@@ -303,12 +303,12 @@
     return id;
   }
 
-  Mentor getWithId(string aId)
+  public static Mentor getWithId(string aId)
   {
     return mentorsById.get(aId);
   }
 
-  bool hasWithId(string aId)
+  public static boolean hasWithId(string aId)
   {
     return getWithId(aId) != null;
   }

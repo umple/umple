@@ -202,7 +202,7 @@ class Guard
 {
   depend cruise.umple.compiler.Position;
   
-  isA Constraint;
+  isA ConstraintTree;
   
   lazy Position position;
   lazy Position endPosition;

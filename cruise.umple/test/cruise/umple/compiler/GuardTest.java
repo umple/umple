@@ -17,30 +17,38 @@ public class GuardTest
 {
 
   Guard guard;
+  Attribute attribute;
   
   @Before
   public void setUp()
   {
     guard = new Guard();
-    guard.addExpression(new ConstraintVariable("NAME","x"));
+    UmpleModel model = new UmpleModel(null);
+    UmpleClass uClass = new UmpleClass("blah",model);
+    attribute = new Attribute("x","String","","",false,uClass);
+    guard.addElement(new ConstraintAttribute(attribute));
   }
   
   @Test
   public void condition()
   {
-    Assert.assertEquals("x",guard.getExpression(0).getValue());
+    Assert.assertEquals("x",((ConstraintAttribute)guard.getRoot()).getAttribute().getName());
   }
   
   @Test
   public void equalsOnlyCaresAboutCondition()
   {
 	Guard guard2 = new Guard();
-	guard2.addExpression(new ConstraintVariable("NAME","x"));
-    Assert.assertEquals(guard.getExpression(0).getValue(), guard2.getExpression(0).getValue());
+	guard2.addElement(new ConstraintAttribute(attribute));
+	UmpleModel model = new UmpleModel(null);
+	JavaGenerator gen = new JavaGenerator();
+	gen.setModel(model);
+    Assert.assertEquals(guard.getValue(gen), guard2.getValue(gen));
 
 	Guard guard3 = new Guard();
-	guard3.addExpression(new ConstraintVariable("NAME","y"));
-    Assert.assertEquals(false,guard.getExpression(0).getValue().equals(guard3.getExpression(0).getValue()));
+	Attribute y = new Attribute("y","String","","",false,attribute.getUmpleClass());
+	guard3.addElement(new ConstraintAttribute(y));
+    Assert.assertEquals(false,guard.equals(guard3));
   }
   
 }

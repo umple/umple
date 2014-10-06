@@ -21,9 +21,9 @@ class student
   {
     $this->age = $aAge;
     $this->weight = $aWeight;
-    if ( !($aWeight<3||$aAge>18))
+    if ($aWeight>=3&&$aAge<=18)
     {
-      throw new RuntimeException("Please provide a valid weight and age");
+      throw new RuntimeException("Please provide a valid age and weight");
     }
   }
 
@@ -34,7 +34,7 @@ class student
   public function setAge($aAge)
   {
     $wasSet = false;
-    if ($weight<3||$aAge>18)
+    if ($this->getWeight()<3||$aAge>18)
     {
     $this->age = $aAge;
     $wasSet = true;
@@ -45,7 +45,7 @@ class student
   public function setWeight($aWeight)
   {
     $wasSet = false;
-    if ($aWeight<3||$age>18)
+    if ($aWeight<3||$this->getAge()>18)
     {
     $this->weight = $aWeight;
     $wasSet = true;

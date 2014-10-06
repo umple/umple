@@ -1671,6 +1671,7 @@ public class PhpClassGenerator implements ILang
   UmpleClass uClass = (UmpleClass) uElement;
   GeneratedClass gClass = uClass.getGeneratedClass();
   PhpGenerator gen = new PhpGenerator();
+  GeneratorHelper.generator = gen;
   gen.setModel(model);
 
   HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
@@ -1679,13 +1680,14 @@ public class PhpClassGenerator implements ILang
     String operation = StringFormatter.toUnderscore(inject.getOperation());
     String key = inject.getType() + ":" + operation;
     String newCodeToInject = "";
+    String injectCode = inject.getConstraintTree()==null?inject.getCode():inject.getConstraintCode(gen);
     if (codeInjectionMap.containsKey(key))
     {
-      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),inject.getCode());
+      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),injectCode);
     }
     else
     {
-      newCodeToInject = inject.getCode();
+      newCodeToInject = injectCode;
     }
     codeInjectionMap.put(key,newCodeToInject);
   }
@@ -2865,6 +2867,8 @@ public class PhpClassGenerator implements ILang
     {
       continue;
     }
+
+    gen.setParameterConstraintName(av.getName());    
     
     List<TraceItem> traceItems = av.getTraced("setMethod", uClass);
     
@@ -2992,6 +2996,7 @@ public class PhpClassGenerator implements ILang
     
     }
   }
+  gen.setParameterConstraintName("");
 
     
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
@@ -3002,6 +3007,8 @@ public class PhpClassGenerator implements ILang
       continue;
     }
     
+    gen.setParameterConstraintName(av.getName());
+
     List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
     
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
@@ -3320,6 +3327,7 @@ public class PhpClassGenerator implements ILang
       appendln(stringBuffer, "");
     }
   }
+  gen.setParameterConstraintName("");
 
     
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
@@ -3330,6 +3338,8 @@ public class PhpClassGenerator implements ILang
       continue;
     }
   
+    gen.setParameterConstraintName(av.getName());
+
     List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
 
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isMethod",av)));
@@ -3406,7 +3416,7 @@ public class PhpClassGenerator implements ILang
       
     appendln(stringBuffer, "");
   }
-
+  gen.setParameterConstraintName("");
 
     
 {
@@ -3536,7 +3546,7 @@ public class PhpClassGenerator implements ILang
         State nextState = t.getNextState();
         String spaceOffset = t.getGuard() == null ? "" : "  ";
         StateMachine exitSm = state.exitableStateMachine(nextState);
-        String condition = t.getGuard()!=null?t.getGuard().getCondition(gen):"if ()\n{";        
+        String condition = t.getGuard()!=null?gen.translate("Open",t.getGuard()):"if ()\n{";        
         if (!"if ()\n{".equals(condition))
         {
           allCases.append(GeneratorHelper.doIndent(condition, "      ")+"\n");
@@ -3844,7 +3854,9 @@ public class PhpClassGenerator implements ILang
       continue;
     }
 
-	  List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
+    gen.setParameterConstraintName(av.getName());
+
+    List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
 
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
@@ -3970,6 +3982,7 @@ public class PhpClassGenerator implements ILang
     
     }
  }
+ gen.setParameterConstraintName("");
 
     
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
@@ -3978,6 +3991,8 @@ public class PhpClassGenerator implements ILang
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
   
+    gen.setParameterConstraintName(av.getName());
+
     AssociationVariable relatedAssociation = av.getRelatedAssociation();
 
     if (!av.getIsNavigable())
@@ -3985,7 +4000,9 @@ public class PhpClassGenerator implements ILang
       continue;
     } 
     
-    List<TraceItem> traceItems = av.getTraced("setMethod", uClass);
+    //TraceItem traceItem = av.getTraced("associationAdd", uClass);
+    List<TraceItem> traceItemAssocAdds = av.getTraced("associationAdd", uClass);
+    List<TraceItem> traceItemAssocRemoves = av.getTraced("associationRemove", uClass);
 
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
@@ -4412,8 +4429,6 @@ public class PhpClassGenerator implements ILang
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      
-    
       
     stringBuffer.append(TEXT_467);
     stringBuffer.append(gen.translate("removeMethod",av));
@@ -6733,6 +6748,7 @@ public class PhpClassGenerator implements ILang
     
     }
   }
+  gen.setParameterConstraintName("");
 
      if (uClass.getKey().isProvided()) { 
     

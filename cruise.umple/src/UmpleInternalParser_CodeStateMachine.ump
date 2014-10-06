@@ -848,7 +848,7 @@ class UmpleInternalParser
     	  if(stateToken.getValue("event") != null)
     	    analyzeStandAloneTransition(false,stateToken, stateToken.getValue("fromState"), null, sm);
     	  else
-    		analyzeStandAloneTransition(true,stateToken, stateToken.getValue("fromState"), null, sm);
+            analyzeStandAloneTransition(true,stateToken, stateToken.getValue("fromState"), null, sm);
       }
       
       // Concurrency is only allowed between nested state-machines
@@ -1049,7 +1049,7 @@ class UmpleInternalParser
 	    Token guardToken = transitionToken.getSubToken("guard");
 	    if (guardToken != null)
 	    {
-	      ((GuardAnalyzer)model.getAnalyzer("guard")).setUClassifier( fromState.getStateMachine().getRootStateMachine().getUmpleClass());
+	      ((GuardAnalyzer)model.getAnalyzer("guard")).setUClassifier( sm2.getUmpleClass());
               ((GuardAnalyzer)model.getAnalyzer("guard")).setT(t);
               model.getAnalyzer("guard").analyzeToken(guardToken);
 	    }

@@ -73,8 +73,8 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void constraintTest() {
-		Assert.assertEquals(1,uMode.getUmpleTrait("T").numberOfConstraints());
-		Assert.assertEquals(1,uMode.getUmpleClass("A").numberOfConstraints());
+		Assert.assertEquals(1,uMode.getUmpleTrait("T").numberOfConstraintTrees());
+		Assert.assertEquals(1,uMode.getUmpleClass("A").numberOfConstraintTrees());
 	}
 	
 	@Test

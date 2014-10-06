@@ -47,11 +47,11 @@ class Client
 
   def someMethod (arg)
 
-    if  !(@arg>5) then
-      raise RuntimeError, 'Please provide a valid arg'
+    if arg<=5 then
+        raise RuntimeError, 'Please provide a valid arg'
     end
-    if  !(@minAge<8) then
-      raise RuntimeError, 'Please provide a valid minAge'
+    if get_minAge()>=8 then
+        raise RuntimeError, 'Please provide a valid minAge'
     end
     // rest of stuff that we don't interpret
     return 0;

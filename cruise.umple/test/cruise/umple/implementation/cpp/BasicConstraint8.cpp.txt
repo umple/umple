@@ -13,7 +13,7 @@
   {
     age = aAge;
     weight = aWeight;
-    if ( !(aAge<10&&(aAge<10)))
+    if (aAge>=10||(aAge>=10))
     {
       throw "Please provide a valid age";
     }

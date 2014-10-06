@@ -15,6 +15,7 @@ import org.junit.*;
 
 import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.SampleFileWriter;
+import cruise.umple.compiler.*;
 
 public class UmpleParserTracerTest
 {
@@ -255,17 +256,17 @@ public class UmpleParserTracerTest
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
 	  Assert.assertEquals(traceAttr1.getConditionType(),"where");
-	  Assert.assertEquals(traceAttr1.getConstraint().getExpression(0).getValue(), "id");
-	  Assert.assertEquals(traceAttr1.getConstraint().getExpression(1), new ConstraintVariable("OPERATOR", "=="));
-	  Assert.assertEquals(traceAttr1.getConstraint().getExpression(2), new ConstraintVariable("OPERATOR", "30"));
+	  Assert.assertEquals(((ConstraintAttribute)((ConstraintTree)((ConstraintOperator)((TraceConstraint)traceAttr1.getConstraint().getRoot()).getRoot()).getLeft()).getRoot()).getAttribute().getName(), "id");
+	  Assert.assertEquals(((ConstraintOperator)((TraceConstraint)traceAttr1.getConstraint().getRoot()).getRoot()).getValue(), "==");
+	  Assert.assertEquals(((ConstraintLiteral)((ConstraintOperator)((TraceConstraint)traceAttr1.getConstraint().getRoot()).getRoot()).getRight()).getValue(), "30");
 
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
 	  Assert.assertEquals(traceAttr2.getConditionType(),"where");
-	  Assert.assertEquals(traceAttr2.getConstraint().getExpression(0).getValue(), "id");
-	  Assert.assertEquals(traceAttr2.getConstraint().getExpression(1), new ConstraintVariable("OPERATOR", ">"));
-	  Assert.assertEquals(traceAttr2.getConstraint().getExpression(2), new ConstraintVariable("OPERATOR", "500"));
+	  Assert.assertEquals(((ConstraintAttribute)((ConstraintTree)((ConstraintOperator)((TraceConstraint)traceAttr2.getConstraint().getRoot()).getRoot()).getLeft()).getRoot()).getAttribute().getName(), "id");
+	  Assert.assertEquals(((ConstraintOperator)((TraceConstraint)traceAttr2.getConstraint().getRoot()).getRoot()).getValue(), ">");
+	  Assert.assertEquals(((ConstraintLiteral)((ConstraintOperator)((TraceConstraint)traceAttr2.getConstraint().getRoot()).getRoot()).getRight()).getValue(), "500");
 
   }
   

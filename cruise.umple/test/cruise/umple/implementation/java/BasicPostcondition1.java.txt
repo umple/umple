@@ -44,9 +44,9 @@ public class Client
 
   public int someMethod(Integer arg){
     int result = someMethod_Original(arg);
-    if ( !(arg>5))
+    if (arg<=5)
     {
-      throw new RuntimeException("Please provide a valid arg");
+        throw new RuntimeException("Please provide a valid arg");
     }
     return result;
   }

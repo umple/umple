@@ -148,23 +148,24 @@ class UmpleInternalParser
           ((ConstraintTokenAnalyzer)model.getAnalyzer("constraintToken")).setUClassifier(aClass);
           model.getAnalyzer("constraintToken").analyzeToken(traceToken.getSubToken(pos));
         }
-        Constraint constraint = ((ConstraintTokenAnalyzer)model.getAnalyzer("constraintToken")).getConstraint();
-        List<Attribute> others = new ArrayList<Attribute>();
-        for(ConstraintVariable cv: constraint.getExpressions())
+        ConstraintTree constraint = new TraceConstraint();
+        for(UmpleVariable uv:traceAttr.getUmpleVariables())
         {
-          if(("after".equals(traceAttr.getConditionType())||
-              "until".equals(traceAttr.getConditionType()))&&
-              cv.getIsAttribute()
-              )
+          ((TraceConstraint)constraint).addVariable(uv);
+        }
+        constraint.addElementAll(((ConstraintTokenAnalyzer)model.getAnalyzer("constraintToken")).getConstraint());
+        List<Attribute> others = new ArrayList<Attribute>();
+        if("after".equals(traceAttr.getConditionType())||"until".equals(traceAttr.getConditionType()))
+        {
+          for(ConstraintVariable cv:constraint)
           {
-            UmpleVariable av = cv.getAttribute(aClass);
-            if(av instanceof Attribute)
+            if(cv instanceof ConstraintAttribute)
             {
-              others.add((Attribute)av);
+              others.add(((ConstraintAttribute)cv).getAttribute());
             }
-            else if(av instanceof AssociationVariable)
+            else if(cv instanceof ConstraintAssociation)
             {
-              //others.add((AssociationVariable)av);
+//              others.add(((ConstraintAssociation)cv).getAssociation());
             }
           }
         }
@@ -192,12 +193,12 @@ class UmpleInternalParser
           cb.setCode("Php",code+";");
           cb.setCode("Ruby",code);
           ci.setSnippet(cb);
-          ci.setConstraint(constraint);
+          ci.setConstraintTree(constraint);
           aClass.addCodeInjection(ci);
-          constraint = new Constraint();
-          constraint.addExpression(new ConstraintVariable("",flag));
+          constraint = new ConstraintTree();
           traceAttr.setConstraint(constraint);
-          new Attribute(flag,"Boolean","internal",("after".equals(traceAttr.getConditionType())?"false":"until".equals(traceAttr.getConditionType())?"true":""),false,aClass);
+          Attribute flagAttr = new Attribute(flag,"Boolean","internal",("after".equals(traceAttr.getConditionType())?"false":"until".equals(traceAttr.getConditionType())?"true":""),false,aClass);
+          constraint.addElement(new ConstraintUnassignedName(flag));
         }
       }
       else if ( traceToken.getName().equals("giving") )
@@ -214,23 +215,24 @@ class UmpleInternalParser
       else if( traceToken.is("trace_for") )
       {
         String flag = "traceFlag"+getTraceFlagId();
+        Attribute flagAttr = new Attribute(flag,"Integer","internal","0",false,aClass);
         traceAttr.setForClause(flag);
-        Constraint constraint;
+        ConstraintTree constraint;
         if(traceAttr.getConstraint()==null)
         {
-          constraint = new Constraint();
+          constraint = new ConstraintTree();
         } 
         else
         {
           constraint = traceAttr.getConstraint();
-          constraint.addExpression(new ConstraintVariable("OPERATOR","&&"));
+          constraint.addElement(new ConstraintOperator("&&"));
         }
-        constraint.addExpression(new ConstraintVariable("integer",flag));
-        constraint.addExpression(new ConstraintVariable("OPERATOR","<"));
-        constraint.addExpression(new ConstraintVariable("SYNTAX",traceToken.getValue()));
+        ConstraintTree subTree = new ConstraintTree();
+        subTree.addElement(new ConstraintAttribute(flagAttr));
+        subTree.addElement(new ConstraintOperator("<"));
+        subTree.addElement(new ConstraintNumberLiteral(traceToken.getValue()));
+        constraint.addElement(subTree);
         traceAttr.setConstraint(constraint);
-
-        new Attribute(flag,"Integer","internal","0",false,aClass);
       }     
       else if( traceToken.is("trace_period") )
       {

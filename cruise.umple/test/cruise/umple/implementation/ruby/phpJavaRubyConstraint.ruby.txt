@@ -24,8 +24,8 @@ class Range
     @deleted = false
     @start = a_start
     @end = a_end
-    if  !(a_start<a_end) then
-      raise RuntimeError, 'Please provide a valid start and end'
+    if a_start>=a_end then
+      raise RuntimeError, 'Please provide a valid end and start'
     end
     @initialized = true
   end
@@ -36,7 +36,7 @@ class Range
 
   def set_start(a_start)
     was_set = false
-    if a_start<@end then
+    if a_start<get_end() then
     @start = a_start
     was_set = true
     end
@@ -45,7 +45,7 @@ class Range
 
   def set_end(a_end)
     was_set = false
-    if @start<a_end then
+    if get_start()<a_end then
     @end = a_end
     was_set = true
     end

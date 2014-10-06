@@ -39,6 +39,10 @@ import cruise.umple.compiler.PortBinding;
 import cruise.umple.compiler.PortConstraint;
 import cruise.umple.compiler.Protocol;
 import cruise.umple.compiler.UmpleClass;
+import cruise.umple.compiler.ConstraintTree;
+import cruise.umple.compiler.ConstraintOperator;
+import cruise.umple.compiler.ConstraintLiteral;
+import cruise.umple.compiler.ConstraintAttribute;
 import cruise.umple.core.CommonConstants;
 import cruise.umple.core.GenerationCallback.GenerationArgument;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
@@ -179,37 +183,81 @@ public class UmpleStructureGenerationPolicy{
 		
 		for(Monitor monitor: activeMethod.getWatchList()){
 			List<BasicConstraint> constraints = monitor.getConstraints();
-			for(BasicConstraint contraint: constraints){
-				ConstraintVariable[] expressions = contraint.getExpressions();
-				ConstraintVariable constraintVariable= null;
-				if(expressions.length>1){
-					for(ConstraintVariable expr: expressions){
-						if("NAME".equals(expr.getType())){ //$NON-NLS-1$
-							constraintVariable= expr;
-							break;
-						}
-					}
-				}else{
-					constraintVariable = expressions[0];
-				}
-				
-				if(constraintVariable== null){
-					continue;
-				}
-				
-				if(constraintVariable.getFoundAttribute()== null){
-					String value = constraintVariable.getValue();
-					Port port = portMap.get(value);
-					if(port!= null){
-						ports.add(port);
-					}
-				}
+			for(BasicConstraint constraint: constraints){
+				generatePortsFromConstraints(constraint,monitor,ports,portMap);
 			}
 		}
 		
 		return ports;
 	}
+
+	private static void generatePortsFromConstraints(ConstraintVariable constraint, Monitor monitor, List<Port> ports, Map<String, Port> portMap)
+        {
+          if(constraint == null) return;
+          if(constraint instanceof ConstraintTree)
+          {
+             generatePortsFromConstraints(((ConstraintTree)constraint).getRoot(),monitor,ports, portMap);
+          }
+          else if(constraint instanceof ConstraintOperator)
+          {
+             generatePortsFromConstraints(((ConstraintOperator)constraint).getLeft(),monitor,ports, portMap);
+             generatePortsFromConstraints(((ConstraintOperator)constraint).getRight(),monitor,ports, portMap);
+          }
+	  else if(constraint instanceof ConstraintAttribute){
+	    String value = ((ConstraintAttribute)constraint).getAttribute().getValue();
+	    Port port = portMap.get(value);
+	    if(port!= null){
+	      ports.add(port);
+	    }
+	  }
+        }
 	
+	private static void generateBasicConstraintsFromConstraints(ConstraintVariable constraint, BasicConstraint basicConstraint, Monitor monitor, Map<String, Port> portMap, List<String> values, List<BasicConstraint> basicConstraints, String type)
+        {
+          if(constraint == null) return;
+          if(constraint instanceof ConstraintTree)
+          {
+             generateBasicConstraintsFromConstraints(((ConstraintTree)constraint).getRoot(),basicConstraint,monitor,portMap,values,basicConstraints,type);
+          }
+          else if(constraint instanceof ConstraintOperator)
+          {
+	    String value = ((ConstraintOperator)constraint).getValue();
+	    if(type.equals(value)&&!values.contains(value))
+            {
+              Port port = portMap.get(value);
+//FIXME FIXME FIXME
+//	        String signalType = port.getSignalType();
+//              if(!signalType.equals(CommonTypesConstants.BOOLEAN)&& !signalType.equals("bool")){ //$NON-NLS-1$
+//
+//	        }
+//	        else
+//              {
+                basicConstraints.add(basicConstraint);
+                values.add(value);
+//              }
+            }
+            else
+            {
+              generateBasicConstraintsFromConstraints(((ConstraintOperator)constraint).getLeft(),basicConstraint,monitor,portMap,values,basicConstraints,type);
+              generateBasicConstraintsFromConstraints(((ConstraintOperator)constraint).getRight(),basicConstraint,monitor,portMap,values,basicConstraints,type);
+            }
+          }
+	  else if(constraint instanceof ConstraintLiteral){
+             String value = ((ConstraintLiteral)constraint).getValue();
+	    if(type.equals(value)&&!values.contains(value))
+            {
+              Port port = portMap.get(value);
+//FIXME FIXME FIXME
+//	      String signalType = port.getSignalType();
+//	      if(!signalType.equals(CommonTypesConstants.BOOLEAN)&& !signalType.equals("bool")){ //$NON-NLS-1$
+//		return;
+//	      }
+	      basicConstraints.add(basicConstraint);
+	      values.add(value);
+        }
+	  }
+    }
+
 	private static List<BasicConstraint> processconstraints(UmpleClass parent, List<Monitor> monitors, String type) {
 		List<String> portStrings = new ArrayList<String>();
 		
@@ -223,30 +271,8 @@ public class UmpleStructureGenerationPolicy{
 		List<String> values= new ArrayList<String>();
 		for(Monitor monitor: monitors){
 			List<BasicConstraint> constraints = monitor.getConstraints();
-			for(BasicConstraint contraint: constraints){
-				ConstraintVariable[] expressions = contraint.getExpressions();
-				if(expressions.length<2){
-					continue;
-				}
-				for(ConstraintVariable expr: expressions){
-					if(!"NAME".equals(expr.getType())){ //$NON-NLS-1$
-						continue;
-					}
-					
-					String value = expr.getValue();
-					if(value.equals(type)&& !values.contains(value)){
-						Port port = portMap.get(value);
-						//FIXME FIXME FIXME
-//						String signalType = port.getSignalType();
-//						if(!signalType.equals(CommonTypesConstants.BOOLEAN)&& !signalType.equals("bool")){ //$NON-NLS-1$
-//							continue;
-//						}
-						basicContraints.add(contraint);
-						values.add(value);
-						break;
-					}
-					
-				}
+			for(BasicConstraint constraint: constraints){
+				generateBasicConstraintsFromConstraints(constraint,constraint,monitor,portMap,values,constraints,type);
 //				if(expressions.length==1){
 //					ConstraintVariable constraintVariable = expressions[0];
 //					if(constraintVariable.getFoundAttribute()== null){

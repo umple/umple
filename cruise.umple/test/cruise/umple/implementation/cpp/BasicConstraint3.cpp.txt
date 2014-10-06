@@ -14,7 +14,7 @@
   {
     minAge = aMinAge;
     age = aAge;
-    if ( !(aAge>aMinAge))
+    if (aAge<=aMinAge)
     {
       throw "Please provide a valid age and minAge";
     }
@@ -47,7 +47,7 @@
   bool Client::setMinAge(const int & aMinAge)
   {
     bool wasSet = false;
-    if (age>aMinAge)
+    if (getAge()>aMinAge)
     {
     minAge = aMinAge;
     wasSet = true;
@@ -58,7 +58,7 @@
   bool Client::setAge(const int & aAge)
   {
     bool wasSet = false;
-    if (aAge>minAge)
+    if (aAge>getMinAge())
     {
     age = aAge;
     wasSet = true;

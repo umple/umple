@@ -49,9 +49,9 @@ class Client
   public function someMethod(Integer arg)
   {
     $result = someMethodOriginal(Integer arg);
-    if ( !($arg>5))
+    if ($this->arg<=5)
     {
-      throw new RuntimeException("Please provide a valid arg");
+        throw new RuntimeException("Please provide a valid arg");
     }
     return $result;
   }

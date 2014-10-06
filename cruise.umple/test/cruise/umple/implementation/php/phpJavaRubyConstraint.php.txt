@@ -21,9 +21,9 @@ class Range
   {
     $this->start = $aStart;
     $this->end = $aEnd;
-    if ( !($aStart<$aEnd))
+    if ($aStart>=$aEnd)
     {
-      throw new RuntimeException("Please provide a valid start and end");
+      throw new RuntimeException("Please provide a valid end and start");
     }
   }
 
@@ -34,7 +34,7 @@ class Range
   public function setStart($aStart)
   {
     $wasSet = false;
-    if ($aStart<$end)
+    if ($aStart<$this->getEnd())
     {
     $this->start = $aStart;
     $wasSet = true;
@@ -45,7 +45,7 @@ class Range
   public function setEnd($aEnd)
   {
     $wasSet = false;
-    if ($start<$aEnd)
+    if ($this->getStart()<$aEnd)
     {
     $this->end = $aEnd;
     $wasSet = true;

@@ -24,7 +24,7 @@ class student
     @deleted = false
     @age = a_age
     @weight = a_weight
-    if  !(a_age<10&&(a_age<10)) then
+    if a_age>=10||(a_age>=10) then
       raise RuntimeError, 'Please provide a valid age'
     end
     @initialized = true

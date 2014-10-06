@@ -49,7 +49,8 @@ interface CodeTranslator
   String translate(String id, State st);
   String translate(String id, Event e);
   String translate(String id, AssociationVariable aVar);
-  String translate(String id, Constraint constraint);
+  String translate(String id, ConstraintTree constraint);
+  String translate(String id, ConstraintVariable cv);
   String translate(String id, TraceItem traceItem);
   // TODO: LH#171
   //String translate(String id, AssociationVariable associationVariable);

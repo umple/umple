@@ -1,3 +1,4 @@
+
 namespace cruise.umple.compiler;
 //************************************************************************************* 
 //************************************NEW CLASS****************************************
@@ -1037,14 +1038,8 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 		*/
 		
 		// copy Constraints
-		for(Constraint aConstraint : inTrait.getConstraints()) {
-			for(ConstraintVariable cVariable : aConstraint.getExpressions() ) {			
-				if (cVariable.getType().equals("NAME") && inClass.getAttribute(cVariable.getValue()) == null && inTrait.getAttribute(cVariable.getValue()) == null) {
-					getParseResult().addErrorMessage(new ErrorMessage(207,inTrait.getPosition(0),cVariable.getValue(),inTrait.getName(),inClass.getName()));	
-					return;
-				}
-			}
-			inClass.addConstraint(aConstraint);
+		for(ConstraintTree aConstraint : inTrait.getConstraintTrees()) {
+			inClass.addConstraintTree(aConstraint);
 		}	
 		
 		// copy StateMachines

@@ -250,7 +250,8 @@ class UmpleGenerator
     VALUE(102,"value"),
     CLASS_DEFINITION(200,"classDefinition"),
     CLASS_CONTENT(201, "classContent"),
-    EXTENDS_NAME(202, "extendsName"),
+    ISA_NAME(202, "isAName"),
+    EXTENDS_NAME(203, "extendsName"),
     SOFTWARE_PATTERN(250, "softwarePattern"), 
     IS_A(251, "isA"),
     IS_A_SINGLE(252, "singleIsA"),
@@ -423,7 +424,7 @@ class UmpleGenerator
     return "";
   }
 
-  public String translate(String id, Constraint constraint) 
+  public String translate(String id, ConstraintTree constraint) 
   { 
     return "";
   }
@@ -1029,6 +1030,9 @@ class UmpleGenerator
       case SOFTWARE_PATTERN:
       case IS_A:
       case IS_A_SINGLE:
+      case ISA_NAME:
+        generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, uContainer);
+        break;
       case ASSOCIATION_DEFINITION:
       case ASSOCIATION_CLASS_DEFINITION:
       case MULTIPLICITY:
@@ -1174,7 +1178,6 @@ class UmpleGenerator
   private String getClassProperty(String property, Token elementRootRuleToken, UmpleClass uClass)
   {
     StringBuilder buffer = new StringBuilder();
-    
     switch(RuleName.fromString(property)) {
       case NAME:
         buffer.append(pad(uClass.getName(), RuleName.NAME, uClass));    

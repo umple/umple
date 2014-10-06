@@ -92,7 +92,7 @@ class UmpleModelVisitor {
 	// Logical
 	void visit(Condition cond) {} 
 	void visit(Precondition pre) {}
-	void visit(Constraint constraint) {}
+	void visit(ConstraintTree constraint) {}
 	
 	// Aspect
 	void visit(CodeInjection codeInjection) {}
@@ -253,11 +253,11 @@ class UmpleModelWalker {
 						visitor.visit(clazz.getUniqueIdentifier());
 					}
 					
-					for(Constraint cnst : clazz.getConstraints()) {
-						visitor.visit(cnst);
-						for(ConstraintVariable cnstVar : cnst.getExpressions()) {
-							visitor.visit(cnstVar);							
-						}
+					for(ConstraintTree cnst : clazz.getConstraintTrees()){
+				          for(ConstraintVariable var:cnst)
+                                          {
+                                            visitor.visit(var);       
+                                          }
 					}
 					
 					for(AssociationVariable aVar : clazz.getAssociationVariables()) {
@@ -313,8 +313,8 @@ class UmpleModelWalker {
 					}
 					
 					for(CodeInjection ci: clazz.getCodeInjections()){
-						if(ci.getConstraint() != null) {
-							visitor.visit(ci.getConstraint());
+						if(ci.getConstraintTree() != null) {
+							visitor.visit(ci.getConstraintTree());
 						}
 						visitor.visit(ci);
 						if(ci.getCode() != null) {

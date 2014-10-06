@@ -16,28 +16,33 @@ import org.junit.Test;
 
 public class ConstraintVariableTest
 {
-
-  ConstraintVariable expr;
   
+  ConstraintAttribute expr;
+  Attribute attribute;
+  UmpleClass uClass;
+	
   @Before
   public void setUp()
   {
-    expr = new ConstraintVariable(null,null);
+    uClass = new UmpleClass("blah",new UmpleModel(null));
+    attribute = new Attribute("x","Integer","","",false,uClass);
+    expr = new ConstraintAttribute(null);
   }
   
   @Test
   public void getAttributeType()
   {
-    assertEquals(null,expr.getAttributeType());
+	  
+    assertEquals(null,expr.getAttribute());
     UmpleClass clazz = new UmpleClass("xx");
-    expr.setFoundAttribute(new Attribute("x","MyType","","",false,clazz));
-    assertEquals("MyType",expr.getAttributeType());
+    expr.setAttribute(new Attribute("x","MyType","","",false,clazz));
+    assertEquals("MyType",expr.getAttribute().getType());
   }
 
   @Test
   public void equals_null()
   {
-    ConstraintVariable compareTo = new ConstraintVariable(null,null);
+    ConstraintAttribute compareTo = new ConstraintAttribute(null);
     assertEquals(false,expr.equals("donkey"));
     assertEquals(false,expr.equals(null));
   }
@@ -45,7 +50,7 @@ public class ConstraintVariableTest
   @Test
   public void equals_empty()
   {
-    ConstraintVariable compareTo = new ConstraintVariable(null,null);
+    ConstraintAttribute compareTo = new ConstraintAttribute(null);
     assertEquals(true,expr.equals(compareTo));
     assertEquals(true,compareTo.equals(expr));
   }
@@ -53,50 +58,34 @@ public class ConstraintVariableTest
   @Test
   public void equals_concernAboutHash()
   {
-    assertEquals(true,new ConstraintVariable("OPERATOR","+").equals(new ConstraintVariable("OPERATOR","+")));
+    assertEquals(true,new ConstraintOperator("+").equals(new ConstraintOperator("+")));
   }
 
   @Test
   public void equals_valueAndSubConstraint()
   {
-    ConstraintVariable compareTo = new ConstraintVariable(null,"aval");
+	Attribute aval = new Attribute("aval","Integer","","",false,uClass);
+    ConstraintVariable compareTo = new ConstraintAttribute(aval);
     assertEquals(false,expr.equals(compareTo));
     assertEquals(false,compareTo.equals(expr));
 
-    expr.setValue("notval");
+    Attribute notval = new Attribute("notval","Integer","","",false,uClass);
+    expr.setAttribute(notval);
     assertEquals(false,expr.equals(compareTo));
     assertEquals(false,compareTo.equals(expr));
 
-    expr.setValue("aval");
+    expr.setAttribute(uClass.getAttribute("aval"));
     assertEquals(true,expr.equals(compareTo));
     assertEquals(true,compareTo.equals(expr));
 
-    Constraint con = new Constraint();
-    expr.setSubConstraint(con);
-    assertEquals(false,expr.equals(compareTo));
-    assertEquals(false,compareTo.equals(expr));
+    ConstraintTree tree = new ConstraintTree();
+    tree.addElement(expr);
+    assertEquals(false,tree.equals(compareTo));
+    assertEquals(false,compareTo.equals(tree));
 
-    compareTo.setSubConstraint(con);
-    assertEquals(true,expr.equals(compareTo));
-    assertEquals(true,compareTo.equals(expr));
-  }
-  
-  @Test
-  public void isPrimitive_defaultToTrue() {
-    assertEquals(true,expr.getIsPrimitive());
-  }
-  
-  @Test
-  public void setIsPrimitive_true() {
-    expr.setIsPrimitive(true);
-    assertEquals(true,expr.getIsPrimitive());
-    assertEquals(false,expr.getIsNotPrimitive());
-  }
-  
-  @Test
-  public void setIsPrimitive_false() {
-    expr.setIsPrimitive(false);
-    assertEquals(false,expr.getIsPrimitive());
-    assertEquals(true,expr.getIsNotPrimitive());
+    ConstraintTree tree2 = new ConstraintTree();
+    tree2.addElement(compareTo);
+    assertEquals(true,tree.equals(tree2));
+    assertEquals(true,tree2.equals(tree));
   }
 }

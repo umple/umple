@@ -624,11 +624,7 @@ class Event
   class Guard
   {
     String getCondition(CodeTranslator gen){
-  	  return gen.translate(":Open",this);
-    }
-    
-    String getCondition(){
-  	  return (new JavaGenerator()).translate(":Plain",this);
+  	  return gen.translate("Plain",this);
     }
   }
 }

@@ -9,8 +9,9 @@ softwarePattern- : [[isA]] | [[singleton]] | [[immutable]] | [[keyDefinition]] |
 
 // Generalization and inheritance [*isAclause*]
 isA- : [[singleIsA]] | [[multipleIsA]]
-singleIsA- : isA [extendsName] [[gTemplateParameter]]? ( , isA [extendsName] [[gTemplateParameter]]? )*  ;
-multipleIsA- : isA [extendsName] [[gTemplateParameter]]? ( , [extendsName] [[gTemplateParameter]]? )* ;
+singleIsA- : isA [[isAName]] ( , isA [[isAName]] )*  ;
+multipleIsA- : isA [[isAName]] ( , [[isAName]] )* ;
+isAName- : " [**extendsNames] " [[gTemplateParameter]]? | [extendsName] [[gTemplateParameter]]?
 
 gTemplateParameter : < [[functionIncludeExcludeAlias]] >
 

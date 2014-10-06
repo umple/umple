@@ -63,13 +63,13 @@ public class LightFixture
     switch (aBulb)
     {
       case On:
-        if (brightness<1)
+        if (getBrightness()<1)
         {
           setBulb(Bulb.Off);
           wasEventProcessed = true;
           break;
         }
-        if (brightness>10)
+        if (getBrightness()>10)
         {
           setBulb(Bulb.Amber);
           wasEventProcessed = true;

@@ -23,7 +23,7 @@
       ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeAfter.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name );
     }
     wasSet = true;
-    if ("tim".equals(name))
+    if ("tim".equals(aName))
     {
       traceFlag1=true;
     }

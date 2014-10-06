@@ -75,7 +75,7 @@
         String tabSpace = t.getGuard() == null ? "        " : "          ";
         StateMachine exitSm = state.exitableStateMachine(nextState);
         
-        String condition = t.getGuard()!=null?t.getGuard().getCondition(gen):"if ()\n{";
+        String condition = t.getGuard()!=null?gen.translate("Open",t.getGuard()):"if ()\n{";
         if (!"if ()\n{".equals(condition))
         {
             addUncaughtExceptionVariables(gen.translate("eventMethod",e),

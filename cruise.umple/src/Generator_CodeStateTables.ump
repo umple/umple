@@ -81,8 +81,10 @@ class StateTableRow {
       guard = t.getGuard();
       if (guard == null) guardString = "";
       else {
+        JavaGenerator gen = new JavaGenerator();
+        gen.setModel(uState.getStateMachine().getUmpleClass().getSourceModel());
         guardString = event.isAutoTransition() ? "[" : " ["
-          + guard.getCondition().replaceAll("\"","&quot;")+"]";
+          + guard.getCondition(gen).replaceAll("\"","&quot;")+"]";
       }
 
       // Add state to the state event hash table

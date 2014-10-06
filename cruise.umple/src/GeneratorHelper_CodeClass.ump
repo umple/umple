@@ -64,7 +64,12 @@ class GeneratorHelper
       {
         if (asCode == null)
         {
-          asCode = inject.getCode();
+          if(inject.getConstraintTree()!=null&&generator!=null)
+          {
+            asCode = inject.getConstraintCode(generator);
+          }
+          else asCode = inject.getCode();
+           
           Position p = inject.getPosition();
 	      if (p != null) {
 	          positionString =  "// line " + p.getLineNumber() + " \"" + p.getRelativePath((UmpleClass)(inject.getUmpleClassifier()), ((UmpleClass)inject.getUmpleClassifier()).getSourceModel().getDefaultGenerate() ) + "\"\n";
@@ -72,7 +77,11 @@ class GeneratorHelper
         }
         else
         {
-          asCode = StringFormatter.format("{0}\n{1}",asCode,inject.getCode());
+          if(inject.getConstraintTree()!=null&&generator!=null)
+          {
+            asCode = StringFormatter.format("{0}\n{1}",asCode,inject.getConstraintCode(generator));
+          }
+          else asCode = StringFormatter.format("{0}\n{1}",asCode,inject.getCode());
         }
       }
     }

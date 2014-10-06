@@ -44,7 +44,6 @@ class UmpleInternalParser
   private void analyzeInvariant (Token invariantToken, UmpleClassifier uClassifier)
   {
     if(((InvariantAnalyzer)model.getAnalyzer("invariant"))!=null){
-      
       ((InvariantAnalyzer)model.getAnalyzer("invariant")).setUClassifier(uClassifier);
       model.getAnalyzer("invariant").analyzeToken(invariantToken);
     }

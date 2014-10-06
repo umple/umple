@@ -7,7 +7,7 @@
       StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeAfter.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,id,"+id );
     }
     wasSet = true;
-    if (id>232100)
+    if (aId>232100)
     {
       traceFlag2=true;
     }
@@ -23,7 +23,7 @@
       StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeAfter.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name );
     }
     wasSet = true;
-    if ("tim".equals(name))
+    if ("tim".equals(aName))
     {
       traceFlag1=true;
     }

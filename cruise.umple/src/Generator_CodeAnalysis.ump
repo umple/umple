@@ -277,7 +277,7 @@ class LLOCMetricVisitor {
 	void visit(Precondition pre) {
 		cur_lloc++;
 	}
-	void visit(Constraint constraint) {
+	void visit(ConstraintTree constraint) {
 		cur_lloc++;
 	}
 	
@@ -432,7 +432,7 @@ class McCabeMetricVisitor {
 	void visit(Precondition pre) {
 		cur_conditions++;
 	}
-	void visit(Constraint constraint) {
+	void visit(ConstraintTree constraint) {
 		cur_conditions++;
 	}
 	

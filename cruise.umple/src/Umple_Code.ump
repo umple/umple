@@ -700,39 +700,12 @@ class CodeInjection
   }
   public String getCode()
   {
-    if(constraint == null)
-    {
-      return snippet.getCode();
-    }
-    else
-    {
-      if("Java".equals(CodeBlock.languageUsed))
-      {
-        return StringFormatter.format((new JavaGenerator()).translate("Closed",getConstraint()),
-  	                             snippet.getCode()
-  	                             );
-      }
-      else if("Php".equals(CodeBlock.languageUsed))
-      {
-        return StringFormatter.format((new PhpGenerator()).translate("Closed",getConstraint()),
-  	                             snippet.getCode()
-                                     );
-      }
-      else if("Ruby".equals(CodeBlock.languageUsed))
-      {
-        return StringFormatter.format((new RubyGenerator()).translate("Closed",getConstraint()),
-  	                             snippet.getCode()
-                                     );
-      }
-      else if("Cpp".equals(CodeBlock.languageUsed))
-      {
-   	return StringFormatter.format((new CppGenerator()).translate("Closed",getConstraint()),
-                                     snippet.getCode()
-                                     );
-      }
-      return snippet.getCode();
-    }
-  }  
+    return snippet.getCode();
+  }
+  public String getConstraintCode(CodeTranslator gen)
+  {
+    return StringFormatter.format(gen.translate("Closed",constraintTree),getCode());
+  }
   public void setCode(String lang, String code)
   {
     snippet.setCode(lang, code);
@@ -806,7 +779,6 @@ class UmpleInterface
     }
     return isMethod;  
   }
-
 }
 
 /*
@@ -1361,8 +1333,6 @@ class UmpleClass
     }
     return wasRemoved;
   }
-  
-  
 
 }
 
@@ -1636,141 +1606,697 @@ class Association
   }
 }
 
-class ConstraintVariable
-{
-  after setStateMachine { setIsStateMachine(aStateMachine!=null); setType("STATEMACHINE"); }
-  after setState { setIsState(aState!=null); setType("STATE"); }
-  UmpleVariable getAttribute(UmpleClassifier uClassifier){
-	if(!getIsAttribute()) {
-      return null;
-    }
-    if(uClassifier==null){
-    	return null;
-    }
-    UmpleVariable uv;
-    if (uClassifier instanceof UmpleClass) {
-    	 uv= ((UmpleClass)(uClassifier)).getAttribute(this.getValue());
-    } else {
-    	uv = ((UmpleTrait)(uClassifier)).getAttribute(this.getValue());
-    }
-    
-    if(uv!=null){
-      setFoundAttribute(uv);
-      isAssociation = ((Attribute)uv).getIsList();
-      return uv;
-    }
-    else
-    {
-      if (uClassifier instanceof UmpleClass) {
-    	  uv = ((UmpleClass)(uClassifier)).getAssociationVariable(this.getValue());
-      } else {
-    	  uv = ((UmpleTrait)(uClassifier)).getAssociationVariable(this.getValue());
-      }	
-      
-      setFoundAttribute(uv);
-      isAssociation = uv!=null;
-      return uv;
-    }
-  }
-  
-}
 
-class Constraint
+class ConstraintTree
 {
-  public String toString()
+  /*
+   * Used by trees to add all the elements of another tree to this tree
+   * @param cv the constraint variable node to add to this tree(if it is a ConstraintTree it will add all of it's sub elements via the addElement method)
+   */
+  public void addElementAll(ConstraintVariable cv)
   {
-    if(numberOfExpressions()==0)
+    if(cv == null)
     {
-      return "";
-    }
-    StringBuilder out = new StringBuilder();
-    List<ConstraintVariable> toAdd = new ArrayList<ConstraintVariable>();
-    for(int m = 0; m < numberOfExpressions(); m++)
-    {
-      if(getExpression(m).getIsAttribute()&&!toAdd.contains(getExpression(m)))
-      {
-        toAdd.add(getExpression(m));
-      }
-    }
-    if(toAdd.size()==0)
-    {
-      return "";
-    }
-    else if(toAdd.size()==1)
-    {
-      return toAdd.get(0).getValue();
+      return;
     }
     else
-    {      
-      out.append(toAdd.get(0).getValue());
-      for(int m = 1; m < toAdd.size()-1; ++m)
-      {
-        out.append(", ");
-        out.append(toAdd.get(m).getValue());
-      }
-      out.append(" and ");
-      out.append(toAdd.get(toAdd.size()-1).getValue());
-    }      
-    return out.toString();
-  }
-  
-  void mergeWith(Constraint constraint)
-  {
-    boolean first = true;
-    if(numberOfExpressions()>0)
     {
-      first = false;
-      if(getNegated()&&!constraint.getNegated())
-      {
-        addExpression(new ConstraintVariable("OPERATOR","||"));
-      }
-      else 
-      {
-        addExpression(new ConstraintVariable("OPERATOR","&&"));
-      }
-    }
-    if(constraint.getNegated())
-    {
-      addExpression(new ConstraintVariable("OPERATOR","!"));
-    }  
-    if(!first)
-    {
-      addExpression(new ConstraintVariable("SYNTAX","("));
-    }
-    for(ConstraintVariable cv: constraint.getExpressions())
-    {
-      addExpression(cv);
-    }
-    if(!first)
-    {
-      addExpression(new ConstraintVariable("SYNTAX",")"));
+      addElement(cv);
     }
   }
-  
-  public boolean equals(Object object)
+
+  /*
+   * Negates a sub variable of the ConstriantTree recursively trying to do as much as it can, setting this ConstraintTree to show the ! symbol if this is the deepest ConstraintTree
+   * @param variable the sub constaint variable that is being negated. ConstraintOperators will call the negate method, ConstraintTrees will attempt to go deeper down the tree if that exists, trying to find a negatable target
+   */
+  private boolean negateVariable(ConstraintVariable variable)
   {
-    if(object==null)
+    boolean wasNegated = false;
+    if(variable==null)
     {
       return false;
     }
-    else
+    if(variable instanceof ConstraintOperator)
     {
-      Constraint constraint = (Constraint)object;
-      int size = constraint.numberOfExpressions();
-      if(numberOfExpressions()!=size)
+      if(((ConstraintOperator)variable).negate())
       {
-        return false;
+        return true;
       }
-      for(int i=0;i<size;i++)
+      else
       {
-        if(!getExpression(i).equals(constraint.getExpression(i)))
-        {
-          return false;
-        }
+        boolean left = negateVariable(((ConstraintOperator)variable).getLeft());
+        boolean right = negateVariable(((ConstraintOperator)variable).getRight());
+        wasNegated = left||right;
       }
+    }
+    else if(variable instanceof ConstraintTree)
+    {
+      wasNegated = ((ConstraintTree)variable).negate();
+    }
+    else if(variable instanceof ConstraintLiteral||variable instanceof ConstraintUnassignedName)
+    {
+      return false;
+    }
+    if(!wasNegated)
+    {
+      displayNegation = !displayNegation;
     }
     return true;
   }
+  
+  /*
+   * The public counterpart to the negateVariabe method, it negates this ConstraintTree's root, starting off the recursive decent into the negation of the tree
+   */
+  public boolean negate()
+  {
+    return negateVariable(root);
+  }
+
+  /*
+   * Copies non-constraint data such as whether the tree should display the ! symbol and whether it should display ( ) around the treee
+   */
+  ConstraintTree clone(ConstraintTree tree)
+  {
+    ConstraintTree aElement = createNew();
+    aElement.setDisplayNegation(tree.getDisplayNegation());
+    aElement.setShouldDisplayBrackets(tree.getShouldDisplayBrackets());
+    return aElement;
+  }
+
+  /*
+   * Creates a new instance of this class, it is used in clone and addElement in order to copy a tree so that there is a deep copy instead of a shallow one
+   * This method needs to be overrided for sub classes of ConstaintTree to function properly.
+   */
+  ConstraintTree createNew()
+  {
+    return new ConstraintTree();
+  }
+
+  /*
+   * Adds a node to the tree, the three modes are
+   *   - if nothing exists in the tree: set the element as the root
+   *   - if the element is an operator: add the root if it is not null as an operand to the operator, and set the operator to the root
+   *   - if there exists an operator: add the element as an operand to the operator.
+   * @param element to be added to the tree
+   */
+  ConstraintVariable addElement(ConstraintVariable aElement)
+  {
+    ++numberOfElements;
+    ConstraintOperator operator = null;
+    if(aElement instanceof ConstraintOperator)
+    {
+      operator = (ConstraintOperator)aElement;
+      aElement = new ConstraintOperator(operator.getValue());
+      addElementAll(operator.getLeft());
+    }
+    else if(aElement instanceof ConstraintTree)
+    {
+      ConstraintTree list = ((ConstraintTree)aElement);
+      aElement = clone(list);
+      ((ConstraintTree)aElement).addElementAll(list.getRoot());
+    }
+    if(aElement instanceof ConstraintOperator)
+    {
+      requestor = ((ConstraintOperator)aElement);
+      requestor.addOperand(root);
+      root = requestor;
+    }
+    else
+    {
+      if(requestor!=null)
+      {
+        requestor.addOperand(aElement);
+        root = requestor;
+        requestor = null;
+      }
+      else 
+      {
+        root = aElement;
+      }
+      if(aElement instanceof ConstraintNamed)
+      {
+        if(!"this".equals(((ConstraintNamed)aElement).getName()))
+        {
+          names.add(((ConstraintNamed)aElement).getName());
+        }
+      }
+      else if(aElement instanceof ConstraintTree)
+      {
+        names.addAll(((ConstraintTree)aElement).names);
+      }
+    }
+    if(aElement instanceof ConstraintOperator)
+    {
+      addElementAll(operator.getRight());
+    }
+    return aElement;
+  }
+
+  /*
+   * Whenever ConstraintTrees or named Constriants are added to the constraint tree, a record of that name is added to a set of names
+   * This method pretty prints that set of names.
+   */
+  public String getNamedNames()
+  {
+    StringBuilder builder = new StringBuilder();
+    int i=0;
+    String last = "";
+    for(String name:names)
+    {
+      if(i>=names.size()-1)
+      {
+        last = name;
+        break;
+      }
+      builder.append(name);
+      if(names.size()>2)
+      {
+        builder.append(", ");
+      }
+      else builder.append(" ");
+      ++i;
+    }
+    if(names.size()>1)builder.append("and ");
+    builder.append(last);
+    return builder.toString();
+  }
+
+  /*
+   * Iterator method, override the method from the Iterable<Constraint> interface that all ConstraintVariables inherit from
+   * Iterates over all of the root's elements, then returns itself
+   */
+  public Iterator<ConstraintVariable> iterator()
+  {
+    final ConstraintTree myself = this;
+    return new Iterator<ConstraintVariable>()
+    {
+      ConstraintTree self;
+      boolean hasReturnedSelf;
+      Iterator<ConstraintVariable> iterator;
+      {
+        self = myself;
+        hasReturnedSelf = false;
+        if(self.getRoot()!=null)
+        {
+          iterator = self.getRoot().iterator();
+        }
+      }
+      public ConstraintVariable next()
+      {
+        if(iterator==null||!iterator.hasNext())
+        {
+          hasReturnedSelf = true;
+          return self;
+        }
+        else
+        {
+          return iterator.next();
+        }
+      }
+      public boolean hasNext()
+      {
+        return !hasReturnedSelf;
+      }
+      public void remove(){}
+    };
+  }
+
+  /*
+   * Mandatory type method for the SuperGenerator to distiguish easily between different ConstraintVariable types.
+   */
+  public String getType(){ return "complex"; }
+}
+
+class TraceConstraint
+{
+  ConstraintTree createNew()
+  {
+    TraceConstraint constraint =  new TraceConstraint();
+    for(UmpleVariable uv:this.getVariables())
+    {
+      constraint.addVariable(uv);
+    }
+    return constraint;
+  }
+
+  public ConstraintVariable addElement(ConstraintVariable aElement)
+  {
+    if(aElement instanceof ConstraintUnassignedName)
+    {
+      ConstraintUnassignedName variable = (ConstraintUnassignedName)aElement;
+      MethodParameter foundParameter = null;
+      for(UmpleVariable uv:getVariables())
+      {
+        if(uv.getName().equals(variable.getValue()))
+        {
+          foundParameter = new MethodParameter(uv.getName(),uv.getType(),uv.getModifier(),uv.getValue(),false);
+        }
+      }
+      if(foundParameter!=null)
+      {
+        aElement = new ConstraintMethodParameter(foundParameter);
+      }
+    }
+    return super.addElement(aElement);
+  }
+}
+
+class Precondition
+{
+  ConstraintTree createNew()
+  {
+    return new Precondition(method);
+  }
+
+  public ConstraintVariable addElement(ConstraintVariable aElement)
+  {
+    if(aElement instanceof ConstraintUnassignedName)
+    {
+      ConstraintUnassignedName name = (ConstraintUnassignedName)aElement;
+      MethodParameter foundParameter = null;
+      for(MethodParameter param:method.getMethodParameters())
+      {
+        if(param.getName().equals(name.getValue()))
+        {
+          foundParameter = param;
+          break;
+        }
+      }
+      if(foundParameter!=null)
+      {
+        aElement = new ConstraintMethodParameter(foundParameter);
+      }
+    }
+    return super.addElement(aElement);
+  }
+}
+
+class Postcondition
+{
+  ConstraintTree createNew()
+  {
+    return new Postcondition(method);
+  }
+  
+  public ConstraintVariable addElement(ConstraintVariable aElement)
+  {
+    if(aElement instanceof ConstraintUnassignedName)
+    {
+      ConstraintUnassignedName name = (ConstraintUnassignedName)aElement;
+      MethodParameter foundParameter = null;
+      for(MethodParameter param:method.getMethodParameters())
+      {
+        if(param.getName().equals(name.getValue()))
+        {
+          foundParameter = param;
+          break;
+        }
+      }
+      if(foundParameter!=null)
+      {
+        aElement = new ConstraintMethodParameter(foundParameter);
+      }
+    }
+    return super.addElement(aElement);
+  }
+}
+
+class ConstraintOperator
+{
+  /*
+   * Returns which kind of operator this is based on the number of operands it has.
+   */
+  public String getType(){ return numberOfSubConstraints()>0?numberOfSubConstraints()>1?"operatorTwo":"operatorOne":"operatorNone"; }
+
+  /*
+   * Carefully adds the operand on one side of the operator or the other, for example string literals are added in front, regardless of how they are arranged in the inputted constraint
+   * takes care of making sure cardinality calls the numberOf method, and if there is a number it puts it as the right operand(flipping ordinal operators)
+   */
+  public void addOperand(ConstraintVariable variable)
+  {
+    if(variable!=null)
+    {
+      if(variable instanceof ConstraintLiteral)
+      {
+        if(variable instanceof ConstraintNumberLiteral)
+        {
+          correctForPrimitive();
+          subConstraints.add(variable);
+        }
+        else if(numberOfSubConstraints()>0)
+        {
+          subConstraints.add(0,variable);
+        }
+        else
+        {
+          subConstraints.add(variable);
+        }
+        
+      }
+      else
+      {
+        if(numberOfSubConstraints()==0&&value.contains("cardinality"))
+        {
+          correctForCardinality(variable);
+        }
+        if(numberOfSubConstraints()==1&&getLeft() instanceof ConstraintNumberLiteral)
+        {
+          subConstraints.add(0,variable);
+          flip();
+        }
+        else
+        {
+          subConstraints.add(variable);
+        }
+      }
+    }
+  }
+
+  /*
+   * Tries to set associations so that they will use the numberOf method for the size.
+   * @param variable to the corrected
+   */
+  public void correctForCardinality(ConstraintVariable variable)
+  {
+    if(variable == null)
+    {
+      return;
+    }
+    else if((variable instanceof ConstraintAssociation)&&value.contains("cardinality"))
+    {
+      ((ConstraintAssociation)variable).setNumberOf(true);
+    }
+    else if((variable instanceof ConstraintTree)&&((ConstraintTree)variable).getNumberOfElements()>0)
+    {
+      correctForCardinality(((ConstraintTree)variable).getRoot());
+    }
+    else if(variable instanceof ConstraintOperator)
+    {
+      correctForCardinality(((ConstraintOperator)variable).getLeft());
+    }
+  }
+
+  /*
+   * switches the .equals() style method for the primitive == or !=
+   */
+  public void correctForPrimitive()
+  {
+    if("object==".equals(value))
+    {
+      value = "==";
+    }
+    else if("object!=".equals(value))
+    {
+      value = "!=";
+    }
+  }
+
+  /*
+   * If the number is being put on the right, when it was originally on the left, the operator has to flip, '>' to '<' and '<' to '>'
+   */
+  public void flip()
+  {
+    if(">=".equals(value))
+    {
+      value = "<=";
+    }
+    else if(">=".equals(value))
+    {
+      value = "<=";
+    }
+    else if("<".equals(value))
+    {
+      value = ">";
+    }
+    else if(">".equals(value))
+    {
+      value = "<";
+    }
+  }
+
+  /*
+   * If this method is reached by the negateVariable in ConstraintTree it means that the parent ConstraintTree doesn't have to display the negation, the operator will handle it instead.
+   */
+  public boolean negate()
+  {
+    if("object==".equals(value))
+    {
+      value = "object!=";
+    }
+    else if("object!=".equals(value))
+    {
+      value = "object==";
+    }
+    else if("==".equals(value))
+    {
+      value = "!=";
+    }
+    else if("!=".equals(value))
+    {
+      value = "==";
+    }
+    else if(">".equals(value))
+    {
+      value = "<=";
+    }
+    else if(">=".equals(value))
+    {
+      value = "<";
+    }
+    else if("<=".equals(value))
+    {
+      value = ">";
+    }
+    else if("<".equals(value))
+    {
+      value = ">=";
+    }
+    else if("cardinality==".equals(value))
+    {
+      value = "cardinality!=";
+    }
+    else if("cardinality!=".equals(value))
+    {
+      value = "cardinality==";
+    }
+    else if("cardinality>".equals(value))
+    {
+      value = "cardinality<=";
+    }
+    else if("cardinality>=".equals(value))
+    {
+      value = "cardinality<";
+    }
+    else if("cardinality<=".equals(value))
+    {
+      value = "cardinality>";
+    }
+    else if("cardinality<".equals(value))
+    {
+      value = "cardinality>=";
+    }
+    else if("&&".equals(value))
+    {
+      value = "||";
+      return false;
+    }
+    else if("||".equals(value))
+    {
+      value = "&&";
+      return false;
+    }
+    if(".".equals(value)||",".equals(value))
+    {
+      return false;
+    }
+    return true;
+  }
+
+  /*
+   * Iterators over the left, then this, then the right.
+   */
+  public Iterator<ConstraintVariable> iterator()
+  {
+    final ConstraintVariable myself = this;
+    return new Iterator<ConstraintVariable>()
+    {
+      boolean hasReturnedSelf;
+      Iterator<ConstraintVariable> currentIterator;
+      ConstraintVariable self;
+      {
+        hasReturnedSelf = false;
+        self = myself;
+        if(getLeft()!=null)
+        {
+          currentIterator = getLeft().iterator();
+        }
+      }
+
+      public ConstraintVariable next()
+      {
+        if(currentIterator == null||!currentIterator.hasNext())
+        {
+          if(getRight()!=null&&!hasReturnedSelf)
+          {
+            currentIterator = getRight().iterator();
+          }
+          else
+          {
+            currentIterator = null;
+          }
+          hasReturnedSelf = true;
+          return self;
+        }
+        else
+        {
+          return currentIterator.next();
+        }
+      }
+      public boolean hasNext()
+      {
+        return (currentIterator!=null&&currentIterator.hasNext())||!hasReturnedSelf;
+      }
+      public void remove(){}
+    };
+  }
+}
+
+class ConstraintAttribute
+{
+  String getName()
+  {
+    return attribute==null?null:attribute.getName();
+  }
+  /*
+   * A method for conveniently getting the contained attribute's container class.
+   */
+  UmpleClassifier retrieveClassifier(){
+    UmpleClass containerClass = attribute.getUmpleClass();
+    if(containerClass==null)
+    {
+      UmpleTrait containerTrait = attribute.getUmpleTrait();
+      return containerTrait;
+    }
+    else
+    {
+      return containerClass;
+    }
+  }
+  public String getType(){ return getAttribute().getModifier().contains("internal")?"name":"attribute"; }
+}
+
+class ConstraintLiteral
+{
+  public String getType(){ return "literal"; }
+}
+
+class ConstraintUnassignedName
+{
+  String getName()
+  {
+    return getValue();
+  }
+  public String getType(){ return "name"; }
+}
+
+class ConstraintAssociation
+{
+  String getName()
+  {
+    return association==null?null:association.getName();
+  }
+  /*
+   * A method for conveniently getting the contained association's container class.
+   */
+  UmpleClassifier retrieveClassifier(){
+    UmpleClass containerClass = association.getUmpleClass();
+    if(containerClass==null)
+    {
+      UmpleTrait containerTrait = association.getUmpleTrait();
+      return containerTrait;
+    }
+    else
+    {
+      return containerClass;
+    }
+  }
+  public String getType(){ return numberOf?"associationNumberOf":index==-1?"associationList":"associationGet"; }
+}
+
+class ConstraintMethodParameter
+{
+  String getName()
+  {
+    return parameter==null?"":parameter.getName();
+  }
+  public String getType(){ return "method parameter"; }
+}
+
+external interface Iterable<ConstraintVariable> {}
+class ConstraintVariable
+{
+  isA "Iterable<ConstraintVariable>";
+  depend java.util.Iterator;
+  abstract;
+  String getValue(CodeTranslator gen){
+    return gen.translate(getType(),this);
+  }
+  UmpleClassifier retrieveClassifier(){
+    return null;
+  }
+  public abstract String getType();
+
+  /*
+   * base implementation of the iterator method, it just returns this. This will be overridden by the ConstraintTree and ConstraintOperator classes, as they are the only ones with actual sub constraints to return
+   */
+  public Iterator<ConstraintVariable> iterator()
+  {
+    final ConstraintVariable myself = this;
+    return new Iterator<ConstraintVariable>()
+    {
+      boolean hasReturned;
+      ConstraintVariable self;
+      {
+        hasReturned = false;
+        self = myself;
+      }
+      public ConstraintVariable next()
+      {
+        if(hasReturned)
+        {
+          return null;
+        }
+        else
+        {
+          hasReturned = true;
+          return self;
+        }
+      }
+      public boolean hasNext()
+      {
+        return !hasReturned;
+      }
+      public void remove(){}
+    };
+  }
+}
+
+class ConstraintState
+{
+  String getName()
+  {
+    return state==null?null:state.getName();
+  }
+  public String getType() { return "state"; }
+}
+
+class ConstraintStateMachine
+{
+  String getName()
+  {
+    return stateMachine==null?null:stateMachine.getName();
+  }
+  public String getType(){ return "statemachine"; }
 }
 
 /*

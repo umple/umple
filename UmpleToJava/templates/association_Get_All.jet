@@ -9,7 +9,9 @@
       continue;
     }
 
-	List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
+    gen.setParameterConstraintName(av.getName());
+
+    List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
 
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
@@ -44,4 +46,5 @@
       %>UNABLE TO UNDERSAND association variable (see association_Get_All.jet)<%
     }
  }
+ gen.setParameterConstraintName("");
 %>

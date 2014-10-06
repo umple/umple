@@ -209,65 +209,166 @@ class MethodParameter
 }
 
 /*
- * Under Development --> commited code needs Specs, Andrew and Miguel not happy!
+ * ConstraintVariables encapsulate that data of one element in a ConstraintTree, making up the nodes of that tree.
+ * For example: a<3
+ *     has the structure:   ConstraintTree
+ *                          ConstraintOperator(<)
+ *                            /            \
+ *                    ConstraintTree     ConstraintNumberLiteral(3)
+ *               ConstraintAttribute(a)
+ *     where all the "Constraint" classes inherit from ConstraintVariable
  */
-class ConstraintVariable{
-  type;//NOT USED: One order of parsing list each type of Umple Variable (Including the Constrained Variable).
-  value;
-  1 -> 0..1 Constraint subConstraint;
+class ConstraintVariable
+{
+  /*
+   * ConstraintTrees are a redundant class that are necessary because of lone constraints, i.e. [true] has to be handled, and does not contain an operator
+   * If lone constraints didn't exist then the ConstraintTree class could be condensed into ConstraintOperator. One nice religation of responsibilities is that ConstraintTrees take care of the ! and () symbols, leaving the ConstraintOperator class to be more pure
+   */
+  class ConstraintTree
+  {
+    depend cruise.umple.compiler.*;
+    depend java.util.*;
 
-  boolean isAttribute = {!"SYNTAX".equals(type)&&!"OPERATOR".equals(type)};
-  boolean isOperator = {"OPERATOR".equals(type)};
-  boolean isAssociation = false;
-  Integer index = -1;
-  boolean isPrimitive = true;
-  boolean isStateMachine = false;
-  boolean isState = false;
-  boolean isNotPrimitive = { !isPrimitive };
-  boolean isNumeric = {"integer".equals(type.toLowerCase())||
-    "float".equals(type.toLowerCase())||
-     "double".equals(type.toLowerCase())};
-  UmpleVariable foundAttribute = null;
-  State state = null;
-  StateMachine stateMachine = null;
+    ConstraintVariable root = null;
+    ConstraintOperator requestor = null;
+    TreeSet<String> names = new TreeSet<String>();
+
+    boolean shouldDisplayBrackets = false;
+    boolean displayBrackets  = { shouldDisplayBrackets||(displayNegation&&numberOfElements>1) }
+    boolean displayNegation = false;
+
+    int numberOfElements = 0;
+
+    key { root }
+
+    /*
+     * TraceConstraint objects ensure that the attribute being traced will be treated as a parameter and not a member variable
+     */
+    class TraceConstraint
+    {
+      1 -> * UmpleVariable variables;
+    }
+    /*
+     * The Preconditions are constraints on methods, restricting the method so that it does not process if the constraint is not satisfied.
+     */
+    class Precondition
+    {
+      * -> 1 Method ; // The method precondition belongs to
+    }
+    /*
+     * The Preconditions are constraints on methods, throughing an exception if the constraint is not sastisfied after the method has computed.
+     */
+    class Postcondition
+    {
+      * -> 1 Method ; // The method postcondition belongs to
+      lazy Position position;
+    }
+  }
+
+  /*
+   * ConstraintOperators encapsulate the branching of the constraint tree, where the branches occur at the operators, for example
+   * [a<3&&b!="loved"]
+   * the basic structure will look like
+   *                                        ConstraintOperator(&&)
+   *                                      /                        \
+   *              ConstraintOperator(<)                                ConstraintOperator(!=)
+   *                  /            \                                      /                 \
+   *     ConstraintAttribute(a) ConstraintNumberLiteral(3)   ConstraintAttribute(b)  ConstraintLiteral("loved")
+   * With the extra complication that ConstraintTrees parent everything that are not ConstraintLiterals
+   */
+  class ConstraintOperator
+  {
+    value;
+    1 -> 0..2 ConstraintVariable subConstraints;
+    ConstraintVariable left = { numberOfSubConstraints()>0?getSubConstraint(0):null }
+    ConstraintVariable right = { numberOfSubConstraints()>1?getSubConstraint(1):null }
+    key { left, right, value }
+  }
+
+  /*
+   * ConstraintLiterals encapulate raw data literals, such as strings, numbers and booleans, that do not have an model variable associated.
+   * This will be a leaf in the constraint tree.
+   */
+  class ConstraintLiteral
+  {
+    value;
+    /* Number literals are the special case of literals, where the value they contained is garanteed to be a number. */
+    class ConstraintNumberLiteral
+    {
+    }
+    key { value }
+  }
   
-  attributeType = { (getFoundAttribute() == null) ? null : getFoundAttribute().getType() }
+  /*
+   * This super class contains all subclasses that have elements with names
+   */
+  class ConstraintNamed
+  {
+    abstract;
+    /*
+     * The reason d'etre of this super class, it ensures that subclasses have getName methods
+     */
+    public abstract String getName();
 
-  key { value, subConstraint }
+    /*
+     * ConstraintAttributes encapsulate the attribute for the constraint, this will be a leaf on the constraint tree
+     */
+    class ConstraintAttribute
+    {
+      Attribute attribute;
+      index = -1;
+      key { attribute }
+    }
 
-}
+    /*
+     * ConstraintAttributes encapsulate the association for the constraint, this will be a leaf on the constraint tree.
+     */
+    class ConstraintAssociation
+    {
+      AssociationVariable association;
+      index = -1;
+      numberOf = false;
+      key { association }
+    }
 
-/*
- * The Constraint object related to Umple Classes
- */
-class Constraint {
-  depend cruise.umple.util.*;
-  isA CodeBlock;
-  
-  format = "allParameterClosed";
-  String inject = "";
-  CodeTranslator gen = null;
-  boolean negated = false;
-  String code = { StringFormatter.format(getGen().translate((getNegated()?"Not":"")+getFormat(),this),getInject()) };
-  ConstraintVariable[] expressions;  
-}
+    /*
+     * ConstraintMethodParameters are there for Preconditions and Postconditions, they encapsulate the MethodParameter that the constraint is refering to
+     * This will be a leaf on the constraint tree.
+     */
+    class ConstraintMethodParameter
+    {
+      MethodParameter parameter;
+      key { parameter }
+    }
 
-/*
- * The Precondition object (special Constraint) related to Umple Classes
- */
-class Precondition{  
-  isA Constraint;
-   * -> 1 Method ; // The method precondition belongs to
-   
-}
+    /*
+     * ConstraintUnassignedNames are names that were not recognized by the analysis, for example ConstraintMethodParameters are originally ConstraintUnassignedNames, 
+     * but are caught when they are added to the Precondition or Postcondition and a ConstraintMethodParameter is added instead of the ConstraintUnassignedName.
+     */
+    class ConstraintUnassignedName
+    {
+      value;
+      key { value }
+    }
 
-/*
- * The Postcondition object (special Constraint) related to Umple Classes
- */
-class Postcondition{  
-  isA Constraint;
-   * -> 1 Method ; // The method postcondition belongs to
-   lazy Position position;
+    /*
+     * ConstraintStates encapsulate the state data in a statemachine expression such as [sm is in state st], this is a leaf in the constraint tree/
+     */
+    class ConstraintState
+    {
+      State state;
+      key { state }
+    }
+
+    /*
+     * ConstraintStateMachines encapsulate the statemachine data in a statemachine expression such as [sm is in state st], this is a leaf in the constraint tree.
+     */
+    class ConstraintStateMachine
+    {
+      StateMachine stateMachine;
+      key { stateMachine }
+    }
+  }
 }
 
 /*
@@ -293,8 +394,9 @@ class CodeInjection
   type;
   operation;
   CodeBlock snippet;
+  lazy constraintParameterName;
   * -> 1 UmpleClassifier;
-  1 -> 0..1 Constraint;
+  1 -> 0..1 ConstraintTree;
   lazy Position position;
   Boolean isInternal = false;
 }
@@ -320,6 +422,7 @@ class Key
  */
 class UmpleClassifier
 {
+  abstract;
   isA UmpleElement;
   // The methods contained within the Umple Classifier.
   1 -> 0..* Method;
@@ -386,7 +489,7 @@ class UmpleClass
   1 -> 0..* Postcondition;
 
   // The possible Constraints related to the Umple Class
-  1 -> 0..* Constraint;
+  1 -> 0..* ConstraintTree;
 
   // The Umple Class's super class (if there is one).
   * subclasses -- 0..1 UmpleClass extendsClass;
@@ -407,7 +510,7 @@ class UmpleClass
 
   // The comments associated with the Umple Class (such as the Javadoc above it).
   1 -> * Comment;
-  
+
   UmpleModel sourceModel;
 
   //This is used to assign inheritance parameters.
@@ -464,7 +567,7 @@ class UmpleTrait {
   1 -> 0..* Postcondition;
 
   // The possible Constraints related to the Umple Trait
-  1 -> 0..* Constraint;
+  1 -> 0..* ConstraintTree;
   
   // The Umple Trait's super Traits (if there are ones).
   * subTraits -- 0..* UmpleTrait extendsTraits;
@@ -479,7 +582,7 @@ class UmpleTrait {
 
   // The comments associated with the Umple Trait (such as the Javadoc above it).
   1 -> * Comment;
-  
+
   UmpleModel sourceModel;
   
   //The template parameters which are specified when traits are defined.
