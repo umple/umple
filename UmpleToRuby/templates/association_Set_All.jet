@@ -219,9 +219,13 @@
     {
       includeFile = "association_SetOneToAtMostN.jet";
     }
-    else if (av.isOnlyOne() && relatedAssociation.isMany() && !(av.isMandatory() && !av.isOne()))
+    else if (av.isOnlyOne() && relatedAssociation.isMany() && !(av.isMandatory() && !av.isOne()) && !(uClass instanceof AssociationClass))
     {
       includeFile = "association_SetOneToMany.jet";
+    }
+    else if (av.isOnlyOne() && relatedAssociation.isMany() && !(av.isMandatory() && !av.isOne()) && (uClass instanceof AssociationClass))
+    {
+      includeFile = "association_SetOneToManyAssociationClass.jet";
     }
     else if (av.isOptionalOne() && relatedAssociation.isOptionalN())
     {
@@ -375,6 +379,10 @@
     else if (includeFile == "association_SetOneToMany.jet")
     {
       %><%@ include file="association_SetOneToMany.jet"%><%
+    }
+    else if (includeFile == "association_SetOneToManyAssociationClass.jet")
+    {
+      %><%@ include file="association_SetOneToManyAssociationClass.jet"%><%
     }
     else if (includeFile == "association_SetOneToAtMostN.jet")
     {

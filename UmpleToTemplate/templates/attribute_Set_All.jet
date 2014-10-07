@@ -45,5 +45,45 @@
       %><%@ include file="attribute_Set.jet" %><%
     }
   }
+
+  if(uClass.getExtendsClass()!=null)
+  {
+    for(Attribute av:uClass.getExtendsClass().getAttributes())
+    {
+      if (av.isConstant() || av.getIsAutounique() || "internal".equals(av.getModifier()) || av.getIsDerived())
+      {
+        continue;
+      }
+
+      List<TraceItem> traceItems = av.getTraced("setMethod", uClass);
+
+      gen.setParameterConstraintName(av.getName());
+
+      String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
+      String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
+
+//      String customResetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("resetMethod",av)));
+//      String customResetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("resetMethod",av)));
+      
+      String customAddPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("addMethod",av)));
+      String customAddPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("addMethod",av)));
+
+//      String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("removeMethod",av)));
+//      String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("removeMethod",av)));
+
+      if (av.getModifier().equals("defaulted")&&(customSetPrefixCode!=null&&customSetPostfixCode!=null)&&customSetPrefixCode.matches("[\\s]*if.*\\n[\\s]*.*"))
+      {
+        %><%@ include file="attribute_SetDefaulted_subclass.jet" %><%
+      }
+      else if (av.getIsList()&&(customAddPrefixCode!=null&&customAddPostfixCode!=null)&&customAddPrefixCode.matches("[\\s]*if.*\\n[\\s]*.*"))
+      {
+        %><%@ include file="attribute_SetMany_subclass.jet" %><%
+      }
+      else if(customSetPrefixCode!=null&&customSetPostfixCode!=null&&customSetPrefixCode.matches("[\\s]*if.*\\n[\\s]*.*"))
+      {
+        %><%@ include file="attribute_Set_subclass.jet" %><%
+      }    
+    }
+  }
   gen.setParameterConstraintName("");
 %>

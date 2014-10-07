@@ -779,39 +779,43 @@ class ConstraintNameNameAnalyzer
     UmpleClassifier uClass = null;
     if(cv.getRoot() instanceof ConstraintOperator)
     {
-      ConstraintVariable left = ((ConstraintOperator)cv.getRoot()).getLeft();
-      if(left == null)
+      ConstraintOperator operator = ((ConstraintOperator)cv.getRoot());
+      for(int i=operator.numberOfSubConstraints()-1;i>=0;--i)
       {
-        if(left instanceof ConstraintAttribute )
+        ConstraintVariable left = operator.getSubConstraint(i);
+        if(left != null)
         {
-          ConstraintAttribute previouslyFoundAttribute = (ConstraintAttribute)left;
-          uClass = previouslyFoundAttribute.getAttribute().getUmpleClass();
-          if(uClass==null)
+          if(left instanceof ConstraintAttribute )
           {
-            uClass = previouslyFoundAttribute.getAttribute().getUmpleTrait();
-            UmpleModel model = ((UmpleTrait)uClass).getSourceModel();
-            uClass = model.getUmpleClass(previouslyFoundAttribute.getAttribute().getType());
+            ConstraintAttribute previouslyFoundAttribute = (ConstraintAttribute)left;
+            uClass = previouslyFoundAttribute.getAttribute().getUmpleClass();
+            if(uClass==null)
+            {
+              uClass = previouslyFoundAttribute.getAttribute().getUmpleTrait();
+              UmpleModel model = ((UmpleTrait)uClass).getSourceModel();
+              uClass = model.getUmpleClass(previouslyFoundAttribute.getAttribute().getType());
+            }
+            else
+            {
+              UmpleModel model = ((UmpleClass)uClass).getSourceModel();
+              uClass = model.getUmpleClass(previouslyFoundAttribute.getAttribute().getType());
+            }
           }
-          else
+          else if(left instanceof ConstraintAssociation )
           {
-            UmpleModel model = ((UmpleClass)uClass).getSourceModel();
-            uClass = model.getUmpleClass(previouslyFoundAttribute.getAttribute().getType());
-          }
-        }
-        else if(left instanceof ConstraintAssociation )
-        {
-          ConstraintAssociation previouslyFoundAssociation = (ConstraintAssociation)left;
-          uClass = previouslyFoundAssociation.getAssociation().getUmpleClass();
-          if(uClass==null)
-          {
-            uClass = previouslyFoundAssociation.getAssociation().getUmpleTrait();
-            UmpleModel model = ((UmpleTrait)uClass).getSourceModel();
-            uClass = model.getUmpleClass(previouslyFoundAssociation.getAssociation().getType());
-          }
-          else
-          {
-            UmpleModel model = ((UmpleClass)uClass).getSourceModel();
-            uClass = model.getUmpleClass(previouslyFoundAssociation.getAssociation().getType());
+            ConstraintAssociation previouslyFoundAssociation = (ConstraintAssociation)left;
+            uClass = previouslyFoundAssociation.getAssociation().getUmpleClass();
+            if(uClass==null)
+            {
+              uClass = previouslyFoundAssociation.getAssociation().getUmpleTrait();
+              UmpleModel model = ((UmpleTrait)uClass).getSourceModel();
+              uClass = model.getUmpleClass(previouslyFoundAssociation.getAssociation().getType());
+            }
+            else
+            {
+              UmpleModel model = ((UmpleClass)uClass).getSourceModel();
+              uClass = model.getUmpleClass(previouslyFoundAssociation.getAssociation().getType());
+            }
           }
         }
       }
