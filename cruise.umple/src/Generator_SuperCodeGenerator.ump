@@ -105,7 +105,7 @@ class SuperCodeGenerator {
       String methodName = "getMethod";
       String suffix = "("+(attribute.getIndex()!=-1?(""+attribute.getIndex()):"")+")";
       String prefix = ConstraintLookupMap.get("accessor");
-      if(constraintWithinConstructor||attribute.getName().equals(parameterConstraintName))
+      if((constraintWithinConstructor||attribute.getName().equals(parameterConstraintName))&&attribute.getIndex()==-1)
       {
         methodName = "parameterOne";
         suffix = "";

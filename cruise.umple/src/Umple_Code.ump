@@ -1992,7 +1992,7 @@ class ConstraintOperator
     }
     else if(variable instanceof ConstraintOperator)
     {
-      correctForCardinality(((ConstraintOperator)variable).getLeft());
+      correctForCardinality(((ConstraintOperator)variable).getRight());
     }
   }
 
