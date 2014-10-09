@@ -7,7 +7,7 @@ public boolean umplify(List<File> srcFiles) {
     }
     // Generates a MasterFile if we have processed more than one file
    FileHelper.writeMasterFile(filesUmplified, outputFolder, needSubDirectories);
-    return true;
+   return true;
 }
 
 public boolean umplifyElement(File file){
@@ -52,7 +52,7 @@ public boolean umplifyUmple(File file)
 			outputModel.addUmpleClass(uClass);
 			filesUmplified.add(umpleFile.getSimpleFileName());
 			// generate Umple Code
-			FileHelper.writeFile(outputModel, outputFolder,needSubDirectories,testMode);
+			FileHelper.writeFile(outputModel, outputFolder,needSubDirectories,testMode, splitModel);
 		} catch (IOException e) {
 			logger.error("IOException in Umplificator.umplifyUmpleFile");
 			logger.error(e.getStackTrace());
@@ -115,7 +115,7 @@ public boolean umplifyJava(File file)
 		    }
 		    filesUmplified.add(umpleFile.getSimpleFileName());
 			// generate Umple Code
-			FileHelper.writeFile(outputModel, outputFolder,needSubDirectories,testMode);
+			FileHelper.writeFile(outputModel, outputFolder,needSubDirectories,testMode,splitModel);
 		} catch (IOException e) {
 			logger.error("IOso Exception in Umplificator.umplifyUmpleFile");
 			logger.error(e.getStackTrace());

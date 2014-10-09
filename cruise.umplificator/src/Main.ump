@@ -36,6 +36,7 @@ class UmplificatorMain {
 			 if (level != -1) { umplificator.setCurrentLevel(RefactoringLevel.values()[level]);}
 			 if (optset.has("path")) { umplificator.setOutputFolder((String)optset.valueOf("path")); }
 			umplificator.setNeedSubDirectories(optset.has("dir"));
+			umplificator.setSplitModel(optset.has("splitModel"));			
 			String console = umplificator.umplify(inputFiles) ? "Success!":"Error" ;
 			System.out.println(console);
 		 }
@@ -46,8 +47,9 @@ class UmplificatorMain {
 	    optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
 	    optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
 	    optparser.accepts("dir", "If present, subdirectories based on namespaces will be generated");
+	    optparser.accepts("splitModel", "If present, two ouput files will be created for each input class. One for the model one for the rest");
 	    optparser.accepts("path", "The output folder path").withRequiredArg();
-        optparser.accepts( "level","The level of Refactoring").withRequiredArg().ofType( Integer.class );
+        optparser.accepts("level","The level of Refactoring").withRequiredArg().ofType( Integer.class );
    	    return optparser;
     }
     
@@ -103,9 +105,5 @@ class UmplificatorMain {
         e.printStackTrace();
       }
   }
-	
-    //after constructor {
-    //	PropertyConfigurator.configure(getClass().getResource("/log4j.properties"));
-  	//}
 
 } 

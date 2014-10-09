@@ -10,6 +10,7 @@ depend cruise.umplificator.generator.UmpleToUmpleGenerator;
 depend cruise.umple.compiler.exceptions.UmpleCompilerException;
 
 public static final String [] EXTENSIONS = new String [] {".java",".ump"};
+public static final String SecondaryFileName = "_code" ;
 public static final String separator = System.getProperty("line.separator");
 
  public static  List<File> getListOfFilesFromPath(String path, List<File> inputFiles){
@@ -56,7 +57,7 @@ public static void printFilesToUmplify(List<File> srcFiles){
 	logger.info(outMessage.toString());
 }
   
-   public static  void writeFile(UmpleModel model, String outputFolder, boolean createSubdirectories, boolean testMode){
+  public static  void writeFile(UmpleModel model, String outputFolder, boolean createSubdirectories, boolean testMode, boolean splitModel){
 	   if (testMode==false) {
 		   try
 		   {
@@ -69,17 +70,21 @@ public static void printFilesToUmplify(List<File> srcFiles){
 				   path = outputFolder + File.separator + subDirectories +File.separator;
 			   }
 			   else{
-			    path = outputFolder + File.separator;
+				   path = outputFolder + File.separator;
 			   }
-			   String filename = path + model.getUmpleFile().getSimpleFileName() + EXTENSIONS[1];
-			   File file = new File(path);
-			   file.mkdirs();
-			   BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-			   bw.write(model.getCode());
-			   bw.flush();
-			   bw.close();
-			   logger.debug("--Output--");
-			   logger.debug(model.getCode());
+			   String filenameModel = path + model.getUmpleFile().getSimpleFileName() + EXTENSIONS[1];
+			   String filenameNoModel = path + model.getUmpleFile().getSimpleFileName() + SecondaryFileName  + EXTENSIONS[1];
+			   if (splitModel)
+			   {
+				   // Create 2 files, one for model, one for extracode (as in umple style)
+				   createFile( path,filenameModel,generator.getOutputModelCode());
+				   createFile( path,filenameNoModel,generator.getOutputExtraCode());		   
+			   }
+			   else
+			   {
+				   createFile( path,filenameModel,generator.getOutputAllCode());		
+			   }
+			   logger.debug("--File has been created for" +filenameModel +"--");
 		   }
 		   catch (Exception e)
 		   {
@@ -87,7 +92,25 @@ public static void printFilesToUmplify(List<File> srcFiles){
 		   }
 	   }
    }
-  
+
+
+   private static void createFile(String path, String filename, String content){
+	   try
+	   {
+		   File file = new File(path);
+		   file.mkdirs();
+		   BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+		   bw.write(content);
+		   bw.flush();
+		   bw.close();
+	   }
+	   catch (Exception e)
+	   {	   
+		   logger.error("Error creating file");
+		   throw new UmpleCompilerException("There was a problem with generating UmpleSelf code." + e, e);
+	   }
+   }
+
    public static void writeMasterFile(List<String> filenames, String outputFolder, boolean needSubDirectories){
 	   if (needSubDirectories) { writePerPackageMasterFile(filenames, outputFolder);}
 	   else { writeSingleMasterFile(filenames, outputFolder); }

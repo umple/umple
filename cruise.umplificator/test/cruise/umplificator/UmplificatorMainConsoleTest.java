@@ -28,5 +28,23 @@ public class UmplificatorMainConsoleTest {
 			Assert.fail();
 		}
 	}
+	
+
+	@Test
+	public void MainOneUmpleFileAsInputTwoAsOutput() {
+	String[] args = new String[] {"-splitModel testclass.ump"};
+		
+		try {
+			BufferedWriter out = new BufferedWriter(new FileWriter("testclass.ump"));
+		    out.write("class Testclass {}");
+		    out.close();
+		    
+		    UmplificatorMain.main(args);
+		    
+		    new File("testclass.ump").delete();
+		} catch (IOException e) {
+			Assert.fail();
+		}
+	}
 
 }
