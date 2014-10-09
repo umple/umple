@@ -18,6 +18,7 @@ class Umplificator {
 	lazy String [] filesUmplified;
 	// if true, umplificator creates subdirectories based on the namespace of the model
 	lazy Boolean needSubDirectories;
+	lazy Boolean splitModel;
 	Boolean testMode=false;
 
 	public enum RefactoringLevel
