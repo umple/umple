@@ -1727,6 +1727,11 @@ public class UmpleParserTest
     Assert.assertEquals("location", key.getMember(1));
     Assert.assertEquals(true, key.getIsInternal());
   }
+  
+  @Test
+  public void AssociationClassKeyNoWarnings() {
+    assertNoWarningsParse("010_associationClassProvidedCompleteKey.ump");
+  }
 
   @Test
   public void inlineComments()

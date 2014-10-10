@@ -1,0 +1,14 @@
+class UphillRace{
+	division;
+}
+
+class UphillRacer{ 
+	name; 
+}
+
+associationClass UphillRaceEntry {
+	Integer number;
+	* UphillRacer racer;
+	* UphillRace race;
+	key {racer, race, number}
+}

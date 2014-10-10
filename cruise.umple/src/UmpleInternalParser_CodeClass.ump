@@ -866,6 +866,10 @@ class UmpleInternalParser
       }
     }
 
+    if(classToken.is("associationClassDefinition")) {
+      analyzeAllAssociations(classToken);
+    }
+
     analyzeAllTokens(classToken,aClass);
     return aClass;
   }
@@ -1114,7 +1118,6 @@ class UmpleInternalParser
         return;
     }
     analyzeClass(classToken);
-    analyzeAllAssociations(classToken);
   }
 
    private boolean verifyClassesInUse()
@@ -2341,7 +2344,22 @@ class UmpleInternalParser
               tokenMatch = true;
             }      
           }
-        }      
+        }
+
+        if(aClass instanceof AssociationClass) {
+          AssociationClass assocClass = (AssociationClass) aClass;
+          String firstEndName = assocClass.getAssociatedTo(0).getEnd(1).getRoleName();
+          String secondEndName = assocClass.getAssociatedTo(1).getEnd(1).getRoleName();
+          
+          // tokenVal with a lower-case first letter.
+          String firstLower = Character.toLowerCase(tokenVal.charAt(0)) + (tokenVal.length() > 1 ? tokenVal.substring(1) : "");
+          
+          if(secondEndName.equals(firstLower) || firstEndName.equals(firstLower))
+          {
+            finalTokenVal = firstLower;
+            tokenMatch = true;
+          }
+        }
 
         if(!tokenMatch)
         {
