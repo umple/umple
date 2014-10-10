@@ -1,0 +1,30 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public function <%=gen.translate("setMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
+  {
+    $wasSet = false;
+    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
+    if ($<%=gen.translate("parameterOne",av)%>.nil?)
+    {
+      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
+      return wasSet;
+    }
+
+    $<%=gen.translate("parameterExisting",av)%> = $this-><%=gen.translate("associationOne",av)%>;
+    $this-><%=gen.translate("associationOne",av)%> = $<%=gen.translate("parameterOne",av)%>;
+    if (!$<%=gen.translate("parameterExisting",av)%>->is_null() && !$<%=gen.translate("parameterExisting",av)%>->equals($<%=gen.translate("parameterOne",av)%>))
+    {
+      $<%=gen.translate("parameterExisting",av)%>-><%=gen.relatedTranslate("removeMethod",av)%>($this);
+    }
+    if !$this-><%=gen.translate("associationOne",av)%>-><%=gen.relatedTranslate("addMethod",av)%>($this)
+    {
+      $this-><%=gen.translate("associationOne",av)%> = $<%=gen.translate("parameterExisting",av)%>;
+      $wasSet = false;
+    }
+    else
+    {
+      $wasSet = true;
+    }
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
+    return $wasSet;
+  end
+

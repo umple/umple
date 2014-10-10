@@ -708,6 +708,7 @@ class Attribute
 
   after constructor { codeblock.setCode(normalizeValue(aType,aValue)); }
   before setType { codeblock.setCode(normalizeValue(aType,getValue())); }
+  after setType { setValue(getValue()); }
 
   // Specifies whether or not the method parameter is lazy.
   Boolean isLazy = false;

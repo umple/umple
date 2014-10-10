@@ -1424,13 +1424,6 @@ class Attribute
     return "".equals(possibleValue) ? super.getValue() : possibleValue;
   }
 
-  public boolean setType(String aType)
-  {
-    boolean answer = super.setType(aType);
-    setValue(getValue());
-    return answer;
-  }
-
   public boolean setValue(String aValue)
   {
     aValue = normalizeValue(getType(),aValue);
