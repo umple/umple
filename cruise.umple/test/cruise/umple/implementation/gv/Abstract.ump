@@ -1,0 +1,12 @@
+generate GvClassDiagram;
+namespace example;
+
+class X {
+  abstract;
+  a;
+}
+
+class Y {
+  isA X;
+  b;
+}

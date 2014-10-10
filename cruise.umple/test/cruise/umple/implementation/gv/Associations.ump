@@ -1,0 +1,25 @@
+generate GvClassDiagram;
+namespace example;
+
+// Example code illustrating various
+// kinds of associations
+class A {}
+
+// Class with inline association having role name
+class B {
+  1 -- * A endTwo; 
+}
+
+// Class with reflexive association
+class C {
+  0..1 -- * C;
+  1 -- 0..1 D; // D is external
+}
+
+// Independently defined and directed association
+association {
+  0..1 A -> * C;
+}
+
+// Reference to a class defined elsewhere
+external D {}
