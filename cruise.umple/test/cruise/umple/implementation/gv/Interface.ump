@@ -1,0 +1,37 @@
+generate GvClassDiagram;
+namespace example;
+
+interface RegisterCapable
+{
+  depend school.util.*;
+  
+  boolean registerForCourse(Course aCourse);
+}
+
+class Person {
+  name;
+}
+
+
+class CorporateClient {
+  isA RegisterCapable;
+  boolean registerForCourse(Course aCourse) {
+     // write code here
+  }
+  0..1 <- * Person employees;
+}
+
+class IndividualStudent {
+  isA Person, RegisterCapable;
+  boolean registerForCourse(Course aCourse) {
+     // write code here
+  }
+}
+
+
+class Course
+{
+  name;
+  description;
+  * -- * Person registrants;
+}
