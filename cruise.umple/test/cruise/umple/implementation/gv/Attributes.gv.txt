@@ -1,0 +1,12 @@
+digraph "Attributes" {
+  size="80,10"
+  rankdir="BT"
+  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+
+  // Class: Student
+  "Student" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    Student    </td></tr><hr/><tr><td align="left" href="" title="String name&#13;">  name : String  </td></tr><tr><td align="left" href="" title="String studentId&#13;Student Id&#13;">  studentId : String  </td></tr><tr><td align="left" href="" title="Phone[] phoneNumbers&#13;">  phoneNumbers : Phone[]  </td></tr></table>>,
+   tooltip="class Student
+"];
+
+  // All associations
+}

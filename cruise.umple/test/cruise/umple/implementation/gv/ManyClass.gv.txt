@@ -1,0 +1,15 @@
+digraph "ManyClass" {
+  size="80,10"
+  rankdir="BT"
+  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+
+  // Class: Student1
+  "Student1" [shape=record, label="{Student1|name\ :\ String\l\
+studentId\ :\ String\l}",
+   tooltip="class Student1
+"];
+
+  // Class: Student2
+  "Student2" [shape=record, label="{Student2}",
+   tooltip="class Student2
+"];

@@ -268,7 +268,7 @@ public class TemplateTest
     // System.out.println(actual);
     SampleFileWriter.assertEitherFileContent(expected1, expected2, actual);
   }
-
+  
   public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className)
   {
     assertUmpleTemplateFor(umpleFile, codeFile, className, true, true);
@@ -279,6 +279,11 @@ public class TemplateTest
     assertUmpleTemplateFor(umpleFile, codeFile, className, false, true);
   }
 
+  public void assertUmplePartialTemplateFor(String umpleFile, String codeFile)
+  {
+    assertUmplePartialTemplateFor(umpleFile, codeFile, null);   
+  }
+  
   public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className, boolean isFullMatch)
   {
     assertUmpleTemplateFor(umpleFile, codeFile, className, isFullMatch, true);

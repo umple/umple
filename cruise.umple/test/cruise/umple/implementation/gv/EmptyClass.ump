@@ -1,0 +1,6 @@
+generate GvClassDiagram;
+namespace example;
+
+class Empty 
+{
+}
