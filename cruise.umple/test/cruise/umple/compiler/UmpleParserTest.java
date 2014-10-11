@@ -1734,6 +1734,12 @@ public class UmpleParserTest
   }
 
   @Test
+  public void AssociationClassIncompletKeyWarning()
+  {   
+    assertHasWarningsParse("010_associationClassProvidedIncompleteKey.ump", 1011);
+  }
+  
+  @Test
   public void inlineComments()
   {
     assertParse("013_inlineComments.ump");

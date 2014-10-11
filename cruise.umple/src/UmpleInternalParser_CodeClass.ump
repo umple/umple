@@ -2346,18 +2346,22 @@ class UmpleInternalParser
           }
         }
 
-        if(aClass instanceof AssociationClass) {
+        if(aClass instanceof AssociationClass) 
+        {
           AssociationClass assocClass = (AssociationClass) aClass;
-          String firstEndName = assocClass.getAssociatedTo(0).getEnd(1).getRoleName();
-          String secondEndName = assocClass.getAssociatedTo(1).getEnd(1).getRoleName();
+          String endName;
           
-          // tokenVal with a lower-case first letter.
-          String firstLower = Character.toLowerCase(tokenVal.charAt(0)) + (tokenVal.length() > 1 ? tokenVal.substring(1) : "");
-          
-          if(secondEndName.equals(firstLower) || firstEndName.equals(firstLower))
-          {
-            finalTokenVal = firstLower;
-            tokenMatch = true;
+          for(Association associatedTo: assocClass.getAssociatedTo()) {
+            endName = associatedTo.getEnd(1).getRoleName();
+            
+            // tokenVal with a lower-case first letter.
+            String firstLower = Character.toLowerCase(tokenVal.charAt(0)) + (tokenVal.length() > 1 ? tokenVal.substring(1) : "");
+            
+            if(endName.equals(firstLower))
+            {
+              finalTokenVal = firstLower;
+              tokenMatch = true;
+            }
           }
         }
 
@@ -2368,6 +2372,20 @@ class UmpleInternalParser
       }
       aClass.getKey().addMember(finalTokenVal);
       tokensAdded.add(finalTokenVal); 
+    }
+
+    //Issue 610: Associaton Classes with incomplete keys must issue warning 1011
+    if(aClass instanceof AssociationClass) {
+      AssociationClass assocClass = (AssociationClass) aClass;
+      String endName;
+      
+      for(Association associatedTo : assocClass.getAssociatedTo()) {
+        endName = associatedTo.getEnd(1).getRoleName();
+        
+        if(!tokensAdded.contains(endName)) {
+          setFailedPosition(keyToken.getPosition(), 1011, keyToken.getParentToken().getValue("name"), endName, tokensAdded.toString());
+        }
+      }
     }
   }
 

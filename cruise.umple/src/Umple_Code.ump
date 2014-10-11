@@ -834,8 +834,12 @@ class AssociationClass
     if (!key.isProvided())
     {
       key = new Key();
-      key.addMember(getAssociatedTo(0).getEnd(1).getRoleName());
-      key.addMember(getAssociatedTo(1).getEnd(1).getRoleName());
+      
+      for(Association associatedTo: getAssociatedTo())
+      {
+        key.addMember(associatedTo.getEnd(1).getRoleName());
+      }
+
       key.setIsInternal(true);
       setKey(key);
     }
