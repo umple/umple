@@ -98,17 +98,17 @@ public class Mentor
   {
     boolean wasSet = false;
     ArrayList<Student> checkNewStudents = new ArrayList<Student>();
-    for (Student newStudent : newStudents)
+    for (Student aStudent : newStudents)
     {
-      if (checkNewStudents.contains(newStudent))
+      if (checkNewStudents.contains(aStudent))
       {
         return wasSet;
       }
-      else if (newStudent.getMentor() != null && !this.equals(newStudent.getMentor()))
+      else if (aStudent.getMentor() != null && !this.equals(aStudent.getMentor()))
       {
         return wasSet;
       }
-      checkNewStudents.add(newStudent);
+      checkNewStudents.add(aStudent);
     }
 
     if (checkNewStudents.size() != minimumNumberOfStudents())
@@ -123,10 +123,10 @@ public class Mentor
       setMentor(orphan, null);
     }
     students.clear();
-    for (Student newStudent : newStudents)
+    for (Student aStudent : newStudents)
     {
-      setMentor(newStudent, this);
-      students.add(newStudent);
+      setMentor(aStudent, this);
+      students.add(aStudent);
     }
     wasSet = true;
     return wasSet;
