@@ -7670,22 +7670,22 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_1365);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1366);
-    stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1367);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1368);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1369);
-    stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1370);
      if (customSetManyPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetManyPostfixCode,gen.translate("setManyMethod",av));
         append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_1371);
-    stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1372);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_1373);
-    stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1374);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_1375);
@@ -7695,7 +7695,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_1377);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1378);
-    stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1379);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1380);
@@ -7721,19 +7721,19 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_1391);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1392);
-    stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1393);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1394);
     stringBuffer.append(TEXT_1395);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_1396);
-    stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1397);
     stringBuffer.append(TEXT_1398);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1399);
-    stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1400);
      if (customSetManyPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetManyPostfixCode,gen.translate("setManyMethod",av)); 
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 

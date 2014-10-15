@@ -1,0 +1,13 @@
+namespace cruise.associations;
+
+// this java code is compiled automatically on build for testbed
+// if the code compiles, then the test has passed
+
+class A 
+{}
+
+class B 
+{
+   0..1 b -- 3 A a;
+}
+
