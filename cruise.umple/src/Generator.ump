@@ -254,6 +254,19 @@ class AlloyGenerator
   String output = "";
 }
 
+class NuSMVGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+}
 
 class SimulateGenerator
 {
@@ -450,6 +463,7 @@ use Generator_CodeStateTables.ump;
 use Generator_CodeSimpleMetrics.ump;
 use Generator_CodeGvClassDiagram.ump;
 use Generator_CodeAlloy.ump;
+use Generator_CodeNuSMV.ump;
 use Generator_CodeSimulate.ump;
 use Generator_CodeYuml.ump;
 use Generator_CodeXtext.ump;

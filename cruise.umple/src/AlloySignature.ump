@@ -73,7 +73,7 @@ class AlloyModel {
   
   private void genAssociationFact(UmpleModel model)
   {
-    String temp = "";
+    //String temp = "";
     for(Association assoc : model.getAssociations())
     {
       if(!assoc.getEnd(0).getClassName().equals(assoc.getEnd(1).getClassName()))
