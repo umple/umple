@@ -1,0 +1,53 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file generates NuSMV code
+  generate NuSMV;
+in your umple file, or the command line option
+  -g NuSMV
+
+ */
+
+namespace cruise.umple.compiler;
+
+class NuSMVGenerator
+{
+    
+  public void generate(){
+  
+    StringBuilder code = new StringBuilder(); 
+    
+    
+    //This writes the generated code.
+    terminateCode(code);
+  }
+  
+  private void terminateCode(StringBuilder code) {
+    model.setCode(code.toString());
+    writeModel();
+  } 
+  
+  // Output the NuSMV file to a file with the .als suffix
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".smv";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating NuSMV code." + e, e);
+    }
+  } 
+}
