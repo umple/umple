@@ -10760,7 +10760,24 @@ if (p != null) {
         
         append(stringBuffer,"\n");
         int javaline = stringBuffer.toString().split("\\n").length+(aMethod.numberOfComments() > 0?0:1);
-        
+
+        StringBuilder methodExceptionsBuilder = new StringBuilder();
+        if(aMethod.getExceptions()!=null&&aMethod.numberOfExceptions()>0)
+        {
+          methodExceptionsBuilder.append(" throws ");
+          String exceptioncomma = "";
+          for(String methodException:aMethod.getExceptions())
+          {
+            if(!"".equals(methodException))
+            {
+              methodExceptionsBuilder.append(exceptioncomma);
+              methodExceptionsBuilder.append(methodException);
+              exceptioncomma = ",";
+            }
+          }
+        }
+        String methodExceptions = methodExceptionsBuilder.toString();
+
         if(!"".equals(customPostconditionCode))
         {
           StringBuilder lineNumbers = new StringBuilder();
@@ -10790,7 +10807,7 @@ if (p != null) {
                     
           append(stringBuffer,positionHeader);
           append(stringBuffer,override);
-          append(stringBuffer, "{5}  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams, positionHeader);
+          append(stringBuffer, "{5}  {0}{1} {2} {3}({4}){6}", methodModifier, methodImplementationModifier, methodType, methodName, finalParams, positionHeader, methodExceptions);
         
           appendln(stringBuffer, "{");
           if(!"".equals(methodType)&&!"void".equals(methodType))
@@ -10810,12 +10827,12 @@ if (p != null) {
           appendln(stringBuffer, "  }");
           
           javaline+= 5+customPostconditionCode.split("\\n").length;
-          append(stringBuffer, "\n  {0}{1} {2} {3}_Original({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);
+          append(stringBuffer, "\n  {0}{1} {2} {3}_Original({4}){5}", methodModifier, methodImplementationModifier, methodType, methodName, finalParams, methodExceptions);
         }
         else
         {
           append(stringBuffer,override);
-          append(stringBuffer, "{5}  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams, positionHeader);
+          append(stringBuffer, "{5}  {0}{1} {2} {3}({4}){6}", methodModifier, methodImplementationModifier, methodType, methodName, finalParams, positionHeader, methodExceptions);
         }
         if(aMethod.getIsAbstract())
         {

@@ -1770,6 +1770,15 @@ class UmpleInternalParser
           setFailedPosition(token.getPosition(), 0, "Unable to make method abstract!");
         }
       }
+      else if(token.is("methodThrowsExceptions")){
+        for(Token exceptionToken:token.getSubTokens())
+        {
+          if(exceptionToken.is("exception"))
+          {
+            aMethod.addException(exceptionToken.getValue());
+          }
+        }
+      }
       else if(token.is("static"))
       {
         modifier += " static ";

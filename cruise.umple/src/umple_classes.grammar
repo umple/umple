@@ -48,10 +48,11 @@ codeLangs- : ([=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|UmpleSelf] ( , [=code
 
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]
-concreteMethodDeclaration : [=modifier:public|protected|private]? [=static]? [type]? [[methodDeclarator]] [[methodBody]] | [=modifier:public|protected]? [=abstract] [type]? [[methodDeclarator]] 
+concreteMethodDeclaration : [=modifier:public|protected|private]? [=static]? [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? [[methodBody]] | [=modifier:public|protected]? [=abstract] [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? ;
 abstractMethodDeclaration :  [type] [[methodDeclarator]] ; 
 methodBody- : ( [[codeLangs]] { ( [[precondition]] | [[postcondition]] )* [**code] } )+ 
 methodDeclarator : [methodName] [[parameterList]]
+methodThrowsExceptions : throws [~exception] ( , [~exception] )*
 parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_ROUND_BRACKET
 parameter : [[typedName]]
 
