@@ -480,9 +480,14 @@ class Method
 	  this.type = another.getType();
 	  this.isImplemented = another.getIsImplemented();
 	  this.methodParameters = new ArrayList<MethodParameter>();
+          this.exceptions = new ArrayList<String>();
 	  for (MethodParameter mParameter : another.getMethodParameters()) {
 		  this.methodParameters.add(new MethodParameter(mParameter));
 	  }
+          for (String exception:exceptions)
+          {
+            this.addException(exception);
+          }
 	  if (another.getMethodBody()!=null){
 		  this.methodBody = new MethodBody(another.getMethodBody());
 	  } else{

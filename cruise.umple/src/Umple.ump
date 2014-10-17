@@ -132,6 +132,9 @@ class Method
 
   // The name of the method. 
   name;
+
+  // Throws exceptions
+  String[] exceptions;
   
   lazy Position position;
   lazy Position codePosition;
