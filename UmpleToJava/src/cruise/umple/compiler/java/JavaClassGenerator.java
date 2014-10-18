@@ -2551,19 +2551,17 @@ for (StateMachine smq : uClass.getStateMachines())
     
     for (State state : sm.getStates())
     {
-      if (state.getActivity() == null)
+      for (Activity activity : state.getActivities())
       {
-        continue;
+        if (isFirst)
+        {
+          appendln(stringBuffer, "");
+          appendln(stringBuffer, "");
+          append(stringBuffer,"  //{0} Do Activity Threads", uClass.getName());
+          isFirst = false;
+        }
+        append(stringBuffer, "\n  Thread {0} = null;", gen.translate("doActivityThread",activity));
       }
-
-      if (isFirst)
-      {
-        appendln(stringBuffer, "");
-        appendln(stringBuffer, "");
-        append(stringBuffer,"  //{0} Do Activity Threads", uClass.getName());
-        isFirst = false;
-      }
-      append(stringBuffer, "\n  Thread {0} = null;", gen.translate("doActivityThread",state));
     }
   }
 }
@@ -5049,9 +5047,12 @@ for (StateMachine smq : uClass.getStateMachines())
         }
         if(traceItemActivity!=null)
         {
-        	exitActions.append("\n        " + action.getActionCode().substring(0, action.getActionCode().length() - 1).concat(traceItemActivity.trace(gen, state.getActivity(),"sm_di", uClass))+" }");
+          for (Activity activity : state.getActivities())
+          {
+            exitActions.append("\n        " + action.getActionCode().substring(0, action.getActionCode().length() - 1).concat(traceItemActivity.trace(gen, activity,"sm_di", uClass))+" }");
             exitJavaLine+=action.getActionCode().split("\\n").length;
-        	exitJavaLine++;
+            exitJavaLine++;
+          }
         }
         else
         {
@@ -5060,7 +5061,7 @@ for (StateMachine smq : uClass.getStateMachines())
         }
       }
     }
-    if (state.getActivity() != null)
+    for (Activity activity : state.getActivities())
     {
       if (!hasThisEntry)
       {
@@ -5079,10 +5080,10 @@ for (StateMachine smq : uClass.getStateMachines())
       
       if(traceItem!=null)
       {
-    	  entryActions.append("\n"+traceItem.trace(gen, state.getActivity(),"sm_da", uClass));
+    	  entryActions.append("\n"+traceItem.trace(gen, activity,"sm_da", uClass));
     	  entryJavaLine++;
       }
-      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state),gen.translate("doActivityThread",state)));
+      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",activity),gen.translate("doActivityThread",activity)));
       entryJavaLine++;
     }
     
@@ -9090,25 +9091,24 @@ for (StateMachine smq : uClass.getStateMachines())
     {
       for (State state : nestedSm.getStates())
       {
-        if (state.getActivity() != null)
+        for (Activity activity : state.getActivities())
         {
           hasActivities = true;
           
     
-  Activity activity = state.getActivity();
   Event e = activity.getOnCompletionEvent();
   String postTransition = e != null ? gen.translate("eventMethod",e) : null; 
 
-     Position p = state.getActivity().getPosition();
+     Position p = activity.getPosition();
 if (p != null) { 
    int javaline = stringBuffer.toString().split("\\n").length;
-   addUncaughtExceptionVariables(gen.translate("doActivityMethod",state),p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline+7,state.getActivity().getActivityCode().split("\\n").length); 
+   addUncaughtExceptionVariables(gen.translate("doActivityMethod",activity),p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline+7,activity.getActivityCode().split("\\n").length); 
   } 
     stringBuffer.append(TEXT_1936);
-    stringBuffer.append( gen.translate("doActivityMethod",state));
+    stringBuffer.append( gen.translate("doActivityMethod",activity));
     stringBuffer.append(TEXT_1937);
     stringBuffer.append(TEXT_1938);
-    stringBuffer.append( state.getActivity().getActivityCode() );
+    stringBuffer.append( activity.getActivityCode() );
     stringBuffer.append(TEXT_1939);
      if (postTransition != null) { append(stringBuffer, "\n      {0}();",postTransition); } 
     stringBuffer.append(TEXT_1940);
@@ -9119,25 +9119,24 @@ if (p != null) {
     
     for (State state : sm.getStates())
     {
-      if (state.getActivity() != null)
+      for (Activity activity : state.getActivities())
       {
         hasActivities = true;
         
     
-  Activity activity = state.getActivity();
   Event e = activity.getOnCompletionEvent();
   String postTransition = e != null ? gen.translate("eventMethod",e) : null; 
 
-     Position p = state.getActivity().getPosition();
+     Position p = activity.getPosition();
 if (p != null) { 
    int javaline = stringBuffer.toString().split("\\n").length;
-   addUncaughtExceptionVariables(gen.translate("doActivityMethod",state),p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline+7,state.getActivity().getActivityCode().split("\\n").length); 
+   addUncaughtExceptionVariables(gen.translate("doActivityMethod",activity),p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline+7,activity.getActivityCode().split("\\n").length); 
   } 
     stringBuffer.append(TEXT_1941);
-    stringBuffer.append( gen.translate("doActivityMethod",state));
+    stringBuffer.append( gen.translate("doActivityMethod",activity));
     stringBuffer.append(TEXT_1942);
     stringBuffer.append(TEXT_1943);
-    stringBuffer.append( state.getActivity().getActivityCode() );
+    stringBuffer.append( activity.getActivityCode() );
     stringBuffer.append(TEXT_1944);
      if (postTransition != null) { append(stringBuffer, "\n      {0}();",postTransition); } 
     stringBuffer.append(TEXT_1945);
@@ -9160,7 +9159,7 @@ if (p != null) {
     {
       for (State state : nestedSm.getStates())
       {
-        if (state.getActivity() != null)
+        for (Activity activity : state.getActivities())
         {
           if (isFirst)
           {
@@ -9171,9 +9170,9 @@ if (p != null) {
           {
             output.append(StringFormatter.format("\n        else if"));
           }
-          output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",state)));
+          output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",activity)));
           output.append(StringFormatter.format("      {\n"));
-          output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",state)));
+          output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",activity)));
           output.append(StringFormatter.format("      }"));
         }
       }
@@ -9181,7 +9180,7 @@ if (p != null) {
     
     for (State state : sm.getStates())
     {
-      if (state.getActivity() != null)
+      for (Activity activity : state.getActivities())
       {
         if (isFirst)
         {
@@ -9192,9 +9191,9 @@ if (p != null) {
         {
           output.append(StringFormatter.format("\n        else if"));
         }
-        output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",state)));
+        output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",activity)));
         output.append(StringFormatter.format("      {\n"));
-        output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",state)));
+        output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",activity)));
         output.append(StringFormatter.format("      }"));
       }
     }

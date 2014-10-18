@@ -177,19 +177,30 @@ class JavaGenerator
     {
       return StringFormatter.format(AsIsSingularLookupMap.get(keyName),singularName);
     }
-    else if ("doActivityMethod".equals(keyName))
-    {
-      return StringFormatter.format("doActivity{0}", GeneratorHelper.getFullActivityName(state)); 
-    }
-    else if ("doActivityThread".equals(keyName))
-    {
-      return StringFormatter.format("doActivity{0}Thread", GeneratorHelper.getFullActivityName(state)); 
-    }
     else if ("type".equals(keyName))
     {
       return getUpperCaseName(state.getStateMachine().getName());
     }
     
+    return "UNKNOWN ID: " + keyName;
+  }
+
+  public String translate(String keyName, Activity a)
+  {
+    State s = a.getState();
+    String threadNum = "";
+    if (s.numberOfActivities() > 1)
+    {
+      threadNum = "" + a.getState().getActivities().indexOf(a);
+    }
+    if ("doActivityMethod".equals(keyName))
+    {
+      return StringFormatter.format("doActivity{0}{1}", threadNum,  GeneratorHelper.getFullActivityName(a.getState())); 
+    }
+    else if ("doActivityThread".equals(keyName))
+    {
+      return StringFormatter.format("doActivity{0}{1}Thread", threadNum, GeneratorHelper.getFullActivityName(a.getState())); 
+    }
     return "UNKNOWN ID: " + keyName;
   }
   
@@ -1943,13 +1954,13 @@ class JavaGenerator
   {
     for(State state : sm.getStates())
     {
-      if (state.getActivity() != null)
+      for (Activity activity : state.getActivities())
       {
-        String code = StringFormatter.format("if ({0} != null) { {0}.interrupt(); }",translate("doActivityThread",state));
-        Action interruptAction = new Action(code);
-        interruptAction.setIsInternal(true);
-        interruptAction.setActionType("exit");
-        state.addAction(interruptAction);
+          String code = StringFormatter.format("if ({0} != null) { {0}.interrupt(); }",translate("doActivityThread",activity));
+          Action interruptAction = new Action(code);
+          interruptAction.setIsInternal(true);
+          interruptAction.setActionType("exit");
+          state.addAction(interruptAction);
       }
     }
   }

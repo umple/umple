@@ -178,8 +178,27 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State state = sm.getState(0);
     
-    Activity a1 = state.getActivity();
+    Activity a1 = state.getActivity(0);
     Assert.assertEquals("iAmaDoActivity", a1.getActivityCode());
+  }
+  
+  @Test
+  public void multipleDoActivity() 
+  {
+    assertParse("100_multipleDoActivities.ump","[classDefinition][name:X][stateMachine][inlineStateMachine][name:sm][state][stateName:s1][activity][code:blah1();][activity][code:blah2();][inlineComment:e1 -> s2;][state][stateName:s2]");
+    
+    UmpleClass c = model.getUmpleClass("X");
+    StateMachine sm = c.getStateMachine(0);
+    State state = sm.getState(0);
+    
+    Assert.assertEquals(true,state.hasActivities());
+    Assert.assertEquals(2, state.numberOfActivities());
+    Activity a1 = state.getActivity(0);
+    Activity a2 = state.getActivity(1);
+    Assert.assertEquals("blah1();", a1.getActivityCode());
+    Assert.assertEquals("blah2();", a2.getActivityCode());
+    
+    //Assert.assertEquals("iAmaDoActivity", a1.getActivityCode());
   }
 
   @Test
@@ -193,7 +212,7 @@ public class UmpleParserStateMachineTest
     State state = sm.getState(1);
 
     Transition t = state.getTransition(0);
-    Activity act = state.getActivity();
+    Activity act = state.getActivity(0);
     Assert.assertNotNull(act);
     Assert.assertEquals("keepDoing;", act.getActivityCode());
     Assert.assertEquals(t.getEvent(), act.getOnCompletionEvent());
@@ -1453,9 +1472,9 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(1, threadLevel.numberOfStates());
     State doLevel = threadLevel.getState(0);
 
-    Assert.assertEquals(true, doLevel.hasActivity());
-    Assert.assertEquals("System.out.println(\"Hello\");", doLevel.getActivity().getCodeblock().getCode("Java"));
-    Assert.assertEquals("cout << \"hello\";", doLevel.getActivity().getCodeblock().getCode("Cpp"));
+    Assert.assertEquals(true, doLevel.hasActivities());
+    Assert.assertEquals("System.out.println(\"Hello\");", doLevel.getActivity(0).getCodeblock().getCode("Java"));
+    Assert.assertEquals("cout << \"hello\";", doLevel.getActivity(0).getCodeblock().getCode("Cpp"));
   }
 
   private void assertParse(String filename, String expectedOutput)

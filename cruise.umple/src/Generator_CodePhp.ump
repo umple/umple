@@ -405,15 +405,26 @@ class PhpGenerator
     {
       return "\"" + fullStateName + "\"";
     }
-    else if ("doActivityMethod".equals(keyName))
+    
+    return "UNKNOWN ID: " + keyName;
+  }
+
+  public String translate(String keyName, Activity a)
+  {
+    State s = a.getState();
+    String threadNum = "";
+    if (s.numberOfActivities() > 1)
     {
-      return StringFormatter.format("doActivity{0}", GeneratorHelper.getFullActivityName(state)); 
+      threadNum = "" + a.getState().getActivities().indexOf(a);
+    }
+    if ("doActivityMethod".equals(keyName))
+    {
+      return StringFormatter.format("doActivity{0}{1}", threadNum,  GeneratorHelper.getFullActivityName(a.getState())); 
     }
     else if ("doActivityThread".equals(keyName))
     {
-      return StringFormatter.format("doActivity{0}Thread", GeneratorHelper.getFullActivityName(state)); 
+      return StringFormatter.format("doActivity{0}{1}Thread", threadNum, GeneratorHelper.getFullActivityName(a.getState())); 
     }
-    
     return "UNKNOWN ID: " + keyName;
   }
   

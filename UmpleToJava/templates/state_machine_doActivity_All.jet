@@ -10,7 +10,7 @@
     {
       for (State state : nestedSm.getStates())
       {
-        if (state.getActivity() != null)
+        for (Activity activity : state.getActivities())
         {
           hasActivities = true;
           %><%@ include file="state_machine_doActivity.jet" %><%
@@ -20,7 +20,7 @@
     
     for (State state : sm.getStates())
     {
-      if (state.getActivity() != null)
+      for (Activity activity : state.getActivities())
       {
         hasActivities = true;
         %><%@ include file="state_machine_doActivity.jet" %><%

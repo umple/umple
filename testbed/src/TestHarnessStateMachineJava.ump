@@ -225,6 +225,69 @@ class CourseW {
     }
   }
 }
+
+class MultiLogCourse
+{
+  String[] logs;
+  
+  status {
+    Open {
+      entry / { addLog("Open Entry"); }
+      flip -> Closed;
+    }
+    Closed {
+      entry / { addLog("Closed Entry"); }
+      flip -> Open;
+      do 
+      {  
+        Thread.sleep(400);
+        addLog("Do Activity On Closed Thread1");
+      }
+      do 
+      {  
+        Thread.sleep(500);
+        addLog("Do Activity On Closed Thread2");
+      }
+    }
+  }
+}
+
+class CourseVMultiDo {
+
+  Integer count = 0;
+
+  status {
+    Off {
+      do {doX();} 
+      do {doX();}
+      -> On;
+    }
+    On { }
+  }
+
+  public void doX() { 
+    count += 1;
+  } 
+
+}
+
+class CourseWMultiDo {
+  String[] logs;
+  
+  status {
+    Open {
+      statusOpen {
+        do {
+          addLog("DoActivity in nested state Thread1");
+        }
+        do {
+          addLog("DoActivity in nested state Thread2");
+        }
+      }  
+    }
+  }
+}
+
 external Observable {}
 class ObservableCourse
 {

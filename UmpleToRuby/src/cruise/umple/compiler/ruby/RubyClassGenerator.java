@@ -1859,19 +1859,17 @@ public class RubyClassGenerator implements ILang
     
     for (State state : sm.getStates())
     {
-      if (state.getActivity() == null)
+      for (Activity activity : state.getActivities())
       {
-        continue;
+        if (isFirstDoActivity)
+        {
+          appendln(stringBuffer, "");
+          appendln(stringBuffer, "");
+          append(stringBuffer,"  #{0} Do Activity Threads", uClass.getName());
+          isFirstDoActivity = false;
+        }
+        append(stringBuffer, "\n  #attr_reader {0};", gen.translate("doActivityThread",activity));
       }
-
-      if (isFirstDoActivity)
-      {
-        appendln(stringBuffer, "");
-        appendln(stringBuffer, "");
-        append(stringBuffer,"  #{0} Do Activity Threads", uClass.getName());
-        isFirstDoActivity = false;
-      }
-      append(stringBuffer, "\n  #attr_reader {0};", gen.translate("doActivityThread",state));
     }
   }
 }
@@ -3263,7 +3261,7 @@ public class RubyClassGenerator implements ILang
       }
     }
   
-    if (state.getActivity() != null)
+    for (Activity activity : state.getActivities())
     {
       if (!hasThisEntry)
       {
@@ -3276,7 +3274,7 @@ public class RubyClassGenerator implements ILang
       hasEntry = true;
       hasThisEntry = true;
       isFirstEntry = false;
-      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state),gen.translate("doActivityThread",state)));
+      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",activity),gen.translate("doActivityThread",activity)));
     }
     
     if (hasThisEntry)
@@ -6307,14 +6305,14 @@ public class RubyClassGenerator implements ILang
   {
     for (State state : sm.getStates())
     {
-      if (state.getActivity() != null)
+      for (Activity activity : state.getActivities())
       {
         hasActivities = true;
         
     stringBuffer.append(TEXT_1489);
-    stringBuffer.append( gen.translate("doActivityMethod",state));
+    stringBuffer.append( gen.translate("doActivityMethod",activity));
     stringBuffer.append(TEXT_1490);
-    stringBuffer.append( state.getActivity().getActivityCode() );
+    stringBuffer.append( activity.getActivityCode() );
     stringBuffer.append(TEXT_1491);
     
       }
@@ -6331,7 +6329,7 @@ public class RubyClassGenerator implements ILang
   {
     for (State state : sm.getStates())
     {
-      if (state.getActivity() != null)
+      for (Activity activity : state.getActivities())
       {
         if (isFirst)
         {
@@ -6342,9 +6340,9 @@ public class RubyClassGenerator implements ILang
         {
           output.append(StringFormatter.format("\n        else if"));
         }
-        output.append(StringFormatter.format(" (\"{0}\".eql?(doActivityMethodName))\n",gen.translate("doActivityMethod",state)));
+        output.append(StringFormatter.format(" (\"{0}\".eql?(doActivityMethodName))\n",gen.translate("doActivityMethod",activity)));
         output.append(StringFormatter.format("        {\n"));
-        output.append(StringFormatter.format("          controller.{0}\n",gen.translate("doActivityMethod",state)));
+        output.append(StringFormatter.format("          controller.{0}\n",gen.translate("doActivityMethod",activity)));
         output.append(StringFormatter.format("        }"));
       }
     }

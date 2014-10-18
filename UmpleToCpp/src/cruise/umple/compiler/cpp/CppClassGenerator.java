@@ -4089,7 +4089,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
 //		    }
 	    }
     }	
-    if (state.getActivity() != null)
+    for (Activity activity : state.getActivities())
     {
       if (!hasThisEntry)
       {
@@ -4102,7 +4102,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
       hasEntry = true;
       hasThisEntry = true;
       isFirstEntry = false;
-      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state),gen.translate("doActivityThread",state)));
+      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",activity),gen.translate("doActivityThread",activity)));
     }
     
     if (hasThisEntry)
@@ -7886,17 +7886,17 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
   {
     for (State state : sm.getStates())
     {
-      if (state.getActivity() != null)
+      for (Activity activity : state.getActivities())
       {
         hasActivities = true;
         
     stringBuffer.append(TEXT_1968);
     stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1969);
-    stringBuffer.append( gen.translate("doActivityMethod",state));
+    stringBuffer.append( gen.translate("doActivityMethod",activity));
     stringBuffer.append(TEXT_1970);
     stringBuffer.append(TEXT_1971);
-    stringBuffer.append( state.getActivity().getActivityCode() );
+    stringBuffer.append( activity.getActivityCode() );
     stringBuffer.append(TEXT_1972);
     
       }
@@ -7913,7 +7913,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
   {
     for (State state : sm.getStates())
     {
-      if (state.getActivity() != null)
+      for (Activity activity : state.getActivities())
       {
         if (isFirst)
         {
@@ -7924,9 +7924,9 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
         {
           output.append(StringFormatter.format("\n        else if"));
         }
-        output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",state)));
+        output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",activity)));
         output.append(StringFormatter.format("      {\n"));
-        output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",state)));
+        output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",activity)));
         output.append(StringFormatter.format("      }"));
       }
     }

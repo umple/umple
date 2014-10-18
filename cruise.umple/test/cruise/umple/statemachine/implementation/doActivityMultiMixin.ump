@@ -1,0 +1,17 @@
+class X {
+  sm {
+    s1 {
+      do {blah1();};
+      e1 -> s2;
+    }
+    s2 {}
+  }
+}
+
+class X {
+  sm {
+    s1 {
+      do {blah2();};
+    }
+  }
+}

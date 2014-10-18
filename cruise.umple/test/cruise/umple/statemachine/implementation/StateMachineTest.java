@@ -182,6 +182,18 @@ public class StateMachineTest extends StateMachineTemplateTest
   }
   
   @Test
+  public void doActivityMultipleInSameState()
+  {
+    assertUmpleTemplateFor("doActivityMulti.ump",languagePath + "/doActivityMulti."+ languagePath +".txt","X");
+  }
+
+  @Test
+  public void doActivityMultiMixin()
+  {
+    assertUmpleTemplateFor("doActivityMultiMixin.ump",languagePath + "/doActivityMulti."+ languagePath +".txt","X");
+  }
+  
+  @Test
   public void doActivityNestedStateMachine()
   {
 	  assertUmpleTemplateFor("doActivityNestedStateMachine.ump",languagePath + "/doActivityNestedStateMachine."+ languagePath +".txt","Course");

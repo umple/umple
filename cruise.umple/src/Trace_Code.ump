@@ -70,7 +70,7 @@ class State
         Transition  tsn = smti.getTransition();
         State st = smti.getState();
         if( smti.getTraceStateMachineFlag() ) continue;
-        if( method.equals("activity") && st.equals(this) && st.hasActivity() )
+        if( method.equals("activity") && st.equals(this) && st.hasActivities() )
           return smti;
         if(!(smti.getExit()||smti.getEntry())){
           if(tsn!=null&&method.equals("transition"))

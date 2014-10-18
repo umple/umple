@@ -203,7 +203,7 @@ public class UmpleStatemachineGenerationPolicy{
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY)
 	public static String getStateDoActivityCode(@GenerationBaseElement State element, 
 			@GenerationRegistry GenerationPolicyRegistry generationValueGetter,String language){
-		Activity activity = element.getActivity();
+		Activity activity = element.getActivity(0);
 		if(activity== null){
 			return CommonConstants.BLANK;
 		}
@@ -221,7 +221,7 @@ public class UmpleStatemachineGenerationPolicy{
 	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_ON_COMPLETION_EVENT)
 	public static String getStateDoActivityOnCompletionEvent(@GenerationBaseElement State element){
-		Activity activity = element.getActivity();
+		Activity activity = element.getActivity(0);
 		if(activity== null){
 			return CommonConstants.BLANK;
 		}
