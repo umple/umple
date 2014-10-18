@@ -1,0 +1,81 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  private static $SmS1 = 1;
+  private static $SmS2 = 2;
+  private $sm;
+
+  //X Do Activity Threads
+  private $doActivity0SmS1Thread = null;
+  private $doActivity1SmS1Thread = null;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setSm(self::$SmS1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getSmFullName()
+  {
+    $answer = $this->getSm();
+    return $answer;
+  }
+
+  public function getSm()
+  {
+    if ($this->sm == self::$SmS1) { return "SmS1"; }
+    elseif ($this->sm == self::$SmS2) { return "SmS2"; }
+    return null;
+  }
+
+  public function e1()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS1)
+    {
+      $this->setSm(self::$SmS2);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setSm($aSm)
+  {
+    $this->sm = $aSm;
+
+    // entry actions and do activities
+    if ($this->sm == self::$SmS1)
+    {
+      blah1();
+      blah2();
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

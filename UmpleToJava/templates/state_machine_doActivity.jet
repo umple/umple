@@ -1,19 +1,18 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
 <%
-  Activity activity = state.getActivity();
   Event e = activity.getOnCompletionEvent();
   String postTransition = e != null ? gen.translate("eventMethod",e) : null; 
 %>
-<% Position p = state.getActivity().getPosition();
+<% Position p = activity.getPosition();
 if (p != null) { 
    int javaline = stringBuffer.toString().split("\\n").length;
-   addUncaughtExceptionVariables(gen.translate("doActivityMethod",state),p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline+7,state.getActivity().getActivityCode().split("\\n").length); 
+   addUncaughtExceptionVariables(gen.translate("doActivityMethod",activity),p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline+7,activity.getActivityCode().split("\\n").length); 
   } %>
-  private void <%= gen.translate("doActivityMethod",state)%>()
+  private void <%= gen.translate("doActivityMethod",activity)%>()
   {
     try
     {
-      <%= state.getActivity().getActivityCode() %>
+      <%= activity.getActivityCode() %>
       Thread.sleep(1);
       <% if (postTransition != null) { append(stringBuffer, "\n      {0}();",postTransition); } %>
     }

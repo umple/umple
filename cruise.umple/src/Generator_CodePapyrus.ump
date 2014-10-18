@@ -170,15 +170,15 @@ class PapyrusGenerator
             else{
 
               //check if the subvertex needs a closing tag or not
-              if(numActions > 0 || s.getActivity() != null){
+              if(numActions > 0 || s.hasActivities()){
                 smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:State\" xmi:id=\"_{0}\" name=\"{0}\">\n",s.getName()));
               }
               else{
                 smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:State\" xmi:id=\"_{0}\" name=\"{0}\"/>\n",s.getName()));
               }
 
-              if(s.getActivity() != null){
-                smcode.append(StringFormatter.format("        <doActivity xmi:type=\"uml:Activity\" xmi:id=\"_{0}\" name=\"{1}\"/>\n",generatePapyrusID(), s.getActivity().getCodeblock() ));
+              for(Activity activity: s.getActivities()){
+                smcode.append(StringFormatter.format("        <doActivity xmi:type=\"uml:Activity\" xmi:id=\"_{0}\" name=\"{1}\"/>\n",generatePapyrusID(), activity.getCodeblock() ));
               }
 
               for (Action a : s.getActions()){
@@ -190,7 +190,7 @@ class PapyrusGenerator
                 }
               }
 
-              if(numActions > 0 || s.getActivity() != null){
+              if(numActions > 0 || s.hasActivities()){
                 smcode.append("      </subvertex>\n");
               }
 

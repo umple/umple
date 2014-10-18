@@ -197,10 +197,13 @@ class UmpleSelfGenerator
         
         Event event = t.getEvent();
         
-        if (event.isAutoTransition() && state.getActivity() != null)
+        if (event.isAutoTransition() && state.hasActivities())
         {
           hasConsumedActivity = true;
-          code.append(StringFormatter.format("do { {0} }", state.getActivity().getCodeblock().toString()));
+          for (Activity activity : state.getActivities())
+          {
+            code.append(StringFormatter.format("do { {0} }", activity.getCodeblock().toString()));
+          }
         }
         else if (!event.isAutoTransition())
         {
@@ -222,15 +225,17 @@ class UmpleSelfGenerator
         generateStateMachine(subSm, level+1, code);
       }
 
-      if (state.getActivity() != null && !hasConsumedActivity)
-      {
-        if (isFirst)
+      for (Activity activity : state.getActivities()){
+        if (activity != null && !hasConsumedActivity)
         {
-          code.append("\n");
+          if (isFirst)
+          {
+            code.append("\n");
+          }
+          code.append(StringFormatter.format("{0}    ", baseSpace));
+          code.append(StringFormatter.format("do { {0} };\n", activity.getCodeblock().toString()));
+          isFirst = false;
         }
-        code.append(StringFormatter.format("{0}    ", baseSpace));
-        code.append(StringFormatter.format("do { {0} };\n", state.getActivity().getCodeblock().toString()));
-        isFirst = false;
       }
 
       code.append(StringFormatter.format("{0}  }\n", baseSpace));

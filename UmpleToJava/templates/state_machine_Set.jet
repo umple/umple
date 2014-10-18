@@ -124,9 +124,12 @@
         }
         if(traceItemActivity!=null)
         {
-        	exitActions.append("\n        " + action.getActionCode().substring(0, action.getActionCode().length() - 1).concat(traceItemActivity.trace(gen, state.getActivity(),"sm_di", uClass))+" }");
+          for (Activity activity : state.getActivities())
+          {
+            exitActions.append("\n        " + action.getActionCode().substring(0, action.getActionCode().length() - 1).concat(traceItemActivity.trace(gen, activity,"sm_di", uClass))+" }");
             exitJavaLine+=action.getActionCode().split("\\n").length;
-        	exitJavaLine++;
+            exitJavaLine++;
+          }
         }
         else
         {
@@ -135,7 +138,7 @@
         }
       }
     }
-    if (state.getActivity() != null)
+    for (Activity activity : state.getActivities())
     {
       if (!hasThisEntry)
       {
@@ -154,10 +157,10 @@
       
       if(traceItem!=null)
       {
-    	  entryActions.append("\n"+traceItem.trace(gen, state.getActivity(),"sm_da", uClass));
+    	  entryActions.append("\n"+traceItem.trace(gen, activity,"sm_da", uClass));
     	  entryJavaLine++;
       }
-      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state),gen.translate("doActivityThread",state)));
+      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",activity),gen.translate("doActivityThread",activity)));
       entryJavaLine++;
     }
     

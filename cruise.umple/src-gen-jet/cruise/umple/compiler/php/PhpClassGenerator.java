@@ -1915,19 +1915,17 @@ public class PhpClassGenerator implements ILang
     
     for (State state : sm.getStates())
     {
-      if (state.getActivity() == null)
+      for (Activity activity : state.getActivities())
       {
-        continue;
+        if (isFirst)
+        {
+          appendln(stringBuffer, "");
+          appendln(stringBuffer, "");
+          append(stringBuffer,"  //{0} Do Activity Threads", uClass.getName());
+          isFirst = false;
+        }
+        append(stringBuffer, "\n  private ${0} = null;", gen.translate("doActivityThread",activity));
       }
-
-      if (isFirst)
-      {
-        appendln(stringBuffer, "");
-        appendln(stringBuffer, "");
-        append(stringBuffer,"  //{0} Do Activity Threads", uClass.getName());
-        isFirst = false;
-      }
-      append(stringBuffer, "\n  private ${0} = null;", gen.translate("doActivityThread",state));
     }
   }
 }
@@ -3910,7 +3908,7 @@ public class PhpClassGenerator implements ILang
       }
     }
   
-    if (state.getActivity() != null)
+    for (Activity activity : state.getActivities())
     {
       if (!hasThisEntry)
       {
@@ -3927,7 +3925,7 @@ public class PhpClassGenerator implements ILang
       hasEntry = true;
       hasThisEntry = true;
       isFirstEntry = false;
-      entryActions.append(StringFormatter.format("\n      {0}",state.getActivity().getActivityCode()));
+      entryActions.append(StringFormatter.format("\n      {0}",activity.getActivityCode()));
     }
     
     if (hasThisEntry)

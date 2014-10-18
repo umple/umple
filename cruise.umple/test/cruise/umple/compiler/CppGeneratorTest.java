@@ -673,12 +673,12 @@ public class CppGeneratorTest
     Assert.assertEquals("Pass",generator.translate("stateOne",state));
     Assert.assertEquals("\"Pass\"",generator.translate("stateString",state));
     Assert.assertEquals("Grade",generator.translate("type",state));
-    Assert.assertEquals("doActivityGradePass",generator.translate("doActivityMethod",state));
-    Assert.assertEquals("doActivityGradePassThread",generator.translate("doActivityThread",state));
+    Assert.assertEquals("UNKNOWN ID: doActivityMethod",generator.translate("doActivityMethod",state));
+    Assert.assertEquals("UNKNOWN ID: doActivityThread",generator.translate("doActivityThread",state));
     
     Activity activity = new Activity("//the code",state);
-    state.setActivity(activity);
-    Assert.assertEquals("doActivityGradePass",generator.translate("doActivityMethod",state));
+    state.addActivity(activity);
+    Assert.assertEquals("doActivityGradePass",generator.translate("doActivityMethod",activity));
     
   }   
   

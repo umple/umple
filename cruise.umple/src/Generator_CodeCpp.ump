@@ -180,17 +180,29 @@ class CppGenerator
     {
       return StringFormatter.format(AsIsSingularLookupMap.get(keyName),singularName);
     }
-    else if ("doActivityMethod".equals(keyName))
-    {
-      return StringFormatter.format("doActivity{0}{1}",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(state.getName())); 
-    }
-    else if ("doActivityThread".equals(keyName))
-    {
-      return StringFormatter.format("doActivity{0}{1}Thread",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(state.getName())); 
-    }
     else if ("type".equals(keyName))
     {
       return getUpperCaseName(state.getStateMachine().getName());
+    }
+    
+    return "UNKNOWN ID: " + keyName;
+  }
+
+  public String translate(String keyName, Activity a)
+  {
+    State s = a.getState();
+    String threadNum = "";
+    if (s.numberOfActivities() > 1)
+    {
+      threadNum = "" + a.getState().getActivities().indexOf(a);
+    }
+    if ("doActivityMethod".equals(keyName))
+    {
+      return StringFormatter.format("doActivity{0}{1}{2}",threadNum,getUpperCaseName(s.getStateMachine().getName()),getUpperCaseName(s.getName()));
+    }
+    else if ("doActivityThread".equals(keyName))
+    {
+      return StringFormatter.format("doActivity{0}{1}{2}Thread",threadNum,getUpperCaseName(s.getStateMachine().getName()),getUpperCaseName(s.getName())); 
     }
     
     return "UNKNOWN ID: " + keyName;

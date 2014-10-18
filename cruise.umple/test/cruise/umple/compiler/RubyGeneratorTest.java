@@ -1532,7 +1532,7 @@ public class RubyGeneratorTest
 
     Activity activity = new Activity("//the code",state);
 
-    state.setActivity(activity);
+    state.addActivity(activity);
 
     Assert.assertEquals("doActivityGradePass",generator.translate("doActivityMethod",state));    
 

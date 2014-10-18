@@ -48,7 +48,7 @@ class State
   name;
   Boolean isConcurrent = { numberOfNestedStateMachines() > 1 }
     
-  1 -- 0..1 Activity;
+  1 -- * Activity;
   0..1 -> * Action;
   * -- 1 StateMachine;
 

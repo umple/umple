@@ -285,12 +285,9 @@ class UmpleModelWalker {
 						visitor.visit(sm);
 						for(State state: sm.getStates()){
 							visitor.visit(state);
-							if(state.getActivity()!= null){
-								visitor.visit(state.getActivity());
-								
-								if(state.getActivity() != null) {
-									visitor.visit(new UserCode(state.getActivity().getActivityCode()));
-								}
+							for (Activity activity : state.getActivities()){
+								visitor.visit(activity);
+								visitor.visit(new UserCode(activity.getActivityCode()));
 							}
 							for(Transition transition: state.getTransitions()){
 								visitor.visit(transition);
