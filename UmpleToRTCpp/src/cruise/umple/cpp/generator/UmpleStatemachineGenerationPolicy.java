@@ -18,6 +18,7 @@
 *******************************************************************************/
 package cruise.umple.cpp.generator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -201,22 +202,34 @@ public class UmpleStatemachineGenerationPolicy{
 	}
 	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY)
-	public static String getStateDoActivityCode(@GenerationBaseElement State element, 
+	public static List<String> getStateDoActivityCode(@GenerationBaseElement State element, 
 			@GenerationRegistry GenerationPolicyRegistry generationValueGetter,String language){
-		Activity activity = element.getActivity(0);
+		List<String> codes= new ArrayList<String>();
+		List<Activity> activities = element.getActivities();
+		for(Activity activity: activities){
+			String activityCode = getActivityCode(element, generationValueGetter, language, activity);
+			if(activityCode.isEmpty()){
+				continue;
+			}
+			
+			codes.add(activityCode);
+		}
+		
+		return codes;
+	}
+
+	private static String getActivityCode(State element, GenerationPolicyRegistry generationValueGetter, String language, Activity activity) {
 		if(activity== null){
 			return CommonConstants.BLANK;
 		}
 		
 		String code = activity.getCodeblock().getCode(language);
-		if(code!= null&& !code.isEmpty()){
-			return code;
+		if(code== null|| code.isEmpty()){
+			code= activity.getActivityCode();
 		}
 		
-		String activityCode = activity.getActivityCode();
-		activityCode = addLineNumbersInformation(generationValueGetter, language,  element.getStateMachine(), activity.getPosition(), activityCode);
-		
-		return activityCode;
+		code = addLineNumbersInformation(generationValueGetter, language,  element.getStateMachine(), activity.getPosition(), code);
+		return code;
 	}
 	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_ON_COMPLETION_EVENT)
@@ -289,6 +302,9 @@ public class UmpleStatemachineGenerationPolicy{
 	
 	private static String addLineNumbersInformation(GenerationPolicyRegistry generationValueGetter, 
 			String language, StateMachine statemachine, Position position, String actionCode) {
+		if(position== null){
+			return actionCode;
+		}
 		String extended= actionCode;
 		
 		String positionString = getPositionString(generationValueGetter,
