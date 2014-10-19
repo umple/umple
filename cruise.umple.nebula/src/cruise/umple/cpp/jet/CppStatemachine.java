@@ -103,31 +103,34 @@ public class CppStatemachine extends CppGenerationTemplate{
   protected final String TEXT_62 = "*>(thisVoidPtr);" + NL + "thisPtr->";
   protected final String TEXT_63 = "();";
   protected final String TEXT_64 = "doActivity";
-  protected final String TEXT_65 = "{" + NL + "\tthis->";
+  protected final String TEXT_65 = "this->";
   protected final String TEXT_66 = " = new Thread(&";
   protected final String TEXT_67 = "::";
   protected final String TEXT_68 = ", this, \"";
-  protected final String TEXT_69 = "\");" + NL + "\tthis->";
-  protected final String TEXT_70 = "->start();" + NL + "}";
-  protected final String TEXT_71 = "\t\t" + NL + "if (";
-  protected final String TEXT_72 = " != NULL) { " + NL + "\t";
-  protected final String TEXT_73 = "->stop(); " + NL + "}";
-  protected final String TEXT_74 = "\t\t" + NL + "\t\t//";
-  protected final String TEXT_75 = "= new ";
-  protected final String TEXT_76 = "(); ";
-  protected final String TEXT_77 = " a";
-  protected final String TEXT_78 = "= ";
-  protected final String TEXT_79 = ";";
-  protected final String TEXT_80 = "\t\t" + NL + "\t";
-  protected final String TEXT_81 = " a";
-  protected final String TEXT_82 = "= ";
-  protected final String TEXT_83 = ";";
-  protected final String TEXT_84 = NL + "case ";
-  protected final String TEXT_85 = "::";
-  protected final String TEXT_86 = ":";
-  protected final String TEXT_87 = NL;
-  protected final String TEXT_88 = NL + "\tbreak;" + NL + "\t\t\t";
-  protected final String TEXT_89 = "wasEventProcessed = true;";
+  protected final String TEXT_69 = "\");" + NL + "this->";
+  protected final String TEXT_70 = "->start();";
+  protected final String TEXT_71 = "{";
+  protected final String TEXT_72 = NL;
+  protected final String TEXT_73 = NL + "}";
+  protected final String TEXT_74 = "\t\t" + NL + "if (";
+  protected final String TEXT_75 = " != NULL) { " + NL + "\t";
+  protected final String TEXT_76 = "->stop(); " + NL + "}";
+  protected final String TEXT_77 = "\t\t" + NL + "\t\t//";
+  protected final String TEXT_78 = "= new ";
+  protected final String TEXT_79 = "(); ";
+  protected final String TEXT_80 = " a";
+  protected final String TEXT_81 = "= ";
+  protected final String TEXT_82 = ";";
+  protected final String TEXT_83 = "\t\t" + NL + "\t";
+  protected final String TEXT_84 = " a";
+  protected final String TEXT_85 = "= ";
+  protected final String TEXT_86 = ";";
+  protected final String TEXT_87 = NL + "case ";
+  protected final String TEXT_88 = "::";
+  protected final String TEXT_89 = ":";
+  protected final String TEXT_90 = NL;
+  protected final String TEXT_91 = NL + "\tbreak;" + NL + "\t\t\t";
+  protected final String TEXT_92 = "wasEventProcessed = true;";
 
   /**
   * @param argument
@@ -805,33 +808,30 @@ public void execute() {
 
 }});
 
-getRegistry().define(ICppStatemachinesDefinitions.STATEMCHAINE_THREAD_USE_DECLARATION, new GenerationProcdure(this){
+getRegistry().define(ICppStatemachinesDefinitions.DO_ACTIVITY_FUNCTION_WRAP, new GenerationProcdure(this){
 	
 @Override
 public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+
+	@GenerationArgument String threadInstance;
 	
-	@GenerationArgument String threadCallback;
-			
 @Override
 public void execute() {
-if(threadCallback== null|| threadCallback.isEmpty()){
-	return;
-}
-	
+
 
     stringBuffer.append(TEXT_71);
-    stringBuffer.append(threadCallback);
     stringBuffer.append(TEXT_72);
-    stringBuffer.append(threadCallback);
+    stringBuffer.append(StringUtil.indent(threadInstance,1));
     stringBuffer.append(TEXT_73);
     
-}});
 
 }});
 
-getRegistry().define(ICppStatemachinesDefinitions.STATEMCHAINE_THREAD_CONSTRUCTOR_DECLARATION, new GenerationProcdure(this){
+}});
+
+getRegistry().define(ICppStatemachinesDefinitions.STATEMCHAINE_THREAD_USE_DECLARATION, new GenerationProcdure(this){
 	
 @Override
 public StringBuffer execute(Object element, Object... arguments) {
@@ -857,6 +857,32 @@ if(threadCallback== null|| threadCallback.isEmpty()){
 
 }});
 
+getRegistry().define(ICppStatemachinesDefinitions.STATEMCHAINE_THREAD_CONSTRUCTOR_DECLARATION, new GenerationProcdure(this){
+	
+@Override
+public StringBuffer execute(Object element, Object... arguments) {
+	
+return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+	
+	@GenerationArgument String threadCallback;
+			
+@Override
+public void execute() {
+if(threadCallback== null|| threadCallback.isEmpty()){
+	return;
+}
+	
+
+    stringBuffer.append(TEXT_77);
+    stringBuffer.append(threadCallback);
+    stringBuffer.append(TEXT_78);
+    stringBuffer.append(threadCallback);
+    stringBuffer.append(TEXT_79);
+    
+}});
+
+}});
+
 
 getRegistry().define(ICppStatemachinesDefinitions.ENUM_VARIABLE_PLACEHOLDER_DECLARATION, new GenerationProcdure(this){
 	
@@ -873,11 +899,11 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
     stringBuffer.append(shortenedType);
-    stringBuffer.append(TEXT_77);
+    stringBuffer.append(TEXT_80);
     stringBuffer.append(enumType);
-    stringBuffer.append(TEXT_78);
+    stringBuffer.append(TEXT_81);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_79);
+    stringBuffer.append(TEXT_82);
     
 }});
 
@@ -896,13 +922,13 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_80);
-    stringBuffer.append(enumType);
-    stringBuffer.append(TEXT_81);
-    stringBuffer.append(enumType);
-    stringBuffer.append(TEXT_82);
-    stringBuffer.append(name);
     stringBuffer.append(TEXT_83);
+    stringBuffer.append(enumType);
+    stringBuffer.append(TEXT_84);
+    stringBuffer.append(enumType);
+    stringBuffer.append(TEXT_85);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_86);
     
 }});
 
@@ -923,14 +949,14 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_84);
-    stringBuffer.append(enumType);
-    stringBuffer.append(TEXT_85);
-    stringBuffer.append(sourceState);
-    stringBuffer.append(TEXT_86);
     stringBuffer.append(TEXT_87);
-    stringBuffer.append(StringUtil.indent(body,1));
+    stringBuffer.append(enumType);
     stringBuffer.append(TEXT_88);
+    stringBuffer.append(sourceState);
+    stringBuffer.append(TEXT_89);
+    stringBuffer.append(TEXT_90);
+    stringBuffer.append(StringUtil.indent(body,1));
+    stringBuffer.append(TEXT_91);
     
 
 }});
@@ -950,7 +976,7 @@ return CodeProcedure.generate(new CodeProcedure(this) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_89);
+    stringBuffer.append(TEXT_92);
     
 
 }});

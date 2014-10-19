@@ -706,9 +706,6 @@ public class CppStatemachinePointsHandler{
 							
 							String exitProcedureName= generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_EXIT_PROCEDURE_NAME, 
 									exitTypeQualifiedName);
-							if("exitOne".equals(exitProcedureName)){
-								System.out.println();
-							}
 							
 							if(generationValueGetter.getValues(ICppStatemachinesDefinitions.STATEMCHAINE_EXIT_PROCEDURE_NAME, uClass).contains(exitProcedureName)){
 								body = body+ generationValueGetter.use(ICppStatemachinesDefinitions.PROCEDURE_CALL_DECLARATION, 
@@ -823,7 +820,7 @@ public class CppStatemachinePointsHandler{
 			Object exitSm = exitableStatemachines.get(state);
 			if(exitSm== null){
 				useMainSm:{
-					String doActivityCode = generationValueGetter.generationPointString(state, ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY);
+					List<Object> doActivityCode = generationValueGetter.generationPointList(state, ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY);
 					if(!doActivityCode.isEmpty()){
 						break useMainSm;
 					}
@@ -877,17 +874,27 @@ public class CppStatemachinePointsHandler{
 				
 			}
 			
-			String doActivityCode = generationValueGetter.generationPointString(state, ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY);
-			if(doActivityCode!= null&& !doActivityCode.isEmpty()){
-				Object statemachine = generationValueGetter.getObject(state, ICppStatemachinesDefinitions.STATEMACHINE);
-				String smType = getQualifiedTypeName(generationValueGetter, statemachine);
-				String stateType = getQualifiedTypeName(generationValueGetter, state);
+			List<Object> doActivityCodes = generationValueGetter.generationPointList(state, ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY);
+			String indexer= doActivityCodes.isEmpty()? CommonConstants.BLANK: String.valueOf(1);
+			for(Object activityCode: doActivityCodes){
+				String doActivityCode= (String) activityCode;
 				
-				String switchVariableName= smType+ stateType;
+				if(!doActivityCode.isEmpty()){
+					Object statemachine = generationValueGetter.getObject(state, ICppStatemachinesDefinitions.STATEMACHINE);
+					String smType = getQualifiedTypeName(generationValueGetter, statemachine);
+					String stateType = getQualifiedTypeName(generationValueGetter, state);
+					
+					String switchVariableName= smType+ stateType;
+					
+					String threadInstance = generationValueGetter.use(ICppStatemachinesDefinitions.THREAD_INSTANCE, switchVariableName)+ indexer;
+					body= body+ generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_THREAD_USE_DECLARATION, threadInstance);
+				}
 				
-				String threadInstance = generationValueGetter.use(ICppStatemachinesDefinitions.THREAD_INSTANCE, switchVariableName);
-				body= body+ generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_THREAD_USE_DECLARATION, threadInstance);
+				if(!indexer.isEmpty()){
+					indexer= String.valueOf((Integer.valueOf(indexer).intValue()+ 1));
+				}
 			}
+			
 			
 			switchCases = switchCases+ generationValueGetter.use(ICppStatemachinesDefinitions.STATEMACHINE_SWITCH_CASE_DECLARATION,
 					shortendedQualifiedTypeName, stateName, body);
@@ -902,10 +909,6 @@ public class CppStatemachinePointsHandler{
 			preDeclarations.append(CommonConstants.NEW_LINE);
 			
 			swtichCalls= preDeclarations+ swtichCalls;
-		}
-		
-		if("exitOne".equals(generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_EXIT_PROCEDURE_NAME,qualifiedTypeName))){
-			System.out.println();
 		}
 		
 		if(!switchCases.trim().isEmpty()){
@@ -1091,7 +1094,7 @@ public class CppStatemachinePointsHandler{
 			@GenerationArgument Object element,
 			@GenerationProcedureParameter(id = ICppStatemachinesDefinitions.STATE_ENTRY_CODE_BODY) String entryCode,
 			@GenerationProcedureParameter(id = ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_ON_COMPLETION_EVENT) String onCompletionEvent,
-			@GenerationProcedureParameter(id = ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY) String doActivityCodeBody){
+			@GenerationProcedureParameter(id = ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY) List<Object> doActivityCodes){
 		
 		String body= CommonConstants.BLANK;
 		
@@ -1177,19 +1180,18 @@ public class CppStatemachinePointsHandler{
 			}
 		}
 		
-		String doActivityCode= doActivityCodeBody;
-		if(onCompletionEvent!=null&& !onCompletionEvent.isEmpty()){
-			String invocation = generationValueGetter.use(ICppDefinitions.METHOD_INVOCATION, onCompletionEvent, CommonConstants.BLANK, Boolean.TRUE);
-			if(doActivityCodeBody!= null&& !doActivityCode.isEmpty()){
+		String indexer= doActivityCodes.isEmpty()? CommonConstants.BLANK: String.valueOf(1);
+		for(Object doActivityCodeObject: doActivityCodes){
+			String doActivityCode= (String) doActivityCodeObject;
+			if(onCompletionEvent!=null&& !onCompletionEvent.isEmpty()){
+				String invocation = generationValueGetter.use(ICppDefinitions.METHOD_INVOCATION, onCompletionEvent, CommonConstants.BLANK, Boolean.TRUE);
 				invocation= doActivityCode+ CommonConstants.NEW_LINE+ invocation;
+				doActivityCode= invocation;
 			}
-			doActivityCode= invocation;
-		}
-		
-		if(doActivityCode!= null&& !doActivityCode.isEmpty()){
+			
 			String parentName= generationValueGetter.getString(element, IModelingElementDefinitions.NAME);
-			String threadInstance = generationValueGetter.use(ICppStatemachinesDefinitions.THREAD_INSTANCE, switchVariableType);
-			String doActivityInstance = generationValueGetter.use(ICppStatemachinesDefinitions.DO_ACTIVITY_METHOD_INSTANCE, switchVariableType);
+			String threadInstance = generationValueGetter.use(ICppStatemachinesDefinitions.THREAD_INSTANCE, switchVariableType)+ indexer;
+			String doActivityInstance = generationValueGetter.use(ICppStatemachinesDefinitions.DO_ACTIVITY_METHOD_INSTANCE, indexer+ switchVariableType);
 			String declaration = generationValueGetter.generate(ICppDefinitions.DECLARE_STATEMENET, state, 
 					//GenerationArgumentDescriptor.arg(ICppDefinitions.GENERIC_TYPE, parentName),
 					GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_TYPE_ARGUMENT, ICppStatemachinesDefinitions.THREAD),
@@ -1231,13 +1233,21 @@ public class CppStatemachinePointsHandler{
 			String functionPointer = generationValueGetter.use(ICppStatemachinesDefinitions.DO_ACTIVITY_FUNCTION_POINTER_IMPLEMENTATION, parentName,
 					doActivityInstance, threadInstance);
 			
-			contents= contents+ CommonConstants.NEW_LINE+ functionPointer;
+			if(!contents.isEmpty()){
+				contents= contents+ CommonConstants.NEW_LINE+ CommonConstants.NEW_LINE;
+			}
+			
+			contents= contents+ functionPointer;
+			if(!indexer.isEmpty()){
+				indexer= String.valueOf((Integer.valueOf(indexer).intValue()+ 1));
+			}
 		}
-		
 		
 		if(contents.isEmpty()){
 			return contents;
 		}
+		contents= generationValueGetter.use(ICppStatemachinesDefinitions.DO_ACTIVITY_FUNCTION_WRAP, contents);
+		
 		return generationValueGetter.use(ICppStatemachinesDefinitions.STATEMACHINE_SWITCH_CASE_DECLARATION, smTypeQualified, 
 				generationValueGetter.getString(state, IModelingElementDefinitions.NAME),contents);
 	}
@@ -1296,7 +1306,6 @@ public class CppStatemachinePointsHandler{
 					instanceName);
 			
 			List<?> states= generationValueGetter.getList(statemachine, ICppStatemachinesDefinitions.STATES);
-			
 			String entryContents= CommonConstants.BLANK;
 			String entryBody= CommonConstants.BLANK;
 			for(Object state: states){
@@ -1687,8 +1696,8 @@ public class CppStatemachinePointsHandler{
 	}
 	
 	@GenerationPoint(generationPoint= ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY)
-	public static String doActivity(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object state){
-		return generationValueGetter.getString(state, ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY, CPPCommonConstants.CPP_LANGUAGE);
+	public static List<?> doActivity(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object state){
+		return generationValueGetter.getList(state, ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY, CPPCommonConstants.CPP_LANGUAGE);
 	}
 	
 	@GenerationPoint(generationPoint= ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_ON_COMPLETION_EVENT)
