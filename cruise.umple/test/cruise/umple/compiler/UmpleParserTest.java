@@ -40,6 +40,11 @@ public class UmpleParserTest
 	  assertSimpleParse("011_compositionParseTest_indDef.ump");
 	  assertSimpleParse("011_compositionParseTest_inlineDef.ump");
   }
+
+  @Test
+  public void compositionParseTest_leftVarNames() {
+	  assertSimpleParse("011_compositionParseTest_leftVarNames.ump");
+  }
   
   @Test
   public void compositionParseTest_DoubleDefinition() {
