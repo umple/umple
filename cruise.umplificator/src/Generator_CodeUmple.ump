@@ -10,7 +10,6 @@ namespace cruise.umplificator.generator;
 
 class UmpleToUmpleGenerator
 {
-  isA CodeGeneratorWithSubptions;
   depend java.util.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.*;
