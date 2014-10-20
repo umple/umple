@@ -147,17 +147,13 @@ public class PooledStateMachine_timedTransition_1
 	  wait(3);
 	
 	  //ev2 is taken off the pool and is processed
+	  //transition to s3
+	  //ev3 is taken off the pool and is processed
 	  //transition to s4
-	  Assert.assertEquals(PooledSM_timedTransition_1.Sm.s4, psm.getSm()); 
-      
-	  
-	  //check that there is one event left in the pool: ev3
-	  Assert.assertEquals(1, psm.pool.messages.size());
-	  for (PooledSM_timedTransition_1.Message msg: psm.pool.messages)
-      {
-		  Assert.assertEquals(PooledSM_timedTransition_1.MessageType.ev3_M, msg.type);
-      }
-      
+	  Assert.assertEquals(PooledSM_timedTransition_1.Sm.s4, psm.getSm());
+
+	  //check that there is no event left in the pool
+	  Assert.assertEquals(0, psm.pool.messages.size());      
   }
   
   public static void wait(int seconds)
