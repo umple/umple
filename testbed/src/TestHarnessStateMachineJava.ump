@@ -350,7 +350,7 @@ class DeepHistoryCourse
       }
       Ss2 {
         Sss1{
-          toSss2 -> Sss2;
+          toSss2 -> S1.Sss2;
           toS2 -> S2;
         }
         Sss2{

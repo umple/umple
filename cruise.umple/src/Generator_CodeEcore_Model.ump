@@ -402,14 +402,20 @@ class EcoreGenericTypeArgument {
 
   isA EcoreGenericTypeNode;
   
-  defaulted Integer order = 0;
+  lazy Integer order;
   
   before constructor {
     setTagName("eTypeArguments");
   }
   
-  key {order}
+  // Set default order to zero to avoid warning 45
+  // Originally order was defaulted and = 0;
+  after constructor {
+    setOrder(0);
+  }
   
+  key {order}
+
   Map<String,String> getNodeAttributes(){
     Map<String,String> map = super.getNodeAttributes();
     
