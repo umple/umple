@@ -10,8 +10,11 @@ Umple will regenerate all Java files.
 The following instructs the system to inject comments on every class point to the source
 @outputumplesource
 */
+strictness allow 30;
+strictness allow 1006;
 strictness allow 1007;
 strictness allow 1008;
+strictness allow 1006;
 
 tracer log4j root=debug (debug)=(file, console);
 

@@ -4,7 +4,6 @@ class JavaClassVisitor {
 
  isA ASTVisitor;
  
- depend cruise.umplificator.StringHelper;
  depend org.eclipse.jdt.core.dom.ASTVisitor;
  depend org.eclipse.jdt.core.dom.TypeDeclaration;
  depend org.eclipse.jdt.core.dom.EnumDeclaration;
