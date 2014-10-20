@@ -1,19 +1,19 @@
 class A1 {}  
  
 class B1 {
-	 0..1 b1 -<@> * A1 a1;   
+	 0..1 b1 <@>- * A1 a1;   
 }
 
 class A2 {}  
  
 class B2 {
-	 1 b2 -<@> 1 A2 a2;   
+	 1 b2 <@>- 1 A2 a2;   
 }
 
 
 class A3 {}  
  
 class B3 {
-	 * b3 -<@> 0..4 A3;   
+	 * b3 <@>- 0..4 A3;   
 }
 
