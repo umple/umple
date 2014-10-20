@@ -99,6 +99,7 @@ class CourseH
     {
       Idle
       {
+        fill -> Full;
       }
       Full
       {
@@ -130,6 +131,7 @@ class CourseI
       Idle
       {
         flip -> Running;
+        fill -> Full;
       }
       Full
       {
@@ -201,8 +203,8 @@ class CourseM
 
 statemachine MachineN
 {
-  On { stay -> On; }
-  Off { }
+  On { stay -> On; revert -> Off; }
+  Off {}
 }
 
 class CourseN
@@ -260,6 +262,7 @@ class CourseX {
         e -> green;
       }
       green {
+        darken -> black;
         greenStatus {
           greenStatusOn { 
             entry / { addLog("GreenStatusOn Entry"); }
