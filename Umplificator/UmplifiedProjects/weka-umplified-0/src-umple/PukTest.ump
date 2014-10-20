@@ -1,0 +1,28 @@
+namespace weka.classifiers.functions.supportVector;
+
+class PukTest
+{
+  isA AbstractKernelTest;
+ depend weka.classifiers.functions.supportVector.AbstractKernelTest;
+ depend weka.classifiers.functions.supportVector.Kernel;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public PukTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default Puk 
+ */
+public Kernel getKernel(){
+  return new Puk();
+}
+
+public static Test suite(){
+  return new TestSuite(PukTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

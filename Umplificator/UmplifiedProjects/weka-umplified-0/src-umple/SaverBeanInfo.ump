@@ -1,0 +1,14 @@
+namespace weka.gui.beans;
+
+class SaverBeanInfo
+{
+  isA AbstractDataSinkBeanInfo;
+ depend java.beans.BeanDescriptor;
+/** 
+ * Get the bean descriptor for this bean
+ * @return a <code>BeanDescriptor</code> value
+ */
+public BeanDescriptor getBeanDescriptor(){
+  return new BeanDescriptor(weka.gui.beans.Saver.class,SaverCustomizer.class);
+}
+}

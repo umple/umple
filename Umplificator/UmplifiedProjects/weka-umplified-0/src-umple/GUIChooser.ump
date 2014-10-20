@@ -1,0 +1,8 @@
+
+top Menu
+{
+/** 
+ * Enum listing possible menus that plugins can appear in 
+ */
+public static enum Menu {TOOLS, VISUALIZATION}
+}

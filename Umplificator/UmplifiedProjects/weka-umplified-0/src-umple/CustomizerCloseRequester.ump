@@ -1,0 +1,11 @@
+namespace weka.gui.beans;
+
+interface CustomizerCloseRequester
+{
+ depend java.awt.Window;
+/** 
+ * A reference to the parent is passed in
+ * @param parent the parent Window
+ */
+void setParentWindow(Window parent);
+}

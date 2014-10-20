@@ -1,0 +1,12 @@
+namespace weka.core.pmml;
+
+interface PMMLProducer
+{
+ depend weka.core.Instances;
+/** 
+ * Produce a PMML representation
+ * @param train the training data that might have been used by theimplementer. If it is not needed by the implementer then clients can safely pass in null
+ * @return a string containing the PMML representation
+ */
+String toPMML(Instances train);
+}

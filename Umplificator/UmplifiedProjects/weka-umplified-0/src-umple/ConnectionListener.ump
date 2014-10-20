@@ -1,0 +1,11 @@
+namespace weka.gui.sql.event;
+
+interface ConnectionListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+/** 
+ * This method gets called when the connection is either established or disconnected.
+ */
+public void connectionChange(ConnectionEvent evt);
+}

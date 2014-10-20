@@ -1,0 +1,115 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class TargetValue
+{
+ depend java.math.BigDecimal;
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlElement(name="Partition",namespace="http://www.dmg.org/PMML-4_1") protected Partition partition;
+
+@XmlAttribute protected Double defaultValue;
+
+@XmlAttribute protected String displayValue;
+
+@XmlAttribute protected BigDecimal priorProbability;
+
+@XmlAttribute protected String value;
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the partition property.
+ * @return possible object is {@link Partition }
+ */
+public Partition getPartition(){
+  return partition;
+}
+
+/** 
+ * Sets the value of the partition property.
+ * @param value allowed object is {@link Partition }
+ */
+public void setPartition(Partition value){
+  this.partition=value;
+}
+
+/** 
+ * Gets the value of the defaultValue property.
+ * @return possible object is {@link Double }
+ */
+public Double getDefaultValue(){
+  return defaultValue;
+}
+
+/** 
+ * Sets the value of the defaultValue property.
+ * @param value allowed object is {@link Double }
+ */
+public void setDefaultValue(Double value){
+  this.defaultValue=value;
+}
+
+/** 
+ * Gets the value of the displayValue property.
+ * @return possible object is {@link String }
+ */
+public String getDisplayValue(){
+  return displayValue;
+}
+
+/** 
+ * Sets the value of the displayValue property.
+ * @param value allowed object is {@link String }
+ */
+public void setDisplayValue(String value){
+  this.displayValue=value;
+}
+
+/** 
+ * Gets the value of the priorProbability property.
+ * @return possible object is {@link BigDecimal }
+ */
+public BigDecimal getPriorProbability(){
+  return priorProbability;
+}
+
+/** 
+ * Sets the value of the priorProbability property.
+ * @param value allowed object is {@link BigDecimal }
+ */
+public void setPriorProbability(BigDecimal value){
+  this.priorProbability=value;
+}
+
+/** 
+ * Gets the value of the value property.
+ * @return possible object is {@link String }
+ */
+public String getValue(){
+  return value;
+}
+
+/** 
+ * Sets the value of the value property.
+ * @param value allowed object is {@link String }
+ */
+public void setValue(String value){
+  this.value=value;
+}
+}

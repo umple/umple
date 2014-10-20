@@ -1,0 +1,43 @@
+namespace weka.gui.beans;
+
+class KnowledgeFlow
+{
+/** 
+ * Static method that can be called from a running program to launch the KnowledgeFlow
+ */
+public static void startApp(){
+  KnowledgeFlowApp.addStartupListener(new StartUpListener(){
+    public void startUpComplete(){
+      weka.gui.SplashWindow.disposeSplash();
+    }
+  }
+);
+  weka.gui.SplashWindow.splash(ClassLoader.getSystemResource("weka/gui/beans/icons/splash.jpg"));
+  Thread nt=new Thread(){
+    public void run(){
+      weka.gui.SplashWindow.invokeMethod("weka.gui.beans.KnowledgeFlowApp","createSingleton",null);
+    }
+  }
+;
+  nt.start();
+}
+
+public void startUpComplete(){
+  weka.gui.SplashWindow.disposeSplash();
+}
+
+public void run(){
+  weka.gui.SplashWindow.invokeMethod("weka.gui.beans.KnowledgeFlowApp","createSingleton",null);
+}
+
+/** 
+ * Shows the splash screen, launches the application and then disposes the splash screen.
+ * @param args the command line arguments
+ */
+public static void main(String[] args){
+  weka.core.logging.Logger.log(weka.core.logging.Logger.Level.INFO,"Logging started");
+  weka.gui.SplashWindow.splash(ClassLoader.getSystemResource("weka/gui/beans/icons/splash.jpg"));
+  weka.gui.SplashWindow.invokeMain("weka.gui.beans.KnowledgeFlowApp",args);
+  weka.gui.SplashWindow.disposeSplash();
+}
+}

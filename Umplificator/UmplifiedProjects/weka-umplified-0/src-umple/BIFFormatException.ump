@@ -1,0 +1,14 @@
+namespace weka.gui.graphvisualizer;
+
+class BIFFormatException
+{
+  isA Exception;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=-4102518086411708140L;
+
+public BIFFormatException(String s){
+  super(s);
+}
+}

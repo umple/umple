@@ -1,0 +1,23 @@
+
+top DELIMITER2
+{
+/** 
+ * <p>Java class for DELIMITER. <p>The following schema fragment specifies the expected content contained within this class. <p> <pre> &lt;simpleType name="DELIMITER"> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"> &lt;enumeration value="sameTimeWindow"/> &lt;enumeration value="acrossTimeWindows"/> &lt;/restriction> &lt;/simpleType> </pre>
+ */
+@XmlEnum public enum DELIMITER2 {@XmlEnumValue("acrossTimeWindows") ACROSS_TIME_WINDOWS("acrossTimeWindows"), @XmlEnumValue("sameTimeWindow") SAME_TIME_WINDOW("sameTimeWindow"); private final String value;
+DELIMITER2(String v){
+  value=v;
+}
+public String value(){
+  return value;
+}
+public static DELIMITER2 fromValue(String v){
+  for (  DELIMITER2 c : DELIMITER2.values()) {
+    if (c.value.equals(v)) {
+      return c;
+    }
+  }
+  throw new IllegalArgumentException(v.toString());
+}
+}
+}

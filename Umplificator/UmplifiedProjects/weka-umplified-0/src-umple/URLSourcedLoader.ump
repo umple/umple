@@ -1,0 +1,17 @@
+namespace weka.core.converters;
+
+interface URLSourcedLoader
+{
+/** 
+ * Set the url to load from
+ * @param url the url to load from
+ * @exception Exception if the url can't be set.
+ */
+void setURL(String url) throws Exception ;
+
+/** 
+ * Return the current url
+ * @return the current url
+ */
+String retrieveURL();
+}

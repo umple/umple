@@ -1,0 +1,11 @@
+namespace weka.core;
+
+interface Matchable
+{
+/** 
+ * Returns a string that describes a tree representing the object in prefix order.
+ * @return the tree described as a string
+ * @exception Exception if the tree can't be computed
+ */
+String prefix() throws Exception ;
+}

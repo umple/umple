@@ -1,0 +1,48 @@
+
+top METRIC_TYPE
+{
+/** 
+ * Enum for holding different metric types 
+ */
+public static enum METRIC_TYPE {CONFIDENCE("conf"){
+  double compute(  int premiseSupport,  int consequenceSupport,  int totalSupport,  int totalTransactions){
+    return (double)totalSupport / (double)premiseSupport;
+  }
+}
+, LIFT("lift"){
+  double compute(  int premiseSupport,  int consequenceSupport,  int totalSupport,  int totalTransactions){
+    double confidence=METRIC_TYPE.CONFIDENCE.compute(premiseSupport,consequenceSupport,totalSupport,totalTransactions);
+    return confidence / ((double)consequenceSupport / (double)totalTransactions);
+  }
+}
+, LEVERAGE("lev"){
+  double compute(  int premiseSupport,  int consequenceSupport,  int totalSupport,  int totalTransactions){
+    double coverageForItemSet=(double)totalSupport / (double)totalTransactions;
+    double expectedCoverageIfIndependent=((double)premiseSupport / (double)totalTransactions) * ((double)consequenceSupport / (double)totalTransactions);
+    return coverageForItemSet - expectedCoverageIfIndependent;
+  }
+}
+, CONVICTION("conv"){
+  double compute(  int premiseSupport,  int consequenceSupport,  int totalSupport,  int totalTransactions){
+    double num=(double)premiseSupport * (double)(totalTransactions - consequenceSupport) / (double)totalTransactions;
+    double denom=premiseSupport - totalSupport + 1;
+    return num / denom;
+  }
+}
+; private final String m_stringVal;
+METRIC_TYPE(String name){
+  m_stringVal=name;
+}
+abstract double compute(int premiseSupport,int consequenceSupport,int totalSupport,int totalTransactions);
+public String toString(){
+  return m_stringVal;
+}
+public String toStringMetric(int premiseSupport,int consequenceSupport,int totalSupport,int totalTransactions){
+  return m_stringVal + ":(" + Utils.doubleToString(compute(premiseSupport,consequenceSupport,totalSupport,totalTransactions),2)+ ")";
+}
+public String toXML(int premiseSupport,int consequenceSupport,int totalSupport,int totalTransactions){
+  String result="<CRITERE name=\"" + m_stringVal + "\" value=\" "+ Utils.doubleToString(compute(premiseSupport,consequenceSupport,totalSupport,totalTransactions),2)+ "\"/>";
+  return result;
+}
+}
+}

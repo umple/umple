@@ -1,0 +1,62 @@
+namespace weka.gui.beans;
+
+interface BeanCommon
+{
+ depend java.beans.EventSetDescriptor;
+/** 
+ * Set a custom (descriptive) name for this bean
+ * @param name the name to use
+ */
+void setCustomName(String name);
+
+/** 
+ * Get the custom (descriptive) name for this bean (if one has been set)
+ * @return the custom name (or the default name)
+ */
+String getCustomName();
+
+/** 
+ * Stop any processing that the bean might be doing.
+ */
+void stop();
+
+/** 
+ * Returns true if. at this time, the bean is busy with some (i.e. perhaps a worker thread is performing some calculation).
+ * @return true if the bean is busy.
+ */
+boolean isBusy();
+
+/** 
+ * Set a logger
+ * @param logger a <code>weka.gui.Logger</code> value
+ */
+void setLog(weka.gui.Logger logger);
+
+/** 
+ * Returns true if, at this time,  the object will accept a connection via the named event
+ * @param esd the EventSetDescriptor for the event in question
+ * @return true if the object will accept a connection
+ */
+boolean connectionAllowed(EventSetDescriptor esd);
+
+/** 
+ * Returns true if, at this time,  the object will accept a connection via the named event
+ * @param eventName the name of the event
+ * @return true if the object will accept a connection
+ */
+boolean connectionAllowed(String eventName);
+
+/** 
+ * Notify this object that it has been registered as a listener with a source for recieving events described by the named event This object is responsible for recording this fact.
+ * @param eventName the event
+ * @param source the source with which this object has been registered asa listener
+ */
+void connectionNotification(String eventName,Object source);
+
+/** 
+ * Notify this object that it has been deregistered as a listener with a source for named event. This object is responsible for recording this fact.
+ * @param eventName the event
+ * @param source the source with which this object has been registered asa listener
+ */
+void disconnectionNotification(String eventName,Object source);
+}

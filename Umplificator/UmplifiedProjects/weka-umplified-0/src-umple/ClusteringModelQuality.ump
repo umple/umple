@@ -1,0 +1,63 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class ClusteringModelQuality
+{
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlAttribute(name="SSB") protected Double ssb;
+
+@XmlAttribute(name="SSE") protected Double sse;
+
+@XmlAttribute protected String dataName;
+
+/** 
+ * Gets the value of the ssb property.
+ * @return possible object is {@link Double }
+ */
+public Double getSSB(){
+  return ssb;
+}
+
+/** 
+ * Sets the value of the ssb property.
+ * @param value allowed object is {@link Double }
+ */
+public void setSSB(Double value){
+  this.ssb=value;
+}
+
+/** 
+ * Gets the value of the sse property.
+ * @return possible object is {@link Double }
+ */
+public Double getSSE(){
+  return sse;
+}
+
+/** 
+ * Sets the value of the sse property.
+ * @param value allowed object is {@link Double }
+ */
+public void setSSE(Double value){
+  this.sse=value;
+}
+
+/** 
+ * Gets the value of the dataName property.
+ * @return possible object is {@link String }
+ */
+public String getDataName(){
+  return dataName;
+}
+
+/** 
+ * Sets the value of the dataName property.
+ * @param value allowed object is {@link String }
+ */
+public void setDataName(String value){
+  this.dataName=value;
+}
+}

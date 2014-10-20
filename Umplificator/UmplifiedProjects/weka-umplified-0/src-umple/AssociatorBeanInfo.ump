@@ -1,0 +1,27 @@
+namespace weka.gui.beans;
+
+class AssociatorBeanInfo
+{
+  isA SimpleBeanInfo;
+ depend java.beans.BeanDescriptor;
+ depend java.beans.EventSetDescriptor;
+ depend java.beans.SimpleBeanInfo;
+public EventSetDescriptor[] getEventSetDescriptors(){
+  try {
+    EventSetDescriptor[] esds={new EventSetDescriptor(Associator.class,"text",TextListener.class,"acceptText"),new EventSetDescriptor(Associator.class,"graph",GraphListener.class,"acceptGraph"),new EventSetDescriptor(Associator.class,"configuration",ConfigurationListener.class,"acceptConfiguration"),new EventSetDescriptor(Associator.class,"batchAssociationRules",BatchAssociationRulesListener.class,"acceptAssociationRules")};
+    return esds;
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+  }
+  return null;
+}
+
+/** 
+ * Get the bean descriptor for this bean
+ * @return a <code>BeanDescriptor</code> value
+ */
+public BeanDescriptor getBeanDescriptor(){
+  return new BeanDescriptor(weka.gui.beans.Associator.class,AssociatorCustomizer.class);
+}
+}

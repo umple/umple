@@ -1,0 +1,17 @@
+
+top ATTR_TYPE
+{
+/** 
+ * The attribute type.
+ */
+public enum ATTR_TYPE {/** 
+ * normal string. 
+ */
+Normal, /** 
+ * a comment. 
+ */
+Comment, /** 
+ * a quoted string. 
+ */
+Quote}
+}

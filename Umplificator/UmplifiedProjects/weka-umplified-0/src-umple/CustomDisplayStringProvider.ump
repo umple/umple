@@ -1,0 +1,10 @@
+namespace weka.core;
+
+interface CustomDisplayStringProvider
+{
+/** 
+ * Returns the custom display string.
+ * @return		the string
+ */
+public String toDisplay();
+}

@@ -1,0 +1,43 @@
+namespace weka.classifiers.trees.j48;
+
+class EntropySplitCrit
+{
+  isA EntropyBasedSplitCrit;
+ depend weka.core.RevisionUtils;
+ depend weka.core.Utils;
+ depend weka.core.ContingencyTables;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=5986252682266803935L;
+
+/** 
+ * Computes entropy for given distribution.
+ */
+public final double splitCritValue(Distribution bags){
+  return newEnt(bags);
+}
+
+/** 
+ * Computes entropy of test distribution with respect to training distribution.
+ */
+public final double splitCritValue(Distribution train,Distribution test){
+  double result=0;
+  int numClasses=0;
+  int i, j;
+  for (j=0; j < test.numClasses(); j++)   if (Utils.gr(train.perClass(j),0) || Utils.gr(test.perClass(j),0))   numClasses++;
+  for (i=0; i < test.numBags(); i++)   if (Utils.gr(test.perBag(i),0)) {
+    for (j=0; j < test.numClasses(); j++)     if (Utils.gr(test.perClassPerBag(i,j),0))     result-=test.perClassPerBag(i,j) * Math.log(train.perClassPerBag(i,j) + 1);
+    result+=test.perBag(i) * Math.log(train.perBag(i) + numClasses);
+  }
+  return result / ContingencyTables.log2;
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 10055 $");
+}
+}

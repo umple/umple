@@ -1,0 +1,15 @@
+namespace weka.gui.graphvisualizer;
+
+class LayoutCompleteEvent
+{
+  isA EventObject;
+ depend java.util.EventObject;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=6172467234026258427L;
+
+public LayoutCompleteEvent(Object source){
+  super(source);
+}
+}

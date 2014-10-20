@@ -1,0 +1,75 @@
+namespace weka.gui.treevisualizer;
+
+class PlaceNode1
+{
+  isA NodePlace;
+/** 
+ * An array containing the spacing value for each level 
+ */
+private double[] m_levels;
+
+/** 
+ * The number of levels in the tree 
+ */
+private int m_noLevels;
+
+/** 
+ * An array containing the current node place for each level to place each node accordingly.
+ */
+private int[] m_levelNode;
+
+/** 
+ * The distance between each level. 
+ */
+private double m_yRatio;
+
+/** 
+ * Call this function to have each node in the tree starting at 'r' placed in a visual (not logical, they already are) tree position.
+ * @param r The top of the tree.
+ */
+@Override public void place(Node r){
+  m_noLevels=Node.getHeight(r,0) + 1;
+  m_yRatio=1 / (double)m_noLevels;
+  m_levels=new double[m_noLevels];
+  m_levelNode=new int[m_noLevels];
+  for (int noa=0; noa < m_noLevels; noa++) {
+    m_levels[noa]=1;
+    m_levelNode[noa]=0;
+  }
+  setNumOfNodes(r,0);
+  for (int noa=0; noa < m_noLevels; noa++) {
+    m_levels[noa]=1 / m_levels[noa];
+  }
+  placer(r,0);
+}
+
+/** 
+ * This function finds the number of nodes on each level recursively.
+ * @param r The current Node upto.
+ * @param l The current level upto.
+ */
+private void setNumOfNodes(Node r,int l){
+  Edge e;
+  l++;
+  m_levels[l]++;
+  for (int noa=0; (e=r.getChild(noa)) != null && r.getCVisible(); noa++) {
+    setNumOfNodes(e.getTarget(),l);
+  }
+}
+
+/** 
+ * This function goes through and sets the position of each node
+ * @param r The current node upto.
+ * @param l the current level upto.
+ */
+private void placer(Node r,int l){
+  Edge e;
+  l++;
+  m_levelNode[l]++;
+  r.setCenter(m_levelNode[l] * m_levels[l]);
+  r.setTop(l * m_yRatio);
+  for (int noa=0; (e=r.getChild(noa)) != null && r.getCVisible(); noa++) {
+    placer(e.getTarget(),l);
+  }
+}
+}

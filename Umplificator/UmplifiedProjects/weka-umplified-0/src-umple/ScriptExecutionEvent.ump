@@ -1,0 +1,22 @@
+
+top Type
+{
+/** 
+ * Defines the type of event.
+ * @author  fracpete (fracpete at waikato dot ac dot nz)
+ * @version $Revision: 8034 $
+ */
+public enum Type {/** 
+ * started execution. 
+ */
+STARTED, /** 
+ * finished normal. 
+ */
+FINISHED, /** 
+ * finished with error. 
+ */
+ERROR, /** 
+ * got stopped by user. 
+ */
+STOPPED}
+}

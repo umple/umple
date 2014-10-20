@@ -1,0 +1,26 @@
+namespace weka.classifiers;
+
+interface IterativeClassifier
+{
+  isA Classifier;
+ depend weka.core.Instances;
+/** 
+ * Initializes an iterative classifier.
+ * @param instances the instances to be used in induction
+ * @exception Exception if the model cannot be initialized
+ */
+void initializeClassifier(Instances instances) throws Exception ;
+
+/** 
+ * Performs one iteration.
+ * @return false if no further iterations could be performed, true otherwise
+ * @exception Exception if this iteration fails for unexpected reasons
+ */
+boolean next() throws Exception ;
+
+/** 
+ * Signal end of iterating, useful for any house-keeping/cleanup
+ * @exception Exception if cleanup fails
+ */
+void done() throws Exception ;
+}

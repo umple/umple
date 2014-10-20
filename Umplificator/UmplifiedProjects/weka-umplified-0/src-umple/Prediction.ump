@@ -1,0 +1,27 @@
+namespace weka.classifiers.evaluation;
+
+interface Prediction
+{
+/** 
+ * Constant representing a missing value. This should have the same value as weka.core.Instance.MISSING_VALUE 
+ */
+double MISSING_VALUE=weka.core.Utils.missingValue();
+
+/** 
+ * Gets the weight assigned to this prediction. This is typically the weight of the test instance the prediction was made for.
+ * @return the weight assigned to this prediction.
+ */
+double weight();
+
+/** 
+ * Gets the actual class value.
+ * @return the actual class value, or MISSING_VALUE if noprediction was made.  
+ */
+double actual();
+
+/** 
+ * Gets the predicted class value.
+ * @return the predicted class value, or MISSING_VALUE if noprediction was made.  
+ */
+double predicted();
+}

@@ -1,0 +1,55 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class NeuralOutputs
+{
+ depend java.math.BigInteger;
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlElement(name="NeuralOutput",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<NeuralOutput> neuralOutput;
+
+@XmlAttribute protected BigInteger numberOfOutputs;
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the neuralOutput property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the neuralOutput property. <p> For example, to add a new item, do as follows: <pre> getNeuralOutput().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link NeuralOutput }
+ */
+public List<NeuralOutput> getNeuralOutput(){
+  if (neuralOutput == null) {
+    neuralOutput=new ArrayList<NeuralOutput>();
+  }
+  return this.neuralOutput;
+}
+
+/** 
+ * Gets the value of the numberOfOutputs property.
+ * @return possible object is {@link BigInteger }
+ */
+public BigInteger getNumberOfOutputs(){
+  return numberOfOutputs;
+}
+
+/** 
+ * Sets the value of the numberOfOutputs property.
+ * @param value allowed object is {@link BigInteger }
+ */
+public void setNumberOfOutputs(BigInteger value){
+  this.numberOfOutputs=value;
+}
+}

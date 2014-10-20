@@ -1,0 +1,87 @@
+namespace weka.experiment;
+
+class RemoteExperimentSubTask
+{
+  isA Task,RevisionHandler;
+ depend java.io.File;
+ depend weka.core.RevisionHandler;
+ depend weka.core.RevisionUtils;
+/** 
+ * ID added to avoid warning 
+ */
+private static final long serialVersionUID=-1674092706571603720L;
+
+private TaskStatusInfo m_result=new TaskStatusInfo();
+
+private Experiment m_experiment;
+
+public RemoteExperimentSubTask(){
+  m_result.setStatusMessage("Not running.");
+  m_result.setExecutionStatus(TaskStatusInfo.TO_BE_RUN);
+}
+
+/** 
+ * Set the experiment for this sub task
+ * @param task the experiment
+ */
+public void setExperiment(Experiment task){
+  m_experiment=task;
+}
+
+/** 
+ * Get the experiment for this sub task
+ * @return this sub task's experiment
+ */
+public Experiment getExperiment(){
+  return m_experiment;
+}
+
+/** 
+ * Run the experiment
+ */
+@Override public void execute(){
+  m_result=new TaskStatusInfo();
+  m_result.setStatusMessage("Running...");
+  String goodResult="(sub)experiment completed successfully";
+  String subTaskType;
+  if (m_experiment.getRunLower() != m_experiment.getRunUpper()) {
+    subTaskType="(dataset " + ((File)m_experiment.getDatasets().elementAt(0)).getName();
+  }
+ else {
+    subTaskType="(exp run # " + m_experiment.getRunLower();
+  }
+  try {
+    System.err.println("Initializing " + subTaskType + ")...");
+    m_experiment.initialize();
+    System.err.println("Iterating " + subTaskType + ")...");
+    while (m_experiment.hasMoreIterations()) {
+      m_experiment.nextIteration();
+    }
+    System.err.println("Postprocessing " + subTaskType + ")...");
+    m_experiment.postProcess();
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+    String badResult="(sub)experiment " + subTaskType + ") failed : "+ ex.toString();
+    m_result.setExecutionStatus(TaskStatusInfo.FAILED);
+    m_result.setStatusMessage(badResult);
+    m_result.setTaskResult("Failed");
+    return;
+  }
+  m_result.setExecutionStatus(TaskStatusInfo.FINISHED);
+  m_result.setStatusMessage(goodResult + " " + subTaskType+ ").");
+  m_result.setTaskResult("No errors");
+}
+
+@Override public TaskStatusInfo getTaskStatus(){
+  return m_result;
+}
+
+/** 
+ * Returns the revision string.
+ * @return the revision
+ */
+@Override public String getRevision(){
+  return RevisionUtils.extract("$Revision: 10204 $");
+}
+}

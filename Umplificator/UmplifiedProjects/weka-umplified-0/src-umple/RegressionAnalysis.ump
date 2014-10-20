@@ -1,0 +1,166 @@
+namespace weka.classifiers.evaluation;
+
+class RegressionAnalysis
+{
+ depend weka.core.Attribute;
+ depend weka.core.Instances;
+ depend weka.core.RevisionUtils;
+ depend weka.core.matrix.Matrix;
+/** 
+ * Returns the sum of squared residuals of the simple linear regression model: y = a + bx.
+ * @param data (the data set)
+ * @param chosen (chosen x-attribute)
+ * @param slope (slope determined by simple linear regression model)
+ * @param intercept (intercept determined by simple linear regression model)
+ * @return sum of squared residuals
+ * @throws Exception if there is a missing class value in data
+ */
+public static double calculateSSR(Instances data,Attribute chosen,double slope,double intercept) throws Exception {
+  double ssr=0.0;
+  for (int i=0; i < data.numInstances(); i++) {
+    double yHat=slope * data.instance(i).value(chosen) + intercept;
+    double resid=data.instance(i).value(data.classIndex()) - yHat;
+    ssr+=resid * resid;
+  }
+  return ssr;
+}
+
+/** 
+ * Returns the R-squared value for a linear regression model, where sum of squared residuals is already calculated. This works for either a simple or a multiple linear regression model.
+ * @param data (the data set)
+ * @param ssr (sum of squared residuals)
+ * @return R^2 value
+ * @throws Exception if there is a missing class value in data
+ */
+public static double calculateRSquared(Instances data,double ssr) throws Exception {
+  double yMean=data.meanOrMode(data.classIndex());
+  double tss=0.0;
+  for (int i=0; i < data.numInstances(); i++) {
+    tss+=(data.instance(i).value(data.classIndex()) - yMean) * (data.instance(i).value(data.classIndex()) - yMean);
+  }
+  double rsq=1 - (ssr / tss);
+  return rsq;
+}
+
+/** 
+ * Returns the adjusted R-squared value for a linear regression model. This works for either a simple or a multiple linear regression model.
+ * @param rsq (the model's R-squared value)
+ * @param n (the number of instances in the data)
+ * @param k (the number of coefficients in the model: k>=2)
+ * @return the adjusted R squared value
+ */
+public static double calculateAdjRSquared(double rsq,int n,int k){
+  if (n < 1 || k < 2 || n == k) {
+    System.err.println("Cannot calculate Adjusted R^2.");
+    return Double.NaN;
+  }
+  return 1 - ((1 - rsq) * (n - 1) / (n - k));
+}
+
+/** 
+ * Returns the F-statistic for a linear regression model.
+ * @param rsq (the model's R-squared value)
+ * @param n (the number of instances in the data)
+ * @param k (the number of coefficients in the model: k>=2)
+ * @return F-statistic
+ */
+public static double calculateFStat(double rsq,int n,int k){
+  if (n < 1 || k < 2 || n == k) {
+    System.err.println("Cannot calculate F-stat.");
+    return Double.NaN;
+  }
+  double numerator=rsq / (k - 1);
+  double denominator=(1 - rsq) / (n - k);
+  return numerator / denominator;
+}
+
+/** 
+ * Returns the standard errors of slope and intercept for a simple linear regression model: y = a + bx. The first element is the standard error of slope, the second element is standard error of intercept.
+ * @param data (the data set)
+ * @param chosen (chosen x-attribute)
+ * @param slope (slope determined by simple linear regression model)
+ * @param intercept (intercept determined by simple linear regression model)
+ * @param df (number of instances - 2)
+ * @return array of standard errors of slope and intercept
+ * @throws Exception if there is a missing class value in data
+ */
+public static double[] calculateStdErrorOfCoef(Instances data,Attribute chosen,double slope,double intercept,int df) throws Exception {
+  double ssr=calculateSSR(data,chosen,slope,intercept);
+  double mse=ssr / df;
+  double[][] array=new double[data.numInstances()][2];
+  for (int i=0; i < data.numInstances(); i++) {
+    array[i][0]=data.instance(i).value(chosen);
+    array[i][1]=1.0;
+  }
+  Matrix X=new Matrix(array);
+  Matrix Xt=X.transpose();
+  Matrix XtX=Xt.times(X);
+  Matrix inverse=XtX.inverse();
+  Matrix cov=inverse.times(mse);
+  double[] result=new double[2];
+  for (int i=0; i < 2; i++) {
+    result[i]=Math.sqrt(cov.get(i,i));
+  }
+  return result;
+}
+
+/** 
+ * Returns an array of the standard errors of the coefficients in a multiple linear regression. The last element in the array is the standard error of the constant coefficient. The standard error array is used to calculate the t-statistics.
+ * @param data (the data set
+ * @param selected (flags indicating variables used in the regression)
+ * @param ssr (sum of squared residuals)
+ * @param n (number of instances)
+ * @param k (number of coefficients; includes constant)
+ * @return array of standard errors of coefficients
+ * @throws Exception if there is a missing class value in data
+ */
+public static double[] calculateStdErrorOfCoef(Instances data,boolean[] selected,double ssr,int n,int k) throws Exception {
+  double[][] array=new double[n][k];
+  int column=0;
+  for (int j=0; j < data.numAttributes(); j++) {
+    if ((data.classIndex() != j) && (selected[j])) {
+      for (int i=0; i < n; i++) {
+        array[i][column]=data.instance(i).value(j);
+      }
+      column++;
+    }
+  }
+  for (int i=0; i < n; i++) {
+    array[i][k - 1]=1.0;
+  }
+  Matrix X=new Matrix(array);
+  Matrix Xt=X.transpose();
+  Matrix XtX=Xt.times(X);
+  Matrix inverse=XtX.inverse();
+  double mse=ssr / (n - k);
+  Matrix cov=inverse.times(mse);
+  double[] result=new double[k];
+  for (int i=0; i < k; i++) {
+    result[i]=Math.sqrt(cov.get(i,i));
+  }
+  return result;
+}
+
+/** 
+ * Returns an array of the t-statistic of each coefficient in a multiple linear regression model.
+ * @param coef (array holding the value of each coefficient)
+ * @param stderror (array holding each coefficient's standard error)
+ * @param k (number of coefficients, includes constant)
+ * @return array of t-statistics of coefficients
+ */
+public static double[] calculateTStats(double[] coef,double[] stderror,int k){
+  double[] result=new double[k];
+  for (int i=0; i < k; i++) {
+    result[i]=coef[i] / stderror[i];
+  }
+  return result;
+}
+
+/** 
+ * Returns the revision string.
+ * @return the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: ? $");
+}
+}

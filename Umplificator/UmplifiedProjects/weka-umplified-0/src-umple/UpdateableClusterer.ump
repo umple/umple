@@ -1,0 +1,17 @@
+namespace weka.clusterers;
+
+interface UpdateableClusterer
+{
+ depend weka.core.Instance;
+/** 
+ * Adds an instance to the clusterer.
+ * @param newInstance the instance to be added
+ * @throws Exception 	if something goes wrong
+ */
+public void updateClusterer(Instance newInstance) throws Exception ;
+
+/** 
+ * Signals the end of the updating.
+ */
+public void updateFinished();
+}

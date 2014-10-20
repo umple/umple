@@ -1,0 +1,169 @@
+namespace weka.filters.unsupervised.attribute;
+
+class NumericToBinary
+{
+  isA UnsupervisedFilter,StreamableFilter;
+  isA PotentialClassIgnorer;
+ depend java.util.ArrayList;
+ depend weka.core.Attribute;
+ depend weka.core.Capabilities;
+ depend weka.core.Capabilities.Capability;
+ depend weka.core.DenseInstance;
+ depend weka.core.Instance;
+ depend weka.core.Instances;
+ depend weka.core.RevisionUtils;
+ depend weka.core.SparseInstance;
+ depend weka.filters.StreamableFilter;
+ depend weka.filters.UnsupervisedFilter;
+/** 
+ * for serialization 
+ */
+static final long serialVersionUID=2616879323359470802L;
+
+/** 
+ * Returns a string describing this filter
+ * @return a description of the filter suitable for displaying in theexplorer/experimenter gui
+ */
+public String globalInfo(){
+  return "Converts all numeric attributes into binary attributes (apart from " + "the class attribute, if set): if the value of the numeric attribute is " + "exactly zero, the value of the new attribute will be zero. If the "+ "value of the numeric attribute is missing, the value of the new "+ "attribute will be missing. Otherwise, the value of the new "+ "attribute will be one. The new attributes will be nominal.";
+}
+
+/** 
+ * Returns the Capabilities of this filter.
+ * @return the capabilities of this object
+ * @see Capabilities
+ */
+@Override public Capabilities getCapabilities(){
+  Capabilities result=super.getCapabilities();
+  result.disableAll();
+  result.enableAllAttributes();
+  result.enable(Capability.MISSING_VALUES);
+  result.enableAllClasses();
+  result.enable(Capability.MISSING_CLASS_VALUES);
+  result.enable(Capability.NO_CLASS);
+  return result;
+}
+
+/** 
+ * Sets the format of the input instances.
+ * @param instanceInfo an Instances object containing the input instancestructure (any instances contained in the object are ignored - only the structure is required).
+ * @return true if the outputFormat may be collected immediately
+ * @throws Exception if the input format can't be set successfully
+ */
+@Override public boolean setInputFormat(Instances instanceInfo) throws Exception {
+  super.setInputFormat(instanceInfo);
+  setOutputFormat();
+  return true;
+}
+
+/** 
+ * Input an instance for filtering.
+ * @param instance the input instance
+ * @return true if the filtered instance may now be collected with output().
+ * @throws IllegalStateException if no input format has been defined.
+ */
+@Override public boolean input(Instance instance){
+  if (getInputFormat() == null) {
+    throw new IllegalStateException("No input instance format defined");
+  }
+  if (m_NewBatch) {
+    resetQueue();
+    m_NewBatch=false;
+  }
+  convertInstance(instance);
+  return true;
+}
+
+/** 
+ * Set the output format.
+ */
+private void setOutputFormat(){
+  ArrayList<Attribute> newAtts;
+  int newClassIndex;
+  StringBuffer attributeName;
+  Instances outputFormat;
+  ArrayList<String> vals;
+  newClassIndex=getInputFormat().classIndex();
+  newAtts=new ArrayList<Attribute>();
+  for (int j=0; j < getInputFormat().numAttributes(); j++) {
+    Attribute att=getInputFormat().attribute(j);
+    if ((j == newClassIndex) || (!att.isNumeric())) {
+      newAtts.add((Attribute)att.copy());
+    }
+ else {
+      attributeName=new StringBuffer(att.name() + "_binarized");
+      vals=new ArrayList<String>(2);
+      vals.add("0");
+      vals.add("1");
+      newAtts.add(new Attribute(attributeName.toString(),vals));
+    }
+  }
+  outputFormat=new Instances(getInputFormat().relationName(),newAtts,0);
+  outputFormat.setClassIndex(newClassIndex);
+  setOutputFormat(outputFormat);
+}
+
+/** 
+ * Convert a single instance over. The converted instance is added to the end of the output queue.
+ * @param instance the instance to convert
+ */
+private void convertInstance(Instance instance){
+  Instance inst=null;
+  if (instance instanceof SparseInstance) {
+    double[] vals=new double[instance.numValues()];
+    int[] newIndices=new int[instance.numValues()];
+    for (int j=0; j < instance.numValues(); j++) {
+      Attribute att=getInputFormat().attribute(instance.index(j));
+      if ((!att.isNumeric()) || (instance.index(j) == getInputFormat().classIndex())) {
+        vals[j]=instance.valueSparse(j);
+      }
+ else {
+        if (instance.isMissingSparse(j)) {
+          vals[j]=instance.valueSparse(j);
+        }
+ else {
+          vals[j]=1;
+        }
+      }
+      newIndices[j]=instance.index(j);
+    }
+    inst=new SparseInstance(instance.weight(),vals,newIndices,outputFormatPeek().numAttributes());
+  }
+ else {
+    double[] vals=new double[outputFormatPeek().numAttributes()];
+    for (int j=0; j < getInputFormat().numAttributes(); j++) {
+      Attribute att=getInputFormat().attribute(j);
+      if ((!att.isNumeric()) || (j == getInputFormat().classIndex())) {
+        vals[j]=instance.value(j);
+      }
+ else {
+        if (instance.isMissing(j) || (instance.value(j) == 0)) {
+          vals[j]=instance.value(j);
+        }
+ else {
+          vals[j]=1;
+        }
+      }
+    }
+    inst=new DenseInstance(instance.weight(),vals);
+  }
+  inst.setDataset(instance.dataset());
+  push(inst);
+}
+
+/** 
+ * Returns the revision string.
+ * @return the revision
+ */
+@Override public String getRevision(){
+  return RevisionUtils.extract("$Revision: 10215 $");
+}
+
+/** 
+ * Main method for testing this class.
+ * @param argv should contain arguments to the filter: use -h for help
+ */
+public static void main(String[] argv){
+  runFilter(new NumericToBinary(),argv);
+}
+}

@@ -1,0 +1,25 @@
+namespace weka.gui.beans;
+
+class TextSaverBeanInfo
+{
+  isA SimpleBeanInfo;
+ depend java.beans.BeanDescriptor;
+ depend java.beans.EventSetDescriptor;
+ depend java.beans.SimpleBeanInfo;
+/** 
+ * Get the event set descriptors for this bean
+ * @return an <code>EventSetDescriptor[]</code> value
+ */
+@Override public EventSetDescriptor[] getEventSetDescriptors(){
+  EventSetDescriptor[] esds={};
+  return esds;
+}
+
+/** 
+ * Get BeanDescriptor for this bean
+ * @return an <code>BeanDescriptor</code> value
+ */
+@Override public BeanDescriptor getBeanDescriptor(){
+  return new BeanDescriptor(weka.gui.beans.TextSaver.class,TextSaverCustomizer.class);
+}
+}

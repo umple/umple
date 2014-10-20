@@ -1,0 +1,28 @@
+namespace weka.datagenerators.clusterers;
+
+class SubspaceClusterDefinitionTest
+{
+  isA AbstractClusterDefinitionTest;
+ depend weka.datagenerators.AbstractClusterDefinitionTest;
+ depend weka.datagenerators.ClusterDefinition;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public SubspaceClusterDefinitionTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default SubspaceClusterDefinition 
+ */
+public ClusterDefinition getDefinition(){
+  return new SubspaceClusterDefinition(new SubspaceCluster());
+}
+
+public static Test suite(){
+  return new TestSuite(SubspaceClusterDefinitionTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

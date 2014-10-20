@@ -1,0 +1,47 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class ModelStats
+{
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlElement(name="UnivariateStats",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<UnivariateStats> univariateStats;
+
+@XmlElement(name="MultivariateStats",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<MultivariateStats> multivariateStats;
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the univariateStats property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the univariateStats property. <p> For example, to add a new item, do as follows: <pre> getUnivariateStats().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link UnivariateStats }
+ */
+public List<UnivariateStats> getUnivariateStats(){
+  if (univariateStats == null) {
+    univariateStats=new ArrayList<UnivariateStats>();
+  }
+  return this.univariateStats;
+}
+
+/** 
+ * Gets the value of the multivariateStats property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the multivariateStats property. <p> For example, to add a new item, do as follows: <pre> getMultivariateStats().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link MultivariateStats }
+ */
+public List<MultivariateStats> getMultivariateStats(){
+  if (multivariateStats == null) {
+    multivariateStats=new ArrayList<MultivariateStats>();
+  }
+  return this.multivariateStats;
+}
+}

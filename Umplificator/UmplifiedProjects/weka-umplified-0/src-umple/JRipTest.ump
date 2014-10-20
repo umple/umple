@@ -1,0 +1,28 @@
+namespace weka.classifiers.rules;
+
+class JRipTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public JRipTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default JRip 
+ */
+public Classifier getClassifier(){
+  return new JRip();
+}
+
+public static Test suite(){
+  return new TestSuite(JRipTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

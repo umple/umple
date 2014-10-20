@@ -1,0 +1,12 @@
+namespace weka.gui.beans;
+
+interface IncrementalClassifierListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+/** 
+ * Accept the event
+ * @param e a <code>ClassifierEvent</code> value
+ */
+void acceptClassifier(IncrementalClassifierEvent e);
+}

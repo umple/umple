@@ -1,0 +1,10 @@
+namespace weka.gui.scripting.event;
+
+interface ScriptExecutionListener
+{
+/** 
+ * Gets sent when a script execution changes.
+ * @param e		the event
+ */
+public void scriptFinished(ScriptExecutionEvent e);
+}

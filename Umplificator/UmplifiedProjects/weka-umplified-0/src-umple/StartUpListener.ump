@@ -1,0 +1,8 @@
+namespace weka.gui.beans;
+
+interface StartUpListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+void startUpComplete();
+}

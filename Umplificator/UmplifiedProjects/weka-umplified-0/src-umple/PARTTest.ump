@@ -1,0 +1,28 @@
+namespace weka.classifiers.rules;
+
+class PARTTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public PARTTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default PART 
+ */
+public Classifier getClassifier(){
+  return new PART();
+}
+
+public static Test suite(){
+  return new TestSuite(PARTTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

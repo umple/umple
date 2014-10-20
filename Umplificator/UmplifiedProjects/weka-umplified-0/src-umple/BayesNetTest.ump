@@ -1,0 +1,28 @@
+namespace weka.datagenerators.classifiers.classification;
+
+class BayesNetTest
+{
+  isA AbstractDataGeneratorTest;
+ depend weka.datagenerators.AbstractDataGeneratorTest;
+ depend weka.datagenerators.DataGenerator;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public BayesNetTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default BayesNet 
+ */
+public DataGenerator getGenerator(){
+  return new BayesNet();
+}
+
+public static Test suite(){
+  return new TestSuite(BayesNetTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

@@ -1,0 +1,28 @@
+namespace weka.datagenerators.classifiers.classification;
+
+class LED24Test
+{
+  isA AbstractDataGeneratorTest;
+ depend weka.datagenerators.AbstractDataGeneratorTest;
+ depend weka.datagenerators.DataGenerator;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public LED24Test(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default LED24 
+ */
+public DataGenerator getGenerator(){
+  return new LED24();
+}
+
+public static Test suite(){
+  return new TestSuite(LED24Test.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

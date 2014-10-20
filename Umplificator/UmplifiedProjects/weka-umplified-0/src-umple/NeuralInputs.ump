@@ -1,0 +1,55 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class NeuralInputs
+{
+ depend java.math.BigInteger;
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlElement(name="NeuralInput",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<NeuralInput> neuralInput;
+
+@XmlAttribute protected BigInteger numberOfInputs;
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the neuralInput property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the neuralInput property. <p> For example, to add a new item, do as follows: <pre> getNeuralInput().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link NeuralInput }
+ */
+public List<NeuralInput> getNeuralInput(){
+  if (neuralInput == null) {
+    neuralInput=new ArrayList<NeuralInput>();
+  }
+  return this.neuralInput;
+}
+
+/** 
+ * Gets the value of the numberOfInputs property.
+ * @return possible object is {@link BigInteger }
+ */
+public BigInteger getNumberOfInputs(){
+  return numberOfInputs;
+}
+
+/** 
+ * Sets the value of the numberOfInputs property.
+ * @param value allowed object is {@link BigInteger }
+ */
+public void setNumberOfInputs(BigInteger value){
+  this.numberOfInputs=value;
+}
+}

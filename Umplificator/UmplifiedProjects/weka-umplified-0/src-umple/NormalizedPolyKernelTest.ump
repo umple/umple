@@ -1,0 +1,28 @@
+namespace weka.classifiers.functions.supportVector;
+
+class NormalizedPolyKernelTest
+{
+  isA AbstractKernelTest;
+ depend weka.classifiers.functions.supportVector.AbstractKernelTest;
+ depend weka.classifiers.functions.supportVector.Kernel;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public NormalizedPolyKernelTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default NormalizedPolyKernel 
+ */
+public Kernel getKernel(){
+  return new NormalizedPolyKernel();
+}
+
+public static Test suite(){
+  return new TestSuite(NormalizedPolyKernelTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

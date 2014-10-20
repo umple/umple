@@ -1,0 +1,21 @@
+namespace weka.gui.explorer;
+
+interface ClustererPanelLaunchHandlerPlugin
+{
+/** 
+ * Allows the clusterer panel to pass in a reference to itself
+ * @param p the ClustererPanel
+ */
+void setClustererPanel(ClustererPanel p);
+
+/** 
+ * Get the name of the launch command (to appear as the button text or in the popup menu)
+ * @return the name of the launch command
+ */
+String getLaunchCommand();
+
+/** 
+ * Gets called when the user clicks the button or selects this plugin's entry from the popup menu.
+ */
+void launch();
+}

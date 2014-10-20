@@ -1,0 +1,19 @@
+
+top Type
+{
+/** 
+ * Enumeration of source control types.
+ * @author  fracpete (fracpete at waikato dot ac dot nz)
+ * @version $Revision: 8034 $
+ */
+public enum Type {/** 
+ * unknown source control revision. 
+ */
+UNKNOWN, /** 
+ * CVS. 
+ */
+CVS, /** 
+ * Subversion. 
+ */
+SUBVERSION}
+}

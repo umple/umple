@@ -1,0 +1,28 @@
+namespace weka.datagenerators.clusterers;
+
+class BIRCHClusterTest
+{
+  isA AbstractDataGeneratorTest;
+ depend weka.datagenerators.AbstractDataGeneratorTest;
+ depend weka.datagenerators.DataGenerator;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public BIRCHClusterTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default BIRCHCluster 
+ */
+public DataGenerator getGenerator(){
+  return new BIRCHCluster();
+}
+
+public static Test suite(){
+  return new TestSuite(BIRCHClusterTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

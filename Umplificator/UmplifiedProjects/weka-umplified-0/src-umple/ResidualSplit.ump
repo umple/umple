@@ -1,0 +1,248 @@
+namespace weka.classifiers.trees.lmt;
+
+class ResidualSplit
+{
+  isA ClassifierSplitModel;
+ depend weka.classifiers.trees.j48.ClassifierSplitModel;
+ depend weka.classifiers.trees.j48.Distribution;
+ depend weka.core.Attribute;
+ depend weka.core.Instance;
+ depend weka.core.Instances;
+ depend weka.core.RevisionUtils;
+ depend weka.core.Utils;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=-5055883734183713525L;
+
+/** 
+ * The attribute selected for the split
+ */
+protected Attribute m_attribute;
+
+/** 
+ * The index of the attribute selected for the split
+ */
+protected int m_attIndex;
+
+/** 
+ * Number of instances in the set
+ */
+protected int m_numInstances;
+
+/** 
+ * Number of classed
+ */
+protected int m_numClasses;
+
+/** 
+ * The set of instances
+ */
+protected Instances m_data;
+
+/** 
+ * The Z-values (LogitBoost response) for the set of instances
+ */
+protected double[][] m_dataZs;
+
+/** 
+ * The LogitBoost-weights for the set of instances
+ */
+protected double[][] m_dataWs;
+
+/** 
+ * The split point (for numeric attributes)
+ */
+protected double m_splitPoint;
+
+/** 
+ * Creates a split object
+ * @param attIndex the index of the attribute to split on 
+ */
+public ResidualSplit(int attIndex){
+  m_attIndex=attIndex;
+}
+
+/** 
+ * Builds the split. Needs the Z/W values of LogitBoost for the set of instances.
+ */
+public void buildClassifier(Instances data,double[][] dataZs,double[][] dataWs) throws Exception {
+  m_numClasses=data.numClasses();
+  m_numInstances=data.numInstances();
+  if (m_numInstances == 0)   throw new Exception("Can't build split on 0 instances");
+  m_data=data;
+  m_dataZs=dataZs;
+  m_dataWs=dataWs;
+  m_attribute=data.attribute(m_attIndex);
+  if (m_attribute.isNominal()) {
+    m_splitPoint=0.0;
+    m_numSubsets=m_attribute.numValues();
+  }
+ else {
+    getSplitPoint();
+    m_numSubsets=2;
+  }
+  m_distribution=new Distribution(data,this);
+}
+
+/** 
+ * Selects split point for numeric attribute.
+ */
+protected boolean getSplitPoint() throws Exception {
+  double[] splitPoints=new double[m_numInstances];
+  int numSplitPoints=0;
+  Instances sortedData=new Instances(m_data);
+  sortedData.sort(sortedData.attribute(m_attIndex));
+  double last, current;
+  last=sortedData.instance(0).value(m_attIndex);
+  for (int i=0; i < m_numInstances - 1; i++) {
+    current=sortedData.instance(i + 1).value(m_attIndex);
+    if (!Utils.eq(current,last)) {
+      splitPoints[numSplitPoints++]=(last + current) / 2.0;
+    }
+    last=current;
+  }
+  double[] entropyGain=new double[numSplitPoints];
+  for (int i=0; i < numSplitPoints; i++) {
+    m_splitPoint=splitPoints[i];
+    entropyGain[i]=entropyGain();
+  }
+  int bestSplit=-1;
+  double bestGain=-Double.MAX_VALUE;
+  for (int i=0; i < numSplitPoints; i++) {
+    if (entropyGain[i] > bestGain) {
+      bestGain=entropyGain[i];
+      bestSplit=i;
+    }
+  }
+  if (bestSplit < 0)   return false;
+  m_splitPoint=splitPoints[bestSplit];
+  return true;
+}
+
+/** 
+ * Computes entropy gain for current split.
+ */
+public double entropyGain() throws Exception {
+  int numSubsets;
+  if (m_attribute.isNominal()) {
+    numSubsets=m_attribute.numValues();
+  }
+ else {
+    numSubsets=2;
+  }
+  double[][][] splitDataZs=new double[numSubsets][][];
+  double[][][] splitDataWs=new double[numSubsets][][];
+  int[] subsetSize=new int[numSubsets];
+  for (int i=0; i < m_numInstances; i++) {
+    int subset=whichSubset(m_data.instance(i));
+    if (subset < 0)     throw new Exception("ResidualSplit: no support for splits on missing values");
+    subsetSize[subset]++;
+  }
+  for (int i=0; i < numSubsets; i++) {
+    splitDataZs[i]=new double[subsetSize[i]][];
+    splitDataWs[i]=new double[subsetSize[i]][];
+  }
+  int[] subsetCount=new int[numSubsets];
+  for (int i=0; i < m_numInstances; i++) {
+    int subset=whichSubset(m_data.instance(i));
+    splitDataZs[subset][subsetCount[subset]]=m_dataZs[i];
+    splitDataWs[subset][subsetCount[subset]]=m_dataWs[i];
+    subsetCount[subset]++;
+  }
+  double entropyOrig=entropy(m_dataZs,m_dataWs);
+  double entropySplit=0.0;
+  for (int i=0; i < numSubsets; i++) {
+    entropySplit+=entropy(splitDataZs[i],splitDataWs[i]);
+  }
+  return entropyOrig - entropySplit;
+}
+
+/** 
+ * Helper function to compute entropy from Z/W values.
+ */
+protected double entropy(double[][] dataZs,double[][] dataWs){
+  double entropy=0.0;
+  int numInstances=dataZs.length;
+  for (int j=0; j < m_numClasses; j++) {
+    double m=0.0;
+    double sum=0.0;
+    for (int i=0; i < numInstances; i++) {
+      m+=dataZs[i][j] * dataWs[i][j];
+      sum+=dataWs[i][j];
+    }
+    m/=sum;
+    for (int i=0; i < numInstances; i++) {
+      entropy+=dataWs[i][j] * Math.pow(dataZs[i][j] - m,2);
+    }
+  }
+  return entropy;
+}
+
+/** 
+ * Checks if there are at least 2 subsets that contain >= minNumInstances.
+ */
+public boolean checkModel(int minNumInstances){
+  int count=0;
+  for (int i=0; i < m_distribution.numBags(); i++) {
+    if (m_distribution.perBag(i) >= minNumInstances)     count++;
+  }
+  return (count >= 2);
+}
+
+/** 
+ * Returns name of splitting attribute (left side of condition).
+ */
+public final String leftSide(Instances data){
+  return data.attribute(m_attIndex).name();
+}
+
+/** 
+ * Prints the condition satisfied by instances in a subset.
+ */
+public final String rightSide(int index,Instances data){
+  StringBuffer text;
+  text=new StringBuffer();
+  if (data.attribute(m_attIndex).isNominal())   text.append(" = " + data.attribute(m_attIndex).value(index));
+ else   if (index == 0)   text.append(" <= " + Utils.doubleToString(m_splitPoint,6));
+ else   text.append(" > " + Utils.doubleToString(m_splitPoint,6));
+  return text.toString();
+}
+
+public final int whichSubset(Instance instance) throws Exception {
+  if (instance.isMissing(m_attIndex))   return -1;
+ else {
+    if (instance.attribute(m_attIndex).isNominal())     return (int)instance.value(m_attIndex);
+ else     if (Utils.smOrEq(instance.value(m_attIndex),m_splitPoint))     return 0;
+ else     return 1;
+  }
+}
+
+/** 
+ * Method not in use
+ */
+public void buildClassifier(Instances data){
+}
+
+/** 
+ * Method not in use
+ */
+public final double[] weights(Instance instance){
+  return null;
+}
+
+/** 
+ * Method not in use
+ */
+public final String sourceExpression(int index,Instances data){
+  return "";
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+}

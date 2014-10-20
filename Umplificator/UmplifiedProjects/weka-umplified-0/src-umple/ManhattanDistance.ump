@@ -1,0 +1,71 @@
+namespace weka.core;
+
+class ManhattanDistance
+{
+  isA TechnicalInformationHandler;
+  isA NormalizableDistance;
+ depend weka.core.TechnicalInformation.Field;
+ depend weka.core.TechnicalInformation.Type;
+/** 
+ * for serialization. 
+ */
+private static final long serialVersionUID=6783782554224000243L;
+
+/** 
+ * Constructs an Manhattan Distance object, Instances must be still set.
+ */
+public ManhattanDistance(){
+  super();
+}
+
+/** 
+ * Constructs an Manhattan Distance object and automatically initializes the ranges.
+ * @param data 	the instances the distance function should work on
+ */
+public ManhattanDistance(Instances data){
+  super(data);
+}
+
+/** 
+ * Returns a string describing this object.
+ * @return 		a description of the evaluator suitable fordisplaying in the explorer/experimenter gui
+ */
+public String globalInfo(){
+  return "Implements the Manhattan distance (or Taxicab geometry). The distance " + "between two points is the sum of the (absolute) differences of their " + "coordinates.\n\n"+ "For more information, see:\n\n"+ getTechnicalInformation().toString();
+}
+
+/** 
+ * Returns an instance of a TechnicalInformation object, containing  detailed information about the technical background of this class, e.g., paper reference or book this class is based on.
+ * @return 		the technical information about this class
+ */
+public TechnicalInformation getTechnicalInformation(){
+  TechnicalInformation result;
+  result=new TechnicalInformation(Type.MISC);
+  result.setValue(Field.AUTHOR,"Wikipedia");
+  result.setValue(Field.TITLE,"Taxicab geometry");
+  result.setValue(Field.URL,"http://en.wikipedia.org/wiki/Taxicab_geometry");
+  return result;
+}
+
+/** 
+ * Updates the current distance calculated so far with the new difference between two attributes. The difference between the attributes was  calculated with the difference(int,double,double) method.
+ * @param currDist	the current distance calculated so far
+ * @param diff	the difference between two new attributes
+ * @return		the update distance
+ * @see #difference(int,double,double)
+ */
+protected double updateDistance(double currDist,double diff){
+  double result;
+  result=currDist;
+  result+=Math.abs(diff);
+  return result;
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+}

@@ -1,0 +1,228 @@
+namespace weka.gui;
+
+class ETable
+{
+  isA JTable;
+ depend java.awt.BorderLayout;
+ depend java.awt.Color;
+ depend java.awt.Component;
+ depend java.awt.Container;
+ depend java.awt.Dimension;
+ depend java.awt.Graphics;
+ depend java.awt.Point;
+ depend java.awt.Rectangle;
+ depend java.awt.event.MouseEvent;
+ depend javax.swing.BorderFactory;
+ depend javax.swing.JCheckBox;
+ depend javax.swing.JComponent;
+ depend javax.swing.JLabel;
+ depend javax.swing.JPanel;
+ depend javax.swing.JScrollPane;
+ depend javax.swing.JTable;
+ depend javax.swing.JViewport;
+ depend javax.swing.SwingConstants;
+ depend javax.swing.UIManager;
+ depend javax.swing.border.Border;
+ depend javax.swing.table.JTableHeader;
+ depend javax.swing.table.TableCellRenderer;
+ depend javax.swing.table.TableColumn;
+ depend javax.swing.table.TableColumnModel;
+/** 
+ * For serialization
+ */
+private static final long serialVersionUID=-3028630226368293049L;
+
+private final Color MAC_FOCUSED_SELECTED_CELL_HORIZONTAL_LINE_COLOR=new Color(0x7daaea);
+
+private final Color MAC_UNFOCUSED_SELECTED_CELL_HORIZONTAL_LINE_COLOR=new Color(0xe0e0e0);
+
+private final Color MAC_UNFOCUSED_SELECTED_CELL_BACKGROUND_COLOR=new Color(0xc0c0c0);
+
+private final Color MAC_FOCUSED_UNSELECTED_VERTICAL_LINE_COLOR=new Color(0xd9d9d9);
+
+private final Color MAC_FOCUSED_SELECTED_VERTICAL_LINE_COLOR=new Color(0x346dbe);
+
+private final Color MAC_UNFOCUSED_UNSELECTED_VERTICAL_LINE_COLOR=new Color(0xd9d9d9);
+
+private final Color MAC_UNFOCUSED_SELECTED_VERTICAL_LINE_COLOR=new Color(0xacacac);
+
+private final Color MAC_OS_ALTERNATE_ROW_COLOR=new Color(0.92f,0.95f,0.99f);
+
+public ETable(){
+  setShowGrid(false);
+  setIntercellSpacing(new Dimension());
+  getTableHeader().setReorderingAllowed(false);
+  if (System.getProperty("os.name").contains("Mac")) {
+    JLabel.class.cast(getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.LEADING);
+    setShowHorizontalLines(false);
+    setShowVerticalLines(true);
+  }
+}
+
+/** 
+ * Paints empty rows too, after letting the UI delegate do its painting.
+ */
+@Override public void paint(Graphics g){
+  super.paint(g);
+  paintEmptyRows(g);
+}
+
+/** 
+ * Paints the backgrounds of the implied empty rows when the table model is insufficient to fill all the visible area available to us. We don't involve cell renderers, because we have no data.
+ */
+protected void paintEmptyRows(Graphics g){
+  final int rowCount=getRowCount();
+  final Rectangle clip=g.getClipBounds();
+  final int height=clip.y + clip.height;
+  if (rowCount * rowHeight < height) {
+    for (int i=rowCount; i <= height / rowHeight; ++i) {
+      g.setColor(colorForRow(i));
+      g.fillRect(clip.x,i * rowHeight,clip.width,rowHeight);
+    }
+    if (System.getProperty("os.name").contains("Mac") && getShowVerticalLines()) {
+      g.setColor(MAC_UNFOCUSED_UNSELECTED_VERTICAL_LINE_COLOR);
+      TableColumnModel columnModel=getColumnModel();
+      int x=0;
+      for (int i=0; i < columnModel.getColumnCount(); ++i) {
+        TableColumn column=columnModel.getColumn(i);
+        x+=column.getWidth();
+        g.drawLine(x - 1,rowCount * rowHeight,x - 1,height);
+      }
+    }
+  }
+}
+
+/** 
+ * Changes the behavior of a table in a JScrollPane to be more like the behavior of JList, which expands to fill the available space. JTable normally restricts its size to just what's needed by its model.
+ */
+@Override public boolean getScrollableTracksViewportHeight(){
+  if (getParent() instanceof JViewport) {
+    JViewport parent=(JViewport)getParent();
+    return (parent.getHeight() > getPreferredSize().height);
+  }
+  return false;
+}
+
+/** 
+ * Returns the appropriate background color for the given row.
+ */
+protected Color colorForRow(int row){
+  return (row % 2 == 0) ? alternateRowColor() : getBackground();
+}
+
+private Color alternateRowColor(){
+  return UIManager.getLookAndFeel().getClass().getName().contains("GTK") ? Color.WHITE : MAC_OS_ALTERNATE_ROW_COLOR;
+}
+
+/** 
+ * Shades alternate rows in different colors.
+ */
+@Override public Component prepareRenderer(TableCellRenderer renderer,int row,int column){
+  Component c=super.prepareRenderer(renderer,row,column);
+  boolean focused=hasFocus();
+  boolean selected=isCellSelected(row,column);
+  if (selected) {
+    if (System.getProperty("os.name").contains("Mac") && focused == false) {
+      c.setBackground(MAC_UNFOCUSED_SELECTED_CELL_BACKGROUND_COLOR);
+      c.setForeground(UIManager.getColor("Table.foreground"));
+    }
+ else {
+      c.setBackground(UIManager.getColor("Table.selectionBackground"));
+      c.setForeground(UIManager.getColor("Table.selectionForeground"));
+    }
+  }
+ else {
+    c.setBackground(colorForRow(row));
+    c.setForeground(UIManager.getColor("Table.foreground"));
+  }
+  if (c instanceof JComponent) {
+    JComponent jc=(JComponent)c;
+    if (UIManager.getLookAndFeel().getClass().getName().contains("GTK") && c instanceof JCheckBox) {
+      jc.setOpaque(true);
+    }
+    if (getCellSelectionEnabled() == false && isEditing() == false) {
+      if (System.getProperty("os.name").contains("Mac")) {
+        fixMacOsCellRendererBorder(jc,selected,focused);
+      }
+ else {
+        jc.setBorder(null);
+      }
+    }
+    initToolTip(jc,row,column);
+  }
+  return c;
+}
+
+private void fixMacOsCellRendererBorder(JComponent renderer,boolean selected,boolean focused){
+  Border border;
+  if (selected) {
+    border=BorderFactory.createMatteBorder(0,0,1,0,focused ? MAC_FOCUSED_SELECTED_CELL_HORIZONTAL_LINE_COLOR : MAC_UNFOCUSED_SELECTED_CELL_HORIZONTAL_LINE_COLOR);
+  }
+ else {
+    border=BorderFactory.createEmptyBorder(0,0,1,0);
+  }
+  if (getShowVerticalLines()) {
+    Color verticalLineColor;
+    if (focused) {
+      verticalLineColor=selected ? MAC_FOCUSED_SELECTED_VERTICAL_LINE_COLOR : MAC_FOCUSED_UNSELECTED_VERTICAL_LINE_COLOR;
+    }
+ else {
+      verticalLineColor=selected ? MAC_UNFOCUSED_SELECTED_VERTICAL_LINE_COLOR : MAC_UNFOCUSED_UNSELECTED_VERTICAL_LINE_COLOR;
+    }
+    Border verticalBorder=BorderFactory.createMatteBorder(0,0,0,1,verticalLineColor);
+    border=BorderFactory.createCompoundBorder(border,verticalBorder);
+  }
+  renderer.setBorder(border);
+}
+
+/** 
+ * Sets the component's tool tip if the component is being rendered smaller than its preferred size. This means that all users automatically get tool tips on truncated text fields that show them the full value.
+ */
+private void initToolTip(JComponent c,int row,int column){
+  String toolTipText=null;
+  if (c.getPreferredSize().width > getCellRect(row,column,false).width) {
+    toolTipText=getValueAt(row,column).toString();
+  }
+  c.setToolTipText(toolTipText);
+}
+
+/** 
+ * Places tool tips over the cell they correspond to. MS Outlook does this, and it works rather well. Swing will automatically override our suggested location if it would cause the tool tip to go off the display.
+ */
+@Override public Point getToolTipLocation(MouseEvent e){
+  if (getToolTipText(e) == null) {
+    return null;
+  }
+  final int row=rowAtPoint(e.getPoint());
+  final int column=columnAtPoint(e.getPoint());
+  if (row == -1 || column == -1) {
+    return null;
+  }
+  return getCellRect(row,column,false).getLocation();
+}
+
+/** 
+ * Improve the appearance of of a table in a JScrollPane on Mac OS, where there's otherwise an unsightly hole.
+ */
+@Override protected void configureEnclosingScrollPane(){
+  super.configureEnclosingScrollPane();
+  if (System.getProperty("os.name").contains("Mac") == false) {
+    return;
+  }
+  Container p=getParent();
+  if (p instanceof JViewport) {
+    Container gp=p.getParent();
+    if (gp instanceof JScrollPane) {
+      JScrollPane scrollPane=(JScrollPane)gp;
+      JViewport viewport=scrollPane.getViewport();
+      if (viewport == null || viewport.getView() != this) {
+        return;
+      }
+      final Component renderer=new JTableHeader().getDefaultRenderer().getTableCellRendererComponent(null,"",false,false,-1,0);
+      JPanel panel=new JPanel(new BorderLayout());
+      panel.add(renderer,BorderLayout.CENTER);
+      scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER,panel);
+    }
+  }
+}
+}

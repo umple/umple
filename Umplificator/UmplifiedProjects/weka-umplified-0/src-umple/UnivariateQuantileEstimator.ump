@@ -1,0 +1,18 @@
+namespace weka.estimators;
+
+interface UnivariateQuantileEstimator
+{
+/** 
+ * Adds a value to the interval estimator.
+ * @param value the value to add
+ * @param weight the weight of the value
+ */
+void addValue(double value,double weight);
+
+/** 
+ * Returns the quantile for the given percentage
+ * @param value the value at which to evaluate
+ * @return the quantile
+ */
+double predictQuantile(double quantile);
+}

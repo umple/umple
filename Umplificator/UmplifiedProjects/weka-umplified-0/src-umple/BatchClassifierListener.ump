@@ -1,0 +1,12 @@
+namespace weka.gui.beans;
+
+interface BatchClassifierListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+/** 
+ * Accept a BatchClassifierEvent
+ * @param e a <code>BatchClassifierEvent</code> value
+ */
+void acceptClassifier(BatchClassifierEvent e);
+}

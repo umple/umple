@@ -1,0 +1,38 @@
+namespace weka.gui.sql;
+
+class DbUtils
+{
+  isA DatabaseUtils;
+ depend java.sql.Connection;
+ depend weka.core.RevisionUtils;
+ depend weka.experiment.DatabaseUtils;
+/** 
+ * for serialization. 
+ */
+private static final long serialVersionUID=103748569037426479L;
+
+/** 
+ * initializes the object.
+ * @throws Exception      in case something goes wrong in the init of theDatabaseUtils constructor
+ * @see DatabaseUtils
+ */
+public DbUtils() throws Exception {
+  super();
+}
+
+/** 
+ * returns the current database connection.
+ * @return        the current connection instance
+ */
+public Connection getConnection(){
+  return m_Connection;
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+}

@@ -1,0 +1,125 @@
+namespace weka.gui.beans;
+
+class AssociatorCustomizer
+{
+  isA BeanCustomizer,CustomizerCloseRequester;
+  isA JPanel;
+ depend java.awt.BorderLayout;
+ depend java.awt.GridLayout;
+ depend java.awt.Window;
+ depend java.awt.event.ActionEvent;
+ depend java.awt.event.ActionListener;
+ depend java.beans.PropertyChangeListener;
+ depend java.beans.PropertyChangeSupport;
+ depend javax.swing.JButton;
+ depend javax.swing.JPanel;
+ depend weka.gui.GenericObjectEditor;
+ depend weka.gui.PropertySheetPanel;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=5767664969353495974L;
+
+private PropertyChangeSupport m_pcSupport=new PropertyChangeSupport(this);
+
+private weka.gui.beans.Associator m_dsAssociator;
+
+private PropertySheetPanel m_AssociatorEditor=new PropertySheetPanel();
+
+protected Window m_parentWindow;
+
+/** 
+ * Backup is user presses cancel 
+ */
+private weka.associations.Associator m_backup;
+
+private ModifyListener m_modifyListener;
+
+public AssociatorCustomizer(){
+  setLayout(new BorderLayout());
+  add(m_AssociatorEditor,BorderLayout.CENTER);
+  JPanel butHolder=new JPanel();
+  butHolder.setLayout(new GridLayout(1,2));
+  JButton OKBut=new JButton("OK");
+  OKBut.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (m_modifyListener != null) {
+        m_modifyListener.setModifiedStatus(AssociatorCustomizer.this,true);
+      }
+      m_parentWindow.dispose();
+    }
+  }
+);
+  JButton CancelBut=new JButton("Cancel");
+  CancelBut.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (m_backup != null) {
+        m_dsAssociator.setAssociator(m_backup);
+      }
+      if (m_modifyListener != null) {
+        m_modifyListener.setModifiedStatus(AssociatorCustomizer.this,false);
+      }
+      m_parentWindow.dispose();
+    }
+  }
+);
+  butHolder.add(OKBut);
+  butHolder.add(CancelBut);
+  add(butHolder,BorderLayout.SOUTH);
+}
+
+public void actionPerformed(ActionEvent e){
+  if (m_modifyListener != null) {
+    m_modifyListener.setModifiedStatus(AssociatorCustomizer.this,true);
+  }
+  m_parentWindow.dispose();
+}
+
+public void actionPerformed(ActionEvent e){
+  if (m_backup != null) {
+    m_dsAssociator.setAssociator(m_backup);
+  }
+  if (m_modifyListener != null) {
+    m_modifyListener.setModifiedStatus(AssociatorCustomizer.this,false);
+  }
+  m_parentWindow.dispose();
+}
+
+/** 
+ * Set the classifier object to be edited
+ * @param object an <code>Object</code> value
+ */
+public void setObject(Object object){
+  m_dsAssociator=(weka.gui.beans.Associator)object;
+  try {
+    m_backup=(weka.associations.Associator)GenericObjectEditor.makeCopy(m_dsAssociator.getAssociator());
+  }
+ catch (  Exception ex) {
+  }
+  m_AssociatorEditor.setTarget(m_dsAssociator.getAssociator());
+}
+
+/** 
+ * Add a property change listener
+ * @param pcl a <code>PropertyChangeListener</code> value
+ */
+public void addPropertyChangeListener(PropertyChangeListener pcl){
+  m_pcSupport.addPropertyChangeListener(pcl);
+}
+
+/** 
+ * Remove a property change listener
+ * @param pcl a <code>PropertyChangeListener</code> value
+ */
+public void removePropertyChangeListener(PropertyChangeListener pcl){
+  m_pcSupport.removePropertyChangeListener(pcl);
+}
+
+public void setParentWindow(Window parent){
+  m_parentWindow=parent;
+}
+
+@Override public void setModifiedListener(ModifyListener l){
+  m_modifyListener=l;
+}
+}

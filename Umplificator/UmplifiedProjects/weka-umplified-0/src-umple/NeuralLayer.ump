@@ -1,0 +1,145 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class NeuralLayer
+{
+ depend java.math.BigInteger;
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlElement(name="Neuron",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Neuron> neuron;
+
+@XmlAttribute protected ACTIVATIONFUNCTION activationFunction;
+
+@XmlAttribute protected Double altitude;
+
+@XmlAttribute protected NNNORMALIZATIONMETHOD normalizationMethod;
+
+@XmlAttribute protected BigInteger numberOfNeurons;
+
+@XmlAttribute protected Double threshold;
+
+@XmlAttribute protected Double width;
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the neuron property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the neuron property. <p> For example, to add a new item, do as follows: <pre> getNeuron().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Neuron }
+ */
+public List<Neuron> getNeuron(){
+  if (neuron == null) {
+    neuron=new ArrayList<Neuron>();
+  }
+  return this.neuron;
+}
+
+/** 
+ * Gets the value of the activationFunction property.
+ * @return possible object is {@link ACTIVATIONFUNCTION }
+ */
+public ACTIVATIONFUNCTION getActivationFunction(){
+  return activationFunction;
+}
+
+/** 
+ * Sets the value of the activationFunction property.
+ * @param value allowed object is {@link ACTIVATIONFUNCTION }
+ */
+public void setActivationFunction(ACTIVATIONFUNCTION value){
+  this.activationFunction=value;
+}
+
+/** 
+ * Gets the value of the altitude property.
+ * @return possible object is {@link Double }
+ */
+public Double getAltitude(){
+  return altitude;
+}
+
+/** 
+ * Sets the value of the altitude property.
+ * @param value allowed object is {@link Double }
+ */
+public void setAltitude(Double value){
+  this.altitude=value;
+}
+
+/** 
+ * Gets the value of the normalizationMethod property.
+ * @return possible object is {@link NNNORMALIZATIONMETHOD }
+ */
+public NNNORMALIZATIONMETHOD getNormalizationMethod(){
+  return normalizationMethod;
+}
+
+/** 
+ * Sets the value of the normalizationMethod property.
+ * @param value allowed object is {@link NNNORMALIZATIONMETHOD }
+ */
+public void setNormalizationMethod(NNNORMALIZATIONMETHOD value){
+  this.normalizationMethod=value;
+}
+
+/** 
+ * Gets the value of the numberOfNeurons property.
+ * @return possible object is {@link BigInteger }
+ */
+public BigInteger getNumberOfNeurons(){
+  return numberOfNeurons;
+}
+
+/** 
+ * Sets the value of the numberOfNeurons property.
+ * @param value allowed object is {@link BigInteger }
+ */
+public void setNumberOfNeurons(BigInteger value){
+  this.numberOfNeurons=value;
+}
+
+/** 
+ * Gets the value of the threshold property.
+ * @return possible object is {@link Double }
+ */
+public Double getThreshold(){
+  return threshold;
+}
+
+/** 
+ * Sets the value of the threshold property.
+ * @param value allowed object is {@link Double }
+ */
+public void setThreshold(Double value){
+  this.threshold=value;
+}
+
+/** 
+ * Gets the value of the width property.
+ * @return possible object is {@link Double }
+ */
+public Double getWidth(){
+  return width;
+}
+
+/** 
+ * Sets the value of the width property.
+ * @param value allowed object is {@link Double }
+ */
+public void setWidth(Double value){
+  this.width=value;
+}
+}

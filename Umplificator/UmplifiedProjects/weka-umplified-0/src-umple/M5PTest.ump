@@ -1,0 +1,28 @@
+namespace weka.classifiers.trees;
+
+class M5PTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public M5PTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default M5P 
+ */
+public Classifier getClassifier(){
+  return new M5P();
+}
+
+public static Test suite(){
+  return new TestSuite(M5PTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

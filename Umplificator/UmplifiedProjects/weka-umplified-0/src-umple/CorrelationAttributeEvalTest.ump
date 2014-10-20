@@ -1,0 +1,33 @@
+namespace weka.attributeSelection;
+
+class CorrelationAttributeEvalTest
+{
+  isA AbstractEvaluatorTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public CorrelationAttributeEvalTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default Ranker 
+ */
+public ASSearch getSearch(){
+  return new Ranker();
+}
+
+/** 
+ * Creates a default InfoGainAttributeEval 
+ */
+public ASEvaluation getEvaluator(){
+  return new CorrelationAttributeEval();
+}
+
+public static Test suite(){
+  return new TestSuite(CorrelationAttributeEvalTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

@@ -1,0 +1,28 @@
+namespace weka.associations;
+
+class FPGrowthTest
+{
+  isA AbstractAssociatorTest;
+ depend weka.associations.AbstractAssociatorTest;
+ depend weka.associations.Associator;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public FPGrowthTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default Apriori 
+ */
+public Associator getAssociator(){
+  return new FPGrowth();
+}
+
+public static Test suite(){
+  return new TestSuite(FPGrowthTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

@@ -1,0 +1,44 @@
+namespace weka.filters.unsupervised.instance;
+
+class RandomizeTest
+{
+  isA AbstractFilterTest;
+ depend weka.core.Instances;
+ depend weka.filters.AbstractFilterTest;
+ depend weka.filters.Filter;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public RandomizeTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default Randomize 
+ */
+public Filter getFilter(){
+  return new Randomize();
+}
+
+public void testTypical(){
+  Instances result=useFilter();
+  assertEquals(m_Instances.numAttributes(),result.numAttributes());
+  assertEquals(m_Instances.numInstances(),result.numInstances());
+  boolean diff=false;
+  for (int i=0; i < m_Instances.numInstances(); i++) {
+    String i1=m_Instances.instance(i).toString();
+    String i2=result.instance(i).toString();
+    if (!i1.equals(i2)) {
+      diff=true;
+    }
+  }
+  assertTrue("All instances seem to be in the same positions",diff);
+}
+
+public static Test suite(){
+  return new TestSuite(RandomizeTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

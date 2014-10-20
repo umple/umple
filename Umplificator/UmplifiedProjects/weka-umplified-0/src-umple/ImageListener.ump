@@ -1,0 +1,12 @@
+namespace weka.gui.beans;
+
+interface ImageListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+/** 
+ * Accept and process an ImageEvent
+ * @param image the image to process
+ */
+void acceptImage(ImageEvent image);
+}

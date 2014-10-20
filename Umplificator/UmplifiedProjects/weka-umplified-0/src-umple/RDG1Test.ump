@@ -1,0 +1,28 @@
+namespace weka.datagenerators.classifiers.classification;
+
+class RDG1Test
+{
+  isA AbstractDataGeneratorTest;
+ depend weka.datagenerators.AbstractDataGeneratorTest;
+ depend weka.datagenerators.DataGenerator;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public RDG1Test(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default RDG1 
+ */
+public DataGenerator getGenerator(){
+  return new RDG1();
+}
+
+public static Test suite(){
+  return new TestSuite(RDG1Test.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

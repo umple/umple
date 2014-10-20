@@ -1,0 +1,28 @@
+namespace weka.classifiers.bayes;
+
+class NaiveBayesUpdateableTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public NaiveBayesUpdateableTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default NaiveBayesUpdateable 
+ */
+public Classifier getClassifier(){
+  return new NaiveBayesUpdateable();
+}
+
+public static Test suite(){
+  return new TestSuite(NaiveBayesUpdateableTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

@@ -1,0 +1,106 @@
+namespace weka.filters.supervised.instance;
+
+class ClassBalancer
+{
+  isA SupervisedFilter,WeightedInstancesHandler;
+  isA SimpleBatchFilter;
+ depend java.util.ArrayList;
+ depend java.util.Collections;
+ depend java.util.Enumeration;
+ depend java.util.Vector;
+ depend weka.core.Attribute;
+ depend weka.core.Capabilities;
+ depend weka.core.Capabilities.Capability;
+ depend weka.core.DenseInstance;
+ depend weka.core.Instance;
+ depend weka.core.Instances;
+ depend weka.core.Option;
+ depend weka.core.Range;
+ depend weka.core.RevisionUtils;
+ depend weka.core.SpecialFunctions;
+ depend weka.core.Statistics;
+ depend weka.core.Utils;
+ depend weka.core.WeightedInstancesHandler;
+ depend weka.filters.SimpleBatchFilter;
+ depend weka.filters.SupervisedFilter;
+/** 
+ * for serialization 
+ */
+static final long serialVersionUID=6237337831221353842L;
+
+/** 
+ * Returns a string describing this filter.
+ * @return a description of the filter suitable for displaying in theexplorer/experimenter gui
+ */
+@Override public String globalInfo(){
+  return "Reweights the instances in the data so that each class has the same total " + "weight. The total sum of weights accross all instances will be maintained. Only " + "the weights in the first batch of data received by this filter are changed, so "+ "it can be used with the FilteredClassifier.";
+}
+
+/** 
+ * Determines the output format based on the input format and returns this.
+ * @param inputFormat the input format to base the output format on
+ * @return the output format
+ */
+@Override protected Instances determineOutputFormat(Instances inputFormat){
+  return new Instances(inputFormat,0);
+}
+
+/** 
+ * Returns the Capabilities of this filter.
+ * @return the capabilities of this object
+ * @see Capabilities
+ */
+@Override public Capabilities getCapabilities(){
+  Capabilities result;
+  result=super.getCapabilities();
+  result.disableAll();
+  result.enableAllAttributes();
+  result.enable(Capability.MISSING_VALUES);
+  result.enableAllClasses();
+  result.enable(Capability.MISSING_CLASS_VALUES);
+  return result;
+}
+
+/** 
+ * Processes the given data.
+ * @param instances the data to process
+ * @return the modified data
+ * @throws Exception in case the processing goes wrong
+ */
+@Override protected Instances process(Instances instances) throws Exception {
+  if (isFirstBatchDone()) {
+    return new Instances(instances);
+  }
+  Instances result=new Instances(instances,instances.numInstances());
+  double[] sumOfWeightsPerClass=new double[instances.numClasses()];
+  for (int i=0; i < instances.numInstances(); i++) {
+    Instance inst=instances.instance(i);
+    sumOfWeightsPerClass[(int)inst.classValue()]+=inst.weight();
+  }
+  double sumOfWeights=Utils.sum(sumOfWeightsPerClass);
+  double factor=sumOfWeights / (double)instances.numClasses();
+  for (int i=0; i < instances.numInstances(); i++) {
+    result.add(instances.instance(i));
+    Instance newInst=result.instance(i);
+    copyValues(newInst,false,instances,outputFormatPeek());
+    newInst.setWeight(factor * newInst.weight() / sumOfWeightsPerClass[(int)newInst.classValue()]);
+  }
+  return result;
+}
+
+/** 
+ * Returns the revision string.
+ * @return the revision
+ */
+@Override public String getRevision(){
+  return RevisionUtils.extract("$Revision: 10215 $");
+}
+
+/** 
+ * runs the filter with the given arguments
+ * @param args the commandline arguments
+ */
+public static void main(String[] args){
+  runFilter(new ClassBalancer(),args);
+}
+}

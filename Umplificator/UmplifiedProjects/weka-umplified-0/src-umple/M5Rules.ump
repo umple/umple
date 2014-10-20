@@ -1,0 +1,66 @@
+namespace weka.classifiers.rules;
+
+class M5Rules
+{
+  isA TechnicalInformationHandler;
+  isA M5Base;
+ depend weka.classifiers.trees.m5.M5Base;
+ depend weka.core.RevisionUtils;
+ depend weka.core.TechnicalInformation;
+ depend weka.core.TechnicalInformation.Field;
+ depend weka.core.TechnicalInformation.Type;
+ depend weka.core.TechnicalInformationHandler;
+/** 
+ * for serialization 
+ */
+static final long serialVersionUID=-1746114858746563180L;
+
+/** 
+ * Returns a string describing classifier
+ * @return a description suitable fordisplaying in the explorer/experimenter gui
+ */
+public String globalInfo(){
+  return "Generates a decision list for regression problems using " + "separate-and-conquer. In each iteration it builds a " + "model tree using M5 and makes the \"best\" "+ "leaf into a rule.\n\n"+ "For more information see:\n\n"+ getTechnicalInformation().toString();
+}
+
+/** 
+ * Constructor
+ */
+public M5Rules(){
+  super();
+  setGenerateRules(true);
+}
+
+/** 
+ * Returns an instance of a TechnicalInformation object, containing  detailed information about the technical background of this class, e.g., paper reference or book this class is based on.
+ * @return the technical information about this class
+ */
+public TechnicalInformation getTechnicalInformation(){
+  TechnicalInformation result;
+  result=new TechnicalInformation(Type.INPROCEEDINGS);
+  result.setValue(Field.AUTHOR,"Geoffrey Holmes and Mark Hall and Eibe Frank");
+  result.setValue(Field.TITLE,"Generating Rule Sets from Model Trees");
+  result.setValue(Field.BOOKTITLE,"Twelfth Australian Joint Conference on Artificial Intelligence");
+  result.setValue(Field.YEAR,"1999");
+  result.setValue(Field.PAGES,"1-12");
+  result.setValue(Field.PUBLISHER,"Springer");
+  result.add(super.getTechnicalInformation());
+  return result;
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+
+/** 
+ * Main method by which this class can be tested
+ * @param args an array of options
+ */
+public static void main(String[] args){
+  runClassifier(new M5Rules(),args);
+}
+}

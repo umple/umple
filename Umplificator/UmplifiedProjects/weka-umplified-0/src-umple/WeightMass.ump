@@ -1,0 +1,13 @@
+namespace weka.classifiers.trees.ht;
+
+class WeightMass
+{
+  isA Serializable;
+ depend java.io.Serializable;
+/** 
+ * For serialization
+ */
+private static final long serialVersionUID=6794839107050779425L;
+
+public double m_weight;
+}

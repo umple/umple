@@ -1,0 +1,45 @@
+namespace weka.gui.beans;
+
+class ClassValuePickerBeanInfo
+{
+  isA SimpleBeanInfo;
+ depend java.beans.BeanDescriptor;
+ depend java.beans.EventSetDescriptor;
+ depend java.beans.PropertyDescriptor;
+ depend java.beans.SimpleBeanInfo;
+/** 
+ * Returns the event set descriptors
+ * @return an <code>EventSetDescriptor[]</code> value
+ */
+public EventSetDescriptor[] getEventSetDescriptors(){
+  try {
+    EventSetDescriptor[] esds={new EventSetDescriptor(ClassValuePicker.class,"dataSet",DataSourceListener.class,"acceptDataSet")};
+    return esds;
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+  }
+  return null;
+}
+
+/** 
+ * Returns the property descriptors
+ * @return a <code>PropertyDescriptor[]</code> value
+ */
+public PropertyDescriptor[] getPropertyDescriptors(){
+  try {
+    PropertyDescriptor p1;
+    p1=new PropertyDescriptor("classValue",ClassValuePicker.class);
+    PropertyDescriptor[] pds={p1};
+    return pds;
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+  }
+  return null;
+}
+
+public BeanDescriptor getBeanDescriptor(){
+  return new BeanDescriptor(weka.gui.beans.ClassValuePicker.class,ClassValuePickerCustomizer.class);
+}
+}

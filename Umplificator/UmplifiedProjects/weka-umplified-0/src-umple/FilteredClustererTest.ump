@@ -1,0 +1,28 @@
+namespace weka.clusterers;
+
+class FilteredClustererTest
+{
+  isA AbstractClustererTest;
+ depend weka.clusterers.AbstractClustererTest;
+ depend weka.clusterers.Clusterer;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public FilteredClustererTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default FilteredClusterer 
+ */
+public Clusterer getClusterer(){
+  return new FilteredClusterer();
+}
+
+public static Test suite(){
+  return new TestSuite(FilteredClustererTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

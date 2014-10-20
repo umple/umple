@@ -1,0 +1,28 @@
+namespace weka.classifiers.meta;
+
+class AdaBoostM1Test
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public AdaBoostM1Test(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default AdaBoostM1 
+ */
+public Classifier getClassifier(){
+  return new AdaBoostM1();
+}
+
+public static Test suite(){
+  return new TestSuite(AdaBoostM1Test.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

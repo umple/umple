@@ -1,0 +1,28 @@
+namespace weka.classifiers.meta;
+
+class RandomizableFilteredClassifierTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public RandomizableFilteredClassifierTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default RandomizableFilteredClassifier 
+ */
+public Classifier getClassifier(){
+  return new RandomizableFilteredClassifier();
+}
+
+public static Test suite(){
+  return new TestSuite(RandomizableFilteredClassifierTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

@@ -1,0 +1,28 @@
+namespace weka.classifiers.evaluation;
+
+interface InformationRetrievalEvaluationMetric
+{
+ depend weka.core.Instance;
+/** 
+ * Updates the statistics about a classifiers performance for the current test instance. Implementers need only implement this method if it is not possible to compute their statistics from what is stored in the base Evaluation object.
+ * @param predictedDistribution the probabilities assigned to each class
+ * @param instance the instance to be classified
+ * @throws Exception if the class of the instance is not set
+ */
+void updateStatsForClassifier(double[] predictedDistribution,Instance instance) throws Exception ;
+
+/** 
+ * Get the value of the named statistic for the given class index. If the implementing class is extending AbstractEvaluationMetric then the implementation of getStatistic(String statName) should just call this method with a classIndex of 0.
+ * @param statName the name of the statistic to compute the value for
+ * @param classIndex the class index for which to compute the statistic
+ * @return the value of the named statistic for the given class index orUtils.missingValue() if the statistic can't be computed for some reason
+ */
+double getStatistic(String statName,int classIndex);
+
+/** 
+ * Get the weighted (by class) average for this statistic.
+ * @param statName the name of the statistic to compute
+ * @return the weighted (by class) average value of the statistic orUtils.missingValue() if this can't be computed (or isn't appropriate).
+ */
+double getClassWeightedAverageStatistic(String statName);
+}

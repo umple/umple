@@ -1,0 +1,59 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class AntecedentSequence
+{
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlElement(name="SequenceReference",namespace="http://www.dmg.org/PMML-4_1",required=true) protected SequenceReference sequenceReference;
+
+@XmlElement(name="Time",namespace="http://www.dmg.org/PMML-4_1") protected Time time;
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the sequenceReference property.
+ * @return possible object is {@link SequenceReference }
+ */
+public SequenceReference getSequenceReference(){
+  return sequenceReference;
+}
+
+/** 
+ * Sets the value of the sequenceReference property.
+ * @param value allowed object is {@link SequenceReference }
+ */
+public void setSequenceReference(SequenceReference value){
+  this.sequenceReference=value;
+}
+
+/** 
+ * Gets the value of the time property.
+ * @return possible object is {@link Time }
+ */
+public Time getTime(){
+  return time;
+}
+
+/** 
+ * Sets the value of the time property.
+ * @param value allowed object is {@link Time }
+ */
+public void setTime(Time value){
+  this.time=value;
+}
+}

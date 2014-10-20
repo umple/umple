@@ -1,0 +1,40 @@
+namespace weka.filters.unsupervised.instance;
+
+class SparseToNonSparseTest
+{
+  isA AbstractFilterTest;
+ depend weka.core.Instances;
+ depend weka.core.SparseInstance;
+ depend weka.filters.AbstractFilterTest;
+ depend weka.filters.Filter;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public SparseToNonSparseTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates an example SparseToNonSparse 
+ */
+public Filter getFilter(){
+  SparseToNonSparse f=new SparseToNonSparse();
+  return f;
+}
+
+public void testTypical(){
+  Instances result=useFilter();
+  assertEquals(m_Instances.numAttributes(),result.numAttributes());
+  assertEquals(m_Instances.numInstances(),result.numInstances());
+  for (int i=0; i < result.numInstances(); i++) {
+    assertTrue("Instance should not be an instanceof SparseInstance:" + (i + 1),!(result.instance(i) instanceof SparseInstance));
+  }
+}
+
+public static Test suite(){
+  return new TestSuite(SparseToNonSparseTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

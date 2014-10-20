@@ -1,0 +1,488 @@
+namespace weka.gui;
+
+class LogWindowPrintStream
+{
+  isA PrintStream;
+ depend java.awt.BorderLayout;
+ depend java.awt.Color;
+ depend java.awt.Container;
+ depend java.awt.Dimension;
+ depend java.awt.FlowLayout;
+ depend java.awt.GridLayout;
+ depend java.awt.event.ActionEvent;
+ depend java.awt.event.ActionListener;
+ depend java.awt.event.ItemEvent;
+ depend java.awt.event.ItemListener;
+ depend java.io.PrintStream;
+ depend javax.swing.JButton;
+ depend javax.swing.JCheckBox;
+ depend javax.swing.JFrame;
+ depend javax.swing.JLabel;
+ depend javax.swing.JPanel;
+ depend javax.swing.JScrollPane;
+ depend javax.swing.JSpinner;
+ depend javax.swing.JTextPane;
+ depend javax.swing.SpinnerNumberModel;
+ depend javax.swing.event.CaretEvent;
+ depend javax.swing.event.CaretListener;
+ depend javax.swing.event.ChangeEvent;
+ depend javax.swing.event.ChangeListener;
+ depend javax.swing.text.Style;
+ depend javax.swing.text.StyleConstants;
+ depend javax.swing.text.StyleContext;
+ depend javax.swing.text.StyledDocument;
+ depend weka.core.Tee;
+ depend weka.core.Utils;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=5650947361381061112L;
+
+/** 
+ * the name of the style for stdout 
+ */
+public final static String STYLE_STDOUT="stdout";
+
+/** 
+ * the name of the style for stderr 
+ */
+public final static String STYLE_STDERR="stderr";
+
+/** 
+ * the color of the style for stdout 
+ */
+public final static Color COLOR_STDOUT=Color.BLACK;
+
+/** 
+ * the Color of the style for stderr 
+ */
+public final static Color COLOR_STDERR=Color.RED;
+
+/** 
+ * whether we're debugging - enables output on stdout 
+ */
+public final static boolean DEBUG=false;
+
+/** 
+ * whether the JTextPane has wordwrap or not 
+ */
+public boolean m_UseWordwrap=true;
+
+/** 
+ * the output 
+ */
+protected JTextPane m_Output=new JTextPane();
+
+/** 
+ * the clear button 
+ */
+protected JButton m_ButtonClear=new JButton("Clear");
+
+/** 
+ * the close button 
+ */
+protected JButton m_ButtonClose=new JButton("Close");
+
+/** 
+ * the current size 
+ */
+protected JLabel m_LabelCurrentSize=new JLabel("currently: 0");
+
+/** 
+ * the spinner for the max number of chars 
+ */
+protected JSpinner m_SpinnerMaxSize=new JSpinner();
+
+/** 
+ * whether to allow wordwrap or not 
+ */
+protected JCheckBox m_CheckBoxWordwrap=new JCheckBox("Use wordwrap");
+
+/** 
+ * for redirecting stdout 
+ */
+protected static Tee m_TeeOut=null;
+
+/** 
+ * for redirecting stderr 
+ */
+protected static Tee m_TeeErr=null;
+
+/** 
+ * the parent 
+ */
+protected LogWindow m_Parent=null;
+
+/** 
+ * the style of the printstream 
+ */
+protected String m_Style=null;
+
+private static final long serialVersionUID=-8275856175921425981L;
+
+/** 
+ * the constructor
+ * @param parent the parent frame
+ * @param stream the stream (used for constructor of superclass)
+ * @param style the style name associated with this output
+ */
+public LogWindowPrintStream(LogWindow parent,PrintStream stream,String style){
+  super(stream);
+  m_Parent=parent;
+  m_Style=style;
+}
+
+/** 
+ * flushes the printstream
+ */
+@Override public synchronized void flush(){
+}
+
+/** 
+ * prints the given int
+ */
+@Override public synchronized void print(int x){
+  print(new Integer(x).toString());
+}
+
+/** 
+ * prints the given boolean
+ */
+@Override public synchronized void print(boolean x){
+  print(new Boolean(x).toString());
+}
+
+/** 
+ * prints the given string
+ */
+@Override public synchronized void print(String x){
+  StyledDocument doc;
+  doc=m_Parent.m_Output.getStyledDocument();
+  try {
+    doc.insertString(doc.getLength(),x,doc.getStyle(m_Style));
+    m_Parent.m_Output.setCaretPosition(doc.getLength());
+    m_Parent.trim();
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+}
+
+/** 
+ * prints the given object
+ */
+@Override public synchronized void print(Object x){
+  String line;
+  Throwable t;
+  StackTraceElement[] trace;
+  int i;
+  if (x instanceof Throwable) {
+    t=(Throwable)x;
+    trace=t.getStackTrace();
+    line=t.getMessage() + "\n";
+    for (i=0; i < trace.length; i++) {
+      line+="\t" + trace[i].toString() + "\n";
+    }
+    x=line;
+  }
+  if (x == null) {
+    print("null");
+  }
+ else {
+    print(x.toString());
+  }
+}
+
+/** 
+ * prints a new line
+ */
+@Override public synchronized void println(){
+  print("\n");
+}
+
+/** 
+ * prints the given int
+ */
+@Override public synchronized void println(int x){
+  print(x);
+  println();
+}
+
+/** 
+ * prints the given boolean
+ */
+@Override public synchronized void println(boolean x){
+  print(x);
+  println();
+}
+
+/** 
+ * prints the given string
+ */
+@Override public synchronized void println(String x){
+  print(x);
+  println();
+}
+
+/** 
+ * prints the given object (for Throwables we print the stack trace)
+ */
+@Override public synchronized void println(Object x){
+  print(x);
+  println();
+}
+
+/** 
+ * creates the frame
+ */
+public LogWindow(){
+  super("Weka - Log");
+  createFrame();
+  StyledDocument doc;
+  Style style;
+  boolean teeDone;
+  doc=m_Output.getStyledDocument();
+  style=StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+  style=doc.addStyle(STYLE_STDOUT,style);
+  StyleConstants.setFontFamily(style,"monospaced");
+  StyleConstants.setForeground(style,COLOR_STDOUT);
+  style=StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+  style=doc.addStyle(STYLE_STDERR,style);
+  StyleConstants.setFontFamily(style,"monospaced");
+  StyleConstants.setForeground(style,COLOR_STDERR);
+  teeDone=!((m_TeeOut == null) && (m_TeeErr == null));
+  if (!DEBUG) {
+    if (!teeDone) {
+      m_TeeOut=new Tee(System.out);
+      System.setOut(m_TeeOut);
+    }
+    m_TeeOut.add(new LogWindowPrintStream(this,m_TeeOut.getDefault(),STYLE_STDOUT));
+  }
+  if (!teeDone) {
+    m_TeeErr=new Tee(System.err);
+    System.setErr(m_TeeErr);
+  }
+  m_TeeErr.add(new LogWindowPrintStream(this,m_TeeErr.getDefault(),STYLE_STDERR));
+}
+
+/** 
+ * creates the frame and all its components
+ */
+protected void createFrame(){
+  JPanel panel;
+  JPanel panel2;
+  JPanel panel3;
+  JPanel panel4;
+  SpinnerNumberModel model;
+  int width;
+  JLabel label;
+  setSize(600,400);
+  width=getBounds().width;
+  setLocation(getGraphicsConfiguration().getBounds().width - width,getLocation().y);
+  getContentPane().setLayout(new BorderLayout());
+  getContentPane().add(new JScrollPane(m_Output),BorderLayout.CENTER);
+  setWordwrap(m_UseWordwrap);
+  panel=new JPanel(new BorderLayout());
+  getContentPane().add(panel,BorderLayout.SOUTH);
+  panel3=new JPanel(new BorderLayout());
+  panel.add(panel3,BorderLayout.SOUTH);
+  panel2=new JPanel(new FlowLayout(FlowLayout.RIGHT));
+  panel3.add(panel2,BorderLayout.EAST);
+  m_ButtonClear.setMnemonic('C');
+  m_ButtonClear.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      clear();
+    }
+  }
+);
+  panel2.add(m_ButtonClear);
+  m_ButtonClose.setMnemonic('l');
+  m_ButtonClose.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      close();
+    }
+  }
+);
+  panel2.add(m_ButtonClose);
+  panel2=new JPanel(new GridLayout(1,3));
+  panel3.add(panel2,BorderLayout.WEST);
+  panel4=new JPanel(new FlowLayout());
+  panel2.add(panel4);
+  model=(SpinnerNumberModel)m_SpinnerMaxSize.getModel();
+  model.setMinimum(new Integer(1));
+  model.setStepSize(new Integer(1000));
+  model.setValue(new Integer(100000));
+  model.addChangeListener(this);
+  label=new JLabel("max. Size");
+  label.setDisplayedMnemonic('m');
+  label.setLabelFor(m_SpinnerMaxSize);
+  panel4.add(label);
+  panel4.add(m_SpinnerMaxSize);
+  panel4=new JPanel(new FlowLayout());
+  panel2.add(panel4);
+  panel4.add(m_LabelCurrentSize);
+  panel4=new JPanel(new FlowLayout());
+  panel2.add(panel4);
+  m_CheckBoxWordwrap.setSelected(m_UseWordwrap);
+  m_CheckBoxWordwrap.addItemListener(new ItemListener(){
+    @Override public void itemStateChanged(    ItemEvent e){
+      setWordwrap(m_CheckBoxWordwrap.isSelected());
+    }
+  }
+);
+  panel4.add(m_CheckBoxWordwrap);
+}
+
+@Override public void actionPerformed(ActionEvent e){
+  clear();
+}
+
+@Override public void actionPerformed(ActionEvent e){
+  close();
+}
+
+@Override public void itemStateChanged(ItemEvent e){
+  setWordwrap(m_CheckBoxWordwrap.isSelected());
+}
+
+/** 
+ * clears the output
+ */
+public void clear(){
+  m_Output.setText("");
+}
+
+/** 
+ * closes the frame
+ */
+public void close(){
+  setVisible(false);
+}
+
+/** 
+ * trims the JTextPane, if too big
+ */
+public void trim(){
+  StyledDocument doc;
+  int size;
+  int maxSize;
+  int pos;
+  doc=m_Output.getStyledDocument();
+  size=doc.getLength();
+  maxSize=((Integer)m_SpinnerMaxSize.getValue()).intValue();
+  if (size > maxSize) {
+    try {
+      pos=size - maxSize;
+      while (!doc.getText(pos,1).equals("\n")) {
+        pos++;
+      }
+      while (doc.getText(pos,1).equals("\n")) {
+        pos++;
+      }
+      doc.remove(0,pos);
+    }
+ catch (    Exception ex) {
+      if (DEBUG) {
+        System.out.println(ex);
+      }
+    }
+  }
+  m_Output.setCaretPosition(doc.getLength());
+}
+
+/** 
+ * returns a string representation (#RGB) of the given color
+ */
+protected String colorToString(Color c){
+  String result;
+  result="#" + Utils.padLeft(Integer.toHexString(c.getRed()),2) + Utils.padLeft(Integer.toHexString(c.getGreen()),2)+ Utils.padLeft(Integer.toHexString(c.getBlue()),2);
+  result=result.replaceAll("\\ ","0").toUpperCase();
+  return result;
+}
+
+/** 
+ * toggles the wordwrap<br/> override wordwrap from: http://forum.java.sun.com/thread.jspa?threadID=498535&messageID=2356174
+ */
+public void setWordwrap(boolean wrap){
+  Container parent;
+  JTextPane outputOld;
+  m_UseWordwrap=wrap;
+  if (m_CheckBoxWordwrap.isSelected() != m_UseWordwrap) {
+    m_CheckBoxWordwrap.setSelected(m_UseWordwrap);
+  }
+  parent=m_Output.getParent();
+  outputOld=m_Output;
+  if (m_UseWordwrap) {
+    m_Output=new JTextPane();
+  }
+ else {
+    m_Output=new JTextPane(){
+      private static final long serialVersionUID=-8275856175921425981L;
+      @Override public void setSize(      Dimension d){
+        if (d.width < getGraphicsConfiguration().getBounds().width) {
+          d.width=getGraphicsConfiguration().getBounds().width;
+        }
+        super.setSize(d);
+      }
+      @Override public boolean getScrollableTracksViewportWidth(){
+        return false;
+      }
+    }
+;
+  }
+  m_Output.setEditable(false);
+  m_Output.addCaretListener(this);
+  m_Output.setDocument(outputOld.getDocument());
+  m_Output.setCaretPosition(m_Output.getDocument().getLength());
+  parent.add(m_Output);
+  parent.remove(outputOld);
+}
+
+@Override public void setSize(Dimension d){
+  if (d.width < getGraphicsConfiguration().getBounds().width) {
+    d.width=getGraphicsConfiguration().getBounds().width;
+  }
+  super.setSize(d);
+}
+
+@Override public boolean getScrollableTracksViewportWidth(){
+  return false;
+}
+
+/** 
+ * Called when the caret position is updated.
+ */
+@Override public void caretUpdate(CaretEvent e){
+  m_LabelCurrentSize.setText("currently: " + m_Output.getStyledDocument().getLength());
+  if (DEBUG) {
+    System.out.println(e);
+  }
+}
+
+/** 
+ * Invoked when the target of the listener has changed its state.
+ */
+@Override public void stateChanged(ChangeEvent e){
+  if (e.getSource() == m_SpinnerMaxSize.getModel()) {
+    trim();
+    validate();
+    caretUpdate(null);
+  }
+}
+
+/** 
+ * for testing only
+ */
+public static void main(String[] args){
+  LogWindow log;
+  LookAndFeel.setLookAndFeel();
+  log=new LogWindow();
+  log.setVisible(true);
+  log.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+  System.out.print("a");
+  System.err.print("a");
+  System.out.print("a");
+  System.out.println();
+  System.err.println(new java.util.Date());
+}
+}

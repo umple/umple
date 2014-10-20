@@ -1,0 +1,23 @@
+
+top INVALIDVALUETREATMENTMETHOD
+{
+/** 
+ * <p>Java class for INVALID-VALUE-TREATMENT-METHOD. <p>The following schema fragment specifies the expected content contained within this class. <p> <pre> &lt;simpleType name="INVALID-VALUE-TREATMENT-METHOD"> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"> &lt;enumeration value="returnInvalid"/> &lt;enumeration value="asIs"/> &lt;enumeration value="asMissing"/> &lt;/restriction> &lt;/simpleType> </pre>
+ */
+@XmlEnum public enum INVALIDVALUETREATMENTMETHOD {@XmlEnumValue("asIs") AS_IS("asIs"), @XmlEnumValue("asMissing") AS_MISSING("asMissing"), @XmlEnumValue("returnInvalid") RETURN_INVALID("returnInvalid"); private final String value;
+INVALIDVALUETREATMENTMETHOD(String v){
+  value=v;
+}
+public String value(){
+  return value;
+}
+public static INVALIDVALUETREATMENTMETHOD fromValue(String v){
+  for (  INVALIDVALUETREATMENTMETHOD c : INVALIDVALUETREATMENTMETHOD.values()) {
+    if (c.value.equals(v)) {
+      return c;
+    }
+  }
+  throw new IllegalArgumentException(v.toString());
+}
+}
+}

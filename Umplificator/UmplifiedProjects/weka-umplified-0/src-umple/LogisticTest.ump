@@ -1,0 +1,28 @@
+namespace weka.classifiers.functions;
+
+class LogisticTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public LogisticTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default Logistic 
+ */
+public Classifier getClassifier(){
+  return new Logistic();
+}
+
+public static Test suite(){
+  return new TestSuite(LogisticTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

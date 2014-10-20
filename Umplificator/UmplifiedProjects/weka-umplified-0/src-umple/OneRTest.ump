@@ -1,0 +1,28 @@
+namespace weka.classifiers.rules;
+
+class OneRTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public OneRTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default OneR 
+ */
+public Classifier getClassifier(){
+  return new OneR();
+}
+
+public static Test suite(){
+  return new TestSuite(OneRTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

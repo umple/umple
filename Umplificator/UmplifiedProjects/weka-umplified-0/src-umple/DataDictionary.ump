@@ -1,0 +1,74 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class DataDictionary
+{
+ depend java.math.BigInteger;
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlElement(name="DataField",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<DataField> dataField;
+
+@XmlElement(name="Taxonomy",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Taxonomy> taxonomy;
+
+@XmlAttribute protected BigInteger numberOfFields;
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the dataField property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the dataField property. <p> For example, to add a new item, do as follows: <pre> getDataField().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link DataField }
+ */
+public List<DataField> getDataFields(){
+  if (dataField == null) {
+    dataField=new ArrayList<DataField>();
+  }
+  return this.dataField;
+}
+
+public void addDataField(DataField field){
+  if (dataField == null) {
+    dataField=new ArrayList<DataField>();
+  }
+  dataField.add(field);
+}
+
+/** 
+ * Gets the value of the taxonomy property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the taxonomy property. <p> For example, to add a new item, do as follows: <pre> getTaxonomy().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Taxonomy }
+ */
+public List<Taxonomy> getTaxonomy(){
+  if (taxonomy == null) {
+    taxonomy=new ArrayList<Taxonomy>();
+  }
+  return this.taxonomy;
+}
+
+/** 
+ * Gets the value of the numberOfFields property.
+ * @return possible object is {@link BigInteger }
+ */
+public BigInteger getNumberOfFields(){
+  return numberOfFields;
+}
+
+/** 
+ * Sets the value of the numberOfFields property.
+ * @param value allowed object is {@link BigInteger }
+ */
+public void setNumberOfFields(BigInteger value){
+  this.numberOfFields=value;
+}
+}

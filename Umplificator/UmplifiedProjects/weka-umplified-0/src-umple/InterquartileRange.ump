@@ -1,0 +1,8 @@
+
+top ValueType
+{
+/** 
+ * enum for obtaining the various determined IQR values. 
+ */
+public enum ValueType {UPPER_EXTREME_VALUES, UPPER_OUTLIER_VALUES, LOWER_OUTLIER_VALUES, LOWER_EXTREME_VALUES, MEDIAN, IQR}
+}

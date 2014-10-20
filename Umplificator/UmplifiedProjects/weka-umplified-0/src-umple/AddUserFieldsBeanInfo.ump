@@ -1,0 +1,15 @@
+namespace weka.filters.unsupervised.attribute;
+
+class AddUserFieldsBeanInfo
+{
+  isA SimpleBeanInfo;
+ depend java.beans.BeanDescriptor;
+ depend java.beans.SimpleBeanInfo;
+/** 
+ * Get the bean descriptor for this bean
+ * @return a <code>BeanDescriptor</code> value
+ */
+@Override public BeanDescriptor getBeanDescriptor(){
+  return new BeanDescriptor(weka.filters.unsupervised.attribute.AddUserFields.class,weka.gui.filters.AddUserFieldsCustomizer.class);
+}
+}

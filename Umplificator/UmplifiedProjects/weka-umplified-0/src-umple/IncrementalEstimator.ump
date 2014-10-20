@@ -1,0 +1,11 @@
+namespace weka.estimators;
+
+interface IncrementalEstimator
+{
+/** 
+ * Add one value to the current estimator.
+ * @param data the new data value 
+ * @param weight the weight assigned to the data value 
+ */
+void addValue(double data,double weight);
+}

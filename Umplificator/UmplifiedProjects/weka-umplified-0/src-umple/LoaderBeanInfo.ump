@@ -1,0 +1,14 @@
+namespace weka.gui.beans;
+
+class LoaderBeanInfo
+{
+  isA AbstractDataSourceBeanInfo;
+ depend java.beans.BeanDescriptor;
+/** 
+ * Get the bean descriptor for this bean
+ * @return a <code>BeanDescriptor</code> value
+ */
+public BeanDescriptor getBeanDescriptor(){
+  return new BeanDescriptor(weka.gui.beans.Loader.class,LoaderCustomizer.class);
+}
+}

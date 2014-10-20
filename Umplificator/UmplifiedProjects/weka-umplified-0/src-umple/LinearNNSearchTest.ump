@@ -1,0 +1,26 @@
+namespace weka.core.neighboursearch;
+
+class LinearNNSearchTest
+{
+  isA AbstractNearestNeighbourSearchTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public LinearNNSearchTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default LinearNNSearch 
+ */
+public NearestNeighbourSearch getNearestNeighbourSearch(){
+  return new LinearNNSearch();
+}
+
+public static Test suite(){
+  return new TestSuite(LinearNNSearchTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

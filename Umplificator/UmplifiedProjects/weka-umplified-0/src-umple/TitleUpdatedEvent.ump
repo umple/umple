@@ -1,0 +1,28 @@
+namespace weka.gui.scripting.event;
+
+class TitleUpdatedEvent
+{
+  isA EventObject;
+ depend java.util.EventObject;
+ depend weka.gui.scripting.ScriptingPanel;
+/** 
+ * for serialization. 
+ */
+private static final long serialVersionUID=4971569742479666535L;
+
+/** 
+ * Initializes the event.
+ * @param source	the scripting panel that triggered the event
+ */
+public TitleUpdatedEvent(ScriptingPanel source){
+  super(source);
+}
+
+/** 
+ * Returns the scripting panel that triggered the event. Use the <code>getTitle()</code> method for accessing the new title.
+ * @return		the panel
+ */
+public ScriptingPanel getPanel(){
+  return (ScriptingPanel)getSource();
+}
+}

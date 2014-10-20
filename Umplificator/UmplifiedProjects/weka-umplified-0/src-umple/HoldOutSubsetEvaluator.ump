@@ -1,0 +1,33 @@
+namespace weka.attributeSelection;
+
+class HoldOutSubsetEvaluator
+{
+  isA SubsetEvaluator;
+  isA ASEvaluation;
+ depend java.util.BitSet;
+ depend weka.core.Instance;
+ depend weka.core.Instances;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=8280529785412054174L;
+
+/** 
+ * Evaluates a subset of attributes with respect to a set of instances.
+ * @param subset a bitset representing the attribute subset to beevaluated
+ * @param holdOut a set of instances (possibly seperate and distinctfrom those use to build/train the evaluator) with which to evaluate the merit of the subset
+ * @return the "merit" of the subset on the holdOut data
+ * @exception Exception if the subset cannot be evaluated
+ */
+public abstract double evaluateSubset(BitSet subset,Instances holdOut) throws Exception ;
+
+/** 
+ * Evaluates a subset of attributes with respect to a single instance.
+ * @param subset a bitset representing the attribute subset to beevaluated
+ * @param holdOut a single instance (possibly not one of those used tobuild/train the evaluator) with which to evaluate the merit of the subset
+ * @param retrain true if the classifier should be retrained with respectto the new subset before testing on the holdOut instance.
+ * @return the "merit" of the subset on the holdOut instance
+ * @exception Exception if the subset cannot be evaluated
+ */
+public abstract double evaluateSubset(BitSet subset,Instance holdOut,boolean retrain) throws Exception ;
+}

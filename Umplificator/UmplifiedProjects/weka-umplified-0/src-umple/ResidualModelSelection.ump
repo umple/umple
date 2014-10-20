@@ -1,0 +1,95 @@
+namespace weka.classifiers.trees.lmt;
+
+class ResidualModelSelection
+{
+  isA ModelSelection;
+ depend weka.classifiers.trees.j48.ClassifierSplitModel;
+ depend weka.classifiers.trees.j48.Distribution;
+ depend weka.classifiers.trees.j48.ModelSelection;
+ depend weka.classifiers.trees.j48.NoSplit;
+ depend weka.core.Instances;
+ depend weka.core.RevisionUtils;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=-293098783159385148L;
+
+/** 
+ * Minimum number of instances for leaves
+ */
+protected int m_minNumInstances;
+
+/** 
+ * Minimum information gain for split
+ */
+protected double m_minInfoGain;
+
+/** 
+ * Constructor to create ResidualModelSelection object. 
+ * @param minNumInstances minimum number of instances for leaves
+ */
+public ResidualModelSelection(int minNumInstances){
+  m_minNumInstances=minNumInstances;
+  m_minInfoGain=1.0E-4;
+}
+
+/** 
+ * Method not in use
+ */
+public void cleanup(){
+}
+
+/** 
+ * Selects split based on residuals for the given dataset.
+ */
+public final ClassifierSplitModel selectModel(Instances data,double[][] dataZs,double[][] dataWs) throws Exception {
+  int numAttributes=data.numAttributes();
+  if (numAttributes < 2)   throw new Exception("Can't select Model without non-class attribute");
+  if (data.numInstances() < m_minNumInstances)   return new NoSplit(new Distribution(data));
+  double bestGain=-Double.MAX_VALUE;
+  int bestAttribute=-1;
+  for (int i=0; i < numAttributes; i++) {
+    if (i != data.classIndex()) {
+      ResidualSplit split=new ResidualSplit(i);
+      split.buildClassifier(data,dataZs,dataWs);
+      if (split.checkModel(m_minNumInstances)) {
+        double gain=split.entropyGain();
+        if (gain > bestGain) {
+          bestGain=gain;
+          bestAttribute=i;
+        }
+      }
+    }
+  }
+  if (bestGain >= m_minInfoGain) {
+    ResidualSplit split=new ResidualSplit(bestAttribute);
+    split.buildClassifier(data,dataZs,dataWs);
+    return split;
+  }
+ else {
+    return new NoSplit(new Distribution(data));
+  }
+}
+
+/** 
+ * Method not in use
+ */
+public final ClassifierSplitModel selectModel(Instances train){
+  return null;
+}
+
+/** 
+ * Method not in use
+ */
+public final ClassifierSplitModel selectModel(Instances train,Instances test){
+  return null;
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+}

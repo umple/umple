@@ -1,0 +1,43 @@
+namespace weka.filters.unsupervised.attribute;
+
+class ReplaceMissingWithUserConstantTest
+{
+  isA AbstractFilterTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+ depend weka.core.Instances;
+ depend weka.filters.AbstractFilterTest;
+ depend weka.filters.Filter;
+public ReplaceMissingWithUserConstantTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default ReplaceMissingWithUserConstant 
+ */
+@Override public Filter getFilter(){
+  ReplaceMissingWithUserConstant filter=new ReplaceMissingWithUserConstant();
+  filter.setDateReplacementValue("1969-08-28");
+  filter.setDateFormat("yyyy-MM-dd");
+  return filter;
+}
+
+public void testTypical(){
+  Instances result=useFilter();
+  assertEquals(m_Instances.numAttributes(),result.numAttributes());
+  assertEquals(m_Instances.numInstances(),result.numInstances());
+  for (int j=0; j < m_Instances.numAttributes(); j++) {
+    for (int i=0; i < m_Instances.numInstances(); i++) {
+      assertTrue("All missing values should have been replaced " + result.instance(i),!result.instance(i).isMissing(j));
+    }
+  }
+}
+
+public static Test suite(){
+  return new TestSuite(ReplaceMissingWithUserConstantTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

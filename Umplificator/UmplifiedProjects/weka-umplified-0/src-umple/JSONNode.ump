@@ -1,0 +1,19 @@
+
+top NodeType
+{
+/** 
+ * The type of a node.
+ * @author FracPete (fracpete at waikato dot ac dot nz)
+ * @version $Revision: 10203 $
+ */
+public static enum NodeType {/** 
+ * a primitive. 
+ */
+PRIMITIVE, /** 
+ * an object with nested key-value pairs. 
+ */
+OBJECT, /** 
+ * an array. 
+ */
+ARRAY}
+}

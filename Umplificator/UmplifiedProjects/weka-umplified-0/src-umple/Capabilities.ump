@@ -1,0 +1,127 @@
+
+top Capability
+{
+/** 
+ * enumeration of all capabilities 
+ */
+public enum Capability {/** 
+ * can handle nominal attributes 
+ */
+NOMINAL_ATTRIBUTES(ATTRIBUTE + ATTRIBUTE_CAPABILITY,"Nominal attributes"), /** 
+ * can handle binary attributes 
+ */
+BINARY_ATTRIBUTES(ATTRIBUTE + ATTRIBUTE_CAPABILITY,"Binary attributes"), /** 
+ * can handle unary attributes 
+ */
+UNARY_ATTRIBUTES(ATTRIBUTE + ATTRIBUTE_CAPABILITY,"Unary attributes"), /** 
+ * can handle empty nominal attributes 
+ */
+EMPTY_NOMINAL_ATTRIBUTES(ATTRIBUTE + ATTRIBUTE_CAPABILITY,"Empty nominal attributes"), /** 
+ * can handle numeric attributes 
+ */
+NUMERIC_ATTRIBUTES(ATTRIBUTE + ATTRIBUTE_CAPABILITY,"Numeric attributes"), /** 
+ * can handle date attributes 
+ */
+DATE_ATTRIBUTES(ATTRIBUTE + ATTRIBUTE_CAPABILITY,"Date attributes"), /** 
+ * can handle string attributes 
+ */
+STRING_ATTRIBUTES(ATTRIBUTE + ATTRIBUTE_CAPABILITY,"String attributes"), /** 
+ * can handle relational attributes 
+ */
+RELATIONAL_ATTRIBUTES(ATTRIBUTE + ATTRIBUTE_CAPABILITY,"Relational attributes"), /** 
+ * can handle missing values in attributes 
+ */
+MISSING_VALUES(ATTRIBUTE_CAPABILITY,"Missing values"), /** 
+ * can handle data without class attribute, eg clusterers 
+ */
+NO_CLASS(CLASS_CAPABILITY,"No class"), /** 
+ * can handle nominal classes 
+ */
+NOMINAL_CLASS(CLASS + CLASS_CAPABILITY,"Nominal class"), /** 
+ * can handle binary classes 
+ */
+BINARY_CLASS(CLASS + CLASS_CAPABILITY,"Binary class"), /** 
+ * can handle unary classes 
+ */
+UNARY_CLASS(CLASS + CLASS_CAPABILITY,"Unary class"), /** 
+ * can handle empty nominal classes 
+ */
+EMPTY_NOMINAL_CLASS(CLASS + CLASS_CAPABILITY,"Empty nominal class"), /** 
+ * can handle numeric classes 
+ */
+NUMERIC_CLASS(CLASS + CLASS_CAPABILITY,"Numeric class"), /** 
+ * can handle date classes 
+ */
+DATE_CLASS(CLASS + CLASS_CAPABILITY,"Date class"), /** 
+ * can handle string classes 
+ */
+STRING_CLASS(CLASS + CLASS_CAPABILITY,"String class"), /** 
+ * can handle relational classes 
+ */
+RELATIONAL_CLASS(CLASS + CLASS_CAPABILITY,"Relational class"), /** 
+ * can handle missing values in class attribute 
+ */
+MISSING_CLASS_VALUES(CLASS_CAPABILITY,"Missing class values"), /** 
+ * can handle multi-instance data 
+ */
+ONLY_MULTIINSTANCE(OTHER_CAPABILITY,"Only multi-Instance data"); /** 
+ * the flags for the capabilities 
+ */
+private int m_Flags=0;
+/** 
+ * the display string 
+ */
+private String m_Display;
+/** 
+ * initializes the capability with the given flags
+ * @param flags "meta-data" for the capability
+ * @param display the display string (must be unique!)
+ */
+private Capability(int flags,String display){
+  m_Flags=flags;
+  m_Display=display;
+}
+/** 
+ * returns true if the capability is an attribute
+ * @return true if the capability is an attribute
+ */
+public boolean isAttribute(){
+  return ((m_Flags & ATTRIBUTE) == ATTRIBUTE);
+}
+/** 
+ * returns true if the capability is a class
+ * @return true if the capability is a class
+ */
+public boolean isClass(){
+  return ((m_Flags & CLASS) == CLASS);
+}
+/** 
+ * returns true if the capability is an attribute capability
+ * @return true if the capability is an attribute capability
+ */
+public boolean isAttributeCapability(){
+  return ((m_Flags & ATTRIBUTE_CAPABILITY) == ATTRIBUTE_CAPABILITY);
+}
+/** 
+ * returns true if the capability is a class capability
+ * @return true if the capability is a class capability
+ */
+public boolean isOtherCapability(){
+  return ((m_Flags & OTHER_CAPABILITY) == OTHER_CAPABILITY);
+}
+/** 
+ * returns true if the capability is a other capability
+ * @return true if the capability is a other capability
+ */
+public boolean isClassCapability(){
+  return ((m_Flags & CLASS_CAPABILITY) == CLASS_CAPABILITY);
+}
+/** 
+ * returns the display string of the capability
+ * @return the display string
+ */
+@Override public String toString(){
+  return m_Display;
+}
+}
+}

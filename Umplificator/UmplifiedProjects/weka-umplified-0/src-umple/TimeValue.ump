@@ -1,0 +1,99 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class TimeValue
+{
+ depend java.math.BigInteger;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Timestamp",namespace="http://www.dmg.org/PMML-4_1") protected Timestamp timestamp;
+
+@XmlAttribute protected BigInteger index;
+
+@XmlAttribute protected Double standardError;
+
+@XmlAttribute protected Double time;
+
+@XmlAttribute(required=true) protected double value;
+
+/** 
+ * Gets the value of the timestamp property.
+ * @return possible object is {@link Timestamp }
+ */
+public Timestamp getTimestamp(){
+  return timestamp;
+}
+
+/** 
+ * Sets the value of the timestamp property.
+ * @param value allowed object is {@link Timestamp }
+ */
+public void setTimestamp(Timestamp value){
+  this.timestamp=value;
+}
+
+/** 
+ * Gets the value of the index property.
+ * @return possible object is {@link BigInteger }
+ */
+public BigInteger getIndex(){
+  return index;
+}
+
+/** 
+ * Sets the value of the index property.
+ * @param value allowed object is {@link BigInteger }
+ */
+public void setIndex(BigInteger value){
+  this.index=value;
+}
+
+/** 
+ * Gets the value of the standardError property.
+ * @return possible object is {@link Double }
+ */
+public Double getStandardError(){
+  return standardError;
+}
+
+/** 
+ * Sets the value of the standardError property.
+ * @param value allowed object is {@link Double }
+ */
+public void setStandardError(Double value){
+  this.standardError=value;
+}
+
+/** 
+ * Gets the value of the time property.
+ * @return possible object is {@link Double }
+ */
+public Double getTime(){
+  return time;
+}
+
+/** 
+ * Sets the value of the time property.
+ * @param value allowed object is {@link Double }
+ */
+public void setTime(Double value){
+  this.time=value;
+}
+
+/** 
+ * Gets the value of the value property.
+ */
+public double getValue(){
+  return value;
+}
+
+/** 
+ * Sets the value of the value property.
+ */
+public void setValue(double value){
+  this.value=value;
+}
+}

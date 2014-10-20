@@ -1,0 +1,28 @@
+namespace weka.classifiers.trees;
+
+class LMTTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public LMTTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default LMT 
+ */
+public Classifier getClassifier(){
+  return new LMT();
+}
+
+public static Test suite(){
+  return new TestSuite(LMTTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

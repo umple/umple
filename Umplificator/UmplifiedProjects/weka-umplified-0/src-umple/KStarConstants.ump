@@ -1,0 +1,48 @@
+namespace weka.classifiers.lazy.kstar;
+
+interface KStarConstants
+{
+/** 
+ * Some usefull constants 
+ */
+int ON=1;
+
+int OFF=0;
+
+int NUM_RAND_COLS=5;
+
+double FLOOR=0.0;
+
+double FLOOR1=0.1;
+
+double INITIAL_STEP=0.05;
+
+double LOG2=0.693147181;
+
+double EPSILON=1.0e-5;
+
+/** 
+ * How close the root finder for numeric and nominal have to get 
+ */
+int ROOT_FINDER_MAX_ITER=40;
+
+double ROOT_FINDER_ACCURACY=0.01;
+
+/** 
+ * Blend setting modes 
+ */
+int B_SPHERE=1;
+
+int B_ENTROPY=2;
+
+/** 
+ * Missing value handling mode 
+ */
+int M_DELETE=1;
+
+int M_MAXDIFF=2;
+
+int M_NORMAL=3;
+
+int M_AVERAGE=4;
+}

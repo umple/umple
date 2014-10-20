@@ -1,0 +1,68 @@
+namespace weka.core.converters;
+
+class AbstractLoader
+{
+  isA Loader;
+ depend java.io.File;
+ depend java.io.IOException;
+ depend java.io.InputStream;
+ depend weka.core.Instance;
+ depend weka.core.Instances;
+/** 
+ * ID to avoid warning 
+ */
+private static final long serialVersionUID=2425432084900694551L;
+
+/** 
+ * The current retrieval mode 
+ */
+protected int m_retrieval;
+
+/** 
+ * Sets the retrieval mode.
+ * @param mode the retrieval mode
+ */
+@Override public void setRetrieval(int mode){
+  m_retrieval=mode;
+}
+
+/** 
+ * Gets the retrieval mode.
+ * @return the retrieval mode
+ */
+protected int getRetrieval(){
+  return m_retrieval;
+}
+
+/** 
+ * Default implementation throws an IOException.
+ * @param file the File
+ * @exception IOException always
+ */
+@Override public void setSource(File file) throws IOException {
+  throw new IOException("Setting File as source not supported");
+}
+
+/** 
+ * Default implementation sets retrieval mode to NONE
+ * @exception never.
+ */
+@Override public void reset() throws Exception {
+  m_retrieval=NONE;
+}
+
+/** 
+ * Default implementation throws an IOException.
+ * @param input the input stream
+ * @exception IOException always
+ */
+@Override public void setSource(InputStream input) throws IOException {
+  throw new IOException("Setting InputStream as source not supported");
+}
+
+@Override public abstract Instances getStructure() throws IOException ;
+
+@Override public abstract Instances getDataSet() throws IOException ;
+
+@Override public abstract Instance getNextInstance(Instances structure) throws IOException ;
+}

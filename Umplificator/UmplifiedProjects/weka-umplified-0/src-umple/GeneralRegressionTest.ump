@@ -1,0 +1,29 @@
+namespace weka.classifiers.pmml.consumer;
+
+class GeneralRegressionTest
+{
+  isA AbstractPMMLClassifierTest;
+ depend java.util.ArrayList;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public GeneralRegressionTest(String name){
+  super(name);
+}
+
+@Override protected void setUp() throws Exception {
+  m_modelNames=new ArrayList<String>();
+  m_dataSetNames=new ArrayList<String>();
+  m_modelNames.add("polynomial_regression_model.xml");
+  m_modelNames.add("HEART_NOMREG.xml");
+  m_dataSetNames.add("Elnino_small.arff");
+  m_dataSetNames.add("heart-c.arff");
+}
+
+public static Test suite(){
+  return new TestSuite(weka.classifiers.pmml.consumer.GeneralRegressionTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

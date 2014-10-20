@@ -1,0 +1,54 @@
+
+top StringFunc
+{
+/** 
+ * Enum for the string functions
+ */
+enum StringFunc {UPPERCASE("uppercase"){
+  String eval(  Object[] args){
+    return ((String)args[0]).toUpperCase();
+  }
+  boolean legalNumParams(  int num){
+    return (num == 1);
+  }
+  String[] getParameterNames(){
+    return new String[]{"input"};
+  }
+}
+, SUBSTRING("substring"){
+  String eval(  Object[] args){
+    String input=(String)args[0];
+    int startPos=((Integer)args[1]).intValue();
+    int length=((Integer)args[2]).intValue();
+    return input.substring(startPos - 1,startPos + length);
+  }
+  boolean legalNumParams(  int num){
+    return (num == 3);
+  }
+  String[] getParameterNames(){
+    return new String[]{"input","startPos","length"};
+  }
+}
+, TRIMBLANKS("trimBlanks"){
+  String eval(  Object[] args){
+    return ((String)args[0]).trim();
+  }
+  boolean legalNumParams(  int num){
+    return (num == 1);
+  }
+  String[] getParameterNames(){
+    return new String[]{"input"};
+  }
+}
+; abstract String eval(Object[] args);
+abstract boolean legalNumParams(int num);
+abstract String[] getParameterNames();
+private String m_stringVal;
+StringFunc(String funcName){
+  m_stringVal=funcName;
+}
+public String toString(){
+  return m_stringVal;
+}
+}
+}

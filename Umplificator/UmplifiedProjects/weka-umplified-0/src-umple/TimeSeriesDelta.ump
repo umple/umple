@@ -1,0 +1,121 @@
+namespace weka.filters.unsupervised.attribute;
+
+class TimeSeriesDelta
+{
+  isA TimeSeriesTranslate;
+ depend weka.core.Capabilities;
+ depend weka.core.Capabilities.Capability;
+ depend weka.core.DenseInstance;
+ depend weka.core.Instance;
+ depend weka.core.Instances;
+ depend weka.core.RevisionUtils;
+ depend weka.core.SparseInstance;
+ depend weka.core.UnsupportedAttributeTypeException;
+ depend weka.core.Utils;
+/** 
+ * for serialization 
+ */
+static final long serialVersionUID=3101490081896634942L;
+
+/** 
+ * Returns a string describing this classifier
+ * @return a description of the classifier suitable fordisplaying in the explorer/experimenter gui
+ */
+public String globalInfo(){
+  return "An instance filter that assumes instances form time-series data and " + "replaces attribute values in the current instance with the difference " + "between the current value and the equivalent attribute attribute value "+ "of some previous (or future) instance. For instances where the time-shifted "+ "value is unknown either the instance may be dropped, or missing values "+ "used. Skips the class attribute if it is set.";
+}
+
+/** 
+ * Returns the Capabilities of this filter.
+ * @return            the capabilities of this object
+ * @see Capabilities
+ */
+public Capabilities getCapabilities(){
+  Capabilities result=super.getCapabilities();
+  result.disableAll();
+  result.enableAllAttributes();
+  result.enable(Capability.MISSING_VALUES);
+  result.enableAllClasses();
+  result.enable(Capability.MISSING_CLASS_VALUES);
+  result.enable(Capability.NO_CLASS);
+  return result;
+}
+
+/** 
+ * Sets the format of the input instances.
+ * @param instanceInfo an Instances object containing the input instancestructure (any instances contained in the object are ignored - only the structure is required).
+ * @return true if the outputFormat may be collected immediately
+ * @throws UnsupportedAttributeTypeException if selectedattributes are not numeric.  
+ */
+public boolean setInputFormat(Instances instanceInfo) throws Exception {
+  if ((instanceInfo.classIndex() > 0) && (!getFillWithMissing())) {
+    throw new IllegalArgumentException("TimeSeriesDelta: Need to fill in missing values " + "using appropriate option when class index is set.");
+  }
+  super.setInputFormat(instanceInfo);
+  Instances outputFormat=new Instances(instanceInfo,0);
+  for (int i=0; i < instanceInfo.numAttributes(); i++) {
+    if (i != instanceInfo.classIndex()) {
+      if (m_SelectedCols.isInRange(i)) {
+        if (outputFormat.attribute(i).isNumeric()) {
+          outputFormat.renameAttribute(i,outputFormat.attribute(i).name() + " d" + (m_InstanceRange < 0 ? '-' : '+')+ Math.abs(m_InstanceRange));
+        }
+ else {
+          throw new UnsupportedAttributeTypeException("Time delta attributes must be numeric!");
+        }
+      }
+    }
+  }
+  outputFormat.setClassIndex(instanceInfo.classIndex());
+  setOutputFormat(outputFormat);
+  return true;
+}
+
+/** 
+ * Creates a new instance the same as one instance (the "destination") but with some attribute values copied from another instance (the "source")
+ * @param source the source instance
+ * @param dest the destination instance
+ * @return the new merged instance
+ */
+protected Instance mergeInstances(Instance source,Instance dest){
+  Instances outputFormat=outputFormatPeek();
+  double[] vals=new double[outputFormat.numAttributes()];
+  for (int i=0; i < vals.length; i++) {
+    if ((i != outputFormat.classIndex()) && (m_SelectedCols.isInRange(i))) {
+      if ((source != null) && !source.isMissing(i) && !dest.isMissing(i)) {
+        vals[i]=dest.value(i) - source.value(i);
+      }
+ else {
+        vals[i]=Utils.missingValue();
+      }
+    }
+ else {
+      vals[i]=dest.value(i);
+    }
+  }
+  Instance inst=null;
+  if (dest instanceof SparseInstance) {
+    inst=new SparseInstance(dest.weight(),vals);
+  }
+ else {
+    inst=new DenseInstance(dest.weight(),vals);
+  }
+  inst.setDataset(dest.dataset());
+  return inst;
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+
+/** 
+ * Main method for testing this class.
+ * @param argv should contain arguments to the filter: use -h for help
+ */
+public static void main(String[] argv){
+  runFilter(new TimeSeriesDelta(),argv);
+}
+}

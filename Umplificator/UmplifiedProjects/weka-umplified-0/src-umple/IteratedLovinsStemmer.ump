@@ -1,0 +1,57 @@
+namespace weka.core.stemmers;
+
+class IteratedLovinsStemmer
+{
+  isA LovinsStemmer;
+ depend weka.core.RevisionUtils;
+/** 
+ * for serialization 
+ */
+static final long serialVersionUID=960689687163788264L;
+
+/** 
+ * Returns a string describing the stemmer
+ * @return a description suitable fordisplaying in the explorer/experimenter gui
+ */
+public String globalInfo(){
+  return "An iterated version of the Lovins stemmer. It stems the word (in " + "case it's longer than 2 characters) until it no further changes.\n\n" + "For more information about the Lovins stemmer see:\n\n"+ getTechnicalInformation().toString();
+}
+
+/** 
+ * Iterated stemming of the given word. Word is converted to lower case.
+ * @param str 	the word to stem
+ * @return 		the stemmed word
+ */
+public String stem(String str){
+  if (str.length() <= 2) {
+    return str;
+  }
+  String stemmed=super.stem(str);
+  while (!stemmed.equals(str)) {
+    str=stemmed;
+    stemmed=super.stem(stemmed);
+  }
+  return stemmed;
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+
+/** 
+ * Runs the stemmer with the given options
+ * @param args      the options
+ */
+public static void main(String[] args){
+  try {
+    Stemming.useStemmer(new IteratedLovinsStemmer(),args);
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+}
+}

@@ -1,0 +1,165 @@
+namespace weka.gui.experiment;
+
+class Experimenter
+{
+  isA JPanel;
+ depend java.awt.BorderLayout;
+ depend java.awt.Image;
+ depend java.awt.Toolkit;
+ depend java.awt.event.WindowAdapter;
+ depend java.awt.event.WindowEvent;
+ depend java.beans.PropertyChangeEvent;
+ depend java.beans.PropertyChangeListener;
+ depend javax.swing.JFrame;
+ depend javax.swing.JPanel;
+ depend javax.swing.JTabbedPane;
+ depend weka.core.Memory;
+ depend weka.experiment.Experiment;
+ depend weka.gui.LookAndFeel;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=-5751617505738193788L;
+
+/** 
+ * The panel for configuring the experiment 
+ */
+protected SetupModePanel m_SetupPanel;
+
+/** 
+ * The panel for running the experiment 
+ */
+protected RunPanel m_RunPanel;
+
+/** 
+ * The panel for analysing experimental results 
+ */
+protected ResultsPanel m_ResultsPanel;
+
+/** 
+ * The tabbed pane that controls which sub-pane we are working with 
+ */
+protected JTabbedPane m_TabbedPane=new JTabbedPane();
+
+/** 
+ * True if the class attribute is the first attribute for all datasets involved in this experiment.
+ */
+protected boolean m_ClassFirst=false;
+
+/** 
+ * variable for the Experimenter class which would be set to null by the memory monitoring thread to free up some memory if we running out of memory
+ */
+private static Experimenter m_experimenter;
+
+/** 
+ * for monitoring the Memory consumption 
+ */
+protected static Memory m_Memory=new Memory(true);
+
+/** 
+ * Creates the experiment environment gui with no initial experiment
+ */
+public Experimenter(boolean classFirst){
+  m_SetupPanel=new SetupModePanel();
+  m_ResultsPanel=new ResultsPanel();
+  m_RunPanel=new RunPanel();
+  m_RunPanel.setResultsPanel(m_ResultsPanel);
+  m_ClassFirst=classFirst;
+  m_TabbedPane.addTab("Setup",null,m_SetupPanel,"Set up the experiment");
+  m_TabbedPane.addTab("Run",null,m_RunPanel,"Run the experiment");
+  m_TabbedPane.addTab("Analyse",null,m_ResultsPanel,"Analyse experiment results");
+  m_TabbedPane.setSelectedIndex(0);
+  m_TabbedPane.setEnabledAt(1,false);
+  m_SetupPanel.addPropertyChangeListener(new PropertyChangeListener(){
+    @Override public void propertyChange(    PropertyChangeEvent e){
+      Experiment exp=m_SetupPanel.getExperiment();
+      exp.classFirst(m_ClassFirst);
+      m_RunPanel.setExperiment(exp);
+      m_TabbedPane.setEnabledAt(1,true);
+    }
+  }
+);
+  setLayout(new BorderLayout());
+  add(m_TabbedPane,BorderLayout.CENTER);
+}
+
+@Override public void propertyChange(PropertyChangeEvent e){
+  Experiment exp=m_SetupPanel.getExperiment();
+  exp.classFirst(m_ClassFirst);
+  m_RunPanel.setExperiment(exp);
+  m_TabbedPane.setEnabledAt(1,true);
+}
+
+/** 
+ * Tests out the experiment environment.
+ * @param args ignored.
+ */
+public static void main(String[] args){
+  weka.core.logging.Logger.log(weka.core.logging.Logger.Level.INFO,"Logging started");
+  weka.gui.GenericObjectEditor.determineClasses();
+  LookAndFeel.setLookAndFeel();
+  try {
+    boolean classFirst=false;
+    if (args.length > 0) {
+      classFirst=args[0].equals("CLASS_FIRST");
+    }
+    m_experimenter=new Experimenter(classFirst);
+    final JFrame jf=new JFrame("Weka Experiment Environment");
+    jf.getContentPane().setLayout(new BorderLayout());
+    jf.getContentPane().add(m_experimenter,BorderLayout.CENTER);
+    jf.addWindowListener(new WindowAdapter(){
+      @Override public void windowClosing(      WindowEvent e){
+        jf.dispose();
+        System.exit(0);
+      }
+    }
+);
+    jf.pack();
+    jf.setSize(800,600);
+    jf.setVisible(true);
+    Image icon=Toolkit.getDefaultToolkit().getImage(m_experimenter.getClass().getClassLoader().getResource("weka/gui/weka_icon_new_48.png"));
+    jf.setIconImage(icon);
+    Thread memMonitor=new Thread(){
+      @Override public void run(){
+        while (true) {
+          if (m_Memory.isOutOfMemory()) {
+            jf.dispose();
+            m_experimenter=null;
+            System.gc();
+            System.err.println("\ndisplayed message:");
+            m_Memory.showOutOfMemory();
+            System.err.println("\nexiting");
+            System.exit(-1);
+          }
+        }
+      }
+    }
+;
+    memMonitor.setPriority(Thread.NORM_PRIORITY);
+    memMonitor.start();
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+    System.err.println(ex.getMessage());
+  }
+}
+
+@Override public void windowClosing(WindowEvent e){
+  jf.dispose();
+  System.exit(0);
+}
+
+@Override public void run(){
+  while (true) {
+    if (m_Memory.isOutOfMemory()) {
+      jf.dispose();
+      m_experimenter=null;
+      System.gc();
+      System.err.println("\ndisplayed message:");
+      m_Memory.showOutOfMemory();
+      System.err.println("\nexiting");
+      System.exit(-1);
+    }
+  }
+}
+}

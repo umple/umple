@@ -1,0 +1,25 @@
+namespace weka.core;
+
+class UnsupportedAttributeTypeException
+{
+  isA WekaException;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=2658987325328414838L;
+
+/** 
+ * Creates a new UnsupportedAttributeTypeException with no message.
+ */
+public UnsupportedAttributeTypeException(){
+  super();
+}
+
+/** 
+ * Creates a new UnsupportedAttributeTypeException.
+ * @param message the reason for raising an exception.
+ */
+public UnsupportedAttributeTypeException(String message){
+  super(message);
+}
+}

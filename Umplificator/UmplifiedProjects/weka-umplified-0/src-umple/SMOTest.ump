@@ -1,0 +1,28 @@
+namespace weka.classifiers.functions;
+
+class SMOTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public SMOTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default SMO 
+ */
+public Classifier getClassifier(){
+  return new SMO();
+}
+
+public static Test suite(){
+  return new TestSuite(SMOTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

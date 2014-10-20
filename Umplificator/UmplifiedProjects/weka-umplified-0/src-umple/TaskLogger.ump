@@ -1,0 +1,14 @@
+namespace weka.gui;
+
+interface TaskLogger
+{
+/** 
+ * Tells the task logger that a new task has been started
+ */
+void taskStarted();
+
+/** 
+ * Tells the task logger that a task has completed
+ */
+void taskFinished();
+}

@@ -1,0 +1,35 @@
+namespace weka.gui.beans;
+
+class BatchAssociationRulesEvent
+{
+  isA EventObject;
+ depend java.util.EventObject;
+ depend weka.associations.AssociationRules;
+/** 
+ * For serialization 
+ */
+private static final long serialVersionUID=6332614648885439492L;
+
+/** 
+ * The encapsulated rules 
+ */
+protected AssociationRules m_rules;
+
+/** 
+ * Creates a new <code>BatchAssociationRulesEvent</code> instance.
+ * @param source the source object.
+ * @param rules the association rules.
+ */
+public BatchAssociationRulesEvent(Object source,AssociationRules rules){
+  super(source);
+  m_rules=rules;
+}
+
+/** 
+ * Get the encapsulated association rules.
+ * @return the encapsulated association rules.
+ */
+public AssociationRules getRules(){
+  return m_rules;
+}
+}

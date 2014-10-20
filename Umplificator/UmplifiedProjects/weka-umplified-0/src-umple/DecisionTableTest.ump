@@ -1,0 +1,28 @@
+namespace weka.classifiers.rules;
+
+class DecisionTableTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public DecisionTableTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default DecisionTable 
+ */
+public Classifier getClassifier(){
+  return new DecisionTable();
+}
+
+public static Test suite(){
+  return new TestSuite(DecisionTableTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

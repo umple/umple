@@ -1,0 +1,43 @@
+namespace weka.classifiers.bayes.net.search.fixed;
+
+class NaiveBayes
+{
+  isA SearchAlgorithm;
+ depend weka.classifiers.bayes.BayesNet;
+ depend weka.classifiers.bayes.net.search.SearchAlgorithm;
+ depend weka.core.Instances;
+ depend weka.core.RevisionUtils;
+/** 
+ * for serialization 
+ */
+static final long serialVersionUID=-4808572519709755811L;
+
+/** 
+ * Returns a string describing this object
+ * @return a description of the classifier suitable fordisplaying in the explorer/experimenter gui
+ */
+public String globalInfo(){
+  return "The NaiveBayes class generates a fixed Bayes network structure " + "with arrows from the class variable to each of the attribute " + "variables.";
+}
+
+/** 
+ * @param bayesNet
+ * @param instances the instances to work with
+ * @throws Exception if something goes wrong
+ */
+public void buildStructure(BayesNet bayesNet,Instances instances) throws Exception {
+  for (int iAttribute=0; iAttribute < instances.numAttributes(); iAttribute++) {
+    if (iAttribute != instances.classIndex()) {
+      bayesNet.getParentSet(iAttribute).addParent(instances.classIndex(),instances);
+    }
+  }
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+}

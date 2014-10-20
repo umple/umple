@@ -1,0 +1,28 @@
+namespace weka.gui.beans;
+
+interface DataSource
+{
+/** 
+ * Add a data source listener
+ * @param dsl a <code>DataSourceListener</code> value
+ */
+void addDataSourceListener(DataSourceListener dsl);
+
+/** 
+ * Remove a data source listener
+ * @param dsl a <code>DataSourceListener</code> value
+ */
+void removeDataSourceListener(DataSourceListener dsl);
+
+/** 
+ * Add an instance listener
+ * @param dsl an <code>InstanceListener</code> value
+ */
+void addInstanceListener(InstanceListener dsl);
+
+/** 
+ * Remove an instance listener
+ * @param dsl an <code>InstanceListener</code> value
+ */
+void removeInstanceListener(InstanceListener dsl);
+}

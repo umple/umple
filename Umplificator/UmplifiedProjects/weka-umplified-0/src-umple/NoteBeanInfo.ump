@@ -1,0 +1,17 @@
+namespace weka.gui.beans;
+
+class NoteBeanInfo
+{
+  isA SimpleBeanInfo;
+ depend java.beans.BeanDescriptor;
+ depend java.beans.EventSetDescriptor;
+ depend java.beans.SimpleBeanInfo;
+public EventSetDescriptor[] getEventSetDescriptors(){
+  EventSetDescriptor[] esds={};
+  return esds;
+}
+
+public BeanDescriptor getBeanDescriptor(){
+  return new BeanDescriptor(weka.gui.beans.Note.class,weka.gui.beans.NoteCustomizer.class);
+}
+}

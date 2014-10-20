@@ -1,0 +1,10 @@
+namespace weka.core;
+
+interface Summarizable
+{
+/** 
+ * Returns a string that summarizes the object.
+ * @return the object summarized as a string
+ */
+String toSummaryString();
+}

@@ -1,0 +1,25 @@
+namespace weka.core;
+
+class UnassignedClassException
+{
+  isA RuntimeException;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=6268278694768818235L;
+
+/** 
+ * Creates a new UnassignedClassException with no message.
+ */
+public UnassignedClassException(){
+  super();
+}
+
+/** 
+ * Creates a new UnassignedClassException.
+ * @param message the reason for raising an exception.
+ */
+public UnassignedClassException(String message){
+  super(message);
+}
+}

@@ -1,0 +1,18 @@
+namespace weka.gui.beans;
+
+interface UserRequestAcceptor
+{
+ depend java.util.Enumeration;
+/** 
+ * Get a list of performable requests
+ * @return an <code>Enumeration</code> value
+ */
+Enumeration<String> enumerateRequests();
+
+/** 
+ * Perform the named request
+ * @param requestName a <code>String</code> value
+ * @exception IllegalArgumentException if an error occurs
+ */
+void performRequest(String requestName);
+}

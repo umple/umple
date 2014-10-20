@@ -1,0 +1,8 @@
+namespace weka.gui.streams;
+
+interface InstanceListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+void instanceProduced(InstanceEvent e);
+}

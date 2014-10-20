@@ -1,0 +1,15 @@
+
+top Distribution
+{
+/** 
+ * Enumerated type for the distribution (general linear and generalized linear model types only).
+ */
+enum Distribution {NONE("none"), NORMAL("normal"), BINOMIAL("binomial"), GAMMA("gamma"), INVGAUSSIAN("igauss"), NEGBINOMIAL("negbin"), POISSON("poisson"); private final String m_stringVal;
+Distribution(String name){
+  m_stringVal=name;
+}
+public String toString(){
+  return m_stringVal;
+}
+}
+}

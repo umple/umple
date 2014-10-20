@@ -1,0 +1,27 @@
+namespace weka.core.logging;
+
+class ConsoleLogger
+{
+  isA Logger;
+ depend java.util.Date;
+ depend weka.core.RevisionUtils;
+/** 
+ * Performs the actual logging. 
+ * @param level	the level of the message
+ * @param msg		the message to log
+ * @param cls		the classname originating the log event
+ * @param method	the method originating the log event
+ * @param lineno	the line number originating the log event
+ */
+protected void doLog(Level level,String msg,String cls,String method,int lineno){
+  System.err.println(m_DateFormat.format(new Date()) + " " + cls+ " "+ method+ "\n"+ level+ ": "+ msg);
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+}

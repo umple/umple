@@ -1,0 +1,228 @@
+namespace weka.filters.unsupervised.instance;
+
+class NonSparseToSparse
+{
+  isA UnsupervisedFilter,StreamableFilter,OptionHandler;
+  isA Filter;
+ depend java.util.ArrayList;
+ depend java.util.Enumeration;
+ depend java.util.Vector;
+ depend weka.core.Attribute;
+ depend weka.core.Capabilities;
+ depend weka.core.Capabilities.Capability;
+ depend weka.core.Instance;
+ depend weka.core.Instances;
+ depend weka.core.Option;
+ depend weka.core.OptionHandler;
+ depend weka.core.RevisionUtils;
+ depend weka.core.SparseInstance;
+ depend weka.core.Utils;
+ depend weka.filters.Filter;
+ depend weka.filters.StreamableFilter;
+ depend weka.filters.UnsupervisedFilter;
+/** 
+ * for serialization 
+ */
+static final long serialVersionUID=4694489111366063852L;
+
+protected boolean m_encodeMissingAsZero=false;
+
+protected boolean m_insertDummyNominalFirstValue=false;
+
+/** 
+ * Returns a string describing this filter
+ * @return a description of the filter suitable for displaying in theexplorer/experimenter gui
+ */
+public String globalInfo(){
+  return "An instance filter that converts all incoming instances" + " into sparse format.";
+}
+
+/** 
+ * Returns the Capabilities of this filter.
+ * @return the capabilities of this object
+ * @see Capabilities
+ */
+@Override public Capabilities getCapabilities(){
+  Capabilities result=super.getCapabilities();
+  result.disableAll();
+  result.enableAllAttributes();
+  result.enable(Capability.MISSING_VALUES);
+  result.enableAllClasses();
+  result.enable(Capability.MISSING_CLASS_VALUES);
+  result.enable(Capability.NO_CLASS);
+  return result;
+}
+
+/** 
+ * Returns an enumeration describing the available options.
+ * @return an enumeration of all the available options.
+ */
+@Override public Enumeration<Option> listOptions(){
+  Vector<Option> result=new Vector<Option>();
+  result.add(new Option("\tTreat missing values as zero.","M",0,"-M"));
+  result.add(new Option("\tAdd a dummy first value for nominal attributes.","F",0,"-F"));
+  return result.elements();
+}
+
+@Override public void setOptions(String[] options) throws Exception {
+  m_encodeMissingAsZero=Utils.getFlag('M',options);
+  m_insertDummyNominalFirstValue=Utils.getFlag('F',options);
+  Utils.checkForRemainingOptions(options);
+}
+
+@Override public String[] getOptions(){
+  Vector<String> result=new Vector<String>();
+  if (m_encodeMissingAsZero) {
+    result.add("-M");
+  }
+  if (m_insertDummyNominalFirstValue) {
+    result.add("-F");
+  }
+  return result.toArray(new String[result.size()]);
+}
+
+/** 
+ * Set whether missing values should be treated in the same way as zeros
+ * @param m true if missing values are to be treated the same as zeros
+ */
+public void setTreatMissingValuesAsZero(boolean m){
+  m_encodeMissingAsZero=m;
+}
+
+/** 
+ * Get whether missing values are to be treated in the same way as zeros
+ * @return true if missing values are to be treated in the same way as zeros
+ */
+public boolean getTreatMissingValuesAsZero(){
+  return m_encodeMissingAsZero;
+}
+
+/** 
+ * Returns the tip text for this property
+ * @return tip text for this property suitable for displaying in theexplorer/experimenter gui
+ */
+public String treatMissingValuesAsZeroTipText(){
+  return "Treat missing values in the same way as zeros.";
+}
+
+/** 
+ * Set whether to insert a dummy first value in the definition for each nominal attribute or not.
+ * @param d true if a dummy value is to be inserted for each nominalattribute.
+ */
+public void setInsertDummyNominalFirstValue(boolean d){
+  m_insertDummyNominalFirstValue=d;
+}
+
+/** 
+ * Get whether a dummy first value will be inserted in the definition of each nominal attribute.
+ * @return true if a dummy first value will be inserted for each nominalattribute.
+ */
+public boolean getInsertDummyNominalFirstValue(){
+  return m_insertDummyNominalFirstValue;
+}
+
+/** 
+ * Returns the tip text for this property
+ * @return tip text for this property suitable for displaying in theexplorer/experimenter gui
+ */
+public String insertDummyNominalFirstValueTipText(){
+  return "Insert a dummy value before the first declared value " + "for all nominal attributes. Useful when converting market " + "basket data that has been encoded for Apriori to sparse format. "+ "Typically used in conjuction with treat missing values as zero.";
+}
+
+/** 
+ * Sets the format of the input instances.
+ * @param instanceInfo an Instances object containing the input instancestructure (any instances contained in the object are ignored - only the structure is required).
+ * @return true if the outputFormat may be collected immediately
+ * @throws Exception if format cannot be processed
+ */
+@Override public boolean setInputFormat(Instances instanceInfo) throws Exception {
+  super.setInputFormat(instanceInfo);
+  Instances instNew=instanceInfo;
+  if (m_insertDummyNominalFirstValue) {
+    ArrayList<Attribute> atts=new ArrayList<Attribute>();
+    for (int i=0; i < instanceInfo.numAttributes(); i++) {
+      if (instanceInfo.attribute(i).isNominal()) {
+        ArrayList<String> labels=new ArrayList<String>();
+        labels.add("_d");
+        for (int j=0; j < instanceInfo.attribute(j).numValues(); j++) {
+          labels.add(instanceInfo.attribute(i).value(j));
+        }
+        Attribute newAtt=new Attribute(instanceInfo.attribute(i).name(),labels);
+        newAtt.setWeight(instanceInfo.attribute(i).weight());
+        atts.add(newAtt);
+      }
+ else {
+        atts.add(instanceInfo.attribute(i));
+      }
+    }
+    instNew=new Instances(instanceInfo.relationName(),atts,0);
+  }
+  setOutputFormat(instNew);
+  return true;
+}
+
+/** 
+ * Input an instance for filtering. Ordinarily the instance is processed and made available for output immediately. Some filters require all instances be read before producing output.
+ * @param instance the input instance.
+ * @return true if the filtered instance may now be collected with output().
+ * @throws IllegalStateException if no input format has been set.
+ */
+@Override public boolean input(Instance instance){
+  Instance newInstance=null;
+  if (getInputFormat() == null) {
+    throw new IllegalStateException("No input instance format defined");
+  }
+  if (m_NewBatch) {
+    resetQueue();
+    m_NewBatch=false;
+  }
+  if (m_encodeMissingAsZero && !m_insertDummyNominalFirstValue) {
+    Instance tempInst=(Instance)instance.copy();
+    tempInst.setDataset(getInputFormat());
+    for (int i=0; i < tempInst.numAttributes(); i++) {
+      if (tempInst.isMissing(i)) {
+        tempInst.setValue(i,0);
+      }
+    }
+    instance=tempInst;
+  }
+  if (m_insertDummyNominalFirstValue) {
+    double[] values=instance.toDoubleArray();
+    for (int i=0; i < instance.numAttributes(); i++) {
+      if (instance.attribute(i).isNominal()) {
+        if (!Utils.isMissingValue(values[i])) {
+          values[i]++;
+        }
+      }
+      if (m_encodeMissingAsZero && Utils.isMissingValue(values[i])) {
+        values[i]=0;
+      }
+    }
+    newInstance=new SparseInstance(instance.weight(),values);
+    newInstance.setDataset(getOutputFormat());
+    push(newInstance);
+  }
+ else {
+    newInstance=new SparseInstance(instance);
+    newInstance.setDataset(instance.dataset());
+    push(newInstance);
+  }
+  return true;
+}
+
+/** 
+ * Returns the revision string.
+ * @return the revision
+ */
+@Override public String getRevision(){
+  return RevisionUtils.extract("$Revision: 10215 $");
+}
+
+/** 
+ * Main method for testing this class.
+ * @param argv should contain arguments to the filter: use -h for help
+ */
+public static void main(String[] argv){
+  runFilter(new NonSparseToSparse(),argv);
+}
+}

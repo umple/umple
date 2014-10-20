@@ -1,0 +1,18 @@
+namespace weka.gui.beans;
+
+class ClustererPerformanceEvaluatorBeanInfo
+{
+  isA SimpleBeanInfo;
+ depend java.beans.EventSetDescriptor;
+ depend java.beans.SimpleBeanInfo;
+public EventSetDescriptor[] getEventSetDescriptors(){
+  try {
+    EventSetDescriptor[] esds={new EventSetDescriptor(ClustererPerformanceEvaluator.class,"text",TextListener.class,"acceptText")};
+    return esds;
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+  }
+  return null;
+}
+}

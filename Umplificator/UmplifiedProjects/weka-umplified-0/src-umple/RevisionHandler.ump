@@ -1,0 +1,10 @@
+namespace weka.core;
+
+interface RevisionHandler
+{
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision();
+}

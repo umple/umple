@@ -1,0 +1,95 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class ScoreDistribution
+{
+ depend java.math.BigDecimal;
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlAttribute protected BigDecimal confidence;
+
+@XmlAttribute protected BigDecimal probability;
+
+@XmlAttribute(required=true) protected double recordCount;
+
+@XmlAttribute(required=true) protected String value;
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the confidence property.
+ * @return possible object is {@link BigDecimal }
+ */
+public BigDecimal getConfidence(){
+  return confidence;
+}
+
+/** 
+ * Sets the value of the confidence property.
+ * @param value allowed object is {@link BigDecimal }
+ */
+public void setConfidence(BigDecimal value){
+  this.confidence=value;
+}
+
+/** 
+ * Gets the value of the probability property.
+ * @return possible object is {@link BigDecimal }
+ */
+public BigDecimal getProbability(){
+  return probability;
+}
+
+/** 
+ * Sets the value of the probability property.
+ * @param value allowed object is {@link BigDecimal }
+ */
+public void setProbability(BigDecimal value){
+  this.probability=value;
+}
+
+/** 
+ * Gets the value of the recordCount property.
+ */
+public double getRecordCount(){
+  return recordCount;
+}
+
+/** 
+ * Sets the value of the recordCount property.
+ */
+public void setRecordCount(double value){
+  this.recordCount=value;
+}
+
+/** 
+ * Gets the value of the value property.
+ * @return possible object is {@link String }
+ */
+public String getValue(){
+  return value;
+}
+
+/** 
+ * Sets the value of the value property.
+ * @param value allowed object is {@link String }
+ */
+public void setValue(String value){
+  this.value=value;
+}
+}
