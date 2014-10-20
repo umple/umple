@@ -1,0 +1,125 @@
+namespace weka.experiment;
+
+class CrossValidationSplitResultProducer
+{
+  isA CrossValidationResultProducer;
+ depend java.util.Random;
+ depend weka.core.Instances;
+ depend weka.core.RevisionUtils;
+ depend weka.core.Utils;
+/** 
+ * for serialization 
+ */
+static final long serialVersionUID=1403798164046795073L;
+
+/** 
+ * Returns a string describing this result producer
+ * @return a description of the result producer suitable for displaying in theexplorer/experimenter gui
+ */
+@Override public String globalInfo(){
+  return "Carries out one split of a repeated k-fold cross-validation, " + "using the set SplitEvaluator to generate some results. " + "Note that the run number is actually the nth split of a repeated "+ "k-fold cross-validation, i.e. if k=10, run number 100 is the 10th "+ "fold of the 10th cross-validation run. This producer's sole purpose "+ "is to allow more fine-grained distribution of cross-validation "+ "experiments. If the class attribute is nominal, the dataset is stratified.";
+}
+
+/** 
+ * Gets the keys for a specified run number. Different run numbers correspond to different randomizations of the data. Keys produced should be sent to the current ResultListener
+ * @param run the run number to get keys for.
+ * @throws Exception if a problem occurs while getting the keys
+ */
+@Override public void doRunKeys(int run) throws Exception {
+  if (m_Instances == null) {
+    throw new Exception("No Instances set");
+  }
+  Object[] seKey=m_SplitEvaluator.getKey();
+  Object[] key=new Object[seKey.length + 3];
+  key[0]=Utils.backQuoteChars(m_Instances.relationName());
+  key[2]="" + (((run - 1) % m_NumFolds) + 1);
+  key[1]="" + (((run - 1) / m_NumFolds) + 1);
+  System.arraycopy(seKey,0,key,3,seKey.length);
+  if (m_ResultListener.isResultRequired(this,key)) {
+    try {
+      m_ResultListener.acceptResult(this,key,null);
+    }
+ catch (    Exception ex) {
+      throw ex;
+    }
+  }
+}
+
+/** 
+ * Gets the results for a specified run number. Different run numbers correspond to different randomizations of the data. Results produced should be sent to the current ResultListener
+ * @param run the run number to get results for.
+ * @throws Exception if a problem occurs while getting the results
+ */
+@Override public void doRun(int run) throws Exception {
+  if (getRawOutput()) {
+    if (m_ZipDest == null) {
+      m_ZipDest=new OutputZipper(m_OutputFile);
+    }
+  }
+  if (m_Instances == null) {
+    throw new Exception("No Instances set");
+  }
+  int fold=(run - 1) % m_NumFolds;
+  run=((run - 1) / m_NumFolds) + 1;
+  Instances runInstances=new Instances(m_Instances);
+  Random random=new Random(run);
+  runInstances.randomize(random);
+  if (runInstances.classAttribute().isNominal()) {
+    runInstances.stratify(m_NumFolds);
+  }
+  Object[] seKey=m_SplitEvaluator.getKey();
+  Object[] key=new Object[seKey.length + 3];
+  key[0]=Utils.backQuoteChars(m_Instances.relationName());
+  key[1]="" + run;
+  key[2]="" + (fold + 1);
+  System.arraycopy(seKey,0,key,3,seKey.length);
+  if (m_ResultListener.isResultRequired(this,key)) {
+    for (int tempFold=0; tempFold < fold; tempFold++) {
+      runInstances.trainCV(m_NumFolds,tempFold,random);
+    }
+    Instances train=runInstances.trainCV(m_NumFolds,fold,random);
+    Instances test=runInstances.testCV(m_NumFolds,fold);
+    try {
+      Object[] seResults=m_SplitEvaluator.getResult(train,test);
+      Object[] results=new Object[seResults.length + 1];
+      results[0]=getTimestamp();
+      System.arraycopy(seResults,0,results,1,seResults.length);
+      if (m_debugOutput) {
+        String resultName=("" + run + "."+ (fold + 1)+ "."+ Utils.backQuoteChars(runInstances.relationName())+ "."+ m_SplitEvaluator.toString()).replace(' ','_');
+        resultName=Utils.removeSubstring(resultName,"weka.classifiers.");
+        resultName=Utils.removeSubstring(resultName,"weka.filters.");
+        resultName=Utils.removeSubstring(resultName,"weka.attributeSelection.");
+        m_ZipDest.zipit(m_SplitEvaluator.getRawResultOutput(),resultName);
+      }
+      m_ResultListener.acceptResult(this,key,results);
+    }
+ catch (    Exception ex) {
+      throw ex;
+    }
+  }
+}
+
+/** 
+ * Gets a text descrption of the result producer.
+ * @return a text description of the result producer.
+ */
+@Override public String toString(){
+  String result="CrossValidationSplitResultProducer: ";
+  result+=getCompatibilityState();
+  if (m_Instances == null) {
+    result+=": <null Instances>";
+  }
+ else {
+    result+=": " + Utils.backQuoteChars(m_Instances.relationName());
+  }
+  return result;
+}
+
+/** 
+ * Returns the revision string.
+ * @return the revision
+ */
+@Override public String getRevision(){
+  return RevisionUtils.extract("$Revision: 10203 $");
+}
+}

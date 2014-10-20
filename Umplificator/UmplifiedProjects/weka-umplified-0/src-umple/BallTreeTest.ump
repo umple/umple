@@ -1,0 +1,26 @@
+namespace weka.core.neighboursearch;
+
+class BallTreeTest
+{
+  isA AbstractNearestNeighbourSearchTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public BallTreeTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default BallTree 
+ */
+public NearestNeighbourSearch getNearestNeighbourSearch(){
+  return new BallTree();
+}
+
+public static Test suite(){
+  return new TestSuite(BallTreeTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

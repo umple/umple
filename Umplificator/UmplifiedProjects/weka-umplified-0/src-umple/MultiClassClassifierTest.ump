@@ -1,0 +1,28 @@
+namespace weka.classifiers.meta;
+
+class MultiClassClassifierTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public MultiClassClassifierTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default MultiClassClassifier 
+ */
+public Classifier getClassifier(){
+  return new MultiClassClassifier();
+}
+
+public static Test suite(){
+  return new TestSuite(MultiClassClassifierTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

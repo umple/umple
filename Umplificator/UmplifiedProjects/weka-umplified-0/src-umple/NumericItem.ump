@@ -1,0 +1,5 @@
+
+top Comparison
+{
+public static enum Comparison {NONE, EQUAL, LESS_THAN_OR_EQUAL_TO, GREATER_THAN}
+}

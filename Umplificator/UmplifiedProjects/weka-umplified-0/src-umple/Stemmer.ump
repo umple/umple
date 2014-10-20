@@ -1,0 +1,14 @@
+namespace weka.core.stemmers;
+
+interface Stemmer
+{
+  isA Serializable,RevisionHandler;
+ depend java.io.Serializable;
+ depend weka.core.RevisionHandler;
+/** 
+ * Stems the given word and returns the stemmed version
+ * @param word      the unstemmed word
+ * @return          the stemmed word
+ */
+public String stem(String word);
+}

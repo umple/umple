@@ -1,0 +1,10 @@
+namespace weka.core;
+
+interface EnvironmentHandler
+{
+/** 
+ * Set environment variables to use.
+ * @param env the environment variables touse
+ */
+void setEnvironment(Environment env);
+}

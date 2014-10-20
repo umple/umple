@@ -1,0 +1,35 @@
+namespace weka.classifiers.functions.supportVector;
+
+class PrecomputedKernelMatrixKernelTest
+{
+  isA AbstractKernelTest;
+ depend java.io.InputStreamReader;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+ depend weka.core.matrix.Matrix;
+public PrecomputedKernelMatrixKernelTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default PrecomputedKernelMatrixKernell 
+ */
+@Override public Kernel getKernel(){
+  PrecomputedKernelMatrixKernel pc=new PrecomputedKernelMatrixKernel();
+  try {
+    pc.setKernelMatrix(new Matrix(new InputStreamReader(ClassLoader.getSystemResourceAsStream("weka/classifiers/data/test.matrix"))));
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+  return pc;
+}
+
+public static Test suite(){
+  return new TestSuite(PrecomputedKernelMatrixKernelTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

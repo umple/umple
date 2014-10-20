@@ -1,0 +1,33 @@
+namespace weka.classifiers.functions;
+
+class SGDTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public SGDTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default SGD 
+ */
+public Classifier getClassifier(){
+  SGD p=new SGD();
+  p.setDontNormalize(true);
+  p.setDontReplaceMissing(true);
+  p.setEpochs(1);
+  p.setLearningRate(0.001);
+  return p;
+}
+
+public static Test suite(){
+  return new TestSuite(SGDTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

@@ -1,0 +1,12 @@
+namespace weka.classifiers;
+
+interface UpdateableClassifier
+{
+ depend weka.core.Instance;
+/** 
+ * Updates a classifier using the given instance.
+ * @param instance the instance to included
+ * @exception Exception if instance could not be incorporatedsuccessfully
+ */
+void updateClassifier(Instance instance) throws Exception ;
+}

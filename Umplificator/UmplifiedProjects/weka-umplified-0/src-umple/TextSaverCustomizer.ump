@@ -1,0 +1,167 @@
+namespace weka.gui.beans;
+
+class TextSaverCustomizer
+{
+  isA BeanCustomizer,EnvironmentHandler,CustomizerClosingListener,CustomizerCloseRequester;
+  isA JPanel;
+ depend java.awt.BorderLayout;
+ depend java.awt.Font;
+ depend java.awt.GridLayout;
+ depend java.awt.Window;
+ depend java.awt.event.ActionEvent;
+ depend java.awt.event.ActionListener;
+ depend javax.swing.BorderFactory;
+ depend javax.swing.JButton;
+ depend javax.swing.JCheckBox;
+ depend javax.swing.JFileChooser;
+ depend javax.swing.JPanel;
+ depend javax.swing.JTextArea;
+ depend weka.core.Environment;
+ depend weka.core.EnvironmentHandler;
+/** 
+ * For serialization
+ */
+private static final long serialVersionUID=-1012433373647714743L;
+
+private TextSaver m_textSaver;
+
+private FileEnvironmentField m_fileEditor;
+
+private final JCheckBox m_append=new JCheckBox("Append to file");
+
+private Environment m_env=Environment.getSystemWide();
+
+private ModifyListener m_modifyListener;
+
+private Window m_parent;
+
+private String m_fileBackup;
+
+/** 
+ * Default Constructor
+ */
+public TextSaverCustomizer(){
+  setLayout(new BorderLayout());
+}
+
+/** 
+ * Set the TextSaver object to customize.
+ * @param object the TextSaver to customize
+ */
+@Override public void setObject(Object object){
+  m_textSaver=(TextSaver)object;
+  m_fileBackup=m_textSaver.getFilename();
+  m_append.setSelected(m_textSaver.getAppend());
+  setup();
+}
+
+private void setup(){
+  JPanel holder=new JPanel();
+  holder.setLayout(new BorderLayout());
+  m_fileEditor=new FileEnvironmentField("Filename",m_env,JFileChooser.SAVE_DIALOG);
+  m_fileEditor.resetFileFilters();
+  JPanel temp=new JPanel();
+  temp.setLayout(new GridLayout(2,0));
+  temp.add(m_fileEditor);
+  temp.add(m_append);
+  holder.add(temp,BorderLayout.SOUTH);
+  String globalInfo=m_textSaver.globalInfo();
+  JTextArea jt=new JTextArea();
+  jt.setColumns(30);
+  jt.setFont(new Font("SansSerif",Font.PLAIN,12));
+  jt.setEditable(false);
+  jt.setLineWrap(true);
+  jt.setWrapStyleWord(true);
+  jt.setText(globalInfo);
+  jt.setBackground(getBackground());
+  JPanel jp=new JPanel();
+  jp.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("About"),BorderFactory.createEmptyBorder(5,5,5,5)));
+  jp.setLayout(new BorderLayout());
+  jp.add(jt,BorderLayout.CENTER);
+  holder.add(jp,BorderLayout.NORTH);
+  add(holder,BorderLayout.CENTER);
+  addButtons();
+  m_fileEditor.setText(m_textSaver.getFilename());
+}
+
+private void addButtons(){
+  JButton okBut=new JButton("OK");
+  JButton cancelBut=new JButton("Cancel");
+  JPanel butHolder=new JPanel();
+  butHolder.setLayout(new GridLayout(1,2));
+  butHolder.add(okBut);
+  butHolder.add(cancelBut);
+  add(butHolder,BorderLayout.SOUTH);
+  okBut.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      m_textSaver.setFilename(m_fileEditor.getText());
+      m_textSaver.setAppend(m_append.isSelected());
+      if (m_modifyListener != null) {
+        m_modifyListener.setModifiedStatus(TextSaverCustomizer.this,true);
+      }
+      if (m_parent != null) {
+        m_parent.dispose();
+      }
+    }
+  }
+);
+  cancelBut.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      customizerClosing();
+      if (m_parent != null) {
+        m_parent.dispose();
+      }
+    }
+  }
+);
+}
+
+@Override public void actionPerformed(ActionEvent e){
+  m_textSaver.setFilename(m_fileEditor.getText());
+  m_textSaver.setAppend(m_append.isSelected());
+  if (m_modifyListener != null) {
+    m_modifyListener.setModifiedStatus(TextSaverCustomizer.this,true);
+  }
+  if (m_parent != null) {
+    m_parent.dispose();
+  }
+}
+
+@Override public void actionPerformed(ActionEvent e){
+  customizerClosing();
+  if (m_parent != null) {
+    m_parent.dispose();
+  }
+}
+
+/** 
+ * Set the environment variables to use
+ * @param env the environment variables to use
+ */
+@Override public void setEnvironment(Environment env){
+  m_env=env;
+}
+
+/** 
+ * Set a listener interested in whether we've modified the TextSaver that we're customizing
+ * @param l the listener
+ */
+@Override public void setModifiedListener(ModifyListener l){
+  m_modifyListener=l;
+}
+
+/** 
+ * Set the parent window of this dialog
+ * @param parent the parent window
+ */
+@Override public void setParentWindow(Window parent){
+  m_parent=parent;
+}
+
+/** 
+ * Gets called if the use closes the dialog via the close widget on the window - is treated as cancel, so restores the TextSaver to its previous state.
+ */
+@Override public void customizerClosing(){
+  m_textSaver.setFilename(m_fileBackup);
+}
+}

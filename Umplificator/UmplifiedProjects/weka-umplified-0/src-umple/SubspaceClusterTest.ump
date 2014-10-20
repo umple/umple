@@ -1,0 +1,28 @@
+namespace weka.datagenerators.clusterers;
+
+class SubspaceClusterTest
+{
+  isA AbstractDataGeneratorTest;
+ depend weka.datagenerators.AbstractDataGeneratorTest;
+ depend weka.datagenerators.DataGenerator;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public SubspaceClusterTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default SubspaceCluster 
+ */
+public DataGenerator getGenerator(){
+  return new SubspaceCluster();
+}
+
+public static Test suite(){
+  return new TestSuite(SubspaceClusterTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

@@ -1,0 +1,28 @@
+namespace weka.classifiers.rules;
+
+class M5RulesTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public M5RulesTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default M5Rules 
+ */
+public Classifier getClassifier(){
+  return new M5Rules();
+}
+
+public static Test suite(){
+  return new TestSuite(M5RulesTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

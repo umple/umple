@@ -1,0 +1,92 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class Itemset
+{
+ depend java.math.BigDecimal;
+ depend java.math.BigInteger;
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlElement(name="ItemRef",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<ItemRef> itemRef;
+
+@XmlAttribute(required=true) protected String id;
+
+@XmlAttribute protected BigInteger numberOfItems;
+
+@XmlAttribute protected BigDecimal support;
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the itemRef property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the itemRef property. <p> For example, to add a new item, do as follows: <pre> getItemRef().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link ItemRef }
+ */
+public List<ItemRef> getItemRef(){
+  if (itemRef == null) {
+    itemRef=new ArrayList<ItemRef>();
+  }
+  return this.itemRef;
+}
+
+/** 
+ * Gets the value of the id property.
+ * @return possible object is {@link String }
+ */
+public String getId(){
+  return id;
+}
+
+/** 
+ * Sets the value of the id property.
+ * @param value allowed object is {@link String }
+ */
+public void setId(String value){
+  this.id=value;
+}
+
+/** 
+ * Gets the value of the numberOfItems property.
+ * @return possible object is {@link BigInteger }
+ */
+public BigInteger getNumberOfItems(){
+  return numberOfItems;
+}
+
+/** 
+ * Sets the value of the numberOfItems property.
+ * @param value allowed object is {@link BigInteger }
+ */
+public void setNumberOfItems(BigInteger value){
+  this.numberOfItems=value;
+}
+
+/** 
+ * Gets the value of the support property.
+ * @return possible object is {@link BigDecimal }
+ */
+public BigDecimal getSupport(){
+  return support;
+}
+
+/** 
+ * Sets the value of the support property.
+ * @param value allowed object is {@link BigDecimal }
+ */
+public void setSupport(BigDecimal value){
+  this.support=value;
+}
+}

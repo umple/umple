@@ -1,0 +1,45 @@
+namespace weka.experiment;
+
+class RemoteExperimentEvent
+{
+  isA Serializable;
+ depend java.io.Serializable;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=7000867987391866451L;
+
+/** 
+ * A status type message 
+ */
+public boolean m_statusMessage;
+
+/** 
+ * A log type message 
+ */
+public boolean m_logMessage;
+
+/** 
+ * The message 
+ */
+public String m_messageString;
+
+/** 
+ * True if a remote experiment has finished 
+ */
+public boolean m_experimentFinished;
+
+/** 
+ * Constructor
+ * @param status true for status type messages
+ * @param log true for log type messages
+ * @param finished true if experiment has finished
+ * @param message the message
+ */
+public RemoteExperimentEvent(boolean status,boolean log,boolean finished,String message){
+  m_statusMessage=status;
+  m_logMessage=log;
+  m_experimentFinished=finished;
+  m_messageString=message;
+}
+}

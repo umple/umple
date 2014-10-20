@@ -1,0 +1,38 @@
+namespace weka.classifiers.bayes;
+
+class NaiveBayesMultinomialUpdateableTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend weka.core.CheckScheme.PostProcessor;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public NaiveBayesMultinomialUpdateableTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default NaiveBayesMultinomialUpdateable 
+ */
+public Classifier getClassifier(){
+  return new NaiveBayesMultinomialUpdateable();
+}
+
+/** 
+ * returns a custom PostProcessor for the CheckClassifier datasets..
+ * @return		a custom PostProcessor
+ * @see AbsPostProcessor
+ */
+protected PostProcessor getPostProcessor(){
+  return new AbsPostProcessor();
+}
+
+public static Test suite(){
+  return new TestSuite(NaiveBayesMultinomialUpdateableTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

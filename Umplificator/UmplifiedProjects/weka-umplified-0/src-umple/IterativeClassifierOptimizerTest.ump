@@ -1,0 +1,28 @@
+namespace weka.classifiers.meta;
+
+class IterativeClassifierOptimizerTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public IterativeClassifierOptimizerTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default IterativeClassifierOptimizer 
+ */
+public Classifier getClassifier(){
+  return new IterativeClassifierOptimizer();
+}
+
+public static Test suite(){
+  return new TestSuite(IterativeClassifierOptimizerTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

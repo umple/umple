@@ -1,0 +1,18 @@
+namespace weka.gui.beans;
+
+interface ModifyListener
+{
+ depend java.beans.Customizer;
+/** 
+ * Tell the listener about the modified status of the source object.
+ * @param source the source object
+ * @param modified true if the source object has been modified
+ */
+void setModifiedStatus(Object source,boolean modified);
+
+/** 
+ * Set a listener to be notified about the modified status of this object
+ * @param l the ModifiedListener
+ */
+void setModifiedListener(ModifyListener l);
+}

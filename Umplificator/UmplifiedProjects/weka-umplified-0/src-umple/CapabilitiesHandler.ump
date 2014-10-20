@@ -1,0 +1,11 @@
+namespace weka.core;
+
+interface CapabilitiesHandler
+{
+/** 
+ * Returns the capabilities of this object.
+ * @return            the capabilities of this object
+ * @see Capabilities
+ */
+public Capabilities getCapabilities();
+}

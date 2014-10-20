@@ -1,0 +1,38 @@
+namespace weka.core;
+
+class MathematicalExpression
+{
+  isA RevisionHandler;
+ depend java.io.ByteArrayInputStream;
+ depend java.util.HashMap;
+ depend java_cup.runtime.DefaultSymbolFactory;
+ depend java_cup.runtime.SymbolFactory;
+ depend weka.core.mathematicalexpression.Parser;
+ depend weka.core.mathematicalexpression.Scanner;
+/** 
+ * Parses and evaluates the given expression. Returns the result of the mathematical expression, based on the given values of the symbols.
+ * @param expr the expression to evaluate
+ * @param symbols the symbol/value mapping
+ * @return the evaluated result
+ * @throws Exception if something goes wrong
+ */
+@SuppressWarnings("deprecation") public static double evaluate(String expr,HashMap<String,Double> symbols) throws Exception {
+  SymbolFactory sf;
+  ByteArrayInputStream parserInput;
+  Parser parser;
+  sf=new DefaultSymbolFactory();
+  parserInput=new ByteArrayInputStream(expr.getBytes());
+  parser=new Parser(new Scanner(parserInput,sf),sf);
+  parser.setSymbols(symbols);
+  parser.parse();
+  return parser.getResult();
+}
+
+/** 
+ * Returns the revision string.
+ * @return the revision
+ */
+@Override public String getRevision(){
+  return RevisionUtils.extract("$Revision: 10203 $");
+}
+}

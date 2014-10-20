@@ -1,0 +1,45 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class Level
+{
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlAttribute protected Double alpha;
+
+@XmlAttribute protected Double smoothedValue;
+
+/** 
+ * Gets the value of the alpha property.
+ * @return possible object is {@link Double }
+ */
+public Double getAlpha(){
+  return alpha;
+}
+
+/** 
+ * Sets the value of the alpha property.
+ * @param value allowed object is {@link Double }
+ */
+public void setAlpha(Double value){
+  this.alpha=value;
+}
+
+/** 
+ * Gets the value of the smoothedValue property.
+ * @return possible object is {@link Double }
+ */
+public Double getSmoothedValue(){
+  return smoothedValue;
+}
+
+/** 
+ * Sets the value of the smoothedValue property.
+ * @param value allowed object is {@link Double }
+ */
+public void setSmoothedValue(Double value){
+  this.smoothedValue=value;
+}
+}

@@ -1,0 +1,15 @@
+namespace weka.gui.beans;
+
+class ConfigurationEvent
+{
+  isA EventObject;
+ depend java.util.EventObject;
+/** 
+ * For serialization 
+ */
+private static final long serialVersionUID=5433562112093780868L;
+
+public ConfigurationEvent(Object source){
+  super(source);
+}
+}

@@ -1,0 +1,17 @@
+namespace weka.core;
+
+interface LogHandler
+{
+ depend weka.gui.Logger;
+/** 
+ * Set the log to use
+ * @param log the log to use
+ */
+void setLog(Logger log);
+
+/** 
+ * Get the log in use
+ * @return the log in use
+ */
+Logger getLog();
+}

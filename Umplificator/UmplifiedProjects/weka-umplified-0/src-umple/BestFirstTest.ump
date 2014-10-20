@@ -1,0 +1,33 @@
+namespace weka.attributeSelection;
+
+class BestFirstTest
+{
+  isA AbstractSearchTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public BestFirstTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default BestFirst 
+ */
+public ASSearch getSearch(){
+  return new BestFirst();
+}
+
+/** 
+ * Creates a default CfsSubsetEval 
+ */
+public ASEvaluation getEvaluator(){
+  return new CfsSubsetEval();
+}
+
+public static Test suite(){
+  return new TestSuite(BestFirstTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

@@ -1,0 +1,10 @@
+namespace weka.gui.treevisualizer;
+
+interface NodePlace
+{
+/** 
+ * The function to call to postion the tree that starts at Node r
+ * @param r The top of the tree.
+ */
+void place(Node r);
+}

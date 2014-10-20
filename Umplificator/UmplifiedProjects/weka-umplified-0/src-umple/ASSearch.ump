@@ -1,0 +1,59 @@
+namespace weka.attributeSelection;
+
+class ASSearch
+{
+  isA Serializable,RevisionHandler;
+ depend java.io.Serializable;
+ depend weka.core.Instances;
+ depend weka.core.RevisionHandler;
+ depend weka.core.RevisionUtils;
+ depend weka.core.SerializedObject;
+ depend weka.core.Utils;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=7591673350342236548L;
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+
+/** 
+ * Searches the attribute subset/ranking space.
+ * @param ASEvaluator the attribute evaluator to guide the search
+ * @param data the training instances.
+ * @return an array (not necessarily ordered) of selected attribute indexes
+ * @throws Exception if the search can't be completed
+ */
+public abstract int[] search(ASEvaluation ASEvaluator,Instances data) throws Exception ;
+
+/** 
+ * Creates a new instance of a search class given it's class name and (optional) arguments to pass to it's setOptions method. If the search method implements OptionHandler and the options parameter is non-null, the search method will have it's options set.
+ * @param searchName the fully qualified class name of the search class
+ * @param options an array of options suitable for passing to setOptions. Maybe null.
+ * @return the newly created search object, ready for use.
+ * @throws Exception if the search class name is invalid, or the optionssupplied are not acceptable to the search class.
+ */
+public static ASSearch forName(String searchName,String[] options) throws Exception {
+  return (ASSearch)Utils.forName(ASSearch.class,searchName,options);
+}
+
+/** 
+ * Creates copies of the current search scheme. Note that this method now uses Serialization to perform a deep copy, so the search object must be fully Serializable. Any currently built model will now be copied as well.
+ * @param model an example search scheme to copy
+ * @param num the number of search scheme copies to create.
+ * @return an array of search schemes.
+ * @throws Exception if an error occurs 
+ */
+public static ASSearch[] makeCopies(ASSearch model,int num) throws Exception {
+  if (model == null)   throw new Exception("No model search scheme set");
+  ASSearch[] result=new ASSearch[num];
+  SerializedObject so=new SerializedObject(model);
+  for (int i=0; i < result.length; i++)   result[i]=(ASSearch)so.getObject();
+  return result;
+}
+}

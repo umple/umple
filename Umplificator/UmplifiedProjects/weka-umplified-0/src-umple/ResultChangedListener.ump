@@ -1,0 +1,11 @@
+namespace weka.gui.sql.event;
+
+interface ResultChangedListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+/** 
+ * This method gets called when a query has been executed.
+ */
+public void resultChanged(ResultChangedEvent evt);
+}

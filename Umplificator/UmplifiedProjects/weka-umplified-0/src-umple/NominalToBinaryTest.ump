@@ -1,0 +1,36 @@
+namespace weka.filters.unsupervised.attribute;
+
+class NominalToBinaryTest
+{
+  isA AbstractFilterTest;
+ depend weka.core.Instances;
+ depend weka.filters.AbstractFilterTest;
+ depend weka.filters.Filter;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public NominalToBinaryTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates an example NominalToBinary 
+ */
+public Filter getFilter(){
+  NominalToBinary f=new NominalToBinary();
+  return f;
+}
+
+public void testTypical(){
+  Instances result=useFilter();
+  assertEquals(m_Instances.numAttributes() + 5,result.numAttributes());
+  assertEquals(m_Instances.numInstances(),result.numInstances());
+}
+
+public static Test suite(){
+  return new TestSuite(NominalToBinaryTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

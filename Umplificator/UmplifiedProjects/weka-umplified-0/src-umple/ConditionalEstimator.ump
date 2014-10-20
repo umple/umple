@@ -1,0 +1,29 @@
+namespace weka.estimators;
+
+interface ConditionalEstimator
+{
+  isA RevisionHandler;
+ depend weka.core.RevisionHandler;
+/** 
+ * Add a new data value to the current estimator.
+ * @param data the new data value 
+ * @param given the new value that data is conditional upon 
+ * @param weight the weight assigned to the data value 
+ */
+void addValue(double data,double given,double weight);
+
+/** 
+ * Get a probability estimator for a value
+ * @param given the new value that data is conditional upon 
+ * @return the estimator for the supplied value given the condition
+ */
+Estimator getEstimator(double given);
+
+/** 
+ * Get a probability for a value conditional on another value
+ * @param data the value to estimate the probability of
+ * @param given the new value that data is conditional upon 
+ * @return the estimator for the supplied value given the condition
+ */
+double getProbability(double data,double given);
+}

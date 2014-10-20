@@ -1,0 +1,490 @@
+namespace weka.core.stemmers;
+
+class LovinsStemmer
+{
+  isA Stemmer,TechnicalInformationHandler;
+ depend java.util.HashMap;
+ depend weka.core.RevisionUtils;
+ depend weka.core.TechnicalInformation;
+ depend weka.core.TechnicalInformation.Field;
+ depend weka.core.TechnicalInformation.Type;
+ depend weka.core.TechnicalInformationHandler;
+/** 
+ * for serialization 
+ */
+static final long serialVersionUID=-6113024782588197L;
+
+/** 
+ * Enters C version compatibility mode if set to true (emulates features of the original C implementation that are inconsistent with the algorithm as described in Lovins's paper) 
+ */
+private static boolean m_CompMode=false;
+
+/** 
+ * The hash tables containing the list of endings. 
+ */
+private static HashMap<String,String> m_l11=null;
+
+private static HashMap<String,String> m_l10=null;
+
+private static HashMap<String,String> m_l9=null;
+
+private static HashMap<String,String> m_l8=null;
+
+private static HashMap<String,String> m_l7=null;
+
+private static HashMap<String,String> m_l6=null;
+
+private static HashMap<String,String> m_l5=null;
+
+private static HashMap<String,String> m_l4=null;
+
+private static HashMap<String,String> m_l3=null;
+
+private static HashMap<String,String> m_l2=null;
+
+private static HashMap<String,String> m_l1=null;
+
+/** 
+ * Returns a string describing the stemmer
+ * @return a description suitable fordisplaying in the explorer/experimenter gui
+ */
+public String globalInfo(){
+  return "A stemmer based on the Lovins stemmer, described here:\n\n" + getTechnicalInformation().toString();
+}
+
+/** 
+ * Returns an instance of a TechnicalInformation object, containing  detailed information about the technical background of this class, e.g., paper reference or book this class is based on.
+ * @return the technical information about this class
+ */
+public TechnicalInformation getTechnicalInformation(){
+  TechnicalInformation result;
+  result=new TechnicalInformation(Type.ARTICLE);
+  result.setValue(Field.AUTHOR,"Julie Beth Lovins");
+  result.setValue(Field.YEAR,"1968");
+  result.setValue(Field.TITLE,"Development of a stemming algorithm");
+  result.setValue(Field.JOURNAL,"Mechanical Translation and Computational Linguistics");
+  result.setValue(Field.VOLUME,"11");
+  result.setValue(Field.PAGES,"22-31");
+  return result;
+}
+
+/** 
+ * Finds and removes ending from given word.
+ * @param word	the word to work on
+ * @return 		the processed word
+ */
+private String removeEnding(String word){
+  int length=word.length();
+  int el=11;
+  while (el > 0) {
+    if (length - el > 1) {
+      String ending=word.substring(length - el);
+      String conditionCode=null;
+switch (el) {
+case 11:
+        conditionCode=(String)m_l11.get(ending);
+      break;
+case 10:
+    conditionCode=(String)m_l10.get(ending);
+  break;
+case 9:
+conditionCode=(String)m_l9.get(ending);
+break;
+case 8:
+conditionCode=(String)m_l8.get(ending);
+break;
+case 7:
+conditionCode=(String)m_l7.get(ending);
+break;
+case 6:
+conditionCode=(String)m_l6.get(ending);
+break;
+case 5:
+conditionCode=(String)m_l5.get(ending);
+break;
+case 4:
+conditionCode=(String)m_l4.get(ending);
+break;
+case 3:
+conditionCode=(String)m_l3.get(ending);
+break;
+case 2:
+conditionCode=(String)m_l2.get(ending);
+break;
+case 1:
+conditionCode=(String)m_l1.get(ending);
+break;
+default :
+}
+if (conditionCode != null) {
+switch (conditionCode.charAt(0)) {
+case 'A':
+return word.substring(0,length - el);
+case 'B':
+if (length - el > 2) {
+return word.substring(0,length - el);
+}
+break;
+case 'C':
+if (length - el > 3) {
+return word.substring(0,length - el);
+}
+break;
+case 'D':
+if (length - el > 4) {
+return word.substring(0,length - el);
+}
+break;
+case 'E':
+if (word.charAt(length - el - 1) != 'e') {
+return word.substring(0,length - el);
+}
+break;
+case 'F':
+if ((length - el > 2) && (word.charAt(length - el - 1) != 'e')) {
+return word.substring(0,length - el);
+}
+break;
+case 'G':
+if ((length - el > 2) && (word.charAt(length - el - 1) == 'f')) {
+return word.substring(0,length - el);
+}
+break;
+case 'H':
+if ((word.charAt(length - el - 1) == 't') || ((word.charAt(length - el - 1) == 'l') && (word.charAt(length - el - 2) == 'l'))) {
+return word.substring(0,length - el);
+}
+break;
+case 'I':
+if ((word.charAt(length - el - 1) != 'o') && (word.charAt(length - el - 1) != 'e')) {
+return word.substring(0,length - el);
+}
+break;
+case 'J':
+if ((word.charAt(length - el - 1) != 'a') && (word.charAt(length - el - 1) != 'e')) {
+return word.substring(0,length - el);
+}
+break;
+case 'K':
+if ((length - el > 2) && ((word.charAt(length - el - 1) == 'l') || (word.charAt(length - el - 1) == 'i') || ((word.charAt(length - el - 1) == 'e') && (word.charAt(length - el - 3) == 'u')))) {
+return word.substring(0,length - el);
+}
+break;
+case 'L':
+if ((word.charAt(length - el - 1) != 'u') && (word.charAt(length - el - 1) != 'x') && ((word.charAt(length - el - 1) != 's') || (word.charAt(length - el - 2) == 'o'))) {
+return word.substring(0,length - el);
+}
+break;
+case 'M':
+if ((word.charAt(length - el - 1) != 'a') && (word.charAt(length - el - 1) != 'c') && (word.charAt(length - el - 1) != 'e')&& (word.charAt(length - el - 1) != 'm')) {
+return word.substring(0,length - el);
+}
+break;
+case 'N':
+if ((length - el > 3) || ((length - el == 3) && ((word.charAt(length - el - 3) != 's')))) {
+return word.substring(0,length - el);
+}
+break;
+case 'O':
+if ((word.charAt(length - el - 1) == 'l') || (word.charAt(length - el - 1) == 'i')) {
+return word.substring(0,length - el);
+}
+break;
+case 'P':
+if (word.charAt(length - el - 1) != 'c') {
+return word.substring(0,length - el);
+}
+break;
+case 'Q':
+if ((length - el > 2) && (word.charAt(length - el - 1) != 'l') && (word.charAt(length - el - 1) != 'n')) {
+return word.substring(0,length - el);
+}
+break;
+case 'R':
+if ((word.charAt(length - el - 1) == 'n') || (word.charAt(length - el - 1) == 'r')) {
+return word.substring(0,length - el);
+}
+break;
+case 'S':
+if (((word.charAt(length - el - 1) == 'r') && (word.charAt(length - el - 2) == 'd')) || ((word.charAt(length - el - 1) == 't') && (word.charAt(length - el - 2) != 't'))) {
+return word.substring(0,length - el);
+}
+break;
+case 'T':
+if ((word.charAt(length - el - 1) == 's') || ((word.charAt(length - el - 1) == 't') && (word.charAt(length - el - 2) != 'o'))) {
+return word.substring(0,length - el);
+}
+break;
+case 'U':
+if ((word.charAt(length - el - 1) == 'l') || (word.charAt(length - el - 1) == 'm') || (word.charAt(length - el - 1) == 'n')|| (word.charAt(length - el - 1) == 'r')) {
+return word.substring(0,length - el);
+}
+break;
+case 'V':
+if (word.charAt(length - el - 1) == 'c') {
+return word.substring(0,length - el);
+}
+break;
+case 'W':
+if ((word.charAt(length - el - 1) != 's') && (word.charAt(length - el - 1) != 'u')) {
+return word.substring(0,length - el);
+}
+break;
+case 'X':
+if ((word.charAt(length - el - 1) == 'l') || (word.charAt(length - el - 1) == 'i') || ((length - el > 2) && (word.charAt(length - el - 1) == 'e') && (word.charAt(length - el - 3) == 'u'))) {
+return word.substring(0,length - el);
+}
+break;
+case 'Y':
+if ((word.charAt(length - el - 1) == 'n') && (word.charAt(length - el - 2) == 'i')) {
+return word.substring(0,length - el);
+}
+break;
+case 'Z':
+if (word.charAt(length - el - 1) != 'f') {
+return word.substring(0,length - el);
+}
+break;
+case 'a':
+if ((word.charAt(length - el - 1) == 'd') || (word.charAt(length - el - 1) == 'f') || (((word.charAt(length - el - 1) == 'h') && (word.charAt(length - el - 2) == 'p')))|| (((word.charAt(length - el - 1) == 'h') && (word.charAt(length - el - 2) == 't')))|| (word.charAt(length - el - 1) == 'l')|| (((word.charAt(length - el - 1) == 'r') && (word.charAt(length - el - 2) == 'e')))|| (((word.charAt(length - el - 1) == 'r') && (word.charAt(length - el - 2) == 'o')))|| (((word.charAt(length - el - 1) == 's') && (word.charAt(length - el - 2) == 'e')))|| (word.charAt(length - el - 1) == 't')) {
+return word.substring(0,length - el);
+}
+break;
+case 'b':
+if (m_CompMode) {
+if (((length - el == 3) && (!((word.charAt(length - el - 1) == 't') && (word.charAt(length - el - 2) == 'e') && (word.charAt(length - el - 3) == 'm')))) || ((length - el > 3) && (!((word.charAt(length - el - 1) == 't') && (word.charAt(length - el - 2) == 's') && (word.charAt(length - el - 3) == 'y')&& (word.charAt(length - el - 4) == 'r'))))) {
+return word.substring(0,length - el);
+}
+}
+ else {
+if ((length - el > 2) && (!((word.charAt(length - el - 1) == 't') && (word.charAt(length - el - 2) == 'e') && (word.charAt(length - el - 3) == 'm'))) && ((length - el < 4) || (!((word.charAt(length - el - 1) == 't') && (word.charAt(length - el - 2) == 's') && (word.charAt(length - el - 3) == 'y')&& (word.charAt(length - el - 4) == 'r'))))) {
+return word.substring(0,length - el);
+}
+}
+break;
+case 'c':
+if (word.charAt(length - el - 1) == 'l') {
+return word.substring(0,length - el);
+}
+break;
+default :
+throw new IllegalArgumentException("Fatal error.");
+}
+}
+}
+el--;
+}
+return word;
+}
+
+/** 
+ * Recodes ending of given word.
+ * @param word	the word to work on
+ * @return		the processed word
+ */
+private String recodeEnding(String word){
+  int lastPos=word.length() - 1;
+  if (word.endsWith("bb") || word.endsWith("dd") || word.endsWith("gg")|| word.endsWith("ll")|| word.endsWith("mm")|| word.endsWith("nn")|| word.endsWith("pp")|| word.endsWith("rr")|| word.endsWith("ss")|| word.endsWith("tt")) {
+    word=word.substring(0,lastPos);
+    lastPos--;
+  }
+  if (word.endsWith("iev")) {
+    word=word.substring(0,lastPos - 2).concat("ief");
+  }
+  if (word.endsWith("uct")) {
+    word=word.substring(0,lastPos - 2).concat("uc");
+    lastPos--;
+  }
+  if (word.endsWith("umpt")) {
+    word=word.substring(0,lastPos - 3).concat("um");
+    lastPos-=2;
+  }
+  if (word.endsWith("rpt")) {
+    word=word.substring(0,lastPos - 2).concat("rb");
+    lastPos--;
+  }
+  if (word.endsWith("urs")) {
+    word=word.substring(0,lastPos - 2).concat("ur");
+    lastPos--;
+  }
+  if (word.endsWith("istr")) {
+    word=word.substring(0,lastPos - 3).concat("ister");
+    lastPos++;
+  }
+  if (word.endsWith("metr")) {
+    word=word.substring(0,lastPos - 3).concat("meter");
+    lastPos++;
+  }
+  if (word.endsWith("olv")) {
+    word=word.substring(0,lastPos - 2).concat("olut");
+    lastPos++;
+  }
+  if (word.endsWith("ul")) {
+    if ((lastPos - 2 < 0) || ((word.charAt(lastPos - 2) != 'a') && (word.charAt(lastPos - 2) != 'i') && (word.charAt(lastPos - 2) != 'o'))) {
+      word=word.substring(0,lastPos - 1).concat("l");
+      lastPos--;
+    }
+  }
+  if (word.endsWith("bex")) {
+    word=word.substring(0,lastPos - 2).concat("bic");
+  }
+  if (word.endsWith("dex")) {
+    word=word.substring(0,lastPos - 2).concat("dic");
+  }
+  if (word.endsWith("pex")) {
+    word=word.substring(0,lastPos - 2).concat("pic");
+  }
+  if (word.endsWith("tex")) {
+    word=word.substring(0,lastPos - 2).concat("tic");
+  }
+  if (word.endsWith("ax")) {
+    word=word.substring(0,lastPos - 1).concat("ac");
+  }
+  if (word.endsWith("ex")) {
+    word=word.substring(0,lastPos - 1).concat("ec");
+  }
+  if (word.endsWith("ix")) {
+    word=word.substring(0,lastPos - 1).concat("ic");
+  }
+  if (word.endsWith("lux")) {
+    word=word.substring(0,lastPos - 2).concat("luc");
+  }
+  if (word.endsWith("uad")) {
+    word=word.substring(0,lastPos - 2).concat("uas");
+  }
+  if (word.endsWith("vad")) {
+    word=word.substring(0,lastPos - 2).concat("vas");
+  }
+  if (word.endsWith("cid")) {
+    word=word.substring(0,lastPos - 2).concat("cis");
+  }
+  if (word.endsWith("lid")) {
+    word=word.substring(0,lastPos - 2).concat("lis");
+  }
+  if (word.endsWith("erid")) {
+    word=word.substring(0,lastPos - 3).concat("eris");
+  }
+  if (word.endsWith("pand")) {
+    word=word.substring(0,lastPos - 3).concat("pans");
+  }
+  if (word.endsWith("end")) {
+    if ((lastPos - 3 < 0) || (word.charAt(lastPos - 3) != 's')) {
+      word=word.substring(0,lastPos - 2).concat("ens");
+    }
+  }
+  if (word.endsWith("ond")) {
+    word=word.substring(0,lastPos - 2).concat("ons");
+  }
+  if (word.endsWith("lud")) {
+    word=word.substring(0,lastPos - 2).concat("lus");
+  }
+  if (word.endsWith("rud")) {
+    word=word.substring(0,lastPos - 2).concat("rus");
+  }
+  if (word.endsWith("her")) {
+    if ((lastPos - 3 < 0) || ((word.charAt(lastPos - 3) != 'p') && (word.charAt(lastPos - 3) != 't'))) {
+      word=word.substring(0,lastPos - 2).concat("hes");
+    }
+  }
+  if (word.endsWith("mit")) {
+    word=word.substring(0,lastPos - 2).concat("mis");
+  }
+  if (word.endsWith("end")) {
+    if ((lastPos - 3 < 0) || (word.charAt(lastPos - 3) != 'm')) {
+      word=word.substring(0,lastPos - 2).concat("ens");
+    }
+  }
+  if (word.endsWith("ert")) {
+    word=word.substring(0,lastPos - 2).concat("ers");
+  }
+  if (word.endsWith("et")) {
+    if ((lastPos - 2 < 0) || (word.charAt(lastPos - 2) != 'n')) {
+      word=word.substring(0,lastPos - 1).concat("es");
+    }
+  }
+  if (word.endsWith("yt")) {
+    word=word.substring(0,lastPos - 1).concat("ys");
+  }
+  if (word.endsWith("yz")) {
+    word=word.substring(0,lastPos - 1).concat("ys");
+  }
+  return word;
+}
+
+/** 
+ * Returns the stemmed version of the given word. Word is converted to lower case before stemming.
+ * @param word 	a string consisting of a single word
+ * @return 		the stemmed word
+ */
+public String stem(String word){
+  if (word.length() > 2) {
+    return recodeEnding(removeEnding(word.toLowerCase()));
+  }
+ else {
+    return word.toLowerCase();
+  }
+}
+
+/** 
+ * Stems everything in the given string. String is converted to lower case before stemming.
+ * @param str		the string to stem
+ * @return 		the processed string
+ */
+public String stemString(String str){
+  StringBuffer result=new StringBuffer();
+  int start=-1;
+  for (int j=0; j < str.length(); j++) {
+    char c=str.charAt(j);
+    if (Character.isLetterOrDigit(c)) {
+      if (start == -1) {
+        start=j;
+      }
+    }
+ else     if (c == '\'') {
+      if (start == -1) {
+        result.append(c);
+      }
+    }
+ else {
+      if (start != -1) {
+        result.append(stem(str.substring(start,j)));
+        start=-1;
+      }
+      result.append(c);
+    }
+  }
+  if (start != -1) {
+    result.append(stem(str.substring(start,str.length())));
+  }
+  return result.toString();
+}
+
+/** 
+ * returns a string representation of the stemmer
+ * @return a string representation of the stemmer
+ */
+public String toString(){
+  return getClass().getName();
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+
+/** 
+ * Runs the stemmer with the given options
+ * @param args      the options
+ */
+public static void main(String[] args){
+  try {
+    Stemming.useStemmer(new LovinsStemmer(),args);
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+}
+}

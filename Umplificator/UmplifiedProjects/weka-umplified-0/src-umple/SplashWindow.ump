@@ -1,0 +1,175 @@
+namespace weka.gui;
+
+class SplashWindow
+{
+  isA Window;
+ depend java.awt.Dimension;
+ depend java.awt.EventQueue;
+ depend java.awt.Frame;
+ depend java.awt.Graphics;
+ depend java.awt.Image;
+ depend java.awt.MediaTracker;
+ depend java.awt.Toolkit;
+ depend java.awt.Window;
+ depend java.awt.event.MouseAdapter;
+ depend java.awt.event.MouseEvent;
+ depend java.net.URL;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=-2685134277041307795L;
+
+/** 
+ * The current instance of the splash window. (Singleton design pattern).
+ */
+private static SplashWindow m_instance;
+
+/** 
+ * The splash image which is displayed on the splash window.
+ */
+private final Image image;
+
+/** 
+ * This attribute indicates whether the method paint(Graphics) has been called at least once since the construction of this window.<br> This attribute is used to notify method splash(Image) that the window has been drawn at least once by the AWT event dispatcher thread.<br> This attribute acts like a latch. Once set to true, it will never be changed back to false again.
+ * @see #paint
+ * @see #splash
+ */
+private boolean paintCalled=false;
+
+/** 
+ * Creates a new instance.
+ * @param parent the parent of the window.
+ * @param image the splash image.
+ */
+private SplashWindow(Frame parent,Image image){
+  super(parent);
+  this.image=image;
+  MediaTracker mt=new MediaTracker(this);
+  mt.addImage(image,0);
+  try {
+    mt.waitForID(0);
+  }
+ catch (  InterruptedException ie) {
+  }
+  int imgWidth=image.getWidth(this);
+  int imgHeight=image.getHeight(this);
+  setSize(imgWidth,imgHeight);
+  Dimension screenDim=Toolkit.getDefaultToolkit().getScreenSize();
+  setLocation((screenDim.width - imgWidth) / 2,(screenDim.height - imgHeight) / 2);
+  MouseAdapter disposeOnClick=new MouseAdapter(){
+    @Override public void mouseClicked(    MouseEvent evt){
+synchronized (SplashWindow.this) {
+        SplashWindow.this.paintCalled=true;
+        SplashWindow.this.notifyAll();
+      }
+      dispose();
+    }
+  }
+;
+  addMouseListener(disposeOnClick);
+}
+
+@Override public void mouseClicked(MouseEvent evt){
+synchronized (SplashWindow.this) {
+    SplashWindow.this.paintCalled=true;
+    SplashWindow.this.notifyAll();
+  }
+  dispose();
+}
+
+/** 
+ * Updates the display area of the window.
+ */
+@Override public void update(Graphics g){
+  paint(g);
+}
+
+/** 
+ * Paints the image on the window.
+ */
+@Override public void paint(Graphics g){
+  g.drawImage(image,0,0,this);
+  if (!paintCalled) {
+    paintCalled=true;
+synchronized (this) {
+      notifyAll();
+    }
+  }
+}
+
+/** 
+ * Open's a splash window using the specified image.
+ * @param image The splash image.
+ */
+@SuppressWarnings("deprecation") public static void splash(Image image){
+  if (m_instance == null && image != null) {
+    Frame f=new Frame();
+    m_instance=new SplashWindow(f,image);
+    m_instance.show();
+    if (!EventQueue.isDispatchThread() && Runtime.getRuntime().availableProcessors() == 1) {
+synchronized (m_instance) {
+        while (!m_instance.paintCalled) {
+          try {
+            m_instance.wait();
+          }
+ catch (          InterruptedException e) {
+          }
+        }
+      }
+    }
+  }
+}
+
+/** 
+ * Open's a splash window using the specified image.
+ * @param imageURL The url of the splash image.
+ */
+public static void splash(URL imageURL){
+  if (imageURL != null) {
+    splash(Toolkit.getDefaultToolkit().createImage(imageURL));
+  }
+}
+
+/** 
+ * Closes the splash window.
+ */
+public static void disposeSplash(){
+  if (m_instance != null) {
+    m_instance.getOwner().dispose();
+    m_instance=null;
+  }
+}
+
+/** 
+ * Invokes the named method of the provided class name.
+ * @param className the name of the class
+ * @param methodName the name of the method to invoke
+ * @param args the command line arguments
+ */
+public static void invokeMethod(String className,String methodName,String[] args){
+  try {
+    Class.forName(className).getMethod(methodName,new Class[]{String[].class}).invoke(null,new Object[]{args});
+  }
+ catch (  Exception e) {
+    InternalError error=new InternalError("Failed to invoke method: " + methodName);
+    error.initCause(e);
+    throw error;
+  }
+}
+
+/** 
+ * Invokes the main method of the provided class name.
+ * @param className the name of the class
+ * @param args the command line arguments
+ */
+public static void invokeMain(String className,String[] args){
+  try {
+    Class.forName(className).getMethod("main",new Class[]{String[].class}).invoke(null,new Object[]{args});
+  }
+ catch (  Exception e) {
+    InternalError error=new InternalError("Failed to invoke main method");
+    error.initCause(e);
+    throw error;
+  }
+}
+}

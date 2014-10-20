@@ -1,0 +1,28 @@
+namespace weka.datagenerators.classifiers.classification;
+
+class AgrawalTest
+{
+  isA AbstractDataGeneratorTest;
+ depend weka.datagenerators.AbstractDataGeneratorTest;
+ depend weka.datagenerators.DataGenerator;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public AgrawalTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default Agrawal 
+ */
+public DataGenerator getGenerator(){
+  return new Agrawal();
+}
+
+public static Test suite(){
+  return new TestSuite(AgrawalTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

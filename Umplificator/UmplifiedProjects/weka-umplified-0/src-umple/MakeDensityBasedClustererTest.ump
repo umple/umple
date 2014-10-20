@@ -1,0 +1,28 @@
+namespace weka.clusterers;
+
+class MakeDensityBasedClustererTest
+{
+  isA AbstractClustererTest;
+ depend weka.clusterers.AbstractClustererTest;
+ depend weka.clusterers.Clusterer;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public MakeDensityBasedClustererTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default MakeDensityBasedClusterer 
+ */
+public Clusterer getClusterer(){
+  return new MakeDensityBasedClusterer();
+}
+
+public static Test suite(){
+  return new TestSuite(MakeDensityBasedClustererTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

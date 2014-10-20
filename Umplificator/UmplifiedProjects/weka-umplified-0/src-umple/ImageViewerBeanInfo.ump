@@ -1,0 +1,16 @@
+namespace weka.gui.beans;
+
+class ImageViewerBeanInfo
+{
+  isA SimpleBeanInfo;
+ depend java.beans.EventSetDescriptor;
+ depend java.beans.SimpleBeanInfo;
+/** 
+ * Get the event set descriptors for this bean
+ * @return an <code>EventSetDescriptor[]</code> value
+ */
+@Override public EventSetDescriptor[] getEventSetDescriptors(){
+  EventSetDescriptor[] esds={};
+  return esds;
+}
+}

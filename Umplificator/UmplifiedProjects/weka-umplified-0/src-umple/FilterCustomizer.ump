@@ -1,0 +1,131 @@
+namespace weka.gui.beans;
+
+class FilterCustomizer
+{
+  isA BeanCustomizer,CustomizerCloseRequester;
+  isA JPanel;
+ depend java.awt.BorderLayout;
+ depend java.awt.GridLayout;
+ depend java.awt.Window;
+ depend java.awt.event.ActionEvent;
+ depend java.awt.event.ActionListener;
+ depend java.beans.PropertyChangeListener;
+ depend java.beans.PropertyChangeSupport;
+ depend javax.swing.BorderFactory;
+ depend javax.swing.JButton;
+ depend javax.swing.JPanel;
+ depend weka.gui.GenericObjectEditor;
+ depend weka.gui.PropertySheetPanel;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=2049895469240109738L;
+
+private final PropertyChangeSupport m_pcSupport=new PropertyChangeSupport(this);
+
+private weka.gui.beans.Filter m_filter;
+
+/** 
+ * Backup if user presses cancel 
+ */
+private weka.filters.Filter m_backup;
+
+private final PropertySheetPanel m_filterEditor=new PropertySheetPanel();
+
+private Window m_parentWindow;
+
+private ModifyListener m_modifyListener;
+
+public FilterCustomizer(){
+  m_filterEditor.setBorder(BorderFactory.createTitledBorder("Filter options"));
+  setLayout(new BorderLayout());
+  add(m_filterEditor,BorderLayout.CENTER);
+  JPanel butHolder=new JPanel();
+  butHolder.setLayout(new GridLayout(1,2));
+  JButton OKBut=new JButton("OK");
+  OKBut.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      m_filterEditor.closingOK();
+      if (m_modifyListener != null) {
+        m_modifyListener.setModifiedStatus(FilterCustomizer.this,true);
+      }
+      m_parentWindow.dispose();
+    }
+  }
+);
+  JButton CancelBut=new JButton("Cancel");
+  CancelBut.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      m_filterEditor.closingCancel();
+      if (m_backup != null) {
+        m_filter.setFilter(m_backup);
+      }
+      if (m_modifyListener != null) {
+        m_modifyListener.setModifiedStatus(FilterCustomizer.this,false);
+      }
+      m_parentWindow.dispose();
+    }
+  }
+);
+  butHolder.add(OKBut);
+  butHolder.add(CancelBut);
+  add(butHolder,BorderLayout.SOUTH);
+}
+
+@Override public void actionPerformed(ActionEvent e){
+  m_filterEditor.closingOK();
+  if (m_modifyListener != null) {
+    m_modifyListener.setModifiedStatus(FilterCustomizer.this,true);
+  }
+  m_parentWindow.dispose();
+}
+
+@Override public void actionPerformed(ActionEvent e){
+  m_filterEditor.closingCancel();
+  if (m_backup != null) {
+    m_filter.setFilter(m_backup);
+  }
+  if (m_modifyListener != null) {
+    m_modifyListener.setModifiedStatus(FilterCustomizer.this,false);
+  }
+  m_parentWindow.dispose();
+}
+
+/** 
+ * Set the filter bean to be edited
+ * @param object a Filter bean
+ */
+@Override public void setObject(Object object){
+  m_filter=(weka.gui.beans.Filter)object;
+  try {
+    m_backup=(weka.filters.Filter)GenericObjectEditor.makeCopy(m_filter.getFilter());
+  }
+ catch (  Exception ex) {
+  }
+  m_filterEditor.setTarget(m_filter.getFilter());
+}
+
+/** 
+ * Add a property change listener
+ * @param pcl a <code>PropertyChangeListener</code> value
+ */
+@Override public void addPropertyChangeListener(PropertyChangeListener pcl){
+  m_pcSupport.addPropertyChangeListener(pcl);
+}
+
+/** 
+ * Remove a property change listener
+ * @param pcl a <code>PropertyChangeListener</code> value
+ */
+@Override public void removePropertyChangeListener(PropertyChangeListener pcl){
+  m_pcSupport.removePropertyChangeListener(pcl);
+}
+
+@Override public void setParentWindow(Window parent){
+  m_parentWindow=parent;
+}
+
+@Override public void setModifiedListener(ModifyListener l){
+  m_modifyListener=l;
+}
+}

@@ -1,0 +1,26 @@
+namespace weka.core.neighboursearch;
+
+class KDTreeTest
+{
+  isA AbstractNearestNeighbourSearchTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public KDTreeTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default KDTree 
+ */
+public NearestNeighbourSearch getNearestNeighbourSearch(){
+  return new KDTree();
+}
+
+public static Test suite(){
+  return new TestSuite(KDTreeTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

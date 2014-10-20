@@ -1,0 +1,206 @@
+namespace weka.gui.beans;
+
+class SQLViewerPerspective
+{
+  isA KnowledgeFlowApp.KFPerspective;
+  isA JPanel;
+ depend java.awt.BorderLayout;
+ depend java.awt.event.ActionEvent;
+ depend java.awt.event.ActionListener;
+ depend java.beans.beancontext.BeanContextSupport;
+ depend java.util.Vector;
+ depend javax.swing.Icon;
+ depend javax.swing.JButton;
+ depend javax.swing.JPanel;
+ depend weka.core.Instances;
+ depend weka.core.converters.DatabaseLoader;
+ depend weka.gui.beans.KnowledgeFlowApp.MainKFPerspective;
+ depend weka.gui.sql.SqlViewer;
+ depend weka.gui.sql.event.ConnectionEvent;
+ depend weka.gui.sql.event.ConnectionListener;
+/** 
+ * For serialization
+ */
+private static final long serialVersionUID=3684166225482042972L;
+
+protected MainKFPerspective m_mainPerspective;
+
+protected SqlViewer m_viewer;
+
+protected JButton m_newFlowBut;
+
+/** 
+ * Constructor
+ */
+public SQLViewerPerspective(){
+  setLayout(new BorderLayout());
+  m_viewer=new SqlViewer(null);
+  add(m_viewer,BorderLayout.CENTER);
+  m_newFlowBut=new JButton("New Flow");
+  m_newFlowBut.setToolTipText("Set up a new Knowledge Flow with the " + "current connection and query");
+  JPanel butHolder=new JPanel();
+  butHolder.add(m_newFlowBut);
+  add(butHolder,BorderLayout.SOUTH);
+  m_newFlowBut.addActionListener(new ActionListener(){
+    @Override public void actionPerformed(    ActionEvent e){
+      if (m_mainPerspective != null) {
+        newFlow();
+      }
+    }
+  }
+);
+  m_newFlowBut.setEnabled(false);
+  m_viewer.addConnectionListener(new ConnectionListener(){
+    @Override public void connectionChange(    ConnectionEvent evt){
+      if (evt.getType() == ConnectionEvent.DISCONNECT) {
+        m_newFlowBut.setEnabled(false);
+      }
+ else {
+        m_newFlowBut.setEnabled(true);
+      }
+    }
+  }
+);
+}
+
+@Override public void actionPerformed(ActionEvent e){
+  if (m_mainPerspective != null) {
+    newFlow();
+  }
+}
+
+@Override public void connectionChange(ConnectionEvent evt){
+  if (evt.getType() == ConnectionEvent.DISCONNECT) {
+    m_newFlowBut.setEnabled(false);
+  }
+ else {
+    m_newFlowBut.setEnabled(true);
+  }
+}
+
+protected void newFlow(){
+  m_newFlowBut.setEnabled(false);
+  String user=m_viewer.getUser();
+  String password=m_viewer.getPassword();
+  String uRL=m_viewer.getURL();
+  String query=m_viewer.getQuery();
+  if (query == null) {
+    query="";
+  }
+  try {
+    DatabaseLoader dbl=new DatabaseLoader();
+    dbl.setUser(user);
+    dbl.setPassword(password);
+    dbl.setUrl(uRL);
+    dbl.setQuery(query);
+    BeanContextSupport bc=new BeanContextSupport();
+    bc.setDesignTime(true);
+    Loader loaderComp=new Loader();
+    bc.add(loaderComp);
+    loaderComp.setLoader(dbl);
+    KnowledgeFlowApp singleton=KnowledgeFlowApp.getSingleton();
+    m_mainPerspective.addTab("DBSource");
+    Vector<Object> beans=BeanInstance.getBeanInstances(m_mainPerspective.getNumTabs() - 1);
+    Vector<BeanConnection> connections=BeanConnection.getConnections(m_mainPerspective.getNumTabs() - 1);
+    singleton.integrateFlow(beans,connections,true,false);
+    singleton.setActivePerspective(0);
+    m_newFlowBut.setEnabled(true);
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+  }
+}
+
+/** 
+ * Set instances (if the perspective accepts them)
+ * @param insts the instances
+ */
+@Override public void setInstances(Instances insts) throws Exception {
+}
+
+/** 
+ * Returns true if this perspective accepts instances
+ * @return true if this perspective can accept instances
+ */
+@Override public boolean acceptsInstances(){
+  return false;
+}
+
+/** 
+ * Get the title of this perspective
+ * @return the title of this perspective
+ */
+@Override public String getPerspectiveTitle(){
+  return "SQL Viewer";
+}
+
+/** 
+ * Get the tool tip text for this perspective.
+ * @return the tool tip text for this perspective
+ */
+@Override public String getPerspectiveTipText(){
+  return "Explore database tables with SQL";
+}
+
+/** 
+ * Get the icon for this perspective.
+ * @return the Icon for this perspective (or null if the perspective does nothave an icon)
+ */
+@Override public Icon getPerspectiveIcon(){
+  java.awt.Image pic=null;
+  java.net.URL imageURL=this.getClass().getClassLoader().getResource("weka/gui/beans/icons/database.png");
+  if (imageURL == null) {
+  }
+ else {
+    pic=java.awt.Toolkit.getDefaultToolkit().getImage(imageURL);
+  }
+  return new javax.swing.ImageIcon(pic);
+}
+
+/** 
+ * Set active status of this perspective. True indicates that this perspective is the visible active perspective in the KnowledgeFlow
+ * @param active true if this perspective is the active one
+ */
+@Override public void setActive(boolean active){
+}
+
+/** 
+ * Set whether this perspective is "loaded" - i.e. whether or not the user has opted to have it available in the perspective toolbar. The perspective can make the decision as to allocating or freeing resources on the basis of this.
+ * @param loaded true if the perspective is available in the perspectivetoolbar of the KnowledgeFlow
+ */
+@Override public void setLoaded(boolean loaded){
+}
+
+/** 
+ * Set a reference to the main KnowledgeFlow perspective - i.e. the perspective that manages flow layouts.
+ * @param main the main KnowledgeFlow perspective.
+ */
+@Override public void setMainKFPerspective(MainKFPerspective main){
+  m_mainPerspective=main;
+}
+
+/** 
+ * Main method for testing this class
+ * @param args command line arguments
+ */
+public static void main(String[] args){
+  final javax.swing.JFrame jf=new javax.swing.JFrame();
+  jf.getContentPane().setLayout(new java.awt.BorderLayout());
+  SQLViewerPerspective p=new SQLViewerPerspective();
+  jf.getContentPane().add(p,BorderLayout.CENTER);
+  jf.addWindowListener(new java.awt.event.WindowAdapter(){
+    @Override public void windowClosing(    java.awt.event.WindowEvent e){
+      jf.dispose();
+      System.exit(0);
+    }
+  }
+);
+  jf.setSize(800,600);
+  jf.setVisible(true);
+}
+
+@Override public void windowClosing(java.awt.event.WindowEvent e){
+  jf.dispose();
+  System.exit(0);
+}
+}

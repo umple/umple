@@ -1,0 +1,8 @@
+namespace weka.gui.beans;
+
+interface ChartListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+void acceptDataPoint(ChartEvent e);
+}

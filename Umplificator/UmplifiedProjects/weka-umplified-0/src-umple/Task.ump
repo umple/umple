@@ -1,0 +1,17 @@
+namespace weka.experiment;
+
+interface Task
+{
+  isA Serializable;
+ depend java.io.Serializable;
+/** 
+ * Execute this task.
+ */
+void execute();
+
+/** 
+ * Clients should be able to call this method at any time to obtain information on a current task.
+ * @return a TaskStatusInfo object holding info and result (if available) forthis task
+ */
+TaskStatusInfo getTaskStatus();
+}

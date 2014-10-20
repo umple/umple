@@ -1,0 +1,26 @@
+namespace weka.classifiers.trees.ht;
+
+class InactiveHNode
+{
+  isA LearningNode,Serializable;
+  isA LeafNode;
+ depend java.io.Serializable;
+ depend java.util.Map;
+ depend weka.core.Instance;
+/** 
+ * For serialization
+ */
+private static final long serialVersionUID=-8747567733141700911L;
+
+/** 
+ * Constructor
+ * @param classDistrib the class distribution at this node
+ */
+public InactiveHNode(Map<String,WeightMass> classDistrib){
+  m_classDistribution=classDistrib;
+}
+
+@Override public void updateNode(Instance inst){
+  super.updateDistribution(inst);
+}
+}

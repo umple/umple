@@ -1,0 +1,28 @@
+namespace weka.classifiers.trees;
+
+class HoeffdingTreeTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public HoeffdingTreeTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default HoeffdingTree 
+ */
+public Classifier getClassifier(){
+  return new HoeffdingTree();
+}
+
+public static Test suite(){
+  return new TestSuite(HoeffdingTreeTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

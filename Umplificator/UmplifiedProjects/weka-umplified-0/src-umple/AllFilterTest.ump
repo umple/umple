@@ -1,0 +1,33 @@
+namespace weka.filters;
+
+class AllFilterTest
+{
+  isA AbstractFilterTest;
+ depend weka.core.Instances;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public AllFilterTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default AllFilter 
+ */
+public Filter getFilter(){
+  return new AllFilter();
+}
+
+public void testTypical(){
+  Instances result=useFilter();
+  assertEquals(m_Instances.numAttributes(),result.numAttributes());
+  assertEquals(m_Instances.numInstances(),result.numInstances());
+}
+
+public static Test suite(){
+  return new TestSuite(AllFilterTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

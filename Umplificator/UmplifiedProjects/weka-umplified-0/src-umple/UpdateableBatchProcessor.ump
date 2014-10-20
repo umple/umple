@@ -1,0 +1,10 @@
+namespace weka.classifiers;
+
+interface UpdateableBatchProcessor
+{
+/** 
+ * Signal that the training data is finished (for now).
+ * @throws Exception if a problem occurs
+ */
+public void batchFinished() throws Exception ;
+}

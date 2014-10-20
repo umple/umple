@@ -1,0 +1,30 @@
+namespace weka.experiment;
+
+interface InstanceQueryAdapter
+{
+/** 
+ * returns key column headings in their original case. Used for those databases that create uppercase column names.
+ * @param columnName    the column to retrieve the original case for
+ * @return        the original case
+ */
+public String attributeCaseFix(String columnName);
+
+/** 
+ * Gets whether there should be printed some debugging output to stderr or not.
+ * @return         true if output should be printed
+ */
+public boolean getDebug();
+
+/** 
+ * Gets whether data is to be returned as a set of sparse instances
+ * @return true if data is to be encoded as sparse instances
+ */
+public boolean getSparseData();
+
+/** 
+ * translates the column data type string to an integer value that indicates which data type / get()-Method to use in order to retrieve values from the database (see DatabaseUtils.Properties, InstanceQuery()). Blanks in the type are replaced with underscores "_", since Java property names can't contain blanks.
+ * @param type     the column type as retrieved withjava.sql.MetaData.getColumnTypeName(int)
+ * @return         an integer value that indicateswhich data type / get()-Method to use in order to retrieve values from the
+ */
+public int translateDBColumnType(String type);
+}

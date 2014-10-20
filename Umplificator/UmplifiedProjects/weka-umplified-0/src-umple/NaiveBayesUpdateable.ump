@@ -1,0 +1,57 @@
+namespace weka.classifiers.bayes;
+
+class NaiveBayesUpdateable
+{
+  isA UpdateableClassifier;
+  isA NaiveBayes;
+ depend weka.classifiers.UpdateableClassifier;
+ depend weka.core.RevisionUtils;
+ depend weka.core.TechnicalInformation;
+/** 
+ * for serialization 
+ */
+static final long serialVersionUID=-5354015843807192221L;
+
+/** 
+ * Returns a string describing this classifier
+ * @return a description of the classifier suitable fordisplaying in the explorer/experimenter gui
+ */
+public String globalInfo(){
+  return "Class for a Naive Bayes classifier using estimator classes. This is the " + "updateable version of NaiveBayes.\n" + "This classifier will use a default precision of 0.1 for numeric attributes "+ "when buildClassifier is called with zero training instances.\n\n"+ "For more information on Naive Bayes classifiers, see\n\n"+ getTechnicalInformation().toString();
+}
+
+/** 
+ * Returns an instance of a TechnicalInformation object, containing  detailed information about the technical background of this class, e.g., paper reference or book this class is based on.
+ * @return the technical information about this class
+ */
+public TechnicalInformation getTechnicalInformation(){
+  return super.getTechnicalInformation();
+}
+
+/** 
+ * Set whether supervised discretization is to be used.
+ * @param newblah true if supervised discretization is to be used.
+ */
+public void setUseSupervisedDiscretization(boolean newblah){
+  if (newblah) {
+    throw new IllegalArgumentException("Can't use discretization " + "in NaiveBayesUpdateable!");
+  }
+  m_UseDiscretization=false;
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+
+/** 
+ * Main method for testing this class.
+ * @param argv the options
+ */
+public static void main(String[] argv){
+  runClassifier(new NaiveBayesUpdateable(),argv);
+}
+}

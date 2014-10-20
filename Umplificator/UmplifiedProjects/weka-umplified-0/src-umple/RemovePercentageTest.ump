@@ -1,0 +1,55 @@
+namespace weka.filters.unsupervised.instance;
+
+class RemovePercentageTest
+{
+  isA AbstractFilterTest;
+ depend weka.core.Instances;
+ depend weka.filters.AbstractFilterTest;
+ depend weka.filters.Filter;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public RemovePercentageTest(String name){
+  super(name);
+}
+
+/** 
+ * Need to remove non-nominal attributes, set class index 
+ */
+protected void setUp() throws Exception {
+  super.setUp();
+  m_Instances.setClassIndex(1);
+}
+
+/** 
+ * Creates a default RemovePercentage 
+ */
+public Filter getFilter(){
+  RemovePercentage f=new RemovePercentage();
+  return f;
+}
+
+public void testTypical(){
+  m_Filter=getFilter();
+  Instances result=useFilter();
+  assertEquals(m_Instances.numAttributes(),result.numAttributes());
+}
+
+public void testInverting(){
+  m_Filter=getFilter();
+  ((RemovePercentage)m_Filter).setPercentage(20.0);
+  Instances result=useFilter();
+  m_Filter=getFilter();
+  ((RemovePercentage)m_Filter).setPercentage(20.0);
+  ((RemovePercentage)m_Filter).setInvertSelection(true);
+  Instances resultInv=useFilter();
+  assertEquals(m_Instances.numInstances(),result.numInstances() + resultInv.numInstances());
+}
+
+public static Test suite(){
+  return new TestSuite(RemovePercentageTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

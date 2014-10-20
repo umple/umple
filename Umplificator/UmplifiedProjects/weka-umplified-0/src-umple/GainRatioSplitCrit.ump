@@ -1,0 +1,72 @@
+namespace weka.classifiers.trees.j48;
+
+class GainRatioSplitCrit
+{
+  isA EntropyBasedSplitCrit;
+ depend weka.core.ContingencyTables;
+ depend weka.core.RevisionUtils;
+ depend weka.core.Utils;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=-433336694718670930L;
+
+/** 
+ * This method is a straightforward implementation of the gain ratio criterion for the given distribution.
+ */
+@Override public final double splitCritValue(Distribution bags){
+  double numerator;
+  double denumerator;
+  numerator=oldEnt(bags) - newEnt(bags);
+  if (Utils.eq(numerator,0)) {
+    return Double.MAX_VALUE;
+  }
+  denumerator=splitEnt(bags);
+  if (Utils.eq(denumerator,0)) {
+    return Double.MAX_VALUE;
+  }
+  return denumerator / numerator;
+}
+
+/** 
+ * This method computes the gain ratio in the same way C4.5 does.
+ * @param bags the distribution
+ * @param totalnoInst the weight of ALL instances
+ * @param numerator the info gain
+ */
+public final double splitCritValue(Distribution bags,double totalnoInst,double numerator){
+  double denumerator;
+  denumerator=splitEnt(bags,totalnoInst);
+  if (Utils.eq(denumerator,0)) {
+    return 0;
+  }
+  denumerator=denumerator / totalnoInst;
+  return numerator / denumerator;
+}
+
+/** 
+ * Help method for computing the split entropy.
+ */
+private final double splitEnt(Distribution bags,double totalnoInst){
+  double returnValue=0;
+  double noUnknown;
+  int i;
+  noUnknown=totalnoInst - bags.total();
+  if (Utils.gr(bags.total(),0)) {
+    for (i=0; i < bags.numBags(); i++) {
+      returnValue=returnValue - lnFunc(bags.perBag(i));
+    }
+    returnValue=returnValue - lnFunc(noUnknown);
+    returnValue=returnValue + lnFunc(totalnoInst);
+  }
+  return returnValue / ContingencyTables.log2;
+}
+
+/** 
+ * Returns the revision string.
+ * @return the revision
+ */
+@Override public String getRevision(){
+  return RevisionUtils.extract("$Revision: 10169 $");
+}
+}

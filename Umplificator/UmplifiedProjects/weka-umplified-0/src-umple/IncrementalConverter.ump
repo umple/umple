@@ -1,0 +1,5 @@
+namespace weka.core.converters;
+
+interface IncrementalConverter
+{
+}

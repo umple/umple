@@ -1,0 +1,8 @@
+namespace weka.gui.beans;
+
+interface DataSourceListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+void acceptDataSet(DataSetEvent e);
+}

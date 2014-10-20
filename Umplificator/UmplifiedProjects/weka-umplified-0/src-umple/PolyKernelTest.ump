@@ -1,0 +1,28 @@
+namespace weka.classifiers.functions.supportVector;
+
+class PolyKernelTest
+{
+  isA AbstractKernelTest;
+ depend weka.classifiers.functions.supportVector.AbstractKernelTest;
+ depend weka.classifiers.functions.supportVector.Kernel;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public PolyKernelTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default PolyKernel 
+ */
+public Kernel getKernel(){
+  return new PolyKernel();
+}
+
+public static Test suite(){
+  return new TestSuite(PolyKernelTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

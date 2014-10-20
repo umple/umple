@@ -1,0 +1,28 @@
+namespace weka.classifiers.functions.supportVector;
+
+class StringKernelTest
+{
+  isA AbstractKernelTest;
+ depend weka.classifiers.functions.supportVector.AbstractKernelTest;
+ depend weka.classifiers.functions.supportVector.Kernel;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public StringKernelTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default StringKernel 
+ */
+public Kernel getKernel(){
+  return new StringKernel();
+}
+
+public static Test suite(){
+  return new TestSuite(StringKernelTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

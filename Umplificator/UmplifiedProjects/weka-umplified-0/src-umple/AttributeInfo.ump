@@ -1,0 +1,7 @@
+namespace weka.core;
+
+interface AttributeInfo
+{
+  isA Serializable;
+ depend java.io.Serializable;
+}

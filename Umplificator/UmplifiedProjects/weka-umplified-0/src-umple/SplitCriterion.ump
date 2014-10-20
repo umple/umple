@@ -1,0 +1,44 @@
+namespace weka.classifiers.trees.j48;
+
+class SplitCriterion
+{
+  isA Serializable,RevisionHandler;
+ depend java.io.Serializable;
+ depend weka.core.RevisionHandler;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=5490996638027101259L;
+
+/** 
+ * Computes result of splitting criterion for given distribution.
+ * @return value of splitting criterion. 0 by default
+ */
+public double splitCritValue(Distribution bags){
+  return 0;
+}
+
+/** 
+ * Computes result of splitting criterion for given training and test distributions.
+ * @return value of splitting criterion. 0 by default
+ */
+public double splitCritValue(Distribution train,Distribution test){
+  return 0;
+}
+
+/** 
+ * Computes result of splitting criterion for given training and test distributions and given number of classes.
+ * @return value of splitting criterion. 0 by default
+ */
+public double splitCritValue(Distribution train,Distribution test,int noClassesDefault){
+  return 0;
+}
+
+/** 
+ * Computes result of splitting criterion for given training and test distributions and given default distribution.
+ * @return value of splitting criterion. 0 by default
+ */
+public double splitCritValue(Distribution train,Distribution test,Distribution defC){
+  return 0;
+}
+}

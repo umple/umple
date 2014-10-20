@@ -1,0 +1,12 @@
+
+top Missing
+{
+enum Missing {ASIS("asIs"), ASMEAN("asMean"), ASMODE("asMode"), ASMEDIAN("asMedian"), ASVALUE("asValue"); private final String m_stringVal;
+Missing(String name){
+  m_stringVal=name;
+}
+public String toString(){
+  return m_stringVal;
+}
+}
+}

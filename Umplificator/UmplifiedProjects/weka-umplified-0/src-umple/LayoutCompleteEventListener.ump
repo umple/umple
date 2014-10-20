@@ -1,0 +1,6 @@
+namespace weka.gui.graphvisualizer;
+
+interface LayoutCompleteEventListener
+{
+void layoutCompleted(LayoutCompleteEvent le);
+}

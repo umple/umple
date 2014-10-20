@@ -1,0 +1,12 @@
+namespace weka.gui.beans;
+
+interface TrainingSetListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+/** 
+ * Accept and process a training set
+ * @param e a <code>TrainingSetEvent</code> value
+ */
+void acceptTrainingSet(TrainingSetEvent e);
+}

@@ -1,0 +1,11 @@
+namespace weka.core.stopwords;
+
+interface StopwordsHandler
+{
+/** 
+ * Returns true if the given string is a stop word.
+ * @param word the word to test
+ * @return true if the word is a stopword
+ */
+public boolean isStopword(String word);
+}

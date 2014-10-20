@@ -1,0 +1,15 @@
+
+top ModelType
+{
+/** 
+ * for serialization 
+ */
+protected enum ModelType {UNKNOWN_MODEL("unknown"), REGRESSION_MODEL("Regression"), GENERAL_REGRESSION_MODEL("GeneralRegression"), NEURAL_NETWORK_MODEL("NeuralNetwork"), TREE_MODEL("TreeModel"), RULESET_MODEL("RuleSetModel"), SVM_MODEL("SupportVectorMachineModel"); private final String m_stringVal;
+ModelType(String name){
+  m_stringVal=name;
+}
+@Override public String toString(){
+  return m_stringVal;
+}
+}
+}

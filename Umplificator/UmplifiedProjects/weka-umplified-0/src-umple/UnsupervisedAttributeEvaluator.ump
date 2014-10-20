@@ -1,0 +1,11 @@
+namespace weka.attributeSelection;
+
+class UnsupervisedAttributeEvaluator
+{
+  isA AttributeEvaluator;
+  isA ASEvaluation;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=-4100897318675336178L;
+}

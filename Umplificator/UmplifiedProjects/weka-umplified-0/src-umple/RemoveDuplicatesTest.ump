@@ -1,0 +1,29 @@
+namespace weka.filters.unsupervised.instance;
+
+class RemoveDuplicatesTest
+{
+  isA AbstractFilterTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+ depend weka.filters.AbstractFilterTest;
+ depend weka.filters.Filter;
+public RemoveDuplicatesTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default Resample 
+ */
+@Override public Filter getFilter(){
+  RemoveDuplicates f=new RemoveDuplicates();
+  return f;
+}
+
+public static Test suite(){
+  return new TestSuite(RemoveDuplicatesTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

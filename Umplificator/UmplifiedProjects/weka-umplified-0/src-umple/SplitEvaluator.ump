@@ -1,0 +1,58 @@
+namespace weka.experiment;
+
+interface SplitEvaluator
+{
+  isA Serializable;
+ depend java.io.Serializable;
+ depend weka.core.Instances;
+/** 
+ * Sets a list of method names for additional measures to look for in SplitEvaluators.
+ * @param additionalMeasures a list of method names
+ */
+void setAdditionalMeasures(String[] additionalMeasures);
+
+/** 
+ * Gets the names of each of the key columns produced for a single run. The names should not contain spaces (use '_' instead for easy  translation.) The number of key fields must be constant for a given  SplitEvaluator.
+ * @return an array containing the name of each key column
+ */
+String[] getKeyNames();
+
+/** 
+ * Gets the data types of each of the key columns produced for a single run. The number of key fields must be constant for a given SplitEvaluator.
+ * @return an array containing objects of the type of each key column. The objects should be Strings, or Doubles.
+ */
+Object[] getKeyTypes();
+
+/** 
+ * Gets the names of each of the result columns produced for a single run. The names should not contain spaces (use '_' instead for easy  translation.) The number of result fields must be constant for a given SplitEvaluator.
+ * @return an array containing the name of each result column
+ */
+String[] getResultNames();
+
+/** 
+ * Gets the data types of each of the result columns produced for a  single run. The number of result fields must be constant for a given SplitEvaluator.
+ * @return an array containing objects of the type of each result column. The objects should be Strings, or Doubles.
+ */
+Object[] getResultTypes();
+
+/** 
+ * Gets the key describing the current SplitEvaluator. For example This may contain the name of the classifier used for classifier predictive evaluation. The number of key fields must be constant for a given SplitEvaluator.
+ * @return a value of type 'Object'
+ */
+Object[] getKey();
+
+/** 
+ * Gets the results for the supplied train and test datasets.
+ * @param train the training Instances.
+ * @param test the testing Instances.
+ * @return the results stored in an array. The objects stored inthe array may be Strings, Doubles, or null (for the missing value).
+ * @exception Exception if a problem occurs while getting the results
+ */
+Object[] getResult(Instances train,Instances test) throws Exception ;
+
+/** 
+ * Returns the raw output for the most recent call to getResult. Useful for debugging splitEvaluators.
+ * @return the raw output corresponding to the most recent callto getResut
+ */
+String getRawResultOutput();
+}

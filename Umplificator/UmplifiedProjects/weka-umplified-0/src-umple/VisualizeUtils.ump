@@ -1,0 +1,94 @@
+namespace weka.gui.visualize;
+
+class VisualizeUtils
+{
+ depend java.awt.Color;
+ depend java.util.Properties;
+ depend javax.swing.JOptionPane;
+ depend weka.core.Utils;
+/** 
+ * The name of the properties file 
+ */
+protected static String PROPERTY_FILE="weka/gui/visualize/Visualize.props";
+
+/** 
+ * Contains the visualization properties 
+ */
+protected static Properties VISUALIZE_PROPERTIES;
+
+/** 
+ * Default maximum precision for the display of numeric values 
+ */
+protected static int MAX_PRECISION=10;
+
+/** 
+ * Parses a string containing either a named colour or r,g,b values.
+ * @param colourDef the string containing the named colour (or r,g,b)
+ * @param defaultColour the colour to return if parsing fails
+ * @return the Color corresponding to the string.
+ */
+public static Color processColour(String colourDef,Color defaultColour){
+  String colourDefBack=new String(colourDef);
+  Color retC=defaultColour;
+  if (colourDef.indexOf(",") >= 0) {
+    try {
+      int index=colourDef.indexOf(",");
+      int R=Integer.parseInt(colourDef.substring(0,index));
+      colourDef=colourDef.substring(index + 1,colourDef.length());
+      index=colourDef.indexOf(",");
+      int G=Integer.parseInt(colourDef.substring(0,index));
+      colourDef=colourDef.substring(index + 1,colourDef.length());
+      int B=Integer.parseInt(colourDef);
+      retC=new Color(R,G,B);
+    }
+ catch (    Exception ex) {
+      System.err.println("VisualizeUtils: Problem parsing colour property " + "value (" + colourDefBack + ").");
+    }
+  }
+ else {
+    if (colourDef.compareTo("black") == 0) {
+      retC=Color.black;
+    }
+ else     if (colourDef.compareTo("blue") == 0) {
+      retC=Color.blue;
+    }
+ else     if (colourDef.compareTo("cyan") == 0) {
+      retC=Color.cyan;
+    }
+ else     if (colourDef.compareTo("darkGray") == 0) {
+      retC=Color.darkGray;
+    }
+ else     if (colourDef.compareTo("gray") == 0) {
+      retC=Color.gray;
+    }
+ else     if (colourDef.compareTo("green") == 0) {
+      retC=Color.green;
+    }
+ else     if (colourDef.compareTo("lightGray") == 0) {
+      retC=Color.lightGray;
+    }
+ else     if (colourDef.compareTo("magenta") == 0) {
+      retC=Color.magenta;
+    }
+ else     if (colourDef.compareTo("orange") == 0) {
+      retC=Color.orange;
+    }
+ else     if (colourDef.compareTo("pink") == 0) {
+      retC=Color.pink;
+    }
+ else     if (colourDef.compareTo("red") == 0) {
+      retC=Color.red;
+    }
+ else     if (colourDef.compareTo("white") == 0) {
+      retC=Color.white;
+    }
+ else     if (colourDef.compareTo("yellow") == 0) {
+      retC=Color.yellow;
+    }
+ else {
+      System.err.println("VisualizeUtils: colour property name not recognized " + "(" + colourDefBack + ").");
+    }
+  }
+  return retC;
+}
+}

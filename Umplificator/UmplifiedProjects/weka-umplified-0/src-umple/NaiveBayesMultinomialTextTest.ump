@@ -1,0 +1,38 @@
+namespace weka.classifiers.bayes;
+
+class NaiveBayesMultinomialTextTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend weka.core.CheckScheme.PostProcessor;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public NaiveBayesMultinomialTextTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default NaiveBayesMultinomialText 
+ */
+public Classifier getClassifier(){
+  return new NaiveBayesMultinomialText();
+}
+
+/** 
+ * returns a custom PostProcessor for the CheckClassifier datasets..
+ * @return		a custom PostProcessor
+ * @see AbsPostProcessor
+ */
+protected PostProcessor getPostProcessor(){
+  return new AbsPostProcessor();
+}
+
+public static Test suite(){
+  return new TestSuite(NaiveBayesMultinomialTextTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

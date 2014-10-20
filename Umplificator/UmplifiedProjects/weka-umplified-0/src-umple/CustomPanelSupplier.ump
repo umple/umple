@@ -1,0 +1,11 @@
+namespace weka.gui;
+
+interface CustomPanelSupplier
+{
+ depend javax.swing.JPanel;
+/** 
+ * Gets the custom panel for the object.
+ * @return the custom JPanel
+ */
+JPanel getCustomPanel();
+}

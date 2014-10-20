@@ -1,0 +1,27 @@
+namespace weka.classifiers.pmml.consumer;
+
+class RuleSetModelTest
+{
+  isA AbstractPMMLClassifierTest;
+ depend java.util.ArrayList;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public RuleSetModelTest(String name){
+  super(name);
+}
+
+@Override protected void setUp() throws Exception {
+  m_modelNames=new ArrayList<String>();
+  m_dataSetNames=new ArrayList<String>();
+  m_modelNames.add("HEART_RULESET.xml");
+  m_dataSetNames.add("heart-c.arff");
+}
+
+public static Test suite(){
+  return new TestSuite(weka.classifiers.pmml.consumer.RuleSetModelTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

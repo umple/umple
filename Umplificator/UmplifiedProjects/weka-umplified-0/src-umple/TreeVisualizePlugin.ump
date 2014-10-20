@@ -1,0 +1,33 @@
+namespace weka.gui.visualize.plugins;
+
+interface TreeVisualizePlugin
+{
+ depend javax.swing.JMenuItem;
+/** 
+ * Get a JMenu or JMenuItem which contain action listeners that perform the visualization of the tree in GraphViz's dotty format.   Exceptions thrown because of changes in Weka since compilation need to  be caught by the implementer.
+ * @see NoClassDefFoundError
+ * @see IncompatibleClassChangeError
+ * @param dotty 	the tree in dotty format
+ * @param name	the name of the item (in the Explorer's history list)
+ * @return menuitem 	for opening visualization(s), or nullto indicate no visualization is applicable for the input
+ */
+public JMenuItem getVisualizeMenuItem(String dotty,String name);
+
+/** 
+ * Get the minimum version of Weka, inclusive, the class is designed to work with.  eg: <code>3.5.0</code>
+ * @return		the minimum version
+ */
+public String getMinVersion();
+
+/** 
+ * Get the maximum version of Weka, exclusive, the class is designed to work with.  eg: <code>3.6.0</code>
+ * @return		the maximum version
+ */
+public String getMaxVersion();
+
+/** 
+ * Get the specific version of Weka the class is designed for. eg: <code>3.5.1</code>
+ * @return		the version the plugin was designed for
+ */
+public String getDesignVersion();
+}

@@ -1,0 +1,18 @@
+namespace weka.gui.beans;
+
+class AbstractTrainAndTestSetProducerBeanInfo
+{
+  isA SimpleBeanInfo;
+ depend java.beans.EventSetDescriptor;
+ depend java.beans.SimpleBeanInfo;
+public EventSetDescriptor[] getEventSetDescriptors(){
+  try {
+    EventSetDescriptor[] esds={new EventSetDescriptor(TrainingSetProducer.class,"trainingSet",TrainingSetListener.class,"acceptTrainingSet"),new EventSetDescriptor(TestSetProducer.class,"testSet",TestSetListener.class,"acceptTestSet")};
+    return esds;
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+  }
+  return null;
+}
+}

@@ -1,0 +1,75 @@
+namespace weka.filters.unsupervised.attribute;
+
+class AddIDTest
+{
+  isA AbstractFilterTest;
+ depend weka.core.Instances;
+ depend weka.filters.AbstractFilterTest;
+ depend weka.filters.Filter;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public AddIDTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default AddID 
+ */
+public Filter getFilter(){
+  return new AddID();
+}
+
+/** 
+ * Creates a specialized AddID 
+ */
+public Filter getFilter(int pos){
+  AddID af=new AddID();
+  af.setIDIndex("" + (pos + 1));
+  return af;
+}
+
+/** 
+ * performs the actual test
+ */
+protected void performTest(){
+  Instances icopy=new Instances(m_Instances);
+  Instances result=null;
+  try {
+    m_Filter.setInputFormat(icopy);
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+    fail("Exception thrown on setInputFormat(): \n" + ex.getMessage());
+  }
+  try {
+    result=Filter.useFilter(icopy,m_Filter);
+    assertNotNull(result);
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+    fail("Exception thrown on useFilter(): \n" + ex.getMessage());
+  }
+  assertEquals((icopy.numAttributes() + 1),result.numAttributes());
+  assertEquals(icopy.numInstances(),m_Instances.numInstances());
+}
+
+public void testAddFirst(){
+  m_Filter=getFilter(0);
+  testBuffered();
+  performTest();
+}
+
+public void testAddLast(){
+  m_Filter=getFilter(m_Instances.numAttributes() - 1);
+  testBuffered();
+  performTest();
+}
+
+public static Test suite(){
+  return new TestSuite(AddIDTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

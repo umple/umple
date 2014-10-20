@@ -1,0 +1,32 @@
+namespace weka.core.stopwords;
+
+class RainbowTest
+{
+  isA AbstractStopwordsTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+ depend junit.textui.TestRunner;
+/** 
+ * Constructs the test.
+ * @param name the name of the test
+ */
+public RainbowTest(String name){
+  super(name);
+}
+
+/** 
+ * Used to create an instance of a specific stopwords scheme.
+ * @return a suitably configured <code>StopwordsHandler</code> value
+ */
+@Override public StopwordsHandler getStopwords(){
+  return new Rainbow();
+}
+
+public static Test suite(){
+  return new TestSuite(RainbowTest.class);
+}
+
+public static void main(String[] args){
+  TestRunner.run(suite());
+}
+}

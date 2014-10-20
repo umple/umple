@@ -1,0 +1,105 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class PCell
+{
+ depend java.math.BigInteger;
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlAttribute(required=true) protected double beta;
+
+@XmlAttribute protected BigInteger df;
+
+@XmlAttribute(required=true) protected String parameterName;
+
+@XmlAttribute protected String targetCategory;
+
+public PCell(){
+}
+
+public PCell(String targetCategory,String parameterName,BigInteger df,double beta){
+  this.targetCategory=targetCategory;
+  this.parameterName=parameterName;
+  this.df=df;
+  this.beta=beta;
+}
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the beta property.
+ */
+public double getBeta(){
+  return beta;
+}
+
+/** 
+ * Sets the value of the beta property.
+ */
+public void setBeta(double value){
+  this.beta=value;
+}
+
+/** 
+ * Gets the value of the df property.
+ * @return possible object is {@link BigInteger }
+ */
+public BigInteger getDf(){
+  return df;
+}
+
+/** 
+ * Sets the value of the df property.
+ * @param value allowed object is {@link BigInteger }
+ */
+public void setDf(BigInteger value){
+  this.df=value;
+}
+
+/** 
+ * Gets the value of the parameterName property.
+ * @return possible object is {@link String }
+ */
+public String getParameterName(){
+  return parameterName;
+}
+
+/** 
+ * Sets the value of the parameterName property.
+ * @param value allowed object is {@link String }
+ */
+public void setParameterName(String value){
+  this.parameterName=value;
+}
+
+/** 
+ * Gets the value of the targetCategory property.
+ * @return possible object is {@link String }
+ */
+public String getTargetCategory(){
+  return targetCategory;
+}
+
+/** 
+ * Sets the value of the targetCategory property.
+ * @param value allowed object is {@link String }
+ */
+public void setTargetCategory(String value){
+  this.targetCategory=value;
+}
+}

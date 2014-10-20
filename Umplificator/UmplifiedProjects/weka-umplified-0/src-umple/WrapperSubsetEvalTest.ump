@@ -1,0 +1,35 @@
+namespace weka.attributeSelection;
+
+class WrapperSubsetEvalTest
+{
+  isA AbstractEvaluatorTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public WrapperSubsetEvalTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default BestFirst 
+ */
+public ASSearch getSearch(){
+  return new GreedyStepwise();
+}
+
+/** 
+ * Creates a WrapperSubsetEval with J48 
+ */
+public ASEvaluation getEvaluator(){
+  WrapperSubsetEval eval=new WrapperSubsetEval();
+  eval.setClassifier(new weka.classifiers.trees.J48());
+  return eval;
+}
+
+public static Test suite(){
+  return new TestSuite(WrapperSubsetEvalTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

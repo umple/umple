@@ -1,0 +1,33 @@
+namespace weka.attributeSelection;
+
+class GainRatioAttributeEvalTest
+{
+  isA AbstractEvaluatorTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public GainRatioAttributeEvalTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default Ranker 
+ */
+public ASSearch getSearch(){
+  return new Ranker();
+}
+
+/** 
+ * Creates a default GainRatioAttributeEval 
+ */
+public ASEvaluation getEvaluator(){
+  return new GainRatioAttributeEval();
+}
+
+public static Test suite(){
+  return new TestSuite(GainRatioAttributeEvalTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

@@ -1,0 +1,20 @@
+namespace weka.gui.beans;
+
+interface GOECustomizer
+{
+  isA BeanCustomizer;
+/** 
+ * Tells the customizer not to display its own OK and CANCEL buttons
+ */
+void dontShowOKCancelButtons();
+
+/** 
+ * Gets called when the customizer is closing under an OK condition 
+ */
+void closingOK();
+
+/** 
+ * Gets called when the customizer is closing under a CANCEL condition
+ */
+void closingCancel();
+}

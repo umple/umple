@@ -1,0 +1,33 @@
+namespace weka.attributeSelection;
+
+class GreedyStepwiseTest
+{
+  isA AbstractSearchTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public GreedyStepwiseTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default GreedyStepwise 
+ */
+public ASSearch getSearch(){
+  return new GreedyStepwise();
+}
+
+/** 
+ * Creates a default CfsSubsetEval 
+ */
+public ASEvaluation getEvaluator(){
+  return new CfsSubsetEval();
+}
+
+public static Test suite(){
+  return new TestSuite(GreedyStepwiseTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

@@ -1,0 +1,120 @@
+namespace weka.core.converters;
+
+class SerializedInstancesSaver
+{
+  isA BatchConverter;
+  isA AbstractFileSaver;
+ depend java.io.IOException;
+ depend java.io.ObjectOutputStream;
+ depend java.io.OutputStream;
+ depend weka.core.Capabilities;
+ depend weka.core.Capabilities.Capability;
+ depend weka.core.RevisionUtils;
+/** 
+ * for serialization. 
+ */
+static final long serialVersionUID=-7717010648500658872L;
+
+/** 
+ * the output stream. 
+ */
+protected ObjectOutputStream m_objectstream;
+
+/** 
+ * Constructor. 
+ */
+public SerializedInstancesSaver(){
+  resetOptions();
+}
+
+/** 
+ * Returns a string describing this Saver.
+ * @return a description of the Saver suitable fordisplaying in the explorer/experimenter gui
+ */
+public String globalInfo(){
+  return "Serializes the instances to a file with extension bsi.";
+}
+
+/** 
+ * Returns a description of the file type.
+ * @return a short file description
+ */
+public String getFileDescription(){
+  return "Binary serialized instances";
+}
+
+/** 
+ * Resets the Saver.
+ */
+public void resetOptions(){
+  super.resetOptions();
+  setFileExtension(".bsi");
+}
+
+/** 
+ * Returns the Capabilities of this saver.
+ * @return            the capabilities of this object
+ * @see Capabilities
+ */
+public Capabilities getCapabilities(){
+  Capabilities result=super.getCapabilities();
+  result.enableAllAttributes();
+  result.enable(Capability.MISSING_VALUES);
+  result.enableAllClasses();
+  result.enable(Capability.MISSING_CLASS_VALUES);
+  result.enable(Capability.NO_CLASS);
+  return result;
+}
+
+/** 
+ * Resets the writer, setting writer and objectstream to null.
+ */
+public void resetWriter(){
+  super.resetWriter();
+  m_objectstream=null;
+}
+
+/** 
+ * Sets the destination output stream.
+ * @param output the output stream.
+ * @throws IOException throws an IOException if destination cannot be set
+ */
+public void setDestination(OutputStream output) throws IOException {
+  super.setDestination(output);
+  m_objectstream=new ObjectOutputStream(output);
+}
+
+/** 
+ * Writes a Batch of instances.
+ * @throws IOException throws IOException if saving in batch mode is not possible
+ */
+public void writeBatch() throws IOException {
+  if (getRetrieval() == INCREMENTAL)   throw new IOException("Batch and incremental saving cannot be mixed.");
+  if (getInstances() == null)   throw new IOException("No instances to save");
+  setRetrieval(BATCH);
+  if (m_objectstream == null)   throw new IOException("No output for serialization.");
+  setWriteMode(WRITE);
+  m_objectstream.writeObject(getInstances());
+  m_objectstream.flush();
+  m_objectstream.close();
+  setWriteMode(WAIT);
+  resetWriter();
+  setWriteMode(CANCEL);
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+
+/** 
+ * Main method.
+ * @param args should contain the options of a Saver.
+ */
+public static void main(String[] args){
+  runFileSaver(new SerializedInstancesSaver(),args);
+}
+}

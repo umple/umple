@@ -1,0 +1,12 @@
+
+top ArrayType
+{
+public static enum ArrayType {NUM("NUM-ARRAY"), INT("INT-ARRAY"), REAL("REAL-ARRAY"), STRING("STRING-ARRAY"), REAL_SPARSE("REAL-SparseArray"), INT_SPARSE("INT-SparseArray"); private final String m_stringVal;
+ArrayType(String name){
+  m_stringVal=name;
+}
+@Override public String toString(){
+  return m_stringVal;
+}
+}
+}

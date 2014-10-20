@@ -1,0 +1,10 @@
+namespace weka.gui.beans;
+
+interface BatchAssociationRulesListener
+{
+/** 
+ * Accept a <code>BatchAssociationRulesEvent</code>
+ * @param e a <code>BatchAssociationRulesEvent</code>
+ */
+void acceptAssociationRules(BatchAssociationRulesEvent e);
+}

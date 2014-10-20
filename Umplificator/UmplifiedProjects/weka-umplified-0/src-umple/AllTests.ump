@@ -1,0 +1,19 @@
+namespace weka.filters;
+
+class AllTests
+{
+  isA WekaTestSuite;
+ depend weka.test.WekaTestSuite;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public static Test suite(){
+  TestSuite suite=(TestSuite)suite("weka.filters.Filter");
+  suite.addTest(AllFilterTest.suite());
+  suite.addTest(MultiFilterTest.suite());
+  return suite;
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

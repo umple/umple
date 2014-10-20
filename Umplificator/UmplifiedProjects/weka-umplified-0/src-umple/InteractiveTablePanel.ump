@@ -1,0 +1,130 @@
+namespace weka.gui.beans;
+
+class InteractiveTableModelListener
+{
+  isA TableModelListener;
+ depend java.awt.BorderLayout;
+ depend java.awt.Component;
+ depend javax.swing.JPanel;
+ depend javax.swing.JScrollPane;
+ depend javax.swing.JTable;
+ depend javax.swing.event.TableModelEvent;
+ depend javax.swing.event.TableModelListener;
+ depend javax.swing.table.DefaultTableCellRenderer;
+ depend javax.swing.table.TableColumn;
+/** 
+ * For serialization 
+ */
+private static final long serialVersionUID=4495705463732140410L;
+
+/** 
+ * Holds column names 
+ */
+protected String[] m_columnNames;
+
+/** 
+ * The table itself 
+ */
+protected JTable m_table;
+
+/** 
+ * Scroll panel for the table 
+ */
+protected JScrollPane m_scroller;
+
+/** 
+ * Model for the table 
+ */
+protected InteractiveTableModel m_tableModel;
+
+private static final long serialVersionUID=6186813827783402502L;
+
+/** 
+ * The index of the interactive column 
+ */
+protected int m_interactiveColumn;
+
+/** 
+ * Constructor
+ * @param colNames the names of the columns
+ */
+public InteractiveTablePanel(String[] colNames){
+  m_columnNames=colNames;
+  initComponent();
+}
+
+/** 
+ * Initializes the component
+ */
+public void initComponent(){
+  m_tableModel=new InteractiveTableModel(m_columnNames);
+  m_tableModel.addTableModelListener(new InteractiveTablePanel.InteractiveTableModelListener());
+  m_table=new JTable();
+  m_table.setModel(m_tableModel);
+  m_table.setSurrendersFocusOnKeystroke(true);
+  if (!m_tableModel.hasEmptyRow()) {
+    m_tableModel.addEmptyRow();
+  }
+  InteractiveTableModel model=(InteractiveTableModel)m_table.getModel();
+  m_scroller=new javax.swing.JScrollPane(m_table);
+  m_table.setPreferredScrollableViewportSize(new java.awt.Dimension(500,80));
+  TableColumn hidden=m_table.getColumnModel().getColumn(model.m_hidden_index);
+  hidden.setMinWidth(2);
+  hidden.setPreferredWidth(2);
+  hidden.setMaxWidth(2);
+  hidden.setCellRenderer(new InteractiveRenderer(model.m_hidden_index));
+  setLayout(new BorderLayout());
+  add(m_scroller,BorderLayout.CENTER);
+}
+
+/** 
+ * Get the JTable component
+ * @return the JTable
+ */
+public JTable getTable(){
+  return m_table;
+}
+
+/** 
+ * Highlight the last row in the table
+ * @param row the row
+ */
+public void highlightLastRow(int row){
+  int lastrow=m_tableModel.getRowCount();
+  if (row == lastrow - 1) {
+    m_table.setRowSelectionInterval(lastrow - 1,lastrow - 1);
+  }
+ else {
+    m_table.setRowSelectionInterval(row + 1,row + 1);
+  }
+  m_table.setColumnSelectionInterval(0,0);
+}
+
+/** 
+ * Constructor
+ * @param interactiveColumn the column that is interactive (i.e. you canpress return to generate a new row from it)
+ */
+public InteractiveRenderer(int interactiveColumn){
+  m_interactiveColumn=interactiveColumn;
+}
+
+@Override public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected,boolean hasFocus,int row,int column){
+  Component c=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+  if (column == m_interactiveColumn && hasFocus) {
+    if ((InteractiveTablePanel.this.m_tableModel.getRowCount() - 1) == row && !InteractiveTablePanel.this.m_tableModel.hasEmptyRow()) {
+      InteractiveTablePanel.this.m_tableModel.addEmptyRow();
+    }
+    highlightLastRow(row);
+  }
+  return c;
+}
+
+@Override public void tableChanged(TableModelEvent evt){
+  if (evt.getType() == TableModelEvent.UPDATE) {
+    int column=evt.getColumn();
+    int row=evt.getFirstRow();
+    m_table.setColumnSelectionInterval(column + 1,column + 1);
+    m_table.setRowSelectionInterval(row,row);
+  }
+}
+}

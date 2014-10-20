@@ -1,0 +1,177 @@
+
+top MathFunc
+{
+/** 
+ * Enum for the math functions.
+ */
+enum MathFunc {MIN("min"){
+  double eval(  double[] args){
+    return args[Utils.minIndex(args)];
+  }
+  boolean legalNumParams(  int num){
+    return (num > 0);
+  }
+  String[] getParameterNames(){
+    return null;
+  }
+}
+, MAX("max"){
+  double eval(  double[] args){
+    return args[Utils.maxIndex(args)];
+  }
+  boolean legalNumParams(  int num){
+    return (num > 0);
+  }
+  String[] getParameterNames(){
+    return null;
+  }
+}
+, SUM("sum"){
+  double eval(  double[] args){
+    return Utils.sum(args);
+  }
+  boolean legalNumParams(  int num){
+    return (num > 0);
+  }
+  String[] getParameterNames(){
+    return null;
+  }
+}
+, AVG("avg"){
+  double eval(  double[] args){
+    return Utils.mean(args);
+  }
+  boolean legalNumParams(  int num){
+    return (num > 0);
+  }
+  String[] getParameterNames(){
+    return null;
+  }
+}
+, LOG10("log10"){
+  double eval(  double[] args){
+    return Math.log10(args[0]);
+  }
+  boolean legalNumParams(  int num){
+    return (num == 1);
+  }
+  String[] getParameterNames(){
+    return new String[]{"A"};
+  }
+}
+, LN("ln"){
+  double eval(  double[] args){
+    return Math.log(args[0]);
+  }
+  boolean legalNumParams(  int num){
+    return (num == 1);
+  }
+  String[] getParameterNames(){
+    return new String[]{"A"};
+  }
+}
+, SQRT("sqrt"){
+  double eval(  double[] args){
+    return Math.sqrt(args[0]);
+  }
+  boolean legalNumParams(  int num){
+    return (num == 1);
+  }
+  String[] getParameterNames(){
+    return new String[]{"A"};
+  }
+}
+, ABS("abs"){
+  double eval(  double[] args){
+    return Math.abs(args[0]);
+  }
+  boolean legalNumParams(  int num){
+    return (num == 1);
+  }
+  String[] getParameterNames(){
+    return new String[]{"A"};
+  }
+}
+, EXP("exp"){
+  double eval(  double[] args){
+    return Math.exp(args[0]);
+  }
+  boolean legalNumParams(  int num){
+    return (num == 1);
+  }
+  String[] getParameterNames(){
+    return new String[]{"A"};
+  }
+}
+, POW("pow"){
+  double eval(  double[] args){
+    return Math.pow(args[0],args[1]);
+  }
+  boolean legalNumParams(  int num){
+    return (num == 2);
+  }
+  String[] getParameterNames(){
+    return new String[]{"A","B"};
+  }
+}
+, THRESHOLD("threshold"){
+  double eval(  double[] args){
+    if (args[0] > args[1]) {
+      return 1.0;
+    }
+ else {
+      return 0.0;
+    }
+  }
+  boolean legalNumParams(  int num){
+    return (num == 2);
+  }
+  String[] getParameterNames(){
+    return new String[]{"A","B"};
+  }
+}
+, FLOOR("floor"){
+  double eval(  double[] args){
+    return Math.floor(args[0]);
+  }
+  boolean legalNumParams(  int num){
+    return (num == 1);
+  }
+  String[] getParameterNames(){
+    return new String[]{"A"};
+  }
+}
+, CEIL("ceil"){
+  double eval(  double[] args){
+    return Math.ceil(args[0]);
+  }
+  boolean legalNumParams(  int num){
+    return (num == 1);
+  }
+  String[] getParameterNames(){
+    return new String[]{"A"};
+  }
+}
+, ROUND("round"){
+  double eval(  double[] args){
+    return Math.round(args[0]);
+  }
+  boolean legalNumParams(  int num){
+    return (num == 1);
+  }
+  String[] getParameterNames(){
+    return new String[]{"A"};
+  }
+}
+; abstract double eval(double[] args);
+abstract boolean legalNumParams(int num);
+abstract String[] getParameterNames();
+private final String m_stringVal;
+MathFunc(String funcName){
+  m_stringVal=funcName;
+}
+public String toString(){
+  return m_stringVal;
+}
+}
+}

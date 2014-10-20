@@ -1,0 +1,93 @@
+namespace weka.filters;
+
+class SimpleBatchFilter
+{
+  isA SimpleFilter;
+ depend weka.core.Instance;
+ depend weka.core.Instances;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=8102908673378055114L;
+
+/** 
+ * returns true if the output format is immediately available after the input format has been set and not only after all the data has been seen (see batchFinished())
+ * @return true if the output format is immediately available
+ * @see #batchFinished()
+ * @see #setInputFormat(Instances)
+ */
+@Override protected boolean hasImmediateOutputFormat(){
+  return false;
+}
+
+/** 
+ * Returns whether to allow the determineOutputFormat(Instances) method access to the full dataset rather than just the header. <p/> Default implementation returns false.
+ * @return whether determineOutputFormat has access to the full input dataset
+ */
+public boolean allowAccessToFullInputFormat(){
+  return false;
+}
+
+/** 
+ * Input an instance for filtering. Filter requires all training instances be read before producing output (calling the method batchFinished() makes the data available). If this instance is part of a new batch, m_NewBatch is set to false.
+ * @param instance the input instance
+ * @return true if the filtered instance may now be collected with output().
+ * @throws IllegalStateException if no input structure has been defined
+ * @throws Exception if something goes wrong
+ * @see #batchFinished()
+ */
+@Override public boolean input(Instance instance) throws Exception {
+  if (getInputFormat() == null) {
+    throw new IllegalStateException("No input instance format defined");
+  }
+  if (m_NewBatch) {
+    resetQueue();
+    m_NewBatch=false;
+  }
+  bufferInput((Instance)instance.copy());
+  if (isFirstBatchDone()) {
+    Instances inst=new Instances(getInputFormat());
+    inst=process(inst);
+    for (int i=0; i < inst.numInstances(); i++) {
+      push(inst.instance(i));
+    }
+    flushInput();
+  }
+  return m_FirstBatchDone;
+}
+
+/** 
+ * Signify that this batch of input to the filter is finished. If the filter requires all instances prior to filtering, output() may now be called to retrieve the filtered instances. Any subsequent instances filtered should be filtered based on setting obtained from the first batch (unless the setInputFormat has been re-assigned or new options have been set). Sets m_FirstBatchDone and m_NewBatch to true.
+ * @return true if there are instances pending output
+ * @throws IllegalStateException if no input format has been set.
+ * @throws Exception if something goes wrong
+ * @see #m_NewBatch
+ * @see #m_FirstBatchDone
+ */
+@Override public boolean batchFinished() throws Exception {
+  int i;
+  Instances inst;
+  if (getInputFormat() == null) {
+    throw new IllegalStateException("No input instance format defined");
+  }
+  inst=new Instances(getInputFormat());
+  if (!hasImmediateOutputFormat() && !isFirstBatchDone()) {
+    if (allowAccessToFullInputFormat()) {
+      setOutputFormat(determineOutputFormat(inst));
+    }
+ else {
+      setOutputFormat(determineOutputFormat(new Instances(inst,0)));
+    }
+  }
+  if (inst.numInstances() > 0) {
+    inst=process(inst);
+    flushInput();
+    for (i=0; i < inst.numInstances(); i++) {
+      push(inst.instance(i));
+    }
+  }
+  m_NewBatch=true;
+  m_FirstBatchDone=true;
+  return (numPendingOutput() != 0);
+}
+}

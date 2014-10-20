@@ -1,0 +1,17 @@
+namespace weka.gui.beans;
+
+interface WekaWrapper
+{
+/** 
+ * Set the algorithm.
+ * @param algorithm an <code>Object</code> value
+ * @exception IllegalArgumentException if the supplied object isnot of the class of algorithms handled by this wrapper.
+ */
+void setWrappedAlgorithm(Object algorithm);
+
+/** 
+ * Get the algorithm
+ * @return an <code>Object</code> value
+ */
+Object getWrappedAlgorithm();
+}

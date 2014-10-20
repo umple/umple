@@ -1,0 +1,566 @@
+namespace weka.classifiers.functions.supportVector;
+
+class RegSMO
+{
+  isA TechnicalInformationHandler;
+  isA RegOptimizer;
+ depend java.util.Collections;
+ depend java.util.Enumeration;
+ depend java.util.Vector;
+ depend weka.core.Instances;
+ depend weka.core.Option;
+ depend weka.core.RevisionUtils;
+ depend weka.core.TechnicalInformation;
+ depend weka.core.TechnicalInformation.Field;
+ depend weka.core.TechnicalInformation.Type;
+ depend weka.core.TechnicalInformationHandler;
+ depend weka.core.Utils;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=-7504070793279598638L;
+
+/** 
+ * tolerance parameter, smaller changes on alpha in inner loop will be ignored
+ */
+protected double m_eps=1.0e-12;
+
+/** 
+ * Precision constant for updating sets 
+ */
+protected final static double m_Del=1e-10;
+
+/** 
+ * error cache containing m_error[i] = SVMOutput(i) - m_target[i] - m_b <br/> note, we don't need m_b in the cache, since if we do, we need to maintain it when m_b is updated
+ */
+double[] m_error;
+
+/** 
+ * alpha value for first candidate 
+ */
+protected double m_alpha1;
+
+/** 
+ * alpha* value for first candidate 
+ */
+protected double m_alpha1Star;
+
+/** 
+ * alpha value for second candidate 
+ */
+protected double m_alpha2;
+
+/** 
+ * alpha* value for second candidate 
+ */
+protected double m_alpha2Star;
+
+/** 
+ * default constructor
+ */
+public RegSMO(){
+  super();
+}
+
+/** 
+ * Returns a string describing classifier
+ * @return a description suitable for displaying in the explorer/experimentergui
+ */
+public String globalInfo(){
+  return "Implementation of SMO for support vector regression as described " + "in :\n\n" + getTechnicalInformation().toString();
+}
+
+/** 
+ * Returns an instance of a TechnicalInformation object, containing detailed information about the technical background of this class, e.g., paper reference or book this class is based on.
+ * @return the technical information about this class
+ */
+@Override public TechnicalInformation getTechnicalInformation(){
+  TechnicalInformation result;
+  result=new TechnicalInformation(Type.MISC);
+  result.setValue(Field.AUTHOR,"A.J. Smola and B. Schoelkopf");
+  result.setValue(Field.TITLE,"A tutorial on support vector regression");
+  result.setValue(Field.NOTE,"NeuroCOLT2 Technical Report NC2-TR-1998-030");
+  result.setValue(Field.YEAR,"1998");
+  return result;
+}
+
+/** 
+ * Returns an enumeration describing the available options
+ * @return an enumeration of all the available options
+ */
+@Override public Enumeration<Option> listOptions(){
+  Vector<Option> result=new Vector<Option>();
+  result.addElement(new Option("\tThe epsilon for round-off error.\n" + "\t(default 1.0e-12)","P",1,"-P <double>"));
+  result.addAll(Collections.list(super.listOptions()));
+  return result.elements();
+}
+
+/** 
+ * Parses a given list of options. <p/> <!-- options-start --> Valid options are: <p/> <pre> -P &lt;double&gt; The epsilon for round-off error. (default 1.0e-12) </pre> <pre> -L &lt;double&gt; The epsilon parameter in epsilon-insensitive loss function. (default 1.0e-3) </pre> <pre> -W &lt;double&gt; The random number seed. (default 1) </pre> <!-- options-end -->
+ * @param options the list of options as an array of strings
+ * @throws Exception if an option is not supported
+ */
+@Override public void setOptions(String[] options) throws Exception {
+  String tmpStr;
+  tmpStr=Utils.getOption('P',options);
+  if (tmpStr.length() != 0) {
+    setEpsilon(Double.parseDouble(tmpStr));
+  }
+ else {
+    setEpsilon(1.0e-12);
+  }
+  super.setOptions(options);
+}
+
+/** 
+ * Gets the current settings of the classifier.
+ * @return an array of strings suitable for passing to setOptions
+ */
+@Override public String[] getOptions(){
+  Vector<String> result=new Vector<String>();
+  result.add("-P");
+  result.add("" + getEpsilon());
+  Collections.addAll(result,super.getOptions());
+  return result.toArray(new String[result.size()]);
+}
+
+/** 
+ * Returns the tip text for this property
+ * @return tip text for this property suitable for displaying in theexplorer/experimenter gui
+ */
+public String epsilonTipText(){
+  return "The epsilon for round-off error (shouldn't be changed).";
+}
+
+/** 
+ * Get the value of epsilon.
+ * @return Value of epsilon.
+ */
+public double getEpsilon(){
+  return m_eps;
+}
+
+/** 
+ * Set the value of epsilon.
+ * @param v Value to assign to epsilon.
+ */
+public void setEpsilon(double v){
+  m_eps=v;
+}
+
+/** 
+ * initialize various variables before starting the actual optimizer
+ * @param data data set used for learning
+ * @throws Exception if something goes wrong
+ */
+@Override protected void init(Instances data) throws Exception {
+  super.init(data);
+  m_error=new double[m_nInstances];
+  for (int i=0; i < m_nInstances; i++) {
+    m_error[i]=-m_target[i];
+  }
+}
+
+/** 
+ * wrap up various variables to save memeory and do some housekeeping after optimization has finished.
+ * @throws Exception if something goes wrong
+ */
+@Override protected void wrapUp() throws Exception {
+  m_error=null;
+  super.wrapUp();
+}
+
+/** 
+ * Finds optimal point on line constrained by first (i1) and second (i2) candidate. Parameters correspond to pseudocode (see technicalinformation)
+ * @param i1
+ * @param alpha1
+ * @param alpha1Star
+ * @param C1
+ * @param i2
+ * @param alpha2
+ * @param alpha2Star
+ * @param C2
+ * @param gamma
+ * @param eta
+ * @param deltaPhi
+ * @return
+ */
+protected boolean findOptimalPointOnLine(int i1,double alpha1,double alpha1Star,double C1,int i2,double alpha2,double alpha2Star,double C2,double gamma,double eta,double deltaPhi){
+  if (eta <= 0) {
+    return false;
+  }
+  boolean case1=false;
+  boolean case2=false;
+  boolean case3=false;
+  boolean case4=false;
+  boolean finished=false;
+  while (!finished) {
+    if ((case1 == false) && (alpha1 > 0 || (alpha1Star == 0 && deltaPhi > 0)) && (alpha2 > 0 || (alpha2Star == 0 && deltaPhi < 0))) {
+      double L=Math.max(0,gamma - C1);
+      double H=Math.min(C2,gamma);
+      if (L < H) {
+        double a2=alpha2 - deltaPhi / eta;
+        a2=Math.min(a2,H);
+        a2=Math.max(L,a2);
+        if (a2 > C2 - m_Del * C2) {
+          a2=C2;
+        }
+ else         if (a2 <= m_Del * C2) {
+          a2=0;
+        }
+        double a1=alpha1 - (a2 - alpha2);
+        if (a1 > C1 - m_Del * C1) {
+          a1=C1;
+        }
+ else         if (a1 <= m_Del * C1) {
+          a1=0;
+        }
+        if (Math.abs(alpha1 - a1) > m_eps) {
+          deltaPhi+=eta * (a2 - alpha2);
+          alpha1=a1;
+          alpha2=a2;
+        }
+      }
+ else {
+        finished=true;
+      }
+      case1=true;
+    }
+ else     if ((case2 == false) && (alpha1 > 0 || (alpha1Star == 0 && deltaPhi > 2 * m_epsilon)) && (alpha2Star > 0 || (alpha2 == 0 && deltaPhi > 2 * m_epsilon))) {
+      double L=Math.max(0,-gamma);
+      double H=Math.min(C2,-gamma + C1);
+      if (L < H) {
+        double a2=alpha2Star + (deltaPhi - 2 * m_epsilon) / eta;
+        a2=Math.min(a2,H);
+        a2=Math.max(L,a2);
+        if (a2 > C2 - m_Del * C2) {
+          a2=C2;
+        }
+ else         if (a2 <= m_Del * C2) {
+          a2=0;
+        }
+        double a1=alpha1 + (a2 - alpha2Star);
+        if (a1 > C1 - m_Del * C1) {
+          a1=C1;
+        }
+ else         if (a1 <= m_Del * C1) {
+          a1=0;
+        }
+        if (Math.abs(alpha1 - a1) > m_eps) {
+          deltaPhi+=eta * (-a2 + alpha2Star);
+          alpha1=a1;
+          alpha2Star=a2;
+        }
+      }
+ else {
+        finished=true;
+      }
+      case2=true;
+    }
+ else     if ((case3 == false) && (alpha1Star > 0 || (alpha1 == 0 && deltaPhi < -2 * m_epsilon)) && (alpha2 > 0 || (alpha2Star == 0 && deltaPhi < -2 * m_epsilon))) {
+      double L=Math.max(0,gamma);
+      double H=Math.min(C2,C1 + gamma);
+      if (L < H) {
+        double a2=alpha2 - (deltaPhi + 2 * m_epsilon) / eta;
+        a2=Math.min(a2,H);
+        a2=Math.max(L,a2);
+        if (a2 > C2 - m_Del * C2) {
+          a2=C2;
+        }
+ else         if (a2 <= m_Del * C2) {
+          a2=0;
+        }
+        double a1=alpha1Star + (a2 - alpha2);
+        if (a1 > C1 - m_Del * C1) {
+          a1=C1;
+        }
+ else         if (a1 <= m_Del * C1) {
+          a1=0;
+        }
+        if (Math.abs(alpha1Star - a1) > m_eps) {
+          deltaPhi+=eta * (a2 - alpha2);
+          alpha1Star=a1;
+          alpha2=a2;
+        }
+      }
+ else {
+        finished=true;
+      }
+      case3=true;
+    }
+ else     if ((case4 == false) && (alpha1Star > 0 || (alpha1 == 0 && deltaPhi < 0)) && (alpha2Star > 0 || (alpha2 == 0 && deltaPhi > 0))) {
+      double L=Math.max(0,-gamma - C1);
+      double H=Math.min(C2,-gamma);
+      if (L < H) {
+        double a2=alpha2Star + deltaPhi / eta;
+        a2=Math.min(a2,H);
+        a2=Math.max(L,a2);
+        if (a2 > C2 - m_Del * C2) {
+          a2=C2;
+        }
+ else         if (a2 <= m_Del * C2) {
+          a2=0;
+        }
+        double a1=alpha1Star - (a2 - alpha2Star);
+        if (a1 > C1 - m_Del * C1) {
+          a1=C1;
+        }
+ else         if (a1 <= m_Del * C1) {
+          a1=0;
+        }
+        if (Math.abs(alpha1Star - a1) > m_eps) {
+          deltaPhi+=eta * (-a2 + alpha2Star);
+          alpha1Star=a1;
+          alpha2Star=a2;
+        }
+      }
+ else {
+        finished=true;
+      }
+      case4=true;
+    }
+ else {
+      finished=true;
+    }
+  }
+  if (Math.abs(alpha1 - m_alpha[i1]) > m_eps || Math.abs(alpha1Star - m_alphaStar[i1]) > m_eps || Math.abs(alpha2 - m_alpha[i2]) > m_eps || Math.abs(alpha2Star - m_alphaStar[i2]) > m_eps) {
+    if (alpha1 > C1 - m_Del * C1) {
+      alpha1=C1;
+    }
+ else     if (alpha1 <= m_Del * C1) {
+      alpha1=0;
+    }
+    if (alpha1Star > C1 - m_Del * C1) {
+      alpha1Star=C1;
+    }
+ else     if (alpha1Star <= m_Del * C1) {
+      alpha1Star=0;
+    }
+    if (alpha2 > C2 - m_Del * C2) {
+      alpha2=C2;
+    }
+ else     if (alpha2 <= m_Del * C2) {
+      alpha2=0;
+    }
+    if (alpha2Star > C2 - m_Del * C2) {
+      alpha2Star=C2;
+    }
+ else     if (alpha2Star <= m_Del * C2) {
+      alpha2Star=0;
+    }
+    m_alpha[i1]=alpha1;
+    m_alphaStar[i1]=alpha1Star;
+    m_alpha[i2]=alpha2;
+    m_alphaStar[i2]=alpha2Star;
+    if (alpha1 != 0 || alpha1Star != 0) {
+      if (!m_supportVectors.contains(i1)) {
+        m_supportVectors.insert(i1);
+      }
+    }
+ else {
+      m_supportVectors.delete(i1);
+    }
+    if (alpha2 != 0 || alpha2Star != 0) {
+      if (!m_supportVectors.contains(i2)) {
+        m_supportVectors.insert(i2);
+      }
+    }
+ else {
+      m_supportVectors.delete(i2);
+    }
+    return true;
+  }
+  return false;
+}
+
+/** 
+ * takeStep method from pseudocode. Parameters correspond to pseudocode (see technicalinformation)
+ * @param i1
+ * @param i2
+ * @param alpha2
+ * @param alpha2Star
+ * @param phi2
+ * @return
+ * @throws Exception
+ */
+protected int takeStep(int i1,int i2,double alpha2,double alpha2Star,double phi2) throws Exception {
+  if (i1 == i2) {
+    return 0;
+  }
+  double C1=m_C * m_data.instance(i1).weight();
+  double C2=m_C * m_data.instance(i2).weight();
+  double alpha1=m_alpha[i1];
+  double alpha1Star=m_alphaStar[i1];
+  double phi1=m_error[i1];
+  double k11=m_kernel.eval(i1,i1,m_data.instance(i1));
+  double k12=m_kernel.eval(i1,i2,m_data.instance(i1));
+  double k22=m_kernel.eval(i2,i2,m_data.instance(i2));
+  double eta=-2 * k12 + k11 + k22;
+  if (eta < 0) {
+    return 0;
+  }
+  double gamma=alpha1 - alpha1Star + alpha2 - alpha2Star;
+  double alpha1old=alpha1;
+  double alpha1Starold=alpha1Star;
+  double alpha2old=alpha2;
+  double alpha2Starold=alpha2Star;
+  double deltaPhi=phi2 - phi1;
+  if (findOptimalPointOnLine(i1,alpha1,alpha1Star,C1,i2,alpha2,alpha2Star,C2,gamma,eta,deltaPhi)) {
+    alpha1=m_alpha[i1];
+    alpha1Star=m_alphaStar[i1];
+    alpha2=m_alpha[i2];
+    alpha2Star=m_alphaStar[i2];
+    double dAlpha1=alpha1 - alpha1old - (alpha1Star - alpha1Starold);
+    double dAlpha2=alpha2 - alpha2old - (alpha2Star - alpha2Starold);
+    for (int j=0; j < m_nInstances; j++) {
+      if ((j != i1) && (j != i2)) {
+        m_error[j]+=dAlpha1 * m_kernel.eval(i1,j,m_data.instance(i1)) + dAlpha2 * m_kernel.eval(i2,j,m_data.instance(i2));
+      }
+    }
+    m_error[i1]+=dAlpha1 * k11 + dAlpha2 * k12;
+    m_error[i2]+=dAlpha1 * k12 + dAlpha2 * k22;
+    double b1=Double.MAX_VALUE;
+    double b2=Double.MAX_VALUE;
+    if ((0 < alpha1 && alpha1 < C1) || (0 < alpha1Star && alpha1Star < C1) || (0 < alpha2 && alpha2 < C2)|| (0 < alpha2Star && alpha2Star < C2)) {
+      if (0 < alpha1 && alpha1 < C1) {
+        b1=m_error[i1] - m_epsilon;
+      }
+ else       if (0 < alpha1Star && alpha1Star < C1) {
+        b1=m_error[i1] + m_epsilon;
+      }
+      if (0 < alpha2 && alpha2 < C2) {
+        b2=m_error[i2] - m_epsilon;
+      }
+ else       if (0 < alpha2Star && alpha2Star < C2) {
+        b2=m_error[i2] + m_epsilon;
+      }
+      if (b1 < Double.MAX_VALUE) {
+        m_b=b1;
+        if (b2 < Double.MAX_VALUE) {
+          m_b=(b1 + b2) / 2.0;
+        }
+      }
+ else       if (b2 < Double.MAX_VALUE) {
+        m_b=b2;
+      }
+    }
+ else     if (m_b == 0) {
+      m_b=(m_error[i1] + m_error[i2]) / 2.0;
+    }
+    return 1;
+  }
+ else {
+    return 0;
+  }
+}
+
+/** 
+ * examineExample method from pseudocode. Parameters correspond to pseudocode (see technicalinformation)
+ * @param i2
+ * @return
+ * @throws Exception
+ */
+protected int examineExample(int i2) throws Exception {
+  double alpha2=m_alpha[i2];
+  double alpha2Star=m_alphaStar[i2];
+  double C2=m_C;
+  double C2Star=m_C;
+  double phi2=m_error[i2];
+  double phi2b=phi2 - m_b;
+  if ((phi2b > m_epsilon && alpha2Star < C2Star) || (phi2b < m_epsilon && alpha2Star > 0) || (-phi2b > m_epsilon && alpha2 < C2)|| (-phi2b > m_epsilon && alpha2 > 0)) {
+    int i1=secondChoiceHeuristic(i2);
+    if (i1 >= 0 && (takeStep(i1,i2,alpha2,alpha2Star,phi2) > 0)) {
+      return 1;
+    }
+    for (i1=0; i1 < m_target.length; i1++) {
+      if ((m_alpha[i1] > 0 && m_alpha[i1] < m_C) || (m_alphaStar[i1] > 0 && m_alphaStar[i1] < m_C)) {
+        if (takeStep(i1,i2,alpha2,alpha2Star,phi2) > 0) {
+          return 1;
+        }
+      }
+    }
+    for (i1=0; i1 < m_target.length; i1++) {
+      if (takeStep(i1,i2,alpha2,alpha2Star,phi2) > 0) {
+        return 1;
+      }
+    }
+  }
+  return 0;
+}
+
+/** 
+ * applies heuristic for finding candidate that is expected to lead to good gain when applying takeStep together with second candidate.
+ * @param i2 index of second candidate
+ * @return
+ */
+protected int secondChoiceHeuristic(int i2){
+  for (int i=0; i < 59; i++) {
+    int i1=m_random.nextInt(m_nInstances);
+    if ((i1 != i2) && (m_alpha[i1] > 0 && m_alpha[i1] < m_C) || (m_alphaStar[i1] > 0 && m_alphaStar[i1] < m_C)) {
+      return i1;
+    }
+  }
+  return -1;
+}
+
+/** 
+ * finds alpha and alpha* parameters that optimize the SVM target function
+ * @throws Exception
+ */
+public void optimize() throws Exception {
+  int numChanged=0;
+  int examineAll=1;
+  int sigFig=-100;
+  int loopCounter=0;
+  while ((numChanged > 0 || (examineAll > 0)) | (sigFig < 3)) {
+    loopCounter++;
+    numChanged=0;
+    int numSamples=0;
+    if (examineAll > 0) {
+      for (int i=0; i < m_nInstances; i++) {
+        numChanged+=examineExample(i);
+      }
+    }
+ else {
+      for (int i=0; i < m_target.length; i++) {
+        if ((m_alpha[i] > 0 && m_alpha[i] < m_C * m_data.instance(i).weight()) || (m_alphaStar[i] > 0 && m_alphaStar[i] < m_C * m_data.instance(i).weight())) {
+          numSamples++;
+          numChanged+=examineExample(i);
+        }
+      }
+    }
+    int minimumNumChanged=1;
+    if (loopCounter % 2 == 0) {
+      minimumNumChanged=(int)Math.max(1,0.1 * numSamples);
+    }
+    if (examineAll == 1) {
+      examineAll=0;
+    }
+ else     if (numChanged < minimumNumChanged) {
+      examineAll=1;
+    }
+    if (loopCounter == 2500) {
+      break;
+    }
+  }
+}
+
+/** 
+ * learn SVM parameters from data using Smola's SMO algorithm. Subclasses should implement something more interesting.
+ * @param instances the data to learn from
+ * @throws Exception if something goes wrong
+ */
+@Override public void buildClassifier(Instances instances) throws Exception {
+  init(instances);
+  optimize();
+  wrapUp();
+}
+
+/** 
+ * Returns the revision string.
+ * @return the revision
+ */
+@Override public String getRevision(){
+  return RevisionUtils.extract("$Revision: 10169 $");
+}
+}

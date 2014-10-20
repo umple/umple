@@ -1,0 +1,133 @@
+namespace weka.gui.beans;
+
+class CrossValidationFoldMakerCustomizer
+{
+  isA BeanCustomizer,CustomizerCloseRequester,CustomizerClosingListener;
+  isA JPanel;
+ depend java.awt.BorderLayout;
+ depend java.awt.GridLayout;
+ depend java.awt.Window;
+ depend java.awt.event.ActionEvent;
+ depend java.awt.event.ActionListener;
+ depend java.beans.PropertyChangeListener;
+ depend java.beans.PropertyChangeSupport;
+ depend javax.swing.JButton;
+ depend javax.swing.JPanel;
+ depend weka.gui.PropertySheetPanel;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=1229878140258668581L;
+
+private PropertyChangeSupport m_pcSupport=new PropertyChangeSupport(this);
+
+private PropertySheetPanel m_cvEditor=new PropertySheetPanel();
+
+private CrossValidationFoldMaker m_cvMaker;
+
+private ModifyListener m_modifyListener;
+
+private int m_foldsBackup;
+
+private boolean m_orderBackup;
+
+private int m_seedBackup;
+
+private Window m_parent;
+
+public CrossValidationFoldMakerCustomizer(){
+  setBorder(javax.swing.BorderFactory.createEmptyBorder(0,5,5,5));
+  setLayout(new BorderLayout());
+  add(m_cvEditor,BorderLayout.CENTER);
+  add(new javax.swing.JLabel("CrossValidationFoldMakerCustomizer"),BorderLayout.NORTH);
+  addButtons();
+}
+
+private void addButtons(){
+  JButton okBut=new JButton("OK");
+  JButton cancelBut=new JButton("Cancel");
+  JPanel butHolder=new JPanel();
+  butHolder.setLayout(new GridLayout(1,2));
+  butHolder.add(okBut);
+  butHolder.add(cancelBut);
+  add(butHolder,BorderLayout.SOUTH);
+  okBut.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      if (m_modifyListener != null) {
+        m_modifyListener.setModifiedStatus(CrossValidationFoldMakerCustomizer.this,true);
+      }
+      if (m_parent != null) {
+        m_parent.dispose();
+      }
+    }
+  }
+);
+  cancelBut.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      customizerClosing();
+      if (m_parent != null) {
+        m_parent.dispose();
+      }
+    }
+  }
+);
+}
+
+public void actionPerformed(ActionEvent e){
+  if (m_modifyListener != null) {
+    m_modifyListener.setModifiedStatus(CrossValidationFoldMakerCustomizer.this,true);
+  }
+  if (m_parent != null) {
+    m_parent.dispose();
+  }
+}
+
+public void actionPerformed(ActionEvent e){
+  customizerClosing();
+  if (m_parent != null) {
+    m_parent.dispose();
+  }
+}
+
+/** 
+ * Set the object to be edited
+ * @param object a CrossValidationFoldMaker object
+ */
+public void setObject(Object object){
+  m_cvMaker=((CrossValidationFoldMaker)object);
+  m_foldsBackup=m_cvMaker.getFolds();
+  m_orderBackup=m_cvMaker.getPreserveOrder();
+  m_seedBackup=m_cvMaker.getSeed();
+  m_cvEditor.setTarget(m_cvMaker);
+}
+
+/** 
+ * Add a property change listener
+ * @param pcl a <code>PropertyChangeListener</code> value
+ */
+public void addPropertyChangeListener(PropertyChangeListener pcl){
+  m_pcSupport.addPropertyChangeListener(pcl);
+}
+
+/** 
+ * Remove a property change listener
+ * @param pcl a <code>PropertyChangeListener</code> value
+ */
+public void removePropertyChangeListener(PropertyChangeListener pcl){
+  m_pcSupport.removePropertyChangeListener(pcl);
+}
+
+@Override public void setModifiedListener(ModifyListener l){
+  m_modifyListener=l;
+}
+
+@Override public void setParentWindow(Window parent){
+  m_parent=parent;
+}
+
+@Override public void customizerClosing(){
+  m_cvMaker.setSeed(m_seedBackup);
+  m_cvMaker.setFolds(m_foldsBackup);
+  m_cvMaker.setPreserveOrder(m_orderBackup);
+}
+}

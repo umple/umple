@@ -1,0 +1,5 @@
+namespace weka.classifiers.trees.ht;
+
+interface LearningNode
+{
+}

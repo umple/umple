@@ -1,0 +1,19 @@
+namespace weka.core;
+
+interface AdditionalMeasureProducer
+{
+ depend java.util.Enumeration;
+/** 
+ * Returns an enumeration of the measure names. Additional measures must follow the naming convention of starting with "measure", eg. double measureBlah()
+ * @return an enumeration of the measure names
+ */
+Enumeration<String> enumerateMeasures();
+
+/** 
+ * Returns the value of the named measure
+ * @param measureName the name of the measure to query for its value
+ * @return the value of the named measure
+ * @exception IllegalArgumentException if the named measure is not supported
+ */
+double getMeasure(String measureName);
+}

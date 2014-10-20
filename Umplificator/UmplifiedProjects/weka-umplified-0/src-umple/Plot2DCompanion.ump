@@ -1,0 +1,11 @@
+namespace weka.gui.visualize;
+
+interface Plot2DCompanion
+{
+ depend java.awt.Graphics;
+/** 
+ * Something to be drawn before the plot itself
+ * @param gx the graphics context to render to
+ */
+void prePlot(Graphics gx);
+}

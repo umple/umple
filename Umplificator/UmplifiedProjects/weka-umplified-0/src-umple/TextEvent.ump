@@ -1,0 +1,48 @@
+namespace weka.gui.beans;
+
+class TextEvent
+{
+  isA EventObject;
+ depend java.util.EventObject;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=4196810607402973744L;
+
+/** 
+ * The text
+ */
+protected String m_text;
+
+/** 
+ * The title for the text. Could be used in a list component
+ */
+protected String m_textTitle;
+
+/** 
+ * Creates a new <code>TextEvent</code> instance.
+ * @param source an <code>Object</code> value
+ * @param text a <code>String</code> value
+ */
+public TextEvent(Object source,String text,String textTitle){
+  super(source);
+  m_text=text;
+  m_textTitle=textTitle;
+}
+
+/** 
+ * Describe <code>getText</code> method here.
+ * @return a <code>String</code> value
+ */
+public String getText(){
+  return m_text;
+}
+
+/** 
+ * Describe <code>getTextTitle</code> method here.
+ * @return a <code>String</code> value
+ */
+public String getTextTitle(){
+  return m_textTitle;
+}
+}

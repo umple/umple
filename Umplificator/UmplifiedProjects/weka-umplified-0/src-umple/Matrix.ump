@@ -1,0 +1,132 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class Matrix
+{
+ depend java.math.BigInteger;
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Array",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<ArrayType> numarray;
+
+@XmlElement(name="MatCell",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<MatCell> matCell;
+
+@XmlAttribute protected Double diagDefault;
+
+@XmlAttribute protected String kind;
+
+@XmlAttribute protected BigInteger nbCols;
+
+@XmlAttribute protected BigInteger nbRows;
+
+@XmlAttribute protected Double offDiagDefault;
+
+/** 
+ * Gets the value of the numarray property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the numarray property. <p> For example, to add a new item, do as follows: <pre> getNUMARRAY().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link ArrayType }
+ */
+public List<ArrayType> getNUMARRAY(){
+  if (numarray == null) {
+    numarray=new ArrayList<ArrayType>();
+  }
+  return this.numarray;
+}
+
+/** 
+ * Gets the value of the matCell property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the matCell property. <p> For example, to add a new item, do as follows: <pre> getMatCell().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link MatCell }
+ */
+public List<MatCell> getMatCell(){
+  if (matCell == null) {
+    matCell=new ArrayList<MatCell>();
+  }
+  return this.matCell;
+}
+
+/** 
+ * Gets the value of the diagDefault property.
+ * @return possible object is {@link Double }
+ */
+public Double getDiagDefault(){
+  return diagDefault;
+}
+
+/** 
+ * Sets the value of the diagDefault property.
+ * @param value allowed object is {@link Double }
+ */
+public void setDiagDefault(Double value){
+  this.diagDefault=value;
+}
+
+/** 
+ * Gets the value of the kind property.
+ * @return possible object is {@link String }
+ */
+public String getKind(){
+  if (kind == null) {
+    return "any";
+  }
+ else {
+    return kind;
+  }
+}
+
+/** 
+ * Sets the value of the kind property.
+ * @param value allowed object is {@link String }
+ */
+public void setKind(String value){
+  this.kind=value;
+}
+
+/** 
+ * Gets the value of the nbCols property.
+ * @return possible object is {@link BigInteger }
+ */
+public BigInteger getNbCols(){
+  return nbCols;
+}
+
+/** 
+ * Sets the value of the nbCols property.
+ * @param value allowed object is {@link BigInteger }
+ */
+public void setNbCols(BigInteger value){
+  this.nbCols=value;
+}
+
+/** 
+ * Gets the value of the nbRows property.
+ * @return possible object is {@link BigInteger }
+ */
+public BigInteger getNbRows(){
+  return nbRows;
+}
+
+/** 
+ * Sets the value of the nbRows property.
+ * @param value allowed object is {@link BigInteger }
+ */
+public void setNbRows(BigInteger value){
+  this.nbRows=value;
+}
+
+/** 
+ * Gets the value of the offDiagDefault property.
+ * @return possible object is {@link Double }
+ */
+public Double getOffDiagDefault(){
+  return offDiagDefault;
+}
+
+/** 
+ * Sets the value of the offDiagDefault property.
+ * @param value allowed object is {@link Double }
+ */
+public void setOffDiagDefault(Double value){
+  this.offDiagDefault=value;
+}
+}

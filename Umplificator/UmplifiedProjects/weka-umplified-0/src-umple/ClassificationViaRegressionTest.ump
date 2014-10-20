@@ -1,0 +1,28 @@
+namespace weka.classifiers.meta;
+
+class ClassificationViaRegressionTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public ClassificationViaRegressionTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default ClassificationViaRegression 
+ */
+public Classifier getClassifier(){
+  return new ClassificationViaRegression();
+}
+
+public static Test suite(){
+  return new TestSuite(ClassificationViaRegressionTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

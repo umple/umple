@@ -1,0 +1,25 @@
+namespace weka.core;
+
+class UnsupportedClassTypeException
+{
+  isA WekaException;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=5175741076972192151L;
+
+/** 
+ * Creates a new UnsupportedClassTypeException with no message.
+ */
+public UnsupportedClassTypeException(){
+  super();
+}
+
+/** 
+ * Creates a new UnsupportedClassTypeException.
+ * @param message the reason for raising an exception.
+ */
+public UnsupportedClassTypeException(String message){
+  super(message);
+}
+}

@@ -1,0 +1,15 @@
+
+top Optype
+{
+/** 
+ * Enumerated type for the Optype
+ */
+public enum Optype {NONE("none"), CONTINUOUS("continuous"), CATEGORICAL("categorical"), ORDINAL("ordinal"); private final String m_stringVal;
+Optype(String name){
+  m_stringVal=name;
+}
+@Override public String toString(){
+  return m_stringVal;
+}
+}
+}

@@ -1,0 +1,65 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class ModelExplanation
+{
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlElement(name="PredictiveModelQuality",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<PredictiveModelQuality> predictiveModelQuality;
+
+@XmlElement(name="ClusteringModelQuality",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<ClusteringModelQuality> clusteringModelQuality;
+
+@XmlElement(name="Correlations",namespace="http://www.dmg.org/PMML-4_1") protected Correlations correlations;
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the predictiveModelQuality property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the predictiveModelQuality property. <p> For example, to add a new item, do as follows: <pre> getPredictiveModelQuality().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link PredictiveModelQuality }
+ */
+public List<PredictiveModelQuality> getPredictiveModelQuality(){
+  if (predictiveModelQuality == null) {
+    predictiveModelQuality=new ArrayList<PredictiveModelQuality>();
+  }
+  return this.predictiveModelQuality;
+}
+
+/** 
+ * Gets the value of the clusteringModelQuality property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the clusteringModelQuality property. <p> For example, to add a new item, do as follows: <pre> getClusteringModelQuality().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link ClusteringModelQuality }
+ */
+public List<ClusteringModelQuality> getClusteringModelQuality(){
+  if (clusteringModelQuality == null) {
+    clusteringModelQuality=new ArrayList<ClusteringModelQuality>();
+  }
+  return this.clusteringModelQuality;
+}
+
+/** 
+ * Gets the value of the correlations property.
+ * @return possible object is {@link Correlations }
+ */
+public Correlations getCorrelations(){
+  return correlations;
+}
+
+/** 
+ * Sets the value of the correlations property.
+ * @param value allowed object is {@link Correlations }
+ */
+public void setCorrelations(Correlations value){
+  this.correlations=value;
+}
+}

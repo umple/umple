@@ -1,0 +1,86 @@
+namespace weka.core.converters;
+
+class DatabaseConnection
+{
+  isA DatabaseUtils;
+ depend java.io.File;
+ depend java.sql.DatabaseMetaData;
+ depend java.sql.SQLException;
+ depend java.util.Properties;
+ depend weka.core.RevisionUtils;
+ depend weka.experiment.DatabaseUtils;
+/** 
+ * for serialization 
+ */
+static final long serialVersionUID=1673169848863178695L;
+
+/** 
+ * Sets up the database drivers.
+ * @throws Exception if an error occurs
+ */
+public DatabaseConnection() throws Exception {
+  super();
+}
+
+/** 
+ * Reads the properties from the specified file and sets up the database drivers.
+ * @param propsFile	the props file to load, ignored if null or pointing to a directory
+ * @throws Exception 	if an error occurs
+ */
+public DatabaseConnection(File propsFile) throws Exception {
+  super(propsFile);
+}
+
+/** 
+ * Uses the specified properties to set up the database drivers.
+ * @param props	the properties to use, ignored if null
+ * @throws Exception 	if an error occurs
+ */
+public DatabaseConnection(Properties props) throws Exception {
+  super(props);
+}
+
+/** 
+ * Returns the underlying properties object.
+ * @return		the properties object
+ */
+public Properties getProperties(){
+  return PROPERTIES;
+}
+
+/** 
+ * Check if the property checkUpperCaseNames in the DatabaseUtils file is  set to true or false.
+ * @return  	true if the property checkUpperCaseNames in the DatabaseUtils file is set to true, false otherwise.
+ */
+public boolean getUpperCase(){
+  return m_checkForUpperCaseNames;
+}
+
+/** 
+ * Gets meta data for the database connection object.
+ * @return the meta data.
+ * @throws Exception if an error occurs
+ */
+public DatabaseMetaData getMetaData() throws Exception {
+  if (!isConnected())   throw new IllegalStateException("Not connected, please connect first!");
+  return m_Connection.getMetaData();
+}
+
+/** 
+ * Dewtermines if the current query retrieves a result set or updates a table
+ * @return the update count (-1 if the query retrieves a result set).
+ * @throws SQLException if an error occurs
+ */
+public int getUpdateCount() throws SQLException {
+  if (!isConnected())   throw new IllegalStateException("Not connected, please connect first!");
+  return m_PreparedStatement.getUpdateCount();
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+}

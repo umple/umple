@@ -1,0 +1,28 @@
+namespace weka.classifiers.trees;
+
+class J48Test
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public J48Test(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default J48 
+ */
+public Classifier getClassifier(){
+  return new J48();
+}
+
+public static Test suite(){
+  return new TestSuite(J48Test.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

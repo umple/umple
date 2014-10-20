@@ -1,0 +1,53 @@
+namespace weka.filters.unsupervised.attribute;
+
+class ReplaceMissingValuesTest
+{
+  isA AbstractFilterTest;
+ depend weka.core.Attribute;
+ depend weka.core.Instances;
+ depend weka.filters.AbstractFilterTest;
+ depend weka.filters.Filter;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public ReplaceMissingValuesTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default ReplaceMissingValues 
+ */
+public Filter getFilter(){
+  return new ReplaceMissingValues();
+}
+
+public void testTypical(){
+  Instances result=useFilter();
+  assertEquals(m_Instances.numAttributes(),result.numAttributes());
+  assertEquals(m_Instances.numInstances(),result.numInstances());
+  for (int j=0; j < m_Instances.numAttributes(); j++) {
+    Attribute inatt=m_Instances.attribute(j);
+    Attribute outatt=result.attribute(j);
+    for (int i=0; i < m_Instances.numInstances(); i++) {
+      if (m_Instances.attribute(j).isString()) {
+        if (m_Instances.instance(i).isMissing(j)) {
+          assertTrue("Missing values in strings cannot be replaced",result.instance(i).isMissing(j));
+        }
+ else {
+          assertEquals("String values should not have changed",inatt.value((int)m_Instances.instance(i).value(j)),outatt.value((int)result.instance(i).value(j)));
+        }
+      }
+ else {
+        assertTrue("All non-string missing values should have been replaced",!result.instance(i).isMissing(j));
+      }
+    }
+  }
+}
+
+public static Test suite(){
+  return new TestSuite(ReplaceMissingValuesTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

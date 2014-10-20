@@ -1,0 +1,28 @@
+namespace weka.classifiers.meta;
+
+class AdditiveRegressionTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public AdditiveRegressionTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default AdditiveRegression 
+ */
+public Classifier getClassifier(){
+  return new AdditiveRegression();
+}
+
+public static Test suite(){
+  return new TestSuite(AdditiveRegressionTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

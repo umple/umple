@@ -1,0 +1,12 @@
+
+top SchemeType
+{
+public enum SchemeType {CLASSIFIER("classifier"), CLUSTERER("clusterer"), ASSOCIATOR("association rules"), ATTRIBUTE_SELECTION("attribute selection"), FILTER("filter"), LOADER("loader"), SAVER("saver"), DATAGENERATOR("data generator"), COMMANDLINE("general commandline runnable"); private final String m_stringVal;
+SchemeType(String name){
+  m_stringVal=name;
+}
+@Override public String toString(){
+  return m_stringVal;
+}
+}
+}

@@ -1,0 +1,966 @@
+namespace weka.classifiers.functions.supportVector;
+
+class StringKernel
+{
+  isA TechnicalInformationHandler;
+  isA Kernel;
+ depend java.util.Collections;
+ depend java.util.Enumeration;
+ depend java.util.Vector;
+ depend weka.core.Attribute;
+ depend weka.core.Capabilities;
+ depend weka.core.Capabilities.Capability;
+ depend weka.core.Instance;
+ depend weka.core.Instances;
+ depend weka.core.Option;
+ depend weka.core.RevisionUtils;
+ depend weka.core.SelectedTag;
+ depend weka.core.Tag;
+ depend weka.core.TechnicalInformation;
+ depend weka.core.TechnicalInformation.Field;
+ depend weka.core.TechnicalInformation.Type;
+ depend weka.core.TechnicalInformationHandler;
+ depend weka.core.Utils;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=-4902954211202690123L;
+
+/** 
+ * The size of the cache (a prime number) 
+ */
+private int m_cacheSize=250007;
+
+/** 
+ * The size of the internal cache for intermediate results (a prime number) 
+ */
+private int m_internalCacheSize=200003;
+
+/** 
+ * The attribute number of the string attribute 
+ */
+private int m_strAttr;
+
+/** 
+ * Kernel cache (i.e., cache for kernel evaluations) 
+ */
+private double[] m_storage;
+
+private long[] m_keys;
+
+/** 
+ * Counts the number of kernel evaluations. 
+ */
+private int m_kernelEvals;
+
+/** 
+ * The number of instance in the dataset 
+ */
+private int m_numInsts;
+
+/** 
+ * Pruning method: No Pruning 
+ */
+public final static int PRUNING_NONE=0;
+
+/** 
+ * Pruning method: Lambda See [2] for details. 
+ */
+public final static int PRUNING_LAMBDA=1;
+
+/** 
+ * Pruning methods 
+ */
+public static final Tag[] TAGS_PRUNING={new Tag(PRUNING_NONE,"No pruning"),new Tag(PRUNING_LAMBDA,"Lambda pruning")};
+
+/** 
+ * the pruning method 
+ */
+protected int m_PruningMethod=PRUNING_NONE;
+
+/** 
+ * the decay factor that penalizes non-continuous substring matches. See [1] for details.
+ */
+protected double m_lambda=0.5;
+
+/** 
+ * The substring length 
+ */
+private int m_subsequenceLength=3;
+
+/** 
+ * The maximum substring length for lambda pruning 
+ */
+private int m_maxSubsequenceLength=9;
+
+/** 
+ * powers of lambda are prepared prior to kernel evaluations. all powers between 0 and this value are precalculated
+ */
+protected static final int MAX_POWER_OF_LAMBDA=10000;
+
+/** 
+ * the precalculated powers of lambda 
+ */
+protected double[] m_powersOflambda=null;
+
+/** 
+ * flag for switching normalization on or off. This defaults to false and can be turned on by the switch for feature space normalization in SMO
+ */
+private boolean m_normalize=false;
+
+/** 
+ * private cache for intermediate results 
+ */
+private int maxCache;
+
+private double[] cachekh;
+
+private int[] cachekhK;
+
+private double[] cachekh2;
+
+private int[] cachekh2K;
+
+/** 
+ * cached indexes for private cache 
+ */
+private int m_multX;
+
+private int m_multY;
+
+private int m_multZ;
+
+private int m_multZZ;
+
+private boolean m_useRecursionCache=true;
+
+/** 
+ * default constructor
+ */
+public StringKernel(){
+  super();
+}
+
+/** 
+ * creates a new StringKernel object. Initializes the kernel cache and the 'lambda cache', i.e. the precalculated powers of lambda from lambda^2 to lambda^MAX_POWER_OF_LAMBDA
+ * @param data the dataset to use
+ * @param cacheSize the size of the cache
+ * @param subsequenceLength the subsequence length
+ * @param lambda the lambda value
+ * @param debug whether to output debug information
+ * @throws Exception if something goes wrong
+ */
+public StringKernel(Instances data,int cacheSize,int subsequenceLength,double lambda,boolean debug) throws Exception {
+  setDebug(debug);
+  setCacheSize(cacheSize);
+  setInternalCacheSize(200003);
+  setSubsequenceLength(subsequenceLength);
+  setMaxSubsequenceLength(-1);
+  setLambda(lambda);
+  buildKernel(data);
+}
+
+/** 
+ * Returns a string describing the kernel
+ * @return a description suitable for displaying in the explorer/experimentergui
+ */
+@Override public String globalInfo(){
+  return "Implementation of the subsequence kernel (SSK) as described in [1] " + "and of the subsequence kernel with lambda pruning (SSK-LP) as " + "described in [2].\n\n"+ "For more information, see\n\n"+ getTechnicalInformation().toString();
+}
+
+/** 
+ * Returns an instance of a TechnicalInformation object, containing detailed information about the technical background of this class, e.g., paper reference or book this class is based on.
+ * @return the technical information about this class
+ */
+@Override public TechnicalInformation getTechnicalInformation(){
+  TechnicalInformation result;
+  TechnicalInformation additional;
+  result=new TechnicalInformation(Type.ARTICLE);
+  result.setValue(Field.AUTHOR,"Huma Lodhi and Craig Saunders and John Shawe-Taylor and Nello Cristianini and Christopher J. C. H. Watkins");
+  result.setValue(Field.YEAR,"2002");
+  result.setValue(Field.TITLE,"Text Classification using String Kernels");
+  result.setValue(Field.JOURNAL,"Journal of Machine Learning Research");
+  result.setValue(Field.VOLUME,"2");
+  result.setValue(Field.PAGES,"419-444");
+  result.setValue(Field.HTTP,"http://www.jmlr.org/papers/v2/lodhi02a.html");
+  additional=result.add(Type.TECHREPORT);
+  additional.setValue(Field.AUTHOR,"F. Kleedorfer and A. Seewald");
+  additional.setValue(Field.YEAR,"2005");
+  additional.setValue(Field.TITLE,"Implementation of a String Kernel for WEKA");
+  additional.setValue(Field.INSTITUTION,"Oesterreichisches Forschungsinstitut fuer Artificial Intelligence");
+  additional.setValue(Field.ADDRESS,"Wien, Austria");
+  additional.setValue(Field.NUMBER,"TR-2005-13");
+  return result;
+}
+
+/** 
+ * Returns an enumeration describing the available options.
+ * @return an enumeration of all the available options.
+ */
+@Override public Enumeration<Option> listOptions(){
+  Vector<Option> result=new Vector<Option>();
+  String desc;
+  String param;
+  int i;
+  SelectedTag tag;
+  result.addAll(Collections.list(super.listOptions()));
+  desc="";
+  param="";
+  for (i=0; i < TAGS_PRUNING.length; i++) {
+    if (i > 0) {
+      param+="|";
+    }
+    tag=new SelectedTag(TAGS_PRUNING[i].getID(),TAGS_PRUNING);
+    param+="" + tag.getSelectedTag().getID();
+    desc+="\t" + tag.getSelectedTag().getID() + " = "+ tag.getSelectedTag().getReadable()+ "\n";
+  }
+  result.addElement(new Option("\tThe pruning method to use:\n" + desc + "\t(default: "+ PRUNING_NONE+ ")","P",1,"-P <" + param + ">"));
+  result.addElement(new Option("\tThe size of the cache (a prime number).\n" + "\t(default: 250007)","C",1,"-C <num>"));
+  result.addElement(new Option("\tThe size of the internal cache (a prime number).\n" + "\t(default: 200003)","IC",1,"-IC <num>"));
+  result.addElement(new Option("\tThe lambda constant. Penalizes non-continuous subsequence\n" + "\tmatches. Must be in (0,1).\n" + "\t(default: 0.5)","L",1,"-L <num>"));
+  result.addElement(new Option("\tThe length of the subsequence.\n" + "\t(default: 3)","ssl",1,"-ssl <num>"));
+  result.addElement(new Option("\tThe maximum length of the subsequence.\n" + "\t(default: 9)","ssl-max",1,"-ssl-max <num>"));
+  result.addElement(new Option("\tUse normalization.\n" + "\t(default: no)","N",0,"-N"));
+  return result.elements();
+}
+
+/** 
+ * Parses a given list of options. <p/> <!-- options-start --> Valid options are: <p/> <pre> -D Enables debugging output (if available) to be printed. (default: off) </pre> <pre> -no-checks Turns off all checks - use with caution! (default: checks on) </pre> <pre> -P &lt;0|1&gt; The pruning method to use: 0 = No pruning 1 = Lambda pruning (default: 0) </pre> <pre> -C &lt;num&gt; The size of the cache (a prime number). (default: 250007) </pre> <pre> -IC &lt;num&gt; The size of the internal cache (a prime number). (default: 200003) </pre> <pre> -L &lt;num&gt; The lambda constant. Penalizes non-continuous subsequence matches. Must be in (0,1). (default: 0.5) </pre> <pre> -ssl &lt;num&gt; The length of the subsequence. (default: 3) </pre> <pre> -ssl-max &lt;num&gt; The maximum length of the subsequence. (default: 9) </pre> <pre> -N Use normalization. (default: no) </pre> <!-- options-end -->
+ * @param options the list of options as an array of strings
+ * @throws Exception if an option is not supported
+ */
+@Override public void setOptions(String[] options) throws Exception {
+  String tmpStr;
+  tmpStr=Utils.getOption('P',options);
+  if (tmpStr.length() != 0) {
+    setPruningMethod(new SelectedTag(Integer.parseInt(tmpStr),TAGS_PRUNING));
+  }
+ else {
+    setPruningMethod(new SelectedTag(PRUNING_NONE,TAGS_PRUNING));
+  }
+  tmpStr=Utils.getOption('C',options);
+  if (tmpStr.length() != 0) {
+    setCacheSize(Integer.parseInt(tmpStr));
+  }
+ else {
+    setCacheSize(250007);
+  }
+  tmpStr=Utils.getOption("IC",options);
+  if (tmpStr.length() != 0) {
+    setInternalCacheSize(Integer.parseInt(tmpStr));
+  }
+ else {
+    setInternalCacheSize(200003);
+  }
+  tmpStr=Utils.getOption('L',options);
+  if (tmpStr.length() != 0) {
+    setLambda(Double.parseDouble(tmpStr));
+  }
+ else {
+    setLambda(0.5);
+  }
+  tmpStr=Utils.getOption("ssl",options);
+  if (tmpStr.length() != 0) {
+    setSubsequenceLength(Integer.parseInt(tmpStr));
+  }
+ else {
+    setSubsequenceLength(3);
+  }
+  tmpStr=Utils.getOption("ssl-max",options);
+  if (tmpStr.length() != 0) {
+    setMaxSubsequenceLength(Integer.parseInt(tmpStr));
+  }
+ else {
+    setMaxSubsequenceLength(9);
+  }
+  setUseNormalization(Utils.getFlag('N',options));
+  if (getMaxSubsequenceLength() < 2 * getSubsequenceLength()) {
+    throw new IllegalArgumentException("Lambda Pruning forbids even contiguous substring matches! " + "Use a bigger value for ssl-max (at least 2*ssl).");
+  }
+  super.setOptions(options);
+}
+
+/** 
+ * Gets the current settings of the Kernel.
+ * @return an array of strings suitable for passing to setOptions
+ */
+@Override public String[] getOptions(){
+  Vector<String> result=new Vector<String>();
+  Collections.addAll(result,super.getOptions());
+  result.add("-P");
+  result.add("" + m_PruningMethod);
+  result.add("-C");
+  result.add("" + getCacheSize());
+  result.add("-IC");
+  result.add("" + getInternalCacheSize());
+  result.add("-L");
+  result.add("" + getLambda());
+  result.add("-ssl");
+  result.add("" + getSubsequenceLength());
+  result.add("-ssl-max");
+  result.add("" + getMaxSubsequenceLength());
+  if (getUseNormalization()) {
+    result.add("-L");
+  }
+  return result.toArray(new String[result.size()]);
+}
+
+/** 
+ * Returns the tip text for this property
+ * @return tip text for this property suitable for displaying in theexplorer/experimenter gui
+ */
+public String pruningMethodTipText(){
+  return "The pruning method.";
+}
+
+/** 
+ * Sets the method used to for pruning.
+ * @param value the pruning method to use.
+ */
+public void setPruningMethod(SelectedTag value){
+  if (value.getTags() == TAGS_PRUNING) {
+    m_PruningMethod=value.getSelectedTag().getID();
+  }
+}
+
+/** 
+ * Gets the method used for pruning.
+ * @return the pruning method to use.
+ */
+public SelectedTag getPruningMethod(){
+  return new SelectedTag(m_PruningMethod,TAGS_PRUNING);
+}
+
+/** 
+ * Sets the size of the cache to use (a prime number)
+ * @param value the size of the cache
+ */
+public void setCacheSize(int value){
+  if (value >= 0) {
+    m_cacheSize=value;
+    clean();
+  }
+ else {
+    System.out.println("Cache size cannot be smaller than 0 (provided: " + value + ")!");
+  }
+}
+
+/** 
+ * Gets the size of the cache
+ * @return the cache size
+ */
+public int getCacheSize(){
+  return m_cacheSize;
+}
+
+/** 
+ * Returns the tip text for this property
+ * @return tip text for this property suitable for displaying in theexplorer/experimenter gui
+ */
+public String cacheSizeTipText(){
+  return "The size of the cache (a prime number).";
+}
+
+/** 
+ * sets the size of the internal cache for intermediate results. Memory consumption is about 16x this amount in bytes. Only use when lambda pruning is switched off.
+ * @param value the size of the internal cache
+ */
+public void setInternalCacheSize(int value){
+  if (value >= 0) {
+    m_internalCacheSize=value;
+    clean();
+  }
+ else {
+    System.out.println("Cache size cannot be smaller than 0 (provided: " + value + ")!");
+  }
+}
+
+/** 
+ * Gets the size of the internal cache
+ * @return the cache size
+ */
+public int getInternalCacheSize(){
+  return m_internalCacheSize;
+}
+
+/** 
+ * Returns the tip text for this property
+ * @return tip text for this property suitable for displaying in theexplorer/experimenter gui
+ */
+public String internalCacheSizeTipText(){
+  return "The size of the internal cache (a prime number).";
+}
+
+/** 
+ * Sets the length of the subsequence.
+ * @param value the length
+ */
+public void setSubsequenceLength(int value){
+  m_subsequenceLength=value;
+}
+
+/** 
+ * Returns the length of the subsequence
+ * @return the length
+ */
+public int getSubsequenceLength(){
+  return m_subsequenceLength;
+}
+
+/** 
+ * Returns the tip text for this property
+ * @return tip text for this property suitable for displaying in theexplorer/experimenter gui
+ */
+public String subsequenceLengthTipText(){
+  return "The subsequence length.";
+}
+
+/** 
+ * Sets the maximum length of the subsequence.
+ * @param value the maximum length
+ */
+public void setMaxSubsequenceLength(int value){
+  m_maxSubsequenceLength=value;
+}
+
+/** 
+ * Returns the maximum length of the subsequence
+ * @return the maximum length
+ */
+public int getMaxSubsequenceLength(){
+  return m_maxSubsequenceLength;
+}
+
+/** 
+ * Returns the tip text for this property
+ * @return tip text for this property suitable for displaying in theexplorer/experimenter gui
+ */
+public String maxSubsequenceLengthTipText(){
+  return "The maximum subsequence length (theta in the paper)";
+}
+
+/** 
+ * Sets the lambda constant used in the string kernel
+ * @param value the lambda value to use
+ */
+public void setLambda(double value){
+  m_lambda=value;
+}
+
+/** 
+ * Gets the lambda constant used in the string kernel
+ * @return the current lambda constant
+ */
+public double getLambda(){
+  return m_lambda;
+}
+
+/** 
+ * Returns the tip text for this property
+ * @return tip text for this property suitable for displaying in theexplorer/experimenter gui
+ */
+public String lambdaTipText(){
+  return "Penalizes non-continuous subsequence matches, from (0,1)";
+}
+
+/** 
+ * Sets whether to use normalization. Each time this value is changed, the kernel cache is cleared.
+ * @param value whether to use normalization
+ */
+public void setUseNormalization(boolean value){
+  if (value != m_normalize) {
+    clean();
+  }
+  m_normalize=value;
+}
+
+/** 
+ * Returns whether normalization is used.
+ * @return true if normalization is used
+ */
+public boolean getUseNormalization(){
+  return m_normalize;
+}
+
+/** 
+ * Returns the tip text for this property
+ * @return tip text for this property suitable for displaying in theexplorer/experimenter gui
+ */
+public String useNormalizationTipText(){
+  return "Whether to use normalization.";
+}
+
+/** 
+ * Computes the result of the kernel function for two instances. If id1 == -1, eval use inst1 instead of an instance in the dataset.
+ * @param id1 the index of the first instance in the dataset
+ * @param id2 the index of the second instance in the dataset
+ * @param inst1 the instance corresponding to id1 (used if id1 == -1)
+ * @return the result of the kernel function
+ * @throws Exception if something goes wrong
+ */
+@Override public double eval(int id1,int id2,Instance inst1) throws Exception {
+  if (m_Debug && id1 > -1 && id2 > -1) {
+    System.err.println("\nEvaluation of string kernel for");
+    System.err.println(m_data.instance(id1).stringValue(m_strAttr));
+    System.err.println("and");
+    System.err.println(m_data.instance(id2).stringValue(m_strAttr));
+  }
+  if (id1 == id2 && m_normalize) {
+    return 1.0;
+  }
+  double result=0;
+  long key=-1;
+  int location=-1;
+  if ((id1 >= 0) && (m_keys != null)) {
+    if (id1 > id2) {
+      key=(long)id1 * m_numInsts + id2;
+    }
+ else {
+      key=(long)id2 * m_numInsts + id1;
+    }
+    if (key < 0) {
+      throw new Exception("Cache overflow detected!");
+    }
+    location=(int)(key % m_keys.length);
+    if (m_keys[location] == (key + 1)) {
+      if (m_Debug) {
+        System.err.println("result (cached): " + m_storage[location]);
+      }
+      return m_storage[location];
+    }
+  }
+  m_kernelEvals++;
+  long start=System.currentTimeMillis();
+  Instance inst2=m_data.instance(id2);
+  char[] s1=inst1.stringValue(m_strAttr).toCharArray();
+  char[] s2=inst2.stringValue(m_strAttr).toCharArray();
+  if (s1.length == 0 || s2.length == 0) {
+    return 0;
+  }
+  if (m_normalize) {
+    result=normalizedKernel(s1,s2);
+  }
+ else {
+    result=unnormalizedKernel(s1,s2);
+  }
+  if (m_Debug) {
+    long duration=System.currentTimeMillis() - start;
+    System.err.println("result: " + result);
+    System.err.println("evaluation time:" + duration + "\n");
+  }
+  if (key != -1) {
+    m_storage[location]=result;
+    m_keys[location]=(key + 1);
+  }
+  return result;
+}
+
+/** 
+ * Frees the memory used by the kernel. (Useful with kernels which use cache.) This function is called when the training is done. i.e. after that, eval will be called with id1 == -1.
+ */
+@Override public void clean(){
+  m_storage=null;
+  m_keys=null;
+}
+
+/** 
+ * Returns the number of kernel evaluation performed.
+ * @return the number of kernel evaluation performed.
+ */
+@Override public int numEvals(){
+  return m_kernelEvals;
+}
+
+/** 
+ * Returns the number of dot product cache hits.
+ * @return the number of dot product cache hits, or -1 if not supported bythis kernel.
+ */
+@Override public int numCacheHits(){
+  return -1;
+}
+
+/** 
+ * evaluates the normalized kernel between s and t. See [1] for details about the normalized SSK.
+ * @param s first input string
+ * @param t second input string
+ * @return a double indicating their distance, or similarity
+ */
+public double normalizedKernel(char[] s,char[] t){
+  double k1=unnormalizedKernel(s,s);
+  double k2=unnormalizedKernel(t,t);
+  double normTerm=Math.sqrt(k1 * k2);
+  return unnormalizedKernel(s,t) / normTerm;
+}
+
+/** 
+ * evaluates the unnormalized kernel between s and t. See [1] for details about the unnormalized SSK.
+ * @param s first input string
+ * @param t second input string
+ * @return a double indicating their distance, or similarity
+ */
+public double unnormalizedKernel(char[] s,char[] t){
+  if (t.length > s.length) {
+    char[] buf=s;
+    s=t;
+    t=buf;
+  }
+  if (m_PruningMethod == PRUNING_NONE) {
+    m_multX=(s.length + 1) * (t.length + 1);
+    m_multY=(t.length + 1);
+    m_multZ=1;
+    maxCache=m_internalCacheSize;
+    if (maxCache == 0) {
+      maxCache=(m_subsequenceLength + 1) * m_multX;
+    }
+ else     if ((m_subsequenceLength + 1) * m_multX < maxCache) {
+      maxCache=(m_subsequenceLength + 1) * m_multX;
+    }
+    m_useRecursionCache=true;
+    cachekhK=new int[maxCache];
+    cachekh2K=new int[maxCache];
+    cachekh=new double[maxCache];
+    cachekh2=new double[maxCache];
+  }
+ else   if (m_PruningMethod == PRUNING_LAMBDA) {
+    maxCache=0;
+    m_useRecursionCache=false;
+  }
+  double res;
+  if (m_PruningMethod == PRUNING_LAMBDA) {
+    res=kernelLP(m_subsequenceLength,s,s.length - 1,t,t.length - 1,m_maxSubsequenceLength);
+  }
+ else {
+    res=kernel(m_subsequenceLength,s,s.length - 1,t,t.length - 1);
+  }
+  cachekh=null;
+  cachekhK=null;
+  cachekh2=null;
+  cachekh2K=null;
+  return res;
+}
+
+/** 
+ * Recursion-ending function that is called at the end of each recursion branch.
+ * @param n
+ * @return
+ */
+protected double getReturnValue(int n){
+  if (n == 0) {
+    return 1;
+  }
+ else {
+    return 0;
+  }
+}
+
+/** 
+ * the kernel function (Kn). This function performs the outer loop character-wise over the first input string s. For each character encountered, a recursion branch is started that identifies all subsequences in t starting with that character. <br> See [1] for details but note that this code is optimized and may be hard to recognize.
+ * @param n the current length of the matching subsequence
+ * @param s first string, as a char array
+ * @param t second string, as a char array
+ * @param endIndexS the portion of s currently regarded is s[1:endIndexS]
+ * @param endIndexT the portion of t currently regarded is t[1:endIndexT]
+ * @return a double indicating the distance or similarity between s and t,according to and depending on the initial value for n.
+ */
+protected double kernel(int n,char[] s,int endIndexS,char[] t,int endIndexT){
+  if (Math.min(endIndexS + 1,endIndexT + 1) < n) {
+    return getReturnValue(n);
+  }
+  double result=0;
+  for (int iS=endIndexS; iS > n - 2; iS--) {
+    double buf=0;
+    char x=s[iS];
+    for (int j=0; j <= endIndexT; j++) {
+      if (t[j] == x) {
+        buf+=kernelHelper(n - 1,s,iS - 1,t,j - 1);
+      }
+    }
+    result+=buf * m_powersOflambda[2];
+  }
+  return result;
+}
+
+/** 
+ * The kernel helper function, called K' in [1] and [2].
+ * @param n the current length of the matching subsequence
+ * @param s first string, as a char array
+ * @param t second string, as a char array
+ * @param endIndexS the portion of s currently regarded is s[1:endIndexS]
+ * @param endIndexT the portion of t currently regarded is t[1:endIndexT]
+ * @return a partial result for K
+ */
+protected double kernelHelper(int n,char[] s,int endIndexS,char[] t,int endIndexT){
+  if (n <= 0) {
+    return getReturnValue(n);
+  }
+  if (Math.min(endIndexS + 1,endIndexT + 1) < n) {
+    return getReturnValue(n);
+  }
+  int adr=0;
+  if (m_useRecursionCache) {
+    adr=m_multX * n + m_multY * endIndexS + m_multZ * endIndexT;
+    if (cachekhK[adr % maxCache] == adr + 1) {
+      return cachekh[adr % maxCache];
+    }
+  }
+  double result=0;
+  result=m_lambda * kernelHelper(n,s,endIndexS - 1,t,endIndexT) + kernelHelper2(n,s,endIndexS,t,endIndexT);
+  if (m_useRecursionCache) {
+    cachekhK[adr % maxCache]=adr + 1;
+    cachekh[adr % maxCache]=result;
+  }
+  return result;
+}
+
+/** 
+ * helper function for the evaluation of the kernel K'' see section 'Efficient Computation of SSK' in [1]
+ * @param n the current length of the matching subsequence
+ * @param s first string, as a char array
+ * @param t second string, as a char array
+ * @param endIndexS the portion of s currently regarded is s[1:endIndexS]
+ * @param endIndexT the portion of t currently regarded is t[1:endIndexT]
+ * @return a partial result for K'
+ */
+protected double kernelHelper2(int n,char[] s,int endIndexS,char[] t,int endIndexT){
+  if (endIndexS < 0 || endIndexT < 0) {
+    return getReturnValue(n);
+  }
+  int adr=0;
+  if (m_useRecursionCache) {
+    adr=m_multX * n + m_multY * endIndexS + m_multZ * endIndexT;
+    if (cachekh2K[adr % maxCache] == adr + 1) {
+      return cachekh2[adr % maxCache];
+    }
+  }
+  char x=s[endIndexS];
+  if (x == t[endIndexT]) {
+    double ret=m_lambda * (kernelHelper2(n,s,endIndexS,t,endIndexT - 1) + m_lambda * kernelHelper(n - 1,s,endIndexS - 1,t,endIndexT - 1));
+    if (m_useRecursionCache) {
+      cachekh2K[adr % maxCache]=adr + 1;
+      cachekh2[adr % maxCache]=ret;
+    }
+    return ret;
+  }
+ else {
+    double ret=m_lambda * kernelHelper2(n,s,endIndexS,t,endIndexT - 1);
+    if (m_useRecursionCache) {
+      cachekh2K[adr % maxCache]=adr + 1;
+      cachekh2[adr % maxCache]=ret;
+    }
+    return ret;
+  }
+}
+
+/** 
+ * the kernel function K explained in [1] using lambda pruning, explained in [2]. An additional parameter is introduced, which denotes the maximum length of a subsequence match. This allows for the control of how relaxed the subsequence matches are. <br>
+ * @param n the current length of the matching subsequence
+ * @param s first string, as a char array
+ * @param t second string, as a char array
+ * @param endIndexS the portion of s currently regarded is s[1:endIndexS]
+ * @param endIndexT the portion of t currently regarded is t[1:endIndexT]
+ * @param remainingMatchLength actually the initial value formaxLambdaExponent
+ * @return a double indicating the distance or similarity between s and t,according to and depending on the initial value for n.
+ */
+protected double kernelLP(int n,char[] s,int endIndexS,char[] t,int endIndexT,int remainingMatchLength){
+  if (Math.min(endIndexS + 1,endIndexT + 1) < n) {
+    return getReturnValue(n);
+  }
+  if (remainingMatchLength == 0) {
+    return getReturnValue(n);
+  }
+  double result=0;
+  for (int iS=endIndexS; iS > n - 2; iS--) {
+    double buf=0;
+    char x=s[iS];
+    for (int j=0; j <= endIndexT; j++) {
+      if (t[j] == x) {
+        buf+=kernelHelperLP(n - 1,s,iS - 1,t,j - 1,remainingMatchLength - 2);
+      }
+    }
+    result+=buf * m_powersOflambda[2];
+  }
+  return result;
+}
+
+/** 
+ * helper function for the evaluation of the kernel (K'n) using lambda pruning
+ * @param n the current length of the matching subsequence
+ * @param s first string, as a char array
+ * @param t second string, as a char array
+ * @param endIndexS the portion of s currently regarded is s[1:endIndexS]
+ * @param endIndexT the portion of t currently regarded is t[1:endIndexT]
+ * @param remainingMatchLength the number of characters that may still be usedfor matching (i.e. gaps + matches in both strings)
+ * @return a partial result for K
+ */
+protected double kernelHelperLP(int n,char[] s,int endIndexS,char[] t,int endIndexT,int remainingMatchLength){
+  if (n == 0) {
+    return getReturnValue(n);
+  }
+  if (Math.min(endIndexS + 1,endIndexT + 1) < n) {
+    ;
+    return getReturnValue(n);
+  }
+  if (remainingMatchLength < 2 * n) {
+    return getReturnValue(n);
+  }
+  int adr=0;
+  if (m_useRecursionCache) {
+    adr=m_multX * n + m_multY * endIndexS + m_multZ * endIndexT + m_multZZ * remainingMatchLength;
+    if (cachekh2K[adr % maxCache] == adr + 1) {
+      return cachekh2[adr % maxCache];
+    }
+  }
+  int rml=0;
+  double result=0;
+  for (int iS=(endIndexS - remainingMatchLength); iS <= endIndexS; iS++) {
+    result*=m_lambda;
+    result+=kernelHelper2LP(n,s,iS,t,endIndexT,rml++);
+  }
+  if (m_useRecursionCache && endIndexS >= 0 && endIndexT >= 0 && n >= 0) {
+    cachekhK[adr % maxCache]=adr + 1;
+    cachekh[adr % maxCache]=result;
+  }
+  return result;
+}
+
+/** 
+ * helper function for the evaluation of the kernel (K''n) using lambda pruning
+ * @param n the current length of the matching subsequence
+ * @param s first string, as a char array
+ * @param t second string, as a char array
+ * @param endIndexS the portion of s currently regarded is s[1:endIndexS]
+ * @param endIndexT the portion of t currently regarded is t[1:endIndexT]
+ * @param remainingMatchLength the number of characters that may still be usedfor matching (i.e. gaps + matches in both strings)
+ * @return a partial result for K'
+ */
+protected double kernelHelper2LP(int n,char[] s,int endIndexS,char[] t,int endIndexT,int remainingMatchLength){
+  if (remainingMatchLength < 2 * n) {
+    return getReturnValue(n);
+  }
+  if (endIndexS < 0 || endIndexT < 0) {
+    return getReturnValue(n);
+  }
+  int adr=0;
+  if (m_useRecursionCache) {
+    adr=m_multX * n + m_multY * endIndexS + m_multZ * endIndexT + m_multZZ * remainingMatchLength;
+    if (cachekh2K[adr % maxCache] == adr + 1) {
+      return cachekh2[adr % maxCache];
+    }
+  }
+  char x=s[endIndexS];
+  if (x == t[endIndexT]) {
+    double ret=m_lambda * (kernelHelper2LP(n,s,endIndexS,t,endIndexT - 1,remainingMatchLength - 1) + m_lambda * kernelHelperLP(n - 1,s,endIndexS - 1,t,endIndexT - 1,remainingMatchLength - 2));
+    if (m_useRecursionCache && endIndexS >= 0 && endIndexT >= 0 && n >= 0) {
+      cachekh2K[adr % maxCache]=adr + 1;
+      cachekh2[adr % maxCache]=ret;
+    }
+    return ret;
+  }
+  int i;
+  int minIndex=endIndexT - remainingMatchLength;
+  if (minIndex < 0) {
+    minIndex=0;
+  }
+  for (i=endIndexT; i >= minIndex; i--) {
+    if (x == t[i]) {
+      int skipLength=endIndexT - i;
+      double ret=getPowerOfLambda(skipLength) * kernelHelper2LP(n,s,endIndexS,t,i,remainingMatchLength - skipLength);
+      if (m_useRecursionCache && endIndexS >= 0 && endIndexT >= 0 && n >= 0) {
+        cachekh2K[adr % maxCache]=adr + 1;
+        cachekh2[adr % maxCache]=ret;
+      }
+      return ret;
+    }
+  }
+  double ret=getReturnValue(n);
+  if (m_useRecursionCache && endIndexS >= 0 && endIndexT >= 0 && n >= 0) {
+    cachekh2K[adr % maxCache]=adr + 1;
+    cachekh2[adr % maxCache]=ret;
+  }
+  return ret;
+}
+
+/** 
+ * precalculates small powers of lambda to speed up the kernel evaluation
+ * @return the powers
+ */
+private double[] calculatePowersOfLambda(){
+  double[] powers=new double[MAX_POWER_OF_LAMBDA + 1];
+  powers[0]=1.0;
+  double val=1.0;
+  for (int i=1; i <= MAX_POWER_OF_LAMBDA; i++) {
+    val*=m_lambda;
+    powers[i]=val;
+  }
+  return powers;
+}
+
+/** 
+ * retrieves a power of lambda from the lambda cache or calculates it directly
+ * @param exponent the exponent to calculate
+ * @return the exponent-th power of lambda
+ */
+private double getPowerOfLambda(int exponent){
+  if (exponent > MAX_POWER_OF_LAMBDA) {
+    return Math.pow(m_lambda,exponent);
+  }
+  if (exponent < 0) {
+    throw new IllegalArgumentException("only positive powers of lambda may be computed");
+  }
+  return m_powersOflambda[exponent];
+}
+
+/** 
+ * initializes variables etc.
+ * @param data the data to use
+ */
+@Override protected void initVars(Instances data){
+  super.initVars(data);
+  m_kernelEvals=0;
+  m_strAttr=-1;
+  for (int i=0; i < data.numAttributes(); i++) {
+    if (i == data.classIndex()) {
+      continue;
+    }
+    if (data.attribute(i).type() == Attribute.STRING) {
+      m_strAttr=i;
+      break;
+    }
+  }
+  m_numInsts=m_data.numInstances();
+  m_storage=new double[m_cacheSize];
+  m_keys=new long[m_cacheSize];
+  m_powersOflambda=calculatePowersOfLambda();
+}
+
+/** 
+ * Returns the Capabilities of this kernel.
+ * @return the capabilities of this object
+ * @see Capabilities
+ */
+@Override public Capabilities getCapabilities(){
+  Capabilities result=super.getCapabilities();
+  result.disableAll();
+  result.enable(Capability.STRING_ATTRIBUTES);
+  result.enableAllClasses();
+  result.enable(Capability.MISSING_CLASS_VALUES);
+  return result;
+}
+
+/** 
+ * builds the kernel with the given data.
+ * @param data the data to base the kernel on
+ * @throws Exception if something goes wrong, e.g., the data does not consistof one string attribute and the class
+ */
+@Override public void buildKernel(Instances data) throws Exception {
+  super.buildKernel(data);
+}
+
+/** 
+ * Returns the revision string.
+ * @return the revision
+ */
+@Override public String getRevision(){
+  return RevisionUtils.extract("$Revision: 10169 $");
+}
+}

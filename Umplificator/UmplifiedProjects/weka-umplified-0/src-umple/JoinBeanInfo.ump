@@ -1,0 +1,31 @@
+namespace weka.gui.beans;
+
+class JoinBeanInfo
+{
+  isA SimpleBeanInfo;
+ depend java.beans.BeanDescriptor;
+ depend java.beans.EventSetDescriptor;
+ depend java.beans.SimpleBeanInfo;
+/** 
+ * Returns the event set descriptors
+ * @return an <code>EventSetDescriptor[]</code> value
+ */
+@Override public EventSetDescriptor[] getEventSetDescriptors(){
+  try {
+    EventSetDescriptor[] esds={new EventSetDescriptor(DataSource.class,"instance",InstanceListener.class,"acceptInstance"),new EventSetDescriptor(DataSource.class,"dataSet",DataSourceListener.class,"acceptDataSet")};
+    return esds;
+  }
+ catch (  Exception ex) {
+    ex.printStackTrace();
+  }
+  return null;
+}
+
+/** 
+ * Get the bean descriptor for this bean
+ * @return a <code>BeanDescriptor</code> value
+ */
+@Override public BeanDescriptor getBeanDescriptor(){
+  return new BeanDescriptor(weka.gui.beans.Join.class,JoinCustomizer.class);
+}
+}

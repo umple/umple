@@ -1,0 +1,78 @@
+namespace weka.filters.unsupervised.instance;
+
+class RemoveMisclassifiedTest
+{
+  isA AbstractFilterTest;
+ depend weka.core.Instances;
+ depend weka.filters.AbstractFilterTest;
+ depend weka.filters.Filter;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public RemoveMisclassifiedTest(String name){
+  super(name);
+}
+
+/** 
+ * Need to remove non-nominal attributes, set class index 
+ */
+protected void setUp() throws Exception {
+  super.setUp();
+  m_Instances.setClassIndex(1);
+  int i=0;
+  while (i < m_Instances.numAttributes()) {
+    if (!m_Instances.attribute(i).isNominal() && !m_Instances.attribute(i).isNumeric())     m_Instances.deleteAttributeAt(i);
+ else     i++;
+  }
+}
+
+/** 
+ * Creates a default RemoveMisclassified, suited for nominal class 
+ */
+public Filter getFilter(){
+  return getFilter(true);
+}
+
+/** 
+ * Creates a RemoveMisclassified, with either J48 (true) or M5P (false) as classifier
+ */
+protected Filter getFilter(boolean nominal){
+  RemoveMisclassified f=new RemoveMisclassified();
+  if (nominal)   f.setClassifier(new weka.classifiers.trees.J48());
+ else   f.setClassifier(new weka.classifiers.trees.M5P());
+  if (!nominal)   f.setThreshold(2.0);
+  return f;
+}
+
+public void testNominal(){
+  m_Filter=getFilter(true);
+  m_Instances.setClassIndex(0);
+  Instances result=useFilter();
+  assertEquals(m_Instances.numAttributes(),result.numAttributes());
+}
+
+public void testNumeric(){
+  m_Filter=getFilter(false);
+  m_Instances.setClassIndex(1);
+  Instances result=useFilter();
+  assertEquals(m_Instances.numAttributes(),result.numAttributes());
+}
+
+public void testInverting(){
+  m_Filter=getFilter();
+  m_Instances.setClassIndex(0);
+  Instances result=useFilter();
+  m_Filter=getFilter();
+  ((RemoveMisclassified)m_Filter).setInvert(true);
+  m_Instances.setClassIndex(0);
+  Instances resultInv=useFilter();
+  assertEquals(m_Instances.numInstances(),result.numInstances() + resultInv.numInstances());
+}
+
+public static Test suite(){
+  return new TestSuite(RemoveMisclassifiedTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

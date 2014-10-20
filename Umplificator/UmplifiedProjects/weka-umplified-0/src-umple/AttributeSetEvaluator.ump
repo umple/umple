@@ -1,0 +1,27 @@
+namespace weka.attributeSelection;
+
+class AttributeSetEvaluator
+{
+  isA ASEvaluation;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=-5744881009422257389L;
+
+/** 
+ * evaluates an individual attribute
+ * @param attribute the index of the attribute to be evaluated
+ * @return the "merit" of the attribute
+ * @exception Exception if the attribute could not be evaluated
+ */
+public abstract double evaluateAttribute(int attribute) throws Exception ;
+
+/** 
+ * Evaluates a set of attributes
+ * @param attributes an <code>int[]</code> value
+ * @param classAttributes an <code>int[]</code> value
+ * @return a <code>double</code> value
+ * @exception Exception if an error occurs
+ */
+public abstract double evaluateAttribute(int[] attributes,int[] classAttributes) throws Exception ;
+}

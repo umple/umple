@@ -1,0 +1,28 @@
+namespace weka.classifiers.functions;
+
+class VotedPerceptronTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public VotedPerceptronTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default VotedPerceptron 
+ */
+public Classifier getClassifier(){
+  return new VotedPerceptron();
+}
+
+public static Test suite(){
+  return new TestSuite(VotedPerceptronTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

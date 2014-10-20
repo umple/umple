@@ -1,0 +1,12 @@
+namespace weka.gui.beans;
+
+interface GraphListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+/** 
+ * Describe <code>acceptGraph</code> method here.
+ * @param e a <code>GraphEvent</code> value
+ */
+void acceptGraph(GraphEvent e);
+}

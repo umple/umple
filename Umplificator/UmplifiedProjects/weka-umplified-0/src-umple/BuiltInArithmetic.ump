@@ -1,0 +1,36 @@
+
+top Operator
+{
+/** 
+ * Enumerated type for the operator.
+ */
+enum Operator {ADDITION(" + "){
+  double eval(  double a,  double b){
+    return a + b;
+  }
+}
+, SUBTRACTION(" - "){
+  double eval(  double a,  double b){
+    return a - b;
+  }
+}
+, MULTIPLICATION(" * "){
+  double eval(  double a,  double b){
+    return a * b;
+  }
+}
+, DIVISION(" / "){
+  double eval(  double a,  double b){
+    return a / b;
+  }
+}
+; abstract double eval(double a,double b);
+private final String m_stringVal;
+Operator(String opName){
+  m_stringVal=opName;
+}
+public String toString(){
+  return m_stringVal;
+}
+}
+}

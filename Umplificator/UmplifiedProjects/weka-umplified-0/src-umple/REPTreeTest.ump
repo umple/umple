@@ -1,0 +1,28 @@
+namespace weka.classifiers.trees;
+
+class REPTreeTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public REPTreeTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default REPTree 
+ */
+public Classifier getClassifier(){
+  return new REPTree();
+}
+
+public static Test suite(){
+  return new TestSuite(REPTreeTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

@@ -1,0 +1,7 @@
+namespace weka.gui.streams;
+
+interface SerialInstanceListener
+{
+  isA java.util.EventListener;
+void secondInstanceProduced(InstanceEvent e);
+}

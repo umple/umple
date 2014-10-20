@@ -1,0 +1,6 @@
+namespace weka.gui.beans;
+
+class TestSetMakerBeanInfo
+{
+  isA AbstractTestSetProducerBeanInfo;
+}

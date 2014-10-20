@@ -1,0 +1,12 @@
+namespace weka.gui.beans;
+
+interface BatchClustererListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+/** 
+ * Accept a BatchClustererEvent
+ * @param e a <code>BatchClustererEvent</code> value
+ */
+void acceptClusterer(BatchClustererEvent e);
+}

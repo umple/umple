@@ -1,0 +1,90 @@
+namespace weka.filters.unsupervised.attribute;
+
+class RemoveByNameTest
+{
+  isA AbstractFilterTest;
+ depend weka.core.Instances;
+ depend weka.filters.AbstractFilterTest;
+ depend weka.filters.Filter;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+/** 
+ * Initializes the test.
+ * @param name	the name of the test
+ */
+public RemoveByNameTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default RemoveByName.
+ * @return		the filter
+ */
+public Filter getFilter(){
+  return getFilter(RemoveByName.DEFAULT_EXPRESSION,false);
+}
+
+/** 
+ * returns a custom filter.
+ * @param expression	the expression to use
+ * @param invert	whether to invert the matching sense
+ * @return		the configured filter
+ */
+protected Filter getFilter(String expression,boolean invert){
+  RemoveByName filter;
+  filter=new RemoveByName();
+  filter.setExpression(expression);
+  filter.setInvertSelection(invert);
+  return filter;
+}
+
+/** 
+ * Tests removing all attributes starting with "String".
+ */
+public void testTypical(){
+  Instances result;
+  m_Filter=getFilter("^String.*",false);
+  result=useFilter();
+  assertEquals(m_Instances.numAttributes() - 2,result.numAttributes());
+  assertEquals(m_Instances.numInstances(),result.numInstances());
+}
+
+/** 
+ * Tests removing all attributes starting with "Nominal", one of them being the class attribute.
+ */
+public void testTypicalWithClass(){
+  Instances result;
+  m_Instances.setClassIndex(1);
+  m_Filter=getFilter("^Nominal.*",false);
+  result=useFilter();
+  assertEquals(m_Instances.numAttributes() - 1,result.numAttributes());
+  assertEquals(m_Instances.numInstances(),result.numInstances());
+}
+
+/** 
+ * Tests removing all attributes but attributes ending with "Att2".
+ */
+public void testTypicalInverted(){
+  Instances result;
+  m_Filter=getFilter(".*Att2$",true);
+  result=useFilter();
+  assertEquals(3,result.numAttributes());
+  assertEquals(m_Instances.numInstances(),result.numInstances());
+}
+
+/** 
+ * Returns a test suite.
+ * @return		the test suite
+ */
+public static Test suite(){
+  return new TestSuite(RemoveByNameTest.class);
+}
+
+/** 
+ * Runs the test from commandline.
+ * @param args	ignored
+ */
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

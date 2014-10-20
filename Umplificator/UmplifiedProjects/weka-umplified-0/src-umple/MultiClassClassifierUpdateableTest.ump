@@ -1,0 +1,30 @@
+namespace weka.classifiers.meta;
+
+class MultiClassClassifierUpdateableTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public MultiClassClassifierUpdateableTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default MultiClassClassifierUpdateable 
+ */
+public Classifier getClassifier(){
+  MultiClassClassifierUpdateable m=new MultiClassClassifierUpdateable();
+  m.setClassifier(new weka.classifiers.functions.SGD());
+  return m;
+}
+
+public static Test suite(){
+  return new TestSuite(MultiClassClassifierUpdateableTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

@@ -1,0 +1,72 @@
+namespace weka.core;
+
+class ChebyshevDistance
+{
+  isA TechnicalInformationHandler;
+  isA NormalizableDistance;
+ depend weka.core.TechnicalInformation.Field;
+ depend weka.core.TechnicalInformation.Type;
+/** 
+ * for serialization. 
+ */
+private static final long serialVersionUID=-7739904999895461429L;
+
+/** 
+ * Constructs an Chebyshev Distance object, Instances must be still set.
+ */
+public ChebyshevDistance(){
+  super();
+}
+
+/** 
+ * Constructs an Chebyshev Distance object and automatically initializes the ranges.
+ * @param data 	the instances the distance function should work on
+ */
+public ChebyshevDistance(Instances data){
+  super(data);
+}
+
+/** 
+ * Returns a string describing this object.
+ * @return 		a description of the evaluator suitable fordisplaying in the explorer/experimenter gui
+ */
+public String globalInfo(){
+  return "Implements the Chebyshev distance. The distance between two vectors " + "is the greatest of their differences along any coordinate dimension.\n\n" + "For more information, see:\n\n"+ getTechnicalInformation().toString();
+}
+
+/** 
+ * Returns an instance of a TechnicalInformation object, containing  detailed information about the technical background of this class, e.g., paper reference or book this class is based on.
+ * @return 		the technical information about this class
+ */
+public TechnicalInformation getTechnicalInformation(){
+  TechnicalInformation result;
+  result=new TechnicalInformation(Type.MISC);
+  result.setValue(Field.AUTHOR,"Wikipedia");
+  result.setValue(Field.TITLE,"Chebyshev distance");
+  result.setValue(Field.URL,"http://en.wikipedia.org/wiki/Chebyshev_distance");
+  return result;
+}
+
+/** 
+ * Updates the current distance calculated so far with the new difference between two attributes. The difference between the attributes was  calculated with the difference(int,double,double) method.
+ * @param currDist	the current distance calculated so far
+ * @param diff	the difference between two new attributes
+ * @return		the update distance
+ * @see #difference(int,double,double)
+ */
+protected double updateDistance(double currDist,double diff){
+  double result;
+  result=currDist;
+  diff=Math.abs(diff);
+  if (diff > result)   result=diff;
+  return result;
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+}

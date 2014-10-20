@@ -1,0 +1,14 @@
+namespace weka.gui.streams;
+
+interface InstanceProducer
+{
+ depend weka.core.Instance;
+ depend weka.core.Instances;
+void addInstanceListener(InstanceListener ipl);
+
+void removeInstanceListener(InstanceListener ipl);
+
+Instances outputFormat() throws Exception ;
+
+Instance outputPeek() throws Exception ;
+}

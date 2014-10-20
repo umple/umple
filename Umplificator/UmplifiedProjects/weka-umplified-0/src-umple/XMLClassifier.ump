@@ -1,0 +1,32 @@
+namespace weka.classifiers.xml;
+
+class XMLClassifier
+{
+  isA XMLBasicSerialization;
+ depend weka.core.RevisionUtils;
+ depend weka.core.xml.XMLBasicSerialization;
+/** 
+ * initializes the serialization
+ * @throws Exception if initialization fails
+ */
+public XMLClassifier() throws Exception {
+  super();
+}
+
+/** 
+ * generates internally a new XML document and clears also the IgnoreList and the mappings for the Read/Write-Methods
+ */
+public void clear() throws Exception {
+  super.clear();
+  m_Properties.addAllowed(weka.classifiers.Classifier.class,"debug");
+  m_Properties.addAllowed(weka.classifiers.Classifier.class,"options");
+}
+
+/** 
+ * Returns the revision string.
+ * @return		the revision
+ */
+public String getRevision(){
+  return RevisionUtils.extract("$Revision: 8034 $");
+}
+}

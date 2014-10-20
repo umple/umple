@@ -1,0 +1,7 @@
+namespace weka.core.scripting;
+
+interface JythonSerializableObject
+{
+  isA Serializable,JythonObject;
+ depend java.io.Serializable;
+}

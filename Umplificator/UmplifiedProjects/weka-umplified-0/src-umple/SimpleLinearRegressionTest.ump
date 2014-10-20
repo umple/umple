@@ -1,0 +1,28 @@
+namespace weka.classifiers.functions;
+
+class SimpleLinearRegressionTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public SimpleLinearRegressionTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default SimpleLinearRegression 
+ */
+public Classifier getClassifier(){
+  return new SimpleLinearRegression();
+}
+
+public static Test suite(){
+  return new TestSuite(SimpleLinearRegressionTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

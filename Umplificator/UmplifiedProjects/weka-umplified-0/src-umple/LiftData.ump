@@ -1,0 +1,132 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class LiftData
+{
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlElement(name="ModelLiftGraph",namespace="http://www.dmg.org/PMML-4_1",required=true) protected ModelLiftGraph modelLiftGraph;
+
+@XmlElement(name="OptimumLiftGraph",namespace="http://www.dmg.org/PMML-4_1") protected OptimumLiftGraph optimumLiftGraph;
+
+@XmlElement(name="RandomLiftGraph",namespace="http://www.dmg.org/PMML-4_1") protected RandomLiftGraph randomLiftGraph;
+
+@XmlAttribute protected Double rankingQuality;
+
+@XmlAttribute protected String targetFieldDisplayValue;
+
+@XmlAttribute protected String targetFieldValue;
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the modelLiftGraph property.
+ * @return possible object is {@link ModelLiftGraph }
+ */
+public ModelLiftGraph getModelLiftGraph(){
+  return modelLiftGraph;
+}
+
+/** 
+ * Sets the value of the modelLiftGraph property.
+ * @param value allowed object is {@link ModelLiftGraph }
+ */
+public void setModelLiftGraph(ModelLiftGraph value){
+  this.modelLiftGraph=value;
+}
+
+/** 
+ * Gets the value of the optimumLiftGraph property.
+ * @return possible object is {@link OptimumLiftGraph }
+ */
+public OptimumLiftGraph getOptimumLiftGraph(){
+  return optimumLiftGraph;
+}
+
+/** 
+ * Sets the value of the optimumLiftGraph property.
+ * @param value allowed object is {@link OptimumLiftGraph }
+ */
+public void setOptimumLiftGraph(OptimumLiftGraph value){
+  this.optimumLiftGraph=value;
+}
+
+/** 
+ * Gets the value of the randomLiftGraph property.
+ * @return possible object is {@link RandomLiftGraph }
+ */
+public RandomLiftGraph getRandomLiftGraph(){
+  return randomLiftGraph;
+}
+
+/** 
+ * Sets the value of the randomLiftGraph property.
+ * @param value allowed object is {@link RandomLiftGraph }
+ */
+public void setRandomLiftGraph(RandomLiftGraph value){
+  this.randomLiftGraph=value;
+}
+
+/** 
+ * Gets the value of the rankingQuality property.
+ * @return possible object is {@link Double }
+ */
+public Double getRankingQuality(){
+  return rankingQuality;
+}
+
+/** 
+ * Sets the value of the rankingQuality property.
+ * @param value allowed object is {@link Double }
+ */
+public void setRankingQuality(Double value){
+  this.rankingQuality=value;
+}
+
+/** 
+ * Gets the value of the targetFieldDisplayValue property.
+ * @return possible object is {@link String }
+ */
+public String getTargetFieldDisplayValue(){
+  return targetFieldDisplayValue;
+}
+
+/** 
+ * Sets the value of the targetFieldDisplayValue property.
+ * @param value allowed object is {@link String }
+ */
+public void setTargetFieldDisplayValue(String value){
+  this.targetFieldDisplayValue=value;
+}
+
+/** 
+ * Gets the value of the targetFieldValue property.
+ * @return possible object is {@link String }
+ */
+public String getTargetFieldValue(){
+  return targetFieldValue;
+}
+
+/** 
+ * Sets the value of the targetFieldValue property.
+ * @param value allowed object is {@link String }
+ */
+public void setTargetFieldValue(String value){
+  this.targetFieldValue=value;
+}
+}

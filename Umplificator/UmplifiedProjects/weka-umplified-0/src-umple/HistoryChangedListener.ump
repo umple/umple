@@ -1,0 +1,11 @@
+namespace weka.gui.sql.event;
+
+interface HistoryChangedListener
+{
+  isA EventListener;
+ depend java.util.EventListener;
+/** 
+ * This method gets called when a history is modified.
+ */
+public void historyChanged(HistoryChangedEvent evt);
+}

@@ -1,0 +1,23 @@
+
+top NNNORMALIZATIONMETHOD
+{
+/** 
+ * <p>Java class for NN-NORMALIZATION-METHOD. <p>The following schema fragment specifies the expected content contained within this class. <p> <pre> &lt;simpleType name="NN-NORMALIZATION-METHOD"> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"> &lt;enumeration value="none"/> &lt;enumeration value="simplemax"/> &lt;enumeration value="softmax"/> &lt;/restriction> &lt;/simpleType> </pre>
+ */
+@XmlEnum public enum NNNORMALIZATIONMETHOD {@XmlEnumValue("none") NONE("none"), @XmlEnumValue("simplemax") SIMPLEMAX("simplemax"), @XmlEnumValue("softmax") SOFTMAX("softmax"); private final String value;
+NNNORMALIZATIONMETHOD(String v){
+  value=v;
+}
+public String value(){
+  return value;
+}
+public static NNNORMALIZATIONMETHOD fromValue(String v){
+  for (  NNNORMALIZATIONMETHOD c : NNNORMALIZATIONMETHOD.values()) {
+    if (c.value.equals(v)) {
+      return c;
+    }
+  }
+  throw new IllegalArgumentException(v.toString());
+}
+}
+}

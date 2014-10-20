@@ -1,0 +1,88 @@
+namespace weka.core.pmml.jaxbbindings;
+
+class BaselineStratum
+{
+ depend java.util.ArrayList;
+ depend java.util.List;
+ depend javax.xml.bind.annotation.XmlAccessType;
+ depend javax.xml.bind.annotation.XmlAccessorType;
+ depend javax.xml.bind.annotation.XmlAttribute;
+ depend javax.xml.bind.annotation.XmlElement;
+ depend javax.xml.bind.annotation.XmlRootElement;
+ depend javax.xml.bind.annotation.XmlType;
+@XmlElement(name="Extension",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<Extension> extension;
+
+@XmlElement(name="BaselineCell",namespace="http://www.dmg.org/PMML-4_1",required=true) protected List<BaselineCell> baselineCell;
+
+@XmlAttribute protected String label;
+
+@XmlAttribute(required=true) protected double maxTime;
+
+@XmlAttribute(required=true) protected String value;
+
+/** 
+ * Gets the value of the extension property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the extension property. <p> For example, to add a new item, do as follows: <pre> getExtension().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Extension }
+ */
+public List<Extension> getExtension(){
+  if (extension == null) {
+    extension=new ArrayList<Extension>();
+  }
+  return this.extension;
+}
+
+/** 
+ * Gets the value of the baselineCell property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the baselineCell property. <p> For example, to add a new item, do as follows: <pre> getBaselineCell().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link BaselineCell }
+ */
+public List<BaselineCell> getBaselineCell(){
+  if (baselineCell == null) {
+    baselineCell=new ArrayList<BaselineCell>();
+  }
+  return this.baselineCell;
+}
+
+/** 
+ * Gets the value of the label property.
+ * @return possible object is {@link String }
+ */
+public String getLabel(){
+  return label;
+}
+
+/** 
+ * Sets the value of the label property.
+ * @param value allowed object is {@link String }
+ */
+public void setLabel(String value){
+  this.label=value;
+}
+
+/** 
+ * Gets the value of the maxTime property.
+ */
+public double getMaxTime(){
+  return maxTime;
+}
+
+/** 
+ * Sets the value of the maxTime property.
+ */
+public void setMaxTime(double value){
+  this.maxTime=value;
+}
+
+/** 
+ * Gets the value of the value property.
+ * @return possible object is {@link String }
+ */
+public String getValue(){
+  return value;
+}
+
+/** 
+ * Sets the value of the value property.
+ * @param value allowed object is {@link String }
+ */
+public void setValue(String value){
+  this.value=value;
+}
+}

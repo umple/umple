@@ -1,0 +1,10 @@
+namespace weka.gui.beans;
+
+interface LogWriter
+{
+/** 
+ * Set a logger
+ * @param logger a <code>weka.gui.Logger</code> value
+ */
+void setLog(weka.gui.Logger logger);
+}

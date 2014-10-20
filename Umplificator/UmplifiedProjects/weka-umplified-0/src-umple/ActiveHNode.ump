@@ -1,0 +1,69 @@
+namespace weka.classifiers.trees.ht;
+
+class ActiveHNode
+{
+  isA LearningNode,Serializable;
+  isA LeafNode;
+ depend java.io.Serializable;
+ depend java.util.ArrayList;
+ depend java.util.HashMap;
+ depend java.util.List;
+ depend java.util.Map;
+ depend weka.core.Attribute;
+ depend weka.core.Instance;
+/** 
+ * For serialization
+ */
+private static final long serialVersionUID=3284585939739561683L;
+
+/** 
+ * The weight of instances seen at the last split evaluation 
+ */
+public double m_weightSeenAtLastSplitEval=0;
+
+/** 
+ * Statistics for nominal or numeric attributes conditioned on the class 
+ */
+protected Map<String,ConditionalSufficientStats> m_nodeStats=new HashMap<String,ConditionalSufficientStats>();
+
+@Override public void updateNode(Instance inst) throws Exception {
+  super.updateDistribution(inst);
+  for (int i=0; i < inst.numAttributes(); i++) {
+    Attribute a=inst.attribute(i);
+    if (i != inst.classIndex()) {
+      ConditionalSufficientStats stats=m_nodeStats.get(a.name());
+      if (stats == null) {
+        if (a.isNumeric()) {
+          stats=new GaussianConditionalSufficientStats();
+        }
+ else {
+          stats=new NominalConditionalSufficientStats();
+        }
+        m_nodeStats.put(a.name(),stats);
+      }
+      stats.update(inst.value(a),inst.classAttribute().value((int)inst.classValue()),inst.weight());
+    }
+  }
+}
+
+/** 
+ * Returns a list of split candidates
+ * @param splitMetric the splitting metric to use
+ * @return a list of split candidates
+ */
+public List<SplitCandidate> getPossibleSplits(SplitMetric splitMetric){
+  List<SplitCandidate> splits=new ArrayList<SplitCandidate>();
+  List<Map<String,WeightMass>> nullDist=new ArrayList<Map<String,WeightMass>>();
+  nullDist.add(m_classDistribution);
+  SplitCandidate nullSplit=new SplitCandidate(null,nullDist,splitMetric.evaluateSplit(m_classDistribution,nullDist));
+  splits.add(nullSplit);
+  for (  Map.Entry<String,ConditionalSufficientStats> e : m_nodeStats.entrySet()) {
+    ConditionalSufficientStats stat=e.getValue();
+    SplitCandidate splitCandidate=stat.bestSplit(splitMetric,m_classDistribution,e.getKey());
+    if (splitCandidate != null) {
+      splits.add(splitCandidate);
+    }
+  }
+  return splits;
+}
+}

@@ -1,0 +1,28 @@
+namespace weka.classifiers.functions;
+
+class GaussianProcessesTest
+{
+  isA AbstractClassifierTest;
+ depend weka.classifiers.AbstractClassifierTest;
+ depend weka.classifiers.Classifier;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+public GaussianProcessesTest(String name){
+  super(name);
+}
+
+/** 
+ * Creates a default GaussianProcesses 
+ */
+public Classifier getClassifier(){
+  return new GaussianProcesses();
+}
+
+public static Test suite(){
+  return new TestSuite(GaussianProcessesTest.class);
+}
+
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

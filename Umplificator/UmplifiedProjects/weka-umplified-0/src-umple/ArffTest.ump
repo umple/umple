@@ -1,0 +1,47 @@
+namespace weka.core.converters;
+
+class ArffTest
+{
+  isA AbstractFileConverterTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+/** 
+ * Constructs the <code>ArffTest</code>.
+ * @param name the name of the test class
+ */
+public ArffTest(String name){
+  super(name);
+}
+
+/** 
+ * returns the loader used in the tests
+ * @return the configured loader
+ */
+public AbstractLoader getLoader(){
+  return new ArffLoader();
+}
+
+/** 
+ * returns the saver used in the tests
+ * @return the configured saver
+ */
+public AbstractSaver getSaver(){
+  return new ArffSaver();
+}
+
+/** 
+ * returns a test suite
+ * @return the test suite
+ */
+public static Test suite(){
+  return new TestSuite(ArffTest.class);
+}
+
+/** 
+ * for running the test from commandline
+ * @param args the commandline arguments - ignored
+ */
+public static void main(String[] args){
+  junit.textui.TestRunner.run(suite());
+}
+}

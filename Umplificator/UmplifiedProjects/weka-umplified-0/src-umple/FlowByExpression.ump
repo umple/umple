@@ -1,0 +1,177 @@
+
+top ExpressionType
+{
+public static enum ExpressionType {EQUALS(" = "){
+  @Override boolean evaluate(  Instance inst,  int lhsAttIndex,  String rhsOperand,  double numericOperand,  Pattern regexPattern,  boolean rhsIsAttribute,  int rhsAttIndex){
+    if (rhsIsAttribute) {
+      if (inst.isMissing(lhsAttIndex) && inst.isMissing(rhsAttIndex)) {
+        return true;
+      }
+      if (inst.isMissing(lhsAttIndex) || inst.isMissing(rhsAttIndex)) {
+        return false;
+      }
+      return Utils.eq(inst.value(lhsAttIndex),inst.value(rhsAttIndex));
+    }
+    if (inst.isMissing(lhsAttIndex)) {
+      return false;
+    }
+    return (Utils.eq(inst.value(lhsAttIndex),numericOperand));
+  }
+}
+, NOTEQUAL(" != "){
+  @Override boolean evaluate(  Instance inst,  int lhsAttIndex,  String rhsOperand,  double numericOperand,  Pattern regexPattern,  boolean rhsIsAttribute,  int rhsAttIndex){
+    return !EQUALS.evaluate(inst,lhsAttIndex,rhsOperand,numericOperand,regexPattern,rhsIsAttribute,rhsAttIndex);
+  }
+}
+, LESSTHAN(" < "){
+  @Override boolean evaluate(  Instance inst,  int lhsAttIndex,  String rhsOperand,  double numericOperand,  Pattern regexPattern,  boolean rhsIsAttribute,  int rhsAttIndex){
+    if (rhsIsAttribute) {
+      if (inst.isMissing(lhsAttIndex) || inst.isMissing(rhsAttIndex)) {
+        return false;
+      }
+      return (inst.value(lhsAttIndex) < inst.value(rhsAttIndex));
+    }
+    if (inst.isMissing(lhsAttIndex)) {
+      return false;
+    }
+    return (inst.value(lhsAttIndex) < numericOperand);
+  }
+}
+, LESSTHANEQUAL(" <= "){
+  @Override boolean evaluate(  Instance inst,  int lhsAttIndex,  String rhsOperand,  double numericOperand,  Pattern regexPattern,  boolean rhsIsAttribute,  int rhsAttIndex){
+    if (rhsIsAttribute) {
+      if (inst.isMissing(lhsAttIndex) || inst.isMissing(rhsAttIndex)) {
+        return false;
+      }
+      return (inst.value(lhsAttIndex) <= inst.value(rhsAttIndex));
+    }
+    if (inst.isMissing(lhsAttIndex)) {
+      return false;
+    }
+    return (inst.value(lhsAttIndex) <= numericOperand);
+  }
+}
+, GREATERTHAN(" > "){
+  @Override boolean evaluate(  Instance inst,  int lhsAttIndex,  String rhsOperand,  double numericOperand,  Pattern regexPattern,  boolean rhsIsAttribute,  int rhsAttIndex){
+    return !LESSTHANEQUAL.evaluate(inst,lhsAttIndex,rhsOperand,numericOperand,regexPattern,rhsIsAttribute,rhsAttIndex);
+  }
+}
+, GREATERTHANEQUAL(" >= "){
+  @Override boolean evaluate(  Instance inst,  int lhsAttIndex,  String rhsOperand,  double numericOperand,  Pattern regexPattern,  boolean rhsIsAttribute,  int rhsAttIndex){
+    return !LESSTHAN.evaluate(inst,lhsAttIndex,rhsOperand,numericOperand,regexPattern,rhsIsAttribute,rhsAttIndex);
+  }
+}
+, ISMISSING(" isMissing "){
+  @Override boolean evaluate(  Instance inst,  int lhsAttIndex,  String rhsOperand,  double numericOperand,  Pattern regexPattern,  boolean rhsIsAttribute,  int rhsAttIndex){
+    return (inst.isMissing(lhsAttIndex));
+  }
+}
+, CONTAINS(" contains "){
+  @Override boolean evaluate(  Instance inst,  int lhsAttIndex,  String rhsOperand,  double numericOperand,  Pattern regexPattern,  boolean rhsIsAttribute,  int rhsAttIndex){
+    if (inst.isMissing(lhsAttIndex)) {
+      return false;
+    }
+    String lhsString="";
+    try {
+      lhsString=inst.stringValue(lhsAttIndex);
+    }
+ catch (    IllegalArgumentException ex) {
+      return false;
+    }
+    if (rhsIsAttribute) {
+      if (inst.isMissing(rhsAttIndex)) {
+        return false;
+      }
+      try {
+        String rhsString=inst.stringValue(rhsAttIndex);
+        return lhsString.contains(rhsString);
+      }
+ catch (      IllegalArgumentException ex) {
+        return false;
+      }
+    }
+    return lhsString.contains(rhsOperand);
+  }
+}
+, STARTSWITH(" startsWith "){
+  @Override boolean evaluate(  Instance inst,  int lhsAttIndex,  String rhsOperand,  double numericOperand,  Pattern regexPattern,  boolean rhsIsAttribute,  int rhsAttIndex){
+    if (inst.isMissing(lhsAttIndex)) {
+      return false;
+    }
+    String lhsString="";
+    try {
+      lhsString=inst.stringValue(lhsAttIndex);
+    }
+ catch (    IllegalArgumentException ex) {
+      return false;
+    }
+    if (rhsIsAttribute) {
+      if (inst.isMissing(rhsAttIndex)) {
+        return false;
+      }
+      try {
+        String rhsString=inst.stringValue(rhsAttIndex);
+        return lhsString.startsWith(rhsString);
+      }
+ catch (      IllegalArgumentException ex) {
+        return false;
+      }
+    }
+    return lhsString.startsWith(rhsOperand);
+  }
+}
+, ENDSWITH(" endsWith "){
+  @Override boolean evaluate(  Instance inst,  int lhsAttIndex,  String rhsOperand,  double numericOperand,  Pattern regexPattern,  boolean rhsIsAttribute,  int rhsAttIndex){
+    if (inst.isMissing(lhsAttIndex)) {
+      return false;
+    }
+    String lhsString="";
+    try {
+      lhsString=inst.stringValue(lhsAttIndex);
+    }
+ catch (    IllegalArgumentException ex) {
+      return false;
+    }
+    if (rhsIsAttribute) {
+      if (inst.isMissing(rhsAttIndex)) {
+        return false;
+      }
+      try {
+        String rhsString=inst.stringValue(rhsAttIndex);
+        return lhsString.endsWith(rhsString);
+      }
+ catch (      IllegalArgumentException ex) {
+        return false;
+      }
+    }
+    return lhsString.endsWith(rhsOperand);
+  }
+}
+, REGEX(" regex "){
+  @Override boolean evaluate(  Instance inst,  int lhsAttIndex,  String rhsOperand,  double numericOperand,  Pattern regexPattern,  boolean rhsIsAttribute,  int rhsAttIndex){
+    if (inst.isMissing(lhsAttIndex)) {
+      return false;
+    }
+    if (regexPattern == null) {
+      return false;
+    }
+    String lhsString="";
+    try {
+      lhsString=inst.stringValue(lhsAttIndex);
+    }
+ catch (    IllegalArgumentException ex) {
+      return false;
+    }
+    return regexPattern.matcher(lhsString).matches();
+  }
+}
+; abstract boolean evaluate(Instance inst,int lhsAttIndex,String rhsOperand,double numericOperand,Pattern regexPattern,boolean rhsIsAttribute,int rhsAttIndex);
+private final String m_stringVal;
+ExpressionType(String name){
+  m_stringVal=name;
+}
+@Override public String toString(){
+  return m_stringVal;
+}
+}
+}

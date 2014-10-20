@@ -1,0 +1,10 @@
+namespace weka.gui.beans;
+
+class 
+{
+ depend java.lang.annotation.Documented;
+ depend java.lang.annotation.ElementType;
+ depend java.lang.annotation.Retention;
+ depend java.lang.annotation.RetentionPolicy;
+ depend java.lang.annotation.Target;
+}

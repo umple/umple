@@ -1,0 +1,13 @@
+namespace weka.attributeSelection;
+
+interface SubsetEvaluator
+{
+ depend java.util.BitSet;
+/** 
+ * evaluates a subset of attributes
+ * @param subset a bitset representing the attribute subset to be evaluated 
+ * @return the "merit" of the subset
+ * @exception Exception if the subset could not be evaluated
+ */
+double evaluateSubset(BitSet subset) throws Exception ;
+}

@@ -1,0 +1,32 @@
+namespace weka.core.stopwords;
+
+class NullTest
+{
+  isA AbstractStopwordsTest;
+ depend junit.framework.Test;
+ depend junit.framework.TestSuite;
+ depend junit.textui.TestRunner;
+/** 
+ * Constructs the test.
+ * @param name the name of the test
+ */
+public NullTest(String name){
+  super(name);
+}
+
+/** 
+ * Used to create an instance of a specific stopwords scheme.
+ * @return a suitably configured <code>StopwordsHandler</code> value
+ */
+@Override public StopwordsHandler getStopwords(){
+  return new Null();
+}
+
+public static Test suite(){
+  return new TestSuite(NullTest.class);
+}
+
+public static void main(String[] args){
+  TestRunner.run(suite());
+}
+}

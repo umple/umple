@@ -1,0 +1,51 @@
+namespace weka.gui;
+
+class PropertyValueSelector
+{
+  isA JComboBox;
+ depend java.beans.PropertyEditor;
+ depend javax.swing.ComboBoxModel;
+ depend javax.swing.DefaultComboBoxModel;
+ depend javax.swing.JComboBox;
+/** 
+ * for serialization 
+ */
+private static final long serialVersionUID=128041237745933212L;
+
+/** 
+ * The property editor 
+ */
+PropertyEditor m_Editor;
+
+private static final long serialVersionUID=7942587653040180213L;
+
+/** 
+ * Sets up the editing component with the supplied editor.
+ * @param pe the PropertyEditor
+ */
+public PropertyValueSelector(PropertyEditor pe){
+  m_Editor=pe;
+  Object value=m_Editor.getAsText();
+  String tags[]=m_Editor.getTags();
+  ComboBoxModel model=new DefaultComboBoxModel(tags){
+    private static final long serialVersionUID=7942587653040180213L;
+    public Object getSelectedItem(){
+      return m_Editor.getAsText();
+    }
+    public void setSelectedItem(    Object o){
+      m_Editor.setAsText((String)o);
+    }
+  }
+;
+  setModel(model);
+  setSelectedItem(value);
+}
+
+public Object getSelectedItem(){
+  return m_Editor.getAsText();
+}
+
+public void setSelectedItem(Object o){
+  m_Editor.setAsText((String)o);
+}
+}

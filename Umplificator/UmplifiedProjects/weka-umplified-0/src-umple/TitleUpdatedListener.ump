@@ -1,0 +1,10 @@
+namespace weka.gui.scripting.event;
+
+interface TitleUpdatedListener
+{
+/** 
+ * Gets called when the title of the frame/dialog needs updating.
+ * @param event	the event that got sent
+ */
+public void titleUpdated(TitleUpdatedEvent event);
+}
