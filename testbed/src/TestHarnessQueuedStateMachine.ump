@@ -56,7 +56,6 @@ class QueuedSM_autoTransition
 class QueuedSM_autoTransition_timedEvent {
   queued sm{
     s1 {
-      e1 -> s2;
       ->s2;
     }
     s2{
@@ -248,8 +247,6 @@ class MultipleQueuedSMs {
     s4{
       e4 -> s3;
     }
-    s5{
-    }
   }
 }
 
@@ -318,7 +315,7 @@ class QueuedSM_timedTransition_1 {
       after(2) -> s2;
     }
     s2 {
-      ev2 -> s4;
+      ev2 -> s3;
     }
     s3 {
       ev3 -> s4;

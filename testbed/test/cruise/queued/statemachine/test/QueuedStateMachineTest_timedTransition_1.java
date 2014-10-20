@@ -68,9 +68,22 @@ public class QueuedStateMachineTest_timedTransition_1
 	  //transition to s2
 	  Assert.assertEquals(QueuedSM_timedTransition_1.Sm.s2, qsm.getSm()); 
       
-	  //ev0 is triggered: ev0 is queued
+	  //ev2 is triggered
 	  qsm.ev2();	
-	  //ev0 is dequeued and processed: transition to s1
+	  //ev2 is dequeued and processed: transition to s3
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSm().equals(QueuedSM_timedTransition_1.Sm.s3) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
+	  Assert.assertEquals(QueuedSM_timedTransition_1.Sm.s3, qsm.getSm());
+	  // check if there is a message saved in the queue
+	  noMessageIsSaved(qsm);
+
+	  //ev3 is triggered
+	  qsm.ev3();	
+	  //ev3 is dequeued and processed: transition to s4
 	  numChecks=200; // we will check for a second
 	  while(!qsm.getSm().equals(QueuedSM_timedTransition_1.Sm.s4) && numChecks>0) {
 	    Thread.sleep(5);
@@ -80,7 +93,7 @@ public class QueuedStateMachineTest_timedTransition_1
 	  Assert.assertEquals(QueuedSM_timedTransition_1.Sm.s4, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  noMessageIsSaved(qsm);
-
+	  
 	  
 	  //check that there is no event left in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());

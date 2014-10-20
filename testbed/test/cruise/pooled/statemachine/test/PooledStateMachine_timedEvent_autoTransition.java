@@ -9,8 +9,7 @@ public class PooledStateMachine_timedEvent_autoTransition
   public void numberOfMessagesInMessageType()
   {
 	  // compare the number of messages in MessageType is equal to the number of events in State Machine except timed events and auto-transition
-	  Assert.assertEquals(3, X.MessageType.values().length);
-	  Assert.assertEquals(true, X.MessageType.valueOf("e1_M").equals(null));
+	  Assert.assertEquals(2, X.MessageType.values().length);
 	  Assert.assertEquals(true, X.MessageType.valueOf("null_M").equals(X.MessageType.null_M));
 	  Assert.assertEquals(true, X.MessageType.valueOf("timeouts2Tos3_M").equals(X.MessageType.timeouts2Tos3_M));
   }

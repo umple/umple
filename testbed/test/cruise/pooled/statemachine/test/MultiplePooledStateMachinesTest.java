@@ -10,11 +10,10 @@ public class MultiplePooledStateMachinesTest
   public void numberOfMessagesInMessageType()
   {
 	  // compare the number of messages in MessageType is equal to the number of events in State Machine except timed events and auto-transition
-	  Assert.assertEquals(4, MultiplePooledSMs.MessageType.values().length);
+	  Assert.assertEquals(3, MultiplePooledSMs.MessageType.values().length);
 	  Assert.assertEquals(true, MultiplePooledSMs.MessageType.valueOf("e1_M").equals(MultiplePooledSMs.MessageType.e1_M));
 	  Assert.assertEquals(true, MultiplePooledSMs.MessageType.valueOf("e2_M").equals(MultiplePooledSMs.MessageType.e2_M));
 	  Assert.assertEquals(true, MultiplePooledSMs.MessageType.valueOf("e4_M").equals(MultiplePooledSMs.MessageType.e4_M));
-	  Assert.assertEquals(true, MultiplePooledSMs.MessageType.valueOf("null_M").equals(MultiplePooledSMs.MessageType.null_M));
   }
   
   @Test 
@@ -22,7 +21,7 @@ public class MultiplePooledStateMachinesTest
   {
 	  // compare the number of states is equal to the number of keys in stateMessageMap
 	  Assert.assertEquals((MultiplePooledSMs.Sm1.values().length+MultiplePooledSMs.Sm.values().length), MultiplePooledSMs.stateMessageMap.keySet().size());
-	  Assert.assertEquals(5, MultiplePooledSMs.stateMessageMap.keySet().size());
+	  Assert.assertEquals(4, MultiplePooledSMs.stateMessageMap.keySet().size());
   }
   
   @Test 
@@ -33,7 +32,6 @@ public class MultiplePooledStateMachinesTest
 	  Assert.assertEquals(true, MultiplePooledSMs.stateMessageMap.containsKey(MultiplePooledSMs.Sm.s2));
 	  Assert.assertEquals(true, MultiplePooledSMs.stateMessageMap.containsKey(MultiplePooledSMs.Sm1.s3));
 	  Assert.assertEquals(true, MultiplePooledSMs.stateMessageMap.containsKey(MultiplePooledSMs.Sm1.s4));
-	  Assert.assertEquals(true, MultiplePooledSMs.stateMessageMap.containsKey(MultiplePooledSMs.Sm1.s5));
   }
   
   @Test 
@@ -44,19 +42,17 @@ public class MultiplePooledStateMachinesTest
 	  Assert.assertEquals(1, MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm.s2).size());
 	  Assert.assertEquals(1, MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm1.s3).size());
 	  Assert.assertEquals(1, MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm1.s4).size());
-	  Assert.assertEquals(1, MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm1.s5).size());
 	  Assert.assertEquals(true , MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm.s1).containsAll(MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm.s1)));
 	  Assert.assertEquals(true , MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm.s2).containsAll(MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm.s2)));
 	  Assert.assertEquals(true , MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm1.s3).containsAll(MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm1.s3)));
 	  Assert.assertEquals(true , MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm1.s4).containsAll(MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm1.s4)));
-	  Assert.assertEquals(true , MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm1.s5).containsAll(MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm1.s5)));
   }
   
   @Test 
   public void sizeOfstateMessageMap()
   {
 	  //size of stateMessageMap which contains (state, list of MessageTypes)
-	  Assert.assertEquals(5, MultiplePooledSMs.stateMessageMap.size());
+	  Assert.assertEquals(4, MultiplePooledSMs.stateMessageMap.size());
   }
   
   @Test 

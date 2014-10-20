@@ -60,7 +60,6 @@ class Mentor
 class X{
   pooled sm{
     s1 {
-      e1 -> s2;
       ->s2;
     }
     s2{
@@ -71,6 +70,7 @@ class X{
   }
 }
 
+strictness ignore 62;
 class PooledSMwithUnspecifiedReception{
   pooled sm{
     s1 {
@@ -275,8 +275,6 @@ class MultiplePooledSMs {
     s4{
       e4 -> s3;
     }
-    s5{
-    }
   }
 }
 
@@ -344,7 +342,7 @@ class PooledSM_timedTransition_1 {
       after(2) -> s2;
     }
     s2 {
-      ev2 -> s4;
+      ev2 -> s3;
     }
     s3 {
       ev3 -> s4;
