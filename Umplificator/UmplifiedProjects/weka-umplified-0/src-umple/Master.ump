@@ -1,3 +1,11 @@
+strictness allow 131;
+strictness allow 1006;
+strictness allow 1007;
+strictness allow 1008;
+strictness allow 1006;
+
+generate Java "../src-gen-umple";
+
 use AbstractAssociator.ump;
 use Apriori.ump;
 use AprioriItemSet.ump;
