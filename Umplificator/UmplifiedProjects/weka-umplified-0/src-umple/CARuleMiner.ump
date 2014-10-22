@@ -3,9 +3,9 @@ namespace weka.associations;
 interface CARuleMiner
 {
   isA OptionHandler;
- depend java.util.ArrayList;
- depend weka.core.Instances;
- depend weka.core.OptionHandler;
+ //depend java.util.ArrayList;
+ //depend weka.core.Instances;
+ //depend weka.core.OptionHandler;
 /** 
  * Method for mining class association rules. Must initialize all fields of the CARuleMiner that are not being set via options (ie. multiple calls of mineCARs must always lead to the same result). Must not change the dataset in any way.
  * @param data the insatnces for which class association rules are mined
