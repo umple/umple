@@ -13,3 +13,5 @@ use TestHarnessTracer.ump;
 use TestHarnessConstraints.ump;
 use LocalHarness.ump;
 use TestHarnessAssociation0_1_mMultiplicity.ump;
+use TestHarnessCompositionsLeft.ump;
+use TestHarnessCompositionsRight.ump;

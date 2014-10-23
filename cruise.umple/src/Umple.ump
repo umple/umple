@@ -791,6 +791,7 @@ class AssociationVariable
   isA UmpleVariable;
   Multiplicity multiplicity;
   immutable Boolean isNavigable;
+  Boolean isComposition = false;
   String priority = "";
   
   0..1 self relatedAssociation;

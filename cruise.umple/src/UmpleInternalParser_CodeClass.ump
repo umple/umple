@@ -1566,7 +1566,10 @@ class UmpleInternalParser
       UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
       
       AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
+      myAs.setIsComposition(association.getIsLeftComposition());
       AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
+      yourAs.setIsComposition(association.getIsRightComposition());
+
       myAs.setRelatedAssociation(yourAs);
       
       if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
@@ -2649,7 +2652,10 @@ class UmpleInternalParser
     AssociationEnd yourEnd = association.getEnd(1);
 
     AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
+    myAs.setIsComposition(association.getIsLeftComposition());
     AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
+    yourAs.setIsComposition(association.getIsRightComposition());
+
     myAs.setRelatedAssociation(yourAs);
     
     if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }

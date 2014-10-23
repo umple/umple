@@ -511,7 +511,10 @@ class UmpleInternalParser
     AssociationEnd yourEnd = association.getEnd(1);
 
     AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
+    myAs.setIsComposition(association.getIsLeftComposition());
     AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
+    yourAs.setIsComposition(association.getIsRightComposition());
+
     myAs.setRelatedAssociation(yourAs);
     
     if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
@@ -955,7 +958,10 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 			AssociationEnd myEnd = aAssociation.getEnd(0);
 		    AssociationEnd yourEnd = aAssociation.getEnd(1);
 		    AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),aAssociation.getIsLeftNavigable());
+                    myAs.setIsComposition(aAssociation.getIsLeftComposition());
 		    AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),aAssociation.getIsRightNavigable());
+		    yourAs.setIsComposition(aAssociation.getIsRightComposition());
+
 		    myAs.setRelatedAssociation(yourAs); 
 		    boolean added = inClass.addAssociationVariable(yourAs);
 		    if (added)

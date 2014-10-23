@@ -1,0 +1,227 @@
+namespace cruise.associations.compositions;
+
+// Ignore warnings about multiplicity bounds on directed association
+strictness ignore 36;
+
+class X_comp {}
+
+class X1_1
+{
+	int num;
+}
+
+class XM_1
+{
+	int num;
+}
+
+class XM_M
+{
+	int num;
+}
+
+class X1_star
+{
+	int num;
+}
+
+class XM_star
+{
+	int num;
+}
+
+class Xstar_star
+{
+	int num;
+}
+
+class Xm_n__1
+{
+	int num;
+}
+
+class Xm_n__m
+{
+	int num;
+}
+
+class Xm_n__star
+{
+	int num;
+}
+
+
+class Xm_n__m_n
+{
+	int num;
+}
+
+class X0_n__1
+{
+	int num;
+}
+
+class X0_n__m
+{
+	int num;
+}
+
+class X0_n__star
+{
+	int num;
+}
+
+class X0_n__m_n
+{
+	int num;
+}
+
+class X0_n__0_n
+{
+	int num;
+}
+
+class X0_1__1
+{
+	int num;
+}
+
+
+class X0_1__m
+{
+	int num;
+}
+
+class X0_1__star
+{
+	int num;
+}
+
+class X0_1__m_n
+{
+	int num;
+}
+
+class X0_1__0_n
+{
+	int num;
+}
+
+class X0_1__0_1
+{
+	int num;
+}
+
+
+
+
+
+
+
+
+class Y1_1
+{
+	1 y1_1 -<@> 1 X1_1 xVar;
+}
+
+class YM_1
+{
+	3 ym_1 -<@> 1 XM_1 xVar;
+}
+
+class YM_M
+{
+	3 ym_m -<@> 3 XM_M xVar;
+}
+
+class Y1_star
+{
+	1 y1_star -<@> * X1_star xVar;
+}
+
+class YM_star
+{
+	3 ym_star -<@> * XM_star xVar;
+}
+
+class Ystar_star
+{
+	* ystar_star -<@> * Xstar_star xVar;
+}
+
+class Ym_n__1
+{
+	2..3 ym_n__1 -<@> 1 Xm_n__1 xVar;
+}
+
+class Ym_n__m
+{
+	2..3 ym_n__m -<@> 3 Xm_n__m xVar;
+}
+
+class Ym_n__star
+{
+	2..3 ym_n__star -<@> * Xm_n__star xVar;
+}
+
+
+class Ym_n__m_n
+{
+	2..3 ym_n__m_n -<@> 2..3 Xm_n__m_n xVar;
+}
+
+class Y0_n__1
+{
+	0..3 y0_n__1 -<@> 1 X0_n__1 xVar;
+}
+
+class Y0_n__m
+{
+	0..3 y0_n__m -<@> 3 X0_n__m xVar;
+}
+
+class Y0_n__star
+{
+	0..3 y0_n__star -<@> * X0_n__star xVar;
+}
+
+class Y0_n__m_n
+{
+	0..3 y0_n__m_n -<@> 2..3 X0_n__m_n xVar;
+}
+
+class Y0_n__0_n
+{
+	0..3 y0_n__0_n -<@> 0..3 X0_n__0_n xVar;
+}
+
+class Y0_1__1
+{
+	0..1 y0_1__1 -<@> 1 X0_1__1 xVar;
+}
+
+class Y0_1__m
+{
+	0..1 y0_1__m -<@> 3 X0_1__m xVar;
+}
+
+class Y0_1__star
+{
+	0..1 y0_1__star -<@> * X0_1__star xVar;
+}
+
+class Y0_1__m_n
+{
+	0..1 y0_1__m_n -<@> 2..3 X0_1__m_n xVar;
+}
+
+class Y0_1__0_n
+{
+	0..1 y0_1__0_n -<@> 0..3 X0_1__0_n xVar;
+}
+
+class Y0_1__0_1
+{
+	0..1 y0_1__0_1 -<@> 0..1 X0_1__0_1 xVar;
+}
+
