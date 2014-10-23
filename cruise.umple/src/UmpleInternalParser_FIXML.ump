@@ -336,7 +336,10 @@ class UmpleInternalParser {
 			AssociationEnd myEnd = aAssociation.getEnd(0);
 		    AssociationEnd yourEnd = aAssociation.getEnd(1);
 		    AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),aAssociation.getIsLeftNavigable());
+                    myAs.setIsComposition(aAssociation.getIsLeftComposition());
 		    AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),aAssociation.getIsRightNavigable());
+                    yourAs.setIsComposition(aAssociation.getIsRightComposition());
+
 		    myAs.setRelatedAssociation(yourAs);
 		    boolean added = uClass.addAssociationVariable(yourAs);
 		    if (added)

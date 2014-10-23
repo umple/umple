@@ -1,0 +1,223 @@
+namespace cruise.associations.compositions;
+
+// Ignore warnings about multiplicity bounds on directed association
+strictness ignore 36;
+
+class Z_1_1
+{
+	int num;
+}
+
+class Z_M_1
+{
+	int num;
+}
+
+class Z_M_M
+{	
+	int num;
+}
+
+class Z_1_star
+{
+	int num;
+}
+
+class Z_M_star
+{
+	int num;
+}
+
+class Z_star_star
+{
+	int num;
+}
+
+class Z_m_n__1
+{
+	int num;
+}
+
+class Z_m_n__m
+{
+	int num;
+}
+
+class Z_m_n__star
+{
+	int num;
+}
+
+class Z_m_n__m_n
+{
+	int num;
+}
+
+class Z_0_n__1
+{
+	int num;
+}
+
+class Z_0_n__m
+{
+	int num;
+}
+
+class Z_0_n__star
+{
+	int num;
+}
+
+class Z_0_n__m_n
+{
+	int num;
+}
+
+class Z_0_n__0_n
+{
+	int num;
+}
+
+class Z_0_1__1
+{
+	int num;
+}
+
+class Z_0_1__m
+{
+	int num;
+}
+
+class Z_0_1__star
+{
+	int num;
+}
+
+class Z_0_1__m_n
+{
+	int num;
+}
+
+class Z_0_1__0_n
+{
+	int num;
+}
+
+class Z_0_1__0_1
+{
+	int num;
+}
+
+
+
+
+
+
+
+
+class Y_1_1
+{
+	1 y_1_1 <@>- 1 Z_1_1 zVar;
+}
+
+class Y_M_1
+{
+	3 y_m_1 <@>- 1 Z_M_1 zVar;
+}
+
+class Y_M_M
+{	
+	3 y_m_m <@>- 3 Z_M_M zVar;
+}
+
+class Y_1_star
+{
+	1 y_1_star <@>- * Z_1_star zVar;
+}
+
+class Y_M_star
+{
+	3 y_m_star <@>- * Z_M_star zVar;
+}
+
+class Y_star_star
+{
+	* y_star_star <@>- * Z_star_star zVar;
+}
+
+class Y_m_n__1
+{
+	2..3 y_m_n__1 <@>- 1 Z_m_n__1 zVar;
+}
+
+class Y_m_n__m
+{
+	2..3 y_m_n__m <@>- 3 Z_m_n__m zVar;
+}
+
+class Y_m_n__star
+{
+	2..3 y_m_n__star <@>- * Z_m_n__star zVar;
+}
+
+class Y_m_n__m_n
+{
+	2..3 y_m_n__m_n <@>- 2..3 Z_m_n__m_n zVar;
+}
+
+class Y_0_n__1
+{
+	0..3 y_0_n__1 <@>- 1 Z_0_n__1 zVar;
+}
+
+class Y_0_n__m
+{
+	0..3 y_0_n__m <@>- 3 Z_0_n__m zVar;
+}
+
+class Y_0_n__star
+{
+	0..3 y_0_n__star <@>- * Z_0_n__star zVar;
+}
+
+class Y_0_n__m_n
+{
+	0..3 y_0_n__m_n <@>- 2..3 Z_0_n__m_n zVar;
+}
+
+class Y_0_n__0_n
+{
+	0..3 y_0_n__0_n <@>- 0..3 Z_0_n__0_n zVar;
+}
+
+class Y_0_1__1
+{
+	0..1 y_0_1__1 <@>- 1 Z_0_1__1 zVar;
+}
+
+class Y_0_1__m
+{
+	0..1 y_0_1__m <@>- 3 Z_0_1__m zVar;
+}
+
+class Y_0_1__star
+{
+	0..1 y_0_1__star <@>- * Z_0_1__star zVar;
+}
+
+class Y_0_1__m_n
+{
+	0..1 y_0_1__m_n <@>- 2..3 Z_0_1__m_n zVar;
+}
+
+class Y_0_1__0_n
+{
+	0..1 y_0_1__0_n <@>- 0..3 Z_0_1__0_n zVar;
+}
+
+class Y_0_1__0_1
+{
+	0..1 y_0_1__0_1 <@>- 0..1 Z_0_1__0_1 zVar;
+}
+
+
