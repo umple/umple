@@ -343,9 +343,13 @@ class Token
   private Token shallowCopy()
   {
     Token nToken = new Token(this.getName()+"", this.getValue()+"");
-    if (nToken.getPosition() != null)
+    if (getPosition() != null)
     {
-      nToken.setPosition(new Position(getPosition().getFilename(), getPosition().getLineNumber(), getPosition().getCharacterOffset(), getPosition().getOffset()));      
+      nToken.setPosition(getPosition().copy());      
+    }
+    if (getEndPosition() != null)
+    {
+      nToken.setEndPosition(getEndPosition().copy());
     }
     return nToken;
   }

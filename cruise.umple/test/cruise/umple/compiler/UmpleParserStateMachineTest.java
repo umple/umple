@@ -195,10 +195,19 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(2, state.numberOfActivities());
     Activity a1 = state.getActivity(0);
     Activity a2 = state.getActivity(1);
+    
+    //Check positions for multiple do activities
+    Assert.assertNotNull(a1.getPosition());
+    Assert.assertNotNull(a2.getPosition());
+    
+    Assert.assertEquals(4, a1.getPosition().getLineNumber());
+    Assert.assertEquals(5, a2.getPosition().getLineNumber());
+    
+    Assert.assertEquals(6, a1.getPosition().getCharacterOffset());
+    Assert.assertEquals(6, a2.getPosition().getCharacterOffset());   
+    
     Assert.assertEquals("blah1();", a1.getActivityCode());
     Assert.assertEquals("blah2();", a2.getActivityCode());
-    
-    //Assert.assertEquals("iAmaDoActivity", a1.getActivityCode());
   }
 
   @Test
@@ -1447,6 +1456,20 @@ public class UmpleParserStateMachineTest
   public void activeBlock()
   {
     assertParse("160_activeblock.ump", "[classDefinition][name:Lamp][stateMachine][name:stateMachine1][state][stateName:topLevel][state][stateName:thread1][activity][code:System.out.println(\"Hello\");]");
+    UmpleClass c = model.getUmpleClass("Lamp");
+    Assert.assertEquals(1, c.numberOfStateMachines());
+    StateMachine sm = c.getStateMachine(0);
+    
+    Assert.assertEquals(1,sm.numberOfStates());
+    State topLevel = sm.getState(0);
+
+    Assert.assertEquals(1, topLevel.numberOfNestedStateMachines());
+    StateMachine threadLevel = topLevel.getNestedStateMachine(0);
+    
+    Assert.assertEquals(1, threadLevel.numberOfStates());
+    State doLevel = threadLevel.getState(0);
+
+    Assert.assertEquals(true, doLevel.hasActivities());
   }
   
   @Test
@@ -1475,6 +1498,71 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(true, doLevel.hasActivities());
     Assert.assertEquals("System.out.println(\"Hello\");", doLevel.getActivity(0).getCodeblock().getCode("Java"));
     Assert.assertEquals("cout << \"hello\";", doLevel.getActivity(0).getCodeblock().getCode("Cpp"));
+  }
+  
+  @Test
+  public void activeBlock_ActivityPositions()
+  {
+    //Single active block (no languages specified)
+    assertParse("160_activeblock.ump", "[classDefinition][name:Lamp][stateMachine][name:stateMachine1][state][stateName:topLevel][state][stateName:thread1][activity][code:System.out.println(\"Hello\");]");
+    UmpleClass c = model.getUmpleClass("Lamp");
+    Assert.assertEquals(1, c.numberOfStateMachines());
+    StateMachine sm = c.getStateMachine(0);
+    
+    Assert.assertEquals(1,sm.numberOfStates());
+    State topLevel = sm.getState(0);
+
+    Assert.assertEquals(1, topLevel.numberOfNestedStateMachines());
+    StateMachine threadLevel = topLevel.getNestedStateMachine(0);
+    
+    Assert.assertEquals(1, threadLevel.numberOfStates());
+    State doLevel = threadLevel.getState(0);
+
+    Assert.assertEquals(true, doLevel.hasActivities());
+    Activity a = doLevel.getActivity(0);
+    	    	    
+    //Check start position of active object
+    Assert.assertEquals("160_activeblock.ump", a.getPosition().getFilename());
+    Assert.assertEquals(3, a.getPosition().getLineNumber());
+    Assert.assertEquals(2, a.getPosition().getCharacterOffset());
+    Assert.assertEquals(16, a.getPosition().getOffset());
+    
+    //Check end position of active object
+    Assert.assertEquals("160_activeblock.ump", a.getEndPosition().getFilename());
+    Assert.assertEquals(1, a.getEndPosition().getLineNumber());
+    Assert.assertEquals(65, a.getEndPosition().getCharacterOffset());
+    Assert.assertEquals(65, a.getEndPosition().getOffset());
+    
+    //Multiple active blocks with multiple languages
+    assertParse("160_activeBlock_supportingLanguageSpecific.ump", "[classDefinition][name:Lamp][stateMachine][name:stateMachine1][state][stateName:topLevel][state][stateName:thread1][activity][codeLang:Java][code:System.out.println(\"Hello\");][codeLang:Cpp][code:cout << \"hello\";]");
+    c = model.getUmpleClass("Lamp");
+    Assert.assertEquals(1, c.numberOfStateMachines());
+    sm = c.getStateMachine(0);
+    
+    Assert.assertEquals(1,sm.numberOfStates());
+    topLevel = sm.getState(0);
+
+    Assert.assertEquals(1, topLevel.numberOfNestedStateMachines());
+    threadLevel = topLevel.getNestedStateMachine(0);
+    
+    Assert.assertEquals(1, threadLevel.numberOfStates());
+    doLevel = threadLevel.getState(0);
+
+    Assert.assertEquals(1, doLevel.numberOfActivities());	  
+    
+    //Check start position of active object
+    Position p = doLevel.getActivity(0).getPosition();
+    Assert.assertEquals("160_activeBlock_supportingLanguageSpecific.ump", p.getFilename());
+    Assert.assertEquals(4, p.getLineNumber());
+    Assert.assertEquals(2, p.getCharacterOffset());
+    Assert.assertEquals(19, p.getOffset());
+    
+    //Check end position of active object 
+    Position endP = doLevel.getActivity(0).getEndPosition();
+    Assert.assertEquals("160_activeBlock_supportingLanguageSpecific.ump", p.getFilename());
+    Assert.assertEquals(1, endP.getLineNumber());
+    Assert.assertEquals(99, endP.getCharacterOffset());
+    Assert.assertEquals(99, endP.getOffset());
   }
 
   private void assertParse(String filename, String expectedOutput)

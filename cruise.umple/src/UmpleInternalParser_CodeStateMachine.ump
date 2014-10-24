@@ -154,7 +154,11 @@ class UmpleInternalParser
       doActivity.addSubToken(activeToken.getSubToken("code",0).copy());
       doActivity.addSubToken(new Token("}", "STATIC"));
     }
-    
+
+    //Copy position information to the new do activity token
+    doActivity.setPosition(activeToken.getPosition());
+    doActivity.setEndPosition(activeToken.getEndPosition());
+
     subState.addSubToken(doActivity);
     stateToken.addSubToken(new Token("}", "STATIC"));
     stateToken.addSubToken(subState);
