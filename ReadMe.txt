@@ -64,6 +64,9 @@ They are referenced here so that people can better understand the hierarchy of f
     
     lib
        Elements the Umple build depends on
+       The file umple.jar is used to bootstrap the build
+          - It should be updated with major releases, and also preiodically
+             in between
 
     releases
        Historical and current versions of the Umple compiler
