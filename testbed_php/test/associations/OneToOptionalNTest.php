@@ -24,7 +24,7 @@ class OneToOptionalNTest extends UnitTestCase
     
     $this->assertEqual(false,$s->setMentor(null));
     $this->assertEqual($m,$s->getMentor());
-    $this->assertEqual($s,$m->getStudent(0));
+    $this->assertEqual($s,$m->getStudent_index(0));
   } 
   
 
@@ -36,7 +36,7 @@ class OneToOptionalNTest extends UnitTestCase
     $this->assertEqual(99,$s->getNumber());
     $this->assertEqual($m,$s->getMentor());
     $this->assertEqual(1,$m->numberOfStudents());
-    $this->assertEqual($s,$m->getStudent(0));
+    $this->assertEqual($s,$m->getStudent_index(0));
   }  
   
   public function test_CreateStudentFromMentorTooMany()
@@ -99,7 +99,7 @@ class OneToOptionalNTest extends UnitTestCase
     $this->assertEqual(10,$s->getNumber());
     $this->assertEqual($m,$s->getMentor());
     $this->assertEqual(1,$m->numberOfStudents());
-    $this->assertEqual($s,$m->getStudent(0));
+    $this->assertEqual($s,$m->getStudent_index(0));
   }
   
 
@@ -114,9 +114,9 @@ class OneToOptionalNTest extends UnitTestCase
     $this->assertEqual(10,$s->getNumber());
     $this->assertEqual($m,$s->getMentor());
     $this->assertEqual(3,$m->numberOfStudents());
-    $this->assertEqual($s,$m->getStudent(0));
-    $this->assertEqual($s2,$m->getStudent(1));
-    $this->assertEqual($s3,$m->getStudent(2));
+    $this->assertEqual($s,$m->getStudent_index(0));
+    $this->assertEqual($s2,$m->getStudent_index(1));
+    $this->assertEqual($s3,$m->getStudent_index(2));
     $this->assertEqual(null,$s4);
   }  
   
@@ -133,8 +133,8 @@ class OneToOptionalNTest extends UnitTestCase
     
     $this->assertEqual($m2,$s->getMentor());
     $this->assertEqual(2,$m2->numberOfStudents());
-    $this->assertEqual($s2,$m2->getStudent(0));
-    $this->assertEqual($s,$m2->getStudent(1));
+    $this->assertEqual($s2,$m2->getStudent_index(0));
+    $this->assertEqual($s,$m2->getStudent_index(1));
     
     $this->assertEqual(0,$m->numberOfStudents());
     
@@ -150,7 +150,7 @@ class OneToOptionalNTest extends UnitTestCase
     $m2->addStudent($s);
     
     $this->assertEqual($m2,$s->getMentor());
-    $this->assertEqual($s,$m2->getStudent(0));
+    $this->assertEqual($s,$m2->getStudent_index(0));
     $this->assertEqual(0,$m->numberOfStudents());
   }  
   
@@ -170,11 +170,11 @@ class OneToOptionalNTest extends UnitTestCase
     $m2->addStudent($s1);
 
     $this->assertEqual(2,$m->numberOfStudents());
-    $this->assertEqual($s2,$m->getStudent(0));
-    $this->assertEqual($s3,$m->getStudent(1));
+    $this->assertEqual($s2,$m->getStudent_index(0));
+    $this->assertEqual($s3,$m->getStudent_index(1));
     
     $this->assertEqual(1,$m2->numberOfStudents());
-    $this->assertEqual($s1,$m2->getStudent(0));
+    $this->assertEqual($s1,$m2->getStudent_index(0));
     
     $this->assertEqual($m2,$s1->getMentor());
     $this->assertEqual($m,$s2->getMentor());
@@ -190,7 +190,7 @@ class OneToOptionalNTest extends UnitTestCase
     
     $s->setMentor($m2);
     $this->assertEqual($m2,$s->getMentor());
-    $this->assertEqual($s,$m2->getStudent(0));
+    $this->assertEqual($s,$m2->getStudent_index(0));
     $this->assertEqual(0,$m->numberOfStudents());    
   }  
   

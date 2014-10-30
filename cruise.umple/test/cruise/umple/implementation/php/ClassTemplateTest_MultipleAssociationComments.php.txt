@@ -49,7 +49,7 @@ class Foo
   // INTERFACE
   //------------------------
 
-  public function getBar1($index)
+  public function getBar1_index($index)
   {
     $aBar1 = $this->bar1s[$index];
     return $aBar1;
@@ -90,7 +90,7 @@ class Foo
     return $index;
   }
 
-  public function getBar2($index)
+  public function getBar2_index($index)
   {
     $aBar2 = $this->bar2s[$index];
     return $aBar2;
@@ -131,7 +131,7 @@ class Foo
     return $index;
   }
 
-  public function getBar3($index)
+  public function getBar3_index($index)
   {
     $aBar3 = $this->bar3s[$index];
     return $aBar3;
@@ -172,7 +172,7 @@ class Foo
     return $index;
   }
 
-  public function getBar4($index)
+  public function getBar4_index($index)
   {
     $aBar4 = $this->bar4s[$index];
     return $aBar4;

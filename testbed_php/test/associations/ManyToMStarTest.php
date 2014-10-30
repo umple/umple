@@ -42,9 +42,9 @@ class ManyToMStarTest extends UnitTestCase
     $m = new MentorR("blah",array($s,$s2,$s3));
 
     $this->assertEqual(3,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
   }
   
 
@@ -58,10 +58,10 @@ class ManyToMStarTest extends UnitTestCase
     $m = new MentorR("blah",array($s,$s2,$s3,$s4));
 
     $this->assertEqual(4,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
-    $this->assertEqual($m,$s4->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
+    $this->assertEqual($m,$s4->getMentor_index(0));
   }  
 
 
@@ -83,22 +83,22 @@ class ManyToMStarTest extends UnitTestCase
     $m = new MentorR("blah",array($s,$s2,$s3));
 
     $this->assertEqual(3, $m->numberOfStudents());
-    $this->assertEqual($m, $s->getMentor(0));
-    $this->assertEqual($m, $s2->getMentor(0));
-    $this->assertEqual($m, $s3->getMentor(0));
+    $this->assertEqual($m, $s->getMentor_index(0));
+    $this->assertEqual($m, $s2->getMentor_index(0));
+    $this->assertEqual($m, $s3->getMentor_index(0));
     $this->assertEqual(0, $s4->numberOfMentors());    
 
     $m2 = new MentorR("blah",array($s,$s2,$s4));
     
     $this->assertEqual(3, $m->numberOfStudents());
-    $this->assertEqual($m, $s->getMentor(0));
-    $this->assertEqual($m, $s2->getMentor(0));
-    $this->assertEqual($m, $s3->getMentor(0));
+    $this->assertEqual($m, $s->getMentor_index(0));
+    $this->assertEqual($m, $s2->getMentor_index(0));
+    $this->assertEqual($m, $s3->getMentor_index(0));
     
     $this->assertEqual(3, $m2->numberOfStudents());
-    $this->assertEqual($m2, $s->getMentor(1));
-    $this->assertEqual($m2, $s2->getMentor(1));
-    $this->assertEqual($m2, $s4->getMentor(0));
+    $this->assertEqual($m2, $s->getMentor_index(1));
+    $this->assertEqual($m2, $s2->getMentor_index(1));
+    $this->assertEqual($m2, $s4->getMentor_index(0));
 
   }   
   
@@ -115,9 +115,9 @@ class ManyToMStarTest extends UnitTestCase
     
     $this->assertEqual(false, $m->setStudents(array($s5,$s4)));
     $this->assertEqual(3,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
     $this->assertEqual(0,$s4->numberOfMentors());
     $this->assertEqual(0,$s5->numberOfMentors());
     
@@ -149,9 +149,9 @@ class ManyToMStarTest extends UnitTestCase
     $this->assertEqual(3,$m->numberOfStudents());
     $this->assertEqual(0,$s->numberOfMentors());
 
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
-    $this->assertEqual($m,$s4->getMentor(0));    
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
+    $this->assertEqual($m,$s4->getMentor_index(0));    
   }
   
 
@@ -185,10 +185,10 @@ class ManyToMStarTest extends UnitTestCase
     $this->assertEqual(true,$m->addStudent($s4));
     
     $this->assertEqual(4,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
-    $this->assertEqual($m,$s4->getMentor(0));    
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
+    $this->assertEqual($m,$s4->getMentor_index(0));    
    
     $this->assertEqual(true,$m->addStudent($s5));
     $this->assertEqual(5,$m->numberOfStudents());
@@ -208,13 +208,13 @@ class ManyToMStarTest extends UnitTestCase
     $m = new MentorR("blah",array($s,$s2,$s3));
     $m2 = new MentorR("blah2",array($s4,$s5,$s6));
 
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
     
-    $this->assertEqual($m2,$s4->getMentor(0));
-    $this->assertEqual($m2,$s5->getMentor(0));
-    $this->assertEqual($m2,$s6->getMentor(0));
+    $this->assertEqual($m2,$s4->getMentor_index(0));
+    $this->assertEqual($m2,$s5->getMentor_index(0));
+    $this->assertEqual($m2,$s6->getMentor_index(0));
     
     $this->assertEqual(true,$m->addStudent($s4));
     
@@ -222,8 +222,8 @@ class ManyToMStarTest extends UnitTestCase
     $this->assertEqual(3,$m2->numberOfStudents());
     
     $this->assertEqual(2,$s4->numberOfMentors());    
-    $this->assertEqual($m2,$s4->getMentor(0));    
-    $this->assertEqual($m,$s4->getMentor(1));
+    $this->assertEqual($m2,$s4->getMentor_index(0));    
+    $this->assertEqual($m,$s4->getMentor_index(1));
 
     $this->assertEqual(true,$m->addStudent($s5));
   }  
@@ -243,11 +243,11 @@ class ManyToMStarTest extends UnitTestCase
     $this->assertEqual(true,$m->removeStudent($s3));
     
     $this->assertEqual(3,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
     $this->assertEqual(0,$s3->numberOfMentors());
     $this->assertEqual(0,$s4->numberOfMentors());   
-    $this->assertEqual($m,$s5->getMentor(0));
+    $this->assertEqual($m,$s5->getMentor_index(0));
 
     $this->assertEqual(false,$m->removeStudent($s2));
     $this->assertEqual(3,$m->numberOfStudents());

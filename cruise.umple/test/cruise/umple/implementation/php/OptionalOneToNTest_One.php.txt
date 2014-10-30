@@ -47,7 +47,7 @@ class Mentor
     return $this->name;
   }
 
-  public function getStudent($index)
+  public function getStudent_index($index)
   {
     $aStudent = $this->students[$index];
     return $aStudent;
@@ -107,17 +107,17 @@ class Mentor
   {
     $wasSet = false;
     $checkNewStudents = array();
-    foreach ($newStudents as $newStudent)
+    foreach ($newStudents as $aStudent)
     {
-      if (array_search($newStudent,$checkNewStudents) !== false)
+      if (array_search($aStudent,$checkNewStudents) !== false)
       {
         return $wasSet;
       }
-      else if ($newStudent->getMentor() != null && $this !== $newStudent->getMentor())
+      else if ($aStudent->getMentor() != null && $this !== $aStudent->getMentor())
       {
         return $wasSet;
       }
-      $checkNewStudents[] = $newStudent;
+      $checkNewStudents[] = $aStudent;
     }
 
     if (count($checkNewStudents) != self::minimumNumberOfStudents())
@@ -144,10 +144,10 @@ class Mentor
     }
 
     $this->students = array();
-    foreach ($newStudents as $newStudent)
+    foreach ($newStudents as $aStudent)
     {
-      $this->setMentor($newStudent, $this);
-      $this->students[] = $newStudent;
+      $this->setMentor($aStudent, $this);
+      $this->students[] = $aStudent;
     }
     $wasSet = true;
     return $wasSet;

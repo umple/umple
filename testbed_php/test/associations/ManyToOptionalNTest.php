@@ -42,8 +42,8 @@ class ManyToOptionalNTest extends UnitTestCase
     $m->setStudents(array($s,$s2));
     
     $this->assertEqual(2,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
   }
   
 
@@ -65,20 +65,20 @@ class ManyToOptionalNTest extends UnitTestCase
     $m->setStudents(array($s,$s2));
 
     $this->assertEqual(2,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
     $this->assertEqual(0,$s3->numberOfMentors());    
 
     $m2 = new MentorAA("blah");
     $m2->setStudents(array($s,$s3));
     
     $this->assertEqual(2, $m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
     
     $this->assertEqual(2, $m2->numberOfStudents());
-    $this->assertEqual($m2,$s->getMentor(1));
-    $this->assertEqual($m2,$s3->getMentor(0));
+    $this->assertEqual($m2,$s->getMentor_index(1));
+    $this->assertEqual($m2,$s3->getMentor_index(0));
 
   }   
   
@@ -96,8 +96,8 @@ class ManyToOptionalNTest extends UnitTestCase
     $this->assertEqual(true,$m->setStudents(array($s,$s2)));
     $this->assertEqual(false, $m->setStudents($s2,$s3,$s4,$s5,$s));
     $this->assertEqual(2,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
     $this->assertEqual(0,$s3->numberOfMentors());
     $this->assertEqual(0,$s4->numberOfMentors());
     $this->assertEqual(0,$s5->numberOfMentors());
@@ -128,8 +128,8 @@ class ManyToOptionalNTest extends UnitTestCase
     $this->assertEqual(2,$m->numberOfStudents());
 
     $this->assertEqual(0,$s->numberOfMentors());
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
    
   }
   
@@ -178,8 +178,8 @@ class ManyToOptionalNTest extends UnitTestCase
     $this->assertEqual(true,$m->addStudent($s2));
     
     $this->assertEqual(2,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
    
     $this->assertEqual(false,$m->addStudent($s3));
     $this->assertEqual(2,$m->numberOfStudents());
@@ -202,10 +202,10 @@ class ManyToOptionalNTest extends UnitTestCase
     $this->assertEqual(2,$m->numberOfStudents());
     $this->assertEqual(1,$m2->numberOfStudents());
 
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
     
-    $this->assertEqual($m2,$s3->getMentor(0));
+    $this->assertEqual($m2,$s3->getMentor_index(0));
     
     $this->assertEqual(true,$m2->addStudent($s2));
     
@@ -213,8 +213,8 @@ class ManyToOptionalNTest extends UnitTestCase
     $this->assertEqual(2,$m2->numberOfStudents());
     
     $this->assertEqual(2,$s2->numberOfMentors());    
-    $this->assertEqual($m,$s2->getMentor(0));    
-    $this->assertEqual($m2,$s2->getMentor(1));
+    $this->assertEqual($m,$s2->getMentor_index(0));    
+    $this->assertEqual($m2,$s2->getMentor_index(1));
 
     $this->assertEqual(false,$m->addStudent($s3));
     $this->assertEqual(2,$s2->numberOfMentors());    
@@ -234,7 +234,7 @@ class ManyToOptionalNTest extends UnitTestCase
     $this->assertEqual(true,$m->removeStudent($s2));
     
     $this->assertEqual(1,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
     $this->assertEqual(0,$s2->numberOfMentors());
     $this->assertEqual(0,$s3->numberOfMentors());
 

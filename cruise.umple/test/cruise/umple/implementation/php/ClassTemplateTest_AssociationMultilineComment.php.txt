@@ -29,7 +29,7 @@ class Foo
   // INTERFACE
   //------------------------
 
-  public function getBar($index)
+  public function getBar_index($index)
   {
     $aBar = $this->bars[$index];
     return $aBar;

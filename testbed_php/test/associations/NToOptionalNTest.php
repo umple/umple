@@ -45,8 +45,8 @@ class NToOptionalNTest extends UnitTestCase
     $this->assertEqual(false,$s->addMentor($m3));
     
     $this->assertEqual(2, $s->numberOfMentors());
-    $this->assertEqual($s,$m->getStudent(0));
-    $this->assertEqual($s,$m2->getStudent(0));
+    $this->assertEqual($s,$m->getStudent_index(0));
+    $this->assertEqual($s,$m2->getStudent_index(0));
     $this->assertEqual(0,$m3->numberOfStudents());
   }
   
@@ -66,9 +66,9 @@ class NToOptionalNTest extends UnitTestCase
     $this->assertEqual(false,$m->addStudent($s4));
     
     $this->assertEqual(3,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
     $this->assertEqual(1,$s3->numberOfMentors());
   }   
   
@@ -85,7 +85,7 @@ class NToOptionalNTest extends UnitTestCase
     $this->assertEqual(false,$s->removeMentor($m2));
     
     $this->assertEqual(2, $s->numberOfMentors());
-    $this->assertEqual($m2,$s->getMentor(1));
+    $this->assertEqual($m2,$s->getMentor_index(1));
   } 
   
 

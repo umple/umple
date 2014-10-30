@@ -8,7 +8,7 @@ class UnidirectionalManyTest extends UnitTestCase
     $m = new MentorP("blah");
     $s = new StudentP(1);
     $m->addStudent($s);
-    $this->assertEqual($s,$m->getStudent(0));
+    $this->assertEqual($s,$m->getStudent_index(0));
   }
   
 
@@ -20,7 +20,7 @@ class UnidirectionalManyTest extends UnitTestCase
     $this->assertEqual(true,$m->addStudent($s));
 
     $this->assertEqual(1,$m->numberOfStudents());
-    $this->assertEqual($s,$m->getStudent(0));
+    $this->assertEqual($s,$m->getStudent_index(0));
   }  
   
 
@@ -56,8 +56,8 @@ class UnidirectionalManyTest extends UnitTestCase
     $this->assertEqual(1,$m->numberOfStudents());
     $this->assertEqual(1,$m2->numberOfStudents());
 
-    $this->assertEqual($s,$m->getStudent(0));
-    $this->assertEqual($s,$m2->getStudent(0));
+    $this->assertEqual($s,$m->getStudent_index(0));
+    $this->assertEqual($s,$m2->getStudent_index(0));
   }
   
 

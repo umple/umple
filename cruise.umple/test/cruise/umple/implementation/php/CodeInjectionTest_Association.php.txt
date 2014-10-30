@@ -75,7 +75,7 @@ class Student
     return $aM2;
   }
 
-  public function getM3($index)
+  public function getM3_index($index)
   {
     print "getM3";
     $aM3 = $this->m3s[$index];
@@ -126,7 +126,7 @@ class Student
     return $index;
   }
 
-  public function getM4($index)
+  public function getM4_index($index)
   {
     print "getM4";
     $aM4 = $this->m4s[$index];
@@ -177,7 +177,7 @@ class Student
     return $index;
   }
 
-  public function getM5($index)
+  public function getM5_index($index)
   {
     print "getM5";
     $aM5 = $this->m5s[$index];
@@ -228,7 +228,7 @@ class Student
     return $index;
   }
 
-  public function getM6($index)
+  public function getM6_index($index)
   {
     print "getM6";
     $aM6 = $this->m6s[$index];

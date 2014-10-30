@@ -20,8 +20,8 @@ class OptionalNToOptionalNTest extends UnitTestCase
     $s = new StudentAE(99);
     $m->addStudent($s);
     
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($s, $m->getStudent(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($s, $m->getStudent_index(0));
   }
 
   
@@ -39,16 +39,16 @@ class OptionalNToOptionalNTest extends UnitTestCase
     $m2->addStudent($s);
     $s2->addMentor($m);
     
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m2,$s->getMentor(1));
-    $this->assertEqual($m2,$s2->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(1));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m2,$s->getMentor_index(1));
+    $this->assertEqual($m2,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(1));
 
     
-    $this->assertEqual($s, $m->getStudent(0));
-    $this->assertEqual($s2, $m->getStudent(1));
-    $this->assertEqual($s2, $m2->getStudent(0));
-    $this->assertEqual($s, $m2->getStudent(1));
+    $this->assertEqual($s, $m->getStudent_index(0));
+    $this->assertEqual($s2, $m->getStudent_index(1));
+    $this->assertEqual($s2, $m2->getStudent_index(0));
+    $this->assertEqual($s, $m2->getStudent_index(1));
   }
   
 
@@ -62,14 +62,14 @@ class OptionalNToOptionalNTest extends UnitTestCase
     $m2->addStudent($s);
     
     $this->assertEqual(2,$s->numberOfMentors());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m2,$s->getMentor(1));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m2,$s->getMentor_index(1));
 
     $this->assertEqual(1, $m->numberOfStudents());
     $this->assertEqual(1, $m2->numberOfStudents());
 
-    $this->assertEqual($s, $m->getStudent(0));
-    $this->assertEqual($s, $m2->getStudent(0));
+    $this->assertEqual($s, $m->getStudent_index(0));
+    $this->assertEqual($s, $m2->getStudent_index(0));
   }  
   
 
@@ -90,16 +90,16 @@ class OptionalNToOptionalNTest extends UnitTestCase
     $m2->addStudent($s1);
 
     $this->assertEqual(2, $m->numberOfStudents());
-    $this->assertEqual($s1, $m->getStudent(0));
-    $this->assertEqual($s2, $m->getStudent(1));
+    $this->assertEqual($s1, $m->getStudent_index(0));
+    $this->assertEqual($s2, $m->getStudent_index(1));
     
     $this->assertEqual(1, $m2->numberOfStudents());
-    $this->assertEqual($s1, $m2->getStudent(0));
+    $this->assertEqual($s1, $m2->getStudent_index(0));
     
-    $this->assertEqual($m,$s1->getMentor(0));
-    $this->assertEqual($m2,$s1->getMentor(1));
+    $this->assertEqual($m,$s1->getMentor_index(0));
+    $this->assertEqual($m2,$s1->getMentor_index(1));
     
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
   }   
   
 
