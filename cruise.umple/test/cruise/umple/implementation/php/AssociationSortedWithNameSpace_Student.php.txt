@@ -62,7 +62,7 @@ class Student
     return $this->ProfsPriority;
   }
 
-  public function getProf($index)
+  public function getProf_index($index)
   {
     $aProf = $this->Profs[$index];
     return $aProf;

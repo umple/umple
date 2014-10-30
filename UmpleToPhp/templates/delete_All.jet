@@ -40,62 +40,120 @@
       continue;
     }
     
-    if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
-    {
-      %><%@ include file="delete_OneFromOne.jet" %><%
+    if (relatedAssociation.getIsComposition()) {
+    	if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isOnlyOne()) {
+    		%><%@ include file="delete_OneFromOne.jet" %><%
+    	}
+    	else if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isOptionalOne()) {
+    		%><%@ include file="delete_OptionalOneFromOne_comp.jet" %><%
+    	}
+    	else if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isMany()) {
+    		%><%@ include file="delete_ManyFromX_comp.jet" %><%
+    	}
+    	
+    	else if (relatedAssociation.isMany() && av.isOnlyOne()) {
+    		%><%@ include file="delete_OneFromOne.jet" %><%
+    	}
+    	else if (relatedAssociation.isMany() && av.isOptionalOne()) {
+    	    %><%@ include file="delete_OptionalOneFromOne_comp.jet" %><%
+    	}
+	else if (relatedAssociation.isMany() && av.isMany()) {
+    	    %><%@ include file="delete_ManyFromX_comp.jet" %><%
+    	}
+    	else {
+    		continue;
+    	}
+    	
+    	
     }
-    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
-    {
-      %><%@ include file="delete_OptionalOneFromOptionalOne.jet" %><%
+    
+    else if (av.getIsComposition() && (av.isMany() && relatedAssociation.isOnlyOne())) { 
+    	// normally this is the same for compositions, except for ManyToOne, the
+    	// list has to be cleared on the Many end (here, the ones are successfully deleted, 
+    	// but they are not removed from the list)
+  		// this functionality is not present for compositions, since, in the case
+  		// of deleting one from many, this would be on the composition end, and OneFromOne would
+  		// be called so the object is actually deleted. 	
+  
+    	%><%@ include file="delete_ManyFromX_comp.jet" %><%
+	  
     }
-    else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
-    {
-      %><%@ include file="delete_OneFromOptionalOne.jet" %><%
+    
+    else if (av.getIsComposition() && (av.isMany() && relatedAssociation.isOptionalOne() && !av.isMandatory())) { 
+    	
+    	%><%@ include file="delete_OptionalOneFromMany_comp.jet" %><%
+	  
     }
-    else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
-    {
-      %><%@ include file="delete_OptionalOneFromOne.jet" %><%
+    
+    else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && relatedAssociation.getMultiplicity().getLowerBound() != relatedAssociation.getMultiplicity().getUpperBound())) { 
+    	
+    	%><%@ include file="delete_OptionalOneFromMN_comp.jet" %><%
+	  
     }
-    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
-    {
-      %><%@ include file="delete_OptionalOneFromMany.jet" %><%
+
+    else if (av.getIsComposition() && av.isMany() && relatedAssociation.isOptionalOne()) {
+    	    %><%@ include file="delete_OptionalOneFromMany_comp.jet" %><%
     }
-    else if (av.isOptionalOne() && relatedAssociation.isN())
-    {
-      %><%@ include file="delete_OptionalOneFromN.jet" %><%
-    }
-    else if (av.isOptionalOne() && relatedAssociation.isMN())
-    {
-      %><%@ include file="delete_OptionalOneFromMN.jet" %><%
-    }
-    else if (av.isOne() && relatedAssociation.isMany())
-    {
-      %><%@ include file="delete_OneFromMany.jet" %><%
-    }
-    else if (av.isMandatory() && relatedAssociation.isOptionalOne())
-    {
-      %><%@ include file="delete_MandatoryFromOptionalOne.jet" %><%
-    }
-    else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
-    {
-      %><%@ include file="delete_ManyFromMN.jet" %><%
-    }
-    else if (av.isMany() && relatedAssociation.isMany())
-    {
-      %><%@ include file="delete_ManyFromMany.jet" %><%
-    }
-    else if (av.isMany() && relatedAssociation.isOnlyOne())
-    {
-      %><%@ include file="delete_ManyFromOne.jet" %><%
-    }
-    else if (av.isMany() && relatedAssociation.isOptionalOne())
-    {
-      %><%@ include file="delete_ManyFromOptionalOne.jet" %><%
-    }
-    else
-    {
-      continue;
-    }
+    
+    else {
+    
+	    if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
+	    {
+	      %><%@ include file="delete_OneFromOne.jet" %><%
+	    }
+	    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
+	    {
+	      %><%@ include file="delete_OptionalOneFromOptionalOne.jet" %><%
+	    }
+	    else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
+	    {
+	      %><%@ include file="delete_OneFromOptionalOne.jet" %><%
+	    }
+	    else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
+	    {
+	      %><%@ include file="delete_OptionalOneFromOne.jet" %><%
+	    }
+	    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
+	    {
+	      %><%@ include file="delete_OptionalOneFromMany.jet" %><%
+	    }
+	    else if (av.isOptionalOne() && relatedAssociation.isN())
+	    {
+	      %><%@ include file="delete_OptionalOneFromN.jet" %><%
+	    }
+	    else if (av.isOptionalOne() && relatedAssociation.isMN())
+	    {
+	      %><%@ include file="delete_OptionalOneFromMN.jet" %><%
+	    }
+	    else if (av.isOne() && relatedAssociation.isMany())
+	    {
+	      %><%@ include file="delete_OneFromMany.jet" %><%
+	    }
+	    else if (av.isMandatory() && relatedAssociation.isOptionalOne())
+	    {
+	      %><%@ include file="delete_MandatoryFromOptionalOne.jet" %><%
+	    }
+	    else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
+	    {
+	      %><%@ include file="delete_ManyFromMN.jet" %><%
+	    }
+	    else if (av.isMany() && relatedAssociation.isMany())
+	    {
+	      %><%@ include file="delete_ManyFromMany.jet" %><%
+	    }
+	    else if (av.isMany() && relatedAssociation.isOnlyOne()) 
+	    {
+	      %><%@ include file="delete_ManyFromOne.jet" %><%
+	    }
+	    else if (av.isMany() && relatedAssociation.isOptionalOne())
+	    {
+	      %><%@ include file="delete_ManyFromOptionalOne.jet" %><%
+	    }
+	    else
+	    {
+	      continue;
+	    }
+	}
     hasSomethingToDelete = true;
   }
   

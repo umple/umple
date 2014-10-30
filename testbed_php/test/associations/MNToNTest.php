@@ -29,9 +29,9 @@ class MNToNTest extends UnitTestCase
     $this->assertEqual(true,$m->setStudents(array($s,$s2,$s3)));
     
     $this->assertEqual(3,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
   }  
   
 
@@ -67,9 +67,9 @@ class MNToNTest extends UnitTestCase
     $this->assertEqual(false,$m->addStudent($s6));
     
     $this->assertEqual(3,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
     $this->assertEqual(0,$s4->numberOfMentors());
     $this->assertEqual(0,$s5->numberOfMentors());
     $this->assertEqual(0,$s6->numberOfMentors());
@@ -105,9 +105,9 @@ class MNToNTest extends UnitTestCase
     $this->assertEqual(false,$m->setStudents(array($s4,$s5,$s,$s2)));
     
     $this->assertEqual(3,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
     $this->assertEqual(0,$s4->numberOfMentors());
     $this->assertEqual(0,$s5->numberOfMentors());
     $this->assertEqual(0,$s5->numberOfMentors());

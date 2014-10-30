@@ -30,10 +30,10 @@ class NToMStarTest extends UnitTestCase
     $this->assertEqual(true,$m->setStudents(array($s,$s2,$s3,$s4)));
     
     $this->assertEqual(4, $m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
-    $this->assertEqual($m,$s4->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
+    $this->assertEqual($m,$s4->getMentor_index(0));
   }  
   
 
@@ -54,15 +54,15 @@ class NToMStarTest extends UnitTestCase
     $this->assertEqual(true,$m->setStudents(array($s,$s2,$s3,$s4,$s5,$s6,$s7,$s8,$s9)));
     
     $this->assertEqual(9, $m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
-    $this->assertEqual($m,$s4->getMentor(0));
-    $this->assertEqual($m,$s5->getMentor(0));
-    $this->assertEqual($m,$s6->getMentor(0));
-    $this->assertEqual($m,$s7->getMentor(0));
-    $this->assertEqual($m,$s8->getMentor(0));
-    $this->assertEqual($m,$s9->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
+    $this->assertEqual($m,$s4->getMentor_index(0));
+    $this->assertEqual($m,$s5->getMentor_index(0));
+    $this->assertEqual($m,$s6->getMentor_index(0));
+    $this->assertEqual($m,$s7->getMentor_index(0));
+    $this->assertEqual($m,$s8->getMentor_index(0));
+    $this->assertEqual($m,$s9->getMentor_index(0));
   }   
   
 
@@ -79,7 +79,7 @@ class NToMStarTest extends UnitTestCase
       $s2 = new StudentW($i);
       $this->assertEqual(true,$m->addStudent($s2));
       $this->assertEqual($i,$m->numberOfStudents());
-      $this->assertEqual($m,$s2->getMentor(0));
+      $this->assertEqual($m,$s2->getMentor_index(0));
     }
   }   
   
@@ -98,7 +98,7 @@ class NToMStarTest extends UnitTestCase
     $this->assertEqual(false,$m->removeStudent($s2));
     
     $this->assertEqual(4, $m->numberOfStudents());
-    $this->assertEqual($s2,$m->getStudent(1));
+    $this->assertEqual($s2,$m->getStudent_index(1));
   } 
   
 
@@ -141,9 +141,9 @@ class NToMStarTest extends UnitTestCase
     $this->assertEqual(false,$m->setStudents(array($s4,$s5)));
     
     $this->assertEqual(3, $m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
     $this->assertEqual(0,$s4->numberOfMentors());
     $this->assertEqual(0,$s5->numberOfMentors());
     $this->assertEqual(0,$s6->numberOfMentors());

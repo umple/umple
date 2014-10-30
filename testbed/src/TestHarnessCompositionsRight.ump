@@ -118,106 +118,127 @@ class Z_0_1__0_1
 class Y_1_1
 {
 	1 y_1_1 <@>- 1 Z_1_1 zVar;
+	int v = 1;
 }
 
 class Y_M_1
 {
 	3 y_m_1 <@>- 1 Z_M_1 zVar;
+	int v = 1;
 }
 
 class Y_M_M
 {	
 	3 y_m_m <@>- 3 Z_M_M zVar;
+	int v = 1;
 }
 
 class Y_1_star
 {
 	1 y_1_star <@>- * Z_1_star zVar;
+	int v = 1;
 }
 
 class Y_M_star
 {
 	3 y_m_star <@>- * Z_M_star zVar;
+	int v = 1;
 }
 
 class Y_star_star
 {
 	* y_star_star <@>- * Z_star_star zVar;
+	int v = 1;
 }
 
 class Y_m_n__1
 {
 	2..3 y_m_n__1 <@>- 1 Z_m_n__1 zVar;
+	int v = 1;
 }
 
 class Y_m_n__m
 {
 	2..3 y_m_n__m <@>- 3 Z_m_n__m zVar;
+	int v = 1;
 }
 
 class Y_m_n__star
 {
 	2..3 y_m_n__star <@>- * Z_m_n__star zVar;
+	int v = 1;
 }
 
 class Y_m_n__m_n
 {
 	2..3 y_m_n__m_n <@>- 2..3 Z_m_n__m_n zVar;
+	int v = 1;
 }
 
 class Y_0_n__1
 {
 	0..3 y_0_n__1 <@>- 1 Z_0_n__1 zVar;
+	int v = 1;
 }
 
 class Y_0_n__m
 {
 	0..3 y_0_n__m <@>- 3 Z_0_n__m zVar;
+	int v = 1;
 }
 
 class Y_0_n__star
 {
 	0..3 y_0_n__star <@>- * Z_0_n__star zVar;
+	int v = 1;
 }
 
 class Y_0_n__m_n
 {
 	0..3 y_0_n__m_n <@>- 2..3 Z_0_n__m_n zVar;
+	int v = 1;
 }
 
 class Y_0_n__0_n
 {
 	0..3 y_0_n__0_n <@>- 0..3 Z_0_n__0_n zVar;
+	int v = 1;
 }
 
 class Y_0_1__1
 {
 	0..1 y_0_1__1 <@>- 1 Z_0_1__1 zVar;
+	int v = 1;
 }
 
 class Y_0_1__m
 {
 	0..1 y_0_1__m <@>- 3 Z_0_1__m zVar;
+	int v = 1;
 }
 
 class Y_0_1__star
 {
 	0..1 y_0_1__star <@>- * Z_0_1__star zVar;
+	int v = 1;
 }
 
 class Y_0_1__m_n
 {
 	0..1 y_0_1__m_n <@>- 2..3 Z_0_1__m_n zVar;
+	int v = 1;
 }
 
 class Y_0_1__0_n
 {
 	0..1 y_0_1__0_n <@>- 0..3 Z_0_1__0_n zVar;
+	int v = 1;
 }
 
 class Y_0_1__0_1
 {
 	0..1 y_0_1__0_1 <@>- 0..1 Z_0_1__0_1 zVar;
+	int v = 1;
 }
 
 

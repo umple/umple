@@ -24,12 +24,12 @@ class ClassLevelImmutabilityTest extends UnitTestCase
     $widget = new WidgetSubclass("Little Widget", "myType", array($associated));
     $this->assertEqual($widget->getName(), "Little Widget");
     $this->assertEqual($widget->getType(), "myType");
-    $this->assertEqual($widget->getWidgetImmutableB(0), $associated);
+    $this->assertEqual($widget->getWidgetImmutableB_index(0), $associated);
 
     $widget->delete();
     $this->assertEqual($widget->getName(), "Little Widget");
     $this->assertEqual($widget->getType(), "myType");
-    $this->assertEqual($widget->getWidgetImmutableB(0), $associated);
+    $this->assertEqual($widget->getWidgetImmutableB_index(0), $associated);
   }
 
 

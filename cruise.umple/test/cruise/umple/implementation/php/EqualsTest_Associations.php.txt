@@ -45,7 +45,7 @@ class Mentor
     return $has;
   }
 
-  public function getSecondary($index)
+  public function getSecondary_index($index)
   {
     $aSecondary = $this->secondaries[$index];
     return $aSecondary;

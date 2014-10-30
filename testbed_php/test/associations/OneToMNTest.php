@@ -24,7 +24,7 @@ class OneToMNTest extends UnitTestCase
     
     $this->assertEqual(false,$s->setMentor(null));
     $this->assertEqual($m,$s->getMentor());
-    $this->assertEqual($s,$m->getStudent(0));
+    $this->assertEqual($s,$m->getStudent_index(0));
     
   }  
 
@@ -77,7 +77,7 @@ class OneToMNTest extends UnitTestCase
     $this->assertEqual(99,$s->getNumber());
     $this->assertEqual($m,$s->getMentor());
     $this->assertEqual(1,$m->numberOfStudents());
-    $this->assertEqual($s,$m->getStudent(0));
+    $this->assertEqual($s,$m->getStudent_index(0));
   }  
   
 
@@ -89,7 +89,7 @@ class OneToMNTest extends UnitTestCase
     $this->assertEqual(10,$s->getNumber());
     $this->assertEqual($m,$s->getMentor());
     $this->assertEqual(1,$m->numberOfStudents());
-    $this->assertEqual($s,$m->getStudent(0));
+    $this->assertEqual($s,$m->getStudent_index(0));
   }
 
 
@@ -130,8 +130,8 @@ class OneToMNTest extends UnitTestCase
     $this->assertEqual(true,$s->setMentor($m2));
     $this->assertEqual($m2,$s->getMentor());
     $this->assertEqual(2,$m2->numberOfStudents());
-    $this->assertEqual($s2,$m2->getStudent(0));
-    $this->assertEqual($s,$m2->getStudent(1));
+    $this->assertEqual($s2,$m2->getStudent_index(0));
+    $this->assertEqual($s,$m2->getStudent_index(1));
     
     $this->assertEqual(2,$m->numberOfStudents());
   } 
@@ -148,7 +148,7 @@ class OneToMNTest extends UnitTestCase
     
     $this->assertEqual(true,$m2->addStudent($s));
     $this->assertEqual($m2,$s->getMentor());
-    $this->assertEqual($s,$m2->getStudent(0));
+    $this->assertEqual($s,$m2->getStudent_index(0));
     $this->assertEqual(2,$m->numberOfStudents());
   }  
   
@@ -168,11 +168,11 @@ class OneToMNTest extends UnitTestCase
     $m2->addStudent($s1);
 
     $this->assertEqual(2,$m->numberOfStudents());
-    $this->assertEqual($s2,$m->getStudent(0));
-    $this->assertEqual($s3,$m->getStudent(1));
+    $this->assertEqual($s2,$m->getStudent_index(0));
+    $this->assertEqual($s3,$m->getStudent_index(1));
     
     $this->assertEqual(1,$m2->numberOfStudents());
-    $this->assertEqual($s1,$m2->getStudent(0));
+    $this->assertEqual($s1,$m2->getStudent_index(0));
     
     $this->assertEqual($m2,$s1->getMentor());
     $this->assertEqual($m,$s2->getMentor());
@@ -191,7 +191,7 @@ class OneToMNTest extends UnitTestCase
     
     $this->assertEqual(true,$s->setMentor($m2));
     $this->assertEqual($m2,$s->getMentor());
-    $this->assertEqual($s,$m2->getStudent(0));
+    $this->assertEqual($s,$m2->getStudent_index(0));
     $this->assertEqual(2,$m->numberOfStudents());    
   }
   

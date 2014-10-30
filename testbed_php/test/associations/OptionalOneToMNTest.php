@@ -164,9 +164,9 @@ class OptionalOneToMNTest extends UnitTestCase
     
     $this->assertEqual(true, $m->setStudents(array($s2, $s3, $s4)));
     $this->assertEqual(3,$m->numberOfStudents());
-    $this->assertEqual($s2,$m->getStudent(0));
-    $this->assertEqual($s3,$m->getStudent(1));
-    $this->assertEqual($s4,$m->getStudent(2));
+    $this->assertEqual($s2,$m->getStudent_index(0));
+    $this->assertEqual($s3,$m->getStudent_index(1));
+    $this->assertEqual($s4,$m->getStudent_index(2));
 
     $this->assertEqual(null,$s->getMentor());
     $this->assertEqual($m,$s2->getMentor());

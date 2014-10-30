@@ -72,7 +72,7 @@ class OneToNTest extends UnitTestCase
     $this->assertEqual(99,$s->getNumber());
     $this->assertEqual($m,$s->getMentor());
     $this->assertEqual(1,$m->numberOfStudents());
-    $this->assertEqual($s,$m->getStudent(0));
+    $this->assertEqual($s,$m->getStudent_index(0));
   }  
   
 
@@ -84,7 +84,7 @@ class OneToNTest extends UnitTestCase
     $this->assertEqual(10,$s->getNumber());
     $this->assertEqual($m,$s->getMentor());
     $this->assertEqual(1,$m->numberOfStudents());
-    $this->assertEqual($s,$m->getStudent(0));
+    $this->assertEqual($s,$m->getStudent_index(0));
   }
 
 

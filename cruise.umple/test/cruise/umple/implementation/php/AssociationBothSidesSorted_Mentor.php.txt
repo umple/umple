@@ -62,7 +62,7 @@ class Mentor
     return $this->studentsPriority;
   }
 
-  public function getStudent($index)
+  public function getStudent_index($index)
   {
     $aStudent = $this->students[$index];
     return $aStudent;

@@ -36,8 +36,8 @@ class ManyToNTest extends UnitTestCase
     $m = new MentorQ("blah",array($s,$s2));
 
     $this->assertEqual(2,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
   }
   
   public function test_constructorWatchOutForDuplicateEntries()
@@ -57,19 +57,19 @@ class ManyToNTest extends UnitTestCase
     $m = new MentorQ("blah",array($s1,$s2));
 
     $this->assertEqual(2,$m->numberOfStudents());
-    $this->assertEqual($m,$s1->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s1->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
     $this->assertEqual(0,$s3->numberOfMentors());    
 
     $m2 = new MentorQ("blah2",array($s2,$s3));
     
     $this->assertEqual(2,$m->numberOfStudents());
-    $this->assertEqual($m,$s1->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s1->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
     
     $this->assertEqual(2,$m2->numberOfStudents());
-    $this->assertEqual($m2,$s2->getMentor(1));
-    $this->assertEqual($m2,$s3->getMentor(0));
+    $this->assertEqual($m2,$s2->getMentor_index(1));
+    $this->assertEqual($m2,$s3->getMentor_index(0));
 
   }   
   
@@ -86,16 +86,16 @@ class ManyToNTest extends UnitTestCase
     
     $this->assertEqual(false,$m->setStudents($s2,$s3,$s4));
     $this->assertEqual(2,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
     $this->assertEqual(0,$s3->numberOfMentors());
     $this->assertEqual(0,$s4->numberOfMentors());
     $this->assertEqual(0,$s5->numberOfMentors());
 
     $this->assertEqual(false,$m->setStudents($s5));
     $this->assertEqual(2,$m->numberOfStudents());
-    $this->assertEqual($m,$s->getMentor(0));
-    $this->assertEqual($m,$s2->getMentor(0));
+    $this->assertEqual($m,$s->getMentor_index(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
     $this->assertEqual(0,$s3->numberOfMentors());
     $this->assertEqual(0,$s4->numberOfMentors());
     $this->assertEqual(0,$s5->numberOfMentors());
@@ -128,8 +128,8 @@ class ManyToNTest extends UnitTestCase
 
     $this->assertEqual(0,$s->numberOfMentors());
 
-    $this->assertEqual($m,$s2->getMentor(0));
-    $this->assertEqual($m,$s3->getMentor(0));
+    $this->assertEqual($m,$s2->getMentor_index(0));
+    $this->assertEqual($m,$s3->getMentor_index(0));
   }
   
 

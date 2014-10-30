@@ -18,8 +18,8 @@ class ManyToManyTest extends UnitTestCase
     $s = new StudentN(99);
     $m->addStudent($s);
     
-    $this->assertEqual($m, $s->getMentor(0));
-    $this->assertEqual($s, $m->getStudent(0));
+    $this->assertEqual($m, $s->getMentor_index(0));
+    $this->assertEqual($s, $m->getStudent_index(0));
   }
 
   function test_addStudentToMultipleMentors()
@@ -35,16 +35,16 @@ class ManyToManyTest extends UnitTestCase
     $m2->addStudent($s);
     $s2->addMentor($m);
     
-    $this->assertEqual($m, $s->getMentor(0));
-    $this->assertEqual($m2, $s->getMentor(1));
-    $this->assertEqual($m2, $s2->getMentor(0));
-    $this->assertEqual($m, $s2->getMentor(1));
+    $this->assertEqual($m, $s->getMentor_index(0));
+    $this->assertEqual($m2, $s->getMentor_index(1));
+    $this->assertEqual($m2, $s2->getMentor_index(0));
+    $this->assertEqual($m, $s2->getMentor_index(1));
 
     
-    $this->assertEqual($s, $m->getStudent(0));
-    $this->assertEqual($s2, $m->getStudent(1));
-    $this->assertEqual($s2, $m2->getStudent(0));
-    $this->assertEqual($s, $m2->getStudent(1));
+    $this->assertEqual($s, $m->getStudent_index(0));
+    $this->assertEqual($s2, $m->getStudent_index(1));
+    $this->assertEqual($s2, $m2->getStudent_index(0));
+    $this->assertEqual($s, $m2->getStudent_index(1));
   }
   
 
@@ -58,14 +58,14 @@ class ManyToManyTest extends UnitTestCase
     $m2->addStudent($s);
     
     $this->assertEqual(2, $s->numberOfMentors());
-    $this->assertEqual($m, $s->getMentor(0));
-    $this->assertEqual($m2, $s->getMentor(1));
+    $this->assertEqual($m, $s->getMentor_index(0));
+    $this->assertEqual($m2, $s->getMentor_index(1));
 
     $this->assertEqual(1, $m->numberOfStudents());
     $this->assertEqual(1, $m2->numberOfStudents());
 
-    $this->assertEqual($s, $m->getStudent(0));
-    $this->assertEqual($s, $m2->getStudent(0));
+    $this->assertEqual($s, $m->getStudent_index(0));
+    $this->assertEqual($s, $m2->getStudent_index(0));
   }  
   
 
@@ -88,18 +88,18 @@ class ManyToManyTest extends UnitTestCase
     $m2->addStudent($s1);
 
     $this->assertEqual(3, $m->numberOfStudents());
-    $this->assertEqual($s1, $m->getStudent(0));
-    $this->assertEqual($s2, $m->getStudent(1));
-    $this->assertEqual($s3, $m->getStudent(2));
+    $this->assertEqual($s1, $m->getStudent_index(0));
+    $this->assertEqual($s2, $m->getStudent_index(1));
+    $this->assertEqual($s3, $m->getStudent_index(2));
     
     $this->assertEqual(1, $m2->numberOfStudents());
-    $this->assertEqual($s1, $m2->getStudent(0));
+    $this->assertEqual($s1, $m2->getStudent_index(0));
     
-    $this->assertEqual($m, $s1->getMentor(0));
-    $this->assertEqual($m2, $s1->getMentor(1));
+    $this->assertEqual($m, $s1->getMentor_index(0));
+    $this->assertEqual($m2, $s1->getMentor_index(1));
     
-    $this->assertEqual($m, $s2->getMentor(0));
-    $this->assertEqual($m, $s3->getMentor(0));
+    $this->assertEqual($m, $s2->getMentor_index(0));
+    $this->assertEqual($m, $s3->getMentor_index(0));
   }   
   
 

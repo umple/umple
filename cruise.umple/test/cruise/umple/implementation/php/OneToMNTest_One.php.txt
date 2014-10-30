@@ -42,7 +42,7 @@ class Mentor
     return $this->name;
   }
 
-  public function getPupil($index)
+  public function getPupil_index($index)
   {
     $aPupil = $this->pupils[$index];
     return $aPupil;
