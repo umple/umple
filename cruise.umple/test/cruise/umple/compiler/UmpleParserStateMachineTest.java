@@ -1564,6 +1564,45 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(99, endP.getCharacterOffset());
     Assert.assertEquals(99, endP.getOffset());
   }
+  
+  @Test
+  public void activeBlock_MultiLanguagePositions()
+  {
+    assertParse("160_activeBlock_supportingLanguageSpecific.ump", "[classDefinition][name:Lamp][stateMachine][name:stateMachine1][state][stateName:topLevel][state][stateName:thread1][activity][codeLang:Java][code:System.out.println(\"Hello\");][codeLang:Cpp][code:cout << \"hello\";]");
+    UmpleClass c = model.getUmpleClass("Lamp");
+    State topLevel = c.getStateMachine(0).getState(0);
+    Activity a = topLevel.getNestedStateMachine(0).getState(0).getActivity(0);
+    
+    CodeBlock cb = a.getCodeblock();
+    Assert.assertEquals(true, cb.hasCode("Java"));
+    Assert.assertEquals(false, cb.hasCode("Php"));
+    Assert.assertEquals(true, cb.hasCode("Cpp"));
+    Assert.assertEquals(false, cb.hasCode(""));
+    
+    Position jPos = a.getImplementationPositions().get("Java");
+    Assert.assertEquals(4, jPos.getLineNumber());
+    Assert.assertEquals(9, jPos.getCharacterOffset());
+    Assert.assertEquals("160_activeBlock_supportingLanguageSpecific.ump", jPos.getFilename());
+    
+    Position cPos = a.getImplementationPositions().get("Cpp");
+    Assert.assertEquals(6, cPos.getLineNumber());
+    Assert.assertEquals(4, cPos.getCharacterOffset());
+    Assert.assertEquals("160_activeBlock_supportingLanguageSpecific.ump", cPos.getFilename());
+    
+    // Check positions for single language active block
+    assertParse("160_activeblock.ump", "[classDefinition][name:Lamp][stateMachine][name:stateMachine1][state][stateName:topLevel][state][stateName:thread1][activity][code:System.out.println(\"Hello\");]");
+    c = model.getUmpleClass("Lamp");
+    topLevel = c.getStateMachine(0).getState(0);
+    a = topLevel.getNestedStateMachine(0).getState(0).getActivity(0);
+    cb = a.getCodeblock();
+    
+    Assert.assertEquals(true, cb.hasCode(""));
+    Position nPos = a.getImplementationPositions().get("");
+    Assert.assertEquals(5, nPos.getLineNumber());
+    Assert.assertEquals(4, nPos.getCharacterOffset());
+    Assert.assertEquals("160_activeblock.ump", nPos.getFilename());
+    
+  }
 
   private void assertParse(String filename, String expectedOutput)
   {

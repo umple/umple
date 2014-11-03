@@ -1259,27 +1259,35 @@ class UmpleInternalParser
   private Activity analyzeActivity(Token activityToken, State fromState)
   {
     Activity act= new Activity("", fromState);
-  	CodeBlock cb = new CodeBlock();
-  	
-  	List<String> codelangs = new ArrayList<String>();
-  	for(Token tkn: activityToken.getSubTokens()){
-  	  if(tkn.is("codeLang")){
-  		codelangs.add(tkn.getValue());
-  	  } else if(tkn.is("code")){
-  		if(codelangs.isEmpty())
-  		{
-  		  cb.setCode(tkn.getValue());
-  		} 
-  		else {
-  		  for(String lang: codelangs){
-  			cb.setCode(lang, tkn.getValue());
+    CodeBlock cb = new CodeBlock();
+    
+    List<String> codelangs = new ArrayList<String>();
+    Map<String,Position> implementationPositions = new HashMap<String,Position>();
+
+    for(Token tkn: activityToken.getSubTokens())
+    {
+      if(tkn.is("codeLang")){
+        codelangs.add(tkn.getValue());
+        implementationPositions.put(tkn.getValue(), tkn.getPosition());
+      }
+      else if(tkn.is("code"))
+      {
+        if(codelangs.isEmpty())
+        {
+          cb.setCode(tkn.getValue());
+          implementationPositions.put("", tkn.getPosition());
+        } 
+        else 
+        {
+          for(String lang: codelangs){
+            cb.setCode(lang, tkn.getValue());
           }
           codelangs.clear();
-    	}
+        }
       }
     }
     act.setCodeblock(cb);
-    
+    act.setImplementationPositions(implementationPositions);
     act.setPosition(activityToken.getPosition());
     act.setEndPosition(activityToken.getEndPosition());
     return act;
