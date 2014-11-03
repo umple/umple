@@ -75,10 +75,12 @@ class State
 class Activity
 {
   depend cruise.umple.compiler.Position;
+  depend java.util.*;
 
   lazy Position position;
   lazy Position endPosition;
   activityCode;  // target language code
+  Map<String,Position> implementationPositions = new HashMap<String,Position>();
   
     
   * -> 0..1 Event onCompletionEvent;
