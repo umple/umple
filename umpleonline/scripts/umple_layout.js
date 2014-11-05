@@ -34,12 +34,14 @@ Layout.init = function()
     Layout.errorMessageSpace = 0;
   }
 
-  if(jQuery(window).innerWidth() > this.screenThresholdWidth)
+  var layoutQuery = this.checkLayoutNeeded();
+
+  if(layoutQuery.layoutType === "large")
   {
     this.layoutHandler = new LargeScreenManager();
     this.isInSmallScreenMode = false;
   }
-  else
+  else if(layoutQuery.layoutType === "small")
   {
     this.layoutHandler = new SmallScreenManager();
     this.isInSmallScreenMode = true;
@@ -53,18 +55,29 @@ Layout.init = function()
       if(!jQuery(event.target).hasClass("ui-resizable"))
         Layout.zoomResize(); 
     });
-}
+};
+
+Layout.checkLayoutNeeded = function() {
+  if(jQuery(window).innerWidth() > jQuery(window).innerHeight()) 
+  {
+    return {layoutType: "large"};
+  }
+  else
+  {
+    return {layoutType: "small"};
+  }
+};
 
 Layout.initPaletteSize = function()
 {
   this.layoutHandler.initPaletteSize();
-}
+};
 
 // Initializes the canvas size
 Layout.initUmpleCanvasSize = function()
 {
   this.layoutHandler.initUmpleCanvasSize();
-}
+};
 
 // Initializes the text editor size
 Layout.initUmpleTextAreaSize = function()
@@ -267,11 +280,13 @@ Layout.showHideMenu = function(doShow)
 //Deals with any resize of the window. This includes browser zoom and resize within the OS.
 Layout.zoomResize = function()
 { 
-  if(jQuery(window).innerWidth() > Layout.screenThresholdWidth)
+  var layoutQuery = this.checkLayoutNeeded();
+
+  if(layoutQuery.layoutType === "large")
   {
     if(this.isInSmallScreenMode) this.toggleSmallScreenMode();
   }
-  else
+  else if(layoutQuery.layoutType === "small")
   {
     if(!this.isInSmallScreenMode) this.toggleSmallScreenMode();
   }
