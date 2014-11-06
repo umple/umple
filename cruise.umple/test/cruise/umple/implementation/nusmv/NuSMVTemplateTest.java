@@ -24,34 +24,14 @@ public class NuSMVTemplateTest extends TemplateTest{
 	  public void tearDown()
 	  {
 	    super.tearDown();
-	    SampleFileWriter.destroy(pathToInput + "/nusmv/ExampleFile.smv");
+	    SampleFileWriter.destroy(pathToInput + "/alloy/ExampleFile.smv");
+	   
 	  }
 	  
 	  @Test @Ignore
-	  public void File()
-	  {
-		assertUmpleTemplateFor("nusmv/ExampleFile.ump","nusmv/ExampleFile.nusmv.txt");
-		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/ExampleFile.smv")).exists());
-	  }
-	  
-	  @Test //@Ignore
-	  public void ExampleFile1()
-	  {
-		assertUmpleTemplateFor("nusmv/ExampleFile1.ump","nusmv/ExampleFile1.nusmv.txt");
-		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/ExampleFile1.smv")).exists());
-	  }
-	  
-	  @Test //@Ignore
-	  public void ExampleFile2()
-	  {
-		assertUmpleTemplateFor("nusmv/ExampleFile2.ump","nusmv/ExampleFile2.nusmv.txt");
-		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/ExampleFile2.smv")).exists());
-	  }
-	  
-	  @Test //@Ignore
 	  public void ExampleFile()
 	  {
-		assertUmpleTemplateFor("nusmv/ExampleFile.ump","nusmv/ExampleFile.nusmv.txt");
+		assertUmpleTemplateFor("alloy/ExampleFile.ump","nusmv/ExampleFile.nusmv.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/ExampleFile.smv")).exists());
 	  }
 }
