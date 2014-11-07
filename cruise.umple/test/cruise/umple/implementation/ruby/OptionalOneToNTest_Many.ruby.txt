@@ -57,7 +57,9 @@ class Student
   def delete
     @deleted = true
     unless @mentor.nil?
-      @mentor.delete
+      a_mentor = @mentor
+      @mentor = nil
+      a_mentor.delete
     end
   end
 

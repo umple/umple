@@ -343,7 +343,7 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
   public  function test_OneToOne_RightTest()
   {
     $z = new Z_1_1();
-    $y = new Y_1_1($z);
+    $y = new YR_1_1($z);
     $y->delete();    
 
     $this->assertEqual(null, $y->getZVar());
@@ -354,7 +354,7 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
   public  function test_MToOne_RightTest()
   {
     $z = new Z_M_1(1);
-    $y = new Y_M_1($z);
+    $y = new YR_M_1($z);
     $z->delete();    
 
     $this->assertEqual(null, $y->getZVar());
@@ -364,10 +364,10 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
    
   public  function test_MToM_RightTest()
   {
-    $y1 = new Y_M_M();
-    $y2 = new Y_M_M();
+    $y1 = new YR_M_M();
+    $y2 = new YR_M_M();
     $y2->setV(2);
-    $y3 = new Y_M_M();
+    $y3 = new YR_M_M();
     $y3->setV(3);
      
     $z = new Z_M_M(1, array($y1, $y2, $y3)); 
@@ -383,7 +383,7 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
    
   public  function test_OneToStar_RightTest()
   {
-    $y = new Y_1_star();
+    $y = new YR_1_star();
     
     $z = new Z_1_star(1, $y); 
 
@@ -396,10 +396,10 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
    
   public  function test_MToStar_RightTest()
   {
-    $y1 = new Y_M_star();
-    $y2 = new Y_M_star();
+    $y1 = new YR_M_star();
+    $y2 = new YR_M_star();
     $y2->setV(2);
-    $y3 = new Y_M_star();
+    $y3 = new YR_M_star();
     $y3->setV(3);
      
     $z = new Z_M_star(1, array($y1, $y2, $y3)); 
@@ -415,10 +415,10 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
    
   public  function test_StarToStar_RightTest()
   {
-    $y1 = new Y_star_star();
-    $y2 = new Y_star_star();
+    $y1 = new YR_star_star();
+    $y2 = new YR_star_star();
     $y2->setV(2);
-    $y3 = new Y_star_star();
+    $y3 = new YR_star_star();
     $y3->setV(3);
      
     $z1 = new Z_star_star(1);
@@ -442,7 +442,7 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
   public  function test_MNToOne_RightTest()
   {
     $z = new Z_m_n__1(1);
-    $y = new Y_m_n__1($z);
+    $y = new YR_m_n__1($z);
     $z->delete();    
 
     $this->assertEqual(null, $y->getZVar());
@@ -452,10 +452,10 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
    
   public  function test_MNToM_RightTest()
   {
-    $y1 = new Y_m_n__m();
-    $y2 = new Y_m_n__m();
+    $y1 = new YR_m_n__m();
+    $y2 = new YR_m_n__m();
     $y2->setV(2);
-    $y3 = new Y_m_n__m();
+    $y3 = new YR_m_n__m();
     $y3->setV(3);
      
     $z = new Z_m_n__m(1); 
@@ -472,10 +472,10 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
    
   public  function test_MNToStar_RightTest()
   {
-    $y1 = new Y_m_n__star();
-    $y2 = new Y_m_n__star();
+    $y1 = new YR_m_n__star();
+    $y2 = new YR_m_n__star();
     $y2->setV(2);
-    $y3 = new Y_m_n__star();
+    $y3 = new YR_m_n__star();
     $y3->setV(3);
      
     $z = new Z_m_n__star(1, array($y1, $y2)); 
@@ -492,8 +492,8 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
    
   public  function test_MNToMN_RightTest()
   {
-    $y1 = new Y_m_n__m_n();
-    $y2 = new Y_m_n__m_n();
+    $y1 = new YR_m_n__m_n();
+    $y2 = new YR_m_n__m_n();
     $y2->setV(2);
      
     $z = new Z_m_n__m_n(1); 
@@ -510,7 +510,7 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
   public  function test__0NToOne_RightTest()
   {
     $z = new Z_0_n__1(1);
-    $y = new Y_0_n__1($z);
+    $y = new YR_0_n__1($z);
     $z->delete();    
 
     $this->assertEqual(null, $y->getZVar());
@@ -520,10 +520,10 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
    
   public  function test__0NToM_RightTest()
   {
-    $y1 = new Y_0_n__m();
-    $y2 = new Y_0_n__m();
+    $y1 = new YR_0_n__m();
+    $y2 = new YR_0_n__m();
     $y2->setV(2);
-    $y3 = new Y_0_n__m();
+    $y3 = new YR_0_n__m();
     $y3->setV(3);
      
     $z = new Z_0_n__m(1); 
@@ -542,8 +542,8 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
    
   public  function test__0NToStar_RightTest()
   {
-    $y1 = new Y_0_n__star();
-    $y2 = new Y_0_n__star();
+    $y1 = new YR_0_n__star();
+    $y2 = new YR_0_n__star();
     $y2->setV(2);
      
     $z = new Z_0_n__star(1); 
@@ -560,8 +560,8 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
    
   public  function test__0NTo0N_RightTest()
   {
-    $y1 = new Y_0_n__0_n();
-    $y2 = new Y_0_n__0_n();
+    $y1 = new YR_0_n__0_n();
+    $y2 = new YR_0_n__0_n();
     $y2->setV(2);
      
     $z1 = new Z_0_n__0_n(1); 
@@ -583,7 +583,7 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
   public  function test__0OneToOne_RightTest()
   {
     $z = new Z_0_1__1(1);
-    $y = new Y_0_1__1($z);
+    $y = new YR_0_1__1($z);
     $y->delete();    
 
     $this->assertEqual(null, $y->getZVar());
@@ -597,7 +597,7 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
     $z2 = new Z_0_1__m(2);
     $z3 = new Z_0_1__m(3);
      
-    $y = new Y_0_1__m(array($z1, $z2, $z3)); 
+    $y = new YR_0_1__m(array($z1, $z2, $z3)); 
     
     $y->delete();    
 
@@ -610,7 +610,7 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
    
   public  function test__0OneToStar_RightTest()
   {
-    $y = new Y_0_1__star();
+    $y = new YR_0_1__star();
     
     $z = new Z_0_1__star(1); 
     $z->setY_0_1__star($y);
@@ -628,7 +628,7 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
     $z2 = new Z_0_1__m_n(2);
     $z3 = new Z_0_1__m_n(3); 
     
-    $y = new Y_0_1__m_n(array($z1, $z2, $z3));
+    $y = new YR_0_1__m_n(array($z1, $z2, $z3));
 
     $y->delete();    
 
@@ -642,7 +642,7 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
    
   public  function test__01To0N_RightTest()
   {
-    $y1 = new Y_0_1__0_n();
+    $y1 = new YR_0_1__0_n();
      
     $z1 = new Z_0_1__0_n(1); 
     $z1->setY_0_1__0_n($y1);
@@ -660,7 +660,7 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
   public  function test__0OneTo0One_RightTest()
   {
     $z = new Z_0_1__0_1(1);
-    $y = new Y_0_1__0_1();
+    $y = new YR_0_1__0_1();
     $y->setZVar($z);
     
     $z->delete();    

@@ -337,7 +337,7 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void OneToOne_RightTest()
   {
-    Y_1_1 y = new Y_1_1(1);
+    YR_1_1 y = new YR_1_1(1);
     Z_1_1 z = y.getZVar();
     y.getZVar().delete();    
 
@@ -349,7 +349,7 @@ public class CompositionMultiplicity_DeleteCodeTests
   public void MToOne_RightTest()
   {
     Z_M_1 z = new Z_M_1(1);
-    Y_M_1 y = new Y_M_1(z);
+    YR_M_1 y = new YR_M_1(z);
     z.delete();    
 
     Assert.assertEquals(null, y.getZVar());
@@ -359,9 +359,9 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void MToM_RightTest()
   {
-    Y_M_M y1 = new Y_M_M();
-    Y_M_M y2 = new Y_M_M();
-    Y_M_M y3 = new Y_M_M();
+    YR_M_M y1 = new YR_M_M();
+    YR_M_M y2 = new YR_M_M();
+    YR_M_M y3 = new YR_M_M();
      
     Z_M_M z = new Z_M_M(1); 
     z.setY_m_m(y1, y2, y3);    
@@ -377,7 +377,7 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void OneToStar_RightTest()
   {
-    Y_1_star y = new Y_1_star();
+    YR_1_star y = new YR_1_star();
     
     Z_1_star z = new Z_1_star(1, y); 
 
@@ -390,9 +390,9 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void MToStar_RightTest()
   {
-    Y_M_star y1 = new Y_M_star();
-    Y_M_star y2 = new Y_M_star();
-    Y_M_star y3 = new Y_M_star();
+    YR_M_star y1 = new YR_M_star();
+    YR_M_star y2 = new YR_M_star();
+    YR_M_star y3 = new YR_M_star();
      
     Z_M_star z = new Z_M_star(1, y1, y2, y3); 
 
@@ -407,9 +407,9 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void StarToStar_RightTest()
   {
-    Y_star_star y1 = new Y_star_star();
-    Y_star_star y2 = new Y_star_star();
-    Y_star_star y3 = new Y_star_star();
+    YR_star_star y1 = new YR_star_star();
+    YR_star_star y2 = new YR_star_star();
+    YR_star_star y3 = new YR_star_star();
      
     Z_star_star z1 = new Z_star_star(1);
     z1.addY_star_star(y1);
@@ -432,7 +432,7 @@ public class CompositionMultiplicity_DeleteCodeTests
   public void MNToOne_RightTest()
   {
     Z_m_n__1 z = new Z_m_n__1(1);
-    Y_m_n__1 y = new Y_m_n__1(z);
+    YR_m_n__1 y = new YR_m_n__1(z);
     z.delete();    
 
     Assert.assertEquals(null, y.getZVar());
@@ -442,9 +442,9 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void MNToM_RightTest()
   {
-    Y_m_n__m y1 = new Y_m_n__m();
-    Y_m_n__m y2 = new Y_m_n__m();
-    Y_m_n__m y3 = new Y_m_n__m();
+    YR_m_n__m y1 = new YR_m_n__m();
+    YR_m_n__m y2 = new YR_m_n__m();
+    YR_m_n__m y3 = new YR_m_n__m();
      
     Z_m_n__m z = new Z_m_n__m(1); 
     z.setY_m_n__m(y1, y2, y3);    
@@ -460,9 +460,9 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void MNToStar_RightTest()
   {
-    Y_m_n__star y1 = new Y_m_n__star();
-    Y_m_n__star y2 = new Y_m_n__star();
-    Y_m_n__star y3 = new Y_m_n__star();
+    YR_m_n__star y1 = new YR_m_n__star();
+    YR_m_n__star y2 = new YR_m_n__star();
+    YR_m_n__star y3 = new YR_m_n__star();
      
     Z_m_n__star z = new Z_m_n__star(1, y1, y2); 
     z.addY_m_n__star(y3);
@@ -478,8 +478,8 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void MNToMN_RightTest()
   {
-    Y_m_n__m_n y1 = new Y_m_n__m_n();
-    Y_m_n__m_n y2 = new Y_m_n__m_n();
+    YR_m_n__m_n y1 = new YR_m_n__m_n();
+    YR_m_n__m_n y2 = new YR_m_n__m_n();
      
     Z_m_n__m_n z = new Z_m_n__m_n(1); 
     z.setY_m_n__m_n(y1, y2);    
@@ -495,7 +495,7 @@ public class CompositionMultiplicity_DeleteCodeTests
   public void _0NToOne_RightTest()
   {
     Z_0_n__1 z = new Z_0_n__1(1);
-    Y_0_n__1 y = new Y_0_n__1(z);
+    YR_0_n__1 y = new YR_0_n__1(z);
     z.delete();    
 
     Assert.assertEquals(null, y.getZVar());
@@ -505,9 +505,9 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void _0NToM_RightTest()
   {
-    Y_0_n__m y1 = new Y_0_n__m();
-    Y_0_n__m y2 = new Y_0_n__m();
-    Y_0_n__m y3 = new Y_0_n__m();
+    YR_0_n__m y1 = new YR_0_n__m();
+    YR_0_n__m y2 = new YR_0_n__m();
+    YR_0_n__m y3 = new YR_0_n__m();
      
     Z_0_n__m z = new Z_0_n__m(1); 
     z.addY_0_n__m(y1);
@@ -525,8 +525,8 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void _0NToStar_RightTest()
   {
-    Y_0_n__star y1 = new Y_0_n__star();
-    Y_0_n__star y2 = new Y_0_n__star();
+    YR_0_n__star y1 = new YR_0_n__star();
+    YR_0_n__star y2 = new YR_0_n__star();
      
     Z_0_n__star z = new Z_0_n__star(1); 
     z.addY_0_n__star(y1);
@@ -542,8 +542,8 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void _0NTo0N_RightTest()
   {
-    Y_0_n__0_n y1 = new Y_0_n__0_n();
-    Y_0_n__0_n y2 = new Y_0_n__0_n();
+    YR_0_n__0_n y1 = new YR_0_n__0_n();
+    YR_0_n__0_n y2 = new YR_0_n__0_n();
      
     Z_0_n__0_n z1 = new Z_0_n__0_n(1); 
     z1.addY_0_n__0_n(y1);
@@ -564,7 +564,7 @@ public class CompositionMultiplicity_DeleteCodeTests
   public void _0OneToOne_RightTest()
   {
     Z_0_1__1 z = new Z_0_1__1(1);
-    Y_0_1__1 y = new Y_0_1__1(z);
+    YR_0_1__1 y = new YR_0_1__1(z);
     y.getZVar().delete();    
 
     Assert.assertEquals(null, y.getZVar());
@@ -578,7 +578,7 @@ public class CompositionMultiplicity_DeleteCodeTests
     Z_0_1__m z2 = new Z_0_1__m(2);
     Z_0_1__m z3 = new Z_0_1__m(3);
      
-    Y_0_1__m y = new Y_0_1__m(z1, z2, z3); 
+    YR_0_1__m y = new YR_0_1__m(z1, z2, z3); 
     
     z1.delete();    
 
@@ -591,7 +591,7 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void _0OneToStar_RightTest()
   {
-    Y_0_1__star y = new Y_0_1__star();
+    YR_0_1__star y = new YR_0_1__star();
     
     Z_0_1__star z = new Z_0_1__star(1); 
     z.setY_0_1__star(y);
@@ -609,7 +609,7 @@ public class CompositionMultiplicity_DeleteCodeTests
     Z_0_1__m_n z2 = new Z_0_1__m_n(2);
     Z_0_1__m_n z3 = new Z_0_1__m_n(3); 
     
-    Y_0_1__m_n y = new Y_0_1__m_n(z1, z2, z3);
+    YR_0_1__m_n y = new YR_0_1__m_n(z1, z2, z3);
 
     y.delete();    
 
@@ -623,7 +623,7 @@ public class CompositionMultiplicity_DeleteCodeTests
   @Test
   public void _01To0N_RightTest()
   {
-    Y_0_1__0_n y1 = new Y_0_1__0_n();
+    YR_0_1__0_n y1 = new YR_0_1__0_n();
      
     Z_0_1__0_n z1 = new Z_0_1__0_n(1); 
     z1.setY_0_1__0_n(y1);
@@ -641,7 +641,7 @@ public class CompositionMultiplicity_DeleteCodeTests
   public void _0OneTo0One_RightTest()
   {
     Z_0_1__0_1 z = new Z_0_1__0_1(1);
-    Y_0_1__0_1 y = new Y_0_1__0_1();
+    YR_0_1__0_1 y = new YR_0_1__0_1();
     y.setZVar(z);
     
     z.delete();    
