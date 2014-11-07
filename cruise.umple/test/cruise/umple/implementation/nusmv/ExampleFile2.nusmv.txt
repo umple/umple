@@ -1,0 +1,38 @@
+-- This file is generated from ExampleFile2.ump --
+
+MODULE LockState
+  
+  VAR 
+    state : { BothDoorsClosedLockFull , OpeningUpperGate , UpperGateOpen , ClosingUpperGate , LoweringWater , BothDoorsClosedLockEmpty , OpeningLowerGate , LowerGateOpen , ClosingLowerGate , RaisingWater }; 
+    transition : { boatRequestsToEnterAndGoDown , boatRequestsToEnterAndGoUp , upperGateFullyOpen , boatInLockRequestingToGoDown , after3minutes , upperGateFullyClosed , waterLevelMatchesDownStream , lowerGateFullyOpen , boatInLockRequestingToGoUp , lowerGateFullyClosed , waterLevelMatchesUpStream };  
+    
+  ASSIGN
+    init(state) := BothDoorsClosedLockFull;   
+     
+  TRANS
+    (state = BothDoorsClosedLockFull) -> (
+        (transition = boatRequestsToEnterAndGoDown & next(state) = OpeningUpperGate)  |
+        (transition = boatRequestsToEnterAndGoUp & next(state) = LoweringWater)  ) |
+    (state = UpperGateOpen) -> (
+        (transition = boatInLockRequestingToGoDown & next(state) = ClosingUpperGate)  |
+        (transition = after3minutes & next(state) = ClosingUpperGate)  ) |
+    (state = ClosingUpperGate) -> (
+        (transition = upperGateFullyClosed & next(state) = LoweringWater)  |
+        (transition = upperGateFullyClosed & next(state) = BothDoorsClosedLockFull)  ) |
+    (state = BothDoorsClosedLockEmpty) -> (
+        (transition = boatRequestsToEnterAndGoUp & next(state) = OpeningLowerGate)  |
+        (transition = boatRequestsToEnterAndGoDown & next(state) = RaisingWater)  ) |
+    (state = LowerGateOpen) -> (
+        (transition = boatInLockRequestingToGoUp & next(state) = ClosingLowerGate)  |
+        (transition = after3minutes & next(state) = ClosingLowerGate)  ) |
+    (state = ClosingLowerGate) -> (
+        (transition = lowerGateFullyClosed & next(state) = RaisingWater)  |
+        (transition = lowerGateFullyClosed & next(state) = BothDoorsClosedLockEmpty)  ) |
+    (state = OpeningUpperGate) -> (
+        transition = upperGateFullyOpen & next(state) = UpperGateOpen) |
+    (state = LoweringWater) -> (
+        transition = waterLevelMatchesDownStream & next(state) = OpeningLowerGate) |
+    (state = OpeningLowerGate) -> (
+        transition = lowerGateFullyOpen & next(state) = LowerGateOpen) |
+    (state = RaisingWater) -> (
+        transition = waterLevelMatchesUpStream & next(state) = OpeningUpperGate)

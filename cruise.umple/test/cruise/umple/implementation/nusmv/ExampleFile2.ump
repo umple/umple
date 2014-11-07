@@ -1,0 +1,61 @@
+
+class Lock
+{
+  Boolean boatGoingDown = false;
+  Boolean boatGoingUp = false;
+  Boolean boatBlockingGate = false;
+  
+  lockState {
+    BothDoorsClosedLockFull {
+      // Waiting for boat
+      boatRequestsToEnterAndGoDown -> OpeningUpperGate;
+      boatRequestsToEnterAndGoUp -> LoweringWater;
+    }
+
+    OpeningUpperGate {
+      upperGateFullyOpen -> UpperGateOpen;
+    }
+
+    UpperGateOpen {
+      entry / {boatGoingUp = false;}
+      boatInLockRequestingToGoDown -> / {boatGoingDown = true;} ClosingUpperGate;
+      after3minutes [!boatBlockingGate] -> ClosingUpperGate;
+    }
+
+    ClosingUpperGate {
+      upperGateFullyClosed [boatGoingDown]-> LoweringWater;
+      upperGateFullyClosed [!boatGoingDown]-> BothDoorsClosedLockFull;   
+    }
+    
+    LoweringWater {
+      waterLevelMatchesDownStream -> OpeningLowerGate;
+    } 
+    
+    
+    BothDoorsClosedLockEmpty {
+      // Waiting for boat
+      boatRequestsToEnterAndGoUp -> OpeningLowerGate;
+      boatRequestsToEnterAndGoDown -> RaisingWater;
+    }
+
+    OpeningLowerGate {
+      lowerGateFullyOpen -> LowerGateOpen;
+    }
+
+    LowerGateOpen {
+      entry / {boatGoingDown = false;}
+      boatInLockRequestingToGoUp -> / {boatGoingUp = true;} ClosingLowerGate;
+      after3minutes [!boatBlockingGate] -> ClosingLowerGate;
+    }
+
+    ClosingLowerGate {
+      lowerGateFullyClosed [boatGoingUp]-> RaisingWater;
+      lowerGateFullyClosed [!boatGoingUp]-> BothDoorsClosedLockEmpty;   
+    }
+    
+    RaisingWater {
+      waterLevelMatchesUpStream -> OpeningUpperGate;
+    } 
+  }
+}
+

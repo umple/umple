@@ -1,0 +1,22 @@
+-- This file is generated from ExampleFile1.ump --
+
+MODULE State
+  
+  VAR 
+    state : { newBooking , seatAssigned , checkedIn , cancelled , completed }; 
+    transition : { assignSeat , cancel , checkIn , complete };  
+    
+  ASSIGN
+    init(state) := newBooking;   
+     
+  TRANS
+    (state = newBooking) -> (
+        (transition = assignSeat & next(state) = seatAssigned)  |
+        (transition = cancel & next(state) = cancelled)  ) |
+    (state = seatAssigned) -> (
+        (transition = cancel & next(state) = cancelled)  |
+        (transition = checkIn & next(state) = checkedIn)  ) |
+    (state = checkedIn) -> (
+        (transition = cancel & next(state) = cancelled)  |
+        (transition = complete & next(state) = completed)  )
+  

@@ -1,0 +1,24 @@
+-- This file is generated from ExampleFile.ump --
+
+MODULE Status
+  
+  VAR 
+    state : { Open , Closing , Closed , Opening , HalfOpen }; 
+    transition : { buttonOrObstacle , reachBottom , reachTop };  
+    
+  ASSIGN
+    init(state) := Open;   
+     
+  TRANS
+    (state = Closing) -> (
+        (transition = buttonOrObstacle & next(state) = Opening)  |
+        (transition = reachBottom & next(state) = Closed)  ) |
+    (state = Opening) -> (
+        (transition = buttonOrObstacle & next(state) = HalfOpen)  |
+        (transition = reachTop & next(state) = Open)  ) |
+    (state = Open) -> (
+        transition = buttonOrObstacle & next(state) = Closing) |
+    (state = Closed) -> (
+        transition = buttonOrObstacle & next(state) = Opening) |
+    (state = HalfOpen) -> (
+        transition = buttonOrObstacle & next(state) = Opening)

@@ -1,0 +1,179 @@
+namespace cruise.umple.nusmv;
+
+class NuSMVModule
+{
+
+  depend cruise.umple.compiler.*;
+  
+  // Attributes declaration
+  name; startState;
+  
+  //Associations of module object
+  * -- 0..1 AssignPart;
+  * -- 0..1 TransitionPart;
+  * -- 0..1 DeclarationPart;
+  
+  // This defines the print method for nusmv modules
+  output <<!MODULE <<=getName()>>
+  
+  <<=declarationPart.print()>>
+  	
+  <<=assignPart.print()>><<=getTransitionPart().print()>>
+  !>>
+  	emit print()(output);
+}
+
+class AssignPart 
+{
+  name;
+  startState;
+  after constructor { setName("ASSIGN"); }
+  
+  output <<!<<=getName()>>
+  	init(state) := <<=startState>>; !>>
+  	emit print()(output);
+}
+
+class DeclarationPart
+{
+  name;
+  * -- 1..* DeclarationStatement;
+  after constructor { setName("VAR"); }
+  
+   
+  private String writeStatements(int size)
+  {
+	int n = size;
+	String temp = "";
+  	if(n == 1) return declarationStatements.get(0).print();
+  	else {
+  		int i = 0;
+  		while(i < n - 1)
+  		{
+  			temp += declarationStatements.get(i).print() + "\n    ";
+  			i++;
+  		}
+  		temp += declarationStatements.get(i).print();
+  	}
+  		return temp;
+  }
+  
+  output <<!<<=getName()>> 
+    <<=writeStatements(numberOfDeclarationStatements())>> !>>
+  	emit print()(output);
+}
+
+class DeclarationElement
+{
+  value;
+}
+
+class DeclarationStatement 
+{
+  name;
+  * -> 1..* DeclarationElement;
+  
+  private String writeElements(int size)
+  {
+	int n = size;
+	String temp = "";
+  	if(n == 1) return declarationElements.get(0).getValue();
+  	else {
+  		int i = 0;
+  		while(i < n - 1)
+  		{
+  			temp += declarationElements.get(i).getValue() + " , ";
+  			i++;
+  		}
+  		temp += declarationElements.get(i).getValue();
+  	}
+  		return temp;
+  }
+  
+  output <<!<<=  getName()>> : { <<=writeElements(numberOfDeclarationElements())>> }; !>>
+  emit print()(output);
+  
+}
+
+class TransitionPart 
+{
+  name;
+  after constructor { setName("TRANS"); } 
+  * -- * ComplexTransition;
+  * -- * SimpleTransition;
+  * -- * NuSMVTransition;
+  
+  private String writeTransitions(int size)
+  {
+	int n = size;
+	String temp = "";
+  	if(n == 1) return nuSMVTransitions.get(0).print();
+  	else {
+  		int i = 0;
+  		while(i < n - 1)
+  		{
+  			temp += nuSMVTransitions.get(i).print() + " |\n    ";
+  			i++;
+  		}
+  		temp += nuSMVTransitions.get(i).print();
+  	}
+  	return temp;
+  }  
+  
+  output <<!  
+  <<#for(ComplexTransition ctrans : getComplexTransitions())
+    addNuSMVTransition(ctrans);#>>
+  <<#for(SimpleTransition strans : getSimpleTransitions())
+  	addNuSMVTransition(strans);#>> 
+  <<=name>>
+    <<=writeTransitions(numberOfNuSMVTransitions())>>!>>
+  emit print()(output);
+}
+
+class NuSMVTransition
+{
+  fromState;
+  nextState;
+  event;
+ 
+  public String print(){ return null; }
+  //output <<!(transition = <<=getEvent()>> & next(state) = <<=getNextState()>>) !>>
+  //emit print()(output);
+}
+
+class ComplexTransition 
+{
+  isA NuSMVTransition;
+  * -- 2..* SimpleTransition;
+  
+  private String writeTransitions(int size)
+  {
+	int n = size;
+	String temp = "";
+  	if(n == 1) return simpleTransitions.get(0).printMe();
+  	else {
+  		int i = 0;
+  		while(i < n - 1)
+  		{
+  			temp += simpleTransitions.get(i).printMe() + "|\n        ";
+  			i++;
+  		}
+  		temp += simpleTransitions.get(i).printMe();
+  	}
+  		return temp;
+  }
+  
+  output <<!(state = <<=simpleTransitions.get(0).getFromState()>>) -> (
+  		  <<=writeTransitions(numberOfSimpleTransitions())>>)!>>
+  emit print()(output);
+}
+
+class SimpleTransition 
+{
+  isA NuSMVTransition;
+  
+  output <<!(state = <<=getFromState()>>) -> (
+  	    transition = <<=getEvent()>> & next(state) = <<=getNextState()>>)!>>
+  	emit print()(output);output1 <<!(transition = <<=getEvent()>> & next(state) = <<=getNextState()>>)  !>>
+    emit printMe()(output1);
+}

@@ -12,24 +12,121 @@ in your umple file, or the command line option
 
  */
 
+use NuSMVMetamodel.ump;
 namespace cruise.umple.compiler;
 
 class NuSMVGenerator
 {
+  depend cruise.umple.nusmv.*;
     
   public void generate(){
-  
+  	
     StringBuilder code = new StringBuilder(); 
-    
-    
+    NuSMVModule module = new NuSMVModule("","");
+    for(UmpleClass uClass : model.getUmpleClasses())
+    {
+  		for(StateMachine sm : uClass.getStateMachines())
+  		{  			
+  			module = new NuSMVModule(changeNameCase(sm.getFullName()), sm.getStartState().getName()); 
+  			module.setDeclarationPart(generateVariables(sm));
+  			module.setAssignPart(generateAssign(sm));
+  			module.setTransitionPart(genTransition(sm));	
+  		}
+  	}
+  	
     //This writes the generated code.
+    code.append(commentModel());
+    code.append(module.print());
     terminateCode(code);
   }
+  
+  private String changeNameCase(String str)
+  {
+    char[] stringArray = str.trim().toCharArray();
+    stringArray[0] = Character.toUpperCase(stringArray[0]);
+    str = new String(stringArray);
+    return str;
+  }
+  
+space <<!
+
+!>>
+  output <<!-- This file is generated from <<=model.getUmpleFile().getFileName()>> --!>>
+  emit commentModel()(output,space);
   
   private void terminateCode(StringBuilder code) {
     model.setCode(code.toString());
     writeModel();
   } 
+  	
+  private DeclarationPart generateVariables(StateMachine sm)
+  {
+  		DeclarationElement temp = new DeclarationElement("");
+  		DeclarationStatement decState = new DeclarationStatement("state", temp);
+  		DeclarationStatement decTransition = new DeclarationStatement("transition", temp);
+  		
+  		
+  		//Creates states list  			
+  		for(State st : sm.getStates())
+  		{
+  			DeclarationElement stateElement = new DeclarationElement(st.getName());
+  			decState.addDeclarationElement(stateElement);
+  		}
+  		decState.removeDeclarationElement(temp);
+  		
+  		//Creates events (transitions) list
+  		for(Event e : sm.getAllEvents())
+  		{
+  			DeclarationElement transitionElement = new DeclarationElement(e.getName());
+  			decTransition.addDeclarationElement(transitionElement);
+  		}
+  		decTransition.removeDeclarationElement(temp);
+  		
+  		return new DeclarationPart("", decState,decTransition);
+  }
+  	
+  private AssignPart generateAssign(StateMachine sm)
+  {
+  		AssignPart apart = new AssignPart("",sm.getStartState().getName());	
+  		return apart;
+  }
+  	
+  private TransitionPart genTransition(StateMachine sm)
+  {
+  		TransitionPart tpart = new TransitionPart("TRANS");
+  		SimpleTransition temp = new SimpleTransition("","","");
+  		SimpleTransition temp1 = new SimpleTransition("","","");
+  		//SimpleTransition [] tempArray = new SimpleTransition[]{temp,temp1};
+  		
+  		for(State st : sm.getStates())
+  		{
+  			if(st.numberOfTransitions() > 1)
+  			{
+  				ComplexTransition ctrans = new ComplexTransition("","","",temp1,temp);
+  				for(Transition tr : st.getTransitions())
+  				{
+  					SimpleTransition smt = new 
+  						SimpleTransition( tr.getFromState().getName(), tr.getNextState().getName(), 
+  							tr.getEvent().getName()	);
+  					ctrans.addSimpleTransition(smt);
+  				}
+  				ctrans.removeSimpleTransition(temp);
+  				ctrans.removeSimpleTransition(temp1);
+  				tpart.addComplexTransition(ctrans);	
+  			}
+  			else if(st.numberOfTransitions() == 1)
+  			{
+  				Transition tr = st.getTransition(0);
+  				SimpleTransition strans = new SimpleTransition(	tr.getFromState().getName(), 
+  						tr.getNextState().getName(), tr.getEvent().getName() );
+  				tpart.addSimpleTransition(strans);
+  			}
+  			else {
+  			  
+  			}
+  		}
+  		return tpart;
+  }
   
   // Output the NuSMV file to a file with the .als suffix
   private void writeModel()
