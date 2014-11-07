@@ -1,3 +1,4 @@
+=begin
 require 'test/unit'
 
 require './src-gen-umple/y_1_1'
@@ -83,13 +84,13 @@ require './src-gen-umple/z_0_1__0_1'
 
 
 module CruiseAssociationsCompositions
-class CompositionMultiplicity_DeleteCodeTests < Test::Unit::TestCase
+class CompositionMultiplicity_DeleteCodeTests  < Test::Unit::TestCase
 
   # 										LEFT TESTS
 
   
   def test_OneToOne_Left
-  
+ 
     y = Y1_1.new(nil)
     x = X1_1.new(1, y)
     x.delete   
@@ -732,3 +733,4 @@ class CompositionMultiplicity_DeleteCodeTests < Test::Unit::TestCase
 
 end
 end
+=end
