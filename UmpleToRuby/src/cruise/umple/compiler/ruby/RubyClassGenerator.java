@@ -1541,94 +1541,183 @@ public class RubyClassGenerator implements ILang
   protected final String TEXT_1521 = ".nil?";
   protected final String TEXT_1522 = NL + "      ";
   protected final String TEXT_1523 = ".delete" + NL + "    end";
-  protected final String TEXT_1524 = NL + "    unless @";
-  protected final String TEXT_1525 = ".nil?" + NL + "      @";
-  protected final String TEXT_1526 = ".";
-  protected final String TEXT_1527 = "(nil)" + NL + "    end";
-  protected final String TEXT_1528 = NL + "    ";
-  protected final String TEXT_1529 = " = @";
-  protected final String TEXT_1530 = NL + "    @";
-  protected final String TEXT_1531 = " = nil" + NL + "    unless ";
-  protected final String TEXT_1532 = ".nil?";
-  protected final String TEXT_1533 = NL + "      ";
-  protected final String TEXT_1534 = ".";
-  protected final String TEXT_1535 = "(nil)" + NL + "    end";
-  protected final String TEXT_1536 = NL + "    ";
-  protected final String TEXT_1537 = " = @";
-  protected final String TEXT_1538 = NL + "    @";
-  protected final String TEXT_1539 = " = nil" + NL + "    unless ";
-  protected final String TEXT_1540 = ".nil?";
-  protected final String TEXT_1541 = NL + "      ";
-  protected final String TEXT_1542 = ".delete" + NL + "    end";
-  protected final String TEXT_1543 = NL + "    unless @";
-  protected final String TEXT_1544 = ".nil?" + NL + "      @";
-  protected final String TEXT_1545 = ".";
-  protected final String TEXT_1546 = "(self)" + NL + "    end";
-  protected final String TEXT_1547 = NL + "    unless @";
-  protected final String TEXT_1548 = ".nil?" + NL + "      @";
-  protected final String TEXT_1549 = ".delete" + NL + "    end";
-  protected final String TEXT_1550 = NL + "    unless @";
-  protected final String TEXT_1551 = ".nil?" + NL + "      if @";
-  protected final String TEXT_1552 = ".";
-  protected final String TEXT_1553 = " <= ";
-  protected final String TEXT_1554 = NL + "        @";
-  protected final String TEXT_1555 = ".delete" + NL + "      else" + NL + "        @";
-  protected final String TEXT_1556 = ".";
-  protected final String TEXT_1557 = "(self)" + NL + "      end" + NL + "    end";
-  protected final String TEXT_1558 = NL + "    @";
-  protected final String TEXT_1559 = " = @";
-  protected final String TEXT_1560 = NL + "    @";
-  protected final String TEXT_1561 = " = nil" + NL + "    @";
-  protected final String TEXT_1562 = ".";
-  protected final String TEXT_1563 = "(self)";
-  protected final String TEXT_1564 = NL + "    @";
-  protected final String TEXT_1565 = ".each do |";
-  protected final String TEXT_1566 = "|";
-  protected final String TEXT_1567 = NL + "      ";
-  protected final String TEXT_1568 = ".instance_variable_set(\"@";
-  protected final String TEXT_1569 = "\",nil)" + NL + "    end" + NL + "    @";
-  protected final String TEXT_1570 = ".clear";
-  protected final String TEXT_1571 = NL + "    ";
-  protected final String TEXT_1572 = " = @";
-  protected final String TEXT_1573 = ".dup" + NL + "    @";
-  protected final String TEXT_1574 = ".clear";
-  protected final String TEXT_1575 = NL + "    ";
-  protected final String TEXT_1576 = ".each do |";
-  protected final String TEXT_1577 = "|" + NL + "      if ";
-  protected final String TEXT_1578 = ".";
-  protected final String TEXT_1579 = " <= ";
-  protected final String TEXT_1580 = ".";
-  protected final String TEXT_1581 = NL + "        ";
-  protected final String TEXT_1582 = ".delete" + NL + "      else";
-  protected final String TEXT_1583 = NL + "        ";
-  protected final String TEXT_1584 = ".";
-  protected final String TEXT_1585 = "(self)" + NL + "      end" + NL + "    end";
-  protected final String TEXT_1586 = NL + "    ";
+  protected final String TEXT_1524 = NL + "    " + NL + "    if @";
+  protected final String TEXT_1525 = " != nil" + NL + "        @";
+  protected final String TEXT_1526 = ".delete" + NL + "        @";
+  protected final String TEXT_1527 = " = nil" + NL + "    end" + NL + "    ";
+  protected final String TEXT_1528 = NL + "    while @";
+  protected final String TEXT_1529 = ".any? do" + NL + "      curSize = @";
+  protected final String TEXT_1530 = ".size" + NL + "      if @";
+  protected final String TEXT_1531 = "[0] != nil";
+  protected final String TEXT_1532 = NL + "          ";
+  protected final String TEXT_1533 = " = @";
+  protected final String TEXT_1534 = "[0]" + NL + "          @";
+  protected final String TEXT_1535 = "[0] = nil";
+  protected final String TEXT_1536 = NL + "          ";
+  protected final String TEXT_1537 = ".delete" + NL + "      end" + NL + "      if curSize == @";
+  protected final String TEXT_1538 = ".size" + NL + "          @";
+  protected final String TEXT_1539 = ".shift  # this deletes the first value in the array" + NL + "      end" + NL + "    end" + NL + "    @";
+  protected final String TEXT_1540 = ".clear";
+  protected final String TEXT_1541 = NL + "    while @";
+  protected final String TEXT_1542 = ".any? do" + NL + "      curSize = @";
+  protected final String TEXT_1543 = ".size" + NL + "      @";
+  protected final String TEXT_1544 = "[0].delete" + NL + "      if curSize == @";
+  protected final String TEXT_1545 = ".size" + NL + "          @";
+  protected final String TEXT_1546 = ".shift  # this deletes the first value in the array" + NL + "      end" + NL + "    end" + NL + "    @";
+  protected final String TEXT_1547 = ".clear" + NL + "    " + NL + "      ";
+  protected final String TEXT_1548 = NL + "    ";
+  protected final String TEXT_1549 = " = @";
+  protected final String TEXT_1550 = NL + "    @";
+  protected final String TEXT_1551 = " = nil" + NL + "    unless ";
+  protected final String TEXT_1552 = ".nil?";
+  protected final String TEXT_1553 = NL + "      ";
+  protected final String TEXT_1554 = ".delete" + NL + "    end";
+  protected final String TEXT_1555 = NL + "    " + NL + "    if @";
+  protected final String TEXT_1556 = " != nil" + NL + "        @";
+  protected final String TEXT_1557 = ".delete" + NL + "        @";
+  protected final String TEXT_1558 = " = nil" + NL + "    end" + NL + "    ";
+  protected final String TEXT_1559 = NL + "    while @";
+  protected final String TEXT_1560 = ".any? do" + NL + "      curSize = @";
+  protected final String TEXT_1561 = ".size" + NL + "      @";
+  protected final String TEXT_1562 = "[0].delete" + NL + "      if curSize == @";
+  protected final String TEXT_1563 = ".size" + NL + "          @";
+  protected final String TEXT_1564 = ".shift  # this deletes the first value in the array" + NL + "      end" + NL + "    end" + NL + "    @";
+  protected final String TEXT_1565 = ".clear" + NL + "    " + NL + "      ";
+  protected final String TEXT_1566 = NL + "    while @";
+  protected final String TEXT_1567 = ".any? do" + NL + "      curSize = @";
+  protected final String TEXT_1568 = ".size" + NL + "      @";
+  protected final String TEXT_1569 = "[0].delete" + NL + "      if curSize == @";
+  protected final String TEXT_1570 = ".size" + NL + "          @";
+  protected final String TEXT_1571 = ".shift  # this deletes the first value in the array" + NL + "      end" + NL + "    end" + NL + "    @";
+  protected final String TEXT_1572 = ".clear" + NL + "    " + NL + "      ";
+  protected final String TEXT_1573 = NL + "    while @";
+  protected final String TEXT_1574 = ".any? do" + NL + "      @";
+  protected final String TEXT_1575 = "[0].instance_variable_set(\"@";
+  protected final String TEXT_1576 = "\",nil)" + NL + "      @";
+  protected final String TEXT_1577 = ".shift  # this deletes the first value in the array" + NL + "    end" + NL + "    @";
+  protected final String TEXT_1578 = ".clear    ";
+  protected final String TEXT_1579 = NL + "    if @";
+  protected final String TEXT_1580 = " != nil" + NL + "      if @";
+  protected final String TEXT_1581 = ".";
+  protected final String TEXT_1582 = " <= ";
+  protected final String TEXT_1583 = NL + "        @";
+  protected final String TEXT_1584 = ".delete" + NL + "\t@";
+  protected final String TEXT_1585 = " = nil" + NL + "      else";
+  protected final String TEXT_1586 = NL + "        ";
   protected final String TEXT_1587 = " = @";
-  protected final String TEXT_1588 = ".dup" + NL + "    @";
-  protected final String TEXT_1589 = ".clear";
-  protected final String TEXT_1590 = NL + "    ";
-  protected final String TEXT_1591 = ".each do |";
-  protected final String TEXT_1592 = "|";
-  protected final String TEXT_1593 = NL + "      ";
-  protected final String TEXT_1594 = ".";
-  protected final String TEXT_1595 = "(self)" + NL + "    end";
-  protected final String TEXT_1596 = NL + "    @";
-  protected final String TEXT_1597 = ".each do |";
-  protected final String TEXT_1598 = "|";
-  protected final String TEXT_1599 = NL + "      ";
-  protected final String TEXT_1600 = ".delete" + NL + "    end";
-  protected final String TEXT_1601 = NL + "    @";
-  protected final String TEXT_1602 = ".each do |";
-  protected final String TEXT_1603 = "|";
-  protected final String TEXT_1604 = NL + "      ";
-  protected final String TEXT_1605 = ".";
-  protected final String TEXT_1606 = "(nil)" + NL + "    end";
-  protected final String TEXT_1607 = NL + NL;
-  protected final String TEXT_1608 = NL + "  #------------------------" + NL + "  # DEVELOPER CODE - PROVIDED AS-IS" + NL + "  #------------------------" + NL + "  ";
-  protected final String TEXT_1609 = NL + "  ";
-  protected final String TEXT_1610 = NL + "end";
-  protected final String TEXT_1611 = NL;
+  protected final String TEXT_1588 = ".";
+  protected final String TEXT_1589 = NL + "\t";
+  protected final String TEXT_1590 = ".delete(@";
+  protected final String TEXT_1591 = ")" + NL + "\t@";
+  protected final String TEXT_1592 = " = nil" + NL + "      end" + NL + "    end";
+  protected final String TEXT_1593 = NL + "    while @";
+  protected final String TEXT_1594 = ".any? do" + NL + "      curSize = @";
+  protected final String TEXT_1595 = ".size" + NL + "      @";
+  protected final String TEXT_1596 = "[0].";
+  protected final String TEXT_1597 = "(self)" + NL + "      if curSize == @";
+  protected final String TEXT_1598 = ".size" + NL + "          @";
+  protected final String TEXT_1599 = ".shift  # this deletes the first value in the array" + NL + "      end" + NL + "    end" + NL + "    @";
+  protected final String TEXT_1600 = ".clear";
+  protected final String TEXT_1601 = NL + "    ";
+  protected final String TEXT_1602 = " = @";
+  protected final String TEXT_1603 = NL + "    @";
+  protected final String TEXT_1604 = " = nil" + NL + "    unless ";
+  protected final String TEXT_1605 = ".nil?";
+  protected final String TEXT_1606 = NL + "      ";
+  protected final String TEXT_1607 = ".delete" + NL + "    end";
+  protected final String TEXT_1608 = NL + "    unless @";
+  protected final String TEXT_1609 = ".nil?" + NL + "      @";
+  protected final String TEXT_1610 = ".";
+  protected final String TEXT_1611 = "(nil)" + NL + "    end";
+  protected final String TEXT_1612 = NL + "    ";
+  protected final String TEXT_1613 = " = @";
+  protected final String TEXT_1614 = NL + "    @";
+  protected final String TEXT_1615 = " = nil" + NL + "    unless ";
+  protected final String TEXT_1616 = ".nil?";
+  protected final String TEXT_1617 = NL + "      ";
+  protected final String TEXT_1618 = ".";
+  protected final String TEXT_1619 = "(nil)" + NL + "    end";
+  protected final String TEXT_1620 = NL + "    ";
+  protected final String TEXT_1621 = " = @";
+  protected final String TEXT_1622 = NL + "    @";
+  protected final String TEXT_1623 = " = nil" + NL + "    unless ";
+  protected final String TEXT_1624 = ".nil?";
+  protected final String TEXT_1625 = NL + "      ";
+  protected final String TEXT_1626 = ".delete" + NL + "    end";
+  protected final String TEXT_1627 = NL + "    unless @";
+  protected final String TEXT_1628 = ".nil?" + NL + "      @";
+  protected final String TEXT_1629 = ".";
+  protected final String TEXT_1630 = "(self)" + NL + "    end";
+  protected final String TEXT_1631 = NL + "    unless @";
+  protected final String TEXT_1632 = ".nil?";
+  protected final String TEXT_1633 = NL + "      ";
+  protected final String TEXT_1634 = " = @";
+  protected final String TEXT_1635 = NL + "      @";
+  protected final String TEXT_1636 = " = nil";
+  protected final String TEXT_1637 = NL + "      ";
+  protected final String TEXT_1638 = ".delete" + NL + "    end";
+  protected final String TEXT_1639 = NL + "    unless @";
+  protected final String TEXT_1640 = ".nil?" + NL + "      if @";
+  protected final String TEXT_1641 = ".";
+  protected final String TEXT_1642 = " <= ";
+  protected final String TEXT_1643 = NL + "        @";
+  protected final String TEXT_1644 = ".delete" + NL + "      else" + NL + "        @";
+  protected final String TEXT_1645 = ".";
+  protected final String TEXT_1646 = "(self)" + NL + "      end" + NL + "    end";
+  protected final String TEXT_1647 = NL + "    @";
+  protected final String TEXT_1648 = " = @";
+  protected final String TEXT_1649 = NL + "    @";
+  protected final String TEXT_1650 = " = nil" + NL + "    @";
+  protected final String TEXT_1651 = ".";
+  protected final String TEXT_1652 = "(self)";
+  protected final String TEXT_1653 = NL + "    @";
+  protected final String TEXT_1654 = ".each do |";
+  protected final String TEXT_1655 = "|";
+  protected final String TEXT_1656 = NL + "      ";
+  protected final String TEXT_1657 = ".instance_variable_set(\"@";
+  protected final String TEXT_1658 = "\",nil)" + NL + "    end" + NL + "    @";
+  protected final String TEXT_1659 = ".clear";
+  protected final String TEXT_1660 = NL + "    ";
+  protected final String TEXT_1661 = " = @";
+  protected final String TEXT_1662 = ".dup" + NL + "    @";
+  protected final String TEXT_1663 = ".clear";
+  protected final String TEXT_1664 = NL + "    ";
+  protected final String TEXT_1665 = ".each do |";
+  protected final String TEXT_1666 = "|" + NL + "      if ";
+  protected final String TEXT_1667 = ".";
+  protected final String TEXT_1668 = " <= ";
+  protected final String TEXT_1669 = ".";
+  protected final String TEXT_1670 = NL + "        ";
+  protected final String TEXT_1671 = ".delete" + NL + "      else";
+  protected final String TEXT_1672 = NL + "        ";
+  protected final String TEXT_1673 = ".";
+  protected final String TEXT_1674 = "(self)" + NL + "      end" + NL + "    end";
+  protected final String TEXT_1675 = NL + "    ";
+  protected final String TEXT_1676 = " = @";
+  protected final String TEXT_1677 = ".dup" + NL + "    @";
+  protected final String TEXT_1678 = ".clear";
+  protected final String TEXT_1679 = NL + "    ";
+  protected final String TEXT_1680 = ".each do |";
+  protected final String TEXT_1681 = "|";
+  protected final String TEXT_1682 = NL + "      ";
+  protected final String TEXT_1683 = ".";
+  protected final String TEXT_1684 = "(self)" + NL + "    end";
+  protected final String TEXT_1685 = NL + "    @";
+  protected final String TEXT_1686 = ".each do |";
+  protected final String TEXT_1687 = "|";
+  protected final String TEXT_1688 = NL + "      ";
+  protected final String TEXT_1689 = ".delete" + NL + "    end";
+  protected final String TEXT_1690 = NL + "    @";
+  protected final String TEXT_1691 = ".each do |";
+  protected final String TEXT_1692 = "|";
+  protected final String TEXT_1693 = NL + "      ";
+  protected final String TEXT_1694 = ".";
+  protected final String TEXT_1695 = "(nil)" + NL + "    end";
+  protected final String TEXT_1696 = NL + NL;
+  protected final String TEXT_1697 = NL + "  #------------------------" + NL + "  # DEVELOPER CODE - PROVIDED AS-IS" + NL + "  #------------------------" + NL + "  ";
+  protected final String TEXT_1698 = NL + "  ";
+  protected final String TEXT_1699 = NL + "end";
+  protected final String TEXT_1700 = NL;
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -6310,7 +6399,7 @@ public class RubyClassGenerator implements ILang
         hasActivities = true;
         
     stringBuffer.append(TEXT_1489);
-    stringBuffer.append( gen.translate("doActivityMethod",activity));
+    stringBuffer.append( gen.translate("doActivityMethod",state));
     stringBuffer.append(TEXT_1490);
     stringBuffer.append( activity.getActivityCode() );
     stringBuffer.append(TEXT_1491);
@@ -6471,9 +6560,9 @@ public class RubyClassGenerator implements ILang
       continue;
     }
     
-    if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
-    {
-      
+ if (relatedAssociation.getIsComposition()) {
+    	if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isOnlyOne()) {
+    		
     stringBuffer.append(TEXT_1517);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1518);
@@ -6487,216 +6576,449 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1523);
     
-    }
-    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
-    {
-      
+    	}
+    	else if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isOptionalOne()) {
+    		
     stringBuffer.append(TEXT_1524);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1525);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1526);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1527);
     
-    }
-    else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
-    {
-      
+    	}
+        else if (relatedAssociation.isOptionalOne() && av.isMN()) {
+    		
     stringBuffer.append(TEXT_1528);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1529);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1530);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1531);
-    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1532);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1533);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1534);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1535);
-    
-    }
-    else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
-    {
-      
     stringBuffer.append(TEXT_1536);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1537);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1538);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1539);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1540);
+    
+    	}
+    	else if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isMany()) {
+    		
     stringBuffer.append(TEXT_1541);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1542);
-    
-    }
-    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
-    {
-      
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1543);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1544);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1545);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1546);
-    
-    }
-    else if (av.isOptionalOne() && relatedAssociation.isN())
-    {
-      
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1547);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1548);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1549);
     
-    }
-    else if (av.isOptionalOne() && relatedAssociation.isMN())
-    {
-      
+    	}
+    	
+    	else if (relatedAssociation.isMany() && av.isOnlyOne()) {
+    		
+    stringBuffer.append(TEXT_1548);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1549);
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1550);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1551);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1552);
-    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
     stringBuffer.append(TEXT_1553);
-    stringBuffer.append(relatedAssociation.getMultiplicity().getLowerBound());
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1554);
-    stringBuffer.append(gen.translate("associationOne",av));
+    
+    	}
+    	else if (relatedAssociation.isMany() && av.isOptionalOne()) {
+    	    
     stringBuffer.append(TEXT_1555);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1556);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1557);
-    
-    }
-    else if (av.isOne() && relatedAssociation.isMany())
-    {
-      
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1558);
-    stringBuffer.append(gen.translate("removeParameterOne",av));
-    stringBuffer.append(TEXT_1559);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1560);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1561);
-    stringBuffer.append(gen.translate("removeParameterOne",av));
-    stringBuffer.append(TEXT_1562);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
-    stringBuffer.append(TEXT_1563);
     
-    }
-    else if (av.isMandatory() && relatedAssociation.isOptionalOne())
-    {
-      
+    	}
+	else if (relatedAssociation.isMany() && av.isMany()) {
+    	    
+    stringBuffer.append(TEXT_1559);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1560);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1561);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1562);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1563);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1564);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1565);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    
+    	}
+    	else {
+    		continue;
+    	}
+    	
+    	
+    }
+    
+    else if (av.getIsComposition() && (av.isMany() && relatedAssociation.isOnlyOne())) { 
+    	// normally this is the same for compositions, except for ManyToOne, the
+    	// list has to be cleared on the Many end (here, the ones are successfully deleted, 
+    	// but they are not removed from the list)
+  		// this functionality is not present for compositions, since, in the case
+  		// of deleting one from many, this would be on the composition end, and OneFromOne would
+  		// be called so the object is actually deleted. 	
+  
+    	
     stringBuffer.append(TEXT_1566);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1567);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1568);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1569);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1570);
-    
-    }
-    else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
-    {
-      
-    stringBuffer.append(TEXT_1571);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
-    stringBuffer.append(TEXT_1572);
     stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1571);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1572);
+    
+	  
+    }
+    
+    else if (av.getIsComposition() && (av.isMany() && relatedAssociation.isOptionalOne() && !av.isMandatory())) { 
+    	
+    	
     stringBuffer.append(TEXT_1573);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1574);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1575);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_1576);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1577);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1578);
-    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
+    
+	  
+    }
+    
+    else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && relatedAssociation.getMultiplicity().getLowerBound() != relatedAssociation.getMultiplicity().getUpperBound())) { 
+    	
+    	
     stringBuffer.append(TEXT_1579);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1580);
-    stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1581);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
     stringBuffer.append(TEXT_1582);
+    stringBuffer.append(relatedAssociation.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_1583);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1584);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1585);
-    
-    }
-    else if (av.isMany() && relatedAssociation.isMany())
-    {
-      
     stringBuffer.append(TEXT_1586);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1587);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1588);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_1589);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1590);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1591);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1592);
-    stringBuffer.append(TEXT_1593);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1594);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
-    stringBuffer.append(TEXT_1595);
     
+	  
     }
-    else if (av.isMany() && relatedAssociation.isOnlyOne())
-    {
-      
-    stringBuffer.append(TEXT_1596);
+
+    else if (av.getIsComposition() && av.isStar() && relatedAssociation.isStar()) {
+    	    
+    stringBuffer.append(TEXT_1593);
     stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1594);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1595);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1596);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_1597);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1598);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1599);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1600);
     
     }
-    else if (av.isMany() && relatedAssociation.isOptionalOne())
-    {
-      
-    stringBuffer.append(TEXT_1601);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1602);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1603);
-    stringBuffer.append(TEXT_1604);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1605);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_1606);
+
     
-    }
-    else
-    {
-      continue;
-    }
+    else {
+    
+	    if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
+	    {
+	      
+    stringBuffer.append(TEXT_1601);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1602);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1603);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1604);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1605);
+    stringBuffer.append(TEXT_1606);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1607);
+    
+	    }
+	    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
+	    {
+	      
+    stringBuffer.append(TEXT_1608);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1609);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1610);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1611);
+    
+	    }
+	    else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
+	    {
+	      
+    stringBuffer.append(TEXT_1612);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1613);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1614);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1615);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1616);
+    stringBuffer.append(TEXT_1617);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1618);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1619);
+    
+	    }
+	    else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
+	    {
+	      
+    stringBuffer.append(TEXT_1620);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1621);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1622);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1623);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1624);
+    stringBuffer.append(TEXT_1625);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1626);
+    
+	    }
+	    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
+	    {
+	      
+    stringBuffer.append(TEXT_1627);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1628);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1629);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1630);
+    
+	    }
+	    else if (av.isOptionalOne() && relatedAssociation.isN())
+	    {
+	      
+    stringBuffer.append(TEXT_1631);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1632);
+    stringBuffer.append(TEXT_1633);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1634);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1635);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1636);
+    stringBuffer.append(TEXT_1637);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1638);
+    
+	    }
+	    else if (av.isOptionalOne() && relatedAssociation.isMN())
+	    {
+	      
+    stringBuffer.append(TEXT_1639);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1640);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1641);
+    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1642);
+    stringBuffer.append(relatedAssociation.getMultiplicity().getLowerBound());
+    stringBuffer.append(TEXT_1643);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1644);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1645);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1646);
+    
+	    }
+	    else if (av.isOne() && relatedAssociation.isMany())
+	    {
+	      
+    stringBuffer.append(TEXT_1647);
+    stringBuffer.append(gen.translate("removeParameterOne",av));
+    stringBuffer.append(TEXT_1648);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1649);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1650);
+    stringBuffer.append(gen.translate("removeParameterOne",av));
+    stringBuffer.append(TEXT_1651);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1652);
+    
+	    }
+	    else if (av.isMandatory() && relatedAssociation.isOptionalOne())
+	    {
+	      
+    stringBuffer.append(TEXT_1653);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1654);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1655);
+    stringBuffer.append(TEXT_1656);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1657);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_1658);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1659);
+    
+	    }
+	    else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
+	    {
+	      
+    stringBuffer.append(TEXT_1660);
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(TEXT_1661);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1662);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1663);
+    stringBuffer.append(TEXT_1664);
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(TEXT_1665);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1666);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1667);
+    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1668);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1669);
+    stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
+    stringBuffer.append(TEXT_1670);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1671);
+    stringBuffer.append(TEXT_1672);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1673);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1674);
+    
+	    }
+	    else if (av.isMany() && relatedAssociation.isMany())
+	    {
+	      
+    stringBuffer.append(TEXT_1675);
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(TEXT_1676);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1677);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1678);
+    stringBuffer.append(TEXT_1679);
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(TEXT_1680);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1681);
+    stringBuffer.append(TEXT_1682);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1683);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1684);
+    
+	    }
+	    else if (av.isMany() && relatedAssociation.isOnlyOne()) 
+	    {
+	      
+    stringBuffer.append(TEXT_1685);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1686);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1687);
+    stringBuffer.append(TEXT_1688);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1689);
+                                                                                                               
+	    }
+	    else if (av.isMany() && relatedAssociation.isOptionalOne())
+	    {
+	      
+    stringBuffer.append(TEXT_1690);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1691);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1692);
+    stringBuffer.append(TEXT_1693);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1694);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1695);
+    
+	    }
+	    else
+	    {
+	      continue;
+	    }
+	}
   }
   
   if (!uClass.isRoot() && !"external".equals(uClass.getExtendsClass().getModifier()))
@@ -6799,15 +7121,15 @@ public class RubyClassGenerator implements ILang
   	}
   }
 
-    stringBuffer.append(TEXT_1607);
+    stringBuffer.append(TEXT_1696);
      } 
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
-    stringBuffer.append(TEXT_1608);
-    stringBuffer.append(TEXT_1609);
+    stringBuffer.append(TEXT_1697);
+    stringBuffer.append(TEXT_1698);
     stringBuffer.append(uClass.getExtraCode());
      } 
-    stringBuffer.append(TEXT_1610);
-    stringBuffer.append(TEXT_1611);
+    stringBuffer.append(TEXT_1699);
+    stringBuffer.append(TEXT_1700);
     stringBuffer.append(gen.translate("packageDefinitionEnd",uClass));
     return stringBuffer.toString();
   }

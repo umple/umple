@@ -1,0 +1,6 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+    while @<%=gen.translate("associationMany",av)%>.any? do
+      @<%=gen.translate("associationMany",av)%>[0].instance_variable_set("@<%=gen.relatedTranslate("associationOne",av)%>",nil)
+      @<%=gen.translate("associationMany",av)%>.shift  # this deletes the first value in the array
+    end
+    @<%=gen.translate("associationMany",av)%>.clear    
