@@ -80,8 +80,8 @@
       <arg value="cruise.umplificator/src/Master.ump"/>
     </java>
   </target>
-
-  <!-- ```````````````````````````
+ 
+ <!-- ```````````````````````````
     Generate JET Templates
   ``````````````````````````` -->
  
@@ -218,7 +218,7 @@
       <classpath refid="umplificator.project.classpath"/>
     </javac>
     <copy todir="cruise.umplificator/bin/" overwrite="true">
-	<fileset dir="cruise.umplificator/src/main/resources/"><include name="*.xml"/></fileset>
+	<fileset dir="cruise.umplificator/"><include name="log4j2.xml"/></fileset>
 	<fileset dir="cruise.umplificator/src/main/resources/"><include name="*.drl"/></fileset>
     </copy>
     <delete file="cruise.umple/src/rules.grammar"/>
