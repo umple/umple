@@ -1,0 +1,16 @@
+generate GvStateDiagram;
+namespace example;
+
+class A {
+  sm {
+     s2 {
+       do { 
+       doThisContinuouslyWhileOn1(); 
+       doThisContinuouslyWhileOn2();
+       doThisContinuouslyWhileOn3();
+       doThisContinuouslyWhileOn4();
+       doThisContinuouslyWhileOn5();
+       doThisContinuouslyWhileOn6();}
+      }
+  }
+}

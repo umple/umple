@@ -1,0 +1,35 @@
+digraph "TimedTransition" {
+  compound = true;
+  size="80,10"
+
+  // Class: X
+
+    // Top and Bottom Level StateMachine: sm
+    
+    // Start states are shown as a black circle
+    node [shape = point, fillcolor="black", width=0.2 ];
+    start_X_sm [ tooltip = "Class X, SM sm, State start" ];
+    
+        
+    // Format for normal states
+    node [shape = rectangle, width=1,style=rounded];
+    
+      // State: a
+
+      X_sm_a [label = a, tooltip = "Class X, SM sm, State a&#13;Entry:
+   System.out.println(&quot;entering a&quot;);"];
+      // End State: a
+
+      // State: b
+
+      X_sm_b [label = b, tooltip = "Class X, SM sm, State b&#13;Entry:
+   System.out.println(&quot;entering b&quot;);"];
+      // End State: b
+    // End Top and Bottom Level StateMachine: sm
+
+  // All transitions
+    start_X_sm -> X_sm_a [  tooltip = "start to a" ] ;
+    X_sm_a -> X_sm_b [  label = "after(1)", tooltip = "From a to b after(1)" ] ;
+  
+
+}

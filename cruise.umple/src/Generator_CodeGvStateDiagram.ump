@@ -117,10 +117,10 @@ digraph "<<=filename>>" {
   startState <<!
 // Start states are shown as a black circle
 node [shape = point, fillcolor="black", width=0.2 ];
-start_<<=clSmName>>;
+start_<<=clSmName>> [ tooltip = "<<=tooltip>>" ];
 
 !>>
-  emit startState(String clSmName)(startState);
+  emit startState(String clSmName, String tooltip)(startState);
 
   // Template for a normal node
   normalStateFormat <<!
@@ -192,9 +192,9 @@ node [shape = circle, fixedsize = true, width=.3];
   }
   if(label.length()>0) {#>> label = "<<=label>>",<<#
   }
-  #>> tooltip = "<<=readableStart>> <<=label>> -> <<=readableEnd>>"!>>
-  emit transitionAttributes(String lheadtail, String label, String readableStart, String readableEnd)(transitionAttributes);
-  
+  #>> tooltip = "<<=tooltip>>"!>>
+  emit transitionAttributes(String lheadtail, String label, String readableStart, String readableEnd, String tooltip)(transitionAttributes);
+  //"<<=readableStart>> <<=label>> -> <<=readableEnd>>"!>>
   // TEMPLATES FOR STATES
 
   topLevelBorder <<!
@@ -208,11 +208,11 @@ node [shape = circle, fixedsize = true, width=.3];
       UmpleClass uClass, String className, boolean isTopLevel,
       int smCount, int indentLevel) {
 
-    String smName, clSmName, sLabel, sName;
+    String smName, clSmName, sLabel, sName, tooltip;
     boolean isPseudo = false;    
     Event event;
     Action action;
-    String transitionLabel, guardString, actionCode, transitionAction;
+    String transitionLabel, guardString, actionCode, transitionAction, blah = "blah";
     Guard guard;
     List<StateMachine> allNestedStateMachines = sm.getImmediateNestedStateMachines();
 
@@ -240,9 +240,11 @@ node [shape = circle, fixedsize = true, width=.3];
     if(smCount > 1 && isTopLevel) {
       _topLevelBorder(indentLevel, code, clSmName, className, smName);
     }
-      
+
     // Every state machine has a start state
-    _startState(indentLevel,code,clSmName);
+    String [] stateInfo = getStatePath(sm, "start");
+    tooltip = "Class "+className+", SM "+stateInfo[0]+", State "+stateInfo[1];
+    _startState(indentLevel,code,clSmName, tooltip);
     _normalStateFormat(indentLevel, code);
  
     // Iterate through the states of this state machine
@@ -302,7 +304,9 @@ node [shape = circle, fixedsize = true, width=.3];
         // Simple state node
         if(isPseudo) _pseudoStateFormat(indentLevel, code);
         appendSpaces(code,  indentLevel+2);
-        code.append(sName+" [label = "+sLabel+"];\n");
+		
+        tooltip = getStateTooltip(sm, s, className);
+        code.append(sName+" [label = "+sLabel+", tooltip = \""+tooltip+"\"];\n");
         if(isPseudo) _normalStateFormat(indentLevel, code);        
       }
       else {
@@ -320,9 +324,11 @@ node [shape = circle, fixedsize = true, width=.3];
          isFirstState = false;
         String dest=getTransitionNameForState(s,uClass,false);
         String head=getTransitionHeadOrTailForState(s, uClass,false);
+        stateInfo = getStatePath(sm, s.getName());
+        tooltip = "start to "+stateInfo[1]; 
         
         _transition(2,transitions,"start_"+clSmName,"->", dest,
-          transitionAttributes(head,"","start",s.getName()));
+          transitionAttributes(head,"","start",s.getName(), tooltip)); 
       }
           
       // Output all the other transitions
@@ -369,6 +375,7 @@ node [shape = circle, fixedsize = true, width=.3];
         String dest = getTransitionNameForState(t.getNextState(),uClass,false);
         String origlh = getTransitionHeadOrTailForState(t.getFromState(),uClass,true);
         String destlt = getTransitionHeadOrTailForState(t.getNextState(),uClass,false);
+        tooltip = getTransitionTooltip(t, guardString); 
 
         // WORKING ON
         // If we have to go through a dummy external state
@@ -377,19 +384,19 @@ node [shape = circle, fixedsize = true, width=.3];
           _transition(2,transitions,orig,"->", internalBoundaryTrans.get(t)+":e",
             transitionAttributes("dir=none, "+origlh,
             transitionLabel + guardString + transitionAction,
-            t.getFromState().getName(),t.getNextState().getName()));        
+            t.getFromState().getName(),t.getNextState().getName(), tooltip));        
 
           _transition(2,transitions,internalBoundaryTrans.get(t)+":w","->", dest,
             transitionAttributes(destlt,
             "",
-            t.getFromState().getName(),t.getNextState().getName()));        
+            t.getFromState().getName(),t.getNextState().getName(), tooltip));        
         }
         else {
           // Normal transition
           _transition(2,transitions,orig,"->", dest,
             transitionAttributes(origlh+destlt,
             transitionLabel + guardString + transitionAction,
-            t.getFromState().getName(),t.getNextState().getName()));
+            t.getFromState().getName(),t.getNextState().getName(), tooltip));
         }
         transitions.append("\n");
       }  // End iteration through the transitions
@@ -422,6 +429,177 @@ node [shape = circle, fixedsize = true, width=.3];
     }
   }
 
+  // Get the path for nested states 
+  private String[] getStatePath(StateMachine sm_in, String stateName)
+  {
+    StateMachine sm = sm_in;
+	State cur = sm.getParentState();
+	String smName = sm.getName();
+	String statePath = stateName;
+	
+	while (cur != null)
+	{
+	  statePath = smName+"."+statePath;
+	  sm = cur.getStateMachine();
+	  cur = sm.getParentState();
+	  smName = sm.getName();
+	}
+
+	return new String[] {smName, statePath};
+  }
+
+
+  private String getTransitionTooltip(Transition t, String guardString)
+  {
+  	// Find the state machine path the transition is coming from
+  	String [] fromStateInfo = getStatePath(t.getFromState().getStateMachine(), t.getFromState().getName());
+  	String tooltipFromState = fromStateInfo[1];
+	
+	// Find the state machine path the transition is going to
+	String [] toStateInfo = getStatePath(t.getNextState().getStateMachine(), t.getNextState().getName());
+	String tooltipToState = toStateInfo[1];
+	
+	// Get the condition on which transitioning
+	Event event = t.getEvent();
+	
+	// Set transition event information
+	String tooltip = "From "+tooltipFromState+" to "+tooltipToState;
+	if (!event.isAutoTransition()) 
+	{
+	  if (event.getIsTimer()) // Timed transition
+		tooltip = tooltip+" after("+event.getTimerInSeconds()+")";
+	  else if(event.getArgs() == null || event.getArgs() == "") 
+        tooltip = tooltip+" on "+event.getName();
+      else 
+        tooltip = tooltip+" on "+event.getName()+"("+event.getArgs()+")";
+	}
+	else
+	{
+	  tooltip = tooltip+" automatically";
+	}
+	
+	// Get guard code for transition
+	if (guardString != "" && !hideGuards)
+	{
+	  tooltip = tooltip+"&#13;"+"Guard: "+guardString;
+	}
+	
+	// Get action code for transition	
+	Action action = t.getAction();
+	String transitionAction = "";
+	if (action != null)
+	{
+	  transitionAction = action.getActionCode();
+	}
+	if (transitionAction != "" && !hideActions)
+	{	
+	  transitionAction = transitionAction.replaceAll("\"","&quot;");
+	  tooltip = tooltip+"&#13;"+"Transition Action:\n"+retFiveLines(transitionAction);
+	}
+	
+	return tooltip;
+  }
+
+  private String getStateTooltip(StateMachine sm, State st, String className)
+  {
+  	// Find the state machine path
+  	String [] stateInfo = getStatePath(sm, st.getName());
+	
+	String tooltip = "Class "+className+", SM "+stateInfo[0]+", State "+stateInfo[1];
+		
+	// Get the state actions
+	if (!hideActions)
+	{
+	  for (Action action : st.getActions())
+	  {
+	    String actionType = action.getActionType();
+	    String actionCode = retFiveLines(action.getActionCode().replaceAll("\"","&quot;"));
+	    if ("entry".equals(actionType))
+	    {
+	  	  tooltip = tooltip+"&#13;"+"Entry:\n"+actionCode;
+	    }
+	    else if ("exit".equals(actionType))
+	    {
+	      tooltip = tooltip+"&#13;"+"Exit:\n"+actionCode;
+	    }
+	    else
+	    {
+	      tooltip = tooltip+"&#13;"+"Action:\n"+actionCode;
+	    }
+	  }
+	}
+	
+	// Get the activities
+	for (Activity activity : st.getActivities())
+	{
+	  String activityCode = activity.getCodeblock().toString().replaceAll("\"","&quot;");
+	  tooltip = tooltip+"&#13;"+"Activity:\n"+retFiveLines(activityCode);
+	}
+	
+	return tooltip;
+  }
+  
+  // Get the smallest space indent in the code
+  private int getMinSpace(String[] parts)
+  {
+    int lines = parts.length < 5 ? parts.length : 5;
+    int minSpaceCount = 1000;
+    
+    // The first part doesn't have whitespace in front of it
+    for (int i = 1; i < lines; i++)
+  	{
+  	  String part = parts[i];
+  	  int j = 0, spaceCount = 0;
+  	  
+  	  while(j < part.length()){
+        if(Character.isWhitespace(part.charAt(j))) { spaceCount++; }
+        else { break; } // only want to count leading spaces
+        j++;
+      }
+      
+      if (spaceCount < minSpaceCount)
+        minSpaceCount = spaceCount;
+  	}
+  	
+  	return minSpaceCount;
+  }
+  
+  // Return only the first 5 lines of code 
+  // Used for displaying code in the tooltip as to not overwhelm the tooltip
+  private String retFiveLines(String code)
+  {
+  	String trimmedCode = "";
+  	
+  	// Check if the code has multiple lines
+  	if (code.contains(System.getProperty("line.separator")))
+  	{
+  	  String[] parts = code.split("\\r?\\n");
+  	  
+ 	  int minSpace = getMinSpace(parts);
+ 	  int substringIdx = minSpace; 
+ 	  int lines = parts.length < 5 ? parts.length : 5;
+ 	    
+  	  // Only go through the first 5 lines
+  	  for (int i = 0; i < lines; i++)
+  	  {
+  		String part = "   "+parts[i]; // Always have at least an indent of 3
+  		  
+  		// Get rid of excess indentation or add indentation for first line
+  		part = (i > 0) ? part.substring(substringIdx) : part;
+  		
+  		trimmedCode = trimmedCode+part;
+  		if (i < lines-1)
+  		  trimmedCode += "\n";
+  	  }
+  	    
+  	  if (parts.length > 5)
+  	    trimmedCode = trimmedCode+"\n   ...";
+  	  
+  	  return trimmedCode;
+  	}
+  	
+  	return "   "+code;
+  }
 
   // Output the graphviz file to a file with the .gv suffix
   private void writeModel()

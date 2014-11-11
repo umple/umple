@@ -1,0 +1,46 @@
+digraph "NestedState" {
+  compound = true;
+  size="80,10"
+
+  // Class: A
+
+    // Top Level StateMachine: sm
+    
+    // Start states are shown as a black circle
+    node [shape = point, fillcolor="black", width=0.2 ];
+    start_A_sm [ tooltip = "Class A, SM sm, State start" ];
+    
+        
+    // Format for normal states
+    node [shape = rectangle, width=1,style=rounded];
+    
+      // State: s2
+
+     subgraph clusterA_sm_s2 {
+      label = "s2";
+      style = rounded;
+
+      // Bottom Level StateMachine: s2
+      
+      // Start states are shown as a black circle
+      node [shape = point, fillcolor="black", width=0.2 ];
+      start_A_s2 [ tooltip = "Class A, SM sm, State s2.start" ];
+      
+            
+      // Format for normal states
+      node [shape = rectangle, width=1,style=rounded];
+      
+        // State: s2a
+
+        A_smS2_s2a [label = s2a, tooltip = "Class A, SM sm, State s2.s2a"];
+        // End State: s2a
+      // End Bottom Level StateMachine: s2
+     }
+      // End State: s2
+    // End Top Level StateMachine: sm
+
+  // All transitions
+    start_A_sm -> A_smS2_s2a [  lhead=clusterA_sm_s2,  tooltip = "start to s2" ] ;
+    start_A_s2 -> A_smS2_s2a [  tooltip = "start to s2.s2a" ] ;
+  
+}

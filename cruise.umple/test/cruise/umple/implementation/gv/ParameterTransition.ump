@@ -1,0 +1,35 @@
+generate GvStateDiagram;
+namespace example;
+
+class X {
+  stateMachine1 {
+    s1a {
+      do {
+        // This do activity sends events to stateMachine1
+        e(5);
+        Thread.sleep(1000);
+        e(6);
+        Thread.sleep(1000);
+        e(7);
+        Thread.sleep(1000);
+        e(8);
+      }
+      -> s1b;
+    }
+    s1b {}
+  } 
+  stateMachine2 {
+    s2a {
+      entry / {System.out.println("s2a");}
+      e(int a) [a > 6] / {System.out.println("e"+a);} -> s2b;
+    }
+    s2b {
+      entry / {System.out.println("s2b");}
+      e(int a) / {System.out.println("e"+a);} -> s2a;
+    }
+  }
+  public static void main(String [ ] args) {
+    X x = new X();
+  }
+}
+

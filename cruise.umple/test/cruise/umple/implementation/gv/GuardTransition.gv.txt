@@ -1,0 +1,33 @@
+digraph "GuardTransition" {
+  compound = true;
+  size="80,10"
+
+  // Class: A
+
+    // Top and Bottom Level StateMachine: sm
+    
+    // Start states are shown as a black circle
+    node [shape = point, fillcolor="black", width=0.2 ];
+    start_A_sm [ tooltip = "Class A, SM sm, State start" ];
+    
+        
+    // Format for normal states
+    node [shape = rectangle, width=1,style=rounded];
+    
+      // State: s1
+
+      A_sm_s1 [label = s1, tooltip = "Class A, SM sm, State s1"];
+      // End State: s1
+
+      // State: s2
+
+      A_sm_s2 [label = s2, tooltip = "Class A, SM sm, State s2"];
+      // End State: s2
+    // End Top and Bottom Level StateMachine: sm
+
+  // All transitions
+    start_A_sm -> A_sm_s1 [  tooltip = "start to s1" ] ;
+    A_sm_s1 -> A_sm_s2 [  label = "e1 [guard()]", tooltip = "From s1 to s2 on e1&#13;Guard:  [guard()]" ] ;
+  
+
+}
