@@ -38,9 +38,9 @@ public class GvSdGeneratorTest extends TemplateTest {
     SampleFileWriter.destroy(pathToInput + "/gv/TransitionSelf.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/NestedTransition.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/GuardTransition.gv");
-    SampleFileWriter.destroy(pathToInput + "/gv/ActivityLess5Transition.gv");
-    SampleFileWriter.destroy(pathToInput + "/gv/Activity5Transition.gv");
-    SampleFileWriter.destroy(pathToInput + "/gv/ActivityMore5Transition.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/ActLess5Transition.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/Act5Transition.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/ActMore5Transition.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/HideActionTransition.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/HideGuardTransition.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/AutoTransition.gv");
