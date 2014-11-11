@@ -1,0 +1,17 @@
+generate GvStateDiagram;
+namespace example;
+
+class X {
+  sm {
+    a {
+      entry / {System.out.println("entering a");}
+      after(1) -> b;
+    }
+    b {
+      entry / {System.out.println("entering b");}
+    }
+  }
+  public static void main(String [ ] args) {
+    X x = new X();
+  }
+}

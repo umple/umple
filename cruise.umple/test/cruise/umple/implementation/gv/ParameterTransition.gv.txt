@@ -1,0 +1,79 @@
+digraph "ParameterTransition" {
+  compound = true;
+  size="80,10"
+
+  // Class: X
+
+    // Top and Bottom Level StateMachine: stateMachine1
+    
+     subgraph clusterX_stateMachine1 {
+      label = "sm X stateMachine1";
+      penwidth=0.5;
+        
+    // Start states are shown as a black circle
+    node [shape = point, fillcolor="black", width=0.2 ];
+    start_X_stateMachine1 [ tooltip = "Class X, SM stateMachine1, State start" ];
+    
+        
+    // Format for normal states
+    node [shape = rectangle, width=1,style=rounded];
+    
+      // State: s1a
+
+      X_stateMachine1_s1a [label = s1a, tooltip = "Class X, SM stateMachine1, State s1a&#13;Activity:
+   // This do activity sends events to stateMachine1
+   e(5);
+   Thread.sleep(1000);
+   e(6);
+   Thread.sleep(1000);
+   ..."];
+      // End State: s1a
+
+      // State: s1b
+
+      X_stateMachine1_s1b [label = s1b, tooltip = "Class X, SM stateMachine1, State s1b"];
+      // End State: s1b
+    // End Top and Bottom Level StateMachine: stateMachine1
+  }
+
+    // Top and Bottom Level StateMachine: stateMachine2
+    
+     subgraph clusterX_stateMachine2 {
+      label = "sm X stateMachine2";
+      penwidth=0.5;
+        
+    // Start states are shown as a black circle
+    node [shape = point, fillcolor="black", width=0.2 ];
+    start_X_stateMachine2 [ tooltip = "Class X, SM stateMachine2, State start" ];
+    
+        
+    // Format for normal states
+    node [shape = rectangle, width=1,style=rounded];
+    
+      // State: s2a
+
+      X_stateMachine2_s2a [label = s2a, tooltip = "Class X, SM stateMachine2, State s2a&#13;Entry:
+   System.out.println(&quot;s2a&quot;);"];
+      // End State: s2a
+
+      // State: s2b
+
+      X_stateMachine2_s2b [label = s2b, tooltip = "Class X, SM stateMachine2, State s2b&#13;Entry:
+   System.out.println(&quot;s2b&quot;);"];
+      // End State: s2b
+    // End Top and Bottom Level StateMachine: stateMachine2
+  }
+
+  // All transitions
+    start_X_stateMachine1 -> X_stateMachine1_s1a [  tooltip = "start to s1a" ] ;
+    X_stateMachine1_s1a -> X_stateMachine1_s1b [  tooltip = "From s1a to s1b automatically" ] ;
+  
+  start_X_stateMachine2 -> X_stateMachine2_s2a [  tooltip = "start to s2a" ] ;
+    X_stateMachine2_s2b -> X_stateMachine2_s2a [  label = "e(int a) / {...}", tooltip = "From s2b to s2a on e(int a)&#13;Transition Action:
+     System.out.println(&quot;e&quot;+a);" ] ;
+  
+  X_stateMachine2_s2a -> X_stateMachine2_s2b [  label = "e(int a) [a>6] / {...}", tooltip = "From s2a to s2b on e(int a)&#13;Guard:  [a>6]&#13;Transition Action:
+     System.out.println(&quot;e&quot;+a);" ] ;
+  
+
+}

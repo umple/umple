@@ -1,0 +1,32 @@
+digraph "ExitMore5State" {
+  compound = true;
+  size="80,10"
+
+  // Class: A
+
+    // Top and Bottom Level StateMachine: sm
+    
+    // Start states are shown as a black circle
+    node [shape = point, fillcolor="black", width=0.2 ];
+    start_A_sm [ tooltip = "Class A, SM sm, State start" ];
+    
+        
+    // Format for normal states
+    node [shape = rectangle, width=1,style=rounded];
+    
+      // State: s2
+
+      A_sm_s2 [label = s2, tooltip = "Class A, SM sm, State s2&#13;Exit:
+   doEntry1(); 
+   doEntry2();
+   doEntry3();
+   doEntry4();
+   doEntry5();
+   ..."];
+      // End State: s2
+    // End Top and Bottom Level StateMachine: sm
+
+  // All transitions
+    start_A_sm -> A_sm_s2 [  tooltip = "start to s2" ] ;
+  
+}

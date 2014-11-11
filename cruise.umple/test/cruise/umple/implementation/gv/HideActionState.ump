@@ -1,0 +1,11 @@
+generate GvStateDiagram -s "hideactions";
+namespace example;
+
+class A {
+  sm {
+     s2 {
+     	entry / { doEntry(); }
+     	exit / { doEntry(); }
+     }
+  }
+}

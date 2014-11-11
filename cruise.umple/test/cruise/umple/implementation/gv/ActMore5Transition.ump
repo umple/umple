@@ -1,0 +1,18 @@
+generate GvStateDiagram;
+namespace example;
+
+class A {
+  sm {
+     s1 {
+       e1 -> /{ 
+       doTransition1();
+       doTransition2();
+       doTransition3();
+       doTransition4();
+       doTransition5();
+       doTransition6();} s2;
+     }
+     s2 {
+     }
+  }
+}
