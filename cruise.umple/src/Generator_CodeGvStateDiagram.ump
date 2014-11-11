@@ -433,110 +433,110 @@ node [shape = circle, fixedsize = true, width=.3];
   private String[] getStatePath(StateMachine sm_in, String stateName)
   {
     StateMachine sm = sm_in;
-	State cur = sm.getParentState();
-	String smName = sm.getName();
-	String statePath = stateName;
+    State cur = sm.getParentState();
+    String smName = sm.getName();
+    String statePath = stateName;
 	
-	while (cur != null)
-	{
-	  statePath = smName+"."+statePath;
-	  sm = cur.getStateMachine();
-	  cur = sm.getParentState();
-	  smName = sm.getName();
-	}
+    while (cur != null)
+    {
+      statePath = smName+"."+statePath;
+      sm = cur.getStateMachine();
+      cur = sm.getParentState();
+      smName = sm.getName();
+    }
 
-	return new String[] {smName, statePath};
+    return new String[] {smName, statePath};
   }
 
 
   private String getTransitionTooltip(Transition t, String guardString)
   {
-  	// Find the state machine path the transition is coming from
-  	String [] fromStateInfo = getStatePath(t.getFromState().getStateMachine(), t.getFromState().getName());
-  	String tooltipFromState = fromStateInfo[1];
+    // Find the state machine path the transition is coming from
+    String [] fromStateInfo = getStatePath(t.getFromState().getStateMachine(), t.getFromState().getName());
+    String tooltipFromState = fromStateInfo[1];
 	
-	// Find the state machine path the transition is going to
-	String [] toStateInfo = getStatePath(t.getNextState().getStateMachine(), t.getNextState().getName());
-	String tooltipToState = toStateInfo[1];
+    // Find the state machine path the transition is going to
+    String [] toStateInfo = getStatePath(t.getNextState().getStateMachine(), t.getNextState().getName());
+    String tooltipToState = toStateInfo[1];
 	
-	// Get the condition on which transitioning
-	Event event = t.getEvent();
+    // Get the condition on which transitioning
+    Event event = t.getEvent();
 	
-	// Set transition event information
-	String tooltip = "From "+tooltipFromState+" to "+tooltipToState;
-	if (!event.isAutoTransition()) 
-	{
-	  if (event.getIsTimer()) // Timed transition
-		tooltip = tooltip+" after("+event.getTimerInSeconds()+")";
-	  else if(event.getArgs() == null || event.getArgs() == "") 
+    // Set transition event information
+    String tooltip = "From "+tooltipFromState+" to "+tooltipToState;
+    if (!event.isAutoTransition()) 
+    {
+      if (event.getIsTimer()) // Timed transition
+        tooltip = tooltip+" after("+event.getTimerInSeconds()+")";
+      else if(event.getArgs() == null || event.getArgs() == "") 
         tooltip = tooltip+" on "+event.getName();
       else 
         tooltip = tooltip+" on "+event.getName()+"("+event.getArgs()+")";
-	}
-	else
-	{
-	  tooltip = tooltip+" automatically";
-	}
-	
-	// Get guard code for transition
-	if (guardString != "" && !hideGuards)
-	{
-	  tooltip = tooltip+"&#13;"+"Guard: "+guardString;
+    }
+    else
+    {
+      tooltip = tooltip+" automatically";
 	}
 	
-	// Get action code for transition	
-	Action action = t.getAction();
-	String transitionAction = "";
-	if (action != null)
-	{
-	  transitionAction = action.getActionCode();
-	}
-	if (transitionAction != "" && !hideActions)
-	{	
-	  transitionAction = transitionAction.replaceAll("\"","&quot;");
-	  tooltip = tooltip+"&#13;"+"Transition Action:\n"+retFiveLines(transitionAction);
-	}
+    // Get guard code for transition
+    if (guardString != "" && !hideGuards)
+    {
+      tooltip = tooltip+"&#13;"+"Guard: "+guardString;
+    }
 	
-	return tooltip;
+    // Get action code for transition	
+    Action action = t.getAction();
+    String transitionAction = "";
+    if (action != null)
+    {
+      transitionAction = action.getActionCode();
+    }
+    if (transitionAction != "" && !hideActions)
+    {	
+      transitionAction = transitionAction.replaceAll("\"","&quot;");
+      tooltip = tooltip+"&#13;"+"Transition Action:\n"+retFiveLines(transitionAction);
+    }
+	
+    return tooltip;
   }
 
   private String getStateTooltip(StateMachine sm, State st, String className)
   {
-  	// Find the state machine path
-  	String [] stateInfo = getStatePath(sm, st.getName());
+    // Find the state machine path
+    String [] stateInfo = getStatePath(sm, st.getName());
 	
-	String tooltip = "Class "+className+", SM "+stateInfo[0]+", State "+stateInfo[1];
+    String tooltip = "Class "+className+", SM "+stateInfo[0]+", State "+stateInfo[1];
 		
-	// Get the state actions
-	if (!hideActions)
-	{
-	  for (Action action : st.getActions())
-	  {
-	    String actionType = action.getActionType();
-	    String actionCode = retFiveLines(action.getActionCode().replaceAll("\"","&quot;"));
-	    if ("entry".equals(actionType))
-	    {
-	  	  tooltip = tooltip+"&#13;"+"Entry:\n"+actionCode;
-	    }
-	    else if ("exit".equals(actionType))
-	    {
-	      tooltip = tooltip+"&#13;"+"Exit:\n"+actionCode;
-	    }
-	    else
-	    {
-	      tooltip = tooltip+"&#13;"+"Action:\n"+actionCode;
-	    }
-	  }
-	}
+    // Get the state actions
+    if (!hideActions)
+    {
+      for (Action action : st.getActions())
+      {
+        String actionType = action.getActionType();
+        String actionCode = retFiveLines(action.getActionCode().replaceAll("\"","&quot;"));
+        if ("entry".equals(actionType))
+        {
+          tooltip = tooltip+"&#13;"+"Entry:\n"+actionCode;
+        }
+        else if ("exit".equals(actionType))
+        {
+          tooltip = tooltip+"&#13;"+"Exit:\n"+actionCode;
+        }
+        else
+        {
+          tooltip = tooltip+"&#13;"+"Action:\n"+actionCode;
+        }
+      }
+    }
 	
-	// Get the activities
-	for (Activity activity : st.getActivities())
-	{
-	  String activityCode = activity.getCodeblock().toString().replaceAll("\"","&quot;");
-	  tooltip = tooltip+"&#13;"+"Activity:\n"+retFiveLines(activityCode);
-	}
+    // Get the activities
+    for (Activity activity : st.getActivities())
+    {
+      String activityCode = activity.getCodeblock().toString().replaceAll("\"","&quot;");
+      tooltip = tooltip+"&#13;"+"Activity:\n"+retFiveLines(activityCode);
+    }
 	
-	return tooltip;
+    return tooltip;
   }
   
   // Get the smallest space indent in the code
@@ -547,11 +547,11 @@ node [shape = circle, fixedsize = true, width=.3];
     
     // The first part doesn't have whitespace in front of it
     for (int i = 1; i < lines; i++)
-  	{
-  	  String part = parts[i];
-  	  int j = 0, spaceCount = 0;
+    {
+      String part = parts[i];
+      int j = 0, spaceCount = 0;
   	  
-  	  while(j < part.length()){
+      while(j < part.length()){
         if(Character.isWhitespace(part.charAt(j))) { spaceCount++; }
         else { break; } // only want to count leading spaces
         j++;
@@ -559,46 +559,46 @@ node [shape = circle, fixedsize = true, width=.3];
       
       if (spaceCount < minSpaceCount)
         minSpaceCount = spaceCount;
-  	}
+    }
   	
-  	return minSpaceCount;
+    return minSpaceCount;
   }
   
   // Return only the first 5 lines of code 
   // Used for displaying code in the tooltip as to not overwhelm the tooltip
   private String retFiveLines(String code)
   {
-  	String trimmedCode = "";
+    String trimmedCode = "";
   	
-  	// Check if the code has multiple lines
-  	if (code.contains(System.getProperty("line.separator")))
-  	{
-  	  String[] parts = code.split("\\r?\\n");
+    // Check if the code has multiple lines
+    if (code.contains(System.getProperty("line.separator")))
+    {
+      String[] parts = code.split("\\r?\\n");
   	  
- 	  int minSpace = getMinSpace(parts);
- 	  int substringIdx = minSpace; 
- 	  int lines = parts.length < 5 ? parts.length : 5;
+      int minSpace = getMinSpace(parts);
+      int substringIdx = minSpace; 
+      int lines = parts.length < 5 ? parts.length : 5;
  	    
-  	  // Only go through the first 5 lines
-  	  for (int i = 0; i < lines; i++)
-  	  {
-  		String part = "   "+parts[i]; // Always have at least an indent of 3
+      // Only go through the first 5 lines
+      for (int i = 0; i < lines; i++)
+      {
+        String part = "   "+parts[i]; // Always have at least an indent of 3
   		  
-  		// Get rid of excess indentation or add indentation for first line
-  		part = (i > 0) ? part.substring(substringIdx) : part;
+        // Get rid of excess indentation or add indentation for first line
+        part = (i > 0) ? part.substring(substringIdx) : part;
   		
-  		trimmedCode = trimmedCode+part;
-  		if (i < lines-1)
-  		  trimmedCode += "\n";
-  	  }
+        trimmedCode = trimmedCode+part;
+        if (i < lines-1)
+          trimmedCode += "\n";
+      }
   	    
-  	  if (parts.length > 5)
-  	    trimmedCode = trimmedCode+"\n   ...";
+      if (parts.length > 5)
+        trimmedCode = trimmedCode+"\n   ...";
   	  
-  	  return trimmedCode;
-  	}
+      return trimmedCode;
+    }
   	
-  	return "   "+code;
+    return "   "+code;
   }
 
   // Output the graphviz file to a file with the .gv suffix
