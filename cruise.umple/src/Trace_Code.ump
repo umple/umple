@@ -244,15 +244,28 @@ class AssociationVariable
       {
         if(( (method.equals("associationAdd")||method.equals("associationRemove")) && ast.getTraceCardinality()))
         {
-          traceItems.add(ast);
+        	for(AssociationVariable variable: ast.getAssociationVariables())
+          {
+            if(variable.getName().equals(this.getName()))
+            	traceItems.add(ast);
+          }
+          
         }
         if((method.equals("associationAdd") && ast.getTraceAdd()))
         {
-          traceItems.add(ast);
+        	for(AssociationVariable variable: ast.getAssociationVariables())
+          {
+            if(variable.getName().equals(this.getName()))
+            	traceItems.add(ast);
+          }
         }
         if((method.equals("associationRemove") && ast.getTraceRemove()))
         {
-          traceItems.add(ast);
+        	for(AssociationVariable variable: ast.getAssociationVariables())
+          {
+            if(variable.getName().equals(this.getName()))
+            	traceItems.add(ast);
+          }
         }
       }
     }
