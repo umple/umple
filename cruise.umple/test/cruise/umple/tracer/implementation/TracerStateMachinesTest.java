@@ -177,12 +177,13 @@ public class TracerStateMachinesTest extends TracerAssociationsTest
 	}
 	
 	//***************************//
-	//**** Trace Examples    ****//
+	//****    Systems        ****//
 	//***************************//
-	@Test @Ignore 
+	@Test
 	public void ConsoleTracer_Phone()
 	{
-		assertUmpleTemplateFor("Phone.ump",languagePath + "/Phone."+ languagePath +".txt","PhoneLine");
+		AssertStm("Phone.ump","PhoneLine.","PhoneLine");
+		AssertStm("Phone.ump","PhoneSystemSimulation.","PhoneSystemSimulation");
 	}
 	
 	
@@ -191,6 +192,14 @@ public class TracerStateMachinesTest extends TracerAssociationsTest
     assertUmpleTemplateFor( "statemachines/" + inputUmplefile,
         languagePath + tracerPath + expectedOutputFile + languagePath +".txt",
         "Tracer",
+        false);
+  }
+  
+  public void AssertStm( String inputUmplefile, String expectedOutputFile, String className)
+  {   
+    assertUmpleTemplateFor( "statemachines/" + inputUmplefile,
+        languagePath + tracerPath + expectedOutputFile + languagePath +".txt",
+        className,
         false);
   }
 }

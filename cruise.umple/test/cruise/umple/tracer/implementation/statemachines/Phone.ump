@@ -1,58 +1,38 @@
+// Umple/UML system representing simulation of telephone calls between several parties
+// This system actually runs and contains a state machine of a phone call.
+// It runs best on a Mac since it calls a Mac system function for simulated voices
+// Compile it using Umple and then run it using java
 namespace example;
 
-// The class representing the telephone system
 class PhoneSystemSimulation {
   singleton;
-  lazy PhoneLine line1 = new PhoneLine("line1");
-  lazy PhoneLine line2 = new PhoneLine("line2");
+  // lazy PhoneLine[] lines;
+  1 -- * PhoneLine lines;
+  after constructor {
+    addLine(new PhoneLine("line1","Bruce",this));
+    addLine(new PhoneLine("line2","Ralph",this));
+    addLine(new PhoneLine("line3","Victoria",this));
+    addLine(new PhoneLine("line4","Vicki",this));
+    addLine(new PhoneLine("line5","Agnes",this));
+  }
+
   static PhoneSystemSimulation s;
   
-  
-  
-  public static void main(String [ ] args) {
-    s = getInstance();
-    
-    while(true) {
-    
-      // To Do - randomly choose who initiates
-    
-    
-      // Initate a call
-      s.line1.startDialing();
-      s.line1.pause(200);
-      s.line1.setOtherParty(s.line2);
-      s.line1.completeNumber();
-        s.line1.p(); s.line2.p(); // Will be done by tracing associations
-
-      // The other party can choose whether to pick up or not.
-      if(Math.random() > 0.5) {
-        s.line2.pickUp();
-      
-        // While talking either party can hang up
-        if(Math.random() > 0.5) {
-          s.line1.hangUp();
-          s.line2.hangUp(); // assuming it doesn't forget
-        }
-        else {
-          s.line2.hangUp();
-          s.line1.hangUp(); // assuming it doesn't forget
-        }
-      }
-      else {
-        // Hang up while waiting and the other will too
-        s.line1.hangUp();
-      }
-    }
-  }
 }  
 
 class PhoneLine {
   depend java.io.IOException;
 
   id;
+  voice;
   0..1 self otherParty;
-  trace state record id, otherParty;
   
+  trace waitForHook, ringing record id;
+  const String Click="click";
+  const String Dial="dial";
+  const String Beep="beep";
+  const String Hello="hello";
+  const String RingRing="ring ring";
   state {
     onHook {
       entry / {
@@ -65,35 +45,36 @@ class PhoneLine {
       incomingCall -> ringing;
     }
     ringing {
-      entry / {say("ring ring ring!");} 
+      entry / {say(RingRing);} 
       pickUp -> / {getOtherParty().otherPartyPickUp();} communicating;
       otherPartyHangUp -> onHook;
+      autoPickup -> / {getOtherParty().otherPartyPickUp();} communicating;
     }
     communicating {
-      entry / {say("Hello "+getOtherParty().getId());}
-      hangUp -> / {say("click");} onHook;
+      entry / {say(Hello+getOtherParty().getId());}
+      hangUp -> / {say(Click);} onHook;
       otherPartyHangUp -> waitForHook;
       putOnHold -> onHold;
     }
     onHold {
-      hangUp -> / {say("click");} onHook;
+      hangUp -> / {say(Click);} onHook;
       otherPartyHangUp -> waitForHook;
       takeOffHold -> communicating;
     }
     dialing {
-      entry / {say("pat pat pat");} 
+      entry / {say(Dial);} 
       completeNumber -> waitingForConnection;
-      hangUp -> / {say("click");} onHook;
+      hangUp -> / {say(Click);} onHook;
     }
     waitingForConnection {
       entry / {getOtherParty().incomingCall();}
       otherPartyPickUp -> communicating;
-      hangUp -> / {say("click");} onHook;
+      hangUp -> / {say(Click);} onHook;
       timeOut -> onHook;
     }
     waitForHook {
-      entry / {say("OOO OOO OOO");}
-      hangUp -> / {say("click");} onHook;
+      entry / {say(Beep);}
+      hangUp -> / {say(Click);} onHook;
     }
   }
   
@@ -102,14 +83,12 @@ class PhoneLine {
   }
   
   void p() {
-    System.out.println("  other party of "+getId()+"="+getOtherParty());
+    // System.out.println("  other party of "+getId()+"="+getOtherParty());
   }
   
   void say(String s) {
-    String voice ="";
-    if(getId().equals("line2")) voice=" -v Victoria";
     try {
-      Runtime.getRuntime().exec("say "+getId()+" "+s+voice);
+      Runtime.getRuntime().exec("say "+getId()+" "+s+" -v "+getVoice());
     }
     catch (IOException e) {}
     pause(2000);
@@ -123,3 +102,6 @@ class PhoneLine {
     }
   }
 }
+
+strictness ignore 1007;
+
