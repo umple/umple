@@ -1,0 +1,39 @@
+// UML state diagram of a course selection
+// From Lethbridge and Laganiere, McGraw Hill, 2004
+// Object Oriented Software Engineering, Practical Software Development Using UML and Java
+// http://www.lloseng.com
+// Note that it is left as an exercise to add a student requesting to drop the course
+// This version has nesting
+
+generate Java "CourseSectionNested";
+
+class CourseSection
+{
+  status
+  {
+    Planned 
+    {
+      cancel -> Cancelled;
+      openRegistration -> NotEnoughStudents;
+    }
+    Open {
+      cancel -> Cancelled;
+      NotEnoughStudents
+      {
+        requestToRegister -> Open;
+        closeRegistration -> Cancelled;
+        classSizeExceedsMinimum -> EnoughStudents;
+      }
+      EnoughStudents
+      {
+        requestToRegister -> Open;
+        closeRegistration -> Closed;
+        classSizeExceedsMaximum -> Closed;
+      }
+    }
+    Cancelled { }
+    Closed { 
+      cancel -> Cancelled;
+    }
+  }
+}

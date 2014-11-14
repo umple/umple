@@ -1,0 +1,121 @@
+/*
+ Insurance - sample UML class diagram in Umple 
+  Last updated: June 8, 2010
+*/
+//Namespace for core of the system.
+
+generate Java "Insurance";
+
+class InsurancePolicy{ 
+ policyNumber;
+ monthlyPremium;
+ starDate;
+ endDate;
+ insuradValue;
+ 1 -- * Transaction;
+ * -- 1 Person holder;
+}
+
+class Transaction {
+ date;
+}
+
+class Renewal {
+ isA Transaction;
+}
+
+class Claim {
+ description;
+ amountClaimed;
+}
+
+class Person{
+ name;
+ address;
+ dateOfBirth;
+}
+
+class LifeInsurancePolicy {
+ isA InsurancePolicy;
+ * policy-- 1 Person insuredLife;
+ * -- * Person beneficiary;
+}
+
+class PropertyInsurancePolicy{
+ isA InsurancePolicy;
+}
+
+class InsuredProperty {
+ yearBuilt;
+ 1 -- 1 PropertyInsurancePolicy;
+}
+
+class Building {
+ isA InsuredProperty;
+ address;
+ floorArea;
+}
+
+class Vehicle{
+ isA InsuredProperty;
+ identificationNumber;
+ manufacturer;
+ model;
+}
+//$?[End_of_model]$?
+
+//Positioning
+class InsurancePolicy
+{
+  position 143 28 183 128;
+  position.association InsurancePolicy__Transaction 184,10 0,13;
+  position.association InsurancePolicy__Person:holder 183,128 66,0;
+}
+
+class Vehicle
+{
+  position 12 469 211 96;
+}
+
+class Person
+{
+  position 480 240 152 93;
+}
+
+class Building
+{
+  position 241 468 136 79;
+}
+
+class Claim
+{
+  position 466 395 176 76;
+}
+
+class InsuredProperty
+{
+  position 113 347 134 62;
+  position.association InsuredProperty__PropertyInsurancePolicy 14,0 113,45;
+}
+
+class PropertyInsurancePolicy
+{
+  position 14 242 164 45;
+}
+
+class LifeInsurancePolicy
+{
+  position 189 241 135 45;
+  position.association LifeInsurancePolicy:policy__Person:insuredLife 136,10 0,11;
+  position.association LifeInsurancePolicy__Person:beneficiary 135,35 0,36;
+}
+
+class Transaction
+{
+  position 486 25 109 62;
+}
+
+class Renewal
+{
+  position 486 148 109 41;
+}

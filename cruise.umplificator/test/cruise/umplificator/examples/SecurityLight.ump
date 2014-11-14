@@ -1,0 +1,95 @@
+/* UML State machine and simelation of a security light
+ * http://accu.org/index.php/journals/1548
+ * http://www.stateworks.com/technology/TN9-Flowchart-is-not-State-Machine/
+ */
+
+
+generate Java "SecurityLight";
+
+class ExternalSecurityLight{
+  1 -- 1 Timer;
+  
+  boolean ambientLight=false; //ambient light is false when it is low, and true when it is increased
+  
+  queued externalSecurityLightStateMachine{
+    /**Transition between these states is controlled by 
+     *an ambient light level sensor
+     */
+    
+    //when the lamp is off
+    day {
+      dark /{setAmbientLight(false);}-> off;
+    }
+    //when the lamp is controlled by a movement sensor
+    night{
+      off {
+        movement [getAmbientLight() == false] /{lampOn();} -> moving;
+      }
+      moving{
+        noMovement /{timer.startTimer(); setAmbientLight(true);} ->timing;
+      }
+      timing{
+        timeout [getAmbientLight() == true]/{timer.stopTimer();
+          
+          while (System.currentTimeMillis() < timer.getStopTime()) {
+            try {
+              Thread.sleep(10000); 
+              System.out.println("Lamp is lighting for: "+((timer.getStopTime()-timer.getStartTime())/1000)+" seconds"); 
+              lampOff();
+            } catch (InterruptedException e) {}
+          }
+        } ->off;
+        movement -> moving;
+      }
+      light/{lampOff();} ->day;
+    }
+  }
+  
+  after constructor{
+    setExternalSecurityLightStateMachineNight(ExternalSecurityLightStateMachineNight.Null);
+    setExternalSecurityLightStateMachine(ExternalSecurityLightStateMachine.day);
+    removal=new Thread(this);
+    //start the thread of ExternalSecurityLight
+    removal.start();
+  }
+  public void lampOff(){
+    System.out.println("Lamp OFF");
+  }
+  
+  public void lampOn(){
+    System.out.println("Lamp ON");
+  }
+  
+  public static void main(String[] args){
+    ExternalSecurityLight exLight=new ExternalSecurityLight();
+    
+    exLight.dark();
+    exLight.movement();
+    exLight.noMovement();
+    exLight.timeout();
+    exLight.light();
+    
+    //day --> off(night) --> moving --> timing --> off --> day
+      
+  }
+}  
+     
+class Timer {
+  
+  long startTime = 0L;
+  long stopTime = 0L;
+  boolean lighting = false;
+  
+  public void startTimer() {
+    System.out.println("start timing");
+    this.startTime = System.currentTimeMillis();
+    this.lighting = true;
+  }
+  
+  public void stopTimer() {
+   this.stopTime = this.getStartTime() + 10000L;
+   this.lighting = false;
+  }
+
+}
+// @@@skipcompile - issue 589 prevents compilation in Java == should be used instead of equals

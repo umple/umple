@@ -1,0 +1,66 @@
+// UML class diagram in Umple representing a system for
+// reporting of accidents by an employer
+
+generate Java "Accidents";
+
+class AccidentType
+{
+  code;
+  description;
+  key {code}
+}
+
+class SeriousnessLevel
+{
+  code;
+  description;
+  key {code}
+}
+
+class Employee
+{
+  id;
+  department;
+  name;
+  supervisor;
+  other_employee_details;
+}
+
+class Accident
+{
+  id;
+  description;
+  Date date;
+  Time time;
+  other_details;
+  
+  * -- 1 Employee;
+  * -> 1 AccidentType;
+  * -> 1 SeriousnessLevel;
+  
+  key {id}
+}
+//$?[End_of_model]$?
+//Positioning
+class Accident
+{
+  position 11 24 163 145;
+  position.association Accident__Employee 164,144 50,0;
+  position.association Accident__AccidentType 74,145 74,0;
+  position.association Accident__SeriousnessLevel 164,116 0,7;
+}
+
+class Employee
+{
+  position 184 260 233 128;
+}
+
+class SeriousnessLevel
+{
+  position 266 133 149 79;
+}
+
+class AccidentType
+{
+  position 11 230 149 74;
+}

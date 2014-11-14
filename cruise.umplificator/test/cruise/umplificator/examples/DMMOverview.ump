@@ -1,0 +1,123 @@
+// This example refers to Figures 1, 4 and 5 of 'The Dagstuhl Middle Metamodel: 
+// A Schema for Reverse Engineering', ATEM 2003, First International 
+// Workshop on Meta-Models and Schemas for Reverse Engineering, 
+// WCRE, Victoria, B.C., in Electronic Notes in Theoretical Computer
+// Science, Elsevier, Vol. 94, pp 7-18,
+// Authors: Lethbridge, T.C., Sander Tichelaar, and Erhard Ploedereder (2003) 
+
+// To load the entire DMM example at once, copy and paste all 
+// five DMM components (DMM*) into the editor.  Please note that the
+// position attributes of classes and associations will need to be 
+// re-adjusted, as the example has been made to display the diagrams 
+// as separate entities.
+
+// This is a UML class diagram written in Umple
+
+// Abstract
+generate Java "Overview";
+
+class SourceObject{
+}
+
+class Defines{
+  0..1 -- 1 SourceObject;
+  0..1 -- 1 ModelObject;
+}
+
+class Declares{
+  0..1 -- 1 SourceObject;
+  * -- 1 ModelObject;
+}
+
+// Abstract
+class ModelObject{
+  name;
+}
+
+// Abstract
+class Relationship{}
+
+class SourceRelationship{
+  isA Relationship;
+}
+
+class ModelElement{
+  isA ModelObject;
+  }
+
+class ModelRelationship{
+  isA ModelObject;
+  * toModelRel1 -- 1 ModelElement toModelElem1;
+  * toModelRel2 -- 1 ModelElement toModelElem2;
+}
+
+class RelationshipInModel{
+   isA Relationship;
+   1 -- 1 ModelRelationship;
+}
+
+class SourceModelRelationship{
+  isA Relationship;
+}
+//$?[End_of_model]$?
+
+//Positioning
+class SourceModelRelationship
+{
+  position 6 373 170 41;
+}
+
+class SourceRelationship
+{
+  position 185 372 135 41;
+}
+
+class ModelRelationship
+{
+  position 173 209 132 45;
+  position.association ModelElement:toModelElem1__ModelRelationship 132,10 0,10;
+  position.association ModelElement:toModeElem2__ModelRelationship 132,35 0,35;
+  position.association ModelElement:toModelElem1__ModelRelationship:toModelRel1 133,10 0,10;
+  position.association ModelElement:toModelElem2__ModelRelationship:toModelRel2 133,30 0,30;
+}
+
+class ModelElement
+{
+  position 501 209 114 44;
+}
+
+class Relationship
+{
+  position 192 282 109 45;
+}
+
+class ModelObject
+{
+  position 392 91 112 62;
+
+}
+
+class RelationshipInModel
+{
+  position 328 372 139 41;
+  position.association ModelRelationship__RelationshipInModel 121,0 116,45;
+}
+
+class SourceObject
+{
+  position 9 98 109 39;
+}
+
+class Declares
+{
+  position 217 76 109 41;
+  position.association Declares__SourceObject 0,32 109,10;
+  position.association Declares__ModelObject 109,25 0,10;
+}
+
+class Defines
+{
+  position 219 127 109 41;
+  position.association Defines__SourceObject 0,5 109,34;
+  position.association Defines__ModelObject 110,5 0,41;
+}

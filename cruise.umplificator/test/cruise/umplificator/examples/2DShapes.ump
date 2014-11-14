@@ -1,0 +1,51 @@
+// 2D Shapes class hierarchy - sample UML class diagram in Umple
+// From Book by Lethbridge and Laganiere, McGraw Hill 2004
+// Object-Oriented Software Engineering: Practical Software Engineering using UML and Java
+// See http://www.lloseng.com
+
+
+
+strictness allow 30;
+strictness allow 1006;
+strictness allow 1007;
+strictness allow 1008;
+strictness allow 1006;
+
+generate Java "2DShapes";
+
+class Shape2D {
+ center;
+}
+//Abstract
+class EllipticalShape {
+ isA Shape2D;
+ semiMajorAxis;
+}
+//Abstract
+class Polygon { 
+ isA Shape2D;
+}
+class Circle {
+ isA EllipticalShape;
+}
+class Ellipse{
+ isA EllipticalShape;
+}
+class SimplePolygon {
+ orientation;
+ isA Polygon;
+}
+class ArbitraryPolygon {
+ points;
+ isA Polygon;
+}
+class Rectangle {
+ isA SimplePolygon;
+ height;
+ width;
+}
+class RegularPolygon {
+ numPoints;
+ radius;
+ isA SimplePolygon;
+}

@@ -1,0 +1,63 @@
+// UML state machine diagram written in Umple representing the
+// steps in processing an application for a grant
+
+generate Java "ApplicationProcessing";
+
+class GrantApplication {
+  Boolean adminCheckOk=false;
+
+  status {
+    Planned {
+      createApplication -> InProgress;
+    }
+  
+    // Application being worked on by researcher
+    InProgress {
+      researcherDeclaresComplete -> EvaluationByInstitution;
+      editByResearcher -> InProgress;
+    }
+  
+    EvaluationByInstitution {
+      returnToResearcher -> InProgress;
+      verified -> VerifiedByInstitution;
+      editByInstitution -> EvaluationByInstitution;
+    }
+  
+    VerifiedByInstitution {
+      reOpen -> EvaluationByInstitution;
+      submit -> SubmittedByInstitution;
+    }
+  
+    SubmittedByInstitution {
+      withdraw -> Withdrawn;
+      acceptForReview -> UnderAdministrativeReview;
+      submissionCheck [adminCheckOk] -> SubmittedByInstitution;
+      submissionCheck [!adminCheckOk] -> EvaluationByInstitution;
+    }
+  
+    UnderAdministrativeReview {
+      acceptForExpertReview -> UnderExpertReview;
+      bypassExpertReviewDueToMinorChanges -> AwaitingFinalDecision;
+      returnToInstitition -> EvaluationByInstitution;
+      withdraw -> Withdrawn;      
+    }
+  
+    UnderExpertReview {
+      expertReviewsReturned -> AwaitingFinalDecision;
+      withdraw -> Withdrawn;      
+    }
+ 
+    AwaitingFinalDecision {
+      finalAccept -> Accepted;
+      minorRevisionsNeeded -> EvaluationByInstitution;
+      reject -> Rejected;
+    }
+    Accepted {}
+    Rejected {
+      tryAgain -> InProgress;
+    }
+    Withdrawn {
+      tryAgain -> InProgress;
+    }
+  }
+}

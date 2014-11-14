@@ -1,0 +1,181 @@
+// This example refers to Figures 3, 4, and 5 of 'The Dagstuhl Middle Metamodel: 
+// A Schema for Reverse Engineering', ATEM 2003, First International 
+// Workshop on Meta-Models and Schemas for Reverse Engineering, 
+// WCRE, Victoria, B.C., in Electronic Notes in Theoretical Computer
+// Science, Elsevier, Vol. 94, pp 7-18,
+// Authors: Lethbridge, T.C., Sander Tichelaar, and Erhard Ploedereder (2003) 
+
+// To load the entire DMM example at once, copy and paste all 
+// five DMM components (DMM*) into the editor.  Please note that the
+// position attributes of classes and associations will need to be 
+// re-adjusted, as the example has been made to display the diagrams 
+// as separate entities.
+
+// This is a UML class diagram written in Umple
+generate Java "DMMSourceObjectHierarchy";
+
+class SourceObject{
+}
+
+class SourcePart{
+  isA SourceObject;
+  startLine;
+  startChar;
+  endLine;
+  endChar;
+}
+
+class Contains{
+  0..1 containedBy -- 0..1 SourcePart;
+  * -- 1 SourceObject;
+}
+
+class SourceUnit{
+  isA SourceObject;
+  name;
+}
+
+class SourceFile{
+  isA SourceUnit;
+  path;
+}
+
+class Includes{
+  * included -- 1 SourceFile includes;
+  * includes -- 1 SourceFile included;
+}
+
+class MacroExpansion{
+  isA SourcePart;
+}
+
+class IsExpansionOf{
+  * -- 1 MacroDefinition;
+  1 -- 1 MacroExpansion;
+}
+
+class MacroArgument{
+  isA SourcePart;
+  name;
+}
+
+class Definition{
+  isA SourcePart;
+}
+
+// abstract
+class Resolvable{
+  isA SourcePart;
+  name;
+}
+
+class Comment{
+  isA SourcePart;
+}
+
+class Describes{
+  * -- 1 SourceObject;
+  0..1 foundIn -- 0..1 Comment;
+}
+
+class MacroDefinition{
+  isA Definition;
+  name;
+}
+
+class Declaration{
+  isA Resolvable;
+}
+
+class Reference{
+  isA Resolvable;
+}
+//$?[End_of_model]$?
+//Positioning
+class SourcePart
+{
+  position 93 154 139 110;
+}
+
+class MacroDefinition
+{
+  position 249 442 112 58;
+}
+
+class Resolvable
+{
+  position 483 338 112 58;
+}
+
+class SourceUnit
+{
+  position 456 155 112 58;
+}
+
+class SourceFile
+{
+  position 578 235 109 62;
+}
+
+class Reference
+{
+  position 568 449 109 41;
+}
+
+class Declaration
+{
+  position 399 449 109 41;
+}
+
+class Comment
+{
+  position 367 338 109 41;
+}
+
+class Definition
+{
+  position 250 338 109 41;
+}
+
+class MacroArgument
+{
+  position 132 337 109 41;
+}
+
+class MacroExpansion
+{
+  position 5 337 120 45;
+}
+
+class SourceObject
+{
+  position 292 16 113 45;
+}
+
+class Describes
+{
+  position 304 166 109 45;
+  position.association Describes__SourceObject 80,0 92,45;
+  position.association Comment__Describes 80,41 17,0;
+}
+
+class Contains
+{
+  position 73 17 109 45;
+  position.association Contains__SourcePart 65,45 45,0;
+  position.association Contains__SourceObject 110,9 0,10;
+}
+
+class Includes
+{
+  position 579 39 109 45;
+  position.association Includes:included__SourceFile:includes 21,45 22,0;
+  position.association Includes:includes__SourceFile:included 100,41 100,0;
+}
+
+class IsExpansionOf
+{
+  position 15 443 109 41;
+  position.association IsExpansionOf__MacroDefinition 109,10 0,11;
+  position.association IsExpansionOf__MacroExpansion 40,0 50,45;
+}

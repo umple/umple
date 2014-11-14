@@ -111,38 +111,40 @@ public static void printFilesToUmplify(List<File> srcFiles){
 	   }
    }
 
-   public static void writeMasterFile(List<String> filenames, String outputFolder, boolean needSubDirectories){
-	   if (needSubDirectories) { writePerPackageMasterFile(filenames, outputFolder);}
-	   else { writeSingleMasterFile(filenames, outputFolder); }
+   public static void writeMasterFile(List<String> filenames, String outputFolder, boolean needSubDirectories, boolean testMode){
+	   if (needSubDirectories && testMode==false) { writePerPackageMasterFile(filenames, outputFolder);}
+	   else { writeSingleMasterFile(filenames, outputFolder, testMode); }
    }
    
    private static  void writePerPackageMasterFile(List<String> filenames, String outputFolder){
 		// TODO
    }
   
-   private static void writeSingleMasterFile(List<String> filenames, String outputFolder){
-	   StringBuffer sb =  new StringBuffer();
-	   for (String s: filenames)
-	   {
-	   	   if (s != null){
-		    sb.append("use " + s + ".ump;" );
-		    sb.append(System.getProperty("line.separator"));
-	   	   }
-	   }
-	   try
-	   {
-		   String path = outputFolder + File.separator;
-		   File file = new File(path);
-		   file.mkdirs();
-		   String masterFileName =  path + "Master.ump" ;
-		   BufferedWriter bw = new BufferedWriter(new FileWriter(masterFileName));
-		   bw.write(sb.toString());
-		   bw.flush();
-		   bw.close();
-	   }
-	   catch (Exception e)
-	   {
-		   throw new UmpleCompilerException("There was a problem with generating MasterFile." + e, e);
+   private static void writeSingleMasterFile(List<String> filenames, String outputFolder,boolean testMode){
+	   if (testMode==false) {
+		   StringBuffer sb =  new StringBuffer();
+		   for (String s: filenames)
+		   {
+		   	   if (s != null){
+			    sb.append("use " + s + ".ump;" );
+			    sb.append(System.getProperty("line.separator"));
+		   	   }
+		   }
+		   try
+		   {
+			   String path = outputFolder + File.separator;
+			   File file = new File(path);
+			   file.mkdirs();
+			   String masterFileName =  path + "Master.ump" ;
+			   BufferedWriter bw = new BufferedWriter(new FileWriter(masterFileName));
+			   bw.write(sb.toString());
+			   bw.flush();
+			   bw.close();
+		   }
+		   catch (Exception e)
+		   {
+			   throw new UmpleCompilerException("There was a problem with generating MasterFile." + e, e);
+		   }
 	   }
    }
   

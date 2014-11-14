@@ -1,0 +1,117 @@
+/*
+  The named example you requested is not available or else
+  you did not specify a name in the URL you used to invoke UmpleOnline.
+   
+  Below is a very simple Umple file demonstrating basic features
+  You can use this to start experimenting with Umple
+  
+  Click on the Generate Code button to see the almost 700 lines of Java
+  generated from this class diagram model
+*/
+
+//Definition of a class
+generate Java "NullExample";
+
+class A {
+
+  // The class has an attribute called 'name' that is a string by default
+  name;
+
+  // The class also has an integer attribute, initialized to 1
+  Integer i = 1;
+}
+
+// Definition of a second class
+class B {
+  // This will be a subclass of B. It will inherit the attributes name and i.
+  isA A;
+}
+
+// A third class
+class C {
+  // Integer z will be given a number at construction that cannot change
+  autounique z;
+  
+  // The following indicates that a C has some associated B's
+  1 -- * B;
+}
+
+// A fourth class that will be a singleton (only one instance allowed)
+class D{
+  singleton;
+  
+  // The following demonstrates some datatypes
+  lazy String id;
+  lazy Date someDate;
+  lazy Boolean whetherTrueOrFalse;
+}
+
+// Associations can be defined in a class or separately as is done here
+association {
+   0..1 D theD --
+   1..* A theA;
+}
+
+// Modeling entities can also be added to a class as follows
+// We are adding to B, rather than replacing it
+class B {
+  // Can only be set on creation
+  immutable Integer anotherAttribute;
+  
+
+
+  
+  // An optional to optional association to an instance of D
+  0..1 -- 0..1 D;
+  
+  // A state machine with states high, medium and low
+  // event goDown (a method) will trigger a state change to state medium
+  // Every time we enter state medium, we increment i 
+  // Every time we go down from medium we subtract 10 from i
+  height {
+    high {
+      goDown -> medium;
+    }
+   
+    medium
+    {
+      entry / {setI(getI()+1);}
+       
+      goUp -> high;
+
+      goDown ->/{setI(getI()-10);} low;
+       
+    }
+    low { goUp -> medium; }
+  }  
+  
+  // The following shows that you can put arbitrary methods in your code,
+  // Since this is Java, it makes sense only to generate Java from this
+  public Integer timesTen()
+  {
+     return (anotherAttribute*10);
+  }
+  
+}//$?[End_of_model]$?
+
+class D
+{
+  position 53 302 223 97;
+}
+
+class B
+{
+  position.association B__D 42,63 148,0;
+  position 173 167 193 63;
+}
+
+class C
+{
+  position.association B__C 25,63 144,0;
+  position 287 29 109 63;
+}
+
+class A
+{
+  position 41 17 158 80;
+}

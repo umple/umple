@@ -1,0 +1,44 @@
+// UML state machine diagram in Umple representing an automatic transmission
+//  From Book by Lethbridge and Laganiere, McGraw Hill 2004
+//  Object-Oriented Software Engineering: Practical Software Engineering using UML and Java
+//  See http://www.lloseng.com
+
+ generate Java "CarTransmission";
+
+class CarTransmission {
+
+  Boolean driveSelected;
+
+  state {
+    neutral {
+      selectReverse -> reverse;
+      selectDrive -> drive;
+      selectFirst -> first;
+      selectSecond -> second;
+    }
+    
+    reverse {
+      selectNeutral -> neutral;
+    }
+    
+    drive {
+      selectNeutral -> neutral;
+      selectFirst -> first;
+      selectSecond -> second;
+    
+      first {
+        reachSecondSpeed [driveSelected] -> second;
+      }
+      
+      second {
+        reachThirdSpeed [driveSelected] -> third;
+        dropBelowSecondSpeed [driveSelected] -> first;
+      }
+      
+      third {
+        dropBelowThirdSpeed-> second;
+      }
+    }
+   
+  }
+}

@@ -1,0 +1,62 @@
+// UML state diagram representing an airport runway, written in Umple
+generate Java "Runway";
+
+class Runway {
+  Boolean noPlaneOnRunway = false;
+  Boolean inspectionSuccess = false;
+
+  runwayStateMachine {
+  
+    Open {
+      alarm -> Emergency;
+      
+      Free {
+        entry / {turnOnGreenLight();}
+        exit / {turnOffGreenLight();}
+        planeLanding -> Occupied;
+        planeTakingOff -> Occupied;
+        repair -> Restoration;
+      }
+      
+      Occupied {
+        planeTakesOff -> Free;
+        landingComplete -> Free;
+      }
+    }
+  
+    Closed {
+      entry / {closeRunway();}
+          
+      Emergency {
+        emergencyOver -> ReadyToOpen;
+      }
+      
+      ReadyToOpen {
+        open [noPlaneOnRunway] -> Open;
+      }
+      
+      Restoration {
+        Restoration_1 {
+          Repair {
+            repairCompleted -> InspectRepairs;
+          }
+          InspectRepairs { 
+            check [inspectionSuccess] -> ReadyToOpen;
+            check [!inspectionSuccess] -> Repair; 
+          }
+        }
+        ||
+        Restoration_2 {
+          // Do other maintenhance while repair is going on
+          Maintenance {
+            do { performMaintenanceWork();}
+          }
+        }
+      }
+    }
+  }
+  void closeRunway() {}
+  void turnOffGreenLight() {}
+  void turnOnGreenLight() {}
+  void performMaintenanceWork() {}
+}

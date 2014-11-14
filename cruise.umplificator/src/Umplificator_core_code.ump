@@ -4,11 +4,19 @@ class Umplificator {
 
 public boolean umplify(List<File> srcFiles) {
     FileHelper.printFilesToUmplify(srcFiles);
+    // Initializing a new Umple Model
+    outputModel = new UmpleModel(null);
+    // Initialize drools engine
+	ruleRunner = new RuleRunner();
+	RuleService ruleService = new RuleService (ruleRunner);
+	ruleService.startRuleEngine(currentLevel);
+	ruleRunner.insertUmpleModel(outputModel);
+	
     for (File aFile : srcFiles){
     	 umplifyElement(aFile);
     }
     // Generates a MasterFile if we have processed more than one file
-   FileHelper.writeMasterFile(filesUmplified, outputFolder, needSubDirectories);
+   FileHelper.writeMasterFile(filesUmplified, outputFolder, needSubDirectories,testMode);
    return true;
 }
 
@@ -70,20 +78,17 @@ public boolean umplifyJava(File file)
 			// GetContent from file
 			// Parse File
 			// The visitor is automatically assigned to the Parser
+			UmpleFile umpleFile = new UmpleFile(file);
  		   	JavaParser javaParser =new JavaParser();
 		    String content =  IOUtils.toString(file.toURI());;
    			logger.debug("---Input---");
 		    logger.debug(content);
 		    javaParser.parseUnit(content);
-			// initialize drools engine
-		    RuleRunner ruleRunner = new RuleRunner();
-		    RuleService ruleService = new RuleService (ruleRunner);
-			ruleService.startRuleEngine(currentLevel);
 			// Insert Elements in Working Memory
 			String compilationUnitName= javaParser.getJavaVisitor().getName();
 			boolean isInterface = javaParser.getJavaVisitor().getIsInterface();
 			boolean isEnumType = javaParser.getJavaVisitor().getIsEnumType();
-
+			
 			UmpleInterface uInterface=null;
 			UmpleClass uClass=null;
 			if (!isEnumType){
@@ -104,10 +109,7 @@ public boolean umplifyJava(File file)
 			ruleRunner.insertJavaElements(javaParser.getJavaVisitor());
 			ruleRunner.fireAllRules();
 
-			// generate Umple Code
-			UmpleFile umpleFile = new UmpleFile(file);
-			outputModel = new UmpleModel(umpleFile);
-			
+			// generate Umple Code		
 			if (!isEnumType){
 				if (isInterface) { outputModel.addUmpleInterface(uInterface);} else {  outputModel.addUmpleClass(uClass);};
 			}

@@ -1,0 +1,460 @@
+// UML state machine and and simulation of a the  TCP-IP protocol
+
+
+generate Java "TcplpSimulation";
+
+class Tcp {
+  
+  depend java.util.LinkedList;
+  depend java.util.Queue;
+  depend java.lang.Thread;
+  depend java.io.*;
+  depend java.lang.InterruptedException;
+  depend java.io.IOException;
+
+  // Tcp flags
+  const String SYN="SYN";
+  const String ACK="ACK";
+  const String FIN="FIN";
+  const String RST="RST";
+  const String SYNACK="SYNAck";
+
+  // Queues for adding and removing Tcp flags
+  //LinkedList messages= new LinkedList(); 
+  Queue_Tcp q=new Queue_Tcp();
+  BufferedReader in=null;
+  lazy String sentence;
+ 
+  
+  connection{
+    Closed{
+      //entry /{ beginConnection(); }
+      passiveOpen->Listen;
+      activeOpen ->/{ sendSyn();}  SYN_Sent;
+    }
+    
+    Listen{
+      syn ->/{ sendSynAck();} SYN_Received;
+      //sendData->/{ sendSyn();} SYN_Sent; --(4 handshake ways case)
+      close -> Closed;
+    }
+    
+    SYN_Received{
+      ack -> Established;
+      //rst -> Listen;
+      //close -> /{ sendFin(); } FIN_Wait_1;
+    }
+    
+    SYN_Sent{
+      //syn ->/{ sendSynAck();} SYN_Received; --(another case)
+      synAck->/{ sendAck();} Established;
+      //close -> Closed;
+      //timeOut -> /{ sendRst(); } Closed;
+    }
+    
+    Established{
+      fin ->/{ sendAck();} Close_Wait;
+      activeClose->/{ sendFin();} FIN_Wait_1;
+      data->/{sendData();} Established;
+      //Data_R->/{ recieveData(sentence);} Esatablished;
+    }
+    Close_Wait{
+      passiveClose ->/{ sendFin();} Last_ACK; 
+    }
+    
+    Last_ACK{
+      ack -> Closed;
+    }
+    FIN_Wait_1{
+      ack ->FIN_Wait_2;
+      fin ->/{ sendAck();} Closing;
+      finAck ->/{ sendAck();} Timed_Wait;
+    }
+    FIN_Wait_2{
+      fin ->/{ sendAck();} Timed_Wait;
+    }
+    Closing{
+      ack -> Timed_Wait;
+    }
+    Timed_Wait{
+      timeOut->Closed;
+    }
+  }
+  
+  
+  public synchronized void sendSyn(){
+    try{
+      q.putMessage(SYN);
+    }catch (InterruptedException e) {}
+  }
+  
+  public synchronized void sendSynAck() {
+     try{
+       q.putMessage(SYNACK);
+     }catch (InterruptedException e) {}
+  }
+
+  public synchronized void sendAck() {
+    try{
+      q.putMessage(ACK);
+    }catch (InterruptedException e) {}
+  }
+
+
+   public synchronized void sendData() {
+     in=new BufferedReader(new InputStreamReader(System.in));
+     String sn;
+     try{
+       sn=in.readLine();
+       try{
+         q.putMessage(sn);
+       }catch (InterruptedException e) {}
+     } catch (IOException ioe){}
+   }
+
+    public synchronized void sendFin() {
+      try{
+        q.putMessage(FIN);
+      }catch (InterruptedException e) {}
+    }
+
+}
+
+
+//Queue_1 class that have acquire and release methods used to send signals between the threads
+class Queue_1{
+  depend java.util.concurrent.Semaphore;
+  depend java.lang.InterruptedException;
+  
+  Semaphore semC = new Semaphore(0);
+  Semaphore semS = new Semaphore(1);
+
+  public void acquire_semC() {
+    try {
+      semC.acquire();
+    } catch (InterruptedException e) {
+      System.out.println("InterruptedException caught");
+    }
+  }
+  
+  public void release_semC(){
+    semC.release();
+  }
+
+  public void acquire_semS() {
+    try {
+      semS.acquire();
+    } catch (InterruptedException e) {
+      System.out.println("InterruptedException caught");
+    }
+  }
+  
+  public void release_semS(){
+   semS.release();
+  }
+}
+
+
+class Queue_Tcp{
+
+ depend java.lang.Thread;
+ depend java.lang.InterruptedException;
+ depend java.util.*;
+ //LinkedList messages; 
+  LinkedList<String> messages = new LinkedList<String>();
+ 
+ public synchronized void putMessage(String var) throws InterruptedException { 
+   messages.add(var);
+   notify();
+   //String msg = (String)messages.getFirst();
+   String msg = messages.element();
+   System.out.println("send message: " +msg); 
+ } 
+  
+  // Called by Receiver thread 
+  public synchronized String getMessage() throws InterruptedException { 
+    while ( messages.size() == 0 ) 
+      wait();
+    String message =messages.remove();
+    return (message); 
+  } 
+    
+  public Boolean isEmptyMessage() {
+    if(messages.size() == 0)
+      return true;
+    return false;
+  }
+} 
+
+external Thread{
+}
+
+class Receiver{
+  depend java.lang.Thread;
+  depend java.lang.InterruptedException;
+
+  isA Thread;
+  Queue_Tcp q;
+
+  public void run() { 
+    try { 
+      while ( !q.isEmptyMessage() ) {
+        String message = q.getMessage();
+        System.out.println("Got message: " + message);
+        sleep( 2000 ); 
+      }
+    }catch( InterruptedException e ) { } 
+  } 
+    
+}
+ 
+class MySocket{
+  
+  String host;
+  Integer port;
+  //MySocket needs a constructor to create the tcp
+  Tcp tcp=new Tcp();
+   
+  // use a semaphore to synchronize sending signals between the threads 
+  Queue_1 q=new Queue_1();
+  
+  public void connect(){
+    //Connects client to the server
+    try{
+      tcp.activeOpen();
+      q.acquire_semS(); 
+    }catch(Exception e){}
+    q.release_semS(); 
+    tcp.synAck();
+  }
+   
+  /*void receive(){
+    //receive data from the server
+    tcp.Data_R();
+  }*/
+  
+  public void send(){
+     //send data to client
+     tcp.data();
+   }
+   
+  public void close(){
+    //Closes the socket 
+    tcp.activeClose();
+    //Closes the serverSocket
+    tcp.passiveClose();
+  }
+  
+}
+
+class MyServerSocket{
+   Integer port;
+   Tcp tcp=new Tcp();
+   MySocket clientsocket=null;
+   MyServerSocket serverSocket=null;
+   
+   // use a semaphore to synchronize sending signals between the threads 
+   Queue_1 q=new Queue_1();
+   
+   /** The MyServerSocket accept method's job is to start a new MySocket 
+    *which happens at  L251. However, it seems to me that it should not have 
+    *its own Tcp, it should send passiveOpen to the tcp of MySocket.
+    */
+
+   public void accept(){
+     //Listens for a connection to be made to this socket and accepts it
+     tcp.passiveOpen();
+     //if(serverSocket!= null){
+       clientsocket=new MySocket("localHost",999);
+    // }
+     try{
+       tcp.syn();
+       q.acquire_semC();
+     }catch(Exception e){}
+     q.release_semC();
+     tcp.ack();
+   }
+}
+
+
+//create client class to implement MySocket class
+
+class Tcp_Client 
+{
+  depend java.io.IOException;
+  depend java.lang.Thread;
+  depend java.lang.InterruptedException;
+  depend java.util.LinkedList; 
+  
+  isA Thread;
+    
+  MySocket clientSocket=null;
+  boolean readyToStop= false;
+  Queue_Tcp q=new Queue_Tcp();
+  Receiver receive=new Receiver(q);
+  String host="localhost";
+  Integer port=999;
+  
+  
+  public void run() {
+    //LinkedList messages= new LinkedList();
+    //q=new Queue_Tcp();
+    //receive=new Receiver(q);
+    try
+    {
+      // connects client with the server
+      clientSocket= new MySocket(getHost(), getPort());
+      if(clientSocket != null)
+      {clientSocket.connect();}
+      while(!q.isEmptyMessage()){
+        receive.start();
+      }
+      System.out.println("Client: Connected");
+    } catch (Exception ex){
+      try
+      {
+        //Close the socket
+        if (clientSocket != null)
+          clientSocket.close();
+      }
+      finally
+      {
+        clientSocket = null;
+      }
+      System.out.println("Client: Closed"); 
+    }
+    if(clientSocket == null){
+      // closes the socket
+      setReadyToStop(true);
+      try
+      {
+        //Close the socket
+        if (clientSocket != null)
+        clientSocket.close();
+      }
+      finally
+      {
+        clientSocket = null;
+      }
+    }
+  }
+
+}
+
+
+//Creat Server class to implement the MyServerSocket class
+
+class Tcp_Server
+{
+  depend java.io.IOException;
+  depend java.lang.Thread;
+  depend java.lang.InterruptedException;
+  depend java.util.LinkedList;  
+  isA Thread;
+    
+  MyServerSocket serverSocket = null;
+  MySocket clientSocket = null;
+  Boolean isListening=false;
+  Queue_Tcp q=new Queue_Tcp();
+  Receiver receive=new Receiver(q);
+  Integer port=999;
+  Boolean readyToStop = true; 
+
+  public void run() {
+    //LinkedList messages= new LinkedList();
+    //q=new Queue_Tcp();
+    //receive=new Receiver(q);
+    //Begins waiting for a new client.
+    if (!getIsListening())
+    {
+      if (serverSocket == null)
+      {
+        serverSocket = new MyServerSocket(getPort());
+      }
+    }
+    
+    //listens to the client and accept the connection
+    setReadyToStop(false); 
+    serverStarted();
+    try
+    {
+      // waits for a new client connection, accepts it
+      while(!getReadyToStop())
+      {
+        try
+        {
+          receive=new Receiver(new Queue_Tcp());
+          if(serverSocket != null){
+            serverSocket.accept();}
+          while(!q.isEmptyMessage()){
+            receive.start();
+          }
+          
+          //Sends a message to client connected to the server
+          if (clientSocket == null)
+            System.out.println("socket does not exist");
+           try
+           {
+             
+            clientSocket.send();
+           } catch (Exception ex) {}
+        }catch (Exception ex){}
+      } 
+    } catch (Exception ex){}
+    finally
+    {
+      setReadyToStop(true);
+      serverStopped();
+      //Closes all connection to the server 
+      try
+      {
+        // Close the sSocket and the connection with client
+        if (serverSocket == null)
+        {
+          stopListening();
+        }else if (serverSocket != null || clientSocket != null)
+          try
+          {
+            clientSocket.close();
+          } catch(Exception ex) {}
+      } catch(Exception ex) {}
+      finally
+      {
+        clientSocket = null;
+        serverSocket = null;
+      }
+    }
+  }
+
+
+  protected void serverStarted() {
+    System.out.println("Server: Started");
+  }
+
+  protected void serverStopped() {
+    System.out.println("Server: Stopped");
+  }
+
+  //Causes the server to stop accepting new connections
+  public void stopListening(){
+    setReadyToStop(true);
+  }
+
+}
+
+
+// mainTest class
+
+class MainTest{
+  depend java.lang.Thread;
+
+  public static void main(String[] args) {
+    Tcp_Server server= new Tcp_Server();
+    server.start();
+    Tcp_Client client= new Tcp_Client();
+    client.start();
+  }
+}
+
+strictness ignore 1008; // Don't worry about about synchronized
+strictness ignore 46; 

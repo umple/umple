@@ -1,0 +1,334 @@
+// This example refers to Figures 2, 4, 5 and 6 of 'The Dagstuhl Middle Metamodel: 
+// A Schema for Reverse Engineering', ATEM 2003, First International 
+// Workshop on Meta-Models and Schemas for Reverse Engineering, 
+// WCRE, Victoria, B.C., in Electronic Notes in Theoretical Computer
+// Science, Elsevier, Vol. 94, pp 7-18,
+// Authors: Lethbridge, T.C., Sander Tichelaar, and Erhard Ploedereder (2003) 
+
+// To load the entire DMM example at once, copy and paste all 
+// five DMM components (DMM*) into the editor.  Please note that the
+// position attributes of classes and associations will need to be 
+// re-adjusted, as the example has been made to display the diagrams 
+// as separate entities.
+
+// This is a UML class diagram written in Umple
+generate Java "DMMModelElementHierarchy";
+
+class ModelElement{
+  visibility;
+}
+
+class StructuralElement{
+  isA ModelElement;
+}
+
+class BehaviouralElement{
+  isA ModelElement;
+}
+
+class Invokes{
+  * invoked -- 1 BehaviouralElement invokes;
+  * invokes -- 1 BehaviouralElement invoked;
+}
+
+class Accesses{
+  * -- 1 BehaviouralElement;
+  * -- 1 StructuralElement;
+}
+
+class DMMPackage{
+  isA ModelElement;
+  * -- 0..1 DMMPackage isSubpackageOf;
+}
+
+class Contains{
+  * contain -- 1 DMMPackage partOf;
+  0..1 -- 1 ModelElement;
+}
+
+class Type{
+  isA StructuralElement;
+}
+
+class IsDefinedInTermsOf{
+  * definesBy -- 1 Type definedBy;
+  * definedBy -- 1 Type definesBy;
+}
+
+class Value{
+  isA StructuralElement;
+}
+
+class IsOfType{
+  0..1 -- 1 Value;
+  * -- 1 Type;
+}
+
+class EnumerationLiteral{
+  isA Value;
+}
+
+class IsEnumerationLiteralOf{
+  1..* -- 1 EnumerationLiteral;
+  * -- 1 EnumeratedType;
+}
+
+class Variable{
+  isA Value;
+  0..1 -- 0..1 Value hasValue;
+}
+
+class Property{
+  isA Variable;
+  1 -- 1 MethodInProperty;
+}
+
+class MethodInProperty{
+  isA Method;
+}
+
+class EnumeratedType{
+  isA Type;
+}
+
+class CollectionType{
+  isA Type;
+  size;
+}
+
+class StructuredType{
+  isA Type;
+}
+
+class Field{
+  isA Variable;
+}
+
+class IsFieldOf{
+  1 -- 1 Field;
+  * -- 1 StructuredType;
+}
+
+class FormalParameter{
+  isA Variable;
+  pos;
+}
+
+class IsParameterOf{
+  1 -- 1 FormalParameter;
+  * -- 1 BehaviouralElement;
+}
+
+class DMMClass{
+  isA StructuredType;
+  isSubclassable;
+}
+
+class InheritsFrom{
+  1 transmits -- * DMMClass inherits;
+  1 inherits -- * DMMClass transmits;
+}
+
+class Imports{
+  * -- 1 DMMPackage;
+  * -- 1 DMMClass;
+}
+
+class ExecutableValue{
+  isA BehaviouralElement;
+}
+
+class Method{
+  isA BehaviouralElement;
+  Boolean isConstructor;
+  Boolean isDestructor;
+  Boolean isAbstract;
+  Boolean isDynamicallyBound;
+  Boolean isOverideable;
+}
+
+class IsMethodOf{
+  * -- 1 DMMClass methodOf;
+  0..1 -- 1 Method hasMethod;
+}
+
+class Routine{
+  isA BehaviouralElement;
+}
+//$?[End_of_model]$?
+//Positioning
+class Method
+{
+  position 678 455 216 128;
+}
+
+class DMMClass
+{
+  position 21 527 172 56;
+}
+
+class ModelElement
+{
+  position 359 11 129 58;
+}
+
+class FormalParameter
+{
+  position 546 457 109 58;
+}
+
+class CollectionType
+{
+  position 119 312 109 58;
+}
+
+class BehaviouralElement
+{
+  position 720 119 117 60;
+}
+
+class EnumerationLiteral
+{
+  position 364 332 131 41;
+}
+
+class Routine
+{
+  position 666 329 109 41;
+}
+
+class ExecutableValue
+{
+  position 803 330 131 46;
+}
+
+class Field
+{
+  position 318 457 109 41;
+}
+
+class StructuredType
+{
+  position 52 384 109 41;
+}
+
+class EnumeratedType
+{
+  position 188 381 109 41;
+}
+
+class Variable
+{
+  position 506 331 109 41;
+  position.association Value:hasValue__Variable 79,0 106,41;
+}
+
+class Value
+{
+  position 479 204 109 41;
+}
+
+class Type
+{
+  position 152 204 109 60;
+}
+
+class DMMPackage
+{
+  position 28 113 108 60;
+}
+
+class StructuralElement
+{
+  position 318 126 133 41;
+}
+
+class Property
+{
+  position 432 457 109 41;
+  position.association MethodInProperty__Property 55,41 0,20;
+}
+
+// Association classes
+class Accesses
+{
+  position 508 127 109 41;
+  position.association Accesses__BehaviouralElement 109,10 0,18;
+  position.association Accesses__StructuralElement 0,10 133,11;
+}
+
+class Invokes
+{
+  position 800 17 109 41;
+  position.association BehaviouralElement:invokes__Invokes:invoked 4,41 84,0;
+  position.association BehaviouralElement:invoked__Invokes:invokes 26,41 106,0;
+}
+
+class Contains
+{
+  position 24 14 109 41;
+  position.association Contains:contain__DMMPackage:partOf 24,41 20,0;
+  position.association Contains__ModelElement 109,23 0,26;
+}
+
+class IsOfType
+{
+  position 295 205 109 41;
+  position.association IsOfType__Value 109,10 0,11;
+  position.association IsOfType__Type 0,4 109,56;
+}
+
+class Imports
+{
+  position 6 226 109 41;
+  position.association Imports__DMMPackage 62,0 40,60;
+  position.association DMMClass__Imports 26,41 11,0;
+
+}
+
+class IsDefinedInTermsOf
+{
+  position 154 110 135 41;
+  position.association IsDefinedInTermsOf:definesBy__Type:definedBy 38,41 40,0;
+  position.association IsDefinedInTermsOf:definedBy__Type:definesBy 10,41 12,0;
+}
+
+class IsParameterOf
+{
+  position 603 203 109 41;
+  position.association FormalParameter__IsParameterOf 70,0 0,56.5;
+  position.association BehaviouralParameter__IsParameterOf 70,0 0,60;
+}
+
+class IsEnumerationLiteralOf
+{
+  position 260 269 135 41;
+  position.association EnumerationLiteral__IsEnumerationLiteralOf 90,41 0,30;
+  position.association EnumeratedType__IsEnumerationLiteralOf 28,41 100,0;
+}
+
+class IsFieldOf
+{
+  position 141 477 109 41;
+  position.association Field__IsFieldOf 109,10 0,30;
+  position.association IsFieldOf__SructuredType 10,0 99,41;
+}
+
+class IsMethodOf
+{
+  position 363 551 109 41;
+  position.association DMMClass:methodOf__IsMethodOf 0,10 172,34;
+  position.association IsMethodOf__Method:hasMethod 109,10 0,106;
+}
+
+class InheritsFrom
+{
+  position 50 610 109 41;
+  position.association DMMClass:inherits__InheritsFrom 0,30 0,56;
+  position.association DMMClass:transmits__InheritsFrom 109,30 172,56;
+}
+
+class MethodInProperty
+{
+  position 540 595 132 49;
+}

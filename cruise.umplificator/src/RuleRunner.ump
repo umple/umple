@@ -46,8 +46,7 @@ depend org.kie.api.runtime.KieContainer;
 depend org.kie.api.runtime.KieSession;
 depend java.io.*;
 depend cruise.umplificator.visitor.JavaClassVisitor;
-depend cruise.umple.compiler.UmpleClass;
-depend cruise.umple.compiler.UmpleInterface;
+depend cruise.umple.compiler.*;
 depend org.eclipse.jdt.core.dom.FieldDeclaration;
 depend org.eclipse.jdt.core.dom.ImportDeclaration;
 depend org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -119,6 +118,12 @@ depend org.eclipse.jdt.core.dom.MethodDeclaration;
  	public KieSession insertUmpleClass(UmpleClass uClass){
  	  logger.debug("RuleRunner.insertUmpleClass - Insert uClass into working memory");
 	  kieSession.insert(uClass);
+	  return kieSession;
+  	}  
+  	
+  	public KieSession insertUmpleModel(UmpleModel uModel){
+ 	  logger.debug("RuleRunner.insertUmpleModel - Insert Umple Model into working memory");
+	  kieSession.insert(uModel);
 	  return kieSession;
   	}  
   	

@@ -1,0 +1,57 @@
+// State machine of a bill in Canadian parliament represented in Umple
+generate Java "ParliamentBill";
+
+class Bill {
+  Boolean isCommonsBill = true;
+  billState {
+    inPreparation {
+      introduceInHouse -> inHouseOfCommons;
+      introduceInSenate -> / {isCommonsBill = false;} inSenate; // rare
+    }
+    inHouseOfCommons {
+      withdraw -> withdrawn;
+      voteFails -> withdrawn;
+      firstReading {
+        votePasses -> secondReading;
+      }
+      secondReading {
+        votePasses -> committeeConsideration;
+      }
+      committeeConsideration {
+        votePasses -> thirdReading;
+      }
+      thirdReading {
+        votePasses [isCommonsBill]-> inSenate;
+        votePasses [!isCommonsBill]-> awaitingRoyalAssent;
+      }
+    }
+    inSenate {
+      withdraw -> withdrawn;
+      voteFails -> withdrawn;
+      firstReadingS {
+        votePasses -> secondReadingS;
+      }
+      secondReadingS {
+        votePasses -> committeeConsiderationS;
+      }
+      committeeConsiderationS {
+        votePasses -> thirdReadingS;
+      }
+      thirdReadingS {
+        votePasses [isCommonsBill]-> awaitingRoyalAssent;
+        votePasses [!isCommonsBill]-> inHouseOfCommons;
+      }
+    }
+    
+    awaitingRoyalAssent {
+      royalAssent -> actOfParliament;
+    }
+
+    actOfParliament {
+    }
+
+    withdrawn {
+      modify -> inPreparation;
+    }
+  }
+}

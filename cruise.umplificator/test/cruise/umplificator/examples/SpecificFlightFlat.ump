@@ -1,0 +1,45 @@
+// State machine for an airline flight
+// Avoids the use of nested states.
+generate Java "SpecificFlightFlat";
+
+class SpecificFlight {
+  Boolean finished;
+  Boolean empty;
+  
+  state {
+    planned {
+      assignPlane -> planeAssigned;
+      cancel -> cancelled;
+    }
+    planeAssigned {
+      readyForPassengers -> boarding;
+      changePlane -> planned;
+      cancel -> cancelled;
+    }
+    waitingForNextLeg {
+      readyForPassengers -> boarding;
+      evacuate -> disembarking;
+    }
+    boarding {
+      evacuate -> disembarking;
+      boardingComplete -> closedAtGate;
+    }
+    closedAtGate {
+      evacuate -> disembarking;
+      permissionToDepart -> underway;     
+    }
+    underway {
+      evacuate -> disembarking;
+      arriveAtGate -> disembarking;
+    }
+    disembarking {
+      evacuate -> disembarking;
+      passengersOut [!empty] -> waitingForNextLeg;
+      passengersOut [finished && empty] -> completed;
+      passengersOut [!finished && empty] -> planeAssigned;
+    }
+    completed {}
+    cancelled {}
+  }
+}
+    

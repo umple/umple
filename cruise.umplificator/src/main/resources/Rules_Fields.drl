@@ -14,7 +14,8 @@ Finally, the UmpleAttribute is inserted into the working memory (forward chainin
 
 rule "JavaField_IsUmpleAttribute"
     when
-        fieldDeclaration: FieldDeclaration(fieldDeclaration.getType().isPrimitiveType())
+        fieldDeclaration: FieldDeclaration(fieldDeclaration.getType().isPrimitiveType()
+						  || fieldDeclaration.getType().equals("String"))
         uClass: UmpleClass()
     then
   		Attribute uAttr = new Attribute(null, null, null, null, false, uClass);

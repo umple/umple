@@ -1,0 +1,139 @@
+// State machine of two communicating agents
+
+generate Java "AgentsCommunication";
+
+class AgentSystem {
+   depend java.math.*;
+   1 -- * Agent;
+   
+   Agent findAgent(int num) {
+     
+     for(Agent agent : getAgents()) {
+       if(agent.getAgentNumber() == num) {
+          return(agent);
+       }
+     }
+     return null;
+   }
+   
+   public static void main(String [ ] args) {
+    int randomIndex;
+    AgentSystem theAgentSystem = new AgentSystem();
+    theAgentSystem.addAgent(new AgentA(1, theAgentSystem));
+    theAgentSystem.addAgent(new AgentB(2, theAgentSystem));
+    Random r = new Random();
+    
+    for(int i=0; i<1000; i++) 
+    {
+      // clock either agent depending on parity of a random number generator
+      int theNext =Math.abs(r.nextInt());
+      randomIndex = theNext % 2;
+      //System.out.println("Int was "+theNext+ "Next random index = " + randomIndex);
+      theAgentSystem.getAgent(randomIndex).clock();
+    } 
+  }
+}
+
+class Agent {
+   Integer agentNumber;
+   const Msga = "a";
+   const Msgb = "b";
+   const Msgc = "c";
+   const Msgd = "d";
+ 
+  0..1 -> * Message messages;
+  
+  boolean send(int agentNumber, String val) {
+    // Send to the other agent asynchronously
+    System.out.println(agentNumber +  " Sent " + val);
+    Agent recipient = getAgentSystem().findAgent(agentNumber);
+    if(recipient != null) { 
+      recipient.receive(val);
+      return true;
+    } 
+    else {
+      return false;
+    }
+  }
+  
+  boolean receive(String val) {
+      // Receive from the other agent and put into a queue
+      addMessage(new Message(val));
+      System.out.println(agentNumber +  " Received " + val);
+      return true;
+  }  
+  
+  boolean consume(String val) {
+     // returns true if the first item on the queue matches val
+     // deletes first item if it matches 
+    if(numberOfMessages() >0)
+    {
+      if(getMessage(0).getVal().equals(val)) {
+        removeMessage(getMessage(0));
+         System.out.println(agentNumber +  " Consumed " + val);
+        return(true);
+      }
+    }
+    return(false);
+  }
+  
+  public boolean clock() {
+   //abstract method -- does nothing; overridden by state machines
+    return false;
+  }
+}
+
+class AgentA {
+  isA Agent;
+  
+  sm {
+    s1 {
+      entry / { send(2, Msga);}
+      clock -> s2;
+      //after(10)-> s2;
+      // -> s2;
+    }
+    s2 {
+      entry / { send(2, Msgb);}
+      clock -> s3;
+    }
+    s3 {
+      clock [ consume(Msgc)] -> s4;
+    }
+    s4 {
+      clock [ consume(Msgd)] -> s5;
+    }
+    s5 {}
+  }
+}
+
+class AgentB {
+  isA Agent;
+  
+  sm {
+    s1 {
+      entry / { send(1, Msgc);}
+      clock -> s2;
+    }
+    s2 {
+      clock [ consume(Msga)] -> s3;
+
+    }
+    s3 {
+      clock [ consume(Msgb)] -> s4;
+    }
+    s4 {
+      entry / { send(1, Msgd);}
+      clock -> s5;
+    }
+    s5 {}
+  }
+ 
+}
+
+class Message {
+  autounique seqNum;
+  val;
+  
+  key {seqNum }
+}

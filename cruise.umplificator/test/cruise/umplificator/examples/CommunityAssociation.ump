@@ -1,0 +1,122 @@
+// UML class diagram in Umple showing a simple system for managing the data
+// maintained by a community association
+
+generate Java "CommunityAssociation";
+
+class Facility
+{
+  id;
+  type;
+  openPeriod;
+  1 -- * Booking booked;
+}
+
+class Resident
+{
+  name;
+  Boolean under18;
+  emailAddress;
+  telephoneNumber;
+  executivePosition;
+}
+
+class CommunityResidence
+{  
+  streetAddress;
+  Integer apartmentNumber;
+  feePaidToDate;
+  1 -- * Resident;
+}
+
+class Event
+{
+  Date date;
+  Time time;
+  Float fee;
+  name;
+}
+
+class Booking
+{
+  Date date;
+  Time startTime;
+  Time endTime;
+  Float feePaid;
+  Boolean isReservedForFCFS;
+  * -- 0..1 Resident;
+}
+
+class Under18Event
+{
+  isA Event;
+}
+
+class Rink
+{
+  isA Facility;
+}
+
+class TennisCourt
+{
+  isA Facility;
+}
+
+class CommunityAssociation
+{
+  singleton;
+  1 -- * CommunityResidence;
+  1 -- * Facility;
+  1 -- * Event;
+}//$?[End_of_model]$?
+
+class Facility
+{
+  position 333 375 150 97;
+  position.association Booking:booked__Facility 0,41 216,27;
+}
+
+class Resident
+{
+  position 46 37 194 131;
+}
+
+class CommunityResidence
+{
+  position 325 73 206 97;
+  position.association CommunityResidence__Resident 0,10 195,75;
+}
+
+class Event
+{
+  position 545 302 113 114;
+}
+
+class Booking
+{
+  position 36 401 215 131;
+  position.association Booking__Resident 30,0 25,131;
+  position.association Booking__Facility 216,23 0,36;
+}
+
+class Under18Event
+{
+  position 587 510 109 45;
+}
+
+class Rink
+{
+  position 290 521 109 45;
+}
+
+class TennisCourt
+{
+  position 430 518 109 45;
+}
+
+class CommunityAssociation
+{
+  position 309 272 157 45;
+  position.association CommunityAssociation__Facility 109,45 92,0;
+  position.association CommunityAssociation__CommunityResidence 108,0 135,97;
+  position.association CommunityAssociation__Event 158,34 0,28;
+}

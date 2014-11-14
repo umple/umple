@@ -1,0 +1,236 @@
+// Domain model for a generic system to manage decision making within an
+// organization. The requirements are at the bottom of the file.
+// View this using options / GVClassDiagram to get a nice layout.
+// UML Class diagram written in Umple
+
+// The organization
+
+generate Java "Decisions";
+
+class Organization {
+  singleton;
+  lazy name;
+  1 -- * Decision;
+  1 -- * DecisionMakingBody;
+  1 -- * Person users;
+}
+
+// A committee or individual decision maker
+// OK to just call this Committee
+class DecisionMakingBody {
+  name;
+  * -- 1 ApprovalLevel; // Can grant final approval to this level
+  
+  // Hierarchical relationships among decision making bodies
+  * subordinateBodies -- 0..1 DecisionMakingBody superiorBody;
+  
+  // People who are members; can be temporarily empty
+  1 -- * Membership;
+}
+
+class Membership {
+  * -- 1 Person;
+  Date startDate;
+  Date endDate;
+}
+
+// A formal decision that is proposed or made
+class Decision {
+  id; // Formal identification code
+  
+  // Used to categorize decisions by level
+  * -- 1 DecisionType;
+  
+  // The most recent decision
+  1 -- 0..1 DecisionByBody currentStatus; 
+  
+  // Used for tracking splitting or merging of decisions
+  * predecessors -- * Decision successors; 
+  
+  // True if still in progress; false if dropped or merged/split
+  Boolean isBeingConsidered;
+}
+
+// Tracks the progress of a decision as it is approved and changed
+class DecisionByBody {
+  lazy Date dateOfDecision; // Null of not yet made
+  * -- 1 DecisionMakingBody decider;
+
+  // May be updated by this committee
+  * -- 1 DecisionSummaryVersion; 
+
+  // The versions of the documents as presented and discussed
+  * usedInDecision -- * DocumentVersion documentsForDecision; 
+
+  Boolean accepted; // false if not approved and would have to go back down
+  0..1 previous -- 0..1 DecisionByBody next; 
+ 
+  // The requests the body has made
+  0..1 -> * ChangeRequest;
+  
+  // Conditional approval
+  * -- * Decision onlyApprovedConditionalOnDecision;
+}
+
+class DecisionSummaryVersion {
+  Integer versionNumber;
+  shortSummary;
+}
+
+class Document {
+  id;
+  docType;
+  1 -- * DocumentVersion versions;
+}
+
+class DocumentVersion {
+  Integer versionNumber;
+  Date dateCreated; // not strictly required
+  filename;  // put filename here, but could be in Document
+  * -- * Person authors;
+}
+
+class Annotation {
+  text;
+  Date dateMade;
+  * -> 0..1 Person madeByUser;
+  * -> 0..1 DecisionMakingBody madeByBody;
+}
+
+class ChangeRequest {
+  isA Annotation;
+  0..1 -> * Comment;
+}
+
+// A comment can just be applied to a ChangeRequest
+class Comment {
+  isA Annotation;
+}
+
+// Categorization of decisions
+class DecisionType {
+  description;
+  * -- 1 ApprovalLevel highestApprovalLevelRequired;
+}
+
+// Identifies a level of approval -- e.g. departmental, board level
+// It would be acceptable just to have string attributes instead of associations to this
+// Could also be called ImportanceLevel
+class ApprovalLevel {
+  description;
+}
+
+class Person {
+   name;
+}
+
+/* Requirements for the above
+
+Many organization have decisions to make that are made by various committees in a hierarchical manner. Committees exist at various levels. For example, there might be a departmental committee that makes a decision, and passes the decision up to a division council for further approval, and that then passes the result to the board of directors for final approval.
+
+Some committees might consist of a single individual, e.g. a department head or director.
+
+The system you will model needs to be able to handle any kind of organization; the committees or individuals will have different names in each organization. In a university, for example, there might be many levels: Department curriculum committee, department council, faculty curriculum committee, faculty council, undergraduate council and Senate.
+
+Decisions are of various types, with each type having an importance levels. Based on its importance, a decision only needs to be approved up to a certain level in the hierarchy. For example, the decision about which courses to offer in a given year might only need to be approved by the department curriculum committee, but a new program of studies might need to be approved by the Senate (and every level from department curriculum committee up to Senate). In a company, an expense less than $1000 might need approval by a department head. Expenses of over $1000000 might need approval by the Board of Directors.
+
+Each decision has a 'short summary' that describes the decision. Examples might be: 'Purchase Photocopier model AB309 from Xerox for $2570' or 'Create course SEG2104 with title: "Model driven development", and description: 'Model driven development using Umple', and prerequisites: "SEG2105"'
+
+Short summaries can have multiple versions (as changes are made).
+
+Each decision has associated with it a set of documents. Each document has an id, a filename, a type (MS Word, Excel, Pdf etc.) and a set of versions.
+
+When a committee approves a decision, it does so by approving the short summary, and possibly modifying the set of documents by adding new versions of existing documents or adding new documents.
+
+A committee might turn down a decision based on one version of a document and request a list of change requests that are simple blocks of text. Users or other committees may add comments to the change requests and may create new versions of documents and an updated version of the short summary. A decision may therefore go up the hierarchy, be rejected, come back down for revisions, go back up again, back down again, and eventually be approved at the highest needed level, or rejected or dropped at any level.
+
+It is also possible for a committee to split a decision into separate decisions, or merge two decisions together, or approve one decision conditional on approval of one or more other decisions.
+
+Committees have members. Each member has a start and end date on the committee. Each document has a set of authors. Each version has a date and a set of authors.
+
+*/
+//$?[End_of_model]$?
+
+class ChangeRequest
+{
+  position 368 523 109 45;
+  position.association ChangeRequest__Comment 115,17 0,40;
+}
+
+class DecisionByBody
+{
+  position.association ChangeRequest__DecisionByBody 167,29 0,0;
+  position.association DecisionByBody__DecisionSummaryVersion 55,80 16,0;
+  position.association DecisionByBody:usedInDecision__DocumentVersion:documentsForDecision 119,0 0,10;
+  position.association DecisionByBody__DecisionMakingBody:decider 30,0 12,60;
+  position 203 444 159 77;
+}
+
+class Comment
+{
+  position 575 547 109 45;
+}
+
+class Annotation
+{
+  position 572 401 123 77;
+  position.association Annotation__Person:madeByUser 97,0 64,63;
+}
+
+class Person
+{
+  position 261 23 109 60;
+}
+
+class Organization
+{
+  position.association Organization__Person:users 113,13 0,10;
+  position.association DecisionMakingBody__Organization 75,63 30,0;
+}
+
+class Membership
+{
+  position.association Membership__Person 129,14 0,10;
+  position 93 130 121 77;
+}
+
+class DecisionSummaryVersion
+{
+  position 112 585 178 77;
+}
+
+class DocumentVersion
+{
+  position.association DocumentVersion__Person:authors 155,0 113,63;
+  position 502 117 178 94;
+}
+
+class DecisionType
+{
+  position 389 372 141 60;
+  position.association ApprovalLevel:highestApprovalLevelRequired__DecisionType 102,0 1,63;
+}
+
+class Decision
+{
+  position.association Decision__DecisionType 211,48 0,10;
+  position.association Decision__DecisionByBody:currentStatus 35,80 30,0;
+}
+
+class Document
+{
+  position.association Document__DocumentVersion:versions 14,80 18,0;
+  position 522 6 123 77;
+}
+
+class DecisionMakingBody
+{
+  position 300 175 130 60;
+  position.association ApprovalLevel__DecisionMakingBody 131,40 0,10;
+  position.association DecisionMakingBody__Membership 0,46 122,29;
+}
+
+class ApprovalLevel
+{
+  position 581 259 141 60;
+}

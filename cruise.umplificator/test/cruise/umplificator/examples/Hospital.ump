@@ -1,0 +1,119 @@
+// Hospital system - sample UML class diagram in Umple
+generate Java "Hospital";
+
+class Hospital
+{
+     1 -- * Employee;
+     1 -- 1..* Ward;
+}
+
+// Subsections within the hospital.
+class Ward
+{
+     String name;
+     Integer capacity;
+     1..* -- * Employee;
+     1 -- * Patient;
+}
+
+// The people who work at the hospital.
+class Employee
+{
+     String name;
+     Integer id;
+     Integer salary;
+     1 -- 1..* Shift;
+     1 -- 1..* Privilege;
+}
+
+// Working shifts that the employees have.
+class Shift
+{
+     Date date;
+     Integer startTime;
+     Integer endTime;
+}
+
+// Various privileges and roles that the employees have.
+class Privilege
+{
+     String privilege;
+}
+
+// Specialized employee who looks after patients.
+class Doctor
+{
+     isA Employee;
+}
+
+// Specialized doctor who performs advanced procedures on patients.
+class Surgeon
+{
+     isA Doctor;
+}
+
+// Employee who maintains the cleanliness of the hospital.
+class Janitor
+{
+     isA Employee;
+}
+
+// Patient who is at the hospital to get better.
+class Patient
+{
+     String name;
+     * -- * Doctor;
+}//$?[End_of_model]$?
+
+class Hospital
+{
+  position 231 11 109 45;
+  position.association Employee__Hospital 49,46 55,0;
+  position.association Hospital__Ward 110,37 74,0;
+}
+
+class Employee
+{
+  position 227 93 125 93;
+  position.association Employee__Shift 0,64 150,39;
+  position.association Employee__Privilege 9,97 30,0;
+}
+
+class Doctor
+{
+  position 272 245 109 45;
+}
+
+class Surgeon
+{
+  position 287 355 109 45;
+}
+
+class Janitor
+{
+  position 150 360 109 45;
+}
+
+class Patient
+{
+  position 439 336 113 68;
+  position.association Doctor__Patient 0,0 110,44;
+  }
+
+class Ward
+{
+  position 447 105 139 76;
+  position.association Doctor__Ward 0,69 109,19;
+  position.association Employee__Ward 0,30 126,41;
+  position.association Patient__Ward 100,80 60,0;
+}
+
+class Shift
+{
+  position 17 32 149 93;
+}
+
+class Privilege
+{
+  position 42 222 126 60;
+}

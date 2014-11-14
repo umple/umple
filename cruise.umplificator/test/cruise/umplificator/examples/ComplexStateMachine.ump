@@ -1,0 +1,78 @@
+// Sample UML state machine written in Umple
+// Shows nested states and transitions among those states.
+// This has a main program, so can be executed
+
+generate Java "ComplexStateMachine";
+
+class BigStateMachineTest {
+  depend java.lang.reflect.InvocationTargetException;
+  depend java.lang.reflect.Method;
+
+  trace Zx,Z,B,G,X,D;
+  sm {
+    Zxab {
+     Zx {
+       Z {
+         e3-> X;
+         e2 -> A;
+       }
+       X {
+       }
+       e5 -> G;
+     }
+     A {
+       e5 -> D;
+       e3 -> B;
+     }
+     B {
+       e3 -> Ge;
+     }
+    e1 -> E;
+    e4 -> Ge;
+    }
+    D {
+      e5 -> X;
+      e2 -> E;
+    }
+    Ge {
+     G {
+       e1 -> B;
+     }
+     E {
+       e1 -> G;
+       e2 -> G;
+     }
+    }
+  }
+  
+   public static void main(String [ ] args) {
+     if(args.length == 0 || args[0].length()==0) {
+       System.out.println("The first argument must be a string with events, one per character");
+      }
+      else {
+        BigStateMachineTest b = new BigStateMachineTest();
+        Class c = b.getClass();
+        java.lang.reflect.Method m;
+        String ev;
+        for (int i=0; i<args[0].length(); i++) {
+          ev="e"+args[0].charAt(i);
+          try {
+            m = c.getMethod(ev);
+          } catch (SecurityException e) {
+             return;
+          } catch (NoSuchMethodException e) {
+             System.out.println("No event "+ev);
+             return;
+          } 
+          try {
+            m.invoke(b);
+          } catch (IllegalArgumentException e) {
+          } catch (IllegalAccessException e) {
+          } catch (InvocationTargetException e) {
+          }
+        }
+        System.out.println("Ending in State "+b.getSmFullName());
+      }
+   }
+}
+    
