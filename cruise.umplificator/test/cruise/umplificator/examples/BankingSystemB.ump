@@ -1,0 +1,142 @@
+/*
+  Banking System - sample UML class diagram written in Umple
+  Last updated: February 21, 2011
+*/
+	
+generate Java "BankingSystemB";
+
+class FinancialInstitution {
+ name;
+ 1 -- * ReusableFinancialInstrument;
+}
+
+class CreditCardCompany{
+ isA FinancialInstitution;
+}
+
+class Bank{
+ isA FinancialInstitution;
+ 1 -- * Branch;
+}
+
+class FinancialInstrument{
+}
+
+class ReusableFinancialInstrument{
+ isA FinancialInstrument;
+ number;
+ pin;
+ * -> 1 Currency;
+}
+
+class CreditCard {
+ isA ReusableFinancialInstrument;
+ creditLimit;
+ name;
+}
+
+class DebitCard {
+ isA ReusableFinancialInstrument;
+}
+
+class Cheque {
+ isA FinancialInstrument;
+ amount;
+ Date date;
+ sequenceNumber;
+}
+
+class BankAccount{
+ isA FinancialInstrument;
+ accountNumber;
+ balance;
+ Float overdraftOrCreditLimit;
+ 
+ 1..* -- * DebitCard;
+ 1 -- * Cheque; 
+}
+
+class Currency
+{
+ code;
+ exchangeRate;
+}
+
+class Branch
+{
+ name;
+ address;
+ 1 -- * BankAccount;
+}
+
+class Loan{
+ isA BankAccount;
+}
+//$?[End_of_model]$?
+//Positioning
+class BankAccount
+{
+  position 46 334 216 96;
+  position.association BankAccount__DebitCard 217,93 0,17;
+  position.association BankAccount__Cheque 217,10 0,8;
+}
+
+class Cheque
+{
+  position 334 336 189 96;
+}
+
+class ReusableFinancialInstrument
+{
+  position 582 333 171 75;
+  position.association Currency__ReusableFinancialInstrument 120,0 115,76;
+}
+
+class Currency
+{
+  position 587 195 170 79;
+}
+
+class CreditCard
+{
+  position 669 467 145 76;
+}
+
+class Branch
+{
+  position 103 195 128 79;
+  position.association 0 1,76 81,0;
+  position.association BankAccount__Branch 26,79 30,0;
+}
+
+class FinancialInstitution
+{
+  position 379 12 131 62;
+  position.association FinancialInstitution__ReusableFinancialInstrument 92,62 0,0;
+}
+
+class Loan
+{
+  position 99 473 109 41;
+}
+
+class DebitCard
+{
+  position 530 464 109 45;
+}
+
+class FinancialInstrument
+{
+  position 370 231 136 45;
+}
+
+class Bank
+{
+  position 242 119 109 45;
+  position.association Bank__Branch 0,41 100,0;
+}
+
+class CreditCardCompany
+{
+  position 520 119 139 45;
+}

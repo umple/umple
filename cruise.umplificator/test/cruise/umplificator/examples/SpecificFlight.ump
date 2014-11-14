@@ -1,0 +1,44 @@
+// UML State machine for an airline flight with nested state, written in Umple
+generate Java "SpecificFlight";
+
+class SpecificFlight {
+  Boolean finished;
+  Boolean empty;
+
+  state {
+    planned {
+      assignPlane -> planeAssigned;
+      cancel -> cancelled;
+    }
+    planeAssigned {
+      readyForPassengers -> boarding;
+      changePlane -> planned;
+      cancel -> cancelled;
+    }
+    activeWithPassengers {
+      evacuate -> disembarking;
+      waitingForNextLeg {
+        readyForPassengers -> boarding;
+      }
+      boarding {
+        boardingComplete -> closedAtGate;
+      }
+      closedAtGate {
+        permissionToDepart -> underway;     
+      }
+      underway {
+        arriveAtGate -> disembarking;
+      }
+      disembarking {
+        passengersOut [!empty] -> waitingForNextLeg;
+        passengersOut [finished && empty] -> completed;
+        passengersOut [!finished && empty] -> planeAssigned;
+      }
+    }
+    completed {}
+    cancelled {}
+  }
+
+
+}
+    

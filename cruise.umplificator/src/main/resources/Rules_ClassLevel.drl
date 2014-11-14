@@ -5,7 +5,17 @@ import cruise.umple.compiler.*;
 import java.util.*;
 
 
+rule "addClass_toUmpleModel"
+	when
+		umpleClass: UmpleClass()
+		umpleModel: UmpleModel(umpleModel.getUmpleClass(umpleClass.getName())== null)
+	then
+	    umpleModel.addUmpleClass(umpleClass);
+end
+
+
 rule "transform_ImportDeclaration"
+
 	when
 		importDeclaration: ImportDeclaration()
 		uClass: UmpleClass()

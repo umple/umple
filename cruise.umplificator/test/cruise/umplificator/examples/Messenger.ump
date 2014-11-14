@@ -1,0 +1,34 @@
+// UML state diagram representing a Messenger with a message
+
+
+generate Java "Messenger";
+
+class Messenger {
+
+  message {
+    Composed {
+      cancel -> Discarded;
+      send -> Sent;
+    }
+    
+    Sent {
+      transmitViaGateway [externalContact]  -> InTransit;
+      transmit [internalContact] -> Delivered;
+      deleteMessage -> Deleted;
+    }
+    
+    InTransit {
+      reachRecipient -> delivered;
+      deleteMessage -> Deleted;
+    }
+    
+    Delivered {
+      read -> read;
+    }
+    Deleted { } 
+  }
+  Boolean internalContact = false;
+  Boolean externalContact = false;
+
+}
+  

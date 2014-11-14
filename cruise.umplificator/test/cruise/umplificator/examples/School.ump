@@ -1,0 +1,31 @@
+// Simple UML class diagram for data managed by a school
+
+generate Java "School";
+
+class School {
+ String name;
+ String address;
+ String description;
+ 0..1 -- * Person student;
+ key{name}
+}
+
+namespace human;
+
+class Person {
+ String name;
+ Integer idNumber;
+ key{idNumber}
+}
+//$?[End_of_model]$?
+//Positioning
+class School
+{
+  position 144 243 149 96;
+  position.association Person:student__School 70,0 72,79;
+}
+
+class Person
+{
+  position 143 66 146 79;
+}

@@ -1,0 +1,26 @@
+// UML state machine digram for a Garage door, written in Umple
+// See also the YouTube video http://www.youtube.com/watch?v=mFczzVkTZ9g
+generate Java "GarageDoor";
+
+class GarageDoor
+{
+   status {
+      	Open { buttonOrObstacle -> Closing;  }
+      
+	Closing {
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      	}
+
+      	Closed { buttonOrObstacle -> Opening; }
+
+      	Opening {
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      	}
+
+      	HalfOpen { buttonOrObstacle -> Opening; }
+  }
+
+
+}

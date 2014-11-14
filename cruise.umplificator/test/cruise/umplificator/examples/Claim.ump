@@ -1,0 +1,31 @@
+// UML class diagram representing insurance claims
+
+generate Java "Claim";
+ 
+class Claim {
+ String sequenceNumber;
+ String sequenceNumber2;
+ String description;
+ String amountClaimed;
+ 1 -- 0..1 Clamor;
+ key{sequenceNumber, sequenceNumber2}
+}
+
+class Clamor {
+ String sequencia;
+ String description="2";
+ String plata;
+ key{sequencia}
+}
+//$?[End_of_model]$?
+//Positioning
+class Claim
+{
+  position 95 248 197 110;
+  position.association Claim__Clamor 100,0 79,96;
+}
+
+class Clamor
+{
+  position 116 50 151 96;
+}

@@ -1,0 +1,54 @@
+// UML state machine diagrams showing several modes of a telephone
+// See also a separate example showing a diagram of a phone call
+generate Java "TelephoneSystem2";
+
+class Phone {
+  Boolean permanentMute = false;
+  Boolean callInProgress = false;
+  
+  ringerSound {
+    Off{
+      callReceived [!permanentMute] -> On ;
+    }
+    
+    On{
+      silentButton -> Off ;
+      pickUp ->  Off ;
+      rejectCall -> Off ;    
+      unanswered -> Off;
+    }
+  }
+
+  screenLight {
+    Off{
+      callReceived -> On ; 
+      pickUp -> On;
+      dial -> On;
+    }
+
+    On{
+      after(30000) -> Dimmed;
+      hangUp -> Off;
+    }
+ 
+    Dimmed{
+      callReceived -> On;
+      pickUp -> On;
+      dial -> On;
+      hangUp -> Off;
+      after(60000) [!callInProgress] -> Off;
+    }
+  }
+
+  vibration {
+    Off {
+      callReceived -> On ;
+     }
+
+    On{
+      pickUp -> Off;
+      rejectCall -> Off;
+      unanswered -> Off;
+    }
+  }
+}

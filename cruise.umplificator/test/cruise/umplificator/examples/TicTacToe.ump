@@ -1,0 +1,26 @@
+// Simple UML state machine of a tic-tac-toe or noughts and crosses game
+generate Java "TicTacToe";
+
+class TicTacToe {
+ state {
+   xTurn {
+     xPlays [isThreeInARow()] -> xWin;
+     xPlays [!isThreeInARow() && spaceAvailable()] -> oTurn;
+     xPlays [!spaceAvailable()] -> tie;
+   }
+   oTurn {
+     oPlays [isThreeInARow()] -> oWin;
+     oPlays [!isThreeInARow() && spaceAvailable()] -> xTurn;
+     oPlays [!spaceAvailable()] -> tie;
+   }
+   xWin {
+   }
+   oWin {
+   }
+   tie {
+   }
+ }
+ // The following need to be implemented 
+ Boolean isThreeInARow() {return false;}
+ Boolean spaceAvailable() {return true;}
+}

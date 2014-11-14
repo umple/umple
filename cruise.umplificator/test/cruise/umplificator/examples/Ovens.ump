@@ -1,0 +1,64 @@
+// Three UML state machines for part of an oven represented in Umple
+// These are adapted from:
+// J H Bae, h S Chae, C Chang,
+// A metric towards evaluating understandability of state machines: An empirical study
+// Information and Software Technology 55 (2013) 2172–2190
+// http://dx.doi.org/10.1016/j.infsof.2013.07.011
+
+// Version of the Oven with a medium-cohesion, medium-coupling state machine
+generate Java "Ovens";
+
+class Oven1 {
+  cook { OFF{} ON{} }
+  Integer leftTime = 0;
+  ovenstate {
+    s1_1 {
+      enterTime(Integer t) [t > 0] / {leftTime = t;} -> s1_2;
+    }
+    s1_2 {
+      enterTime(Integer t) [t > 0] / {leftTime = t;} -> s1_2;
+      start / {cook = Cook.ON;} -> s1_3;
+    }
+    s1_3 {
+    }
+  }
+}
+
+// Version of the Oven with a low-cohesion, hight-coupling state machine
+class Oven2 {
+  cook { OFF{} ON{} }
+  Integer leftTime = 0;
+  ovenstate {
+    s2_1 {
+      enterTime(Integer t) [t > 1] / {leftTime = t;} -> s2_2;
+      enterTime(Integer t) [t == 1] / {leftTime = t;} -> s2_3;
+    }
+    s2_2 {
+      enterTime(Integer t) [t > 1] / {leftTime = t;} -> s2_2;
+      enterTime(Integer t) [t == 1] / {leftTime = t;} -> s2_3;
+      start -> s2_4;
+    }
+    s2_3 {
+      enterTime(Integer t) [t > 1] / {leftTime = t;} -> s2_2;
+      enterTime(Integer t) [t == 1] / {leftTime = t;} -> s2_3;
+      start -> s2_4;
+    }
+    s2_4 {
+      entry /  {cook = Cook.ON;}
+    }
+  }
+}
+
+// Version of the Oven with a high-cohesion, low-coupling state machine
+class Oven3 {
+  cook { OFF{} ON{} }
+  Integer leftTime = 0;
+  ovenstate {
+    s3_1 {
+      enterTime(Integer t) [cook == Cook.OFF && t > 0] / {leftTime = t;} -> s3_1;
+      start [cook == Cook.OFF && leftTime > 0] / {cook = Cook.ON;} -> s3_1;
+    }
+  }
+}
+
+strictness ignore 28;

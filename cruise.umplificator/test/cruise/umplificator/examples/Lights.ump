@@ -1,0 +1,79 @@
+// State machines for three versions of a Light
+// From Jung Ho Bae, Yeon Ji Jeong, Heung Seok Chae, Carl K. Chang: Semantics Based
+// Cohesion and Coupling Metrics for Evaluating Understandability of State
+generate Java "Lights";
+
+class Light1 {
+  light { OFF{} ON{} }
+  Integer brightness = 0;
+
+  sm {
+    s1 {
+      entry / {light = Light.OFF;}
+      on -> s2;
+    }
+    s2 {
+      entry / {light = Light.ON; brightness = 0;}      
+      set(Integer b) [b >= 1 && b <= 3] -> / {brightness=b;} s3;
+    }
+    s3 {
+      set(Integer b) [b >= 1 && b <= 3] -> / {brightness=b;} s3;
+      off -> s1;
+    }
+  }
+}
+
+// Version of the light with just one state
+class Light2 {
+  light { OFF{} ON{} }
+  Integer brightness = 0;  
+  sm {
+    s2 {
+      on [light == Light.OFF]-> / {light = Light.ON; brightness = 0;} s2;
+      set(Integer b) [light == Light.ON && b >= 1 && b <= 3] -> / {brightness=b;} s2;
+      off [light == Light.ON]-> / {light = Light.OFF;} s2;
+    }
+  }
+}
+
+// Complex version of the light with five states
+class Light3 {
+  light { OFF{} ON{} }
+  Integer brightness = 0;
+
+  sm {
+    s1 {
+      entry / {light = Light.OFF;}
+      on -> s2;
+    }
+    s2 {
+      entry / {light = Light.ON; brightness = 0;}      
+      set(Integer b) [b == 1] -> / {brightness=b;} s3;
+      set(Integer b) [b == 2] -> / {brightness=b;} s4;
+      set(Integer b) [b == 3] -> / {brightness=b;} s5;
+    }
+    s3 {
+      // Brightness 1
+      set(Integer b) [b == 1] -> / {brightness=b;} s3;
+      set(Integer b) [b == 2] -> / {brightness=b;} s4;
+      set(Integer b) [b == 3] -> / {brightness=b;} s5;
+      off -> s1;
+    }
+    s4 {
+      // Brightness 2
+      set(Integer b) [b == 1] -> / {brightness=b;} s3;
+      set(Integer b) [b == 2] -> / {brightness=b;} s4;
+      set(Integer b) [b == 3] -> / {brightness=b;} s5;
+      off -> s1;
+    }
+    s5 {
+      // Brightness 3
+      set(Integer b) [b == 1] -> / {brightness=b;} s3;
+      set(Integer b) [b == 2] -> / {brightness=b;} s4;
+      set(Integer b) [b == 3] -> / {brightness=b;} s5;
+      off -> s1;
+    }
+  }
+}
+
+strictness ignore 28;

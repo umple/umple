@@ -1,0 +1,34 @@
+// UML state machine diagram of a simple traffic light system written in Umple
+generate Java "TrafficLightsA";
+
+class Intersection_timerDriven_noPedestrian 
+{
+  
+  flow {
+    FourWayStop 
+    {
+      initiateRegularOperation -> DirectionOneGo;    
+    }
+    DirectionOneGo
+    {
+      Wait_DirectionOneGo -> DirectionOneHalting;
+      detectMalfunction_DirectionOneGo -> FourWayStop;
+    }
+    DirectionOneHalting
+    {
+      WaitDirectionOneHalting -> DirectionTwoGo;
+      detectMalfunction_DirectionOneaHalting -> FourWayStop;
+    }
+    DirectionTwoGo
+    {
+      WaitDirectionTwoGo -> DirectionTwoHalting;
+      detectMalfunction_DirectionTwoGo -> FourWayStop;
+    }
+    DirectionTwoHalting 
+    {
+      Wait_DirectionTwoGo -> DirectionOneGo;
+      detectMalfunction_DirectionTwoHalting -> FourWayStop;
+    }        
+  }
+
+}

@@ -20,6 +20,7 @@ class Umplificator {
 	lazy Boolean needSubDirectories;
 	lazy Boolean splitModel;
 	Boolean testMode=false;
+	lazy RuleRunner ruleRunner;
 
 	public enum RefactoringLevel
 	{

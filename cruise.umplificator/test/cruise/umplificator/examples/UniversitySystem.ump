@@ -1,0 +1,61 @@
+/*
+  University System- sample system 
+  Last updated: June 8, 2010
+  Note: this version replces the association classes with the appropriate class/association substitution
+*/
+//Namespace for core of the system.
+
+generate Java "UniversitySystem";
+
+class Course{
+}
+class Topic {
+}
+
+/*association PrerequisiteReason { 
+ * Course successor;
+ * Course prerequisite;
+}*/
+class PrerequisiteReason {
+ * sucReason -- 1 Course successor;
+ * preReason -- 1 Course prerequisite;
+ * -- * Topic materialNeededBySuccessor;
+}
+
+/*association MutualExclusionReason { 
+ * Course;
+ * Course isMutualyExclusiveWith;
+}*/
+class MutualExclusionReason {
+ * mutex -- 1 Course;
+ * -- 1 Course isMutuallyExclusiveWith;
+ * -- * Topic overlappingMaterial;
+}
+//$?[End_of_model]$?
+
+//Positioning
+class MutualExclusionReason
+{
+  position 343 40 163 45;
+  position.association Course__MutualExclusionReason:mutex 0,7 110,8;
+  position.association Course:isMutuallyExclusiveWith__MutualExclusionReason 0,35 109,36;
+  position.association MutualExclusionReason__Topic:overlappingMaterial 74,45 54,0;
+}
+
+class PrerequisiteReason
+{
+  position 26 300 136 45;
+  position.association Course:successor__PrerequisiteReason:sucReason 95,0 96,45;
+  position.association Course:prerequisite__PrerequisiteReason:preReason 7,0 8,45;
+  position.association PrerequisiteReason__Topic:materialNeededBySuccessor 137,9 0,10;
+}
+
+class Topic
+{
+  position 363 299 109 45;
+}
+
+class Course
+{
+  position 25 39 109 45;
+}

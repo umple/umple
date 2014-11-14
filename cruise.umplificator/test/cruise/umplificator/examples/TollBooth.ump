@@ -1,0 +1,46 @@
+// UML state machines for managing a toll booth and lanes in the toll plaza
+generate Java "TollBooth";
+
+class TollLane {
+
+  vehicleProcessingState {
+    Empty {
+      classify -> VehicleClassified;
+      vehicleActivatedExitSensor -> ExitSensorActive;
+      vehicleActivatedExitSensorReverseDirection -> ReverseEntry;
+    }
+    VehicleClassified {
+      paymentComplete -> VehicleFreeToGo;
+      vehicleActivatedExitSensor -> ExitSensorActive;
+      cancel -> Empty;
+    }
+    VehicleFreeToGo {
+      vehicleActivatedExitSensor -> ExitSensorActive;
+      unblock -> Empty;
+    }
+    ExitSensorActive {
+      exitSensorDeactivated -> Empty;
+    }
+    ReverseEntry {
+      exitSensorDeactivated -> Empty;
+      exitSensorDeactivatedReverseDirection -> VehicleFreeToGo;
+    }
+  }
+  
+  laneAndBoothState {
+    Closed {
+      open -> Opening;
+    }
+    Opening {
+      completedOpening -> Open;
+      cancelOpening -> Closed;
+    }
+    Open {
+      close -> Closing;
+    }
+    Closing {
+      cancelClosing -> Open;
+      completedClosing -> Closed;
+    } 
+  }
+}

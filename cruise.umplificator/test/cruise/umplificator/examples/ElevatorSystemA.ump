@@ -1,0 +1,69 @@
+/*
+  Elevator System A - UML class diagram written in Umple
+  Last updated: June 8, 2010
+*/
+generate Java "ElevatorSystemA";
+
+class Building{
+ name;
+ 1 -- 2..* Floor;
+ 1 -- 1..* Bank;
+}
+
+class Bank{
+ id;
+ 1 -- 1..* Elevator;
+}
+
+
+class Floor{
+ id;
+ doorToOpen;
+ 
+ 0..1 -- 0..1 Floor onSamelevelAs;
+ 1 -- * Elevator onFloor; 
+}
+
+class Elevator{
+ id;
+ direction;
+ movingOrStopped;
+ * -- * Floor hasAccess;
+}
+
+//Temporarely taken out because of lack of Association Class implementations in Umple 2.0
+//ordered
+/*association BankOnFloor{ 
+ Boolean upCall;
+ Boolean downCall;
+ 0..* Bank; 
+ 2..* Floor;
+}*/
+//$?[End_of_model]$?
+
+//Positioning
+class Elevator
+{
+  position 189 139 193 96;
+  position.association Elevator__Floor:hasAccess 60,96 44,0;
+}
+
+class Floor
+{
+  position 205 289 157 93;
+  position.association Floor__Floor:onSameLevelAs 0,74 12,93;
+  position.association Elevator:onFloor__Floor 99,0 115,96;
+}
+
+class Bank
+{
+  position 233 25 109 62;
+  position.association Bank__Elevator 56,62 100,0;
+}
+
+class Building
+{
+  position 27 158 112 57;
+  position.association Building__Floor 112,57 0,0;
+  position.association Bank__Building 112,0 0,57;
+}

@@ -1,0 +1,22 @@
+// UML state machine diagram for a DVD state machine written in Umple
+generate Java "DVD_Player";
+
+class DVD_Player_UI {
+  
+  DVD_Panel {
+    Stopped  {
+      workOutTimer1 -> Running;
+    }
+    
+    Running {
+      workOutTimer2 -> Running;
+      workOutTick -> Running;
+      workOutTimer1 -> Paused;
+    }
+    
+    Paused {
+      workOutTimer1 -> Running;
+      workOutTimer2 -> Stopped;
+    }    
+  }
+}
