@@ -197,7 +197,7 @@ else if (isset($_REQUEST["umpleCode"]))
       exec("rm -rf " . $thedir . "/modelcd.gv " . $thedir . "/model.gv");
       $command = "java -jar umplesync.jar -generate " . $language . " {$filename} " . $suboptions . " 1> {$outputFilename} 2> {$errorFilename}";
   }
-  exec($command);
+  exec("( ulimit -t 10; " . $command . ")");
   
   // Restore file so it doesn't have the 'generate' command in front
   saveFile($input);

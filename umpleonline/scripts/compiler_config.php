@@ -504,7 +504,7 @@ function executeCommand($command)
 {
   ob_start();
   set_time_limit(0);
-  passthru($command);
+  passthru("( ulimit -t 10; " . $command . ")");
   $output = trim(ob_get_contents());
   ob_clean();
   return $output;
