@@ -69,7 +69,6 @@ class PhoneLine {
   voice;
   0..1 self otherParty;
   
-  trace waitForHook, ringing record id;
   const String Click="click";
   const String Dial="dial";
   const String Beep="beep";

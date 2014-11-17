@@ -31,8 +31,7 @@ class Manager {
  0..1 -- * Employee;
 }
 
-//Accounts,  priviledges, etc.
-namespace BankingSystem.core.intangableResources;
+
 class Account{
  Integer accountNumber;
  Float balance;
@@ -65,8 +64,7 @@ class MortgageAccount {
  collateral;
 }
 
-//Anything physicaly tangable
-namespace BankingSystem.core.tangableResources;
+
 class Card
 {
  holderName;

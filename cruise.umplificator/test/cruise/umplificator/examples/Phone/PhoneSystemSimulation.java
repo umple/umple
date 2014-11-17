@@ -165,8 +165,8 @@ public class PhoneSystemSimulation
 
   // line 22 "Phone.ump"
    public static  void main(String [] args){
-    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
-    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
+    Thread.currentThread().setUncaughtExceptionHandler(new .AgentSystem.UmpleExceptionHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new .AgentSystem.UmpleExceptionHandler());
     s = getInstance();
     PhoneLine lineA;
     PhoneLine lineB;
@@ -217,3 +217,109 @@ public class PhoneSystemSimulation
   static PhoneSystemSimulation s ;
 
   
+}
+  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
+  {
+    public void uncaughtException(Thread t, Throwable e)
+    {
+      translate(e);
+      if(e.getCause()!=null)
+      {
+        translate(e.getCause());
+      }
+      e.printStackTrace();
+    }
+    public void translate(Throwable e)
+    {
+      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();
+      StackTraceElement[] elements = e.getStackTrace();
+      try
+      {
+        for(StackTraceElement element:elements)
+        {
+          String className = element.getClassName();
+          String methodName = element.getMethodName();
+          boolean methodFound = false;
+          int index = className.lastIndexOf('.')+1;
+          try {
+            java.lang.reflect.Method query = this.getClass().getMethod(className.substring(index)+"_"+methodName,new Class[]{});
+            UmpleSourceData sourceInformation = (UmpleSourceData)query.invoke(this,new Object[]{});
+            for(int i=0;i<sourceInformation.size();++i)
+            {
+              int distanceFromStart = element.getLineNumber()-sourceInformation.getJavaLine(i)-(("main".equals(methodName))?2:0);
+              if(distanceFromStart>=0&&distanceFromStart<=sourceInformation.getLength(i))
+              {
+                result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),sourceInformation.getFileName(i),sourceInformation.getUmpleLine(i)+distanceFromStart));
+                methodFound = true;
+                break;
+              }
+            }
+          }
+          catch (Exception e2){}
+          if(!methodFound)
+          {
+            result.add(element);
+          }
+        }
+      }
+      catch (Exception e1)
+      {
+        e1.printStackTrace();
+      }
+      e.setStackTrace(result.toArray(new StackTraceElement[0]));
+    }
+  //The following methods Map Java lines back to their original Umple file / line    
+    public UmpleSourceData PhoneSystemSimulation_PhoneSystemSimulation(){ return new UmpleSourceData().setFileNames("Phone.ump").setUmpleLines(10).setJavaLines(31).setLengths(6);}
+    public UmpleSourceData PhoneSystemSimulation_main(){ return new UmpleSourceData().setFileNames("Phone.ump").setUmpleLines(21).setJavaLines(166).setLengths(3);}
+    public UmpleSourceData PhoneLine_pause(){ return new UmpleSourceData().setFileNames("Phone.ump").setUmpleLines(138).setJavaLines(465).setLengths(3);}
+    public UmpleSourceData PhoneLine_pickUp(){ return new UmpleSourceData().setFileNames("Phone.ump").setUmpleLines(89).setJavaLines(138).setLengths(1);}
+    public UmpleSourceData PhoneLine_p(){ return new UmpleSourceData().setFileNames("Phone.ump").setUmpleLines(126).setJavaLines(451).setLengths(3);}
+    public UmpleSourceData PhoneLine_say(){ return new UmpleSourceData().setFileNames("Phone.ump").setUmpleLines(130).setJavaLines(456).setLengths(3);}
+    public UmpleSourceData PhoneLine_toString(){ return new UmpleSourceData().setFileNames("Phone.ump").setUmpleLines(122).setJavaLines(446).setLengths(3);}
+    public UmpleSourceData PhoneLine_setState(){ return new UmpleSourceData().setFileNames("Phone.ump"," Phone.ump"," Phone.ump"," Phone.ump"," Phone.ump"," Phone.ump").setUmpleLines(78, 88, 94, 105, 110, 116).setJavaLines(339, 346, 350, 354, 358, 362).setLengths(4, 1, 1, 1, 1, 1);}
+    public UmpleSourceData PhoneLine_hangUp(){ return new UmpleSourceData().setFileNames("Phone.ump"," Phone.ump"," Phone.ump"," Phone.ump"," Phone.ump").setUmpleLines(95, 100, 107, 112, 117).setJavaLines(204, 210, 216, 222, 228).setLengths(1, 1, 1, 1, 1);}
+    public UmpleSourceData PhoneLine_autoPickup(){ return new UmpleSourceData().setFileNames("Phone.ump").setUmpleLines(91).setJavaLines(184).setLengths(1);}
+
+  }
+  public static class UmpleSourceData
+  {
+    String[] umpleFileNames;
+    Integer[] umpleLines;
+    Integer[] umpleJavaLines;
+    Integer[] umpleLengths;
+    
+    public UmpleSourceData(){
+    }
+    public String getFileName(int i){
+      return umpleFileNames[i];
+    }
+    public Integer getUmpleLine(int i){
+      return umpleLines[i];
+    }
+    public Integer getJavaLine(int i){
+      return umpleJavaLines[i];
+    }
+    public Integer getLength(int i){
+      return umpleLengths[i];
+    }
+    public UmpleSourceData setFileNames(String... filenames){
+      umpleFileNames = filenames;
+      return this;
+    }
+    public UmpleSourceData setUmpleLines(Integer... umplelines){
+      umpleLines = umplelines;
+      return this;
+    }
+    public UmpleSourceData setJavaLines(Integer... javalines){
+      umpleJavaLines = javalines;
+      return this;
+    }
+    public UmpleSourceData setLengths(Integer... lengths){
+      umpleLengths = lengths;
+      return this;
+    }
+    public int size(){
+      return umpleFileNames.length;
+    }
+  } 
+}

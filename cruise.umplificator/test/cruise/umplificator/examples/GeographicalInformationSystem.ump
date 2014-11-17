@@ -4,7 +4,7 @@
 */
 //Namespace for core of the system.
 
-generate Java "GeographicalInformationSystem	";
+generate Java "GeographicalInformationSystem";
 
 class Map {
   scale; name; lattitude;

@@ -3,11 +3,7 @@
 
 
 
-/**
- * Example system representing aspects of a Car On-Board Diagnosis (OBD)
- * Demonstrates the composite Structure Diagram in Umple
- */
-// line 6 "OBDCarSystem.ump"
+// line 7 "OBDCarSystem.ump"
 public class CarInformation
 {
 

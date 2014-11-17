@@ -21,7 +21,7 @@
  * crises and coordinators 
  */
  
- generate Java "BcmsCore";
+generate Java "BcmsCore";
  
  
 class CrisisManagementSystem

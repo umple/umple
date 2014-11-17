@@ -434,8 +434,8 @@ public class ExternalSecurityLight implements Runnable
 
   // line 64 "SecurityLight.ump"
    public static  void main(String [] args){
-    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
-    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
+    Thread.currentThread().setUncaughtExceptionHandler(new .AgentSystem.UmpleExceptionHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new .AgentSystem.UmpleExceptionHandler());
     ExternalSecurityLight exLight=new ExternalSecurityLight();
     
     exLight.dark();
@@ -456,6 +456,7 @@ public class ExternalSecurityLight implements Runnable
             "  " + "timer = "+(getTimer()!=null?Integer.toHexString(System.identityHashCode(getTimer())):"null")
      + outputString;
   }
+}
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {
     public void uncaughtException(Thread t, Throwable e)
