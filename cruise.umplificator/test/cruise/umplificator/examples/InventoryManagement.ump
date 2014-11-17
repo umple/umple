@@ -5,7 +5,7 @@
 */
 //Namespace for core of the system.
 
-generate Java "InventiryManagement";
+generate Java "InventoryManagement";
 
 class ProductSource {
  advertisedCostPerUnit; 

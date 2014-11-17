@@ -103,7 +103,7 @@ public class Loan
     return state;
   }
 
-  private boolean __autotransition11__()
+  private boolean __autotransition4__()
   {
     boolean wasEventProcessed = false;
     
@@ -309,7 +309,7 @@ public class Loan
         // line 19 "LibraryLoanStateMachine.ump"
         deadline = getLoanTime();
         loanStartTime = currentTime();
-        __autotransition11__();
+        __autotransition4__();
         break;
       case outstanding:
         startTimeoutoutstandingTooverdueHandler();

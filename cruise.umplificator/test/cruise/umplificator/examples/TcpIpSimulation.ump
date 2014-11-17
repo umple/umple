@@ -1,7 +1,7 @@
 // UML state machine and and simulation of a the  TCP-IP protocol
 
 
-generate Java "TcplpSimulation";
+generate Java "TcpIpSimulation";
 
 class Tcp {
   

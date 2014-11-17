@@ -2,7 +2,7 @@
 // From Empir Software Eng (2009) 14:685–719 DOI 10.1007/s10664-009-9106-z
 // By Cruz-Lemus, Genero, Manso, Morasca and Piattini
 // This is the nested version of the state machine
-generate Java "DigitalWatchFlatNested";
+generate Java "DigitalWatchNested";
 
 class DigitalWatch {
   //  sx indicates that button X has been pressed

@@ -3,10 +3,7 @@
 
 
 
-/**
- * Umple class diagram representing card games in the Oh Hell and Whist family
- */
-// line 3 "OhHellWhist.ump"
+// line 4 "OhHellWhist.ump"
 // line 87 "OhHellWhist.ump"
 public class Card
 {

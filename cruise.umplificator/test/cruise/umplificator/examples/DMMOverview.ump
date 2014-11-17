@@ -14,7 +14,7 @@
 // This is a UML class diagram written in Umple
 
 // Abstract
-generate Java "Overview";
+generate Java "DMMOverview";
 
 class SourceObject{
 }

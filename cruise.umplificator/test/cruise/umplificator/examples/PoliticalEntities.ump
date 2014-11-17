@@ -4,7 +4,7 @@
 */
 //Namespace for core of the system.
 
-generate Java "PoliticalEntinies";
+generate Java "PoliticalEntities";
 
 class PoliticalEntity { name; }
 

@@ -2,7 +2,7 @@
 //
 // Author: Timothy C. Lethbridge
 
-namespace routesAndLocations;
+ generate Java "RoutesAndLocations";
 
 /* 
 
@@ -18,7 +18,7 @@ has the necessary classes.
  * A CityMap contains the precompiled streets and landmarks
  * This must be read in from the database on system initialization
  */
- generate Java "RoutesAndLocations";
+
  
 class CityMap {
   singleton;

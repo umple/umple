@@ -12,7 +12,7 @@
 // as separate entities.
 
 // This is a UML class diagram written in Umple
-generate Java "RelationshipHierarchy";
+generate Java "DMMRelationshipHierarchy";
 
 class ModelRelationship{
 }

@@ -493,8 +493,8 @@ public class Microwave implements Runnable
 
   // line 106 "MicrowaveOven2.ump"
    public static  void main(String [] args){
-    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
-    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
+    Thread.currentThread().setUncaughtExceptionHandler(new .AgentSystem.UmpleExceptionHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new .AgentSystem.UmpleExceptionHandler());
     Microwave microwave=new Microwave();
     //microwave.doorOpened();
     microwave.buttonPressed();
@@ -514,6 +514,7 @@ public class Microwave implements Runnable
             "  " + "timer" + "=" + (getTimer() != null ? !getTimer().equals(this)  ? getTimer().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
+}
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {
     public void uncaughtException(Thread t, Throwable e)

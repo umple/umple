@@ -30,8 +30,8 @@ end
 rule "JavaField_hasGetter"
 	when
 		fieldDeclaration: FieldDeclaration()
-		method: MethodDeclaration(getMethodName(method).equals(getGetterName(fieldDeclaration)) && getMethodType(method).equals(getFieldType(fieldDeclaration)))
-		attribute: Attribute(name.equals(getFieldName(fieldDeclaration)))
+		//method: MethodDeclaration(getMethodName(method).equals(getGetterName(fieldDeclaration)) && getMethodType(method).equals(getFieldType(fieldDeclaration)))
+		//attribute: Attribute(name.equals(getFieldName(fieldDeclaration)))
 	then
 		System.out.println("Field has a getter");
 		System.out.println(getGetterName(fieldDeclaration));

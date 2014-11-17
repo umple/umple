@@ -2,6 +2,7 @@
 // Demonstrates the composite Structure Diagram in Umple
 
 
+generate Java "OBDCarSystem";
 
 class CarInformation {
 	int motorOilclientData;
@@ -9,7 +10,6 @@ class CarInformation {
 	int sparkPlugclientData;
 	int wheelsclientData;
 }
-generate Java "OBDCarSystem";
 
 class BoardData {
 	int carsTime;

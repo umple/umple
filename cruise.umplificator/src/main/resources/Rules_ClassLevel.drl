@@ -8,8 +8,9 @@ import java.util.*;
 rule "addClass_toUmpleModel"
 	when
 		umpleClass: UmpleClass()
-		umpleModel: UmpleModel(umpleModel.getUmpleClass(umpleClass.getName())== null)
+		umpleModel: UmpleModel()
 	then
+		System.out.println(umpleClass.getName());
 	    umpleModel.addUmpleClass(umpleClass);
 end
 

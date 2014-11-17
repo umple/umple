@@ -143,7 +143,7 @@ public class Authorizer
     return wasEventProcessed;
   }
 
-  private boolean __autotransition9__()
+  private boolean __autotransition1__()
   {
     boolean wasEventProcessed = false;
     
@@ -167,7 +167,7 @@ public class Authorizer
     return wasEventProcessed;
   }
 
-  private boolean __autotransition10__()
+  private boolean __autotransition2__()
   {
     boolean wasEventProcessed = false;
     
@@ -269,8 +269,8 @@ public class Authorizer
         if (validatingPINSMWaitingForDigit == ValidatingPINSMWaitingForDigit.Null) { setValidatingPINSMWaitingForDigit(ValidatingPINSMWaitingForDigit.waitingDigit); }
         break;
       case waitingForAuthorization:
-        __autotransition9__();
-        __autotransition10__();
+        __autotransition1__();
+        __autotransition2__();
         break;
     }
   }
