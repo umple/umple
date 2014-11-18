@@ -1,0 +1,17 @@
+-- This file is generated from Test.ump --
+
+MODULE Sm
+  
+  VAR 
+    state : { s1 , s2 , s2a , s2b , s2c }; 
+    event : { e1 , e2 , e3 };  
+    
+  ASSIGN
+    init(state) := s1;   
+     
+  TRANS
+    (state = s1) -> (
+        (event = e1 & next(state) = s2)  |
+        (event = e2 & next(state) = s2b)  ) |
+    (state = s2) -> (
+        event = e1 & next(state) = s1)

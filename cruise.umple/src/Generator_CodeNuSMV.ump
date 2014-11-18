@@ -58,31 +58,45 @@ space <<!
     model.setCode(code.toString());
     writeModel();
   } 
-  	
-  private DeclarationPart generateVariables(StateMachine sm)
+ 
+  public DeclarationPart generateVariables(StateMachine sm)
   {
-  		DeclarationElement temp = new DeclarationElement("");
-  		DeclarationStatement decState = new DeclarationStatement("state", temp);
-  		DeclarationStatement decTransition = new DeclarationStatement("transition", temp);
+  	DeclarationElement temp = new DeclarationElement("");
+  	DeclarationStatement decTransition = new DeclarationStatement("event", temp);
   		
-  		
-  		//Creates states list  			
-  		for(State st : sm.getStates())
+  	//Creates events (transitions) list
+  	for(Event e : sm.getAllEvents())
+  	{
+  		DeclarationElement transitionElement = new DeclarationElement(e.getName());
+  		decTransition.addDeclarationElement(transitionElement);
+  	}
+  	decTransition.removeDeclarationElement(temp);
+  	return new DeclarationPart("", genStateVariables(sm), decTransition);
+  }
+  
+  public DeclarationStatement genStateVariables(StateMachine sm)
+  {
+  	DeclarationElement temp = new DeclarationElement("");
+  	DeclarationStatement decState = new DeclarationStatement("state",temp);
+  	DeclarationStatement decTransition = new DeclarationStatement("event",temp);
+  	DeclarationStatement decState2 = new DeclarationStatement("state",temp);
+  	//Creates states list  			
+  	for(State st : sm.getStates())
+  	{
+  		DeclarationElement stateElement = new DeclarationElement(st.getName());
+  		decState.addDeclarationElement(stateElement);
+  		if(st.hasNestedStateMachines())
   		{
-  			DeclarationElement stateElement = new DeclarationElement(st.getName());
-  			decState.addDeclarationElement(stateElement);
-  		}
-  		decState.removeDeclarationElement(temp);
-  		
-  		//Creates events (transitions) list
-  		for(Event e : sm.getAllEvents())
-  		{
-  			DeclarationElement transitionElement = new DeclarationElement(e.getName());
-  			decTransition.addDeclarationElement(transitionElement);
-  		}
-  		decTransition.removeDeclarationElement(temp);
-  		
-  		return new DeclarationPart("", decState,decTransition);
+  			for(StateMachine nsm : st.getNestedStateMachines())
+  			{
+  				decState2 = genStateVariables(nsm);
+  			}
+  			for(DeclarationElement de : decState2.getDeclarationElements())
+  				decState.addDeclarationElement(de);
+  		}	
+  	}
+  	decState.removeDeclarationElement(temp);
+  	return decState;
   }
   	
   private AssignPart generateAssign(StateMachine sm)
@@ -93,39 +107,34 @@ space <<!
   	
   private TransitionPart genTransition(StateMachine sm)
   {
-  		TransitionPart tpart = new TransitionPart("TRANS");
-  		SimpleTransition temp = new SimpleTransition("","","");
-  		SimpleTransition temp1 = new SimpleTransition("","","");
-  		//SimpleTransition [] tempArray = new SimpleTransition[]{temp,temp1};
+  	TransitionPart tpart = new TransitionPart("TRANS");
+    SimpleTransition temp = new SimpleTransition("","","");
+  	SimpleTransition temp1 = new SimpleTransition("","","");
+  	//SimpleTransition [] tempArray = new SimpleTransition[]{temp,temp1};
   		
-  		for(State st : sm.getStates())
+  	for(State st : sm.getStates())
+  	{
+  		if(st.numberOfTransitions() > 1)
   		{
-  			if(st.numberOfTransitions() > 1)
+  			ComplexTransition ctrans = new ComplexTransition("","","",temp1,temp);
+  			for(Transition tr : st.getTransitions())
   			{
-  				ComplexTransition ctrans = new ComplexTransition("","","",temp1,temp);
-  				for(Transition tr : st.getTransitions())
-  				{
-  					SimpleTransition smt = new 
-  						SimpleTransition( tr.getFromState().getName(), tr.getNextState().getName(), 
-  							tr.getEvent().getName()	);
+  				SimpleTransition smt = new 
+  				SimpleTransition( tr.getFromState().getName(), tr.getNextState().getName(),	tr.getEvent().getName()	);
   					ctrans.addSimpleTransition(smt);
-  				}
-  				ctrans.removeSimpleTransition(temp);
-  				ctrans.removeSimpleTransition(temp1);
-  				tpart.addComplexTransition(ctrans);	
   			}
-  			else if(st.numberOfTransitions() == 1)
-  			{
-  				Transition tr = st.getTransition(0);
-  				SimpleTransition strans = new SimpleTransition(	tr.getFromState().getName(), 
-  						tr.getNextState().getName(), tr.getEvent().getName() );
-  				tpart.addSimpleTransition(strans);
-  			}
-  			else {
-  			  
-  			}
+  			ctrans.removeSimpleTransition(temp);
+  			ctrans.removeSimpleTransition(temp1);
+  			tpart.addComplexTransition(ctrans);	
   		}
-  		return tpart;
+  		if(st.numberOfTransitions() == 1)
+  		{
+  			Transition tr = st.getTransition(0);
+  			SimpleTransition strans = new SimpleTransition(	tr.getFromState().getName(), tr.getNextState().getName(), tr.getEvent().getName() );
+  			tpart.addSimpleTransition(strans);
+  		}
+  	}
+  	return tpart;
   }
   
   // Output the NuSMV file to a file with the .als suffix

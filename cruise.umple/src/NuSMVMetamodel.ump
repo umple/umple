@@ -173,7 +173,7 @@ class SimpleTransition
   isA NuSMVTransition;
   
   output <<!(state = <<=getFromState()>>) -> (
-  	    transition = <<=getEvent()>> & next(state) = <<=getNextState()>>)!>>
-  	emit print()(output);output1 <<!(transition = <<=getEvent()>> & next(state) = <<=getNextState()>>)  !>>
+  	    event = <<=getEvent()>> & next(state) = <<=getNextState()>>)!>>
+  	emit print()(output);output1 <<!(event = <<=getEvent()>> & next(state) = <<=getNextState()>>)  !>>
     emit printMe()(output1);
 }
