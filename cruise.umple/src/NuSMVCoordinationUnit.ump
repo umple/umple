@@ -15,6 +15,16 @@ class NuSMVCoordinator
     return str;
   }
   
+  public NuSMVModule generateSimpleModule(StateMachine sm)
+  {
+    NuSMVModule module = new NuSMVModule(changeNameCase(sm.getFullName()), 
+    		sm.getStartState().getName()); 
+  	module.setDeclarationPart(generateVariables(sm));
+  	module.setAssignPart(generateAssign(sm));
+  	module.setTransitionPart(genTransition(sm));	
+  	return module;
+  }
+  
 space <<!
 
 !>>
@@ -30,6 +40,8 @@ space <<!
   	for(Event e : sm.getAllEvents())
   	{
   		EnumerationElement transitionElement = new EnumerationElement(e.getName());
+  		if(e.getName().contains("__autotransition"))
+  		  continue;
   		decTransition.addEnumerationElement(transitionElement);
   	}
   	decTransition.removeEnumerationElement(temp);

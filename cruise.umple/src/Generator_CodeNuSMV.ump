@@ -25,20 +25,18 @@ class NuSMVGenerator
   	NuSMVCoordinator coord = new NuSMVCoordinator();
     StringBuilder code = new StringBuilder(); 
     NuSMVModule module = new NuSMVModule("","");
+ 
+ 	//This appends comment to the model
+    code.append(coord.commentModel(model));
     for(UmpleClass uClass : model.getUmpleClasses())
     {
   		for(StateMachine sm : uClass.getStateMachines())
   		{  			
-  			module = new NuSMVModule(coord.changeNameCase(sm.getFullName()), sm.getStartState().getName()); 
-  			module.setDeclarationPart(coord.generateVariables(sm));
-  			module.setAssignPart(coord.generateAssign(sm));
-  			module.setTransitionPart(coord.genTransition(sm));	
+  			module = coord.generateSimpleModule(sm);	
+  			code.append(module.print());
   		}
   	}
-  	
-    //This writes the generated code.
-    code.append(coord.commentModel(model));
-    code.append(module.print());
+  	//This writes the generated code.
     terminateCode(code);
   }
   

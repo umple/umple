@@ -1,17 +1,23 @@
 -- This file is generated from Test.ump --
 
-MODULE Sm
+MODULE Drive
   
   VAR 
-    state : { s1 , s2 , s2a , s2b , s2c }; 
-    event : { e1 , e2 , e3 };  
+    state : { first , second , third , selectNeutral , neutral , selectFirst , selectSecond }; 
+    event : { reachSecondSpeed , reachThirdSpeed , dropBelowSecondSpeed , dropBelowThirdSpeed };  
     
   ASSIGN
-    init(state) := s1;   
+    init(state) := first;   
      
   TRANS
-    (state = s1) -> (
-        (event = e1 & next(state) = s2)  |
-        (event = e2 & next(state) = s2b)  ) |
-    (state = s2) -> (
-        event = e1 & next(state) = s1)
+    (state = second) -> (
+        (event = reachThirdSpeed & next(state) = third)  |
+        (event = dropBelowSecondSpeed & next(state) = first)  |
+        (event = reachSecondSpeed & next(state) = second)  ) |
+    (state = first) -> (
+        event = reachSecondSpeed & next(state) = second) |
+    (state = third) -> (
+        event = dropBelowThirdSpeed & next(state) = second) |
+    (state = selectNeutral) -> (next(state) = neutral) |
+    (state = selectFirst) -> (next(state) = first) |
+    (state = selectSecond) -> (next(state) = second)
