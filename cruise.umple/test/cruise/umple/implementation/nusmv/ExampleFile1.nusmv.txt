@@ -4,18 +4,18 @@ MODULE State
   
   VAR 
     state : { newBooking , seatAssigned , checkedIn , cancelled , completed }; 
-    transition : { assignSeat , cancel , checkIn , complete };  
+    event : { assignSeat , cancel , checkIn , complete };  
     
   ASSIGN
     init(state) := newBooking;   
      
   TRANS
     (state = newBooking) -> (
-        (transition = assignSeat & next(state) = seatAssigned)  |
-        (transition = cancel & next(state) = cancelled)  ) |
+        (event = assignSeat & next(state) = seatAssigned)  |
+        (event = cancel & next(state) = cancelled)  ) |
     (state = seatAssigned) -> (
-        (transition = cancel & next(state) = cancelled)  |
-        (transition = checkIn & next(state) = checkedIn)  ) |
+        (event = cancel & next(state) = cancelled)  |
+        (event = checkIn & next(state) = checkedIn)  ) |
     (state = checkedIn) -> (
-        (transition = cancel & next(state) = cancelled)  |
-        (transition = complete & next(state) = completed)  )
+        (event = cancel & next(state) = cancelled)  |
+        (event = complete & next(state) = completed)  )
