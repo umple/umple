@@ -1,0 +1,35 @@
+digraph "Compositions" {
+  size="80,10"
+  rankdir="BT"
+  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+
+  // Class: A
+  "A" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    A    </td></tr></table>>,
+   tooltip="class A
+Example code illustrating various&#13;kinds of compositions&#13;"];
+
+  // Class: X
+  "X" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    X    </td></tr></table>>,
+   tooltip="class X
+"];
+
+  // Class: Y
+  "Y" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    Y    </td></tr></table>>,
+   tooltip="class Y
+"];
+
+  // Class: B
+  "B" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    B    </td></tr></table>>,
+   tooltip="class B
+Class with inline composition having role name&#13;"];
+
+  // Class: C
+  "C" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    C    </td></tr></table>>,
+   tooltip="class C
+Class with both composition ends having role names&#13;"];
+
+  // All associations
+  "X" -> "Y" [dir="forward", arrowhead="diamond", taillabel="* x", headlabel="2..3 ", tooltip="X * x -<@> 2..3  Y"];
+  "B" -> "A" [dir="forward", arrowhead="diamond", taillabel="1 ", headlabel="* endTwo", tooltip="B 1  -<@> * endTwo A"];
+  "C" -> "A" [dir="back", arrowtail="diamond", taillabel="0..1 endOne", headlabel="* endTwo", tooltip="C 0..1 endOne <@>- * endTwo A"];
+}

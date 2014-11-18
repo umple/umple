@@ -22,6 +22,8 @@ UmpleAssociationFactory.create = function(data)
   umpleAssociation.isSymmetricReflexive = (data.isSymmetricReflexive == "true" || data.isSymmetricReflexive == true) ? true : false;
   umpleAssociation.isLeftNavigable = (data.isLeftNavigable == "true" || data.isLeftNavigable == true) ? true : false;
   umpleAssociation.isRightNavigable = (data.isRightNavigable == "true" || data.isRightNavigable == true) ? true : false;
+  umpleAssociation.isLeftComposition = (data.isLeftComposition == "true" || data.isLeftComposition == true) ? true : false;
+  umpleAssociation.isRightComposition = (data.isRightComposition == "true" || data.isRightComposition == true) ? true : false;
   umpleAssociation.color = data.isTraced;
   return umpleAssociation;
 }
@@ -43,6 +45,8 @@ function UmpleAssociation()
   this.isSymmetricReflexive = false;
   this.isLeftNavigable = true;
   this.isRightNavigable = true;
+  this.isLeftComposition = false;
+  this.isRightComposition = false;
   this.color = "black";
   
   this.setClasses = function(aClassOneId,aClassTwoId)
@@ -253,6 +257,10 @@ function UmpleAssociation()
     {
       associationDiv = this.drawableReflexive();
     }
+    else if (this.isComposition())
+    {
+      associationDiv = this.drawableComposition();
+    }
     else if (this.isBidirectional())
     {
       associationDiv = this.drawableBidirectional();
@@ -303,9 +311,12 @@ function UmpleAssociation()
     this.classTwoPosition = classTwo.position;
     var perimeterOne = this.classOnePosition.add(this.offsetOnePosition);
     var perimeterTwo = this.classTwoPosition.add(this.offsetTwoPosition);
-    
+
     var line = new UmpleLine(perimeterOne.add(UmpleClassFactory.offsetError),perimeterTwo.add(UmpleClassFactory.offsetError));
-    associationDiv.append(line.drawable());
+    
+    if (!this.isComposition()) {
+    	associationDiv.append(line.drawable());
+    }
     
     // initiate the hovers and anchors
     var hoverHtml = "";
@@ -375,6 +386,101 @@ function UmpleAssociation()
     return associationDiv;
   }
   
+  this.drawableComposition = function()
+  {
+    var associationDiv = this.drawableBidirectional();
+
+    var peak = null;
+    
+    if (this.isLeftComposition)
+    {
+      peak = this.classOnePosition.add(this.offsetOnePosition);
+      otherEnd = this.classTwoPosition.add(this.offsetTwoPosition);
+    }
+    else
+    {
+      peak = this.classTwoPosition.add(this.offsetTwoPosition);
+      otherEnd = this.classOnePosition.add(this.offsetOnePosition);
+    }
+    
+    var associationLineSlopeAngle = peak.slopeAngle360(otherEnd);
+    var edge1SlopeAngle = associationLineSlopeAngle + 30;
+    var edge2SlopeAngle = associationLineSlopeAngle - 30;
+    var distance = 8;
+    
+    var vertice1 = peak.travelForward(distance, edge1SlopeAngle);
+    var vertice2 = peak.travelForward(distance, edge2SlopeAngle);
+    var vertice3 = vertice1.travelForward(distance, edge2SlopeAngle);
+    
+    var edge1 = new UmpleLine(peak.add(UmpleClassFactory.offsetError), vertice1.add(UmpleClassFactory.offsetError));
+    var edge2 = new UmpleLine(peak.add(UmpleClassFactory.offsetError), vertice2.add(UmpleClassFactory.offsetError));
+    var edge3 = new UmpleLine(vertice1.add(UmpleClassFactory.offsetError), vertice3.add(UmpleClassFactory.offsetError));
+    var edge4 = new UmpleLine(vertice2.add(UmpleClassFactory.offsetError), vertice3.add(UmpleClassFactory.offsetError));
+
+    associationDiv.append(edge1.drawable());
+    associationDiv.append(edge2.drawable());
+    associationDiv.append(edge3.drawable());
+    associationDiv.append(edge4.drawable());
+
+    var assocLine = new UmpleLine(vertice3.add(UmpleClassFactory.offsetError),otherEnd.add(UmpleClassFactory.offsetError));
+    associationDiv.append(assocLine.drawable());
+
+
+    // to draw an empty diamond (i.e. not coloured in), comment out the following lines of code 
+    // until the next comment indicates
+
+    var distanceM = 4;
+    
+    var vertice1M = peak.travelForward(distanceM, edge1SlopeAngle);
+    var vertice2M = peak.travelForward(distanceM, edge2SlopeAngle);
+    var vertice3M = vertice1.travelForward(distanceM, edge2SlopeAngle);
+    var vertice4M = vertice2.travelForward(distanceM, edge1SlopeAngle);
+
+    var edge1M = new UmpleLine(peak.add(UmpleClassFactory.offsetError), vertice3M.add(UmpleClassFactory.offsetError));
+    var edge2M = new UmpleLine(peak.add(UmpleClassFactory.offsetError), vertice4M.add(UmpleClassFactory.offsetError));
+    var edge3M = new UmpleLine(peak.add(UmpleClassFactory.offsetError), vertice3.add(UmpleClassFactory.offsetError));
+    
+    var edge4M = new UmpleLine(vertice1.add(UmpleClassFactory.offsetError), vertice4M.add(UmpleClassFactory.offsetError));
+    var edge5M = new UmpleLine(vertice1.add(UmpleClassFactory.offsetError), vertice2M.add(UmpleClassFactory.offsetError));
+    var edge6M = new UmpleLine(vertice1.add(UmpleClassFactory.offsetError), vertice2.add(UmpleClassFactory.offsetError));
+    
+    var edge7M = new UmpleLine(vertice2.add(UmpleClassFactory.offsetError), vertice1M.add(UmpleClassFactory.offsetError));
+    var edge8M = new UmpleLine(vertice2.add(UmpleClassFactory.offsetError), vertice3M.add(UmpleClassFactory.offsetError));
+    
+    var edge9M = new UmpleLine(vertice3.add(UmpleClassFactory.offsetError), vertice1M.add(UmpleClassFactory.offsetError));
+    var edge10M = new UmpleLine(vertice3.add(UmpleClassFactory.offsetError), vertice2M.add(UmpleClassFactory.offsetError));
+    
+    var edge11M = new UmpleLine(vertice1M.add(UmpleClassFactory.offsetError), vertice2M.add(UmpleClassFactory.offsetError));
+    var edge12M = new UmpleLine(vertice1M.add(UmpleClassFactory.offsetError), vertice3M.add(UmpleClassFactory.offsetError));
+    var edge13M = new UmpleLine(vertice1M.add(UmpleClassFactory.offsetError), vertice4M.add(UmpleClassFactory.offsetError));
+
+    var edge14M = new UmpleLine(vertice2M.add(UmpleClassFactory.offsetError), vertice3M.add(UmpleClassFactory.offsetError));
+    var edge15M = new UmpleLine(vertice2M.add(UmpleClassFactory.offsetError), vertice4M.add(UmpleClassFactory.offsetError));
+
+    var edge16M = new UmpleLine(vertice3M.add(UmpleClassFactory.offsetError), vertice4M.add(UmpleClassFactory.offsetError));
+
+    associationDiv.append(edge1M.drawable());
+    associationDiv.append(edge2M.drawable());
+    associationDiv.append(edge3M.drawable());
+    associationDiv.append(edge4M.drawable());
+    associationDiv.append(edge5M.drawable());
+    associationDiv.append(edge6M.drawable());
+    associationDiv.append(edge7M.drawable());
+    associationDiv.append(edge8M.drawable());
+    associationDiv.append(edge9M.drawable());
+    associationDiv.append(edge10M.drawable());
+    associationDiv.append(edge11M.drawable());
+    associationDiv.append(edge12M.drawable());
+    associationDiv.append(edge13M.drawable());
+    associationDiv.append(edge14M.drawable());
+    associationDiv.append(edge15M.drawable());
+    associationDiv.append(edge16M.drawable());
+
+    // end of code block to comment out for empty arrow (see above) 
+
+    return associationDiv;
+  }
+
   this.drawableReflexive = function() 
   {
     // replace the old association div with a fresh one
@@ -647,6 +753,11 @@ function UmpleAssociation()
     }
     return this.isRightNavigable && this.isLeftNavigable;
   }
+
+  this.isComposition = function()
+  {
+    return this.isRightComposition || this.isLeftComposition;
+  }
   
   this.endHasArrow = function(isEndOne)
   {
@@ -739,7 +850,7 @@ function UmpleAssociation()
     // allow extra space for arrow in undirectional associations
     // reduce space if multiplicity is *
     var space = 3;
-    if (!this.isBidirectional() && this.endHasArrow(isEndOne)) space += 5;
+    if ((!this.isBidirectional() && this.endHasArrow(isEndOne)) || this.isComposition()) space += 5;
     
     // slope angle of the association
     var angle = perimeterOne.slopeAngle360(perimeterTwo);
