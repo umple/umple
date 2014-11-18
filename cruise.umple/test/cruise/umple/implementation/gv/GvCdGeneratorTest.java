@@ -26,6 +26,7 @@ public class GvCdGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/gv/Methodscd.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/Abstractcd.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/Associationscd.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/Compositionscd.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/Interfacecd.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/ManyClasscd.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/ManyClassAbstractcd.gv");
@@ -65,6 +66,13 @@ public class GvCdGeneratorTest extends TemplateTest
   {
     language = null;
     assertUmplePartialTemplateFor("gv/Associations.ump","gv/Associations.gv.txt");
+  }
+
+  @Test
+  public void display_compositions()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/Compositions.ump","gv/Compositions.gv.txt");
   }
 
   @Test

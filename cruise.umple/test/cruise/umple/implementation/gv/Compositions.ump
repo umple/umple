@@ -1,0 +1,24 @@
+generate GvClassDiagram;
+namespace example;
+
+// Example code illustrating various
+// kinds of compositions
+class A {}
+class X {}
+class Y {}
+
+// Class with inline composition having role name
+class B {
+  1 -<@> * A endTwo; 
+}
+
+// Class with both composition ends having role names
+class C {
+  0..1 endOne <@>- * A endTwo; 
+}
+
+// Independent composition
+association {
+  * X x -<@> 2..3 Y;
+}
+
