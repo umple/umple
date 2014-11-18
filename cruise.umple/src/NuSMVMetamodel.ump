@@ -37,7 +37,7 @@ class AssignPart
 class DeclarationPart
 {
   name;
-  * -- 1..* DeclarationStatement;
+  * -- 1..* EnumerationStatement;
   after constructor { setName("VAR"); }
   
    
@@ -45,52 +45,52 @@ class DeclarationPart
   {
 	int n = size;
 	String temp = "";
-  	if(n == 1) return declarationStatements.get(0).print();
+  	if(n == 1) return enumerationStatements.get(0).print();
   	else {
   		int i = 0;
   		while(i < n - 1)
   		{
-  			temp += declarationStatements.get(i).print() + "\n    ";
+  			temp += enumerationStatements.get(i).print() + "\n    ";
   			i++;
   		}
-  		temp += declarationStatements.get(i).print();
+  		temp += enumerationStatements.get(i).print();
   	}
   		return temp;
   }
   
   output <<!<<=getName()>> 
-    <<=writeStatements(numberOfDeclarationStatements())>> !>>
+    <<=writeStatements(numberOfEnumerationStatements())>> !>>
   	emit print()(output);
 }
 
-class DeclarationElement
+class EnumerationElement
 {
   value;
 }
 
-class DeclarationStatement 
+class EnumerationStatement 
 {
   name;
-  * -> 1..* DeclarationElement;
+  * -> 1..* EnumerationElement;
   
   private String writeElements(int size)
   {
 	int n = size;
 	String temp = "";
-  	if(n == 1) return declarationElements.get(0).getValue();
+  	if(n == 1) return enumerationElements.get(0).getValue();
   	else {
   		int i = 0;
   		while(i < n - 1)
   		{
-  			temp += declarationElements.get(i).getValue() + " , ";
+  			temp += enumerationElements.get(i).getValue() + " , ";
   			i++;
   		}
-  		temp += declarationElements.get(i).getValue();
+  		temp += enumerationElements.get(i).getValue();
   	}
   		return temp;
   }
   
-  output <<!<<=  getName()>> : { <<=writeElements(numberOfDeclarationElements())>> }; !>>
+  output <<!<<=  getName()>> : { <<=writeElements(numberOfEnumerationElements())>> }; !>>
   emit print()(output);
   
 }

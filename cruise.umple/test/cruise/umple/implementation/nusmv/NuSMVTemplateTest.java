@@ -28,6 +28,7 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/ExampleFile1.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/ExampleFile2.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/Test.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/CarTransmission.smv");
 	  }
 	  
 	  @Test @Ignore
