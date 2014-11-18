@@ -34,10 +34,16 @@ class AssignPart
   	emit print()(output);
 }
 
+class DeclarationStatement
+{
+  name;
+  public String print(){ return ""; }
+}
+
 class DeclarationPart
 {
   name;
-  * -- 1..* EnumerationStatement;
+  * -- 1..* DeclarationStatement;
   after constructor { setName("VAR"); }
   
    
@@ -45,21 +51,21 @@ class DeclarationPart
   {
 	int n = size;
 	String temp = "";
-  	if(n == 1) return enumerationStatements.get(0).print();
+  	if(n == 1) return declarationStatements.get(0).print();
   	else {
   		int i = 0;
   		while(i < n - 1)
   		{
-  			temp += enumerationStatements.get(i).print() + "\n    ";
+  			temp += declarationStatements.get(i).print() + "\n    ";
   			i++;
   		}
-  		temp += enumerationStatements.get(i).print();
+  		temp += declarationStatements.get(i).print();
   	}
   		return temp;
   }
   
   output <<!<<=getName()>> 
-    <<=writeStatements(numberOfEnumerationStatements())>> !>>
+    <<=writeStatements(numberOfDeclarationStatements())>> !>>
   	emit print()(output);
 }
 
@@ -68,9 +74,19 @@ class EnumerationElement
   value;
 }
 
+class VarDeclarationStatement
+{
+  isA DeclarationStatement;
+  type;
+  value;
+  
+  output <<!<<=getValue()>> : <<=getType()>>;!>>
+  	emit print()(output);
+}
+
 class EnumerationStatement 
 {
-  name;
+  isA DeclarationStatement;
   * -> 1..* EnumerationElement;
   
   private String writeElements(int size)
@@ -172,8 +188,18 @@ class SimpleTransition
 {
   isA NuSMVTransition;
   
+  public String print()
+  {
+    if(! getEvent().contains("__autotransition"))
+      return printNormalTransition();
+ 	return printTransitionWithNoEvent();
+  }
+  
+  outputWithNoEvent <<!(state = <<=getFromState()>>) -> (next(state) = <<=getNextState()>>)!>>
+  	emit printTransitionWithNoEvent()(outputWithNoEvent);
+  
   output <<!(state = <<=getFromState()>>) -> (
   	    event = <<=getEvent()>> & next(state) = <<=getNextState()>>)!>>
-  	emit print()(output);output1 <<!(event = <<=getEvent()>> & next(state) = <<=getNextState()>>)  !>>
+  	emit printNormalTransition()(output);output1 <<!(event = <<=getEvent()>> & next(state) = <<=getNextState()>>)  !>>
     emit printMe()(output1);
 }
