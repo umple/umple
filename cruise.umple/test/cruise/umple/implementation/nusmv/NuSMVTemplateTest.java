@@ -29,6 +29,7 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/ExampleFile2.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/Test.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/CarTransmission.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/CourseSection.smv");
 	  }
 	  
 	  @Test @Ignore
@@ -71,5 +72,11 @@ public class NuSMVTemplateTest extends TemplateTest{
 	  {
 		assertUmpleTemplateFor("nusmv/Test.ump","nusmv/Test.nusmv.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/Test.smv")).exists());
+	  }
+	  @Test //@Ignore
+	  public void CourseSection()
+	  {
+		assertUmpleTemplateFor("nusmv/CourseSection.ump","nusmv/CourseSection.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/CourseSection.smv")).exists());
 	  }
 }

@@ -34,6 +34,7 @@ class NuSMVGenerator
   		{  			
   			module = coord.generateSimpleModule(sm);	
   			code.append(module.print());
+  			//coord.printStateAncestors(sm);
   		}
   	}
   	//This writes the generated code.
