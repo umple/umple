@@ -45,7 +45,70 @@ space <<!
   		decTransition.addEnumerationElement(transitionElement);
   	}
   	decTransition.removeEnumerationElement(temp);
-  	return new DeclarationPart("", genStateVariables(sm), decTransition);
+  	DeclarationPart dPart = new DeclarationPart("", genStateVariables(sm), decTransition);
+  	/*for(String st : guardList(sm))
+  	{
+  	  VarDeclarationStatement varStmt = new VarDeclarationStatement("","boolean",st);
+  	  dPart.addDeclarationStatement(varStmt);
+  	}*/
+  	return dPart;
+  }
+  
+  /*public ArrayDeque<String> getParentList(StateMachine sm)
+  {
+    int i = 0; 
+    ArrayDeque<String> temp = new ArrayDeque<String>();
+    if(sm.getNestedStateMachines().size() > 0)
+    {
+      for(State stt : sm.getStates())
+      {
+      	if(! stt.hasNestedStateMachines())
+      	  continue;
+      	i++;
+      	temp.push(stt.getStateMachine().getName());
+      	getParentList(stt.getNestedStateMachine(i));
+      }
+    }
+    return temp;
+  }
+  
+  public void printStateAncestors(StateMachine sm)
+  {
+    ArrayDeque<String> temp = new ArrayDeque<String>();
+    //for(State st : sm.getStates())
+    //{
+      temp = getParentList(sm);
+      String str = "";
+      while(temp.size() != 0)
+        str += temp.pop()+".";
+      System.out.println(str);
+    //}
+  }*/
+  
+  public List<String> guardList(StateMachine sm)
+  {
+    String temp = "";
+  	List<String> str = new ArrayList();
+    for(Transition trans : sm.getAllTransitions())
+    {
+  
+      //temp = trans.getGuard().getValue();
+      if(!(trans.getGuard() == null & checkDuplicate(temp,str)))
+      {
+      	str.add(temp);
+      }
+    }
+    return str;
+  }
+  
+  private boolean checkDuplicate(String temp,List<String> str)
+  {
+    for(String st : str)
+    {
+      if(st.equals(temp))
+        return true;
+    }
+    return false;
   }
   
   public EnumerationStatement genStateVariables(StateMachine sm)

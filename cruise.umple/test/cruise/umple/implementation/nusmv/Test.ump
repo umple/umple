@@ -1,7 +1,3 @@
-// Illustration of nested states. Event e1 will take the system into
-// state s2, and its first substrate s2a. Event e2 directly goes to s2b.
-// Event e3 toggles between s2b and s2a. Event e1 when in s2, goes to s1
-
 class TransmissionDrive{
 
 	drive {
@@ -23,5 +19,4 @@ class TransmissionDrive{
         dropBelowThirdSpeed-> second;
       }
     }
-
 }
