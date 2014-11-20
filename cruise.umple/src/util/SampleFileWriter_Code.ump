@@ -29,8 +29,12 @@ class SampleFileWriter
     });
     return allFiles;
   }
+
+  public static  String readContent(File filename){
+     return readContent(filename, null);
+  }
   
-  public static String readContent(File filename)
+  public static String readContent(File filename, String exclusionPattern)
   {
     BufferedReader reader = null;
     StringBuffer answer = new StringBuffer();
@@ -41,6 +45,9 @@ class SampleFileWriter
       String nextLine = null;
       while (( nextLine = reader.readLine()) != null)
       {
+        if(exclusionPattern != null) {
+          nextLine = nextLine.replaceAll(exclusionPattern, "");
+        }
         answer.append(nextLine);
         answer.append("\n");
       } 
