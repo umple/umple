@@ -23,11 +23,28 @@ class PapyrusGenerator
   {
     boolean hasClassDiagram = false; //true if the umple file has one or more class diagrams in it.
     StringBuilder code = new StringBuilder();
+    StringBuilder notationCode = new StringBuilder(); //Holds the xml for the notation of the class diagrams
     StringBuilder smcode; //Holds the xml for state machines in the umple file
+    StringBuilder smNotationCode; //Holds the xml for the notation of the state machines
+    StringBuilder smSubNotationCode;
     StringBuilder smSubCode;
     StringBuilder subCode;
     List<StateMachine> allNestedStateMachines = new ArrayList<StateMachine>();
     ArrayList<Association> allAssociations = new ArrayList<Association>();
+    // layout info for class diagrams
+    int maxPixelHeight = 600;
+    int xCoordinate = 20;
+    int yCoordinate = 20;
+    int coordinateIncrement = 200;
+    // layout info for state machines
+    int smContainerHeight = 500;
+    int smContainerWidth = 700;
+    int smTitleBarHeight = 13;
+    int smXCoordinate = 20;
+    int smYCoordinate = 20;
+    int smMaxPixelHeight = 600;
+    int smYCoordinateIncrement = 200;
+    int smXCoordinateIncrement = 400;
 
     code.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 
@@ -54,11 +71,27 @@ class PapyrusGenerator
         }
 
         String packageType = "uml:Class";
-        code.append(StringFormatter.format("  <packagedElement xmi:type=\"{1}\" xmi:id=\"{0}\" name=\"{0}\">\n",uClass.getName(),packageType));
+        code.append(StringFormatter.format("  <packagedElement xmi:type=\"{1}\" xmi:id=\"_{0}\" name=\"{0}\">\n",uClass.getName(),packageType));
+
+        notationCode.append(StringFormatter.format("  <children xmi:type=\"notation:Shape\" xmi:id=\"_{0}\" type=\"2008\">\n",uClass.getName()));
+        notationCode.append("    <children xmi:type=\"notation:DecorationNode\" type=\"5029\"/>\n");
+        notationCode.append("    <children xmi:type=\"notation:BasicCompartment\" type=\"7017\"/>\n");
+        notationCode.append("    <children xmi:type=\"notation:BasicCompartment\" type=\"7018\"/>\n");
+        notationCode.append("    <children xmi:type=\"notation:BasicCompartment\" type=\"7019\"/>\n");
+        notationCode.append(StringFormatter.format("    <element xmi:type=\"{1}\" href=\"model.uml#_{0}\"/>\n",uClass.getName(),packageType));
+        notationCode.append(StringFormatter.format("    <layoutConstraint xmi:type=\"notation:Bounds\" x=\"{0}\" y=\"{1}\"/>\n", xCoordinate, yCoordinate));
+        notationCode.append("  </children>\n");
+
+        // Increment Layout coordinates
+        yCoordinate += coordinateIncrement;
+        if(yCoordinate > maxPixelHeight) {
+            yCoordinate -= maxPixelHeight;
+            xCoordinate += coordinateIncrement;
+        }
 
         if (uClass.getExtendsClass() != null)
         {
-          code.append(StringFormatter.format("    <generalization xmi:id=\"{0}-_generalization.0\" general=\"{1}\"/>\n",uClass.getName(),uClass.getExtendsClass().getName()));
+          code.append(StringFormatter.format("    <generalization xmi:id=\"_{0}-_generalization.0\" general=\"_{1}\"/>\n",uClass.getName(),uClass.getExtendsClass().getName()));
         }
 
         String implementedInterfaces="";
@@ -68,7 +101,7 @@ class PapyrusGenerator
             implementedInterfaces += uInterface.getName() + "," ;
           }
           implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1);
-          code.append(StringFormatter.format("    <interfaceRealization xmi:id=\"{0}-_interfaceRealization.0\" supplier=\"{1}\" client=\"{0}\" contract=\"{1}\"/>\n",uClass.getName(),implementedInterfaces));
+          code.append(StringFormatter.format("    <interfaceRealization xmi:id=\"_{0}-_interfaceRealization.0\" supplier=\"_{1}\" client=\"_{0}\" contract=\"_{1}\"/>\n",uClass.getName(),implementedInterfaces));
         }
 
         for(Attribute av : uClass.getAttributes())
@@ -77,23 +110,23 @@ class PapyrusGenerator
           
           if (typeName.equals("String") || typeName.equals("Integer") || typeName.equals("Boolean"))
           {
-            code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\">\n",uClass.getName(),av.getName()));
+            code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"_{0}-{1}\" name=\"{1}\" visibility=\"private\">\n",uClass.getName(),av.getName()));
             code.append(StringFormatter.format("      <type xmi:type=\"uml:PrimitiveType\" href=\"pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#{0}\"/>\n",typeName));
           }
           else if (typeName.equals("Double") || typeName.equals("Float") || typeName.equals("Date"))
           {
-            code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\">\n",uClass.getName(),av.getName()));
+            code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"_{0}-{1}\" name=\"{1}\" visibility=\"private\">\n",uClass.getName(),av.getName()));
             code.append(StringFormatter.format("      <type xmi:type=\"uml:PrimitiveType\" href=\"pathmap://UML_METAMODELS/Ecore.metamodel.uml#E{0}\"/>\n",typeName));
           }
           else if (av.isPrimitive())
           {
             typeName = StringFormatter.format("dataType-{0}",typeName);
-            code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\" type=\"{2}\">\n",uClass.getName(),av.getName(),typeName));
+            code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"_{0}-{1}\" name=\"{1}\" visibility=\"private\" type=\"{2}\">\n",uClass.getName(),av.getName(),typeName));
           }
 
 
-          code.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));
-          code.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));
+          code.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"_{0}-{1}-_upperValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));
+          code.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"_{0}-{1}-_lowerValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));
           code.append("    </ownedAttribute>\n");
         }
 
@@ -112,18 +145,41 @@ class PapyrusGenerator
           String associationId = as.getName() == null ? StringFormatter.format("_packagedElement.{0}",packageAssociationIndex) : as.getName();
           String associationName = as.getName() == null ? "" : StringFormatter.format(" name=\"{0}\"",as.getName());
 
-          subCode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:Association\" xmi:id=\"{0}\"{3} memberEnd=\"{0}-{1} {0}-{2}\" navigableOwnedEnd=\"{0}-{1} {0}-{2}\">\n",associationId,left.getRoleName(),right.getRoleName(),associationName));
+          subCode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:Association\" xmi:id=\"_{0}\"{3} memberEnd=\"_{0}-{1} _{0}-{2}\" navigableOwnedEnd=\"_{0}-{1} _{0}-{2}\">\n",associationId,left.getRoleName(),right.getRoleName(),associationName));
 
-          subCode.append(StringFormatter.format("    <ownedEnd xmi:id=\"{0}-{1}\" name=\"{1}\" type=\"{2}\" association=\"{0}\">\n",associationId,left.getRoleName(),left.getClassName()));
-          subCode.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"{2}\"/>\n",associationId,left.getRoleName(),leftRange[1]));
-          subCode.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralInteger\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"{2}\"/>\n",associationId,left.getRoleName(),leftRange[0]));
+          subCode.append(StringFormatter.format("    <ownedEnd xmi:id=\"_{0}-{1}\" name=\"{1}\" type=\"_{2}\" association=\"_{0}\">\n",associationId,left.getRoleName(),left.getClassName()));
+          subCode.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"_{0}-{1}-_upperValue\" value=\"{2}\"/>\n",associationId,left.getRoleName(),leftRange[1]));
+          subCode.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralInteger\" xmi:id=\"_{0}-{1}-_lowerValue\" value=\"{2}\"/>\n",associationId,left.getRoleName(),leftRange[0]));
           subCode.append("    </ownedEnd>\n");
-          subCode.append(StringFormatter.format("    <ownedEnd xmi:id=\"{0}-{1}\" name=\"{1}\" type=\"{2}\" association=\"{0}\">\n",associationId,right.getRoleName(),right.getClassName()));
-          subCode.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"{2}\"/>\n",associationId,right.getRoleName(),rightRange[1]));
-          subCode.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralInteger\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"{2}\"/>\n",associationId,right.getRoleName(),rightRange[0]));
+          subCode.append(StringFormatter.format("    <ownedEnd xmi:id=\"_{0}-{1}\" name=\"{1}\" type=\"_{2}\" association=\"_{0}\">\n",associationId,right.getRoleName(),right.getClassName()));
+          subCode.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"_{0}-{1}-_upperValue\" value=\"{2}\"/>\n",associationId,right.getRoleName(),rightRange[1]));
+          subCode.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralInteger\" xmi:id=\"_{0}-{1}-_lowerValue\" value=\"{2}\"/>\n",associationId,right.getRoleName(),rightRange[0]));
           subCode.append("    </ownedEnd>\n");
           subCode.append("  </packagedElement>\n");
           packageAssociationIndex += 1;
+          
+          notationCode.append(StringFormatter.format("  <edges xmi:type=\"notation:Connector\" xmi:id=\"__{0}\" type=\"4001\" source=\"_{1}\" target=\"_{2}\">\n",associationId,right.getClassName(),left.getClassName())); 
+          notationCode.append("    <children xmi:type=\"notation:DecorationNode\" type=\"6001\">\n");
+          notationCode.append("      <layoutConstraint xmi:type=\"notation:Location\" y=\"-20\"/>\n");
+          notationCode.append("    </children>\n");
+          notationCode.append("    <children xmi:type=\"notation:DecorationNode\" type=\"6002\">\n");
+          notationCode.append("      <layoutConstraint xmi:type=\"notation:Location\" y=\"20\"/>\n");
+          notationCode.append("    </children>\n");
+          notationCode.append("    <children xmi:type=\"notation:DecorationNode\" type=\"6003\">\n");
+          notationCode.append("      <layoutConstraint xmi:type=\"notation:Location\" y=\"-20\"/>\n");
+          notationCode.append("    </children>\n");
+          notationCode.append("    <children xmi:type=\"notation:DecorationNode\" type=\"6005\">\n");
+          notationCode.append("      <layoutConstraint xmi:type=\"notation:Location\" y=\"20\"/>\n");
+          notationCode.append("    </children>\n");
+          notationCode.append("    <children xmi:type=\"notation:DecorationNode\" type=\"6033\">\n");
+          notationCode.append("      <layoutConstraint xmi:type=\"notation:Location\" y=\"20\"/>\n");
+          notationCode.append("    </children>\n");
+          notationCode.append("    <children xmi:type=\"notation:DecorationNode\" type=\"6034\">\n");
+          notationCode.append("      <layoutConstraint xmi:type=\"notation:Location\" y=\"-20\"/>\n");
+          notationCode.append("    </children>\n");
+          notationCode.append(StringFormatter.format("    <element xmi:type=\"uml:Association\" href=\"model.uml#_{0}\"/>\n",associationId));
+          notationCode.append("    <bendpoints xmi:type=\"notation:RelativeBendpoints\" points=\"[0, 0, 0, 0]$[0, 0, 0, 0]\"/>\n");
+          notationCode.append("  </edges>\n");
         }
         code.append("  </packagedElement>\n");
         code.append(subCode.toString());
@@ -133,14 +189,27 @@ class PapyrusGenerator
         {
           smcode = new StringBuilder();
           smSubCode = new StringBuilder();
+          smNotationCode = new StringBuilder();
+          smSubNotationCode = new StringBuilder();
           smName = sm.getName();
           className = uClass.getName();
           allNestedStateMachines = sm.getImmediateNestedStateMachines();
 
           smcode.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-          smcode.append(StringFormatter.format("<uml:Model xmi:version=\"2.1\" xmlns:xmi=\"http://schema.omg.org/spec/XMI/2.1\" xmlns:uml=\"http://www.eclipse.org/uml2/3.0.0/UML\" xmi:id=\"_{0}\" name=\"model\">\n",model.getUmpleFile().getSimpleFileName()));
+          smcode.append(StringFormatter.format("<uml:Model xmi:version=\"2.1\" xmlns:xmi=\"http://schema.omg.org/spec/XMI/2.1\" xmlns:uml=\"http://www.eclipse.org/uml2/5.0.0/UML\" xmi:id=\"_{0}\" name=\"model\">\n",model.getUmpleFile().getSimpleFileName()));
           smcode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:StateMachine\" xmi:id=\"_{0}\" name=\"{1}\">\n",smID, sm.getName()));
           smcode.append(StringFormatter.format("    <region xmi:id=\"_{0}\" name=\"Region0\">\n",regionID));
+
+          smNotationCode.append(StringFormatter.format("  <children xmi:type=\"notation:Shape\" xmi:id=\"_{0}\" type=\"2000\" fontName=\"Lucida Grande\" fontHeight=\"11\" lineColor=\"0\">\n",generatePapyrusID()));
+          smNotationCode.append(StringFormatter.format("    <children xmi:type=\"notation:DecorationNode\" xmi:id=\"_{0}\" type=\"2001\">\n",generatePapyrusID()));
+          smNotationCode.append(StringFormatter.format("      <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\" width=\"{1}\" height=\"{2}\"/>\n",generatePapyrusID(), smContainerWidth, smTitleBarHeight));
+          smNotationCode.append("    </children>\n");
+          smNotationCode.append(StringFormatter.format("    <children xmi:type=\"notation:DecorationNode\" xmi:id=\"_{0}\" type=\"2002\">\n",generatePapyrusID()));
+          smNotationCode.append(StringFormatter.format("      <children xmi:type=\"notation:Shape\" xmi:id=\"_{0}\" type=\"3000\" fontName=\"Lucida Grande\" fontHeight=\"11\" lineColor=\"0\">\n",generatePapyrusID()));
+          smNotationCode.append(StringFormatter.format("        <eAnnotations xmi:type=\"ecore:EAnnotation\" xmi:id=\"_{0}\" source=\"RegionAnnotationKey\">\n",generatePapyrusID()));
+          smNotationCode.append(StringFormatter.format("          <details xmi:type=\"ecore:EStringToStringMapEntry\" xmi:id=\"_{0}\" key=\"RegionZoneKey\" value=\"\"/>\n",generatePapyrusID()));
+          smNotationCode.append("        </eAnnotations>\n");
+          smNotationCode.append(StringFormatter.format("        <children xmi:type=\"notation:DecorationNode\" xmi:id=\"_{0}\" type=\"3002\">\n",generatePapyrusID()));
 
           for (State s : sm.getStates())
           {
@@ -155,15 +224,59 @@ class PapyrusGenerator
             if( (isStartState == true || isFinalState == true || isHistoryState == true || isDeepHistoryState == true) && numActions == 0) {
               if(isStartState == true){
                 smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:Pseudostate\" xmi:id=\"_{0}\" name=\"{0}\"/>\n",s.getName()));
+              
+                smNotationCode.append(StringFormatter.format("          <children xmi:type=\"notation:Shape\" xmi:id=\"_{0}\" type=\"8000\">\n",s.getName()));
+                smNotationCode.append("            <children xmi:type=\"notation:DecorationNode\" type=\"8001\">\n");
+                smNotationCode.append("              <layoutConstraint xmi:type=\"notation:Location\" x=\"25\" y=\"3\"/>\n");
+                smNotationCode.append("            </children>\n"); 
+                smNotationCode.append("            <children xmi:type=\"notation:DecorationNode\" type=\"8002\">\n");
+                smNotationCode.append("              <layoutConstraint xmi:type=\"notation:Location\" x=\"25\" y=\"-10\"/>\n");
+                smNotationCode.append("            </children>\n");
+                smNotationCode.append(StringFormatter.format("            <element xmi:type=\"uml:Pseudostate\" href=\"{0}_{1}.uml#_{0}\"/>\n", className, smName, s.getName())); 
+                smNotationCode.append(StringFormatter.format("            <layoutConstraint xmi:type=\"notation:Bounds\" x=\"{0}\" y=\"{1}\"/>\n", smXCoordinate, smYCoordinate));
+                smNotationCode.append("          </children>\n");
               }
               else if(isHistoryState == true){
                 smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:Pseudostate\" xmi:id=\"_{0}\" name=\"{0}\" kind=\"shallowHistory\"/>\n",s.getName()));
+              
+                smNotationCode.append(StringFormatter.format("          <children xmi:type=\"notation:Shape\" xmi:id=\"_{0}\" type=\"13000\">\n",s.getName()));
+                smNotationCode.append("            <children xmi:type=\"notation:DecorationNode\" type=\"13001\">\n");
+                smNotationCode.append("              <layoutConstraint xmi:type=\"notation:Location\" x=\"25\" y=\"3\"/>\n");
+                smNotationCode.append("            </children>\n"); 
+                smNotationCode.append("            <children xmi:type=\"notation:DecorationNode\" type=\"13002\">\n");
+                smNotationCode.append("              <layoutConstraint xmi:type=\"notation:Location\" x=\"25\" y=\"-10\"/>\n");
+                smNotationCode.append("            </children>\n");
+                smNotationCode.append(StringFormatter.format("            <element xmi:type=\"uml:Pseudostate\" href=\"{0}_{1}.uml#_{0}\"/>\n", className, smName, s.getName())); 
+                smNotationCode.append(StringFormatter.format("            <layoutConstraint xmi:type=\"notation:Bounds\" x=\"{0}\" y=\"{1}\"/>\n", smXCoordinate, smYCoordinate));
+                smNotationCode.append("          </children>\n");
+              
               }
               else if(isDeepHistoryState == true){
                 smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:Pseudostate\" xmi:id=\"_{0}\" name=\"{0}\" kind=\"deepHistory\"/>\n",s.getName()));
+              
+                smNotationCode.append(StringFormatter.format("          <children xmi:type=\"notation:Shape\" xmi:id=\"_{0}\" type=\"14000\">\n",s.getName()));
+                smNotationCode.append("            <children xmi:type=\"notation:DecorationNode\" type=\"14001\">\n");
+                smNotationCode.append("              <layoutConstraint xmi:type=\"notation:Location\" x=\"25\" y=\"3\"/>\n");
+                smNotationCode.append("            </children>\n"); 
+                smNotationCode.append("            <children xmi:type=\"notation:DecorationNode\" type=\"14002\">\n");
+                smNotationCode.append("              <layoutConstraint xmi:type=\"notation:Location\" x=\"25\" y=\"-10\"/>\n");
+                smNotationCode.append("            </children>\n");
+                smNotationCode.append(StringFormatter.format("            <element xmi:type=\"uml:Pseudostate\" href=\"{0}_{1}.uml#_{0}\"/>\n", className, smName, s.getName())); 
+                smNotationCode.append(StringFormatter.format("            <layoutConstraint xmi:type=\"notation:Bounds\" x=\"{0}\" y=\"{1}\"/>\n", smXCoordinate, smYCoordinate));
+                smNotationCode.append("          </children>\n");
+              
               }
               else if(isFinalState == true){
                 smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:FinalState\" xmi:id=\"_{0}\" name=\"{0}\"/>\n",s.getName()));
+              
+                smNotationCode.append(StringFormatter.format("          <children xmi:type=\"notation:Shape\" xmi:id=\"_{0}\" type=\"5000\">\n",s.getName()));
+                smNotationCode.append("            <children xmi:type=\"notation:DecorationNode\" type=\"5001\">\n");
+                smNotationCode.append("              <layoutConstraint xmi:type=\"notation:Location\" x=\"25\" y=\"3\"/>\n");
+                smNotationCode.append("            </children>\n"); 
+                smNotationCode.append("            <children xmi:type=\"notation:DecorationNode\" type=\"5002\"/>\n");
+                smNotationCode.append(StringFormatter.format("            <element xmi:type=\"uml:FinalState\" href=\"{0}_{1}.uml#_{0}\"/>\n", className, smName, s.getName())); 
+                smNotationCode.append(StringFormatter.format("            <layoutConstraint xmi:type=\"notation:Bounds\" x=\"{0}\" y=\"{1}\"/>\n", smXCoordinate, smYCoordinate));
+                smNotationCode.append("          </children>\n");
               }
             }
 
@@ -176,17 +289,48 @@ class PapyrusGenerator
               else{
                 smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:State\" xmi:id=\"_{0}\" name=\"{0}\"/>\n",s.getName()));
               }
+              
+              smNotationCode.append(StringFormatter.format("          <children xmi:type=\"notation:Shape\" xmi:id=\"_{0}\" type=\"6000\">\n", s.getName()));
+              smNotationCode.append("            <children xmi:type=\"notation:DecorationNode\" type=\"6001\"/>\n");
+              smNotationCode.append("            <children xmi:type=\"notation:DecorationNode\" type=\"6002\">\n"); 
+              smNotationCode.append("              <layoutConstraint xmi:type=\"notation:Bounds\"/>\n");
+              smNotationCode.append("            </children>\n");
+              smNotationCode.append("            <children xmi:type=\"notation:BasicCompartment\" type=\"compartment_shape_display\">\n");
+              smNotationCode.append("              <styles xmi:type=\"notation:TitleStyle\"/>\n"); 
+              smNotationCode.append("              <layoutConstraint xmi:type=\"notation:Bounds\"/>\n");
+              smNotationCode.append("            </children>\n");
 
               for(Activity activity: s.getActivities()){
-                smcode.append(StringFormatter.format("        <doActivity xmi:type=\"uml:Activity\" xmi:id=\"_{0}\" name=\"{1}\"/>\n",generatePapyrusID(), activity.getCodeblock() ));
+                String id = generatePapyrusID();
+                
+                smcode.append(StringFormatter.format("        <doActivity xmi:type=\"uml:Activity\" xmi:id=\"_{0}\" name=\"{1}\"/>\n",id, activity.getCodeblock() ));
+              
+                smNotationCode.append("            <children xmi:type=\"notation:Shape\" type=\"691\">\n"); 
+                smNotationCode.append(StringFormatter.format("              <element xmi:type=\"uml:Activity\" href=\"{0}_{1}.uml#_{2}\"/>\n",className,smName,id));
+                smNotationCode.append("              <layoutConstraint xmi:type=\"notation:Location\" x=\"-311\" y=\"-262\"/>\n");
+                smNotationCode.append("            </children>\n");
               }
 
               for (Action a : s.getActions()){
+                String id = generatePapyrusID();
+              
                 if(a.getActionType().equals("entry")){
-                  smcode.append(StringFormatter.format("        <entry xmi:type=\"uml:FunctionBehavior\" xmi:id=\"_{0}\" name=\"{1}\"/>\n",generatePapyrusID(), a.getActionCode() ));
+                  smcode.append(StringFormatter.format("        <entry xmi:type=\"uml:FunctionBehavior\" xmi:id=\"_{0}\" name=\"{1}\"/>\n",id, a.getActionCode() ));
+                
+                  smNotationCode.append("            <children xmi:type=\"notation:Shape\" type=\"690\">\n");
+                  smNotationCode.append(StringFormatter.format("              <element xmi:type=\"uml:FunctionBehavior\" href=\"{0}_{1}.uml#_{2}\"/>\n",className,smName,id)); 
+                  smNotationCode.append("              <layoutConstraint xmi:type=\"notation:Location\" x=\"-661\" y=\"-103\"/>\n");
+                  smNotationCode.append("            </children>\n");
+                
                 }
                 else if(a.getActionType().equals("exit")){
-                  smcode.append(StringFormatter.format("        <exit xmi:type=\"uml:FunctionBehavior\" xmi:id=\"_{0}\" name=\"{1}\"/>\n",generatePapyrusID(), a.getActionCode() ));
+                  smcode.append(StringFormatter.format("        <exit xmi:type=\"uml:FunctionBehavior\" xmi:id=\"_{0}\" name=\"{1}\"/>\n",id, a.getActionCode() ));
+                
+                  smNotationCode.append("            <children xmi:type=\"notation:Shape\" type=\"692\">\n");
+                  smNotationCode.append(StringFormatter.format("              <element xmi:type=\"uml:FunctionBehavior\" href=\"{0}_{1}.uml#_{2}\"/>\n",className,smName,id)); 
+                  smNotationCode.append("              <layoutConstraint xmi:type=\"notation:Location\" x=\"-597\" y=\"-62\"/>\n");
+                  smNotationCode.append("            </children>\n");
+                
                 }
               }
 
@@ -199,9 +343,11 @@ class PapyrusGenerator
 
             for (Transition t : s.getTransitions())
             {
+              String transitionID = generatePapyrusID();
+              
               //check if transition has a guard condition
               if(t.getGuard()!= null){
-                smSubCode.append(StringFormatter.format("      <transition xmi:id=\"_{0}\" name=\"{1}\" guard=\"_{2}\" source=\"_{3}\" target=\"_{4}\">\n",generatePapyrusID(), t.getEvent().getName(), t.getGuard().getCondition(new JavaGenerator()), t.getFromState().getName(), t.getNextState().getName() ));
+                smSubCode.append(StringFormatter.format("      <transition xmi:id=\"_{0}\" name=\"{1}\" guard=\"_{2}\" source=\"_{3}\" target=\"_{4}\">\n", transitionID, t.getEvent().getName(), t.getGuard().getCondition(new JavaGenerator()), t.getFromState().getName(), t.getNextState().getName() ));
                 smSubCode.append(StringFormatter.format("        <ownedRule xmi:id=\"_{0}\" name=\"{0}\"/>\n", t.getGuard().getCondition(new JavaGenerator()) ));
                 //check if transition also has an action
                 if(t.getAction() != null){
@@ -211,14 +357,34 @@ class PapyrusGenerator
               }
               else{
                 if(t.getAction() != null){
-                  smSubCode.append(StringFormatter.format("      <transition xmi:id=\"_{0}\" name=\"{1}\" source=\"_{2}\" target=\"_{3}\">\n", generatePapyrusID() ,t.getEvent().getName(), t.getFromState().getName(), t.getNextState().getName() ));
+                  smSubCode.append(StringFormatter.format("      <transition xmi:id=\"_{0}\" name=\"{1}\" source=\"_{2}\" target=\"_{3}\">\n", transitionID, t.getEvent().getName(), t.getFromState().getName(), t.getNextState().getName() ));
                   smSubCode.append(StringFormatter.format("        <effect xmi:type=\"uml:Activity\" xmi:id=\"_{0}\" name=\"{1}\"/>\n", generatePapyrusID(), t.getAction().getActionCode() ));
                   smSubCode.append("      </transition>\n");
                 }
                 else{
-                  smSubCode.append(StringFormatter.format("      <transition xmi:id=\"_{0}\" name=\"{1}\" source=\"_{2}\" target=\"_{3}\"/>\n",generatePapyrusID(), t.getEvent().getName(), t.getFromState().getName(), t.getNextState().getName() ));
+                  smSubCode.append(StringFormatter.format("      <transition xmi:id=\"_{0}\" name=\"{1}\" source=\"_{2}\" target=\"_{3}\"/>\n",transitionID, t.getEvent().getName(), t.getFromState().getName(), t.getNextState().getName() ));
                 }
               }
+              
+              smSubNotationCode.append(StringFormatter.format("  <edges xmi:type=\"notation:Connector\" type=\"7000\" source=\"_{0}\" target=\"_{1}\">\n", t.getFromState().getName(), t.getNextState().getName()));
+              smSubNotationCode.append("    <children xmi:type=\"notation:DecorationNode\" type=\"7001\"/>\n");
+              smSubNotationCode.append("    <children xmi:type=\"notation:DecorationNode\" type=\"7002\"/>\n");
+              smSubNotationCode.append("    <children xmi:type=\"notation:DecorationNode\" type=\"7003\"/>\n");
+              smSubNotationCode.append("    <styles xmi:type=\"notation:FontStyle\"/>\n");
+              smSubNotationCode.append(StringFormatter.format("    <element xmi:type=\"uml:Transition\" href=\"{0}_{1}.uml#_{2}\"/>\n", className, smName, transitionID));
+              smSubNotationCode.append("    <bendpoints xmi:type=\"notation:RelativeBendpoints\" points=\"[0, 0, 0, 0]$[0, 0, 0, 0]\"/>\n");
+              smSubNotationCode.append("  </edges>\n");
+            }
+            
+            smNotationCode.append(StringFormatter.format("            <element xmi:type=\"uml:State\" href=\"{0}_{1}.uml#_{2}\"/>\n",className, smName, s.getName()));
+            smNotationCode.append(StringFormatter.format("            <layoutConstraint xmi:type=\"notation:Bounds\" x=\"{0}\" y=\"{1}\"/>\n", smXCoordinate, smYCoordinate));
+            smNotationCode.append("          </children>\n");
+            
+            // Increment Layout coordinates
+            smYCoordinate += smYCoordinateIncrement;
+            if(smYCoordinate > smMaxPixelHeight) {
+                smYCoordinate -= smMaxPixelHeight;
+                smXCoordinate += smXCoordinateIncrement;
             }
 
           }
@@ -226,11 +392,23 @@ class PapyrusGenerator
           smcode.append("    </region>\n");
           smcode.append("  </packagedElement>\n");
           smcode.append("</uml:Model>");
+          
+          smNotationCode.append(StringFormatter.format("          <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\"/>\n", generatePapyrusID()));
+          smNotationCode.append                       ("        </children>\n");
+          smNotationCode.append(StringFormatter.format("        <element xmi:type=\"uml:Region\" href=\"{0}_{1}.uml#_{2}\"/>\n", className, smName, regionID));
+          smNotationCode.append(StringFormatter.format("        <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\" width=\"{1}\" height=\"{2}\"/>\n", generatePapyrusID(), smContainerWidth, smContainerHeight - smTitleBarHeight));
+          smNotationCode.append                       ("      </children>\n");
+          smNotationCode.append(StringFormatter.format("      <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\" y=\"13\" width=\"{1}\" height=\"{2}\"/>\n", generatePapyrusID(), smContainerWidth, smContainerHeight - smTitleBarHeight));
+          smNotationCode.append                       ("    </children>\n");
+          smNotationCode.append(StringFormatter.format("    <element xmi:type=\"uml:StateMachine\" href=\"{0}_{1}.uml#_{2}\"/>\n",className, smName, smID));
+          smNotationCode.append(StringFormatter.format("    <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\" x=\"30\" y=\"30\" width=\"{1}\" height=\"{2}\"/>\n", generatePapyrusID(), smContainerWidth, smContainerHeight));
+          smNotationCode.append                       ("  </children>\n");
+          smNotationCode.append(smSubNotationCode.toString());
 
         //At this point the papyrus model for the state machine is created
         model.setCode(smcode.toString());
         writeModel(false);
-        writeModNotation(false);
+        writeModNotation(false, smNotationCode.toString());
         writeModDI(false);
         writeModProject();
         }
@@ -245,7 +423,7 @@ class PapyrusGenerator
         isFirstInterface = false;
         String clientDependency = StringFormatter.format(" clientDependency=\"{0}-_interfaceRealization.0\"",uInterface.getName()) ;
         String packageType = "uml:Interface";
-        code.append(StringFormatter.format("  <packagedElement xmi:type=\"{1}\" xmi:id=\"{0}\" name=\"{0}\"/>\n",uInterface.getName(),packageType,clientDependency));
+        code.append(StringFormatter.format("  <packagedElement xmi:type=\"{1}\" xmi:id=\"_{0}\" name=\"{0}\"/>\n",uInterface.getName(),packageType,clientDependency));
       }
     }
 
@@ -268,7 +446,7 @@ class PapyrusGenerator
     if(hasClassDiagram){
     model.setCode(code.toString());
     writeModel(true);
-    writeModNotation(true); // model.notation
+    writeModNotation(true, notationCode.toString()); // model.notation
     writeModDI(true); // model.di
     writeModProject(); //.project
     }
@@ -292,22 +470,23 @@ class PapyrusGenerator
   // As currently created, it is very bare bones. To increase Papyrus functionality, you will need to improve this function.
   // @param isClassDiagram determines if the file will contain the notation for a class diagram or a state machine
   */
-  private void writeModNotation(boolean isClassDiagram)
+  private void writeModNotation(boolean isClassDiagram, String innerCode)
   {
     try {
       String path = model.getUmpleFile().getPath();
       StringBuilder noteCode = new StringBuilder();
       String modelFilename = null;
 
-      noteCode.append(model+"\n"+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+      noteCode.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
       
       if(isClassDiagram)
       {
       noteCode.append("<notation:Diagram xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:notation=\"http://www.eclipse.org/gmf/runtime/1.0.2/notation\"");
-      noteCode.append(StringFormatter.format(" xmlns:uml=\"http://www.eclipse.org/uml2/3.0.0/UML\" xmi:id=\"_{0}\"",diagramID));
+      noteCode.append(StringFormatter.format(" xmlns:uml=\"http://www.eclipse.org/uml2/5.0.0/UML\" xmi:id=\"_{0}\"",diagramID));
       noteCode.append(StringFormatter.format(" type=\"PapyrusUMLClassDiagram\" name=\"{0}\" measurementUnit=\"Pixel\">\n",model.getUmpleFile().getSimpleFileName()));
       noteCode.append(StringFormatter.format("  <styles xmi:type=\"notation:DiagramStyle\" xmi:id=\"_{0}DiagramStyle\"/>\n",model.getUmpleFile().getSimpleFileName()));
       noteCode.append(StringFormatter.format("  <element xmi:type=\"uml:Model\" href=\"model.uml#_{0}\"/>\n",model.getUmpleFile().getSimpleFileName()));
+      noteCode.append(innerCode);
       noteCode.append("</notation:Diagram>\n");
 
       modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + "model.notation";
@@ -317,29 +496,10 @@ class PapyrusGenerator
       noteCode.append("<notation:Diagram xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:notation=\"http://www.eclipse.org/gmf/runtime/1.0.2/notation\"");
       noteCode.append(StringFormatter.format(" xmlns:uml=\"http://www.eclipse.org/uml2/3.0.0/UML\" xmi:id=\"_{0}\"", diagramID));
       noteCode.append(StringFormatter.format(" type=\"PapyrusUMLStateMachineDiagram\" name=\"{0}\" measurementUnit=\"Pixel\">\n",smName));
-      noteCode.append(StringFormatter.format("  <children xmi:type=\"notation:Shape\" xmi:id=\"_{0}\" type=\"2000\" fontName=\"Lucida Grande\" fontHeight=\"11\" lineColor=\"0\">\n",generatePapyrusID()));
-      noteCode.append(StringFormatter.format("    <children xmi:type=\"notation:DecorationNode\" xmi:id=\"_{0}\" type=\"2001\">\n",generatePapyrusID()));
-      noteCode.append(StringFormatter.format("      <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\" width=\"700\" height=\"13\"/>\n",generatePapyrusID()));
-      noteCode.append                       ("    </children>\n");
-      noteCode.append(StringFormatter.format("    <children xmi:type=\"notation:DecorationNode\" xmi:id=\"_{0}\" type=\"2002\">\n",generatePapyrusID()));
-      noteCode.append(StringFormatter.format("      <children xmi:type=\"notation:Shape\" xmi:id=\"_{0}\" type=\"3000\" fontName=\"Lucida Grande\" fontHeight=\"11\" lineColor=\"0\">\n",generatePapyrusID()));
-      noteCode.append(StringFormatter.format("        <eAnnotations xmi:type=\"ecore:EAnnotation\" xmi:id=\"_{0}\" source=\"RegionAnnotationKey\">\n",generatePapyrusID()));
-      noteCode.append(StringFormatter.format("          <details xmi:type=\"ecore:EStringToStringMapEntry\" xmi:id=\"_{0}\" key=\"RegionZoneKey\" value=\"\"/>\n",generatePapyrusID()));
-      noteCode.append                       ("        </eAnnotations>\n");
-      noteCode.append(StringFormatter.format("        <children xmi:type=\"notation:DecorationNode\" xmi:id=\"_{0}\" type=\"3002\">\n",generatePapyrusID()));
-      noteCode.append(StringFormatter.format("          <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\"/>\n",generatePapyrusID()));
-      noteCode.append                       ("        </children>\n");
-      noteCode.append(StringFormatter.format("        <element xmi:type=\"uml:Region\" href=\"{0}_{1}.uml#_{2}\"/>\n",className, smName, regionID));
-      noteCode.append(StringFormatter.format("        <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\" width=\"700\" height=\"287\"/>\n",generatePapyrusID()));
-      noteCode.append                       ("      </children>\n");
-      noteCode.append(StringFormatter.format("      <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\" y=\"13\" width=\"700\" height=\"287\"/>\n",generatePapyrusID()));
-      noteCode.append                       ("    </children>\n");
-      noteCode.append(StringFormatter.format("    <element xmi:type=\"uml:StateMachine\" href=\"{0}_{1}.uml#_{2}\"/>\n",className, smName, smID));
-      noteCode.append(StringFormatter.format("    <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\" x=\"30\" y=\"30\" width=\"700\" height=\"300\"/>\n",generatePapyrusID()));
-      noteCode.append                       ("  </children>\n");
+      noteCode.append(innerCode);
       noteCode.append(StringFormatter.format("  <styles xmi:type=\"notation:DiagramStyle\" xmi:id=\"_{0}\"/>\n",generatePapyrusID()));
       noteCode.append(StringFormatter.format("  <element xmi:type=\"uml:StateMachine\" href=\"{0}_{1}.uml#_{2}\"/>\n",className, smName, smID));
-      noteCode.append                       ("</notation:Diagram>\n");
+      noteCode.append("</notation:Diagram>\n");
 
       modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + className + '_' + smName + ".notation";
       }

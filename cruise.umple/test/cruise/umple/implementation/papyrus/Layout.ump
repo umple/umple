@@ -1,0 +1,15 @@
+generate Papyrus;
+namespace example;
+
+
+class X { }
+class Y { }
+class Z { }
+class A { }
+class B { }
+class C { }
+class D { }
+class E { }
+class F { }
+class G { }
+class H { }

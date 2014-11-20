@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" type="PapyrusUMLClassDiagram" name="Layout" measurementUnit="Pixel">
+  <styles xmi:type="notation:DiagramStyle"/>
+  <element xmi:type="uml:Model" href="model.uml#_Layout"/>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_X"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="20" y="20"/>
+  </children>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_Y"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="20" y="220"/>
+  </children>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_Z"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="20" y="420"/>
+  </children>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_A"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="220" y="20"/>
+  </children>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_B"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="220" y="220"/>
+  </children>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_C"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="220" y="420"/>
+  </children>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_D"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="420" y="20"/>
+  </children>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_E"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="420" y="220"/>
+  </children>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_F"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="420" y="420"/>
+  </children>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_G"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="620" y="20"/>
+  </children>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_H"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="620" y="220"/>
+  </children>
+</notation:Diagram>

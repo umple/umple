@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" type="PapyrusUMLStateMachineDiagram" name="GarageDoor" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" type="2000" fontName="Lucida Grande" fontHeight="11" lineColor="0">
+    <children xmi:type="notation:DecorationNode" type="2001">
+      <layoutConstraint xmi:type="notation:Bounds" width="700" height="13"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" type="2002">
+      <children xmi:type="notation:Shape" type="3000" fontName="Lucida Grande" fontHeight="11" lineColor="0">
+        <eAnnotations xmi:type="ecore:EAnnotation" source="RegionAnnotationKey">
+          <details xmi:type="ecore:EStringToStringMapEntry" key="RegionZoneKey" value=""/>
+        </eAnnotations>
+        <children xmi:type="notation:DecorationNode" type="3002">
+          <children xmi:type="notation:Shape" type="6000">
+            <children xmi:type="notation:DecorationNode" type="6001"/>
+            <children xmi:type="notation:DecorationNode" type="6002">
+              <layoutConstraint xmi:type="notation:Bounds"/>
+            </children>
+            <children xmi:type="notation:BasicCompartment" type="compartment_shape_display">
+              <styles xmi:type="notation:TitleStyle"/>
+              <layoutConstraint xmi:type="notation:Bounds"/>
+            </children>
+            <children xmi:type="notation:Shape" type="690">
+              <element xmi:type="uml:FunctionBehavior" href="Garage_GarageDoor.uml#_RTASJMQOURi2W1UHRY0GEN"/>
+              <layoutConstraint xmi:type="notation:Location" x="-661" y="-103"/>
+            </children>
+            <children xmi:type="notation:Shape" type="692">
+              <element xmi:type="uml:FunctionBehavior" href="Garage_GarageDoor.uml#_CkaNIAPQFRa5OvRUTCXUrI"/>
+              <layoutConstraint xmi:type="notation:Location" x="-597" y="-62"/>
+            </children>
+            <element xmi:type="uml:State" href="Garage_GarageDoor.uml#_Closed"/>
+            <layoutConstraint xmi:type="notation:Bounds" x="20" y="20"/>
+          </children>
+          <children xmi:type="notation:Shape" type="6000">
+            <children xmi:type="notation:DecorationNode" type="6001"/>
+            <children xmi:type="notation:DecorationNode" type="6002">
+              <layoutConstraint xmi:type="notation:Bounds"/>
+            </children>
+            <children xmi:type="notation:BasicCompartment" type="compartment_shape_display">
+              <styles xmi:type="notation:TitleStyle"/>
+              <layoutConstraint xmi:type="notation:Bounds"/>
+            </children>
+            <children xmi:type="notation:Shape" type="690">
+              <element xmi:type="uml:FunctionBehavior" href="Garage_GarageDoor.uml#_sv3Nk3GZkFGGCCLYskmPHE"/>
+              <layoutConstraint xmi:type="notation:Location" x="-661" y="-103"/>
+            </children>
+            <element xmi:type="uml:State" href="Garage_GarageDoor.uml#_Opening"/>
+            <layoutConstraint xmi:type="notation:Bounds" x="20" y="220"/>
+          </children>
+          <children xmi:type="notation:Shape" type="6000">
+            <children xmi:type="notation:DecorationNode" type="6001"/>
+            <children xmi:type="notation:DecorationNode" type="6002">
+              <layoutConstraint xmi:type="notation:Bounds"/>
+            </children>
+            <children xmi:type="notation:BasicCompartment" type="compartment_shape_display">
+              <styles xmi:type="notation:TitleStyle"/>
+              <layoutConstraint xmi:type="notation:Bounds"/>
+            </children>
+            <children xmi:type="notation:Shape" type="691">
+              <element xmi:type="uml:Activity" href="Garage_GarageDoor.uml#_STZ2RE2WM3JIYRa5IBl32m"/>
+              <layoutConstraint xmi:type="notation:Location" x="-311" y="-262"/>
+            </children>
+            <children xmi:type="notation:Shape" type="690">
+              <element xmi:type="uml:FunctionBehavior" href="Garage_GarageDoor.uml#_0ZEXiKkRQlMX55BsAJkRmL"/>
+              <layoutConstraint xmi:type="notation:Location" x="-661" y="-103"/>
+            </children>
+            <element xmi:type="uml:State" href="Garage_GarageDoor.uml#_Open"/>
+            <layoutConstraint xmi:type="notation:Bounds" x="20" y="420"/>
+          </children>
+          <children xmi:type="notation:Shape" type="6000">
+            <children xmi:type="notation:DecorationNode" type="6001"/>
+            <children xmi:type="notation:DecorationNode" type="6002">
+              <layoutConstraint xmi:type="notation:Bounds"/>
+            </children>
+            <children xmi:type="notation:BasicCompartment" type="compartment_shape_display">
+              <styles xmi:type="notation:TitleStyle"/>
+              <layoutConstraint xmi:type="notation:Bounds"/>
+            </children>
+            <children xmi:type="notation:Shape" type="690">
+              <element xmi:type="uml:FunctionBehavior" href="Garage_GarageDoor.uml#_rDMaWlHSr52LLRYKUIK5KD"/>
+              <layoutConstraint xmi:type="notation:Location" x="-661" y="-103"/>
+            </children>
+            <element xmi:type="uml:State" href="Garage_GarageDoor.uml#_Closing"/>
+            <layoutConstraint xmi:type="notation:Bounds" x="420" y="20"/>
+          </children>
+          <layoutConstraint xmi:type="notation:Bounds"/>
+        </children>
+        <element xmi:type="uml:Region" href="Garage_GarageDoor.uml#_5Lk2F5I1C03JrlTImGBT1k"/>
+        <layoutConstraint xmi:type="notation:Bounds" width="700" height="487"/>
+      </children>
+      <layoutConstraint xmi:type="notation:Bounds" y="13" width="700" height="487"/>
+    </children>
+    <element xmi:type="uml:StateMachine" href="Garage_GarageDoor.uml#_IrUCPGR4YUTQJMFkrK0NQ3"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="30" y="30" width="700" height="500"/>
+  </children>
+  <edges xmi:type="notation:Connector" type="7000" source="_Closed" target="_Opening">
+    <children xmi:type="notation:DecorationNode" type="7001"/>
+    <children xmi:type="notation:DecorationNode" type="7002"/>
+    <children xmi:type="notation:DecorationNode" type="7003"/>
+    <styles xmi:type="notation:FontStyle"/>
+    <element xmi:type="uml:Transition" href="Garage_GarageDoor.uml#_0GQJ5iCMmlG4KHBEYrUEMG"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Connector" type="7000" source="_Opening" target="_Open">
+    <children xmi:type="notation:DecorationNode" type="7001"/>
+    <children xmi:type="notation:DecorationNode" type="7002"/>
+    <children xmi:type="notation:DecorationNode" type="7003"/>
+    <styles xmi:type="notation:FontStyle"/>
+    <element xmi:type="uml:Transition" href="Garage_GarageDoor.uml#_XiRTPrRs1FriDSWCEXvL10"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Connector" type="7000" source="_Open" target="_Closing">
+    <children xmi:type="notation:DecorationNode" type="7001"/>
+    <children xmi:type="notation:DecorationNode" type="7002"/>
+    <children xmi:type="notation:DecorationNode" type="7003"/>
+    <styles xmi:type="notation:FontStyle"/>
+    <element xmi:type="uml:Transition" href="Garage_GarageDoor.uml#_TNAGQOLBl4PXJkA01EvG1O"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Connector" type="7000" source="_Closing" target="_Closed">
+    <children xmi:type="notation:DecorationNode" type="7001"/>
+    <children xmi:type="notation:DecorationNode" type="7002"/>
+    <children xmi:type="notation:DecorationNode" type="7003"/>
+    <styles xmi:type="notation:FontStyle"/>
+    <element xmi:type="uml:Transition" href="Garage_GarageDoor.uml#_aUFLWHNQL5ZLQmTFJF0ivQ"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Connector" type="7000" source="_Closing" target="_Opening">
+    <children xmi:type="notation:DecorationNode" type="7001"/>
+    <children xmi:type="notation:DecorationNode" type="7002"/>
+    <children xmi:type="notation:DecorationNode" type="7003"/>
+    <styles xmi:type="notation:FontStyle"/>
+    <element xmi:type="uml:Transition" href="Garage_GarageDoor.uml#_NPlsDUaDSsNGX14rR3Y5Am"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <styles xmi:type="notation:DiagramStyle"/>
+  <element xmi:type="uml:StateMachine" href="Garage_GarageDoor.uml#_IrUCPGR4YUTQJMFkrK0NQ3"/>
+</notation:Diagram>

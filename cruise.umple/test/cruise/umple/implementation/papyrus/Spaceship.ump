@@ -1,0 +1,9 @@
+generate Papyrus;
+
+class Spaceship {
+    1--* Martian pilots;
+}
+
+class Martian {
+  name;
+}

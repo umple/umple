@@ -35,6 +35,8 @@ public class PapyrusGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/.project");
     SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus");
     SampleFileWriter.destroy(pathToInput + "/papyrus/Associations");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Spaceship");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Layout");
 
     SampleFileWriter.destroy("myfile");
   }
@@ -54,6 +56,10 @@ public class PapyrusGeneratorTest extends TemplateTest
     Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/Garage_GarageDoor.notation")).exists());
     Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/.project")).exists());
     
+  //ensure notation files match expected output file with generated UUID's removed
+    String outputNotation = SampleFileWriter.readContent(new File(pathToInput + "/papyrus/Papyrus/model.notation"), " xmi:id=\".*?\"");
+    SampleFileWriter.assertFileContent(new File(pathToInput + "/papyrus/Papyrus.notation.txt"), outputNotation, false);
+    
   }  
 
   @Test
@@ -67,7 +73,43 @@ public class PapyrusGeneratorTest extends TemplateTest
     Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Associations/model.di")).exists());
     Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Associations/model.notation")).exists());
     Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Associations/.project")).exists());
+    
+    //ensure notation files match expected output file with generated UUID's removed
+    String outputNotation = SampleFileWriter.readContent(new File(pathToInput + "/papyrus/Associations/model.notation"), " xmi:id=\".*?\"");
+    SampleFileWriter.assertFileContent(new File(pathToInput + "/papyrus/Associations.notation.txt"), outputNotation, false); 
   }  
   
+  @Test
+  public void Spaceship()
+  {
+    language = null;
+    assertUmpleTemplateFor("papyrus/Spaceship.ump","papyrus/Spaceship.uml.txt");
+    
+    //ensure all required files created appropriately
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Spaceship/model.uml")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Spaceship/model.di")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Spaceship/model.notation")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Spaceship/.project")).exists());
+    
+    //ensure notation files match expected output file with generated UUID's removed
+    String outputNotation = SampleFileWriter.readContent(new File(pathToInput + "/papyrus/Spaceship/model.notation"), " xmi:id=\".*?\"");
+    SampleFileWriter.assertFileContent(new File(pathToInput + "/papyrus/Spaceship.notation.txt"), outputNotation, false); 
+  }  
   
+  @Test
+  public void Layout()
+  {
+    language = null;
+    assertUmpleTemplateFor("papyrus/Layout.ump","papyrus/Layout.uml.txt");
+    
+    //ensure all required files created appropriately
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Layout/model.uml")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Layout/model.di")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Layout/model.notation")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Layout/.project")).exists());
+    
+    //ensure notation files match expected output file with generated UUID's removed
+    String outputNotation = SampleFileWriter.readContent(new File(pathToInput + "/papyrus/Layout/model.notation"), " xmi:id=\".*?\"");
+    SampleFileWriter.assertFileContent(new File(pathToInput + "/papyrus/Layout.notation.txt"), outputNotation, false); 
+  }  
 }
