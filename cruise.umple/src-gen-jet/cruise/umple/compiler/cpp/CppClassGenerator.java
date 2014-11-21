@@ -3914,31 +3914,48 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
     
   StringBuffer allExitCases = new StringBuffer();
   StringBuffer allEnterCases = new StringBuffer();
-  boolean hasExit = sm.getHasExitAction();
-  boolean hasEntry = sm.getHasEntryAction();
   
   for(State s : sm.getStates())
   {
-    if (hasExit)
-    {
-      allExitCases.append(StringFormatter.format("    if ({0} == {1}.{2} && {3} != {1}.{2} ) { {4}(); }\n"
-        , gen.translate("stateMachineOne",sm)
-        , gen.translate("type",sm)
-        , gen.translate("stateOne",s)
-        , gen.translate("parameterOne",sm)
-        , gen.translate("exitMethod",s)
-      ));
-    }
+    boolean hasThisExit = false;
+    boolean hasThisEntry = false;
 
-    if (hasEntry)
+    for(Action a : s.getActions())
     {
-      allEnterCases.append(StringFormatter.format("    if ({0} != {1}.{2} && {3} == {1}.{2} ) { {4}(); }\n"
-        , gen.translate("stateMachineOne",sm)
-        , gen.translate("type",sm)
-        , gen.translate("stateOne",s)
-        , gen.translate("parameterOne",sm)
-        , gen.translate("enterMethod",s)
-      ));
+      if ("exit".equals(a.getActionType()))
+      {
+        if(!hasThisExit)
+        {
+          allExitCases.append(StringFormatter.format("    if ({0} == {1}.{2} && {3} != {1}.{2} )\n    {"
+            , gen.translate("stateMachineOne",sm)
+            , gen.translate("type",sm)
+            , gen.translate("stateOne",s)
+            , gen.translate("parameterOne",sm)
+          ));
+        }
+        hasThisExit = true;
+        allExitCases.append("\n      " + a.getActionCode());
+      }
+      else if ("entry".equals(a.getActionType()))
+      {
+        if (!hasThisEntry)
+        { 
+          allEnterCases.append(StringFormatter.format("    if ({0} != {1}.{2} && {3} == {1}.{2} )\n    {"
+            , gen.translate("stateMachineOne",sm)
+            , gen.translate("type",sm)
+            , gen.translate("stateOne",s)
+            , gen.translate("parameterOne",sm)
+          ));
+        }
+        hasThisEntry = true;
+        allEnterCases.append("\n      " + a.getActionCode());
+      }
+    }
+    if (s.getHasExitAction()){
+     allExitCases.append("\n    }\n");
+    }
+    if (s.getHasEntryAction()){
+     allEnterCases.append("\n    }\n");
     }
   }
   

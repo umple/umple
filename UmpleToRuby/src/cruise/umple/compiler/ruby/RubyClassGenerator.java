@@ -6399,7 +6399,7 @@ public class RubyClassGenerator implements ILang
         hasActivities = true;
         
     stringBuffer.append(TEXT_1489);
-    stringBuffer.append( gen.translate("doActivityMethod",state));
+    stringBuffer.append( gen.translate("doActivityMethod",activity));
     stringBuffer.append(TEXT_1490);
     stringBuffer.append( activity.getActivityCode() );
     stringBuffer.append(TEXT_1491);

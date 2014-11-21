@@ -32,6 +32,7 @@ class X4
     }
     Off {
       exit / { if (doActivityStatusOffThread != null) { doActivityStatusOffThread.interrupt(); } }
+      entry / { doActivityStatusOffThread = new DoActivityThread(this,"doActivityStatusOff"); }
       do { keepDoing };
     }
   }
@@ -110,6 +111,7 @@ class X11
     }
     Off {
       exit / { if (doActivityStatusOffThread != null) { doActivityStatusOffThread.interrupt(); } }
+      entry / { doActivityStatusOffThread = new DoActivityThread(this,"doActivityStatusOff"); }
       do { keepDoing; } -> On;
     }
   }

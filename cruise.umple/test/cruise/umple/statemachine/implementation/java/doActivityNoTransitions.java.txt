@@ -1,0 +1,95 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.21.0.4771 modeling language!*/
+
+package example;
+
+public class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  enum Bulb { On, Off }
+  private Bulb bulb;
+
+  //LightFixture Do Activity Threads
+  Thread doActivityBulbOnThread = null;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public LightFixture()
+  {
+    setBulb(Bulb.On);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getBulbFullName()
+  {
+    String answer = bulb.toString();
+    return answer;
+  }
+
+  public Bulb getBulb()
+  {
+    return bulb;
+  }
+
+  public boolean setBulb(Bulb aBulb)
+  {
+    if (bulb == Bulb.On && aBulb != Bulb.On )
+    {
+      if (doActivityBulbOnThread != null) { doActivityBulbOnThread.interrupt(); }
+    }
+    if (bulb != Bulb.On && aBulb == Bulb.On )
+    {
+      doActivityBulbOnThread = new DoActivityThread(this,"doActivityBulbOn");
+    }
+    bulb = aBulb;
+    return true;
+  }
+
+  private void doActivityBulbOn()
+  {
+    try
+    {
+      doActivity();
+      Thread.sleep(1);
+    }
+    catch (InterruptedException e)
+    {
+
+    }
+  }
+
+  private static class DoActivityThread extends Thread
+  {
+    LightFixture controller;
+    String doActivityMethodName;
+    
+    public DoActivityThread(LightFixture aController,String aDoActivityMethodName)
+    {
+      controller = aController;
+      doActivityMethodName = aDoActivityMethodName;
+      start();
+    }
+    
+    public void run()
+    {
+      if ("doActivityBulbOn".equals(doActivityMethodName))
+      {
+        controller.doActivityBulbOn();
+      }
+    }
+  }
+
+  public void delete()
+  {}
+
+}

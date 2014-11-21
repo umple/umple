@@ -1,0 +1,73 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.21.0.4666 modeling language!*/
+
+class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  private static $BulbOn = 1;
+  private static $BulbOff = 2;
+  private $Bulb;
+
+  //LightFixture Do Activity Threads
+  private $doActivityBulbOnThread = null;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setBulb(self::$BulbOn);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getBulbFullName()
+  {
+    $answer = $this->getBulb();
+    return $answer;
+  }
+
+  public function getBulb()
+  {
+    if ($this->Bulb == self::$BulbOn) { return "BulbOn"; }
+    elseif ($this->Bulb == self::$BulbOff) { return "BulbOff"; }
+    return null;
+  }
+
+  public function setBulb($aBulb)
+  {
+    if ($aBulb == "BulbOn" || $aBulb == self::$BulbOn)
+    {
+      $this->Bulb = self::$BulbOn;
+      return true;
+    }
+    elseif ($aBulb == "BulbOff" || $aBulb == self::$BulbOff)
+    {
+      $this->Bulb = self::$BulbOff;
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

@@ -1,0 +1,58 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.21.0.4771 modeling language!*/
+
+package example;
+
+public class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  enum Bulb { On, Off }
+  private Bulb bulb;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public LightFixture()
+  {
+    setBulb(Bulb.On);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getBulbFullName()
+  {
+    String answer = bulb.toString();
+    return answer;
+  }
+
+  public Bulb getBulb()
+  {
+    return bulb;
+  }
+
+  public boolean setBulb(Bulb aBulb)
+  {
+    if (bulb == Bulb.On && aBulb != Bulb.On )
+    {
+      doExit();
+    }
+    if (bulb != Bulb.On && aBulb == Bulb.On )
+    {
+      doEntry();
+    }
+    bulb = aBulb;
+    return true;
+  }
+
+  public void delete()
+  {}
+
+}
