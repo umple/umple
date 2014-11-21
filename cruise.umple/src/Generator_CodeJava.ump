@@ -1950,7 +1950,7 @@ class JavaGenerator
     return hasTimedEvents;
   }
   
-  private void prepareDoActivityThreadInterrupt(StateMachine sm)
+  private void prepareDoActivityThread(StateMachine sm)
   {
     for(State state : sm.getStates())
     {
@@ -1961,6 +1961,12 @@ class JavaGenerator
           interruptAction.setIsInternal(true);
           interruptAction.setActionType("exit");
           state.addAction(interruptAction);
+
+          String entryCode = StringFormatter.format("{0} = new DoActivityThread(this,\"{1}\");",translate("doActivityThread",activity),translate("doActivityMethod",activity));
+          Action entryAction = new Action(entryCode);
+          entryAction.setIsInternal(true);
+          entryAction.setActionType("entry");
+          state.addAction(entryAction);
       }
     }
   }
@@ -1979,7 +1985,7 @@ class JavaGenerator
   private void prepareNestedStatesFor(StateMachine sm, StateMachine parentSm, int concurrentIndex)
   {
     prepareFinalStateFor(sm,parentSm); 
-    prepareDoActivityThreadInterrupt(sm); 
+    prepareDoActivityThread(sm); 
     if (sm.getParentState() != null && sm.getStartState() != null)
     {
       State parentState = sm.getParentState();

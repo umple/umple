@@ -31,6 +31,7 @@
       if ("entry".equals(action.getActionType()))
       {
         TraceItem traceItem = state.getTraced("entry",uClass);
+        TraceItem traceItemActivity = state.getTraced("activity",uClass);
         if (!hasThisEntry)
         {
           if (!isFirstEntry)
@@ -82,6 +83,14 @@
           //entryJavaLine++;
           entryActions.append("\n        }");
           entryJavaLine++;
+        }
+        else if(traceItemActivity!=null)
+        {
+          for (Activity activity : state.getActivities())
+          {
+            entryActions.append("\n        " + action.getActionCode().substring(0, action.getActionCode().length() - 1).concat(traceItemActivity.trace(gen, activity,"sm_di", uClass))+" }");
+            entryJavaLine+=action.getActionCode().split("\\n").length;
+          }
         }
         else{
           entryActions.append("\n        " + action.getActionCode());
@@ -137,31 +146,6 @@
             exitJavaLine+=action.getActionCode().split("\\n").length;
         }
       }
-    }
-    for (Activity activity : state.getActivities())
-    {
-      if (!hasThisEntry)
-      {
-        if (!isFirstEntry)
-        {
-          entryActions.append("\n      ");
-          entryJavaLine++;
-        }
-        entryActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
-        entryJavaLine++;
-      }
-      TraceItem traceItem = state.getTraced("activity",uClass);
-      hasEntry = true;
-      hasThisEntry = true;
-      isFirstEntry = false;
-      
-      if(traceItem!=null)
-      {
-    	  entryActions.append("\n"+traceItem.trace(gen, activity,"sm_da", uClass));
-    	  entryJavaLine++;
-      }
-      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",activity),gen.translate("doActivityThread",activity)));
-      entryJavaLine++;
     }
     
     if (hasThisEntry)

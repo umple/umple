@@ -198,6 +198,12 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
 	  assertUmpleTemplateFor("doActivityNestedStateMachine.ump",languagePath + "/doActivityNestedStateMachine."+ languagePath +".txt","Course");
   }
+
+  @Test
+  public void doActivityNoTransitions()
+  {
+    assertUmpleTemplateFor("doActivityNoTransitions.ump",languagePath + "/doActivityNoTransitions."+ languagePath +".txt","LightFixture");
+  }
   
   @Test 
   public void exitAction()
@@ -215,6 +221,12 @@ public class StateMachineTest extends StateMachineTemplateTest
   public void entryExitTransitionActionWithGuard()
   {
     assertUmpleTemplateFor("entryExitTransitionActionWithGuard.ump",languagePath + "/entryExitTransitionActionWithGuard."+ languagePath +".txt","LightFixture");
+  }
+
+  @Test
+  public void entryExitActionNoTransitions()
+  {
+    assertUmpleTemplateFor("entryExitActionNoTransitions.ump",languagePath + "/entryExitActionNoTransitions." + languagePath + ".txt", "LightFixture");
   }
 
   @Test

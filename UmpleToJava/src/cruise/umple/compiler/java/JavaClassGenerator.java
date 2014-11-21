@@ -4982,37 +4982,61 @@ for (StateMachine smq : uClass.getStateMachines())
     
   StringBuffer allExitCases = new StringBuffer();
   StringBuffer allEnterCases = new StringBuffer();
-  boolean hasExit = sm.getHasExitAction();
-  boolean hasEntry = sm.getHasEntryAction();
   
   for(State s : sm.getStates())
   {
-    if (hasExit)
+    boolean hasThisExit = false;
+    boolean hasThisEntry = false;
+    for (Action action : s.getActions())
     {
-      TraceItem traceItem = s.getTraced("entry",uClass);
-      allExitCases.append(StringFormatter.format("    if ({0} == {1}.{2} && {3} != {1}.{2} ) { {4}(); }\n"
-        , gen.translate("stateMachineOne",sm)
-        , gen.translate("type",sm)
-        , gen.translate("stateOne",s)
-        , gen.translate("parameterOne",sm)
-        , gen.translate("exitMethod",s)
-      ));
-      allEnterCases.append(
-        traceItem!=null/*&&traceItem.getIsPost()*/?traceItem.trace(gen, s,"sm_e", uClass)+"\n":"");      
-    }
+      if ("exit".equals(action.getActionType()))
+      {
+        TraceItem traceItem = s.getTraced("exit",uClass);
+        
+        if (!hasThisExit)
+        {
+          allExitCases.append(StringFormatter.format("    if ({0} == {1}.{2} && {3} != {1}.{2} )\n    {"
+            , gen.translate("stateMachineOne",sm)
+            , gen.translate("type",sm)
+            , gen.translate("stateOne",s)
+            , gen.translate("parameterOne",sm)
+          ));
+        }
 
-    if (hasEntry)
-    {
-      TraceItem traceItem = s.getTraced("exit",uClass);
-      allEnterCases.append(StringFormatter.format("    if ({0} != {1}.{2} && {3} == {1}.{2} ) { {4}(); }\n"
-        , gen.translate("stateMachineOne",sm)
-        , gen.translate("type",sm)
-        , gen.translate("stateOne",s)
-        , gen.translate("parameterOne",sm)
-        , gen.translate("enterMethod",s)
-      ));
-      allEnterCases.append(
-        traceItem!=null/*&&traceItem.getIsPost()*/?traceItem.trace(gen, s,"sm_x", uClass)+"\n":"");      
+        hasThisExit = true;
+
+        allExitCases.append(
+          traceItem!=null/*&&traceItem.getIsPost()*/?traceItem.trace(gen, s,"sm_e", uClass)+"\n":"");
+
+        allExitCases.append("\n      " + action.getActionCode()); 
+      }
+      else if("entry".equals(action.getActionType()))
+      {
+        TraceItem traceItem = s.getTraced("entry",uClass);        
+        
+        if (!hasThisEntry)
+        {
+          allEnterCases.append(StringFormatter.format("    if ({0} != {1}.{2} && {3} == {1}.{2} )\n    {"
+            , gen.translate("stateMachineOne",sm)
+            , gen.translate("type",sm)
+            , gen.translate("stateOne",s)
+            , gen.translate("parameterOne",sm)
+          ));
+        }
+
+        hasThisEntry = true;
+
+        allEnterCases.append(
+            traceItem!=null/*&&traceItem.getIsPost()*/?traceItem.trace(gen, s,"sm_x", uClass)+"\n":"");
+
+        allEnterCases.append("\n      " + action.getActionCode()); 
+      }
+    }
+    if (s.getHasExitAction()){
+     allExitCases.append("\n    }\n");
+    }
+    if (s.getHasEntryAction()){
+     allEnterCases.append("\n    }\n");
     }
   }
   
@@ -5070,6 +5094,7 @@ for (StateMachine smq : uClass.getStateMachines())
       if ("entry".equals(action.getActionType()))
       {
         TraceItem traceItem = state.getTraced("entry",uClass);
+        TraceItem traceItemActivity = state.getTraced("activity",uClass);
         if (!hasThisEntry)
         {
           if (!isFirstEntry)
@@ -5121,6 +5146,14 @@ for (StateMachine smq : uClass.getStateMachines())
           //entryJavaLine++;
           entryActions.append("\n        }");
           entryJavaLine++;
+        }
+        else if(traceItemActivity!=null)
+        {
+          for (Activity activity : state.getActivities())
+          {
+            entryActions.append("\n        " + action.getActionCode().substring(0, action.getActionCode().length() - 1).concat(traceItemActivity.trace(gen, activity,"sm_di", uClass))+" }");
+            entryJavaLine+=action.getActionCode().split("\\n").length;
+          }
         }
         else{
           entryActions.append("\n        " + action.getActionCode());
@@ -5176,31 +5209,6 @@ for (StateMachine smq : uClass.getStateMachines())
             exitJavaLine+=action.getActionCode().split("\\n").length;
         }
       }
-    }
-    for (Activity activity : state.getActivities())
-    {
-      if (!hasThisEntry)
-      {
-        if (!isFirstEntry)
-        {
-          entryActions.append("\n      ");
-          entryJavaLine++;
-        }
-        entryActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
-        entryJavaLine++;
-      }
-      TraceItem traceItem = state.getTraced("activity",uClass);
-      hasEntry = true;
-      hasThisEntry = true;
-      isFirstEntry = false;
-      
-      if(traceItem!=null)
-      {
-    	  entryActions.append("\n"+traceItem.trace(gen, activity,"sm_da", uClass));
-    	  entryJavaLine++;
-      }
-      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",activity),gen.translate("doActivityThread",activity)));
-      entryJavaLine++;
     }
     
     if (hasThisEntry)

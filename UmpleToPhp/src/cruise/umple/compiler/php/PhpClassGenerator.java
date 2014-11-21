@@ -3829,8 +3829,6 @@ public class PhpClassGenerator implements ILang
   StringBuffer allCases = new StringBuffer();
   StringBuffer allExitCases = new StringBuffer();
   StringBuffer allEnterCases = new StringBuffer();
-  boolean hasExit = sm.getHasExitAction();
-  boolean hasEntry = sm.getHasEntryAction();
 
   for (State state : sm.getStates())
   {
@@ -3848,26 +3846,43 @@ public class PhpClassGenerator implements ILang
     allCases.append(StringFormatter.format("      return true;\n"));
     allCases.append(StringFormatter.format("    }\n"));
 
-    if (hasExit)
+    boolean hasThisEntry = false;
+    boolean hasThisExit = false;
+    for (Action action : state.getActions())
     {
-      allExitCases.append(StringFormatter.format("    if ($this->{0} == self::${1} && (${2} != self::${1} && ${2} != \"{1}\") ) { $this->{3}(); }\n"
-        , gen.translate("stateMachineOne",sm)
-        , gen.translate("stateOne",state)
-        , gen.translate("parameterOne",sm)
-        , gen.translate("exitMethod",state)
-      ));
+      if ("exit".equals(action.getActionType()))
+      {
+        if(!hasThisExit)
+        {
+          allExitCases.append(StringFormatter.format("    if ($this->{0} == self::${1} && (${2} != self::${1} && ${2} != \"{1}\") )\n    {"
+            , gen.translate("stateMachineOne",sm)
+            , gen.translate("stateOne",state)
+            , gen.translate("parameterOne",sm)
+          ));
+        }
+        hasThisExit = true;
+        allExitCases.append("\n      " + action.getActionCode());
+      }
+      else if ("entry".equals(action.getActionType()))
+      {
+        if (!hasThisEntry)
+        {
+          allEnterCases.append(StringFormatter.format("    if ($this->{0} != self::${1} && (${2} == self::${1} || ${2} == \"{1}\") )\n    {"
+            , gen.translate("stateMachineOne",sm)
+            , gen.translate("stateOne",state)
+            , gen.translate("parameterOne",sm)
+          ));
+        }
+        hasThisEntry = true;
+        allEnterCases.append("\n      " + action.getActionCode());
+      }
     }
-
-    if (hasEntry)
-    {
-      allEnterCases.append(StringFormatter.format("    if ($this->{0} != self::${1} && (${2} == self::${1} || ${2} == \"{1}\") ) { $this->{3}(); }\n"
-        , gen.translate("stateMachineOne",sm)
-        , gen.translate("stateOne",state)
-        , gen.translate("parameterOne",sm)
-        , gen.translate("enterMethod",state)
-      ));
+    if (state.getHasExitAction()){
+     allExitCases.append("\n    }\n");
     }
-
+    if (state.getHasEntryAction()){
+     allEnterCases.append("\n    }\n");
+    }
   }
   String outputCases = allCases.toString().trim();
   String exitCasesOutput = allExitCases.toString().trim();
