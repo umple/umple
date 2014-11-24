@@ -6,17 +6,18 @@ import java.util.*;
 
 
 rule "addClass_toUmpleModel"
+  salience 100
 	when
 		umpleClass: UmpleClass()
 		umpleModel: UmpleModel()
 	then
-		System.out.println(umpleClass.getName());
+		//System.out.println("ADDING CLASS TO MODEL: "+umpleClass.getName());
 	    umpleModel.addUmpleClass(umpleClass);
 end
 
 
 rule "transform_ImportDeclaration"
-
+  salience 100
 	when
 		importDeclaration: ImportDeclaration()
 		uClass: UmpleClass()
@@ -26,6 +27,7 @@ rule "transform_ImportDeclaration"
 end
 
 rule "transform_ImportDeclaration_UInterface"
+  salience 100
 	when
 		importDeclaration: ImportDeclaration()
 		uInterface: UmpleInterface()
@@ -35,6 +37,7 @@ rule "transform_ImportDeclaration_UInterface"
 end
 
 rule "transform_InheritanceDeclaration_Interfaces"
+  salience 100
 	when
 		typeDeclaration : TypeDeclaration(typeDeclaration.superInterfaceTypes().size() > 0)
 		uClass: UmpleClass(typeDeclaration.getName().getIdentifier().equals(uClass.getName()))
@@ -49,6 +52,7 @@ rule "transform_InheritanceDeclaration_Interfaces"
 end
 
 rule "transform_InheritanceDeclaration_Interfaces_UInterface"
+  salience 100
 	when
 		typeDeclaration : TypeDeclaration(typeDeclaration.superInterfaceTypes().size() > 0)
 		uInterface: UmpleInterface(typeDeclaration.getName().getIdentifier().equals(uInterface.getName()))
@@ -63,6 +67,7 @@ rule "transform_InheritanceDeclaration_Interfaces_UInterface"
 end
 
 rule "transform_InheritanceDeclaration_SuperClasses"
+  salience 100
 	when
 		typeDeclaration : TypeDeclaration(typeDeclaration.getSuperclassType() != null)
 		uClass: UmpleClass(typeDeclaration.getName().getIdentifier().equals(uClass.getName()))
@@ -72,6 +77,7 @@ rule "transform_InheritanceDeclaration_SuperClasses"
 end
 
 rule "transform_Namespace"
+  salience 100
 	when
 		packageDeclaration: PackageDeclaration()
 		uClass: UmpleClass()
@@ -81,6 +87,7 @@ end
 
 
 rule "transform_Namespace_UInterface"
+  salience 100
 	when
 		packageDeclaration: PackageDeclaration()
 		uInterface: UmpleInterface()
@@ -89,6 +96,7 @@ rule "transform_Namespace_UInterface"
 end
 
 rule "append_FieldDeclaration"
+  salience 100
 	when
 		fieldDeclaration: FieldDeclaration()
 		uClass: UmpleClass()
@@ -97,6 +105,7 @@ rule "append_FieldDeclaration"
 end
 
 rule "append_FieldDeclaration_interfaces"
+  salience 100
 	when
 		fieldDeclaration: FieldDeclaration()
 		uInterface: UmpleInterface()
@@ -105,6 +114,7 @@ rule "append_FieldDeclaration_interfaces"
 end
 
 rule "append_MethodDeclaration"
+  salience 100
 	when
 		method: MethodDeclaration()
 		uClass: UmpleClass()
@@ -113,6 +123,7 @@ rule "append_MethodDeclaration"
 end
 
 rule "append_MethodDeclaration_interfaces"
+  salience 100
 	when
 		method: MethodDeclaration()
 		uInterface: UmpleInterface()

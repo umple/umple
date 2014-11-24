@@ -1,10 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.21.0.4666 modeling language!*/
 
-package Elevator.core.Buttons;
 
-// line 41 "../../../../ElevatorSystemB.ump"
-// line 92 "../../../../ElevatorSystemB.ump"
+
+// line 40 "ElevatorSystemB.ump"
+// line 91 "ElevatorSystemB.ump"
 public class OpenDoorButton extends Button
 {
 

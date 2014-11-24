@@ -1,10 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.21.0.4666 modeling language!*/
 
-package Elevator.core.Buttons;
 
-// line 54 "../../../../ElevatorSystemB.ump"
-// line 76 "../../../../ElevatorSystemB.ump"
+
+// line 53 "ElevatorSystemB.ump"
+// line 75 "ElevatorSystemB.ump"
 public class ConsoleCallButton extends Button
 {
 

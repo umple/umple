@@ -1,33 +1,33 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.21.0.4666 modeling language!*/
 
-package Elevator.core.Buttons;
+
 import java.util.*;
 
-// line 48 "../../../../ElevatorSystemB.ump"
-// line 84 "../../../../ElevatorSystemB.ump"
-public class DownCallButton extends Button
+// line 44 "ElevatorSystemB.ump"
+// line 87 "ElevatorSystemB.ump"
+public class UpCallButton extends Button
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //DownCallButton Associations
+  //UpCallButton Associations
   private List<Elevator> elevators;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public DownCallButton(boolean aLightOn, Elevator... allElevators)
+  public UpCallButton(boolean aLightOn, Elevator... allElevators)
   {
     super(aLightOn);
     elevators = new ArrayList<Elevator>();
     boolean didAddElevators = setElevators(allElevators);
     if (!didAddElevators)
     {
-      throw new RuntimeException("Unable to create DownCallButton, must have at least 1 elevators");
+      throw new RuntimeException("Unable to create UpCallButton, must have at least 1 elevators");
     }
   }
 
@@ -81,13 +81,13 @@ public class DownCallButton extends Button
     boolean wasAdded = false;
     if (elevators.contains(aElevator)) { return false; }
     elevators.add(aElevator);
-    if (aElevator.indexOfDownCallButton(this) != -1)
+    if (aElevator.indexOfUpCallButton(this) != -1)
     {
       wasAdded = true;
     }
     else
     {
-      wasAdded = aElevator.addDownCallButton(this);
+      wasAdded = aElevator.addUpCallButton(this);
       if (!wasAdded)
       {
         elevators.remove(aElevator);
@@ -111,13 +111,13 @@ public class DownCallButton extends Button
 
     int oldIndex = elevators.indexOf(aElevator);
     elevators.remove(oldIndex);
-    if (aElevator.indexOfDownCallButton(this) == -1)
+    if (aElevator.indexOfUpCallButton(this) == -1)
     {
       wasRemoved = true;
     }
     else
     {
-      wasRemoved = aElevator.removeDownCallButton(this);
+      wasRemoved = aElevator.removeUpCallButton(this);
       if (!wasRemoved)
       {
         elevators.add(oldIndex,aElevator);
@@ -155,13 +155,13 @@ public class DownCallButton extends Button
       }
       else
       {
-        aNewElevator.addDownCallButton(this);
+        aNewElevator.addUpCallButton(this);
       }
     }
 
     for (Elevator anOldElevator : oldElevators)
     {
-      anOldElevator.removeDownCallButton(this);
+      anOldElevator.removeUpCallButton(this);
     }
     wasSet = true;
     return wasSet;
@@ -205,7 +205,7 @@ public class DownCallButton extends Button
     elevators.clear();
     for(Elevator aElevator : copyOfElevators)
     {
-      aElevator.removeDownCallButton(this);
+      aElevator.removeUpCallButton(this);
     }
     super.delete();
   }

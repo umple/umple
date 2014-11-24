@@ -3,8 +3,8 @@
 
 
 
-// line 49 "AccessControl.ump"
-// line 87 "AccessControl.ump"
+// line 50 "AccessControl.ump"
+// line 88 "AccessControl.ump"
 public class User
 {
 

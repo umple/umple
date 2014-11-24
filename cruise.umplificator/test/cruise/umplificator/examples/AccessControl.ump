@@ -29,6 +29,7 @@ association
 class Facility
 {
   Integer id;
+  lazy Time t; 
   * -> 0..1 FacilityType;
   Integer access_count;
   name;
@@ -54,7 +55,6 @@ class User
   last_name;
   password;
   other_details;
-  
   key {id}
 }
 

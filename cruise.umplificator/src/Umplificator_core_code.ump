@@ -85,7 +85,7 @@ public boolean umplifyJava(File file)
 		    logger.debug(content);
 		    javaParser.parseUnit(content);
 			// Insert Elements in Working Memory
-			String compilationUnitName= javaParser.getJavaVisitor().getName();
+            String compilationUnitName= javaParser.getJavaVisitor().getTypeDeclaration().getName().getFullyQualifiedName();
 			boolean isInterface = javaParser.getJavaVisitor().getIsInterface();
 			boolean isEnumType = javaParser.getJavaVisitor().getIsEnumType();
 			

@@ -4,8 +4,8 @@
 
 import java.util.*;
 
-// line 41 "AccessControl.ump"
-// line 93 "AccessControl.ump"
+// line 42 "AccessControl.ump"
+// line 94 "AccessControl.ump"
 public class Role
 {
 
