@@ -1,10 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.21.0.4666 modeling language!*/
 
-package Elevator.core.Buttons;
 
-// line 34 "../../../../ElevatorSystemB.ump"
-// line 67 "../../../../ElevatorSystemB.ump"
+
+/**
+ * Separate out the buttons
+ */
+// line 33 "ElevatorSystemB.ump"
+// line 66 "ElevatorSystemB.ump"
 public class Button
 {
 

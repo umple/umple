@@ -75,7 +75,7 @@ class JavaClassVisitor {
     enumDeclaration.setName(name);
 	enumDeclaration.setCode(enumDeclarationCode);
     isEnumType = true;
-    return false;
+    return true;
   }
 
 }

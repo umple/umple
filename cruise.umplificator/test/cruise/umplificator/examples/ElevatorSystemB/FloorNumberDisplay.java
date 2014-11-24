@@ -1,11 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.21.0.4666 modeling language!*/
 
-package Elevator.core.Buttons;
+
 import Elevator.core.Buttons.*;
 
-// line 27 "../../../../ElevatorSystemB.ump"
-// line 71 "../../../../ElevatorSystemB.ump"
+// line 27 "ElevatorSystemB.ump"
+// line 70 "ElevatorSystemB.ump"
 public class FloorNumberDisplay
 {
 

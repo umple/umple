@@ -2,10 +2,11 @@
 /*This code was generated using the UMPLE 1.21.0.4666 modeling language!*/
 
 
+import java.sql.Time;
 import java.util.*;
 
 // line 29 "AccessControl.ump"
-// line 76 "AccessControl.ump"
+// line 77 "AccessControl.ump"
 public class Facility
 {
 
@@ -15,6 +16,7 @@ public class Facility
 
   //Facility Attributes
   private int id;
+  private Time t;
   private int access_count;
   private String name;
   private String description;
@@ -38,6 +40,7 @@ public class Facility
     cachedHashCode = -1;
     canSetId = true;
     id = aId;
+    t = null;
     access_count = aAccess_count;
     name = aName;
     description = aDescription;
@@ -55,6 +58,14 @@ public class Facility
     boolean wasSet = false;
     if (!canSetId) { return false; }
     id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setT(Time aT)
+  {
+    boolean wasSet = false;
+    t = aT;
     wasSet = true;
     return wasSet;
   }
@@ -94,6 +105,11 @@ public class Facility
   public int getId()
   {
     return id;
+  }
+
+  public Time getT()
+  {
+    return t;
   }
 
   public int getAccess_count()
@@ -403,6 +419,7 @@ public class Facility
             "name" + ":" + getName()+ "," +
             "description" + ":" + getDescription()+ "," +
             "other_details" + ":" + getOther_details()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "t" + "=" + (getT() != null ? !getT().equals(this)  ? getT().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "facilityType = "+(getFacilityType()!=null?Integer.toHexString(System.identityHashCode(getFacilityType())):"null")
      + outputString;
   }

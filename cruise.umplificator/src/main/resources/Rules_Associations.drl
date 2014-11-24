@@ -4,6 +4,7 @@ import org.eclipse.jdt.core.dom.*;
 import cruise.umple.compiler.*;
 
 // These rules verify one association end to detect multiplicities
+/*
 rule "isAssociation"
     when
         fieldDeclaration: FieldDeclaration(!fieldDeclaration.getType().isPrimitiveType())

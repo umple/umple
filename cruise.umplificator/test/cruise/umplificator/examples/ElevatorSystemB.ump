@@ -30,7 +30,6 @@ class FloorNumberDisplay{
 }
 
 //Separate out the buttons
-namespace Elevator.core.Buttons;
 class Button{
  Boolean lightOn;
 }

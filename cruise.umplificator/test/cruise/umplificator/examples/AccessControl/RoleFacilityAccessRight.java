@@ -3,8 +3,8 @@
 
 
 
-// line 61 "AccessControl.ump"
-// line 98 "AccessControl.ump"
+// line 62 "AccessControl.ump"
+// line 99 "AccessControl.ump"
 public class RoleFacilityAccessRight
 {
 

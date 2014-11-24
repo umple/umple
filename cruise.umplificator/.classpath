@@ -34,6 +34,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jopt-simple"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/log4j-api-2.0.1.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/log4j-core-2.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Repositories/umple/dist/umple.jar"/>
+	<classpathentry kind="lib" path="C:/Repositories/umple/lib/umple.jar" sourcepath="/cruise.umple"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

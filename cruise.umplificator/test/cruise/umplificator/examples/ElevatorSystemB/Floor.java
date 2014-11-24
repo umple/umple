@@ -1,12 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.21.0.4666 modeling language!*/
 
-package Elevator.core.Buttons;
+
 import Elevator.core.Buttons.*;
 import java.util.*;
 
-// line 18 "../../../../ElevatorSystemB.ump"
-// line 107 "../../../../ElevatorSystemB.ump"
+// line 18 "ElevatorSystemB.ump"
+// line 106 "ElevatorSystemB.ump"
 public class Floor
 {
 

@@ -7,7 +7,7 @@
  * Ref_Facility_Type
  */
 // line 7 "AccessControl.ump"
-// line 82 "AccessControl.ump"
+// line 83 "AccessControl.ump"
 public class FacilityType
 {
 
