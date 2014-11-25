@@ -1,0 +1,65 @@
+// A brief example to show the functionality of compositions
+// and the difference between compositions and regular associations.
+
+//Namespace for core of the system.
+namespace Compotisions.core;
+
+
+class Building {}
+
+// deleting a building deletes all its floors
+// also, deleting a floor delete all its rooms
+class Floor {
+   4..10 -<@> 1 Building b;
+   1 <@>- 0..6 Room r;
+}
+
+class Room {
+    1 r -- * Person p;
+    int windows = 6;
+}
+
+class Person {
+     1 p -- 1..2 Vehicle v;
+     name;
+}
+
+class Vehicle {}
+
+class Wheel {}
+
+// compositions can also be in non-inline associations
+// deleting a vehicle also deletes the associated wheels
+association {
+     0..1 Vehicle v -<@> 4 Wheel w;
+}
+
+
+//$?[End_of_model]$?
+// Positioning
+class Building
+{
+  position 17 323 120 62;
+}
+class Floor
+{
+  position 17 214 109 40;
+}
+class Room
+{
+  position 17 109 168 60;
+  position.association Person:p__Room:r 169,7 0,10;
+}
+class Person
+{
+  position 229 175 109 56;
+  position.association Person:p__Vehicle:v 110,12 0,10;
+}
+class Vehicle
+{
+  position 382 112 109 40;
+}
+class Wheel
+{
+  position 382 207 117 60;
+}
