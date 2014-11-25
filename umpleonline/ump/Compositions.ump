@@ -31,7 +31,7 @@ class Wheel {}
 // compositions can also be in non-inline associations
 // deleting a vehicle also deletes the associated wheels
 association {
-     0..1 Vehicle v -<@> 4 Wheel w;
+     0..1 Vehicle v <@>- 4 Wheel w;
 }
 
 
