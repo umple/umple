@@ -15,6 +15,7 @@ module ExampleLoaderHelper
   "OhHellWhist.ump" => ["Card", "Trick_generalization", "umpleAssociation_8"],
   "Claim.ump" => ["Claim", "Clamor", "umpleAssociation_0"],
   "CommunityAssociation.ump" => ["CommunityResidence", "Rink_generalization", "umpleAssociation_5"],
+  "Compositions.ump" => ["Composition", "", ""],
   "CoOpSystem.ump" => ["Job", "Resume", "umpleAssociation_11"],
   "DMMOverview.ump" => ["SourceObject", "SourceRelationship_generalization", "umpleAssociation_6"],
   "DMMSourceObjectHierarchy.ump" => ["Contains", "SourceUnit_generalization", "umpleAssociation_7"],
