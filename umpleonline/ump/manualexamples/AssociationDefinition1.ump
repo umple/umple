@@ -18,6 +18,11 @@ association {
   0..1 A -> * C;
 }
 
+// Class with composition
+class E {
+  0..1 e <@>- * A a;
+}
+
 // Reference to a class defined elsewhere
 external D {}//$?[End_of_model]$?
 

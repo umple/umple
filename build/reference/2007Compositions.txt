@@ -1,0 +1,63 @@
+Compositions
+Associations
+noreferences
+
+@@description
+
+<p> A composition is a subtype of association where the delete is mandatory
+    regardless of the multiplicity (enforced delete).</p>
+
+<p> Compositions are used for associations where once the objects are associated, it makes sense for the deletion of one to cause the deletion of the other.  This differs from the pre-existing associations, where the delete is dependent on the multiplicity. <p>
+
+<p> For example, consider the case of a Vehicle and Wheel classes.
+With a regular association, the code would be as follows (where a Wheel can be associated to at most 1 Vehicles, and a Vehicle can have between 2 and 4 Wheels).  
+<p>
+<p> See <b> Example 1 </b>
+<p>
+
+<p> Here, the delete code for Vehicle does not delete the associated Wheels, since the multiplicity on Wheel is 0..1 which means the Wheel can exist without a Vehicle.
+However, on deleting a Vehicle it would make more sense for the associated Wheels to be deleted. 
+<p>
+
+<p> This is where compositions are useful.
+Rewriting the above example so that a Vehicle is composed with Wheel:
+<p>
+<p>
+<p> See <b> Example 2 </b>
+<p>
+
+<p> With the composition code, notice how the delete code for the Vehicle deletes all the Wheels associated, although the multiplicity is unchanged.
+<p>
+
+<p> Compositions can be specified inline, or as separate associations (the same way as regular associations).
+The following two examples are equivalent to the Wheel-Vehicle example specified above.
+<p>
+<p>
+<p> See <b> Examples 3 and 4 </b>
+<p>
+
+&nbsp;<br/>
+
+<p><b>Syntax</b><p><p> The syntax for compositions is the same as for regular associations, except for the arrow used.
+While in regular associations, the syntax is <b>a -- b</b> for "a associated with b", for compositions it is <b>a <@>- b</b> for "a composed with b", or <b>a -<@> b</b> for "b composed with a". 
+In the class diagrams generated for compositions, the symbol is a filled-in diamond arrow.  <p>
+
+&nbsp;<br/>
+
+
+@@example
+@@source manualexamples/Compositions_regAssoc.ump
+@@endexample
+
+@@example
+@@source manualexamples/Compositions1.ump
+@@endexample
+
+@@example
+@@source manualexamples/Compositions1_eq1.ump
+@@endexample
+
+@@example
+@@source manualexamples/Compositions1_eq2.ump
+@@endexample
+
