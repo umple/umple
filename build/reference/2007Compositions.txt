@@ -36,6 +36,10 @@ The following two examples are equivalent to the Wheel-Vehicle example specified
 <p> See <b> Examples 3 and 4 </b>
 <p>
 
+<p>The following diagram is a representation of how the composition in the included examples is represented in UML, as generated in an editable class diagram by UmpleOnline.<p>
+
+<img src="examples/Compositions_VehicleWithWheel.png" alt="UML class diagrams for Vehicle composed with Wheel" />
+
 &nbsp;<br/>
 
 <p><b>Syntax</b><p><p> The syntax for compositions is the same as for regular associations, except for the arrow used.
@@ -44,6 +48,9 @@ In the class diagrams generated for compositions, the symbol is a filled-in diam
 
 &nbsp;<br/>
 
+@@syntax
+
+[[composition]] [[inlineComposition]]
 
 @@example
 @@source manualexamples/Compositions_regAssoc.ump
