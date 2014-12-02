@@ -40,6 +40,15 @@ public class DoActivityTest
     Assert.assertEquals(1, course.getCount());
     Assert.assertEquals(CourseV.Status.On, course.getStatus());
   }
+
+  @Test
+  public void autoTransitionSyncAfterMultipleDo() throws InterruptedException
+  {
+    TransitionActivitySync sync = new TransitionActivitySync();
+    Thread.sleep(1000);
+    Assert.assertEquals("[1, 2, 3]", sync.getList());
+    Assert.assertEquals(TransitionActivitySync.Status.On, sync.getStatus());
+  }
   
   @Test
   public void doActivityInNestedStateMachine() throws InterruptedException

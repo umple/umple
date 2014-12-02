@@ -271,6 +271,24 @@ class CourseVMultiDo {
 
 }
 
+class TransitionActivitySync{
+  String list = "";
+
+  status{
+    Off {
+      do
+      { 
+        Thread.sleep(500);
+        list += "2, ";
+      }
+      do { list += "[1, "; } -> On;
+    }
+    On{
+      do { list += "3]"; }
+    }
+  }
+}
+
 class CourseWMultiDo {
   String[] logs;
   

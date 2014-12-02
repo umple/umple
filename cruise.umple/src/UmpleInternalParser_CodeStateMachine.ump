@@ -1189,7 +1189,9 @@ class UmpleInternalParser
     Set<String> unguardedEvents = new HashSet<String>();
     List<Token> subStates = new ArrayList<Token>();
     boolean priorAutoTransitionExists = false;
+    String priorAutoTransitionState = null;
     List<Token> transitions = new ArrayList<Token>();
+    List<Token> activityTransform = new ArrayList<Token>();
     
     
     if(superStateEvents == null){
@@ -1205,7 +1207,20 @@ class UmpleInternalParser
       {
         transitions.add(subToken);  
       }
-      else if(subToken.is("autoTransition")){
+      else if(subToken.is("autoTransition") && subToken.getSubToken("guard") == null){
+        if(priorAutoTransitionExists)
+        {
+          if(subToken.getSubToken("activity") != null){
+            activityTransform.add(subToken);
+          }else{
+            ignoredTransitions.add(subToken);
+          }
+          if (!subToken.getValue("stateName").equals(priorAutoTransitionState)){
+            // Issue 657: Only display warning if auto-transitions go to different states
+            setFailedPosition(subToken.getPosition(), 69, subToken.getValue("stateName"), ""+subToken.getPosition().getLineNumber());
+          }
+        }
+        priorAutoTransitionState = subToken.getValue("stateName");
         priorAutoTransitionExists = true;
         superStateEvents.add(null);
       }
@@ -1251,10 +1266,23 @@ class UmpleInternalParser
       unguardedEventsAux.addAll(unguardedEvents);
       checkStateForDuplicateEvents(subState, unguardedEventsAux);
     }
+
+    for(Token autoTransition: activityTransform){
+      transformAutoTransitionToActivity(autoTransition);
+    }
     
     return;
 	}
 	//End Telmer
+
+  private void transformAutoTransitionToActivity(Token autoTransition){
+    if(autoTransition.getSubToken("activity") == null) return;
+    Token parent = autoTransition.getParentToken();
+    parent.removeSubToken(autoTransition);
+    
+    Token activity = autoTransition.getSubToken("activity").copy();
+    parent.addSubToken(activity);
+  }
 
   private Activity analyzeActivity(Token activityToken, State fromState)
   {

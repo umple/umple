@@ -204,6 +204,15 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
     assertUmpleTemplateFor("doActivityNoTransitions.ump",languagePath + "/doActivityNoTransitions."+ languagePath +".txt","LightFixture");
   }
+
+  @Test
+  public void doActivitiesWithAutoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+    Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+    f1.setAccessible(true);
+    f1.setInt(null, 1);
+    assertUmpleTemplateFor("doActivitiesWithAutoTransition.ump",languagePath + "/doActivitiesWithAutoTransition."+languagePath +".txt","LightFixture");
+  }
   
   @Test 
   public void exitAction()

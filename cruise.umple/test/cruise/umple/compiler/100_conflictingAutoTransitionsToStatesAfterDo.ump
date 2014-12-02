@@ -1,0 +1,10 @@
+class Test{
+  sm{
+    start{
+      do { System.out.println("Activity 1"); } -> s2;
+      do { System.out.println("Activity 2"); } -> s3;
+    }
+    s2{}
+    s3{}
+  }
+} 

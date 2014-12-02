@@ -1,0 +1,101 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  private static $BulbOn = 1;
+  private static $BulbOff = 2;
+  private $Bulb;
+
+  //LightFixture Do Activity Threads
+  private $doActivity0BulbOnThread = null;
+  private $doActivity1BulbOnThread = null;
+  private $doActivity0BulbOffThread = null;
+  private $doActivity1BulbOffThread = null;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setBulb(self::$BulbOn);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getBulbFullName()
+  {
+    $answer = $this->getBulb();
+    return $answer;
+  }
+
+  public function getBulb()
+  {
+    if ($this->Bulb == self::$BulbOn) { return "BulbOn"; }
+    elseif ($this->Bulb == self::$BulbOff) { return "BulbOff"; }
+    return null;
+  }
+
+  private function __autotransition1__()
+  {
+    $wasEventProcessed = false;
+    
+    $aBulb = $this->Bulb;
+    if ($aBulb == self::$BulbOn)
+    {
+      $this->setBulb(self::$BulbOff);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function __autotransition2__()
+  {
+    $wasEventProcessed = false;
+    
+    $aBulb = $this->Bulb;
+    if ($aBulb == self::$BulbOff)
+    {
+      $this->setBulb(self::$BulbOn);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setBulb($aBulb)
+  {
+    $this->Bulb = $aBulb;
+
+    // entry actions and do activities
+    if ($this->Bulb == self::$BulbOn)
+    {
+      onActivity1();
+      onActivity2();
+    }
+    elseif ($this->Bulb == self::$BulbOff)
+    {
+      offActivity1();
+      offActivity2();
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

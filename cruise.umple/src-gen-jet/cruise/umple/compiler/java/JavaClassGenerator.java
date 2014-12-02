@@ -9234,7 +9234,16 @@ if (p != null) {
     stringBuffer.append(TEXT_1938);
     stringBuffer.append( activity.getActivityCode() );
     stringBuffer.append(TEXT_1939);
-     if (postTransition != null) { append(stringBuffer, "\n      {0}();",postTransition); } 
+     if (postTransition != null)
+      { 
+        for (Activity a : state.getActivities())
+        {
+          if(a != activity){
+            append(stringBuffer, "\n      {0}.join();",gen.translate("doActivityThread",a));
+          }
+        }
+        append(stringBuffer, "\n      {0}();",postTransition); 
+      } 
     stringBuffer.append(TEXT_1940);
     
         }
@@ -9262,7 +9271,16 @@ if (p != null) {
     stringBuffer.append(TEXT_1943);
     stringBuffer.append( activity.getActivityCode() );
     stringBuffer.append(TEXT_1944);
-     if (postTransition != null) { append(stringBuffer, "\n      {0}();",postTransition); } 
+     if (postTransition != null)
+      { 
+        for (Activity a : state.getActivities())
+        {
+          if(a != activity){
+            append(stringBuffer, "\n      {0}.join();",gen.translate("doActivityThread",a));
+          }
+        }
+        append(stringBuffer, "\n      {0}();",postTransition); 
+      } 
     stringBuffer.append(TEXT_1945);
     
       }
