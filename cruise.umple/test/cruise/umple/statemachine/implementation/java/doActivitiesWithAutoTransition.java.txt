@@ -1,0 +1,210 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  enum Bulb { On, Off }
+  private Bulb bulb;
+
+  //LightFixture Do Activity Threads
+  Thread doActivity0BulbOnThread = null;
+  Thread doActivity1BulbOnThread = null;
+  Thread doActivity0BulbOffThread = null;
+  Thread doActivity1BulbOffThread = null;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public LightFixture()
+  {
+    setBulb(Bulb.On);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getBulbFullName()
+  {
+    String answer = bulb.toString();
+    return answer;
+  }
+
+  public Bulb getBulb()
+  {
+    return bulb;
+  }
+
+  private boolean __autotransition1__()
+  {
+    boolean wasEventProcessed = false;
+    
+    Bulb aBulb = bulb;
+    switch (aBulb)
+    {
+      case On:
+        exitBulb();
+        setBulb(Bulb.Off);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition2__()
+  {
+    boolean wasEventProcessed = false;
+    
+    Bulb aBulb = bulb;
+    switch (aBulb)
+    {
+      case Off:
+        exitBulb();
+        setBulb(Bulb.On);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitBulb()
+  {
+    switch(bulb)
+    {
+      case On:
+        if (doActivity0BulbOnThread != null) { doActivity0BulbOnThread.interrupt(); }
+        if (doActivity1BulbOnThread != null) { doActivity1BulbOnThread.interrupt(); }
+        break;
+      case Off:
+        if (doActivity0BulbOffThread != null) { doActivity0BulbOffThread.interrupt(); }
+        if (doActivity1BulbOffThread != null) { doActivity1BulbOffThread.interrupt(); }
+        break;
+    }
+  }
+
+  private void setBulb(Bulb aBulb)
+  {
+    bulb = aBulb;
+
+    // entry actions and do activities
+    switch(bulb)
+    {
+      case On:
+        doActivity0BulbOnThread = new DoActivityThread(this,"doActivity0BulbOn");
+        doActivity1BulbOnThread = new DoActivityThread(this,"doActivity1BulbOn");
+        break;
+      case Off:
+        doActivity0BulbOffThread = new DoActivityThread(this,"doActivity0BulbOff");
+        doActivity1BulbOffThread = new DoActivityThread(this,"doActivity1BulbOff");
+        break;
+    }
+  }
+
+  private void doActivity0BulbOn()
+  {
+    try
+    {
+      onActivity1();
+      Thread.sleep(1);
+      doActivity1BulbOnThread.join();
+      __autotransition1__();
+    }
+    catch (InterruptedException e)
+    {
+
+    }
+  }
+
+  private void doActivity1BulbOn()
+  {
+    try
+    {
+      onActivity2();
+      Thread.sleep(1);
+    }
+    catch (InterruptedException e)
+    {
+
+    }
+  }
+
+  private void doActivity0BulbOff()
+  {
+    try
+    {
+      offActivity1();
+      Thread.sleep(1);
+    }
+    catch (InterruptedException e)
+    {
+
+    }
+  }
+
+  private void doActivity1BulbOff()
+  {
+    try
+    {
+      offActivity2();
+      Thread.sleep(1);
+      doActivity0BulbOffThread.join();
+      __autotransition2__();
+    }
+    catch (InterruptedException e)
+    {
+
+    }
+  }
+
+  private static class DoActivityThread extends Thread
+  {
+    LightFixture controller;
+    String doActivityMethodName;
+    
+    public DoActivityThread(LightFixture aController,String aDoActivityMethodName)
+    {
+      controller = aController;
+      doActivityMethodName = aDoActivityMethodName;
+      start();
+    }
+    
+    public void run()
+    {
+      if ("doActivity0BulbOn".equals(doActivityMethodName))
+      {
+        controller.doActivity0BulbOn();
+      }
+        else if ("doActivity1BulbOn".equals(doActivityMethodName))
+      {
+        controller.doActivity1BulbOn();
+      }
+        else if ("doActivity0BulbOff".equals(doActivityMethodName))
+      {
+        controller.doActivity0BulbOff();
+      }
+        else if ("doActivity1BulbOff".equals(doActivityMethodName))
+      {
+        controller.doActivity1BulbOff();
+      }
+    }
+  }
+
+  public void delete()
+  {}
+
+}

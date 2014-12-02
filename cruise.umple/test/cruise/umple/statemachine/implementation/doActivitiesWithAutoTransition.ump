@@ -1,0 +1,14 @@
+namespace example;
+
+class LightFixture{
+	Bulb{
+		On{
+			do { onActivity1(); } -> Off;
+			do { onActivity2(); }
+		}
+		Off{
+			do { offActivity1(); }
+			do { offActivity2(); } -> On;
+		}
+	}
+}

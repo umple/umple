@@ -239,6 +239,21 @@ public class UmpleParserStateMachineTest
 	  assertHasWarning("100_unclearTransitionToStateNested.ump", 0, 66, new Position("100_unclearTransitionToStateNested.ump", 5, 7, 44));
   }
   
+  // Multiple auto-transitions to different states 
+  @Test
+  public void conflictingAutoTransitionsToStates(){
+    assertHasWarning("100_conflictingAutoTransitionsToStates.ump", 0, 69, new Position("100_conflictingAutoTransitionsToStates.ump", 5, 6, 48));
+  }
+
+  @Test
+  public void conflictingAutoTransitionsToStatesNested(){
+    assertHasWarning("100_conflictingAutoTransitionsToStatesNested.ump", 0, 69, new Position("100_conflictingAutoTransitionsToStatesNested.ump", 6, 8, 62));
+  }
+
+  @Test
+  public void conflictingAutoTransitionsToStatesAfterDo(){
+    assertHasWarning("100_conflictingAutoTransitionsToStatesAfterDo.ump", 0, 69, new Position("100_conflictingAutoTransitionsToStatesAfterDo.ump", 5, 6, 89));
+  }
 
   @Test
   public void historyStatePlacement(){
@@ -1219,7 +1234,7 @@ public class UmpleParserStateMachineTest
     
     assertNoWarnings("485_duplicateEventsNoGuards2.ump");
     
-    assertHasWarning("485_duplicateEventsNoGuards3.ump", 0, 54, new Position("485_duplicateEventsNoGuards3.ump",4,8,34));
+    assertHasWarning("485_duplicateEventsNoGuards3.ump", 0, 69, new Position("485_duplicateEventsNoGuards3.ump",6,6,62));
     
     assertNoWarnings("485_duplicateEventsNoGuardsTimed.ump");
   }
