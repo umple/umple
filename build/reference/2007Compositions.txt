@@ -50,7 +50,7 @@ In the class diagrams generated for compositions, the symbol is a filled-in diam
 
 @@syntax
 
-[[composition]] [[inlineComposition]]
+[[association]] [[inlineAssociation]]
 
 @@example
 @@source manualexamples/Compositions_regAssoc.ump
