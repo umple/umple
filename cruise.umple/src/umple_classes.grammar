@@ -59,12 +59,8 @@ parameter : [[typedName]]
 // Details of associations: See manual page [*AssociationDefinition*]
 
 association : [=modifier:immutable]?  [[associationEnd]] [=arrow:--|->|<-|><|<@>-|-<@>] [[associationEnd]] ;
-// note how compositions are included as a subcase of associations
-composition : [=modifier:immutable]?  [[associationEnd]] [=arrow:<@>-|-<@>] [[associationEnd]] ;
 symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;
 inlineAssociation : [=modifier:immutable]? [[inlineAssociationEnd]] [=arrow:--|->|<-|><|<@>-|-<@>] [[associationEnd]] ;
-// note how inline compositions are included as a subcase of inline associations
-inlineComposition : [=modifier:immutable]? [[inlineAssociationEnd]] [=arrow:<@>-|-<@>] [[associationEnd]] ;
 inlineAssociationEnd : [[multiplicity]] [~roleName]? [[isSorted]]?
 singleAssociationEnd : [[multiplicity]] [type] [~roleName]? ;
 // note: gpIdentifier = general parameter identifier
