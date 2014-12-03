@@ -54,7 +54,43 @@
          <enablement></enablement>
       </consolePatternMatchListener>
    </extension>
-   
+  <!--   
+  This extension point is for the Papyrus Generator. It is currently
+  commented out since the Papyrus Generation code is not fully complete.
+  To enable it, simpy uncomment and remove this explanation.
+  Of note:
+  - The <enablement> tag specifies that the menu/button is greyed out
+    when Papyrus is not installed
+    
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="cruise.umple.ui.eclipse.UmpleAction.Papyrus"
+            label="Umple Papyrus Tools"
+            visible="false">
+         <menu
+               id="UmpleMenu"
+               label="Umple &amp;Menu">
+            <separator
+                  name="UmpleGroup">
+            </separator>
+         </menu>
+         <action
+               class="cruise.umple.ui.eclipse.UmpleAction"
+               icon="$nl$/icons/umpleDocument.gif"
+               id="GeneratePapyrus"
+               label="&amp;Generate A Papyrus Diagram"
+               menubarPath="UmpleMenu/UmpleGroup"
+               toolbarPath="cruise.umple.ui.eclipse.UmpleAction/UmpleGroup"
+               tooltip="Generate A Papyrus Diagram">
+               <enablement> 
+                  <pluginState id="org.eclipse.papyrus.uml.diagram.common" value="installed"/> 
+               </enablement> 
+         </action>
+      </actionSet>
+   </extension>
+    -->
    <!--
   
    The Wizard shows a "sample" Airline, but UmpleOnline provides a sufficient intro,

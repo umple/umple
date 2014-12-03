@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+import org.eclipse.core.internal.runtime.InternalPlatform;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
@@ -91,7 +94,15 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
         UmpleFile file = new UmpleFile(fullPath.substring(0, fullPath.lastIndexOf(fileName, fullPath.length() - 1)), fileName);
         model = new UmpleModel(file);
         try{
+          
+    	  if("GeneratePapyrus".equals(action.getId())) {
+    		  model.addGenerate("Papyrus");
+    	  }
+          
           model.run();
+          
+          // Refresh the project so our generated files appear automatically
+          fName.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
         }
         catch (Exception e1)
         {
