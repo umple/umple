@@ -14,503 +14,422 @@ class UmpleToUmpleGenerator
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.*;
 
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  
-  String outputAllCode = "";
-  String outputModelCode = "";
-  String outputExtraCode = "";
-  
-  public void generate() {
-    this.setOutputAllCode(generateAllUmpleCode());
-  	this.setOutputModelCode(generateUmpleModelCode());
- 	this.setOutputExtraCode(generateUmpleExtraCode());
-  }
+public String getUmpleClassAllCode(UmpleClass uClass){
+		StringBuilder code = new StringBuilder();
+		ArrayList<Association> externalAssociations = new ArrayList<Association>();
 
-  private String generateAllUmpleCode()
-  {
-    CodeGenerator internalGen = generateBasedOn();
-    // internalGen.prepare();
-    StringBuilder code = new StringBuilder();
-    ArrayList<Association> externalAssociations = new ArrayList<Association>();
+		code.append(StringFormatter.format("namespace {0};\n", uClass.getNamespace(0)));  
+		code.append(StringFormatter.format("\nclass {0}\n{\n", uClass.getName()));
 
-    for (UmpleClass uClass : model.getUmpleClasses())
-    {
-      if (uClass.hasNamespaces()) {
-         model.setDefaultNamespace( uClass.getNamespace(0));
-      }
-      for (String aNamespace: uClass.getNamespaces())
-      {
-        code.append(StringFormatter.format("namespace {0};\n", aNamespace));   
-      }
-      code.append(StringFormatter.format("\nclass {0}\n{\n", uClass.getName()));
-	  
-	  String  implementedInterfaces="";
-      for (UmpleInterface uInterface : uClass.getParentInterface())
-      {
-         implementedInterfaces += uInterface.getName() + "," ; 
-      }
-      if (!implementedInterfaces.equals(""))
-      {
-          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
-          code.append(StringFormatter.format("  isA {0};\n", implementedInterfaces));    	  
-      }
+		String  implementedInterfaces="";
+		for (UmpleInterface uInterface : uClass.getParentInterface())
+		{
+			implementedInterfaces += uInterface.getName() + "," ; 
+		}
+		if (!implementedInterfaces.equals(""))
+		{
+			implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
+			code.append(StringFormatter.format("  isA {0};\n", implementedInterfaces));    	  
+		}
 
-      if (uClass.getExtendsClass() != null)
-      {
-        code.append(StringFormatter.format("  isA {0};\n", uClass.getExtendsClass().getName()));
-      }
+		if (uClass.getExtendsClass() != null)
+		{
+			code.append(StringFormatter.format("  isA {0};\n", uClass.getExtendsClass().getName()));
+		}
 
-      for (Depend aDepend : uClass.getDepends())
-      {
-    	 code.append(StringFormatter.format(" depend {0};\n", aDepend.getName()));   
-      }
+		for (Depend aDepend : uClass.getDepends())
+		{
+			code.append(StringFormatter.format(" depend {0};\n", aDepend.getName()));   
+		}
 
-      for (Attribute av : uClass.getAttributes())
-      {
-        String typeName = av.getType() == null ? "String" : av.getType();
-        String attrName = av.getIsList() ? getModel().getGlossary().getPlural(av.getName()) : getModel().getGlossary().getSingular(av.getName());
+		for (Attribute av : uClass.getAttributes())
+		{
+			String typeName = av.getType() == null ? "String" : av.getType();
+			String attrName = av.getName();
+			code.append(" ");
+			if (av.isIsLazy())
+			{
+				code.append(" lazy");
+			}
+			if (!av.getModifier().equals("settable"))
+			{
+				code.append(StringFormatter.format(" {0}", av.getModifier()));
+			}
+			if (av.isIsAutounique())
+			{
+				code.append(" autounique");
+			}
+			else if (!typeName.equals("String") || av.isImmutable() || av.isIsLazy())
+			{
+				code.append(StringFormatter.format(" {0}", typeName));
+			}
+			code.append(StringFormatter.format(" {0}", attrName));
 
-        code.append(" ");
-        if (av.isIsLazy())
-        {
-          code.append(" lazy");
-        }
-        if (!av.getModifier().equals("settable"))
-        {
-          code.append(StringFormatter.format(" {0}", av.getModifier()));
-        }
-        if (av.isIsAutounique())
-        {
-          code.append(" autounique");
-        }
-        else if (!typeName.equals("String") || av.isImmutable() || av.isIsLazy())
-        {
-          code.append(StringFormatter.format(" {0}", typeName));
-        }
-        code.append(StringFormatter.format(" {0}", attrName));
+			if (av.getValue() != null)
+			{
+				code.append(StringFormatter.format(" = {0}", av.getValue()));
+			}
 
-        if (av.getValue() != null)
-        {
-          code.append(StringFormatter.format(" = {0}", av.getValue()));
-        }
+			code.append(";\n");
 
-        code.append(";\n");
-      }
+			for (Association as : uClass.getAssociations())
+			{
+				AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
+				AssociationEnd theirEnd = as.getIsRightNavigable() ? as.getEnd(1) : as.getEnd(0);
 
-      for (Association as : uClass.getAssociations())
-      {
-        AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
-        AssociationEnd theirEnd = as.getIsRightNavigable() ? as.getEnd(1) : as.getEnd(0);
+				if (!myEnd.getClassName().equals(uClass.getName()))
+				{
+					continue;
+				}
+				if (as.isNamed())
+				{
+					externalAssociations.add(as);
+					continue;
+				}
+				code.append(StringFormatter.format("  {0} {1} -- {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
+			}
 
-        if (!myEnd.getClassName().equals(uClass.getName()))
-        {
-          continue;
-        }
-        if (as.isNamed())
-        {
-          externalAssociations.add(as);
-          continue;
-        }
-        code.append(StringFormatter.format("  {0} {1} -- {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
-      }
+			for (CodeInjection ci : uClass.getCodeInjections())
+			{
+				code.append(StringFormatter.format("  {0} {1} { {2} }\n", ci.getType(), ci.getOperation(), ci.getCode()));
+			}
 
-      for (CodeInjection ci : uClass.getCodeInjections())
-      {
-        code.append(StringFormatter.format("  {0} {1} { {2} }\n", ci.getType(), ci.getOperation(), ci.getCode()));
-      }
+			for (StateMachine sm : uClass.getStateMachines())
+			{
+				generateStateMachine(sm, 1, code);
+			}
 
-      for (StateMachine sm : uClass.getStateMachines())
-      {
-        generateStateMachine(sm, 1, code);
-      }
+			for (Method m : uClass.getMethods())
+			{
+				generateMethod(m, code);
+			}
 
-      for (Method m : uClass.getMethods())
-      {
-        generateMethod(m, code);
-      }
-	  
-	  if (uClass.getExtraCode() != null)
-      {
-        code.append(uClass.getExtraCode());
-      }
-      code.append("}\n");
-    }
+			if (uClass.getExtraCode() != null)
+			{
+				code.append(uClass.getExtraCode());
+			}
+			code.append("}\n");
+	}
 
-    for (Association as : externalAssociations)
-    {
-      AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
-      AssociationEnd theirEnd = as.getIsRightNavigable() ? as.getEnd(1) : as.getEnd(0);
+		for (Association as : externalAssociations)
+		{
+			AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
+			AssociationEnd theirEnd = as.getIsRightNavigable() ? as.getEnd(1) : as.getEnd(0);
 
-      code.append(StringFormatter.format("\nassociation {0}\n{\n", as.getName()));
-      code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), myEnd.getClassName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
-      code.append("}");
-    }
-    
-    for (UmpleInterface uInterface : model.getUmpleInterfaces())
-    {
-        generateInterface(uInterface, code);
-    }
-    
-    for (CodeBlock codeBlock : model.getExtraCodes())
-    {
-        generateTopExtraCode(codeBlock, code);
-    }
-   
-    model.setCode(code.toString());
-    internalGen.postpare();
-    return code.toString();
-  }
-  
-   // Algorithmitic code (extra code)
-   private String generateUmpleExtraCode(){
-    CodeGenerator internalGen = generateBasedOn();
-    StringBuilder code = new StringBuilder();
+			code.append(StringFormatter.format("\nassociation {0}\n{\n", as.getName()));
+			code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), myEnd.getClassName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
+			code.append("}");
+		}
+		return code.toString();
+	}
 
-    for (UmpleClass uClass : model.getUmpleClasses())
-    {
-      if (uClass.hasNamespaces()) {
-         model.setDefaultNamespace( uClass.getNamespace(0));
-      }
-      for (String aNamespace: uClass.getNamespaces())
-      {
-        code.append(StringFormatter.format("namespace {0};\n", aNamespace));   
-      }
-      code.append(StringFormatter.format("\nclass {0}\n{\n", uClass.getName()));
-	    
-	  if (uClass.getExtraCode() != null)
-      {
-        code.append(uClass.getExtraCode());
-      }
-      code.append("}\n");
-    }
 
-    model.setCode(code.toString());
-    internalGen.postpare();
-    return code.toString();
-   }
-   
-   // Umple Model code only
-   private String generateUmpleModelCode(){
-   CodeGenerator internalGen = generateBasedOn();
-    // internalGen.prepare();
-    StringBuilder code = new StringBuilder();
-    ArrayList<Association> externalAssociations = new ArrayList<Association>();
+	/**
+	 * Algorithmitic code (extra code)
+	 */
+	// line 140 "../../../../src/Generator_CodeUmple.ump"
+	public String getUmpleClassExtraCode(UmpleClass uClass){
+		StringBuilder code = new StringBuilder();
 
-    for (UmpleClass uClass : model.getUmpleClasses())
-    {
-      if (uClass.hasNamespaces()) {
-         model.setDefaultNamespace( uClass.getNamespace(0));
-      }
-      for (String aNamespace: uClass.getNamespaces())
-      {
-        code.append(StringFormatter.format("namespace {0};\n", aNamespace));   
-      }
-      code.append(StringFormatter.format("\nclass {0}\n{\n", uClass.getName()));
-	  
-	  String  implementedInterfaces="";
-      for (UmpleInterface uInterface : uClass.getParentInterface())
-      {
-         implementedInterfaces += uInterface.getName() + "," ; 
-      }
-      if (!implementedInterfaces.equals(""))
-      {
-          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
-          code.append(StringFormatter.format("  isA {0};\n", implementedInterfaces));    	  
-      }
+		code.append(StringFormatter.format("namespace {0};\n", uClass.getNamespace(0)));  
+		code.append(StringFormatter.format("\nclass {0}\n{\n", uClass.getName()));
 
-      if (uClass.getExtendsClass() != null)
-      {
-        code.append(StringFormatter.format("  isA {0};\n", uClass.getExtendsClass().getName()));
-      }
+		if (uClass.getExtraCode() != null)
+		{
+			code.append(uClass.getExtraCode());
+		}
+		code.append("}\n");
+		return code.toString();
+	}
 
-      for (Depend aDepend : uClass.getDepends())
-      {
-    	 code.append(StringFormatter.format(" depend {0};\n", aDepend.getName()));   
-      }
 
-      for (Attribute av : uClass.getAttributes())
-      {
-        String typeName = av.getType() == null ? "String" : av.getType();
-        String attrName = av.getIsList() ? getModel().getGlossary().getPlural(av.getName()) : getModel().getGlossary().getSingular(av.getName());
+	/**
+	 * Umple Model code only
+	 */
+	// line 163 "../../../../src/Generator_CodeUmple.ump"
+	public String getUmpleClassModelCode(UmpleClass uClass){
+		// internalGen.prepare();
+		StringBuilder code = new StringBuilder();
+		ArrayList<Association> externalAssociations = new ArrayList<Association>();
 
-        code.append(" ");
-        if (av.isIsLazy())
-        {
-          code.append(" lazy");
-        }
-        if (!av.getModifier().equals("settable"))
-        {
-          code.append(StringFormatter.format(" {0}", av.getModifier()));
-        }
-        if (av.isIsAutounique())
-        {
-          code.append(" autounique");
-        }
-        else if (!typeName.equals("String") || av.isImmutable() || av.isIsLazy())
-        {
-          code.append(StringFormatter.format(" {0}", typeName));
-        }
-        code.append(StringFormatter.format(" {0}", attrName));
+		code.append(StringFormatter.format("namespace {0};\n", uClass.getNamespace(0)));  
+		code.append(StringFormatter.format("\nclass {0}\n{\n", uClass.getName()));
 
-        if (av.getValue() != null)
-        {
-          code.append(StringFormatter.format(" = {0}", av.getValue()));
-        }
+		String  implementedInterfaces="";
+		for (UmpleInterface uInterface : uClass.getParentInterface())
+		{
+			implementedInterfaces += uInterface.getName() + "," ; 
+		}
+		if (!implementedInterfaces.equals(""))
+		{
+			implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
+			code.append(StringFormatter.format("  isA {0};\n", implementedInterfaces));    	  
+		}
 
-        code.append(";\n");
-      }
+		if (uClass.getExtendsClass() != null)
+		{
+			code.append(StringFormatter.format("  isA {0};\n", uClass.getExtendsClass().getName()));
+		}
 
-      for (Association as : uClass.getAssociations())
-      {
-        AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
-        AssociationEnd theirEnd = as.getIsRightNavigable() ? as.getEnd(1) : as.getEnd(0);
+		for (Depend aDepend : uClass.getDepends())
+		{
+			code.append(StringFormatter.format(" depend {0};\n", aDepend.getName()));   
+		}
 
-        if (!myEnd.getClassName().equals(uClass.getName()))
-        {
-          continue;
-        }
-        if (as.isNamed())
-        {
-          externalAssociations.add(as);
-          continue;
-        }
-        code.append(StringFormatter.format("  {0} {1} -- {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
-      }
+		for (Attribute av : uClass.getAttributes())
+		{
+			String typeName = av.getType() == null ? "String" : av.getType();
+			String attrName = av.getName();
 
-      for (CodeInjection ci : uClass.getCodeInjections())
-      {
-        code.append(StringFormatter.format("  {0} {1} { {2} }\n", ci.getType(), ci.getOperation(), ci.getCode()));
-      }
+			code.append(" ");
+			if (av.isIsLazy())
+			{
+				code.append(" lazy");
+			}
+			if (!av.getModifier().equals("settable"))
+			{
+				code.append(StringFormatter.format(" {0}", av.getModifier()));
+			}
+			if (av.isIsAutounique())
+			{
+				code.append(" autounique");
+			}
+			else if (!typeName.equals("String") || av.isImmutable() || av.isIsLazy())
+			{
+				code.append(StringFormatter.format(" {0}", typeName));
+			}
+			code.append(StringFormatter.format(" {0}", attrName));
 
-      for (StateMachine sm : uClass.getStateMachines())
-      {
-        generateStateMachine(sm, 1, code);
-      }
+			if (av.getValue() != null)
+			{
+				code.append(StringFormatter.format(" = {0}", av.getValue()));
+			}
 
-      for (Method m : uClass.getMethods())
-      {
-        generateMethod(m, code);
-      }
-	  
-      code.append("}\n");
-    }
+			code.append(";\n");
+		}
 
-    for (Association as : externalAssociations)
-    {
-      AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
-      AssociationEnd theirEnd = as.getIsRightNavigable() ? as.getEnd(1) : as.getEnd(0);
+		for (Association as : uClass.getAssociations())
+		{
+			AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
+			AssociationEnd theirEnd = as.getIsRightNavigable() ? as.getEnd(1) : as.getEnd(0);
 
-      code.append(StringFormatter.format("\nassociation {0}\n{\n", as.getName()));
-      code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), myEnd.getClassName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
-      code.append("}");
-    }
-    
-    for (UmpleInterface uInterface : model.getUmpleInterfaces())
-    {
-        generateInterface(uInterface, code);
-    }
-    
-    for (CodeBlock codeBlock : model.getExtraCodes())
-    {
-        generateTopExtraCode(codeBlock, code);
-    }
-   
-    model.setCode(code.toString());
-    internalGen.postpare();
-    return code.toString();
-   }
-   
-   private void generateTopExtraCode(CodeBlock codeBlock, StringBuilder code){
-	   code.append(StringFormatter.format("\ntop {0}\n{\n", codeBlock.getName()));
-	   if (codeBlock.getCode() != null)
-	   {
-		   code.append(codeBlock.getCode());
-	   }
-	   code.append("}");
-   }
-  
-   private void generateInterface(UmpleInterface uInterface, StringBuilder code){
-       if (uInterface.hasNamespaces()) {
-         model.setDefaultNamespace( uInterface.getNamespace(0));
-	     code.append(StringFormatter.format("namespace {0};\n",  uInterface.getNamespace(0)));   
-       }  
-	   code.append(StringFormatter.format("\ninterface {0}\n{\n", uInterface.getName()));
-	   String  extendedInterfaces="";
-	   for (UmpleInterface extendedInterface : uInterface.getExtendsInterface())
-	   {
-		   extendedInterfaces += extendedInterface.getName() + "," ; 
-	   }
-	   if (!extendedInterfaces.equals(""))
-	   {
-		   extendedInterfaces = extendedInterfaces.substring(0, extendedInterfaces.length()-1); 
-		   code.append(StringFormatter.format("  isA {0};\n", extendedInterfaces));    	  
-	   }
-	   for (Depend aDepend : uInterface.getDepends())
-	   {
-		   code.append(StringFormatter.format(" depend {0};\n", aDepend.getName()));   
-	   }
-	   if (uInterface.getExtraCode() != null)
-	   {
-		   code.append(uInterface.getExtraCode());
-	   }
-	   code.append("}"); 
-   }
-   
-   
-  private void generateMethod(Method m, StringBuilder code)
-  {
-    code.append(StringFormatter.format("\n  {0} {1} {2}", m.getModifier().trim(), m.getType(), m.getName()));
-    generateParams(m.getMethodParameters(), code, false);
-    code.append(" {\n");
-    String body = m.getMethodBody().getCodeblock().toString();
-    if (body.length() > 0) { code.append("\n"); }
-    code.append(body);
-    if (body.length() > 0) { code.append("\n"); }
-    code.append("  }\n");
-  }
+			if (!myEnd.getClassName().equals(uClass.getName()))
+			{
+				continue;
+			}
+			if (as.isNamed())
+			{
+				externalAssociations.add(as);
+				continue;
+			}
+			code.append(StringFormatter.format("  {0} {1} -- {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
+		}
 
-  private void generateParams(List<MethodParameter> allParams, StringBuilder code, boolean ignoreIfDone)
-  {
-    if (allParams.size() == 0)
-    {
-      if (!ignoreIfDone) { code.append("()"); }
-    }
-    else
-    {
-      code.append("(");
-      boolean isFirst = true;
-      for (MethodParameter p : allParams)
-      {
-        if (!isFirst)
-        {
-          code.append(", ");
-        }
-        code.append(StringFormatter.format("{0} {1}", p.getType(), p.getName()));
-        isFirst = false;
-      }
-      code.append(")");
-    }
-  }
+		for (CodeInjection ci : uClass.getCodeInjections())
+		{
+			code.append(StringFormatter.format("  {0} {1} { {2} }\n", ci.getType(), ci.getOperation(), ci.getCode()));
+		}
 
-  private void generateStateMachine(StateMachine sm, int level, StringBuilder code)
-  {
-    String baseSpace = spacer(level * 2 + (level - 1) * 2);
-    code.append(StringFormatter.format("{1}{0} {\n", name(sm), baseSpace));
-    boolean isFirst;
-    boolean hasConsumedActivity;
-    for (State state : sm.getStates())
-    {
-      code.append(StringFormatter.format("{1}  {0} {", state.getName(), baseSpace));
-      isFirst = true;
-      hasConsumedActivity = false;
-      for (Action a : state.getActions())
-      {
-        if (isFirst)
-        {
-          code.append("\n");
-        }
-        code.append(StringFormatter.format("{0}    ", baseSpace));
-        code.append(StringFormatter.format("{0} / { {1} }\n", a.getActionType(), a.getActionCode()));
-        isFirst = false;
-      }
+		for (StateMachine sm : uClass.getStateMachines())
+		{
+			generateStateMachine(sm, 1, code);
+		}
 
-      for (Transition t : state.getTransitions())
-      {
-        if (isFirst)
-        {
-          code.append("\n");
-        }
-        code.append(StringFormatter.format("{0}    ", baseSpace));
-        if (t.getGuard() != null)
-        {
-          JavaGenerator gen = new JavaGenerator();
-          gen.setModel(sm.getUmpleClass().getSourceModel());
-          code.append(StringFormatter.format("[{0}] ", t.getGuard().getCondition(gen)));
-        }
-        
-        Event event = t.getEvent();
-        
-        if (event.isAutoTransition() && state.hasActivities())
-        {
-          hasConsumedActivity = true;
-          for (Activity activity : state.getActivities())
-          {
-            code.append(StringFormatter.format("do { {0} }", activity.getCodeblock().toString()));
-          }
-        }
-        else if (!event.isAutoTransition())
-        {
-          code.append(StringFormatter.format("{0}", t.getEvent().getName()));
-        }
-        generateParams(t.getEvent().getParams(), code, true);
-        code.append(" -> ");
-        if (t.getAction() != null)
-        {
-          code.append(StringFormatter.format("/ { {0} } ", t.getAction().getCodeblock().toString()));
-        }
-        code.append(StringFormatter.format("{0};", t.getNextState().getName()));
-        code.append("\n");
-        isFirst = false;
-      }
-      
-      for (StateMachine subSm : state.getNestedStateMachines())
-      {
-        generateStateMachine(subSm, level+1, code);
-      }
+		for (Method m : uClass.getMethods())
+		{
+			generateMethod(m, code);
+		}
 
-      for (Activity activity : state.getActivities())
-      { 
-        if (activity != null && !hasConsumedActivity)
-        {
-          if (isFirst)
-          {
-            code.append("\n");
-          }
-          code.append(StringFormatter.format("{0}    ", baseSpace));
-          code.append(StringFormatter.format("do { {0} };\n", activity.getCodeblock().toString()));
-          isFirst = false;
-        }
-      }
+		code.append("}\n");
 
-      code.append(StringFormatter.format("{0}  }\n", baseSpace));
-    }
+		for (Association as : externalAssociations)
+		{
+			AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
+			AssociationEnd theirEnd = as.getIsRightNavigable() ? as.getEnd(1) : as.getEnd(0);
 
-    code.append(StringFormatter.format("{0}}\n", baseSpace));
-  }
+			code.append(StringFormatter.format("\nassociation {0}\n{\n", as.getName()));
+			code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), myEnd.getClassName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
+			code.append("}");
+		}
 
-  private String name(StateMachine sm)
-  {
-    String input = sm.getFullName();
-    return input.substring(0, 1).toUpperCase() + input.substring(1);
-  }
+		return code.toString();
+	}
 
-  private String spacer(int num)
-  {
-    StringBuilder space = new StringBuilder();
-    for (int i = 0; i < num; i++)
-    {
-      space.append(" ");
-    }
-    return space.toString();
-  }
+	// line 279 "../../../../src/Generator_CodeUmple.ump"
+	public void generateTopExtraCode(CodeBlock codeBlock){
+		StringBuilder code = new StringBuilder();
+		code.append(StringFormatter.format("\ntop {0}\n{\n", codeBlock.getName()));
+		if (codeBlock.getCode() != null)
+		{
+			code.append(codeBlock.getCode());
+		}
+		code.append("}");
+	}
 
-  private CodeGenerator generateBasedOn()
-  {
-    String targetLanguage = "Java";
-    for (GenerateTarget target : model.getGenerates())
-    {
-      if (target.getLanguage().equals("UmpleSelf"))
-      {
-        continue;
-      }
-      targetLanguage = target.getLanguage();
-      break;
-    }
-    return model.newGenerator(targetLanguage);
-  }
+	// line 289 "../../../../src/Generator_CodeUmple.ump"
+	public String getUmpleInterfaceAllCode(UmpleInterface uInterface){
+		StringBuilder code = new StringBuilder();
+		if (uInterface.hasNamespaces()) {
+			code.append(StringFormatter.format("namespace {0};\n",  uInterface.getNamespace(0)));   
+		}  
+		code.append(StringFormatter.format("\ninterface {0}\n{\n", uInterface.getName()));
+		String  extendedInterfaces="";
+		for (UmpleInterface extendedInterface : uInterface.getExtendsInterface())
+		{
+			extendedInterfaces += extendedInterface.getName() + "," ; 
+		}
+		if (!extendedInterfaces.equals(""))
+		{
+			extendedInterfaces = extendedInterfaces.substring(0, extendedInterfaces.length()-1); 
+			code.append(StringFormatter.format("  isA {0};\n", extendedInterfaces));    	  
+		}
+		for (Depend aDepend : uInterface.getDepends())
+		{
+			code.append(StringFormatter.format(" depend {0};\n", aDepend.getName()));   
+		}
+		if (uInterface.getExtraCode() != null)
+		{
+			code.append(uInterface.getExtraCode());
+		}
+		code.append("}");
+		return  code.toString();
+	}
+
+	// line 319 "../../../../src/Generator_CodeUmple.ump"
+	private void generateMethod(Method m, StringBuilder code){
+		code.append(StringFormatter.format("\n  {0} {1} {2}", m.getModifier().trim(), m.getType(), m.getName()));
+		generateParams(m.getMethodParameters(), code, false);
+		code.append(" {\n");
+		String body = m.getMethodBody().getCodeblock().toString();
+		if (body.length() > 0) { code.append("\n"); }
+		code.append(body);
+		if (body.length() > 0) { code.append("\n"); }
+		code.append("  }\n");
+	}
+
+	// line 331 "../../../../src/Generator_CodeUmple.ump"
+	private void generateParams(List<MethodParameter> allParams, StringBuilder code, boolean ignoreIfDone){
+		if (allParams.size() == 0)
+		{
+			if (!ignoreIfDone) { code.append("()"); }
+		}
+		else
+		{
+			code.append("(");
+			boolean isFirst = true;
+			for (MethodParameter p : allParams)
+			{
+				if (!isFirst)
+				{
+					code.append(", ");
+				}
+				code.append(StringFormatter.format("{0} {1}", p.getType(), p.getName()));
+				isFirst = false;
+			}
+			code.append(")");
+		}
+	}
+
+	// line 354 "../../../../src/Generator_CodeUmple.ump"
+	private void generateStateMachine(StateMachine sm, int level, StringBuilder code){
+		String baseSpace = spacer(level * 2 + (level - 1) * 2);
+		code.append(StringFormatter.format("{1}{0} {\n", name(sm), baseSpace));
+		boolean isFirst;
+		boolean hasConsumedActivity;
+		for (State state : sm.getStates())
+		{
+			code.append(StringFormatter.format("{1}  {0} {", state.getName(), baseSpace));
+			isFirst = true;
+			hasConsumedActivity = false;
+			for (Action a : state.getActions())
+			{
+				if (isFirst)
+				{
+					code.append("\n");
+				}
+				code.append(StringFormatter.format("{0}    ", baseSpace));
+				code.append(StringFormatter.format("{0} / { {1} }\n", a.getActionType(), a.getActionCode()));
+				isFirst = false;
+			}
+
+			for (Transition t : state.getTransitions())
+			{
+				if (isFirst)
+				{
+					code.append("\n");
+				}
+				code.append(StringFormatter.format("{0}    ", baseSpace));
+				if (t.getGuard() != null)
+				{
+					JavaGenerator gen = new JavaGenerator();
+					gen.setModel(sm.getUmpleClass().getSourceModel());
+					code.append(StringFormatter.format("[{0}] ", t.getGuard().getCondition(gen)));
+				}
+
+				Event event = t.getEvent();
+
+				if (event.isAutoTransition() && state.hasActivities())
+				{
+					hasConsumedActivity = true;
+					for (Activity activity : state.getActivities())
+					{
+						code.append(StringFormatter.format("do { {0} }", activity.getCodeblock().toString()));
+					}
+				}
+				else if (!event.isAutoTransition())
+				{
+					code.append(StringFormatter.format("{0}", t.getEvent().getName()));
+				}
+				generateParams(t.getEvent().getParams(), code, true);
+				code.append(" -> ");
+				if (t.getAction() != null)
+				{
+					code.append(StringFormatter.format("/ { {0} } ", t.getAction().getCodeblock().toString()));
+				}
+				code.append(StringFormatter.format("{0};", t.getNextState().getName()));
+				code.append("\n");
+				isFirst = false;
+			}
+
+			for (StateMachine subSm : state.getNestedStateMachines())
+			{
+				generateStateMachine(subSm, level+1, code);
+			}
+
+			for (Activity activity : state.getActivities())
+			{ 
+				if (activity != null && !hasConsumedActivity)
+				{
+					if (isFirst)
+					{
+						code.append("\n");
+					}
+					code.append(StringFormatter.format("{0}    ", baseSpace));
+					code.append(StringFormatter.format("do { {0} };\n", activity.getCodeblock().toString()));
+					isFirst = false;
+				}
+			}
+
+			code.append(StringFormatter.format("{0}  }\n", baseSpace));
+		}
+
+		code.append(StringFormatter.format("{0}}\n", baseSpace));
+	}
+
+	// line 440 "../../../../src/Generator_CodeUmple.ump"
+	private String name(StateMachine sm){
+		String input = sm.getFullName();
+		return input.substring(0, 1).toUpperCase() + input.substring(1);
+	}
+
+	// line 446 "../../../../src/Generator_CodeUmple.ump"
+	private String spacer(int num){
+		StringBuilder space = new StringBuilder();
+		for (int i = 0; i < num; i++)
+		{
+			space.append(" ");
+		}
+		return space.toString();
+	}
 
 }
-
-
