@@ -1,0 +1,6 @@
+generate GvEntityRelationshipDiagram;
+namespace example;
+
+class Course {
+   * self  isMutuallyExclusiveWith;
+}

@@ -1,0 +1,31 @@
+digraph "NormalEntity" {
+  size="80,10"
+  rankdir="BT"
+  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+
+  // Class: X
+  "X" [shape=rectangle, label="   X   ",
+   tooltip="class X
+"];
+
+  // Attributes for X
+  "aX" [shape=ellipse, label="   a\ :\ String   ", tooltip="String a&#13;"];
+  "X" -> "aX" [arrowhead="none"];
+
+  "dateX" [shape=ellipse, peripheries=2, label="   date\ :\ Date[]   ", tooltip="Date[] date&#13;"];
+  "X" -> "dateX" [arrowhead="none"];
+
+  "timeX" [shape=ellipse, label="   time\ :\ Time   ", tooltip="Time time&#13;"];
+  "X" -> "timeX" [arrowhead="none"];
+
+  "xX" [shape=ellipse, label="   x\ :\ Float   ", tooltip="Float x&#13;"];
+  "X" -> "xX" [arrowhead="none"];
+
+  "yX" [shape=ellipse, label="   y\ :\ Float   ", tooltip="Float y&#13;"];
+  "X" -> "yX" [arrowhead="none"];
+
+  "sumX" [shape=ellipse, style=dashed, label="   sum\ :\ Float   ", tooltip="Float sum&#13;"];
+  "X" -> "sumX" [arrowhead="none"];
+
+  // All associations
+}

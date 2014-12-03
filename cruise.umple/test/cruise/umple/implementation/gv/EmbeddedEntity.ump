@@ -1,0 +1,12 @@
+generate GvEntityRelationshipDiagram;
+namespace example;
+
+class Person
+{
+  name;
+  
+  class Student
+  {
+    Integer number;
+  }
+}
