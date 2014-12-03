@@ -77,6 +77,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $javadoc = false;
   $stateDiagram = false;
   $classDiagram = false;
+  $entityRelationshipDiagram = false;
   $yumlDiagram = false;
   $uigu = false;
   $htmlContents = false;
@@ -95,6 +96,11 @@ else if (isset($_REQUEST["umpleCode"]))
   {
      $language = "GvClassDiagram";
      $classDiagram = True;
+  }
+  else if ($language == "entityRelationshipDiagram")
+  {
+     $language = "GvEntityRelationshipDiagram";
+     $entityRelationshipDiagram = True;
   }
   else if ($language == "yumlDiagram")
   {
@@ -144,7 +150,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;      
   } // end html content      
 
-  elseif (!in_array($language,array("Php","Java","Ruby","RTCpp","Cpp","Sql","GvStateDiagram","GvClassDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","RTCpp","Cpp","Sql","GvStateDiagram","GvClassDiagram","GvEntityRelationshipDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     $filename = saveFile($input);
     $errorFilename = "{$filename}.erroroutput";
@@ -188,7 +194,7 @@ else if (isset($_REQUEST["umpleCode"]))
   if($toRemove) { exec($rmcommand); }
   
   // The following is a hack. The arguments to umplesync need fixing
-  if (!$stateDiagram && !$classDiagram && !$yumlDiagram) {  
+  if (!$stateDiagram && !$classDiagram && !entityRelationshipDiagram && !$yumlDiagram) {  
     $command = "java -jar umplesync.jar -source {$filename} 1> {$outputFilename} 2> {$errorFilename}";
   }
   else {
@@ -297,6 +303,23 @@ else if (isset($_REQUEST["umpleCode"]))
       echo $svgcode;
       echo "</svg>";      
     } // end graphViz class diagram
+
+    else if ($entityRelationshipDiagram) {
+      $thedir = dirname($outputFilename);
+      exec("rm -rf " . $thedir . "/entityRelationshipDiagram.svg");
+      $command = "/usr/local/bin/dot -Tsvg -Gdpi=63 " . $thedir . "/modelerd.gv -o " . $thedir .  "/entityRelationshipDiagram.svg";
+      exec($command);
+      if (!file_exists($thedir . "/entityRelationshipDiagram.svg") && file_exists("doterr.svg"))
+      {
+        exec("cp " . "./doterr.svg " . $thedir . "/entityRelationshipDiagram.svg");
+      }
+      $svgcode= readTemporaryFile("{$thedir}/entityRelationshipDiagram.svg");
+      $html = "<a href=\"umpleonline/$thedir/modelerd.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/entityRelationshipDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
+      echo $html;
+      echo $svgcode;
+      echo "</svg>";      
+    } // end graphViz entity relationship diagram
     
     else if ($yumlDiagram) {
       $thedir = dirname($outputFilename);

@@ -1,0 +1,44 @@
+digraph "InheritanceEntity" {
+  size="80,10"
+  rankdir="BT"
+  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+
+  // Class: Person
+  "Person" [shape=rectangle, label="   Person   ",
+   tooltip="class Person
+"];
+
+  // Attributes for Person
+  "namePerson" [shape=ellipse, label="   name\ :\ String   ", tooltip="String name&#13;"];
+  "Person" -> "namePerson" [arrowhead="none"];
+
+  // Class: Student
+  "Student" [shape=rectangle, label="   Student   ",
+   tooltip="class Student
+"];
+
+  // Attributes for Student
+  "numberStudent" [shape=ellipse, label="   number\ :\ Integer   ", tooltip="Integer number&#13;"];
+  "Student" -> "numberStudent" [arrowhead="none"];
+
+  "StudentIsA" [shape=triangle, label="IsA"];
+  "Student" -> "StudentIsA" [arrowhead="none"];
+  "StudentIsA" -> "Person" [arrowhead="none"];
+
+
+  // Class: Teacher
+  "Teacher" [shape=rectangle, label="   Teacher   ",
+   tooltip="class Teacher
+"];
+
+  // Attributes for Teacher
+  "numberTeacher" [shape=ellipse, label="   number\ :\ Integer   ", tooltip="Integer number&#13;"];
+  "Teacher" -> "numberTeacher" [arrowhead="none"];
+
+  "TeacherIsA" [shape=triangle, label="IsA"];
+  "Teacher" -> "TeacherIsA" [arrowhead="none"];
+  "TeacherIsA" -> "Person" [arrowhead="none"];
+
+
+  // All associations
+}
