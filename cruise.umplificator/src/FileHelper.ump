@@ -5,7 +5,7 @@ class FileHelper {
 depend java.io.*;
 depend java.util.Arrays;
 depend java.util.List;
-depend cruise.umple.compiler.UmpleModel;
+depend cruise.umple.compiler.*;
 depend cruise.umplificator.generator.UmpleToUmpleGenerator;
 depend cruise.umple.compiler.exceptions.UmpleCompilerException;
 
@@ -62,8 +62,6 @@ public static void printFilesToUmplify(List<File> srcFiles){
 		   try
 		   {
 			   UmpleToUmpleGenerator generator = new UmpleToUmpleGenerator();
-			   generator.setModel(model);
-			   generator.generate();
 			   String path="";
 			   if (createSubdirectories)	{	
 				   String subDirectories = (model.getDefaultNamespace() != null && model.getDefaultNamespace().length() > 0) ?model.getDefaultNamespace().replace(".", File.separator) :"";
@@ -72,19 +70,29 @@ public static void printFilesToUmplify(List<File> srcFiles){
 			   else{
 				   path = outputFolder + File.separator;
 			   }
-			   String filenameModel = path + model.getUmpleFile().getSimpleFileName() + EXTENSIONS[1];
-			   String filenameNoModel = path + model.getUmpleFile().getSimpleFileName() + SecondaryFileName  + EXTENSIONS[1];
-			   if (splitModel)
-			   {
-				   // Create 2 files, one for model, one for extracode (as in umple style)
-				   createFile( path,filenameModel,generator.getOutputModelCode());
-				   createFile( path,filenameNoModel,generator.getOutputExtraCode());		   
+			   // Create a file for each class in Umple Model 
+			   for (UmpleClass uClass: model.getUmpleClasses()){
+				   String filenameModel = path + uClass.getName() + EXTENSIONS[1];
+				   String filenameNoModel = path + uClass.getName() + SecondaryFileName  + EXTENSIONS[1];
+				   if (splitModel)
+				   {
+					   // Create 2 files, one for model, one for extracode (as in umple style)
+					   createFile( path,filenameModel,generator.getUmpleClassModelCode(uClass));
+					   createFile( path,filenameNoModel,generator.getUmpleClassExtraCode(uClass));		   
+				   }
+				   else
+				   {
+					   createFile( path,filenameModel,generator.getUmpleClassAllCode(uClass));		
+				   }
+				   logger.debug("--UmpleClass has been created for" +filenameModel +"--");
 			   }
-			   else
-			   {
-				   createFile( path,filenameModel,generator.getOutputAllCode());		
+			   // Create a file for each interface in Umple Model 
+			   for (UmpleInterface uInterface: model.getUmpleInterfaces()){
+				   String filenameModel = path + uInterface.getName() + EXTENSIONS[1];  
+				   createFile( path,filenameModel,generator.getUmpleInterfaceAllCode(uInterface));		
+				   
+				   logger.debug("--UmpleInterface has been created for" +filenameModel +"--");
 			   }
-			   logger.debug("--File has been created for" +filenameModel +"--");
 		   }
 		   catch (Exception e)
 		   {
@@ -147,6 +155,6 @@ public static void printFilesToUmplify(List<File> srcFiles){
 		   }
 	   }
    }
-  
-  
-}
+   
+   
+  }
