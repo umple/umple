@@ -1,0 +1,5 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+    for( <%=gen.translate("type",av)%> orphan : <%=gen.translate("getMethod",av)%>_<%=gen.translate("type",av)%>() )
+    {
+      orphan.clear_<%=gen.relatedTranslate("associationOne",av)%>();
+    }

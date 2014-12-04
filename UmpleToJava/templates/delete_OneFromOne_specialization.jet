@@ -1,0 +1,8 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+
+    <%=gen.translate("type",av)%> <%=gen.translate("parameterExisting",av)%> = <%=gen.translate("getMethod",av)%>_One<%=gen.translate("type",av)%>();
+    super.clear_<%=gen.translate("associationOne", av)%>();
+    if (<%=gen.translate("parameterExisting",av)%> != null)
+    {
+      <%=gen.translate("parameterExisting",av)%>.delete();
+    }

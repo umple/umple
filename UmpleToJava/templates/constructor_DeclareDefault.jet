@@ -139,16 +139,22 @@
   
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
-  	if (!av.getIsNavigable() || !av.isImmutable())
-  	{
-  	  continue;
-  	}
+
+    %><%@ include file="specializationCode_Constructor.jet" %><%
+
+    if (!av.getIsNavigable() || !av.isImmutable())
+    {
+      continue;
+    }
     append(stringBuffer, "\n    {0} = true;", gen.translate("associationCanSet",av));
   }
   boolean doneOnce=false;
   String firstSorted = "";
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
+
+    %><%@ include file="specializationCode_Constructor.jet" %><%
+
   	if (av.isOnlyOne() && av.getRelatedAssociation().isMany() && av.getRelatedAssociation().isSorted() && av.getIsNavigable())
   	{
   		if("".equals(firstSorted))
@@ -168,7 +174,7 @@
   }
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
-    AssociationVariable relatedAssociation = av.getRelatedAssociation();
+    %><%@ include file="specializationCode_Constructor.jet" %><%
     
     if (!av.getIsNavigable())
     {

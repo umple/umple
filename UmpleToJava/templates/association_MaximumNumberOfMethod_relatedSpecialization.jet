@@ -1,0 +1,24 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+    String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
+
+    String customMaximumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("maximumNumberOfMethod",av)));
+    String customMaximumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("maximumNumberOfMethod",av)));
+    
+    %>
+<% if (customMaximumNumberOfPrefixCode == null && customMaximumNumberOfPostfixCode == null) { %>
+  public static int <%=gen.translate("maximumNumberOfMethod",av)%>_<%=gen.translate("type",av)%>()
+  {
+    return <%=av.getMultiplicity().getUpperBound()%>;
+  }
+<% } else { %><%=umpleSourceFile%>
+  public static int <%=gen.translate("maximumNumberOfMethod",av)%>_<%=gen.translate("type",av)%>()
+  {
+    <% if (customMaximumNumberOfPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customMaximumNumberOfPrefixCode,gen.translate("maximumNumberOfMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPrefixCode, "    ")); } %>
+    int maximum = <%=av.getMultiplicity().getUpperBound()%>;
+    <% if (customMaximumNumberOfPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customMaximumNumberOfPostfixCode,gen.translate("maximumNumberOfMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPostfixCode, "    ")); } %>
+    return maximum;
+  }
+<% } %>

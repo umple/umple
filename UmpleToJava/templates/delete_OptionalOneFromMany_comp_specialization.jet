@@ -1,0 +1,7 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+    while( !<%=gen.translate("getMethod",av)%><% if (mulChangedToOne) { %>_One<%=gen.translate("type",av)%><% } %>().isEmpty() )
+    {
+      <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("getMethod",av)%><% if (mulChangedToOne) { %>_One<%=gen.translate("type",av)%><% } else { %>_<%=gen.translate("type",av)%><% } %>().get(0);
+      <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(null);
+      <%=gen.translate("getMethod",av)%><% if (mulChangedToOne) { %>_One<%=gen.translate("type",av)%><% } %>().remove(<%=gen.translate("parameterOne",av)%>);
+    }

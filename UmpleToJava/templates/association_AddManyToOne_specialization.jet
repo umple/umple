@@ -1,0 +1,6 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public <%=gen.translate("type",av)%> <%=gen.translate("addMethod",av)%>(<%=gen.translate("methodArgumentsExcept",relatedAssociation)%>)
+  {
+    // need to keep this because of the type differences between sub & super classes
+    return new <%=gen.translate("type",av)%>(<%=gen.translate("callerArgumentsExcept",relatedAssociation)%>);
+  }

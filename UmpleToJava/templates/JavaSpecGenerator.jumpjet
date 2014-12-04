@@ -1,0 +1,62 @@
+<%@ jet package="cruise.umple.compiler.java" class="JavaSpecGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="spec_generator.skeleton"%>
+<%@ include file="UmpleNotice.jet" %>
+<%
+	} // end append
+	
+  public void getAssociationCode_specialization_reqSuperCode(JavaGenerator gen, String includeFile, String includeFile2, String includeFile3, StringBuffer stringBuffer, AssociationVariable av, AssociationVariable relatedAssociation,
+  		String customSetPrefixCode, String customSetPostfixCode, String customAddPrefixCode, String customAddPostfixCode, String customRemovePrefixCode, String customRemovePostfixCode,
+  		String customSetManyPrefixCode, String customSetManyPostfixCode, List<TraceItem> traceItemAssocRemoves, List<TraceItem> traceItemAssocAdds, UmpleClass uClass, boolean sortMethodAdded, String umpleSourceFile,
+  		Map<String,UncaughtException> uncaughtExceptions, UmpleClass globalUmpleClass, boolean addNewLine, boolean mulChangedToOne, boolean relMulChangedToOne, boolean mulChangedToN, boolean reqSetCode, boolean relReqCommonCode, boolean relReqSetCode, String scName) 
+  	{ 
+  	this.uncaughtExceptions = uncaughtExceptions;
+  	this.globalUmpleClass = globalUmpleClass;
+  %><%@ include file="association_set_specialization_reqSuperCode.jet" %><%
+     }// end super code
+     
+  public void getAssociationCode_specialization_reqCommonCode(JavaGenerator gen, String includeFile, String includeFile2, String includeFile3, StringBuffer stringBuffer, AssociationVariable av, AssociationVariable relatedAssociation,
+  		String customSetPrefixCode, String customSetPostfixCode, String customAddPrefixCode, String customAddPostfixCode, String customRemovePrefixCode, String customRemovePostfixCode,
+  		String customSetManyPrefixCode, String customSetManyPostfixCode, List<TraceItem> traceItemAssocRemoves, List<TraceItem> traceItemAssocAdds, UmpleClass uClass, boolean sortMethodAdded, String umpleSourceFile,
+  		Map<String,UncaughtException> uncaughtExceptions, UmpleClass globalUmpleClass, boolean addNewLine, boolean mulChangedToOne, boolean relMulChangedToOne, boolean mulChangedToN, boolean reqSetCode, boolean relReqCommonCode, boolean relReqSetCode, String scName) 
+  	{
+  	 this.uncaughtExceptions = uncaughtExceptions;
+  	 this.globalUmpleClass = globalUmpleClass;
+  %><%@ include file="association_set_specialization_reqCommonCode.jet" %><% 
+    } // end common code
+    
+    java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) (.*)");
+private void addUncaughtExceptionVariables(int javaline, String code, String methodname)
+{
+  String[] lines = code.split("\\n");
+  java.util.regex.Matcher matcher = lineNumberPattern.matcher(lines[0]);
+  if(matcher.matches())
+  {
+    if(!uncaughtExceptions.containsKey(methodname))
+    {
+      uncaughtExceptions.put(methodname,new UncaughtException(globalUmpleClass.getName(), methodname));
+    }
+    uncaughtExceptions.get(methodname).addUncaughtFileName(matcher.group(2));
+    uncaughtExceptions.get(methodname).addUncaughtUmpleLine(Integer.parseInt(matcher.group(1))-1);
+    uncaughtExceptions.get(methodname).addUncaughtJavaLine(javaline+1);
+    uncaughtExceptions.get(methodname).addUncaughtLength(lines.length);
+  }  
+}
+private void addUncaughtExceptionVariables(String methodname, String filename, int umpleline, int javaline, int length)
+{
+  if(!uncaughtExceptions.containsKey(methodname))
+  {
+    uncaughtExceptions.put(methodname,new UncaughtException(globalUmpleClass.getName(), methodname));
+  }
+  
+  uncaughtExceptions.get(methodname).addUncaughtFileName(filename);
+  uncaughtExceptions.get(methodname).addUncaughtUmpleLine(umpleline-1);
+  uncaughtExceptions.get(methodname).addUncaughtJavaLine(javaline+1);
+  uncaughtExceptions.get(methodname).addUncaughtLength(length);
+}
+
+private Map<String,UncaughtException> uncaughtExceptions;
+private UmpleClass globalUmpleClass;
+
+public String endAll(String stringBuffer)
+{
+  GeneratorHelper.generator = null;
+%>

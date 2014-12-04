@@ -4,6 +4,8 @@
   isFirst = true;
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
+
+    %><%@ include file="specializationCode.jet" %><%
     if (!av.getIsNavigable())
     {
       continue;
