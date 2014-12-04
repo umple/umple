@@ -62,7 +62,7 @@
   
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
-    AssociationVariable relatedAssociation = av.getRelatedAssociation();
+    %><%@ include file="specializationCode_Constructor.jet" %><%
     
     if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
     {
@@ -97,5 +97,4 @@
   {
     append(stringBuffer, "}");
   }
-  
 %>

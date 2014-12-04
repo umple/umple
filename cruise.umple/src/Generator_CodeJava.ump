@@ -1648,6 +1648,33 @@ class JavaGenerator
     
   private void prepare(UmpleClass aClass)
   {
+
+    // here we will prepare the associationVariables
+    if (aClass.getAssociations().length != 0)
+    {
+      for (AssociationVariable av : aClass.getAssociationVariables())
+      {
+        try
+        {
+          av.setIsSpecialization(aClass.getAssociation(aClass.indexOfAssociationVariable(av)).getIsSpecialization());
+          if (!av.getIsSpecialization()) continue;
+          Association relatedAssoc = aClass.getAssociation(aClass.indexOfAssociationVariable(av));
+          av.setNeedsCommonCode( relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsCommonCode());
+          av.setNeedsSuperCode( relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsSuperCode());         	 
+          av.setMulChangedToOne( relatedAssoc.getEnd(av.getRelevantEnd()).getMulChangedToOne());
+          av.setMulChangedToN( relatedAssoc.getEnd(av.getRelevantEnd()).getMulChangedToN());
+          av.setReqSetCode( relatedAssoc.getEnd(av.getRelevantEnd()).getReqSetCode());
+	  av.setScName( relatedAssoc.getEnd(av.getRelevantEnd()).getSuperClassName());
+        } 
+        catch ( IndexOutOfBoundsException wat )
+        {
+          // In this situation, the association was either symmetric reflexive or there was some
+          // issue with traits (it appears that it is possible for traits to have more associationVariables
+          // than they have associations). Either way, these are currently unsupported with respect to specializations.
+        } 
+      }
+    }
+    
     if (aClass.getGeneratedClass() != null)
     {
       GeneratedClass genClass = aClass.createGeneratedClass(getModel());
@@ -2182,6 +2209,10 @@ class JavaGenerator
         shouldAppear = false;
       }
       else if ((av.isMN() || av.isN()) && relatedAv.isOptionalN())
+      {
+        shouldAppear = false;
+      }
+      else if (av.getIsSpecialization())
       {
         shouldAppear = false;
       }

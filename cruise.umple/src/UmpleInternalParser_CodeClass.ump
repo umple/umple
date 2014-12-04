@@ -353,6 +353,9 @@ class UmpleInternalParser
       addUnlinkedAssociationVariables();
       addUnlinkedAssociations();
       addUnlinkedExtends();
+      
+      //required for parsing specializedAssociations
+      createSpecializedLinks();
       checkDuplicateAssociationNames();
       checkExtendsForCycles();
       checkSortedAssociations();
@@ -1171,8 +1174,6 @@ class UmpleInternalParser
 	       return false;
 	  }
 
-
-
   private void addUnlinkedAssociationVariables()
   {
     for (AssociationVariable av : unlinkedAssociationVariables)
@@ -1370,7 +1371,306 @@ class UmpleInternalParser
 
     return true;
   }
-  
+
+
+
+  private void createSpecializedLinks()
+  {
+    ArrayList<Association> visited = new ArrayList<Association>();
+    int aLLB, aLUB, aRLB, aRUB, bLLB, bLUB, bRLB, bRUB;
+    Boolean lLowerBoundOK, rLowerBoundOK, lUpperBoundOK, rUpperBoundOK, boundsOK, subclassOK, namesOK, reverseNames,
+    		lMulChToOne, rMulChToOne, lMulChToN, rMulChToN, lNeedsSetCode, rNeedsSetCode;
+    String aLName, aRName, bLName, bRName;
+    ArrayList<String> leftHierarchy, rightHierarchy;
+    UmpleClass currentLeftClass, currentRightClass, parentLeftClass, parentRightClass;
+    AssociationEnd bLeftEnd, bRightEnd, aLeftEnd, aRightEnd;
+    for (Association A : model.getAssociations())
+    {
+      
+      if (A.getIsSpecialization())
+      {
+        continue;
+      }
+      
+      aLeftEnd = A.getEnd(0);
+      aRightEnd = A.getEnd(1);
+      
+      // symmetric reflexive? no thanks -- not a specializable case (see below -- A -- A twice)
+      if (aLeftEnd.getClassName().equals(aRightEnd.getClassName()))
+      {
+        continue;
+      }
+      
+      aLLB = aLeftEnd.getMultiplicity().getLowerBound();
+      aLUB = aLeftEnd.getMultiplicity().getUpperBound();
+      aRLB = aRightEnd.getMultiplicity().getLowerBound();
+      aRUB = aRightEnd.getMultiplicity().getUpperBound();
+      
+      aLName = aLeftEnd.getRoleName();
+      aRName = aRightEnd.getRoleName();
+      
+      // If one of the ends of the association are to a trait or an interface, the logic currently falls apart.
+      // Given that, we will skip these two situations.
+      if (model.getUmpleInterface(aLeftEnd.getClassName()) != null || model.getUmpleInterface(aRightEnd.getClassName()) != null)
+      {
+        continue;
+      }
+      
+      if (model.getUmpleTrait(aLeftEnd.getClassName()) != null || model.getUmpleTrait(aRightEnd.getClassName()) != null)
+      {
+        continue;
+      }
+
+      for (Association B : visited)
+      {  
+      
+        if (B.getIsSpecialization())
+        {
+          continue;
+        }
+      
+        leftHierarchy = new ArrayList<String>();
+        rightHierarchy = new ArrayList<String>();
+      
+        bLeftEnd = B.getEnd(0);
+        bRightEnd = B.getEnd(1);
+        bLName = bLeftEnd.getRoleName();
+        bRName = bRightEnd.getRoleName();
+        
+        // if either end is an interface or a trait, continue (see above)
+        if (model.getUmpleInterface(bLeftEnd.getClassName()) != null || model.getUmpleInterface(bRightEnd.getClassName()) != null)
+	{
+          continue;
+        }
+       
+        if (model.getUmpleTrait(bLeftEnd.getClassName()) != null || model.getUmpleTrait(bRightEnd.getClassName()) != null)
+        {
+          continue;
+        }
+
+ 
+        // if A -- B twice, we don't want that.
+        if (aLeftEnd.getClassName().equals(bLeftEnd.getClassName()) && aRightEnd.getClassName().equals(bRightEnd.getClassName()))
+        {
+          continue;
+        }
+        
+        // reset the appropriate booleans
+        namesOK = false;
+        boundsOK = false;
+        subclassOK = false;
+        reverseNames = false;
+        lMulChToOne = false;
+        rMulChToOne = false;
+        lMulChToN = false;
+        rMulChToN = false;
+      	lNeedsSetCode = false;
+      	rNeedsSetCode = false; 
+        
+        // determine appropriate boolean value of the bounds
+        bLLB = bLeftEnd.getMultiplicity().getLowerBound();
+        bLUB = bLeftEnd.getMultiplicity().getUpperBound();
+        bRLB = bRightEnd.getMultiplicity().getLowerBound();
+        bRUB = bRightEnd.getMultiplicity().getUpperBound();
+        
+        lLowerBoundOK = (bLLB <= aLLB);
+      	rLowerBoundOK = (bRLB <= aRLB);
+      	lUpperBoundOK = (bLUB >= aLUB);
+      	rUpperBoundOK = (bRUB >= aRUB);
+      		  
+      	if (bLUB != 1 && aLUB == 1)
+          lMulChToOne = true;
+          
+        if (bRUB != 1 && aRUB == 1)
+          rMulChToOne = true;
+          
+        if (aLUB == aLLB && bLLB == 0 && bLUB > 1) //  && aLUB > 1
+          lMulChToN = true;
+          
+        if (aRUB == aRLB && bRLB == 0 && bRUB > 1) //  && aRUB > 1
+          rMulChToN = true;
+      		  
+      	// changed to MN (or M*) -- this may need to change when set method generation is fixed	  
+        if (aLUB >= aLLB && aLLB != 0 && aLUB > 1 && ((bLLB == 0 && bLUB > 1) || bLUB == -1))
+          lMulChToN = true;
+        
+        // changed to MN (or M*)
+        if (aRUB >= aRLB && aRLB != 0 && aRUB > 1 && ((bRLB == 0 && bRUB > 1) || bRUB == -1))
+          rMulChToN = true;	  
+      		 
+        // special case for * multiplicity
+      	if ( bLUB == -1 ) 
+      	{ 
+      	  lUpperBoundOK = true;
+      	}
+      	
+      	if ( bRUB == -1 ) 
+      	{ 
+      	  rUpperBoundOK = true;
+        }
+      	
+      	if ( bLUB == -1 || (bLLB == 0 && bLUB != 1))
+      	{ 
+      	  rNeedsSetCode = true;
+      	} 
+      	
+      	if ( bRUB == -1 || (bRLB == 0 && bRUB != 1))
+      	{
+      	  lNeedsSetCode = true;
+      	}
+      	        	
+      	// if all bounds OK, set boolean to true
+      	if (lLowerBoundOK && rLowerBoundOK && lUpperBoundOK && rUpperBoundOK)
+      	{
+      	  boundsOK = true;
+      	}
+        
+        // now we need to see if the names match
+        if (aLName.equals(bLName) && aRName.equals(bRName))
+        {
+          // both names match, so
+          namesOK = true;
+        }
+        else if (aRName.equals(bLName) && aLName.equals(bRName))
+        {
+          reverseNames = true;
+          namesOK = true;
+        }
+        
+        // build class hierarchy lists
+        currentLeftClass = model.getUmpleClass(aLeftEnd.getClassName());
+      	parentLeftClass = currentLeftClass.getExtendsClass();
+      	currentRightClass = model.getUmpleClass(aRightEnd.getClassName());
+      	parentRightClass = currentRightClass.getExtendsClass();
+      	
+      	leftHierarchy.add(currentLeftClass.getName());
+      	rightHierarchy.add(currentRightClass.getName());
+      	
+      	while (parentLeftClass != null)
+      	{
+      	  leftHierarchy.add(parentLeftClass.getName());
+      	  parentLeftClass = parentLeftClass.getExtendsClass();
+      	}
+      	
+      	while (parentRightClass != null)
+      	{
+          rightHierarchy.add(parentRightClass.getName());
+      	  parentRightClass = parentRightClass.getExtendsClass();
+      	}
+      	
+      	parentRightClass = model.getUmpleClass(bRightEnd.getClassName());
+      	parentLeftClass = model.getUmpleClass(bLeftEnd.getClassName());
+      	
+      	if ( leftHierarchy.contains(parentLeftClass.getName()) && rightHierarchy.contains(parentRightClass.getName()))
+      	{
+      	  subclassOK = true;
+      	} 
+      	else if (rightHierarchy.contains(parentLeftClass.getName()) && leftHierarchy.contains(parentRightClass.getName()))
+      	{
+      	  subclassOK = true;
+      	}
+      	
+      	if ( subclassOK && namesOK && boundsOK )
+      	{
+      	  // then it's a redefinition
+      	  // so B is a parent
+      	  
+      	  if (!reverseNames)
+      	  {
+      	    aLeftEnd.setSuperClassName(bLeftEnd.getClassName());
+      	    aRightEnd.setSuperClassName(bRightEnd.getClassName());
+      	  	
+      	  	// Refer to the Association Specialization manual page --
+      	  	// There are 2 cases for specialized code:
+      	  	// 1- either the class will need code from it's superclass
+      	  	// 2- or it will need code from it's own class
+      	  	// 1- the case of A -- B and Aa -- B where Aa isA A, Aa will need super code
+      	  	// 2- in the same case, B will need common code.
+      	  	// *- int he A -- B, Aa -- Bb case, where Bb isA B, they both need super code.
+      	  	
+      	  	// Checks class names for information relevant to the above.
+      	  	if (aLeftEnd.getClassName().equals(bLeftEnd.getClassName()))
+      	  	{
+      	  	  // i.e. same name as parent, so common code is required.
+      	  	  aRightEnd.setNeedsCommonCode(true);
+      	  	}
+      	  	else
+      	  	{
+      	  	  aRightEnd.setNeedsSuperCode(true);
+      	  	}
+      	  	
+      	  	// need to check both ends...
+      	  	if (aRightEnd.getClassName().equals(bRightEnd.getClassName()))
+      	  	{
+      	  	  aLeftEnd.setNeedsCommonCode(true);
+      	  	}
+      	  	else
+      	  	{
+      	  	  aLeftEnd.setNeedsSuperCode(true);
+      	  	}
+      	  }
+      	  else
+      	  {
+      	    aLeftEnd.setSuperClassName(bRightEnd.getClassName());
+      	    aRightEnd.setSuperClassName(bLeftEnd.getClassName());
+      	    
+      	    // check class names for information relevant to above (paragraph)
+      	    if (aLeftEnd.getClassName().equals(bRightEnd.getClassName()))
+      	    {
+      	      // i.e. same class as parent, so common code is required.
+      	      // why set right when I check left? Because of the way
+      	      // associationVariables are handled.
+      	      aRightEnd.setNeedsCommonCode(true);
+      	    }
+      	    else
+      	    {
+      	      aRightEnd.setNeedsSuperCode(true);
+      	    }
+      	    
+      	    if (aRightEnd.getClassName().equals(bLeftEnd.getClassName()))
+      	    {
+      	      // need to check both.
+      	      aLeftEnd.setNeedsCommonCode(true);
+      	    }
+      	    else
+      	    {
+      	      aLeftEnd.setNeedsSuperCode(true);
+      	    }
+      	  }
+      	  
+      	  // -- probably legacy, comment out and see if it breaks.
+      	  if (bLeftEnd.getClassName().equals(aLeftEnd.getClassName()))
+          {
+            A.setCommonClassName(bLeftEnd.getClassName());
+          }
+          else if (bRightEnd.getClassName().equals(aRightEnd.getClassName()))
+          {
+            A.setCommonClassName(bRightEnd.getClassName());
+          }
+          
+      	  A.getEnd(0).setMulChangedToOne(lMulChToOne);
+      	  A.getEnd(1).setMulChangedToOne(rMulChToOne);
+      	  
+      	  A.getEnd(0).setMulChangedToN(lMulChToN);
+      	  A.getEnd(1).setMulChangedToN(rMulChToN);
+      	  
+      	  A.getEnd(0).setReqSetCode(lNeedsSetCode);
+      	  A.getEnd(1).setReqSetCode(rNeedsSetCode);
+      	  
+      	  B.setIsSpecialized(true);
+      	  B.addSpecializedAssociation(A);
+      	  
+      	  A.setIsSpecialization(true);
+      	  A.setSpecializedFrom(B);
+      	  
+      	}
+        
+      }
+      
+      visited.add(A);
+    }
+  }
+
   private void checkDuplicateAssociationNames()
   {
     for(UmpleClass C : model.getUmpleClasses())
@@ -1396,10 +1696,16 @@ class UmpleInternalParser
         {
           continue;
         }
-        
+
         AssociationEnd firstEnd = assoc.getEnd(0);
-        AssociationEnd secondEnd = assoc.getEnd(1);  
-        
+        AssociationEnd secondEnd = assoc.getEnd(1); 
+
+	    if ( assoc.getIsSpecialization() )
+        {
+	      //getParseResult().addErrorMessage(new ErrorMessage(400,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
+          continue;
+        }         
+                
         isSymmetricReflexive = firstEnd.getModifier().equals("symmetricreflexive") || secondEnd.getModifier().equals("symmetricreflexive");
 
         Boolean checkFirstEnd = !firstEnd.getClassName().equals(C.getName());
@@ -1570,6 +1876,22 @@ class UmpleInternalParser
       AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
       yourAs.setIsComposition(association.getIsRightComposition());
 
+	  myAs.setRelevantEnd(0);
+	  yourAs.setRelevantEnd(1);
+
+	  myAs.setIsSpecialized(association.getIsSpecialized());
+	  yourAs.setIsSpecialized(association.getIsSpecialized());
+	  myAs.setIsSpecialization(association.getIsSpecialization());
+	  yourAs.setIsSpecialization(association.getIsSpecialization());
+	  
+	  myAs.setSuperClassName(myEnd.getSuperClassName());
+	  yourAs.setSuperClassName(yourEnd.getSuperClassName());
+
+	  myAs.setNeedsCommonCode(myEnd.getNeedsCommonCode());
+	  myAs.setNeedsSuperCode(myEnd.getNeedsSuperCode());
+	  yourAs.setNeedsCommonCode(yourEnd.getNeedsCommonCode());
+	  yourAs.setNeedsSuperCode(yourEnd.getNeedsSuperCode());
+	  	  
       myAs.setRelatedAssociation(yourAs);
       
       if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
@@ -2413,8 +2735,16 @@ class UmpleInternalParser
     myMult.setBound(myBound);
     myMult.setRange(myLowerBound,myUpperBound);
 
+	//String myIsSpecialized = symmetricReflexiveAssociationToken.getValue("isSpecialized");
+	//String myIsSpecialization = symmetricReflexiveAssociationToken.getValue("isSpecialization");
+
     AssociationVariable myAs = new AssociationVariable(myName,myType,myModifier,null,myMult,true);
     AssociationVariable yourAs = new AssociationVariable(myName,myType,myModifier,null,myMult,true);
+
+	//myAs.setIsSpecialized(myIsSpecialized.equals("true"));
+    //myAs.setIsSpecialization(myIsSpecialization.equals("true"));
+    //yourAs.setIsSpecialized(myIsSpecialized.equals("true"));
+    //yourAs.setIsSpecialization(myIsSpecialization.equals("true"));
 
     myAs.setRelatedAssociation(yourAs);
     aClass.addAssociationVariable(yourAs);

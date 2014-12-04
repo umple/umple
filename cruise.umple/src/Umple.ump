@@ -747,6 +747,16 @@ class Association
   internal Boolean immutable = false;
   Boolean named = { name != null && !"".equals(name) }
 
+  // code for specialized associations
+  // the 0..1 parent -- * specializedAssociations is the code to handle the following:
+  // parent denotes which association this one is tightening
+  // specializedAssociations is a list of associations that have specialized this "parent" one
+  0..1 specializedFrom -- * Association specializedAssociations;
+  Boolean isSpecialized = false;
+  Boolean isSpecialization = false;
+  // name of the class this association shares with its parent
+  commonClassName = "";
+
   before getName { if (!isNamed()) { return this.deriveName(); } }
   after constructor { this.setLeftAndRight(); }
 }
@@ -767,6 +777,14 @@ class AssociationEnd
   Multiplicity multiplicity;
   Boolean isDefaultRoleName = false;
   String priority = "";
+
+  // relevant to specializations
+  String superClassName = "";
+  Boolean needsCommonCode = false;
+  Boolean needsSuperCode = false;
+  Boolean mulChangedToOne = false;
+  Boolean mulChangedToN = false;
+  Boolean reqSetCode = false;
 
   key { multiplicity, roleName, className, modifier, referenceToClassName }
   //modifier { Settable, Immutable, Internal, Defaulted, Constant }
@@ -795,6 +813,19 @@ class AssociationVariable
   String priority = "";
   
   0..1 self relatedAssociation;
+
+  // code relevant to specialization of associations
+  Boolean isSpecialized = false;		// is it ever specialized?
+  Boolean isSpecialization = false;		// is it a specialization of another?
+  commonClassName = "";
+  superClassName = "";
+  int relevantEnd = 0;					// 0 to ensure that everything doesn't break
+  Boolean needsSuperCode = false;
+  Boolean needsCommonCode = false;
+  Boolean mulChangedToOne = false;
+  String scName = "";
+  Boolean mulChangedToN = false;
+  Boolean reqSetCode = false;
 
   // The comments associated with the association (such as the Javadoc above it).
   1 -> * Comment;

@@ -81,7 +81,10 @@ for (StateMachine smq : uClass.getStateMachines())
   
     private String getConstructorCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   {
-    Integer baseJavaLine = stringBuffer.toString().split("\\n").length;%>
+    Integer baseJavaLine = stringBuffer.toString().split("\\n").length;
+    boolean reqSuperCode, reqCommonCode;
+    AssociationVariable relatedAssociation;
+    Association relatedAssoc;%>
 
   //------------------------
   // CONSTRUCTOR
@@ -110,7 +113,7 @@ for (StateMachine smq : uClass.getStateMachines())
   <%@ include file="state_machine_Get_All.jet" %>
   <%@ include file="state_machine_Events_All.jet" %>
   <%@ include file="state_machine_Set_All.jet" %><%
-    return stringBuffer.toString();
+    return stringBuffer.toString(); 
   } 
   private String getAssociationCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   {
@@ -120,6 +123,7 @@ for (StateMachine smq : uClass.getStateMachines())
   <%@ include file="association_Set_All.jet" %>
   <%return stringBuffer.toString();
     } 
+    
     private String getEqualsCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   {%>
 <% if (uClass.getKey().isProvided()) { %>
@@ -211,7 +215,6 @@ for (StateMachine smq : uClass.getStateMachines())
   return stringBuffer.toString();
 }
 %><%@ include file="uncaught_exception.jet"%><%
-
 public String endAll(String stringBuffer)
 {
   GeneratorHelper.generator = null;

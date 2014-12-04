@@ -1,0 +1,21 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public <%=gen.translate("type",av)%> <%=gen.translate("getMethod",av)%>_One<%=gen.translate("type",av)%>()
+  {
+    <% if (customGetPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customGetPrefixCode,gen.translate("getMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } %>
+<% if (customGetPostfixCode == null) { %><% for( TraceItem traceItem : traceItems ) %><%= 
+(traceItem!=null?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("associationOne",av)):"")
+%>
+    return (<%=gen.translate("type",av)%>)<%=gen.translate("associationOne",av)%><% if (mulChangedToOne) { %>.get(0)<% } %>;
+<% } else { %><% for( TraceItem traceItem : traceItems ) %><%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("associationOne",av)):"")
+%>
+    <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = (<%=gen.translate("type",av)%>)<%=gen.translate("associationOne",av)%><% if (mulChangedToOne) {%>.get(0)<% } %>;<% for( TraceItem traceItem : traceItems ) %><%= 
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("parameterOne",av)):"")
+%>
+    <% addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customGetPostfixCode,gen.translate("getMethod",av));
+     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); %>
+    return <%=gen.translate("parameterOne",av)%>;
+<% } %>
+  } 
+

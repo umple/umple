@@ -1,0 +1,564 @@
+namespace cruise.associations.specializations;
+
+/*  Collection of tests for the specialization feature in Java.
+ 
+    If these tests compile, then they have passed. The biggest issue
+    with having duplicate association names when the same classes
+    are involved is in the method signatures: Java is very limited
+    when it comes to overriding methods. The beauty of that is that
+    the test would not compile if a method override is not up to 
+    par.
+
+    Previously, the code would fail to compile on account of the 
+    method signatures being the same (there was duplicate code
+    generation in the generated code) -- now, if the 
+    specialization is valid, the signatures should be different.
+
+*/
+
+// Ignore warnings about multiplicity bounds on directed association
+strictness ignore 36;
+
+//
+// Case: Multiplities Changed to One 
+//
+
+// Multiplicities changed down to one - same class right side     [1]
+
+class Elephant {}
+class Zebra {}
+class BigElephant {isA Elephant;}
+
+association { 0..4 Elephant bob -- 0..2 Zebra poodle; }
+association { 0..1 BigElephant bob -- 0..1 Zebra poodle; }
+
+
+// Right multiplicity changed to one test                         [2]
+
+class Spatula {}
+class Apple {}
+class Snapple { isA Apple; }
+
+association { 2..4 Apple fruit -- 0..2 Spatula spat; }
+association { 2..3 Snapple fruit -- 0..1 Spatula spat; }
+ 
+
+// Both multiplicities changed to one -- both subclasses          [3]
+
+class Sun {}
+class Moon {}
+class Sun2 { isA Sun; }
+class Moon2 { isA Moon; }
+
+association { 0..10 Sun sun -- 0..4 Moon moon; }
+association { 0..1 Sun2 sun -- 0..1 Moon2 moon; }
+
+
+//
+// Case: MN down to N
+//       With mandatory LHS                                       [4]
+//
+
+class Animal {}
+class Leg {}
+class Rhino { isA Animal; }
+
+association { 1 Animal animal -- 0..* Leg legs; }
+association { 1 Rhino animal -- 4 Leg legs; }
+ 
+
+//       With List LHS                                            [5]
+
+class Alteration {}
+class Dilleniidae {}
+class Pine { isA Dilleniidae; }
+
+association { 0..3 Dilleniidae dills -- 0..* Alteration alts; }
+association { 0..2 Pine dills -- 3 Alteration alts; }
+
+
+//       Both ends are specialized                                [6]
+
+class Fat {}
+class Blubber {isA Fat;}
+class BigCreature {}
+class Whale {isA BigCreature;}
+
+association { 0..4 BigCreature bigs -- 0..* Fat fat; }
+association { 2 Whale bigs -- 10 Blubber fat; }
+
+
+//
+// Case: Optional 1 down to 1 both cases
+//                                                                [7]
+
+class Repent {}
+class Serendipity {}
+class Repenter { isA Repent; }
+
+association { 0..1 Repent rep -- 0..1 Serendipity seren; }
+association { 1 Repenter rep -- 1 Serendipity seren; }
+
+
+// Both ends are subclasses                                       [8]
+
+class Repent1 {}
+class Serendipity1 {}
+class Repenter1 { isA Repent1; }
+class Serendipity2 { isA Serendipity1; }
+
+association { 0..1 Repent1 rep -- 0..1 Serendipity1 seren; }
+association { 1 Repenter1 rep -- 1 Serendipity2 seren; }
+
+
+// Both ends don't start at 0..1                                  [9]
+ 
+class Tree {}
+class Owl {}
+class Birch { isA Tree; }
+
+association { 0..1 Tree trees -- 0..5 Owl hoots; }
+association { 1 Birch trees -- 0..3 Owl hoots; } 
+
+
+//
+// Case: Many down to MN
+//                                                                [10]
+
+class Suppa {}
+class Supap {}
+class Subba { isA Suppa; }
+class Subab { isA Supap; }
+
+association { * Suppa suppa -- * Supap supap; }
+association { 10..15 Subba suppa -- 2..3 Subab supap; }
+
+// Many down to N (and 1)                                         [11]
+
+class Spam {}
+class Drama {}
+class Spammer { isA Spam; }
+class Drummer { isA Drama; }
+
+association { * Spam spam -- * Drama drama; }
+association { 1 Spammer spam -- 4 Drummer drama; }
+
+
+// Many down to optional                                          [12]
+
+class Az {}
+class Bz {}
+class Aaz { isA Az; }
+class Bbz { isA Bz; }
+
+association { * Az a -- * Bz b; }
+association { 0..4 Aaz a -- 0..1 Bbz b; }
+
+// Wheel -- Vehicle, Bicycle, Unicycle test                       [13]
+
+class Vehicle {}
+class Bicycle { isA Vehicle; }
+class Unicycle { isA Vehicle; }
+class Wheel {}
+
+association { 0..1 Vehicle vehicle -- 0..* Wheel wheel; }
+association { 0..1 Bicycle vehicle -- 0..2 Wheel wheel; }
+association { 0..1 Unicycle vehicle -- 0..1 Wheel wheel; }
+
+// Optional to mandatory                                          [14]
+
+class Qq {}
+class Ww {}
+class Qqq { isA Qq; }
+
+association { 0..5 Qq q -- 0..1 Ww w; }
+association { 2 Qqq q -- 1 Ww w; }
+
+// Optional to Mandatory -- subclass                              [15]
+
+class Ee {}
+class Rr {}
+class Eee { isA Ee; }
+class Rrr { isA Rr; }
+
+association { 0..5 Ee e -- 0..1 Rr r; }
+association { 2 Eee e -- 1 Rrr r; }
+
+// Optional down to MN and Optional down to Mandatory N           [16]
+
+class Tt {}
+class Yy {}
+class Ttt { isA Tt; }
+class Yyy { isA Yy; } 
+
+association { 0..5 Tt t -- 0..4 Yy y; }
+association { 2..3 Ttt t -- 3 Yyy y; }
+
+// Optional down to Optional and Optional down to Mandatory       [17]
+
+class Uu {}
+class Ii {}
+class Uuu { isA Uu; }
+class Iii { isA Ii; }
+
+association { 0..5 Uu u -- 0..4 Ii i; }
+association { 0..3 Uuu u -- 2 Iii i; }
+
+// Many to many down to many to MN                                [18] 
+
+class Oo {}
+class Pp {}
+class Ooo { isA Oo; }
+class Ppp { isA Pp; }
+
+association { * Oo o -- 1..5 Pp p; }
+association { * Ooo o -- 2..4 Ppp p; }
+
+//                                                                [19]
+
+class Aa {}
+class Ss {}
+class Aaa { isA Aa; }
+class Sss { isA Ss; }
+
+association { * Aa a -- 0..2 Ss s; }
+association { 4..* Aaa a -- 0..1 Sss s; }
+
+//                                                                [20]
+
+class Dd {}
+class Ff {}
+class Ddd { isA Dd; }
+class Fff { isA Ff; }
+
+association { * Dd d -- * Ff f; }
+association { 2..* Ddd d -- * Fff f; }
+
+//                                                                [21]
+
+class Gg {}
+class Hh {}
+class Ggg { isA Gg; }
+class Hhh { isA Hh; }
+
+association { * Gg g -- 0..5 Hh h; }
+association { 5 Ggg g -- 0..1 Hhh h; }
+
+//                                                                [22]
+
+class Jj {}
+class Kk {} 
+class Jjj { isA Jj; }
+class Kkk { isA Kk; }
+
+association { * Jj j -- 0..* Kk k; }
+association { 1 Jjj j -- 0..6 Kkk k; }
+
+//                                                                [23]
+
+class Ll {}
+class Zz {}
+class Lll { isA Ll; }
+class Zzz { isA Zz; }
+
+association { * Ll l -- 0..* Kk k; }
+association { 1 Lll l -- 1..* Kkk k; }
+
+//								  [24]
+class Xx {}
+class Cc {}
+class Xxx { isA Xx; }
+class Ccc { isA Cc; }
+
+association { * Xx x -- * Cc c; }
+association { 1 Xxx x -- * Ccc c; }
+
+//                     						  [25]
+class Vv {}
+class Bb {}
+class Vvv { isA Vv; }
+class Bbb { isA Bb; }
+
+association { * Vv v -- * Bb b; }
+association { 1 Vvv v -- 0..7 Bbb b; }
+
+//                      					  [26]
+class Mm {}
+class Nn {}
+class Mmm { isA Mm; }
+class Nnn { isA Nn; }
+
+association { * Mm m -- * Nn n; }
+association { 1 Mmm m -- 0..1 Nnn n; } 
+
+//                                  				  [27]
+class Qw {}
+class We {}
+class Qww { isA Qw; }
+class Wee { isA We; }
+
+association { * Qw qw -- * We we; }
+association { 0..6 Qww qw -- * Wee we; }
+
+//                                                                [28]
+class Er {}
+class Rt {}
+class Err { isA Er; }
+class Rtt { isA Rt; }
+
+association { * Er er -- * Rt rt; }
+association { 0..1 Err er -- 3..* Rtt rt; }
+
+//                                         			  [29]
+class Ty {}
+class Yu {}
+class Tyy { isA Ty; }
+class Yuu { isA Yu; }
+
+association { * Ty ty -- * Yu yu; }
+association { 0..1 Tyy ty -- 3..5 Yuu yu; }
+
+//								  [30]
+class Ui {}
+class Io {}
+class Uii { isA Ui; }
+class Ioo { isA Io; }
+
+association { * Ui ui -- * Io io; }
+association { 0..1 Uii ui -- * Ioo io; }
+
+//								  [31]
+class Op {}
+class Pa {}
+class Opp { isA Op; }
+class Paa { isA Pa; }
+
+association { * Op op -- * Pa pa; }
+association { 0..1 Opp op -- 1 Paa pa; }
+
+// 								  [32]
+class Sass {}
+class Sd {}
+class Sassy { isA Sass; }
+class Sdd { isA Sd; }
+
+association { * Sass sass -- * Sd sd; }
+association { 0..1 Sassy sass -- 0..4 Sdd sd; }
+association { 0..1 Sassy sass -- 0..3 Sd sd; } // failing atm
+
+// 								  [33]
+class Df {}
+class Fg {}
+class Dff { isA Df; }
+
+association { * Df df -- * Fg fg; }
+association { 5..9 Dff df -- * Fg fg; }
+
+//								  [34]
+class Gh {}
+class Hj {}
+class Ghh { isA Gh; }
+
+association { * Gh gh -- * Fg fg; }
+association { * Ghh gh -- 4..6 Fg fg; }
+
+//                                                                [35]
+class Jk {}
+class Kl {}
+class Jkk { isA Jk; }
+
+association { * Jk jk -- * Kl kl; }
+association { 0..1 Jkk jk -- 4..5 Kl kl; }
+
+//                                                                [36]
+class Lz {}
+class Zx {}
+class Lzz { isA Lz; }
+
+association { * Lz lz -- * Zx zx; }
+association { * Lzz lz -- 0..1 Zx zx; }
+
+//                                                                [37]
+class Xc {}
+class Cvv {}
+class Xcc { isA Xc; }
+
+association { * Xc xc -- * Cvv cvv; }
+association { * Xcc xc -- 5..7 Cvv cvv; }
+
+//                                                                [38]
+class Vb {}
+class Bn {}
+class Vbb { isA Vb; }
+
+association { * Vb vb -- * Bn bn; }
+association { 1 Vbb vb -- 2..4 Bn bn; }
+
+//								  [39]
+class Nm {}
+class Mq {}
+class Nmm { isA Nm; }
+
+association { * Nm nm -- * Mq mq; }
+association { 0..1 Nmm nm -- 3..5 Mq mq; }
+
+//                                                                [40]
+class Qa {}
+class Az {}
+class Qaa { isA Qa; }
+
+association { * Qa qa -- * Az az; }
+association { * Qaa qa -- 4..* Az az; }
+
+//								  [41]
+class Zw {}
+class Ws {}
+class Zww { isA Zw; }
+
+association { * Zw zw -- * Ws ws; }
+association { 1 Zww zw -- 3..* Ws ws; }
+
+//                                				  [42]
+class Sx {}
+class Xe {}
+class Sxx { isA Sx; }
+
+association { * Sx sx -- * Xe xe; }
+association { * Sxx sx -- * Xe xe; }
+
+//                                                                [43]
+class Ed {}
+class Dc {}
+class Edd { isA Ed; }
+
+association { * Ed ed -- * Dc dc; }
+association { 0..1 Edd ed -- * Dc dc; }
+
+//                                                                [44]
+class Cr {}
+class Rf {}
+class Crr { isA Cr; }
+
+association { * Cr cr -- * Rf rf; }
+association { 1 Crr cr -- 0..4 Rf rf; }
+
+//                                                                [45]
+class Fv {}
+class Vt {}
+class Fvv { isA Fv; }
+
+association { * Fv fv -- * Vt vt; }
+association { 0..1 Fvv fv -- 0..3 Vt vt; }
+
+//                                                                [46]
+
+class Tg {}
+class Gb {}
+class Tgg { isA Tg; }
+
+association { * Tg tg -- 5..12 Gb gb; }
+association { * Tgg tg -- 6..8 Gb gb; }
+
+//                                                                [47]
+class By {}
+class Yh {}
+class Byy { isA By; }
+
+association { * By by -- * Gb gb; }
+association { * Byy by <- 2..4 Gb gb; }
+
+//                                                                [48]
+class Hn {}
+class Nu {}
+class Hnn { isA Hn; }
+
+association { * Hn hn -- * Nu nu; }
+association { 4..8 Hnn hn <- * Nu nu; }
+
+//                                                                [49]
+class Uj {}
+class Jm {}
+class Ujj { isA Uj; }
+
+association { * Uj uj -- * Jm jm; }
+association { 5..* Ujj uj <- * Jm jm; }
+
+//                                                                [50]
+class Mi {}
+class Ik {}
+class Mii { isA Mi; }
+
+association { * Mi mi -- * Ik ik; }
+association { 0..6 Mii mi <- * Ik ik; }
+
+//                                                                [51]
+class Ko {}
+class Ol {}
+class Koo { isA Ko; }
+class Oll { isA Ol; }
+
+association { * Ko ko -- * Ol ol; }
+association { 0..1 Koo ko <@>- * Oll ol; }
+
+//                                                                [52]
+class Lp {}
+class Pq {}
+class Lpp { isA Lp; }
+class Pqq { isA Pq; }
+
+association { * Lp lp -- * Pq pq; }
+association { 0..1 Lpp lp <@>- * Pqq pq; }
+
+//								  [53]
+class Za {}
+class Aq {}
+class Zaa { isA Za; }
+class Aqq { isA Aq; }
+
+association { * Za za -- * Aq aq; }
+association { 0..1 Zaa za -<@> 0..4 Aqq aq; }
+
+//        							  [54]
+class Qx {}
+class Xsx {}
+class Qxx { isA Qx; }
+class Xssx { isA Xsx; }
+
+association { * Qx qx -- * Xsx xsx; }
+association { 0..1 Qxx qx -<@> 0..1 Xssx xsx; }
+
+//	 	 	 	 	 	 	 	  [55]
+class Sw {}
+class Wc {}
+class Sww { isA Sw; }
+class Wcc { isA Wc; }
+
+association { * Sw sw -<@> * Wc wc; }
+association { 0..3 Sww sw -<@> 0..4 Wcc wc; }
+
+//								  [56]
+class Cd {}
+class De {}
+class Cdd { isA Cd; }
+class Dee { isA De; }
+
+association { * Cd cd -- * De de; }
+association { 2..3 Cdd cd <@>- 0..1 Dee de; }
+
+//								  [57]
+class Ev {}
+class Vf {}
+class Evv { isA Ev; }
+class Vff { isA Vf; }
+
+association { * Ev ev -- * Vf vf; }
+association { 1 Evv ev -> 4..5 Vff vf; }
+
+//                                                                [58]
+class Fr {}
+class Rb {}
+class Frr { isA Fr; }
+class Rbb { isA Rb; }
+
+association { * Fr fr -- * Rb rb; }
+association { 4..5 Frr fr -> 1 Rbb rb; }

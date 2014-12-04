@@ -167,14 +167,6 @@ public class UmpleTraitTest {
 		Assert.assertEquals(false, model.getUmpleClass("A").getExtraCode().isEmpty());		
 	}	
 
-	@Ignore
-	public void associationTraitsTest() {
-		String code = "class A {isA T;} class B {} trait T { 1 -- * B;} ";
-		UmpleModel model = getRunModel(code);
-		SampleFileWriter.destroy("B.java");	
-		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());
-	}
-	
 	@Test
 	public void checkRequiredMethodTest() {
 		String code = "class A{isA T;} trait T { String test();}";
@@ -927,6 +919,14 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
+
+        @Ignore
+        public void associationTraitsTest() {
+              String code = "class A {isA T;} class B {} trait T { 1 -- * B;} ";
+              UmpleModel model = getRunModel(code);
+              SampleFileWriter.destroy("B.java");     
+              Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());
+        }
 	
 	@Test
 	public void associations001Test() {

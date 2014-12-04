@@ -5,6 +5,12 @@
     continue;
   }
 
+  // if it's a specialization, skip the association code for the av
+  if ( reqSuperCode || reqCommonCode )
+  {
+    continue;
+  }
+
   if (av.isOnlyOne())
   {
     %><%@ include file="constructor_AssociationAssignOne.jet" %><%
