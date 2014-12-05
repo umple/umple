@@ -18,7 +18,10 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 		StringBuilder code = new StringBuilder();
 		ArrayList<Association> externalAssociations = new ArrayList<Association>();
 
-		code.append(StringFormatter.format("namespace {0};\n", uClass.getNamespace(0)));  
+		if (uClass.hasNamespaces())
+		{
+			code.append(StringFormatter.format("namespace {0};\n", uClass.getNamespace(0)));  
+		}
 		code.append(StringFormatter.format("\nclass {0}\n{\n", uClass.getName()));
 
 		String  implementedInterfaces="";
@@ -69,8 +72,6 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 			{
 				code.append(StringFormatter.format(" = {0}", av.getValue()));
 			}
-
-			code.append(";\n");
 
 			for (Association as : uClass.getAssociations())
 			{
@@ -108,8 +109,7 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 			{
 				code.append(uClass.getExtraCode());
 			}
-			code.append("}\n");
-	}
+		}
 
 		for (Association as : externalAssociations)
 		{
@@ -120,6 +120,8 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 			code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), myEnd.getClassName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
 			code.append("}");
 		}
+		
+		code.append(";\n");
 		return code.toString();
 	}
 
@@ -131,7 +133,10 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 	public String getUmpleClassExtraCode(UmpleClass uClass){
 		StringBuilder code = new StringBuilder();
 
-		code.append(StringFormatter.format("namespace {0};\n", uClass.getNamespace(0)));  
+		if (uClass.hasNamespaces())
+		{
+			code.append(StringFormatter.format("namespace {0};\n", uClass.getNamespace(0)));  
+		}
 		code.append(StringFormatter.format("\nclass {0}\n{\n", uClass.getName()));
 
 		if (uClass.getExtraCode() != null)
@@ -152,7 +157,10 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 		StringBuilder code = new StringBuilder();
 		ArrayList<Association> externalAssociations = new ArrayList<Association>();
 
-		code.append(StringFormatter.format("namespace {0};\n", uClass.getNamespace(0)));  
+		if (uClass.hasNamespaces())
+		{
+			code.append(StringFormatter.format("namespace {0};\n", uClass.getNamespace(0)));  
+		}
 		code.append(StringFormatter.format("\nclass {0}\n{\n", uClass.getName()));
 
 		String  implementedInterfaces="";
@@ -204,10 +212,9 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 			{
 				code.append(StringFormatter.format(" = {0}", av.getValue()));
 			}
-
 			code.append(";\n");
 		}
-
+		
 		for (Association as : uClass.getAssociations())
 		{
 			AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
@@ -240,8 +247,6 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 			generateMethod(m, code);
 		}
 
-		code.append("}\n");
-
 		for (Association as : externalAssociations)
 		{
 			AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
@@ -251,7 +256,7 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 			code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), myEnd.getClassName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
 			code.append("}");
 		}
-
+				code.append("}\n");
 		return code.toString();
 	}
 

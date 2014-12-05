@@ -2,6 +2,7 @@ package cruise.umplificator.rules
 
 import org.eclipse.jdt.core.dom.*;
 import cruise.umple.compiler.*;
+import cruise.umplificator.parser.*;
 import java.util.*;
 
 
@@ -15,13 +16,14 @@ rule "addClass_toUmpleModel"
 	    umpleModel.addUmpleClass(umpleClass);
 end
 
-
 rule "transform_ImportDeclaration"
   salience 100
 	when
 		importDeclaration: ImportDeclaration()
 		uClass: UmpleClass()
+		eval(uClass.getName().equals(getDeclarationContainerName(importDeclaration)))		
 	then
+		//System.out.println("ADDING DEPEND TO CLASS: "+uClass.getName());
 		Depend depend = new Depend(getImportName(importDeclaration));
 		uClass.addDepend(depend);
 end
@@ -31,6 +33,7 @@ rule "transform_ImportDeclaration_UInterface"
 	when
 		importDeclaration: ImportDeclaration()
 		uInterface: UmpleInterface()
+		eval(uInterface.getName().equals(getDeclarationContainerName(importDeclaration)))	
 	then
 		Depend depend = new Depend(getImportName(importDeclaration));
 		uInterface.addDepend(depend);
@@ -81,6 +84,7 @@ rule "transform_Namespace"
 	when
 		packageDeclaration: PackageDeclaration()
 		uClass: UmpleClass()
+		eval(uClass.getName().equals(getDeclarationContainerName(packageDeclaration)))	
 	then
 		uClass.addNamespace(packageDeclaration.getName().getFullyQualifiedName());
 end
@@ -91,6 +95,7 @@ rule "transform_Namespace_UInterface"
 	when
 		packageDeclaration: PackageDeclaration()
 		uInterface: UmpleInterface()
+		eval(uInterface.getName().equals(getDeclarationContainerName(packageDeclaration)))	
 	then
 		uInterface.addNamespace(packageDeclaration.getName().getFullyQualifiedName());
 end
@@ -100,6 +105,7 @@ rule "append_FieldDeclaration"
 	when
 		fieldDeclaration: FieldDeclaration()
 		uClass: UmpleClass()
+		eval(uClass.getName().equals(getDeclarationContainerName(fieldDeclaration)))
 	then
 		uClass.appendExtraCode(fieldDeclaration.toString());
 end
@@ -109,6 +115,7 @@ rule "append_FieldDeclaration_interfaces"
 	when
 		fieldDeclaration: FieldDeclaration()
 		uInterface: UmpleInterface()
+		eval(uInterface.getName().equals(getDeclarationContainerName(fieldDeclaration)))
 	then
 		uInterface.appendExtraCode(fieldDeclaration.toString());
 end
@@ -118,6 +125,7 @@ rule "append_MethodDeclaration"
 	when
 		method: MethodDeclaration()
 		uClass: UmpleClass()
+		eval(uClass.getName().equals(getDeclarationContainerName(method)))
 	then
 		uClass.appendExtraCode(method.toString());
 end
@@ -127,6 +135,7 @@ rule "append_MethodDeclaration_interfaces"
 	when
 		method: MethodDeclaration()
 		uInterface: UmpleInterface()
+		eval(uInterface.getName().equals(getDeclarationContainerName(method)))
 	then
 		uInterface.appendExtraCode(method.toString());
 end
@@ -174,4 +183,33 @@ function List<String> getImplementedInterfaces(TypeDeclaration typeDeclaration)
 	}
 	return names;
 }
+
+function String getDeclarationContainerName(ASTNode declaration)
+{
+	if  ((declaration instanceof MethodDeclaration)   || 
+		 (declaration instanceof FieldDeclaration)) {
+		ASTNode parentNode = declaration.getParent();
+		if (parentNode.getNodeType() == ASTNode.TYPE_DECLARATION)
+		{
+			TypeDeclaration container = (TypeDeclaration) parentNode;
+			String javaClassName = container.getName().getFullyQualifiedName();
+			System.out.println(javaClassName);
+			return javaClassName;
+		}
+	}
+	else if ((declaration instanceof ImportDeclaration)|| (declaration instanceof PackageDeclaration))
+	{
+		ASTNode parentNode = declaration.getParent();
+	    if (parentNode.getNodeType() == ASTNode.COMPILATION_UNIT)
+		{
+			CompilationUnit unit = (CompilationUnit) parentNode;
+			JavaParser javaParser =new JavaParser();
+			javaParser.parseUnit(parentNode.toString());
+			String compilationUnitName= javaParser.getJavaVisitor().getTypeDeclaration().getName().getFullyQualifiedName();
+			return compilationUnitName;
+		}			 
+	}
+	return "";
+}
+
 

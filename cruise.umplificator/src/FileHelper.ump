@@ -119,16 +119,16 @@ public static void printFilesToUmplify(List<File> srcFiles){
 	   }
    }
 
-   public static void writeMasterFile(List<String> filenames, String outputFolder, boolean needSubDirectories, boolean testMode){
+   public static void writeMasterFile(List<String> filenames, String outputFolder, boolean needSubDirectories, boolean testMode, boolean splitModel){
 	   if (needSubDirectories && testMode==false) { writePerPackageMasterFile(filenames, outputFolder);}
-	   else { writeSingleMasterFile(filenames, outputFolder, testMode); }
+	   else { writeSingleMasterFile(filenames, outputFolder, testMode, splitModel); }
    }
    
    private static  void writePerPackageMasterFile(List<String> filenames, String outputFolder){
 		// TODO
    }
   
-   private static void writeSingleMasterFile(List<String> filenames, String outputFolder,boolean testMode){
+   private static void writeSingleMasterFile(List<String> filenames, String outputFolder,boolean testMode, boolean splitModel){
 	   if (testMode==false) {
 		   StringBuffer sb =  new StringBuffer();
 		   for (String s: filenames)
@@ -136,6 +136,11 @@ public static void printFilesToUmplify(List<File> srcFiles){
 		   	   if (s != null){
 			    sb.append("use " + s + ".ump;" );
 			    sb.append(System.getProperty("line.separator"));
+			    	if (splitModel)
+			    	{
+			    	 sb.append("use " + s + "_code.ump;" );
+			   		 sb.append(System.getProperty("line.separator"));
+			    	}
 		   	   }
 		   }
 		   try
