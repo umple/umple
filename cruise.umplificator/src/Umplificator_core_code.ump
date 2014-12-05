@@ -16,7 +16,7 @@ public boolean umplify(List<File> srcFiles) {
     	 umplifyElement(aFile);
     }
     // Generates a MasterFile if we have processed more than one file
-   FileHelper.writeMasterFile(filesUmplified, outputFolder, needSubDirectories,testMode);
+   FileHelper.writeMasterFile(filesUmplified, outputFolder, needSubDirectories,testMode, splitModel);
    return true;
 }
 

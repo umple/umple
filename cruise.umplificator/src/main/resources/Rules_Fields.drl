@@ -27,10 +27,11 @@ rule "JavaField_CanBeUmpleAttribute"
     	String attrName = getFieldName(fieldDeclaration);
     	String attrType  = getAttributeType(fieldDeclaration);
   		Attribute uAttr = new Attribute(attrName, attrType, null, null, false, uClass);
-  		///uAttr.setModifier("settable");
+  		uAttr.setModifier("settable");
   		uClass.addAttribute(uAttr);
     	// We insert the atribute into the Working memory,
     	// so it can accessed and modified by other Rules
+    	System.out.print(uClass.getName() + uAttr.getName());
     	update(uClass);    	
     	insert(uAttr);
 end
@@ -210,15 +211,15 @@ function boolean hasFieldAGetter(MethodDeclaration method, FieldDeclaration fiel
   TypeDeclaration container = (TypeDeclaration) parentNode;
   // Is a getter?
   String methodName = getMethodName(method);
-  String getPosssibleGetterName = getGetterName(field);
+  String fieldName  = getFieldName(field);
+  boolean isSignatureOfGetter = hasSignatureOfGetter(field,method); 
   if (isPrimitiveOrStringOrTime(field)){ 
 	  if (container.getName().getFullyQualifiedName().equals(className) 
-	     && getPosssibleGetterName.contains(methodName) && method.parameters().size()== 0)
+	     && isSignatureOfGetter && method.parameters().size()== 0)
 	  {
 	  	// 1. Consider only methods that have the same type of field
 	  	String fieldType = getFieldType(field);
 	  	String methodReturnType = getMethodType(method);
-	  	String fieldName  = getFieldName(field);
 	    if (fieldType.equals(methodReturnType))
 	    {
 	    	// is the method returning the instance variable value?
@@ -313,6 +314,29 @@ function String getGetterName(FieldDeclaration field)
 {
 	String fieldName = WordUtils.capitalize(getFieldName(field));
 	return "get" + fieldName;
+}
+
+function boolean hasSignatureOfGetter(FieldDeclaration field, MethodDeclaration method)
+{	
+	String methodName = getMethodName(method);
+	String fieldName = getFieldName(field);
+	String fieldNameCapitalized = WordUtils.capitalize(fieldName);
+	String option1 = "get" + fieldNameCapitalized;
+	String option2 = "is" + fieldNameCapitalized;
+	
+	// For instance getSomething()
+	if (methodName.equals(option1)){
+		return true;
+	}
+	// For instance isSomething()
+	else if (methodName.equals(option2)){
+		return true;
+	}
+	// For instance something()
+	else if (methodName.equals(fieldName)){
+		return true;
+	}
+	return false;
 }
 
 function String getSetterName(FieldDeclaration field)
