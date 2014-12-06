@@ -65,10 +65,6 @@ Action.clicked = function(event)
   {
     Action.generateCode("classDiagram","classDiagram");
   }
-  else if (action == "entityRelationshipDiagram")
-  {
-    Action.generateCode("entityRelationshipDiagram","entityRelationshipDiagram");
-  }
   else if (action == "EcoreCode")
   {
     Action.generateCode("xml","Ecore");

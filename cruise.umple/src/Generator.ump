@@ -227,60 +227,18 @@ class SimpleMetricsGenerator
   String output = "";
 }
 
-class SuperGvGenerator
+class GvClassDiagramGenerator
 {
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
-  abstract;
-  //The reason for bringing following inheritance here is because of Umple code generation. It generates a false method for iterface coverage.
-  isA CodeGeneratorWithSubptions;
-  
+
   // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
   // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
-}
-
-class GvClassDiagramGenerator
-{
-  isA SuperGvGenerator;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-/*
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";*/
-}
-
-class GvEntityRelationshipDiagramGenerator
-{
-  isA SuperGvGenerator;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-  
-  /*isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";*/
 }
 
 class AlloyGenerator
@@ -505,7 +463,6 @@ use Generator_CodeGvStateDiagram.ump;
 use Generator_CodeStateTables.ump;
 use Generator_CodeSimpleMetrics.ump;
 use Generator_CodeGvClassDiagram.ump;
-use Generator_CodeGvEntityRelationshipDiagram.ump;
 use Generator_CodeAlloy.ump;
 use Generator_CodeNuSMV.ump;
 use Generator_CodeSimulate.ump;
@@ -514,7 +471,6 @@ use Generator_CodeXtext.ump;
 use Generator_CodeJson.ump;
 use Generator_CodeStructureDiagram.ump;
 use Generator_SuperCodeGenerator.ump;
-use Generator_SuperGvGenerator.ump; // ABSTRACT CLASS FOR GV!!
 use Generator_Html.ump;
 use Generator_UmpleModelWalker.ump;
 use Generator_CodeAnalysis.ump;
