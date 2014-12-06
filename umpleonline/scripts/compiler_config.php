@@ -54,6 +54,7 @@ function generateMenu($buttonSuffix)
             <option value=\"yumlDiagram:yumlDiagram\">Yuml Class Diagram</option>
             <option value=\"classDiagram:classDiagram\">GraphViz Class Diagram (SVG)</option>
             <option value=\"stateDiagram:stateDiagram\">State Diagram (GraphViz SVG)</option>
+            <option value=\"entityRelationship:entityRelationshipDiagram\">Entity Relationship Diagram (GraphViz SVG)</option>
             <option id=\"genstatetables\" value=\"html:StateTables\">State Tables</option>            
             <option value=\"structureDiagram:StructureDiagram\">Structure Diagram</option>                        
             <option value=\"java:Json\">Json</option>

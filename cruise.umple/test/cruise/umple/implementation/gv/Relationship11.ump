@@ -1,0 +1,15 @@
+generate GvEntityRelationshipDiagram;
+namespace example;
+
+class X {
+  a;
+  Date date;
+  Time time;
+  
+  1 -- 1 Y ; 
+}
+
+class Y {
+  b;
+  c;
+}

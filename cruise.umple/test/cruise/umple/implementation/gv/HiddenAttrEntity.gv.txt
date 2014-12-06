@@ -1,0 +1,13 @@
+digraph "HiddenAttrEntity" {
+  size="80,10"
+  rankdir="BT"
+  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+
+  // Class: X
+  "X" [shape=rectangle, label="   X   ",
+   tooltip="class X
+"];
+
+  // Attributes for X
+  // All associations
+}

@@ -1,0 +1,21 @@
+generate GvEntityRelationshipDiagram;
+namespace example;
+
+class Team {
+  name;
+}
+
+class Player {
+  name;
+  Integer id;
+  key { id }
+ }
+
+class PlayerOnTeam {
+  Integer year;
+  * -- 1 Player;
+  * -- 1 Team;
+  key { year, player, team }
+}
+
+   

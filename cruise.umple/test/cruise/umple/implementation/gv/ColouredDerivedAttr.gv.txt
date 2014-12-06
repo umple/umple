@@ -1,0 +1,22 @@
+digraph "ColouredDerivedAttr" {
+  size="80,10"
+  rankdir="BT"
+  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+
+  // Class: X
+  "X" [ style=filled, fillcolor="#FFCCCC", shape=rectangle, label="   X   ",
+   tooltip="class X
+"];
+
+  // Attributes for X
+  "xX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, label="   x\ :\ Float   ", tooltip="Float x&#13;"];
+  "X" -> "xX" [arrowhead="none"];
+
+  "yX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, label="   y\ :\ Float   ", tooltip="Float y&#13;"];
+  "X" -> "yX" [arrowhead="none"];
+
+  "sumX" [ fillcolor="#FFCCCC", shape=ellipse, style="dashed, filled", label="   sum\ :\ Float   ", tooltip="Float sum&#13;"];
+  "X" -> "sumX" [arrowhead="none"];
+
+  // All associations
+}
