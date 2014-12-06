@@ -193,7 +193,6 @@ function String getDeclarationContainerName(ASTNode declaration)
 		{
 			TypeDeclaration container = (TypeDeclaration) parentNode;
 			String javaClassName = container.getName().getFullyQualifiedName();
-			System.out.println(javaClassName);
 			return javaClassName;
 		}
 	}
@@ -202,7 +201,9 @@ function String getDeclarationContainerName(ASTNode declaration)
 		ASTNode parentNode = declaration.getParent();
 	    if (parentNode.getNodeType() == ASTNode.COMPILATION_UNIT)
 		{
+			// The parent node of a PackageDeclaration or ImportDeclaration is a compilation unit
 			CompilationUnit unit = (CompilationUnit) parentNode;
+			// We need to parse it, in order to extract name of compilationUnit
 			JavaParser javaParser =new JavaParser();
 			javaParser.parseUnit(parentNode.toString());
 			String compilationUnitName= javaParser.getJavaVisitor().getTypeDeclaration().getName().getFullyQualifiedName();
