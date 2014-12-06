@@ -1,0 +1,44 @@
+digraph "RelationshipAttributes" {
+  size="80,10"
+  rankdir="BT"
+  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+
+  // Relationship w/ Attributes: Ticket
+
+  "Ticket" [shape=diamond, label="   Ticket   ",
+   tooltip=""];
+
+  // Attributes for Ticket
+  "ticketNumberTicket" [shape=ellipse, label="   ticketNumber\ :\ Integer   ", tooltip="Integer ticketNumber&#13;"];
+  "Ticket" -> "ticketNumberTicket" [arrowhead="none"];
+
+  "priceTicket" [shape=ellipse, label="   price\ :\ Double   ", tooltip="Double price&#13;"];
+  "Ticket" -> "priceTicket" [arrowhead="none"];
+
+  // Class: Person
+  "Person" [shape=rectangle, label="   Person   ",
+   tooltip="class Person
+"];
+
+  // Attributes for Person
+  "namePerson" [shape=ellipse, label="   name\ :\ String   ", tooltip="String name&#13;"];
+  "Person" -> "namePerson" [arrowhead="none"];
+
+  // Class: Seminar
+  "Seminar" [shape=rectangle, label="   Seminar   ",
+   tooltip="class Seminar
+"];
+
+  // Attributes for Seminar
+  "whenSeminar" [shape=ellipse, label="   when\ :\ Date   ", tooltip="Date when&#13;"];
+  "Seminar" -> "whenSeminar" [arrowhead="none"];
+
+  "addressSeminar" [shape=ellipse, label="   address\ :\ String   ", tooltip="String address&#13;"];
+  "Seminar" -> "addressSeminar" [arrowhead="none"];
+
+  // All associations
+  "Person" -> "Ticket" [dir="none", label="1", tooltip="Person->Ticket"];
+
+  "Seminar" -> "Ticket" [dir="none", label="*", tooltip="Seminar->Ticket"];
+
+}

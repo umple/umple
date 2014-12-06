@@ -1,0 +1,8 @@
+generate GvEntityRelationshipDiagram -s "hideattributes";
+namespace example;
+
+class X {
+  a;
+  Date date;
+  Time time;
+}

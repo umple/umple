@@ -1,0 +1,39 @@
+digraph "ColouredEntity" {
+  size="80,10"
+  rankdir="BT"
+  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+
+  // Class: X
+  "X" [ style=filled, fillcolor="#FFCCCC", shape=rectangle, label="   X   ",
+   tooltip="class X
+"];
+
+  // Attributes for X
+  "aX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, label="   a\ :\ String   ", tooltip="String a&#13;"];
+  "X" -> "aX" [arrowhead="none"];
+
+  "dateX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, peripheries=2, label="   date\ :\ Date[]   ", tooltip="Date[] date&#13;"];
+  "X" -> "dateX" [arrowhead="none"];
+
+  "timeX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, label="   time\ :\ Time   ", tooltip="Time time&#13;"];
+  "X" -> "timeX" [arrowhead="none"];
+
+  // Class: Y
+  "Y" [shape=rectangle, label="   Y   ",
+   tooltip="class Y
+"];
+
+  // Attributes for Y
+  "dateY" [shape=ellipse, label=<   <u>date : Date</u>   >, tooltip="Date date&#13;"];
+  "Y" -> "dateY" [arrowhead="none"];
+
+  "timeY" [shape=ellipse, label=<   <u>time : Time</u>   >, tooltip="Time time&#13;"];
+  "Y" -> "timeY" [arrowhead="none"];
+
+  // All associations
+  "Y_X" [shape=diamond, label="   test   ", tooltip="Y->X"];
+  "Y" -> "Y_X" [dir="back", arrowtail="open", label="0..1", tooltip="Y->X"];
+
+  "Y_X" -> "X" [dir="back", arrowtail="open", label="*", tooltip="Y->X"];
+
+}
