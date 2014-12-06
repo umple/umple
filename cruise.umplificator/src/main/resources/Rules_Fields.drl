@@ -29,9 +29,9 @@ rule "JavaField_CanBeUmpleAttribute"
   		Attribute uAttr = new Attribute(attrName, attrType, null, null, false, uClass);
   		uAttr.setModifier("settable");
   		uClass.addAttribute(uAttr);
+		refactorClassField(fieldDeclaration, uClass);
     	// We insert the atribute into the Working memory,
     	// so it can accessed and modified by other Rules
-    	System.out.print(uClass.getName() + uAttr.getName());
     	update(uClass);    	
     	insert(uAttr);
 end
@@ -361,6 +361,17 @@ function String getFieldType(FieldDeclaration field){
 	else {
 	  return field.getType().toString();
 	}
+}
+
+function void refactorClassField(FieldDeclaration field, UmpleClass uClass) {
+	String beforeExtraCode = uClass.getExtraCode();
+	System.out.println("BEFORE:"+ beforeExtraCode);
+	String toRemove = field.toString();
+	String afterExtraCode = beforeExtraCode.replaceFirst(toRemove,"");
+	// Clean extracode from class
+	uClass.resetExtraCode();
+	uClass.appendExtraCode(afterExtraCode);
+	System.out.println("AFTER:"+ uClass.getExtraCode());
 }
 
 function String getValue(FieldDeclaration field){

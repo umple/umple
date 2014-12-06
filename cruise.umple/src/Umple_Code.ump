@@ -794,6 +794,11 @@ class UmpleElement
   {
     appendExtraCode(newCode,true);
   }
+  
+  public void resetExtraCode()
+  {
+  	extraCode = new ExtraCode();
+  }
 
   public void appendExtraCode(String newCode, boolean addNewline)
   {
