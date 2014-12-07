@@ -1,0 +1,11 @@
+// This example shows how to remove the warning by completing the key
+class Passenger {}
+
+class Flight {}
+
+associationClass Booking {
+  Integer number;
+  * Passenger passenger;
+  * Flight flight;
+  key {number, flight, passenger}
+}

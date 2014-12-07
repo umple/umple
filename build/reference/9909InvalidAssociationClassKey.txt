@@ -1,0 +1,21 @@
+W1011 Invalid Association Class Key
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when an Association Class key is missing a required member.</h2>
+
+<p>For Association Classes with explicit keys, each class that participates in the relationship should be declared as a member of that key.
+
+</p>
+
+
+@@example
+@@source manualexamples/W1011InvalidAssociationClassKey1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W1011InvalidAssociationClassKey2.ump
+@@endexample
+
