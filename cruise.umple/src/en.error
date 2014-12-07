@@ -155,7 +155,7 @@
 1008: 3, "http://umple.org/W1008MethodNotParsed.html", Method syntax could not be processed. It has been considered as Extra Code ;
 1009: 4, "http://umple.org/PageBeingDeveloped.html", Method '{0}' has a name conflict with automatic generated getter/setter methods for attribute '{1}'. The user definition is being disconsidered. Please use a different name ;
 1010: 3, "http://umple.org/PageBeingDeveloped.html", Constraint syntax, {0}, could not be processed. It has been considered as Extra Code ;
-1011: 3, "http://umple.org/W1011InvalidAssocationClassKey.html", AssociationClass '{0}' missing needed '{1}' key, provided {2} ;
+1011: 3, "http://umple.org/W1011InvalidAssociationClassKey.html", AssociationClass '{0}' missing needed '{1}' key, provided {2} ;
 
 1500 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: '{0}' not understood ; 
 1501 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 
