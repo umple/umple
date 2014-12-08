@@ -35,5 +35,7 @@
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/log4j-api-2.0.1.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/log4j-core-2.0.1.jar"/>
 	<classpathentry kind="lib" path="C:/Repositories/umple/dist/umple.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/org.eclipse.jface_3.10.0.v20140604-0740.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/org.eclipse.text_3.5.300.v20130515-1451.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

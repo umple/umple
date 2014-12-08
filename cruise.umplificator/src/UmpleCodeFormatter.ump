@@ -1,0 +1,29 @@
+namespace cruise.umplificator.formatter;
+
+class UmpleCodeFormatter {
+
+	depend org.eclipse.jdt.core.formatter.CodeFormatter;
+	depend org.eclipse.jdt.internal.formatter.DefaultCodeFormatter;
+	depend org.eclipse.jface.text.BadLocationException;
+	depend org.eclipse.jface.text.Document;
+	depend org.eclipse.jface.text.IDocument;
+	depend org.eclipse.text.edits.MalformedTreeException;
+	depend org.eclipse.text.edits.TextEdit;
+
+ public static  String beautifyCode(String input){
+
+      CodeFormatter cf = new DefaultCodeFormatter();	
+	  TextEdit te = cf.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS, input, 0,input.length(),1,System.getProperty("line.separator") );
+	  IDocument dc = new Document(input);
+	  try {
+		  te.apply(dc);
+		  return dc.get();
+	  } catch (MalformedTreeException e) {
+		  logger.error("---Error formatting code---:" + e.getMessage());
+	  } catch (BadLocationException e) {
+		  logger.error("---Error formatting code---:" +  e.getMessage());
+	  }
+	  return "";
+  }
+		
+}
