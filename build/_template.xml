@@ -31,6 +31,8 @@
     <pathelement location="lib/umplificatorplugins/org.eclipse.core.runtime_3.9.0.v20130326-1255.jar"/>
     <pathelement location="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar"/>
     <pathelement location="lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"/>
+	<pathelement location="lib/umplificatorplugins/org.eclipse.jface_3.10.0.v20140604-0740.jar"/>
+	<pathelement location="lib/umplificatorplugins/org.eclipse.text_3.5.300.v20130515-1451.jar"/>
     <pathelement location="lib/umplificatorplugins/log4j-core-2.0.1.jar"/>
     <pathelement location="lib/umplificatorplugins/log4j-api-2.0.1.jar"/>
 

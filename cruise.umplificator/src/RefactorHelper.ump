@@ -7,13 +7,12 @@ class RefactorHelper {
 	
 	public static void removeClassField(FieldDeclaration field, UmpleClass uClass) {
 		String beforeExtraCode = uClass.getExtraCode();
-		System.out.println("BEFORE:"+ beforeExtraCode);
 		String toRemove = field.toString();
 		String afterExtraCode = beforeExtraCode.replaceFirst(toRemove,"");
 		// Clean extracode from class
 		uClass.resetExtraCode();
+		// Append extraCode
 		uClass.appendExtraCode(afterExtraCode);
-		System.out.println("AFTER:"+ uClass.getExtraCode());
 	}
 
 	

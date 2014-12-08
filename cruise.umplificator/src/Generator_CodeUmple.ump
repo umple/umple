@@ -13,6 +13,7 @@ class UmpleToUmpleGenerator
   depend java.util.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.*;
+  depend cruise.umplificator.formatter.UmpleCodeFormatter;
 
    public String getUmpleClassAllCode(UmpleClass uClass){
     StringBuilder code = new StringBuilder();
@@ -109,7 +110,8 @@ class UmpleToUmpleGenerator
 
 			if (uClass.getExtraCode() != null)
 			{
-				code.append(uClass.getExtraCode());
+				String formattedCode = UmpleCodeFormatter.beautifyCode(uClass.getExtraCode());
+				code.append(formattedCode);
 			}
 
 
@@ -142,7 +144,8 @@ class UmpleToUmpleGenerator
 
 		if (uClass.getExtraCode() != null)
 		{
-			code.append(uClass.getExtraCode());
+			String formattedCode = UmpleCodeFormatter.beautifyCode(uClass.getExtraCode());	
+			code.append(formattedCode);
 		}
 		code.append("}\n");
 		return code.toString();
@@ -295,7 +298,8 @@ class UmpleToUmpleGenerator
 		}
 		if (uInterface.getExtraCode() != null)
 		{
-			code.append(uInterface.getExtraCode());
+			String formattedCode = UmpleCodeFormatter.beautifyCode(uInterface.getExtraCode());
+			code.append(formattedCode);
 		}
 		code.append("}");
 		return  code.toString();

@@ -16,7 +16,7 @@ rule "addClass_toUmpleModel"
 		umpleClass: UmpleClass()
 		umpleModel: UmpleModel()
 	then
-		System.out.println("ADDING CLASS TO MODEL: "+umpleClass.getName());
+		//System.out.println("ADDING CLASS TO MODEL: "+umpleClass.getName());
 	    umpleModel.addUmpleClass(umpleClass);
 end
 
