@@ -135,7 +135,14 @@ depend org.eclipse.jdt.core.dom.MethodDeclaration;
     
     public KieSession fireAllRules()
     {
+    	// Agenda works as a stack
      	logger.debug("RuleRunner.fireAllRules - Fire rules");
+     	logger.debug("RuleRunner.fireAllRules - Fire rules LEVEL1");
+		kieSession.getAgenda().getAgendaGroup( "LEVEL1" ).setFocus();
+		logger.debug("RuleRunner.fireAllRules - Fire rules LEVEL2");
+		kieSession.getAgenda().getAgendaGroup( "LEVEL2" ).setFocus();
+		logger.debug("RuleRunner.fireAllRules - Fire rules LEVEL2.1");
+		kieSession.getAgenda().getAgendaGroup( "LEVEL2.1" ).setFocus();
         kieSession.fireAllRules();
 
         return kieSession;
