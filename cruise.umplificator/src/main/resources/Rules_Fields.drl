@@ -2,8 +2,22 @@ package cruise.umplificator.rules
 
 import org.eclipse.jdt.core.dom.*;
 import cruise.umple.compiler.*;
-import org.apache.commons.lang.WordUtils;
-
+import function cruise.umplificator.rules.FieldAnalyzerHelper.getFieldContainerName
+import function cruise.umplificator.rules.FieldAnalyzerHelper.getFieldType
+import function cruise.umplificator.rules.FieldAnalyzerHelper.getAttributeType
+import function cruise.umplificator.rules.FieldAnalyzerHelper.getFieldName
+import function cruise.umplificator.rules.FieldAnalyzerHelper.isPrimitiveOrStringOrTime
+import function cruise.umplificator.rules.MethodAnalyzerHelper.getMethodContainerName
+import function cruise.umplificator.rules.MethodAnalyzerHelper.getMethodName
+import function cruise.umplificator.rules.MethodAnalyzerHelper.getMethodType
+import function cruise.umplificator.rules.MethodAnalyzerHelper.hasSignatureOfGetter
+import function cruise.umplificator.rules.MethodAnalyzerHelper.isSetterMethodName
+import function cruise.umplificator.rules.MethodAnalyzerHelper.isFieldInContructor
+import function cruise.umplificator.rules.MethodAnalyzerHelper.hasFieldAGetter
+import function cruise.umplificator.rules.MethodAnalyzerHelper.hasFieldASetter
+import function cruise.umplificator.rules.MethodAnalyzerHelper.getGetterName
+import function cruise.umplificator.rules.RefactorHelper.removeClassField
+import org.drools.core.*;
 /* --------------- RULES ------------------ /*
 /* Rules in Drools perform trasnformations to UmpleElements*/
 
@@ -13,7 +27,7 @@ Finally, the UmpleAttribute is inserted into the working memory (forward chainin
 */
 
 rule "JavaField_CanBeUmpleAttribute"
-  salience 50
+	agenda-group "LEVEL2" 
     when
         fieldDeclaration: FieldDeclaration()
         uClass: UmpleClass()
@@ -29,7 +43,7 @@ rule "JavaField_CanBeUmpleAttribute"
   		Attribute uAttr = new Attribute(attrName, attrType, null, null, false, uClass);
   		uAttr.setModifier("settable");
   		uClass.addAttribute(uAttr);
-		refactorClassField(fieldDeclaration, uClass);
+		removeClassField(fieldDeclaration, uClass);
     	// We insert the atribute into the Working memory,
     	// so it can accessed and modified by other Rules
     	update(uClass);    	
@@ -38,7 +52,7 @@ end
 
 
 rule "JavaField_isLazyAttribute"
-salience 30
+	agenda-group "LEVEL2.1" 
 	when
 	    fieldDeclaration: FieldDeclaration()
         method: MethodDeclaration(method.isConstructor())
@@ -57,7 +71,7 @@ end
 
 
 rule "JavaField_isImmutableAttribute"
-salience 10
+	agenda-group "LEVEL2.1" 
 	when	    
 		fieldDeclaration: FieldDeclaration()
         method: MethodDeclaration(method.isConstructor==false && method.parameters().size==1 )
@@ -110,302 +124,4 @@ query "Fields having a Getter"
 	attribute: Attribute(name.equals(getFieldName(fieldDeclaration)))
 end
 
-/* ---------------FUNCTIONS--------------------------- */
 
-/* --------------- isAttribute Helpers------------------ */
-
-
-function boolean isSetterMethodName( MethodDeclaration method, FieldDeclaration field){
-	String methodName = getMethodName(method);
-    String fieldName =  WordUtils.capitalize(getFieldName(field));
-    
-    if (methodName.contains(fieldName))
-    {
-    	return true;
-    }
-    else if (getSetterName(field).equals(methodName))
-    {
-    	return true;
-    }
-	return false;
-}
-
-function boolean isFieldInContructor(MethodDeclaration method, FieldDeclaration field, String className){
-  boolean toReturn = false;
-  ASTNode parentNode = method.getParent();
-  // Considering methods inside each class
-  TypeDeclaration container = (TypeDeclaration) parentNode;
-  // Is a constructor 
-  if (container.getName().getIdentifier().equals(className) && method.isConstructor())
-  {
-  // Determine now if field is initialized in constructor
- 	Block block = method.getBody();
- 	for (Object statement: block.statements())
- 	{
- 		Statement aInitialization = (Statement)statement;
- 		if (aInitialization instanceof ExpressionStatement) {
- 		    ExpressionStatement expressionStatement = (ExpressionStatement)aInitialization;
- 		    Expression expression  = expressionStatement.getExpression();
- 		   	if (expression instanceof Assignment) {
- 		        Assignment assignment = (Assignment)expression;
- 		        Expression lhs = assignment.getLeftHandSide();
- 		        Expression rhs = assignment.getRightHandSide();       
- 		        String fieldName = getFieldName(field);
- 		        // Field is initialized inside the constructor
- 		        if (lhs.toString().equals(fieldName)){
- 		        	//Now, determine if field is initialized using one of parameters of constructor
- 		        	// lhs =  the instance variable, rhs = the parameter in the constructor
-					for (Object obj: method.parameters())
-					{
-						 SingleVariableDeclaration param = (SingleVariableDeclaration) obj;
-						 String paramName = param.getName().toString();
-						 String RHS = rhs.toString();
-						 if (paramName.equals(RHS)){ // We could check the type
- 		         			toReturn =  true;
-						 }
-					}
- 		        }
- 		   	}
- 		}
- 	}
-  }
-  return toReturn;
-}
-
-
-function boolean hasFieldASetter(MethodDeclaration method, FieldDeclaration field, String className){
-  // Is a Setter?
-  ASTNode parentNode = method.getParent();
-  // Considering only methods inside each class
-  TypeDeclaration container = (TypeDeclaration) parentNode;
-  String methodName = getMethodName(method);
-  
-  if (container.getName().getIdentifier().equals(className) &&
-	  method.isConstructor()== false &&  method.parameters().size() == 1) {
-  		// Method return type should be void or boolean
-  	if (isSetterMethodName(method,field)) {
-  		String returnType = getMethodType(method);
-  		String fieldType = getFieldType(field);
-  		if (returnType.equals("boolean") || returnType.equals("void"))
-  		{
-  			SingleVariableDeclaration param = (SingleVariableDeclaration) method.parameters().get(0);
-  			String paramType = param.getType().toString();
-  			// Parameter should be of the same type of field
-  			if (paramType.equals(fieldType))
-  			{
-  				//System.out.println("HAS SETTER" + getFieldName(field) + getPosssibleSetterName);
-  				return true;
-  			}
-  		}
-  	}
- }
-  
-// System.out.println("HAS NOT  SETTER" + methodName + getPosssibleSetterName);
- return false;
-}
-
-
-function boolean hasFieldAGetter(MethodDeclaration method, FieldDeclaration field, String className){
-  ASTNode parentNode = method.getParent();
-  // Considering only methods inside each class
-  TypeDeclaration container = (TypeDeclaration) parentNode;
-  // Is a getter?
-  String methodName = getMethodName(method);
-  String fieldName  = getFieldName(field);
-  boolean isSignatureOfGetter = hasSignatureOfGetter(field,method); 
-  if (isPrimitiveOrStringOrTime(field)){ 
-	  if (container.getName().getFullyQualifiedName().equals(className) 
-	     && isSignatureOfGetter && method.parameters().size()== 0)
-	  {
-	  	// 1. Consider only methods that have the same type of field
-	  	String fieldType = getFieldType(field);
-	  	String methodReturnType = getMethodType(method);
-	    if (fieldType.equals(methodReturnType))
-	    {
-	    	// is the method returning the instance variable value?
-	     	Block block = method.getBody();
-		    for (Object obj: block.statements())
-		 	{
-		 		if (obj instanceof  ReturnStatement){
-		 			ReturnStatement returnStament = ( ReturnStatement) obj;
-		 			// RHS
-		 			Expression expression = returnStament.getExpression();
-		 			if (expression.toString().equals(fieldName)){	
-		 				//System.out.println("Field has getter: TRUE "+  fieldName);
-		 				return true;
-		 			}
-		 		}
-		 	}
-	    }
-   }
-  }
-  return false;
-}
-
-function String getMethodName(MethodDeclaration method){
-	return method.getName().getFullyQualifiedName();
-}
-
-function String getFieldContainerName(FieldDeclaration field)
-{
-	ASTNode parentNode = field.getParent();
-	if (parentNode.getNodeType() == ASTNode.TYPE_DECLARATION)
-	{
-		TypeDeclaration container = (TypeDeclaration) parentNode;
-		String javaClassName = container.getName().getFullyQualifiedName();
-		return javaClassName;
-	}
-	return "";
-}
-
-function String getMethodContainerName(MethodDeclaration method)
-{
-	ASTNode parentNode = method.getParent();
-	if (parentNode.getNodeType() == ASTNode.TYPE_DECLARATION)
-	{
-		TypeDeclaration container = (TypeDeclaration) parentNode;
-		String javaClassName = container.getName().getFullyQualifiedName();
-		return javaClassName;
-	}
-	return "";
-}
-
-
-function boolean isPrimitiveOrStringOrTime(FieldDeclaration field) {
-
-	if (field.getType().isPrimitiveType()){
-		return true;
-	}
-	else if (field.getType().isSimpleType())
-	{
-	    SimpleType simpleType = (SimpleType) field.getType();
-	    String fieldTypeName = simpleType.getName().getFullyQualifiedName(); 
-	    if (fieldTypeName.equalsIgnoreCase("string") ||
-	    	fieldTypeName.equalsIgnoreCase("date") || 
-	    	fieldTypeName.equalsIgnoreCase("time")){
-	    	return true;
-	    }
-	}
-	return false;
-}
-
-function String getMethodType(MethodDeclaration method){
-	Type returnType = method.getReturnType2();
-	if (returnType != null){ 
-		if (returnType.isSimpleType())
-		{  
-		    SimpleType simpleType = (SimpleType) returnType;
-		    String fieldTypeName = simpleType.getName().getFullyQualifiedName(); 
-		    return fieldTypeName;
-		}
-		else if (returnType.isQualifiedType()){
-			QualifiedType qualifiedType = (QualifiedType) returnType;
-			String fieldTypeName = qualifiedType.getName().getFullyQualifiedName(); 
-			return fieldTypeName;
-		}
-		else {
-		    return returnType.toString();
-		}
-	}
-	return "";
-}
-
-function String getGetterName(FieldDeclaration field)
-{
-	String fieldName = WordUtils.capitalize(getFieldName(field));
-	return "get" + fieldName;
-}
-
-function boolean hasSignatureOfGetter(FieldDeclaration field, MethodDeclaration method)
-{	
-	String methodName = getMethodName(method);
-	String fieldName = getFieldName(field);
-	String fieldNameCapitalized = WordUtils.capitalize(fieldName);
-	String option1 = "get" + fieldNameCapitalized;
-	String option2 = "is" + fieldNameCapitalized;
-	
-	// For instance getSomething()
-	if (methodName.equals(option1)){
-		return true;
-	}
-	// For instance isSomething()
-	else if (methodName.equals(option2)){
-		return true;
-	}
-	// For instance something()
-	else if (methodName.equals(fieldName)){
-		return true;
-	}
-	return false;
-}
-
-function String getSetterName(FieldDeclaration field)
-{
-	String fieldName = WordUtils.capitalize(getFieldName(field));
-	return "set" + fieldName;
-}
-
-function String getFieldName(FieldDeclaration field){
-   	Object declarationFrag = field.fragments().get(0);
-   	String fieldName = ((VariableDeclarationFragment) declarationFrag).getName().getFullyQualifiedName();
-   	return fieldName;
-}
-
-function String getFieldType(FieldDeclaration field){
-	if (field.getType().isSimpleType())
-	{
-	    SimpleType simpleType = (SimpleType) field.getType();
-	    String fieldTypeName = simpleType.getName().getFullyQualifiedName(); 
-	    return fieldTypeName;
-	}
-	else {
-	  return field.getType().toString();
-	}
-}
-
-function void refactorClassField(FieldDeclaration field, UmpleClass uClass) {
-	String beforeExtraCode = uClass.getExtraCode();
-	System.out.println("BEFORE:"+ beforeExtraCode);
-	String toRemove = field.toString();
-	String afterExtraCode = beforeExtraCode.replaceFirst(toRemove,"");
-	// Clean extracode from class
-	uClass.resetExtraCode();
-	uClass.appendExtraCode(afterExtraCode);
-	System.out.println("AFTER:"+ uClass.getExtraCode());
-}
-
-function String getValue(FieldDeclaration field){
-   	//VariableDeclarationFragment declarationFragment =  (VariableDeclarationFragment) field.fragments().get(0);
-   	//Expresion expression = declarationFragment.getInitializer();
-   	return "";
-}
-
-function String getAttributeType(FieldDeclaration field){
-	String attrType="";
-	String fieldType= getFieldType(field);
-		 	if  (fieldType.equals("byte")){
-			    return "Integer";}
-	         else if (fieldType.equals("short")) {
-	         	return "Integer";}
-	         else if (fieldType.equals("char")){
-	           return "String";}
-	         else  if (fieldType.equals("int")){  
-	           return "Integer";}
-	         else if (fieldType.equals("long")){
-	           return "Double";}
-	         else if (fieldType.equals("float")){ 
-	           return "Float"; }
-	         else if (fieldType.equals("double")){
-	           return "Double";}
-	         else if (fieldType.equals("boolean")){
-	          return "Boolean";}
-	         else if (fieldType.equals("String")){
-	           return "String";}
-	         else if (fieldType.equals("Time")){
-	           return "Time";}
-	         else if (fieldType.equals("Date")){
-	           return "Date";}
-	         else if  (fieldType.equals("void")){  
-	          return"";}
-	         else { throw new IllegalArgumentException("Invalid Type");}
-}

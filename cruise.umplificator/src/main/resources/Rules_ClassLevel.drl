@@ -5,19 +5,23 @@ import cruise.umple.compiler.*;
 import cruise.umplificator.parser.*;
 import java.util.*;
 
+import function cruise.umplificator.rules.TopLevelAnalyzerHelper.getImportName
+import function cruise.umplificator.rules.TopLevelAnalyzerHelper.getDeclarationContainerName
+import function cruise.umplificator.rules.TopLevelAnalyzerHelper.getImplementedInterfaces
+import function cruise.umplificator.rules.TopLevelAnalyzerHelper.getSuperClassName
 
 rule "addClass_toUmpleModel"
-  salience 100
+	agenda-group "LEVEL1" 
 	when
 		umpleClass: UmpleClass()
 		umpleModel: UmpleModel()
 	then
-		//System.out.println("ADDING CLASS TO MODEL: "+umpleClass.getName());
+		System.out.println("ADDING CLASS TO MODEL: "+umpleClass.getName());
 	    umpleModel.addUmpleClass(umpleClass);
 end
 
 rule "transform_ImportDeclaration"
-  salience 100
+	agenda-group "LEVEL1" 
 	when
 		importDeclaration: ImportDeclaration()
 		uClass: UmpleClass()
@@ -29,7 +33,7 @@ rule "transform_ImportDeclaration"
 end
 
 rule "transform_ImportDeclaration_UInterface"
-  salience 100
+	agenda-group "LEVEL1" 
 	when
 		importDeclaration: ImportDeclaration()
 		uInterface: UmpleInterface()
@@ -40,7 +44,7 @@ rule "transform_ImportDeclaration_UInterface"
 end
 
 rule "transform_InheritanceDeclaration_Interfaces"
-  salience 100
+	agenda-group "LEVEL1" 
 	when
 		typeDeclaration : TypeDeclaration(typeDeclaration.superInterfaceTypes().size() > 0)
 		uClass: UmpleClass(typeDeclaration.getName().getIdentifier().equals(uClass.getName()))
@@ -55,7 +59,7 @@ rule "transform_InheritanceDeclaration_Interfaces"
 end
 
 rule "transform_InheritanceDeclaration_Interfaces_UInterface"
-  salience 100
+	agenda-group "LEVEL1" 
 	when
 		typeDeclaration : TypeDeclaration(typeDeclaration.superInterfaceTypes().size() > 0)
 		uInterface: UmpleInterface(typeDeclaration.getName().getIdentifier().equals(uInterface.getName()))
@@ -70,7 +74,7 @@ rule "transform_InheritanceDeclaration_Interfaces_UInterface"
 end
 
 rule "transform_InheritanceDeclaration_SuperClasses"
-  salience 100
+	agenda-group "LEVEL1" 
 	when
 		typeDeclaration : TypeDeclaration(typeDeclaration.getSuperclassType() != null)
 		uClass: UmpleClass(typeDeclaration.getName().getIdentifier().equals(uClass.getName()))
@@ -80,7 +84,7 @@ rule "transform_InheritanceDeclaration_SuperClasses"
 end
 
 rule "transform_Namespace"
-  salience 100
+	agenda-group "LEVEL1" 
 	when
 		packageDeclaration: PackageDeclaration()
 		uClass: UmpleClass()
@@ -91,7 +95,7 @@ end
 
 
 rule "transform_Namespace_UInterface"
-  salience 100
+	agenda-group "LEVEL1" 
 	when
 		packageDeclaration: PackageDeclaration()
 		uInterface: UmpleInterface()
@@ -101,116 +105,46 @@ rule "transform_Namespace_UInterface"
 end
 
 rule "append_FieldDeclaration"
-  salience 100
+	agenda-group "LEVEL1" 
 	when
 		fieldDeclaration: FieldDeclaration()
 		uClass: UmpleClass()
 		eval(uClass.getName().equals(getDeclarationContainerName(fieldDeclaration)))
+		eval(!uClass.getExtraCode().contains(fieldDeclaration.toString()))
 	then
 		uClass.appendExtraCode(fieldDeclaration.toString());
 end
 
 rule "append_FieldDeclaration_interfaces"
-  salience 100
+	ruleflow-group "LEVEL1" 
 	when
 		fieldDeclaration: FieldDeclaration()
 		uInterface: UmpleInterface()
 		eval(uInterface.getName().equals(getDeclarationContainerName(fieldDeclaration)))
+		eval(!uInterface.getExtraCode().contains(fieldDeclaration.toString()))
 	then
 		uInterface.appendExtraCode(fieldDeclaration.toString());
 end
 
 rule "append_MethodDeclaration"
-  salience 100
+	agenda-group "LEVEL1" 
 	when
 		method: MethodDeclaration()
 		uClass: UmpleClass()
 		eval(uClass.getName().equals(getDeclarationContainerName(method)))
+		eval(!uClass.getExtraCode().contains(method.toString()))
 	then
 		uClass.appendExtraCode(method.toString());
 end
 
 rule "append_MethodDeclaration_interfaces"
-  salience 100
+	agenda-group "LEVEL1" 
 	when
 		method: MethodDeclaration()
 		uInterface: UmpleInterface()
 		eval(uInterface.getName().equals(getDeclarationContainerName(method)))
+		eval(!uInterface.getExtraCode().contains(method.toString()))
 	then
 		uInterface.appendExtraCode(method.toString());
 end
-
-
-//http://svn.apache.org/repos/asf/geronimo/devtools/j2g/trunk/plugins/org.apache.geronimo.devtools.j2g.sources/src/org/apache/geronimo/devtools/j2g/sources/dependence/NodesVisitor.java
-function String getImportName(ImportDeclaration importDeclaration){
-	StringBuilder importName =  new StringBuilder();
-	importName.append(importDeclaration.getName().getFullyQualifiedName());
-	if (importDeclaration.isOnDemand()) { 
-		importName.append(".*"); 
-	}else { 
-		importName.append("");
-	}
-	return importName.toString();
-}
-
-function String getSuperClassName(TypeDeclaration typeDecl)
-{
-    Type type = typeDecl.getSuperclassType();
-    String superClassname="";
-	if (type != null)
-	{
-		if (type.isSimpleType())
-		{
-		SimpleType simpleType = (SimpleType) type;
-		superClassname = simpleType.getName().getFullyQualifiedName();
-		}
-	}
-	return superClassname;
-}
-
-function List<String> getImplementedInterfaces(TypeDeclaration typeDeclaration)
-{
-	List<String> names = new ArrayList<String>();
-	List<Type> interfaceTypes = typeDeclaration.superInterfaceTypes();
-	for (Type aType : interfaceTypes)
-	{
-		if (aType !=null && aType.isSimpleType())
-		{
-			SimpleType simpleType = (SimpleType) aType;
-		    String interfaceName = simpleType.getName().getFullyQualifiedName();
-		    names.add(interfaceName);
-		}
-	}
-	return names;
-}
-
-function String getDeclarationContainerName(ASTNode declaration)
-{
-	if  ((declaration instanceof MethodDeclaration)   || 
-		 (declaration instanceof FieldDeclaration)) {
-		ASTNode parentNode = declaration.getParent();
-		if (parentNode.getNodeType() == ASTNode.TYPE_DECLARATION)
-		{
-			TypeDeclaration container = (TypeDeclaration) parentNode;
-			String javaClassName = container.getName().getFullyQualifiedName();
-			return javaClassName;
-		}
-	}
-	else if ((declaration instanceof ImportDeclaration)|| (declaration instanceof PackageDeclaration))
-	{
-		ASTNode parentNode = declaration.getParent();
-	    if (parentNode.getNodeType() == ASTNode.COMPILATION_UNIT)
-		{
-			// The parent node of a PackageDeclaration or ImportDeclaration is a compilation unit
-			CompilationUnit unit = (CompilationUnit) parentNode;
-			// We need to parse it, in order to extract name of compilationUnit
-			JavaParser javaParser =new JavaParser();
-			javaParser.parseUnit(parentNode.toString());
-			String compilationUnitName= javaParser.getJavaVisitor().getTypeDeclaration().getName().getFullyQualifiedName();
-			return compilationUnitName;
-		}			 
-	}
-	return "";
-}
-
 

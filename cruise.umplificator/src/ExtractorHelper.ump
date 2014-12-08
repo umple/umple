@@ -1,0 +1,377 @@
+namespace cruise.umplificator.rules;
+
+class FieldAnalyzerHelper {
+
+	depend org.eclipse.jdt.core.dom.*;
+	
+	public static String getFieldName(FieldDeclaration field){
+	   	Object declarationFrag = field.fragments().get(0);
+	   	String fieldName = ((VariableDeclarationFragment) declarationFrag).getName().getFullyQualifiedName();
+	   	return fieldName;
+	}
+	
+	public static String getFieldType(FieldDeclaration field){
+		if (field.getType().isSimpleType())
+		{
+		    SimpleType simpleType = (SimpleType) field.getType();
+		    String fieldTypeName = simpleType.getName().getFullyQualifiedName(); 
+		    return fieldTypeName;
+		}
+		else {
+		  return field.getType().toString();
+		}
+	}
+	
+	public static  boolean isPrimitiveOrStringOrTime(FieldDeclaration field) {
+	
+		if (field.getType().isPrimitiveType()){
+			return true;
+		}
+		else if (field.getType().isSimpleType())
+		{
+		    SimpleType simpleType = (SimpleType) field.getType();
+		    String fieldTypeName = simpleType.getName().getFullyQualifiedName(); 
+		    if (fieldTypeName.equalsIgnoreCase("string") ||
+		    	fieldTypeName.equalsIgnoreCase("date") || 
+		    	fieldTypeName.equalsIgnoreCase("time")){
+		    	return true;
+		    }
+		}
+		return false;
+	}
+	
+		
+	public static String getAttributeType(FieldDeclaration field){
+		String fieldType= getFieldType(field);
+			 	if  (fieldType.equals("byte")){
+				    return "Integer";}
+		         else if (fieldType.equals("short")) {
+		         	return "Integer";}
+		         else if (fieldType.equals("char")){
+		           return "String";}
+		         else  if (fieldType.equals("int")){  
+		           return "Integer";}
+		         else if (fieldType.equals("long")){
+		           return "Double";}
+		         else if (fieldType.equals("float")){ 
+		           return "Float"; }
+		         else if (fieldType.equals("double")){
+		           return "Double";}
+		         else if (fieldType.equals("boolean")){
+		          return "Boolean";}
+		         else if (fieldType.equals("String")){
+		           return "String";}
+		         else if (fieldType.equals("Time")){
+		           return "Time";}
+		         else if (fieldType.equals("Date")){
+		           return "Date";}
+		         else if  (fieldType.equals("void")){  
+		          return"";}
+		         else { throw new IllegalArgumentException("Invalid Type");}
+	}
+	
+	public static String getValue(FieldDeclaration field){
+	   	//VariableDeclarationFragment declarationFragment =  (VariableDeclarationFragment) field.fragments().get(0);
+	   	//Expresion expression = declarationFragment.getInitializer();
+	   	return "";
+	}
+	
+	public static  String getFieldContainerName(FieldDeclaration field)
+	{
+		ASTNode parentNode = field.getParent();
+		if (parentNode.getNodeType() == ASTNode.TYPE_DECLARATION)
+		{
+			TypeDeclaration container = (TypeDeclaration) parentNode;
+			String javaClassName = container.getName().getFullyQualifiedName();
+			return javaClassName;
+		}
+		return "";
+	}
+
+
+}
+
+class MethodAnalyzerHelper {
+
+	depend org.eclipse.jdt.core.dom.*;
+	depend org.apache.commons.lang.WordUtils;
+	depend cruise.umplificator.rules.FieldAnalyzerHelper;
+	
+	//Getters
+	public static boolean hasSignatureOfGetter(FieldDeclaration field, MethodDeclaration method)
+	{	
+		String methodName = getMethodName(method);
+		String fieldName = FieldAnalyzerHelper.getFieldName(field);
+		String fieldNameCapitalized = WordUtils.capitalize(fieldName);
+		String option1 = "get" + fieldNameCapitalized;
+		String option2 = "is" + fieldNameCapitalized;
+		
+		// For instance getSomething()
+		if (methodName.equals(option1)){
+			return true;
+		}
+		// For instance isSomething()
+		else if (methodName.equals(option2)){
+			return true;
+		}
+		// For instance something()
+		else if (methodName.equals(fieldName)){
+			return true;
+		}
+		return false;
+	}
+	
+	public static  String getGetterName(FieldDeclaration field)
+	{
+		String fieldName = WordUtils.capitalize(FieldAnalyzerHelper.getFieldName(field));
+		return "get" + fieldName;
+	}
+
+	public static  boolean hasFieldAGetter(MethodDeclaration method, FieldDeclaration field, String className){
+	  ASTNode parentNode = method.getParent();
+	  // Considering only methods inside each class
+	  TypeDeclaration container = (TypeDeclaration) parentNode;
+	  // Is a getter?
+	  String fieldName  = FieldAnalyzerHelper.getFieldName(field);
+	  boolean isSignatureOfGetter = hasSignatureOfGetter(field,method); 
+	  if (FieldAnalyzerHelper.isPrimitiveOrStringOrTime(field)){ 
+		  if (container.getName().getFullyQualifiedName().equals(className) 
+		     && isSignatureOfGetter && method.parameters().size()== 0)
+		  {
+		  	// 1. Consider only methods that have the same type of field
+		  	String fieldType = FieldAnalyzerHelper.getFieldType(field);
+		  	String methodReturnType = getMethodType(method);
+		    if (fieldType.equals(methodReturnType))
+		    {
+		    	// is the method returning the instance variable value?
+		     	Block block = method.getBody();
+			    for (Object obj: block.statements())
+			 	{
+			 		if (obj instanceof  ReturnStatement){
+			 			ReturnStatement returnStament = ( ReturnStatement) obj;
+			 			// RHS
+			 			Expression expression = returnStament.getExpression();
+			 			if (expression.toString().equals(fieldName)){	
+			 				//System.out.println("Field has getter: TRUE "+  fieldName);
+			 				return true;
+			 			}
+			 		}
+			 	}
+		    }
+	   }
+	  }
+	  return false;
+	}
+	
+	// Setters
+	public static  boolean isSetterMethodName( MethodDeclaration method, FieldDeclaration field){
+		String methodName = getMethodName(method);
+	    String fieldName =  WordUtils.capitalize(FieldAnalyzerHelper.getFieldName(field));
+	    
+	    if (methodName.contains(fieldName))
+	    {
+	    	return true;
+	    }
+	    else if (getSetterName(field).equals(methodName))
+	    {
+	    	return true;
+	    }
+		return false;
+	}
+	
+	public static  boolean hasFieldASetter(MethodDeclaration method, FieldDeclaration field, String className){
+	  // Is a Setter?
+	  ASTNode parentNode = method.getParent();
+	  // Considering only methods inside each class
+	  TypeDeclaration container = (TypeDeclaration) parentNode;  
+	  if (container.getName().getIdentifier().equals(className) &&
+		  method.isConstructor()== false &&  method.parameters().size() == 1) {
+	  		// Method return type should be void or boolean
+	  	if (isSetterMethodName(method,field)) {
+	  		String returnType = getMethodType(method);
+	  		String fieldType = FieldAnalyzerHelper.getFieldType(field);
+	  		if (returnType.equals("boolean") || returnType.equals("void"))
+	  		{
+	  			SingleVariableDeclaration param = (SingleVariableDeclaration) method.parameters().get(0);
+	  			String paramType = param.getType().toString();
+	  			// Parameter should be of the same type of field
+	  			if (paramType.equals(fieldType))
+	  			{
+	  				//System.out.println("HAS SETTER" + getFieldName(field) + getPosssibleSetterName);
+	  				return true;
+	  			}
+	  		}
+	  	}
+	 }
+	 // System.out.println("HAS NOT  SETTER" + methodName + getPosssibleSetterName);
+	 return false;
+	}
+	
+	public static String getSetterName(FieldDeclaration field)
+	{
+		String fieldName = WordUtils.capitalize(FieldAnalyzerHelper.getFieldName(field));
+		return "set" + fieldName;
+	}
+	
+	// Constructor
+
+	public static  boolean isFieldInContructor(MethodDeclaration method, FieldDeclaration field, String className){
+	  boolean toReturn = false;
+	  ASTNode parentNode = method.getParent();
+	  // Considering methods inside each class
+	  TypeDeclaration container = (TypeDeclaration) parentNode;
+	  // Is a constructor 
+	  if (container.getName().getIdentifier().equals(className) && method.isConstructor())
+	  {
+	  // Determine now if field is initialized in constructor
+	 	Block block = method.getBody();
+	 	for (Object statement: block.statements())
+	 	{
+	 		Statement aInitialization = (Statement)statement;
+	 		if (aInitialization instanceof ExpressionStatement) {
+	 		    ExpressionStatement expressionStatement = (ExpressionStatement)aInitialization;
+	 		    Expression expression  = expressionStatement.getExpression();
+	 		   	if (expression instanceof Assignment) {
+	 		        Assignment assignment = (Assignment)expression;
+	 		        Expression lhs = assignment.getLeftHandSide();
+	 		        Expression rhs = assignment.getRightHandSide();       
+	 		        String fieldName = FieldAnalyzerHelper.getFieldName(field);
+	 		        // Field is initialized inside the constructor
+	 		        if (lhs.toString().equals(fieldName)){
+	 		        	//Now, determine if field is initialized using one of parameters of constructor
+	 		        	// lhs =  the instance variable, rhs = the parameter in the constructor
+						for (Object obj: method.parameters())
+						{
+							 SingleVariableDeclaration param = (SingleVariableDeclaration) obj;
+							 String paramName = param.getName().toString();
+							 String RHS = rhs.toString();
+							 if (paramName.equals(RHS)){ // We could check the type
+	 		         			toReturn =  true;
+							 }
+						}
+	 		        }
+	 		   	}
+	 		}
+	 	}
+	  }
+	  return toReturn;
+	}
+	
+	// General Use	
+	public static  String getMethodName(MethodDeclaration method){
+		return method.getName().getFullyQualifiedName();
+	}
+	
+	public static  String getMethodContainerName(MethodDeclaration method)
+	{
+		ASTNode parentNode = method.getParent();
+		if (parentNode.getNodeType() == ASTNode.TYPE_DECLARATION)
+		{
+			TypeDeclaration container = (TypeDeclaration) parentNode;
+			String javaClassName = container.getName().getFullyQualifiedName();
+			return javaClassName;
+		}
+		return "";
+	}
+	
+	public static  String getMethodType(MethodDeclaration method){
+		Type returnType = method.getReturnType2();
+		if (returnType != null){ 
+			if (returnType.isSimpleType())
+			{  
+			    SimpleType simpleType = (SimpleType) returnType;
+			    String fieldTypeName = simpleType.getName().getFullyQualifiedName(); 
+			    return fieldTypeName;
+			}
+			else if (returnType.isQualifiedType()){
+				QualifiedType qualifiedType = (QualifiedType) returnType;
+				String fieldTypeName = qualifiedType.getName().getFullyQualifiedName(); 
+				return fieldTypeName;
+			}
+			else {
+			    return returnType.toString();
+			}
+		}
+		return "";
+	}
+}
+
+class TopLevelAnalyzerHelper {
+
+	depend org.eclipse.jdt.core.dom.*;
+	depend java.util.*;
+	depend cruise.umplificator.parser.JavaParser;
+	
+	//http://svn.apache.org/repos/asf/geronimo/devtools/j2g/trunk/plugins/org.apache.geronimo.devtools.j2g.sources/src/org/apache/geronimo/devtools/j2g/sources/dependence/NodesVisitor.java
+	public static String getImportName(ImportDeclaration importDeclaration){
+		StringBuilder importName =  new StringBuilder();
+		importName.append(importDeclaration.getName().getFullyQualifiedName());
+		if (importDeclaration.isOnDemand()) { 
+			importName.append(".*"); 
+		}else { 
+			importName.append("");
+		}
+		return importName.toString();
+	}
+	
+	public static  String getSuperClassName(TypeDeclaration typeDecl)
+	{
+	    Type type = typeDecl.getSuperclassType();
+	    String superClassname="";
+		if (type != null)
+		{
+			if (type.isSimpleType())
+			{
+			SimpleType simpleType = (SimpleType) type;
+			superClassname = simpleType.getName().getFullyQualifiedName();
+			}
+		}
+		return superClassname;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static  List<String> getImplementedInterfaces(TypeDeclaration typeDeclaration)
+	{
+		List<String> names = new ArrayList<String>();
+		List<Type> interfaceTypes = typeDeclaration.superInterfaceTypes();
+		for (Type aType : interfaceTypes)
+		{
+			if (aType !=null && aType.isSimpleType())
+			{
+				SimpleType simpleType = (SimpleType) aType;
+			    String interfaceName = simpleType.getName().getFullyQualifiedName();
+			    names.add(interfaceName);
+			}
+		}
+		return names;
+	}
+	
+	public static  String getDeclarationContainerName(ASTNode declaration)
+	{
+		if  ((declaration instanceof MethodDeclaration)   || 
+			 (declaration instanceof FieldDeclaration)) {
+			ASTNode parentNode = declaration.getParent();
+			if (parentNode.getNodeType() == ASTNode.TYPE_DECLARATION)
+			{
+				TypeDeclaration container = (TypeDeclaration) parentNode;
+				String javaClassName = container.getName().getFullyQualifiedName();
+				return javaClassName;
+			}
+		}
+		else if ((declaration instanceof ImportDeclaration)|| (declaration instanceof PackageDeclaration))
+		{
+			ASTNode parentNode = declaration.getParent();
+		    if (parentNode.getNodeType() == ASTNode.COMPILATION_UNIT)
+			{
+				// The parent node of a PackageDeclaration or ImportDeclaration is a compilation unit
+				// We need to parse it, in order to extract name of compilationUnit
+				JavaParser javaParser =new JavaParser();
+				javaParser.parseUnit(parentNode.toString());
+				String compilationUnitName= javaParser.getJavaVisitor().getTypeDeclaration().getName().getFullyQualifiedName();
+				return compilationUnitName;
+			}			 
+		}
+		return "";
+	}
+
+}

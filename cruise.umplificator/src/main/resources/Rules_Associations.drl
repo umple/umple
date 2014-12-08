@@ -2,13 +2,22 @@ package cruise.umplificator.rules
 
 import org.eclipse.jdt.core.dom.*;
 import cruise.umple.compiler.*;
+import function cruise.umplificator.rules.FieldAnalyzerHelper.getFieldName
+import function cruise.umplificator.rules.FieldAnalyzerHelper.isPrimitiveOrStringOrTime
+import function cruise.umplificator.rules.FieldAnalyzerHelper.getFieldContainerName
+import function cruise.umplificator.rules.MethodAnalyzerHelper.getMethodContainerName
 
 // These rules verify one association end to detect multiplicities
-/*
+
 rule "isAssociation"
     when
-        fieldDeclaration: FieldDeclaration(!fieldDeclaration.getType().isPrimitiveType())
+        fieldDeclaration: FieldDeclaration()
         uClass: UmpleClass()
+        method: MethodDeclaration()
+       	eval(!isPrimitiveOrStringOrTime(fieldDeclaration))				   
+       	eval(uClass.getName().equals(getFieldContainerName(fieldDeclaration)))
+    	eval(uClass.getName().equals(getMethodContainerName(method)))
+      	//eval(hasFieldAGetter(method, fieldDeclaration, uClass.getName()))
     then
     	//Association uAssoc = new Association(false, false, null);
 		// TODO ADD association names

@@ -30,3 +30,6 @@ use FileHelper.ump;
 use StringHelper.ump;
 use RuleRunner.ump;
 use Generator_CodeUmple.ump;
+use ExtractorHelper.ump;
+use RefactorHelper.ump;
+

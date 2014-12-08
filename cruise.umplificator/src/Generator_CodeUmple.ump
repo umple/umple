@@ -14,8 +14,8 @@ class UmpleToUmpleGenerator
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.*;
 
-public String getUmpleClassAllCode(UmpleClass uClass){
-		StringBuilder code = new StringBuilder();
+   public String getUmpleClassAllCode(UmpleClass uClass){
+    StringBuilder code = new StringBuilder();
 		ArrayList<Association> externalAssociations = new ArrayList<Association>();
 
 		if (uClass.hasNamespaces())
@@ -42,7 +42,7 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 
 		for (Depend aDepend : uClass.getDepends())
 		{
-			code.append(StringFormatter.format(" depend {0};\n", aDepend.getName()));   
+			code.append(StringFormatter.format("  depend {0};\n", aDepend.getName()));   
 		}
 
 		for (Attribute av : uClass.getAttributes())
@@ -72,6 +72,8 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 			{
 				code.append(StringFormatter.format(" = {0}", av.getValue()));
 			}
+			code.append(";\n");
+		}
 
 			for (Association as : uClass.getAssociations())
 			{
@@ -109,7 +111,7 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 			{
 				code.append(uClass.getExtraCode());
 			}
-		}
+
 
 		for (Association as : externalAssociations)
 		{
@@ -121,10 +123,9 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 			code.append("}");
 		}
 		
-		code.append(";\n");
+		code.append("}\n");
 		return code.toString();
-	}
-
+  }
 
 	/**
 	 * Algorithmitic code (extra code)
@@ -181,7 +182,7 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 
 		for (Depend aDepend : uClass.getDepends())
 		{
-			code.append(StringFormatter.format(" depend {0};\n", aDepend.getName()));   
+			code.append(StringFormatter.format("  depend {0};\n", aDepend.getName()));   
 		}
 
 		for (Attribute av : uClass.getAttributes())
@@ -290,7 +291,7 @@ public String getUmpleClassAllCode(UmpleClass uClass){
 		}
 		for (Depend aDepend : uInterface.getDepends())
 		{
-			code.append(StringFormatter.format(" depend {0};\n", aDepend.getName()));   
+			code.append(StringFormatter.format("  depend {0};\n", aDepend.getName()));   
 		}
 		if (uInterface.getExtraCode() != null)
 		{
