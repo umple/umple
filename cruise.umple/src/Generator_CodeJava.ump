@@ -1785,6 +1785,7 @@ class JavaGenerator
     executeMethods += "public void reset() { getInstance().traces.clear(); }";
     lookups.put("packageName","cruise.util");
     lookups.put("dependTracer","cruise.util.{0}Tracer");
+    lookups.put("dependDate","java.util.Date");
     lookups.put("stringTracer",executeMethods);
     lookups.put("startTime","(int)System.currentTimeMillis()");
     lookups.put("initial","handle(\"Time,Thread,UmpleFile,LineNumber,Class,Object,Operation,Name,Value\");");
