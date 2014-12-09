@@ -1,0 +1,26 @@
+Association Specializations
+Associations
+noreferences
+
+@@description
+
+<p> A specialization is a subset of duplicate associations where: <br/>
+<ul>
+<li> the role names are identical;
+<li> the associated types form a hierarchical structure (i.e. the specialized types are subclasses);
+<li> and the multiplicites are more specific than that of the previously defined association.
+</ul>
+</p> 
+
+<p> For example, consider the case of Vehicle and Wheel classes and an Optional One to Many association between them.
+A Wheel can only belong to one Vehicle, but the concept of a Vehicle can include any number of Wheels. Say, for instance, we wanted to create a new Bicycle class that extends Vehicle, but we would like to make use of the association that already exists with a stricter multiplicity (say, a Bicycle can have up to 2 Wheels). </p>
+&nbsp;<br/>
+<p> Without specialiations, we need to create a new association between Bicycle and Wheel and thus generate some unneeded code and duplicate data fields (both Vehicle and Bicycle would have a list of Wheels, which behave more or less the same). With specializations, simply stating that we want a new association between Bicycle and Wheel (as long as the names match up to the Vehicle to Wheel association) is enough to generate more appropriate code. 
+</p>
+
+&nbsp;<br/>
+
+@@example
+@@source manualexamples/assocSpecEx.ump
+@@endexample
+

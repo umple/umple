@@ -1,0 +1,45 @@
+// Here we define our base classes
+class Vehicle {}
+class Wheel {}
+
+// Here we define our subclasses
+class Bicycle { isA Vehicle; }
+class Unicycle { isA Vehicle; }
+
+// This is the "parent association" so to speak.
+// It defines the Vehicle to Wheel relationship with
+// as much abstraction as possible.
+association { 0..1 Vehicle vehicle -- 0..* Wheel wheel; }
+
+// Here, we'd like to extend the functionality of the 
+// previous association to work with subclasses of Vehicle,
+// while utilizing as much of the existing code as possible.
+// Specializations allow us to do this, since:
+// -> Bicycle and Unicycle extend Vehicle;
+// -> Wheel is part of the Wheel hierarchy;
+// -> The bounds on the left are not less specific than
+//    the left bound of the parent association;
+// -> The bounds on the right are not less specific than
+//    the right bound of the parent association;
+// -> Finally, the role names are the same.
+association { 0..1 Bicycle vehicle -- 0..2 Wheel wheel; }
+association { 0..1 Unicycle vehicle -- 0..1 Wheel wheel; }
+
+//$?[End_of_model]$?
+// Positioning
+class Bicycle
+{
+position 65 315 109 45;
+}
+class Unicycle
+{
+position 352 324 109 45;
+}
+class Vehicle
+{
+position 193 224 109 45;
+}
+class Wheel
+{
+position 188 35 109 45;
+}
