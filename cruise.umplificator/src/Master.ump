@@ -33,4 +33,3 @@ use Generator_CodeUmple.ump;
 use ExtractorHelper.ump;
 use RefactorHelper.ump;
 use UmpleCodeFormatter.ump;
-

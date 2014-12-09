@@ -48,7 +48,7 @@ class UmplificatorMain {
 	    optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
 	    optparser.accepts("dir", "If present, subdirectories based on namespaces will be generated");
 	    optparser.accepts("splitModel", "If present, two ouput files will be created for each input class. One for the model one for the rest");
-	    optparser.accepts("path", "The output folder path").withRequiredArg();
+	    optparser.accepts("path", "The output folder path").withRequiredArg().ofType(String.class);
         optparser.accepts("level","The level of Refactoring").withRequiredArg().ofType( Integer.class );
    	    return optparser;
     }
