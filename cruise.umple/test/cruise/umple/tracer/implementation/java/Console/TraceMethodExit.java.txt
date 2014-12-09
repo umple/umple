@@ -1,5 +1,4 @@
 import cruise.util.ConsoleTracer;
-import java.util.Date;
 
 public class Tracer
 {

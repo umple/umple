@@ -1,5 +1,4 @@
 package example;
-import java.util.Date;
 import org.lttng.ust.LTTngUst;
 
 public class Tracer
