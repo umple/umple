@@ -3,6 +3,7 @@ package cruise.umplificator.rules
 import org.eclipse.jdt.core.dom.*;
 import cruise.umple.compiler.*;
 import function cruise.umplificator.rules.FieldAnalyzerHelper.getFieldName
+import function cruise.umplificator.rules.FieldAnalyzerHelper.getFieldType
 import function cruise.umplificator.rules.FieldAnalyzerHelper.isPrimitiveOrStringOrTime
 import function cruise.umplificator.rules.FieldAnalyzerHelper.getFieldContainerName
 import function cruise.umplificator.rules.MethodAnalyzerHelper.getMethodContainerName
@@ -11,6 +12,7 @@ import function cruise.umplificator.rules.MethodAnalyzerHelper.getMethodContaine
 
 rule "isAssociation"
 	agenda-group "LEVEL3" 
+	no-loop
     when
         fieldDeclaration: FieldDeclaration()
         uClass: UmpleClass()
@@ -18,19 +20,29 @@ rule "isAssociation"
        	eval(!isPrimitiveOrStringOrTime(fieldDeclaration))				   
        	eval(uClass.getName().equals(getFieldContainerName(fieldDeclaration)))
     	eval(uClass.getName().equals(getMethodContainerName(method)))
-      	//eval(hasFieldAGetter(method, fieldDeclaration, uClass.getName()))
+    	eval(uClass.getAssociationVariable(getFieldName(fieldDeclaration))== null)
     then
+       String fieldType = getFieldType(fieldDeclaration);
+       String fieldName = getFieldName(fieldDeclaration);
        System.out.println(getFieldName(fieldDeclaration));
        Multiplicity mult = new Multiplicity();
        mult.setBound("*");
-	   AssociationEnd leftEnd = new AssociationEnd(null,uClass.getName(),null,uClass.getName(),mult);
-       Association uAssoc = new Association(true, true, false, false, leftEnd, null);
-    	//Association uAssoc = new  Association(false,fal
-		//uClass.addAssociation(uAssoc);
+       AssociationVariable assocVar = new AssociationVariable(fieldName, fieldType,"", "", mult, false);
+	   AssociationEnd leftEnd = new AssociationEnd(assocVar.getName(),assocVar.getType(),null,uClass.getName(),mult);
+	   AssociationEnd rightEnd = new AssociationEnd("something","A","something",uClass.getName(),mult);
+       Association uAssoc = new Association(true, true, false, false, leftEnd, rightEnd);
+       //uAssoc.setName(uClass.getName());
     	// We insert the association into the Working memory,
     	// so it can accessed and modified by other Rules
-       update(uClass);    	
+       uAssoc.setName(uClass.getName());
+	   uClass.addAssociation(uAssoc);
+       uClass.addAssociationVariable(assocVar);
+       insert(assocVar);
        insert(uAssoc);
+       update(uClass);    	
+       System.out.println(uClass.getAssociationVariables().size());
+       System.out.println(uClass.numberOfAssociations());
+       //insert(uAssoc);
 end
 
 /*

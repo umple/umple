@@ -112,6 +112,7 @@ class UmpleToUmpleGenerator
 			{
 				String formattedCode = UmpleCodeFormatter.beautifyCode(uClass.getExtraCode());
 				code.append(formattedCode);
+				code.append("\n");
 			}
 
 
@@ -146,6 +147,7 @@ class UmpleToUmpleGenerator
 		{
 			String formattedCode = UmpleCodeFormatter.beautifyCode(uClass.getExtraCode());	
 			code.append(formattedCode);
+			code.append("\n");
 		}
 		code.append("}\n");
 		return code.toString();
