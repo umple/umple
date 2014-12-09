@@ -1,5 +1,4 @@
 package example;
-import java.util.Date;
 import java.util.logging.*;
 
 public class Tracer

@@ -1,6 +1,5 @@
 import java.io.IOException;
 import cruise.util.StringTracer;
-import java.util.Date;
 
 public class PhoneLine
 {

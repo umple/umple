@@ -1,5 +1,4 @@
 import cruise.util.FileTracer;
-import java.util.Date;
 
 public class Tracer
 {
