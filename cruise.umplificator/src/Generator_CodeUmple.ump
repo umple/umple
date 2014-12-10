@@ -75,7 +75,7 @@ class UmpleToUmpleGenerator
 			}
 			code.append(";\n");
 		}
-
+				
 			for (Association as : uClass.getAssociations())
 			{
 				AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
@@ -115,7 +115,7 @@ class UmpleToUmpleGenerator
 				code.append("\n");
 			}
 
-
+			code.append("}\n");
 		for (Association as : externalAssociations)
 		{
 			AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
@@ -125,8 +125,6 @@ class UmpleToUmpleGenerator
 			code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), myEnd.getClassName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
 			code.append("}");
 		}
-		
-		code.append("}\n");
 		return code.toString();
   }
 
@@ -252,7 +250,7 @@ class UmpleToUmpleGenerator
 		{
 			generateMethod(m, code);
 		}
-
+		code.append("}\n");
 		for (Association as : externalAssociations)
 		{
 			AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
@@ -262,7 +260,6 @@ class UmpleToUmpleGenerator
 			code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), myEnd.getClassName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
 			code.append("}");
 		}
-				code.append("}\n");
 		return code.toString();
 	}
 

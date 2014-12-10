@@ -145,18 +145,20 @@ class MethodAnalyzerHelper {
 		    {
 		    	// is the method returning the instance variable value?
 		     	Block block = method.getBody();
-			    for (Object obj: block.statements())
-			 	{
-			 		if (obj instanceof  ReturnStatement){
-			 			ReturnStatement returnStament = ( ReturnStatement) obj;
-			 			// RHS
-			 			Expression expression = returnStament.getExpression();
-			 			if (expression.toString().equals(fieldName)){	
-			 				//System.out.println("Field has getter: TRUE "+  fieldName);
-			 				return true;
-			 			}
-			 		}
-			 	}
+				if (block != null){
+				    for (Object obj: block.statements())
+				 	{
+				 		if (obj instanceof  ReturnStatement){
+				 			ReturnStatement returnStament = ( ReturnStatement) obj;
+				 			// RHS
+				 			Expression expression = returnStament.getExpression();
+				 			if (expression.toString().equals(fieldName)){	
+				 				//System.out.println("Field has getter: TRUE "+  fieldName);
+				 				return true;
+				 			}
+				 		}
+				 	}
+		     	}
 		    }
 	   }
 	  }
