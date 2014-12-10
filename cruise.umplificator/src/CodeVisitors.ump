@@ -28,21 +28,21 @@ class JavaClassVisitor {
 
   @Override
   public boolean visit(ImportDeclaration node) {
-    logger.debug("Visiting ImportDeclarations");
+    logger.debug("Visiting ImportDeclarations-"+node.getName());
     importDeclarations.add(node);
     return super.visit(node);
   }
   
   @Override
   public boolean visit(FieldDeclaration node) {
-    logger.debug("Visiting FieldDeclarations");
+    logger.debug("Visiting FieldDeclarations-"+node.toString());
     fieldDeclarations.add(node);
     return super.visit(node);
   }
   
   @Override
   public boolean visit(MethodDeclaration node) {
-    logger.debug("Visiting MethodDeclarations");
+    logger.debug("Visiting MethodDeclarations-" +node.getName());
     methodDeclarations.add(node);
     return super.visit(node);
   }
@@ -50,7 +50,7 @@ class JavaClassVisitor {
   @Override
   public boolean visit(TypeDeclaration node) {
     // Main node to visit
-    logger.debug("Visiting TypeDeclarations");
+    logger.debug("Visiting TypeDeclarations-" +node.getName());
     name = node.getName().getFullyQualifiedName();
     isInterface = node.isInterface();
     typeDeclaration = node;
@@ -60,7 +60,7 @@ class JavaClassVisitor {
   @Override
   public boolean visit (PackageDeclaration node) 
   {
-    logger.debug("Visiting PackageDeclaration");
+    logger.debug("-Visiting PackageDeclaration-" +node.getName());
     packageDeclaration = node;
     return super.visit(node);
   }
@@ -68,7 +68,7 @@ class JavaClassVisitor {
   @Override
   public boolean visit (EnumDeclaration node) 
   {
-  	logger.debug("Visiting EnumDeclaration");
+  	logger.debug("Visiting EnumDeclaration-" +node.getName());
     enumDeclaration = new CodeBlock();
     name = node.getName().getFullyQualifiedName();
     String enumDeclarationCode = node.toString();
