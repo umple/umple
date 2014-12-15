@@ -1,4 +1,4 @@
-class TransmissionDrive{
+class TransmissionDrive {
 
 	drive {
       selectNeutral -> neutral;

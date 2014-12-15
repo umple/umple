@@ -6,7 +6,7 @@
   {
     for (State state : sm.getStates())
     {
-      for (Activity activity : state.getActivities())
+      if (state.getActivity() != null)
       {
         hasActivities = true;
         %><%@ include file="state_machine_doActivity.jet" %><%

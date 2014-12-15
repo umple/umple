@@ -1,9 +1,9 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-   void <%=gen.translate("type",uClass)%>::<%= gen.translate("doActivityMethod",activity)%>()
+   void <%=gen.translate("type",uClass)%>::<%= gen.translate("doActivityMethod",state)%>()
   {
      try
      {
-       <%= activity.getActivityCode() %>
+       <%= state.getActivity().getActivityCode() %>
      }
      catch (InterruptedException e)
      {

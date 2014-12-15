@@ -47,7 +47,7 @@
       }
     }
   
-    for (Activity activity : state.getActivities())
+    if (state.getActivity() != null)
     {
       if (!hasThisEntry)
       {
@@ -60,7 +60,7 @@
       hasEntry = true;
       hasThisEntry = true;
       isFirstEntry = false;
-      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",activity),gen.translate("doActivityThread",activity)));
+      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state),gen.translate("doActivityThread",state)));
     }
     
     if (hasThisEntry)

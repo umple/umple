@@ -616,17 +616,19 @@ public class CppHeaderGenerator implements ILang
     
     for (State state : sm.getStates())
     {
-      for (Activity activity : state.getActivities())
+      if (state.getActivity() == null)
       {
-        if (isFirst)
-        {
-          appendln(stringBuffer, "");
-          appendln(stringBuffer, "");
-          append(stringBuffer,"  //{0} Do Activity Threads", uClass.getName());
-          isFirst = false;
-        }
-        append(stringBuffer, "\n  Thread {0} = null;", gen.translate("doActivityThread",activity));
+        continue;
       }
+
+      if (isFirst)
+      {
+        appendln(stringBuffer, "");
+        appendln(stringBuffer, "");
+        append(stringBuffer,"  //{0} Do Activity Threads", uClass.getName());
+        isFirst = false;
+      }
+      append(stringBuffer, "\n  Thread {0} = null;", gen.translate("doActivityThread",state));
     }
   }
 }
@@ -1238,7 +1240,7 @@ public class CppHeaderGenerator implements ILang
       }
     }
   
-    for (Activity activity : state.getActivities())
+    if (state.getActivity() != null)
     {
       if (!hasThisEntry)
       {
@@ -1251,7 +1253,7 @@ public class CppHeaderGenerator implements ILang
       hasEntry = true;
       hasThisEntry = true;
       isFirstEntry = false;
-      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",activity),gen.translate("doActivityThread",activity)));
+      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state),gen.translate("doActivityThread",state)));
     }
     
     if (hasThisEntry)
@@ -2211,17 +2213,17 @@ public class CppHeaderGenerator implements ILang
   {
     for (State state : sm.getStates())
     {
-      for (Activity activity : state.getActivities())
+      if (state.getActivity() != null)
       {
         hasActivities = true;
         
     stringBuffer.append(TEXT_325);
     stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_326);
-    stringBuffer.append( gen.translate("doActivityMethod",activity));
+    stringBuffer.append( gen.translate("doActivityMethod",state));
     stringBuffer.append(TEXT_327);
     stringBuffer.append(TEXT_328);
-    stringBuffer.append( activity.getActivityCode() );
+    stringBuffer.append( state.getActivity().getActivityCode() );
     stringBuffer.append(TEXT_329);
     
       }
@@ -2238,7 +2240,7 @@ public class CppHeaderGenerator implements ILang
   {
     for (State state : sm.getStates())
     {
-      for (Activity activity : state.getActivities())
+      if (state.getActivity() != null)
       {
         if (isFirst)
         {
@@ -2249,9 +2251,9 @@ public class CppHeaderGenerator implements ILang
         {
           output.append(StringFormatter.format("\n        else if"));
         }
-        output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",activity)));
+        output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",state)));
         output.append(StringFormatter.format("      {\n"));
-        output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",activity)));
+        output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",state)));
         output.append(StringFormatter.format("      }"));
       }
     }

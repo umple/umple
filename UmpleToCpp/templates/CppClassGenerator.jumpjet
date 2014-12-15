@@ -65,12 +65,7 @@
   <%@ include file="attribute_Get_All.jet" %>
   <%@ include file="state_machine_Get_All.jet" %>
   <%@ include file="state_machine_Events_All.jet" %>
-  <%@ include file="state_machine_Set_All.jet" %><%
-    return getAssociationCode(stringBuffer,model, gen,uClass,gClass,false);
-  }
-  public String getAssociationCode(StringBuffer stringBuffer, UmpleModel model, CppGenerator gen, UmpleClass uClass, GeneratedClass gClass, boolean isFirst)
-  {
-  %>
+  <%@ include file="state_machine_Set_All.jet" %>
   <%@ include file="association_Get_All.jet" %>
   <%@ include file="association_Set_All.jet" %>
 <% if (uClass.getKey().isProvided()) { %>
