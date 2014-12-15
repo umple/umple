@@ -9,7 +9,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.internal.runtime.InternalPlatform;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
@@ -17,7 +21,6 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -68,29 +71,38 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
         window.getActivePage().saveAllEditors(false);
 
         IEditorPart editor = window.getActivePage().getActiveEditor();
+        
         // Check 1. Verify that a FileEditor View is opened
         if (editor == null)
         {
           throw new Exception("Please open an Umple file.");
         }
         IResource fName = (IResource) editor.getEditorInput().getAdapter(IResource.class);
-
-        String name = fName.getFullPath().toOSString();
-        String wsLocation = fName.getWorkspace().getRoot().getLocation().toOSString();
+        // Getting the location (for linked resources) instead of the path
+        // 10-27-2014
+        String wsLocation = fName.getLocation().toOSString();
 
         String fileName = window.getActivePage().getActiveEditor().getTitle().toString();
         // Check 2. Verify if it is an Umple file before processing it
         if (!(fileName.endsWith(".ump")) || fileName.equals("")){
           throw new Exception("Please open an Umple file.");
         }
-        String fullPath = wsLocation + name;
+        String fullPath = wsLocation;
 
         // Extract the file name from the path so the file name woudln't be
         // duplicated
         UmpleFile file = new UmpleFile(fullPath.substring(0, fullPath.lastIndexOf(fileName, fullPath.length() - 1)), fileName);
         model = new UmpleModel(file);
         try{
+          
+    	  if("GeneratePapyrus".equals(action.getId())) {
+    		  model.addGenerate("Papyrus");
+    	  }
+          
           model.run();
+          
+          // Refresh the project so our generated files appear automatically
+          fName.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
         }
         catch (Exception e1)
         {

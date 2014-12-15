@@ -12,13 +12,13 @@ MODULE Status
   TRANS
     (state = Closing) -> (
         (event = buttonOrObstacle & next(state) = Opening)  |
-        (event = reachBottom & next(state) = Closed)  ) &
+        (event = reachBottom & next(state) = Closed)  ) |
     (state = Opening) -> (
         (event = buttonOrObstacle & next(state) = HalfOpen)  |
-        (event = reachTop & next(state) = Open)  ) &
+        (event = reachTop & next(state) = Open)  ) |
     (state = Open) -> (
-        event = buttonOrObstacle & next(state) = Closing) &
+        event = buttonOrObstacle & next(state) = Closing) |
     (state = Closed) -> (
-        event = buttonOrObstacle & next(state) = Opening) &
+        event = buttonOrObstacle & next(state) = Opening) |
     (state = HalfOpen) -> (
         event = buttonOrObstacle & next(state) = Opening)

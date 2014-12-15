@@ -12,16 +12,16 @@ MODULE Status
   TRANS
     (state = Planned) -> (
         (event = cancel & next(state) = Cancelled)  |
-        (event = openRegistration & next(state) = OpenNotEnoughStudents)  ) &
+        (event = openRegistration & next(state) = OpenNotEnoughStudents)  ) |
     (state = OpenNotEnoughStudents) -> (
         (event = requestToRegister & next(state) = OpenNotEnoughStudents)  |
         (event = closeRegistration & next(state) = Cancelled)  |
         (event = cancel & next(state) = Cancelled)  |
-        (event = classSizeExceedsMinimum & next(state) = OpenEnoughStudents)  ) &
+        (event = classSizeExceedsMinimum & next(state) = OpenEnoughStudents)  ) |
     (state = OpenEnoughStudents) -> (
         (event = cancel & next(state) = Cancelled)  |
         (event = requestToRegister & next(state) = OpenEnoughStudents)  |
         (event = closeRegistration & next(state) = Closed)  |
-        (event = classSizeExceedsMaximum & next(state) = Closed)  ) &
+        (event = classSizeExceedsMaximum & next(state) = Closed)  ) |
     (state = Closed) -> (
         event = cancel & next(state) = Cancelled)
