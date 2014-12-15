@@ -7,17 +7,19 @@
     
     for (State state : sm.getStates())
     {
-      for (Activity activity : state.getActivities())
+      if (state.getActivity() == null)
       {
-        if (isFirst)
-        {
-          appendln(stringBuffer, "");
-          appendln(stringBuffer, "");
-          append(stringBuffer,"  //{0} Do Activity Threads", uClass.getName());
-          isFirst = false;
-        }
-        append(stringBuffer, "\n  Thread {0} = null;", gen.translate("doActivityThread",activity));
+        continue;
       }
+
+      if (isFirst)
+      {
+        appendln(stringBuffer, "");
+        appendln(stringBuffer, "");
+        append(stringBuffer,"  //{0} Do Activity Threads", uClass.getName());
+        isFirst = false;
+      }
+      append(stringBuffer, "\n  Thread {0} = null;", gen.translate("doActivityThread",state));
     }
   }
 }

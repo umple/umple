@@ -33,7 +33,6 @@ public interface ICppStatemachinesDefinitions {
 	public final static String DO_ACTIVITY_IMPLEMENTATION= "cpp.do.activity.implementation";  //$NON-NLS-1$
 	public final static String DO_ACTIVITY_MEDIATOR_IMPLEMENTATION= "cpp.do.activity.mediator.implementation";  //$NON-NLS-1$
 	public final static String DO_ACTIVITY_FUNCTION_POINTER_IMPLEMENTATION= "cpp.do.activity.function.pointer.implementation";  //$NON-NLS-1$
-	public final static String DO_ACTIVITY_FUNCTION_WRAP= "cpp.do.activity.function.pointer.wrap";  //$NON-NLS-1$
 	
 	public final static String STATEMACHINE_METHOD_IMPLEMENTATION= "cpp.statemachine.events.implementation"; //$NON-NLS-1$
 	

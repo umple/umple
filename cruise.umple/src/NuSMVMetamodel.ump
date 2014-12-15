@@ -3,7 +3,7 @@ namespace cruise.umple.nusmv;
 class NuSMVModule
 {
 
-  depend cruise.umple.compiler.*;
+  //depend cruise.umple.compiler.*;
   
   // Attributes declaration
   name; startState;

@@ -71,20 +71,17 @@
 //      String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("removeMethod",av)));
 //      String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("removeMethod",av)));
 
-      if(customSetPrefixCode!=null||customSetPostfixCode!=null)
+      if (av.getModifier().equals("defaulted")&&(customSetPrefixCode!=null&&customSetPostfixCode!=null)&&customSetPrefixCode.matches("[\\s]*if.*\\n[\\s]*.*"))
       {
-        if (av.getModifier().equals("defaulted"))
-        {
-          %><%@ include file="attribute_SetDefaulted_subclass.jet" %><%
-        }
-        else if (av.getIsList())
-        {
-          %><%@ include file="attribute_SetMany_subclass.jet" %><%
-        }
-        else if(!av.isImmutable()||av.getIsLazy())//if(customSetPrefixCode!=null&&customSetPostfixCode!=null&&customSetPrefixCode.matches("[\\s]*if.*\\n[\\s]*.*"))
-        {
-          %><%@ include file="attribute_Set_subclass.jet" %><%
-        }
+        %><%@ include file="attribute_SetDefaulted_subclass.jet" %><%
+      }
+      else if (av.getIsList()&&(customAddPrefixCode!=null&&customAddPostfixCode!=null)&&customAddPrefixCode.matches("[\\s]*if.*\\n[\\s]*.*"))
+      {
+        %><%@ include file="attribute_SetMany_subclass.jet" %><%
+      }
+      else if(customSetPrefixCode!=null&&customSetPostfixCode!=null&&customSetPrefixCode.matches("[\\s]*if.*\\n[\\s]*.*"))
+      {
+        %><%@ include file="attribute_Set_subclass.jet" %><%
       }    
     }
   }

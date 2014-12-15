@@ -7,7 +7,7 @@
   {
     for (State state : sm.getStates())
     {
-      for (Activity activity : state.getActivities())
+      if (state.getActivity() != null)
       {
         if (isFirst)
         {
@@ -18,9 +18,9 @@
         {
           output.append(StringFormatter.format("\n        else if"));
         }
-        output.append(StringFormatter.format(" (\"{0}\".eql?(doActivityMethodName))\n",gen.translate("doActivityMethod",activity)));
+        output.append(StringFormatter.format(" (\"{0}\".eql?(doActivityMethodName))\n",gen.translate("doActivityMethod",state)));
         output.append(StringFormatter.format("        {\n"));
-        output.append(StringFormatter.format("          controller.{0}\n",gen.translate("doActivityMethod",activity)));
+        output.append(StringFormatter.format("          controller.{0}\n",gen.translate("doActivityMethod",state)));
         output.append(StringFormatter.format("        }"));
       }
     }
