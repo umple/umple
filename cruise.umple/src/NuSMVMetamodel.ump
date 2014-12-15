@@ -3,7 +3,7 @@ namespace cruise.umple.nusmv;
 class NuSMVModule
 {
 
-  depend cruise.umple.compiler.*;
+  //depend cruise.umple.compiler.*;
   
   // Attributes declaration
   name; startState;
@@ -128,7 +128,7 @@ class TransitionPart
   		int i = 0;
   		while(i < n - 1)
   		{
-  			temp += nuSMVTransitions.get(i).print() + " |\n    ";
+  			temp += nuSMVTransitions.get(i).print() + " &\n    ";
   			i++;
   		}
   		temp += nuSMVTransitions.get(i).print();
@@ -195,7 +195,7 @@ class SimpleTransition
  	return printTransitionWithNoEvent();
   }
   
-  outputWithNoEvent <<!(state = <<=getFromState()>>) -> (next(state) = <<=getNextState()>>)!>>
+  outputWithNoEvent <<!(event = <<=getFromState()>>) -> (next(state) = <<=getNextState()>>)!>>
   	emit printTransitionWithNoEvent()(outputWithNoEvent);
   
   output <<!(state = <<=getFromState()>>) -> (

@@ -85,7 +85,7 @@ space <<!
     //}
   }*/
   
-  public List<String> guardList(StateMachine sm)
+  /*public List<String> guardList(StateMachine sm)
   {
     String temp = "";
   	List<String> str = new ArrayList();
@@ -99,8 +99,8 @@ space <<!
       }
     }
     return str;
-  }
-  
+  }*/
+  /*
   private boolean checkDuplicate(String temp,List<String> str)
   {
     for(String st : str)
@@ -109,13 +109,13 @@ space <<!
         return true;
     }
     return false;
-  }
+  }*/
   
   public EnumerationStatement genStateVariables(StateMachine sm)
   {
   	EnumerationElement temp = new EnumerationElement("");
   	EnumerationStatement decState = new EnumerationStatement("state",temp);
-  	EnumerationStatement decTransition = new EnumerationStatement("event",temp);
+  	//EnumerationStatement decTransition = new EnumerationStatement("event",temp);
   	EnumerationStatement decState2 = new EnumerationStatement("state",temp);
   	//Creates states list  			
   	for(State st : sm.getStates())
