@@ -1,0 +1,14 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  bool <%=gen.translate("type",uClass)%>::<%= gen.translate("setMethod",av) %>(const <%=gen.translate("type",av)%> & <%=gen.translate("parameterOne",av)%>)
+  {
+    bool wasSet = false;
+    <% if (customSetPrefixCode != null) {
+      append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
+      <% for( TraceItem traceItem : traceItems ) %><%= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"at_s", uClass,gen.translate("parameterOne",av)):"")%>
+      wasSet = super::<%= gen.translate("setMethod",av) %>(<%=gen.translate("parameterOne",av)%>);
+      <% for( TraceItem traceItem : traceItems ) %><%= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"at_s", uClass):"")%>
+    <% if (customSetPostfixCode != null) {
+      append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
+    return wasSet;
+  }
+

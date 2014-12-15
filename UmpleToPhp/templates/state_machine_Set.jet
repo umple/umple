@@ -99,7 +99,7 @@
       }
     }
   
-    if (state.getActivity() != null)
+    for (Activity activity : state.getActivities())
     {
       if (!hasThisEntry)
       {
@@ -116,7 +116,7 @@
       hasEntry = true;
       hasThisEntry = true;
       isFirstEntry = false;
-      entryActions.append(StringFormatter.format("\n      {0}",state.getActivity().getActivityCode()));
+      entryActions.append(StringFormatter.format("\n      {0}",activity.getActivityCode()));
     }
     
     if (hasThisEntry)
