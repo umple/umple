@@ -46,6 +46,7 @@ space <<!
   	}
   	decTransition.removeEnumerationElement(temp);
   	DeclarationPart dPart = new DeclarationPart("", genStateVariables(sm), decTransition);
+  	
   	/*for(String st : guardList(sm))
   	{
   	  VarDeclarationStatement varStmt = new VarDeclarationStatement("","boolean",st);
@@ -92,7 +93,8 @@ space <<!
     for(Transition trans : sm.getAllTransitions())
     {
   
-      //temp = trans.getGuard().getValue();
+      //temp = (new JavaGenerator()).translate("Plain", trans.getGuard());
+      //(new JavaGenerator()).translate("Plain", transition.getGuard());
       if(!(trans.getGuard() == null & checkDuplicate(temp,str)))
       {
       	str.add(temp);

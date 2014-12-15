@@ -12,27 +12,27 @@ MODULE LockState
   TRANS
     (state = BothDoorsClosedLockFull) -> (
         (event = boatRequestsToEnterAndGoDown & next(state) = OpeningUpperGate)  |
-        (event = boatRequestsToEnterAndGoUp & next(state) = LoweringWater)  ) |
+        (event = boatRequestsToEnterAndGoUp & next(state) = LoweringWater)  ) &
     (state = UpperGateOpen) -> (
         (event = boatInLockRequestingToGoDown & next(state) = ClosingUpperGate)  |
-        (event = after3minutes & next(state) = ClosingUpperGate)  ) |
+        (event = after3minutes & next(state) = ClosingUpperGate)  ) &
     (state = ClosingUpperGate) -> (
         (event = upperGateFullyClosed & next(state) = LoweringWater)  |
-        (event = upperGateFullyClosed & next(state) = BothDoorsClosedLockFull)  ) |
+        (event = upperGateFullyClosed & next(state) = BothDoorsClosedLockFull)  ) &
     (state = BothDoorsClosedLockEmpty) -> (
         (event = boatRequestsToEnterAndGoUp & next(state) = OpeningLowerGate)  |
-        (event = boatRequestsToEnterAndGoDown & next(state) = RaisingWater)  ) |
+        (event = boatRequestsToEnterAndGoDown & next(state) = RaisingWater)  ) &
     (state = LowerGateOpen) -> (
         (event = boatInLockRequestingToGoUp & next(state) = ClosingLowerGate)  |
-        (event = after3minutes & next(state) = ClosingLowerGate)  ) |
+        (event = after3minutes & next(state) = ClosingLowerGate)  ) &
     (state = ClosingLowerGate) -> (
         (event = lowerGateFullyClosed & next(state) = RaisingWater)  |
-        (event = lowerGateFullyClosed & next(state) = BothDoorsClosedLockEmpty)  ) |
+        (event = lowerGateFullyClosed & next(state) = BothDoorsClosedLockEmpty)  ) &
     (state = OpeningUpperGate) -> (
-        event = upperGateFullyOpen & next(state) = UpperGateOpen) |
+        event = upperGateFullyOpen & next(state) = UpperGateOpen) &
     (state = LoweringWater) -> (
-        event = waterLevelMatchesDownStream & next(state) = OpeningLowerGate) |
+        event = waterLevelMatchesDownStream & next(state) = OpeningLowerGate) &
     (state = OpeningLowerGate) -> (
-        event = lowerGateFullyOpen & next(state) = LowerGateOpen) |
+        event = lowerGateFullyOpen & next(state) = LowerGateOpen) &
     (state = RaisingWater) -> (
         event = waterLevelMatchesUpStream & next(state) = OpeningUpperGate)
