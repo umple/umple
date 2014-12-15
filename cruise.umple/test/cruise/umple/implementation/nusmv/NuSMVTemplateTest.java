@@ -30,6 +30,8 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/Test.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/CarTransmission.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/CourseSection.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/GrantApplication.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/AbstractMachine.smv");
 	  }
 	  
 	  @Test @Ignore
@@ -78,5 +80,19 @@ public class NuSMVTemplateTest extends TemplateTest{
 	  {
 		assertUmpleTemplateFor("nusmv/CourseSection.ump","nusmv/CourseSection.nusmv.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/CourseSection.smv")).exists());
+	  }
+	  
+	  @Test 
+	  public void GrantApplication()
+	  {
+		assertUmpleTemplateFor("nusmv/GrantApplication.ump","nusmv/GrantApplication.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/GrantApplication.smv")).exists());
+	  }
+	  
+	  @Test 
+	  public void AbstractMachine()
+	  {
+		assertUmpleTemplateFor("nusmv/AbstractMachine.ump","nusmv/AbstractMachine.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/AbstractMachine.smv")).exists());
 	  }
 }

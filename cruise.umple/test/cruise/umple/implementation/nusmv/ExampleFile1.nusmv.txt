@@ -12,10 +12,10 @@ MODULE State
   TRANS
     (state = newBooking) -> (
         (event = assignSeat & next(state) = seatAssigned)  |
-        (event = cancel & next(state) = cancelled)  ) |
+        (event = cancel & next(state) = cancelled)  ) &
     (state = seatAssigned) -> (
         (event = cancel & next(state) = cancelled)  |
-        (event = checkIn & next(state) = checkedIn)  ) |
+        (event = checkIn & next(state) = checkedIn)  ) &
     (state = checkedIn) -> (
         (event = cancel & next(state) = cancelled)  |
         (event = complete & next(state) = completed)  )

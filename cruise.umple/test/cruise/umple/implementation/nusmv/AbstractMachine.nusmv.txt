@@ -1,0 +1,17 @@
+-- This file is generated from AbstractMachine.ump --
+
+MODULE S2
+  
+  VAR 
+    state : { s2a , s2b , e1 , s1 }; 
+    event : { e3 };  
+    
+  ASSIGN
+    init(state) := s2a;   
+     
+  TRANS
+    (state = s2a) -> (
+        event = e3 & next(state) = s2b) &
+    (state = s2b) -> (
+        event = e3 & next(state) = s2a) &
+    (event = e1) -> (next(state) = s1)
