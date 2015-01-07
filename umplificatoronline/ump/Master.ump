@@ -1,0 +1,8 @@
+strictness allow 1008;
+
+generate Php "../models";
+
+use codeAnalyzer.ump;
+use downloader.ump;
+use grapher.ump;
+use umplificator.ump;
