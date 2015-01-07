@@ -3,6 +3,9 @@ namespace cruise.umplificator.core;
 class Umplificator {
 
 public boolean umplify(List<File> srcFiles) {
+	StopWatch watch = new LoggingStopWatch("model");
+	logger.debug("start time : "+watch.getStartTime());
+	
     FileHelper.printFilesToUmplify(srcFiles);
     // Initializing a new Umple Model
     outputModel = new UmpleModel(null);
@@ -17,6 +20,10 @@ public boolean umplify(List<File> srcFiles) {
     }
     // Generates a MasterFile if we have processed more than one file
    FileHelper.writeMasterFile(filesUmplified, outputFolder, needSubDirectories,testMode, splitModel);
+   // generate Umple Code
+   FileHelper.writeFile(outputModel, outputFolder,needSubDirectories,testMode,splitModel);
+   logger.debug("Elapsed Time : "+ watch.getElapsedTime());
+   logger.debug("Stop Time : "+watch.stop());
    return true;
 }
 
@@ -118,8 +125,7 @@ public boolean umplifyJava(File file)
 		    	outputModel.addExtraCode(javaParser.getJavaVisitor().getEnumDeclaration());
 		    }
 		    filesUmplified.add(umpleFile.getSimpleFileName());
-			// generate Umple Code
-			FileHelper.writeFile(outputModel, outputFolder,needSubDirectories,testMode,splitModel);
+
 		} catch (IOException e) {
 			logger.error("IOso Exception in Umplificator.umplifyUmpleFile");
 			logger.error(e.getStackTrace());
