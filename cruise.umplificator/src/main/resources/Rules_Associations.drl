@@ -51,6 +51,48 @@ rule "isAssociation"
        System.out.println(uClass.numberOfAssociations());
 end
 
+rule "MatchOtherAssociationEnd"
+	agenda-group "LEVEL3" 
+	no-loop
+    when
+        fieldDeclaration: FieldDeclaration()
+        uClass: UmpleClass()
+        method: MethodDeclaration()
+        
+       	eval(!isPrimitiveOrStringOrTime(fieldDeclaration))				   
+       	eval(uClass.getName().equals(getFieldContainerName(fieldDeclaration)))
+    	eval(uClass.getName().equals(getMethodContainerName(method)))
+    	eval(uClass.getAssociationVariable(getFieldName(fieldDeclaration))== null)
+    	//Student -> Supervisor
+    then
+       String fieldType = getFieldType(fieldDeclaration);
+       String fieldName = getFieldName(fieldDeclaration);
+       //System.out.println(getFieldName(fieldDeclaration));
+       // Initial Multiplicity
+       // * -- 0..1 Supervisor;
+       Multiplicity mult = new Multiplicity();
+       mult.setBound("0..1"); // TO BE EXTRACTED
+       Multiplicity mult2 = new Multiplicity();
+       mult2.setBound("*"); // TO BE ANALYZED IN OTHER RULES
+       // Rolename, className, modifier, referencedClass, multiplicity
+       // Left end is complete
+       AssociationEnd leftEnd = new AssociationEnd("",uClass.getName(),"","",mult2);
+       // Right end needs to be completed
+	   AssociationEnd rightEnd = new AssociationEnd("",fieldType,"",uClass.getName(),mult);
+       AssociationVariable assocVar = new AssociationVariable(fieldName, fieldType,"", "", mult, false);
+       // Association is inserted into memory
+       Association uAssoc = new Association(true, true, false, false, leftEnd, rightEnd);
+    	// We insert the association into the Working memory,
+    	// so it can accessed and modified by other Rules
+       uAssoc.setName(uClass.getName()+"_"+fieldType);
+	   uClass.addAssociation(uAssoc);
+       uClass.addAssociationVariable(assocVar);
+       insert(assocVar);
+       insert(uAssoc);
+       update(uClass);    	
+       System.out.println(uClass.numberOfAssociations());
+end
+
 /*
 rule "isOneToUnknownAssociation"
 	//

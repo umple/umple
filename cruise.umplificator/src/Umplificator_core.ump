@@ -12,6 +12,9 @@ class Umplificator {
 	depend cruise.umplificator.parser.JavaParser;
 	depend cruise.umplificator.rules.RuleRunner;
 	depend cruise.umplificator.rules.RuleService;
+	depend org.perf4j.LoggingStopWatch;
+	depend org.perf4j.StopWatch;
+	
 	lazy UmpleModel outputModel;
 	lazy RefactoringLevel currentLevel;
 	lazy String outputFolder; 

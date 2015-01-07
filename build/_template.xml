@@ -35,6 +35,7 @@
 	<pathelement location="lib/umplificatorplugins/org.eclipse.text_3.5.300.v20130515-1451.jar"/>
     <pathelement location="lib/umplificatorplugins/log4j-core-2.0.1.jar"/>
     <pathelement location="lib/umplificatorplugins/log4j-api-2.0.1.jar"/>
+	<pathelement location="lib/umplificatorplugins/perf4j-0.9.16.jar"/>
 
 	  <!-- ```````````````````````````
     DROOLS LIBRARIES FOR THE UMPLIFICATOR

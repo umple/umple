@@ -287,6 +287,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="dist/umple.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/log4j-core-2.0.1.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/log4j-api-2.0.1.jar"/>
+			<zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/perf4j-0.9.16.jar"/>
         </jar>
     </target>
 
