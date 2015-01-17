@@ -15,6 +15,10 @@ More details can be found as follows
   * Live diagram of the metamodel: http://metamodel.umple.org
   * Architecture: http://architecture.umple.org
 
+Umple is continuously tested and build on Travis CI (https://travis-ci.org/). 
+
+Current build status: ![](https://travis-ci.org/Nava2/Umple.svg?branch=master)
+
 The items below are in alphabetical order.
 
 Items marked *** are created by the build process only and are not version controlled.
