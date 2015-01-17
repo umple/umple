@@ -1,15 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." default="init" name="LocalBuildProperties" >
 
-  <!-- can be run locally, and simulates almost 100% of what happens on the build server -->
+  <!--
+    can be run locally, and simulates almost 100% of what happens on the build server
+
+    haltonfailure ==> used by JUnit, if true then the build will stop
+      as soon as the first failure is enountered (so no pretty html
+      html output to look at), if false then a build could be marked as
+      "Successfull" even though some tests failed.  Having a false value
+      is useful when debugging so that you can see all failing tests at
+      once, instead of having to run a full build only to see one test
+      fail at a time
+
+    shouldPackageUmpleOnline => used by build server, if true, then
+      it moves the latest jars into /trunk/umpleonline/script
+      which updates the "local" version of umpleonline
+      If false, it skips this step and umpleonline isn't touched
+
+    shouldDeploy => used by build server, if true, then if it creates
+      a continuous deploy, which updates the production version
+      of umpleonline (i.e. performs our continuous delivery), which
+      should only be done on the build server.  If false, it skips
+      this step
+
+    showJunitSummary => used by JUnit, if true, then the command line
+      will output the summary of a JUnit test run which can be useful
+      for local debugging.  If false, not summary is presented.
+
+    showJunitOutput => used by JUnit, if true, then the command line
+      will output all of the logging from JUnit, which can be quite
+      verbose which can be useful for local debugging, but also overwhelming.
+      If false, not summary is presented.
+
+    junit => used by JUnit, a filter for which test classes to run.
+      It defaults to all tests (e.g. *Test), but can be used to run
+      specific tests for debugging (e.g. USEGeneratorTest)
+
+    rake_cmd => used by Ruby, a cross-platform flat to indicate
+      which command executes ruby (i.e. ruby on Linux / Mac and
+      ruby.bat on Windows)
+   -->
   <property name="haltonfailure" value="false"/>
   <property name="shouldPackageUmpleOnline" value="false"/>
-  <property name="shouldDeploy" value="false"/>  
-  <property name="showJunitSummary" value="false"/>  
-  <property name="showJunitOutput" value="false"/>  
-  <property name="junit" value="*Test"/> 
-  <property name="rake_cmd" value="rake"/>  
-  
+  <property name="shouldDeploy" value="false"/>
+  <property name="showJunitSummary" value="false"/>
+  <property name="showJunitOutput" value="false"/>
+  <property name="junit" value="*Test"/>
+  <property name="rake_cmd" value="rake"/>
+
   <import file="_versionLast.xml" />
 
 </project>

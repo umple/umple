@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." name="CruiseControlProperties">
 
-  <!-- 
+  <!--
     run by the build machine, should work as-is on your machine, but be careful
     as your code will be run against the "latest" Umpled Umple.
+
+    See _local.xml for a definition of each attribute
    -->
-  <property name="haltonfailure" value="true"/>    
+  <property name="haltonfailure" value="true"/>
   <property name="shouldPackageUmpleOnline" value="true"/>
   <property name="shouldDeploy" value="true"/>
   <property name="showJunitSummary" value="false"/>
-  <property name="showJunitOutput" value="false"/> 
-  <property name="junit" value="*Test"/> 
-  <property name="rake_cmd" value="rake"/>  
-   
+  <property name="showJunitOutput" value="false"/>
+  <property name="junit" value="*Test"/>
+  <property name="rake_cmd" value="rake"/>
+
   <import file="_versionNew.xml" />
 
 
