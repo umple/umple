@@ -77,6 +77,17 @@ class SampleFileWriter
     }
   }
   
+  private static String readLine(BufferedReader reader)
+  {
+    try{    
+        String nextLine = reader.readLine();
+        return nextLine == null ? null : nextLine.trim();
+    } catch (Exception e){
+        Assert.fail(e.getMessage());
+        return null;
+    }
+  }
+  
   public static void assertPartialFileContent(File partial, String actual)
   {
     BufferedReader expectedReader = null;
@@ -96,13 +107,13 @@ class SampleFileWriter
       {
         if (expectedLine == null || foundMatch)
         {
-          expectedLine = expectedReader.readLine();
+          expectedLine = readLine(expectedReader);
         }
-        actualLine = actualReader.readLine();
+        actualLine = readLine(actualReader);
         // HACK: To deal with // line # comments
         while (actualLine != null && actualLine.indexOf("// line") != -1)
         { //Ignore the line, go to next
-          actualLine = actualReader.readLine();
+          actualLine = readLine(actualReader);
         }
         
         line++;
