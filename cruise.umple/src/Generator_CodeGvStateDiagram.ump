@@ -571,7 +571,8 @@ node [shape = circle, fixedsize = true, width=.3];
     String trimmedCode = "";
   	
     // Check if the code has multiple lines
-    if (code.contains(System.getProperty("line.separator")))
+    // TODO: Get this working with Unix AND Windows line endings
+    if (code.contains(System.getProperty("line.separator")) || code.contains("\n"))
     {
       String[] parts = code.split("\\r?\\n");
   	  
