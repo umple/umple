@@ -1,0 +1,21 @@
+language: java
+
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk7
+
+before_install:
+  - ./travis/deps.sh # run linux or osx depending on environment
+
+before_script:
+
+script:
+  - cd build/
+  - ant -Dmyenv=travis -f build.umple.xml first-build 
+  # build against itself:
+  - ant -Dmyenv=travis -f build.umple.xml build
+
+os:
+  - linux
+  - osx
