@@ -32,21 +32,21 @@ class CompositeStructureTokenAnalyzer {
 	UmpleInternalParser parser;
 	lazy UmpleClass componentClass;
 	0..1 -- * UmpleClass components;
-	
+
 	void prepare(final Token token) {
 		String componentName = token.getValue("name");
     	componentClass = parser.getModel().getUmpleClass(componentName);
     	if(componentClass != null) {
     		addComponent(componentClass);
-    	} 
+    	}
 	}
-	
-	
+
+
   void logError(Position position, int errorCode, String... messages){
 	  getParser().getParseResult().setPosition(position);
 	  getParser().getParseResult().addErrorMessage(new ErrorMessage(errorCode,position,messages));
   }
-  
+
    public String analyzeInlineComment(Token token){
     String txt = token.getValue();
 	  return !txt.startsWith("@outputumplesource") && !txt.equals("$?[End_of_model]$?") ? txt : null;
@@ -55,8 +55,8 @@ class CompositeStructureTokenAnalyzer {
    public List<Comment> analyzeMultiComment(Token token){
     List<Comment> cmtList = new ArrayList<Comment>();
 	  String inlineComments[] = token.getValue().split("\n");
-	  
-	  for (int i = 0; i < inlineComments.length; i++) 
+
+	  for (int i = 0; i < inlineComments.length; i++)
 	  {
 		  if(!inlineComments[i].startsWith("@outputumplesource")) {
 			  cmtList.add(new Comment(inlineComments[i]));
@@ -93,7 +93,7 @@ class CompositeStructureTokenAnalyzer {
   }
 
    public void analyzePortDefinition(Token token){
-    if(token!=null) { 
+    if(token!=null) {
     	String name = null, type = "String";
     	Direction direction = null;
     	String modifier = "public";
@@ -117,7 +117,7 @@ class CompositeStructureTokenAnalyzer {
         			isReplicated = true;
         			Token mulToken = portMulToken.getSubToken(0);
         			String mulValue = mulToken.getValue();
-        			if(mulValue != null 
+        			if(mulValue != null
         					&& mulValue.length() > 0) {
         				mulValue = mulValue.substring(1, mulValue.length()-1);
         			}
@@ -143,7 +143,7 @@ class CompositeStructureTokenAnalyzer {
     			}
     		} else if(portParamToken.is("inverse")) {
     			isConjugated = true;
-    		} 
+    		}
     	}
     	Port portDef = new Port(name,modifier ,isConjugated, multiplicity, isReplicated, type);
     	componentClass.addPort(portDef);
@@ -229,7 +229,7 @@ class CompositeStructureTokenAnalyzer {
   }
 
    private void analyzeConstraintTree(Monitor pw, Token ConstraintTreeToken, ActiveMethod aMethod){
-    for(Token constraintToken : ConstraintTreeToken.getSubTokens()) {   
+    for(Token constraintToken : ConstraintTreeToken.getSubTokens()) {
 		   if(constraintToken.is("timeConstraint")) {
 			   Token timeToken = constraintToken.getSubToken("timeConstraint");
 			   Token clauseToken = timeToken.getSubToken("clause");
@@ -255,7 +255,7 @@ class CompositeStructureTokenAnalyzer {
 			   BasicConstraint constraint = new BasicConstraint();
 			   constraint.setPosition(constraintToken.getPosition());
 			   constraint.setEndPosition(constraintToken.getEndPosition());
-			   
+
 			   if(cvs.getNumberOfElements() == 0) {
 				   Token portToken = constraintToken.getSubToken("constraintName");
 				   if(portToken != null) {
@@ -363,7 +363,7 @@ class CompositeStructureTokenAnalyzer {
 					  aMethod.getMethodBody().get(1).addActiveDirectionHandlerBody(abh);
 				  }
 			  }
-		  } 
+		  }
 		  else if (methodToken.is("multilineComment"))
 		  {
 			  List<Comment> cmtList = analyzeMultiComment(methodToken);
@@ -388,7 +388,7 @@ class CompositeStructureTokenAnalyzer {
 			  if(normalHandler) {
 				 aMethod.getMethodBody().get(0).addActiveDirectionHandlerBody(abh);
 			  } else {
-				 aMethod.getMethodBody().get(1).addActiveDirectionHandlerBody(abh); 
+				 aMethod.getMethodBody().get(1).addActiveDirectionHandlerBody(abh);
 			  }
 		  } else if (methodToken.is("activeTrigger")){
 			  analyzeActiveTrigger(normalHandler, methodToken, aMethod);
@@ -418,7 +418,7 @@ class CompositeStructureTokenAnalyzer {
 					  }
 					  if (parameterToken.getSubToken("list") != null)
 					  {
-						  isList = parameterToken.getSubToken("list").getValue() != null;        
+						  isList = parameterToken.getSubToken("list").getValue() != null;
 					  }
 					  String paramName = parameterToken.getSubToken("name").getValue();
 					  MethodParameter aParameter  = new MethodParameter(paramName,paramType,null,null, false);
@@ -431,12 +431,12 @@ class CompositeStructureTokenAnalyzer {
   }
 
    public void analyzeActiveMethodDefinition(Token activeMethodToken){
-    if(activeMethodToken != null) {      
+    if(activeMethodToken != null) {
     	ActiveDirectionHandler forwardBody = new ActiveDirectionHandler();
     	ActiveDirectionHandler inverseBody = new ActiveDirectionHandler();
     	inverseBody.setDirectionHandler(DirectionHandler.INVERSE);
     	ActiveMethod aMethod = new ActiveMethod("", "", "", new ActiveDirectionHandler [] { forwardBody, inverseBody });
-    	
+
     	// TODO
     	Protocol protocol = new Protocol();
     	// Set method position
@@ -482,10 +482,10 @@ class CompositeStructureTokenAnalyzer {
     		{
     			analyzeMethodBody(token, aMethod);
     		}
-    		
+
     		componentClass.addActiveMethod(aMethod);
-    		
-    	} 
+
+    	}
 
     }
   }
@@ -512,11 +512,11 @@ class CompositeStructureTokenAnalyzer {
 
 				  boolean bindfromSubcomponent = pbi.getFromPortClass() != null && pbi.getFromPortClass().length() > 0;
 				  boolean bindtoSubcomopnent = pbi.getToPortClass() != null && pbi.getToPortClass().length() > 0;
-				  
+
 				  Attribute fromVar = getSubcomponentVariable(cmpClass, pbi.getFromPortClass(), pbi.getFromPort());
 				  Attribute toVar = getSubcomponentVariable(cmpClass, pbi.getToPortClass(), pbi.getToPort());
-				  
-				  if(bindfromSubcomponent) {				  
+
+				  if(bindfromSubcomponent) {
 					  if(fromVar == null) {
 						  fromClass = cmpClass;
 					  } else {
@@ -525,7 +525,7 @@ class CompositeStructureTokenAnalyzer {
 						  if(fromClass == null) {
 							  // log error comp doesn't exist
 						  }
-					  } 
+					  }
 				  }
 				  if(bindtoSubcomopnent) {
 					  if(toVar == null) {
@@ -536,24 +536,24 @@ class CompositeStructureTokenAnalyzer {
 						  if(toClass == null) {
 							  // log error comp doesn't exist
 						  }
-					  } 
+					  }
 				  }
-				  
+
 				  if(bindfromSubcomponent && fromClass == null ) {
 					  // Log Error
 					  errorFound = true;
 				  }
-				  
+
 				  if(bindtoSubcomopnent && toClass == null ) {
 					  // Log Error
 					  errorFound = true;
 				  }
-				  
+
 				  if(pbi.getFromPort() == null || pbi.getFromPort().length() == 0 ) {
 					  // Log Error
 					  errorFound = true;
 				  }
-				  
+
 				  if(pbi.getToPort() == null || pbi.getToPort().length() == 0 ) {
 					  // Log Error
 					  errorFound = true;
@@ -578,15 +578,15 @@ class CompositeStructureTokenAnalyzer {
 					  } else {
 						  to = cmpClass.getPort(pbi.getToPort());
 					  }
-					  
+
 					  if(from == null || to == null) {
 						  // Log Error
-						  errorFound = true;  
+						  errorFound = true;
 					  } else {
 						  PortBinding pb = new PortBinding(from, to);
 						  pb.setFromSubcomponent(fromVar);
 						  pb.setToSubcomponent(toVar);
-						  
+
 						  if(pbi.getCode() != null && pbi.getCode().length() > 0) {
 							  AnonymousFunction af = new AnonymousFunction();
 							  af.setCodeblock(new CodeBlock(pbi.getCode()));
@@ -594,8 +594,8 @@ class CompositeStructureTokenAnalyzer {
 						  }
 						  cmpClass.addPortBinding(pb);
 					  }
-					  
-				  }  
+
+				  }
 			  }
 		  }
    }
@@ -605,7 +605,7 @@ class CompositeStructureTokenAnalyzer {
 		   for(ActiveMethod am : cmpClass.getActiveMethods()) {
 			   for(Monitor mt : am.getWatchList()) {
 //				   ConstraintTree removeList = new ConstraintTree();
-				   for(BasicConstraint bs : mt.getConstraints()) {					   
+				   for(BasicConstraint bs : mt.getConstraints()) {
 					   for(ConstraintVariable cv:bs)
                                            {
                                              if(cv instanceof ConstraintNamed)
@@ -627,9 +627,9 @@ class CompositeStructureTokenAnalyzer {
 //					   for(ConstraintVariable cv : removeList) {
 //						   bs.removeExpression(cv);
 //					   }
-					   
+
 				   }
-				   
+
 			   }
 		   }
 	   }
@@ -638,7 +638,7 @@ class CompositeStructureTokenAnalyzer {
    private boolean isMonitored(Port portName, ActiveMethod am){
     for(Monitor mt : am.getWatchList()) {
 			for(PortConstraint pc : mt.getPortConstraints()) {
-				if(portName.equals(pc.getPort())) {	
+				if(portName.equals(pc.getPort())) {
 					return true;
 				}
 			}
@@ -711,7 +711,7 @@ class CompositeStructureTokenAnalyzer {
 		   if(acType == ActiveType.ATOMIC || acType == ActiveType.SYNCH)
 			   break;
 	   }
-	   
+
 	   if(modifier.contains("public")) {
 		   if(acType == ActiveType.ASYNCH ) {
 			   port.setType(Type.RELAY);
@@ -722,7 +722,7 @@ class CompositeStructureTokenAnalyzer {
 		   if((acType == ActiveType.ATOMIC) ) {
 			   port.setType(Type.SERVICE);
 		   }
-	   } else if(modifier.contains("private") 
+	   } else if(modifier.contains("private")
 			   		|| modifier.contains("protected")) {
 		   if((acType == ActiveType.SYNCH || acType == ActiveType.ASYNCH) ) {
 			   port.setType(Type.END);
@@ -740,7 +740,7 @@ class CompositeStructureTokenAnalyzer {
 //		   msgStruct.addParam(new MessageField(port.getName(), signalType));
 //	   } else {
 //		   for(Attribute attr : typeClass.getAttributes()) {
-//			   
+//
 //		   }
 //	   }
   }
@@ -764,7 +764,7 @@ class CompositeStructureTokenAnalyzer {
 
    private void buildProtocolData(){
     for(UmpleClass cmpClass : getComponents()) {
-		   for(Port port : cmpClass.getPorts()) { 
+		   for(Port port : cmpClass.getPorts()) {
 			   Protocol protocol = new Protocol();
 
 			   for(ActiveMethod am : cmpClass.getActiveMethods()) {
@@ -973,7 +973,7 @@ class CompositeStructureTokenAnalyzer {
 		   logError(sub.getPosition(), 29, sub.getValue(), "integer");
 	   }
 
-   } 
+   }
    private ConstraintTree analyzeGeneralConstraintExpression(Token generalExpressionToken, UmpleClassifier uClassifier)
    {
 	   ConstraintTree rawLine = new ConstraintTree();
@@ -1045,7 +1045,7 @@ class CompositeStructureTokenAnalyzer {
 			   {
 				   rawLine.addElementAll(analyzeConstraint(sub,uClassifier));
 			   }
-		   
+
 	   }
 	   return rawLine;
    }
@@ -1389,15 +1389,15 @@ class CompositeStructureTokenAnalyzer {
 	   if(rawLine.getNumberOfElements() == 0)
 	   {
 		   if (!invariantToken.getValue().equals("STATIC"))
-		   { 
+		   {
 			   if (invariantToken.is("genExpr"))
 			   {
 				   rawLine.addElementAll(analyzeGeneralConstraintExpression(invariantToken,null));
-			   }        
+			   }
 			   else if (invariantToken.is("boolExpr"))
 			   {
 				   rawLine.addElementAll(analyzeBooleanConstraintExpression(invariantToken,null));
-			   } 
+			   }
 			   else if (invariantToken.is("stringExpr"))
 			   {
 				   rawLine.addElementAll(analyzeStringConstraintExpression(invariantToken,null));
@@ -1443,7 +1443,6 @@ class CompositeStructureTokenAnalyzer {
 	   subtokensCopy.addAll(negativeConstraintSubtokens);
 
 	   ConstraintTree rawLine = new ConstraintTree();
-
 	   rawLine.addElement(new ConstraintOperator("!"));
 
 	   for (Token s :subtokensCopy){
@@ -1462,13 +1461,13 @@ class CompositeStructureTokenAnalyzer {
 
    /**
     * /////////////////////////////////////////////// TO BE REMOVED ///////////////////////////////////////////////////////////////////////
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
+   *
+   *
+   *
+   *
+   *
+   *
+   *
    * Analyzer Events
    */
    public void done(){
@@ -1477,7 +1476,7 @@ class CompositeStructureTokenAnalyzer {
 	processTriggersData();
 	buildProtocolData();
   }
-  
+
 }
 
 //Walk through template tree while analyzing template tokens
@@ -1490,7 +1489,7 @@ class CompositeStructureDefinitionWalker {
 	depend java.util.List;
 	isA IWalker;
 	UmpleInternalParser parser;
-	
+
 	lazy Token rootToken;
 	lazy int rootAnalysisStep;
 	lazy internal CompositeStructureTokenAnalyzer compAnalyzer;
@@ -1498,18 +1497,18 @@ class CompositeStructureDefinitionWalker {
 	after constructor {
 		compAnalyzer = new CompositeStructureTokenAnalyzer(parser);
 	}
-	
+
     void accept(CompositeStructureTokenAnalyzer analyzer) {
-    	if (rootToken.is("classDefinition")) {  
+    	if (rootToken.is("classDefinition")) {
     		analyzer.prepare(rootToken);
     	}
     	analyzeSubTokens(rootToken, analyzer);
     }
-    
+
     void done() {
     	compAnalyzer.done();
     }
-    
+
     private void analyzeToken(Token aToken, CompositeStructureTokenAnalyzer analyzer, int analysisStep){
     	if (analysisStep != 2) {
     		parser.reAnalyze(parser.reAnalyze() || (analysisStep == 1));
@@ -1523,7 +1522,7 @@ class CompositeStructureDefinitionWalker {
     		analyzer.analyzePortBindingDefinition(aToken);
     	}
     }
-    
+
     private void analyzeSubTokens(Token aToken, CompositeStructureTokenAnalyzer analyzer) {
 //    	reAnalyze = true;
 //    	parser.reAnalyze(true);
@@ -1539,7 +1538,7 @@ class CompositeStructureDefinitionWalker {
       		}
 //    	} while (reAnalyze);
     }
-    
+
     void analyze(Token mainToken, int rootAnalysisStep) {
     	setRootToken(mainToken);
     	setRootAnalysisStep(rootAnalysisStep);
@@ -1547,19 +1546,19 @@ class CompositeStructureDefinitionWalker {
     }
 }
 
-//Internal invocation for internal umple parser in order to invoke walkers calls which 
+//Internal invocation for internal umple parser in order to invoke walkers calls which
 //can instantiate the analysis if required
 class UmpleInternalParser
 {
   internal CompositeStructureDefinitionWalker compWalker = new CompositeStructureDefinitionWalker(this);
-  
-  private void analyzeComponentToken(Token token, int analysisStep) {  	
+
+  private void analyzeComponentToken(Token token, int analysisStep) {
   	compWalker.analyze(token, analysisStep);
   }
-  
+
   private void postTokenComponentAnalysis(){
     compWalker.done();
   }
-  
-  
-} 
+
+
+}

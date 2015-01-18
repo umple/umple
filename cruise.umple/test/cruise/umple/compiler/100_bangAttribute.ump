@@ -1,0 +1,4 @@
+class LightFixture {
+  Integer age;
+  [! (age > 18)]
+}

@@ -38,16 +38,16 @@ public class GuardTest
   @Test
   public void equalsOnlyCaresAboutCondition()
   {
-	Guard guard2 = new Guard();
-	guard2.addElement(new ConstraintAttribute(attribute));
-	UmpleModel model = new UmpleModel(null);
-	JavaGenerator gen = new JavaGenerator();
-	gen.setModel(model);
+    Guard guard2 = new Guard();
+    guard2.addElement(new ConstraintAttribute(attribute));
+    UmpleModel model = new UmpleModel(null);
+    JavaGenerator gen = new JavaGenerator();
+    gen.setModel(model);
     Assert.assertEquals(guard.getValue(gen), guard2.getValue(gen));
 
-	Guard guard3 = new Guard();
-	Attribute y = new Attribute("y","String","","",false,attribute.getUmpleClass());
-	guard3.addElement(new ConstraintAttribute(y));
+    Guard guard3 = new Guard();
+    Attribute y = new Attribute("y","String","","",false,attribute.getUmpleClass());
+    guard3.addElement(new ConstraintAttribute(y));
     Assert.assertEquals(false,guard.equals(guard3));
   }
   

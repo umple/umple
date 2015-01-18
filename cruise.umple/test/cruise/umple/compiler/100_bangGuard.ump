@@ -1,0 +1,11 @@
+class LightFixture {
+ boolean flag = false;
+  status {
+    on{
+      turnOff [! getFlag()] -> off;
+    }
+    off{
+      turnOn -> on;
+    }
+  }
+}
