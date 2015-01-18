@@ -6,6 +6,7 @@ jdk:
   - openjdk7
 
 before_install:
+  - chmod 755 -R ./travis # to deal with SVN possibly not holding permissions
   - ./travis/deps.sh # run linux or osx depending on environment
 
 before_script:
