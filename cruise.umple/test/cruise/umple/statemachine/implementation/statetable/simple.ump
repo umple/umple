@@ -1,0 +1,9 @@
+namespace example;
+
+class Student
+{
+  status {
+    On { power -> Off; }
+    Off { power -> On; }
+  }
+}
