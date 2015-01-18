@@ -49,7 +49,7 @@
     Clean up and initialize any potential byproduct
   ``````````````````````````` -->
   <target name="clean">
-	<delete dir="${project.path}/src-gen-umple" failonerror="false"/>	
+	<delete dir="${project.path}/src-gen-umple" failonerror="false"/>
   </target>
 
 
@@ -60,7 +60,7 @@
     <mkdir dir="${test.output.path.ruby}"/>
   </target>
 
-    
+
   <!-- ```````````````````````````
     Compile the testbed tests
   ``````````````````````````` -->
@@ -70,7 +70,7 @@
     <antcall target="compilePhp" />
     <antcall target="compileRuby" />
   </target>
-  
+
   <target name="compileJava">
     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="testbed/src/TestHarness.ump"/>
@@ -93,13 +93,13 @@
       <arg value="testbed_php/src/TestHarnessPhp.ump"/>
     </java>
   </target>
-  
+
   <target name="compileRuby">
     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="testbed_ruby/src/TestHarnessRuby.ump"/>
     </java>
   </target>
-  
+
   <!-- ```````````````````````````
     Run the testbed tests for all supported languages
   ``````````````````````````` -->
@@ -114,7 +114,7 @@
   </target>
 
   <target name="testJava">
-    <echo message="Running JAVA tests via junit"/> 
+    <echo message="Running JAVA tests via junit"/>
     <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}">
       <formatter type="xml"/>
       <batchtest fork="yes" todir="${test.output.path.java}">
@@ -132,45 +132,50 @@
       </fileset>
       <report format="frames" todir="${test.output.path.java}"/>
     </junitreport>
-    <echo message="JAVA tests completed!"/> 
+    <echo message="JAVA tests completed!"/>
   </target>
-  
+
   <target name="testPhp">
-    <echo message="Running PHP tests from command line"/> 
+    <echo message="Running PHP tests from command line"/>
     <exec executable="php" dir="testbed_php/test/" output="${test.output.path.php}/index.xml">
       <arg value="AllXmlTests.php"/>
     </exec>
     <exec executable="php" dir="testbed_php/test/" output="${test.output.path.php}/index.html" outputproperty="test.output.php">
       <arg value="AllTests.php"/>
     </exec>
-    <!-- check for error --> 
+    <!-- check for error -->
     <fail message="PHP tests failed ('Fail' found)">
-      <condition> 
-        <contains string="${test.output.php}" substring="Fail" casesensitive="true"/> 
-      </condition> 
-    </fail>    
+      <condition>
+        <contains string="${test.output.php}" substring="Fail" casesensitive="true"/>
+      </condition>
+    </fail>
     <fail message="PHP tests failed ('PHP Fatal error' found)">
-      <condition> 
-        <contains string="${test.output.php}" substring="PHP Fatal error" casesensitive="true"/> 
-      </condition> 
-    </fail>    
-    <echo message="PHP tests completed!"/> 
+      <condition>
+        <contains string="${test.output.php}" substring="PHP Fatal error" casesensitive="true"/>
+      </condition>
+    </fail>
+    <fail message="PHP tests failed ('Fatal error' found)">
+      <condition>
+        <contains string="${test.output.php}" substring="Fatal error" casesensitive="true"/>
+      </condition>
+    </fail>
+    <echo message="PHP tests completed!"/>
   </target>
-  
+
   <target name="testRuby">
-    <echo message="Running RUBY tests via rake task"/> 
+    <echo message="Running RUBY tests via rake task"/>
     <exec executable="${rake_cmd}" dir="testbed_ruby/" output="${test.output.path.ruby}/index.html" outputproperty="test.output.ruby" />
 
-    <!-- check for error string 'rake aborted', and fail build if itis found --> 
+    <!-- check for error string 'rake aborted', and fail build if itis found -->
     <fail message="Ruby tests failed ('rake aborted' found)">
-      <condition> 
-        <contains string="${test.output.ruby}" substring="rake aborted" casesensitive="false"/> 
-      </condition> 
-    </fail> 
+      <condition>
+        <contains string="${test.output.ruby}" substring="rake aborted" casesensitive="false"/>
+      </condition>
+    </fail>
 
-    <echo message="RUBY tests completed!"/> 
+    <echo message="RUBY tests completed!"/>
   </target>
-  
+
   <!-- ``````````````````````````````````````````````
     User manual example and umpleonline example tests
   ``````````````````````````````````````````````` -->
@@ -187,8 +192,8 @@
   <!-- ```````````````````````````
        Build the application
        ``````````````````````````` -->
-  
-  <!-- 
+
+  <!--
     Build
     run by the build machine, should work as-is on your machine, but be careful
     as your code will be run against the "latest" Umpled Umple.

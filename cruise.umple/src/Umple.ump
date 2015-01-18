@@ -14,12 +14,12 @@ external interface Runnable {}
 
 /*
  * Class UmpleModel is the central class describing the system being compiled.
- * 
- * The model contains everything that was derived from an Umple file (.ump) when it was parsed such as 
+ *
+ * The model contains everything that was derived from an Umple file (.ump) when it was parsed such as
  * the classes, attributes, associations, state machines, methods, etc that were in it.
- * 
+ *
  * Put another way, when an Umple file (.ump) is parsed an Umple model is populated with everything that was parsed from that file.
- * 
+ *
  * Because of this it is absolutely critical to understand the model since it is basically the "root" of everything.
  */
 class UmpleModel
@@ -49,7 +49,7 @@ class UmpleModel
   internal Coordinate initialOffset = new Coordinate(50,30,0,0);
   internal Coordinate classSize = new Coordinate(0,0,109,45);
   internal int maxYLevels = 5;
-  
+
   // Top level blocks code contained within a model.
   // extraCodes will be generated in a single file
   lazy CodeBlock[] extraCodes;
@@ -63,13 +63,13 @@ class UmpleModel
 
   // The Umple Classes contained within the model.
   1 -> * UmpleClass;
- 
+
   // The Umple Traits contained within the model.
   1 -> * UmpleTrait;
- 
+
   // The Umple Templates contained within the model.
   1 -> * UmpleTemplate;
- 
+
   // The State Machines contained within the model.
   1 -> * StateMachine stateMachineDefinitions;
 
@@ -87,7 +87,7 @@ class UmpleElement
 
   // The name of the Umple element.
   name;
-  
+
   // The position(s) of the element in the source code, used in debugging
   //  may have multiple positions in the case of mixins
   1 -> 0..* Position positions;
@@ -95,7 +95,7 @@ class UmpleElement
 
   // The modifier associated with the Umple element.
   modifier = null;
-  
+
   Boolean hasMainMethod = false;
 
   String[] namespaces;
@@ -113,7 +113,7 @@ class UmpleElement
   // Specifies the display color of this element
   String displayColor = "";
 
-  before setPackageName { if (aPackageName == null) { return false; } }  
+  before setPackageName { if (aPackageName == null) { return false; } }
 }
 
 /*
@@ -126,16 +126,16 @@ class Method
 
   // Specifies whether or not the Method is abstract.
   Boolean isAbstract = false;
-  
+
   // The modifier associated with the method.
   modifier;
 
-  // The name of the method. 
+  // The name of the method.
   name;
 
   // Throws exceptions
   String[] exceptions;
-  
+
   lazy Position position;
   lazy Position codePosition;
   lazy Position endPosition;
@@ -154,7 +154,7 @@ class Method
 
   // The comments associated with the method (such as the Javadoc above it).
   1 -> * Comment;
-  
+
 }
 
  /*
@@ -164,7 +164,7 @@ class MethodBody
 {
 
   depend java.util.*;
-  
+
   // The code within the method body.
   extraCode = {codeblock.getCode() != null ? codeblock.getCode() : ""}
   CodeBlock codeblock;
@@ -183,12 +183,12 @@ class Constant
   type;
 
   // The modifier of the constant.
-  modifier; 
+  modifier;
 
   // The value of the constant.
   value;
 
-  class UniqueIdentifier { } 
+  class UniqueIdentifier { }
 }
 
 /*
@@ -237,8 +237,8 @@ class ConstraintVariable
     TreeSet<String> names = new TreeSet<String>();
 
     boolean shouldDisplayBrackets = false;
-    boolean displayBrackets  = { shouldDisplayBrackets||(displayNegation&&numberOfElements>1) }
     boolean displayNegation = false;
+    boolean displayBrackets  = { shouldDisplayBrackets||(displayNegation&&numberOfElements>1) }
 
     int numberOfElements = 0;
 
@@ -301,7 +301,7 @@ class ConstraintVariable
     }
     key { value }
   }
-  
+
   /*
    * This super class contains all subclasses that have elements with names
    */
@@ -345,7 +345,7 @@ class ConstraintVariable
     }
 
     /*
-     * ConstraintUnassignedNames are names that were not recognized by the analysis, for example ConstraintMethodParameters are originally ConstraintUnassignedNames, 
+     * ConstraintUnassignedNames are names that were not recognized by the analysis, for example ConstraintMethodParameters are originally ConstraintUnassignedNames,
      * but are caught when they are added to the Precondition or Postcondition and a ConstraintMethodParameter is added instead of the ConstraintUnassignedName.
      */
     class ConstraintUnassignedName
@@ -393,7 +393,7 @@ class CodeInjection
 {
   depend cruise.umple.compiler.Position;
   depend cruise.umple.util.*;
-  
+
   type;
   operation;
   CodeBlock snippet;
@@ -430,7 +430,7 @@ class UmpleClassifier
   // The methods contained within the Umple Classifier.
   1 -> 0..* Method;
 
-  * -> * Depend;  
+  * -> * Depend;
 
   // The constants contained within the Umple Classifier.
   1 -> 0..* Constant;
@@ -450,7 +450,7 @@ class UmpleInterface
 
 
   before setPackageName { if (aPackageName == null) { return false; } }
-  before addDepend { if (depends.contains(aDepend)) { return false; } }  
+  before addDepend { if (depends.contains(aDepend)) { return false; } }
 }
 
 /*
@@ -484,10 +484,10 @@ class UmpleClass
   internal Boolean ancestorIsImmutable = false;
 
   1 -> * CodeInjection;
-  
+
   //The possible Preconditions related to the Umple Class
   1 -> 0..* Precondition;
-  
+
   //The possible Preconditions related to the Umple Class
   1 -> 0..* Postcondition;
 
@@ -498,7 +498,7 @@ class UmpleClass
   * subclasses -- 0..1 UmpleClass extendsClass;
 
   * subClasses -- * UmpleTrait extendsTraits;
-  
+
   * subClasses -- * UmpleTemplate extendsTemplates;
 
   * -> 0..* UmpleInterface parentInterface;
@@ -517,16 +517,16 @@ class UmpleClass
   UmpleModel sourceModel;
 
   //This is used to assign inheritance parameters.
-  1 -> * GeneralTPApplied;	
-  	
-  before addDepend { if (depends.contains(aDepend)) { return false; } }  
+  1 -> * GeneralTPApplied;
+
+  before addDepend { if (depends.contains(aDepend)) { return false; } }
 
   before setImmutable { if (!canBeImmutable()) { return false; } }
 
   before addAssociationVariable { if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; } }
-  
+
   before setExtendsClass { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
-  
+
   before addStateMachine { if (isImmutable()) { return false; } }
 }
 
@@ -546,7 +546,7 @@ class UmpleTrait {
 
   // Specifies whether or not the Umple class is an abstract class.
   Boolean isAbstract = false;
-  
+
   // Specifies whether or not the Umple trait is a singleton.
   Boolean isSingleton = false;
 
@@ -562,16 +562,16 @@ class UmpleTrait {
   internal Boolean ancestorIsImmutable = false;
 
   1 -> * CodeInjection;
-  
+
   //The possible Preconditions related to the Umple Trait
   1 -> 0..* Precondition;
-  
+
   //The possible Preconditions related to the Umple Trait
   1 -> 0..* Postcondition;
 
   // The possible Constraints related to the Umple Trait
   1 -> 0..* ConstraintTree;
-  
+
   // The Umple Trait's super Traits (if there are ones).
   * subTraits -- 0..* UmpleTrait extendsTraits;
 
@@ -587,26 +587,26 @@ class UmpleTrait {
   1 -> * Comment;
 
   UmpleModel sourceModel;
-  
+
   //The template parameters which are specified when traits are defined.
   1 -> * GeneralTemplateParameter;
 
   //This is used to assign inheritance parameters.
-  1 -> * GeneralTPApplied;	
-  
+  1 -> * GeneralTPApplied;
+
   //This is used to assign required interfaces
   1 -> * UmpleInterface requiredInterfaces;
-  
-  //--- before addDepend { if (depends.contains(aDepend)) { return false; } }  
+
+  //--- before addDepend { if (depends.contains(aDepend)) { return false; } }
 
   before setImmutable { if (!canBeImmutable()) { return false; } }
 
   //--- before addAssociationVariable { if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; } }
- 
+
   before setExtendsTrait { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
-  
+
   before addStateMachine { if (isImmutable()) { return false; } }
-  
+
 }
 
 //This class is used to specify parameters for traits.
@@ -623,9 +623,9 @@ class GeneralTemplateParameter {
 class GeneralTPApplied {
 	inheritanceName;
 	String[] parameters;
-	1 -> 0..1 Position positions;	
+	1 -> 0..1 Position positions;
 	1 -> * MethodTemplateSignature;
-	
+
 }
 
 class MethodTemplateSignature{
@@ -645,11 +645,11 @@ class Depend
   key { name }
 }
 
-/* 
+/*
  * A combination of Class and Association (as defined in UML)
  * An AssociationClass is a full-fledged class, but at the same time
  * It associates two other classes that would otherwise have a many-many
- * relationship. Instances of the AssociationClass represent data 
+ * relationship. Instances of the AssociationClass represent data
  * held by the links between those two classes.
  */
 class AssociationClass
@@ -676,11 +676,11 @@ class UmpleVariable
 
   // The value of the Umple variable.
   value;
-    
+
   before setName { if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); } }
   before getModifier { if (modifier == null) { return "settable"; } }
 
-  class UniqueIdentifier { }  
+  class UniqueIdentifier { }
 }
 
 /*
@@ -696,7 +696,7 @@ class Attribute
 
   // Specifies whether or not the method parameter is auto unique.
   // TODO: should default to false, but constructors would need updating
-  Boolean isAutounique; 
+  Boolean isAutounique;
 
   // Specifies whether or not the attribute is unique.
   Boolean isUnique = false;
@@ -706,7 +706,7 @@ class Attribute
 
   // Specifies whether or not the method parameter is derived.
   Boolean isDerived = false;
-  
+
   CodeBlock codeblock = new CodeBlock();
 
   after constructor { codeblock.setCode(normalizeValue(aType,aValue)); }
@@ -719,7 +719,7 @@ class Attribute
 
   // The comments associated with the attribute (such as the Javadoc above it).
   1 -> * Comment;
-  
+
   // In case this attribute needs to have error handling preformed
   1 -> 0..1 Position;
   1 -> 0..1 Position endPosition;
@@ -761,11 +761,11 @@ class Association
   after constructor { this.setLeftAndRight(); }
 }
 
-/* 
+/*
  * An association end represents one logical end of an association
- * 
+ *
  * See also AssociationVariable
- * TODO: Code smell referenceToClassName is a duplication, can access via the association 
+ * TODO: Code smell referenceToClassName is a duplication, can access via the association
  * Create a derived attribute otherend (the other AssociationEnd)
  */
 class AssociationEnd
@@ -811,7 +811,7 @@ class AssociationVariable
   immutable Boolean isNavigable;
   Boolean isComposition = false;
   String priority = "";
-  
+
   0..1 self relatedAssociation;
 
   // code relevant to specialization of associations
@@ -845,13 +845,13 @@ class Multiplicity
 {
   depend cruise.umple.util.*;
 
-  lazy bound; // used when minimum=maximum; 
+  lazy bound; // used when minimum=maximum;
   lazy minimum;
   lazy maximum;
 
   parserable = { getBound() != null ? getBound() : getMinimum().equals("0") && getMaximum().equals("*") ? "*" : getMinimum() + ".." + getMaximum() }
 
-  key { bound, minimum, maximum } 
+  key { bound, minimum, maximum }
 
 }
 
@@ -950,7 +950,7 @@ class GenerateTarget
   Boolean override = false;
   Boolean overrideAll = false;
   lazy String[] suboptions;
-  
+
   before getPath{if(path == null) path = ""; }
   key{language}
 }

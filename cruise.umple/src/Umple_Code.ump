@@ -83,7 +83,7 @@ class UmpleModel
   public String getDefaultGenerate()
   {
     // Note that this method should be getDefaultGenerateLanguage
-    // To avoid rippling changes throughout the code, the name is left as is 
+    // To avoid rippling changes throughout the code, the name is left as is
     if (numberOfGenerates() == 0)
     {
       return null;
@@ -152,13 +152,13 @@ class UmpleModel
   {
     return analyzers.containsKey(name);
   }
-  
+
   public Analyzer getAnalyzer(String name)
   {
     return analyzers.get(name);
   }
 /*
- * Creates a new parser, loads the input, parses, then analyses 
+ * Creates a new parser, loads the input, parses, then analyses
  */
   public void run()
   {
@@ -167,7 +167,7 @@ class UmpleModel
     cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser(this);
     UmpleParser analyzer = new UmpleInternalParser("UmpleInternalParser",this,parser);
     ParseResult result = parser.parse(umpleFile);
-    
+
     failed = !result.getWasSuccess();
     lastResult = result;
 
@@ -186,12 +186,12 @@ class UmpleModel
   public CodeGenerator newGenerator(String language)
   {
     boolean foundGenerator;
-    
+
     String realLanguage = language;
     if (language.equals("Cpp")) realLanguage="RTCpp";
     else if (language.equals("SimpleCpp")) realLanguage="Cpp";
-    
-    String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",realLanguage); 
+
+    String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",realLanguage);
     Class<?> classDefinition = null;
     try {
       classDefinition = Class.forName(className);
@@ -233,10 +233,10 @@ class UmpleModel
     {
       System.err.println("Code Generator error. Unable to generate code: Stack Trace Follows.");
       cruise.umple.util.ExceptionDumper.dumpCompilerError(ex);
-      System.exit(-1);    
+      System.exit(-1);
     }
    }
-   
+
 
   public Coordinate getDefaultClassPosition(int numDefaults)
   {
@@ -261,10 +261,10 @@ class UmpleModel
 
     String classOne = a.getEnd(0).getClassName();
     String classTwo = a.getEnd(1).getClassName();
-    
+
     if(getUmpleTraitTypeParameter(classOne) || getUmpleTrait(classOne)!=null) return null;
     if(getUmpleTraitTypeParameter(classTwo) || getUmpleTrait(classTwo)!=null) return null;
-    
+
     Coordinate classOnePos = getUmpleClass(classOne).getCoordinates();
     Coordinate classTwoPos = getUmpleClass(classTwo).getCoordinates();
 
@@ -282,10 +282,10 @@ class UmpleModel
       tempClass2 = temp.getEnd(1).getClassName();
 
       if (temp.getName().equals(a.getName()) &&
-          tempClass1.equals(classOne)        && 
-          tempClass2.equals(classTwo)) 
+          tempClass1.equals(classOne)        &&
+          tempClass2.equals(classTwo))
       {
-        break; 
+        break;
       }
 
       if (tempClass1.equals(classOne) && tempClass2.equals(classTwo)){ ++num; break; }
@@ -340,7 +340,7 @@ class UmpleModel
     {
       defaults[0] = altOffsetOne;
       defaults[1] = altOffsetTwo;
-    } 
+    }
     else
     {
       defaults[0] = offsetOne;
@@ -362,7 +362,7 @@ class UmpleModel
     {
       Association current = getAssociation(i);
       if (current.getEnd(0).getClassName().equals(name) && current.getEnd(1).getClassName().equals(name))
-      {    
+      {
         if (current.numberOfPositions() > 0)
         {
           if (current.getPosition(0).getStatus().equals(Coordinate.Status.Defaulted))
@@ -410,18 +410,18 @@ class UmpleModel
 
     return defaults;
   }
-  
-  
+
+
   public Map<String, CodeTranslator> getAllTranslators() {
     Map<String, CodeTranslator> allTranslators = new HashMap<String, CodeTranslator>();
     CodeGenerator tempCodeGen = null;
     for(GenerateTarget t : getGenerates())
     {
-      if((tempCodeGen = newGenerator(t.getLanguage())) instanceof CodeTranslator) {        
+      if((tempCodeGen = newGenerator(t.getLanguage())) instanceof CodeTranslator) {
         allTranslators.put(t.getLanguage(), (CodeTranslator)tempCodeGen);
       }
     }
-    
+
     return allTranslators;
   }
 }
@@ -442,7 +442,7 @@ class Key
       return false;
     }
     return indexOfMember(av.getName()) != -1;
-  }  
+  }
 }
 
 /*
@@ -462,14 +462,14 @@ class Depend
 
   /**
    * This is for cloning
-   * Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning 
+   * Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning
    */
 class Method
-{  
+{
     /**
    * This is for cloning
-   * Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning 
-   */	
+   * Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning
+   */
   public Method(Method another) {
 	  this.isAbstract = another.getIsAbstract();
 	  this.modifier = another.getModifier();
@@ -493,10 +493,10 @@ class Method
 	  } else{
 		  this.methodBody = another.getMethodBody();
 	  }
-	  this. comments = another.getComments();  
+	  this. comments = another.getComments();
   }
-  
-  public boolean getExistsInLanguage(String lang) 
+
+  public boolean getExistsInLanguage(String lang)
   {
     if (!hasMethodBody()){
       return false;
@@ -509,7 +509,7 @@ class Method
     return true;
   }
   public String toString()
-  {    
+  {
     StringBuffer methodBuffer = new StringBuffer();
     methodBuffer.append(" " + this.getType()+ " " + this.getName());
     methodBuffer.append("(");
@@ -520,7 +520,7 @@ class Method
     String parameters = "";
     String finalParams= "";
     if (this.hasMethodParameters()){
-      for (MethodParameter aMethodParam : this.getMethodParameters()) 
+      for (MethodParameter aMethodParam : this.getMethodParameters())
       {
         paramName = aMethodParam.getName();
         paramType = aMethodParam.getType();
@@ -571,7 +571,7 @@ class MethodParameter
 {
   /**
    * This is for cloning
-   * Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning 
+   * Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning
    */
   public MethodParameter(MethodParameter another){
 	super(another.getName(), another.getType(), another.getModifier(), another.getValue());
@@ -593,7 +593,7 @@ class CodeBlock
   public CodeBlock(CodeBlock another){
   	this.codes = new HashMap<String,String>();
   	this.codes.putAll(another.codes);
-  }	
+  }
   public void ApplyTypeParameters(GeneralTPApplied inGeneralTPApplied){
 	   if (inGeneralTPApplied == null) return;
 	   Integer start=0,end=0;
@@ -621,11 +621,11 @@ class CodeBlock
 		  			} else {
 		  				internalCode = internalCode+"#"+strTemp+"#";
 		  			}
-		  			
-		  		}			
+
+		  		}
 		  		if (!inProcess){
 		  			internalCode = internalCode+code.charAt(i);
-		  		}	
+		  		}
 			}
 		   codes.put(language, internalCode);
 	   }
@@ -765,13 +765,13 @@ class UmpleInterface
     for (Method aMethod : this.getMethods()){
       // Compare method names
       if (aMethod.getName().equals(methodName)){
-      	if(aMethod.getType().equals(methodType)){  
+      	if(aMethod.getType().equals(methodType)){
 	        // Now compare parameters
 	        if (numberOfParams == aMethod.getMethodParameters().size()){
 	          for (MethodParameter param: aMethod.getMethodParameters()){
 	            for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
 	              if (param.getType().equals(paramToCompare.getType())){
-	                isMethod=true;        
+	                isMethod=true;
 	              }
 	              else{
 	                return false;
@@ -779,10 +779,10 @@ class UmpleInterface
 	            }
 	          }
 	        }
-	    }    
+	    }
       }
     }
-    return isMethod;  
+    return isMethod;
   }
 }
 
@@ -794,7 +794,7 @@ class UmpleElement
   {
     appendExtraCode(newCode,true);
   }
-  
+
   public void resetExtraCode()
   {
   	extraCode = new ExtraCode();
@@ -802,14 +802,14 @@ class UmpleElement
 
   public void appendExtraCode(String newCode, boolean addNewline)
   {
-    if (newCode == null) 
-    { 
+    if (newCode == null)
+    {
       return;
     }
     if (extraCode.getHasCode() && addNewline)
     {
       newCode = System.getProperty("line.separator") + newCode;
-    } 
+    }
     extraCode.appendExtraCode(newCode);
   }
 
@@ -844,7 +844,7 @@ class AssociationClass
     if (!key.isProvided())
     {
       key = new Key();
-      
+
       for(Association associatedTo: getAssociatedTo())
       {
         key.addMember(associatedTo.getEnd(1).getRoleName());
@@ -853,7 +853,7 @@ class AssociationClass
       key.setIsInternal(true);
       setKey(key);
     }
-  }  
+  }
 }
 
 /*
@@ -868,7 +868,7 @@ class UmpleClass
 			  return true;
 		  }
 	}
-	  return false; 
+	  return false;
   }
 
   after setExtendsClass {
@@ -878,7 +878,7 @@ class UmpleClass
       if(this.hasMethod(method))
       {
         Method aMethod = this.getMethod(method);
-        
+
         if(aMethod.getMethodBody().getExtraCode("")==null||"".equals(aMethod.getMethodBody().getExtraCode("")))
         {
           aMethod.getMethodBody().setExtraCode("",method.getMethodBody().getExtraCode(""));
@@ -914,21 +914,21 @@ class UmpleClass
     }
     return all;
   }
-  
+
   public List<TraceDirective> getAllTraceDirectives(){
     ArrayList<TraceDirective> all = new ArrayList<TraceDirective>();
     all.addAll(getTraceDirectives());
-    
+
     for(TraceCase tc : getTraceCases())
       if( tc.getActivation() ==  true )
         for(TraceDirective td : tc.getTraceDirectives())
           all.add(td);
-    
+
     return all;
   }
 
   public List<CodeInjection> getApplicableCodeInjections(String type, String method)
-  {  
+  {
     ArrayList<CodeInjection> all = new ArrayList<CodeInjection>();
     if (type == null || method == null)
     {
@@ -979,17 +979,17 @@ class UmpleClass
         }
       }
 
-      if ((isAllExcludes && isMatchOnExclude.isTrue()) || isMatch.isTrue()) 
+      if ((isAllExcludes && isMatchOnExclude.isTrue()) || isMatch.isTrue())
       {
         all.add(code);
       }
-    } 
+    }
 
     return all;
   }
 
   public List<StateMachine> getStateMachines(Event e)
-  { 
+  {
     List<StateMachine> allStateMachines = new ArrayList<StateMachine>();
     for (StateMachine sm : getAllStateMachines())
     {
@@ -1102,7 +1102,7 @@ class UmpleClass
     int numberOfParams = comparedMethod.getMethodParameters().size();
     for (Method aMethod : this.getMethods()){
       // Compare method names
-      if (aMethod.getName().equals(methodName)){  
+      if (aMethod.getName().equals(methodName)){
     	  if(aMethod.getType().equals(methodType)){
 	        // Now compare parameters
 	        if (numberOfParams == aMethod.getMethodParameters().size())
@@ -1121,18 +1121,18 @@ class UmpleClass
 	            return true;
 	          }
 	        }
-    	  }  
+    	  }
       }
     }
-    return false;  
+    return false;
   }
-  
+
   public Method getMethod(Method comparedMethod){
     String methodName = comparedMethod.getName();
     int numberOfParams = comparedMethod.getMethodParameters().size();
     for (Method aMethod : this.getMethods()){
       // Compare method names
-      if (aMethod.getName().equals(methodName)){  
+      if (aMethod.getName().equals(methodName)){
         // Now compare parameters
         if (numberOfParams == aMethod.getMethodParameters().size())
         {
@@ -1152,7 +1152,7 @@ class UmpleClass
         }
       }
     }
-    return null;  
+    return null;
   }
 
   public Attribute getAttribute(String name)
@@ -1199,29 +1199,29 @@ class UmpleClass
     }
     return true;
   }
-  
-  /* @return true if this class is immutable, either because it has the "immutable" modifier or 
-   * because an ancestor class is immutable; false if this class neither has the "immutable" modifier 
+
+  /* @return true if this class is immutable, either because it has the "immutable" modifier or
+   * because an ancestor class is immutable; false if this class neither has the "immutable" modifier
    * nor an immutable ancestor.
    */
   public boolean isImmutable()
    {
      return (iAmImmutable || ancestorIsImmutable);
   }
-    
+
   public boolean setImmutable()
   {
     boolean wasSet = false;
     if (extendsClass != null && !ancestorIsImmutable) { return wasSet; }
-    
-    if (propagateImmutabilityToAllRelationships(true)) 
-    { 
+
+    if (propagateImmutabilityToAllRelationships(true))
+    {
       iAmImmutable = true;
       wasSet = true;
     }
     return wasSet;
   }
-  
+
   private boolean propagateImmutabilityToAllRelationships(boolean isImmutable)
   {
     if (isImmutable)
@@ -1233,10 +1233,10 @@ class UmpleClass
         if (!immutabilityAssociationRulesSatisfied(av, true)) { return false; }
       }
     }
-    
+
     return notifySubclassesAncestorImmutable(isImmutable);
   }
-  
+
   private boolean notifySubclassesAncestorImmutable(boolean isImmutable)
   {
     boolean notified = true;
@@ -1255,7 +1255,7 @@ class UmpleClass
     }
     return notified;
   }
-  
+
   protected boolean setAncestorIsImmutable(boolean isImmutable)
   {
     if (iAmImmutable)
@@ -1270,7 +1270,7 @@ class UmpleClass
       return success;
     }
   }
-  
+
   private boolean enforceImmutabilityInheritanceRules(UmpleClass newSuperClass)
   {
     // A subclass may not be immutable if the superclass is not immutable
@@ -1279,7 +1279,7 @@ class UmpleClass
     return setAncestorIsImmutable(ancestorImmutable);
   }
 
-  protected static boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, UmpleClass myClass, boolean myClassImmutable, 
+  protected static boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, UmpleClass myClass, boolean myClassImmutable,
       AssociationVariable yourAV, UmpleClass yourClass, boolean yourClassImmutable)
   {
     boolean satisfied = false;
@@ -1290,7 +1290,7 @@ class UmpleClass
     else if (!myClassImmutable && !yourClassImmutable && !"immutable".equals(myAV.getModifier()) && !"immutable".equals(yourAV.getModifier()))
     {
       satisfied = true;
-    } 
+    }
     else if (myAV.getIsNavigable() && yourAV.getIsNavigable())
     {
       //satisfied = false;
@@ -1334,8 +1334,8 @@ class UmpleClass
 
     return immutabilityAssociationRulesSatisfied(myAV, this, myClassImmutable, relatedAV, relatedClass, relatedClassImmutable);
   }
-  
-  
+
+
   public boolean deleteAttribute(Attribute aAttribute)
   {
     boolean wasRemoved = false;
@@ -1374,7 +1374,7 @@ class UmpleVariable
   {
     return "immutable".equals(modifier);
   }
-  
+
   public String normalizeValue(String aType, String aValue)
   {
     if (aType == null || aValue == null || aValue.length() == 0)
@@ -1412,11 +1412,11 @@ class Attribute
 	umpleTrait = another.getUmpleTrait();
 	traceRecords = another.getTraceRecords();
   }
-  	
+
   public boolean isConstant()
   {
     return "const".equals(getModifier());
-  }  
+  }
 
   public boolean isPrimitive()
   {
@@ -1431,10 +1431,10 @@ class Attribute
 
     return (varIsImmutable || classIsImmutable);
   }
-  
+
   public String getValue()
   {
-    String possibleValue = codeblock.getCode(); 
+    String possibleValue = codeblock.getCode();
     return "".equals(possibleValue) ? super.getValue() : possibleValue;
   }
 
@@ -1455,7 +1455,7 @@ class Attribute
   {
     return this.getType() + (this.getIsList() ? "[]" : "");
   }
-  
+
 }
 
 /*
@@ -1472,11 +1472,11 @@ class Association
 	  this.positions = new ArrayList<Coordinate>();
 	  for (Coordinate coordinate : another.getPositions()) {
 		this.positions.add(coordinate);
-	  }  
+	  }
 	  this.tokenPosition = another.getTokenPosition();
 	  this.tokenEndPosition = another.getTokenEndPosition();
 	  this.immutable = another.immutable;
-	
+
 	  //Association Associations
 	  this.ends = new ArrayList<AssociationEnd>();
 	  for (AssociationEnd associationEnd : another.getEnds()) {
@@ -1487,7 +1487,7 @@ class Association
 		  this.associationTraceItems.add(associationTraceItems);
 	  }
   }
-  
+
   public void setLeftAndRight()
   {
     String name = this.getName();
@@ -1540,7 +1540,7 @@ class Association
     }
     else if ( (!getIsLeftNavigable() || !getIsRightNavigable()) && (getIsLeftComposition() || getIsRightComposition())) {
     	arrow = "><";
-    } 
+    }
     else if (getIsRightComposition() && getIsLeftComposition())
     {
       arrow = "><";
@@ -1557,7 +1557,7 @@ class Association
     {
       arrow = "><";
     }
-    
+
     return arrow;
   }
 
@@ -1597,17 +1597,17 @@ class Association
       return secondClassName + secondRole + "__" + firstClassName + firstRole;
     }
   }
-  
+
   public void setImmutable()
   {
     this.immutable = true;
   }
-  
+
   public boolean isImmutable()
   {
     return this.immutable;
   }
-  
+
   public boolean isComposition() {
   	return this.isLeftComposition || this.isRightComposition;
   }
@@ -1636,9 +1636,8 @@ class ConstraintTree
    * Negates a sub variable of the ConstriantTree recursively trying to do as much as it can, setting this ConstraintTree to show the ! symbol if this is the deepest ConstraintTree
    * @param variable the sub constaint variable that is being negated. ConstraintOperators will call the negate method, ConstraintTrees will attempt to go deeper down the tree if that exists, trying to find a negatable target
    */
-  private boolean negateVariable(ConstraintVariable variable)
-  {
-    boolean wasNegated = false;
+  private boolean negateVariable(ConstraintVariable variable){
+    boolean wasOperationNegatable = false;
     if(variable==null)
     {
       return false;
@@ -1653,24 +1652,25 @@ class ConstraintTree
       {
         boolean left = negateVariable(((ConstraintOperator)variable).getLeft());
         boolean right = negateVariable(((ConstraintOperator)variable).getRight());
-        wasNegated = left||right;
+        wasOperationNegatable = left||right;
       }
     }
     else if(variable instanceof ConstraintTree)
     {
-      wasNegated = ((ConstraintTree)variable).negate();
+      wasOperationNegatable = ((ConstraintTree)variable).negate();
     }
     else if(variable instanceof ConstraintLiteral||variable instanceof ConstraintUnassignedName)
     {
       return false;
     }
-    if(!wasNegated)
+
+    if(!wasOperationNegatable)
     {
       displayNegation = !displayNegation;
     }
-    return true;
+    return wasOperationNegatable;
   }
-  
+
   /*
    * The public counterpart to the negateVariabe method, it negates this ConstraintTree's root, starting off the recursive decent into the negation of the tree
    */
@@ -1736,7 +1736,7 @@ class ConstraintTree
         root = requestor;
         requestor = null;
       }
-      else 
+      else
       {
         root = aElement;
       }
@@ -1904,7 +1904,7 @@ class Postcondition
   {
     return new Postcondition(method);
   }
-  
+
   public ConstraintVariable addElement(ConstraintVariable aElement)
   {
     if(aElement instanceof ConstraintUnassignedName)
@@ -1958,7 +1958,7 @@ class ConstraintOperator
         {
           subConstraints.add(variable);
         }
-        
+
       }
       else
       {
@@ -2046,7 +2046,11 @@ class ConstraintOperator
    */
   public boolean negate()
   {
-    if("object==".equals(value))
+    if ("".equals(value))
+    {
+      return false;
+    }
+    else if("object==".equals(value))
     {
       value = "object!=";
     }
@@ -2321,24 +2325,24 @@ class AssociationEnd
   	this.multiplicity = another.getMultiplicity();
   	this.isDefaultRoleName = another.getIsDefaultRoleName();
   	this.priority = another.getPriority();
-	
-  	//AssociationEnd Associations	
+
+  	//AssociationEnd Associations
   	this.association = another.getAssociation();
-	
+
   	//Helper Variables
   	this.cachedHashCode = another.cachedHashCode;
   	this.canSetMultiplicity = another.canSetMultiplicity;
   	this.canSetRoleName = another.canSetRoleName;
 	this.canSetClassName = another.canSetClassName;
 	this.canSetModifier = another.canSetModifier;
-	this.canSetReferenceToClassName = another.canSetReferenceToClassName;	
+	this.canSetReferenceToClassName = another.canSetReferenceToClassName;
   }
   private static int MULT_MANY = -1;
 
   public boolean isNavigable()
   {
     return !getModifier().toLowerCase().equals("nonnavigable");
-  }  
+  }
 
   public String getLowerBoundString()
   {
@@ -2447,7 +2451,7 @@ class AssociationEnd
     {
       return defaultIfNotOneOrMany;
     }
-  }  
+  }
 
 }
 
@@ -2469,7 +2473,7 @@ class AssociationVariable
 	  for (Comment comment : another.getComments()) {
 		  this.comments.add(comment);
 	  }
-	
+
 	  this.umpleClass = another.getUmpleClass();
 	  this.umpleTrait = another.getUmpleTrait();
 	  this.associationTraceItems = new ArrayList<AssociationTraceItem>();
@@ -2478,7 +2482,7 @@ class AssociationVariable
 	  }
 	  //Helper Variables
 	  //this.canSetIsNavigable = another.canSetIsNavigable;
-  }	
+  }
 
   public boolean isReflexive()
   {
@@ -2542,7 +2546,7 @@ class AssociationVariable
   {
     return multiplicity.getLowerBound() == 0 && isMany();
   }
-  
+
   public boolean isUpperBounded()
   {
     return multiplicity.getUpperBound() >= 0;
@@ -2588,12 +2592,12 @@ class AssociationVariable
     AssociationVariable related = getRelatedAssociation();
     Boolean relatedAssocIsImmutable = (related == null) ? false : "immutable".equals(related.getModifier());
 
-    Boolean myUmpleClassIsImmutable = 
+    Boolean myUmpleClassIsImmutable =
       (getIsNavigable() && getUmpleClass() != null) ? getUmpleClass().isImmutable() : false;
-    Boolean yourUmpleClassIsImmutable = 
+    Boolean yourUmpleClassIsImmutable =
       (related != null && related.getIsNavigable() && related.getUmpleClass() != null) ? related.getUmpleClass().isImmutable() : false;
 
-    return (super.isImmutable() || relatedAssocIsImmutable 
+    return (super.isImmutable() || relatedAssocIsImmutable
         || myUmpleClassIsImmutable || yourUmpleClassIsImmutable);
   }
 
@@ -2643,10 +2647,10 @@ class AssociationVariable
     Boolean myUmpleClassIsImmutable = (getUmpleClass() != null) ? getUmpleClass().isImmutable() : false;
     Boolean yourUmpleClassIsImmutable = (related.getUmpleClass() != null) ? related.getUmpleClass().isImmutable() : false;
 
-    return UmpleClass.immutabilityAssociationRulesSatisfied(this, umpleClass, myUmpleClassIsImmutable, 
+    return UmpleClass.immutabilityAssociationRulesSatisfied(this, umpleClass, myUmpleClassIsImmutable,
         related, related.getUmpleClass(), yourUmpleClassIsImmutable);
   }
-  
+
 }
 
 /*
@@ -2663,14 +2667,14 @@ class Multiplicity
 
   public String getRange()
   {
-    String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + ""; 
+    String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + "";
     String upperBound = getUpperBound() == -1 ? "*" : getUpperBound() + "";
     return StringFormatter.format("[{0},{1}]",lowerBound,upperBound);
   }
 
   public String[] getRangeParts()
   {
-    String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + ""; 
+    String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + "";
     String upperBound = getUpperBound() == -1 ? "*" : getUpperBound() + "";
     return new String[] { lowerBound, upperBound };
   }
@@ -2691,7 +2695,7 @@ class Multiplicity
     {
       return false;
     }
-    
+
     // Fix for issue 292
     if (getUpperBound() == 0)
     {
@@ -2814,7 +2818,7 @@ class GeneratedElement
     }
     else
     {
-      return lookups.get(aKey);  
+      return lookups.get(aKey);
     }
   }
 
@@ -2860,7 +2864,7 @@ class GeneratedElement
     for (String aKey : lookups.keySet())
     {
       answer += "[" + aKey + ":" + lookups.get(aKey) + "]";
-    }    
+    }
     answer += ">>";
     return answer;
   }
@@ -2941,7 +2945,7 @@ class Coordinate
     int topDeltaX = getTopMiddle().getX() - neighbour.getBottomMiddle().getX();
 
     int bottomDeltaY = neighbour.getTopMiddle().getY() - getBottomMiddle().getY();
-    int bottomDeltaX = getBottomMiddle().getX() - neighbour.getTopMiddle().getX(); 
+    int bottomDeltaX = getBottomMiddle().getX() - neighbour.getTopMiddle().getX();
 
     if (topDeltaY > 0 && Math.abs(topDeltaY) > Math.abs(topDeltaX))
     {
@@ -2966,7 +2970,7 @@ class Coordinate
     int a = other.getX() - getX();
     int b = other.getY() - getY();
     int c = (int) Math.round(Math.sqrt(Math.pow(a,2) + Math.pow(b,2)));
-    return c; 
+    return c;
   }
 
   public String toString()
@@ -2980,7 +2984,7 @@ class Coordinate
     {
       setStatus(Status.Undefined);
     }
-    else 
+    else
     {
       setStatus(Status.Explicit);
     }
@@ -2995,12 +2999,12 @@ class Comment
 
   /**
    * Used to take a comment and process it into a format appropriate for displaying in generated code.
-   * 
+   *
    * For example, you may want a bunch of inline comments put together and displayed as Javadoc.  This accomplishes that (among others).
-   * 
+   *
    * @param type Indicates the type of comment which determines how the comments are formatted.  The types are: Hash, Javadoc, Attribute Javadoc, Association Javadoc, Method Javadoc, RubyMultiline, RubyMultiline Internal and Multiline.  Defaults to "//" if not specified.
    * @param allComments A list of comments to be processed and formatted all together as one.
-   * 
+   *
    * @return The processed/formatted comment appropriate for use in generated code output.
    */
   public static String format(String type,List<Comment> allComments)
@@ -3084,7 +3088,7 @@ class Comment
           c.setText(c.getText().substring(startIndex));
         }
       }
-      output += commentDelimiter + c.getText() + "\n"; 
+      output += commentDelimiter + c.getText() + "\n";
     }
 
     // Finalize the comment based on what type it was. (ex. For Javadoc place the "/**" and "*/" around the comment)
@@ -3125,9 +3129,9 @@ class Comment
 class GeneralTPApplied {
 	Map<String,String> parameterMapping = new HashMap<String,String>();
 //---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
+//----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------
-  private void ApplyTypeParametersToMethod(Method newMethod){   
+  private void ApplyTypeParametersToMethod(Method newMethod){
 	for (String strType : this.getParameterMapping().keySet()) {
 		String newName = this.getParameterMapping().get(strType);
 		if (newMethod.getType().equals(strType)){
@@ -3141,19 +3145,19 @@ class GeneralTPApplied {
 	}
   }
 //---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------	
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
 	public GeneralTPApplied(GeneralTPApplied another) {
 	  this.parameterMapping = another.parameterMapping;
 	  this.inheritanceName = another.inheritanceName;
 	  methodTemplateSignatures = new ArrayList<MethodTemplateSignature>();
 	  for (MethodTemplateSignature mtSignature : another.getMethodTemplateSignatures()) {
 		  methodTemplateSignatures.add(new MethodTemplateSignature(mtSignature));
-	  } 
+	  }
   	}
 //---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------	
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
 	boolean hasMethodTemplateSignature(MethodTemplateSignature inMTSignature) {
 		for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
 			if (compareTwoMethdos(mTSignature.getMethod(),inMTSignature.getMethod())) return true;
@@ -3161,8 +3165,8 @@ class GeneralTPApplied {
 		return false;
 	}
 //---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------		
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
   public MethodTemplateSignature hasMethod(Method inMethod){
     for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
     		Method newMethod = new Method(mTSignature.getMethod());
@@ -3172,8 +3176,8 @@ class GeneralTPApplied {
 	return null;
   }
 //---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------	
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
   private boolean compareTwoMethdos(Method method1, Method method2){
     if (method1.getName().equals(method2.getName())){
 		 // if(method1.getType().equals(method2.getType())){
@@ -3193,13 +3197,13 @@ class GeneralTPApplied {
 		            return true;
 		          }
 		     }
-		 // }  
+		 // }
       }
 	  return false;
   }
 //---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------   
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
 }
 
 class MethodTemplateSignature{
@@ -3210,8 +3214,8 @@ class MethodTemplateSignature{
     this.method = new Method(another.getMethod());
   }
 //---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------   
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
 }
 
 
@@ -3234,7 +3238,7 @@ class ModelConstraint
   lazy String target;
   String linkNext = "";
   lazy String link;
-  ModelConstraint mostRecent = { getModelConstraint(numberOfModelConstraints()-1) } ; 
+  ModelConstraint mostRecent = { getModelConstraint(numberOfModelConstraints()-1) } ;
 
   const ModelConstraintResult SUCCESS = new ModelConstraintResult(null,-1,null,null);
   const ModelConstraintResult AND = new ModelConstraintResult(null,-1,null,null);
@@ -3400,7 +3404,7 @@ class ModelConstraintAssociation
 
         Integer rMax = 0;
         Integer rMin = 0;
-          
+
         if(rightHandMultiplicity.getBound()!=null)
         {
           rMax = Integer.parseInt(rightHandMultiplicity.getBound().replace("*",""+Integer.MAX_VALUE));
@@ -3411,7 +3415,7 @@ class ModelConstraintAssociation
           rMax = Integer.parseInt(rightHandMultiplicity.getMaximum().replace("*",""+Integer.MAX_VALUE));
           rMin = Integer.parseInt(rightHandMultiplicity.getMinimum().replace("*","0"));
         }
-          
+
         if("*".equals(rightHandMultiplicity.getBound()))
         {
         }
@@ -3419,7 +3423,7 @@ class ModelConstraintAssociation
         {
           Integer tMin = Integer.parseInt(theirs.getMultiplicity().getMinimum().replace("*","0"));
           Integer tMax = Integer.parseInt(theirs.getMultiplicity().getMaximum().replace("*",""+Integer.MAX_VALUE));
-          
+
           if(tMax>rMax||tMin<rMin)
           {
             continue;
@@ -3513,7 +3517,7 @@ class ModelConstraintSuperClass
           child = temp;
         }
       }
-      else 
+      else
       {
         for(UmpleInterface i:child.getParentInterface())
         {
@@ -3639,7 +3643,7 @@ class ModelConstraintAttributeFromClass
       {
         setSource(uClassifier.getName());
       }
-      
+
       uClass = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getSource());
       if(uClass == null)
       {
