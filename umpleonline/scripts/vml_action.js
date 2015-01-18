@@ -37,6 +37,10 @@ Action.clicked = function(event)
   {
     Action.generateCode("java","TextUml");
   }
+  else if (action == "ScxmlCode")
+  {
+    Action.generateCode("java","Scxml");
+  }
   else if (action == "PapyrusCode")
   {
     Action.generateCode("xml","Papyrus");
@@ -59,7 +63,7 @@ Action.saveNewFile = function()
 {
   var vmlCode = Page.getVmlCode();
   var filename = Page.getFilename();
-  
+
   if (filename == "")
   {
     Ajax.sendRequest("scripts/compiler_vml.php",Action.saveNewFileCallback,format("save=1&&vmlCode={0}",vmlCode));

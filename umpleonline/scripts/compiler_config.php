@@ -4,7 +4,7 @@
 // http://umple.org/license
 //
 // Utility functions invoked primarily by compiler.php and umple.php
-// 
+//
 // To run UmpleOnline locally, you may need to set the following constants
 // based on your home computer settings
 
@@ -12,7 +12,7 @@
 //$GLOBALS["JAVA_HOME"] = "C:\Program Files\Java\jdk1.6.0_17";
 //$GLOBALS["ANT_EXEC"] = "C:\Ant\apache-ant-1.8.1\bin\ant";
 //$GLOBALS["OS"] = "Windows";
- 
+
 // CRUISE SERVER and MAC OS installations
 $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
@@ -50,13 +50,14 @@ function generateMenu($buttonSuffix)
             <option id=\"genruby\" value=\"ruby:Ruby\">Ruby Code</option>
             <option value=\"xml:Ecore\">Ecore</option>
             <option value=\"java:TextUml\">TextUml</option>
+            <option value=\"xml:Scxml\">Scxml (Experimental)</option>
             <option value=\"xml:Papyrus\">Papyrus XMI</option>
             <option value=\"yumlDiagram:yumlDiagram\">Yuml Class Diagram</option>
             <option value=\"classDiagram:classDiagram\">GraphViz Class Diagram (SVG)</option>
             <option value=\"stateDiagram:stateDiagram\">State Diagram (GraphViz SVG)</option>
             <option value=\"entityRelationship:entityRelationshipDiagram\">Entity Relationship Diagram (GraphViz SVG)</option>
-            <option id=\"genstatetables\" value=\"html:StateTables\">State Tables</option>            
-            <option value=\"structureDiagram:StructureDiagram\">Structure Diagram</option>                        
+            <option id=\"genstatetables\" value=\"html:StateTables\">State Tables</option>
+            <option value=\"structureDiagram:StructureDiagram\">Structure Diagram</option>
             <option value=\"java:Json\">Json</option>
             <option id=\"gensql\" value=\"sql:Sql\">Sql</option>
             <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple Metrics</option>
@@ -66,7 +67,7 @@ function generateMenu($buttonSuffix)
           </select>
         </li>
         <li id=\"ttGenerateCode\">
-          <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQueryPaletteButton\" value=\"Generate Code\"></div> 
+          <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQueryPaletteButton\" value=\"Generate Code\"></div>
         </li>
         <li><div id=\"genstatus\" align=\"center\">Done. See below</div><li>
       </ul>";
@@ -80,23 +81,23 @@ function saveFile($input, $filename = null)
   {
     if (!isset($_REQUEST["filename"]))
     {
-      $filename = nextFilename();  
+      $filename = nextFilename();
     }
     else
     {
       $filename = $_REQUEST["filename"];
     }
   }
-  
+
   $fh = fopen($filename, 'w');
-  
+
   if($GLOBALS["OS"] == "Mac") {
     $contents = stripslashes($input);
   }
   else {
     $contents = $input;
   }
-  
+
   fwrite($fh, $contents);
   fclose($fh);
   return $filename;
@@ -195,7 +196,7 @@ function extractFilename()
         // There is an argument with a matching overwrite key
         // For now, just ensure that the saved URL can only
         // be overwritten if the argument &overwrite=yes is supplied
-        if (!$_REQUEST["overwrite"] == "yes") { 
+        if (!$_REQUEST["overwrite"] == "yes") {
           $readOnly = true;
           $fileToCopy = "ump/" . $filename;
           $destfile = nextFilename("ump");
@@ -230,13 +231,13 @@ function extractFilename()
   {
     $filename = "../" . nextFilename("ump");
   }
- 
+
   // The only other option is that there is a filename option
   else
   {
     $destfile = nextFilename("ump");
     $filename = "../" . $destfile;
-    
+
     if(!substr($_REQUEST["filename"],-4)==".ump") {
        file_put_contents($destfile, "// URL in filename argument must end in .ump and the initial http:// must be omitted");
     }
@@ -264,10 +265,10 @@ function nextFilename($basedir = "../ump", $prefix = "tmp")
     $id = rand(0,999999);
     $dirname = "{$basedir}/{$prefix}{$id}";
     $filename = "{$dirname}/model.ump";
-    
+
     if (!file_exists($dirname))
     {
-        
+
       mkdir($dirname);
       return $filename;
     }
@@ -283,24 +284,24 @@ function showYumlImage($filename)
   ?>
   <head>
     <title> <?php echo $title ?> </title>
-    <link rel="shortcut icon" href=<?php echo $icon ?> type="image/x-icon" /> 
+    <link rel="shortcut icon" href=<?php echo $icon ?> type="image/x-icon" />
   </head>
-  
+
   <body>
   <img id="diagram" />
 	<textarea id="source" style="display:none">
 	<?php echo $yuml; ?>
 	</textarea>
 
-        <!-- empty or /scruffy -->	
+        <!-- empty or /scruffy -->
 	<input id="diagramType" type="hidden" value="" />
-	
+
 	<script type="text/javascript" charset="utf-8">
 	  var source = document.getElementById("source");
 	  var diagramType = document.getElementById("diagramType").value;
 	  var diagram = document.getElementById("diagram");
 	  diagram.src = "http://yuml.me/diagram"+ diagramType +"/class/" + source.value;
-	</script>    
+	</script>
   </body>
   <?php
 }
@@ -309,12 +310,12 @@ function showUserInterface($filename)
 {
   $title = "Generate User Interface";
   $icon = "uigu.png";
-  
+
   ?>
   <html>
   <head>
     <title> <?php echo $title ?> </title>
-    <link rel="shortcut icon" href=<?php echo $icon ?> type="image/x-icon" /> 
+    <link rel="shortcut icon" href=<?php echo $icon ?> type="image/x-icon" />
   </head>
   </html>
   <?php
@@ -324,7 +325,7 @@ function showUserInterface($filename)
 	if ($namespace_location===false) {
 		file_put_contents($filename,"namespace uigu;\n" . $content);
 	}
-	
+
 	$tempDir=dirname($filename);
 	$umpDir=dirname($tempDir);
 	if (file_exists("$tempDir/files"))
@@ -335,9 +336,9 @@ function showUserInterface($filename)
 	copy("JSFProvider/build.xml", "$tempDir/build.xml");
 
     chdir($tempDir);
-	
+
 	$output = executeCommand("ant -DxmlFile=../../scripts/JSFProvider/UmpleProject.xml -DumpleFile=model.ump -DoutputFolder=TempApp -DprojectName=umpleUIGU");
-	
+
 	$didCompile = strpos($output,"BUILD SUCCESSFUL") > 0;
     if ($didCompile){
 		if (!file_exists("TempProj"))
@@ -356,15 +357,15 @@ function showUserInterface($filename)
 		//echo "$tempDir/TempProj";
 		chdir("..");
 		rcopy($tmp."/TempProj", $umpDir."/uigu/".$uiguDir);
-		
+
 		chdir($tmp);
-		
+
 		$gh=fopen("uigudir.txt", 'w');
 		fwrite($gh, $uiguDir);
 		fclose($gh);
-		
+
 		$fh=fopen("index.html", 'w') or die("Failed to create/open file!");
-	
+
 		$before = <<< _BEFORE
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -424,39 +425,39 @@ function showUmlImage($json)
   <html>
   <head>
     <title> <?php echo $title ?> </title>
-    <link rel="shortcut icon" href=<?php echo $icon ?> type="image/x-icon" /> 
+    <link rel="shortcut icon" href=<?php echo $icon ?> type="image/x-icon" />
   </head>
   </html>
   <?php
-  
+
   header("Content-type: image/png");
   require_once("canvas.php");
 
   $canvas = new Canvas(950,350);
   $diagram = $canvas->createDiagram();
-  
+
   $classIds = array();
-  
+
   foreach ($json->umpleClasses as $umpleClass)
   {
-  
+
     $umplePosition = $umpleClass->position;
     $classEntity = new ClassEntity($umpleClass->name,new Position($umplePosition->x,$umplePosition->y,$umplePosition->width,$umplePosition->height));
     $classIds[$umpleClass->id] = $classEntity;
     $classEntity->draw($diagram);
   }
-  
-  
+
+
   foreach ($json->umpleAssociations as $umpleAssociation)
   {
-   
+
     $classEntity1 = $classIds[$umpleAssociation->classOneId];
     $classEntity2 = $classIds[$umpleAssociation->classTwoId];
 
     $mult1 = new MultiplicityEnd($classEntity1);
     $mult2 = new MultiplicityEnd($classEntity2);
-    $association = new Association($mult1, $mult2);  
-    
+    $association = new Association($mult1, $mult2);
+
     $c1Position = $classEntity1->getPosition();
     $c1Offset = $umpleAssociation->offsetOnePosition;
     $c2Position = $classEntity2->getPosition();
@@ -467,10 +468,10 @@ function showUmlImage($json)
 
     $association->addConnector($p1);
     $association->addConnector($p2);
-    
+
     $association->draw($diagram);
   }
-  
+
   ImagePng($diagram);
   ImageDestroy($diagram);
 }
@@ -479,12 +480,12 @@ function handleUmpleTextChange()
 {
   $action = $_REQUEST["action"];
   $input = $_REQUEST["umpleCode"];
-  
+
   //Windows versus Linux PHP issues
-  $actionCode = $GLOBALS["OS"] == "Windows" ? json_encode($_REQUEST["actionCode"]) : "\"" . $_REQUEST["actionCode"] . "\""; 
+  $actionCode = $GLOBALS["OS"] == "Windows" ? json_encode($_REQUEST["actionCode"]) : "\"" . $_REQUEST["actionCode"] . "\"";
   $actionCode = str_replace("<","\<",$actionCode);
   $actionCode = str_replace(">","\>",$actionCode);
-   
+
   if(!is_null($actionCode)){
 	  //Escape all the double quotes
 	  $actionCode = str_replace("\"","\\\"",$actionCode);
@@ -493,7 +494,7 @@ function handleUmpleTextChange()
 	  //Trim for escaped doubles quotes in the beginning and end of the actionCode string
 	  $actionCode = trim($actionCode, "\\\"");
   }
-  
+
   $filename = saveFile($input);
   $umpleOutput = executeCommand("java -jar umplesync.jar -{$action} \"{$actionCode}\" {$filename}");
   saveFile($umpleOutput,$filename);
@@ -518,7 +519,7 @@ function cleanupOldFiles()
   // 1 percent of the time delete old temp directories older than 30 days ago
     executeCommand("find ./ump -maxdepth 1 -type d -mtime +30 | grep -v .svn | grep /tmp | xargs rm -rf");
   // The following commented out because it takes too long - use ralph script cleanump
-  // delete empty directories older than 2 days - typically produced when Javascript off 
+  // delete empty directories older than 2 days - typically produced when Javascript off
   //executeCommand("find ./ump -maxdepth 1 -type d -empty -mtime +2 | grep -v .svn |  xargs rm -rf");
   }
 }

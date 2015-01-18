@@ -1,0 +1,45 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.compiler;
+
+class ScxmlGenerator
+{
+
+  public void generate()
+  {
+    StringBuilder code = new StringBuilder();
+
+    code.append("<!--  EXPERIMENTAL SCXML OUTPUT, NOT READY FOR USE -->\n");
+    code.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+    code.append("<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:xi=\"http://www.w3.org/2001/XInclude\" version=\"1.0\" initial=\"Main\" datamodel=\"null\">\n");
+    code.append("</scxml>");
+    model.setCode(code.toString());
+    writeModel();
+  }
+
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".scxml";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating SCXML code." + e, e);
+    }
+  }
+}

@@ -8,9 +8,9 @@ $output = readTemporaryFile($filename);
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <script src="scripts/_load_vml.js" type="text/javascript"></script> 
+  <script src="scripts/_load_vml.js" type="text/javascript"></script>
   <title>UmpleOnline: Generate Java, PHP, or Ruby code from Umple</title>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
   <table class="pagetitle">
@@ -20,7 +20,7 @@ $output = readTemporaryFile($filename);
       </td>
       <td>
         <p class="pagedescription">
-          
+
           Add your VML structure, and then include the appropriate invocations to generate the desired system.<br />
           Note that this implementation has been set to work with <a href="http://cruise.site.uottawa.ca/umpleonline">UmpleOnline</a>,<br />
           so if your generation code is Umple, you can compile it directly to Java, PHP, or Ruby.
@@ -33,32 +33,33 @@ $output = readTemporaryFile($filename);
 
 <table id="container" class="container">
 <tr>
-  
+
   <td>
     <div id="palette" class="palette-vml">
 
       <ul></ul>
-      
+
       <div class="title">GENERATE</div>
       <input id="buttonGenericCode" type="button" class="button" value="Generic Code" />
-      
+
       <ul></ul>
-      
+
       <div class="title">UMPLE PLUGIN</div>
       <input id="buttonPhpCode" type="button" class="button" value="Php Code" /> <br />
       <input id="buttonJavaCode" type="button" class="button" value="Java Code" /> <br />
       <input id="buttonRubyCode" type="button" class="button" value="Ruby Code" /> <br />
       <input id="buttonEcoreCode" type="button" class="button" value="Ecore XML" /> <br />
       <input id="buttonTextUmlCode" type="button" class="button" value="TextUml Code" /> <br />
+      <input id="buttonScxmlUmlCode" type="button" class="button" value="SCXML Code (Experimental)" /> <br />
       <input id="buttonPapyrusCode" type="button" class="button" value="Papyrus XMI" /> <br />
       <input id="buttonYumlCode" type="button" class="button" value="Yuml Code" /> <br />
       <input id="buttonJsonCode" type="button" class="button" value="Json Code" /> <br />
-      
+
       <div id="buttonCodeComplete" class="doneMessage">Done<br /> (See Below)</div>
       <div id="buttonCodeWaiting" class="waiting"><img src="scripts/ajax-loader.gif" /></div>
 
       <ul></ul>
-      
+
       <div class="title">EXAMPLES</div>
         <select id="inputExample" name="inputExample" class="button" style="padding:0; margin:0;">
           <option name="optionExample" id = "defaultExampleOption" value="">Select Example</option>

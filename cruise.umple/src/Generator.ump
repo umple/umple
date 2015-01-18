@@ -16,7 +16,7 @@ namespace cruise.umple.compiler;
 // Allows independent code generation tools
 // Different generators will do different things regarding where the files are put, etc.
 interface CodeGenerator
-{ 
+{
   boolean setModel(UmpleModel aUmpleModel);
   boolean setOutput(String aString);
   boolean setSuboption(String subopt);
@@ -30,16 +30,16 @@ interface CodeGenerator
 class CodeGeneratorWithSubptions
 {
   isA CodeGenerator;
-  lazy String[] suboptions;  
-  public boolean hasSuboption(String subopt) 
-  { 
+  lazy String[] suboptions;
+  public boolean hasSuboption(String subopt)
+  {
     return suboptions.contains(subopt);
   }
-  
-  public boolean setSuboption(String subopt) 
-  { 
+
+  public boolean setSuboption(String subopt)
+  {
     return suboptions.add(subopt);
-  }  
+  }
 }
 
 interface CodeTranslator
@@ -171,6 +171,20 @@ class TextUmlGenerator
   String output = "";
 }
 
+class ScxmlGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+}
+
 class GvStateDiagramGenerator
 {
   isA CodeGeneratorWithSubptions;
@@ -236,7 +250,7 @@ class SuperGvGenerator
   abstract;
   //The reason for bringing following inheritance here is because of Umple code generation. It generates a false method for iterface coverage.
   isA CodeGeneratorWithSubptions;
-  
+
   // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
   // off of what's contained in here.
   UmpleModel model = null;
@@ -329,7 +343,7 @@ class XtextGenerator
   UmpleModel model = null;
   String outputPath = "";
   String output = "";
-  
+
   HashSet<String> terminals = new HashSet<String>();
 }
 
@@ -354,7 +368,7 @@ class StructureDiagramGenerator
 }
 
 class JavaGenerator
-{  
+{
   isA CodeTranslator;
   isA SuperCodeGenerator;
   depend java.util.*;
@@ -363,7 +377,7 @@ class JavaGenerator
 
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.java.*;
-  
+
   StringBuilder uncaughtExceptions = new StringBuilder();
   UmpleClass[] mainClasses;
 }
@@ -377,7 +391,7 @@ class RTCppGenerator
 
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.cpp.generator.UmpleCppPoliciesProcessor;
-  depend cruise.umple.cpp.core.ContentsDescriptor; 
+  depend cruise.umple.cpp.core.ContentsDescriptor;
 
   // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
   // off of what's contained in here.
@@ -394,7 +408,7 @@ class CppGenerator
   depend cruise.umple.util.*;
 
   depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.cpp.*;  
+  depend cruise.umple.compiler.cpp.*;
 }
 
 
@@ -407,7 +421,7 @@ class PhpGenerator
   depend cruise.umple.util.*;
 
   depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.php.*;  
+  depend cruise.umple.compiler.php.*;
 }
 
 class UmpleGenerator
@@ -421,7 +435,7 @@ class UmpleGenerator
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.parser.analysis.*;
   depend cruise.umple.parser.rules.*;
-  // depend cruise.umple.compiler.umple.*;  
+  // depend cruise.umple.compiler.umple.*;
 }
 
 class Uigu2Generator
@@ -445,7 +459,7 @@ class RubyGenerator
   depend cruise.umple.util.*;
 
   depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.ruby.*;  
+  depend cruise.umple.compiler.ruby.*;
 }
 
 class SqlGenerator
@@ -457,7 +471,7 @@ class SqlGenerator
   depend cruise.umple.util.*;
 
   depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.sql.*;  
+  depend cruise.umple.compiler.sql.*;
 }
 
 use Umple.ump;
@@ -479,6 +493,7 @@ use Generator_CodeTest.ump;
 use Generator_CodePapyrus.ump;
 use Generator_CodeXmi.ump;
 use Generator_CodeTextUml.ump;
+use Generator_CodeScxml.ump;
 use Generator_CodeGvStateDiagram.ump;
 use Generator_CodeStateTables.ump;
 use Generator_CodeSimpleMetrics.ump;

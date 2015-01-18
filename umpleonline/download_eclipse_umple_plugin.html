@@ -4,8 +4,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link href="scripts/styles_download.css" rel="stylesheet" type="text/css" />
   <title>Downloading and Installing Umple</title>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
-  
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
 <style>
 
 .button {
@@ -39,9 +39,9 @@
    border-top-color: #810b09;
    background: #810b09;
    }
-   
-</style>  
-  
+
+</style>
+
 </head>
 <body>
 
@@ -51,48 +51,48 @@
 
   <p class="intro">
     Below are instructions for downloading and installing Umple, a model-oriented programming technology that lets you model
-    in code.  Here is <a href="http://umple.org">more information</a> 
+    in code.  Here is <a href="http://umple.org">more information</a>
     about Umple, or try it online without downloading, using the <a href="http://try.umple.org">UmpleOnline tool</a>
   </p>
 
   <h2>A. Requirements to run Umple</h2>
-  
+
   <p>Umple can be used on Mac-OS, Windows or Linux.</p>
-  
+
   <h3>For Eclipse</h3>
   <ul>
     <li>Eclipse with Modelling tools. It is known to work under Indigo, Juno or Kepler.</li>
   </ul>
-  
+
     <h3>For command-line use</h3>
    <ul>
      <li>An up-to-date JVM. Java 7 recommended.
    </ul>
   &nbsp; <br/>
-  
-  
+
+
   <h2>B. Directions</h2>
-  
+
   <h3>B.1 Downloading Umple (choose from the following options)</h3>
-  
+
  <ul>
 
     <li><a class="button" href="https://github.com/umple/Umple/releases/latest/">
     The latest official releases of Umple jars at GitHub</a><br/>&nbsp;<br/>
     The command-line compiler and the Eclipse plugin are available, here along with release notes.<br />&nbsp;<br />
-    
+
     <li><a class="button" href="http://try.umple.org/scripts/umple.jar">The latest build of the command-line
      compiler at the University of Ottawa</a><br/> &nbsp;<br/>
      This is built after every commit from our continuous build process.
     This is also the version of the compiler used by <a href="http://try.umple.org">UmpleOnline</a>. This version may contain experimental
     features so should not be used in critical applications.<br />&nbsp;<br />
-  
+
     <li>To obtain the full tree with source code (including the Umple compiler as a jar, which is necessary to
     compile Umple itself, select one of the following: <br />&nbsp;<br />
-  
+
     <ul>
     <li><b>Definitive Subversion Master With Lastest Software</b>: svn checkout http://umple.googlecode.com/svn/trunk/ umple-read-only
-        
+
     <li><b>UOttawa git mirror (updated automatically after every commit once the continuous integration server has verified that all tests pass)</b>: git clone http://cruise.site.uottawa.ca/git/umple-svn-git-mirror/.git
 
     <li><b><a href="https://github.com/umple/Umple">Github mirror main page</a></b>: git clone https://github.com/umple/Umple.git
@@ -100,28 +100,28 @@
     <li><b><a href="https://sourceforge.net/projects/umple/">SourceForge mirror main page</a></b>
 
     <li>Release tarballs or zip files, available at Github as described above.
-    
+
     </ul><br />&nbsp;<br />
-     
-   
+
+
    <li><b>Recent changes:</b> <a href="http://changed.umple.org">The list of completed changes applied in the last six months can be found by clicking here</a>
 
   </ul>
-  
+
   <br />&nbsp;<br />
 
 
 
 
    <h3>B.2 Installing and running the Umple compiler in Eclipse</h3>
-   
+
    <p>Full directions for <a href="https://code.google.com/p/umple/wiki/Install_Eclipse_Plugin">installing the Eclipse plugin can be found on this Umple Wiki Page.</a></p>
-  
-  
-  
+
+
+
     <br />&nbsp;<br />
-  
-  
+
+
    <h3>B.3 Running the Umple compiler on the command line</h3>
    <ul>
      <li>Run <pre>java -jar umple.jar &lt;options&gt; &lt;arguments&gt;</pre>
@@ -130,18 +130,18 @@
 
      <li>You can use --help as an option to obtain the full set of command-line options. Options available include:
      <ul>
-     <li>-g, --generate :                          Specify the output language: Java,RTCpp, 
-                                          Php,RTCpp,Ruby,SQL,Json,Ecore,TextUml,
-                                          Yuml,Cpp etc.                                 
-      <li> --help :                                  Display the help message               
-      <li> --override :                              If a output language <lang> is         
-                                          specified using option -g, output    
-                                          will only generate language <lang>   
-      <li> --path :                                  If a output language is specified      
-                                          using option -g, output source code  
-                                          will be placed to path               
-      <li> -v, --version :                           Print out the current Umple version    
-                                          number          
+     <li>-g, --generate :                          Specify the output language: Java,RTCpp,
+                                          Php,RTCpp,Ruby,SQL,Json,Ecore,TextUml,Scxml
+                                          Yuml,Cpp etc.
+      <li> --help :                                  Display the help message
+      <li> --override :                              If a output language <lang> is
+                                          specified using option -g, output
+                                          will only generate language <lang>
+      <li> --path :                                  If a output language is specified
+                                          using option -g, output source code
+                                          will be placed to path
+      <li> -v, --version :                           Print out the current Umple version
+                                          number
      </ul>
    </ul>
 
@@ -151,7 +151,7 @@
   <br />&nbsp;<br />
 
   <h3>B.4 User Manual </h3>
-  
+
   <p>Refer to the <a href="http://manual.umple.org">Umple user manual</a> for comprehensive help programming in Umple. The <a href="http://api.umple.org">API quick reference</a> and <a href="http://grammar.umple.org">grammar quick reference</a> may be of particular help for power users.</p>
 
 </body>

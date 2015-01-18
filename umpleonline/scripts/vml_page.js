@@ -8,19 +8,20 @@
 Page = new Object();
 
 Page.init = function()
-{ 
+{
   Page.initAction("buttonGenericCode");
   Page.initAction("buttonPhpCode");
   Page.initAction("buttonJavaCode");
   Page.initAction("buttonRubyCode");
   Page.initAction("buttonEcoreCode");
   Page.initAction("buttonTextUmlCode");
+  Page.initAction("buttonScxmlCode");
   Page.initAction("buttonPapyrusCode");
   Page.initAction("buttonYumlCode");
   Page.initAction("buttonJsonCode");
 
   Page.initExamples();
-  
+
   Page.initSourceCodeArea();
   Page.showCodeMessage("none");
   Action.saveNewFile();
@@ -48,7 +49,7 @@ Page.initExamples = function()
 Page.getVmlCode = function()
 {
   return document.getElementById("vmltext").value;
-} 
+}
 
 Page.setVmlCode = function(code)
 {
