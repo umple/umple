@@ -73,6 +73,7 @@ public class UmpleParserStateMachineTest
   public void stateMachineComments()
   {
     assertParse("100_stateMachineComments.ump","[inlineComment:one][inlineComment:two][classDefinition][name:LightFixture][inlineComment:three][inlineComment:four][stateMachine][inlineStateMachine][name:status][inlineComment:five][inlineComment:six][state][stateName:On][inlineComment:seven][inlineComment:eight][transition][event:flip][stateName:Off][inlineComment:nine][inlineComment:ten][state][stateName:Off][inlineComment:eleven][inlineComment:twelve]");
+    Assert.assertEquals(1, model.numberOfUmpleClasses());
     UmpleClass c = model.getUmpleClass("LightFixture");
     Assert.assertEquals(1, c.numberOfStateMachines());
     StateMachine sm = c.getStateMachine(0);
