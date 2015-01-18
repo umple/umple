@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." default="build" name="Umple">
-  
+
   <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 
   <target name="build" >
@@ -18,14 +18,14 @@
         <ant antfile="build/build.eclipseplugin.xml" target="build" inheritAll="false" />
 
         <echo>Building Umplificator Eclipse Plugin</echo>
-        <ant antfile="build/build.umplificatorplugin.xml" target="build" inheritAll="false" /> 
+        <ant antfile="build/build.umplificatorplugin.xml" target="build" inheritAll="false" />
 
         <!-- <echo>Building Eclipse Plugin with XText Code Editor</echo>
-        <ant antfile="build/build.eclipsextextplugin.xml" target="build" inheritAll="false" /> --> 
+        <ant antfile="build/build.eclipsextextplugin.xml" target="build" inheritAll="false" /> -->
 
         <echo>Building Java Testbed (Testing that Umple Generated Code Works)</echo>
         <ant antfile="build/build.testbed.xml" target="build" inheritAll="false" />
-        
+
       </try>
 
       <finally>
@@ -39,11 +39,85 @@
     <echo>Starting Build</echo>
     <copy file="build/qa_updating.php" tofile="dist/qa/index.php" overwrite="true" />
   </target>
-  
+
   <target name="qaLandingPage">
     <echo>Creating a QA Landing Page</echo>
     <copy file="build/qa_index.php" tofile="dist/qa/index.php" overwrite="true" />
   </target>
-  
+
+
+  <!-- ###################################################### -->
+  <!--  EXPOSING INTERNAL build.*.xml TARGETS TO MAIN TARGET  -->
+  <!-- ###################################################### -->
+
+  <!-- ###################################################### -->
+  <!--  Available in build.umple.xml  -->
+  <!-- ###################################################### -->
+
+  <!-- Turn *.ump code from Umple into *.java -->
+  <target name="umpleSelf" >
+    <ant antfile="build/build.umple.xml" target="umpleSelf" inheritAll="true" />
+  </target>
+
+  <!-- Compile *.java into byte code -->
+  <target name="compileUmple" >
+    <ant antfile="build/build.umple.xml" target="compile" inheritAll="true" />
+  </target>
+
+  <!-- Compile the all testbed programs against the latest umple.jar -->
+  <target name="testUmple" >
+    <ant antfile="build/build.umple.xml" target="test" inheritAll="true" />
+  </target>
+
+  <!-- ###################################################### -->
+  <!--  Available in build.testbed.xml  -->
+  <!-- ###################################################### -->
+
+  <!-- Build (aka compile and test) all testbed programs against the latest umple.jar -->
+  <target name="buildTestbed" >
+    <ant antfile="build/build.testbed.xml" target="build" inheritAll="true" />
+  </target>
+
+  <!-- Compile all testbed programs against the latest umple.jar -->
+  <target name="compileTestbed" >
+    <ant antfile="build/build.testbed.xml" target="compile" inheritAll="true" />
+  </target>
+
+  <!-- Compile the Java testbed program against the latest umple.jar -->
+  <target name="compileJava" >
+    <ant antfile="build/build.testbed.xml" target="compileJava" inheritAll="true" />
+  </target>
+
+  <!-- Compile the PHP testbed program against the latest umple.jar -->
+  <target name="compilePhp" >
+    <ant antfile="build/build.testbed.xml" target="compilePhp" inheritAll="true" />
+  </target>
+
+  <!-- Compile the Ruby testbed program against the latest umple.jar -->
+  <target name="compileRuby" >
+    <ant antfile="build/build.testbed.xml" target="compileRuby" inheritAll="true" />
+  </target>
+
+  <!-- Test all testbed programs against the latest umple.jar -->
+  <target name="testTestbed" >
+    <ant antfile="build/build.testbed.xml" target="test" inheritAll="true" />
+  </target>
+
+  <!-- Test the Java testbed program against the latest umple.jar -->
+  <target name="testJava" >
+    <ant antfile="build/build.testbed.xml" target="testJava" inheritAll="true" />
+  </target>
+
+  <!-- Test the PHP testbed program against the latest umple.jar -->
+  <target name="testPhp" >
+    <ant antfile="build/build.testbed.xml" target="testPhp" inheritAll="true" />
+  </target>
+
+  <!-- Test the Ruby testbed program against the latest umple.jar -->
+  <target name="testRuby" >
+    <ant antfile="build/build.testbed.xml" target="testRuby" inheritAll="true" />
+  </target>
+
+
 </project>
 
