@@ -1,0 +1,17 @@
+generate Ruby;
+namespace example;
+
+class AssociationRule
+{
+  abstract;
+  
+  public abstract Double getPrimaryMetricValue();
+}
+
+class Rule {
+  isA AssociationRule;
+  
+  public Double getPrimaryMetricValue() { 
+   0.0
+  }
+}

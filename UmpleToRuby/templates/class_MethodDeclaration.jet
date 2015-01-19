@@ -1,8 +1,8 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
 <%
-  if (uClass.hasMethods())
-  {
-  	for (Method aMethod : uClass.getMethods()) 
+  // don't recheck for method being present: 
+  // the for loop will terminate immediately even if there are none with little to no 
+    for (Method aMethod : uClass.getMethods())
   	{
       String methodName = aMethod.getName();
       String methodType = aMethod.getType();
@@ -10,35 +10,14 @@
       String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
       customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
         
-      String methodBody = (aMethod.getMethodBody() != null) ? aMethod.getMethodBody().getExtraCode() : "";
+      String methodBody;
+      if (aMethod.getIsAbstract()) {
+       methodBody = "fail NotImplementedError, \"Method, " + uClass.getName() + "." + methodName + ", must be implemented.\"";
+      } else {
+       methodBody = (aMethod.getMethodBody() != null) ? aMethod.getMethodBody().getExtraCode() : "";
+      }
+
       String properMethodBody = "    " + methodBody;
-    		
-    		/*String lines[] = properMethodBody.split("\n");
-    		properMethodBody = "";
-    		int lineNumber = 0;
-    		
-		    for (String line : lines)
-		    {
-		    	int startIndex = 0;
-				
-				// Go through each line ensuring there are at most 4 spaces for the prefix.
-				for (int i = 0; i < line.length(); i++)
-				{
-					char letter = line.charAt(i);
-					// Remove these letters until the actual content is found in the line.
-					if (letter == ' ' || letter == '\t')
-					{
-						startIndex++;
-					}
-					// Line content found, start the line from here.
-					else
-					{
-						line = line.substring(startIndex);
-						properMethodBody += "    " + line + "\n";
-						break;
-					}
-				}
-		    }*/
     		
       String finalParams = "";
       StringBuilder parameters = new StringBuilder();
@@ -80,7 +59,6 @@
       appendln(stringBuffer, properMethodBody);
     	
 	  appendln(stringBuffer, "  end");
-  	}
   }
 %>
 
