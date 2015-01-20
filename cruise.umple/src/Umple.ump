@@ -75,6 +75,21 @@ class UmpleModel
 
   // The Umple interfaces contained within the model.
   1 -> * UmpleInterface;
+
+  // Right now, a model can only have 1 diagram
+  0..1 -- 0..1 Diagram;
+}
+
+/*
+ * A Diagram represents a subset of the available model and is used
+ * to help isolate certain aspects of the system.
+ * It will be used by the code generation process to "strip" the model
+ * piror to generation so that all generators will support Diagrams
+ *
+ * Right now, no implementation, just setting up the model
+ */
+class Diagram
+{
 }
 
 /*

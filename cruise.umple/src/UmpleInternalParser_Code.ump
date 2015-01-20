@@ -8,8 +8,8 @@ http://umple.org/license
 This file contains the implementation details for our internal Umple parser.
 
 This class parses an Umple file into an abstract syntax tree of tokens, which are then
-analyzed into an instance of of Umple meta model.  This meta model instance can then 
-be passed to our code generator to generate target implementations such as Java, PHP 
+analyzed into an instance of of Umple meta model.  This meta model instance can then
+be passed to our code generator to generate target implementations such as Java, PHP
 and Ruby.  It is configured to mostly delegate to helper methods for the following components
 
  + Core (most things outside of the elements below)
@@ -34,21 +34,21 @@ namespace cruise.umple.compiler;
 
 class UmpleInternalParser
 {
-  
+
   internal String[] unparsedUmpleFiles;
   internal String[] parsedUmpleFiles;
   internal Boolean shouldProcessAgain = false;
   internal Boolean shouldProcessClassAgain = false;
-  
+
   after constructor { init(); }
-  
+
   public UmpleInternalParser()
   {
     this("UmpleInternalParser", new UmpleModel(null), new RuleBasedParser(new UmpleModel(null)));
   }
 
   public UmpleInternalParser(UmpleModel aModel)
-  {   
+  {
     this("UmpleInternalParser", aModel, new RuleBasedParser(aModel));
   }
 
@@ -59,15 +59,15 @@ class UmpleInternalParser
       setFilename(model.getUmpleFile().getFileName());
       setRootToken(reset()); // Makes sure the root token position has the filename
     }
-    
+
     Couple quotes = new Couple("\"","\"");
     Couple braces = new Couple("{","}");
-    
-    addCouple(quotes);    
-    
+
+    addCouple(quotes);
+
     braces.addIgnore(quotes);
     braces.addIgnore(new Couple("//","\n"));
-    
+
     addCouple(braces);
     parser.addGrammarFile("/umple_core.grammar");
     parser.addGrammarFile("/umple_classes.grammar");
@@ -78,11 +78,11 @@ class UmpleInternalParser
     parser.addGrammarFile("/umple_traces.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
     parser.addGrammarFile("/umple_structure.grammar");
-    parser.addGrammarFile("/umple_template.grammar");  
+    parser.addGrammarFile("/umple_template.grammar");
     parser.addGrammarFile("/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
-    
     parser.addGrammarFile("/use.grammar");
+    parser.addGrammarFile("/umple_diagram.grammar"); // TODO Under development
   }
 
   public ParseResult parse(String ruleName, String input){
@@ -94,55 +94,55 @@ class UmpleInternalParser
 
   public ParseResult analyze(boolean shouldGenerate)
   {
-    setParseResult(parser.getParseResult());    
+    setParseResult(parser.getParseResult());
     setRootToken(parser.getRootToken());
     analyzeAllTokens(getRootToken());
     postTokenAnalysis();
     applyTraits();
     checkDefaultedNameConflict();
-    
+
     if (shouldGenerate && getParseResult().getWasSuccess())
     {
       model.generate();
     }
     return getParseResult();
   }
-  
+
   boolean addToGeneratedMethodMap(HashSet<String> generatedMethods, String className, CodeTranslator t, String translatingLabel, Attribute aAttr){
     String generatedMethodName = t.translate(translatingLabel, aAttr);
-    
+
     if(generatedMethodName != null && !"".equals(generatedMethodName) && !generatedMethodName.startsWith("UNKNOWN ID")){
-      
+
       boolean success = generatedMethods.add(generatedMethodName);
       if(!success){
         getParseResult().addErrorMessage(new ErrorMessage(48,aAttr.getPosition(), aAttr.getName(), className, generatedMethodName));
         return false;
       }
-      
+
     }
     return true;
   }
-  
+
   void checkDefaultedNameConflict(){
-    
+
     Map<String, CodeTranslator> allTranslators = model.getAllTranslators();
-        
+
     HashSet<String> generatedMethods = new HashSet<String>();
     for(String langName : allTranslators.keySet()){
       CodeTranslator t = allTranslators.get(langName);
-      
+
       for(UmpleClass aClass : model.getUmpleClasses()){
         generatedMethods.clear();
-        
+
         for(Attribute aAttr : aClass.getAttributes()){
           String modifier = aAttr.getModifier();
-          
+
           // Can add more!
           if(!"internal".equals(modifier)){
             addToGeneratedMethodMap(generatedMethods, aClass.getName(), t, "getMethod", aAttr);
             addToGeneratedMethodMap(generatedMethods, aClass.getName(), t, "setMethod", aAttr);
           }
-          
+
           if("defaulted".equals(modifier)){
             addToGeneratedMethodMap(generatedMethods, aClass.getName(), t, "getDefaultMethod", aAttr);
           }
@@ -222,6 +222,7 @@ class UmpleInternalParser
     analyzeComponentToken(t,analysisStep);
     analyzeTraceToken(t,analysisStep);
     analyzeLayoutToken(t,analysisStep);
+    analyzeDiagramToken(t,analysisStep);
     analyzeFIXML(t, analysisStep);
   }
 
@@ -233,7 +234,7 @@ class UmpleInternalParser
     analyzeStateMachineToken(t,aClass,analysisStep);
     analyzeDependentTokens(t,aClass,analysisStep);
   }
-  
+
 
   //The analysis methods in this function can depend on prior analysis (ex: constraints/keys on attributes defined later in the code)
   //Therefore it is necessary to force a second pass of the analysis for these cases
@@ -264,7 +265,7 @@ class UmpleInternalParser
     analyzeTraceToken(t,aClass);
     analyzeLayoutToken(t,aClass,analysisStep);
   }
-  
+
   // Once you have analyze all tokens, you allowed a second 'pass' to apply any additional checks
   // Each step in the process might "fail", so we check the status before calling each delegate
   // token post token analysis method
@@ -281,32 +282,32 @@ class UmpleInternalParser
     }
     if (getParseResult().getWasSuccess())
     {
-      postTokenClassAnalysis();  
+      postTokenClassAnalysis();
     }
 
     if (getParseResult().getWasSuccess())
     {
       postTokenStateMachineAnalysis();
     }
-    
+
     if (getParseResult().getWasSuccess())
     {
-      postTokenTraceAnalysis();  
+      postTokenTraceAnalysis();
     }
 
     if (getParseResult().getWasSuccess())
     {
       postTokenLayoutAnalysis();
     }
-    
+
     if (getParseResult().getWasSuccess()) {
       postTokenTemplateAnalysis();
     }
-    
+
     if (getParseResult().getWasSuccess()) {
       postTokenComponentAnalysis();
     }
-    
+
     if (getParseResult().getWasSuccess())
     {
       postTokenTraitAnalysis();
@@ -333,11 +334,11 @@ class UmpleInternalParser
   }
 
 
-  // Locate all 'use *.ump' references and add those files if not already parsed 
+  // Locate all 'use *.ump' references and add those files if not already parsed
   private void addNecessaryFiles()
   {
   }
-  
+
   // Loop through all unparsed files, parse them, and add any missing references
   private void parseAllFiles()
   {
@@ -354,9 +355,9 @@ class UmpleInternalParser
       setFilename(nextFile);
       parse("program", input);
       addNecessaryFiles();
-    }    
-  } 
-  
+    }
+  }
+
   public void analyzeParseResult()
   {
     int numberOfErrors = 0;
@@ -416,10 +417,10 @@ class UmpleInternalParser
     {
       boolean hasMessage = false;
       for(int i = 0; i<getParseResult().numberOfErrorMessages(); i++)
-      {        
+      {
         ErrorMessage error = getParseResult().getErrorMessage(i);
         if(error.getErrorType().getErrorCode() == id)
-        {          
+        {
           getParseResult().removeErrorMessage(error);
           hasMessage = true;
           break;
@@ -438,7 +439,7 @@ class UmpleInternalParser
     {
       getParseResult().setHasWarnings(false);
     }
-  } 
+  }
 }
 
 use UmpleInternalParser_CodeCore.ump;
@@ -451,3 +452,4 @@ use UmpleInternalParser_CodeStateMachine.ump;
 use UmpleInternalParser_CodeTrace.ump;
 use UmpleInternalParser_CodeLayout.ump;
 use UmpleInternalParser_CodeUSE.ump;
+use UmpleInternalParser_CodeDiagram.ump;
