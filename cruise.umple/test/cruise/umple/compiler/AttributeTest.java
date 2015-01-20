@@ -25,6 +25,55 @@ public class AttributeTest
   }
   
   @Test
+  public void getAllAttributes_none()
+  {
+    Assert.assertEquals(0, new UmpleClass("Mentor").getAllAttributes().size());
+  }
+
+  @Test
+  public void getAllAttributes_allMyAttributesIncluded()
+  {
+    Assert.assertEquals(1, clazz.getAllAttributes().size());
+    Assert.assertEquals(attr, clazz.getAllAttributes().get(0));
+  }
+
+  @Test
+  public void getAllAttributes_allMySuperclassAttributesIncluded()
+  {
+    UmpleClass superClazz = new UmpleClass("Person");
+    Attribute superAttribute = new Attribute("super_a",null,null,null,false,superClazz);
+    
+    superClazz.addAttribute(superAttribute);
+    clazz.setExtendsClass(superClazz);
+    
+    Assert.assertEquals(2, clazz.getAllAttributes().size());
+    Assert.assertEquals(attr, clazz.getAllAttributes().get(1));
+    Assert.assertEquals(superAttribute, clazz.getAllAttributes().get(0));
+  }
+
+  @Test
+  public void getAllAttributes_allMyInfiniteSuperclassAttributesIncluded()
+  {
+    UmpleClass superClazz = new UmpleClass("Person");
+    Attribute superAttribute = new Attribute("super_a",null,null,null,false,superClazz);
+
+    UmpleClass superSuperClazz = new UmpleClass("Person");
+    Attribute superSuperAttribute = new Attribute("super_super_a",null,null,null,false,superSuperClazz);
+    
+    superClazz.addAttribute(superAttribute);
+    superSuperClazz.addAttribute(superSuperAttribute);
+    
+    superClazz.setExtendsClass(superSuperClazz);
+    clazz.setExtendsClass(superClazz);
+    
+    Assert.assertEquals(3, clazz.getAllAttributes().size());
+    Assert.assertEquals(attr, clazz.getAllAttributes().get(2));
+    Assert.assertEquals(superAttribute, clazz.getAllAttributes().get(1));
+    Assert.assertEquals(superSuperAttribute, clazz.getAllAttributes().get(0));
+  }
+  
+  
+  @Test
   public void getName()
   {
     Assert.assertEquals("a", attr.getName());

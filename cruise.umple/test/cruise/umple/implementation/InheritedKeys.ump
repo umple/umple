@@ -1,0 +1,9 @@
+class Foo {
+  Integer a;
+}
+
+class Bar {
+  isA Foo;
+  Integer b;
+  key {a, b}
+}

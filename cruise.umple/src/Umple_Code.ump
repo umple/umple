@@ -1154,10 +1154,26 @@ class UmpleClass
     }
     return null;
   }
+  
+  public List<Attribute> getAllAttributes()
+  {
+    List<Attribute> all = new ArrayList<Attribute>();
+    
+    // Get all it's inherited attributes
+    if (this.hasExtendsClass()) {
+      UmpleClass parent = this.getExtendsClass();
+      List<Attribute> allParent = parent.getAllAttributes();
+      all.addAll(allParent);
+    }
+    
+    all.addAll(getAttributes());
+    
+    return all;
+  }
 
   public Attribute getAttribute(String name)
   {
-    for (Attribute av : attributes)
+    for (Attribute av : getAllAttributes())
     {
       if (av.getName().equals(name))
       {
