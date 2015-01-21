@@ -1,3 +1,5 @@
+strictness expect 100;  
+
 use Master_net.n3.nanoxml.ump;
 use Master_org.jhotdraw.app.ump;
 use Master_org.jhotdraw.app.action.ump;
