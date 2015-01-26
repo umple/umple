@@ -31,7 +31,20 @@
 
 <h1>A page you requested was not found</h1>
 
-<p>A page you requested was not found. If this was an UmpleOnline request to
+<p>A page you requested was not found. If you came to this page via clicking on a
+link or from a search engine, please report the information at the bottom to <a href="mailto:tcl@eecs.uottawa.c">tcl@eecs.uottawa.ca</a></p>
+
+<br/>&nbsp;<br/>
+
+<h2>Models 2015 Conference</h2>
+
+<p>If you are looking for a page related to the Models 2015 conference, please go to <a href="http://www.modelsconference.org">http://www.modelsconference.org</a>
+
+<br/>&nbsp;<br/>
+
+<h2>Umple</h2>
+
+<p>If this was an UmpleOnline request to
 display a model, it might be that the page has expired; temporary models are
 kept for about a day unless they are saved as a bookmarkable URL.</p>
 
@@ -39,8 +52,24 @@ kept for about a day unless they are saved as a bookmarkable URL.</p>
 page</a> or the <a href="/umple/GettingStarted.html">Umple user
 manual</a>.</p>
 
+<br/>&nbsp;<br/>
+
 <p>For other information about the CRuiSE group, see one of the links on
 the left.</p>
+
+<p>For debugging purposes, here is some data to report</p>
+      
+<ul>
+  <li>Request URI =  <!--#echo var="request_uri" -->
+  <li>Referrer=  <!--#echo var="http_referrer" -->
+  <li>Document root =  <!--#echo var="document_root" -->
+  <li>Document URI =  <!--#echo var="document_uri" -->
+  <li>Forwarded =  <!--#echo var="forwarded" -->
+  <li>From =  <!--#echo var="from" -->
+  <li>Gateway_interface =  <!--#echo var="gateway_interface" -->
+  <li>Document name =  <!--#echo var="document_name" -->
+</ul>
+
 
 &nbsp;<br>
 
