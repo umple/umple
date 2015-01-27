@@ -2,6 +2,7 @@ package cruise.umple.implementation.gv;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cruise.umple.implementation.TemplateTest;
@@ -75,7 +76,7 @@ public class GvCdGeneratorTest extends TemplateTest
     assertUmplePartialTemplateFor("gv/Compositions.ump","gv/Compositions.gv.txt");
   }
 
-  @Test
+  @Ignore
   public void display_interface()
   {
     language = null;
