@@ -124,11 +124,11 @@ class GvClassDiagramGenerator
   }
 
   // Create each method for each class - called by classCreation
-  private void methodCreation(UmpleClass uClass, StringBuilder code, boolean manyClass)
+  private void methodCreation(UmpleClassifier inUmpleClassifier, StringBuilder code, boolean manyClass)
   {
     if (hasSuboption("showmethods")) {
       boolean isFirstMethod = true;
-      for (Method uMethod : uClass.getMethods()) {
+      for (Method uMethod : inUmpleClassifier.getMethods()) {
         if (manyClass) {
           if(isFirstMethod) code.append("|"); // method block starter
           else code.append("\\\n"); // separator between attributes
@@ -185,8 +185,8 @@ class GvClassDiagramGenerator
         code.append("  \""+uInterface.getName()
           +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
       } 
-      code.append("  \""+uClass.getName()+"\" -> \"    "+uInterface.getName());
-      code.append("    \" [  arrowhead=\"empty\"; samehead=\"gen\"; style=dashed];\n\n");
+      code.append("  \""+uClass.getName()+"\" -> \""+uInterface.getName());
+      code.append("\" [  arrowhead=\"empty\"; samehead=\"gen\"; style=dashed];\n\n");
     }
   }
 
@@ -234,4 +234,59 @@ class GvClassDiagramGenerator
       code.append(" ");
     }
   }
+  
+  //This overrides a method used for generating the necessary tags for interfaces and also their hierarchies.
+   protected void createInterfacesAndTheirHirerarchy(UmpleInterface inInterface, StringBuilder code){
+	   boolean manyInterface = getModel().getUmpleInterfaces().size() >= 200 ? true : false;
+
+	    String interfaceName = inInterface.getName();
+	    String interfaceColor = inInterface.getDisplayColor();
+	    if (!interfaceColor.equals("")) interfaceColor=" style=filled, fillcolor="+interfaceColor+" ";
+	    
+	    if (manyInterface) {
+	      code.append("  \""+manyInterface+"\" ["+interfaceColor+"shape=record, label=\"{"+interfaceName);
+	      code.append("\n&laquo;interface&raquo;");
+	    } 
+	    else {
+	      code.append("  \""+interfaceName+"\" ["+interfaceColor+"shape=plaintext margin=0 label=");
+		    
+	      // Different cellpadding for if the class has nothing but the
+	      // name because of a glitch in graphviz's graphics
+		    code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
+			   			+"<tr><td>    "+interfaceName+"    </td></tr>");
+	    }
+	    code.append("<tr><td cellpadding=\"4\">&laquo;interface&raquo;"+"</td></tr>");
+	    if ((inInterface.getMethods().size()<=0) || (!hasSuboption("showmethods"))){
+	    	code.append("<hr/><tr><td cellpadding=\"4\">   </td></tr>");
+	    }
+	    methodCreation(inInterface, code, manyInterface);
+
+	    // Terminate outputting the class attributes
+	    if(manyInterface) code.append("}\"");
+	   	else code.append("</table>>"); 
+	    
+	    
+	    // Output the tooltip : Class name followed by any comment
+	    code.append(",\n   tooltip=\"interface "+interfaceName+"\n");
+//	    code.append(appendTooltipComment(uInterface.getComments(), false));
+	    code.append("\"");
+
+	    // Terminate the class as a whole
+	    code.append("];\n");
+	    createInterfaceHierarchyAssociations(inInterface,code);
+   }
+   
+   //This creates tags which are necessary to show hierarchies.
+   protected void createInterfaceHierarchyAssociations(UmpleInterface inInterface, StringBuilder code){
+	    for(UmpleInterface uInt : inInterface.getExtendsInterface()) {
+	        String intColor = uInt.getDisplayColor();
+	        // TO DO needs fixing - interface colour does not appear
+	        if (!intColor.equals("")) {
+	          code.append("  \""+uInt.getName()
+	            +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
+	        } 
+	        code.append("  \""+inInterface.getName()+"\" -> \""+uInt.getName());
+	        code.append("\" [  arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
+	      }
+   }  
 }

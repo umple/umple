@@ -218,4 +218,12 @@ class GvEntityRelationshipDiagramGenerator
 
     return isWeak;
   }
+  
+  
+  //This is used to generate interfaces and their hierarchies.
+  //This was implemented for Graphviz but not sure about this generator.
+  //TODO This must be investigated.
+  protected void createInterfacesAndTheirHirerarchy(UmpleInterface inInterface, StringBuilder code){
+  	
+  }
 }

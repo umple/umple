@@ -34,6 +34,9 @@ digraph "<<=filename>>" {
       visitClass(uClass, visitedClasses, code, associations);
     } // End iteration through classes
     
+    for (UmpleInterface uInterface : getModel().getUmpleInterfaces()){
+    	createInterfacesAndTheirHirerarchy(uInterface,code); 
+    }
     terminateCode(code, associations);
   }
 
@@ -80,6 +83,7 @@ digraph "<<=filename>>" {
   protected abstract void parentClassAssoc(StringBuilder code, String className, String parentName);
   protected abstract void classCreation(UmpleClass uClass, StringBuilder code);
   protected abstract void associationCreation(UmpleClass uClass, Association uAssoc, StringBuilder associations, String className);
+  protected abstract void createInterfacesAndTheirHirerarchy(UmpleInterface inInterface, StringBuilder code);
   protected void interfaceCreation(UmpleClass uClass, StringBuilder code) {}
 
   protected void terminateCode(StringBuilder code, StringBuilder associations) {
