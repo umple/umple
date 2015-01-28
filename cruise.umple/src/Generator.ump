@@ -266,6 +266,15 @@ class GvClassDiagramGenerator
   depend cruise.umple.compiler.exceptions.*;
 }
 
+class GvClassTraitDiagramGenerator
+{
+  isA SuperGvGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+}
+
 class GvEntityRelationshipDiagramGenerator
 {
   isA SuperGvGenerator;
@@ -498,6 +507,7 @@ use Generator_CodeGvStateDiagram.ump;
 use Generator_CodeStateTables.ump;
 use Generator_CodeSimpleMetrics.ump;
 use Generator_CodeGvClassDiagram.ump;
+use Generator_CodeGvClassTraitDiagram.ump;
 use Generator_CodeGvEntityRelationshipDiagram.ump;
 use Generator_CodeAlloy.ump;
 use Generator_CodeNuSMV.ump;

@@ -244,8 +244,7 @@ class GvClassDiagramGenerator
 	    if (!interfaceColor.equals("")) interfaceColor=" style=filled, fillcolor="+interfaceColor+" ";
 	    
 	    if (manyInterface) {
-	      code.append("  \""+manyInterface+"\" ["+interfaceColor+"shape=record, label=\"{"+interfaceName);
-	      code.append("\n&laquo;interface&raquo;");
+	      code.append("  \""+manyInterface+"\" ["+interfaceColor+"shape=record, label=\"{"+"&laquo;interface&raquo;<BR/>"+interfaceName);
 	    } 
 	    else {
 	      code.append("  \""+interfaceName+"\" ["+interfaceColor+"shape=plaintext margin=0 label=");
@@ -253,9 +252,8 @@ class GvClassDiagramGenerator
 	      // Different cellpadding for if the class has nothing but the
 	      // name because of a glitch in graphviz's graphics
 		    code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
-			   			+"<tr><td>    "+interfaceName+"    </td></tr>");
+			   			+"<tr><td>"+"&laquo;interface&raquo;<BR/>"+interfaceName+"</td></tr>");
 	    }
-	    code.append("<tr><td cellpadding=\"4\">&laquo;interface&raquo;"+"</td></tr>");
 	    if ((inInterface.getMethods().size()<=0) || (!hasSuboption("showmethods"))){
 	    	code.append("<hr/><tr><td cellpadding=\"4\">   </td></tr>");
 	    }

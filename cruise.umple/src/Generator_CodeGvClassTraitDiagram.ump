@@ -1,0 +1,395 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file generates .gv files for use by Graphviz, representing the class diagram along with traits in the Umple model. To generate for this format, use 
+  generate GvClassTraitDiagram;
+in your umple file, or the command line option
+  -g GvClassTraitDiagram
+
+See also GvStateDiagram
+ */
+
+namespace cruise.umple.compiler;
+
+class GvClassTraitDiagramGenerator
+{
+  //This overrides the superclass's method.
+  public void generate(){
+	    StringBuilder code = new StringBuilder();
+	    StringBuilder associations = new StringBuilder();
+
+	    // Output basic gv file header
+	    _graphStart(0,code,getModel().getUmpleFile().getSimpleFileName());
+	    
+	    // Set of classes we are visiting
+	    // We always visit from the top of the hierarchy first
+	    // This set ensures we track what we have visited
+	    HashSet visitedClasses = new HashSet();
+
+	    // Iterate through each class. 
+	    for (UmpleClass uClass : getModel().getUmpleClasses())
+	    {
+	      visitClass(uClass, visitedClasses, code, associations);
+	    } // End iteration through classes
+	    
+	    for (UmpleInterface uInterface : getModel().getUmpleInterfaces()){
+	    	createInterfacesAndTheirHirerarchy(uInterface,code); 
+	    }
+	    for (UmpleTrait uTrait : getModel().getUmpleTraits()){
+	    	createTraits(uTrait,code);
+	    }
+	    terminateCode(code, associations);
+	  }
+	  
+ // Returns what is being generated - called SuperGvGenerator
+  protected String generatorType()
+  {
+    return "cd";
+  }
+
+  // Create the association between a class and its parent 
+  // - called VisitClass in SuperGvGenerator
+  protected void parentClassAssoc(StringBuilder code, String className, String parentName)
+  {
+    code.append("  \""+className+"\" -> \""+parentName+"\""
+        +" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
+        createTraitClassHierarchy(getModel().getUmpleClass(className),code);
+  }
+
+  // Create each class - called VisitClass in SuperGvGenerator
+  protected void classCreation(UmpleClass inClass, StringBuilder code)
+  {
+       code.append("	//Class: "+inClass.getName()+"\n\n");
+	   code.append("\""+inClass.getName()+"\" [shape=plaintext margin=0 label=< \n");
+	   code.append("	<table bgcolor=\"#ADD6FF\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
+	   String abs = "";
+	   if(inClass.getIsAbstract()) {abs= "\n&laquo;abstract&raquo;<BR/>";}
+	   code.append("	  <TR><TD>"+abs+inClass.getName()+"</TD></TR> \n");
+	   code.append("	  <TR><TD>");
+	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+	   attributeCreation(inClass,code,false);
+       code.append("			</TABLE>");	   	   
+	   code.append("	  	  </TD>");
+	   code.append("	  </TR>\n");
+	   code.append("	  <TR><TD>");
+	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+	   methodCreation(inClass,code,false);
+	   code.append("			</TABLE>");	
+	   code.append("		  </TD></TR> \n");
+	   code.append("	</table>> \n");
+       code.append("tooltip=\"class "+inClass.getName()+"\"]; \n");
+	}
+
+  // Create each attribute for each class - called by classCreation
+  private void attributeCreation(UmpleClass inClass, StringBuilder code, boolean manyClass)
+  {
+	    if (inClass.numberOfAttributes()<=0 || hasSuboption("hideattributes") ){
+	    	code.append("<TR><td align=\"left\"></td></TR>");
+		    return;
+		}
+	    boolean noAttribute = true;
+		if (!hasSuboption("hideattributes")) { 
+			for (Attribute uAttribute : inClass.getAttributes()) {
+				if(uAttribute.getSource().equals(Method.Source.fTrait)) continue;
+		        noAttribute = false;
+				if (!uAttribute.isConstant()) 
+		        {
+		        	String isList = uAttribute.getIsList() ? "[]" : ""; //Hello
+		          	String type = uAttribute.getType().replace("<","&lt;").replace(">","&gt;");
+		            StringBuilder attrTooltip = new StringBuilder();
+		            attrTooltip.append(type+isList+" "+uAttribute.getName()+"&#13;");
+		            attrTooltip.append(appendTooltipComment(uAttribute.getComments(), true));        
+		            code.append("<TR><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
+		                  +"  "+uAttribute.getName()+" : "
+		                  +type+isList+"  </td></TR>");
+		        }
+		      }
+		}
+		if (noAttribute){
+			code.append("<TR><td align=\"left\"></td></TR>");  
+		}
+  }
+
+  // Create each method for each class - called by classCreation
+  private void methodCreation(UmpleClassifier inUmpleClassifier, StringBuilder code, boolean manyClass)
+  {
+	    if (inUmpleClassifier.numberOfMethods()<=0 || !hasSuboption("showmethods")){
+			   code.append("<TR><td  align=\"left\"></td></TR>");
+			   return;
+		   }
+		   boolean notMethod = true;
+		   for (Method uMethod : inUmpleClassifier.getMethods()) {
+			   if (uMethod.getSource().equals(Method.Source.fTrait)) continue;
+			   notMethod = false;
+			   String accessModifier = "";
+		       switch (uMethod.getModifier().trim()) {
+		          case "": accessModifier = "+"; break;
+		          case "private": accessModifier = "-"; break;
+		          case "protected": accessModifier = "#"; break;
+		          case "public": accessModifier = "+"; break;
+		       }
+		       String parameters = "";
+		       if(uMethod.hasMethodParameters()) {
+		          for (MethodParameter mp : uMethod.getMethodParameters()) {
+		            parameters += mp.getFullType() + ",";
+		          }
+		          parameters = parameters.substring(0, parameters.length() - 1); // delete last comma
+		       }
+		       	  parameters = parameters.replace("<","&lt;").replace(">","&gt;");
+		       	  String type = uMethod.getType().replace("<","&lt;").replace(">","&gt;");
+		          StringBuilder methTooltip = new StringBuilder();
+		          methTooltip.append(type+" "+uMethod.getName()+"("+parameters+")"+"&#13;");
+		          methTooltip.append(appendTooltipComment(uMethod.getComments(), true));
+		      
+		          StringBuilder hrefString = new StringBuilder();
+		          hrefString.append("javascript:Action.selectMethod('");
+		          hrefString.append(uMethod.getName()+"','"+type+"','"+uMethod.getModifier().trim()+"')");
+		         
+		          code.append("<tr><td align=\"left\" href=\""+hrefString+"\" title=\""+methTooltip+"\">"
+		              +"  "+accessModifier+uMethod.getName()
+		              +"("+parameters+") : "+type+"  </td></tr>");
+		   }
+		   if (notMethod){
+			   code.append("<TR><td align=\"left\"></td></TR>");  
+		   }
+  }
+
+  // Create each interface for each class - called by classCreation
+  protected void interfaceCreation(UmpleClass uClass, StringBuilder code)
+  {
+    // Add any interface implementations so they are output at the end
+    for(UmpleInterface uInterface : uClass.getParentInterface()) {
+      String intColor = uInterface.getDisplayColor();
+      // TO DO needs fixing - interface colour does not appear
+      if (!intColor.equals("")) {
+        code.append("  \""+uInterface.getName()
+          +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
+      } 
+      code.append("  \""+uClass.getName()+"\" -> \""+uInterface.getName());
+      code.append("\" [  arrowhead=\"empty\"; samehead=\"gen\"; style=dashed];\n\n");
+    }
+  }
+
+  // Create the associations in the class diagram
+  // - called VisitClass in SuperGvGenerator
+  protected void associationCreation(UmpleClass uClass, Association uAssoc, StringBuilder associations, String className)
+  {
+    AssociationEnd leftEnd = uAssoc.getEnd(0);
+    AssociationEnd rightEnd = uAssoc.getEnd(1);
+    String modifierOne = leftEnd.getModifier();
+    String modifierTwo = rightEnd.getModifier();
+    String visualLeftEnd, visualRightEnd, toolTip, label;
+
+    // Only output them when visiting one class
+    if(leftEnd.getClassName().equals(className)) {
+      String[] arrows = retArrows(uAssoc);
+        
+      if ("symmetricreflexive".equals(modifierOne) && "symmetricreflexive".equals(modifierTwo)) 
+      {
+        if ("undefined".equals(rightEnd.getDisplayRoleName()))
+          label = leftEnd.toSimpleString()+" "+leftEnd.getDisplayRoleName();
+        else label = rightEnd.toSimpleString()+" "+rightEnd.getDisplayRoleName();
+          
+        toolTip = leftEnd.getClassName() + " " + label + " " + rightEnd.getClassName();
+          
+        associations.append(labelAssociation(leftEnd.getClassName(),
+          rightEnd.getClassName(), arrows[0], label, toolTip));
+      }
+      else 
+      {
+        visualLeftEnd = leftEnd.toSimpleString()+" "+leftEnd.getDisplayRoleName();
+        visualRightEnd = rightEnd.toSimpleString()+" "+rightEnd.getDisplayRoleName();
+        toolTip = leftEnd.getClassName() + " " + visualLeftEnd +
+            " " + arrows[1] + " " + visualRightEnd + " " + rightEnd.getClassName();
+          
+        associations.append(twoLabelAssociation(leftEnd.getClassName(),
+          rightEnd.getClassName(), arrows[0], visualRightEnd, visualLeftEnd, toolTip));
+      }
+    }
+  }
+
+  // Used to indent code
+  private void appendSpaces(StringBuilder code, int numSpaces) {
+    for(int i=0; i<numSpaces; i++) {
+      code.append(" ");
+    }
+  }
+  
+  //This overrides a method used for generating the necessary tags for interfaces and also their hierarchies.
+   protected void createInterfacesAndTheirHirerarchy(UmpleInterface inInterface, StringBuilder code){
+       code.append("	//Interface: "+inInterface.getName()+"\n\n");
+	   code.append("\""+inInterface.getName()+"\" [shape=plaintext margin=0 label=< \n");
+	   code.append("	<table bgcolor=\"#D6EBFF\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
+	   code.append("	  <TR><TD>&laquo;interface&raquo;<BR/>"+inInterface.getName()+"</TD></TR> \n");
+	   code.append("	  <TR><TD>");  	   
+	   code.append("	  	  </TD>");
+	   code.append("	  </TR>\n");
+	   code.append("	  <TR><TD>");
+	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+	   methodCreation(inInterface,code,false);
+	   code.append("			</TABLE>");	
+	   code.append("		  </TD></TR> \n");
+	   code.append("	</table>> \n");
+       code.append("tooltip=\"interface "+inInterface.getName()+"\"]; \n");
+	    createInterfaceHierarchyAssociations(inInterface,code);
+   }
+   
+   //This creates tags which are necessary to show hierarchies.
+   protected void createInterfaceHierarchyAssociations(UmpleInterface inInterface, StringBuilder code){
+	    for(UmpleInterface uInt : inInterface.getExtendsInterface()) {
+	        String intColor = uInt.getDisplayColor();
+	        // TO DO needs fixing - interface colour does not appear
+	        if (!intColor.equals("")) {
+	          code.append("  \""+uInt.getName()
+	            +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
+	        } 
+	        code.append("  \""+inInterface.getName()+"\" -> \""+uInt.getName());
+	        code.append("\" [  arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
+	      }
+   }
+   private void createTraits(UmpleTrait inTrait , StringBuilder code){	   
+	   boolean manyTrait = getModel().getUmpleTraits().size() >= 200 ? true : false;
+	   code.append("	//Trait: "+inTrait.getName()+"\n\n");
+	   code.append("\""+inTrait.getName()+"\" [shape=plaintext margin=0 label=< \n");
+	   code.append("	<table bgcolor=\"#FAF0E6\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
+	   code.append("	  <TR><TD COLSPAN=\"2\">&laquo;trait&raquo;<BR/>"+inTrait.getName()+"</TD></TR> \n");
+	   code.append("	  <TR><TD COLSPAN=\"2\">");
+	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+	   tAttributeCreation(inTrait,code,manyTrait);
+       code.append("			</TABLE>");	   	   
+	   code.append("	  	  </TD>");
+	   code.append("	  </TR>\n");
+	   code.append("	  <TR><TD>");
+	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+	   tMethodCreation(inTrait,code,manyTrait,false);
+	   code.append("			</TABLE>");	
+	   code.append("		  </TD>");
+	   code.append("		  <TD>");
+	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+	   tMethodCreation(inTrait,code,manyTrait,true);
+	   code.append("			</TABLE>");	
+	   code.append("		  </TD></TR> \n");
+	   code.append("	</table>> \n");
+       code.append("tooltip=\"Trait "+inTrait.getName()+"\"]; \n");
+       createTraitsHierarchy(inTrait,code);
+       createTraitRequiredInterfaces(inTrait,code);
+   }
+   
+   private void tAttributeCreation(UmpleTrait inTrait, StringBuilder code, boolean manyClass){
+	    if (inTrait.numberOfAttributes()<=0 || hasSuboption("hideattributes") ){
+	    	code.append("<TR><td COLSPAN=\"3\" align=\"left\"></td></TR>");
+	    	return;
+	    }
+	    if (!hasSuboption("hideattributes")) { 
+	      for (Attribute uAttribute : inTrait.getAttributes()) {
+	        if (!uAttribute.isConstant()) 
+	        {
+	          String isList = uAttribute.getIsList() ? "[]" : ""; //Hello
+	          String type = uAttribute.getType().replace("<","&lt;").replace(">","&gt;");
+	          
+	          if (manyClass) {
+	            code.append(""+uAttribute.getName()+"\\ :\\ "+type+isList+"\\l");
+	          }
+	          else {
+	            StringBuilder attrTooltip = new StringBuilder();
+	            attrTooltip.append(type+isList+" "+uAttribute.getName()+"&#13;");
+	            attrTooltip.append(appendTooltipComment(uAttribute.getComments(), true));        
+	            code.append("<TR><td COLSPAN=\"3\" align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
+	                  +"  "+uAttribute.getName()+" : "
+	                  +type+isList+"  </td></TR>");
+	          }
+	        }
+	      }
+	    }
+	  }
+ 
+   private void tMethodCreation(UmpleTrait inUmpleTrait, StringBuilder code, boolean manyClass,boolean abstractMethod){
+	   if (inUmpleTrait.numberOfMethods()<=0 || !hasSuboption("showmethods")){
+		   code.append("<TR><td COLSPAN=\"3\" align=\"left\"></td></TR>");
+		   return;
+	   }
+	   boolean notMethod = true;
+	   for (Method uMethod : inUmpleTrait.getMethods()) {
+	   if (uMethod.isIsAbstract()==abstractMethod) {
+		   notMethod = false;
+		   String accessModifier = "";
+	       switch (uMethod.getModifier().trim()) {
+	          case "": accessModifier = "+"; break;
+	          case "private": accessModifier = "-"; break;
+	          case "protected": accessModifier = "#"; break;
+	          case "public": accessModifier = "+"; break;
+	       }
+	       String parameters = "";
+	       if(uMethod.hasMethodParameters()) {
+	          for (MethodParameter mp : uMethod.getMethodParameters()) {
+	            parameters += mp.getFullType() + ",";
+	          }
+	          parameters = parameters.substring(0, parameters.length() - 1); // delete last comma
+	       }
+	       parameters = parameters.replace("<","&lt;").replace(">","&gt;");
+	       String type = uMethod.getType().replace("<","&lt;").replace(">","&gt;");
+	       if (manyClass) {
+	          code.append(accessModifier+uMethod.getName()+"("+parameters+")\\ :\\ "+type+"\\l");
+	       }
+	       else {
+	          StringBuilder methTooltip = new StringBuilder();
+	          methTooltip.append(type+" "+uMethod.getName()+"("+parameters+")"+"&#13;");
+	          methTooltip.append(appendTooltipComment(uMethod.getComments(), true));
+	      
+	          StringBuilder hrefString = new StringBuilder();
+	          hrefString.append("javascript:Action.selectMethod('");
+	          hrefString.append(uMethod.getName()+"','"+type+"','"+uMethod.getModifier().trim()+"')");
+	         
+	          code.append("<tr><td align=\"left\" href=\""+hrefString+"\" title=\""+methTooltip+"\">"
+	              +"  "+accessModifier+uMethod.getName()
+	              +"("+parameters+") : "+type+"  </td></tr>");
+	       } 
+	   }
+	   }
+	   if (notMethod){
+		   code.append("<TR><td COLSPAN=\"3\" align=\"left\"></td></TR>");  
+	   }
+   }   
+   /*
+    * The section is dealing with associations and inheritances.  
+    */
+      private void createTraitsHierarchy(UmpleTrait inTrait , StringBuilder code){
+   	   for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+   		   String intColor = uTrait.getDisplayColor();
+   		      if (!intColor.equals("")) {
+   		        code.append("  \""+uTrait.getName()
+   		          +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
+   		      } 
+   		   code.append("	\""+inTrait.getName()+"\" -> \""+uTrait.getName()+"\""
+   			        +" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
+   	   }
+      }
+      
+      private void createTraitRequiredInterfaces(UmpleTrait inTrait , StringBuilder code){
+   	   for (UmpleInterface uInterface : inTrait.getRequiredInterfaces()) {
+   		   String intColor = uInterface.getDisplayColor();
+   		      if (!intColor.equals("")) {
+   		        code.append("  \""+uInterface.getName()
+   		          +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
+   		      } 
+   		   code.append("  \""+inTrait.getName()+"\" -> \""+uInterface.getName());
+   		   code.append("\" [  arrowhead=\"empty\"; samehead=\"gen\"; style=dashed; label=\"&laquo;required&raquo;\"];\n\n");
+   	   }
+      }
+      
+      private void createTraitClassHierarchy(UmpleClass inClass , StringBuilder code){
+   	   for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+   		   String intColor = uTrait.getDisplayColor();
+   		      if (!intColor.equals("")) {
+   		        code.append("  \""+uTrait.getName()
+   		          +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
+   		      } 
+   		   code.append("	\""+inClass.getName()+"\" -> \""+uTrait.getName()+"\""
+   			        +" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
+   	   }
+      }
+}
