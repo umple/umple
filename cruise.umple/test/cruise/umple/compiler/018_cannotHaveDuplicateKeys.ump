@@ -3,7 +3,8 @@ class Student
 {
   id;
   name;
+  age;
   key { id, name }
   
-  key { name }
+  key { age }
 }

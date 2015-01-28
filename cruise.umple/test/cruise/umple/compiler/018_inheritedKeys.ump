@@ -1,0 +1,9 @@
+class Student {
+  Integer a;
+}
+
+class Mentor {
+  isA Student;
+  Integer b;
+  key {a, b}
+}

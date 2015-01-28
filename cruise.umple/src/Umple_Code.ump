@@ -435,13 +435,14 @@ class Key
     return isDefault || members.size() > 0;
   }
 
+  public boolean isMember(String name)
+  {
+    return (name == null) ? false : indexOfMember(name) != -1;
+  }
+
   public boolean isMember(UmpleVariable av)
   {
-    if (av == null)
-    {
-      return false;
-    }
-    return indexOfMember(av.getName()) != -1;
+    return (av == null) ? false : isMember(av.getName());
   }
 }
 
@@ -1154,20 +1155,25 @@ class UmpleClass
     }
     return null;
   }
-  
+
+  public boolean hasAllAttributes()
+  {
+    return getAllAttributes().size() > 0;
+  }
+
   public List<Attribute> getAllAttributes()
   {
     List<Attribute> all = new ArrayList<Attribute>();
-    
+
     // Get all it's inherited attributes
     if (this.hasExtendsClass()) {
       UmpleClass parent = this.getExtendsClass();
       List<Attribute> allParent = parent.getAllAttributes();
       all.addAll(allParent);
     }
-    
+
     all.addAll(getAttributes());
-    
+
     return all;
   }
 

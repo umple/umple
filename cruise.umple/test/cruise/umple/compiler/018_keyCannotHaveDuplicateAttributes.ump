@@ -7,6 +7,6 @@ class Student
 class Test
 {
 	name;
-	1 -- 0..1 Y stuff;
+	1 -- 0..1 Student stuff;
 	key{stuff, stuff}
 }
