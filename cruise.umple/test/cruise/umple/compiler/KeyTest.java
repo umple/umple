@@ -1,7 +1,7 @@
 /*
 
  Copyright: All contributers to the Umple Project
- 
+
  This file is made available subject to the open source license found at:
  http://umple.org/license
 
@@ -26,32 +26,42 @@ public class KeyTest
     key.addMember("id");
     Assert.assertEquals(true, key.isProvided());
   }
-  
+
   @Test
   public void isKey_Attribute()
   {
     UmpleClass clazz = new UmpleClass("Student");
     Attribute av = new Attribute("id","String",null,null,false,clazz);
     Key key = new Key();
-    
+
     Assert.assertEquals(false, key.isMember(av));
     key.addMember("id");
     Assert.assertEquals(true, key.isMember(av));
-  
+
     Assert.assertEquals(false, key.isMember((Attribute)null));
   }
-  
+
+  @Test
+  public void isMember_string()
+  {
+    Key key = new Key();
+    key.addMember("a");
+    Assert.assertEquals(true, key.isMember("a"));
+    Assert.assertEquals(false, key.isMember("b"));
+    Assert.assertEquals(false, key.isMember((String)null));
+  }
+
   @Test
   public void isKey_AssociationVariable()
   {
     AssociationVariable av = new AssociationVariable("student","Student",null,null,createMultiplicity(-1,-1),true);
 
     Key key = new Key();
-    
+
     Assert.assertEquals(false, key.isMember(av));
     key.addMember("student");
     Assert.assertEquals(true, key.isMember(av));
-  
+
     Assert.assertEquals(false, key.isMember((AssociationVariable)null));
 
   }
@@ -62,5 +72,5 @@ public class KeyTest
     m.setRange(lower + "", upper + "");
     return m;
   }
-  
+
 }

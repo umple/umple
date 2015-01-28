@@ -213,6 +213,8 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("016_associationClassPosition.ump", "[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Mentor][elementPosition][x:1][y:2][width:3][height:4][associationPosition][name:Mentor__Student][coordinate][x:1][y:2][coordinate][x:3][y:4][classDefinition][name:Mentor][associationClassDefinition][name:Relationship][singleAssociationEnd][bound:*][type:Student][singleAssociationEnd][bound:*][type:Mentor][elementPosition][x:10][y:20][width:30][height:40]");
     fileToOutputs.put("017_glossary.ump","[glossary][word][singular:entity][plural:entities]");
     fileToOutputs.put("018_key.ump","[classDefinition][name:Student][attribute][name:id][attribute][name:name][key][keyId:id][keyId:name][classDefinition][name:Mentor][attribute][name:employeeId][key][keyId:employeeId][classDefinition][name:Course][attribute][name:code][defaultKey]");
+    fileToOutputs.put("018_cannotHaveDuplicateKeys.ump", "[classDefinition][name:Student][attribute][name:id][attribute][name:name][attribute][name:age][key][keyId:id][keyId:name][key][keyId:age]");
+    fileToOutputs.put("018_inheritedKeys.ump", "[classDefinition][name:Student][attribute][type:Integer][name:a][classDefinition][name:Mentor][extendsName:Student][attribute][type:Integer][name:b][key][keyId:a][keyId:b]");
     fileToOutputs.put("019_before.ump","[classDefinition][name:Student][attribute][name:name][beforeCode][operationName:setName][code:doSomething();]");
     fileToOutputs.put("019_after.ump","[classDefinition][name:Student][attribute][name:name][afterCode][operationName:getName][code:notReallyPossible();]");
     fileToOutputs.put("020_enumEmpty.ump","[classDefinition][name:Student][stateMachine][enum][name:status]");
@@ -291,6 +293,10 @@ public class UmpleInternalParserTest extends UmpleParserTest
   {
 	  
     boolean answer = parse(filename);
+    if (answer != true)
+    {
+      Assert.fail("Did no parse:" + parser.getParseResult().getErrorMessages());
+    }
     Assert.assertEquals(true, answer);
     AssertHelper.assertEqualsSafe(expectedOutput, parser.toString());  
   }
