@@ -256,7 +256,13 @@ class GvClassTraitDiagramGenerator
 	   code.append("	//Trait: "+inTrait.getName()+"\n\n");
 	   code.append("\""+inTrait.getName()+"\" [shape=plaintext margin=0 label=< \n");
 	   code.append("	<table bgcolor=\"#FAF0E6\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
-	   code.append("	  <TR><TD COLSPAN=\"2\">&laquo;trait&raquo;<BR/>"+inTrait.getName()+"</TD></TR> \n");
+	   code.append("	  <TR><TD COLSPAN=\"2\">");
+	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+	   code.append("	  <TR><TD>&laquo;trait&raquo;<BR/>"+inTrait.getName()+"</TD></TR>");	 
+	   addTemplateParameters(inTrait,code);
+       code.append("			</TABLE>");
+       code.append(	   "</TD></TR> \n");
+       
 	   code.append("	  <TR><TD COLSPAN=\"2\">");
 	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
 	   tAttributeCreation(inTrait,code,manyTrait);
@@ -392,4 +398,27 @@ class GvClassTraitDiagramGenerator
    			        +" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
    	   }
       }
+      
+
+   private void addTemplateParameters(UmpleTrait inTrait, StringBuilder code){
+	   if (inTrait.getGeneralTemplateParameters().size()>0) {
+		   code.append("<TR><TD><TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+		   code.append("<TR><TD> </TD></TR>");
+		   for (GeneralTemplateParameter gTP : inTrait.getGeneralTemplateParameters()) {
+			   String restriction = "";
+			   if (gTP.getInterfacesAndClass().length>0) {
+				   restriction = "  isA  ";
+				   for(String name : gTP.getInterfacesAndClass()){
+					   restriction = restriction+name+",";
+				   }
+				   restriction = restriction.substring(0, restriction.length()-1);
+			   }
+			   code.append("<TR><TD>["+gTP.getName()+restriction+"]</TD></TR>");	
+				
+		   }   
+	       code.append("</TABLE></TD></TR>");	  
+	   }
+	   
+   }
+   
 }
