@@ -779,6 +779,7 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
 	for (UmpleTrait t1 : traitMethods.keySet()) {
 		for (Method method : traitMethods.get(t1)) {
 			method.getComment(2).setText(method.getComment(2).getText()+"'"+inClass.getName()+"' ");
+			method.setSource(Method.Source.fTrait);
 			inClass.addMethod(method);   
 		}
 	}
@@ -1406,6 +1407,7 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 		for (Attribute attribute : traitAttributes.get(t1)) {
 			//I need some comment for users in generated code;
 			//attribute.getComment(2).setText(attribute.getComment(2).getText()+"'"+inClass.getName()+"' ");
+			attribute.setSource(Attribute.Source.fTrait);
 			inClass.addAttribute(attribute);  
 		}
 	}
