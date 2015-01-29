@@ -1,0 +1,19 @@
+class RemoteControl
+{
+
+  status {
+    
+    On {
+      power -> Off;
+      Play {
+        push -> Pause;
+      }
+      Pause { 
+        push -> Play; 
+      }
+    }
+    Off {
+      power -> On;
+    }
+  }
+}
