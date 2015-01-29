@@ -33,6 +33,7 @@ Page.useStructureDiagram = false;
 Page.showAttributes = true;
 Page.showMethods = false;
 Page.showActions = true;
+Page.showTraits = false;
 Page.modifiedDiagrams = false;
 
 // The following is set called from umple.php
@@ -110,7 +111,8 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleMethods");
   Page.initHighlighter("buttonToggleAttributes");
   Page.initHighlighter("buttonToggleActions");
-
+  Page.initHighlighter("buttonToggleTraits");
+  
   Page.initToggleTool("buttonAddClass");
   Page.initToggleTool("buttonAddAssociation");
   Page.initToggleTool("buttonAddGeneralization");
@@ -150,7 +152,8 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleMethods");
   Page.initAction("buttonToggleAttributes");
   Page.initAction("buttonToggleActions");
-
+  Page.initAction("buttonToggleTraits");
+  
   Page.initLabels();
 
   Page.enablePaletteItem("buttonUndo", false);
@@ -194,7 +197,8 @@ Page.initOptions = function()
   jQuery("#buttonShowHideCanvas").prop('checked', Layout.isDiagramVisible);
   jQuery("#buttonToggleAttributes").prop('checked',true);
   jQuery("#buttonToggleActions").prop('checked',true);
-
+  jQuery("#buttonToggleTraits").prop('checked',false);
+  
   if(Page.useEditableClassDiagram)
    jQuery("#buttonShowEditableClassDiagram").prop('checked', true); 
   if(Page.useGvClassDiagram)
@@ -362,6 +366,7 @@ Page.initCodeMirrorEditor = function() {
           "Ctrl-Shift--": function(cm) {Page.clickButtonSmaller()},
           "Ctrl-A": function(cm) {Page.clickToggleAttributes()},
           "Ctrl-M": function(cm) {Page.clickToggleMethods()},
+          "Ctrl-R": function(cm) {Page.clickToggleTraits()},
           "Esc": function(cm) {cm.getInputField().blur()}
           }
         }
@@ -405,6 +410,10 @@ Page.clickToggleAttributes = function() {
 Page.clickToggleMethods = function() {
   jQuery('#buttonToggleMethods').trigger('click');
 }
+Page.clickToggleTraits = function() {
+  jQuery('#buttonToggleTraits').trigger('click');
+}
+
 
 Page.isPhotoReady = function()
 {

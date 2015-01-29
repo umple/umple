@@ -97,6 +97,11 @@ else if (isset($_REQUEST["umpleCode"]))
      $language = "GvClassDiagram";
      $classDiagram = True;
   }
+  else if ($language == "traitDiagram")
+  {
+     $language = "GvClassTraitDiagram";
+     $classDiagram = True;
+  }
   else if ($language == "entityRelationshipDiagram")
   {
      $language = "GvEntityRelationshipDiagram";
@@ -150,7 +155,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;      
   } // end html content      
 
-  elseif (!in_array($language,array("Php","Java","Ruby","RTCpp","Cpp","Sql","GvStateDiagram","GvClassDiagram","GvEntityRelationshipDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","RTCpp","Cpp","Sql","GvStateDiagram","GvClassDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     $filename = saveFile($input);
     $errorFilename = "{$filename}.erroroutput";

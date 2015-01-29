@@ -379,6 +379,10 @@ $output = readTemporaryFile("ump/" . $filename);
               <input id="buttonToggleActions" class="checkbox" type="checkbox"/> 
               <a id="labelToggleActions" class="buttonExtend">Actions</a> 
             </li>
+            <li id="ttToggleTraits" class="layoutListItem"> 
+              <input id="buttonToggleTraits" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleTraits" class="buttonExtend">Traits</a> 
+            </li>
           </ul>
           <ul>
             <li id="diagramTypeTitle" class="subtitle"> Diagram Type </li>

@@ -166,6 +166,10 @@ Action.clicked = function(event)
   {
     Action.toggleActions();
   }
+  else if (action == "ToggleTraits")
+  {
+    Action.toggleTraits();
+  }  
   else if(action == "StructureLink")
   {
     Action.generateStructureDiagramFile();
@@ -1246,8 +1250,8 @@ Action.selectMethod = function(methodName, type, accessMod)
 // Highlights the text of the class that is currently selected.
 Action.selectClass = function(className) 
 {
-	var scursor = new RegExp("class "+className+"($|\\\s|[{])");
-	var ncursor = new RegExp("class [A-Za-z]");
+	var scursor = new RegExp("(class|interface|trait) "+className+"($|\\\s|[{])");
+	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
 
 	Action.selectItem(scursor, ncursor);
 }
@@ -1443,7 +1447,14 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   Action.savedCanonical=canonical;
   Page.showCanvasLoading();
   if(Page.useEditableClassDiagram) {language="language=Json"}
-  else if(Page.useGvClassDiagram) {language="language=classDiagram"}
+  else if(Page.useGvClassDiagram) {
+    if(Page.showTraits) {
+      language="language=traitDiagram";
+    }
+    else {
+      language="language=classDiagram";
+    }
+  }
   else if(Page.useGvStateDiagram) {language="language=stateDiagram"}
   else if(Page.useStructureDiagram) {language="language=StructureDiagram"}
   
@@ -1668,6 +1679,13 @@ Action.toggleActions = function()
   Page.showActions = !Page.showActions;
   Action.redrawDiagram()
 }
+
+Action.toggleTraits = function()
+{
+  Page.showTraits = !Page.showTraits;
+  Action.redrawDiagram()
+}
+
 
 Action.redrawDiagram = function()
 {
@@ -1959,6 +1977,14 @@ Mousetrap.bind(['ctrl+m'], function(e){
   if(jQuery('.focus').length != 0)
   {
     Page.clickToggleMethods();
+    return false; //equivalent to e.preventDefault();
+  }
+});
+
+Mousetrap.bind(['ctrl+r'], function(e){
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickToggleTraits();
     return false; //equivalent to e.preventDefault();
   }
 });
