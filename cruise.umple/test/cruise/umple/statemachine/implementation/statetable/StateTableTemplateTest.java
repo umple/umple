@@ -36,12 +36,20 @@ public class StateTableTemplateTest extends TemplateTest
   {
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "/statetable/simple.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/nestedStateTable.html");
   }
 
   @Test
   public void SimpleStateTable()
   {
     assertUmpleTemplateFor("statetable/simple.ump","statetable/simple.html.txt");
+  }
+  
+  // The following is a test to check if nested state tables are displayed with nested states indented.
+  @Test
+  public void NestedStateTableIndent()
+  {
+    assertUmpleTemplateFor("statetable/nestedStateTable.ump", "statetable/nestedStateTable.html.txt");
   }
 
 

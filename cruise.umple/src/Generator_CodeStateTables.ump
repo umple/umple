@@ -268,15 +268,9 @@ class StateTable {
     StateTableRow stateRow = null; 
     String smName, clSmName;
     boolean isPseudo = false;
-    
-    // TODO ?? should this be just getNestedStateMachines?
-    List<StateMachine> allNestedStateMachines = theSm.getImmediateNestedStateMachines();
 
     // We haven't processed any states yet in this statemachine
     Boolean isFirstState = true;
-
-    // Determine whether bottom level
-    Boolean isBottomLevel = allNestedStateMachines.isEmpty();
  
     // Iterate (recursively) through the states of this state machine
     for (State s : theSm.getStates())
@@ -286,16 +280,16 @@ class StateTable {
       isPseudo = sLabel.equals("H") || sLabel.equals("H*");
 
       // Add a row for this state  - automatically adds to 'rows' as there is an association
-      stateRow = new StateTableRow(s,sLabel,0,null,this);
+      stateRow = new StateTableRow(s,sLabel,nestingLevel,null,this);
       stateRow.build();
+
+      for (StateMachine nestedSm : s.getNestedStateMachines())
+      {
+      	buildRecursively(nestedSm,nestingLevel+1);
+      }
       
     }  // End iteration through the states, adding rows at this level of nesting
-
-    // Process nested state machines of this state, adding additional nested rows
-    for(StateMachine nestedSm: allNestedStateMachines) {
-      buildRecursively(nestedSm,nestingLevel+1);
-    } // End iteration through nested state machines
-  } // End build recursively
+  }
 }  
   
 
