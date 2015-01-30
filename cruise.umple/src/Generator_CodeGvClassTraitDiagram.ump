@@ -178,6 +178,7 @@ class GvClassTraitDiagramGenerator
   // - called VisitClass in SuperGvGenerator
   protected void associationCreation(UmpleClass uClass, Association uAssoc, StringBuilder associations, String className)
   {
+ 	if (uAssoc.getSource().equals(Association.Source.fTrait)) return; 
     AssociationEnd leftEnd = uAssoc.getEnd(0);
     AssociationEnd rightEnd = uAssoc.getEnd(1);
     String modifierOne = leftEnd.getModifier();
@@ -252,11 +253,11 @@ class GvClassTraitDiagramGenerator
 	      }
    }
    private void createTraits(UmpleTrait inTrait , StringBuilder code){	   
-    boolean manyTrait = getModel().getUmpleTraits().size() >= 200 ? true : false;
+ boolean manyTrait = getModel().getUmpleTraits().size() >= 200 ? true : false;
 	   
 	   if (inTrait.numberOfGeneralTemplateParameters()>0){
 		   code.append("subgraph cluster_"+inTrait.getName()+" { \n");
-		   code.append(" node [style=filled]; color=black; \n");
+		   code.append(" node [style=filled]; color=black; bgcolor=\"#faf6f2\"; \n");
 	   }
 	   
 	   code.append("	//Trait: "+inTrait.getName()+"\n\n");
@@ -287,9 +288,15 @@ class GvClassTraitDiagramGenerator
     		   tAssociationCreation(inTrait,uAssocition,code);
     	   }
     	   code.append("}");
+    	   for (GeneralTemplateParameter gTP : inTrait.getGeneralTemplateParameters()) {
+			   for(String name : gTP.getInterfacesAndClass()){
+				      code.append("  \""+gTP.getName()+"_TP\" -> \""+name);
+				      code.append("\" [  arrowhead=\"empty\"; samehead=\"gen\"; style=dashed];\n\n");
+			   }
+    	   }
     	}
-
        createTraitsHierarchy(inTrait,code);
+       createTraitRequiredInterfaces(inTrait,code);
    }
    
    private void tAttributeCreation(UmpleTrait inTrait, StringBuilder code, boolean manyClass){
@@ -405,15 +412,24 @@ class GvClassTraitDiagramGenerator
     * The section is dealing with associations and inheritances.  
     */
       private void createTraitsHierarchy(UmpleTrait inTrait , StringBuilder code){
-   	   for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-   		   String intColor = uTrait.getDisplayColor();
-   		      if (!intColor.equals("")) {
-   		        code.append("  \""+uTrait.getName()
-   		          +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
-   		      } 
-   		   code.append("	\""+inTrait.getName()+"\" -> \""+uTrait.getName()+"\""
-   			        +" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
-   	   }
+	    for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+	   		   String intColor = uTrait.getDisplayColor();
+	   		      if (!intColor.equals("")) {
+	   		        code.append("  \""+uTrait.getName()
+	   		          +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
+	   		      } 
+	   		   String bindText = "";
+			      if (uTrait.numberOfGeneralTemplateParameters()>0){
+			    	  bindText="&laquo;bind";
+			    	  for (GeneralTemplateParameter gTP: uTrait.getGeneralTemplateParameters()){
+			    		  bindText = bindText+"  "+gTP.getName() +" -> "+inTrait.getGeneralTPAppliedByName(uTrait.getName()).getParameterMapping().get(gTP.getName())+"; ";
+			    	  }
+			    	  bindText = bindText.substring(0, bindText.length() - 2);
+			    	  bindText=bindText+"&raquo;";
+			      }
+			    	  	code.append("	\""+inTrait.getName()+"\" -> \""+uTrait.getName()+"\""
+			    	  			+" [arrowhead=\"empty\"; samehead=\"gen\"; label=\""+bindText+"\"];\n\n");
+	   	   }
       }
       
       private void createTraitRequiredInterfaces(UmpleTrait inTrait , StringBuilder code){
@@ -429,38 +445,36 @@ class GvClassTraitDiagramGenerator
       }
       
       private void createTraitClassHierarchy(UmpleClass inClass , StringBuilder code){
-   	   for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
-   		   String intColor = uTrait.getDisplayColor();
-   		      if (!intColor.equals("")) {
-   		        code.append("  \""+uTrait.getName()
-   		          +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
-   		      } 
-   		   code.append("	\""+inClass.getName()+"\" -> \""+uTrait.getName()+"\""
-   			        +" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
-   	   }
+	    for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+	   		   String intColor = uTrait.getDisplayColor();
+	   		      if (!intColor.equals("")) {
+	   		        code.append("  \""+uTrait.getName()
+	   		          +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
+	   		      } 
+	   		      String bindText = "";
+	   		      if (uTrait.numberOfGeneralTemplateParameters()>0){
+	   		    	  bindText="&laquo;bind";
+	   		    	  for (GeneralTemplateParameter gTP: uTrait.getGeneralTemplateParameters()){
+	   		    		  bindText = bindText+"  "+gTP.getName() +" -> "+inClass.getGeneralTPAppliedByName(uTrait.getName()).getParameterMapping().get(gTP.getName())+"; ";
+	   		    	  }
+	   		    	  bindText = bindText.substring(0, bindText.length() - 2);
+	   		    	  bindText=bindText+"&raquo;";
+	   		      }
+	   		   code.append("	\""+inClass.getName()+"\" -> \""+uTrait.getName()+"\""
+	   			        +" [arrowhead=\"empty\"; samehead=\"gen\"; label=\""+bindText+"\"];\n\n");
+	   	   }
       }
       
 
    private void addTemplateParameters(UmpleTrait inTrait, StringBuilder code){
- 	   for (GeneralTemplateParameter gTP : inTrait.getGeneralTemplateParameters()) {
+    for (GeneralTemplateParameter gTP : inTrait.getGeneralTemplateParameters()) {
 		   code.append("	//Template Parameter: \n");
 		   code.append("\""+gTP.getName()+"_TP\" [style=dotted shape=plaintext margin=0 label=< \n");
 		   code.append("	<table bgcolor=\"#FAF0E6\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
-		   code.append("<TR><TD BORDER=\"1\" STYLE=\"rounded\" ><TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
-		   code.append("<TR><TD>&laquo;Template Parameter&raquo;</TD></TR>");
-			   String restriction = "";
-			   if (gTP.getInterfacesAndClass().length>0) {
-				   restriction = "  :  ";
-				   for(String name : gTP.getInterfacesAndClass()){
-					   restriction = restriction+name+", ";
-				   }
-				   restriction = restriction.substring(0, restriction.length()-2);
-			   }
-			   code.append("<TR><TD STYLE=\"rounded\" BORDER=\"1\" align=\"left\">"+gTP.getName()+restriction+"</TD></TR>");	
-		       code.append("</TABLE></TD></TR>");	  
-		 	   code.append("	</table>> \n");
-	           code.append("tooltip=\"Template Parameter "+gTP.getName()+"\"]; \n");
-	   }   
+		   code.append("<TR><TD  BORDER=\"1\" STYLE=\"rounded\" >&laquo;Template Parameter&raquo;<BR/>"+gTP.getName()+"</TD></TR>"); 
+		   code.append("	</table>> \n");
+	       code.append("tooltip=\"Template Parameter "+gTP.getName()+"\"]; \n");
+	   }
    }
    
 }
