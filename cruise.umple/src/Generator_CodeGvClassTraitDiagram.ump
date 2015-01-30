@@ -48,7 +48,7 @@ class GvClassTraitDiagramGenerator
  // Returns what is being generated - called SuperGvGenerator
   protected String generatorType()
   {
-    return "cd";
+    return "cdt";
   }
 
   // Create the association between a class and its parent 
@@ -57,7 +57,6 @@ class GvClassTraitDiagramGenerator
   {
     code.append("  \""+className+"\" -> \""+parentName+"\""
         +" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
-        createTraitClassHierarchy(getModel().getUmpleClass(className),code);
   }
 
   // Create each class - called VisitClass in SuperGvGenerator
@@ -82,6 +81,7 @@ class GvClassTraitDiagramGenerator
 	   code.append("		  </TD></TR> \n");
 	   code.append("	</table>> \n");
        code.append("tooltip=\"class "+inClass.getName()+"\"]; \n");
+       createTraitClassHierarchy(inClass,code);
 	}
 
   // Create each attribute for each class - called by classCreation
@@ -94,7 +94,7 @@ class GvClassTraitDiagramGenerator
 	    boolean noAttribute = true;
 		if (!hasSuboption("hideattributes")) { 
 			for (Attribute uAttribute : inClass.getAttributes()) {
-				if(uAttribute.getSource().equals(Method.Source.fTrait)) continue;
+				if(uAttribute.getSource().equals(Attribute.Source.fTrait)) continue;
 		        noAttribute = false;
 				if (!uAttribute.isConstant()) 
 		        {
@@ -252,17 +252,17 @@ class GvClassTraitDiagramGenerator
 	      }
    }
    private void createTraits(UmpleTrait inTrait , StringBuilder code){	   
-	   boolean manyTrait = getModel().getUmpleTraits().size() >= 200 ? true : false;
+    boolean manyTrait = getModel().getUmpleTraits().size() >= 200 ? true : false;
+	   
+	   if (inTrait.numberOfGeneralTemplateParameters()>0){
+		   code.append("subgraph cluster_"+inTrait.getName()+" { \n");
+		   code.append(" node [style=filled]; color=black; \n");
+	   }
+	   
 	   code.append("	//Trait: "+inTrait.getName()+"\n\n");
 	   code.append("\""+inTrait.getName()+"\" [shape=plaintext margin=0 label=< \n");
 	   code.append("	<table bgcolor=\"#FAF0E6\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
-	   code.append("	  <TR><TD COLSPAN=\"2\">");
-	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
-	   code.append("	  <TR><TD>&laquo;trait&raquo;<BR/>"+inTrait.getName()+"</TD></TR>");	 
-	   addTemplateParameters(inTrait,code);
-       code.append("			</TABLE>");
-       code.append(	   "</TD></TR> \n");
-       
+	   code.append("	  <TR><TD COLSPAN=\"2\">&laquo;trait&raquo;<BR/>"+inTrait.getName()+"</TD></TR>");      
 	   code.append("	  <TR><TD COLSPAN=\"2\">");
 	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
 	   tAttributeCreation(inTrait,code,manyTrait);
@@ -281,8 +281,15 @@ class GvClassTraitDiagramGenerator
 	   code.append("		  </TD></TR> \n");
 	   code.append("	</table>> \n");
        code.append("tooltip=\"Trait "+inTrait.getName()+"\"]; \n");
+       if (inTrait.numberOfGeneralTemplateParameters()>0){
+    	   addTemplateParameters(inTrait,code);  
+    	   for (Association uAssocition : inTrait.getAssociations()) {
+    		   tAssociationCreation(inTrait,uAssocition,code);
+    	   }
+    	   code.append("}");
+    	}
+
        createTraitsHierarchy(inTrait,code);
-       createTraitRequiredInterfaces(inTrait,code);
    }
    
    private void tAttributeCreation(UmpleTrait inTrait, StringBuilder code, boolean manyClass){
@@ -360,6 +367,40 @@ class GvClassTraitDiagramGenerator
 		   code.append("<TR><td COLSPAN=\"3\" align=\"left\"></td></TR>");  
 	   }
    }   
+
+  protected void tAssociationCreation(UmpleTrait inTrait, Association inAssociation, StringBuilder associations){
+	    AssociationEnd leftEnd = inAssociation.getEnd(0);
+	    AssociationEnd rightEnd = inAssociation.getEnd(1);
+	    String modifierOne = leftEnd.getModifier();
+	    String modifierTwo = rightEnd.getModifier();
+	    String visualLeftEnd, visualRightEnd, toolTip, label;
+
+	      String[] arrows = retArrows(inAssociation);
+	        
+	      if ("symmetricreflexive".equals(modifierOne) && "symmetricreflexive".equals(modifierTwo)) 
+	      {
+	        if ("undefined".equals(rightEnd.getDisplayRoleName()))
+	          label = leftEnd.toSimpleString()+" "+leftEnd.getDisplayRoleName();
+	        else label = rightEnd.toSimpleString()+" "+rightEnd.getDisplayRoleName();
+	          
+	        toolTip = leftEnd.getClassName() + " " + label + " " + rightEnd.getClassName()+"_TP";
+	          
+	        associations.append(labelAssociation(leftEnd.getClassName(),
+	        		rightEnd.getClassName()+"_TP", arrows[0], label, toolTip));
+	      }
+	      else 
+	      {
+	        visualLeftEnd = leftEnd.toSimpleString()+" "+leftEnd.getDisplayRoleName();
+	        visualRightEnd = rightEnd.toSimpleString()+" "+rightEnd.getDisplayRoleName();
+	        toolTip = leftEnd.getClassName() + " " + visualLeftEnd +
+	            " " + arrows[1] + " " + visualRightEnd + " " + rightEnd.getClassName()+"_TP";//rightEnd.getClassName();
+	          
+	        associations.append(twoLabelAssociation(leftEnd.getClassName(),
+	        		rightEnd.getClassName()+"_TP", arrows[0], visualRightEnd, visualLeftEnd, toolTip));
+	      }
+	  }
+
+
    /*
     * The section is dealing with associations and inheritances.  
     */
@@ -383,7 +424,7 @@ class GvClassTraitDiagramGenerator
    		          +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
    		      } 
    		   code.append("  \""+inTrait.getName()+"\" -> \""+uInterface.getName());
-   		   code.append("\" [  arrowhead=\"empty\"; samehead=\"gen\"; style=dashed; label=\"&laquo;required&raquo;\"];\n\n");
+   		   code.append("\" [  arrowhead=\"open\"; style=dashed; label=\"&laquo;required&raquo;\"];\n\n");
    	   }
       }
       
@@ -401,24 +442,25 @@ class GvClassTraitDiagramGenerator
       
 
    private void addTemplateParameters(UmpleTrait inTrait, StringBuilder code){
-	   if (inTrait.getGeneralTemplateParameters().size()>0) {
-		   code.append("<TR><TD><TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
-		   code.append("<TR><TD> </TD></TR>");
-		   for (GeneralTemplateParameter gTP : inTrait.getGeneralTemplateParameters()) {
+ 	   for (GeneralTemplateParameter gTP : inTrait.getGeneralTemplateParameters()) {
+		   code.append("	//Template Parameter: \n");
+		   code.append("\""+gTP.getName()+"_TP\" [style=dotted shape=plaintext margin=0 label=< \n");
+		   code.append("	<table bgcolor=\"#FAF0E6\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
+		   code.append("<TR><TD BORDER=\"1\" STYLE=\"rounded\" ><TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+		   code.append("<TR><TD>&laquo;Template Parameter&raquo;</TD></TR>");
 			   String restriction = "";
 			   if (gTP.getInterfacesAndClass().length>0) {
-				   restriction = "  isA  ";
+				   restriction = "  :  ";
 				   for(String name : gTP.getInterfacesAndClass()){
-					   restriction = restriction+name+",";
+					   restriction = restriction+name+", ";
 				   }
-				   restriction = restriction.substring(0, restriction.length()-1);
+				   restriction = restriction.substring(0, restriction.length()-2);
 			   }
-			   code.append("<TR><TD>["+gTP.getName()+restriction+"]</TD></TR>");	
-				
-		   }   
-	       code.append("</TABLE></TD></TR>");	  
-	   }
-	   
+			   code.append("<TR><TD STYLE=\"rounded\" BORDER=\"1\" align=\"left\">"+gTP.getName()+restriction+"</TD></TR>");	
+		       code.append("</TABLE></TD></TR>");	  
+		 	   code.append("	</table>> \n");
+	           code.append("tooltip=\"Template Parameter "+gTP.getName()+"\"]; \n");
+	   }   
    }
    
 }
