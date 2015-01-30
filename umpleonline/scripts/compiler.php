@@ -81,6 +81,8 @@ else if (isset($_REQUEST["umpleCode"]))
   $yumlDiagram = false;
   $uigu = false;
   $htmlContents = false;
+  $generatorType = "";
+  
 
   if ($language == "javadoc")
   {
@@ -90,21 +92,25 @@ else if (isset($_REQUEST["umpleCode"]))
   else if ($language == "stateDiagram")
   {
      $language = "GvStateDiagram";
+     $generatorType = "";
      $stateDiagram = True;
   }
   else if ($language == "classDiagram")
   {
      $language = "GvClassDiagram";
+     $generatorType = "cd";     
      $classDiagram = True;
   }
   else if ($language == "traitDiagram")
   {
      $language = "GvClassTraitDiagram";
+     $generatorType = "cdt";
      $classDiagram = True;
   }
   else if ($language == "entityRelationshipDiagram")
   {
      $language = "GvEntityRelationshipDiagram";
+     $generatorType = "erd";
      $entityRelationshipDiagram = True;
   }
   else if ($language == "yumlDiagram")
@@ -205,7 +211,7 @@ else if (isset($_REQUEST["umpleCode"]))
   else {
       // The following is used for outputting diagrams only
       $thedir = dirname($outputFilename);
-      exec("rm -rf " . $thedir . "/modelcd.gv " . $thedir . "/model.gv");
+      exec("rm -rf " . $thedir . "/modelcd.gv " . $thedir . "/model.gv " . $thedir . "modelcdt.gv " . $thedir . "/modelerd.gv");
       $command = "java -jar umplesync.jar -generate " . $language . " {$filename} " . $suboptions . " 1> {$outputFilename} 2> {$errorFilename}";
   }
   exec("( ulimit -t 10; " . $command . ")");
@@ -295,14 +301,14 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($classDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/classDiagram.svg");
-      $command = "/usr/local/bin/dot -Tsvg -Gdpi=63 " . $thedir . "/modelcd.gv -o " . $thedir .  "/classDiagram.svg";
+      $command = "/usr/local/bin/dot -Tsvg -Gdpi=63 " . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/classDiagram.svg";
       exec($command);
 			if (!file_exists($thedir . "/classDiagram.svg") && file_exists("doterr.svg"))
 			{
 				exec("cp " . "./doterr.svg " . $thedir . "/classDiagram.svg");
 			}
       $svgcode= readTemporaryFile("{$thedir}/classDiagram.svg");
-      $html = "<a href=\"umpleonline/$thedir/modelcd.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/classDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      $html = "<a href=\"umpleonline/$thedir/model" . $generatorType . ".gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/classDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       echo $svgcode;
