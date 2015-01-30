@@ -968,6 +968,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 		    if (added)
 		    {
 			    relatedClass.addAssociationVariable(myAs);
+			    aAssociation.setSource(Association.Source.fTrait);
 		    	inClass.addAssociation(aAssociation);
 		    }
 		    

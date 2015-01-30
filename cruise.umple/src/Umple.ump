@@ -780,7 +780,12 @@ class Association
   Boolean isSpecialization = false;
   // name of the class this association shares with its parent
   commonClassName = "";
-
+  
+  //The source of association
+  //None: origial
+  //fTrait: from traits
+  source {none,fTrait}
+  
   before getName { if (!isNamed()) { return this.deriveName(); } }
   after constructor { this.setLeftAndRight(); }
 }
