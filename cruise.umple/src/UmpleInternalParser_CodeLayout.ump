@@ -100,7 +100,7 @@ class UmpleInternalParser
       }
       else if (c.getCoordinates().getStatus() == Coordinate.Status.Undefined)
       {
-        c.setCoordinates(model.getDefaultClassPosition(i+1));
+        c.setCoordinates(model.getDefaultInterfacePosition(i+1));
         c.getCoordinates().setStatus(Coordinate.Status.Defaulted);
       }
     }

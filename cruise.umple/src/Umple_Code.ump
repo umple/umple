@@ -253,6 +253,21 @@ class UmpleModel
     return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
   }
 
+  public Coordinate getDefaultInterfacePosition(int numDefaults)
+  {
+    int xIndex  = 0;
+    int yIndex = 0;
+    int yOffset = 0;
+    int xOffset = 0;
+
+    xIndex = (numDefaults-1) / (maxYLevels);
+    yIndex = (numDefaults-1) % (maxYLevels);
+    yOffset = (yIndex * levelOffset.getY()) + initialOffset.getY();
+    xOffset = (xIndex * levelOffset.getX()) + initialOffset.getX() + 2*classSize.getWidth();
+
+    return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
+  }
+
   public Coordinate[] getDefaultAssociationPosition(Association a)
   {
     Coordinate[] defaults = new Coordinate[2];
