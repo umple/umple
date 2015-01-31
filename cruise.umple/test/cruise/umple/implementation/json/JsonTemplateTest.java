@@ -22,7 +22,7 @@ public class JsonTemplateTest extends TemplateTest
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "/json/umple.json");
   }
-
+ 
   @Test
   public void defaultPosition()
   {

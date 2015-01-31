@@ -13,6 +13,7 @@ UmpleClassFactory.create = function(data)
   var umpleClass = new UmpleClass();
   umpleClass.id = data.id;
   umpleClass.name = data.name;
+  umpleClass.isInterface = data.isInterface;
   umpleClass.displayColor = data.displayColor;
   if(umpleClass.displayColor == "") umpleClass.displayColor="transparent";  
   umpleClass.position.x = data.position.x;
@@ -83,6 +84,7 @@ function UmpleClass()
 {
   this.id;
   this.name;
+  this.isInterface;
   this.displayColor = "transparent";
   this.position = new UmplePosition(0,0,109,41);
   this.attributes = [];
@@ -317,14 +319,31 @@ function UmpleClass()
       '  </tr>',this.id,this.position.height,rowspan) + 
       '  <tr class="classArea">' +
       '    <td > <img src="scripts/class.png" title="Class" /> ';
-      
+    
+    
+
     if (Page.isPhotoReady())
     {
-      classInnerHtml += format('<span id="{0}_name" name="className">{1}</span>',this.id,this.name);
+      if (this.isInterface=="true")
+      {
+        classInnerHtml += format('<span id="{0}_name" name="className">{2}<br>{1}</span>',this.id,this.name," &#171interface&#187");
+      }
+      else
+      {
+         classInnerHtml += format('<span id="{0}_name" name="className">{1}</span>',this.id,this.name);
+      }
     }
     else
     {
-      classInnerHtml += format('<span id="{0}_name" name="className" class="editable editableDoubleClick" >{1}</span>',this.id,this.name);
+      if (this.isInterface=="true")
+      {
+        classInnerHtml += format('<span id="{0}_name" name="className" class="editable editableDoubleClick">{2}<br>{1}</span>',this.id, this.name,"&#171interface&#187");
+      }
+      else
+      {
+        classInnerHtml += format('<span id="{0}_name" name="className" class="editable editableDoubleClick" >{1}</span>',this.id, this.name);
+
+      }
     }
     
     classInnerHtml += ('</td> ' + '</tr>');
