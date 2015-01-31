@@ -11,17 +11,61 @@ namespace cruise.umple.compiler;
 
 class ScxmlGenerator
 {
+  StringBuilder code = new StringBuilder();
+  
+  cr <<!
+!>>
+  
+  header <<!<!--  EXPERIMENTAL SCXML OUTPUT, NOT READY FOR USE -->!>>
+  emit genHeader()(header, cr);
+  
+  xmlTag <<!<?xml version="1.0" encoding="utf-8"?>!>>
+  emit genXMLTag()(xmlTag, cr);
+  
+  tagAttribute <<! <<=key>>="<<=value>>"!>>
+  emit genTagAttribute(String key, String value)(tagAttribute);
+  
+  scxmlOpeningTag <<!<scxml<<=name>> xmlns="http://www.w3.org/2005/07/scxml" xmlns:xi="http://www.w3.org/2001/XInclude" version="1.0" initial="Main" datamodel="null">!>>
+  scxmlClosingTag <<!</scxml>!>>
+  emit genScxmlOpeningTag(String name)(scxmlOpeningTag, cr);
+  emit genScxmlClosingTag()(scxmlClosingTag);
+  
+  stateOpeningTag <<!<state<<=id>>>!>>
+  stateClosingTag <<!</state>!>>
+  emit genStateOpeningTag(String id)(stateOpeningTag, cr);
+  emit genStateClosingTag()(stateClosingTag, cr);
 
   public void generate()
   {
-    StringBuilder code = new StringBuilder();
-
-    code.append("<!--  EXPERIMENTAL SCXML OUTPUT, NOT READY FOR USE -->\n");
-    code.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
-    code.append("<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:xi=\"http://www.w3.org/2001/XInclude\" version=\"1.0\" initial=\"Main\" datamodel=\"null\">\n");
-    code.append("</scxml>");
+    _genHeader(0, code);
+    _genXMLTag(0, code);
+    String name = "";
+    StateMachine sm = null;
+    
+    // Verify that there is only one class that contains one state machine
+    if (model.getUmpleClasses().size() == 1) {
+      if (model.getUmpleClass(0).getStateMachines().size() == 1) {
+        sm = model.getUmpleClass(0).getStateMachine(0);
+        name = genTagAttribute("name", sm.getName());
+      }
+    }
+    
+    _genScxmlOpeningTag(0, code, name);
+    if (sm != null) {
+      // Generate code for the state machine.
+      for (State state : sm.getStates()) {
+        generateState(state);
+      }
+    }
+    
+    _genScxmlClosingTag(0, code);
     model.setCode(code.toString());
     writeModel();
+  }
+  
+  private void generateState(State state) {
+    _genStateOpeningTag(0, code, genTagAttribute("id", state.getName()));
+    _genStateClosingTag(0, code);
   }
 
   private void writeModel()
