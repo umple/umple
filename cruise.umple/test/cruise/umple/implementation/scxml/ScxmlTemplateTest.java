@@ -39,5 +39,10 @@ public class ScxmlTemplateTest extends TemplateTest
   {
     assertUmpleTemplateFor("scxml/empty.ump","scxml/empty.scxml.txt");
   }
-
+  
+  @Test
+  public void oneState()
+  {
+    assertUmpleTemplateFor("scxml/oneState.ump","scxml/oneState.scxml.txt");
+  }
 }
