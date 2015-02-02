@@ -11,10 +11,6 @@ State machine tests
 
 package cruise.umple.statemachine.implementation.statetable;
 
-import java.io.File;
-
-import junit.framework.Assert;
-
 import org.junit.*;
 
 import cruise.umple.implementation.TemplateTest;
