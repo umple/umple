@@ -30,11 +30,11 @@ class StateTableRow {
   String sLabel;  // The label to be used for the state
   Integer nestingLevel;  // Higher number means it is a substate
   StateTableRow parent; // null if not nested
-  
-  isPseudo=false; // H or H* Can never actually be in this so skipped as a row 
+
+  isPseudo=false; // H or H* Can never actually be in this so skipped as a row
   Map<String,StateCell> stateEventCells = new HashMap<String,StateCell>();
   Map<State,EventCell> stateStateCells = new HashMap<State,EventCell>();
-  
+
   // Add cells for the entire row of transitions
   public void build() {
     Event event;
@@ -43,16 +43,16 @@ class StateTableRow {
     String eventLabel = "??";
     String guardString, actionCode, transitionAction;
     Guard guard;
-  
+
     // Add cells for each transition
     for (Transition t : uState.getTransitions()) {
       event = t.getEvent();
       action = t.getAction();
-        
+
       if(event.isAutoTransition()) {
         transitionLabel = "";
         eventLabel = "(auto)";
-      } 
+      }
       else {
         if (event.getIsTimer()) {
           transitionLabel = "after("+event.getTimerInSeconds()+")";
@@ -68,7 +68,7 @@ class StateTableRow {
           }
         }
       }
-        
+
       if (action == null || action.getActionCode() == "") {
         transitionAction = "";
       }
@@ -77,7 +77,7 @@ class StateTableRow {
         if (actionCode.length() > 15) transitionAction = " / {...}";
          else transitionAction = " / "+actionCode.replaceAll("\"","&quot;");
       }
-      
+
       guard = t.getGuard();
       if (guard == null) guardString = "";
       else {
@@ -100,11 +100,11 @@ class StateTableRow {
       stateStateCells.get(t.getNextState()).addEventPattern(eventPattern);
     } // End of loop through each transition
   }  // End of build() method
-  
-  
+
+
   // Output the first cell in the row of the table, i.e. the state name with indentation
   public StringBuilder firstCellInRow(StringBuilder sb) {
-    sb.append("    <td>");
+    sb.append("    <td class=\"state-header\">");
     for(int i=0; i<nestingLevel; i++) {
       sb.append("- ");
     }
@@ -112,18 +112,18 @@ class StateTableRow {
     sb.append("</td>\n");
     return(sb);
   }
-  
+
   // Output this row of the stateEvent Table (not including tr tags
   public StringBuilder stateEventTableRowHtml() {
     StringBuilder sb = new StringBuilder();
 
     // Output the name of the state with appropriate nesting
     firstCellInRow(sb);
-   
+
     // Loop through all events, find the event in the hash table, and output each cell
 
     for(String ev : getStateTable().getAllEvents()) {
-      sb.append("    <td>");
+      sb.append("    <td class=\"event-entry\">");
       if(stateEventCells.containsKey(ev)) {
         sb.append(stateEventCells.get(ev).htmlString());
       }
@@ -141,11 +141,11 @@ class StateTableRow {
 
     // Output the name of the state with appropriate nesting
     firstCellInRow(sb);
-   
+
     // Loop through all states, find the state in the hash table, and output each cell
     for(StateTableRow col : getStateTable().getRows()) {
       State colState = col.getUState();
-      sb.append("    <td>");
+      sb.append("    <td class=\"state-entry\">");
       if(stateStateCells.containsKey(colState)) {
         sb.append(stateStateCells.get(colState).htmlString());
       }
@@ -163,7 +163,7 @@ class StateCell {
   State uState;
   String guardString;
   String actionString;
-  
+
   // Output  this state cell as html - appears in state-event table
   public StringBuilder htmlString() {
     StringBuilder sb = new StringBuilder();
@@ -179,11 +179,11 @@ class StateCell {
 // Cell in state-state table containing the events that can take from one to another
 class EventCell {
   String[] eventPattern;
-  
+
   // Output  this event cell as html - appears in state-state table
   public StringBuilder htmlString() {
     StringBuilder sb = new StringBuilder();
-    
+
     boolean isFirst = true;
     for(String ep : getEventPattern())
     {
@@ -203,12 +203,12 @@ class StateTable {
 
   // Outputs the State State table - with events as cells
   public StringBuilder stateEventTableHtml(StringBuilder sb) {
-    sb.append("<table border=\"1\">\n");
+    sb.append("<table class=\"statetable\">\n");
 
     // Output row headers - blank cell + list of events
-    sb.append("  <tr><td>&nbsp;</td>");
+    sb.append("  <tr><td class=\"event-header\">&nbsp;</td>");
     for(String e : allEvents) {
-      sb.append("<td>");
+      sb.append("<td class=\"event-header\">");
       sb.append(e);
       sb.append("</td>");
     }
@@ -227,14 +227,14 @@ class StateTable {
 
   // Outputs the State State table - with events as cells
   public StringBuilder stateStateTableHtml(StringBuilder sb) {
-    sb.append("<table border=\"1\">\n");
+    sb.append("<table class=\"statetable\">\n");
 
     // Output row headers - blank cell + list of states (same as rows)
-    sb.append("  <tr><td>&nbsp;</td>");
+    sb.append("  <tr><td class=\"state-header\">&nbsp;</td>");
     for(StateTableRow col : rows) {
       String stateName = col.getSLabel();
       // TODO convert slabel so indentation is vertical
-      sb.append("<td>");
+      sb.append("<td class=\"state-header\">");
       sb.append(stateName);
       sb.append("</td>");
     }
@@ -258,20 +258,20 @@ class StateTable {
       eventSet.addAll(row.getStateEventCells().keySet());
     }
     allEvents = new ArrayList<String>(eventSet);
-    
-    Collections.sort(allEvents);     
+
+    Collections.sort(allEvents);
   }
 
   // Walks the state machine adding rows as needed
   public void buildRecursively(StateMachine theSm, int nestingLevel) {
     String sLabel;
-    StateTableRow stateRow = null; 
+    StateTableRow stateRow = null;
     String smName, clSmName;
     boolean isPseudo = false;
 
     // We haven't processed any states yet in this statemachine
     Boolean isFirstState = true;
- 
+
     // Iterate (recursively) through the states of this state machine
     for (State s : theSm.getStates())
     {
@@ -287,26 +287,36 @@ class StateTable {
       {
       	buildRecursively(nestedSm,nestingLevel+1);
       }
-      
+
     }  // End iteration through the states, adding rows at this level of nesting
   }
-}  
-  
+}
+
 
 class StateTablesGenerator
 {
   StringBuilder code = new StringBuilder();
 
   // Basic templates
-  topHeader <<!<h1>State tables generated by Umple from <<=fn>>.ump</h1>!>>
+  topHeader <<!
+  <style>
+  .statetable { border-collapse: collapse; }
+  .statetable td { border: 1px solid black; padding: 2px 10px 2px 10px; }
+  .statetable .state-header, .statetable .event-header { font-weight: bold; background-color: #ecf0f1; border: 2px solid black; }
+  .statetable .state-entry, .statetable .event-entry {  }
+  </style>
+  <h1>State tables generated by Umple from <<=fn>>.ump</h1>
+!>>
+
+
   emit genTopHeader(String fn)(topHeader);
-  
+
   cr <<!
 !>>
-  
+
   td <<!<td><<=content>></td>!>>
   emit genCell(String content)(td,cr);
-  
+
   public StringBuilder genCellString(StringBuilder code, String s) {
     return _genCell(0, code, s);
   }
@@ -317,7 +327,7 @@ class StateTablesGenerator
   {
     // Output basic file header
     _genTopHeader(0, code, model.getUmpleFile().getSimpleFileName());
-    
+
     String className;
 
     // Determine if there are multiple classes with state machines
@@ -331,19 +341,19 @@ class StateTablesGenerator
     }
     if(smCount == 0) {
       // Special case. No state machine.
-      
+
       code.append("<p>No State machines found in this model</p>\n");
-      
+
       terminateCode(code);
       return;
     }
 
     // We now know we have to output one or more state machines
-    // Iterate through each class. 
+    // Iterate through each class.
     for (UmpleClass uClass : model.getUmpleClasses())
     {
       className = uClass.getName();
-      
+
       // Process the top level state machines in a class
       for (StateMachine sm : uClass.getStateMachines())
       {
@@ -352,7 +362,7 @@ class StateTablesGenerator
         code.append(" state machine ");
         code.append(sm.getName());
         code.append("</h2>\n\n");
-      
+
         // Set up the state table
         StateTable st = new StateTable(uClass, sm);
 
@@ -360,31 +370,31 @@ class StateTablesGenerator
         st.buildRecursively(sm, 0);
         // Now figure out the headers
         st.buildAllEvents();
-        
+
         // Output the headers of the State Event table
         code.append("<h3>State-event table</h3>\n");
-        
+
         // Output the body of the state event table
         st.stateEventTableHtml(code);
 
         // Output the headers of the State State table
         code.append("<h3>State-state table</h3>\n");
-        
+
         // Output the body of the state state table
         st.stateStateTableHtml(code);
 
       } // End iteration through state machines of a class
     } // End iteration through classes
-    
+
     terminateCode(code);
     return;
   }
-  
+
   private void terminateCode(StringBuilder code) {
     model.setCode(code.toString());
     writeModel();
     return;
-  } 
+  }
 
   // Output the graphviz file to a file with the .gv suffix
   private void writeModel()
@@ -405,6 +415,6 @@ class StateTablesGenerator
       throw new UmpleCompilerException("There was a problem with generating State Tables." + e, e);
     }
     return;
-  } 
+  }
 }
 
