@@ -34,6 +34,9 @@ class ScxmlGenerator
   stateClosingTag <<!</state>!>>
   emit genStateOpeningTag(String id)(stateOpeningTag, cr);
   emit genStateClosingTag()(stateClosingTag, cr);
+  
+  transitionTag <<!<transition<<=event>><<=cond>><<=target>><<=type>>>!>>
+  emit genTransitionTag(String event, String cond, String target, String type)(transitionTag, cr);
 
   public void generate()
   {
@@ -65,7 +68,25 @@ class ScxmlGenerator
   
   private void generateState(State state) {
     _genStateOpeningTag(0, code, genTagAttribute("id", state.getName()));
+    
+    for (Transition transition: state.getTransitions()) {
+      generateTransition(transition);
+    }
+     
     _genStateClosingTag(0, code);
+  }
+  
+  private void generateTransition(Transition transition) {
+    String event = "";
+    String cond = "";
+    String target = genTagAttribute("target", transition.getNextState().getName());
+    String type = "";
+    
+    if (transition.hasEvent()) {
+      event = genTagAttribute("event", transition.getEvent().getName());
+    }
+    
+    _genTransitionTag(0, code, event, cond, target, type);
   }
 
   private void writeModel()
