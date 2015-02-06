@@ -76,5 +76,22 @@ public class SampleFileWriterTest {
 
   }   
   
+  @Test
+  public void checkFileExists() {
+    SampleFileWriter.createFile("path.txt", "");
+    try {
+      
+      SampleFileWriter.assertExists("path.txt");
+    } finally {
+      // just make sure it's destroyed regardless
+      SampleFileWriter.destroy("path.txt");
+    }
+    
+  }
+  
+  @Test(expected=AssertionError.class)
+  public void checkFileExists_fail() {
+    SampleFileWriter.assertExists("IDoNotExist.txt");
+  }
   
 }

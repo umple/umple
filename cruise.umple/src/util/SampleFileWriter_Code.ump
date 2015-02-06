@@ -144,6 +144,14 @@ class SampleFileWriter
     }
     if (!foundMatch) { Assert.fail("Did not find expected lines"); }
   }
+
+  /**
+   * Assert that a file exists at {@code path}. 
+   * @param path Path to a file, check syntax for {@link File#File(String)} for specification. 
+   */
+  public static void assertExists(String path) {
+    Assert.assertTrue("File, " + path + ", does not exist.", (new File(path)).exists());
+  }
   
   public static void assertFileContent(File expected, String actual)
   {
