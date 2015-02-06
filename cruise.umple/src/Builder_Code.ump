@@ -189,6 +189,11 @@ class Builder {
 
   depend java.io.*;
   depend java.net.*;
+  depend java.util.List;
+  depend java.util.ArrayList;
+  depend java.util.Arrays;
+  depend java.lang.ProcessBuilder.Redirect;
+
   depend org.apache.tools.ant.*;
   
   public URL compile(String directory, String jarname, String projectName, String javaTarget)
@@ -227,31 +232,78 @@ class Builder {
     }
   }
   
+  /**
+   * Delegate method to {@link #runAnt(String, String, List)}
+   * @param buildFilename Path to build file (relative or absolute)
+   * @return True if ant target executed successfully. 
+   */
   public boolean runAnt(String buildFilename)
   {
+    return runAnt(buildFilename, "");
+  }
+
+  /** 
+   * Run Ant on the current platform for buildFilename and target
+   * @param buildFilename Path to build file (relative or absolute)
+   * @param target Ant target to run, must be empty string or valid target -- empty implies default Ant target
+   * @param extraLibs Any extra libraries for Ant to load, passed with {@code -libs} parameter.
+   * @param True if ant target successfully executes
+   */
+  public boolean runAnt(String buildFilename, String target, String... extraLibs) {
+    if (target == null) {
+      throw new IllegalArgumentException("Target can not be null.");
+    }
+
+    if ("".equals(buildFilename)) {
+      throw new IllegalArgumentException("buildFilename was empty or null.");
+    }
+
+    if (extraLibs == null) {
+      throw new IllegalArgumentException("extraLibs was null, must be empty or have path values.");
+    }
+
+    final String antSuffix = System.getProperty("os.name").toLowerCase().contains("windows") ? ".bat" : "";
+    final String buildPath = (new File(buildFilename)).getAbsolutePath();
+    
+    String libParam = "";
+    if (extraLibs.length > 0) {
+      final List<String> paths = new ArrayList<>(extraLibs.length);
+      for (String lib : extraLibs) {
+        paths.add((new File(lib)).getAbsolutePath());
+      }
+
+      libParam = "-lib " +  String.join(";", paths);
+    }
+
+    final List<String> antCmd = Arrays.asList("ant" + antSuffix, "-f", buildPath, libParam, target);
+
+    // System.out.println("Running Ant: " + String.join(" ", antCmd));
+    Process p = null;
     try
     {
-      Process p;
-      if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-    	  p = Runtime.getRuntime().exec("ant.bat -f " + (new File(buildFilename)).getAbsolutePath());
-      }
-      else {
-    	p = Runtime.getRuntime().exec("ant -f " + (new File(buildFilename)).getAbsolutePath());
-      }
+      p = (new ProcessBuilder(antCmd))
+        .inheritIO()
+        .start();
+
       //Uncomment these lines if the process has been failing. It might give you an idea of what's going on.
       //BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
       //System.out.println(b.readLine());
       p.waitFor();
-      return true;  
+
+      return p.exitValue() == 0;
     }
-    catch (IOException e)
+    catch (IOException | InterruptedException e)
     {
+      e.printStackTrace(System.err);
       return false;
+    } finally {
+
+      // forcibly make sure the process terminated, otherwise rogue processes may continue to run
+      if (p != null) {
+        p.destroy();
+      }
     }
-    catch (InterruptedException e2)
-    {
-      return false;
-    }
+
   }
   
   public void runAntOLD(String buildFilename)
