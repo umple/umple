@@ -330,18 +330,6 @@ class UmpleRunMain
       System.err.print(e.getMessage());
     }
   }
-
-  public static void main(String[] args)
-  {
-    if (args.length < 2)
-    {
-      System.out.println("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\n" + 
-        "Example: java -jar umple.jar airline.ump airline.cmd");
-      return;
-    }
-
-    UmpleRunMain.run(args[0], args[1], args[2].equals("--debug"));
-  }
 }
 
 /*

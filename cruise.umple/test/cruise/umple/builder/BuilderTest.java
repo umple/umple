@@ -1,29 +1,19 @@
 package cruise.umple.builder;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import cruise.umple.util.SampleFileWriter;
+import cruise.umple.util.*;
 
 public class BuilderTest {
 
-  public static class TestAntTask extends Task {
-
-    @Override
-    public void execute() throws BuildException {
-      super.execute();
-
-      SampleFileWriter.createFile("foo-bar.txt", "");
-    }
-  }
   
   ByteArrayOutputStream stream;
   
@@ -32,32 +22,19 @@ public class BuilderTest {
   {
     stream = new ByteArrayOutputStream();
     
-    { 
-      String buildfileContent = "<project name=\"blah\" default=\"mydefault\" basedir=\".\">" +
-        "<target name=\"mydefault\">" +
-        "<touch file=\"deleteme.txt\"/>" +
-        "</target>" +
-        "</project>";
+    String buildfileContent = "<project name=\"blah\" default=\"mydefault\" basedir=\".\">" +
+      "<target name=\"mydefault\">" +
+      "<copy file=\"mybuild.xml\" tofile=\"deleteme.txt\"/>" +
+      "</target>" +
+      "</project>";
     
-      String simpleJavaContent = "public class MeToo {}";
-      String complexJavaContent = "package Aha; public class MeThree {}";
+    String simpleJavaContent = "public class MeToo {}";
+    String complexJavaContent = "package Aha; public class MeThree {}";
     
     
-      SampleFileWriter.createFile("mybuild.xml", buildfileContent);
-      SampleFileWriter.createFile("MyApp/MeToo.java", simpleJavaContent);
-      SampleFileWriter.createFile("MyApp/Aha/MeThree.java", complexJavaContent);
-    }
-    
-    {
-      String buildfileContent = "<project name=\"blah\" basedir=\".\">" +
-              "<target name=\"mytarget\">" +
-            "<taskdef name=\"foo\" classname=\"cruise.umple.builder.BuilderTest$TestAntTask\" " + 
-                "classpath=\"../dist/umple.jar\" />" +
-            "<foo />" + 
-              "</target>" +
-              "</project>";
-      SampleFileWriter.createFile("reqLib.xml", buildfileContent);
-    }
+    SampleFileWriter.createFile("mybuild.xml", buildfileContent);
+    SampleFileWriter.createFile("MyApp/MeToo.java", simpleJavaContent);
+    SampleFileWriter.createFile("MyApp/Aha/MeThree.java", complexJavaContent);
   }
   
   @After
@@ -66,8 +43,6 @@ public class BuilderTest {
     SampleFileWriter.destroy("mybuild.xml");
     SampleFileWriter.destroy("deleteme.txt");
     SampleFileWriter.destroy("MyApp");
-    SampleFileWriter.destroy("reqLib.xml");
-    SampleFileWriter.destroy("foo-bar.txt");
   }
 
 
@@ -131,22 +106,13 @@ public class BuilderTest {
 
 */   
    
-  @Test 
-  public void executeSimpleAntScript()
-  {
-    Builder builder = new Builder();
-    assertTrue(builder.runAnt("mybuild.xml", "mydefault"));
-    SampleFileWriter.assertExists("deleteme.txt");
-  }
-   
-  @Test
-  public void executeAntScriptWithExternalLib() {
-    Builder builder = new Builder();
-    assertTrue("Failed to run ant on 'reqLib.xml' -- try to run `packageJars` and rerun if this fails", 
-        builder.runAnt("reqLib.xml", "mytarget"));
-    
-    assertTrue("Created file does not exist", (new File("foo-bar.txt")).exists());   
-  }
+   @Test 
+   public void executeSimpleAntScript()
+   {
+     Builder builder = new Builder();
+     builder.runAnt("mybuild.xml");
+     Assert.assertEquals(true,(new File("deleteme.txt")).exists());
+   }
 
   
 }
