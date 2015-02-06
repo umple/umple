@@ -115,6 +115,13 @@ public class JsonTemplateTest extends TemplateTest
     assertUmpleTemplateFor("json/TraceColorAssociation.ump", "json/TraceColorAssociation.json.txt");
   }
   
+  @Test
+  public void interfacesTest()
+  {
+	assertUmpleTemplateFor("json/interfacesTest.ump", "json/interfacesTest.json.txt");
+  }
+  
+  
   // @Test
   // public void ExtraCode()
   // {

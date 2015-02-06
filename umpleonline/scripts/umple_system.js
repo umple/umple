@@ -255,11 +255,16 @@ UmpleSystem.updateClass = function(umpleClass)
   var divs = umpleClass.drawable();
   var classDiv = divs[0];
   var generalizationDiv = divs[1];
-
+  var interfaceDiv = divs[2];
   var canvas = jQuery("#" + Page.umpleCanvasId());
   var classObj = jQuery("#" + umpleClass.id);
   canvas.append(classDiv);
-  canvas.append(generalizationDiv);
+  //canvas.append(generalizationDiv);
+  if(generalizationDiv != null)
+  {
+    for(var i=0; i<generalizationDiv.length; i++)
+    canvas.append(generalizationDiv);
+  }
   
   UmpleSystem.redraw(umpleClass);
 

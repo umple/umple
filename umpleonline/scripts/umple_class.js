@@ -33,7 +33,15 @@ UmpleClassFactory.create = function(data)
   for (var i = 0; i < data.methods.length; i++)
   {
     umpleClass.methods.push(UmpleMethodFactory.create(data.methods[i]));
+  }
+  if(data.implementedInterfaces != null)
+  {
+    for (var i = 0; i < data.implementedInterfaces.length; i++)
+    {
+      umpleClass.interfaces[i] = data.implementedInterfaces[i].interfacesName +"";
+    }
   }  
+  
   return umpleClass;
 }
 
@@ -89,6 +97,7 @@ function UmpleClass()
   this.position = new UmplePosition(0,0,109,41);
   this.attributes = [];
   this.methods = [];
+  this.interfaces = [];
   this.extendsClass;
 
   this.addAttribute = function(typeAndName)
@@ -149,9 +158,6 @@ function UmpleClass()
   }
 
 
-
-
-
   this.setExtendsClass = function(umpleClassId)
   {
     this.extendsClass = umpleClassId;
@@ -185,8 +191,8 @@ function UmpleClass()
          
   this.drawable = function()
   {
-    var classDiv = this.drawClass();
-  var generalizationDiv = this.drawGeneralization();
+  var classDiv = this.drawClass();
+  var generalizationDiv = this.drawGeneralization();  
   var divs = [classDiv,generalizationDiv];
     return divs;
   }
@@ -326,7 +332,7 @@ function UmpleClass()
     {
       if (this.isInterface=="true")
       {
-        classInnerHtml += format('<span id="{0}_name" name="className">{2}<br>{1}</span>',this.id,this.name," &#171interface&#187");
+        classInnerHtml += format('<span>&#171interface&#187<span><br><span id="{0}_name" name="className">{1}</span>',this.id,this.name);
       }
       else
       {
@@ -337,10 +343,11 @@ function UmpleClass()
     {
       if (this.isInterface=="true")
       {
-        classInnerHtml += format('<span id="{0}_name" name="className" class="editable editableDoubleClick">{2}<br>{1}</span>',this.id, this.name,"&#171interface&#187");
+        classInnerHtml += format('<span>&#171interface&#187<span><br><span id="{0}_name" name="className" class="editable editableDoubleClick">{1}</span>',this.id, this.name);
       }
       else
       {
+        
         classInnerHtml += format('<span id="{0}_name" name="className" class="editable editableDoubleClick" >{1}</span>',this.id, this.name);
 
       }
@@ -431,23 +438,48 @@ function UmpleClass()
   
   this.drawGeneralization = function()
   {
+    
+    var umpleGeneralization = null;
+    var generalizationDiv = [];
     var parent = UmpleSystem.find(this.extendsClass);
-    if (parent == null)
+    if (parent == null && this.interfaces.length == 0)
     {
       return null;
     }
+    if (parent != null)
+    {
+      umpleGeneralization = new UmpleGeneralization();
+      umpleGeneralization.childId = this.id;
+      umpleGeneralization.parentId = parent.id;
+      umpleGeneralization.childPosition = this.position;
+      umpleGeneralization.parentPosition = parent.position;
     
-    var umpleGeneralization = new UmpleGeneralization();
-    umpleGeneralization.childId = this.id;
-    umpleGeneralization.parentId = parent.id;
-    umpleGeneralization.childPosition = this.position;
-    umpleGeneralization.parentPosition = parent.position;
+      generalizationDiv[0] = umpleGeneralization.drawable();
+    }
+
+    if(this.interfaces.length > 0)
+    {
+      var parent_in = null;
+      for (var i = 0; i < this.interfaces.length; i++)
+      {
+        parent_in = UmpleSystem.find(this.interfaces[i]);
+        if (parent_in == null)
+        {
+          continue;
+        }
+        umpleGeneralization = new UmpleGeneralization();
+        umpleGeneralization.childId = this.id;
+        umpleGeneralization.parentId = parent_in.id;
+        umpleGeneralization.childPosition = this.position;
+        umpleGeneralization.parentPosition = parent_in.position;
     
-    generalizationDiv = umpleGeneralization.drawable();
-  
+        generalizationDiv[i+1] = umpleGeneralization.drawable();
+      }
+    }
     return generalizationDiv;
   }
   
+
   this.anchorDivHtml = function(type,index)
   {
     return format('<div id="{0}_{1}{2}" class="{3}" name="{4}" style="top: 0px; left: 0px; cursor:{5}; display: none;"><img name="image" src="./scripts/_.gif"/></div>',this.id,type,index,type,type,"move");
