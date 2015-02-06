@@ -1,0 +1,10 @@
+interface AAA
+{
+}
+interface BBB
+{
+}
+class Mentor
+{
+	isA BBB,AAA;
+}
