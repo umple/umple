@@ -829,9 +829,20 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 	if (inClass==null) return false;
     for(UmpleInterface uInterface : inClass.getParentInterface()){
 		if (uInterface.getName().equals(name)){	return true; }
+		if (CheckInterfaceInInTerfaceHierarchy(uInterface,name)) {return true;}
 	}
 	return checkInterfaceImplementationInHeirarchy(inClass.getExtendsClass(),name);
 }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private boolean CheckInterfaceInInTerfaceHierarchy(UmpleInterface inInterface,	String name) {
+	  for (UmpleInterface uInterface : inInterface.getExtendsInterface()) {
+		  if (uInterface.getName().equals(name)) {return true;}
+		  if (CheckInterfaceInInTerfaceHierarchy(uInterface,name)) {return true;}
+	  }
+	return false;
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
