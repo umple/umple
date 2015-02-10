@@ -67,14 +67,14 @@ class GvClassTraitDiagramGenerator
 	   code.append("	<table bgcolor=\"#ADD6FF\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
 	   String abs = "";
 	   if(inClass.getIsAbstract()) {abs= "\n&laquo;abstract&raquo;<BR/>";}
-	   code.append("	  <TR><TD>"+abs+inClass.getName()+"</TD></TR> \n");
-	   code.append("	  <TR><TD>");
+	   code.append("	  <TR><TD WIDTH=\"100\">"+abs+inClass.getName()+"</TD></TR> \n");
+	   code.append("	  <TR><TD HEIGHT=\"20\">");
 	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
 	   attributeCreation(inClass,code,false);
        code.append("			</TABLE>");	   	   
 	   code.append("	  	  </TD>");
 	   code.append("	  </TR>\n");
-	   code.append("	  <TR><TD>");
+	   code.append("	  <TR><TD HEIGHT=\"20\">");
 	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
 	   methodCreation(inClass,code,false);
 	   code.append("			</TABLE>");	
@@ -225,11 +225,11 @@ class GvClassTraitDiagramGenerator
        code.append("	//Interface: "+inInterface.getName()+"\n\n");
 	   code.append("\""+inInterface.getName()+"\" [shape=plaintext margin=0 label=< \n");
 	   code.append("	<table bgcolor=\"#D6EBFF\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
-	   code.append("	  <TR><TD>&laquo;interface&raquo;<BR/>"+inInterface.getName()+"</TD></TR> \n");
-	   code.append("	  <TR><TD>");  	   
+	   code.append("	  <TR><TD WIDTH=\"100\">&laquo;interface&raquo;<BR/>"+inInterface.getName()+"</TD></TR> \n");
+	   code.append("	  <TR><TD HEIGHT=\"20\">");  	   
 	   code.append("	  	  </TD>");
 	   code.append("	  </TR>\n");
-	   code.append("	  <TR><TD>");
+	   code.append("	  <TR><TD HEIGHT=\"20\">");
 	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
 	   methodCreation(inInterface,code,false);
 	   code.append("			</TABLE>");	
@@ -263,19 +263,19 @@ class GvClassTraitDiagramGenerator
 	   code.append("	//Trait: "+inTrait.getName()+"\n\n");
 	   code.append("\""+inTrait.getName()+"\" [shape=plaintext margin=0 label=< \n");
 	   code.append("	<table bgcolor=\"#FAF0E6\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
-	   code.append("	  <TR><TD COLSPAN=\"2\">&laquo;trait&raquo;<BR/>"+inTrait.getName()+"</TD></TR>");      
-	   code.append("	  <TR><TD COLSPAN=\"2\">");
+	   code.append("	  <TR><TD WIDTH=\"100\" COLSPAN=\"2\">&laquo;trait&raquo;<BR/>"+inTrait.getName()+"</TD></TR>");      
+	   code.append("	  <TR><TD HEIGHT=\"20\" COLSPAN=\"2\">");
 	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
 	   tAttributeCreation(inTrait,code,manyTrait);
        code.append("			</TABLE>");	   	   
 	   code.append("	  	  </TD>");
 	   code.append("	  </TR>\n");
-	   code.append("	  <TR><TD>");
+	   code.append("	  <TR><TD HEIGHT=\"20\" WIDTH=\"100\">");
 	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
 	   tMethodCreation(inTrait,code,manyTrait,false);
 	   code.append("			</TABLE>");	
 	   code.append("		  </TD>");
-	   code.append("		  <TD>");
+	   code.append("		  <TD HEIGHT=\"20\" WIDTH=\"100\" >");
 	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
 	   tMethodCreation(inTrait,code,manyTrait,true);
 	   code.append("			</TABLE>");	
@@ -422,7 +422,7 @@ class GvClassTraitDiagramGenerator
 			      if (uTrait.numberOfGeneralTemplateParameters()>0){
 			    	  bindText="&laquo;bind";
 			    	  for (GeneralTemplateParameter gTP: uTrait.getGeneralTemplateParameters()){
-			    		  bindText = bindText+"  "+gTP.getName() +" -> "+inTrait.getGeneralTPAppliedByName(uTrait.getName()).getParameterMapping().get(gTP.getName())+"; ";
+			    		  bindText = bindText+"  "+gTP.getName() +" = "+inTrait.getGeneralTPAppliedByName(uTrait.getName()).getParameterMapping().get(gTP.getName())+"; ";
 			    	  }
 			    	  bindText = bindText.substring(0, bindText.length() - 2);
 			    	  bindText=bindText+"&raquo;";
@@ -455,7 +455,7 @@ class GvClassTraitDiagramGenerator
 	   		      if (uTrait.numberOfGeneralTemplateParameters()>0){
 	   		    	  bindText="&laquo;bind";
 	   		    	  for (GeneralTemplateParameter gTP: uTrait.getGeneralTemplateParameters()){
-	   		    		  bindText = bindText+"  "+gTP.getName() +" -> "+inClass.getGeneralTPAppliedByName(uTrait.getName()).getParameterMapping().get(gTP.getName())+"; ";
+	   		    		  bindText = bindText+"  "+gTP.getName() +" = "+inClass.getGeneralTPAppliedByName(uTrait.getName()).getParameterMapping().get(gTP.getName())+"; ";
 	   		    	  }
 	   		    	  bindText = bindText.substring(0, bindText.length() - 2);
 	   		    	  bindText=bindText+"&raquo;";
