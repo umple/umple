@@ -6,7 +6,8 @@ class NuSMVModule
   //depend cruise.umple.compiler.*;
   
   // Attributes declaration
-  name; startState;
+  name; 
+  startState;
   
   //Associations of module object
   * -- 0..1 AssignPart;
@@ -179,8 +180,8 @@ class ComplexTransition
   		return temp;
   }
   
-  output <<!(state = <<=simpleTransitions.get(0).getFromState()>>) -> (
-  		  <<=writeTransitions(numberOfSimpleTransitions())>>)!>>
+  output <<!( (state = <<=simpleTransitions.get(0).getFromState()>>) -> (
+  		  <<=writeTransitions(numberOfSimpleTransitions())>>) )!>>
   emit print()(output);
 }
 
@@ -195,11 +196,11 @@ class SimpleTransition
  	return printTransitionWithNoEvent();
   }
   
-  outputWithNoEvent <<!(event = <<=getFromState()>>) -> (next(state) = <<=getNextState()>>)!>>
+  outputWithNoEvent <<!( (event = <<=getFromState()>>) -> (next(state) = <<=getNextState()>>) )!>>
   	emit printTransitionWithNoEvent()(outputWithNoEvent);
   
-  output <<!(state = <<=getFromState()>>) -> (
-  	    event = <<=getEvent()>> & next(state) = <<=getNextState()>>)!>>
+  output <<!( (state = <<=getFromState()>>) -> (
+  	    event = <<=getEvent()>> & next(state) = <<=getNextState()>>) )!>>
   	emit printNormalTransition()(output);output1 <<!(event = <<=getEvent()>> & next(state) = <<=getNextState()>>)  !>>
     emit printMe()(output1);
 }

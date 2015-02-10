@@ -10,8 +10,9 @@ MODULE S2
     init(state) := s2a;   
      
   TRANS
-    (state = s2a) -> (
-        event = e3 & next(state) = s2b) &
-    (state = s2b) -> (
-        event = e3 & next(state) = s2a) &
-    (event = e1) -> (next(state) = s1)
+    ( (state = s2a) -> (
+        event = e3 & next(state) = s2b) ) &
+    ( (state = s2b) -> (
+        event = e3 & next(state) = s2a) ) &
+    ( (event = e1) -> (next(state) = s1) )
+  

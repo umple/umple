@@ -10,12 +10,13 @@ MODULE State
     init(state) := newBooking;   
      
   TRANS
-    (state = newBooking) -> (
+    ( (state = newBooking) -> (
         (event = assignSeat & next(state) = seatAssigned)  |
-        (event = cancel & next(state) = cancelled)  ) &
-    (state = seatAssigned) -> (
+        (event = cancel & next(state) = cancelled)  ) ) &
+    ( (state = seatAssigned) -> (
         (event = cancel & next(state) = cancelled)  |
-        (event = checkIn & next(state) = checkedIn)  ) &
-    (state = checkedIn) -> (
+        (event = checkIn & next(state) = checkedIn)  ) ) &
+    ( (state = checkedIn) -> (
         (event = cancel & next(state) = cancelled)  |
-        (event = complete & next(state) = completed)  )
+        (event = complete & next(state) = completed)  ) )
+  
