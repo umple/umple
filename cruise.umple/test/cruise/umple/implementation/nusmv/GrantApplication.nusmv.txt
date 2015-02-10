@@ -10,36 +10,37 @@ MODULE Status
     init(state) := Planned;   
      
   TRANS
-    (state = InProgress) -> (
+    ( (state = InProgress) -> (
         (event = researcherDeclaresComplete & next(state) = EvaluationByInstitution)  |
-        (event = editByResearcher & next(state) = InProgress)  ) &
-    (state = EvaluationByInstitution) -> (
+        (event = editByResearcher & next(state) = InProgress)  ) ) &
+    ( (state = EvaluationByInstitution) -> (
         (event = returnToResearcher & next(state) = InProgress)  |
         (event = verified & next(state) = VerifiedByInstitution)  |
-        (event = editByInstitution & next(state) = EvaluationByInstitution)  ) &
-    (state = VerifiedByInstitution) -> (
+        (event = editByInstitution & next(state) = EvaluationByInstitution)  ) ) &
+    ( (state = VerifiedByInstitution) -> (
         (event = reOpen & next(state) = EvaluationByInstitution)  |
-        (event = submit & next(state) = SubmittedByInstitution)  ) &
-    (state = SubmittedByInstitution) -> (
+        (event = submit & next(state) = SubmittedByInstitution)  ) ) &
+    ( (state = SubmittedByInstitution) -> (
         (event = withdraw & next(state) = Withdrawn)  |
         (event = acceptForReview & next(state) = UnderAdministrativeReview)  |
         (event = submissionCheck & next(state) = SubmittedByInstitution)  |
-        (event = submissionCheck & next(state) = EvaluationByInstitution)  ) &
-    (state = UnderAdministrativeReview) -> (
+        (event = submissionCheck & next(state) = EvaluationByInstitution)  ) ) &
+    ( (state = UnderAdministrativeReview) -> (
         (event = acceptForExpertReview & next(state) = UnderExpertReview)  |
         (event = bypassExpertReviewDueToMinorChanges & next(state) = AwaitingFinalDecision)  |
         (event = returnToInstitition & next(state) = EvaluationByInstitution)  |
-        (event = withdraw & next(state) = Withdrawn)  ) &
-    (state = UnderExpertReview) -> (
+        (event = withdraw & next(state) = Withdrawn)  ) ) &
+    ( (state = UnderExpertReview) -> (
         (event = expertReviewsReturned & next(state) = AwaitingFinalDecision)  |
-        (event = withdraw & next(state) = Withdrawn)  ) &
-    (state = AwaitingFinalDecision) -> (
+        (event = withdraw & next(state) = Withdrawn)  ) ) &
+    ( (state = AwaitingFinalDecision) -> (
         (event = finalAccept & next(state) = Accepted)  |
         (event = minorRevisionsNeeded & next(state) = EvaluationByInstitution)  |
-        (event = reject & next(state) = Rejected)  ) &
-    (state = Planned) -> (
-        event = createApplication & next(state) = InProgress) &
-    (state = Rejected) -> (
-        event = tryAgain & next(state) = InProgress) &
-    (state = Withdrawn) -> (
-        event = tryAgain & next(state) = InProgress)
+        (event = reject & next(state) = Rejected)  ) ) &
+    ( (state = Planned) -> (
+        event = createApplication & next(state) = InProgress) ) &
+    ( (state = Rejected) -> (
+        event = tryAgain & next(state) = InProgress) ) &
+    ( (state = Withdrawn) -> (
+        event = tryAgain & next(state) = InProgress) )
+  
