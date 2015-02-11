@@ -51,4 +51,10 @@ public class ScxmlTemplateTest extends TemplateTest
   {
     assertUmpleTemplateFor("scxml/simpleTransition.ump","scxml/simpleTransition.scxml.txt");
   }
+  
+  @Test
+  public void nestedStateMachine()
+  {
+    assertUmpleTemplateFor("scxml/nestedStateMachine.ump","scxml/nestedStateMachine.scxml.txt");
+  }
 }

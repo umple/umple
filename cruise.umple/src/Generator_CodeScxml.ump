@@ -35,7 +35,7 @@ class ScxmlGenerator
   emit genStateOpeningTag(String id)(stateOpeningTag, cr);
   emit genStateClosingTag()(stateClosingTag, cr);
   
-  transitionTag <<!<transition<<=event>><<=cond>><<=target>><<=type>>>!>>
+  transitionTag <<!<transition<<=event>><<=cond>><<=target>><<=type>>/>!>>
   emit genTransitionTag(String event, String cond, String target, String type)(transitionTag, cr);
 
   public void generate()
@@ -71,6 +71,13 @@ class ScxmlGenerator
     
     for (Transition transition: state.getTransitions()) {
       generateTransition(transition);
+    }
+    
+    // Handle nested states.
+    for (StateMachine nestedStateMachine : state.getNestedStateMachines()) {
+      for (State subState : nestedStateMachine.getStates()) {
+        generateState(subState);
+      }
     }
      
     _genStateClosingTag(0, code);

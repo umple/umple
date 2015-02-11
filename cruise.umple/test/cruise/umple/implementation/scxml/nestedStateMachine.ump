@@ -1,0 +1,8 @@
+class SMClass {
+  sm {
+    superState {   
+      subState {  
+      }
+    }
+  }
+}
