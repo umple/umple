@@ -1,0 +1,39 @@
+
+namespace cruise.umple.util;
+
+external Task {};
+
+/**
+ * Defines an Ant task to use in Ant-like build environments
+ */
+class UmpleAntTask {
+  depend org.apache.tools.ant.*;
+  depend cruise.umple.UmpleRunMain;
+  isA Task;
+
+  // The method executing the task
+  void execute() throws BuildException {
+  	if ("".equals(this._src)) {
+  		throw new BuildException("src must be specified.");
+  	}
+
+    UmpleRunMain.run(this._src, this._cmdFile, _debug);
+  }
+
+  String _src = null;
+  String _cmdFile = "";
+  boolean _debug = false;
+
+  public void setSrc(String aSrc) {
+  	this._src = aSrc;
+  }
+
+  public void setCmdFile(String aCmdFile) {
+  	this._cmdFile = aCmdFile;
+  }
+
+  public void setDebug(boolean aDebug) {
+  	this._debug = aDebug;
+  }
+
+}
