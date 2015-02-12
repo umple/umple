@@ -696,7 +696,7 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-   private void analyzeDependentTokens(Token t, UmpleTrait uTrait, int analysisStep){
+   private void analyzeDependentTokens(Token t, UmpleTrait inTrait, int analysisStep){
     if(analysisStep == 1 || shouldProcessClassAgain)
     {
       shouldProcessClassAgain = true;
@@ -707,12 +707,12 @@ class UmpleInternalParser
     
     if (t.is("invariant"))
     {
-      analyzeInvariant(t,uTrait);
+      analyzeInvariant(t,inTrait);
     }
     else if (t.is("beforeCode") || t.is("afterCode"))
     {
     //TODO should applied for traits
-      analyzeInjectionCode(t,uTrait);
+      analyzeInjectionCode(t,inTrait);
     }
     else if (t.is("key") || t.is("defaultKey"))
     {
@@ -720,7 +720,7 @@ class UmpleInternalParser
     //  analyzeKey(t,aClass);
     }
     //analyzeTraceToken(t,aClass);
-    //analyzeLayoutToken(t,aClass,analysisStep);
+    analyzeLayoutToken(t,inTrait,analysisStep);
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   

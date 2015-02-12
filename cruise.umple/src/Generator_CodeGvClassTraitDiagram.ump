@@ -62,23 +62,29 @@ class GvClassTraitDiagramGenerator
   // Create each class - called VisitClass in SuperGvGenerator
   protected void classCreation(UmpleClass inClass, StringBuilder code)
   {
+       String classColor = inClass.getDisplayColor();
+       if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
        code.append("	//Class: "+inClass.getName()+"\n\n");
-	   code.append("\""+inClass.getName()+"\" [shape=plaintext margin=0 label=< \n");
-	   code.append("	<table bgcolor=\"#ADD6FF\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
+	   code.append("\""+inClass.getName()+"\" [ "+classColor+" shape=plaintext margin=0 label=< \n");
+	   code.append("	<table BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
 	   String abs = "";
 	   if(inClass.getIsAbstract()) {abs= "\n&laquo;abstract&raquo;<BR/>";}
 	   code.append("	  <TR><TD WIDTH=\"100\">"+abs+inClass.getName()+"</TD></TR> \n");
-	   code.append("	  <TR><TD HEIGHT=\"20\">");
-	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
-	   attributeCreation(inClass,code,false);
-       code.append("			</TABLE>");	   	   
-	   code.append("	  	  </TD>");
-	   code.append("	  </TR>\n");
-	   code.append("	  <TR><TD HEIGHT=\"20\">");
-	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
-	   methodCreation(inClass,code,false);
-	   code.append("			</TABLE>");	
-	   code.append("		  </TD></TR> \n");
+	   if (!hasSuboption("hideattributes") ){
+		   code.append("	  <TR><TD HEIGHT=\"20\">");
+		   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+		   attributeCreation(inClass,code,false);
+		   code.append("			</TABLE>");	   	   
+		   code.append("	  	  </TD>");
+		   code.append("	  </TR>\n");
+	   }   
+	   if (hasSuboption("showmethods")){
+		   code.append("	  <TR><TD HEIGHT=\"20\">");
+		   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+		   methodCreation(inClass,code,false);
+		   code.append("			</TABLE>");	
+		   code.append("		  </TD></TR> \n");
+	   }
 	   code.append("	</table>> \n");
        code.append("tooltip=\"class "+inClass.getName()+"\"]; \n");
        createTraitClassHierarchy(inClass,code);
@@ -87,10 +93,6 @@ class GvClassTraitDiagramGenerator
   // Create each attribute for each class - called by classCreation
   private void attributeCreation(UmpleClass inClass, StringBuilder code, boolean manyClass)
   {
-	    if (inClass.numberOfAttributes()<=0 || hasSuboption("hideattributes") ){
-	    	code.append("<TR><td align=\"left\"></td></TR>");
-		    return;
-		}
 	    boolean noAttribute = true;
 		if (!hasSuboption("hideattributes")) { 
 			for (Attribute uAttribute : inClass.getAttributes()) {
@@ -117,10 +119,6 @@ class GvClassTraitDiagramGenerator
   // Create each method for each class - called by classCreation
   private void methodCreation(UmpleClassifier inUmpleClassifier, StringBuilder code, boolean manyClass)
   {
-	    if (inUmpleClassifier.numberOfMethods()<=0 || !hasSuboption("showmethods")){
-			   code.append("<TR><td  align=\"left\"></td></TR>");
-			   return;
-		   }
 		   boolean notMethod = true;
 		   for (Method uMethod : inUmpleClassifier.getMethods()) {
 			   if (uMethod.getSource().equals(Method.Source.fTrait)) continue;
@@ -222,18 +220,23 @@ class GvClassTraitDiagramGenerator
   
   //This overrides a method used for generating the necessary tags for interfaces and also their hierarchies.
    protected void createInterfacesAndTheirHirerarchy(UmpleInterface inInterface, StringBuilder code){
-       code.append("	//Interface: "+inInterface.getName()+"\n\n");
-	   code.append("\""+inInterface.getName()+"\" [shape=plaintext margin=0 label=< \n");
-	   code.append("	<table bgcolor=\"#D6EBFF\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
+    String interfaceColor = inInterface.getDisplayColor();
+       if (!interfaceColor.equals("")) interfaceColor=" style=filled, fillcolor="+interfaceColor+" ";
+	   code.append("	//Interface: "+inInterface.getName()+"\n\n");
+	   code.append("\""+inInterface.getName()+"\" [ "+interfaceColor+" shape=plaintext margin=0 label=< \n");
+	   code.append("	<table BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
 	   code.append("	  <TR><TD WIDTH=\"100\">&laquo;interface&raquo;<BR/>"+inInterface.getName()+"</TD></TR> \n");
-	   code.append("	  <TR><TD HEIGHT=\"20\">");  	   
-	   code.append("	  	  </TD>");
-	   code.append("	  </TR>\n");
-	   code.append("	  <TR><TD HEIGHT=\"20\">");
-	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
-	   methodCreation(inInterface,code,false);
-	   code.append("			</TABLE>");	
-	   code.append("		  </TD></TR> \n");
+//	   Used for attributes but we don't allow attributes for interfaces
+//	   code.append("	  <TR><TD HEIGHT=\"20\">");  	   
+//	   code.append("	  	  </TD>");
+//	   code.append("	  </TR>\n");
+	   if (hasSuboption("showmethods")){
+		   code.append("	  <TR><TD HEIGHT=\"20\">");
+		   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+		   methodCreation(inInterface,code,false);
+		   code.append("			</TABLE>");	
+		   code.append("		  </TD></TR> \n");
+	   }
 	   code.append("	</table>> \n");
        code.append("tooltip=\"interface "+inInterface.getName()+"\"]; \n");
 	    createInterfaceHierarchyAssociations(inInterface,code);
@@ -253,33 +256,39 @@ class GvClassTraitDiagramGenerator
 	      }
    }
    private void createTraits(UmpleTrait inTrait , StringBuilder code){	   
- boolean manyTrait = getModel().getUmpleTraits().size() >= 200 ? true : false;
-	   
+     boolean manyTrait = getModel().getUmpleTraits().size() >= 200 ? true : false;
+       String traitColor = inTrait.getDisplayColor();
+       if (!traitColor.equals("")) traitColor=" style=filled, fillcolor="+traitColor+" ";	   
 	   if (inTrait.numberOfGeneralTemplateParameters()>0){
 		   code.append("subgraph cluster_"+inTrait.getName()+" { \n");
-		   code.append(" node [style=filled]; color=black; bgcolor=\"#faf6f2\"; \n");
+//		   code.append(" node [style=filled]; color=black; bgcolor=\"#faf6f2\"; \n");
+		   code.append(" node [style=filled]; \n");
 	   }
 	   
 	   code.append("	//Trait: "+inTrait.getName()+"\n\n");
-	   code.append("\""+inTrait.getName()+"\" [shape=plaintext margin=0 label=< \n");
-	   code.append("	<table bgcolor=\"#FAF0E6\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
+	   code.append("\""+inTrait.getName()+"\" [ "+traitColor+" shape=plaintext margin=0 label=< \n");
+	   code.append("	<table BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
 	   code.append("	  <TR><TD WIDTH=\"100\" COLSPAN=\"2\">&laquo;trait&raquo;<BR/>"+inTrait.getName()+"</TD></TR>");      
-	   code.append("	  <TR><TD HEIGHT=\"20\" COLSPAN=\"2\">");
-	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
-	   tAttributeCreation(inTrait,code,manyTrait);
-       code.append("			</TABLE>");	   	   
-	   code.append("	  	  </TD>");
-	   code.append("	  </TR>\n");
-	   code.append("	  <TR><TD HEIGHT=\"20\" WIDTH=\"100\">");
-	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
-	   tMethodCreation(inTrait,code,manyTrait,false);
-	   code.append("			</TABLE>");	
-	   code.append("		  </TD>");
-	   code.append("		  <TD HEIGHT=\"20\" WIDTH=\"100\" >");
-	   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
-	   tMethodCreation(inTrait,code,manyTrait,true);
-	   code.append("			</TABLE>");	
-	   code.append("		  </TD></TR> \n");
+	   if (!hasSuboption("hideattributes") ){
+		   code.append("	  <TR><TD HEIGHT=\"20\" COLSPAN=\"2\">");
+		   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+		   tAttributeCreation(inTrait,code,manyTrait);
+	       code.append("			</TABLE>");	   	   
+		   code.append("	  	  </TD>");
+		   code.append("	  </TR>\n");
+	   }
+	   if (hasSuboption("showmethods")){
+		   code.append("	  <TR><TD HEIGHT=\"20\" WIDTH=\"100\">");
+		   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+		   tMethodCreation(inTrait,code,manyTrait,false);
+		   code.append("			</TABLE>");	
+		   code.append("		  </TD>");
+		   code.append("		  <TD HEIGHT=\"20\" WIDTH=\"100\" >");
+		   code.append("			<TABLE CELLPADDING=\"0\" BORDER=\"0\" CELLSPACING=\"0\">\n");
+		   tMethodCreation(inTrait,code,manyTrait,true);
+		   code.append("			</TABLE>");	
+		   code.append("		  </TD></TR> \n");
+	   }
 	   code.append("	</table>> \n");
        code.append("tooltip=\"Trait "+inTrait.getName()+"\"]; \n");
        if (inTrait.numberOfGeneralTemplateParameters()>0){
@@ -470,7 +479,8 @@ class GvClassTraitDiagramGenerator
     for (GeneralTemplateParameter gTP : inTrait.getGeneralTemplateParameters()) {
 		   code.append("	//Template Parameter: \n");
 		   code.append("\""+gTP.getName()+"_TP\" [style=dotted shape=plaintext margin=0 label=< \n");
-		   code.append("	<table bgcolor=\"#FAF0E6\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
+//		   code.append("	<table bgcolor=\"#FAF0E6\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
+		   code.append("	<table BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n");
 		   code.append("<TR><TD  BORDER=\"1\" STYLE=\"rounded\" >&laquo;Template Parameter&raquo;<BR/>"+gTP.getName()+"</TD></TR>"); 
 		   code.append("	</table>> \n");
 	       code.append("tooltip=\"Template Parameter "+gTP.getName()+"\"]; \n");
