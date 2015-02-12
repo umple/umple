@@ -1,0 +1,10 @@
+// This example will record any addition/removal to manager assoc link 
+
+class Company
+{
+  * -- * Manager manager;
+  trace manager;
+}
+
+class Manager
+{}
