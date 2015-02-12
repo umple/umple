@@ -24,7 +24,7 @@ class UmpleInternalParser
 
   // There are currently no core tokens of concern in the context of an UmpleClass
   // This method is available if needed
-  private void analyzeLayoutToken(Token token, UmpleClass aClass, int analysisStep)
+  private void analyzeLayoutToken(Token token, UmpleClassifier inUmpleClassifier, int analysisStep)
   {
     // Only process layout tokens once all other entities have been analyzed
     if (analysisStep == 1 || shouldProcessClassAgain)
@@ -35,7 +35,7 @@ class UmpleInternalParser
   
     if (token.is("elementPosition"))
     {
-      aClass.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
+      inUmpleClassifier.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
     }
     else if (token.is("displayColor"))
     { // See near clone in UmpleInternalParser_CodeClass.ump
@@ -43,7 +43,7 @@ class UmpleInternalParser
       if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
       if(!theColor.startsWith("\"")) theColor= "\""+theColor;
       if(!theColor.endsWith("\"")) theColor= theColor+"\"";
-      aClass.setDisplayColor(theColor);
+      inUmpleClassifier.setDisplayColor(theColor);
     }
     else if (token.is("associationPosition"))
     {
