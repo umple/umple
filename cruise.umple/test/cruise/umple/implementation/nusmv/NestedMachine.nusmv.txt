@@ -1,0 +1,30 @@
+-- This file is generated from NestedMachine.ump --
+
+
+MODULE Sm_Handle  
+    
+  VAR 
+    state : { s1 , s2 , s2a , s2b }; 
+    event : { e1 , e2 , e3 };        
+  
+MODULE Sm  
+    
+  VAR 
+    handle : Sm_Handle;     
+  ASSIGN
+    init(handle.state) := s1;    
+  TRANS
+    ( (handle.state = s1) -> (
+      (handle.event = e1 & next(handle.state) = s2)  |
+      (handle.event = e2 & next(handle.state) = s2b)  ) ) &
+    ( (handle.state = s2) -> (
+       handle.event = e1 & next(handle.state) = s1) )  
+      
+MODULE S2( handle )  
+        
+  TRANS
+    ( (handle.state = s2a) -> (
+       handle.event = e3 & next(handle.state) = s2b) ) &
+    ( (handle.state = s2b) -> (
+       handle.event = e3 & next(handle.state) = s2a) )  
+  
