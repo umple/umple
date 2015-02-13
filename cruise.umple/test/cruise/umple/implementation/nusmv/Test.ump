@@ -1,22 +1,18 @@
-class TransmissionDrive{
-
-	drive {
-      selectNeutral -> neutral;
-      selectFirst -> first;
-      selectSecond -> second;
-    
-      first {
-        reachSecondSpeed [driveSelected] -> second;
-      }
-      
-      second {
-        reachThirdSpeed [driveSelected] -> third;
-        dropBelowSecondSpeed [driveSelected] -> first;
-        reachSecondSpeed [driveSelected] -> second;
-      }
-      
-      third {
-        dropBelowThirdSpeed-> second;
-      }
+class Booking {
+  state {
+    newBooking { 
+      assignSeat -> seatAssigned;
+      cancel -> cancelled;
     }
+    seatAssigned {
+      cancel -> cancelled;
+      checkIn -> checkedIn;
+    }
+    checkedIn {
+      cancel -> cancelled;
+      complete -> completed;
+    }
+    cancelled {}
+    completed {}
+  }
 }

@@ -1,11 +1,14 @@
 generate NuSMV;
 
-class Me{
-	s2 {
-  	e1 -> s1;
+class Me {
+  s2 {
+
+    
     s2a {
+      e1 -> s1;
   	  e3 -> s2b;
     }
+  
     s2b {
       e3 -> s2a;
     }

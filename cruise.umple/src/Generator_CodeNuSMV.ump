@@ -28,13 +28,26 @@ class NuSMVGenerator
  
  	//This appends comment to the model
     code.append(coord.commentModel(model));
+    String handle = "";
+    String dot = "";
     for(UmpleClass uClass : model.getUmpleClasses())
     {
   		for(StateMachine sm : uClass.getStateMachines())
   		{  			
-  			module = coord.generateSimpleModule(sm);	
-  			code.append(module.print());
-  			//coord.printStateAncestors(sm);
+  			if( !coord.isNested(sm) )
+  			{	
+  				module = coord.generateSimpleModule(sm);
+  				code.append(module.print(handle , dot));
+  				//System.out.println("I am Here!");
+  			}
+  			else {
+  				handle = "handle";
+  				dot = ".";
+  				
+  				StringBuilder code1 = 
+  						coord.genModuleForNestedMachine(sm,handle,dot);  
+  				code.append(code1.toString());				
+  			}
   		}
   	}
   	//This writes the generated code.

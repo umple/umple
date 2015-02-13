@@ -1,6 +1,7 @@
 class GarageDoor
 {
    status {
+   	  
       Open { buttonOrObstacle -> Closing;  }
       Closing {
           buttonOrObstacle -> Opening;

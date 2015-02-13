@@ -1,24 +1,23 @@
 -- This file is generated from Test.ump --
 
-MODULE Drive
-  
-  VAR 
-    state : { first , second , third , selectNeutral , neutral , selectFirst , selectSecond }; 
-    event : { reachSecondSpeed , reachThirdSpeed , dropBelowSecondSpeed , dropBelowThirdSpeed };  
+
+MODULE State  
     
+  VAR 
+    state : { newBooking , seatAssigned , checkedIn , cancelled , completed }; 
+    event : { assignSeat , cancel , checkIn , complete };      
   ASSIGN
-    init(state) := first;   
-     
+    init(state) := newBooking;    
   TRANS
-    ( (state = second) -> (
-        (event = reachThirdSpeed & next(state) = third)  |
-        (event = dropBelowSecondSpeed & next(state) = first)  |
-        (event = reachSecondSpeed & next(state) = second)  ) ) &
-    ( (state = first) -> (
-        event = reachSecondSpeed & next(state) = second) ) &
-    ( (state = third) -> (
-        event = dropBelowThirdSpeed & next(state) = second) ) &
-    ( (event = selectNeutral) -> (next(state) = neutral) ) &
-    ( (event = selectFirst) -> (next(state) = first) ) &
-    ( (event = selectSecond) -> (next(state) = second) )
+    ( (state = newBooking) -> (
+      (event = assignSeat & next(state) = seatAssigned)  |
+      (event = cancel & next(state) = cancelled)  ) ) &
+    ( (state = seatAssigned) -> (
+      (event = cancel & next(state) = cancelled)  |
+      (event = checkIn & next(state) = checkedIn)  ) ) &
+    ( (state = checkedIn) -> (
+      (event = cancel & next(state) = cancelled)  |
+      (event = complete & next(state) = completed)  ) ) &
+    ( (state = cancelled) -> (next(state) = state) ) &
+    ( (state = completed) -> (next(state) = state) )  
   

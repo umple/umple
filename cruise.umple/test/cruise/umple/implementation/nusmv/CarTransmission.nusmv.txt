@@ -1,0 +1,39 @@
+-- This file is generated from CarTransmission.ump --
+
+
+MODULE State_Handle  
+    
+  VAR 
+    state : { neutral , reverse , drive , first , second , third }; 
+    event : { selectReverse , selectDrive , selectFirst , selectSecond , selectNeutral , reachSecondSpeed , reachThirdSpeed , dropBelowSecondSpeed , dropBelowThirdSpeed };        
+  
+MODULE State  
+    
+  VAR 
+    handle : State_Handle;     
+  ASSIGN
+    init(handle.state) := neutral;    
+  TRANS
+    ( (handle.state = neutral) -> (
+      (handle.event = selectReverse & next(handle.state) = reverse)  |
+      (handle.event = selectDrive & next(handle.state) = drive)  |
+      (handle.event = selectFirst & next(handle.state) = first)  |
+      (handle.event = selectSecond & next(handle.state) = second)  ) ) &
+    ( (handle.state = drive) -> (
+      (handle.event = selectNeutral & next(handle.state) = neutral)  |
+      (handle.event = selectFirst & next(handle.state) = first)  |
+      (handle.event = selectSecond & next(handle.state) = second)  ) ) &
+    ( (handle.state = reverse) -> (
+       handle.event = selectNeutral & next(handle.state) = neutral) )  
+      
+MODULE Drive( handle )  
+        
+  TRANS
+    ( (handle.state = second) -> (
+      (handle.event = reachThirdSpeed & next(handle.state) = third)  |
+      (handle.event = dropBelowSecondSpeed & next(handle.state) = first)  ) ) &
+    ( (handle.state = first) -> (
+       handle.event = reachSecondSpeed & next(handle.state) = second) ) &
+    ( (handle.state = third) -> (
+       handle.event = dropBelowThirdSpeed & next(handle.state) = second) )  
+  
