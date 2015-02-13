@@ -1,22 +1,23 @@
 -- This file is generated from ExampleFile1.ump --
 
-MODULE State
-  
+
+MODULE State  
+    
   VAR 
     state : { newBooking , seatAssigned , checkedIn , cancelled , completed }; 
-    event : { assignSeat , cancel , checkIn , complete };  
-    
+    event : { assignSeat , cancel , checkIn , complete };      
   ASSIGN
-    init(state) := newBooking;   
-     
+    init(state) := newBooking;    
   TRANS
     ( (state = newBooking) -> (
-        (event = assignSeat & next(state) = seatAssigned)  |
-        (event = cancel & next(state) = cancelled)  ) ) &
+      (event = assignSeat & next(state) = seatAssigned)  |
+      (event = cancel & next(state) = cancelled)  ) ) &
     ( (state = seatAssigned) -> (
-        (event = cancel & next(state) = cancelled)  |
-        (event = checkIn & next(state) = checkedIn)  ) ) &
+      (event = cancel & next(state) = cancelled)  |
+      (event = checkIn & next(state) = checkedIn)  ) ) &
     ( (state = checkedIn) -> (
-        (event = cancel & next(state) = cancelled)  |
-        (event = complete & next(state) = completed)  ) )
+      (event = cancel & next(state) = cancelled)  |
+      (event = complete & next(state) = completed)  ) ) &
+    ( (state = cancelled) -> (next(state) = state) ) &
+    ( (state = completed) -> (next(state) = state) )  
   

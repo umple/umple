@@ -1,46 +1,46 @@
 -- This file is generated from GrantApplication.ump --
 
-MODULE Status
-  
+
+MODULE Status  
+    
   VAR 
     state : { Planned , InProgress , EvaluationByInstitution , VerifiedByInstitution , SubmittedByInstitution , UnderAdministrativeReview , UnderExpertReview , AwaitingFinalDecision , Accepted , Rejected , Withdrawn }; 
-    event : { createApplication , researcherDeclaresComplete , editByResearcher , returnToResearcher , verified , editByInstitution , reOpen , submit , withdraw , acceptForReview , submissionCheck , acceptForExpertReview , bypassExpertReviewDueToMinorChanges , returnToInstitition , expertReviewsReturned , finalAccept , minorRevisionsNeeded , reject , tryAgain };  
-    
+    event : { createApplication , researcherDeclaresComplete , editByResearcher , returnToResearcher , verified , editByInstitution , reOpen , submit , withdraw , acceptForReview , submissionCheck , acceptForExpertReview , bypassExpertReviewDueToMinorChanges , returnToInstitition , expertReviewsReturned , finalAccept , minorRevisionsNeeded , reject , tryAgain };      
   ASSIGN
-    init(state) := Planned;   
-     
+    init(state) := Planned;    
   TRANS
     ( (state = InProgress) -> (
-        (event = researcherDeclaresComplete & next(state) = EvaluationByInstitution)  |
-        (event = editByResearcher & next(state) = InProgress)  ) ) &
+      (event = researcherDeclaresComplete & next(state) = EvaluationByInstitution)  |
+      (event = editByResearcher & next(state) = InProgress)  ) ) &
     ( (state = EvaluationByInstitution) -> (
-        (event = returnToResearcher & next(state) = InProgress)  |
-        (event = verified & next(state) = VerifiedByInstitution)  |
-        (event = editByInstitution & next(state) = EvaluationByInstitution)  ) ) &
+      (event = returnToResearcher & next(state) = InProgress)  |
+      (event = verified & next(state) = VerifiedByInstitution)  |
+      (event = editByInstitution & next(state) = EvaluationByInstitution)  ) ) &
     ( (state = VerifiedByInstitution) -> (
-        (event = reOpen & next(state) = EvaluationByInstitution)  |
-        (event = submit & next(state) = SubmittedByInstitution)  ) ) &
+      (event = reOpen & next(state) = EvaluationByInstitution)  |
+      (event = submit & next(state) = SubmittedByInstitution)  ) ) &
     ( (state = SubmittedByInstitution) -> (
-        (event = withdraw & next(state) = Withdrawn)  |
-        (event = acceptForReview & next(state) = UnderAdministrativeReview)  |
-        (event = submissionCheck & next(state) = SubmittedByInstitution)  |
-        (event = submissionCheck & next(state) = EvaluationByInstitution)  ) ) &
+      (event = withdraw & next(state) = Withdrawn)  |
+      (event = acceptForReview & next(state) = UnderAdministrativeReview)  |
+      (event = submissionCheck & next(state) = SubmittedByInstitution)  |
+      (event = submissionCheck & next(state) = EvaluationByInstitution)  ) ) &
     ( (state = UnderAdministrativeReview) -> (
-        (event = acceptForExpertReview & next(state) = UnderExpertReview)  |
-        (event = bypassExpertReviewDueToMinorChanges & next(state) = AwaitingFinalDecision)  |
-        (event = returnToInstitition & next(state) = EvaluationByInstitution)  |
-        (event = withdraw & next(state) = Withdrawn)  ) ) &
+      (event = acceptForExpertReview & next(state) = UnderExpertReview)  |
+      (event = bypassExpertReviewDueToMinorChanges & next(state) = AwaitingFinalDecision)  |
+      (event = returnToInstitition & next(state) = EvaluationByInstitution)  |
+      (event = withdraw & next(state) = Withdrawn)  ) ) &
     ( (state = UnderExpertReview) -> (
-        (event = expertReviewsReturned & next(state) = AwaitingFinalDecision)  |
-        (event = withdraw & next(state) = Withdrawn)  ) ) &
+      (event = expertReviewsReturned & next(state) = AwaitingFinalDecision)  |
+      (event = withdraw & next(state) = Withdrawn)  ) ) &
     ( (state = AwaitingFinalDecision) -> (
-        (event = finalAccept & next(state) = Accepted)  |
-        (event = minorRevisionsNeeded & next(state) = EvaluationByInstitution)  |
-        (event = reject & next(state) = Rejected)  ) ) &
+      (event = finalAccept & next(state) = Accepted)  |
+      (event = minorRevisionsNeeded & next(state) = EvaluationByInstitution)  |
+      (event = reject & next(state) = Rejected)  ) ) &
     ( (state = Planned) -> (
-        event = createApplication & next(state) = InProgress) ) &
+       event = createApplication & next(state) = InProgress) ) &
     ( (state = Rejected) -> (
-        event = tryAgain & next(state) = InProgress) ) &
+       event = tryAgain & next(state) = InProgress) ) &
     ( (state = Withdrawn) -> (
-        event = tryAgain & next(state) = InProgress) )
+       event = tryAgain & next(state) = InProgress) ) &
+    ( (state = Accepted) -> (next(state) = state) )  
   

@@ -3,11 +3,12 @@ namespace cruise.umple.nusmv;
 class NuSMVModule
 {
 
-  //depend cruise.umple.compiler.*;
+  depend cruise.umple.compiler.*;
   
   // Attributes declaration
   name; 
   startState;
+  String [] args;
   
   //Associations of module object
   * -- 0..1 AssignPart;
@@ -15,13 +16,33 @@ class NuSMVModule
   * -- 0..1 DeclarationPart;
   
   // This defines the print method for nusmv modules
-  output <<!MODULE <<=getName()>>
-  
-  <<=declarationPart.print()>>
+  output <<!<<#if(args.size() == 0){#>>
+
+MODULE <<=getName()>><<#}
+  else{
+  	String temp = "";
+  	if(args.size() > 1) {
+  		for(int i = 0; i < args.size() - 1 ; i++)
+  			temp += args.get(args.size()) + ",";
+  		temp += args.get(args.size());
+  	} 
+  	else 
+  		temp = args.get(0);
+  		
+  	#>>
   	
-  <<=assignPart.print()>><<=getTransitionPart().print()>>
+MODULE <<=getName()>>( <<=temp>> )<<#}#>>
+  
+  <<#if(declarationPart != null){#>>
+  
+  <<=declarationPart.print()>><<#}#>>
+  <<#if(assignPart != null){#>>	
+  <<=assignPart.print(handle, dot)>><<#}#>>
+  <<#if(getTransitionPart() != null){#>>
+  <<=getTransitionPart().print(handle, dot)>><<#}#>>
+  
   !>>
-  	emit print()(output);
+  	emit print(String handle,String dot)(output);
 }
 
 class AssignPart 
@@ -31,8 +52,8 @@ class AssignPart
   after constructor { setName("ASSIGN"); }
   
   output <<!<<=getName()>>
-  	init(state) := <<=startState>>; !>>
-  	emit print()(output);
+  	init(<<=handle>><<=dot>>state) := <<=startState>>;!>>
+emit print(String handle,String dot)(output);
 }
 
 class DeclarationStatement
@@ -120,31 +141,31 @@ class TransitionPart
   * -- * SimpleTransition;
   * -- * NuSMVTransition;
   
-  private String writeTransitions(int size)
+  private String writeTransitions(int size, String handle, String dot)
   {
 	int n = size;
 	String temp = "";
-  	if(n == 1) return nuSMVTransitions.get(0).print();
+  	if(n == 1) return nuSMVTransitions.get(0).print(handle , dot);
   	else {
   		int i = 0;
   		while(i < n - 1)
   		{
-  			temp += nuSMVTransitions.get(i).print() + " &\n    ";
+  			temp += nuSMVTransitions.get(i).print(handle , dot) + " &\n    ";
   			i++;
   		}
-  		temp += nuSMVTransitions.get(i).print();
+  		temp += nuSMVTransitions.get(i).print(handle , dot);
   	}
   	return temp;
   }  
   
-  output <<!  
+  output <<!
+  <<=getName()>>
   <<#for(ComplexTransition ctrans : getComplexTransitions())
     addNuSMVTransition(ctrans);#>>
   <<#for(SimpleTransition strans : getSimpleTransitions())
-  	addNuSMVTransition(strans);#>> 
-  <<=name>>
-    <<=writeTransitions(numberOfNuSMVTransitions())>>!>>
-  emit print()(output);
+   addNuSMVTransition(strans);#>>
+<<=writeTransitions(numberOfNuSMVTransitions(), handle, dot)>>!>>
+  emit print(String handle, String dot)(output);
 }
 
 class NuSMVTransition
@@ -153,7 +174,7 @@ class NuSMVTransition
   nextState;
   event;
  
-  public String print(){ return null; }
+  public String print(String handle,String dot){ return null; }
   //output <<!(transition = <<=getEvent()>> & next(state) = <<=getNextState()>>) !>>
   //emit print()(output);
 }
@@ -163,44 +184,56 @@ class ComplexTransition
   isA NuSMVTransition;
   * -- 2..* SimpleTransition;
   
-  private String writeTransitions(int size)
+  private String writeTransitions(int size,String handle,String dot)
   {
 	int n = size;
 	String temp = "";
-  	if(n == 1) return simpleTransitions.get(0).printMe();
+  	if(n == 1) return simpleTransitions.get(0).printMe(handle , dot);
   	else {
   		int i = 0;
   		while(i < n - 1)
   		{
-  			temp += simpleTransitions.get(i).printMe() + "|\n        ";
+  			temp += simpleTransitions.get(i).printMe(handle , dot) + "|\n    ";
   			i++;
   		}
-  		temp += simpleTransitions.get(i).printMe();
+  		temp += simpleTransitions.get(i).printMe(handle , dot);
   	}
   		return temp;
   }
   
-  output <<!( (state = <<=simpleTransitions.get(0).getFromState()>>) -> (
-  		  <<=writeTransitions(numberOfSimpleTransitions())>>) )!>>
-  emit print()(output);
+  output <<!( (<<=handle>><<=dot>>state = <<=simpleTransitions.get(0).getFromState()>>) -> (
+    <<=writeTransitions(numberOfSimpleTransitions(), handle, dot)>>) )!>>
+  emit print(String handle , String dot)(output);
 }
 
 class SimpleTransition 
 {
   isA NuSMVTransition;
   
-  public String print()
+  public String print(String handle, String dot)
   {
-    if(! getEvent().contains("__autotransition"))
-      return printNormalTransition();
- 	return printTransitionWithNoEvent();
+    if(getEvent().contains("__autotransition") )
+    	return printTransitionWithAutoEvent(handle,dot);
+    if(getEvent() == "")
+    	return printTransitionWithNoEvent(handle,dot);
+    return printNormalTransition(handle,dot);
   }
   
-  outputWithNoEvent <<!( (event = <<=getFromState()>>) -> (next(state) = <<=getNextState()>>) )!>>
-  	emit printTransitionWithNoEvent()(outputWithNoEvent);
+  //This print transitions without an event, but source and target states.
+  outputWithAutoEvent <<!( (<<=handle>><<=dot>>event = <<=getEvent()>>) -> (next(<<=handle>><<=dot>>state) = <<=getNextState()>>) )!>>
+  	emit printTransitionWithAutoEvent(String handle,String dot)(outputWithAutoEvent);
   
-  output <<!( (state = <<=getFromState()>>) -> (
-  	    event = <<=getEvent()>> & next(state) = <<=getNextState()>>) )!>>
-  	emit printNormalTransition()(output);output1 <<!(event = <<=getEvent()>> & next(state) = <<=getNextState()>>)  !>>
-    emit printMe()(output1);
+  //This print transitions without an event, but source and target states.
+  outputWithNoEvent <<!( (<<=handle>><<=dot>>state = <<=getFromState()>>) -> (next(<<=handle>><<=dot>>state) = <<=getNextState()>>) )!>>
+  	emit printTransitionWithNoEvent(String handle,String dot)(outputWithNoEvent);
+  
+  //This prints transitions with event, and source and target states. 
+  output <<!( (<<=handle>><<=dot>>state = <<=getFromState()>>) -> (
+  	   <<=handle>><<=dot>>event = <<=getEvent()>> & next(<<=handle>><<=dot>>state) = <<=getNextState()>>) )!>>
+  	emit printNormalTransition(String handle,String dot)(output);
+  	
+  //This prints transitions with event and traget state.	
+  output1 <<!  (<<=handle>><<=dot>>event = <<=getEvent()>> & next(<<=handle>><<=dot>>state) = <<=getNextState()>>)  !>>
+    emit printMe(String handle , String dot)(output1);
+    
 }
