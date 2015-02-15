@@ -348,9 +348,9 @@ class CppMethodTemplateFormatter {
 	String emit getCppSecondaryEmitMethodBody(EmitResponse emitResp)(cppSecondaryEmitMethodBody);
 	cppSecondaryEmitMethodBody <<!string spaces = "";
 	string newCode = "";
-	string realSb = sb;
+	string *realSb = &sb;
 	if(numSpaces > 0) {
-        realSb = newCode;
+        realSb = &newCode;
         spaces = _createSpacesString(numSpaces);
         newCode+=spaces;
     }
@@ -498,7 +498,7 @@ class Utils {
   			sb.append(");");
   		} else if(lang.equalsIgnoreCase("Cpp")) {  
 //	    	sb.append("sb << ");
-	    	sb.append("realSb+= ");
+	    	sb.append("(*realSb)+= ");
   			sb.append(value);
   			sb.append(";");
 	  	}

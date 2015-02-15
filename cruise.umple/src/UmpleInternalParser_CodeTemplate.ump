@@ -461,8 +461,6 @@ class TemplateTokenAnalyzer {
 		  Attribute aField = new Attribute(Utils.getLineSeparator(),"String","const","",false,template);
 		  aField.setCodeblock(cb);
 		  template.addAttribute(aField);
-		  aField = new Attribute("_lineNumber","Integer","","1",false,template);
-		  template.addAttribute(aField);
 	  }
 	}
 	
@@ -510,12 +508,15 @@ class TemplateTokenAnalyzer {
 	void done() {
 	
 		for(UmpleClass template : getTemplates()) {
-		
+			String defaultGenerate = this.getParser().getModel().getDefaultGenerate();
 			if(template.numberOfEmitMethods() > 0) {
 				TemplateMethod tMth = template.getEmitMethod(0);
 				Method mth = tMth.getMethod();
 				initializeCreateSpaceMethod(template, mth);
-				template.addDepend(new Depend("java.util.regex.Pattern"));
+				if(defaultGenerate == null 
+					|| "Java".equalsIgnoreCase(defaultGenerate)) {
+					template.addDepend(new Depend("java.util.regex.Pattern"));
+				}
 			}
 			
 			for(TemplateMethod tMth : template.getEmitMethods()) {
