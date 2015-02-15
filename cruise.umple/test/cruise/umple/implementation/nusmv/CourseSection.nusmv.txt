@@ -4,25 +4,24 @@
 MODULE Status  
     
   VAR 
-    state : { Planned , OpenNotEnoughStudents , OpenEnoughStudents , Cancelled , Closed }; 
+    state : { status_Planned , status_OpenNotEnoughStudents , status_OpenEnoughStudents , status_Cancelled , status_Closed }; 
     event : { cancel , openRegistration , requestToRegister , closeRegistration , classSizeExceedsMinimum , classSizeExceedsMaximum };      
   ASSIGN
-    init(state) := Planned;    
+    init(state) := status_Planned;    
   TRANS
-    ( (state = Planned) -> (
-      (event = cancel & next(state) = Cancelled)  |
-      (event = openRegistration & next(state) = OpenNotEnoughStudents)  ) ) &
-    ( (state = OpenNotEnoughStudents) -> (
-      (event = requestToRegister & next(state) = OpenNotEnoughStudents)  |
-      (event = closeRegistration & next(state) = Cancelled)  |
-      (event = cancel & next(state) = Cancelled)  |
-      (event = classSizeExceedsMinimum & next(state) = OpenEnoughStudents)  ) ) &
-    ( (state = OpenEnoughStudents) -> (
-      (event = cancel & next(state) = Cancelled)  |
-      (event = requestToRegister & next(state) = OpenEnoughStudents)  |
-      (event = closeRegistration & next(state) = Closed)  |
-      (event = classSizeExceedsMaximum & next(state) = Closed)  ) ) &
-    ( (state = Closed) -> (
-       event = cancel & next(state) = Cancelled) ) &
-    ( (state = Cancelled) -> (next(state) = state) )  
-  
+    ( (state = status_Planned) -> (
+      (event = cancel & next(state) = status_Cancelled)  |
+      (event = openRegistration & next(state) = status_OpenNotEnoughStudents)  ) ) &
+    ( (state = status_OpenNotEnoughStudents) -> (
+      (event = requestToRegister & next(state) = status_OpenNotEnoughStudents)  |
+      (event = closeRegistration & next(state) = status_Cancelled)  |
+      (event = cancel & next(state) = status_Cancelled)  |
+      (event = classSizeExceedsMinimum & next(state) = status_OpenEnoughStudents)  ) ) &
+    ( (state = status_OpenEnoughStudents) -> (
+      (event = cancel & next(state) = status_Cancelled)  |
+      (event = requestToRegister & next(state) = status_OpenEnoughStudents)  |
+      (event = closeRegistration & next(state) = status_Closed)  |
+      (event = classSizeExceedsMaximum & next(state) = status_Closed)  ) ) &
+    ( (state = status_Closed) -> (
+       event = cancel & next(state) = status_Cancelled) ) &
+    ( (state = status_Cancelled) -> (next(state) = state) )  

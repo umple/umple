@@ -4,27 +4,31 @@
 MODULE Sm_Handle  
     
   VAR 
-    state : { s1 , s2 , s2a , s2b }; 
-    event : { e1 , e2 , e3 };        
+    state : { sm_s1 , sm_s2 , s2_s2a , s2_s2b , s2_s2c , sm_s3 , sm_s4 }; 
+    event : { e1 , e2 , e3 , e4 };        
   
 MODULE Sm  
     
   VAR 
     handle : Sm_Handle;     
   ASSIGN
-    init(handle.state) := s1;    
+    init(handle.state) := sm_s1;    
   TRANS
-    ( (handle.state = s1) -> (
-      (handle.event = e1 & next(handle.state) = s2)  |
-      (handle.event = e2 & next(handle.state) = s2b)  ) ) &
-    ( (handle.state = s2) -> (
-       handle.event = e1 & next(handle.state) = s1) )  
+    ( (handle.state = sm_s1) -> (
+      (handle.event = e1 & next(handle.state) = sm_s2)  |
+      (handle.event = e2 & next(handle.state) = s2_s2b)  |
+      (handle.event = e3 & next(handle.state) = sm_s4)  ) ) &
+    ( (handle.state = sm_s2) -> (
+       handle.event = e1 & next(handle.state) = sm_s1) ) &
+    ( (handle.state = sm_s3) -> (next(handle.state) = handle.state) ) &
+    ( (handle.state = sm_s4) -> (next(handle.state) = handle.state) )  
       
 MODULE S2( handle )  
         
   TRANS
-    ( (handle.state = s2a) -> (
-       handle.event = e3 & next(handle.state) = s2b) ) &
-    ( (handle.state = s2b) -> (
-       handle.event = e3 & next(handle.state) = s2a) )  
-  
+    ( (handle.state = s2_s2b) -> (
+      (handle.event = e3 & next(handle.state) = s2_s2a)  |
+      (handle.event = e4 & next(handle.state) = sm_s3)  ) ) &
+    ( (handle.state = s2_s2a) -> (
+       handle.event = e3 & next(handle.state) = s2_s2b) ) &
+    ( (handle.state = s2_s2c) -> (next(handle.state) = handle.state) )  

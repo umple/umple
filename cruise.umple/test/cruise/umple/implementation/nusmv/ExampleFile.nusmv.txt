@@ -4,21 +4,21 @@
 MODULE Status  
     
   VAR 
-    state : { Open , Closing , Closed , Opening , HalfOpen }; 
+    state : { status_Open , status_Closing , status_Closed , status_Opening , status_HalfOpen }; 
     event : { buttonOrObstacle , reachBottom , reachTop };      
   ASSIGN
-    init(state) := Open;    
+    init(state) := status_Open;    
   TRANS
-    ( (state = Closing) -> (
-      (event = buttonOrObstacle & next(state) = Opening)  |
-      (event = reachBottom & next(state) = Closed)  ) ) &
-    ( (state = Opening) -> (
-      (event = buttonOrObstacle & next(state) = HalfOpen)  |
-      (event = reachTop & next(state) = Open)  ) ) &
-    ( (state = Open) -> (
-       event = buttonOrObstacle & next(state) = Closing) ) &
-    ( (state = Closed) -> (
-       event = buttonOrObstacle & next(state) = Opening) ) &
-    ( (state = HalfOpen) -> (
-       event = buttonOrObstacle & next(state) = Opening) )  
+    ( (state = status_Closing) -> (
+      (event = buttonOrObstacle & next(state) = status_Opening)  |
+      (event = reachBottom & next(state) = status_Closed)  ) ) &
+    ( (state = status_Opening) -> (
+      (event = buttonOrObstacle & next(state) = status_HalfOpen)  |
+      (event = reachTop & next(state) = status_Open)  ) ) &
+    ( (state = status_Open) -> (
+       event = buttonOrObstacle & next(state) = status_Closing) ) &
+    ( (state = status_Closed) -> (
+       event = buttonOrObstacle & next(state) = status_Opening) ) &
+    ( (state = status_HalfOpen) -> (
+       event = buttonOrObstacle & next(state) = status_Opening) )  
   
