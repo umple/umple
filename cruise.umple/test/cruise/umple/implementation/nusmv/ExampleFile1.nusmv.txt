@@ -4,20 +4,19 @@
 MODULE State  
     
   VAR 
-    state : { newBooking , seatAssigned , checkedIn , cancelled , completed }; 
+    state : { state_newBooking , state_seatAssigned , state_checkedIn , state_cancelled , state_completed }; 
     event : { assignSeat , cancel , checkIn , complete };      
   ASSIGN
-    init(state) := newBooking;    
+    init(state) := state_newBooking;    
   TRANS
-    ( (state = newBooking) -> (
-      (event = assignSeat & next(state) = seatAssigned)  |
-      (event = cancel & next(state) = cancelled)  ) ) &
-    ( (state = seatAssigned) -> (
-      (event = cancel & next(state) = cancelled)  |
-      (event = checkIn & next(state) = checkedIn)  ) ) &
-    ( (state = checkedIn) -> (
-      (event = cancel & next(state) = cancelled)  |
-      (event = complete & next(state) = completed)  ) ) &
-    ( (state = cancelled) -> (next(state) = state) ) &
-    ( (state = completed) -> (next(state) = state) )  
-  
+    ( (state = state_newBooking) -> (
+      (event = assignSeat & next(state) = state_seatAssigned)  |
+      (event = cancel & next(state) = state_cancelled)  ) ) &
+    ( (state = state_seatAssigned) -> (
+      (event = cancel & next(state) = state_cancelled)  |
+      (event = checkIn & next(state) = state_checkedIn)  ) ) &
+    ( (state = state_checkedIn) -> (
+      (event = cancel & next(state) = state_cancelled)  |
+      (event = complete & next(state) = state_completed)  ) ) &
+    ( (state = state_cancelled) -> (next(state) = state) ) &
+    ( (state = state_completed) -> (next(state) = state) )  
