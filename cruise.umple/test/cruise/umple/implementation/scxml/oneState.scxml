@@ -1,6 +1,0 @@
-<!--  EXPERIMENTAL SCXML OUTPUT, NOT READY FOR USE -->
-<?xml version="1.0" encoding="utf-8"?>
-<scxml name="sm" xmlns="http://www.w3.org/2005/07/scxml" xmlns:xi="http://www.w3.org/2001/XInclude" version="1.0" initial="Main" datamodel="null">
-<state id="stateOne">
-</state>
-</scxml>

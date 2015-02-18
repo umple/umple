@@ -32,6 +32,9 @@ public class ScxmlTemplateTest extends TemplateTest
   {
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "/scxml/empty.scxml");
+    SampleFileWriter.destroy(pathToInput + "/scxml/oneState.scxml");
+    SampleFileWriter.destroy(pathToInput + "/scxml/simpleTransition.scxml");
+    SampleFileWriter.destroy(pathToInput + "/scxml/nestedStateMachine.scxml");
   }
 
   @Test
