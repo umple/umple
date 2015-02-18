@@ -1,8 +1,8 @@
 -- This file is generated from GrantApplication.ump --
 
 
-MODULE Status  
-    
+MODULE Status
+  
   VAR 
     state : { status_Planned , status_InProgress , status_EvaluationByInstitution , status_VerifiedByInstitution , status_SubmittedByInstitution , status_UnderAdministrativeReview , status_UnderExpertReview , status_AwaitingFinalDecision , status_Accepted , status_Rejected , status_Withdrawn }; 
     event : { createApplication , researcherDeclaresComplete , editByResearcher , returnToResearcher , verified , editByInstitution , reOpen , submit , withdraw , acceptForReview , submissionCheck , acceptForExpertReview , bypassExpertReviewDueToMinorChanges , returnToInstitition , expertReviewsReturned , finalAccept , minorRevisionsNeeded , reject , tryAgain };      
@@ -42,4 +42,10 @@ MODULE Status
        event = tryAgain & next(state) = status_InProgress) ) &
     ( (state = status_Withdrawn) -> (
        event = tryAgain & next(state) = status_InProgress) ) &
-    ( (state = status_Accepted) -> (next(state) = state) )  
+    ( (state = status_Accepted) -> (next(state) = state) )
+  
+MODULE main
+  
+  VAR 
+    status : Status;     
+  

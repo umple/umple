@@ -1,8 +1,8 @@
 -- This file is generated from ExampleFile.ump --
 
 
-MODULE Status  
-    
+MODULE Status
+  
   VAR 
     state : { status_Open , status_Closing , status_Closed , status_Opening , status_HalfOpen }; 
     event : { buttonOrObstacle , reachBottom , reachTop };      
@@ -20,5 +20,10 @@ MODULE Status
     ( (state = status_Closed) -> (
        event = buttonOrObstacle & next(state) = status_Opening) ) &
     ( (state = status_HalfOpen) -> (
-       event = buttonOrObstacle & next(state) = status_Opening) )  
+       event = buttonOrObstacle & next(state) = status_Opening) )
+  
+MODULE main
+  
+  VAR 
+    status : Status;     
   
