@@ -37,7 +37,7 @@ class NuSMVGenerator
   			if( !coord.isNested(sm) )
   			{	
   				code.append( coord.generateSimpleModule(sm).toString() );
-  				//code.append(module.print(handle , dot));
+  				//code.append(module.toString(handle , dot));
   				//System.out.println("I am Here!");
   			}
   			else {

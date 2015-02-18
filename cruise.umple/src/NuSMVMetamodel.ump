@@ -35,14 +35,14 @@ MODULE <<=getName()>>( <<=temp>> )<<#}#>>
 
   <<#if(declarationPart != null){#>>
 
-  <<=declarationPart.print()>><<#}#>>
+  <<=declarationPart.toString()>><<#}#>>
   <<#if(assignPart != null){#>>	
-  <<=assignPart.print(handle, dot)>><<#}#>>
+  <<=assignPart.toString(handle, dot)>><<#}#>>
   <<#if(getTransitionPart() != null){#>>
-  <<=getTransitionPart().print(handle, dot)>><<#}#>>
+  <<=getTransitionPart().toString(handle, dot)>><<#}#>>
 
   !>>
-  	emit print(String handle,String dot)(output);
+  	emit toString(String handle,String dot)(output);
 }
 
 class AssignPart 
@@ -53,13 +53,13 @@ class AssignPart
   
   output <<!<<=getName()>>
   	init(<<=handle>><<=dot>>state) := <<=startState>>;!>>
-emit print(String handle,String dot)(output);
+emit toString(String handle,String dot)(output);
 }
 
 class DeclarationStatement
 {
   name;
-  public String print(){ return ""; }
+  public String toString(){ return ""; }
 }
 
 class DeclarationPart
@@ -73,22 +73,22 @@ class DeclarationPart
   {
 	int n = size;
 	String temp = "";
-  	if(n == 1) return declarationStatements.get(0).print();
+  	if(n == 1) return declarationStatements.get(0).toString();
   	else {
   		int i = 0;
   		while(i < n - 1)
   		{
-  			temp += declarationStatements.get(i).print() + "\n    ";
+  			temp += declarationStatements.get(i).toString() + "\n    ";
   			i++;
   		}
-  		temp += declarationStatements.get(i).print();
+  		temp += declarationStatements.get(i).toString();
   	}
   		return temp;
   }
   
   output <<!<<=getName()>> 
     <<=writeStatements(numberOfDeclarationStatements())>> !>>
-  	emit print()(output);
+  	emit toString()(output);
 }
 
 class EnumerationElement
@@ -114,7 +114,7 @@ class VarDeclarationStatement
   	else{ 
   		temp = args.get(0);#>><<=getName()>> : <<=getType()>>( <<=temp>> );<<#}
   	}#>>!>>
-  	emit print()(output);
+  	emit toString()(output);
 }
 
 class EnumerationStatement 
@@ -140,7 +140,7 @@ class EnumerationStatement
   }
   
   output <<!<<=  getName()>> : { <<=writeElements(numberOfEnumerationElements())>> }; !>>
-  emit print()(output);
+  emit toString()(output);
   
 }
 
@@ -156,15 +156,15 @@ class TransitionPart
   {
 	int n = size;
 	String temp = "";
-  	if(n == 1) return nuSMVTransitions.get(0).print(handle , dot);
+  	if(n == 1) return nuSMVTransitions.get(0).toString(handle , dot);
   	else {
   		int i = 0;
   		while(i < n - 1)
   		{
-  			temp += nuSMVTransitions.get(i).print(handle , dot) + " &\n    ";
+  			temp += nuSMVTransitions.get(i).toString(handle , dot) + " &\n    ";
   			i++;
   		}
-  		temp += nuSMVTransitions.get(i).print(handle , dot);
+  		temp += nuSMVTransitions.get(i).toString(handle , dot);
   	}
   	return temp;
   }  
@@ -176,7 +176,7 @@ class TransitionPart
   <<#for(SimpleTransition strans : getSimpleTransitions())
    addNuSMVTransition(strans);#>>
 <<=writeTransitions(numberOfNuSMVTransitions(), handle, dot)>>!>>
-  emit print(String handle, String dot)(output);
+  emit toString(String handle, String dot)(output);
 }
 
 class NuSMVTransition
@@ -185,7 +185,7 @@ class NuSMVTransition
   nextState;
   event;
  
-  public String print(String handle,String dot){ return null; }
+  public String toString(String handle,String dot){ return null; }
   //output <<!(transition = <<=getEvent()>> & next(state) = <<=getNextState()>>) !>>
   //emit print()(output);
 }
@@ -214,14 +214,14 @@ class ComplexTransition
   
   output <<!( (<<=handle>><<=dot>>state = <<=simpleTransitions.get(0).getFromState()>>) -> (
     <<=writeTransitions(numberOfSimpleTransitions(), handle, dot)>>) )!>>
-  emit print(String handle , String dot)(output);
+  emit toString(String handle , String dot)(output);
 }
 
 class SimpleTransition 
 {
   isA NuSMVTransition;
   
-  public String print(String handle, String dot)
+  public String toString(String handle, String dot)
   {
     if(getEvent().contains("__autotransition") )
     	return printTransitionWithAutoEvent(handle,dot);
