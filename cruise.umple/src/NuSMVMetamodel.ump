@@ -3,7 +3,7 @@ namespace cruise.umple.nusmv;
 class NuSMVModule
 {
 
-  depend cruise.umple.compiler.*;
+  //depend cruise.umple.compiler.*;
   
   // Attributes declaration
   name; 
@@ -30,17 +30,17 @@ MODULE <<=getName()>><<#}
   		temp = args.get(0);
   		
   	#>>
-  	
+
 MODULE <<=getName()>>( <<=temp>> )<<#}#>>
-  
+
   <<#if(declarationPart != null){#>>
-  
+
   <<=declarationPart.print()>><<#}#>>
   <<#if(assignPart != null){#>>	
   <<=assignPart.print(handle, dot)>><<#}#>>
   <<#if(getTransitionPart() != null){#>>
   <<=getTransitionPart().print(handle, dot)>><<#}#>>
-  
+
   !>>
   	emit print(String handle,String dot)(output);
 }
@@ -100,9 +100,20 @@ class VarDeclarationStatement
 {
   isA DeclarationStatement;
   type;
-  value;
+  String [] args;
   
-  output <<!<<=getValue()>> : <<=getType()>>;!>>
+  // This defines the print method for nusmv modules
+  output <<!<<#if(args.size() == 0){#>><<=getName()>> : <<=getType()>>;<<#}
+  else{
+  	String temp = "";
+  	if(args.size() > 1) {
+  		for(int i = 0; i < args.size() - 1 ; i++)
+  			temp += args.get(args.size()) + ",";
+  		temp += args.get(args.size());
+  	} 
+  	else{ 
+  		temp = args.get(0);#>><<=getName()>> : <<=getType()>>( <<=temp>> );<<#}
+  	}#>>!>>
   	emit print()(output);
 }
 

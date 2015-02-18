@@ -1,8 +1,8 @@
 -- This file is generated from Test.ump --
 
 
-MODULE State  
-    
+MODULE State
+  
   VAR 
     state : { state_newBooking , state_seatAssigned , state_checkedIn , state_cancelled , state_completed }; 
     event : { assignSeat , cancel , checkIn , complete };      
@@ -19,4 +19,10 @@ MODULE State
       (event = cancel & next(state) = state_cancelled)  |
       (event = complete & next(state) = state_completed)  ) ) &
     ( (state = state_cancelled) -> (next(state) = state) ) &
-    ( (state = state_completed) -> (next(state) = state) )  
+    ( (state = state_completed) -> (next(state) = state) )
+  
+MODULE main
+  
+  VAR 
+    state : State;     
+  

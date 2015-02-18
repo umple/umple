@@ -1,8 +1,8 @@
 -- This file is generated from ExampleFile2.ump --
 
 
-MODULE LockState  
-    
+MODULE LockState
+  
   VAR 
     state : { lockState_BothDoorsClosedLockFull , lockState_OpeningUpperGate , lockState_UpperGateOpen , lockState_ClosingUpperGate , lockState_LoweringWater , lockState_BothDoorsClosedLockEmpty , lockState_OpeningLowerGate , lockState_LowerGateOpen , lockState_ClosingLowerGate , lockState_RaisingWater }; 
     event : { boatRequestsToEnterAndGoDown , boatRequestsToEnterAndGoUp , upperGateFullyOpen , boatInLockRequestingToGoDown , after3minutes , upperGateFullyClosed , waterLevelMatchesDownStream , lowerGateFullyOpen , boatInLockRequestingToGoUp , lowerGateFullyClosed , waterLevelMatchesUpStream };      
@@ -34,5 +34,10 @@ MODULE LockState
     ( (state = lockState_OpeningLowerGate) -> (
        event = lowerGateFullyOpen & next(state) = lockState_LowerGateOpen) ) &
     ( (state = lockState_RaisingWater) -> (
-       event = waterLevelMatchesUpStream & next(state) = lockState_OpeningUpperGate) )  
+       event = waterLevelMatchesUpStream & next(state) = lockState_OpeningUpperGate) )
+  
+MODULE main
+  
+  VAR 
+    lockState : LockState;     
   

@@ -1,0 +1,73 @@
+-- This file is generated from Elevator.ump --
+
+
+MODULE Elevator_state_machine_Handle
+  
+  VAR 
+    state : { elevator_state_machine_Idle , elevator_state_machine_PrepareUp , PrepareUp_DoorClosingMovingUp , elevator_state_machine_PrepareDown , PrepareDown_DoorClosingMovingDown , elevator_state_machine_InMotion , InMotion_Moving , InMotion_Stopping , elevator_state_machine_OnFloor , OnFloor_DoorOpening , OnFloor_AtFloor , OnFloor_DoorClosing , OnFloor_CheckingNextDestination }; 
+    event : { upRequest , downRequest , started , doorClosed , approachingFloor , approachedFloor , stopped , doorOpened , timeoutAtFloorToDoorClosing , doorClosingRequest , doorCLosed , obstruction , doorOpeningRequest , noRequest };      
+  
+MODULE Elevator_state_machine
+  
+  VAR 
+    handle : Elevator_state_machine_Handle;     
+  ASSIGN
+    init(handle.state) := elevator_state_machine_Idle;    
+  TRANS
+    ( (handle.state = elevator_state_machine_Idle) -> (
+      (handle.event = upRequest & next(handle.state) = elevator_state_machine_PrepareUp)  |
+      (handle.event = downRequest & next(handle.state) = elevator_state_machine_PrepareDown)  ) ) &
+    ( (handle.state = elevator_state_machine_PrepareUp) -> (
+       handle.event = started & next(handle.state) = InMotion_Moving) ) &
+    ( (handle.state = elevator_state_machine_PrepareDown) -> (
+       handle.event = started & next(handle.state) = InMotion_Moving) ) &
+    ( (handle.state = elevator_state_machine_InMotion) -> (next(handle.state) = handle.state) ) &
+    ( (handle.state = elevator_state_machine_OnFloor) -> (next(handle.state) = handle.state) )
+  
+MODULE PrepareUp( handle )
+        
+  TRANS
+    ( (handle.state = PrepareUp_DoorClosingMovingUp) -> (
+       handle.event = doorClosed & next(handle.state) = elevator_state_machine_InMotion) )
+  
+MODULE PrepareDown( handle )
+        
+  TRANS
+    ( (handle.state = PrepareDown_DoorClosingMovingDown) -> (
+       handle.event = doorClosed & next(handle.state) = elevator_state_machine_InMotion) )
+  
+MODULE InMotion( handle )
+        
+  TRANS
+    ( (handle.state = InMotion_Moving) -> (
+      (handle.event = approachingFloor & next(handle.state) = InMotion_Moving)  |
+      (handle.event = approachedFloor & next(handle.state) = InMotion_Stopping)  ) ) &
+    ( (handle.state = InMotion_Stopping) -> (
+       handle.event = stopped & next(handle.state) = OnFloor_DoorOpening) )
+  
+MODULE OnFloor( handle )
+        
+  TRANS
+    ( (handle.state = OnFloor_AtFloor) -> (
+      (handle.event = timeoutAtFloorToDoorClosing & next(handle.state) = OnFloor_DoorClosing)  |
+      (handle.event = doorClosingRequest & next(handle.state) = OnFloor_DoorClosing)  ) ) &
+    ( (handle.state = OnFloor_DoorClosing) -> (
+      (handle.event = doorCLosed & next(handle.state) = OnFloor_CheckingNextDestination)  |
+      (handle.event = obstruction & next(handle.state) = OnFloor_DoorOpening)  |
+      (handle.event = doorOpeningRequest & next(handle.state) = OnFloor_DoorOpening)  ) ) &
+    ( (handle.state = OnFloor_CheckingNextDestination) -> (
+      (handle.event = upRequest & next(handle.state) = elevator_state_machine_PrepareUp)  |
+      (handle.event = downRequest & next(handle.state) = elevator_state_machine_PrepareDown)  |
+      (handle.event = noRequest & next(handle.state) = elevator_state_machine_Idle)  ) ) &
+    ( (handle.state = OnFloor_DoorOpening) -> (
+       handle.event = doorOpened & next(handle.state) = OnFloor_AtFloor) )
+  
+MODULE main
+  
+  VAR 
+    elevator_state_machine : Elevator_state_machine;
+    prepareUp : PrepareUp( elevator_state_machine.handle );
+    prepareDown : PrepareDown( elevator_state_machine.handle );
+    inMotion : InMotion( elevator_state_machine.handle );
+    onFloor : OnFloor( elevator_state_machine.handle );     
+  

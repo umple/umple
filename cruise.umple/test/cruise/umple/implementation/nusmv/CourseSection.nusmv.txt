@@ -1,8 +1,8 @@
 -- This file is generated from CourseSection.ump --
 
 
-MODULE Status  
-    
+MODULE Status
+  
   VAR 
     state : { status_Planned , status_OpenNotEnoughStudents , status_OpenEnoughStudents , status_Cancelled , status_Closed }; 
     event : { cancel , openRegistration , requestToRegister , closeRegistration , classSizeExceedsMinimum , classSizeExceedsMaximum };      
@@ -24,4 +24,10 @@ MODULE Status
       (event = classSizeExceedsMaximum & next(state) = status_Closed)  ) ) &
     ( (state = status_Closed) -> (
        event = cancel & next(state) = status_Cancelled) ) &
-    ( (state = status_Cancelled) -> (next(state) = state) )  
+    ( (state = status_Cancelled) -> (next(state) = state) )
+  
+MODULE main
+  
+  VAR 
+    status : Status;     
+  

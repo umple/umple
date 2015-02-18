@@ -1,8 +1,8 @@
 -- This file is generated from AbstractMachine.ump --
 
 
-MODULE S2  
-    
+MODULE S2
+  
   VAR 
     state : { s2_s2a , s2_s2b , s2_s1 }; 
     event : { e1 , e3 };      
@@ -14,4 +14,10 @@ MODULE S2
       (event = e3 & next(state) = s2_s2b)  ) ) &
     ( (state = s2_s2b) -> (
        event = e3 & next(state) = s2_s2a) ) &
-    ( (state = s2_s1) -> (next(state) = state) )  
+    ( (state = s2_s1) -> (next(state) = state) )
+  
+MODULE main
+  
+  VAR 
+    s2 : S2;     
+  

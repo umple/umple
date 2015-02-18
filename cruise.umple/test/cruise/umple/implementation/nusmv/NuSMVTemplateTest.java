@@ -33,6 +33,11 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/GrantApplication.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/AbstractMachine.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/NestedMachine.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/BigStateMachineTest.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/CourseSectionNested.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/NestedWatch.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/DigitalWatchFlat.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/Elevator.smv");
 	  }
 	  
 	  @Test @Ignore
@@ -64,10 +69,45 @@ public class NuSMVTemplateTest extends TemplateTest{
 	  }
 	  
 	  @Test //@Ignore
+	  public void DigitalWatchFlat()
+	  {
+		assertUmpleTemplateFor("nusmv/DigitalWatchFlat.ump","nusmv/DigitalWatchFlat.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/DigitalWatchFlat.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore
 	  public void CarTransmission()
 	  {
 		assertUmpleTemplateFor("nusmv/CarTransmission.ump","nusmv/CarTransmission.nusmv.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/CarTransmission.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void Elevator()
+	  {
+		assertUmpleTemplateFor("nusmv/Elevator.ump","nusmv/Elevator.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/Elevator.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void BigStateMachineTest()
+	  {
+		assertUmpleTemplateFor("nusmv/BigStateMachineTest.ump","nusmv/BigStateMachineTest.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/BigStateMachineTest.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void CourseSectionNested()
+	  {
+		assertUmpleTemplateFor("nusmv/CourseSectionNested.ump","nusmv/CourseSectionNested.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/CourseSectionNested.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void NestedWatch()
+	  {
+		assertUmpleTemplateFor("nusmv/NestedWatch.ump","nusmv/NestedWatch.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/NestedWatch.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore

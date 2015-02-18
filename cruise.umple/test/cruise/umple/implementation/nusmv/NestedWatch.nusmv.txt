@@ -1,0 +1,122 @@
+-- This file is generated from NestedWatch.ump --
+
+
+MODULE Sm_Handle
+  
+  VAR 
+    state : { sm_regular , regular_time , regular_date , regular_update , update_second , update_minute , update_hour , update_month , update_day , update_year , sm_chronometer , chronometer_chronoNormal , chronoNormal_paused , chronoNormal_running , chronometer_lapRunning , chronometer_lapPaused , sm_alarmStatus , alarmStatus_bothOff , alarmStatus_chimeOn , alarmStatus_bothOn , alarmStatus_alarmOn , sm_alarmUpdate , alarmUpdate_alarmTime , alarmUpdate_hourMinuteUpdate , hourMinuteUpdate_alarmHour , hourMinuteUpdate_alarmMinute }; 
+    event : { s3 , notS2 , s1 , s2 , s3during2Secs , notS1 };      
+  
+MODULE Sm
+  
+  VAR 
+    handle : Sm_Handle;     
+  ASSIGN
+    init(handle.state) := sm_regular;    
+  TRANS
+    ( (handle.state = sm_chronometer) -> (
+       handle.event = s3 & next(handle.state) = regular_time) ) &
+    ( (handle.state = sm_alarmStatus) -> (
+       handle.event = notS2 & next(handle.state) = regular_time) ) &
+    ( (handle.state = sm_alarmUpdate) -> (
+       handle.event = s3 & next(handle.state) = update_second) ) &
+    ( (handle.state = sm_regular) -> (next(handle.state) = regular_time) )
+  
+MODULE Regular( handle )
+        
+  TRANS
+    ( (handle.state = regular_time) -> (
+      (handle.event = s1 & next(handle.state) = regular_date)  |
+      (handle.event = s2 & next(handle.state) = sm_alarmStatus)  |
+      (handle.event = s3 & next(handle.state) = sm_chronometer)  |
+      (handle.event = s3during2Secs & next(handle.state) = alarmUpdate_alarmTime)  ) ) &
+    ( (handle.state = regular_date) -> (
+       handle.event = notS1 & next(handle.state) = regular_time) ) &
+    ( (handle.state = regular_update) -> (
+       handle.event = s3 & next(handle.state) = regular_time) )
+  
+MODULE Update( handle )
+        
+  TRANS
+    ( (handle.state = update_second) -> (
+      (handle.event = s1 & next(handle.state) = update_minute)  |
+      (handle.event = s2 & next(handle.state) = update_second)  ) ) &
+    ( (handle.state = update_minute) -> (
+      (handle.event = s1 & next(handle.state) = update_hour)  |
+      (handle.event = s2 & next(handle.state) = update_minute)  ) ) &
+    ( (handle.state = update_hour) -> (
+      (handle.event = s1 & next(handle.state) = update_month)  |
+      (handle.event = s2 & next(handle.state) = update_hour)  ) ) &
+    ( (handle.state = update_month) -> (
+      (handle.event = s1 & next(handle.state) = update_day)  |
+      (handle.event = s2 & next(handle.state) = update_month)  ) ) &
+    ( (handle.state = update_day) -> (
+      (handle.event = s1 & next(handle.state) = update_year)  |
+      (handle.event = s2 & next(handle.state) = update_day)  ) ) &
+    ( (handle.state = update_year) -> (
+      (handle.event = s1 & next(handle.state) = update_second)  |
+      (handle.event = s2 & next(handle.state) = update_year)  ) )
+  
+MODULE Chronometer( handle )
+        
+  TRANS
+    ( (handle.state = chronometer_lapRunning) -> (
+      (handle.event = s1 & next(handle.state) = chronometer_lapPaused)  |
+      (handle.event = s2 & next(handle.state) = chronoNormal_running)  ) ) &
+    ( (handle.state = chronometer_lapPaused) -> (
+      (handle.event = s1 & next(handle.state) = chronometer_lapRunning)  |
+      (handle.event = s2 & next(handle.state) = chronoNormal_paused)  ) ) &
+    ( (handle.state = chronometer_chronoNormal) -> (next(handle.state) = chronoNormal_paused) )
+  
+MODULE ChronoNormal( handle )
+        
+  TRANS
+    ( (handle.state = chronoNormal_paused) -> (
+      (handle.event = s1 & next(handle.state) = chronoNormal_running)  |
+      (handle.event = s2 & next(handle.state) = chronoNormal_paused)  ) ) &
+    ( (handle.state = chronoNormal_running) -> (
+      (handle.event = s1 & next(handle.state) = chronoNormal_paused)  |
+      (handle.event = s2 & next(handle.state) = chronometer_lapRunning)  ) )
+  
+MODULE AlarmStatus( handle )
+        
+  TRANS
+    ( (handle.state = alarmStatus_bothOff) -> (
+       handle.event = s1 & next(handle.state) = alarmStatus_chimeOn) ) &
+    ( (handle.state = alarmStatus_chimeOn) -> (
+       handle.event = s1 & next(handle.state) = alarmStatus_bothOn) ) &
+    ( (handle.state = alarmStatus_bothOn) -> (
+       handle.event = s1 & next(handle.state) = alarmStatus_alarmOn) ) &
+    ( (handle.state = alarmStatus_alarmOn) -> (
+       handle.event = s1 & next(handle.state) = alarmStatus_bothOff) )
+  
+MODULE AlarmUpdate( handle )
+        
+  TRANS
+    ( (handle.state = alarmUpdate_alarmTime) -> (
+      (handle.event = s1 & next(handle.state) = hourMinuteUpdate_alarmMinute)  |
+      (handle.event = s2 & next(handle.state) = hourMinuteUpdate_alarmHour)  ) ) &
+    ( (handle.state = alarmUpdate_hourMinuteUpdate) -> (next(handle.state) = handle.state) )
+  
+MODULE HourMinuteUpdate( handle )
+        
+  TRANS
+    ( (handle.state = hourMinuteUpdate_alarmHour) -> (
+      (handle.event = s1 & next(handle.state) = hourMinuteUpdate_alarmMinute)  |
+      (handle.event = s2 & next(handle.state) = hourMinuteUpdate_alarmHour)  ) ) &
+    ( (handle.state = hourMinuteUpdate_alarmMinute) -> (
+      (handle.event = s1 & next(handle.state) = hourMinuteUpdate_alarmHour)  |
+      (handle.event = s2 & next(handle.state) = hourMinuteUpdate_alarmMinute)  ) )
+  
+MODULE main
+  
+  VAR 
+    sm : Sm;
+    regular : Regular( sm.handle );
+    update : Update( sm.handle );
+    chronometer : Chronometer( sm.handle );
+    chronoNormal : ChronoNormal( sm.handle );
+    alarmStatus : AlarmStatus( sm.handle );
+    alarmUpdate : AlarmUpdate( sm.handle );
+    hourMinuteUpdate : HourMinuteUpdate( sm.handle );     
+  
