@@ -36,14 +36,14 @@ class NuSMVCoordinator
   	return false;
   }
   
-  private String getStartStateNameCompositeState(StateMachine sm)
+  private String getStartStateNameForCompositeState(StateMachine sm)
   {
   	String name = sm.getStartState().getName();
   	if(startStateIsStateMachine(sm))
   	{  	
   		State st = sm.getStartState();
   		StateMachine stm = st.getNestedStateMachine(0);
-  		name = getStartStateNameCompositeState(stm);
+  		name = getStartStateNameForCompositeState(stm);
   	}
   	return name;
   }
@@ -56,7 +56,7 @@ class NuSMVCoordinator
   	module.setDeclarationPart(generateVariables(sm));
   	module.setAssignPart(generateAssign(sm));
   	module.setTransitionPart(genTransition(sm, genStateVariables(sm)));	
-  	temp.append(module.print("",""));
+  	temp.append(module.toString("",""));
   	
   	//This part is the code generating the main module
   	module = new NuSMVModule("main",""); 
@@ -65,7 +65,7 @@ class NuSMVCoordinator
   	DeclarationPart dPart = new DeclarationPart("VAR" , varDec);
   		dPart.addDeclarationStatement(varDec);
   		module.setDeclarationPart(dPart);
-  		temp.append(module.print("",""));
+  		temp.append(module.toString("",""));
   	
   	return temp;
   }
@@ -88,20 +88,20 @@ class NuSMVCoordinator
   	
   	//This defines and adds the thin-line module to the output code -- Step (1)
   	NuSMVModule placeHolder = genPlaceHolderModule(sm);
-  	code.append(placeHolder.print(handle , dot));
+  	code.append(placeHolder.toString(handle , dot));
   	
   	//Defines a collection of state variables to ensure state names match transitions
   	EnumerationStatement svar = genStateVariables(sm);		
   	
   	//This defines and adds the parent module to the output code -- Step (2)
   	NuSMVModule parent = genParentModule(sm, placeHolder.getName(),svar);
-  	code.append(parent.print(handle , dot));
+  	code.append(parent.toString(handle , dot));
   	
   	//Generation of nested state machines is done here.
   	genModules(sm , handle , dot, code , svar);
   	
   	//This generates the main module
-  	code.append(genMainModule(sm).print(handle , dot));
+  	code.append(genMainModule(sm).toString(handle , dot));
   	
   	return code;  	
   }
@@ -155,7 +155,7 @@ class NuSMVCoordinator
   		{
   			for( StateMachine stm : st.getNestedStateMachines() )
   			{
-  				code.append(genInnerModule(stm, handle, stateVar).print(handle , dot));
+  				code.append(genInnerModule(stm, handle, stateVar).toString(handle , dot));
   				if(isNested( stm ))
   					genModules(stm , handle , dot, code , stateVar);
   			}
@@ -396,7 +396,7 @@ space <<!
   			State st = lookUpState(sm , str);
   			StateMachine smt = st.getNestedStateMachine(0) ;
   			SimpleTransition stran = new SimpleTransition(lookUpStateDetail(stateVariables,str),
-  					lookUpStateDetail(stateVariables,getStartStateNameCompositeState(smt)),"");
+  					lookUpStateDetail(stateVariables,getStartStateNameForCompositeState(smt)),"");
   			tpart.addSimpleTransition(stran);
   		}
   	}
