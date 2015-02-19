@@ -8,7 +8,7 @@ class RefactorHelper {
 	public static void removeClassField(FieldDeclaration field, UmpleClass uClass) {
 		String beforeExtraCode = uClass.getExtraCode();
 		String toRemove = field.toString();
-		String afterExtraCode = beforeExtraCode.replaceFirst(toRemove,"");
+		String afterExtraCode = beforeExtraCode.replace(toRemove,"");
 		// Clean extracode from class
 		uClass.resetExtraCode();
 		// Append extraCode
