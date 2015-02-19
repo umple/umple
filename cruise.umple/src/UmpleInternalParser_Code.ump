@@ -82,7 +82,7 @@ class UmpleInternalParser
     parser.addGrammarFile("/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
     parser.addGrammarFile("/use.grammar");
-    parser.addGrammarFile("/umple_diagram.grammar"); // TODO Under development
+    parser.addGrammarFile("/umple_filter.grammar"); // TODO Under development
   }
 
   public ParseResult parse(String ruleName, String input){
@@ -222,7 +222,7 @@ class UmpleInternalParser
     analyzeComponentToken(t,analysisStep);
     analyzeTraceToken(t,analysisStep);
     analyzeLayoutToken(t,analysisStep);
-    analyzeDiagramToken(t,analysisStep);
+    analyzeFilterToken(t,analysisStep);
     analyzeFIXML(t, analysisStep);
   }
 
@@ -452,4 +452,4 @@ use UmpleInternalParser_CodeStateMachine.ump;
 use UmpleInternalParser_CodeTrace.ump;
 use UmpleInternalParser_CodeLayout.ump;
 use UmpleInternalParser_CodeUSE.ump;
-use UmpleInternalParser_CodeDiagram.ump;
+use UmpleInternalParser_CodeFilter.ump;

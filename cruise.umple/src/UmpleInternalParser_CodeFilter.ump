@@ -21,13 +21,21 @@ class UmpleInternalParser
   //----------  Diagram analysis Code  -------
   //------------------------------------------
 
-  private void analyzeDiagramToken(Token token, int analysisStep)
+  private void analyzeFilterToken(Token token, int analysisStep)
   {
     if (analysisStep == 1) {
       shouldProcessAgain = true;
     } else if (analysisStep == 2) {
-      Diagram d = new Diagram();
-      model.setDiagram(d);
+      Filter d = new Filter();
+      /*for(int i=2; i<token.numberOfSubTokens()-1; i++)
+      {
+        if(token.getSubToken(i).getValue("value")!= null)
+        {
+          d.addValue(token.getSubToken(i).getValue("value"));
+        }
+            
+      }*/
+      model.setFilter(d);
     }
   }
 }

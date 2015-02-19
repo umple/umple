@@ -18,7 +18,7 @@ import org.junit.*;
 import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.*;
 
-public class UmpleParserDiagramTest
+public class UmpleParserFilterTest
 {
   UmpleParser parser;
   UmpleModel model;
@@ -33,17 +33,17 @@ public class UmpleParserDiagramTest
   }
 
   @Test
-  public void emptyDiagram()
+  public void emptyFilter()
   {
-    assertParse("600_emptyDiagram.ump", "[diagram]");
-    Assert.assertNotNull(model.getDiagram());
+    assertParse("600_emptyFilter.ump", "[filter]");
+    Assert.assertNotNull(model.getFilter());
   }
 
   private void assertParse(String filename, String expectedOutput)
   {
     assertParse(filename, expectedOutput, true);
   }
-  
+
   private void assertParse(String filename, String expectedOutput, boolean expected)
   {
     // String input = SampleFileWriter.readContent(new File(pathToInput,

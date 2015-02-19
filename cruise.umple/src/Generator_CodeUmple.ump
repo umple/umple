@@ -583,7 +583,7 @@ class UmpleGenerator
     parser.addGrammarFile("/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
     parser.addGrammarFile("/use.grammar");
-    parser.addGrammarFile("/umple_diagram.grammar"); // TODO Under development
+    parser.addGrammarFile("/umple_filter.grammar"); // TODO Under development
 
     parser.setupRules(true);    // Compute the Umple grammar rules
 
