@@ -149,6 +149,7 @@ UmpleSystem.addClass = function(umpleClass)
     jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");
     jQuery(".ui-icon").removeClass("ui-icon");
   }
+  //UmpleSystem.redrawGeneralizationsTo(umpleClass);
   return umpleClass;   
 }
 
@@ -255,7 +256,7 @@ UmpleSystem.updateClass = function(umpleClass)
   var divs = umpleClass.drawable();
   var classDiv = divs[0];
   var generalizationDiv = divs[1];
-  var interfaceDiv = divs[2];
+  
   var canvas = jQuery("#" + Page.umpleCanvasId());
   var classObj = jQuery("#" + umpleClass.id);
   canvas.append(classDiv);
@@ -263,7 +264,10 @@ UmpleSystem.updateClass = function(umpleClass)
   if(generalizationDiv != null)
   {
     for(var i=0; i<generalizationDiv.length; i++)
-    canvas.append(generalizationDiv);
+    {
+      canvas.append(generalizationDiv[i]);
+    }
+    
   }
   
   UmpleSystem.redraw(umpleClass);
@@ -346,6 +350,17 @@ UmpleSystem.redrawGeneralizationsTo = function(parent)
   	{
   	  this.updateClass(umpleClass);
   	}
+    else if(umpleClass.interfaces.length > 0)
+    {
+      for (var j = 0; j < umpleClass.interfaces.length; j++)
+      {
+        if ( umpleClass.interfaces[j] == parent.id)
+        {
+          this.updateClass(umpleClass);
+        }
+       
+      }
+    }
   }
 }
 
@@ -651,7 +666,7 @@ UmpleSystem.mergeClasses = function(newSystem)
   for (var i=0; i<this.umpleClasses.length; i++)
   {
   	var umpleClass = this.umpleClasses[i]; 
-  	if (umpleClass.extendsClass != null)
+  	if (umpleClass.extendsClass != null || umpleClass.interfaces.length >0)
   	{
       this.updateClass(umpleClass);
   	}
