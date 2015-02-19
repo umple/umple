@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 import org.junit.*;
 import cruise.umple.util.SampleFileWriter;
 
-public class DiagramTest
+public class FilterTest
 {
 
   UmpleFile uFile;
@@ -36,17 +36,19 @@ public class DiagramTest
   }
 
   @Test
-  public void byDefaultNoDiagramsPresent()
+  public void byDefaultNoFilterPresent()
   {
-    assertEquals(null, model.getDiagram());
+    assertEquals(null, model.getFilter());
   }
 
   @Test
   public void isSettableInModel()
   {
-    Diagram d = new Diagram();
-    model.setDiagram(d);
-    assertEquals(d, model.getDiagram());
+    Filter d = new Filter();
+    model.setFilter(d);
+    //model.getDiagram().addValue("Student");
+    assertEquals(d, model.getFilter());
+    //System.out.println("The diagram in this model is: "+ model.getDiagram().toString());
   }
 
 }
