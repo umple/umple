@@ -36,16 +36,29 @@ class NuSMVCoordinator
   	return false;
   }
   
-  private String getStartStateNameForCompositeState(StateMachine sm)
+  /*private String getStartStateNameForCompositeState(StateMachine sm)
   {
-  	String name = sm.getStartState().getName();
+  	String name = "";
   	if(startStateIsStateMachine(sm))
   	{  	
   		State st = sm.getStartState();
   		StateMachine stm = st.getNestedStateMachine(0);
-  		name = getStartStateNameForCompositeState(stm);
+  		name = stm.getName()+"_"+stm.getStartState().getName();
   	}
   	return name;
+  }*/
+  
+  private List<String> getStartStateNameForCompositeState(StateMachine sm , List<String> temp)
+  { 
+  	String name = sm.getStartState().getName();
+  	temp.add(name);
+  	if(startStateIsStateMachine(sm))
+  	{  	
+  		State st = sm.getStartState();
+  		StateMachine stm = st.getNestedStateMachine(0);
+  		temp = getStartStateNameForCompositeState(stm , temp);
+  	}
+  	return temp;
   }
   
   public StringBuilder generateSimpleModule(StateMachine sm)
@@ -123,6 +136,7 @@ class NuSMVCoordinator
   
   private String lookUpStateDetail(EnumerationStatement stateVariables, String str)
   {
+	//System.out.println(str);
   	for(EnumerationElement e : stateVariables.getEnumerationElements())
   	{
   		if(e.getValue().endsWith("_"+str))
@@ -393,10 +407,11 @@ space <<!
   	{
   		for(String str : getCompositeStatesWithNoTransiton(sm))
   		{
+  			List<String> tempStr = new ArrayList<String>();
   			State st = lookUpState(sm , str);
   			StateMachine smt = st.getNestedStateMachine(0) ;
   			SimpleTransition stran = new SimpleTransition(lookUpStateDetail(stateVariables,str),
-  					lookUpStateDetail(stateVariables,getStartStateNameForCompositeState(smt)),"");
+  					lookUpStateDetail(stateVariables,getStartStateNameForCompositeState(smt,tempStr).get(0)),"");
   			tpart.addSimpleTransition(stran);
   		}
   	}

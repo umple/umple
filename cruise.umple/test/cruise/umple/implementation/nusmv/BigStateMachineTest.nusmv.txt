@@ -17,7 +17,7 @@ MODULE Sm
     ( (handle.state = sm_D) -> (
       (handle.event = e5 & next(handle.state) = Zx_X)  |
       (handle.event = e2 & next(handle.state) = Ge_E)  ) ) &
-    ( (handle.state = sm_Zxab) -> (next(handle.state) = Zx_Z) ) &
+    ( (handle.state = sm_Zxab) -> (next(handle.state) = Zxab_Zx) ) &
     ( (handle.state = sm_Ge) -> (next(handle.state) = Ge_G) )
   
 MODULE Zxab( handle )
