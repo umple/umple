@@ -41,7 +41,7 @@ autoTransitionBlock- : [[guard]]? ( [[action]] -> | -> [[action]] | -> ) [stateN
 transition : ( [[eventDefinition]] [[guard]] | [[guard]] [[eventDefinition]] | [=unspecified]? [[guard]] | [[eventDefinition]])? ( [[action]] -> | -> [[action]] | -> ) [stateName] ; 
 
 //Issue148
-standAloneTransition : ( [[eventDefinition]] [[guard]] | [[guard]] [[eventDefinition]] | [=unspecified]? [[guard]] | [[eventDefinition]])? [fromState] ( [[action]] -> | -> [[action]] | -> ) [toState] ;
+standAloneTransition : ( [[eventDefinition]] [[guard]] | [[guard]] [[eventDefinition]] | [=unspecified]? [[guard]] | [[eventDefinition]])? [~fromState] ( [[action]] -> | -> [[action]] | -> ) [~toState] ;
 
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event] ( [[parameterList]] )?
 
