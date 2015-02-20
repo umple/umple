@@ -1,0 +1,7 @@
+class CarWindowController {
+  CarWindow {
+   Open {
+      up[x.y -> Closing;
+    }
+  }
+}

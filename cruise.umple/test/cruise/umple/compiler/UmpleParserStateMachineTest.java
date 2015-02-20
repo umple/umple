@@ -1230,6 +1230,13 @@ public class UmpleParserStateMachineTest
     Assert.assertNotNull(a1);
     Assert.assertEquals("blabla", a1.getActionCode());
   }
+  
+  @Test
+  public void transitionWithInvalidGuard()
+  {
+    assertHasWarning("100_transitionWithInvalidGuard.ump", 0, 1006, new Position("100_transitionWithInvalidGuard.ump", 4, 6, 58));
+  }
+
 
   @Test
   public void eventWithArgument()
