@@ -1,0 +1,10 @@
+class SMClass {
+  sm {
+    stateOne {
+    	eventA -> /{ doTransition(); } stateTwo;	
+    }
+    stateTwo {
+    	eventB -> stateOne;
+    }
+  }
+}
