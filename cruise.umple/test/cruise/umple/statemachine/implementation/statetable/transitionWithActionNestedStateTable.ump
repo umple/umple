@@ -1,0 +1,19 @@
+namespace example;
+
+class Student
+{
+  status {
+    On 
+    { 
+      OnOn 
+      {
+        sleepButton -> /{someAction();} Sleep;
+        power -> Off; 
+      }
+      Sleep { power -> OnOn; }
+    }
+    Off { power -> On; }
+  }
+
+  public void someAction() {};
+}

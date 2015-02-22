@@ -1,0 +1,16 @@
+namespace example;
+
+class Student
+{
+  boolean stayOn;
+
+  status {
+    On 
+    { 
+      power -> /{someAction();} Off;
+    }
+    Off { power -> On; }
+  }
+
+  public void someAction() {};
+}
