@@ -15,6 +15,9 @@ class ScxmlGenerator
   
   cr <<!
 !>>
+
+  textElement <<!<<=content>>!>>
+  emit genTextElement(String content)(textElement, cr);
   
   header <<!<!--  EXPERIMENTAL SCXML OUTPUT, NOT READY FOR USE -->!>>
   emit genHeader()(header, cr);
@@ -25,18 +28,29 @@ class ScxmlGenerator
   tagAttribute <<! <<=key>>="<<=value>>"!>>
   emit genTagAttribute(String key, String value)(tagAttribute);
   
-  scxmlOpeningTag <<!<scxml<<=name>> xmlns="http://www.w3.org/2005/07/scxml" xmlns:xi="http://www.w3.org/2001/XInclude" version="1.0" initial="Main" datamodel="null">!>>
+  scxmlOpeningTag <<!<scxml<<=name>> xmlns="http://www.w3.org/2005/07/scxml" xmlns:xi="http://www.w3.org/2001/XInclude" version="1.0">!>>
   scxmlClosingTag <<!</scxml>!>>
+  scxmlEmptyTag <<!<scxml<<=name>> xmlns="http://www.w3.org/2005/07/scxml" xmlns:xi="http://www.w3.org/2001/XInclude" version="1.0"/>!>>
   emit genScxmlOpeningTag(String name)(scxmlOpeningTag, cr);
   emit genScxmlClosingTag()(scxmlClosingTag);
+  emit genScxmlEmptyTag(String name)(scxmlEmptyTag, cr);
   
   stateOpeningTag <<!<state<<=id>>>!>>
   stateClosingTag <<!</state>!>>
+  stateEmptyTag    <<!<state<<=id>>/>!>>
   emit genStateOpeningTag(String id)(stateOpeningTag, cr);
   emit genStateClosingTag()(stateClosingTag, cr);
+  emit genStateEmptyTag(String id)(stateEmptyTag, cr);
   
-  transitionTag <<!<transition<<=event>><<=cond>><<=target>><<=type>>/>!>>
-  emit genTransitionTag(String event, String cond, String target, String type)(transitionTag, cr);
+  transitionOpeningTag <<!<transition<<=event>><<=cond>><<=target>><<=type>>>!>>
+  transitionClosingTag <<!</transition>!>>
+  transitionEmptyTag <<!<transition<<=event>><<=cond>><<=target>><<=type>>/>!>>
+  emit genTransitionOpeningTag(String event, String cond, String target, String type)(transitionOpeningTag, cr);
+  emit genTransitionClosingTag()(transitionClosingTag, cr);
+  emit genTransitionTag(String event, String cond, String target, String type)(transitionEmptyTag, cr);
+  
+  genericTag <<!<<<#if (isClosing) {#>>/<<#}#>><<=tagName>>>!>>
+  emit genGenericTag(String tagName, boolean isClosing)(genericTag, cr);
 
   public void generate()
   {
@@ -53,6 +67,13 @@ class ScxmlGenerator
       }
     }
     
+    if (sm == null || isStateMachineEmpty(sm)) {
+    	_genScxmlEmptyTag(0, code, name);
+    	model.setCode(code.toString());
+    	writeModel();
+    	return;
+    }
+    
     _genScxmlOpeningTag(0, code, name);
     if (sm != null) {
       // Generate code for the state machine.
@@ -66,8 +87,21 @@ class ScxmlGenerator
     writeModel();
   }
   
+  public boolean isStateMachineEmpty(StateMachine sm) {
+  	return sm != null && !sm.hasStates();	
+  }
+  
   private void generateState(State state) {
+  	if (isStateEmpty(state)) {
+      _genStateEmptyTag(0, code, genTagAttribute("id", state.getName()));
+      return;
+    }
+    
     _genStateOpeningTag(0, code, genTagAttribute("id", state.getName()));
+    
+    for (Action action: state.getActions()) {
+      generateStateAction(action);
+    }
     
     for (Transition transition: state.getTransitions()) {
       generateTransition(transition);
@@ -83,6 +117,10 @@ class ScxmlGenerator
     _genStateClosingTag(0, code);
   }
   
+  private boolean isStateEmpty(State state) {
+    return state != null && !state.hasTransitions() && !state.hasNestedStateMachines() && !state.hasActions();
+  }
+  
   private void generateTransition(Transition transition) {
     String event = "";
     String cond = "";
@@ -93,7 +131,47 @@ class ScxmlGenerator
       event = genTagAttribute("event", transition.getEvent().getName());
     }
     
-    _genTransitionTag(0, code, event, cond, target, type);
+    if (transition.hasGuard()) {
+      Guard guard = transition.getGuard();
+      cond = genTagAttribute("cond", guard.getCondition(new JavaGenerator()));
+    }
+    
+    if (isTransitionEmpty(transition)) {
+    	_genTransitionTag(0, code, event, cond, target, type);
+    	return;
+   	}
+   	
+   	_genTransitionOpeningTag(0, code, event, cond, target, type);
+   	
+   	if (transition.hasAction()) {
+   		generateTransitionAction(transition.getAction());
+   	}
+   	
+   	_genTransitionClosingTag(0, code);
+  }
+  
+  private boolean isTransitionEmpty(Transition transition) {
+  	return transition != null && !transition.hasAction();
+  }
+  
+  private void generateStateAction(Action action) {
+	String type = action.getActionType();
+	if (!"entry".equals(type) && !"exit".equals(type)) {
+		return;
+	} 
+	
+	String tagName = "on".concat(type);
+    _genGenericTag(0, code, tagName, false);
+    _genGenericTag(0, code, "script", false);
+ 	_genTextElement(0, code, action.getActionCode());
+ 	_genGenericTag(0, code, "script", true);
+ 	_genGenericTag(0, code, tagName, true);
+  }
+  
+  private void generateTransitionAction(Action action) {
+   	_genGenericTag(0, code, "script", false);
+ 	_genTextElement(0, code, action.getActionCode());
+ 	_genGenericTag(0, code, "script", true);
   }
 
   private void writeModel()

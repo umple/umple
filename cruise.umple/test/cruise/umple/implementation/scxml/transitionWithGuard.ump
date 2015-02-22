@@ -1,0 +1,10 @@
+class SMClass {
+  sm {
+    stateOne {
+    	eventA [x] -> stateTwo;	
+    }
+    stateTwo {
+    	eventB -> stateOne;
+    }
+  }
+}

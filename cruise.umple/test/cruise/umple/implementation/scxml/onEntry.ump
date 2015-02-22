@@ -1,0 +1,7 @@
+class SMClass {
+  sm {
+    stateOne {
+    	entry / { doEntry(); } 
+    }
+  }
+}
