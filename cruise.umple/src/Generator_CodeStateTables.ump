@@ -22,7 +22,8 @@ namespace cruise.umple.compiler;
 
 // Row in a state-state table and state-event table
 // Also iterated through as columns in a state-state-table
-class StateTableRow {
+class StateTableRow 
+{
   depend java.util.Map;
   depend java.util.HashMap;
 
@@ -30,91 +31,33 @@ class StateTableRow {
   String sLabel;  // The label to be used for the state
   Integer nestingLevel;  // Higher number means it is a substate
   StateTableRow parent; // null if not nested
+  Integer tableRowId; // The unique id of this row
 
   isPseudo=false; // H or H* Can never actually be in this so skipped as a row
-  Map<String,StateCell> stateEventCells = new HashMap<String,StateCell>();
-  Map<State,EventCell> stateStateCells = new HashMap<State,EventCell>();
+  Map<String,StateTableCell> stateEventCells = new HashMap<String,StateTableCell>();
+  Map<State,StateTableCell> stateStateCells = new HashMap<State,StateTableCell>();
 
   // Add cells for the entire row of transitions
-  public void build() {
-    Event event;
-    Action action;
-    String transitionLabel = "?";
-    String eventLabel = "??";
-    String guardString, actionCode, transitionAction;
-    Guard guard;
+  public void build() 
+  {
+    boolean isDerived = false;
+    StateTableRow curRow = this;
+    State curState;
 
-    // Add cells for each transition
-    for (Transition t : uState.getTransitions()) {
-      event = t.getEvent();
-      action = t.getAction();
-
-      if(event.isAutoTransition()) {
-        transitionLabel = "";
-        eventLabel = "(auto)";
-      }
-      else {
-        if (event.getIsTimer()) {
-          transitionLabel = "after("+event.getTimerInSeconds()+")";
-          eventLabel=transitionLabel;
-        }
-        else {
-          eventLabel = event.getName();
-          if(event.getArgs() == null || event.getArgs() == "") {
-            transitionLabel = eventLabel;
-          }
-          else {
-            transitionLabel = eventLabel+"("+event.getArgs()+")";
-          }
-        }
-      }
-
-      if (action == null || action.getActionCode() == "") {
-        transitionAction = "";
-      }
-      else {
-        actionCode = action.getActionCode();
-        if (actionCode.length() > 15) transitionAction = " / {...}";
-         else transitionAction = " / "+actionCode.replaceAll("\"","&quot;");
-      }
-
-      guard = t.getGuard();
-      if (guard == null) guardString = "";
-      else {
-        JavaGenerator gen = new JavaGenerator();
-        gen.setModel(uState.getStateMachine().getUmpleClass().getSourceModel());
-        guardString = event.isAutoTransition() ? "[" : " ["
-          + guard.getCondition(gen).replaceAll("\"","&quot;")+"]";
-      }
-
-      // Add state to the state event hash table
-      stateEventCells.put(eventLabel, new StateCell(t.getNextState(),guardString, transitionAction));
-
-      // Add event to the state state hash table
-      String eventPattern = eventLabel;
-      if(!guardString.equals("")) eventPattern = eventPattern + "[" + guardString + "]";
-      if(!stateStateCells.containsKey(t.getNextState())) {
-         // First event going to this state
-        stateStateCells.put(t.getNextState(), new EventCell());
-      }
-      stateStateCells.get(t.getNextState()).addEventPattern(eventPattern);
-    } // End of loop through each transition
+    //Loops through this row and its parents to find transitions
+    while(curRow != null) 
+    {
+      curState = curRow.getUState();
+      extractTransitions(curState, isDerived);
+      curRow = curRow.getParent();
+      isDerived = true;
+    }
+    
   }  // End of build() method
 
-
-  // Output the first cell in the row of the table, i.e. the state name with indentation
-  public StringBuilder firstCellInRow(StringBuilder sb) {
-    sb.append("    <td class=\"state-header\">");
-    for(int i=0; i<nestingLevel; i++) {
-      sb.append("- ");
-    }
-    sb.append(sLabel);
-    sb.append("</td>\n");
-    return(sb);
-  }
-
   // Output this row of the stateEvent Table (not including tr tags
-  public StringBuilder stateEventTableRowHtml() {
+  public StringBuilder stateEventTableRowHtml() 
+  {
     StringBuilder sb = new StringBuilder();
 
     // Output the name of the state with appropriate nesting
@@ -122,12 +65,15 @@ class StateTableRow {
 
     // Loop through all events, find the event in the hash table, and output each cell
 
-    for(String ev : getStateTable().getAllEvents()) {
+    for(String ev : getStateTable().getAllEvents()) 
+    {
       sb.append("    <td class=\"event-entry\">");
-      if(stateEventCells.containsKey(ev)) {
+      if(stateEventCells.containsKey(ev)) 
+      {
         sb.append(stateEventCells.get(ev).htmlString());
       }
-      else {
+      else 
+      {
         sb.append("&nbsp;");
       }
       sb.append("</td>\n");
@@ -136,78 +82,278 @@ class StateTableRow {
   }
 
   // Output this row of the stateState Table not including tr tags
-  public StringBuilder stateStateTableRowHtml() {
+  public StringBuilder stateStateTableRowHtml() 
+  {
     StringBuilder sb = new StringBuilder();
 
     // Output the name of the state with appropriate nesting
     firstCellInRow(sb);
 
     // Loop through all states, find the state in the hash table, and output each cell
-    for(StateTableRow col : getStateTable().getRows()) {
+    for(StateTableRow col : getStateTable().getRows()) 
+    {
       State colState = col.getUState();
       sb.append("    <td class=\"state-entry\">");
-      if(stateStateCells.containsKey(colState)) {
+
+      if(stateStateCells.containsKey(colState)) 
+      {
         sb.append(stateStateCells.get(colState).htmlString());
       }
-      else {
+      else 
+      {
         sb.append("&nbsp;");
       }
       sb.append("</td>\n");
     }
     return(sb);
   }
-}
 
-// Cell in a state-event table containing the resulting state (may be nested)
-class StateCell {
-  State uState;
-  String guardString;
-  String actionString;
+  //Loops through the transitions in a state and adds them to a list
+  private void extractTransitions(State curState, boolean isDerived) 
+  {
+    Event event;
+    Action action;
+    String transitionLabel = "?";
+    String eventLabel = "??";
+    String guardString, actionCode, transitionAction;
+    Guard guard;
 
-  // Output  this state cell as html - appears in state-event table
-  public StringBuilder htmlString() {
-    StringBuilder sb = new StringBuilder();
-
-    // TODO put actionString in a popup
-    sb.append(guardString);
-    sb.append(" ");
-    sb.append(uState.getName());
-    return(sb);
-  }
-}
-
-// Cell in state-state table containing the events that can take from one to another
-class EventCell {
-  String[] eventPattern;
-
-  // Output  this event cell as html - appears in state-state table
-  public StringBuilder htmlString() {
-    StringBuilder sb = new StringBuilder();
-
-    boolean isFirst = true;
-    for(String ep : getEventPattern())
+    // Add cells for each transition
+    for (Transition t : curState.getTransitions()) 
     {
-      if(! isFirst) sb.append("<br/>");
-      sb.append(ep);
-      isFirst = false;
+      event = t.getEvent();
+      action = t.getAction();
+
+      if(event.isAutoTransition()) 
+      {
+        transitionLabel = "";
+        eventLabel = "(auto)";
+      }
+      else 
+      {
+        if (event.getIsTimer()) 
+        {
+          transitionLabel = "after(" + event.getTimerInSeconds() + ")";
+          eventLabel=transitionLabel;
+        }
+        else 
+        {
+          eventLabel = event.getName();
+          if(event.getArgs() == null || event.getArgs() == "") 
+          {
+            transitionLabel = eventLabel;
+          }
+          else 
+          {
+            transitionLabel = eventLabel + "(" + event.getArgs() + ")";
+          }
+        }
+      }
+
+      if (action == null || action.getActionCode() == "") 
+      {
+        transitionAction = "";
+      }
+      else 
+      {
+        actionCode = action.getActionCode();
+        transitionAction = "/ " + actionCode.replaceAll("\"","&quot;");
+      }
+
+      guard = t.getGuard();
+      if (guard == null) guardString = "";
+      else 
+      {
+        guardString = extractGuardString(guard, curState, event);
+      }
+
+      // Add state to the state event list in hash table
+      addStateEventCell(eventLabel, t, guardString, transitionAction, isDerived);
+
+      // Add event to the state state list in hash table
+      addStateStateCell(eventLabel, t, guardString, transitionAction, isDerived);
+
+    } // End of loop through each transition
+  }
+
+  private void addStateEventCell(String label, Transition t, String guard, 
+    String action, boolean isDerived) {
+
+    if(stateEventCells.get(label) == null) 
+    {
+      stateEventCells.put(label, new StateTableCell());
     }
+
+    stateEventCells.get(label).addStateTableEntry(
+      new StateEventEntry(t.getNextState(), guard, action, isDerived));
+  }
+
+  private void addStateStateCell(String label, Transition t, String guard, 
+    String action, boolean isDerived) {
+
+    if(stateStateCells.get(t.getNextState()) == null) 
+    {
+      stateStateCells.put(t.getNextState(), new StateTableCell());
+    }
+
+    stateStateCells.get(t.getNextState()).addStateTableEntry(
+      new StateStateEntry(label, guard, action, isDerived));
+  }
+
+  // Output the first cell in the row of the table, i.e. the state name with indentation
+  private StringBuilder firstCellInRow(StringBuilder sb) 
+  {
+    sb.append("    <td class=\"state-header\" data-parent=\"");
+
+    if(this.parent != null) 
+    {
+      sb.append(String.valueOf(this.parent.getTableRowId()));
+    }
+
+    sb.append("\">");
+
+    for(int i=0; i<nestingLevel; i++) 
+    {
+      sb.append("- ");
+    }
+    sb.append(sLabel);
+    sb.append("</td>\n");
+    return(sb);
+  }
+
+  private String extractGuardString(Guard guard, State curState, Event event)
+  {
+    JavaGenerator gen = new JavaGenerator();
+    UmpleClass umpClass = curState.getStateMachine().getUmpleClass();
+    
+    if(umpClass == null) 
+    {
+      return extractGuardString(guard, this.getParent().getUState(), event);
+    }
+    else 
+    {
+      gen.setModel(umpClass.getSourceModel());
+      return guard.getCondition(gen).replaceAll("\"","&quot;");
+    }
+  }
+}
+
+// Cell in a state table containing the resulting state or the event that results in transition
+class StateTableCell 
+{
+  1 -> * StateTableEntry;
+  
+  public StringBuilder htmlString()
+  {
+    StringBuilder sb = new StringBuilder();
+    boolean isFirst = true;
+    for(StateTableEntry entry : getStateTableEntries())
+    {
+      if(isFirst)
+      {
+        isFirst = false;
+        sb.append(entry.htmlString());
+      } 
+      else
+      {
+        sb.append("<br>");
+        sb.append(entry.htmlString());
+      }
+    }
+
+    return sb;
+  }
+}
+
+//Interface for each individual entry within a cell
+interface StateTableEntry
+{
+  public StringBuilder htmlString();
+}
+
+//Cell entries for state-event tables
+class StateEventEntry
+{
+  isA StateTableEntry;
+  State uState;
+  String guard;
+  String action;
+  boolean isDerived;
+
+  // Output this state cell as html - appears in state-event table
+  public StringBuilder htmlString() 
+  {
+    StringBuilder sb = new StringBuilder();
+    sb.append("<span");
+    if(isDerived) sb.append(" class=\"derived\"");
+
+    if(action != null && !action.equals("")) {
+      sb.append(" data-action=\"");
+      sb.append(action);
+      sb.append("\"");
+    }
+
+    sb.append(">");
+
+    if(guard != null && !guard.equals(""))
+    {
+      sb.append("[");
+      sb.append(guard);
+      sb.append("] ");
+    }
+
+    sb.append(uState.getName());
+    sb.append("</span>");
     return(sb);
   }
 }
 
-class StateTable {
+//Cell entries for state-state tables
+class StateStateEntry
+{
+  isA StateTableEntry;
+  String label;
+  String guard;
+  String action;
+  boolean isDerived;
+
+  // Output this state cell as html - appears in state-state table
+  public StringBuilder htmlString() 
+  {
+    StringBuilder sb = new StringBuilder();
+    sb.append("<span");
+    if(isDerived) sb.append(" class=\"derived\"");
+    sb.append(">");
+    sb.append(label);
+
+    if(guard != null && !guard.equals(""))
+    {
+      sb.append(" [");
+      sb.append(guard);
+      sb.append("]");
+    }
+
+    sb.append("</span>");
+    return(sb);
+  }
+}
+
+class StateTable 
+{
   UmpleClass uClass;
   StateMachine sm;
   List<String> allEvents = null; // will be populated by call to buildAllEvents
   1 -- * StateTableRow rows;  // Rows to be output for each state
 
-  // Outputs the State State table - with events as cells
-  public StringBuilder stateEventTableHtml(StringBuilder sb) {
-    sb.append("<table class=\"statetable\">\n");
+  // Outputs the Event State table - with states as cells
+  public StringBuilder stateEventTableHtml(StringBuilder sb) 
+  {
+    sb.append("<table class=\"statetable event-statetable\">\n");
 
     // Output row headers - blank cell + list of events
     sb.append("  <tr><td class=\"event-header\">&nbsp;</td>");
-    for(String e : allEvents) {
+    for(String e : allEvents) 
+    {
       sb.append("<td class=\"event-header\">");
       sb.append(e);
       sb.append("</td>");
@@ -215,10 +361,11 @@ class StateTable {
     sb.append("</tr>\n");
 
     // Output each row
-    for(StateTableRow row : rows) {
+    for(StateTableRow row : rows) 
+    {
       sb.append("  <tr>\n");
       sb.append(row.stateEventTableRowHtml());
-      sb.append("  <tr>\n\n");
+      sb.append("  </tr>\n\n");
     }
 
     sb.append("</table>\n\n\n");
@@ -226,8 +373,9 @@ class StateTable {
   }
 
   // Outputs the State State table - with events as cells
-  public StringBuilder stateStateTableHtml(StringBuilder sb) {
-    sb.append("<table class=\"statetable\">\n");
+  public StringBuilder stateStateTableHtml(StringBuilder sb) 
+  {
+    sb.append("<table class=\"statetable state-statetable\">\n");
 
     // Output row headers - blank cell + list of states (same as rows)
     sb.append("  <tr><td class=\"state-header\">&nbsp;</td>");
@@ -241,10 +389,11 @@ class StateTable {
     sb.append("</tr>\n");
 
     // Output each row
-    for(StateTableRow row : rows) {
+    for(StateTableRow row : rows) 
+    {
       sb.append("  <tr>\n");
       sb.append(row.stateStateTableRowHtml());
-      sb.append("  <tr>\n\n");
+      sb.append("  </tr>\n\n");
     }
 
     sb.append("</table>\n\n\n");
@@ -252,9 +401,11 @@ class StateTable {
   }
 
   // Builds the columns after the rest of the tables are made
-  public void buildAllEvents() {
+  public void buildAllEvents() 
+  {
     HashSet<String> eventSet = new HashSet<String>();
-    for (StateTableRow row : rows) {
+    for (StateTableRow row : rows) 
+    {
       eventSet.addAll(row.getStateEventCells().keySet());
     }
     allEvents = new ArrayList<String>(eventSet);
@@ -262,8 +413,19 @@ class StateTable {
     Collections.sort(allEvents);
   }
 
+  // The first call to the recursive state machine walking
+  public void buildRecursivelyEntry(StateMachine theSm) {
+    int nestingLevel = 0;
+    int currentId = 0;
+    buildRecursively(theSm, nestingLevel, currentId, null);
+  }
+
   // Walks the state machine adding rows as needed
-  public void buildRecursively(StateMachine theSm, int nestingLevel) {
+  public int buildRecursively(StateMachine theSm, 
+                              int nestingLevel, 
+                              int currentId,
+                              StateTableRow parent) 
+  {
     String sLabel;
     StateTableRow stateRow = null;
     String smName, clSmName;
@@ -280,15 +442,18 @@ class StateTable {
       isPseudo = sLabel.equals("H") || sLabel.equals("H*");
 
       // Add a row for this state  - automatically adds to 'rows' as there is an association
-      stateRow = new StateTableRow(s,sLabel,nestingLevel,null,this);
+      stateRow = new StateTableRow(s, sLabel, nestingLevel, parent, currentId, this);
       stateRow.build();
+      currentId++;
 
       for (StateMachine nestedSm : s.getNestedStateMachines())
       {
-      	buildRecursively(nestedSm,nestingLevel+1);
+      	currentId = buildRecursively(nestedSm, nestingLevel + 1, currentId, stateRow);
       }
 
     }  // End iteration through the states, adding rows at this level of nesting
+
+    return currentId;
   }
 }
 
@@ -299,20 +464,31 @@ class StateTablesGenerator
 
   // Basic templates
   topHeader <<!
+  <script>
+    jQuery(document).ready(function () 
+    {
+      jQuery(".statetable").each(function() {
+        StateTable.init(jQuery(this));
+        StateTable.readTable();
+        StateTable.colour();
+      });
+    });
+  </script>
   <style>
   .statetable { border-collapse: collapse; }
   .statetable td { border: 1px solid black; padding: 2px 10px 2px 10px; }
   .statetable .state-header, .statetable .event-header { font-weight: bold; background-color: #ecf0f1; border: 2px solid black; }
   .statetable .state-entry, .statetable .event-entry {  }
+  .statetable .derived { font-style: italic; }
   </style>
   <h1>State tables generated by Umple from <<=fn>>.ump</h1>
-!>>
+  !>>
 
 
   emit genTopHeader(String fn)(topHeader);
 
   cr <<!
-!>>
+  !>>
 
   td <<!<td><<=content>></td>!>>
   emit genCell(String content)(td,cr);
@@ -367,7 +543,7 @@ class StateTablesGenerator
         StateTable st = new StateTable(uClass, sm);
 
         // Build the contents of the state tables
-        st.buildRecursively(sm, 0);
+        st.buildRecursivelyEntry(sm);
         // Now figure out the headers
         st.buildAllEvents();
 

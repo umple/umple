@@ -33,20 +33,59 @@ public class StateTableTemplateTest extends TemplateTest
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "/statetable/simple.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/nestedStateTable.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/guardedTransitionStateTable.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/guardedTransitionNestedStateTable.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/transitionWithActionStateTable.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/transitionWithActionNestedStateTable.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/autoTransitionStateTable.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/timerTransitionStateTable.html");
   }
 
   @Test
-  public void SimpleStateTable()
+  public void simpleStateTable()
   {
     assertUmpleTemplateFor("statetable/simple.ump","statetable/simple.html.txt");
   }
   
-  // The following is a test to check if nested state tables are displayed with nested states indented.
   @Test
-  public void NestedStateTableIndent()
+  public void nestedStateTable()
   {
     assertUmpleTemplateFor("statetable/nestedStateTable.ump", "statetable/nestedStateTable.html.txt");
   }
 
+  @Test
+  public void guardedTransitionStateTable() 
+  {
+    assertUmpleTemplateFor("statetable/guardedTransitionStateTable.ump", "statetable/guardedTransitionStateTable.html.txt");
+  }
 
+  @Test
+  public void guardedTransitionNestedStateTable()
+  {
+    assertUmpleTemplateFor("statetable/guardedTransitionNestedStateTable.ump", "statetable/guardedTransitionNestedStateTable.html.txt");
+  }
+
+  @Test
+  public void transitionWithActionStateTable() 
+  {
+    assertUmpleTemplateFor("statetable/transitionWithActionStateTable.ump", "statetable/transitionWithActionStateTable.html.txt");  
+  }
+
+  @Test
+  public void transitionWithActionNestedStateTable()
+  {
+    assertUmpleTemplateFor("statetable/transitionWithActionNestedStateTable.ump", "statetable/transitionWithActionNestedStateTable.html.txt");  
+  }
+
+  @Test
+  public void autoTransitionStateTable()
+  {
+    assertUmpleTemplateFor("statetable/autoTransitionStateTable.ump", "statetable/autoTransitionStateTable.html.txt");
+  }
+
+  @Test
+  public void timerTransitionStateTable()
+  {
+    assertUmpleTemplateFor("statetable/timerTransitionStateTable.ump", "statetable/timerTransitionStateTable.html.txt");
+  }
 }
