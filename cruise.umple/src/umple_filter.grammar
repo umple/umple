@@ -2,10 +2,10 @@
 // This file is made available subject to the open source license found at:
 // [*http://umple.org/license*]
 
-filter: filter ( [filterName] )? { ([[filterStatement]];)?}
+filter : filter ( [filterName] )? { ([[filterStatement]];)? }
  
 
-filterStatement -: [[filterValue]]|[[filterCombinedValue]]|[[filterNamespace]]
+filterStatement- : [[filterValue]]|[[filterCombinedValue]]|[[filterNamespace]]
  
 
 filterValue : (!)? (related [!number:[0-9]+([\\.][0-9]+)?]?)? ([classname])? ( , [classname] )*
@@ -13,4 +13,4 @@ filterValue : (!)? (related [!number:[0-9]+([\\.][0-9]+)?]?)? ([classname])? ( ,
 
 filterCombinedValue : include [filterName] (, [filterName])*
 
-filterNamespace: namespace [Namespace] (, [Namespace])*  
+filterNamespace : namespace [Namespace] (, [Namespace])*  
