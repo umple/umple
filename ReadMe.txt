@@ -6,7 +6,7 @@ Umple is developed in itself, guaranteeing robustness, hence the Umple compiler 
 
 Development follows a model-driven, test-driven, agile, continuous-integration process. Umple is hosted currently on Google Code at http://code.umple.org. It is mirrored on Github at https://github.com/umple/Umple and at SourceForge at https://sourceforge.net/projects/umple/ 
 
-Umple has been largely developed as a research project at the University of Ottawa, Canada, by numerous PhD and masters students, Many undergraduates from across Canada have also contributed. See the license file for the list of contributors.
+Umple has been largely developed as a research project at the University of Ottawa, Canada, by numerous PhD and masters students, Many undergraduates from across Canada and the USA have also contributed. See the license file for the list of contributors.
 
 More details can be found as follows
   * Umple home page: http://www.umple.org
