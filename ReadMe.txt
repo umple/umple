@@ -37,6 +37,9 @@ They are referenced here so that people can better understand the hierarchy of f
     cruise.umple.xtext.ui
        Code for the Eciipse plugins
 
+    cruise.umplificator* - Tool for connverting code to Umple
+    cruise.umple.validator - tool for validating umple when umplifying
+
     cruise.umple.nebula
        New code generation infrastructure used for real-timeC++
 
@@ -77,7 +80,7 @@ They are referenced here so that people can better understand the hierarchy of f
     
     sandbox
 
-    testbed -> Major testing examples
+    testbed -> Testing of generated code
     testbed_php
     testbed_ruby
 
@@ -85,7 +88,7 @@ They are referenced here so that people can better understand the hierarchy of f
     UmpleToPhp  -> Code generation for Php
     UmpleToRuby -> Code generation for Ruby
     UmpleToRTCpp -> Code generation for C++
-    UmpleTCpp   -> Code generation for alternative C++ - not yet ready
+    UmpleTCpp   -> Code generation for alternative C++ - historical; to be deleted
     UmpleToSDL -> Code generation to convert Umple to SDL
     UmpleToSql -> Code generation SQL from Umple models
     UmpleToTemplate -> Template for creating new code generation subprojects
@@ -93,6 +96,8 @@ They are referenced here so that people can better understand the hierarchy of f
     umpleonline -> The UmpleOnline web application, which allows generation of code
         from Umple directly in a web browser, and also editing of Umple both graphically
         and textually. This is online at http://try.umple.org
+
+    umplificatoronline -> Online tool for converting code to Umple
 
     umpleUI*
         Projects for the UIGU tools for generating a UI from Umple
