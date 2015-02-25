@@ -106,5 +106,5 @@ public class JavaClassTemplateTest extends ClassTemplateTest
   public void immutableNotLazyAttributeConstructor(){
 	  assertUmpleTemplateFor("java/ImmutableNotLazyAttributeConstructor.ump","java/StudentImmutableNotLazyTest.java.txt","Student");
   }
-  
+   
 }

@@ -24,6 +24,7 @@ external interface Runnable {}
  */
 class UmpleModel
 {
+  depend java.io.*;
   depend cruise.umple.analysis.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
@@ -90,7 +91,8 @@ class UmpleModel
  */
 class Filter
 {
-  //String[] value;
+  name;
+  String[] values;
 }
 
 /*
@@ -161,12 +163,12 @@ class Method
 
   // Specifies whether or not the method is implemented.
   Boolean isImplemented;
-  
+
   //This supposed to show from where this method came.
   //fTrait means it comes from traits.
   //fAuto means it comes from auto generation mechanism.
   source {none,fTrait,fAuto}
-  
+
   // The method parameters.
   1 -> 0..* MethodParameter;
 
@@ -737,7 +739,7 @@ class Attribute
   // Specifies whether or not the method parameter is lazy.
   Boolean isLazy = false;
   Boolean isRefinement = false;
-  
+
   //This supposed to show from where this method came.
   //fTrait means it comes from traits.
   //
@@ -781,12 +783,12 @@ class Association
   Boolean isSpecialization = false;
   // name of the class this association shares with its parent
   commonClassName = "";
-  
+
   //The source of association
   //None: origial
   //fTrait: from traits
   source {none,fTrait}
-  
+
   before getName { if (!isNamed()) { return this.deriveName(); } }
   after constructor { this.setLeftAndRight(); }
 }

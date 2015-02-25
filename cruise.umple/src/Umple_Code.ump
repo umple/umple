@@ -215,6 +215,7 @@ class UmpleModel
  */
   public void generate()
   {
+    applyFilter();
     boolean foundGenerator;
     try
     {
@@ -438,6 +439,24 @@ class UmpleModel
     }
 
     return allTranslators;
+  }
+
+  public void applyFilter()
+  {
+    Filter f = getFilter();
+    if (f == null)
+    {
+      return;
+    }
+    int maxIndex = umpleClasses.size() - 1;
+    for(int i=maxIndex; i>=0;i--)
+    {
+      UmpleClass clazz = umpleClasses.get(i);
+      if (!f.isIncluded(clazz))
+      {
+        removeUmpleClass(clazz);
+      }
+    }
   }
 }
 
@@ -3717,5 +3736,35 @@ class ModelConstraintAttributeFromClass
     return ModelConstraint.SUCCESS;
   }
 }
+
+class Filter
+{
+
+  public boolean isIncluded(String name)
+  {
+    if (name == null)
+    {
+      return false;
+    }
+    else
+    {
+      return values.indexOf(name) != -1;
+    }
+  }
+
+  public boolean isIncluded(UmpleClass clazz)
+  {
+    if (clazz == null)
+    {
+      return false;
+    }
+    else
+    {
+      return isIncluded(clazz.getName());
+    }
+  }
+
+}
+
 
 use Umple_Code_Trait.ump;

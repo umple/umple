@@ -1,0 +1,17 @@
+
+
+class School{
+  name;
+}
+
+class Student{
+}
+
+class Mentor{
+  1 -- * Student;  
+}
+
+filter Roles
+{
+  Student, Mentor;
+}

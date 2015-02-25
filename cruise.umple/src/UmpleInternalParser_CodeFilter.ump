@@ -23,19 +23,36 @@ class UmpleInternalParser
 
   private void analyzeFilterToken(Token token, int analysisStep)
   {
-    if (analysisStep == 1) {
+    if (analysisStep == 1)
+    {
       shouldProcessAgain = true;
-    } else if (analysisStep == 2) {
-      Filter d = new Filter();
-      /*for(int i=2; i<token.numberOfSubTokens()-1; i++)
+    }
+    else if (analysisStep == 2)
+    {
+      if(token.is("filter"))
       {
-        if(token.getSubToken(i).getValue("value")!= null)
+        String name = token.getValue("name");
+        Filter f = new Filter(name);
+        for(int i=0; i<token.numberOfSubTokens(); i++)
         {
-          d.addValue(token.getSubToken(i).getValue("value"));
+          if(token.getSubToken(i).getValue()!=null)
+          {
+            Token nt = token.getSubToken(i);
+            for(int j=0; j<nt.numberOfSubTokens();j++)
+              {
+                if(nt.getSubToken(j).getValue("classname")!=null)
+                  {
+                    // TODO, the filter should have direct *->* connections to classes, not
+                    // simply their names
+                    String aValue = nt.getSubToken(j).getValue("classname");
+                    f.addValue(aValue);
+                  }
+              }
+
+          }
         }
-            
-      }*/
-      model.setFilter(d);
+        model.setFilter(f);
+      }
     }
   }
 }

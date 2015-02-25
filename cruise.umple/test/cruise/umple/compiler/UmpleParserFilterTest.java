@@ -32,11 +32,20 @@ public class UmpleParserFilterTest
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler");
   }
 
-  @Test
+  //@Test
   public void emptyFilter()
   {
-    assertParse("600_emptyFilter.ump", "[filter]");
+	  assertParse("600_emptyFilter.ump", "[filter]");
     Assert.assertNotNull(model.getFilter());
+  }
+
+  @Test
+  public void simpleFilter()
+  {
+	  assertParse("601_simpleFilter.ump","[classDefinition][name:School][attribute][name:name][classDefinition][name:Student][classDefinition][name:Mentor][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Student][filter][filterName:Roles][filterValue][classname:Student][classname:Mentor]");
+	  Assert.assertNotNull(model.getFilter());
+	  String actuals[] = {"Student", "Mentor"};
+	  Assert.assertArrayEquals(model.getFilter().getValues(), actuals);
   }
 
   private void assertParse(String filename, String expectedOutput)
@@ -46,8 +55,6 @@ public class UmpleParserFilterTest
 
   private void assertParse(String filename, String expectedOutput, boolean expected)
   {
-    // String input = SampleFileWriter.readContent(new File(pathToInput,
-    // filename));
     UmpleFile file = new UmpleFile(pathToInput, filename);
     model = new UmpleModel(new UmpleFile(pathToInput, filename));
     model.setShouldGenerate(false);
@@ -60,7 +67,6 @@ public class UmpleParserFilterTest
     {
       answer = parser.analyze(false).getWasSuccess();
     }
-
     if (answer == false && expected)
     {
       if (model.getLastResult() == null)
@@ -72,12 +78,12 @@ public class UmpleParserFilterTest
         System.out.println("failed at:" + model.getLastResult().getPosition());
       }
     }
-
     Assert.assertEquals(expected, answer);
     if (expected)
     {
       Assert.assertEquals(expectedOutput, parser.toString());
     }
+
   }
 
 }

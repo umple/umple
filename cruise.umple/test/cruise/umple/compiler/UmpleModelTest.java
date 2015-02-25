@@ -1,7 +1,7 @@
 /*
 
  Copyright: All contributers to the Umple Project
- 
+
  This file is made available subject to the open source license found at:
  http://umple.org/license
 
@@ -22,180 +22,85 @@ import cruise.umple.util.SampleFileWriter;
 
 
 public class UmpleModelTest
-
 {
 
-  
-
   UmpleFile uFile;
-
   UmpleModel model;
-
-  
 
   @Before
 
   public void setUp()
-
   {
 
     SampleFileWriter.createFile("teacher.txt", "class Teacher {}");
-
     SampleFileWriter.createFile("student.txt", "class Student {}");
-
     SampleFileWriter.createFile("TestSymmetric.txt", "class Course { * self isMutuallyExclusiveWith;}");
 
     uFile = new UmpleFile("teacher.txt");
-
     model = new UmpleModel(new UmpleFile("teacher.txt"));
-
-    
-
   }
 
-  
-
   @After
-
   public void tearDown()
-
   {
-
     SampleFileWriter.destroy("teacher.txt");
-
     SampleFileWriter.destroy("student.txt");
-    
     SampleFileWriter.destroy("TestSymmetric.txt");
-
     SampleFileWriter.destroy("Course.java");
   }
 
-  
-
-
-
   @Test
-
   public void getDefaultGenerate()
-
   {
-
     assertEquals(null, model.getDefaultGenerate());
-
     model.addGenerate("Php");
-
     assertEquals("Php", model.getDefaultGenerate());
-
     model.addGenerate("Java");
-
     assertEquals("Php", model.getDefaultGenerate());
-
   }
 
-
-
   @Test
-
   public void addUmpleInterface()
-
   {
-
     assertEquals(null,model.getUmpleInterface("Teacher"));
-
-    
-
     UmpleInterface aInterface = model.addUmpleInterface("Teacher");
-
     assertEquals(aInterface,model.getUmpleInterface("Teacher"));
-
   }
 
-
-
   @Test
-
   public void addUmpleClass()
-
   {
-
     assertEquals(null,model.getUmpleClass("Teacher"));
-
-    
-
     UmpleClass uClass = model.addUmpleClass("Teacher");
-
     assertEquals(uClass,model.getUmpleClass("Teacher"));
-
   }
 
-
-
-
-
-
-
   @Test
-
   public void addUmpleClassMergeWithExisting()
-
   {
-
     assertEquals(null,model.getUmpleClass("Teacher"));
 
-    
-
     UmpleClass uClass = model.addUmpleClass("Teacher");
-
     Attribute attr = new Attribute("x","String",null,null,false,uClass);
-
-    
-
     UmpleClass sameClass = model.addUmpleClass("Teacher");
-
     assertSame(uClass,sameClass);
-
   }
-
-
-
-  
-
-  
-
-   @Test
-
-  public void shouldGenerate()
-
-  {
-
-    model = new UmpleModel(null);
-
-    assertEquals(true,model.getShouldGenerate());
-
-    
-
-    model.setShouldGenerate(false);
-
-    assertEquals(false,model.getShouldGenerate());
-
-
-
-    model.setShouldGenerate(true);
-
-    assertEquals(true,model.getShouldGenerate());
-
-  }
-
-  
 
   @Test
-
-  public void umpleFile()
-
+  public void shouldGenerate()
   {
+    model = new UmpleModel(null);
+    assertEquals(true,model.getShouldGenerate());
+    model.setShouldGenerate(false);
+    assertEquals(false,model.getShouldGenerate());
+    model.setShouldGenerate(true);
+    assertEquals(true,model.getShouldGenerate());
+  }
 
+  @Test
+  public void umpleFile()
+  {
     assertEquals("teacher", model.getUmpleFile().getSimpleFileName());
-
   }
 
 
@@ -226,7 +131,7 @@ public class UmpleModelTest
 
   }
 
-  
+
 
   @Test
 
@@ -244,7 +149,7 @@ public class UmpleModelTest
 
   }
 
-  
+
 
   @Test
 
@@ -260,7 +165,7 @@ public class UmpleModelTest
 
   }
 
-  
+
 
   @Test
 
@@ -278,7 +183,7 @@ public class UmpleModelTest
 
   }
 
-  
+
 
   @Test
 
@@ -290,7 +195,7 @@ public class UmpleModelTest
 
     UmpleClass c2 = new UmpleClass("Mentor");
 
-    
+
 
     AssociationEnd end1 = new AssociationEnd("",c1.getName(),"","",new Multiplicity());
 
@@ -298,7 +203,7 @@ public class UmpleModelTest
 
 	Association a = new Association(true,true,false,false,end1,end2);
 
-	
+
 
 	UmpleModel model = new UmpleModel(null);
 
@@ -312,7 +217,7 @@ public class UmpleModelTest
 
 	c2.setCoordinates(model.getDefaultClassPosition(1));
 
-	
+
 
 	//class two to the right of class one
 
@@ -338,7 +243,7 @@ public class UmpleModelTest
 
 	a.removePosition(defaults[1]);
 
-	
+
 
 	//class two to the left of class one
 
@@ -364,7 +269,7 @@ public class UmpleModelTest
 
 	a.removePosition(defaults[1]);
 
-	
+
 
 	//class two below class one
 
@@ -384,13 +289,13 @@ public class UmpleModelTest
 
 	assertEquals(new Coordinate(30,45,0,0), a.getPosition(0));
 
-	assertEquals(new Coordinate(30,0,0,0), a.getPosition(1));  
+	assertEquals(new Coordinate(30,0,0,0), a.getPosition(1));
 
 	a.removePosition(defaults[0]);
 
 	a.removePosition(defaults[1]);
 
-	
+
 
 	//class two above class one
 
@@ -416,7 +321,7 @@ public class UmpleModelTest
 
 	a.removePosition(defaults[1]);
 
-	
+
 
 	//diagonal
 
@@ -442,9 +347,9 @@ public class UmpleModelTest
 
 	a.removePosition(defaults[1]);
 
-  }  
+  }
 
-  
+
 
   @Test
 
@@ -454,7 +359,7 @@ public class UmpleModelTest
 
 	  UmpleClass c1 = new UmpleClass("Student");
 
-	    
+
 
 	  AssociationEnd end1 = new AssociationEnd("role1",c1.getName(),"","",new Multiplicity());
 
@@ -462,7 +367,7 @@ public class UmpleModelTest
 
 	  Association a = new Association(true,true,false,false,end1,end2);
 
-		
+
 
 	  UmpleModel model = new UmpleModel(null);
 
@@ -484,7 +389,7 @@ public class UmpleModelTest
 
   }
 
-  
+
 
   @Test
 
@@ -504,41 +409,41 @@ public class UmpleModelTest
 
     assertEquals(y,all.get(1));
 
-    
+
 
   }
-  
-  @Test 
+
+  @Test
   public void SymmetricReflexiveTest (){
 	  UmpleModel inModel = new UmpleModel(new UmpleFile("TestSymmetric.txt"));
 	  inModel.run();
 	  assertEquals(1,inModel.getUmpleClass(0).getAssociations().length);
   }
-  
+
   @Test
   public void getAllTranslatorsTest_ModelWithNormalGenerators() {
     // Note that this test is not exhaustive. This test implementation was
     //  chosen because the supported translators may change frequently and
     //  we don't want to have to keep changing this test. As long as we know
     //  that the method does not blow up, we are good.
-    
+
     model.addGenerate("Php");
     model.addGenerate("Java");
-    
+
     Map<String, CodeTranslator> allTranslators = model.getAllTranslators();
-    
+
     assertTrue(allTranslators.containsKey("Php"));
     assertNotNull(allTranslators.get("Php"));
     assertTrue(allTranslators.containsKey("Java"));
     assertNotNull(allTranslators.get("Java"));
   }
-  
+
   @Test
-  public void getAllTranslatorsTest_ModelWithNoGenerators() {    
+  public void getAllTranslatorsTest_ModelWithNoGenerators() {
     Map<String, CodeTranslator> allTranslators = model.getAllTranslators();
-    
+
     assertTrue(allTranslators.isEmpty());
   }
-  
+
 }
 
