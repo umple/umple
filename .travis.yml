@@ -14,7 +14,7 @@ before_script:
 script:
   - cd build/
   - ant -Dmyenv=travis -f build.umple.xml first-build 
-  # build against itself:
+  # build against itself to demonstrate that the new compiler works:
   - ant -Dmyenv=travis -f build.umple.xml build
 
 os:
