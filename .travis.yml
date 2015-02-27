@@ -2,8 +2,8 @@ language: java
 
 jdk:
   - oraclejdk8
-  - oraclejdk7
-  - openjdk7
+#  - oraclejdk7
+#  - openjdk7
 
 before_install:
   - chmod 755 -R ./travis # to deal with SVN possibly not holding permissions
@@ -14,7 +14,7 @@ before_script:
 script:
   - cd build/
   - ant -Dmyenv=travis -f build.umple.xml first-build 
-  # build against itself to demonstrate that the new compiler works:
+  # build against itself:
   - ant -Dmyenv=travis -f build.umple.xml build
 
 os:
