@@ -38,6 +38,9 @@ public class ScxmlTemplateTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/scxml/transitionWithGuard.scxml");
     SampleFileWriter.destroy(pathToInput + "/scxml/onEntry.scxml");
     SampleFileWriter.destroy(pathToInput + "/scxml/transitionAction.scxml");
+    SampleFileWriter.destroy(pathToInput + "/scxml/classCode.scxml");
+    SampleFileWriter.destroy(pathToInput + "/scxml/classCodeNoStateMachine.scxml");
+    SampleFileWriter.destroy(pathToInput + "/scxml/classCodeEmptyStateMachine.scxml");
   }
 
   @Test
@@ -80,5 +83,23 @@ public class ScxmlTemplateTest extends TemplateTest
   public void transitionAction()
   {
     assertUmpleTemplateFor("scxml/transitionAction.ump","scxml/transitionAction.scxml.txt");
+  }
+  
+  @Test
+  public void classCode()
+  {
+    assertUmpleTemplateFor("scxml/classCode.ump","scxml/classCode.scxml.txt");
+  }
+  
+  @Test
+  public void classCodeNoStateMachine()
+  {
+    assertUmpleTemplateFor("scxml/classCodeNoStateMachine.ump","scxml/classCodeNoStateMachine.scxml.txt");
+  }
+  
+  @Test
+  public void classCodeEmptyStateMachine()
+  {
+    assertUmpleTemplateFor("scxml/classCodeEmptyStateMachine.ump","scxml/classCodeEmptyStateMachine.scxml.txt");
   }
 }

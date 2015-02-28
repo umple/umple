@@ -1,0 +1,7 @@
+class SMClass {
+  sm {
+  }
+  
+  void doTransitionA() { System.out.println("Doing transition A"); }
+  void doTransitionB() { System.out.println("Doing transition B"); }  
+}

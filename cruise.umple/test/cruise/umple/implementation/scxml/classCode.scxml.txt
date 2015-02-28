@@ -1,0 +1,26 @@
+<!--  EXPERIMENTAL SCXML OUTPUT, NOT READY FOR USE -->
+<?xml version="1.0" encoding="utf-8"?>
+<scxml name="sm" xmlns="http://www.w3.org/2005/07/scxml" xmlns:xi="http://www.w3.org/2001/XInclude" version="1.0">
+<state id="stateOne">
+<transition event="eventA" target="stateTwo">
+<script>
+doTransitionA();
+</script>
+</transition>
+</state>
+<state id="stateTwo">
+<transition event="eventB" target="stateOne">
+<script>
+doTransitionB();
+</script>
+</transition>
+</state>
+<script>
+ void doTransitionA()  {
+System.out.println("Doing transition A");
+  }
+ void doTransitionB()  {
+System.out.println("Doing transition B");
+  }
+</script>
+</scxml>

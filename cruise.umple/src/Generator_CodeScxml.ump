@@ -82,13 +82,21 @@ class ScxmlGenerator
       }
     }
     
+    // Look for additional methods inside the class and add them in a <script> in 
+    // the scxml document.
+    UmpleClass umpleClass = model.getUmpleClass(0);
+    if (umpleClass.hasMethods()) {
+      generateScxmlScript(umpleClass.getMethods());
+    }
+    
     _genScxmlClosingTag(0, code);
     model.setCode(code.toString());
     writeModel();
   }
   
-  public boolean isStateMachineEmpty(StateMachine sm) {
-  	return sm != null && !sm.hasStates();	
+  public boolean isStateMachineEmpty(StateMachine sm){
+    UmpleClass parent = sm.getUmpleClass();
+    return sm != null && !sm.hasStates() && !parent.hasMethods();
   }
   
   private void generateState(State state) {
@@ -173,6 +181,17 @@ class ScxmlGenerator
  	_genTextElement(0, code, action.getActionCode());
  	_genGenericTag(0, code, "script", true);
   }
+  
+   private void generateScxmlScript(List<Method> methods) {
+     _genGenericTag(0, code, "script", false);
+     
+     for (Method method: methods) {
+      _genTextElement(0, code, method.toString());  
+     }
+     
+     _genGenericTag(0, code, "script", true);
+
+   }
 
   private void writeModel()
   {
