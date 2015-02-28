@@ -93,4 +93,3 @@ document.write('<script type="text/javascript" src="scripts/umple_tooltips.js"><
 
 //For styling and colouring statetables
 document.write('<script type="text/javascript" src="scripts/statetable/state_table_colourer.js"></script>');
-document.write('<link href="scripts/statetable/statetable_styles.css" rel="stylesheet" type="text/css">');

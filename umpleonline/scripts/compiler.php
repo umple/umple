@@ -156,7 +156,7 @@ else if (isset($_REQUEST["umpleCode"]))
     $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
     $errors = getErrorHtml($errorFilename, 0);    
     if($outputErr == "true")
- 	echo $errors;
+ 	  echo $errors . "<p>URL_SPLIT";
     echo $sourceCode;
     return;      
   } // end html content      

@@ -881,10 +881,6 @@ Page.getErrorMarkup = function(code, language)
   { // Covers javadoc and YUML diagrams
     output = code.split("<iframe ")[0];
   }
-  else if(language == "html")
-  { // Covers SimpleMetrics, StateTables and Code Analysis
-    output = code.split("<html xmlns")[0];
-  }
   else if(language == "diagramUpdate")
   { // Covers simple right-hand side canvas updates
     output = code.replace(/<p>$/, "");
@@ -912,11 +908,6 @@ Page.getGeneratedMarkup = function(code, language)
   { // Covers javadoc and YUML diagrams
     output = code.split("<iframe ")[1];
     output = "<iframe " + output;
-  }
-  else if(language == "html")
-  { // Covers SimpleMetrics, StateTables and Code Analysis
-    output = code.split("<html xmlns")[1];
-    output = "<html xmlns" + output;
   }
   else if(language == "diagramUpdate")
   { // Covers simple right-hand side canvas updates

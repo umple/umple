@@ -354,3 +354,15 @@ StateTable.colour = function()
     }
   }
 };
+
+StateTable.colourTables = function() 
+{
+  jQuery(document).ready(function () 
+  {
+    jQuery(".statetable").each(function() {
+      StateTable.init(jQuery(this));
+      StateTable.readTable();
+      StateTable.colour();
+    });
+  });
+}; 

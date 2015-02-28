@@ -653,16 +653,29 @@ Action.generalizationSelected = function(obj)
   }
 }
 
-Action.generateCode = function(languageStyle,languageName)
+Action.generateCode = function(languageStyle, languageName)
 {
   var generateCodeSelector = "#buttonGenerateCode";
   var actualLanguage = languageName;
-  if (Page.getAdvancedMode() == 0 && (languageName == "Cpp"))
+  var additionalCallback;
+  if (Page.getAdvancedMode() == 0 && (languageName === "Cpp"))
   {
     actualLanguage = "Experimental-"+languageName;
   }
+
+  if(languageName === "StateTables")
+  {
+    additionalCallback = StateTable.colourTables;
+  }
+
   jQuery(generateCodeSelector).showLoading();
-  Action.ajax(function(response) {Action.generateCodeCallback(response,languageStyle);},format("language={0}&languageStyle={1}",actualLanguage, languageStyle),"true");
+  Action.ajax(
+    function(response) { 
+      Action.generateCodeCallback(response, languageStyle, additionalCallback); 
+    },
+    format("language={0}&languageStyle={1}", actualLanguage, languageStyle),
+    "true"
+  );
 }
 
 Action.photoReady = function()
@@ -680,10 +693,17 @@ Action.photoReady = function()
   UmpleSystem.redrawCanvas();
 }
 
-Action.generateCodeCallback = function(response,language)
+Action.generateCodeCallback = function(response, language, optionalCallback)
 {
   Page.showGeneratedCode(response.responseText,language);
   Action.gentime = new Date().getTime();
+
+  if(optionalCallback !== undefined)
+  {
+    optionalCallback();
+  }
+  else { console.log("Undefined callback"); }
+
   var generateCodeSelector = "#buttonGenerateCode";
   jQuery(generateCodeSelector).hideLoading();
   Page.showCodeDone();
