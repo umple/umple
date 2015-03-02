@@ -190,6 +190,8 @@ class Builder {
   depend java.io.*;
   depend java.net.*;
   depend org.apache.tools.ant.*;
+  depend java.util.*;
+  depend java.util.stream.*;
   
   public URL compile(String directory, String jarname, String projectName, String javaTarget)
   {
@@ -229,28 +231,73 @@ class Builder {
   
   public boolean runAnt(String buildFilename)
   {
+    return runAnt(buildFilename, "", Collections.<String, String>emptyMap());
+  }
+
+  public boolean runAnt(String buildFilename, final String target)
+    {
+    return runAnt(buildFilename, target, Collections.<String, String>emptyMap());
+      }
+
+  public boolean runAnt(String buildFilename, final String target, final Map<String, String> options)
+  {
+    // build string parameters:
+
+    final String exec = "ant" + (System.getProperty("os.name").toLowerCase().contains("windows") ? ".bat" : "");
+    final String buildFilePath = (new File(buildFilename)).getAbsolutePath();
+    String optionStr = "";
+    if (options != null) {
+      final List<String> optionList = new ArrayList<>(options.size() * 20);
+      for (Map.Entry<String, String> e : options.entrySet()) {
+        optionList.add("-D" + e.getKey().trim() + (e.getValue().trim().length() > 0 ? "=" + e.getValue().trim() : ""));
+      }
+      
+      optionStr = String.join(" ", optionList);
+    }
+    
+    List<String> cmd = Arrays.asList(exec, "-f", buildFilePath, optionStr);
+    // remove empty parameters
+    cmd = cmd.stream().map(String::trim).filter(s -> !"".equals(s)).collect(Collectors.toList());
+    
+    Process p = null;
     try
     {
-      Process p;
-      if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-    	  p = Runtime.getRuntime().exec("ant.bat -f " + (new File(buildFilename)).getAbsolutePath());
-      }
-      else {
-    	p = Runtime.getRuntime().exec("ant -f " + (new File(buildFilename)).getAbsolutePath());
-      }
-      //Uncomment these lines if the process has been failing. It might give you an idea of what's going on.
-      //BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
-      //System.out.println(b.readLine());
+      ProcessBuilder pb = new ProcessBuilder(cmd);
+      
+      p = pb.start();
       p.waitFor();
+
+      if (p.exitValue() != 0) {
+        try (BufferedReader out = new BufferedReader(new InputStreamReader(p.getInputStream()));
+             BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
+          final StringBuilder outSB = new StringBuilder();
+          
+          String line;
+          while ((line = out.readLine()) != null) {
+            outSB.append(line + "\n");
+          }
+
+          final StringBuilder errSB = new StringBuilder();
+          while ((line = err.readLine()) != null) {
+            errSB.append(line + "\n");
+          }
+
+          System.out.println("== Ant Task failed ==");
+          System.out.println("System.out => \n" + outSB);
+          System.err.println("System.err => \n" + errSB);
+        }
+        
+      return false;
+    }
+
       return true;  
     }
-    catch (IOException e)
+    catch (IOException | InterruptedException e)
     {
       return false;
     }
-    catch (InterruptedException e2)
-    {
-      return false;
+    finally {
+      if (p != null) p.destroy();
     }
   }
   

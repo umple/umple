@@ -110,8 +110,8 @@ public class BuilderTest {
    public void executeSimpleAntScript()
    {
      Builder builder = new Builder();
-     builder.runAnt("mybuild.xml");
-     Assert.assertEquals(true,(new File("deleteme.txt")).exists());
+     Assert.assertTrue("Ant failed to run successfully", builder.runAnt("mybuild.xml"));
+     Assert.assertTrue("Did not create file in ant script.", (new File("deleteme.txt")).exists());
    }
 
   

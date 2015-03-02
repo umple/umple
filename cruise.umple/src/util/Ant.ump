@@ -6,34 +6,70 @@ external Task {};
 /**
  * Defines an Ant task to use in Ant-like build environments
  */
-class UmpleAntTask {
+class UmplecAntTask {
   depend org.apache.tools.ant.*;
-  depend cruise.umple.UmpleRunMain;
+  depend cruise.umple.UmpleConsoleConfig;
+  depend cruise.umple.UmpleConsoleMain;
+  depend java.util.*;
+  depend java.util.stream.*;
+  depend java.io.File;
+  depend java.nio.file.*;
+
   isA Task;
 
   // The method executing the task
   void execute() throws BuildException {
-  	if ("".equals(this._src)) {
-  		throw new BuildException("src must be specified.");
+
+    this.linkedFiles.stream().map(LinkedFile::getSrc).map(p -> cwd.relativize(p)).map(Path::toString).forEach(this.cfg::addLinkedFile);
+
+  	UmpleConsoleMain console = new UmpleConsoleMain(cfg);
+    int res = console.runConsole();
+
+    if (res != 0) {
+      throw new BuildException("Error running Umple task: " + res + ".");
+    }
+
+  }
+
+  internal UmpleConsoleConfig cfg = new UmpleConsoleConfig("");
+  internal Path cwd = Paths.get(System.getProperty("user.dir"));
+
+
+  public void setSrc(File aSrc) {
+    Path ufile = cwd.relativize(aSrc.toPath());
+
+  	this.cfg.setUmpleFile(ufile.toString());
   	}
 
-    UmpleRunMain.run(this._src, this._cmdFile, _debug);
+  public void setLinkedFile(String linkedFile) {
+  	this.cfg.addLinkedFile(linkedFile);
   }
 
-  String _src = null;
-  String _cmdFile = "";
-  boolean _debug = false;
-
-  public void setSrc(String aSrc) {
-  	this._src = aSrc;
+  public void setGenerate(String generate) {
+    this.cfg.setGenerate(generate);
   }
 
-  public void setCmdFile(String aCmdFile) {
-  	this._cmdFile = aCmdFile;
+  public void setOverride(boolean override) {
+    this.cfg.setOverride(override);
   }
 
-  public void setDebug(boolean aDebug) {
-  	this._debug = aDebug;
+  internal List<LinkedFile> linkedFiles = new ArrayList<>(4);
+
+  public LinkedFile createLinkedFile() {
+    LinkedFile f = new LinkedFile();
+    linkedFiles.add(f);
+    return f;
+  }
+
+  protected static class LinkedFile {
+    private Path p = null;
+
+    public void setSrc(File f) { this.p = f.toPath(); }
+    public Path getSrc() { return this.p; } 
+
+    public String toString() {
+      return "LinkedFile{src=" + p.toString() + "}";
+    }
   }
 
 }

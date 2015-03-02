@@ -1,6 +1,14 @@
 bin/
 dist/ 
 
+# os specific:
+.DS_Store
+
+#intelliJ
+.idea
+*.iml
+.recommenders
+
 *.swp
 src-gen-umple/
 
@@ -8,6 +16,7 @@ src-gen-umple/
 .classpath
 .project
 .settings
+.metadata
 
 *.class
 # Mobile Tools for Java (J2ME)

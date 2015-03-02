@@ -214,6 +214,10 @@ class SampleFileWriter
     }    
   }
   
+  public static void assertFileExists(final String path) {
+    Assert.assertTrue("File, " + path + ", does not exist.", (new File(path)).exists());
+  }
+  
   public static void closeAsRequired(BufferedReader reader)
   {
     if (reader != null)

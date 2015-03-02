@@ -49,4 +49,5 @@ use UmpleImport.ump;
 use Main_Code.ump;
 use UmpleStats_Code.ump;
 use util/Util_Code.ump;
+use util/Ant.ump;
 use Builder_Code.ump;

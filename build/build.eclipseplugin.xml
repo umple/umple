@@ -74,7 +74,7 @@
   <target name="compile">
     <echo message="${ant.project.name}: ${ant.file}"/>
 
-    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.7" target="1.7">
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.8" target="1.8">
       <src path="${project.path}/src"/>
       <src path="${project.path}/test"/>
       <src path="cruise.umple/src"/>

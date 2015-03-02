@@ -156,7 +156,7 @@
   <target name="compile">
     <echo message="${ant.project.name}: ${ant.file}"/>
 
-    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.7" target="1.7">
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.8" target="1.8">
 	<src path="${xtext.project.path}/src"/>
       <src path="${xtext.project.path}/src-gen"/>
       <src path="${project.path}/src"/>
@@ -181,7 +181,7 @@
   <target name="compileValidator">
     <echo message="${ant.project.name}: ${ant.file}"/>
 
-    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="cruise.umple.validator/bin" source="1.7" target="1.7">
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="cruise.umple.validator/bin" source="1.8" target="1.8">
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-jet"/>
       <src path="${project.path}/src-gen-umple"/>
@@ -204,7 +204,7 @@
 
   <target name="compileUmplificator">
     <echo message="${ant.project.name}: ${ant.file}"/>
-    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="cruise.umplificator/bin" source="1.7" target="1.7">
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="cruise.umplificator/bin" source="1.8" target="1.8">
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-jet"/>
       <src path="${project.path}/src-gen-umple"/>
@@ -471,8 +471,8 @@
     <antcall target="compile" />
     <antcall target="compileValidator" />
     <antcall target="compileUmplificator" />
-    <antcall target="template.test" />
     <antcall target="package" />
+    <antcall target="template.test" />
     <antcall target="deploy" />
     <antcall target="template.resetVersion" />
   </target>

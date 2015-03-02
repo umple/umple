@@ -11,6 +11,99 @@ Command line tools: To compile Umple files, or to do diffs
 
 namespace cruise.umple;
 
+/**
+ * Config is the parsed command line information for UmpleConsole.
+ */
+class UmpleConsoleConfig {
+  depend java.util.*;
+  depend java.util.stream.*;
+  depend joptsimple.*;
+  depend java.io.*;
+
+  defaulted boolean version = false;
+  defaulted boolean help = false;
+  
+  internal Optional<String> generate   = Optional.empty();
+  defaulted boolean override           = false;
+  internal Optional<String> path       = Optional.empty();
+  internal Optional<String> compile    = Optional.empty();
+  internal Optional<String> importFile = Optional.empty();
+  internal List<String> suboptions     = Collections.<String>emptyList();
+
+  String umpleFile;
+  String[] linkedFiles;
+
+  UmpleConsoleConfig(OptionSet optSet) {
+    this(optSet.nonOptionArguments().size() > 0 ? optSet.nonOptionArguments().get(0) : null);
+
+    this.version    = optSet.has("v");
+    this.help       = optSet.has("help");
+    this.importFile = Optional.ofNullable((String)optSet.valueOf("import"));
+    
+    this.generate   = Optional.ofNullable((String)optSet.valueOf("generate"));
+    this.override   = optSet.has("override");
+    this.path       = Optional.ofNullable((String)optSet.valueOf("path"));
+    
+    final List<String> files = optSet.nonOptionArguments();
+    this.linkedFiles = (files.size() > 1 ? files.subList(1, files.size()) : Collections.<String>emptyList());
+
+    this.suboptions = optSet.valuesOf("suboption").stream()
+      .map(o -> (String)o)
+      .collect(Collectors.toList());
+
+    // compile takes a bit more logic..
+    this.compile = Optional.ofNullable((String)optSet.valueOf("c"));
+  }
+
+  public List<File> getLinkedFilesAsFile() {
+    return this.linkedFiles.stream().map(p -> new File(p)).collect(Collectors.toList());
+  }
+
+  public Optional<String> getGenerate() {
+    return this.generate;
+  }
+
+  public void setGenerate(String generate) {
+    this.generate = Optional.of(generate);
+  }
+
+  public Optional<String> getCompile() {
+    return this.compile;
+  }
+
+  public void setCompile(String compile) {
+    this.compile = Optional.of(compile);
+  }
+
+  public void setImportFile(String importFile) {
+    this.importFile = Optional.of(importFile);
+  }
+
+  public Optional<String> getImportFile() {
+    return this.importFile;
+  }
+
+  public void setPath(String path) {
+    this.path = Optional.of(path);
+  }
+
+  public Optional<String> getPath() {
+    return this.path;
+  }
+
+  public List<String> getSuboptions() {
+    return this.suboptions;
+  }
+
+  public void setSuboptions(List<String> suboptions) {
+    this.suboptions = suboptions;
+  }
+
+  public void addSuboption(String suboption) {
+    this.suboptions.add(suboption);
+  }
+}
+
 /*
  * Main program for the command line Umple compiler
  * Run java -jar umple.jar --help for details 
@@ -23,62 +116,67 @@ class UmpleConsoleMain
   depend java.util.List;
   depend java.util.Arrays;
   depend joptsimple.*;
-  depend java.io.IOException;
   depend java.io.*;
 
-  public static void main(String[] args)
-  {
-    OptionParser optparser = initializeOptionParser();
-    OptionSet optset = optParse(optparser, args);
-    if (preModelOptionProcess(optparser, optset))
-    {
-      return;
+
+  UmpleConsoleConfig cfg;
+
+  static OptionParser optparser = initializeOptionParser();
+
+  /**
+   * Create a main console. If the args are invalid, an IllegalStateException is thrown. 
+   * @throws IllegalStateException If invalid arguments are passed and joptsimple fails to parse. 
+   */
+  UmpleConsoleMain(String[] args) {
+    optparser = initializeOptionParser();
+
+    OptionSet optset = optParse(args);
+    if (optset == null) {
+      throw new IllegalStateException("Illegal arguments were passed, check usage.");
     }
     
-    List<String> nonOpt = optset.nonOptionArguments();
+    this.cfg = new UmpleConsoleConfig(optset);
+  }
 
-    if (nonOpt.isEmpty())
+  public int runConsole() {
+    if (preModelOptionProcess())
     {
+      return 0;
+    }
+
+    if (cfg.getUmpleFile() == null || "".equals(cfg.getUmpleFile()))
+      {
       System.out.println("Please specify <umple_file> to process");
-      printUsage(optparser);
-      return;
+      printUsage();
+      return 1;
     }
 
-    String filename = nonOpt.get(0);
-    System.out.println(filename);
-    UmpleFile umpleFile = new UmpleFile(filename);
-    //this loop is used to add command-based linked umple files and to show names of them.
-    for (int i=1;i<nonOpt.size(); i++)
-    {
-      if (new File(nonOpt.get(i)).exists())
-      {
-        umpleFile.addLinkedFiles(nonOpt.get(i));
-        System.out.println(nonOpt.get(i)); 		
-      } else
-      {
-        System.out.println("The file "+nonOpt.get(i)+" doesn't exist."); 		
-      }
+    final String filename = cfg.getUmpleFile();
+    System.out.println("Compiling -> " + filename);
+
+    final UmpleFile umpleFile = new UmpleFile(filename);
+    //this loop is used to add linked umple files and to show names of them.
+    cfg.getLinkedFilesAsFile().stream()
+        .filter(File::exists)
+        .map(File::getPath)
+        .forEach(umpleFile::addLinkedFiles);
+
+    final UmpleModel model = new UmpleModel(umpleFile);
+
+    if (postModelOptionProcess(model)) {
+      return 0;
     }
 
-    UmpleModel model = new UmpleModel(umpleFile);
+    try {
+      try {
 
-    if (postModelOptionProcess(optset, model))
-    {
-      return;
-    }
-
-    try
-    {
-      try
-      {
         model.run();
-      }
-      catch(UmpleCompilerException e)
-      {
+
+      } catch (UmpleCompilerException e) {
         System.err.print(e.getMessage());
         if (!model.isShouldGenerate())
         {
-          System.exit(-1);
+          return -1;
         }
       }
 
@@ -87,56 +185,45 @@ class UmpleConsoleMain
 
       // The "c" option causes an attempt to compile the resulting base language
       // code. Not completely tested at current time.
-      if (compileSuccess && optset.has("c"))
+      if (compileSuccess && cfg.getCompile().isPresent())
       {
-        CodeCompiler compiler = new CodeCompiler();
-        compileSuccess = compiler.compile(model, (String)optset.valueOf("c"));
+        compileSuccess = CodeCompiler.compile(model, cfg.getCompile().get());
       }
 
       String successWord = compileSuccess ? "Success! " : "";
-      for (int i=0;i<nonOpt.size(); i++)
-      {
-        if (new File(nonOpt.get(i)).exists())
-        {
-          System.out.println(successWord + "Processed "+ nonOpt.get(i) +".");
-        }
-      }
-      if (compileSuccess)
-      {
-        return;
-      }
-      System.exit(compileSuccess ? 0 : 1); 
+      System.out.println(successWord + "Processed "+ cfg.getUmpleFile() + ".");
+      cfg.getLinkedFilesAsFile().stream()
+        .filter(File::exists)
+        .forEach(f -> System.out.println(successWord + "Processed "+ f.getPath() + "."));
+      
+      return (compileSuccess ? 0 : 1); 
     }
     catch(Exception ex)
     {
       System.err.println("Umple compiler error. Stack trace follows");
       cruise.umple.util.ExceptionDumper.dumpCompilerError(ex);
-      System.exit(-1);
+      return -1;
     }
-    System.exit(0);
   }
 
-  private static void printUsage(OptionParser optparser)
-  {
-    System.out.println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
-      try
+  public static void main(String[] args)
       {
-        optparser.printHelpOn(System.out);
-      } 
-      catch (IOException e)
-      {
-        e.printStackTrace();
+    UmpleConsoleMain console = new UmpleConsoleMain(args);
+
+    int result = console.runConsole();
+    if (result < 0) {
+      System.exit(result);
       }
     }
     
-  private static void generateUmple(String xmi)
+  private void generateUmple(String xmi)
   {
     boolean isSuccess = false;
     try
     {
       EcoreImportHandler handler = new EcoreImportHandler();
       UmpleImportModel umple = handler.readDataFromXML(xmi);
-      isSuccess = umple.generateUmpleFile(xmi+".ump");
+      isSuccess = umple.generateUmpleFile(xmi + ".ump");
     }
     catch (Exception e)
     {
@@ -157,24 +244,19 @@ class UmpleConsoleMain
     * Argument: optSet - set of the options and corresponding arguments
     * Return: boolean - If application should terminate immediately after return
     */
-  private static boolean preModelOptionProcess(OptionParser optparser, OptionSet optSet)
+  private boolean preModelOptionProcess()
   {
-    if (optSet == null)
-    {
-      
-    }
-    else if (optSet.has("version"))
+    if (cfg.getVersion())
     {
       System.out.println("Version: " + UmpleModel.VERSION_NUMBER);
     }
-    else if (optSet.has("help"))
+    else if (cfg.getHelp())
     {
-      printUsage(optparser);
+      printUsage();
     }
-    else if (optSet.has("import"))
+    else if (cfg.getImportFile().isPresent())
     {
-      String xmi = (String)optSet.valueOf("import");
-      generateUmple(xmi);
+      generateUmple(cfg.getImportFile().get());
     }
     else
     {
@@ -183,30 +265,19 @@ class UmpleConsoleMain
     return true;
   }
 
-  private static boolean postModelOptionProcess(OptionSet optset, UmpleModel model)
-  {
-    if (optset.has("generate"))
-    {
-      boolean override=false;
-      String path = "";
-      if (optset.has("override"))
+  private boolean postModelOptionProcess(UmpleModel model)
       {
-        override = true;
-      }
-      if (optset.has("path"))
+    if (cfg.getGenerate().isPresent())
       {
-        path = (String)optset.valueOf("path");
-      }
-      String lang = (String)optset.valueOf("generate");
+      String path = cfg.getPath().orElse("");
+      boolean override = cfg.getOverride();
+      String lang = cfg.getGenerate().orElse(null);
+
       GenerateTarget gt = new GenerateTarget(lang, path);
       gt.setOverrideAll(override);
-      if (optset.has("s"))
-      {
-        for (Object s : optset.valuesOf("s"))
-        {
-          gt.addSuboption((String) s); 
-        }
-      }
+      
+      cfg.getSuboptions().stream().forEach(gt::addSuboption); 
+
       model.addGenerate(Arrays.asList(gt));
     }
     return false;
@@ -228,7 +299,20 @@ class UmpleConsoleMain
     return optparser;
   }
   
-  private static OptionSet optParse(OptionParser optparser, String[] args)
+  private static void printUsage()
+  {
+    System.out.println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
+    try
+    {
+      optparser.printHelpOn(System.out);
+    } 
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+  }
+
+  static OptionSet optParse(String[] args)
   {
     OptionSet optSet = null;
 
@@ -239,7 +323,7 @@ class UmpleConsoleMain
     catch (joptsimple.OptionException e)
     {
       System.out.println("Option:" + e.getMessage());
-      printUsage(optparser);
+      printUsage();
     }
 
     return optSet;

@@ -77,8 +77,14 @@ public class UmpleConsoleMainTest
   {
    String[] args = new String[] { "--IDONTEXIST"  };
    
+     try {
    UmpleConsoleMain.main(args);
-   Assert.assertTrue(outErrIntercept.toString().startsWith("Option:\'IDONTEXIST\' is not a recognized option"+System.getProperty("line.separator")+"Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump"+System.getProperty("line.separator")));
+     } catch (IllegalStateException ise) {
+       Assert.assertTrue(outErrIntercept.toString().startsWith("Option:\'IDONTEXIST\' is not a recognized option\n" 
+           + "Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump\n"));
+     } catch (Exception e) {
+       Assert.fail("Invalid exception thrown: " + e);
+     }
   }
   
    // Ignore the following - currently does exit
@@ -169,23 +175,30 @@ public class UmpleConsoleMainTest
   }
    @Test 
    public void MultiUmpleFile() {
-	   String[] args = new String[] { "testclass1.ump", "testclass2.ump"};
+    String[] args = new String[] { "testclass1.ump", "testclass2.ump" };
 	   try {
-			BufferedWriter out1 = new BufferedWriter(new FileWriter("testclass1.ump"));
-			BufferedWriter out2 = new BufferedWriter(new FileWriter("testclass2.ump"));
+
+      try (BufferedWriter out1 = new BufferedWriter(new FileWriter(
+          "testclass1.ump"));
+          BufferedWriter out2 = new BufferedWriter(new FileWriter(
+              "testclass2.ump"));) {
 		    out1.write("class Testclass1 {}");
-		    out1.close();
 		    out2.write("class Testclass1 {}");	    
-		    out2.close();
+      }
+
 		    UmpleConsoleMain.main(args);
+      Assert.assertEquals(String .format("Compiling -> testclass1.ump%n"
+          + "Success! Processed testclass1.ump.%n" 
+          + "Success! Processed testclass2.ump.%n"),
+          outErrIntercept.toString());
 		    File fileOut = new File("Testclass1.java");
-		    Assert.assertEquals(true, fileOut.exists());
-			fileOut.delete();
-		    Assert.assertEquals(String.format("testclass1.ump%ntestclass2.ump%nSuccess! Processed testclass1.ump.%nSuccess! Processed testclass2.ump.%n"), outErrIntercept.toString());
-		    new File("testclass1.ump").delete();
-		    new File("testclass2.ump").delete();
+      Assert.assertTrue("Testclass1.java does not exist", fileOut.exists());
 		} catch (IOException e) {
 			Assert.fail();
+    } finally {
+      new File("Testclass1.java").delete();
+      new File("testclass1.ump").delete();
+      new File("testclass2.ump").delete();
 		}   
    }
    @Test 
