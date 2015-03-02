@@ -35,6 +35,7 @@ public class StateTableTemplateTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/statetable/nestedStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/guardedTransitionStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/guardedTransitionNestedStateTable.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/guardedTransitionDoublyNestedStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/transitionWithActionStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/transitionWithActionNestedStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/autoTransitionStateTable.html");
@@ -44,48 +45,90 @@ public class StateTableTemplateTest extends TemplateTest
   @Test
   public void simpleStateTable()
   {
-    assertUmpleTemplateFor("statetable/simple.ump","statetable/simple.html.txt");
+    assertUmpleTemplateFor
+    (
+      "statetable/simple.ump",
+      "statetable/simple.html.txt"
+    );
   }
   
   @Test
   public void nestedStateTable()
   {
-    assertUmpleTemplateFor("statetable/nestedStateTable.ump", "statetable/nestedStateTable.html.txt");
+    assertUmpleTemplateFor
+    (
+      "statetable/nestedStateTable.ump", 
+      "statetable/nestedStateTable.html.txt"
+    );
   }
 
   @Test
   public void guardedTransitionStateTable() 
   {
-    assertUmpleTemplateFor("statetable/guardedTransitionStateTable.ump", "statetable/guardedTransitionStateTable.html.txt");
+    assertUmpleTemplateFor
+    (
+      "statetable/guardedTransitionStateTable.ump", 
+      "statetable/guardedTransitionStateTable.html.txt"
+    );
   }
 
   @Test
   public void guardedTransitionNestedStateTable()
   {
-    assertUmpleTemplateFor("statetable/guardedTransitionNestedStateTable.ump", "statetable/guardedTransitionNestedStateTable.html.txt");
+    assertUmpleTemplateFor
+    (
+      "statetable/guardedTransitionNestedStateTable.ump", 
+      "statetable/guardedTransitionNestedStateTable.html.txt"
+    );
+  }
+
+  @Test
+  public void guardedTransitionDoublyNestedStateTable()
+  {
+    assertUmpleTemplateFor
+    (
+      "statetable/guardedTransitionDoublyNestedStateTable.ump", 
+      "statetable/guardedTransitionDoublyNestedStateTable.html.txt"
+    );
   }
 
   @Test
   public void transitionWithActionStateTable() 
   {
-    assertUmpleTemplateFor("statetable/transitionWithActionStateTable.ump", "statetable/transitionWithActionStateTable.html.txt");  
+    assertUmpleTemplateFor
+    (
+      "statetable/transitionWithActionStateTable.ump", 
+      "statetable/transitionWithActionStateTable.html.txt"
+    );  
   }
 
   @Test
   public void transitionWithActionNestedStateTable()
   {
-    assertUmpleTemplateFor("statetable/transitionWithActionNestedStateTable.ump", "statetable/transitionWithActionNestedStateTable.html.txt");  
+    assertUmpleTemplateFor
+    (
+      "statetable/transitionWithActionNestedStateTable.ump", 
+      "statetable/transitionWithActionNestedStateTable.html.txt"
+    );  
   }
 
   @Test
   public void autoTransitionStateTable()
   {
-    assertUmpleTemplateFor("statetable/autoTransitionStateTable.ump", "statetable/autoTransitionStateTable.html.txt");
+    assertUmpleTemplateFor
+    (
+      "statetable/autoTransitionStateTable.ump", 
+      "statetable/autoTransitionStateTable.html.txt"
+    );
   }
 
   @Test
   public void timerTransitionStateTable()
   {
-    assertUmpleTemplateFor("statetable/timerTransitionStateTable.ump", "statetable/timerTransitionStateTable.html.txt");
+    assertUmpleTemplateFor
+    (
+      "statetable/timerTransitionStateTable.ump", 
+      "statetable/timerTransitionStateTable.html.txt"
+    );
   }
 }

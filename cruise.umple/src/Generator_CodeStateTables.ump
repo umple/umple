@@ -164,7 +164,7 @@ class StateTableRow
       if (guard == null) guardString = "";
       else 
       {
-        guardString = extractGuardString(guard, curState, event);
+        guardString = extractGuardString(guard, curState, event, this);
       }
 
       // Add state to the state event list in hash table
@@ -221,14 +221,18 @@ class StateTableRow
     return(sb);
   }
 
-  private String extractGuardString(Guard guard, State curState, Event event)
+  private String extractGuardString(Guard guard, 
+                                    State curState, 
+                                    Event event, 
+                                    StateTableRow curRow)
   {
     JavaGenerator gen = new JavaGenerator();
     UmpleClass umpClass = curState.getStateMachine().getUmpleClass();
     
     if(umpClass == null) 
     {
-      return extractGuardString(guard, this.getParent().getUState(), event);
+      return extractGuardString(
+        guard, curRow.getParent().getUState(), event, curRow.getParent());
     }
     else 
     {
