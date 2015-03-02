@@ -76,12 +76,15 @@ digraph "<<=filename>>" {
     // or multiple state machines in any class
     // If so, we will need to put boxes around the state machines
     int smCount = 0;
-    for (UmpleClass uClass : model.getUmpleClasses()) {
-      for (StateMachine sm : uClass.getStateMachines()) {
+    for (UmpleClass uClass : model.getUmpleClasses()) 
+    {
+      for (StateMachine sm : uClass.getStateMachines()) 
+      {
         smCount++;
       }
     }
-    if(smCount == 0) {
+    if(smCount == 0) 
+    {
       // Special case. No state machine.
       _nosm(0,code);
       terminateCode(code, transitions);
@@ -98,7 +101,8 @@ digraph "<<=filename>>" {
       // Process the top level state machines in a class
       for (StateMachine sm : uClass.getStateMachines())
       {
-        if(sm.getParentState() == null) { // This check shouldn't be needed
+        if(sm.getParentState() == null) 
+        { // This check shouldn't be needed
           appendStateMachineRecursively(code, transitions, sm, uClass, className, true, smCount, 4);
         }
       } // End iteration through state machines of a class
@@ -137,8 +141,10 @@ node [shape = circle, fixedsize = true, width=.3];
   emit pseudoStateFormat()(pseudoStateFormat);
 
   // Used to indent code
-  private void appendSpaces(StringBuilder code, int numSpaces) {
-    for(int i=0; i<numSpaces; i++) {
+  private void appendSpaces(StringBuilder code, int numSpaces) 
+  {
+    for(int i=0; i<numSpaces; i++) 
+    {
       code.append(" ");
     }
   }
@@ -146,35 +152,43 @@ node [shape = circle, fixedsize = true, width=.3];
   // The state qualified name incorporates the classname, the state machine name
   // and the hierarchy of state names
   // This is used as the internal graphviz label, and is not displayed.  
-  private String getStateQualifiedName(State s, UmpleClass c) {
+  private String getStateQualifiedName(State s, UmpleClass c) 
+  {
     StateMachine sm = s.getStateMachine();
     String prepend = s.hasNestedStateMachines() ? "cluster" : "";
     return prepend+c.getName()+"_"+sm.getFullName()+"_"+s.getName();
   }
 
   // Return the name for the state to be used in transitions
-  private String getTransitionNameForState(State s, UmpleClass c, boolean isOrigin) {
+  private String getTransitionNameForState(State s, UmpleClass c, boolean isOrigin) 
+  {
     State firstNonSuperstate = getFirstNestedNonClusterState(s);
     return getStateQualifiedName(firstNonSuperstate, c);
   }
   
   // return self if it does not have nested state, otherwise the first
   // nested state that does not itself have a nested state
-  private State getFirstNestedNonClusterState(State s) {
-    if(!s.hasNestedStateMachines()) {
+  private State getFirstNestedNonClusterState(State s) 
+  {
+    if(!s.hasNestedStateMachines()) 
+    {
       return s;
     }
-    else {
+    else 
+    {
       return getFirstNestedNonClusterState(s.getNestedStateMachine(0).getState(0));
     }
   }
 
-  private String getTransitionHeadOrTailForState(State s, UmpleClass c, boolean isOrigin) {
-    if(s.hasNestedStateMachines()) {
+  private String getTransitionHeadOrTailForState(State s, UmpleClass c, boolean isOrigin) 
+  {
+    if(s.hasNestedStateMachines()) 
+    {
       // Use lhead or ltail
       return (isOrigin? "ltail" : "lhead")+"="+getStateQualifiedName(s, c)+",";
     }
-    else {
+    else 
+    {
       return "";
     }
   }  
@@ -206,7 +220,8 @@ node [shape = circle, fixedsize = true, width=.3];
 
   private void appendStateMachineRecursively(StringBuilder code, StringBuilder transitions, StateMachine sm,
       UmpleClass uClass, String className, boolean isTopLevel,
-      int smCount, int indentLevel) {
+      int smCount, int indentLevel) 
+  {
 
     String smName, clSmName, sLabel, sName, tooltip;
     boolean isPseudo = false;    
@@ -222,7 +237,8 @@ node [shape = circle, fixedsize = true, width=.3];
     // Determine whether bottom level
     Boolean isBottomLevel = allNestedStateMachines.isEmpty();
     String levelPhrase = "";
-    if(isTopLevel) {
+    if(isTopLevel) 
+    {
       if(isBottomLevel) levelPhrase ="Top and Bottom Level ";
       else levelPhrase = "Top Level ";
     }
@@ -237,7 +253,8 @@ node [shape = circle, fixedsize = true, width=.3];
     // If there are multiple state machines in the model
     // And this is a top level state machine
     // Then we need to put the state machine in a border
-    if(smCount > 1 && isTopLevel) {
+    if(smCount > 1 && isTopLevel) 
+    {
       _topLevelBorder(indentLevel, code, clSmName, className, smName);
     }
 
@@ -264,17 +281,20 @@ node [shape = circle, fixedsize = true, width=.3];
       // and go or come from other states further inside
       // then we need to add a dummy connector state
 
-      if(!isBottomLevel) { // s is not bottom level
+      if(!isBottomLevel) 
+      { // s is not bottom level
         Map<Transition,String> newInternalBoundaryTrans = new HashMap<Transition,String>();
       
         Set<Transition> allT = new HashSet<Transition>();
         allT.addAll(s.getTransitions());
         allT.addAll(s.getNextTransition());
 
-        for (Transition t: allT) {
+        for (Transition t: allT) 
+        {
           if(!internalBoundaryTrans.containsKey(t) && (
             (t.getFromState()==s && t.getNextState().isSubstateOf(s)) ||
-            (t.getNextState()==s && t.getFromState().isSubstateOf(s)) ) ) {
+            (t.getNextState()==s && t.getFromState().isSubstateOf(s)) ) ) 
+          {
 
             nodeNumber++;
             String dummyName="dummyNode"+nodeNumber+"_"+
@@ -283,13 +303,15 @@ node [shape = circle, fixedsize = true, width=.3];
             newInternalBoundaryTrans.put(t,dummyName);
           }
         }
-        if(!newInternalBoundaryTrans.isEmpty()) {
+        if(!newInternalBoundaryTrans.isEmpty()) 
+        {
           appendSpaces(code, indentLevel+2);
           code.append("// Dummy notes for transitions to/from internals to boundary\n");
           appendSpaces(code, indentLevel+2);
           code.append("node [shape = point, width = 0.005];\n");
 
-          for (String nodeName : newInternalBoundaryTrans.values()) {
+          for (String nodeName : newInternalBoundaryTrans.values()) 
+          {
             appendSpaces(code, indentLevel+2);
             code.append(nodeName+" [label=\"\"];\n");
           }
@@ -300,7 +322,8 @@ node [shape = circle, fixedsize = true, width=.3];
       }
 
       // Output the state (and possibly state machine) id
-      if(!s.hasNestedStateMachines()) {
+      if(!s.hasNestedStateMachines()) 
+      {
         // Simple state node
         if(isPseudo) _pseudoStateFormat(indentLevel, code);
         appendSpaces(code,  indentLevel+2);
@@ -309,7 +332,8 @@ node [shape = circle, fixedsize = true, width=.3];
         code.append(sName+" [label = "+sLabel+", tooltip = \""+tooltip+"\"];\n");
         if(isPseudo) _normalStateFormat(indentLevel, code);        
       }
-      else {
+      else 
+      {
         // Start of a subgraph
         appendSpaces(code,  indentLevel+1);
         code.append("subgraph "+sName+" {\n");
@@ -319,7 +343,8 @@ node [shape = circle, fixedsize = true, width=.3];
         code.append("style = rounded;\n");
       }
 
-      if(isFirstState) {
+      if(isFirstState) 
+      {
          // Output transition to first state
          isFirstState = false;
         String dest=getTransitionNameForState(s,uClass,false);
@@ -332,31 +357,39 @@ node [shape = circle, fixedsize = true, width=.3];
       }
           
       // Output all the other transitions
-      for (Transition t : s.getNextTransition()) {
+      for (Transition t : s.getNextTransition()) 
+      {
         event = t.getEvent();
         action = t.getAction();
         
-        if(event.isAutoTransition()) {
+        if(event.isAutoTransition()) 
+        {
           transitionLabel = "";
         } 
         else {
-          if (event.getIsTimer()) {
+          if (event.getIsTimer()) 
+          {
             transitionLabel = "after("+event.getTimerInSeconds()+")";
           }
-          else {
-            if(event.getArgs() == null || event.getArgs() == "") {
+          else 
+          {
+            if(event.getArgs() == null || event.getArgs() == "") 
+            {
               transitionLabel = event.getName();
             }
-            else {
+            else 
+            {
               transitionLabel = event.getName()+"("+event.getArgs()+")";
             }
           }
         }
         
-        if (action == null || action.getActionCode() == "" || hideActions) {
+        if (action == null || action.getActionCode() == "" || hideActions) 
+        {
           transitionAction = "";
         }
-        else {
+        else 
+        {
           actionCode = action.getActionCode();
           if (actionCode.length() > 15) transitionAction = " / {...}";
           else transitionAction = " / "+actionCode.replaceAll("\"","&quot;");
@@ -364,11 +397,15 @@ node [shape = circle, fixedsize = true, width=.3];
       
         guard = t.getGuard();
         if (guard == null || hideGuards) guardString = "";
-        else {
+        else 
+        {
           JavaGenerator gen = new JavaGenerator();
           gen.setModel(getModel());
-          guardString = event.isAutoTransition() ? "[" : " ["
-            + guard.getCondition(gen).replaceAll("\"","&quot;")+"]";
+          
+          if(event.isAutoTransition()) guardString = "[";
+          else guardString = " [";
+
+          guardString += guard.getCondition(gen).replaceAll("\"","&quot;") + "]";
         }
         
         String orig = getTransitionNameForState(t.getFromState(),uClass,true);
@@ -380,7 +417,8 @@ node [shape = circle, fixedsize = true, width=.3];
         // WORKING ON
         // If we have to go through a dummy external state
         // we have to add two transitions
-        if(internalBoundaryTrans.containsKey(t)) {
+        if(internalBoundaryTrans.containsKey(t)) 
+        {
           _transition(2,transitions,orig,"->", internalBoundaryTrans.get(t)+":e",
             transitionAttributes("dir=none, "+origlh,
             transitionLabel + guardString + transitionAction,
@@ -391,7 +429,8 @@ node [shape = circle, fixedsize = true, width=.3];
             "",
             t.getFromState().getName(),t.getNextState().getName(), tooltip));        
         }
-        else {
+        else 
+        {
           // Normal transition
           _transition(2,transitions,orig,"->", dest,
             transitionAttributes(origlh+destlt,
@@ -403,12 +442,14 @@ node [shape = circle, fixedsize = true, width=.3];
 
       // Process nested state machines of this state
       allNestedStateMachines = s.getNestedStateMachines();
-      for(StateMachine nestedSm: allNestedStateMachines) {
+      for(StateMachine nestedSm: allNestedStateMachines) 
+      {
         appendStateMachineRecursively(code, transitions, nestedSm, uClass, className, false, smCount, indentLevel+2);
       } // End iteration through nested state machines
 
       // Mark end of subgraph
-      if(s.hasNestedStateMachines()) {
+      if(s.hasNestedStateMachines()) 
+      {
         appendSpaces(code,  indentLevel+1);
         code.append("}\n");
       }
@@ -424,7 +465,8 @@ node [shape = circle, fixedsize = true, width=.3];
     // If there are multiple state machines in the model
     // And this is the top level state machine
     // Then we need to end the cluster border started earlier
-    if(smCount > 1 && isTopLevel) {
+    if(smCount > 1 && isTopLevel) 
+    {
       code.append("  }\n");
     }
   }

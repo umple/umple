@@ -1,0 +1,30 @@
+generate GvStateDiagram;
+namespace example;
+
+class X {
+  boolean guard;
+  sm {
+    s1 {
+      entry / {
+        System.out.println("Starting first sleep");
+      }
+      do {
+        Thread.sleep(2000);
+        System.out.println("Ending first sleep");
+      }
+      [guard] -> s2;
+    }
+    s2 {
+      entry / {
+        System.out.println("Starting second sleep");
+      }
+      do {
+        Thread.sleep(2000);
+        System.out.println("Ending second sleep");
+      }
+    }
+  }
+  public static void main(String [ ] args) {
+    X x = new X();
+  }
+}
