@@ -1,6 +1,6 @@
 package cruise.umple.util;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -110,6 +110,11 @@ public class UmplecAntTaskTest {
     SampleFileWriter.destroy(UMPLEC_LINKED_FILE);
     SampleFileWriter.destroy(UMPLEC_GENERATE_FILE);
     SampleFileWriter.destroy(UMPLEC_OVERRIDE_FILE);
+  }
+
+  @Test
+  public void doNothing() {
+    assertEquals(1,1);
   }
 
   // @Test
