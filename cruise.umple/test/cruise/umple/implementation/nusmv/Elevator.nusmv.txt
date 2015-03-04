@@ -17,24 +17,24 @@ MODULE Elevator_state_machine
     ( (handle.state = elevator_state_machine_Idle) -> (
       (handle.event = upRequest & next(handle.state) = elevator_state_machine_PrepareUp)  |
       (handle.event = downRequest & next(handle.state) = elevator_state_machine_PrepareDown)  ) ) &
-    ( (handle.state = elevator_state_machine_PrepareUp) -> (
-       handle.event = started & next(handle.state) = InMotion_Moving) ) &
-    ( (handle.state = elevator_state_machine_PrepareDown) -> (
-       handle.event = started & next(handle.state) = InMotion_Moving) ) &
-    ( (handle.state = elevator_state_machine_InMotion) -> (next(handle.state) = handle.state) ) &
-    ( (handle.state = elevator_state_machine_OnFloor) -> (next(handle.state) = handle.state) )
+    ( (handle.state = elevator_state_machine_PrepareUp) -> (next(handle.state) = PrepareUp_DoorClosingMovingUp) ) &
+    ( (handle.state = elevator_state_machine_PrepareDown) -> (next(handle.state) = PrepareDown_DoorClosingMovingDown) ) &
+    ( (handle.state = elevator_state_machine_InMotion) -> (next(handle.state) = InMotion_Moving) ) &
+    ( (handle.state = elevator_state_machine_OnFloor) -> (next(handle.state) = OnFloor_DoorOpening) )
   
 MODULE PrepareUp( handle )
         
   TRANS
     ( (handle.state = PrepareUp_DoorClosingMovingUp) -> (
-       handle.event = doorClosed & next(handle.state) = elevator_state_machine_InMotion) )
+      (handle.event = doorClosed & next(handle.state) = elevator_state_machine_InMotion)  |
+      (handle.event = started & next(handle.state) = InMotion_Moving)  ) )
   
 MODULE PrepareDown( handle )
         
   TRANS
     ( (handle.state = PrepareDown_DoorClosingMovingDown) -> (
-       handle.event = doorClosed & next(handle.state) = elevator_state_machine_InMotion) )
+      (handle.event = doorClosed & next(handle.state) = elevator_state_machine_InMotion)  |
+      (handle.event = started & next(handle.state) = InMotion_Moving)  ) )
   
 MODULE InMotion( handle )
         

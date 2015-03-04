@@ -48,7 +48,7 @@ class NuSMVCoordinator
   	return name;
   }*/
   
-  private List<String> getStartStateNameForCompositeState(StateMachine sm , List<String> temp)
+  /*private List<String> getStartStateNameForCompositeState(StateMachine sm , List<String> temp)
   { 
   	String name = sm.getStartState().getName();
   	temp.add(name);
@@ -59,7 +59,7 @@ class NuSMVCoordinator
   		temp = getStartStateNameForCompositeState(stm , temp);
   	}
   	return temp;
-  }
+  }*/
   
   public StringBuilder generateSimpleModule(StateMachine sm)
   {
@@ -98,7 +98,7 @@ class NuSMVCoordinator
   public StringBuilder genModuleForNestedMachine(StateMachine sm , String handle , String dot) {
   	
   	StringBuilder code = new StringBuilder();
-  	
+
   	//This defines and adds the thin-line module to the output code -- Step (1)
   	NuSMVModule placeHolder = genPlaceHolderModule(sm);
   	code.append(placeHolder.toString(handle , dot));
@@ -110,13 +110,17 @@ class NuSMVCoordinator
   	NuSMVModule parent = genParentModule(sm, placeHolder.getName(),svar);
   	code.append(parent.toString(handle , dot));
   	
+		//if(recomposeStateMachine(sm) != null)
+			//sm = recomposeStateMachine(sm); 
+
   	//Generation of nested state machines is done here.
   	genModules(sm , handle , dot, code , svar);
   	
   	//This generates the main module
   	code.append(genMainModule(sm).toString(handle , dot));
   	
-  	return code;  	
+  	
+		return code;  	
   }
   
   private NuSMVModule genPlaceHolderModule(StateMachine sm)
@@ -136,7 +140,6 @@ class NuSMVCoordinator
   
   private String lookUpStateDetail(EnumerationStatement stateVariables, String str)
   {
-	//System.out.println(str);
   	for(EnumerationElement e : stateVariables.getEnumerationElements())
   	{
   		if(e.getValue().endsWith("_"+str))
@@ -160,9 +163,8 @@ class NuSMVCoordinator
   	return module;
   }
   
-  private void genModules(StateMachine sm , String handle , String dot, 
-  											StringBuilder code , EnumerationStatement stateVar)
-  {	
+  private void genModules(StateMachine sm , String handle , String dot, StringBuilder code , EnumerationStatement stateVar)
+  {
   	for(State st : sm.getStates())
   	{
   		if( st.hasNestedStateMachines() )
@@ -176,6 +178,8 @@ class NuSMVCoordinator
   		}
   	}
   }
+
+	
   
   private NuSMVModule genMainModule(StateMachine sm)
   {
@@ -316,21 +320,141 @@ space <<!
   	}
   	return yes;
   }
+
+	private List<State> getCompositeStates(StateMachine sm)
+	{
+		List<State> temp = new ArrayList<State>();
+		for(State st : sm.getStates())
+			if(st.hasNestedStateMachines())
+				temp.add(st);
+		return temp;				
+	}
+
+	/*private boolean hasNakedTransitions(State state)
+	{
+		if(getNakedTransitions(state).size() > 0)
+			return true;
+		return false;
+	}*/
+
+	private boolean equals(Transition first, Transition other)
+	{
+		return first.getFromState().getName() == other.getFromState().getName()
+				&& first.getNextState().getName() == other.getNextState().getName();			
+	}
+
+	//Computes the difference between the first and other
+  private List<Transition> difference(List<Transition> first , List<Transition> other)
+  {
+  	List<Transition> temp = new ArrayList<Transition>();
+  	for(Transition tr : other)
+  		for(Transition trFirst : first)
+  			if(equals(trFirst , tr))
+  				continue;
+  			else
+  				temp.add(trFirst);
+  	return temp;
+  }
+
+	//Returns a list of transitions distributed over all states of the composite state st
+	/*private List<Transition> getNakedTransitions(State st)
+	{
+		List<Transition> trans = new ArrayList<Transition>();
+		
+	}*/
+	
+	//Returns a list of transitions distributed over all states of the composite state st
+	private List<Transition> getNakedTransitions(State st)
+	{
+		List<Transition> trans = new ArrayList<Transition>();
+		if(!st.hasNestedStateMachines())
+			return trans;
+		for(StateMachine sm : st.getNestedStateMachines())
+		{
+			for(State stt : sm.getStates())
+				for(Transition tr : stt.getTransitions())
+					if(tr.getFromState().getName().equals(stt.getName()))
+						trans.add(tr);
+		}
+		return difference( st.getTransitions() , trans );
+	}
+
+	/*private StateMachine recomposeStateMachine(StateMachine sm)
+	{
+		StateMachine tempsm = new StateMachine(sm.getName());
+		//tempsm.setFullName(sm.getFullName());
+		for(State st  : getCompositeStates(sm))	{	
+			tempsm.addState(addNakedTransitions(st));
+		}
+		return tempsm;
+	}*/
+
+	//This distributes naked transition over the states of a composite state st (achieved by recursion)
+	private void addNakedTransitions(State st)
+	{
+		List<Transition> nakedTransitions = getNakedTransitions(st);	
+		for(StateMachine sm : st.getNestedStateMachines()) 
+		{	
+			for(State stt : sm.getStates()) 
+			{
+				for(Transition tr : nakedTransitions) {
+					stt.addTransition(tr);
+				}
+				if(stt.hasNestedStateMachines())
+					addNakedTransitions(stt);
+				//sm.addState(stt);
+				for(Transition ttr : stt.getTransitions())
+					System.out.println(ttr.getFromState().getName()+"["+ttr.getEvent().getName()+"] -> "+ttr.getNextState().getName());
+			}
+			System.out.println("I am outside the state!!!");
+			for(State stm : sm.getStates())
+				for(Transition ttr : stm.getTransitions())
+					System.out.println(ttr.getFromState().getName()+"["+ttr.getEvent().getName()+"] -> "+ttr.getNextState().getName());
+			//st.addNestedStateMachine(sm);
+		}
+		
+	}
+
+	//This distributes naked transition over the states of a composite state with state machine sm
+	/*private void addNakedTransitions(StateMachine sm)
+	{
+		List<State> compositeStates = getCompositeStates(sm);
+		if(compositeStates.size() > 0)
+			for(State state : compositeStates)
+				if(hasNakedTransitions(state))
+					for(Transition transition : getNakedTransitions(state)) {
+						if(state.getNestedStateMachines().size() > 1)
+							for(StateMachine stm : state.getNestedStateMachines())
+								addNakedTransitions(stm);
+						else {
+							StateMachine newSm = state.getNestedStateMachines().get(0);
+							for(State newSt : newSm.getStates())
+								newSt.addTransition(transition);
+						}
+					}					
+	}
+
+	private List<String> getCompositeStatesWithNakedTransitons(StateMachine sm)
+  {
+  	List<String> temp = new ArrayList<String>(); 
+  	for(State st : sm.getStates())
+  	{
+  		if(st.getTransitions().size() > 0 && !has(temp,st.getName()) ) 
+  			temp.add(st.getName());
+  	}
+  	return temp;
+  }
   
   private List<String> getCompositeStatesWithNoTransiton(StateMachine sm)
   {
   	List<String> temp = new ArrayList<String>(); 
   	for(State st : sm.getStates())
-  	{
-  		if(st.getTransitions().size() == 0 && has(temp,st.getName()) == false 
-  		&& startStateIsStateMachine(sm)) {
+  		if(st.getTransitions().size() == 0 && !has(temp,st.getName()) && startStateIsStateMachine(sm))
   			temp.add(st.getName());
-  		}
-  	}
   	return temp;
   }
   
-  private State lookUpState(StateMachine sm , String str)
+  /*private State lookUpState(StateMachine sm , String str)
   {
   	for(State st : sm.getStates())
   	{
@@ -338,17 +462,22 @@ space <<!
   			return st;
   	}
   	return null;
-  }
+  }*/
   
   private List<String> getFinalStates(StateMachine sm)
   {
   	List<String> temp = new ArrayList<String>(); 
+		int numOfTransitions = 0;
   	for(State st : sm.getStates())
   	{
-  		if(st.getTransitions().size() == 0 && has(temp,st.getName()) == false 
-  			&& !startStateIsStateMachine(sm)) {
+			numOfTransitions = st.getTransitions().size();
+			if(numOfHighLevelTransition(st) != -1)
+				numOfTransitions += numOfHighLevelTransition(st); 
+  		if(numOfTransitions == 0 && has(temp,st.getName()) == false && st.hasNestedStateMachines() == false) {
   			temp.add(st.getName());
+				//System.out.println("I am here!");
   		}
+			numOfTransitions = 0;
   	}
   	return temp;
   }
@@ -366,73 +495,211 @@ space <<!
   	}
   	return trList;
   }
+  
+  /*public void addNakedTransitions(StateMachine sm)
+  {
+		List<Transition> temp = new ArrayList<Transition>();
+  	if(sm.getNestedStateMachines().size() > 0) 
+		{
+  			for(State st : sm.getStates())
+					if(st.hasNestedStateMachines())
+						for(Transition tr : st.getTransitions()) 
+						{
+							if(st.getNestedStateMachines().size() > 1)
+								for(StateMachine stm : st.getNestedStateMachines())
+									addNakedTransitions(stm);
+							else 
+							{
+								StateMachine newSm = st.getNestedStateMachines().get(0);
+								for(State newSt : newSm.getStates())
+									newSt.addTransition(tr);
+							}
+						}
+  	}
+  }
+	
+	private List<State> getStatesWithManyTransitions(StateMachine sm)
+	{
+		List<State> tempStates = new ArrayList<State>();
+		for(State state : sm.getStates())
+			//&& !state.hasNestedStateMachines()
+			if(state.numberOfTransitions() > 1 && !state.hasNestedStateMachines())
+				tempStates.add(state);
+		return tempStates;
+	}*/ 
+
+	private List<State> getStatesWithManyTransitions(StateMachine sm)
+	{
+		List<State> tempStates = new ArrayList<State>();
+		int numOfTransitions = 0;
+		for(State state : sm.getStates())
+		{
+			numOfTransitions = state.numberOfTransitions();
+			if(numOfHighLevelTransition(state) != -1)
+				numOfTransitions += numOfHighLevelTransition(state);
+			if(numOfTransitions > 1 && !state.hasNestedStateMachines())
+				tempStates.add(state);
+			numOfTransitions = 0;
+		}
+		return tempStates;
+	}
+
+	private int numOfHighLevelTransition(State state)
+	{
+		State tempState = state.getStateMachine().getParentState();
+		if(tempState != null)
+			return getHighLevelTransitions(state).size();
+
+		return -1;
+	}
+
+  private List<Transition> getHighLevelTransitions(State st)
+	{
+		List<Transition> transitions = new ArrayList<Transition>();
+		if(st.getStateMachine().getParentState() != null 
+				&& st.getStateMachine().getParentState().getStateMachine().getParentState() == null)
+			for(Transition trr : st.getStateMachine().getParentState().getTransitions())
+				transitions.add(trr);
+		else {
+			State state = st.getStateMachine().getParentState();
+			for(Transition trr : st.getStateMachine().getParentState().getTransitions())
+				transitions.add(trr);
+			for(Transition tr : getHighLevelTransitions(state))
+				transitions.add(tr);
+		}
+
+		//System.out.println(st.getName());
+		//for(Transition tr : transitions)
+			//System.out.println(tr.getFromState().getName()+ " ["+tr.getEvent().getName()+"] "+tr.getNextState().getName());
+		return transitions;
+	}
+
+  private void generateCompositeTransition(StateMachine sm, TransitionPart tpart, EnumerationStatement stateVariables)
+	{
+		SimpleTransition temp = new SimpleTransition("","","");
+  	SimpleTransition temp1 = new SimpleTransition("","","");
+		
+		for(State st : getStatesWithManyTransitions(sm))
+		{
+			ComplexTransition ctrans = new ComplexTransition("","","",temp1,temp);
+	  	for(Transition tr : st.getTransitions())
+	  	{  
+	  		SimpleTransition smt = new 
+	  				SimpleTransition( lookUpStateDetail(stateVariables,tr.getFromState().getName()), 
+	  					lookUpStateDetail(stateVariables,tr.getNextState().getName()),	tr.getEvent().getName()	);
+	  						ctrans.addSimpleTransition(smt);	
+	  	}
+
+			if(st.getStateMachine().getParentState() != null)
+				for(Transition ttr : getHighLevelTransitions(st))
+	  		{  
+	  			SimpleTransition smtt = new 
+	  				SimpleTransition( lookUpStateDetail(stateVariables,st.getName()), 
+	  					lookUpStateDetail(stateVariables,ttr.getNextState().getName()),	ttr.getEvent().getName()	);
+	  						ctrans.addSimpleTransition(smtt);	
+	  		}
+
+	  	ctrans.removeSimpleTransition(temp);
+  		ctrans.removeSimpleTransition(temp1);
+  		tpart.addComplexTransition(ctrans);		
+		}
+	}
+
+
+	private void genTransitionCompositeStates(StateMachine sm, TransitionPart tpart, EnumerationStatement stateVariables)
+	{
+		for(State st : getCompositeStates(sm))
+		{  
+	  	SimpleTransition smt = new 
+	  				SimpleTransition( lookUpStateDetail(stateVariables,st.getName()), 
+	  					lookUpStateDetail(stateVariables,getStartStateOfCompositeState(st).getName()), ""	);
+	  	tpart.addSimpleTransition(smt);
+			//if(getNakedTransitions(st).size() > 0)
+				//	addNakedTransitions(st);
+		}
+	}
+
+	//Precondition - st is a start state
+	public State getStartStateOfCompositeState(State st)
+	{
+		return st.getNestedStateMachines().get(0).getStartState();
+	}
+
+	
   	
   public TransitionPart genTransition(StateMachine sm, EnumerationStatement stateVariables)
   {
   	TransitionPart tpart = new TransitionPart("TRANS");
-    SimpleTransition temp = new SimpleTransition("","","");
-  	SimpleTransition temp1 = new SimpleTransition("","","");
- 
-  	boolean hasNestedMachine = false;
-  	for(State st : sm.getStates())
+
+  	//boolean hasNestedMachine = false;
+		//Generates transitions for composite states
+		genTransitionCompositeStates(sm, tpart, stateVariables);
+		//Generates transitions for all states with many transitions
+		generateCompositeTransition(sm, tpart, stateVariables);
+  	
+		//Generates transitions for all non-composite states with a transition
+		genTransitionForSimpleStatesWithUnitTransition(sm, tpart, stateVariables);
+
+		//Generates transitions for all the final states
+		genTransitionForFinalStates(sm, tpart, stateVariables);
+
+  	return tpart;
+  }
+
+	private void genTransitionForSimpleStatesWithUnitTransition(StateMachine sm, TransitionPart tpart, EnumerationStatement stateVariables)
+	{
+		int numOfTransitions = 0;
+		for(State st : sm.getStates())
   	{
-  		if(st.hasNestedStateMachines())
-  			hasNestedMachine = true;
-  		if(st.numberOfTransitions() > 1)
+			numOfTransitions = st.getTransitions().size();
+			if(numOfHighLevelTransition(st) != -1)
+				numOfTransitions += numOfHighLevelTransition(st); 
+  		if(numOfTransitions == 1 && !st.hasNestedStateMachines())
   		{
-  			ComplexTransition ctrans = new ComplexTransition("","","",temp1,temp);
-  			for(Transition tr : st.getTransitions())
-  			{
-  			    
-  				SimpleTransition smt = new 
-  				SimpleTransition( lookUpStateDetail(stateVariables,tr.getFromState().getName()), 
-  					lookUpStateDetail(stateVariables,tr.getNextState().getName()),	tr.getEvent().getName()	);
-  					ctrans.addSimpleTransition(smt);	
-  			}
-  			ctrans.removeSimpleTransition(temp);
-  			ctrans.removeSimpleTransition(temp1);
-  			tpart.addComplexTransition(ctrans);	
-  		}
-  		
-  		if(st.numberOfTransitions() == 1)
-  		{
-  			Transition trb = st.getTransition(0);
+  			Transition trb = new Transition(st,st);
+				if(numOfHighLevelTransition(st) == 1){
+					trb = getHighLevelTransitions(st).get(0);		
+					trb.setFromState(st);
+				}
+				else
+					trb = st.getTransitions().get(0);
   			SimpleTransition strans = new SimpleTransition(	lookUpStateDetail(stateVariables,trb.getFromState().getName()), 
   					lookUpStateDetail(stateVariables,trb.getNextState().getName()), trb.getEvent().getName() );
   			tpart.addSimpleTransition(strans);
   		}
+			numOfTransitions = 0;
   	}
-  	
-  	if(startStateIsStateMachine(sm))
-  	{
-  		for(String str : getCompositeStatesWithNoTransiton(sm))
-  		{
-  			List<String> tempStr = new ArrayList<String>();
-  			State st = lookUpState(sm , str);
-  			StateMachine smt = st.getNestedStateMachine(0) ;
-  			SimpleTransition stran = new SimpleTransition(lookUpStateDetail(stateVariables,str),
-  					lookUpStateDetail(stateVariables,getStartStateNameForCompositeState(smt,tempStr).get(0)),"");
-  			tpart.addSimpleTransition(stran);
-  		}
-  	}
-  	
-  	if(getFinalStates(sm).size() != 0) {
+	}
+
+	private void genTransitionForFinalStates(StateMachine sm, TransitionPart tpart, EnumerationStatement stateVariables)
+	{
+		if(getFinalStates(sm).size() != 0) 
   		for(String str : getFinalStates(sm))
   		{
-  			if(hasNestedMachine || sm.hasParentState())
+  			if(sm.getNestedStateMachines().size() > 0 || sm.hasParentState())
   			{
   				SimpleTransition stran = new SimpleTransition(lookUpStateDetail(stateVariables,str),"handle.state","");
   				tpart.addSimpleTransition(stran);
   			}
-  			//getStartStateNameCompositeState(sm)
   			else {
   				SimpleTransition stran = new SimpleTransition(lookUpStateDetail(stateVariables,str),"state","");
   				tpart.addSimpleTransition(stran);
   			}
   		}
+	}
+
+	/*private void generateTransitionForCompositeState(StateMachine sm,TransitionPart tpart, EnumerationStatement stateVariables)
+	{
+		for(String str : getCompositeStatesWithNoTransiton(sm))
+  	{
+  		List<String> tempStr = new ArrayList<String>();
+  		State st = lookUpState(sm , str);
+  		StateMachine smt = st.getNestedStateMachine(0) ;
+  		SimpleTransition stran = new SimpleTransition(lookUpStateDetail(stateVariables,str),
+  					lookUpStateDetail(stateVariables,getStartStateNameForCompositeState(smt,tempStr).get(0)),"");
+  		tpart.addSimpleTransition(stran);
   	}
-  	return tpart;
-  }
+	}*/
 }
 
 //public List<TransitionPart> 
