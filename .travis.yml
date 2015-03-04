@@ -10,6 +10,7 @@ before_install:
 script:
   - cd build/
   - ant -Dmyenv=travis -f build.umple.xml first-build 
+
   # build against itself and run all tests
   - ant -Dmyenv=travis 
 

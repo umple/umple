@@ -12,14 +12,6 @@ import org.junit.Test;
 
 public class UmpleConsoleConfigTest {
 
-  @Before
-  public void setUp() throws Exception {
-  }
-
-  @After
-  public void tearDown() throws Exception {
-  }
-  
   private static OptionSet set(String... args) {
     return UmpleConsoleMain.optParse(args);
   }
@@ -72,6 +64,7 @@ public class UmpleConsoleConfigTest {
   @Test
   public void testGetImportFile() {
     UmpleConsoleConfig cfg = new UmpleConsoleConfig(set("--import", "test.xmi"));
+
     assertEquals("Import flag was not honoured.", "test.xmi", cfg.getImportFile().get());
   }
 

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Umple Plug-in
 Bundle-SymbolicName: cruise.umple.ui.eclipse; singleton:=true
-Bundle-Version: 0.0.1
+Bundle-Version: 1.22.0.${svn.Revision}
 Bundle-Activator: cruise.umple.ui.eclipse.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,

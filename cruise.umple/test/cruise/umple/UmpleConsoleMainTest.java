@@ -5,37 +5,44 @@
  This file is made available subject to the open source license found at:
  http://umple.org/license
 
-*/
+ */
 
 package cruise.umple;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import cruise.umple.util.SampleFileWriter;
 
-public class UmpleConsoleMainTest
-{
+public class UmpleConsoleMainTest {
   private PrintStream out_backup;
   private PrintStream err_backup;
   private ByteArrayOutputStream outErrIntercept;
   String pathToInput;
   
   @Before
-  public void setUp()
-  {
+  public void setUp() {
     out_backup = System.out;
     err_backup = System.err;
     outErrIntercept = new ByteArrayOutputStream();
     System.setOut(new PrintStream(outErrIntercept));
     System.setErr(new PrintStream(outErrIntercept));
-//    UmpleConsoleMain.displayOutput = false;
+    // UmpleConsoleMain.displayOutput = false;
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/sequence");
   }
   
   @After
-  public void tearDown()
-  {
+  public void tearDown() {
     System.setOut(out_backup);
     System.setErr(err_backup);
     SampleFileWriter.destroy("myfile.ump");
@@ -46,189 +53,162 @@ public class UmpleConsoleMainTest
     SampleFileWriter.destroy("testclass.ecore");
   }
   
-  @Test @Ignore
-  public void Usage()
-  {
+  @Test
+  @Ignore
+  public void Usage() {
    String[] args = new String[0];
    
    UmpleConsoleMain.main(args);
-   Assert.assertEquals(String.format("Usage: java -jar umple.jar [options] <umple_file>%nExample: java -jar umple.jar airline.ump%n"), outErrIntercept.toString());
+    Assert.assertEquals("Usage: java -jar umple.jar [options] <umple_file>\n"
+        + "Example: java -jar umple.jar airline.ump\n", outErrIntercept.toString());
   }
   
-
   @Test
-  public void Version()
-  {
-    String[] args = new String[] { "--version"};
+  public void Version() {
+    String[] args = new String[] { "--version" };
 
     UmpleConsoleMain.main(args);
-    Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.VERSION_NUMBER +System.getProperty("line.separator"), outErrIntercept.toString());
+    Assert.assertEquals(
+        "Version: " + cruise.umple.compiler.UmpleModel.VERSION_NUMBER
+            + System.getProperty("line.separator"), outErrIntercept.toString());
 
     outErrIntercept.reset();
-    args = new String[] { "-v"};
+    args = new String[] { "-v" };
 
     UmpleConsoleMain.main(args);
-    Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.VERSION_NUMBER +System.getProperty("line.separator"), outErrIntercept.toString());
+    Assert.assertEquals("Version: " + cruise.umple.compiler.UmpleModel.VERSION_NUMBER + "\n", 
+        outErrIntercept.toString());
   }
 
-
   @Test
-  public void badArgument()
-  {
+  public void badArgument() {
    String[] args = new String[] { "--IDONTEXIST"  };
    
      try {
    UmpleConsoleMain.main(args);
      } catch (IllegalStateException ise) {
-       Assert.assertTrue(outErrIntercept.toString().startsWith("Option:\'IDONTEXIST\' is not a recognized option\n" 
+      Assert.assertTrue(outErrIntercept.toString()
+          .startsWith("Option:\'IDONTEXIST\' is not a recognized option\n"
            + "Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump\n"));
-     } catch (Exception e) {
-       Assert.fail("Invalid exception thrown: " + e);
      }
   }
   
    // Ignore the following - currently does exit
-  @Test  @Ignore
+  @Test
+  @Ignore
   public void generateOverride() {
-		String[] cppargs = new String[] {"-g", "Cpp", "--override", "testclass.ump"};
+    String[] cppargs = new String[] { "-g", "Cpp", "--override",
+        "testclass.ump" };
 		
 		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter("testclass.ump"));
-		    out.write("generate Java; class testclass {}");
-		    out.close();
+      SampleFileWriter.createFile("testclass.ump", "generate Java; class testclass {}");
 		    
 		    UmpleConsoleMain.main(cppargs);
-		    File javaout = new File("testclass.java");
-		    File cppout = new File("testclass.cpp");
-		    File chout = new File("testclass.h");
-		    Assert.assertEquals(false, javaout.exists());
-		    Assert.assertEquals(true, cppout.exists());
-		    Assert.assertEquals(true, chout.exists()); 
-		    javaout.delete();
-		    cppout.delete();
-		    chout.delete();
 		    
-		    new File("testclass.ump").delete();
-		} catch (IOException e) {
-			Assert.fail();
+      SampleFileWriter.assertFileExists("testclass.java");
+      SampleFileWriter.assertFileExists("testclass.cpp");
+      SampleFileWriter.assertFileExists("testclass.h");
+    } finally {
+      SampleFileWriter.destroy("testclass.java", "testclass.cpp",
+          "testclass.h", "testclass.ump");
 		}
   }
   
   // Ignore the following - currently does exit
-  @Test  @Ignore
-  public void generatePath() {
-		String[] cppargs = new String[] {"-g", "Cpp", "--path", "/tmp", "testclass.ump"};
+  @Test
+  @Ignore
+  public void generatePath() throws IOException {
+    Path tmpDir = Files.createTempDirectory(Paths.get("."), "tmp"); // let the jvm delete this one
+    String tmpPath = tmpDir.toAbsolutePath().toString();
+
+    String[] cppargs = new String[] { "-g", "Cpp", "--path", tmpPath,
+        "testclass.ump" };
 		
 		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter("testclass.ump"));
-		    out.write("class testclass {}");
-		    out.close();
+      SampleFileWriter.createFile("testclass.ump", "class testclass {}");
 		    
 		    UmpleConsoleMain.main(cppargs);
-		    File cppout = new File("/tmp/testclass.cpp");
-		    File chout = new File("/tmp/testclass.h");
-		    Assert.assertEquals(true, cppout.exists());
-		    Assert.assertEquals(true, chout.exists()); 
-		    cppout.delete();
-		    chout.delete();
-		    
-		    new File("testclass.ump").delete();
-		} catch (IOException e) {
-			Assert.fail();
+      SampleFileWriter.assertFileExists(tmpPath + "/testclass.cpp");
+      SampleFileWriter.assertFileExists(tmpPath + "/testclass.h");
+    } finally {
+      SampleFileWriter.destroy("testclass.ump");
 		}
   }
   
    // Ignore the following - currently does exit
-   @Test  @Ignore
+  @Test
+  @Ignore
   public void outputLang() {
-	String[] javaargs = new String[] {"-g", "Java", "testclass.ump"};
-	String[] cppargs = new String[] {"-g", "Cpp", "testclass.ump"};
-	String[] phpargs = new String[] {"-g", "Php", "testclass.ump"};
+    String[] javaargs = new String[] { "-g", "Java", "testclass.ump" };
+    String[] cppargs = new String[] { "-g", "Cpp", "testclass.ump" };
+    String[] phpargs = new String[] { "-g", "Php", "testclass.ump" };
 	
 	try {
-		BufferedWriter out = new BufferedWriter(new FileWriter("testclass.ump"));
+      SampleFileWriter.createFile("testclass.ump", "class testclass {}");
 	
-	    out.write("class testclass {}");
-	    out.close();
 	    UmpleConsoleMain.main(javaargs);
-	    File javaout = new File("testclass.java");
-	    Assert.assertEquals(true, javaout.exists());
-	    javaout.delete();
+      SampleFileWriter.assertFileExists("testclass.java");
 	    
 	    UmpleConsoleMain.main(cppargs);
-	    File cppout = new File("testclass.cpp");
-	    File chout = new File("testclass.h");
-	    Assert.assertEquals(true, cppout.exists());
-	    Assert.assertEquals(true, chout.exists());
-	    cppout.delete();
-	    chout.delete();
+      SampleFileWriter.assertFileExists("testclass.cpp");
+      SampleFileWriter.assertFileExists("testclass.h");
 	    
 	    UmpleConsoleMain.main(phpargs);
-	    File phpout = new File("testclass.php");
-	    Assert.assertEquals(true, phpout.exists());
-	    phpout.delete();
-	    
-	    new File("testclass.ump").delete();
-	} catch (IOException e) {
-		Assert.fail();
+      SampleFileWriter.assertFileExists("testclass.php");
+    } finally {
+      SampleFileWriter.destroy("testclass.ump", 
+          "testclass.java",
+          "testclass.cpp", "testclass.h", 
+          "testclass.php");
 	}
   }
+
    @Test 
    public void MultiUmpleFile() {
     String[] args = new String[] { "testclass1.ump", "testclass2.ump" };
-	   try {
 
-      try (BufferedWriter out1 = new BufferedWriter(new FileWriter(
-          "testclass1.ump"));
-          BufferedWriter out2 = new BufferedWriter(new FileWriter(
-              "testclass2.ump"));) {
-		    out1.write("class Testclass1 {}");
-		    out2.write("class Testclass1 {}");	    
-      }
-
+    try {
+      SampleFileWriter.createFile("testclass1.ump", "class Testclass1 {}");
+      SampleFileWriter.createFile("testclass2.ump", "class Testclass1 {}");
 		    UmpleConsoleMain.main(args);
-      Assert.assertEquals(String.format("Processing -> testclass1.ump%n"
-          + "Success! Processed testclass1.ump.%n" 
-          + "Success! Processed testclass2.ump.%n"),
+
+      Assert.assertEquals("Processing -> testclass1.ump\n"
+              + "Success! Processed testclass1.ump.\n"
+              + "Success! Processed testclass2.ump.\n",
           outErrIntercept.toString());
-		    File fileOut = new File("Testclass1.java");
-      Assert.assertTrue("Testclass1.java does not exist", fileOut.exists());
-		} catch (IOException e) {
-			Assert.fail();
+
+      SampleFileWriter.assertFileExists("Testclass1.java");
     } finally {
-      new File("Testclass1.java").delete();
-      new File("testclass1.ump").delete();
-      new File("testclass2.ump").delete();
+      for (String file : args)
+        SampleFileWriter.destroy(file);
+
+      SampleFileWriter.destroy("Testclass1.java");
 		}   
    }
+
    @Test 
    public void UmpleImportTest() {
+    String[] args = new String[] { "-import", "testclass.ecore" };
 	   
-	   String[] args = new String[] {"-import", "testclass.ecore"};
 	   try {
-		BufferedWriter in = new BufferedWriter(new FileWriter("testclass.ecore"));
-		//load simple ECore
-		String cr = System.getProperty("line.separator");
-		in.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+cr);
-		in.write("<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" name=\"base\" nsURI=\"cruise.example.base\" nsPrefix=\"base\">"+cr);
-		in.write("<eClassifiers xsi:type=\"ecore:EDataType\" name=\"Time\" instanceClassName=\"java.sql.Time\"/>"+cr);
-		in.write("<eClassifiers xsi:type=\"ecore:EClass\" name=\"ICart\" interface=\"true\" abstract=\"true\">"+cr);
-		in.write("</eClassifiers>"+cr);
-		in.write("<eClassifiers xsi:type=\"ecore:EClass\" name=\"Cart\" eSuperTypes=\"#//ICart\">"+cr);
-		in.write("</eClassifiers>"+cr);
-		in.write("</ecore:EPackage>"+cr);
-		in.close();
+      // load simple ECore
+      SampleFileWriter.createFile("testclass.ecore", String.join("\n",
+          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+          "<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" name=\"base\" nsURI=\"cruise.example.base\" nsPrefix=\"base\">",
+          "<eClassifiers xsi:type=\"ecore:EDataType\" name=\"Time\" instanceClassName=\"java.sql.Time\"/>",
+          "<eClassifiers xsi:type=\"ecore:EClass\" name=\"ICart\" interface=\"true\" abstract=\"true\">",
+          "</eClassifiers>",
+          "<eClassifiers xsi:type=\"ecore:EClass\" name=\"Cart\" eSuperTypes=\"#//ICart\">",
+          "</eClassifiers>", 
+          "</ecore:EPackage>"));
 		
 		UmpleConsoleMain.main(args);
-    Assert.assertEquals("Success! Processed testclass.ecore."+cr, outErrIntercept.toString());
+      Assert.assertEquals("Success! Processed testclass.ecore.\n",
+          outErrIntercept.toString());
 		
-		File fileOut = new File("testclass.ecore.ump");
-	    Assert.assertEquals(true, fileOut.exists());
-		fileOut.delete();
-		
-	} catch (IOException e) {
-		Assert.fail();
+      SampleFileWriter.assertFileExists("testclass.ecore.ump");
+    } finally {
+      SampleFileWriter.destroy("testclass.ecore", "testclass.ecore.ump");
 	}
    }
-   
 }

@@ -17,23 +17,49 @@ class EcoreImportHandler
 	internal currentElement = "";
 	internal UmpleImportClass currentClass = null;
 	
-	public UmpleImportModel readDataFromXML(String filename) throws IOException, ParserConfigurationException {
+	internal Optional<Exception> parseException = Optional.empty();
 	    
-		/*
+	public UmpleImportModel readDataFromXML(String filename) throws IOException, ParserConfigurationException {
+		/* TODO why was this commented?
 		if(!UmpleEcoreValidator.getInstance().validate(Paths.get(filename))){
       		System.err.println("Ecore model used is not valid");
     	}
     	*/
 
+    	try (FileInputStream fis = new FileInputStream(filename)) {
+    		return readDataFromXML(fis);
+    	}
+	}
+	
+	/**
+	 * Read an {@link UmpleImportModel} from the input stream. 
+	 * @param input Stream to read from, it is the callers responsibility to close it. 
+	 * @throws IOException Thrown from {@link SAXParser#parse(InputStream, DefaultHandler)}
+	 * @throws ParserConfigurationException Thrown from {@link SAXParserFactory#newSAXParser()}
+	 */
+	public UmpleImportModel readDataFromXML(InputStream input) throws IOException, ParserConfigurationException {
+		if (input == null) {
+			throw new NullPointerException("Input stream was null.");
+		}
+
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setNamespaceAware(true);
 		try {
 			SAXParser parser = factory.newSAXParser();
-			parser.parse(new File(filename), this);
-		} catch (SAXException e) {
-			System.out.println(e.getMessage());
+			parser.parse(input, this);
+		} catch (Exception e) {
+			this.parseException = Optional.of(e);
 		}
+
 		return model;
+	}
+
+	Optional<Exception> getParseException() {
+		return parseException;
+	}
+
+	Boolean isSuccessful() {
+		return !parseException.isPresent();
 	}
 
 	public void startDocument() throws SAXException {

@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import cruise.umple.builder.Builder;
 
+
 public class UmplecAntTaskTest {
 
   @Test
@@ -20,6 +21,7 @@ public class UmplecAntTaskTest {
     // no-op
   }
 
+  // private final static String TEST_TASKDEF_FILE = "test.taskdef.xml";
   // private final static String TEST_TASKDEF_CONTENT = "<project name=\"TestTaskDefFile\" default=\"test\" basedir=\"%s\">" +
   //     "<target name=\"test\">" +
   //     "<taskdef name=\"foo\" classname=\"cruise.umple.util.UmplecAntTask\" " +
@@ -28,8 +30,7 @@ public class UmplecAntTaskTest {
   //     "</target>" +
   //     "</project>";
 
-  // private final static String TEST_TASKDEF_FILE = "test.taskdef.xml";
-
+  // private final static String UMPLEC_TASKDEF_FILE = "test.simpleumple.xml";
   // private final static String UMPLEC_TASKDEF_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
   //     "<project default=\"test\" name=\"Umple\" basedir=\"%s\">" +
   //     "<target name=\"test\">" +
@@ -38,8 +39,6 @@ public class UmplecAntTaskTest {
   //     "<umplec src=\"SimpleUmple.ump\"/>" +
   //     "</target>" +
   //     "</project>";
-
-  // private final static String UMPLEC_TASKDEF_FILE = "test.simpleumple.xml";
 
   // private final static String SIMPLE_UMPLE_FILE = "SimpleUmple.ump";
   // private final static String SIMPLE_UMPLE_CONTENT = "namespace cruise.umple.util;\n" +
@@ -53,6 +52,8 @@ public class UmplecAntTaskTest {
   // private final static String SIMPLE_UMPLE_CONTENT2 = "generate Java;\n" +
   // "namespace cruise.umple.util;\n" +
   //   "class SimpleClass {\n" +
+  //     "depend cruise.umple.UmpleRunMain;\n" + 
+      
   //     "String name2;\n" +
   //   "}\n";
 
@@ -63,6 +64,7 @@ public class UmplecAntTaskTest {
   //     "String name3;\n" + 
   //   "}\n";
   
+  // private final static String UMPLEC_LINKED_LONG_FILE = "test.linkedfiles.xml";
   // private final static String UMPLEC_LINKED_LONG_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
   //     "<project default=\"test\" name=\"Umple\" basedir=\"%s\">" +
   //     "<taskdef name=\"umplec\" classname=\"cruise.umple.util.UmplecAntTask\" " +
@@ -74,8 +76,8 @@ public class UmplecAntTaskTest {
   //     "</umplec>" +
   //     "</target>" +
   //     "</project>";
-  // private final static String UMPLEC_LINKED_LONG_FILE = "test.linkedfile.long.xml";
 
+  // private final static String UMPLEC_LINKED_ATTR_FILE = "test.linkedfile.attr.xml";
   // private final static String UMPLEC_LINKED_ATTR_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
   //     "<project default=\"test\" name=\"Umple\" basedir=\"%s\">" +
   //     "<taskdef name=\"umplec\" classname=\"cruise.umple.util.UmplecAntTask\" " + 
@@ -84,8 +86,8 @@ public class UmplecAntTaskTest {
   //     "<umplec src=\"SimpleUmple.ump\" linkedFile=\"SimpleUmple2.ump\"/>" +
   //     "</target>" +
   //     "</project>";
-  // private final static String UMPLEC_LINKED_ATTR_FILE = "test.linkedfile.attr.xml";
 
+  // private final static String UMPLEC_GENERATE_FILE = "test.generate.xml";
   // private final static String UMPLEC_GENERATE_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
   //     "<project default=\"test\" name=\"Umple\" basedir=\"%s\">" +
   //     "<taskdef name=\"umplec\" classname=\"cruise.umple.util.UmplecAntTask\" " +
@@ -95,7 +97,7 @@ public class UmplecAntTaskTest {
   //     "</target>" +
   //     "</project>";
 
-  // private final static String UMPLEC_GENERATE_FILE = "test.generate.xml";
+  // private final static String UMPLEC_OVERRIDE_FILE = "test.override.xml";
   // private final static String UMPLEC_OVERRIDE_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
   //     "<project default=\"test\" name=\"Umple\" basedir=\"%s\">" +
   //     "<taskdef name=\"umplec\" classname=\"cruise.umple.util.UmplecAntTask\" " +
@@ -104,8 +106,6 @@ public class UmplecAntTaskTest {
   //     "<umplec src=\"SimpleUmple2.ump\" generate=\"Cpp\" override=\"on\"/>" +
   //     "</target>" +
   //     "</project>";
-
-  // private final static String UMPLEC_OVERRIDE_FILE = "test.override.xml";
 
   // private String TEST_DIR;
   
@@ -169,8 +169,6 @@ public class UmplecAntTaskTest {
   // public void multiLinkedFiles() {
   //   assertTrue(runAnt(UMPLEC_LINKED_LONG_FILE, "test"));
   //   assertFileExists("cruise/umple/util/SimpleClass.java");
-    
-
   // }
 
   // @Test

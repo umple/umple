@@ -285,9 +285,13 @@ class SampleFileWriter
     }
   }
   
-  public static void destroy(String filename)
+  /**
+   * Deletes a file or directory.
+   * @param filenames File paths to destroy
+   */
+  public static void destroy(String... filenames)
   {
-    
+    for (String filename: filenames) {
     File file = new File(filename);
     
     if (file.isDirectory())
@@ -298,6 +302,7 @@ class SampleFileWriter
     {
       file.delete();
     }
+  }
   }
   
   private static void destroy(File path)

@@ -291,12 +291,10 @@ class Builder {
     }
 
       return true;  
-    }
-    catch (IOException | InterruptedException e)
-    {
+    } catch (IOException | InterruptedException e) {
+      System.err.println("Failed to run Ant: " + e.getMessage());
       return false;
-    }
-    finally {
+    } finally {
       if (p != null) p.destroy();
     }
   }

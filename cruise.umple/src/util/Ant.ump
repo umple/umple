@@ -19,7 +19,6 @@ class UmplecAntTask {
 
   // The method executing the task
   void execute() throws BuildException {
-
     if (!srcPath.isPresent()) {
       throw new BuildException("src was not set.");
     }
@@ -31,7 +30,7 @@ class UmplecAntTask {
 
     this.linkedFiles.stream().map(LinkedFile::getSrc).map(p -> srcDir.relativize(p)).map(Path::toString).forEach(this.cfg::addLinkedFile);
 
-  	UmpleConsoleMain console = new UmpleConsoleMain(cfg);
+    UmpleConsoleMain console = new UmpleConsoleMain(this.cfg);
     int res = console.runConsole();
 
     if (res != 0) {
@@ -41,6 +40,8 @@ class UmplecAntTask {
   }
 
   internal UmpleConsoleConfig cfg = new UmpleConsoleConfig("");
+  internal List<LinkedFile> linkedFiles = new ArrayList<>(4);
+
   internal Path cwd = Paths.get(System.getProperty("user.dir"));
   internal Optional<Path> srcPath = Optional.empty();
 
@@ -67,8 +68,6 @@ class UmplecAntTask {
   public void setDest(File dest) {
     this.cfg.setPath(dest.getAbsolutePath());
   }
-
-  internal List<LinkedFile> linkedFiles = new ArrayList<>(4);
 
   public LinkedFile createLinkedFile() {
     LinkedFile f = new LinkedFile();

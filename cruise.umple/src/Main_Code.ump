@@ -39,7 +39,6 @@ class UmpleConsoleConfig {
     this.version    = optSet.has("v");
     this.help       = optSet.has("help");
     this.importFile = Optional.ofNullable((String)optSet.valueOf("import"));
-    
     this.generate   = Optional.ofNullable((String)optSet.valueOf("generate"));
     this.override   = optSet.has("override");
     this.path       = Optional.ofNullable((String)optSet.valueOf("path"));
@@ -117,7 +116,6 @@ class UmpleConsoleMain
   depend java.util.Arrays;
   depend joptsimple.*;
   depend java.io.*;
-
 
   UmpleConsoleConfig cfg;
 
@@ -265,10 +263,8 @@ class UmpleConsoleMain
     return true;
   }
 
-  private boolean postModelOptionProcess(UmpleModel model)
-      {
-    if (cfg.getGenerate().isPresent())
-      {
+  private boolean postModelOptionProcess(UmpleModel model) {
+    if (cfg.getGenerate().isPresent()) {
       String path = cfg.getPath().orElse("");
       boolean override = cfg.getOverride();
       String lang = cfg.getGenerate().orElse(null);
@@ -280,6 +276,7 @@ class UmpleConsoleMain
 
       model.addGenerate(Arrays.asList(gt));
     }
+    
     return false;
   }
   

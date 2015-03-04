@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: cruise.umple.xtext.ui
 Bundle-Vendor: Cruise - University of Ottawa
-Bundle-Version: 0.0.1
+Bundle-Version: 1.22.0.${svn.Revision}
 Bundle-SymbolicName: cruise.umple.xtext.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext.ui,
