@@ -1,0 +1,14 @@
+<!--  EXPERIMENTAL SCXML OUTPUT, NOT READY FOR USE -->
+<?xml version="1.0" encoding="utf-8"?>
+<scxml name="sm" xmlns="http://www.w3.org/2005/07/scxml" xmlns:xi="http://www.w3.org/2001/XInclude" version="1.0">
+<state id="stateOne">
+<onentry>
+<script>
+System.out.println("auto transition");
+</script>
+<raise event="__autotransition1__"/>
+</onentry>
+<transition event="__autotransition1__" target="stateTwo"/>
+</state>
+<state id="stateTwo"/>
+</scxml>

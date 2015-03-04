@@ -13,6 +13,7 @@ package cruise.umple.implementation.scxml;
 
 import org.junit.*;
 
+import cruise.umple.compiler.Event;
 import cruise.umple.implementation.TemplateTest;
 import cruise.umple.util.SampleFileWriter;
 
@@ -22,6 +23,7 @@ public class ScxmlTemplateTest extends TemplateTest
   public void setUp()
   {
     super.setUp();
+    Event.setNextAutoTransitionId(1);
     language = "Scxml";
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/implementation");
     pathToRoot = SampleFileWriter.rationalize("../../cruise.umple");
@@ -41,6 +43,7 @@ public class ScxmlTemplateTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/scxml/classCode.scxml");
     SampleFileWriter.destroy(pathToInput + "/scxml/classCodeNoStateMachine.scxml");
     SampleFileWriter.destroy(pathToInput + "/scxml/classCodeEmptyStateMachine.scxml");
+    SampleFileWriter.destroy(pathToInput + "/scxml/autoTransition.scxml");
   }
 
   @Test
@@ -101,5 +104,11 @@ public class ScxmlTemplateTest extends TemplateTest
   public void classCodeEmptyStateMachine()
   {
     assertUmpleTemplateFor("scxml/classCodeEmptyStateMachine.ump","scxml/classCodeEmptyStateMachine.scxml.txt");
+  }
+  
+  @Test
+  public void autoTransition()
+  {
+    assertUmpleTemplateFor("scxml/autoTransition.ump","scxml/autoTransition.scxml.txt");
   }
 }

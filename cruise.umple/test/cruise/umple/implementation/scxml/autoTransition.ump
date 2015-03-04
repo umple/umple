@@ -1,0 +1,12 @@
+class SMClass {
+  sm {
+    stateOne {
+		do{
+		System.out.println("auto transition");
+		} 
+		-> stateTwo;	
+    }
+    stateTwo {
+    }
+  }
+}

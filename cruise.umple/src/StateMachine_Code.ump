@@ -595,6 +595,10 @@ class Event
     return e;
   }
   
+  public static void setNextAutoTransitionId(int value) {
+    Event.nextAutoTransitionId = value;
+  }
+  
   public String getArgs()
   {
   	String args="";

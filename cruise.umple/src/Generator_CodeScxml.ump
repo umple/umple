@@ -49,6 +49,9 @@ class ScxmlGenerator
   emit genTransitionClosingTag()(transitionClosingTag, cr);
   emit genTransitionTag(String event, String cond, String target, String type)(transitionEmptyTag, cr);
   
+  raiseTag <<!<raise<<=event>>/>!>>
+  emit genRaiseTag(String event)(raiseTag, cr);
+  
   genericTag <<!<<<#if (isClosing) {#>>/<<#}#>><<=tagName>>>!>>
   emit genGenericTag(String tagName, boolean isClosing)(genericTag, cr);
 
@@ -107,8 +110,12 @@ class ScxmlGenerator
     
     _genStateOpeningTag(0, code, genTagAttribute("id", state.getName()));
     
-    for (Action action: state.getActions()) {
-      generateStateAction(action);
+    if (stateHasOnEntry(state)) {
+      generateOnEntry(state);
+    }
+    
+    if (stateHasOnExit(state)) {
+      generateOnExit(state);
     }
     
     for (Transition transition: state.getTransitions()) {
@@ -127,6 +134,30 @@ class ScxmlGenerator
   
   private boolean isStateEmpty(State state) {
     return state != null && !state.hasTransitions() && !state.hasNestedStateMachines() && !state.hasActions();
+  }
+  
+  private boolean stateHasOnEntry(State state) {
+    if (state.hasActivities()) {
+      return true;
+    }
+    
+    for (Action action: state.getActions()) {
+      if ("entry".equals(action.getActionType())) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+  
+  private boolean stateHasOnExit(State state) {
+    for (Action action: state.getActions()) {
+      if ("exit".equals(action.getActionType())) {
+        return true;
+      }
+    }
+    
+    return false;
   }
   
   private void generateTransition(Transition transition) {
@@ -162,18 +193,47 @@ class ScxmlGenerator
   	return transition != null && !transition.hasAction();
   }
   
-  private void generateStateAction(Action action) {
-	String type = action.getActionType();
-	if (!"entry".equals(type) && !"exit".equals(type)) {
-		return;
-	} 
-	
-	String tagName = "on".concat(type);
-    _genGenericTag(0, code, tagName, false);
+  
+  private void generateOnEntry(State state) {
+    _genGenericTag(0, code, "onentry", false);
+     
+    for(Action action: state.getActions()) {
+      _genGenericTag(0, code, "script", false);
+      if ("entry".equals(action.getActionType())) {
+        _genTextElement(0, code, action.getActionCode());
+      }
+      _genGenericTag(0, code, "script", true);
+    }
+     
+    for (Activity activity: state.getActivities()) {
+      _genGenericTag(0, code, "script", false);
+      _genTextElement(0, code, activity.getActivityCode());
+      _genGenericTag(0, code, "script", true);
+      
+      if (activity.hasOnCompletionEvent()) {
+        Event cEvent = activity.getOnCompletionEvent();
+        if (cEvent.isAutoTransition()) {
+          String event = " event=\"" + cEvent.getName() + "\"";
+          _genRaiseTag(0, code, event);
+        }
+      }
+    } 
+    
+    _genGenericTag(0, code, "onentry", true);
+  }
+   
+  private void generateOnExit(State state) {
+    _genGenericTag(0, code, "onexit", false);
     _genGenericTag(0, code, "script", false);
- 	_genTextElement(0, code, action.getActionCode());
- 	_genGenericTag(0, code, "script", true);
- 	_genGenericTag(0, code, tagName, true);
+    
+    for (Action action: state.getActions()) {
+      if ("exit".equals(action.getActionType())) {
+        _genTextElement(0, code, action.getActionCode());
+      }
+    }
+ 	
+    _genGenericTag(0, code, "script", true);
+    _genGenericTag(0, code, "onexit", true);
   }
   
   private void generateTransitionAction(Action action) {
