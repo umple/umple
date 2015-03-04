@@ -454,6 +454,10 @@ class UmpleModel
       UmpleClass clazz = umpleClasses.get(i);
       if (!f.isIncluded(clazz))
       {
+        for(int j=0; j<clazz.getAssociations().length;j++)
+        {
+          associations.remove(clazz.getAssociation(j));
+        }
         removeUmpleClass(clazz);
       }
     }

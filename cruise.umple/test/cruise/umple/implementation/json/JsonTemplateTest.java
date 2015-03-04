@@ -120,13 +120,11 @@ public class JsonTemplateTest extends TemplateTest
   {
 	assertUmpleTemplateFor("json/interfacesTest.ump", "json/interfacesTest.json.txt");
   }
-  
-  
-  // @Test
-  // public void ExtraCode()
-  // {
-  // language = null;
-  // assertUmpleTemplateFor("php/ClassTemplateTest_ExtraCode.ump","php/ClassTemplateTest_ExtraCode.php.txt","Mentor");
-  // }
+
+  @Test
+  public void filterTest()
+  {
+	  assertUmpleTemplateFor("json/filterTest.ump", "json/filterTest.json.txt");
+  }
 
 }

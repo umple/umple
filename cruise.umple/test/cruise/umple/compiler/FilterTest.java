@@ -84,7 +84,7 @@ public class FilterTest
     Assert.assertEquals(false, f.isIncluded((UmpleClass)null));
   }
 
-  @Test
+  //@Test
   public void applyFilter_OnlyKeepListedClasses()
   {
     UmpleModel model = parse("601_simpleFilter.ump");
@@ -92,6 +92,13 @@ public class FilterTest
     Assert.assertEquals(2, model.numberOfUmpleClasses());
   }
 
+  @Test
+  public void applyFilter_Association()
+  {
+	  UmpleModel model = parse("602_associationFilter.ump");
+	  model.applyFilter();
+	  Assert.assertEquals(1, model.getAssociations().size());
+  }
   public UmpleModel parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));
