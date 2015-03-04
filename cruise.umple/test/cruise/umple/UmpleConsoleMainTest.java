@@ -187,7 +187,7 @@ public class UmpleConsoleMainTest
       }
 
 		    UmpleConsoleMain.main(args);
-      Assert.assertEquals(String .format("Compiling -> testclass1.ump%n"
+      Assert.assertEquals(String.format("Processing -> testclass1.ump%n"
           + "Success! Processed testclass1.ump.%n" 
           + "Success! Processed testclass2.ump.%n"),
           outErrIntercept.toString());

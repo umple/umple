@@ -20,7 +20,16 @@ class UmplecAntTask {
   // The method executing the task
   void execute() throws BuildException {
 
-    this.linkedFiles.stream().map(LinkedFile::getSrc).map(p -> cwd.relativize(p)).map(Path::toString).forEach(this.cfg::addLinkedFile);
+    if (!srcPath.isPresent()) {
+      throw new BuildException("src was not set.");
+    }
+
+    final Path srcDir = this.srcPath.get().getParent();
+    if (srcDir == null) {
+      throw new BuildException("src does not have a parent folder {src=" + this.srcPath.get() + "}");
+    }
+
+    this.linkedFiles.stream().map(LinkedFile::getSrc).map(p -> srcDir.relativize(p)).map(Path::toString).forEach(this.cfg::addLinkedFile);
 
   	UmpleConsoleMain console = new UmpleConsoleMain(cfg);
     int res = console.runConsole();
@@ -33,16 +42,18 @@ class UmplecAntTask {
 
   internal UmpleConsoleConfig cfg = new UmpleConsoleConfig("");
   internal Path cwd = Paths.get(System.getProperty("user.dir"));
-
+  internal Optional<Path> srcPath = Optional.empty();
 
   public void setSrc(File aSrc) {
-    Path ufile = cwd.relativize(aSrc.toPath());
+    srcPath = Optional.of(aSrc.toPath());
 
-  	this.cfg.setUmpleFile(ufile.toString());
+    this.cfg.setUmpleFile(cwd.relativize(srcPath.get()).toString());
   	}
 
-  public void setLinkedFile(String linkedFile) {
-  	this.cfg.addLinkedFile(linkedFile);
+  public void setLinkedFile(File linkedFile) {
+  	LinkedFile lf = createLinkedFile();
+    lf.setSrc(linkedFile);
+    linkedFiles.add(lf);
   }
 
   public void setGenerate(String generate) {
@@ -51,6 +62,10 @@ class UmplecAntTask {
 
   public void setOverride(boolean override) {
     this.cfg.setOverride(override);
+  }
+
+  public void setDest(File dest) {
+    this.cfg.setPath(dest.getAbsolutePath());
   }
 
   internal List<LinkedFile> linkedFiles = new ArrayList<>(4);

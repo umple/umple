@@ -152,7 +152,7 @@ class UmpleConsoleMain
     }
 
     final String filename = cfg.getUmpleFile();
-    System.out.println("Compiling -> " + filename);
+    System.out.println("Processing -> " + filename);
 
     final UmpleFile umpleFile = new UmpleFile(filename);
     //this loop is used to add linked umple files and to show names of them.

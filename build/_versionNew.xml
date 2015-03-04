@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." name="VersionNew" >
 
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
     <exec executable="svn" output="build/svn.properties">
       <arg value="info" />
     </exec>
     <property prefix="svn" file="build/svn.properties"/>
     <property prefix="base" file="build/umpleversion.txt"/>
 
-    <property name="umple.version" value="${base.version}.${svn.Revision}" />
+    <exec executable="git" outputproperty="git.revision">
+    	<arg value="describe" />
+    	<arg value="--always" />
+    </exec>
+
+    
+    <!-- if the svn property didn't set it'll be the string "svn.Revision", get the git version instead. -->
+    <if>
+      <matches pattern="\d+" string="${svn.Revision}"/>
+	  <then>
+	  	<property name="revision" value="${svn.revision}" />
+	  </then>
+	  <else>
+	  	<property name="revision" value="${git.revision}" />
+	  </else>
+    </if>
+
+    <property name="umple.version" value="${base.version}-${revision}" />
     <echo message="Current Version: ${umple.version}" />
   
 </project>

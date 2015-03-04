@@ -10,12 +10,19 @@
 package cruise.umple.compiler;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import cruise.umple.util.SampleFileWriter;
 
@@ -28,12 +35,13 @@ public class UmpleModelTest
   UmpleModel model;
 
   @Before
-
   public void setUp()
   {
-
     SampleFileWriter.createFile("teacher.txt", "class Teacher {}");
     SampleFileWriter.createFile("student.txt", "class Student {}");
+
+    SampleFileWriter.createFile("sub/Teacher2.ump", "namespace sub; class Teacher2{}");
+    SampleFileWriter.createFile("sub/student2.ump", "namespace sub; class Student2 {}");
     SampleFileWriter.createFile("TestSymmetric.txt", "class Course { * self isMutuallyExclusiveWith;}");
 
     uFile = new UmpleFile("teacher.txt");
@@ -47,6 +55,8 @@ public class UmpleModelTest
     SampleFileWriter.destroy("student.txt");
     SampleFileWriter.destroy("TestSymmetric.txt");
     SampleFileWriter.destroy("Course.java");
+    SampleFileWriter.destroy("Teacher.java");
+    SampleFileWriter.destroy("sub/");
   }
 
   @Test
@@ -81,7 +91,7 @@ public class UmpleModelTest
     assertEquals(null,model.getUmpleClass("Teacher"));
 
     UmpleClass uClass = model.addUmpleClass("Teacher");
-    Attribute attr = new Attribute("x","String",null,null,false,uClass);
+    new Attribute("x","String",null,null,false,uClass); // this adds the attribute to uClass
     UmpleClass sameClass = model.addUmpleClass("Teacher");
     assertSame(uClass,sameClass);
   }
@@ -103,7 +113,25 @@ public class UmpleModelTest
     assertEquals("teacher", model.getUmpleFile().getSimpleFileName());
   }
 
-
+  @Test
+  public void umpleFileWithLinkedFiles() {
+    uFile.addLinkedFiles("sub/student2.ump");
+    model = new UmpleModel(uFile);
+    model.run();
+    
+    List<String> classNames = model.getUmpleClasses().stream().map(UmpleClass::getName).collect(Collectors.toList());
+    assertTrue(classNames.contains("Student2"));
+    assertTrue(classNames.contains("Teacher"));
+    
+    uFile = new UmpleFile("sub/Teacher2.ump");
+    uFile.addLinkedFiles("student2.ump");
+    model = new UmpleModel(uFile);
+    model.run();
+    
+    classNames = model.getUmpleClasses().stream().map(UmpleClass::getName).collect(Collectors.toList());
+    assertTrue(classNames.contains("Student2"));
+    assertTrue(classNames.contains("Teacher2"));
+  }
 
   @Test
 

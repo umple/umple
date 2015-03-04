@@ -9,6 +9,8 @@
 
 package cruise.umple.compiler;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 
 import org.junit.After;
@@ -102,10 +104,15 @@ public class UmpleFileTest {
   }     
 
   @Test
-  public void AddLinkedFiles() {
+  public void addLinkedFiles() {
    UmpleFile file = new UmpleFile("blah.txt");
    file.addLinkedFiles("test1.ump");
    Assert.assertEquals("\nuse test1.ump;\n", file.getLinkedFiles());
+   
+   // Issue 684, it works here
+   file = new UmpleFile("blah.txt");
+   file.addLinkedFiles("sub1234/test1.ump");
+   assertEquals("\nuse sub1234/test1.ump;\n", file.getLinkedFiles());
   }  
    
 }
