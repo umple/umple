@@ -116,15 +116,21 @@ public class JsonTemplateTest extends TemplateTest
   }
   
   @Test
-  public void interfacesTest()
+  public void InterfacesTest()
   {
-	assertUmpleTemplateFor("json/interfacesTest.ump", "json/interfacesTest.json.txt");
+    assertUmpleTemplateFor("json/InterfacesTest.ump", "json/InterfacesTest.json.txt");
   }
 
   @Test
-  public void filterTest()
+  public void InterfaceClassAssociationTest()
   {
-	  assertUmpleTemplateFor("json/filterTest.ump", "json/filterTest.json.txt");
+    assertUmpleTemplateFor("json/InterfaceClassAssociationTest.ump", "json/InterfaceClassAssociationTest.json.txt");
+  }
+
+  @Test
+  public void FilterTest()
+  {
+    assertUmpleTemplateFor("json/FilterTest.ump", "json/FilterTest.json.txt");
   }
 
 }

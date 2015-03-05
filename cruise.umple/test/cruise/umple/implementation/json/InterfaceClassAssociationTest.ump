@@ -1,0 +1,10 @@
+generate Json;
+namespace example;
+
+interface I {
+  
+}
+
+class C1 {
+  0..1 -> * I;
+}

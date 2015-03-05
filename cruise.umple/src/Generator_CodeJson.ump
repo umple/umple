@@ -59,10 +59,16 @@ class JsonGenerator
                 traceColor = "red";
         
         jsonForAttributes += StringFormatter.format(
-            "{ {0}type{0} : {0}{1}{0}, {0}name{0} : {0}{2}{0}, {0}modifier{0} : {0}{3}{0}, {0}traceColor{0} : {0}{4}{0} }",
-            "\"",attributeType,attribute.getName(),modifier,traceColor);
+            "{ {0}type{0} : {0}{1}{0}, {0}name{0} : {0}{2}{0}, " +
+            "{0}modifier{0} : {0}{3}{0}, {0}traceColor{0} : {0}{4}{0} }",
+            "\"",
+            attributeType,
+            attribute.getName(),
+            modifier,
+            traceColor);
         
       }
+
       for(Method method : aClass.getMethods())
       {
         if(jsonForMethods.length() > 0)
@@ -89,7 +95,14 @@ class JsonGenerator
           }
           methodParams += param.getFullType().trim();
         }
-        jsonForMethods += StringFormatter.format("{ {0}type{0} : {0}{1}{0}, {0}name{0} : {0}{2}{0}, {0}parameters{0} : {0}{3}{0}, {0}visibility{0} : {0}{4}{0}}","\"",methodReturnType,method.getName(),methodParams,visibility);
+        jsonForMethods += StringFormatter.format(
+          "{ {0}type{0} : {0}{1}{0}, {0}name{0} : {0}{2}{0}, " +
+          "{0}parameters{0} : {0}{3}{0}, {0}visibility{0} : {0}{4}{0}}",
+          "\"",
+          methodReturnType,
+          method.getName(),
+          methodParams,
+          visibility);
       }
 
       if (!isFirst)
@@ -106,7 +119,8 @@ class JsonGenerator
       //Add implemented interfaces in jsonForClasses: if a class implements one or multiple interfaces, the name of thoese interfaces will be included in Json
       String implementedInterfaces = "";
 
-      if (aClass.hasParentInterface() == true){
+      if (aClass.hasParentInterface() == true)
+      {
           int index = 0;
           implementedInterfaces = StringFormatter.format(", {0}implementedInterfaces{0}: [ ","\"");
           for (UmpleInterface uInterface : aClass.getParentInterface())
@@ -123,11 +137,27 @@ class JsonGenerator
        
 
       boolean isInterface = false;
-      jsonForClasses += StringFormatter.format("{{0}position{0}: {{0}x{0}: {1}, {0}y{0}: {2}, {0}width{0}: {3}, {0}height{0}: {4}}, {0}attributes{0}: [{7}],{0}methods{0}: [{8}], {0}id{0}: {0}{5}{0}, {0}name{0}: {0}{6}{0}, {0}displayColor{0}: {0}{10}{0} {9}, {0}isInterface{0}: {0}{11}{0}{12}}", "\"", x, y, width, height, name, name, jsonForAttributes,jsonForMethods,extendsJson,displayColor,isInterface,implementedInterfaces);
+      jsonForClasses += StringFormatter.format(
+        "{{0}position{0}: {{0}x{0}: {1}, {0}y{0}: {2}, {0}width{0}: {3}, " +
+        "{0}height{0}: {4}}, {0}attributes{0}: [{7}],{0}methods{0}: [{8}], " +
+        "{0}id{0}: {0}{5}{0}, {0}name{0}: {0}{6}{0}, {0}displayColor{0}: {0}{10}{0} {9}, " +
+        "{0}isInterface{0}: {0}{11}{0}{12}}", 
+        "\"", 
+        x, 
+        y, 
+        width, 
+        height, 
+        name, 
+        name, 
+        jsonForAttributes,
+        jsonForMethods,
+        extendsJson,
+        displayColor,
+        isInterface,
+        implementedInterfaces);
+
       isFirst = false;
     }
-
-    
 
     boolean isFirstInterface = true;
     for (UmpleInterface aInterface : model.getUmpleInterfaces())
@@ -148,16 +178,34 @@ class JsonGenerator
       {
         jsonForClasses += ", ";
       }
-      jsonForClasses += StringFormatter.format("{{0}position{0}: {{0}x{0}: {1}, {0}y{0}: {2}, {0}width{0}: {3}, {0}height{0}: {4}}, {0}attributes{0}: [{7}],{0}methods{0}: [{8}], {0}id{0}: {0}{5}{0}, {0}name{0}: {0}{6}{0}, {0}displayColor{0}: {0}{10}{0} {9}, {0}isInterface{0}: {0}{11}{0}{12}}", "\"", x, y, width, height, name, name, jsonForAttributes,jsonForMethods,extendsJson, displayColor,isInterface,implementedInterfaces);
+
+      jsonForClasses += StringFormatter.format(
+        "{{0}position{0}: {{0}x{0}: {1}, {0}y{0}: {2}, {0}width{0}: {3}, " +
+        "{0}height{0}: {4}}, {0}attributes{0}: [{7}],{0}methods{0}: [{8}], " +
+        "{0}id{0}: {0}{5}{0}, {0}name{0}: {0}{6}{0}, {0}displayColor{0}: {0}{10}{0} {9}, " + 
+        "{0}isInterface{0}: {0}{11}{0}{12}}", "\"", 
+        x, 
+        y, 
+        width, 
+        height, 
+        name, 
+        name, 
+        jsonForAttributes,
+        jsonForMethods,
+        extendsJson, 
+        displayColor,
+        isInterface,
+        implementedInterfaces);
+
       isFirst = false;
     }
 
     int index = 0;
     for (Association aAssoc : model.getAssociations())
     {
-      UmpleClass c1 = model.getUmpleClass(aAssoc.getEnd(0).getClassName());
-      UmpleClass c2 = model.getUmpleClass(aAssoc.getEnd(1).getClassName());
-
+      String c1Name = extractClassName(aAssoc.getEnd(0));
+      String c2Name = extractClassName(aAssoc.getEnd(1));
+      
       if (index > 0)
       {
         jsonForAssociations += ", ";
@@ -201,15 +249,49 @@ class JsonGenerator
                 traceColor = "red";
 
       String associationId = "umpleAssociation_" + index;
-      
+      String baseAssociationJson = 
+          "{\"offsetOnePosition\": {\"x\": {2}, \"y\": {3}, \"width\": 0, \"height\": 0}, " +
+          "\"offsetTwoPosition\": {\"x\": {4}, \"y\": {5}, \"width\": 0, \"height\": 0}, " +
+          "\"id\": \"{6}\", \"classOneId\": \"{0}\", \"classTwoId\": \"{1}\", " +
+          "\"multiplicityOne\": \"{7}\", \"multiplicityTwo\": \"{8}\", " +
+          "\"name\": \"{9}\", \"roleOne\": \"{10}\", \"roleTwo\": \"{11}\", " +
+          "\"isLeftNavigable\":\"{12}\", \"isRightNavigable\":\"{13}\", " +
+          "\"isLeftComposition\":\"{14}\", \"isRightComposition\":\"{15}\", " + 
+          "\"isSymmetricReflexive\":\"{16}\", \"isTraced\":\"{17}\"}";
+
+      String isSymmetricReflexive;
+
       if ("symmetricreflexive".equals(modifierOne) && "symmetricreflexive".equals(modifierTwo)) 
       {
-        jsonForAssociations += StringFormatter.format("{\"offsetOnePosition\": {\"x\": {2}, \"y\": {3}, \"width\": 0, \"height\": 0}, \"offsetTwoPosition\": {\"x\": {4}, \"y\": {5}, \"width\": 0, \"height\": 0}, \"id\": \"{6}\", \"classOneId\": \"{0}\", \"classTwoId\": \"{1}\", \"multiplicityOne\": \"{7}\", \"multiplicityTwo\": \"{8}\", \"name\": \"{9}\", \"roleOne\": \"{10}\", \"roleTwo\": \"{11}\", \"isLeftNavigable\":\"{12}\", \"isRightNavigable\":\"{13}\", \"isLeftComposition\":\"{14}\", \"isRightComposition\":\"{15}\", \"isSymmetricReflexive\":\"{16}\", \"isTraced\":\"{17}\"}", c1.getName(), c2.getName(), x1, y1, x2, y2,associationId, multOne, multTwo, name, roleTwo, "", aAssoc.getIsLeftNavigable(), aAssoc.getIsRightNavigable(), aAssoc.getIsLeftComposition(), aAssoc.getIsRightComposition(), "true", traceColor);
+        roleOne = roleTwo;
+        roleTwo = "";
+        isSymmetricReflexive = "true";
       }
       else 
       {
-        jsonForAssociations += StringFormatter.format("{\"offsetOnePosition\": {\"x\": {2}, \"y\": {3}, \"width\": 0, \"height\": 0}, \"offsetTwoPosition\": {\"x\": {4}, \"y\": {5}, \"width\": 0, \"height\": 0}, \"id\": \"{6}\", \"classOneId\": \"{0}\", \"classTwoId\": \"{1}\", \"multiplicityOne\": \"{7}\", \"multiplicityTwo\": \"{8}\", \"name\": \"{9}\", \"roleOne\": \"{10}\", \"roleTwo\": \"{11}\", \"isLeftNavigable\":\"{12}\", \"isRightNavigable\":\"{13}\", \"isLeftComposition\":\"{14}\", \"isRightComposition\":\"{15}\", \"isSymmetricReflexive\":\"{16}\", \"isTraced\":\"{17}\"}", c1.getName(), c2.getName(), x1, y1, x2, y2,associationId, multOne, multTwo, name, roleOne, roleTwo, aAssoc.getIsLeftNavigable(), aAssoc.getIsRightNavigable(), aAssoc.getIsLeftComposition(), aAssoc.getIsRightComposition(), "false", traceColor);
+        isSymmetricReflexive = "false";
       }
+
+      jsonForAssociations += StringFormatter.format(
+          baseAssociationJson,
+          c1Name, 
+          c2Name, 
+          x1, 
+          y1, 
+          x2, 
+          y2,
+          associationId, 
+          multOne, 
+          multTwo, 
+          name, 
+          roleOne, 
+          roleTwo, 
+          aAssoc.getIsLeftNavigable(), 
+          aAssoc.getIsRightNavigable(), 
+          aAssoc.getIsLeftComposition(), 
+          aAssoc.getIsRightComposition(), 
+          isSymmetricReflexive, 
+          traceColor);
 
       index += 1;
     }
@@ -220,6 +302,24 @@ class JsonGenerator
     //String json = "{" + jsonForClasses + ", " + jsonForInterfaces + ", " + jsonForAssociations + " }";
     String json = "{" + jsonForClasses  + ", " + jsonForAssociations + " }";
     model.setCode(json);
+  }
+
+  //Method to deal with association ends being different entities 
+  //(eg. class or interface)
+  private String extractClassName(AssociationEnd aAssocEnd)
+  {
+    UmpleClass umpClass = model.getUmpleClass(aAssocEnd.getClassName());
+
+    if(umpClass != null) 
+    {
+      return umpClass.getName();
+    }
+      
+    //Must be an interface at this end of the association
+    UmpleInterface umpInterface = 
+      model.getUmpleInterface(aAssocEnd.getClassName());
+
+    return umpInterface.getName();
   }
 }
 
