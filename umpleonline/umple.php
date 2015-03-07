@@ -191,14 +191,13 @@ $output = readTemporaryFile("ump/" . $filename);
               <img src="scripts/copy.png"/> 
               Encoded URL
             </li>
+            <li class="dropbox-add-saver"></li>
           </ul>
         
-          <ul class="dropbox-add-saver"></ul>
-        
-          <ul class="second">
+          <ul class="second center-children">
             <li class="subtitle">RESET</li>
             <li id="ttStartOver"> 
-              <div id="buttonStartOver" class="jQueryPaletteButton" value="Start Over"></div> 
+              <div id="buttonStartOver" class="jQuery-palette-button" value="Start Over"></div> 
             </li>
           </ul>
         </div>
@@ -207,7 +206,7 @@ $output = readTemporaryFile("ump/" . $filename);
         <h3><a href="#tools">TOOLS</a></h3>
         
         <div class="section">
-          <ul id="mainLoadMenu" class="first">
+          <ul id="mainLoadMenu" class="first center-children">
             <li class="subtitle"> Load </li>
             <li id="exampleType">
               <select id="inputExampleType" name="inputExampleType" class="button" size = "1">
@@ -305,10 +304,9 @@ $output = readTemporaryFile("ump/" . $filename);
                 <option name = "optionExample" value="OBDCarSystem.ump">OBD Car System</option>
                 <option name = "optionExample" value="PingPong.ump">Ping Pong</option>
               </select>
-            </li>              
+            </li>
+            <li class="dropbox-add-chooser"></li>       
           </ul>
-        
-          <ul class="dropbox-add-chooser"></ul>
       
           <ul id="mainDrawMenu" class="second toggle">
             <li class="subtitle"> Draw </li>
@@ -353,7 +351,7 @@ $output = readTemporaryFile("ump/" . $filename);
       
       <div class="section">
         <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
-          <ul class="first">
+          <ul class="first toggle">
             <li class="subtitle"> Show View </li>
             <li id="ttShowHideCanvas"> 
               <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
@@ -384,7 +382,7 @@ $output = readTemporaryFile("ump/" . $filename);
               <a id="labelToggleTraits" class="buttonExtend">Traits</a> 
             </li>
           </ul>
-          <ul>
+          <ul class="second">
             <li id="diagramTypeTitle" class="subtitle"> Diagram Type </li>
             <li id="ttShowEditableClassDiagram"> 
               <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
@@ -403,7 +401,7 @@ $output = readTemporaryFile("ump/" . $filename);
               <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
             </li>
           </ul>
-          <ul>
+          <ul class="second">
             <li id="preferencesTitle" class="subtitle"> Preferences </li>
             <li id="ttPhotoReady"> 
               <input id="buttonPhotoReady" class="checkbox" type="checkbox" name="photoReady" value="photoReady"/> 
@@ -414,7 +412,7 @@ $output = readTemporaryFile("ump/" . $filename);
               <a id="labelManualSync" class="buttonExtend">Manual Sync</a> 
             </li>          
           </ul>
-          <ul>
+          <ul class="second">
             <li class="subtitle"> Other Views </li>
             <!--<li id="buttonPngImage" class="png"><img src="scripts/png.png" title="Generate PNG Image" /> PNG View</li> //DISABLED -->
             <li id="ttYumlImage">

@@ -292,7 +292,10 @@ Page.initJQueryButton = function(id)
 {
   var selector = "#" + id;
   var value = jQuery(selector).attr("value");
-  jQuery(selector).button({label: value});
+  jQuery(selector).button({
+    label: value,
+    className: "jQuery-palette-button"
+  });
 }
 
 Page.initAction = function(id)

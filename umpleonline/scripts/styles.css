@@ -80,6 +80,7 @@ div.syncNeededMessage{ color: Gray; margin-left: 5px;}
 .generatedCode { overflow-x: hidden; border: 1px solid gray; }
 
 /* UMPLE PALETTE */
+.center-children { text-align: center; }
 div.paletteWrapper { 
   box-sizing:border-box; -moz-box-sizing:border-box; border: 1px solid Gray; 
   background-color: GhostWhite; padding:  1px 1px 1px 1px; -moz-border-radius: 4px; 
@@ -119,11 +120,21 @@ div.palette li.highlight {
 div.palette .bookmarkableUrl { padding: 2px 14px 2px 14px; }
 .bookmarkableUrl { padding: 0px 0px 0px 8px; }
 
+/* Override jQueryUI style to remove gradient and extra image loading */
+#paletteColumn .ui-state-active { background: #999; } 
+#paletteColumn h3.ui-state-active>a:link { color: #3383bb; } /* Overrides a:link rule in accordion header */
+#paletteColumn .ui-state-default { background: #eee; } 
+#paletteColumn .ui-widget-content { background: #c9c9c9; }
+
 /* BUTTONS */
-div.jQueryPaletteButton { 
-  font-family: Verdana; letter-spacing: 0.1px; color: black; border-color: DarkSlateGray; 
-  width: 132px; height: 25px; vertical-align: center; font-size: 10pt; margin:0px 5px 0px 10px; 
-  padding:0; cursor:hand; 
+#paletteColumn div.jQuery-palette-button { 
+  font-family: Verdana; letter-spacing: 0.1px;
+  width: 132px; height: 25px; margin: auto; padding:0; 
+  background: #eee;
+}
+
+#paletteColumn div.jQuery-palette-button.ui-state-hover { 
+  background: #f8f8f8; /* Overrides jQueryUI hover styles to remove image */
 }
 
 #buttonStructureLink {
@@ -146,7 +157,7 @@ a.button:active { color:black; text-decoration:none; }
 /* SELECT and CUSTOM SIZE INPUTS */
 select.button { 
   width:134px; border: DimGray solid 1px; font: Verdana; font-size: 10pt; padding: 0px; 
-  margin: 0 0px 5px 10px; cursor:pointer; 
+  margin: 0px 0px 5px 0px; cursor:pointer; 
 }
 input.customSize { height: 18px; width: 36px; cursor: caret; margin-top: 5px}
 

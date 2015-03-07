@@ -9,7 +9,7 @@ document.write('<script type="text/javascript" src="scripts/mousetrap.min.js"></
 
 //PROTOTYPE
 document.write('<script type="text/javascript" src="scripts/prototype.js"></script>');
-document.write('<script type="text/javascript" src="scripts/scriptaculous.js"></script>');
+//document.write('<script type="text/javascript" src="scripts/scriptaculous.js"></script>');
 
 //JQUERY
 // OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-1.4.2.min.js"></script>');

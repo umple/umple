@@ -39,7 +39,7 @@ function generateMenu($buttonSuffix)
   //  working on these can reactivate them in their local version
   //  <option value=\"uigu:uigu\">JSF GUI (under development)</option>
   //  <option value=\"cpp:Cpp\">Simple C++ (under development)</option>
-  $generatemenu = "<ul class=\"second\">
+  $generatemenu = "<ul class=\"second center-children\">
         <li class=\"subtitle\"> Generate".$buttonSuffix."</li>
         <li id=\"ttGeneratedCodeType\">
           <select id=\"inputGenerateCode".$buttonSuffix."\" name=\"inputLanguage\" class=\"button\">
@@ -67,7 +67,7 @@ function generateMenu($buttonSuffix)
           </select>
         </li>
         <li id=\"ttGenerateCode\">
-          <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQueryPaletteButton\" value=\"Generate Code\"></div>
+          <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQuery-palette-button\" value=\"Generate Code\"></div>
         </li>
         <li><div id=\"genstatus\" align=\"center\">Done. See below</div><li>
       </ul>";
