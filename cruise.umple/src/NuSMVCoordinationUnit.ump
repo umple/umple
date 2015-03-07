@@ -100,7 +100,7 @@ class NuSMVCoordinator
   	StringBuilder code = new StringBuilder();
 
   	//This defines and adds the thin-line module to the output code -- Step (1)
-  	NuSMVModule placeHolder = genPlaceHolderModule(sm);
+  	NuSMVModule placeHolder = genPlaceHolderModule(sm,handle);
   	code.append(placeHolder.toString(handle , dot));
   	
   	//Defines a collection of state variables to ensure state names match transitions
@@ -117,15 +117,17 @@ class NuSMVCoordinator
   	genModules(sm , handle , dot, code , svar);
   	
   	//This generates the main module
-  	code.append(genMainModule(sm).toString(handle , dot));
+  	code.append(genMotherModule(sm,handle).toString(handle , dot));
   	
+		//This generates the main module
+  	code.append(genMainModule(sm).toString(handle , dot));
   	
 		return code;  	
   }
   
-  private NuSMVModule genPlaceHolderModule(StateMachine sm)
+  private NuSMVModule genPlaceHolderModule(StateMachine sm, String handle)
   {
-  	NuSMVModule module = new NuSMVModule(changeNameCase(sm.getFullName(),1)+"_Handle","");
+  	NuSMVModule module = new NuSMVModule(changeNameCase(sm.getFullName(),1)+"_"+changeNameCase(handle,1),"");
   	module.setDeclarationPart(generateVariables(sm));
   	return module;
   }
@@ -181,19 +183,31 @@ class NuSMVCoordinator
 
 	
   
-  private NuSMVModule genMainModule(StateMachine sm)
+  private NuSMVModule genMotherModule(StateMachine sm, String handle)
+  {
+  	NuSMVModule temp = new NuSMVModule("StateMachine_"+changeNameCase(sm.getName(),1) , "");
+  	VarDeclarationStatement varDec = new VarDeclarationStatement(
+  		changeNameCase(sm.getName(),0) , changeNameCase(sm.getName(),1) );
+  	DeclarationPart dPart = new DeclarationPart("VAR" , varDec);
+  		dPart.addDeclarationStatement(varDec);
+  	  genDpartForMotherMachine(sm , dPart , changeNameCase(sm.getName(),0)+"."+handle);	
+  	temp.setDeclarationPart(dPart);
+  	return temp;
+  }
+
+	private NuSMVModule genMainModule(StateMachine sm)
   {
   	NuSMVModule temp = new NuSMVModule("main" , "");
   	VarDeclarationStatement varDec = new VarDeclarationStatement(
-  		sm.getName() , changeNameCase(sm.getName(),1) );
+  		"stateMachine_"+changeNameCase(sm.getName(),0) , "StateMachine_"+changeNameCase(sm.getName(),1) );
   	DeclarationPart dPart = new DeclarationPart("VAR" , varDec);
   		dPart.addDeclarationStatement(varDec);
-  	  genDpartForMain(sm , dPart , sm.getName()+".handle");	
+  	  //genDpartForMain(sm , dPart , sm.getName()+".handle");	
   	temp.setDeclarationPart(dPart);
   	return temp;
   }
   
-  public void genDpartForMain(StateMachine sm , DeclarationPart dPart, String name)
+  public void genDpartForMotherMachine(StateMachine sm , DeclarationPart dPart, String name)
   {	 
   	for(State st : sm.getStates())
   	{
@@ -207,7 +221,7 @@ class NuSMVCoordinator
   				dPart.addDeclarationStatement(varDec1);
   				
   				if(isNested( stm ))
-  					genDpartForMain(stm , dPart , name);
+  					genDpartForMotherMachine(stm , dPart , name);
   			}
   		}
   	}

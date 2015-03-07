@@ -1,3 +1,50 @@
-class Me {
-  
+/* Adapted from the following report:
+* Model Checking Template-Semantics Specifications
+* Technical Report : CS-2004-20
+* Authored by:
+*	Yun Lu 
+*	Joanne M. Atlee 
+*	Nancy A. Day 
+*	Jianwei Niu
+*
+*/
+
+class HeatingSystem
+{
+	boolean tooCold;
+	boolean tooHot;
+	boolean requestHeat;
+	int furnaceTimer;
+	int furnaceStartupTime;
+	int valvePos;
+	int waitedForWarm;
+	int warmUpTimer;
+	int coolDownTimer;
+	int waitedForCool;
+	
+	room {	
+					noHeatReq {
+						idleNoHeat {
+							t15 [tooCold] / { valvePos++; waitedForWarm = 0; } -> waitForHeat;
+						}	
+						waitForHeat {
+							t17 [waitedForWarm < warmUpTimer] / { waitedForWarm++; } -> waitForHeat;
+							t18 [valvePos != 2 && warmUpTimer == waitedForWarm] / { valvePos++; waitedForWarm = 0; } -> waitForHeat;
+							t15 [!tooCold] -> idleNoHeat;
+							t20 [waitedForwarm == warmUpTimer && valvePos == 2 && tooCold] / { requestHeat = true } -> heatReq;
+						}
+					}
+					heatReq {
+						idleHeat {
+							t21 [tooHot] / { valvePos--; waitedForCool = 0; } -> waitForCool;
+						}	
+						waitForCool {
+							t19 [waitedForCool == coolDownTimer && valvePos == 0 && tooHot] -> noHeatReq;
+							t22 [!tooHot] -> idleHeat;
+							t24 [valvePos != 0 && coolDownTimer == waitedForCool] / { valvePos--; waitedForCool = 0; } -> waitForCool;
+							t23 [waitedForCool < coolDownTimer] / { waitedForCool++; } -> waitForCool;
+						}
+					}
+				}
+	
 }

@@ -57,11 +57,16 @@ MODULE Ge( handle )
     ( (handle.state = Ge_G) -> (
        handle.event = e1 & next(handle.state) = Zxab_B) )
   
-MODULE main
+MODULE StateMachine_Sm
   
   VAR 
     sm : Sm;
     zxab : Zxab( sm.handle );
     zx : Zx( sm.handle );
     ge : Ge( sm.handle );     
+  
+MODULE main
+  
+  VAR 
+    stateMachine_sm : StateMachine_Sm;     
   

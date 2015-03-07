@@ -43,9 +43,14 @@ MODULE Drive( handle )
       (handle.event = selectFirst & next(handle.state) = drive_first)  |
       (handle.event = selectSecond & next(handle.state) = drive_second)  ) )
   
-MODULE main
+MODULE StateMachine_State
   
   VAR 
     state : State;
     drive : Drive( state.handle );     
+  
+MODULE main
+  
+  VAR 
+    stateMachine_state : StateMachine_State;     
   

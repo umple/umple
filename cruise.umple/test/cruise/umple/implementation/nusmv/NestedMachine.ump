@@ -13,6 +13,7 @@ class A {
         s2b {
           e3 -> s2a;
           e4 -> s3;
+          e2 -> s2c;
         }
         s2c{}
      }

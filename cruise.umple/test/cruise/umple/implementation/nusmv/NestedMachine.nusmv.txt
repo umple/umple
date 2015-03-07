@@ -31,12 +31,19 @@ MODULE S2( handle )
     ( (handle.state = s2_s2b) -> (
       (handle.event = e3 & next(handle.state) = s2_s2a)  |
       (handle.event = e4 & next(handle.state) = sm_s3)  |
+      (handle.event = e2 & next(handle.state) = s2_s2c)  |
       (handle.event = e1 & next(handle.state) = sm_s1)  ) ) &
     ( (handle.state = s2_s2c) -> (
        handle.event = e1 & next(handle.state) = sm_s1) )
   
-MODULE main
+MODULE StateMachine_Sm
   
   VAR 
     sm : Sm;
     s2 : S2( sm.handle );     
+  
+MODULE main
+  
+  VAR 
+    stateMachine_sm : StateMachine_Sm;     
+  

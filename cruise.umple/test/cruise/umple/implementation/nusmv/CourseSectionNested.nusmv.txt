@@ -36,8 +36,14 @@ MODULE Open( handle )
       (handle.event = classSizeExceedsMaximum & next(handle.state) = status_Closed)  |
       (handle.event = cancel & next(handle.state) = status_Cancelled)  ) )
   
-MODULE main
+MODULE StateMachine_Status
   
   VAR 
     status : Status;
     open : Open( status.handle );     
+  
+MODULE main
+  
+  VAR 
+    stateMachine_status : StateMachine_Status;     
+  

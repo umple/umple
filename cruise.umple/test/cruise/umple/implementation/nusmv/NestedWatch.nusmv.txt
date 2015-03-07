@@ -121,7 +121,7 @@ MODULE HourMinuteUpdate( handle )
       (handle.event = s2 & next(handle.state) = hourMinuteUpdate_alarmMinute)  |
       (handle.event = s3 & next(handle.state) = update_second)  ) )
   
-MODULE main
+MODULE StateMachine_Sm
   
   VAR 
     sm : Sm;
@@ -132,3 +132,9 @@ MODULE main
     alarmStatus : AlarmStatus( sm.handle );
     alarmUpdate : AlarmUpdate( sm.handle );
     hourMinuteUpdate : HourMinuteUpdate( sm.handle );     
+  
+MODULE main
+  
+  VAR 
+    stateMachine_sm : StateMachine_Sm;     
+  

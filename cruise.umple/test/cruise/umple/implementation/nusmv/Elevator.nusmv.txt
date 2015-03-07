@@ -62,7 +62,7 @@ MODULE OnFloor( handle )
     ( (handle.state = OnFloor_DoorOpening) -> (
        handle.event = doorOpened & next(handle.state) = OnFloor_AtFloor) )
   
-MODULE main
+MODULE StateMachine_Elevator_state_machine
   
   VAR 
     elevator_state_machine : Elevator_state_machine;
@@ -70,4 +70,9 @@ MODULE main
     prepareDown : PrepareDown( elevator_state_machine.handle );
     inMotion : InMotion( elevator_state_machine.handle );
     onFloor : OnFloor( elevator_state_machine.handle );     
+  
+MODULE main
+  
+  VAR 
+    stateMachine_elevator_state_machine : StateMachine_Elevator_state_machine;     
   
