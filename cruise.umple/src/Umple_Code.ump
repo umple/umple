@@ -448,6 +448,10 @@ class UmpleModel
     {
       return;
     }
+    if(f.isEmpty())
+    {
+      return;
+    }
     int maxIndex = umpleClasses.size() - 1;
     for(int i=maxIndex; i>=0;i--)
     {
@@ -3743,6 +3747,11 @@ class ModelConstraintAttributeFromClass
 
 class Filter
 {
+  public boolean isEmpty()
+  {
+    
+    return getValues().length==0 || "*".equals(getValue(0));
+  }
 
   public boolean isIncluded(String name)
   {

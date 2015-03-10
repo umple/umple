@@ -1,0 +1,19 @@
+class Student
+{
+  0..1 -- 0..1 Mentor;
+}
+
+class Mentor
+{
+}
+
+class School
+{
+  * -> * Mentor;
+  * -> * Student;
+}
+
+filter  
+{
+*;
+}
