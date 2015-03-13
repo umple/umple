@@ -3,11 +3,13 @@ Tracing
 noreferences
 
 @@description
-<p>
+<p align="justify">
 Model Oriented Tracing Language (MOTL) allows developers to specify tracing at the model level.
 </p>
 
-<p>Historically, developers have traced software using various techniques:</p>
+<p align="justify">
+Historically, developers have traced software using various techniques:
+</p>
 
 <ul>
 
@@ -21,15 +23,33 @@ Model Oriented Tracing Language (MOTL) allows developers to specify tracing at t
 
 </ul>
 
-<p>However, in software generated from UML, these techniques can only be used effectively on <i>generated code</i>. They require understanding the structure of that generated code; furthermore trace directives need replacing when the code is replaced. Tracing thus occurs at a level of abstraction below the level at which the system is implemented.<p>
+<p align="justify">
+However, in software generated from UML, these techniques can only be used effectively on <i>generated code</i>. They require understanding the structure of that generated code; furthermore trace directives need replacing when the code is replaced. Tracing thus occurs at a level of abstraction below the level at which the system is implemented.
+</p>
 
-<p>MOTL is designed to allow tracing with direct reference to UML model elements (state machines and their states and events, associations and attributes). MOTL specifies how to inject trace code into generated code for UML constructs.</p>
+<br>
 
-<p>MOTL syntax is designed to be be usable independently of Umple. For example, trace statements could be used to inject tracing into code generated from a UML model specified in Papyrus. The current implementation of MOTL focuses on tracing Umple-generated code. In order to trace a UML model created by an arbitrary UML tool, it is currently necessary to have the model from that tool converted to Umple first.</p>
+<p align="justify">
+MOTL is designed to allow tracing with direct reference to UML model elements (state machines and their states and events, associations and attributes). MOTL specifies how to inject trace code into generated code for UML constructs.
+</p>
 
-<p>MOTL can be used to generate tracing directives for different types of tracers. At its simplest level, if the phrase 'tracer Console;' is used (or no <a href="Tracers.html">tracer</a> statement is included), then trace output is directed to <i>standard error</i>. Generation of tracing for <a href="http://dtrace.org/blogs/about/">DTrace</a> and <a href="http://lttng.org/">LTTNG</a> is under development.</p>
+<br>
 
-<p>MOTL can be used in two modes:</p>
+<p align="justify">
+MOTL syntax is designed to be be usable independently of Umple. For example, trace statements could be used to inject tracing into code generated from a UML model specified in Papyrus. The current implementation of MOTL focuses on tracing Umple-generated code. In order to trace a UML model created by an arbitrary UML tool, it is currently necessary to have the model from that tool converted to Umple first.
+</p>
+
+<br>
+
+<p align="justify">
+MOTL can be used to generate tracing directives for different types of tracers. At its simplest level, if the phrase 'tracer Console;' is used (or no <a href="Tracers.html">tracer</a> statement is included), then trace output is directed to <i>standard error</i>. Generation of tracing for <a href="http://dtrace.org/blogs/about/">DTrace</a> and <a href="http://lttng.org/">LTTNG</a> is under development.
+</p>
+
+<br>
+
+<p align="justify">
+MOTL can be used in two modes:
+</p>
 <ul>
 <li>As scripts that are independent of the model. These appear like DTrace scripts. When used with Umple, they are merged into an Umple model using Umple's mixin capability.</li>
 
@@ -37,8 +57,12 @@ Model Oriented Tracing Language (MOTL) allows developers to specify tracing at t
 
 </ul>
 
-<p>The following pages describe how to use MOTL. Many aspects of MOTL are under development. Some <a href="http://code.google.com/p/umple/wiki/DraftManualPages">future pages for tracing features under development cam be found in Umple wiki pages.</a></p>
+<br>
+
+<p align="justify">
+The following pages describe how to use MOTL. Many aspects of MOTL are under development. Some <a href="http://code.google.com/p/umple/wiki/DraftManualPages">future pages for tracing features under development cam be found in Umple wiki pages.</a>
+</p>
 
 <hr />
 
-<i>The MOTL project has been sponsored by NSERC, Ericsson and Defense Research and Development Canada, in the <a href="http://dmct.dorsal.polymtl.ca/">Distributed Multi-Core Tracing Project managed by Ecole Polytechnique de Montreal</a></i>
+<i>The MOTL project has been sponsored by NSERC, Ericsson and Defence Research and Development Canada, in the <a href="http://dmct.dorsal.polymtl.ca/">Distributed Multi-Core Tracing Project managed by Ecole Polytechnique de Montreal</a></i>

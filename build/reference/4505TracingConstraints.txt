@@ -3,7 +3,7 @@ Tracing
 noreferences
 
 @@description
-<p>
+<p align="justify">
 Constraints can be imposed upon the traced UML entity to limit the scope of tracing to when a certain condition is true. MOTL provides a set of constraints that can be classified into a prefix and postfix constraints. 
 <br>
 
@@ -17,10 +17,13 @@ Conditions consist of a left hand side, Boolean operator and a right hand side. 
 Trace will be recorded for a specific number of appearances, then tracing stops. <br>
 </li>
 <li>
+<b> Record clause </b> <br>
+Record clause postfix gives the flexibility to record another model element or a specific string. <br>
+</li>
+<li>
 <b> Life Timeline </b> <br>
 There are two cases. (1) trace the UML construct from its creation and stop when the trace condition is satisfied. (2) Tracing will begin only after the trace condition is satisfied and will then continue nonstop.  <br>
 </li>
-
 </ul>
 </p>
 
@@ -35,4 +38,9 @@ There are two cases. (1) trace the UML construct from its creation and stop when
 
 @@example
 @@source manualexamples/TracingConstraints2.ump
+@@endexample
+
+
+@@example
+@@source manualexamples/TracingConstraints3.ump
 @@endexample

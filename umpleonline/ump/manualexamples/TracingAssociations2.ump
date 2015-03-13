@@ -1,10 +1,11 @@
-// This example will record any addition to assoc link 'manager'
+// This example will record any addition to assoc link 'supervisor'
 
-class Company
-{
-  * -- * Manager manager;
-  trace add manager;
+class Student {
+  Integer id;
 }
 
-class Manager
-{}
+class Professor {
+  1 -- * Student supervisor;
+  
+  trace add supervisor;
+}

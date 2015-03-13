@@ -3,7 +3,7 @@ Tracing
 noreferences
 
 @@description
-<p>
+<p align="justify">
 Tracing non api methods is possible using MOTL. Entry and/or exit of methods can be traced.
 </p>
 

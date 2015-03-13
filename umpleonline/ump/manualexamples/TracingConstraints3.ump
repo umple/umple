@@ -1,0 +1,12 @@
+class Student
+{
+  name;
+  Integer id;
+  
+  // tracing of attribute name starts and doesn't stop until condition becomes true
+  trace name until [name == "john"];
+
+  // tracing of attribute id until condition becomes true and then always continue tracing 
+  trace id after [id == 234];
+}
+

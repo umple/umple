@@ -1,0 +1,14 @@
+class LightBulb
+{
+  status
+  {
+    On { 
+      flip -> Off;
+    }
+    Off { 
+      flip -> On;
+    }
+    // trace any triggering of event flip
+    trace flip;
+  }
+}

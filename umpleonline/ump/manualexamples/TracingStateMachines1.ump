@@ -1,28 +1,19 @@
-
-// this example will trace all states of State machine GarageDoor 
-
-class Garage
+class LightBulb
 {
-    // UML state machine digram for a Garage door, written in Umple
-    GarageDoor {
-      	
-      	Open { buttonOrObstacle -> Closing;  }
-      	
-      	Closing {
-          buttonOrObstacle -> Opening;
-          reachBottom -> Closed;
-      	}
-
-      	Closed { buttonOrObstacle -> Opening; }
-
-      	Opening {
-          buttonOrObstacle -> HalfOpen;
-          reachTop -> Open;
-      	}
-
-      	HalfOpen { buttonOrObstacle -> Opening; }
+  Integer v = 0;
+  status
+  {
+    On { 
+      entry / { v = 1; } 
+      flip -> Off;
     }
-    
-    // trace whole state machine
-    trace GarageDoor;
+    Off { 
+      entry / { v = 2; }
+      flip -> On;
+    }
+    // trace whenever we enter/exit state On 
+    trace On;
+    // trace whenever we exit state Off and report value of attribute v 
+    trace exit Off record v;
+  }
 }

@@ -3,15 +3,15 @@ Tracing
 noreferences
 
 @@description
-<p>
+<p align="justify">
 MOTL sets the Console to be its default tracer. However, it provides a set of potential tracers that will have an impact on how tracing is injected and how its collected. Modellers can control the model tracer using a tracer directive.
 </p>
 
-<p>
+<p align="justify">
 MOTL tracers can be classified into two main categories: Built in tracers and third party tracers. The main difference between these two categories is that the first category tracers doesn’t require any additional jars imported into your model generated code, while  the later requires jars specific to each tracer.
 </p>
 
-<p>
+<p align="justify">
 <ol>
 <li>(Built in tracers)</li>
   <ul>

@@ -12,3 +12,11 @@ class Student
   // this example traces attribute name whenever its value is changed for 5 times 
   trace name for 5;
 }
+
+class Professor {
+  name;
+  1 -- * Student supervisor;
+  
+  // trace code is injected in attribute setter with role name cardinality condition
+  trace name where [ supervisor cardinality > 10];
+}

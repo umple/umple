@@ -4,11 +4,11 @@ noreferences
 
 @@description
 
-<p>
+<p align="justify">
 Associations describe the relationships between class instances; role names are used to clarify the relation at both ends of an association. MOTL allows the tracing of associations by referring to the role names. Tracing can occur whenever an association link is added or deleted at run time:
 </p>
 
-<p>
+<p align="justify">
 <ul>
 <li><b>add</b>: When the "add" keyword is specified before the traced assoc role name, tracing occurs when an association link is being added.</li>
 <li><b>remove</b>: When the "remove" keyword is specified before the traced assoc role name, tracing occurs when an association link is being deleted.</li>

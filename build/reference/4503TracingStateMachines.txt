@@ -3,8 +3,9 @@ Tracing
 noreferences
 
 @@description
-<p>
-State machines are representations of system behaviour. States can have entry or exit actions and do activities; they can also be composite (i.e. nested) or concurrent. MOTL provides modellers with the capability of specifying tracing for all these modelling elements. </p>
+<p align="justify">
+State machines are representations of system behaviour. States can have entry or exit actions and do activities; they can also be composite (i.e. nested) or concurrent. MOTL provides modellers with the capability of specifying tracing for all these modelling elements. 
+</p>
 
 <ul>
 <li><b>State machine</b>: State Machines can be traced as a whole, considering all states, nested states, events, etc.</li>
@@ -18,4 +19,12 @@ State machines are representations of system behaviour. States can have entry or
 
 @@example
 @@source manualexamples/TracingStateMachines1.ump
+@@endexample
+
+@@example
+@@source manualexamples/TracingStateMachines2.ump
+@@endexample
+
+@@example
+@@source manualexamples/TracingStateMachines3.ump
 @@endexample

@@ -2,11 +2,13 @@ class Student
 {
   name;
   Integer id;
+  // trace attribute id and record provided string message as part of  the trace output
+  trace id record "i am tracing attribute name";
   
-  // tracing of attribute name starts and doesn't stop until condition becomes true
-  trace name until [name == "john"];
-
-  // tracing of attribute id until condition becomes true and then always continue tracing 
-  trace id after [id == 234];
+  status {
+    s1 { e1 -> s2; }
+    s2 {}
+  }
+  // trace whenever we enter/exit state "s1" and record attribute name
+  trace s1 record name;
 }
-
