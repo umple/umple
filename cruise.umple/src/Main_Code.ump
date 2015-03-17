@@ -214,14 +214,20 @@ class UmpleConsoleMain
       }
     }
     
-  private void generateUmple(String xmi)
+  private void generateUmple(String filename)
   {
     boolean isSuccess = false;
     try
     {
-      EcoreImportHandler handler = new EcoreImportHandler();
-      UmpleImportModel umple = handler.readDataFromXML(xmi);
-      isSuccess = umple.generateUmpleFile(xmi + ".ump");
+      UmpleImportModel umple;
+      if (filename.endsWith(".scxml")) {
+        SCXMLImportHandler handler = new SCXMLImportHandler();
+        umple = handler.readDataFromXML(filename);
+      } else {
+        EcoreImportHandler handler = new EcoreImportHandler();
+        umple = handler.readDataFromXML(filename);
+      }
+      isSuccess = umple.generateUmpleFile(filename + ".ump");
     }
     catch (Exception e)
     {
@@ -229,7 +235,7 @@ class UmpleConsoleMain
     } 
     if (isSuccess)
     {
-      System.out.println("Success! Processed "+ xmi + ".");
+      System.out.println("Success! Processed "+ filename + ".");
     }
     else
     {

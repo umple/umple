@@ -76,6 +76,23 @@ public class UmpleImportTest {
 
 		assertEquals(expectedText, actualText);
 	}
+	
+	@Test
+	public void SCXMLEmptyStateMachineTest() throws Exception {
+	  String expectedText = loadUmpleFile("SCXMLImport_empty.ump").trim();
+	  String actualText = loadSCXMLFile("SCXMLImport_empty.scxml").trim();
+	   
+	  assertEquals(expectedText, actualText);
+	}
+	 
+	private static String loadSCXMLFile(String name) throws Exception {
+	  String filename = getFullFilePath(name);
+	  assertEquals(true, (new File(filename)).exists());
+	 
+	  SCXMLImportHandler handler = new SCXMLImportHandler();
+	  UmpleImportModel umple = handler.readDataFromXML(filename);
+	  return umple.generateUmple();
+  }
 
 	private static String loadECoreFile(String name) throws Exception {
 		String filename = getFullFilePath(name);

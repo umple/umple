@@ -11,12 +11,11 @@ Model for importing XMI and generating Umple code
 
 namespace cruise.umple.compiler;
 
-class EcoreImportHandler
-{	
-	internal UmpleImportModel model = new UmpleImportModel("");
-	internal currentElement = "";
-	internal UmpleImportClass currentClass = null;
-	
+class UmpleImportHandler
+{
+    abstract;
+    	
+	UmpleImportModel model = new UmpleImportModel("");
 	internal Optional<Exception> parseException = Optional.empty();
 	    
 	public UmpleImportModel readDataFromXML(String filename) throws IOException, ParserConfigurationException {
@@ -61,9 +60,15 @@ class EcoreImportHandler
 	Boolean isSuccessful() {
 		return !parseException.isPresent();
 	}
+}
+
+class EcoreImportHandler
+{
+    internal currentElement = "";
+    internal UmpleImportClass currentClass = null;
 
 	public void startDocument() throws SAXException {
-		model = new UmpleImportModel("");
+	    setModel(new UmpleImportModel(""));
 	}
 
 	public void endDocument() throws SAXException {
@@ -71,7 +76,8 @@ class EcoreImportHandler
 	}
 
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-		currentElement = localName;		
+		currentElement = localName;
+		UmpleImportModel model = getModel();		
 		//load package object
 		if (currentElement.equals("EPackage")) {
 			UmpleImportPackage umplePackage = new UmpleImportPackage(UmpleImportConstants.ECORE_PACKAGE, "");
@@ -190,4 +196,28 @@ class EcoreImportHandler
 			type = rawType;
 		return type;
 	}
+}
+
+class SCXMLImportHandler
+{
+   internal UmpleImportClass currentClass = null;
+
+   public void startDocument() throws SAXException {
+       UmpleImportClass umpleClass = new UmpleImportClass("StateMachine", "StateMachine", "StateMachine", false, false);
+       UmpleImportModel model = getModel();
+       model.addUmpleImportElement(umpleClass);
+       currentClass = umpleClass;
+   }
+
+   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+       if("scxml".equals(localName)) {
+           String stateMachineName = attributes.getValue("name");
+           UmpleImportStateMachine stateMachine = new UmpleImportStateMachine("", "", stateMachineName);
+           currentClass.addUmpleImportStateMachine(stateMachine);
+       }
+   }
+
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+
+   }
 }

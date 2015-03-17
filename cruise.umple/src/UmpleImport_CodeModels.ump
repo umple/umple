@@ -109,6 +109,9 @@ class UmpleImportClass
 		for (UmpleImportAssociation association : umpleImportAssociations) {
 			umpleBuilder.append(association.generateUmple());
 		}
+		for (UmpleImportStateMachine stateMachine : umpleImportStateMachines) {
+		  umpleBuilder.append(stateMachine.generateUmple());
+		}
 		umpleBuilder.append("\n}");
 		return umpleBuilder.toString();
 	}
@@ -180,4 +183,11 @@ class UmpleImportAssociation
 		}
 		return rtn;
 	}
+}
+
+class UmpleImportStateMachine
+{
+    String generateUmple() {
+        return "\n\t" + this.getStateMachineName() + " {}";
+    }
 }

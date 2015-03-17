@@ -16,6 +16,26 @@ namespace cruise.umple.compiler;
  */
 external DefaultHandler{}
 
+class UmpleImportHandler
+{
+   abstract;
+
+   depend java.io.File;
+   depend java.io.IOException;
+   depend java.io.InputStream;
+   depend java.io.FileInputStream;
+   depend java.util.Optional;
+   depend java.nio.file.Paths;
+   depend javax.xml.parsers.ParserConfigurationException;
+   depend javax.xml.parsers.SAXParser;
+   depend javax.xml.parsers.SAXParserFactory;
+   depend org.xml.sax.Attributes;
+   depend org.xml.sax.SAXException;
+   depend org.xml.sax.SAXParseException;
+    depend org.xml.sax.helpers.DefaultHandler;
+   isA DefaultHandler;
+}
+
 /* 
  * Parse ECore by extend SAX handler callbacks
  */
@@ -34,7 +54,29 @@ class EcoreImportHandler
 	depend org.xml.sax.SAXException;
 	depend org.xml.sax.SAXParseException;
 	depend org.xml.sax.helpers.DefaultHandler;
-	isA DefaultHandler;
+	isA UmpleImportHandler;
+}
+
+/*
+ * Parse SCXML by extend SAX handler callbacks
+ */
+class SCXMLImportHandler
+{
+   depend java.io.File;
+   depend java.io.IOException;
+   depend java.io.InputStream;
+   depend java.io.FileInputStream;
+   depend java.util.Optional;
+   depend java.nio.file.Paths;
+   depend javax.xml.parsers.ParserConfigurationException;
+   depend javax.xml.parsers.SAXParser;
+   depend javax.xml.parsers.SAXParserFactory;
+   depend org.xml.sax.Attributes;
+   depend org.xml.sax.SAXException;
+   depend org.xml.sax.SAXParseException;
+   depend org.xml.sax.helpers.DefaultHandler;
+
+  isA UmpleImportHandler;
 }
 
 /* 
@@ -77,6 +119,7 @@ class UmpleImportClass
 	
 	0..1 -> * UmpleImportAttribute;
 	0..1 -> * UmpleImportAssociation;
+	0..1 -> * UmpleImportStateMachine;
 	
 	packageName;
 	Boolean isAbstract;
@@ -112,6 +155,12 @@ class UmpleImportAssociation
 	Integer upperBound = 1;
 	lazy Integer otherLowerBound;
 	Integer otherUpperBound = 1;
+}
+
+class UmpleImportStateMachine {
+   isA UmpleImportElement;
+
+   stateMachineName;
 }
 
 class UmpleImportConstants
