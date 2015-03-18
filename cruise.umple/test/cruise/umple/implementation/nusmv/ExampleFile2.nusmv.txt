@@ -1,43 +1,43 @@
 -- This file is generated from ExampleFile2.ump --
 
-
 MODULE LockState
   
   VAR 
-    state : { lockState_BothDoorsClosedLockFull , lockState_OpeningUpperGate , lockState_UpperGateOpen , lockState_ClosingUpperGate , lockState_LoweringWater , lockState_BothDoorsClosedLockEmpty , lockState_OpeningLowerGate , lockState_LowerGateOpen , lockState_ClosingLowerGate , lockState_RaisingWater }; 
-    event : { boatRequestsToEnterAndGoDown , boatRequestsToEnterAndGoUp , upperGateFullyOpen , boatInLockRequestingToGoDown , after3minutes , upperGateFullyClosed , waterLevelMatchesDownStream , lowerGateFullyOpen , boatInLockRequestingToGoUp , lowerGateFullyClosed , waterLevelMatchesUpStream };      
+    event : { boatRequestsToEnterAndGoDown , boatRequestsToEnterAndGoUp , upperGateFullyOpen , boatInLockRequestingToGoDown , after3minutes , upperGateFullyClosed , waterLevelMatchesDownStream , lowerGateFullyOpen , boatInLockRequestingToGoUp , lowerGateFullyClosed , waterLevelMatchesUpStream }; 
+    lockState_state : { lockState_BothDoorsClosedLockFull , lockState_OpeningUpperGate , lockState_UpperGateOpen , lockState_ClosingUpperGate , lockState_LoweringWater , lockState_BothDoorsClosedLockEmpty , lockState_OpeningLowerGate , lockState_LowerGateOpen , lockState_ClosingLowerGate , lockState_RaisingWater };  
+    
   ASSIGN
-    init(state) := lockState_BothDoorsClosedLockFull;    
+    init(lockState_state) := lockState_BothDoorsClosedLockFull;  
+  
   TRANS
-    ( (state = lockState_BothDoorsClosedLockFull) -> (
-      (event = boatRequestsToEnterAndGoDown & next(state) = lockState_OpeningUpperGate)  |
-      (event = boatRequestsToEnterAndGoUp & next(state) = lockState_LoweringWater)  ) ) &
-    ( (state = lockState_UpperGateOpen) -> (
-      (event = boatInLockRequestingToGoDown & next(state) = lockState_ClosingUpperGate)  |
-      (event = after3minutes & next(state) = lockState_ClosingUpperGate)  ) ) &
-    ( (state = lockState_ClosingUpperGate) -> (
-      (event = upperGateFullyClosed & next(state) = lockState_LoweringWater)  |
-      (event = upperGateFullyClosed & next(state) = lockState_BothDoorsClosedLockFull)  ) ) &
-    ( (state = lockState_BothDoorsClosedLockEmpty) -> (
-      (event = boatRequestsToEnterAndGoUp & next(state) = lockState_OpeningLowerGate)  |
-      (event = boatRequestsToEnterAndGoDown & next(state) = lockState_RaisingWater)  ) ) &
-    ( (state = lockState_LowerGateOpen) -> (
-      (event = boatInLockRequestingToGoUp & next(state) = lockState_ClosingLowerGate)  |
-      (event = after3minutes & next(state) = lockState_ClosingLowerGate)  ) ) &
-    ( (state = lockState_ClosingLowerGate) -> (
-      (event = lowerGateFullyClosed & next(state) = lockState_RaisingWater)  |
-      (event = lowerGateFullyClosed & next(state) = lockState_BothDoorsClosedLockEmpty)  ) ) &
-    ( (state = lockState_OpeningUpperGate) -> (
-       event = upperGateFullyOpen & next(state) = lockState_UpperGateOpen) ) &
-    ( (state = lockState_LoweringWater) -> (
-       event = waterLevelMatchesDownStream & next(state) = lockState_OpeningLowerGate) ) &
-    ( (state = lockState_OpeningLowerGate) -> (
-       event = lowerGateFullyOpen & next(state) = lockState_LowerGateOpen) ) &
-    ( (state = lockState_RaisingWater) -> (
-       event = waterLevelMatchesUpStream & next(state) = lockState_OpeningUpperGate) )
+    ( (lockState_state = lockState_BothDoorsClosedLockFull) -> (
+      (event = boatRequestsToEnterAndGoDown & next(lockState_state) = lockState_OpeningUpperGate)  |
+      (event = boatRequestsToEnterAndGoUp & next(lockState_state) = lockState_LoweringWater)  ) ) &
+    ( (lockState_state = lockState_UpperGateOpen) -> (
+      (event = boatInLockRequestingToGoDown & next(lockState_state) = lockState_ClosingUpperGate)  |
+      (event = after3minutes & next(lockState_state) = lockState_ClosingUpperGate)  ) ) &
+    ( (lockState_state = lockState_ClosingUpperGate) -> (
+      (event = upperGateFullyClosed & next(lockState_state) = lockState_LoweringWater)  |
+      (event = upperGateFullyClosed & next(lockState_state) = lockState_BothDoorsClosedLockFull)  ) ) &
+    ( (lockState_state = lockState_BothDoorsClosedLockEmpty) -> (
+      (event = boatRequestsToEnterAndGoUp & next(lockState_state) = lockState_OpeningLowerGate)  |
+      (event = boatRequestsToEnterAndGoDown & next(lockState_state) = lockState_RaisingWater)  ) ) &
+    ( (lockState_state = lockState_LowerGateOpen) -> (
+      (event = boatInLockRequestingToGoUp & next(lockState_state) = lockState_ClosingLowerGate)  |
+      (event = after3minutes & next(lockState_state) = lockState_ClosingLowerGate)  ) ) &
+    ( (lockState_state = lockState_ClosingLowerGate) -> (
+      (event = lowerGateFullyClosed & next(lockState_state) = lockState_RaisingWater)  |
+      (event = lowerGateFullyClosed & next(lockState_state) = lockState_BothDoorsClosedLockEmpty)  ) ) &
+    ( (lockState_state = lockState_OpeningUpperGate) -> (
+       event = upperGateFullyOpen & next(lockState_state) = lockState_UpperGateOpen) ) &
+    ( (lockState_state = lockState_LoweringWater) -> (
+       event = waterLevelMatchesDownStream & next(lockState_state) = lockState_OpeningLowerGate) ) &
+    ( (lockState_state = lockState_OpeningLowerGate) -> (
+       event = lowerGateFullyOpen & next(lockState_state) = lockState_LowerGateOpen) ) &
+    ( (lockState_state = lockState_RaisingWater) -> (
+       event = waterLevelMatchesUpStream & next(lockState_state) = lockState_OpeningUpperGate) )
   
 MODULE main
   
   VAR 
-    lockState : LockState;     
-  
+    lockState : LockState; 

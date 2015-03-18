@@ -1,56 +1,58 @@
 -- This file is generated from CarTransmission.ump --
 
-
 MODULE State_Handle
   
   VAR 
-    state : { state_neutral , state_reverse , state_drive , drive_first , drive_second , drive_third }; 
-    event : { selectReverse , selectDrive , selectFirst , selectSecond , selectNeutral , reachSecondSpeed , reachThirdSpeed , dropBelowSecondSpeed , dropBelowThirdSpeed };      
+    event : { selectReverse , selectDrive , selectFirst , selectSecond , selectNeutral , reachSecondSpeed , reachThirdSpeed , dropBelowSecondSpeed , dropBelowThirdSpeed };  
+    
   
-MODULE State
+MODULE State( stateDrive , handle )
   
   VAR 
-    handle : State_Handle;     
+    state_state : { state_neutral , state_reverse , state_drive };  
+    
   ASSIGN
-    init(handle.state) := state_neutral;    
-  TRANS
-    ( (handle.state = state_neutral) -> (
-      (handle.event = selectReverse & next(handle.state) = state_reverse)  |
-      (handle.event = selectDrive & next(handle.state) = state_drive)  |
-      (handle.event = selectFirst & next(handle.state) = drive_first)  |
-      (handle.event = selectSecond & next(handle.state) = drive_second)  ) ) &
-    ( (handle.state = state_drive) -> (next(handle.state) = drive_first) ) &
-    ( (handle.state = state_reverse) -> (
-       handle.event = selectNeutral & next(handle.state) = state_neutral) )
+    init(state_state) := state_neutral;  
   
-MODULE Drive( handle )
-        
   TRANS
-    ( (handle.state = drive_first) -> (
-      (handle.event = reachSecondSpeed & next(handle.state) = drive_second)  |
-      (handle.event = selectNeutral & next(handle.state) = state_neutral)  |
-      (handle.event = selectFirst & next(handle.state) = drive_first)  |
-      (handle.event = selectSecond & next(handle.state) = drive_second)  ) ) &
-    ( (handle.state = drive_second) -> (
-      (handle.event = reachThirdSpeed & next(handle.state) = drive_third)  |
-      (handle.event = dropBelowSecondSpeed & next(handle.state) = drive_first)  |
-      (handle.event = selectNeutral & next(handle.state) = state_neutral)  |
-      (handle.event = selectFirst & next(handle.state) = drive_first)  |
-      (handle.event = selectSecond & next(handle.state) = drive_second)  ) ) &
-    ( (handle.state = drive_third) -> (
-      (handle.event = dropBelowThirdSpeed & next(handle.state) = drive_second)  |
-      (handle.event = selectNeutral & next(handle.state) = state_neutral)  |
-      (handle.event = selectFirst & next(handle.state) = drive_first)  |
-      (handle.event = selectSecond & next(handle.state) = drive_second)  ) )
+    ( (state_state = state_neutral) -> (
+      (handle.event = selectReverse & next(state_state) = state_reverse)  |
+      (handle.event = selectDrive & next(state_state) = state_drive)  |
+      (handle.event = selectFirst & next(stateDrive.stateDrive_state) = stateDrive_first)  |
+      (handle.event = selectSecond & next(stateDrive.stateDrive_state) = stateDrive_second)  ) ) &
+    ( (state_state = state_reverse) -> (
+       handle.event = selectNeutral & next(state_state) = state_neutral) ) &
+    ( (state_state = state_drive) -> ( next(stateDrive.stateDrive_state) = stateDrive_first) )
   
-MODULE StateMachine_State
+MODULE StateDrive( state , handle )
   
   VAR 
-    state : State;
-    drive : Drive( state.handle );     
+    stateDrive_state : { stateDrive_first , stateDrive_second , stateDrive_third , null };  
+    
+  ASSIGN
+    init(stateDrive_state) := null;  
+  
+  TRANS
+    ( (stateDrive_state = stateDrive_first) -> (
+      (handle.event = reachSecondSpeed & next(stateDrive_state) = stateDrive_second)  |
+      (handle.event = selectNeutral & next(state.state_state) = state_neutral)  |
+      (handle.event = selectFirst & next(stateDrive_state) = stateDrive_first)  |
+      (handle.event = selectSecond & next(stateDrive_state) = stateDrive_second)  ) ) &
+    ( (stateDrive_state = stateDrive_second) -> (
+      (handle.event = reachThirdSpeed & next(stateDrive_state) = stateDrive_third)  |
+      (handle.event = dropBelowSecondSpeed & next(stateDrive_state) = stateDrive_first)  |
+      (handle.event = selectNeutral & next(state.state_state) = state_neutral)  |
+      (handle.event = selectFirst & next(stateDrive_state) = stateDrive_first)  |
+      (handle.event = selectSecond & next(stateDrive_state) = stateDrive_second)  ) ) &
+    ( (stateDrive_state = stateDrive_third) -> (
+      (handle.event = dropBelowThirdSpeed & next(stateDrive_state) = stateDrive_second)  |
+      (handle.event = selectNeutral & next(state.state_state) = state_neutral)  |
+      (handle.event = selectFirst & next(stateDrive_state) = stateDrive_first)  |
+      (handle.event = selectSecond & next(stateDrive_state) = stateDrive_second)  ) )
   
 MODULE main
   
   VAR 
-    stateMachine_state : StateMachine_State;     
-  
+    handle : State_Handle;
+    state : State( stateDrive , handle );
+    stateDrive : StateDrive( state , handle ); 

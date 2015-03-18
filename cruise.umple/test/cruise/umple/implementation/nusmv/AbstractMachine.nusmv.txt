@@ -1,23 +1,24 @@
 -- This file is generated from AbstractMachine.ump --
 
-
 MODULE S2
   
   VAR 
-    state : { s2_s2a , s2_s2b , s2_s1 }; 
-    event : { e1 , e3 };      
+    event : { e1 , e3 }; 
+    s2_state : { s2_s2a , s2_s2b , s2_s1 };  
+    
   ASSIGN
-    init(state) := s2_s2a;    
+    init(s2_state) := s2_s2a;  
+  
   TRANS
-    ( (state = s2_s2a) -> (
-      (event = e1 & next(state) = s2_s1)  |
-      (event = e3 & next(state) = s2_s2b)  ) ) &
-    ( (state = s2_s2b) -> (
-       event = e3 & next(state) = s2_s2a) ) &
-    ( (state = s2_s1) -> (next(state) = state) )
+    ( (s2_state = s2_s2a) -> (
+      (event = e1 & next(s2_state) = s2_s1)  |
+      (event = e3 & next(s2_state) = s2_s2b)  ) ) &
+    ( (s2_state = s2_s2b) -> (
+       event = e3 & next(s2_state) = s2_s2a) ) &
+    ( (s2_state = s2_s1) -> ( next(s2_state) = s2_state) )
   
 MODULE main
   
   VAR 
-    s2 : S2;     
-  
+    s2 : S2; 
+    

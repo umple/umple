@@ -1,33 +1,34 @@
 -- This file is generated from CourseSection.ump --
 
-
 MODULE Status
   
   VAR 
-    state : { status_Planned , status_OpenNotEnoughStudents , status_OpenEnoughStudents , status_Cancelled , status_Closed }; 
-    event : { cancel , openRegistration , requestToRegister , closeRegistration , classSizeExceedsMinimum , classSizeExceedsMaximum };      
+    event : { cancel , openRegistration , requestToRegister , closeRegistration , classSizeExceedsMinimum , classSizeExceedsMaximum }; 
+    status_state : { status_Planned , status_OpenNotEnoughStudents , status_OpenEnoughStudents , status_Cancelled , status_Closed };  
+    
   ASSIGN
-    init(state) := status_Planned;    
+    init(status_state) := status_Planned;  
+  
   TRANS
-    ( (state = status_Planned) -> (
-      (event = cancel & next(state) = status_Cancelled)  |
-      (event = openRegistration & next(state) = status_OpenNotEnoughStudents)  ) ) &
-    ( (state = status_OpenNotEnoughStudents) -> (
-      (event = requestToRegister & next(state) = status_OpenNotEnoughStudents)  |
-      (event = closeRegistration & next(state) = status_Cancelled)  |
-      (event = cancel & next(state) = status_Cancelled)  |
-      (event = classSizeExceedsMinimum & next(state) = status_OpenEnoughStudents)  ) ) &
-    ( (state = status_OpenEnoughStudents) -> (
-      (event = cancel & next(state) = status_Cancelled)  |
-      (event = requestToRegister & next(state) = status_OpenEnoughStudents)  |
-      (event = closeRegistration & next(state) = status_Closed)  |
-      (event = classSizeExceedsMaximum & next(state) = status_Closed)  ) ) &
-    ( (state = status_Closed) -> (
-       event = cancel & next(state) = status_Cancelled) ) &
-    ( (state = status_Cancelled) -> (next(state) = state) )
+    ( (status_state = status_Planned) -> (
+      (event = cancel & next(status_state) = status_Cancelled)  |
+      (event = openRegistration & next(status_state) = status_OpenNotEnoughStudents)  ) ) &
+    ( (status_state = status_OpenNotEnoughStudents) -> (
+      (event = requestToRegister & next(status_state) = status_OpenNotEnoughStudents)  |
+      (event = closeRegistration & next(status_state) = status_Cancelled)  |
+      (event = cancel & next(status_state) = status_Cancelled)  |
+      (event = classSizeExceedsMinimum & next(status_state) = status_OpenEnoughStudents)  ) ) &
+    ( (status_state = status_OpenEnoughStudents) -> (
+      (event = cancel & next(status_state) = status_Cancelled)  |
+      (event = requestToRegister & next(status_state) = status_OpenEnoughStudents)  |
+      (event = closeRegistration & next(status_state) = status_Closed)  |
+      (event = classSizeExceedsMaximum & next(status_state) = status_Closed)  ) ) &
+    ( (status_state = status_Closed) -> (
+       event = cancel & next(status_state) = status_Cancelled) ) &
+    ( (status_state = status_Cancelled) -> ( next(status_state) = status_state) )
   
 MODULE main
   
   VAR 
-    status : Status;     
-  
+    status : Status; 
+    

@@ -1,72 +1,86 @@
 -- This file is generated from BigStateMachineWithNakedTransition.ump --
 
-
 MODULE Sm_Handle
   
   VAR 
-    state : { sm_Zxab , Zxab_Zx , Zx_Z , Zx_X , Zxab_A , Zxab_B , sm_D , sm_Ge , Ge_G , Ge_E }; 
-    event : { e1 , e4 , e5 , e2 , e3 };      
+    event : { e1 , e4 , e5 , e2 , e3 };  
+    
   
-MODULE Sm
+MODULE Sm( smZxab , smZxabZx , smGe , handle )
   
   VAR 
-    handle : Sm_Handle;     
+    sm_state : { sm_Zxab , sm_D , sm_Ge };  
+    
   ASSIGN
-    init(handle.state) := sm_Zxab;    
-  TRANS
-    ( (handle.state = sm_D) -> (
-      (handle.event = e5 & next(handle.state) = Zx_X)  |
-      (handle.event = e2 & next(handle.state) = Ge_E)  ) ) &
-    ( (handle.state = sm_Zxab) -> (next(handle.state) = Zxab_Zx) ) &
-    ( (handle.state = sm_Ge) -> (next(handle.state) = Ge_G) )
+    init(sm_state) := sm_Zxab;  
   
-MODULE Zxab( handle )
-        
   TRANS
-    ( (handle.state = Zxab_A) -> (
-      (handle.event = e5 & next(handle.state) = sm_D)  |
-      (handle.event = e3 & next(handle.state) = Zxab_B)  |
-      (handle.event = e1 & next(handle.state) = Ge_E)  |
-      (handle.event = e4 & next(handle.state) = sm_Ge)  ) ) &
-    ( (handle.state = Zxab_B) -> (
-      (handle.event = e3 & next(handle.state) = sm_Ge)  |
-      (handle.event = e1 & next(handle.state) = Ge_E)  |
-      (handle.event = e4 & next(handle.state) = sm_Ge)  ) ) &
-    ( (handle.state = Zxab_Zx) -> (next(handle.state) = Zx_Z) )
+    ( (sm_state = sm_D) -> (
+      (handle.event = e5 & next(smZxabZx.smZxabZx_state) = smZxabZx_X)  |
+      (handle.event = e2 & next(smGe.smGe_state) = smGe_E)  ) ) &
+    ( (sm_state = sm_Zxab) -> ( next(smZxab.smZxab_state) = smZxab_Zx) ) &
+    ( (sm_state = sm_Ge) -> ( next(smGe.smGe_state) = smGe_G) )
   
-MODULE Zx( handle )
-        
-  TRANS
-    ( (handle.state = Zx_Z) -> (
-      (handle.event = e3 & next(handle.state) = Zx_X)  |
-      (handle.event = e2 & next(handle.state) = Zxab_A)  |
-      (handle.event = e5 & next(handle.state) = Ge_G)  |
-      (handle.event = e1 & next(handle.state) = Ge_E)  |
-      (handle.event = e4 & next(handle.state) = sm_Ge)  ) ) &
-    ( (handle.state = Zx_X) -> (
-      (handle.event = e5 & next(handle.state) = Ge_G)  |
-      (handle.event = e1 & next(handle.state) = Ge_E)  |
-      (handle.event = e4 & next(handle.state) = sm_Ge)  ) )
-  
-MODULE Ge( handle )
-        
-  TRANS
-    ( (handle.state = Ge_E) -> (
-      (handle.event = e1 & next(handle.state) = Ge_G)  |
-      (handle.event = e2 & next(handle.state) = Ge_G)  ) ) &
-    ( (handle.state = Ge_G) -> (
-       handle.event = e1 & next(handle.state) = Zxab_B) )
-  
-MODULE StateMachine_Sm
+MODULE SmZxab( sm , smZxabZx , smGe , handle )
   
   VAR 
-    sm : Sm;
-    zxab : Zxab( sm.handle );
-    zx : Zx( sm.handle );
-    ge : Ge( sm.handle );     
+    smZxab_state : { smZxab_Zx , smZxab_A , smZxab_B , null };  
+    
+  ASSIGN
+    init(smZxab_state) := null;  
+  
+  TRANS
+    ( (smZxab_state = smZxab_A) -> (
+      (handle.event = e5 & next(sm.sm_state) = sm_D)  |
+      (handle.event = e3 & next(smZxab_state) = smZxab_B)  |
+      (handle.event = e1 & next(smGe.smGe_state) = smGe_E)  |
+      (handle.event = e4 & next(sm.sm_state) = sm_Ge)  ) ) &
+    ( (smZxab_state = smZxab_B) -> (
+      (handle.event = e3 & next(sm.sm_state) = sm_Ge)  |
+      (handle.event = e1 & next(smGe.smGe_state) = smGe_E)  |
+      (handle.event = e4 & next(sm.sm_state) = sm_Ge)  ) ) &
+    ( (smZxab_state = smZxab_Zx) -> ( next(smZxabZx.smZxabZx_state) = smZxabZx_Z) )
+  
+MODULE SmZxabZx( sm , smZxab , smGe , handle )
+  
+  VAR 
+    smZxabZx_state : { smZxabZx_Z , smZxabZx_X , null };  
+    
+  ASSIGN
+    init(smZxabZx_state) := null;  
+  
+  TRANS
+    ( (smZxabZx_state = smZxabZx_Z) -> (
+      (handle.event = e3 & next(smZxabZx_state) = smZxabZx_X)  |
+      (handle.event = e2 & next(smZxab.smZxab_state) = smZxab_A)  |
+      (handle.event = e5 & next(smGe.smGe_state) = smGe_G)  |
+      (handle.event = e1 & next(smGe.smGe_state) = smGe_E)  |
+      (handle.event = e4 & next(sm.sm_state) = sm_Ge)  ) ) &
+    ( (smZxabZx_state = smZxabZx_X) -> (
+      (handle.event = e5 & next(smGe.smGe_state) = smGe_G)  |
+      (handle.event = e1 & next(smGe.smGe_state) = smGe_E)  |
+      (handle.event = e4 & next(sm.sm_state) = sm_Ge)  ) )
+  
+MODULE SmGe( sm , smZxab , smZxabZx , handle )
+  
+  VAR 
+    smGe_state : { smGe_G , smGe_E , null };  
+    
+  ASSIGN
+    init(smGe_state) := null;  
+  
+  TRANS
+    ( (smGe_state = smGe_E) -> (
+      (handle.event = e1 & next(smGe_state) = smGe_G)  |
+      (handle.event = e2 & next(smGe_state) = smGe_G)  ) ) &
+    ( (smGe_state = smGe_G) -> (
+       handle.event = e1 & next(smZxab.smZxab_state) = smZxab_B) )
   
 MODULE main
   
   VAR 
-    stateMachine_sm : StateMachine_Sm;     
-  
+    handle : Sm_Handle;
+    sm : Sm( smZxab , smZxabZx , smGe , handle );
+    smZxab : SmZxab( sm , smZxabZx , smGe , handle );
+    smZxabZx : SmZxabZx( sm , smZxab , smGe , handle );
+    smGe : SmGe( sm , smZxab , smZxabZx , handle ); 

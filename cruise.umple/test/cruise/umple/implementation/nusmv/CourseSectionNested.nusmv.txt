@@ -1,49 +1,51 @@
 -- This file is generated from CourseSectionNested.ump --
 
-
 MODULE Status_Handle
   
   VAR 
-    state : { status_Planned , status_Open , Open_NotEnoughStudents , Open_EnoughStudents , status_Cancelled , status_Closed }; 
-    event : { cancel , openRegistration , requestToRegister , closeRegistration , classSizeExceedsMinimum , classSizeExceedsMaximum };      
+    event : { cancel , openRegistration , requestToRegister , closeRegistration , classSizeExceedsMinimum , classSizeExceedsMaximum };  
+    
   
-MODULE Status
+MODULE Status( statusOpen , handle )
   
   VAR 
-    handle : Status_Handle;     
+    status_state : { status_Planned , status_Open , status_Cancelled , status_Closed };  
+    
   ASSIGN
-    init(handle.state) := status_Planned;    
-  TRANS
-    ( (handle.state = status_Planned) -> (
-      (handle.event = cancel & next(handle.state) = status_Cancelled)  |
-      (handle.event = openRegistration & next(handle.state) = Open_NotEnoughStudents)  ) ) &
-    ( (handle.state = status_Open) -> (next(handle.state) = Open_NotEnoughStudents) ) &
-    ( (handle.state = status_Closed) -> (
-       handle.event = cancel & next(handle.state) = status_Cancelled) ) &
-    ( (handle.state = status_Cancelled) -> (next(handle.state) = handle.state) )
+    init(status_state) := status_Planned;  
   
-MODULE Open( handle )
-        
   TRANS
-    ( (handle.state = Open_NotEnoughStudents) -> (
-      (handle.event = requestToRegister & next(handle.state) = status_Open)  |
-      (handle.event = closeRegistration & next(handle.state) = status_Cancelled)  |
-      (handle.event = classSizeExceedsMinimum & next(handle.state) = Open_EnoughStudents)  |
-      (handle.event = cancel & next(handle.state) = status_Cancelled)  ) ) &
-    ( (handle.state = Open_EnoughStudents) -> (
-      (handle.event = requestToRegister & next(handle.state) = status_Open)  |
-      (handle.event = closeRegistration & next(handle.state) = status_Closed)  |
-      (handle.event = classSizeExceedsMaximum & next(handle.state) = status_Closed)  |
-      (handle.event = cancel & next(handle.state) = status_Cancelled)  ) )
+    ( (status_state = status_Planned) -> (
+      (handle.event = cancel & next(status_state) = status_Cancelled)  |
+      (handle.event = openRegistration & next(statusOpen.statusOpen_state) = statusOpen_NotEnoughStudents)  ) ) &
+    ( (status_state = status_Closed) -> (
+       handle.event = cancel & next(status_state) = status_Cancelled) ) &
+    ( (status_state = status_Open) -> ( next(statusOpen.statusOpen_state) = statusOpen_NotEnoughStudents) ) &
+    ( (status_state = status_Cancelled) -> ( next(status_state) = status_state) )
   
-MODULE StateMachine_Status
+MODULE StatusOpen( status , handle )
   
   VAR 
-    status : Status;
-    open : Open( status.handle );     
+    statusOpen_state : { statusOpen_NotEnoughStudents , statusOpen_EnoughStudents , null };  
+    
+  ASSIGN
+    init(statusOpen_state) := null;  
+  
+  TRANS
+    ( (statusOpen_state = statusOpen_NotEnoughStudents) -> (
+      (handle.event = requestToRegister & next(status.status_state) = status_Open)  |
+      (handle.event = closeRegistration & next(status.status_state) = status_Cancelled)  |
+      (handle.event = classSizeExceedsMinimum & next(statusOpen_state) = statusOpen_EnoughStudents)  |
+      (handle.event = cancel & next(status.status_state) = status_Cancelled)  ) ) &
+    ( (statusOpen_state = statusOpen_EnoughStudents) -> (
+      (handle.event = requestToRegister & next(status.status_state) = status_Open)  |
+      (handle.event = closeRegistration & next(status.status_state) = status_Closed)  |
+      (handle.event = classSizeExceedsMaximum & next(status.status_state) = status_Closed)  |
+      (handle.event = cancel & next(status.status_state) = status_Cancelled)  ) )
   
 MODULE main
   
   VAR 
-    stateMachine_status : StateMachine_Status;     
-  
+    handle : Status_Handle;
+    status : Status( statusOpen , handle );
+    statusOpen : StatusOpen( status , handle ); 

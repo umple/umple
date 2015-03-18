@@ -1,49 +1,51 @@
 -- This file is generated from NestedMachine.ump --
 
-
 MODULE Sm_Handle
   
   VAR 
-    state : { sm_s1 , sm_s2 , s2_s2a , s2_s2b , s2_s2c , sm_s3 , sm_s4 }; 
-    event : { e1 , e2 , e3 , e4 };      
+    event : { e1 , e2 , e3 , e4 };  
+    
   
-MODULE Sm
+MODULE Sm( smS2 , handle )
   
   VAR 
-    handle : Sm_Handle;     
+    sm_state : { sm_s1 , sm_s2 , sm_s3 , sm_s4 };  
+    
   ASSIGN
-    init(handle.state) := sm_s1;    
-  TRANS
-    ( (handle.state = sm_s1) -> (
-      (handle.event = e1 & next(handle.state) = sm_s2)  |
-      (handle.event = e2 & next(handle.state) = s2_s2b)  |
-      (handle.event = e3 & next(handle.state) = sm_s4)  ) ) &
-    ( (handle.state = sm_s2) -> (next(handle.state) = s2_s2a) ) &
-    ( (handle.state = sm_s3) -> (next(handle.state) = handle.state) ) &
-    ( (handle.state = sm_s4) -> (next(handle.state) = handle.state) )
+    init(sm_state) := sm_s1;  
   
-MODULE S2( handle )
-        
   TRANS
-    ( (handle.state = s2_s2a) -> (
-      (handle.event = e3 & next(handle.state) = s2_s2b)  |
-      (handle.event = e1 & next(handle.state) = sm_s1)  ) ) &
-    ( (handle.state = s2_s2b) -> (
-      (handle.event = e3 & next(handle.state) = s2_s2a)  |
-      (handle.event = e4 & next(handle.state) = sm_s3)  |
-      (handle.event = e2 & next(handle.state) = s2_s2c)  |
-      (handle.event = e1 & next(handle.state) = sm_s1)  ) ) &
-    ( (handle.state = s2_s2c) -> (
-       handle.event = e1 & next(handle.state) = sm_s1) )
+    ( (sm_state = sm_s1) -> (
+      (handle.event = e1 & next(sm_state) = sm_s2)  |
+      (handle.event = e2 & next(smS2.smS2_state) = smS2_s2b)  |
+      (handle.event = e3 & next(sm_state) = sm_s4)  ) ) &
+    ( (sm_state = sm_s2) -> ( next(smS2.smS2_state) = smS2_s2a) ) &
+    ( (sm_state = sm_s3) -> ( next(sm_state) = sm_state) ) &
+    ( (sm_state = sm_s4) -> ( next(sm_state) = sm_state) )
   
-MODULE StateMachine_Sm
+MODULE SmS2( sm , handle )
   
   VAR 
-    sm : Sm;
-    s2 : S2( sm.handle );     
+    smS2_state : { smS2_s2a , smS2_s2b , smS2_s2c , null };  
+    
+  ASSIGN
+    init(smS2_state) := null;  
+  
+  TRANS
+    ( (smS2_state = smS2_s2a) -> (
+      (handle.event = e3 & next(smS2_state) = smS2_s2b)  |
+      (handle.event = e1 & next(sm.sm_state) = sm_s1)  ) ) &
+    ( (smS2_state = smS2_s2b) -> (
+      (handle.event = e3 & next(smS2_state) = smS2_s2a)  |
+      (handle.event = e4 & next(sm.sm_state) = sm_s3)  |
+      (handle.event = e2 & next(smS2_state) = smS2_s2c)  |
+      (handle.event = e1 & next(sm.sm_state) = sm_s1)  ) ) &
+    ( (smS2_state = smS2_s2c) -> (
+       handle.event = e1 & next(sm.sm_state) = sm_s1) )
   
 MODULE main
   
   VAR 
-    stateMachine_sm : StateMachine_Sm;     
-  
+    handle : Sm_Handle;
+    sm : Sm( smS2 , handle );
+    smS2 : SmS2( sm , handle ); 

@@ -1,28 +1,29 @@
 -- This file is generated from Test.ump --
 
-
 MODULE State
   
   VAR 
-    state : { state_newBooking , state_seatAssigned , state_checkedIn , state_cancelled , state_completed }; 
-    event : { assignSeat , cancel , checkIn , complete };      
+    event : { assignSeat , cancel , checkIn , complete }; 
+    state_state : { state_newBooking , state_seatAssigned , state_checkedIn , state_cancelled , state_completed };  
+    
   ASSIGN
-    init(state) := state_newBooking;    
+    init(state_state) := state_newBooking;  
+  
   TRANS
-    ( (state = state_newBooking) -> (
-      (event = assignSeat & next(state) = state_seatAssigned)  |
-      (event = cancel & next(state) = state_cancelled)  ) ) &
-    ( (state = state_seatAssigned) -> (
-      (event = cancel & next(state) = state_cancelled)  |
-      (event = checkIn & next(state) = state_checkedIn)  ) ) &
-    ( (state = state_checkedIn) -> (
-      (event = cancel & next(state) = state_cancelled)  |
-      (event = complete & next(state) = state_completed)  ) ) &
-    ( (state = state_cancelled) -> (next(state) = state) ) &
-    ( (state = state_completed) -> (next(state) = state) )
+    ( (state_state = state_newBooking) -> (
+      (event = assignSeat & next(state_state) = state_seatAssigned)  |
+      (event = cancel & next(state_state) = state_cancelled)  ) ) &
+    ( (state_state = state_seatAssigned) -> (
+      (event = cancel & next(state_state) = state_cancelled)  |
+      (event = checkIn & next(state_state) = state_checkedIn)  ) ) &
+    ( (state_state = state_checkedIn) -> (
+      (event = cancel & next(state_state) = state_cancelled)  |
+      (event = complete & next(state_state) = state_completed)  ) ) &
+    ( (state_state = state_cancelled) -> ( next(state_state) = state_state) ) &
+    ( (state_state = state_completed) -> ( next(state_state) = state_state) )
   
 MODULE main
   
   VAR 
-    state : State;     
-  
+    state : State; 
+    

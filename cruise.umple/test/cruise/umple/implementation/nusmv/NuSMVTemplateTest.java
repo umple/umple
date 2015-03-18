@@ -91,7 +91,7 @@ public class NuSMVTemplateTest extends TemplateTest{
 		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/CarTransmission.smv")).exists());
 	  }
 	  
-	  @Test //@Ignore
+	  @Test @Ignore
 	  public void Elevator()
 	  {
 		assertUmpleTemplateFor("nusmv/Elevator.ump","nusmv/Elevator.nusmv.txt");
