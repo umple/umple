@@ -1,4 +1,4 @@
--- This file is generated from myTemporaryTest.ump --
+-- This file is generated from FurnaceControlSystem.ump --
 
 MODULE HeatSystem_Handle
   

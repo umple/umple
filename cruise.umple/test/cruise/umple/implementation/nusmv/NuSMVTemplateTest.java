@@ -40,6 +40,7 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/Elevator.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/BigStateMachineWithNakedTransition.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/myTemporaryTest.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/FurnaceControlSystem.smv");
 	  }
 	  
 	  @Test @Ignore
@@ -91,7 +92,7 @@ public class NuSMVTemplateTest extends TemplateTest{
 		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/CarTransmission.smv")).exists());
 	  }
 	  
-	  @Test @Ignore
+	  @Test //@Ignore
 	  public void Elevator()
 	  {
 		assertUmpleTemplateFor("nusmv/Elevator.ump","nusmv/Elevator.nusmv.txt");
@@ -103,6 +104,13 @@ public class NuSMVTemplateTest extends TemplateTest{
 	  {
 		assertUmpleTemplateFor("nusmv/BigStateMachineWithNakedTransition.ump","nusmv/BigStateMachineWithNakedTransition.nusmv.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/BigStateMachineWithNakedTransition.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void FurnaceControlSystem()
+	  {
+		assertUmpleTemplateFor("nusmv/FurnaceControlSystem.ump","nusmv/FurnaceControlSystem.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/FurnaceControlSystem.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore

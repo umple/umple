@@ -41,13 +41,13 @@ class NuSMVCoordinator
   	return yes;
   }
 
-	public StringBuilder generateSimpleModule(StateMachine sm)
+	public StringBuilder generateSimpleModule(StateMachine sm , EnumerationStatement svar)
   {
     StringBuilder temp = new StringBuilder();
     NuSMVModule module = new NuSMVModule(changeNameCase(sm.getFullName(),1), 
     		sm.getStartState().getName()); 
   	module.setDeclarationPart(new DeclarationPart("", generateEventList(sm), generateStateList(sm)));
-  	module.setAssignPart(generateAssign(sm,changeNameCase(sm.getFullName(),0)+"_state"));
+  	module.setAssignPart(generateAssign(sm,changeNameCase(sm.getFullName(),0)+"_state", svar));
   	module.setTransitionPart(genTransition(sm, genStateVariables(sm)));	
   	temp.append(module.toString("",""));
   	
@@ -72,7 +72,7 @@ class NuSMVCoordinator
   	code.append(placeHolder.toString(handle , dot));
   	
   	//Defines a collection of state variables to ensure state names match transitions
-  	EnumerationStatement svar = genStateVariables(sm);		
+  	EnumerationStatement svar = genStateVariables(sm);
   	
   	//This defines and adds the parent module to the output code -- Step (2)
 		List<StateMachine> smList = generateStateMachineList(sm);
@@ -81,7 +81,6 @@ class NuSMVCoordinator
   	code.append(parent.toString(handle , dot));
 
   	//Generation of nested state machines is done here.
-		//System.out.println(genModules(sm , handle, svar).size());
   	for(NuSMVModule nestedMachine : genModules(sm , handle, svar , smList , mainVarList))
 			code.append(nestedMachine.toString(handle, dot));
   	
@@ -131,7 +130,7 @@ class NuSMVCoordinator
 		mainVarList.add(vstmt);
 
 		module.setDeclarationPart(new DeclarationPart("", generateStateList(sm)));
-  	module.setAssignPart(generateAssign(sm,changeNameCase(sm.getFullName(),0)+"_state"));
+  	module.setAssignPart(generateAssign(sm,changeNameCase(sm.getFullName(),0)+"_state", svar));
   	module.setTransitionPart(genTransition(sm,svar));
   	
   	return module;
@@ -153,13 +152,29 @@ class NuSMVCoordinator
 		return nestedMachines;
   }
 
+  /*private List<String> genStateVariable(StateMachine sm)
+	{
+		List<String> stateList = new ArrayList<String>();
+		for(State st : sm.getStates())
+		{
+			stateList.add(st.getName());
+			if(st.hasNestedStateMachines())
+			{
+				for(StateMachine nsm : st.getNestedStateMachines())
+					for(String stateName : genStateVariable(nsm))					
+						stateList.add(stateName);
+			}
+		}
+		return stateList;
+	}*/
+  
+
   public EnumerationStatement genStateVariables(StateMachine sm)
   {
   	EnumerationElement temp = new EnumerationElement("");
   	EnumerationStatement decState = new EnumerationStatement("state",temp);
-  	//EnumerationStatement decTransition = new EnumerationStatement("event",temp);
-  	EnumerationStatement decState2 = new EnumerationStatement("state",temp);
-  	//Creates states list  			
+  	
+		//Creates states list  			
   	for(State st : sm.getStates())
   	{
   		EnumerationElement stateElement = new EnumerationElement(changeNameCase(sm.getFullName(),0)+"_"+st.getName());
@@ -167,22 +182,31 @@ class NuSMVCoordinator
   		if(st.hasNestedStateMachines())
   		{
   			for(StateMachine nsm : st.getNestedStateMachines())
-  				decState2 = genStateVariables(nsm);
-  				
-  			for(EnumerationElement de : decState2.getEnumerationElements())
-  				decState.addEnumerationElement(de);
+  				for(EnumerationElement de : genStateVariables(nsm).getEnumerationElements())
+  					decState.addEnumerationElement(de);  				
   		}	
   	}
   	decState.removeEnumerationElement(temp);
   	return decState;
   }
 
-  public AssignPart generateAssign(StateMachine sm, String varName)
+  public AssignPart generateAssign(StateMachine sm, String varName, EnumerationStatement stateVariables)
   {
-		String initState = sm.getParentState() != null ? "null" : sm.getName()+"_"+sm.getStartState().getName();
+		String initState = createInitialState(sm , stateVariables);
   	AssignPart apart = new AssignPart("", initState, varName);	
   		return apart;
   }
+
+	private String createInitialState( StateMachine sm , EnumerationStatement stateVariables)
+	{
+		if(sm.getParentState() != null)
+		{
+			if(sm.getParentState().isIsConcurrent())
+				return lookUpStateHandle(stateVariables, sm.getStartState().getName()) +"_"+sm.getStartState().getName();
+			return null;		
+		}
+		return sm.getName()+"_"+sm.getStartState().getName();
+	}
 
 	public EnumerationStatement generateEventList(StateMachine sm)
   {
@@ -213,6 +237,10 @@ class NuSMVCoordinator
 		if(sm.getParentState() != null)
 			decState.addEnumerationElement(new EnumerationElement(null));
   	decState.removeEnumerationElement(temp);
+		if(decState.getEnumerationElements().size() == 1) {
+			EnumerationElement nullElement = new EnumerationElement("null");
+  		decState.addEnumerationElement(nullElement);	
+		}			
   	return decState;
   }
 
@@ -293,29 +321,21 @@ class NuSMVCoordinator
 
 	private void genTransitionForFinalStates(StateMachine sm, TransitionPart tpart, EnumerationStatement stateVariables)
 	{
-		String stateName;
-		String source = changeNameCase(sm.getFullName(), 0) +"_state";
+		String stateName = changeNameCase(sm.getFullName(), 0)+"_state";
 		if(getFinalStates(sm).size() != 0) 
   		for(String str : getFinalStates(sm))
   		{	
   			if(sm.getNestedStateMachines().size() > 0 || sm.hasParentState())
   			{
-					/*String parentName = getParentName(sm, trb.getNextState(), stateVariables);
-					String parentName = sm.getStateMachine().getParentState() == null ? "" : ;
-			
-					String stateName = parentName == "" ? changeNameCase(sm.getFullName(), 0) +"_state" : parentName + "_state";*/
-
-					stateName = changeNameCase(sm.getFullName(), 0)+"_state";
 					NextExpression nextExpr = new NextExpression(stateName, stateName, "");
 	  			SimpleTransition strans = new 
-	  				SimpleTransition( lookUpStateDetail(stateVariables,str), source, "", nextExpr	);
+	  				SimpleTransition( lookUpStateDetail(stateVariables,str), stateName, "", nextExpr	);
   				tpart.addSimpleTransition(strans);
   			}
   			else {
-					stateName = changeNameCase(sm.getFullName(), 0) +"_state";
 					NextExpression nextExpr = new NextExpression(stateName, stateName, "");
 	  			SimpleTransition strans = new 
-	  				SimpleTransition( lookUpStateDetail(stateVariables,str), source, "", nextExpr	);
+	  				SimpleTransition( lookUpStateDetail(stateVariables,str), stateName, "", nextExpr	);
 
   				tpart.addSimpleTransition(strans);
   			}
@@ -466,7 +486,7 @@ class NuSMVCoordinator
   	{
   		if(e.getValue().endsWith("_"+stateName)) {
   			String temp = e.getValue();
-				int x = temp.indexOf("_");
+				int x = temp.indexOf("_"+stateName);
 				if(x > 0)
 					return changeNameCase(temp.substring(0,x),0);
 			}
