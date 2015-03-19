@@ -235,7 +235,7 @@ class ComplexTransition
 class SimpleTransition 
 {
   isA NuSMVTransition;
-  1 -> 1..* NextExpression nextState;
+  1 -> 1..* NextExpression;
   event;
   public String toString(String handle, String dot)
   {
@@ -248,42 +248,42 @@ class SimpleTransition
 
   private String computeDot(int i)
 	{
-		return getNextState(0).getVarName() == ""? "" : ".";
+		return getNextExpression(i).getVarName() == ""? "" : ".";
 	}
   
-  public String getNextExpressions()
+  public String convertToString()
   {
   	String temp = "";
     //String dot = getVarName() == ""? "" : ".";
-  	int size = numberOfNextState();
+  	int size = numberOfNextExpressions();
   	if(size == 0)
   		return temp;
   	if(size == 1)
-  		return "next("+getNextState(0).getVarName()+computeDot(0)+
-  			getNextState(0).getName()+") = "+getNextState(0).getValue(); 
+  		return "next("+getNextExpression(0).getVarName()+computeDot(0)+
+  			getNextExpression(0).getName()+") = "+getNextExpression(0).getValue(); 
   	for(int i = 0; i < size - 1;i++)
-  		temp += "next("+getNextState(i).getVarName()+computeDot(i)+
-  			getNextState(i).getName()+") = "+getNextState(i).getValue()+" & ";
-  	temp += "next("+getNextState(size-1).getVarName()+computeDot(size - 1)+
-  			getNextState(size-1).getName()+") = "+getNextState(size-1).getValue();
+  		temp += "next("+getNextExpression(i).getVarName()+computeDot(i)+
+  			getNextExpression(i).getName()+") = "+getNextExpression(i).getValue()+" & ";
+  	temp += "next("+getNextExpression(size-1).getVarName()+computeDot(size - 1)+
+  			getNextExpression(size-1).getName()+") = "+getNextExpression(size-1).getValue();
   	return temp;
   }
   
   //This print transitions without an event, but source and target states.
-  outputWithAutoEvent <<!( (<<=handle>><<=dot>>event = <<=getEvent()>>) -> ( <<=getNextExpressions()>>) )!>>
+  outputWithAutoEvent <<!( (<<=handle>><<=dot>>event = <<=getEvent()>>) -> ( <<=convertToString()>>) )!>>
   	emit printTransitionWithAutoEvent(String handle,String dot)(outputWithAutoEvent);
   
   //This print transitions without an event, but source and target states.
-  outputWithNoEvent <<!( (<<=getVarName()>> = <<=getFromState()>>) -> ( <<=getNextExpressions()>>) )!>>
+  outputWithNoEvent <<!( (<<=getVarName()>> = <<=getFromState()>>) -> ( <<=convertToString()>>) )!>>
   	emit printTransitionWithNoEvent(String handle,String dot)(outputWithNoEvent);
   
   //This prints transitions with event, and source and target states. 
   output <<!( (<<=getVarName()>> = <<=getFromState()>>) -> (
-  	   <<=handle>><<=dot>>event = <<=getEvent()>> & <<=getNextExpressions()>>) )!>>
+  	   <<=handle>><<=dot>>event = <<=getEvent()>> & <<=convertToString()>>) )!>>
   	emit printNormalTransition(String handle,String dot)(output);
   	
   //This prints transitions with event and traget state.	
-  output1 <<!  (<<=handle>><<=dot>>event = <<=getEvent()>> & <<=getNextExpressions()>>)  !>>
+  output1 <<!  (<<=handle>><<=dot>>event = <<=getEvent()>> & <<=convertToString()>>)  !>>
     emit printMe(String handle , String dot)(output1);
     
 }

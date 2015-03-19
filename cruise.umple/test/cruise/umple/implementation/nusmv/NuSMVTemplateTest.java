@@ -106,7 +106,7 @@ public class NuSMVTemplateTest extends TemplateTest{
 		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/BigStateMachineWithNakedTransition.smv")).exists());
 	  }
 	  
-	  @Test //@Ignore
+	  @Test @Ignore
 	  public void FurnaceControlSystem()
 	  {
 		assertUmpleTemplateFor("nusmv/FurnaceControlSystem.ump","nusmv/FurnaceControlSystem.nusmv.txt");

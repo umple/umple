@@ -34,14 +34,14 @@ MODULE SmS2( sm , handle )
   TRANS
     ( (smS2_state = smS2_s2a) -> (
       (handle.event = e3 & next(smS2_state) = smS2_s2b)  |
-      (handle.event = e1 & next(sm.sm_state) = sm_s1)  ) ) &
+      (handle.event = e1 & next(sm.sm_state) = sm_s1 & next(smS2_state) = null)  ) ) &
     ( (smS2_state = smS2_s2b) -> (
       (handle.event = e3 & next(smS2_state) = smS2_s2a)  |
-      (handle.event = e4 & next(sm.sm_state) = sm_s3)  |
+      (handle.event = e4 & next(sm.sm_state) = sm_s3 & next(smS2_state) = null)  |
       (handle.event = e2 & next(smS2_state) = smS2_s2c)  |
-      (handle.event = e1 & next(sm.sm_state) = sm_s1)  ) ) &
+      (handle.event = e1 & next(sm.sm_state) = sm_s1 & next(smS2_state) = null)  ) ) &
     ( (smS2_state = smS2_s2c) -> (
-       handle.event = e1 & next(sm.sm_state) = sm_s1) )
+       handle.event = e1 & next(sm.sm_state) = sm_s1 & next(smS2_state) = null) )
   
 MODULE main
   

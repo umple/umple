@@ -270,6 +270,20 @@ class NuSMVCoordinator
 		return str1 == null || str1.equals( str ) ? "" : str1;		
 	}
 
+	private boolean isChildState(State source , State target)
+	{
+		StateMachine host = source.getStateMachine();
+		boolean yes = false;
+		for(State st : host.getStates())
+		{
+			if(!target.getName().equals(st.getName()))
+				continue;
+			else 
+				yes = true;
+		}
+		return yes;
+	}
+
 	private void genTransitionCompositeStates(StateMachine sm, TransitionPart tpart, EnumerationStatement stateVariables)
 	{
 		String source = changeNameCase(sm.getFullName(), 0) +"_state";
@@ -279,8 +293,12 @@ class NuSMVCoordinator
 			String stateName = parentName == "" ? changeNameCase(sm.getFullName(), 0) +"_state" : parentName + "_state";
 			NextExpression nextExpr = new NextExpression(stateName, 
 					lookUpStateDetail(stateVariables,getStartStateOfCompositeState(st).getName()), parentName);
-	  	SimpleTransition strans = new 
-	  				SimpleTransition( lookUpStateDetail(stateVariables, st.getName()), source,"", nextExpr	);
+
+	  	SimpleTransition strans = new SimpleTransition(lookUpStateDetail(stateVariables, st.getName()), source,"", nextExpr);
+
+			//Adding exit transition
+			if(parentName != "" && st.getStateMachine().getParentState() != null && st.getNestedStateMachines().size() == 0)
+				strans.addNextExpression(createExitExpression(sm, stateName , parentName));
 	  	tpart.addSimpleTransition(strans);
 		}
 	}
@@ -328,15 +346,12 @@ class NuSMVCoordinator
   			if(sm.getNestedStateMachines().size() > 0 || sm.hasParentState())
   			{
 					NextExpression nextExpr = new NextExpression(stateName, stateName, "");
-	  			SimpleTransition strans = new 
-	  				SimpleTransition( lookUpStateDetail(stateVariables,str), stateName, "", nextExpr	);
+	  			SimpleTransition strans = new SimpleTransition( lookUpStateDetail(stateVariables,str), stateName, "", nextExpr	);
   				tpart.addSimpleTransition(strans);
   			}
   			else {
 					NextExpression nextExpr = new NextExpression(stateName, stateName, "");
-	  			SimpleTransition strans = new 
-	  				SimpleTransition( lookUpStateDetail(stateVariables,str), stateName, "", nextExpr	);
-
+	  			SimpleTransition strans = new SimpleTransition( lookUpStateDetail(stateVariables,str), stateName, "", nextExpr	);
   				tpart.addSimpleTransition(strans);
   			}
 			}
@@ -372,6 +387,11 @@ class NuSMVCoordinator
   	}
   	return temp;
   }
+
+	private NextExpression createExitExpression(StateMachine sm, String stateName , String parentName) 
+	{
+		return new NextExpression(changeNameCase(sm.getFullName(), 0) +"_state", "null", "");	
+	}
   
   private void genTransitionForSimpleStatesWithUnitTransition(StateMachine sm, TransitionPart tpart, EnumerationStatement stateVariables)
 	{
@@ -391,6 +411,7 @@ class NuSMVCoordinator
 				else
 					trb = st.getTransitions().get(0);
 					String parentName = getParentName(sm, trb.getNextState(), stateVariables);
+					
 					String stateName = parentName == "" ? changeNameCase(sm.getFullName(), 0) +"_state" : parentName + "_state";
 					String source = changeNameCase(sm.getFullName(), 0) +"_state";
 
@@ -398,6 +419,12 @@ class NuSMVCoordinator
 								NextExpression(stateName, lookUpStateDetail(stateVariables,trb.getNextState().getName()), parentName);
 	  			SimpleTransition strans = new 
 	  				SimpleTransition( lookUpStateDetail(stateVariables,trb.getFromState().getName()), source, trb.getEvent().getName(), nextExpr	);
+					
+					//Adding exit transition
+					if(parentName != "" && st.getStateMachine().getParentState() != null)
+						if(!isChildState(st , trb.getNextState())	)								
+							strans.addNextExpression(createExitExpression(sm, stateName , parentName));					
+
   			tpart.addSimpleTransition(strans);
   		}
 			numOfTransitions = 0;
@@ -423,6 +450,10 @@ class NuSMVCoordinator
 				NextExpression nextExpr = new NextExpression(stateName, lookUpStateDetail(stateVariables,tr.getNextState().getName()), parentName);
 	  		SimpleTransition smt = new 
 	  				SimpleTransition( lookUpStateDetail(stateVariables,tr.getFromState().getName()), source, tr.getEvent().getName(), nextExpr	);
+				//Adding exit transition
+				if(parentName != "" && st.getStateMachine().getParentState() != null)
+					if(!isChildState(st , tr.getNextState())	)		
+						smt.addNextExpression(createExitExpression(sm, stateName , parentName)); 	
 				ctrans.addSimpleTransition(smt);
 	  	}
 				
@@ -436,6 +467,11 @@ class NuSMVCoordinator
 								lookUpStateDetail(stateVariables,ttr.getNextState().getName()), parentName);
 					SimpleTransition smtt = new 
 	  				SimpleTransition( lookUpStateDetail(stateVariables,st.getName()), source, ttr.getEvent().getName(), highLevelNextExpr	);
+					//Adding exit transition
+					if(parentName != "" && st.getStateMachine().getParentState() != null)
+						if(!isChildState(st , ttr.getNextState())	)					
+							smtt.addNextExpression(createExitExpression(sm, stateName , parentName));
+					
 					ctrans.addSimpleTransition(smtt);
 	  		}
 			ctrans.removeSimpleTransition(temp);

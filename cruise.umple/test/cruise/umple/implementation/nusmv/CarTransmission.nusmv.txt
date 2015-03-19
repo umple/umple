@@ -35,18 +35,18 @@ MODULE StateDrive( state , handle )
   TRANS
     ( (stateDrive_state = stateDrive_first) -> (
       (handle.event = reachSecondSpeed & next(stateDrive_state) = stateDrive_second)  |
-      (handle.event = selectNeutral & next(state.state_state) = state_neutral)  |
+      (handle.event = selectNeutral & next(state.state_state) = state_neutral & next(stateDrive_state) = null)  |
       (handle.event = selectFirst & next(stateDrive_state) = stateDrive_first)  |
       (handle.event = selectSecond & next(stateDrive_state) = stateDrive_second)  ) ) &
     ( (stateDrive_state = stateDrive_second) -> (
       (handle.event = reachThirdSpeed & next(stateDrive_state) = stateDrive_third)  |
       (handle.event = dropBelowSecondSpeed & next(stateDrive_state) = stateDrive_first)  |
-      (handle.event = selectNeutral & next(state.state_state) = state_neutral)  |
+      (handle.event = selectNeutral & next(state.state_state) = state_neutral & next(stateDrive_state) = null)  |
       (handle.event = selectFirst & next(stateDrive_state) = stateDrive_first)  |
       (handle.event = selectSecond & next(stateDrive_state) = stateDrive_second)  ) ) &
     ( (stateDrive_state = stateDrive_third) -> (
       (handle.event = dropBelowThirdSpeed & next(stateDrive_state) = stateDrive_second)  |
-      (handle.event = selectNeutral & next(state.state_state) = state_neutral)  |
+      (handle.event = selectNeutral & next(state.state_state) = state_neutral & next(stateDrive_state) = null)  |
       (handle.event = selectFirst & next(stateDrive_state) = stateDrive_first)  |
       (handle.event = selectSecond & next(stateDrive_state) = stateDrive_second)  ) )
   
