@@ -37,8 +37,15 @@ class UmplificatorMain {
 			 if (optset.has("path")) { umplificator.setOutputFolder((String)optset.valueOf("path")); }
 			umplificator.setNeedSubDirectories(optset.has("dir"));
 			umplificator.setSplitModel(optset.has("splitModel"));			
-			String console = umplificator.umplify(inputFiles) ? "Success!":"Error" ;
-			System.out.println(console);
+
+			try {
+				String console = umplificator.umplify(inputFiles) ? "Success!":"Error" ;
+				logger.info(console);
+			} catch (Exception e)
+			{
+				logger.fatal("Fatal exception while umplifying input files!", e);
+				System.exit(1);
+			}
 		 }
 	}
 

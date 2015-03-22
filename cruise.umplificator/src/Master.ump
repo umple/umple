@@ -16,7 +16,17 @@ strictness allow 1007;
 strictness allow 1008;
 strictness allow 1006;
 
-tracer log4j root=debug (debug)=(file, console);
+/* 
+This injects log4j trace points, but only generates a dummy file
+in /src/main/.
+
+The file that actually gets packaged with the final .jar is:
+	cruise.umplificator/log4j2.xml
+
+This is done to have more control over the logger output (e.g. so we could
+add file rollover)
+*/
+tracer log4j root=debug (info)=(file, console);
 
 generate Java "../src-gen-umple";
 
