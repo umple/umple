@@ -109,7 +109,7 @@ class UmpleImportClass
 		for (UmpleImportAssociation association : umpleImportAssociations) {
 			umpleBuilder.append(association.generateUmple());
 		}
-		for (UmpleImportStateMachine stateMachine : umpleImportStateMachines) {
+		for (ImportStateMachine stateMachine : importStateMachines) {
 		  umpleBuilder.append(stateMachine.generateUmple());
 		}
 		umpleBuilder.append("\n}");
@@ -185,9 +185,34 @@ class UmpleImportAssociation
 	}
 }
 
-class UmpleImportStateMachine
+class ImportStateMachineElement
 {
-    String generateUmple() {
-        return "\n\t" + this.getStateMachineName() + " {}";
+  String generateUmple() {
+    String indent = new String(new char[getDepth()]).replace("\0", "\t");
+    StringBuilder umpleBuilder = this.getUmpleBuilder();
+    umpleBuilder.append("\n" + indent + this.getElemName() + " {");
+
+    for (ImportStateMachineElement elem : this.getImportStateMachineElements()) {
+      umpleBuilder.append(elem.generateUmple());
     }
+
+    umpleBuilder.append("\n" + indent + "}");	
+
+    return umpleBuilder.toString();
+  }
+}
+
+class ImportStateMachineTransition
+{
+  String generateUmple() {
+    String indent = new String(new char[getDepth()]).replace("\0", "\t");
+    StringBuilder umpleBuilder = this.getUmpleBuilder();
+    umpleBuilder.append("\n" + indent + this.getElemName());
+    if (this.getCond() != null) {
+      umpleBuilder.append(" [" + this.getCond() + "]");
+    }
+    umpleBuilder.append(" -> " + this.getTarget() + ";");
+
+    return umpleBuilder.toString();
+  }
 }

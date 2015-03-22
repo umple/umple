@@ -221,7 +221,7 @@ class UmpleConsoleMain
     {
       UmpleImportModel umple;
       if (filename.endsWith(".scxml")) {
-        SCXMLImportHandler handler = new SCXMLImportHandler();
+        ScxmlImportHandler handler = new ScxmlImportHandler();
         umple = handler.readDataFromXML(filename);
       } else {
         EcoreImportHandler handler = new EcoreImportHandler();

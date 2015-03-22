@@ -78,18 +78,66 @@ public class UmpleImportTest {
 	}
 	
 	@Test
-	public void SCXMLEmptyStateMachineTest() throws Exception {
-	  String expectedText = loadUmpleFile("SCXMLImport_empty.ump").trim();
-	  String actualText = loadSCXMLFile("SCXMLImport_empty.scxml").trim();
+	public void ScxmlEmptyStateMachineTest() throws Exception {
+	  String expectedText = loadUmpleFile("ScxmlImport_empty.ump").trim();
+	  String actualText = loadScxmlFile("ScxmlImport_empty.scxml.txt").trim();
 	   
 	  assertEquals(expectedText, actualText);
 	}
+	
+	@Test
+  public void ScxmlOneStateTest() throws Exception {
+    String expectedText = loadUmpleFile("ScxmlImport_one_state.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_one_state.scxml.txt").trim();
+     
+    assertEquals(expectedText, actualText);
+  }
+	
+	@Test
+  public void ScxmlMultipleStatesTest() throws Exception {
+    String expectedText = loadUmpleFile("ScxmlImport_multiple_states.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_multiple_states.scxml.txt").trim();
+     
+    assertEquals(expectedText, actualText);
+  }
+	
+	@Test
+  public void ScxmlOneNestedStateTest() throws Exception {
+    String expectedText = loadUmpleFile("ScxmlImport_one_nested_state.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_one_nested_state.scxml.txt").trim();
+     
+    assertEquals(expectedText, actualText);
+  }
+	
+	@Test
+  public void ScxmlMultipleNestedStatesTest() throws Exception {
+    String expectedText = loadUmpleFile("ScxmlImport_multiple_nested_states.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_multiple_nested_states.scxml.txt").trim();
+     
+    assertEquals(expectedText, actualText);
+  }
+	
+	@Test
+	public void ScxmlTransitionTest() throws Exception {
+	  String expectedText = loadUmpleFile("ScxmlImport_transition.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_transition.scxml.txt").trim();
+     
+    assertEquals(expectedText, actualText);
+	}
+	
+	@Test
+  public void ScxmlTransitionWithGuardTest() throws Exception {
+    String expectedText = loadUmpleFile("ScxmlImport_transition_with_guard.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_transition_with_guard.scxml.txt").trim();
+     
+    assertEquals(expectedText, actualText);
+  }
 	 
-	private static String loadSCXMLFile(String name) throws Exception {
+	private static String loadScxmlFile(String name) throws Exception {
 	  String filename = getFullFilePath(name);
 	  assertEquals(true, (new File(filename)).exists());
 	 
-	  SCXMLImportHandler handler = new SCXMLImportHandler();
+	  ScxmlImportHandler handler = new ScxmlImportHandler();
 	  UmpleImportModel umple = handler.readDataFromXML(filename);
 	  return umple.generateUmple();
   }

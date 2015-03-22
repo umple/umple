@@ -60,13 +60,14 @@ class EcoreImportHandler
 /*
  * Parse SCXML by extend SAX handler callbacks
  */
-class SCXMLImportHandler
+class ScxmlImportHandler
 {
    depend java.io.File;
    depend java.io.IOException;
    depend java.io.InputStream;
    depend java.io.FileInputStream;
    depend java.util.Optional;
+   depend java.util.Stack;
    depend java.nio.file.Paths;
    depend javax.xml.parsers.ParserConfigurationException;
    depend javax.xml.parsers.SAXParser;
@@ -80,20 +81,31 @@ class SCXMLImportHandler
 }
 
 /* 
- * Defines import prototype for package, class, interface 
- * and associations
- */ 
+* Defines import prototype for package, class, interface 
+* and associations
+*/ 
 class UmpleImportElement
 {
-	abstract;
-	
-	//identifier from xmi
-	id;
-	//name attribute from xmi
-	name;
-	StringBuilder umpleBuilder = new StringBuilder();
-	
-	abstract String generateUmple();
+  abstract;
+
+  //identifier from xmi
+  id;
+  //name attribute from xmi
+  name;
+  StringBuilder umpleBuilder = new StringBuilder();
+
+  abstract String generateUmple();
+  }
+
+class ImportStateMachineElement
+{
+  abstract;
+  isA UmpleImportElement;
+
+  0..1 -> * ImportStateMachineElement;
+
+  Integer depth;
+  String elemName;
 }
 
 /* 
@@ -119,7 +131,7 @@ class UmpleImportClass
 	
 	0..1 -> * UmpleImportAttribute;
 	0..1 -> * UmpleImportAssociation;
-	0..1 -> * UmpleImportStateMachine;
+	0..1 -> * ImportStateMachine;
 	
 	packageName;
 	Boolean isAbstract;
@@ -157,10 +169,19 @@ class UmpleImportAssociation
 	Integer otherUpperBound = 1;
 }
 
-class UmpleImportStateMachine {
-   isA UmpleImportElement;
+class ImportStateMachine {
+  isA ImportStateMachineElement;
+}
 
-   stateMachineName;
+class ImportStateMachineState {
+  isA ImportStateMachineElement;
+}
+
+class ImportStateMachineTransition {
+  isA ImportStateMachineElement;
+
+  String cond;
+  String target;
 }
 
 class UmpleImportConstants

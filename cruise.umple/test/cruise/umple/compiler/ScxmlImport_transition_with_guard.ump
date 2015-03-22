@@ -1,0 +1,13 @@
+
+
+class StateMachine
+{
+	sm {
+		stateA {
+			e1 [x] -> stateB;
+		}
+		stateB {
+			e2 [y] -> stateA;
+		}
+	}
+}

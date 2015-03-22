@@ -198,26 +198,47 @@ class EcoreImportHandler
 	}
 }
 
-class SCXMLImportHandler
+class ScxmlImportHandler
 {
-   internal UmpleImportClass currentClass = null;
+  internal UmpleImportClass currentClass = null;
+  internal Stack<ImportStateMachineElement> elemStack = new Stack<ImportStateMachineElement>();
+  Integer depth = 0;
 
-   public void startDocument() throws SAXException {
-       UmpleImportClass umpleClass = new UmpleImportClass("StateMachine", "StateMachine", "StateMachine", false, false);
-       UmpleImportModel model = getModel();
-       model.addUmpleImportElement(umpleClass);
-       currentClass = umpleClass;
-   }
+  public void startDocument() throws SAXException {
+    UmpleImportClass umpleClass = new UmpleImportClass("StateMachine", "StateMachine", "StateMachine", false, false);
+    UmpleImportModel model = getModel();
+    model.addUmpleImportElement(umpleClass);
+    currentClass = umpleClass;
+  }
 
-   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-       if("scxml".equals(localName)) {
-           String stateMachineName = attributes.getValue("name");
-           UmpleImportStateMachine stateMachine = new UmpleImportStateMachine("", "", stateMachineName);
-           currentClass.addUmpleImportStateMachine(stateMachine);
-       }
-   }
+  public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    if("scxml".equals(localName)) {
+      depth = 1;
+      String stateMachineName = attributes.getValue("name");
+	    ImportStateMachine stateMachine = new ImportStateMachine("", "", depth, stateMachineName);
+	    currentClass.addImportStateMachine(stateMachine);
+	    elemStack.push(stateMachine);
+    } else if ("state".equals(localName)) {
+      depth++;
+      String stateId = attributes.getValue("id");
+      ImportStateMachineState state = new ImportStateMachineState("", "", depth, stateId);
+      elemStack.peek().addImportStateMachineElement(state);
+      elemStack.push(state);
+    } else if ("transition".equals(localName)) {
+      depth++;
+      String event = attributes.getValue("event");
+      String cond = attributes.getValue("cond");
+      String target = attributes.getValue("target");
 
-   public void endElement(String uri, String localName, String qName) throws SAXException {
+      ImportStateMachineTransition transition = new ImportStateMachineTransition("", "", depth, event, cond, target);
+      elemStack.peek().addImportStateMachineElement(transition);
+    }
+  }
 
-   }
+  public void endElement(String uri, String localName, String qName) throws SAXException {
+      depth--;
+      if ("scxml".equals(localName) || "state".equals(localName)) {
+        elemStack.pop();
+      }
+  }
 }
