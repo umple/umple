@@ -77,12 +77,12 @@ public class UmpleImportTest {
 		assertEquals(expectedText, actualText);
 	}
 
-	// @Test
-	// public void ScxmlEmptyStateMachineTest() throws Exception {
-	//   String expectedText = loadUmpleFile("ScxmlImport_empty.ump").trim();
-	//   String actualText = loadScxmlFile("ScxmlImport_empty.scxml.txt").trim();
-	//   assertEquals(expectedText, actualText);
-	// }
+	@Test
+	public void ScxmlEmptyStateMachineTest() throws Exception {
+	  String expectedText = loadUmpleFile("ScxmlImport_empty.ump").trim();
+	  String actualText = loadScxmlFile("ScxmlImport_empty.scxml.txt").trim();
+	  assertEquals(expectedText, actualText);
+	}
 
 	@Test
   public void ScxmlOneStateTest() throws Exception {
