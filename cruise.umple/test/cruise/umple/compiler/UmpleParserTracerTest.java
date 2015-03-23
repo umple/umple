@@ -49,7 +49,7 @@ public class UmpleParserTracerTest
   public void traceType_Console()
   {
 	  code = "tracer Console;";
-	  assertParse(code,"[traceType][tracerType:Console]");
+	  assertParse(code,"[tracerDirective][tracerType:Console]");
 	  Assert.assertEquals("console",model.getTraceType());
   }
   
@@ -57,7 +57,15 @@ public class UmpleParserTracerTest
   public void traceType_File()
   {
 	  code = "tracer File;";
-	  assertParse(code,"[traceType][tracerType:File]");
+	  assertParse(code,"[tracerDirective][tracerType:File]");
+	  Assert.assertEquals("file",model.getTraceType());
+  }
+  
+  @Test
+  public void traceType_FileWithFileNameProvided()
+  {
+	  code = "tracer File log.txt;";
+	  assertParse(code,"[tracerDirective][tracerType:File][tracerArgument:log.txt]");
 	  Assert.assertEquals("file",model.getTraceType());
   }
   
@@ -65,7 +73,7 @@ public class UmpleParserTracerTest
   public void traceType_String()
   {
 	  code = "tracer String;";
-	  assertParse(code,"[traceType][tracerType:String]");
+	  assertParse(code,"[tracerDirective][tracerType:String]");
 	  Assert.assertEquals("string",model.getTraceType());
   }
   
@@ -73,7 +81,7 @@ public class UmpleParserTracerTest
   public void traceType_JavaAPI()
   {
     code = "tracer JavaAPI;";
-    assertParse(code,"[traceType][tracerType:JavaAPI]");
+    assertParse(code,"[tracerDirective][tracerType:JavaAPI]");
     Assert.assertEquals("javaapi",model.getTraceType());
   }
   
@@ -81,7 +89,7 @@ public class UmpleParserTracerTest
   public void traceType_log4j()
   {
     code = "tracer log4j;";
-    assertParse(code,"[traceType][tracerType:log4j]");
+    assertParse(code,"[tracerDirective][tracerType:log4j]");
     Assert.assertEquals("log4j",model.getTraceType());
   }
   
@@ -89,7 +97,7 @@ public class UmpleParserTracerTest
   public void traceType_lttng()
   {
     code = "tracer LttngJNI;";
-    assertParse(code,"[traceType][tracerType:LttngJNI]");
+    assertParse(code,"[tracerDirective][tracerType:LttngJNI]");
     Assert.assertEquals("lttngjni",model.getTraceType());
   }
   
@@ -97,7 +105,7 @@ public class UmpleParserTracerTest
   public void traceType_log4jConfigOptions()
   {
     code = "tracer log4j (error)=(console,file);";
-    assertParse(code,"[traceType][tracerType:log4j][log4jConfig][log4jLevel:error][log4jAppender:console][log4jAppender:file]");
+    assertParse(code,"[tracerDirective][tracerType:log4j][logConfig][logLevel:error][logAppender:console][logAppender:file]");
     Assert.assertEquals("log4j",model.getTraceType());
     
     LogConfiguration log = model.getTracer().getLogConfiguration();
@@ -111,7 +119,7 @@ public class UmpleParserTracerTest
   public void traceType_log4jMonitorInterval()
   {
     code = "tracer log4j monitorInterval=30;";
-    assertParse(code,"[traceType][tracerType:log4j][log4jConfig][monitorInterval:30]");
+    assertParse(code,"[tracerDirective][tracerType:log4j][logConfig][monitorInterval:30]");
     LogConfiguration log = model.getTracer().getLogConfiguration();
     Assert.assertEquals(30,log.getMonitorInterval());
   }
@@ -128,7 +136,7 @@ public class UmpleParserTracerTest
   public void traceType_TracerNameCaseInsensitive()
   {
 	  code = "tracer FILE;";
-	  assertParse(code,"[traceType][tracerType:FILE]");
+	  assertParse(code,"[tracerDirective][tracerType:FILE]");
 	  Assert.assertEquals("file",model.getTraceType());
   }
   	

@@ -8,16 +8,17 @@
 // Trace capabilities of the MOTL sublanguage of Umple.
 // See user manual page: [*ModelOrientedTracingLanguage(MOTL)*]
 
-// The tool to output the trace: [*Tracers*]
-traceType : tracer [tracerType] ( , [tracerType] )* [[log4jConfig]]* ([[tracerOptions]])* ;
-//traceType : tracer [=tracerType:Console|File|String|Visual] ( , [=tracerType:Console|File|String|Visual] )* ( [=onoff:on|off] : [[tracerOptions]] ( , [[tracerOptions]] )* )* ( [=verbisty:verbose] )? ( [tracerArgument] )* ;
-tracerOptions- : [[tracerOn]]? [=option:Time|time|Thread|thread|File|file|Line|line|Trace|trace|Trigger|trigger|TraceFile|tracefile|TraceLine|traceline|TriggerLine|triggerline|TriggerFile|triggerfile|Class|class|Object|object|Operation|operation|Name|name|Value|value] [=option:Time|time|Thread|thread|File|file|Line|line|Trace|trace|Trigger|trigger|TraceFile|tracefile|TraceLine|traceline|TriggerLine|triggerline|TriggerFile|triggerfile|Class|class|Object|object|Operation|operation|Name|name|Value|value]*
-tracerOn : on:|off:
-log4jConfig : (root = [rootLevel]) | (monitorInterval = [monitorInterval]) | (OPEN_ROUND_BRACKET) [log4jLevel] ( , [log4jLevel] )* (CLOSE_ROUND_BRACKET) = (OPEN_ROUND_BRACKET) [log4jAppender] ( , [log4jAppender] )* (CLOSE_ROUND_BRACKET)
+// ======= TRACER 
+// ======= grammar rules - The tool to output the trace: [*Tracers*]
+tracerDirective : tracer [tracerType] [[logConfig]]* [tracerArgument]? ;
+logConfig : (root = [rootLevel]) | (monitorInterval = [monitorInterval]) | (OPEN_ROUND_BRACKET) [logLevel] ( , [logLevel] )* (CLOSE_ROUND_BRACKET) = (OPEN_ROUND_BRACKET) [logAppender] ( , [logAppender] )* (CLOSE_ROUND_BRACKET)
+
+// ======= TRACE
+// ======= grammar rules
 
 trace : [[traceDirective]] | [[traceCase]]
 
-traceDirective : trace [[traceItem]] ( [[executeClause]]|[[traceWhen]]|[[traceFor]]|[[tracePeriod]]|[[traceDuring]]|[[traceCaseActivation]]|[[traceRecord]]|[[traceLevel]]|[[log4jLevel]] )* ;
+traceDirective : trace [[traceItem]] ( [[executeClause]]|[[traceWhen]]|[[traceFor]]|[[tracePeriod]]|[[traceDuring]]|[[traceCaseActivation]]|[[traceRecord]]|[[traceLevel]]|[[logLevel]] )* ;
 
 traceItem- : [[traceEntity]] | [[PreOrPostCondition]]
 traceEntity- : ( [[traceOptions]] )?  [trace_entity] (OPEN_ROUND_BRACKET)? (CLOSE_ROUND_BRACKET)? ( , [trace_entity] (OPEN_ROUND_BRACKET)? (CLOSE_ROUND_BRACKET)? )*
@@ -34,7 +35,7 @@ tracePeriod- : period [trace_period]
 traceDuring- : during [trace_duration]
 traceRecord- : record [[recordEntity]]
 recordEntity- : ( only )? ( " [**trace_record_string] " | [trace_record] ) ( , [trace_record] )*
-log4jLevel-  : logLevel [=logLevel:trace|debug|info|warn|error|fatal|all|finest|finer|fine|config|warning|severe] ( , [=logLevel:trace|debug|info|warn|error|fatal|finest|finer|fine|config|warning|severe] )*
+logLevel-  : logLevel [=logLevel:trace|debug|info|warn|error|fatal|all|finest|finer|fine|config|warning|severe] ( , [=logLevel:trace|debug|info|warn|error|fatal|finest|finer|fine|config|warning|severe] )*
 
 traceCondition- : [LHS] [[conditionRHS]]
 conditionRHS- : [comparison_operator] [RHS]
@@ -44,3 +45,13 @@ traceCaseDef- : tracecase [tracecase_name] { [[traceDirective]]* }
 traceCaseActivation- : activate [tracecase_act_name] (onAllObjects | onThisThreadOnly)? ;
 traceCaseDeactivation- : deactivate [tracecase_deact_name] onThisObject [[deActivateFor]]? ;
 deActivateFor- : for [deactivate_for]
+
+
+// ---- Old rules ------------------------ //
+//traceType : tracer [tracerType] ( [=onoff:on|off] : [[tracerOptions]] ( , [[tracerOptions]] )* )* ( [=verbisty:verbose] )? ( [tracerArgument] )* [[log4jConfig]]* ([[tracerOptions]])* ;
+//traceType : tracer [tracerType] ( , [tracerType] )* [[log4jConfig]]* ([[tracerOptions]])* ;
+//traceType : tracer [=tracerType:Console|File|String|Visual] ( , [=tracerType:Console|File|String|Visual] )* ( [=onoff:on|off] : [[tracerOptions]] ( , [[tracerOptions]] )* )* ( [=verbisty:verbose] )? ( [tracerArgument] )* ;
+//tracerOptions- : [[tracerOn]]? [=option:Time|time|Thread|thread|File|file|Line|line|Trace|trace|Trigger|trigger|TraceFile|tracefile|TraceLine|traceline|TriggerLine|triggerline|TriggerFile|triggerfile|Class|class|Object|object|Operation|operation|Name|name|Value|value] [=option:Time|time|Thread|thread|File|file|Line|line|Trace|trace|Trigger|trigger|TraceFile|tracefile|TraceLine|traceline|TriggerLine|triggerline|TriggerFile|triggerfile|Class|class|Object|object|Operation|operation|Name|name|Value|value]*
+//tracerOn : on:|off:
+//log4jConfig : (root = [rootLevel]) | (monitorInterval = [monitorInterval]) | (OPEN_ROUND_BRACKET) [log4jLevel] ( , [log4jLevel] )* (CLOSE_ROUND_BRACKET) = (OPEN_ROUND_BRACKET) [log4jAppender] ( , [log4jAppender] )* (CLOSE_ROUND_BRACKET)
+// ---- left as reference --------------- //
