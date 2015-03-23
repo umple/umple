@@ -80,6 +80,43 @@ class ScxmlImportHandler
   isA UmpleImportHandler;
 }
 
+/**
+ * ImportType is a "enumeration" of information for what type of 
+ * file was imported. 
+ * 
+ * @since 19 Mar 2015
+ */
+class UmpleImportType {
+
+  depend java.util.*;
+
+  // http://eclipse.org/ecoretools/
+  const UmpleImportType ECORE = new UmpleImportType("ecore", "ECore");
+  
+  // http://en.wikipedia.org/wiki/SCXML
+  const UmpleImportType SCXML = new UmpleImportType("scxml", "State-Chart XML");
+    
+
+  const Set<UmpleImportType> ALL = new HashSet<>(Arrays.asList(ECORE, SCXML));
+  
+  /** 
+   * The file type of an import, i.e. the extension. 
+   */ 
+  immutable String fileType;  
+  
+  /**
+   * Longform description of the type. 
+   */
+  immutable String name;
+  
+}
+
+class UmpleImportHandlerFactory {
+	// Singleton Instance of the class. 
+	const UmpleImportHandlerFactory INSTANCE = new UmpleImportHandlerFactory();
+
+}
+
 /* 
 * Defines import prototype for package, class, interface 
 * and associations

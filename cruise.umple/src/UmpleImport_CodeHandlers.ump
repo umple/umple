@@ -242,3 +242,16 @@ class ScxmlImportHandler
       }
   }
 }
+
+class UmpleImportHandlerFactory {
+
+	public static UmpleImportHandler create(final UmpleImportType type) {
+		if (type == UmpleImportType.ECORE) {
+			return new EcoreImportHandler();
+		} else if (type == UmpleImportType.SCXML) {
+			return new ScxmlImportHandler();
+		} else {
+			throw new IllegalArgumentException("Unknown UmpleImportType: " + type);
+		}
+	}
+}
