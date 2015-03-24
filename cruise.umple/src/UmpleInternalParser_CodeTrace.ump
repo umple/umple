@@ -38,6 +38,7 @@ class UmpleInternalParser
     {
       Tracer tracer = model.getTracer();
       LogConfiguration log = new LogConfiguration(tracer);
+      TraceMessageSwitch tms = new TraceMessageSwitch(tracer);
       
       for(Token subToken: token.getSubTokens())
       {
@@ -48,6 +49,21 @@ class UmpleInternalParser
         else if(subToken.is("tracerArgument"))
         {
           tracer.addArgument(subToken.getValue());
+        }
+        else if(subToken.is("traceMsgHeader"))
+        {
+        	for(Token msgToken : subToken.getSubTokens())
+        	{
+        		if(msgToken.is("switch"))
+        			if( msgToken.getValue().equals("on") )
+        				tms.setOn(true);
+        			else if( msgToken.getValue().equals("off") )
+        				tms.setOff(true);
+        		
+        		if(msgToken.is("option"))
+        			tms.addOption(msgToken.getValue());
+        	}
+        	tracer.setTraceMessageSwitch(tms);
         }
         else if(subToken.is("verbosity"))
         {

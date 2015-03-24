@@ -20,12 +20,31 @@ class UmpleModel
   Tracer tracer = new Tracer("console");
 }
 
+class UmpleClass
+{
+  0..1 -- * TraceDirective;
+  0..1 -- * TraceCase;
+}
+
+/*
+ * ----- Tracer Directive MetaModel
+ * A statement found in Umple that directs tracing technology
+ * to be used in generted code
+ */
 class Tracer
 {
   String name;
   String[] argument;
   Boolean verbosity = false;
+  1 -- 0..1 TraceMessageSwitch;
   1 -- 0..1 LogConfiguration;
+}
+
+class TraceMessageSwitch
+{
+	boolean on = false;
+	boolean off = false;
+	String[] option;
 }
 
 class LogConfiguration
@@ -41,13 +60,8 @@ class LoggerAppender
   String[] levels;
 }
 
-class UmpleClass
-{
-  0..1 -- * TraceDirective;
-  0..1 -- * TraceCase;
-}
-
 /*
+ * ----- Trace Directive MetaModel
  * A statement found in Umple that directs code to be generated
  * to trace a model element and generate output using some tracing tool
  */

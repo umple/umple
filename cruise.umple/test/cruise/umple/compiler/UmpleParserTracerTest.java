@@ -139,6 +139,31 @@ public class UmpleParserTracerTest
 	  assertParse(code,"[tracerDirective][tracerType:FILE]");
 	  Assert.assertEquals("file",model.getTraceType());
   }
+  
+  @Test
+  public void traceType_TraceMessageOnSwitch()
+  {
+	  code = "tracer console on : Time,Thread;";
+	  assertParse(code,"[tracerDirective][tracerType:console][traceMsgHeader][switch:on][option:Time][option:Thread]");
+	  Assert.assertEquals("console",model.getTraceType());
+	  
+	  TraceMessageSwitch tms = model.getTracer().getTraceMessageSwitch();
+	  Assert.assertEquals(true,tms.getOn());
+	  Assert.assertEquals("Time",tms.getOption(0));
+	  Assert.assertEquals("Thread",tms.getOption(1));
+  }
+  
+  @Test
+  public void traceType_TraceMessageOffSwitch()
+  {
+	  code = "tracer console off : Object;";
+	  assertParse(code,"[tracerDirective][tracerType:console][traceMsgHeader][switch:off][option:Object]");
+	  Assert.assertEquals("console",model.getTraceType());
+	  
+	  TraceMessageSwitch tms = model.getTracer().getTraceMessageSwitch();
+	  Assert.assertEquals(true,tms.getOff());
+	  Assert.assertEquals("Object",tms.getOption(0));
+  }
   	
   //------------------------
   // Tracing Attributes
