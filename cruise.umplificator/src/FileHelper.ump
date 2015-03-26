@@ -43,18 +43,27 @@ public static String getFileExtension (File file)
   
   
 public static void printFilesToUmplify(List<File> srcFiles){
-    StringBuffer outMessage = new StringBuffer();
-		outMessage.append(separator);
-		outMessage.append("Files to be umplified: ");
-		outMessage.append(separator);
-		for (File aFile: srcFiles)
-		{
-			outMessage.append(aFile.getName());
+
+	if (!srcFiles.isEmpty())
+	{
+	    StringBuffer outMessage = new StringBuffer();
 			outMessage.append(separator);
-		}
-		outMessage.append(separator);
-		outMessage.append("-----------------------");
-	logger.info(outMessage.toString());
+			outMessage.append("Files to be umplified: ");
+			outMessage.append(separator);
+			for (File aFile: srcFiles)
+			{
+				outMessage.append(aFile.getName());
+				outMessage.append(separator);
+			}
+			outMessage.append(separator);
+			outMessage.append("-----------------------");
+		logger.info(outMessage.toString());
+	}
+	else
+	{
+		logger.error("No source files found! Exiting with error.");
+		System.exit(1);
+	}
 }
   
   public static  void writeFile(UmpleModel model, String outputFolder, boolean createSubdirectories, boolean testMode, boolean splitModel){

@@ -8,6 +8,11 @@
 #      to the built umplificator, and the second is the path the to projects directory
 #     * e.g. umplificator_all_prjects.sh ~/umplificator.jar ~/project_dir
 #
+# Notes:
+#   To remove all existing Umplificator scores (if you want a fresh run) use this command:
+#
+#       find <project_directory>/ -name "*.umplify.score" -type f -delete
+#
 # -------------------------------------------------------------------------------------
 
 # Grab script arguments: umplificator script path, (optional) root directory
@@ -25,8 +30,10 @@ for org_dir in $rootdir/*; do
                 for proj_dir in $org_dir/*; do
                         for ver_dir in $proj_dir/*; do
                                 # Only add projects that haven't already been tried by the umplificator
-                                if ! test -e $ver_dir/*.Umplify.Score; then
-                                        to_umplify+=($ver_dir/src)
+                                pattern=$ver_dir/*.umplify.score
+                                files=( $pattern )
+                                if ! test -e ${files[0]}; then
+                                        to_umplify+=($ver_dir)
                                 fi
                         done
                 done
@@ -36,37 +43,40 @@ done
 # Umplify all projects
 for dir in "${to_umplify[@]}"; do
 
+        mkdir -p ${umplificator%/*}/logs
         touch $dir/P.umplify.score
         echo $dir/P.umplify.score
 
         # Try level 0
-        java -jar $umplificator -level=0 -dir -path=$dir/umple_output $dir 2> ${umplificator%/*}/logs/stderr-level0.log
+        java -jar $umplificator -level=0 -dir -path=$dir/umple_output $dir/src 2> ${umplificator%/*}/logs/stderr-level0.log
         if [ $? -eq 0 ]; then 
                 touch $dir/0.umplify.score
         else 
                 touch $dir/F.umplify.score
                 rm $dir/P.umplify.score
-                cp ${umplificator%/*}/logs/* $dir/logs/
+                mkdir -p $dir/logs/ && mv ${umplificator%/*}/logs/* $dir/logs/
                 continue
         fi
 
         # Try level 1
-        java -jar $umplificator -level=1 -dir -path=$dir/umple_output $dir 2> ${umplificator%/*}/logs/stderr-level1.log
+        java -jar $umplificator -level=1 -dir -path=$dir/umple_output $dir/src 2> ${umplificator%/*}/logs/stderr-level1.log
         if [ $? -eq 0 ]; then 
                 touch $dir/1.umplify.score
         else 
                 rm $dir/P.umplify.score
-                cp ${umplificator%/*}/logs/* $dir/logs/
+                mkdir -p $dir/logs/ && mv ${umplificator%/*}/logs/* $dir/logs/
                 continue
         fi
 
         # Try level 2
-        java -jar $umplificator -level=2 -dir -path=$dir/umple_output $dir 2> ${umplificator%/*}/logs/stderr-level2.log
+        java -jar $umplificator -level=2 -dir -path=$dir/umple_output $dir/src 2> ${umplificator%/*}/logs/stderr-level2.log
         if [ $? -eq 0 ]; then 
                 touch $dir/2.umplify.score
+                rm $dir/P.umplify.score
+                mkdir -p $dir/logs/ && mv ${umplificator%/*}/logs/* $dir/logs/
         else 
                 rm $dir/P.umplify.score
-                cp ${umplificator%/*}/logs/* $dir/logs/
+                mkdir -p $dir/logs/ && mv ${umplificator%/*}/logs/* $dir/logs/
                 continue
         fi
 done
