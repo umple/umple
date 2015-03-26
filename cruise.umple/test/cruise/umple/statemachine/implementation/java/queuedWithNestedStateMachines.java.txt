@@ -13,13 +13,13 @@ public class QueuedWithNestedStateMachines implements Runnable
   //------------------------
 
   //QueuedWithNestedStateMachines State Machines
-  enum Sm { s1, s2 }
-  enum SmS2 { Null, s2a, s2b }
+  public enum Sm { s1, s2 }
+  public enum SmS2 { Null, s2a, s2b }
   private Sm sm;
   private SmS2 smS2;
   
   //enumeration type of messages accepted by QueuedWithNestedStateMachines
-  enum MessageType { e1_M, e2_M, e3_M }
+  protected enum MessageType { e1_M, e2_M, e3_M }
   
   MessageQueue queue;
   Thread removal;

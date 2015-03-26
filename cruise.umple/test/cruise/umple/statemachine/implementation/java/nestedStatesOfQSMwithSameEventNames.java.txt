@@ -13,15 +13,15 @@ public class NestedStatesWthSameEventNames implements Runnable
   //------------------------
 
   //NestedStatesWthSameEventNames State Machines
-  enum Sm { nestedState1, nestedState2, state5 }
-  enum SmNestedState1 { Null, state1, state2 }
-  enum SmNestedState2 { Null, state3, state4 }
+  public enum Sm { nestedState1, nestedState2, state5 }
+  public enum SmNestedState1 { Null, state1, state2 }
+  public enum SmNestedState2 { Null, state3, state4 }
   private Sm sm;
   private SmNestedState1 smNestedState1;
   private SmNestedState2 smNestedState2;
   
   //enumeration type of messages accepted by NestedStatesWthSameEventNames
-  enum MessageType { moveTo_M, transit_M }
+  protected enum MessageType { moveTo_M, transit_M }
   
   MessageQueue queue;
   Thread removal;

@@ -11,7 +11,7 @@ public class X
   //------------------------
 
   //X State Machines
-  enum Sm { s1, s2 }
+  public enum Sm { s1, s2 }
   private Sm sm;
 
   //X Do Activity Threads

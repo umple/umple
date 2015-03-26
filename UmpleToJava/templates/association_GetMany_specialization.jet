@@ -20,7 +20,7 @@
   {
     <% if (customGetManyPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customGetManyPrefixCode,gen.translate("getManyMethod",av)); 
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } %>
-    <%String scgName = av.getSuperClassName();%>
+    <%String scgName = relatedAssoc.getEnd(av.getRelevantEnd()).getSuperClassName();%>
     List<? extends <%=scgName%>> <%=gen.translate("parameterMany",av)%> = super.<%=gen.translate("getManyMethod",av)%>();
     <% if (customGetManyPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customGetManyPostfixCode,gen.translate("getManyMethod",av)); 
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPostfixCode, "    ")); } %>

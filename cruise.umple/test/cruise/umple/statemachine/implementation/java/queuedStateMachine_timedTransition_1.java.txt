@@ -13,11 +13,11 @@ public class X implements Runnable
   //------------------------
 
   //X State Machines
-  enum Sm { s0, s1, s2, s3, s4 }
+  public enum Sm { s0, s1, s2, s3, s4 }
   private Sm sm;
   
   //enumeration type of messages accepted by X
-  enum MessageType { ev0_M, timeouts1Tos2_M, ev2_M, ev3_M }
+  protected enum MessageType { ev0_M, timeouts1Tos2_M, ev2_M, ev3_M }
   
   MessageQueue queue;
   Thread removal;

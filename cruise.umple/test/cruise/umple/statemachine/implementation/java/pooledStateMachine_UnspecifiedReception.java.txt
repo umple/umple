@@ -13,14 +13,14 @@ public class PooledSMwithUnspecifiedReception implements Runnable
   //------------------------
 
   //PooledSMwithUnspecifiedReception State Machines
-  enum Sm { s1, s2, error1 }
+  public enum Sm { s1, s2, error1 }
   private Sm sm;
   
   MessagePool pool;
   Thread removal;
   
   //enumeration type of messages accepted by PooledSMwithUnspecifiedReception
-  enum MessageType { e1_M, unspecified_M, null_M }
+  protected enum MessageType { e1_M, unspecified_M, null_M }
 
   // Map for a PooledSMwithUnspecifiedReception pooled state machine that allows querying which events are possible in each map
 

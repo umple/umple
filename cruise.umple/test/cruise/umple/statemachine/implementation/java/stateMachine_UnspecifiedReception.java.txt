@@ -11,7 +11,7 @@ public class Course
   //------------------------
 
   //Course State Machines
-  enum Status { Open, Full, error1 }
+  public enum Status { Open, Full, error1 }
   private Status status;
 
   //------------------------

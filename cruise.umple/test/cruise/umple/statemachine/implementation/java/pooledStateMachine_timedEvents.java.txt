@@ -16,14 +16,14 @@ public class Mentor implements Runnable
   private int howLongUntilOk;
 
   //Mentor State Machines
-  enum Status { Ok, NotOk }
+  public enum Status { Ok, NotOk }
   private Status status;
   
   MessagePool pool;
   Thread removal;
   
   //enumeration type of messages accepted by Mentor
-  enum MessageType { timeoutOkToNotOk_M, timeoutNotOkToOk_M }
+  protected enum MessageType { timeoutOkToNotOk_M, timeoutNotOkToOk_M }
 
   // Map for a Mentor pooled state machine that allows querying which events are possible in each map
 

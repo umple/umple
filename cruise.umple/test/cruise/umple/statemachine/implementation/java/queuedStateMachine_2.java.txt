@@ -13,11 +13,11 @@ public class GarageDoor implements Runnable
   //------------------------
 
   //GarageDoor State Machines
-  enum Status { Open, Closing, Closed, Opening, HalfOpen }
+  public enum Status { Open, Closing, Closed, Opening, HalfOpen }
   private Status status;
   
   //enumeration type of messages accepted by GarageDoor
-  enum MessageType { buttonOrObstacle_M, reachBottom_M, reachTop_M }
+  protected enum MessageType { buttonOrObstacle_M, reachBottom_M, reachTop_M }
   
   MessageQueue queue;
   Thread removal;

@@ -11,7 +11,7 @@ public class Student
   //------------------------
 
   //Student State Machines
-  enum Grade { Pass }
+  public enum Grade { Pass }
   private Grade grade;
 
   //------------------------

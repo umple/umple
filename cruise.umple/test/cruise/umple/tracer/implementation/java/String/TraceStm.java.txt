@@ -12,9 +12,9 @@ public class Tracer
   //------------------------
 
   //Tracer State Machines
-  enum Sm { s1, s2 }
-  enum SmS1 { Null, s1a, s1b }
-  enum SmS2 { Null, s2a, s2b }
+  public enum Sm { s1, s2 }
+  public enum SmS1 { Null, s1a, s1b }
+  public enum SmS2 { Null, s2a, s2b }
   private Sm sm;
   private SmS1 smS1;
   private SmS2 smS2;

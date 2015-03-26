@@ -2959,11 +2959,12 @@ for (StateMachine smq : uClass.getStateMachines())
       isFirst = false;
     }
   
-    append(stringBuffer, "\n  enum {0} { {1} }", gen.translate("type",sm), gen.translate("listStates",sm));
+    append(stringBuffer, "\n  public enum {0} { {1} }", gen.translate("type", sm), gen.translate("listStates", sm));
 
     for (StateMachine nestedSm : allNested)
     {
-      append(stringBuffer, "\n  enum {0} { {1} }", gen.translate("type",nestedSm), gen.translate("listStates",nestedSm));
+      append(stringBuffer, "\n  public enum {0} { {1} }", gen.translate("type", nestedSm), 
+             gen.translate("listStates",nestedSm));
     }
     
     append(stringBuffer, "\n  private {0} {1};", gen.translate("type",sm), gen.translate("stateMachineOne", sm));
@@ -2993,7 +2994,7 @@ for (StateMachine smq : uClass.getStateMachines())
   {
     append(stringBuffer,"\n  ");
     append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
-    append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEventsForQSM",uClass));   
+    append(stringBuffer, "\n  protected enum MessageType { {0} }", gen.translate("listEventsForQSM",uClass));   
   }
 
   boolean foundQueuedSM = false;
@@ -3026,7 +3027,7 @@ for (StateMachine smq : uClass.getStateMachines())
     append(stringBuffer,"\n  Thread removal;");
     append(stringBuffer,"\n  ");
     append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
-    append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEventsForPooledSM",uClass));
+    append(stringBuffer, "\n  protected enum MessageType { {0} }", gen.translate("listEventsForPooledSM",uClass));
   } 
 
   boolean foundPooled = false;

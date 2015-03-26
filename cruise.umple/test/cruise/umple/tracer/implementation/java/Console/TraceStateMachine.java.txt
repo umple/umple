@@ -11,7 +11,7 @@ public class GarageDoor
   //------------------------
 
   //GarageDoor State Machines
-  enum Status { Open, Closing, Closed, Opening, HalfOpen }
+  public enum Status { Open, Closing, Closed, Opening, HalfOpen }
   private Status status;
 
   //------------------------

@@ -14,7 +14,7 @@ public class LightFixture
   private int brightness;
 
   //LightFixture State Machines
-  enum Bulb { Off, Dimmed, On }
+  public enum Bulb { Off, Dimmed, On }
   private Bulb bulb;
 
   //------------------------

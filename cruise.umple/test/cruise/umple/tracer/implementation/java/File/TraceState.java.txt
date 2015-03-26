@@ -12,8 +12,8 @@ public class Tracer
   //------------------------
 
   //Tracer State Machines
-  enum Status { On, Off }
-  enum StatusOn { Null, SemiOn, FullOn }
+  public enum Status { On, Off }
+  public enum StatusOn { Null, SemiOn, FullOn }
   private Status status;
   private StatusOn statusOn;
 

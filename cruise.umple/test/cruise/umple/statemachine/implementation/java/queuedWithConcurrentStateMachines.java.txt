@@ -13,15 +13,15 @@ public class QueuedWithConcurrentStateMachines implements Runnable
   //------------------------
 
   //QueuedWithConcurrentStateMachines State Machines
-  enum Sm { s1, s2 }
-  enum SmS2a { Null, s2a }
-  enum SmS2b { Null, s2b }
+  public enum Sm { s1, s2 }
+  public enum SmS2a { Null, s2a }
+  public enum SmS2b { Null, s2b }
   private Sm sm;
   private SmS2a smS2a;
   private SmS2b smS2b;
   
   //enumeration type of messages accepted by QueuedWithConcurrentStateMachines
-  enum MessageType { e1_M, e2_M }
+  protected enum MessageType { e1_M, e2_M }
   
   MessageQueue queue;
   Thread removal;

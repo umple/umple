@@ -23,7 +23,7 @@ public class PhoneLine
   private String voice;
 
   //PhoneLine State Machines
-  enum State { onHook, ringing, communicating, onHold, dialing, waitingForConnection, waitForHook }
+  public enum State { onHook, ringing, communicating, onHold, dialing, waitingForConnection, waitForHook }
   private State state;
 
   //PhoneLine Associations

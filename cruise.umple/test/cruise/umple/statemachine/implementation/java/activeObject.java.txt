@@ -14,12 +14,12 @@ public class Lamp
   private String log;
 
   //Lamp State Machines
-  enum StateMachine1 { topLevel }
-  enum StateMachine1TopLevel { Null, thread1 }
+  public enum StateMachine1 { topLevel }
+  public enum StateMachine1TopLevel { Null, thread1 }
   private StateMachine1 stateMachine1;
   private StateMachine1TopLevel stateMachine1TopLevel;
-  enum StateMachine2 { topLevel }
-  enum StateMachine2TopLevel { Null, thread1 }
+  public enum StateMachine2 { topLevel }
+  public enum StateMachine2TopLevel { Null, thread1 }
   private StateMachine2 stateMachine2;
   private StateMachine2TopLevel stateMachine2TopLevel;
 

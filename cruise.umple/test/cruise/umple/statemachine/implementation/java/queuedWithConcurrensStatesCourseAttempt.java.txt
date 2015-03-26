@@ -13,17 +13,17 @@ public class CourseAttempt implements Runnable
   //------------------------
 
   //CourseAttempt State Machines
-  enum CourseAttemptSM { studying, failed, passed }
-  enum CourseAttemptSMLab1 { Null, lab1, lab2 }
-  enum CourseAttemptSMTermProject { Null, termProject }
-  enum CourseAttemptSMFinalExam { Null, finalExam }
+  public enum CourseAttemptSM { studying, failed, passed }
+  public enum CourseAttemptSMLab1 { Null, lab1, lab2 }
+  public enum CourseAttemptSMTermProject { Null, termProject }
+  public enum CourseAttemptSMFinalExam { Null, finalExam }
   private CourseAttemptSM courseAttemptSM;
   private CourseAttemptSMLab1 courseAttemptSMLab1;
   private CourseAttemptSMTermProject courseAttemptSMTermProject;
   private CourseAttemptSMFinalExam courseAttemptSMFinalExam;
   
   //enumeration type of messages accepted by CourseAttempt
-  enum MessageType {  }
+  protected enum MessageType {  }
   
   MessageQueue queue;
   Thread removal;

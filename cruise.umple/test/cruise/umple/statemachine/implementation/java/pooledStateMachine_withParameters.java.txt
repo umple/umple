@@ -16,14 +16,14 @@ public class LightFixture implements Runnable
   private int brightness;
 
   //LightFixture State Machines
-  enum Bulb { Off, Dimmed, On }
+  public enum Bulb { Off, Dimmed, On }
   private Bulb bulb;
   
   MessagePool pool;
   Thread removal;
   
   //enumeration type of messages accepted by LightFixture
-  enum MessageType { turnDimmer_M, flipSwitch_M, entry_M }
+  protected enum MessageType { turnDimmer_M, flipSwitch_M, entry_M }
 
   // Map for a LightFixture pooled state machine that allows querying which events are possible in each map
 

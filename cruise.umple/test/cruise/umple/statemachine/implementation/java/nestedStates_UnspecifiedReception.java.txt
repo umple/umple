@@ -11,9 +11,9 @@ public class NestedStatesWthSameEventNames
   //------------------------
 
   //NestedStatesWthSameEventNames State Machines
-  enum Sm { nestedState1, nestedState2, state5 }
-  enum SmNestedState1 { Null, state1, state2 }
-  enum SmNestedState2 { Null, state3, state4 }
+  public enum Sm { nestedState1, nestedState2, state5 }
+  public enum SmNestedState1 { Null, state1, state2 }
+  public enum SmNestedState2 { Null, state3, state4 }
   private Sm sm;
   private SmNestedState1 smNestedState1;
   private SmNestedState2 smNestedState2;

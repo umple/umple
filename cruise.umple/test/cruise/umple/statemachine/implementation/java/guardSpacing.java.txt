@@ -14,7 +14,7 @@ public class Garage
   private boolean entranceClear;
 
   //Garage State Machines
-  enum GarageDoor { Open, Closing }
+  public enum GarageDoor { Open, Closing }
   private GarageDoor garageDoor;
 
   //------------------------

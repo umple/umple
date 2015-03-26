@@ -12,7 +12,7 @@ public class Tracer
   //------------------------
 
   //Tracer State Machines
-  enum Status { Open, Closed }
+  public enum Status { Open, Closed }
   private Status status;
 
   //Tracer Do Activity Threads

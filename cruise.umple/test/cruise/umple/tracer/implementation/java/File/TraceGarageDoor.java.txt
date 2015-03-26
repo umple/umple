@@ -12,7 +12,7 @@ public class Tracer
   //------------------------
 
   //Tracer State Machines
-  enum GarageDoor { Open, Closing, Closed, Opening, HalfOpen }
+  public enum GarageDoor { Open, Closing, Closed, Opening, HalfOpen }
   private GarageDoor GarageDoor;
 
   //------------------------

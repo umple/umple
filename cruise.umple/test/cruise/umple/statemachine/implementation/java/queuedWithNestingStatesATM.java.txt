@@ -13,13 +13,13 @@ public class AutomatedTellerMachine implements Runnable
   //------------------------
 
   //AutomatedTellerMachine State Machines
-  enum Sm { idle, maintenance, active }
-  enum SmActive { Null, validating, selecting, processing, printing }
+  public enum Sm { idle, maintenance, active }
+  public enum SmActive { Null, validating, selecting, processing, printing }
   private Sm sm;
   private SmActive smActive;
   
   //enumeration type of messages accepted by AutomatedTellerMachine
-  enum MessageType { cardInserted_M, maintain_M, isMaintained_M, cancel_M, validated_M, select_M, selectAnotherTransiction_M, finish_M, receiptPrinted_M }
+  protected enum MessageType { cardInserted_M, maintain_M, isMaintained_M, cancel_M, validated_M, select_M, selectAnotherTransiction_M, finish_M, receiptPrinted_M }
   
   MessageQueue queue;
   Thread removal;

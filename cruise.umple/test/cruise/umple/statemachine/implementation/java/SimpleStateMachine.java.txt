@@ -11,7 +11,7 @@ public class Mentor
   //------------------------
 
   //Mentor State Machines
-  enum Status {  }
+  public enum Status {  }
   private Status status;
 
   //------------------------

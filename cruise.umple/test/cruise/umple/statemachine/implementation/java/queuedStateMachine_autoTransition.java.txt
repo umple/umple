@@ -13,11 +13,11 @@ public class Light implements Runnable
   //------------------------
 
   //Light State Machines
-  enum Bulb { Off, On }
+  public enum Bulb { Off, On }
   private Bulb bulb;
   
   //enumeration type of messages accepted by Light
-  enum MessageType {  }
+  protected enum MessageType {  }
   
   MessageQueue queue;
   Thread removal;

@@ -13,10 +13,10 @@ public class X implements Runnable
   //------------------------
 
   //X State Machines
-  enum Sm { q, s }
+  public enum Sm { q, s }
   private Sm sm;
-  enum Sm1 { s1, s2 }
-  enum Sm1S1 { Null, s1a, s1b }
+  public enum Sm1 { s1, s2 }
+  public enum Sm1S1 { Null, s1a, s1b }
   private Sm1 sm1;
   private Sm1S1 sm1S1;
   
@@ -24,7 +24,7 @@ public class X implements Runnable
   Thread removal;
   
   //enumeration type of messages accepted by X
-  enum MessageType { null_M, e1_M, e2_M, e5_M, e6_M }
+  protected enum MessageType { null_M, e1_M, e2_M, e5_M, e6_M }
 
   // Map for a X pooled state machine that allows querying which events are possible in each map
 

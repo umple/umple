@@ -13,14 +13,14 @@ public class Light implements Runnable
   //------------------------
 
   //Light State Machines
-  enum Bulb { Off, On }
+  public enum Bulb { Off, On }
   private Bulb bulb;
   
   MessagePool pool;
   Thread removal;
   
   //enumeration type of messages accepted by Light
-  enum MessageType { null_M }
+  protected enum MessageType { null_M }
 
   // Map for a Light pooled state machine that allows querying which events are possible in each map
 

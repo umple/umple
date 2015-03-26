@@ -12,7 +12,7 @@ public class Tracer
   //------------------------
 
   //Tracer State Machines
-  enum Sm { Open, Closing, Closed, Opening, HalfOpen }
+  public enum Sm { Open, Closing, Closed, Opening, HalfOpen }
   private Sm sm;
 
   //------------------------

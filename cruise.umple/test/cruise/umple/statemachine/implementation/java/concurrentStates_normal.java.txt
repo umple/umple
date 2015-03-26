@@ -11,9 +11,9 @@ public class LightFixture
   //------------------------
 
   //LightFixture State Machines
-  enum Status { Off, On }
-  enum StatusMotorIdle { Null, MotorIdle, MotorRunning }
-  enum StatusFanIdle { Null, FanIdle, FanRunning }
+  public enum Status { Off, On }
+  public enum StatusMotorIdle { Null, MotorIdle, MotorRunning }
+  public enum StatusFanIdle { Null, FanIdle, FanRunning }
   private Status status;
   private StatusMotorIdle statusMotorIdle;
   private StatusFanIdle statusFanIdle;

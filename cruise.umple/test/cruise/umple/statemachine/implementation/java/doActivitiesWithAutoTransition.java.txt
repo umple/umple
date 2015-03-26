@@ -11,7 +11,7 @@ public class LightFixture
   //------------------------
 
   //LightFixture State Machines
-  enum Bulb { On, Off }
+  public enum Bulb { On, Off }
   private Bulb bulb;
 
   //LightFixture Do Activity Threads

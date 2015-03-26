@@ -13,14 +13,14 @@ public class Course implements Runnable
   //------------------------
 
   //Course State Machines
-  enum Status { Open, Full }
+  public enum Status { Open, Full }
   private Status status;
   
   MessagePool pool;
   Thread removal;
   
   //enumeration type of messages accepted by Course
-  enum MessageType { register_M, reject_M }
+  protected enum MessageType { register_M, reject_M }
 
   // Map for a Course pooled state machine that allows querying which events are possible in each map
 

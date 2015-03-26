@@ -7,7 +7,6 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class JavaSpecGenerator 
 {
-
   protected static String nl;
   public static synchronized JavaSpecGenerator create(String lineSeparator)
   {
@@ -2582,6 +2581,22 @@ public class JavaSpecGenerator
   protected final String TEXT_2562 = "(";
   protected final String TEXT_2563 = ", index);";
   protected final String TEXT_2564 = NL + "    }" + NL + "    return wasAdded;" + NL + "  }" + NL;
+
+  /*  Skeleton for the Specialization Generator
+      
+      This file was created to fix a "code too large" error in the 
+      constructor for the JavaClassGenerator. 
+
+      Note the lack of a getCode method -- this is the distinction
+      between the Class Generators and the Spec Generator. The issue
+      was with the generator implementing ILang. Since there really
+      was no point to implement ILang with the desired solution
+      in mind, the getCode method was dropped.
+
+      Essentially, this Generator would contain methods that are
+      called from other Generators when the inclusion of the 
+      necessary strings would result in a "code too large" error.
+  */
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)

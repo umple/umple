@@ -13,16 +13,16 @@ public class X implements Runnable
   //------------------------
 
   //X State Machines
-  enum Sm { s1, s2, s3, s4 }
+  public enum Sm { s1, s2, s3, s4 }
   private Sm sm;
-  enum Sm2 { sm21, sm22 }
+  public enum Sm2 { sm21, sm22 }
   private Sm2 sm2;
   
   MessagePool pool;
   Thread removal;
   
   //enumeration type of messages accepted by X
-  enum MessageType { ev1_M, ev5_M, ev2_M, ev3_M, ev4_M, ev7_M }
+  protected enum MessageType { ev1_M, ev5_M, ev2_M, ev3_M, ev4_M, ev7_M }
 
   // Map for a X pooled state machine that allows querying which events are possible in each map
 

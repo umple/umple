@@ -13,11 +13,11 @@ public class QSMwithUnspecifiedRecep implements Runnable
   //------------------------
 
   //QSMwithUnspecifiedRecep State Machines
-  enum Sm { s1, s2, error1, error2 }
+  public enum Sm { s1, s2, error1, error2 }
   private Sm sm;
   
   //enumeration type of messages accepted by QSMwithUnspecifiedRecep
-  enum MessageType { e1_M, e2_M }
+  protected enum MessageType { e1_M, e2_M }
   
   MessageQueue queue;
   Thread removal;

@@ -12,8 +12,8 @@ public class X
   //------------------------
 
   //X State Machines
-  enum Sm { s1, s2 }
-  enum SmS1 { Null, s1a, s1b }
+  public enum Sm { s1, s2 }
+  public enum SmS1 { Null, s1a, s1b }
   private Sm sm;
   private SmS1 smS1;
 

@@ -11,7 +11,7 @@ public class Lamp
   //------------------------
 
   //Lamp State Machines
-  enum Status { On, Off }
+  public enum Status { On, Off }
   private Status status;
 
   //Lamp Do Activity Threads

@@ -15,7 +15,7 @@ public class Mentor
   private int howLongUntilOk;
 
   //Mentor State Machines
-  enum Status { Ok, NotOkay, NotOk }
+  public enum Status { Ok, NotOkay, NotOk }
   private Status status;
 
   //Helper Variables

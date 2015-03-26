@@ -12,10 +12,10 @@ public class Tracer
   //------------------------
 
   //Tracer State Machines
-  enum Stm { sLevel1, outsideNested }
-  enum StmSLevel1 { Null, sLevel2a, sLevel2b }
-  enum StmSLevel1SLevel2a { Null, sLevel2aLevel3a, sLevel2aLevel3b }
-  enum StmSLevel1SLevel2aSLevel2aLevel3b { Null, sLevel2aLevel3bLevel4 }
+  public enum Stm { sLevel1, outsideNested }
+  public enum StmSLevel1 { Null, sLevel2a, sLevel2b }
+  public enum StmSLevel1SLevel2a { Null, sLevel2aLevel3a, sLevel2aLevel3b }
+  public enum StmSLevel1SLevel2aSLevel2aLevel3b { Null, sLevel2aLevel3bLevel4 }
   private Stm stm;
   private StmSLevel1 stmSLevel1;
   private StmSLevel1SLevel2a stmSLevel1SLevel2a;

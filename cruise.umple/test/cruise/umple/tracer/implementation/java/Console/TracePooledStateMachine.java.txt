@@ -14,14 +14,14 @@ public class Tracer implements Runnable
   //------------------------
 
   //Tracer State Machines
-  enum Status { Open, Full }
+  public enum Status { Open, Full }
   private Status status;
   
   MessagePool pool;
   Thread removal;
   
   //enumeration type of messages accepted by Tracer
-  enum MessageType { register_M, reject_M, extend_M }
+  protected enum MessageType { register_M, reject_M, extend_M }
 
   // Map for a Tracer pooled state machine that allows querying which events are possible in each map
 

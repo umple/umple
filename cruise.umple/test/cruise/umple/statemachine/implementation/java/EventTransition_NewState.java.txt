@@ -11,7 +11,7 @@ public class Light
   //------------------------
 
   //Light State Machines
-  enum Bulb { Off, On }
+  public enum Bulb { Off, On }
   private Bulb bulb;
 
   //------------------------

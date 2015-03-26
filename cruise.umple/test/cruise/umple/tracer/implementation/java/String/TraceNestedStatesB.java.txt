@@ -14,8 +14,8 @@ public class NestedStateB
   //------------------------
 
   //NestedStateB State Machines
-  enum Status { Off, On }
-  enum StatusOn { Null, Idle, Running }
+  public enum Status { Off, On }
+  public enum StatusOn { Null, Idle, Running }
   private Status status;
   private StatusOn statusOn;
 

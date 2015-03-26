@@ -15,7 +15,7 @@ public class PhoneLine
   private String id;
 
   //PhoneLine State Machines
-  enum State { onHook, ringing, communicating, onHold, dialing, waitingForConnection, waitForHook }
+  public enum State { onHook, ringing, communicating, onHold, dialing, waitingForConnection, waitForHook }
   private State state;
 
   //PhoneLine Associations

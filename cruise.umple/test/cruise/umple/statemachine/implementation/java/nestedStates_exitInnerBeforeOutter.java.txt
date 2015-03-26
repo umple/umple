@@ -11,8 +11,8 @@ public class LightFixture
   //------------------------
 
   //LightFixture State Machines
-  enum Bulb { Off, On }
-  enum BulbOn { Null, Normal, Dimmed }
+  public enum Bulb { Off, On }
+  public enum BulbOn { Null, Normal, Dimmed }
   private Bulb bulb;
   private BulbOn bulbOn;
 

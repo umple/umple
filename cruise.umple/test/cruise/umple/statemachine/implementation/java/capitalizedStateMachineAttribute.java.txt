@@ -11,7 +11,7 @@ public class Garage
   //------------------------
 
   //Garage State Machines
-  enum GarageDoor {  }
+  public enum GarageDoor {  }
   private GarageDoor garageDoor;
 
   //------------------------

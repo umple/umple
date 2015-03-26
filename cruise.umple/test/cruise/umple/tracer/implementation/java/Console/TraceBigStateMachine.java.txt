@@ -14,10 +14,10 @@ public class StateMachineTest
   private int v;
 
   //StateMachineTest State Machines
-  enum Status { S1, S2, S3 }
-  enum StatusS1 { Null, S1A, S1B }
-  enum StatusS1S1B { Null, S1B1, S1B2 }
-  enum StatusS2 { Null, S2A, S2B, S2C }
+  public enum Status { S1, S2, S3 }
+  public enum StatusS1 { Null, S1A, S1B }
+  public enum StatusS1S1B { Null, S1B1, S1B2 }
+  public enum StatusS2 { Null, S2A, S2B, S2C }
   private Status status;
   private StatusS1 statusS1;
   private StatusS1S1B statusS1S1B;
