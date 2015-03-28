@@ -26,7 +26,7 @@ The file that actually gets packaged with the final .jar is:
 This is done to have more control over the logger output (e.g. so we could
 add file rollover)
 */
-tracer log4j root=debug (info)=(file, console);
+tracer log4j noconfig;
 
 generate Java "../src-gen-umple";
 
