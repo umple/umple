@@ -162,6 +162,12 @@ private static void postpareTrace(UmpleModel aModel)
   }
   
   public static  void prepareLog4jTracer(UmpleModel model, Map<String,String> lookups){
+  	
+  	// Don't generate log4j xml configuration file
+  	if(model.getTracer().hasLogConfiguration())
+  		if(model.getTracer().getLogConfiguration().getGenerateConfig()==false)
+  			return;
+  	
     try 
     {
       String path = model.getUmpleFile().getPath();

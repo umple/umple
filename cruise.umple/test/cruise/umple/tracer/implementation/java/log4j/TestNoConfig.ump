@@ -1,0 +1,11 @@
+namespace example;
+
+tracer log4j noConfig;
+
+class Tracer
+{
+  x;
+  int y;
+  trace x;
+  trace y;
+}

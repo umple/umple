@@ -38,6 +38,7 @@ public class JavaLog4jConfigurationTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/log4j2.xml");
   }
   
+
   
   @Test
   public void TestConfig()
@@ -51,6 +52,12 @@ public class JavaLog4jConfigurationTest extends TemplateTest
   {
     assertUmpleTemplateFor("TestConfigOptions.ump","TestConfigOptions.xml.txt");
     Assert.assertEquals(true, (new File(pathToInput + "/log4j2.xml")).exists());
+  }
+  
+  @Test
+  public void TestConfigNoGenration()
+  {
+    Assert.assertEquals(false, (new File(pathToInput + "/log4j2.xml")).exists());
   }
   
   @Test

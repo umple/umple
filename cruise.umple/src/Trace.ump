@@ -51,6 +51,7 @@ class LogConfiguration
 {
   Integer monitorInterval = 0;
   String rootLogger = "info";
+  boolean generateConfig = true;
   1 -- * LoggerAppender;
 }
 

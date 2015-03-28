@@ -48,7 +48,13 @@ class UmpleInternalParser
         }
         else if(subToken.is("tracerArgument"))
         {
-          tracer.addArgument(subToken.getValue());
+        	if(subToken.getValue().toLowerCase().equals("noconfig"))
+        	{
+        		log.setGenerateConfig(false);
+        		tracer.setLogConfiguration(log);
+        	}
+        	else
+        		tracer.addArgument(subToken.getValue());
         }
         else if(subToken.is("traceMsgHeader"))
         {

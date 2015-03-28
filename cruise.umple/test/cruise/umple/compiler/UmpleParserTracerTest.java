@@ -164,7 +164,15 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(true,tms.getOff());
 	  Assert.assertEquals("Object",tms.getOption(0));
   }
-  	
+  
+  @Test
+  public void traceType_log4jNoConfig()
+  {
+	  code = "tracer log4j noConfig;";
+	  assertParse(code,"[tracerDirective][tracerType:log4j][tracerArgument:noConfig]");
+	  Assert.assertEquals("log4j",model.getTraceType());
+  }
+  
   //------------------------
   // Tracing Attributes
   //------------------------
