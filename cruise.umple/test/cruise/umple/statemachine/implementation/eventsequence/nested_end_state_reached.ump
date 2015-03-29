@@ -1,0 +1,41 @@
+namespace example;
+
+class EventSeqTestEndState
+{
+  sm 
+  {
+    super1
+    {
+      ev5 -> superend;
+      s1
+      {
+        ev1 -> s2;
+        ev2 -> sidestate;
+      }
+
+      sidestate
+      {
+        ev1 -> s2;
+      }
+
+      s2
+      {
+        ev2 -> s3;
+      }
+
+      s3
+      {
+        ev2 -> s2;
+        ev4 -> endstate;
+      }
+    }
+
+    superend 
+    {
+      endstate
+      {
+
+      }
+    }
+  }
+}

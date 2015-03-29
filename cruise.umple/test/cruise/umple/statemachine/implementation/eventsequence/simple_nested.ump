@@ -1,0 +1,30 @@
+namespace example;
+
+class ReallySimpleNestedStateMachine 
+{
+  sm 
+  {
+    s1
+    {
+      s11 
+      {
+        ev1 -> s12;
+      }
+      s12
+      {
+        ev1 -> s2;
+      }
+    }
+    s2
+    {
+      s21 
+      {
+        ev1 -> s22;
+      }
+      s22
+      {
+
+      }
+    }
+  }
+}

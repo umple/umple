@@ -24,6 +24,7 @@ public class TemplateTest
   public String pathToInput;
   public String pathToRoot;
   public String language;
+  public String[] suboptions;
   public String languagePath;
   public String umpleParserName;
   
@@ -36,6 +37,7 @@ public class TemplateTest
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/implementation");
     pathToRoot = SampleFileWriter.rationalize("../cruise.umple");
     language = null;
+    suboptions = null;
     languagePath = "java";
     umpleParserName = "cruise.umple.compiler.UmpleInternalParser";
     aTracer = null;
@@ -374,7 +376,18 @@ public class TemplateTest
 
     if (language != null)
     {
-      model.addGenerate(language);
+      if(suboptions != null)
+      {
+        GenerateTarget target = new GenerateTarget(language, null);
+        for(int i = 0; i < suboptions.length; i++) {
+          target.addSuboption(suboptions[i]);
+        }
+        model.addGenerate(target);
+      }
+      else
+      {
+        model.addGenerate(language);
+      }
     }
 
     result = parser.analyze(true);

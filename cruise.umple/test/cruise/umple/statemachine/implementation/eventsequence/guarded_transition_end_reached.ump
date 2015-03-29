@@ -1,0 +1,28 @@
+namespace example;
+
+class GuardedTransitionEndState
+{
+  boolean guard;
+
+  sm
+  {
+    s1
+    {
+      ev1 [guard] -> s2;
+      ev1 [!guard] -> endState;
+      ev2 -> s4;
+    }
+    s2
+    {
+      ev1 -> s1;
+    }
+    endState
+    {
+
+    }
+    s4
+    {
+      
+    }
+  }
+}

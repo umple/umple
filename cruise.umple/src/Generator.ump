@@ -213,7 +213,7 @@ class StateTablesGenerator
   String output = "";
 }
 
-class CodeAnalysisGenerator
+class EventSequenceGenerator
 {
   isA CodeGeneratorWithSubptions;
   depend java.io.*;
@@ -222,6 +222,21 @@ class CodeAnalysisGenerator
   depend cruise.umple.compiler.exceptions.*;
 
   // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+}
+
+class CodeAnalysisGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, 
+  // attributes, associations and methods.  Generated output is based
   // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
@@ -505,6 +520,7 @@ use Generator_CodeTextUml.ump;
 use Generator_CodeScxml.ump;
 use Generator_CodeGvStateDiagram.ump;
 use Generator_CodeStateTables.ump;
+use Generator_CodeEventSequence.ump;
 use Generator_CodeSimpleMetrics.ump;
 use Generator_CodeGvClassDiagram.ump;
 use Generator_CodeGvClassTraitDiagram.ump;

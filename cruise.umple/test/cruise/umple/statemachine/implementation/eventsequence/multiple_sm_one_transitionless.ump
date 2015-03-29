@@ -1,0 +1,21 @@
+namespace example;
+
+class MultipleSmOneTransitionless
+{
+  sm1
+  {
+    s1 {} 
+  }
+
+  sm2
+  {
+    s2
+    {
+      ev1 -> s3;
+    }
+    s3
+    {
+
+    }
+  }
+}

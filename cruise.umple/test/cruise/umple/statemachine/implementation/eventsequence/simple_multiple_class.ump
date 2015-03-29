@@ -1,0 +1,31 @@
+namespace example;
+
+class SimpleFirst
+{
+  sm1 
+  {
+    s11 
+    {
+      ev11 -> s12;
+    }
+    s12
+    {
+
+    }
+  }
+}
+
+class SimpleSecond
+{
+  sm2 
+  {
+    s21 
+    {
+      ev21 -> s22;
+    }
+    s22
+    {
+
+    }
+  }
+}

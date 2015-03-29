@@ -1,0 +1,23 @@
+namespace example;
+
+class GuardedTransitionAllVisited
+{
+  boolean guard;
+
+  sm
+  {
+    s1
+    {
+      ev1 [guard] -> s2;
+      ev1 [!guard] -> s3;
+    }
+    s2
+    {
+      ev1 -> s1;
+    }
+    s3
+    {
+      ev1 -> s1;
+    }
+  }
+}

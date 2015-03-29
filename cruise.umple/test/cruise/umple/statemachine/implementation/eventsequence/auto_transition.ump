@@ -1,0 +1,28 @@
+namespace example;
+
+class AutoTransition
+{
+  sm
+  {
+    s1
+    {
+      -> s2;
+    }
+    s2
+    {
+      ev1 -> s3;
+    }
+    s3
+    {
+      ev1 -> s4;
+    }
+    s4
+    {
+      ev1 -> s5;
+    }
+    s5
+    {
+
+    }
+  } 
+}

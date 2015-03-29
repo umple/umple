@@ -1,0 +1,31 @@
+namespace example;
+
+class HitCounter
+{
+  sm
+  {
+    s1
+    {
+      ev1 -> s1;
+      ev2 -> s2;
+      ev3 -> s3;
+    }
+    s2
+    {
+      ev1 -> s1;
+      ev2 -> s2;
+      ev3 -> s3;
+    }
+    s3
+    {
+      ev1 -> s1;
+      ev2 -> s2;
+      ev3 -> s3;
+      ev4 -> s4;
+    }
+    s4
+    {
+
+    }
+  }
+}

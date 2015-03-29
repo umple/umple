@@ -1,0 +1,915 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file generates a randomized sequences of events and their resulting states
+for every state machine in the model. The results of this sequence is output
+in an HTML table.
+
+Command line action for this is
+  -g EventSequence
+
+ */
+namespace cruise.umple.compiler;
+
+class EventSequencer
+{
+  0..1 -> * StateWrapper possibleStates;
+  0..1 -> * Transition possibleTransitions;
+  0..1 -> * Event possibleEvents; 
+  0..1 -> 0..1 EventSequenceWalkTracker tracker;
+
+  StateMachine sm;
+  double randomEventProportion = 0.15;
+  Random randomGenerator = new Random();
+
+  after constructor {
+    tracker = new EventSequenceWalkTracker();
+  }
+
+  public StringBuilder generateEventSequence(EventSequenceTemplater templater)
+  {
+    EventSequenceTable table = new EventSequenceTable();
+    EventSequenceList list = new EventSequenceList();
+
+    recursivelyAnalyzeStateMachine(sm, table, null);
+
+    // After analysis, set the tracker event limit
+    tracker.calculateMaximumEvents();
+
+    // Special case, empty state machine
+    if(numberOfPossibleStates() == 0)
+    {
+      return new StringBuilder("No states found in state machine");
+    }
+
+    // Special case, state machine without transitions
+    if(numberOfPossibleTransitions() == 0)
+    {
+      return new StringBuilder("No transitions found in state machine");
+    }
+
+    walkThroughStateMachine(table, list);
+
+    StringBuilder output = new StringBuilder();
+    output.append(table.output(templater));
+    output.append(list.output(templater));
+    output.append(templater.genEndMessage(tracker.getFinishReason()));
+    return output;
+  }
+
+  // Build the data structures the EventSequencer will use to walk the state
+  // machine. Also, adds rows the the output table
+  private void recursivelyAnalyzeStateMachine(StateMachine currentStateMachine, 
+                                              EventSequenceTable table,
+                                              StateWrapper parent)
+  {
+    StateWrapper wrappedState;
+
+    for(State state : currentStateMachine.getStates()) 
+    {
+      wrappedState = new StateWrapper(state);
+      wrappedState.setParent(parent);
+
+      //Add the state only if it has not been added before
+      if(wrapState(state) == null) 
+      {
+        addPossibleState(wrappedState);
+        tracker.addUnvisitedState(wrappedState);
+        table.addRow(wrappedState);
+        recursivelyAddStateTransitions(wrappedState, wrappedState);
+      }
+      
+      for (StateMachine nestedSm : state.getNestedStateMachines())
+      {
+        recursivelyAnalyzeStateMachine(nestedSm, table, wrappedState);
+      }
+    }
+  }
+
+  private void recursivelyAddStateTransitions(StateWrapper originalState,
+                                              StateWrapper currentState)
+  {
+    State unwrappedState = currentState.getWrappedState();
+    Event event;
+
+    for(Transition trans : unwrappedState.getTransitions())
+    {
+      event = trans.getEvent();
+
+      // only handle the transition and event if it has not already been dealt
+      // with in a sub state
+      if(indexOfPossibleTransition(trans) == -1)
+      {
+        addPossibleTransition(trans);
+        tracker.addUnvisitedTransition(trans);
+      }
+
+      // add the event to the state's pool of available events
+      originalState.addMappedTransistion(event, trans);
+
+      // only add the event to the global list of possible transitions if it
+      // doesn't make sense as an event that could happen globally (ie auto
+      // and timed transitions).
+      // add the event to the global possible list if it isn't already there
+      if(event.isAutoTransition() &&
+         event.getIsTimer() &&
+         indexOfPossibleEvent(event) == -1)
+      {
+        addPossibleEvent(event);
+      }
+    }
+
+    if(currentState.hasParent()) 
+    {
+      recursivelyAddStateTransitions(originalState, currentState.getParent());
+    }
+  }
+
+  // Does a random walk through the state machine. It will choose events that
+  // apply to the current state 1-randomEventProportion, and the rest of the
+  // time it will choose a random event from the state machine (which may or 
+  // may not apply to the current state). It builds up the EventSequenceTable
+  // as it walks. The walk finishes depending on the policy set (visit all
+  // states, use all transitions, do X events)
+  private void walkThroughStateMachine(EventSequenceTable table,
+                                       EventSequenceList list)
+  {
+    StateWrapper currentState;
+    Transition currentTransition;
+    Event currentEvent;
+    boolean isFinished = false;
+
+    currentState = wrapState(resolveStartState(sm.getStartState()));
+
+    // Add the start state to the output table
+    table.addColumn(currentState, "START");
+    list.addColumn(currentState, "START");
+
+    // Mark the start state as visited
+    tracker.removeUnvisitedState(currentState);
+
+    // Begin walking through the state machine
+    while(!isFinished)
+    {
+      currentEvent = nextEvent(currentState);
+      currentTransition = currentState.getMappedTransition(currentEvent,
+                                                           randomGenerator);
+
+      if(currentTransition != null)
+      {
+        currentState = wrapState(findNextState(currentTransition));
+      }      
+      
+      // Mark the transition and state as visited
+      tracker.markTransitionVisited(currentTransition);
+      tracker.markStateVisited(currentState);
+
+      // Add state and event to the outputs
+      table.addColumn(currentState, 
+                      extractLabel(currentEvent, currentTransition));
+      list.addColumn(currentState, 
+                     extractLabel(currentEvent, currentTransition));
+
+      isFinished = tracker.isWalkFinished(currentState);
+    }
+  }
+
+  // Decides whether to have the next event be pulled from the global set of
+  // events, or only from the events associated with the current state.
+  private Event nextEvent(StateWrapper currentState)
+  {
+    double chance = randomGenerator.nextDouble();
+    Event nextEvent;
+
+    // only try to get a random event from the global pool of events if
+    // the global event pool isn't empty (which will happen if the only
+    // kinds of transitions are auto and timed transitions) 
+    if(numberOfPossibleEvents() != 0 && chance <= randomEventProportion )
+    {
+      nextEvent = getRandomEvent();
+    }
+    else
+    {
+      nextEvent = getRandomEvent(currentState); 
+    }
+
+    return nextEvent;
+  }
+
+  // Retrieves an event randomly from the set of all events present in the
+  // state machine.
+  private Event getRandomEvent()
+  {
+    int index = randomGenerator.nextInt(numberOfPossibleEvents());
+    return getPossibleEvent(index);
+  }
+
+  // Retrieves an event from the set of events that will cause a transition
+  // within the current state.
+  private Event getRandomEvent(StateWrapper curState)
+  {
+    Event[] events = curState.getPossibleEvents();
+    int index = randomGenerator.nextInt(events.length);
+    return events[index];
+  }
+
+  // Retrieves a StateWrapper object from the associated StateWrappers based
+  // on the state that it is wrapping.
+  private StateWrapper wrapState(State state)
+  {
+    StateWrapper resultWrappedState = null;
+
+    for(StateWrapper sw : getPossibleStates())
+    {
+      if(sw.getWrappedState() == state)
+      {
+        resultWrappedState = sw;
+        break;
+      }
+    }
+
+    return resultWrappedState;
+  }
+
+  private State findNextState(Transition trans)
+  {
+    State nextState = trans.getNextState();
+
+    nextState = resolveStartState(nextState);
+
+    return nextState;
+  }
+
+  private State resolveStartState(State nextState) 
+  {
+    while(nextState.hasNestedStateMachines()) 
+    {
+      for(StateMachine sm : nextState.getNestedStateMachines()) 
+      {
+        tracker.removeUnvisitedState(wrapState(nextState)); // Superstates are marked as visited
+        nextState = sm.getStartState();
+      }
+    }
+
+    return nextState;
+  }
+
+  private String extractLabel(Event event, Transition trans) 
+  {
+    String eventLabel;
+    Guard guard = null;
+
+    if(event.isAutoTransition())
+    {
+      eventLabel = "(auto)";
+    }
+    else if(event.getIsTimer())
+    {
+      eventLabel = "after(" + event.getTimerInSeconds() + ")";
+    }
+    else
+    {
+      eventLabel = event.getName();
+    }
+
+    if(trans != null)
+    {
+      guard = trans.getGuard();
+    }
+
+    if(guard != null) 
+    {
+      eventLabel += " [" + extractGuardLabel(guard) + "]";
+    }
+
+    return eventLabel;
+  }
+
+  private String extractGuardLabel(Guard guard)
+  {
+    JavaGenerator gen = new JavaGenerator();
+    UmpleClass umpClass = sm.getUmpleClass();
+  
+    gen.setModel(umpClass.getSourceModel());
+    return guard.getCondition(gen).replaceAll("\"","&quot;");
+  }
+}
+
+class EventSequenceWalkTracker
+{
+  0..1 -> * StateWrapper unvisitedStates;
+  0..1 -> * Transition unvisitedTransitions;
+
+  finishReason = "";
+  int counter = 0;
+  int maxEvents = -1; //set lazily
+
+  public boolean isWalkFinished(StateWrapper currentState) {
+    boolean isFinished = false;
+
+    counter++;
+
+    // Hit event counter limit (ensures the walk ends in every case)
+    if(counter >= maxEvents)
+    {
+      isFinished = true;
+      setFinishReason("Hit arbitrary counter");
+    }
+
+    // Reached end state policy
+    if(currentState.isEndState())
+    {
+      isFinished = true;
+      setFinishReason("Reached an end-state");
+    }
+
+    // Visit all states policy
+    if(numberOfUnvisitedStates() == 0)
+    {
+      isFinished = true;
+      setFinishReason("Visited all states");
+    }
+
+    return isFinished;
+  }
+
+  public void calculateMaximumEvents() {
+    maxEvents = (numberOfUnvisitedStates() + numberOfUnvisitedTransitions());
+  }
+
+  public void markTransitionVisited(Transition trans) {
+    removeUnvisitedTransition(trans);
+  }
+
+  public void markStateVisited(StateWrapper state) {
+    removeUnvisitedState(state);
+    markSuperStatesAsVisited(state);
+  }
+
+  private void markSuperStatesAsVisited(StateWrapper state) {
+    while(state != null) {
+      removeUnvisitedState(state);
+      state = state.getParent();
+    }
+  }
+
+}
+
+// A simple wrapper over a State machine's states that allows keeping track
+// of the parent state of the wrapped state, and all events that will cause
+// a transition out of the wrapped state.
+class StateWrapper
+{
+  * -> 0..1 StateWrapper parent;
+  0..1 -> * EventWrapper events;
+
+  State wrappedState; 
+  
+  // If no possible events exist to exit this state, then the wrapped state is
+  // an end state.
+  public boolean isEndState()
+  {
+    boolean result = false;
+    
+    if(numberOfEvents() == 0) 
+      result = true;
+    
+    return result;
+  }
+
+  // Adds an event and the transition it maps to for this state to the eventMap
+  public void addMappedTransistion(Event event, Transition transition)
+  {
+    wrapEvent(event).addTransition(transition);
+  }
+
+  // Returns one of the transitions caused by this event using the injected
+  // Random number generator
+  public Transition getMappedTransition(Event event, Random randomGen) 
+  {
+    EventWrapper wrappedEvent = wrapEvent(event);
+
+    if(isEndState() || wrappedEvent.numberOfTransitions() == 0) 
+      return null;
+
+    int index = randomGen.nextInt(wrappedEvent.numberOfTransitions());
+
+    return wrappedEvent.getTransition(index);
+  }
+
+  // returns an array of possible events
+  public Event[] getPossibleEvents()
+  {
+    Event[] eventArray = new Event[numberOfEvents()];
+    for(int i = 0; i < numberOfEvents(); i++) 
+    {
+      eventArray[i] = events.get(i).getWrappedEvent();
+    }
+
+    return eventArray;
+  }
+
+  // Returns the name of this state, accounting for parent states. 
+  // The parent state names are added as prefixes, separated by dots.
+  public String getDottedName() 
+  {
+    return recursivelyGetDottedNames(this);
+  }
+
+  // Returns the name of this state, accounting for nested depth.
+  // For each level of nesting this state is in, a dash is prefixed to the name
+  public String getDashedName() 
+  {
+    String name = "";
+    StateWrapper parent = getParent();
+
+    while(parent != null) {
+      name += "- ";
+      parent = parent.getParent();
+    }
+
+    return name + wrappedState.getName();
+  }
+
+  private String recursivelyGetDottedNames(StateWrapper stateWrapper) 
+  {
+    if(stateWrapper.hasParent()) {
+      return stateWrapper.recursivelyGetDottedNames(stateWrapper.getParent()) 
+        + "." + stateWrapper.getWrappedState().getName();
+    } else {
+      return stateWrapper.getWrappedState().getName();
+    }
+  }
+
+  private EventWrapper wrapEvent(Event unwrapped) 
+  {
+    for(EventWrapper ev : events) {
+      if(ev.getWrappedEvent() == unwrapped) {
+        return ev;
+      }
+    }
+
+    EventWrapper newEv = new EventWrapper(unwrapped);
+    events.add(newEv);
+    return newEv;
+  }
+}
+
+// Allows mapping from events to the various transitions. This allows guards to
+// effectively be ignored for the purpose of walking randomly through the state
+// machine.
+class EventWrapper
+{
+  0..1 -> * Transition;
+  Event wrappedEvent;
+}
+
+// The grid-type view of the event sequence, with the possible states as rows
+// and the sequence of events as columns.
+class EventSequenceTable
+{
+  0..1 -> * EventSequenceTableRow;
+  0..1 -> 0..1 EventSequenceTableHeaderRow headerRow;
+
+  // Create the header row and blank table cell
+  after constructor 
+  {
+    headerRow = new EventSequenceTableHeaderRow();
+  }
+
+  //Adds a column to the table, puts an X in the row with the active state
+  public void addColumn(StateWrapper activeState, String triggeringEvent)
+  {
+    addToHeaderRow(triggeringEvent);
+    for(EventSequenceTableRow row : getEventSequenceTableRows())
+    {
+      row.addCell(activeState.getWrappedState());
+    }
+  }
+
+  //Adds a row to the table, puts the state name in the first cell of the row
+  public void addRow(StateWrapper rowState)
+  {
+    addEventSequenceTableRow(new EventSequenceTableRow(rowState));
+  }
+
+  // Outputs the entire table
+  public StringBuilder output(EventSequenceTemplater templater)
+  {
+    StringBuilder tableSb = new StringBuilder();
+    tableSb.append(templater.genGridHeader());
+
+    tableSb.append(headerRow.output(templater));
+
+    for(EventSequenceTableRow row : getEventSequenceTableRows())
+    {
+      tableSb.append(row.output(templater));
+    }
+
+    tableSb.append(templater.genFooter());
+    return tableSb;
+  }
+
+  private void addToHeaderRow(String eventLabel)
+  {
+    headerRow.addCell(eventLabel);
+  }
+}
+
+//Represents the header row of a Event Sequence table.
+class EventSequenceTableHeaderRow
+{
+  0..1 -> * EventSequenceHeaderCell;
+
+  public void addCell(String eventLabel)
+  {
+    addEventSequenceHeaderCell(new EventSequenceHeaderCell(false, eventLabel));
+  }
+
+  // Outputs the header row
+  public StringBuilder output(EventSequenceTemplater templater) 
+  {
+    StringBuilder rowSb = new StringBuilder();
+
+    rowSb.append(templater.genRowStart());
+    rowSb.append(templater.genCell("&nbsp;"));
+
+    for(EventSequenceHeaderCell cell : getEventSequenceHeaderCells())
+    {
+      rowSb.append(cell.output(templater));
+    }
+
+    rowSb.append(templater.genRowEnd());
+    return rowSb;
+  }
+}
+
+// Represents a row in the Event Sequence table. This has a state name as a row
+// label
+class EventSequenceTableRow
+{
+  0..1 -> * EventSequenceCell;
+
+  StateWrapper rowState;
+  boolean isHeader = false;
+
+  public void addCell(State activeState)
+  {
+    if(activeState == rowState.getWrappedState())
+    {
+      addEventSequenceCell(new EventSequenceCell(false, "X"));
+    }
+    else
+    {
+      addEventSequenceCell(new EventSequenceCell(true, ""));
+    }
+  }
+
+  // Outputs this row
+  public StringBuilder output(EventSequenceTemplater templater) 
+  {
+    StringBuilder rowSb = new StringBuilder();
+
+    rowSb.append(templater.genRowStart());
+    rowSb.append(templater.genRowHeader(rowState.getDashedName()));
+
+    for(EventSequenceCell cell : getEventSequenceCells())
+    {
+      rowSb.append(cell.output(templater));
+    }
+
+    rowSb.append(templater.genRowEnd());
+    return rowSb;
+  }
+}
+
+// Represents a cell in a row in the Event Sequence table.
+class EventSequenceHeaderCell
+{
+  boolean isRow;
+  label;
+
+  // Outputs this cell
+  public String output(EventSequenceTemplater templater)
+  {
+    String cell;
+
+    if(isRow)
+    {
+      cell = templater.genRowHeader(label);  
+    }
+    else
+    {
+      cell = templater.genColumnHeader(label);
+    }
+
+    return cell;
+  }
+}
+
+// Represents a cell in a row in the Event Sequence table.
+class EventSequenceCell
+{
+  boolean isEmpty;
+  label;
+
+  // Outputs this cell
+  public String output(EventSequenceTemplater templater)
+  {
+    String cell;
+
+    if(isEmpty)
+    {
+      cell = templater.genCell("&nbsp;");  
+    }
+    else
+    {
+      cell = templater.genCell(label);
+    }
+
+    return cell;
+  }
+}
+
+// This is the list-style view for the event sequence. It has two primary rows.
+// The first row is the sequence of events generated, the second row is the 
+// the state resulting from that event.
+class EventSequenceList
+{
+  0..1 -> * EventSequenceCell events;
+  0..1 -> * EventSequenceCell states;
+  
+  EventSequenceHeaderCell eventRowLabel = 
+    new EventSequenceHeaderCell(true, "Events");
+  EventSequenceHeaderCell stateRowLabel = 
+    new EventSequenceHeaderCell(true, "States");
+  int characterLimit = 100; 
+
+  public void addColumn(StateWrapper resultingState, String triggeringEvent)
+  {
+    addEvent(new EventSequenceCell(false, triggeringEvent));
+    addState(new EventSequenceCell(false, 
+      resultingState.getDottedName()));
+  }
+
+  public StringBuilder output(EventSequenceTemplater templater)
+  {
+    StringBuilder outputSB = new StringBuilder();
+    StringBuilder eventRowSB = new StringBuilder();
+    StringBuilder stateRowSB = new StringBuilder();
+    int characterCount = 0;
+    EventSequenceCell eventCell;
+    EventSequenceCell stateCell;
+    int addedLength = 0;
+
+    outputSB.append(beginTable(eventRowSB, stateRowSB, templater));
+
+    for(int i = 0; i < numberOfEvents(); i++)
+    {
+      eventCell = getEvent(i);
+      stateCell = getState(i);
+
+      addedLength = Math.max(eventCell.getLabel().length(), 
+                                 stateCell.getLabel().length());
+      characterCount += addedLength;
+
+      if(characterCount > characterLimit)
+      {
+        // End the current table
+        outputSB.append(endTable(eventRowSB, stateRowSB, templater));
+
+        // Start a new table
+        eventRowSB = new StringBuilder();
+        stateRowSB = new StringBuilder();
+        outputSB.append(beginTable(eventRowSB, stateRowSB, templater));
+
+        // Reset the character counter
+        characterCount = addedLength;
+      }
+
+      eventRowSB.append(eventCell.output(templater));
+      stateRowSB.append(stateCell.output(templater));
+    }
+
+    outputSB.append(endTable(eventRowSB, stateRowSB, templater));
+    return outputSB;
+  }
+
+  private StringBuilder beginTable(StringBuilder eSB, 
+                                   StringBuilder sSB,
+                                   EventSequenceTemplater templater)
+  {
+    StringBuilder sb = new StringBuilder();
+    
+    // Add a new table to the main output 
+    sb.append(templater.genListHeader());
+
+    // Start a new event row
+    eSB.append(templater.genRowStart());
+    eSB.append(eventRowLabel.output(templater));
+
+    // Start a new state row
+    sSB.append(templater.genRowStart());
+    sSB.append(stateRowLabel.output(templater));
+
+    return sb;
+  }
+
+  private StringBuilder endTable(StringBuilder eSB, 
+                                 StringBuilder sSB,
+                                 EventSequenceTemplater templater)
+  {
+    StringBuilder sb = new StringBuilder();
+
+    // add row endings to the event and state rows
+    eSB.append(templater.genRowEnd());
+    sSB.append(templater.genRowEnd());
+
+    // flush the event and state rows to the output
+    sb.append(eSB);
+    sb.append(sSB);
+
+    // end the table
+    sb.append(templater.genFooter());
+    return sb;
+  }
+}
+
+class EventSequenceGenerator
+{
+  EventSequenceTemplater templater = new EventSequenceTemplater();
+
+  // CENTRAL GENERATE METHOD
+
+  public void generate()
+  {
+    StringBuilder code = new StringBuilder();
+    code.append(templater.genTopHeader(
+      model.getUmpleFile().getSimpleFileName()));
+
+    // Determine if there are multiple classes with state machines
+    // or multiple state machines in any class
+    // If so, we will need to put boxes around the state machines
+    int smCount = 0;
+    for (UmpleClass uClass : model.getUmpleClasses()) 
+    {
+      for (StateMachine sm : uClass.getStateMachines()) 
+      {
+        smCount++;
+      }
+    }
+
+    if(smCount == 0) 
+    {
+      // Special case. No state machine.
+
+      code.append(templater.genNoSMMessage());
+
+      terminateCode(code);
+      return;
+    }
+
+    // We now know we have to output one or more state machines
+    // Iterate through each class.
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      String className = uClass.getName();
+
+      // Process the top level state machines in a class
+      for (StateMachine sm : uClass.getStateMachines())
+      {
+        code.append(templater.genTableTitleHeader(className, sm.getName()));
+
+        EventSequencer es = new EventSequencer(sm);
+        seedRandomFromSuboptions(es);        
+
+        code.append(es.generateEventSequence(templater));
+
+      } // End iteration through state machines of a class
+    } // End iteration through classes
+
+    terminateCode(code);
+  }
+
+  private void terminateCode(StringBuilder code)
+  {
+    model.setCode(code.toString());
+    writeModel();
+  }
+
+  // Output the html to a file with a .html suffix
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + 
+        model.getUmpleFile().getSimpleFileName() + ".html";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException(
+        "There was a problem with generating Event Sequences." + e, e);
+    }
+  }
+
+  // Sets a non-random seed for the EventSequencer when the suboption "seed"
+  // is used. A second suboption can be passed directly after the "seed" to 
+  // specify a specific seed.
+  private void seedRandomFromSuboptions(EventSequencer es) {
+    if(this.hasSuboption("seed")) {
+      int subOptIndex = Arrays.asList(getSuboptions()).indexOf("seed");
+      long seed = 0;
+      if(subOptIndex + 1 < getSuboptions().length) {
+        //Probably a seed number attached to the suboptions
+        try {
+          seed = Long.parseLong(getSuboptions()[subOptIndex + 1]);
+        } catch (NumberFormatException e) {
+          System.out.println("Seed value expected as suboption after 'seed'");
+        }
+      } 
+
+      es.getRandomGenerator().setSeed(seed);
+    }
+  }
+}
+
+// Contains the templates for both the event sequence UI types
+class EventSequenceTemplater
+{
+  // helper templates
+  cr <<!
+!>>
+  cr2 <<!
+
+!>>
+  tab <<!  !>>
+  tab2 <<!    !>>
+
+  ////////////////////////////////////////////////////////////////////////////
+  //  General output templates                                              //
+  ////////////////////////////////////////////////////////////////////////////
+  styleHeader <<!<style>!>>
+  styles <<!
+  .event-sequence-grid, .event-sequence-list 
+  { 
+    border-collapse: collapse;
+    margin-bottom: 10px;
+  }
+
+  .event-sequence-grid td, .event-sequence-list td 
+  { 
+    border: 1px solid black; 
+    padding: 2px 10px 2px 10px; 
+    white-space: nowrap;
+    text-align: center; 
+  }
+
+  .event-sequence-grid .row-header {
+    text-align: left;
+  }
+  !>>
+  styleFooter <<!</style>!>>
+
+  header <<!<h1>Event sequence generated by Umple from <<=modelName>>.ump</h1>!>>
+  tableTitleHeader <<!<h2>Class <<=className>> state machine <<=smName>></h2>!>>
+  noSMMessage <<!<p>No State machines found in this model</p>!>>
+  endMessage <<!<p>Event sequence ending reason: <<=reason>></p>!>>
+
+  emit genTopHeader(String modelName)(styleHeader, styles, cr, styleFooter, cr2, header, cr);
+  emit genTableTitleHeader(String className, String smName)(cr, tableTitleHeader, cr2);
+  emit genNoSMMessage()(cr, noSMMessage);
+  emit genEndMessage(String reason)(endMessage);
+
+
+  ////////////////////////////////////////////////////////////////////////////
+  //  Table output templates                                                //
+  ////////////////////////////////////////////////////////////////////////////
+  gridHeader      <<!<table class="event-sequence-grid">!>>
+  listHeader      <<!<table class="event-sequence-list">!>>
+  rowStart          <<!<tr>!>>
+  columnHeader        <<!<td class="column-header"><<=label>></td>!>>
+  rowHeader           <<!<td class="row-header"><<=label>></td>!>>
+  cell                <<!<td><<=content>></td>!>>
+  rowEnd            <<!</tr>!>>
+  footer          <<!</table>!>>
+  
+  emit genGridHeader()(gridHeader, cr);
+  emit genListHeader()(listHeader, cr);
+  emit genRowStart()(tab, rowStart, cr);
+  emit genColumnHeader(String label)(tab2, columnHeader, cr);
+  emit genRowHeader(String label)(tab2, rowHeader, cr);
+  emit genCell(String content)(tab2, cell, cr);
+  emit genRowEnd()(tab, rowEnd, cr);
+  emit genFooter()(footer, cr);
+}

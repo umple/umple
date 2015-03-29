@@ -1,0 +1,30 @@
+namespace example;
+
+class GuardedTimedTransition
+{
+  boolean guard;
+  sm
+  {
+    s1
+    {
+      [guard] -> s2;
+      ev1 -> s5;
+    }
+    s2
+    {
+      ev1 -> s3;
+    }
+    s3
+    {
+      ev1 -> s4;
+    }
+    s4
+    {
+      ev1 -> s5;
+    }
+    s5
+    {
+
+    }
+  } 
+}

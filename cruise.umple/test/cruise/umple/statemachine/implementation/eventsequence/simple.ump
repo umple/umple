@@ -1,0 +1,16 @@
+namespace example;
+
+class ReallySimpleStateMachine 
+{
+  sm 
+  {
+    s1 
+    {
+      ev1 -> s2;
+    }
+    s2
+    {
+
+    }
+  }
+}
