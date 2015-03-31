@@ -212,34 +212,52 @@ class ScxmlImportHandler
   }
 
   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    depth++;
     if("scxml".equals(localName)) {
-      depth = 1;
       String stateMachineName = attributes.getValue("name");
 	    ImportStateMachine stateMachine = new ImportStateMachine("", "", depth, stateMachineName);
 	    currentClass.addImportStateMachine(stateMachine);
 	    elemStack.push(stateMachine);
     } else if ("state".equals(localName)) {
-      depth++;
       String stateId = attributes.getValue("id");
       ImportStateMachineState state = new ImportStateMachineState("", "", depth, stateId);
       elemStack.peek().addImportStateMachineElement(state);
       elemStack.push(state);
     } else if ("transition".equals(localName)) {
-      depth++;
       String event = attributes.getValue("event");
       String cond = attributes.getValue("cond");
       String target = attributes.getValue("target");
 
-      ImportStateMachineTransition transition = new ImportStateMachineTransition("", "", depth, event, cond, target);
+      ImportTransition transition = new ImportTransition("", "", depth, event, cond, target);
       elemStack.peek().addImportStateMachineElement(transition);
+      elemStack.push(transition);
+    } else if ("onentry".equals(localName)) {
+      ImportAction onentry = new ImportAction("", "", depth, "entry");
+      elemStack.peek().addImportStateMachineElement(onentry);
+      elemStack.push(onentry);
+    } else if ("onexit".equals(localName)) {
+      ImportAction onexit = new ImportAction("", "", depth, "exit");
+      elemStack.peek().addImportStateMachineElement(onexit);
+      elemStack.push(onexit);
+    }
+  }
+
+  public void characters(char[] ch, int start, int length) {
+    String chars = new String(ch, start, length);
+    if (elemStack.peek() instanceof ImportAction) {
+      ImportAction action = (ImportAction)elemStack.peek();
+      action.getContent().append(chars);
+    } else if (elemStack.peek() instanceof ImportTransition) {
+      ImportTransition transition = (ImportTransition)elemStack.peek();
+      transition.getAction().append(chars);
     }
   }
 
   public void endElement(String uri, String localName, String qName) throws SAXException {
-      depth--;
-      if ("scxml".equals(localName) || "state".equals(localName)) {
-        elemStack.pop();
-      }
+    depth--;
+    if (!"script".equals(localName)) {
+      elemStack.pop();  
+    }
   }
 }
 

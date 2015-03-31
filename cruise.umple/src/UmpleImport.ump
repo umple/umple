@@ -18,22 +18,22 @@ external DefaultHandler{}
 
 class UmpleImportHandler
 {
-   abstract;
+  abstract;
 
-   depend java.io.File;
-   depend java.io.IOException;
-   depend java.io.InputStream;
-   depend java.io.FileInputStream;
-   depend java.util.Optional;
-   depend java.nio.file.Paths;
-   depend javax.xml.parsers.ParserConfigurationException;
-   depend javax.xml.parsers.SAXParser;
-   depend javax.xml.parsers.SAXParserFactory;
-   depend org.xml.sax.Attributes;
-   depend org.xml.sax.SAXException;
-   depend org.xml.sax.SAXParseException;
-    depend org.xml.sax.helpers.DefaultHandler;
-   isA DefaultHandler;
+  depend java.io.File;
+  depend java.io.IOException;
+  depend java.io.InputStream;
+  depend java.io.FileInputStream;
+  depend java.util.Optional;
+  depend java.nio.file.Paths;
+  depend javax.xml.parsers.ParserConfigurationException;
+  depend javax.xml.parsers.SAXParser;
+  depend javax.xml.parsers.SAXParserFactory;
+  depend org.xml.sax.Attributes;
+  depend org.xml.sax.SAXException;
+  depend org.xml.sax.SAXParseException;
+  depend org.xml.sax.helpers.DefaultHandler;
+  isA DefaultHandler;
 }
 
 /* 
@@ -62,20 +62,20 @@ class EcoreImportHandler
  */
 class ScxmlImportHandler
 {
-   depend java.io.File;
-   depend java.io.IOException;
-   depend java.io.InputStream;
-   depend java.io.FileInputStream;
-   depend java.util.Optional;
-   depend java.util.Stack;
-   depend java.nio.file.Paths;
-   depend javax.xml.parsers.ParserConfigurationException;
-   depend javax.xml.parsers.SAXParser;
-   depend javax.xml.parsers.SAXParserFactory;
-   depend org.xml.sax.Attributes;
-   depend org.xml.sax.SAXException;
-   depend org.xml.sax.SAXParseException;
-   depend org.xml.sax.helpers.DefaultHandler;
+  depend java.io.File;
+  depend java.io.IOException;
+  depend java.io.InputStream;
+  depend java.io.FileInputStream;
+  depend java.util.Optional;
+  depend java.util.Stack;
+  depend java.nio.file.Paths;
+  depend javax.xml.parsers.ParserConfigurationException;
+  depend javax.xml.parsers.SAXParser;
+  depend javax.xml.parsers.SAXParserFactory;
+  depend org.xml.sax.Attributes;
+  depend org.xml.sax.SAXException;
+  depend org.xml.sax.SAXParseException;
+  depend org.xml.sax.helpers.DefaultHandler;
 
   isA UmpleImportHandler;
 }
@@ -214,11 +214,18 @@ class ImportStateMachineState {
   isA ImportStateMachineElement;
 }
 
-class ImportStateMachineTransition {
+class ImportTransition {
   isA ImportStateMachineElement;
 
   String cond;
   String target;
+  StringBuilder action = new StringBuilder();
+}
+
+class ImportAction {
+  isA ImportStateMachineElement;
+
+  StringBuilder content = new StringBuilder();
 }
 
 class UmpleImportConstants

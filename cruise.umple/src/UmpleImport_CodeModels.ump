@@ -202,7 +202,7 @@ class ImportStateMachineElement
   }
 }
 
-class ImportStateMachineTransition
+class ImportTransition
 {
   String generateUmple() {
     String indent = new String(new char[getDepth()]).replace("\0", "\t");
@@ -211,7 +211,37 @@ class ImportStateMachineTransition
     if (this.getCond() != null) {
       umpleBuilder.append(" [" + this.getCond() + "]");
     }
-    umpleBuilder.append(" -> " + this.getTarget() + ";");
+    umpleBuilder.append(" ->"); 
+
+    StringBuilder action = getAction();
+    if (action != null && action.length() > 0) {
+      umpleBuilder.append(" / {\n" + indent + "\t");
+      String content = action.toString().replaceAll("\n", "\n" + indent + "\t");
+      content = content.trim();
+      umpleBuilder.append(content);
+      umpleBuilder.append("\n" + indent + "}");
+    }
+
+    umpleBuilder.append(" " +this.getTarget() + ";");
+
+    return umpleBuilder.toString();
+  }
+}
+
+class ImportAction {
+  String generateUmple() {
+    String indent = new String(new char[getDepth()]).replace("\0", "\t");
+    StringBuilder umpleBuilder = this.getUmpleBuilder();
+
+    umpleBuilder.append("\n" + indent + getElemName() + " / {");
+
+    if (content.length() > 0) {
+      String contentString = content.toString().replaceAll("\n", "\n" + indent + "\t");
+      contentString = contentString.trim();
+      umpleBuilder.append("\n" + indent + "\t" + contentString);
+    }		
+
+	  umpleBuilder.append("\n" + indent + "}");
 
     return umpleBuilder.toString();
   }

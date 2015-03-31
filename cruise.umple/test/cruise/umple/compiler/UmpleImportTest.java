@@ -44,7 +44,7 @@ public class UmpleImportTest {
 	@Test
 	public void EcoreClassAttributesParsingTest() throws Exception {
 
-		String expectedText = loadUmpleFile("ECoreImport_ClassAttributes.ump");
+	  String expectedText = loadUmpleFile("ECoreImport_ClassAttributes.ump");
 		String actualText = loadECoreFile("ECoreImport_ClassAttributes.ecore");
 
 		assertEquals(expectedText, actualText);
@@ -131,6 +131,46 @@ public class UmpleImportTest {
 
     assertEquals(expectedText, actualText);
   }
+	
+	@Test
+	public void ScxmlOnEntryEmptyTest() throws Exception {
+	  String expectedText = loadUmpleFile("ScxmlImport_onentry_empty.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_onentry_empty.scxml.txt").trim();
+
+    assertEquals(expectedText, actualText);
+	}
+	
+	@Test
+	public void ScxmlOnEntryWithActionTest() throws Exception {
+	  String expectedText = loadUmpleFile("ScxmlImport_onentry_with_action.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_onentry_with_action.scxml.txt").trim();
+
+    assertEquals(expectedText, actualText); 
+	}
+	
+	@Test
+	public void ScxmlOnEntryWithMultilineActionTest() throws Exception {
+	  String expectedText = loadUmpleFile("ScxmlImport_onentry_with_multiline_action.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_onentry_with_multiline_action.scxml.txt").trim();
+
+    assertEquals(expectedText, actualText);
+	}
+	
+	@Test
+	public void ScxmlOnEntryAndOnExitTest() throws Exception {
+	  String expectedText = loadUmpleFile("ScxmlImport_onentry_and_onexit.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_onentry_and_onexit.scxml.txt").trim();
+
+    assertEquals(expectedText, actualText);
+	}
+	
+	@Test 
+	public void ScxmlTransitionActionTest() throws Exception {
+	  String expectedText = loadUmpleFile("ScxmlImport_transition_action.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_transition_action.scxml.txt").trim();
+
+    assertEquals(expectedText, actualText); 
+	}
 
 	private static String loadScxmlFile(String name) throws Exception {
 	  String filename = getFullFilePath(name);

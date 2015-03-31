@@ -1,0 +1,15 @@
+
+
+class StateMachine
+{
+	sm {
+		stateA {
+			entry / {
+				onEntryAction();
+			}
+			exit / {
+				onExitAction();
+			}
+		}
+	}
+}

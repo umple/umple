@@ -1,0 +1,13 @@
+
+
+class StateMachine
+{
+	sm {
+		stateA {
+			entry / {
+				onEntryAction();
+				onEntryAction2();
+			}
+		}
+	}
+}
