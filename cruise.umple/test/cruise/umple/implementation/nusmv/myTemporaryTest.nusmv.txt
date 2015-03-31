@@ -15,7 +15,7 @@ MODULE HeatSystem( heatSystemHouse , heatSystemHouseRoom , heatSystemHouseRoomRo
     init(heatSystem_state) := heatSystem_heatSys;  
   
   TRANS
-    ( (heatSystem_state = heatSystem_heatSys) -> ( next(heatSystemHouse.heatSystemHouse_state) = heatSystemHouse_house) )
+    ( (heatSystem_state = heatSystem_heatSys) -> ( next(heatSystemHouse.heatSystemHouse_state) = heatSystemHouse_house & next(heatSystemFurnace.heatSystemFurnace_state) = heatSystemFurnace_furnace) )
   
 MODULE HeatSystemHouse( heatSystem , heatSystemHouseRoom , heatSystemHouseRoomRoom , heatSystemHouseRoomRoomNoHeatReq , heatSystemHouseRoomRoomHeatReq , heatSystemHouseController , heatSystemHouseControllerController , heatSystemHouseControllerControllerControllerOn , heatSystemHouseControllerControllerControllerOnHeaterActive , heatSystemFurnace , heatSystemFurnaceFurnace , heatSystemFurnaceFurnaceFurnaceNormal , handle )
   
@@ -23,10 +23,10 @@ MODULE HeatSystemHouse( heatSystem , heatSystemHouseRoom , heatSystemHouseRoomRo
     heatSystemHouse_state : { heatSystemHouse_house , null };  
     
   ASSIGN
-    init(heatSystemHouse_state) := heatSystemHouse_house;  
+    init(heatSystemHouse_state) := null;  
   
   TRANS
-    ( (heatSystemHouse_state = heatSystemHouse_house) -> ( next(heatSystemHouseRoom.heatSystemHouseRoom_state) = heatSystemHouseRoom_room) )
+    ( (heatSystemHouse_state = heatSystemHouse_house) -> ( next(heatSystemHouseRoom.heatSystemHouseRoom_state) = heatSystemHouseRoom_room & next(heatSystemHouseController.heatSystemHouseController_state) = heatSystemHouseController_Controller) )
   
 MODULE HeatSystemHouseRoom( heatSystem , heatSystemHouse , heatSystemHouseRoomRoom , heatSystemHouseRoomRoomNoHeatReq , heatSystemHouseRoomRoomHeatReq , heatSystemHouseController , heatSystemHouseControllerController , heatSystemHouseControllerControllerControllerOn , heatSystemHouseControllerControllerControllerOnHeaterActive , heatSystemFurnace , heatSystemFurnaceFurnace , heatSystemFurnaceFurnaceFurnaceNormal , handle )
   
@@ -34,7 +34,7 @@ MODULE HeatSystemHouseRoom( heatSystem , heatSystemHouse , heatSystemHouseRoomRo
     heatSystemHouseRoom_state : { heatSystemHouseRoom_room , null };  
     
   ASSIGN
-    init(heatSystemHouseRoom_state) := heatSystemHouseRoom_room;  
+    init(heatSystemHouseRoom_state) := null;  
   
   TRANS
     ( (heatSystemHouseRoom_state = heatSystemHouseRoom_room) -> ( next(heatSystemHouseRoomRoom.heatSystemHouseRoomRoom_state) = heatSystemHouseRoomRoom_noHeatReq) )
@@ -64,7 +64,7 @@ MODULE HeatSystemHouseRoomRoomNoHeatReq( heatSystem , heatSystemHouse , heatSyst
       (handle.event = t17 & next(heatSystemHouseRoomRoomNoHeatReq_state) = heatSystemHouseRoomRoomNoHeatReq_waitForHeat)  |
       (handle.event = t18 & next(heatSystemHouseRoomRoomNoHeatReq_state) = heatSystemHouseRoomRoomNoHeatReq_waitForHeat)  |
       (handle.event = t15 & next(heatSystemHouseRoomRoomNoHeatReq_state) = heatSystemHouseRoomRoomNoHeatReq_idleNoHeat)  |
-      (handle.event = t20 & next(heatSystemHouseRoomRoom.heatSystemHouseRoomRoom_state) = heatSystemHouseRoomRoom_heatReq & next(heatSystemHouseRoomRoomNoHeatReq_state) = null)  ) ) &
+      (handle.event = t20 & next(heatSystemHouseRoomRoom.heatSystemHouseRoomRoom_state) = heatSystemHouseRoomRoom_heatReq & next(heatSystemHouseRoomRoom.heatSystemHouseRoomRoom_state) = null & next(heatSystemHouseRoomRoomNoHeatReq_state) = null)  ) ) &
     ( (heatSystemHouseRoomRoomNoHeatReq_state = heatSystemHouseRoomRoomNoHeatReq_idleNoHeat) -> (
        handle.event = t15 & next(heatSystemHouseRoomRoomNoHeatReq_state) = heatSystemHouseRoomRoomNoHeatReq_waitForHeat) )
   
@@ -78,7 +78,7 @@ MODULE HeatSystemHouseRoomRoomHeatReq( heatSystem , heatSystemHouse , heatSystem
   
   TRANS
     ( (heatSystemHouseRoomRoomHeatReq_state = heatSystemHouseRoomRoomHeatReq_waitForCool) -> (
-      (handle.event = t19 & next(heatSystemHouseRoomRoom.heatSystemHouseRoomRoom_state) = heatSystemHouseRoomRoom_noHeatReq & next(heatSystemHouseRoomRoomHeatReq_state) = null)  |
+      (handle.event = t19 & next(heatSystemHouseRoomRoom.heatSystemHouseRoomRoom_state) = heatSystemHouseRoomRoom_noHeatReq & next(heatSystemHouseRoomRoom.heatSystemHouseRoomRoom_state) = null & next(heatSystemHouseRoomRoomHeatReq_state) = null)  |
       (handle.event = t22 & next(heatSystemHouseRoomRoomHeatReq_state) = heatSystemHouseRoomRoomHeatReq_idleHeat)  |
       (handle.event = t24 & next(heatSystemHouseRoomRoomHeatReq_state) = heatSystemHouseRoomRoomHeatReq_waitForCool)  |
       (handle.event = t23 & next(heatSystemHouseRoomRoomHeatReq_state) = heatSystemHouseRoomRoomHeatReq_waitForCool)  ) ) &
@@ -91,7 +91,7 @@ MODULE HeatSystemHouseController( heatSystem , heatSystemHouse , heatSystemHouse
     heatSystemHouseController_state : { heatSystemHouseController_Controller , null };  
     
   ASSIGN
-    init(heatSystemHouseController_state) := heatSystemHouseController_Controller;  
+    init(heatSystemHouseController_state) := null;  
   
   TRANS
     ( (heatSystemHouseController_state = heatSystemHouseController_Controller) -> ( next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_off) )
@@ -123,8 +123,8 @@ MODULE HeatSystemHouseControllerControllerControllerOn( heatSystem , heatSystemH
   TRANS
     ( (heatSystemHouseControllerControllerControllerOn_state = heatSystemHouseControllerControllerControllerOn_idle) -> (
       (handle.event = activate & next(heatSystemHouseControllerControllerControllerOn_state) = heatSystemHouseControllerControllerControllerOn_heaterActive)  |
-      (handle.event = furnaceFault & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_error & next(heatSystemHouseControllerControllerControllerOn_state) = null)  |
-      (handle.event = heatSwitchOff & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_off & next(heatSystemHouseControllerControllerControllerOn_state) = null)  ) ) &
+      (handle.event = furnaceFault & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_error & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = null & next(heatSystemHouseControllerControllerControllerOn_state) = null)  |
+      (handle.event = heatSwitchOff & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_off & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = null & next(heatSystemHouseControllerControllerControllerOn_state) = null)  ) ) &
     ( (heatSystemHouseControllerControllerControllerOn_state = heatSystemHouseControllerControllerControllerOn_heaterActive) -> ( next(heatSystemHouseControllerControllerControllerOnHeaterActive.heatSystemHouseControllerControllerControllerOnHeaterActive_state) = heatSystemHouseControllerControllerControllerOnHeaterActive_actHeater) )
   
 MODULE HeatSystemHouseControllerControllerControllerOnHeaterActive( heatSystem , heatSystemHouse , heatSystemHouseRoom , heatSystemHouseRoomRoom , heatSystemHouseRoomRoomNoHeatReq , heatSystemHouseRoomRoomHeatReq , heatSystemHouseController , heatSystemHouseControllerController , heatSystemHouseControllerControllerControllerOn , heatSystemFurnace , heatSystemFurnaceFurnace , heatSystemFurnaceFurnaceFurnaceNormal , handle )
@@ -138,13 +138,13 @@ MODULE HeatSystemHouseControllerControllerControllerOnHeaterActive( heatSystem ,
   TRANS
     ( (heatSystemHouseControllerControllerControllerOnHeaterActive_state = heatSystemHouseControllerControllerControllerOnHeaterActive_actHeater) -> (
       (handle.event = furnaceRunning & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = heatSystemHouseControllerControllerControllerOnHeaterActive_heaterRun)  |
-      (handle.event = deactivate & next(heatSystemHouseControllerControllerControllerOn.heatSystemHouseControllerControllerControllerOn_state) = heatSystemHouseControllerControllerControllerOn_idle & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = null)  |
-      (handle.event = furnaceFault & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_error & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = null)  |
-      (handle.event = heatSwitchOff & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_off & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = null)  ) ) &
+      (handle.event = deactivate & next(heatSystemHouseControllerControllerControllerOn.heatSystemHouseControllerControllerControllerOn_state) = heatSystemHouseControllerControllerControllerOn_idle & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = null & next(heatSystemHouseControllerControllerControllerOn.heatSystemHouseControllerControllerControllerOn_state) = null & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = null)  |
+      (handle.event = furnaceFault & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_error & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = null & next(heatSystemHouseControllerControllerControllerOn.heatSystemHouseControllerControllerControllerOn_state) = null & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = null)  |
+      (handle.event = heatSwitchOff & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_off & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = null & next(heatSystemHouseControllerControllerControllerOn.heatSystemHouseControllerControllerControllerOn_state) = null & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = null)  ) ) &
     ( (heatSystemHouseControllerControllerControllerOnHeaterActive_state = heatSystemHouseControllerControllerControllerOnHeaterActive_heaterRun) -> (
-      (handle.event = deactivate & next(heatSystemHouseControllerControllerControllerOn.heatSystemHouseControllerControllerControllerOn_state) = heatSystemHouseControllerControllerControllerOn_idle & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = null)  |
-      (handle.event = furnaceFault & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_error & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = null)  |
-      (handle.event = heatSwitchOff & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_off & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = null)  ) )
+      (handle.event = deactivate & next(heatSystemHouseControllerControllerControllerOn.heatSystemHouseControllerControllerControllerOn_state) = heatSystemHouseControllerControllerControllerOn_idle & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = null & next(heatSystemHouseControllerControllerControllerOn.heatSystemHouseControllerControllerControllerOn_state) = null & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = null)  |
+      (handle.event = furnaceFault & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_error & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = null & next(heatSystemHouseControllerControllerControllerOn.heatSystemHouseControllerControllerControllerOn_state) = null & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = null)  |
+      (handle.event = heatSwitchOff & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = heatSystemHouseControllerController_off & next(heatSystemHouseControllerController.heatSystemHouseControllerController_state) = null & next(heatSystemHouseControllerControllerControllerOn.heatSystemHouseControllerControllerControllerOn_state) = null & next(heatSystemHouseControllerControllerControllerOnHeaterActive_state) = null)  ) )
   
 MODULE HeatSystemFurnace( heatSystem , heatSystemHouse , heatSystemHouseRoom , heatSystemHouseRoomRoom , heatSystemHouseRoomRoomNoHeatReq , heatSystemHouseRoomRoomHeatReq , heatSystemHouseController , heatSystemHouseControllerController , heatSystemHouseControllerControllerControllerOn , heatSystemHouseControllerControllerControllerOnHeaterActive , heatSystemFurnaceFurnace , heatSystemFurnaceFurnaceFurnaceNormal , handle )
   
@@ -152,7 +152,7 @@ MODULE HeatSystemFurnace( heatSystem , heatSystemHouse , heatSystemHouseRoom , h
     heatSystemFurnace_state : { heatSystemFurnace_furnace , null };  
     
   ASSIGN
-    init(heatSystemFurnace_state) := heatSystemFurnace_furnace;  
+    init(heatSystemFurnace_state) := null;  
   
   TRANS
     ( (heatSystemFurnace_state = heatSystemFurnace_furnace) -> ( next(heatSystemFurnaceFurnace.heatSystemFurnaceFurnace_state) = heatSystemFurnaceFurnace_furnaceNormal) )
@@ -181,15 +181,15 @@ MODULE HeatSystemFurnaceFurnaceFurnaceNormal( heatSystem , heatSystemHouse , hea
   TRANS
     ( (heatSystemFurnaceFurnaceFurnaceNormal_state = heatSystemFurnaceFurnaceFurnaceNormal_furnaceOff) -> (
       (handle.event = activate & next(heatSystemFurnaceFurnaceFurnaceNormal_state) = heatSystemFurnaceFurnaceFurnaceNormal_furnaceAct)  |
-      (handle.event = furnaceFault & next(heatSystemFurnaceFurnace.heatSystemFurnaceFurnace_state) = heatSystemFurnaceFurnace_furnaceErr & next(heatSystemFurnaceFurnaceFurnaceNormal_state) = null)  ) ) &
+      (handle.event = furnaceFault & next(heatSystemFurnaceFurnace.heatSystemFurnaceFurnace_state) = heatSystemFurnaceFurnace_furnaceErr & next(heatSystemFurnaceFurnace.heatSystemFurnaceFurnace_state) = null & next(heatSystemFurnaceFurnaceFurnaceNormal_state) = null)  ) ) &
     ( (heatSystemFurnaceFurnaceFurnaceNormal_state = heatSystemFurnaceFurnaceFurnaceNormal_furnaceRun) -> (
       (handle.event = deactivate & next(heatSystemFurnaceFurnaceFurnaceNormal_state) = heatSystemFurnaceFurnaceFurnaceNormal_furnaceOff)  |
-      (handle.event = furnaceFault & next(heatSystemFurnaceFurnace.heatSystemFurnaceFurnace_state) = heatSystemFurnaceFurnace_furnaceErr & next(heatSystemFurnaceFurnaceFurnaceNormal_state) = null)  ) ) &
+      (handle.event = furnaceFault & next(heatSystemFurnaceFurnace.heatSystemFurnaceFurnace_state) = heatSystemFurnaceFurnace_furnaceErr & next(heatSystemFurnaceFurnace.heatSystemFurnaceFurnace_state) = null & next(heatSystemFurnaceFurnaceFurnaceNormal_state) = null)  ) ) &
     ( (heatSystemFurnaceFurnaceFurnaceNormal_state = heatSystemFurnaceFurnaceFurnaceNormal_furnaceAct) -> (
       (handle.event = deactivate & next(heatSystemFurnaceFurnaceFurnaceNormal_state) = heatSystemFurnaceFurnaceFurnaceNormal_furnaceOff)  |
       (handle.event = t5 & next(heatSystemFurnaceFurnaceFurnaceNormal_state) = heatSystemFurnaceFurnaceFurnaceNormal_furnaceAct)  |
       (handle.event = furnaceRunning & next(heatSystemFurnaceFurnaceFurnaceNormal_state) = heatSystemFurnaceFurnaceFurnaceNormal_furnaceRun)  |
-      (handle.event = furnaceFault & next(heatSystemFurnaceFurnace.heatSystemFurnaceFurnace_state) = heatSystemFurnaceFurnace_furnaceErr & next(heatSystemFurnaceFurnaceFurnaceNormal_state) = null)  ) )
+      (handle.event = furnaceFault & next(heatSystemFurnaceFurnace.heatSystemFurnaceFurnace_state) = heatSystemFurnaceFurnace_furnaceErr & next(heatSystemFurnaceFurnace.heatSystemFurnaceFurnace_state) = null & next(heatSystemFurnaceFurnaceFurnaceNormal_state) = null)  ) )
   
 MODULE main
   

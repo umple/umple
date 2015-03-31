@@ -1,0 +1,105 @@
+class CruiseControlSystem 
+{
+	cruiseControlSystem {
+      adaptiveControlSystem {
+        control {
+			cruiseController {
+                term -> terminal;
+				inactive {
+                    engineOn -> cruiseController.inactive.tempState;
+					tempState {
+						clearSpeed -> active;
+					}
+				}
+				active {
+					engineOff -> inactive;
+					on -> cruiseController.active.tempState;
+					tempState {
+                        recordSpeed -> cruiseController.active.tempState.tempState_1;
+						tempState_1 {
+							enableControl -> cruising;
+						}
+					}
+				}
+				cruising {
+					engineOff -> inactive;
+					off -> cruiseController.cruising.tempState;
+					brake -> cruiseController.cruising.tempState;
+					accelerator -> cruiseController.cruising.tempState;
+                    on -> cruiseController.cruising.tempState_1;
+					tempState {
+						disableControl -> standby;
+					}
+					tempState_1 {
+						recordSpeed -> cruiseController.cruising.tempState_1.tempState_2;
+						tempState_2 {
+							enableControl -> cruising;
+						}
+					}
+				}
+				standby {
+					engineOff -> inactive;
+					resume -> cruiseController.standby.tempState;
+					tempState {
+						enableControl -> cruising;
+					}
+					on -> cruiseController.standby.tempState_1;
+					tempState_1 {
+						recordSpeed -> cruiseController.standby.tempState_1.tempState_2;
+						tempState_2 {
+							enableControl -> cruising;
+						}
+					}
+				}
+			}
+			||
+			speedControl {
+                term -> terminal;
+				disabled {
+					speed -> disabled;
+					clearSpeed -> disabled;
+					recordSpeed -> disabled;
+					enableControl -> enabled;
+				}
+				enabled {
+					speed -> speedControl.tempState;
+					recordSpeed -> enabled;
+					enableControl -> disabled;
+				}
+				tempState {
+					setThrottle -> enabled;
+				}
+			}
+		}
+		||
+		sensorScan {
+            term -> terminal;
+			engineOn -> sensorScan;
+			engineOff -> sensorScan;
+			on -> sensorScan;
+			off -> sensorScan;
+			resume -> sensorScan;
+			brake -> sensorScan;
+			accelerator -> sensorScan;
+		}
+		||
+		inputSpeed {
+            term -> terminal;
+			engineOn -> checkSpeed;
+			checkSpeed {
+				speed -> checkSpeed;
+				engineOff -> inputSpeed;
+			}
+		}
+		||
+		throttle {
+            term -> terminal;
+			setThrottle -> throttle.tempState;
+			tempState {
+				zoom -> throttle;
+			}
+		}
+      }
+      terminal{}
+	}
+}

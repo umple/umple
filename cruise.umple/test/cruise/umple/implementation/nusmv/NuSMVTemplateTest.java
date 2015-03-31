@@ -41,6 +41,25 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/BigStateMachineWithNakedTransition.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/myTemporaryTest.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/FurnaceControlSystem.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/AdaptiveCruiseControlSystem.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/AdaptiveCruiseControlWithTerminalState.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/AbstractConcurrentSystem.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/MultiLevelStateMachineExample.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/MultiLevelStateMachineExampleCase2.smv");
+	  }
+	
+	  @Test //@Ignore
+	  public void MultiLevelStateMachineExample()
+	  {
+		assertUmpleTemplateFor("nusmv/MultiLevelStateMachineExample.ump","nusmv/MultiLevelStateMachineExample.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/MultiLevelStateMachineExample.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void MultiLevelStateMachineExampleCase2()
+	  {
+		assertUmpleTemplateFor("nusmv/MultiLevelStateMachineExampleCase2.ump","nusmv/MultiLevelStateMachineExampleCase2.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/MultiLevelStateMachineExampleCase2.smv")).exists());
 	  }
 	  
 	  @Test @Ignore
@@ -62,6 +81,13 @@ public class NuSMVTemplateTest extends TemplateTest{
 	  {
 		assertUmpleTemplateFor("nusmv/ExampleFile1.ump","nusmv/ExampleFile1.nusmv.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/ExampleFile1.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void AdaptiveCruiseControlWithTerminalState()
+	  {
+		assertUmpleTemplateFor("nusmv/AdaptiveCruiseControlWithTerminalState.ump","nusmv/AdaptiveCruiseControlWithTerminalState.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/AdaptiveCruiseControlWithTerminalState.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore
@@ -111,6 +137,20 @@ public class NuSMVTemplateTest extends TemplateTest{
 	  {
 		assertUmpleTemplateFor("nusmv/FurnaceControlSystem.ump","nusmv/FurnaceControlSystem.nusmv.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/FurnaceControlSystem.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void AdaptiveCruiseControlSystem()
+	  {
+		assertUmpleTemplateFor("nusmv/AdaptiveCruiseControlSystem.ump","nusmv/AdaptiveCruiseControlSystem.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/AdaptiveCruiseControlSystem.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void AbstractConcurrentSystem()
+	  {
+		assertUmpleTemplateFor("nusmv/AbstractConcurrentSystem.ump","nusmv/AbstractConcurrentSystem.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/AbstractConcurrentSystem.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore

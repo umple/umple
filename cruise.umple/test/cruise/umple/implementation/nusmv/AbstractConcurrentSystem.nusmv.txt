@@ -1,0 +1,83 @@
+-- This file is generated from AbstractConcurrentSystem.ump --
+
+MODULE State_Handle
+  
+  VAR 
+    event : { e5 , e1 , e4 , e2 , e3 };  
+    
+  
+MODULE State( stateState11 , stateState11State11 , stateState12 , stateState12State12 , handle )
+  
+  VAR 
+    state_state : { state_state1 , state_state2 };  
+    
+  ASSIGN
+    init(state_state) := state_state1;  
+  
+  TRANS
+    ( (state_state = state_state1) -> ( next(stateState11.stateState11_state) = stateState11_state11 & next(stateState12.stateState12_state) = stateState12_state12) ) &
+    ( (state_state = state_state2) -> ( next(state_state) = state_state) )
+  
+MODULE StateState11( state , stateState11State11 , stateState12 , stateState12State12 , handle )
+  
+  VAR 
+    stateState11_state : { stateState11_state11 , null };  
+    
+  ASSIGN
+    init(stateState11_state) := null;  
+  
+  TRANS
+    ( (stateState11_state = stateState11_state11) -> ( next(stateState11State11.stateState11State11_state) = stateState11State11_state111) )
+  
+MODULE StateState11State11( state , stateState11 , stateState12 , stateState12State12 , handle )
+  
+  VAR 
+    stateState11State11_state : { stateState11State11_state111 , stateState11State11_state112 , null };  
+    
+  ASSIGN
+    init(stateState11State11_state) := null;  
+  
+  TRANS
+    ( (stateState11State11_state = stateState11State11_state111) -> (
+      (handle.event = e1 & next(stateState11State11_state) = stateState11State11_state112)  |
+      (handle.event = e5 & next(state.state_state) = state_state2 & next(stateState11.stateState11_state) = null & next(stateState11State11_state) = null)  ) ) &
+    ( (stateState11State11_state = stateState11State11_state112) -> (
+      (handle.event = e4 & next(stateState11State11_state) = stateState11State11_state111)  |
+      (handle.event = e5 & next(state.state_state) = state_state2 & next(stateState11.stateState11_state) = null & next(stateState11State11_state) = null)  ) )
+  
+MODULE StateState12( state , stateState11 , stateState11State11 , stateState12State12 , handle )
+  
+  VAR 
+    stateState12_state : { stateState12_state12 , null };  
+    
+  ASSIGN
+    init(stateState12_state) := null;  
+  
+  TRANS
+    ( (stateState12_state = stateState12_state12) -> ( next(stateState12State12.stateState12State12_state) = stateState12State12_state121) )
+  
+MODULE StateState12State12( state , stateState11 , stateState11State11 , stateState12 , handle )
+  
+  VAR 
+    stateState12State12_state : { stateState12State12_state121 , stateState12State12_state122 , null };  
+    
+  ASSIGN
+    init(stateState12State12_state) := null;  
+  
+  TRANS
+    ( (stateState12State12_state = stateState12State12_state121) -> (
+      (handle.event = e2 & next(stateState12State12_state) = stateState12State12_state122)  |
+      (handle.event = e5 & next(state.state_state) = state_state2 & next(stateState12.stateState12_state) = null & next(stateState12State12_state) = null)  ) ) &
+    ( (stateState12State12_state = stateState12State12_state122) -> (
+      (handle.event = e3 & next(stateState12State12_state) = stateState12State12_state121)  |
+      (handle.event = e5 & next(state.state_state) = state_state2 & next(stateState12.stateState12_state) = null & next(stateState12State12_state) = null)  ) )
+  
+MODULE main
+  
+  VAR 
+    handle : State_Handle;
+    state : State( stateState11 , stateState11State11 , stateState12 , stateState12State12 , handle );
+    stateState11 : StateState11( state , stateState11State11 , stateState12 , stateState12State12 , handle );
+    stateState11State11 : StateState11State11( state , stateState11 , stateState12 , stateState12State12 , handle );
+    stateState12 : StateState12( state , stateState11 , stateState11State11 , stateState12State12 , handle );
+    stateState12State12 : StateState12State12( state , stateState11 , stateState11State11 , stateState12 , handle ); 

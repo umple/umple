@@ -83,11 +83,11 @@ MODULE SmChronometer( sm , smRegular , smRegularUpdate , smChronometerChronoNorm
   TRANS
     ( (smChronometer_state = smChronometer_lapRunning) -> (
       (handle.event = s1 & next(smChronometer_state) = smChronometer_lapPaused)  |
-      (handle.event = s2 & next(smChronometerChronoNormal.smChronometerChronoNormal_state) = smChronometerChronoNormal_running & next(smChronometer_state) = null)  |
+      (handle.event = s2 & next(smChronometerChronoNormal.smChronometerChronoNormal_state) = smChronometerChronoNormal_running)  |
       (handle.event = s3 & next(smRegular.smRegular_state) = smRegular_time & next(smChronometer_state) = null)  ) ) &
     ( (smChronometer_state = smChronometer_lapPaused) -> (
       (handle.event = s1 & next(smChronometer_state) = smChronometer_lapRunning)  |
-      (handle.event = s2 & next(smChronometerChronoNormal.smChronometerChronoNormal_state) = smChronometerChronoNormal_paused & next(smChronometer_state) = null)  |
+      (handle.event = s2 & next(smChronometerChronoNormal.smChronometerChronoNormal_state) = smChronometerChronoNormal_paused)  |
       (handle.event = s3 & next(smRegular.smRegular_state) = smRegular_time & next(smChronometer_state) = null)  ) ) &
     ( (smChronometer_state = smChronometer_chronoNormal) -> ( next(smChronometerChronoNormal.smChronometerChronoNormal_state) = smChronometerChronoNormal_paused) )
   
@@ -103,11 +103,11 @@ MODULE SmChronometerChronoNormal( sm , smRegular , smRegularUpdate , smChronomet
     ( (smChronometerChronoNormal_state = smChronometerChronoNormal_paused) -> (
       (handle.event = s1 & next(smChronometerChronoNormal_state) = smChronometerChronoNormal_running)  |
       (handle.event = s2 & next(smChronometerChronoNormal_state) = smChronometerChronoNormal_paused)  |
-      (handle.event = s3 & next(smRegular.smRegular_state) = smRegular_time & next(smChronometerChronoNormal_state) = null)  ) ) &
+      (handle.event = s3 & next(smRegular.smRegular_state) = smRegular_time & next(smChronometer.smChronometer_state) = null & next(smChronometerChronoNormal_state) = null)  ) ) &
     ( (smChronometerChronoNormal_state = smChronometerChronoNormal_running) -> (
       (handle.event = s1 & next(smChronometerChronoNormal_state) = smChronometerChronoNormal_paused)  |
       (handle.event = s2 & next(smChronometer.smChronometer_state) = smChronometer_lapRunning & next(smChronometerChronoNormal_state) = null)  |
-      (handle.event = s3 & next(smRegular.smRegular_state) = smRegular_time & next(smChronometerChronoNormal_state) = null)  ) )
+      (handle.event = s3 & next(smRegular.smRegular_state) = smRegular_time & next(smChronometer.smChronometer_state) = null & next(smChronometerChronoNormal_state) = null)  ) )
   
 MODULE SmAlarmStatus( sm , smRegular , smRegularUpdate , smChronometer , smChronometerChronoNormal , smAlarmUpdate , smAlarmUpdateHourMinuteUpdate , handle )
   
@@ -141,8 +141,8 @@ MODULE SmAlarmUpdate( sm , smRegular , smRegularUpdate , smChronometer , smChron
   
   TRANS
     ( (smAlarmUpdate_state = smAlarmUpdate_alarmTime) -> (
-      (handle.event = s1 & next(smAlarmUpdateHourMinuteUpdate.smAlarmUpdateHourMinuteUpdate_state) = smAlarmUpdateHourMinuteUpdate_alarmMinute & next(smAlarmUpdate_state) = null)  |
-      (handle.event = s2 & next(smAlarmUpdateHourMinuteUpdate.smAlarmUpdateHourMinuteUpdate_state) = smAlarmUpdateHourMinuteUpdate_alarmHour & next(smAlarmUpdate_state) = null)  |
+      (handle.event = s1 & next(smAlarmUpdateHourMinuteUpdate.smAlarmUpdateHourMinuteUpdate_state) = smAlarmUpdateHourMinuteUpdate_alarmMinute)  |
+      (handle.event = s2 & next(smAlarmUpdateHourMinuteUpdate.smAlarmUpdateHourMinuteUpdate_state) = smAlarmUpdateHourMinuteUpdate_alarmHour)  |
       (handle.event = s3 & next(smRegularUpdate.smRegularUpdate_state) = smRegularUpdate_second & next(smAlarmUpdate_state) = null)  ) ) &
     ( (smAlarmUpdate_state = smAlarmUpdate_hourMinuteUpdate) -> ( next(smAlarmUpdateHourMinuteUpdate.smAlarmUpdateHourMinuteUpdate_state) = smAlarmUpdateHourMinuteUpdate_alarmHour) )
   
@@ -158,11 +158,11 @@ MODULE SmAlarmUpdateHourMinuteUpdate( sm , smRegular , smRegularUpdate , smChron
     ( (smAlarmUpdateHourMinuteUpdate_state = smAlarmUpdateHourMinuteUpdate_alarmHour) -> (
       (handle.event = s1 & next(smAlarmUpdateHourMinuteUpdate_state) = smAlarmUpdateHourMinuteUpdate_alarmMinute)  |
       (handle.event = s2 & next(smAlarmUpdateHourMinuteUpdate_state) = smAlarmUpdateHourMinuteUpdate_alarmHour)  |
-      (handle.event = s3 & next(smRegularUpdate.smRegularUpdate_state) = smRegularUpdate_second & next(smAlarmUpdateHourMinuteUpdate_state) = null)  ) ) &
+      (handle.event = s3 & next(smRegularUpdate.smRegularUpdate_state) = smRegularUpdate_second & next(smAlarmUpdate.smAlarmUpdate_state) = null & next(smAlarmUpdateHourMinuteUpdate_state) = null)  ) ) &
     ( (smAlarmUpdateHourMinuteUpdate_state = smAlarmUpdateHourMinuteUpdate_alarmMinute) -> (
       (handle.event = s1 & next(smAlarmUpdateHourMinuteUpdate_state) = smAlarmUpdateHourMinuteUpdate_alarmHour)  |
       (handle.event = s2 & next(smAlarmUpdateHourMinuteUpdate_state) = smAlarmUpdateHourMinuteUpdate_alarmMinute)  |
-      (handle.event = s3 & next(smRegularUpdate.smRegularUpdate_state) = smRegularUpdate_second & next(smAlarmUpdateHourMinuteUpdate_state) = null)  ) )
+      (handle.event = s3 & next(smRegularUpdate.smRegularUpdate_state) = smRegularUpdate_second & next(smAlarmUpdate.smAlarmUpdate_state) = null & next(smAlarmUpdateHourMinuteUpdate_state) = null)  ) )
   
 MODULE main
   
