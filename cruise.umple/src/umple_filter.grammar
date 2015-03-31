@@ -2,15 +2,20 @@
 // This file is made available subject to the open source license found at:
 // [*http://umple.org/license*]
 
-filter : filter ( [filterName] )? { ([[filterStatement]];)? }
+filter : filter ( [filterName] )? { ([[filterStatement]])* }
+
+filterStatement- : [[filterCombinedValue]] | [[filterNamespace]] | [[filterValue]] | [[hops]]
+
+hops- : hops {([[super]] | [[sub]] | [[association]])*}
  
+filterValue : include ([classname])? ( , [classname] )*;
 
-filterStatement- : [[filterValue]]|[[filterCombinedValue]]|[[filterNamespace]]
- 
+super : super [superNum];
 
-filterValue : (!)? (related [!number:[0-9]+([\\.][0-9]+)?]?)? ([classname])? ( , [classname] )*
- 
+sub : sub [subNum];
 
-filterCombinedValue : include [filterName] (, [filterName])*
+association : association [associationNum];
 
-filterNamespace : namespace [Namespace] (, [Namespace])*  
+filterCombinedValue : filter ([filterName])? (, [filterName])*;
+
+filterNamespace : namespace [Namespace] (, [Namespace])* ;

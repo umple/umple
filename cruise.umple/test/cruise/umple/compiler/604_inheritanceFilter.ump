@@ -1,0 +1,6 @@
+class X { isA Y; }
+class Y { isA Z; }
+class Z { isA P; }
+class P { isA Q; }
+class Q { }
+class A { 1 -- 1 Y;}

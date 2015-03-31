@@ -18,5 +18,5 @@ class Mentor
 
 filter
 {
-  Student;
+  include Student;
 }

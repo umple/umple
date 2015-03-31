@@ -31,27 +31,78 @@ class UmpleInternalParser
     {
       if(token.is("filter"))
       {
-        String name = token.getValue("name");
+        String name = token.getValue("filtername");
         Filter f = new Filter(name);
-        for(int i=0; i<token.numberOfSubTokens(); i++)
+        for(Token t : token.getSubTokens())
         {
-          if(token.getSubToken(i).getValue()!=null)
+          if(t.is("super"))
           {
-            Token nt = token.getSubToken(i);
-            for(int j=0; j<nt.numberOfSubTokens();j++)
-              {
-                if(nt.getSubToken(j).getValue("classname")!=null)
-                  {
-                    // TODO, the filter should have direct *->* connections to classes, not
-                    // simply their names
-                    String aValue = nt.getSubToken(j).getValue("classname");
-                    f.addValue(aValue);
-                  }
-              }
-
+            addSuperValue(f,t);
+          }
+          if(t.is("sub"))
+          {
+            addSubValue(f,t);
+          }
+          if(t.is("association"))
+          {
+            addAssociationValue(f,t);
+          }
+          if(t.is("filterValue"))
+          {
+            addClassValue(f,t);
           }
         }
         model.setFilter(f);
+      }
+    }
+  }
+
+  private void addSuperValue(Filter f, Token t)
+  {
+    for(Token nt : t.getSubTokens())
+    {
+      if("superNum".equals(nt.getName()))
+      {
+        int superNum = Integer.parseInt(nt.getValue("superNum"));
+        f.setSuperCount(superNum);
+      }
+    }
+  }
+
+  private void addSubValue(Filter f, Token t)
+  {
+    for(Token nt : t.getSubTokens())
+    {
+      if("subNum".equals(nt.getName()))
+      {
+        int subNum = Integer.parseInt(nt.getValue("subNum"));
+        f.setSubCount(subNum);
+      }
+    }
+  }
+
+  private void addAssociationValue(Filter f, Token t)
+  {
+    for(Token nt : t.getSubTokens())
+    {
+      if("associationNum".equals(nt.getName()))
+      {
+        int associationNum = Integer.parseInt(nt.getValue("associationNum"));
+        f.setAssociationCount(associationNum);
+      }
+    }
+  }
+
+  private void addClassValue(Filter f, Token t)
+  {
+    for(Token nt : t.getSubTokens())
+    {
+      if(nt.getValue("classname")!=null)
+      {
+        // TODO, the filter should have direct *->* connections to classes, not
+        // simply their names
+        String aValue = nt.getValue("classname");
+        f.addValue(aValue);
       }
     }
   }

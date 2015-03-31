@@ -14,5 +14,5 @@ class School
 }
 
 filter X  {
-  Student, Mentor;
+  include Student, Mentor;
 }

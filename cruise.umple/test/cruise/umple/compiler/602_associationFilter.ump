@@ -1,18 +1,5 @@
-class Student
-{
-  0..1 -- 0..1 Mentor;
-}
-
-class Mentor
-{
-}
-
-class School
-{
-  * -> * Mentor;
-  * -> * Student;
-}
-
-filter X  {
-  Student,Mentor;
-}
+class X { * -- * Y; }
+class Y { * -- * Z; }
+class Z { * -- * P; }
+class P { * -- * Q; }
+class Q { }

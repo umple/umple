@@ -444,26 +444,145 @@ class UmpleModel
   public void applyFilter()
   {
     Filter f = getFilter();
+
     if (f == null)
     {
       return;
     }
+
     if(f.isEmpty())
     {
       return;
     }
+
+    for(UmpleClass clazz : umpleClasses)
+    {
+      if(f.isIncluded(clazz))
+      {
+        clazz.setFilteredin(true);
+        if(f.hasSub())
+        {
+          addSubClasses(f.getSubCount(),clazz);
+        }
+        if(f.hasSuper())
+        {
+          addSuperClasses(f.getSuperCount(), clazz);
+        }
+      }  
+    }
+
+    if(f.hasAssociation())
+    {
+      markRelatedClass(f.getAssociationCount());
+    }
+
+    if(!f.hasSuper())
+    {
+      for(UmpleClass clazz : umpleClasses)
+      {
+        if(clazz.getFilteredin())
+        {
+          addSuperClasses(clazz);
+        }
+      }
+    }
+
+    filterOutClasses();
+
+  }
+
+  private void filterOutClasses()
+  {
     int maxIndex = umpleClasses.size() - 1;
-    for(int i=maxIndex; i>=0;i--)
+    for(int i=maxIndex; i>=0; i--)
     {
       UmpleClass clazz = umpleClasses.get(i);
-      if (!f.isIncluded(clazz))
+      if (!clazz.getFilteredin())
       {
-        for(int j=0; j<clazz.getAssociations().length;j++)
+        for(Association a : clazz.getAssociations())
         {
-          associations.remove(clazz.getAssociation(j));
-        }
+          associations.remove(a);
+        }  
         removeUmpleClass(clazz);
       }
+    }
+  }
+
+  private void markRelatedClass(int asso)
+  {
+    ArrayList<String> names = new ArrayList<String>();
+    for(int i = 0; i<asso; i++)
+    {
+      for(UmpleClass clazz : umpleClasses)
+      {
+        if(clazz.getFilteredin())
+        {
+          addRelatedClassName(clazz,names);
+        }
+      } 
+      markClassByName(names);
+      names = new ArrayList<String>();
+    }
+  }
+
+  private void addRelatedClassName(UmpleClass c, ArrayList<String> names)
+  {
+    for(AssociationVariable a : c.getAssociationVariables())
+    {
+      names.add(a.getType());
+    }  
+  }
+
+  private void markClassByName(ArrayList<String> names)
+  {
+    for(UmpleClass c : umpleClasses)
+    {
+      if(names.indexOf(c.getName())>=0)
+      {
+        c.setFilteredin(true);
+      }
+    }
+  }
+
+  private void addSuperClasses(int sup, UmpleClass c)
+  {
+    if(sup==0 || c.getExtendsClass()==null)
+    {
+      return;
+    }
+    else
+    {
+      c.getExtendsClass().setFilteredin(true);
+      addSuperClasses(sup-1, c.getExtendsClass());
+    }
+  }
+   
+  private void addSuperClasses(UmpleClass c)
+  {
+    if(c.getExtendsClass()==null)
+    {
+      return;
+    }
+    else
+    {
+      c.getExtendsClass().setFilteredin(true);
+      addSuperClasses(c.getExtendsClass());
+    }
+  }
+
+  private void addSubClasses(int sub, UmpleClass c)
+  {
+    if(sub==0)
+    {
+      return;
+    }
+    else
+    {
+      for(UmpleClass s : c.getSubclasses())
+      {
+        s.setFilteredin(true);
+        addSubClasses(sub-1,s);
+      } 
     }
   }
 }
@@ -3747,6 +3866,21 @@ class ModelConstraintAttributeFromClass
 
 class Filter
 {
+  public boolean hasAssociation()
+  {
+    return getAssociationCount()>0;
+  }
+
+  public boolean hasSub()
+  {
+    return getSubCount()>0;
+  }
+  
+  public boolean hasSuper()
+  {
+    return getSuperCount()>=0;
+  }
+
   public boolean isEmpty()
   {
     

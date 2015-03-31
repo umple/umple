@@ -9,9 +9,6 @@
 
 package cruise.umple.compiler;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.*;
 
@@ -32,7 +29,7 @@ public class UmpleParserFilterTest
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler");
   }
 
-  //@Test
+  @Test
   public void emptyFilter()
   {
 	  assertParse("600_emptyFilter.ump", "[filter]");
@@ -42,10 +39,20 @@ public class UmpleParserFilterTest
   @Test
   public void simpleFilter()
   {
-	  assertParse("601_simpleFilter.ump","[classDefinition][name:School][attribute][name:name][classDefinition][name:Student][classDefinition][name:Mentor][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Student][filter][filterName:Roles][filterValue][classname:Student][classname:Mentor]");
+	  assertParse("601_simpleFilter.ump","[classDefinition][name:School][attribute][name:name][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Mentor][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Student][classDefinition][name:Student][classDefinition][name:Mentor][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Student][filter][filterName:Roles][filterValue][classname:Student][classname:Mentor]");
 	  Assert.assertNotNull(model.getFilter());
 	  String actuals[] = {"Student", "Mentor"};
 	  Assert.assertArrayEquals(model.getFilter().getValues(), actuals);
+  }
+  
+  @Test
+  public void associationFilter()
+  {
+    assertParse("605_fullFilter.ump","[classDefinition][name:School][attribute][name:name][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Mentor][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Student][classDefinition][name:Student][classDefinition][name:Mentor][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Student][filter][filterName:Roles][super][superNum:2][sub][subNum:2][association][associationNum:2][filterValue][classname:Student][classname:Mentor]");
+    Assert.assertNotNull(model.getFilter());
+    Assert.assertEquals(model.getFilter().getSuperCount(), 2);
+    Assert.assertEquals(model.getFilter().getSubCount(), 2);
+    Assert.assertEquals(model.getFilter().getAssociationCount(), 2);
   }
 
   private void assertParse(String filename, String expectedOutput)

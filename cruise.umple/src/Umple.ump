@@ -92,6 +92,9 @@ class UmpleModel
 class Filter
 {
   name;
+  Integer superCount = -1;
+  Integer subCount = 0;
+  Integer associationCount = -1;
   String[] values;
 }
 
@@ -488,6 +491,9 @@ class UmpleClass
   depend cruise.umple.util.*;
 
   isA UmpleClassifier;
+
+  // Specifies whether or not in the filter
+  Boolean filteredin = false;
 
   // Specifies whether or not the Umple class is an abstract class.
   Boolean isAbstract = false;
