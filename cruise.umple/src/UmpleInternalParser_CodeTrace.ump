@@ -54,7 +54,7 @@ class UmpleInternalParser
         		tracer.setLogConfiguration(log);
         	}
         	else
-        		tracer.addArgument(subToken.getValue());
+        		tracer.addTracerArgument(new TracerArgument(subToken.getValue()));
         }
         else if(subToken.is("traceMsgHeader"))
         {
@@ -67,7 +67,7 @@ class UmpleInternalParser
         				tms.setOff(true);
         		
         		if(msgToken.is("option"))
-        			tms.addOption(msgToken.getValue());
+        			tms.addOption(new MessageComponent(msgToken.getValue()));
         	}
         	tracer.setTraceMessageSwitch(tms);
         }

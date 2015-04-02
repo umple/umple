@@ -149,8 +149,8 @@ public class UmpleParserTracerTest
 	  
 	  TraceMessageSwitch tms = model.getTracer().getTraceMessageSwitch();
 	  Assert.assertEquals(true,tms.getOn());
-	  Assert.assertEquals("Time",tms.getOption(0));
-	  Assert.assertEquals("Thread",tms.getOption(1));
+	  Assert.assertEquals("Time",tms.getOption(0).getComponent());
+	  Assert.assertEquals("Thread",tms.getOption(1).getComponent());
   }
   
   @Test
@@ -162,7 +162,7 @@ public class UmpleParserTracerTest
 	  
 	  TraceMessageSwitch tms = model.getTracer().getTraceMessageSwitch();
 	  Assert.assertEquals(true,tms.getOff());
-	  Assert.assertEquals("Object",tms.getOption(0));
+	  Assert.assertEquals("Object",tms.getOption(0).getComponent());
   }
   
   @Test

@@ -34,17 +34,28 @@ class UmpleClass
 class Tracer
 {
   String name;
-  String[] argument;
   Boolean verbosity = false;
+  
+  1 -> * TracerArgument;
   1 -- 0..1 TraceMessageSwitch;
   1 -- 0..1 LogConfiguration;
+}
+
+class TracerArgument
+{
+	String argument;
 }
 
 class TraceMessageSwitch
 {
 	boolean on = false;
 	boolean off = false;
-	String[] option;
+	1 -> * MessageComponent option;
+}
+
+class MessageComponent
+{
+	String component;
 }
 
 class LogConfiguration

@@ -72,9 +72,9 @@ private static void postpareTrace(UmpleModel aModel)
         if(generateFile)
         {
           generateFile=false;          
-          if(model.getTracer().numberOfArgument()>0)
+          if(model.getTracer().numberOfTracerArguments()>0)
           {
-            templateLookups.put("filename","\""+td.getTracer().getArgument(0)+"\"");
+            templateLookups.put("filename","\""+td.getTracer().getTracerArgument(0).getArgument()+"\"");
           }
           else
           {
