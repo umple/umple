@@ -57,6 +57,7 @@ function generateMenu($buttonSuffix)
             <option value=\"stateDiagram:stateDiagram\">State Diagram (GraphViz SVG)</option>
             <option value=\"entityRelationship:entityRelationshipDiagram\">Entity Relationship Diagram (GraphViz SVG)</option>
             <option id=\"genstatetables\" value=\"html:StateTables\">State Tables</option>
+            <option id=\"geneventsequence\" value=\"html:EventSequence\">Event Sequence</option>
             <option value=\"structureDiagram:StructureDiagram\">Structure Diagram</option>
             <option value=\"java:Json\">Json</option>
             <option id=\"gensql\" value=\"sql:Sql\">Sql</option>
