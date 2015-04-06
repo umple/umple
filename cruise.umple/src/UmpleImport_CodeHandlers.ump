@@ -14,52 +14,52 @@ namespace cruise.umple.compiler;
 class UmpleImportHandler
 {
     abstract;
-    	
-	UmpleImportModel model = new UmpleImportModel("");
-	internal Optional<Exception> parseException = Optional.empty();
-	    
-	public UmpleImportModel readDataFromXML(String filename) throws IOException, ParserConfigurationException {
-		/* TODO why was this commented?
-		if(!UmpleEcoreValidator.getInstance().validate(Paths.get(filename))){
-      		System.err.println("Ecore model used is not valid");
-    	}
-    	*/
+      
+  UmpleImportModel model = new UmpleImportModel("");
+  internal Optional<Exception> parseException = Optional.empty();
+      
+  public UmpleImportModel readDataFromXML(String filename) throws IOException, ParserConfigurationException {
+    /* TODO why was this commented?
+    if(!UmpleEcoreValidator.getInstance().validate(Paths.get(filename))){
+          System.err.println("Ecore model used is not valid");
+      }
+      */
 
-    	try (FileInputStream fis = new FileInputStream(filename)) {
-    		return readDataFromXML(fis);
-    	}
-	}
-	
-	/**
-	 * Read an {@link UmpleImportModel} from the input stream. 
-	 * @param input Stream to read from, it is the callers responsibility to close it. 
-	 * @throws IOException Thrown from {@link SAXParser#parse(InputStream, DefaultHandler)}
-	 * @throws ParserConfigurationException Thrown from {@link SAXParserFactory#newSAXParser()}
-	 */
-	public UmpleImportModel readDataFromXML(InputStream input) throws IOException, ParserConfigurationException {
-		if (input == null) {
-			throw new NullPointerException("Input stream was null.");
-		}
+      try (FileInputStream fis = new FileInputStream(filename)) {
+        return readDataFromXML(fis);
+      }
+  }
+  
+  /**
+   * Read an {@link UmpleImportModel} from the input stream. 
+   * @param input Stream to read from, it is the callers responsibility to close it. 
+   * @throws IOException Thrown from {@link SAXParser#parse(InputStream, DefaultHandler)}
+   * @throws ParserConfigurationException Thrown from {@link SAXParserFactory#newSAXParser()}
+   */
+  public UmpleImportModel readDataFromXML(InputStream input) throws IOException, ParserConfigurationException {
+    if (input == null) {
+      throw new NullPointerException("Input stream was null.");
+    }
 
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setNamespaceAware(true);
-		try {
-			SAXParser parser = factory.newSAXParser();
-			parser.parse(input, this);
-		} catch (Exception e) {
-			this.parseException = Optional.of(e);
-		}
+    SAXParserFactory factory = SAXParserFactory.newInstance();
+    factory.setNamespaceAware(true);
+    try {
+      SAXParser parser = factory.newSAXParser();
+      parser.parse(input, this);
+    } catch (Exception e) {
+      this.parseException = Optional.of(e);
+    }
 
-		return model;
-	}
+    return model;
+  }
 
-	Optional<Exception> getParseException() {
-		return parseException;
-	}
+  Optional<Exception> getParseException() {
+    return parseException;
+  }
 
-	Boolean isSuccessful() {
-		return !parseException.isPresent();
-	}
+  Boolean isSuccessful() {
+    return !parseException.isPresent();
+  }
 }
 
 class EcoreImportHandler
@@ -67,135 +67,135 @@ class EcoreImportHandler
     internal currentElement = "";
     internal UmpleImportClass currentClass = null;
 
-	public void startDocument() throws SAXException {
-	    setModel(new UmpleImportModel(""));
-	}
+  public void startDocument() throws SAXException {
+      setModel(new UmpleImportModel(""));
+  }
 
-	public void endDocument() throws SAXException {
-		// System.out.println("end document");
-	}
+  public void endDocument() throws SAXException {
+    // System.out.println("end document");
+  }
 
-	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-		currentElement = localName;
-		UmpleImportModel model = getModel();		
-		//load package object
-		if (currentElement.equals("EPackage")) {
-			UmpleImportPackage umplePackage = new UmpleImportPackage(UmpleImportConstants.ECORE_PACKAGE, "");
-			String nameSpace = attributes.getValue(UmpleImportConstants.XMI_PACKAGENAME);
-			
-			// If no attribute "nsURI", use attribute "name" instead
-			if (nameSpace == null || nameSpace.isEmpty()) {
-				nameSpace = attributes.getValue(UmpleImportConstants.XMI_NAME);
-			}
-			
-			if (nameSpace != null && !nameSpace.isEmpty()) {
-				umplePackage.setName(nameSpace);
-				model.addUmpleImportElement(umplePackage);
-			}
-		} 
-		//load class/interface/dataType object
-		else if (currentElement.equals("eClassifiers")) {
-			String attrType = attributes.getValue(UmpleImportConstants.XMI_TYPE);
-			boolean checkIsClass = attrType.equals(UmpleImportConstants.ECORE_CLASS);
-			boolean checkIsDataType = attrType.equals(UmpleImportConstants.ECORE_DATATYPE);
-			boolean checkDataTypeIsExtraClass = false;
-			if (checkIsDataType){
-				String dataTypeName = attributes.getValue(UmpleImportConstants.XMI_NAME);
-				//exclude umple default date and time dataType
-				boolean checkIsDate = dataTypeName.equals("Date");
-				boolean checkIsTime = dataTypeName.equals("Time");
-				checkDataTypeIsExtraClass = !(checkIsDate||checkIsTime);
-			}
-			if (checkIsClass || checkDataTypeIsExtraClass) {
-				boolean isInterface = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_INTERFACE));
-				boolean isAbstract = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_ABSTRACT));
-				String currentPackageName = model.getCurrentPackageName();
-				String className = attributes.getValue(UmpleImportConstants.XMI_NAME);
-				UmpleImportClass umpleClass = new UmpleImportClass(UmpleImportConstants.ECORE_CLASS, className, currentPackageName, isAbstract, isInterface);
-	            currentClass = umpleClass;
-	            
-				// note that it's possible that a class can have multiple interfaces
-				String superType = attributes.getValue(UmpleImportConstants.XMI_SUPERTYPE);
-				if (superType != null) 
-					umpleClass.addSuperType(parseRawTypes(superType));
-				model.addUmpleImportElement(umpleClass);
-			}
-		} 
-		//load class attributes and associations
-		else if (currentElement.equals("eStructuralFeatures")) {
-			String attrType = attributes.getValue(UmpleImportConstants.XMI_TYPE);
-			boolean checkIsAttribute = attrType.equals(UmpleImportConstants.ECORE_ATTRIBUTE);
-			boolean checkIsReference = attrType.equals(UmpleImportConstants.ECORE_REFERENCE);
-			String attrName = attributes.getValue(UmpleImportConstants.XMI_NAME);
-			String classAttrTypeRaw = attributes.getValue(UmpleImportConstants.ECORE_TYPE);
-			String classAttrType=parseRawTypes(classAttrTypeRaw);
-			String currentClassName = currentClass.getName();
-			if(checkIsAttribute)
-			{				
-				UmpleImportAttribute umpleAttribute = new UmpleImportAttribute(UmpleImportConstants.ECORE_ATTRIBUTE, attrName, currentClassName, classAttrType);
-				String attrUpper = attributes.getValue(UmpleImportConstants.XMI_UPPER);
-				if(attrUpper!=null)
-					umpleAttribute.setUpperBound(Integer.parseInt(attrUpper));
-				currentClass.addUmpleImportAttribute(umpleAttribute);
-			}
-			if(checkIsReference)
-			{
-				String endClassName = null;
-				String endClassNameRaw = attributes.getValue("eOpposite");
-				
-				String lower = attributes.getValue("lowerBound");
-				String upper = attributes.getValue("upperBound");
-				int lowerBound = (lower != null)? Integer.parseInt(lower):0;
-				int upperBound = (upper != null)? Integer.parseInt(upper):-1;
-				
-				if(endClassNameRaw!=null)
-					endClassName = endClassNameRaw.split(classAttrTypeRaw+"/")[1];
-				UmpleImportAssociation umpleAssociation = new UmpleImportAssociation(UmpleImportConstants.ECORE_REFERENCE, attrName, currentClassName, classAttrType, endClassName);
-				umpleAssociation.setLowerBound(lowerBound);
-				umpleAssociation.setUpperBound(upperBound);
-				UmpleImportAssociation oppoEnd = model.checkIfOppositeExist(umpleAssociation);
-				if(oppoEnd==null)
-					currentClass.addUmpleImportAssociation(umpleAssociation);
-			}
-		}
-	}
-	
-	public void endElement(String uri, String localName, String qName) throws SAXException {
-	    // reset internal values for next round of parsing
-	    boolean checkIsClassifiers = currentElement.equals(currentElement.equals("eClassifiers"));
-		if (checkIsClassifiers && currentClass != null)
-			currentClass = null;
-		currentElement = "";
-	}
+  public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    currentElement = localName;
+    UmpleImportModel model = getModel();    
+    //load package object
+    if (currentElement.equals("EPackage")) {
+      UmpleImportPackage umplePackage = new UmpleImportPackage(UmpleImportConstants.ECORE_PACKAGE, "");
+      String nameSpace = attributes.getValue(UmpleImportConstants.XMI_PACKAGENAME);
+      
+      // If no attribute "nsURI", use attribute "name" instead
+      if (nameSpace == null || nameSpace.isEmpty()) {
+        nameSpace = attributes.getValue(UmpleImportConstants.XMI_NAME);
+      }
+      
+      if (nameSpace != null && !nameSpace.isEmpty()) {
+        umplePackage.setName(nameSpace);
+        model.addUmpleImportElement(umplePackage);
+      }
+    } 
+    //load class/interface/dataType object
+    else if (currentElement.equals("eClassifiers")) {
+      String attrType = attributes.getValue(UmpleImportConstants.XMI_TYPE);
+      boolean checkIsClass = attrType.equals(UmpleImportConstants.ECORE_CLASS);
+      boolean checkIsDataType = attrType.equals(UmpleImportConstants.ECORE_DATATYPE);
+      boolean checkDataTypeIsExtraClass = false;
+      if (checkIsDataType){
+        String dataTypeName = attributes.getValue(UmpleImportConstants.XMI_NAME);
+        //exclude umple default date and time dataType
+        boolean checkIsDate = dataTypeName.equals("Date");
+        boolean checkIsTime = dataTypeName.equals("Time");
+        checkDataTypeIsExtraClass = !(checkIsDate||checkIsTime);
+      }
+      if (checkIsClass || checkDataTypeIsExtraClass) {
+        boolean isInterface = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_INTERFACE));
+        boolean isAbstract = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_ABSTRACT));
+        String currentPackageName = model.getCurrentPackageName();
+        String className = attributes.getValue(UmpleImportConstants.XMI_NAME);
+        UmpleImportClass umpleClass = new UmpleImportClass(UmpleImportConstants.ECORE_CLASS, className, currentPackageName, isAbstract, isInterface);
+              currentClass = umpleClass;
+              
+        // note that it's possible that a class can have multiple interfaces
+        String superType = attributes.getValue(UmpleImportConstants.XMI_SUPERTYPE);
+        if (superType != null) 
+          umpleClass.addSuperType(parseRawTypes(superType));
+        model.addUmpleImportElement(umpleClass);
+      }
+    } 
+    //load class attributes and associations
+    else if (currentElement.equals("eStructuralFeatures")) {
+      String attrType = attributes.getValue(UmpleImportConstants.XMI_TYPE);
+      boolean checkIsAttribute = attrType.equals(UmpleImportConstants.ECORE_ATTRIBUTE);
+      boolean checkIsReference = attrType.equals(UmpleImportConstants.ECORE_REFERENCE);
+      String attrName = attributes.getValue(UmpleImportConstants.XMI_NAME);
+      String classAttrTypeRaw = attributes.getValue(UmpleImportConstants.ECORE_TYPE);
+      String classAttrType=parseRawTypes(classAttrTypeRaw);
+      String currentClassName = currentClass.getName();
+      if(checkIsAttribute)
+      {       
+        UmpleImportAttribute umpleAttribute = new UmpleImportAttribute(UmpleImportConstants.ECORE_ATTRIBUTE, attrName, currentClassName, classAttrType);
+        String attrUpper = attributes.getValue(UmpleImportConstants.XMI_UPPER);
+        if(attrUpper!=null)
+          umpleAttribute.setUpperBound(Integer.parseInt(attrUpper));
+        currentClass.addUmpleImportAttribute(umpleAttribute);
+      }
+      if(checkIsReference)
+      {
+        String endClassName = null;
+        String endClassNameRaw = attributes.getValue("eOpposite");
+        
+        String lower = attributes.getValue("lowerBound");
+        String upper = attributes.getValue("upperBound");
+        int lowerBound = (lower != null)? Integer.parseInt(lower):0;
+        int upperBound = (upper != null)? Integer.parseInt(upper):-1;
+        
+        if(endClassNameRaw!=null)
+          endClassName = endClassNameRaw.split(classAttrTypeRaw+"/")[1];
+        UmpleImportAssociation umpleAssociation = new UmpleImportAssociation(UmpleImportConstants.ECORE_REFERENCE, attrName, currentClassName, classAttrType, endClassName);
+        umpleAssociation.setLowerBound(lowerBound);
+        umpleAssociation.setUpperBound(upperBound);
+        UmpleImportAssociation oppoEnd = model.checkIfOppositeExist(umpleAssociation);
+        if(oppoEnd==null)
+          currentClass.addUmpleImportAssociation(umpleAssociation);
+      }
+    }
+  }
+  
+  public void endElement(String uri, String localName, String qName) throws SAXException {
+      // reset internal values for next round of parsing
+      boolean checkIsClassifiers = currentElement.equals(currentElement.equals("eClassifiers"));
+    if (checkIsClassifiers && currentClass != null)
+      currentClass = null;
+    currentElement = "";
+  }
 
-	public void characters(char[] ch, int start, int length) throws SAXException {
-		// System.out.println("characters");
-	}
-		
-	public void warning(SAXParseException e) throws SAXException {
-		System.out.println("Warning: " + e.getMessage());
-	}
+  public void characters(char[] ch, int start, int length) throws SAXException {
+    // System.out.println("characters");
+  }
+    
+  public void warning(SAXParseException e) throws SAXException {
+    System.out.println("Warning: " + e.getMessage());
+  }
 
-	public void error(SAXParseException e) throws SAXException {
-		System.out.println("Error: " + e.getMessage());
-	}
+  public void error(SAXParseException e) throws SAXException {
+    System.out.println("Error: " + e.getMessage());
+  }
 
-	public void fatalError(SAXParseException e) throws SAXException {
-		System.out.println("Fatal Error: " + e.getMessage());
-	}
-	
-	private String parseRawTypes(String rawType) {
-		String type = "";
-		if (rawType.contains("#//"))
-			type = rawType.split("#//")[1];
-		else if (rawType.contains("/0/"))
-			type = rawType.split("/0/")[1];
-		else if (rawType.contains("/1/"))
-			type = rawType.split("/1/")[1];
-		else
-			type = rawType;
-		return type;
-	}
+  public void fatalError(SAXParseException e) throws SAXException {
+    System.out.println("Fatal Error: " + e.getMessage());
+  }
+  
+  private String parseRawTypes(String rawType) {
+    String type = "";
+    if (rawType.contains("#//"))
+      type = rawType.split("#//")[1];
+    else if (rawType.contains("/0/"))
+      type = rawType.split("/0/")[1];
+    else if (rawType.contains("/1/"))
+      type = rawType.split("/1/")[1];
+    else
+      type = rawType;
+    return type;
+  }
 }
 
 class ScxmlImportHandler
@@ -203,6 +203,7 @@ class ScxmlImportHandler
   internal UmpleImportClass currentClass = null;
   internal Stack<ImportStateMachineElement> elemStack = new Stack<ImportStateMachineElement>();
   Integer depth = 0;
+  boolean isInitial = false;
 
   public void startDocument() throws SAXException {
     UmpleImportClass umpleClass = new UmpleImportClass("StateMachine", "StateMachine", "StateMachine", false, false);
@@ -215,9 +216,10 @@ class ScxmlImportHandler
     depth++;
     if("scxml".equals(localName)) {
       String stateMachineName = attributes.getValue("name");
-	    ImportStateMachine stateMachine = new ImportStateMachine("", "", depth, stateMachineName);
-	    currentClass.addImportStateMachine(stateMachine);
-	    elemStack.push(stateMachine);
+      ImportStateMachine stateMachine = new ImportStateMachine("", "", depth, stateMachineName);
+      stateMachine.setInitialState(attributes.getValue("initial"));
+      currentClass.addImportStateMachine(stateMachine);
+      elemStack.push(stateMachine);
     } else if ("state".equals(localName)) {
       String stateId = attributes.getValue("id");
       ImportStateMachineState state = new ImportStateMachineState("", "", depth, stateId);
@@ -229,8 +231,19 @@ class ScxmlImportHandler
       String target = attributes.getValue("target");
 
       ImportTransition transition = new ImportTransition("", "", depth, event, cond, target);
-      elemStack.peek().addImportStateMachineElement(transition);
-      elemStack.push(transition);
+
+      if (isInitial) {
+        if (elemStack.peek() instanceof ImportStateMachine) {
+          ImportStateMachine sm = (ImportStateMachine)elemStack.peek();
+          sm.setInitialState(target);
+        } else if (elemStack.peek() instanceof ImportStateMachineState) { 
+          ImportStateMachineState state = (ImportStateMachineState)elemStack.peek();
+          state.setInitialState(target);
+        }
+      } else {
+        elemStack.peek().addImportStateMachineElement(transition);
+      }
+      elemStack.push(transition);  
     } else if ("onentry".equals(localName)) {
       ImportAction onentry = new ImportAction("", "", depth, "entry");
       elemStack.peek().addImportStateMachineElement(onentry);
@@ -239,6 +252,8 @@ class ScxmlImportHandler
       ImportAction onexit = new ImportAction("", "", depth, "exit");
       elemStack.peek().addImportStateMachineElement(onexit);
       elemStack.push(onexit);
+    } else if ("initial".equals(localName)) {
+      isInitial = true;
     }
   }
 
@@ -255,21 +270,28 @@ class ScxmlImportHandler
 
   public void endElement(String uri, String localName, String qName) throws SAXException {
     depth--;
-    if (!"script".equals(localName)) {
-      elemStack.pop();  
+    if ("script".equals(localName)) {
+      return;
     }
+
+    if ("initial".equals(localName)) {
+      isInitial = false;
+      return;
+    }
+
+    elemStack.pop();
   }
 }
 
 class UmpleImportHandlerFactory {
 
-	public static UmpleImportHandler create(final UmpleImportType type) {
-		if (type == UmpleImportType.ECORE) {
-			return new EcoreImportHandler();
-		} else if (type == UmpleImportType.SCXML) {
-			return new ScxmlImportHandler();
-		} else {
-			throw new IllegalArgumentException("Unknown UmpleImportType: " + type);
-		}
-	}
+  public static UmpleImportHandler create(final UmpleImportType type) {
+    if (type == UmpleImportType.ECORE) {
+      return new EcoreImportHandler();
+    } else if (type == UmpleImportType.SCXML) {
+      return new ScxmlImportHandler();
+    } else {
+      throw new IllegalArgumentException("Unknown UmpleImportType: " + type);
+    }
+  }
 }

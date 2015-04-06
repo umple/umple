@@ -13,176 +13,176 @@ namespace cruise.umple.compiler;
 
 class UmpleImportModel
 {
-	internal StringBuilder umpleBuilder = new StringBuilder();
-	
-	String generateUmple() {
-		boolean packageExist = false;
-		umpleBuilder = new StringBuilder();
-		for (UmpleImportElement umpleImportElement : umpleImportElements) {			
-			if(umpleImportElement.getId()!=UmpleImportConstants.ECORE_REFERENCE) {
-				// Append 2 new lines if there is more than 1 package
-				if("ecore:EPackage".equals(umpleImportElement.getId())) {
-					if(packageExist) {
-						umpleBuilder.append("\n\n");
-					} else {
-						packageExist = true;
-					}
-				}
-			
-				umpleBuilder.append(umpleImportElement.generateUmple());
-			}
-		}
-		return umpleBuilder.toString();
-	}
-	
-	//resolve assoications by global lookup
-	UmpleImportAssociation checkIfOppositeExist(UmpleImportAssociation currEnd){
-	  this.addUmpleImportElement(currEnd);
-	  UmpleImportAssociation oppoEnd = null;
-	  for (UmpleImportElement umpleImportElement : umpleImportElements) {
-		  if(umpleImportElement.getId() == UmpleImportConstants.ECORE_REFERENCE){
-			  UmpleImportAssociation tempEnd = (UmpleImportAssociation)umpleImportElement;
-			  String oppoStartClass = tempEnd.getStartClass();
-			  String oppoEndClass = tempEnd.getEndClass();
-			  String currStartClass = currEnd.getStartClass();
-			  String currEndClass = currEnd.getEndClass();
-			  if(currStartClass.equals(oppoEndClass) && currEndClass.equals(oppoStartClass))
-				  oppoEnd = tempEnd;
-		  }
-	  }
-	  //update existing association with crrEnd info
-	  if(oppoEnd!=null)
-	  {
-		  for (UmpleImportElement umpleImportElement : umpleImportElements) {
-			  if(umpleImportElement.getName() == oppoEnd.getStartClass()){
-				  UmpleImportClass umpleClass = (UmpleImportClass)umpleImportElement;
-				  umpleClass.removeUmpleImportAssociation(oppoEnd);
-				  oppoEnd.setOtherLowerBound(currEnd.getLowerBound());
-				  oppoEnd.setOtherUpperBound(currEnd.getUpperBound());
-				  umpleClass.addUmpleImportAssociation(oppoEnd);
-			  }
-		  }  
-	  }
-	  return oppoEnd;
-	}
-	
-	boolean generateUmpleFile(String filename) {
-		String input = this.generateUmple();
-		boolean isSuccess = false;
-		if (input != null && !input.isEmpty()) {
-			SampleFileWriter.createFile(filename, input);
-			isSuccess = true;
-		}
-		return isSuccess;
-	}
+  internal StringBuilder umpleBuilder = new StringBuilder();
+  
+  String generateUmple() {
+    boolean packageExist = false;
+    umpleBuilder = new StringBuilder();
+    for (UmpleImportElement umpleImportElement : umpleImportElements) {     
+      if(umpleImportElement.getId()!=UmpleImportConstants.ECORE_REFERENCE) {
+        // Append 2 new lines if there is more than 1 package
+        if("ecore:EPackage".equals(umpleImportElement.getId())) {
+          if(packageExist) {
+            umpleBuilder.append("\n\n");
+          } else {
+            packageExist = true;
+          }
+        }
+      
+        umpleBuilder.append(umpleImportElement.generateUmple());
+      }
+    }
+    return umpleBuilder.toString();
+  }
+  
+  //resolve assoications by global lookup
+  UmpleImportAssociation checkIfOppositeExist(UmpleImportAssociation currEnd){
+    this.addUmpleImportElement(currEnd);
+    UmpleImportAssociation oppoEnd = null;
+    for (UmpleImportElement umpleImportElement : umpleImportElements) {
+      if(umpleImportElement.getId() == UmpleImportConstants.ECORE_REFERENCE){
+        UmpleImportAssociation tempEnd = (UmpleImportAssociation)umpleImportElement;
+        String oppoStartClass = tempEnd.getStartClass();
+        String oppoEndClass = tempEnd.getEndClass();
+        String currStartClass = currEnd.getStartClass();
+        String currEndClass = currEnd.getEndClass();
+        if(currStartClass.equals(oppoEndClass) && currEndClass.equals(oppoStartClass))
+          oppoEnd = tempEnd;
+      }
+    }
+    //update existing association with crrEnd info
+    if(oppoEnd!=null)
+    {
+      for (UmpleImportElement umpleImportElement : umpleImportElements) {
+        if(umpleImportElement.getName() == oppoEnd.getStartClass()){
+          UmpleImportClass umpleClass = (UmpleImportClass)umpleImportElement;
+          umpleClass.removeUmpleImportAssociation(oppoEnd);
+          oppoEnd.setOtherLowerBound(currEnd.getLowerBound());
+          oppoEnd.setOtherUpperBound(currEnd.getUpperBound());
+          umpleClass.addUmpleImportAssociation(oppoEnd);
+        }
+      }  
+    }
+    return oppoEnd;
+  }
+  
+  boolean generateUmpleFile(String filename) {
+    String input = this.generateUmple();
+    boolean isSuccess = false;
+    if (input != null && !input.isEmpty()) {
+      SampleFileWriter.createFile(filename, input);
+      isSuccess = true;
+    }
+    return isSuccess;
+  }
 }
 
 class UmpleImportPackage
 {
-	String generateUmple() {
-		StringBuilder umpleBuilder = this.getUmpleBuilder();
-		umpleBuilder.append("namespace " + this.getName() + ";");
-		return umpleBuilder.toString();
-	}
+  String generateUmple() {
+    StringBuilder umpleBuilder = this.getUmpleBuilder();
+    umpleBuilder.append("namespace " + this.getName() + ";");
+    return umpleBuilder.toString();
+  }
 }
 
 class UmpleImportClass
 {
-	String generateUmple() {
-	    StringBuilder umpleBuilder = this.getUmpleBuilder();
-		umpleBuilder.append("\n\n");
-		if(isInterface){
-			umpleBuilder.append("interface "+this.getName() +"\n{");
-		}else{
-			umpleBuilder.append("class "+ this.getName() +"\n{");
-			if(superTypes.size()!=0){
-				for (String superType : superTypes) {
-				    if(!superType.isEmpty())
-						umpleBuilder.append("\n\tisA "+ superType+";");
-				}
-			}
-		}
-		for (UmpleImportAttribute umpleImportAttribute : umpleImportAttributes) {
-			umpleBuilder.append(umpleImportAttribute.generateUmple());
-		}
-		//inline associations
-		for (UmpleImportAssociation association : umpleImportAssociations) {
-			umpleBuilder.append(association.generateUmple());
-		}
-		for (ImportStateMachine stateMachine : importStateMachines) {
-		  umpleBuilder.append(stateMachine.generateUmple());
-		}
-		umpleBuilder.append("\n}");
-		return umpleBuilder.toString();
-	}
+  String generateUmple() {
+      StringBuilder umpleBuilder = this.getUmpleBuilder();
+    umpleBuilder.append("\n\n");
+    if(isInterface){
+      umpleBuilder.append("interface "+this.getName() +"\n{");
+    }else{
+      umpleBuilder.append("class "+ this.getName() +"\n{");
+      if(superTypes.size()!=0){
+        for (String superType : superTypes) {
+            if(!superType.isEmpty())
+            umpleBuilder.append("\n\tisA "+ superType+";");
+        }
+      }
+    }
+    for (UmpleImportAttribute umpleImportAttribute : umpleImportAttributes) {
+      umpleBuilder.append(umpleImportAttribute.generateUmple());
+    }
+    //inline associations
+    for (UmpleImportAssociation association : umpleImportAssociations) {
+      umpleBuilder.append(association.generateUmple());
+    }
+    for (ImportStateMachine stateMachine : importStateMachines) {
+      umpleBuilder.append(stateMachine.generateUmple());
+    }
+    umpleBuilder.append("\n}");
+    return umpleBuilder.toString();
+  }
 }
 
 class UmpleImportAttribute
 {
-	String generateUmple() {
-		StringBuilder builder = this.getUmpleBuilder();
-    	String umpleType = getUmpleTypeFromEcoreType(this.dataType);
-    	builder.append("\n\t" + umpleType + this.getName()+";");
-    	return builder.toString();
+  String generateUmple() {
+    StringBuilder builder = this.getUmpleBuilder();
+      String umpleType = getUmpleTypeFromEcoreType(this.dataType);
+      builder.append("\n\t" + umpleType + this.getName()+";");
+      return builder.toString();
     }
     
     private String getUmpleTypeFromEcoreType(String uType)
-  	{
-		String ret="";
-		if(uType.equals("EInt"))
-			ret = "Integer";
-		else if(uType.equals("EDouble"))
-			ret = "Double";
-		else if(uType.equals("EDate"))
-			ret = "Date";
-		else if(uType.equals("EBoolean"))
-			ret = "Boolean";
-		else if(uType.equals("EString")){
-			if(upperBound!=1)
-				ret = "String";
-		}
-		else
-			ret = uType;
-		if(upperBound!=1)
-    		ret +="[]";
-		if(!ret.isEmpty())
-			ret += " ";
-		return ret;
-  	}
+    {
+    String ret="";
+    if(uType.equals("EInt"))
+      ret = "Integer";
+    else if(uType.equals("EDouble"))
+      ret = "Double";
+    else if(uType.equals("EDate"))
+      ret = "Date";
+    else if(uType.equals("EBoolean"))
+      ret = "Boolean";
+    else if(uType.equals("EString")){
+      if(upperBound!=1)
+        ret = "String";
+    }
+    else
+      ret = uType;
+    if(upperBound!=1)
+        ret +="[]";
+    if(!ret.isEmpty())
+      ret += " ";
+    return ret;
+    }
 }
 
 class UmpleImportAssociation
-{	
-	String generateUmple() {
-		StringBuilder builder = this.getUmpleBuilder();
-    	builder.append("\n\t");
-		boolean isUniDirection = this.getEndClassName() == null;
-		if (isUniDirection)
-			builder.append("0..1 -> ");
-		else {
-			builder.append(this.generateMultiplicityBound(
-					this.getOtherLowerBound(), this.getOtherUpperBound())
-					+ " " + this.getEndClassName() + " -- ");
-		}
-		builder.append(this.generateMultiplicityBound(this.getLowerBound(),
-				this.getUpperBound()) + " " + this.getEndClass() + " " + this.getName() + ";");
-    	return builder.toString();
+{ 
+  String generateUmple() {
+    StringBuilder builder = this.getUmpleBuilder();
+      builder.append("\n\t");
+    boolean isUniDirection = this.getEndClassName() == null;
+    if (isUniDirection)
+      builder.append("0..1 -> ");
+    else {
+      builder.append(this.generateMultiplicityBound(
+          this.getOtherLowerBound(), this.getOtherUpperBound())
+          + " " + this.getEndClassName() + " -- ");
+    }
+    builder.append(this.generateMultiplicityBound(this.getLowerBound(),
+        this.getUpperBound()) + " " + this.getEndClass() + " " + this.getName() + ";");
+      return builder.toString();
     }
     
     private String generateMultiplicityBound(int lowerBound, int upperBound) {
-		String rtn = "";
-		if (upperBound == -1) {
-			if (lowerBound == 0)
-				rtn = "*";
-			else
-				rtn = StringFormatter.format("{0}..*", lowerBound);
-		} else if (lowerBound == upperBound) {
-			rtn = StringFormatter.format("{0}", lowerBound);
-		} else {
-			rtn = StringFormatter.format("{0}..{1}", lowerBound, upperBound);
-		}
-		return rtn;
-	}
+    String rtn = "";
+    if (upperBound == -1) {
+      if (lowerBound == 0)
+        rtn = "*";
+      else
+        rtn = StringFormatter.format("{0}..*", lowerBound);
+    } else if (lowerBound == upperBound) {
+      rtn = StringFormatter.format("{0}", lowerBound);
+    } else {
+      rtn = StringFormatter.format("{0}..{1}", lowerBound, upperBound);
+    }
+    return rtn;
+  }
 }
 
 class ImportStateMachineElement
@@ -192,11 +192,15 @@ class ImportStateMachineElement
     StringBuilder umpleBuilder = this.getUmpleBuilder();
     umpleBuilder.append("\n" + indent + this.getElemName() + " {");
 
-    for (ImportStateMachineElement elem : this.getImportStateMachineElements()) {
+    if (initialState != null) {
+      Collections.sort(importStateMachineElements, new StateComparator(initialState));
+    }
+
+    for (ImportStateMachineElement elem : importStateMachineElements) {
       umpleBuilder.append(elem.generateUmple());
     }
 
-    umpleBuilder.append("\n" + indent + "}");	
+    umpleBuilder.append("\n" + indent + "}"); 
 
     return umpleBuilder.toString();
   }
@@ -228,7 +232,8 @@ class ImportTransition
   }
 }
 
-class ImportAction {
+class ImportAction 
+{
   String generateUmple() {
     String indent = new String(new char[getDepth()]).replace("\0", "\t");
     StringBuilder umpleBuilder = this.getUmpleBuilder();
@@ -239,10 +244,26 @@ class ImportAction {
       String contentString = content.toString().replaceAll("\n", "\n" + indent + "\t");
       contentString = contentString.trim();
       umpleBuilder.append("\n" + indent + "\t" + contentString);
-    }		
+    }   
 
-	  umpleBuilder.append("\n" + indent + "}");
+    umpleBuilder.append("\n" + indent + "}");
 
     return umpleBuilder.toString();
+  }
+}
+
+class StateComparator
+{
+  int compare(Object o1, Object o2) {
+    ImportStateMachineState e1 = (ImportStateMachineState)o1;
+    ImportStateMachineState e2 = (ImportStateMachineState)o2;
+
+    if (e1 != null && initialState.equals(e1.getElemName())) {
+      return -1;
+    } else if (e2 != null && initialState.equals(e2.getElemName())) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 }

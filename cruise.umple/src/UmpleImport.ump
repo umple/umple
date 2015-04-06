@@ -15,6 +15,7 @@ namespace cruise.umple.compiler;
  * SAX, streamed-base push JAXP API
  */
 external DefaultHandler{}
+external interface Comparator{}
 
 class UmpleImportHandler
 {
@@ -40,21 +41,21 @@ class UmpleImportHandler
  * Parse ECore by extend SAX handler callbacks
  */
 class EcoreImportHandler
-{	
-	depend java.io.File;
-	depend java.io.IOException;
-	depend java.io.InputStream;
-	depend java.io.FileInputStream;
-	depend java.util.Optional;
-	depend java.nio.file.Paths;
-	depend javax.xml.parsers.ParserConfigurationException;
-	depend javax.xml.parsers.SAXParser;
-	depend javax.xml.parsers.SAXParserFactory;
-	depend org.xml.sax.Attributes;
-	depend org.xml.sax.SAXException;
-	depend org.xml.sax.SAXParseException;
-	depend org.xml.sax.helpers.DefaultHandler;
-	isA UmpleImportHandler;
+{ 
+  depend java.io.File;
+  depend java.io.IOException;
+  depend java.io.InputStream;
+  depend java.io.FileInputStream;
+  depend java.util.Optional;
+  depend java.nio.file.Paths;
+  depend javax.xml.parsers.ParserConfigurationException;
+  depend javax.xml.parsers.SAXParser;
+  depend javax.xml.parsers.SAXParserFactory;
+  depend org.xml.sax.Attributes;
+  depend org.xml.sax.SAXException;
+  depend org.xml.sax.SAXParseException;
+  depend org.xml.sax.helpers.DefaultHandler;
+  isA UmpleImportHandler;
 }
 
 /*
@@ -112,8 +113,8 @@ class UmpleImportType {
 }
 
 class UmpleImportHandlerFactory {
-	// Singleton Instance of the class. 
-	const UmpleImportHandlerFactory INSTANCE = new UmpleImportHandlerFactory();
+  // Singleton Instance of the class. 
+  const UmpleImportHandlerFactory INSTANCE = new UmpleImportHandlerFactory();
 
 }
 
@@ -143,6 +144,8 @@ class ImportStateMachineElement
 
   Integer depth;
   String elemName;
+  String initialState = null;
+  String finalState = null;
 }
 
 /* 
@@ -150,60 +153,60 @@ class ImportStateMachineElement
  */ 
 class UmpleImportModel
 {   
-	depend cruise.umple.util.SampleFileWriter;
-	
-	0..1 -> * UmpleImportElement;
-	
-	currentPackageName;	
+  depend cruise.umple.util.SampleFileWriter;
+  
+  0..1 -> * UmpleImportElement;
+  
+  currentPackageName; 
 }
 
 class UmpleImportPackage
 {
-	isA UmpleImportElement;
+  isA UmpleImportElement;
 }
 
 class UmpleImportClass
 {
-	isA UmpleImportElement;
-	
-	0..1 -> * UmpleImportAttribute;
-	0..1 -> * UmpleImportAssociation;
-	0..1 -> * ImportStateMachine;
-	
-	packageName;
-	Boolean isAbstract;
-	Boolean isInterface;
-	String[] superTypes;
+  isA UmpleImportElement;
+  
+  0..1 -> * UmpleImportAttribute;
+  0..1 -> * UmpleImportAssociation;
+  0..1 -> * ImportStateMachine;
+  
+  packageName;
+  Boolean isAbstract;
+  Boolean isInterface;
+  String[] superTypes;
 }
 
 class UmpleImportAttribute
 {
-	isA UmpleImportElement;
-	
-	className;
-	dataType;
-	//primitive type as default
-	lazy Integer lowerBound;
-	//primitive type as default
-	Integer upperBound=1;
+  isA UmpleImportElement;
+  
+  className;
+  dataType;
+  //primitive type as default
+  lazy Integer lowerBound;
+  //primitive type as default
+  Integer upperBound=1;
 }
 
 class UmpleImportAssociation
 {
-	depend cruise.umple.util.StringFormatter;
-	
-	isA UmpleImportElement;
-	
-	//root class
-	startClass;
-	//eType
-	endClass;
-	//eOpposite
-	endClassName;
+  depend cruise.umple.util.StringFormatter;
+  
+  isA UmpleImportElement;
+  
+  //root class
+  startClass;
+  //eType
+  endClass;
+  //eOpposite
+  endClassName;
     lazy Integer lowerBound;
-	Integer upperBound = 1;
-	lazy Integer otherLowerBound;
-	Integer otherUpperBound = 1;
+  Integer upperBound = 1;
+  lazy Integer otherLowerBound;
+  Integer otherUpperBound = 1;
 }
 
 class ImportStateMachine {
@@ -228,23 +231,32 @@ class ImportAction {
   StringBuilder content = new StringBuilder();
 }
 
+class StateComparator
+{
+  isA Comparator;
+
+  depend java.util.Comparator;
+
+  String initialState;
+}
+
 class UmpleImportConstants
 {
-	singleton;
-	
-	const XMI_TYPE="xsi:type";
-	const XMI_NAME="name";
-	const XMI_PACKAGENAME="nsURI";
-	const XMI_INTERFACE="interface";
-	const XMI_ABSTRACT="abstract";
-	const XMI_SUPERTYPE="eSuperTypes";
-	const XMI_UPPER = "upperBound";
-	const ECORE_PACKAGE = "ecore:EPackage";
-	const ECORE_CLASS = "ecore:EClass";
-	const ECORE_ATTRIBUTE = "ecore:EAttribute";
-	const ECORE_TYPE = "eType";
-	const ECORE_DATATYPE = "ecore:EDataType";
-	const ECORE_REFERENCE = "ecore:EReference";
+  singleton;
+  
+  const XMI_TYPE="xsi:type";
+  const XMI_NAME="name";
+  const XMI_PACKAGENAME="nsURI";
+  const XMI_INTERFACE="interface";
+  const XMI_ABSTRACT="abstract";
+  const XMI_SUPERTYPE="eSuperTypes";
+  const XMI_UPPER = "upperBound";
+  const ECORE_PACKAGE = "ecore:EPackage";
+  const ECORE_CLASS = "ecore:EClass";
+  const ECORE_ATTRIBUTE = "ecore:EAttribute";
+  const ECORE_TYPE = "eType";
+  const ECORE_DATATYPE = "ecore:EDataType";
+  const ECORE_REFERENCE = "ecore:EReference";
 }
 
 use UmpleImport_CodeHandlers.ump;

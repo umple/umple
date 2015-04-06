@@ -171,6 +171,22 @@ public class UmpleImportTest {
 
     assertEquals(expectedText, actualText); 
 	}
+	
+	@Test 
+  public void ScxmlInitialStateTest() throws Exception {
+    String expectedText = loadUmpleFile("ScxmlImport_initial_state.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_initial_state.scxml.txt").trim();
+
+    assertEquals(expectedText, actualText); 
+  }
+	
+	@Test 
+  public void ScxmlInitialNestedStateTest() throws Exception {
+    String expectedText = loadUmpleFile("ScxmlImport_initial_nested_state.ump").trim();
+    String actualText = loadScxmlFile("ScxmlImport_initial_nested_state.scxml.txt").trim();
+
+    assertEquals(expectedText, actualText); 
+  }
 
 	private static String loadScxmlFile(String name) throws Exception {
 	  String filename = getFullFilePath(name);

@@ -1,0 +1,13 @@
+
+
+class StateMachine
+{
+	sm {
+		stateB {
+		}
+		stateA {
+		}
+		stateC {
+		}
+	}
+}
