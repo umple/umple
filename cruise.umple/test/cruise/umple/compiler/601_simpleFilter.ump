@@ -13,7 +13,7 @@ class Mentor{
   1 -- * Student;  
 }
 
-filter Roles
+filter roles
 {
   include Student, Mentor;
 }

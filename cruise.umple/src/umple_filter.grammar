@@ -8,7 +8,7 @@ filterStatement- : [[filterCombinedValue]] | [[filterNamespace]] | [[filterValue
 
 hops- : hops {([[super]] | [[sub]] | [[association]])*}
  
-filterValue : include ([classname])? ( , [classname] )*;
+filterValue : include ([classname]) ( , [classname] )*;
 
 super : super [superNum];
 
@@ -16,6 +16,6 @@ sub : sub [subNum];
 
 association : association [associationNum];
 
-filterCombinedValue : filter ([filterName])? (, [filterName])*;
-
 filterNamespace : namespace [Namespace] (, [Namespace])* ;
+
+filterCombinedValue : includeFilter ([filterName]) ( , [filterName] )*;

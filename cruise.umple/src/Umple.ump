@@ -78,7 +78,7 @@ class UmpleModel
   1 -> * UmpleInterface;
 
   // Right now, a model can only have 1 diagram
-  0..1 -- 0..1 Filter;
+  1 -> * Filter;
 }
 
 /*
@@ -96,6 +96,7 @@ class Filter
   Integer subCount = 0;
   Integer associationCount = -1;
   String[] values;
+  String[] filterValues;
 }
 
 /*

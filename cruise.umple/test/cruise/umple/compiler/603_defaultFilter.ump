@@ -13,6 +13,6 @@ class School
   * -> * Student;
 }
 
-filter  
+filter
 {
 }

@@ -31,7 +31,7 @@ class UmpleInternalParser
     {
       if(token.is("filter"))
       {
-        String name = token.getValue("filtername");
+        String name = token.getValue("filterName");
         Filter f = new Filter(name);
         for(Token t : token.getSubTokens())
         {
@@ -51,8 +51,23 @@ class UmpleInternalParser
           {
             addClassValue(f,t);
           }
+          if(t.is("filterCombinedValue"))
+          {
+            addCombinedFilter(f,t);
+          }
         }
-        model.setFilter(f);
+        model.addFilter(f);
+      }
+    }
+  }
+
+  private void addCombinedFilter(Filter f, Token t)
+  {
+    for(Token nt : t.getSubTokens())
+    {
+      if("filterName".equals(nt.getName()))
+      {
+        f.addFilterValue(nt.getValue("filterName"));
       }
     }
   }

@@ -215,7 +215,7 @@ class UmpleModel
  */
   public void generate()
   {
-    applyFilter();
+    applyFilter(null);
     boolean foundGenerator;
     try
     {
@@ -441,16 +441,36 @@ class UmpleModel
     return allTranslators;
   }
 
-  public void applyFilter()
+  public void applyFilter(String fname)
   {
-    Filter f = getFilter();
+    Filter f = getFilter(fname);
 
     if (f == null)
     {
       return;
     }
 
-    if(f.isEmpty())
+    if(!f.hasNestedFilter() && f.isEmpty())
+    {
+      return;
+    }
+
+    if(f.hasNestedFilter())
+    {
+      for(String fn : f.getFilterValues())
+      {
+        markIncludedClasses(getFilter(fn));
+      }
+    }
+
+    markIncludedClasses(f);
+    filterOutClasses();
+
+  }
+
+  private void markIncludedClasses(Filter f)
+  {
+    if (f == null || f.isEmpty()) 
     {
       return;
     }
@@ -486,9 +506,6 @@ class UmpleModel
         }
       }
     }
-
-    filterOutClasses();
-
   }
 
   private void filterOutClasses()
@@ -584,6 +601,23 @@ class UmpleModel
         addSubClasses(sub-1,s);
       } 
     }
+  }
+
+  public Filter getFilter(String name)
+  {
+    for (Filter aFilter : getFilters())
+    {
+      if(aFilter.getName() != null)
+      {
+        if (aFilter.getName().equals(name))
+          return aFilter;
+      }
+      else if(name==null)
+      {
+        return aFilter;
+      } 
+    }
+    return null;
   }
 }
 
@@ -3866,25 +3900,30 @@ class ModelConstraintAttributeFromClass
 
 class Filter
 {
+  public boolean hasNestedFilter()
+  {
+    return getFilterValues().length > 0;
+  }
+
   public boolean hasAssociation()
   {
-    return getAssociationCount()>0;
+    return getAssociationCount() > 0;
   }
 
   public boolean hasSub()
   {
-    return getSubCount()>0;
+    return getSubCount() > 0;
   }
   
   public boolean hasSuper()
   {
-    return getSuperCount()>=0;
+    return getSuperCount() >= 0;
   }
 
   public boolean isEmpty()
   {
     
-    return getValues().length==0 || "*".equals(getValue(0));
+    return getValues().length == 0 || "*".equals(getValue(0));
   }
 
   public boolean isIncluded(String name)

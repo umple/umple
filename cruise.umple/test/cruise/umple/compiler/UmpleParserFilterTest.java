@@ -33,28 +33,37 @@ public class UmpleParserFilterTest
   public void emptyFilter()
   {
 	  assertParse("600_emptyFilter.ump", "[filter]");
-    Assert.assertNotNull(model.getFilter());
+    Assert.assertNotNull(model.getFilter(null));
   }
 
   @Test
   public void simpleFilter()
   {
-	  assertParse("601_simpleFilter.ump","[classDefinition][name:School][attribute][name:name][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Mentor][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Student][classDefinition][name:Student][classDefinition][name:Mentor][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Student][filter][filterName:Roles][filterValue][classname:Student][classname:Mentor]");
-	  Assert.assertNotNull(model.getFilter());
+	  assertParse("601_simpleFilter.ump","[classDefinition][name:School][attribute][name:name][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Mentor][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Student][classDefinition][name:Student][classDefinition][name:Mentor][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Student][filter][filterName:roles][filterValue][classname:Student][classname:Mentor]");
+	  Assert.assertNotNull(model.getFilter("roles"));
 	  String actuals[] = {"Student", "Mentor"};
-	  Assert.assertArrayEquals(model.getFilter().getValues(), actuals);
+	  Assert.assertArrayEquals(model.getFilter("roles").getValues(), actuals);
   }
   
   @Test
   public void associationFilter()
   {
     assertParse("605_fullFilter.ump","[classDefinition][name:School][attribute][name:name][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Mentor][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Student][classDefinition][name:Student][classDefinition][name:Mentor][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Student][filter][filterName:Roles][super][superNum:2][sub][subNum:2][association][associationNum:2][filterValue][classname:Student][classname:Mentor]");
-    Assert.assertNotNull(model.getFilter());
-    Assert.assertEquals(model.getFilter().getSuperCount(), 2);
-    Assert.assertEquals(model.getFilter().getSubCount(), 2);
-    Assert.assertEquals(model.getFilter().getAssociationCount(), 2);
+    Assert.assertNotNull(model.getFilter("Roles"));
+    Assert.assertEquals(model.getFilter("Roles").getSuperCount(), 2);
+    Assert.assertEquals(model.getFilter("Roles").getSubCount(), 2);
+    Assert.assertEquals(model.getFilter("Roles").getAssociationCount(), 2);
   }
 
+  @Test
+  public void nestedFilter()
+  {
+    assertParse("606_nestedfilter.ump","[classDefinition][name:School][attribute][name:name][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Mentor][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Student][classDefinition][name:Student][classDefinition][name:Mentor][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Student][filter][filterName:Student][filterValue][classname:Student][filter][filterName:Mentor][filterValue][classname:Mentor][filter][filterName:Roles][filterCombinedValue][filterName:Student][filterName:Mentor]");
+    Assert.assertNotNull(model.getFilter("Roles"));
+    Assert.assertEquals(model.getFilter("Roles").getFilterValues()[0], "Student");
+    Assert.assertEquals(model.getFilter("Roles").getFilterValues()[1], "Mentor");
+  }
+  
   private void assertParse(String filename, String expectedOutput)
   {
     assertParse(filename, expectedOutput, true);

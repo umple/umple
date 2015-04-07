@@ -47,42 +47,49 @@ public class FilterTest
   @Test
   public void byDefaultNoFilterPresent()
   {
-    assertEquals(null, model.getFilter());
+    assertEquals(0, model.getFilters().size());
   }
 
   @Test
   public void getFilter_defaultsToNull()
   {
-    assertEquals(null, model.getFilter());
+    assertEquals(null, model.getFilter("aaa"));
   }
 
+  @Test
+  public void getFilterTest()
+  {
+    model = parse("601_simpleFilter.ump");
+    assertEquals(1, model.getFilters().size());
+    assertNotNull(model.getFilter("roles"));  
+  }
+  
   @Test
   public void isSettableInModel()
   {
     Filter f = new Filter("aaa");
-    model.setFilter(f);
-    model.getFilter().addValue("Student");
-    model.getFilter().addValue("Mentor");
-    assertEquals(f, model.getFilter());
-    assertEquals("aaa", model.getFilter().getName());
-    assertEquals("Student",model.getFilter().getValue(0));
-    assertEquals("Mentor",model.getFilter().getValue(1));
+    model.addFilter(f);
+    model.getFilter("aaa").addValue("Student");
+    model.getFilter("aaa").addValue("Mentor");
+    assertEquals(f, model.getFilter("aaa"));
+    assertEquals("aaa", model.getFilter("aaa").getName());
+    assertEquals("Student",model.getFilter("aaa").getValue(0));
+    assertEquals("Mentor",model.getFilter("aaa").getValue(1));
   }
-
+ 
   @Test
   public void hasAssociationTest()
   {
     Filter f = new Filter("aaa");
-    model.setFilter(f);
-    assertEquals(false, model.getFilter().hasAssociation());
-    model.getFilter().setAssociationCount(-2);
-    assertEquals(false, model.getFilter().hasAssociation());
-    model.getFilter().setAssociationCount(0);
-    assertEquals(false, model.getFilter().hasAssociation());
-    model.getFilter().setAssociationCount(1);
-    assertEquals(true, model.getFilter().hasAssociation());
+    assertEquals(false, f.hasAssociation());
+    f.setAssociationCount(-2);
+    assertEquals(false, f.hasAssociation());
+    f.setAssociationCount(0);
+    assertEquals(false, f.hasAssociation());
+    f.setAssociationCount(1);
+    assertEquals(true, f.hasAssociation());
   }
-  
+
   @Test
   public void hasSuperTest()
   {
@@ -107,13 +114,22 @@ public class FilterTest
     assertEquals(false, f.hasSub());
   }
   
+  @Test 
+  public void hasNestedFilter()
+  {
+    Filter f = new Filter("aaa");
+    assertEquals(false, f.hasNestedFilter());
+    f.addFilterValue("bbb");
+    assertEquals(true, f.hasNestedFilter());
+  }
+
   @Test
   public void isIncluded()
   {
     Filter f = new Filter("aaa");
-    model.setFilter(f);
-    model.getFilter().addValue("Student");
-    model.getFilter().addValue("Mentor");
+
+    f.addValue("Student");
+    f.addValue("Mentor");
 
     Assert.assertEquals(true, f.isIncluded("Student"));
     Assert.assertEquals(false, f.isIncluded("Blah"));
@@ -151,7 +167,7 @@ public class FilterTest
   public void applyFilter_OnlyKeepListedClasses()
   {
     model = parse("601_simpleFilter.ump");
-    model.applyFilter();
+    model.applyFilter("roles");
     Assert.assertEquals(2, model.numberOfUmpleClasses());
   }
   
@@ -159,7 +175,7 @@ public class FilterTest
   public void applyFilter_Association()
   {
     model = parse("601_simpleFilter.ump");
-    model.applyFilter();
+    model.applyFilter("roles");
     Assert.assertEquals(1, model.numberOfAssociations());
   }
 
@@ -167,7 +183,8 @@ public class FilterTest
   public void applyFilter_Empty()
   {
     model = parse("603_defaultFilter.ump");
-    model.applyFilter();
+    Assert.assertEquals(3, model.numberOfUmpleClasses());
+    model.applyFilter(null);
     Assert.assertEquals(3, model.numberOfUmpleClasses());
   }
 
@@ -177,7 +194,7 @@ public class FilterTest
     model = parse("603_defaultFilter.ump");
     Filter f = new Filter("includeAll");
     f.addValue("*");
-    model.applyFilter();
+    model.applyFilter("includeAll");
     Assert.assertEquals(3, model.numberOfUmpleClasses());
   }
 
@@ -187,9 +204,9 @@ public class FilterTest
     Filter f = new Filter("aaa");
     model.addUmpleClass("Mentor");
     model.addUmpleClass("Student");
-    model.setFilter(f);
-    model.getFilter().addValue(null);
-    model.applyFilter();
+    model.addFilter(f);
+    model.getFilter("aaa").addValue(null);
+    model.applyFilter("aaa");
     Assert.assertEquals(0, model.numberOfUmpleClasses());
   }
   
@@ -197,11 +214,11 @@ public class FilterTest
   public void oneAssociationHop()
   {
     model = parse("602_associationFilter.ump");
-    Filter f = new Filter("aaa");
+    Filter f = new Filter("association_one");
     f.setAssociationCount(1);
     f.addValue("X");
-    model.setFilter(f);
-    model.applyFilter();
+    model.addFilter(f);
+    model.applyFilter("association_one");
     Assert.assertEquals(2, model.numberOfUmpleClasses());
     ArrayList<String> names = new ArrayList<String>();
     names.add("X");
@@ -213,11 +230,11 @@ public class FilterTest
   public void multipleAssociationHops()
   {
     model = parse("602_associationFilter.ump");
-    Filter f = new Filter("Filter");
+    Filter f = new Filter("association_multiple");
     f.setAssociationCount(2);
     f.addValue("X");
-    model.setFilter(f);
-    model.applyFilter();
+    model.addFilter(f);
+    model.applyFilter("association_multiple");
     Assert.assertEquals(3, model.numberOfUmpleClasses());
     ArrayList<String> names = new ArrayList<String>();
     names.add("X");
@@ -227,16 +244,16 @@ public class FilterTest
     
     model = parse("602_associationFilter.ump");
     f.setAssociationCount(3);
-    model.setFilter(f);
-    model.applyFilter();
+    model.addFilter(f);
+    model.applyFilter("association_multiple");
     Assert.assertEquals(4, model.numberOfUmpleClasses());
     names.add("P");
     assertFiltered(names, model.getUmpleClasses());
     
     model = parse("602_associationFilter.ump");
     f.setAssociationCount(4);
-    model.setFilter(f);
-    model.applyFilter();
+    model.addFilter(f);
+    model.applyFilter("association_multiple");
     Assert.assertEquals(5, model.numberOfUmpleClasses());
     names.add("Q");
     assertFiltered(names, model.getUmpleClasses());
@@ -248,9 +265,9 @@ public class FilterTest
   {
     model = parse("604_inheritanceFilter.ump");
     Filter f = new Filter("inheritance");
-    model.setFilter(f);
-    model.getFilter().addValue("Y");
-    model.applyFilter();
+    model.addFilter(f);
+    model.getFilter("inheritance").addValue("Y");
+    model.applyFilter("inheritance");
     ArrayList<String> names = new ArrayList<String>();
     names.add("Y");
     names.add("Z");
@@ -266,9 +283,9 @@ public class FilterTest
     model = parse("604_inheritanceFilter.ump");
     Filter f = new Filter("inheritance");
     f.setSuperCount(2);
-    model.setFilter(f);
-    model.getFilter().addValue("Y");
-    model.applyFilter();
+    model.addFilter(f);
+    model.getFilter("inheritance").addValue("Y");
+    model.applyFilter("inheritance");
     ArrayList<String> names = new ArrayList<String>();
     names.add("Y");
     names.add("Z");
@@ -278,8 +295,8 @@ public class FilterTest
     
     model = parse("604_inheritanceFilter.ump");
     f.setSuperCount(0);
-    model.setFilter(f);
-    model.applyFilter();
+    model.addFilter(f);
+    model.applyFilter("inheritance");
     names = new ArrayList<String>();
     names.add("Y");
     Assert.assertEquals(1, model.numberOfUmpleClasses());
@@ -291,9 +308,9 @@ public class FilterTest
   {
     model = parse("604_inheritanceFilter.ump");
     Filter f = new Filter("inheritance");
-    model.setFilter(f);
-    model.getFilter().addValue("P");
-    model.applyFilter();
+    model.addFilter(f);
+    model.getFilter("inheritance").addValue("P");
+    model.applyFilter("inheritance");
     ArrayList<String> names = new ArrayList<String>();
     names.add("P");
     names.add("Q");
@@ -307,9 +324,9 @@ public class FilterTest
     model = parse("604_inheritanceFilter.ump");
     Filter f = new Filter("inheritance");
     f.setSubCount(2);
-    model.setFilter(f);
-    model.getFilter().addValue("P");
-    model.applyFilter();
+    model.addFilter(f);
+    model.getFilter("inheritance").addValue("P");
+    model.applyFilter("inheritance");
     ArrayList<String> names = new ArrayList<String>();
     names.add("Y");
     names.add("Z");
@@ -317,6 +334,28 @@ public class FilterTest
     names.add("Q");
     Assert.assertEquals(4, model.numberOfUmpleClasses());
     assertFiltered(names, model.getUmpleClasses());
+  }
+  
+  @Test
+  public void applyFilter_NestedFilter()
+  {
+    model = parse("601_simpleFilter.ump");
+    Filter nf = new Filter("nestedFilter");
+    nf.addFilterValue("StudentFilter");
+    nf.addFilterValue("MentorFilter");
+    model.addFilter(nf);
+    Filter sf = new Filter("StudentFilter");
+    sf.addValue("Student");
+    model.addFilter(sf);
+    Filter mf = new Filter("MentorFilter");
+    mf.addValue("Mentor");
+    model.addFilter(mf);
+    model.applyFilter("nestedFilter");
+    ArrayList<String> names = new ArrayList<String>();
+    names.add("Student");
+    names.add("Mentor");
+    Assert.assertEquals(2, model.numberOfUmpleClasses());
+    assertFiltered(names, model.getUmpleClasses()); 
   }
   
   private void assertFiltered(ArrayList<String> names, List<UmpleClass> list)
