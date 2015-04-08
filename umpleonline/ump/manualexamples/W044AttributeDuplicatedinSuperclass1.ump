@@ -7,4 +7,6 @@ class B {
   isA A;
   attr;
 }
-// @@@skipcompile - the result won't compile in Java because there are two attr
+
+//$?[End_of_model]$?
+// @@@skipcompile - the result won't compile because there are two attr

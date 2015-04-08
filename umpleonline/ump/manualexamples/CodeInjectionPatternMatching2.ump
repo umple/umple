@@ -10,4 +10,3 @@ class Student
   }
 }
 //$?[End_of_model]$?
-// @@@skipcompile - Issue 594 currently can't combine get* and !getCityOfBirth

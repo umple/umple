@@ -55,4 +55,5 @@ class Person
 {
   position 46 25 124 63;
 }
+
 // @@@skipcompile - There is actually no package school.util.* - this is a demo

@@ -1,4 +1,5 @@
 // Class with non-alphanumeric name (100)
 class @ {}
 
+//$?[End_of_model]$?
 // @@@skipcompile

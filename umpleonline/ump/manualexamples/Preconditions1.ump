@@ -8,3 +8,7 @@ class PotentialVoter {
      return 0;
   }
 }
+
+// $?[End_of_model]$?
+// @@@skipphpcompile - Contains Java/Cpp code
+// @@@skiprubycompile - Contains Java/Cpp code

@@ -43,3 +43,6 @@ class Wheel
 {
 position 188 35 109 45;
 }
+
+// $?[End_of_model]$?
+// @@@skipphpcompile - Skipped due to issue 701

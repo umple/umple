@@ -457,3 +457,8 @@ class MainTest{
 
 strictness ignore 1008; // Don't worry about about synchronized
 strictness ignore 46; 
+
+// $?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code

@@ -39,7 +39,7 @@ class Elevator {
         doorClosingRequest -> DoorClosing;
       }
       DoorClosing {
-        doorCLosed -> CheckingNextDestination;
+        doorClosed -> CheckingNextDestination;
         obstruction -> DoorOpening;
         doorOpeningRequest -> DoorOpening;
       }

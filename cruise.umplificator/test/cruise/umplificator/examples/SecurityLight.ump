@@ -92,4 +92,6 @@ class Timer {
   }
 
 }
-// @@@skipcompile - issue 589 prevents compilation in Java == should be used instead of equals
+
+//$?[End_of_model]$?
+// @@@skipjavacompile - issue 589 prevents compilation in Java == should be used instead of equals

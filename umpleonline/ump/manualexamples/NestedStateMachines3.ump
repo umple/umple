@@ -64,3 +64,7 @@ class Student
 {
   position 260 65 109 45;
 }
+
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code

@@ -2,4 +2,6 @@
 class X {
   m() {}
 }
-// @@@skipcompile - the resulting Java cannot be compiled
+
+//$?[End_of_model]$?
+// @@@skipcompile - the resulting code cannot be compiled

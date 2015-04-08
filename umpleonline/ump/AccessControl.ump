@@ -105,3 +105,5 @@ class RoleFacilityAccessRight{
 /*
 @@@testlanguage=java,cpp,php
 */
+
+// @@@skipphpcompile - remove when issue 697 is fixed

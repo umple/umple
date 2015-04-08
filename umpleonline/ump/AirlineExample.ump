@@ -104,4 +104,3 @@ class Airline
   position.association Airline__RegularFlight 59,45 37,0;
   position.association Airline__Person 46,0 75,80;
 }
-// @@@skipcompile - issue 584 (see also Airline.ump) likely dup file

@@ -64,7 +64,7 @@ class Microwave{
     cookingExtended{
       entry / {
         // add 1 minute to timer
-        timer.setTimeMs(TimeIncrementMs+timer.getTimeMs());
+        timer.setTimeMs(TimeIncrementMs + timer.getTimeMs());
         //release a button
         setIsButtonPressed(false);
       }
@@ -121,3 +121,8 @@ class Timer {
     return getTimeMs();
   }
 }
+
+// $?[End_of_model]$?
+// @@@skipcppcompile - Contains Java code
+// @@@skipphpcompile - Contains Java code
+// @@@skiprubycompile - Contains Java code

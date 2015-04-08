@@ -17,7 +17,7 @@ class Messenger {
     }
     
     InTransit {
-      reachRecipient -> delivered;
+      reachRecipient -> Delivered;
       deleteMessage -> Deleted;
     }
     

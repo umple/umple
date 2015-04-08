@@ -10,3 +10,5 @@ class Student
   trace id after [id == 234];
 }
 
+// $?[End_of_model]$?
+// @@@skipphpcompile - Skipped due to issue 699

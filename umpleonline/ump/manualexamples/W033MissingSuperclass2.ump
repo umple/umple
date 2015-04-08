@@ -4,5 +4,6 @@ class S {
   isA T;
 }
 external T {};
-// @@@skipcompile - This won't compile in Java since we aren't linking in T here
 
+//$?[End_of_model]$?
+// @@@skipcompile - This won't compile in Java since we aren't linking in T here

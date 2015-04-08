@@ -5,7 +5,7 @@ class Bill {
   billState {
     inPreparation {
       introduceInHouse -> inHouseOfCommons;
-      introduceInSenate -> / {isCommonsBill = false;} inSenate; // rare
+      introduceInSenate -> / {setIsCommonsBill(false);} inSenate; // rare
     }
     inHouseOfCommons {
       withdraw -> withdrawn;
@@ -54,3 +54,5 @@ class Bill {
     }
   }
 }
+
+// $?[End_of_model]$?

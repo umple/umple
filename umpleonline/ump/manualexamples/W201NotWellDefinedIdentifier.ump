@@ -6,3 +6,6 @@ trait color {
 trait equality{
 	//traits elements
 }
+
+//$?[End_of_model]$?
+// @@@skipcompile 

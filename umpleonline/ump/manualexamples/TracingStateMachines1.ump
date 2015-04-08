@@ -4,11 +4,11 @@ class LightBulb
   status
   {
     On { 
-      entry / { v = 1; } 
+      entry / { setV(1); } 
       flip -> Off;
     }
     Off { 
-      entry / { v = 2; }
+      entry / { setV(2); }
       flip -> On;
     }
     // trace whenever we enter/exit state On 

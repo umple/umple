@@ -107,3 +107,7 @@ class Registration
   position.association Course__Registration 110,16 0,29;
   position 50 220 109 74;
 }
+
+// @@@skipcppcompile - Java-specific code in main and toString in class Academy
+// @@@skipphpcompile - Java-specific code in main and toString in class Academy
+// @@@skiprubycompile - Java-specific code in main and toString in class Academy

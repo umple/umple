@@ -12,3 +12,6 @@ class Student
   // trace whenever we enter/exit state "s1" and record attribute name
   trace s1 record name;
 }
+
+// $?[End_of_model]$?
+// @@@skipphpcompile - Skipped due to issue 698

@@ -116,3 +116,6 @@ class IntersectionTimerDriven {
     Walk {}
   }
 }
+//$?[End_of_model]$?
+// @@@skipcompile - will not compile until issue 695 is fixed
+// @@@skiprubycompile - incorrect ruby code generated until issue 694 fixed

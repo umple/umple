@@ -4,4 +4,6 @@ class X {
     s*1 {}
   }
 }
+
+//$?[End_of_model]$?
 // @@@skipcompile

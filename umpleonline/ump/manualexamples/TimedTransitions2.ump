@@ -2,25 +2,38 @@
 // when the value of the attribute count drops below 5
 // An attempt to make this transition is taken every second
 // The do activity slowly drops the value of count
-class X {
+class X 
+{
   Integer count = 10;
-  sm {
-    a {
-      entry / {System.out.println("entering a");}
-      do {
-        while (count > 0) {
-          System.out.println("Count = "+count);
+  sm 
+  {
+    a 
+    {
+      entry / { System.out.println("entering a"); }
+      do 
+      {
+        while (count > 0) 
+        {
+          System.out.println("Count = " + count);
           Thread.sleep(1000);
           count --;
         }
       }
       afterEvery(1) [count<5] -> b;
     }
-    b {
-      entry / {System.out.println("entering b");}
+    b 
+    {
+      entry / { System.out.println("entering b"); }
     }
   }
-  public static void main(String [ ] args) {
+
+  public static void main(String [] args) 
+  {
     X x = new X();
   }
 }
+
+// $?[End_of_model]$?
+// @@@skipcppcompile - Has Java code
+// @@@skipphpcompile - Has Java code
+// @@@skiprubycompile - Has Java code

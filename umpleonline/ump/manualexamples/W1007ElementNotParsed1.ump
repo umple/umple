@@ -3,4 +3,5 @@ class X {
   blah blah blah;
   1 - * X;
 }
-// @@@skipcompile - the resulting Java code cannot be compiled
+//$?[End_of_model]$?
+// @@@skipcompile - the resulting code cannot be compiled

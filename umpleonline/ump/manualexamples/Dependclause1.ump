@@ -17,3 +17,8 @@ class Baseball
     return eq.getName().equals("bat");
   }
 }
+
+// $?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code

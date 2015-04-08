@@ -24,4 +24,5 @@ class StationCoordinator {
   // is the lead
   Boolean lead;
 }
+//$?[End_of_model]$?
 // @@@skipcompile -- there is a need to add methods to turn this model to a compilable system

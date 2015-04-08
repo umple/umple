@@ -15,14 +15,14 @@ class Loan
   state {
     initial {
       entry / {
-        deadline = getLoanTime();
-        loanStartTime = currentTime();
-      };
+        setDeadline(getLoanTime());
+        setLoanStartTime(currentTime());
+      }
       -> outstanding;
     }
     outstanding {
       // regular loan, can be extended
-      extend -> / {deadline = getExtensionTime();} outstanding;
+      extend -> / {setDeadline(getExtensionTime());} outstanding;
       returnitem -> returned;
       recall -> / {sendRecallNotice();} recalled;
       after(deadline) -> overdue;
@@ -30,13 +30,16 @@ class Loan
     }
     recalled {
       // Not overdue, but cannot extend
-      entry / {deadline = deadline - (currentTime() - loanStartTime);}
+      entry / {setDeadline(getDeadline() - (currentTime() - getLoanStartTime()));}
       returnitem -> returned;
       after(deadline) -> overdue;
       declareLost -> lost;      
     }
     overdue {
-      entry / {assessFine(); sendOverdueNotice();}
+      entry / {
+        assessFine(); 
+        sendOverdueNotice();
+      }
       afterEvery(getFineIncrementInterval()) -> overdue;
       returnitem -> returned;
       declareLost -> lost;      

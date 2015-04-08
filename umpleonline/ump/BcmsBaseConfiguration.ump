@@ -21,4 +21,6 @@ class CrisisManagementSystem {
   1 -> 0..1 Crisis;
   1 -> 2 StationCoordinator;
 }
+
+//$?[End_of_model]$?
 // @@@skipcompile - there are many method calls that need adding to make this complete

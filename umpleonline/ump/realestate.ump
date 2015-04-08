@@ -127,3 +127,5 @@ class GPSCoord
 {
   position 49 427 142 76;
 }
+
+// @@@skipphpcompile - Skipped due to issue 700

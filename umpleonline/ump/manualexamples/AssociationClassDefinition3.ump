@@ -51,3 +51,5 @@ class Team
 {
   position 397 70 109 58;
 }
+
+// @@@skipphpcompile - remove when issue 697 is fixed

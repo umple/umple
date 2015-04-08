@@ -112,3 +112,6 @@ class Passenger
   position 311 485 189 77;
 }
 
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code

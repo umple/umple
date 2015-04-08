@@ -76,3 +76,6 @@ class Light3 {
 }
 
 strictness ignore 28;
+
+// $?[End_of_model]$?
+// @@@skipphpcompile - Due to issue 703 and Java-specific code in actions

@@ -37,6 +37,8 @@ class Person
 class Ticket
 {
   position.association Person:attendee__Ticket 166,48 0,23;
-    position.association Seminar__Ticket 30,77 30,0;
-position 50 10 166 77;
+  position.association Seminar__Ticket 30,77 30,0;
+  position 50 10 166 77;
 }
+
+// @@@skipphpcompile - remove when issue 697 is fixed

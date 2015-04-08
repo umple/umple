@@ -17,4 +17,5 @@ class Student
   // trace attribute id with log4j level set to (error)
   trace name logLevel error;
 }
-
+//$?[End_of_model]$?
+// @@@skipcompile - log4j not on build path

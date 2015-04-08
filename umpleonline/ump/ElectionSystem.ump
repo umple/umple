@@ -152,3 +152,8 @@ class ElectoralDistrict
   position.association ElectoralDistrict__Position 50,59 112,0;
   position.association ElectoralDistrict__ElectoralDistrict:subDistrict 0,38 15,59;
 }
+
+// $?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code

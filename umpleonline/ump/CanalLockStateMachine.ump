@@ -18,8 +18,8 @@ class Lock
     }
 
     UpperGateOpen {
-      entry / {boatGoingUp = false;}
-      boatInLockRequestingToGoDown -> / {boatGoingDown = true;} ClosingUpperGate;
+      entry / {setBoatGoingUp(false);}
+      boatInLockRequestingToGoDown -> / {setBoatGoingDown(true);} ClosingUpperGate;
       after3minutes [!boatBlockingGate] -> ClosingUpperGate;
     }
 
@@ -44,8 +44,8 @@ class Lock
     }
 
     LowerGateOpen {
-      entry / {boatGoingDown = false;}
-      boatInLockRequestingToGoUp -> / {boatGoingUp = true;} ClosingLowerGate;
+      entry / {setBoatGoingDown(false);}
+      boatInLockRequestingToGoUp -> / {setBoatGoingUp(true);} ClosingLowerGate;
       after3minutes [!boatBlockingGate] -> ClosingLowerGate;
     }
 
