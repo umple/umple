@@ -216,7 +216,7 @@ $output = readTemporaryFile("ump/" . $filename);
               </select>
             </li>
             <li id="itemLoadExamples">
-              <select id="inputExample" name="inputExample" class="button" size = "1">
+              <select id="inputExample" name="inputExample" class="button" size = "1" data-diagram-type="class">
                 <option name = "optionExample" id = "defaultExampleOption" value="">Select Example</option>
                 <option name = "optionExample" value="2DShapes.ump">2DShapes</option>
                 <option name = "optionExample" value="AccessControl.ump">Access Control</option>
@@ -263,10 +263,11 @@ $output = readTemporaryFile("ump/" . $filename);
                 <option name = "optionExample" value="UniversitySystem.ump">University System</option>
                 <option name = "optionExample" value="VendingMachineClassDiagram.ump">Vending Machine</option>
                 <option name = "optionExample" value="WarehouseSystem.ump">Warehouse System</option>
+                <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
             <li id="itemLoadExamples2">
-              <select id="inputExample2" name="inputExample2" class="button" size = "1">
+              <select id="inputExample2" name="inputExample2" class="button" size="1" data-diagram-type="state">
                 <option name = "optionExample2" id = "defaultExampleOption2" value="">Select Example</option>
                 <option name = "optionExample" value="AgentsCommunication.ump">Agents Communicating</option>
                 <option name = "optionExample" value="ApplicationProcessing.ump">Application for a Grant</option>
@@ -296,13 +297,15 @@ $output = readTemporaryFile("ump/" . $filename);
                 <option name = "optionExample" value="TollBooth.ump">Toll Booth</option>
                 <option name = "optionExample" value="TrafficLightsA.ump">Traffic Lights A</option>
                 <option name = "optionExample" value="TrafficLightsB.ump">Traffic Lights B</option>
+                <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
             <li id="itemLoadExamples3">
-              <select id="inputExample3" name="inputExample3" class="button" size = "1">
-                <option name = "optionExample3" id = "defaultExampleOption3" value="">Select Example</option>              
+              <select id="inputExample3" name="inputExample3" class="button" size="1" data-diagram-type="composite">
+                <option name = "optionExample3" id = "defaultExampleOption3" value="">Select Example</option>
                 <option name = "optionExample" value="OBDCarSystem.ump">OBD Car System</option>
                 <option name = "optionExample" value="PingPong.ump">Ping Pong</option>
+                <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
             <li class="dropbox-add-chooser"></li>       
@@ -439,7 +442,7 @@ $output = readTemporaryFile("ump/" . $filename);
     <div class="spacer row"></div>
   <?php } ?>
 
-  <script language="JavaScript">
+  <script>
     Page.init(
       <?php if($showDiagram) { ?> true  <?php } else { ?> false <?php } ?>,
       <?php if($showText) { ?> true  <?php } else { ?> false <?php } ?>,

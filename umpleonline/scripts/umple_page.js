@@ -80,7 +80,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Action.loadFile();
   
   jQuery(generateDefault).prop("selected",true);
-}
+};
 
 Page.initPaletteArea = function()
 {

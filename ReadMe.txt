@@ -17,7 +17,7 @@ More details can be found as follows
 
 Umple is continuously tested and build on Travis CI (https://travis-ci.org/). 
 
-Current build status: ![](https://travis-ci.org/Nava2/Umple.svg?branch=master)
+Current build status: https://travis-ci.org/umple/Umple
 
 The items below are in alphabetical order.
 

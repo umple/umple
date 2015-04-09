@@ -891,6 +891,14 @@ Action.setExampleType = function setExampleType()
 
 Action.loadExample = function loadExample()
 {
+  var diagramType = this.dataset['diagramType'];
+  var $option = jQuery(' option:selected', this);
+  if ($option.hasClass('openUmprOption')) {
+    // user wants to open the umpr repository
+    location.href = "http://umpr.umple.org?diagram-type=" + diagramType;
+    return;
+  }
+
   UmpleSystem.merge(null);
   Page.showCanvasLoading(true);
   Page.showModelLoading(true);
