@@ -20,7 +20,13 @@ umplificator=$1
 if [[ ! -z "$2" ]]; then
         rootdir=$2
 else
-        rootdir="."
+        rootdir=$UMPLIFY_DIR
+fi
+
+if [ -z "$rootdir" ]; then # If rootdir is null
+        echo "No rootdir set!"
+        echo "Rootdir can either be specified by the env variable UMPLIFY_DIR or as the second argument to this script"
+        exit 1
 fi
 
 # Crawl the directory and build a list of projects to umplify
@@ -28,13 +34,15 @@ to_umplify=()
 for org_dir in $rootdir/*; do
         if test -d $org_dir; then
                 for proj_dir in $org_dir/*; do
-                        for ver_dir in $proj_dir/*; do
-                                # Only add projects that haven't already been tried by the umplificator
-                                pattern=$ver_dir/*.umplify.score
-                                files=( $pattern )
-                                if ! test -e ${files[0]}; then
-                                        to_umplify+=($ver_dir)
-                                fi
+                        for branch_dir in $proj_dir/*; do
+                                for ver_dir in $branch_dir/*; do
+                                        # Only add projects that haven't already been tried by the umplificator
+                                        pattern=$ver_dir/*.umplify.score
+                                        files=( $pattern )
+                                        if ! test -e ${files[0]}; then
+                                                to_umplify+=($ver_dir)
+                                        fi
+                                done
                         done
                 done
         fi
@@ -45,7 +53,6 @@ for dir in "${to_umplify[@]}"; do
 
         mkdir -p ${umplificator%/*}/logs
         touch $dir/P.umplify.score
-        echo $dir/P.umplify.score
 
         # Try level 0
         java -jar $umplificator -level=0 -dir -path=$dir/umple_output $dir/src 2> ${umplificator%/*}/logs/stderr-level0.log
