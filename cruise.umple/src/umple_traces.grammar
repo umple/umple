@@ -46,14 +46,12 @@ traceCaseDeactivation- : deactivate [tracecase_deact_name] onThisObject [[deActi
 deActivateFor- : for [deactivate_for]
 
 
-/*--------- Old rules (left as reference) ---------
-++ Tracer
+//--------- Old rules (left as reference) ---------
+//++Tracer
 //traceType : tracer [tracerType] ( [=onoff:on|off] : [[tracerOptions]] ( , [[tracerOptions]] )* )* ( [=verbisty:verbose] )? ( [tracerArgument] )* [[log4jConfig]]* ([[tracerOptions]])* ;
 //traceType : tracer [tracerType] ( , [tracerType] )* [[log4jConfig]]* ([[tracerOptions]])* ;
 //traceType : tracer [=tracerType:Console|File|String|Visual] ( , [=tracerType:Console|File|String|Visual] )* ( [=onoff:on|off] : [[tracerOptions]] ( , [[tracerOptions]] )* )* ( [=verbisty:verbose] )? ( [tracerArgument] )* ;
 //tracerOptions- : [[tracerOn]]? [=option:Time|time|Thread|thread|File|file|Line|line|Trace|trace|Trigger|trigger|TraceFile|tracefile|TraceLine|traceline|TriggerLine|triggerline|TriggerFile|triggerfile|Class|class|Object|object|Operation|operation|Name|name|Value|value] [=option:Time|time|Thread|thread|File|file|Line|line|Trace|trace|Trigger|trigger|TraceFile|tracefile|TraceLine|traceline|TriggerLine|triggerline|TriggerFile|triggerfile|Class|class|Object|object|Operation|operation|Name|name|Value|value]*
 //tracerOn : on:|off:
 //log4jConfig : (root = [rootLevel]) | (monitorInterval = [monitorInterval]) | (OPEN_ROUND_BRACKET) [log4jLevel] ( , [log4jLevel] )* (CLOSE_ROUND_BRACKET) = (OPEN_ROUND_BRACKET) [log4jAppender] ( , [log4jAppender] )* (CLOSE_ROUND_BRACKET)
-++ Trace
-
---------------------------------------------------*/
+//--------------------------------------------------
