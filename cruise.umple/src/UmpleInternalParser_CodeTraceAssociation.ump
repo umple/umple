@@ -20,19 +20,19 @@ class UmpleInternalParser
 
 		for( AssociationVariable aVar : traceDirective.getUmpleClass().getAssociationVariables() )
 		{
-			if( traceToken.getValue("trace_entity").equals(aVar.getName()))
+			if( traceToken.getValue("traceEntity").equals(aVar.getName()))
 				tracedAssoc.addAssociationVariable(aVar);
 		}
 
 		for( Association assoc : traceDirective.getUmpleClass().getAssociations() )
 		{
-			if( assoc.getName().contains(traceToken.getValue("trace_entity") ))
+			if( assoc.getName().contains(traceToken.getValue("traceEntity") ))
 				tracedAssoc.addAssociation(assoc);
 		}
 
 		for(Token sub: traceToken.getParentToken().getSubTokens())
 		{
-			if(sub.is("traceOptions"))
+			if(sub.is("Prefix"))
 			{
 				for(Token sub2: sub.getSubTokens())
 				{

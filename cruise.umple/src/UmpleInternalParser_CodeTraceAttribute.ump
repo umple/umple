@@ -20,8 +20,8 @@ class UmpleInternalParser
   // if trace entity is an attribute
   private void analyzeAttributeTraceItem(Token traceToken) {
 
-    UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
-    attr = attr==null?traceDirective.getUmpleClass().getAssociationVariable(traceToken.getValue("trace_entity")):attr;
+    UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("traceEntity"));
+    attr = attr==null?traceDirective.getUmpleClass().getAssociationVariable(traceToken.getValue("traceEntity")):attr;
 
     if( attr != null )
     {
@@ -32,7 +32,7 @@ class UmpleInternalParser
 
       for(Token sub: traceToken.getParentToken().getSubTokens())
       {
-        if(sub.is("traceOptions"))
+        if(sub.is("Prefix"))
         {
           traceAttr.setTraceSet(false);
           for(Token sub2: sub.getSubTokens())

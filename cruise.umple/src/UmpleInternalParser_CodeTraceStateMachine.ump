@@ -21,7 +21,7 @@ class UmpleInternalParser
     List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
     StateMachine stm = null;
     State state = null;
-    String stmTraceItem = traceToken.getValue("trace_entity");
+    String stmTraceItem = traceToken.getValue("traceEntity");
 
     if( traceToken.getParentToken().getSubToken(1).numberOfSubTokens()>0)
     {
@@ -47,9 +47,9 @@ class UmpleInternalParser
         tracedStm.setIsOut(isOut);
         tracedStm.setIsIn(isIn);
         tracedStm.setPosition(traceToken.getPosition());
-        if( traceToken.getParentToken().getValue("trace_level")!=null )
+        if( traceToken.getParentToken().getValue("traceLevel")!=null )
         {
-          tracedStm.setLevel(Integer.parseInt(traceToken.getParentToken().getValue("trace_level")));
+          tracedStm.setLevel(Integer.parseInt(traceToken.getParentToken().getValue("traceLevel")));
         }
         for( StateMachine sm:stms  )
         {
@@ -123,13 +123,13 @@ class UmpleInternalParser
       tracedStm.setPosition(traceToken.getPosition());  
       tracedStm.setStateMachine(stm);
       tracedStm.setState(state);
-      if( traceToken.getParentToken().getValue("trace_level")!=null )
+      if( traceToken.getParentToken().getValue("traceLevel")!=null )
       {
-        tracedStm.setLevel(Integer.parseInt(traceToken.getParentToken().getValue("trace_level")));
+        tracedStm.setLevel(Integer.parseInt(traceToken.getParentToken().getValue("traceLevel")));
       }
       for(Token sub: traceToken.getParentToken().getSubTokens())
       {
-        if(sub.is("traceOptions"))
+        if(sub.is("Prefix"))
         {
           boolean wasSet = false;
           boolean wasInOut = false;

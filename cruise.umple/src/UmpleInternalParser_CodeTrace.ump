@@ -56,7 +56,7 @@ class UmpleInternalParser
         	else
         		tracer.addTracerArgument(new TracerArgument(subToken.getValue()));
         }
-        else if(subToken.is("traceMsgHeader"))
+        else if(subToken.is("traceMessageHeader"))
         {
         	for(Token msgToken : subToken.getSubTokens())
         	{
@@ -147,11 +147,11 @@ class UmpleInternalParser
 
     for( Token traceToken : token.getSubTokens() )
     {
-      if( traceToken.is("trace_entity") || traceToken.getName().equals("entry") || traceToken.getName().equals("exit"))
+      if( traceToken.is("traceEntity") || traceToken.getName().equals("entry") || traceToken.getName().equals("exit"))
       {
         analyzeTraceItem( traceToken );
       }
-      else if( traceToken.is("traceWhen") ) //for where/giving/after/until
+      else if( traceToken.is("traceCondition") ) //for where/giving/after/until
       {
         //using the constraint data type, used for holding umple specific conditionals
         int pos = 1;
@@ -234,7 +234,7 @@ class UmpleInternalParser
         }
         traceAttr.addUmpleVariable(attr);
       }     
-      else if( traceToken.is("trace_for") )
+      else if( traceToken.is("traceFor") )
       {
         String flag = "traceFlag"+getTraceFlagId();
         Attribute flagAttr = new Attribute(flag,"Integer","internal","0",false,aClass);
@@ -256,18 +256,18 @@ class UmpleInternalParser
         constraint.addElement(subTree);
         traceAttr.setConstraint(constraint);
       }     
-      else if( traceToken.is("trace_period") )
+      else if( traceToken.is("tracePeriod") )
       {
         traceAttr.setTraceSet(false);
         traceAttr.setTraceGet(false);
         traceAttr.setTraceConstructor(true);
-        traceAttr.setPeriodClause(token.getValue("trace_period"));
+        traceAttr.setPeriodClause(token.getValue("tracePeriod"));
       }
-      else if( traceToken.is("trace_duration") )
+      else if( traceToken.is("traceDuration") )
       {
-        traceAttr.setDuringClause(token.getValue("trace_duration"));
+        traceAttr.setDuringClause(token.getValue("traceDuration"));
       }
-      else if( traceToken.is("trace_record") || traceToken.getName().equals("only")  || traceToken.is("trace_record_string") )
+      else if( traceToken.is("traceRecord") || traceToken.getName().equals("only")  || traceToken.is("recordString") )
       {
         if( isFirst )
         {
@@ -278,9 +278,9 @@ class UmpleInternalParser
         else
           analyzeTraceRecord(traceDirective,traceToken,traceRecord);
       }
-      else if( traceToken.is("trace_execute") )
+      else if( traceToken.is("traceExecute") )
       {
-        traceAttr.setExecuteClause(token.getValue("trace_execute"));
+        traceAttr.setExecuteClause(token.getValue("traceExecute"));
       }
       else if( traceToken.is("logLevel") )
       {
@@ -297,8 +297,8 @@ class UmpleInternalParser
    */
   private void analyzeTraceRecord(TraceDirective traceDirective, Token token, TraceRecord traceRecord){
 
-    String record = token.getValue("trace_record_string");
-    Attribute attr = traceDirective.getUmpleClass().getAttribute(token.getValue("trace_record"));
+    String record = token.getValue("recordString");
+    Attribute attr = traceDirective.getUmpleClass().getAttribute(token.getValue("traceRecord"));
 
     if( token.getName().equals("only") )
     {
@@ -340,7 +340,7 @@ class UmpleInternalParser
     }
 
     // trace all attribute [wildcard]
-    if( traceToken.getValue("trace_entity").equals("*attribute") )
+    if( traceToken.getValue("traceEntity").equals("*attribute") )
     {
       UmpleClass uClass = traceDirective.getUmpleClass();
 
@@ -365,8 +365,8 @@ class UmpleInternalParser
     int traceItemType = -1;
 
     // --- check if attribute
-    UmpleVariable attr = aClass.getAttribute(traceToken.getValue("trace_entity"));  
-    attr = attr==null?aClass.getAssociationVariable(traceToken.getValue("trace_entity")):attr;
+    UmpleVariable attr = aClass.getAttribute(traceToken.getValue("traceEntity"));  
+    attr = attr==null?aClass.getAssociationVariable(traceToken.getValue("traceEntity")):attr;
 
     if( attr != null )
     {
@@ -376,18 +376,18 @@ class UmpleInternalParser
     // --- check if state machine
     for( StateMachine sVar : aClass.getStateMachines() )
     {
-      if( traceToken.getValue("trace_entity").equals(sVar.getName()))
+      if( traceToken.getValue("traceEntity").equals(sVar.getName()))
       {
         traceItemType = 2;
       }
       for( State s : sVar.getStates() )
       {
-        if( traceToken.getValue("trace_entity").equals(s.getName()) || traceToken.getValue("trace_entity").equals(sVar.getName()+"."+s.getName()) )
+        if( traceToken.getValue("traceEntity").equals(s.getName()) || traceToken.getValue("traceEntity").equals(sVar.getName()+"."+s.getName()) )
         {
           traceItemType = 2;
         }
         for( Transition t : s.getTransitions() )
-          if( traceToken.getValue("trace_entity").equals(t.getEvent().getName()))
+          if( traceToken.getValue("traceEntity").equals(t.getEvent().getName()))
           {
             traceItemType = 2;
           }
@@ -397,7 +397,7 @@ class UmpleInternalParser
     // --- check if association
     for( AssociationVariable aVar : aClass.getAssociationVariables() )
     {
-      if( traceToken.getValue("trace_entity").equals(aVar.getName()))
+      if( traceToken.getValue("traceEntity").equals(aVar.getName()))
       {
         traceItemType = 3;
       }
@@ -405,7 +405,7 @@ class UmpleInternalParser
 
     for( Association a : aClass.getAssociations() )
     {
-      if( a.getName().contains(traceToken.getValue("trace_entity") ))
+      if( a.getName().contains(traceToken.getValue("traceEntity") ))
       {
         traceItemType = 3;
       }
@@ -414,7 +414,7 @@ class UmpleInternalParser
     // --- check if method
     for( Method mVar : aClass.getMethods() )
     {
-      if( traceToken.getValue("trace_entity").equals(mVar.getName()) )
+      if( traceToken.getValue("traceEntity").equals(mVar.getName()) )
       {
         traceItemType = 4;
       }
@@ -448,7 +448,7 @@ class UmpleInternalParser
   private void analyzeMethodTraceItem(Token traceToken){
     for( Method mVar : traceDirective.getUmpleClass().getMethods() )
     {
-      if( traceToken.getValue("trace_entity").equals(mVar.getName()) )
+      if( traceToken.getValue("traceEntity").equals(mVar.getName()) )
       {
         mte.setPosition(traceToken.getPosition());
         mte.addMethod(mVar);
@@ -458,7 +458,7 @@ class UmpleInternalParser
     boolean wasSet = false;
     for(Token sub: traceToken.getParentToken().getSubTokens())
     {
-      if(sub.is("traceOptions")) 
+      if(sub.is("Prefix")) 
       {
         for(Token sub2: sub.getSubTokens())
         {
