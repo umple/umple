@@ -178,7 +178,7 @@ class HtmlGen {
   }
 }
 
-// $?[End_of_model]$?
+//$?[End_of_model]$?
 // @@@skipcppcompile - Contains Java code
 // @@@skipphpcompile - Contains Java code
 // @@@skiprubycompile - Contains Java code

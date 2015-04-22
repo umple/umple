@@ -10,5 +10,5 @@ associationClass Booking {
   key {number, flight, passenger}
 }
 
-// $?[End_of_model]$?
+//$?[End_of_model]$?
 // @@@skipphpcompile - remove when issue 697 is fixed

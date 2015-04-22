@@ -7,5 +7,5 @@ class Student
   trace id;
 }
 
-// $?[End_of_model]$?
+//$?[End_of_model]$?
 // @@@skipphpcompile - Skipped due to issue 698

@@ -28,7 +28,7 @@ class Student
   position 47 23 141 100;
 }
 
-// $?[End_of_model]$?
+//$?[End_of_model]$?
 // @@@skipcppcompile - Contains Java code
 // @@@skipphpcompile - Contains Java code also, issue 700 (line 17)
 // @@@skiprubycompile - Contains Java code

@@ -4,5 +4,5 @@ class A {
 }
 class OtherClass {}
 
-// $?[End_of_model]$?
+//$?[End_of_model]$?
 // @@@skipphpcompile - Skipped due to issue 700

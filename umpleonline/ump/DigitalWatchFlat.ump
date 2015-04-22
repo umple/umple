@@ -125,6 +125,6 @@ class DigitalWatch {
   }
 }
 
-// $?[End_of_model]$?
+//$?[End_of_model]$?
 // @@@skipphpcompile - Contains Java/Cpp Code
 // @@@skiprubycompile - Contains Java/Cpp Code

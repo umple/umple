@@ -9,6 +9,6 @@ class PotentialVoter {
   }
 }
 
-// $?[End_of_model]$?
+//$?[End_of_model]$?
 // @@@skipphpcompile - Contains Java/Cpp code
 // @@@skiprubycompile - Contains Java/Cpp code
