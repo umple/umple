@@ -40,10 +40,10 @@ MODULE StateState11State11( state , stateState11 , stateState12 , stateState12St
   TRANS
     ( (stateState11State11_state = stateState11State11_state111) -> (
       (handle.event = e1 & next(stateState11State11_state) = stateState11State11_state112)  |
-      (handle.event = e5 & next(state.state_state) = state_state2 & next(stateState11.stateState11_state) = null & next(stateState11State11_state) = null)  ) ) &
+      (handle.event = e5 & next(state.state_state) = state_state2 & next(stateState11.stateState11_state) = null & next(stateState11State11_state) = null & next(stateState12.stateState12_state) = null & next(stateState12State12.stateState12State12_state) = null)  ) ) &
     ( (stateState11State11_state = stateState11State11_state112) -> (
       (handle.event = e4 & next(stateState11State11_state) = stateState11State11_state111)  |
-      (handle.event = e5 & next(state.state_state) = state_state2 & next(stateState11.stateState11_state) = null & next(stateState11State11_state) = null)  ) )
+      (handle.event = e5 & next(state.state_state) = state_state2 & next(stateState11.stateState11_state) = null & next(stateState11State11_state) = null & next(stateState12.stateState12_state) = null & next(stateState12State12.stateState12State12_state) = null)  ) )
   
 MODULE StateState12( state , stateState11 , stateState11State11 , stateState12State12 , handle )
   
@@ -67,10 +67,10 @@ MODULE StateState12State12( state , stateState11 , stateState11State11 , stateSt
   TRANS
     ( (stateState12State12_state = stateState12State12_state121) -> (
       (handle.event = e2 & next(stateState12State12_state) = stateState12State12_state122)  |
-      (handle.event = e5 & next(state.state_state) = state_state2 & next(stateState12.stateState12_state) = null & next(stateState12State12_state) = null)  ) ) &
+      (handle.event = e5 & next(state.state_state) = state_state2 & next(stateState11.stateState11_state) = null & next(stateState11State11.stateState11State11_state) = null & next(stateState12.stateState12_state) = null & next(stateState12State12_state) = null)  ) ) &
     ( (stateState12State12_state = stateState12State12_state122) -> (
       (handle.event = e3 & next(stateState12State12_state) = stateState12State12_state121)  |
-      (handle.event = e5 & next(state.state_state) = state_state2 & next(stateState12.stateState12_state) = null & next(stateState12State12_state) = null)  ) )
+      (handle.event = e5 & next(state.state_state) = state_state2 & next(stateState11.stateState11_state) = null & next(stateState11State11.stateState11State11_state) = null & next(stateState12.stateState12_state) = null & next(stateState12State12_state) = null)  ) )
   
 MODULE main
   

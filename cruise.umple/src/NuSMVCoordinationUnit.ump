@@ -314,6 +314,22 @@ class NuSMVCoordinator
 			}
 	}
 
+	private void disableConcurrentMachines(State gparent, State source, SimpleTransition strans, EnumerationStatement stateVariables)
+	{	
+		for(int i = 0; i < gparent.numberOfNestedStateMachines();i++) {
+			StateMachine machine = gparent.getNestedStateMachines().get(i);
+			String parentName = machine.getFullName().equals(source.getStateMachine().getFullName()) ? 
+					"" : changeNameCase(machine.getFullName(), 0); 
+			String stateName = parentName == "" ? 
+				changeNameCase(gparent.getNestedStateMachines().get(i).getFullName(), 0) + "_state" : parentName + "_state";
+			NextExpression newExpr = new NextExpression(stateName,"null", parentName);
+			strans.addNextExpression(newExpr);
+			if(isNested(machine))
+				for(State state : getCompositeStates(machine))				
+					disableConcurrentMachines(state, source, strans, stateVariables);
+		}
+	}
+
 	private void genTransitionCompositeStates(StateMachine sm, TransitionPart tpart, EnumerationStatement stateVariables)
 	{
 		String source = changeNameCase(sm.getFullName(), 0) +"_state";
@@ -425,20 +441,33 @@ class NuSMVCoordinator
 			if(!isChildState(source , destination))	{	
 				
 				//Case 1: target state has a host machine not in the list of ancestors
-				if(machineStack.search(destination.getStateMachine()) < 1)
-					generateExitStatements(machineStack, sm , destination, stateVariables, strans);
+				if(machineStack.search(destination.getStateMachine()) < 1) 
+					genNon_ConcurrentExitStatements(sm, stateVariables, strans, source, machineStack, destination);
 				
 				//Case 2: destination state is a member of ancestors, deactivate members below the targeted ancestors
 				if(machineStack.search(destination.getStateMachine()) >= 1) {
-					for(int i = 0; i < machineStack.search(destination.getStateMachine()); i++)
+					for(int i = 0; i <= machineStack.search(destination.getStateMachine()); i++)
 						machineStack.pop();
-					generateExitStatements(machineStack, sm , destination, stateVariables, strans);
+					generateExitStatements(machineStack, sm , destination, stateVariables, strans, source);
 				}
 			}
 	}
 
-	private void generateExitStatements(Stack<StateMachine> machineStack, StateMachine sm , State destination, EnumerationStatement stateVariables, SimpleTransition strans) {
-		
+	private void genNon_ConcurrentExitStatements(StateMachine sm , EnumerationStatement stateVariables, SimpleTransition strans , State source,
+		Stack<StateMachine> machineStack, State destination) {
+		Stack<StateMachine> machineStackCopy = machineStack;
+		State parent = source.getStateMachine().getParentState();
+		if(parent != null) {
+			State grandParent = parent.getStateMachine().getParentState();
+			if(grandParent != null && grandParent.getIsConcurrent()) {
+				disableConcurrentMachines(grandParent, source, strans, stateVariables); 
+				return;
+			}
+		}
+		generateExitStatements(machineStack, sm , destination, stateVariables, strans, source);
+	}
+
+	private void generateExitStatements(Stack<StateMachine> machineStack, StateMachine sm , State destination, EnumerationStatement stateVariables, SimpleTransition strans , State source) {
 		while(!machineStack.empty()) {
 			StateMachine stm = machineStack.pop();
 			String parentName = stm.getFullName().equals(sm.getFullName()) ? "" : changeNameCase(stm.getFullName(), 0); 

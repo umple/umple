@@ -46,6 +46,14 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/AbstractConcurrentSystem.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/MultiLevelStateMachineExample.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/MultiLevelStateMachineExampleCase2.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/nestedConcurrentMachine.smv");
+	  }
+	  
+	  @Test //@Ignore
+	  public void nestedConcurrentMachine()
+	  {
+		assertUmpleTemplateFor("nusmv/nestedConcurrentMachine.ump","nusmv/nestedConcurrentMachine.nusmv.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/nestedConcurrentMachine.smv")).exists());
 	  }
 	
 	  @Test //@Ignore

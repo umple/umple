@@ -16,9 +16,13 @@ class A {
         e5 -> state2; 
         state121 {
           e2 -> state122;
+          e4 -> state1221;
         }
         state122 {
           e3 -> state121;
+          state1221 {
+          	e4 -> state121;
+          }
         } } 
     }
     state2{}
