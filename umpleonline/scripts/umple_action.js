@@ -665,7 +665,12 @@ Action.generateCode = function(languageStyle, languageName)
 
   if(languageName === "StateTables")
   {
-    additionalCallback = StateTable.colourTables;
+    additionalCallback = StateTree.colourStateTables;
+  }
+
+  if(languageName === "EventSequence")
+  {
+    additionalCallback = StateTree.colourEventSequences;
   }
 
   jQuery(generateCodeSelector).showLoading();
@@ -702,7 +707,6 @@ Action.generateCodeCallback = function(response, language, optionalCallback)
   {
     optionalCallback();
   }
-  else { console.log("Undefined callback"); }
 
   var generateCodeSelector = "#buttonGenerateCode";
   jQuery(generateCodeSelector).hideLoading();

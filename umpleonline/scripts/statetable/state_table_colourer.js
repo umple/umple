@@ -1,4 +1,4 @@
-var StateTable = {}
+var StateTree = {}
 
 //////////////////////////////////////////////////////////////
 //                      STATENODE CLASS                     //
@@ -217,43 +217,15 @@ Colour.prototype.toHex = function()
 //////////////////////////////////////////////////////////////
 //                   STATETABLE FUNCTIONS                   //
 //////////////////////////////////////////////////////////////
-StateTable.init = function(table) 
+function StateTable(table, stateTree)
 {
-  StateTable.stateNodes = [];
-
-  StateTable.table = table;
-
-  if(StateTable.table.hasClass("event-statetable")) 
-  {
-    StateTable.type = "event";
-  } 
-  else if(StateTable.table.hasClass("state-statetable")) 
-  {
-    StateTable.type = "state";
-  } 
-  else 
-  {
-    console.log("Unknown state table type");
-    StateTable.type = "unknown";
-  }
+  this.table = table;
+  this.stateTree = stateTree;
 };
 
-StateTable.createState = function(stateRow, id) 
+StateTable.prototype.readTable = function() 
 {
-  var parentId = parseInt(stateRow.attr("data-parent"));
-  var parent = StateTable.stateNodes[parentId];
-
-  if(isNaN(parentId)) 
-  {
-    parent = null;
-  } 
-
-  return new StateNode(parent, id);
-};
-
-StateTable.readTable = function() 
-{
-  var rows = StateTable.table.find("tr");
+  var rows = this.table.find("tr");
 
   //process first entry in each row (except the first) to get the state tree
   var id = 0;
@@ -261,83 +233,32 @@ StateTable.readTable = function()
   for(var i = 1; i < rows.length; i++) 
   {
     var entry = jQuery(rows[i]).find("td")[0];
-    StateTable.stateNodes.push(StateTable.createState(jQuery(entry), id));
-    id++;
+    this.stateTree.stateNodes.push(
+      this.stateTree.createState(jQuery(entry), id++));
   }
 };
 
-StateTable.maxDepth = function() 
+StateTable.prototype.colour = function() 
 {
-  var max = 0;
-  var stateDepth;
-  for(var i = 0; i < StateTable.stateNodes.length; i++) 
-  {
-    stateDepth = StateTable.stateNodes[i].getDepth();
-
-    if(stateDepth > max) max = stateDepth;
-  }
-
-  return max;
-};
-
-StateTable.numStateFamilies = function() 
-{
-  numStateFamilies = 0;
-  for(var i = 0; i < StateTable.stateNodes.length; i++) 
-  {
-    if(StateTable.stateNodes[i].getParent() === null)
-      numStateFamilies++;
-  }
-
-  return numStateFamilies;
-};
-
-StateTable.colour = function() 
-{
-  var colourer = new StateColourer(StateTable.maxDepth(), 
-    StateTable.numStateFamilies);
-
-  //Assign each state their passive and active colours
-  var colourId = 0;
-  var stateNode;
-
-  for(var i = 0; i < StateTable.stateNodes.length; i++) 
-  {
-    stateNode = StateTable.stateNodes[i];
-    //Non-child state
-    if(stateNode.getParent() === null)
-    {
-      stateNode.passiveColour = colourer.getBasePassiveColour();
-      stateNode.activeColour = colourer.getBaseColour(colourId++);
-    } 
-    else //Child state 
-    {
-      stateNode.passiveColour = colourer.lighten(
-        stateNode.getParent().passiveColour);
-      stateNode.activeColour = colourer.lighten(
-        stateNode.getParent().activeColour);
-    }
-  }
-
   //Colour the states
-  var rows = StateTable.table.find("tr");
+  var rows = this.table.find("tr");
   var rowEntries, rowState, cell;
 
   //Colour the header
-  if(StateTable.type === "state") 
+  if(this.stateTree.type === "state") 
   {
     rowEntries = jQuery(rows[0]).find("td");
     for(var i = 1; i < rowEntries.length; i++) 
     {
       jQuery(rowEntries[i]).css("background-color", "#" +
-        StateTable.stateNodes[i - 1].activeColour);
+        this.stateTree.stateNodes[i - 1].activeColour);
     }
   }
 
   //Colour the rest of the table
   for(var i = 1; i < rows.length; i++) 
   {
-    rowState = StateTable.stateNodes[i - 1];
+    rowState = this.stateTree.stateNodes[i - 1];
     rowEntries = jQuery(rows[i]).find("td");
 
     cell = jQuery(rowEntries[0]);
@@ -355,14 +276,196 @@ StateTable.colour = function()
   }
 };
 
-StateTable.colourTables = function() 
+//////////////////////////////////////////////////////////////
+//                 EVENTSEQUENCE FUNCTIONS                  //
+//////////////////////////////////////////////////////////////
+
+function EventSequence(headerTable, bodyTable, stateTree)
+{
+  this.headerTable = headerTable;
+  this.bodyTable = bodyTable;
+  this.stateTree = stateTree;
+};
+
+EventSequence.prototype.readTable = function()
+{
+  var entries = jQuery(this.headerTable).find("td");
+
+  //process each entry, except the first to get the state tree
+  var id = 0;
+
+  for(var i = 1; i < entries.length; i++) 
+  {
+    this.stateTree.stateNodes.push(
+      this.stateTree.createState(jQuery(entries[i]), id++));
+  }
+};
+
+EventSequence.prototype.colour = function()
+{
+  var rows, rowEntries, rowState, cell;
+
+  //Colour the floating column
+  rows = jQuery(this.headerTable).find("td");
+
+  for(var i = 1; i < rows.length; i++)
+  {
+    rowState = this.stateTree.stateNodes[i - 1];
+    jQuery(rows[i]).css("background-color", "#" + rowState.activeColour);
+  }
+
+  //Colour the main table
+  rows = jQuery(this.bodyTable).find("tr");
+
+  // Colour all rows, except the top row
+  for(var i = 1; i < rows.length; i++)
+  {
+    rowState = this.stateTree.stateNodes[i - 1];
+    rowEntries = jQuery(rows[i]).find("td");
+
+    for(var j = 0; j < rowEntries.length; j++)
+    {
+      cell = jQuery(rowEntries[j]);
+
+      if(cell.text().match(/^\s$/)) 
+        cell.css("background-color", "#" + rowState.passiveColour);
+      else
+        cell.css("background-color", "#" + rowState.activeColour);
+    }
+  }
+};
+
+//////////////////////////////////////////////////////////////
+//                   STATETREE  FUNCTIONS                   //
+//////////////////////////////////////////////////////////////
+StateTree.init = function(table, type)
+{
+  StateTree.stateNodes = [];
+
+  if(table.hasClass("event-statetable")) 
+  {
+    StateTree.type = "event";
+    StateTree.handler = new StateTable(table, this);
+  } 
+  else if(table.hasClass("state-statetable")) 
+  {
+    StateTree.type = "state";
+    StateTree.handler = new StateTable(table, this);
+  } 
+  else if(table.hasClass("event-sequence-grid"))
+  {
+    StateTree.type = "eventSequence";
+    StateTree.handler = new EventSequence(table.find("table")[0], 
+                                          table.find("table")[1], 
+                                          this);
+  }
+  else 
+  {
+    console.log("Unknown state table type");
+    StateTree.type = "unknown";
+  }
+};
+
+StateTree.createState = function(stateRow, id)
+{
+  var parentId = parseInt(stateRow.attr("data-parent"));
+  var parent = StateTree.stateNodes[parentId];
+
+  if(isNaN(parentId)) 
+  {
+    parent = null;
+  } 
+
+  return new StateNode(parent, id);
+};
+
+StateTree.maxDepth = function() 
+{
+  var max = 0;
+  var stateDepth;
+  for(var i = 0; i < StateTree.stateNodes.length; i++) 
+  {
+    stateDepth = StateTree.stateNodes[i].getDepth();
+
+    if(stateDepth > max) max = stateDepth;
+  }
+
+  return max;
+};
+
+StateTree.numStateFamilies = function() 
+{
+  numStateFamilies = 0;
+  for(var i = 0; i < StateTree.stateNodes.length; i++) 
+  {
+    if(StateTree.stateNodes[i].getParent() === null)
+      numStateFamilies++;
+  }
+
+  return numStateFamilies;
+};
+
+StateTree.readTable = function()
+{
+  StateTree.handler.readTable();
+};
+
+StateTree.assignStateColours = function()
+{
+  var colourer = new StateColourer(StateTree.maxDepth(), 
+    StateTree.numStateFamilies());
+
+  //Assign each state their passive and active colours
+  var colourId = 0;
+  var stateNode;
+
+  for(var i = 0; i < StateTree.stateNodes.length; i++) 
+  {
+    stateNode = StateTree.stateNodes[i];
+    //Non-child state
+    if(stateNode.getParent() === null)
+    {
+      stateNode.passiveColour = colourer.getBasePassiveColour();
+      stateNode.activeColour = colourer.getBaseColour(colourId++);
+    } 
+    else //Child state 
+    {
+      stateNode.passiveColour = colourer.lighten(
+        stateNode.getParent().passiveColour);
+      stateNode.activeColour = colourer.lighten(
+        stateNode.getParent().activeColour);
+    }
+  }
+}
+
+StateTree.colour = function()
+{
+  StateTree.assignStateColours();
+  StateTree.handler.colour();
+}
+
+// Entry function for colouring the State Tables
+StateTree.colourStateTables = function() 
 {
   jQuery(document).ready(function () 
   {
     jQuery(".statetable").each(function() {
-      StateTable.init(jQuery(this));
-      StateTable.readTable();
-      StateTable.colour();
+      StateTree.init(jQuery(this));
+      StateTree.readTable();
+      StateTree.colour();
     });
   });
 }; 
+
+// Entry function for colouring the Event Sequences
+StateTree.colourEventSequences = function()
+{
+  jQuery(document).ready(function() 
+  {
+    jQuery(".event-sequence-grid").each(function() {
+      StateTree.init(jQuery(this));
+      StateTree.readTable();
+      StateTree.colour();
+    });
+  });
+};

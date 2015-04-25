@@ -25,14 +25,17 @@ class EventSequencer
   StateMachine sm;
   double randomEventProportion = 0.15;
   Random randomGenerator = new Random();
+  int smNumber;
+  int nextStateId = 0;
 
-  after constructor {
+  after constructor 
+  {
     tracker = new EventSequenceWalkTracker();
   }
 
-  public StringBuilder generateEventSequence(EventSequenceTemplater templater)
+  public StringBuilder generateEventSequence(EventSequenceTemplate templater)
   {
-    EventSequenceTable table = new EventSequenceTable();
+    EventSequenceTable table = new EventSequenceTable(smNumber);
     EventSequenceList list = new EventSequenceList();
 
     recursivelyAnalyzeStateMachine(sm, table, null);
@@ -43,13 +46,15 @@ class EventSequencer
     // Special case, empty state machine
     if(numberOfPossibleStates() == 0)
     {
-      return new StringBuilder("No states found in state machine");
+      return new StringBuilder(templater.genNoStatesMessage(
+        String.valueOf(smNumber)));
     }
 
     // Special case, state machine without transitions
     if(numberOfPossibleTransitions() == 0)
     {
-      return new StringBuilder("No transitions found in state machine");
+      return new StringBuilder(templater.genNoTransitionMessage(
+        String.valueOf(smNumber)));
     }
 
     walkThroughStateMachine(table, list);
@@ -71,7 +76,7 @@ class EventSequencer
 
     for(State state : currentStateMachine.getStates()) 
     {
-      wrappedState = new StateWrapper(state);
+      wrappedState = new StateWrapper(state, nextStateId++);
       wrappedState.setParent(parent);
 
       //Add the state only if it has not been added before
@@ -147,7 +152,9 @@ class EventSequencer
 
     // Add the start state to the output table
     table.addColumn(currentState, "START");
-    list.addColumn(currentState, "START");
+
+    // Add the start state to the output list
+    list.addFirstRow(currentState, "-");
 
     // Mark the start state as visited
     tracker.removeUnvisitedState(currentState);
@@ -171,7 +178,7 @@ class EventSequencer
       // Add state and event to the outputs
       table.addColumn(currentState, 
                       extractLabel(currentEvent, currentTransition));
-      list.addColumn(currentState, 
+      list.addRow(currentState, 
                      extractLabel(currentEvent, currentTransition));
 
       isFinished = tracker.isWalkFinished(currentState);
@@ -356,7 +363,6 @@ class EventSequenceWalkTracker
       state = state.getParent();
     }
   }
-
 }
 
 // A simple wrapper over a State machine's states that allows keeping track
@@ -367,7 +373,8 @@ class StateWrapper
   * -> 0..1 StateWrapper parent;
   0..1 -> * EventWrapper events;
 
-  State wrappedState; 
+  State wrappedState;
+  int stateId;
   
   // If no possible events exist to exit this state, then the wrapped state is
   // an end state.
@@ -435,6 +442,20 @@ class StateWrapper
     return name + wrappedState.getName();
   }
 
+  // Returns the id value of this states parent, or the empty string, if this 
+  // has no parent
+  public String getParentId()
+  {
+    if(parent == null)
+    {
+      return "";
+    }
+    else
+    {
+      return String.valueOf(getParent().getStateId());
+    }
+  }
+
   private String recursivelyGetDottedNames(StateWrapper stateWrapper) 
   {
     if(stateWrapper.hasParent()) {
@@ -472,8 +493,12 @@ class EventWrapper
 // and the sequence of events as columns.
 class EventSequenceTable
 {
+  0..1 -> * StateWrapper headerStates;
   0..1 -> * EventSequenceTableRow;
   0..1 -> 0..1 EventSequenceTableHeaderRow headerRow;
+
+  int gridId;
+  int nextEventNumber = 0;
 
   // Create the header row and blank table cell
   after constructor 
@@ -494,14 +519,38 @@ class EventSequenceTable
   //Adds a row to the table, puts the state name in the first cell of the row
   public void addRow(StateWrapper rowState)
   {
+    addHeaderState(rowState);
     addEventSequenceTableRow(new EventSequenceTableRow(rowState));
   }
 
   // Outputs the entire table
-  public StringBuilder output(EventSequenceTemplater templater)
+  public StringBuilder output(EventSequenceTemplate templater)
   {
     StringBuilder tableSb = new StringBuilder();
     tableSb.append(templater.genGridHeader());
+    tableSb.append(templater.genGridContainer(gridId));
+
+    //Outputting the floating grid header
+    tableSb.append(templater.genFloaterHeader());
+
+    tableSb.append(templater.genFloaterRowStart());
+    tableSb.append(templater.genFloaterFirstCell(templater.GRID_FLOATER_FIRST,
+                                            "States"));
+    tableSb.append(templater.genFloaterRowEnd());
+
+    for(StateWrapper state : headerStates)
+    {
+      tableSb.append(templater.genFloaterRowStart());
+      tableSb.append(templater.genFloaterCell(templater.GRID_FLOATER,
+                                              state.getParentId(),
+                                              state.getDashedName()));
+      tableSb.append(templater.genFloaterRowEnd());
+    }
+
+    tableSb.append(templater.genFloaterFooter());
+
+    //Outputting the body of the event grid
+    tableSb.append(templater.genGridBodyHeader());
 
     tableSb.append(headerRow.output(templater));
 
@@ -510,13 +559,23 @@ class EventSequenceTable
       tableSb.append(row.output(templater));
     }
 
-    tableSb.append(templater.genFooter());
+    tableSb.append(templater.genGridBodyFooter());
+    tableSb.append(templater.genGridContainerFooter());
+    tableSb.append(templater.genGridEnd());
     return tableSb;
   }
 
   private void addToHeaderRow(String eventLabel)
   {
-    headerRow.addCell(eventLabel);
+    if(nextEventNumber == 0)
+    {
+      headerRow.addCell(eventLabel);
+    }
+    else
+    {
+      headerRow.addCell(String.valueOf(nextEventNumber) + ". " + eventLabel);
+    }
+    nextEventNumber++;
   }
 }
 
@@ -527,23 +586,22 @@ class EventSequenceTableHeaderRow
 
   public void addCell(String eventLabel)
   {
-    addEventSequenceHeaderCell(new EventSequenceHeaderCell(false, eventLabel));
+    addEventSequenceHeaderCell(new EventSequenceHeaderCell(eventLabel));
   }
 
   // Outputs the header row
-  public StringBuilder output(EventSequenceTemplater templater) 
+  public StringBuilder output(EventSequenceTemplate templater) 
   {
     StringBuilder rowSb = new StringBuilder();
 
-    rowSb.append(templater.genRowStart());
-    rowSb.append(templater.genCell("&nbsp;"));
+    rowSb.append(templater.genGridRowStart());
 
     for(EventSequenceHeaderCell cell : getEventSequenceHeaderCells())
     {
       rowSb.append(cell.output(templater));
     }
 
-    rowSb.append(templater.genRowEnd());
+    rowSb.append(templater.genGridRowEnd());
     return rowSb;
   }
 }
@@ -570,44 +628,42 @@ class EventSequenceTableRow
   }
 
   // Outputs this row
-  public StringBuilder output(EventSequenceTemplater templater) 
+  public StringBuilder output(EventSequenceTemplate templater) 
   {
     StringBuilder rowSb = new StringBuilder();
+    boolean isFirst = true;
 
-    rowSb.append(templater.genRowStart());
-    rowSb.append(templater.genRowHeader(rowState.getDashedName()));
+    rowSb.append(templater.genGridRowStart());
 
     for(EventSequenceCell cell : getEventSequenceCells())
     {
-      rowSb.append(cell.output(templater));
+      if(isFirst)
+      {
+        rowSb.append(cell.outputFirst(templater, rowState.getParentId()));
+        isFirst = false;
+      }
+      else
+      {
+        rowSb.append(cell.output(templater));
+      }
     }
 
-    rowSb.append(templater.genRowEnd());
+    rowSb.append(templater.genGridRowEnd());
     return rowSb;
   }
 }
 
-// Represents a cell in a row in the Event Sequence table.
+// Represents a cell in a row in the first row of a Event Sequence table.
 class EventSequenceHeaderCell
 {
-  boolean isRow;
   label;
 
   // Outputs this cell
-  public String output(EventSequenceTemplater templater)
+  public String output(EventSequenceTemplate templater)
   {
-    String cell;
+    String cellContents = templater.genGridHeaderContent(label);
 
-    if(isRow)
-    {
-      cell = templater.genRowHeader(label);  
-    }
-    else
-    {
-      cell = templater.genColumnHeader(label);
-    }
-
-    return cell;
+    return templater.genGridCell(templater.TABLE_HEADER, cellContents);
   }
 }
 
@@ -618,20 +674,30 @@ class EventSequenceCell
   label;
 
   // Outputs this cell
-  public String output(EventSequenceTemplater templater)
+  public String output(EventSequenceTemplate templater)
   {
-    String cell;
+    return templater.genGridCell(templater.TABLE_CELL, 
+                                 generateCellContents(templater));
+  }
 
+  // Outputs this cell if it is the first in the row
+  public String outputFirst(EventSequenceTemplate templater, String parentId)
+  {
+    return templater.genFirstGridCell(templater.TABLE_CELL, 
+                                      parentId, 
+                                      generateCellContents(templater));
+  }
+
+  private String generateCellContents(EventSequenceTemplate templater)
+  {
     if(isEmpty)
     {
-      cell = templater.genCell("&nbsp;");  
+      return "&nbsp;";  
     }
     else
     {
-      cell = templater.genCell(label);
+      return label;
     }
-
-    return cell;
   }
 }
 
@@ -640,113 +706,83 @@ class EventSequenceCell
 // the state resulting from that event.
 class EventSequenceList
 {
-  0..1 -> * EventSequenceCell events;
-  0..1 -> * EventSequenceCell states;
-  
-  EventSequenceHeaderCell eventRowLabel = 
-    new EventSequenceHeaderCell(true, "Events");
-  EventSequenceHeaderCell stateRowLabel = 
-    new EventSequenceHeaderCell(true, "States");
-  int characterLimit = 100; 
+  0..1 -> * EventListRow;
 
-  public void addColumn(StateWrapper resultingState, String triggeringEvent)
+  int eventCount = 1;
+
+  public void addFirstRow(StateWrapper resultingState, String triggeringEvent)
   {
-    addEvent(new EventSequenceCell(false, triggeringEvent));
-    addState(new EventSequenceCell(false, 
+    addEventListRow(new EventListRow("", 
+      "START", 
+      triggeringEvent, 
       resultingState.getDottedName()));
   }
 
-  public StringBuilder output(EventSequenceTemplater templater)
+  public void addRow(StateWrapper resultingState, String triggeringEvent)
   {
-    StringBuilder outputSB = new StringBuilder();
-    StringBuilder eventRowSB = new StringBuilder();
-    StringBuilder stateRowSB = new StringBuilder();
-    int characterCount = 0;
-    EventSequenceCell eventCell;
-    EventSequenceCell stateCell;
-    int addedLength = 0;
+    addEventListRow(new EventListRow("", 
+      String.valueOf(eventCount), 
+      triggeringEvent, 
+      resultingState.getDottedName()));
 
-    outputSB.append(beginTable(eventRowSB, stateRowSB, templater));
+    eventCount++;
+  }
 
-    for(int i = 0; i < numberOfEvents(); i++)
+  public StringBuilder output(EventSequenceTemplate templater)
+  {
+    StringBuilder outputSb = new StringBuilder();
+
+    outputSb.append(templater.genListStart());
+
+    outputSb.append(new EventListRow(
+      templater.TABLE_HEADER, 
+      "Event<br>Number",
+      "Event",
+      "Next State").output(templater));
+
+    for(EventListRow row : eventListRows)
     {
-      eventCell = getEvent(i);
-      stateCell = getState(i);
-
-      addedLength = Math.max(eventCell.getLabel().length(), 
-                                 stateCell.getLabel().length());
-      characterCount += addedLength;
-
-      if(characterCount > characterLimit)
-      {
-        // End the current table
-        outputSB.append(endTable(eventRowSB, stateRowSB, templater));
-
-        // Start a new table
-        eventRowSB = new StringBuilder();
-        stateRowSB = new StringBuilder();
-        outputSB.append(beginTable(eventRowSB, stateRowSB, templater));
-
-        // Reset the character counter
-        characterCount = addedLength;
-      }
-
-      eventRowSB.append(eventCell.output(templater));
-      stateRowSB.append(stateCell.output(templater));
+      outputSb.append(row.output(templater));
     }
 
-    outputSB.append(endTable(eventRowSB, stateRowSB, templater));
-    return outputSB;
+    outputSb.append(templater.genListEnd());
+
+    return outputSb;
   }
+}
 
-  private StringBuilder beginTable(StringBuilder eSB, 
-                                   StringBuilder sSB,
-                                   EventSequenceTemplater templater)
+// A row in the list-style output
+class EventListRow
+{
+  cellClassName;
+  number;
+  eventName;
+  nextStateName;
+
+  public StringBuilder output(EventSequenceTemplate templater)
   {
-    StringBuilder sb = new StringBuilder();
-    
-    // Add a new table to the main output 
-    sb.append(templater.genListHeader());
+    StringBuilder outputSb = new StringBuilder();
+    outputSb.append(templater.genListRowStart());
 
-    // Start a new event row
-    eSB.append(templater.genRowStart());
-    eSB.append(eventRowLabel.output(templater));
+    outputSb.append(templater.genListCell(cellClassName, number));
+    outputSb.append(templater.genListCell(cellClassName, eventName));
+    outputSb.append(templater.genListCell(cellClassName, nextStateName));
+  
+    outputSb.append(templater.genListRowEnd());
 
-    // Start a new state row
-    sSB.append(templater.genRowStart());
-    sSB.append(stateRowLabel.output(templater));
-
-    return sb;
-  }
-
-  private StringBuilder endTable(StringBuilder eSB, 
-                                 StringBuilder sSB,
-                                 EventSequenceTemplater templater)
-  {
-    StringBuilder sb = new StringBuilder();
-
-    // add row endings to the event and state rows
-    eSB.append(templater.genRowEnd());
-    sSB.append(templater.genRowEnd());
-
-    // flush the event and state rows to the output
-    sb.append(eSB);
-    sb.append(sSB);
-
-    // end the table
-    sb.append(templater.genFooter());
-    return sb;
+    return outputSb;
   }
 }
 
 class EventSequenceGenerator
 {
-  EventSequenceTemplater templater = new EventSequenceTemplater();
+  EventSequenceTemplate templater = new EventSequenceTemplate();
 
   // CENTRAL GENERATE METHOD
 
   public void generate()
   {
+    int counter = 0;
     StringBuilder code = new StringBuilder();
     code.append(templater.genTopHeader(
       model.getUmpleFile().getSimpleFileName()));
@@ -773,6 +809,9 @@ class EventSequenceGenerator
       return;
     }
 
+    // Message to notify users that the order of events is random
+    code.append(templater.genRandomNotification());
+
     // We now know we have to output one or more state machines
     // Iterate through each class.
     for (UmpleClass uClass : model.getUmpleClasses())
@@ -783,14 +822,17 @@ class EventSequenceGenerator
       for (StateMachine sm : uClass.getStateMachines())
       {
         code.append(templater.genTableTitleHeader(className, sm.getName()));
-
-        EventSequencer es = new EventSequencer(sm);
+        EventSequencer es = new EventSequencer(sm, counter);
+        counter++;
         seedRandomFromSuboptions(es);        
 
         code.append(es.generateEventSequence(templater));
 
       } // End iteration through state machines of a class
     } // End iteration through classes
+
+    // Add scripts
+    code.append(templater.genScripts());
 
     terminateCode(code);
   }
@@ -845,8 +887,14 @@ class EventSequenceGenerator
 }
 
 // Contains the templates for both the event sequence UI types
-class EventSequenceTemplater
+class EventSequenceTemplate
 {
+  // css class constants
+  const GRID_FLOATER_FIRST = "row-header first";
+  const GRID_FLOATER = "row-header";
+  const TABLE_HEADER = "column-header";
+  const TABLE_CELL = "content-cell";
+
   // helper templates
   cr <<!
 !>>
@@ -855,61 +903,258 @@ class EventSequenceTemplater
 !>>
   tab <<!  !>>
   tab2 <<!    !>>
+  tab3 <<!      !>>
+  tab4 <<!        !>>
+  tab5 <<!          !>>
+  tab6 <<!            !>>
 
   ////////////////////////////////////////////////////////////////////////////
   //  General output templates                                              //
   ////////////////////////////////////////////////////////////////////////////
   styleHeader <<!<style>!>>
   styles <<!
+  /* Shared Styles */
   .event-sequence-grid, .event-sequence-list 
   { 
-    border-collapse: collapse;
-    margin-bottom: 10px;
+    font-family: sans-serif;
   }
 
-  .event-sequence-grid td, .event-sequence-list td 
+  .event-sequence-grid table, table.event-sequence-list
+  {
+    border-collapse: collapse;
+  }
+
+  .event-sequence-list td, .event-sequence-grid td
   { 
-    border: 1px solid black; 
+    line-height: 1;
     padding: 2px 10px 2px 10px; 
     white-space: nowrap;
     text-align: center; 
   }
 
+  /* Grid-only styles */
+  .event-sequence-grid .content-cell {
+    border: 1px solid black;
+  }
+
   .event-sequence-grid .row-header {
     text-align: left;
   }
-  !>>
+
+  .event-sequence-grid .column-header > div {
+    width: 10px;
+
+    -moz-transform:
+      perspective(999px) /* Helps with the font distortion */
+      translate(20px, 0px)
+      rotate(-45deg);
+    -moz-transform-origin: left bottom;
+    -ms-transform:
+      translate(21px, 0px)
+      rotate(-45deg);
+    -ms-transform-origin: left bottom;
+    -webkit-transform:
+      translate(21px, 2px) 
+      rotate(-45deg);
+    -webkit-transform-origin: left bottom;
+    -o-transform:
+      translate(21px, 0px)
+      rotate(-45deg);
+    -o-transform-origin: left bottom;
+  }
+
+  .event-sequence-grid .column-header span {
+    border-bottom: 1px solid black;
+  }
+
+  /* Floating column styles */
+  .event-sequence-grid .wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .event-sequence-grid .floating-col {
+    display: inline-block;
+    position: absolute;
+    overflow: hidden;
+    border-right: 1px solid black;
+    z-index: 1;
+  }
+
+  .event-sequence-grid .inner-wrapper {
+    position: relative;
+  }
+
+  .event-sequence-grid .hidden-spacer {
+    position: relative;
+    display: inline-block;
+  }
+
+  .event-sequence-grid .table-body {
+    overflow-x: scroll;
+  }
+
+  .event-sequence-grid .table-body table {
+    position: relative;
+    display: inline-block;
+  }
+
+  .event-sequence-grid .floating-col td {
+    background-color: white;
+    border: 1px solid black;
+  }
+
+  .event-sequence-grid .floating-col td.first {
+  }
+
+  /* List-only styles */
+  table.event-sequence-list
+  {
+    margin-top: 20px;
+  }
+
+  .event-sequence-list td
+  {
+    border: 1px solid black;
+  }!>> /* END OF CSS TEMPLATE */
   styleFooter <<!</style>!>>
+
+  scriptHeader <<!<script>!>>
+  scripts <<!
+  function formatEventSequence(wrapper) 
+  {
+    if(wrapper === undefined || wrapper.innerHTML === "") 
+    {
+      return;
+    }
+
+    // Calculate spacer height due to slanted names
+    var longest = 0;
+    var last = 0;
+    var columnHeaders = wrapper
+        .getElementsByClassName("column-header");
+
+    for(var i = 0; i < columnHeaders.length; i++) 
+    {
+      var innerSpan = columnHeaders[i].firstChild.firstChild;
+      if(longest < innerSpan.offsetWidth)
+        longest = innerSpan.offsetWidth;
+
+      if(i == columnHeaders.length - 1)
+        last = innerSpan.offsetWidth;
+    }
+
+    var spacerHeight = longest * Math.cos(45 * (Math.PI / 180));
+    var lastLabelWidth = last *  Math.sin(45 * (Math.PI / 180));
+
+    // Get the various elements
+    var tableBody = wrapper.getElementsByClassName("table-body")[0];
+    var floatingCol = wrapper.getElementsByClassName('floating-col')[0];
+    var innerWrapper = wrapper.getElementsByClassName("inner-wrapper")[0];
+    var actualTable = innerWrapper.getElementsByTagName('table')[0]
+
+    // give the inner elements the header space for the slanted headers
+    tableBody.style.height = tableBody.offsetHeight + spacerHeight +'px';
+
+    // Make the inner wrapper long enough to hold the scrollable contents
+    innerWrapper.style.width = floatingCol.offsetWidth 
+                             + actualTable.offsetWidth 
+                             + lastLabelWidth 
+                             + 'px';
+
+    // Move the elements down so the headers show
+    actualTable.style.top = spacerHeight + 'px';
+    floatingCol.style.top = spacerHeight - 1 + 'px';
+
+    // Move the table body over to accommodate the floating header column
+    innerWrapper.getElementsByTagName('table')[0].style.left 
+      = floatingCol.offsetWidth - 6 + 'px';
+  };
+
+  var wrapperIndex = 0;
+
+  while(true)
+  {
+    var wrapper = document.getElementById("wrapper" + wrapperIndex);
+
+    if(wrapper === null)
+    {
+      break;
+    }
+
+    wrapperIndex++;
+    formatEventSequence(wrapper);
+  }!>> /* END OF JAVASCRIPT TEMPLATE */
+  scriptFooter <<!</script>!>>
 
   header <<!<h1>Event sequence generated by Umple from <<=modelName>>.ump</h1>!>>
   tableTitleHeader <<!<h2>Class <<=className>> state machine <<=smName>></h2>!>>
+  randomNotificationMessage <<!<p>Note that the sequence of events is randomly generated. Subsequential event generation will likely yield different results.</p>!>>
   noSMMessage <<!<p>No State machines found in this model</p>!>>
   endMessage <<!<p>Event sequence ending reason: <<=reason>></p>!>>
+  noStatesMessage <<!<p>No states found in state machine</p>!>>
+  noTransitionsMessage <<!<p>No transitions found in state machine</p>!>>
 
   emit genTopHeader(String modelName)(styleHeader, styles, cr, styleFooter, cr2, header, cr);
   emit genTableTitleHeader(String className, String smName)(cr, tableTitleHeader, cr2);
-  emit genNoSMMessage()(cr, noSMMessage);
-  emit genEndMessage(String reason)(endMessage);
+  emit genScripts()(scriptHeader, scripts, cr, scriptFooter, cr);
+  emit genRandomNotification()(randomNotificationMessage, cr2);
+  emit genNoSMMessage()(noSMMessage, cr);
+  emit genEndMessage(String reason)(endMessage, cr2);
 
 
   ////////////////////////////////////////////////////////////////////////////
   //  Table output templates                                                //
   ////////////////////////////////////////////////////////////////////////////
-  gridHeader      <<!<table class="event-sequence-grid">!>>
-  listHeader      <<!<table class="event-sequence-list">!>>
-  rowStart          <<!<tr>!>>
-  columnHeader        <<!<td class="column-header"><<=label>></td>!>>
-  rowHeader           <<!<td class="row-header"><<=label>></td>!>>
-  cell                <<!<td><<=content>></td>!>>
-  rowEnd            <<!</tr>!>>
-  footer          <<!</table>!>>
+  gridStart         <<!<div class="event-sequence-grid">!>>
+  gridWrapper         <<!<div id="wrapper<<=containerId>>" class="wrapper">!>>
+  gridFloaterHeader     <<!<div class="floating-col">!>>
+  gridBodyHeader        <<!<div class="table-body">!>>
+  gridInnerWrapper        <<!<div class="inner-wrapper">!>>
+  gridHeaderContents            <<!<div><span><<=content>></span></div>!>>
+
+  tableStart    <<!<table>!>>
+  rowStart      <<!<tr>!>>
+  cell          <<!<td class="<<=cssClass>>"><<=content>></td>!>>
+  firstCell     <<!<td class="<<=cssClass>>" data-parent="<<=parentId>>"><<=content>></td>!>>
+  rowEnd        <<!</tr>!>>
+  tableFooter   <<!</table>!>>
+  divFooter     <<!</div>!>>
+
+  listStart <<!<table class="event-sequence-list">!>>
   
-  emit genGridHeader()(gridHeader, cr);
-  emit genListHeader()(listHeader, cr);
-  emit genRowStart()(tab, rowStart, cr);
-  emit genColumnHeader(String label)(tab2, columnHeader, cr);
-  emit genRowHeader(String label)(tab2, rowHeader, cr);
-  emit genCell(String content)(tab2, cell, cr);
-  emit genRowEnd()(tab, rowEnd, cr);
-  emit genFooter()(footer, cr);
+  emit genGridHeader()(gridStart, cr);
+  emit genGridContainer(int containerId)(tab, gridWrapper, cr);
+  emit genFloaterHeader()(tab2, gridFloaterHeader, cr, tab3, tableStart, cr);
+  emit genFloaterRowStart()(tab4, rowStart, cr);
+  emit genFloaterFirstCell(String cssClass, String content)(tab5, cell, cr);
+  emit genFloaterCell(String cssClass, String parentId, 
+                      String content)(tab5, firstCell, cr);
+  emit genFloaterRowEnd()(tab4, rowEnd, cr);
+  emit genFloaterFooter()(tab3, tableFooter, cr, tab2, divFooter, cr);
+  emit genGridBodyHeader()(tab2, gridBodyHeader, cr, tab3, gridInnerWrapper, 
+                           cr, tab4, tableStart, cr);
+  emit genGridRowStart()(tab5, rowStart, cr);
+  emit genGridHeaderContent(String content)(gridHeaderContents);
+  emit genFirstGridCell(String cssClass, String parentId, 
+                        String content)(tab6, firstCell, cr);
+  emit genGridCell(String cssClass, String content)(tab6, cell, cr);
+  emit genGridRowEnd()(tab5, rowEnd, cr);
+  emit genGridBodyFooter()(tab4, tableFooter, cr, tab3, divFooter, cr, tab2, 
+                           divFooter, cr);
+  emit genGridContainerFooter()(tab, divFooter, cr);
+  emit genGridEnd()(divFooter, cr2);
+
+  emit genListStart()(listStart, cr);
+  emit genListRowStart()(tab, rowStart, cr);
+  emit genListCell(String cssClass, String content)(tab2, cell, cr);
+  emit genListRowEnd()(tab, rowEnd, cr);
+  emit genListEnd()(tableFooter, cr2);
+
+  // Special cases for state machines without states or transitions
+  emit genNoStatesMessage(String containerId)(gridWrapper, divFooter, 
+                                              noStatesMessage, cr2);
+  emit genNoTransitionMessage(String containerId)(gridWrapper, divFooter, 
+                                                  noTransitionsMessage, cr2);
 }
