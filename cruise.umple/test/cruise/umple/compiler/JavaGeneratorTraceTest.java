@@ -53,7 +53,7 @@ public class JavaGeneratorTraceTest
   @Test @Ignore
   public void prepare_traceDirective_attribute_string_default_package()
   {
-    model.setTracer(new Tracer("String"));
+    model.setTracer(new TracerDirective("String"));
     
     UmpleClass c = model.addUmpleClass("LightFixture");
     c.setPackageName("notblah");
@@ -77,7 +77,7 @@ public class JavaGeneratorTraceTest
   @Test @Ignore
   public void prepare_postpare_traceDirective_attribute_string()
   {
-    model.setTracer(new Tracer("Console"));
+    model.setTracer(new TracerDirective("Console"));
     model.setDefaultPackage("blah");
     
     UmpleClass c = model.addUmpleClass("LightFixture");
@@ -112,7 +112,7 @@ public class JavaGeneratorTraceTest
   @Test
   public void prepare_postpare_traceDirective_attribute_string_samePackage()
   {
-    model.setTracer(new Tracer("Console"));
+    model.setTracer(new TracerDirective("Console"));
     model.setDefaultPackage("blah");
     
     UmpleClass c = model.addUmpleClass("LightFixture");

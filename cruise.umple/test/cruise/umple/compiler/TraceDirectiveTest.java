@@ -19,7 +19,7 @@ public class TraceDirectiveTest
   @Before
   public void setUp()
   {
-	  traceDirective = new TraceDirective(new Tracer("Console"));
+	  traceDirective = new TraceDirective(new TracerDirective("Console"));
   }
   
 //  @Test @Ignore

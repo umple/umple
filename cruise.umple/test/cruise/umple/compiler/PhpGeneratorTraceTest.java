@@ -52,7 +52,7 @@ public class PhpGeneratorTraceTest
   @Test 
   public void prepare_postpare_traceItem_attribute_string()
   {
-    model.setTracer(new Tracer("String"));
+    model.setTracer(new TracerDirective("String"));
     model.setDefaultPackage("blah");
     
     UmpleClass c = model.addUmpleClass("LightFixture");

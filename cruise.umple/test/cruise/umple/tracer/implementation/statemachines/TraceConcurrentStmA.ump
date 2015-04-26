@@ -1,0 +1,34 @@
+namespace example;
+
+class Tracer {
+	 trace  s1;
+ sm {
+   s1 {
+     e3 -> s2;
+     a {
+       s11 {
+         e1 -> s12;
+       }
+       s12 {
+       }
+     }
+     ||
+     b
+     {
+       s21 {
+         e2 -> s22;
+       }
+       s22 {
+       }
+     }
+   }
+   s2 {
+   }
+ }
+ public static void main(String[] argv) {
+   X x1 = new X();
+   x1.e1();
+   x1.e2();
+   x1.e3();
+ }
+}

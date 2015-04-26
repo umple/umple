@@ -36,7 +36,7 @@ class UmpleInternalParser
 
     if (token.is("tracerDirective"))
     {
-      Tracer tracer = model.getTracer();
+    	TracerDirective tracer = model.getTracer();
       LogConfiguration log = new LogConfiguration(tracer);
       TraceMessageSwitch tms = new TraceMessageSwitch(tracer);
       
@@ -44,7 +44,7 @@ class UmpleInternalParser
       {
         if(subToken.is("tracerType"))
         {
-          tracer = new Tracer(subToken.getValue().toLowerCase());
+          tracer = new TracerDirective(subToken.getValue().toLowerCase());
         }
         else if(subToken.is("tracerArgument"))
         {
@@ -54,7 +54,7 @@ class UmpleInternalParser
         		tracer.setLogConfiguration(log);
         	}
         	else
-        		tracer.addTracerArgument(new TracerArgument(subToken.getValue()));
+        		tracer.addTracerArgument(new TracerArgument(subToken.getValue(),tracer));
         }
         else if(subToken.is("traceMessageHeader"))
         {
@@ -77,7 +77,7 @@ class UmpleInternalParser
         }
         else if(subToken.is("logConfig"))
         {
-          LoggerAppender logApp = new LoggerAppender(log);
+        	LoggerLevelToAppender logApp = new LoggerLevelToAppender(log);
           
           for(Token logToken : subToken.getSubTokens())
           {
@@ -87,11 +87,11 @@ class UmpleInternalParser
             }
             if(logToken.is("logLevel"))
             {
-              logApp.addLevel(logToken.getValue());
+              logApp.addLevel(new Level(logToken.getValue()));
             }
             if(logToken.is("logAppender"))
             {
-              logApp.addAppender(logToken.getValue());
+              logApp.addAppender(new Appender(logToken.getValue()));
             }
             if(logToken.is("monitorInterval"))
             {
@@ -115,7 +115,7 @@ class UmpleInternalParser
     {
       if(model.getTracer()==null)
       {
-        model.setTracer(new Tracer("console"));
+      	model.setTracer(new TracerDirective("console"));
       }
       for( Token traceToken : token.getSubTokens() )
       {

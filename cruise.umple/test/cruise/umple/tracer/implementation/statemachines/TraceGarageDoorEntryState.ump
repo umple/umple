@@ -27,7 +27,7 @@ class Tracer
       	HalfOpen { buttonOrObstacle -> Opening; }
     }
     
-    // trace state entry
+    // trace state Closed entry
     trace entry Closed;
   
     void openGarageLights() {}

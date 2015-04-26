@@ -318,7 +318,7 @@ class LLOCMetricVisitor {
 	}
 	
 	// Trace
-	void visit(Tracer tracer) {
+	void visit(TracerDirective tracer) {
 		cur_lloc++;
 	}
 	void visit(TraceItem traceItem) {

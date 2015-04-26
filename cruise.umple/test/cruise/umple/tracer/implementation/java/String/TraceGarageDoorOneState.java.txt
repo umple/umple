@@ -1,6 +1,3 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
-
 package example;
 import cruise.util.StringTracer;
 
@@ -13,7 +10,7 @@ public class Tracer
 
   //Tracer State Machines
   public enum GarageDoor { Open, Closing, Closed, Opening, HalfOpen }
-  private GarageDoor GarageDoor;
+  private GarageDoor garageDoor;
 
   //------------------------
   // CONSTRUCTOR
@@ -30,20 +27,20 @@ public class Tracer
 
   public String getGarageDoorFullName()
   {
-    String answer = GarageDoor.toString();
+    String answer = garageDoor.toString();
     return answer;
   }
 
   public GarageDoor getGarageDoor()
   {
-    return GarageDoor;
+    return garageDoor;
   }
 
   public boolean buttonOrObstacle()
   {
     boolean wasEventProcessed = false;
     
-    GarageDoor aGarageDoor = GarageDoor;
+    GarageDoor aGarageDoor = garageDoor;
     switch (aGarageDoor)
     {
       case Open:
@@ -79,7 +76,7 @@ public class Tracer
   {
     boolean wasEventProcessed = false;
     
-    GarageDoor aGarageDoor = GarageDoor;
+    GarageDoor aGarageDoor = garageDoor;
     switch (aGarageDoor)
     {
       case Closing:
@@ -98,7 +95,7 @@ public class Tracer
   {
     boolean wasEventProcessed = false;
     
-    GarageDoor aGarageDoor = GarageDoor;
+    GarageDoor aGarageDoor = garageDoor;
     switch (aGarageDoor)
     {
       case Opening:
@@ -114,7 +111,7 @@ public class Tracer
 
   private void setGarageDoor(GarageDoor aGarageDoor)
   {
-    GarageDoor = aGarageDoor;
+    garageDoor = aGarageDoor;
   }
 
   public void delete()

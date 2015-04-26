@@ -1,0 +1,344 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+import cruise.util.ConsoleTracer;
+
+// line 3 "../TraceConcurrentStmA.ump"
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer State Machines
+  public enum Sm { s1, s2 }
+  public enum SmA { Null, a }
+  public enum SmAA { Null, s11, s12 }
+  public enum SmB { Null, b }
+  public enum SmBB { Null, s21, s22 }
+  private Sm sm;
+  private SmA smA;
+  private SmAA smAA;
+  private SmB smB;
+  private SmBB smBB;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer()
+  {
+    setSmA(SmA.Null);
+    setSmAA(SmAA.Null);
+    setSmB(SmB.Null);
+    setSmBB(SmBB.Null);
+    setSm(Sm.s1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    if (smA != SmA.Null) { answer += "." + smA.toString(); }
+    if (smAA != SmAA.Null) { answer += "." + smAA.toString(); }
+    if (smB != SmB.Null) { answer += "." + smB.toString(); }
+    if (smBB != SmBB.Null) { answer += "." + smBB.toString(); }
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public SmA getSmA()
+  {
+    return smA;
+  }
+
+  public SmAA getSmAA()
+  {
+    return smAA;
+  }
+
+  public SmB getSmB()
+  {
+    return smB;
+  }
+
+  public SmBB getSmBB()
+  {
+    return smBB;
+  }
+
+  public boolean e3()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s1:
+        exitSm();
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,s1,e3,s2" );
+        setSm(Sm.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean enterS1()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmA aSmA = smA;
+    SmAA aSmAA = smAA;
+    SmB aSmB = smB;
+    SmBB aSmBB = smBB;
+    switch (aSmA)
+    {
+      case Null:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,Null,enterS1,a" );
+        setSmA(SmA.a);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmAA)
+    {
+      case Null:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,Null,enterS1,s11" );
+        setSmAA(SmAA.s11);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmB)
+    {
+      case Null:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,Null,enterS1,b" );
+        setSmB(SmB.b);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmBB)
+    {
+      case Null:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,Null,enterS1,s21" );
+        setSmBB(SmBB.s21);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitS1()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmA aSmA = smA;
+    SmAA aSmAA = smAA;
+    SmB aSmB = smB;
+    SmBB aSmBB = smBB;
+    switch (aSmA)
+    {
+      case a:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,a,exitS1,Null" );
+        setSmA(SmA.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmAA)
+    {
+      case s11:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,s11,exitS1,Null" );
+        setSmAA(SmAA.Null);
+        wasEventProcessed = true;
+        break;
+      case s12:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,s12,exitS1,Null" );
+        setSmAA(SmAA.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmB)
+    {
+      case b:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,b,exitS1,Null" );
+        setSmB(SmB.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmBB)
+    {
+      case s21:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,s21,exitS1,Null" );
+        setSmBB(SmBB.Null);
+        wasEventProcessed = true;
+        break;
+      case s22:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,s22,exitS1,Null" );
+        setSmBB(SmBB.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean e1()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmAA aSmAA = smAA;
+    switch (aSmAA)
+    {
+      case s11:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,s11,e1,s12" );
+        setSmAA(SmAA.s12);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean e2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmBB aSmBB = smBB;
+    switch (aSmBB)
+    {
+      case s21:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceConcurrentStmA.ump,4,Tracer,"+System.identityHashCode(this)+",sm_t,s21,e2,s22" );
+        setSmBB(SmBB.s22);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case s1:
+        exitS1();
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case s1:
+        if (smA == SmA.Null) { setSmA(SmA.a); }
+        if (smB == SmB.Null) { setSmB(SmB.b); }
+        break;
+    }
+  }
+
+  private void exitSmA()
+  {
+    switch(smA)
+    {
+      case a:
+        exitS1();
+        break;
+    }
+  }
+
+  private void setSmA(SmA aSmA)
+  {
+    smA = aSmA;
+    if (sm != Sm.s1 && aSmA != SmA.Null) { setSm(Sm.s1); }
+
+    // entry actions and do activities
+    switch(smA)
+    {
+      case a:
+        if (smAA == SmAA.Null) { setSmAA(SmAA.s11); }
+        break;
+    }
+  }
+
+  private void setSmAA(SmAA aSmAA)
+  {
+    smAA = aSmAA;
+    if (smA != SmA.a && aSmAA != SmAA.Null) { setSmA(SmA.a); }
+  }
+
+  private void exitSmB()
+  {
+    switch(smB)
+    {
+      case b:
+        exitS1();
+        break;
+    }
+  }
+
+  private void setSmB(SmB aSmB)
+  {
+    smB = aSmB;
+    if (sm != Sm.s1 && aSmB != SmB.Null) { setSm(Sm.s1); }
+
+    // entry actions and do activities
+    switch(smB)
+    {
+      case b:
+        if (smBB == SmBB.Null) { setSmBB(SmBB.s21); }
+        break;
+    }
+  }
+
+  private void setSmBB(SmBB aSmBB)
+  {
+    smBB = aSmBB;
+    if (smB != SmB.b && aSmBB != SmBB.Null) { setSmB(SmB.b); }
+  }
+
+  public void delete()
+  {}
+
+}

@@ -9,8 +9,8 @@ public class Tracer
   //------------------------
 
   //Tracer State Machines
-  public enum GarageDoor { Open, Closing, Closed, Opening, HalfOpen }
-  private GarageDoor garageDoor;
+  public enum Sm { Open, Closing, Closed, Opening, HalfOpen }
+  private Sm sm;
 
   //------------------------
   // CONSTRUCTOR
@@ -18,51 +18,54 @@ public class Tracer
 
   public Tracer()
   {
-    setGarageDoor(GarageDoor.Open);
+    setSm(Sm.Open);
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public String getGarageDoorFullName()
+  public String getSmFullName()
   {
-    String answer = garageDoor.toString();
+    String answer = sm.toString();
     return answer;
   }
 
-  public GarageDoor getGarageDoor()
+  public Sm getSm()
   {
-    return garageDoor;
+    return sm;
   }
 
   public boolean buttonOrObstacle()
   {
     boolean wasEventProcessed = false;
     
-    GarageDoor aGarageDoor = garageDoor;
-    switch (aGarageDoor)
+    Sm aSm = sm;
+    switch (aSm)
     {
       case Open:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoorOneState.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Open,buttonOrObstacle,Closing" );
-        setGarageDoor(GarageDoor.Closing);
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceEvent.ump,26,Tracer,"+System.identityHashCode(this)+",sm_t,Open,buttonOrObstacle,Closing" );
+        setSm(Sm.Closing);
         wasEventProcessed = true;
         break;
       case Closing:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoorOneState.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Closing,buttonOrObstacle,Opening" );
-        setGarageDoor(GarageDoor.Opening);
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceEvent.ump,26,Tracer,"+System.identityHashCode(this)+",sm_t,Closing,buttonOrObstacle,Opening" );
+        setSm(Sm.Opening);
         wasEventProcessed = true;
         break;
       case Closed:
-        setGarageDoor(GarageDoor.Opening);
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceEvent.ump,26,Tracer,"+System.identityHashCode(this)+",sm_t,Closed,buttonOrObstacle,Opening" );
+        setSm(Sm.Opening);
         wasEventProcessed = true;
         break;
       case Opening:
-        setGarageDoor(GarageDoor.HalfOpen);
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceEvent.ump,26,Tracer,"+System.identityHashCode(this)+",sm_t,Opening,buttonOrObstacle,HalfOpen" );
+        setSm(Sm.HalfOpen);
         wasEventProcessed = true;
         break;
       case HalfOpen:
-        setGarageDoor(GarageDoor.Opening);
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceEvent.ump,26,Tracer,"+System.identityHashCode(this)+",sm_t,HalfOpen,buttonOrObstacle,Opening" );
+        setSm(Sm.Opening);
         wasEventProcessed = true;
         break;
       default:
@@ -76,12 +79,11 @@ public class Tracer
   {
     boolean wasEventProcessed = false;
     
-    GarageDoor aGarageDoor = garageDoor;
-    switch (aGarageDoor)
+    Sm aSm = sm;
+    switch (aSm)
     {
       case Closing:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoorOneState.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Closing,reachBottom,Closed" );
-        setGarageDoor(GarageDoor.Closed);
+        setSm(Sm.Closed);
         wasEventProcessed = true;
         break;
       default:
@@ -95,11 +97,11 @@ public class Tracer
   {
     boolean wasEventProcessed = false;
     
-    GarageDoor aGarageDoor = garageDoor;
-    switch (aGarageDoor)
+    Sm aSm = sm;
+    switch (aSm)
     {
       case Opening:
-        setGarageDoor(GarageDoor.Open);
+        setSm(Sm.Open);
         wasEventProcessed = true;
         break;
       default:
@@ -109,9 +111,9 @@ public class Tracer
     return wasEventProcessed;
   }
 
-  private void setGarageDoor(GarageDoor aGarageDoor)
+  private void setSm(Sm aSm)
   {
-    garageDoor = aGarageDoor;
+    sm = aSm;
   }
 
   public void delete()

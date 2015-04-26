@@ -74,7 +74,7 @@ private static void postpareTrace(UmpleModel aModel)
           generateFile=false;          
           if(model.getTracer().numberOfTracerArguments()>0)
           {
-            templateLookups.put("filename","\""+td.getTracer().getTracerArgument(0).getArgument()+"\"");
+            templateLookups.put("filename","\""+td.getTracerDirective().getTracerArgument(0).getArgument()+"\"");
           }
           else
           {
@@ -200,13 +200,13 @@ private static void postpareTrace(UmpleModel aModel)
     {
       LogConfiguration lc = model.getTracer().getLogConfiguration();
       
-      for(LoggerAppender logApp : lc.getLoggerAppenders())
+      for(LoggerLevelToAppender logApp : lc.getLoggerLevelToAppenders())
       {
-        for(String level : logApp.getLevels())
+        for(Level level : logApp.getLevels())
         {
-          for(String app : logApp.getAppender())
+          for(Appender app : logApp.getAppenders())
           {
-            appender += StringFormatter.format(lookups.get("log4jAppender"),app,level);
+            appender += StringFormatter.format(lookups.get("log4jAppender"),app.getAppender(),level.getLevel());
           }
         }
       }

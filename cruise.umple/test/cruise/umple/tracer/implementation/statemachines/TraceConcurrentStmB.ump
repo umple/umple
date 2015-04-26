@@ -1,0 +1,29 @@
+namespace example;
+
+class Tracer {
+ trace  sm;
+
+ sm {
+   s1 {
+     e3 -> s2;
+     a {
+       s11 {
+         e1 -> s12;
+       }
+       s12 {
+       }
+     }
+     ||
+     b
+     {
+       s21 {
+         e2 -> s22;
+       }
+       s22 {
+       }
+     }
+   }
+   s2 {
+   }
+ }
+}

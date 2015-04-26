@@ -110,9 +110,9 @@ public class UmpleParserTracerTest
     
     LogConfiguration log = model.getTracer().getLogConfiguration();
     Assert.assertEquals("info",log.getRootLogger());
-    Assert.assertEquals("console",log.getLoggerAppender(0).getAppender(0));
-    Assert.assertEquals("file",log.getLoggerAppender(0).getAppender(1));
-    Assert.assertEquals("error",log.getLoggerAppender(0).getLevel(0));
+    Assert.assertEquals("console",log.getLoggerLevelToAppender(0).getAppender(0).getAppender());
+    Assert.assertEquals("file",log.getLoggerLevelToAppender(0).getAppender(1).getAppender());
+    Assert.assertEquals("error",log.getLoggerLevelToAppender(0).getLevel(0).getLevel());
   }
   
   @Test
@@ -795,7 +795,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)stm.getState(4),clazz.getStateMachine(0).getState(4));
   }
   
-  @Test @Ignore
+  @Test
   public void traceState()
   {
 	  assertParse("375_traceState.ump","[classDefinition][name:GarageDoor][stateMachine][inlineStateMachine][name:status][state][stateName:Open][transition][event:buttonOrObstacle][stateName:Closing][state][stateName:Closing][transition][event:buttonOrObstacle][stateName:Opening][transition][event:reachBottom][stateName:Closed][state][stateName:Closed][transition][event:buttonOrObstacle][stateName:Opening][state][stateName:Opening][transition][event:buttonOrObstacle][stateName:HalfOpen][transition][event:reachTop][stateName:Open][state][stateName:HalfOpen][transition][event:buttonOrObstacle][stateName:Opening][trace][traceDirective][traceEntity:Closing]",true);
@@ -903,15 +903,15 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(tracedState.getState(),clazz.getStateMachine(0).getState(0));
   }
   
-  @Test @Ignore
-  public void traceTransition()
+  @Test
+  public void traceEvent()
   {
-	  assertParse("379_traceTransition.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][code:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][code:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][traceDirective][traceEntity:flip]");
+	  assertParse("379_traceTransition.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][code:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][code:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][traceDirective][traceEntity:flip]",true);
 	  
 	  UmpleClass clazz = model.getUmpleClass("Light");
 	  StateMachineTraceItem tracedState = clazz.getTraceDirective(0).getStateMachineTraceItem(0);
-	  Transition tran = tracedState.getTransition();
-	  Assert.assertEquals((Object)tran,clazz.getStateMachine(0).getState(0).getNextTransition(0));
+	  Event e = tracedState.getTransition().getEvent();
+	  Assert.assertEquals(e,clazz.getStateMachine(0).getEvent("flip"));
 
   }
     

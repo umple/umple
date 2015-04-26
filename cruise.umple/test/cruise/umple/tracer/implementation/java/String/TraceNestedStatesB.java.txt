@@ -1,19 +1,15 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
-
-
+package example;
 import cruise.util.StringTracer;
 
-public class NestedStateB
+// line 3 "../TraceNestedStatesB.ump"
+public class Tracer
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //NestedStateB State Machines
+  //Tracer State Machines
   public enum Status { Off, On }
   public enum StatusOn { Null, Idle, Running }
   private Status status;
@@ -23,7 +19,7 @@ public class NestedStateB
   // CONSTRUCTOR
   //------------------------
 
-  public NestedStateB()
+  public Tracer()
   {
     setStatusOn(StatusOn.Null);
     setStatus(Status.Off);
@@ -59,7 +55,6 @@ public class NestedStateB
     switch (aStatus)
     {
       case Off:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",model.ump,26,NestedStateB,"+System.identityHashCode(this)+",sm_t,Off,flip,Idle" );
         setStatusOn(StatusOn.Idle);
         wasEventProcessed = true;
         break;
@@ -70,7 +65,6 @@ public class NestedStateB
     switch (aStatusOn)
     {
       case Idle:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",model.ump,26,NestedStateB,"+System.identityHashCode(this)+",sm_t,Idle,flip,Running" );
         setStatusOn(StatusOn.Running);
         wasEventProcessed = true;
         break;

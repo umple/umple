@@ -1,0 +1,28 @@
+namespace example;
+
+class Tracer
+{
+  status
+  {
+    Off
+    {
+      flip -> Idle;
+    }
+    On
+    {
+      turnOff -> Off;
+      Idle
+      {
+        flip -> Running;
+      }
+      Running
+      {
+        
+      }
+    }
+    
+    
+  }
+  // trace nested state
+  trace Idle;
+}

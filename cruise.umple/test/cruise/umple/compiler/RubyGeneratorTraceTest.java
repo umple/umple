@@ -51,7 +51,7 @@ public class RubyGeneratorTraceTest
   @Test 
   public void prepare_traceItem_attribute_string_default_package()
   {
-    model.setTracer(new Tracer("String"));
+    model.setTracer(new TracerDirective("String"));
     
     UmpleClass c = model.addUmpleClass("LightFixture");
     c.setPackageName("notblah");
@@ -74,7 +74,7 @@ public class RubyGeneratorTraceTest
   @Test
   public void prepare_postpare_traceItem_attribute_string()
   {
-    model.setTracer(new Tracer("String"));
+    model.setTracer(new TracerDirective("String"));
     model.setDefaultPackage("blah");
     
     UmpleClass c = model.addUmpleClass("LightFixture");
@@ -108,7 +108,7 @@ public class RubyGeneratorTraceTest
   @Test
   public void prepare_postpare_traceItem_attribute_string_samePackage()
   {
-    model.setTracer(new Tracer("String"));
+    model.setTracer(new TracerDirective("String"));
     model.setDefaultPackage("blah");
     
     UmpleClass c = model.addUmpleClass("LightFixture");

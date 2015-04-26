@@ -11,5 +11,5 @@ class Light
       flip -> On;
     }
   }
-  trace transition flip;
+  trace flip;
 }

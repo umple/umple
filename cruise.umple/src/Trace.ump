@@ -17,7 +17,7 @@ namespace cruise.umple.compiler;
 class UmpleModel
 {
   String traceType = {getTracer().getName()}
-  Tracer tracer = new Tracer("console");
+  TracerDirective tracer = new TracerDirective("console");
 }
 
 class UmpleClass
@@ -31,31 +31,30 @@ class UmpleClass
  * A statement found in Umple that directs tracing technology
  * to be used in generted code
  */
-class Tracer
+class TracerDirective
 {
   String name;
   Boolean verbosity = false;
-  
-  1 -> * TracerArgument;
+  1 -- * TracerArgument;
   1 -- 0..1 TraceMessageSwitch;
   1 -- 0..1 LogConfiguration;
 }
 
 class TracerArgument
 {
-	String argument;
+  String argument;
 }
 
 class TraceMessageSwitch
 {
-	boolean on = false;
-	boolean off = false;
-	1 -> * MessageComponent option;
+  Boolean on = false;
+  Boolean off = false;
+  1 -> * MessageComponent option;
 }
 
 class MessageComponent
 {
-	String component;
+  String component;
 }
 
 class LogConfiguration
@@ -63,13 +62,23 @@ class LogConfiguration
   Integer monitorInterval = 0;
   String rootLogger = "info";
   boolean generateConfig = true;
-  1 -- * LoggerAppender;
+  1 -- * LoggerLevelToAppender;
 }
 
-class LoggerAppender
+class LoggerLevelToAppender
 {
-  String[] appender;
-  String[] levels;
+  1 -> * Appender;
+  1 -> * Level;
+}
+
+class Level 
+{
+  String level;
+}
+
+class Appender 
+{
+  String appender;
 }
 
 /*
@@ -81,8 +90,8 @@ class TraceDirective
 {
   Integer id = 0;
   String[] logLevel;
-  String tracerType = {getTracer().getName()}
-  1 -> 1 Tracer ;
+  String tracerType = {getTracerDirective().getName()}
+  1 -> 1 TracerDirective;
 
   1 -- * AttributeTraceItem;
   1 -- * StateMachineTraceItem;

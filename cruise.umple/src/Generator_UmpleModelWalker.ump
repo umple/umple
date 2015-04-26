@@ -113,7 +113,7 @@ class UmpleModelVisitor {
 	void visit(Activity activity) {}
 	
 	// Trace
-	void visit(Tracer tracer) {}
+	void visit(TracerDirective tracer) {}
 	void visit(TraceDirective traceDirective) {}
 	void visit(TraceItem traceItem) {}
 	void visit(TraceRecord traceRecord) {}
@@ -322,7 +322,7 @@ class UmpleModelWalker {
 					for(TraceDirective td: clazz.getTraceDirectives()){
 						visitor.visit(td);
 						visitor.visit(td.getTraceRecord());
-						visitor.visit(td.getTracer());
+						visitor.visit(td.getTracerDirective());
 						
 						for(AttributeTraceItem ati : td.getAttributeTraceItems()) {
 							visitor.visit(ati);

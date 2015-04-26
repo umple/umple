@@ -361,7 +361,7 @@ public class TemplateTest
     UmpleModel model = new UmpleModel(file);
     model.setShouldGenerate(false);
     if( aTracer != null )
-    	model.setTracer(new Tracer(aTracer));
+    	model.setTracer(new TracerDirective(aTracer));
     RuleBasedParser rbp = new RuleBasedParser(model);
     UmpleParser parser = new UmpleInternalParser(umpleParserName, model, rbp);
     ParseResult result = rbp.parse(file);

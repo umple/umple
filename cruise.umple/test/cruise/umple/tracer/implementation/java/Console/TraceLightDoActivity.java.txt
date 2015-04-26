@@ -1,6 +1,3 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
-
 package example;
 import cruise.util.ConsoleTracer;
 
@@ -50,13 +47,13 @@ public class Tracer
     switch (aStatus)
     {
       case Open:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,18,Tracer,"+System.identityHashCode(this)+",sm_t,Open,flip,Closed" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,20,Tracer,"+System.identityHashCode(this)+",sm_t,Open,flip,Closed" );
         setStatus(Status.Closed);
         wasEventProcessed = true;
         break;
       case Closed:
         exitStatus();
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,18,Tracer,"+System.identityHashCode(this)+",sm_t,Closed,flip,Open" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,20,Tracer,"+System.identityHashCode(this)+",sm_t,Closed,flip,Open" );
         setStatus(Status.Open);
         wasEventProcessed = true;
         break;
@@ -72,7 +69,7 @@ public class Tracer
     switch(status)
     {
       case Closed:
-        if (doActivityStatusClosedThread != null) { doActivityStatusClosedThread.interrupt();     ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,18,Tracer,"+System.identityHashCode(this)+",sm_di,Closed,doActivitedInterrupted,status" ); }
+        if (doActivityStatusClosedThread != null) { doActivityStatusClosedThread.interrupt();     ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,20,Tracer,"+System.identityHashCode(this)+",sm_di,Closed,doActivitedInterrupted,status" ); }
         break;
     }
   }
@@ -85,8 +82,7 @@ public class Tracer
     switch(status)
     {
       case Closed:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,18,Tracer,"+System.identityHashCode(this)+",sm_da,Closed,doActivitedStarted,status" );
-        doActivityStatusClosedThread = new DoActivityThread(this,"doActivityStatusClosed");
+        doActivityStatusClosedThread = new DoActivityThread(this,"doActivityStatusClosed")    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,20,Tracer,"+System.identityHashCode(this)+",sm_di,Closed,doActivitedInterrupted,status" ); }
         break;
     }
   }
