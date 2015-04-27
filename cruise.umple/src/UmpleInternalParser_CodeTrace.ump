@@ -44,7 +44,17 @@ class UmpleInternalParser
       {
         if(subToken.is("tracerType"))
         {
-          tracer = new TracerDirective(subToken.getValue().toLowerCase());
+        	String tracerName = subToken.getValue().toLowerCase();
+        	
+        	if( tracerName.equals("console") | tracerName.equals("file") | tracerName.equals("string") 
+        			| tracerName.equals("javaapi") | tracerName.equals("lttngjni") | tracerName.equals("log4j") )
+        	{
+            tracer = new TracerDirective(subToken.getValue().toLowerCase());
+        	}
+        	else {
+            tracer = new TracerDirective("console");
+            setFailedPosition(subToken.getPosition(),302);
+        	}
         }
         else if(subToken.is("tracerArgument"))
         {

@@ -144,6 +144,8 @@
 
 # Messages related to MOTL
 301: 4,  "http://umple.org/PageBeingDeveloped.html", Tracing of non-existent model entity  ;
+302: 4,  "http://umple.org/PageBeingDeveloped.html", Tracer not recognized - Console tracer is defaulted;
+
 
 # Messages relating to deprecated features
 901: 4, "http://umple.org/W901DeprecatedKeywordConstant.html", Keyword "constant" deprecated, please use "const" ;
