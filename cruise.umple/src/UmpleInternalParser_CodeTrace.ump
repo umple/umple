@@ -354,6 +354,10 @@ class UmpleInternalParser
         traceAttr.setTraceSet(true);
       }
     }
+    
+    // Trace Warning
+    if( traceItemType == -1 )
+    	setFailedPosition(traceToken.getPosition(),301);
   }
 
   /**
