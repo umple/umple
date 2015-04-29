@@ -37,15 +37,21 @@ class UmpleInternalParser
           traceAttr.setTraceSet(false);
           for(Token sub2: sub.getSubTokens())
           {
-            if( "get".equals(sub2.getValue("option")) )
+          	String option = sub2.getValue("option");
+          	if(option==null) continue;
+            if( "get".equals(option) )
             {
               wasSet = true;
               traceAttr.setTraceGet(true);
             }
-            if( "set".equals(sub2.getValue("option")) )
+            else if( "set".equals(option) )
             {
               wasSet = true;
               traceAttr.setTraceSet(true);
+            }
+            else
+            {
+							getParseResult().addErrorMessage(new ErrorMessage(303,sub.getPosition(),option));
             }
           }
         }
