@@ -4,7 +4,7 @@
 // Root logger level will be debug
 // Info logging level will be written into console output
 // Error logging level will be written into file
-tracer log4j root=debug (info)=(console) (error)=(file);
+tracer log4j root=debug info = console error = file;
 
 class Student
 {

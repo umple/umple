@@ -109,7 +109,7 @@ public class UmpleParserTracerTest
 	@Test
 	public void traceType_log4jConfigOptions()
 	{
-		code = "tracer log4j (error)=(console,file);";
+		code = "tracer log4j error = console,file;";
 		assertParse(code,"[tracerDirective][tracerType:log4j][logConfig][logLevel:error][logAppender:console][logAppender:file]");
 		Assert.assertEquals("log4j",model.getTraceType());
 

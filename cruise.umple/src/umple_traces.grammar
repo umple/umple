@@ -12,7 +12,7 @@
 // ======= grammar rules - The tool to output the trace: [*Tracers*]
 tracerDirective : tracer [tracerType] [[tracerOptions]] ;
 tracerOptions- : [[logConfig]]* [[traceMessageHeader]]? [tracerArgument]?
-logConfig : (root = [rootLevel]) | (monitorInterval = [monitorInterval]) | (OPEN_ROUND_BRACKET) [logLevel] ( , [logLevel] )* (CLOSE_ROUND_BRACKET) = (OPEN_ROUND_BRACKET) [logAppender] ( , [logAppender] )* (CLOSE_ROUND_BRACKET)
+logConfig : (root = [rootLevel]) | (monitorInterval = [monitorInterval]) | ( [logLevel] ( , [logLevel] )* = [logAppender] ( , [logAppender] )* )
 traceMessageHeader : [=switch:on|off] : [option] ( , [option] )*
 
 // ======= TRACE

@@ -1,6 +1,6 @@
 namespace example;
 
-tracer log4j root=error (error)=(console,file);
+tracer log4j root=error error = console,file;
 
 class Tracer
 {
