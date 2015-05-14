@@ -38,6 +38,21 @@ rule "addInterface_toUmpleModel"
 		insert(umpleInterface);
 end
 
+rule "addTopConstruct_toUmpleModel"
+	agenda-group "LEVEL1" 
+	when
+		enumDeclaration: EnumDeclaration()
+		umpleModel: UmpleModel()
+	then
+		String enumName = enumDeclaration.getName().getFullyQualifiedName();
+		// Create Top Level Construct
+	    CodeBlock languageSpecificCode = new CodeBlock();
+	    languageSpecificCode.setName(enumName);
+	    languageSpecificCode.setCode(enumDeclaration.toString());
+		System.out.println("ADDING TOP LEVEL CONSTRUCT TO MODEL: "+enumName);
+		umpleModel.addExtraCode(languageSpecificCode);
+end
+
 rule "transform_ImportDeclaration"
 	agenda-group "LEVEL1" 
 	when

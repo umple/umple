@@ -102,6 +102,11 @@ public static void printFilesToUmplify(List<File> srcFiles){
 				   
 				   logger.debug("--UmpleInterface has been created for" +filenameModel +"--");
 			   }
+			  for (CodeBlock codeBlock: model.getExtraCodes()){
+				   String filenameModel = path + codeBlock.getName() + EXTENSIONS[1];  
+				   createFile( path,filenameModel,generator.generateTopExtraCode(codeBlock));		 
+				   logger.debug("--Top construct has been created for" +filenameModel +"--");
+			   }
 		   }
 		   catch (Exception e)
 		   {

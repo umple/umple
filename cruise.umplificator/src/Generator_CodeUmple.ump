@@ -264,14 +264,16 @@ class UmpleToUmpleGenerator
 	}
 
 	// line 279 "../../../../src/Generator_CodeUmple.ump"
-	public void generateTopExtraCode(CodeBlock codeBlock){
+	public String generateTopExtraCode(CodeBlock codeBlock){
 		StringBuilder code = new StringBuilder();
 		code.append(StringFormatter.format("\ntop {0}\n{\n", codeBlock.getName()));
 		if (codeBlock.getCode() != null)
 		{
 			code.append(codeBlock.getCode());
 		}
+		code.append("\n");
 		code.append("}");
+		return code.toString();
 	}
 
 	// line 289 "../../../../src/Generator_CodeUmple.ump"

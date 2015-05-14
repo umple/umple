@@ -11,20 +11,18 @@ class JavaClassVisitor {
  depend org.eclipse.jdt.core.dom.MethodDeclaration;
  depend org.eclipse.jdt.core.dom.FieldDeclaration;
  depend org.eclipse.jdt.core.dom.PackageDeclaration;
- depend cruise.umple.compiler.CodeBlock;
 
  ImportDeclaration [] importDeclarations;
  MethodDeclaration [] methodDeclarations;
  FieldDeclaration [] fieldDeclarations;
+ EnumDeclaration [] enumDeclarations;
+ 
  lazy TypeDeclaration typeDeclaration;
- lazy CodeBlock enumDeclaration;
  lazy PackageDeclaration packageDeclaration;
  lazy String name;
  lazy String classBody;
  lazy Boolean isInterface;
  lazy Boolean isEnumType;
-
- trace name, classBody, isInterface, isEnumType;
 
   @Override
   public boolean visit(ImportDeclaration node) {
@@ -52,7 +50,6 @@ class JavaClassVisitor {
     // Main node to visit
     logger.debug("Visiting TypeDeclarations-" +node.getName());
     name = node.getName().getFullyQualifiedName();
-    isInterface = node.isInterface();
     typeDeclaration = node;
     return true; 
   }
@@ -69,13 +66,8 @@ class JavaClassVisitor {
   public boolean visit (EnumDeclaration node) 
   {
   	logger.debug("Visiting EnumDeclaration-" +node.getName());
-    enumDeclaration = new CodeBlock();
-    name = node.getName().getFullyQualifiedName();
-    String enumDeclarationCode = node.toString();
-    enumDeclaration.setName(name);
-	enumDeclaration.setCode(enumDeclarationCode);
-    //isEnumType = true;
-    return true;
+    enumDeclarations.add(node);
+    return false;
   }
 
 }

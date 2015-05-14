@@ -48,6 +48,7 @@ depend java.io.*;
 depend cruise.umplificator.visitor.JavaClassVisitor;
 depend cruise.umple.compiler.*;
 depend org.eclipse.jdt.core.dom.FieldDeclaration;
+depend org.eclipse.jdt.core.dom.EnumDeclaration;
 depend org.eclipse.jdt.core.dom.ImportDeclaration;
 depend org.eclipse.jdt.core.dom.MethodDeclaration;
 
@@ -108,10 +109,15 @@ depend org.eclipse.jdt.core.dom.MethodDeclaration;
 	   {
 		   kieSession.insert(fieldDeclaration); 
 	   }
+	   for (EnumDeclaration enumDeclaration : visitor.getEnumDeclarations())
+	   {
+		   kieSession.insert(enumDeclaration); 
+	   }
 
 	   kieSession.insert(visitor.getTypeDeclaration()); 
-	  
+	    
 	   kieSession.insert(visitor.getPackageDeclaration());
+	   
 	   return kieSession;
     }
   
