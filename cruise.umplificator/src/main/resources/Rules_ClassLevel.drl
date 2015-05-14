@@ -13,11 +13,29 @@ import function cruise.umplificator.rules.TopLevelAnalyzerHelper.getSuperClassNa
 rule "addClass_toUmpleModel"
 	agenda-group "LEVEL1" 
 	when
-		umpleClass: UmpleClass()
-		umpleModel: UmpleModel()
+		typeDeclaration: TypeDeclaration(interface == false)
+		// Add class only once
+		umpleModel: UmpleModel(getUmpleClass(typeDeclaration.getName().getFullyQualifiedName())==null)
 	then
-		//System.out.println("ADDING CLASS TO MODEL: "+umpleClass.getName());
-	    umpleModel.addUmpleClass(umpleClass);
+		String typeName = typeDeclaration.getName().getFullyQualifiedName();
+		UmpleClass uClass = new UmpleClass(typeName);
+	    umpleModel.addUmpleClass(uClass);
+	    System.out.println("ADDING CLASS TO MODEL: "+uClass.getName());
+	    insert(uClass);
+end
+
+rule "addInterface_toUmpleModel"
+	agenda-group "LEVEL1" 
+	when
+		typeDeclaration: TypeDeclaration(interface == true)
+		// Add class only once
+		umpleModel: UmpleModel(getUmpleClass(typeDeclaration.getName().getFullyQualifiedName())==null)
+	then
+		String typeName = typeDeclaration.getName().getFullyQualifiedName();
+		UmpleInterface umpleInterface = new UmpleInterface(typeName);
+		umpleModel.addUmpleInterface(umpleInterface);
+		System.out.println("ADDING INTERFACE TO MODEL: "+umpleInterface.getName());
+		insert(umpleInterface);
 end
 
 rule "transform_ImportDeclaration"

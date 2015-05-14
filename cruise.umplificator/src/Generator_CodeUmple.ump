@@ -300,6 +300,7 @@ class UmpleToUmpleGenerator
 			String formattedCode = UmpleCodeFormatter.beautifyCode(uInterface.getExtraCode());
 			code.append(formattedCode);
 		}
+		code.append("\n");
 		code.append("}");
 		return  code.toString();
 	}
