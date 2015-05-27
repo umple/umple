@@ -874,7 +874,21 @@ class ConstraintNameNameAnalyzer
         {
           ConstraintStateMachine name = new ConstraintStateMachine(stateMachine);
           return name;
+        } 
+        else
+        {
+        	Port port = null;
+        	if (uClassifier instanceof UmpleClass)
+        	{
+        		port = ((UmpleClass)(uClassifier)).getPort(value);
+        	}
+        	if(port!=null)
+        	{
+        		ConstraintPort name = new ConstraintPort(port);
+        		return name;
+        	} 
         }
+        
       }
     }
     if(uClassifier instanceof UmpleClass)

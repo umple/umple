@@ -299,7 +299,7 @@ class CompositeStructureTokenAnalyzer {
 			   analyzeAnonymousBody(trig, activeToken, aMethod);
 		   } else if(activeToken.is("hitchConstraint")) {
 			   analyzeHitchConstraint(trig, activeToken, aMethod);
-		   } else if(activeToken.is("ConstraintTree")) {
+		   } else if(activeToken.is("ConstraintTree") || activeToken.is("constraintList")) {
 			   analyzeTriggerConstraintTree(trig, activeToken, aMethod);
 		   } else if(activeToken.is("invoke")) {
 			   analyzeInvoke(trig, activeToken, aMethod);
@@ -451,7 +451,7 @@ class CompositeStructureTokenAnalyzer {
     		{
     			aMethod.setModifier(token.getValue());
     		}
-    		if (token.is("ConstraintTree"))
+    		if (token.is("ConstraintTree") || token.is("constraintList"))
     		{
     			Monitor pw = new Monitor(aMethod);
     			analyzeConstraintTree(pw, token, aMethod);
@@ -482,10 +482,8 @@ class CompositeStructureTokenAnalyzer {
     		{
     			analyzeMethodBody(token, aMethod);
     		}
-
-    		componentClass.addActiveMethod(aMethod);
-
     	}
+    	componentClass.addActiveMethod(aMethod);
 
     }
   }
@@ -892,7 +890,7 @@ class CompositeStructureTokenAnalyzer {
 		   }
 		   else if(sub.is("name"))
 		   {
-			   ConstraintAttribute name = (ConstraintAttribute)(ConstraintNameNameAnalyzer.analyzeName(cv,uClassifier,sub.getValue()));
+			   ConstraintNamed name = (ConstraintNamed)(ConstraintNameNameAnalyzer.analyzeName(cv,uClassifier,sub.getValue()));
 			   cv.addElement(name);
 			   if (grandparentToken.is("precondition")||grandparentToken.is("postcondition"))
 			   { //if it was a precondition or postcondition, check if it matches any of the method arguments
@@ -1001,52 +999,52 @@ class CompositeStructureTokenAnalyzer {
    private ConstraintTree analyzeConstraint(Token invariantToken, UmpleClassifier uClassifier)
    {
 	   ConstraintTree rawLine = new ConstraintTree();
-	   List<Token> subs = invariantToken.getSubTokens();
-	   for (Token sub : subs)
+	   if (invariantToken.is("genExpr"))
 	   {
-			   if (sub.is("genExpr"))
-			   {
-				   rawLine.addElementAll(analyzeGeneralConstraintExpression(sub,uClassifier));
-			   }
-			   else if (sub.is("boolExpr"))
-			   {
-				   rawLine.addElementAll(analyzeBooleanConstraintExpression(sub,uClassifier));
-			   }
-			   else if (sub.is("stringExpr"))
-			   {
-				   rawLine.addElementAll(analyzeStringConstraintExpression(sub,uClassifier));
-			   }
-			   else if (sub.is("numExpr"))
-			   {
-				   rawLine.addElementAll(analyzeNumberConstraintExpression(sub,uClassifier));
-			   }
-			   else if (sub.is("associationExpr"))
-			   {
-				   rawLine.addElementAll(analyzeAssociationConstraintExpression(sub,uClassifier));
-			   }
-			   else if (sub.is("statemachineExpr"))
-			   {
-				   rawLine.addElementAll(analyzeStateMachineConstraintExpression(sub,uClassifier));
-			   }
-			   else if(sub.is("loneBoolean"))
-			   {
-				   rawLine.addElement(analyzeConstraintName(sub.getSubToken(0),uClassifier,true));
-			   }
-			   else if (sub.is("linkingOp")){
-				   rawLine.addElementAll(analyzeLinkingOpExpression(sub,uClassifier));
-			   }
-			   else if (sub.is("negativeConstraint")){
-				   rawLine.addElementAll(analyzeNegativeConstraint(sub, uClassifier));
-			   }
-			   else if (sub.is("fakeContraint")){
-				   rawLine.addElement(new ConstraintUnassignedName(sub.getValue()));
-			   }
-			   else
-			   {
-				   rawLine.addElementAll(analyzeConstraint(sub,uClassifier));
-			   }
-
+		   rawLine.addElementAll(analyzeGeneralConstraintExpression(invariantToken,uClassifier));
 	   }
+	   else if (invariantToken.is("boolExpr"))
+	   {
+		   rawLine.addElementAll(analyzeBooleanConstraintExpression(invariantToken,uClassifier));
+	   }
+	   else if (invariantToken.is("stringExpr"))
+	   {
+		   rawLine.addElementAll(analyzeStringConstraintExpression(invariantToken,uClassifier));
+	   }
+	   else if (invariantToken.is("numExpr"))
+	   {
+		   rawLine.addElementAll(analyzeNumberConstraintExpression(invariantToken,uClassifier));
+	   }
+	   else if (invariantToken.is("associationExpr"))
+	   {
+		   rawLine.addElementAll(analyzeAssociationConstraintExpression(invariantToken,uClassifier));
+	   }
+	   else if (invariantToken.is("statemachineExpr"))
+	   {
+		   rawLine.addElementAll(analyzeStateMachineConstraintExpression(invariantToken,uClassifier));
+	   }
+	   else if(invariantToken.is("loneBoolean"))
+	   {
+		   rawLine.addElement(analyzeConstraintName(invariantToken.getSubToken(0),uClassifier,true));
+	   }
+	   else if (invariantToken.is("linkingOp")){
+		   rawLine.addElementAll(analyzeLinkingOpExpression(invariantToken,uClassifier));
+	   }
+	   else if (invariantToken.is("negativeConstraint")){
+		   rawLine.addElementAll(analyzeNegativeConstraint(invariantToken, uClassifier));
+	   }
+	   else if (invariantToken.is("fakeContraint")){
+		   rawLine.addElement(new ConstraintUnassignedName(invariantToken.getValue()));
+	   }
+	   else
+	   {
+		   List<Token> subs = invariantToken.getSubTokens();
+		   for (Token sub : subs)
+		   {
+			   rawLine.addElementAll(analyzeConstraint(sub,uClassifier));
+		   }
+	   }
+	   
 	   return rawLine;
    }
 
@@ -1385,7 +1383,7 @@ class CompositeStructureTokenAnalyzer {
    }
 
    public ConstraintTree analyzeInvariantConstraint(Token invariantToken){
-	   ConstraintTree rawLine = analyzeConstraint(invariantToken, null);
+	   ConstraintTree rawLine = analyzeConstraint(invariantToken, componentClass);
 	   if(rawLine.getNumberOfElements() == 0)
 	   {
 		   if (!invariantToken.getValue().equals("STATIC"))

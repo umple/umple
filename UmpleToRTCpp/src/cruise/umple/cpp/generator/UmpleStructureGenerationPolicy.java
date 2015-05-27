@@ -32,6 +32,8 @@ import cruise.umple.compiler.Attribute;
 import cruise.umple.compiler.BasicConstraint;
 import cruise.umple.compiler.CodeBlock;
 import cruise.umple.compiler.Comment;
+import cruise.umple.compiler.ConstraintPort;
+import cruise.umple.compiler.ConstraintUnassignedName;
 import cruise.umple.compiler.ConstraintVariable;
 import cruise.umple.compiler.Monitor;
 import cruise.umple.compiler.Port;
@@ -191,26 +193,35 @@ public class UmpleStructureGenerationPolicy{
 		return ports;
 	}
 
-	private static void generatePortsFromConstraints(ConstraintVariable constraint, Monitor monitor, List<Port> ports, Map<String, Port> portMap)
-        {
-          if(constraint == null) return;
-          if(constraint instanceof ConstraintTree)
-          {
-             generatePortsFromConstraints(((ConstraintTree)constraint).getRoot(),monitor,ports, portMap);
-          }
-          else if(constraint instanceof ConstraintOperator)
-          {
-             generatePortsFromConstraints(((ConstraintOperator)constraint).getLeft(),monitor,ports, portMap);
-             generatePortsFromConstraints(((ConstraintOperator)constraint).getRight(),monitor,ports, portMap);
-          }
-	  else if(constraint instanceof ConstraintAttribute){
-	    String value = ((ConstraintAttribute)constraint).getAttribute().getValue();
-	    Port port = portMap.get(value);
-	    if(port!= null){
-	      ports.add(port);
-	    }
-	  }
-        }
+	private static void generatePortsFromConstraints(ConstraintVariable constraint, Monitor monitor, List<Port> ports, Map<String, Port> portMap){
+		if (constraint == null)
+			return;
+		
+		if (constraint instanceof ConstraintTree) {
+			generatePortsFromConstraints(((ConstraintTree) constraint).getRoot(), monitor, ports,portMap);
+		} else if (constraint instanceof ConstraintOperator) {
+			generatePortsFromConstraints(((ConstraintOperator) constraint).getLeft(), monitor,ports, portMap);
+			generatePortsFromConstraints(((ConstraintOperator) constraint).getRight(), monitor,ports, portMap);
+		} else if (constraint instanceof ConstraintAttribute) {
+			String value = ((ConstraintAttribute) constraint).getAttribute().getValue();
+			Port port = portMap.get(value);
+			if (port != null) {
+				ports.add(port);
+			}
+		} else if (constraint instanceof ConstraintUnassignedName) {
+			String value = ((ConstraintUnassignedName) constraint).getValue();
+			Port port = portMap.get(value);
+			if (port != null) {
+				ports.add(port);
+			}
+		}else if (constraint instanceof ConstraintPort) {
+			String value = ((ConstraintPort) constraint).getName();
+			Port port = portMap.get(value);
+			if (port != null) {
+				ports.add(port);
+			}
+		}
+	}
 	
 	private static void generateBasicConstraintsFromConstraints(ConstraintVariable constraint, BasicConstraint basicConstraint, Monitor monitor, Map<String, Port> portMap, List<String> values, List<BasicConstraint> basicConstraints, String type)
         {

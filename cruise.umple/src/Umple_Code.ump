@@ -2527,6 +2527,15 @@ class ConstraintStateMachine
   public String getType(){ return "statemachine"; }
 }
 
+class ConstraintPort
+{
+  String getName()
+  {
+    return port==null?null:port.getName();
+  }
+  public String getType(){ return "port"; }
+}
+
 /*
  * In Umple_Code.ump: Methods for computing compound properties
  */

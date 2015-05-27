@@ -398,6 +398,15 @@ class ConstraintVariable
       StateMachine stateMachine;
       key { stateMachine }
     }
+    
+    /*
+     * ConstraintPort encapsulate the statemachine data in a port watch expression
+     */
+    class ConstraintPort
+    {
+      Port port;
+      key { port }
+    }
   }
 }
 
