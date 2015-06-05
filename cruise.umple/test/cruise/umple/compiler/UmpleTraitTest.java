@@ -168,7 +168,7 @@ public class UmpleTraitTest {
 	}	
 
 	@Test
-	public void checkRequiredMethodTest() {
+	public void checkRequiredMethodTest1() {
 		String code = "class A{isA T;} trait T { String test();}";
 		UmpleModel model = getModel(code);
 		boolean happened = false;
@@ -180,6 +180,14 @@ public class UmpleTraitTest {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
+	}	
+	
+	@Test
+	public void checkRequiredMethodTest2() {
+		String code = "class A{abstract;isA T;} trait T { String test();}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("test", model.getUmpleClass("A").getMethod(0).getName());
+		Assert.assertEquals(true, model.getUmpleClass("A").getMethod(0).isIsAbstract());
 	}	
 	
 	@Ignore
@@ -1063,6 +1071,14 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}
 	}
+
+	@Test
+	public void RequiredInterfaces004() {
+		String code = "class A{abstract; isA T;} interface I{} trait T{isA I;} ";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfParentInterface());
+	}
+	
 	@Test
 	public void semanticAnalysisTemplateRestriction001() {
 		String code = "class A{isA T<X=B>;} class B{} trait T<X isA C>{} ";

@@ -801,7 +801,8 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 			
 		} else {
 			UmpleClass uClass = model.getUmpleClass(bindingValue);
-			if (uClass==null){
+			UmpleInterface uInterface = model.getUmpleInterface(bindingValue);
+			if (uClass==null & uInterface==null){
 				getParseResult().addErrorMessage( new ErrorMessage( 221, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName()) ); 
 			 	return;
 			} else {
@@ -1288,7 +1289,9 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 //---------------------------------Start--------------------------------------
 private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inTrait,String topTrait) {
 	for (UmpleInterface uInterface : inTrait.getRequiredInterfaces()) {
-		if (!checkInterfaceImplementationInHeirarchy(inClass,uInterface.getName())){
+		if (inClass.isIsAbstract()){
+    		inClass.addParentInterface(uInterface);
+    	} else if (!checkInterfaceImplementationInHeirarchy(inClass,uInterface.getName())){
 			getParseResult().addErrorMessage(new ErrorMessage(222,inClass.getPosition(0),inClass.getName(),uInterface.getName(),topTrait));
 		    return;
 		}
@@ -1311,7 +1314,11 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 		  if (uMethod.isIsAbstract()) {
 			  Method newMethod = new Method(uMethod);
 			  ApplyTypeParametersToMethod(newMethod,inGeneralTPApplied);
-			  if(!inClass.hasImplementedMethodIncludingWithinParentClasses(newMethod)){
+			  if(inClass.isIsAbstract()){
+				  newMethod.getComment(2).setText(newMethod.getComment(2).getText()+"'"+inClass.getName()+"' ");
+				  newMethod.setSource(Method.Source.fTrait);
+					inClass.addMethod(newMethod);   
+			  } else  if(!inClass.hasImplementedMethodIncludingWithinParentClasses(newMethod)){
 				  getParseResult().addErrorMessage(new ErrorMessage(208,newMethod.getPosition(),newMethod.getName(),inTrait.getName(),inClass.getName()));
 				  return;
 			  }
