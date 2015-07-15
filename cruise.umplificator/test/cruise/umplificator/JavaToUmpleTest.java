@@ -21,12 +21,13 @@ public class JavaToUmpleTest {
 	String pathToRoot;
 	Umplificator umplificator;
 	List<String> filesToDelete = new ArrayList<String>();
-
+	List<File> filesToUmplify = new ArrayList<File>();
 
 	@Before
 	public void setUp() throws Exception {
 		umplificator = new Umplificator();
-		umplificator.setTestMode(true);
+		umplificator.setTestMode(false);
+		umplificator.setOutputFolder("");
 		pathToRoot = "test/cruise/umplificator/transformationTestFiles/";
 	}
 
@@ -41,7 +42,8 @@ public class JavaToUmpleTest {
 		File javaFile = new File(pathToRoot+fileName+"_java.java"); //INPUT
 		File umpleFile = new File(pathToRoot+fileName+"_umple.ump"); //OUTPUT
 		// Umplify file. Process must succeed!
-		assertTrue(umplificator.umplifyElement(javaFile));
+		filesToUmplify.add(javaFile);
+		assertTrue(umplificator.umplify(filesToUmplify));
 		// Get the output content
 		assertOuputAndFile(umpleFile);
 		// Clean files 
@@ -54,7 +56,8 @@ public class JavaToUmpleTest {
 		File javaFile = new File(pathToRoot+fileName+"_java.java"); //INPUT
 		File umpleFile = new File(pathToRoot+fileName+"_umple.ump"); //OUTPUT
 		// Umplify file. Process must succeed!
-		assertTrue(umplificator.umplifyElement(javaFile));
+		filesToUmplify.add(javaFile);
+		assertTrue(umplificator.umplify(filesToUmplify));
 		// Get the output content
 		assertOuputAndFile(umpleFile);
 		// Clean files 
@@ -67,7 +70,8 @@ public class JavaToUmpleTest {
 		File javaFile = new File(pathToRoot+fileName+"_java.java"); //INPUT
 		File umpleFile = new File(pathToRoot+fileName+"_umple.ump"); //OUTPUT
 		// Umplify file. Process must succeed!
-		assertTrue(umplificator.umplifyElement(javaFile));
+		filesToUmplify.add(javaFile);
+		assertTrue(umplificator.umplify(filesToUmplify));
 		// Get the output content
 		assertOuputAndFile(umpleFile);
 		// Clean files 
@@ -81,7 +85,8 @@ public class JavaToUmpleTest {
 		File umpleFile = new File(pathToRoot+fileName+"_Level0.ump"); //OUTPUT
 		// Umplify file. Process must succeed!
 		umplificator.setCurrentLevel(RefactoringLevel.CLASS);
-		assertTrue(umplificator.umplifyElement(javaFile));
+		filesToUmplify.add(javaFile);
+		assertTrue(umplificator.umplify(filesToUmplify));
 		// Get the output content
 		assertOuputAndFile(umpleFile);
 		// Clean files 
@@ -95,7 +100,8 @@ public class JavaToUmpleTest {
 		File umpleFile = new File(pathToRoot+fileName+"_Level0.ump"); //OUTPUT
 		// Umplify file. Process must succeed!
 		umplificator.setCurrentLevel(RefactoringLevel.CLASS);
-		assertTrue(umplificator.umplifyElement(javaFile));
+		filesToUmplify.add(javaFile);
+		assertTrue(umplificator.umplify(filesToUmplify));
 		// Get the output content
 		assertOuputAndFile(umpleFile);
 		// Clean files 
@@ -109,7 +115,8 @@ public class JavaToUmpleTest {
 		File umpleFile = new File(pathToRoot+fileName+"_Level1.ump"); //OUTPUT
 		// Umplify file. Process must succeed!
 		umplificator.setCurrentLevel(RefactoringLevel.ATTRIBUTES);
-		assertTrue(umplificator.umplifyElement(javaFile));
+		filesToUmplify.add(javaFile);
+		assertTrue(umplificator.umplify(filesToUmplify));
 		// Get the output content
 		assertOuputAndFile(umpleFile);
 		// Clean files 
@@ -119,17 +126,17 @@ public class JavaToUmpleTest {
 	@Test
 	public void JavaToUmple_Level2(){
 		String fileName = "Test";
-		File javaFile = new File(pathToRoot+fileName+"_java.java"); //INPUT
+		File javaFile = new File(pathToRoot+fileName+".java"); //INPUT
 		File umpleFile = new File(pathToRoot+fileName+"_Level2.ump"); //OUTPUT
 		// Umplify file. Process must succeed!
 		umplificator.setCurrentLevel(RefactoringLevel.ASSOCIATIONS);
-		assertTrue(umplificator.umplifyElement(javaFile));
+		filesToUmplify.add(javaFile);
+		assertTrue(umplificator.umplify(filesToUmplify));
 		// Get the output content
 		assertOuputAndFile(umpleFile);
 		// Clean files 
 		filesToDelete.add(fileName);
 	}
-	
 	
 
 	@After

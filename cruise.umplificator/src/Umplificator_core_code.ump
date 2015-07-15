@@ -97,7 +97,7 @@ public boolean umplifyJava(File file)
 		    filesUmplified.add(umpleFile.getSimpleFileName());
 
 		} catch (IOException e) {
-			logger.error("IOso Exception in Umplificator.umplifyUmpleFile");
+			logger.error("IOException in Umplificator.umplifyJava");
 			logger.error(e.getStackTrace());
 			return false;
 		} 

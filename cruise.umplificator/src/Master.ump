@@ -34,6 +34,7 @@ use Main.ump;
 use UmplificatorVersion.ump;
 use Umplificator_core.ump;
 use Umplificator_core_code.ump;
+use Umplificator_traces.ump;
 use Parser_Java.ump;
 use CodeVisitors.ump;
 use FileHelper.ump;
