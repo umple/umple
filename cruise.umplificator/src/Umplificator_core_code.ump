@@ -108,7 +108,6 @@ public boolean umplifyJava(File file)
 
 public boolean umplifyCPP(File file)
 {
-	logger.error("Not Implemented yet");
     throw new UnsupportedOperationException( "CPP Reverse Eng. will be implemented soon");
 }
 

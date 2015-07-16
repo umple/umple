@@ -1,6 +1,6 @@
 use Umplificator_core_code.ump;
 
 class Umplificator {
-	trace umplifyCPP record "not implemented yet";
+	trace umplifyCPP record "not implemented yet" logLevel error;
 }
 
