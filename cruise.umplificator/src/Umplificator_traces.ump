@@ -1,6 +1,39 @@
-use Umplificator_core_code.ump;
+/* 
+MOTL tracer directive indication (log4j) as tracer: resulting in log4j tracepoints injection
+
+'nonconfig': an option for tracer indicating that generation of XML Config file is not desired 
+We have our own customized XML config file (e.g. using file rollover Appender)
+The file that actually gets packaged with the final .jar is: cruise.umplificator/log4j2.xml
+*/
+
+tracer log4j noconfig;
+
+// MOTL trace specification
 
 class Umplificator {
+	//trace needSubDirectories where [ needSubDirectories==true ] record "umplificator will create subdirectories based on the namespace of the model" logLevel info;
+	trace outputFolder where [outputFolder==null] logLevel fatal;
+	trace filesUmplified;
 	trace umplifyCPP record "not implemented yet" logLevel error;
 }
 
+class JavaParser {
+  trace parseUnit logLevel debug record "Parsing Compilation Unit";
+  trace exit parseUnit logLevel debug record "Initializing Java Visitor for Compilation Unit";
+  trace parseBodyDeclarations logLevel debug record "Parsing Body Declarations from source";
+  trace exit parseBodyDeclarations logLevel debug record "Initializing Java Visitor for Body Declarations";
+}
+
+class RuleService {
+  trace startRuleEngine logLevel debug record "RuleService.startRuleEngine";
+}
+
+class RuleRunner {
+	trace RuleRunner logLevel debug record "Instantiate RuleRunner- Resources, FileSystem and Repository created";
+  trace addRuleFile logLevel debug record "RuleRunner.addRuleFile - Add Rule Files to Session";
+  trace insertJavaElements logLevel debug record "RuleRunner.insertJavaElements - Insert Java elements into working memory";
+  trace insertUmpleClass logLevel debug record "RuleRunner.insertUmpleClass - Insert uClass into working memory";
+  trace insertUmpleModel logLevel debug record "RuleRunner.insertUmpleModel - Insert Umple Model into working memory";	
+  trace insertUmpleInterface logLevel debug record "RuleRunner.insertUmpleInterface- Insert uInterface into working memory";
+  trace fireAllRules logLevel debug record "RuleRunner.fireAllRules - Fire rules";
+}
