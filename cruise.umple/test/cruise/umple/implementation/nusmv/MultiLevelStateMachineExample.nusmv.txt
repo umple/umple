@@ -16,9 +16,9 @@ MODULE Sm( smS2 , smS2S21 , handle )
   
   TRANS
     ( (sm_state = sm_s1) -> (
-      (handle.event = e1 & next(sm_state) = sm_s1)  |
-      (handle.event = e2 & next(sm_state) = sm_s2)  ) ) &
-    ( (sm_state = sm_s2) -> ( next(smS2.smS2_state) = smS2_s21) )
+      (handle.event = e1 & next(sm_state) = sm_s1 )  |
+      (handle.event = e2 & next(sm_state) = sm_s2 )  ) ) &
+    ( (sm_state = sm_s2) -> ( next(smS2.smS2_state) = smS2_s21 ) )
   
 MODULE SmS2( sm , smS2S21 , handle )
   
@@ -30,8 +30,9 @@ MODULE SmS2( sm , smS2S21 , handle )
   
   TRANS
     ( (smS2_state = smS2_s22) -> (
-       handle.event = e2 & next(sm.sm_state) = sm_s1 & next(smS2_state) = null) ) &
-    ( (smS2_state = smS2_s21) -> ( next(smS2S21.smS2S21_state) = smS2S21_s211) )
+       handle.event = e2 & next(sm.sm_state) = sm_s1
+         & next(smS2_state) = null ) ) &
+    ( (smS2_state = smS2_s21) -> ( next(smS2S21.smS2S21_state) = smS2S21_s211 ) )
   
 MODULE SmS2S21( sm , smS2 , handle )
   
@@ -43,8 +44,11 @@ MODULE SmS2S21( sm , smS2 , handle )
   
   TRANS
     ( (smS2S21_state = smS2S21_s211) -> (
-      (handle.event = e1 & next(sm.sm_state) = sm_s1 & next(smS2.smS2_state) = null & next(smS2S21_state) = null)  |
-      (handle.event = e3 & next(smS2.smS2_state) = smS2_s22 & next(smS2S21_state) = null)  ) )
+      (handle.event = e1 & next(sm.sm_state) = sm_s1
+         & next(smS2.smS2_state) = null
+         & next(smS2S21_state) = null )  |
+      (handle.event = e3 & next(smS2.smS2_state) = smS2_s22
+         & next(smS2S21_state) = null )  ) )
   
 MODULE main
   

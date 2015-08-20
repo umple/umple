@@ -16,10 +16,10 @@ MODULE Sm( smZxab , smZxabZx , smGe , handle )
   
   TRANS
     ( (sm_state = sm_D) -> (
-      (handle.event = e5 & next(smZxabZx.smZxabZx_state) = smZxabZx_X)  |
-      (handle.event = e2 & next(smGe.smGe_state) = smGe_E)  ) ) &
-    ( (sm_state = sm_Zxab) -> ( next(smZxab.smZxab_state) = smZxab_Zx) ) &
-    ( (sm_state = sm_Ge) -> ( next(smGe.smGe_state) = smGe_G) )
+      (handle.event = e5 & next(smZxabZx.smZxabZx_state) = smZxabZx_X )  |
+      (handle.event = e2 & next(smGe.smGe_state) = smGe_E )  ) ) &
+    ( (sm_state = sm_Zxab) -> ( next(smZxab.smZxab_state) = smZxab_Zx ) ) &
+    ( (sm_state = sm_Ge) -> ( next(smGe.smGe_state) = smGe_G ) )
   
 MODULE SmZxab( sm , smZxabZx , smGe , handle )
   
@@ -31,15 +31,21 @@ MODULE SmZxab( sm , smZxabZx , smGe , handle )
   
   TRANS
     ( (smZxab_state = smZxab_A) -> (
-      (handle.event = e5 & next(sm.sm_state) = sm_D & next(smZxab_state) = null)  |
-      (handle.event = e3 & next(smZxab_state) = smZxab_B)  |
-      (handle.event = e1 & next(smGe.smGe_state) = smGe_E & next(smZxab_state) = null)  |
-      (handle.event = e4 & next(sm.sm_state) = sm_Ge & next(smZxab_state) = null)  ) ) &
+      (handle.event = e5 & next(sm.sm_state) = sm_D
+         & next(smZxab_state) = null )  |
+      (handle.event = e3 & next(smZxab_state) = smZxab_B )  |
+      (handle.event = e1 & next(smGe.smGe_state) = smGe_E
+         & next(smZxab_state) = null )  |
+      (handle.event = e4 & next(sm.sm_state) = sm_Ge
+         & next(smZxab_state) = null )  ) ) &
     ( (smZxab_state = smZxab_B) -> (
-      (handle.event = e3 & next(sm.sm_state) = sm_Ge & next(smZxab_state) = null)  |
-      (handle.event = e1 & next(smGe.smGe_state) = smGe_E & next(smZxab_state) = null)  |
-      (handle.event = e4 & next(sm.sm_state) = sm_Ge & next(smZxab_state) = null)  ) ) &
-    ( (smZxab_state = smZxab_Zx) -> ( next(smZxabZx.smZxabZx_state) = smZxabZx_Z) )
+      (handle.event = e3 & next(sm.sm_state) = sm_Ge
+         & next(smZxab_state) = null )  |
+      (handle.event = e1 & next(smGe.smGe_state) = smGe_E
+         & next(smZxab_state) = null )  |
+      (handle.event = e4 & next(sm.sm_state) = sm_Ge
+         & next(smZxab_state) = null )  ) ) &
+    ( (smZxab_state = smZxab_Zx) -> ( next(smZxabZx.smZxabZx_state) = smZxabZx_Z ) )
   
 MODULE SmZxabZx( sm , smZxab , smGe , handle )
   
@@ -51,15 +57,28 @@ MODULE SmZxabZx( sm , smZxab , smGe , handle )
   
   TRANS
     ( (smZxabZx_state = smZxabZx_Z) -> (
-      (handle.event = e3 & next(smZxabZx_state) = smZxabZx_X)  |
-      (handle.event = e2 & next(smZxab.smZxab_state) = smZxab_A & next(smZxabZx_state) = null)  |
-      (handle.event = e5 & next(smGe.smGe_state) = smGe_G & next(smZxab.smZxab_state) = null & next(smZxabZx_state) = null)  |
-      (handle.event = e1 & next(smGe.smGe_state) = smGe_E & next(smZxab.smZxab_state) = null & next(smZxabZx_state) = null)  |
-      (handle.event = e4 & next(sm.sm_state) = sm_Ge & next(smZxab.smZxab_state) = null & next(smZxabZx_state) = null)  ) ) &
+      (handle.event = e3 & next(smZxabZx_state) = smZxabZx_X )  |
+      (handle.event = e2 & next(smZxab.smZxab_state) = smZxab_A
+         & next(smZxabZx_state) = null )  |
+      (handle.event = e5 & next(smGe.smGe_state) = smGe_G
+         & next(smZxab.smZxab_state) = null
+         & next(smZxabZx_state) = null )  |
+      (handle.event = e1 & next(smGe.smGe_state) = smGe_E
+         & next(smZxab.smZxab_state) = null
+         & next(smZxabZx_state) = null )  |
+      (handle.event = e4 & next(sm.sm_state) = sm_Ge
+         & next(smZxab.smZxab_state) = null
+         & next(smZxabZx_state) = null )  ) ) &
     ( (smZxabZx_state = smZxabZx_X) -> (
-      (handle.event = e5 & next(smGe.smGe_state) = smGe_G & next(smZxab.smZxab_state) = null & next(smZxabZx_state) = null)  |
-      (handle.event = e1 & next(smGe.smGe_state) = smGe_E & next(smZxab.smZxab_state) = null & next(smZxabZx_state) = null)  |
-      (handle.event = e4 & next(sm.sm_state) = sm_Ge & next(smZxab.smZxab_state) = null & next(smZxabZx_state) = null)  ) )
+      (handle.event = e5 & next(smGe.smGe_state) = smGe_G
+         & next(smZxab.smZxab_state) = null
+         & next(smZxabZx_state) = null )  |
+      (handle.event = e1 & next(smGe.smGe_state) = smGe_E
+         & next(smZxab.smZxab_state) = null
+         & next(smZxabZx_state) = null )  |
+      (handle.event = e4 & next(sm.sm_state) = sm_Ge
+         & next(smZxab.smZxab_state) = null
+         & next(smZxabZx_state) = null )  ) )
   
 MODULE SmGe( sm , smZxab , smZxabZx , handle )
   
@@ -71,10 +90,11 @@ MODULE SmGe( sm , smZxab , smZxabZx , handle )
   
   TRANS
     ( (smGe_state = smGe_E) -> (
-      (handle.event = e1 & next(smGe_state) = smGe_G)  |
-      (handle.event = e2 & next(smGe_state) = smGe_G)  ) ) &
+      (handle.event = e1 & next(smGe_state) = smGe_G )  |
+      (handle.event = e2 & next(smGe_state) = smGe_G )  ) ) &
     ( (smGe_state = smGe_G) -> (
-       handle.event = e1 & next(smZxab.smZxab_state) = smZxab_B & next(smGe_state) = null) )
+       handle.event = e1 & next(smZxab.smZxab_state) = smZxab_B
+         & next(smGe_state) = null ) )
   
 MODULE main
   

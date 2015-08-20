@@ -11,14 +11,13 @@ MODULE S2
   
   TRANS
     ( (s2_state = s2_s2a) -> (
-      (event = e1 & next(s2_state) = s2_s1)  |
-      (event = e3 & next(s2_state) = s2_s2b)  ) ) &
+      (event = e1 & next(s2_state) = s2_s1 )  |
+      (event = e3 & next(s2_state) = s2_s2b )  ) ) &
     ( (s2_state = s2_s2b) -> (
-       event = e3 & next(s2_state) = s2_s2a) ) &
-    ( (s2_state = s2_s1) -> ( next(s2_state) = s2_state) )
+       event = e3 & next(s2_state) = s2_s2a ) ) &
+    ( (s2_state = s2_s1) -> ( next(s2_state) = s2_state ) )
   
 MODULE main
   
   VAR 
     s2 : S2; 
-    

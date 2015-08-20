@@ -11,42 +11,41 @@ MODULE Status
   
   TRANS
     ( (status_state = status_InProgress) -> (
-      (event = researcherDeclaresComplete & next(status_state) = status_EvaluationByInstitution)  |
-      (event = editByResearcher & next(status_state) = status_InProgress)  ) ) &
+      (event = researcherDeclaresComplete & next(status_state) = status_EvaluationByInstitution )  |
+      (event = editByResearcher & next(status_state) = status_InProgress )  ) ) &
     ( (status_state = status_EvaluationByInstitution) -> (
-      (event = returnToResearcher & next(status_state) = status_InProgress)  |
-      (event = verified & next(status_state) = status_VerifiedByInstitution)  |
-      (event = editByInstitution & next(status_state) = status_EvaluationByInstitution)  ) ) &
+      (event = returnToResearcher & next(status_state) = status_InProgress )  |
+      (event = verified & next(status_state) = status_VerifiedByInstitution )  |
+      (event = editByInstitution & next(status_state) = status_EvaluationByInstitution )  ) ) &
     ( (status_state = status_VerifiedByInstitution) -> (
-      (event = reOpen & next(status_state) = status_EvaluationByInstitution)  |
-      (event = submit & next(status_state) = status_SubmittedByInstitution)  ) ) &
+      (event = reOpen & next(status_state) = status_EvaluationByInstitution )  |
+      (event = submit & next(status_state) = status_SubmittedByInstitution )  ) ) &
     ( (status_state = status_SubmittedByInstitution) -> (
-      (event = withdraw & next(status_state) = status_Withdrawn)  |
-      (event = acceptForReview & next(status_state) = status_UnderAdministrativeReview)  |
-      (event = submissionCheck & next(status_state) = status_SubmittedByInstitution)  |
-      (event = submissionCheck & next(status_state) = status_EvaluationByInstitution)  ) ) &
+      (event = withdraw & next(status_state) = status_Withdrawn )  |
+      (event = acceptForReview & next(status_state) = status_UnderAdministrativeReview )  |
+      (event = submissionCheck & next(status_state) = status_SubmittedByInstitution )  |
+      (event = submissionCheck & next(status_state) = status_EvaluationByInstitution )  ) ) &
     ( (status_state = status_UnderAdministrativeReview) -> (
-      (event = acceptForExpertReview & next(status_state) = status_UnderExpertReview)  |
-      (event = bypassExpertReviewDueToMinorChanges & next(status_state) = status_AwaitingFinalDecision)  |
-      (event = returnToInstitition & next(status_state) = status_EvaluationByInstitution)  |
-      (event = withdraw & next(status_state) = status_Withdrawn)  ) ) &
+      (event = acceptForExpertReview & next(status_state) = status_UnderExpertReview )  |
+      (event = bypassExpertReviewDueToMinorChanges & next(status_state) = status_AwaitingFinalDecision )  |
+      (event = returnToInstitition & next(status_state) = status_EvaluationByInstitution )  |
+      (event = withdraw & next(status_state) = status_Withdrawn )  ) ) &
     ( (status_state = status_UnderExpertReview) -> (
-      (event = expertReviewsReturned & next(status_state) = status_AwaitingFinalDecision)  |
-      (event = withdraw & next(status_state) = status_Withdrawn)  ) ) &
+      (event = expertReviewsReturned & next(status_state) = status_AwaitingFinalDecision )  |
+      (event = withdraw & next(status_state) = status_Withdrawn )  ) ) &
     ( (status_state = status_AwaitingFinalDecision) -> (
-      (event = finalAccept & next(status_state) = status_Accepted)  |
-      (event = minorRevisionsNeeded & next(status_state) = status_EvaluationByInstitution)  |
-      (event = reject & next(status_state) = status_Rejected)  ) ) &
+      (event = finalAccept & next(status_state) = status_Accepted )  |
+      (event = minorRevisionsNeeded & next(status_state) = status_EvaluationByInstitution )  |
+      (event = reject & next(status_state) = status_Rejected )  ) ) &
     ( (status_state = status_Planned) -> (
-       event = createApplication & next(status_state) = status_InProgress) ) &
+       event = createApplication & next(status_state) = status_InProgress ) ) &
     ( (status_state = status_Rejected) -> (
-       event = tryAgain & next(status_state) = status_InProgress) ) &
+       event = tryAgain & next(status_state) = status_InProgress ) ) &
     ( (status_state = status_Withdrawn) -> (
-       event = tryAgain & next(status_state) = status_InProgress) ) &
-    ( (status_state = status_Accepted) -> ( next(status_state) = status_state) )
+       event = tryAgain & next(status_state) = status_InProgress ) ) &
+    ( (status_state = status_Accepted) -> ( next(status_state) = status_state ) )
   
 MODULE main
   
   VAR 
     status : Status; 
-    

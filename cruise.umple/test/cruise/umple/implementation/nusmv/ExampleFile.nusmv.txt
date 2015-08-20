@@ -11,21 +11,19 @@ MODULE Status
   
   TRANS
     ( (status_state = status_Closing) -> (
-      (event = buttonOrObstacle & next(status_state) = status_Opening)  |
-      (event = reachBottom & next(status_state) = status_Closed)  ) ) &
+      (event = buttonOrObstacle & next(status_state) = status_Opening )  |
+      (event = reachBottom & next(status_state) = status_Closed )  ) ) &
     ( (status_state = status_Opening) -> (
-      (event = buttonOrObstacle & next(status_state) = status_HalfOpen)  |
-      (event = reachTop & next(status_state) = status_Open)  ) ) &
+      (event = buttonOrObstacle & next(status_state) = status_HalfOpen )  |
+      (event = reachTop & next(status_state) = status_Open )  ) ) &
     ( (status_state = status_Open) -> (
-       event = buttonOrObstacle & next(status_state) = status_Closing) ) &
+       event = buttonOrObstacle & next(status_state) = status_Closing ) ) &
     ( (status_state = status_Closed) -> (
-       event = buttonOrObstacle & next(status_state) = status_Opening) ) &
+       event = buttonOrObstacle & next(status_state) = status_Opening ) ) &
     ( (status_state = status_HalfOpen) -> (
-       event = buttonOrObstacle & next(status_state) = status_Opening) )
+       event = buttonOrObstacle & next(status_state) = status_Opening ) )
   
 MODULE main
   
   VAR 
     status : Status; 
-    
-  

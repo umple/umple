@@ -11,24 +11,23 @@ MODULE Status
   
   TRANS
     ( (status_state = status_Planned) -> (
-      (event = cancel & next(status_state) = status_Cancelled)  |
-      (event = openRegistration & next(status_state) = status_OpenNotEnoughStudents)  ) ) &
+      (event = cancel & next(status_state) = status_Cancelled )  |
+      (event = openRegistration & next(status_state) = status_OpenNotEnoughStudents )  ) ) &
     ( (status_state = status_OpenNotEnoughStudents) -> (
-      (event = requestToRegister & next(status_state) = status_OpenNotEnoughStudents)  |
-      (event = closeRegistration & next(status_state) = status_Cancelled)  |
-      (event = cancel & next(status_state) = status_Cancelled)  |
-      (event = classSizeExceedsMinimum & next(status_state) = status_OpenEnoughStudents)  ) ) &
+      (event = requestToRegister & next(status_state) = status_OpenNotEnoughStudents )  |
+      (event = closeRegistration & next(status_state) = status_Cancelled )  |
+      (event = cancel & next(status_state) = status_Cancelled )  |
+      (event = classSizeExceedsMinimum & next(status_state) = status_OpenEnoughStudents )  ) ) &
     ( (status_state = status_OpenEnoughStudents) -> (
-      (event = cancel & next(status_state) = status_Cancelled)  |
-      (event = requestToRegister & next(status_state) = status_OpenEnoughStudents)  |
-      (event = closeRegistration & next(status_state) = status_Closed)  |
-      (event = classSizeExceedsMaximum & next(status_state) = status_Closed)  ) ) &
+      (event = cancel & next(status_state) = status_Cancelled )  |
+      (event = requestToRegister & next(status_state) = status_OpenEnoughStudents )  |
+      (event = closeRegistration & next(status_state) = status_Closed )  |
+      (event = classSizeExceedsMaximum & next(status_state) = status_Closed )  ) ) &
     ( (status_state = status_Closed) -> (
-       event = cancel & next(status_state) = status_Cancelled) ) &
-    ( (status_state = status_Cancelled) -> ( next(status_state) = status_state) )
+       event = cancel & next(status_state) = status_Cancelled ) ) &
+    ( (status_state = status_Cancelled) -> ( next(status_state) = status_state ) )
   
 MODULE main
   
   VAR 
     status : Status; 
-    

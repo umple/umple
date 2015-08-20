@@ -16,12 +16,12 @@ MODULE Status( statusOpen , handle )
   
   TRANS
     ( (status_state = status_Planned) -> (
-      (handle.event = cancel & next(status_state) = status_Cancelled)  |
-      (handle.event = openRegistration & next(statusOpen.statusOpen_state) = statusOpen_NotEnoughStudents)  ) ) &
+      (handle.event = cancel & next(status_state) = status_Cancelled )  |
+      (handle.event = openRegistration & next(statusOpen.statusOpen_state) = statusOpen_NotEnoughStudents )  ) ) &
     ( (status_state = status_Closed) -> (
-       handle.event = cancel & next(status_state) = status_Cancelled) ) &
-    ( (status_state = status_Open) -> ( next(statusOpen.statusOpen_state) = statusOpen_NotEnoughStudents) ) &
-    ( (status_state = status_Cancelled) -> ( next(status_state) = status_state) )
+       handle.event = cancel & next(status_state) = status_Cancelled ) ) &
+    ( (status_state = status_Open) -> ( next(statusOpen.statusOpen_state) = statusOpen_NotEnoughStudents ) ) &
+    ( (status_state = status_Cancelled) -> ( next(status_state) = status_state ) )
   
 MODULE StatusOpen( status , handle )
   
@@ -33,15 +33,22 @@ MODULE StatusOpen( status , handle )
   
   TRANS
     ( (statusOpen_state = statusOpen_NotEnoughStudents) -> (
-      (handle.event = requestToRegister & next(status.status_state) = status_Open & next(statusOpen_state) = null)  |
-      (handle.event = closeRegistration & next(status.status_state) = status_Cancelled & next(statusOpen_state) = null)  |
-      (handle.event = classSizeExceedsMinimum & next(statusOpen_state) = statusOpen_EnoughStudents)  |
-      (handle.event = cancel & next(status.status_state) = status_Cancelled & next(statusOpen_state) = null)  ) ) &
+      (handle.event = requestToRegister & next(status.status_state) = status_Open
+         & next(statusOpen_state) = null )  |
+      (handle.event = closeRegistration & next(status.status_state) = status_Cancelled
+         & next(statusOpen_state) = null )  |
+      (handle.event = classSizeExceedsMinimum & next(statusOpen_state) = statusOpen_EnoughStudents )  |
+      (handle.event = cancel & next(status.status_state) = status_Cancelled
+         & next(statusOpen_state) = null )  ) ) &
     ( (statusOpen_state = statusOpen_EnoughStudents) -> (
-      (handle.event = requestToRegister & next(status.status_state) = status_Open & next(statusOpen_state) = null)  |
-      (handle.event = closeRegistration & next(status.status_state) = status_Closed & next(statusOpen_state) = null)  |
-      (handle.event = classSizeExceedsMaximum & next(status.status_state) = status_Closed & next(statusOpen_state) = null)  |
-      (handle.event = cancel & next(status.status_state) = status_Cancelled & next(statusOpen_state) = null)  ) )
+      (handle.event = requestToRegister & next(status.status_state) = status_Open
+         & next(statusOpen_state) = null )  |
+      (handle.event = closeRegistration & next(status.status_state) = status_Closed
+         & next(statusOpen_state) = null )  |
+      (handle.event = classSizeExceedsMaximum & next(status.status_state) = status_Closed
+         & next(statusOpen_state) = null )  |
+      (handle.event = cancel & next(status.status_state) = status_Cancelled
+         & next(statusOpen_state) = null )  ) )
   
 MODULE main
   

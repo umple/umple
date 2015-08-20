@@ -11,79 +11,78 @@ MODULE Sm
   
   TRANS
     ( (sm_state = sm_time) -> (
-      (event = s1 & next(sm_state) = sm_date)  |
-      (event = s2 & next(sm_state) = sm_bothOff)  |
-      (event = s3 & next(sm_state) = sm_paused)  |
-      (event = s3during2Secs & next(sm_state) = sm_alarmTime)  ) ) &
+      (event = s1 & next(sm_state) = sm_date )  |
+      (event = s2 & next(sm_state) = sm_bothOff )  |
+      (event = s3 & next(sm_state) = sm_paused )  |
+      (event = s3during2Secs & next(sm_state) = sm_alarmTime )  ) ) &
     ( (sm_state = sm_paused) -> (
-      (event = s1 & next(sm_state) = sm_running)  |
-      (event = s2 & next(sm_state) = sm_paused)  |
-      (event = s3 & next(sm_state) = sm_time)  ) ) &
+      (event = s1 & next(sm_state) = sm_running )  |
+      (event = s2 & next(sm_state) = sm_paused )  |
+      (event = s3 & next(sm_state) = sm_time )  ) ) &
     ( (sm_state = sm_running) -> (
-      (event = s1 & next(sm_state) = sm_paused)  |
-      (event = s2 & next(sm_state) = sm_lapRunning)  |
-      (event = s3 & next(sm_state) = sm_time)  ) ) &
+      (event = s1 & next(sm_state) = sm_paused )  |
+      (event = s2 & next(sm_state) = sm_lapRunning )  |
+      (event = s3 & next(sm_state) = sm_time )  ) ) &
     ( (sm_state = sm_lapRunning) -> (
-      (event = s1 & next(sm_state) = sm_lapPaused)  |
-      (event = s2 & next(sm_state) = sm_running)  |
-      (event = s3 & next(sm_state) = sm_time)  ) ) &
+      (event = s1 & next(sm_state) = sm_lapPaused )  |
+      (event = s2 & next(sm_state) = sm_running )  |
+      (event = s3 & next(sm_state) = sm_time )  ) ) &
     ( (sm_state = sm_lapPaused) -> (
-      (event = s1 & next(sm_state) = sm_lapRunning)  |
-      (event = s2 & next(sm_state) = sm_paused)  |
-      (event = s3 & next(sm_state) = sm_time)  ) ) &
+      (event = s1 & next(sm_state) = sm_lapRunning )  |
+      (event = s2 & next(sm_state) = sm_paused )  |
+      (event = s3 & next(sm_state) = sm_time )  ) ) &
     ( (sm_state = sm_bothOff) -> (
-      (event = notS2 & next(sm_state) = sm_time)  |
-      (event = s1 & next(sm_state) = sm_chimeOn)  ) ) &
+      (event = notS2 & next(sm_state) = sm_time )  |
+      (event = s1 & next(sm_state) = sm_chimeOn )  ) ) &
     ( (sm_state = sm_chimeOn) -> (
-      (event = notS2 & next(sm_state) = sm_time)  |
-      (event = s1 & next(sm_state) = sm_bothOn)  ) ) &
+      (event = notS2 & next(sm_state) = sm_time )  |
+      (event = s1 & next(sm_state) = sm_bothOn )  ) ) &
     ( (sm_state = sm_bothOn) -> (
-      (event = notS2 & next(sm_state) = sm_time)  |
-      (event = s1 & next(sm_state) = sm_alarmOn)  ) ) &
+      (event = notS2 & next(sm_state) = sm_time )  |
+      (event = s1 & next(sm_state) = sm_alarmOn )  ) ) &
     ( (sm_state = sm_alarmOn) -> (
-      (event = s1 & next(sm_state) = sm_bothOff)  |
-      (event = notS2 & next(sm_state) = sm_time)  ) ) &
+      (event = s1 & next(sm_state) = sm_bothOff )  |
+      (event = notS2 & next(sm_state) = sm_time )  ) ) &
     ( (sm_state = sm_alarmTime) -> (
-      (event = s1 & next(sm_state) = sm_alarmMinute)  |
-      (event = s2 & next(sm_state) = sm_alarmHour)  |
-      (event = s3 & next(sm_state) = sm_second)  ) ) &
+      (event = s1 & next(sm_state) = sm_alarmMinute )  |
+      (event = s2 & next(sm_state) = sm_alarmHour )  |
+      (event = s3 & next(sm_state) = sm_second )  ) ) &
     ( (sm_state = sm_alarmHour) -> (
-      (event = s1 & next(sm_state) = sm_alarmMinute)  |
-      (event = s2 & next(sm_state) = sm_alarmHour)  |
-      (event = s3 & next(sm_state) = sm_second)  ) ) &
+      (event = s1 & next(sm_state) = sm_alarmMinute )  |
+      (event = s2 & next(sm_state) = sm_alarmHour )  |
+      (event = s3 & next(sm_state) = sm_second )  ) ) &
     ( (sm_state = sm_alarmMinute) -> (
-      (event = s1 & next(sm_state) = sm_alarmHour)  |
-      (event = s2 & next(sm_state) = sm_alarmMinute)  |
-      (event = s3 & next(sm_state) = sm_second)  ) ) &
+      (event = s1 & next(sm_state) = sm_alarmHour )  |
+      (event = s2 & next(sm_state) = sm_alarmMinute )  |
+      (event = s3 & next(sm_state) = sm_second )  ) ) &
     ( (sm_state = sm_second) -> (
-      (event = s1 & next(sm_state) = sm_minute)  |
-      (event = s2 & next(sm_state) = sm_second)  |
-      (event = s3 & next(sm_state) = sm_time)  ) ) &
+      (event = s1 & next(sm_state) = sm_minute )  |
+      (event = s2 & next(sm_state) = sm_second )  |
+      (event = s3 & next(sm_state) = sm_time )  ) ) &
     ( (sm_state = sm_minute) -> (
-      (event = s1 & next(sm_state) = sm_hour)  |
-      (event = s2 & next(sm_state) = sm_minute)  |
-      (event = s3 & next(sm_state) = sm_time)  ) ) &
+      (event = s1 & next(sm_state) = sm_hour )  |
+      (event = s2 & next(sm_state) = sm_minute )  |
+      (event = s3 & next(sm_state) = sm_time )  ) ) &
     ( (sm_state = sm_hour) -> (
-      (event = s1 & next(sm_state) = sm_month)  |
-      (event = s2 & next(sm_state) = sm_hour)  |
-      (event = s3 & next(sm_state) = sm_time)  ) ) &
+      (event = s1 & next(sm_state) = sm_month )  |
+      (event = s2 & next(sm_state) = sm_hour )  |
+      (event = s3 & next(sm_state) = sm_time )  ) ) &
     ( (sm_state = sm_month) -> (
-      (event = s1 & next(sm_state) = sm_day)  |
-      (event = s2 & next(sm_state) = sm_month)  |
-      (event = s3 & next(sm_state) = sm_time)  ) ) &
+      (event = s1 & next(sm_state) = sm_day )  |
+      (event = s2 & next(sm_state) = sm_month )  |
+      (event = s3 & next(sm_state) = sm_time )  ) ) &
     ( (sm_state = sm_day) -> (
-      (event = s1 & next(sm_state) = sm_year)  |
-      (event = s2 & next(sm_state) = sm_day)  |
-      (event = s3 & next(sm_state) = sm_time)  ) ) &
+      (event = s1 & next(sm_state) = sm_year )  |
+      (event = s2 & next(sm_state) = sm_day )  |
+      (event = s3 & next(sm_state) = sm_time )  ) ) &
     ( (sm_state = sm_year) -> (
-      (event = s1 & next(sm_state) = sm_second)  |
-      (event = s2 & next(sm_state) = sm_year)  |
-      (event = s3 & next(sm_state) = sm_time)  ) ) &
+      (event = s1 & next(sm_state) = sm_second )  |
+      (event = s2 & next(sm_state) = sm_year )  |
+      (event = s3 & next(sm_state) = sm_time )  ) ) &
     ( (sm_state = sm_date) -> (
-       event = notS1 & next(sm_state) = sm_time) )
+       event = notS1 & next(sm_state) = sm_time ) )
   
 MODULE main
   
   VAR 
     sm : Sm; 
-    

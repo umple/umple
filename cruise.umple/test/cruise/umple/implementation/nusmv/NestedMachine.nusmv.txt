@@ -16,12 +16,12 @@ MODULE Sm( smS2 , handle )
   
   TRANS
     ( (sm_state = sm_s1) -> (
-      (handle.event = e1 & next(sm_state) = sm_s2)  |
-      (handle.event = e2 & next(smS2.smS2_state) = smS2_s2b)  |
-      (handle.event = e3 & next(sm_state) = sm_s4)  ) ) &
-    ( (sm_state = sm_s2) -> ( next(smS2.smS2_state) = smS2_s2a) ) &
-    ( (sm_state = sm_s3) -> ( next(sm_state) = sm_state) ) &
-    ( (sm_state = sm_s4) -> ( next(sm_state) = sm_state) )
+      (handle.event = e1 & next(sm_state) = sm_s2 )  |
+      (handle.event = e2 & next(smS2.smS2_state) = smS2_s2b )  |
+      (handle.event = e3 & next(sm_state) = sm_s4 )  ) ) &
+    ( (sm_state = sm_s2) -> ( next(smS2.smS2_state) = smS2_s2a ) ) &
+    ( (sm_state = sm_s3) -> ( next(sm_state) = sm_state ) ) &
+    ( (sm_state = sm_s4) -> ( next(sm_state) = sm_state ) )
   
 MODULE SmS2( sm , handle )
   
@@ -33,15 +33,19 @@ MODULE SmS2( sm , handle )
   
   TRANS
     ( (smS2_state = smS2_s2a) -> (
-      (handle.event = e3 & next(smS2_state) = smS2_s2b)  |
-      (handle.event = e1 & next(sm.sm_state) = sm_s1 & next(smS2_state) = null)  ) ) &
+      (handle.event = e3 & next(smS2_state) = smS2_s2b )  |
+      (handle.event = e1 & next(sm.sm_state) = sm_s1
+         & next(smS2_state) = null )  ) ) &
     ( (smS2_state = smS2_s2b) -> (
-      (handle.event = e3 & next(smS2_state) = smS2_s2a)  |
-      (handle.event = e4 & next(sm.sm_state) = sm_s3 & next(smS2_state) = null)  |
-      (handle.event = e2 & next(smS2_state) = smS2_s2c)  |
-      (handle.event = e1 & next(sm.sm_state) = sm_s1 & next(smS2_state) = null)  ) ) &
+      (handle.event = e3 & next(smS2_state) = smS2_s2a )  |
+      (handle.event = e4 & next(sm.sm_state) = sm_s3
+         & next(smS2_state) = null )  |
+      (handle.event = e2 & next(smS2_state) = smS2_s2c )  |
+      (handle.event = e1 & next(sm.sm_state) = sm_s1
+         & next(smS2_state) = null )  ) ) &
     ( (smS2_state = smS2_s2c) -> (
-       handle.event = e1 & next(sm.sm_state) = sm_s1 & next(smS2_state) = null) )
+       handle.event = e1 & next(sm.sm_state) = sm_s1
+         & next(smS2_state) = null ) )
   
 MODULE main
   

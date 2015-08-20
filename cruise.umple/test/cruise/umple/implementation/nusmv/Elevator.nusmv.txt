@@ -16,12 +16,12 @@ MODULE Elevator_state_machine( elevator_state_machinePrepareUp , elevator_state_
   
   TRANS
     ( (elevator_state_machine_state = elevator_state_machine_Idle) -> (
-      (handle.event = upRequest & next(elevator_state_machine_state) = elevator_state_machine_PrepareUp)  |
-      (handle.event = downRequest & next(elevator_state_machine_state) = elevator_state_machine_PrepareDown)  ) ) &
-    ( (elevator_state_machine_state = elevator_state_machine_PrepareUp) -> ( next(elevator_state_machinePrepareUp.elevator_state_machinePrepareUp_state) = elevator_state_machinePrepareUp_DoorClosingMovingUp) ) &
-    ( (elevator_state_machine_state = elevator_state_machine_PrepareDown) -> ( next(elevator_state_machinePrepareDown.elevator_state_machinePrepareDown_state) = elevator_state_machinePrepareDown_DoorClosingMovingDown) ) &
-    ( (elevator_state_machine_state = elevator_state_machine_InMotion) -> ( next(elevator_state_machineInMotion.elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Moving) ) &
-    ( (elevator_state_machine_state = elevator_state_machine_OnFloor) -> ( next(elevator_state_machineOnFloor.elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorOpening) )
+      (handle.event = upRequest & next(elevator_state_machine_state) = elevator_state_machine_PrepareUp )  |
+      (handle.event = downRequest & next(elevator_state_machine_state) = elevator_state_machine_PrepareDown )  ) ) &
+    ( (elevator_state_machine_state = elevator_state_machine_PrepareUp) -> ( next(elevator_state_machinePrepareUp.elevator_state_machinePrepareUp_state) = elevator_state_machinePrepareUp_DoorClosingMovingUp ) ) &
+    ( (elevator_state_machine_state = elevator_state_machine_PrepareDown) -> ( next(elevator_state_machinePrepareDown.elevator_state_machinePrepareDown_state) = elevator_state_machinePrepareDown_DoorClosingMovingDown ) ) &
+    ( (elevator_state_machine_state = elevator_state_machine_InMotion) -> ( next(elevator_state_machineInMotion.elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Moving ) ) &
+    ( (elevator_state_machine_state = elevator_state_machine_OnFloor) -> ( next(elevator_state_machineOnFloor.elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorOpening ) )
   
 MODULE Elevator_state_machinePrepareUp( elevator_state_machine , elevator_state_machinePrepareDown , elevator_state_machineInMotion , elevator_state_machineOnFloor , handle )
   
@@ -33,8 +33,10 @@ MODULE Elevator_state_machinePrepareUp( elevator_state_machine , elevator_state_
   
   TRANS
     ( (elevator_state_machinePrepareUp_state = elevator_state_machinePrepareUp_DoorClosingMovingUp) -> (
-      (handle.event = doorClosed & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_InMotion & next(elevator_state_machinePrepareUp_state) = null)  |
-      (handle.event = started & next(elevator_state_machineInMotion.elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Moving & next(elevator_state_machinePrepareUp_state) = null)  ) )
+      (handle.event = doorClosed & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_InMotion
+         & next(elevator_state_machinePrepareUp_state) = null )  |
+      (handle.event = started & next(elevator_state_machineInMotion.elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Moving
+         & next(elevator_state_machinePrepareUp_state) = null )  ) )
   
 MODULE Elevator_state_machinePrepareDown( elevator_state_machine , elevator_state_machinePrepareUp , elevator_state_machineInMotion , elevator_state_machineOnFloor , handle )
   
@@ -46,8 +48,10 @@ MODULE Elevator_state_machinePrepareDown( elevator_state_machine , elevator_stat
   
   TRANS
     ( (elevator_state_machinePrepareDown_state = elevator_state_machinePrepareDown_DoorClosingMovingDown) -> (
-      (handle.event = doorClosed & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_InMotion & next(elevator_state_machinePrepareDown_state) = null)  |
-      (handle.event = started & next(elevator_state_machineInMotion.elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Moving & next(elevator_state_machinePrepareDown_state) = null)  ) )
+      (handle.event = doorClosed & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_InMotion
+         & next(elevator_state_machinePrepareDown_state) = null )  |
+      (handle.event = started & next(elevator_state_machineInMotion.elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Moving
+         & next(elevator_state_machinePrepareDown_state) = null )  ) )
   
 MODULE Elevator_state_machineInMotion( elevator_state_machine , elevator_state_machinePrepareUp , elevator_state_machinePrepareDown , elevator_state_machineOnFloor , handle )
   
@@ -59,10 +63,11 @@ MODULE Elevator_state_machineInMotion( elevator_state_machine , elevator_state_m
   
   TRANS
     ( (elevator_state_machineInMotion_state = elevator_state_machineInMotion_Moving) -> (
-      (handle.event = approachingFloor & next(elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Moving)  |
-      (handle.event = approachedFloor & next(elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Stopping)  ) ) &
+      (handle.event = approachingFloor & next(elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Moving )  |
+      (handle.event = approachedFloor & next(elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Stopping )  ) ) &
     ( (elevator_state_machineInMotion_state = elevator_state_machineInMotion_Stopping) -> (
-       handle.event = stopped & next(elevator_state_machineOnFloor.elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorOpening & next(elevator_state_machineInMotion_state) = null) )
+       handle.event = stopped & next(elevator_state_machineOnFloor.elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorOpening
+         & next(elevator_state_machineInMotion_state) = null ) )
   
 MODULE Elevator_state_machineOnFloor( elevator_state_machine , elevator_state_machinePrepareUp , elevator_state_machinePrepareDown , elevator_state_machineInMotion , handle )
   
@@ -74,18 +79,21 @@ MODULE Elevator_state_machineOnFloor( elevator_state_machine , elevator_state_ma
   
   TRANS
     ( (elevator_state_machineOnFloor_state = elevator_state_machineOnFloor_AtFloor) -> (
-      (handle.event = timeoutAtFloorToDoorClosing & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorClosing)  |
-      (handle.event = doorClosingRequest & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorClosing)  ) ) &
+      (handle.event = timeoutAtFloorToDoorClosing & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorClosing )  |
+      (handle.event = doorClosingRequest & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorClosing )  ) ) &
     ( (elevator_state_machineOnFloor_state = elevator_state_machineOnFloor_DoorClosing) -> (
-      (handle.event = doorCLosed & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_CheckingNextDestination)  |
-      (handle.event = obstruction & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorOpening)  |
-      (handle.event = doorOpeningRequest & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorOpening)  ) ) &
+      (handle.event = doorCLosed & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_CheckingNextDestination )  |
+      (handle.event = obstruction & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorOpening )  |
+      (handle.event = doorOpeningRequest & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorOpening )  ) ) &
     ( (elevator_state_machineOnFloor_state = elevator_state_machineOnFloor_CheckingNextDestination) -> (
-      (handle.event = upRequest & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_PrepareUp & next(elevator_state_machineOnFloor_state) = null)  |
-      (handle.event = downRequest & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_PrepareDown & next(elevator_state_machineOnFloor_state) = null)  |
-      (handle.event = noRequest & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_Idle & next(elevator_state_machineOnFloor_state) = null)  ) ) &
+      (handle.event = upRequest & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_PrepareUp
+         & next(elevator_state_machineOnFloor_state) = null )  |
+      (handle.event = downRequest & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_PrepareDown
+         & next(elevator_state_machineOnFloor_state) = null )  |
+      (handle.event = noRequest & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_Idle
+         & next(elevator_state_machineOnFloor_state) = null )  ) ) &
     ( (elevator_state_machineOnFloor_state = elevator_state_machineOnFloor_DoorOpening) -> (
-       handle.event = doorOpened & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_AtFloor) )
+       handle.event = doorOpened & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_AtFloor ) )
   
 MODULE main
   
