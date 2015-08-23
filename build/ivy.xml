@@ -1,0 +1,63 @@
+
+<ivy-module version="2.0">
+    <info organisation="org.umple" module="umple"/>
+    <configurations>
+        <conf name="build"          description="Provide main functionality"/>
+
+        <conf name="eclipseplugin"  description="Eclipse plugin" />
+        <conf name="xtext"          description="Building XText support" />
+
+        <conf name="core"           description="Build core library"    extends="xtext" />
+
+        <conf name="validator"      description="Validator" extends="core"/>
+
+        <conf name="umplificator"   description="Build umplificator library"    extends="core"/>
+
+        <conf name="test"           description="for testing our framework"     visibility="private" />
+    </configurations>
+
+    <dependencies>
+        <!-- Build: -->
+        <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="build->default"/>
+
+        <!-- Testing -->
+        <dependency org="junit" name="junit" rev="4.12" conf="test, build->default" />
+
+        
+        <!-- Core: -->
+        
+        <dependency org="net.sf.jopt-simple"    name="jopt-simple"  rev="4.4"   conf="core->default" />
+        <dependency org="joda-time"             name="joda-time"    rev="2.1"   conf="core->default"/>
+        <dependency org="org.apache.ant"        name="ant"          rev="1.9.6" conf="core->default"/>
+
+
+        <!-- Validator -->
+        <dependency org="org.eclipse.core" name="runtime" rev="3.9.0-v20130326-1255" conf="validator->default"/>
+
+
+        <!-- Umplificator -->
+        <dependency org="commons-io"                name="commons-io"               rev="2.4"       conf="umplificator->default"/>
+        <dependency org="org.apache.commons"        name="commons-collections4"     rev="4.0"       conf="umplificator->default"/>
+        <dependency org="commons-configuration"     name="commons-configuration"    rev="1.10"      conf="umplificator->default"/>
+        <dependency org="commons-logging"           name="commons-logging"          rev="1.1.3"     conf="umplificator->default"/>
+        <dependency org="org.apache.logging.log4j"  name="log4j-core"               rev="2.0.2"     conf="umplificator->default"/>
+        <dependency org="org.apache.logging.log4j"  name="log4j-api"                rev="2.0.2"     conf="umplificator->default"/>
+
+        <dependency org="org.eclipse"               name="text"                     rev="3.3.0-v20070606-0010" conf="umplificator->default"/>
+        <dependency org="org.perf4j"                name="perf4j"                   rev="0.9.16"    conf="umplificator->default"/>
+
+        <dependency org="org.kie"                   name="kie-api"                  rev="6.2.0.Final" conf="umplificator->default"/>
+        <dependency org="org.drools"                name="drools-compiler"          rev="6.2.0.Final" conf="umplificator->default"/>
+        <dependency org="org.eclipse.core"          name="runtime"                  rev="3.10.0-v20140318-2214" conf="umplificator->default" />
+        <dependency org="org.osgi"                  name="org.osgi.core"            rev="4.3.0"       conf="umplificator->default" />
+
+        <!-- XText/Xtend Plugin -->
+        <dependency org="org.eclipse.xtext" name="org.eclipse.xtext.ui"     rev="2.9.0.beta3"   conf="xtext->default"/>
+        <dependency org="org.eclipse.xtend" name="org.eclipse.xtend.core"   rev="2.9.0.beta3"   conf="xtext->default"/>
+
+        <!-- Eclipse Plugin dependencies -->
+        <dependency org="org.eclipse.jdt"   name="org.eclipse.jdt.core" rev="3.10.0" conf="eclipseplugin->default"/>
+        
+    </dependencies>
+
+</ivy-module>

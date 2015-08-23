@@ -14,7 +14,6 @@
 
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
-    <path refid="junit4.classpath"/>
   </path>
 
   <!-- ```````````````````````````
@@ -34,6 +33,9 @@
   <target name="compile">
     <echo message="${ant.project.name}: ${ant.file}"/>
 
+    <deps-resolve conf="core" pathid="core.ivy.classpath" />
+    <deps-resolve conf="test" pathid="test.ivy.classpath" />
+
     <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.8" target="1.8">
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-umple"/>
@@ -41,6 +43,8 @@
       <exclude name="**/.svn"/>
       <exclude name="**/*.ump" />
       <classpath refid="project.classpath"/>
+      <classpath refid="core.ivy.classpath"/>
+      <classpath refid="test.ivy.classpath"/>
     </javac>
   </target>
 

@@ -190,16 +190,18 @@
     as your code will be run against the "latest" Umpled Umple.
    -->
   <target name="build" >
-    <ant antfile="build/build.umple.xml" target="precondition" inheritAll="false" />
+    <echo> SKIPPING ECLIPSE PLUGIN </echo>
+
+    <!-- <ant antfile="build/build.umple.xml" target="precondition" inheritAll="false" />
     <antcall target="template.clean" />
     <antcall target="template.init" />
     <antcall target="template.setVersion" />
-    <antcall target="compile" />
+    <antcall target="compile" /> -->
     <!-- Not yet able to get SWT testing working on LINUX, and 3 test cases is not worth the effort -->
     <!-- <antcall target="test" /> -->
-    <antcall target="package" />
+    <!-- <antcall target="package" />
     <antcall target="template.resetVersion" />
-    <ant antfile="build/build.umple.xml" target="postcondition" inheritAll="false" />
+    <ant antfile="build/build.umple.xml" target="postcondition" inheritAll="false" /> -->
   </target>
   
   <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->

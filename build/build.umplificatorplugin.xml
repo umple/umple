@@ -230,14 +230,15 @@
     as your code will be run against the "latest" Umpled Umple.
    -->
   <target name="build" >
-    <antcall target="clean" />
+    <echo>SKIPPING ECLIPSE PLUGINS</echo>
+    <!-- <antcall target="clean" />
     <antcall target="init" />
     <antcall target="setVersion" />
     <antcall target="umpleSelf" />
-    <antcall target="compile" />
+    <antcall target="compile" /> -->
 	  <!-- <antcall target="test" />-->
-    <antcall target="package" />
-    <antcall target="resetVersion" />
+   <!--  <antcall target="package" />
+    <antcall target="resetVersion" /> -->
   </target>
   
   <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->

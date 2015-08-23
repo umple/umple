@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." default="build" name="UmpleCore" >
-
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+  
   <taskdef resource="net/sf/antcontrib/antlib.xml"/>
 
   <!-- ```````````````````````````
@@ -35,13 +34,11 @@
 
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
-    <path refid="junit4.classpath"/>
   </path>
 
   <path id="manualumpfiles.classpath">
     <pathelement location="${manualumpfiles.bin.path}"/>
     <pathelement location="${exampleumpfiles.bin.path}"/>
-    <path refid="junit4.classpath"/>
   </path>
 
 
@@ -49,7 +46,7 @@
     Clean up and initialize any potential byproduct
   ``````````````````````````` -->
   <target name="clean">
-	<delete dir="${project.path}/src-gen-umple" failonerror="false"/>
+	  <delete dir="${project.path}/src-gen-umple" failonerror="false"/>
   </target>
 
 
@@ -72,6 +69,9 @@
   </target>
 
   <target name="compileJava">
+    <deps-resolve conf="core" pathid="core.ivy.classpath" />
+    <deps-resolve conf="test" pathid="test.ivy.classpath" />
+
     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="testbed/src/TestHarness.ump"/>
     </java>
@@ -80,21 +80,27 @@
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-umple"/>
       <src path="${project.path}/test"/>
-      <exclude name="**/.svn"/>
+      <exclude name="**/.git"/>
       <exclude name="**/*.ump" />
       <exclude name="**/data" />
       <classpath refid="project.classpath"/>
+      <classpath refid="core.ivy.classpath"/>
+      <classpath refid="test.ivy.classpath"/>
     </javac>
 
   </target>
 
   <target name="compilePhp">
+    <deps-resolve conf="core" pathid="core.ivy.classpath" />
+
     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="testbed_php/src/TestHarnessPhp.ump"/>
     </java>
   </target>
 
   <target name="compileRuby">
+    <deps-resolve conf="core" pathid="core.ivy.classpath" />
+
     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="testbed_ruby/src/TestHarnessRuby.ump"/>
     </java>
@@ -115,6 +121,8 @@
 
   <target name="testJava">
     <echo message="Running JAVA tests via junit"/>
+
+    <deps-resolve conf="test" pathid="test.ivy.classpath" />
     <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}">
       <formatter type="xml"/>
       <batchtest fork="yes" todir="${test.output.path.java}">
@@ -124,6 +132,7 @@
         </fileset>
       </batchtest>
       <classpath refid="project.classpath"/>
+      <classpath refid="test.ivy.classpath"/>
     </junit>
 
     <junitreport todir="${test.output.path.java}">

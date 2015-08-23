@@ -10,97 +10,8 @@
   <property name="myenv" value="cc" />
   <import file="_${myenv}.xml" />
 
-  <path id="junit4.classpath">
-    <pathelement location="lib/junit.jar"/>
-    <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
-  </path>
-
-  <path id="validator_core.classpath">
-    <pathelement location="lib/junit.jar"/>
-    <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/> 
-    <pathelement location="lib/umplificatorplugins/commons-collections4-4.0.jar"/>
-	<pathelement location="lib/umplificatorplugins/commons-io-2.4.jar"/>
-    <pathelement location="lib/umplificatorplugins/commons-lang-2.5.jar"/> 
-    <pathelement location="lib/umplificatorplugins/commons-logging-1.1.3.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.core.contenttype_3.4.200.v20130326-1255.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.core.jobs_3.5.300.v20130429-1813.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.equinox.preferences_3.5.100.v20130422-1538.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.osgi_3.9.0.v20130529-1710.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.jdt.core_3.9.1.v20130905-0837.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.core.runtime_3.9.0.v20130326-1255.jar"/>
-    <pathelement location="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"/>
-	<pathelement location="lib/umplificatorplugins/org.eclipse.jface_3.10.0.v20140604-0740.jar"/>
-	<pathelement location="lib/umplificatorplugins/org.eclipse.text_3.5.300.v20130515-1451.jar"/>
-    <pathelement location="lib/umplificatorplugins/log4j-core-2.0.1.jar"/>
-    <pathelement location="lib/umplificatorplugins/log4j-api-2.0.1.jar"/>
-	<pathelement location="lib/umplificatorplugins/perf4j-0.9.16.jar"/>
-
-	  <!-- ```````````````````````````
-    DROOLS LIBRARIES FOR THE UMPLIFICATOR
-    ``````````````````````````` -->
-	<pathelement location="lib/umplificatorplugins/droolsplugins/antlr-runtime-3.5.jar"/>
-	<pathelement location="lib/umplificatorplugins/droolsplugins/drools-compiler-6.0.1.Final.jar"/>
-	<pathelement location="lib/umplificatorplugins/droolsplugins/drools-core-6.0.1.Final.jar"/>
-	<pathelement location="lib/umplificatorplugins/droolsplugins/drools-jsr94-6.0.1.Final.jar"/>
-	<pathelement location="lib/umplificatorplugins/droolsplugins/kie-api-6.0.1.Final.jar"/>
-	<pathelement location="lib/umplificatorplugins/droolsplugins/kie-internal-6.0.1.Final.jar"/>
-	<pathelement location="lib/umplificatorplugins/droolsplugins/mvel2-2.1.8.Final.jar"/>
-	<pathelement location="lib/umplificatorplugins/droolsplugins/protobuf-java-2.5.0.jar"/>
-	<pathelement location="lib/umplificatorplugins/droolsplugins/slf4j-api-1.7.6.jar"/>
-	<pathelement location="lib/umplificatorplugins/droolsplugins/slf4j-simple-1.7.6.jar"/>
-	<pathelement location="lib/umplificatorplugins/droolsplugins/xstream-1.4.3.jar"/>
-  </path>
-
-  <path id="umple.classpath">
-    <pathelement location="lib/ant.jar"/>
-    <pathelement location="lib/ant-launcher.jar"/>
-    <pathelement location="lib/tools.jar"/>
-  </path>
-
-  <path id="xtext_core.classpath">
-    <pathelement location="lib/xtextplugins/com.google.inject_2.0.0.v201003051000.jar" />
-    <pathelement location="lib/xtextplugins/org.antlr.runtime_3.0.0.v200803061811.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.common_2.6.0.v20100914-1218.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.ecore_2.7.0.v20110605-0747.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.xtend_1.0.1.v201008251147.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.util_2.0.0.v201106070531.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.xtend_1.0.2.v201102150722.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext_2.0.0.v201106070531.jar" />
-    <pathelement location="lib/xtextplugins/com.google.collect_0.8.0.v201102150722.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.ecore.xmi_2.5.0.v20100521-1846.jar"/>
-    <pathelement location="lib/xtextplugins/org.apache.commons.logging_1.0.4.v201005080501.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe.core_1.1.0.v201106070424.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.xtend.typesystem.emf_1.0.1.v201008251147.jar"/>
-  <!-- ```````````````````````````
-    Libraries for the xtext Grammar and MWE2 Generator
-  ``````````````````````````` -->
-    <pathelement location="lib/xtextplugins/com.ibm.icu_4.2.1.v20100412.jar" />
-    <pathelement location="lib/xtextplugins/org.apache.commons.cli_1.0.0.v20080604-1500.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.codegen.ecore_2.6.1.v20100914-1218.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.codegen_2.6.0.v20100914-1218.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe.utils_1.1.0.v201106070424.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.language_1.0.2.v201102151014.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.launch_2.0.0.v201106070634.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.runtime_2.0.0.v201106070424.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.xpand_1.0.1.v201008251147.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.common.types_2.0.0.v201106070531.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.generator_1.0.2.v201102150722.jar"/>
-  <!-- ```````````````````````````
-    Libraries for the Umple Editor: cruise.umple.xtext.ui
-  ``````````````````````````` -->
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui_2.0.0.v201106070531.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.edit.ui_2.6.0.v20100914-1218.jar"/>
-    <pathelement location="lib/xtextplugins/org.apache.log4j_1.2.15.v201005080500.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui.shared_1.0.2.v201102150722.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.builder_1.0.2.v201102150722.jar"/>
-    <pathelement location="lib/xtextplugins/org.antlr.runtime_3.2.0.v201101311130.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.common.types.ui_2.0.0.v201106070531.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui.codetemplates_2.0.1.v201108020636.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui.codetemplates.ui_2.0.1.v201108020636.jar"/>
-   </path>
+  <import file="build.deps.xml" />
+  <deps-declare-taskdef />
 
   <!-- ```````````````````````````
     Clean up and initialize any potential byproduct
@@ -169,6 +80,10 @@
   ``````````````````````````` -->
 
   <target name="template.test">
+
+    <deps-get-path conf="core" pathid="core.ivy.classpath" />
+    <deps-get-path conf="test" pathid="test.ivy.classpath" />
+
     <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}" >
       <!-- <jmvarg value="-XstartOnFirstThread"/> -->
       <formatter type="xml" unless="${showJunitOutput}"/>
@@ -180,6 +95,8 @@
         </fileset>
       </batchtest>
       <classpath refid="project.classpath"/>
+      <classpath refid="core.ivy.classpath"/>
+      <classpath refid="test.ivy.classpath"/>
     </junit>
 
     <junitreport todir="${test.output.path}">
