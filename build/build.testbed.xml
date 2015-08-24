@@ -29,6 +29,11 @@
   <property name="threadcount" value="4"/>
   <property name="cleanonfinish" value="true" />
 
+  <property name="php.simpletest.version" value="1.1" />
+  <property name="php.simpletest.url" 
+            value="http://downloads.sourceforge.net/project/simpletest/simpletest/simpletest_${php.simpletest.version}/simpletest_${php.simpletest.version}.0.tar.gz" />
+  <property name="php.libs.dir" value="dist/libs/php" />
+
   <import file="_${myenv}.xml" />
   <import file="_template.xml" />
 
@@ -96,6 +101,25 @@
     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="testbed_php/src/TestHarnessPhp.ump"/>
     </java>
+
+    <property name="php.simpletest.archive"
+              value="${php.libs.dir}/simpletest.${php.simpletest.version}.tar.gz" />
+    <property name="php.simpletest.dir"
+              value="${php.libs.dir}/simpletest" />
+
+    <mkdir dir="${php.libs.dir}"/>
+
+    <get src="${php.simpletest.url}"
+         dest="${php.simpletest.archive}"
+         usetimestamp="true" />
+
+    <gunzip src="${php.simpletest.archive}"
+            dest="${php.simpletest.dir}.tar" />
+
+    <untar  src="${php.simpletest.dir}.tar"
+            dest="${php.libs.dir}/" />
+    <delete file="${php.simpletest.dir}.tar" />
+
   </target>
 
   <target name="compileRuby">
@@ -122,7 +146,9 @@
   <target name="testJava">
     <echo message="Running JAVA tests via junit"/>
 
+    <deps-resolve conf="core" pathid="core.ivy.classpath" />
     <deps-resolve conf="test" pathid="test.ivy.classpath" />
+
     <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}">
       <formatter type="xml"/>
       <batchtest fork="yes" todir="${test.output.path.java}">
@@ -133,6 +159,7 @@
       </batchtest>
       <classpath refid="project.classpath"/>
       <classpath refid="test.ivy.classpath"/>
+      <classpath refid="core.ivy.classpath"/>
     </junit>
 
     <junitreport todir="${test.output.path.java}">
@@ -141,7 +168,7 @@
       </fileset>
       <report format="frames" todir="${test.output.path.java}"/>
     </junitreport>
-    <echo message="JAVA tests completed!"/>
+    <echo message="Java tests completed!"/>
   </target>
 
   <target name="testPhp">
@@ -152,10 +179,13 @@
     <exec executable="php" dir="testbed_php/test/" output="${test.output.path.php}/index.html" outputproperty="test.output.php">
       <arg value="AllTests.php"/>
     </exec>
+
     <!-- check for error -->
     <fail message="PHP tests failed ('Fail' found)">
       <condition>
-        <contains string="${test.output.php}" substring="Fail" casesensitive="true"/>
+        <not>
+          <contains string="${test.output.php}" substring="&lt;strong&gt;0&lt;/strong&gt; fails" casesensitive="true"/>
+        </not>
       </condition>
     </fail>
     <fail message="PHP tests failed ('PHP Fatal error' found)">

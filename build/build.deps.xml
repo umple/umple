@@ -12,7 +12,7 @@
   <property name="umple.ivy.dep.file" value="${basedir}/build/ivy.xml" />
 
   <!-- Umple Last -->
-  <property name="umple.deps.dir" value="${basedir}/deps" />
+  <property name="umple.deps.dir" value="${basedir}/dist/libs" />
   <property name="umple.deps.manual.dir" value="${umple.deps.dir}/manual" />
   <property name="umple.last.jar.file" value="${umple.deps.dir}/umple-${umple.version}.jar" />
 
