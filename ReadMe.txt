@@ -4,7 +4,7 @@ Umple is a model-oriented programming technology. It allows developers to embed 
 
 Umple is developed in itself, guaranteeing robustness, hence the Umple compiler has to be distributed with the source (in the releases directory).
 
-Development follows a model-driven, test-driven, agile, continuous-integration process. Umple is hosted currently on Google Code at http://code.umple.org. It is mirrored on Github at https://github.com/umple/Umple and at SourceForge at https://sourceforge.net/projects/umple/ 
+Development follows a model-driven, test-driven, agile, continuous-integration process. Umple is hosted currently on Github at http://code.umple.org. It was first released in 2007, and the master was on Google Code from 2011 to 2015. 
 
 Umple has been largely developed as a research project at the University of Ottawa, Canada, by numerous PhD and masters students, Many undergraduates from across Canada and the USA have also contributed. See the license file for the list of contributors.
 
@@ -15,7 +15,7 @@ More details can be found as follows
   * Live diagram of the metamodel: http://metamodel.umple.org
   * Architecture: http://architecture.umple.org
 
-Umple is continuously tested and build on Travis CI (https://travis-ci.org/). 
+Umple is continuously tested and build on Travis CI (https://travis-ci.org/). (This is under review: See http://cc.umple.org for a movable link to the CI server)
 
 Current build status: https://travis-ci.org/umple/Umple
 
