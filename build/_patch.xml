@@ -9,6 +9,8 @@
   <property name="haltonfailure" value="true"/>
   <property name="shouldPackageUmpleOnline" value="false"/>
   <property name="shouldDeploy" value="false"/>
+  <property name="ivyRetrieveLogLevel" value="quiet" />
+  <property name="ivyResolveLogLevel" value="default" />
   <property name="showJunitSummary" value="false"/>
   <property name="showJunitOutput" value="false"/>
   <property name="junit" value="*Test"/>

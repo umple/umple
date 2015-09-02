@@ -23,6 +23,22 @@
       should only be done on the build server.  If false, it skips
       this step
 
+    ivyRetrieveLogLevel => This controls how much log output 
+      <ivy:retrieve /> produces. Available options:
+        - default
+          the default log settings, where all usual messages are output to the console
+        - quiet
+          disable all usual messages, making the whole retrieve process quiet unless errors occur 
+
+    ivyResolveLogLevel => This controls how much log output 
+      <ivy:resolve /> produces. Available options are:
+        - default
+          the default log settings, where all usual messages are output to the console
+        - download-only
+          disable all usual messages but download ones. A resolve with everything in cache won't output any message.
+        - quiet
+          disable all usual messages, making the whole resolve process quiet unless errors occur 
+
     showJunitSummary => used by JUnit, if true, then the command line
       will output the summary of a JUnit test run which can be useful
       for local debugging.  If false, not summary is presented.
@@ -43,6 +59,8 @@
   <property name="haltonfailure" value="false"/>
   <property name="shouldPackageUmpleOnline" value="false"/>
   <property name="shouldDeploy" value="false"/>
+  <property name="ivyRetrieveLogLevel" value="quiet" />
+  <property name="ivyResolveLogLevel" value="download-only" />
   <property name="showJunitSummary" value="false"/>
   <property name="showJunitOutput" value="false"/>
   <property name="junit" value="*Test"/>

@@ -10,6 +10,9 @@
   <property name="shouldDeploy" value="false"/>
   <property name="showJunitSummary" value="true"/>
   <property name="showJunitOutput" value="false"/> 
+
+  <property name="ivyRetrieveLogLevel" value="default" />
+  <property name="ivyResolveLogLevel" value="default" />
   <property name="junit" value="*Test"/> 
   <property name="rake_cmd" value="rake"/>  
    

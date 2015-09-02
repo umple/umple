@@ -21,7 +21,7 @@ function loadTestsIn($test,$directoryName)
     { 
       if (endsWith($file,"Test.php")) 
       { 
-        $test->addTestFile("{$directoryName}/{$file}");
+        $test->addFile("{$directoryName}/{$file}");
       } 
     } 
     closedir($handle); 

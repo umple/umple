@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir=".." default="build" name="Umple">
+<project basedir=".." default="build" name="Umple" xmlns:ivy="antlib:org.apache.ivy.ant">
 
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+  <import file="build.deps.xml" />  
+  <deps-declare-taskdef />
 
-  <target name="build" >
+  <target name="build">
     <trycatch property="foo" reference="bar">
       <try>
         <antcall target="qaBuildingPage" />
