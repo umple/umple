@@ -14,7 +14,7 @@
   <!-- Umple Last -->
   <property name="umple.deps.dir" value="${basedir}/dist/libs" />
   <property name="umple.deps.manual.dir" value="${umple.deps.dir}/manual" />
-  <property name="umple.last.jar.file" value="${umple.deps.dir}/umple-${umple.version}.jar" />
+  <property name="umple.last.jar.file" value="${umple.deps.dir}/../umple-latest.jar" />
 
   <!-- Macros used to work nicely with Ivy -->
 
