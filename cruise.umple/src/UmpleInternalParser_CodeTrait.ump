@@ -943,13 +943,15 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
 private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationVariable, GeneralTPApplied inGeneralTPApplied,UmpleClass inClass) {
-    if (inGeneralTPApplied == null) return;
-	for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
+    if (inGeneralTPApplied == null) return;  
+	String rawLName = "";
+    String lName="";
+	String rawRName = "";
+    String rName = "";
+ 	for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
 		String newName = inGeneralTPApplied.getParameterMapping().get(strType);
 		if (inAssociationVariable.getType().equals(strType)){
 	        //----------------------------------------------------------------
-			String rawRName = "";
-	        String rName = "";
 	        if (inAssociationVariable.getName().length()==0){
 		        rawRName = StringFormatter.toCamelCase(newName);
 		        rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;        	
@@ -957,11 +959,8 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 		        rawRName = StringFormatter.toCamelCase(inAssociationVariable.getName());
 		        rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;        		        	
 	        }
-
 			UmpleClass relatedClass = getModel().getUmpleClass(newName);
-			//----------------------------------------------------------------
-			String rawLName = "";
-	        String lName="";
+
 	        if (inAssociationVariable.getRelatedAssociation().getName().length()==0){
 				rawLName = StringFormatter.toCamelCase(inClass.getName());
 		        lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;	
@@ -969,30 +968,40 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 	        	rawLName = StringFormatter.toCamelCase(inAssociationVariable.getRelatedAssociation().getName());
 		        lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;
 	        }
-	        //----------------------------------------------------------------
-			AssociationEnd leftEnd = new AssociationEnd(lName, inClass.getName(), inAssociationVariable.getRelatedAssociation().getModifier(), inClass.getName(), inAssociationVariable.getRelatedAssociation().getMultiplicity());
-			AssociationEnd rightEnd = new AssociationEnd(rName,relatedClass.getName(), inAssociationVariable.getModifier(),relatedClass.getName(),inAssociationVariable.getMultiplicity());		
-			Association aAssociation = new Association(inAssociationVariable.getRelatedAssociation().getIsNavigable(), inAssociationVariable.getIsNavigable(),false,false,leftEnd,rightEnd);
-			aAssociation.setName(rName);
-			getModel().addAssociation(aAssociation);	    
-			AssociationEnd myEnd = aAssociation.getEnd(0);
-		    AssociationEnd yourEnd = aAssociation.getEnd(1);
-		    AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),aAssociation.getIsLeftNavigable());
-                    myAs.setIsComposition(aAssociation.getIsLeftComposition());
-		    AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),aAssociation.getIsRightNavigable());
-		    yourAs.setIsComposition(aAssociation.getIsRightComposition());
-
-		    myAs.setRelatedAssociation(yourAs); 
-		    boolean added = inClass.addAssociationVariable(yourAs);
-		    if (added)
-		    {
-			    relatedClass.addAssociationVariable(myAs);
-			    aAssociation.setSource(Association.Source.fTrait);
-		    	inClass.addAssociation(aAssociation);
-		    }
-		    
+	        addAssociation(lName,rName, inAssociationVariable,inClass,relatedClass);
+	        return;
+	        //----------------------------------------------------------------		    
 		}
 	}
+    rName = inAssociationVariable.getName();
+	UmpleClass relatedClass = getModel().getUmpleClass(inAssociationVariable.getType());
+    lName=inAssociationVariable.getRelatedAssociation().getName();
+	addAssociation(lName,rName, inAssociationVariable,inClass,relatedClass);
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  private void addAssociation(String lName, String rName, AssociationVariable inAssociationVariable, UmpleClass inClass, UmpleClass relatedClass) {	
+        AssociationEnd leftEnd = new AssociationEnd(lName, inClass.getName(), inAssociationVariable.getRelatedAssociation().getModifier(), inClass.getName(), inAssociationVariable.getRelatedAssociation().getMultiplicity());
+		AssociationEnd rightEnd = new AssociationEnd(rName,relatedClass.getName(), inAssociationVariable.getModifier(),relatedClass.getName(),inAssociationVariable.getMultiplicity());		
+		Association aAssociation = new Association(inAssociationVariable.getRelatedAssociation().getIsNavigable(), inAssociationVariable.getIsNavigable(),false,false,leftEnd,rightEnd);
+		aAssociation.setName(rName);
+		getModel().addAssociation(aAssociation);	    
+		AssociationEnd myEnd = aAssociation.getEnd(0);
+	    AssociationEnd yourEnd = aAssociation.getEnd(1);
+	    AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),aAssociation.getIsLeftNavigable());
+              myAs.setIsComposition(aAssociation.getIsLeftComposition());
+	    AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),aAssociation.getIsRightNavigable());
+	    yourAs.setIsComposition(aAssociation.getIsRightComposition());
+
+	    myAs.setRelatedAssociation(yourAs); 
+	    boolean added = inClass.addAssociationVariable(yourAs);
+	    if (added)
+	    {
+		    relatedClass.addAssociationVariable(myAs);
+		    aAssociation.setSource(Association.Source.fTrait);
+	    	inClass.addAssociation(aAssociation);
+	    }
 }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
