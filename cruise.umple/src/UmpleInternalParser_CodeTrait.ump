@@ -942,36 +942,37 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
-private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationVariable, GeneralTPApplied inGeneralTPApplied,UmpleClass inClass) {
-    if (inGeneralTPApplied == null) return;  
+private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationVariable, GeneralTPApplied inGeneralTPApplied,UmpleClass inClass) {  
 	String rawLName = "";
     String lName="";
 	String rawRName = "";
     String rName = "";
- 	for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
-		String newName = inGeneralTPApplied.getParameterMapping().get(strType);
-		if (inAssociationVariable.getType().equals(strType)){
-	        //----------------------------------------------------------------
-	        if (inAssociationVariable.getName().length()==0){
-		        rawRName = StringFormatter.toCamelCase(newName);
-		        rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;        	
-	        } else{
-		        rawRName = StringFormatter.toCamelCase(inAssociationVariable.getName());
-		        rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;        		        	
-	        }
-			UmpleClass relatedClass = getModel().getUmpleClass(newName);
-
-	        if (inAssociationVariable.getRelatedAssociation().getName().length()==0){
-				rawLName = StringFormatter.toCamelCase(inClass.getName());
-		        lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;	
-	        } else {
-	        	rawLName = StringFormatter.toCamelCase(inAssociationVariable.getRelatedAssociation().getName());
-		        lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;
-	        }
-	        addAssociation(lName,rName, inAssociationVariable,inClass,relatedClass);
-	        return;
-	        //----------------------------------------------------------------		    
-		}
+    if (inGeneralTPApplied != null) {
+	 	for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
+			String newName = inGeneralTPApplied.getParameterMapping().get(strType);
+			if (inAssociationVariable.getType().equals(strType)){
+		        //----------------------------------------------------------------
+		        if (inAssociationVariable.getName().length()==0){
+			        rawRName = StringFormatter.toCamelCase(newName);
+			        rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;        	
+		        } else{
+			        rawRName = StringFormatter.toCamelCase(inAssociationVariable.getName());
+			        rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;        		        	
+		        }
+				UmpleClass relatedClass = getModel().getUmpleClass(newName);
+	
+		        if (inAssociationVariable.getRelatedAssociation().getName().length()==0){
+					rawLName = StringFormatter.toCamelCase(inClass.getName());
+			        lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;	
+		        } else {
+		        	rawLName = StringFormatter.toCamelCase(inAssociationVariable.getRelatedAssociation().getName());
+			        lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;
+		        }
+		        addAssociation(lName,rName, inAssociationVariable,inClass,relatedClass);
+		        return;
+		        //----------------------------------------------------------------		    
+			}
+		}	
 	}
     rName = inAssociationVariable.getName();
 	UmpleClass relatedClass = getModel().getUmpleClass(inAssociationVariable.getType());
