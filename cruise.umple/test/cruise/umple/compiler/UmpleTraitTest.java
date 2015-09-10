@@ -952,6 +952,13 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, model.getUmpleClass("B").numberOfAssociationVariables());
 		Assert.assertEquals(3, model.getUmpleClass("C").numberOfAssociationVariables());
 	}
+
+	@Test
+	public void associations003Test() {
+		String code = "class A{isA T<X1=B>;   }trait T<X1>{0..1 -> * X1;isA T2<X2=X1>;} trait T2<X2>{0..1 -> 2 X2;} class B{}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfAssociationVariables());
+	}	
 	
 	@Test
 	public void templateInCode01Test() {

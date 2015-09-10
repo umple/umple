@@ -948,19 +948,26 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 		String newName = inGeneralTPApplied.getParameterMapping().get(strType);
 		if (inAssociationVariable.getType().equals(strType)){
 	        //----------------------------------------------------------------
-	        String rawRName = StringFormatter.toCamelCase(newName);
-	        String rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;
-	        if (rName.equals(inAssociationVariable.getName())){
-	    	   rawRName = StringFormatter.toCamelCase(newName);
-	    	   rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;
-	        } 
+			String rawRName = "";
+	        String rName = "";
+	        if (inAssociationVariable.getName().length()==0){
+		        rawRName = StringFormatter.toCamelCase(newName);
+		        rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;        	
+	        } else{
+		        rawRName = StringFormatter.toCamelCase(inAssociationVariable.getName());
+		        rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;        		        	
+	        }
+
 			UmpleClass relatedClass = getModel().getUmpleClass(newName);
 			//----------------------------------------------------------------
-			String rawLName = StringFormatter.toCamelCase(inClass.getName());
-	        String lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;
-	        if (lName.equals(inAssociationVariable.getRelatedAssociation().getName())){
-	    	   rawLName = StringFormatter.toCamelCase(inGeneralTPApplied.getInheritanceName());
-	    	   lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;
+			String rawLName = "";
+	        String lName="";
+	        if (inAssociationVariable.getRelatedAssociation().getName().length()==0){
+				rawLName = StringFormatter.toCamelCase(inClass.getName());
+		        lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;	
+	        } else {
+	        	rawLName = StringFormatter.toCamelCase(inAssociationVariable.getRelatedAssociation().getName());
+		        lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;
 	        }
 	        //----------------------------------------------------------------
 			AssociationEnd leftEnd = new AssociationEnd(lName, inClass.getName(), inAssociationVariable.getRelatedAssociation().getModifier(), inClass.getName(), inAssociationVariable.getRelatedAssociation().getMultiplicity());
@@ -1501,7 +1508,7 @@ private Map<UmpleTrait, List<AssociationVariable>> gatherAssociations(UmpleTrait
  	traitAssociationVariables.put(inTrait,associationVariables);
      //----------------------------------------------------------------------------------------
      for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-    	 tempTraitAssociationVariables = gatherAssociations(uTrait,inGTPApplied,inClass);	 
+    	 tempTraitAssociationVariables = gatherAssociations(uTrait,inTrait.getGeneralTPAppliedByName(uTrait.getName()),inClass);	 
     	 if ( ! getParseResult().getWasSuccess() ) return traitAssociationVariables;
 //    	 if (CheckAssociationsComeFromTraitsIsAvaialbleInOtherTraits(traitAssociations,tempTraitAssociations,inTrait)) return traitAssociations;
     	 AddAssociationMapToAnother(traitAssociationVariables,tempTraitAssociationVariables);
