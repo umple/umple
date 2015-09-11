@@ -77,7 +77,7 @@
     <deps-resolve conf="core" pathid="core.ivy.classpath" />
     <deps-resolve conf="test" pathid="test.ivy.classpath" />
 
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="testbed/src/TestHarness.ump"/>
     </java>
 
@@ -98,7 +98,7 @@
   <target name="compilePhp">
     <deps-resolve conf="core" pathid="core.ivy.classpath" />
 
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="testbed_php/src/TestHarnessPhp.ump"/>
     </java>
 
@@ -125,7 +125,7 @@
   <target name="compileRuby">
     <deps-resolve conf="core" pathid="core.ivy.classpath" />
 
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="testbed_ruby/src/TestHarnessRuby.ump"/>
     </java>
   </target>

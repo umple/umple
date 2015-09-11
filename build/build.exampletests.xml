@@ -135,7 +135,7 @@
       <!-- Compile in umple to Java -->
       <trycatch>
         <try>
-          <java jar="dist/umple.jar" fork="true" failonerror="true" dir="${java.path}">
+          <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true" dir="${java.path}">
             <arg value="-g" />
             <arg value="Java" />
             <arg value="--path" />
@@ -252,7 +252,7 @@
       <!-- Compile in umple to Cpp -->
       <trycatch>
         <try>
-          <java jar="dist/umple.jar" fork="true" failonerror="true" dir="${cpp.path}">
+          <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true" dir="${cpp.path}">
             <arg value="-g" />
             <arg value="RTCpp" />
             <arg value="--path" />
@@ -392,7 +392,7 @@
       <!-- Compile in umple to Php -->
       <trycatch>
         <try>
-          <java jar="dist/umple.jar" fork="true" failonerror="true" dir="${php.path}">
+          <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true" dir="${php.path}">
             <arg value="-g" />
             <arg value="Php" />
             <arg value="--path" />
@@ -522,7 +522,7 @@
       <!-- Compile in umple to Ruby -->
       <trycatch>
         <try>
-          <java jar="dist/umple.jar" fork="true" failonerror="true" dir="${ruby.path}">
+          <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true" dir="${ruby.path}">
             <arg value="-g" />
             <arg value="Ruby" />
             <arg value="--path" />

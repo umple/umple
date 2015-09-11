@@ -108,7 +108,7 @@
     Compile Umple files 
   ``````````````````````````` -->
   <target name="umpleSelf">
-     <java jar="dist/umple.jar" fork="true" failonerror="true">
+     <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="cruise.umplificator/src/Master.ump"/>
     </java>
   </target>
