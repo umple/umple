@@ -11,7 +11,7 @@ Umple is a model-oriented programming technology. It allows developers to embed 
 The project homepage is located at http://umple.org/
 
 ##Development
-Umple is developed in itself, guaranteeing robustness, hence the Umple compiler has to be distributed with the source (in the releases directory).
+Umple is developed in itself, guaranteeing robustness, the most recent version of the compiler must be used to compile itself. See the wiki for development setup.
 
 Development follows a model-driven, test-driven, agile, continuous-integration process. Umple is hosted currently on Github at http://code.umple.org. It was first released in 2007, and the master was on Google Code from 2011 to 2015.
 
