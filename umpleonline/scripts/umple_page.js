@@ -751,11 +751,25 @@ Page.getSelectedExample = function()
   var inputExample = "";
   var theExampleType = Page.getExampleType();
   if(theExampleType == "cdModels") {
+    var requiresGvClass = false; // Some class diagrams  are too complex to edit
     inputExample = jQuery("#inputExample option:selected").val();
-    // if diagram type not a class diagram, set it to a class diagram
-    if(!(Page.useEditableClassDiagram || Page.useGvClassDiagram)) {
-      jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
-      Action.changeDiagramType({type: "editableClass"});
+    if (inputExample == "GeometricSystem.ump") {
+      requiresGvClass = true;
+    }
+    
+    if(requiresGvClass) {
+      // if diagram type not a editable class diagram, set it 
+      if(!Page.useGvClassDiagram) {
+        jQuery("#buttonShowGvClassDiagram").attr('checked', true); 
+        Action.changeDiagramType({type: "GVClass"});
+      }
+      else {
+        // if diagram type not a class diagram, set it to a class diagram
+        if(!(Page.useEditableClassDiagram || Page.useGvClassDiagram)) {
+          jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
+          Action.changeDiagramType({type: "editableClass"});
+        }
+      }
     }
   }
   else {
