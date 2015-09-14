@@ -43,8 +43,6 @@
 
   <target name="init">
     <antcall target="template.init" />
-    <!-- TODO: get the "-f build.deps.xml bootstrap" to be part of the docs / build and then remove this line -->
-    <ant antfile="build/build.deps.xml" target="deps.vendor" inheritAll="true" />
   </target>
 
   <target name="resetUmpleSelf">
