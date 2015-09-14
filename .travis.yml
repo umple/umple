@@ -15,4 +15,7 @@ script:
 
 os:
   - linux
-  - osx
+
+  # Dropping osx for now, as oraclejdk8 does not appear to be available
+  # /Users/travis/build.sh: line 41: jdk_switcher: command not found
+  # - osx
