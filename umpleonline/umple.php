@@ -235,6 +235,7 @@ $output = readTemporaryFile("ump/" . $filename);
                 <option name = "optionExample" value="Compositions.ump">Compositions</option>
                 <option name = "optionExample" value="CoOpSystem.ump">Co-Op System</option>
                 <option name = "optionExample" value="DMMOverview.ump">DMM Overview</option>
+                <option name = "optionExample" value="GeometricSystem.ump">Geometric system</option>
                 <!-- <option name = "optionExample" value="DMMModelElementHierarchy.ump">DMM Model Element Hierarchy</option> -->
                 <option name = "optionExample" value="DMMSourceObjectHierarchy.ump">DMM Source Object Hierarchy</option>
                 <option name = "optionExample" value="DMMRelationshipHierarchy.ump">DMM Relationship Hierarchy</option>
