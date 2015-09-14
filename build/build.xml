@@ -66,7 +66,7 @@
 
   <!-- Perform a first build to get umple related stuff installed -->
   <target name="first-build" >
-    <ant antfile="build/build.umple.xml" target="umpleSelf" inheritAll="true" />
+    <ant antfile="build/build.umple.xml" target="first-build" inheritAll="true" />
   </target>
 
 
