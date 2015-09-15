@@ -13,6 +13,41 @@
   <import file="build.deps.xml" />
   <deps-declare-taskdef />
 
+  <property name="dist.dir"                     value="${basedir}/dist/" />
+
+  <property name="dist.umple.zip"               value="umple-${umple.version}.zip" />
+  <property name="dist.umple.all.zip"           value="umple-all-${umple.version}.zip" />
+  <property name="dist.umple.deps.zip"          value="umple-deps-${umple.version}.zip" />
+  <property name="dist.umple.core.zip"          value="umple-core-${umple.version}.zip" />
+  <property name="dist.umple.umplificator.zip"  value="umple-umplificator-${umple.version}.zip" />
+  <property name="dist.umple.validator.zip"     value="umple-validator-${umple.version}.zip" />
+  <property name="dist.umple.extras.zip"        value="umple-extras-${umple.version}.zip" />
+
+  <property name="dist.umple.jar"               value="umple-${umple.version}.jar" />
+  <property name="dist.umple.umplificator.jar"  value="umplificator-${umple.version}.jar" />
+  <property name="dist.umple.validator.jar"     value="validator-${umple.version}.jar" />
+  <property name="dist.umple.vml.jar"           value="vml-${umple.version}.jar" />
+  <property name="dist.umple.stats.jar"         value="umplestats-${umple.version}.jar" />
+  <property name="dist.umple.docs.jar"          value="umpledocs-${umple.version}.jar" />
+  <property name="dist.umple.sync.jar"          value="umplesync-${umple.version}.jar" />
+  <property name="dist.umple.run.jar"           value="umplerun-${umple.version}.jar" />
+
+  <macrodef name="build-zip">
+    <attribute  name="name"     description="Name of zipped archive" />
+    <attribute  name="includes" description="Included files relative to `dist.dir`" 
+                default="" />
+    <element    name="fileset"  description="Files to include in zip archive" 
+                optional="true" implicit="true" />
+
+    <sequential>
+      <zip  destfile="${dist.dir}/@{name}"
+          basedir="${dist.dir}"
+          includes="@{includes}">
+          <fileset/>
+      </zip>
+    </sequential>
+  </macrodef>
+
   <!-- ```````````````````````````
     Clean up and initialize any potential byproduct
   ``````````````````````````` -->

@@ -21,7 +21,8 @@
   ``````````````````````````` -->
 
   <target name="umpleSandbox">
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
+    <echo>${dist.dir}/${dist.umple.jar}</echo>
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="sandbox/src/sandbox.ump"/>
     </java>
   </target>
