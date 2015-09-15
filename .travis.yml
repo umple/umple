@@ -11,7 +11,8 @@ script:
   - cd build/
   - ant -Dmyenv=travis bootstrap
   - ant -Dmyenv=travis first-build
-  - ant -Dmyenv=travis build
+  # TODO https://github.com/umple/umple/issues/616
+  # - ant -Dmyenv=travis build
 
 os:
   - linux
