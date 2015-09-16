@@ -12,6 +12,7 @@
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/cruise.umple"/>
   <property name="test.output.path" value="dist/qa/cruise.umple"/>
+  <property name="vendors.path" value="dist/vendors"/>
 
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
@@ -38,6 +39,10 @@
     <delete dir="${project.path}/src-gen-umple" failonerror="false" />
     <delete dir="cruise.umplificator/src-gen-umple" failonerror="false" />
     <delete dir="cruise.umple.validator/src-gen-umple" failonerror="false" />
+  </target>
+
+  <target name="init">
+    <antcall target="template.init" />
   </target>
 
   <target name="resetUmpleSelf">
@@ -73,17 +78,17 @@
       <arg value="cruise.umplificator/src/Master.ump"/>
     </java>
   </target>
- 
+
  <!-- ```````````````````````````
     Generate JET Templates
   ``````````````````````````` -->
- 
+
   <!-- Move the generic JET templates into the various UmpleTo* projects -->
   <target name="templates">
 	<!--
 	<exec executable="ruby" failonerror="true" dir="build">
 		<arg value="InsertDebugCodeScript.rb" />
-	</exec>	
+	</exec>
 	-->
     <copy todir="UmpleToJava/templates" overwrite="true">
       <fileset dir="UmpleToTemplate/templates" excludes=".git*" />
@@ -112,7 +117,7 @@
 	  <unjar src="lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
 	  <unjar src="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
   </target>
-    
+
   <!-- Move the generated code from UmpleTo* to cruise.umple -->
   <target name="codegen">
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/java" overwrite="true">
@@ -129,7 +134,7 @@
     </copy>
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/sql" overwrite="true">
       <fileset dir="UmpleToSql/src/cruise/umple/compiler/sql" excludes=".git*" />
-    </copy> 	
+    </copy>
   </target>
 
   <!-- Move RTCpp cpde to cruise.umple -->
@@ -141,7 +146,7 @@
       <fileset dir="UmpleToRTCpp/src" excludes=".git*" />
     </copy>
   </target>
-  
+
   <!-- ```````````````````````````
     Compile the application
   ``````````````````````````` -->
@@ -159,6 +164,7 @@
       <src path="${project.path}/src-gen-jet"/>
       <src path="${project.path}/src-gen-umple"/>
       <src path="${project.path}/test"/>
+      <src path="${vendors.path}/jopt-simple/src"/>
       <exclude name="**/.git"/>
       <exclude name="**/*.ump" />
       <exclude name="**/data" />
@@ -248,7 +254,7 @@
       <fileset dir="build/reference/files"/>
     </copy>
   </target>
-  
+
   <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">
     <copy file="dist/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="dist/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
@@ -314,12 +320,12 @@
     <manifestclasspath property="umple.validator.jar.classpath" jarfile="dist/umple.jar" >
       <classpath refid="validator.ivy.classpath"/>
     </manifestclasspath>
-    
+
     <!-- The validator jar-->
     <echo message="Package: Umple validator jar used in Umple " />
-    <jar destfile="dist/umplevalidator_${umple.version}.jar" 
-         basedir="cruise.umple.validator/bin" 
-         includes="cruise/umple/** cruise/umple/validator** org/eclipse/** en.error org/** *.grammar *.error templates/** org/apache/**" >
+    <jar destfile="dist/umplevalidator_${umple.version}.jar"
+         basedir="cruise.umple.validator/bin"
+         includes="cruise/umple/** cruise/umple/validator** org/eclipse/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/**" >
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -338,9 +344,9 @@
       <classpath refid="core.ivy.classpath"/>
     </manifestclasspath>
 
-    <jar destfile="dist/umple.jar" 
-         basedir="${bin.path}" 
-         includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/**" 
+    <jar destfile="dist/umple.jar"
+         basedir="${bin.path}"
+         includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/**"
          excludes="**/*Test.class">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
@@ -349,7 +355,7 @@
         <attribute name="Class-Path" value="${umple.jar.classpath}"/>
       </manifest>
 
-    </jar>  
+    </jar>
   </target>
 
   <target name="packageJars">
@@ -363,7 +369,7 @@
 
 
     <echo message="Package: Umple statistics jar" />
-    <jar destfile="dist/umplestats.jar" basedir="${bin.path}" includes="cruise/umple/** *.grammar *.error templates/** org/apache/**">
+    <jar destfile="dist/umplestats.jar" basedir="${bin.path}" includes="cruise/umple/** *.grammar *.error templates/** org/apache/** joptsimple/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -373,7 +379,7 @@
     </jar>
 
     <echo message="Package: Umple documenter jar used to build the user manual" />
-    <jar destfile="dist/umpledocs.jar" basedir="${bin.path}" includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/**">
+    <jar destfile="dist/umpledocs.jar" basedir="${bin.path}" includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -383,7 +389,7 @@
     </jar>
 
     <echo message="Package: Umple sync jar used in UmpleOnline to compile and sync diagram - See PlaygroundMain" />
-    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/**">
+    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -391,13 +397,13 @@
         <attribute name="Class-Path" value="${umple.jar.classpath}"/>
       </manifest>
     </jar>
- 
+
     <echo message="Package: Umplerun jar - tool for dynamically calling Umple API" />
     <copy todir="${bin.path}">
       <fileset dir="lib/umplerun"/>
     </copy>
 
-    <jar destfile="dist/umplerun.jar" basedir="${bin.path}" includes="cruise/umple/** en.error org/** *.grammar *.error templates/** org/apache/**">
+    <jar destfile="dist/umplerun.jar" basedir="${bin.path}" includes="cruise/umple/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -407,7 +413,7 @@
     </jar>
 
     <echo message="Package: VML - Tool for variability modeling" />
-    <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** en.error cruise/vml/** *.grammar *.error templates/** org/apache/**">
+    <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** en.error cruise/vml/** *.grammar *.error templates/** org/apache/** joptsimple/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -424,7 +430,7 @@
       <fileset dir="../cruise.umple.xtext/umpleUpdateSite"/>
     </copy> -->
   </target>
-	  
+
   <target name="package">
     <echo message="Package Version: ${umple.version}" />
 	  <antcall target="packageJars" />
@@ -441,7 +447,7 @@
     <antcall target="deployUmpleonlineJars" />
     <antcall target="deployUpdatedLib" />
   </target>
-  
+
   <target name="deployUmpleonlineJars" >
     <copy file="dist/umplesync.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="dist/umple.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/umple.jar" overwrite="true" />
@@ -456,7 +462,7 @@
 
   <target name="deployUmpleonline" >
     <antcall target="deployUmpleonlineJars" />
-    <antcall target="deployUmpleDocs" />    
+    <antcall target="deployUmpleDocs" />
     <copy todir="/h/ralph/sites/www/html/umpleonline">
       <fileset dir="umpleonline">
         <exclude name=".git"/>
@@ -464,7 +470,7 @@
       </fileset>
     </copy>
   </target>
-  
+
   <target name="deployUmpleDocs" >
     <antcall target="packageDocs" />
     <copy todir="/h/ralph/sites/www/html/umple">
@@ -479,14 +485,14 @@
   ``````````````````````````` -->
   <!--
     First Build
-    run this the very first time, it will package up your system 
-    and generate a 
+    run this the very first time, it will package up your system
+    and generate a
   -->
   <target name="first-build">
     <antcall target="deps:umple" />
 
     <antcall target="clean" />
-    <antcall target="template.init" />
+    <antcall target="init" />
     <antcall target="codegen" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
@@ -498,7 +504,25 @@
     <antcall target="template.resetVersion" />
   </target>
 
-  <!-- 
+  <!--
+    Run this to simply create a new umple.jar for testing the packaging code
+  -->
+  <target name="package-build">
+    <antcall target="deps:umple" />
+
+    <antcall target="clean" />
+    <antcall target="init" />
+    <antcall target="codegen" />
+    <antcall target="rtcpp" />
+    <antcall target="template.setVersion" />
+    <antcall target="umpleSelf" />
+    <antcall target="compile" />
+
+    <antcall target="packageJars" />
+    <antcall target="template.resetVersion" />
+  </target>
+
+  <!--
     Build
     run by the build machine, should work as-is on your machine, but be careful
     as your code will be run against the "latest" Umpled Umple.
@@ -507,7 +531,7 @@
     <antcall target="deps:umple" />
 
     <antcall target="clean" />
-    <antcall target="template.init" />
+    <antcall target="init" />
     <antcall target="codegen" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
@@ -523,7 +547,7 @@
 
   <target name="build-umplificator" >
     <antcall target="clean" />
-    <antcall target="template.init" />
+    <antcall target="init" />
     <antcall target="codegen" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
@@ -553,13 +577,13 @@
     <!-- <antcall target="template.test" /> -->
   </target>
 
-  
+
   <!-- Other projects that rely on UmpleCore can call this target to ensure the the application
        Is compiled -->
 
   <target name="precondition" >
-    <antcall target="template.clean" />
-    <antcall target="template.init" />
+    <antcall target="clean" />
+    <antcall target="init" />
     <antcall target="codegen" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />

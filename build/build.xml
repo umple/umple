@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." default="build" name="Umple" xmlns:ivy="antlib:org.apache.ivy.ant">
 
-  <import file="build.deps.xml" />  
+  <import file="build.deps.xml" />
   <deps-declare-taskdef />
 
   <target name="build">
@@ -52,8 +52,23 @@
   <!-- ###################################################### -->
 
   <!-- ###################################################### -->
+  <!--  Available in build.deps.xml  -->
+  <!-- ###################################################### -->
+
+  <!-- Get all dependencies installed -->
+  <target name="bootstrap" >
+    <ant antfile="build/build.deps.xml" target="bootstrap" inheritAll="true" />
+  </target>
+
+  <!-- ###################################################### -->
   <!--  Available in build.umple.xml  -->
   <!-- ###################################################### -->
+
+  <!-- Perform a first build to get umple related stuff installed -->
+  <target name="first-build" >
+    <ant antfile="build/build.umple.xml" target="first-build" inheritAll="true" />
+  </target>
+
 
   <!-- Turn *.ump code from Umple into *.java -->
   <target name="umpleSelf" >

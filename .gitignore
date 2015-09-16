@@ -1,5 +1,9 @@
 bin/
-dist/ 
+dist/
+nohup.out
+
+# Temporary
+umpleonline/index.php
 
 # os specific:
 .DS_Store

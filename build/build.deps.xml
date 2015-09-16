@@ -16,6 +16,10 @@
   <property name="umple.deps.manual.dir" value="${umple.deps.dir}/manual" />
   <property name="umple.last.jar.file" value="${umple.deps.dir}/../umple-latest.jar" />
 
+  <!-- Vendor Configuration -->
+  <property name="vendors.path" value="${basedir}/dist/vendors" />
+  <property name="jopt-simple.install.version" value="4.4" />
+
   <!-- Macros used to work nicely with Ivy -->
 
   <macrodef name="deps-get-path">
@@ -33,14 +37,14 @@
     <attribute name="pathid"  description="Ant pathid retrieved jars load into"/>
     <attribute name="pattern" description="Pattern given to 'ivy:retrieve'"/>
     <attribute name="transitive"  description="Transitive 'ivy:resolve'" default="true"/>
-    
+
     <sequential>
       <echo>Resolving ivy configuration, @{conf}.</echo>
       <ivy:resolve    file="${umple.ivy.dep.file}"  conf="@{conf}"  transitive="@{transitive}" log="download-only"/>
-      
+
       <mkdir dir="${umple.deps.dir}/@{conf}" />
       <ivy:retrieve   pattern="@{pattern}"          symlink="false" log="quiet"/>
-      
+
       <deps-get-path  conf="@{conf}" pathid="@{pathid}" />
     </sequential>
   </macrodef>
@@ -54,8 +58,8 @@
       <if> <!-- Only run the resolve if the cache path isn't known about -->
         <not><isreference refid="@{pathid}" /></not>
         <then>
-          <deps-resolve-private conf="@{conf}" 
-                                pathid="@{pathid}" 
+          <deps-resolve-private conf="@{conf}"
+                                pathid="@{pathid}"
                                 pattern="${umple.deps.dir}/[conf]/[artifact].[ext]"
                                 transitive="true" />
         </then>
@@ -70,13 +74,27 @@
     </sequential>
   </macrodef>
 
+  <!-- Vendor Dependencies for umple.jar -->
+  <target name="deps:vendor" description="Install vendor dependencies">
+    <echo>Installing Vendors...</echo>
+    <delete dir="${vendors.path}" failonerror="false" />
+    <mkdir dir="${vendors.path}"/>
+    <get src="https://codeload.github.com/pholser/jopt-simple/zip/jopt-simple-${jopt-simple.install.version}" verbose="true" dest="${vendors.path}/jopt-simple-${jopt-simple.install.version}.zip"/>
+    <unzip src="${vendors.path}/jopt-simple-${jopt-simple.install.version}.zip" dest="${vendors.path}/"/>
+    <delete dir="${vendors.path}/jopt-simple-jopt-simple-${jopt-simple.install.version}/src/test" failonerror="false" />
+    <move file="${vendors.path}/jopt-simple-jopt-simple-${jopt-simple.install.version}" tofile="${vendors.path}/jopt-simple"/>
+    <echo>DONE, Installing Vendors.</echo>
+  </target>
+
   <!-- Install Ivy: -->
   <target name="bootstrap" description="Install Ivy and Build requirements">
 
     <mkdir dir="${user.home.ant}"/>
-  
+
+    <antcall target="deps:vendor" />
+
     <echo>Installing Ivy v${ivy.install.version}</echo>
-    <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" 
+    <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
          dest="${ivy.jar.file}" usetimestamp="true" />
 
     <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.jar.file}" />
@@ -85,8 +103,8 @@
 
     <ivy:settings file="${basedir}/build/ivysettings.xml"/>
 
-    <deps-resolve-private conf="build" 
-                          pathid="build.ivy.classpath" 
+    <deps-resolve-private conf="build"
+                          pathid="build.ivy.classpath"
                           pattern="${user.home.ant}/[artifact].[ext]" transitive="false"/>
   </target>
 
@@ -96,10 +114,10 @@
 
     <echo level="warning">WARNING: This is merely wget-ing http://try.umple.org/scripts/umple.jar</echo>
     <mkdir dir="${umple.deps.dir}" />
-    <get src="http://try.umple.org/scripts/umple.jar" 
+    <get src="http://try.umple.org/scripts/umple.jar"
          dest="${umple.last.jar.file}"
          usetimestamp="true" />
-    
+
     <path id="umple.last.classpath">
       <pathelement location="${umple.last.jar.file}"/>
     </path>
@@ -115,10 +133,10 @@
 
     <echo level="warning">WARNING: This is merely wget-ing https://umple.googlecode.com/svn/trunk/lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0*.jar</echo>
     <mkdir dir="${umple.deps.manual.dir}" />
-    <get src="https://umple.googlecode.com/svn/trunk/lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar" 
+    <get src="https://umple.googlecode.com/svn/trunk/lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"
          dest="${umple.deps.manual.dir}/"
          usetimestamp="true" />
-    
+
     <path id="umple.manual.classpath">
       <fileset file="${umple.deps.manual.dir}/*.jar" />
     </path>
