@@ -1,6 +1,6 @@
 #Umple Modelling Language
 
-[![Build Status](https://travis-ci.org/umple-ucosp/umple.svg?branch=master)](https://travis-ci.org/umple-ucosp/umple)
+[![Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple)
 
 ##Introduction
 
