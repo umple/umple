@@ -15,6 +15,8 @@
   <property name="ivyResolveLogLevel" value="default" />
   <property name="junit" value="*Test"/> 
   <property name="rake_cmd" value="rake"/>  
+
+  <property name="online" value="true" />
    
   <import file="_versionNew.xml" />
 

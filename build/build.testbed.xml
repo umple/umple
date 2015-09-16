@@ -6,15 +6,15 @@
   <!-- ```````````````````````````
     Environment Variables
   ``````````````````````````` -->
+  <import file="_template.xml" />
 
   <property name="project.path" value="testbed"/>
   <property name="bin.path" value="${project.path}/bin"/>
-  <property name="dist.path" value="dist/${project.path}/java"/>
-  <property name="test.output.path" value="dist/qa/testbed_java"/>
-  <property name="test.output.path.java" value="dist/qa/testbed_java"/>
-  <property name="test.output.path.php" value="dist/qa/testbed_php"/>
-  <property name="test.output.path.ruby" value="dist/qa/testbed_ruby"/>
-  <property name="myenv" value="cc" />
+  <property name="dist.path" value="${dist.dir}/${project.path}/java"/>
+  <property name="test.output.path" value="${dist.dir}/qa/testbed_java"/>
+  <property name="test.output.path.java" value="${dist.dir}/qa/testbed_java"/>
+  <property name="test.output.path.php" value="${dist.dir}/qa/testbed_php"/>
+  <property name="test.output.path.ruby" value="${dist.dir}/qa/testbed_ruby"/>
 
   <property name="examplepattern" value="*" />
   <property name="manualumpfiles.path" value="umpleonline/ump/manualexamples"/>
@@ -32,10 +32,7 @@
   <property name="php.simpletest.version" value="1.1" />
   <property name="php.simpletest.url" 
             value="http://downloads.sourceforge.net/project/simpletest/simpletest/simpletest_${php.simpletest.version}/simpletest_${php.simpletest.version}.0.tar.gz" />
-  <property name="php.libs.dir" value="dist/libs/php" />
-
-  <import file="_${myenv}.xml" />
-  <import file="_template.xml" />
+  <property name="php.libs.dir" value="${dist.dir}/libs/php" />
 
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
@@ -74,10 +71,10 @@
   </target>
 
   <target name="compileJava">
-    <deps-resolve conf="core" pathid="core.ivy.classpath" />
-    <deps-resolve conf="test" pathid="test.ivy.classpath" />
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+    <deps-load-path conf="test" pathid="test.ivy.classpath" />
 
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="testbed/src/TestHarness.ump"/>
     </java>
 
@@ -96,9 +93,9 @@
   </target>
 
   <target name="compilePhp">
-    <deps-resolve conf="core" pathid="core.ivy.classpath" />
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="testbed_php/src/TestHarnessPhp.ump"/>
     </java>
 
@@ -123,9 +120,9 @@
   </target>
 
   <target name="compileRuby">
-    <deps-resolve conf="core" pathid="core.ivy.classpath" />
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="testbed_ruby/src/TestHarnessRuby.ump"/>
     </java>
   </target>
@@ -146,8 +143,8 @@
   <target name="testJava">
     <echo message="Running JAVA tests via junit"/>
 
-    <deps-resolve conf="core" pathid="core.ivy.classpath" />
-    <deps-resolve conf="test" pathid="test.ivy.classpath" />
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+    <deps-load-path conf="test" pathid="test.ivy.classpath" />
 
     <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}">
       <formatter type="xml"/>
@@ -181,7 +178,7 @@
     </exec>
 
     <!-- check for error -->
-    <fail message="PHP tests failed ('Fail' found)">
+    <fail message="PHP tests failed ('Fail' found)\n${test.output.php}">
       <condition>
         <not>
           <contains string="${test.output.php}" substring="&lt;strong&gt;0&lt;/strong&gt; fails" casesensitive="true"/>

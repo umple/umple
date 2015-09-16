@@ -10,6 +10,92 @@
   <property name="myenv" value="cc" />
   <import file="_${myenv}.xml" />
 
+  <property name="dist.dir"                     value="${basedir}/dist" />
+
+  <property name="dist.umple.jar"               value="umple-${umple.version}.jar" />
+  <property name="dist.umple.umplificator.jar"  value="umplificator-${umple.version}.jar" />
+  <property name="dist.umple.validator.jar"     value="validator-${umple.version}.jar" />
+  <property name="dist.umple.vml.jar"           value="vml-${umple.version}.jar" />
+  <property name="dist.umple.stats.jar"         value="umplestats-${umple.version}.jar" />
+  <property name="dist.umple.docs.jar"          value="umpledocs-${umple.version}.jar" />
+  <property name="dist.umple.sync.jar"          value="umplesync-${umple.version}.jar" />
+  <property name="dist.umple.run.jar"           value="umplerun-${umple.version}.jar" />
+
+  <macrodef name="isreachable" >
+    <attribute name="property" description="Property to hold result value" />
+    <attribute name="host"     description="Host validated" />
+    <sequential>
+      <if>
+        <os family="unix" />
+        <then>
+          <exec executable="ping" resultproperty="@{property}" output="/dev/null" logError="true" >
+            <arg line="-c 1 -t ${connectionTimeout}" />
+            <arg line="@{host}" />
+          </exec>
+        </then>
+        <else>
+          <echo message="Ping on windows is untested. Please fix this if you use this feature." />
+
+
+          <!-- https://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/ping.mspx?mfr=true -->
+          <if>
+            <!-- Ping requires timeout in MS, use the math module. -->
+            <not><isset property="connectionTimeout.milli" /></not>
+            <then>
+              <math result="connectionTimeout.milli" operand1="${connectionTimeout}" operation="*" operand2="1000" datatype="int"/>
+              <echo>Connection timeout -> ${connectionTimeout.milli} ms</echo>
+            </then>
+          </if>
+
+          <exec executable="PING" resultproperty="@{property}" output="NUL" logError="true" >
+            <arg line="/w ${connectionTimeout.milli}" />
+            <arg line="/n 1" />
+            <arg line="@{host}" />
+          </exec>
+        </else>
+      </if>
+    </sequential> 
+  </macrodef>
+
+  <macrodef name="check-connectivity">
+    <sequential>
+      <if>
+        <not><isset property="online" /></not>
+        <then>
+          <echo message="Checking for Internet connectivity..." />
+          <echo message="Set property -Donline=false if connectivity is known to be unavailable." />
+          
+          <!-- 
+            We ping three different sources that we know of to check if they are available. If they are not available
+            then we know that the build is offline (as far as we are concerned).
+
+            Unfortunately, the <isreachable> tag from <condition> seems to return false negatives, thus doing an OS 
+            specific approach was required. This is handled in the custom <isreachable> macro defined above. 
+          -->
+          <parallel>
+            <isreachable property="access.maven" 
+                         host="repo1.maven.org" />
+            <isreachable property="access.org.umple" 
+                         host="try.umple.org" />
+            <isreachable property="access.com.googlecode" 
+                         host="umple.googlecode.com" />
+          </parallel>
+
+          <condition property="online">
+            <and>
+              <equals arg1="0" arg2="${access.maven}" />
+              <equals arg1="0" arg2="${access.org.umple}" />
+              <equals arg1="0" arg2="${access.com.googlecode}" />
+            </and>
+          </condition>
+        </then>
+      </if>
+
+      <property name="online" value="false" />
+      <echo message="Internet connectivity available: ${online}" />
+    </sequential>
+  </macrodef>
+
   <import file="build.deps.xml" />
   <deps-declare-taskdef />
 
@@ -22,7 +108,7 @@
     <delete dir="cruise.umplificator/bin" failonerror="false" />
     <delete dir="${bin.path}" failonerror="false" />
     <delete dir="${dist.path}" failonerror="false" />
-    <touch file="dist/.gitkeep"/>
+    <touch file="${dist.dir}/.gitkeep"/>
   </target>
 
   <target name="template.init">
