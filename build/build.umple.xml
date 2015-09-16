@@ -10,9 +10,9 @@
   <property name="project.path" value="cruise.umple"/>
   <property name="xtext.project.path" value="cruise.umple.xtext"/>
   <property name="bin.path" value="${project.path}/bin"/>
-  <property name="dist.path" value="dist/cruise.umple"/>
-  <property name="test.output.path" value="dist/qa/cruise.umple"/>
-  <property name="vendors.path" value="dist/vendors"/>
+  <property name="dist.path" value="${dist.dir}/cruise.umple"/>
+  <property name="test.output.path" value="${dist.dir}/qa/cruise.umple"/>
+  <property name="vendors.path" value="${dist.dir}/vendors"/>
 
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
@@ -49,7 +49,7 @@
     <delete file="cruise.umple/src/rules.grammar"/>
     <delete file="cruise.umple/bin/rules.grammar"/>
 
-    <deps-resolve conf="core" pathid="core.ivy.classpath" />
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
     <java jar="${umple.last.jar.file}" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
@@ -66,15 +66,15 @@
     <delete file="cruise.umple/src/rules.grammar"/>
     <delete file="cruise.umple/bin/rules.grammar"/>
 
-    <deps-resolve conf="core" pathid="core.ivy.classpath" />
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
     </java>
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple.validator/src/Master.ump"/>
     </java>
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="cruise.umplificator/src/Master.ump"/>
     </java>
   </target>
@@ -154,8 +154,8 @@
   <target name="compile">
     <echo message="${ant.project.name}: ${ant.file}"/>
 
-    <deps-resolve conf="core"   pathid="core.ivy.classpath" />
-    <deps-resolve conf="test"   pathid="test.ivy.classpath" />
+    <deps-load-path conf="core"   pathid="core.ivy.classpath" />
+    <deps-load-path conf="test"   pathid="test.ivy.classpath" />
 
     <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.8" target="1.8">
 	    <src path="${xtext.project.path}/src"/>
@@ -184,13 +184,13 @@
   <target name="compileValidator">
     <echo message="${ant.project.name}: ${ant.file}"/>
 
-    <antcall target="deps:manual" />
+    <antcall target="deps-manual" />
     <path id="umple.manual.classpath">
       <fileset file="${umple.deps.manual.dir}/*.jar" />
     </path>
 
-    <deps-resolve conf="validator"    pathid="validator.ivy.classpath" />
-    <deps-resolve conf="test"         pathid="test.ivy.classpath" />
+    <deps-load-path conf="validator"    pathid="validator.ivy.classpath" />
+    <deps-load-path conf="test"         pathid="test.ivy.classpath" />
 
     <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="cruise.umple.validator/bin" source="1.8" target="1.8">
       <src path="${project.path}/src"/>
@@ -217,10 +217,15 @@
   <target name="compileUmplificator">
     <echo message="${ant.project.name}: ${ant.file}"/>
 
-    <deps-resolve conf="umplificator" pathid="umplificator.ivy.classpath" />
-    <deps-resolve conf="test"         pathid="test.ivy.classpath" />
+    <deps-load-path conf="umplificator" pathid="umplificator.ivy.classpath" />
+    <deps-load-path conf="test"         pathid="test.ivy.classpath" />
 
-    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="cruise.umplificator/bin" source="1.8" target="1.8">
+    <javac  debug="true" 
+            includeantruntime="false" 
+            debuglevel="source,lines,vars" 
+            destdir="cruise.umplificator/bin" 
+            source="1.8" 
+            target="1.8">
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-jet"/>
       <src path="${project.path}/src-gen-umple"/>
@@ -246,7 +251,9 @@
   ``````````````````````````` -->
 
   <target name="packageDocs">
-    <java classname="cruise.umple.docs.DocumenterMain" fork="true" classpath="dist/umpledocs.jar">
+    <java classname="cruise.umple.docs.DocumenterMain" 
+          fork="true" 
+          classpath="${dist.dir}/${dist.umple.docs.jar}">
       <arg value="build/reference"/>
       <arg value="${dist.path}/reference"/>
     </java>
@@ -256,16 +263,16 @@
   </target>
 
   <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">
-    <copy file="dist/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
-    <copy file="dist/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
-    <copy file="dist/vml.jar" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.jar}" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.vml.jar}" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
   </target>
 
 <!-- The Umplificator jar-->
 <target name="packageUmplificator">
 
 
-  <jar destfile="dist/umplificator_${umple.version}.jar" filesetmanifest="mergewithoutmain">
+  <jar destfile="${dist.dir}/${dist.umple.umplificator.jar}" filesetmanifest="mergewithoutmain">
     <manifest>
      <attribute name="Built-By" value="Cruise - University of Ottawa"/>
      <attribute name="Version" value="${umple.version}"/>
@@ -273,41 +280,7 @@
      <attribute name="Class-Path" value="."/>
    </manifest>
    <fileset dir="cruise.umplificator/bin"/>
-<!--    <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/commons-collections4-4.0.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/commons-configuration-1.10.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/commons-lang-2.5.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/commons-logging-1.1.3.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/org.eclipse.core.contenttype_3.4.200.v20130326-1255.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/org.eclipse.core.jobs_3.5.300.v20130429-1813.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/org.eclipse.core.resources_3.8.100.v20130521-2026.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/org.eclipse.core.runtime_3.9.0.v20130326-1255.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/org.eclipse.equinox.preferences_3.5.100.v20130422-1538.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/org.eclipse.jdt.core_3.9.1.v20130905-0837.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/org.eclipse.osgi_3.9.0.v20130529-1710.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/org.eclipse.jface_3.10.0.v20140604-0740.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/org.eclipse.text_3.5.300.v20130515-1451.jar"/>
 
-   <zipfileset excludes="META-INF/*.SF" src="lib/junit.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/droolsplugins/antlr-runtime-3.5.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/droolsplugins/drools-compiler-6.0.1.Final.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/droolsplugins/drools-core-6.0.1.Final.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/droolsplugins/drools-jsr94-6.0.1.Final.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/droolsplugins/kie-api-6.0.1.Final.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/droolsplugins/kie-internal-6.0.1.Final.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/droolsplugins/mvel2-2.1.8.Final.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/droolsplugins/protobuf-java-2.5.0.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/droolsplugins/xstream-1.4.3.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/droolsplugins/slf4j-api-1.7.6.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/droolsplugins/slf4j-simple-1.7.6.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/commons-io-2.4.jar"/>
-
-   <zipfileset excludes="META-INF/*.SF" src="dist/umple.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/log4j-core-2.0.1.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/log4j-api-2.0.1.jar"/>
-   <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/perf4j-0.9.16.jar"/> -->
  </jar>
 </target>
 
@@ -317,20 +290,20 @@
 
     <deps-get-path conf="validator" pathid="validator.ivy.classpath" />
 
-    <manifestclasspath property="umple.validator.jar.classpath" jarfile="dist/umple.jar" >
+    <manifestclasspath property="umple.validator.jar.classpath" jarfile="${dist.dir}/umple.jar" >
       <classpath refid="validator.ivy.classpath"/>
     </manifestclasspath>
 
     <!-- The validator jar-->
     <echo message="Package: Umple validator jar used in Umple " />
-    <jar destfile="dist/umplevalidator_${umple.version}.jar"
+    <jar destfile="${dist.dir}/umplevalidator_${umple.version}.jar"
          basedir="cruise.umple.validator/bin"
          includes="cruise/umple/** cruise/umple/validator** org/eclipse/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/**" >
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
         <attribute name="Main-Class" value="cruise.umple.CodeGenValidatorMainConsole"/>
-        <attribute name="Class-Path" value="${validator.project.classpath}"/>
+        <attribute name="Class-Path" value="${umple.validator.jar.classpath}"/>
       </manifest>
     </jar>
   </target>
@@ -340,11 +313,11 @@
 
     <deps-get-path conf="core" pathid="core.ivy.classpath" />
 
-    <manifestclasspath property="umple.jar.classpath" jarfile="dist/umple.jar" >
+    <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
       <classpath refid="core.ivy.classpath"/>
     </manifestclasspath>
 
-    <jar destfile="dist/umple.jar"
+    <jar destfile="${dist.dir}/${dist.umple.jar}"
          basedir="${bin.path}"
          includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/**"
          excludes="**/*Test.class">
@@ -362,39 +335,48 @@
     <antcall target="packageMainJar" />
 
     <deps-get-path conf="core" pathid="core.ivy.classpath" />
-
-    <manifestclasspath property="umple.jar.classpath" jarfile="dist/umple.jar" >
+    <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
       <classpath refid="core.ivy.classpath"/>
     </manifestclasspath>
 
+    <deps-get-path conf="test" pathid="test.ivy.classpath" />
+    <manifestclasspath property="umple.test.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
+      <classpath refid="test.ivy.classpath"/>
+    </manifestclasspath>
 
     <echo message="Package: Umple statistics jar" />
-    <jar destfile="dist/umplestats.jar" basedir="${bin.path}" includes="cruise/umple/** *.grammar *.error templates/** org/apache/** joptsimple/**">
+    <jar  destfile="${dist.dir}/${dist.umple.stats.jar}" 
+          basedir="${bin.path}" 
+          includes="cruise/umple/** *.grammar *.error templates/** org/apache/** joptsimple/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
         <attribute name="Main-Class" value="cruise.umple.stats.StatsMain"/>
-        <attribute name="Class-Path" value="${umple.jar.classpath}"/>
+        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
       </manifest>
     </jar>
 
     <echo message="Package: Umple documenter jar used to build the user manual" />
-    <jar destfile="dist/umpledocs.jar" basedir="${bin.path}" includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/**">
+    <jar  destfile="${dist.dir}/${dist.umple.docs.jar}" 
+          basedir="${bin.path}" 
+          includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
         <attribute name="Main-Class" value="cruise.umple.docs.DocumenterMain"/>
-        <attribute name="Class-Path" value="${umple.jar.classpath}"/>
+        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
       </manifest>
     </jar>
 
     <echo message="Package: Umple sync jar used in UmpleOnline to compile and sync diagram - See PlaygroundMain" />
-    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/**">
+    <jar  destfile="${dist.dir}/${dist.umple.sync.jar}" 
+          basedir="${bin.path}" 
+          includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
         <attribute name="Main-Class" value="cruise.umple.PlaygroundMain"/>
-        <attribute name="Class-Path" value="${umple.jar.classpath}"/>
+        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
       </manifest>
     </jar>
 
@@ -403,27 +385,31 @@
       <fileset dir="lib/umplerun"/>
     </copy>
 
-    <jar destfile="dist/umplerun.jar" basedir="${bin.path}" includes="cruise/umple/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/**">
+    <jar  destfile="${dist.dir}/${dist.umple.run.jar}" 
+          basedir="${bin.path}" 
+          includes="cruise/umple/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/**">
       <manifest>
-        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
-        <attribute name="Version" value="${umple.version}"/>
-        <attribute name="Main-Class" value="cruise.umple.UmpleRunMain"/>
-        <attribute name="Class-Path" value="${umple.jar.classpath}"/>
+        <attribute name="Built-By"    value="Cruise - University of Ottawa"/>
+        <attribute name="Version"     value="${umple.version}"/>
+        <attribute name="Main-Class"  value="cruise.umple.UmpleRunMain"/>
+        <attribute name="Class-Path"  value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
       </manifest>
     </jar>
 
     <echo message="Package: VML - Tool for variability modeling" />
-    <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** en.error cruise/vml/** *.grammar *.error templates/** org/apache/** joptsimple/**">
+    <jar  destfile="${dist.dir}/${dist.umple.vml.jar}" 
+          basedir="${bin.path}" 
+          includes="cruise/umple/** en.error cruise/vml/** *.grammar *.error templates/** org/apache/** joptsimple/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
         <attribute name="Main-Class" value="cruise.vml.VmlConsole"/>
-        <attribute name="Class-Path" value="${umple.jar.classpath}"/>
+        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
       </manifest>
     </jar>
 
 	  <!-- TODO: UNCOMMENT ONCE XTEXT IN THE MIX -->
-    <!-- <copy todir="dist/update">
+    <!-- <copy todir="${dist.dir}/update">
       <fileset dir="../cruise.umple.xtext/umpleUpdateSite"/>
     </copy>
     <copy todir="../umpleonline/update">
@@ -449,15 +435,15 @@
   </target>
 
   <target name="deployUmpleonlineJars" >
-    <copy file="dist/umplesync.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/umplesync.jar" overwrite="true" />
-    <copy file="dist/umple.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/umple.jar" overwrite="true" />
-    <copy file="dist/vml.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/vml.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.sync.jar}"   tofile="/h/ralph/sites/www/html/umpleonline/scripts/umplesync.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.jar}"        tofile="/h/ralph/sites/www/html/umpleonline/scripts/umple.jar"     overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.vml.jar}"    tofile="/h/ralph/sites/www/html/umpleonline/scripts/vml.jar"       overwrite="true" />
   </target>
 
   <target name="deployUpdatedLib">
-    <copy file="dist/umplesync.jar" tofile="lib/umplesync.jar" overwrite="true" />
-    <copy file="dist/umple.jar" tofile="lib/umple.jar" overwrite="true" />
-    <copy file="dist/vml.jar" tofile="lib/vml.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.sync.jar}"   tofile="lib/umplesync.jar"  overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.jar}"        tofile="lib/umple.jar"      overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.vml.jar}"    tofile="lib/vml.jar"        overwrite="true" />
   </target>
 
   <target name="deployUmpleonline" >
@@ -474,7 +460,7 @@
   <target name="deployUmpleDocs" >
     <antcall target="packageDocs" />
     <copy todir="/h/ralph/sites/www/html/umple">
-      <fileset dir="dist/cruise.umple/reference">
+      <fileset dir="${dist.dir}/cruise.umple/reference">
         <exclude name=".git"/>
       </fileset>
     </copy>
@@ -489,7 +475,10 @@
     and generate a
   -->
   <target name="first-build">
-    <antcall target="deps:umple" />
+    <property name="first.build" value="true" />
+    <check-connectivity />
+
+    <antcall target="deps-resolve-all" />
 
     <antcall target="clean" />
     <antcall target="init" />
@@ -508,7 +497,10 @@
     Run this to simply create a new umple.jar for testing the packaging code
   -->
   <target name="package-build">
-    <antcall target="deps:umple" />
+    <property name="first.build" value="false" />
+    <check-connectivity />
+
+    <antcall target="deps-umple" />
 
     <antcall target="clean" />
     <antcall target="init" />
@@ -528,7 +520,10 @@
     as your code will be run against the "latest" Umpled Umple.
    -->
   <target name="build" >
-    <antcall target="deps:umple" />
+    <property name="first.build" value="false" />
+    <check-connectivity />
+
+    <antcall target="deps-umple" />
 
     <antcall target="clean" />
     <antcall target="init" />
@@ -546,6 +541,9 @@
   </target>
 
   <target name="build-umplificator" >
+    <property name="first.build" value="fals" />
+    <check-connectivity />
+
     <antcall target="clean" />
     <antcall target="init" />
     <antcall target="codegen" />

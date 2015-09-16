@@ -9,8 +9,8 @@
 
   <property name="project.path" value="cruise.umplificator.eclipse"/>
   <property name="bin.path" value="${project.path}/bin"/>
-  <property name="dist.path" value="dist/cruise.umplificator.eclipse"/>
-  <property name="test.output.path" value="dist/qa/cruise.umplificator"/>
+  <property name="dist.path" value="${dist.dir}/cruise.umplificator.eclipse"/>
+  <property name="test.output.path" value="${dist.dir}/qa/cruise.umplificator"/>
 
   <condition property="jvmarg.01" value="-d32"><equals arg1="${is.osx}" arg2="true" /></condition>
   <condition property="jvmarg.02" value="-XstartOnFirstThread"><equals arg1="${is.osx}" arg2="true" /></condition>
@@ -85,13 +85,13 @@
   <target name="clean">
     <delete dir="cruise.umplificator/bin" failonerror="false" />
     <delete dir="cruise.umplificator.eclipse/bin" failonerror="false" />
-	<delete dir="dist/qa/cruise.umplificator" failonerror="false" />
+	<delete dir="${dist.dir}/qa/cruise.umplificator" failonerror="false" />
   </target>
 
   <target name="init">
     <mkdir dir="cruise.umplificator/bin"/>
     <mkdir dir="cruise.umplificator.eclipse/bin"/>
-	<mkdir dir="dist/qa/cruise.umplificator"/>
+	<mkdir dir="${dist.dir}/qa/cruise.umplificator"/>
   </target>
 
   <target name="setVersion">
@@ -108,7 +108,7 @@
     Compile Umple files 
   ``````````````````````````` -->
   <target name="umpleSelf">
-     <java jar="dist/umple.jar" fork="true" failonerror="true">
+     <java jar="${dist.dir}/umple.jar" fork="true" failonerror="true">
       <arg value="cruise.umplificator/src/Master.ump"/>
     </java>
   </target>

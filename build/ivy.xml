@@ -25,10 +25,8 @@
 
         
         <!-- Core: -->
-        
         <dependency org="net.sf.jopt-simple"    name="jopt-simple"  rev="4.4"   conf="core->default" />
-        <dependency org="joda-time"             name="joda-time"    rev="2.1"   conf="core->default"/>
-        <dependency org="org.apache.ant"        name="ant"          rev="1.9.6" conf="core->default"/>
+        <dependency org="org.apache.ant"        name="ant"          rev="1.9.6" conf="core->default" />
 
 
         <!-- Validator -->
