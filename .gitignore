@@ -3,7 +3,10 @@ dist/
 nohup.out
 
 # Temporary
-umpleonline/index.php
+
+# umple specific
+umpleonline/ump/tmp*
+
 
 # os specific:
 .DS_Store
