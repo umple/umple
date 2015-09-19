@@ -46,7 +46,7 @@ import java.util.Map;
  * More documentation that should appear
  * <p> 
  * It will process comments of the form
- * Compile with javac -classpath /Library/Java/Home/lib/tools.jar UmplesourceTaglet.java
+ * Compile with javac -classpath /Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/lib/tools.jar UmplesourceTaglet.java
  * @umplesource Master.ump 4
  * @umplesource Umple.ump 20
  * @author Jamie Ho 
@@ -164,9 +164,9 @@ public class UmplesourceTaglet implements Taglet {
     }
     
     private static String umpleLinkText(String tagText) {
-      return "<a href=\"http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/"
+      return "<a href=\"https://github.com/umple/umple/tree/master/cruise.umple/src/"
       + umpleFile(tagText)+"#"+umpleLine(tagText)
-      + "\" target=\"googlecode\">"
+      + "\" target=\"githubcode\">"
       +  umpleFile(tagText)
       + " (Line "+umpleLine(tagText)
       +")</a>";

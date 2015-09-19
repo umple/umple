@@ -120,7 +120,7 @@ $output = readTemporaryFile("ump/" . $filename);
           Draw on the right, write (Umple) model code on the left. Generate Java, C++, PHP or Ruby code from your models. <br/>
           Visit <a href="http://manual.umple.org" target="helppage">the User Manual</a> or <a href="http://www.umple.org">the Umple Home Page</a> for help.
           &nbsp;&nbsp;&nbsp;<a href="download_eclipse_umple_plugin.html">Download Umple</a>
-          &nbsp;&nbsp;&nbsp;<a href="http://code.google.com/p/umple/issues/entry" target="newissue">Report an Issue</a>
+          &nbsp;&nbsp;&nbsp;<a href="https://github.com/umple/umple/issues/new" target="newissue">Report an Issue</a>
         </p>
       </div>
     </div>
