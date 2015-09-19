@@ -1,3 +1,10 @@
 #!/bin/csh -fb
-cd ~/umple/build
-ant -Dmyenv=local -f build.umple.xml umpleSelf compile packageMainJar
+if ! $?UMPLEROOT then
+  setenv UMPLEROOT ~/umple
+endif
+cd $UMPLEROOT/build
+echo Doing quick build of Umple at $UMPLEROOT ( umpleSelf compile packageMainJar )
+echo This should take 10-20 seconds. Do not interrupt
+echo This only builds the main command line jar, not umplesync.jar, for that use qfbumple
+echo You should always have done 'git pull' or fetch and merge before running this and have resolved conflicts
+ant -Dmyenv=local -f build.umple.xml umpleSelf compile packageMainJar 

@@ -1,0 +1,9 @@
+#!/bin/csh -fb
+if ! $?UMPLEROOT then
+  setenv UMPLEROOT ~/umple
+endif
+cd $UMPLEROOT/build
+echo Doing FULL build of Umple at $UMPLEROOT using ant -Dmyenv=local
+echo This should take 2-5 minutes. Do not interrupt.
+echo You should always have done 'git pull' or fetch then merge before running this and resolved conflicts
+ant -Dmyenv=local
