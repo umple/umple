@@ -22,14 +22,14 @@ document.write('<script type="text/javascript" src="scripts/ajax.js"><\/script>'
 document.write('<script type="text/javascript" src="scripts/helper.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/json.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/debugger.js"><\/script>');
-document.write('<script type="text/javascript" src="scripts/ws_rotateimg.js"><\/script>');
+// document.write('<script type="text/javascript" src="scripts/ws_rotateimg.js"><\/script>');
 
 // GREYBOX
 //document.write('<script type="text/javascript">var GB_ROOT_DIR = "./scripts/";<\/script>');
 //document.write('<script type="text/javascript" src="scripts/AJS.js"><\/script>');
 //document.write('<script type="text/javascript" src="scripts/AJS_fx.js"><\/script>');
 //document.write('<script type="text/javascript" src="scripts/gb_scripts.js"><\/script>');
-//document.write('<link href="scripts/gb_styles.css" rel="stylesheet" type="text/css" media="all" />');	
+//document.write('<link href="scripts/gb_styles.css" rel="stylesheet" type="text/css" media="all" />');
 
 //SYNTAX HIGHLIGHTER
 document.write('<script type="text/javascript" src="scripts/shCore.js"><\/script>');
