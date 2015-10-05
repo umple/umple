@@ -19,13 +19,13 @@ Umple has been largely developed as a research project at the University of Otta
 
 More details can be found as follows
 
-  * Umple home page: http://www.umple.org
-  * Umple user manual: http://manual.umple.org
-  * Download page: http://dl.umple.org
+  * Umple home page: http://www.umple.org  - The master Umple page with a more comprehensive set of links
+  * Umple user manual: http://manual.umple.org  - Full documentation of all Umple features
+  * Download page: http://dl.umple.org    - Links to the latest official release and continuous builds
   * Live diagram of the metamodel: http://metamodel.umple.org
   * Architecture: http://architecture.umple.org
 
-Umple is continuously tested and build on Travis CI (https://travis-ci.org/). (This is under review: See http://cc.umple.org for a movable link to the CI server)
+Umple is continuously tested and build at the University of Ottawa using CruiseControl; see http://cc.umple.org . It is also built on Travis CI (https://travis-ci.org/).
  
 ###Project setup
 
