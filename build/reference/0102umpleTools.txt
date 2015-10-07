@@ -12,7 +12,7 @@ and compile .ump files.</p>
 
 <li><b>Eclipse.</b> To use Umple with Eclipse, you need to load an Umple 
 Eclipse plugin. This can be obtained from our <a 
-href="http://code.google.com/p/umple/downloads/list">downloads site</a>. 
+href="https://github.com/umple/Umple/releases/tag/v.1.22.0.5146>downloads site</a>. 
 Note there is a plain plugin and a plugin enhanced with the XText 
 technology that gives context-assist to help you program or model with 
 fewer errors.</li>
@@ -28,7 +28,7 @@ code as well as several other outputs. <a href="UsingUmpleOnline.html">The Umple
 
 <li><b>Command-line based compiler</b> You can always use Umple from the 
 command line, typically from an ant script. Simply <a
-href="http://code.google.com/p/umple/downloads/list">download the latest 
+href="https://github.com/umple/Umple/releases/tag/v.1.22.0.5146">download the latest 
 officially released version of the umple jar</a>, and run it as "java -jar umple.jar *.ump".</li>
 
 <br />
