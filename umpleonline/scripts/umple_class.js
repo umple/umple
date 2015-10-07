@@ -14,6 +14,7 @@ UmpleClassFactory.create = function(data)
   umpleClass.id = data.id;
   umpleClass.name = data.name;
   umpleClass.isInterface = data.isInterface;
+  umpleClass.isAbstract = data.isAbstract;
   umpleClass.displayColor = data.displayColor;
   if(umpleClass.displayColor == "") umpleClass.displayColor="transparent";  
   umpleClass.position.x = data.position.x;
@@ -93,6 +94,7 @@ function UmpleClass()
   this.id;
   this.name;
   this.isInterface;
+  this.isAbstract;
   this.displayColor = "transparent";
   this.position = new UmplePosition(0,0,109,41);
   this.attributes = [];
@@ -330,9 +332,13 @@ function UmpleClass()
 
     if (Page.isPhotoReady())
     {
-      if (this.isInterface=="true")
+      if (this.isInterface == "true")
       {
         classInnerHtml += format('<span>&#171interface&#187<span><br><span id="{0}_name" name="className">{1}</span>',this.id,this.name);
+      }
+      else if (this.isAbstract == "true")
+      {
+        classInnerHtml += format('<span>&#171abstract&#187<span><br><span id="{0}_name" name="className">{1}</span>',this.id,this.name);
       }
       else
       {
@@ -341,13 +347,16 @@ function UmpleClass()
     }
     else
     {
-      if (this.isInterface=="true")
+      if (this.isInterface == "true")
       {
         classInnerHtml += format('<span>&#171interface&#187<span><br><span id="{0}_name" name="className" class="editable editableDoubleClick">{1}</span>',this.id, this.name);
       }
+      else if (this.isAbstract == "true") 
+      {
+        classInnerHtml += format('<span>&#171abstract&#187<span><br><span id="{0}_name" name="className" class="editable editableDoubleClick">{1}</span>',this.id, this.name);
+      }
       else
       {
-        
         classInnerHtml += format('<span id="{0}_name" name="className" class="editable editableDoubleClick" >{1}</span>',this.id, this.name);
 
       }
@@ -367,24 +376,24 @@ function UmpleClass()
 
       }
       
-      if(Page.showMethods == true)
-      {
+    if(Page.showMethods == true)
+    {
+      classInnerHtml +=
+      format(
+      '  <tr class="methodArea">' +
+      '    <td class="methods">{0}' +
+      '    </td>' +
+      '  </tr>',methodsInnerHtml);
+    }
+
         classInnerHtml +=
         format(
-        '  <tr class="methodArea">' +
-        '    <td class="methods">{0}' +
+        '  <tr class="width">' +
+        '    <td> <img id="{0}_width" src="scripts/_.gif" style="width:{1}px;height:0px;display:block;"  />' +
         '    </td>' +
-        '  </tr>',methodsInnerHtml);
-      }
-
-          classInnerHtml +=
-          format(
-          '  <tr class="width">' +
-          '    <td> <img id="{0}_width" src="scripts/_.gif" style="width:{1}px;height:0px;display:block;"  />' +
-          '    </td>' +
-          '  </tr>',this.id,this.position.width); 
+        '  </tr>',this.id,this.position.width); 
  
-      classInnerHtml += '</table>';
+    classInnerHtml += '</table>';
  
     var existing = classDiv.html();
     classDiv.html(classInnerHtml + existing);
