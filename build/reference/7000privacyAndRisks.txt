@@ -10,7 +10,7 @@ noreferences
 
 <p><b>License:</b> All use of Umple and UmpleOnline is subject to the <a href="http://cruise.eecs.uottawa.ca/UmpleMITLicense.html">Umple MIT license</a>. Please read it carefully, since it disclaims liability. This is not because we don't want to be 'good engineers' and take responsibility for work, rather it is because we are following the open source model, which allows a wide variety of people to modify Umple.</p>
 
-<p><b>Risk due to support by hosting organizations:</b> UmpleOnline is hosted at the University with funds from research grants. Should these research grants cease, support for Umple may cease unless others take over responsibility for hosting. Similarly, the code is hosted on Google Code. If Google decides to cease hosting projects for free, Umple would need to be hosted somewhere else.</p>
+<p><b>Risk due to support by hosting organizations:</b> UmpleOnline is hosted at the University with funds from research grants. Should these research grants cease, support for Umple may cease unless others take over responsibility for hosting. Similarly, the code is hosted on Github. If Github decides to cease hosting projects for free, Umple would need to be hosted somewhere else.</p>
 
 <p><b>Risk of deprecation, missing features and defects:</b> It is possible that code which works today may cease working in the future. Development is performed by students and in the context of research. You will therefore find incomplete features and bugs. We encourage you to report new ones (and fix them) and to realize that you may need to work around the existing ones. That said, we do use test-driven development to maintain what we believe is a high level of quality.</p>
 
@@ -18,7 +18,7 @@ noreferences
 
 <p><b>Not certified for safety critical or mission critical use:</b> At the current time Umple-generated code <b>should not be used for mission-critical or safety critical uses</b>, including software for any device that may pose a safety risk if it performs incorrectly, or software that would cause economic damage if it failed. We intend that, in time, Umple and tools like it will in fact help improve safety and reliability. But at the current time we have not subjected Umple to the rigorous validation it needs for such uses, and there are many known issues that would preclude such current use.</p>
 
-<p><b>Need to apply best practices:</b> Should you choose to use Umple for production use, it is <b>critical that you follow rigorous software engineering practices</b> including (but not limited to): Requirements analysis, careful design and thorough testing. <a href="http://code.google.com/p/umple/wiki/BestUmpleUsePractices">See here for a list of Umple best practies.</a></p>
+<p><b>Need to apply best practices:</b> Should you choose to use Umple for production use, it is <b>critical that you follow rigorous software engineering practices</b> including (but not limited to): Requirements analysis, careful design and thorough testing. <a href="https://github.com/umple/umple/wiki/BestUmpleUsePractices">See here for a list of Umple best practies.</a></p>
 
 &nbsp; <br />
 

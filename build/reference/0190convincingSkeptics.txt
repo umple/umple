@@ -53,7 +53,7 @@ noreferences
   <li>Umple can be used incrementally. You can use just a few pieces of it here and there to gain substantial advantages.</li>
   <li>There is an easy-to-access user manual, with examples for all constructs and messages.</li>
   <li>Umple will save a lot of coding and maintenance of boilerplate code, code for patterns, and code for constructs such as state machines.</li>
-  <li>Studies have shown that code using Umple is actually easier to understand than traditional code, and people learn to be better modelers when using Umple. <a href="http://code.google.com/p/umple/wiki/Publications">See here for a list of peer-reviewed publications.</a></li>
+  <li>Studies have shown that code using Umple is actually easier to understand than traditional code, and people learn to be better modelers when using Umple. <a href="https://github.com/umple/umple/wiki/Publications">See here for a list of peer-reviewed publications.</a></li>
   <li>Umple is deliberately simpler than UML and other modeling technologies.</li>
 </ul></li><br/>
 

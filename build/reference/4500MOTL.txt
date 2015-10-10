@@ -60,7 +60,7 @@ MOTL can be used in two modes:
 <br>
 
 <p align="justify">
-The following pages describe how to use MOTL. Many aspects of MOTL are under development. Some <a href="http://code.google.com/p/umple/wiki/DraftManualPages">future pages for tracing features under development cam be found in Umple wiki pages.</a>
+The following pages describe how to use MOTL. Many aspects of MOTL are under development. Some <a href="https://github.com/umple/umple/wiki/DraftManualPages">future pages for tracing features under development cam be found in Umple wiki pages.</a>
 </p>
 
 <hr />
