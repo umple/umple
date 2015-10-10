@@ -27,6 +27,9 @@ For Unix, Mac and Linux users:
   - Does not rebuild the compiler (a bit testcase) nor run the testbed tests
   - Used when you want to do a basic test after doing qbumple
 
+pumple
+  - Propagates the umple jars to umpleonline
+
  mumple
   - packages the user manual
   
