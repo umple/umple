@@ -18,7 +18,7 @@ Code in the examples will be rendered using syntaxHighlighter. This is found in 
 
 A link will be generated from each code example to ensure that it can be displayed in UmpleOnline. Always test and comment code samples.
 
-Instructions for building deploying the user manual can be found here: https://code.google.com/p/umple/wiki/Deploying
+Instructions for building deploying the user manual can be found here: https://github.com/umple/umple/wiki/Deploying
 In short: to build on your local environment
 cd trunk/build
 ant -Dmyenv=local -f build.umple.xml packageDocs
