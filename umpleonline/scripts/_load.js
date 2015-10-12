@@ -22,7 +22,7 @@ document.write('<script type="text/javascript" src="scripts/jquery/jquery-1.11.1
 document.write('<link href="scripts/jquery/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" media="screen" /> ');
 document.write('<script type="text/javascript" src="scripts/jquery/jquery-ui-1.10.4.custom.min.js"></script>');
 
-document.write('<script type="text/javascript" src="scripts/jquery/caretRange/caretRange.js"></script>');
+// document.write('<script type="text/javascript" src="scripts/jquery/caretRange/caretRange.js"></script>');
 document.write('<script type="text/javascript" src="scripts/jquery.ui.touch-punch.min.js"></script>');
 
 // JQuery Plugins
@@ -42,7 +42,7 @@ document.write('<script type="text/javascript" src="scripts/ws_rotateimg.js"></s
 //document.write('<script type="text/javascript" src="scripts/AJS.js"></script>');
 //document.write('<script type="text/javascript" src="scripts/AJS_fx.js"></script>');
 //document.write('<script type="text/javascript" src="scripts/gb_scripts.js"></script>');
-//document.write('<link href="scripts/gb_styles.css" rel="stylesheet" type="text/css" media="all" />');	
+//document.write('<link href="scripts/gb_styles.css" rel="stylesheet" type="text/css" media="all" />');
 
 //SYNTAX HIGHLIGHTER
 document.write('<script type="text/javascript" src="scripts/shCore.js"></script>');
