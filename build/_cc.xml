@@ -10,8 +10,12 @@
   <property name="haltonfailure" value="true"/>
   <property name="shouldPackageUmpleOnline" value="true"/>
   <property name="shouldDeploy" value="true"/>
+
+  <property name="connectionTimeout" value="30" />
+
   <property name="ivyRetrieveLogLevel" value="quiet" />
   <property name="ivyResolveLogLevel" value="download-only" />
+  
   <property name="showJunitSummary" value="false"/>
   <property name="showJunitOutput" value="false"/>
   <property name="junit" value="*Test"/>
