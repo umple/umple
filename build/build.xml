@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." default="build" name="Umple" xmlns:ivy="antlib:org.apache.ivy.ant">
 
-  <import file="build.deps.xml" />
-  <deps-declare-taskdef />
+  <import file="_template.xml" />
 
   <target name="build">
     <trycatch property="foo" reference="bar">
@@ -38,12 +37,12 @@
 
   <target name="qaBuildingPage">
     <echo>Starting Build</echo>
-    <copy file="build/qa_updating.php" tofile="dist/qa/index.php" overwrite="true" />
+    <copy file="build/qa_updating.php" tofile="${dist.dir}/qa/index.php" overwrite="true" />
   </target>
 
   <target name="qaLandingPage">
     <echo>Creating a QA Landing Page</echo>
-    <copy file="build/qa_index.php" tofile="dist/qa/index.php" overwrite="true" />
+    <copy file="build/qa_index.php" tofile="${dist.dir}/qa/index.php" overwrite="true" />
   </target>
 
 

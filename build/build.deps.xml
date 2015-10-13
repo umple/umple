@@ -4,6 +4,8 @@
   <!-- ```````````````````````````
     Environment Variables
   ``````````````````````````` -->
+  <import file="_template.xml" />
+
   <!-- Ivy Configuration -->
   <property name="ivy.install.version" value="2.4.0" />
   <property name="user.home.ant" value="${user.home}/.ant/lib" />
@@ -12,12 +14,12 @@
   <property name="umple.ivy.dep.file" value="${basedir}/build/ivy.xml" />
 
   <!-- Umple Last -->
-  <property name="umple.deps.dir" value="${basedir}/dist/libs" />
+  <property name="umple.deps.dir" value="${dist.dir}/libs" />
   <property name="umple.deps.manual.dir" value="${umple.deps.dir}/manual" />
   <property name="umple.last.jar.file" value="${umple.deps.dir}/../umple-latest.jar" />
 
   <!-- Vendor Configuration -->
-  <property name="vendors.path" value="${basedir}/dist/vendors" />
+  <property name="vendors.path" value="${dist.dir}/vendors" />
   <property name="jopt-simple.install.version" value="4.4" />
 
   <!-- Macros used to work nicely with Ivy -->
@@ -32,36 +34,56 @@
     </sequential>
   </macrodef>
 
-  <macrodef name="deps-resolve-private">
+  <macrodef name="deps-load-path-private">
     <attribute name="conf"    description="Ivy configuration to load"/>
-    <attribute name="pathid"  description="Ant pathid retrieved jars load into"/>
     <attribute name="pattern" description="Pattern given to 'ivy:retrieve'"/>
     <attribute name="transitive"  description="Transitive 'ivy:resolve'" default="true"/>
 
     <sequential>
-      <echo>Resolving ivy configuration, @{conf}.</echo>
+      <echo>Resolving configuration: @{conf}</echo>
       <ivy:resolve    file="${umple.ivy.dep.file}"  conf="@{conf}"  transitive="@{transitive}" log="download-only"/>
 
       <mkdir dir="${umple.deps.dir}/@{conf}" />
       <ivy:retrieve   pattern="@{pattern}"          symlink="false" log="quiet"/>
-
-      <deps-get-path  conf="@{conf}" pathid="@{pathid}" />
     </sequential>
   </macrodef>
 
-  <macrodef name="deps-resolve">
+  <!-- Resolve a configuration and stores the data into the pathid -->
+  <macrodef name="deps-load-path">
     <attribute name="conf"    description="Ivy configuration to load"/>
     <attribute name="pathid"  description="Ant pathid retrieved jars load into"/>
     <sequential>
-      <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
-      <if> <!-- Only run the resolve if the cache path isn't known about -->
+      <if> <!-- Only run the resolve if the cache path isn't known about and -->
         <not><isreference refid="@{pathid}" /></not>
         <then>
-          <deps-resolve-private conf="@{conf}"
-                                pathid="@{pathid}"
-                                pattern="${umple.deps.dir}/[conf]/[artifact].[ext]"
-                                transitive="true" />
+          <if> <!-- Only resolve if the build is online -->
+            <istrue value="${online}" />
+            <then>
+              <deps-load-path-private conf="@{conf}"
+                                    pattern="${umple.deps.dir}/[conf]/[artifact].[ext]"
+                                    transitive="true" />
+            </then>
+            <else> 
+              <!-- We're offline, thus we need to check if the configuration was installed previously -->
+
+              <fail message="Must be online for first build." >
+                <condition> <istrue value="${first.build}" /> </condition>
+              </fail>
+
+              <fail message="Must be online when first running a build for a configuration, @{conf}." >
+                <condition>
+                  <not> 
+                    <resourceexists>
+                      <file file="${umple.deps.dir}/@{conf}"/>
+                    </resourceexists>
+                  </not>
+                </condition>
+              </fail>
+            </else>
+          </if>
+
+          <deps-get-path  conf="@{conf}" pathid="@{pathid}" />
         </then>
       </if>
     </sequential>
@@ -74,8 +96,33 @@
     </sequential>
   </macrodef>
 
+  <!-- Resolve all dependencies -->
+  <target name="deps-resolve-all">
+    <check-connectivity />
+
+    <fail message="Can not resolve dependencies without Internet connection.">
+      <condition> <isfalse value="${online}" /> </condition>
+    </fail>
+
+    <deps-load-path conf="build"          pathid="build.ivy.classpath" />
+
+    <deps-load-path conf="core"           pathid="core.ivy.classpath" />
+    <deps-load-path conf="test"           pathid="test.ivy.classpath" />
+
+    <deps-load-path conf="umplificator"   pathid="umplificator.ivy.classpath" />
+    <deps-load-path conf="validator"      pathid="validator.ivy.classpath" />
+    <deps-load-path conf="eclipseplugin"  pathid="eclipseplugin.ivy.classpath" />
+    <deps-load-path conf="xtext"          pathid="xtext.ivy.classpath" />
+
+    <antcall target="deps-umple" />
+    <antcall target="deps-manual" />
+    <antcall target="deps-vendor" />
+  </target>
+
   <!-- Vendor Dependencies for umple.jar -->
-  <target name="deps:vendor" description="Install vendor dependencies">
+  <target name="deps-vendor" description="Install vendor dependencies" >
+    <check-connectivity />
+
     <echo>Installing Vendors...</echo>
     <delete dir="${vendors.path}" failonerror="false" />
     <mkdir dir="${vendors.path}"/>
@@ -87,11 +134,8 @@
   </target>
 
   <!-- Install Ivy: -->
-  <target name="bootstrap" description="Install Ivy and Build requirements">
-
+  <target name="bootstrap" description="Install Ivy and Build requirements" >
     <mkdir dir="${user.home.ant}"/>
-
-    <antcall target="deps:vendor" />
 
     <echo>Installing Ivy v${ivy.install.version}</echo>
     <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
@@ -103,20 +147,35 @@
 
     <ivy:settings file="${basedir}/build/ivysettings.xml"/>
 
-    <deps-resolve-private conf="build"
-                          pathid="build.ivy.classpath"
-                          pattern="${user.home.ant}/[artifact].[ext]" transitive="false"/>
+    <deps-load-path-private conf="build"
+                            pattern="${user.home.ant}/[artifact].[ext]" 
+                            transitive="false"/>
   </target>
 
-  <target name="deps:umple" description="--> retrieve latest umple version.">
+  <target name="deps-umple" description="--> retrieve latest umple version." >
     <!-- this isn't actually Ivy, but its the smartest place to do this; eventually we'll use Ivy :) -->
-    <echo>Fetching umple-${umple.version}</echo>
+    <check-connectivity />
 
-    <echo level="warning">WARNING: This is merely wget-ing http://try.umple.org/scripts/umple.jar</echo>
-    <mkdir dir="${umple.deps.dir}" />
-    <get src="http://try.umple.org/scripts/umple.jar"
-         dest="${umple.last.jar.file}"
-         usetimestamp="true" />
+    <if>
+      <isfalse value="${online}"/>
+      <then>
+        <echo message="online = ${online}, first.build = ${first.build}" />
+        <fail message="Can not retrieve latest version of umple without an internet connection.">
+          <condition>
+            <istrue value="${first.build}" />
+          </condition>
+        </fail>
+      </then>
+      <else>
+        <echo>Fetching umple-${umple.version}</echo>
+
+        <echo level="warning">WARNING: This is merely wget-ing http://try.umple.org/scripts/umple.jar</echo>
+        <mkdir dir="${umple.deps.dir}" />
+        <get src="http://try.umple.org/scripts/umple.jar"
+             dest="${umple.last.jar.file}"
+             usetimestamp="true" />
+      </else>
+    </if>
 
     <path id="umple.last.classpath">
       <pathelement location="${umple.last.jar.file}"/>
@@ -125,17 +184,31 @@
     <taskdef name="umplec" classname="cruise.umple.util.UmplecAntTask" classpathref="umple.last.classpath" />
   </target>
 
-  <target name="deps:manual" description="--> retrieve manual dependencies">
-    <echo>Fetching manual dependencies</echo>
-    <mkdir dir="${umple.deps.manual.dir}" />
+  <target name="deps-manual" description="--> retrieve manual dependencies">
+    <check-connectivity />
 
-    <echo>Fetching org.eclipse.cdt.core_5.5.0.jar</echo>
+    <if>
+      <isfalse value="${online}"/>
+      <then>
+        <fail message="Can not retrieve manual dependencies without an internet connection.">
+          <condition>
+            <istrue value="${first.build}" />
+          </condition>
+        </fail>
+      </then>
+      <else>
+        <echo>Fetching manual dependencies</echo>
+        <mkdir dir="${umple.deps.manual.dir}" />
 
-    <echo level="warning">WARNING: This is merely wget-ing https://umple.googlecode.com/svn/trunk/lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0*.jar</echo>
-    <mkdir dir="${umple.deps.manual.dir}" />
-    <get src="https://umple.googlecode.com/svn/trunk/lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"
-         dest="${umple.deps.manual.dir}/"
-         usetimestamp="true" />
+        <echo>Fetching org.eclipse.cdt.core_5.5.0.jar</echo>
+
+        <echo level="warning">WARNING: This is merely wget-ing https://umple.googlecode.com/svn/trunk/lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0*.jar</echo>
+        <mkdir dir="${umple.deps.manual.dir}" />
+        <get src="https://umple.googlecode.com/svn/trunk/lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"
+             dest="${umple.deps.manual.dir}/"
+             usetimestamp="true" />
+      </else>
+    </if>
 
     <path id="umple.manual.classpath">
       <fileset file="${umple.deps.manual.dir}/*.jar" />

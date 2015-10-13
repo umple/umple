@@ -39,6 +39,8 @@
         - quiet
           disable all usual messages, making the whole resolve process quiet unless errors occur 
 
+    connectionTimeout => Seconds to wait for a connection to complete.
+
     showJunitSummary => used by JUnit, if true, then the command line
       will output the summary of a JUnit test run which can be useful
       for local debugging.  If false, not summary is presented.
@@ -59,8 +61,12 @@
   <property name="haltonfailure" value="false"/>
   <property name="shouldPackageUmpleOnline" value="false"/>
   <property name="shouldDeploy" value="false"/>
+  
   <property name="ivyRetrieveLogLevel" value="quiet" />
   <property name="ivyResolveLogLevel" value="download-only" />
+
+  <property name="connectionTimeout" value="30" />
+
   <property name="showJunitSummary" value="false"/>
   <property name="showJunitOutput" value="false"/>
   <property name="junit" value="*Test"/>
