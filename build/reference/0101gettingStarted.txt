@@ -69,7 +69,7 @@ pages also allows you to instantly load the examples into UmpleOnline.</p>
 <p>To learn more about Umple, read the links on the left of this page, or 
 go to the <a href="http://www.umple.org">Umple Home page</a>. In 
 particular, you should browse the <a 
-href="https://github.com/umple/umple/wiki/Tutorials">tutorials and videos 
+href="http://code.google.com/p/umple/wiki/Tutorials">tutorials and videos 
 about Umple</a></p>
 
 <hr />
@@ -78,4 +78,4 @@ about Umple</a></p>
 
 <hr />
 
-<i>If you are an ordinary user and notice an error in this manual, <a href="https://github.com/umple/umple/issues/">please report it using our issue tracking system here</a> Flag it as a defect in the user documentation. If you still have trouble after reading this manual, please contact our <a href="mailto:umple-help@googlegroups.com"> help mailing list and post a request for help</a>. If you are a contributer, <a href="https://github.com/umple/umple/wiki/Deploying">instructions on how to edit this manual are here</a>. 
+<i>If you are an ordinary user and notice an error in this manual, <a href="https://code.google.com/p/umple/issues/list">please report it using our issue tracking system here</a> Flag it as a defect in the user documentation. If you still have trouble after reading this manual, please contact our <a href="mailto:umple-help@googlegroups.com"> help mailing list and post a request for help</a>. If you are a contributer, <a href="https://code.google.com/p/umple/wiki/Deploying">instructions on how to edit this manual are here</a>. 
