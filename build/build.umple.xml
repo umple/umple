@@ -329,6 +329,9 @@
       </manifest>
 
     </jar>
+    
+    <copy file="${dist.dir}/${dist.umple.jar}" 
+          tofile="${dist.dir}/${dist.umple.jar.next}" />
   </target>
 
   <target name="packageJars">
