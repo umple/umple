@@ -105,17 +105,26 @@
               value="${php.libs.dir}/simpletest" />
 
     <mkdir dir="${php.libs.dir}"/>
+    
+    <if>
+      <not>
+        <resourceexists>
+          <file file="${php.simpletest.archive}" />
+        </resourceexists>
+      </not>
+      <then>
+        <get src="${php.simpletest.url}"
+             dest="${php.simpletest.archive}"
+             usetimestamp="true" />
 
-    <get src="${php.simpletest.url}"
-         dest="${php.simpletest.archive}"
-         usetimestamp="true" />
+        <gunzip src="${php.simpletest.archive}"
+                dest="${php.simpletest.dir}.tar" />
 
-    <gunzip src="${php.simpletest.archive}"
-            dest="${php.simpletest.dir}.tar" />
-
-    <untar  src="${php.simpletest.dir}.tar"
-            dest="${php.libs.dir}/" />
-    <delete file="${php.simpletest.dir}.tar" />
+        <untar  src="${php.simpletest.dir}.tar"
+                dest="${php.libs.dir}/" />
+        <delete file="${php.simpletest.dir}.tar" />
+      </then>
+    </if>
 
   </target>
 
