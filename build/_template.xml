@@ -13,6 +13,7 @@
   <property name="dist.dir"                     value="${basedir}/dist" />
 
   <property name="dist.umple.jar"               value="umple-${umple.version}.jar" />
+  <property name="dist.umple.jar.next"          value="umple.jar" />
   <property name="dist.umple.umplificator.jar"  value="umplificator-${umple.version}.jar" />
   <property name="dist.umple.validator.jar"     value="validator-${umple.version}.jar" />
   <property name="dist.umple.vml.jar"           value="vml-${umple.version}.jar" />
