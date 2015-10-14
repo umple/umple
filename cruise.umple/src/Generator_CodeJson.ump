@@ -177,6 +177,8 @@ class JsonGenerator
       String extendsJson = "";
       boolean isInterface = true;
       String implementedInterfaces = "";
+      boolean isAbstract = false;
+
       if (!isFirst)
       {
         jsonForClasses += ", ";
@@ -185,7 +187,7 @@ class JsonGenerator
       jsonForClasses += StringFormatter.format(
         "{{0}position{0}: {{0}x{0}: {1}, {0}y{0}: {2}, {0}width{0}: {3}, " +
         "{0}height{0}: {4}}, {0}attributes{0}: [{7}],{0}methods{0}: [{8}], " +
-        "{0}id{0}: {0}{5}{0}, {0}name{0}: {0}{6}{0}, {0}displayColor{0}: {0}{10}{0} {9}, " + 
+        "{0}id{0}: {0}{5}{0}, {0}name{0}: {0}{6}{0}, {0}isAbstract{0}: {0}{13}{0}, {0}displayColor{0}: {0}{10}{0} {9}, " + 
         "{0}isInterface{0}: {0}{11}{0}{12}}", "\"", 
         x, 
         y, 
@@ -198,7 +200,8 @@ class JsonGenerator
         extendsJson, 
         displayColor,
         isInterface,
-        implementedInterfaces);
+        implementedInterfaces,
+        isAbstract);
 
       isFirst = false;
     }
