@@ -8,13 +8,14 @@ UmpleMethodFactory = new Object();
 
 UmpleMethodFactory.create = function(data)
 {
-  var umpleMethod = new UmpleMethod(data.visibility, data.type, data.name, data.parameters);
+  var umpleMethod = new UmpleMethod(data.visibility, data.isAbstract, data.type, data.name, data.parameters);
   return umpleMethod;
 }
 
-function UmpleMethod(aVisibility, aType, aName, theParameters)
+function UmpleMethod(aVisibility, isAbstract, aType, aName, theParameters)
 {
   this.visibility = aVisibility;
+  this.isAbstract = isAbstract;
   this.type = aType;
   this.name = aName;
   this.parameters = (typeof(theParameters) == "string" ? theParameters.split(",") : theParameters);
