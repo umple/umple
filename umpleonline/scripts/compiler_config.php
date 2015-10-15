@@ -246,11 +246,7 @@ function extractFilename()
     {
       file_put_contents($destfile, file_get_contents("http://" . $_REQUEST["filename"]));
       if(substr($http_response_header[0],-2)!="OK") {
-         // try https
-        file_put_contents($destfile, file_get_contents("https://" . $_REQUEST["filename"]));
-        if(substr($http_response_header[0],-2)!="OK") {         
-          file_put_contents($destfile, "// URL of the Umple file to be loaded in the URL after ?filename= must omit the initial http:// and end with .ump.\n// The file must be accessible from our server.\n// Could not load http://" . $_REQUEST["filename"]);
-        }
+        file_put_contents($destfile, "// URL of the Umple file to be loaded in the URL after ?filename= must omit the initial http:// and end with .ump.\n// The file must be accessible from our server.\n// Could not load http://" . $_REQUEST["filename"]);
       }
     }
   }
