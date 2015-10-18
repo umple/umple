@@ -133,4 +133,10 @@ public class JsonTemplateTest extends TemplateTest
     assertUmpleTemplateFor("json/FilterTest.ump", "json/FilterTest.json.txt");
   }
 
+  @Test
+  public void AbstractTest()
+  {
+    assertUmpleTemplateFor("json/AbstractClass.ump", "json/AbstractClass.json.txt");
+  }
+
 }
