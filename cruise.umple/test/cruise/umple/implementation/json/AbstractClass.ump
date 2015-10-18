@@ -1,0 +1,17 @@
+class AAA {
+  abstract void test();
+  var;
+}
+
+class BBB {
+    isA AAA;
+    void test(){}
+}
+
+class CCC {
+  abstract;
+}
+
+interface FFF {
+   void testTwo();
+}
