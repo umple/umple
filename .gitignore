@@ -16,7 +16,7 @@ umpleonline/ump/tmp*
 *.iml
 .recommenders
 
-*.swp
+*swp
 src-gen-umple/
 
 # eclipse

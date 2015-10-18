@@ -7,15 +7,12 @@
   <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
   <taskdef resource="net/sf/antcontrib/antlib.xml"/>
 
-  <property name="myenv" value="cc" />
+  <import file="_template.xml" />
 
   <property name="project.path" value="umpleonline/testsuite" />
-  <property name="test.output.path" value="dist/qa/testbed_umpleonline" />
+  <property name="test.output.path" value="${dist.dir}/qa/testbed_umpleonline" />
   <property name="test.output.path.full" location="${test.output.path}" />
   <property name="output.name" value="index.html" />
-
-  <import file="_${myenv}.xml" />
-  <import file="_template.xml" />
 
   <!-- Options -->
 

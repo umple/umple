@@ -8,8 +8,8 @@
 
   <property name="project.path" value="sandbox"/>
   <property name="bin.path" value="${project.path}/bin"/>
-  <property name="dist.path" value="dist/sandbox"/>
-  <property name="test.output.path" value="dist/qa/sandbox"/>
+  <property name="dist.path" value="${dist.dir}/sandbox"/>
+  <property name="test.output.path" value="${dist.dir}/qa/sandbox"/>
   <property name="haltonfailure" value="true"/>
 
   <path id="project.classpath">
@@ -21,7 +21,7 @@
   ``````````````````````````` -->
 
   <target name="umpleSandbox">
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="sandbox/src/sandbox.ump"/>
     </java>
   </target>
@@ -33,8 +33,8 @@
   <target name="compile">
     <echo message="${ant.project.name}: ${ant.file}"/>
 
-    <deps-resolve conf="core" pathid="core.ivy.classpath" />
-    <deps-resolve conf="test" pathid="test.ivy.classpath" />
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+    <deps-load-path conf="test" pathid="test.ivy.classpath" />
 
     <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.8" target="1.8">
       <src path="${project.path}/src"/>

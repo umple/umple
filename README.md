@@ -51,11 +51,12 @@ The umple project is split into many smaller subproject, the folder hierarchy is
   * libs/ *Managed build dependencies that umple*.jar require to run* 
   * cruise.umple/reference *User manual* 
   * qa/ *Test reports* 
-  * umple.jar *Command-line Compiler* 
-  * umpledocs.jar *User manual generator*
-  * umplestats.jar *Statistics generation*
-  * umplesync.jar *UmpleOnline tool to to synchronize graphical form*
-  * vml.jar * Extension for variability modeling*
+  * umple.jar and umple.VERSION.jar  *Current command-line Compiler* 
+  * umpledocs.VERSION.jar *User manual generator*
+  * umplestats.VERSION.jar *Statistics generation*
+  * umplesync.VERSION.jar *UmpleOnline tool to to synchronize graphical form*
+  * umplerun.VERSION.jar *tool to drive input to an umple program*
+  * vml.VERSION.jar * Extension for variability modeling*
 
 * examples/ *Developer curated examples*
 * externalexamples/ *External projects that are used for testing*

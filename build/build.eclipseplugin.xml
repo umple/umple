@@ -9,8 +9,8 @@
 
   <property name="project.path" value="cruise.umple.eclipse"/>
   <property name="bin.path" value="${project.path}/bin"/>
-  <property name="dist.path" value="dist/cruise.umple.eclipse"/>
-  <property name="test.output.path" value="dist/qa/cruise.umple.eclipse"/>
+  <property name="dist.path" value="${dist.dir}/cruise.umple.eclipse"/>
+  <property name="test.output.path" value="${dist.dir}/qa/cruise.umple.eclipse"/>
 
   <condition property="jvmarg.01" value="-d32"><equals arg1="${is.osx}" arg2="true" /></condition>
   <condition property="jvmarg.02" value="-XstartOnFirstThread"><equals arg1="${is.osx}" arg2="true" /></condition>
@@ -31,41 +31,6 @@
     <path refid="xtext_core.classpath"/>
     <path refid="junit4.classpath"/>
   </path>
-  
-  <path id="eclipse.classpath">
-    <pathelement location="lib/eclipseplugins/org.eclipse.core.commands_3.5.0.I20090525-2000.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.core.contenttype_3.4.1.R35x_v20090826-0451.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.core.filebuffers_3.5.0.v20090526-2000.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.core.jobs_3.4.100.v20090429-1800.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.core.resources_3.5.2.R35x_v20091203-1235.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.core.runtime_3.5.0.v20090525.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20090429-1800/runtime_registry_compatibility.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.emf.ecore_2.5.0.v200906151043.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.equinox.app_1.2.0.v20090520-1800.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.equinox.common_3.5.1.R35x_v20090807-1100.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.equinox.preferences_3.2.300.v20090520-1800.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.equinox.registry_3.4.100.v20090520-1800.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.jdt.compiler.apt_1.0.201.R35x_v20090825-1530.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.jdt.compiler.tool_1.0.100.v_972_R35x.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.jdt.core_3.5.1.v_972_R35x.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.jface_3.5.2.M20100120-0800.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.jface.text_3.5.2.r352_v20091118-0800.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.osgi_3.5.2.R35x_v20100126.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.text_3.5.0.v20090513-2000.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.ui_3.5.2.M20100120-0800.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.ui.console_3.5.100.v20111007_r372.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.ui.editors_3.5.0.v20090527-2000.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.ui.ide_3.5.2.M20100113-0800.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.debug.ui_3.7.102.v20111129-1423_r372.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.debug.core_3.7.1.v20111129-2031.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.jdt.launching_3.6.1.v20111006_r372.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.ui.views_3.4.1.M20090826-0800.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench_3.5.2.M20100113-0800.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench.texteditor_3.5.1.r352_v20100105.jar" />
-
-    <pathelement location="lib/eclipseplugins/${path.eclipse.01}" />
-    <pathelement location="lib/eclipseplugins/${path.eclipse.02}" />
-  </path>  
 
   <!-- ```````````````````````````
     Compile the application

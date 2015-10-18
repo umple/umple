@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." default="build" name="UmplificatorPlugin" >
 
+  <import file="_template.xml" />
 
   <!-- ```````````````````````````
     Environment Variables
@@ -8,7 +9,7 @@
 
   <property name="project.path" value="cruise.umple.umplificator.core.ui"/>
   <property name="bin.path" value="${project.path}/bin"/>
-  <property name="dist.path" value="dist/cruise.umple.umplificator.core.ui"/>
+  <property name="dist.path" value="${dist.dir}/cruise.umple.umplificator.core.ui"/>
 
   <condition property="jvmarg.01" value="-d32"><equals arg1="${is.osx}" arg2="true" /></condition>
   <condition property="jvmarg.02" value="-XstartOnFirstThread"><equals arg1="${is.osx}" arg2="true" /></condition>
@@ -26,50 +27,6 @@
     <pathelement location="cruise.umple.umplificator.core.ui/bin"/>
     <path refid="umplificator.classpath"/>
   </path>
-  
-  <path id="umplificator.classpath">
-        <pathelement location="lib/eclipseplugins/org.eclipse.ui_3.7.0.I20110602-0100.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.swt_3.7.1.v3738a.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.swt.win32.win32.x86_64_3.7.1.v3738a.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.jface_3.7.0.I20110522-1430.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.core.commands_3.6.0.I20110111-0800.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench_3.7.0.I20110519-0100.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.core.runtime_3.7.0.v20110110.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.osgi_3.7.1.R37x_v20110808-1106.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.equinox.common_3.6.0.v20110523.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.core.jobs_3.5.100.v20110404.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.core.runtime.compatibility.registry_3.5.0.v20110505/runtime_registry_compatibility.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.equinox.registry_3.5.101.R37x_v20110810-1611.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.equinox.preferences_3.4.1.R37x_v20110725.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.core.contenttype_3.4.100.v20110423-0524.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.equinox.app_1.3.100.v20110321.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.emf.ecore_2.7.0.v20120127-1122.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.emf.common_2.7.0.v20120127-1122.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.emf.ecore.xmi_2.7.0.v20120127-1122.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.emf.edit_2.7.2.v20120130-0943.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.emf.ecore.change_2.7.1.v20120127-1122.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.jdt.launching_3.6.1.v20110803_r371.jar"/>
-        <pathelement location="lib/eclipseplugins/org.apache.log4j_1.2.15.v201012070815.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.core.resources_3.7.100.v20110510-0712.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.emf.edit.ui_2.7.0.v20120130-0943.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.jdt.core_3.7.1.v_B76_R37x.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.jdt.compiler.apt_1.0.400.v0110816-0800.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.jdt.compiler.tool_1.0.100.v_B76_R37x.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.jface.text_3.7.1.r371_v20110825-0800.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.text_3.5.101.r371_v20110810-0800.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.ui.ide_3.7.0.v20110809-1737.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.ui.views_3.6.0.I20110412-0800.jar"/>
-    	<pathelement location="lib/eclipseplugins/org.eclipse.emf.query_1.2.100.v200903190031.jar"/>
-   	<pathelement location="lib/eclipseplugins/org.eclipse.xtext.junit_2.0.1.v201108020636.jar"/>
-   	<pathelement location="lib/eclipseplugins/com.google.collect_1.0.0.v201105210816.jar"/>
-        <pathelement location="lib/eclipseplugins/org.eclipse.xtext.ui.junit_2.0.1.v201108020636.jar"/>
-        <pathelement location="lib/junit.jar"/>        
-	<pathelement location="lib/umple.jar"/>
-	<pathelement location="lib/ant.jar"/>
-	<pathelement location="lib/jopt-simple-4.3.jar"/>
-   	<!-- <pathelement location="lib/eclipseplugins/${path.eclipse.01}" />
-   	<pathelement location="lib/eclipseplugins/${path.eclipse.02}" /> -->
-  </path>  
 
   <!-- ```````````````````````````
     Compile the application
