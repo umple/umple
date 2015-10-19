@@ -152,9 +152,15 @@ class GvClassDiagramGenerator
         }
         parameters = parameters.replace("<","&lt;").replace(">","&gt;");
         String type = uMethod.getType().replace("<","&lt;").replace(">","&gt;");
+        boolean isAbstract = uMethod.getIsAbstract();
       
         if (manyClass) {
-          code.append(accessModifier+uMethod.getName()+"("+parameters+")\\ :\\ "+type+"\\l");
+          if (isAbstract) {
+            code.append(accessModifier+ "<I>" + uMethod.getName()+"</I> ("+parameters+")\\ :\\ "+type+"\\l");
+          }
+          else {
+            code.append(accessModifier+uMethod.getName()+"("+parameters+")\\ :\\ "+type+"\\l");
+          }
         }
         else {
           StringBuilder methTooltip = new StringBuilder();
@@ -165,9 +171,16 @@ class GvClassDiagramGenerator
           hrefString.append("javascript:Action.selectMethod('");
           hrefString.append(uMethod.getName()+"','"+type+"','"+uMethod.getModifier().trim()+"')");
          
-          code.append("<tr><td align=\"left\" href=\""+hrefString+"\" title=\""+methTooltip+"\">"
+          if (isAbstract) {
+            code.append("<tr><td align=\"left\" href=\""+hrefString+"\" title=\""+methTooltip+"\">"
+                +"  "+accessModifier+ "<I>" + uMethod.getName() + "</I>" 
+                +" ("+parameters+") : "+type+"  </td></tr>");
+          }
+          else {
+            code.append("<tr><td align=\"left\" href=\""+hrefString+"\" title=\""+methTooltip+"\">"
               +"  "+accessModifier+uMethod.getName()
-              +"("+parameters+") : "+type+"  </td></tr>");
+              +"("+parameters+") : "+type+"  </td></tr>");  
+          }
           isFirstMethod = false;
         }
       }

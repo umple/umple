@@ -14,6 +14,7 @@ UmpleClassFactory.create = function(data)
   umpleClass.id = data.id;
   umpleClass.name = data.name;
   umpleClass.isInterface = data.isInterface;
+  umpleClass.isAbstract = data.isAbstract;
   umpleClass.displayColor = data.displayColor;
   if(umpleClass.displayColor == "") umpleClass.displayColor="transparent";  
   umpleClass.position.x = data.position.x;
@@ -93,6 +94,7 @@ function UmpleClass()
   this.id;
   this.name;
   this.isInterface;
+  this.isAbstract;
   this.displayColor = "transparent";
   this.position = new UmplePosition(0,0,109,41);
   this.attributes = [];
@@ -265,14 +267,27 @@ function UmpleClass()
           visibility = "+ ";   //set default visibility to public
 
         var methodtype = (method.type == "" ?  "void" : method.type)
-   
+        
         if(Page.isPhotoReady())
         {
-          methodsInnerHtml += format('<div class="umpleMethod">{3}{1}({2}) : {0}</div>',methodtype,method.name,method.parameters,visibility);
+
+          if ( method.isAbstract == "true")
+          {
+            methodsInnerHtml += format('<div class="umpleMethod">{3}<span style="font-style:italic">{1}({2}) </span> : {0} </div>',methodtype,method.name,method.parameters,visibility);
+          }
+          else 
+          {
+            methodsInnerHtml += format('<div class="umpleMethod">{3}{1}({2}) : {0} </div>',methodtype,method.name,method.parameters,visibility);
+          }
         }
         else
-          methodsInnerHtml += format('<div class="umpleMethod"><span id="{4}_method_{5}" name="methodEdit" class="editable editableDoubleClick">{3}{1}({2}) : {0}</span> <img src="scripts/delete2.jpg" onclick="Action.methodDelete({6}{4}{6},{6}{5}{6})" /></div>',methodtype,method.name,method.parameters,visibility,this.id,i,"'");
-
+          if ( method.isAbstract == "true")
+          {
+            methodsInnerHtml += format('<div class="umpleMethod"><span id="{4}_method_{5}" name="methodEdit" class="editable editableDoubleClick">{3}<span style="font-style:italic">{1}({2})</span> : {0} </span> <img src="scripts/delete2.jpg" onclick="Action.methodDelete({6}{4}{6},{6}{5}{6})" /></div>',methodtype,method.name,method.parameters,visibility,this.id,i,"'");
+          }
+          else {
+            methodsInnerHtml += format('<div class="umpleMethod"><span id="{4}_method_{5}" name="methodEdit" class="editable editableDoubleClick">{3}{1}({2}) : {0} </span> <img src="scripts/delete2.jpg" onclick="Action.methodDelete({6}{4}{6},{6}{5}{6})" /></div>',methodtype,method.name,method.parameters,visibility,this.id,i,"'");
+          }
       }
     }
     
@@ -330,9 +345,13 @@ function UmpleClass()
 
     if (Page.isPhotoReady())
     {
-      if (this.isInterface=="true")
+      if (this.isInterface == "true")
       {
         classInnerHtml += format('<span>&#171interface&#187<span><br><span id="{0}_name" name="className">{1}</span>',this.id,this.name);
+      }
+      else if (this.isAbstract == "true")
+      {
+        classInnerHtml += format('<span>&#171abstract&#187<span><br><span id="{0}_name" name="className">{1}</span>',this.id,this.name);
       }
       else
       {
@@ -341,13 +360,16 @@ function UmpleClass()
     }
     else
     {
-      if (this.isInterface=="true")
+      if (this.isInterface == "true")
       {
         classInnerHtml += format('<span>&#171interface&#187<span><br><span id="{0}_name" name="className" class="editable editableDoubleClick">{1}</span>',this.id, this.name);
       }
+      else if (this.isAbstract == "true") 
+      {
+        classInnerHtml += format('<span>&#171abstract&#187<span><br><span id="{0}_name" name="className" class="editable editableDoubleClick">{1}</span>',this.id, this.name);
+      }
       else
       {
-        
         classInnerHtml += format('<span id="{0}_name" name="className" class="editable editableDoubleClick" >{1}</span>',this.id, this.name);
 
       }
@@ -367,24 +389,24 @@ function UmpleClass()
 
       }
       
-      if(Page.showMethods == true)
-      {
+    if(Page.showMethods == true)
+    {
+      classInnerHtml +=
+      format(
+      '  <tr class="methodArea">' +
+      '    <td class="methods">{0}' +
+      '    </td>' +
+      '  </tr>',methodsInnerHtml);
+    }
+
         classInnerHtml +=
         format(
-        '  <tr class="methodArea">' +
-        '    <td class="methods">{0}' +
+        '  <tr class="width">' +
+        '    <td> <img id="{0}_width" src="scripts/_.gif" style="width:{1}px;height:0px;display:block;"  />' +
         '    </td>' +
-        '  </tr>',methodsInnerHtml);
-      }
-
-          classInnerHtml +=
-          format(
-          '  <tr class="width">' +
-          '    <td> <img id="{0}_width" src="scripts/_.gif" style="width:{1}px;height:0px;display:block;"  />' +
-          '    </td>' +
-          '  </tr>',this.id,this.position.width); 
+        '  </tr>',this.id,this.position.width); 
  
-      classInnerHtml += '</table>';
+    classInnerHtml += '</table>';
  
     var existing = classDiv.html();
     classDiv.html(classInnerHtml + existing);
