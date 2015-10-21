@@ -13,15 +13,7 @@
   
   
   <property name="dist.dir"                     value="${basedir}/dist" />
-  <property name="recent.build.properties.file" value="${dist.dir}/recent.build.properties" />
-
-  <!-- Try to load the recent build properties file, this tells us the most recent build files in a multi-build environment -->
-  <if>
-    <available file="${recent.build.properties.file}" />
-    <then>
-      <property file="${recent.build.properties.file}" />
-    </then>
-  </if>
+  <property file="${dist.dir}/recent.build.properties" />
   <property name="dist.umple.latest.version"    value="latest" />
   
   <!-- Macro that will build up jar properties: creates two, 
