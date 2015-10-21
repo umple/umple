@@ -16,7 +16,7 @@
   <!-- Umple Last -->
   <property name="umple.deps.dir" value="${dist.dir}/libs" />
   <property name="umple.deps.manual.dir" value="${umple.deps.dir}/manual" />
-  <property name="umple.last.jar.file" value="${umple.deps.dir}/../umple-latest.jar" />
+  <property name="umple.stable.jar" value="${umple.deps.dir}/../umple-stable.jar" />
 
   <!-- Vendor Configuration -->
   <property name="vendors.path" value="${dist.dir}/vendors" />
@@ -178,7 +178,7 @@
     </if>
 
     <path id="umple.last.classpath">
-      <pathelement location="${umple.last.jar.file}"/>
+      <pathelement location="${umple.stable.jar}"/>
     </path>
 
     <taskdef name="umplec" classname="cruise.umple.util.UmplecAntTask" classpathref="umple.last.classpath" />

@@ -9,18 +9,50 @@
 
   <property name="myenv" value="cc" />
   <import file="_${myenv}.xml" />
-
+  
+  
+  
   <property name="dist.dir"                     value="${basedir}/dist" />
+  <property name="recent.build.properties.file" value="${dist.dir}/recent.build.properties" />
 
-  <property name="dist.umple.jar"               value="umple-${umple.version}.jar" />
-  <property name="dist.umple.jar.next"          value="umple.jar" />
-  <property name="dist.umple.umplificator.jar"  value="umplificator-${umple.version}.jar" />
-  <property name="dist.umple.validator.jar"     value="validator-${umple.version}.jar" />
-  <property name="dist.umple.vml.jar"           value="vml-${umple.version}.jar" />
-  <property name="dist.umple.stats.jar"         value="umplestats-${umple.version}.jar" />
-  <property name="dist.umple.docs.jar"          value="umpledocs-${umple.version}.jar" />
-  <property name="dist.umple.sync.jar"          value="umplesync-${umple.version}.jar" />
-  <property name="dist.umple.run.jar"           value="umplerun-${umple.version}.jar" />
+  <!-- Try to load the recent build properties file, this tells us the most recent build files in a multi-build environment -->
+  <if>
+    <available file="${recent.build.properties.file}" />
+    <then>
+      <property file="${recent.build.properties.file}" />
+    </then>
+  </if>
+  <property name="dist.umple.latest.version"    value="latest" />
+  
+  <!-- Macro that will build up jar properties: creates two, 
+  1. dist.umple.@{name}.jar      -> most recent built jar
+  2. dist.umple.@{name}.jar.prev -> previously built jar -->
+  <macrodef name="umple-jar">
+    <attribute name="name" description="Name of the jar" />
+    <sequential>
+      <if>
+        <equals arg1="umple" arg2="@{name}" />
+        <then>
+          <property name="dist.@{name}.jar"       value="@{name}-${umple.version}.jar" />
+          <property name="dist.@{name}.jar.prev"  value="umple-${dist.umple.latest.version}.jar" />
+        </then>
+        <else>
+          <property name="dist.umple.@{name}.jar"       value="@{name}-${umple.version}.jar" />
+          <property name="dist.umple.@{name}.jar.prev"  value="@{name}-${dist.umple.latest.version}.jar" />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+
+  <umple-jar name="umple" />
+  <umple-jar name="umplificator" />
+  <umple-jar name="validator" />
+  <umple-jar name="vml" />
+  <umple-jar name="stats" />
+  <umple-jar name="docs" />
+  <umple-jar name="sync" />
+  <umple-jar name="run" />
 
   <macrodef name="isreachable" >
     <attribute name="property" description="Property to hold result value" />
