@@ -6,19 +6,15 @@
 
 ------------------------------------------------------------------------------------------------------------------
 
-open util/ordering[UmpleObject]
-
--- Defines a signature for class UmpleObject
-abstract sig UmpleObject { }
 
 -- Defines a signature for class A
-sig A extends UmpleObject {
+sig A {
   bs : set B,
   a : Int
 }
 
 -- Defines a signature for class B
-sig B extends UmpleObject {
+sig B {
   a : one A
 }
 

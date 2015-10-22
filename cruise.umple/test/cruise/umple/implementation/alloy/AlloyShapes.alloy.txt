@@ -6,23 +6,14 @@
 
 ------------------------------------------------------------------------------------------------------------------
 
-open util/ordering[UmpleObject]
-
--- Defines a signature for class UmpleObject
-abstract sig UmpleObject { }
-
--- Defines a signature for class TempObject
-abstract sig TempObject {
-  tempName : String
-}
 
 -- Defines a signature for class Shape2D
-sig Shape2D extends UmpleObject {
+sig Shape2D {
   center : one Point
 }
 
 -- Defines a signature for class Point
-sig Point extends UmpleObject {
+sig Point {
   x : Int,
   y : Int
 }
@@ -60,11 +51,7 @@ sig RegularPolygon extends SimplePolygon {
   numPoints : Int,
   radius : Int
 }
--- Defines a rule that enhances visualizing model with String type
-fact VisualizationFact {
-  no tempobject_1 : TempObject |
-    tempobject_1.tempName = "null"
-}
+
 
 -- Defines constraints on association between Shape2D and Point
 fact AssociationFact {

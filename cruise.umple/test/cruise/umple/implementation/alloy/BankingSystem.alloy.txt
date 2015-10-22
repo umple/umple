@@ -6,23 +6,14 @@ module BankingSystem/core/humanResources
 
 ------------------------------------------------------------------------------------------------------------------
 
-open util/ordering[UmpleObject]
-
--- Defines a signature for class UmpleObject
-abstract sig UmpleObject { }
-
--- Defines a signature for class TempObject
-abstract sig TempObject {
-  tempName : String
-}
 
 -- Defines a signature for class PersonRole
-sig PersonRole extends UmpleObject {
+sig PersonRole {
   person : one Person
 }
 
 -- Defines a signature for class Person
-sig Person extends UmpleObject {
+sig Person {
   personRoles : set PersonRole,
   name : String,
   address : String,
@@ -49,7 +40,7 @@ sig Manager extends Employee {
 }
 
 -- Defines a signature for class Account
-sig Account extends UmpleObject {
+sig Account {
   accountType : one AccountType,
   clients : some Client,
   branch : one Branch,
@@ -59,14 +50,14 @@ sig Account extends UmpleObject {
 }
 
 -- Defines a signature for class AccountType
-sig AccountType extends UmpleObject {
+sig AccountType {
   privileges : set Privilege,
   monthlyFee : Int,
   interestRate : Int
 }
 
 -- Defines a signature for class Privilege
-sig Privilege extends UmpleObject {
+sig Privilege {
   accountTypes : set AccountType,
   description : String
 }
@@ -83,7 +74,7 @@ sig MortgageAccount extends Account {
 }
 
 -- Defines a signature for class Card
-sig Card extends UmpleObject {
+sig Card {
   creditCardAccount : one CreditCardAccount,
   holderName : String
 }
@@ -96,16 +87,12 @@ sig Branch extends Division {
 }
 
 -- Defines a signature for class Division
-sig Division extends UmpleObject {
+sig Division {
   employees : set Employee,
   subDivision : set Division,
   name : String
 }
--- Defines a rule that enhances visualizing model with String type
-fact VisualizationFact {
-  no tempobject_1 : TempObject |
-    tempobject_1.tempName = "null"
-}
+
 
 -- Defines constraints on association between PersonRole and Person
 fact AssociationFact {

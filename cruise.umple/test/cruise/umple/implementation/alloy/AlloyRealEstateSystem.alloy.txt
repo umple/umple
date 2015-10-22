@@ -6,18 +6,9 @@ module realestate
 
 ------------------------------------------------------------------------------------------------------------------
 
-open util/ordering[UmpleObject]
-
--- Defines a signature for class UmpleObject
-abstract sig UmpleObject { }
-
--- Defines a signature for class TempObject
-abstract sig TempObject {
-  tempName : String
-}
 
 -- Defines a signature for class Address
-sig Address extends UmpleObject {
+sig Address {
   numberOnStreet : Int,
   apartmentOrUnit : Int,
   street : String,
@@ -26,13 +17,13 @@ sig Address extends UmpleObject {
 }
 
 -- Defines a signature for class GPSCoord
-sig GPSCoord extends UmpleObject {
+sig GPSCoord {
   lattitude : Int,
   longitude : Int
 }
 
 -- Defines a signature for class Property
-sig Property extends UmpleObject {
+sig Property {
   neighbourhood : one Neighbourhood,
   propertySales : set PropertySale,
   propertyForSales : set PropertyForSale,
@@ -45,7 +36,7 @@ sig Property extends UmpleObject {
 }
 
 -- Defines a signature for class Neighbourhood
-sig Neighbourhood extends UmpleObject {
+sig Neighbourhood {
   properties : set Property,
   agents : set Agent,
   description : String,
@@ -53,7 +44,7 @@ sig Neighbourhood extends UmpleObject {
 }
 
 -- Defines a signature for class PropertySale
-sig PropertySale extends UmpleObject {
+sig PropertySale {
   property : one Property,
   propertyForSale : lone PropertyForSale,
   salePrice : Int,
@@ -62,7 +53,7 @@ sig PropertySale extends UmpleObject {
 }
 
 -- Defines a signature for class OpenHouse
-sig OpenHouse extends UmpleObject {
+sig OpenHouse {
   propertyForSale : one PropertyForSale,
   agentInCharge : lone Agent,
   date : String,
@@ -71,7 +62,7 @@ sig OpenHouse extends UmpleObject {
 }
 
 -- Defines a signature for class Agent
-sig Agent extends UmpleObject {
+sig Agent {
   specializingNeighbourhoods : set Neighbourhood,
   openHouses : set OpenHouse,
   propertyForSales : set PropertyForSale,
@@ -84,7 +75,7 @@ sig Agent extends UmpleObject {
 }
 
 -- Defines a signature for class PropertyForSale
-sig PropertyForSale extends UmpleObject {
+sig PropertyForSale {
   listedProperty : one Property,
   listingAgent : lone Agent,
   propertySale : lone PropertySale,
@@ -93,11 +84,7 @@ sig PropertyForSale extends UmpleObject {
   askingPrice : Int,
   dateListedForSale : String
 }
--- Defines a rule that enhances visualizing model with String type
-fact VisualizationFact {
-  no tempobject_1 : TempObject |
-    tempobject_1.tempName = "null"
-}
+
 
 -- Defines constraints on association between Neighbourhood and Property
 fact AssociationFact {

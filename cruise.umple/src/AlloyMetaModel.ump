@@ -17,6 +17,7 @@ class AlloyObject {
 }
 
 class Function {
+
   depend cruise.umple.compiler.*;
 		
   beginEndRoleName;

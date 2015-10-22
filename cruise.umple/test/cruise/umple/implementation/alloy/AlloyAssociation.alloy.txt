@@ -6,24 +6,20 @@
 
 ------------------------------------------------------------------------------------------------------------------
 
-open util/ordering[UmpleObject]
-
--- Defines a signature for class UmpleObject
-abstract sig UmpleObject { }
 
 -- Defines a signature for class Man
-sig Man extends UmpleObject {
+sig Man {
   wives : some Woman,
   children : some Child
 }
 
 -- Defines a signature for class Woman
-sig Woman extends UmpleObject {
+sig Woman {
   husband : one Man
 }
 
 -- Defines a signature for class Child
-sig Child extends UmpleObject {
+sig Child {
   father : lone Man
 }
 

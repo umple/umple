@@ -6,18 +6,14 @@
 
 ------------------------------------------------------------------------------------------------------------------
 
-open util/ordering[UmpleObject]
-
--- Defines a signature for class UmpleObject
-abstract sig UmpleObject { }
 
 -- Defines a signature for class Employee
-sig Employee extends UmpleObject {
+sig Employee {
   worksIn : some Address
 }
 
 -- Defines a signature for class Address
-sig Address extends UmpleObject {
+sig Address {
   employees : some Employee
 }
 

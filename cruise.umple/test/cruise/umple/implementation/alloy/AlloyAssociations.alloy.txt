@@ -6,13 +6,9 @@
 
 ------------------------------------------------------------------------------------------------------------------
 
-open util/ordering[UmpleObject]
-
--- Defines a signature for class UmpleObject
-abstract sig UmpleObject { }
 
 -- Defines a signature for class A
-sig A extends UmpleObject {
+sig A {
   b : one B,
   c : lone C,
   ds : some D,
@@ -20,7 +16,7 @@ sig A extends UmpleObject {
 }
 
 -- Defines a signature for class B
-sig B extends UmpleObject {
+sig B {
   c : one C,
   d : lone D,
   es : some E,
@@ -29,7 +25,7 @@ sig B extends UmpleObject {
 }
 
 -- Defines a signature for class C
-sig C extends UmpleObject {
+sig C {
   d : one D,
   e : lone E,
   fs : some F,
@@ -39,7 +35,7 @@ sig C extends UmpleObject {
 }
 
 -- Defines a signature for class D
-sig D extends UmpleObject {
+sig D {
   e : one E,
   f : lone F,
   gs : some G,
@@ -49,7 +45,7 @@ sig D extends UmpleObject {
 }
 
 -- Defines a signature for class E
-sig E extends UmpleObject {
+sig E {
   a : one A,
   b : lone B,
   cs : some C,
@@ -57,20 +53,20 @@ sig E extends UmpleObject {
 }
 
 -- Defines a signature for class F
-sig F extends UmpleObject {
+sig F {
   b : lone B,
   cs : some C,
   ds : set D
 }
 
 -- Defines a signature for class G
-sig G extends UmpleObject {
+sig G {
   cs : some C,
   ds : set D
 }
 
 -- Defines a signature for class H
-sig H extends UmpleObject { }
+sig H { }
 
 
 -- Defines constraints on association between B and A

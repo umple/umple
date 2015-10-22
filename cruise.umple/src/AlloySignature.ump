@@ -39,13 +39,13 @@ class AlloyModel {
     facts = new ArrayList<Fact>(); 
     statements = new ArrayList<Statement>();
     
-    OpenStatement st = new OpenStatement("ordering","UmpleObject");
-    statements.add(st);
+    //OpenStatement st = new OpenStatement("ordering","UmpleObject");
+    //statements.add(st);
     
-    Signature umpleObject = new Signature("UmpleObject","",false,true,false);
-    signatures.add(umpleObject);
+    //Signature umpleObject = new Signature("UmpleObject","",false,true,false);
+    //signatures.add(umpleObject);
     
-    if(hasStringAttribute(model))
+    /*if(hasStringAttribute(model))
     {
       Signature tempObject = new Signature("TempObject","",false,true,false);
       UmpleClass uClass = new UmpleClass("TempObject");
@@ -57,7 +57,7 @@ class AlloyModel {
       Function tempFun = new Function(abute);
       tempObject.addFunction(tempFun);
       signatures.add(tempObject);
-    }
+    }*/
     genAssociationFact(model);
     genSignatures(model);
     genOtherConstraints(model);
@@ -339,15 +339,15 @@ class Signature
   {
     if(uClass.hasExtendsClass()) 
       return uClass.getExtendsClass().getName();
-    return "UmpleObject";
+    return "";
   }
 	
   private void instantiateDataMembers(UmpleClass uClass){
 	//utility = new Utility();
-	if(getExtendsClass(uClass).equals(""))
+	/*if(getExtendsClass(uClass).equals(""))
 	{
-	  extendsName = "UmpleObject";
-	}
+	  extendsName = "";
+	}*/
 	
 	extendsName = getExtendsClass(uClass);
 	function = new ArrayList<Function>();
@@ -398,7 +398,8 @@ class Signature
       return "abstract sig "+name+addExtension()+" {";
     if(isSingleton)
       return "one sig "+name+addExtension()+" {";
-    return "sig "+name+" extends "+extendsName+" {";
+      
+    return "sig "+name+addExtension()+" {";
   }
 	
   public String printSignature()
