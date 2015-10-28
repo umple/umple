@@ -197,6 +197,8 @@ Page.initOptions = function()
   jQuery("#buttonShowHideTextEditor").prop('checked', Layout.isTextVisible);
   jQuery("#buttonShowHideCanvas").prop('checked', Layout.isDiagramVisible);
 	jQuery("#buttonTabsCheckbox").prop('checked', false);
+	jQuery("#tabRow").hide();
+	jQuery("#ttTabsCheckbox").hide();
   jQuery("#buttonToggleAttributes").prop('checked',true);
   jQuery("#buttonToggleActions").prop('checked',true);
   jQuery("#buttonToggleTraits").prop('checked',false);
@@ -820,6 +822,8 @@ Page.showGeneratedCode = function(code,language,tabnumber)
 	// Default "tabnumber" parameter to null, ie. only output to the main codeblock
 	if (typeof(tabnumber)==='undefined') tabnumber = "";
 
+	Action.toggleTabsCheckbox(language);
+
   Page.applyGeneratedCodeAreaStyles(language);
   
   var errorMarkup = Page.getErrorMarkup(code, language);
@@ -836,6 +840,16 @@ Page.showGeneratedCode = function(code,language,tabnumber)
 			formatOnce('<pre class="brush: {1};">{0}</pre>',generatedMarkup,language)
 		)
     SyntaxHighlighter.highlight("code");
+
+		if(tabnumber == ""){
+			// Remove all previous file codeblocks
+			jQuery('#innerGeneratedCodeRow').nextAll().remove();
+			// Clear tab row contents
+			jQuery('#tabRow').html('');
+			// Generate tabs
+			Action.generateTabsCode();
+			Action.toggleTabs();
+		}
   }
   else if(language == "structureDiagram")
   {

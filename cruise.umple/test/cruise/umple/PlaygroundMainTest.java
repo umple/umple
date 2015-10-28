@@ -90,7 +90,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-source","myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals(true,outErrIntercept.toString().startsWith("/*PLEASE DO NOT EDIT THIS CODE*/"));
+    Assert.assertEquals(true,outErrIntercept.toString().startsWith("//%% NEW FILE One BEGINS HERE %%\n\n/*PLEASE DO NOT EDIT THIS CODE*/"));
   }
 
   
