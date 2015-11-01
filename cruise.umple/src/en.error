@@ -3,188 +3,188 @@
 # 1,2: Error; 3: Warning, code likely incorrect. 4 Warning: Code may be incorrect. 5. Umple compiled, but embedded code had problems.: 
 # Use PageBeingDeveloped.html for new messages before manual pages are created
 
-0: 1, "http://umple.org/PageBeingDeveloped.html", Generic Umple Error '{0}' ; 
-1: 4, "http://umple.org/W001SingletonWithNon-LazyAttribute.html", Lazy keyword missing from singleton class attribute '{0}' ; 
-2: 4, "http://umple.org/W002SingletonWithRequiredObject.html", Association is referencing a singleton class with multiplicity 1 '{0}' ; 
-3: 4, "http://umple.org/W003RedundantLazyWithInitialization.html", The lazy keyword is redundant when the attribute is being initialized - in class '{0}' ;
-4: 1, "http://umple.org/E004InvalidMultiplicity.html", Invalid multiplicity '{0}' ; 
-5: 1, "http://umple.org/E005UndefinedClassinAssociation.html", Association end '{0}' is not a class or interface ; 
-6: 2, "http://umple.org/E006MissingDefault.html", No default value is specified for a defaulted attribute '{0}' ; 
-7: 3, "http://umple.org/W007KeyAlreadySpecified.html", Key already specified in class '{0}' ; 
-8: 1, "http://umple.org/E008AssociationClassMissingEnd.html", Association class '{0}' is missing an end ; 
-9: 2, "http://umple.org/E009ReflexiveLowerBound.html", Reflexive association with multiplicity '{0}' has lower bound > 0 ; 
-10: 3, "http://umple.org/W010SingletonMultiplicityOver1.html", Singleton class '{0}' cannot have multiplicity greater than 1 ; 
-11: 1, "http://umple.org/E011ClassisSubclassOfSelf.html", {0} '{1}' cannot cyclically extend itself ; 
-12: 1, "http://umple.org/E012ClassIndirectlySubclassofSelf.html", {0} '{1}' cannot cyclically extend {0} '{2}'  ; 
-13: 2, "http://umple.org/E013NonImmutableAssociation.html", Class at directed end of immutable association must be an immutable class ;
-14: 3, "http://umple.org/E014ImmutableSubclassofMutable.html", Existing associations, state machines, or superclass for class '{0}' prevents class-level immutability ;
-15: 3, "http://umple.org/W015ImmutableClassStateMachine.html", Immutable class '{0}' may not contain state machines ;
-16: 1, "http://umple.org/E016NonImmutableSuperclass.html", Immutability rules prevent class '{0}' from subclassing '{1}' ;
-17: 2, "http://umple.org/E017NonImmutableBidirectionality.html", Two-way associations may not be immutable ;
-18: 2, "http://umple.org/E018ReflexiveImmutable.html", Reflexive immutable associations may not be mandatory ;
-19: 2, "http://umple.org/E019DuplicateAssociation.html", Class '{0}' may not have multiple associations with the same name '{1}' ;
-20: 1, "http://umple.org/E020InterfaceAssociationNotOneWay.html", The class-interface association declared in '{0}' must have the '->' arrow ;
+0: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Generic Umple Error '{0}' ; 
+1: 4, "http://cruise.eecs.uottawa.ca/umple/W001SingletonWithNon-LazyAttribute.html", Lazy keyword missing from singleton class attribute '{0}' ; 
+2: 4, "http://cruise.eecs.uottawa.ca/umple/W002SingletonWithRequiredObject.html", Association is referencing a singleton class with multiplicity 1 '{0}' ; 
+3: 4, "http://cruise.eecs.uottawa.ca/umple/W003RedundantLazyWithInitialization.html", The lazy keyword is redundant when the attribute is being initialized - in class '{0}' ;
+4: 1, "http://cruise.eecs.uottawa.ca/umple/E004InvalidMultiplicity.html", Invalid multiplicity '{0}' ; 
+5: 1, "http://cruise.eecs.uottawa.ca/umple/E005UndefinedClassinAssociation.html", Association end '{0}' is not a class or interface ; 
+6: 2, "http://cruise.eecs.uottawa.ca/umple/E006MissingDefault.html", No default value is specified for a defaulted attribute '{0}' ; 
+7: 3, "http://cruise.eecs.uottawa.ca/umple/W007KeyAlreadySpecified.html", Key already specified in class '{0}' ; 
+8: 1, "http://cruise.eecs.uottawa.ca/umple/E008AssociationClassMissingEnd.html", Association class '{0}' is missing an end ; 
+9: 2, "http://cruise.eecs.uottawa.ca/umple/E009ReflexiveLowerBound.html", Reflexive association with multiplicity '{0}' has lower bound > 0 ; 
+10: 3, "http://cruise.eecs.uottawa.ca/umple/W010SingletonMultiplicityOver1.html", Singleton class '{0}' cannot have multiplicity greater than 1 ; 
+11: 1, "http://cruise.eecs.uottawa.ca/umple/E011ClassisSubclassOfSelf.html", {0} '{1}' cannot cyclically extend itself ; 
+12: 1, "http://cruise.eecs.uottawa.ca/umple/E012ClassIndirectlySubclassofSelf.html", {0} '{1}' cannot cyclically extend {0} '{2}'  ; 
+13: 2, "http://cruise.eecs.uottawa.ca/umple/E013NonImmutableAssociation.html", Class at directed end of immutable association must be an immutable class ;
+14: 3, "http://cruise.eecs.uottawa.ca/umple/E014ImmutableSubclassofMutable.html", Existing associations, state machines, or superclass for class '{0}' prevents class-level immutability ;
+15: 3, "http://cruise.eecs.uottawa.ca/umple/W015ImmutableClassStateMachine.html", Immutable class '{0}' may not contain state machines ;
+16: 1, "http://cruise.eecs.uottawa.ca/umple/E016NonImmutableSuperclass.html", Immutability rules prevent class '{0}' from subclassing '{1}' ;
+17: 2, "http://cruise.eecs.uottawa.ca/umple/E017NonImmutableBidirectionality.html", Two-way associations may not be immutable ;
+18: 2, "http://cruise.eecs.uottawa.ca/umple/E018ReflexiveImmutable.html", Reflexive immutable associations may not be mandatory ;
+19: 2, "http://cruise.eecs.uottawa.ca/umple/E019DuplicateAssociation.html", Class '{0}' may not have multiple associations with the same name '{1}' ;
+20: 1, "http://cruise.eecs.uottawa.ca/umple/E020InterfaceAssociationNotOneWay.html", The class-interface association declared in '{0}' must have the '->' arrow ;
 
-21: 2, "http://umple.org/E021InvalidReflexiveAssociation.html", Reflexive association to class '{0}' must use a role name or else self ;
-22: 2, "http://umple.org/E022DuplicateAttribute.html", Class '{0}' has duplicate attribute name {1} ;
-23: 2, "http://umple.org/E023AttributeAssociationNameClash.html", Class '{0}' has attribute name {1} that duplicates an association name, or vice-versa ;
-24: 2, "http://umple.org/E024SortKeyNotofUmpleType.html", Sort key attribute '{0}' in class {1} must be of type Integer, Short, Long, Double, Float or String ;
-25: 2, "http://umple.org/E025SortKeyNotFound.html", Class '{0}' does not contain attribute {1} that is used as sort key ;
-26: 2, "http://umple.org/E026DuplicateKeyItem.html", Duplicate item '{0}' in key statement(s) in class '{1}' ;
-27: 3, "http://umple.org/W027KeyIdentifierIncorrect.html", Item '{0}' in key statement is not defined in class '{1}' ;
-28: 3, "http://umple.org/E028ConstraintIdentifierIncorrect.html", Attribute '{0}' in constraint is not defined in class '{1}' ;
-29: 2, "http://umple.org/E029ConstraintTypeMismatch.html", Attribute '{0}' in constraint must be of type '{1}' ;
+21: 2, "http://cruise.eecs.uottawa.ca/umple/E021InvalidReflexiveAssociation.html", Reflexive association to class '{0}' must use a role name or else self ;
+22: 2, "http://cruise.eecs.uottawa.ca/umple/E022DuplicateAttribute.html", Class '{0}' has duplicate attribute name {1} ;
+23: 2, "http://cruise.eecs.uottawa.ca/umple/E023AttributeAssociationNameClash.html", Class '{0}' has attribute name {1} that duplicates an association name, or vice-versa ;
+24: 2, "http://cruise.eecs.uottawa.ca/umple/E024SortKeyNotofUmpleType.html", Sort key attribute '{0}' in class {1} must be of type Integer, Short, Long, Double, Float or String ;
+25: 2, "http://cruise.eecs.uottawa.ca/umple/E025SortKeyNotFound.html", Class '{0}' does not contain attribute {1} that is used as sort key ;
+26: 2, "http://cruise.eecs.uottawa.ca/umple/E026DuplicateKeyItem.html", Duplicate item '{0}' in key statement(s) in class '{1}' ;
+27: 3, "http://cruise.eecs.uottawa.ca/umple/W027KeyIdentifierIncorrect.html", Item '{0}' in key statement is not defined in class '{1}' ;
+28: 3, "http://cruise.eecs.uottawa.ca/umple/E028ConstraintIdentifierIncorrect.html", Attribute '{0}' in constraint is not defined in class '{1}' ;
+29: 2, "http://cruise.eecs.uottawa.ca/umple/E029ConstraintTypeMismatch.html", Attribute '{0}' in constraint must be of type '{1}' ;
 
-30: 4, "http://umple.org/W030RedefinedNamespace.html", Redefining the namespace of class {0} to {1} ;
-31: 4, "http://umple.org/W031NamespaceNotUsed.html", Declared namespace {0} was not used before declaring {1} ;
-32: 1, "http://umple.org/E032ReservedRoleName.html", The role name '{0}' has a conflict. Please don't use plural form of class name as a role name ;
-33: 3, "http://umple.org/W033MissingSuperclass.html", The indicated superclass {0} of class {1} does not exist and has been ignored. Declare {0} to be external if it is defined outside this Umple system ;
-34: 2, "http://umple.org/E034MultipleInheritance.html", Multiple inheritance not allowed in Umple so  code can be generated for languages that do not permit it. So class {0} cannot be a subclass of class {1} as well as other classes. Consider using multiple implementations of an interface ;
-35: 4, "http://umple.org/W035UninitializedConstant.html", 'const' variable '{0}' of type '{1}' was not initialized and its value was thus set to '{2}' ;
-36: 3, "http://umple.org/W036UnmanagedMultiplicity.html", The specific multiplicity bounds {0} cannot be managed by generated code, since this is a directed association ;
-37: 2, "http://umple.org/E037UninitializedConstantObject.html", 'const' variable '{0}' of type '{1}' was not initialized. Since '{1}' is not a built-in Umple data type no default value could be found. '{0}' must be initialized. ;
-38: 2, "http://umple.org/W9999FeatureUnderDevelopment.html", Attribute '{0}' has a name conflict with attribute auto generated by '{1}' variable '{2}';
-39: 3, "http://umple.org/W033MissingSuperclass.html", The interface {0} extends from an interface {1} that does not exist and has been ignored. Declare {1} to be external if it is defined outside this Umple system ;
+30: 4, "http://cruise.eecs.uottawa.ca/umple/W030RedefinedNamespace.html", Redefining the namespace of class {0} to {1} ;
+31: 4, "http://cruise.eecs.uottawa.ca/umple/W031NamespaceNotUsed.html", Declared namespace {0} was not used before declaring {1} ;
+32: 1, "http://cruise.eecs.uottawa.ca/umple/E032ReservedRoleName.html", The role name '{0}' has a conflict. Please don't use plural form of class name as a role name ;
+33: 3, "http://cruise.eecs.uottawa.ca/umple/W033MissingSuperclass.html", The indicated superclass {0} of class {1} does not exist and has been ignored. Declare {0} to be external if it is defined outside this Umple system ;
+34: 2, "http://cruise.eecs.uottawa.ca/umple/E034MultipleInheritance.html", Multiple inheritance not allowed in Umple so  code can be generated for languages that do not permit it. So class {0} cannot be a subclass of class {1} as well as other classes. Consider using multiple implementations of an interface ;
+35: 4, "http://cruise.eecs.uottawa.ca/umple/W035UninitializedConstant.html", 'const' variable '{0}' of type '{1}' was not initialized and its value was thus set to '{2}' ;
+36: 3, "http://cruise.eecs.uottawa.ca/umple/W036UnmanagedMultiplicity.html", The specific multiplicity bounds {0} cannot be managed by generated code, since this is a directed association ;
+37: 2, "http://cruise.eecs.uottawa.ca/umple/E037UninitializedConstantObject.html", 'const' variable '{0}' of type '{1}' was not initialized. Since '{1}' is not a built-in Umple data type no default value could be found. '{0}' must be initialized. ;
+38: 2, "http://cruise.eecs.uottawa.ca/umple/W9999FeatureUnderDevelopment.html", Attribute '{0}' has a name conflict with attribute auto generated by '{1}' variable '{2}';
+39: 3, "http://cruise.eecs.uottawa.ca/umple/W033MissingSuperclass.html", The interface {0} extends from an interface {1} that does not exist and has been ignored. Declare {1} to be external if it is defined outside this Umple system ;
 
-44: 3, "http://umple.org/W044AttributeDuplicatedinSuperclass.html", Class '{0}' has attribute name {1} that duplicates an attribute inherited from a superclass '{2}'. New definition is being disconsidered.;
-45: 4, "http://umple.org/W045InitializedValueinKey.html", Attribute '{0}' in class '{1}' is in the key. Initializing it will result in all instances having this same value and being treated as equal ;
-46: 4, "http://umple.org/W046AttributeHasTemplateType.html", Attribute {0} in class {1} is declared using a collection template type {2}. Use a directed association (->) or multi-valued attribute([]) to follow proper modelling conventions ;
-47: 4, "http://umple.org/W047EmptyKeyStatement.html", Empty key statement in class {0} ;
-48: 2, "http://umple.org/PageBeingDeveloped.html", Attribute '{0}' in class '{1}' generates method '{2}' which is duplicate;
-49: 4, "http://umple.org/PageBeingDeveloped.html", A {6} implementation of Method '{0}' in class '{1}' is already defined at line {2} of '{3}' file. New definition at line {4} of '{5}' file is being disconsidered;
+44: 3, "http://cruise.eecs.uottawa.ca/umple/W044AttributeDuplicatedinSuperclass.html", Class '{0}' has attribute name {1} that duplicates an attribute inherited from a superclass '{2}'. New definition is being disconsidered.;
+45: 4, "http://cruise.eecs.uottawa.ca/umple/W045InitializedValueinKey.html", Attribute '{0}' in class '{1}' is in the key. Initializing it will result in all instances having this same value and being treated as equal ;
+46: 4, "http://cruise.eecs.uottawa.ca/umple/W046AttributeHasTemplateType.html", Attribute {0} in class {1} is declared using a collection template type {2}. Use a directed association (->) or multi-valued attribute([]) to follow proper modelling conventions ;
+47: 4, "http://cruise.eecs.uottawa.ca/umple/W047EmptyKeyStatement.html", Empty key statement in class {0} ;
+48: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Attribute '{0}' in class '{1}' generates method '{2}' which is duplicate;
+49: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", A {6} implementation of Method '{0}' in class '{1}' is already defined at line {2} of '{3}' file. New definition at line {4} of '{5}' file is being disconsidered;
 
 # State-Machine related messages
-50: 4, "http://umple.org/W050TargetStateNotFound.html", State '{0}' has not been declared, it is being treated as an new state ;
-51: 2, "http://umple.org/E051EventParametersMustMatch.html", Event parameter(s) '{0}' inconsistent with previous declaration of the same event ; 
-52: 2, "http://umple.org/E052StateMachineNameClash.html", Association or attribute can not have same name as state machine '{0}' ;
-53: 2, "http://umple.org/E053NoConcurrencyAtTopLevel.html", State machine {0} has concurrent states, but concurrency is only allowed in nested substates or in 'active' blocks ;
-54: 4, "http://umple.org/W054DuplicateEvents.html", Transition {0} will be ignored due to a unguarded duplicate event;
-55: 4, "http://umple.org/W055DuplicateEventsWithinSubstates.html", Transition {0} in super-state will be ignored due to unguarded duplicate events in all sub-states;
-56: 4, "http://umple.org/PageBeingDeveloped.html", Queued State machine {0} has no events to be queued;
-57: 4, "http://umple.org/PageBeingDeveloped.html", Pooled State machine {0} has no events to be pooled;
-58: 1, "http://umple.org/PageBeingDeveloped.html", class {0} must have no queued state machine, pooled state machine, and regular state machine in the same class;
-59: 1, "http://umple.org/PageBeingDeveloped.html", class {0} must have no queued state machine and pooled state machine in the same class;
-60: 1, "http://umple.org/PageBeingDeveloped.html", class {0} must have no pooled state machine and regular state machine in the same class;
-61: 1, "http://umple.org/PageBeingDeveloped.html", class {0} must have no queued state machine and regular state machine in the same class;
-62: 4, "http://umple.org/PageBeingDeveloped.html", (unspecified) must not be used in combination with Pooled State machine {0} - it is treated such as other regular events - it is pooled;
-63: 1, "http://umple.org/PageBeingDeveloped.html", {0} is a reserved name for History or Deep History States;
-64: 1, "http://umple.org/PageBeingDeveloped.html", You declared a History (H) or Deep History (HStar) state in a non existent state within state machine {0};
-65: 1, "http://umple.org/PageBeingDeveloped.html", You declared a History (H) or Deep History (HStar) state at a state without substates within state machine {0};
-66: 4, "http://umple.org/PageBeingDeveloped.html", Transition to '{0}' has multiple possible destinations. Please use dot notation to clarify what state the transition should go to. ;
-67: 4, "http://umple.org/PageBeingDeveloped.html",  State '{0}' from StateMachine '{1}' is non-reachable. ;
-68: 4, "http://umple.org/PageBeingDeveloped.html", Destiny state '{0}' of transition on line '{1}' has not been found. This transition is being disconsidered;
-69: 4, "http://umple.org/PageBeingDeveloped.html", Auto-Transition to '{0}' on line '{1}' conflicts with a previous exisiting transition. This transition is being disconsidered;
+50: 4, "http://cruise.eecs.uottawa.ca/umple/W050TargetStateNotFound.html", State '{0}' has not been declared, it is being treated as an new state ;
+51: 2, "http://cruise.eecs.uottawa.ca/umple/E051EventParametersMustMatch.html", Event parameter(s) '{0}' inconsistent with previous declaration of the same event ; 
+52: 2, "http://cruise.eecs.uottawa.ca/umple/E052StateMachineNameClash.html", Association or attribute can not have same name as state machine '{0}' ;
+53: 2, "http://cruise.eecs.uottawa.ca/umple/E053NoConcurrencyAtTopLevel.html", State machine {0} has concurrent states, but concurrency is only allowed in nested substates or in 'active' blocks ;
+54: 4, "http://cruise.eecs.uottawa.ca/umple/W054DuplicateEvents.html", Transition {0} will be ignored due to a unguarded duplicate event;
+55: 4, "http://cruise.eecs.uottawa.ca/umple/W055DuplicateEventsWithinSubstates.html", Transition {0} in super-state will be ignored due to unguarded duplicate events in all sub-states;
+56: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Queued State machine {0} has no events to be queued;
+57: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Pooled State machine {0} has no events to be pooled;
+58: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", class {0} must have no queued state machine, pooled state machine, and regular state machine in the same class;
+59: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", class {0} must have no queued state machine and pooled state machine in the same class;
+60: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", class {0} must have no pooled state machine and regular state machine in the same class;
+61: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", class {0} must have no queued state machine and regular state machine in the same class;
+62: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", (unspecified) must not be used in combination with Pooled State machine {0} - it is treated such as other regular events - it is pooled;
+63: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", {0} is a reserved name for History or Deep History States;
+64: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", You declared a History (H) or Deep History (HStar) state in a non existent state within state machine {0};
+65: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", You declared a History (H) or Deep History (HStar) state at a state without substates within state machine {0};
+66: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Transition to '{0}' has multiple possible destinations. Please use dot notation to clarify what state the transition should go to. ;
+67: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html",  State '{0}' from StateMachine '{1}' is non-reachable. ;
+68: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Destiny state '{0}' of transition on line '{1}' has not been found. This transition is being disconsidered;
+69: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Auto-Transition to '{0}' on line '{1}' conflicts with a previous exisiting transition. This transition is being disconsidered;
 
-80: 4, "http://umple.org/PageBeingDeveloped.html", State '{0}' was not found in state machine '{1}'. Processed as if the state exists ;
+80: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", State '{0}' was not found in state machine '{1}'. Processed as if the state exists ;
 
 # Model Constraints' Error messages
-90: 2, "http://umple.org/PageBeingDeveloped.html", Attribute named {0} was not found in class {1}, as required in constraint. ;
-91: 2, "http://umple.org/PageBeingDeveloped.html", Attribute with type {0} was not found in class {1}, as required in constraint. ;
-92: 2, "http://umple.org/PageBeingDeveloped.html", Class {0} was not found to be a subclass of class {1}, as required in constraint. ;
-93: 2, "http://umple.org/PageBeingDeveloped.html", Class {0} was not found to be a superclass of class {1}, as required in constraint. ;
-94: 2, "http://umple.org/PageBeingDeveloped.html", Class {0} was not found to have an association to class {1}, as required in constraint. ;
+90: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Attribute named {0} was not found in class {1}, as required in constraint. ;
+91: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Attribute with type {0} was not found in class {1}, as required in constraint. ;
+92: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class {0} was not found to be a subclass of class {1}, as required in constraint. ;
+93: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class {0} was not found to be a superclass of class {1}, as required in constraint. ;
+94: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class {0} was not found to have an association to class {1}, as required in constraint. ;
 
 # Messages relating to format of identifiers.
-100: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Class name '{0}' must be alphanumeric and start with an alpha character, or _  ;
-101: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Class name '{0}' should start with a capital letter ;
+100: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Class name '{0}' must be alphanumeric and start with an alpha character, or _  ;
+101: 4, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Class name '{0}' should start with a capital letter ;
 
-110: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Interface name '{0}' must be alphanumeric and start with an alpha character or _ ;
-111: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Interface name '{0}' should start with a capital letter ;
-112: 2, "http://umple.org/E112DuplicateConstantsinInterface.html", Interface '{0}' has duplicate constant name {1} ;
+110: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Interface name '{0}' must be alphanumeric and start with an alpha character or _ ;
+111: 4, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Interface name '{0}' should start with a capital letter ;
+112: 2, "http://cruise.eecs.uottawa.ca/umple/E112DuplicateConstantsinInterface.html", Interface '{0}' has duplicate constant name {1} ;
 
-# [TODO - issue 337] 120: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Association role name '{0}' must be alphanumeric and start with a letter ;
-# [TODO - issue 337] 121: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Association role name '{0}' should start with a lower-case letter ;
+# [TODO - issue 337] 120: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Association role name '{0}' must be alphanumeric and start with a letter ;
+# [TODO - issue 337] 121: 4, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Association role name '{0}' should start with a lower-case letter ;
 
-130: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Attribute name '{0}' must be alphanumeric, starting with a lower-case letter ;
-131: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Attribute name '{0}' should start with a lower-case letter ;
-132: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Attribute name '{0}' contains special characters. Association declaration must be separated by spaces ;
+130: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Attribute name '{0}' must be alphanumeric, starting with a lower-case letter ;
+131: 4, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Attribute name '{0}' should start with a lower-case letter ;
+132: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Attribute name '{0}' contains special characters. Association declaration must be separated by spaces ;
 
-140: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Attribute type name '{0}' must be alphanumeric, starting with a letter ;
-141: 4, "http://umple.org/W141ValueTypeMismatch.html", Mismatch between type '{0}' and value {1} ;
+140: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Attribute type name '{0}' must be alphanumeric, starting with a letter ;
+141: 4, "http://cruise.eecs.uottawa.ca/umple/W141ValueTypeMismatch.html", Mismatch between type '{0}' and value {1} ;
 
-150: 2, "http://umple.org/WE1xxIdentifierInvalid.html", State machine name '{0}' must be alphanumeric and start with a letter ;
-152: 2, "http://umple.org/WE1xxIdentifierInvalid.html", State name '{0}' must be alphanumeric and start with a letter ;
+150: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", State machine name '{0}' must be alphanumeric and start with a letter ;
+152: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", State name '{0}' must be alphanumeric and start with a letter ;
 
-160: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Constant name '{0}' must be alphanumeric, starting with a upper-case letter ;
-161: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Constant name '{0}' should start with a upper-case letter ;
+160: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Constant name '{0}' must be alphanumeric, starting with a upper-case letter ;
+161: 4, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Constant name '{0}' should start with a upper-case letter ;
 
 
 # Messages related to traits
-200: 2, "http://umple.org/E200TraitIdentifierInvalid.html", Trait name '{0}' must be alphanumeric and start with an alpha character, or _  ;
-201: 4, "http://umple.org/W201TraitNameSyntax.html", Trait name '{0}' should start with a capital letter ;
-202: 1, "http://umple.org/E202Traitnotdefined.html", The trait named '{0}' is not available. ;
-203: 1, "http://umple.org/E203Nothavinganuniqueidentifier.html", There is a class and a trait with the same name '{0}'. Solution: Please just change the name of trait or class and give it an unique name. ;
-204: 1, "http://umple.org/E204SelfInheritance.html", Trait named '{0}' cannot inherit from itself. Solution: Please check the name of super trait or change your design not to have this inheritance. ;
+200: 2, "http://cruise.eecs.uottawa.ca/umple/E200TraitIdentifierInvalid.html", Trait name '{0}' must be alphanumeric and start with an alpha character, or _  ;
+201: 4, "http://cruise.eecs.uottawa.ca/umple/W201TraitNameSyntax.html", Trait name '{0}' should start with a capital letter ;
+202: 1, "http://cruise.eecs.uottawa.ca/umple/E202Traitnotdefined.html", The trait named '{0}' is not available. ;
+203: 1, "http://cruise.eecs.uottawa.ca/umple/E203Nothavinganuniqueidentifier.html", There is a class and a trait with the same name '{0}'. Solution: Please just change the name of trait or class and give it an unique name. ;
+204: 1, "http://cruise.eecs.uottawa.ca/umple/E204SelfInheritance.html", Trait named '{0}' cannot inherit from itself. Solution: Please check the name of super trait or change your design not to have this inheritance. ;
 #need to be added to manual
-205: 1, "http://umple.org/PageBeingDeveloped.html", Binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must implement interface '{5}';
-206: 1, "http://umple.org/E206CycleinTraits.html", Trait '{0}' cannot cyclically extend '{1}'. ;
+205: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must implement interface '{5}';
+206: 1, "http://cruise.eecs.uottawa.ca/umple/E206CycleinTraits.html", Trait '{0}' cannot cyclically extend '{1}'. ;
 # 207 should be explored more.
-207: 1, "http://umple.org/PageBeingDeveloped.html", Variable '{0}' inside of the constraint in trait '{1}' is not available in class '{2}' or trait '{1}'. ;
-208: 1, "http://umple.org/E208RequiredMethodsNotAvailable.html", Required method '{0}' in trait '{1}' is not available in class '{2}'. ;
+207: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Variable '{0}' inside of the constraint in trait '{1}' is not available in class '{2}' or trait '{1}'. ;
+208: 1, "http://cruise.eecs.uottawa.ca/umple/E208RequiredMethodsNotAvailable.html", Required method '{0}' in trait '{1}' is not available in class '{2}'. ;
 # 209 should be explored more.
-209: 1, "http://umple.org/PageBeingDeveloped.html", Defined name '{0}' in trait '{1}' is not available in the trait's header. ;
-210: 1, "http://umple.org/E210ConflictinMethods.html", In {0} '{1}', there is a conflict on method '{2}' which comes from two different traits '{3}' and '{4}'. ;
-211: 1, "http://umple.org/E211TwoorMoreModifications.html", In modification level of trait '{0}', method '{1}' has been defined two times. ;
-212: 1, "http://umple.org/E212MethodsNotAvailable.html", Method '{0}' is not available in trait '{1}' for modification. ;
-213: 1, "http://umple.org/E213RemovingWhileRenaming.html", It is impossible to remove method '{0}' while changing its name. ;
-214: 1, "http://umple.org/E214TwoIdenticalParameterNames.html", It is impossible to have two parameters with the same name '{0}' in trait'{1}'. ;
-215: 1, "http://umple.org/E215TemplateParameterNotAvailable.html", Parameter '{0}' is not available. ;
-216: 1, "http://umple.org/E216TwiceBindingofaParameter.html", Parameter '{0}' cannot be allocated two times. ;
-217: 1, "http://umple.org/E217ConflictinTypesofAttributes.html", There is a conflict for attribute '{0}' in traits '{1}' because of assigning two different types '{2}' and '{3}'. ;
-218: 3, "http://umple.org/W218ConflictinAttributes.html", Attribute '{0}' which comes from trait '{1}' is available also in {2} '{3}'. ;
-219: 1, "http://umple.org/E219NoBindingforParameters.html", Please assign a value for type parameter '{0}' in trait '{1}' ;
-220: 1, "http://umple.org/E220TwoMethodsWiththeSameName.html", The new name '{0}' for method '{1}' is already available in the trait. ;
+209: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Defined name '{0}' in trait '{1}' is not available in the trait's header. ;
+210: 1, "http://cruise.eecs.uottawa.ca/umple/E210ConflictinMethods.html", In {0} '{1}', there is a conflict on method '{2}' which comes from two different traits '{3}' and '{4}'. ;
+211: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In modification level of trait '{0}', method '{1}' has been defined two times. ;
+212: 1, "http://cruise.eecs.uottawa.ca/umple/E212MethodsNotAvailable.html", Method '{0}' is not available in trait '{1}' for modification. ;
+213: 1, "http://cruise.eecs.uottawa.ca/umple/E213RemovingWhileRenaming.html", It is impossible to remove method '{0}' while changing its name. ;
+214: 1, "http://cruise.eecs.uottawa.ca/umple/E214TwoIdenticalParameterNames.html", It is impossible to have two parameters with the same name '{0}' in trait'{1}'. ;
+215: 1, "http://cruise.eecs.uottawa.ca/umple/E215TemplateParameterNotAvailable.html", Parameter '{0}' is not available. ;
+216: 1, "http://cruise.eecs.uottawa.ca/umple/E216TwiceBindingofaParameter.html", Parameter '{0}' cannot be allocated two times. ;
+217: 1, "http://cruise.eecs.uottawa.ca/umple/E217ConflictinTypesofAttributes.html", There is a conflict for attribute '{0}' in traits '{1}' because of assigning two different types '{2}' and '{3}'. ;
+218: 3, "http://cruise.eecs.uottawa.ca/umple/W218ConflictinAttributes.html", Attribute '{0}' which comes from trait '{1}' is available also in {2} '{3}'. ;
+219: 1, "http://cruise.eecs.uottawa.ca/umple/E219NoBindingforParameters.html", Please assign a value for type parameter '{0}' in trait '{1}' ;
+220: 1, "http://cruise.eecs.uottawa.ca/umple/E220TwoMethodsWiththeSameName.html", The new name '{0}' for method '{1}' is already available in the trait. ;
 #need to be added to manual
-221: 1, "http://umple.org/PageBeingDeveloped.html", Binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' is not available in the system.;
+221: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' is not available in the system.;
 #need to be added to manual
-222: 1, "http://umple.org/PageBeingDeveloped.html", Class '{0}' must implement interface '{1}' so as to be able to use trait '{2}'.;
-223: 1, "http://umple.org/PageBeingDeveloped.html", The type of '{0}' in template parameter '{1}' in trait '{2}' has not been defined.;
-224: 1, "http://umple.org/PageBeingDeveloped.html", Template parameter '{0}' in trait '{1}' has an multiple inheritance restriction, according to classes '{2}' and '{3}', which is not supported. Restrictions must cover single inheritance and multiple interface.;
-225: 1, "http://umple.org/PageBeingDeveloped.html", Binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must be a subclass of class '{5}';
+222: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class '{0}' must implement interface '{1}' so as to be able to use trait '{2}'.;
+223: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The type of '{0}' in template parameter '{1}' in trait '{2}' has not been defined.;
+224: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template parameter '{0}' in trait '{1}' has an multiple inheritance restriction, according to classes '{2}' and '{3}', which is not supported. Restrictions must cover single inheritance and multiple interface.;
+225: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must be a subclass of class '{5}';
 
 # Messages related to MOTL
-301: 4,  "http://umple.org/PageBeingDeveloped.html", Tracing of non-existent model entity  ;
-302: 4,  "http://umple.org/PageBeingDeveloped.html", Tracer not recognized - Console tracer is defaulted ;
-303: 1,  "http://umple.org/PageBeingDeveloped.html", Parsing error: Incorrect attribute trace prefix '{0}' (Prefix can be set/get/both) ;
+301: 4,  "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Tracing of non-existent model entity  ;
+302: 4,  "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Tracer not recognized - Console tracer is defaulted ;
+303: 1,  "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Parsing error: Incorrect attribute trace prefix '{0}' (Prefix can be set/get/both) ;
 
 # Messages relating to deprecated features
-901: 4, "http://umple.org/W901DeprecatedKeywordConstant.html", Keyword "constant" deprecated, please use "const" ;
+901: 4, "http://cruise.eecs.uottawa.ca/umple/W901DeprecatedKeywordConstant.html", Keyword "constant" deprecated, please use "const" ;
 
 # Messages relating to general parsing issues
-1002: 5, "http://umple.org/W1002-3UnexpectedEmbeddedCode.html", Embedded method with code or unparsed code found when strictness is 'modelOnly' ;
-1003: 5, "http://umple.org/W1002-3UnexpectedEmbeddedCode.html", Unparsed extra code found when strictness is 'noExtraCode' ;
-1004: 2, "http://umple.org/E1004-5MessagesnotasExpected.html", Expected message '{0}' not found ;
-1005: 2, "http://umple.org/E1004-5MessagesnotasExpected.html", Disallowed warning message '{0}' encountered ;
-1006: 3, "http://umple.org/W1006StateMachineNotParsed.html", State machine syntax could not be processed. It has been considered as Extra Code ;
-1007: 3, "http://umple.org/W1007ElementNotParsed.html", Attribute or Association syntax could not be processed. It has been considered as Extra Code ;
-1008: 3, "http://umple.org/W1008MethodNotParsed.html", Method syntax could not be processed. It has been considered as Extra Code ;
-1009: 4, "http://umple.org/PageBeingDeveloped.html", Method '{0}' has a name conflict with automatic generated getter/setter methods for attribute '{1}'. The user definition is being disconsidered. Please use a different name ;
-1010: 3, "http://umple.org/PageBeingDeveloped.html", Constraint syntax, {0}, could not be processed. It has been considered as Extra Code ;
-1011: 3, "http://umple.org/W1011InvalidAssociationClassKey.html", AssociationClass '{0}' missing needed '{1}' key, provided {2} ;
+1002: 5, "http://cruise.eecs.uottawa.ca/umple/W1002-3UnexpectedEmbeddedCode.html", Embedded method with code or unparsed code found when strictness is 'modelOnly' ;
+1003: 5, "http://cruise.eecs.uottawa.ca/umple/W1002-3UnexpectedEmbeddedCode.html", Unparsed extra code found when strictness is 'noExtraCode' ;
+1004: 2, "http://cruise.eecs.uottawa.ca/umple/E1004-5MessagesnotasExpected.html", Expected message '{0}' not found ;
+1005: 2, "http://cruise.eecs.uottawa.ca/umple/E1004-5MessagesnotasExpected.html", Disallowed warning message '{0}' encountered ;
+1006: 3, "http://cruise.eecs.uottawa.ca/umple/W1006StateMachineNotParsed.html", State machine syntax could not be processed. It has been considered as Extra Code ;
+1007: 3, "http://cruise.eecs.uottawa.ca/umple/W1007ElementNotParsed.html", Attribute or Association syntax could not be processed. It has been considered as Extra Code ;
+1008: 3, "http://cruise.eecs.uottawa.ca/umple/W1008MethodNotParsed.html", Method syntax could not be processed. It has been considered as Extra Code ;
+1009: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Method '{0}' has a name conflict with automatic generated getter/setter methods for attribute '{1}'. The user definition is being disconsidered. Please use a different name ;
+1010: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Constraint syntax, {0}, could not be processed. It has been considered as Extra Code ;
+1011: 3, "http://cruise.eecs.uottawa.ca/umple/W1011InvalidAssociationClassKey.html", AssociationClass '{0}' missing needed '{1}' key, provided {2} ;
 
-1500 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: '{0}' not understood ; 
-1501 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 
-1502 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: Structure of '{0}' invalid ;
-1503 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: {0}, did you mean {1} ;  
-1510 : 1, "http://umple.org/E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
+1500 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: '{0}' not understood ; 
+1501 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 
+1502 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: Structure of '{0}' invalid ;
+1503 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: {0}, did you mean {1} ;  
+1510 : 1, "http://cruise.eecs.uottawa.ca/umple/E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
 
 # Messages to be emitted when embedded code from another language is compiled and you are passing on the error
-2001: 5, "http://umple.org/W20xxErrorinEmbeddedCode.html", Error in Java embedded in Umple: '{0}' ;
-2002: 5, "http://umple.org/W20xxErrorinEmbeddedCode.html", Error in C++ embedded in Umple: '{0}' ;
+2001: 5, "http://cruise.eecs.uottawa.ca/umple/W20xxErrorinEmbeddedCode.html", Error in Java embedded in Umple: '{0}' ;
+2002: 5, "http://cruise.eecs.uottawa.ca/umple/W20xxErrorinEmbeddedCode.html", Error in C++ embedded in Umple: '{0}' ;
 
 # Special testing messages for debugging
-8001: 1, "http://umple.org/PageBeingDeveloped.html", Debug error : '{0}' ;
-8005: 5, "http://umple.org/PageBeingDeveloped.html", Debug warning : '{0}' ;
+8001: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Debug error : '{0}' ;
+8005: 5, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Debug warning : '{0}' ;
 
 # Message to emit when you are parsing a construct but are not yet processing it in a sensible way/
-9999: 5, "http://umple.org/W9999FeatureUnderDevelopment.html", Feature under development. '{0}' found and ignored. processed as: '{1}' ;
+9999: 5, "http://cruise.eecs.uottawa.ca/umple/W9999FeatureUnderDevelopment.html", Feature under development. '{0}' found and ignored. processed as: '{1}' ;
 
 
 
 # Messages related to templates
-3500: 2, "http://umple.org/PageBeingDeveloped.html", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;
-3501: 2, "http://umple.org/PageBeingDeveloped.html", Template emit method can not be a main;
-3502: 1, "http://umple.org/PageBeingDeveloped.html", Template name '{0}' can not be resolved;
+3500: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;
+3501: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template emit method can not be a main;
+3502: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template name '{0}' can not be resolved;
 
 # Messages related to fixml
-4500: 1,  "http://umple.org/PageBeingDeveloped.html", The tag '{0}' is not closed correctly.  ;
+4500: 1,  "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The tag '{0}' is not closed correctly.  ;

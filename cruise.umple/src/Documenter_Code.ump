@@ -487,7 +487,7 @@ class Template
       "@@EXAMPLE_CODE@@" + "\n" +
       "      </pre>" + "\n" +
       "<p class=\"description\">" +
-      "<a target=\"uol\" href=\"http://try.umple.org@@EXAMPLE_CODE_URL@@\">" +
+      "<a target=\"uol\" href=\"http://cruise.eecs.uottawa.ca/umpleonline@@EXAMPLE_CODE_URL@@\">" +
         "Load the above code into UmpleOnline</a></p>" + "\n" +
       "&nbsp; <br/>" + "\n";
     return template;

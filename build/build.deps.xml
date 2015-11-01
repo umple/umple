@@ -169,9 +169,9 @@
       <else>
         <echo>Fetching umple-${umple.version}</echo>
 
-        <echo level="warning">WARNING: This is merely wget-ing http://try.umple.org/scripts/umple.jar</echo>
+        <echo level="warning">WARNING: This is merely wget-ing http://cruise.eecs.uottawa.ca/umpleonline/scripts/umple.jar</echo>
         <mkdir dir="${umple.deps.dir}" />
-        <get src="http://try.umple.org/scripts/umple.jar"
+        <get src="http://cruise.eecs.uottawa.ca/umpleonline/scripts/umple.jar"
              dest="${umple.last.jar.file}"
              usetimestamp="true" />
       </else>

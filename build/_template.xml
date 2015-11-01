@@ -77,9 +77,9 @@
             <isreachable property="access.maven" 
                          host="repo1.maven.org" />
             <isreachable property="access.org.umple" 
-                         host="try.umple.org" />
+                         host="cruise.eecs.uottawa.ca" />
             <isreachable property="access.com.googlecode" 
-                         host="umple.googlecode.com" />
+                         host="github.com" />
           </parallel>
 
           <condition property="online">
