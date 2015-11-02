@@ -9,7 +9,7 @@ $output = readTemporaryFile($filename);
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="scripts/_load_vml.js" type="text/javascript"></script>
-  <title>UmpleOnline: Generate Java, PHP, or Ruby code from Umple</title>
+  <title>UmpleOnline: Generate Java, PHP, Alloy or Ruby code from Umple</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
@@ -48,6 +48,7 @@ $output = readTemporaryFile($filename);
       <input id="buttonPhpCode" type="button" class="button" value="Php Code" /> <br />
       <input id="buttonJavaCode" type="button" class="button" value="Java Code" /> <br />
       <input id="buttonRubyCode" type="button" class="button" value="Ruby Code" /> <br />
+      <input id="buttonAlloyCode" type="button" class="button" value="Alloy Code" /> <br />
       <input id="buttonEcoreCode" type="button" class="button" value="Ecore XML" /> <br />
       <input id="buttonTextUmlCode" type="button" class="button" value="TextUml Code" /> <br />
       <input id="buttonScxmlUmlCode" type="button" class="button" value="SCXML Code (Experimental)" /> <br />

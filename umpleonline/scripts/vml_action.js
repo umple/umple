@@ -25,6 +25,10 @@ Action.clicked = function(event)
   {
     Action.generateCode("java","Java");
   }
+  else if (action == "AlloyCode")
+  {
+    Action.generateCode("alloy","Alloy");
+  }
   else if (action == "RubyCode")
   {
     Action.generateCode("ruby","Ruby");

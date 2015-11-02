@@ -41,6 +41,10 @@ Action.clicked = function(event)
   {
     Action.generateCode("rtcpp","RTCpp");
   }
+  else if (action == "AlloyCode")
+  {
+    Action.generateCode("alloy","Alloy");
+  }
   else if (action == "CppCode")
   {
     Action.generateCode("cpp","Cpp");

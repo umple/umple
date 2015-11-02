@@ -106,7 +106,7 @@ $output = readTemporaryFile("ump/" . $filename);
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="scripts/_load.js" type="text/javascript"></script>
-  <title>UmpleOnline: Generate Java, C++, PHP, or Ruby code from Umple</title>
+  <title>UmpleOnline: Generate Java, C++, PHP, Alloy or Ruby code from Umple</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
 </head>
 <body>
@@ -117,7 +117,7 @@ $output = readTemporaryFile("ump/" . $filename);
       </div>
       <div class="inRow">
         <p class="pagedescription">
-          Draw on the right, write (Umple) model code on the left. Generate Java, C++, PHP or Ruby code from your models. <br/>
+          Draw on the right, write (Umple) model code on the left. Generate Java, C++, PHP, Alloy or Ruby code from your models. <br/>
           Visit <a href="http://manual.umple.org" target="helppage">the User Manual</a> or <a href="http://www.umple.org">the Umple Home Page</a> for help.
           &nbsp;&nbsp;&nbsp;<a href="download_eclipse_umple_plugin.html">Download Umple</a>
           &nbsp;&nbsp;&nbsp;<a href="https://github.com/umple/umple/issues/new" target="newissue">Report an Issue</a>
@@ -423,7 +423,7 @@ $output = readTemporaryFile("ump/" . $filename);
               <img id="buttonYumlImage" src="scripts/yuml.png"/> 
               <a id="labelYumlImage" class="buttonExtend">Yuml View</a>
             </li>
-            <!--<li id="buttonSimulateCode" class="simulate"><img src="scripts/simulate.png" title="Simulate Code" /> Simulate</li> //DISABLED -->
+            <!--<li id="buttonSimulateCode" class="simulate"><img src="scripts/simulate.png" title="Simulate Code" /> Simulate</li> //DISABLED -->F
           </ul>
         </div>
       </div> 

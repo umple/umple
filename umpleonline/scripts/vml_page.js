@@ -13,6 +13,7 @@ Page.init = function()
   Page.initAction("buttonPhpCode");
   Page.initAction("buttonJavaCode");
   Page.initAction("buttonRubyCode");
+  Page.initAction("buttonAlloyCode");
   Page.initAction("buttonEcoreCode");
   Page.initAction("buttonTextUmlCode");
   Page.initAction("buttonScxmlCode");
