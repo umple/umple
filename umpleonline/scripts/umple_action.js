@@ -2067,7 +2067,7 @@ Action.toggleTabsCheckbox = function(language)
 	}
 
 	if(language == "java" || language == "php" || language == "cpp" 
-    || language == "ruby"){
+    || language == "ruby" || language == "sql"){
 		jQuery("#ttTabsCheckbox").show();
 		jQuery("#tabRow").show();
 	}
@@ -2118,6 +2118,7 @@ Action.generateTabsCode = function()
 	var strFileContents = "";
 	var arrFileNames = [];
 	var strNewLine = "";
+	var skipSpace = false;
 
 	// Read full code output line by line
   jQuery('.content').each(function(){
@@ -2129,12 +2130,17 @@ Action.generateTabsCode = function()
 			arrCodeFiles[intFileCounter] = strFileContents;
 			intFileCounter++;
 			jQuery('#generatedCodeRow').append("<div id='innerGeneratedCodeRow" + intFileCounter + "'></div>");
-    	strFileContents = "";
-			strFileContents += "<a href=\"umpleonline/../ump/tmp238804/JavaFromUmple.zip\" class=\"zipDownloadLink\">Download the following as a zip file</a>&nbsp;<p>URL_SPLIT";
+			strFileContents = "<p>URL_SPLIT";
+			skipSpace = true;
     }
 		else{
-			strFileContents += strNewLine + jQuery(this).text();
-			strNewLine = "\n";
+			if(!skipSpace){
+				strFileContents += strNewLine + jQuery(this).text();
+				strNewLine = "\n";
+			}
+			else{
+				skipSpace = false;
+			}
 		}
 
   });
@@ -2154,8 +2160,9 @@ function showTab(event)
 		// Show only relevant file codeblock
 		jQuery('#innerGeneratedCodeRow' + event.data.tabnumber).show();
 
-		// Generate code for specific file only
+		// Highlight code for specific file only
   	Page.showGeneratedCode(event.data.code, $("inputGenerateCode").value.split(":")[0], event.data.tabnumber);
+		jQuery('.line').last().hide();
 		jQuery('.line').last().hide();
 
 		// Hide main code window with glommed files

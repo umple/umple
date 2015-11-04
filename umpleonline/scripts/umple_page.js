@@ -830,7 +830,9 @@ Page.showGeneratedCode = function(code,language,tabnumber)
   var generatedMarkup = Page.getGeneratedMarkup(code, language);
 
   //Set any error or warning messages
-  jQuery("#messageArea").html(errorMarkup);
+	if(errorMarkup != ""){
+ 		jQuery("#messageArea").html(errorMarkup);
+	}
 
   //Set the generated content
   if(language == "java" || language == "php" || language == "cpp" 
@@ -861,7 +863,9 @@ Page.showGeneratedCode = function(code,language,tabnumber)
     var downloadLink = '<div id="diagramLinkContainer"></div>';
     errorMarkup = downloadLink + errorMarkup;
 
-    jQuery("#messageArea").html(errorMarkup);
+		if(errorMarkup != ""){
+    	jQuery("#messageArea").html(errorMarkup);
+		}
     Page.toggleStructureDiagramLink(false);
   }
   else
