@@ -9977,7 +9977,7 @@ for (StateMachine smq : uClass.getStateMachines())
     if (av != null)
     {
       String avString = av.getIsDerived()?(gen.translate("getMethod",av)+"()"):gen.translate("attributeOne",av);
-      canSet.append(StringFormatter.format("    {0} = false;\n",gen.translate("attributeCanSet",av)));
+      if(!av.isImmutable()) canSet.append(StringFormatter.format("    {0} = false;\n",gen.translate("attributeCanSet",av)));
       if (av.getIsList())
       {
         checks.append(StringFormatter.format("    if ({0}.size() != compareTo.{0}.size())\n",gen.translate("attributeMany",av)));
