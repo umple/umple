@@ -689,8 +689,6 @@ Action.generateCode = function(languageStyle, languageName)
     format("language={0}&languageStyle={1}", actualLanguage, languageStyle),
     "true"
   );
-	jQuery("#buttonTabsCheckbox").prop('checked', false);
-	jQuery("#tabRow").hide();
 }
 
 Action.photoReady = function()
@@ -2065,6 +2063,27 @@ Mousetrap.bind(['c'], function(e){
   }
 });
 
+Action.toggleTabsCheckbox = function(language)
+{
+	// Workaround for TextUml having java prefix
+	if($("inputGenerateCode").value.split(":")[1] == "TextUml"){
+		language = "TextUml";
+	}
+
+	if(language == "java" || language == "php" || language == "cpp" 
+    || language == "ruby" || language == "sql"){
+		jQuery("#ttTabsCheckbox").show();
+		jQuery("#tabRow").show();
+	}
+	else{
+		jQuery("#ttTabsCheckbox").hide();
+		jQuery("#tabRow").hide();
+		if(jQuery('#buttonTabsCheckbox').is(':checked')){
+			jQuery('#buttonTabsCheckbox').click();
+		}
+	}
+}
+
 // Function for splitting code into tabs for every new file, activated when checking the Show Tabs checkbox
 Action.toggleTabs = function()
 {
@@ -2072,57 +2091,69 @@ Action.toggleTabs = function()
   if(jQuery('#buttonTabsCheckbox').is(':checked')){
 
 		// Show row with buttons for each filename
-		jQuery('#tabRow').html('');
 		jQuery('#tabRow').show();
 
 		// Hide main code window with glommed files
-		jQuery('#innerGeneratedCodeRow').nextAll().remove();
 		jQuery('#innerGeneratedCodeRow').hide();
 
-    var arrCodeFiles = [];
-		var intFileCounter = 0;
-		var strFileContents = "";
-		var arrFileNames = [];
-
-		// Read full code output line by line
-    jQuery('.content').each(function(){
-
-			// If New File Beginning
-      if(jQuery(this).text().indexOf("//%%") >= 0){
-				strFileName = jQuery(this).text().slice(14);
-				strFileName = strFileName.substr(0, strFileName.indexOf(' '));
-				arrFileNames[intFileCounter] = strFileName;
-				arrCodeFiles[intFileCounter] = strFileContents;
-				intFileCounter++;
-				jQuery('#generatedCodeRow').append("<div id='innerGeneratedCodeRow" + intFileCounter + "'></div>");
-      	strFileContents = "";
-				strFileContents += "<a href=\"umpleonline/../ump/tmp238804/JavaFromUmple.zip\" class=\"zipDownloadLink\">Download the following as a zip file</a>&nbsp;<p>URL_SPLIT";
-				strFileContents += jQuery(this).text() + "\n";
-      }
-			else{
-				strFileContents += jQuery(this).text() + "\n";
-			}
-
-    });
-
-		// Output buttons for number of files found
-		for (i=1; i < intFileCounter; i++){
-			jQuery('#tabRow').append("<button type='button' id='tabButton" + i + "'>" + arrFileNames[i-1] + "</button>");
-			jQuery('#tabButton' + i).click({code: arrCodeFiles[i], tabnumber: i}, showTab);
-		}
+		// Show first file codeblock
+		jQuery('#tabButton1').click();
 
   }
   // Checking off the checkbox
   else{
+
 		// Hide row with buttons
-    jQuery('#tabRow').html('');
+    jQuery('#tabRow').hide();
 
 		// Show main code window with glommed files
 		jQuery('#innerGeneratedCodeRow').show();
 
 		// Hide all file codeblocks
-		jQuery('#innerGeneratedCodeRow').nextAll().remove();
+		jQuery('#innerGeneratedCodeRow').nextAll().hide();
+
   }
+}
+
+Action.generateTabsCode = function()
+{
+	var arrCodeFiles = [];
+	var intFileCounter = 0;
+	var strFileContents = "";
+	var arrFileNames = [];
+	var strNewLine = "";
+	var skipSpace = false;
+
+	// Read full code output line by line
+  jQuery('.content').each(function(){
+		// If New File Beginning
+    if(jQuery(this).text().indexOf("//%%") >= 0){
+			strFileName = jQuery(this).text().slice(14);
+			strFileName = strFileName.substr(0, strFileName.indexOf(' '));
+			arrFileNames[intFileCounter] = strFileName;
+			arrCodeFiles[intFileCounter] = strFileContents;
+			intFileCounter++;
+			jQuery('#generatedCodeRow').append("<div id='innerGeneratedCodeRow" + intFileCounter + "'></div>");
+			strFileContents = "<p>URL_SPLIT";
+			skipSpace = true;
+    }
+		else{
+			if(!skipSpace){
+				strFileContents += strNewLine + jQuery(this).text();
+				strNewLine = "\n";
+			}
+			else{
+				skipSpace = false;
+			}
+		}
+
+  });
+
+	// Output buttons for number of files found
+	for (i=1; i < intFileCounter; i++){
+		jQuery('#tabRow').append("<button type='button' id='tabButton" + i + "'>" + arrFileNames[i-1] + "</button>");
+		jQuery('#tabButton' + i).click({code: arrCodeFiles[i], tabnumber: i}, showTab);
+	}
 }
 
 function showTab(event)
@@ -2133,8 +2164,9 @@ function showTab(event)
 		// Show only relevant file codeblock
 		jQuery('#innerGeneratedCodeRow' + event.data.tabnumber).show();
 
-		// Generate code for specific file only
+		// Highlight code for specific file only
   	Page.showGeneratedCode(event.data.code, $("inputGenerateCode").value.split(":")[0], event.data.tabnumber);
+		jQuery('.line').last().hide();
 		jQuery('.line').last().hide();
 
 		// Hide main code window with glommed files

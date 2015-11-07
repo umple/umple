@@ -533,8 +533,8 @@ class PlaygroundMain
         {
           answer += "\n\n\n\n";
         }
-	answer += "//%% NEW FILE " + generatedCode.getKey() + " BEGINS HERE %%\n\n";
-        answer += generatedCode.getValue();
+				answer += "//%% NEW FILE " + generatedCode.getKey() + " BEGINS HERE %%\n\n";
+				answer += generatedCode.getValue();
       }
     }
     else if ("-generate".equals(args[0]))
