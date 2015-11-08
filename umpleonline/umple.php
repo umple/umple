@@ -435,7 +435,12 @@ $output = readTemporaryFile("ump/" . $filename);
   </div>
   
   <div id="generatedCodeRow" class="row">
+		<li id="ttTabsCheckbox">
+			<input id="buttonTabsCheckbox" type="checkbox" class="checkbox" name="buttonTabsCheckbox" value="buttonTabsCheckbox"/>
+			<a id="labelTabsCheckbox" class="buttonExtend">Show Files in Separate Tabs</a>
+		</li>
     <div id="messageArea"></div>
+    <div id="tabRow"></div>
     <div id="innerGeneratedCodeRow"></div>
   </div>
 

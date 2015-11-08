@@ -146,6 +146,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonUigu");
   Page.initAction("buttonStartOver");
   Page.initAction("buttonGenerateCode");
+  Page.initAction("buttonTabsCheckbox");
   Page.initAction("buttonSmaller");
   Page.initAction("buttonLarger");
   Page.initAction("buttonSyncCode");
@@ -196,6 +197,9 @@ Page.initOptions = function()
   jQuery("#buttonShowHideLayoutEditor").prop('checked', Layout.isLayoutVisible);
   jQuery("#buttonShowHideTextEditor").prop('checked', Layout.isTextVisible);
   jQuery("#buttonShowHideCanvas").prop('checked', Layout.isDiagramVisible);
+	jQuery("#buttonTabsCheckbox").prop('checked', false);
+	jQuery("#tabRow").hide();
+	jQuery("#ttTabsCheckbox").hide();
   jQuery("#buttonToggleAttributes").prop('checked',true);
   jQuery("#buttonToggleActions").prop('checked',true);
   jQuery("#buttonToggleTraits").prop('checked',false);
@@ -814,24 +818,41 @@ Page.showViewDone = function()
   setTimeout(function() {jQuery(selector).dialog("close");}, 2000);
 }
 
-Page.showGeneratedCode = function(code,language)
+Page.showGeneratedCode = function(code,language,tabnumber)
 {
+	// Default "tabnumber" parameter to null, ie. only output to the main codeblock
+	if (typeof(tabnumber)==='undefined') tabnumber = "";
+
+	Action.toggleTabsCheckbox(language);
+
   Page.applyGeneratedCodeAreaStyles(language);
   
   var errorMarkup = Page.getErrorMarkup(code, language);
   var generatedMarkup = Page.getGeneratedMarkup(code, language);
 
   //Set any error or warning messages
-  jQuery("#messageArea").html(errorMarkup);
+	if(errorMarkup != ""){
+ 		jQuery("#messageArea").html(errorMarkup);
+	}
 
   //Set the generated content
   if(language == "java" || language == "php" || language == "cpp" 
     || language == "ruby" || language == "xml" || language == "sql" || language == "alloy")
   {
-    jQuery("#innerGeneratedCodeRow").html(
-        formatOnce('<pre class="brush: {1};">{0}</pre>',generatedMarkup,language)
-        )
+		jQuery("#innerGeneratedCodeRow" + tabnumber).html(
+			formatOnce('<pre class="brush: {1};">{0}</pre>',generatedMarkup,language)
+		)
     SyntaxHighlighter.highlight("code");
+
+		if(tabnumber == ""){
+			// Remove all previous file codeblocks
+			jQuery('#innerGeneratedCodeRow').nextAll().remove();
+			// Clear tab row contents
+			jQuery('#tabRow').html('');
+			// Generate tabs
+			Action.generateTabsCode();
+			Action.toggleTabs();
+		}
   }
   else if(language == "structureDiagram")
   {
@@ -843,12 +864,14 @@ Page.showGeneratedCode = function(code,language)
     var downloadLink = '<div id="diagramLinkContainer"></div>';
     errorMarkup = downloadLink + errorMarkup;
 
-    jQuery("#messageArea").html(errorMarkup);
+		if(errorMarkup != ""){
+    	jQuery("#messageArea").html(errorMarkup);
+		}
     Page.toggleStructureDiagramLink(false);
   }
   else
   {
-    jQuery("#innerGeneratedCodeRow").html(generatedMarkup);
+    jQuery("#innerGeneratedCodeRow" + tabnumber).html(generatedMarkup);
   }
 }
 

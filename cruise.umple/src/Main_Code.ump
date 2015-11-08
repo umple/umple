@@ -292,7 +292,7 @@ class UmpleConsoleMain
     
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
     optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
-    optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp,RTCpp,SimpleCpp,Php,Ruby,SQL,Json,Ecore,TextUml,GvStateDiagram,StructureDiagram,GvClassDiagram,GvClassTraitDiagram,GvEntityRelationshipDiagram,Alloy,NuSMV,Yuml,SimpleMetrics,Uigu2").withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp,RTCpp,SimpleCpp,Php,Ruby,SQL,Ruby,Json,Ecore,TextUml,GvStateDiagram,StructureDiagram,GvClassDiagram,GvClassTraitDiagram,GvEntityRelationshipDiagram,Alloy,NuSMV,Yuml,SimpleMetrics,Uigu2").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, output will only generate language <lang>");
     optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles").withRequiredArg().ofType(String.class);
@@ -433,6 +433,7 @@ class PlaygroundMain
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.util.*;
   depend java.io.*;
+  depend java.util.*;
 
   public static void main(String[] args)
   {
@@ -527,12 +528,13 @@ class PlaygroundMain
     }
     else if ("-source".equals(args[0]))
     {
-      for (String generatedCode : model.getGeneratedCode().values()) {
+      for (Map.Entry<String, String> generatedCode : model.getGeneratedCode().entrySet()) {
         if (answer.length() > 0)
         {
           answer += "\n\n\n\n";
         }
-        answer += generatedCode;
+				answer += "//%% NEW FILE " + generatedCode.getKey() + " BEGINS HERE %%\n\n";
+				answer += generatedCode.getValue();
       }
     }
     else if ("-generate".equals(args[0]))
