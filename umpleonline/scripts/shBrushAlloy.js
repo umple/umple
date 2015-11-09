@@ -30,10 +30,10 @@
 SyntaxHighlighter.brushes.Alloy = function()
 {
 	var keywords =	'abstract assert ' +
-					'assert else extends ' +
-					'module ' +
+					'assert fact in all else extends ' +
+					'module sig ' +
 					'String Int ' +
-					'sig one some lone';
+					'one some lone set no ';
 
 	this.regexList = [
 		{ regex: SyntaxHighlighter.regexLib.singleLineCComments,	css: 'comments' },		// one line comments
