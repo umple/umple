@@ -88,8 +88,8 @@ class Appender
  */
 class TraceDirective
 {
-  Integer id = 0;
-  String[] logLevel;
+  autounique id;
+  //String[] logLevel;
   String tracerType = {getTracerDirective().getName()}
   1 -> 1 TracerDirective;
 
@@ -102,9 +102,41 @@ class TraceDirective
   1 -- 0..1 TraceRecord;
 }
 
+class Postfix 
 {
+  Integer occurences = 0;
+  Double periodClause = 0;
+  Double duringClause = 0;
+  executeClause = null;
+  1 -> * Condition;
+  1 -> 0..1 TraceRecord;
+  1 -> * LogLevel;
 }
 
+class Condition 
+{
+  1 -> 1 ConstraintTree constraint;
+  Boolean conditionallyWhere = true;
+  conditionType = "where";
+}
+
+//class TraceRecord 
+//{
+// Boolean recordOnly = false;
+// * -> * UmpleVariable;
+// * -> * Attribute;
+// 1 -> * Record;
+//}
+
+class Record 
+{
+  String recordString;
+}
+
+class LogLevel 
+{
+  String level;
+}
 
 interface TraceItem
 {
@@ -214,12 +246,19 @@ class MethodTraceItem
 }
 
 /*
+ * Future work - initial implementation is done
+ * A group of trace directives that can be switched on or off by other
+ * trace directives
  */
-class TraceRecord
+class TraceCase
 {
+  name = null;
+  boolean activation = false;
+  1 -> * TraceDirective;
 }
 
 /*
+ * Discarded metamodel
  */
 class TraceCondition
 {
@@ -235,6 +274,14 @@ class ConditionRhs
 {
   rhs = null;
   comparisonOperator = null;
+}
+
+class TraceRecord
+{
+  boolean recordOnly = false;
+  * -- * Attribute;
+  * -- * StateMachine;
+  String[] record;
 }
 
 use Trace_Code.ump;
