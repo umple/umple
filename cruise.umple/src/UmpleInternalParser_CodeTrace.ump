@@ -351,25 +351,56 @@ class UmpleInternalParser
       analyzeMethodTraceItem(traceToken);
     }
 
-    // trace all attribute [wildcard]
-    if( traceToken.getValue("traceEntity").equals("*attribute") )
+    String traceWildCard = traceToken.getValue("traceEntity").toLowerCase();
+    
+    if( traceWildCard.equals("allattributes") || 
+    		traceWildCard.equals("allassociations") || 
+    		traceWildCard.equals("allnonapimethods"))
+    	anaylzeTraceWildCard(traceToken);
+    
+    // Trace Warning
+    if( traceItemType == -1 )
+    	setFailedPosition(traceToken.getPosition(),301);
+  }
+  
+  /**
+   * Analyzes trace wildcards
+   */
+  private void anaylzeTraceWildCard(Token traceToken) {
+  	UmpleClass uClass = traceDirective.getUmpleClass();
+    //------------- trace all attribute [wildcard]
+    if( traceToken.getValue("traceEntity").toLowerCase().equals("allattributes") )
     {
-      UmpleClass uClass = traceDirective.getUmpleClass();
-
-      for( int i = 0 ; i < uClass.numberOfAttributes() ; ++i )
+      for( UmpleVariable attr : uClass.getAllAttributes() )
       {
-        UmpleVariable attr;
-        attr = uClass.getAttribute(i);
-        traceAttr.setPosition(traceToken.getPosition());
+      	traceAttr.setPosition(traceToken.getPosition());
         traceAttr.addUmpleVariable(attr);
         traceAttr.setTraceGet(true);
         traceAttr.setTraceSet(true);
       }
     }
-    
-    // Trace Warning
-    if( traceItemType == -1 )
-    	setFailedPosition(traceToken.getPosition(),301);
+    //------------- trace all associations [wildcard]
+    if( traceToken.getValue("traceEntity").toLowerCase().equals("allassociations") )
+    {
+      for( AssociationVariable assoc : uClass.getAssociationVariables() )
+      {
+      	tracedAssoc.setPosition(traceToken.getPosition());
+      	tracedAssoc.addAssociationVariable(assoc);
+      	tracedAssoc.setTraceAdd(true);
+      	tracedAssoc.setTraceRemove(true);
+      }
+    }
+    //------------- trace all non-api methods [wildcard]
+    if( traceToken.getValue("traceEntity").toLowerCase().equals("allnonapimethods") )
+    {
+      for( Method m : uClass.getMethods() )
+      {
+      	mte.setPosition(traceToken.getPosition());
+        mte.addMethod(m);
+        mte.setEntry(true);
+        mte.setExit(true);
+      }
+    }
   }
 
   /**
