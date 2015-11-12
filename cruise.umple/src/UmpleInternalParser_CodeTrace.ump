@@ -292,7 +292,7 @@ class UmpleInternalParser
       }
       else if( traceToken.is("traceExecute") )
       {
-        traceAttr.setExecuteClause(token.getValue("traceExecute"));
+      	traceDirective.getPostfix().setExecuteClause(token.getValue("traceExecute"));
       }
       else if( traceToken.is("logLevel") )
       {

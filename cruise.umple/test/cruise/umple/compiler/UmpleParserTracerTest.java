@@ -496,20 +496,20 @@ public class UmpleParserTracerTest
 
 		AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-		Assert.assertEquals("\"somthing\"",traceAttr1.getExecuteClause());
+		Assert.assertEquals("\"somthing\"",traceDirective1.getPostfix().getExecuteClause());
 
 		AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
-		Assert.assertEquals("record(\"objectBeingTraced\")",traceAttr2.getExecuteClause());
+		Assert.assertEquals("record(\"objectBeingTraced\")",traceDirective2.getPostfix().getExecuteClause());
 
 		AttributeTraceItem traceAttr3 = traceDirective3.getAttributeTraceItem(0);
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr3.getAttribute(0));
 		Assert.assertEquals("traceFlag1",traceAttr3.getForClause());
-		Assert.assertEquals("record(\"x\",name)",traceAttr3.getExecuteClause());
+		Assert.assertEquals("record(\"x\",name)",traceDirective3.getPostfix().getExecuteClause());
 
 		AttributeTraceItem traceAttr4 = traceDirective4.getAttributeTraceItem(0);
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr4.getAttribute(0));
-		Assert.assertEquals("record (\"objectBeingTraced\"), record(\"x\",name)",traceAttr4.getExecuteClause());
+		Assert.assertEquals("record (\"objectBeingTraced\"), record(\"x\",name)",traceDirective4.getPostfix().getExecuteClause());
 		Assert.assertEquals(traceAttr4.getConditionType(),"where");
 
 	}
@@ -721,12 +721,12 @@ public class UmpleParserTracerTest
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(0));
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(1));	  
 		Assert.assertEquals("30ms",traceAttr1.getDuringClause());
-		Assert.assertEquals("\"something\"",traceAttr1.getExecuteClause());
+		Assert.assertEquals("\"something\"",traceDirective1.getPostfix().getExecuteClause());
 
 		AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(0));
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(1));
-		Assert.assertEquals("record(\"x\")",traceAttr2.getExecuteClause());
+		Assert.assertEquals("record(\"x\")",traceDirective2.getPostfix().getExecuteClause());
 		Assert.assertEquals(traceAttr2.getConditionType(),"where");
 	}
 

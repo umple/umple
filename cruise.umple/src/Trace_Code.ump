@@ -404,6 +404,12 @@ class AttributeTraceItem
         message = StringFormatter.format(getExtremities(gen, name),message);
         message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
         message = "\n" + message;
+        if(getTraceDirective().getPostfix().getExecuteClause()!=null)
+        {
+        	String execute = getTraceDirective().getPostfix().getExecuteClause();
+        	execute = GeneratorHelper.doIndent(execute,gen.translate("traceIndent",this));
+        	message += "\n" + execute;
+        }
         return message;
       }
     }
@@ -525,6 +531,12 @@ class StateMachineTraceItem
       message = StringFormatter.format(gen.translate("traceTemplate",this),tracerName,message);
     message = StringFormatter.format(getExtremities(gen, name),message);
     message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
+    if(getTraceDirective().getPostfix().getExecuteClause()!=null)
+    {
+    	String execute = getTraceDirective().getPostfix().getExecuteClause();
+    	execute = GeneratorHelper.doIndent(execute,gen.translate("traceIndent",this));
+    	message += "\n" + execute;
+    }
     return message;
   }
   /* Gets and returns the if statement enclosing this trace item. The name is not used, but is required from the signature of TraceItem
@@ -626,6 +638,12 @@ class AssociationTraceItem
           message = StringFormatter.format(gen.translate("traceTemplate",this),tracerName,message);
         message = StringFormatter.format(getExtremities(gen, name),message);
         message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
+        if(getTraceDirective().getPostfix().getExecuteClause()!=null)
+        {
+        	String execute = getTraceDirective().getPostfix().getExecuteClause();
+        	execute = GeneratorHelper.doIndent(execute,gen.translate("traceIndent",this));
+        	message += "\n" + execute;
+        }
         return message;
       }
     }

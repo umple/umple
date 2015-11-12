@@ -168,6 +168,12 @@ public class TracerAttributesTest extends TracerStateMachinesTest
   {
     assertUmpleTemplateFor("TraceMultipleAttributePeriod.ump",languagePath + tracerPath+"TraceMultipleAttributePeriod."+ languagePath +".txt","Tracer",false);
   }
+  
+  @Test
+  public void traceAttributeWithExecute()
+  {
+    AssertAttr("TraceAttributeWithExecute.ump","TraceAttributeWithExecute.");
+  }
 
   //	@Test  
   //	public void MultipleAttributesRecord1()

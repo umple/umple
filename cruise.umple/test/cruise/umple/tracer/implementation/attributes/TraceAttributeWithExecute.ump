@@ -1,0 +1,7 @@
+namespace example;
+
+class Tracer
+{
+  x;
+  trace x execute {traceCounter++;};
+}
