@@ -1627,7 +1627,6 @@ class Attribute
 	endPosition = another.getEndPosition();
 	umpleClass = another.getUmpleClass();
 	umpleTrait = another.getUmpleTrait();
-	traceRecords = another.getTraceRecords();
   }
 
   public boolean isConstant()

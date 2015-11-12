@@ -98,18 +98,11 @@ class TraceDirective
   1 -- * MethodTraceItem;
   1 -- * AssociationTraceItem;
   1 -> * TraceCondition condition;
+  1 -- 0..1 Postfix;
   1 -- 0..1 TraceRecord;
 }
 
-/*
- * To be done. A group of trace directives that can be switched on or off by other
- * trace directives
- */
-class TraceCase
 {
-  name = null;
-  boolean activation = false;
-  1 -> * TraceDirective;
 }
 
 
@@ -221,19 +214,12 @@ class MethodTraceItem
 }
 
 /*
- * Data to record in a trace directive
  */
 class TraceRecord
 {
-  boolean recordOnly = false;
-  * -- * Attribute;
-  * -- * StateMachine;
-  String[] record;
 }
 
 /*
- * An element of Boolean logic determining whether a trace directive
- * when encountered, will result in trace output
  */
 class TraceCondition
 {

@@ -752,15 +752,14 @@ class TraceItemUtil {
   depend cruise.umple.util.*;
   
   public static  String prepareLog4jMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message){
-    
-    int logCounter = td.numberOfLogLevel();
+    int logCounter = td.getPostfix().numberOfLogLevels();
     String messages = "";
    
    if(logCounter == 0)
    {
      message = StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),"info",message);
    }
-   else if( logCounter == 1 && td.getLogLevel(0).equals("all")) 
+   else if( logCounter == 1 && td.getPostfix().getLogLevel(0).getLevel().equals("all")) 
    {
      String[] logLevels = {"trace","debug","info","warn","error","fatal"};
      logCounter = 6;
@@ -774,27 +773,27 @@ class TraceItemUtil {
    }
    else {
      
-     for( String level : td.getLogLevel() )
+     for( LogLevel level : td.getPostfix().getLogLevels() )
      {
        --logCounter;
-       messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level,message);
+       messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level.getLevel(),message);
        if( logCounter > 0 ) messages += "{0}";
      }
      message = StringFormatter.format(messages,"\n");
    }
    
    return message;
- }
+  }
   
   public static  String prepareJavaLogAPIMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message){
-    int logCounter = td.numberOfLogLevel();
+    int logCounter = td.getPostfix().numberOfLogLevels();
     String messages = "";
    
    if(logCounter == 0)
    {
      message = StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),"info",message);
    }
-   else if( logCounter == 1 && td.getLogLevel(0).equals("all")) 
+   else if( logCounter == 1 && td.getPostfix().getLogLevel(0).getLevel().equals("all")) 
    {
      String[] logLevels = {"finest","finer","fine","config","info","warning","severe"};
      logCounter = 6;
@@ -808,10 +807,10 @@ class TraceItemUtil {
    }
    else {
      
-     for( String level : td.getLogLevel() )
+     for( LogLevel level : td.getPostfix().getLogLevels() )
      {
        --logCounter;
-       messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level,message);
+       messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level.getLevel(),message);
        if( logCounter > 0 ) messages += "{0}";
      }
      message = StringFormatter.format(messages,"\n");

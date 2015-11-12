@@ -352,7 +352,6 @@ class Attribute {
     {
       throw new RuntimeException("Unable to create attribute due to umpleTrait");
     }
-    traceRecords = new ArrayList<TraceRecord>();
     //TODO The following lines should be removed or used correctly for UmpleTrait;
     // line 569 "../../../../src/Umple.ump"
     codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();

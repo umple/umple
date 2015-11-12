@@ -23,6 +23,7 @@ class UmpleInternalParser
   AssociationTraceItem tracedAssoc = null;
   MethodTraceItem mte = null;
   TraceCase tca = null;
+  Postfix post = null;
 
   //------------------------------------------
   //----------  Trace analysis Code  ---------
@@ -150,6 +151,7 @@ class UmpleInternalParser
     traceAttr = new AttributeTraceItem(traceDirective);
     tracedAssoc = new AssociationTraceItem(traceDirective);
     mte = new MethodTraceItem(traceDirective);
+    post = new Postfix(traceDirective);
     TraceRecord traceRecord = null;
     traceDirective.setUmpleClass(aClass);
 
@@ -294,7 +296,7 @@ class UmpleInternalParser
       }
       else if( traceToken.is("logLevel") )
       {
-        traceDirective.addLogLevel(traceToken.getValue());
+      	traceDirective.getPostfix().addLogLevel(new LogLevel(traceToken.getValue()));
       }
     }
     if( traceAttr.numberOfUmpleVariables() > 0 )
