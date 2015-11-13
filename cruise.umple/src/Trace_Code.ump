@@ -391,7 +391,7 @@ class AttributeTraceItem
             );
         if(getTracerType().equals("log4j"))
           message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
-        else if(getTracerType().equals("javaapi"))
+        else if(getTracerType().equals("javaapi") || getTracerType().equals("lttng"))
           message = TraceItemUtil.prepareJavaLogAPIMessages(getTraceDirective(),gen,this,message);
         else if(getTracerType().equals("lttngjni"))
           message = TraceItemUtil.prepareJavaLttngJniMessages(getTraceDirective(),gen,this,message + ", "+gen.translate("traceThread",this));
@@ -523,7 +523,7 @@ class StateMachineTraceItem
         );
     if(getTracerType().equals("log4j"))
       message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
-    else if(getTracerType().equals("javaapi"))
+    else if(getTracerType().equals("javaapi") || getTracerType().equals("lttng"))
       message = TraceItemUtil.prepareJavaLogAPIMessages(getTraceDirective(),gen,this,message);
     else if(getTracerType().equals("lttngjni"))
       message = TraceItemUtil.prepareJavaLttngJniMessages(getTraceDirective(),gen,this,message + ", "+gen.translate("traceThread",this));
@@ -630,7 +630,7 @@ class AssociationTraceItem
             );
         if(getTracerType().equals("log4j"))
           message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
-        else if(getTracerType().equals("javaapi"))
+        else if(getTracerType().equals("javaapi") || getTracerType().equals("lttng"))
           message = TraceItemUtil.prepareJavaLogAPIMessages(getTraceDirective(),gen,this,message);
         else if(getTracerType().equals("lttngjni"))
           message = TraceItemUtil.prepareJavaLttngJniMessages(getTraceDirective(),gen,this,message + ", "+gen.translate("traceThread",this));
@@ -743,7 +743,7 @@ class MethodTraceItem {
         
         if(getTracerType().equals("log4j"))
           message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
-        else if(getTracerType().equals("javaapi"))
+        else if(getTracerType().equals("javaapi") || getTracerType().equals("lttng"))
           message = TraceItemUtil.prepareJavaLogAPIMessages(getTraceDirective(),gen,this,message);
         else if(getTracerType().equals("lttngjni"))
           message = TraceItemUtil.prepareJavaLttngJniMessages(getTraceDirective(),gen,this,message + ", "+gen.translate("traceThread",this));

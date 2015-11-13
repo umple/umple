@@ -48,7 +48,8 @@ class UmpleInternalParser
         	String tracerName = subToken.getValue().toLowerCase();
         	
         	if( tracerName.equals("console") | tracerName.equals("file") | tracerName.equals("string") 
-        			| tracerName.equals("javaapi") | tracerName.equals("lttngjni") | tracerName.equals("log4j") )
+        			| tracerName.equals("javaapi") | tracerName.equals("log4j") 
+        			| tracerName.equals("lttngjni") | tracerName.equals("lttng") )
         	{
             tracer = new TracerDirective(subToken.getValue().toLowerCase());
         	}
@@ -72,10 +73,16 @@ class UmpleInternalParser
         	for(Token msgToken : subToken.getSubTokens())
         	{
         		if(msgToken.is("switch"))
+        		{
         			if( msgToken.getValue().equals("on") )
+        			{
         				tms.setOn(true);
+        			}
         			else if( msgToken.getValue().equals("off") )
+        			{
         				tms.setOff(true);
+        			}
+        		}
         		
         		if(msgToken.is("option"))
         			tms.addOption(new MessageComponent(msgToken.getValue()));

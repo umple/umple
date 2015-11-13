@@ -1531,6 +1531,11 @@ class JavaGenerator
       addJavaLttngJniImport();
     }
     
+    if( getModel().getTracer().getName().equals("lttng") )
+    {
+      addJavaLttngImport();
+    }
+    
     addRelatedImports();
   }
   
@@ -1563,6 +1568,37 @@ class JavaGenerator
       init.setIsInternal(true);
       umpleClass.addCodeInjection(init);
       umpleClass.addDepend(new Depend("org.lttng.ust.LTTngUst"));
+    }
+  }
+  
+  private void addJavaLttngImport(){
+    for(UmpleClass umpleClass : getModel().getUmpleClasses())
+    {
+    	// imports
+    	umpleClass.addDepend(new Depend("java.util.logging.*"));
+      umpleClass.addDepend(new Depend("org.lttng.ust.agent.LTTngAgent"));
+      // code injection in constructor
+      CodeBlock cb = new CodeBlock("LTTngAgent lttngAgent = LTTngAgent.getLTTngAgent();");
+      CodeInjection init = new CodeInjection("after","constructor", cb, umpleClass);
+      init.setIsInternal(true);
+      umpleClass.addCodeInjection(init);
+      // logger static variable
+      Attribute loggerAttr = new Attribute("logger", "Logger", "const", "Logger.getLogger("+umpleClass.getName()+".class.getName())", false, umpleClass);
+      umpleClass.addAttribute(loggerAttr);
+    }
+  }
+  
+  private void addJavaLttngImport(){
+    for(UmpleClass umpleClass : getModel().getUmpleClasses())
+    {
+    	CodeBlock cb = new CodeBlock("LTTngAgent lttngAgent = LTTngAgent.getLTTngAgent();");
+      CodeInjection init = new CodeInjection("after","constructor", cb, umpleClass);
+      init.setIsInternal(true);
+      umpleClass.addCodeInjection(init);
+      Attribute loggerAttr = new Attribute("logger", "Logger", "const", "Logger.getLogger("+umpleClass.getName()+".class.getName())", false, umpleClass);
+      umpleClass.addAttribute(loggerAttr);
+      umpleClass.addDepend(new Depend("java.util.logging.*"));
+      umpleClass.addDepend(new Depend("org.lttng.ust.agent.LTTngAgent"));
     }
   }
 
