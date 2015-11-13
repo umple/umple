@@ -3,7 +3,5 @@ namespace example;
 class Tracer
 {
   x;
-  y;
-  z;
-  trace AllAttributes;
+  trace x execute {traceCounter++;};
 }

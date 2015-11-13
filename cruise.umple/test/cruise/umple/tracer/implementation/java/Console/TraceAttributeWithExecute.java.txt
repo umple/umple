@@ -1,0 +1,9 @@
+  public boolean setX(String aX)
+  {
+    boolean wasSet = false;
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWithExecute.ump,6,Tracer,"+System.identityHashCode(this)+",at_s,x,"+x+","+(""+aX).toString().replace("\n","").replace(",",";") );
+    traceCounter++;
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }
