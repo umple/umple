@@ -1,0 +1,51 @@
+
+package example;
+import java.util.logging.*;
+import org.lttng.ust.agent.LTTngAgent;
+
+public class Tracer
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  public static final Logger logger = Logger.getLogger(Tracer.class.getName());
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private String x;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(String aX)
+  {
+    x = aX;
+    LTTngAgent lttngAgent = LTTngAgent.getLTTngAgent();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setX(String aX)
+  {
+    boolean wasSet = false;
+    logger.info( System.currentTimeMillis()+","+Thread.currentThread().getId()+",LttngTest3.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,x,"+x+","+(""+aX).toString().replace("\n","").replace(",",";") );
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getX()
+  {
+    return x;
+  }
+
+  public void delete()
+  {}
