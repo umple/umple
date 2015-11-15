@@ -1,0 +1,88 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+public class A
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //A Attributes
+  private String k;
+
+  //Helper Variables
+  private int cachedHashCode;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public A(String aK)
+  {
+    cachedHashCode = -1;
+    k = aK;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getK()
+  {
+    return k;
+  }
+
+  public boolean equals(Object obj)
+  {
+    if (obj == null) { return false; }
+    if (!getClass().equals(obj.getClass())) { return false; }
+
+    A compareTo = (A)obj;
+  
+    if (k == null && compareTo.k != null)
+    {
+      return false;
+    }
+    else if (k != null && !k.equals(compareTo.k))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  public int hashCode()
+  {
+    if (cachedHashCode != -1)
+    {
+      return cachedHashCode;
+    }
+    cachedHashCode = 17;
+    if (k != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + k.hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+
+    
+    return cachedHashCode;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "k" + ":" + getK()+ "]"
+     + outputString;
+  }
+}
