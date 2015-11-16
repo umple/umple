@@ -103,6 +103,24 @@ public class TracerStateMachinesTest extends TracerAssociationsTest
 	  AssertStm("TraceConcurrentStmA.ump","TraceConcurrentStmA.");
 	}
 	
+	@Test
+	public void TraceLightBulbState()
+	{
+	  AssertStm("TraceLightBulbState.ump","TraceLightBulbState.","LightBulb");
+	}
+	
+	@Test
+	public void TraceLightBulbEvent()
+	{
+	  AssertStm("TraceLightBulbEvent.ump","TraceLightBulbEvent.","LightBulb");
+	}
+	
+	@Test
+	public void TraceLightBulbPostfix()
+	{
+	  AssertStm("TraceLightBulbPostfix.ump","TraceLightBulbPostfix.","LightBulb");
+	}
+	
 	// to be done
 	@Test @Ignore
 	public void TracePooledStateMachine()
@@ -186,6 +204,7 @@ public class TracerStateMachinesTest extends TracerAssociationsTest
 	//***************************//
 	//****    Systems        ****//
 	//***************************//
+	
 	@Test
 	public void ConsoleTracer_Phone()
 	{
