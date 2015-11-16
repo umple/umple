@@ -300,19 +300,20 @@ public class UmpleParserTracerTest
 		TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 
 		AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+		Condition cond = traceDirective1.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-		Assert.assertEquals(traceAttr1.getConditionType(),"where");
-		Assert.assertEquals(((ConstraintAttribute)((ConstraintTree)((ConstraintOperator)((TraceConstraint)traceAttr1.getConstraint().getRoot()).getRoot()).getLeft()).getRoot()).getAttribute().getName(), "id");
-		Assert.assertEquals(((ConstraintOperator)((TraceConstraint)traceAttr1.getConstraint().getRoot()).getRoot()).getValue(), "==");
-		Assert.assertEquals(((ConstraintLiteral)((ConstraintOperator)((TraceConstraint)traceAttr1.getConstraint().getRoot()).getRoot()).getRight()).getValue(), "30");
+		Assert.assertEquals(cond.getConditionType(),"where");
+		Assert.assertEquals(((ConstraintAttribute)((ConstraintTree)((ConstraintOperator)((TraceConstraint)cond.getConstraint().getRoot()).getRoot()).getLeft()).getRoot()).getAttribute().getName(), "id");
+		Assert.assertEquals(((ConstraintOperator)((TraceConstraint)cond.getConstraint().getRoot()).getRoot()).getValue(), "==");
+		Assert.assertEquals(((ConstraintLiteral)((ConstraintOperator)((TraceConstraint)cond.getConstraint().getRoot()).getRoot()).getRight()).getValue(), "30");
 
-
+		cond = traceDirective2.getPostfix().getCondition();
 		AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
-		Assert.assertEquals(traceAttr2.getConditionType(),"where");
-		Assert.assertEquals(((ConstraintAttribute)((ConstraintTree)((ConstraintOperator)((TraceConstraint)traceAttr2.getConstraint().getRoot()).getRoot()).getLeft()).getRoot()).getAttribute().getName(), "id");
-		Assert.assertEquals(((ConstraintOperator)((TraceConstraint)traceAttr2.getConstraint().getRoot()).getRoot()).getValue(), ">");
-		Assert.assertEquals(((ConstraintLiteral)((ConstraintOperator)((TraceConstraint)traceAttr2.getConstraint().getRoot()).getRoot()).getRight()).getValue(), "500");
+		Assert.assertEquals(cond.getConditionType(),"where");
+		Assert.assertEquals(((ConstraintAttribute)((ConstraintTree)((ConstraintOperator)((TraceConstraint)cond.getConstraint().getRoot()).getRoot()).getLeft()).getRoot()).getAttribute().getName(), "id");
+		Assert.assertEquals(((ConstraintOperator)((TraceConstraint)cond.getConstraint().getRoot()).getRoot()).getValue(), ">");
+		Assert.assertEquals(((ConstraintLiteral)((ConstraintOperator)((TraceConstraint)cond.getConstraint().getRoot()).getRoot()).getRight()).getValue(), "500");
 
 	}
 
@@ -327,12 +328,14 @@ public class UmpleParserTracerTest
 		TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 
 		AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+		Condition cond = traceDirective1.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-		Assert.assertEquals(traceAttr1.getConditionType(),"until");
+		Assert.assertEquals(cond.getConditionType(),"until");
 
+		cond = traceDirective2.getPostfix().getCondition();
 		AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
-		Assert.assertEquals(traceAttr2.getConditionType(),"until");
+		Assert.assertEquals(cond.getConditionType(),"until");
 
 	}
 
@@ -347,12 +350,14 @@ public class UmpleParserTracerTest
 		TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 
 		AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+		Condition cond = traceDirective1.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-		Assert.assertEquals(traceAttr1.getConditionType(),"after");
+		Assert.assertEquals(cond.getConditionType(),"after");
 
 		AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
+		cond = traceDirective2.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
-		Assert.assertEquals(traceAttr2.getConditionType(),"after");
+		Assert.assertEquals(cond.getConditionType(),"after");
 	}
 
 	@Test 
@@ -373,8 +378,9 @@ public class UmpleParserTracerTest
 		TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 
 		AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+		Condition cond = traceDirective1.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("c"),traceAttr1.getAttribute(0));
-		Assert.assertEquals(traceAttr1.getConditionType(),"where");
+		Assert.assertEquals(cond.getConditionType(),"where");
 	}
 
 	@Test
@@ -388,10 +394,11 @@ public class UmpleParserTracerTest
 		TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 
 		AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+		Condition cond = traceDirective1.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("c"),traceAttr1.getAttribute(0));
 		Assert.assertEquals(false,traceAttr1.getTraceSet());
 		Assert.assertEquals(true,traceAttr1.getTraceGet());
-		Assert.assertEquals(traceAttr1.getConditionType(),"where");
+		Assert.assertEquals(cond.getConditionType(),"where");
 	}
 
 	@Test
@@ -419,8 +426,9 @@ public class UmpleParserTracerTest
 		TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 
 		AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+		Condition cond = traceDirective1.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("c"),traceAttr1.getAttribute(0));
-		Assert.assertEquals(traceAttr1.getConditionType(),"giving");
+		Assert.assertEquals(cond.getConditionType(),"giving");
 	}
 
 	@Test
@@ -508,9 +516,10 @@ public class UmpleParserTracerTest
 		Assert.assertEquals("record(\"x\",name)",traceDirective3.getPostfix().getExecuteClause());
 
 		AttributeTraceItem traceAttr4 = traceDirective4.getAttributeTraceItem(0);
+		Condition cond = traceDirective4.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr4.getAttribute(0));
 		Assert.assertEquals("record (\"objectBeingTraced\"), record(\"x\",name)",traceDirective4.getPostfix().getExecuteClause());
-		Assert.assertEquals(traceAttr4.getConditionType(),"where");
+		Assert.assertEquals(cond.getConditionType(),"where");
 
 	}
 
@@ -598,14 +607,16 @@ public class UmpleParserTracerTest
 		TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 
 		AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+		Condition cond = traceDirective1.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(1));
-		Assert.assertEquals(traceAttr1.getConditionType(),"where");
+		Assert.assertEquals(cond.getConditionType(),"where");
 
 		AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
+		cond = traceDirective2.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(1));
-		Assert.assertEquals(traceAttr2.getConditionType(),"where");
+		Assert.assertEquals(cond.getConditionType(),"where");
 	}
 
 	@Test
@@ -618,14 +629,16 @@ public class UmpleParserTracerTest
 		TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 
 		AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+		Condition cond = traceDirective1.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(1));
-		Assert.assertEquals(traceAttr1.getConditionType(),"until");
+		Assert.assertEquals(cond.getConditionType(),"until");
 
 		AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
+		cond = traceDirective2.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(0));
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(1));
-		Assert.assertEquals(traceAttr2.getConditionType(),"until");
+		Assert.assertEquals(cond.getConditionType(),"until");
 	}
 
 	@Test
@@ -638,14 +651,16 @@ public class UmpleParserTracerTest
 		TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 
 		AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+		Condition cond = traceDirective1.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(1));
-		Assert.assertEquals(traceAttr1.getConditionType(),"after");
+		Assert.assertEquals(cond.getConditionType(),"after");
 
 		AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
+		cond = traceDirective2.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(0));
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(1));
-		Assert.assertEquals(traceAttr2.getConditionType(),"after");
+		Assert.assertEquals(cond.getConditionType(),"after");
 	}
 
 	@Test
@@ -724,10 +739,11 @@ public class UmpleParserTracerTest
 		Assert.assertEquals("\"something\"",traceDirective1.getPostfix().getExecuteClause());
 
 		AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
+		Condition cond = traceDirective2.getPostfix().getCondition();
 		Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(0));
 		Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(1));
 		Assert.assertEquals("record(\"x\")",traceDirective2.getPostfix().getExecuteClause());
-		Assert.assertEquals(traceAttr2.getConditionType(),"where");
+		Assert.assertEquals(cond.getConditionType(),"where");
 	}
 
 	@Test

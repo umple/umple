@@ -112,14 +112,14 @@ class Postfix
   Double periodClause = 0;
   Double duringClause = 0;
   executeClause = null;
-  1 -> * Condition;
+  1 -> 0..1 Condition;
   1 -> 0..1 TraceRecord;
   1 -> * LogLevel;
 }
 
 class Condition 
 {
-  1 -> 1 ConstraintTree constraint;
+  ConstraintTree constraint=null;
   Boolean conditionallyWhere = true;
   conditionType = "where";
 }
@@ -157,9 +157,7 @@ interface TraceItem
  */
 class AttributeTraceItem
 {
-  isA TraceItem;  
-
-  ConstraintTree constraint=null;
+  isA TraceItem;
   tracerType = {getTraceDirective().getTracerType()}
 
   boolean traceSet = false;
@@ -172,8 +170,6 @@ class AttributeTraceItem
   * -> * UmpleVariable;
 
   Position position = null;
-  Boolean conditionallyWhere = true; 
-  conditionType = "where";
 }
 
 /*

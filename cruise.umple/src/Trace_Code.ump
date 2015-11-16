@@ -309,10 +309,10 @@ class AttributeTraceItem
     return addUmpleVariable(attr);
   }
   public Boolean getIsPre(){
-    return conditionallyWhere;
+    return getTraceDirective().getPostfix().getCondition().getConditionallyWhere();
   }
   public Boolean getIsPost(){
-    return !conditionallyWhere;
+    return !getTraceDirective().getPostfix().getCondition().getConditionallyWhere();
   }
 
   /*
@@ -417,7 +417,7 @@ class AttributeTraceItem
   public String getExtremities(CodeTranslator gen, String name)
   {
     ((SuperCodeGenerator)gen).setParameterConstraintName(name);
-    return gen.translate("Closed",constraint);
+    return gen.translate("Closed",getTraceDirective().getPostfix().getCondition().getConstraint());
   }
 }
 class StateMachineTraceItem
