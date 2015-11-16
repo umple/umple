@@ -26,6 +26,11 @@ class UmpleClass
   0..1 -- * TraceCase;
 }
 
+class UmpleVariable 
+{
+	depend java.util.*;
+}
+
 /*
  * ----- Tracer Directive MetaModel
  * A statement found in Umple that directs tracing technology
@@ -89,7 +94,6 @@ class Appender
 class TraceDirective
 {
   autounique id;
-  //String[] logLevel;
   String tracerType = {getTracerDirective().getName()}
   1 -> 1 TracerDirective;
 
@@ -108,14 +112,14 @@ class Postfix
   Double periodClause = 0;
   Double duringClause = 0;
   executeClause = null;
-  1 -> * Condition;
+  1 -> 0..1 Condition;
   1 -> 0..1 TraceRecord;
   1 -> * LogLevel;
 }
 
 class Condition 
 {
-  1 -> 1 ConstraintTree constraint;
+  ConstraintTree constraint=null;
   Boolean conditionallyWhere = true;
   conditionType = "where";
 }
@@ -153,9 +157,7 @@ interface TraceItem
  */
 class AttributeTraceItem
 {
-  isA TraceItem;  
-
-  ConstraintTree constraint=null;
+  isA TraceItem;
   tracerType = {getTraceDirective().getTracerType()}
 
   boolean traceSet = false;
@@ -165,12 +167,9 @@ class AttributeTraceItem
   forClause = null;
   periodClause = null;
   duringClause = null;
-  executeClause = null;
-  * -- * UmpleVariable;
+  * -> * UmpleVariable;
 
   Position position = null;
-  Boolean conditionallyWhere = true; 
-  conditionType = "where";
 }
 
 /*
@@ -213,8 +212,8 @@ class AssociationTraceItem
   ConstraintTree constraint=null;
   tracerType = {getTraceDirective().getTracerType()}
 
-  * -- * AssociationVariable;
-  * -- * Association;
+  * -> * AssociationVariable;
+  * -> * Association;
 
   //default case tracing Cardinality
   boolean traceCardinality = true;
@@ -237,7 +236,7 @@ class MethodTraceItem
   boolean entry = false;
   boolean exit = false;
   
-  * -- * Method;
+  * -> * Method;
   
   Position position = null;
   periodClause = null;

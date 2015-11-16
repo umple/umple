@@ -161,6 +161,7 @@ class UmpleInternalParser
     post = new Postfix(traceDirective);
     TraceRecord traceRecord = null;
     traceDirective.setUmpleClass(aClass);
+    Condition cond = new Condition(null, null);
 
     boolean isFirst = true;
 
@@ -178,8 +179,8 @@ class UmpleInternalParser
           String ctype = traceToken.getValue("conditionType");
           if(ctype!=null&&!ctype.equals("where"))
           {
-            traceAttr.setConditionType(ctype);
-            traceAttr.setConditionallyWhere(false);
+            cond.setConditionType(ctype);
+            cond.setConditionallyWhere(false);
           }
           pos = 2;
         }
@@ -196,7 +197,7 @@ class UmpleInternalParser
         }
         constraint.addElementAll(((ConstraintTokenAnalyzer)model.getAnalyzer("constraintToken")).getConstraint());
         List<Attribute> others = new ArrayList<Attribute>();
-        if("after".equals(traceAttr.getConditionType())||"until".equals(traceAttr.getConditionType()))
+        if("after".equals(cond.getConditionType())||"until".equals(cond.getConditionType()))
         {
           for(ConstraintVariable cv:constraint)
           {
@@ -212,7 +213,7 @@ class UmpleInternalParser
         }
         if(others.isEmpty())
         {
-          traceAttr.setConstraint(constraint);
+        	cond.setConstraint(constraint);
           tracedAssoc.setConstraint(constraint);
           mte.setConstraint(constraint);
         }
@@ -226,7 +227,7 @@ class UmpleInternalParser
             method+= ",set"+at.getName().substring(0,1).toUpperCase()+at.getName().substring(1);          	
           }
           String flag = "traceFlag"+getTraceFlagId();
-          String code = flag+"="+("after".equals(traceAttr.getConditionType())?"true":"until".equals(traceAttr.getConditionType())?"false":"");
+          String code = flag+"="+("after".equals(cond.getConditionType())?"true":"until".equals(cond.getConditionType())?"false":"");
           CodeInjection ci = new CodeInjection("after",method,"", aClass);
           CodeBlock cb = new CodeBlock(code+";");
           cb.setCode("Java",code+";");
@@ -237,8 +238,8 @@ class UmpleInternalParser
           ci.setConstraintTree(constraint);
           aClass.addCodeInjection(ci);
           constraint = new ConstraintTree();
-          traceAttr.setConstraint(constraint);
-          Attribute flagAttr = new Attribute(flag,"Boolean","internal",("after".equals(traceAttr.getConditionType())?"false":"until".equals(traceAttr.getConditionType())?"true":""),false,aClass);
+          cond.setConstraint(constraint);
+          Attribute flagAttr = new Attribute(flag,"Boolean","internal",("after".equals(cond.getConditionType())?"false":"until".equals(cond.getConditionType())?"true":""),false,aClass);
           constraint.addElement(new ConstraintUnassignedName(flag));
         }
       }
@@ -259,13 +260,13 @@ class UmpleInternalParser
         Attribute flagAttr = new Attribute(flag,"Integer","internal","0",false,aClass);
         traceAttr.setForClause(flag);
         ConstraintTree constraint;
-        if(traceAttr.getConstraint()==null)
+        if(cond.getConstraint()==null)
         {
           constraint = new ConstraintTree();
         } 
         else
         {
-          constraint = traceAttr.getConstraint();
+          constraint = cond.getConstraint();
           constraint.addElement(new ConstraintOperator("&&"));
         }
         ConstraintTree subTree = new ConstraintTree();
@@ -273,7 +274,7 @@ class UmpleInternalParser
         subTree.addElement(new ConstraintOperator("<"));
         subTree.addElement(new ConstraintNumberLiteral(traceToken.getValue()));
         constraint.addElement(subTree);
-        traceAttr.setConstraint(constraint);
+        cond.setConstraint(constraint);
       }     
       else if( traceToken.is("tracePeriod") )
       {
@@ -306,6 +307,7 @@ class UmpleInternalParser
       	traceDirective.getPostfix().addLogLevel(new LogLevel(traceToken.getValue()));
       }
     }
+    post.setCondition(cond);
     if( traceAttr.numberOfUmpleVariables() > 0 )
       traceDirective.addAttributeTraceItem(traceAttr);
   }

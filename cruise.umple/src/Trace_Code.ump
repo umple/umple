@@ -309,10 +309,10 @@ class AttributeTraceItem
     return addUmpleVariable(attr);
   }
   public Boolean getIsPre(){
-    return conditionallyWhere;
+    return getTraceDirective().getPostfix().getCondition().getConditionallyWhere();
   }
   public Boolean getIsPost(){
-    return !conditionallyWhere;
+    return !getTraceDirective().getPostfix().getCondition().getConditionallyWhere();
   }
 
   /*
@@ -389,14 +389,9 @@ class AttributeTraceItem
             obj,
             accessor+name      		
             );
-        if(getTracerType().equals("log4j"))
-          message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
-        else if(getTracerType().equals("javaapi") || getTracerType().equals("lttng"))
-          message = TraceItemUtil.prepareJavaLogAPIMessages(getTraceDirective(),gen,this,message);
-        else if(getTracerType().equals("lttngjni"))
-          message = TraceItemUtil.prepareJavaLttngJniMessages(getTraceDirective(),gen,this,message + ", "+gen.translate("traceThread",this));
-        else
-          message = StringFormatter.format(gen.translate("traceTemplate",this),tracerName,message);
+        
+        message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
+
         if(getForClause()!=null)
         {
           message += "\n  "+StringFormatter.format(gen.translate("traceIncrement",this),getForClause());
@@ -422,7 +417,7 @@ class AttributeTraceItem
   public String getExtremities(CodeTranslator gen, String name)
   {
     ((SuperCodeGenerator)gen).setParameterConstraintName(name);
-    return gen.translate("Closed",constraint);
+    return gen.translate("Closed",getTraceDirective().getPostfix().getCondition().getConstraint());
   }
 }
 class StateMachineTraceItem
@@ -521,14 +516,9 @@ class StateMachineTraceItem
         obj,
         name      		
         );
-    if(getTracerType().equals("log4j"))
-      message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
-    else if(getTracerType().equals("javaapi") || getTracerType().equals("lttng"))
-      message = TraceItemUtil.prepareJavaLogAPIMessages(getTraceDirective(),gen,this,message);
-    else if(getTracerType().equals("lttngjni"))
-      message = TraceItemUtil.prepareJavaLttngJniMessages(getTraceDirective(),gen,this,message + ", "+gen.translate("traceThread",this));
-    else
-      message = StringFormatter.format(gen.translate("traceTemplate",this),tracerName,message);
+
+    message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
+    
     message = StringFormatter.format(getExtremities(gen, name),message);
     message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
     if(getTraceDirective().getPostfix().getExecuteClause()!=null)
@@ -628,14 +618,9 @@ class AssociationTraceItem
             methodname,
             name        
             );
-        if(getTracerType().equals("log4j"))
-          message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
-        else if(getTracerType().equals("javaapi") || getTracerType().equals("lttng"))
-          message = TraceItemUtil.prepareJavaLogAPIMessages(getTraceDirective(),gen,this,message);
-        else if(getTracerType().equals("lttngjni"))
-          message = TraceItemUtil.prepareJavaLttngJniMessages(getTraceDirective(),gen,this,message + ", "+gen.translate("traceThread",this));
-        else
-          message = StringFormatter.format(gen.translate("traceTemplate",this),tracerName,message);
+        
+        message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
+        
         message = StringFormatter.format(getExtremities(gen, name),message);
         message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
         if(getTraceDirective().getPostfix().getExecuteClause()!=null)
@@ -671,7 +656,7 @@ class MethodTraceItem {
     return getExit();
   }
   /*
-   * @params gen: A code transator
+   * @params gen: A code translator
    * @params o: the current context(i.e.state being traced)
    * @params methodname: what to call this trace
    * @params uClass: the current umple class uClass
@@ -741,14 +726,8 @@ class MethodTraceItem {
             accessor+name         
             );
         
-        if(getTracerType().equals("log4j"))
-          message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
-        else if(getTracerType().equals("javaapi") || getTracerType().equals("lttng"))
-          message = TraceItemUtil.prepareJavaLogAPIMessages(getTraceDirective(),gen,this,message);
-        else if(getTracerType().equals("lttngjni"))
-          message = TraceItemUtil.prepareJavaLttngJniMessages(getTraceDirective(),gen,this,message + ", "+gen.translate("traceThread",this));
-        else
-          message = StringFormatter.format(gen.translate("traceTemplate",this),tracerName,message);
+        message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
+        
         message = StringFormatter.format(getExtremities(gen, name),message);
         message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
         message += "\n";
@@ -769,77 +748,123 @@ class TraceItemUtil {
 
   depend cruise.umple.util.*;
   
-  public static  String prepareLog4jMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message){
-    int logCounter = td.getPostfix().numberOfLogLevels();
-    String messages = "";
-   
-   if(logCounter == 0)
-   {
-     message = StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),"info",message);
-   }
-   else if( logCounter == 1 && td.getPostfix().getLogLevel(0).getLevel().equals("all")) 
-   {
-     String[] logLevels = {"trace","debug","info","warn","error","fatal"};
-     logCounter = 6;
-     for( String level : logLevels )
-     {
-       --logCounter;
-       messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level,message);
-       if( logCounter > 0 ) messages += "{0}";
-     }
-     message = StringFormatter.format(messages,"\n");
-   }
-   else {
-     
-     for( LogLevel level : td.getPostfix().getLogLevels() )
-     {
-       --logCounter;
-       messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level.getLevel(),message);
-       if( logCounter > 0 ) messages += "{0}";
-     }
-     message = StringFormatter.format(messages,"\n");
-   }
-   
-   return message;
+  /* Method to prepare the trace message according to selected tracing technology
+  * @params td: trace directive
+  * @params gen: code translator
+  * @params ti: trace item
+  * @params message: trace message to be prepared 
+  * @return the trace message after preparation
+  * */
+  public static String prepareTraceMessage(TraceDirective td, CodeTranslator gen, TraceItem ti, String message) 
+  {
+  	String tracer = td.getTracerType();
+  	String tracerName = Character.toUpperCase(tracer.charAt(0)) + tracer.substring(1);
+  	
+  	if(tracer.equals("log4j"))
+  	{
+      message = prepareLog4jMessages(td,gen,ti,message);
+  	}
+    else if(tracer.equals("javaapi") || tracer.equals("lttng"))
+    {
+      message = prepareJavaLogAPIMessages(td,gen,ti,message);
+    }
+    else if(tracer.equals("lttngjni"))
+    {
+      message = prepareJavaLttngJniMessages(td,gen,ti,message + ", "+gen.translate("traceThread",ti));
+    }
+    else
+    {
+      message = StringFormatter.format(gen.translate("traceTemplate",ti),tracerName,message);
+    }
+  	
+	  return message;
   }
   
-  public static  String prepareJavaLogAPIMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message){
-    int logCounter = td.getPostfix().numberOfLogLevels();
-    String messages = "";
-   
-   if(logCounter == 0)
-   {
-     message = StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),"info",message);
-   }
-   else if( logCounter == 1 && td.getPostfix().getLogLevel(0).getLevel().equals("all")) 
-   {
-     String[] logLevels = {"finest","finer","fine","config","info","warning","severe"};
-     logCounter = 6;
-     for( String level : logLevels )
-     {
-       --logCounter;
-       messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level,message);
-       if( logCounter > 0 ) messages += "{0}";
-     }
-     message = StringFormatter.format(messages,"\n");
-   }
-   else {
-     
-     for( LogLevel level : td.getPostfix().getLogLevels() )
-     {
-       --logCounter;
-       messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level.getLevel(),message);
-       if( logCounter > 0 ) messages += "{0}";
-     }
-     message = StringFormatter.format(messages,"\n");
-   }
-   
-   return message;
+  // Method to prepare the trace message according to log4j logging framework
+  public static String prepareLog4jMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message)
+  {
+  	Postfix postfix = td.getPostfix();
+  	int logCounter = postfix.numberOfLogLevels();
+  	String messages = "";
+
+  	if(logCounter == 0)
+  	{
+  		message = StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),"info",message);
+  	}
+  	else if( logCounter == 1 && postfix.getLogLevel(0).getLevel().equals("all")) 
+  	{
+  		String[] logLevels = {"trace","debug","info","warn","error","fatal"};
+  		logCounter = 6;
+  		for( String level : logLevels )
+  		{
+  			--logCounter;
+  			messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level,message);
+  			if( logCounter > 0 ) messages += "{0}";
+  		}
+  		message = StringFormatter.format(messages,"\n");
+  	}
+  	else 
+  	{
+  		for( LogLevel level : postfix.getLogLevels() )
+  		{
+  			--logCounter;
+  			messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level.getLevel(),message);
+  			if( logCounter > 0 ) 
+  			{
+  				messages += "{0}";
+  			}
+  		}
+  		message = StringFormatter.format(messages,"\n");
+  	}
+
+  	return message;
   }
-  
-  public static  String prepareJavaLttngJniMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message){
-    message = StringFormatter.format(gen.translate("traceTemplatelttng",traceItem),"tracepointInt",message);
-    return message;
+
+  //Method to prepare the trace message according to Java logging API
+  public static  String prepareJavaLogAPIMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message)
+  {
+  	Postfix postfix = td.getPostfix();
+  	int logCounter = postfix.numberOfLogLevels();
+  	String messages = "";
+
+  	if(logCounter == 0)
+  	{
+  		message = StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),"info",message);
+  	}
+  	else if( logCounter == 1 && postfix.getLogLevel(0).getLevel().equals("all")) 
+  	{
+  		String[] logLevels = {"finest","finer","fine","config","info","warning","severe"};
+  		logCounter = 6;
+  		for( String level : logLevels )
+  		{
+  			--logCounter;
+  			messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level,message);
+  			if( logCounter > 0 ) 
+  			{
+  				messages += "{0}";
+  			}
+  		}
+  		message = StringFormatter.format(messages,"\n");
+  	}
+  	else {
+
+  		for( LogLevel level : td.getPostfix().getLogLevels() )
+  		{
+  			--logCounter;
+  			messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level.getLevel(),message);
+  			if( logCounter > 0 ) messages += "{0}";
+  		}
+  		message = StringFormatter.format(messages,"\n");
+  	}
+
+  	return message;
+  }
+
+  // Method to prepare the trace message according to early version of LTTng
+  public static  String prepareJavaLttngJniMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message)
+  {
+  	message = StringFormatter.format(gen.translate("traceTemplatelttng",traceItem),"tracepointInt",message);
+  	return message;
   }
 
 }
