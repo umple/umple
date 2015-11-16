@@ -198,7 +198,7 @@ public class UmpleParserTracerTest
 		Assert.assertEquals((Object)null,traceAttr.getForClause());
 		Assert.assertEquals((Object)(Object)null,traceAttr.getPeriodClause());
 		Assert.assertEquals((Object)null,traceAttr.getDuringClause());
-		Assert.assertEquals((Object)null,traceAttr.getExecuteClause());
+		Assert.assertEquals((Object)null,traceDirective.getPostfix().getExecuteClause());
 	}
 
 	@Test
@@ -217,7 +217,7 @@ public class UmpleParserTracerTest
 		Assert.assertEquals((Object)null,traceAttr.getForClause());
 		Assert.assertEquals((Object)null,traceAttr.getPeriodClause());
 		Assert.assertEquals((Object)null,traceAttr.getDuringClause());
-		Assert.assertEquals((Object)null,traceAttr.getExecuteClause());
+		Assert.assertEquals((Object)null,traceDirective.getPostfix().getExecuteClause());
 	}
 
 	@Test
@@ -236,7 +236,7 @@ public class UmpleParserTracerTest
 		Assert.assertEquals((Object)null,traceAttr.getForClause());
 		Assert.assertEquals((Object)null,traceAttr.getPeriodClause());
 		Assert.assertEquals((Object)null,traceAttr.getDuringClause());
-		Assert.assertEquals((Object)null,traceAttr.getExecuteClause());
+		Assert.assertEquals((Object)null,traceDirective.getPostfix().getExecuteClause());
 	}
 
 	@Test
