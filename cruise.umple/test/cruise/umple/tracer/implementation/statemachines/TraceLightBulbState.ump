@@ -1,0 +1,19 @@
+namespace example;
+
+class LightBulb
+{
+  Integer v = 0;
+  status
+  {
+    On { 
+      entry / { setV(1); } 
+      flip -> Off;
+    }
+    Off { 
+      entry / { setV(2); }
+      flip -> On;
+    }
+  }
+  //trace whenever we enter/exit state On 
+  trace On;
+}
