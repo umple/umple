@@ -459,6 +459,11 @@ class StateMachineTraceItem
       name = aTransition.getEvent().getName();
       obj = aTransition.getFromState().getName();
       extra = "," + aTransition.getNextState().getName()+"\"";
+      for(MethodParameter param : aTransition.getEvent().getParams())
+      {
+      	extra += concatinator + "\"," + param.getName()+"=\"";
+      	extra += concatinator + param.getName();
+      }
     }
     else if(o instanceof State)
     {

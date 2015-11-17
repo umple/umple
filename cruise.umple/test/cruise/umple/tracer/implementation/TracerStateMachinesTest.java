@@ -103,6 +103,8 @@ public class TracerStateMachinesTest extends TracerAssociationsTest
 	  AssertStm("TraceConcurrentStmA.ump","TraceConcurrentStmA.");
 	}
 	
+	//-------- LightBulb trace tests
+	
 	@Test
 	public void TraceLightBulbState()
 	{
@@ -121,7 +123,22 @@ public class TracerStateMachinesTest extends TracerAssociationsTest
 	  AssertStm("TraceLightBulbPostfix.ump","TraceLightBulbPostfix.","LightBulb");
 	}
 	
-	// to be done
+	//-------- Events with Parameters trace tests
+	
+	@Test
+	public void TraceEventParameter()
+	{
+	  AssertStm("TraceEventParameter.ump","TraceEventParameter.");
+	}
+	
+	@Test
+	public void TraceEventParameterPostfix()
+	{
+	  AssertStm("TraceEventParameterPostfix.ump","TraceEventParameterPostfix.");
+	}
+	
+	//-------- to be added
+	
 	@Test @Ignore
 	public void TracePooledStateMachine()
 	{
