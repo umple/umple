@@ -16,8 +16,6 @@ public class ConsoleTracerTraceCaseTest extends ConsoleTracerTestTemplate
 
       String[] assocTraceExpected = {
           //---------------------- TraceCase A
-          "at_s,id,0,100",
-          "at_s,name,null,Ottawa",
           "sm_t,Off,flip,On",
           "sm_t,Normal,touch,Dimmed"
       };
@@ -50,8 +48,6 @@ public class ConsoleTracerTraceCaseTest extends ConsoleTracerTestTemplate
     
     //---------------------- TraceCase A
     TraceCaseA ta = new TraceCaseA(null, 0);
-    ta.setId(100);
-    ta.setName("Ottawa");
     ta.flip();
     ta.touch();
 

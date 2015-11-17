@@ -1,0 +1,8 @@
+namespace example;
+
+tracer console on : Time,Object;
+class Tracer
+{
+  x;
+  trace x;
+}

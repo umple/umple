@@ -128,6 +128,14 @@ public class UmpleParserTracerTest
 		LogConfiguration log = model.getTracer().getLogConfiguration();
 		Assert.assertEquals(30,log.getMonitorInterval());
 	}
+	
+	@Test
+	public void traceType_SwicthOn()
+	{
+		code = "tracer console on : Time;";
+		assertParse(code,"[tracerDirective][tracerType:console][traceMessageHeader][switch:on][option:Time]");
+		Assert.assertEquals("console",model.getTraceType());
+	}
 
 	@Test
 	public void traceType_DefaultIsConsole()
