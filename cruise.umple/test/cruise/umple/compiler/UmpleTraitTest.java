@@ -1,8 +1,6 @@
 package cruise.umple.compiler;
 
 
-import junit.framework.Assert;
-
 import org.junit.*;
 
 import cruise.umple.util.SampleFileWriter;
@@ -928,14 +926,31 @@ public class UmpleTraitTest {
 		}	
 	}
 
-        @Ignore
-        public void associationTraitsTest() {
-              String code = "class A {isA T;} class B {} trait T { 1 -- * B;} ";
-              UmpleModel model = getRunModel(code);
-              SampleFileWriter.destroy("B.java");     
-              Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());
-        }
-	
+    @Test
+    public void associationTraitsTest() {
+          String code = "class A {isA T;} class B {} trait T { 1 -- * B;} ";
+          UmpleModel model = getRunModel(code);
+          SampleFileWriter.destroy("B.java");     
+          Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());
+    }
+    
+    
+	@Test
+	public void associationTraits000Test() {
+		String code = "class A {isA T;} interface I {} trait T { 1 -- * I;}";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("20");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}	
+    
+
 	@Test
 	public void associations001Test() {
 		String code = "class A{isA T<X=B>;}trait T<X>{0..1 -- * X;} class B{}";
@@ -967,6 +982,23 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, model.getUmpleClass("A").numberOfAssociationVariables());
 	}	
 	
+	
+	@Test
+	public void associations005Test() {
+		String code = "class A{isA T<X=I>;} interface I{} trait T<X>{ 1 -- * X;} }";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("20");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}	
+
+	
 	@Test
 	public void templateInCode01Test() {
 		String code = "class A{isA T<X=B>;} class B{isA T<X=A>;} trait T<X>{void test(){#X# b=new #X#();}}";
@@ -989,6 +1021,8 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}
 	}	
+	
+	
 	@Test
 	public void InterfaceForTemplates002() {
 		String code = "class A{isA T<X = B1>;} interface I{} trait T<X isA I>{}";
