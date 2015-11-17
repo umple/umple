@@ -15,861 +15,918 @@ namespace cruise.umple.compiler;
 
 class UmpleVariable
 {
-  /*
-   * Retrieve the AttributeTraceItem associated with this UmpleVariable
-   * @params method: for example get or set, each specifying the context to call the gotten trace item
-   * @params uClass: the umple class to look within for the trace item
-   * @return Attribute_Traceitem for this UmpleVariable(either association or attribute);   
-   */
-  public List<TraceItem> getTraced(String method, UmpleClass uClass){
-    ArrayList<TraceItem> atis = new ArrayList<TraceItem>();
+	/*
+	 * Retrieve the AttributeTraceItem associated with this UmpleVariable
+	 * @params method: for example get or set, each specifying the context to call the gotten trace item
+	 * @params uClass: the umple class to look within for the trace item
+	 * @return Attribute_Traceitem for this UmpleVariable(either association or attribute);   
+	 */
+	public List<TraceItem> getTraced(String method, UmpleClass uClass){
+		ArrayList<TraceItem> atis = new ArrayList<TraceItem>();
 
-    for(TraceDirective td: uClass.getAllTraceDirectives())
-    {
-      for(AttributeTraceItem ati: td.getAttributeTraceItems())
-      {
-        if(("setMethod".equals(method)&&ati.getTraceSet())||("getMethod".equals(method)&&ati.getTraceGet()))
-        {
-          for(UmpleVariable variable: ati.getUmpleVariables())
-          {
-            if(variable.getName().equals(this.getName()))
-              atis.add(ati);
-          }
-        }
-        else if("constructor".equals(method)&&ati.getTraceConstructor())
-        {
-          for(UmpleVariable variable: ati.getUmpleVariables())
-          {
-            if(variable.equals(this))
-              atis.add(ati);
-          }
-        }
-      }
-    }
-    return atis;
-  }
+		for(TraceDirective td: uClass.getAllTraceDirectives())
+		{
+			for(AttributeTraceItem ati: td.getAttributeTraceItems())
+			{
+				if(("setMethod".equals(method)&&ati.getTraceSet())||("getMethod".equals(method)&&ati.getTraceGet()))
+				{
+					for(UmpleVariable variable: ati.getUmpleVariables())
+					{
+						if(variable.getName().equals(this.getName()))
+							atis.add(ati);
+					}
+				}
+				else if("constructor".equals(method)&&ati.getTraceConstructor())
+				{
+					for(UmpleVariable variable: ati.getUmpleVariables())
+					{
+						if(variable.equals(this))
+							atis.add(ati);
+					}
+				}
+			}
+		}
+		return atis;
+	}
 }
 
 
 class State
 {
-  /*
-   * Retrieve the StateMachineTraceItem associated with this State
-   * @params method: for example entry or entry or normal, each specifying the context to call the gotten trace item
-   * @params uClass: the umple class to look within for the trace item
-   * @return StateMachine_Traceitem for this UmpleVariable(either association or attribute); 
-   */
-  public TraceItem getTraced(String method, UmpleClass uClass){
-    //go through all the trace directives of uClass
-    for(TraceDirective td: uClass.getAllTraceDirectives())
-    {
-      //for all the statemachine trace items
-      for(StateMachineTraceItem smti: td.getStateMachineTraceItems())
-      {
-        StateMachine sm = smti.getStateMachine();
-        Transition  tsn = smti.getTransition();
-        State st = smti.getState();
-        if( smti.getTraceStateMachineFlag() ) continue;
-        if( method.equals("activity") && st.equals(this) && st.hasActivities() )
-          return smti;
-        if(!(smti.getExit()||smti.getEntry())){
-          if(tsn!=null&&method.equals("transition"))
-          {
-            if(smti.getIsOut()&&smti.getIsIn()){
-              if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
-                return smti;
-              }
-            }
-            else if(smti.getIsOut()){
-              if(tsn.getNextState().equals(this)){
-                return smti;
-              }
-            }
-            else if(smti.getIsIn()){
-              if(tsn.getFromState().equals(this)){
-                return smti;
-              }
-            }
-            else {
-              if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
-                return smti;
-              }
-            }
-          }
-          else if(sm==null)
-          {
-            //if the trace item is not for a transition, and does not contain a state machine, return null
-            return null;
-          }
-          else if(sm!=null&&smti.getTraceStateMachineFlag())
-          { 
-            return smti;
-          }
-          else if(method.equals("transition"))
-          {
-            if(smti.getIsOut()){
-              if(this.equals(st))
-              {
-                return smti;
-              }
-              if(smti.getLevel()>0||smti.getLevel()==-1)
-              {
-                StateMachine root = this.getStateMachine();
-                State parent = this;
-                int level = -1;
-                //System.out.println("start");
-                while (parent != null)
-                {
-                  level+=parent.getName().equals("Null")?0:1;
-                  if(st.getName().equals(parent.getName())&&(level<=smti.getLevel()||smti.getLevel()==-1))
-                  {
-                    //System.out.println(this.getName()+" "+level);
-                    return smti;
-                  }
-                  //System.out.println(parent.getName());
-                  root = parent.getStateMachine();
-                  parent = root.getParentState();
-                }
-                //System.out.println("end");
-              }
-            }
+	/*
+	 * Retrieve the StateMachineTraceItem associated with this State
+	 * @params method: for example entry or entry or normal, each specifying the context to call the gotten trace item
+	 * @params uClass: the umple class to look within for the trace item
+	 * @return StateMachine_Traceitem for this UmpleVariable(either association or attribute); 
+	 */
+	public TraceItem getTraced(String method, UmpleClass uClass){
+		//go through all the trace directives of uClass
+		for(TraceDirective td: uClass.getAllTraceDirectives())
+		{
+			//for all the statemachine trace items
+			for(StateMachineTraceItem smti: td.getStateMachineTraceItems())
+			{
+				StateMachine sm = smti.getStateMachine();
+				Transition  tsn = smti.getTransition();
+				State st = smti.getState();
+				if( smti.getTraceStateMachineFlag() ) continue;
+				if( method.equals("activity") && st.equals(this) && st.hasActivities() )
+					return smti;
+				if(!(smti.getExit()||smti.getEntry())){
+					if(tsn!=null&&method.equals("transition"))
+					{
+						if(smti.getIsOut()&&smti.getIsIn()){
+							if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
+								return smti;
+							}
+						}
+						else if(smti.getIsOut()){
+							if(tsn.getNextState().equals(this)){
+								return smti;
+							}
+						}
+						else if(smti.getIsIn()){
+							if(tsn.getFromState().equals(this)){
+								return smti;
+							}
+						}
+						else {
+							if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
+								return smti;
+							}
+						}
+					}
+					else if(sm==null)
+					{
+						//if the trace item is not for a transition, and does not contain a state machine, return null
+						return null;
+					}
+					else if(sm!=null&&smti.getTraceStateMachineFlag())
+					{ 
+						return smti;
+					}
+					else if(method.equals("transition"))
+					{
+						if(smti.getIsOut()){
+							if(this.equals(st))
+							{
+								return smti;
+							}
+							if(smti.getLevel()>0||smti.getLevel()==-1)
+							{
+								StateMachine root = this.getStateMachine();
+								State parent = this;
+								int level = -1;
+								//System.out.println("start");
+								while (parent != null)
+								{
+									level+=parent.getName().equals("Null")?0:1;
+									if(st.getName().equals(parent.getName())&&(level<=smti.getLevel()||smti.getLevel()==-1))
+									{
+										//System.out.println(this.getName()+" "+level);
+										return smti;
+									}
+									//System.out.println(parent.getName());
+									root = parent.getStateMachine();
+									parent = root.getParentState();
+								}
+								//System.out.println("end");
+							}
+						}
 
-            if(smti.getIsIn())
-            {            
-              for(Transition t:getTransitions())
-              {
-                if(t.getNextState().equals(st))
-                {
-                  return smti;
-                }              
-              }
-            }
-          }
-        }
-        if((method.equals("exit")&&smti.getExit())||(method.equals("entry")&&smti.getEntry()))
-        {
-          if(this.equals(st))
-          {
-            return smti;
-          }
-        }
+						if(smti.getIsIn())
+						{            
+							for(Transition t:getTransitions())
+							{
+								if(t.getNextState().equals(st))
+								{
+									return smti;
+								}              
+							}
+						}
+					}
+				}
+				if((method.equals("exit")&&smti.getExit())||(method.equals("entry")&&smti.getEntry()))
+				{
+					if(this.equals(st))
+					{
+						return smti;
+					}
+				}
 
-      }
-    }
+			}
+		}
 
-    return null;
-  }
+		return null;
+	}
 
-  public StateMachineTraceItem getTrace(String method, UmpleClass uClass, Transition t){
-    State nextState = t.getNextState();
+	public StateMachineTraceItem getTrace(String method, UmpleClass uClass, Transition t){
+		State nextState = t.getNextState();
 
-    for( TraceDirective td : uClass.getAllTraceDirectives() )
-      for( StateMachineTraceItem smti : td.getStateMachineTraceItems() )
-        if( ! smti.getTraceStateMachineFlag() )
-        {
-          State traceState = smti.getState();
+		for( TraceDirective td : uClass.getAllTraceDirectives() )
+			for( StateMachineTraceItem smti : td.getStateMachineTraceItems() )
+				if( ! smti.getTraceStateMachineFlag() )
+				{
+					State traceState = smti.getState();
 
-          if(method.equals("entry"))
-          {
-            if( traceState.getName().equals(nextState.getName()) && smti.getEntry() )
-              return smti;
-          }
-          if(method.equals("exit"))
-          {
-            if( traceState.getName().equals(this.getName()) && smti.getExit() )
-              return smti;
-          }
-          if(method.equals("state") && smti.getTransition() == null )
-          {
-            if( (traceState.getName().equals(this.getName()) ||  traceState.getName().equals(nextState.getName()) )
-                && (smti.getEntry()==false && smti.getExit()==false) )
-              return smti;
-            if(isNested(smti, t))
-            {
-              return smti;
-            }
-          }
-          if(method.equals("transition") && smti.getTransition() != null)
-          {
-            if( smti.getTransition().getEvent().equals(t.getEvent()) )
-              return smti;
-          }
-        }
-        else if( smti.getTraceStateMachineFlag() )
-        {
-          if( method.equals("transition") )
-            return smti;
-        }
+					if(method.equals("entry"))
+					{
+						if( traceState.getName().equals(nextState.getName()) && smti.getEntry() )
+							return smti;
+					}
+					if(method.equals("exit"))
+					{
+						if( traceState.getName().equals(this.getName()) && smti.getExit() )
+							return smti;
+					}
+					if(method.equals("state") && smti.getTransition() == null )
+					{
+						if( (traceState.getName().equals(this.getName()) ||  traceState.getName().equals(nextState.getName()) )
+								&& (smti.getEntry()==false && smti.getExit()==false) )
+							return smti;
+						if(isNested(smti, t))
+						{
+							return smti;
+						}
+					}
+					if(method.equals("transition") && smti.getTransition() != null)
+					{
+						if( smti.getTransition().getEvent().equals(t.getEvent()) )
+							return smti;
+					}
+				}
+				else if( smti.getTraceStateMachineFlag() )
+				{
+					if( method.equals("transition") )
+						return smti;
+				}
 
-    return null;
-  }
+		return null;
+	}
 
 
-  // method to trace state and its desired nested states
-  private boolean isNested(StateMachineTraceItem smti, Transition tsn){
+	// method to trace state and its desired nested states
+	private boolean isNested(StateMachineTraceItem smti, Transition tsn){
 
-    boolean isNested = false;
-    State nextState = tsn.getNextState();
-    StateMachine root = this.getStateMachine();
-    State parent = this;
-    int level = 0;
+		boolean isNested = false;
+		State nextState = tsn.getNextState();
+		StateMachine root = this.getStateMachine();
+		State parent = this;
+		int level = 0;
 
-    root = parent.getStateMachine();
-    parent = root.getParentState();
+		root = parent.getStateMachine();
+		parent = root.getParentState();
 
-    while (parent != null)
-    {
-      level+=parent.getName().equals("Null")?0:1;
-      if(smti.getState().getName().equals(parent.getName())&&(level<smti.getLevel()||smti.getLevel()==-1)&& !this.getName().equals("Null") && !nextState.getName().equals("Null"))
-      {
-        return true;
-      }
-      root = parent.getStateMachine();
-      parent = root.getParentState();
-    }
+		while (parent != null)
+		{
+			level+=parent.getName().equals("Null")?0:1;
+			if(smti.getState().getName().equals(parent.getName())&&(level<smti.getLevel()||smti.getLevel()==-1)&& !this.getName().equals("Null") && !nextState.getName().equals("Null"))
+			{
+				return true;
+			}
+			root = parent.getStateMachine();
+			parent = root.getParentState();
+		}
 
-    return isNested;
-  }
+		return isNested;
+	}
 
 }
 
 class AssociationVariable
 {
-  public List<TraceItem> getTraced(String method, UmpleClass uClass){
-    ArrayList<TraceItem> traceItems = new ArrayList<TraceItem>();
+	public List<TraceItem> getTraced(String method, UmpleClass uClass){
+		ArrayList<TraceItem> traceItems = new ArrayList<TraceItem>();
 
-    for(TraceDirective td: uClass.getAllTraceDirectives())
-    {
-      for(AssociationTraceItem ast: td.getAssociationTraceItems())
-      {
-        if(( (method.equals("associationAdd")||method.equals("associationRemove")) && ast.getTraceCardinality()))
-        {
-        	for(AssociationVariable variable: ast.getAssociationVariables())
-          {
-            if(variable.getName().equals(this.getName()))
-            	traceItems.add(ast);
-          }
-          
-        }
-        if((method.equals("associationAdd") && ast.getTraceAdd()))
-        {
-        	for(AssociationVariable variable: ast.getAssociationVariables())
-          {
-            if(variable.getName().equals(this.getName()))
-            	traceItems.add(ast);
-          }
-        }
-        if((method.equals("associationRemove") && ast.getTraceRemove()))
-        {
-        	for(AssociationVariable variable: ast.getAssociationVariables())
-          {
-            if(variable.getName().equals(this.getName()))
-            	traceItems.add(ast);
-          }
-        }
-      }
-    }
+		for(TraceDirective td: uClass.getAllTraceDirectives())
+		{
+			for(AssociationTraceItem ast: td.getAssociationTraceItems())
+			{
+				if(( (method.equals("associationAdd")||method.equals("associationRemove")) && ast.getTraceCardinality()))
+				{
+					for(AssociationVariable variable: ast.getAssociationVariables())
+					{
+						if(variable.getName().equals(this.getName()))
+							traceItems.add(ast);
+					}
 
-    return traceItems;
-  }
+				}
+				if((method.equals("associationAdd") && ast.getTraceAdd()))
+				{
+					for(AssociationVariable variable: ast.getAssociationVariables())
+					{
+						if(variable.getName().equals(this.getName()))
+							traceItems.add(ast);
+					}
+				}
+				if((method.equals("associationRemove") && ast.getTraceRemove()))
+				{
+					for(AssociationVariable variable: ast.getAssociationVariables())
+					{
+						if(variable.getName().equals(this.getName()))
+							traceItems.add(ast);
+					}
+				}
+			}
+		}
+
+		return traceItems;
+	}
 
 }
 
 class Method
 {
-  public List<TraceItem> getTraced(String method, UmpleClass uClass){
-    ArrayList<TraceItem> amis = new ArrayList<TraceItem>();
+	public List<TraceItem> getTraced(String method, UmpleClass uClass){
+		ArrayList<TraceItem> amis = new ArrayList<TraceItem>();
 
-    for(TraceDirective td: uClass.getAllTraceDirectives())
-    {
-      for(MethodTraceItem ami: td.getMethodTraceItems())
-      {
-        for(Method m : ami.getMethods())
-        {
-          if( m.getName().equals(this.getName()))
-          {
-            amis.add(ami);
-          }
-        }
-      }
-    }
-    return amis;
-  }
+		for(TraceDirective td: uClass.getAllTraceDirectives())
+		{
+			for(MethodTraceItem ami: td.getMethodTraceItems())
+			{
+				for(Method m : ami.getMethods())
+				{
+					if( m.getName().equals(this.getName()))
+					{
+						amis.add(ami);
+					}
+				}
+			}
+		}
+		return amis;
+	}
 }
 
 class AttributeTraceItem
 {
-  depend cruise.umple.util.*;
-  depend java.util.*;
+	depend cruise.umple.util.*;
+	depend java.util.*;
 
-  Attribute getAttribute(int index){
-    return (Attribute)getUmpleVariable(index);
-  }
-  Boolean addAttribute(Attribute attr){
-    return addUmpleVariable(attr);
-  }
-  public Boolean getIsPre(){
-    return getTraceDirective().getPostfix().getCondition().getConditionallyWhere();
-  }
-  public Boolean getIsPost(){
-    return !getTraceDirective().getPostfix().getCondition().getConditionallyWhere();
-  }
+	Attribute getAttribute(int index){
+		return (Attribute)getUmpleVariable(index);
+	}
+	Boolean addAttribute(Attribute attr){
+		return addUmpleVariable(attr);
+	}
+	public Boolean getIsPre(){
+		return getTraceDirective().getPostfix().getCondition().getConditionallyWhere();
+	}
+	public Boolean getIsPost(){
+		return !getTraceDirective().getPostfix().getCondition().getConditionallyWhere();
+	}
 
-  /*
-   * @params gen: A code transator
-   * @params o: the current context(i.e.attribute being traced)
-   * @params methodname: what to call this trace
-   * @params uClass: the current umple class uClass
-   * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
-   * @return the message for the trace 
-   */
-  public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass,String... args)
-  {//find the object being traced
-    for(UmpleVariable attr: umpleVariables)
-    {
-      if(attr.equals(o))
-      {
-        String type = ((UmpleVariable)o).getType();
-        String name = "";
-        String extra = "";
-        String obj = "";
-        String accessor = gen.translate("traceAccessor",this);
-        String concatinator = gen.translate("traceConcatinator",this);
-        String comma = concatinator+"\",\""+concatinator;
-        String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
-        String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},\""+concatinator+"{8}";
+	/*
+	 * @params gen: A code transator
+	 * @params o: the current context(i.e.attribute being traced)
+	 * @params methodname: what to call this trace
+	 * @params uClass: the current umple class uClass
+	 * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
+	 * @return the message for the trace 
+	 */
+	public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass,String... args)
+	{//find the object being traced
+		for(UmpleVariable attr: umpleVariables)
+		{
+			if(attr.equals(o))
+			{
+				String type = ((UmpleVariable)o).getType();
+				String name = "";
+				String extra = "";
+				String obj = "";
+				String accessor = gen.translate("traceAccessor",this);
+				String concatinator = gen.translate("traceConcatinator",this);
+				String comma = concatinator+"\",\""+concatinator;
+				String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
+				String messageLayout = TraceItemUtil.prepareMessageLayout(gen,getTraceDirective().getTracerDirective(),this);
 
-        if(o instanceof Attribute)
-        {
-          name = gen.translate("attributeOne",(Attribute)o);
-        }
-        else if(o instanceof AssociationVariable)
-        {
-          name = gen.translate("associationMany",(AssociationVariable)o);
-        }
+				if(o instanceof Attribute)
+				{
+					name = gen.translate("attributeOne",(Attribute)o);
+				}
+				else if(o instanceof AssociationVariable)
+				{
+					name = gen.translate("associationMany",(AssociationVariable)o);
+				}
 
-        if(type==null||"".equals(type)||"Boolean".equals(type)||"boolean".equals(type)||"String".equals(type)||"int".equals(type)||"Integer".equals(type)||"float".equals(type)||"Float".equals(type)||"double".equals(type)||"Double".equals(type)||"Time".equals(type)||"Date".equals(type))
-        {
-          obj = name;
-        }
-        else
-        {
-          obj = name+"(\"+"+StringFormatter.format(gen.translate("traceIdentifier",this),name)+"+\")";
-          name += gen.translate("traceFormatNonPrimitive",this);
-        }
+				if(type==null||"".equals(type)||"Boolean".equals(type)||"boolean".equals(type)||"String".equals(type)||"int".equals(type)||"Integer".equals(type)||"float".equals(type)||"Float".equals(type)||"double".equals(type)||"Double".equals(type)||"Time".equals(type)||"Date".equals(type))
+				{
+					obj = name;
+				}
+				else
+				{
+					obj = name+"(\"+"+StringFormatter.format(gen.translate("traceIdentifier",this),name)+"+\")";
+					name += gen.translate("traceFormatNonPrimitive",this);
+				}
 
-        for(String str: args){
-          extra+=comma+"(\"\"+"+str+")"+gen.translate("traceFormatNonPrimitive",this);
-        }
-        if(getTraceDirective().getTraceRecord()!=null)
-        {
-          for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
-          {
-            extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
-          }
-          if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
-          {
-            extra+= concatinator+"\"";
-            for(String record:getTraceDirective().getTraceRecord().getRecord())
-            {
-              extra+=","+record.replace("\"","");
-            }
-            extra+= "\"";
-          }
-        }
-        String message = messageLayout+extra;
-        message = StringFormatter.format(
-            message,gen.translate("traceTimestamp",this),
-            gen.translate("traceThread",this),
-            getPosition().getFilename().replace("\\","\\\\"),
-            getPosition().getLineNumber(),
-            uClass.getName(),
-            StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
-            methodname,
-            obj,
-            accessor+name      		
-            );
-        
-        message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
+				for(String str: args){
+					extra+=comma+"(\"\"+"+str+")"+gen.translate("traceFormatNonPrimitive",this);
+				}
+				if(getTraceDirective().getTraceRecord()!=null)
+				{
+					for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
+					{
+						extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
+					}
+					if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
+					{
+						extra+= concatinator+"\"";
+						for(String record:getTraceDirective().getTraceRecord().getRecord())
+						{
+							extra+=","+record.replace("\"","");
+						}
+						extra+= "\"";
+					}
+				}
+				String message = messageLayout+extra;
+				message = StringFormatter.format(
+						message,gen.translate("traceTimestamp",this),
+						gen.translate("traceThread",this),
+						getPosition().getFilename().replace("\\","\\\\"),
+						getPosition().getLineNumber(),
+						uClass.getName(),
+						StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
+						methodname,
+						obj,
+						accessor+name      		
+						);
 
-        if(getForClause()!=null)
-        {
-          message += "\n  "+StringFormatter.format(gen.translate("traceIncrement",this),getForClause());
-        }
-        message = StringFormatter.format(getExtremities(gen, name),message);
-        message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
-        message = "\n" + message;
-        if(getTraceDirective().getPostfix().getExecuteClause()!=null)
-        {
-        	String execute = getTraceDirective().getPostfix().getExecuteClause();
-        	execute = GeneratorHelper.doIndent(execute,gen.translate("traceIndent",this));
-        	message += "\n" + execute;
-        }
-        return message;
-      }
-    }
-    return "";
-  }
-  /* Gets and returns the if statement enclosing this trace item.
-   * needs the name of the attribute
-   * @return the if statement for the trace if one exists
-   */
-  public String getExtremities(CodeTranslator gen, String name)
-  {
-    ((SuperCodeGenerator)gen).setParameterConstraintName(name);
-    return gen.translate("Closed",getTraceDirective().getPostfix().getCondition().getConstraint());
-  }
+				message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
+
+				if(getForClause()!=null)
+				{
+					message += "\n  "+StringFormatter.format(gen.translate("traceIncrement",this),getForClause());
+				}
+				message = StringFormatter.format(getExtremities(gen, name),message);
+				message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
+				message = "\n" + message;
+				if(getTraceDirective().getPostfix().getExecuteClause()!=null)
+				{
+					String execute = getTraceDirective().getPostfix().getExecuteClause();
+					execute = GeneratorHelper.doIndent(execute,gen.translate("traceIndent",this));
+					message += "\n" + execute;
+				}
+				return message;
+			}
+		}
+		return "";
+	}
+	/* Gets and returns the if statement enclosing this trace item.
+	 * needs the name of the attribute
+	 * @return the if statement for the trace if one exists
+	 */
+	public String getExtremities(CodeTranslator gen, String name)
+	{
+		((SuperCodeGenerator)gen).setParameterConstraintName(name);
+		return gen.translate("Closed",getTraceDirective().getPostfix().getCondition().getConstraint());
+	}
 }
 class StateMachineTraceItem
 {
-  depend cruise.umple.util.*;
-  depend java.util.*;
+	depend cruise.umple.util.*;
+	depend java.util.*;
 
-  accessor = "";
-  concatinator = " + ";
+	accessor = "";
+	concatinator = " + ";
 
-  public Boolean getIsPre(){
-    return conditionallyWhere;
-  }
-  public Boolean getIsPost(){
-    return !conditionallyWhere;
-  }
-  /*
-   * @params gen: A code transator
-   * @params o: the current context(i.e.state being traced)
-   * @params methodname: what to call this trace
-   * @params uClass: the current umple class uClass
-   * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
-   * @return the message for the trace 
-   */
-  public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args)
-  {
-    String name = "";
-    String extra = "";
-    String obj = "";
-    String accessor = gen.translate("traceAccessor",this);
-    String concatinator = gen.translate("traceConcatinator",this);
-    String comma = concatinator+"\",\""+concatinator;
-    String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
-    String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},{8}";
+	public Boolean getIsPre(){
+		return conditionallyWhere;
+	}
+	public Boolean getIsPost(){
+		return !conditionallyWhere;
+	}
+	/*
+	 * @params gen: A code transator
+	 * @params o: the current context(i.e.state being traced)
+	 * @params methodname: what to call this trace
+	 * @params uClass: the current umple class uClass
+	 * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
+	 * @return the message for the trace 
+	 */
+	public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args)
+	{
+		String name = "";
+		String extra = "";
+		String obj = "";
+		String accessor = gen.translate("traceAccessor",this);
+		String concatinator = gen.translate("traceConcatinator",this);
+		String comma = concatinator+"\",\""+concatinator;
+		String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
+		String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},{8}";
 
-    if(o instanceof Transition)
-    {
-      Transition aTransition = (Transition)o;
-      name = aTransition.getEvent().getName();
-      obj = aTransition.getFromState().getName();
-      extra = "," + aTransition.getNextState().getName()+"\"";
-      for(MethodParameter param : aTransition.getEvent().getParams())
-      {
-      	extra += concatinator + "\"," + param.getName()+"=\"";
-      	extra += concatinator + param.getName();
-      }
-    }
-    else if(o instanceof State)
-    {
-      State state = (State)o;
-      name = getStateMachine().getName()+"\"";
-      obj = state.getName();
-      for( Action a : ((State) o).getActions() )
-      {
-        if( this.getEntry() && a.getActionType().equals("entry") )
-          obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
-        if( this.getExit() && a.getActionType().equals("exit") )
-          obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
-      }
-    }
-    else if(o instanceof Activity)
-    {
-      Activity act = (Activity)o;
-      State state = act.getState();
-      name = getStateMachine().getName()+"\"";
-      obj = state.getName();
-      if( methodname.equals("sm_da"))
-        obj += ",doActivitedStarted";
-      else if(methodname.equals("sm_di"))
-        obj += ",doActivitedInterrupted";
-    }
-    if(getTraceDirective().getTraceRecord()!=null)
-    {
-      for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
-      {
-        extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
-      }
-      if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
-      {
-        extra+= concatinator+"\"";
-        for(String record:getTraceDirective().getTraceRecord().getRecord())
-        {
-          extra+=","+record.replace("\"","");
-        }
-        extra+= "\"";
-      }
-    }
-    for(String str: args){
-      extra+=comma+str;
-    }
+		if(o instanceof Transition)
+		{
+			Transition aTransition = (Transition)o;
+			name = aTransition.getEvent().getName();
+			obj = aTransition.getFromState().getName();
+			extra = "," + aTransition.getNextState().getName()+"\"";
+			for(MethodParameter param : aTransition.getEvent().getParams())
+			{
+				extra += concatinator + "\"," + param.getName()+"=\"";
+				extra += concatinator + param.getName();
+			}
+		}
+		else if(o instanceof State)
+		{
+			State state = (State)o;
+			name = getStateMachine().getName()+"\"";
+			obj = state.getName();
+			for( Action a : ((State) o).getActions() )
+			{
+				if( this.getEntry() && a.getActionType().equals("entry") )
+					obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
+				if( this.getExit() && a.getActionType().equals("exit") )
+					obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
+			}
+		}
+		else if(o instanceof Activity)
+		{
+			Activity act = (Activity)o;
+			State state = act.getState();
+			name = getStateMachine().getName()+"\"";
+			obj = state.getName();
+			if( methodname.equals("sm_da"))
+				obj += ",doActivitedStarted";
+			else if(methodname.equals("sm_di"))
+				obj += ",doActivitedInterrupted";
+		}
+		if(getTraceDirective().getTraceRecord()!=null)
+		{
+			for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
+			{
+				extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
+			}
+			if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
+			{
+				extra+= concatinator+"\"";
+				for(String record:getTraceDirective().getTraceRecord().getRecord())
+				{
+					extra+=","+record.replace("\"","");
+				}
+				extra+= "\"";
+			}
+		}
+		for(String str: args){
+			extra+=comma+str;
+		}
 
-    String message = messageLayout+extra;
-    message = StringFormatter.format(
-        message,gen.translate("traceTimestamp",this),
-        gen.translate("traceThread",this),
-        getPosition().getFilename().replace("\\","\\\\"),
-        getPosition().getLineNumber(),
-        uClass.getName(),
-        StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
-        methodname,
-        obj,
-        name      		
-        );
+		String message = messageLayout+extra;
+		message = StringFormatter.format(
+				message,gen.translate("traceTimestamp",this),
+				gen.translate("traceThread",this),
+				getPosition().getFilename().replace("\\","\\\\"),
+				getPosition().getLineNumber(),
+				uClass.getName(),
+				StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
+				methodname,
+				obj,
+				name      		
+				);
 
-    message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
-    
-    message = StringFormatter.format(getExtremities(gen, name),message);
-    message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
-    if(getTraceDirective().getPostfix().getExecuteClause()!=null)
-    {
-    	String execute = getTraceDirective().getPostfix().getExecuteClause();
-    	execute = GeneratorHelper.doIndent(execute,gen.translate("traceIndent",this));
-    	message += "\n" + execute;
-    }
-    return message;
-  }
-  /* Gets and returns the if statement enclosing this trace item. The name is not used, but is required from the signature of TraceItem
-   * @return the if statement for the trace if one exists
-   */
-  public String getExtremities(CodeTranslator gen, String name)
-  {
-    return gen.translate("Closed",constraint);
-  }
+		message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
+
+		message = StringFormatter.format(getExtremities(gen, name),message);
+		message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
+		if(getTraceDirective().getPostfix().getExecuteClause()!=null)
+		{
+			String execute = getTraceDirective().getPostfix().getExecuteClause();
+			execute = GeneratorHelper.doIndent(execute,gen.translate("traceIndent",this));
+			message += "\n" + execute;
+		}
+		return message;
+	}
+	/* Gets and returns the if statement enclosing this trace item. The name is not used, but is required from the signature of TraceItem
+	 * @return the if statement for the trace if one exists
+	 */
+	public String getExtremities(CodeTranslator gen, String name)
+	{
+		return gen.translate("Closed",constraint);
+	}
 }
 
 class AssociationTraceItem
 {
-  depend cruise.umple.util.*;
-  depend java.util.*;
+	depend cruise.umple.util.*;
+	depend java.util.*;
 
-  public Boolean getIsPre(){
-    return conditionallyWhere;
-  }
-  public Boolean getIsPost(){
-    return !conditionallyWhere;
-  }
-  /*
-   * @params gen: A code transator
-   * @params o: the current context(i.e.attribute being traced)
-   * @params methodname: what to call this trace
-   * @params uClass: the current umple class uClass
-   * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
-   * @return the message for the trace 
-   */  
-  public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args){
+	public Boolean getIsPre(){
+		return conditionallyWhere;
+	}
+	public Boolean getIsPost(){
+		return !conditionallyWhere;
+	}
+	/*
+	 * @params gen: A code transator
+	 * @params o: the current context(i.e.attribute being traced)
+	 * @params methodname: what to call this trace
+	 * @params uClass: the current umple class uClass
+	 * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
+	 * @return the message for the trace 
+	 */  
+	public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args){
 
-    for(AssociationVariable ass: uClass.getAssociationVariables())
-    {
-      if(ass.equals(o))
-      {
-        String type = ((AssociationVariable)o).getType();
-        String name = "";
-        String extra = "";
-        String obj = "";
-        String accessor = gen.translate("traceAccessor",this);
-        String concatinator = gen.translate("traceConcatinator",this);
-        String comma = concatinator+"\",\""+concatinator;
-        String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
-        String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},\"";
+		for(AssociationVariable ass: uClass.getAssociationVariables())
+		{
+			if(ass.equals(o))
+			{
+				String type = ((AssociationVariable)o).getType();
+				String name = "";
+				String extra = "";
+				String obj = "";
+				String accessor = gen.translate("traceAccessor",this);
+				String concatinator = gen.translate("traceConcatinator",this);
+				String comma = concatinator+"\",\""+concatinator;
+				String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
+				String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},\"";
 
-        if(o instanceof AssociationVariable)
-        {
-          name = gen.translate("associationMany",(AssociationVariable)o);
-        }
+				if(o instanceof AssociationVariable)
+				{
+					name = gen.translate("associationMany",(AssociationVariable)o);
+				}
 
-        //         if(type==null||"".equals(type)||"Boolean".equals(type)||"boolean".equals(type)||"String".equals(type)||"int".equals(type)||"Integer".equals(type)||"float".equals(type)||"Float".equals(type)||"double".equals(type)||"Double".equals(type)||"Time".equals(type)||"Date".equals(type))
-        //         {
-        //           obj = name;
-        //         }
-        //         else
-        //         {
-        //           obj = name+"(\"+"+StringFormatter.format(gen.translate("traceIdentifier",this),name)+"+\")";
-        //           name += gen.translate("traceFormatNonPrimitive",this);
-        //         }
+				//         if(type==null||"".equals(type)||"Boolean".equals(type)||"boolean".equals(type)||"String".equals(type)||"int".equals(type)||"Integer".equals(type)||"float".equals(type)||"Float".equals(type)||"double".equals(type)||"Double".equals(type)||"Time".equals(type)||"Date".equals(type))
+				//         {
+				//           obj = name;
+				//         }
+				//         else
+				//         {
+				//           obj = name+"(\"+"+StringFormatter.format(gen.translate("traceIdentifier",this),name)+"+\")";
+				//           name += gen.translate("traceFormatNonPrimitive",this);
+				//         }
 
-        for(String str: args){
-          extra+=concatinator+str;
-        }
-        if(getTraceDirective().getTraceRecord()!=null)
-        {
-          for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
-          {
-            extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
-          }
-          if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
-          {
-            extra+= concatinator+"\"";
-            for(String record:getTraceDirective().getTraceRecord().getRecord())
-            {
-              extra+=","+record.replace("\"","");
-            }
-            extra+= "\"";
-          }
-        }
-        String message = messageLayout+extra;
-        message = StringFormatter.format(
-            message,gen.translate("traceTimestamp",this),
-            gen.translate("traceThread",this),
-            getPosition().getFilename().replace("\\","\\\\"),
-            getPosition().getLineNumber(),
-            uClass.getName()+"+"+type,
-            StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
-            methodname,
-            name        
-            );
-        
-        message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
-        
-        message = StringFormatter.format(getExtremities(gen, name),message);
-        message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
-        if(getTraceDirective().getPostfix().getExecuteClause()!=null)
-        {
-        	String execute = getTraceDirective().getPostfix().getExecuteClause();
-        	execute = GeneratorHelper.doIndent(execute,gen.translate("traceIndent",this));
-        	message += "\n" + execute;
-        }
-        return message;
-      }
-    }
+				for(String str: args){
+					extra+=concatinator+str;
+				}
+				if(getTraceDirective().getTraceRecord()!=null)
+				{
+					for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
+					{
+						extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
+					}
+					if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
+					{
+						extra+= concatinator+"\"";
+						for(String record:getTraceDirective().getTraceRecord().getRecord())
+						{
+							extra+=","+record.replace("\"","");
+						}
+						extra+= "\"";
+					}
+				}
+				String message = messageLayout+extra;
+				message = StringFormatter.format(
+						message,gen.translate("traceTimestamp",this),
+						gen.translate("traceThread",this),
+						getPosition().getFilename().replace("\\","\\\\"),
+						getPosition().getLineNumber(),
+						uClass.getName()+"+"+type,
+						StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
+						methodname,
+						name        
+						);
 
-    return "";
-  }
-  /* Gets and returns the if statement enclosing this trace item.
-   * needs the name of the attribute
-   * @return the if statement for the trace if one exists
-   */
-  public String getExtremities(CodeTranslator gen, String name)
-  {
-    return gen.translate(name+":Closed",constraint);
-  }
+				message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
+
+				message = StringFormatter.format(getExtremities(gen, name),message);
+				message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
+				if(getTraceDirective().getPostfix().getExecuteClause()!=null)
+				{
+					String execute = getTraceDirective().getPostfix().getExecuteClause();
+					execute = GeneratorHelper.doIndent(execute,gen.translate("traceIndent",this));
+					message += "\n" + execute;
+				}
+				return message;
+			}
+		}
+
+		return "";
+	}
+	/* Gets and returns the if statement enclosing this trace item.
+	 * needs the name of the attribute
+	 * @return the if statement for the trace if one exists
+	 */
+	public String getExtremities(CodeTranslator gen, String name)
+	{
+		return gen.translate(name+":Closed",constraint);
+	}
 }
 
 class MethodTraceItem {
-  depend cruise.umple.util.*;
-  depend java.util.*;
+	depend cruise.umple.util.*;
+	depend java.util.*;
 
-  public Boolean getIsPre(){
-    return getEntry();
-  }
-  public Boolean getIsPost(){
-    return getExit();
-  }
-  /*
-   * @params gen: A code translator
-   * @params o: the current context(i.e.state being traced)
-   * @params methodname: what to call this trace
-   * @params uClass: the current umple class uClass
-   * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
-   * @return the message for the trace 
-   */
-  public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args){
-    for(Method meth: methods)
-    {
-      if(meth.equals(o))
-      {
-        String type = ((Method)o).getType();
-        String name = "";
-        String extra = "";
-        String obj = "";
-        String accessor = gen.translate("traceAccessor",this);
-        String concatinator = gen.translate("traceConcatinator",this);
-        String comma = concatinator+"\",\""+concatinator;
-        String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
-        String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7}\"";
+	public Boolean getIsPre(){
+		return getEntry();
+	}
+	public Boolean getIsPost(){
+		return getExit();
+	}
+	/*
+	 * @params gen: A code translator
+	 * @params o: the current context(i.e.state being traced)
+	 * @params methodname: what to call this trace
+	 * @params uClass: the current umple class uClass
+	 * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
+	 * @return the message for the trace 
+	 */
+	public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args){
+		for(Method meth: methods)
+		{
+			if(meth.equals(o))
+			{
+				String type = ((Method)o).getType();
+				String name = "";
+				String extra = "";
+				String obj = "";
+				String accessor = gen.translate("traceAccessor",this);
+				String concatinator = gen.translate("traceConcatinator",this);
+				String comma = concatinator+"\",\""+concatinator;
+				String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
+				String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7}\"";
 
-        if(o instanceof Method)
-        {
-          name = meth.getName();
-        }
+				if(o instanceof Method)
+				{
+					name = meth.getName();
+				}
 
-        
-        if(type==null||"".equals(type)||"Boolean".equals(type)||"boolean".equals(type)||"String".equals(type)||"int".equals(type)||"Integer".equals(type)||"float".equals(type)||"Float".equals(type)||"double".equals(type)||"Double".equals(type)||"Time".equals(type)||"Date".equals(type))
-        {
-          obj = name;
-        }
-        else
-        {
-//          obj = name+"(\"+"+StringFormatter.format(gen.translate("traceIdentifier",this),name)+"+\")";
-//          name += gen.translate("traceFormatNonPrimitive",this);
-          obj = name;
-        }
 
-        for(String str: args){
-          extra+=comma+"(\"\"+"+str+")"+gen.translate("traceFormatNonPrimitive",this);
-        }
-        if(getTraceDirective().getTraceRecord()!=null)
-        {
-          for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
-          {
-            extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
-          }
-          if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
-          {
-            extra+= concatinator+"\"";
-            for(String record:getTraceDirective().getTraceRecord().getRecord())
-            {
-              extra+=","+record.replace("\"","");
-            }
-            extra+= "\"";
-          }
-        }
-        String message = messageLayout+extra;
-        message = StringFormatter.format(
-            message,gen.translate("traceTimestamp",this),
-            gen.translate("traceThread",this),
-            getPosition().getFilename().replace("\\","\\\\"),
-            getPosition().getLineNumber(),
-            uClass.getName(),
-            StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
-            methodname,
-            accessor+name         
-            );
-        
-        message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
-        
-        message = StringFormatter.format(getExtremities(gen, name),message);
-        message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
-        message += "\n";
-        return message;
-      }
-    }
-    return "";
-  }
-  
-  public String getExtremities(CodeTranslator gen, String name){
-    return gen.translate(name+":Closed",constraint);
-  }
-  
+				if(type==null||"".equals(type)||"Boolean".equals(type)||"boolean".equals(type)||"String".equals(type)||"int".equals(type)||"Integer".equals(type)||"float".equals(type)||"Float".equals(type)||"double".equals(type)||"Double".equals(type)||"Time".equals(type)||"Date".equals(type))
+				{
+					obj = name;
+				}
+				else
+				{
+					//          obj = name+"(\"+"+StringFormatter.format(gen.translate("traceIdentifier",this),name)+"+\")";
+					//          name += gen.translate("traceFormatNonPrimitive",this);
+					obj = name;
+				}
+
+				for(String str: args){
+					extra+=comma+"(\"\"+"+str+")"+gen.translate("traceFormatNonPrimitive",this);
+				}
+				if(getTraceDirective().getTraceRecord()!=null)
+				{
+					for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
+					{
+						extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
+					}
+					if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
+					{
+						extra+= concatinator+"\"";
+						for(String record:getTraceDirective().getTraceRecord().getRecord())
+						{
+							extra+=","+record.replace("\"","");
+						}
+						extra+= "\"";
+					}
+				}
+				String message = messageLayout+extra;
+				message = StringFormatter.format(
+						message,gen.translate("traceTimestamp",this),
+						gen.translate("traceThread",this),
+						getPosition().getFilename().replace("\\","\\\\"),
+						getPosition().getLineNumber(),
+						uClass.getName(),
+						StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
+						methodname,
+						accessor+name         
+						);
+
+				message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
+
+				message = StringFormatter.format(getExtremities(gen, name),message);
+				message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
+				message += "\n";
+				return message;
+			}
+		}
+		return "";
+	}
+
+	public String getExtremities(CodeTranslator gen, String name){
+		return gen.translate(name+":Closed",constraint);
+	}
+
 }
 
 // Util class that has common method called from different trace items
 class TraceItemUtil {
 
-  depend cruise.umple.util.*;
-  
-  /* Method to prepare the trace message according to selected tracing technology
-  * @params td: trace directive
-  * @params gen: code translator
-  * @params ti: trace item
-  * @params message: trace message to be prepared 
-  * @return the trace message after preparation
-  * */
-  public static String prepareTraceMessage(TraceDirective td, CodeTranslator gen, TraceItem ti, String message) 
-  {
-  	String tracer = td.getTracerType();
-  	String tracerName = Character.toUpperCase(tracer.charAt(0)) + tracer.substring(1);
-  	
-  	if(tracer.equals("log4j"))
-  	{
-      message = prepareLog4jMessages(td,gen,ti,message);
-  	}
-    else if(tracer.equals("javaapi") || tracer.equals("lttng"))
-    {
-      message = prepareJavaLogAPIMessages(td,gen,ti,message);
-    }
-    else if(tracer.equals("lttngjni"))
-    {
-      message = prepareJavaLttngJniMessages(td,gen,ti,message + ", "+gen.translate("traceThread",ti));
-    }
-    else
-    {
-      message = StringFormatter.format(gen.translate("traceTemplate",ti),tracerName,message);
-    }
-  	
-	  return message;
-  }
-  
-  // Method to prepare the trace message according to log4j logging framework
-  public static String prepareLog4jMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message)
-  {
-  	Postfix postfix = td.getPostfix();
-  	int logCounter = postfix.numberOfLogLevels();
-  	String messages = "";
+	depend cruise.umple.util.*;
 
-  	if(logCounter == 0)
-  	{
-  		message = StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),"info",message);
-  	}
-  	else if( logCounter == 1 && postfix.getLogLevel(0).getLevel().equals("all")) 
-  	{
-  		String[] logLevels = {"trace","debug","info","warn","error","fatal"};
-  		logCounter = 6;
-  		for( String level : logLevels )
-  		{
-  			--logCounter;
-  			messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level,message);
-  			if( logCounter > 0 ) messages += "{0}";
-  		}
-  		message = StringFormatter.format(messages,"\n");
-  	}
-  	else 
-  	{
-  		for( LogLevel level : postfix.getLogLevels() )
-  		{
-  			--logCounter;
-  			messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level.getLevel(),message);
-  			if( logCounter > 0 ) 
-  			{
-  				messages += "{0}";
-  			}
-  		}
-  		message = StringFormatter.format(messages,"\n");
-  	}
+	/* Method to prepare the trace message according to selected tracing technology
+	 * @params td: trace directive
+	 * @params gen: code translator
+	 * @params ti: trace item
+	 * @params message: trace message to be prepared 
+	 * @return the trace message after preparation
+	 * */
+	public static String prepareTraceMessage(TraceDirective td, CodeTranslator gen, TraceItem ti, String message) 
+	{
+		String tracer = td.getTracerType();
+		String tracerName = Character.toUpperCase(tracer.charAt(0)) + tracer.substring(1);
 
-  	return message;
-  }
+		if(tracer.equals("log4j"))
+		{
+			message = prepareLog4jMessages(td,gen,ti,message);
+		}
+		else if(tracer.equals("javaapi") || tracer.equals("lttng"))
+		{
+			message = prepareJavaLogAPIMessages(td,gen,ti,message);
+		}
+		else if(tracer.equals("lttngjni"))
+		{
+			message = prepareJavaLttngJniMessages(td,gen,ti,message + ", "+gen.translate("traceThread",ti));
+		}
+		else
+		{
+			message = StringFormatter.format(gen.translate("traceTemplate",ti),tracerName,message);
+		}
 
-  //Method to prepare the trace message according to Java logging API
-  public static  String prepareJavaLogAPIMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message)
-  {
-  	Postfix postfix = td.getPostfix();
-  	int logCounter = postfix.numberOfLogLevels();
-  	String messages = "";
+		return message;
+	}
 
-  	if(logCounter == 0)
-  	{
-  		message = StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),"info",message);
-  	}
-  	else if( logCounter == 1 && postfix.getLogLevel(0).getLevel().equals("all")) 
-  	{
-  		String[] logLevels = {"finest","finer","fine","config","info","warning","severe"};
-  		logCounter = 6;
-  		for( String level : logLevels )
-  		{
-  			--logCounter;
-  			messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level,message);
-  			if( logCounter > 0 ) 
-  			{
-  				messages += "{0}";
-  			}
-  		}
-  		message = StringFormatter.format(messages,"\n");
-  	}
-  	else {
+	// Method to prepare the trace message according to log4j logging framework
+	public static String prepareLog4jMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message)
+	{
+		Postfix postfix = td.getPostfix();
+		int logCounter = postfix.numberOfLogLevels();
+		String messages = "";
 
-  		for( LogLevel level : td.getPostfix().getLogLevels() )
-  		{
-  			--logCounter;
-  			messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level.getLevel(),message);
-  			if( logCounter > 0 ) messages += "{0}";
-  		}
-  		message = StringFormatter.format(messages,"\n");
-  	}
+		if(logCounter == 0)
+		{
+			message = StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),"info",message);
+		}
+		else if( logCounter == 1 && postfix.getLogLevel(0).getLevel().equals("all")) 
+		{
+			String[] logLevels = {"trace","debug","info","warn","error","fatal"};
+			logCounter = 6;
+			for( String level : logLevels )
+			{
+				--logCounter;
+				messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level,message);
+				if( logCounter > 0 ) messages += "{0}";
+			}
+			message = StringFormatter.format(messages,"\n");
+		}
+		else 
+		{
+			for( LogLevel level : postfix.getLogLevels() )
+			{
+				--logCounter;
+				messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level.getLevel(),message);
+				if( logCounter > 0 ) 
+				{
+					messages += "{0}";
+				}
+			}
+			message = StringFormatter.format(messages,"\n");
+		}
 
-  	return message;
-  }
+		return message;
+	}
 
-  // Method to prepare the trace message according to early version of LTTng
-  public static  String prepareJavaLttngJniMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message)
-  {
-  	message = StringFormatter.format(gen.translate("traceTemplatelttng",traceItem),"tracepointInt",message);
-  	return message;
-  }
+	//Method to prepare the trace message according to Java logging API
+	public static  String prepareJavaLogAPIMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message)
+	{
+		Postfix postfix = td.getPostfix();
+		int logCounter = postfix.numberOfLogLevels();
+		String messages = "";
+
+		if(logCounter == 0)
+		{
+			message = StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),"info",message);
+		}
+		else if( logCounter == 1 && postfix.getLogLevel(0).getLevel().equals("all")) 
+		{
+			String[] logLevels = {"finest","finer","fine","config","info","warning","severe"};
+			logCounter = 6;
+			for( String level : logLevels )
+			{
+				--logCounter;
+				messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level,message);
+				if( logCounter > 0 ) 
+				{
+					messages += "{0}";
+				}
+			}
+			message = StringFormatter.format(messages,"\n");
+		}
+		else {
+
+			for( LogLevel level : td.getPostfix().getLogLevels() )
+			{
+				--logCounter;
+				messages += StringFormatter.format(gen.translate("traceTemplatelog4j",traceItem),level.getLevel(),message);
+				if( logCounter > 0 ) messages += "{0}";
+			}
+			message = StringFormatter.format(messages,"\n");
+		}
+
+		return message;
+	}
+
+	// Method to prepare the trace message according to early version of LTTng
+	public static  String prepareJavaLttngJniMessages(TraceDirective td, CodeTranslator gen, TraceItem traceItem, String message)
+	{
+		message = StringFormatter.format(gen.translate("traceTemplatelttng",traceItem),"tracepointInt",message);
+		return message;
+	}
+
+	// prepare Trace Mesaage Layout based in inclusion/exclusion criteria
+	public static  String prepareMessageLayout(CodeTranslator gen, TracerDirective tracer, TraceItem ti){
+		String concatinator = gen.translate("traceConcatinator",ti);
+		String comma = concatinator+"\",\""+concatinator;
+		String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},\""+concatinator+"{8}";
+
+		if( tracer.hasTraceMessageSwitch() )
+		{
+			TraceMessageSwitch tms = tracer.getTraceMessageSwitch();
+			messageLayout = "";
+			String comp1 = "{0}"
+					,comp2 = "{1}"
+					,comp3 = "{2}"
+					,comp4 = "{3}"
+					,comp5 = "{4}"
+					,comp6 = "{5}"
+					,comp7 = "{6}"
+					,comp8 = "{7}"
+					,comp9 = "{8}";
+
+			if( tms.getOn() )
+			{
+				for(MessageComponent mc : tms.getOption() )
+				{
+					if(mc.getComponent().equals("Time")) messageLayout += comp1;
+					if(mc.getComponent().equals("Thread")) messageLayout += comma+comp2;
+					if(mc.getComponent().equals("UmpleFile")) messageLayout += comma+comp3;
+					if(mc.getComponent().equals("LineNumber")) messageLayout += comma+comp4;
+					if(mc.getComponent().equals("Class")) messageLayout += comma+comp5;
+					if(mc.getComponent().equals("Object")) messageLayout += comma+comp6;
+					if(mc.getComponent().equals("Operation")) messageLayout += comma+comp7;
+					if(mc.getComponent().equals("Name")) messageLayout += comma+comp8;
+					if(mc.getComponent().equals("Value")) messageLayout += comma+comp9;
+				}
+			}
+			else if( tms.getOff() )
+			{
+				messageLayout = "{0}"+comma+"{1}"+comma+"{2}"+comma+"{3}"+comma+"{4}"+comma+"{5}"+comma+"{6}"+comma+"{7}"+comma+"{8}";
+
+				for(MessageComponent mc : tms.getOption() )
+				{
+					if(mc.getComponent().equals("Time")) messageLayout = messageLayout.replace("{0}"+comma, "");
+					if(mc.getComponent().equals("Thread")) messageLayout = messageLayout.replace("{1}"+comma, "");
+					if(mc.getComponent().equals("UmpleFile")) messageLayout = messageLayout.replace("{2}"+comma, "");
+					if(mc.getComponent().equals("LineNumber")) messageLayout = messageLayout.replace("{3}"+comma, "");
+					if(mc.getComponent().equals("Class")) messageLayout = messageLayout.replace("{4}"+comma, "");
+					if(mc.getComponent().equals("Object")) messageLayout = messageLayout.replace("{5}"+comma, "");
+					if(mc.getComponent().equals("Operation")) messageLayout = messageLayout.replace("{6}"+comma, "");
+					if(mc.getComponent().equals("Name")) messageLayout = messageLayout.replace("{7}"+comma, "");
+					if(mc.getComponent().equals("Value")) messageLayout = messageLayout.replace("{8}"+comma, "");
+				}
+			}
+		}
+
+		return messageLayout;
+	}
 
 }
