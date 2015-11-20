@@ -737,6 +737,7 @@ class UmpleInternalParser
 				copyAttributesFromTraitsToClass(uClass);
 				copyMethodsFromTraitToClass(uClass);
 				copyAssociationsFromTraitToClass(uClass);
+				copyStateMachinesFromTraiToClass(uClass);
 				for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
 					recursiveApplyTraits(uClass,uTrait);
 					
@@ -1093,18 +1094,6 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 		for(ConstraintTree aConstraint : inTrait.getConstraintTrees()) {
 			inClass.addConstraintTree(aConstraint);
 		}	
-		
-		// copy StateMachines
-		for (StateMachine st : inTrait.getStateMachines()) {
-			StateMachine stNew = new StateMachine(st.getName());
-			stNew.setPooled(st.getPooled());
-			stNew.setQueued(st.getQueued());
-			stNew.setUmpleClass(inClass);
-			for (State element : st.getStates()) {
-				stNew.addState(element);
-			}
-			inClass.addStateMachine(stNew);
-		}
 		
        // copy injection codes
        for (CodeInjection cj : inTrait.getCodeInjections()) {
@@ -1814,3 +1803,5 @@ private void ApplyExludeIncludeAliasToMethod(Map<UmpleTrait, List<Method>> intra
 }
 
 use UmpleInternalParser_FIXML.ump;
+use UmpleInternalParser_CodeTrait_StateMachine.ump;
+

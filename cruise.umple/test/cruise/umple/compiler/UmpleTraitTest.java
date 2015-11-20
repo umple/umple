@@ -152,6 +152,73 @@ public class UmpleTraitTest {
 	}	
 	
 	@Test
+	public void stateMachineTraits001Test() {
+		String code = "class A {isA T1; status { on { turnOn -> on;}}} trait T1 { status { on { turnOn -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("226");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+
+	@Test
+	public void stateMachineTraits002Test() {
+		String code = "class A{ isA T1;} trait T1 {isA T2; status { on { turnOn -> on;}}} trait T2 { status { on { turnOn -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("226");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}		
+	
+	@Test
+	public void stateMachineTraits003Test() {
+		String code = "class A{isA T1,T2;} trait T1 {status { on { turnOn -> on;}}} trait T2 { status { on { turnOn -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("227");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+	@Test
+	public void stateMachineTraits004Test() {
+		String code = "class A{isA T1;} trait T1 {isA T2, T3;} trait T2 {status { on { turnOn -> on;}}} trait T3 { status { on { turnOn -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("227");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+
+	@Test
+	public void stateMachineTraits005Test() {
+		String code = "class A {isA T1,T2;} trait T1 { isA T3;} trait T2 { isA T3;} trait T3 { status { on { turnOn -> on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfStateMachines());
+	}	
+
+	
+	@Test
 	public void codeInjectTraitsTest() {
 		String code = "class A {isA T;} trait T { Integer x; after getX { x = 0;} before getX { x = 0;} } ";
 		UmpleModel model = getRunModel(code);
