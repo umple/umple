@@ -1,0 +1,53 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Graph Walking API for analysis of the many kinds of graphs, such as 
+StateMachines, Inheritance Hierarchy, Association Hierarchy etc.
+
+ */
+namespace cruise.umple.compiler;
+
+
+/*trait Node 
+{
+  boolean visited = false;
+}*/
+
+interface Node 
+{
+  public void visit();
+  public boolean isVisited(); // TODO Remove this when you know the naming scheme for 
+  // generated boolean variables
+}
+
+/* 
+ * GRAPH CLASS DESCRIPTION
+ */
+class Graph 
+{
+  depend cruise.umple.util.*;
+  depend java.util.*;
+
+  abstract;
+  protected Node startNode;
+  protected Boolean isDepthFirst = true;
+  protected Stack<Node> stack; // for dfs
+  protected LinkedList<Node> queue; // for bfs
+  public abstract Node next();
+
+}
+
+class StateMachineLevelGraph 
+{
+  depend cruise.umple.util.*;
+  depend java.util.*;
+  isA Graph;
+}
+
+use Umple.ump;
+use GraphWalking_Code.ump;
+

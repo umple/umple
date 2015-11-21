@@ -570,6 +570,16 @@ class State
     }
     return null;
   }
+
+  public void visit()
+  {
+    this.isVisited = true;
+  }
+
+  public boolean isVisited() 
+  {
+    return this.isVisited;
+  }
  
 }
 
