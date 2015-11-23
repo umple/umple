@@ -16,60 +16,36 @@ class Graph
   public boolean hasNext () 
   {
     if (this.stack == null && this.queue == null) return false;
-    if (this.isDepthFirst) return stack.isEmpty();
-    return this.queue.isEmpty();
-  }
-}
-
-/*trait Node 
-{
-  public void visit() 
-  { 
-    visited = true;
+    if (this.isDepthFirst) return ! stack.isEmpty();
+    return ! this.queue.isEmpty();
   }
 
-  public boolean isVisited() 
+  public boolean isDepthFirst()
   {
-    return visited;
+    return this.isDepthFirst;
   }
 }
-*/
+
 
 class StateMachineLevelGraph 
 {
 
-/*
-  public StateMachineLevelGraph(UmpleModel model, String name) 
+  public StateMachineLevelGraph(Node startNode, boolean isDepthFirst) 
   {
-    StateMachine nestedMachine = model.getStateMachine(name);
-    if (nestedMachine == null ) return; 
-
-    this.startNode = model.getStartState();
-    this.stack = new Stack<Node>();
-    this.stack.push(this.startNode);
+    this.startNode = startNode;
+    this.isDepthFirst = isDepthFirst;
+    if(isDepthFirst) 
+    {
+      this.stack = new Stack<Node>();
+      this.stack.push(this.startNode);
+    }
+    else
+    {
+      this.queue = new LinkedList<Node>();
+      this.queue.addFirst(this.startNode);
+    }
   }
 
-  public StateMachineLevelGraph(UmpleModel model, String name, boolean isDepthFirst)
-  {
-      StateMachine nestedMachine = model.getStateMachine(name);
-      if (nestedMachine == null) return;
-
-      this.startNode = model.getStartState();
-
-      setIsDepthFirst(isDepthFirst);
-
-      if (isDepthFirst) 
-      {
-        this.stack = new Stack<Node>();
-        this.stack.push(this.startNode);
-      } 
-      else 
-      {
-        this.queue = new LinkedList<Node>();
-        this.queue.addFirst(this.startNode);
-      }
-  }
-*/
   /**
   * Visit and return the next state in the walk.
   */
@@ -82,7 +58,7 @@ class StateMachineLevelGraph
 
   private Node walkDFS () 
   { 
-    if (this.stack.isEmpty()) return null;
+    if (stack == null || stack.isEmpty()) return null;
     State state = (State) stack.pop();
     state.visit();
     
@@ -91,9 +67,9 @@ class StateMachineLevelGraph
       State nextState = (State) transition.getNextState();
       // TODO Confirm that the next state is in the same level
       //if (nextState.isInternal() && ! nextState.isVisited()) 
-      if (! nextState.isVisited())
+      if (! nextState.getIsVisited())
       {
-        this.stack.push(nextState) ;
+        stack.push(nextState) ;
       }
     }
 
@@ -102,7 +78,7 @@ class StateMachineLevelGraph
 
   private Node walkBFS () 
   {
-    if (this.queue.isEmpty()) return null;
+    if (queue == null || queue.isEmpty()) return null;
     State state = (State) queue.pollLast();
     state.visit();
 
@@ -111,9 +87,9 @@ class StateMachineLevelGraph
       State nextState = (State) transition.getNextState();
       // TODO Confirm that the state stays in the same level
       //if (nextState.isInternal() && ! nextState.isVisited()) 
-      if (! nextState.isVisited())
+      if (! nextState.getIsVisited())
       {
-        this.queue.addFirst(nextState);
+        queue.addFirst(nextState);
       }
     }
 

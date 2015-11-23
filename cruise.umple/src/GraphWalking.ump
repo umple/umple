@@ -20,8 +20,6 @@ namespace cruise.umple.compiler;
 interface Node 
 {
   public void visit();
-  public boolean isVisited(); // TODO Remove this when you know the naming scheme for 
-  // generated boolean variables
 }
 
 /* 
@@ -35,10 +33,9 @@ class Graph
   abstract;
   protected Node startNode;
   protected Boolean isDepthFirst = true;
-  protected Stack<Node> stack; // for dfs
-  protected LinkedList<Node> queue; // for bfs
-  public abstract Node next();
-
+  protected Stack<Node> stack;        // for dfs
+  protected LinkedList<Node> queue;   // for bfs
+  //public abstract Node next();
 }
 
 class StateMachineLevelGraph 
