@@ -24,6 +24,9 @@ class Graph
   {
     return this.isDepthFirst;
   }
+
+  // TODO this should be abstract but because of issue $$$ it makes child classes abstract.
+  public Node nextNode(){return null;}
 }
 
 
