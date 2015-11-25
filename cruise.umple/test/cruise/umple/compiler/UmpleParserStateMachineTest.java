@@ -1683,7 +1683,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void noModelGraph()
+  public void noModel_Graph()
   {
     StateMachineLevelGraph graph = new StateMachineLevelGraph();
     Assert.assertEquals(null, graph.nextNode());
@@ -1708,7 +1708,7 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(false, graph.hasNext());
   }
 
-    @Test
+  @Test
   public void oneState_StateMachine_FlatGraphBFS()
   {
     assertParse("100_oneState_StateMachine.ump", "[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On]");
@@ -1725,6 +1725,220 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(true, startNode.getIsVisited());
     Assert.assertEquals(false, graph.hasNext());
   }
+
+  @Test
+  public void twoState_StateMachine_FlatGraphDFS()
+  {
+    assertParse("100_emptyAndNonEmptyStates.ump", "[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off]");
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = true;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+
+    Assert.assertEquals(isDFS, graph.isDepthFirst());
+    Assert.assertEquals(true, graph.hasNext());
+    Assert.assertEquals(false, startNode.getIsVisited());
+
+    state = (State) graph.nextNode();
+    Assert.assertEquals(startNode, state);
+    Assert.assertEquals("On", state.getName());
+    Assert.assertEquals(true, startNode.getIsVisited());
+    Assert.assertEquals(true, state.getIsVisited());
+
+    Assert.assertEquals(true, graph.hasNext());  
+    state = (State) graph.nextNode();
+    Assert.assertEquals("Off", state.getName());
+    Assert.assertEquals(true, state.getIsVisited());  
+
+    Assert.assertEquals(false, graph.hasNext());
+  }
+
+  @Test
+  public void twoState_StateMachine_FlatGraphBFS()
+  {
+    assertParse("100_emptyAndNonEmptyStates.ump", "[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off]");
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = false;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+
+    Assert.assertEquals(isDFS, graph.isDepthFirst());
+    Assert.assertEquals(true, graph.hasNext());
+    Assert.assertEquals(false, startNode.getIsVisited());
+
+    state = (State) graph.nextNode();
+    Assert.assertEquals(startNode, state);
+    Assert.assertEquals("On", state.getName());
+    Assert.assertEquals(true, startNode.getIsVisited());
+    Assert.assertEquals(true, state.getIsVisited());
+
+    Assert.assertEquals(true, graph.hasNext());  
+    state = (State) graph.nextNode();
+    Assert.assertEquals("Off", state.getName());
+    Assert.assertEquals(true, state.getIsVisited());  
+
+    Assert.assertEquals(false, graph.hasNext());
+  }
+
+  @Test
+  public void unreachableState_StateMachine_FlatGraphDFS()
+  {
+    assertParse("100_nonReachableState.ump", "[classDefinition][name:X][stateMachine][inlineStateMachine][name:sm][state][stateName:s1][state][stateName:s2]");
+    UmpleClass c = model.getUmpleClass("X");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = true;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+
+    Assert.assertEquals(true, graph.hasNext());
+    state = (State) graph.nextNode();
+
+    Assert.assertEquals("s1", state.getName());
+    Assert.assertEquals(true, state.getIsVisited());  
+
+    Assert.assertEquals(false, graph.hasNext()); 
+
+  }
+
+  @Test
+  public void unreachableState_StateMachine_FlatGraphBFS()
+  {
+    assertParse("100_nonReachableState.ump", "[classDefinition][name:X][stateMachine][inlineStateMachine][name:sm][state][stateName:s1][state][stateName:s2]");
+    UmpleClass c = model.getUmpleClass("X");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = false;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+
+    Assert.assertEquals(true, graph.hasNext());
+    state = (State) graph.nextNode();
+
+    Assert.assertEquals("s1", state.getName());
+    Assert.assertEquals(true, state.getIsVisited());  
+
+    Assert.assertEquals(false, graph.hasNext()); 
+
+  }
+
+  @Test
+  public void twoStateLoop_StateMachine_FlatGraphDFS()
+  {
+    assertParse("180_twoState_loop.ump", "[classDefinition][name:LightSwitch][stateMachine][inlineStateMachine][name:Light][state][stateName:On][transition][event:push][stateName:Off][state][stateName:Off][transition][event:push][stateName:On]");
+    UmpleClass c = model.getUmpleClass("LightSwitch");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = true;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+
+    Assert.assertEquals(true, graph.hasNext());
+    state = (State) graph.nextNode();
+    Assert.assertEquals("On", state.getName());
+    Assert.assertEquals(true, state.getIsVisited());
+
+    Assert.assertEquals(true, graph.hasNext());
+    state = (State) graph.nextNode();
+    Assert.assertEquals("Off", state.getName());
+    Assert.assertEquals(true, state.getIsVisited());
+
+    Assert.assertEquals(false, graph.hasNext());
+  }
+
+
+  @Test
+  public void twoStateLoop_StateMachine_FlatGraphBFS()
+  {
+    assertParse("180_twoState_loop.ump", "[classDefinition][name:LightSwitch][stateMachine][inlineStateMachine][name:Light][state][stateName:On][transition][event:push][stateName:Off][state][stateName:Off][transition][event:push][stateName:On]");
+    UmpleClass c = model.getUmpleClass("LightSwitch");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = false;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+
+    Assert.assertEquals(true, graph.hasNext());
+    state = (State) graph.nextNode();
+    Assert.assertEquals("On", state.getName());
+    Assert.assertEquals(true, state.getIsVisited());
+
+    Assert.assertEquals(true, graph.hasNext());
+    state = (State) graph.nextNode();
+    Assert.assertEquals("Off", state.getName());
+    Assert.assertEquals(true, state.getIsVisited());
+
+    Assert.assertEquals(false, graph.hasNext());
+  }
+
+  @Test
+  public void ordering_StateMachine_FlatGraphDFS()
+  {
+    assertParse("180_DFSBFS_Comparison_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][state][stateName:s2][transition][event:p1][stateName:s1][transition][event:p5][stateName:s5][state][stateName:s3][state][stateName:s4][transition][event:p7][stateName:s7][state][stateName:s5][transition][event:p6][stateName:s6][state][stateName:s6][state][stateName:s7]");
+    UmpleClass c = model.getUmpleClass("ExampleSM");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = true;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("s1");
+    expectedStates.add("s4");
+    expectedStates.add("s7");
+    expectedStates.add("s3");
+    expectedStates.add("s2");
+    expectedStates.add("s5");
+    expectedStates.add("s6");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+
+  }
+
+  @Test
+  public void ordering_StateMachine_FlatGraphBFS()
+  {
+    assertParse("180_DFSBFS_Comparison_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][state][stateName:s2][transition][event:p1][stateName:s1][transition][event:p5][stateName:s5][state][stateName:s3][state][stateName:s4][transition][event:p7][stateName:s7][state][stateName:s5][transition][event:p6][stateName:s6][state][stateName:s6][state][stateName:s7]");
+    UmpleClass c = model.getUmpleClass("ExampleSM");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = false;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("s1");
+    expectedStates.add("s2");
+    expectedStates.add("s3");
+    expectedStates.add("s4");
+    expectedStates.add("s5");
+    expectedStates.add("s7");
+    expectedStates.add("s6");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+
+  }
+
 
   private void assertParse(String filename, String expectedOutput)
   {
