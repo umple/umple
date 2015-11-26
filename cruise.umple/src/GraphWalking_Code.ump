@@ -37,6 +37,8 @@ class StateMachineLevelGraph
   {
     this.startNode = startNode;
     this.isDepthFirst = isDepthFirst;
+    this.startNode.visit();
+
     if(isDepthFirst) 
     {
       this.stack = new Stack<Node>();
@@ -63,7 +65,6 @@ class StateMachineLevelGraph
   { 
     if (stack == null || stack.isEmpty()) return null;
     State state = (State) stack.pop();
-    state.visit();
     
     for (Transition transition: state.getTransitions()) 
     {
@@ -72,6 +73,7 @@ class StateMachineLevelGraph
       //if (nextState.isInternal() && ! nextState.isVisited()) 
       if (! nextState.getIsVisited())
       {
+        nextState.visit();
         stack.push(nextState) ;
       }
     }
@@ -92,6 +94,7 @@ class StateMachineLevelGraph
       //if (nextState.isInternal() && ! nextState.isVisited()) 
       if (! nextState.getIsVisited())
       {
+        nextState.visit();
         queue.addFirst(nextState);
       }
     }

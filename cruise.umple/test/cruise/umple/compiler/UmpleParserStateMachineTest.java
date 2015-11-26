@@ -1702,9 +1702,8 @@ public class UmpleParserStateMachineTest
     StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
     Assert.assertEquals(isDFS, graph.isDepthFirst());
     Assert.assertEquals(true, graph.hasNext());
-    Assert.assertEquals(false, startNode.getIsVisited());
-    Assert.assertEquals(startNode, graph.nextNode());
     Assert.assertEquals(true, startNode.getIsVisited());
+    Assert.assertEquals(startNode, graph.nextNode());
     Assert.assertEquals(false, graph.hasNext());
   }
 
@@ -1720,9 +1719,8 @@ public class UmpleParserStateMachineTest
     StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
     Assert.assertEquals(isDFS, graph.isDepthFirst());
     Assert.assertEquals(true, graph.hasNext());
-    Assert.assertEquals(false, startNode.getIsVisited());
-    Assert.assertEquals(startNode, graph.nextNode());
     Assert.assertEquals(true, startNode.getIsVisited());
+    Assert.assertEquals(startNode, graph.nextNode());
     Assert.assertEquals(false, graph.hasNext());
   }
 
@@ -1739,7 +1737,7 @@ public class UmpleParserStateMachineTest
 
     Assert.assertEquals(isDFS, graph.isDepthFirst());
     Assert.assertEquals(true, graph.hasNext());
-    Assert.assertEquals(false, startNode.getIsVisited());
+    Assert.assertEquals(true, startNode.getIsVisited());
 
     state = (State) graph.nextNode();
     Assert.assertEquals(startNode, state);
@@ -1768,7 +1766,7 @@ public class UmpleParserStateMachineTest
 
     Assert.assertEquals(isDFS, graph.isDepthFirst());
     Assert.assertEquals(true, graph.hasNext());
-    Assert.assertEquals(false, startNode.getIsVisited());
+    Assert.assertEquals(true, startNode.getIsVisited());
 
     state = (State) graph.nextNode();
     Assert.assertEquals(startNode, state);
@@ -1802,7 +1800,6 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(true, state.getIsVisited());  
 
     Assert.assertEquals(false, graph.hasNext()); 
-
   }
 
   @Test
@@ -1823,7 +1820,6 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(true, state.getIsVisited());  
 
     Assert.assertEquals(false, graph.hasNext()); 
-
   }
 
   @Test
@@ -1849,7 +1845,6 @@ public class UmpleParserStateMachineTest
 
     Assert.assertEquals(false, graph.hasNext());
   }
-
 
   @Test
   public void twoStateLoop_StateMachine_FlatGraphBFS()
@@ -1904,7 +1899,6 @@ public class UmpleParserStateMachineTest
     }
 
     Assert.assertEquals(expectedStates, returnedStates);
-
   }
 
   @Test
@@ -1936,7 +1930,124 @@ public class UmpleParserStateMachineTest
     }
 
     Assert.assertEquals(expectedStates, returnedStates);
+  }
 
+  @Test
+  public void c6_StateMachine_FlatGraphDFS()
+  {
+    assertParse("180_C6_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][state][stateName:s2][transition][event:p3][stateName:s3][state][stateName:s3][transition][event:p4][stateName:s4][state][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s5][transition][event:p6][stateName:s6][state][stateName:s6][transition][event:p1][stateName:s1]");
+    UmpleClass c = model.getUmpleClass("ExampleSM");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = true;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("s1");
+    expectedStates.add("s2");
+    expectedStates.add("s3");
+    expectedStates.add("s4");
+    expectedStates.add("s5");
+    expectedStates.add("s6");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+  }
+
+  @Test
+  public void c6_StateMachine_FlatGraphBFS()
+  {
+    assertParse("180_C6_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][state][stateName:s2][transition][event:p3][stateName:s3][state][stateName:s3][transition][event:p4][stateName:s4][state][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s5][transition][event:p6][stateName:s6][state][stateName:s6][transition][event:p1][stateName:s1]");
+    UmpleClass c = model.getUmpleClass("ExampleSM");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = false;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("s1");
+    expectedStates.add("s2");
+    expectedStates.add("s3");
+    expectedStates.add("s4");
+    expectedStates.add("s5");
+    expectedStates.add("s6");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+  }
+
+  @Test
+  public void k5_StateMachine_FlatGraphDFS()
+  {
+    assertParse("180_K5_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s2][transition][event:p1][stateName:s1][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s3][transition][event:p1][stateName:s1][transition][event:p2][stateName:s2][transition][event:p4][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s4][transition][event:p1][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p5][stateName:s5][state][stateName:s5][transition][event:p1][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4]");
+    UmpleClass c = model.getUmpleClass("ExampleSM");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = true;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("s1");
+    expectedStates.add("s5");
+    expectedStates.add("s4");
+    expectedStates.add("s3");
+    expectedStates.add("s2");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+  }
+
+  @Test
+  public void k5_StateMachine_FlatGraphBFS()
+  {
+    assertParse("180_K5_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s2][transition][event:p1][stateName:s1][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s3][transition][event:p1][stateName:s1][transition][event:p2][stateName:s2][transition][event:p4][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s4][transition][event:p1][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p5][stateName:s5][state][stateName:s5][transition][event:p1][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4]");
+    UmpleClass c = model.getUmpleClass("ExampleSM");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = false;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("s1");
+    expectedStates.add("s2");
+    expectedStates.add("s3");
+    expectedStates.add("s4");
+    expectedStates.add("s5");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
   }
 
 
