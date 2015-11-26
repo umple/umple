@@ -216,6 +216,15 @@ public class UmpleTraitTest {
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(1, model.getUmpleClass("A").numberOfStateMachines());
 	}	
+	
+	@Test
+	public void stateMachineTraits006Test() {
+		String code = "class A {isA T1; status { on { turnOn -> on;}} } trait T1 { status { on { enable -> on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfTransitions());
+	}
+	
+	
 
 	
 	@Test
