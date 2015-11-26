@@ -59,7 +59,7 @@ class LightFixture
     return null;
   }
 
-  public function turnDimmer($lightval, $lightval_1)
+  public function turnDimmer(Integer lightval,Double lightval_1)
   {
     $wasEventProcessed = false;
     
