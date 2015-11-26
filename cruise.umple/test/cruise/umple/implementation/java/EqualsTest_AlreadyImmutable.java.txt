@@ -129,9 +129,6 @@ public class Student
     }
 
     canSetIntId = false;
-    canSetDoubleId = false;
-    canSetBooleanId = false;
-    canSetStringId = false;
     return cachedHashCode;
   }
 
