@@ -8,7 +8,7 @@ class LightBulb
     Off { 
       flip -> On;
     }
-    // trace any triggering of event flip
-    trace flip;
   }
+  // trace any triggering of event flip
+  trace flip;
 }
