@@ -102,8 +102,9 @@
   String argsOutput = allArgs.toString();
 %>
   <%= scope %> function <%=gen.translate("eventMethod",e)%>(<%= argsOutput %>)
-$wasEventProcessed = false;
-<%= eventOutput %>
-return $wasEventProcessed;
-}
+  {
+    $wasEventProcessed = false;
+    <%= eventOutput %>
+    return $wasEventProcessed;
+  }
 

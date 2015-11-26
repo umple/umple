@@ -380,9 +380,9 @@ public class PhpClassGenerator implements ILang
   protected final String TEXT_360 = NL + "  ";
   protected final String TEXT_361 = " function ";
   protected final String TEXT_362 = "(";
-  protected final String TEXT_363 = ")" + NL + "$wasEventProcessed = false;";
-  protected final String TEXT_364 = NL;
-  protected final String TEXT_365 = NL + "return $wasEventProcessed;" + NL + "}" + NL;
+  protected final String TEXT_363 = ")" + NL + "  {" + NL + "    $wasEventProcessed = false;";
+  protected final String TEXT_364 = NL + "    ";
+  protected final String TEXT_365 = NL + "    return $wasEventProcessed;" + NL + "  }" + NL;
   protected final String TEXT_366 = NL + "  public function ";
   protected final String TEXT_367 = "($";
   protected final String TEXT_368 = ")" + NL + "  {";
