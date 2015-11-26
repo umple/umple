@@ -2050,6 +2050,69 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(expectedStates, returnedStates);
   }
 
+  @Test
+  public void tree_StateMachine_FlatGraphDFS()
+  {
+    assertParse("180_Tree7_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][state][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][transition][event:p6][stateName:s6][state][stateName:s3][transition][event:p5][stateName:s5][state][stateName:s4][state][stateName:s5][state][stateName:s6][transition][event:p7][stateName:s7][transition][event:p8][stateName:s8][state][stateName:s7][state][stateName:s8]");
+    UmpleClass c = model.getUmpleClass("ExampleSM");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = true;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("s1");
+    expectedStates.add("s2");
+    expectedStates.add("s6");
+    expectedStates.add("s8");
+    expectedStates.add("s7");
+    expectedStates.add("s4");
+    expectedStates.add("s3");
+    expectedStates.add("s5");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+  }
+
+  @Test
+  public void tree_StateMachine_FlatGraphBFS()
+  {
+    assertParse("180_Tree7_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][state][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][transition][event:p6][stateName:s6][state][stateName:s3][transition][event:p5][stateName:s5][state][stateName:s4][state][stateName:s5][state][stateName:s6][transition][event:p7][stateName:s7][transition][event:p8][stateName:s8][state][stateName:s7][state][stateName:s8]");
+    UmpleClass c = model.getUmpleClass("ExampleSM");
+    StateMachine sm = c.getStateMachine(0);
+    State startNode = sm.getStartState();
+    boolean isDFS = false;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("s1");
+    expectedStates.add("s2");
+    expectedStates.add("s3");
+    expectedStates.add("s4");
+    expectedStates.add("s6");
+    expectedStates.add("s5");
+    expectedStates.add("s7");
+    expectedStates.add("s8");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+  }
 
   private void assertParse(String filename, String expectedOutput)
   {
