@@ -38,7 +38,7 @@ class Course
     return null;
   }
 
-  public function register($name, $age, $grades)
+  public function register(String name,Integer age,Double grades)
   {
     $wasEventProcessed = false;
     
