@@ -88,7 +88,11 @@
   String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
   String eventOutput = allDeclarations.toString() + allCases.toString();
 %>
+<<<<<<< HEAD
+  <%= scope %> function <%=gen.translate("eventMethod",e)%>(<%= argsOutput %>)
+=======
   <%= scope %> function <%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%>)
+>>>>>>> upstream/master
   {
     $wasEventProcessed = false;
     <%= eventOutput %>
