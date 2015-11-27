@@ -1,0 +1,88 @@
+package example;
+import cruise.util.ConsoleTracer;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer State Machines
+  public enum StateMachine { s2a, s2b }
+  private StateMachine stateMachine;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer()
+  {
+    setStateMachine(StateMachine.s2a);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getStateMachineFullName()
+  {
+    String answer = stateMachine.toString();
+    return answer;
+  }
+
+  public StateMachine getStateMachine()
+  {
+    return stateMachine;
+  }
+
+  public boolean e(int a)
+  {
+    boolean wasEventProcessed = false;
+    
+    StateMachine aStateMachine = stateMachine;
+    switch (aStateMachine)
+    {
+      case s2a:
+        if (a>6)
+        {
+          System.out.println("e"+a);
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceEventParameterPostfix.ump,15,Tracer,"+System.identityHashCode(this)+",sm_t,s2a,e,s2b"+",a="+a+",tracing event with parameters" );
+          setStateMachine(StateMachine.s2b);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+      case s2b:
+        System.out.println("e"+a);
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceEventParameterPostfix.ump,15,Tracer,"+System.identityHashCode(this)+",sm_t,s2b,e,s2a"+",a="+a+",tracing event with parameters" );
+        setStateMachine(StateMachine.s2a);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setStateMachine(StateMachine aStateMachine)
+  {
+    stateMachine = aStateMachine;
+
+    // entry actions and do activities
+    switch(stateMachine)
+    {
+      case s2a:
+        System.out.println("s2a");
+        break;
+      case s2b:
+        System.out.println("s2b");
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+}

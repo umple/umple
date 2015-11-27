@@ -55,7 +55,7 @@ public class TracerStateMachinesTest extends TracerAssociationsTest
 	  AssertStm("TraceNestedStates.ump","TraceNestedStates.");
 	}
 	
-	@Test @Ignore
+	@Test
 	public void TraceNestedStatesB()
 	{
 	  AssertStm("TraceNestedStatesB.ump","TraceNestedStatesB.");
@@ -97,13 +97,54 @@ public class TracerStateMachinesTest extends TracerAssociationsTest
 	  AssertStm("TraceEvent.ump","TraceEvent.");
 	}
 	
+	@Test 
+	public void TraceEvent2()
+	{
+		AssertStm("TraceEvent2.ump","TraceEvent2.");	
+	}
+	
 	@Test @Ignore
 	public void TraceConcurrentStmA()
 	{
 	  AssertStm("TraceConcurrentStmA.ump","TraceConcurrentStmA.");
 	}
 	
-	// to be done
+	//-------- LightBulb trace tests
+	
+	@Test
+	public void TraceLightBulbState()
+	{
+	  AssertStm("TraceLightBulbState.ump","TraceLightBulbState.","LightBulb");
+	}
+	
+	@Test
+	public void TraceLightBulbEvent()
+	{
+	  AssertStm("TraceLightBulbEvent.ump","TraceLightBulbEvent.","LightBulb");
+	}
+	
+	@Test
+	public void TraceLightBulbPostfix()
+	{
+	  AssertStm("TraceLightBulbPostfix.ump","TraceLightBulbPostfix.","LightBulb");
+	}
+	
+	//-------- Events with Parameters trace tests
+	
+	@Test
+	public void TraceEventParameter()
+	{
+	  AssertStm("TraceEventParameter.ump","TraceEventParameter.");
+	}
+	
+	@Test
+	public void TraceEventParameterPostfix()
+	{
+	  AssertStm("TraceEventParameterPostfix.ump","TraceEventParameterPostfix.");
+	}
+	
+	//-------- to be added
+	
 	@Test @Ignore
 	public void TracePooledStateMachine()
 	{
@@ -148,12 +189,6 @@ public class TracerStateMachinesTest extends TracerAssociationsTest
 	}
 	
 	@Test @Ignore 
-	public void ConsoleTracer_TraceTransition()
-	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceTransition.ump",languagePath + tracerPath + "/ConsoleTracer_TraceTransition."+ languagePath +".txt","Light");
-	}
-	
-	@Test @Ignore 
 	public void ConsoleTracer_TraceStateRecordAttr()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceStateRecordAttr.ump",languagePath + "/ConsoleTracer_TraceStateRecordAttr."+ languagePath +".txt","Light");
@@ -171,21 +206,10 @@ public class TracerStateMachinesTest extends TracerAssociationsTest
 		assertUmpleTemplateFor("ConsoleTracer_TraceTransitionRecordAttr.ump",languagePath + "/ConsoleTracer_TraceTransitionRecordAttr."+ languagePath +".txt","Light");
 	}
 	
-	@Test @Ignore
-	public void TraceSupportFileTracer()
-	{
-	    assertUmpleTemplateFor("FileTracer.ump",languagePath + "/FileTracer."+ languagePath +".txt","Tracer",false);
-	}
-	  
-	@Test @Ignore
-	public void TraceSupportStringTracer()
-	{
-	    assertUmpleTemplateFor("StringTracer.ump",languagePath + "/StringTracer."+ languagePath +".txt","Tracer");
-	}
-	
 	//***************************//
 	//****    Systems        ****//
 	//***************************//
+	
 	@Test
 	public void ConsoleTracer_Phone()
 	{

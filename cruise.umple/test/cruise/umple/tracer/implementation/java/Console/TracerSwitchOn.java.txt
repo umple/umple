@@ -1,0 +1,8 @@
+  public boolean setX(String aX)
+  {
+    boolean wasSet = false;
+    ConsoleTracer.handle( System.currentTimeMillis()+","+System.identityHashCode(this)+","+(""+aX).toString().replace("\n","").replace(",",";") );
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }

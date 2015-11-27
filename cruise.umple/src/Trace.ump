@@ -119,7 +119,7 @@ class Postfix
 
 class Condition 
 {
-  ConstraintTree constraint=null;
+  ConstraintTree constraint = null;
   Boolean conditionallyWhere = true;
   conditionType = "where";
 }
@@ -180,7 +180,7 @@ class StateMachineTraceItem
 {
   isA TraceItem;
 
-  ConstraintTree constraint=null;
+  ConstraintTree constraint = null;
   tracerType = {getTraceDirective().getTracerType()}
 
   boolean isIn = false;
@@ -209,7 +209,7 @@ class AssociationTraceItem
 {
   isA TraceItem;
   
-  ConstraintTree constraint=null;
+  ConstraintTree constraint = null;
   tracerType = {getTraceDirective().getTracerType()}
 
   * -> * AssociationVariable;
@@ -230,7 +230,7 @@ class MethodTraceItem
 {
   isA TraceItem;
   
-  ConstraintTree constraint=null;
+  ConstraintTree constraint = null;
   tracerType = {getTraceDirective().getTracerType()}
   
   boolean entry = false;
