@@ -1627,7 +1627,6 @@ class Attribute
 	endPosition = another.getEndPosition();
 	umpleClass = another.getUmpleClass();
 	umpleTrait = another.getUmpleTrait();
-	traceRecords = another.getTraceRecords();
   }
 
   public boolean isConstant()
@@ -1698,10 +1697,6 @@ class Association
 	  this.ends = new ArrayList<AssociationEnd>();
 	  for (AssociationEnd associationEnd : another.getEnds()) {
 		  this.ends.add(new AssociationEnd(associationEnd));
-	  }
-	  this.associationTraceItems = new ArrayList<AssociationTraceItem>();
-	  for (AssociationTraceItem associationTraceItems : another.getAssociationTraceItems()) {
-		  this.associationTraceItems.add(associationTraceItems);
 	  }
   }
 
@@ -2702,10 +2697,6 @@ class AssociationVariable
 
 	  this.umpleClass = another.getUmpleClass();
 	  this.umpleTrait = another.getUmpleTrait();
-	  this.associationTraceItems = new ArrayList<AssociationTraceItem>();
-	  for (AssociationTraceItem associationTraceItem : another.getAssociationTraceItems()) {
-		  this.associationTraceItems.add(associationTraceItem);
-	  }
 	  //Helper Variables
 	  //this.canSetIsNavigable = another.canSetIsNavigable;
   }

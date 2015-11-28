@@ -26,6 +26,11 @@ class UmpleClass
   0..1 -- * TraceCase;
 }
 
+class UmpleVariable 
+{
+	depend java.util.*;
+}
+
 /*
  * ----- Tracer Directive MetaModel
  * A statement found in Umple that directs tracing technology
@@ -88,8 +93,7 @@ class Appender
  */
 class TraceDirective
 {
-  Integer id = 0;
-  String[] logLevel;
+  autounique id;
   String tracerType = {getTracerDirective().getName()}
   1 -> 1 TracerDirective;
 
@@ -98,20 +102,45 @@ class TraceDirective
   1 -- * MethodTraceItem;
   1 -- * AssociationTraceItem;
   1 -> * TraceCondition condition;
+  1 -- 0..1 Postfix;
   1 -- 0..1 TraceRecord;
 }
 
-/*
- * To be done. A group of trace directives that can be switched on or off by other
- * trace directives
- */
-class TraceCase
+class Postfix 
 {
-  name = null;
-  boolean activation = false;
-  1 -> * TraceDirective;
+  Integer occurences = 0;
+  Double periodClause = 0;
+  Double duringClause = 0;
+  executeClause = null;
+  1 -> 0..1 Condition;
+  1 -> 0..1 TraceRecord;
+  1 -> * LogLevel;
 }
 
+class Condition 
+{
+  ConstraintTree constraint = null;
+  Boolean conditionallyWhere = true;
+  conditionType = "where";
+}
+
+//class TraceRecord 
+//{
+// Boolean recordOnly = false;
+// * -> * UmpleVariable;
+// * -> * Attribute;
+// 1 -> * Record;
+//}
+
+class Record 
+{
+  String recordString;
+}
+
+class LogLevel 
+{
+  String level;
+}
 
 interface TraceItem
 {
@@ -128,9 +157,7 @@ interface TraceItem
  */
 class AttributeTraceItem
 {
-  isA TraceItem;  
-
-  ConstraintTree constraint=null;
+  isA TraceItem;
   tracerType = {getTraceDirective().getTracerType()}
 
   boolean traceSet = false;
@@ -140,12 +167,9 @@ class AttributeTraceItem
   forClause = null;
   periodClause = null;
   duringClause = null;
-  executeClause = null;
-  * -- * UmpleVariable;
+  * -> * UmpleVariable;
 
   Position position = null;
-  Boolean conditionallyWhere = true; 
-  conditionType = "where";
 }
 
 /*
@@ -156,7 +180,7 @@ class StateMachineTraceItem
 {
   isA TraceItem;
 
-  ConstraintTree constraint=null;
+  ConstraintTree constraint = null;
   tracerType = {getTraceDirective().getTracerType()}
 
   boolean isIn = false;
@@ -185,11 +209,11 @@ class AssociationTraceItem
 {
   isA TraceItem;
   
-  ConstraintTree constraint=null;
+  ConstraintTree constraint = null;
   tracerType = {getTraceDirective().getTracerType()}
 
-  * -- * AssociationVariable;
-  * -- * Association;
+  * -> * AssociationVariable;
+  * -> * Association;
 
   //default case tracing Cardinality
   boolean traceCardinality = true;
@@ -206,13 +230,13 @@ class MethodTraceItem
 {
   isA TraceItem;
   
-  ConstraintTree constraint=null;
+  ConstraintTree constraint = null;
   tracerType = {getTraceDirective().getTracerType()}
   
   boolean entry = false;
   boolean exit = false;
   
-  * -- * Method;
+  * -> * Method;
   
   Position position = null;
   periodClause = null;
@@ -221,19 +245,19 @@ class MethodTraceItem
 }
 
 /*
- * Data to record in a trace directive
+ * Future work - initial implementation is done
+ * A group of trace directives that can be switched on or off by other
+ * trace directives
  */
-class TraceRecord
+class TraceCase
 {
-  boolean recordOnly = false;
-  * -- * Attribute;
-  * -- * StateMachine;
-  String[] record;
+  name = null;
+  boolean activation = false;
+  1 -> * TraceDirective;
 }
 
 /*
- * An element of Boolean logic determining whether a trace directive
- * when encountered, will result in trace output
+ * Discarded metamodel
  */
 class TraceCondition
 {
@@ -249,6 +273,14 @@ class ConditionRhs
 {
   rhs = null;
   comparisonOperator = null;
+}
+
+class TraceRecord
+{
+  boolean recordOnly = false;
+  * -- * Attribute;
+  * -- * StateMachine;
+  String[] record;
 }
 
 use Trace_Code.ump;

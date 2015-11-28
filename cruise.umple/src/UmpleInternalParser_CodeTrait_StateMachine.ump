@@ -1,0 +1,225 @@
+
+namespace cruise.umple.compiler;
+
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+class UmpleInternalParser
+{
+
+//----------------------------------------------------------------------------  
+//---------------------------------Start--------------------------------------
+//----------------------------------------------------------------------------   
+  private void copyStateMachinesFromTraiToClass(UmpleClass inClass) {
+    Map<UmpleTrait, List<StateMachine>> traiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
+	Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
+	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+		tempTraiStateMachine = gatherStateMachinesFromTrait(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
+		CheckSMFromTraitIsNotAvaialbleInOtherTraits(traiStateMachine, tempTraiStateMachine, inClass);
+		if ( ! getParseResult().getWasSuccess() ) return;
+		if (!CheckSMFromTraitIsNotAvaialbleInClass(inClass,tempTraiStateMachine)) return;
+		AddStateMachineMapToAnother(traiStateMachine,tempTraiStateMachine);
+	}
+	for (UmpleTrait t1 : traiStateMachine.keySet()) {
+		for (StateMachine sMachine : traiStateMachine.get(t1)) {
+			sMachine.setUmpleClass(inClass);
+    		inClass.addStateMachine(sMachine);		
+		}
+	}
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private Map<UmpleTrait, List<StateMachine>> gatherStateMachinesFromTrait(UmpleTrait inTrait,GeneralTPApplied inGTPApplied, UmpleClass inClass) {
+    Map<UmpleTrait, List<StateMachine>> traiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>(); 
+ 	 Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
+ 	 //----------------------------------------------------------------------------------------
+ 	 List<StateMachine> lSMachine = new ArrayList<StateMachine>();	  
+ 	 for (StateMachine sMachine : inTrait.getStateMachines()) {
+    	 	lSMachine.add(ApplyTypeParametersToStateMachine(sMachine,inGTPApplied,inClass, inTrait));
+	 }
+ 	traiStateMachine.put(inTrait,lSMachine);
+     //----------------------------------------------------------------------------------------
+     for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+    	 tempTraiStateMachine = gatherStateMachinesFromTrait(uTrait,inTrait.getGeneralTPAppliedByName(uTrait.getName()),inClass);	 
+    	 if ( ! getParseResult().getWasSuccess() ) return traiStateMachine;
+    	 if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traiStateMachine,tempTraiStateMachine,inTrait)) return traiStateMachine;
+    	 AddStateMachineMapToAnother(traiStateMachine,tempTraiStateMachine);
+	 }
+     return traiStateMachine;
+ }
+ 
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+ 
+ private StateMachine ApplyTypeParametersToStateMachine(StateMachine sMachine, GeneralTPApplied inGTPApplied, UmpleClass inClass, UmpleTrait inTrait) {
+	StateMachine newSt = getNewStateMachine(sMachine);
+	return newSt;
+	
+}
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+   private boolean CheckSMFromTraitIsNotAvaialbleInClass(UmpleClass inClass, Map<UmpleTrait, List<StateMachine>> inTempTraiStateMachine){
+    for (UmpleTrait uTrait : inTempTraiStateMachine.keySet()) {
+		for (StateMachine tSMachine : inTempTraiStateMachine.get(uTrait)) {
+			for(StateMachine cSMachine : inClass.getStateMachines()){
+				if (compareStateMachineName(cSMachine, tSMachine)){
+					getParseResult().addErrorMessage(new ErrorMessage(226,inClass.getPosition(0),tSMachine.getName(),uTrait.getName(),"class",inClass.getName()));
+					return false;
+				}else {
+					addExtraStatesAnsTransitions(cSMachine, tSMachine);
+				}
+			}
+		}
+	}
+	return true;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private boolean CheckSMFromTraitIsNotAvaialbleInOtherTraits(Map<UmpleTrait, List<StateMachine>> inTraiStateMachine, Map<UmpleTrait, List<StateMachine>> inTempTraiStateMachine, UmpleClassifier inUmpleClassifier){
+    for(UmpleTrait tUTrait : inTempTraiStateMachine.keySet()){
+		for (StateMachine tSMachine : inTempTraiStateMachine.get(tUTrait)) {
+			for(UmpleTrait uTrait : inTraiStateMachine.keySet()){
+				for (StateMachine sMachine : inTraiStateMachine.get(uTrait)) {
+					if (compareStateMachineName(sMachine, tSMachine)){
+						if (inUmpleClassifier instanceof UmpleTrait){
+							if (uTrait.equals(((UmpleTrait)inUmpleClassifier)) ){
+								getParseResult().addErrorMessage(new ErrorMessage(226,inUmpleClassifier.getPosition(0),sMachine.getName(),tUTrait.getName(),"trait",inUmpleClassifier.getName()));
+								return false;
+							} 							
+							else if(!tUTrait.equals(uTrait)) {
+								getParseResult().addErrorMessage(new ErrorMessage(227,inUmpleClassifier.getPosition(0),sMachine.getName(),tUTrait.getName(),"trait",inUmpleClassifier.getName(),uTrait.getName()));
+								return false;
+							}															
+						} else if(inUmpleClassifier instanceof UmpleClass){
+							if(!tUTrait.equals(uTrait)){
+								getParseResult().addErrorMessage(new ErrorMessage(227,inUmpleClassifier.getPosition(0),sMachine.getName(),tUTrait.getName(),"class",inUmpleClassifier.getName(),uTrait.getName()));
+								return false;
+							}
+						}
+					} else {
+						addExtraStatesAnsTransitions(sMachine, tSMachine);
+					}	
+				}
+			}
+		}
+	}
+	return true;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inTraitStateMachine,	Map<UmpleTrait, List<StateMachine>> inTempTraiStateMachine) {
+    for (UmpleTrait uTrait : inTempTraiStateMachine.keySet()) {
+		if (inTraitStateMachine.containsKey(uTrait)){
+			inTraitStateMachine.get(uTrait).addAll(inTempTraiStateMachine.get(uTrait));
+		} else{
+			inTraitStateMachine.put(uTrait, inTempTraiStateMachine.get(uTrait));
+		}	
+	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private StateMachine getNewStateMachine(StateMachine sMachine) {
+	StateMachine stNew = new StateMachine(sMachine.getName());
+	 stNew.setPooled(sMachine.getPooled());
+	 stNew.setQueued(sMachine.getQueued());
+	 for (State element : sMachine.getStates()) {
+	 	stNew.addState(element);
+	 }
+	return stNew;
+ }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private boolean compareStateMachineName(StateMachine inSMachine1, StateMachine inSMachine2){
+    if(inSMachine1.getName().equals(inSMachine2.getName())){
+		return compareStatesAndTransitions(inSMachine1,inSMachine2);
+	} else{
+		return false;
+	}
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private boolean compareStatesAndTransitions(StateMachine inSMachine1, StateMachine inSMachine2) {
+	  for (State state : inSMachine2.getStates()) {
+		  State mainState = inSMachine1.findState(state.getName());
+		  if (mainState ==null){
+			  return false;
+		  }
+		  for(Transition trans : state.getTransitions() ){
+			  boolean find = false;
+			  for(Transition mainlTrans : mainState.getTransitions() ){
+				  if (checkTwoTransitionEqulaity(trans,mainlTrans)){ find = true; }
+			  }
+			  if(!find) return false;
+		  }
+	  }
+	  return true;
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private  boolean checkTwoTransitionEqulaity(Transition inTransition1, Transition inTransition2) {
+	  if (!inTransition1.getEvent().equals(inTransition2.getEvent())) return false;
+	  if (inTransition1.getEvent().numberOfParams() != inTransition2.getEvent().numberOfParams()) return false;
+	  for (int i = 0; i < inTransition1.getEvent().numberOfParams(); i++) {
+		  if (!inTransition1.getEvent().getParam(i).getType().equals(inTransition2.getEvent().getParam(i).getType())) return false;
+	  }
+	  //TODO inserted by Vahdat [Nov 26, 2015,12:59:42 AM] please complete this comparison for guards. 
+	  if (inTransition1.getGuard()!=null && inTransition2.getGuard()!=null){
+		  
+	  }
+	  //TODO inserted by lethbridge [Nov 26, 2015,1:00:33 AM] please complete this comparison for actions.
+	  if (inTransition1.getAction()!=null && inTransition2.getAction()!=null){
+		//  if (!inTransition1.getAction().getActionType().equals(inTransition2.getAction().getActionType())) return false;
+	  }
+	  return true;
+ }
+  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void addExtraStatesAnsTransitions(StateMachine inSMachine1, StateMachine inSMachine2) {
+    for (State state : inSMachine2.getStates()) {
+		  State mainState = inSMachine1.findState(state.getName());
+		  if (mainState==null){
+			  inSMachine1.addState(state);
+		  } else {
+			  for (int i = 0; i < state.numberOfTransitions(); i++) {
+				  boolean find = false;
+				  for(Transition mainlTrans : mainState.getTransitions() ){
+					  if (checkTwoTransitionEqulaity(state.getTransition(i), mainlTrans)){ find = true; }
+				  }
+				  if(!find) {		
+					  mainState.addTransition(state.getTransition(i));
+				  }
+			  }
+		  }
+
+	  }
+  }
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+
+
+
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+
+}

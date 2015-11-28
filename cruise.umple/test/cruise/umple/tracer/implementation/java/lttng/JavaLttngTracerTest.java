@@ -46,6 +46,12 @@ public class JavaLttngTracerTest extends TemplateTest
     assertLttng("LttngTest2.ump","LttngTest2.java.txt");
   }
   
+  @Test
+  public void Test3()
+  {
+    assertLttng("LttngTest3.ump","LttngTest3.java.txt");
+  }
+  
   public void assertLttng(String input, String expected)
   {
     assertUmpleTemplateFor(input,expected,"Tracer",false);

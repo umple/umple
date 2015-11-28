@@ -1,0 +1,16 @@
+namespace example;
+
+class Tracer 
+{
+  stateMachine {
+    s2a {
+      entry / {System.out.println("s2a");}
+      e(int a) [a > 6] / {System.out.println("e"+a);} -> s2b;
+    }
+    s2b {
+      entry / {System.out.println("s2b");}
+      e(int a) / {System.out.println("e"+a);} -> s2a;
+    }
+  }
+  trace e record "tracing event with parameters";
+}

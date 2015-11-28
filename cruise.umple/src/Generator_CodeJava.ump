@@ -1531,6 +1531,11 @@ class JavaGenerator
       addJavaLttngJniImport();
     }
     
+    if( getModel().getTracer().getName().equals("lttng") )
+    {
+      addJavaLttngImport();
+    }
+    
     addRelatedImports();
   }
   
@@ -1563,6 +1568,37 @@ class JavaGenerator
       init.setIsInternal(true);
       umpleClass.addCodeInjection(init);
       umpleClass.addDepend(new Depend("org.lttng.ust.LTTngUst"));
+    }
+  }
+  
+  private void addJavaLttngImport(){
+    for(UmpleClass umpleClass : getModel().getUmpleClasses())
+    {
+    	// imports
+    	umpleClass.addDepend(new Depend("java.util.logging.*"));
+      umpleClass.addDepend(new Depend("org.lttng.ust.agent.LTTngAgent"));
+      // code injection in constructor
+      CodeBlock cb = new CodeBlock("LTTngAgent lttngAgent = LTTngAgent.getLTTngAgent();");
+      CodeInjection init = new CodeInjection("after","constructor", cb, umpleClass);
+      init.setIsInternal(true);
+      umpleClass.addCodeInjection(init);
+      // logger static variable
+      Attribute loggerAttr = new Attribute("logger", "Logger", "const", "Logger.getLogger("+umpleClass.getName()+".class.getName())", false, umpleClass);
+      umpleClass.addAttribute(loggerAttr);
+    }
+  }
+  
+  private void addJavaLttngImport(){
+    for(UmpleClass umpleClass : getModel().getUmpleClasses())
+    {
+    	CodeBlock cb = new CodeBlock("LTTngAgent lttngAgent = LTTngAgent.getLTTngAgent();");
+      CodeInjection init = new CodeInjection("after","constructor", cb, umpleClass);
+      init.setIsInternal(true);
+      umpleClass.addCodeInjection(init);
+      Attribute loggerAttr = new Attribute("logger", "Logger", "const", "Logger.getLogger("+umpleClass.getName()+".class.getName())", false, umpleClass);
+      umpleClass.addAttribute(loggerAttr);
+      umpleClass.addDepend(new Depend("java.util.logging.*"));
+      umpleClass.addDepend(new Depend("org.lttng.ust.agent.LTTngAgent"));
     }
   }
 
@@ -1795,29 +1831,21 @@ class JavaGenerator
                  "     System.err.println(message);\n"+
                  "  }");
     lookups.put("fileTracer","public static void handle(String message)\n"+
-                 "  {\n"+
-               "    FileOutputStream fout = null;\n"+
-               "    try\n"+
-               "    {\n"+
-               "      // Open an output stream\n"+
-               "      fout = new FileOutputStream (filename,true);\n"+
-               "    }\n"+
-               "    catch (IOException e)\n"+
-               "    {\n"+
-               "      System.err.println (\"Unable to write to file\");\n"+
-               "      System.exit(-1);\n"+
+               "  {\n"+
+    		       "    if(!open){\n"+
+               "      try{\n"+
+               "        // Open an output stream\n"+
+               "        fout = new FileOutputStream (filename,true);\n"+
+               "        stream = new PrintStream(fout);\n"+
+               "      }\n"+
+               "      catch (IOException e){\n"+
+               "        System.err.println (\"Unable to write\");\n"+
+               "        System.exit(-1);\n"+
+               "      }\n"+
+               "      open = true;\n"+
                "    }\n"+
                "    // Write traced Item information\n"+
-               "    new PrintStream(fout).println(message);\n"+
-               "    try\n"+
-               "    {\n"+
-               "      // Close output stream\n"+
-               "      fout.close();\n"+
-               "    }\n"+
-               "    catch (IOException e)\n"+
-               "    {\n"+
-               "      e.printStackTrace();\n"+
-               "    }\n"+
+               "    stream.println(message);\n"+
                "  }");
     lookups.put("log4jConfigDefault", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
         "<Configuration>\n"+

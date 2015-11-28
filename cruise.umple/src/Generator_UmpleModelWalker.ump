@@ -271,9 +271,6 @@ class UmpleModelWalker {
 					for(Attribute attribute: clazz.getAttributes()) {
 						visitor.visit((UmpleVariable)attribute);
 						visitor.visit(attribute); // isIsDerived
-						for(TraceRecord tr: attribute.getTraceRecords()) {
-							visitor.visit(tr);
-						}
 						if(attribute.getCodeblock() != null) {
 							visitor.visit(attribute.getCodeblock());
 						}
@@ -296,9 +293,6 @@ class UmpleModelWalker {
 									Guard gElm = (Guard)transition.getGuard();
 									String condition = gElm.getCondition(new cruise.umple.compiler.JavaGenerator());
 									visitor.visit(gElm);
-									if(condition != null && condition.length() > 0) {
-										visitor.visit(new Condition(condition, gElm));										
-									}
 								}	
 								visitor.visit(transition.getEvent());
 							}
@@ -321,7 +315,6 @@ class UmpleModelWalker {
 					
 					for(TraceDirective td: clazz.getTraceDirectives()){
 						visitor.visit(td);
-						visitor.visit(td.getTraceRecord());
 						visitor.visit(td.getTracerDirective());
 						
 						for(AttributeTraceItem ati : td.getAttributeTraceItems()) {

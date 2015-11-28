@@ -23,6 +23,7 @@ class UmpleInternalParser
   AssociationTraceItem tracedAssoc = null;
   MethodTraceItem mte = null;
   TraceCase tca = null;
+  Postfix post = null;
 
   //------------------------------------------
   //----------  Trace analysis Code  ---------
@@ -47,7 +48,8 @@ class UmpleInternalParser
         	String tracerName = subToken.getValue().toLowerCase();
         	
         	if( tracerName.equals("console") | tracerName.equals("file") | tracerName.equals("string") 
-        			| tracerName.equals("javaapi") | tracerName.equals("lttngjni") | tracerName.equals("log4j") )
+        			| tracerName.equals("javaapi") | tracerName.equals("log4j") 
+        			| tracerName.equals("lttngjni") | tracerName.equals("lttng") )
         	{
             tracer = new TracerDirective(subToken.getValue().toLowerCase());
         	}
@@ -71,10 +73,16 @@ class UmpleInternalParser
         	for(Token msgToken : subToken.getSubTokens())
         	{
         		if(msgToken.is("switch"))
+        		{
         			if( msgToken.getValue().equals("on") )
+        			{
         				tms.setOn(true);
+        			}
         			else if( msgToken.getValue().equals("off") )
+        			{
         				tms.setOff(true);
+        			}
+        		}
         		
         		if(msgToken.is("option"))
         			tms.addOption(new MessageComponent(msgToken.getValue()));
@@ -150,8 +158,10 @@ class UmpleInternalParser
     traceAttr = new AttributeTraceItem(traceDirective);
     tracedAssoc = new AssociationTraceItem(traceDirective);
     mte = new MethodTraceItem(traceDirective);
+    post = new Postfix(traceDirective);
     TraceRecord traceRecord = null;
     traceDirective.setUmpleClass(aClass);
+    Condition cond = new Condition(null, null);
 
     boolean isFirst = true;
 
@@ -169,8 +179,8 @@ class UmpleInternalParser
           String ctype = traceToken.getValue("conditionType");
           if(ctype!=null&&!ctype.equals("where"))
           {
-            traceAttr.setConditionType(ctype);
-            traceAttr.setConditionallyWhere(false);
+            cond.setConditionType(ctype);
+            cond.setConditionallyWhere(false);
           }
           pos = 2;
         }
@@ -187,7 +197,7 @@ class UmpleInternalParser
         }
         constraint.addElementAll(((ConstraintTokenAnalyzer)model.getAnalyzer("constraintToken")).getConstraint());
         List<Attribute> others = new ArrayList<Attribute>();
-        if("after".equals(traceAttr.getConditionType())||"until".equals(traceAttr.getConditionType()))
+        if("after".equals(cond.getConditionType())||"until".equals(cond.getConditionType()))
         {
           for(ConstraintVariable cv:constraint)
           {
@@ -203,7 +213,7 @@ class UmpleInternalParser
         }
         if(others.isEmpty())
         {
-          traceAttr.setConstraint(constraint);
+        	cond.setConstraint(constraint);
           tracedAssoc.setConstraint(constraint);
           mte.setConstraint(constraint);
         }
@@ -217,7 +227,7 @@ class UmpleInternalParser
             method+= ",set"+at.getName().substring(0,1).toUpperCase()+at.getName().substring(1);          	
           }
           String flag = "traceFlag"+getTraceFlagId();
-          String code = flag+"="+("after".equals(traceAttr.getConditionType())?"true":"until".equals(traceAttr.getConditionType())?"false":"");
+          String code = flag+"="+("after".equals(cond.getConditionType())?"true":"until".equals(cond.getConditionType())?"false":"");
           CodeInjection ci = new CodeInjection("after",method,"", aClass);
           CodeBlock cb = new CodeBlock(code+";");
           cb.setCode("Java",code+";");
@@ -228,8 +238,8 @@ class UmpleInternalParser
           ci.setConstraintTree(constraint);
           aClass.addCodeInjection(ci);
           constraint = new ConstraintTree();
-          traceAttr.setConstraint(constraint);
-          Attribute flagAttr = new Attribute(flag,"Boolean","internal",("after".equals(traceAttr.getConditionType())?"false":"until".equals(traceAttr.getConditionType())?"true":""),false,aClass);
+          cond.setConstraint(constraint);
+          Attribute flagAttr = new Attribute(flag,"Boolean","internal",("after".equals(cond.getConditionType())?"false":"until".equals(cond.getConditionType())?"true":""),false,aClass);
           constraint.addElement(new ConstraintUnassignedName(flag));
         }
       }
@@ -250,13 +260,13 @@ class UmpleInternalParser
         Attribute flagAttr = new Attribute(flag,"Integer","internal","0",false,aClass);
         traceAttr.setForClause(flag);
         ConstraintTree constraint;
-        if(traceAttr.getConstraint()==null)
+        if(cond.getConstraint()==null)
         {
           constraint = new ConstraintTree();
         } 
         else
         {
-          constraint = traceAttr.getConstraint();
+          constraint = cond.getConstraint();
           constraint.addElement(new ConstraintOperator("&&"));
         }
         ConstraintTree subTree = new ConstraintTree();
@@ -264,7 +274,7 @@ class UmpleInternalParser
         subTree.addElement(new ConstraintOperator("<"));
         subTree.addElement(new ConstraintNumberLiteral(traceToken.getValue()));
         constraint.addElement(subTree);
-        traceAttr.setConstraint(constraint);
+        cond.setConstraint(constraint);
       }     
       else if( traceToken.is("tracePeriod") )
       {
@@ -290,13 +300,14 @@ class UmpleInternalParser
       }
       else if( traceToken.is("traceExecute") )
       {
-        traceAttr.setExecuteClause(token.getValue("traceExecute"));
+      	traceDirective.getPostfix().setExecuteClause(token.getValue("traceExecute"));
       }
       else if( traceToken.is("logLevel") )
       {
-        traceDirective.addLogLevel(traceToken.getValue());
+      	traceDirective.getPostfix().addLogLevel(new LogLevel(traceToken.getValue()));
       }
     }
+    post.setCondition(cond);
     if( traceAttr.numberOfUmpleVariables() > 0 )
       traceDirective.addAttributeTraceItem(traceAttr);
   }
@@ -349,25 +360,56 @@ class UmpleInternalParser
       analyzeMethodTraceItem(traceToken);
     }
 
-    // trace all attribute [wildcard]
-    if( traceToken.getValue("traceEntity").equals("*attribute") )
+    String traceWildCard = traceToken.getValue("traceEntity").toLowerCase();
+    
+    if( traceWildCard.equals("allattributes") || 
+    		traceWildCard.equals("allassociations") || 
+    		traceWildCard.equals("allnonapimethods"))
+    	anaylzeTraceWildCard(traceToken);
+    
+    // Trace Warning
+    if( traceItemType == -1 )
+    	setFailedPosition(traceToken.getPosition(),301);
+  }
+  
+  /**
+   * Analyzes trace wildcards
+   */
+  private void anaylzeTraceWildCard(Token traceToken) {
+  	UmpleClass uClass = traceDirective.getUmpleClass();
+    //------------- trace all attribute [wildcard]
+    if( traceToken.getValue("traceEntity").toLowerCase().equals("allattributes") )
     {
-      UmpleClass uClass = traceDirective.getUmpleClass();
-
-      for( int i = 0 ; i < uClass.numberOfAttributes() ; ++i )
+      for( UmpleVariable attr : uClass.getAllAttributes() )
       {
-        UmpleVariable attr;
-        attr = uClass.getAttribute(i);
-        traceAttr.setPosition(traceToken.getPosition());
+      	traceAttr.setPosition(traceToken.getPosition());
         traceAttr.addUmpleVariable(attr);
         traceAttr.setTraceGet(true);
         traceAttr.setTraceSet(true);
       }
     }
-    
-    // Trace Warning
-    if( traceItemType == -1 )
-    	setFailedPosition(traceToken.getPosition(),301);
+    //------------- trace all associations [wildcard]
+    if( traceToken.getValue("traceEntity").toLowerCase().equals("allassociations") )
+    {
+      for( AssociationVariable assoc : uClass.getAssociationVariables() )
+      {
+      	tracedAssoc.setPosition(traceToken.getPosition());
+      	tracedAssoc.addAssociationVariable(assoc);
+      	tracedAssoc.setTraceAdd(true);
+      	tracedAssoc.setTraceRemove(true);
+      }
+    }
+    //------------- trace all non-api methods [wildcard]
+    if( traceToken.getValue("traceEntity").toLowerCase().equals("allnonapimethods") )
+    {
+      for( Method m : uClass.getMethods() )
+      {
+      	mte.setPosition(traceToken.getPosition());
+        mte.addMethod(m);
+        mte.setEntry(true);
+        mte.setExit(true);
+      }
+    }
   }
 
   /**
@@ -405,6 +447,13 @@ class UmpleInternalParser
           {
             traceItemType = 2;
           }
+        // check if traced state is already found
+        // no need to check nested states
+        if( traceItemType == 2 ) return traceItemType;
+        if(s.hasNestedStateMachines())
+        {
+        	traceItemType = checkNestedStateMachine(traceToken.getValue("traceEntity"),s);	
+        }
       }
     }
 
@@ -435,6 +484,23 @@ class UmpleInternalParser
     }
 
     return traceItemType;
+  }
+  
+
+  // checks if traced state was deeply nested
+  private int checkNestedStateMachine(String value, State s){
+  	int traceItemType = -1;
+  	for( StateMachine stm : s.getNestedStateMachines())
+  	{
+  		for( State ss : stm.getStates() )
+  		{
+  			if( value.equals(ss.getName()) )
+  				return 2;
+  			if(s.hasNestedStateMachines())
+  				traceItemType = checkNestedStateMachine(value, ss);
+  		}
+  	}
+  	return traceItemType;
   }
 
   /**

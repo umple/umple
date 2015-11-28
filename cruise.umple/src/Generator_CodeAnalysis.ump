@@ -494,9 +494,9 @@ class McCabeMetricVisitor {
 	
 	// Trace
 	void visit(AttributeTraceItem attributeT) {
-		if(attributeT.isConditionallyWhere()) {
-			cur_conditions++;
-		}
+//		if(attributeT.isConditionallyWhere()) {
+//			cur_conditions++;
+//		}
 		if(attributeT.getPeriodClause() != null && attributeT.getPeriodClause().length() > 0) {
 			cur_iterations++;
 		}

@@ -27,7 +27,7 @@ private static void postpareTrace(UmpleModel aModel)
   //*******  Methods dealing with different tracers
   //*********************************************** 
   // Process traces based on tracer selected
-  // Current Tracers supported ( Console / File / String / Log4j ) to be added later ( LTTNG / Dtrace )
+  // Current Tracers supported ( Console / File / String / Log4j / LTTNG  )
   static private boolean generateConsole = true;
   static private boolean generateFile = true;
   static private boolean generateString = true;
@@ -42,8 +42,9 @@ private static void postpareTrace(UmpleModel aModel)
     {
       if(templateLookups.containsKey("dependTracer"))
       {
-        if(td.getTracerType().equals("log4j") || td.getTracerType().equals("javaapi") || td.getTracerType().equals("lttngjni"))
-        {
+      	if(td.getTracerType().equals("log4j") || td.getTracerType().equals("javaapi") 
+        		|| td.getTracerType().equals("lttngjni") || td.getTracerType().equals("lttng"))
+      	{
 //          aClass.addDepend(new Depend("org.apache.logging.log4j.LogManager"));
 //          aClass.addDepend(new Depend("org.apache.logging.log4j.Logger"));
         }
@@ -140,8 +141,7 @@ private static void postpareTrace(UmpleModel aModel)
     }
     aClass.createGeneratedClass(model);
   }
-  public static void prepareFileTracer(UmpleModel model, Map<String,String> lookups)
-  {
+  public static  void prepareFileTracer(UmpleModel model, Map<String,String> lookups){
     UmpleClass aClass = model.addUmpleClass("FileTracer");
     
     if (aClass.getExtraCode()=="")
@@ -152,6 +152,16 @@ private static void postpareTrace(UmpleModel aModel)
       aClass.setPackageName(lookups.get("packageName"));
       
       Attribute filename = new Attribute("filename","String","const",lookups.get("filename"),false,aClass);
+      // commented these attributes
+      // Umple doesn't support static attributes
+      /*
+      Attribute output = new Attribute("fout","FileOutputStream","static","null",false,aClass);
+      Attribute print = new Attribute("stream","PrintStream","static","null",false,aClass);
+      Attribute open = new Attribute("open","boolean","static","false",false,aClass);
+       */
+      aClass.appendExtraCode("  private static FileOutputStream fout = null;");
+      aClass.appendExtraCode("  private static PrintStream stream = null;");
+      aClass.appendExtraCode("  private static boolean open = false;");
       aClass.appendExtraCode(lookups.get("fileTracer"));
       aClass.appendExtraCode(lookups.get("static"));
       CodeInjection init = new CodeInjection("after","constructor", lookups.get("initial"), aClass);

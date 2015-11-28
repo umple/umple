@@ -1,8 +1,6 @@
 package cruise.umple.compiler;
 
 
-import junit.framework.Assert;
-
 import org.junit.*;
 
 import cruise.umple.util.SampleFileWriter;
@@ -152,6 +150,82 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, model.getUmpleClass("A").numberOfStateMachines());
 		Assert.assertEquals(2, model.getUmpleClass("B").numberOfStateMachines());		
 	}	
+	
+	@Test
+	public void stateMachineTraits001Test() {
+		String code = "class A {isA T1; status { on { turnOn -> on;}}} trait T1 { status { on { turnOn -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("226");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+
+	@Test
+	public void stateMachineTraits002Test() {
+		String code = "class A{ isA T1;} trait T1 {isA T2; status { on { turnOn -> on;}}} trait T2 { status { on { turnOn -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("226");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}		
+	
+	@Test
+	public void stateMachineTraits003Test() {
+		String code = "class A{isA T1,T2;} trait T1 {status { on { turnOn -> on;}}} trait T2 { status { on { turnOn -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("227");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+	@Test
+	public void stateMachineTraits004Test() {
+		String code = "class A{isA T1;} trait T1 {isA T2, T3;} trait T2 {status { on { turnOn -> on;}}} trait T3 { status { on { turnOn -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("227");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+
+	@Test
+	public void stateMachineTraits005Test() {
+		String code = "class A {isA T1,T2;} trait T1 { isA T3;} trait T2 { isA T3;} trait T3 { status { on { turnOn -> on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfStateMachines());
+	}	
+	
+	@Test
+	public void stateMachineTraits006Test() {
+		String code = "class A {isA T1; status { on { turnOn -> on;}} } trait T1 { status { on { enable -> on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfTransitions());
+	}
+	
+	
+
 	
 	@Test
 	public void codeInjectTraitsTest() {
@@ -928,14 +1002,31 @@ public class UmpleTraitTest {
 		}	
 	}
 
-        @Ignore
-        public void associationTraitsTest() {
-              String code = "class A {isA T;} class B {} trait T { 1 -- * B;} ";
-              UmpleModel model = getRunModel(code);
-              SampleFileWriter.destroy("B.java");     
-              Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());
-        }
-	
+    @Test
+    public void associationTraitsTest() {
+          String code = "class A {isA T;} class B {} trait T { 1 -- * B;} ";
+          UmpleModel model = getRunModel(code);
+          SampleFileWriter.destroy("B.java");     
+          Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());
+    }
+    
+    
+	@Test
+	public void associationTraits000Test() {
+		String code = "class A {isA T;} interface I {} trait T { 1 -- * I;}";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("20");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}	
+    
+
 	@Test
 	public void associations001Test() {
 		String code = "class A{isA T<X=B>;}trait T<X>{0..1 -- * X;} class B{}";
@@ -967,6 +1058,23 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, model.getUmpleClass("A").numberOfAssociationVariables());
 	}	
 	
+	
+	@Test
+	public void associations005Test() {
+		String code = "class A{isA T<X=I>;} interface I{} trait T<X>{ 1 -- * X;} }";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("20");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}	
+
+	
 	@Test
 	public void templateInCode01Test() {
 		String code = "class A{isA T<X=B>;} class B{isA T<X=A>;} trait T<X>{void test(){#X# b=new #X#();}}";
@@ -989,6 +1097,8 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}
 	}	
+	
+	
 	@Test
 	public void InterfaceForTemplates002() {
 		String code = "class A{isA T<X = B1>;} interface I{} trait T<X isA I>{}";

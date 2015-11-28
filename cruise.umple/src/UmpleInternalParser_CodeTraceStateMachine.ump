@@ -17,8 +17,10 @@ namespace cruise.umple.compiler;
 class UmpleInternalParser
 {
 
-  private void analyzeStateMachineTraceItem(Token traceToken){
+  private void analyzeStateMachineTraceItem(Token traceToken)
+  {
     List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
+    StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
     StateMachine stm = null;
     State state = null;
     String stmTraceItem = traceToken.getValue("traceEntity");
@@ -43,7 +45,6 @@ class UmpleInternalParser
 
       if(isTransition)
       {
-        StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
         tracedStm.setIsOut(isOut);
         tracedStm.setIsIn(isIn);
         tracedStm.setPosition(traceToken.getPosition());
@@ -75,7 +76,6 @@ class UmpleInternalParser
         for( Transition tsn : s.getTransitions() )
           if( tsn.getEvent().getName().equals(traceToken.getValue()) )
           {
-            StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
             tracedStm.setIsOut(false);
             tracedStm.setIsIn(false);
             tracedStm.setPosition(traceToken.getPosition());
@@ -118,8 +118,7 @@ class UmpleInternalParser
     //System.out.println(stmTraceItem+"<>"+stm);  
     // if trace entity is a state machine  
     if( stm != null)
-    {  
-      StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
+    {
       tracedStm.setPosition(traceToken.getPosition());  
       tracedStm.setStateMachine(stm);
       tracedStm.setState(state);
@@ -170,7 +169,6 @@ class UmpleInternalParser
       }
       tracedStm.setTraceStateMachineFlag(state == null);
       traceDirective.addStateMachineTraceItem(tracedStm);
-
     }
   }
 } 

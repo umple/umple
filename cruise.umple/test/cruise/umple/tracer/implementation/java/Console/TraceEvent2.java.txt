@@ -1,0 +1,15 @@
+public boolean reachBottom()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case Closing:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceEvent2.ump,26,Tracer,"+System.identityHashCode(this)+",sm_t,Closing,reachBottom,Closed" );
+        setSm(Sm.Closed);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
