@@ -2,6 +2,7 @@
 <%
   StringBuffer allCases = new StringBuffer();
   StringBuffer allDeclarations = new StringBuffer();
+  StringBuffer allArgs = new StringBuffer();
 
   boolean firstStateMachine = true;
   for(StateMachine sm : uClass.getStateMachines(e))
@@ -85,13 +86,24 @@
     }
     firstStateMachine = false;
   }
+  String[] split = e.getArgs().split(",");
+  if (split[0] != null && split[0] != "")
+  {
+    for (int i = 0; i < split.length; i++) {
+      if (i > 0)
+      {
+        allArgs.append(", ");
+      }
+      allArgs.append(StringFormatter.format("${0}",split[i].substring(split[i].indexOf(" ")+1)));
+    }
+  }
   String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
   String eventOutput = allDeclarations.toString() + allCases.toString();
+  String argsOutput = allArgs.toString();
 %>
-  <%= scope %> function <%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%>)
+  <%= scope %> function <%=gen.translate("eventMethod",e)%>(<%= argsOutput %>)
   {
     $wasEventProcessed = false;
     <%= eventOutput %>
     return $wasEventProcessed;
   }
-
