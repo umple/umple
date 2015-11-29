@@ -1,43 +1,68 @@
 -- This file is generated from ExampleFile2.ump --
 
-MODULE LockState
-  
-  VAR 
-    event : { boatRequestsToEnterAndGoDown , boatRequestsToEnterAndGoUp , upperGateFullyOpen , boatInLockRequestingToGoDown , after3minutes , upperGateFullyClosed , waterLevelMatchesDownStream , lowerGateFullyOpen , boatInLockRequestingToGoUp , lowerGateFullyClosed , waterLevelMatchesUpStream }; 
-    lockState_state : { lockState_BothDoorsClosedLockFull , lockState_OpeningUpperGate , lockState_UpperGateOpen , lockState_ClosingUpperGate , lockState_LoweringWater , lockState_BothDoorsClosedLockEmpty , lockState_OpeningLowerGate , lockState_LowerGateOpen , lockState_ClosingLowerGate , lockState_RaisingWater };  
+ -- This defines a NuSMV module for LockState --
+ MODULE LockState
+
+    -- This part declares input variables for the given NuSMV module --
+   IVAR
+     event : { boatRequestsToEnterAndGoDown , boatRequestsToEnterAndGoUp , upperGateFullyOpen , boatInLockRequestingToGoDown , after3minutes , upperGateFullyClosed , waterLevelMatchesDownStream , lowerGateFullyOpen , boatInLockRequestingToGoUp , lowerGateFullyClosed , waterLevelMatchesUpStream };
     
-  ASSIGN
-    init(lockState_state) := lockState_BothDoorsClosedLockFull;  
+    -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { BothDoorsClosedLockFull , OpeningUpperGate , UpperGateOpen , ClosingUpperGate , LoweringWater , BothDoorsClosedLockEmpty , OpeningLowerGate , LowerGateOpen , ClosingLowerGate , RaisingWater };
+    
+    -- This part defines macros that summarize the transitions of the given NuSMV module --
+   DEFINE
+     t1 := event = boatRequestsToEnterAndGoDown & state = BothDoorsClosedLockFull;
+     t2 := event = boatRequestsToEnterAndGoUp & state = BothDoorsClosedLockFull;
+     t3 := event = upperGateFullyOpen & state = OpeningUpperGate;
+     t4 := event = boatInLockRequestingToGoDown & state = UpperGateOpen;
+     t5 := event = after3minutes & state = UpperGateOpen;
+     t6 := event = upperGateFullyClosed & state = ClosingUpperGate;
+     t7 := event = upperGateFullyClosed & state = ClosingUpperGate;
+     t8 := event = waterLevelMatchesDownStream & state = LoweringWater;
+     t9 := event = boatRequestsToEnterAndGoUp & state = BothDoorsClosedLockEmpty;
+     t10 := event = boatRequestsToEnterAndGoDown & state = BothDoorsClosedLockEmpty;
+     t11 := event = lowerGateFullyOpen & state = OpeningLowerGate;
+     t12 := event = boatInLockRequestingToGoUp & state = LowerGateOpen;
+     t13 := event = after3minutes & state = LowerGateOpen;
+     t14 := event = lowerGateFullyClosed & state = ClosingLowerGate;
+     t15 := event = lowerGateFullyClosed & state = ClosingLowerGate;
+     t16 := event = waterLevelMatchesUpStream & state = RaisingWater;
   
-  TRANS
-    ( (lockState_state = lockState_BothDoorsClosedLockFull) -> (
-      (event = boatRequestsToEnterAndGoDown & next(lockState_state) = lockState_OpeningUpperGate )  |
-      (event = boatRequestsToEnterAndGoUp & next(lockState_state) = lockState_LoweringWater )  ) ) &
-    ( (lockState_state = lockState_UpperGateOpen) -> (
-      (event = boatInLockRequestingToGoDown & next(lockState_state) = lockState_ClosingUpperGate )  |
-      (event = after3minutes & next(lockState_state) = lockState_ClosingUpperGate )  ) ) &
-    ( (lockState_state = lockState_ClosingUpperGate) -> (
-      (event = upperGateFullyClosed & next(lockState_state) = lockState_LoweringWater )  |
-      (event = upperGateFullyClosed & next(lockState_state) = lockState_BothDoorsClosedLockFull )  ) ) &
-    ( (lockState_state = lockState_BothDoorsClosedLockEmpty) -> (
-      (event = boatRequestsToEnterAndGoUp & next(lockState_state) = lockState_OpeningLowerGate )  |
-      (event = boatRequestsToEnterAndGoDown & next(lockState_state) = lockState_RaisingWater )  ) ) &
-    ( (lockState_state = lockState_LowerGateOpen) -> (
-      (event = boatInLockRequestingToGoUp & next(lockState_state) = lockState_ClosingLowerGate )  |
-      (event = after3minutes & next(lockState_state) = lockState_ClosingLowerGate )  ) ) &
-    ( (lockState_state = lockState_ClosingLowerGate) -> (
-      (event = lowerGateFullyClosed & next(lockState_state) = lockState_RaisingWater )  |
-      (event = lowerGateFullyClosed & next(lockState_state) = lockState_BothDoorsClosedLockEmpty )  ) ) &
-    ( (lockState_state = lockState_OpeningUpperGate) -> (
-       event = upperGateFullyOpen & next(lockState_state) = lockState_UpperGateOpen ) ) &
-    ( (lockState_state = lockState_LoweringWater) -> (
-       event = waterLevelMatchesDownStream & next(lockState_state) = lockState_OpeningLowerGate ) ) &
-    ( (lockState_state = lockState_OpeningLowerGate) -> (
-       event = lowerGateFullyOpen & next(lockState_state) = lockState_LowerGateOpen ) ) &
-    ( (lockState_state = lockState_RaisingWater) -> (
-       event = waterLevelMatchesUpStream & next(lockState_state) = lockState_OpeningUpperGate ) )
-  
-MODULE main
-  
-  VAR 
-    lockState : LockState; 
+    -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := BothDoorsClosedLockFull;
+     next( state ) := case
+       t7 : BothDoorsClosedLockFull;
+       t1 | t16 : OpeningUpperGate;
+       t3 : UpperGateOpen;
+       t4 | t5 : ClosingUpperGate;
+       t2 | t6 : LoweringWater;
+       t15 : BothDoorsClosedLockEmpty;
+       t8 | t9 : OpeningLowerGate;
+       t11 : LowerGateOpen;
+       t12 | t13 : ClosingLowerGate;
+       t10 | t14 : RaisingWater;
+       TRUE : state;
+     esac;
+ 
+    
+ -- This defines a NuSMV module for main --
+ MODULE main
+
+    -- This part declares state variables for the given NuSMV module --
+   VAR
+     lockState : LockState;
+    
+   CTLSPEC   EF  ( lockState.state = BothDoorsClosedLockFull )
+   CTLSPEC   EF  ( lockState.state = OpeningUpperGate )
+   CTLSPEC   EF  ( lockState.state = UpperGateOpen )
+   CTLSPEC   EF  ( lockState.state = ClosingUpperGate )
+   CTLSPEC   EF  ( lockState.state = LoweringWater )
+   CTLSPEC   EF  ( lockState.state = BothDoorsClosedLockEmpty )
+   CTLSPEC   EF  ( lockState.state = OpeningLowerGate )
+   CTLSPEC   EF  ( lockState.state = LowerGateOpen )
+   CTLSPEC   EF  ( lockState.state = ClosingLowerGate )
+   CTLSPEC   EF  ( lockState.state = RaisingWater )
+    

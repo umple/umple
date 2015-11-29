@@ -1,29 +1,49 @@
 -- This file is generated from ExampleFile.ump --
 
-MODULE Status
-  
-  VAR 
-    event : { buttonOrObstacle , reachBottom , reachTop }; 
-    status_state : { status_Open , status_Closing , status_Closed , status_Opening , status_HalfOpen };  
+ -- This defines a NuSMV module for Status --
+ MODULE Status
+
+    -- This part declares input variables for the given NuSMV module --
+   IVAR
+     event : { buttonOrObstacle , reachBottom , reachTop };
     
-  ASSIGN
-    init(status_state) := status_Open;  
+    -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Open , Closing , Closed , Opening , HalfOpen };
+    
+    -- This part defines macros that summarize the transitions of the given NuSMV module --
+   DEFINE
+     t1 := event = buttonOrObstacle & state = Open;
+     t2 := event = buttonOrObstacle & state = Closing;
+     t3 := event = reachBottom & state = Closing;
+     t4 := event = buttonOrObstacle & state = Closed;
+     t5 := event = buttonOrObstacle & state = Opening;
+     t6 := event = reachTop & state = Opening;
+     t7 := event = buttonOrObstacle & state = HalfOpen;
   
-  TRANS
-    ( (status_state = status_Closing) -> (
-      (event = buttonOrObstacle & next(status_state) = status_Opening )  |
-      (event = reachBottom & next(status_state) = status_Closed )  ) ) &
-    ( (status_state = status_Opening) -> (
-      (event = buttonOrObstacle & next(status_state) = status_HalfOpen )  |
-      (event = reachTop & next(status_state) = status_Open )  ) ) &
-    ( (status_state = status_Open) -> (
-       event = buttonOrObstacle & next(status_state) = status_Closing ) ) &
-    ( (status_state = status_Closed) -> (
-       event = buttonOrObstacle & next(status_state) = status_Opening ) ) &
-    ( (status_state = status_HalfOpen) -> (
-       event = buttonOrObstacle & next(status_state) = status_Opening ) )
-  
-MODULE main
-  
-  VAR 
-    status : Status; 
+    -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := Open;
+     next( state ) := case
+       t6 : Open;
+       t1 : Closing;
+       t3 : Closed;
+       t4 | t2 | t7 : Opening;
+       t5 : HalfOpen;
+       TRUE : state;
+     esac;
+ 
+    
+ -- This defines a NuSMV module for main --
+ MODULE main
+
+    -- This part declares state variables for the given NuSMV module --
+   VAR
+     status : Status;
+    
+   CTLSPEC   EF  ( status.state = Open )
+   CTLSPEC   EF  ( status.state = Closing )
+   CTLSPEC   EF  ( status.state = Closed )
+   CTLSPEC   EF  ( status.state = Opening )
+   CTLSPEC   EF  ( status.state = HalfOpen )
+    

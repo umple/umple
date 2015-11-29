@@ -35,12 +35,12 @@ class NuSMVGenerator
   		{  			
   			if( !coord.isNested(sm) )
   			{	
-  				code.append( coord.generateSimpleModule(sm , coord.genStateVariables(sm)).toString());
+  				code.append( coord.generateSimpleModule( sm ));
   			}
   			else {
   				handle = "handle";
   				dot = ".";  
-  				code.append(coord.genModuleForNestedMachine(sm,handle,dot).toString());				
+  				//code.append(coord.genModuleForNestedMachine(sm,handle,dot).toString());				
   			}
   		}
   	}

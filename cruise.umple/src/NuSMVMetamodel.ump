@@ -1,288 +1,330 @@
 namespace cruise.umple.nusmv;
 
-class NuSMVModule
-{
-
-  //depend cruise.umple.compiler.*;
-  
-  // Attributes declaration
-  name; 
-  startState;
-  String [] args;
-  
-  //Associations of module object
-  * -- 0..1 AssignPart;
-  * -- 0..1 TransitionPart;
-  * -- 0..1 DeclarationPart;
-  
-  // This defines the print method for nusmv modules
-  output <<!<<#if(args.size() == 0){#>>
-
-MODULE <<=getName()>><<#}
-  else{
-  	String temp = "";
-		int size = args.size();
-		if(size > 1) {
-  		for(int i = 0; i < size - 1 ; i++)
-  			temp += args.get(i) + " , ";
-  		temp += args.get(size-1);
-  	} 
-  	else 
-  		temp = args.get(0);
-  		
-  	#>>
-
-MODULE <<=getName()>>( <<=temp>> )<<#}#>>
-
-  <<#if(declarationPart != null){#>>
-
-  <<=declarationPart.toString()>><<#}#>>
-
-  <<#if(assignPart != null){#>>
-	
-  <<=assignPart.toString(handle, dot)>><<#}#>>
-  <<#if(transitionPart != null){#>>
-
-  <<=transitionPart.toString(handle, dot)>><<#}#>>
-
-  !>>
-  	emit toString(String handle,String dot)(output);
-}
-
-class AssignPart 
-{
-  name;
-  startState;
-	varName;
-  after constructor { setName("ASSIGN"); }
-	
-	private String print(String handle, String dot) {
-		if(varName != "")
-			return varName;
-		else
-			return handle+dot+"state";
-	}
-
-  output <<!<<=getName()>>
-  	init(<<=print(handle,dot)>>) := <<=startState>>;!>>
-	emit toString(String handle,String dot)(output);
-}
-
-class DeclarationStatement
-{
-  name;
-  public String toString(){ return ""; }
-}
-
-class DeclarationPart
-{
-  name;
-  * -- 1..* DeclarationStatement;
-  after constructor { setName("VAR"); }
-  
-   
-  private String writeStatements()
-  {
-		int n = declarationStatements.size();
+class NuSMVModule {
+  	identifier;
+  	String [] parameters;
+	private String printParameters() {
 		String temp = "";
-  	if(n == 1) 
-			return declarationStatements.get(0).toString();
-  	else {
-			if(n > 1) {
-  			for(int i = 0; i < n - 1 ; i++)
-  				temp += declarationStatements.get(i).toString() + "\n    ";
-  			temp += declarationStatements.get(n-1).toString();
-  		}
-  	}
-  	return temp;
-  }
+		int size = parameters.size();
+		if(size > 1) {
+  			for(int i = 0; i < size - 1 ; i++)
+  				temp += parameters.get(i) + " , ";
+  			temp += parameters.get(size-1);
+  		} 
+  		else 
+  			temp = parameters.get(0);
+		return temp;
+	}
   
-  output <<!<<=getName()>> 
-    <<=writeStatements()>> !>>
+  	1 -> 1 ModuleBody;
+  	comment <<! -- This defines a NuSMV module for <<=identifier>> --
+ !>>
+	output <<!MODULE <<=getIdentifier()>><<#if(parameters.size() != 0){#>> ( <<=printParameters()>> ) 
+
+
+<<=moduleBody.toString()>><<#}
+	else {#>>
+
+
+<<=moduleBody.toString()>> <<#}#>> !>> 
+  emit toString()(comment, output);
+}
+
+class ModuleBody {
+
+  1 -> 1..* ModuleElement;
+	
+	//Defines the template for outputting the instance of this class
+	output <<!  <<#for(ModuleElement me : moduleElements){#>><<=me.toString()>>
+  <<#}#>>!>>
+  emit toString()(output);
+}
+
+class ModuleElement {
+    lazy header;
+}
+
+class VarDeclaration {
+  
+  isA ModuleElement;
+  after constructor { setHeader("VAR"); }
+  1 -> 1..* VariableSpecifier;
+
+  comment <<!  -- This part declares state variables for the given NuSMV module --
+  !>>
+  output <<! <<=getHeader()>>
+    <<#for(VariableSpecifier vs : variableSpecifiers){#>><<=vs.toString()>>
+    <<#}#>>!>>
+  emit toString()(comment, output);
+}
+
+class VariableSpecifier {
+  
+  identifier;
+  String [] typeSpecifier;
+  
+  private String print() {
+    String temp = "";
+		for(int i = 0; i < typeSpecifier.size() - 1 ; i++)
+  	  temp += typeSpecifier.get(i) + " , ";
+  	temp += typeSpecifier.get(typeSpecifier.size() - 1);
+		return temp;
+  }
+	
+  output <<! <<#if(typeSpecifier.size() == 1){#>><<=getIdentifier()>> : <<=typeSpecifier.get(0)>>;<<#}
+  else{#>><<=getIdentifier()>> : { <<=print()>> };<<#}#>>!>>
+  emit toString()(output);
+}
+
+class IVarDeclaration {
+  
+  isA ModuleElement;
+  after constructor { setHeader("IVAR");}
+
+	1 -> 1..* VariableSpecifier;
+
+  comment <<!  -- This part declares input variables for the given NuSMV module --
+  !>>
+  output <<! <<=getHeader()>>
+    <<#for(VariableSpecifier vs : variableSpecifiers){#>><<=vs.toString()>>
+    <<#}#>>!>>
+  emit toString()(comment, output);
+}
+
+class DefineDeclaration {
+  
+  isA ModuleElement;
+  after constructor { setHeader("DEFINE");}
+  1 -> 1..* DefineBody;
+  comment <<!  -- This part defines macros that summarize the transitions of the given NuSMV module --
+  !>>
+  output <<! <<=getHeader()>>
+  <<#for(DefineBody db : defineBodies){#>><<=db.toString()>>
+  <<#}#>>!>>
+  emit toString()(comment, output); 
+}
+
+class DefineBody {
+  identifier;
+  1 -> 1 BasicExpression;
+  
+  output <<!   <<=getIdentifier()>> :=<<=basicExpression.toString()>>;!>>
+  emit toString()(output);
+}
+
+class BasicExpression {
+	//Association definition
+	0..1 parent -- 0..2 BasicExpression children;
+	//Variable Declarations
+	identifier;
+  	lazy Boolean bracketed;
+	operator { AND, OR, XOR, XNOR, IMPLY, IFF, EQ, NE, LT, GT, LE, GE, NULL, NOT };
+  	after constructor { setBracketed(false); }
+    
+  	public String convertOperator(){
+		String op = getOperatorFullName();
+		switch( op ){
+			case "AND" : 		return " & ";
+			case "OR" :      		return " | ";
+			case "XOR" :    	return " xor ";
+			case "XNOR" : 	return " xnor ";
+			case "IMPLY" : 	return " -> ";
+			case "IFF" : 			return " <-> ";
+			case "EQ" : 			return " = ";
+			case "NE" : 			return " != ";
+			case "LT" : 			return " < ";
+			case "GT" : 			return " > ";
+			case "LE" : 			return " <= ";
+			case "GE" : 			return " >= ";
+      		case "MINUS" : 	return " - ";
+      		case "NOT" : 		return " ! ";
+			default : 				return "";
+		}
+  	}
+	public String getExpression() {
+  		String op = convertOperator();
+    	if(children.size() == 0)
+      		return getIdentifier();
+    	if(getChildren().size() == 1)
+			if(getBracketed())
+				return "( "+ getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier() + " )";
+      		else return getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier();
+    	else
+			if(getBracketed())
+				return "( "+ getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression()+" )";
+      		else return getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression();
+	}
+  
+  //Template for formatting output
+  output <<! <<#if(getBracketed()){#>><<=getExpression()>><<#}
+  else{#>><<=getExpression()>><<#}#>>!>>
+  emit toString()(output);
+}
+
+class CTLSpecification {
+	isA ModuleElement;
+	after constructor { setHeader("CTLSPEC"); }
+	1 -> 1 CTLExpression;
+  	//Template for formatting output
+  	output <<! <<=getHeader()>>  <<=cTLExpression.toString()>>!>>
   	emit toString()(output);
 }
 
-class EnumerationElement
-{
-  value;
-}
-
-class VarDeclarationStatement
-{
-  isA DeclarationStatement;
-  type;
-  String [] arguments;
-  
-  // This defines the print method for nusmv modules
-	private String writeElements()
-	{
-		String temp = "";
-		for(int i = 0; i < arguments.size() - 1 ; i++)
-  			temp += arguments.get(i) + " , ";
-  		temp += arguments.get(arguments.size() - 1);
-		return temp;
+class CTLExpression {
+	isA BasicExpression;
+	ctlOperator { EG, EX, EF, AG, AX, AF, E, A, U };
+	lazy Boolean qualified;
+	after constructor { setQualified(false); }
+	
+	public String getExpression() {
+  		String op = convertOperator();
+    	if(getChildren().size() == 0)
+      		return getIdentifier();
+    	if(getChildren().size() == 1)
+			if(getBracketed())
+				return "( "+ getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier() + " )";
+      		else return getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier();
+    	else
+			if(getBracketed())
+				return "( "+ getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression()+" )";
+      		else return getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression();
 	}
-
-  output <<!<<#if(arguments.size() == 0){#>><<=getName()>> : <<=getType()>>;<<#}
-  else{#>><<=getName()>> : <<=getType()>>( <<=writeElements()>> );<<#}#>>!>>
+	private String getRealExpression() {
+		if(qualified)
+			return getCtlOperatorFullName()+"  "+getExpression();
+		return getExpression();	
+	}	
+	//Template for formatting output
+  output <<! <<#if(getBracketed()){#>><<=getRealExpression()>><<#}
+  else{#>><<=getRealExpression()>><<#}#>>!>>
   emit toString()(output);
 }
 
-class EnumerationStatement 
-{
-  isA DeclarationStatement;
-  * -> 1..* EnumerationElement;
+class NextExpression {
+  isA BasicExpression;
+  1 -> 1 BasicExpression;
   
-  private String writeElements(int size)
-  {
-	int n = size;
-	String temp = "";
-  	if(n == 1) return enumerationElements.get(0).getValue();
-  	else {
-  		int i = 0;
-  		while(i < n - 1)
-  		{
-  			temp += enumerationElements.get(i).getValue() + " , ";
-  			i++;
-  		}
-  		temp += enumerationElements.get(i).getValue();
-  	}
-  		return temp;
-  }
+  output <<!next( <<=getIdentifier()>> ) =<<=basicExpression.toString()>>!>>
+  emit getExpression()(output);
+}
+
+class AssignConstraint {
+
+  isA ModuleElement;
+  after constructor { setHeader("ASSIGN"); }
+
+	//Association Definition
+  1 -> 1..* Assign;  
   
-  output <<!<<=  getName()>> : { <<=writeElements(numberOfEnumerationElements())>> }; !>>
+  comment <<!  -- This part defines the transitions from states to states for the given NuSMV module --
+  !>>
+  output <<! <<=getHeader()>>
+ <<#for(Assign assign : assigns){#>><<=assign.toString()>>
+ <<#}#>>!>>
+  emit toString()(comment, output);
+}
+
+class Assign {
+		
+  identifier;
+  1 -> 1 BasicExpression;
+  public String toString() { return null; }
+}
+
+class SimpleAssign {
+	isA Assign;
+  
+  //Template for formatting output
+  output <<!    <<=getIdentifier()>> :=<<=getBasicExpression().toString()>>;!>>
   emit toString()(output);
-  
 }
 
-class TransitionPart 
-{
-  name;
-  after constructor { setName("TRANS"); } 
-  * -- * ComplexTransition;
-  * -- * SimpleTransition;
-  * -- * NuSMVTransition;
-  
-  private String writeTransitions(int size, String handle, String dot)
-  {
-	int n = size;
-	String temp = "";
-		if(size == 0) return "";
-  	if(n == 1) return nuSMVTransitions.get(0).toString(handle , dot);
-  	else {
-  		int i = 0;
-  		while(i < n - 1)
-  		{
-  			temp += nuSMVTransitions.get(i).toString(handle , dot) + " &\n    ";
-  			i++;
-  		}
-  		temp += nuSMVTransitions.get(i).toString(handle , dot);
-  	}
-  	return temp;
-  }  
-  
-  output <<!
-  <<=getName()>>
-  <<#for(ComplexTransition ctrans : getComplexTransitions())
-    addNuSMVTransition(ctrans);#>>
-  <<#for(SimpleTransition strans : getSimpleTransitions())
-   addNuSMVTransition(strans);#>>
-<<=writeTransitions(numberOfNuSMVTransitions(), handle, dot)>>!>>
-  emit toString(String handle, String dot)(output);
+class InitAssign {
+	isA Assign;
+
+  //Template for formatting output
+  output <<!    init( <<=getIdentifier()>> ) :=<<=getBasicExpression().toString()>>;!>>
+  emit toString()(output);
 }
 
-class NextExpression 
-{
-	name;
-	value;
-	varName;
+class NextAssign {
+	isA Assign;
+  
+  //Template for formatting output
+  output <<!    next( <<=getIdentifier()>> ) :=<<=getBasicExpression().toString()>>;!>>
+  emit toString()(output);
 }
 
-class NuSMVTransition
-{
-	fromState;
-	varName;
-  public String toString(String handle,String dot) { return null; }
+class CaseExpression {
+  isA BasicExpression;
+  1 -> 1..* CaseStatement;
+  
+  output <<! case
+  <<#for(CaseStatement stmt : caseStatements){#>><<=stmt.toString()>>
+  <<#}#>>
+   esac!>>
+  emit toString()(output);
 }
 
-class ComplexTransition 
-{
-  isA NuSMVTransition;
-  * -- 2..* SimpleTransition;
+class CaseStatement {
+  1 -> 2 BasicExpression;
   
-  private String writeTransitions(int size,String handle,String dot)
-  {
-	int n = size;
-	String temp = "";
-  	if(n == 1) return simpleTransitions.get(0).printMe(handle , dot);
-  	else {
-  		int i = 0;
-  		while(i < n - 1)
-  		{
-  			temp += simpleTransitions.get(i).printMe(handle , dot) + "|\n    ";
-  			i++;
-  		}
-  		temp += simpleTransitions.get(i).printMe(handle , dot);
-  	}
-  		return temp;
-  }
-  
-  output <<!( (<<=getVarName()>> = <<=simpleTransitions.get(0).getFromState()>>) -> (
-    <<=writeTransitions(numberOfSimpleTransitions(), handle, dot)>>) )!>>
-  emit toString(String handle , String dot)(output);
+  //Template for formatting output
+  output <<!    <<=basicExpressions.get(0).toString()>> :<<=basicExpressions.get(1).toString()>>;!>>
+  emit toString()(output);
 }
 
-class SimpleTransition 
-{
-  isA NuSMVTransition;
-  1 -> 1..* NextExpression;
-  event;
-  public String toString(String handle, String dot)
-  {
-    if(getEvent().contains("__autotransition") )
-    	return printTransitionWithAutoEvent(handle,dot);
-    if(getEvent() == "")
-    	return printTransitionWithNoEvent(handle,dot);
-    return printNormalTransition(handle,dot);
-  }
+class TransConstraint {
+  
+  isA ModuleElement;
+  after constructor { setHeader("TRANS"); setTerminated(false); }
 
-  private String computeDot(int i){
-		return getNextExpression(i).getVarName() == ""? "" : ".";
-  }
-  
-  public String convertToString()
-  {
-  	String temp = "";
-    //String dot = getVarName() == ""? "" : ".";
-  	int size = numberOfNextExpressions();
-  	if(size == 0)
-  		return temp;
-  	if(size == 1)
-  		return "next("+getNextExpression(0).getVarName()+computeDot(0)+
-  			getNextExpression(0).getName()+") = "+getNextExpression(0).getValue(); 
-  	for(int i = 0; i < size - 1;i++)
-  		temp += "next("+getNextExpression(i).getVarName()+computeDot(i)+
-  			getNextExpression(i).getName()+") = "+getNextExpression(i).getValue()+"\n         & ";
-  	temp += "next("+getNextExpression(size-1).getVarName()+computeDot(size - 1)+
-  			getNextExpression(size-1).getName()+") = "+getNextExpression(size-1).getValue();
-  	return temp;
-  }
-  
-  //This print transitions without an event, but source and target states.
-  outputWithAutoEvent <<!( (<<=handle>><<=dot>>event = <<=getEvent()>>) -> ( <<=convertToString()>> ) )!>>
-  	emit printTransitionWithAutoEvent(String handle,String dot)(outputWithAutoEvent);
-  
-  //This print transitions without an event, but source and target states.
-  outputWithNoEvent <<!( (<<=getVarName()>> = <<=getFromState()>>) -> ( <<=convertToString()>> ) )!>>
-  	emit printTransitionWithNoEvent(String handle,String dot)(outputWithNoEvent);
-  
-  //This prints transitions with event, and source and target states. 
-  output <<!( (<<=getVarName()>> = <<=getFromState()>>) -> (
-  	   <<=handle>><<=dot>>event = <<=getEvent()>> & <<=convertToString()>> ) )!>>
-  	emit printNormalTransition(String handle,String dot)(output);
-  	
-  //This prints transitions with event and traget state.	
-  output1 <<!  (<<=handle>><<=dot>>event = <<=getEvent()>> & <<=convertToString()>> )  !>>
-    emit printMe(String handle , String dot)(output1);
+	//Associations with basic expressions
+	1 -> 1 BasicExpression;
+
+	lazy Boolean terminated;
     
+  //Template for formatting output
+  output <<! <<=getHeader()>>
+   <<#if(terminated){#>> <<=basicExpression.toString()>>;
+  <<#}
+   else{#>> <<=basicExpression.toString()>>
+  <<#}#>>!>>
+  emit toString()(output);
+}
+
+class InitConstraint {
+  
+  isA ModuleElement;
+  after constructor { setHeader("INIT"); setTerminated(false); }
+	lazy Boolean terminated; 
+
+	//Defines associations with basic expressions
+	1 -> 1 BasicExpression;  
+
+	//Template for formatting output
+  output <<! <<=getHeader()>>
+  <<#if(terminated){#>>  <<=basicExpression.toString()>>;
+  <<#}
+  else{#>>  <<=basicExpression.toString()>>
+  <<#}#>>!>>
+  emit toString()(output); 
+}
+
+class InvarConstraint {
+  
+  isA ModuleElement;
+  after constructor { setHeader("INVAR"); setTerminated(false); }
+  
+	//Defines associations with basic expressions
+	1 -> 1 BasicExpression;  
+
+  lazy Boolean terminated;
+	//Template for formatting output
+  output <<! <<=getHeader()>>
+  <<#if(terminated){#>>  <<=basicExpression.toString()>>;
+  <<#}
+  else{#>>  <<=basicExpression.toString()>>
+  <<#}#>>!>>
+  emit toString()(output); 
 }

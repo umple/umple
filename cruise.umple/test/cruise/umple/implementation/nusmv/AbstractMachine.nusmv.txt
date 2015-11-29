@@ -1,23 +1,41 @@
 -- This file is generated from AbstractMachine.ump --
 
-MODULE S2
-  
-  VAR 
-    event : { e1 , e3 }; 
-    s2_state : { s2_s2a , s2_s2b , s2_s1 };  
+ -- This defines a NuSMV module for S2 --
+ MODULE S2
+
+    -- This part declares input variables for the given NuSMV module --
+   IVAR
+     event : { e1 , e3 };
     
-  ASSIGN
-    init(s2_state) := s2_s2a;  
+    -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { s2a , s2b , s1 };
+    
+    -- This part defines macros that summarize the transitions of the given NuSMV module --
+   DEFINE
+     t1 := event = e1 & state = s2a;
+     t2 := event = e3 & state = s2a;
+     t3 := event = e3 & state = s2b;
   
-  TRANS
-    ( (s2_state = s2_s2a) -> (
-      (event = e1 & next(s2_state) = s2_s1 )  |
-      (event = e3 & next(s2_state) = s2_s2b )  ) ) &
-    ( (s2_state = s2_s2b) -> (
-       event = e3 & next(s2_state) = s2_s2a ) ) &
-    ( (s2_state = s2_s1) -> ( next(s2_state) = s2_state ) )
-  
-MODULE main
-  
-  VAR 
-    s2 : S2; 
+    -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := s2a;
+     next( state ) := case
+       t3 : s2a;
+       t2 : s2b;
+       t1 : s1;
+       TRUE : state;
+     esac;
+ 
+    
+ -- This defines a NuSMV module for main --
+ MODULE main
+
+    -- This part declares state variables for the given NuSMV module --
+   VAR
+     s2 : S2;
+    
+   CTLSPEC   EF  ( s2.state = s2a )
+   CTLSPEC   EF  ( s2.state = s2b )
+   CTLSPEC   EF  ( s2.state = s1 )
+    

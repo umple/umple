@@ -8,629 +8,214 @@ class NuSMVCoordinator
   depend java.util.*;
 
 	space <<!
+
 !>>
   output <<!-- This file is generated from <<=model.getUmpleFile().getFileName()>> --!>>
   emit commentModel(UmpleModel model)(output,space); 
-
-  /**
+  
+  	/**
   * This changes the first caharacter of a given string.
   * @param str the given string.
   * @param index value 0 - Lowercase, 1 - Uppercase, Otherwise no change
   * @return the resulting string value.
   */
-  public String changeNameCase(String str , int index)
-  {
-    char[] stringArray = str.trim().toCharArray();
-    if(index == 1)
-    	stringArray[0] = Character.toUpperCase(stringArray[0]);
-    if(index == 0)
-    	stringArray[0] = Character.toLowerCase(stringArray[0]);
-    str = new String(stringArray);
-    return str;
-  }
-
-  public boolean isNested(StateMachine sm)
-  {
-  	boolean yes = false;
-  	for(State st : sm.getStates()) {
-  		if(st.numberOfNestedStateMachines() > 0) {
-  			yes = true;
-  			break;
-  		}
+  public String changeNameCase(String str , int index) {
+    	char[] stringArray = str.trim().toCharArray();
+    	if(index == 1)
+    		stringArray[0] = Character.toUpperCase(stringArray[0]);
+    	if(index == 0)
+    		stringArray[0] = Character.toLowerCase(stringArray[0]);
+    	str = new String(stringArray);
+    	return str;
   	}
-  	return yes;
-  }
-
-	public StringBuilder generateSimpleModule(StateMachine sm , EnumerationStatement svar)
-  {
-    StringBuilder temp = new StringBuilder();
-    NuSMVModule module = new NuSMVModule(changeNameCase(sm.getFullName(),1), 
-    		sm.getStartState().getName()); 
-  	module.setDeclarationPart(new DeclarationPart("", generateEventList(sm), generateStateList(sm)));
-  	module.setAssignPart(generateAssign(sm,changeNameCase(sm.getFullName(),0)+"_state", svar));
-  	module.setTransitionPart(genTransition(sm, genStateVariables(sm)));	
-  	temp.append(module.toString("",""));
   	
-  	//This part is the code generating the main module
-  	module = new NuSMVModule("main",""); 
-  	VarDeclarationStatement varDec = new VarDeclarationStatement(
-  		changeNameCase(sm.getName(),0) , changeNameCase(sm.getName(),1) );
-  	DeclarationPart dPart = new DeclarationPart("VAR" , varDec);
-  		dPart.addDeclarationStatement(varDec);
-  		module.setDeclarationPart(dPart);
-  		temp.append(module.toString("",""));
-  	return temp;
-  }	
-
-
-  public StringBuilder genModuleForNestedMachine(StateMachine sm , String handle , String dot) {
-  	
-  	StringBuilder code = new StringBuilder();
-
-  	//This defines and adds the thin-line module to the output code -- Step (1)
-  	NuSMVModule placeHolder = genPlaceHolderModule(sm,handle);
-  	code.append(placeHolder.toString(handle , dot));
-  	
-  	//Defines a collection of state variables to ensure state names match transitions
-  	EnumerationStatement svar = genStateVariables(sm);
-  	
-  	//This defines and adds the parent module to the output code -- Step (2)
-		List<StateMachine> smList = generateStateMachineList(sm);
-		List<DeclarationStatement> mainVarList = new ArrayList<DeclarationStatement>(); 
-  	NuSMVModule parent = genModule(sm, svar, handle , smList , mainVarList);
-  	code.append(parent.toString(handle , dot));
-
-  	//Generation of nested state machines is done here.
-  	for(NuSMVModule nestedMachine : genModules(sm , handle, svar , smList , mainVarList))
-			code.append(nestedMachine.toString(handle, dot));
-  	
-  	//This generates the main module
-  	//code.append(genMotherModule(sm,handle).toString(handle , dot));
-  	
-		//This generates the main module
-  	code.append(genMainModuleForNested(sm , handle , smList , mainVarList).toString(handle , dot));
-  	
-		return code;  	
-  }
-
-	private NuSMVModule genMainModuleForNested(StateMachine sm, String handle , List<StateMachine> smList, List<DeclarationStatement> mainVarList)
-	{
-		String nhandle = changeNameCase(sm.getFullName(),1) + "_Handle";
-		NuSMVModule module = new NuSMVModule("main","");
-
-		VarDeclarationStatement element = new VarDeclarationStatement(handle , nhandle);
-		DeclarationPart dPart = new DeclarationPart("VAR" , element);
-
-		for(DeclarationStatement stmt : mainVarList)
-			dPart.addDeclarationStatement(stmt);
-		module.setDeclarationPart(dPart);
-		return module;
-	}
-
-  private NuSMVModule genPlaceHolderModule(StateMachine sm, String handle)
-  {
-  	NuSMVModule module = new NuSMVModule(changeNameCase(sm.getFullName(),1)+"_"+changeNameCase(handle,1),"");
-  	module.setDeclarationPart(new DeclarationPart("", generateEventList(sm)));
-  	return module;
-  }
-
-	private NuSMVModule genModule(StateMachine sm, EnumerationStatement svar, String handle , List<StateMachine> smList , List<DeclarationStatement> mainVarList )
-  {
-  	//String name = changeNameCase(sm.getFullName());
-  	NuSMVModule module = new NuSMVModule(changeNameCase(sm.getFullName(),1),"");
-
-		for(StateMachine stm : smList)
-			if(!stm.getFullName().equals(sm.getFullName())) 
-				module.addArg(changeNameCase(stm.getFullName(),0));
-		module.addArg(handle);
-
-		VarDeclarationStatement vstmt = new VarDeclarationStatement(changeNameCase(sm.getFullName(),0), changeNameCase(sm.getFullName(),1));
-		for(String str : module.getArgs())
-			vstmt.addArgument(str);	
-		mainVarList.add(vstmt);
-
-		module.setDeclarationPart(new DeclarationPart("", generateStateList(sm)));
-  	module.setAssignPart(generateAssign(sm,changeNameCase(sm.getFullName(),0)+"_state", svar));
-  	module.setTransitionPart(genTransition(sm,svar));
-  	
-  	return module;
-  }
-
-	private List<NuSMVModule> genModules(StateMachine sm , String handle , EnumerationStatement stateVar, List<StateMachine> smList , List<DeclarationStatement> mainVarList)
-  {
-		List<NuSMVModule> nestedMachines = new ArrayList<NuSMVModule>();
-  	for(State st : getCompositeStates(sm))
-  	{
-  		for( StateMachine stm : st.getNestedStateMachines() )
-  		{
-				nestedMachines.add(genModule(stm, stateVar, handle , smList , mainVarList));
-  			if(isNested( stm ))
-  				for(NuSMVModule innerModules : genModules(stm , handle, stateVar , smList , mainVarList))
-						nestedMachines.add(innerModules);
-  		}
+  	public boolean isNested(StateMachine sm) {
+  		boolean yes = false;
+  		for(State st : sm.getStates()) 
+  			if(st.numberOfNestedStateMachines() > 0) {
+  				yes = true;
+  				break;
+  			}
+  		return yes;
   	}
-		return nestedMachines;
-  }
-
-  /*private List<String> genStateVariable(StateMachine sm)
-	{
-		List<String> stateList = new ArrayList<String>();
-		for(State st : sm.getStates())
-		{
-			stateList.add(st.getName());
-			if(st.hasNestedStateMachines())
-			{
-				for(StateMachine nsm : st.getNestedStateMachines())
-					for(String stateName : genStateVariable(nsm))					
-						stateList.add(stateName);
-			}
-		}
-		return stateList;
-	}*/
-  
-
-  public EnumerationStatement genStateVariables(StateMachine sm)
-  {
-  	EnumerationElement temp = new EnumerationElement("");
-  	EnumerationStatement decState = new EnumerationStatement("state",temp);
   	
-		//Creates states list  			
-  	for(State st : sm.getStates())
-  	{
-  		EnumerationElement stateElement = new EnumerationElement(changeNameCase(sm.getFullName(),0)+"_"+st.getName());
-  		decState.addEnumerationElement(stateElement);
-  		if(st.hasNestedStateMachines())
-  		{
-  			for(StateMachine nsm : st.getNestedStateMachines())
-  				for(EnumerationElement de : genStateVariables(nsm).getEnumerationElements())
-  					decState.addEnumerationElement(de);  				
-  		}	
-  	}
-  	decState.removeEnumerationElement(temp);
-  	return decState;
-  }
-
-  public AssignPart generateAssign(StateMachine sm, String varName, EnumerationStatement stateVariables)
-  {
-		String initState = createInitialState(sm , stateVariables);
-  	AssignPart apart = new AssignPart("", initState, varName);	
-  		return apart;
-  }
-
-	private String createInitialState( StateMachine sm , EnumerationStatement stateVariables)
-	{
-		if(sm.getParentState() != null)
-		{
-			//if(sm.getParentState().isIsConcurrent())
-				//return lookUpStateHandle(stateVariables, sm.getStartState().getName()) +"_"+sm.getStartState().getName();
-			return null;		
-		}
-		return sm.getName()+"_"+sm.getStartState().getName();
-	}
-
-	public EnumerationStatement generateEventList(StateMachine sm)
-  {
-  	EnumerationElement temp = new EnumerationElement("");
-  	EnumerationStatement decTransition = new EnumerationStatement("event", temp);
+  	public StringBuilder generateSimpleModule( StateMachine sm ) {
+  		if(isNested(sm)) 
+  			return null;
   		
-  	//Creates events (transitions) list
-  	for(Event e : sm.getAllEvents())
-  	{
-  		EnumerationElement transitionElement = new EnumerationElement(e.getName());
-  		decTransition.addEnumerationElement(transitionElement);
+  		StringBuilder temp = new StringBuilder();
+  		//Generates enumeration list for the events recognized by the system
+  		IVarDeclaration ivar = new IVarDeclaration(getEventList( sm ));
+  		
+  		//Creates the state variables for the given state machine
+  		VarDeclaration vdec = new VarDeclaration(getStateList(sm));
+  		ModuleBody body = new ModuleBody(ivar);
+  		body.addModuleElement(vdec);
+  		
+  		//Adding define declaration to module body
+  		body.addModuleElement(getDefineDeclaration(sm));
+  		body.addModuleElement(getAssignConstraint( sm) );
+  		
+  		NuSMVModule module = new NuSMVModule(changeNameCase(sm.getFullName(), 1), body);
+  		temp.append(module.toString());
+  		
+  		//Generating the main module for the statemachine
+  		body = new ModuleBody(genMainVariableFor( sm ));
+  		module = new NuSMVModule("main", body);	
+  		generateSpecForStateReachability( sm, body ); 
+  		temp.append("\n"+module.toString());
+  		return temp;
   	}
-  	decTransition.removeEnumerationElement(temp);
-  	return decTransition;
-  }	
-
-	public EnumerationStatement generateStateList(StateMachine sm)
-  {
-  	EnumerationElement temp = new EnumerationElement("");
-  	EnumerationStatement decState = new EnumerationStatement(sm.getFullName()+"_state",temp);
-  	//Creates states list  			
-  	for(State st : sm.getStates())
-  	{
-  		EnumerationElement stateElement = new EnumerationElement(changeNameCase(sm.getFullName(),0)+"_"+st.getName());
-  		decState.addEnumerationElement(stateElement);	
-  	}
-
-		if(sm.getParentState() != null)
-			decState.addEnumerationElement(new EnumerationElement(null));
-  	decState.removeEnumerationElement(temp);
-		if(decState.getEnumerationElements().size() == 1) {
-			EnumerationElement nullElement = new EnumerationElement("null");
-  		decState.addEnumerationElement(nullElement);	
-		}			
-  	return decState;
-  }
-
-  public TransitionPart genTransition(StateMachine sm, EnumerationStatement stateVariables)
-  {
-  	TransitionPart tpart = new TransitionPart("TRANS");
-
-		//Generates transitions for all states with many transitions
-		generateCompositeTransition(sm, tpart, stateVariables);
   	
-		//Generates transitions for all non-composite states with a transition
-		genTransitionForSimpleStatesWithUnitTransition(sm, tpart, stateVariables);
-
-		//Generates transitions for composite states
-		genTransitionCompositeStates(sm, tpart, stateVariables);
-
-		//Generates transitions for all the final states
-		genTransitionForFinalStates(sm, tpart, stateVariables);
-		
-  	return tpart;
-  }
-
-	private String getParentName(StateMachine sm, State st, EnumerationStatement stateVariables)
-	{
-		String str = changeNameCase(sm.getFullName(), 0);
-		String str1 = lookUpStateHandle(stateVariables, st.getName());
-		return str1 == null || str1.equals( str ) ? "" : str1;		
-	}
-
-	public List<State> genChildStatesList(StateMachine sm)
-  {
-		List<State> stateList = new ArrayList<State>();
-		//Creates states list  			
-  	for(State st : sm.getStates())
-  	{
-  		stateList.add(st);
-  		if(st.hasNestedStateMachines())
-  		{
-  			for(StateMachine nsm : st.getNestedStateMachines())
-  				for(State nestedState : genChildStatesList(nsm))
-  					stateList.add(nestedState);  				
-  		}	
-  	}
-  	return stateList;
-  }
-
-	private boolean isChildState(State source , State target)
-	{
-		StateMachine host = source.getStateMachine();
-		for(State element : genChildStatesList(host))
-		{ 
-			if(!target.getName().equals(element.getName()))
-				continue;
-			else 
-				return true;
-		}
-		return false;
-	}
-
-	private void enableConcurrentMachines(State st, SimpleTransition strans, EnumerationStatement stateVariables, StateMachine sm)
-	{	
-		if(st.getIsConcurrent())
-			for(int i = 1; i < st.numberOfNestedStateMachines();i++)
-			{
-				String parentName = getParentName(sm, st.getNestedStateMachines().get(i).getStartState() , stateVariables);
-				String stateName = parentName == "" ? changeNameCase(st.getNestedStateMachines().get(i).getFullName(), 0) +
-					"_state" : parentName + "_state";
-				NextExpression newExpr = new NextExpression(stateName, 
-					lookUpStateDetail(stateVariables, st.getNestedStateMachines().get(i).getStartState().getName()), parentName);
-				strans.addNextExpression(newExpr);
-			}
-	}
-
-	private void disableConcurrentMachines(State gparent, State source, SimpleTransition strans, EnumerationStatement stateVariables)
-	{	
-		for(int i = 0; i < gparent.numberOfNestedStateMachines();i++) {
-			StateMachine machine = gparent.getNestedStateMachines().get(i);
-			String parentName = machine.getFullName().equals(source.getStateMachine().getFullName()) ? 
-					"" : changeNameCase(machine.getFullName(), 0); 
-			String stateName = parentName == "" ? 
-				changeNameCase(gparent.getNestedStateMachines().get(i).getFullName(), 0) + "_state" : parentName + "_state";
-			NextExpression newExpr = new NextExpression(stateName,"null", parentName);
-			strans.addNextExpression(newExpr);
-			if(isNested(machine))
-				for(State state : getCompositeStates(machine))				
-					disableConcurrentMachines(state, source, strans, stateVariables);
-		}
-	}
-
-	private void genTransitionCompositeStates(StateMachine sm, TransitionPart tpart, EnumerationStatement stateVariables)
-	{
-		String source = changeNameCase(sm.getFullName(), 0) +"_state";
-		for(State st : getCompositeStates(sm))
-		{ 
-			String parentName = getParentName(sm, getStartStateOfCompositeState(st), stateVariables);
-			String stateName = parentName == "" ? changeNameCase(sm.getFullName(), 0) +"_state" : parentName + "_state";
-			NextExpression nextExpr = new NextExpression(stateName, 
-					lookUpStateDetail(stateVariables,getStartStateOfCompositeState(st).getName()), parentName);
-
-	  	SimpleTransition strans = new SimpleTransition(lookUpStateDetail(stateVariables, st.getName()), source,"", nextExpr);
-
-			//Adding exit transition
-			createExitExpression(sm, stateName , parentName , st, getStartStateOfCompositeState(st), strans, stateVariables);
-			enableConcurrentMachines(st, strans, stateVariables, sm);
-	  	tpart.addSimpleTransition(strans);
-		}
-	}
-
-	private List<State> getCompositeStates(StateMachine sm)
-	{
-		List<State> temp = new ArrayList<State>();
-		for(State st : sm.getStates())
-			if(st.hasNestedStateMachines())
-				temp.add(st);
-		return temp;				
-	}
-
-	private List<StateMachine> generateStateMachineList(StateMachine sm)
-	{
-		List<StateMachine> temp = new ArrayList<StateMachine>();
-		temp.add(sm);
-		for(State st : sm.getStates())
-			if(st.hasNestedStateMachines()) {
-				if(!has(temp, st.getStateMachine()))
-					temp.add(st.getStateMachine());
-				for(StateMachine stm : st.getNestedStateMachines()) {
-				
-					for(StateMachine stt : generateStateMachineList(stm))
-						temp.add(stt);
-				}
-			}
-		return temp;				
-	}
-	
-	//Precondition - st is a start state
-	public State getStartStateOfCompositeState(State st)
-	{
-		return st.getNestedStateMachines().get(0).getStartState();
-	}
-
-	private void genTransitionForFinalStates(StateMachine sm, TransitionPart tpart, EnumerationStatement stateVariables)
-	{
-		String stateName = changeNameCase(sm.getFullName(), 0)+"_state";
-		if(getFinalStates(sm).size() != 0) 
-  		for(String str : getFinalStates(sm))
-  		{	
-  			if(sm.getNestedStateMachines().size() > 0 || sm.hasParentState())
-  			{
-					NextExpression nextExpr = new NextExpression(stateName, stateName, "");
-	  			SimpleTransition strans = new SimpleTransition( lookUpStateDetail(stateVariables,str), stateName, "", nextExpr	);
-  				tpart.addSimpleTransition(strans);
-  			}
-  			else {
-					NextExpression nextExpr = new NextExpression(stateName, stateName, "");
-	  			SimpleTransition strans = new SimpleTransition( lookUpStateDetail(stateVariables,str), stateName, "", nextExpr	);
-  				tpart.addSimpleTransition(strans);
-  			}
-			}
-	}
-
-	private <E> boolean has(List<E> str, E find)
-  {
-  	boolean yes = false;
-  	for(E st : str)
-  	{
-  		if(st.equals(find))
-  		{
-  			yes = true;
-  			break;
+  	private int getTransitionIdentity( StateMachine sm, Transition tr) {
+  		int pos = 1;
+  		for(Transition trans : sm.getAllTransitions() ) {
+  			if(trans.equals(tr))
+  				return pos;
+  			pos++;
   		}
+  		return -1;
   	}
-  	return yes;
-  }
-
-	private List<String> getFinalStates(StateMachine sm)
-  {
-  	List<String> temp = new ArrayList<String>(); 
-		int numOfTransitions = 0;
-  	for(State st : sm.getStates())
-  	{
-			numOfTransitions = st.getTransitions().size();
-			if(numOfHighLevelTransition(st) != -1)
-				numOfTransitions += numOfHighLevelTransition(st); 
-  		if(numOfTransitions == 0 && has(temp,st.getName()) == false && st.hasNestedStateMachines() == false) {
-  			temp.add(st.getName());
+  	
+  	private void generateSpecForStateReachability( StateMachine sm, ModuleBody body ) {
+  		
+  		for( State st : sm.getStates() ) {
+  			BasicExpression bexp1 = new BasicExpression(changeNameCase(sm.getFullName(), 0)+".state");
+    		BasicExpression bexp2 = new BasicExpression(st.getName());
+    		CTLExpression cexp = new CTLExpression("ctl");
+    		cexp.addChild(bexp1);
+    		cexp.addChild(bexp2);
+    		cexp.setOperator(cexp.getOperator().EQ);
+    		cexp.setBracketed(true);
+    		cexp.setQualified(true);
+    		cexp.setCtlOperator(cexp.getCtlOperator().EF);
+    		CTLSpecification cspec = new CTLSpecification(cexp);
+    		body.addModuleElement(cspec);
+    	}
+  	}
+  	
+  	private AssignConstraint getAssignConstraint( StateMachine sm) {
+  		BasicExpression bexp = new BasicExpression(sm.getStartState().getName());
+  		InitAssign ia = new InitAssign("state", bexp);
+  		AssignConstraint ac = new AssignConstraint(ia);
+  		ac.addAssign(getNextAssign( sm ));
+  		return ac;
+  	}
+  	
+  	private NextAssign getNextAssign( StateMachine sm ) {
+  		BasicExpression bexp1 = new BasicExpression("state");
+    	BasicExpression bexp2 = new BasicExpression("TRUE");
+    	CaseStatement temp = new CaseStatement(bexp2, bexp1);
+    	CaseExpression expr = new CaseExpression("",temp);
+    	for(State st : sm.getStates() ) {
+    		CaseStatement cstatement = getCaseStatement(sm, st);
+    		if( cstatement != null)
+    			expr.addCaseStatement(cstatement);
+    	}
+    	CaseStatement otherwise = new CaseStatement(bexp2, bexp1);
+    	expr.addCaseStatement( otherwise);
+    	expr.removeCaseStatement(temp);
+    	NextAssign na = new NextAssign("state", expr);
+    	return na;
+  	}
+  	
+  	private CaseStatement getCaseStatement( StateMachine sm, State st ) {
+  		int counter = 0;
+  		BasicExpression root = new BasicExpression("root");
+  		for(Transition tr : st.getNextTransition()) {
+  			BasicExpression bexp = new BasicExpression("t"+getTransitionIdentity( sm, tr) );	
+  			root = 	getExpressionTreeFor( root, bexp );	
+  			counter++;
   		}
-			numOfTransitions = 0;
-  	}
-  	return temp;
-  }
-
-	private void createExitExpression(StateMachine sm, String stateName , String parentName, State source , State destination, SimpleTransition strans, EnumerationStatement stateVariables) 
-	{
-		Stack<StateMachine> machineStack = ancestorStack(sm);		
-		if(machineStack != null)
-			machineStack.pop();
-		if(parentName != "" && source.getStateMachine().getParentState() != null)
-			if(!isChildState(source , destination))	{	
-				
-				//Case 1: target state has a host machine not in the list of ancestors
-				if(machineStack.search(destination.getStateMachine()) < 1) 
-					genNon_ConcurrentExitStatements(sm, stateVariables, strans, source, machineStack, destination);
-				
-				//Case 2: destination state is a member of ancestors, deactivate members below the targeted ancestors
-				if(machineStack.search(destination.getStateMachine()) >= 1) {
-					for(int i = 0; i <= machineStack.search(destination.getStateMachine()); i++)
-						machineStack.pop();
-					generateExitStatements(machineStack, sm , destination, stateVariables, strans, source);
-				}
-			}
-	}
-
-	private void genNon_ConcurrentExitStatements(StateMachine sm , EnumerationStatement stateVariables, SimpleTransition strans , State source,
-		Stack<StateMachine> machineStack, State destination) {
-		Stack<StateMachine> machineStackCopy = machineStack;
-		State parent = source.getStateMachine().getParentState();
-		if(parent != null) {
-			State grandParent = parent.getStateMachine().getParentState();
-			if(grandParent != null && grandParent.getIsConcurrent()) {
-				disableConcurrentMachines(grandParent, source, strans, stateVariables); 
-				return;
-			}
-		}
-		generateExitStatements(machineStack, sm , destination, stateVariables, strans, source);
-	}
-
-	private void generateExitStatements(Stack<StateMachine> machineStack, StateMachine sm , State destination, EnumerationStatement stateVariables, SimpleTransition strans , State source) {
-		while(!machineStack.empty()) {
-			StateMachine stm = machineStack.pop();
-			String parentName = stm.getFullName().equals(sm.getFullName()) ? "" : changeNameCase(stm.getFullName(), 0); 
-			String stateName = parentName == "" ? changeNameCase(stm.getFullName(), 0) +"_state" : parentName + "_state";
-			strans.addNextExpression(new NextExpression(stateName, "null", parentName ));
-		}
-	}
-  
-  private void genTransitionForSimpleStatesWithUnitTransition(StateMachine sm, TransitionPart tpart, EnumerationStatement stateVariables)
-	{
-		int numOfTransitions = 0;
-		for(State st : sm.getStates())
-  	{
-			numOfTransitions = st.getTransitions().size();
-			if(numOfHighLevelTransition(st) != -1)
-				numOfTransitions += numOfHighLevelTransition(st); 
-  		if(numOfTransitions == 1 && !st.hasNestedStateMachines())
-  		{
-  			Transition trb = new Transition(st,st);
-				if(numOfHighLevelTransition(st) == 1){
-					trb = getHighLevelTransitions(st).get(0);		
-					trb.setFromState(st);
-				}
-				else
-					trb = st.getTransitions().get(0);
-					String parentName = getParentName(sm, trb.getNextState(), stateVariables);
-					
-					String stateName = parentName == "" ? changeNameCase(sm.getFullName(), 0) +"_state" : parentName + "_state";
-					String source = changeNameCase(sm.getFullName(), 0) +"_state";
-
-					NextExpression nextExpr = new 
-								NextExpression(stateName, lookUpStateDetail(stateVariables,trb.getNextState().getName()), parentName);
-	  			SimpleTransition strans = new 
-	  				SimpleTransition( lookUpStateDetail(stateVariables,trb.getFromState().getName()), source, trb.getEvent().getName(), nextExpr	);
-					
-					//Adding exit transition
-					createExitExpression(sm, stateName , parentName, st, trb.getNextState(), strans, stateVariables);					
-  				tpart.addSimpleTransition(strans);
+  		if(counter > 0) {
+  			BasicExpression state = new BasicExpression( st.getName() ); 
+  			return new CaseStatement(root, state);
   		}
-			numOfTransitions = 0;
+  		return null;
   	}
-	}
-
-  private void generateCompositeTransition(StateMachine sm, TransitionPart tpart, EnumerationStatement stateVariables)
-	{
-		for(State st : getStatesWithManyTransitions(sm))
-		{	
-			NextExpression tempExpr = new NextExpression("", "", "");
-			SimpleTransition temp = new SimpleTransition("", "", "",tempExpr);
-	  	SimpleTransition temp1 = new SimpleTransition("", "", "", tempExpr);
-			ComplexTransition ctrans = new ComplexTransition("", changeNameCase(sm.getFullName(), 0) +"_state", temp, temp1);
-
-			String stateName;
-			String source = changeNameCase(sm.getFullName(), 0) +"_state";
-	  	for(Transition tr : st.getTransitions())
-	  	{	
-				String parentName = getParentName(sm, tr.getNextState(), stateVariables);
-				stateName = parentName == "" ? changeNameCase(sm.getFullName(), 0) +"_state" : parentName + "_state";
-				NextExpression nextExpr = new NextExpression(stateName, lookUpStateDetail(stateVariables,tr.getNextState().getName()), parentName);
-	  		SimpleTransition smt = new 
-	  				SimpleTransition( lookUpStateDetail(stateVariables,tr.getFromState().getName()), source, tr.getEvent().getName(), nextExpr	);
-				//Adding exit transition
-				createExitExpression(sm, stateName , parentName, st, tr.getNextState(), smt, stateVariables); 
-				ctrans.addSimpleTransition(smt);
-	  	}
-				
-			if(st.getStateMachine().getParentState() != null)
-				
-				for(Transition ttr : getHighLevelTransitions(st))
-	  		{
-					String parentName = getParentName(sm, ttr.getNextState(), stateVariables);
-					stateName = parentName == "" ? changeNameCase(sm.getFullName(), 0) +"_state" : parentName + "_state";;
-					NextExpression highLevelNextExpr = new NextExpression(stateName, 
-								lookUpStateDetail(stateVariables,ttr.getNextState().getName()), parentName);
-					SimpleTransition smtt = new 
-	  				SimpleTransition( lookUpStateDetail(stateVariables,st.getName()), source, ttr.getEvent().getName(), highLevelNextExpr	);
-					createExitExpression(sm, stateName , parentName, st, ttr.getNextState(), smtt, stateVariables);
-					ctrans.addSimpleTransition(smtt);
-	  		}
-			ctrans.removeSimpleTransition(temp);
-  		ctrans.removeSimpleTransition(temp1);
-  		tpart.addComplexTransition(ctrans);					
-		}
-	}
-
-	private int numOfHighLevelTransition(State state)
-	{
-		State tempState = state.getStateMachine().getParentState();
-		if(tempState != null)
-			return getHighLevelTransitions(state).size();
-
-		return -1;
-	}
-
- 	private List<Transition> getHighLevelTransitions(State st)
-	{
-		List<Transition> transitions = new ArrayList<Transition>();
-		if(st.getStateMachine().getParentState() != null 
-				&& st.getStateMachine().getParentState().getStateMachine().getParentState() == null)
-			for(Transition trr : st.getStateMachine().getParentState().getTransitions())
-				transitions.add(trr);
-		else {
-			State state = st.getStateMachine().getParentState();
-			for(Transition trr : st.getStateMachine().getParentState().getTransitions())
-				transitions.add(trr);
-			for(Transition tr : getHighLevelTransitions(state))
-				transitions.add(tr);
-		}
-		return transitions;
-	}
-
-  private String lookUpStateDetail(EnumerationStatement stateVariables, String str)
-  {
-  	for(EnumerationElement e : stateVariables.getEnumerationElements())
-  	{
-  		if(e.getValue().endsWith("_"+str))
-  			return e.getValue();
+  	
+  	private BasicExpression getExpressionTreeFor( BasicExpression root, BasicExpression bexp ) {
+  		if( root.getChildren().size() < 2) {
+  			root.addChild(bexp); 
+  			root.setOperator(root.getOperator().OR);
+  		}
+  		else {
+  			BasicExpression temp = new BasicExpression(root.getChildren().get(0).getIdentifier());
+  			temp.addChild(root.getChildren().get(0));
+  			temp.addChild(bexp);
+  			temp.setOperator(temp.getOperator().OR);
+  			root.addChild(temp);
+  		}
+  		return root;
   	}
-  	return null;
+  	
+  	private VarDeclaration genMainVariableFor( StateMachine sm ) {
+  		VariableSpecifier vs = new VariableSpecifier(changeNameCase(sm.getFullName(), 0));	
+  		vs.addTypeSpecifier( changeNameCase(sm.getFullName(), 1));
+  		VarDeclaration vdec =  new VarDeclaration(vs); 
+  		if(!isNested(sm)) 
+  			return vdec;
+  		for( StateMachine smm : sm.getNestedStateMachines() ) {
+  			vs = new VariableSpecifier(changeNameCase(smm.getFullName(), 0));
+  			vs.addTypeSpecifier( changeNameCase(smm.getFullName(), 1));
+  			vdec.addVariableSpecifier(vs);
+  		}
+  		return vdec;
+  	}
+  	
+  	//Generates event enumeration for a given state machine
+  	private  VariableSpecifier getEventList( StateMachine sm ) {
+  		VariableSpecifier vs = new VariableSpecifier("event");
+  		for( Event event : sm.getAllEvents() ) 
+  			vs.addTypeSpecifier(event.getName());
+  		return vs;
+  	}
+  	
+  	//Generates state enumeration for a given state machine
+  	private VariableSpecifier getStateList(StateMachine sm) {
+  		VariableSpecifier vs = new VariableSpecifier("state");
+  		for(State st : sm.getStates())
+  			vs.addTypeSpecifier(st.getName());
+  		if(sm.getParentState() != null)
+  			vs.addTypeSpecifier("null");
+  		return vs;
+  	}
+  		
+  	//Generates the define part for all the transitions of the system
+  	private DefineDeclaration getDefineDeclaration( StateMachine sm ) {
+  		int i = 1;
+  		BasicExpression temp = new BasicExpression("null");
+  		DefineBody dnull = new DefineBody("null", temp);
+  		DefineDeclaration ddec = new DefineDeclaration(dnull);
+  		for( Transition tr : sm.getAllTransitions() ) {
+  			BasicExpression bexp = composeExpressionFor( tr );
+  			DefineBody dBody = new DefineBody("t"+getTransitionIdentity( sm, tr) , bexp);
+  			ddec.addDefineBody(dBody);
+  			i++;
+  		}
+  		ddec.removeDefineBody(dnull);
+  		return ddec;
+  	}
+  	
+  	private BasicExpression composeExpressionFor( Transition tr ) {
+  		BasicExpression bexp1 = new BasicExpression("event");
+  		BasicExpression bexp2 = new BasicExpression(tr.getEvent().getName());
+  		BasicExpression bexp3 = new BasicExpression("eventExpr"); 
+  		bexp3.addChild(bexp1);
+  		bexp3.addChild(bexp2);
+  		bexp3.setOperator(bexp3.getOperator().EQ);
+  			
+  		BasicExpression bexp4 = new BasicExpression("state");
+  		BasicExpression bexp5 = new BasicExpression(tr.getFromState().getName()); 
+  		BasicExpression bexp6 = new BasicExpression("stateExpr");
+  		bexp6.addChild(bexp4);
+  		bexp6.addChild(bexp5);
+  		bexp6.setOperator(bexp6.getOperator().EQ); 
+  			
+  		BasicExpression bexp = new BasicExpression("state");
+  		bexp.addChild(bexp3);
+  		bexp.addChild(bexp6);
+  		
+  		return bexp;
+  	}
   }
-
-	private String lookUpStateHandle(EnumerationStatement stateVariables, String stateName)
-  {
-  	for(EnumerationElement e : stateVariables.getEnumerationElements())
-  	{
-  		if(e.getValue().endsWith("_"+stateName)) {
-  			String temp = e.getValue();
-				int x = temp.indexOf("_"+stateName);
-				if(x > 0)
-					return changeNameCase(temp.substring(0,x),0);
-			}
-  	}
-  	return null;
-  }
-
-	private Stack<StateMachine> ancestorStack(StateMachine sm)
-	{
-		if(sm.getParentState() == null)
-			return null;
-		Stack<StateMachine> ancestors = new Stack<StateMachine>();
-		ancestors.push(sm);
-		State parent = sm.getParentState();
-		while(parent != null) {
-			ancestors.push(parent.getStateMachine());
-			parent = parent.getStateMachine().getParentState();
-		}
-		return ancestors;		
-	}
-
-	private List<State> getStatesWithManyTransitions(StateMachine sm)
-	{
-		List<State> tempStates = new ArrayList<State>();
-		int numOfTransitions = 0;
-		for(State state : sm.getStates())
-		{
-			numOfTransitions = state.numberOfTransitions();
-			if(numOfHighLevelTransition(state) != -1)
-				numOfTransitions += numOfHighLevelTransition(state);
-			if(numOfTransitions > 1 && !state.hasNestedStateMachines())
-				tempStates.add(state);
-			numOfTransitions = 0;
-		}
-		return tempStates;
-	}
-	
-}
