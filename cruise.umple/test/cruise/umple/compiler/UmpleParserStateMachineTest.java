@@ -1683,15 +1683,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void noModel_Graph()
-  {
-    StateMachineLevelGraph graph = new StateMachineLevelGraph();
-    Assert.assertEquals(null, graph.nextNode());
-    Assert.assertEquals(false, graph.hasNext());
-  }
-
-  @Test
-  public void oneState_StateMachine_FlatGraphDFS()
+  public void oneState_StateMachine_GraphDFS()
   {
     assertParse("100_oneState_StateMachine.ump", "[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On]");
 
@@ -1708,7 +1700,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void oneState_StateMachine_FlatGraphBFS()
+  public void oneState_StateMachine_GraphBFS()
   {
     assertParse("100_oneState_StateMachine.ump", "[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On]");
 
@@ -1725,7 +1717,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void twoState_StateMachine_FlatGraphDFS()
+  public void twoState_StateMachine_GraphDFS()
   {
     assertParse("100_emptyAndNonEmptyStates.ump", "[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off]");
     UmpleClass c = model.getUmpleClass("LightFixture");
@@ -1754,7 +1746,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void twoState_StateMachine_FlatGraphBFS()
+  public void twoState_StateMachine_GraphBFS()
   {
     assertParse("100_emptyAndNonEmptyStates.ump", "[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off]");
     UmpleClass c = model.getUmpleClass("LightFixture");
@@ -1783,7 +1775,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void unreachableState_StateMachine_FlatGraphDFS()
+  public void unreachableState_StateMachine_GraphDFS()
   {
     assertParse("100_nonReachableState.ump", "[classDefinition][name:X][stateMachine][inlineStateMachine][name:sm][state][stateName:s1][state][stateName:s2]");
     UmpleClass c = model.getUmpleClass("X");
@@ -1803,7 +1795,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void unreachableState_StateMachine_FlatGraphBFS()
+  public void unreachableState_StateMachine_GraphBFS()
   {
     assertParse("100_nonReachableState.ump", "[classDefinition][name:X][stateMachine][inlineStateMachine][name:sm][state][stateName:s1][state][stateName:s2]");
     UmpleClass c = model.getUmpleClass("X");
@@ -1823,7 +1815,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void twoStateLoop_StateMachine_FlatGraphDFS()
+  public void twoStateLoop_StateMachine_GraphDFS()
   {
     assertParse("180_twoState_loop.ump", "[classDefinition][name:LightSwitch][stateMachine][inlineStateMachine][name:Light][state][stateName:On][transition][event:push][stateName:Off][state][stateName:Off][transition][event:push][stateName:On]");
     UmpleClass c = model.getUmpleClass("LightSwitch");
@@ -1847,7 +1839,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void twoStateLoop_StateMachine_FlatGraphBFS()
+  public void twoStateLoop_StateMachine_GraphBFS()
   {
     assertParse("180_twoState_loop.ump", "[classDefinition][name:LightSwitch][stateMachine][inlineStateMachine][name:Light][state][stateName:On][transition][event:push][stateName:Off][state][stateName:Off][transition][event:push][stateName:On]");
     UmpleClass c = model.getUmpleClass("LightSwitch");
@@ -1871,7 +1863,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void ordering_StateMachine_FlatGraphDFS()
+  public void ordering_StateMachine_GraphDFS()
   {
     assertParse("180_DFSBFS_Comparison_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][state][stateName:s2][transition][event:p1][stateName:s1][transition][event:p5][stateName:s5][state][stateName:s3][state][stateName:s4][transition][event:p7][stateName:s7][state][stateName:s5][transition][event:p6][stateName:s6][state][stateName:s6][state][stateName:s7]");
     UmpleClass c = model.getUmpleClass("ExampleSM");
@@ -1902,7 +1894,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void ordering_StateMachine_FlatGraphBFS()
+  public void ordering_StateMachine_GraphBFS()
   {
     assertParse("180_DFSBFS_Comparison_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][state][stateName:s2][transition][event:p1][stateName:s1][transition][event:p5][stateName:s5][state][stateName:s3][state][stateName:s4][transition][event:p7][stateName:s7][state][stateName:s5][transition][event:p6][stateName:s6][state][stateName:s6][state][stateName:s7]");
     UmpleClass c = model.getUmpleClass("ExampleSM");
@@ -1932,8 +1924,14 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(expectedStates, returnedStates);
   }
 
+  @Test 
+  public void largeFlat_StateMachine_GraphDFS()
+  {
+
+  }
+
   @Test
-  public void c6_StateMachine_FlatGraphDFS()
+  public void c6_StateMachine_GraphDFS()
   {
     assertParse("180_C6_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][state][stateName:s2][transition][event:p3][stateName:s3][state][stateName:s3][transition][event:p4][stateName:s4][state][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s5][transition][event:p6][stateName:s6][state][stateName:s6][transition][event:p1][stateName:s1]");
     UmpleClass c = model.getUmpleClass("ExampleSM");
@@ -1963,7 +1961,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void c6_StateMachine_FlatGraphBFS()
+  public void c6_StateMachine_GraphBFS()
   {
     assertParse("180_C6_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][state][stateName:s2][transition][event:p3][stateName:s3][state][stateName:s3][transition][event:p4][stateName:s4][state][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s5][transition][event:p6][stateName:s6][state][stateName:s6][transition][event:p1][stateName:s1]");
     UmpleClass c = model.getUmpleClass("ExampleSM");
@@ -1993,7 +1991,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void k5_StateMachine_FlatGraphDFS()
+  public void k5_StateMachine_GraphDFS()
   {
     assertParse("180_K5_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s2][transition][event:p1][stateName:s1][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s3][transition][event:p1][stateName:s1][transition][event:p2][stateName:s2][transition][event:p4][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s4][transition][event:p1][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p5][stateName:s5][state][stateName:s5][transition][event:p1][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4]");
     UmpleClass c = model.getUmpleClass("ExampleSM");
@@ -2022,7 +2020,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void k5_StateMachine_FlatGraphBFS()
+  public void k5_StateMachine_GraphBFS()
   {
     assertParse("180_K5_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s2][transition][event:p1][stateName:s1][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s3][transition][event:p1][stateName:s1][transition][event:p2][stateName:s2][transition][event:p4][stateName:s4][transition][event:p5][stateName:s5][state][stateName:s4][transition][event:p1][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p5][stateName:s5][state][stateName:s5][transition][event:p1][stateName:s1][transition][event:p2][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4]");
     UmpleClass c = model.getUmpleClass("ExampleSM");
@@ -2051,7 +2049,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void tree_StateMachine_FlatGraphDFS()
+  public void tree_StateMachine_GraphDFS()
   {
     assertParse("180_Tree7_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][state][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][transition][event:p6][stateName:s6][state][stateName:s3][transition][event:p5][stateName:s5][state][stateName:s4][state][stateName:s5][state][stateName:s6][transition][event:p7][stateName:s7][transition][event:p8][stateName:s8][state][stateName:s7][state][stateName:s8]");
     UmpleClass c = model.getUmpleClass("ExampleSM");
@@ -2083,7 +2081,7 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  public void tree_StateMachine_FlatGraphBFS()
+  public void tree_StateMachine_GraphBFS()
   {
     assertParse("180_Tree7_StateMachine.ump","[classDefinition][name:ExampleSM][stateMachine][inlineStateMachine][name:SM][state][stateName:s1][transition][event:p2][stateName:s2][state][stateName:s2][transition][event:p3][stateName:s3][transition][event:p4][stateName:s4][transition][event:p6][stateName:s6][state][stateName:s3][transition][event:p5][stateName:s5][state][stateName:s4][state][stateName:s5][state][stateName:s6][transition][event:p7][stateName:s7][transition][event:p8][stateName:s8][state][stateName:s7][state][stateName:s8]");
     UmpleClass c = model.getUmpleClass("ExampleSM");
@@ -2113,6 +2111,238 @@ public class UmpleParserStateMachineTest
 
     Assert.assertEquals(expectedStates, returnedStates);
   }
+
+  @Test
+  public void nested2_StateMachine_GraphDFS()
+  {
+    assertParse("101_Nested_realExample2.ump","[classDefinition][name:StrobeLight][stateMachine][inlineStateMachine][name:dvdPlayer][state][stateName:Off][transition][event:turnOn][stateName:On][state][stateName:Sleep][transition][event:wake][stateName:Pause][state][stateName:On][transition][event:turnOff][stateName:Off][state][stateName:Play][transition][event:push][stateName:Pause][state][stateName:Pause][transition][event:push][stateName:Play][transition][event:standby][stateName:Sleep]");
+    UmpleClass c = model.getUmpleClass("StrobeLight");
+    StateMachine sm = c.getStateMachine(0).getState(2).getNestedStateMachine(0);
+
+    State startNode = sm.getStartState();
+    String smName = sm.getName();
+    boolean isDFS = true;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("Play");
+    expectedStates.add("Pause");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+  }
+
+
+  @Test
+  public void nested2_StateMachine_GraphBFS()
+  {
+    assertParse("101_Nested_realExample2.ump","[classDefinition][name:StrobeLight][stateMachine][inlineStateMachine][name:dvdPlayer][state][stateName:Off][transition][event:turnOn][stateName:On][state][stateName:Sleep][transition][event:wake][stateName:Pause][state][stateName:On][transition][event:turnOff][stateName:Off][state][stateName:Play][transition][event:push][stateName:Pause][state][stateName:Pause][transition][event:push][stateName:Play][transition][event:standby][stateName:Sleep]");
+    UmpleClass c = model.getUmpleClass("StrobeLight");
+    StateMachine sm = c.getStateMachine(0).getState(2).getNestedStateMachine(0);
+
+    State startNode = sm.getStartState();
+    String smName = sm.getName();
+    boolean isDFS = false;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("Play");
+    expectedStates.add("Pause");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+  }
+
+  @Test
+  public void doubleNested_StateMachine_GraphDFS()
+  {
+    assertParse("180_nested_stopWatch.ump","[classDefinition][name:DigitalWatch][inlineComment:sx indicates that button X has been pressed][inlineComment:notSx indicates button x has been released][stateMachine][inlineStateMachine][name:sm][inlineComment:Main state displaying time][state][stateName:regular][state][stateName:time][transition][event:s1][stateName:date][transition][event:s2][stateName:alarmStatus][transition][event:s3][stateName:chronometer][transition][event:s3during2Secs][stateName:alarmTime][state][stateName:date][transition][event:notS1][stateName:time][state][stateName:update][transition][event:s3][stateName:time][inlineComment:States related to time update][state][stateName:second][transition][event:s1][stateName:minute][transition][event:s2][action][code:secondzero();][stateName:second][state][stateName:minute][transition][event:s1][stateName:hour][transition][event:s2][action][code:minute++;][stateName:minute][state][stateName:hour][transition][event:s1][stateName:month][transition][event:s2][action][code:hour++;][stateName:hour][state][stateName:month][transition][event:s1][stateName:day][transition][event:s2][action][code:month++;][stateName:month][state][stateName:day][transition][event:s1][stateName:year][transition][event:s2][action][code:day++;][stateName:day][state][stateName:year][transition][event:s1][stateName:second][transition][event:s2][action][code:year++;][stateName:year][inlineComment:States related to timer][state][stateName:chronometer][transition][event:s3][stateName:time][state][stateName:chronoNormal][state][stateName:paused][transition][event:s1][stateName:running][transition][event:s2][action][code:zero();][stateName:paused][state][stateName:running][transition][event:s1][stateName:paused][transition][event:s2][stateName:lapRunning][state][stateName:lapRunning][transition][event:s1][stateName:lapPaused][transition][event:s2][stateName:running][state][stateName:lapPaused][transition][event:s1][stateName:lapRunning][transition][event:s2][stateName:paused][inlineComment:States related to turning on and off charm or chime][state][stateName:alarmStatus][transition][event:notS2][stateName:time][state][stateName:bothOff][transition][event:s1][stateName:chimeOn][state][stateName:chimeOn][transition][event:s1][stateName:bothOn][state][stateName:bothOn][transition][event:s1][stateName:alarmOn][state][stateName:alarmOn][transition][event:s1][stateName:bothOff][inlineComment:States related to alarm update][state][stateName:alarmUpdate][transition][event:s3][stateName:second][state][stateName:alarmTime][transition][event:s1][stateName:alarmMinute][transition][event:s2][action][code:alarmHour++;][stateName:alarmHour][state][stateName:hourMinuteUpdate][state][stateName:alarmHour][transition][event:s1][stateName:alarmMinute][transition][event:s2][action][code:alarmHour++;][stateName:alarmHour][state][stateName:alarmMinute][transition][event:s1][stateName:alarmHour][transition][event:s2][action][code:alarmMinute++;][stateName:alarmMinute][attribute][type:Integer][name:day][value:0][attribute][type:Integer][name:month][value:0][attribute][type:Integer][name:year][value:2014][attribute][type:Integer][name:hour][value:0][attribute][type:Integer][name:minute][value:0][attribute][type:Integer][name:second][value:0][attribute][type:Integer][name:alarmHour][value:0][attribute][type:Integer][name:alarmMinute][value:0][attribute][type:Integer][name:alarmSecond][value:0][attribute][type:Integer][name:timer][value:0][concreteMethodDeclaration][type:void][methodDeclarator][methodName:secondzero][parameterList][code:setSecond(0);][concreteMethodDeclaration][type:void][methodDeclarator][methodName:zero][parameterList][code:setTimer(0);]");
+    UmpleClass c = model.getUmpleClass("DigitalWatch");
+    StateMachine sm = c.getStateMachine(0).getState(0).getNestedStateMachine(0);
+
+    Assert.assertEquals("regular", sm.getName());
+
+    State startNode = sm.getStartState();
+    String smName = sm.getName();
+    boolean isDFS = true;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("time");
+    expectedStates.add("date");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+  }
+
+  @Test
+  public void doubleNested_StateMachine_GraphBFS()
+  {
+    assertParse("180_nested_stopWatch.ump","[classDefinition][name:DigitalWatch][inlineComment:sx indicates that button X has been pressed][inlineComment:notSx indicates button x has been released][stateMachine][inlineStateMachine][name:sm][inlineComment:Main state displaying time][state][stateName:regular][state][stateName:time][transition][event:s1][stateName:date][transition][event:s2][stateName:alarmStatus][transition][event:s3][stateName:chronometer][transition][event:s3during2Secs][stateName:alarmTime][state][stateName:date][transition][event:notS1][stateName:time][state][stateName:update][transition][event:s3][stateName:time][inlineComment:States related to time update][state][stateName:second][transition][event:s1][stateName:minute][transition][event:s2][action][code:secondzero();][stateName:second][state][stateName:minute][transition][event:s1][stateName:hour][transition][event:s2][action][code:minute++;][stateName:minute][state][stateName:hour][transition][event:s1][stateName:month][transition][event:s2][action][code:hour++;][stateName:hour][state][stateName:month][transition][event:s1][stateName:day][transition][event:s2][action][code:month++;][stateName:month][state][stateName:day][transition][event:s1][stateName:year][transition][event:s2][action][code:day++;][stateName:day][state][stateName:year][transition][event:s1][stateName:second][transition][event:s2][action][code:year++;][stateName:year][inlineComment:States related to timer][state][stateName:chronometer][transition][event:s3][stateName:time][state][stateName:chronoNormal][state][stateName:paused][transition][event:s1][stateName:running][transition][event:s2][action][code:zero();][stateName:paused][state][stateName:running][transition][event:s1][stateName:paused][transition][event:s2][stateName:lapRunning][state][stateName:lapRunning][transition][event:s1][stateName:lapPaused][transition][event:s2][stateName:running][state][stateName:lapPaused][transition][event:s1][stateName:lapRunning][transition][event:s2][stateName:paused][inlineComment:States related to turning on and off charm or chime][state][stateName:alarmStatus][transition][event:notS2][stateName:time][state][stateName:bothOff][transition][event:s1][stateName:chimeOn][state][stateName:chimeOn][transition][event:s1][stateName:bothOn][state][stateName:bothOn][transition][event:s1][stateName:alarmOn][state][stateName:alarmOn][transition][event:s1][stateName:bothOff][inlineComment:States related to alarm update][state][stateName:alarmUpdate][transition][event:s3][stateName:second][state][stateName:alarmTime][transition][event:s1][stateName:alarmMinute][transition][event:s2][action][code:alarmHour++;][stateName:alarmHour][state][stateName:hourMinuteUpdate][state][stateName:alarmHour][transition][event:s1][stateName:alarmMinute][transition][event:s2][action][code:alarmHour++;][stateName:alarmHour][state][stateName:alarmMinute][transition][event:s1][stateName:alarmHour][transition][event:s2][action][code:alarmMinute++;][stateName:alarmMinute][attribute][type:Integer][name:day][value:0][attribute][type:Integer][name:month][value:0][attribute][type:Integer][name:year][value:2014][attribute][type:Integer][name:hour][value:0][attribute][type:Integer][name:minute][value:0][attribute][type:Integer][name:second][value:0][attribute][type:Integer][name:alarmHour][value:0][attribute][type:Integer][name:alarmMinute][value:0][attribute][type:Integer][name:alarmSecond][value:0][attribute][type:Integer][name:timer][value:0][concreteMethodDeclaration][type:void][methodDeclarator][methodName:secondzero][parameterList][code:setSecond(0);][concreteMethodDeclaration][type:void][methodDeclarator][methodName:zero][parameterList][code:setTimer(0);]");
+    UmpleClass c = model.getUmpleClass("DigitalWatch");
+    StateMachine sm = c.getStateMachine(0).getState(0).getNestedStateMachine(0);
+
+    Assert.assertEquals("regular", sm.getName());
+
+    State startNode = sm.getStartState();
+    String smName = sm.getName();
+    boolean isDFS = false;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("time");
+    expectedStates.add("date");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+  }
+
+  @Test
+  public void doubleNested_twoLevels_StateMachine_GraphDFS()
+  {
+    assertParse("180_nested_stopWatch.ump","[classDefinition][name:DigitalWatch][inlineComment:sx indicates that button X has been pressed][inlineComment:notSx indicates button x has been released][stateMachine][inlineStateMachine][name:sm][inlineComment:Main state displaying time][state][stateName:regular][state][stateName:time][transition][event:s1][stateName:date][transition][event:s2][stateName:alarmStatus][transition][event:s3][stateName:chronometer][transition][event:s3during2Secs][stateName:alarmTime][state][stateName:date][transition][event:notS1][stateName:time][state][stateName:update][transition][event:s3][stateName:time][inlineComment:States related to time update][state][stateName:second][transition][event:s1][stateName:minute][transition][event:s2][action][code:secondzero();][stateName:second][state][stateName:minute][transition][event:s1][stateName:hour][transition][event:s2][action][code:minute++;][stateName:minute][state][stateName:hour][transition][event:s1][stateName:month][transition][event:s2][action][code:hour++;][stateName:hour][state][stateName:month][transition][event:s1][stateName:day][transition][event:s2][action][code:month++;][stateName:month][state][stateName:day][transition][event:s1][stateName:year][transition][event:s2][action][code:day++;][stateName:day][state][stateName:year][transition][event:s1][stateName:second][transition][event:s2][action][code:year++;][stateName:year][inlineComment:States related to timer][state][stateName:chronometer][transition][event:s3][stateName:time][state][stateName:chronoNormal][state][stateName:paused][transition][event:s1][stateName:running][transition][event:s2][action][code:zero();][stateName:paused][state][stateName:running][transition][event:s1][stateName:paused][transition][event:s2][stateName:lapRunning][state][stateName:lapRunning][transition][event:s1][stateName:lapPaused][transition][event:s2][stateName:running][state][stateName:lapPaused][transition][event:s1][stateName:lapRunning][transition][event:s2][stateName:paused][inlineComment:States related to turning on and off charm or chime][state][stateName:alarmStatus][transition][event:notS2][stateName:time][state][stateName:bothOff][transition][event:s1][stateName:chimeOn][state][stateName:chimeOn][transition][event:s1][stateName:bothOn][state][stateName:bothOn][transition][event:s1][stateName:alarmOn][state][stateName:alarmOn][transition][event:s1][stateName:bothOff][inlineComment:States related to alarm update][state][stateName:alarmUpdate][transition][event:s3][stateName:second][state][stateName:alarmTime][transition][event:s1][stateName:alarmMinute][transition][event:s2][action][code:alarmHour++;][stateName:alarmHour][state][stateName:hourMinuteUpdate][state][stateName:alarmHour][transition][event:s1][stateName:alarmMinute][transition][event:s2][action][code:alarmHour++;][stateName:alarmHour][state][stateName:alarmMinute][transition][event:s1][stateName:alarmHour][transition][event:s2][action][code:alarmMinute++;][stateName:alarmMinute][attribute][type:Integer][name:day][value:0][attribute][type:Integer][name:month][value:0][attribute][type:Integer][name:year][value:2014][attribute][type:Integer][name:hour][value:0][attribute][type:Integer][name:minute][value:0][attribute][type:Integer][name:second][value:0][attribute][type:Integer][name:alarmHour][value:0][attribute][type:Integer][name:alarmMinute][value:0][attribute][type:Integer][name:alarmSecond][value:0][attribute][type:Integer][name:timer][value:0][concreteMethodDeclaration][type:void][methodDeclarator][methodName:secondzero][parameterList][code:setSecond(0);][concreteMethodDeclaration][type:void][methodDeclarator][methodName:zero][parameterList][code:setTimer(0);]");
+    UmpleClass c = model.getUmpleClass("DigitalWatch");
+    StateMachine sm = c.getStateMachine(0).getState(0).getNestedStateMachine(0);
+
+
+    State startNode = sm.getStartState();
+    String smName = sm.getName();
+    boolean isDFS = true;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("time");
+    expectedStates.add("date");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+
+    expectedStates.clear();
+    returnedStates.clear();
+
+    sm = c.getStateMachine(0).getState(0).getNestedStateMachine(0);
+    sm = sm.getState(2).getNestedStateMachine(0);
+
+    Assert.assertEquals("update", sm.getName()); 
+
+    startNode = sm.getStartState();
+    smName = sm.getName();
+    graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    
+    expectedStates.add("second");
+    expectedStates.add("minute");
+    expectedStates.add("hour");
+    expectedStates.add("month");
+    expectedStates.add("day");
+    expectedStates.add("year");
+
+    while(graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+
+  }
+
+  @Test
+  public void doubleNested_twoLevels_StateMachine_GraphBFS()
+  {
+    assertParse("180_nested_stopWatch.ump","[classDefinition][name:DigitalWatch][inlineComment:sx indicates that button X has been pressed][inlineComment:notSx indicates button x has been released][stateMachine][inlineStateMachine][name:sm][inlineComment:Main state displaying time][state][stateName:regular][state][stateName:time][transition][event:s1][stateName:date][transition][event:s2][stateName:alarmStatus][transition][event:s3][stateName:chronometer][transition][event:s3during2Secs][stateName:alarmTime][state][stateName:date][transition][event:notS1][stateName:time][state][stateName:update][transition][event:s3][stateName:time][inlineComment:States related to time update][state][stateName:second][transition][event:s1][stateName:minute][transition][event:s2][action][code:secondzero();][stateName:second][state][stateName:minute][transition][event:s1][stateName:hour][transition][event:s2][action][code:minute++;][stateName:minute][state][stateName:hour][transition][event:s1][stateName:month][transition][event:s2][action][code:hour++;][stateName:hour][state][stateName:month][transition][event:s1][stateName:day][transition][event:s2][action][code:month++;][stateName:month][state][stateName:day][transition][event:s1][stateName:year][transition][event:s2][action][code:day++;][stateName:day][state][stateName:year][transition][event:s1][stateName:second][transition][event:s2][action][code:year++;][stateName:year][inlineComment:States related to timer][state][stateName:chronometer][transition][event:s3][stateName:time][state][stateName:chronoNormal][state][stateName:paused][transition][event:s1][stateName:running][transition][event:s2][action][code:zero();][stateName:paused][state][stateName:running][transition][event:s1][stateName:paused][transition][event:s2][stateName:lapRunning][state][stateName:lapRunning][transition][event:s1][stateName:lapPaused][transition][event:s2][stateName:running][state][stateName:lapPaused][transition][event:s1][stateName:lapRunning][transition][event:s2][stateName:paused][inlineComment:States related to turning on and off charm or chime][state][stateName:alarmStatus][transition][event:notS2][stateName:time][state][stateName:bothOff][transition][event:s1][stateName:chimeOn][state][stateName:chimeOn][transition][event:s1][stateName:bothOn][state][stateName:bothOn][transition][event:s1][stateName:alarmOn][state][stateName:alarmOn][transition][event:s1][stateName:bothOff][inlineComment:States related to alarm update][state][stateName:alarmUpdate][transition][event:s3][stateName:second][state][stateName:alarmTime][transition][event:s1][stateName:alarmMinute][transition][event:s2][action][code:alarmHour++;][stateName:alarmHour][state][stateName:hourMinuteUpdate][state][stateName:alarmHour][transition][event:s1][stateName:alarmMinute][transition][event:s2][action][code:alarmHour++;][stateName:alarmHour][state][stateName:alarmMinute][transition][event:s1][stateName:alarmHour][transition][event:s2][action][code:alarmMinute++;][stateName:alarmMinute][attribute][type:Integer][name:day][value:0][attribute][type:Integer][name:month][value:0][attribute][type:Integer][name:year][value:2014][attribute][type:Integer][name:hour][value:0][attribute][type:Integer][name:minute][value:0][attribute][type:Integer][name:second][value:0][attribute][type:Integer][name:alarmHour][value:0][attribute][type:Integer][name:alarmMinute][value:0][attribute][type:Integer][name:alarmSecond][value:0][attribute][type:Integer][name:timer][value:0][concreteMethodDeclaration][type:void][methodDeclarator][methodName:secondzero][parameterList][code:setSecond(0);][concreteMethodDeclaration][type:void][methodDeclarator][methodName:zero][parameterList][code:setTimer(0);]");
+    UmpleClass c = model.getUmpleClass("DigitalWatch");
+    StateMachine sm = c.getStateMachine(0).getState(0).getNestedStateMachine(0);
+
+
+    State startNode = sm.getStartState();
+    String smName = sm.getName();
+    boolean isDFS = false;
+    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    State state;
+    ArrayList<String> expectedStates, returnedStates;
+    expectedStates = new ArrayList<String>();
+    expectedStates.add("time");
+    expectedStates.add("date");
+
+    returnedStates = new ArrayList<String>();
+
+    while (graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+
+    expectedStates.clear();
+    returnedStates.clear();
+
+    sm = c.getStateMachine(0).getState(0).getNestedStateMachine(0);
+    sm = sm.getState(2).getNestedStateMachine(0);
+
+    Assert.assertEquals("update", sm.getName()); 
+
+    startNode = sm.getStartState();
+    smName = sm.getName();
+    graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    
+    expectedStates.add("second");
+    expectedStates.add("minute");
+    expectedStates.add("hour");
+    expectedStates.add("month");
+    expectedStates.add("day");
+    expectedStates.add("year");
+
+    while(graph.hasNext())
+    {
+      state = (State) graph.nextNode();
+      returnedStates.add(state.getName());
+    }
+
+    Assert.assertEquals(expectedStates, returnedStates);
+
+  }
+
 
   private void assertParse(String filename, String expectedOutput)
   {

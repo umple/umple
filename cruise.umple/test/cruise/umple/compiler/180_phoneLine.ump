@@ -1,0 +1,46 @@
+class PhoneLine {
+  state {
+    onHook {
+      entry / {
+        if(getOtherParty() != null) {
+          getOtherParty().otherPartyHangUp();
+        } 
+        setOtherParty(null); p();
+      }
+      startDialing -> dialing;
+      incomingCall -> ringing;
+    }
+    ringing {
+      entry / {say(RingRing);} 
+      pickUp -> / {getOtherParty().otherPartyPickUp();} communicating;
+      otherPartyHangUp -> onHook;
+      autoPickup -> / {getOtherParty().otherPartyPickUp();} communicating;
+    }
+    communicating {
+      entry / {say(Hello+getOtherParty().getId());}
+      hangUp -> / {say(Click);} onHook;
+      otherPartyHangUp -> waitForHook;
+      putOnHold -> onHold;
+    }
+    onHold {
+      hangUp -> / {say(Click);} onHook;
+      otherPartyHangUp -> waitForHook;
+      takeOffHold -> communicating;
+    }
+    dialing {
+      entry / {say(Dial);} 
+      completeNumber -> waitingForConnection;
+      hangUp -> / {say(Click);} onHook;
+    }
+    waitingForConnection {
+      entry / {getOtherParty().incomingCall();}
+      otherPartyPickUp -> communicating;
+      hangUp -> / {say(Click);} onHook;
+      timeOut -> onHook;
+    }
+    waitForHook {
+      entry / {say(Beep);}
+      hangUp -> / {say(Click);} onHook;
+    }
+  }
+}

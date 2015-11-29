@@ -29,17 +29,38 @@ class Graph
   public Node nextNode(){return null;}
 }
 
-
+// TODO if both: change now
 class StateMachineLevelGraph 
 {
 
-  public StateMachineLevelGraph(Node startNode, boolean isDepthFirst) 
+  public StateMachineLevelGraph(Node startNode, String smName, boolean isDepthFirst) 
   {
     this.startNode = startNode;
-    this.isDepthFirst = isDepthFirst;
     this.startNode.visit();
+    this.smName = smName;
+    this.isDepthFirst = isDepthFirst;
+    this.isNested = true;
 
     if(isDepthFirst) 
+    {
+      this.stack = new Stack<Node>();
+      this.stack.push(this.startNode);
+    }
+    else
+    {
+      this.queue = new LinkedList<Node>();
+      this.queue.addFirst(this.startNode);
+    }
+  }
+
+  public StateMachineLevelGraph(Node startNode, boolean isDepthFirst)
+  {
+    this.startNode = startNode;
+    this.startNode.visit();
+    this.isDepthFirst = isDepthFirst;
+    this.isNested = false;
+
+    if(isDepthFirst)
     {
       this.stack = new Stack<Node>();
       this.stack.push(this.startNode);
@@ -69,9 +90,9 @@ class StateMachineLevelGraph
     for (Transition transition: state.getTransitions()) 
     {
       State nextState = (State) transition.getNextState();
-      // TODO Confirm that the next state is in the same level
-      //if (nextState.isInternal() && ! nextState.isVisited()) 
-      if (! nextState.getIsVisited())
+      StateMachine sm = nextState.getStateMachine();
+
+      if ((! nextState.getIsVisited()) && (!isNested || sm.getName().equals(this.smName)))
       {
         nextState.visit();
         stack.push(nextState) ;
@@ -90,9 +111,10 @@ class StateMachineLevelGraph
     for (Transition transition: state.getTransitions()) 
     {
       State nextState = (State) transition.getNextState();
+      StateMachine sm = nextState.getStateMachine();
       // TODO Confirm that the state stays in the same level
       //if (nextState.isInternal() && ! nextState.isVisited()) 
-      if (! nextState.getIsVisited())
+      if ((! nextState.getIsVisited()) && (!isNested || sm.getName().equals(this.smName)))
       {
         nextState.visit();
         queue.addFirst(nextState);

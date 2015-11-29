@@ -43,6 +43,8 @@ class StateMachineLevelGraph
   depend cruise.umple.util.*;
   depend java.util.*;
   isA Graph;
+  smName;
+  boolean isNested;
 }
 
 use Umple.ump;
