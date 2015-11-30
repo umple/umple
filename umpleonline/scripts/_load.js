@@ -53,6 +53,7 @@ document.write('<script type="text/javascript" src="scripts/shBrushRuby.js"></sc
 document.write('<script type="text/javascript" src="scripts/shBrushSql.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushCpp.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushAlloy.js"></script>');
+document.write('<script type="text/javascript" src="scripts/shBrushNuSMV.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushXml.js"></script>');
 document.write('<link href="scripts/shCore.css" rel="stylesheet" type="text/css" />');
 document.write('<link href="scripts/shThemeDefault.css" rel="stylesheet" type="text/css" />');

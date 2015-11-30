@@ -127,6 +127,7 @@ Page.initPaletteArea = function()
 //  Page.initAction("buttonZip");
   Page.initAction("buttonRubyCode");
   Page.initAction("buttonAlloyCode");
+  Page.initAction("buttonNuSMVCode");
   Page.initAction("buttonSqlCode");
   Page.initAction("buttonCppCode");
   Page.initAction("buttonPhotoReady");
@@ -837,7 +838,7 @@ Page.showGeneratedCode = function(code,language,tabnumber)
 
   //Set the generated content
   if(language == "java" || language == "php" || language == "cpp" 
-    || language == "ruby" || language == "xml" || language == "sql" || language == "alloy")
+    || language == "ruby" || language == "xml" || language == "sql" || language == "alloy" || language == "nusmv")
   {
 		jQuery("#innerGeneratedCodeRow" + tabnumber).html(
 			formatOnce('<pre class="brush: {1};">{0}</pre>',generatedMarkup,language)

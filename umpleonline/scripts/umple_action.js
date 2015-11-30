@@ -45,6 +45,10 @@ Action.clicked = function(event)
   {
     Action.generateCode("alloy","Alloy");
   }
+  else if (action == "NuSMVCode")
+  {
+    Action.generateCode("nusmv","NuSMV");
+  }
   else if (action == "CppCode")
   {
     Action.generateCode("cpp","Cpp");

@@ -49,6 +49,7 @@ function generateMenu($buttonSuffix)
             <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code</option>
             <option id=\"genruby\" value=\"ruby:Ruby\">Ruby Code</option>
             <option id=\"genalloy\" value=\"alloy:Alloy\">Alloy Model</option>
+	    <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
             <option value=\"xml:Ecore\">Ecore</option>
             <option value=\"java:TextUml\">TextUml</option>
             <option value=\"xml:Scxml\">Scxml (Experimental)</option>

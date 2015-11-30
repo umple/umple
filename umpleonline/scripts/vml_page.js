@@ -14,6 +14,7 @@ Page.init = function()
   Page.initAction("buttonJavaCode");
   Page.initAction("buttonRubyCode");
   Page.initAction("buttonAlloyCode");
+  Page.initAction("buttonNuSMVCode");
   Page.initAction("buttonEcoreCode");
   Page.initAction("buttonTextUmlCode");
   Page.initAction("buttonScxmlCode");
