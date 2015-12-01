@@ -1384,7 +1384,11 @@ class UmpleInternalParser
     if (guardToken != null)
     {
       if(((GuardAnalyzer)model.getAnalyzer("guard"))!=null){
-        ((GuardAnalyzer)model.getAnalyzer("guard")).setUClassifier(fromState.getStateMachine().getRootStateMachine().getUmpleClass());
+        UmpleClassifier uClassifier = fromState.getStateMachine().getRootStateMachine().getUmpleClass();
+    	if (fromState.getStateMachine().getRootStateMachine().getUmpleClass()==null){
+    		uClassifier = fromState.getStateMachine().getRootStateMachine().getUmpleTrait();
+    	}
+        ((GuardAnalyzer)model.getAnalyzer("guard")).setUClassifier(uClassifier);
         ((GuardAnalyzer)model.getAnalyzer("guard")).setT(t);
         model.getAnalyzer("guard").analyzeToken(guardToken);
       }

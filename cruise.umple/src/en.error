@@ -141,8 +141,8 @@
 223: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The type of '{0}' in template parameter '{1}' in trait '{2}' has not been defined.;
 224: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template parameter '{0}' in trait '{1}' has an multiple inheritance restriction, according to classes '{2}' and '{3}', which is not supported. Restrictions must cover single inheritance and multiple interface.;
 225: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must be a subclass of class '{5}';
-226: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' is the native state machine in '{2}' '{3}'.Therefore, it's disregarded.;
-227: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' in the '{2}' '{3}' has already been imported from the trait '{4}'.Therefore, it's disregarded.;
+226: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' is the native state machine in {2} '{3}'.Therefore, it's disregarded.;
+227: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' in the {2} '{3}' has already been imported from the trait '{4}'.Therefore, it's disregarded.;
 
 
 
