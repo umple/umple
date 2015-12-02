@@ -146,10 +146,19 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 //---------------------------------Start--------------------------------------
    private boolean compareStateMachineName(StateMachine inSMachine1, StateMachine inSMachine2){
     if(inSMachine1.getName().equals(inSMachine2.getName())){
-		return compareStatesAndTransitions(inSMachine1,inSMachine2);
-	} else{
-		return false;
-	}
+    	if (!inSMachine1.getStartState().getName().equals(inSMachine2.getStartState().getName())){
+    		UmpleClassifier uClassifier = inSMachine1.getUmpleClass();
+      	if (uClassifier==null) {
+      		uClassifier = inSMachine1.getUmpleTrait();
+      		getParseResult().addErrorMessage(new ErrorMessage(228,uClassifier.getPosition(0),inSMachine1.getName(),"tait", uClassifier.getName()));
+      	} else {
+      		getParseResult().addErrorMessage(new ErrorMessage(228,uClassifier.getPosition(0),inSMachine1.getName(),"class", uClassifier.getName()));
+      	}
+    	}
+	  	return compareStatesAndTransitions(inSMachine1,inSMachine2);
+		} else{
+			return false;
+		}
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -185,6 +194,7 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 					  if (state.getTransition(i).isEqualToTransition(mainlTrans)){ find = true; }
 				  }
 				  if(!find) {		
+				  	state.getTransition(i).setNextState(inSMachine1.findState(state.getTransition(i).getNextState().getName()));
 					  mainState.addTransition(state.getTransition(i));
 				  }
 			  }

@@ -243,6 +243,31 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfTransitions());
 	}
 	
+	@Test
+	public void stateMachineTraits009Test() {
+		String code = "class A {isA T1; status { on { turnOn -> on;}} } trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfTransitions());
+		State st1 = model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getNextState();
+		State st2 = model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(1).getNextState();
+		Assert.assertEquals(st1,st2 );
+		
+	}
+	
+	@Test
+	public void stateMachineTraits010Test() {
+		String code = "class A {isA T1; status { on { turnOn -> on;}} } trait T1 { status { onb { activate -> onb;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("228");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
 	/* ------------------------------------------------------------------------------------
 	 * -------------------------------------END -------------------------------------------
 	 * ------------------------------------------------------------------------------------
