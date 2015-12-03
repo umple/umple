@@ -59,7 +59,7 @@ public class NuSMVTemplateTest extends TemplateTest{
 		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/concurrentMachineExample.smv")).exists());
 	  }
 	  
-	  @Test @Ignore
+	  @Test //@Ignore
 	  public void nestedConcurrentMachine()
 	  {
 		assertUmpleTemplateFor("nusmv/nestedConcurrentMachine.ump","nusmv/nestedConcurrentMachine.nusmv.txt");
@@ -129,63 +129,63 @@ public class NuSMVTemplateTest extends TemplateTest{
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/DigitalWatchFlat.smv")).exists());
 	  }
 	  
-	  @Test @Ignore
+	  @Test //@Ignore
 	  public void CarTransmission()
 	  {
 	  		assertUmpleTemplateFor("nusmv/CarTransmission.ump","nusmv/CarTransmission.nusmv.txt");
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/CarTransmission.smv")).exists());
 	  }
 	  
-	  @Test @Ignore
+	  @Test //@Ignore
 	  public void Elevator()
 	  {
 	  		assertUmpleTemplateFor("nusmv/Elevator.ump","nusmv/Elevator.nusmv.txt");
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/Elevator.smv")).exists());
 	  }
 	  
-	  @Test @Ignore
+	  @Test //@Ignore
 	  public void BigStateMachineWithNakedTransition()
 	  {
 	  		assertUmpleTemplateFor("nusmv/BigStateMachineWithNakedTransition.ump","nusmv/BigStateMachineWithNakedTransition.nusmv.txt");
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/BigStateMachineWithNakedTransition.smv")).exists());
 	  }
 	  
-	  @Test @Ignore
+	  @Test //@Ignore
 	  public void FurnaceControlSystem()
 	  {
 	  		assertUmpleTemplateFor("nusmv/FurnaceControlSystem.ump","nusmv/FurnaceControlSystem.nusmv.txt");
 				Assert.assertEquals(true, (new File(pathToInput + "/nusmv/FurnaceControlSystem.smv")).exists());
 	  }
 	  
-	  @Test @Ignore
+	  @Test //@Ignore
 	  public void AdaptiveCruiseControlSystem()
 	  {
 	  		assertUmpleTemplateFor("nusmv/AdaptiveCruiseControlSystem.ump","nusmv/AdaptiveCruiseControlSystem.nusmv.txt");
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/AdaptiveCruiseControlSystem.smv")).exists());
 	  }
 	  
-	  @Test @Ignore
+	  @Test //@Ignore
 	  public void AbstractConcurrentSystem()
 	  {
 	  		assertUmpleTemplateFor("nusmv/AbstractConcurrentSystem.ump","nusmv/AbstractConcurrentSystem.nusmv.txt");
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/AbstractConcurrentSystem.smv")).exists());
 	  }
 	  
-	  @Test  @Ignore
+	  @Test  //@Ignore
 	  public void BigStateMachineTest()
 	  {
 	  		assertUmpleTemplateFor("nusmv/BigStateMachineTest.ump","nusmv/BigStateMachineTest.nusmv.txt");
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/BigStateMachineTest.smv")).exists());
 	  }
 	  
-	  @Test  @Ignore
+	  @Test  //@Ignore
 	  public void CourseSectionNested()
 	  {
 	  		assertUmpleTemplateFor("nusmv/CourseSectionNested.ump","nusmv/CourseSectionNested.nusmv.txt");
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/CourseSectionNested.smv")).exists());
 	  }
 	  
-	  @Test  @Ignore
+	  @Test  //@Ignore
 	  public void NestedWatch()
 	  {
 	  		assertUmpleTemplateFor("nusmv/NestedWatch.ump","nusmv/NestedWatch.nusmv.txt");
@@ -195,31 +195,31 @@ public class NuSMVTemplateTest extends TemplateTest{
 	  @Test //@Ignore
 	  public void Test()
 	  {
-		assertUmpleTemplateFor("nusmv/Test.ump","nusmv/Test.nusmv.txt");
-		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/Test.smv")).exists());
+	  		assertUmpleTemplateFor("nusmv/Test.ump","nusmv/Test.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/Test.smv")).exists());
 	  }
 	  @Test //@Ignore
 	  public void CourseSection()
 	  {
-		assertUmpleTemplateFor("nusmv/CourseSection.ump","nusmv/CourseSection.nusmv.txt");
-		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/CourseSection.smv")).exists());
+	  		assertUmpleTemplateFor("nusmv/CourseSection.ump","nusmv/CourseSection.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/CourseSection.smv")).exists());
 	  }
 	  
 	  @Test 
 	  public void GrantApplication()
 	  {
-		assertUmpleTemplateFor("nusmv/GrantApplication.ump","nusmv/GrantApplication.nusmv.txt");
-		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/GrantApplication.smv")).exists());
+	  		assertUmpleTemplateFor("nusmv/GrantApplication.ump","nusmv/GrantApplication.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/GrantApplication.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore
 	  public void AbstractMachine()
 	  {
-		assertUmpleTemplateFor("nusmv/AbstractMachine.ump","nusmv/AbstractMachine.nusmv.txt");
-		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/AbstractMachine.smv")).exists());
+	  		assertUmpleTemplateFor("nusmv/AbstractMachine.ump","nusmv/AbstractMachine.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/AbstractMachine.smv")).exists());
 	  }
 	  
-	  @Test @Ignore
+	  @Test //@Ignore
 	  public void NestedMachine()
 	  {
 	  		assertUmpleTemplateFor("nusmv/NestedMachine.ump","nusmv/NestedMachine.nusmv.txt");

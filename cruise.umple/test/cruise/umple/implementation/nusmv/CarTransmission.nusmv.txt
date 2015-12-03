@@ -1,61 +1,71 @@
 -- This file is generated from CarTransmission.ump --
 
-MODULE State_Handle
-  
-  VAR 
-    event : { selectReverse , selectDrive , selectFirst , selectSecond , selectNeutral , reachSecondSpeed , reachThirdSpeed , dropBelowSecondSpeed , dropBelowThirdSpeed };  
+ -- This defines a NuSMV module for State --
+ MODULE State ( _stateDrive ) 
+
+   -- This part declares input variables for the given NuSMV module --
+   IVAR
+     event : { selectReverse , selectDrive , selectFirst , selectSecond , selectNeutral , reachSecondSpeed , reachThirdSpeed , dropBelowSecondSpeed , dropBelowThirdSpeed };
     
-  
-MODULE State( stateDrive , handle )
-  
-  VAR 
-    state_state : { state_neutral , state_reverse , state_drive };  
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { neutral , reverse , drive };
     
-  ASSIGN
-    init(state_state) := state_neutral;  
+   -- This part defines macros that summarize the transitions of the given NuSMV module --
+   DEFINE
+     t1 := event = selectReverse & state = neutral;
+     t2 := event = selectDrive & state = neutral;
+     t3 := event = selectFirst & state = neutral;
+     t4 := event = selectSecond & state = neutral;
+     t5 := event = selectNeutral & state = reverse;
+     t6 := event = selectNeutral & state = drive;
+     t7 := event = selectFirst & state = drive;
+     t8 := event = selectSecond & state = drive;
+     t9 := event = reachSecondSpeed & _stateDrive.state = first;
+     t10 := event = reachThirdSpeed & _stateDrive.state = second;
+     t11 := event = dropBelowSecondSpeed & _stateDrive.state = second;
+     t12 := event = dropBelowThirdSpeed & _stateDrive.state = third;
   
-  TRANS
-    ( (state_state = state_neutral) -> (
-      (handle.event = selectReverse & next(state_state) = state_reverse )  |
-      (handle.event = selectDrive & next(state_state) = state_drive )  |
-      (handle.event = selectFirst & next(stateDrive.stateDrive_state) = stateDrive_first )  |
-      (handle.event = selectSecond & next(stateDrive.stateDrive_state) = stateDrive_second )  ) ) &
-    ( (state_state = state_reverse) -> (
-       handle.event = selectNeutral & next(state_state) = state_neutral ) ) &
-    ( (state_state = state_drive) -> ( next(stateDrive.stateDrive_state) = stateDrive_first ) )
-  
-MODULE StateDrive( state , handle )
-  
-  VAR 
-    stateDrive_state : { stateDrive_first , stateDrive_second , stateDrive_third , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := neutral;
+     next( state ) := case
+       t5 | t6 : neutral;
+       t1 : reverse;
+       t7 | t2 | t8 | t12 | t3 | t11 | t4 | t9 | t10 : drive;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for StateDrive --
+ MODULE StateDrive ( _state ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { first , second , third , null };
     
-  ASSIGN
-    init(stateDrive_state) := null;  
-  
-  TRANS
-    ( (stateDrive_state = stateDrive_first) -> (
-      (handle.event = reachSecondSpeed & next(stateDrive_state) = stateDrive_second )  |
-      (handle.event = selectNeutral & next(state.state_state) = state_neutral
-         & next(stateDrive_state) = null )  |
-      (handle.event = selectFirst & next(stateDrive_state) = stateDrive_first )  |
-      (handle.event = selectSecond & next(stateDrive_state) = stateDrive_second )  ) ) &
-    ( (stateDrive_state = stateDrive_second) -> (
-      (handle.event = reachThirdSpeed & next(stateDrive_state) = stateDrive_third )  |
-      (handle.event = dropBelowSecondSpeed & next(stateDrive_state) = stateDrive_first )  |
-      (handle.event = selectNeutral & next(state.state_state) = state_neutral
-         & next(stateDrive_state) = null )  |
-      (handle.event = selectFirst & next(stateDrive_state) = stateDrive_first )  |
-      (handle.event = selectSecond & next(stateDrive_state) = stateDrive_second )  ) ) &
-    ( (stateDrive_state = stateDrive_third) -> (
-      (handle.event = dropBelowThirdSpeed & next(stateDrive_state) = stateDrive_second )  |
-      (handle.event = selectNeutral & next(state.state_state) = state_neutral
-         & next(stateDrive_state) = null )  |
-      (handle.event = selectFirst & next(stateDrive_state) = stateDrive_first )  |
-      (handle.event = selectSecond & next(stateDrive_state) = stateDrive_second )  ) )
-  
-MODULE main
-  
-  VAR 
-    handle : State_Handle;
-    state : State( stateDrive , handle );
-    stateDrive : StateDrive( state , handle ); 
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _state.t7 | _state.t2 | _state.t3 | _state.t11 | _state.state = drive : first;
+       _state.t4 | _state.t9 | _state.t8 | _state.t12 : second;
+       _state.t10 : third;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for main --
+ MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : State( stateDrive );
+     stateDrive : StateDrive( state );
+    
+   CTLSPEC   EF  ( state.state = neutral )
+   CTLSPEC   EF  ( state.state = reverse )
+   CTLSPEC   EF  ( state.state = drive )
+   CTLSPEC   EF  ( stateDrive.state = first )
+   CTLSPEC   EF  ( stateDrive.state = second )
+   CTLSPEC   EF  ( stateDrive.state = third )
