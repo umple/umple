@@ -143,6 +143,11 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, model.getUmpleClass("A").numberOfAttributes());		
 	}	
 	
+	
+	/* ------------------------------------------------------------------------------------
+	 * ---------------------Tests related to state machines -------------------------------
+	 * ------------------------------------------------------------------------------------
+	 */
 	@Test
 	public void stateMachineTraitsTest() {
 		String code = "class A {isA T1;} class B {isA T1;} trait T1 { isA T2; status { on { turnOn -> on;}} } trait T2 {sm { active { goActive -> active;}} }";
@@ -223,9 +228,25 @@ public class UmpleTraitTest {
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfTransitions());
 	}
-	
-	
 
+	@Test
+	public void stateMachineTraits007Test() {
+		String code = "class A {isA T1; status { on { turnOn[x>0 and z>0] -> /{getData();} on;}} } trait T1 { status { on { turnOn[x>0 and z>0] -> /{getData();} on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfTransitions());
+	}
+
+	@Test
+	public void stateMachineTraits008Test() {
+		String code = "class A {isA T1; status { on { turnOn[x>0] -> on;}} } trait T1 { status { on { turnOn[z>0] -> on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfTransitions());
+	}
+	
+	/* ------------------------------------------------------------------------------------
+	 * -------------------------------------END -------------------------------------------
+	 * ------------------------------------------------------------------------------------
+	 */
 	
 	@Test
 	public void codeInjectTraitsTest() {
