@@ -1,7 +1,5 @@
 language: java
 
-# jdk:
-#   - oraclejdk8
 
 sudo: false
 
@@ -13,12 +11,34 @@ cache:
 before_install:
   - ./travis/deps.sh # run linux or osx depending on environment
 
+env:
+  global:
+    - ANT_FIRST='ant -f build.umple.xml -Dmyenv=travis -Donline=true'
+    - ANT_BUILD='ant -f build.umple.xml -Dmyenv=travis -Dfirst.build=false'
+
 script:
   - cd build/
   - ant -Dmyenv=travis bootstrap
-  - ant -Dmyenv=travis first-build
-  # TODO https://github.com/umple/umple/issues/616
-  # - ant -Dmyenv=travis build
+  # We resolve all of the dependencies before, this way the command will be unlikely to time out
+  - echo 'DEPS: Resolving all dependencies'
+  - ant -Dmyenv=travis deps-resolve-all
+  # Do the a modified version of `first-build`
+  - echo 'FIRST-BUILD: Code Generation'
+  - $ANT_FIRST clean init codegen rtcpp template.setVersion resetUmpleSelf
+  - echo 'FIRST-BUILD: Compiling'
+  - $ANT_FIRST compile compileValidator compileUmplificator
+  - echo 'FIRST-BUILD: Packaging'
+  - $ANT_FIRST package template.resetVersion
+
+  # Do the a modified version of `build`
+  - echo 'BUILD: Code Generation'
+  - $ANT_BUILD clean init codegen rtcpp template.setVersion resetUmpleSelf
+  - echo 'BUILD: Compiling'
+  - $ANT_BUILD compile compileValidator compileUmplificator
+  - echo 'BUILD: Packaging'
+  - $ANT_BUILD package 
+  - echo 'BUILD: Testing..'
+  - $ANT_BUILD template.test template.resetVersion
 
 matrix:
   include:
