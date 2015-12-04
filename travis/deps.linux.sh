@@ -6,6 +6,8 @@ set -e
 # check for linux
 test "$TRAVIS_OS_NAME" == "linux"
 
-#sudo apt-get update
-#sudo apt-get install --force-yes php5-cli 
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+export PATH=$JAVA_HOME/bin:$PATH
 
+java -version
+echo $PATH

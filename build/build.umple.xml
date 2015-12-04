@@ -6,6 +6,8 @@
     Environment Variables
   ``````````````````````````` -->
   <import file="_template.xml" />
+  
+  <deps-declare-taskdef />
 
   <property name="project.path" value="cruise.umple"/>
   <property name="xtext.project.path" value="cruise.umple.xtext"/>
@@ -51,13 +53,13 @@
 
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
-    <java jar="${umple.last.jar.file}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
     </java>
-    <java jar="${umple.last.jar.file}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple.validator/src/Master.ump"/>
     </java>
-     <java jar="${umple.last.jar.file}" fork="true" failonerror="true">
+     <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umplificator/src/Master.ump"/>
     </java>
   </target>
@@ -68,13 +70,13 @@
 
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
-    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
     </java>
-    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple.validator/src/Master.ump"/>
     </java>
-    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umplificator/src/Master.ump"/>
     </java>
   </target>
@@ -173,6 +175,7 @@
       <classpath refid="core.ivy.classpath" />
       <classpath refid="test.ivy.classpath" />
     </javac>
+    
     <copy todir="${bin.path}" overwrite="true">
 	    <fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
 	    <fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
@@ -329,9 +332,6 @@
       </manifest>
 
     </jar>
-    
-    <copy file="${dist.dir}/${dist.umple.jar}" 
-          tofile="${dist.dir}/${dist.umple.jar.next}" />
   </target>
 
   <target name="packageJars">
