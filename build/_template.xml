@@ -53,8 +53,6 @@
         <length file="${temp.file}" when="gt" length="0" />
       </condition>
 
-      <echo>@{property} = ${@{property}}</echo>
-
       <delete file="${temp.file}" 
               deleteonexit="true" 
               quiet="true"/>
