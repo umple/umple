@@ -1,19 +1,31 @@
 traitDefinition : trait [name] [[traitParameters]]? { [[traitContent]]* }
-traitContent- : [[comment]] | [[traitDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[abstractMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
+traitContent- : [[requiredModelElements]] | [[comment]] | [[traitDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[abstractMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
 traitParameters : < [[traitFullParameters]] ( , [[traitFullParameters]] )* >
 traitFullParameters : [~parameter] ([[traitParametersInterface]])?
 traitParametersInterface- : isA [~tInterface]( & [~tInterface])*
-
+requiredModelElements: require ([[requiredState]] | [[requiredEvent]])
+requiredState: [smName] ;
+	//.[~stateName](.[~stateName])* ;
+requiredEvent: [smName] OPEN_ROUND_BRACKET ( [parameter] ( , [parameter] )* )? CLOSE_ROUND_BRACKET ;
+	//.[~stateName](.[~stateName])* 
 
 
 //iE = Include Exclude
+AllInclusionExclusionAlias-: [[InclusionExclusionAlias]] ( , [[InclusionExclusionAlias]]  )*
+InclusionExclusionAlias-: [[functionIncludeExcludeAlias]] | [[StateMachineIncludeExcludeAlias]] 
 functionIncludeExcludeAlias- : [[functionInExAlias]]  ( , [[functionInExAlias]]  )*
 functionInExAlias- : [[functionAliasName]] | [[iEFunction]] | [[traitAppliedParameters]]
 iEFunction : [=iEFunctionModifier:+|-] [methodName] [[iEParameterList]]
 iEParameterList : OPEN_ROUND_BRACKET ( [parameter] ( , [parameter] )* )? CLOSE_ROUND_BRACKET
 functionAliasName : ([=iEFunctionModifier:+])? [~methodName] [[iEParameterList]] as [[IEVisiAlias]]
+
 IEVisiAlias- : [[IEVisiAlias1]] | [[IEVisiAlias2]] | [[IEVisiAlias3]]
 IEVisiAlias1- : [=iEVisibility:public|private|protected] [~methodAliasName]
 IEVisiAlias2- : [=iEVisibility:public|private|protected]
 IEVisiAlias3- : [~methodAliasName]
 traitAppliedParameters : [~pName] = [~rName]
+
+StateMachineIncludeExcludeAlias-: [[ StateMachineInExAlias]] ( , [[StateMachineInExAlias]]  )*
+StateMachineInExAlias-: [[StateMachineAliasName]] | [[iEStateMachine]]
+StateMachineAliasName: ([=iEStateMachineModifier:+])? [~smName]  as [~stateMachineAliasName]
+iEStateMachine : [=iEStateMachineModifier:+|-] [~smName]
