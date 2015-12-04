@@ -19,7 +19,7 @@
 13: 2, "http://cruise.eecs.uottawa.ca/umple/E013NonImmutableAssociation.html", Class at directed end of immutable association must be an immutable class ;
 14: 3, "http://cruise.eecs.uottawa.ca/umple/E014ImmutableSubclassofMutable.html", Existing associations, state machines, or superclass for class '{0}' prevents class-level immutability ;
 15: 3, "http://cruise.eecs.uottawa.ca/umple/W015ImmutableClassStateMachine.html", Immutable class '{0}' may not contain state machines ;
-16: 1, "http://cruise.eecs.uottawa.ca/umple/E016NonImmutableSuperclass.html", Immutability rules prevent class '{0}' from subclassing '{1}' ;
+16: 1, "http://cruise.eecs.uottawa.ca/umple/E016NonImmutab|| (tempMethod != null && tempMethod.isIsAbstract())leSuperclass.html", Immutability rules prevent class '{0}' from subclassing '{1}' ;
 17: 2, "http://cruise.eecs.uottawa.ca/umple/E017NonImmutableBidirectionality.html", Two-way associations may not be immutable ;
 18: 2, "http://cruise.eecs.uottawa.ca/umple/E018ReflexiveImmutable.html", Reflexive immutable associations may not be mandatory ;
 19: 2, "http://cruise.eecs.uottawa.ca/umple/E019DuplicateAssociation.html", Class '{0}' may not have multiple associations with the same name '{1}' ;
@@ -80,7 +80,7 @@
 # Model Constraints' Error messages
 90: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Attribute named {0} was not found in class {1}, as required in constraint. ;
 91: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Attribute with type {0} was not found in class {1}, as required in constraint. ;
-92: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class {0} was not found to be a subclass of class {1}, as required in constraint. ;
+92: 2, "http://cruise.eecs.uottawa.ca/umple/Page|| (tempMethod != null && tempMethod.isIsAbstract())BeingDeveloped.html", Class {0} was not found to be a subclass of class {1}, as required in constraint. ;
 93: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class {0} was not found to be a superclass of class {1}, as required in constraint. ;
 94: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class {0} was not found to have an association to class {1}, as required in constraint. ;
 
@@ -114,7 +114,7 @@
 201: 4, "http://cruise.eecs.uottawa.ca/umple/W201TraitNameSyntax.html", Trait name '{0}' should start with a capital letter ;
 202: 1, "http://cruise.eecs.uottawa.ca/umple/E202Traitnotdefined.html", The trait named '{0}' is not available. ;
 203: 1, "http://cruise.eecs.uottawa.ca/umple/E203Nothavinganuniqueidentifier.html", There is a class and a trait with the same name '{0}'. Solution: Please just change the name of trait or class and give it an unique name. ;
-204: 1, "http://cruise.eecs.uottawa.ca/umple/E204SelfInheritance.html", Trait named '{0}' cannot inherit from itself. Solution: Please check the name of super trait or change your design not to have this inheritance. ;
+204: 1, "http://cruise.eecs.uottawa.ca/umple/E20|| (tempMethod != null && tempMethod.isIsAbstract())4SelfInheritance.html", Trait named '{0}' cannot inherit from itself. Solution: Please check the name of super trait or change your design not to have this inheritance. ;
 #need to be added to manual
 205: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must implement interface '{5}';
 206: 1, "http://cruise.eecs.uottawa.ca/umple/E206CycleinTraits.html", Trait '{0}' cannot cyclically extend '{1}'. ;
@@ -124,7 +124,7 @@
 # 209 should be explored more.
 209: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Defined name '{0}' in trait '{1}' is not available in the trait's header. ;
 210: 1, "http://cruise.eecs.uottawa.ca/umple/E210ConflictinMethods.html", In {0} '{1}', there is a conflict on method '{2}' which comes from two different traits '{3}' and '{4}'. ;
-211: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In modification level of trait '{0}', method '{1}' has been defined two times. ;
+211: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', method '{1}' has been defined two times. ;
 212: 1, "http://cruise.eecs.uottawa.ca/umple/E212MethodsNotAvailable.html", Method '{0}' is not available in trait '{1}' for modification. ;
 213: 1, "http://cruise.eecs.uottawa.ca/umple/E213RemovingWhileRenaming.html", It is impossible to remove method '{0}' while changing its name. ;
 214: 1, "http://cruise.eecs.uottawa.ca/umple/E214TwoIdenticalParameterNames.html", It is impossible to have two parameters with the same name '{0}' in trait'{1}'. ;
@@ -144,8 +144,8 @@
 226: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' is the native state machine in {2} '{3}'.Therefore, it's disregarded.;
 227: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' in the {2} '{3}' has already been imported from the trait '{4}'.Therefore, it's disregarded.;
 228: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Since there are two state machine with the same name '{0}' and having two initial states is not acceptable. The initial state of the merged state machine is the one comes from {1} '{2}'.;
-
-
+229: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', state machine '{1}' has been defined two times. ;
+230: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', state machine '{1}' does not exist. ;
 
 # Messages related to MOTL
 301: 4,  "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Tracing of non-existent model entity  ;

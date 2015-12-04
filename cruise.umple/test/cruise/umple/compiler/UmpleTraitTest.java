@@ -268,6 +268,53 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}	
+	
+	@Test
+	public void stateMachineTraits011Test() {
+		String code = "class A {isA T1 <status as mode,status as mood>;} trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("229");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+	
+	@Test
+	public void stateMachineTraits012Test() {
+		String code = "class A {isA T1 <status1 as mode>;} trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("230");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+	
+	@Test
+	public void stateMachineTraits013Test() {
+		String code = "class A {isA T1 <status as mode>;} trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("mode", model.getUmpleClass("A").getStateMachine(0).getName());
+
+	}	
+	
+	@Test
+	public void stateMachineTraits014Test() {
+		String code = "class A {isA T1 <-status>;} trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(0, model.getUmpleClass("A").numberOfStateMachines());
+
+	}	
+	
 	/* ------------------------------------------------------------------------------------
 	 * -------------------------------------END -------------------------------------------
 	 * ------------------------------------------------------------------------------------

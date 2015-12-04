@@ -3384,6 +3384,15 @@ class GeneralTPApplied {
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------
+	boolean hasStateMachineTemplateSignature(StateMachineTemplateSignature inSMTSignature) {
+		 for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
+				if (smTSignature.getStateMachine().equals(inSMTSignature.getStateMachine()) ) return true;
+			}
+			return false;
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
   public MethodTemplateSignature hasMethod(Method inMethod){
     for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
     		Method newMethod = new Method(mTSignature.getMethod());
