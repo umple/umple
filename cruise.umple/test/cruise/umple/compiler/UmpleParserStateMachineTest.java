@@ -1691,7 +1691,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = true;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     Assert.assertEquals(isDFS, graph.isDepthFirst());
     Assert.assertEquals(true, graph.hasNext());
     Assert.assertEquals(true, startNode.getIsVisited());
@@ -1708,7 +1708,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = false;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     Assert.assertEquals(isDFS, graph.isDepthFirst());
     Assert.assertEquals(true, graph.hasNext());
     Assert.assertEquals(true, startNode.getIsVisited());
@@ -1724,7 +1724,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = true;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
 
     Assert.assertEquals(isDFS, graph.isDepthFirst());
@@ -1753,7 +1753,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = false;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
 
     Assert.assertEquals(isDFS, graph.isDepthFirst());
@@ -1782,7 +1782,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = true;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
 
     Assert.assertEquals(true, graph.hasNext());
@@ -1802,7 +1802,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = false;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
 
     Assert.assertEquals(true, graph.hasNext());
@@ -1822,7 +1822,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = true;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
 
     Assert.assertEquals(true, graph.hasNext());
@@ -1846,7 +1846,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = false;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
 
     Assert.assertEquals(true, graph.hasNext());
@@ -1870,7 +1870,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = true;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -1901,7 +1901,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = false;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -1924,12 +1924,6 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(expectedStates, returnedStates);
   }
 
-  @Test 
-  public void largeFlat_StateMachine_GraphDFS()
-  {
-
-  }
-
   @Test
   public void c6_StateMachine_GraphDFS()
   {
@@ -1938,7 +1932,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = true;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -1968,7 +1962,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = false;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -1998,7 +1992,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = true;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -2027,7 +2021,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = false;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -2056,7 +2050,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = true;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -2088,7 +2082,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = false;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -2122,7 +2116,7 @@ public class UmpleParserStateMachineTest
     State startNode = sm.getStartState();
     String smName = sm.getName();
     boolean isDFS = true;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, smName, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -2151,7 +2145,7 @@ public class UmpleParserStateMachineTest
     State startNode = sm.getStartState();
     String smName = sm.getName();
     boolean isDFS = false;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, smName, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -2181,7 +2175,7 @@ public class UmpleParserStateMachineTest
     State startNode = sm.getStartState();
     String smName = sm.getName();
     boolean isDFS = true;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, smName, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -2211,7 +2205,7 @@ public class UmpleParserStateMachineTest
     State startNode = sm.getStartState();
     String smName = sm.getName();
     boolean isDFS = false;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, smName, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -2240,7 +2234,7 @@ public class UmpleParserStateMachineTest
     State startNode = sm.getStartState();
     String smName = sm.getName();
     boolean isDFS = true;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, smName, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -2267,7 +2261,7 @@ public class UmpleParserStateMachineTest
 
     startNode = sm.getStartState();
     smName = sm.getName();
-    graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    graph = new StateMachineGraph(startNode, smName, isDFS);
     
     expectedStates.add("second");
     expectedStates.add("minute");
@@ -2297,7 +2291,7 @@ public class UmpleParserStateMachineTest
     State startNode = sm.getStartState();
     String smName = sm.getName();
     boolean isDFS = false;
-    StateMachineLevelGraph graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    StateMachineGraph graph = new StateMachineGraph(startNode, smName, isDFS);
     State state;
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
@@ -2324,7 +2318,7 @@ public class UmpleParserStateMachineTest
 
     startNode = sm.getStartState();
     smName = sm.getName();
-    graph = new StateMachineLevelGraph(startNode, smName, isDFS);
+    graph = new StateMachineGraph(startNode, smName, isDFS);
     
     expectedStates.add("second");
     expectedStates.add("minute");
@@ -2342,7 +2336,6 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(expectedStates, returnedStates);
 
   }
-
 
   private void assertParse(String filename, String expectedOutput)
   {

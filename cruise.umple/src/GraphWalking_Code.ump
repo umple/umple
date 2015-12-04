@@ -30,10 +30,10 @@ class Graph
 }
 
 // TODO if both: change now
-class StateMachineLevelGraph 
+class StateMachineGraph 
 {
 
-  public StateMachineLevelGraph(Node startNode, String smName, boolean isDepthFirst) 
+  public StateMachineGraph(Node startNode, String smName, boolean isDepthFirst) 
   {
     this.startNode = startNode;
     this.startNode.visit();
@@ -53,7 +53,7 @@ class StateMachineLevelGraph
     }
   }
 
-  public StateMachineLevelGraph(Node startNode, boolean isDepthFirst)
+  public StateMachineGraph(Node startNode, boolean isDepthFirst)
   {
     this.startNode = startNode;
     this.startNode.visit();

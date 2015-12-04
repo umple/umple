@@ -38,7 +38,7 @@ class Graph
   //public abstract Node next();
 }
 
-class StateMachineLevelGraph 
+class StateMachineGraph 
 {
   depend cruise.umple.util.*;
   depend java.util.*;
