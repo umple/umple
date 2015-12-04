@@ -9,8 +9,8 @@
 
   <property name="myenv" value="cc" />
   <import file="_${myenv}.xml" />
-  
-  
+
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
   
   <property name="dist.dir"                     value="${basedir}/dist" />
   <property file="${dist.dir}/recent.build.properties" />
@@ -29,8 +29,8 @@
           <property name="dist.@{name}.jar.prev"  value="umple-${dist.umple.latest.version}.jar" />
         </then>
         <else>
-          <property name="dist.umple.@{name}.jar"       value="@{name}-${umple.version}.jar" />
-          <property name="dist.umple.@{name}.jar.prev"  value="@{name}-${dist.umple.latest.version}.jar" />
+          <property name="dist.umple.@{name}.jar"       value="umple@{name}-${umple.version}.jar" />
+          <property name="dist.umple.@{name}.jar.prev"  value="umple@{name}-${dist.umple.latest.version}.jar" />
         </else>
       </if>
     </sequential>

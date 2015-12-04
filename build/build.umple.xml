@@ -68,13 +68,13 @@
 
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
-    <java jar="${dist.dir}/${dist.umple.jar.prev}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
     </java>
-    <java jar="${dist.dir}/${dist.umple.jar.prev}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple.validator/src/Master.ump"/>
     </java>
-    <java jar="${dist.dir}/${dist.umple.jar.prev}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umplificator/src/Master.ump"/>
     </java>
   </target>
@@ -329,15 +329,10 @@
       </manifest>
 
     </jar>
-    
-    <copy file="${dist.dir}/${dist.umple.jar}" 
-          tofile="${dist.dir}/${dist.umple.jar.next}" />
   </target>
 
   <target name="packageJars">
     <antcall target="packageMainJar" />
-    
-    <echo message="dist.umple.latest.version=${umple.version}" file="${recent.build.properties.file}" />
 
     <deps-get-path conf="core" pathid="core.ivy.classpath" />
     <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >

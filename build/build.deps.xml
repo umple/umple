@@ -5,6 +5,7 @@
     Environment Variables
   ``````````````````````````` -->
   <import file="_template.xml" />
+  <import file="_versionLast.xml" />
 
   <!-- Ivy Configuration -->
   <property name="ivy.install.version" value="2.4.0" />
@@ -16,7 +17,7 @@
   <!-- Umple Last -->
   <property name="umple.deps.dir" value="${dist.dir}/libs" />
   <property name="umple.deps.manual.dir" value="${umple.deps.dir}/manual" />
-  <property name="umple.stable.jar" value="${umple.deps.dir}/../umple-stable.jar" />
+  <property name="umple.stable.jar" value="${umple.deps.dir}/../umple-${last.version}.jar" />
 
   <!-- Vendor Configuration -->
   <property name="vendors.path" value="${dist.dir}/vendors" />
@@ -172,8 +173,9 @@
         <echo level="warning">WARNING: This is merely wget-ing http://cruise.eecs.uottawa.ca/umpleonline/scripts/umple.jar</echo>
         <mkdir dir="${umple.deps.dir}" />
         <get src="http://cruise.eecs.uottawa.ca/umpleonline/scripts/umple.jar"
-             dest="${umple.last.jar.file}"
+             dest="${umple.stable.jar}"
              usetimestamp="true" />
+        <copy file="${umple.stable.jar}" tofile="${umple.stable.jar}" />
       </else>
     </if>
 
