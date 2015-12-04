@@ -1,7 +1,9 @@
 language: java
 
-
-sudo: false
+# Use the trusty environment, this gives us OpenJDK8
+# Down the road, we really need to remove this and instead use container based.
+sudo: required
+dist: trusty
 
 cache:
   directories:
@@ -20,30 +22,25 @@ script:
   - cd build/
   - ant -Dmyenv=travis bootstrap
   # We resolve all of the dependencies before, this way the command will be unlikely to time out
-  - echo 'DEPS: Resolving all dependencies'
   - ant -Dmyenv=travis deps-resolve-all
   # Do the a modified version of `first-build`
-  - echo 'FIRST-BUILD: Code Generation'
   - $ANT_FIRST clean init codegen rtcpp template.setVersion resetUmpleSelf
-  - echo 'FIRST-BUILD: Compiling'
   - $ANT_FIRST compile compileValidator compileUmplificator
-  - echo 'FIRST-BUILD: Packaging'
   - $ANT_FIRST package template.resetVersion
 
   # Do the a modified version of `build`
-  - echo 'BUILD: Code Generation'
   - $ANT_BUILD clean init codegen rtcpp template.setVersion resetUmpleSelf
-  - echo 'BUILD: Compiling'
   - $ANT_BUILD compile compileValidator compileUmplificator
-  - echo 'BUILD: Packaging'
   - $ANT_BUILD package 
-  - echo 'BUILD: Testing..'
   - $ANT_BUILD template.test template.resetVersion
 
 matrix:
+  exclude:
+    - os: osx
+
   include:
     - os: linux
-      language: java
       jdk: oraclejdk8
+    - os: linux
+      jdk: openjdk8
     - os: osx
-      language: java
