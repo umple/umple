@@ -7,7 +7,7 @@ class BigStateMachineTest {
     Zxab{
      		Zx{
        			Z{
-         			e3-> X;
+         			e3 -> X;
          			e2 -> A;
 					e5 -> G;
 					e1 -> E;

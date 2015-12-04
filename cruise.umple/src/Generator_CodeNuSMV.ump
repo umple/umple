@@ -29,18 +29,13 @@ class NuSMVGenerator
     code.append(coord.commentModel(model));
     String handle = "";
     String dot = "";
-    for(UmpleClass uClass : model.getUmpleClasses())
-    {
-  		for(StateMachine sm : uClass.getStateMachines())
-  		{  			
-  			if( !coord.isNested(sm) )
-  			{	
-  				code.append( coord.generateSimpleModule( sm ));
+    for(UmpleClass uClass : model.getUmpleClasses()) {
+  		for(StateMachine sm : uClass.getStateMachines()) {  			
+  			if( !coord.isNested(sm) ) {	
+  				code.append( coord.generateSystem(coord. generateModuleForSimpleStateMachine( sm )) );
   			}
   			else {
-  				handle = "handle";
-  				dot = ".";  
-  				//code.append(coord.genModuleForNestedMachine(sm,handle,dot).toString());				
+  				code.append( coord.generateSystem( coord.generateModuleForNestedStateMachine( sm )) );				
   			}
   		}
   	}

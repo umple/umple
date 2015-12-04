@@ -1,100 +1,117 @@
 -- This file is generated from AbstractConcurrentSystem.ump --
 
-MODULE State_Handle
-  
-  VAR 
-    event : { e5 , e1 , e4 , e2 , e3 };  
+ -- This defines a NuSMV module for State --
+ MODULE State ( _stateState11 , _stateState11State11 , _stateState12 , _stateState12State12 ) 
+
+   -- This part declares input variables for the given NuSMV module --
+   IVAR
+     event : { e5 , e1 , e4 , e2 , e3 };
     
-  
-MODULE State( stateState11 , stateState11State11 , stateState12 , stateState12State12 , handle )
-  
-  VAR 
-    state_state : { state_state1 , state_state2 };  
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { state1 , state2 };
     
-  ASSIGN
-    init(state_state) := state_state1;  
+   -- This part defines macros that summarize the transitions of the given NuSMV module --
+   DEFINE
+     t1 := event = e5 & _stateState11.state = state11;
+     t2 := event = e1 & _stateState11State11.state = state111;
+     t3 := event = e4 & _stateState11State11.state = state112;
+     t4 := event = e5 & _stateState12.state = state12;
+     t5 := event = e2 & _stateState12State12.state = state121;
+     t6 := event = e3 & _stateState12State12.state = state122;
   
-  TRANS
-    ( (state_state = state_state1) -> ( next(stateState11.stateState11_state) = stateState11_state11
-         & next(stateState12.stateState12_state) = stateState12_state12 ) ) &
-    ( (state_state = state_state2) -> ( next(state_state) = state_state ) )
-  
-MODULE StateState11( state , stateState11State11 , stateState12 , stateState12State12 , handle )
-  
-  VAR 
-    stateState11_state : { stateState11_state11 , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := state1;
+     next( state ) := case
+       t3 | t6 | t2 | t5 : state1;
+       t1 | t4 : state2;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for StateState11 --
+ MODULE StateState11 ( _state , _stateState11State11 , _stateState12 , _stateState12State12 ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { state11 , null };
     
-  ASSIGN
-    init(stateState11_state) := null;  
-  
-  TRANS
-    ( (stateState11_state = stateState11_state11) -> ( next(stateState11State11.stateState11State11_state) = stateState11State11_state111 ) )
-  
-MODULE StateState11State11( state , stateState11 , stateState12 , stateState12State12 , handle )
-  
-  VAR 
-    stateState11State11_state : { stateState11State11_state111 , stateState11State11_state112 , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _state.t2 | _state.t3 | _state.state = state1 : state11;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for StateState11State11 --
+ MODULE StateState11State11 ( _state , _stateState11 , _stateState12 , _stateState12State12 ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { state111 , state112 , null };
     
-  ASSIGN
-    init(stateState11State11_state) := null;  
-  
-  TRANS
-    ( (stateState11State11_state = stateState11State11_state111) -> (
-      (handle.event = e1 & next(stateState11State11_state) = stateState11State11_state112 )  |
-      (handle.event = e5 & next(state.state_state) = state_state2
-         & next(stateState11.stateState11_state) = null
-         & next(stateState11State11_state) = null
-         & next(stateState12.stateState12_state) = null
-         & next(stateState12State12.stateState12State12_state) = null )  ) ) &
-    ( (stateState11State11_state = stateState11State11_state112) -> (
-      (handle.event = e4 & next(stateState11State11_state) = stateState11State11_state111 )  |
-      (handle.event = e5 & next(state.state_state) = state_state2
-         & next(stateState11.stateState11_state) = null
-         & next(stateState11State11_state) = null
-         & next(stateState12.stateState12_state) = null
-         & next(stateState12State12.stateState12State12_state) = null )  ) )
-  
-MODULE StateState12( state , stateState11 , stateState11State11 , stateState12State12 , handle )
-  
-  VAR 
-    stateState12_state : { stateState12_state12 , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _state.t3 | _stateState11.state = state11 : state111;
+       _state.t2 : state112;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for StateState12 --
+ MODULE StateState12 ( _state , _stateState11 , _stateState11State11 , _stateState12State12 ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { state12 , null };
     
-  ASSIGN
-    init(stateState12_state) := null;  
-  
-  TRANS
-    ( (stateState12_state = stateState12_state12) -> ( next(stateState12State12.stateState12State12_state) = stateState12State12_state121 ) )
-  
-MODULE StateState12State12( state , stateState11 , stateState11State11 , stateState12 , handle )
-  
-  VAR 
-    stateState12State12_state : { stateState12State12_state121 , stateState12State12_state122 , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _state.t5 | _state.t6 | _state.state = state1 : state12;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for StateState12State12 --
+ MODULE StateState12State12 ( _state , _stateState11 , _stateState11State11 , _stateState12 ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { state121 , state122 , null };
     
-  ASSIGN
-    init(stateState12State12_state) := null;  
-  
-  TRANS
-    ( (stateState12State12_state = stateState12State12_state121) -> (
-      (handle.event = e2 & next(stateState12State12_state) = stateState12State12_state122 )  |
-      (handle.event = e5 & next(state.state_state) = state_state2
-         & next(stateState11.stateState11_state) = null
-         & next(stateState11State11.stateState11State11_state) = null
-         & next(stateState12.stateState12_state) = null
-         & next(stateState12State12_state) = null )  ) ) &
-    ( (stateState12State12_state = stateState12State12_state122) -> (
-      (handle.event = e3 & next(stateState12State12_state) = stateState12State12_state121 )  |
-      (handle.event = e5 & next(state.state_state) = state_state2
-         & next(stateState11.stateState11_state) = null
-         & next(stateState11State11.stateState11State11_state) = null
-         & next(stateState12.stateState12_state) = null
-         & next(stateState12State12_state) = null )  ) )
-  
-MODULE main
-  
-  VAR 
-    handle : State_Handle;
-    state : State( stateState11 , stateState11State11 , stateState12 , stateState12State12 , handle );
-    stateState11 : StateState11( state , stateState11State11 , stateState12 , stateState12State12 , handle );
-    stateState11State11 : StateState11State11( state , stateState11 , stateState12 , stateState12State12 , handle );
-    stateState12 : StateState12( state , stateState11 , stateState11State11 , stateState12State12 , handle );
-    stateState12State12 : StateState12State12( state , stateState11 , stateState11State11 , stateState12 , handle ); 
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _state.t6 | _stateState12.state = state12 : state121;
+       _state.t5 : state122;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for main --
+ MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : State( stateState11 , stateState11State11 , stateState12 , stateState12State12 );
+     stateState11 : StateState11( state , stateState11State11 , stateState12 , stateState12State12 );
+     stateState11State11 : StateState11State11( state , stateState11 , stateState12 , stateState12State12 );
+     stateState12 : StateState12( state , stateState11 , stateState11State11 , stateState12State12 );
+     stateState12State12 : StateState12State12( state , stateState11 , stateState11State11 , stateState12 );
+    
+   CTLSPEC   EF  ( state.state = state1 )
+   CTLSPEC   EF  ( state.state = state2 )
+   CTLSPEC   EF  ( stateState11.state = state11 )
+   CTLSPEC   EF  ( stateState11State11.state = state111 )
+   CTLSPEC   EF  ( stateState11State11.state = state112 )
+   CTLSPEC   EF  ( stateState12.state = state12 )
+   CTLSPEC   EF  ( stateState12State12.state = state121 )
+   CTLSPEC   EF  ( stateState12State12.state = state122 )

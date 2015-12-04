@@ -3,15 +3,15 @@
  -- This defines a NuSMV module for Status --
  MODULE Status
 
-    -- This part declares input variables for the given NuSMV module --
+   -- This part declares input variables for the given NuSMV module --
    IVAR
      event : { buttonOrObstacle , reachBottom , reachTop };
     
-    -- This part declares state variables for the given NuSMV module --
+   -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Open , Closing , Closed , Opening , HalfOpen };
     
-    -- This part defines macros that summarize the transitions of the given NuSMV module --
+   -- This part defines macros that summarize the transitions of the given NuSMV module --
    DEFINE
      t1 := event = buttonOrObstacle & state = Open;
      t2 := event = buttonOrObstacle & state = Closing;
@@ -21,7 +21,7 @@
      t6 := event = reachTop & state = Opening;
      t7 := event = buttonOrObstacle & state = HalfOpen;
   
-    -- This part defines the transitions from states to states for the given NuSMV module --
+   -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := Open;
      next( state ) := case
@@ -37,7 +37,7 @@
  -- This defines a NuSMV module for main --
  MODULE main
 
-    -- This part declares state variables for the given NuSMV module --
+   -- This part declares state variables for the given NuSMV module --
    VAR
      status : Status;
     

@@ -1,106 +1,139 @@
 -- This file is generated from Elevator.ump --
 
-MODULE Elevator_state_machine_Handle
-  
-  VAR 
-    event : { upRequest , downRequest , started , doorClosed , approachingFloor , approachedFloor , stopped , doorOpened , timeoutAtFloorToDoorClosing , doorClosingRequest , doorCLosed , obstruction , doorOpeningRequest , noRequest };  
+ -- This defines a NuSMV module for Elevator_state_machine --
+ MODULE Elevator_state_machine ( _elevator_state_machinePrepareUp , _elevator_state_machinePrepareDown , _elevator_state_machineInMotion , _elevator_state_machineOnFloor ) 
+
+   -- This part declares input variables for the given NuSMV module --
+   IVAR
+     event : { upRequest , downRequest , started , doorClosed , approachingFloor , approachedFloor , stopped , doorOpened , timeoutAtFloorToDoorClosing , doorClosingRequest , doorCLosed , obstruction , doorOpeningRequest , noRequest };
     
-  
-MODULE Elevator_state_machine( elevator_state_machinePrepareUp , elevator_state_machinePrepareDown , elevator_state_machineInMotion , elevator_state_machineOnFloor , handle )
-  
-  VAR 
-    elevator_state_machine_state : { elevator_state_machine_Idle , elevator_state_machine_PrepareUp , elevator_state_machine_PrepareDown , elevator_state_machine_InMotion , elevator_state_machine_OnFloor };  
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Idle , PrepareUp , PrepareDown , InMotion , OnFloor };
     
-  ASSIGN
-    init(elevator_state_machine_state) := elevator_state_machine_Idle;  
+   -- This part defines macros that summarize the transitions of the given NuSMV module --
+   DEFINE
+     t1 := event = upRequest & state = Idle;
+     t2 := event = downRequest & state = Idle;
+     t3 := event = started & state = PrepareUp;
+     t4 := event = started & state = PrepareDown;
+     t5 := event = doorClosed & _elevator_state_machinePrepareUp.state = DoorClosingMovingUp;
+     t6 := event = doorClosed & _elevator_state_machinePrepareDown.state = DoorClosingMovingDown;
+     t7 := event = approachingFloor & _elevator_state_machineInMotion.state = Moving;
+     t8 := event = approachedFloor & _elevator_state_machineInMotion.state = Moving;
+     t9 := event = stopped & _elevator_state_machineInMotion.state = Stopping;
+     t10 := event = doorOpened & _elevator_state_machineOnFloor.state = DoorOpening;
+     t11 := event = timeoutAtFloorToDoorClosing & _elevator_state_machineOnFloor.state = AtFloor;
+     t12 := event = doorClosingRequest & _elevator_state_machineOnFloor.state = AtFloor;
+     t13 := event = doorCLosed & _elevator_state_machineOnFloor.state = DoorClosing;
+     t14 := event = obstruction & _elevator_state_machineOnFloor.state = DoorClosing;
+     t15 := event = doorOpeningRequest & _elevator_state_machineOnFloor.state = DoorClosing;
+     t16 := event = upRequest & _elevator_state_machineOnFloor.state = CheckingNextDestination;
+     t17 := event = downRequest & _elevator_state_machineOnFloor.state = CheckingNextDestination;
+     t18 := event = noRequest & _elevator_state_machineOnFloor.state = CheckingNextDestination;
   
-  TRANS
-    ( (elevator_state_machine_state = elevator_state_machine_Idle) -> (
-      (handle.event = upRequest & next(elevator_state_machine_state) = elevator_state_machine_PrepareUp )  |
-      (handle.event = downRequest & next(elevator_state_machine_state) = elevator_state_machine_PrepareDown )  ) ) &
-    ( (elevator_state_machine_state = elevator_state_machine_PrepareUp) -> ( next(elevator_state_machinePrepareUp.elevator_state_machinePrepareUp_state) = elevator_state_machinePrepareUp_DoorClosingMovingUp ) ) &
-    ( (elevator_state_machine_state = elevator_state_machine_PrepareDown) -> ( next(elevator_state_machinePrepareDown.elevator_state_machinePrepareDown_state) = elevator_state_machinePrepareDown_DoorClosingMovingDown ) ) &
-    ( (elevator_state_machine_state = elevator_state_machine_InMotion) -> ( next(elevator_state_machineInMotion.elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Moving ) ) &
-    ( (elevator_state_machine_state = elevator_state_machine_OnFloor) -> ( next(elevator_state_machineOnFloor.elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorOpening ) )
-  
-MODULE Elevator_state_machinePrepareUp( elevator_state_machine , elevator_state_machinePrepareDown , elevator_state_machineInMotion , elevator_state_machineOnFloor , handle )
-  
-  VAR 
-    elevator_state_machinePrepareUp_state : { elevator_state_machinePrepareUp_DoorClosingMovingUp , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := Idle;
+     next( state ) := case
+       t18 : Idle;
+       t1 | t16 : PrepareUp;
+       t2 | t17 : PrepareDown;
+       t3 | t7 | t6 | t4 | t5 | t8 : InMotion;
+       t14 | t10 | t12 | t9 | t15 | t11 | t13 : OnFloor;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for Elevator_state_machinePrepareUp --
+ MODULE Elevator_state_machinePrepareUp ( _elevator_state_machine , _elevator_state_machinePrepareDown , _elevator_state_machineInMotion , _elevator_state_machineOnFloor ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { DoorClosingMovingUp , null };
     
-  ASSIGN
-    init(elevator_state_machinePrepareUp_state) := null;  
-  
-  TRANS
-    ( (elevator_state_machinePrepareUp_state = elevator_state_machinePrepareUp_DoorClosingMovingUp) -> (
-      (handle.event = doorClosed & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_InMotion
-         & next(elevator_state_machinePrepareUp_state) = null )  |
-      (handle.event = started & next(elevator_state_machineInMotion.elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Moving
-         & next(elevator_state_machinePrepareUp_state) = null )  ) )
-  
-MODULE Elevator_state_machinePrepareDown( elevator_state_machine , elevator_state_machinePrepareUp , elevator_state_machineInMotion , elevator_state_machineOnFloor , handle )
-  
-  VAR 
-    elevator_state_machinePrepareDown_state : { elevator_state_machinePrepareDown_DoorClosingMovingDown , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _elevator_state_machine.t16 | _elevator_state_machine.t1 | _elevator_state_machine.state = PrepareUp : DoorClosingMovingUp;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for Elevator_state_machinePrepareDown --
+ MODULE Elevator_state_machinePrepareDown ( _elevator_state_machine , _elevator_state_machinePrepareUp , _elevator_state_machineInMotion , _elevator_state_machineOnFloor ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { DoorClosingMovingDown , null };
     
-  ASSIGN
-    init(elevator_state_machinePrepareDown_state) := null;  
-  
-  TRANS
-    ( (elevator_state_machinePrepareDown_state = elevator_state_machinePrepareDown_DoorClosingMovingDown) -> (
-      (handle.event = doorClosed & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_InMotion
-         & next(elevator_state_machinePrepareDown_state) = null )  |
-      (handle.event = started & next(elevator_state_machineInMotion.elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Moving
-         & next(elevator_state_machinePrepareDown_state) = null )  ) )
-  
-MODULE Elevator_state_machineInMotion( elevator_state_machine , elevator_state_machinePrepareUp , elevator_state_machinePrepareDown , elevator_state_machineOnFloor , handle )
-  
-  VAR 
-    elevator_state_machineInMotion_state : { elevator_state_machineInMotion_Moving , elevator_state_machineInMotion_Stopping , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _elevator_state_machine.t17 | _elevator_state_machine.t2 | _elevator_state_machine.state = PrepareDown : DoorClosingMovingDown;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for Elevator_state_machineInMotion --
+ MODULE Elevator_state_machineInMotion ( _elevator_state_machine , _elevator_state_machinePrepareUp , _elevator_state_machinePrepareDown , _elevator_state_machineOnFloor ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Moving , Stopping , null };
     
-  ASSIGN
-    init(elevator_state_machineInMotion_state) := null;  
-  
-  TRANS
-    ( (elevator_state_machineInMotion_state = elevator_state_machineInMotion_Moving) -> (
-      (handle.event = approachingFloor & next(elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Moving )  |
-      (handle.event = approachedFloor & next(elevator_state_machineInMotion_state) = elevator_state_machineInMotion_Stopping )  ) ) &
-    ( (elevator_state_machineInMotion_state = elevator_state_machineInMotion_Stopping) -> (
-       handle.event = stopped & next(elevator_state_machineOnFloor.elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorOpening
-         & next(elevator_state_machineInMotion_state) = null ) )
-  
-MODULE Elevator_state_machineOnFloor( elevator_state_machine , elevator_state_machinePrepareUp , elevator_state_machinePrepareDown , elevator_state_machineInMotion , handle )
-  
-  VAR 
-    elevator_state_machineOnFloor_state : { elevator_state_machineOnFloor_DoorOpening , elevator_state_machineOnFloor_AtFloor , elevator_state_machineOnFloor_DoorClosing , elevator_state_machineOnFloor_CheckingNextDestination , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _elevator_state_machine.t3 | _elevator_state_machine.t7 | _elevator_state_machine.t6 | _elevator_state_machine.t4 | _elevator_state_machine.t5 | _elevator_state_machine.state = InMotion : Moving;
+       _elevator_state_machine.t8 : Stopping;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for Elevator_state_machineOnFloor --
+ MODULE Elevator_state_machineOnFloor ( _elevator_state_machine , _elevator_state_machinePrepareUp , _elevator_state_machinePrepareDown , _elevator_state_machineInMotion ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { DoorOpening , AtFloor , DoorClosing , CheckingNextDestination , null };
     
-  ASSIGN
-    init(elevator_state_machineOnFloor_state) := null;  
-  
-  TRANS
-    ( (elevator_state_machineOnFloor_state = elevator_state_machineOnFloor_AtFloor) -> (
-      (handle.event = timeoutAtFloorToDoorClosing & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorClosing )  |
-      (handle.event = doorClosingRequest & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorClosing )  ) ) &
-    ( (elevator_state_machineOnFloor_state = elevator_state_machineOnFloor_DoorClosing) -> (
-      (handle.event = doorCLosed & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_CheckingNextDestination )  |
-      (handle.event = obstruction & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorOpening )  |
-      (handle.event = doorOpeningRequest & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_DoorOpening )  ) ) &
-    ( (elevator_state_machineOnFloor_state = elevator_state_machineOnFloor_CheckingNextDestination) -> (
-      (handle.event = upRequest & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_PrepareUp
-         & next(elevator_state_machineOnFloor_state) = null )  |
-      (handle.event = downRequest & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_PrepareDown
-         & next(elevator_state_machineOnFloor_state) = null )  |
-      (handle.event = noRequest & next(elevator_state_machine.elevator_state_machine_state) = elevator_state_machine_Idle
-         & next(elevator_state_machineOnFloor_state) = null )  ) ) &
-    ( (elevator_state_machineOnFloor_state = elevator_state_machineOnFloor_DoorOpening) -> (
-       handle.event = doorOpened & next(elevator_state_machineOnFloor_state) = elevator_state_machineOnFloor_AtFloor ) )
-  
-MODULE main
-  
-  VAR 
-    handle : Elevator_state_machine_Handle;
-    elevator_state_machine : Elevator_state_machine( elevator_state_machinePrepareUp , elevator_state_machinePrepareDown , elevator_state_machineInMotion , elevator_state_machineOnFloor , handle );
-    elevator_state_machinePrepareUp : Elevator_state_machinePrepareUp( elevator_state_machine , elevator_state_machinePrepareDown , elevator_state_machineInMotion , elevator_state_machineOnFloor , handle );
-    elevator_state_machinePrepareDown : Elevator_state_machinePrepareDown( elevator_state_machine , elevator_state_machinePrepareUp , elevator_state_machineInMotion , elevator_state_machineOnFloor , handle );
-    elevator_state_machineInMotion : Elevator_state_machineInMotion( elevator_state_machine , elevator_state_machinePrepareUp , elevator_state_machinePrepareDown , elevator_state_machineOnFloor , handle );
-    elevator_state_machineOnFloor : Elevator_state_machineOnFloor( elevator_state_machine , elevator_state_machinePrepareUp , elevator_state_machinePrepareDown , elevator_state_machineInMotion , handle ); 
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _elevator_state_machine.t9 | _elevator_state_machine.t15 | _elevator_state_machine.t14 | _elevator_state_machine.state = OnFloor : DoorOpening;
+       _elevator_state_machine.t10 : AtFloor;
+       _elevator_state_machine.t11 | _elevator_state_machine.t12 : DoorClosing;
+       _elevator_state_machine.t13 : CheckingNextDestination;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for main --
+ MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     elevator_state_machine : Elevator_state_machine( elevator_state_machinePrepareUp , elevator_state_machinePrepareDown , elevator_state_machineInMotion , elevator_state_machineOnFloor );
+     elevator_state_machinePrepareUp : Elevator_state_machinePrepareUp( elevator_state_machine , elevator_state_machinePrepareDown , elevator_state_machineInMotion , elevator_state_machineOnFloor );
+     elevator_state_machinePrepareDown : Elevator_state_machinePrepareDown( elevator_state_machine , elevator_state_machinePrepareUp , elevator_state_machineInMotion , elevator_state_machineOnFloor );
+     elevator_state_machineInMotion : Elevator_state_machineInMotion( elevator_state_machine , elevator_state_machinePrepareUp , elevator_state_machinePrepareDown , elevator_state_machineOnFloor );
+     elevator_state_machineOnFloor : Elevator_state_machineOnFloor( elevator_state_machine , elevator_state_machinePrepareUp , elevator_state_machinePrepareDown , elevator_state_machineInMotion );
+    
+   CTLSPEC   EF  ( elevator_state_machine.state = Idle )
+   CTLSPEC   EF  ( elevator_state_machine.state = PrepareUp )
+   CTLSPEC   EF  ( elevator_state_machine.state = PrepareDown )
+   CTLSPEC   EF  ( elevator_state_machine.state = InMotion )
+   CTLSPEC   EF  ( elevator_state_machine.state = OnFloor )
+   CTLSPEC   EF  ( elevator_state_machinePrepareUp.state = DoorClosingMovingUp )
+   CTLSPEC   EF  ( elevator_state_machinePrepareDown.state = DoorClosingMovingDown )
+   CTLSPEC   EF  ( elevator_state_machineInMotion.state = Moving )
+   CTLSPEC   EF  ( elevator_state_machineInMotion.state = Stopping )
+   CTLSPEC   EF  ( elevator_state_machineOnFloor.state = DoorOpening )
+   CTLSPEC   EF  ( elevator_state_machineOnFloor.state = AtFloor )
+   CTLSPEC   EF  ( elevator_state_machineOnFloor.state = DoorClosing )
+   CTLSPEC   EF  ( elevator_state_machineOnFloor.state = CheckingNextDestination )

@@ -3,15 +3,15 @@
  -- This defines a NuSMV module for Status --
  MODULE Status
 
-    -- This part declares input variables for the given NuSMV module --
+   -- This part declares input variables for the given NuSMV module --
    IVAR
      event : { createApplication , researcherDeclaresComplete , editByResearcher , returnToResearcher , verified , editByInstitution , reOpen , submit , withdraw , acceptForReview , submissionCheck , acceptForExpertReview , bypassExpertReviewDueToMinorChanges , returnToInstitition , expertReviewsReturned , finalAccept , minorRevisionsNeeded , reject , tryAgain };
     
-    -- This part declares state variables for the given NuSMV module --
+   -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Planned , InProgress , EvaluationByInstitution , VerifiedByInstitution , SubmittedByInstitution , UnderAdministrativeReview , UnderExpertReview , AwaitingFinalDecision , Accepted , Rejected , Withdrawn };
     
-    -- This part defines macros that summarize the transitions of the given NuSMV module --
+   -- This part defines macros that summarize the transitions of the given NuSMV module --
    DEFINE
      t1 := event = createApplication & state = Planned;
      t2 := event = researcherDeclaresComplete & state = InProgress;
@@ -37,7 +37,7 @@
      t22 := event = tryAgain & state = Rejected;
      t23 := event = tryAgain & state = Withdrawn;
   
-    -- This part defines the transitions from states to states for the given NuSMV module --
+   -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := Planned;
      next( state ) := case
@@ -58,7 +58,7 @@
  -- This defines a NuSMV module for main --
  MODULE main
 
-    -- This part declares state variables for the given NuSMV module --
+   -- This part declares state variables for the given NuSMV module --
    VAR
      status : Status;
     

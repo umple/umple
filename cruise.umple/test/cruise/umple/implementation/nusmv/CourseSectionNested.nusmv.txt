@@ -1,58 +1,68 @@
 -- This file is generated from CourseSectionNested.ump --
 
-MODULE Status_Handle
-  
-  VAR 
-    event : { cancel , openRegistration , requestToRegister , closeRegistration , classSizeExceedsMinimum , classSizeExceedsMaximum };  
+ -- This defines a NuSMV module for Status --
+ MODULE Status ( _statusOpen ) 
+
+   -- This part declares input variables for the given NuSMV module --
+   IVAR
+     event : { cancel , openRegistration , requestToRegister , closeRegistration , classSizeExceedsMinimum , classSizeExceedsMaximum };
     
-  
-MODULE Status( statusOpen , handle )
-  
-  VAR 
-    status_state : { status_Planned , status_Open , status_Cancelled , status_Closed };  
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Planned , Open , Cancelled , Closed };
     
-  ASSIGN
-    init(status_state) := status_Planned;  
+   -- This part defines macros that summarize the transitions of the given NuSMV module --
+   DEFINE
+     t1 := event = cancel & state = Planned;
+     t2 := event = openRegistration & state = Planned;
+     t3 := event = cancel & state = Open;
+     t4 := event = cancel & state = Closed;
+     t5 := event = requestToRegister & _statusOpen.state = NotEnoughStudents;
+     t6 := event = closeRegistration & _statusOpen.state = NotEnoughStudents;
+     t7 := event = classSizeExceedsMinimum & _statusOpen.state = NotEnoughStudents;
+     t8 := event = requestToRegister & _statusOpen.state = EnoughStudents;
+     t9 := event = closeRegistration & _statusOpen.state = EnoughStudents;
+     t10 := event = classSizeExceedsMaximum & _statusOpen.state = EnoughStudents;
   
-  TRANS
-    ( (status_state = status_Planned) -> (
-      (handle.event = cancel & next(status_state) = status_Cancelled )  |
-      (handle.event = openRegistration & next(statusOpen.statusOpen_state) = statusOpen_NotEnoughStudents )  ) ) &
-    ( (status_state = status_Closed) -> (
-       handle.event = cancel & next(status_state) = status_Cancelled ) ) &
-    ( (status_state = status_Open) -> ( next(statusOpen.statusOpen_state) = statusOpen_NotEnoughStudents ) ) &
-    ( (status_state = status_Cancelled) -> ( next(status_state) = status_state ) )
-  
-MODULE StatusOpen( status , handle )
-  
-  VAR 
-    statusOpen_state : { statusOpen_NotEnoughStudents , statusOpen_EnoughStudents , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := Planned;
+     next( state ) := case
+       t2 | t8 | t5 | t7 : Open;
+       t1 | t6 | t3 | t4 : Cancelled;
+       t9 | t10 : Closed;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for StatusOpen --
+ MODULE StatusOpen ( _status ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { NotEnoughStudents , EnoughStudents , null };
     
-  ASSIGN
-    init(statusOpen_state) := null;  
-  
-  TRANS
-    ( (statusOpen_state = statusOpen_NotEnoughStudents) -> (
-      (handle.event = requestToRegister & next(status.status_state) = status_Open
-         & next(statusOpen_state) = null )  |
-      (handle.event = closeRegistration & next(status.status_state) = status_Cancelled
-         & next(statusOpen_state) = null )  |
-      (handle.event = classSizeExceedsMinimum & next(statusOpen_state) = statusOpen_EnoughStudents )  |
-      (handle.event = cancel & next(status.status_state) = status_Cancelled
-         & next(statusOpen_state) = null )  ) ) &
-    ( (statusOpen_state = statusOpen_EnoughStudents) -> (
-      (handle.event = requestToRegister & next(status.status_state) = status_Open
-         & next(statusOpen_state) = null )  |
-      (handle.event = closeRegistration & next(status.status_state) = status_Closed
-         & next(statusOpen_state) = null )  |
-      (handle.event = classSizeExceedsMaximum & next(status.status_state) = status_Closed
-         & next(statusOpen_state) = null )  |
-      (handle.event = cancel & next(status.status_state) = status_Cancelled
-         & next(statusOpen_state) = null )  ) )
-  
-MODULE main
-  
-  VAR 
-    handle : Status_Handle;
-    status : Status( statusOpen , handle );
-    statusOpen : StatusOpen( status , handle ); 
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _status.t2 | _status.t8 | _status.t5 | _status.state = Open : NotEnoughStudents;
+       _status.t7 : EnoughStudents;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for main --
+ MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     status : Status( statusOpen );
+     statusOpen : StatusOpen( status );
+    
+   CTLSPEC   EF  ( status.state = Planned )
+   CTLSPEC   EF  ( status.state = Open )
+   CTLSPEC   EF  ( status.state = Cancelled )
+   CTLSPEC   EF  ( status.state = Closed )
+   CTLSPEC   EF  ( statusOpen.state = NotEnoughStudents )
+   CTLSPEC   EF  ( statusOpen.state = EnoughStudents )
