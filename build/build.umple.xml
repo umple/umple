@@ -6,6 +6,8 @@
     Environment Variables
   ``````````````````````````` -->
   <import file="_template.xml" />
+  
+  <deps-declare-taskdef />
 
   <property name="project.path" value="cruise.umple"/>
   <property name="xtext.project.path" value="cruise.umple.xtext"/>
@@ -173,6 +175,7 @@
       <classpath refid="core.ivy.classpath" />
       <classpath refid="test.ivy.classpath" />
     </javac>
+    
     <copy todir="${bin.path}" overwrite="true">
 	    <fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
 	    <fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>

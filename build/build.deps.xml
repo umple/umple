@@ -14,13 +14,13 @@
 
   <property name="umple.ivy.dep.file" value="${basedir}/build/ivy.xml" />
 
-  <!-- Umple Last -->
-  <property name="umple.deps.dir" value="${dist.dir}/libs" />
+  <!-- Umple Dependencies -->
+  <property name="umple.deps.dir" value="${user.home}/.ivy2/umple-cache/" />
   <property name="umple.deps.manual.dir" value="${umple.deps.dir}/manual" />
-  <property name="umple.stable.jar" value="${umple.deps.dir}/../umple-${last.version}.jar" />
+  <property name="umple.stable.jar" value="${umple.deps.dir}/umple-${last.version}.jar" />
 
   <!-- Vendor Configuration -->
-  <property name="vendors.path" value="${dist.dir}/vendors" />
+  <property name="vendors.path" value="${umple.deps.dir}/vendors" />
   <property name="jopt-simple.install.version" value="4.4" />
 
   <!-- Macros used to work nicely with Ivy -->
@@ -30,7 +30,7 @@
     <attribute name="pathid"  description="Ant pathid retrieved jars load into"/>
     <sequential>
       <path id="@{pathid}">
-        <fileset file="${umple.deps.dir}/@{conf}/*.jar" />
+        <fileset file="${dist.libs.dir}/@{conf}/*.jar" />
       </path>
     </sequential>
   </macrodef>
@@ -62,8 +62,8 @@
             <istrue value="${online}" />
             <then>
               <deps-load-path-private conf="@{conf}"
-                                    pattern="${umple.deps.dir}/[conf]/[artifact].[ext]"
-                                    transitive="true" />
+                                      pattern="${umple.deps.dir}/[conf]/[artifact].[ext]"
+                                      transitive="true" />
             </then>
             <else> 
               <!-- We're offline, thus we need to check if the configuration was installed previously -->
@@ -118,6 +118,10 @@
     <antcall target="deps-umple" />
     <antcall target="deps-manual" />
     <antcall target="deps-vendor" />
+
+    <copy todir="${dist.dir}/libs">
+      <fileset dir="${umple.deps.dir}" />
+    </copy>
   </target>
 
   <!-- Vendor Dependencies for umple.jar -->
@@ -136,6 +140,10 @@
 
   <!-- Install Ivy: -->
   <target name="bootstrap" description="Install Ivy and Build requirements" >
+    <!-- We have to use the special version because there is no 
+         antcontrib installed. -->
+    <check-connectivity-no-contrib />
+
     <mkdir dir="${user.home.ant}"/>
 
     <echo>Installing Ivy v${ivy.install.version}</echo>
