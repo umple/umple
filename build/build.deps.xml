@@ -15,7 +15,7 @@
   <property name="umple.ivy.dep.file" value="${basedir}/build/ivy.xml" />
 
   <!-- Umple Dependencies -->
-  <property name="umple.deps.dir" value="${user.home}/.ivy2/umple-cache/" />
+  <property name="umple.deps.dir" value="${dist.libs.dir}" />
   <property name="umple.deps.manual.dir" value="${umple.deps.dir}/manual" />
   <property name="umple.stable.jar" value="${umple.deps.dir}/umple-${last.version}.jar" />
 

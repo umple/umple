@@ -1,10 +1,16 @@
 language: java
 
-jdk:
-  - oraclejdk8
+# jdk:
+#   - oraclejdk8
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.ant/lib/
+    - $TRAVIS_BUILD_DIR/dist/libs
 
 before_install:
-  - chmod 755 -R ./travis # to deal with SVN possibly not holding permissions
   - ./travis/deps.sh # run linux or osx depending on environment
 
 script:
@@ -14,9 +20,10 @@ script:
   # TODO https://github.com/umple/umple/issues/616
   # - ant -Dmyenv=travis build
 
-os:
-  - linux
-
-  # Dropping osx for now, as oraclejdk8 does not appear to be available
-  # /Users/travis/build.sh: line 41: jdk_switcher: command not found
-  # - osx
+matrix:
+  include:
+    - os: linux
+      language: java
+      jdk: oraclejdk8
+    - os: osx
+      language: java
