@@ -26,7 +26,10 @@ class Graph
   }
 
   // TODO this should be abstract but because of issue $$$ it makes child classes abstract.
-  public Node nextNode(){return null;}
+  public Node nextNode(){ return null; }
+
+  // TODO same as above. should be abstract.
+  public void clearNodes(){ return; }
 }
 
 // TODO if both: change now
@@ -35,8 +38,11 @@ class StateMachineGraph
 
   public StateMachineGraph(Node startNode, String smName, boolean isDepthFirst) 
   {
-    this.startNode = startNode;
-    this.startNode.visit();
+    if (startNode != null)
+    {
+      this.startNode = startNode;
+      this.startNode.visit();
+    }
     this.smName = smName;
     this.isDepthFirst = isDepthFirst;
     this.isNested = true;
@@ -55,8 +61,12 @@ class StateMachineGraph
 
   public StateMachineGraph(Node startNode, boolean isDepthFirst)
   {
-    this.startNode = startNode;
-    this.startNode.visit();
+    if (startNode != null)
+    {
+      this.startNode = startNode;
+      this.startNode.visit();
+    }
+
     this.isDepthFirst = isDepthFirst;
     this.isNested = false;
 
@@ -77,10 +87,48 @@ class StateMachineGraph
   */
   public Node nextNode() 
   {
+    if (startNode == null) return null;
     if (this.isDepthFirst) return walkDFS();
     return walkBFS();
   }
 
+  public void clearNodes()
+  {
+    if (startNode == null) return;
+
+    HashSet<Node> visited = new HashSet<Node>();
+    Stack<Node> nodes = new Stack<Node>();
+    nodes.push(startNode);
+    visited.add(startNode);
+
+    while (! nodes.isEmpty())
+    {
+      State state = (State) nodes.pop();
+      
+      for (Transition transition: state.getTransitions()) 
+      {
+        State nextState = (State) transition.getNextState();
+        StateMachine sm = nextState.getStateMachine();
+
+        if ((! visited.contains(nextState)) && (!isNested || sm.getName().equals(this.smName)))
+        {
+          visited.add(nextState);
+          nextState.clear();
+          nodes.push(nextState) ;
+        }
+      }
+    }
+    if (this.isDepthFirst)
+    {
+      this.stack.clear();
+      this.stack.push(this.startNode);
+    }
+    else
+    {
+      this.queue.clear();
+      this.queue.addFirst(this.startNode);
+    }
+  }
 
   private Node walkDFS () 
   { 

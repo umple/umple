@@ -20,6 +20,7 @@ namespace cruise.umple.compiler;
 interface Node 
 {
   public void visit();
+  public void clear();
 }
 
 /* 
@@ -36,6 +37,7 @@ class Graph
   protected Stack<Node> stack;        // for dfs
   protected LinkedList<Node> queue;   // for bfs
   //public abstract Node next();
+  //public abstract void clearNodes();
 }
 
 class StateMachineGraph 

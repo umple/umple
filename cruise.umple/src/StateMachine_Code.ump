@@ -576,6 +576,11 @@ class State
     this.isVisited = true;
   }
 
+  public void clear()
+  {
+    this.isVisited = false;
+  }
+
   public boolean isVisited() 
   {
     return this.isVisited;
