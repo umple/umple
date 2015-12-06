@@ -1685,10 +1685,11 @@ public class UmpleParserStateMachineTest
   @Test 
   public void nullStartState_StateMachineGraph_DFS()
   {
+    // Test that a null start state does not cause errors
     StateMachineGraph graph = new StateMachineGraph(null, null, true);
     Assert.assertEquals(true, graph.isDepthFirst());
     Assert.assertEquals(true, graph.hasNext());
-    Assert.assertEquals(null, graph.nextNode());
+    Assert.assertEquals(null, graph.nextNode());  
   }
 
   @Test
@@ -1699,6 +1700,8 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = true;
+
+    // Base case no walking
     StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     Assert.assertEquals(isDFS, graph.isDepthFirst());
     Assert.assertEquals(true, graph.hasNext());
@@ -1716,6 +1719,7 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State startNode = sm.getStartState();
     boolean isDFS = false;
+
     StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     Assert.assertEquals(isDFS, graph.isDepthFirst());
     Assert.assertEquals(true, graph.hasNext());
@@ -1735,6 +1739,7 @@ public class UmpleParserStateMachineTest
     StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
 
+    // Base case walking
     Assert.assertEquals(isDFS, graph.isDepthFirst());
     Assert.assertEquals(true, graph.hasNext());
     Assert.assertEquals(true, startNode.getIsVisited());
@@ -1793,6 +1798,7 @@ public class UmpleParserStateMachineTest
     StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
 
+    // Multi states without transitions
     Assert.assertEquals(true, graph.hasNext());
     state = (State) graph.nextNode();
 
@@ -1833,6 +1839,7 @@ public class UmpleParserStateMachineTest
     StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
 
+    // Base case loop
     Assert.assertEquals(true, graph.hasNext());
     state = (State) graph.nextNode();
     Assert.assertEquals("On", state.getName());
@@ -1880,6 +1887,8 @@ public class UmpleParserStateMachineTest
     boolean isDFS = true;
     StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
+
+    // First test where ordering differs between DFS and BFS
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
     expectedStates.add("s1");
@@ -1942,6 +1951,8 @@ public class UmpleParserStateMachineTest
     boolean isDFS = true;
     StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
+
+    // Test a cycle graph
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
     expectedStates.add("s1");
@@ -2002,6 +2013,8 @@ public class UmpleParserStateMachineTest
     boolean isDFS = true;
     StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
+
+    // Test a complete graph
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
     expectedStates.add("s1");
@@ -2060,6 +2073,8 @@ public class UmpleParserStateMachineTest
     boolean isDFS = true;
     StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
+
+    // Test a tree
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
     expectedStates.add("s1");
@@ -2126,6 +2141,8 @@ public class UmpleParserStateMachineTest
     boolean isDFS = true;
     StateMachineGraph graph = new StateMachineGraph(startNode, smName, isDFS);
     State state;
+
+    // First nested graph test. 
     ArrayList<String> expectedStates, returnedStates;
     expectedStates = new ArrayList<String>();
     expectedStates.add("Play");
@@ -2177,8 +2194,8 @@ public class UmpleParserStateMachineTest
     UmpleClass c = model.getUmpleClass("DigitalWatch");
     StateMachine sm = c.getStateMachine(0).getState(0).getNestedStateMachine(0);
 
+    // Walk a doubly-nested state machine
     Assert.assertEquals("regular", sm.getName());
-
     State startNode = sm.getStartState();
     String smName = sm.getName();
     boolean isDFS = true;
@@ -2237,7 +2254,7 @@ public class UmpleParserStateMachineTest
     UmpleClass c = model.getUmpleClass("DigitalWatch");
     StateMachine sm = c.getStateMachine(0).getState(0).getNestedStateMachine(0);
 
-
+    // Walk both levels of a state machine, one after another.
     State startNode = sm.getStartState();
     String smName = sm.getName();
     boolean isDFS = true;
@@ -2369,6 +2386,8 @@ public class UmpleParserStateMachineTest
     StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     ArrayList<State> visitedStates = new ArrayList<State>();
 
+    // Walk the same cycle graph again, after clearing the nodes
+    // The first walk is tested above, so is not done here.
     while (graph.hasNext())
     {
       visitedStates.add((State) graph.nextNode());
@@ -2378,7 +2397,6 @@ public class UmpleParserStateMachineTest
       Assert.assertEquals(true, state.getIsVisited());
     }
     graph.clearNodes();
-    //Assert.assertEquals(null, visitedStates);
 
     for (State state : visitedStates)
     {
@@ -2400,6 +2418,8 @@ public class UmpleParserStateMachineTest
     StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     ArrayList<State> visitedStates = new ArrayList<State>();
 
+    // Walk a complete graph after clearing nodes
+    // The first walk is tested above, so is not done here.
     while (graph.hasNext())
     {
       visitedStates.add((State) graph.nextNode());
@@ -2433,6 +2453,8 @@ public class UmpleParserStateMachineTest
     StateMachineGraph graph = new StateMachineGraph(startNode, smName, isDFS);
     ArrayList<State> visitedStates = new ArrayList<State>();
 
+    // Walk a nested graph after clearing the nodes
+    // The first walk is tested above, so is not done here.
     while (graph.hasNext())
     {
       visitedStates.add((State) graph.nextNode());
@@ -2460,7 +2482,8 @@ public class UmpleParserStateMachineTest
     UmpleClass c = model.getUmpleClass("DigitalWatch");
     StateMachine sm = c.getStateMachine(0).getState(0).getNestedStateMachine(0);
 
-
+    // Walk a doubly nested graph after clearing the nodes of the first walk.
+    // The first walk is tested above, so is not done here.
     State startNode = sm.getStartState();
     String smName = sm.getName();
     boolean isDFS = false;
@@ -2498,7 +2521,8 @@ public class UmpleParserStateMachineTest
     StateMachineGraph graph = new StateMachineGraph(startNode, isDFS);
     State state;
 
-    // This is already tested above.
+    // Walk a tree twice after clearing nodes.
+    // The first walk is tested above, so is not done here.
     while (graph.hasNext())
     {
       state = (State) graph.nextNode();
@@ -2541,6 +2565,8 @@ public class UmpleParserStateMachineTest
     StateMachineGraph graph = new StateMachineGraph(startNode, smName, isDFS);
     State state;
 
+    // Walk a doubly nested graph twice
+    // The first walk is tested above, so is not done here.
     while (graph.hasNext())
     {
       state = (State) graph.nextNode();

@@ -5,8 +5,19 @@ Copyright: All contributers to the Umple Project
 This file is made available subject to the open source license found at:
 http://umple.org/license
 
+Wiki documenting the classes: 
+https://github.com/umple/umple/wiki/Graph-Analysis-API-Overview
+
 Graph Walking API for analysis of the many kinds of graphs, such as 
-StateMachines, Inheritance Hierarchy, Association Hierarchy etc.
+StateMachines, Inheritance Hierarchy, Association Hierarchy etc. 
+
+Contains the interface Node, which will be converted to a trait later, 
+as functionality improves.
+
+Abstract class Graph outlines the necessary structure for concrete
+graph classes, such as StateMachineGraphs, InheritanceHierarchy etc.
+
+StateMachineGraph is used to walk both flat, and nested state machines.
 
  */
 namespace cruise.umple.compiler;
@@ -15,6 +26,15 @@ namespace cruise.umple.compiler;
 /*trait Node 
 {
   boolean visited = false;
+  public void visit()
+  {
+    this.visited = true;
+  }
+
+  public void clear()
+  {
+    this.visited = false;
+  }
 }*/
 
 interface Node 
@@ -23,9 +43,7 @@ interface Node
   public void clear();
 }
 
-/* 
- * GRAPH CLASS DESCRIPTION
- */
+
 class Graph 
 {
   depend cruise.umple.util.*;
