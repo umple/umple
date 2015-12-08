@@ -5,60 +5,60 @@
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
-     event : { engineOn , engineOff , on , off , resume , brake , accelerator , setThrottle , speed , zoom , clearSpeed , recordSpeed , enableControl , disableControl };
+     event : { ev_engineOn , ev_engineOff , ev_on , ev_off , ev_resume , ev_brake , ev_accelerator , ev_setThrottle , ev_speed , ev_zoom , ev_clearSpeed , ev_recordSpeed , ev_enableControl , ev_disableControl };
     
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : adaptiveControlSystem;
+     state : CruiseControlSystem_adaptiveControlSystem;
     
    -- This part defines macros that summarize the transitions of the given NuSMV module --
    DEFINE
-     t1 := event = engineOn & _cruiseControlSystemControlCruiseControllerCruiseController.state = inactive;
-     t2 := event = engineOff & _cruiseControlSystemControlCruiseControllerCruiseController.state = active;
-     t3 := event = on & _cruiseControlSystemControlCruiseControllerCruiseController.state = active;
-     t4 := event = engineOff & _cruiseControlSystemControlCruiseControllerCruiseController.state = cruising;
-     t5 := event = off & _cruiseControlSystemControlCruiseControllerCruiseController.state = cruising;
-     t6 := event = brake & _cruiseControlSystemControlCruiseControllerCruiseController.state = cruising;
-     t7 := event = accelerator & _cruiseControlSystemControlCruiseControllerCruiseController.state = cruising;
-     t8 := event = on & _cruiseControlSystemControlCruiseControllerCruiseController.state = cruising;
-     t9 := event = engineOff & _cruiseControlSystemControlCruiseControllerCruiseController.state = standby;
-     t10 := event = resume & _cruiseControlSystemControlCruiseControllerCruiseController.state = standby;
-     t11 := event = on & _cruiseControlSystemControlCruiseControllerCruiseController.state = standby;
-     t12 := event = clearSpeed & _cruiseControlSystemControlCruiseControllerCruiseControllerInactive.state = tempState;
-     t13 := event = recordSpeed & _cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = tempState;
-     t14 := event = enableControl & _cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState.state = tempState_1;
-     t15 := event = disableControl & _cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = tempState;
-     t16 := event = recordSpeed & _cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = tempState_1;
-     t17 := event = enableControl & _cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = tempState_2;
-     t18 := event = enableControl & _cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = tempState;
-     t19 := event = recordSpeed & _cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = tempState_1;
-     t20 := event = enableControl & _cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = tempState_2;
-     t21 := event = speed & _cruiseControlSystemControlSpeedControlSpeedControl.state = disabled;
-     t22 := event = clearSpeed & _cruiseControlSystemControlSpeedControlSpeedControl.state = disabled;
-     t23 := event = recordSpeed & _cruiseControlSystemControlSpeedControlSpeedControl.state = disabled;
-     t24 := event = enableControl & _cruiseControlSystemControlSpeedControlSpeedControl.state = disabled;
-     t25 := event = speed & _cruiseControlSystemControlSpeedControlSpeedControl.state = enabled;
-     t26 := event = recordSpeed & _cruiseControlSystemControlSpeedControlSpeedControl.state = enabled;
-     t27 := event = enableControl & _cruiseControlSystemControlSpeedControlSpeedControl.state = enabled;
-     t28 := event = setThrottle & _cruiseControlSystemControlSpeedControlSpeedControl.state = tempState;
-     t29 := event = engineOn & _cruiseControlSystemSensorScan.state = sensorScan;
-     t30 := event = engineOff & _cruiseControlSystemSensorScan.state = sensorScan;
-     t31 := event = on & _cruiseControlSystemSensorScan.state = sensorScan;
-     t32 := event = off & _cruiseControlSystemSensorScan.state = sensorScan;
-     t33 := event = resume & _cruiseControlSystemSensorScan.state = sensorScan;
-     t34 := event = brake & _cruiseControlSystemSensorScan.state = sensorScan;
-     t35 := event = accelerator & _cruiseControlSystemSensorScan.state = sensorScan;
-     t36 := event = engineOn & _cruiseControlSystemInputSpeed.state = inputSpeed;
-     t37 := event = speed & _cruiseControlSystemInputSpeedInputSpeed.state = checkSpeed;
-     t38 := event = engineOff & _cruiseControlSystemInputSpeedInputSpeed.state = checkSpeed;
-     t39 := event = setThrottle & _cruiseControlSystemThrottle.state = throttle;
-     t40 := event = zoom & _cruiseControlSystemThrottleThrottle.state = tempState;
+     t1 := event = ev_engineOn & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive;
+     t2 := event = ev_engineOff & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_active;
+     t3 := event = ev_on & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_active;
+     t4 := event = ev_engineOff & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising;
+     t5 := event = ev_off & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising;
+     t6 := event = ev_brake & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising;
+     t7 := event = ev_accelerator & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising;
+     t8 := event = ev_on & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising;
+     t9 := event = ev_engineOff & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby;
+     t10 := event = ev_resume & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby;
+     t11 := event = ev_on & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby;
+     t12 := event = ev_clearSpeed & _cruiseControlSystemControlCruiseControllerCruiseControllerInactive.state = CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState;
+     t13 := event = ev_recordSpeed & _cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState;
+     t14 := event = ev_enableControl & _cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState.state = CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1;
+     t15 := event = ev_disableControl & _cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState;
+     t16 := event = ev_recordSpeed & _cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1;
+     t17 := event = ev_enableControl & _cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2;
+     t18 := event = ev_enableControl & _cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState;
+     t19 := event = ev_recordSpeed & _cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1;
+     t20 := event = ev_enableControl & _cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2;
+     t21 := event = ev_speed & _cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled;
+     t22 := event = ev_clearSpeed & _cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled;
+     t23 := event = ev_recordSpeed & _cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled;
+     t24 := event = ev_enableControl & _cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled;
+     t25 := event = ev_speed & _cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled;
+     t26 := event = ev_recordSpeed & _cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled;
+     t27 := event = ev_enableControl & _cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled;
+     t28 := event = ev_setThrottle & _cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_tempState;
+     t29 := event = ev_engineOn & _cruiseControlSystemSensorScan.state = CruiseControlSystemSensorScan_sensorScan;
+     t30 := event = ev_engineOff & _cruiseControlSystemSensorScan.state = CruiseControlSystemSensorScan_sensorScan;
+     t31 := event = ev_on & _cruiseControlSystemSensorScan.state = CruiseControlSystemSensorScan_sensorScan;
+     t32 := event = ev_off & _cruiseControlSystemSensorScan.state = CruiseControlSystemSensorScan_sensorScan;
+     t33 := event = ev_resume & _cruiseControlSystemSensorScan.state = CruiseControlSystemSensorScan_sensorScan;
+     t34 := event = ev_brake & _cruiseControlSystemSensorScan.state = CruiseControlSystemSensorScan_sensorScan;
+     t35 := event = ev_accelerator & _cruiseControlSystemSensorScan.state = CruiseControlSystemSensorScan_sensorScan;
+     t36 := event = ev_engineOn & _cruiseControlSystemInputSpeed.state = CruiseControlSystemInputSpeed_inputSpeed;
+     t37 := event = ev_speed & _cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed;
+     t38 := event = ev_engineOff & _cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed;
+     t39 := event = ev_setThrottle & _cruiseControlSystemThrottle.state = CruiseControlSystemThrottle_throttle;
+     t40 := event = ev_zoom & _cruiseControlSystemThrottleThrottle.state = CruiseControlSystemThrottleThrottle_tempState;
   
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
-     init( state ) := adaptiveControlSystem;
+     init( state ) := CruiseControlSystem_adaptiveControlSystem;
      next( state ) := case
-       t2 | t9 | t2 | t9 | t12 | t3 | t6 | t14 | t18 | t16 | t10 | t19 | t21 | t23 | t24 | t28 | t29 | t31 | t33 | t35 | t36 | t38 | t39 | t4 | t1 | t4 | t3 | t13 | t5 | t7 | t17 | t20 | t8 | t15 | t11 | t22 | t27 | t26 | t25 | t30 | t32 | t34 | t38 | t37 | t40 | t40 : adaptiveControlSystem;
+       t2 | t9 | t2 | t9 | t12 | t3 | t6 | t14 | t18 | t16 | t10 | t19 | t21 | t23 | t24 | t28 | t29 | t31 | t33 | t35 | t36 | t38 | t39 | t4 | t1 | t4 | t3 | t13 | t5 | t7 | t17 | t20 | t8 | t15 | t11 | t22 | t27 | t26 | t25 | t30 | t32 | t34 | t38 | t37 | t40 | t40 : CruiseControlSystem_adaptiveControlSystem;
        TRUE : state;
      esac;
  
@@ -68,13 +68,14 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { control , null };
+     state : { CruiseControlSystemControl_control , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t4 | _cruiseControlSystem.t1 | _cruiseControlSystem.t4 | _cruiseControlSystem.t3 | _cruiseControlSystem.t13 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t8 | _cruiseControlSystem.t15 | _cruiseControlSystem.t11 | _cruiseControlSystem.t22 | _cruiseControlSystem.t27 | _cruiseControlSystem.t26 | _cruiseControlSystem.t25 | _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t12 | _cruiseControlSystem.t3 | _cruiseControlSystem.t6 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystem.t16 | _cruiseControlSystem.t10 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t24 | _cruiseControlSystem.t28 | _cruiseControlSystem.state = adaptiveControlSystem : control;
+       _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t12 | _cruiseControlSystem.t3 | _cruiseControlSystem.t6 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystem.t16 | _cruiseControlSystem.t10 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t24 | _cruiseControlSystem.t28 | _cruiseControlSystem.t4 | _cruiseControlSystem.t1 | _cruiseControlSystem.t4 | _cruiseControlSystem.t3 | _cruiseControlSystem.t13 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t8 | _cruiseControlSystem.t15 | _cruiseControlSystem.t11 | _cruiseControlSystem.t22 | _cruiseControlSystem.t27 | _cruiseControlSystem.t26 | _cruiseControlSystem.t25 : CruiseControlSystemControl_control;
+       _cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem : CruiseControlSystemControl_control;
        TRUE : state;
      esac;
  
@@ -84,13 +85,15 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { cruiseController , null };
+     state : { CruiseControlSystemControlCruiseController_cruiseController , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t4 | _cruiseControlSystem.t1 | _cruiseControlSystem.t4 | _cruiseControlSystem.t3 | _cruiseControlSystem.t13 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t8 | _cruiseControlSystem.t15 | _cruiseControlSystem.t11 | _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t12 | _cruiseControlSystem.t3 | _cruiseControlSystem.t6 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystem.t16 | _cruiseControlSystem.t10 | _cruiseControlSystem.t19 | _cruiseControlSystemControl.state = control : cruiseController;
+       _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t12 | _cruiseControlSystem.t3 | _cruiseControlSystem.t6 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystem.t16 | _cruiseControlSystem.t10 | _cruiseControlSystem.t19 | _cruiseControlSystem.t4 | _cruiseControlSystem.t1 | _cruiseControlSystem.t4 | _cruiseControlSystem.t3 | _cruiseControlSystem.t13 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t8 | _cruiseControlSystem.t15 | _cruiseControlSystem.t11 : CruiseControlSystemControlCruiseController_cruiseController;
+       _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystemControl.state = CruiseControlSystemControl_control : CruiseControlSystemControlCruiseController_cruiseController;
        TRUE : state;
      esac;
  
@@ -100,16 +103,18 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { inactive , active , cruising , standby , null };
+     state : { CruiseControlSystemControlCruiseControllerCruiseController_inactive , CruiseControlSystemControlCruiseControllerCruiseController_active , CruiseControlSystemControlCruiseControllerCruiseController_cruising , CruiseControlSystemControlCruiseControllerCruiseController_standby , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t4 | _cruiseControlSystem.t1 | _cruiseControlSystem.t4 | _cruiseControlSystemControlCruiseController.state = cruiseController : inactive;
-       _cruiseControlSystem.t3 | _cruiseControlSystem.t13 | _cruiseControlSystem.t12 | _cruiseControlSystem.t3 : active;
-       _cruiseControlSystem.t6 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystem.t16 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t8 : cruising;
-       _cruiseControlSystem.t10 | _cruiseControlSystem.t19 | _cruiseControlSystem.t15 | _cruiseControlSystem.t11 : standby;
+       _cruiseControlSystem.t4 | _cruiseControlSystem.t1 | _cruiseControlSystem.t4 | _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t2 | _cruiseControlSystem.t9 : CruiseControlSystemControlCruiseControllerCruiseController_inactive;
+       _cruiseControlSystem.t3 | _cruiseControlSystem.t13 | _cruiseControlSystem.t12 | _cruiseControlSystem.t3 : CruiseControlSystemControlCruiseControllerCruiseController_active;
+       _cruiseControlSystem.t6 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystem.t16 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t8 : CruiseControlSystemControlCruiseControllerCruiseController_cruising;
+       _cruiseControlSystem.t10 | _cruiseControlSystem.t19 | _cruiseControlSystem.t15 | _cruiseControlSystem.t11 : CruiseControlSystemControlCruiseControllerCruiseController_standby;
+       _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystemControlCruiseController.state = CruiseControlSystemControlCruiseController_cruiseController : CruiseControlSystemControlCruiseControllerCruiseController_inactive;
        TRUE : state;
      esac;
  
@@ -119,13 +124,15 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { tempState , null };
+     state : { CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t1 | _cruiseControlSystem.t4 | _cruiseControlSystemControlCruiseControllerCruiseController.state = inactive : tempState;
+       _cruiseControlSystem.t1 | _cruiseControlSystem.t4 | _cruiseControlSystem.t2 | _cruiseControlSystem.t9 : CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState;
+       _cruiseControlSystem.t3 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive : CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState;
        TRUE : state;
      esac;
  
@@ -135,13 +142,15 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { tempState , null };
+     state : { CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t12 | _cruiseControlSystem.t3 | _cruiseControlSystem.t3 | _cruiseControlSystem.t13 | _cruiseControlSystemControlCruiseControllerCruiseController.state = active : tempState;
+       _cruiseControlSystem.t3 | _cruiseControlSystem.t13 | _cruiseControlSystem.t12 | _cruiseControlSystem.t3 : CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState;
+       _cruiseControlSystem.t2 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t1 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_active : CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState;
        TRUE : state;
      esac;
  
@@ -151,13 +160,15 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { tempState_1 , null };
+     state : { CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1 , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t3 | _cruiseControlSystem.t13 | _cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = tempState : tempState_1;
+       _cruiseControlSystem.t13 | _cruiseControlSystem.t3 : CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1;
+       _cruiseControlSystem.t2 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t1 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState : CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1;
        TRUE : state;
      esac;
  
@@ -167,14 +178,16 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { tempState , tempState_1 , null };
+     state : { CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState , CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t6 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystemControlCruiseControllerCruiseController.state = cruising : tempState;
-       _cruiseControlSystem.t16 | _cruiseControlSystem.t8 : tempState_1;
+       _cruiseControlSystem.t6 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 : CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState;
+       _cruiseControlSystem.t16 | _cruiseControlSystem.t8 : CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1;
+       _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t15 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t19 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising : CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState;
        TRUE : state;
      esac;
  
@@ -184,13 +197,15 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { tempState_2 , null };
+     state : { CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t8 | _cruiseControlSystem.t16 | _cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = tempState_1 : tempState_2;
+       _cruiseControlSystem.t16 | _cruiseControlSystem.t8 : CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2;
+       _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 : CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2;
        TRUE : state;
      esac;
  
@@ -200,14 +215,16 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { tempState , tempState_1 , null };
+     state : { CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState , CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t15 | _cruiseControlSystem.t10 | _cruiseControlSystemControlCruiseControllerCruiseController.state = standby : tempState;
-       _cruiseControlSystem.t19 | _cruiseControlSystem.t11 : tempState_1;
+       _cruiseControlSystem.t10 | _cruiseControlSystem.t15 : CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState;
+       _cruiseControlSystem.t19 | _cruiseControlSystem.t11 : CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1;
+       _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t13 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby : CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState;
        TRUE : state;
      esac;
  
@@ -217,13 +234,15 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { tempState_2 , null };
+     state : { CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2 , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t11 | _cruiseControlSystem.t19 | _cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = tempState_1 : tempState_2;
+       _cruiseControlSystem.t19 | _cruiseControlSystem.t11 : CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2;
+       _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 : CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2;
        TRUE : state;
      esac;
  
@@ -233,13 +252,15 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { speedControl , null };
+     state : { CruiseControlSystemControlSpeedControl_speedControl , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t22 | _cruiseControlSystem.t27 | _cruiseControlSystem.t26 | _cruiseControlSystem.t25 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t24 | _cruiseControlSystem.t28 | _cruiseControlSystemControl.state = control : speedControl;
+       _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t24 | _cruiseControlSystem.t28 | _cruiseControlSystem.t22 | _cruiseControlSystem.t27 | _cruiseControlSystem.t26 | _cruiseControlSystem.t25 : CruiseControlSystemControlSpeedControl_speedControl;
+       _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystemControl.state = CruiseControlSystemControl_control : CruiseControlSystemControlSpeedControl_speedControl;
        TRUE : state;
      esac;
  
@@ -249,15 +270,17 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { disabled , enabled , tempState , null };
+     state : { CruiseControlSystemControlSpeedControlSpeedControl_disabled , CruiseControlSystemControlSpeedControlSpeedControl_enabled , CruiseControlSystemControlSpeedControlSpeedControl_tempState , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t22 | _cruiseControlSystem.t27 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystemControlSpeedControl.state = speedControl : disabled;
-       _cruiseControlSystem.t26 | _cruiseControlSystem.t24 | _cruiseControlSystem.t28 : enabled;
-       _cruiseControlSystem.t25 : tempState;
+       _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t22 | _cruiseControlSystem.t27 : CruiseControlSystemControlSpeedControlSpeedControl_disabled;
+       _cruiseControlSystem.t26 | _cruiseControlSystem.t24 | _cruiseControlSystem.t28 : CruiseControlSystemControlSpeedControlSpeedControl_enabled;
+       _cruiseControlSystem.t25 : CruiseControlSystemControlSpeedControlSpeedControl_tempState;
+       _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystemControlSpeedControl.state = CruiseControlSystemControlSpeedControl_speedControl : CruiseControlSystemControlSpeedControlSpeedControl_disabled;
        TRUE : state;
      esac;
  
@@ -267,13 +290,14 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { sensorScan , null };
+     state : { CruiseControlSystemSensorScan_sensorScan , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.state = adaptiveControlSystem : sensorScan;
+       _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 : CruiseControlSystemSensorScan_sensorScan;
+       _cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem : CruiseControlSystemSensorScan_sensorScan;
        TRUE : state;
      esac;
  
@@ -283,13 +307,14 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { inputSpeed , null };
+     state : { CruiseControlSystemInputSpeed_inputSpeed , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t38 | _cruiseControlSystem.t37 | _cruiseControlSystem.state = adaptiveControlSystem : inputSpeed;
+       _cruiseControlSystem.t38 | _cruiseControlSystem.t37 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 : CruiseControlSystemInputSpeed_inputSpeed;
+       _cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem : CruiseControlSystemInputSpeed_inputSpeed;
        TRUE : state;
      esac;
  
@@ -299,13 +324,15 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { checkSpeed , null };
+     state : { CruiseControlSystemInputSpeedInputSpeed_checkSpeed , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t37 | _cruiseControlSystemInputSpeed.state = inputSpeed : checkSpeed;
+       _cruiseControlSystem.t37 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 : CruiseControlSystemInputSpeedInputSpeed_checkSpeed;
+       _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t39 | _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystemInputSpeed.state = CruiseControlSystemInputSpeed_inputSpeed : CruiseControlSystemInputSpeedInputSpeed_checkSpeed;
        TRUE : state;
      esac;
  
@@ -315,13 +342,14 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { throttle , null };
+     state : { CruiseControlSystemThrottle_throttle , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t40 | _cruiseControlSystem.t40 | _cruiseControlSystem.t39 | _cruiseControlSystem.state = adaptiveControlSystem : throttle;
+       _cruiseControlSystem.t39 | _cruiseControlSystem.t40 | _cruiseControlSystem.t40 : CruiseControlSystemThrottle_throttle;
+       _cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem : CruiseControlSystemThrottle_throttle;
        TRUE : state;
      esac;
  
@@ -331,13 +359,15 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { tempState , null };
+     state : { CruiseControlSystemThrottleThrottle_tempState , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t40 | _cruiseControlSystem.t39 | _cruiseControlSystemThrottle.state = throttle : tempState;
+       _cruiseControlSystem.t39 | _cruiseControlSystem.t40 : CruiseControlSystemThrottleThrottle_tempState;
+       _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 : null;
+       _cruiseControlSystemThrottle.state = CruiseControlSystemThrottle_throttle : CruiseControlSystemThrottleThrottle_tempState;
        TRUE : state;
      esac;
  
@@ -366,28 +396,28 @@
      cruiseControlSystemThrottle : CruiseControlSystemThrottle( cruiseControlSystem , cruiseControlSystemControl , cruiseControlSystemControlCruiseController , cruiseControlSystemControlCruiseControllerCruiseController , cruiseControlSystemControlCruiseControllerCruiseControllerInactive , cruiseControlSystemControlCruiseControllerCruiseControllerActive , cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState , cruiseControlSystemControlCruiseControllerCruiseControllerCruising , cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1 , cruiseControlSystemControlCruiseControllerCruiseControllerStandby , cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1 , cruiseControlSystemControlSpeedControl , cruiseControlSystemControlSpeedControlSpeedControl , cruiseControlSystemSensorScan , cruiseControlSystemInputSpeed , cruiseControlSystemInputSpeedInputSpeed , cruiseControlSystemThrottleThrottle );
      cruiseControlSystemThrottleThrottle : CruiseControlSystemThrottleThrottle( cruiseControlSystem , cruiseControlSystemControl , cruiseControlSystemControlCruiseController , cruiseControlSystemControlCruiseControllerCruiseController , cruiseControlSystemControlCruiseControllerCruiseControllerInactive , cruiseControlSystemControlCruiseControllerCruiseControllerActive , cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState , cruiseControlSystemControlCruiseControllerCruiseControllerCruising , cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1 , cruiseControlSystemControlCruiseControllerCruiseControllerStandby , cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1 , cruiseControlSystemControlSpeedControl , cruiseControlSystemControlSpeedControlSpeedControl , cruiseControlSystemSensorScan , cruiseControlSystemInputSpeed , cruiseControlSystemInputSpeedInputSpeed , cruiseControlSystemThrottle );
     
-   CTLSPEC   EF  ( cruiseControlSystem.state = adaptiveControlSystem )
-   CTLSPEC   EF  ( cruiseControlSystemControl.state = control )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseController.state = cruiseController )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseController.state = inactive )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseController.state = active )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseController.state = cruising )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseController.state = standby )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerInactive.state = tempState )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = tempState )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState.state = tempState_1 )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = tempState )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = tempState_1 )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = tempState_2 )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = tempState )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = tempState_1 )
-   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = tempState_2 )
-   CTLSPEC   EF  ( cruiseControlSystemControlSpeedControl.state = speedControl )
-   CTLSPEC   EF  ( cruiseControlSystemControlSpeedControlSpeedControl.state = disabled )
-   CTLSPEC   EF  ( cruiseControlSystemControlSpeedControlSpeedControl.state = enabled )
-   CTLSPEC   EF  ( cruiseControlSystemControlSpeedControlSpeedControl.state = tempState )
-   CTLSPEC   EF  ( cruiseControlSystemSensorScan.state = sensorScan )
-   CTLSPEC   EF  ( cruiseControlSystemInputSpeed.state = inputSpeed )
-   CTLSPEC   EF  ( cruiseControlSystemInputSpeedInputSpeed.state = checkSpeed )
-   CTLSPEC   EF  ( cruiseControlSystemThrottle.state = throttle )
-   CTLSPEC   EF  ( cruiseControlSystemThrottleThrottle.state = tempState )
+   CTLSPEC   EF  ( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem )
+   CTLSPEC   EF  ( cruiseControlSystemControl.state = CruiseControlSystemControl_control )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseController.state = CruiseControlSystemControlCruiseController_cruiseController )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_active )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerInactive.state = CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState.state = CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1 )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 )
+   CTLSPEC   EF  ( cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2 )
+   CTLSPEC   EF  ( cruiseControlSystemControlSpeedControl.state = CruiseControlSystemControlSpeedControl_speedControl )
+   CTLSPEC   EF  ( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled )
+   CTLSPEC   EF  ( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled )
+   CTLSPEC   EF  ( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_tempState )
+   CTLSPEC   EF  ( cruiseControlSystemSensorScan.state = CruiseControlSystemSensorScan_sensorScan )
+   CTLSPEC   EF  ( cruiseControlSystemInputSpeed.state = CruiseControlSystemInputSpeed_inputSpeed )
+   CTLSPEC   EF  ( cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed )
+   CTLSPEC   EF  ( cruiseControlSystemThrottle.state = CruiseControlSystemThrottle_throttle )
+   CTLSPEC   EF  ( cruiseControlSystemThrottleThrottle.state = CruiseControlSystemThrottleThrottle_tempState )

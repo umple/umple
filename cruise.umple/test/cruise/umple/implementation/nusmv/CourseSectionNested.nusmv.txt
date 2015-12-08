@@ -5,32 +5,32 @@
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
-     event : { cancel , openRegistration , requestToRegister , closeRegistration , classSizeExceedsMinimum , classSizeExceedsMaximum };
+     event : { ev_cancel , ev_openRegistration , ev_requestToRegister , ev_closeRegistration , ev_classSizeExceedsMinimum , ev_classSizeExceedsMaximum };
     
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { Planned , Open , Cancelled , Closed };
+     state : { Status_Planned , Status_Open , Status_Cancelled , Status_Closed };
     
    -- This part defines macros that summarize the transitions of the given NuSMV module --
    DEFINE
-     t1 := event = cancel & state = Planned;
-     t2 := event = openRegistration & state = Planned;
-     t3 := event = cancel & state = Open;
-     t4 := event = cancel & state = Closed;
-     t5 := event = requestToRegister & _statusOpen.state = NotEnoughStudents;
-     t6 := event = closeRegistration & _statusOpen.state = NotEnoughStudents;
-     t7 := event = classSizeExceedsMinimum & _statusOpen.state = NotEnoughStudents;
-     t8 := event = requestToRegister & _statusOpen.state = EnoughStudents;
-     t9 := event = closeRegistration & _statusOpen.state = EnoughStudents;
-     t10 := event = classSizeExceedsMaximum & _statusOpen.state = EnoughStudents;
+     t1 := event = ev_cancel & state = Status_Planned;
+     t2 := event = ev_openRegistration & state = Status_Planned;
+     t3 := event = ev_cancel & state = Status_Open;
+     t4 := event = ev_cancel & state = Status_Closed;
+     t5 := event = ev_requestToRegister & _statusOpen.state = StatusOpen_NotEnoughStudents;
+     t6 := event = ev_closeRegistration & _statusOpen.state = StatusOpen_NotEnoughStudents;
+     t7 := event = ev_classSizeExceedsMinimum & _statusOpen.state = StatusOpen_NotEnoughStudents;
+     t8 := event = ev_requestToRegister & _statusOpen.state = StatusOpen_EnoughStudents;
+     t9 := event = ev_closeRegistration & _statusOpen.state = StatusOpen_EnoughStudents;
+     t10 := event = ev_classSizeExceedsMaximum & _statusOpen.state = StatusOpen_EnoughStudents;
   
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
-     init( state ) := Planned;
+     init( state ) := Status_Planned;
      next( state ) := case
-       t2 | t8 | t5 | t7 : Open;
-       t1 | t6 | t3 | t4 : Cancelled;
-       t9 | t10 : Closed;
+       t2 | t8 | t5 | t7 : Status_Open;
+       t1 | t6 | t3 | t4 : Status_Cancelled;
+       t9 | t10 : Status_Closed;
        TRUE : state;
      esac;
  
@@ -40,14 +40,16 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { NotEnoughStudents , EnoughStudents , null };
+     state : { StatusOpen_NotEnoughStudents , StatusOpen_EnoughStudents , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _status.t2 | _status.t8 | _status.t5 | _status.state = Open : NotEnoughStudents;
-       _status.t7 : EnoughStudents;
+       _status.t5 | _status.t2 | _status.t8 : StatusOpen_NotEnoughStudents;
+       _status.t7 : StatusOpen_EnoughStudents;
+       _status.t1 | _status.t4 | _status.t9 | _status.t3 | _status.t6 | _status.t10 : null;
+       _status.state = Status_Open : StatusOpen_NotEnoughStudents;
        TRUE : state;
      esac;
  
@@ -60,9 +62,9 @@
      status : Status( statusOpen );
      statusOpen : StatusOpen( status );
     
-   CTLSPEC   EF  ( status.state = Planned )
-   CTLSPEC   EF  ( status.state = Open )
-   CTLSPEC   EF  ( status.state = Cancelled )
-   CTLSPEC   EF  ( status.state = Closed )
-   CTLSPEC   EF  ( statusOpen.state = NotEnoughStudents )
-   CTLSPEC   EF  ( statusOpen.state = EnoughStudents )
+   CTLSPEC   EF  ( status.state = Status_Planned )
+   CTLSPEC   EF  ( status.state = Status_Open )
+   CTLSPEC   EF  ( status.state = Status_Cancelled )
+   CTLSPEC   EF  ( status.state = Status_Closed )
+   CTLSPEC   EF  ( statusOpen.state = StatusOpen_NotEnoughStudents )
+   CTLSPEC   EF  ( statusOpen.state = StatusOpen_EnoughStudents )

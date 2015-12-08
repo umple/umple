@@ -5,25 +5,25 @@
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
-     event : { e1 , e3 };
+     event : { ev_e1 , ev_e3 };
     
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { s2a , s2b , s1 };
+     state : { S2_s2a , S2_s2b , S2_s1 };
     
    -- This part defines macros that summarize the transitions of the given NuSMV module --
    DEFINE
-     t1 := event = e1 & state = s2a;
-     t2 := event = e3 & state = s2a;
-     t3 := event = e3 & state = s2b;
+     t1 := event = ev_e1 & state = S2_s2a;
+     t2 := event = ev_e3 & state = S2_s2a;
+     t3 := event = ev_e3 & state = S2_s2b;
   
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
-     init( state ) := s2a;
+     init( state ) := S2_s2a;
      next( state ) := case
-       t3 : s2a;
-       t2 : s2b;
-       t1 : s1;
+       t3 : S2_s2a;
+       t2 : S2_s2b;
+       t1 : S2_s1;
        TRUE : state;
      esac;
  
@@ -35,7 +35,6 @@
    VAR
      s2 : S2;
     
-   CTLSPEC   EF  ( s2.state = s2a )
-   CTLSPEC   EF  ( s2.state = s2b )
-   CTLSPEC   EF  ( s2.state = s1 )
-    
+   CTLSPEC   EF  ( s2.state = S2_s2a )
+   CTLSPEC   EF  ( s2.state = S2_s2b )
+   CTLSPEC   EF  ( s2.state = S2_s1 )

@@ -5,34 +5,34 @@
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
-     event : { selectReverse , selectDrive , selectFirst , selectSecond , selectNeutral , reachSecondSpeed , reachThirdSpeed , dropBelowSecondSpeed , dropBelowThirdSpeed };
+     event : { ev_selectReverse , ev_selectDrive , ev_selectFirst , ev_selectSecond , ev_selectNeutral , ev_reachSecondSpeed , ev_reachThirdSpeed , ev_dropBelowSecondSpeed , ev_dropBelowThirdSpeed };
     
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { neutral , reverse , drive };
+     state : { State_neutral , State_reverse , State_drive };
     
    -- This part defines macros that summarize the transitions of the given NuSMV module --
    DEFINE
-     t1 := event = selectReverse & state = neutral;
-     t2 := event = selectDrive & state = neutral;
-     t3 := event = selectFirst & state = neutral;
-     t4 := event = selectSecond & state = neutral;
-     t5 := event = selectNeutral & state = reverse;
-     t6 := event = selectNeutral & state = drive;
-     t7 := event = selectFirst & state = drive;
-     t8 := event = selectSecond & state = drive;
-     t9 := event = reachSecondSpeed & _stateDrive.state = first;
-     t10 := event = reachThirdSpeed & _stateDrive.state = second;
-     t11 := event = dropBelowSecondSpeed & _stateDrive.state = second;
-     t12 := event = dropBelowThirdSpeed & _stateDrive.state = third;
+     t1 := event = ev_selectReverse & state = State_neutral;
+     t2 := event = ev_selectDrive & state = State_neutral;
+     t3 := event = ev_selectFirst & state = State_neutral;
+     t4 := event = ev_selectSecond & state = State_neutral;
+     t5 := event = ev_selectNeutral & state = State_reverse;
+     t6 := event = ev_selectNeutral & state = State_drive;
+     t7 := event = ev_selectFirst & state = State_drive;
+     t8 := event = ev_selectSecond & state = State_drive;
+     t9 := event = ev_reachSecondSpeed & _stateDrive.state = StateDrive_first;
+     t10 := event = ev_reachThirdSpeed & _stateDrive.state = StateDrive_second;
+     t11 := event = ev_dropBelowSecondSpeed & _stateDrive.state = StateDrive_second;
+     t12 := event = ev_dropBelowThirdSpeed & _stateDrive.state = StateDrive_third;
   
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
-     init( state ) := neutral;
+     init( state ) := State_neutral;
      next( state ) := case
-       t5 | t6 : neutral;
-       t1 : reverse;
-       t7 | t2 | t8 | t12 | t3 | t11 | t4 | t9 | t10 : drive;
+       t5 | t6 : State_neutral;
+       t1 : State_reverse;
+       t7 | t2 | t8 | t12 | t3 | t11 | t4 | t9 | t10 : State_drive;
        TRUE : state;
      esac;
  
@@ -42,15 +42,17 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { first , second , third , null };
+     state : { StateDrive_first , StateDrive_second , StateDrive_third , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _state.t7 | _state.t2 | _state.t3 | _state.t11 | _state.state = drive : first;
-       _state.t4 | _state.t9 | _state.t8 | _state.t12 : second;
-       _state.t10 : third;
+       _state.t3 | _state.t11 | _state.t7 | _state.t2 : StateDrive_first;
+       _state.t4 | _state.t9 | _state.t8 | _state.t12 : StateDrive_second;
+       _state.t10 : StateDrive_third;
+       _state.t5 | _state.t1 | _state.t6 : null;
+       _state.state = State_drive : StateDrive_first;
        TRUE : state;
      esac;
  
@@ -63,9 +65,9 @@
      state : State( stateDrive );
      stateDrive : StateDrive( state );
     
-   CTLSPEC   EF  ( state.state = neutral )
-   CTLSPEC   EF  ( state.state = reverse )
-   CTLSPEC   EF  ( state.state = drive )
-   CTLSPEC   EF  ( stateDrive.state = first )
-   CTLSPEC   EF  ( stateDrive.state = second )
-   CTLSPEC   EF  ( stateDrive.state = third )
+   CTLSPEC   EF  ( state.state = State_neutral )
+   CTLSPEC   EF  ( state.state = State_reverse )
+   CTLSPEC   EF  ( state.state = State_drive )
+   CTLSPEC   EF  ( stateDrive.state = StateDrive_first )
+   CTLSPEC   EF  ( stateDrive.state = StateDrive_second )
+   CTLSPEC   EF  ( stateDrive.state = StateDrive_third )

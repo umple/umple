@@ -5,90 +5,90 @@
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
-     event : { s1 , s2 , s3 , s3during2Secs , notS1 , notS2 };
+     event : { ev_s1 , ev_s2 , ev_s3 , ev_s3during2Secs , ev_notS1 , ev_notS2 };
     
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { time , date , paused , running , lapRunning , lapPaused , bothOff , chimeOn , bothOn , alarmOn , alarmTime , alarmHour , alarmMinute , second , minute , hour , month , day , year };
+     state : { Sm_time , Sm_date , Sm_paused , Sm_running , Sm_lapRunning , Sm_lapPaused , Sm_bothOff , Sm_chimeOn , Sm_bothOn , Sm_alarmOn , Sm_alarmTime , Sm_alarmHour , Sm_alarmMinute , Sm_second , Sm_minute , Sm_hour , Sm_month , Sm_day , Sm_year };
     
    -- This part defines macros that summarize the transitions of the given NuSMV module --
    DEFINE
-     t1 := event = s1 & state = time;
-     t2 := event = s2 & state = time;
-     t3 := event = s3 & state = time;
-     t4 := event = s3during2Secs & state = time;
-     t5 := event = notS1 & state = date;
-     t6 := event = s1 & state = paused;
-     t7 := event = s2 & state = paused;
-     t8 := event = s3 & state = paused;
-     t9 := event = s1 & state = running;
-     t10 := event = s2 & state = running;
-     t11 := event = s3 & state = running;
-     t12 := event = s1 & state = lapRunning;
-     t13 := event = s2 & state = lapRunning;
-     t14 := event = s3 & state = lapRunning;
-     t15 := event = s1 & state = lapPaused;
-     t16 := event = s2 & state = lapPaused;
-     t17 := event = s3 & state = lapPaused;
-     t18 := event = notS2 & state = bothOff;
-     t19 := event = s1 & state = bothOff;
-     t20 := event = notS2 & state = chimeOn;
-     t21 := event = s1 & state = chimeOn;
-     t22 := event = notS2 & state = bothOn;
-     t23 := event = s1 & state = bothOn;
-     t24 := event = s1 & state = alarmOn;
-     t25 := event = notS2 & state = alarmOn;
-     t26 := event = s1 & state = alarmTime;
-     t27 := event = s2 & state = alarmTime;
-     t28 := event = s3 & state = alarmTime;
-     t29 := event = s1 & state = alarmHour;
-     t30 := event = s2 & state = alarmHour;
-     t31 := event = s3 & state = alarmHour;
-     t32 := event = s1 & state = alarmMinute;
-     t33 := event = s2 & state = alarmMinute;
-     t34 := event = s3 & state = alarmMinute;
-     t35 := event = s1 & state = second;
-     t36 := event = s2 & state = second;
-     t37 := event = s3 & state = second;
-     t38 := event = s1 & state = minute;
-     t39 := event = s2 & state = minute;
-     t40 := event = s3 & state = minute;
-     t41 := event = s1 & state = hour;
-     t42 := event = s2 & state = hour;
-     t43 := event = s3 & state = hour;
-     t44 := event = s1 & state = month;
-     t45 := event = s2 & state = month;
-     t46 := event = s3 & state = month;
-     t47 := event = s1 & state = day;
-     t48 := event = s2 & state = day;
-     t49 := event = s3 & state = day;
-     t50 := event = s1 & state = year;
-     t51 := event = s2 & state = year;
-     t52 := event = s3 & state = year;
+     t1 := event = ev_s1 & state = Sm_time;
+     t2 := event = ev_s2 & state = Sm_time;
+     t3 := event = ev_s3 & state = Sm_time;
+     t4 := event = ev_s3during2Secs & state = Sm_time;
+     t5 := event = ev_notS1 & state = Sm_date;
+     t6 := event = ev_s1 & state = Sm_paused;
+     t7 := event = ev_s2 & state = Sm_paused;
+     t8 := event = ev_s3 & state = Sm_paused;
+     t9 := event = ev_s1 & state = Sm_running;
+     t10 := event = ev_s2 & state = Sm_running;
+     t11 := event = ev_s3 & state = Sm_running;
+     t12 := event = ev_s1 & state = Sm_lapRunning;
+     t13 := event = ev_s2 & state = Sm_lapRunning;
+     t14 := event = ev_s3 & state = Sm_lapRunning;
+     t15 := event = ev_s1 & state = Sm_lapPaused;
+     t16 := event = ev_s2 & state = Sm_lapPaused;
+     t17 := event = ev_s3 & state = Sm_lapPaused;
+     t18 := event = ev_notS2 & state = Sm_bothOff;
+     t19 := event = ev_s1 & state = Sm_bothOff;
+     t20 := event = ev_notS2 & state = Sm_chimeOn;
+     t21 := event = ev_s1 & state = Sm_chimeOn;
+     t22 := event = ev_notS2 & state = Sm_bothOn;
+     t23 := event = ev_s1 & state = Sm_bothOn;
+     t24 := event = ev_s1 & state = Sm_alarmOn;
+     t25 := event = ev_notS2 & state = Sm_alarmOn;
+     t26 := event = ev_s1 & state = Sm_alarmTime;
+     t27 := event = ev_s2 & state = Sm_alarmTime;
+     t28 := event = ev_s3 & state = Sm_alarmTime;
+     t29 := event = ev_s1 & state = Sm_alarmHour;
+     t30 := event = ev_s2 & state = Sm_alarmHour;
+     t31 := event = ev_s3 & state = Sm_alarmHour;
+     t32 := event = ev_s1 & state = Sm_alarmMinute;
+     t33 := event = ev_s2 & state = Sm_alarmMinute;
+     t34 := event = ev_s3 & state = Sm_alarmMinute;
+     t35 := event = ev_s1 & state = Sm_second;
+     t36 := event = ev_s2 & state = Sm_second;
+     t37 := event = ev_s3 & state = Sm_second;
+     t38 := event = ev_s1 & state = Sm_minute;
+     t39 := event = ev_s2 & state = Sm_minute;
+     t40 := event = ev_s3 & state = Sm_minute;
+     t41 := event = ev_s1 & state = Sm_hour;
+     t42 := event = ev_s2 & state = Sm_hour;
+     t43 := event = ev_s3 & state = Sm_hour;
+     t44 := event = ev_s1 & state = Sm_month;
+     t45 := event = ev_s2 & state = Sm_month;
+     t46 := event = ev_s3 & state = Sm_month;
+     t47 := event = ev_s1 & state = Sm_day;
+     t48 := event = ev_s2 & state = Sm_day;
+     t49 := event = ev_s3 & state = Sm_day;
+     t50 := event = ev_s1 & state = Sm_year;
+     t51 := event = ev_s2 & state = Sm_year;
+     t52 := event = ev_s3 & state = Sm_year;
   
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
-     init( state ) := time;
+     init( state ) := Sm_time;
      next( state ) := case
-       t8 | t14 | t18 | t22 | t37 | t43 | t49 | t5 | t11 | t17 | t20 | t25 | t40 | t46 | t52 : time;
-       t1 : date;
-       t3 | t9 | t7 | t16 : paused;
-       t6 | t13 : running;
-       t10 | t15 : lapRunning;
-       t12 : lapPaused;
-       t2 | t24 : bothOff;
-       t19 : chimeOn;
-       t21 : bothOn;
-       t23 : alarmOn;
-       t4 : alarmTime;
-       t30 | t27 | t32 : alarmHour;
-       t29 | t26 | t33 : alarmMinute;
-       t31 | t36 | t28 | t34 | t50 : second;
-       t35 | t39 : minute;
-       t38 | t42 : hour;
-       t41 | t45 : month;
-       t44 | t48 : day;
-       t47 | t51 : year;
+       t8 | t14 | t18 | t22 | t37 | t43 | t49 | t5 | t11 | t17 | t20 | t25 | t40 | t46 | t52 : Sm_time;
+       t1 : Sm_date;
+       t3 | t9 | t7 | t16 : Sm_paused;
+       t6 | t13 : Sm_running;
+       t10 | t15 : Sm_lapRunning;
+       t12 : Sm_lapPaused;
+       t2 | t24 : Sm_bothOff;
+       t19 : Sm_chimeOn;
+       t21 : Sm_bothOn;
+       t23 : Sm_alarmOn;
+       t4 : Sm_alarmTime;
+       t30 | t27 | t32 : Sm_alarmHour;
+       t29 | t26 | t33 : Sm_alarmMinute;
+       t31 | t36 | t28 | t34 | t50 : Sm_second;
+       t35 | t39 : Sm_minute;
+       t38 | t42 : Sm_hour;
+       t41 | t45 : Sm_month;
+       t44 | t48 : Sm_day;
+       t47 | t51 : Sm_year;
        TRUE : state;
      esac;
  
@@ -100,23 +100,22 @@
    VAR
      sm : Sm;
     
-   CTLSPEC   EF  ( sm.state = time )
-   CTLSPEC   EF  ( sm.state = date )
-   CTLSPEC   EF  ( sm.state = paused )
-   CTLSPEC   EF  ( sm.state = running )
-   CTLSPEC   EF  ( sm.state = lapRunning )
-   CTLSPEC   EF  ( sm.state = lapPaused )
-   CTLSPEC   EF  ( sm.state = bothOff )
-   CTLSPEC   EF  ( sm.state = chimeOn )
-   CTLSPEC   EF  ( sm.state = bothOn )
-   CTLSPEC   EF  ( sm.state = alarmOn )
-   CTLSPEC   EF  ( sm.state = alarmTime )
-   CTLSPEC   EF  ( sm.state = alarmHour )
-   CTLSPEC   EF  ( sm.state = alarmMinute )
-   CTLSPEC   EF  ( sm.state = second )
-   CTLSPEC   EF  ( sm.state = minute )
-   CTLSPEC   EF  ( sm.state = hour )
-   CTLSPEC   EF  ( sm.state = month )
-   CTLSPEC   EF  ( sm.state = day )
-   CTLSPEC   EF  ( sm.state = year )
-    
+   CTLSPEC   EF  ( sm.state = Sm_time )
+   CTLSPEC   EF  ( sm.state = Sm_date )
+   CTLSPEC   EF  ( sm.state = Sm_paused )
+   CTLSPEC   EF  ( sm.state = Sm_running )
+   CTLSPEC   EF  ( sm.state = Sm_lapRunning )
+   CTLSPEC   EF  ( sm.state = Sm_lapPaused )
+   CTLSPEC   EF  ( sm.state = Sm_bothOff )
+   CTLSPEC   EF  ( sm.state = Sm_chimeOn )
+   CTLSPEC   EF  ( sm.state = Sm_bothOn )
+   CTLSPEC   EF  ( sm.state = Sm_alarmOn )
+   CTLSPEC   EF  ( sm.state = Sm_alarmTime )
+   CTLSPEC   EF  ( sm.state = Sm_alarmHour )
+   CTLSPEC   EF  ( sm.state = Sm_alarmMinute )
+   CTLSPEC   EF  ( sm.state = Sm_second )
+   CTLSPEC   EF  ( sm.state = Sm_minute )
+   CTLSPEC   EF  ( sm.state = Sm_hour )
+   CTLSPEC   EF  ( sm.state = Sm_month )
+   CTLSPEC   EF  ( sm.state = Sm_day )
+   CTLSPEC   EF  ( sm.state = Sm_year )

@@ -6,43 +6,43 @@ class BigStateMachineTest {
   sm{
     Zxab{
      		Zx{
-       			Z{
-         			e3 -> X;
-         			e2 -> A;
-					e5 -> G;
-					e1 -> E;
+       			Za{
+         			e3 -> Xa;
+         			e2 -> Aa;
+					e5 -> Ga;
+					e1 -> Ea;
     				e4 -> Ge;
        			}
-       			X{ 
-					e5 -> G;
-					e1 -> E;
+       			Xa{ 
+					e5 -> Ga;
+					e1 -> Ea;
     				e4 -> Ge;
 				}
      		}
-     		A{
-       			e5 -> D;
-       			e3 -> B;
-				e1 -> E;
+     		Aa{
+       			e5 -> Da;
+       			e3 -> Ba;
+				e1 -> Ea;
     			e4 -> Ge;
      		}
-     		B{
+     		Ba{
        			e3 -> Ge;
-			e1 -> E;
+				e1 -> Ea;
     			e4 -> Ge;
      		}
     		
     }
-    D {
-      e5 -> X;
-      e2 -> E;
+    Da {
+      e5 -> Xa;
+      e2 -> Ea;
     }
     Ge {
-     G {
-       e1 -> B;
+     Ga {
+       e1 -> Ba;
      }
-     E {
-       e1 -> G;
-       e2 -> G;
+     Ea {
+       e1 -> Ga;
+       e2 -> Ga;
      }
     }
   }

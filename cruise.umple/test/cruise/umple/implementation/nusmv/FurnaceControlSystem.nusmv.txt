@@ -5,45 +5,45 @@
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
-     event : { furnaceFault , furnaceReset , heatSwitchOn , heatSwitchOff , userReset , activate , deactivate , t5 , furnaceRunning , t15 , t17 , t18 , t20 , t21 , t19 , t22 , t24 , t23 };
+     event : { ev_furnaceFault , ev_furnaceReset , ev_heatSwitchOn , ev_heatSwitchOff , ev_userReset , ev_activate , ev_deactivate , ev_t5 , ev_furnaceRunning , ev_t15 , ev_t17 , ev_t18 , ev_t20 , ev_t21 , ev_t19 , ev_t22 , ev_t24 , ev_t23 };
     
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : heatSys;
+     state : HeatSystem_heatSys;
     
    -- This part defines macros that summarize the transitions of the given NuSMV module --
    DEFINE
-     t1 := event = t15 & _heatSystemHouseRoomRoomNoHeatReq.state = idleNoHeat;
-     t2 := event = t17 & _heatSystemHouseRoomRoomNoHeatReq.state = waitForHeat;
-     t3 := event = t18 & _heatSystemHouseRoomRoomNoHeatReq.state = waitForHeat;
-     t4 := event = t15 & _heatSystemHouseRoomRoomNoHeatReq.state = waitForHeat;
-     t5 := event = t20 & _heatSystemHouseRoomRoomNoHeatReq.state = waitForHeat;
-     t6 := event = t21 & _heatSystemHouseRoomRoomHeatReq.state = idleHeat;
-     t7 := event = t19 & _heatSystemHouseRoomRoomHeatReq.state = waitForCool;
-     t8 := event = t22 & _heatSystemHouseRoomRoomHeatReq.state = waitForCool;
-     t9 := event = t24 & _heatSystemHouseRoomRoomHeatReq.state = waitForCool;
-     t10 := event = t23 & _heatSystemHouseRoomRoomHeatReq.state = waitForCool;
-     t11 := event = heatSwitchOn & _heatSystemHouseControllerController.state = off;
-     t12 := event = furnaceFault & _heatSystemHouseControllerController.state = ControllerOn;
-     t13 := event = heatSwitchOff & _heatSystemHouseControllerController.state = ControllerOn;
-     t14 := event = furnaceReset & _heatSystemHouseControllerController.state = error;
-     t15 := event = userReset & _heatSystemHouseControllerController.state = error;
-     t16 := event = activate & _heatSystemHouseControllerControllerControllerOn.state = idle;
-     t17 := event = deactivate & _heatSystemHouseControllerControllerControllerOn.state = heaterActive;
-     t18 := event = furnaceRunning & _heatSystemHouseControllerControllerControllerOnHeaterActive.state = actHeater;
-     t19 := event = furnaceFault & _heatSystemFurnaceFurnace.state = furnaceNormal;
-     t20 := event = furnaceReset & _heatSystemFurnaceFurnace.state = furnaceErr;
-     t21 := event = activate & _heatSystemFurnaceFurnaceFurnaceNormal.state = furnaceOff;
-     t22 := event = deactivate & _heatSystemFurnaceFurnaceFurnaceNormal.state = furnaceRun;
-     t23 := event = deactivate & _heatSystemFurnaceFurnaceFurnaceNormal.state = furnaceAct;
-     t24 := event = t5 & _heatSystemFurnaceFurnaceFurnaceNormal.state = furnaceAct;
-     t25 := event = furnaceRunning & _heatSystemFurnaceFurnaceFurnaceNormal.state = furnaceAct;
+     t1 := event = ev_t15 & _heatSystemHouseRoomRoomNoHeatReq.state = HeatSystemHouseRoomRoomNoHeatReq_idleNoHeat;
+     t2 := event = ev_t17 & _heatSystemHouseRoomRoomNoHeatReq.state = HeatSystemHouseRoomRoomNoHeatReq_waitForHeat;
+     t3 := event = ev_t18 & _heatSystemHouseRoomRoomNoHeatReq.state = HeatSystemHouseRoomRoomNoHeatReq_waitForHeat;
+     t4 := event = ev_t15 & _heatSystemHouseRoomRoomNoHeatReq.state = HeatSystemHouseRoomRoomNoHeatReq_waitForHeat;
+     t5 := event = ev_t20 & _heatSystemHouseRoomRoomNoHeatReq.state = HeatSystemHouseRoomRoomNoHeatReq_waitForHeat;
+     t6 := event = ev_t21 & _heatSystemHouseRoomRoomHeatReq.state = HeatSystemHouseRoomRoomHeatReq_idleHeat;
+     t7 := event = ev_t19 & _heatSystemHouseRoomRoomHeatReq.state = HeatSystemHouseRoomRoomHeatReq_waitForCool;
+     t8 := event = ev_t22 & _heatSystemHouseRoomRoomHeatReq.state = HeatSystemHouseRoomRoomHeatReq_waitForCool;
+     t9 := event = ev_t24 & _heatSystemHouseRoomRoomHeatReq.state = HeatSystemHouseRoomRoomHeatReq_waitForCool;
+     t10 := event = ev_t23 & _heatSystemHouseRoomRoomHeatReq.state = HeatSystemHouseRoomRoomHeatReq_waitForCool;
+     t11 := event = ev_heatSwitchOn & _heatSystemHouseControllerController.state = HeatSystemHouseControllerController_off;
+     t12 := event = ev_furnaceFault & _heatSystemHouseControllerController.state = HeatSystemHouseControllerController_ControllerOn;
+     t13 := event = ev_heatSwitchOff & _heatSystemHouseControllerController.state = HeatSystemHouseControllerController_ControllerOn;
+     t14 := event = ev_furnaceReset & _heatSystemHouseControllerController.state = HeatSystemHouseControllerController_error;
+     t15 := event = ev_userReset & _heatSystemHouseControllerController.state = HeatSystemHouseControllerController_error;
+     t16 := event = ev_activate & _heatSystemHouseControllerControllerControllerOn.state = HeatSystemHouseControllerControllerControllerOn_idle;
+     t17 := event = ev_deactivate & _heatSystemHouseControllerControllerControllerOn.state = HeatSystemHouseControllerControllerControllerOn_heaterActive;
+     t18 := event = ev_furnaceRunning & _heatSystemHouseControllerControllerControllerOnHeaterActive.state = HeatSystemHouseControllerControllerControllerOnHeaterActive_actHeater;
+     t19 := event = ev_furnaceFault & _heatSystemFurnaceFurnace.state = HeatSystemFurnaceFurnace_furnaceNormal;
+     t20 := event = ev_furnaceReset & _heatSystemFurnaceFurnace.state = HeatSystemFurnaceFurnace_furnaceErr;
+     t21 := event = ev_activate & _heatSystemFurnaceFurnaceFurnaceNormal.state = HeatSystemFurnaceFurnaceFurnaceNormal_furnaceOff;
+     t22 := event = ev_deactivate & _heatSystemFurnaceFurnaceFurnaceNormal.state = HeatSystemFurnaceFurnaceFurnaceNormal_furnaceRun;
+     t23 := event = ev_deactivate & _heatSystemFurnaceFurnaceFurnaceNormal.state = HeatSystemFurnaceFurnaceFurnaceNormal_furnaceAct;
+     t24 := event = ev_t5 & _heatSystemFurnaceFurnaceFurnaceNormal.state = HeatSystemFurnaceFurnaceFurnaceNormal_furnaceAct;
+     t25 := event = ev_furnaceRunning & _heatSystemFurnaceFurnaceFurnaceNormal.state = HeatSystemFurnaceFurnaceFurnaceNormal_furnaceAct;
   
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
-     init( state ) := heatSys;
+     init( state ) := HeatSystem_heatSys;
      next( state ) := case
-       t4 | t1 | t3 | t5 | t9 | t13 | t15 | t11 | t18 | t20 | t23 | t25 | t24 | t7 | t7 | t2 | t8 | t6 | t10 | t14 | t17 | t16 | t12 | t22 | t20 | t21 | t19 : heatSys;
+       t4 | t1 | t3 | t5 | t9 | t13 | t15 | t11 | t18 | t20 | t23 | t25 | t24 | t7 | t7 | t2 | t8 | t6 | t10 | t14 | t17 | t16 | t12 | t22 | t20 | t21 | t19 : HeatSystem_heatSys;
        TRUE : state;
      esac;
  
@@ -53,13 +53,14 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { house , null };
+     state : { HeatSystemHouse_house , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t7 | _heatSystem.t7 | _heatSystem.t2 | _heatSystem.t8 | _heatSystem.t6 | _heatSystem.t10 | _heatSystem.t14 | _heatSystem.t17 | _heatSystem.t16 | _heatSystem.t12 | _heatSystem.t4 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t9 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t11 | _heatSystem.t18 | _heatSystem.state = heatSys : house;
+       _heatSystem.t4 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t9 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t11 | _heatSystem.t18 | _heatSystem.t7 | _heatSystem.t7 | _heatSystem.t2 | _heatSystem.t8 | _heatSystem.t6 | _heatSystem.t10 | _heatSystem.t14 | _heatSystem.t17 | _heatSystem.t16 | _heatSystem.t12 : HeatSystemHouse_house;
+       _heatSystem.state = HeatSystem_heatSys : HeatSystemHouse_house;
        TRUE : state;
      esac;
  
@@ -69,13 +70,15 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { room , null };
+     state : { HeatSystemHouseRoom_room , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t7 | _heatSystem.t7 | _heatSystem.t2 | _heatSystem.t8 | _heatSystem.t6 | _heatSystem.t10 | _heatSystem.t4 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t9 | _heatSystemHouse.state = house : room;
+       _heatSystem.t4 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t9 | _heatSystem.t7 | _heatSystem.t7 | _heatSystem.t2 | _heatSystem.t8 | _heatSystem.t6 | _heatSystem.t10 : HeatSystemHouseRoom_room;
+       _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
+       _heatSystemHouse.state = HeatSystemHouse_house : HeatSystemHouseRoom_room;
        TRUE : state;
      esac;
  
@@ -85,14 +88,16 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { noHeatReq , heatReq , null };
+     state : { HeatSystemHouseRoomRoom_noHeatReq , HeatSystemHouseRoomRoom_heatReq , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t4 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t7 | _heatSystem.t7 | _heatSystem.t2 | _heatSystemHouseRoom.state = room : noHeatReq;
-       _heatSystem.t5 | _heatSystem.t9 | _heatSystem.t8 | _heatSystem.t6 | _heatSystem.t10 : heatReq;
+       _heatSystem.t7 | _heatSystem.t7 | _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t1 | _heatSystem.t3 : HeatSystemHouseRoomRoom_noHeatReq;
+       _heatSystem.t5 | _heatSystem.t9 | _heatSystem.t8 | _heatSystem.t6 | _heatSystem.t10 : HeatSystemHouseRoomRoom_heatReq;
+       _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
+       _heatSystemHouseRoom.state = HeatSystemHouseRoom_room : HeatSystemHouseRoomRoom_noHeatReq;
        TRUE : state;
      esac;
  
@@ -102,14 +107,16 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { idleNoHeat , waitForHeat , null };
+     state : { HeatSystemHouseRoomRoomNoHeatReq_idleNoHeat , HeatSystemHouseRoomRoomNoHeatReq_waitForHeat , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t7 | _heatSystem.t4 | _heatSystemHouseRoomRoom.state = noHeatReq : idleNoHeat;
-       _heatSystem.t2 | _heatSystem.t1 | _heatSystem.t3 : waitForHeat;
+       _heatSystem.t4 | _heatSystem.t7 : HeatSystemHouseRoomRoomNoHeatReq_idleNoHeat;
+       _heatSystem.t2 | _heatSystem.t1 | _heatSystem.t3 : HeatSystemHouseRoomRoomNoHeatReq_waitForHeat;
+       _heatSystem.t5 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t6 | _heatSystem.t9 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
+       _heatSystemHouseRoomRoom.state = HeatSystemHouseRoomRoom_noHeatReq : HeatSystemHouseRoomRoomNoHeatReq_idleNoHeat;
        TRUE : state;
      esac;
  
@@ -119,14 +126,16 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { idleHeat , waitForCool , null };
+     state : { HeatSystemHouseRoomRoomHeatReq_idleHeat , HeatSystemHouseRoomRoomHeatReq_waitForCool , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t5 | _heatSystem.t8 | _heatSystemHouseRoomRoom.state = heatReq : idleHeat;
-       _heatSystem.t9 | _heatSystem.t6 | _heatSystem.t10 : waitForCool;
+       _heatSystem.t8 | _heatSystem.t5 : HeatSystemHouseRoomRoomHeatReq_idleHeat;
+       _heatSystem.t9 | _heatSystem.t6 | _heatSystem.t10 : HeatSystemHouseRoomRoomHeatReq_waitForCool;
+       _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t7 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
+       _heatSystemHouseRoomRoom.state = HeatSystemHouseRoomRoom_heatReq : HeatSystemHouseRoomRoomHeatReq_idleHeat;
        TRUE : state;
      esac;
  
@@ -136,13 +145,15 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { Controller , null };
+     state : { HeatSystemHouseController_Controller , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t14 | _heatSystem.t17 | _heatSystem.t16 | _heatSystem.t12 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t11 | _heatSystem.t18 | _heatSystemHouse.state = house : Controller;
+       _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t11 | _heatSystem.t18 | _heatSystem.t14 | _heatSystem.t17 | _heatSystem.t16 | _heatSystem.t12 : HeatSystemHouseController_Controller;
+       _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
+       _heatSystemHouse.state = HeatSystemHouse_house : HeatSystemHouseController_Controller;
        TRUE : state;
      esac;
  
@@ -152,15 +163,17 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { off , ControllerOn , error , null };
+     state : { HeatSystemHouseControllerController_off , HeatSystemHouseControllerController_ControllerOn , HeatSystemHouseControllerController_error , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t14 | _heatSystemHouseController.state = Controller : off;
-       _heatSystem.t17 | _heatSystem.t16 | _heatSystem.t11 | _heatSystem.t18 : ControllerOn;
-       _heatSystem.t12 : error;
+       _heatSystem.t14 | _heatSystem.t13 | _heatSystem.t15 : HeatSystemHouseControllerController_off;
+       _heatSystem.t17 | _heatSystem.t16 | _heatSystem.t11 | _heatSystem.t18 : HeatSystemHouseControllerController_ControllerOn;
+       _heatSystem.t12 : HeatSystemHouseControllerController_error;
+       _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
+       _heatSystemHouseController.state = HeatSystemHouseController_Controller : HeatSystemHouseControllerController_off;
        TRUE : state;
      esac;
  
@@ -170,14 +183,16 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { idle , heaterActive , null };
+     state : { HeatSystemHouseControllerControllerControllerOn_idle , HeatSystemHouseControllerControllerControllerOn_heaterActive , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t11 | _heatSystem.t17 | _heatSystemHouseControllerController.state = ControllerOn : idle;
-       _heatSystem.t16 | _heatSystem.t18 : heaterActive;
+       _heatSystem.t17 | _heatSystem.t11 : HeatSystemHouseControllerControllerControllerOn_idle;
+       _heatSystem.t16 | _heatSystem.t18 : HeatSystemHouseControllerControllerControllerOn_heaterActive;
+       _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
+       _heatSystemHouseControllerController.state = HeatSystemHouseControllerController_ControllerOn : HeatSystemHouseControllerControllerControllerOn_idle;
        TRUE : state;
      esac;
  
@@ -187,14 +202,16 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { actHeater , heaterRun , null };
+     state : { HeatSystemHouseControllerControllerControllerOnHeaterActive_actHeater , HeatSystemHouseControllerControllerControllerOnHeaterActive_heaterRun , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t16 | _heatSystemHouseControllerControllerControllerOn.state = heaterActive : actHeater;
-       _heatSystem.t18 : heaterRun;
+       _heatSystem.t16 : HeatSystemHouseControllerControllerControllerOnHeaterActive_actHeater;
+       _heatSystem.t18 : HeatSystemHouseControllerControllerControllerOnHeaterActive_heaterRun;
+       _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t17 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
+       _heatSystemHouseControllerControllerControllerOn.state = HeatSystemHouseControllerControllerControllerOn_heaterActive : HeatSystemHouseControllerControllerControllerOnHeaterActive_actHeater;
        TRUE : state;
      esac;
  
@@ -204,13 +221,14 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { furnace , null };
+     state : { HeatSystemFurnace_furnace , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t22 | _heatSystem.t20 | _heatSystem.t21 | _heatSystem.t19 | _heatSystem.t20 | _heatSystem.t23 | _heatSystem.t25 | _heatSystem.t24 | _heatSystem.state = heatSys : furnace;
+       _heatSystem.t20 | _heatSystem.t23 | _heatSystem.t25 | _heatSystem.t24 | _heatSystem.t22 | _heatSystem.t20 | _heatSystem.t21 | _heatSystem.t19 : HeatSystemFurnace_furnace;
+       _heatSystem.state = HeatSystem_heatSys : HeatSystemFurnace_furnace;
        TRUE : state;
      esac;
  
@@ -220,14 +238,16 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { furnaceNormal , furnaceErr , null };
+     state : { HeatSystemFurnaceFurnace_furnaceNormal , HeatSystemFurnaceFurnace_furnaceErr , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t20 | _heatSystem.t23 | _heatSystem.t25 | _heatSystem.t24 | _heatSystem.t22 | _heatSystem.t20 | _heatSystem.t21 | _heatSystemFurnace.state = furnace : furnaceNormal;
-       _heatSystem.t19 : furnaceErr;
+       _heatSystem.t22 | _heatSystem.t20 | _heatSystem.t21 | _heatSystem.t20 | _heatSystem.t23 | _heatSystem.t25 | _heatSystem.t24 : HeatSystemFurnaceFurnace_furnaceNormal;
+       _heatSystem.t19 : HeatSystemFurnaceFurnace_furnaceErr;
+       _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 : null;
+       _heatSystemFurnace.state = HeatSystemFurnace_furnace : HeatSystemFurnaceFurnace_furnaceNormal;
        TRUE : state;
      esac;
  
@@ -237,15 +257,17 @@
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { furnaceOff , furnaceRun , furnaceAct , null };
+     state : { HeatSystemFurnaceFurnaceFurnaceNormal_furnaceOff , HeatSystemFurnaceFurnaceFurnaceNormal_furnaceRun , HeatSystemFurnaceFurnaceFurnaceNormal_furnaceAct , null };
     
    -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t22 | _heatSystem.t20 | _heatSystem.t23 | _heatSystemFurnaceFurnace.state = furnaceNormal : furnaceOff;
-       _heatSystem.t25 : furnaceRun;
-       _heatSystem.t21 | _heatSystem.t24 : furnaceAct;
+       _heatSystem.t23 | _heatSystem.t22 | _heatSystem.t20 : HeatSystemFurnaceFurnaceFurnaceNormal_furnaceOff;
+       _heatSystem.t25 : HeatSystemFurnaceFurnaceFurnaceNormal_furnaceRun;
+       _heatSystem.t21 | _heatSystem.t24 : HeatSystemFurnaceFurnaceFurnaceNormal_furnaceAct;
+       _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t19 : null;
+       _heatSystemFurnaceFurnace.state = HeatSystemFurnaceFurnace_furnaceNormal : HeatSystemFurnaceFurnaceFurnaceNormal_furnaceOff;
        TRUE : state;
      esac;
  
@@ -269,26 +291,26 @@
      heatSystemFurnaceFurnace : HeatSystemFurnaceFurnace( heatSystem , heatSystemHouse , heatSystemHouseRoom , heatSystemHouseRoomRoom , heatSystemHouseRoomRoomNoHeatReq , heatSystemHouseRoomRoomHeatReq , heatSystemHouseController , heatSystemHouseControllerController , heatSystemHouseControllerControllerControllerOn , heatSystemHouseControllerControllerControllerOnHeaterActive , heatSystemFurnace , heatSystemFurnaceFurnaceFurnaceNormal );
      heatSystemFurnaceFurnaceFurnaceNormal : HeatSystemFurnaceFurnaceFurnaceNormal( heatSystem , heatSystemHouse , heatSystemHouseRoom , heatSystemHouseRoomRoom , heatSystemHouseRoomRoomNoHeatReq , heatSystemHouseRoomRoomHeatReq , heatSystemHouseController , heatSystemHouseControllerController , heatSystemHouseControllerControllerControllerOn , heatSystemHouseControllerControllerControllerOnHeaterActive , heatSystemFurnace , heatSystemFurnaceFurnace );
     
-   CTLSPEC   EF  ( heatSystem.state = heatSys )
-   CTLSPEC   EF  ( heatSystemHouse.state = house )
-   CTLSPEC   EF  ( heatSystemHouseRoom.state = room )
-   CTLSPEC   EF  ( heatSystemHouseRoomRoom.state = noHeatReq )
-   CTLSPEC   EF  ( heatSystemHouseRoomRoom.state = heatReq )
-   CTLSPEC   EF  ( heatSystemHouseRoomRoomNoHeatReq.state = idleNoHeat )
-   CTLSPEC   EF  ( heatSystemHouseRoomRoomNoHeatReq.state = waitForHeat )
-   CTLSPEC   EF  ( heatSystemHouseRoomRoomHeatReq.state = idleHeat )
-   CTLSPEC   EF  ( heatSystemHouseRoomRoomHeatReq.state = waitForCool )
-   CTLSPEC   EF  ( heatSystemHouseController.state = Controller )
-   CTLSPEC   EF  ( heatSystemHouseControllerController.state = off )
-   CTLSPEC   EF  ( heatSystemHouseControllerController.state = ControllerOn )
-   CTLSPEC   EF  ( heatSystemHouseControllerController.state = error )
-   CTLSPEC   EF  ( heatSystemHouseControllerControllerControllerOn.state = idle )
-   CTLSPEC   EF  ( heatSystemHouseControllerControllerControllerOn.state = heaterActive )
-   CTLSPEC   EF  ( heatSystemHouseControllerControllerControllerOnHeaterActive.state = actHeater )
-   CTLSPEC   EF  ( heatSystemHouseControllerControllerControllerOnHeaterActive.state = heaterRun )
-   CTLSPEC   EF  ( heatSystemFurnace.state = furnace )
-   CTLSPEC   EF  ( heatSystemFurnaceFurnace.state = furnaceNormal )
-   CTLSPEC   EF  ( heatSystemFurnaceFurnace.state = furnaceErr )
-   CTLSPEC   EF  ( heatSystemFurnaceFurnaceFurnaceNormal.state = furnaceOff )
-   CTLSPEC   EF  ( heatSystemFurnaceFurnaceFurnaceNormal.state = furnaceRun )
-   CTLSPEC   EF  ( heatSystemFurnaceFurnaceFurnaceNormal.state = furnaceAct )
+   CTLSPEC   EF  ( heatSystem.state = HeatSystem_heatSys )
+   CTLSPEC   EF  ( heatSystemHouse.state = HeatSystemHouse_house )
+   CTLSPEC   EF  ( heatSystemHouseRoom.state = HeatSystemHouseRoom_room )
+   CTLSPEC   EF  ( heatSystemHouseRoomRoom.state = HeatSystemHouseRoomRoom_noHeatReq )
+   CTLSPEC   EF  ( heatSystemHouseRoomRoom.state = HeatSystemHouseRoomRoom_heatReq )
+   CTLSPEC   EF  ( heatSystemHouseRoomRoomNoHeatReq.state = HeatSystemHouseRoomRoomNoHeatReq_idleNoHeat )
+   CTLSPEC   EF  ( heatSystemHouseRoomRoomNoHeatReq.state = HeatSystemHouseRoomRoomNoHeatReq_waitForHeat )
+   CTLSPEC   EF  ( heatSystemHouseRoomRoomHeatReq.state = HeatSystemHouseRoomRoomHeatReq_idleHeat )
+   CTLSPEC   EF  ( heatSystemHouseRoomRoomHeatReq.state = HeatSystemHouseRoomRoomHeatReq_waitForCool )
+   CTLSPEC   EF  ( heatSystemHouseController.state = HeatSystemHouseController_Controller )
+   CTLSPEC   EF  ( heatSystemHouseControllerController.state = HeatSystemHouseControllerController_off )
+   CTLSPEC   EF  ( heatSystemHouseControllerController.state = HeatSystemHouseControllerController_ControllerOn )
+   CTLSPEC   EF  ( heatSystemHouseControllerController.state = HeatSystemHouseControllerController_error )
+   CTLSPEC   EF  ( heatSystemHouseControllerControllerControllerOn.state = HeatSystemHouseControllerControllerControllerOn_idle )
+   CTLSPEC   EF  ( heatSystemHouseControllerControllerControllerOn.state = HeatSystemHouseControllerControllerControllerOn_heaterActive )
+   CTLSPEC   EF  ( heatSystemHouseControllerControllerControllerOnHeaterActive.state = HeatSystemHouseControllerControllerControllerOnHeaterActive_actHeater )
+   CTLSPEC   EF  ( heatSystemHouseControllerControllerControllerOnHeaterActive.state = HeatSystemHouseControllerControllerControllerOnHeaterActive_heaterRun )
+   CTLSPEC   EF  ( heatSystemFurnace.state = HeatSystemFurnace_furnace )
+   CTLSPEC   EF  ( heatSystemFurnaceFurnace.state = HeatSystemFurnaceFurnace_furnaceNormal )
+   CTLSPEC   EF  ( heatSystemFurnaceFurnace.state = HeatSystemFurnaceFurnace_furnaceErr )
+   CTLSPEC   EF  ( heatSystemFurnaceFurnaceFurnaceNormal.state = HeatSystemFurnaceFurnaceFurnaceNormal_furnaceOff )
+   CTLSPEC   EF  ( heatSystemFurnaceFurnaceFurnaceNormal.state = HeatSystemFurnaceFurnaceFurnaceNormal_furnaceRun )
+   CTLSPEC   EF  ( heatSystemFurnaceFurnaceFurnaceNormal.state = HeatSystemFurnaceFurnaceFurnaceNormal_furnaceAct )

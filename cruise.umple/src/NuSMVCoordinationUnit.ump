@@ -144,20 +144,6 @@ class NuSMVCoordinator
   		return temp;
   	}
   	
-  	/*public NuSMVModule generateMainModuleFor( List<StateMachine> sms ) {
-  		if( sms.size() == 0 )
-  			return null;
-  		ModuleBody body = new ModuleBody(genMainVariableFor( sm ));
-  		if( sms.size() == 1 ) {
-  			NuSMVModule module = new NuSMVModule(changeNameCase(sms.get(0).getFullName(), 1), body);  		
-  			module = new NuSMVModule("main", body);	
-  			generateSpecForStateReachability( sm, body ); 
-  			
-  		}
-  		if(sm)
-  		genMainVariableFor	
-  	}*/
-  	
   	//This generates modules generated from a simple state machine including its main
   	public List<NuSMVModule> generateModuleForSimpleStateMachine( StateMachine sm ) {
   
@@ -196,7 +182,7 @@ class NuSMVCoordinator
   		
   		for( State st : sm.getStates() ) {
   			BasicExpression bexp1 = new BasicExpression(changeNameCase(sm.getFullName(), 0)+".state");
-    		BasicExpression bexp2 = new BasicExpression(st.getName());
+    		BasicExpression bexp2 = new BasicExpression(changeNameCase(st.getStateMachine().getFullName(),1)+"_"+st.getName());
     		CTLExpression cexp = new CTLExpression("ctl");
     		cexp.addChild(bexp1);
     		cexp.addChild(bexp2);
@@ -212,7 +198,7 @@ class NuSMVCoordinator
   	private AssignConstraint getAssignConstraint( StateMachine sm, StateMachine root) {
   		BasicExpression bexp;
   		if( sm.getParentState() == null )
-  			bexp = new BasicExpression(sm.getStartState().getName());
+  			bexp = new BasicExpression(changeNameCase(sm.getFullName(),1)+"_"+sm.getStartState().getName());
   		else
   			bexp = new BasicExpression("null");
   		InitAssign ia = new InitAssign("state", bexp);
@@ -220,6 +206,23 @@ class NuSMVCoordinator
   		ac.addAssign(getNextAssign( sm, root ));
   		return ac;
   	}
+	
+	private CaseStatement initializeCompositeStartState( State state ) {
+		
+		BasicExpression bexp3 = new BasicExpression( "expr" );
+		
+		if( state.isIsStartState() && state.getStateMachine().getParentState() != null ) {
+			State bioparent = state.getStateMachine().getParentState();
+  			BasicExpression bexp1 = new BasicExpression("_"+changeNameCase(bioparent.getStateMachine().getFullName(), 0)+".state");
+  			BasicExpression bexp2 = new BasicExpression(changeNameCase(bioparent.getStateMachine().getFullName(),1)+"_"+bioparent.getName());
+			bexp3.addChild( bexp1 );
+  			bexp3.addChild( bexp2 );
+  			bexp3.setOperator( bexp1.getOperator().EQ );
+			BasicExpression st = new BasicExpression( changeNameCase(state.getStateMachine().getFullName(),1)+"_"+state.getName() ); 
+			return new CaseStatement( bexp3, st );
+  		}
+		return null;		
+	}
   	
   	private NextAssign getNextAssign( StateMachine sm, StateMachine root ) {
   		BasicExpression bexp1 = new BasicExpression("state");
@@ -231,9 +234,18 @@ class NuSMVCoordinator
     		if( cstatement != null)
     			expr.addCaseStatement(cstatement);
     	}
-    	CaseStatement otherwise = new CaseStatement(bexp2, bexp1);
+		if( sm.getParentState() != null && getCaseStatementForNullState(sm.getParentState(), root) != null )
+			expr.addCaseStatement( getCaseStatementForNullState(sm.getParentState(), root) );
+		
+		//Initializing composite start states
+		for(State st : sm.getStates() )
+			if( initializeCompositeStartState( st ) != null )
+				expr.addCaseStatement( initializeCompositeStartState( st ) );
+			
+		CaseStatement otherwise = new CaseStatement(bexp2, bexp1);
     	expr.addCaseStatement( otherwise);
     	expr.removeCaseStatement(temp);
+		
     	NextAssign na = new NextAssign("state", expr);
     	return na;
   	}
@@ -263,11 +275,31 @@ class NuSMVCoordinator
   			} 
   		return allTransitions;
   	}
+	
+	private CaseStatement getCaseStatementForNullState( State st, StateMachine root ) {
+		List<Transition> trans = getAllTransitions(st, root);
+		int counter = 0;
+		BasicExpression rt = new BasicExpression("root");
+		for( Transition tr : root.getAllTransitions() ) {
+			BasicExpression bexp;
+			if( !has( trans, tr ) ) {
+				bexp = new BasicExpression("_"+changeNameCase(root.getFullName(),0)+".t"+getTransitionIdentity( root, tr) );	
+				rt = getExpressionTreeFor( rt, bexp );
+				counter++;
+			}
+		}
+		if(counter > 0) {
+  			BasicExpression state = new BasicExpression( "null" ); 
+  			return new CaseStatement( rt, state );
+  		}
+  		return null;
+	}
   	
   	private CaseStatement getCaseStatement( StateMachine sm, State st, StateMachine parent ) {
   		int counter = 0;
   		BasicExpression root = new BasicExpression("root");
-  		for(Transition tr : getAllTransitions(st, parent) ) {
+  		for( Transition tr : getAllTransitions(st, parent) ) {
+			//System.out.println( st.getName() );
 			BasicExpression bexp;
 			if(!parent.equals(sm))
 				bexp = new BasicExpression("_"+changeNameCase(parent.getFullName(),0)+".t"+getTransitionIdentity( parent, tr) );	
@@ -276,10 +308,10 @@ class NuSMVCoordinator
   			root = getExpressionTreeFor( root, bexp );	
   			counter++;
   		}
-  		if( st.isIsStartState() && st.getStateMachine().getParentState() != null ) {
+  		/*if( st.isIsStartState() && st.getStateMachine().getParentState() != null ) {
   			State bioparent = st.getStateMachine().getParentState();
   			BasicExpression bexp1 = new BasicExpression("_"+changeNameCase(bioparent.getStateMachine().getFullName(), 0)+".state");
-  			BasicExpression bexp2 = new BasicExpression(bioparent.getName());
+  			BasicExpression bexp2 = new BasicExpression(changeNameCase(tr.getFromState().getStateMachine().getFullName(),1)+"_"+bioparent.getName());
   			BasicExpression bexp3 = new BasicExpression("expr");
   			bexp3.addChild(bexp1);
   			bexp3.addChild(bexp2);
@@ -289,9 +321,9 @@ class NuSMVCoordinator
   			else
   				root = getExpressionTreeFor( root, bexp3 );
   			counter++;
-  		}  			
+  		}*/  			
   		if(counter > 0) {
-  			BasicExpression state = new BasicExpression( st.getName() ); 
+  			BasicExpression state = new BasicExpression( changeNameCase(st.getStateMachine().getFullName(),1)+"_"+st.getName() ); 
   			return new CaseStatement( root, state );
   		}
   		return null;
@@ -345,7 +377,7 @@ class NuSMVCoordinator
   	private  VariableSpecifier getEventList( StateMachine sm ) {
   		VariableSpecifier vs = new VariableSpecifier("event");
   		for( Event event : sm.getAllEvents() ) 
-  			vs.addTypeSpecifier(event.getName());
+  			vs.addTypeSpecifier("ev_"+event.getName());
   		return vs;
   	}
   	
@@ -353,7 +385,7 @@ class NuSMVCoordinator
   	private VariableSpecifier getStateList(StateMachine sm) {
   		VariableSpecifier vs = new VariableSpecifier("state");
   		for(State st : sm.getStates())
-  			vs.addTypeSpecifier(st.getName());
+  			vs.addTypeSpecifier(changeNameCase(st.getStateMachine().getFullName(),1)+"_"+st.getName());
   		if(sm.getParentState() != null)
   			vs.addTypeSpecifier("null");
   		return vs;
@@ -377,14 +409,14 @@ class NuSMVCoordinator
   	
   	private BasicExpression composeExpressionFor( Transition tr ) {
   		BasicExpression bexp1 = new BasicExpression("event");
-  		BasicExpression bexp2 = new BasicExpression(tr.getEvent().getName());
+  		BasicExpression bexp2 = new BasicExpression("ev_"+tr.getEvent().getName());
   		BasicExpression bexp3 = new BasicExpression("eventExpr"); 
   		bexp3.addChild(bexp1);
   		bexp3.addChild(bexp2);
   		bexp3.setOperator(bexp3.getOperator().EQ);
   		
   		BasicExpression bexp4 = generateRHS(tr.getFromState());
-  		BasicExpression bexp5 = new BasicExpression(tr.getFromState().getName());
+  		BasicExpression bexp5 = new BasicExpression(changeNameCase(tr.getFromState().getStateMachine().getFullName(),1)+"_"+tr.getFromState().getName());
   		BasicExpression bexp6 = new BasicExpression("stateExpr");
   		bexp6.addChild(bexp4);
   		bexp6.addChild(bexp5);
