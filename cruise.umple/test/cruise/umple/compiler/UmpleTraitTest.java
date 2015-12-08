@@ -243,6 +243,78 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfTransitions());
 	}
 	
+	@Test
+	public void stateMachineTraits009Test() {
+		String code = "class A {isA T1; status { on { turnOn -> on;}} } trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfTransitions());
+		State st1 = model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getNextState();
+		State st2 = model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(1).getNextState();
+		Assert.assertEquals(st1,st2 );
+		
+	}
+	
+	@Test
+	public void stateMachineTraits010Test() {
+		String code = "class A {isA T1; status { on { turnOn -> on;}} } trait T1 { status { onb { activate -> onb;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("228");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+	
+	@Test
+	public void stateMachineTraits011Test() {
+		String code = "class A {isA T1 <status as mode,status as mood>;} trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("229");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+	
+	@Test
+	public void stateMachineTraits012Test() {
+		String code = "class A {isA T1 <status1 as mode>;} trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("230");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+	
+	@Test
+	public void stateMachineTraits013Test() {
+		String code = "class A {isA T1 <status as mode>;} trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("mode", model.getUmpleClass("A").getStateMachine(0).getName());
+
+	}	
+	
+	@Test
+	public void stateMachineTraits014Test() {
+		String code = "class A {isA T1 <-status>;} trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(0, model.getUmpleClass("A").numberOfStateMachines());
+
+	}	
+	
 	/* ------------------------------------------------------------------------------------
 	 * -------------------------------------END -------------------------------------------
 	 * ------------------------------------------------------------------------------------

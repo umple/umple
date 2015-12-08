@@ -1377,34 +1377,42 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifier aClassifier, String extendName) {
-	GeneralTPApplied aGeneralTPApplied = new GeneralTPApplied(extendName);
-	aGeneralTPApplied.setPositions(mainToken.getPosition());
-    String parameterName;
-	for(Token subToken : mainToken.getSubTokens()) {
-		if (subToken.is("iEFunction") || subToken.is("functionAliasName")) {
-			MethodTemplateSignature mtSignature =obtainMethodTemplateSignature(subToken);
-				if (! aGeneralTPApplied.hasMethodTemplateSignature(mtSignature)){	
-					aGeneralTPApplied.addMethodTemplateSignature(mtSignature);
-				} else {
-					getParseResult().addErrorMessage(new ErrorMessage(211,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),mtSignature.getMethod().getName() ));
-				    return;
-			}
-		} else if (subToken.is("traitAppliedParameters")){
-				parameterName = subToken.getValue("pName");
-				if (aGeneralTPApplied.getParameterMapping().containsKey(parameterName)){
-					getParseResult().addErrorMessage(new ErrorMessage(216,subToken.getPosition(),parameterName));
-					return;
+	private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifier aClassifier, String extendName) {
+		GeneralTPApplied aGeneralTPApplied = new GeneralTPApplied(extendName);
+		aGeneralTPApplied.setPositions(mainToken.getPosition());
+	  String parameterName;
+		for(Token subToken : mainToken.getSubTokens()) {
+			if (subToken.is("iEFunction") || subToken.is("functionAliasName")) {
+				MethodTemplateSignature mtSignature =obtainMethodTemplateSignature(subToken);
+					if (! aGeneralTPApplied.hasMethodTemplateSignature(mtSignature)){	
+						aGeneralTPApplied.addMethodTemplateSignature(mtSignature);
+					} else {
+						getParseResult().addErrorMessage(new ErrorMessage(211,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),mtSignature.getMethod().getName() ));
+					    return;
 				}
-				aGeneralTPApplied.getParameterMapping().put(parameterName, subToken.getValue("rName"));				
+			} else if (subToken.is("StateMachineAliasName")|| subToken.is("iEStateMachine")){	
+					StateMachineTemplateSignature stTSignature = obtainStateMachineTemplateSignature(subToken);
+					if (! aGeneralTPApplied.hasStateMachineTemplateSignature(stTSignature)){	
+						aGeneralTPApplied.addStateMachineTemplateSignature(stTSignature);
+					} else {
+						getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getStateMachine()));
+						return;
+				}	
+		  } else if (subToken.is("traitAppliedParameters")){
+					parameterName = subToken.getValue("pName");
+					if (aGeneralTPApplied.getParameterMapping().containsKey(parameterName)){
+						getParseResult().addErrorMessage(new ErrorMessage(216,subToken.getPosition(),parameterName));
+						return;
+					}
+					aGeneralTPApplied.getParameterMapping().put(parameterName, subToken.getValue("rName"));				
+			} 
 		}
+		if (aClassifier instanceof UmpleClass) {
+			((UmpleClass)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
+		} else if (aClassifier instanceof UmpleTrait) {
+			((UmpleTrait)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
+		}	
 	}
-	if (aClassifier instanceof UmpleClass) {
-		((UmpleClass)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
-	} else if (aClassifier instanceof UmpleTrait) {
-		((UmpleTrait)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
-	}	
-}
 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1430,6 +1438,19 @@ private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifie
 	  MethodTemplateSignature mtSignature = new MethodTemplateSignature(iEFunctionModifier,methodAliasName, method); 
 	return mtSignature;
 }
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private StateMachineTemplateSignature obtainStateMachineTemplateSignature(Token inToken){
+     String iEStateMachineModifier="",stateMachineAliasName ="";
+  	 String smName = inToken.getValue("smName");
+  	 if (inToken.getValue("iEStateMachineModifier") != null) iEStateMachineModifier = inToken.getValue("iEStateMachineModifier");
+  	 if (inToken.getValue("stateMachineAliasName") != null) stateMachineAliasName = inToken.getValue("stateMachineAliasName");
+ 	   StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(iEStateMachineModifier, smName, stateMachineAliasName); 	
+ 	   return smTSignature;
+  }
+
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------

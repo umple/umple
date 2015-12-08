@@ -3,7 +3,7 @@
 
   <property prefix="last" file="build/umpleversion.last.txt"/>
   <property name="umple.version" value="${last.version}" />
-  <echo message="Last Version: ${umple.version}" />
+  <echo message="Last Version: ${last.version}" />
 
 </project>
 

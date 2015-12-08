@@ -37,35 +37,54 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-  private Map<UmpleTrait, List<StateMachine>> gatherStateMachinesFromTrait(UmpleTrait inTrait,GeneralTPApplied inGTPApplied, UmpleClass inClass) {
+  private Map<UmpleTrait, List<StateMachine>> gatherStateMachinesFromTrait (UmpleTrait inTrait,GeneralTPApplied inGTPApplied, UmpleClass inClass) 
+  {
     Map<UmpleTrait, List<StateMachine>> traiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>(); 
- 	 Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
- 	 //----------------------------------------------------------------------------------------
- 	 List<StateMachine> lSMachine = new ArrayList<StateMachine>();	  
- 	 for (StateMachine sMachine : inTrait.getStateMachines()) {
-    	 	lSMachine.add(ApplyTypeParametersToStateMachine(sMachine,inGTPApplied,inClass, inTrait));
-	 }
- 	traiStateMachine.put(inTrait,lSMachine);
-     //----------------------------------------------------------------------------------------
-     for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-    	 tempTraiStateMachine = gatherStateMachinesFromTrait(uTrait,inTrait.getGeneralTPAppliedByName(uTrait.getName()),inClass);	 
-    	 if ( ! getParseResult().getWasSuccess() ) return traiStateMachine;
-    	 if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traiStateMachine,tempTraiStateMachine,inTrait)) return traiStateMachine;
-    	 AddStateMachineMapToAnother(traiStateMachine,tempTraiStateMachine);
-	 }
-     return traiStateMachine;
- }
- 
+  	Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
+  	//----------------------------------------------------------------------------------------
+  	if (inGTPApplied!=null){
+	  	for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
+	  		StateMachine sm = inTrait.getStateMachine(smTSignature.getStateMachine());
+	 			if ( sm == null ){
+	 				getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine()));	
+	 				return traiStateMachine;
+	 			}
+	  	}	 
+  	}
+  	//----------------------------------------------------------------------------------------
+  	List<StateMachine> lSMachine = new ArrayList<StateMachine>();	  
+  	for (StateMachine sMachine : inTrait.getStateMachines()) {
+  	 	StateMachine stTemp = ApplyTypeParametersToStateMachine(sMachine,inGTPApplied,inClass, inTrait);
+  		if (stTemp!=null)	lSMachine.add(stTemp);
+  	}
+  	traiStateMachine.put(inTrait,lSMachine);
+  	//----------------------------------------------------------------------------------------
+  	for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+  		tempTraiStateMachine = gatherStateMachinesFromTrait(uTrait,inTrait.getGeneralTPAppliedByName(uTrait.getName()),inClass);	 
+  		if ( ! getParseResult().getWasSuccess() ) return traiStateMachine;
+  		if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traiStateMachine,tempTraiStateMachine,inTrait)) return traiStateMachine;
+  		AddStateMachineMapToAnother(traiStateMachine,tempTraiStateMachine);
+  	}
+  	return traiStateMachine;
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
- 
- private StateMachine ApplyTypeParametersToStateMachine(StateMachine sMachine, GeneralTPApplied inGTPApplied, UmpleClass inClass, UmpleTrait inTrait) {
-	StateMachine newSt = getNewStateMachine(sMachine);
-	return newSt;
-	
-}
 
+   private StateMachine ApplyTypeParametersToStateMachine(StateMachine inSMachine, GeneralTPApplied inGTPApplied, UmpleClass inClass, UmpleTrait inTrait){
+  	 StateMachine newSt = getNewStateMachine(inSMachine);
+  	 if (inGTPApplied!=null){
+  		 for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
+				if (newSt.getName().equals(smTSignature.getStateMachine())){
+					if (smTSignature.getModifier().equals("-")) return null; 
+					newSt.setName(smTSignature.getAlias());
+					return newSt;
+				}
+			}
+  	 }
+  	 return newSt;
+  }
+  
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
@@ -77,7 +96,7 @@ class UmpleInternalParser
 					getParseResult().addErrorMessage(new ErrorMessage(226,inClass.getPosition(0),tSMachine.getName(),uTrait.getName(),"class",inClass.getName()));
 					return false;
 				}else {
-					addExtraStatesAnsTransitions(cSMachine, tSMachine);
+					if (cSMachine.getName().equals(tSMachine.getName())) addExtraStatesAnsTransitions(cSMachine, tSMachine);
 				}
 			}
 		}
@@ -109,7 +128,7 @@ class UmpleInternalParser
 							}
 						}
 					} else {
-						addExtraStatesAnsTransitions(sMachine, tSMachine);
+						if (sMachine.getName().equals(tSMachine.getName())) addExtraStatesAnsTransitions(sMachine, tSMachine);
 					}	
 				}
 			}
@@ -145,11 +164,21 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
    private boolean compareStateMachineName(StateMachine inSMachine1, StateMachine inSMachine2){
-    if(inSMachine1.getName().equals(inSMachine2.getName())){
-		return compareStatesAndTransitions(inSMachine1,inSMachine2);
-	} else{
-		return false;
-	}
+    if(inSMachine1.getName().equals(inSMachine2.getName()) && inSMachine1.numberOfStates()==inSMachine2.numberOfStates()){
+	    	if (!inSMachine1.getStartState().getName().equals(inSMachine2.getStartState().getName())){
+	    		UmpleClassifier uClassifier = inSMachine1.getUmpleClass();
+	      	if (uClassifier==null) {
+	      		uClassifier = inSMachine1.getUmpleTrait();
+	      		getParseResult().addErrorMessage(new ErrorMessage(228,uClassifier.getPosition(0),inSMachine1.getName(),"tait", uClassifier.getName()));
+	      	} else {
+	      		getParseResult().addErrorMessage(new ErrorMessage(228,uClassifier.getPosition(0),inSMachine1.getName(),"class", uClassifier.getName()));
+	      	}
+	    	}
+		  	return compareStatesAndTransitions(inSMachine1,inSMachine2);
+		  	
+		} else{
+			return false;
+		}
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -185,6 +214,7 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 					  if (state.getTransition(i).isEqualToTransition(mainlTrans)){ find = true; }
 				  }
 				  if(!find) {		
+				  	state.getTransition(i).setNextState(inSMachine1.findState(state.getTransition(i).getNextState().getName()));
 					  mainState.addTransition(state.getTransition(i));
 				  }
 			  }

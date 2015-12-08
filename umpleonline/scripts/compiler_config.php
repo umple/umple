@@ -523,8 +523,10 @@ function executeCommand($command)
 function cleanupOldFiles()
 {
   if(rand(1,100) == 50) {
+    executeCommand("scripts/cleanumpinbackground");
+  // OLD
   // 1 percent of the time delete old temp directories older than 30 days ago
-    executeCommand("find ./ump -maxdepth 1 -type d -mtime +30 | grep -v .svn | grep /tmp | xargs rm -rf");
+  //  executeCommand("find ./ump -maxdepth 1 -type d -mtime +30 | grep -v .svn | grep /tmp | xargs rm -rf");
   // The following commented out because it takes too long - use ralph script cleanump
   // delete empty directories older than 2 days - typically produced when Javascript off
   //executeCommand("find ./ump -maxdepth 1 -type d -empty -mtime +2 | grep -v .svn |  xargs rm -rf");
