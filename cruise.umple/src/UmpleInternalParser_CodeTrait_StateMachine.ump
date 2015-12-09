@@ -42,7 +42,7 @@ class UmpleInternalParser
     Map<UmpleTrait, List<StateMachine>> traiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>(); 
   	Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
   	//----------------------------------------------------------------------------------------
-		checkValidityOfSMTemplateSignature(inGTPApplied,inTrait);
+		if (!checkValidityOfSMTemplateSignature(inGTPApplied,inTrait)) return traiStateMachine;
   	//----------------------------------------------------------------------------------------
   	List<StateMachine> lSMachine = new ArrayList<StateMachine>();	  
   	for (StateMachine sMachine : inTrait.getStateMachines()) {
@@ -62,37 +62,51 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-  private void checkValidityOfSMTemplateSignature(GeneralTPApplied inGTPApplied, UmpleTrait inTrait) {
-  	if (inGTPApplied!=null){
+  private boolean checkValidityOfSMTemplateSignature(GeneralTPApplied inGTPApplied, UmpleTrait inTrait) {
+    if (inGTPApplied!=null){
 	  	for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
 	  		StateMachine sm = inTrait.getStateMachine(smTSignature.getStateMachine());
 	 			if ( sm == null ){
 	 				getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine()));	
-	 				return;
-	 			} else {	 				
-	 				for (String s : smTSignature.getStates()){
-	 					State tState = sm.findState(s, false);
-	 					if (tState==null){
-	 		 				getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),s));	
-	 		 				return;
-	 					} else{
-	 						if(tState.hasNestedStateMachines()) sm = tState.getNestedStateMachine(0);
-	 					}	
-	 				}
+	 				return false;
+	 			} else {
+					 StateMachine smTemp = sm;
+					 State tState=null;
+					 for (String s : smTSignature.getStates()){
+						 tState = smTemp.findState(s, false);
+						 if (tState==null){
+//							 boolean find = false;
+//							 for(StateMachine smNested:smTemp.getNestedStateMachines()){
+//								 if (s.equals(sm.getName())) {
+//									 smTemp = smNested;
+//									 find = true;
+//								 }
+//							 }
+//							 if (!find) {
+//								 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),s));	
+//			 		 				return false;
+//							 }
+							 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),s));	
+			 		 		 return false;
+						 } else
+							 if(tState.hasNestedStateMachines()){
+	 						 smTemp = tState.getNestedStateMachine(0);
+	 					 }
+					 }				
 	 			}
 	  	}	 
-  	}
+	  	return true;
+  	} else return true;
 	}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
 
    private StateMachine ApplyTypeParametersToStateMachine(StateMachine inSMachine, GeneralTPApplied inGTPApplied, UmpleClass inClass, UmpleTrait inTrait){
-    StateMachine newSt = getNewStateMachine(inSMachine);
+     StateMachine newSt = getNewStateMachine(inSMachine);
     String track=null;
     String mapped=null;
     Map<String, String> nameMapping = new HashMap<String, String>();
-//    Map<String, String> reversedNameMapping = new HashMap<String, String>();
   	 if (inGTPApplied!=null){
   		 for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
   			 if (smTSignature.getModifier().equals("-")) return null;
@@ -104,7 +118,6 @@ class UmpleInternalParser
   					 newSt.setName(smTSignature.getAlias());
   					 for (State s : newSt.getStates()) s.setStateMachine(newSt);
   					 nameMapping.put(track, smTSignature.getAlias());
-//  					 reversedNameMapping.put(smTSignature.getAlias(), track);
   				 } 
   				 else{ 
   					 StateMachine smTemp = newSt;
@@ -114,18 +127,19 @@ class UmpleInternalParser
   						 mapped = nameMapping.get(track);
   						 if (mapped==null) mapped = s;
   						 tState = smTemp.findState(mapped, false);
-		 					 if(tState.hasNestedStateMachines()){
+//  						 if (tState==null){
+//  							 for(StateMachine sm:smTemp.getNestedStateMachines()){
+//  								 if (mapped.equals(sm.getName())) smTemp = sm;
+//  							 }
+//  						 } else 
+  							 if(tState.hasNestedStateMachines()){
 		 						 smTemp = tState.getNestedStateMachine(0);
-		 						 String str;
-		 						 str="ddd";
 		 					 }
   					 }
   					 if (smTemp!=null) {
   						 tState.setName(smTSignature.getAlias());	
   						 if (tState.hasNestedStateMachines()) {
   							 smTemp.setName(smTSignature.getAlias());
-  							 String T;
-  							 T="sdlflkn";
   						 }
   						 nameMapping.put(track, smTSignature.getAlias());
   					 }

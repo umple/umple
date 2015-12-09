@@ -324,6 +324,16 @@ public class UmpleTraitTest {
 		Assert.assertEquals("alive", model.getUmpleClass("A").getStateMachine(0).getState(0).getName());
 		
 	}	
+	@Test
+	public void stateMachineTraits016Test() {
+		String code = "class A {isA T1 <status.on.running.mode1.submode1 as sm1, status.on.running.mode1.submode2 as sm2>;} trait T1 { status { on { running{mode1{ submode1{goSubMode2 -> submode2;}submode2{goSubMode1 -> submode1;}}} }} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("sm1", model.getUmpleClass("A").getStateMachine(0).findState("sm1",true).getName());
+		Assert.assertEquals("sm2", model.getUmpleClass("A").getStateMachine(0).findState("sm2",true).getName());
+		Assert.assertEquals(null, model.getUmpleClass("A").getStateMachine(0).findState("submode1",true));
+		Assert.assertEquals(null, model.getUmpleClass("A").getStateMachine(0).findState("submode2",true));
+		
+	}	
 
 	/* ------------------------------------------------------------------------------------
 	 * -------------------------------------END -------------------------------------------
