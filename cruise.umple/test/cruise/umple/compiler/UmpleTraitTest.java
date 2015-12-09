@@ -315,6 +315,16 @@ public class UmpleTraitTest {
 
 	}	
 	
+	@Test
+	public void stateMachineTraits015Test() {
+		String code = "class A {isA T1 <status as mode, status.on as alive>;} trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("mode", model.getUmpleClass("A").getStateMachine(0).getName());
+		Assert.assertEquals("mode", model.getUmpleClass("A").getStateMachine(0).getState(0).getStateMachine().getName());
+		Assert.assertEquals("alive", model.getUmpleClass("A").getStateMachine(0).getState(0).getName());
+		
+	}	
+
 	/* ------------------------------------------------------------------------------------
 	 * -------------------------------------END -------------------------------------------
 	 * ------------------------------------------------------------------------------------

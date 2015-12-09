@@ -1443,11 +1443,15 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
    private StateMachineTemplateSignature obtainStateMachineTemplateSignature(Token inToken){
-     String iEStateMachineModifier="",stateMachineAliasName ="";
+    String iEStateMachineModifier="",stateMachineAliasName ="";
   	 String smName = inToken.getValue("smName");
   	 if (inToken.getValue("iEStateMachineModifier") != null) iEStateMachineModifier = inToken.getValue("iEStateMachineModifier");
-  	 if (inToken.getValue("stateMachineAliasName") != null) stateMachineAliasName = inToken.getValue("stateMachineAliasName");
- 	   StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(iEStateMachineModifier, smName, stateMachineAliasName); 	
+  	 if (inToken.getValue("AliasName") != null) stateMachineAliasName = inToken.getValue("AliasName");
+ 	   StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(iEStateMachineModifier, smName, stateMachineAliasName); 
+  	 while(inToken!=null && inToken.getSubToken("StateNames")!=null){ 
+  		 smTSignature.addState(inToken.getSubToken("StateNames").getValue("sName"));
+  		 inToken =  inToken.getSubToken("StateNames").getSubToken("StateNamesPassing");
+  	 }
  	   return smTSignature;
   }
 

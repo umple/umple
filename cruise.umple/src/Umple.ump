@@ -677,6 +677,7 @@ class MethodTemplateSignature{
 class StateMachineTemplateSignature{
 	modifier;
 	stateMachine;
+	String[] states;
 	alias;
 }
 /*
