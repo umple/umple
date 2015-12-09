@@ -332,6 +332,9 @@
       </manifest>
 
     </jar>
+    <echo message="Making symbolic link so it can be run as umple.jar" />
+    <symlink link="${dist.dir}/umple.jar" resource="${dist.dir}/${dist.umple.jar}" overwrite="true" failonerror="false" />
+    
   </target>
 
   <target name="packageJars">
