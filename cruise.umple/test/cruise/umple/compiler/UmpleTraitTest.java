@@ -335,6 +335,23 @@ public class UmpleTraitTest {
 		
 	}	
 
+	@Test
+	public void stateMachineTraits017Test() {
+		String code = "class A {isA T1 <status.turnOff() as goOff>;} trait T1 { status { on { turnOff()-> off;} off{turnOff->off; } } }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("goOff", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getEvent().getName());
+		Assert.assertEquals("goOff", model.getUmpleClass("A").getStateMachine(0).getState(1).getTransition(0).getEvent().getName());		
+	}	
+
+	//This is related to issue #656
+//	@Test
+//	public void stateMachineTraits018Test() {
+//		String code = "class A {isA T1 <status.turnOff(int) as goOff>;} trait T1 { status { on { turnOff(int a,int b)-> off;} off{turnOff(int a)->off; } } }";
+//		UmpleModel model = getRunModel(code);
+//		Assert.assertEquals("turnOff", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getEvent().getName());
+//		Assert.assertEquals("goOff", model.getUmpleClass("A").getStateMachine(0).getState(1).getTransition(0).getEvent().getName());		
+//	}	
+	
 	/* ------------------------------------------------------------------------------------
 	 * -------------------------------------END -------------------------------------------
 	 * ------------------------------------------------------------------------------------

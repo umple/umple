@@ -1443,29 +1443,35 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
    private StateMachineTemplateSignature obtainStateMachineTemplateSignature(Token inToken){
-     String iEStateMachineModifier="",stateMachineAliasName ="";
+    String iEStateMachineModifier="",stateMachineAliasName ="";
   	 String smName = inToken.getValue("smName");
-//  	 MethodTemplateSignature mtSignature = null;
+  	 String e_s_Name=""; //Event  or State name;
+  	 Token token_last_state_or_event = null; 
+  	 MethodTemplateSignature mtSignature = null;
   	 if (inToken.getValue("iEStateMachineModifier") != null) iEStateMachineModifier = inToken.getValue("iEStateMachineModifier");
-  	 if (inToken.getValue("AliasName") != null) stateMachineAliasName = inToken.getValue("AliasName");
-//  	 if (inToken.getSubToken("EventAliasName")!=null){
-//  		  String EventName = inToken.getSubToken("EventAliasName").getValue("methodName");
-//  	 	  Method method = new Method("public", EventName, "", false); 
-//  	 	  if (inToken.getSubToken("EventAliasName").getSubToken("iEParameterList") != null){
-//  	 			for (Token subToken : inToken.getSubToken("EventAliasName").getSubToken("iEParameterList").getSubTokens()) {
-//  	 				if (subToken.is("parameter")) {
-//  	 					method.addMethodParameter(new MethodParameter("", subToken.getValue(), "", "", false));
-//  	 				}
-//  	 			}
-//  	 	   }
-//  	 	 mtSignature = new MethodTemplateSignature(iEStateMachineModifier,stateMachineAliasName,method);
-//  	 }	
-//		 StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(iEStateMachineModifier, smName, stateMachineAliasName, mtSignature);
-		 StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(iEStateMachineModifier, smName, stateMachineAliasName);
-  	 while(inToken!=null && inToken.getSubToken("StateNames")!=null){ 
-  		 smTSignature.addState(inToken.getSubToken("StateNames").getValue("sName"));
+  	 if (inToken.getValue("AliasName") != null) stateMachineAliasName = inToken.getValue("AliasName");  	  
+		 StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(iEStateMachineModifier, smName, stateMachineAliasName);	 
+  	 while(inToken!=null && inToken.getSubToken("StateNames")!=null){  		
+  		 e_s_Name = inToken.getSubToken("StateNames").getValue("sName");  //This assignment is used so as to get the event name if it's going to be set.
+  		 smTSignature.addState(e_s_Name);
+  		 token_last_state_or_event = inToken;
   		 inToken =  inToken.getSubToken("StateNames").getSubToken("StateNamesPassing");
-  	 }
+  	 }  		 
+  		 if (token_last_state_or_event!=null){
+  		 	 if (token_last_state_or_event.getSubToken("StateNames").getValue("iEParameterList")!=null){
+  	   	 	  Method method = new Method("public", e_s_Name, "", false);
+  	   	 	  if (smTSignature.numberOfStates()>0){
+  	   	 	  smTSignature.removeState(e_s_Name);
+  	   	 	  }
+  	   	 			for (Token subToken : token_last_state_or_event.getSubToken("StateNames").getSubToken("iEParameterList").getSubTokens()) {
+  	   	 				if (subToken.is("parameter")) {
+  	   	 					method.addMethodParameter(new MethodParameter("", subToken.getValue(), "", "", false));
+  	   	 				}
+  	   	 			}
+  	   	 	 mtSignature = new MethodTemplateSignature(iEStateMachineModifier,stateMachineAliasName,method);
+  	   	 	smTSignature.setMethodTemplateSignature(mtSignature);
+  	   	 }	 			 
+  		 }
  	   return smTSignature;
   }
 
