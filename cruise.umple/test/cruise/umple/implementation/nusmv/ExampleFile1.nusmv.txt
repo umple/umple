@@ -3,31 +3,31 @@
  -- This defines a NuSMV module for State --
  MODULE State
 
-    -- This part declares input variables for the given NuSMV module --
+   -- This part declares input variables for the given NuSMV module --
    IVAR
-     event : { assignSeat , cancel , checkIn , complete };
+     event : { ev_assignSeat , ev_cancel , ev_checkIn , ev_complete };
     
-    -- This part declares state variables for the given NuSMV module --
+   -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { newBooking , seatAssigned , checkedIn , cancelled , completed };
+     state : { State_newBooking , State_seatAssigned , State_checkedIn , State_cancelled , State_completed };
     
-    -- This part defines macros that summarize the transitions of the given NuSMV module --
+   -- This part defines macros that summarize the transitions of the given NuSMV module --
    DEFINE
-     t1 := event = assignSeat & state = newBooking;
-     t2 := event = cancel & state = newBooking;
-     t3 := event = cancel & state = seatAssigned;
-     t4 := event = checkIn & state = seatAssigned;
-     t5 := event = cancel & state = checkedIn;
-     t6 := event = complete & state = checkedIn;
+     t1 := event = ev_assignSeat & state = State_newBooking;
+     t2 := event = ev_cancel & state = State_newBooking;
+     t3 := event = ev_cancel & state = State_seatAssigned;
+     t4 := event = ev_checkIn & state = State_seatAssigned;
+     t5 := event = ev_cancel & state = State_checkedIn;
+     t6 := event = ev_complete & state = State_checkedIn;
   
-    -- This part defines the transitions from states to states for the given NuSMV module --
+   -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
-     init( state ) := newBooking;
+     init( state ) := State_newBooking;
      next( state ) := case
-       t1 : seatAssigned;
-       t4 : checkedIn;
-       t3 | t2 | t5 : cancelled;
-       t6 : completed;
+       t1 : State_seatAssigned;
+       t4 : State_checkedIn;
+       t3 | t2 | t5 : State_cancelled;
+       t6 : State_completed;
        TRUE : state;
      esac;
  
@@ -35,13 +35,12 @@
  -- This defines a NuSMV module for main --
  MODULE main
 
-    -- This part declares state variables for the given NuSMV module --
+   -- This part declares state variables for the given NuSMV module --
    VAR
      state : State;
     
-   CTLSPEC   EF  ( state.state = newBooking )
-   CTLSPEC   EF  ( state.state = seatAssigned )
-   CTLSPEC   EF  ( state.state = checkedIn )
-   CTLSPEC   EF  ( state.state = cancelled )
-   CTLSPEC   EF  ( state.state = completed )
-    
+   CTLSPEC   EF  ( state.state = State_newBooking )
+   CTLSPEC   EF  ( state.state = State_seatAssigned )
+   CTLSPEC   EF  ( state.state = State_checkedIn )
+   CTLSPEC   EF  ( state.state = State_cancelled )
+   CTLSPEC   EF  ( state.state = State_completed )

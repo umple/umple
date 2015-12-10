@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
 
 class X
 {
@@ -101,7 +101,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   private function enterS1()
   {
     $wasEventProcessed = false;
@@ -114,7 +113,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   private function exitS1()
   {
     $wasEventProcessed = false;
@@ -132,7 +130,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function f()
   {
     $wasEventProcessed = false;
@@ -146,7 +143,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function g()
   {
     $wasEventProcessed = false;
@@ -159,7 +155,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function h()
   {
     $wasEventProcessed = false;
@@ -181,7 +176,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function i()
   {
     $wasEventProcessed = false;
@@ -203,7 +197,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function k()
   {
     $wasEventProcessed = false;
@@ -226,7 +219,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   private function enterS2()
   {
     $wasEventProcessed = false;
@@ -247,7 +239,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   private function exitS2()
   {
     $wasEventProcessed = false;
@@ -278,7 +269,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function j()
   {
     $wasEventProcessed = false;
@@ -292,7 +282,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function m()
   {
     $wasEventProcessed = false;
@@ -310,7 +299,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   private function exitSm1()
   {
     if ($this->sm1 == self::$Sm1S1)

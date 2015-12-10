@@ -21,7 +21,6 @@ class NuSMVModule {
  !>>
 	output <<!MODULE <<=getIdentifier()>><<#if(parameters.size() != 0){#>> ( <<=printParameters()>> ) 
 
-
 <<=moduleBody.toString()>><<#}
 	else {#>>
 
@@ -50,7 +49,7 @@ class VarDeclaration {
   after constructor { setHeader("VAR"); }
   1 -> 1..* VariableSpecifier;
 
-  comment <<!  -- This part declares state variables for the given NuSMV module --
+  comment <<! -- This part declares state variables for the given NuSMV module --
   !>>
   output <<! <<=getHeader()>>
     <<#for(VariableSpecifier vs : variableSpecifiers){#>><<=vs.toString()>>
@@ -62,17 +61,22 @@ class VariableSpecifier {
   
   identifier;
   String [] typeSpecifier;
+  lazy boolean isBracketed;
+  lazy String typeName;
+  
+  after constructor { isBracketed = false; typeName = ""; }
   
   private String print() {
     String temp = "";
-		for(int i = 0; i < typeSpecifier.size() - 1 ; i++)
+	for(int i = 0; i < typeSpecifier.size() - 1 ; i++)
   	  temp += typeSpecifier.get(i) + " , ";
   	temp += typeSpecifier.get(typeSpecifier.size() - 1);
 		return temp;
   }
 	
-  output <<! <<#if(typeSpecifier.size() == 1){#>><<=getIdentifier()>> : <<=typeSpecifier.get(0)>>;<<#}
-  else{#>><<=getIdentifier()>> : { <<=print()>> };<<#}#>>!>>
+  output <<! <<#if(typeSpecifier.size() == 1 && !isBracketed){#>><<=getIdentifier()>> : <<=typeSpecifier.get(0)>>;<<#}
+  else if( isBracketed ){#>><<=getIdentifier()>> : <<=getTypeName()>>( <<=print()>> );<<#}
+  else {#>><<=getIdentifier()>> : { <<=print()>> };<<#}#>>!>>
   emit toString()(output);
 }
 
@@ -83,7 +87,7 @@ class IVarDeclaration {
 
 	1 -> 1..* VariableSpecifier;
 
-  comment <<!  -- This part declares input variables for the given NuSMV module --
+  comment <<! -- This part declares input variables for the given NuSMV module --
   !>>
   output <<! <<=getHeader()>>
     <<#for(VariableSpecifier vs : variableSpecifiers){#>><<=vs.toString()>>
@@ -96,7 +100,7 @@ class DefineDeclaration {
   isA ModuleElement;
   after constructor { setHeader("DEFINE");}
   1 -> 1..* DefineBody;
-  comment <<!  -- This part defines macros that summarize the transitions of the given NuSMV module --
+  comment <<! -- This part defines macros that summarize the transitions of the given NuSMV module --
   !>>
   output <<! <<=getHeader()>>
   <<#for(DefineBody db : defineBodies){#>><<=db.toString()>>
@@ -216,7 +220,7 @@ class AssignConstraint {
 	//Association Definition
   1 -> 1..* Assign;  
   
-  comment <<!  -- This part defines the transitions from states to states for the given NuSMV module --
+  comment <<! -- This part defines the transitions from states to states for the given NuSMV module --
   !>>
   output <<! <<=getHeader()>>
  <<#for(Assign assign : assigns){#>><<=assign.toString()>>

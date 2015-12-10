@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
 
 class X
 {
@@ -82,7 +82,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function ev5()
   {
     $wasEventProcessed = false;
@@ -95,7 +94,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function ev2()
   {
     $wasEventProcessed = false;
@@ -108,7 +106,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function ev3()
   {
     $wasEventProcessed = false;
@@ -121,7 +118,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function ev4()
   {
     $wasEventProcessed = false;
@@ -134,7 +130,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function ev7()
   {
     $wasEventProcessed = false;
@@ -147,7 +142,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   private function setSm($aSm)
   {
     $this->sm = $aSm;

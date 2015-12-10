@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.19.0.3496 modeling language!*/
+/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
 
 class Course
 {
@@ -52,7 +52,6 @@ class Course
     }
     return $wasEventProcessed;
   }
-
   public function reject()
   {
     $wasEventProcessed = false;
@@ -65,7 +64,6 @@ class Course
     }
     return $wasEventProcessed;
   }
-
   private function setStatus($aStatus)
   {
     $this->status = $aStatus;

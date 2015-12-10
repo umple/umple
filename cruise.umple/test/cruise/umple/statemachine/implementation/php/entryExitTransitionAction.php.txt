@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
 
 class LightFixture
 {
@@ -54,7 +54,6 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
-
   private function exitBulb()
   {
     if ($this->bulb == self::$BulbOn)

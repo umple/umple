@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
 
 class X
 {
@@ -66,7 +66,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   private function enterS1()
   {
     $wasEventProcessed = false;
@@ -79,7 +78,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   private function exitS1()
   {
     $wasEventProcessed = false;
@@ -97,7 +95,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function timeouts1aTos1b()
   {
     $wasEventProcessed = false;
@@ -110,7 +107,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   public function e1()
   {
     $wasEventProcessed = false;
@@ -124,7 +120,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   private function exitSm()
   {
     if ($this->sm == self::$SmS1)

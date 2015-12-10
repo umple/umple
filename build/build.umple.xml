@@ -6,6 +6,8 @@
     Environment Variables
   ``````````````````````````` -->
   <import file="_template.xml" />
+  
+  <deps-declare-taskdef />
 
   <property name="project.path" value="cruise.umple"/>
   <property name="xtext.project.path" value="cruise.umple.xtext"/>
@@ -51,13 +53,13 @@
 
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
-    <java jar="${umple.last.jar.file}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
     </java>
-    <java jar="${umple.last.jar.file}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple.validator/src/Master.ump"/>
     </java>
-     <java jar="${umple.last.jar.file}" fork="true" failonerror="true">
+     <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umplificator/src/Master.ump"/>
     </java>
   </target>
@@ -68,13 +70,13 @@
 
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
-    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
     </java>
-    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple.validator/src/Master.ump"/>
     </java>
-    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umplificator/src/Master.ump"/>
     </java>
   </target>
@@ -173,6 +175,7 @@
       <classpath refid="core.ivy.classpath" />
       <classpath refid="test.ivy.classpath" />
     </javac>
+    
     <copy todir="${bin.path}" overwrite="true">
 	    <fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
 	    <fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
@@ -329,9 +332,9 @@
       </manifest>
 
     </jar>
+    <echo message="Making symbolic link so it can be run as umple.jar" />
+    <symlink link="${dist.dir}/umple.jar" resource="${dist.dir}/${dist.umple.jar}" overwrite="true" failonerror="false" />
     
-    <copy file="${dist.dir}/${dist.umple.jar}" 
-          tofile="${dist.dir}/${dist.umple.jar.next}" />
   </target>
 
   <target name="packageJars">
@@ -475,7 +478,9 @@
   <!--
     First Build
     run this the very first time, it will package up your system
-    and generate a
+    and generate a built JAR.
+
+    If changing this target, be sure to update .travis.yml
   -->
   <target name="first-build">
     <property name="first.build" value="true" />
@@ -521,6 +526,8 @@
     Build
     run by the build machine, should work as-is on your machine, but be careful
     as your code will be run against the "latest" Umpled Umple.
+
+    If changing this target, be sure to update .travis.yml
    -->
   <target name="build" >
     <property name="first.build" value="false" />
@@ -544,7 +551,7 @@
   </target>
 
   <target name="build-umplificator" >
-    <property name="first.build" value="fals" />
+    <property name="first.build" value="false" />
     <check-connectivity />
 
     <antcall target="clean" />

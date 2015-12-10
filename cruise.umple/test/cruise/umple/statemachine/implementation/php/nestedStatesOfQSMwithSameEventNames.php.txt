@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3254 modeling language!*/
+/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
 
 class NestedStatesWthSameEventNames
 {
@@ -82,7 +82,6 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
-
   private function exitNestedState1()
   {
     $wasEventProcessed = false;
@@ -100,7 +99,6 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
-
   public function moveTo()
   {
     $wasEventProcessed = false;
@@ -121,7 +119,6 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
-
   public function transit()
   {
     $wasEventProcessed = false;
@@ -144,7 +141,6 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
-
   private function enterNestedState2()
   {
     $wasEventProcessed = false;
@@ -157,7 +153,6 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
-
   private function exitNestedState2()
   {
     $wasEventProcessed = false;
@@ -175,7 +170,6 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
-
   private function exitSm()
   {
     if ($this->sm == self::$SmNestedState1)

@@ -998,6 +998,22 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
+ private void ApplyTypeParametersToEventsOfStateMachines(StateMachine inStateMachine, GeneralTPApplied inGeneralTPApplied){
+	 if (inGeneralTPApplied == null) return;
+	 for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
+		 String newName = inGeneralTPApplied.getParameterMapping().get(strType);
+		 for(Event e : inStateMachine.getAllEvents()){
+			 for(MethodParameter p : e.getParams()){
+				 if (p.getType().equals(strType)){
+					 p.setType(newName);
+				 }
+			 }
+		 }
+	 }
+ }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
   private void addAssociation(String lName, String rName, AssociationVariable inAssociationVariable, UmpleClass inClass, UmpleClass relatedClass) {	
         AssociationEnd leftEnd = new AssociationEnd(lName, inClass.getName(), inAssociationVariable.getRelatedAssociation().getModifier(), inClass.getName(), inAssociationVariable.getRelatedAssociation().getMultiplicity());
 		AssociationEnd rightEnd = new AssociationEnd(rName,relatedClass.getName(), inAssociationVariable.getModifier(),relatedClass.getName(),inAssociationVariable.getMultiplicity());		
@@ -1377,34 +1393,42 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifier aClassifier, String extendName) {
-	GeneralTPApplied aGeneralTPApplied = new GeneralTPApplied(extendName);
-	aGeneralTPApplied.setPositions(mainToken.getPosition());
-    String parameterName;
-	for(Token subToken : mainToken.getSubTokens()) {
-		if (subToken.is("iEFunction") || subToken.is("functionAliasName")) {
-			MethodTemplateSignature mtSignature =obtainMethodTemplateSignature(subToken);
-				if (! aGeneralTPApplied.hasMethodTemplateSignature(mtSignature)){	
-					aGeneralTPApplied.addMethodTemplateSignature(mtSignature);
-				} else {
-					getParseResult().addErrorMessage(new ErrorMessage(211,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),mtSignature.getMethod().getName() ));
-				    return;
-			}
-		} else if (subToken.is("traitAppliedParameters")){
-				parameterName = subToken.getValue("pName");
-				if (aGeneralTPApplied.getParameterMapping().containsKey(parameterName)){
-					getParseResult().addErrorMessage(new ErrorMessage(216,subToken.getPosition(),parameterName));
-					return;
+	private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifier aClassifier, String extendName) {
+		GeneralTPApplied aGeneralTPApplied = new GeneralTPApplied(extendName);
+		aGeneralTPApplied.setPositions(mainToken.getPosition());
+	  String parameterName;
+		for(Token subToken : mainToken.getSubTokens()) {
+			if (subToken.is("iEFunction") || subToken.is("functionAliasName")) {
+				MethodTemplateSignature mtSignature =obtainMethodTemplateSignature(subToken);
+					if (! aGeneralTPApplied.hasMethodTemplateSignature(mtSignature)){	
+						aGeneralTPApplied.addMethodTemplateSignature(mtSignature);
+					} else {
+						getParseResult().addErrorMessage(new ErrorMessage(211,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),mtSignature.getMethod().getName() ));
+					    return;
 				}
-				aGeneralTPApplied.getParameterMapping().put(parameterName, subToken.getValue("rName"));				
+			} else if (subToken.is("StateMachineAliasName")|| subToken.is("iEStateMachine")){	
+					StateMachineTemplateSignature stTSignature = obtainStateMachineTemplateSignature(subToken);
+					if (! aGeneralTPApplied.hasStateMachineTemplateSignature(stTSignature)){	
+						aGeneralTPApplied.addStateMachineTemplateSignature(stTSignature);
+					} else {
+						getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getStateMachine()));
+						return;
+				}	
+		  } else if (subToken.is("traitAppliedParameters")){
+					parameterName = subToken.getValue("pName");
+					if (aGeneralTPApplied.getParameterMapping().containsKey(parameterName)){
+						getParseResult().addErrorMessage(new ErrorMessage(216,subToken.getPosition(),parameterName));
+						return;
+					}
+					aGeneralTPApplied.getParameterMapping().put(parameterName, subToken.getValue("rName"));				
+			} 
 		}
+		if (aClassifier instanceof UmpleClass) {
+			((UmpleClass)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
+		} else if (aClassifier instanceof UmpleTrait) {
+			((UmpleTrait)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
+		}	
 	}
-	if (aClassifier instanceof UmpleClass) {
-		((UmpleClass)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
-	} else if (aClassifier instanceof UmpleTrait) {
-		((UmpleTrait)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
-	}	
-}
 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1430,6 +1454,43 @@ private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifie
 	  MethodTemplateSignature mtSignature = new MethodTemplateSignature(iEFunctionModifier,methodAliasName, method); 
 	return mtSignature;
 }
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private StateMachineTemplateSignature obtainStateMachineTemplateSignature(Token inToken){
+    String iEStateMachineModifier="",stateMachineAliasName ="";
+  	 String smName = inToken.getValue("smName");
+  	 String e_s_Name=""; //Event  or State name;
+  	 Token token_last_state_or_event = null; 
+  	 MethodTemplateSignature mtSignature = null;
+  	 if (inToken.getValue("iEStateMachineModifier") != null) iEStateMachineModifier = inToken.getValue("iEStateMachineModifier");
+  	 if (inToken.getValue("AliasName") != null) stateMachineAliasName = inToken.getValue("AliasName");  	  
+		 StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(iEStateMachineModifier, smName, stateMachineAliasName);	 
+  	 while(inToken!=null && inToken.getSubToken("StateNames")!=null){  		
+  		 e_s_Name = inToken.getSubToken("StateNames").getValue("sName");  //This assignment is used so as to get the event name if it's going to be set.
+  		 smTSignature.addState(e_s_Name);
+  		 token_last_state_or_event = inToken;
+  		 inToken =  inToken.getSubToken("StateNames").getSubToken("StateNamesPassing");
+  	 }  		 
+  		 if (token_last_state_or_event!=null){
+  		 	 if (token_last_state_or_event.getSubToken("StateNames").getValue("iEParameterList")!=null){
+  	   	 	  Method method = new Method("public", e_s_Name, "", false);
+  	   	 	  if (smTSignature.numberOfStates()>0){
+  	   	 	  smTSignature.removeState(e_s_Name);
+  	   	 	  }
+  	   	 			for (Token subToken : token_last_state_or_event.getSubToken("StateNames").getSubToken("iEParameterList").getSubTokens()) {
+  	   	 				if (subToken.is("parameter")) {
+  	   	 					method.addMethodParameter(new MethodParameter("", subToken.getValue(), "", "", false));
+  	   	 				}
+  	   	 			}
+  	   	 	 mtSignature = new MethodTemplateSignature(iEStateMachineModifier,stateMachineAliasName,method);
+  	   	 	smTSignature.setMethodTemplateSignature(mtSignature);
+  	   	 }	 			 
+  		 }
+ 	   return smTSignature;
+  }
+
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -1614,14 +1675,14 @@ private boolean CheckAttComeFromTraitsIsAvaialbleInOtherTraits(	Map<UmpleTrait, 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-private GeneralTPApplied getNewGeneralTPAppliedWithP2P(UmpleTrait inTrait, UmpleTrait uTrait,GeneralTPApplied inGTPApplied) {
-	 GeneralTPApplied newGeneralTPApplied = null;
-	 if (inTrait.getGeneralTPAppliedByName(uTrait.getName()) !=null) {
-	 	newGeneralTPApplied = new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName()));
-     	ApplyTypeParametersToTypeParameters(newGeneralTPApplied,inGTPApplied);
-     }
-	return newGeneralTPApplied;
-}
+	private GeneralTPApplied getNewGeneralTPAppliedWithP2P(UmpleTrait inTrait, UmpleTrait uTrait,GeneralTPApplied inGTPApplied) {
+	 	GeneralTPApplied newGeneralTPApplied = null;
+	 	if (inTrait.getGeneralTPAppliedByName(uTrait.getName()) !=null) {
+	 		newGeneralTPApplied = new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName()));
+     		ApplyTypeParametersToTypeParameters(newGeneralTPApplied,inGTPApplied);
+    	 }
+		return newGeneralTPApplied;
+	}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -1773,7 +1834,6 @@ private void ApplyExludeIncludeAliasToMethod(Map<UmpleTrait, List<Method>> intra
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-
    private void checkTemplateParametersValidity() {
 	   List<String> multipleClasses = new ArrayList<String>();
 	   for ( UmpleTrait uTrait: getModel().getUmpleTraits()) {

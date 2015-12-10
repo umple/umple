@@ -1,22 +1,57 @@
 language: java
 
-jdk:
-  - oraclejdk8
+# Notes:
+# To enabled openjdk8 we need to use the `trusty` environment which is currently in Beta
+# We do not use this due to the length of time required to start-up the builds 
+
+cache:
+  directories:
+    - $HOME/.ant/lib/
+    - $TRAVIS_BUILD_DIR/dist/libs
+
+addons:
+  apt:
+    packages:
+    - php5-common
+    - php5-cli
 
 before_install:
-  - chmod 755 -R ./travis # to deal with SVN possibly not holding permissions
   - ./travis/deps.sh # run linux or osx depending on environment
 
+env:
+  global:
+    - ANT_FIRST='ant -f build.umple.xml -Dmyenv=travis -Donline=true'
+    - ANT_BUILD='ant -f build.umple.xml -Dmyenv=travis -Dfirst.build=false'
+    - ANT_TESTBED='ant -f build.testbed.xml -Dmyenv=travis -Dfirst.build=false'
+
 script:
+  - php --version ; ruby -v
   - cd build/
   - ant -Dmyenv=travis bootstrap
-  - ant -Dmyenv=travis first-build
-  # TODO https://github.com/umple/umple/issues/616
-  # - ant -Dmyenv=travis build
+  # We resolve all of the dependencies before, this way the command will be unlikely to time out
+  - ant -Dmyenv=travis deps-resolve-all
 
-os:
-  - linux
+  # Do the a modified version of `first-build`
+  - $ANT_FIRST clean init codegen rtcpp template.setVersion resetUmpleSelf
+  - $ANT_FIRST compile compileValidator compileUmplificator
+  - $ANT_FIRST package template.resetVersion
 
-  # Dropping osx for now, as oraclejdk8 does not appear to be available
-  # /Users/travis/build.sh: line 41: jdk_switcher: command not found
-  # - osx
+  # Do the a modified version of `build`
+  - $ANT_BUILD clean init codegen rtcpp template.setVersion resetUmpleSelf
+  - $ANT_BUILD compile compileValidator compileUmplificator
+  - $ANT_BUILD package 
+  - $ANT_BUILD template.test template.resetVersion
+
+  # Build the testbed
+  - $ANT_TESTBED clean template.clean init
+  - $ANT_TESTBED compile 
+  - $ANT_TESTBED test 
+  - $ANT_TESTBED template.resetVersion 
+
+matrix:
+  include:
+    - os: linux
+      jdk: oraclejdk8
+    # - os: linux
+    #   jdk: openjdk8
+    - os: osx

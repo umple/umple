@@ -1,2 +1,0 @@
-#!/bin/bash
-java -jar ../dist/umple.jar ../sandbox/src/sandbox.ump

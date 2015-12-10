@@ -1,3 +1,12 @@
+/*
+ * This Umple file modify the following classes:
+ * UmpleInternalParser,
+ * Transition,
+ * Guard,
+ * Method,
+ * StateMachine
+ */
+
 
 namespace cruise.umple.compiler;
 
@@ -30,35 +39,136 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-  private Map<UmpleTrait, List<StateMachine>> gatherStateMachinesFromTrait(UmpleTrait inTrait,GeneralTPApplied inGTPApplied, UmpleClass inClass) {
+  private Map<UmpleTrait, List<StateMachine>> gatherStateMachinesFromTrait (UmpleTrait inTrait,GeneralTPApplied inGTPApplied, UmpleClass inClass) 
+  {
     Map<UmpleTrait, List<StateMachine>> traiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>(); 
- 	 Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
- 	 //----------------------------------------------------------------------------------------
- 	 List<StateMachine> lSMachine = new ArrayList<StateMachine>();	  
- 	 for (StateMachine sMachine : inTrait.getStateMachines()) {
-    	 	lSMachine.add(ApplyTypeParametersToStateMachine(sMachine,inGTPApplied,inClass, inTrait));
-	 }
- 	traiStateMachine.put(inTrait,lSMachine);
-     //----------------------------------------------------------------------------------------
-     for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-    	 tempTraiStateMachine = gatherStateMachinesFromTrait(uTrait,inTrait.getGeneralTPAppliedByName(uTrait.getName()),inClass);	 
-    	 if ( ! getParseResult().getWasSuccess() ) return traiStateMachine;
-    	 if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traiStateMachine,tempTraiStateMachine,inTrait)) return traiStateMachine;
-    	 AddStateMachineMapToAnother(traiStateMachine,tempTraiStateMachine);
-	 }
-     return traiStateMachine;
- }
- 
+  	Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
+  	//----------------------------------------------------------------------------------------
+		if (!checkValidityOfSMTemplateSignature(inGTPApplied,inTrait)) return traiStateMachine;
+  	//----------------------------------------------------------------------------------------
+  	List<StateMachine> lSMachine = new ArrayList<StateMachine>();	  
+  	for (StateMachine sMachine : inTrait.getStateMachines()) {
+  	 	StateMachine stTemp = ApplyTypeParametersToStateMachine(sMachine,inGTPApplied,inClass, inTrait);
+  		if (stTemp!=null)	{
+  			ApplyTypeParametersToEventsOfStateMachines(stTemp, inGTPApplied);
+  			lSMachine.add(stTemp);
+  			}
+  	}
+  	traiStateMachine.put(inTrait,lSMachine);
+  	//----------------------------------------------------------------------------------------
+  	for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+  		tempTraiStateMachine = gatherStateMachinesFromTrait(uTrait,inTrait.getGeneralTPAppliedByName(uTrait.getName()),inClass);	 
+  		if ( ! getParseResult().getWasSuccess() ) return traiStateMachine;
+  		if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traiStateMachine,tempTraiStateMachine,inTrait)) return traiStateMachine;
+  		AddStateMachineMapToAnother(traiStateMachine,tempTraiStateMachine);
+  	}
+  	return traiStateMachine;
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
- 
- private StateMachine ApplyTypeParametersToStateMachine(StateMachine sMachine, GeneralTPApplied inGTPApplied, UmpleClass inClass, UmpleTrait inTrait) {
-	StateMachine newSt = getNewStateMachine(sMachine);
-	return newSt;
-	
-}
+  private boolean checkValidityOfSMTemplateSignature(GeneralTPApplied inGTPApplied, UmpleTrait inTrait) {
+   if (inGTPApplied!=null){
+	  	for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
+	  		StateMachine sm = inTrait.getStateMachine(smTSignature.getStateMachine());
+	 			if ( sm == null ){
+	 				getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine()));	
+	 				return false;
+	 			} if (smTSignature.getMethodTemplateSignature()!=null){
+	 				Method method1 = smTSignature.getMethodTemplateSignature().getMethod();
+	 				Event event = sm.getEventByMethod(method1);	
+	 				if(event==null){
+  	 				getParseResult().addErrorMessage(new ErrorMessage(231,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine(),method1.getSignature()));	
+		 				return false;
+	 				}
+	 				
+	 			}	else {
+					 StateMachine smTemp = sm;
+					 State tState=null;
+					 for (String s : smTSignature.getStates()){
+						 tState = smTemp.findState(s, false);
+						 if (tState==null){
+//							 boolean find = false;
+//							 for(StateMachine smNested:smTemp.getNestedStateMachines()){
+//								 if (s.equals(sm.getName())) {
+//									 smTemp = smNested;
+//									 find = true;
+//								 }
+//							 }
+//							 if (!find) {
+//								 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),s));	
+//			 		 				return false;
+//							 }
+							 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),s));	
+			 		 		 return false;
+						 } else
+							 if(tState.hasNestedStateMachines()){
+	 						 smTemp = tState.getNestedStateMachine(0);
+	 					 }
+					 }				
+	 			}
+	  	}	 
+	  	return true;
+  	} else return true;
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
 
+   private StateMachine ApplyTypeParametersToStateMachine(StateMachine inSMachine, GeneralTPApplied inGTPApplied, UmpleClass inClass, UmpleTrait inTrait){
+     StateMachine newSt = getNewStateMachine(inSMachine);
+    String track=null;
+    String mapped=null;
+    Map<String, String> nameMapping = new HashMap<String, String>();
+  	 if (inGTPApplied!=null){
+  		 for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
+  			 if (smTSignature.getModifier().equals("-")) return null;
+  			 mapped = nameMapping.get(smTSignature.getStateMachine());
+  			 if (mapped==null) mapped = smTSignature.getStateMachine();
+  			 track = smTSignature.getStateMachine();
+  			 if (newSt.getName().equals(mapped)){
+    		   if (smTSignature.getMethodTemplateSignature()!=null){
+  					 changeEventName(newSt,smTSignature);
+  					 continue;
+  				 }
+  				 if (smTSignature.numberOfStates()<=0) {
+  					 newSt.setName(smTSignature.getAlias());
+  					 for (State s : newSt.getStates()) s.setStateMachine(newSt);
+  					 nameMapping.put(track, smTSignature.getAlias());
+
+  				 } 
+  				 else{ 
+  					 StateMachine smTemp = newSt;
+  					 State tState=null;
+  					 for (String s : smTSignature.getStates()){
+  						 track = track+"."+s;
+  						 mapped = nameMapping.get(track);
+  						 if (mapped==null) mapped = s;
+  						 tState = smTemp.findState(mapped, false);
+//  						 if (tState==null){
+//  							 for(StateMachine sm:smTemp.getNestedStateMachines()){
+//  								 if (mapped.equals(sm.getName())) smTemp = sm;
+//  							 }
+//  						 } else 
+  							 if(tState.hasNestedStateMachines()){
+		 						 smTemp = tState.getNestedStateMachine(0);
+		 					 }
+  					 }
+  					 if (smTemp!=null) {
+  						 tState.setName(smTSignature.getAlias());	
+  						 if (tState.hasNestedStateMachines()) {
+  							 smTemp.setName(smTSignature.getAlias());
+  						 }
+  						 nameMapping.put(track, smTSignature.getAlias());
+  					 }
+  				 } 					
+				}
+			}
+  	 }
+  	 return newSt;
+  }
+
+  
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
@@ -70,7 +180,7 @@ class UmpleInternalParser
 					getParseResult().addErrorMessage(new ErrorMessage(226,inClass.getPosition(0),tSMachine.getName(),uTrait.getName(),"class",inClass.getName()));
 					return false;
 				}else {
-					addExtraStatesAnsTransitions(cSMachine, tSMachine);
+					if (cSMachine.getName().equals(tSMachine.getName())) addExtraStatesAnsTransitions(cSMachine, tSMachine);
 				}
 			}
 		}
@@ -102,7 +212,7 @@ class UmpleInternalParser
 							}
 						}
 					} else {
-						addExtraStatesAnsTransitions(sMachine, tSMachine);
+						if (sMachine.getName().equals(tSMachine.getName())) addExtraStatesAnsTransitions(sMachine, tSMachine);
 					}	
 				}
 			}
@@ -138,11 +248,21 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
    private boolean compareStateMachineName(StateMachine inSMachine1, StateMachine inSMachine2){
-    if(inSMachine1.getName().equals(inSMachine2.getName())){
-		return compareStatesAndTransitions(inSMachine1,inSMachine2);
-	} else{
-		return false;
-	}
+    if(inSMachine1.getName().equals(inSMachine2.getName()) && inSMachine1.numberOfStates()==inSMachine2.numberOfStates()){
+	    	if (!inSMachine1.getStartState().getName().equals(inSMachine2.getStartState().getName())){
+	    		UmpleClassifier uClassifier = inSMachine1.getUmpleClass();
+	      	if (uClassifier==null) {
+	      		uClassifier = inSMachine1.getUmpleTrait();
+	      		getParseResult().addErrorMessage(new ErrorMessage(228,uClassifier.getPosition(0),inSMachine1.getName(),"tait", uClassifier.getName()));
+	      	} else {
+	      		getParseResult().addErrorMessage(new ErrorMessage(228,uClassifier.getPosition(0),inSMachine1.getName(),"class", uClassifier.getName()));
+	      	}
+	    	}
+		  	return compareStatesAndTransitions(inSMachine1,inSMachine2);
+		  	
+		} else{
+			return false;
+		}
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -156,33 +276,13 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 		  for(Transition trans : state.getTransitions() ){
 			  boolean find = false;
 			  for(Transition mainlTrans : mainState.getTransitions() ){
-				  if (checkTwoTransitionEqulaity(trans,mainlTrans)){ find = true; }
+				  if (trans.isEqualToTransition(mainlTrans)){ find = true; }
 			  }
 			  if(!find) return false;
 		  }
 	  }
 	  return true;
    }
-//---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------
-  private  boolean checkTwoTransitionEqulaity(Transition inTransition1, Transition inTransition2) {
-	  if (!inTransition1.getEvent().equals(inTransition2.getEvent())) return false;
-	  if (inTransition1.getEvent().numberOfParams() != inTransition2.getEvent().numberOfParams()) return false;
-	  for (int i = 0; i < inTransition1.getEvent().numberOfParams(); i++) {
-		  if (!inTransition1.getEvent().getParam(i).getType().equals(inTransition2.getEvent().getParam(i).getType())) return false;
-	  }
-	  //TODO inserted by Vahdat [Nov 26, 2015,12:59:42 AM] please complete this comparison for guards. 
-	  if (inTransition1.getGuard()!=null && inTransition2.getGuard()!=null){
-		  
-	  }
-	  //TODO inserted by lethbridge [Nov 26, 2015,1:00:33 AM] please complete this comparison for actions.
-	  if (inTransition1.getAction()!=null && inTransition2.getAction()!=null){
-		//  if (!inTransition1.getAction().getActionType().equals(inTransition2.getAction().getActionType())) return false;
-	  }
-	  return true;
- }
-  
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -195,9 +295,10 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 			  for (int i = 0; i < state.numberOfTransitions(); i++) {
 				  boolean find = false;
 				  for(Transition mainlTrans : mainState.getTransitions() ){
-					  if (checkTwoTransitionEqulaity(state.getTransition(i), mainlTrans)){ find = true; }
+					  if (state.getTransition(i).isEqualToTransition(mainlTrans)){ find = true; }
 				  }
 				  if(!find) {		
+				  	state.getTransition(i).setNextState(inSMachine1.findState(state.getTransition(i).getNextState().getName()));
 					  mainState.addTransition(state.getTransition(i));
 				  }
 			  }
@@ -209,8 +310,15 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-
-
+  private void changeEventName(StateMachine inStateMachine, StateMachineTemplateSignature inSMTSignature) {
+  	for (Event event : inStateMachine.getEvents()){
+  		Method m = new Method("",event.getName(),"",false);
+  		m.setMethodParameters(event.getParams());
+  		if (compareTwoMethdos(m, inSMTSignature.getMethodTemplateSignature().getMethod())){
+  			event.setName(inSMTSignature.getAlias());
+  		}
+		}
+	}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -222,4 +330,160 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 
+}
+
+
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+class Transition{
+//----------------------------------------------------------------------------  
+//---------------------------------Start--------------------------------------
+//----------------------------------------------------------------------------	
+  boolean isEqualToTransition(Transition inTransition){
+  	if (inTransition.equals(null)) return false;
+    if (!getEvent().equals(inTransition.getEvent())) return false;
+    if (getAutoTransition()!=inTransition.getAutoTransition()) return false;
+	  if (getEvent().numberOfParams() != inTransition.getEvent().numberOfParams()) return false;
+	  for (int i = 0; i < inTransition.getEvent().numberOfParams(); i++) {
+		  if (!getEvent().getParam(i).getType().equals(inTransition.getEvent().getParam(i).getType())) return false;
+	  }
+	  
+	  if (getGuard()!=null){
+		  if (!getGuard().isEqualToGuard(inTransition.getGuard())) return false; 
+	  } else {
+	  	if (inTransition.getGuard()!=null) 	return false;
+	  }
+
+	  if (getAction()!=null){
+	  	//Please the following equals API is generated automatically.It must be checked always and make sure it's correct.
+		  if (!getAction().equals(inTransition.getAction())) return false; 
+	  } else {
+	  	if (inTransition.getAction()!=null) 	return false;
+	  }
+    return true;
+	}
+}
+
+
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+
+class Guard{
+	depend java.util.Iterator;
+	
+//----------------------------------------------------------------------------  
+//---------------------------------Start--------------------------------------
+//----------------------------------------------------------------------------	
+	//TODO inserted by Vahda [Nov 30, 2015,4:49:56 PM]: please provide a comprehensive comparison
+  //This comparison just supports sequential comparing of boolean operations. If the order is changed then it'll show false.
+  boolean isEqualToGuard(Guard inGuard) {
+  	if (inGuard==null) return false;
+		if (getNumberOfElements()!=inGuard.getNumberOfElements()) return false;
+		Iterator<ConstraintVariable> main = iterator();
+		Iterator<ConstraintVariable> compareTo = inGuard.iterator();
+		while(main.hasNext()&& compareTo.hasNext()){
+			ConstraintVariable mCV = main.next();
+			ConstraintVariable cCV = compareTo.next();
+			if (mCV.getType()!=cCV.getType()) return false;
+			if (mCV instanceof ConstraintOperator && cCV instanceof ConstraintOperator) {
+				ConstraintOperator new_name1 = (ConstraintOperator) mCV;
+				ConstraintOperator new_name2 = (ConstraintOperator) cCV;
+			  if (!new_name1.getValue().equals(new_name2.getValue())) return false;
+			}
+			if (mCV instanceof ConstraintNamed && cCV instanceof ConstraintNamed) {
+				ConstraintNamed new_name1 = (ConstraintNamed) mCV;
+				ConstraintNamed new_name2 = (ConstraintNamed) cCV;
+			  if (!new_name1.getName().equals(new_name2.getName())) return false;
+			}
+			if (mCV instanceof ConstraintLiteral && cCV instanceof ConstraintLiteral) {
+				ConstraintLiteral new_name1 = (ConstraintLiteral) mCV;
+				ConstraintLiteral new_name2 = (ConstraintLiteral) cCV;
+			  if (!new_name1.getValue().equals(new_name2.getValue())) return false;
+			}
+			
+		}
+  	return true;
+  	}
+}
+
+
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+class Method {
+//----------------------------------------------------------------------------  
+//---------------------------------Start--------------------------------------
+//----------------------------------------------------------------------------
+	void setMethodParameters(List<MethodParameter> parameters){
+		methodParameters = parameters;
+ 	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------   
+	String getSignature(){
+    String result = getType()+" "+getName()+"(";
+ 			for(MethodParameter p : getMethodParameters()){
+	 			result=result+p.getType()+",";
+ 			} 	
+ 			
+ 			if (result.endsWith(",") )result =result.substring(0, result.length()-1); 
+ 			result=result+")";
+ 		  return result;
+ 		}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------   		
+boolean compareWithTheMethod(Method inMethod){
+    if (getName().equals(inMethod.getName())){
+		 // if(method1.getType().equals(method2.getType())){
+			  Integer numberOfParams = getMethodParameters().size();
+			  if ( numberOfParams== inMethod.getMethodParameters().size()) {
+		          boolean allSame = true;
+		          for (int i = 0; i < numberOfParams; i++)
+		          {
+		            if(!getMethodParameter(i).getType().equals(inMethod.getMethodParameter(i).getType()))
+		            {
+		              allSame = false;
+		              break;
+		            }
+		          }
+		          if(allSame)
+		          {
+		            return true;
+		          }
+		     }
+		 // }  
+      }
+	  return false;
+  } 		
+}
+
+
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+class StateMachine{
+	public Event getEventByMethod(Method inMethod) {
+	  if (inMethod == null)
+    {
+      return null;
+    }
+    for (State aState : states)
+    {
+      for (int i=0; i<aState.numberOfTransitions(); i++)
+      {
+        Transition aTransition = aState.getTransition(i);
+        Event e = aTransition.getEvent();
+        if (e != null )
+        {
+        	Method m = new Method("",e.getName(),"",false);
+        	m.setMethodParameters(e.getParams());
+        	if (m.compareWithTheMethod(inMethod))  return e;
+        }
+      }
+    }
+    return null;
+	}
 }

@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.19.0.3287 modeling language!*/
+/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
 
 class AutomatedTellerMachine
 {
@@ -76,7 +76,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   public function maintain()
   {
     $wasEventProcessed = false;
@@ -89,7 +88,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   public function unspecified()
   {
     $wasEventProcessed = false;
@@ -111,7 +109,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   public function isMaintained()
   {
     $wasEventProcessed = false;
@@ -124,7 +121,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   public function cancel()
   {
     $wasEventProcessed = false;
@@ -138,7 +134,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   private function __autotransition1__()
   {
     $wasEventProcessed = false;
@@ -151,7 +146,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   private function __autotransition2__()
   {
     $wasEventProcessed = false;
@@ -164,7 +158,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   private function enterActive()
   {
     $wasEventProcessed = false;
@@ -177,7 +170,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   private function exitActive()
   {
     $wasEventProcessed = false;
@@ -205,7 +197,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   public function validated()
   {
     $wasEventProcessed = false;
@@ -218,7 +209,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   public function select()
   {
     $wasEventProcessed = false;
@@ -231,7 +221,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   public function selectAnotherTransiction()
   {
     $wasEventProcessed = false;
@@ -244,7 +233,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   public function finish()
   {
     $wasEventProcessed = false;
@@ -257,7 +245,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   public function receiptPrinted()
   {
     $wasEventProcessed = false;
@@ -271,7 +258,6 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
-
   private function exitSm()
   {
     if ($this->sm == self::$SmActive)

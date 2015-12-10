@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
 
 class LightFixture
 {
@@ -80,7 +80,6 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
-
   private function enterOn()
   {
     $wasEventProcessed = false;
@@ -101,7 +100,6 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
-
   private function exitOn()
   {
     $wasEventProcessed = false;
@@ -132,7 +130,6 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
-
   public function flip()
   {
     $wasEventProcessed = false;
@@ -150,7 +147,6 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
-
   public function flop()
   {
     $wasEventProcessed = false;
@@ -168,7 +164,6 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
-
   private function exitStatus()
   {
     if ($this->status == self::$StatusOn)

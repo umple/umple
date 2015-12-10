@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.19.0.3548 modeling language!*/
+/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
 
 class Mentor
 {
@@ -69,7 +69,6 @@ class Mentor
     }
     return $wasEventProcessed;
   }
-
   public function timeoutNotOkToOk()
   {
     $wasEventProcessed = false;
@@ -82,7 +81,6 @@ class Mentor
     }
     return $wasEventProcessed;
   }
-
   private function setStatus($aStatus)
   {
     $this->status = $aStatus;

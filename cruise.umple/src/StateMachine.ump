@@ -45,6 +45,7 @@ class StateMachine
  */
 class State
 {
+  isA Node;
   name;
   Boolean isConcurrent = { numberOfNestedStateMachines() > 1 }
     
@@ -57,6 +58,7 @@ class State
   Boolean isHistoryState = false;
   Boolean isDeepHistoryState = false;
   Boolean finalState = false;
+  Boolean isVisited = false;
   //State mostRecentState; //will be in dot notation, if used by historyState, only look at first part?
   
   Position position = null;

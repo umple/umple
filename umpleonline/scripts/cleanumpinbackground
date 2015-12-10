@@ -1,0 +1,5 @@
+#!/bin/csh -fb
+echo if apache then will run a job to clean old temp files in the background
+if($LOGNAME == 'apache') then
+  ~ralph/bin/cleanump-su &
+endif

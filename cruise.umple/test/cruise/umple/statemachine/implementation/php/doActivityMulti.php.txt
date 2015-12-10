@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
 
 class X
 {
@@ -56,7 +56,6 @@ class X
     }
     return $wasEventProcessed;
   }
-
   private function setSm($aSm)
   {
     $this->sm = $aSm;

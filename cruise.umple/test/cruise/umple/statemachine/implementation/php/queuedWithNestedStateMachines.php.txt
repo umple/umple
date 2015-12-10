@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3239 modeling language!*/
+/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
 
 class QueuedWithNestedStateMachines
 {
@@ -66,7 +66,6 @@ class QueuedWithNestedStateMachines
     }
     return $wasEventProcessed;
   }
-
   private function enterS2()
   {
     $wasEventProcessed = false;
@@ -79,7 +78,6 @@ class QueuedWithNestedStateMachines
     }
     return $wasEventProcessed;
   }
-
   private function exitS2()
   {
     $wasEventProcessed = false;
@@ -97,7 +95,6 @@ class QueuedWithNestedStateMachines
     }
     return $wasEventProcessed;
   }
-
   public function e2()
   {
     $wasEventProcessed = false;
@@ -110,7 +107,6 @@ class QueuedWithNestedStateMachines
     }
     return $wasEventProcessed;
   }
-
   public function e3()
   {
     $wasEventProcessed = false;
@@ -123,7 +119,6 @@ class QueuedWithNestedStateMachines
     }
     return $wasEventProcessed;
   }
-
   private function exitSm()
   {
     if ($this->sm == self::$SmS2)
