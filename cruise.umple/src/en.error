@@ -144,9 +144,9 @@
 226: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' is the native state machine in {2} '{3}'.Therefore, it's disregarded.;
 227: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' in the {2} '{3}' has already been imported from the trait '{4}'.Therefore, it's disregarded.;
 228: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Since there are two state machine with the same name '{0}' and having two initial states is not acceptable. The initial state of the merged state machine is the one comes from {1} '{2}'.;
-229: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', state machine '{1}' has been defined two times. ;
-230: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', state machine/state '{1}' does not exist. ;
-231: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}' and its state machine '{1}', event '{2}' does not exist. ;
+229: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', the state machine/state/event '{1}' has been defined two times. ;
+230: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', the state machine/state '{1}' does not exist. ;
+231: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}' and its state machine '{1}', the event '{2}' does not exist. ;
 
 # Messages related to MOTL
 301: 4,  "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Tracing of non-existent model entity  ;

@@ -49,7 +49,10 @@ class UmpleInternalParser
   	List<StateMachine> lSMachine = new ArrayList<StateMachine>();	  
   	for (StateMachine sMachine : inTrait.getStateMachines()) {
   	 	StateMachine stTemp = ApplyTypeParametersToStateMachine(sMachine,inGTPApplied,inClass, inTrait);
-  		if (stTemp!=null)	lSMachine.add(stTemp);
+  		if (stTemp!=null)	{
+  			ApplyTypeParametersToEventsOfStateMachines(stTemp, inGTPApplied);
+  			lSMachine.add(stTemp);
+  			}
   	}
   	traiStateMachine.put(inTrait,lSMachine);
   	//----------------------------------------------------------------------------------------
@@ -126,7 +129,7 @@ class UmpleInternalParser
   			 if (newSt.getName().equals(mapped)){
     		   if (smTSignature.getMethodTemplateSignature()!=null){
   					 changeEventName(newSt,smTSignature);
-  					 return newSt;
+  					 continue;
   				 }
   				 if (smTSignature.numberOfStates()<=0) {
   					 newSt.setName(smTSignature.getAlias());

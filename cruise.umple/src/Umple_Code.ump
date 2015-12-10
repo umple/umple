@@ -3385,15 +3385,26 @@ class GeneralTPApplied {
 //----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------
 	boolean hasStateMachineTemplateSignature(StateMachineTemplateSignature inSMTSignature) {
+    boolean find = false;
     for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
-				if (smTSignature.getStateMachine().equals(inSMTSignature.getStateMachine()) && smTSignature.numberOfStates()==inSMTSignature.numberOfStates()){
-					for (int	i = 0; i<smTSignature.numberOfStates() ;i++) {
-						if (!smTSignature.getState(i).equals(inSMTSignature.getState(i))) return false;
+    	if (smTSignature.getStateMachine().equals(inSMTSignature.getStateMachine()) && smTSignature.numberOfStates()==inSMTSignature.numberOfStates()){					
+    		find = true;
+				for (int	i = 0; i<smTSignature.numberOfStates() ;i++) {
+					if (!smTSignature.getState(i).equals(inSMTSignature.getState(i))) {
+						find = false;
+						break;
 					}
-					return true;
 				}
-			}
-			return false;
+				if (!find) continue;
+				if (smTSignature.getMethodTemplateSignature()!=null ^ inSMTSignature.getMethodTemplateSignature()!=null){
+						find = false;
+				} else if (smTSignature.getMethodTemplateSignature()!=null && inSMTSignature.getMethodTemplateSignature()!=null){
+						if (!smTSignature.getMethodTemplateSignature().getMethod().compareWithTheMethod(inSMTSignature.getMethodTemplateSignature().getMethod())) find = false; 
+				}
+    	}
+    	if (find) return true;
+		}
+		return false;
 	}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------

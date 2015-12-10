@@ -342,10 +342,29 @@ public class UmpleTraitTest {
 		Assert.assertEquals("goOff", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getEvent().getName());
 		Assert.assertEquals("goOff", model.getUmpleClass("A").getStateMachine(0).getState(1).getTransition(0).getEvent().getName());		
 	}	
+	
+	@Test
+	public void stateMachineTraits018Test() {
+		String code = "class A {isA T1 <status.turnOff() as goOff, status.turnOn() as goOn>;} trait T1 { status { on { turnOff()-> off;} off{turnOn->on; } } }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("goOff", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getEvent().getName());
+		Assert.assertEquals("goOn", model.getUmpleClass("A").getStateMachine(0).getState(1).getTransition(0).getEvent().getName());		
+	}	
+	
+	@Test
+	public void stateMachineTraits019Test() {
+		String code = "class A{isA T<P=String>;}trait T<P> {	status{		on{			turnOff(P p) -> off;		}		off{			turnOn(P p1,P p2,P p3,int i) -> on; 		}	}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("String", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getEvent().getParam(0).getType());
+		Assert.assertEquals("String", model.getUmpleClass("A").getStateMachine(0).getState(1).getTransition(0).getEvent().getParam(0).getType());		
+		Assert.assertEquals("String", model.getUmpleClass("A").getStateMachine(0).getState(1).getTransition(0).getEvent().getParam(1).getType());
+		Assert.assertEquals("String", model.getUmpleClass("A").getStateMachine(0).getState(1).getTransition(0).getEvent().getParam(2).getType());
+		Assert.assertEquals("int", model.getUmpleClass("A").getStateMachine(0).getState(1).getTransition(0).getEvent().getParam(3).getType());
+	}	
 
 	//This is related to issue #656
 //	@Test
-//	public void stateMachineTraits018Test() {
+//	public void stateMachineTraits020Test() {
 //		String code = "class A {isA T1 <status.turnOff(int) as goOff>;} trait T1 { status { on { turnOff(int a,int b)-> off;} off{turnOff(int a)->off; } } }";
 //		UmpleModel model = getRunModel(code);
 //		Assert.assertEquals("turnOff", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getEvent().getName());
