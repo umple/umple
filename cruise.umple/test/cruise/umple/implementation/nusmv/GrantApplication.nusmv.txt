@@ -3,54 +3,54 @@
  -- This defines a NuSMV module for Status --
  MODULE Status
 
-    -- This part declares input variables for the given NuSMV module --
+   -- This part declares input variables for the given NuSMV module --
    IVAR
-     event : { createApplication , researcherDeclaresComplete , editByResearcher , returnToResearcher , verified , editByInstitution , reOpen , submit , withdraw , acceptForReview , submissionCheck , acceptForExpertReview , bypassExpertReviewDueToMinorChanges , returnToInstitition , expertReviewsReturned , finalAccept , minorRevisionsNeeded , reject , tryAgain };
+     event : { ev_createApplication , ev_researcherDeclaresComplete , ev_editByResearcher , ev_returnToResearcher , ev_verified , ev_editByInstitution , ev_reOpen , ev_submit , ev_withdraw , ev_acceptForReview , ev_submissionCheck , ev_acceptForExpertReview , ev_bypassExpertReviewDueToMinorChanges , ev_returnToInstitition , ev_expertReviewsReturned , ev_finalAccept , ev_minorRevisionsNeeded , ev_reject , ev_tryAgain };
     
-    -- This part declares state variables for the given NuSMV module --
+   -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { Planned , InProgress , EvaluationByInstitution , VerifiedByInstitution , SubmittedByInstitution , UnderAdministrativeReview , UnderExpertReview , AwaitingFinalDecision , Accepted , Rejected , Withdrawn };
+     state : { Status_Planned , Status_InProgress , Status_EvaluationByInstitution , Status_VerifiedByInstitution , Status_SubmittedByInstitution , Status_UnderAdministrativeReview , Status_UnderExpertReview , Status_AwaitingFinalDecision , Status_Accepted , Status_Rejected , Status_Withdrawn };
     
-    -- This part defines macros that summarize the transitions of the given NuSMV module --
+   -- This part defines macros that summarize the transitions of the given NuSMV module --
    DEFINE
-     t1 := event = createApplication & state = Planned;
-     t2 := event = researcherDeclaresComplete & state = InProgress;
-     t3 := event = editByResearcher & state = InProgress;
-     t4 := event = returnToResearcher & state = EvaluationByInstitution;
-     t5 := event = verified & state = EvaluationByInstitution;
-     t6 := event = editByInstitution & state = EvaluationByInstitution;
-     t7 := event = reOpen & state = VerifiedByInstitution;
-     t8 := event = submit & state = VerifiedByInstitution;
-     t9 := event = withdraw & state = SubmittedByInstitution;
-     t10 := event = acceptForReview & state = SubmittedByInstitution;
-     t11 := event = submissionCheck & state = SubmittedByInstitution;
-     t12 := event = submissionCheck & state = SubmittedByInstitution;
-     t13 := event = acceptForExpertReview & state = UnderAdministrativeReview;
-     t14 := event = bypassExpertReviewDueToMinorChanges & state = UnderAdministrativeReview;
-     t15 := event = returnToInstitition & state = UnderAdministrativeReview;
-     t16 := event = withdraw & state = UnderAdministrativeReview;
-     t17 := event = expertReviewsReturned & state = UnderExpertReview;
-     t18 := event = withdraw & state = UnderExpertReview;
-     t19 := event = finalAccept & state = AwaitingFinalDecision;
-     t20 := event = minorRevisionsNeeded & state = AwaitingFinalDecision;
-     t21 := event = reject & state = AwaitingFinalDecision;
-     t22 := event = tryAgain & state = Rejected;
-     t23 := event = tryAgain & state = Withdrawn;
+     t1 := event = ev_createApplication & state = Status_Planned;
+     t2 := event = ev_researcherDeclaresComplete & state = Status_InProgress;
+     t3 := event = ev_editByResearcher & state = Status_InProgress;
+     t4 := event = ev_returnToResearcher & state = Status_EvaluationByInstitution;
+     t5 := event = ev_verified & state = Status_EvaluationByInstitution;
+     t6 := event = ev_editByInstitution & state = Status_EvaluationByInstitution;
+     t7 := event = ev_reOpen & state = Status_VerifiedByInstitution;
+     t8 := event = ev_submit & state = Status_VerifiedByInstitution;
+     t9 := event = ev_withdraw & state = Status_SubmittedByInstitution;
+     t10 := event = ev_acceptForReview & state = Status_SubmittedByInstitution;
+     t11 := event = ev_submissionCheck & state = Status_SubmittedByInstitution;
+     t12 := event = ev_submissionCheck & state = Status_SubmittedByInstitution;
+     t13 := event = ev_acceptForExpertReview & state = Status_UnderAdministrativeReview;
+     t14 := event = ev_bypassExpertReviewDueToMinorChanges & state = Status_UnderAdministrativeReview;
+     t15 := event = ev_returnToInstitition & state = Status_UnderAdministrativeReview;
+     t16 := event = ev_withdraw & state = Status_UnderAdministrativeReview;
+     t17 := event = ev_expertReviewsReturned & state = Status_UnderExpertReview;
+     t18 := event = ev_withdraw & state = Status_UnderExpertReview;
+     t19 := event = ev_finalAccept & state = Status_AwaitingFinalDecision;
+     t20 := event = ev_minorRevisionsNeeded & state = Status_AwaitingFinalDecision;
+     t21 := event = ev_reject & state = Status_AwaitingFinalDecision;
+     t22 := event = ev_tryAgain & state = Status_Rejected;
+     t23 := event = ev_tryAgain & state = Status_Withdrawn;
   
-    -- This part defines the transitions from states to states for the given NuSMV module --
+   -- This part defines the transitions from states to states for the given NuSMV module --
    ASSIGN
-     init( state ) := Planned;
+     init( state ) := Status_Planned;
      next( state ) := case
-       t3 | t22 | t1 | t4 | t23 : InProgress;
-       t2 | t7 | t15 | t6 | t12 | t20 : EvaluationByInstitution;
-       t5 : VerifiedByInstitution;
-       t8 | t11 : SubmittedByInstitution;
-       t10 : UnderAdministrativeReview;
-       t13 : UnderExpertReview;
-       t14 | t17 : AwaitingFinalDecision;
-       t19 : Accepted;
-       t21 : Rejected;
-       t16 | t9 | t18 : Withdrawn;
+       t3 | t22 | t1 | t4 | t23 : Status_InProgress;
+       t2 | t7 | t15 | t6 | t12 | t20 : Status_EvaluationByInstitution;
+       t5 : Status_VerifiedByInstitution;
+       t8 | t11 : Status_SubmittedByInstitution;
+       t10 : Status_UnderAdministrativeReview;
+       t13 : Status_UnderExpertReview;
+       t14 | t17 : Status_AwaitingFinalDecision;
+       t19 : Status_Accepted;
+       t21 : Status_Rejected;
+       t16 | t9 | t18 : Status_Withdrawn;
        TRUE : state;
      esac;
  
@@ -58,19 +58,18 @@
  -- This defines a NuSMV module for main --
  MODULE main
 
-    -- This part declares state variables for the given NuSMV module --
+   -- This part declares state variables for the given NuSMV module --
    VAR
      status : Status;
     
-   CTLSPEC   EF  ( status.state = Planned )
-   CTLSPEC   EF  ( status.state = InProgress )
-   CTLSPEC   EF  ( status.state = EvaluationByInstitution )
-   CTLSPEC   EF  ( status.state = VerifiedByInstitution )
-   CTLSPEC   EF  ( status.state = SubmittedByInstitution )
-   CTLSPEC   EF  ( status.state = UnderAdministrativeReview )
-   CTLSPEC   EF  ( status.state = UnderExpertReview )
-   CTLSPEC   EF  ( status.state = AwaitingFinalDecision )
-   CTLSPEC   EF  ( status.state = Accepted )
-   CTLSPEC   EF  ( status.state = Rejected )
-   CTLSPEC   EF  ( status.state = Withdrawn )
-    
+   CTLSPEC   EF  ( status.state = Status_Planned )
+   CTLSPEC   EF  ( status.state = Status_InProgress )
+   CTLSPEC   EF  ( status.state = Status_EvaluationByInstitution )
+   CTLSPEC   EF  ( status.state = Status_VerifiedByInstitution )
+   CTLSPEC   EF  ( status.state = Status_SubmittedByInstitution )
+   CTLSPEC   EF  ( status.state = Status_UnderAdministrativeReview )
+   CTLSPEC   EF  ( status.state = Status_UnderExpertReview )
+   CTLSPEC   EF  ( status.state = Status_AwaitingFinalDecision )
+   CTLSPEC   EF  ( status.state = Status_Accepted )
+   CTLSPEC   EF  ( status.state = Status_Rejected )
+   CTLSPEC   EF  ( status.state = Status_Withdrawn )

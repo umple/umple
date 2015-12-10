@@ -1,106 +1,124 @@
 -- This file is generated from BigStateMachineTest.ump --
 
-MODULE Sm_Handle
-  
-  VAR 
-    event : { e5 , e2 , e3 , e1 , e4 };  
+ -- This defines a NuSMV module for Sm --
+ MODULE Sm ( _smZxab , _smZxabZx , _smGe ) 
+
+   -- This part declares input variables for the given NuSMV module --
+   IVAR
+     event : { ev_e5 , ev_e2 , ev_e3 , ev_e1 , ev_e4 };
     
-  
-MODULE Sm( smZxab , smZxabZx , smGe , handle )
-  
-  VAR 
-    sm_state : { sm_Zxab , sm_D , sm_Ge };  
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm_Zxab , Sm_Da , Sm_Ge };
     
-  ASSIGN
-    init(sm_state) := sm_Zxab;  
+   -- This part defines macros that summarize the transitions of the given NuSMV module --
+   DEFINE
+     t1 := event = ev_e5 & state = Sm_Da;
+     t2 := event = ev_e2 & state = Sm_Da;
+     t3 := event = ev_e5 & _smZxab.state = SmZxab_Aa;
+     t4 := event = ev_e3 & _smZxab.state = SmZxab_Aa;
+     t5 := event = ev_e1 & _smZxab.state = SmZxab_Aa;
+     t6 := event = ev_e4 & _smZxab.state = SmZxab_Aa;
+     t7 := event = ev_e3 & _smZxab.state = SmZxab_Ba;
+     t8 := event = ev_e1 & _smZxab.state = SmZxab_Ba;
+     t9 := event = ev_e4 & _smZxab.state = SmZxab_Ba;
+     t10 := event = ev_e3 & _smZxabZx.state = SmZxabZx_Za;
+     t11 := event = ev_e2 & _smZxabZx.state = SmZxabZx_Za;
+     t12 := event = ev_e5 & _smZxabZx.state = SmZxabZx_Za;
+     t13 := event = ev_e1 & _smZxabZx.state = SmZxabZx_Za;
+     t14 := event = ev_e4 & _smZxabZx.state = SmZxabZx_Za;
+     t15 := event = ev_e5 & _smZxabZx.state = SmZxabZx_Xa;
+     t16 := event = ev_e1 & _smZxabZx.state = SmZxabZx_Xa;
+     t17 := event = ev_e4 & _smZxabZx.state = SmZxabZx_Xa;
+     t18 := event = ev_e1 & _smGe.state = SmGe_Ga;
+     t19 := event = ev_e1 & _smGe.state = SmGe_Ea;
+     t20 := event = ev_e2 & _smGe.state = SmGe_Ea;
   
-  TRANS
-    ( (sm_state = sm_D) -> (
-      (handle.event = e5 & next(smZxabZx.smZxabZx_state) = smZxabZx_X )  |
-      (handle.event = e2 & next(smGe.smGe_state) = smGe_E )  ) ) &
-    ( (sm_state = sm_Zxab) -> ( next(smZxab.smZxab_state) = smZxab_Zx ) ) &
-    ( (sm_state = sm_Ge) -> ( next(smGe.smGe_state) = smGe_G ) )
-  
-MODULE SmZxab( sm , smZxabZx , smGe , handle )
-  
-  VAR 
-    smZxab_state : { smZxab_Zx , smZxab_A , smZxab_B , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := Sm_Zxab;
+     next( state ) := case
+       t1 | t4 | t10 | t11 | t18 : Sm_Zxab;
+       t3 : Sm_Da;
+       t12 | t19 | t14 | t6 | t9 | t16 | t8 | t15 | t20 | t17 | t7 | t13 | t5 | t2 : Sm_Ge;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for SmZxab --
+ MODULE SmZxab ( _sm , _smZxabZx , _smGe ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmZxab_Zx , SmZxab_Aa , SmZxab_Ba , null };
     
-  ASSIGN
-    init(smZxab_state) := null;  
-  
-  TRANS
-    ( (smZxab_state = smZxab_A) -> (
-      (handle.event = e5 & next(sm.sm_state) = sm_D
-         & next(smZxab_state) = null )  |
-      (handle.event = e3 & next(smZxab_state) = smZxab_B )  |
-      (handle.event = e1 & next(smGe.smGe_state) = smGe_E
-         & next(smZxab_state) = null )  |
-      (handle.event = e4 & next(sm.sm_state) = sm_Ge
-         & next(smZxab_state) = null )  ) ) &
-    ( (smZxab_state = smZxab_B) -> (
-      (handle.event = e3 & next(sm.sm_state) = sm_Ge
-         & next(smZxab_state) = null )  |
-      (handle.event = e1 & next(smGe.smGe_state) = smGe_E
-         & next(smZxab_state) = null )  |
-      (handle.event = e4 & next(sm.sm_state) = sm_Ge
-         & next(smZxab_state) = null )  ) ) &
-    ( (smZxab_state = smZxab_Zx) -> ( next(smZxabZx.smZxabZx_state) = smZxabZx_Z ) )
-  
-MODULE SmZxabZx( sm , smZxab , smGe , handle )
-  
-  VAR 
-    smZxabZx_state : { smZxabZx_Z , smZxabZx_X , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t10 | _sm.t1 : SmZxab_Zx;
+       _sm.t11 : SmZxab_Aa;
+       _sm.t4 | _sm.t18 : SmZxab_Ba;
+       _sm.t3 | _sm.t6 | _sm.t8 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t19 | _sm.t2 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t20 : null;
+       _sm.state = Sm_Zxab : SmZxab_Zx;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for SmZxabZx --
+ MODULE SmZxabZx ( _sm , _smZxab , _smGe ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmZxabZx_Za , SmZxabZx_Xa , null };
     
-  ASSIGN
-    init(smZxabZx_state) := null;  
-  
-  TRANS
-    ( (smZxabZx_state = smZxabZx_Z) -> (
-      (handle.event = e3 & next(smZxabZx_state) = smZxabZx_X )  |
-      (handle.event = e2 & next(smZxab.smZxab_state) = smZxab_A
-         & next(smZxabZx_state) = null )  |
-      (handle.event = e5 & next(smGe.smGe_state) = smGe_G
-         & next(smZxab.smZxab_state) = null
-         & next(smZxabZx_state) = null )  |
-      (handle.event = e1 & next(smGe.smGe_state) = smGe_E
-         & next(smZxab.smZxab_state) = null
-         & next(smZxabZx_state) = null )  |
-      (handle.event = e4 & next(sm.sm_state) = sm_Ge
-         & next(smZxab.smZxab_state) = null
-         & next(smZxabZx_state) = null )  ) ) &
-    ( (smZxabZx_state = smZxabZx_X) -> (
-      (handle.event = e5 & next(smGe.smGe_state) = smGe_G
-         & next(smZxab.smZxab_state) = null
-         & next(smZxabZx_state) = null )  |
-      (handle.event = e1 & next(smGe.smGe_state) = smGe_E
-         & next(smZxab.smZxab_state) = null
-         & next(smZxabZx_state) = null )  |
-      (handle.event = e4 & next(sm.sm_state) = sm_Ge
-         & next(smZxab.smZxab_state) = null
-         & next(smZxabZx_state) = null )  ) )
-  
-MODULE SmGe( sm , smZxab , smZxabZx , handle )
-  
-  VAR 
-    smGe_state : { smGe_G , smGe_E , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t10 | _sm.t1 : SmZxabZx_Xa;
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 : null;
+       _smZxab.state = SmZxab_Zx : SmZxabZx_Za;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for SmGe --
+ MODULE SmGe ( _sm , _smZxab , _smZxabZx ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmGe_Ga , SmGe_Ea , null };
     
-  ASSIGN
-    init(smGe_state) := null;  
-  
-  TRANS
-    ( (smGe_state = smGe_E) -> (
-      (handle.event = e1 & next(smGe_state) = smGe_G )  |
-      (handle.event = e2 & next(smGe_state) = smGe_G )  ) ) &
-    ( (smGe_state = smGe_G) -> (
-       handle.event = e1 & next(smZxab.smZxab_state) = smZxab_B
-         & next(smGe_state) = null ) )
-  
-MODULE main
-  
-  VAR 
-    handle : Sm_Handle;
-    sm : Sm( smZxab , smZxabZx , smGe , handle );
-    smZxab : SmZxab( sm , smZxabZx , smGe , handle );
-    smZxabZx : SmZxabZx( sm , smZxab , smGe , handle );
-    smGe : SmGe( sm , smZxab , smZxabZx , handle ); 
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t15 | _sm.t20 | _sm.t17 | _sm.t7 | _sm.t12 | _sm.t19 | _sm.t14 | _sm.t6 | _sm.t9 : SmGe_Ga;
+       _sm.t16 | _sm.t8 | _sm.t13 | _sm.t5 | _sm.t2 : SmGe_Ea;
+       _sm.t1 | _sm.t4 | _sm.t11 | _sm.t3 | _sm.t10 | _sm.t18 : null;
+       _sm.state = Sm_Ge : SmGe_Ga;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for main --
+ MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     sm : Sm( smZxab , smZxabZx , smGe );
+     smZxab : SmZxab( sm , smZxabZx , smGe );
+     smZxabZx : SmZxabZx( sm , smZxab , smGe );
+     smGe : SmGe( sm , smZxab , smZxabZx );
+    
+   CTLSPEC   EF  ( sm.state = Sm_Zxab )
+   CTLSPEC   EF  ( sm.state = Sm_Da )
+   CTLSPEC   EF  ( sm.state = Sm_Ge )
+   CTLSPEC   EF  ( smZxab.state = SmZxab_Zx )
+   CTLSPEC   EF  ( smZxab.state = SmZxab_Aa )
+   CTLSPEC   EF  ( smZxab.state = SmZxab_Ba )
+   CTLSPEC   EF  ( smZxabZx.state = SmZxabZx_Za )
+   CTLSPEC   EF  ( smZxabZx.state = SmZxabZx_Xa )
+   CTLSPEC   EF  ( smGe.state = SmGe_Ga )
+   CTLSPEC   EF  ( smGe.state = SmGe_Ea )

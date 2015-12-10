@@ -664,6 +664,7 @@ class GeneralTPApplied {
 	String[] parameters;
 	1 -> 0..1 Position positions;
 	1 -> * MethodTemplateSignature;
+	1 -> * StateMachineTemplateSignature;
 
 }
 
@@ -673,6 +674,13 @@ class MethodTemplateSignature{
 	alias;
 }
 
+class StateMachineTemplateSignature{
+	modifier;
+	stateMachine;
+	String[] states;
+	0..1 -> 0..1 MethodTemplateSignature;
+	alias;
+}
 /*
  * A depend relationship indicates a package on which this class depends
  */

@@ -13,7 +13,7 @@ singleIsA- : isA [[isAName]] ( , isA [[isAName]] )*  ;
 multipleIsA- : isA [[isAName]] ( , [[isAName]] )* ;
 isAName- : " [**extendsNames] " [[gTemplateParameter]]? | [extendsName] [[gTemplateParameter]]?
 
-gTemplateParameter : < [[functionIncludeExcludeAlias]] >
+gTemplateParameter : < [[AllInclusionExclusionAlias]] >
 
 // A class that can have only one instance [*SingletonPattern*]
 singleton- : [=singleton] ;

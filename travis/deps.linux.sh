@@ -6,6 +6,8 @@ set -e
 # check for linux
 test "$TRAVIS_OS_NAME" == "linux"
 
-#sudo apt-get update
-#sudo apt-get install --force-yes php5-cli 
+rvm install 2.1
+rvm use 2.1
+
+
 

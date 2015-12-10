@@ -9,53 +9,91 @@
 
   <property name="myenv" value="cc" />
   <import file="_${myenv}.xml" />
-
+  
   <property name="dist.dir"                     value="${basedir}/dist" />
+  <property name="dist.libs.dir"                value="${dist.dir}/libs" />
 
-  <property name="dist.umple.jar"               value="umple-${umple.version}.jar" />
-  <property name="dist.umple.jar.next"          value="umple.jar" />
-  <property name="dist.umple.umplificator.jar"  value="umplificator-${umple.version}.jar" />
-  <property name="dist.umple.validator.jar"     value="validator-${umple.version}.jar" />
-  <property name="dist.umple.vml.jar"           value="vml-${umple.version}.jar" />
-  <property name="dist.umple.stats.jar"         value="umplestats-${umple.version}.jar" />
-  <property name="dist.umple.docs.jar"          value="umpledocs-${umple.version}.jar" />
-  <property name="dist.umple.sync.jar"          value="umplesync-${umple.version}.jar" />
-  <property name="dist.umple.run.jar"           value="umplerun-${umple.version}.jar" />
+  <!-- Macro that will build up jar properties: creates two, 
+  1. dist.umple.@{name}.jar      -> most recent built jar
+  2. dist.umple.@{name}.jar.prev -> previously built jar -->
+  <macrodef name="umple-jar">
+    <attribute name="name" description="Name of the jar" />
+    <sequential>
+      <property name="dist.umple.@{name}.jar"       value="umple@{name}-${umple.version}.jar" />
+      <property name="dist.umple.@{name}.jar.prev"  value="umple@{name}-${last.version}.jar" />
+    </sequential>
+  </macrodef>
+
+  <property name="dist.umple.jar"       value="umple-${umple.version}.jar" />
+  <property name="dist.umple.jar.prev"  value="umple-${last.version}.jar" />
+
+  <umple-jar name="umplificator" />
+  <umple-jar name="validator" />
+  <umple-jar name="vml" />
+  <umple-jar name="stats" />
+  <umple-jar name="docs" />
+  <umple-jar name="sync" />
+  <umple-jar name="run" />
 
   <macrodef name="isreachable" >
     <attribute name="property" description="Property to hold result value" />
     <attribute name="host"     description="Host validated" />
     <sequential>
-      <if>
-        <os family="unix" />
-        <then>
-          <exec executable="ping" resultproperty="@{property}" output="/dev/null" logError="true" >
-            <arg line="-c 1 -t ${connectionTimeout}" />
-            <arg line="@{host}" />
-          </exec>
-        </then>
-        <else>
-          <echo message="Ping on windows is untested. Please fix this if you use this feature." />
+      <!-- Declare local variables -->
+      <local name="temp.file" />
+      <local name="file.length" />
 
+      <!-- get a temporary file to write to -->
+      <tempfile property="temp.file" prefix="@{property}."/>
+      <!-- Actually fetch the URL into the temporary file -->
+      <get src="@{host}" dest="${temp.file}" />
+      
+      <!-- See if the downloaded resource is larger than 0 -->
+      <condition property="@{property}">
+        <length file="${temp.file}" when="gt" length="0" />
+      </condition>
 
-          <!-- https://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/ping.mspx?mfr=true -->
-          <if>
-            <!-- Ping requires timeout in MS, use the math module. -->
-            <not><isset property="connectionTimeout.milli" /></not>
-            <then>
-              <math result="connectionTimeout.milli" operand1="${connectionTimeout}" operation="*" operand2="1000" datatype="int"/>
-              <echo>Connection timeout -> ${connectionTimeout.milli} ms</echo>
-            </then>
-          </if>
-
-          <exec executable="PING" resultproperty="@{property}" output="NUL" logError="true" >
-            <arg line="/w ${connectionTimeout.milli}" />
-            <arg line="/n 1" />
-            <arg line="@{host}" />
-          </exec>
-        </else>
-      </if>
+      <delete file="${temp.file}" 
+              deleteonexit="true" 
+              quiet="true"/>
     </sequential> 
+  </macrodef>
+
+  <macrodef name="check-connectivity-no-contrib">
+    <sequential>
+      <echo message="Checking for Internet connectivity..." />
+      <echo message="Set property -Donline=false if connectivity is known to be unavailable." />
+
+      <!-- Some local variables to the macro -->
+      <local name="access.maven" />
+      <local name="access.umple" />
+      <local name="access.github" />
+      
+      <!-- 
+        We ping three different sources that we know of to check if they are available. If they are not available
+        then we know that the build is offline (as far as we are concerned).
+
+        Unfortunately, the <isreachable> tag from <condition> seems to return false negatives, thus doing an OS 
+        specific approach was required. This is handled in the custom <isreachable> macro defined above. 
+      -->
+      <parallel>
+        <isreachable property="access.maven" 
+                     host="http://repo1.maven.org" />
+        <isreachable property="access.umple" 
+                     host="http://cruise.eecs.uottawa.ca" />
+        <isreachable property="access.github" 
+                     host="https://github.com" />
+      </parallel>
+
+      <condition property="online">
+        <and>
+          <istrue value="${access.maven}" />
+          <istrue value="${access.umple}" />
+          <istrue value="${access.github}" />
+        </and>
+      </condition>
+      <echo message="Internet connectivity available: ${online}" />
+    </sequential>
   </macrodef>
 
   <macrodef name="check-connectivity">
@@ -63,42 +101,13 @@
       <if>
         <not><isset property="online" /></not>
         <then>
-          <echo message="Checking for Internet connectivity..." />
-          <echo message="Set property -Donline=false if connectivity is known to be unavailable." />
-          
-          <!-- 
-            We ping three different sources that we know of to check if they are available. If they are not available
-            then we know that the build is offline (as far as we are concerned).
-
-            Unfortunately, the <isreachable> tag from <condition> seems to return false negatives, thus doing an OS 
-            specific approach was required. This is handled in the custom <isreachable> macro defined above. 
-          -->
-          <parallel>
-            <isreachable property="access.maven" 
-                         host="repo1.maven.org" />
-            <isreachable property="access.org.umple" 
-                         host="cruise.eecs.uottawa.ca" />
-            <isreachable property="access.com.googlecode" 
-                         host="github.com" />
-          </parallel>
-
-          <condition property="online">
-            <and>
-              <equals arg1="0" arg2="${access.maven}" />
-              <equals arg1="0" arg2="${access.org.umple}" />
-              <equals arg1="0" arg2="${access.com.googlecode}" />
-            </and>
-          </condition>
+          <check-connectivity-no-contrib />
         </then>
       </if>
-
-      <property name="online" value="false" />
-      <echo message="Internet connectivity available: ${online}" />
     </sequential>
   </macrodef>
 
   <import file="build.deps.xml" />
-  <deps-declare-taskdef />
 
   <!-- ```````````````````````````
     Clean up and initialize any potential byproduct

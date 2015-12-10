@@ -1,55 +1,71 @@
 -- This file is generated from NestedMachine.ump --
 
-MODULE Sm_Handle
-  
-  VAR 
-    event : { e1 , e2 , e3 , e4 };  
+ -- This defines a NuSMV module for Sm --
+ MODULE Sm ( _smS2 ) 
+
+   -- This part declares input variables for the given NuSMV module --
+   IVAR
+     event : { ev_e1 , ev_e2 , ev_e3 , ev_e4 };
     
-  
-MODULE Sm( smS2 , handle )
-  
-  VAR 
-    sm_state : { sm_s1 , sm_s2 , sm_s3 , sm_s4 };  
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm_s1 , Sm_s2 , Sm_s3 , Sm_s4 };
     
-  ASSIGN
-    init(sm_state) := sm_s1;  
+   -- This part defines macros that summarize the transitions of the given NuSMV module --
+   DEFINE
+     t1 := event = ev_e1 & state = Sm_s1;
+     t2 := event = ev_e2 & state = Sm_s1;
+     t3 := event = ev_e3 & state = Sm_s1;
+     t4 := event = ev_e1 & state = Sm_s2;
+     t5 := event = ev_e3 & _smS2.state = SmS2_s2a;
+     t6 := event = ev_e3 & _smS2.state = SmS2_s2b;
+     t7 := event = ev_e4 & _smS2.state = SmS2_s2b;
+     t8 := event = ev_e2 & _smS2.state = SmS2_s2b;
   
-  TRANS
-    ( (sm_state = sm_s1) -> (
-      (handle.event = e1 & next(sm_state) = sm_s2 )  |
-      (handle.event = e2 & next(smS2.smS2_state) = smS2_s2b )  |
-      (handle.event = e3 & next(sm_state) = sm_s4 )  ) ) &
-    ( (sm_state = sm_s2) -> ( next(smS2.smS2_state) = smS2_s2a ) ) &
-    ( (sm_state = sm_s3) -> ( next(sm_state) = sm_state ) ) &
-    ( (sm_state = sm_s4) -> ( next(sm_state) = sm_state ) )
-  
-MODULE SmS2( sm , handle )
-  
-  VAR 
-    smS2_state : { smS2_s2a , smS2_s2b , smS2_s2c , null };  
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := Sm_s1;
+     next( state ) := case
+       t4 : Sm_s1;
+       t1 | t5 | t6 | t2 | t8 : Sm_s2;
+       t7 : Sm_s3;
+       t3 : Sm_s4;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for SmS2 --
+ MODULE SmS2 ( _sm ) 
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmS2_s2a , SmS2_s2b , SmS2_s2c , null };
     
-  ASSIGN
-    init(smS2_state) := null;  
-  
-  TRANS
-    ( (smS2_state = smS2_s2a) -> (
-      (handle.event = e3 & next(smS2_state) = smS2_s2b )  |
-      (handle.event = e1 & next(sm.sm_state) = sm_s1
-         & next(smS2_state) = null )  ) ) &
-    ( (smS2_state = smS2_s2b) -> (
-      (handle.event = e3 & next(smS2_state) = smS2_s2a )  |
-      (handle.event = e4 & next(sm.sm_state) = sm_s3
-         & next(smS2_state) = null )  |
-      (handle.event = e2 & next(smS2_state) = smS2_s2c )  |
-      (handle.event = e1 & next(sm.sm_state) = sm_s1
-         & next(smS2_state) = null )  ) ) &
-    ( (smS2_state = smS2_s2c) -> (
-       handle.event = e1 & next(sm.sm_state) = sm_s1
-         & next(smS2_state) = null ) )
-  
-MODULE main
-  
-  VAR 
-    handle : Sm_Handle;
-    sm : Sm( smS2 , handle );
-    smS2 : SmS2( sm , handle ); 
+   -- This part defines the transitions from states to states for the given NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t6 | _sm.t1 : SmS2_s2a;
+       _sm.t2 | _sm.t5 : SmS2_s2b;
+       _sm.t8 : SmS2_s2c;
+       _sm.t4 | _sm.t3 | _sm.t7 : null;
+       _sm.state = Sm_s2 : SmS2_s2a;
+       TRUE : state;
+     esac;
+ 
+   
+ -- This defines a NuSMV module for main --
+ MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     sm : Sm( smS2 );
+     smS2 : SmS2( sm );
+    
+   CTLSPEC   EF  ( sm.state = Sm_s1 )
+   CTLSPEC   EF  ( sm.state = Sm_s2 )
+   CTLSPEC   EF  ( sm.state = Sm_s3 )
+   CTLSPEC   EF  ( sm.state = Sm_s4 )
+   CTLSPEC   EF  ( smS2.state = SmS2_s2a )
+   CTLSPEC   EF  ( smS2.state = SmS2_s2b )
+   CTLSPEC   EF  ( smS2.state = SmS2_s2c )

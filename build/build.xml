@@ -4,6 +4,8 @@
   <import file="_template.xml" />
 
   <target name="build">
+    <deps-declare-taskdef />
+
     <trycatch property="foo" reference="bar">
       <try>
         <antcall target="qaBuildingPage" />
