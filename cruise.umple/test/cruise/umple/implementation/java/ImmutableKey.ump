@@ -1,0 +1,7 @@
+class A {
+  
+    immutable String k;
+  
+  key { k };
+    
+}
