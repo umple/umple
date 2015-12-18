@@ -68,45 +68,51 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
   private boolean checkValidityOfSMTemplateSignature(GeneralTPApplied inGTPApplied, UmpleTrait inTrait) {
-   if (inGTPApplied!=null){
+    if (inGTPApplied!=null){
 	  	for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
-	  		StateMachine sm = inTrait.getStateMachine(smTSignature.getStateMachine());
-	 			if ( sm == null ){
-	 				getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine()));	
-	 				return false;
-	 			} if (smTSignature.getMethodTemplateSignature()!=null){
-	 				Method method1 = smTSignature.getMethodTemplateSignature().getMethod();
-	 				Event event = sm.getEventByMethod(method1);	
-	 				if(event==null){
-  	 				getParseResult().addErrorMessage(new ErrorMessage(231,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine(),method1.getSignature()));	
+	  		//checks that the event exists in one of the state machines.
+	  		if (smTSignature.getStateMachine().equals("")){
+	  			Method method1 = smTSignature.getMethodTemplateSignature().getMethod();
+	  			boolean find = false;
+	  			for (StateMachine stMachine : inTrait.getStateMachines()){
+	  				Event event = stMachine.getEventByMethod(method1);	 				
+		 				if(event!=null)			{
+		 					find = true;
+		 					break;
+		 				}
+	  			}
+	 				if(find==false){
+  	 				getParseResult().addErrorMessage(new ErrorMessage(232,inTrait.getPosition(0),inTrait.getName(),method1.getSignature()));	
 		 				return false;
 	 				}
-	 				
-	 			}	else {
-					 StateMachine smTemp = sm;
-					 State tState=null;
-					 for (String s : smTSignature.getStates()){
-						 tState = smTemp.findState(s, false);
-						 if (tState==null){
-//							 boolean find = false;
-//							 for(StateMachine smNested:smTemp.getNestedStateMachines()){
-//								 if (s.equals(sm.getName())) {
-//									 smTemp = smNested;
-//									 find = true;
-//								 }
-//							 }
-//							 if (!find) {
-//								 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),s));	
-//			 		 				return false;
-//							 }
-							 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),s));	
-			 		 		 return false;
-						 } else
-							 if(tState.hasNestedStateMachines()){
-	 						 smTemp = tState.getNestedStateMachine(0);
-	 					 }
-					 }				
-	 			}
+	  		} else {
+		  		StateMachine sm = inTrait.getStateMachine(smTSignature.getStateMachine());
+		 			if ( sm == null ){
+		 				getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine()));	
+		 				return false;
+		 			} if (smTSignature.getMethodTemplateSignature()!=null){
+		 				Method method1 = smTSignature.getMethodTemplateSignature().getMethod();
+		 				Event event = sm.getEventByMethod(method1);	
+		 				if(event==null){
+	  	 				getParseResult().addErrorMessage(new ErrorMessage(231,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine(),method1.getSignature()));	
+			 				return false;
+		 				}
+		 				
+		 			}	else {
+						 StateMachine smTemp = sm;
+						 State tState=null;
+						 for (String s : smTSignature.getStates()){
+							 tState = smTemp.findState(s, false);
+							 if (tState==null){
+								 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),s));	
+				 		 		 return false;
+							 } else
+								 if(tState.hasNestedStateMachines()){
+		 						 smTemp = tState.getNestedStateMachine(0);
+		 					 }
+						 }				
+		 			}
+	  		}
 	  	}	 
 	  	return true;
   	} else return true;
@@ -123,6 +129,7 @@ class UmpleInternalParser
   	 if (inGTPApplied!=null){
   		 for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
   			 if (smTSignature.getModifier().equals("-")) return null;
+  			 if (smTSignature.getStateMachine().equals("")) break;
   			 mapped = nameMapping.get(smTSignature.getStateMachine());
   			 if (mapped==null) mapped = smTSignature.getStateMachine();
   			 track = smTSignature.getStateMachine();
@@ -164,6 +171,15 @@ class UmpleInternalParser
   				 } 					
 				}
 			}
+  		 //This code is used to make sure the * pattern for renaming events name applies to all state machines.
+  		 for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
+  			 if (smTSignature.getStateMachine().equals("")){
+    		   if (smTSignature.getMethodTemplateSignature()!=null){
+  					 changeEventName(newSt,smTSignature);
+  					 continue;
+  				 }
+  			 }
+  		 }
   	 }
   	 return newSt;
   }

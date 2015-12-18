@@ -26,8 +26,11 @@ IEVisiAlias3- : [~methodAliasName]
 traitAppliedParameters : [~pName] = [~rName]
 
 StateMachineIncludeExcludeAlias- : [[ StateMachineInExAlias]] ( , [[StateMachineInExAlias]]  )*
-StateMachineInExAlias- : [[StateMachineAliasName]] | [[iEStateMachine]]
+StateMachineInExAlias- : [[StateMachineAliasName]] | [[iEStateMachine]] | [[StateMachineTransitionAlias]]
 StateMachineAliasName : ([=iEStateMachineModifier:+])? [~smName] ([[StateNames]])? as [~AliasName]
-StateNames : . [~sName] ( [[StateNamesPassing]] )* ([[iEParameterList]])?
+StateNames : . [~sName] ( [[StateNamesPassing]] )*
 StateNamesPassing : [[StateNames]]
 iEStateMachine : [=iEStateMachineModifier:+|-] [~smName]
+
+//This is for events in state machines
+StateMachineTransitionAlias : ( [~smName] | [!smPattern:\d+|[*]]) . [~eventName] [[iEParameterList]] as [~AliasName]

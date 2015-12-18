@@ -362,6 +362,44 @@ public class UmpleTraitTest {
 		Assert.assertEquals("int", model.getUmpleClass("A").getStateMachine(0).getState(1).getTransition(0).getEvent().getParam(3).getType());
 	}	
 
+	@Test
+	public void stateMachineTraits020Test() {
+		String code = "class A {isA T1 <status.activate1() as enable>;} trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("231");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+	
+	@Test
+	public void stateMachineTraits021Test() {
+		String code = "class A {isA T1 <*.activate1() as enable>;} trait T1 { status { on { activate -> on;}} }";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("232");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+
+	@Test
+	public void stateMachineTraits022Test() {
+		String code = "class A {isA T1 <*.activate() as enable>;} trait T1 { status1 { on { activate -> on; activate2 -> on;}}  status2 { on { activate -> on;}}  }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("enable", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getEvent().getName());
+		Assert.assertEquals("activate2", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(1).getEvent().getName());
+		Assert.assertEquals("enable", model.getUmpleClass("A").getStateMachine(1).getState(0).getTransition(0).getEvent().getName());
+	}	
 	//This is related to issue #656
 //	@Test
 //	public void stateMachineTraits020Test() {
