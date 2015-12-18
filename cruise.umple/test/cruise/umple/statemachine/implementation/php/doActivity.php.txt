@@ -55,6 +55,7 @@ class Switch
     }
     return $wasEventProcessed;
   }
+
   private function setStatus($aStatus)
   {
     $this->status = $aStatus;

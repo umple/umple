@@ -69,6 +69,7 @@ class Mentor
     }
     return $wasEventProcessed;
   }
+
   public function timeoutNotOkToOk()
   {
     $wasEventProcessed = false;
@@ -81,6 +82,7 @@ class Mentor
     }
     return $wasEventProcessed;
   }
+
   private function setStatus($aStatus)
   {
     $this->status = $aStatus;

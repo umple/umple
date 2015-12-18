@@ -54,6 +54,7 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
+
   private function exitBulb()
   {
     if ($this->bulb == self::$BulbOn)

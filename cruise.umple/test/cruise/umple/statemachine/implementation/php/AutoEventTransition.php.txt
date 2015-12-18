@@ -52,6 +52,7 @@ class Light
     }
     return $wasEventProcessed;
   }
+
   private function setBulb($aBulb)
   {
     $this->bulb = $aBulb;

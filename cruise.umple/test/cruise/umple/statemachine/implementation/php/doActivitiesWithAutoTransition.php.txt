@@ -58,6 +58,7 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
+
   private function __autotransition2__()
   {
     $wasEventProcessed = false;
@@ -70,6 +71,7 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
+
   private function setBulb($aBulb)
   {
     $this->Bulb = $aBulb;

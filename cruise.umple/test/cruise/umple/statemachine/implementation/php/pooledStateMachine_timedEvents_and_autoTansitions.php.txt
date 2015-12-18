@@ -54,6 +54,7 @@ class X
     }
     return $wasEventProcessed;
   }
+
   public function timeouts2Tos3()
   {
     $wasEventProcessed = false;
@@ -66,6 +67,7 @@ class X
     }
     return $wasEventProcessed;
   }
+
   private function setSm($aSm)
   {
     $this->sm = $aSm;

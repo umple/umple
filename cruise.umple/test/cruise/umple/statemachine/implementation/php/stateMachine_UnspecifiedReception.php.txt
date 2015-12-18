@@ -54,6 +54,7 @@ class Course
     }
     return $wasEventProcessed;
   }
+
   public function unspecified()
   {
     $wasEventProcessed = false;
@@ -66,6 +67,7 @@ class Course
     }
     return $wasEventProcessed;
   }
+
   public function reject()
   {
     $wasEventProcessed = false;
@@ -78,6 +80,7 @@ class Course
     }
     return $wasEventProcessed;
   }
+
   private function __autotransition1__()
   {
     $wasEventProcessed = false;
@@ -90,6 +93,7 @@ class Course
     }
     return $wasEventProcessed;
   }
+
   private function setStatus($aStatus)
   {
     $this->status = $aStatus;

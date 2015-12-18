@@ -66,6 +66,7 @@ class X
     }
     return $wasEventProcessed;
   }
+
   private function enterS1()
   {
     $wasEventProcessed = false;
@@ -78,6 +79,7 @@ class X
     }
     return $wasEventProcessed;
   }
+
   private function exitS1()
   {
     $wasEventProcessed = false;
@@ -95,6 +97,7 @@ class X
     }
     return $wasEventProcessed;
   }
+
   public function timeouts1aTos1b()
   {
     $wasEventProcessed = false;
@@ -107,6 +110,7 @@ class X
     }
     return $wasEventProcessed;
   }
+
   public function e1()
   {
     $wasEventProcessed = false;
@@ -120,6 +124,7 @@ class X
     }
     return $wasEventProcessed;
   }
+
   private function exitSm()
   {
     if ($this->sm == self::$SmS1)

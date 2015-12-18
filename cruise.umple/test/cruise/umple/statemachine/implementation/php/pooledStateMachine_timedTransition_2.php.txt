@@ -58,6 +58,7 @@ class X
     }
     return $wasEventProcessed;
   }
+
   public function timeouts1Tos2()
   {
     $wasEventProcessed = false;
@@ -70,6 +71,7 @@ class X
     }
     return $wasEventProcessed;
   }
+
   public function ev1()
   {
     $wasEventProcessed = false;
@@ -82,6 +84,7 @@ class X
     }
     return $wasEventProcessed;
   }
+
   public function ev2()
   {
     $wasEventProcessed = false;
@@ -94,6 +97,7 @@ class X
     }
     return $wasEventProcessed;
   }
+
   public function ev3()
   {
     $wasEventProcessed = false;
@@ -106,6 +110,7 @@ class X
     }
     return $wasEventProcessed;
   }
+
   private function setSm($aSm)
   {
     $this->sm = $aSm;

@@ -52,6 +52,7 @@ class Light
     }
     return $wasEventProcessed;
   }
+
   private function setStatus($aStatus)
   {
     $this->status = $aStatus;

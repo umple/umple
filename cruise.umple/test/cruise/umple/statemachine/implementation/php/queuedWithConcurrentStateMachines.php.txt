@@ -76,6 +76,7 @@ class QueuedWithConcurrentStateMachines
     }
     return $wasEventProcessed;
   }
+
   private function enterS2()
   {
     $wasEventProcessed = false;
@@ -96,6 +97,7 @@ class QueuedWithConcurrentStateMachines
     }
     return $wasEventProcessed;
   }
+
   private function exitS2()
   {
     $wasEventProcessed = false;
@@ -116,6 +118,7 @@ class QueuedWithConcurrentStateMachines
     }
     return $wasEventProcessed;
   }
+
   public function e2()
   {
     $wasEventProcessed = false;
@@ -137,6 +140,7 @@ class QueuedWithConcurrentStateMachines
     }
     return $wasEventProcessed;
   }
+
   private function exitSm()
   {
     if ($this->sm == self::$SmS2)

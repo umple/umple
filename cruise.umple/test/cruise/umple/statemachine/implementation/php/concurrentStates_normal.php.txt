@@ -80,6 +80,7 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
+
   private function enterOn()
   {
     $wasEventProcessed = false;
@@ -100,6 +101,7 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
+
   private function exitOn()
   {
     $wasEventProcessed = false;
@@ -130,6 +132,7 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
+
   public function flip()
   {
     $wasEventProcessed = false;
@@ -147,6 +150,7 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
+
   public function flop()
   {
     $wasEventProcessed = false;
@@ -164,6 +168,7 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
+
   private function exitStatus()
   {
     if ($this->status == self::$StatusOn)

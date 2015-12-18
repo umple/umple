@@ -56,6 +56,7 @@ class QSMwithUnspecifiedRecep
     }
     return $wasEventProcessed;
   }
+
   public function unspecified()
   {
     $wasEventProcessed = false;
@@ -74,6 +75,7 @@ class QSMwithUnspecifiedRecep
     }
     return $wasEventProcessed;
   }
+
   public function e2()
   {
     $wasEventProcessed = false;
@@ -86,6 +88,7 @@ class QSMwithUnspecifiedRecep
     }
     return $wasEventProcessed;
   }
+
   private function __autotransition1__()
   {
     $wasEventProcessed = false;
@@ -98,6 +101,7 @@ class QSMwithUnspecifiedRecep
     }
     return $wasEventProcessed;
   }
+
   private function __autotransition2__()
   {
     $wasEventProcessed = false;
@@ -110,6 +114,7 @@ class QSMwithUnspecifiedRecep
     }
     return $wasEventProcessed;
   }
+
   private function setSm($aSm)
   {
     $this->sm = $aSm;

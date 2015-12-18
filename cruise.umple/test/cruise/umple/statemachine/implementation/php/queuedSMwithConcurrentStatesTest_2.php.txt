@@ -83,6 +83,7 @@ class QueuedSMwithConcurrentStates_2
     }
     return $wasEventProcessed;
   }
+
   private function enterState1()
   {
     $wasEventProcessed = false;
@@ -103,6 +104,7 @@ class QueuedSMwithConcurrentStates_2
     }
     return $wasEventProcessed;
   }
+
   private function exitState1()
   {
     $wasEventProcessed = false;
@@ -123,6 +125,7 @@ class QueuedSMwithConcurrentStates_2
     }
     return $wasEventProcessed;
   }
+
   private function exitSm()
   {
     if ($this->sm == self::$SmState1)

@@ -53,6 +53,7 @@ class Garage
     }
     return $wasEventProcessed;
   }
+
   private function setGarageDoor($aGarageDoor)
   {
     $this->GarageDoor = $aGarageDoor;

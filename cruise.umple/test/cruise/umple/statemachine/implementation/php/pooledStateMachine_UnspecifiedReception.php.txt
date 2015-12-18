@@ -54,6 +54,7 @@ class PooledSMwithUnspecifiedReception
     }
     return $wasEventProcessed;
   }
+
   public function unspecified()
   {
     $wasEventProcessed = false;
@@ -66,6 +67,7 @@ class PooledSMwithUnspecifiedReception
     }
     return $wasEventProcessed;
   }
+
   private function __autotransition1__()
   {
     $wasEventProcessed = false;
@@ -78,6 +80,7 @@ class PooledSMwithUnspecifiedReception
     }
     return $wasEventProcessed;
   }
+
   private function setSm($aSm)
   {
     $this->sm = $aSm;

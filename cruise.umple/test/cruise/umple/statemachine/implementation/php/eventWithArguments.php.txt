@@ -84,6 +84,7 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
+
   public function flipSwitch()
   {
     $wasEventProcessed = false;
@@ -106,6 +107,7 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
+
   public function entry()
   {
     $wasEventProcessed = false;
@@ -121,6 +123,7 @@ class LightFixture
     }
     return $wasEventProcessed;
   }
+
   private function setBulb($aBulb)
   {
     $this->bulb = $aBulb;

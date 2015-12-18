@@ -119,6 +119,7 @@ class Lamp
     }
     return $wasEventProcessed;
   }
+
   private function exitTopLevel()
   {
     $wasEventProcessed = false;
@@ -139,6 +140,7 @@ class Lamp
     }
     return $wasEventProcessed;
   }
+
   private function exitStateMachine1()
   {
     if ($this->stateMachine1 == self::$StateMachine1TopLevel)

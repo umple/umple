@@ -52,6 +52,7 @@ class Course
     }
     return $wasEventProcessed;
   }
+
   public function reject($firstName)
   {
     $wasEventProcessed = false;
@@ -64,6 +65,7 @@ class Course
     }
     return $wasEventProcessed;
   }
+
   private function setStatus($aStatus)
   {
     $this->status = $aStatus;

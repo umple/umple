@@ -66,6 +66,7 @@ class QueuedWithNestedStateMachines
     }
     return $wasEventProcessed;
   }
+
   private function enterS2()
   {
     $wasEventProcessed = false;
@@ -78,6 +79,7 @@ class QueuedWithNestedStateMachines
     }
     return $wasEventProcessed;
   }
+
   private function exitS2()
   {
     $wasEventProcessed = false;
@@ -95,6 +97,7 @@ class QueuedWithNestedStateMachines
     }
     return $wasEventProcessed;
   }
+
   public function e2()
   {
     $wasEventProcessed = false;
@@ -107,6 +110,7 @@ class QueuedWithNestedStateMachines
     }
     return $wasEventProcessed;
   }
+
   public function e3()
   {
     $wasEventProcessed = false;
@@ -119,6 +123,7 @@ class QueuedWithNestedStateMachines
     }
     return $wasEventProcessed;
   }
+
   private function exitSm()
   {
     if ($this->sm == self::$SmS2)

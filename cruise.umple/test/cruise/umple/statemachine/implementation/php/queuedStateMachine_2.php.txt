@@ -78,6 +78,7 @@ class GarageDoor
     }
     return $wasEventProcessed;
   }
+
   public function reachBottom()
   {
     $wasEventProcessed = false;
@@ -90,6 +91,7 @@ class GarageDoor
     }
     return $wasEventProcessed;
   }
+
   public function reachTop()
   {
     $wasEventProcessed = false;
@@ -102,6 +104,7 @@ class GarageDoor
     }
     return $wasEventProcessed;
   }
+
   private function setStatus($aStatus)
   {
     $this->status = $aStatus;

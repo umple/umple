@@ -72,6 +72,7 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
+
   public function maintain()
   {
     $wasEventProcessed = false;
@@ -84,6 +85,7 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
+
   public function isMaintained()
   {
     $wasEventProcessed = false;
@@ -96,6 +98,7 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
+
   public function cancel()
   {
     $wasEventProcessed = false;
@@ -109,6 +112,7 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
+
   private function enterActive()
   {
     $wasEventProcessed = false;
@@ -121,6 +125,7 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
+
   private function exitActive()
   {
     $wasEventProcessed = false;
@@ -148,6 +153,7 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
+
   public function validated()
   {
     $wasEventProcessed = false;
@@ -160,6 +166,7 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
+
   public function select()
   {
     $wasEventProcessed = false;
@@ -172,6 +179,7 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
+
   public function selectAnotherTransiction()
   {
     $wasEventProcessed = false;
@@ -184,6 +192,7 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
+
   public function finish()
   {
     $wasEventProcessed = false;
@@ -196,6 +205,7 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
+
   public function receiptPrinted()
   {
     $wasEventProcessed = false;
@@ -209,6 +219,7 @@ class AutomatedTellerMachine
     }
     return $wasEventProcessed;
   }
+
   private function exitSm()
   {
     if ($this->sm == self::$SmActive)

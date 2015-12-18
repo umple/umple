@@ -82,6 +82,7 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
+
   private function exitNestedState1()
   {
     $wasEventProcessed = false;
@@ -99,6 +100,7 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
+
   public function e1()
   {
     $wasEventProcessed = false;
@@ -111,6 +113,7 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
+
   public function unspecified()
   {
     $wasEventProcessed = false;
@@ -131,6 +134,7 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
+
   public function e2()
   {
     $wasEventProcessed = false;
@@ -144,6 +148,7 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
+
   private function enterNestedState2()
   {
     $wasEventProcessed = false;
@@ -156,6 +161,7 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
+
   private function exitNestedState2()
   {
     $wasEventProcessed = false;
@@ -173,6 +179,7 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
+
   public function e4()
   {
     $wasEventProcessed = false;
@@ -186,6 +193,7 @@ class NestedStatesWthSameEventNames
     }
     return $wasEventProcessed;
   }
+
   private function exitSm()
   {
     if ($this->sm == self::$SmNestedState1)

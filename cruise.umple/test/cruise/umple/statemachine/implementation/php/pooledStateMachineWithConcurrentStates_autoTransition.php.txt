@@ -93,6 +93,7 @@ class CourseAttempt
     }
     return $wasEventProcessed;
   }
+
   private function enterStudying()
   {
     $wasEventProcessed = false;
@@ -121,6 +122,7 @@ class CourseAttempt
     }
     return $wasEventProcessed;
   }
+
   private function exitStudying()
   {
     $wasEventProcessed = false;
@@ -154,6 +156,7 @@ class CourseAttempt
     }
     return $wasEventProcessed;
   }
+
   private function exitCourseAttemptSM()
   {
     if ($this->courseAttemptSM == self::$CourseAttemptSMStudying)

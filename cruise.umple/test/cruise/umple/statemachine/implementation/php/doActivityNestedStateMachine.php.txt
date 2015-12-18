@@ -65,6 +65,7 @@ class Course
     }
     return $wasEventProcessed;
   }
+
   private function exitOpen()
   {
     $wasEventProcessed = false;
@@ -77,6 +78,7 @@ class Course
     }
     return $wasEventProcessed;
   }
+
   private function exitStatus()
   {
     if ($this->status == self::$StatusOpen)

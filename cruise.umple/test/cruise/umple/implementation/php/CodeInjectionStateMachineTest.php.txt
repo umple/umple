@@ -57,6 +57,7 @@ class Example
     }
     return $wasEventProcessed;
   }
+
   private function setLight($aLight)
   {
     System.out.println("About to flip");
