@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
+/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
 
 class LightFixture
 {
@@ -59,7 +59,7 @@ class LightFixture
     return null;
   }
 
-  public function turnDimmer(Integer lightval,Double grade)
+  public function turnDimmer($lightval, $grade)
   {
     $wasEventProcessed = false;
     

@@ -3715,6 +3715,7 @@ public class PhpClassGenerator implements ILang
     
   StringBuffer allCases = new StringBuffer();
   StringBuffer allDeclarations = new StringBuffer();
+  StringBuffer allArgs = new StringBuffer();
 
   boolean firstStateMachine = true;
   for(StateMachine sm : uClass.getStateMachines(e))
@@ -3798,15 +3799,27 @@ public class PhpClassGenerator implements ILang
     }
     firstStateMachine = false;
   }
+  String[] split = e.getArgs().split(",");
+  if (split[0] != null && split[0] != "")
+  {
+    for (int i = 0; i < split.length; i++) {
+      if (i > 0)
+      {
+        allArgs.append(", ");
+      }
+      allArgs.append(StringFormatter.format("${0}",split[i].substring(split[i].indexOf(" ")+1)));
+    }
+  }
   String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
   String eventOutput = allDeclarations.toString() + allCases.toString();
+  String argsOutput = allArgs.toString();
 
     stringBuffer.append(TEXT_360);
     stringBuffer.append( scope );
     stringBuffer.append(TEXT_361);
     stringBuffer.append(gen.translate("eventMethod",e));
     stringBuffer.append(TEXT_362);
-    stringBuffer.append( (e.getArgs()==null?"":e.getArgs()));
+    stringBuffer.append( argsOutput );
     stringBuffer.append(TEXT_363);
     stringBuffer.append(TEXT_364);
     stringBuffer.append( eventOutput );
