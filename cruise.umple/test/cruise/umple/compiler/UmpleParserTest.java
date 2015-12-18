@@ -1984,9 +1984,7 @@ public class UmpleParserTest
   public void inheritedKeys()
   {
     assertParse("018_inheritedKeys.ump");
-    // TODO: getting the warnings removed had more
-    // affects so I backed out the change, but what to fix it again
-    // assertHasNoWarningsParse("018_inheritedKeys.ump");
+    assertHasNoWarningsParse("018_inheritedKeys.ump");
     UmpleClass mentor = model.getUmpleClass("Mentor");
     Key key = mentor.getKey();
     Assert.assertEquals(2,key.numberOfMembers());

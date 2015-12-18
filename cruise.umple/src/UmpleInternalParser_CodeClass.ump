@@ -2626,8 +2626,22 @@ class UmpleInternalParser
       {
         setFailedPosition(keyToken.getPosition(), 26, tokenVal, keyToken.getParentToken().getValue("name"));
       }
+      
+      //Issue #449
+	UmpleClass child = aClass;
+	while(unlinkedExtends.get(child) != null){
+		for(Attribute parentAttribute : model.getUmpleClass(unlinkedExtends.get(child).get(0)).getAttributes())
+		{
+			if(parentAttribute.getName().equals(tokenVal))
+		    {
+			tokenMatch = true;
+			break;
+			}
+		}
+		child = model.getUmpleClass(unlinkedExtends.get(child).get(0));  
+	}
    
-    if(!aClass.hasAttributes() && !aClass.hasAssociations() && !aClass.hasStateMachines())
+    if(!aClass.hasAttributes() && !aClass.hasAssociations() && !aClass.hasStateMachines() && !tokenMatch)
       {
         setFailedPosition(keyToken.getPosition(), 27, tokenVal, keyToken.getParentToken().getValue("name"));
       }
