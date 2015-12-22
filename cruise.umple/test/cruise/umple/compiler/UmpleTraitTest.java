@@ -400,6 +400,32 @@ public class UmpleTraitTest {
 		Assert.assertEquals("activate2", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(1).getEvent().getName());
 		Assert.assertEquals("enable", model.getUmpleClass("A").getStateMachine(1).getState(0).getTransition(0).getEvent().getName());
 	}	
+	
+
+	
+	
+		@Test
+		public void stateMachineTraits023Test() {
+			String code = "	class A { isA T < st . on as ActiveA > ; } class B { isA T < st . on as ActiveB"+
+											"> ; } class C { isA T < st . on as ActiveC > ; } trait T { st { on { goTwo ->"+
+											"two ; } two { goOne -> on ; } } }";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals("ActiveA", model.getUmpleClass("A").getStateMachine(0).getState(0).getName());
+			Assert.assertEquals("ActiveB", model.getUmpleClass("B").getStateMachine(0).getState(0).getName());
+			Assert.assertEquals("ActiveC", model.getUmpleClass("C").getStateMachine(0).getState(0).getName());
+		}		
+	
+		@Test
+		public void stateMachineTraits024Test() {
+			String code = "class A {	isA T1 <status.turnOff() as goOff>;} class B{	isA T1;}trait T1 { 	status {		on {			turnOff()-> off;		}		off{			turnOff->off;		}	}}";	
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals("goOff", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getEvent().getName());
+			Assert.assertEquals("goOff", model.getUmpleClass("A").getStateMachine(0).getState(1).getTransition(0).getEvent().getName());
+			Assert.assertEquals("turnOff", model.getUmpleClass("B").getStateMachine(0).getState(0).getTransition(0).getEvent().getName());
+			Assert.assertEquals("turnOff", model.getUmpleClass("B").getStateMachine(0).getState(1).getTransition(0).getEvent().getName());
+
+		}		
+	
 	//This is related to issue #656
 //	@Test
 //	public void stateMachineTraits020Test() {

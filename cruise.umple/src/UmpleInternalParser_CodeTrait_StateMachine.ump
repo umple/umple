@@ -5,7 +5,12 @@
  * Guard,
  * Method,
  * StateMachine
- */
+ * State
+ * Transition
+ * Event
+ * MethodParameter
+ * Action
+ *  */
 
 
 namespace cruise.umple.compiler;
@@ -21,20 +26,20 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
   private void copyStateMachinesFromTraiToClass(UmpleClass inClass) {
     Map<UmpleTrait, List<StateMachine>> traiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
-	Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
-	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
-		tempTraiStateMachine = gatherStateMachinesFromTrait(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
-		CheckSMFromTraitIsNotAvaialbleInOtherTraits(traiStateMachine, tempTraiStateMachine, inClass);
-		if ( ! getParseResult().getWasSuccess() ) return;
-		if (!CheckSMFromTraitIsNotAvaialbleInClass(inClass,tempTraiStateMachine)) return;
-		AddStateMachineMapToAnother(traiStateMachine,tempTraiStateMachine);
-	}
-	for (UmpleTrait t1 : traiStateMachine.keySet()) {
-		for (StateMachine sMachine : traiStateMachine.get(t1)) {
-			sMachine.setUmpleClass(inClass);
-    		inClass.addStateMachine(sMachine);		
+		Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
+		for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+			tempTraiStateMachine = gatherStateMachinesFromTrait(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
+			CheckSMFromTraitIsNotAvaialbleInOtherTraits(traiStateMachine, tempTraiStateMachine, inClass);
+			if ( ! getParseResult().getWasSuccess() ) return;
+			if (!CheckSMFromTraitIsNotAvaialbleInClass(inClass,tempTraiStateMachine)) return;
+			AddStateMachineMapToAnother(traiStateMachine,tempTraiStateMachine);
 		}
-	}
+		for (UmpleTrait t1 : traiStateMachine.keySet()) {
+			for (StateMachine sMachine : traiStateMachine.get(t1)) {
+				sMachine.setUmpleClass(inClass);
+    			inClass.addStateMachine(sMachine);		
+			}
+		}
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -122,7 +127,7 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------  
 
    private StateMachine ApplyTypeParametersToStateMachine(StateMachine inSMachine, GeneralTPApplied inGTPApplied, UmpleClass inClass, UmpleTrait inTrait){
-     StateMachine newSt = getNewStateMachine(inSMachine);
+     StateMachine newSt = inSMachine.clone();// getNewStateMachine(inSMachine);
     String track=null;
     String mapped=null;
     Map<String, String> nameMapping = new HashMap<String, String>();
@@ -196,7 +201,7 @@ class UmpleInternalParser
 					getParseResult().addErrorMessage(new ErrorMessage(226,inClass.getPosition(0),tSMachine.getName(),uTrait.getName(),"class",inClass.getName()));
 					return false;
 				}else {
-					if (cSMachine.getName().equals(tSMachine.getName())) addExtraStatesAnsTransitions(cSMachine, tSMachine);
+					if (cSMachine.getName().equals(tSMachine.getName())) addExtraStatesAndTransitions(cSMachine, tSMachine);
 				}
 			}
 		}
@@ -228,7 +233,7 @@ class UmpleInternalParser
 							}
 						}
 					} else {
-						if (sMachine.getName().equals(tSMachine.getName())) addExtraStatesAnsTransitions(sMachine, tSMachine);
+						if (sMachine.getName().equals(tSMachine.getName())) addExtraStatesAndTransitions(sMachine, tSMachine);
 					}	
 				}
 			}
@@ -252,13 +257,16 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
   private StateMachine getNewStateMachine(StateMachine sMachine) {
-	StateMachine stNew = new StateMachine(sMachine.getName());
-	 stNew.setPooled(sMachine.getPooled());
-	 stNew.setQueued(sMachine.getQueued());
-	 for (State element : sMachine.getStates()) {
-	 	stNew.addState(element);
-	 }
-	return stNew;
+  	StateMachine stNew = new StateMachine(sMachine.getName());
+	 	stNew.setPooled(sMachine.getPooled());
+	 	stNew.setQueued(sMachine.getQueued());
+	 	stNew.setUmpleTrait(sMachine.getUmpleTrait());
+	 	stNew.setUmpleClass(sMachine.getUmpleClass());
+	 	stNew.setParentState(sMachine.getParentState());
+	 	for (State element : sMachine.getStates()) {
+	 		stNew.addState(element);
+	 	}
+		return stNew;
  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -302,7 +310,7 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-  private void addExtraStatesAnsTransitions(StateMachine inSMachine1, StateMachine inSMachine2) {
+  private void addExtraStatesAndTransitions(StateMachine inSMachine1, StateMachine inSMachine2) {
     for (State state : inSMachine2.getStates()) {
 		  State mainState = inSMachine1.findState(state.getName());
 		  if (mainState==null){
@@ -327,13 +335,13 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
   private void changeEventName(StateMachine inStateMachine, StateMachineTemplateSignature inSMTSignature) {
-  	for (Event event : inStateMachine.getEvents()){
-  		Method m = new Method("",event.getName(),"",false);
-  		m.setMethodParameters(event.getParams());
+  	for (Transition t : inStateMachine.getAllTransitions()){
+    	Method m = new Method("",t.getEvent().getName(),"",false);
+  		m.setMethodParameters(t.getEvent().getParams());
   		if (compareTwoMethdos(m, inSMTSignature.getMethodTemplateSignature().getMethod())){
-  			event.setName(inSMTSignature.getAlias());
+  			t.getEvent().setName(inSMTSignature.getAlias());
   		}
-		}
+    }	
 	}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -353,6 +361,22 @@ private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inT
 //************************************NEW CLASS****************************************
 //*************************************************************************************  
 class Transition{
+
+//----------------------------------------------------------------------------  
+//---------------------------------Start--------------------------------------
+//----------------------------------------------------------------------------		
+	//Please maintain this method if you're going to add new features to Transitions.
+	//This code manually creates a clone of a Transitions.	
+  Transition clone(State inFromState, State inNextState){
+  	Transition transition = new Transition(inFromState, inNextState);
+  	transition.setAutoTransition(getAutoTransition());
+  	transition.setIsInternal(getIsInternal());
+  	transition.setPosition(getPosition());
+  	transition.setEvent(getEvent().clone());
+  	if (getAction()!=null) transition.setAction(getAction().clone());
+  	transition.setGuard(getGuard());
+  	return  transition;
+  }	
 //----------------------------------------------------------------------------  
 //---------------------------------Start--------------------------------------
 //----------------------------------------------------------------------------	
@@ -388,7 +412,7 @@ class Transition{
 
 class Guard{
 	depend java.util.Iterator;
-	
+
 //----------------------------------------------------------------------------  
 //---------------------------------Start--------------------------------------
 //----------------------------------------------------------------------------	
@@ -481,6 +505,32 @@ boolean compareWithTheMethod(Method inMethod){
 //************************************NEW CLASS****************************************
 //*************************************************************************************  
 class StateMachine{
+	
+	//Please maintain this method if you're going to add new features to state machines.
+	//This code manually creates a clone of a state machine.  
+  public StateMachine clone(){
+    StateMachine stM = new StateMachine(getName());
+  	stM.setContainsDeepHistoryState(getContainsDeepHistoryState());
+  	stM.setContainsHistoryState(getContainsHistoryState());
+  	stM.setParentState(getParentState());
+  	stM.setPooled(getPooled());
+  	stM.setQueued(getQueued());
+  	stM.setRecentSearchDepth(getRecentSearchDepth());
+  	stM.setUmpleClass(getUmpleClass());
+  	stM.setUmpleTrait(getUmpleTrait());
+  	for (State st : getStates()) {
+  			stM.addState(st.clone(stM));
+		}
+  	if (getParentState()==null){
+	  	for (Transition transition : getAllTransitions()) {
+	  		State FromState = stM.findState(transition.getFromState().getName());
+				State NextState = stM.findState(transition.getNextState().getName());
+				transition.clone(FromState, NextState);
+	  	}  	  		
+  	}
+  	return  stM;
+  }	
+	
 	public Event getEventByMethod(Method inMethod) {
 	  if (inMethod == null)
     {
@@ -503,3 +553,98 @@ class StateMachine{
     return null;
 	}
 }
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+class State{
+//Please maintain this method if you're going to add new features to states.
+	//This code manually creates a clone of a state.
+	State clone(StateMachine inStateMachine){
+    State st = new State(getName(), inStateMachine);
+  	st.setFinalState(getFinalState());
+  	st.setIsDeepHistoryState(getIsDeepHistoryState());
+  	st.setIsHistoryState(getIsHistoryState());
+  	st.setIsInternal(getIsInternal());
+  	st.setIsStartState(getIsStartState());
+  	st.setIsVisited(getIsVisited());
+  	st.setPosition(getPosition());
+  	for (int i = 0; i < getNestedStateMachines().size(); i++) {
+			StateMachine stMTemp = nestedStateMachines.get(i).clone();
+			st.addNestedStateMachine(stMTemp);
+		}
+  	for (Action action : actions) {
+			st.addAction(action.clone());
+		}
+  	return st;
+  }
+}
+
+
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+class Event{
+
+	//Please maintain this method if you're going to add new features to Events.
+	//This code manually creates a clone of a Events.	
+  Event clone(){
+  	Event e = new Event(getName());
+  	e.setAutoTransition(getAutoTransition());
+  	e.setIsInternal(getIsInternal());
+  	e.setIsTimer(getIsTimer());
+  	e.setTimerInSeconds(getTimerInSeconds());
+  	e.setUnspecified(getUnspecified());
+  	for (MethodParameter mp : getParams()){
+  		e.addParam(mp.clone());
+  	}
+  	return e;
+  }	
+}
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+class MethodParameter{
+	
+	//Please maintain this method if you're going to add new features to MethodParameters.
+	//This code manually creates a clone of a MethodParameters.
+	MethodParameter clone(){
+		MethodParameter mp = new MethodParameter(getName(),getType(),getModifier(),getValue(),getIsAutounique());
+		mp.isAutounique = getIsAutounique();
+		mp.isList = getIsList();
+		mp.isDerived = getIsDerived();
+		mp.isLazy = getIsLazy();
+		return mp;
+  }
+}
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+class Action{
+	
+	//Please maintain this method if you're going to add new features to Actions.
+	//This code manually creates a clone of a Actions.
+	Action clone(){
+  	Action action = new Action(getActionCode());
+  	action.setActionType(getActionType());
+  	action.setPosition(getPosition());
+  	action.setEndPosition(getEndPosition());
+  	return action;
+  }
+	
+}
+
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+class Guard{
+	//Please maintain this method if you're going to add new features to Guards.
+	//This code manually creates a clone of a Guards.
+  public Guard clone(){
+  	Guard guard  = new Guard();
+  	//TODO: if we want to cover changing names of variables used in guard, I must modify this section to create new objects.
+  	return guard;
+  }
+}
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
