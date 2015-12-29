@@ -396,9 +396,9 @@ public class UmpleTraitTest {
 	public void stateMachineTraits022Test() {
 		String code = "class A {isA T1 <*.activate() as enable>;} trait T1 { status1 { on { activate -> on; activate2 -> on;}}  status2 { on { activate -> on;}}  }";
 		UmpleModel model = getRunModel(code);
-		Assert.assertEquals("enable", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getEvent().getName());
-		Assert.assertEquals("activate2", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(1).getEvent().getName());
-		Assert.assertEquals("enable", model.getUmpleClass("A").getStateMachine(1).getState(0).getTransition(0).getEvent().getName());
+		Assert.assertEquals("enable", model.getUmpleClass("A").getStateMachine("status1").getState(0).getTransition(0).getEvent().getName());
+		Assert.assertEquals("activate2", model.getUmpleClass("A").getStateMachine("status1").getState(0).getTransition(1).getEvent().getName());
+		Assert.assertEquals("enable", model.getUmpleClass("A").getStateMachine("status2").getState(0).getTransition(0).getEvent().getName());
 	}	
 	
 
@@ -424,6 +424,19 @@ public class UmpleTraitTest {
 			Assert.assertEquals("turnOff", model.getUmpleClass("B").getStateMachine(0).getState(0).getTransition(0).getEvent().getName());
 			Assert.assertEquals("turnOff", model.getUmpleClass("B").getStateMachine(0).getState(1).getTransition(0).getEvent().getName());
 
+		}		
+		
+		@Test
+		public void stateMachineTraits025Test() {
+			String code = "class A{		isA Player;}"
+					+"trait ElectricalDevice{	status{			on{			turnOff -> off;		}			off{			turnOn -> on;		}	}}"
+					+"trait Player{	isA ElectricalDevice<status.on as stop,status as sm>;	sm{			stop{					pressPlay -> playing;		}			playing{					pressStop -> stop;					pressPause -> pause;		}		pause{					pressStop -> stop;					pressPlay -> playing;		}	}}";
+	
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(4, model.getUmpleClass("A").getStateMachine("sm").numberOfStates());
+			Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine("sm").getState(0).numberOfTransitions());
+			Assert.assertEquals(1, model.getUmpleClass("A").getStateMachine("sm").getState(3).numberOfTransitions());
+			Assert.assertEquals("turnOn", model.getUmpleClass("A").getStateMachine("sm").getState(3).getTransition(0).getEvent().getName());
 		}		
 	
 	//This is related to issue #656
