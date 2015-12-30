@@ -188,20 +188,43 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-   private boolean CheckSMFromTraitIsNotAvaialbleInClass(UmpleClass inClass, Map<UmpleTrait, List<StateMachine>> inTempTraiStateMachine){
-    for (UmpleTrait uTrait : inTempTraiStateMachine.keySet()) {
-		for (StateMachine tSMachine : inTempTraiStateMachine.get(uTrait)) {
-			for(StateMachine cSMachine : inClass.getStateMachines()){
-				if (compareStateMachineName(cSMachine, tSMachine)){
-					getParseResult().addErrorMessage(new ErrorMessage(226,inClass.getPosition(0),tSMachine.getName(),uTrait.getName(),"class",inClass.getName()));
-					return false;
-				}else {
-					if (cSMachine.getName().equals(tSMachine.getName())) addExtraStatesAndTransitions(cSMachine, tSMachine);
+	private boolean CheckSMFromTraitIsNotAvaialbleInClass(UmpleClass inClass, Map<UmpleTrait, List<StateMachine>> inTempTraiStateMachine){
+  	for (UmpleTrait uTrait : inTempTraiStateMachine.keySet()) {
+  		List<StateMachine> tListBeRemoved = new ArrayList<StateMachine>();
+    	for (StateMachine tSMachine : inTempTraiStateMachine.get(uTrait)) {
+				Map<StateMachine,String> listBeRemoved = new HashMap<StateMachine, String>();
+				for(StateMachine cSMachine : inClass.getStateMachines()){
+					if (compareStateMachineName(cSMachine, tSMachine)){
+						getParseResult().addErrorMessage(new ErrorMessage(226,inClass.getPosition(0),tSMachine.getName(),uTrait.getName(),"class",inClass.getName()));
+						return false;
+					}else {
+						if (cSMachine.getName().equals(tSMachine.getName())){
+							if (!cSMachine.getStartState().getName().equals(tSMachine.getStartState().getName())){
+								StateMachine newStateMachine = new StateMachine(cSMachine.getName());
+								newStateMachine.addState(cSMachine.getName());
+								newStateMachine.getState(0).setIsStartState(true);							
+								cSMachine.setName(cSMachine.getStartState().getName());
+								newStateMachine.getState(0).addNestedStateMachine(cSMachine);
+								tSMachine.setName(tSMachine.getStartState().getName());
+								newStateMachine.getState(0).addNestedStateMachine(tSMachine);
+								listBeRemoved.put(newStateMachine,cSMachine.getName());
+								tListBeRemoved.add(tSMachine);
+							} else {
+							addExtraStatesAndTransitions(cSMachine, tSMachine);	
+							}
+						}
+					}
 				}
+				for(Map.Entry<StateMachine,String> entry : listBeRemoved.entrySet() ) {
+					inClass.removeStateMachine(inClass.getStateMachine(entry.getValue()));
+					inClass.addStateMachine(entry.getKey());
+				}		
+			}
+			for(StateMachine stMachine : tListBeRemoved){
+				inTempTraiStateMachine.get(uTrait).remove(stMachine);
 			}
 		}
-	}
-	return true;
+		return true;
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -217,6 +240,7 @@ class UmpleInternalParser
   		List<StateMachine> mustBeRemoved =new ArrayList<StateMachine>();
 	 		for (StateMachine tSMachine : inTempTraiStateMachine.get(tUTrait)) {
 				for(UmpleTrait uTrait : inTraiStateMachine.keySet()){
+					Map<StateMachine,StateMachine> listBeRemoved = new HashMap<StateMachine, StateMachine>();
 					for (StateMachine sMachine : inTraiStateMachine.get(uTrait)) {
 						if (compareStateMachineName(sMachine, tSMachine)){
 							if (inUmpleClassifier instanceof UmpleTrait){
@@ -235,10 +259,26 @@ class UmpleInternalParser
 							}
 						} else {
 							if (sMachine.getName().equals(tSMachine.getName())){
-								addExtraStatesAndTransitions(sMachine, tSMachine);
-								mustBeRemoved.add(tSMachine);
+								if (!sMachine.getStartState().getName().equals(tSMachine.getStartState().getName())){
+									StateMachine newStateMachine = new StateMachine(sMachine.getName());
+									newStateMachine.addState(sMachine.getName());
+									newStateMachine.getState(0).setIsStartState(true);							
+									sMachine.setName(sMachine.getStartState().getName());
+									newStateMachine.getState(0).addNestedStateMachine(sMachine);
+									tSMachine.setName(tSMachine.getStartState().getName());
+									newStateMachine.getState(0).addNestedStateMachine(tSMachine);
+									listBeRemoved.put(newStateMachine,sMachine);
+									mustBeRemoved.add(tSMachine);
+								} else {
+									addExtraStatesAndTransitions(sMachine, tSMachine);
+									mustBeRemoved.add(tSMachine);
+								}
 							}
 						}	
+					}
+					for(Map.Entry<StateMachine,StateMachine> entry : listBeRemoved.entrySet() ) {
+						inTraiStateMachine.get(uTrait).remove(entry.getValue());
+						inTraiStateMachine.get(uTrait).add(entry.getKey());
 					}
 				}
 			}
@@ -253,9 +293,14 @@ class UmpleInternalParser
 //---------------------------------------------------------------------------- 
 //---------------------------------Start--------------------------------------
 	private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inTraitStateMachine,	Map<UmpleTrait, List<StateMachine>> inTempTraiStateMachine) {
-	    for (UmpleTrait uTrait : inTempTraiStateMachine.keySet()) {
+	  for (UmpleTrait uTrait : inTempTraiStateMachine.keySet()) {
 			if (inTraitStateMachine.containsKey(uTrait)){
-				inTraitStateMachine.get(uTrait).addAll(inTempTraiStateMachine.get(uTrait));
+				if (inTempTraiStateMachine.get(uTrait).size()>0)
+					for (StateMachine st : inTempTraiStateMachine.get(uTrait)){
+						if (!inTraitStateMachine.get(uTrait).contains(st)){
+							inTraitStateMachine.get(uTrait).add(st);
+						}
+					}
 			} else{
 				inTraitStateMachine.put(uTrait, inTempTraiStateMachine.get(uTrait));
 			}	
@@ -326,7 +371,7 @@ class UmpleInternalParser
 						
 						tTransition.setFromState(mainState);
 						tTransition.setNextState(nextState);
-						i--;
+						if (i>0) i--;
 				  }
 				}
 		  }
@@ -538,13 +583,11 @@ class StateMachine{
   	for (State st : getStates()) {
   			stM.addState(st.clone(stM));
 		}
-  	if (getParentState()==null){
-	  	for (Transition transition : getAllTransitions()) {
-	  		State FromState = stM.findState(transition.getFromState().getName());
-				State NextState = stM.findState(transition.getNextState().getName());
-				transition.clone(FromState, NextState);
-	  	}  	  		
-  	}
+  	for (Transition transition : getAllTransitions()) {
+  		State FromState = stM.findState(transition.getFromState().getName(),false);
+			State NextState = stM.findState(transition.getNextState().getName(),false);
+			transition.clone(FromState, NextState);
+  	}  	  		
   	return  stM;
   }	
 	

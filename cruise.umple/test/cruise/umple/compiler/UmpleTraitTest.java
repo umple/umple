@@ -439,6 +439,33 @@ public class UmpleTraitTest {
 			Assert.assertEquals("turnOn", model.getUmpleClass("A").getStateMachine("sm").getState(3).getTransition(0).getEvent().getName());
 		}		
 	
+		@Test
+		public void stateMachineTraits026Test() {
+			String code = "class A {	isA T1;	status { on { turnOn -> on;}}}" 
+					+"trait T1 {	status { onb { activate -> onb;}}}";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(1, model.getUmpleClass("A").getStateMachine("status").numberOfStates());
+			Assert.assertEquals("status", model.getUmpleClass("A").getStateMachine("status").getStartState().getName());
+			Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine("status").getStartState().numberOfNestedStateMachines());
+			Assert.assertEquals("on", model.getUmpleClass("A").getStateMachine("status").getStartState().getNestedStateMachine(0).getName());
+			Assert.assertEquals("onb", model.getUmpleClass("A").getStateMachine("status").getStartState().getNestedStateMachine(1).getName());
+		}		
+		
+		@Test
+		public void stateMachineTraits027Test() {
+			String code = "class A{	isA T;}"
+					+"trait T {	isA T1;	status { on { turnOn -> on;}}}" 
+					+"trait T1 {	status { onb { activate -> onb;}}}";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(1, model.getUmpleClass("A").getStateMachine("status").numberOfStates());
+			Assert.assertEquals("status", model.getUmpleClass("A").getStateMachine("status").getStartState().getName());
+			Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine("status").getStartState().numberOfNestedStateMachines());
+			Assert.assertEquals("on", model.getUmpleClass("A").getStateMachine("status").getStartState().getNestedStateMachine(0).getName());
+			Assert.assertEquals("onb", model.getUmpleClass("A").getStateMachine("status").getStartState().getNestedStateMachine(1).getName());
+		}		
+		
+
+		
 	//This is related to issue #656
 //	@Test
 //	public void stateMachineTraits020Test() {
