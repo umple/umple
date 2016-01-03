@@ -10,7 +10,7 @@ Use the issues tracker for:
 * [bug reports](#bug-reports)
 * [submitting pull requests](#pull-requests)
 
-Please **do not** use the issue tracker for personal support requests nor feature requests. Support requests should be sent to:
+Please **do not** use the issue tracker for feature requests. Support requests should be sent to:
 
 * [the umple-dev mailing list](https://groups.google.com/forum/#!forum/umple-dev)
 
@@ -36,7 +36,7 @@ Guidelines for bug reports:
    case.
 
 Please try to be as detailed as possible in your report. Include information about
-your Operating System, and your Umple version (if not using the latest). Please provide steps to
+your Operating System and the version of the compiler you are usig. Please make sure you are using the latest version of Umple. Please provide steps to
 reproduce the issue as well as the outcome you were expecting! All these details
 will help developers to fix any potential bugs.
 
@@ -60,14 +60,14 @@ Example:
 
 ## Feature requests
 
-Feature requests are welcome and should be discussed on [the umple-core mailing list](https://groups.google.com/forum/#!forum/umple-dev). But take a moment to find
+Feature requests are welcome. Take a moment to find
 out whether your idea fits with the scope and aims of the project. It's up to *you*
 to make a strong case to convince the community of the merits of this feature.
 Please provide as much detail and context as possible.
 
 ## Contributing
 
-We incentivize everyone to contribute to Umple and help us tackle
+Please help us tackle
 existing issues! To do so, there are a few things you need to know
 about the code.
 
@@ -91,11 +91,11 @@ The umple project is split into many smaller subproject, the folder hierarchy is
   * libs/ *Managed build dependencies that umple*.jar require to run*
   * cruise.umple/reference *User manual*
   * qa/ *Test reports*
-  * umple.jar *Command-line Compiler*
-  * umpledocs.jar *User manual generator*
-  * umplestats.jar *Statistics generation*
-  * umplesync.jar *UmpleOnline tool to to synchronize graphical form*
-  * vml.jar * Extension for variability modeling*
+  * umple.jar *Command-line Compiler* (a symbolic link to the latest version
+  * umpledocs.n.n.jar *User manual generator*
+  * umplestats.n.n.jar *Statistics generation*
+  * umplesync.n.n.jar *UmpleOnline tool to to synchronize graphical form*
+  * vml.b.b.jar * Extension for variability modeling*
 
 * `examples` - Developer curated examples
 * `externalexamples` - External projects that are used for testing
