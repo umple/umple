@@ -3,7 +3,7 @@ Open-Source License for the Umple Model-Oriented Software Technology
 
 Based on the MIT License
 
-Copyright © 2008-2015 Timothy C. Lethbridge, Andrew Forward, Omar Badreddin, 
+Copyright © 2008-2016 Timothy C. Lethbridge, Andrew Forward, Omar Badreddin, 
 Dusan Brestovansky, Julie Filion, Miguel Garzon, Hamoud Aljamaan, Ali Fatolahi, 
 Julian Solano, Joshua Horacsek, Joel Hobson, Alvina Lee, Sultan Eid, Jordan Johns, 
 Sonya Adams, James Zhao, Adam Dzialoszynski, Luna Lu, Song Bae Choi, Thomas Morrison, 
@@ -16,7 +16,8 @@ Adriaan Cody Schuffelen, Marc Antoine Gosselin-Lavigne, Pedro Augusto Vincente,
 Jason Canto, Ellen Arteca, Alexi Turcotte, Karin Ng, Mark Galloway,
 Alexander Ringeri, Antonio Maria Pereria de Resende, Craig Bryan, Eric Telmer, 
 Charles Wang, Chan Chun Kit, Nabil Maadarani, John Zweip, Kevin Brightwell,
-Warren Marivel, Ashley Merman, Xinxin Kou
+Warren Marivel, Ashley Merman, Xinxin Kou, Aymen Ben Rkhis, Curtis Meerkerk, Adam Kereliuk,
+Matthew Fritze
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
