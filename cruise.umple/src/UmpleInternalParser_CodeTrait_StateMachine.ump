@@ -200,7 +200,8 @@ class UmpleInternalParser
 					}else {
 						if (cSMachine.getName().equals(tSMachine.getName())){
 							if (!cSMachine.getStartState().getName().equals(tSMachine.getStartState().getName())){
-								listBeRemoved.put(mergeTwoStateMachineWithTheSameNameDifferentInitialState(cSMachine,tSMachine),cSMachine.getName());
+								StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(cSMachine,tSMachine);
+								if (checkSM!=null) listBeRemoved.put(checkSM,cSMachine.getName());
 								tListBeRemoved.add(tSMachine);
 							} else {
 							addExtraStatesAndTransitions(cSMachine, tSMachine);	
@@ -253,7 +254,8 @@ class UmpleInternalParser
 						} else {
 							if (sMachine.getName().equals(tSMachine.getName())){
 								if (!sMachine.getStartState().getName().equals(tSMachine.getStartState().getName())){
-									listBeRemoved.put(mergeTwoStateMachineWithTheSameNameDifferentInitialState(sMachine,tSMachine),sMachine);
+									StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(sMachine,tSMachine);
+									if (checkSM!=null)	listBeRemoved.put(checkSM,sMachine);
 									mustBeRemoved.add(tSMachine);
 								} else {
 									addExtraStatesAndTransitions(sMachine, tSMachine);
@@ -279,13 +281,22 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
 	private StateMachine mergeTwoStateMachineWithTheSameNameDifferentInitialState(StateMachine inSMachine1, StateMachine inSMachine2) {
   	StateMachine newStateMachine = new StateMachine(inSMachine1.getName());
- 		newStateMachine.addState(inSMachine1.getName());
- 		newStateMachine.getState(0).setIsStartState(true);							
- 		inSMachine1.setName(inSMachine1.getStartState().getName());
- 		newStateMachine.getState(0).addNestedStateMachine(inSMachine1);
- 		inSMachine2.setName(inSMachine2.getStartState().getName());
- 		newStateMachine.getState(0).addNestedStateMachine(inSMachine2);
- 		return newStateMachine;
+    if (inSMachine1.getParentState()==null)
+    	{
+    	newStateMachine.addState(inSMachine1.getName());
+    	newStateMachine.getState(0).setIsStartState(true);							
+   		inSMachine1.setName(inSMachine1.getStartState().getName());
+   		newStateMachine.getState(0).addNestedStateMachine(inSMachine1);
+   		inSMachine2.setName(inSMachine2.getStartState().getName());
+   		newStateMachine.getState(0).addNestedStateMachine(inSMachine2);
+    	} else {
+    		State parentState = inSMachine1.getParentState();
+     		inSMachine1.setName(inSMachine1.getStartState().getName());
+     		inSMachine2.setName(inSMachine2.getStartState().getName());
+     		parentState.addNestedStateMachine(inSMachine2);
+     		return null;
+    	}
+    return newStateMachine;
  	}
 //---------------------------------end----------------------------------------
 //---------------------------------------------------------------------------- 
@@ -377,7 +388,8 @@ class UmpleInternalParser
 		  			mainState.addNestedStateMachine(state.getNestedStateMachine(0));
 		  		} else {
 		  			if (!mainState.getNestedStateMachine(0).getStartState().getName().equals(state.getNestedStateMachine(0).getStartState().getName())){
-		  				mainState.addNestedStateMachine(mergeTwoStateMachineWithTheSameNameDifferentInitialState(mainState.getNestedStateMachine(0), state.getNestedStateMachine(0))); 
+		  				StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(mainState.getNestedStateMachine(0), state.getNestedStateMachine(0));
+		  				if (checkSM!=null ) mainState.addNestedStateMachine(checkSM); 
 		  			} else {
 		  				addExtraStatesAndTransitions(mainState.getNestedStateMachine(0),state.getNestedStateMachine(0));
 		  			}
