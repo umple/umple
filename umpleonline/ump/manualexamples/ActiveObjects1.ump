@@ -9,7 +9,7 @@ class A {
     }
   }
 
-  public static void main(String argv[]) {
+  public static void main(String[] argv) {
     new A("1");
     new A("2");
   }
