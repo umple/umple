@@ -40,7 +40,7 @@ class X {
       }
     }
   }
-  public static void main(String argv[]) {
+  public static void main(String[] argv) {
     System.out.println("In Main");
     X theX = new X();
     System.out.println("End of Main");
