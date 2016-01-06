@@ -18,7 +18,7 @@ class X {
       }
     }
   }
-  public static void main(String argv[]) {
+  public static void main(String[] argv) {
     new X();
   }
 }
