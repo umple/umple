@@ -476,7 +476,25 @@ public class UmpleTraitTest {
 			Assert.assertEquals("s1", model.getUmpleClass("A").getStateMachine("status").getStartState().getNestedStateMachine(1).getName());
 			
 		}		
+	
+		@Test
+		public void stateMachineTraits029Test() {
+			String code = "class A {   isA T1<sm1 as sm,sm1.s00 as s0>;   sm {     s0 {       s1 {       }       ||       s2 {       }     }   }}"
+										+"trait T1 {   sm1 {     s00 {       s4 {         e -> s5;       }       s5 {}    }  }}";
+
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(3, model.getUmpleClass("A").getStateMachine("sm").getState(0).numberOfNestedStateMachines());			
+		}			
 		
+		@Test
+		public void stateMachineTraits030Test() {
+			String code = "class A {  	isA T2;	isA T1<sm1 as sm,sm1.s00 as s0>; 	sm {     s0 {       s1 {       }       ||       s2 {       }     }   }}"
+					+"trait T1 {  	sm1 {    		s00 {      			s4 {         e -> s5;       }     			s5 {}		}	}}"
+					+"trait T2{	sm {   		 s0 {   			t1{				goT2 -> t2;			}				t2 {				goT1 -> t1;			}		}	}}";
+
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(4, model.getUmpleClass("A").getStateMachine("sm").getState(0).numberOfNestedStateMachines());			
+		}		
 		
 //the last StateTest
 		
