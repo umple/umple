@@ -840,7 +840,7 @@ Action.umpleCanvasClicked = function(event)
   {
     if (Page.clickCount > 1)
     {
-    	DiagramEdit.removeNewAssociation();
+      DiagramEdit.removeNewAssociation();
     }
   }
   else if (Page.selectedItem == "AddGeneralization" && DiagramEdit.newGeneralization != null)
@@ -2094,86 +2094,85 @@ Action.toggleTabs = function()
   // Checking on the checkbox
   if(jQuery('#buttonTabsCheckbox').is(':checked')){
 
-		// Show row with buttons for each filename
-		jQuery('#tabRow').show();
+    // Show row with buttons for each filename
+    jQuery('#tabRow').show();
 
-		// Hide main code window with glommed files
-		jQuery('#innerGeneratedCodeRow').hide();
+    // Hide main code window with glommed files
+    jQuery('#innerGeneratedCodeRow').hide();
 
-		// Show first file codeblock
-		jQuery('#tabButton1').click();
+    // Show first file codeblock
+    jQuery('#tabButton1').click();
 
   }
   // Checking off the checkbox
   else{
 
-		// Hide row with buttons
+    // Hide row with buttons
     jQuery('#tabRow').hide();
 
-		// Show main code window with glommed files
-		jQuery('#innerGeneratedCodeRow').show();
+    // Show main code window with glommed files
+    jQuery('#innerGeneratedCodeRow').show();
 
-		// Hide all file codeblocks
-		jQuery('#innerGeneratedCodeRow').nextAll().hide();
+    // Hide all file codeblocks
+    jQuery('#innerGeneratedCodeRow').nextAll().hide();
 
   }
 }
 
 Action.generateTabsCode = function()
 {
-	var arrCodeFiles = [];
-	var intFileCounter = 0;
-	var strFileContents = "";
-	var arrFileNames = [];
-	var strNewLine = "";
-	var skipSpace = false;
+  var arrCodeFiles = [];
+  var intFileCounter = 0;
+  var strFileContents = "";
+  var arrFileNames = [];
+  var strNewLine = "";
+  var skipSpace = false;
 
-	// Read full code output line by line
+  // Read full code output line by line
   jQuery('.content').each(function(){
-		// If New File Beginning
+    // If New File Beginning
     if(jQuery(this).text().indexOf("//%%") >= 0){
-			strFileName = jQuery(this).text().slice(14);
-			strFileName = strFileName.substr(0, strFileName.indexOf(' '));
-			arrFileNames[intFileCounter] = strFileName;
-			arrCodeFiles[intFileCounter] = strFileContents;
-			intFileCounter++;
-			jQuery('#generatedCodeRow').append("<div id='innerGeneratedCodeRow" + intFileCounter + "'></div>");
-			strFileContents = "<p>URL_SPLIT";
-			skipSpace = true;
+      intFileCounter++;
+      if(intFileCounter > 1){ arrCodeFiles[intFileCounter] += "</p>"; }
+      strFileName = jQuery(this).text().slice(14);
+      strFileName = strFileName.substr(0, strFileName.indexOf(' '));
+      arrFileNames[intFileCounter] = strFileName;
+      jQuery('#generatedCodeRow').append("<div id='innerGeneratedCodeRow" + intFileCounter + "'></div>");
+      arrCodeFiles[intFileCounter] = "<p>URL_SPLIT";
+      skipSpace = true;
     }
-		else{
-			if(!skipSpace){
-				strFileContents += strNewLine + jQuery(this).text();
-				strNewLine = "\n";
-			}
-			else{
-				skipSpace = false;
-			}
-		}
-
+    else{
+      if(!skipSpace){
+        arrCodeFiles[intFileCounter] += jQuery(this).text() + "\n";
+      }
+      else{
+        skipSpace = false;
+      }
+    }
   });
+  arrCodeFiles[intFileCounter] += "</p>";
 
-	// Output buttons for number of files found
-	for (i=1; i < intFileCounter; i++){
-		jQuery('#tabRow').append("<button type='button' id='tabButton" + i + "'>" + arrFileNames[i-1] + "</button>");
-		jQuery('#tabButton' + i).click({code: arrCodeFiles[i], tabnumber: i}, showTab);
-	}
+  // Output buttons for number of files found
+  for (i=1; i <= intFileCounter; i++){
+    jQuery('#tabRow').append("<button type='button' id='tabButton" + i + "'>" + arrFileNames[i] + "</button>");
+    jQuery('#tabButton' + i).click({code: arrCodeFiles[i], tabnumber: i}, showTab);
+  }
 }
 
 function showTab(event)
 {
-		// Hide all file codeblocks
-		jQuery('#innerGeneratedCodeRow').nextAll().hide();
+  // Hide all file codeblocks
+  jQuery('#innerGeneratedCodeRow').nextAll().hide();
 
-		// Show only relevant file codeblock
-		jQuery('#innerGeneratedCodeRow' + event.data.tabnumber).show();
+  // Show only relevant file codeblock
+  jQuery('#innerGeneratedCodeRow' + event.data.tabnumber).show();
 
-		// Highlight code for specific file only
-  	Page.showGeneratedCode(event.data.code, $("inputGenerateCode").value.split(":")[0], event.data.tabnumber);
-		jQuery('.line').last().hide();
-		jQuery('.line').last().hide();
+  // Highlight code for specific file only
+  Page.showGeneratedCode(event.data.code, $("inputGenerateCode").value.split(":")[0], event.data.tabnumber);
+  jQuery('.line').last().hide();
+  jQuery('.line').last().hide();
 
-		// Hide main code window with glommed files
-		jQuery('#innerGeneratedCodeRow').hide();
+  // Hide main code window with glommed files
+  jQuery('#innerGeneratedCodeRow').hide();
 }
 
