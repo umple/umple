@@ -3615,6 +3615,8 @@ class UmpleInternalParser
       cb.setCode("Ruby", rubyComment);
       aClass.appendExtraCode(true,cb);
       aClass.appendExtraCode("  " + token.getValue());
+      // Issue 516 Fix : UCOSP : Michael Kmicik
+      setFailedPosition(token.getPosition(), 1007, token.getValue("name"));
     }
     else
     {
