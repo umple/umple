@@ -2132,30 +2132,29 @@ Action.generateTabsCode = function()
   jQuery('.content').each(function(){
     // If New File Beginning
     if(jQuery(this).text().indexOf("//%%") >= 0){
+      intFileCounter++;
+      if(intFileCounter > 1){ arrCodeFiles[intFileCounter] += "</p>"; }
       strFileName = jQuery(this).text().slice(14);
       strFileName = strFileName.substr(0, strFileName.indexOf(' '));
       arrFileNames[intFileCounter] = strFileName;
-      arrCodeFiles[intFileCounter] = strFileContents;
-      intFileCounter++;
       jQuery('#generatedCodeRow').append("<div id='innerGeneratedCodeRow" + intFileCounter + "'></div>");
-      strFileContents = "<p>URL_SPLIT";
+      arrCodeFiles[intFileCounter] = "<p>URL_SPLIT";
       skipSpace = true;
     }
     else{
       if(!skipSpace){
-        strFileContents += strNewLine + jQuery(this).text();
-        strNewLine = "\n";
+        arrCodeFiles[intFileCounter] += jQuery(this).text() + "\n";
       }
       else{
         skipSpace = false;
       }
     }
-
   });
+  arrCodeFiles[intFileCounter] += "</p>";
 
   // Output buttons for number of files found
-  for (i=1; i < intFileCounter; i++){
-    jQuery('#tabRow').append("<button type='button' id='tabButton" + i + "'>" + arrFileNames[i-1] + "</button>");
+  for (i=1; i <= intFileCounter; i++){
+    jQuery('#tabRow').append("<button type='button' id='tabButton" + i + "'>" + arrFileNames[i] + "</button>");
     jQuery('#tabButton' + i).click({code: arrCodeFiles[i], tabnumber: i}, showTab);
   }
 }
