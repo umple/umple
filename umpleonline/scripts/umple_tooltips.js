@@ -9,6 +9,25 @@
 // These tooltips can use full HTML and can be styled using css
 var ToolTips = {}
 
+// All custom shortcut types
+var undo, redo, toggleTextEditor;
+
+// Some special shortcuts
+if (navigator.appVersion.indexOf("Mac")!=-1)
+{
+  undo = 'cmd-z';
+  redo = 'cmd-shift-z';
+  toggleTextEditor = 'ctrl-t';
+}
+else
+{
+  undo = 'ctrl-z';
+  redo = 'ctrl-y';
+  toggleTextEditor = 'ctrl-alt-shift-t';
+}
+
+
+
 ToolTips.tooltipEntries = {
   // save model tooltips
   ttSaveBookmark: ["li", "Click to bookmark this model"],
@@ -28,8 +47,8 @@ ToolTips.tooltipEntries = {
   buttonAddAssociation: ["li", "Click on two classes to create an association </br><b>Shortcut: [a]</b>"],
   buttonAddGeneralization: ["li", "Click on two classes to create a generalization </br><b>Shortcut: [g]</b>"],
   buttonDeleteEntity: ["li", "Click on a class, association, or generalization to delete that entity </br><b>Shortcut: [DEL]</b>"],
-  buttonUndo: ["li", "Click to undo the most recent action </br><b>Shortcut: [ctrl+z]</b>"],
-  buttonRedo: ["li", "Click to redo the most recent undone action </br><b>Shortcut: [ctrl-y]</b>"],
+  buttonUndo: ["li", "Click to undo the most recent action </br><b>Shortcut: [" + undo + "]</b>"],
+  buttonRedo: ["li", "Click to redo the most recent undone action </br><b>Shortcut: [" + redo + "]</b>"],
   buttonSyncDiagram: ["li", "Click to sync the diagram and the text"],
 
   // code generation tooltip
@@ -38,7 +57,7 @@ ToolTips.tooltipEntries = {
 
   // show/hide elements tooltips
   ttShowHideCanvas: ['li', "Show/Hide the diagram </br><b>Shortcut: [ctrl+d]"],
-  ttShowHideTextEditor: ['li', "Show/Hide the text editor </br><b>Shortcut: [ctrl+t]"],
+  ttShowHideTextEditor: ['li', "Show/Hide the text editor </br><b>Shortcut: [" + toggleTextEditor + "]"],
   ttShowHideLayoutEditor: ['li', "Show/Hide the layout editor"],
   ttToggleAttributes: ['li', "Show/Hide attributes on class diagrams </br><b>Shortcut: [ctrl+a]"],
   ttToggleMethods: ['li', "Show/Hide the methods on class diagrams </br><b>Shortcut: [ctrl+m]"],
