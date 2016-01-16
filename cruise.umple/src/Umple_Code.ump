@@ -17,6 +17,49 @@ namespace cruise.umple.compiler;
  */
 class UmpleModel
 {
+
+  public static String[] findValidLanguages()
+  {
+    final String NONTERMINAL = "generate";
+    final String START_TOKEN = "[=language:";
+    final String END_TOKEN   = "]";
+    final String DELIMITER   = "\\|";
+    
+    
+    String[] result = new String[0];
+    
+    boolean lineFound = false;
+    try
+    {
+      InputStream in = null;
+      BufferedReader reader = null;
+      try
+      {
+        in     = UmpleModel.class.getResourceAsStream("/umple_core.grammar");
+        reader = new BufferedReader(new InputStreamReader(in));
+        String line;
+        while (((line = reader.readLine()) != null) && !lineFound ) 
+        {
+           if( line.startsWith(NONTERMINAL) && line.contains(START_TOKEN))
+           {
+             int start_index = line.indexOf(START_TOKEN) + START_TOKEN.length();
+             int end_index = line.indexOf(END_TOKEN);
+             String languages = line.substring( start_index, end_index );
+             result = languages.split(DELIMITER);
+             lineFound = true;
+           }
+        }
+      }finally
+      {
+        in.close();
+        reader.close();
+      }
+    }catch( IOException e ){
+      throw new RuntimeException("Error opening '/umple_core.grammar' resource", e);
+    }
+    return result;
+  }
+
   public List<UmpleElement> getUmpleElements()
   {
     List<UmpleElement> all = new ArrayList<UmpleElement>();
@@ -185,12 +228,22 @@ class UmpleModel
  */
   public CodeGenerator newGenerator(String language)
   {
-    boolean foundGenerator;
-
     String realLanguage = language;
+    
+        // Ensure the target is specified in the proper case.
+    VALIDATE_GENERATE:
+    //for( String lang : UmpleModel.validLanguages ){
+    for( String lang : UmpleModel.validLanguages ){
+      if(lang.equalsIgnoreCase(language)){
+        realLanguage = lang;
+        break VALIDATE_GENERATE;
+      }
+    }
+
+		
     if (language.equals("Cpp")) realLanguage="RTCpp";
     else if (language.equals("SimpleCpp")) realLanguage="Cpp";
-
+    
     String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",realLanguage);
     Class<?> classDefinition = null;
     try {
@@ -205,6 +258,9 @@ class UmpleModel
       throw new RuntimeException(cnf);
     }
     catch (Exception ex2) {
+	  System.err.println("Code generator "+realLanguage+ " not found. Check spelling. Specify --help.");
+      System.exit(-1);
+
       throw new RuntimeException("Unable to instantiate "+realLanguage+ ".",ex2);
     }
   }
@@ -237,7 +293,6 @@ class UmpleModel
       System.exit(-1);
     }
    }
-
 
   public Coordinate getDefaultClassPosition(int numDefaults)
   {
@@ -3976,6 +4031,7 @@ class Filter
   }
 
 }
+
 
 
 use Umple_Code_Trait.ump;
