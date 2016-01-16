@@ -13,7 +13,6 @@ import java.io.File;
 import java.util.*;
 
 import org.junit.*;
-import java.lang.reflect.*;
 
 import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.*;
