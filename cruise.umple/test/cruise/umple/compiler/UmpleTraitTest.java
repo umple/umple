@@ -1541,10 +1541,8 @@ public class UmpleTraitTest {
 		try {
 			uMode.run();
 		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			SampleFileWriter.destroy("traitTest.ump");
-			SampleFileWriter.destroy("A.java");	
 		}
 		return uMode;
 	}

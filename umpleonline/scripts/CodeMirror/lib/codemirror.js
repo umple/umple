@@ -589,7 +589,7 @@ var CodeMirror = (function() {
       // unredoHelper(history.done, history.undone, -1);
     }
     function redo() {
-      Actionb.redo(); // ENSURES UMPLE INTERCEPTS REDO
+      Action.redo(); // ENSURES UMPLE INTERCEPTS REDO
       // unredoHelper(history.undone, history.done, 1);
     }
 
