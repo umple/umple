@@ -27,9 +27,7 @@ class Foo
   end
 
 
-  =begin
-  I am a comment above a method.
-  =end
+  # I am a comment above a method.
   def testMethod ()
     // I am a comment inside a method.
   end

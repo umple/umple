@@ -14,9 +14,7 @@ class Foo
 
   #Foo Attributes - for documentation purposes
 
-  =begin
-  Inline comment above attribute.
-  =end
+  # Inline comment above attribute.
   #attr_reader :testAttribute1, :testAttribute2, :testAttribute3, :testAttribute4
 
   #------------------------
