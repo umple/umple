@@ -3620,6 +3620,8 @@ class UmpleInternalParser
     }
     else
     {
+      // Issue 516 Fix : UCOSP : Michael Kmicik
+      setFailedPosition(token.getPosition(), 1007, token.getValue("name"));
       aClass.appendExtraCode(token.getValue());
     }
   }

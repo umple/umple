@@ -1,0 +1,10 @@
+class X{
+	isA T
+
+	String name;
+	int age
+}
+
+trait T{
+	X name;
+}
