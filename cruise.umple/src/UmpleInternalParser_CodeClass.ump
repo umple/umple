@@ -2578,7 +2578,7 @@ class UmpleInternalParser
         methodNames.addAll(attr.getMethodNames());
       }
 
-      methodNames.add(uClass.getName());
+      methodNames.add("constructor");
       methodNames.add("delete");
 
       for(String methodName : methodNames) 
