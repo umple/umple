@@ -168,6 +168,7 @@
 1009: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Method '{0}' has a name conflict with automatic generated getter/setter methods for attribute '{1}'. The user definition is being disconsidered. Please use a different name ;
 1010: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Constraint syntax, {0}, could not be processed. It has been considered as Extra Code ;
 1011: 3, "http://cruise.eecs.uottawa.ca/umple/W1011InvalidAssociationClassKey.html", AssociationClass '{0}' missing needed '{1}' key, provided {2} ;
+1012: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Method '{0}' cannot be found. Injection was ignored. ;
 
 1500 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: '{0}' not understood ; 
 1501 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 

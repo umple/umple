@@ -2554,10 +2554,46 @@ class UmpleInternalParser
     makeCodeInject(injectToken,injection,cb,uClassifier);
     injection.setSnippet(cb);
     if (uClassifier instanceof UmpleClass) {
+      checkCodeInjectionValidity(injectToken, operationName.toString(), uClassifier);
     	((UmpleClass)uClassifier).addCodeInjection(injection);
     } else if (uClassifier instanceof UmpleTrait){
     	((UmpleTrait)uClassifier).addCodeInjection(injection);
     }  
+  }
+
+  private boolean checkCodeInjectionValidity(Token injectToken, String operationName, UmpleClassifier uClassifier) {
+    for(String operation : operationName.split(","))
+    {
+      Boolean matches = false;
+      UmpleClass uClass = (UmpleClass) uClassifier;
+
+      ArrayList<String> methodNames = new ArrayList<String>();
+      for(Method aMethod : uClass.getMethods())
+      {
+        methodNames.add(aMethod.getName());
+      }
+
+      for(Attribute attr : uClass.getAttributes())
+      {
+        methodNames.addAll(attr.getMethodNames());
+      }
+
+      methodNames.add(uClass.getName());
+      methodNames.add("delete");
+
+      for(String methodName : methodNames) 
+      { 
+        if (uClass.matchOperationMethod(operation, methodName)) {
+          matches = true;
+        }
+      }
+
+      if(!matches) {
+        getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
+      }
+    }
+    
+    return false;
   }
   
   //TODO I changed the parameter's type. please remove this comment;

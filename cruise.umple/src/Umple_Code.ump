@@ -1178,6 +1178,40 @@ class UmpleClass
     return all;
   }
 
+  public Boolean matchOperationMethod(String fullOperation, String method) {
+    String formattedMethod = StringFormatter.toUnderscore(method);
+    TriState isMatch = new TriState(false);
+    TriState isMatchOnExclude = new TriState(true);
+
+    String[] allOperations = fullOperation.split(",");
+    for (String operation : allOperations)
+    {
+      boolean isNot = false;
+      if (operation.startsWith("!"))
+      {
+        isNot = true;
+        operation = operation.substring(1);
+      }
+
+      String regexOperation = StringFormatter.toUnderscore(operation);
+      regexOperation = regexOperation.replace("_*", "*");
+      regexOperation = regexOperation.replace("*", ".*");
+      boolean isCurrentMatch = formattedMethod.matches(regexOperation);
+
+      if (isNot && isCurrentMatch)
+      {
+        isMatch.setStatus(false);
+        isMatchOnExclude.setStatus(false);
+      }
+      else if (!isNot && isCurrentMatch)
+      {
+        isMatch.setStatus(true);
+      }
+    }
+
+    return isMatchOnExclude.isTrue() || isMatch.isTrue();
+  }
+
   public List<CodeInjection> getApplicableCodeInjections(String type, String method)
   {
     ArrayList<CodeInjection> all = new ArrayList<CodeInjection>();
@@ -1703,6 +1737,21 @@ class Attribute
     return (varIsImmutable || classIsImmutable);
   }
 
+  public boolean isInternal()
+  {
+    return "internal".equals(getModifier());
+  }
+
+  public boolean isSettable()
+  {
+    return "settable".equals(getModifier());
+  }
+
+  public boolean isDefaulted()
+  {
+    return "defaulted".equals(getModifier());
+  }
+
   public String getValue()
   {
     String possibleValue = codeblock.getCode();
@@ -1727,6 +1776,47 @@ class Attribute
     return this.getType() + (this.getIsList() ? "[]" : "");
   }
 
+  public ArrayList<String> getMethodNames()
+  {
+    ArrayList<String> methodNames = new ArrayList<String>();      
+    String attributeCapitalizedName = this.getUpperCaseName();
+    if (!this.isIsList())
+    {
+      if(!this.isInternal())
+      {
+        methodNames.add("get" + attributeCapitalizedName);
+      }
+      if(this.isIsLazy() || this.isSettable() || this.isDefaulted())
+      {
+        methodNames.add("set" + attributeCapitalizedName);
+      }
+      if(this.isDefaulted()) 
+      {
+        methodNames.add("reset" + attributeCapitalizedName);
+        methodNames.add("getDefault" + attributeCapitalizedName);
+      }
+      if(this.getType() != null && this.getType().equals("Boolean"))
+      {
+        methodNames.add("is" + attributeCapitalizedName);
+      }
+    }
+    else 
+    {
+      if(!this.isInternal())
+      {
+        methodNames.add("get" + attributeCapitalizedName);
+        methodNames.add("numberOf" + attributeCapitalizedName);
+        methodNames.add("has" + attributeCapitalizedName);
+        methodNames.add("indexOf" + attributeCapitalizedName);
+      }
+      if(this.isIsLazy() || this.isSettable() || this.isDefaulted())
+      {
+        methodNames.add("add" + attributeCapitalizedName);
+        methodNames.add("remove" + attributeCapitalizedName);
+      }
+    }
+    return methodNames;
+  }
 }
 
 /*
