@@ -416,6 +416,21 @@ public class UmpleParserTest
   }
 
   @Test
+  public void abstractInterfaceExtends()
+  {
+    assertSimpleParse("423_interfaceInheritanceAbstract.ump");
+
+    Assert.assertEquals(1,model.getUmpleInterface("I").numberOfMethods());
+    Assert.assertEquals("I1",model.getUmpleInterface("I").getMethod(0).getName());
+    Assert.assertEquals(1,model.getUmpleClass("A").numberOfMethods());
+    Assert.assertEquals("I1",model.getUmpleClass("A").getMethod(0).getName());
+    Assert.assertEquals(0,model.getUmpleClass("B").numberOfMethods());
+    Assert.assertEquals(0,model.getUmpleClass("C").numberOfMethods());
+    Assert.assertEquals(1,model.getUmpleClass("D").numberOfMethods());
+    Assert.assertEquals("I1",model.getUmpleClass("D").getMethod(0).getName());
+  }
+
+  @Test
   public void immutableClass()
   {
     assertParse("022_immutableClass.ump");

@@ -1304,11 +1304,31 @@ class UmpleInternalParser
       }
     }
     for(UmpleClass uClass: getModel().getUmpleClasses()) {
-    	for (UmpleInterface uInterface : uClass.getParentInterface()) {
-    		addImplementedMethodsFromInterface(uInterface, uClass);
-    	}
+      for (UmpleInterface uInterface : getAllParentInterface(uClass)) {
+        addImplementedMethodsFromInterface(uInterface, uClass);
+      }
     }
   }  
+
+  private java.util.List<UmpleInterface> getAllParentInterface(UmpleClass uClass){
+
+    java.util.ArrayList<UmpleInterface> temp = new java.util.ArrayList<UmpleInterface>(uClass.getParentInterface());
+    java.util.ArrayList<UmpleClass> uClassChain = new java.util.ArrayList<UmpleClass>();
+
+    for (UmpleClass uClassCurrent = uClass; uClassCurrent != null && !uClassChain.contains(uClassCurrent); uClassCurrent = uClassCurrent.getExtendsClass())
+    {
+      uClassChain.add(uClassCurrent);
+      for (UmpleInterface uInterface : uClassCurrent.getParentInterface())
+      {
+        if (!temp.contains(uInterface))
+        {
+          temp.add(uInterface);
+        }
+      }
+    }
+
+    return temp;
+  }
 
   private void addImplementedMethodsFromInterface(UmpleInterface parentInterface, UmpleClass uClass)
   {
@@ -1318,7 +1338,8 @@ class UmpleInternalParser
       for (Method aMethod : parentInterface.getMethods())
       {
         boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
-        if (!(uClass.hasImplementedMethodIncludingWithinParentClasses(aMethod)) && !(uClass.hasMethodInTraits(aMethod)) && shouldAddMethod)
+        if (!(uClass.hasImplementedMethodIncludingWithinParentClasses(aMethod))
+        && !(uClass.hasMethodInTraits(aMethod)) && !(uClass.isIsAbstract()) && shouldAddMethod)
         {
           aMethod.setIsImplemented("".equals(aMethod.getMethodBody().getExtraCode("")));
           
