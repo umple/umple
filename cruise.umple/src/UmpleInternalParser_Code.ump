@@ -159,6 +159,18 @@ class UmpleInternalParser
   private void setFailedPosition(Position position, int errorCode, String... messages)
   {
     //getParseResult().setWasSuccess(false);
+
+    // Handle the special case of multiple unrecognized lines in a class; ensures that the
+    // 1007 warning message is recorded and displayed no more than once
+    if (errorCode == 1007) {
+      List<ErrorMessage> errorMessages = getParseResult().getErrorMessages();
+      for (ErrorMessage error : errorMessages) {
+        if (error.getErrorType().getErrorCode() == 1007) {
+          return; // we have already recorded this error, lets ignore and return
+        }
+      }
+    }
+
     getParseResult().setPosition(position);
     getParseResult().addErrorMessage(new ErrorMessage(errorCode,position,messages));
   }

@@ -2506,6 +2506,16 @@ public class UmpleParserTest
 	assertParse("412_association_comment.ump");
   }
 
+  // Ensure error 1007 is returned for unrecogrnized lines
+  // Test for issue 516 by M.K
+  @Test
+  public void assertSetFailedPosition() throws Exception {
+    assertHasWarningsParse("380_noLineEndingClass.ump",1007);
+    assertHasWarningsParse("380_noLineEndingTrait.ump",1007);
+    assertHasWarningsParse("380_multipleNoLineEndingsClass.ump",1007);
+    assertHasWarningsParse("380_multipleNoLineEndingsTrait.ump",1007);
+  }
+
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));
@@ -2711,7 +2721,5 @@ public class UmpleParserTest
 	Assert.assertEquals(true, answer);
 	Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
   }
-
-
 }
 
