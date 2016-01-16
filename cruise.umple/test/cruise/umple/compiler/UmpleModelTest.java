@@ -26,8 +26,6 @@ import org.junit.Test;
 
 import cruise.umple.util.SampleFileWriter;
 
-
-
 public class UmpleModelTest
 {
 
@@ -472,6 +470,28 @@ public class UmpleModelTest
 
     assertTrue(allTranslators.isEmpty());
   }
+  
+  @Test
+  public void correctLowercaseTest (){
+    
+    
+    uFile.addLinkedFiles("sub/student2.ump");
+    model = new UmpleModel(uFile);
+    model.addGenerate("php"); // lowercase PHP
+    model.run();
 
+    assertTrue(model.getLastResult().getWasSuccess());
+  }
+  
+  @Test
+  public void correctUppercaseTest (){
+	uFile.addLinkedFiles("sub/student2.ump");
+    model = new UmpleModel(uFile);
+    model.addGenerate("GVCLASSTRAITDIAGRAM"); // uppercase GvClassTraitDiagram
+    model.run();
+
+    assertTrue(model.getLastResult().getWasSuccess());
+  }
+  
 }
 

@@ -28,6 +28,7 @@ class UmpleModel
   depend cruise.umple.analysis.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
+  depend java.util.zip.*; // new
   isA Runnable;
 
   // The Umple file (.ump) that was used to populate the model.
@@ -41,6 +42,7 @@ class UmpleModel
   String code = null;
   Boolean debugMode = false;
   ParseResult lastResult = null;
+  public static final String[] validLanguages = findValidLanguages();
 
   Map<String,String> generatedCode = new HashMap<String,String>();
   Map<String,Analyzer> analyzers = new HashMap<String,Analyzer>();
