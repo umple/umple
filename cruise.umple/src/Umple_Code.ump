@@ -57,6 +57,7 @@ class UmpleModel
     }catch( IOException e ){
       throw new RuntimeException("Error opening '/umple_core.grammar' resource", e);
     }
+    Arrays.sort(result);
     return result;
   }
 
@@ -232,7 +233,6 @@ class UmpleModel
     
     // Ensure the target is specified in the proper case.
     VALIDATE_GENERATE:
-    //for( String lang : UmpleModel.validLanguages ){
     for( String lang : UmpleModel.validLanguages ){
       if(lang.equalsIgnoreCase(language)){
         realLanguage = lang;

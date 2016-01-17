@@ -32,7 +32,7 @@ strictnessMessage : [=message:allow|ignore|expect|disallow] [messageNumber]
 
 // The generate clause can be used to generate multiple outputs
 // The --override is used to say that subsequent generate statements will be ignored
-generate : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|Papyrus|Ecore|Xmi|Xtext|Sql|Umple|UmpleSelf|USE|Test] ( [=suboptionIndicator:-s|--suboption] " [**suboption] " )* ;
+generate : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|Papyrus|Ecore|Xmi|Xtext|Sql|Umple|UmpleSelf|USE|Test|SimpleMetrics|Uigu2] ( [=suboptionIndicator:-s|--suboption] " [**suboption] " )* ;
 
 generate_path : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|Papyrus|Ecore|Xmi|Xtext|Sql|UmpleSelf|USE|test] " [**output] " [=override:--override|--override-all]? ( [=suboptionIndicator:-s|--suboption]  " [**suboption] " )* ;
 
