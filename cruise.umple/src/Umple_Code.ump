@@ -230,7 +230,7 @@ class UmpleModel
   {
     String realLanguage = language;
     
-        // Ensure the target is specified in the proper case.
+    // Ensure the target is specified in the proper case.
     VALIDATE_GENERATE:
     //for( String lang : UmpleModel.validLanguages ){
     for( String lang : UmpleModel.validLanguages ){
@@ -3398,11 +3398,11 @@ class Comment
     }
     else if (type == "RubyMultiline")
     {
-      commentDelimiter = "";
+      commentDelimiter = " ";
     }
     else if (type == "RubyMultiline Internal")
     {
-      commentDelimiter = "  ";
+      commentDelimiter = " ";
     }
     else if (type == "Multiline")
     {
@@ -3472,11 +3472,33 @@ class Comment
     }
     else if (type == "RubyMultiline")
     {
-      output = "=begin\n" + output + "=end";
+      // initialize sb at least as large as the output with 1 comment
+      StringBuilder sb = new StringBuilder( output.length() + 2 ); 
+      sb.append("#");
+      char c;
+      for( int i=0; i < output.length(); ++i ){
+        c = output.charAt(i);
+        sb.append(c);
+        if( (c == '\n') && (i != output.length()-1) ){
+          sb.append("#");
+        }
+      }
+      output = sb.toString();
     }
     else if (type == "RubyMultiline Internal")
     {
-      output = "  =begin\n" + output + "  =end";
+      // initialize sb at least as large as the output with 1 comment
+      StringBuilder sb = new StringBuilder( output.length() + 2 ); 
+      sb.append("#");
+      char c;
+      for( int i=0; i < output.length(); ++i ){
+        c = output.charAt(i);
+        sb.append(c);
+        if( (c == '\n') && (i != output.length()-1) ){
+          sb.append("  #");
+        }
+      }
+      output = sb.toString();
     }
     else if (type == "Multiline")
     {

@@ -5,11 +5,9 @@
 
 module Example
 
-=begin
-This is a student
-Multiple comments
-on several lines
-=end
+# This is a student
+# Multiple comments
+# on several lines
 class Student
 
 

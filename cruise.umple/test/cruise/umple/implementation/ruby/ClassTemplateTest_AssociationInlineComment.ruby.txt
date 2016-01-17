@@ -14,9 +14,7 @@ class Foo
 
   #Foo Associations - for documentation purposes
 
-  =begin
-  I am a inline comment above an association.
-  =end
+  # I am a inline comment above an association.
   #attr_reader :bars
 
   #------------------------

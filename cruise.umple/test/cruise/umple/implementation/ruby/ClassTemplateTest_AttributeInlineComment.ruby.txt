@@ -14,9 +14,7 @@ class Foo
 
   #Foo Attributes - for documentation purposes
 
-  =begin
-  I am a inline comment above an attribute.
-  =end
+  # I am a inline comment above an attribute.
   #attr_reader :bar
 
   #------------------------
