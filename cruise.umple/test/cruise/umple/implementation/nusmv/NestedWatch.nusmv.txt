@@ -59,7 +59,7 @@
      next( state ) := case
        t8 | t1 | t4 | t20 | t10 | t12 | t14 | t16 | t18 | t9 | t2 | t11 | t3 | t13 | t15 | t17 | t19 | t21 : Sm_regular;
        t27 | t25 | t23 | t24 | t6 | t28 | t26 | t29 | t22 : Sm_chronometer;
-       t5 | t31 | t33 | t30 | t32 : Sm_alarmStatus;
+       t33 | t31 | t5 | t30 | t32 : Sm_alarmStatus;
        t35 | t38 | t36 | t7 | t37 | t34 | t39 : Sm_alarmUpdate;
        TRUE : state;
      esac;
@@ -119,10 +119,10 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t6 | _sm.t28 | _sm.t26 | _sm.t27 | _sm.t25 | _sm.t23 : SmChronometer_chronoNormal;
+       _sm.t28 | _sm.t26 | _sm.t27 | _sm.t25 | _sm.t23 : SmChronometer_chronoNormal;
        _sm.t29 | _sm.t24 : SmChronometer_lapRunning;
        _sm.t22 : SmChronometer_lapPaused;
-       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t2 | _sm.t4 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.state = Sm_chronometer : SmChronometer_chronoNormal;
        TRUE : state;
      esac;
@@ -141,7 +141,7 @@
      next( state ) := case
        _sm.t28 | _sm.t27 | _sm.t25 : SmChronometerChronoNormal_paused;
        _sm.t26 | _sm.t23 : SmChronometerChronoNormal_running;
-       _sm.t2 | _sm.t4 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t24 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
+       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t24 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _smChronometer.state = SmChronometer_chronoNormal : SmChronometerChronoNormal_paused;
        TRUE : state;
      esac;
@@ -158,11 +158,11 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t33 | _sm.t5 : SmAlarmStatus_bothOff;
+       _sm.t33 : SmAlarmStatus_bothOff;
        _sm.t30 : SmAlarmStatus_chimeOn;
        _sm.t31 : SmAlarmStatus_bothOn;
        _sm.t32 : SmAlarmStatus_alarmOn;
-       _sm.t1 | _sm.t3 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t2 | _sm.t4 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t35 | _sm.t37 | _sm.t39 : null;
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.state = Sm_alarmStatus : SmAlarmStatus_bothOff;
        TRUE : state;
      esac;

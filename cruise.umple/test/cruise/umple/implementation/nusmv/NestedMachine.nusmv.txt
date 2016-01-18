@@ -27,7 +27,7 @@
      init( state ) := Sm_s1;
      next( state ) := case
        t4 : Sm_s1;
-       t1 | t5 | t6 | t2 | t8 : Sm_s2;
+       t6 | t5 | t1 | t2 | t8 : Sm_s2;
        t7 : Sm_s3;
        t3 : Sm_s4;
        TRUE : state;
@@ -45,10 +45,10 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t6 | _sm.t1 : SmS2_s2a;
+       _sm.t6 : SmS2_s2a;
        _sm.t2 | _sm.t5 : SmS2_s2b;
        _sm.t8 : SmS2_s2c;
-       _sm.t4 | _sm.t3 | _sm.t7 : null;
+       _sm.t1 | _sm.t4 | _sm.t3 | _sm.t7 : null;
        _sm.state = Sm_s2 : SmS2_s2a;
        TRUE : state;
      esac;

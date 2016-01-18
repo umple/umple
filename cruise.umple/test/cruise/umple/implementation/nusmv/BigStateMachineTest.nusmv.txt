@@ -40,7 +40,7 @@
      next( state ) := case
        t1 | t4 | t10 | t11 | t18 : Sm_Zxab;
        t3 : Sm_Da;
-       t12 | t19 | t14 | t6 | t9 | t16 | t8 | t15 | t20 | t17 | t7 | t13 | t5 | t2 : Sm_Ge;
+       t14 | t6 | t9 | t15 | t20 | t16 | t8 | t17 | t7 | t12 | t19 | t13 | t5 | t2 : Sm_Ge;
        TRUE : state;
      esac;
  
@@ -94,9 +94,9 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t15 | _sm.t20 | _sm.t17 | _sm.t7 | _sm.t12 | _sm.t19 | _sm.t14 | _sm.t6 | _sm.t9 : SmGe_Ga;
+       _sm.t12 | _sm.t19 | _sm.t15 | _sm.t20 : SmGe_Ga;
        _sm.t16 | _sm.t8 | _sm.t13 | _sm.t5 | _sm.t2 : SmGe_Ea;
-       _sm.t1 | _sm.t4 | _sm.t11 | _sm.t3 | _sm.t10 | _sm.t18 : null;
+       _sm.t3 | _sm.t6 | _sm.t9 | _sm.t11 | _sm.t17 | _sm.t1 | _sm.t4 | _sm.t7 | _sm.t10 | _sm.t14 | _sm.t18 : null;
        _sm.state = Sm_Ge : SmGe_Ga;
        TRUE : state;
      esac;

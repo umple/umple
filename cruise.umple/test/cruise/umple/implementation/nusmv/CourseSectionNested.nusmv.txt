@@ -28,7 +28,7 @@
    ASSIGN
      init( state ) := Status_Planned;
      next( state ) := case
-       t2 | t8 | t5 | t7 : Status_Open;
+       t5 | t2 | t8 | t7 : Status_Open;
        t1 | t6 | t3 | t4 : Status_Cancelled;
        t9 | t10 : Status_Closed;
        TRUE : state;
@@ -46,9 +46,9 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _status.t5 | _status.t2 | _status.t8 : StatusOpen_NotEnoughStudents;
+       _status.t2 : StatusOpen_NotEnoughStudents;
        _status.t7 : StatusOpen_EnoughStudents;
-       _status.t1 | _status.t4 | _status.t9 | _status.t3 | _status.t6 | _status.t10 : null;
+       _status.t1 | _status.t4 | _status.t6 | _status.t9 | _status.t3 | _status.t5 | _status.t8 | _status.t10 : null;
        _status.state = Status_Open : StatusOpen_NotEnoughStudents;
        TRUE : state;
      esac;
