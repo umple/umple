@@ -416,6 +416,21 @@ public class UmpleParserTest
   }
 
   @Test
+  public void abstractInterfaceExtends()
+  {
+    assertSimpleParse("423_interfaceInheritanceAbstract.ump");
+
+    Assert.assertEquals(1,model.getUmpleInterface("I").numberOfMethods());
+    Assert.assertEquals("I1",model.getUmpleInterface("I").getMethod(0).getName());
+    Assert.assertEquals(1,model.getUmpleClass("A").numberOfMethods());
+    Assert.assertEquals("I1",model.getUmpleClass("A").getMethod(0).getName());
+    Assert.assertEquals(0,model.getUmpleClass("B").numberOfMethods());
+    Assert.assertEquals(0,model.getUmpleClass("C").numberOfMethods());
+    Assert.assertEquals(1,model.getUmpleClass("D").numberOfMethods());
+    Assert.assertEquals("I1",model.getUmpleClass("D").getMethod(0).getName());
+  }
+
+  @Test
   public void immutableClass()
   {
     assertParse("022_immutableClass.ump");
@@ -2506,6 +2521,16 @@ public class UmpleParserTest
 	assertParse("412_association_comment.ump");
   }
 
+  // Ensure error 1007 is returned for unrecogrnized lines
+  // Test for issue 516 by M.K
+  @Test
+  public void assertSetFailedPosition() throws Exception {
+    assertHasWarningsParse("380_noLineEndingClass.ump",1007);
+    assertHasWarningsParse("380_noLineEndingTrait.ump",1007);
+    assertHasWarningsParse("380_multipleNoLineEndingsClass.ump",1007);
+    assertHasWarningsParse("380_multipleNoLineEndingsTrait.ump",1007);
+  }
+
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));
@@ -2711,7 +2736,5 @@ public class UmpleParserTest
 	Assert.assertEquals(true, answer);
 	Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
   }
-
-
 }
 

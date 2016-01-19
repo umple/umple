@@ -14,6 +14,7 @@ import java.util.*;
 import org.junit.*;
 
 import cruise.umple.compiler.exceptions.UmpleCompilerException;
+import cruise.umple.util.SampleFileWriter;
 
 public class UmpleClassTest
 {
@@ -89,6 +90,84 @@ public class UmpleClassTest
     Attribute v = new Attribute("aName",null,null,null,false,umpleClass);
     Assert.assertEquals(v,umpleClass.getAttribute("aName"));
     Assert.assertEquals(null,umpleClass.getAttribute("aSomethingElse"));
+  }
+
+  @Test
+  public void getSettableBooleanAttributeMethods()
+  {
+    Attribute a = new Attribute("a","Boolean",null,null,false,umpleClass);
+    ArrayList<String> methods = a.getMethodNames();
+    Assert.assertTrue(methods.contains("setA"));
+    Assert.assertTrue(methods.contains("isA"));
+    Assert.assertTrue(methods.contains("getA"));
+    Assert.assertEquals(methods.size(),3);
+  }
+
+  @Test
+  public void getSettableAttributeMethods()
+  {
+    Attribute a = new Attribute("a",null,null,null,false,umpleClass);
+    ArrayList<String> methods = a.getMethodNames();
+    Assert.assertTrue(methods.contains("setA"));
+    Assert.assertTrue(methods.contains("getA"));
+    Assert.assertEquals(methods.size(),2);
+  }
+
+  @Test
+  public void getInternalAttributeMethods()
+  {
+    Attribute a = new Attribute("a",null,"internal",null,false,umpleClass);
+    ArrayList<String> methods = a.getMethodNames();
+    Assert.assertEquals(methods.size(),0);
+  }
+
+  @Test
+  public void getConstantAttributeMethods()
+  {
+    Attribute a = new Attribute("a",null,"const","s",false,umpleClass);
+    ArrayList<String> methods = a.getMethodNames();
+    Assert.assertTrue(methods.contains("getA"));
+    Assert.assertEquals(methods.size(),1);
+  }
+
+  @Test
+  public void getImmutableAttributeMethods()
+  {
+    Attribute a = new Attribute("a",null,"immutable",null,false,umpleClass);
+    ArrayList<String> methods = a.getMethodNames();
+    Assert.assertTrue(methods.contains("getA"));
+    Assert.assertEquals(methods.size(),1);
+  }
+
+  @Test
+  public void getLazyAttributeMethods()
+  {
+    Attribute a = new Attribute("a",null,"lazy",null,false,umpleClass);
+    a.setIsLazy(true);
+    ArrayList<String> methods = a.getMethodNames();
+    Assert.assertTrue(methods.contains("setA"));
+    Assert.assertTrue(methods.contains("getA"));
+    Assert.assertEquals(methods.size(),2);
+  }
+
+  public void getAutouniqueAttributeMethods()
+  {
+    Attribute a = new Attribute("a",null,"autounique",null,false,umpleClass);
+    ArrayList<String> methods = a.getMethodNames();
+    Assert.assertTrue(methods.contains("setA"));
+    Assert.assertTrue(methods.contains("getA"));
+    Assert.assertEquals(methods.size(),2);
+  }
+
+  public void getDefaultedAttributeMethods()
+  {
+    Attribute a = new Attribute("a",null,"defaulted",null,false,umpleClass);
+    ArrayList<String> methods = a.getMethodNames();
+    Assert.assertTrue(methods.contains("setA"));
+    Assert.assertTrue(methods.contains("getA"));
+    Assert.assertTrue(methods.contains("resetA"));
+    Assert.assertTrue(methods.contains("getDefaultA"));
+    Assert.assertEquals(methods.size(),4);
   }
   
   @Test
@@ -215,6 +294,27 @@ public class UmpleClassTest
     Assert.assertEquals(true, umpleClass.isAttributeClass());
     Attribute attr = new Attribute("aName","aType",null,"",false, umpleClass);
     Assert.assertEquals(true, umpleClass.isAttributeClass());
+  }
+
+  @Test
+  public void isAttributeClass_internal()
+  {
+    Attribute attr = new Attribute("aName","aType","internal","",false, umpleClass);
+    Assert.assertEquals(true, attr.isInternal());
+  }
+
+  @Test
+  public void isAttributeClass_settable()
+  {
+    Attribute attr = new Attribute("aName","aType",null,"",false, umpleClass);
+    Assert.assertEquals(true, attr.isSettable());
+  }
+
+  @Test
+  public void isAttributeClass_defaulted()
+  {
+    Attribute attr = new Attribute("aName","aType","defaulted","",false, umpleClass);
+    Assert.assertEquals(true, attr.isDefaulted());
   }
   
   @Test
@@ -637,6 +737,55 @@ public class UmpleClassTest
     Assert.assertEquals("//b",allCodes.get(0).getCode());
     Assert.assertEquals("//d",allCodes.get(1).getCode());
   }
+
+  @Test
+  public void getCodeInjectionUnfoundMethodError_simple()
+  {
+    String code = "class A{a; after test { foo(); }}";
+    UmpleModel model = getModel(code);
+    model.run();
+    ParseResult result = model.getLastResult();
+    List<ErrorMessage> errors = result.getErrorMessages();
+    Assert.assertEquals(errors.size(), 1);
+    for(ErrorMessage er : errors)
+    {
+      Assert.assertTrue(er.toString().contains("1012") && er.toString().contains("test"));
+    }
+  }
+
+  @Test
+  public void getCodeInjectionUnfoundMethodError_complex()
+  {
+    String code = "class A{a; internal b; defaulted c = \"s\"; String[] d; immutable String[] e; after setB,getA,test,resetC,addD,removeE { foo(); }}";
+    UmpleModel model = getModel(code);
+    model.run();
+    ParseResult result = model.getLastResult();
+    List<ErrorMessage> errors = result.getErrorMessages();
+
+    Assert.assertEquals(errors.size(), 3);
+    boolean test = false;
+    boolean setB = false;
+    boolean removeE = false;
+    for(ErrorMessage er : errors)
+    {
+      if(er.toString().contains("1012") && er.toString().contains("test"))
+      {
+        test = true;
+      } 
+      else if(er.toString().contains("1012") && er.toString().contains("setB"))
+      {
+        setB = true;
+      }
+      else if(er.toString().contains("1012") && er.toString().contains("removeE"))
+      {
+        removeE = true;
+      }
+    }
+
+    Assert.assertTrue(test);
+    Assert.assertTrue(setB);
+    Assert.assertTrue(removeE);
+  }
   
   @Test
   public void getAllStateMachines_none()
@@ -709,5 +858,11 @@ public class UmpleClassTest
     Multiplicity m = new Multiplicity();
     m.setRange(lower + "", upper + "");
     return m;
+  }
+
+  private UmpleModel getModel(String inCode) {
+    SampleFileWriter.createFile("umpleClassTest.ump",inCode);  
+    UmpleFile uFile = new UmpleFile("umpleClassTest.ump"); 
+    return new UmpleModel(uFile);
   }
 }

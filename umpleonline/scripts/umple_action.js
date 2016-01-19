@@ -1984,7 +1984,7 @@ Mousetrap.bind(['ctrl+l'], function(e){
 });
 
 //Functions for showing and hiding parts of the view
-Mousetrap.bind(['ctrl+t'], function(e){
+Mousetrap.bind(['ctrl+t', 'ctrl+alt+shift+t'], function(e){
   if(jQuery('.focus').length != 0)
   {
     Page.clickShowHideText();
@@ -2000,7 +2000,7 @@ Mousetrap.bind(['ctrl+d'], function(e){
   }
 });
 
-Mousetrap.bind(['ctrl+n'], function(e){
+Mousetrap.bind(['ctrl+n', 'ctrl+alt+n'], function(e){
   if(jQuery('.focus').length != 0)
   {
     Page.clickShowHideMenu();

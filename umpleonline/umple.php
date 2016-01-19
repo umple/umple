@@ -423,7 +423,7 @@ $output = readTemporaryFile("ump/" . $filename);
               <img id="buttonYumlImage" src="scripts/yuml.png"/> 
               <a id="labelYumlImage" class="buttonExtend">Yuml View</a>
             </li>
-            <!--<li id="buttonSimulateCode" class="simulate"><img src="scripts/simulate.png" title="Simulate Code" /> Simulate</li> //DISABLED -->F
+            <!--<li id="buttonSimulateCode" class="simulate"><img src="scripts/simulate.png" title="Simulate Code" /> Simulate</li> //DISABLED -->
           </ul>
         </div>
       </div> 

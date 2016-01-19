@@ -253,6 +253,62 @@ Multiple files of generated code are concatenated when they appear on the web pa
 
 </ul>
 
+<p><b>Shortcuts</b></p>
+<ul>
+
+<li>
+<p><b>Common shortcuts for all computers:</b></p>
+<ul>
+
+<li> Control + E: Show the Editable class diagram
+
+<li> Control + G: Show GraphViz class diagram
+
+<li> Control + S: Show GraphViz state diagram
+
+<li> Control + L: Show Composite Structure diagram
+
+<li> Control + D: Show/Hide the diagram
+
+<li> Control + A: Toggle attributes
+
+<li> Control + M: Toggle methods
+
+<li> Control + R: Toggle traits
+
+</ul>
+</li>
+
+<li>
+<p><b>Mac Specific Shortcuts:</b></p>
+<ul>
+<li> Command + Z: Undo text changes
+
+<li> Command + shift + Z: Redo text changes
+
+<li> Control + T: Toggle the text area
+
+<li> Control + N: Toggle the menu
+</ul>
+</li>
+
+<li>
+<p><b>Windows/Linux Specific Shortcuts:</b></p>
+<ul>
+<li> Control + Z: Undo text changes
+
+<li> Control + Y: Redo text changes
+
+<li> Control + Alt + Shift + T: Toggle the text area
+
+<li> Control + Alt + N: Toggle the menu
+</ul>
+</li>
+
+</ul>
+
+
+
 <hr />
 
 <p><a href="PrivacyandRisks.html">See here for the statement regarding <b>privacy and other risks when using UmpleOnline</b>.</a></p>

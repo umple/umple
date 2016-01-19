@@ -27,35 +27,27 @@ class Foo
   end
 
 
-  =begin
-  Inline comment above method.
-  =end
+  # Inline comment above method.
   def testMethod1 ()
     // I am a comment inside a method.
   end
 
 
-  =begin
-  Multiple inline comments
-  above method.
-  =end
+  # Multiple inline comments
+  # above method.
   def testMethod2 ()
     // I am a comment inside a method.
   end
 
 
-  =begin
-  Multiline comment above method.
-  =end
+  # Multiline comment above method.
   def testMethod3 ()
     // I am a comment inside a method.
   end
 
 
-  =begin
-  Multiple multiline comments
-  above method.
-  =end
+  # Multiple multiline comments
+  # above method.
   def testMethod4 ()
     // I am a comment inside a method.
   end

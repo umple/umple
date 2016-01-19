@@ -1,0 +1,7 @@
+class X{
+	isA T;
+}
+
+trait T{
+	X name
+}

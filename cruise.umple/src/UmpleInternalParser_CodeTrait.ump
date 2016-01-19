@@ -488,10 +488,14 @@ class UmpleInternalParser
       cb.setCode("Ruby", rubyComment);
       aTrait.appendExtraCode(true,cb);
       aTrait.appendExtraCode("  " + token.getValue());
+      // Issue 516 Fix : Michael Kmicik
+      setFailedPosition(token.getPosition(), 1007, token.getValue("name"));
     }
     else
     {
       aTrait.appendExtraCode(token.getValue());
+      // Issue 516 Fix : Michael Kmicik
+      setFailedPosition(token.getPosition(), 1007, token.getValue("name"));
     }
   }
   

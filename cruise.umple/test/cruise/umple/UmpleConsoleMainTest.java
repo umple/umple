@@ -59,8 +59,8 @@ public class UmpleConsoleMainTest {
    String[] args = new String[0];
    
     UmpleConsoleMain.main(args);
-    Assert.assertEquals("Usage: java -jar umple.jar [options] <umple_file>\n"
-        + "Example: java -jar umple.jar airline.ump\n", outErrIntercept.toString());
+    Assert.assertEquals("Usage: java -jar umple.jar [options] <umple_file>"+System.lineSeparator()
+        + "Example: java -jar umple.jar airline.ump"+System.lineSeparator(), outErrIntercept.toString());
   }
   
   @Test
@@ -76,7 +76,7 @@ public class UmpleConsoleMainTest {
     args = new String[] { "-v" };
 
     UmpleConsoleMain.main(args);
-    Assert.assertEquals("Version: " + cruise.umple.compiler.UmpleModel.VERSION_NUMBER + "\n", 
+    Assert.assertEquals("Version: " + cruise.umple.compiler.UmpleModel.VERSION_NUMBER + System.lineSeparator(), 
         outErrIntercept.toString());
   }
 
@@ -88,8 +88,8 @@ public class UmpleConsoleMainTest {
    UmpleConsoleMain.main(args);
      } catch (IllegalStateException ise) {
       Assert.assertTrue(outErrIntercept.toString()
-          .startsWith("Option:\'IDONTEXIST\' is not a recognized option\n"
-           + "Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump\n"));
+          .startsWith("Option:\'IDONTEXIST\' is not a recognized option"+System.lineSeparator()
+           + "Usage: java -jar umple.jar [options] <umple_file>"+System.lineSeparator()+"Example: java -jar umple.jar airline.ump"+System.lineSeparator()));
      }
   }
   
@@ -172,9 +172,9 @@ public class UmpleConsoleMainTest {
       SampleFileWriter.createFile("testclass2.ump", "class Testclass1 {}");
 		    UmpleConsoleMain.main(args);
 
-      Assert.assertEquals("Processing -> testclass1.ump\n"
-              + "Success! Processed testclass1.ump.\n"
-              + "Success! Processed testclass2.ump.\n",
+      Assert.assertEquals("Processing -> testclass1.ump"+System.lineSeparator()
+              + "Success! Processed testclass1.ump."+System.lineSeparator()
+              + "Success! Processed testclass2.ump."+System.lineSeparator(),
           outErrIntercept.toString());
 
       SampleFileWriter.assertFileExists("Testclass1.java");
@@ -192,7 +192,7 @@ public class UmpleConsoleMainTest {
 	   
 	   try {
       // load simple ECore
-      SampleFileWriter.createFile("testclass.ecore", String.join("\n",
+      SampleFileWriter.createFile("testclass.ecore", String.join(System.lineSeparator(),
           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
           "<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" name=\"base\" nsURI=\"cruise.example.base\" nsPrefix=\"base\">",
           "<eClassifiers xsi:type=\"ecore:EDataType\" name=\"Time\" instanceClassName=\"java.sql.Time\"/>",
@@ -203,7 +203,7 @@ public class UmpleConsoleMainTest {
           "</ecore:EPackage>"));
 		
 		UmpleConsoleMain.main(args);
-      Assert.assertEquals("Success! Processed testclass.ecore.\n",
+      Assert.assertEquals("Success! Processed testclass.ecore."+System.lineSeparator(),
           outErrIntercept.toString());
 		
       SampleFileWriter.assertFileExists("testclass.ecore.ump");
