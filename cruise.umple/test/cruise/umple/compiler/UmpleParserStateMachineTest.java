@@ -72,8 +72,45 @@ public class UmpleParserStateMachineTest
     JavaGenerator gen = new JavaGenerator();
     gen.setModel(model);
     
-    Assert.assertEquals("if (!getFlag())\n{\n  {0}\n}", gen.translate("on", t1.getGuard()));
+    Assert.assertEquals("if (!(getFlag()))\n{\n  {0}\n}", gen.translate("on", t1.getGuard()));
   }
+
+ // Issue 607
+  @Test
+  public void handleBangInGuard2()
+  {
+    //assertParse("GuardWithExclamationPoint.ump", "[classDefinition][name:LightFixture][attribute][type:boolean][name:flag][value:false][stateMachine][inlineStateMachine][name:status][state][stateName:on][transition][event:turnOff][guard][loneBoolean][negativeConstraint][constraintName][name:flag][constraintParameterList][stateName:off][state][stateName:off][transition][event:turnOn][stateName:on]");
+   assertNoWarnings("GuardWithExclamationPoint.ump");
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("status", sm.getName());
+    State state1 = sm.getState(0);
+    State state2 = sm.getState(1);
+    Assert.assertEquals(2, sm.numberOfStates());
+    // Assert.assertEquals(0,state.numberOfTransitions());
+    Transition tt = state1.getTransition(0);
+    Transition t0 = state2.getTransition(0);
+    Transition t1 = state2.getTransition(1);
+    Transition t2 = state2.getTransition(2);
+    Transition t3 = state2.getTransition(3);
+    Transition t4 = state2.getTransition(4);
+    Event event1 = tt.getEvent();
+    Guard g=t0.getGuard();
+   // g.negate();
+    
+//  Assert.assertEquals(true, g.getRoot().toString());
+    Assert.assertEquals("turnOff", event1.getName());
+    JavaGenerator gen = new JavaGenerator();
+    gen.setModel(model);
+    
+    Assert.assertEquals("if (!getFlag())\n{\n  {0}\n}", gen.translate("on", tt.getGuard()));
+    Assert.assertEquals("if (!(getFlag()&&getFlag()))\n{\n  {0}\n}", gen.translate("on", t0.getGuard()));
+    Assert.assertEquals("if ((getFlag()||getFlag()))\n{\n  {0}\n}", gen.translate("on", t1.getGuard()));
+    Assert.assertEquals("if ((getFlag()>getFlag()))\n{\n  {0}\n}", gen.translate("on", t2.getGuard()));
+    Assert.assertEquals("if (((getFlag()!=getFlag())||(getFlag()||getFlag())))\n{\n  {0}\n}", gen.translate("on", t3.getGuard()));
+    Assert.assertEquals("if ((!(!getFlag()&&getX())&&(getX()||getX())))\n{\n  {0}\n}", gen.translate("on", t4.getGuard()));
+  }
+
 
   // Issue 492
   @Test

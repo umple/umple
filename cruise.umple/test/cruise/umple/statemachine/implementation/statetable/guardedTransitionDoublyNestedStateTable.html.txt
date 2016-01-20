@@ -30,7 +30,7 @@
 
     <tr>
       <td class="state-header" data-parent="1">- - OnOnOn</td>
-      <td class="event-entry"><span>[getStayOn()] Sleep</span><br><span>[!!getStayOn()] Off</span></td>
+      <td class="event-entry"><span>[getStayOn()] Sleep</span><br><span>[!getStayOn()] Off</span></td>
     </tr>
 
     <tr>
@@ -82,7 +82,7 @@
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry"><span>power [getStayOn()]</span></td>
-      <td class="state-entry"><span>power [!!getStayOn()]</span></td>
+      <td class="state-entry"><span>power [!getStayOn()]</span></td>
     </tr>
 
     <tr>

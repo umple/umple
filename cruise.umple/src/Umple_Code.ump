@@ -1995,21 +1995,33 @@ class ConstraintTree
    */
   private boolean negateVariable(ConstraintVariable variable){
     boolean wasOperationNegatable = false;
-    if(variable==null)
+    if((variable==null))
     {
       return false;
     }
     if(variable instanceof ConstraintOperator)
     {
-      if(((ConstraintOperator)variable).negate())
+      if(((ConstraintOperator)variable).isNegatable())
       {
-        return true;
-      }
-      else
-      {
-        boolean left = negateVariable(((ConstraintOperator)variable).getLeft());
-        boolean right = negateVariable(((ConstraintOperator)variable).getRight());
-        wasOperationNegatable = left||right;
+        if(((ConstraintOperator)variable).negate())
+        {
+          return true;
+        }
+        else
+        {
+          boolean left = isNegateVariable(((ConstraintOperator)variable).getLeft());
+          boolean right = isNegateVariable(((ConstraintOperator)variable).getRight());
+          wasOperationNegatable = left&&right;
+          if(wasOperationNegatable)
+          {
+           left = negateVariable(((ConstraintOperator)variable).getLeft());
+           right = negateVariable(((ConstraintOperator)variable).getRight());            
+          }
+          else
+          {
+            ((ConstraintOperator)variable).negate();
+          }
+        }
       }
     }
     else if(variable instanceof ConstraintTree)
@@ -2024,9 +2036,45 @@ class ConstraintTree
     if(!wasOperationNegatable)
     {
       displayNegation = !displayNegation;
+      wasOperationNegatable=!wasOperationNegatable;
     }
     return wasOperationNegatable;
   }
+
+/*
+To check if a subvariable of the ConstraintTree is negatable or not. Works like negateVariable but does not change the displayNegation.
+
+*/
+  private boolean isNegateVariable(ConstraintVariable variable){
+    boolean wasOperationNegatable = false;
+    if((variable==null))
+    {
+      return false;
+    }
+    if(variable instanceof ConstraintOperator)
+    {
+      if(((ConstraintOperator)variable).isNegatable())
+      {
+        return true;
+      }
+    }
+    else if(variable instanceof ConstraintTree)
+    {
+      wasOperationNegatable = ((ConstraintTree)variable).isNegatable();
+    }
+    else if(variable instanceof ConstraintLiteral||variable instanceof ConstraintUnassignedName)
+    {
+      return false;
+    }
+    if(displayNegation)
+    {
+      wasOperationNegatable=true;
+    }
+    return wasOperationNegatable;
+  }
+
+
+
 
   /*
    * The public counterpart to the negateVariabe method, it negates this ConstraintTree's root, starting off the recursive decent into the negation of the tree
@@ -2034,6 +2082,13 @@ class ConstraintTree
   public boolean negate()
   {
     return negateVariable(root);
+  }
+/*
+   * The public counterpart to the isNegateVariabe method, it checks negativability of this ConstraintTree's root, starting off the recursive decent into the negation of the tree
+   */
+  public boolean isNegatable()
+  {
+    return isNegateVariable(root);
   }
 
   /*
@@ -2397,6 +2452,15 @@ class ConstraintOperator
       value = "<";
     }
   }
+
+  public boolean isNegatable()
+    {
+        if(".".equals(value)||",".equals(value)||"".equals(value))
+      {
+        return false;
+      }
+      return true;
+    }
 
   /*
    * If this method is reached by the negateVariable in ConstraintTree it means that the parent ConstraintTree doesn't have to display the negation, the operator will handle it instead.
