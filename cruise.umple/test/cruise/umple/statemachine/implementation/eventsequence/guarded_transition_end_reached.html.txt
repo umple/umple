@@ -140,7 +140,7 @@
             <td class="column-header"><div><span>START</span></div></td>
             <td class="column-header"><div><span>1. ev1 [getGuard()]</span></div></td>
             <td class="column-header"><div><span>2. ev1</span></div></td>
-            <td class="column-header"><div><span>3. ev1 [!!getGuard()]</span></div></td>
+            <td class="column-header"><div><span>3. ev1 [!getGuard()]</span></div></td>
           </tr>
           <tr>
             <td class="content-cell" data-parent="">X</td>
@@ -195,7 +195,7 @@
   </tr>
   <tr>
     <td class="">3</td>
-    <td class="">ev1 [!!getGuard()]</td>
+    <td class="">ev1 [!getGuard()]</td>
     <td class="">endState</td>
   </tr>
 </table>
