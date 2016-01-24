@@ -1802,17 +1802,21 @@ class Attribute
     }
     else 
     {
+      String singularName = getUmpleClass().getSourceModel().getGlossary().getSingular(this.getName());
+      String singularCapitalizedName = singularName.substring(0, 1).toUpperCase() + singularName.substring(1);
+
       if(!this.isInternal())
       {
+        methodNames.add("get" + singularCapitalizedName);
         methodNames.add("get" + attributeCapitalizedName);
         methodNames.add("numberOf" + attributeCapitalizedName);
         methodNames.add("has" + attributeCapitalizedName);
-        methodNames.add("indexOf" + attributeCapitalizedName);
+        methodNames.add("indexOf" + singularCapitalizedName);
       }
       if(this.isIsLazy() || this.isSettable() || this.isDefaulted())
       {
-        methodNames.add("add" + attributeCapitalizedName);
-        methodNames.add("remove" + attributeCapitalizedName);
+        methodNames.add("add" + singularCapitalizedName);
+        methodNames.add("remove" + singularCapitalizedName);
       }
     }
     return methodNames;
@@ -3013,6 +3017,34 @@ class AssociationVariable
         related, related.getUmpleClass(), yourUmpleClassIsImmutable);
   }
 
+  public ArrayList<String> getMethodNames()
+  {
+    ArrayList<String> methodNames = new ArrayList<String>();      
+    String attributeCapitalizedName = this.getUpperCaseName();
+    String singularName = getUmpleClass().getSourceModel().getGlossary().getSingular(this.getName());
+    String singularCapitalizedName = singularName.substring(0, 1).toUpperCase() + singularName.substring(1);
+
+    if(isMany())
+    {
+      methodNames.add("get" + singularCapitalizedName);
+      methodNames.add("get" + attributeCapitalizedName);
+      methodNames.add("numberOf" + attributeCapitalizedName);
+      methodNames.add("has" + attributeCapitalizedName);
+      methodNames.add("indexOf" + singularCapitalizedName);
+      methodNames.add("minimumNumberOf" + attributeCapitalizedName);
+      methodNames.add("add" + singularCapitalizedName);
+      methodNames.add("add" + singularCapitalizedName + "At");
+      methodNames.add("addOrMove" + singularCapitalizedName + "At");
+      methodNames.add("remove" + singularCapitalizedName);
+    }
+    else
+    {
+      methodNames.add("get" + attributeCapitalizedName);
+      methodNames.add("set" + attributeCapitalizedName);
+    }
+    
+    return methodNames;
+  }
 }
 
 /*

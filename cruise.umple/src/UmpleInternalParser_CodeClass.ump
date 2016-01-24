@@ -2578,8 +2578,26 @@ class UmpleInternalParser
         methodNames.addAll(attr.getMethodNames());
       }
 
+      for(AssociationVariable av : uClass.getAssociationVariables())
+      {
+        methodNames.addAll(av.getMethodNames());
+      }
+
+      for(StateMachine sm : uClass.getStateMachines())
+      {
+        String stateMachineName = sm.getName().substring(0, 1).toUpperCase() + sm.getName().substring(1);
+        methodNames.add("set" + stateMachineName);
+        methodNames.add("get" + stateMachineName);
+
+        for(Event ev : sm.getEvents())
+        {
+          methodNames.add(ev.getName());
+        }
+      }
+
       methodNames.add("constructor");
       methodNames.add("delete");
+      methodNames.add("toString");
 
       for(String methodName : methodNames) 
       { 
