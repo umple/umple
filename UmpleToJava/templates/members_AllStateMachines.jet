@@ -18,7 +18,7 @@
 
     for (StateMachine nestedSm : allNested)
     {
-      append(stringBuffer, "\n  enum {0} { {1} }", gen.translate("type", nestedSm), 
+      append(stringBuffer, "\n  public enum {0} { {1} }", gen.translate("type", nestedSm), 
              gen.translate("listStates",nestedSm));
     }
     
@@ -82,7 +82,7 @@
     append(stringBuffer,"\n  Thread removal;");
     append(stringBuffer,"\n  ");
     append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
-    append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEventsForPooledSM",uClass));
+    append(stringBuffer, "\n  protected enum MessageType { {0} }", gen.translate("listEventsForPooledSM",uClass));
   } 
 
   boolean foundPooled = false;
