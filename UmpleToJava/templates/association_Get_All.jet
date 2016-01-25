@@ -3,6 +3,7 @@
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
+    %><%@ include file="specializationCode_Get.jet"%><% 
 
     if (!av.getIsNavigable())
     {
@@ -35,11 +36,41 @@
   
     if (av.isOne())
     {
-      %><%@ include file="association_GetOne.jet" %><%
+      if (reqSuperCode)
+      {
+        %><%@ include file="association_GetOne_specialization.jet"%><%
+      }
+      else if (reqCommonCode)
+      {
+        %><%@ include file="association_GetOne_relatedSpecialization.jet" %><%
+      }
+      else
+      {
+        %><%@ include file="association_GetOne.jet" %><%
+        if (relatedAssoc != null && relatedAssoc.getIsSpecialized())
+        {
+          %><%@ include file="association_GetOne_clear.jet" %><%
+        }
+      }
     }
     else if (av.isMany())
     {
-      %><%@ include file="association_GetMany.jet" %><%
+      if (reqSuperCode)
+      {
+        %><%@ include file="association_GetMany_specialization.jet"%><%
+      }
+      else if (reqCommonCode)
+      {
+        %><%@ include file="association_GetMany_relatedSpecialization.jet" %><%
+      }
+      else
+      {
+        %><%@ include file="association_GetMany.jet" %><%
+        if (relatedAssoc != null && relatedAssoc.getIsSpecialized())
+        {
+          %><%@ include file="association_GetMany_clear.jet" %><%
+        }
+      }
     }
     else
     {
