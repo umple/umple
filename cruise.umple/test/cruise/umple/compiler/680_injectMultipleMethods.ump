@@ -1,0 +1,15 @@
+class A{
+  Integer x;
+  Integer y;
+  after setX,setY {
+    //this code will be injected
+  }
+}
+
+class B{
+  Integer x;
+  Integer y;
+  before setX,setY {
+    //this code will be injected
+  }
+}

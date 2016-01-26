@@ -2556,10 +2556,10 @@ class UmpleInternalParser
     return value;
   }
 
-	//TODO I changed the parameter's type. please remove this comment;
+  //TODO I changed the parameter's type. please remove this comment;
   private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
   {
-    String type = injectToken.is("beforeCode") ? "before" : "after";    
+    String type = injectToken.is("beforeCode") ? "before" : "after";
     CodeBlock cb = new CodeBlock();
     StringBuilder operationName = new StringBuilder();
     String comma = "";
@@ -2571,15 +2571,15 @@ class UmpleInternalParser
         comma = ",";
       }
     }
-    CodeInjection injection = new CodeInjection(type,injectToken.getValue("operationName"),"",uClassifier);
+    CodeInjection injection = new CodeInjection(type,operationName.toString(),"",uClassifier);
     makeCodeInject(injectToken,injection,cb,uClassifier);
     injection.setSnippet(cb);
     if (uClassifier instanceof UmpleClass) {
       checkCodeInjectionValidity(injectToken, operationName.toString(), uClassifier);
-    	((UmpleClass)uClassifier).addCodeInjection(injection);
+      ((UmpleClass)uClassifier).addCodeInjection(injection);
     } else if (uClassifier instanceof UmpleTrait){
-    	((UmpleTrait)uClassifier).addCodeInjection(injection);
-    }  
+      ((UmpleTrait)uClassifier).addCodeInjection(injection);
+    }
   }
 
   private boolean checkCodeInjectionValidity(Token injectToken, String operationName, UmpleClassifier uClassifier) {
