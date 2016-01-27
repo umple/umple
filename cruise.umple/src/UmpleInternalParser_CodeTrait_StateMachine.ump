@@ -59,6 +59,7 @@ class UmpleInternalParser
   	 	StateMachine stTemp = ApplyTypeParametersToStateMachine(sMachine,inGTPApplied,inClass, inTrait);
   		if (stTemp!=null)	{
   			ApplyTypeParametersToEventsOfStateMachines(stTemp, inGTPApplied);
+  			ApplyTypeParametersToActionCodesOfStateMachines(stTemp, inGTPApplied);
   			lSMachine.add(stTemp);
   			}
   	}
@@ -185,7 +186,32 @@ class UmpleInternalParser
   	return newSt;
 	}
 
-  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+ private void ApplyTypeParametersToEventsOfStateMachines(StateMachine inStateMachine, GeneralTPApplied inGeneralTPApplied){
+	 if (inGeneralTPApplied == null) return;
+	 for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
+		 String newName = inGeneralTPApplied.getParameterMapping().get(strType);
+		 for(Event e : inStateMachine.getAllEvents()){
+			 for(MethodParameter p : e.getParams()){
+				 if (p.getType().equals(strType)){
+					 p.setType(newName);
+				 }
+			 }
+		 }
+	 }
+ }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+  private void ApplyTypeParametersToActionCodesOfStateMachines(StateMachine inStateMachine, GeneralTPApplied inGeneralTPApplied){
+	 if (inGeneralTPApplied == null) return;
+	 for (Transition transition : inStateMachine.getAllTransitions()){
+		if (transition.getAction()!=null )
+			transition.getAction().getCodeblock().ApplyTypeParameters(inGeneralTPApplied);
+	 }
+ }  
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  

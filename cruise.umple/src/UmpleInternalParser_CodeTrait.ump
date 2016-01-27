@@ -1002,22 +1002,6 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
- private void ApplyTypeParametersToEventsOfStateMachines(StateMachine inStateMachine, GeneralTPApplied inGeneralTPApplied){
-	 if (inGeneralTPApplied == null) return;
-	 for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
-		 String newName = inGeneralTPApplied.getParameterMapping().get(strType);
-		 for(Event e : inStateMachine.getAllEvents()){
-			 for(MethodParameter p : e.getParams()){
-				 if (p.getType().equals(strType)){
-					 p.setType(newName);
-				 }
-			 }
-		 }
-	 }
- }
-//---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start-------------------------------------- 
   private void addAssociation(String lName, String rName, AssociationVariable inAssociationVariable, UmpleClass inClass, UmpleClass relatedClass) {	
         AssociationEnd leftEnd = new AssociationEnd(lName, inClass.getName(), inAssociationVariable.getRelatedAssociation().getModifier(), inClass.getName(), inAssociationVariable.getRelatedAssociation().getMultiplicity());
 		AssociationEnd rightEnd = new AssociationEnd(rName,relatedClass.getName(), inAssociationVariable.getModifier(),relatedClass.getName(),inAssociationVariable.getMultiplicity());		
