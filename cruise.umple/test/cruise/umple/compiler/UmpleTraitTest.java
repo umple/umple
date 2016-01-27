@@ -1367,6 +1367,22 @@ public class UmpleTraitTest {
 		Assert.assertEquals("B b=new B();", model.getUmpleClass("A").getMethod(0).getMethodBody().getCodeblock().getCode());
 		Assert.assertEquals("A b=new A();", model.getUmpleClass("B").getMethod(0).getMethodBody().getCodeblock().getCode());
 	}	
+	
+	@Test
+	public void templateInCode02Test() {
+		String code = "class A{isA T<X=B>;} class B{} trait T<X>{void test(){#x# b=new #x#();}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("#x# b=new #x#();", model.getUmpleClass("A").getMethod(0).getMethodBody().getCodeblock().getCode());
+		
+	}	
+	
+	@Test
+	public void templateInCode03Test() {
+		String code = "class A{isA T<X=B>;} class B{} trait T<X>{status {on{turnOff -> /{#X# b=new #X#();} off;}off{}}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("B b=new B();", model.getUmpleClass("A").getStateMachine("status").getStartState().getTransition(0).getAction().getCodeblock().getCode());
+		
+	}	
 
 	@Test
 	public void InterfaceForTemplates001() {

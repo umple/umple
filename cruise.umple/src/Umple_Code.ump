@@ -870,7 +870,7 @@ class CodeBlock
 		  				internalCode = internalCode+inGeneralTPApplied.getParameterMapping().get(strTemp);
 		  				continue;
 		  			} else {
-		  				internalCode = internalCode+"#"+strTemp+"#";
+		  				internalCode = internalCode+"#"+strTemp;
 		  			}
 
 		  		}
