@@ -27,7 +27,7 @@
 
     <%=gen.translate("associationOne",av)%> = <% if (!mulChangedToOne) { %><%=gen.translate("parameterNew",av)%><% } else { %>new ArrayList<<%=scName%>>()<% } %>;
     <% if (mulChangedToOne) { %><%=gen.translate("associationOne",av)%>.add(<%=gen.translate("parameterNew",av)%>);<% } %>
-    <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterNew",av)%>.<%=gen.relatedTranslate("getMethod",av)%><% if (mulChangedToOne) { %>_One<%=gen.relatedTranslate("type",av)%>()<% } else if (relMulChangedToOne) { %>(0)<% } %>;
+    <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterNew",av)%>.<%=gen.relatedTranslate("getMethod",av)%><% if (mulChangedToOne) { %>_One<%=gen.relatedTranslate("type",av)%>()<% } else if (relMulChangedToOne) { %>(0)<% } else { %>()<% } %>;
 
     if (!equals(<%=gen.relatedTranslate("parameterExisting",av)%>))
     {
