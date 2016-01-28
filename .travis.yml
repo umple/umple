@@ -9,6 +9,8 @@ language: java
 cache:
   directories:
     - $HOME/.ant/lib/
+    - $HOME/.ivy2/
+    - $HOME/.m2/
     - $TRAVIS_BUILD_DIR/dist/libs
 
 addons:
@@ -22,7 +24,7 @@ before_install:
 
 env:
   global:
-    - ANT_FIRST='ant -f build.umple.xml -Dmyenv=travis -Donline=true'
+    - ANT_FIRST='ant -f build.umple.xml -Dmyenv=travis'
     - ANT_BUILD='ant -f build.umple.xml -Dmyenv=travis -Dfirst.build=false'
     - ANT_TESTBED='ant -f build.testbed.xml -Dmyenv=travis -Dfirst.build=false'
 
@@ -33,12 +35,12 @@ script:
   # We resolve all of the dependencies before, this way the command will be unlikely to time out
   - ant -Dmyenv=travis deps-resolve-all
 
-  # Do the a modified version of `first-build`
+  # Do a modified version of `first-build`
   - $ANT_FIRST clean init codegen rtcpp template.setVersion resetUmpleSelf
   - $ANT_FIRST compile compileValidator compileUmplificator
   - $ANT_FIRST package template.resetVersion
 
-  # Do the a modified version of `build`
+  # Do a modified version of `build`
   - $ANT_BUILD clean init codegen rtcpp template.setVersion resetUmpleSelf
   - $ANT_BUILD compile compileValidator compileUmplificator
   - $ANT_BUILD package 
