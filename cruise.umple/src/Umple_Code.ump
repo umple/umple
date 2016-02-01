@@ -1178,6 +1178,43 @@ class UmpleClass
     return all;
   }
 
+  public ArrayList<String> getMethodNames()
+  {
+    ArrayList<String> methodNames = new ArrayList<String>();
+    for(Method aMethod : this.getMethods())
+    {
+      methodNames.add(aMethod.getName());
+    }
+
+    for(Attribute attr : this.getAttributes())
+    {
+      methodNames.addAll(attr.getMethodNames());
+    }
+
+    for(AssociationVariable av : this.getAssociationVariables())
+    {
+      methodNames.addAll(av.getMethodNames());
+    }
+
+    for(StateMachine sm : this.getStateMachines())
+    {
+      String stateMachineName = sm.getName().substring(0, 1).toUpperCase() + sm.getName().substring(1);
+      methodNames.add("set" + stateMachineName);
+      methodNames.add("get" + stateMachineName);
+
+      for(Event ev : sm.getEvents())
+      {
+        methodNames.add(ev.getName());
+      }
+    }
+
+    methodNames.add("constructor");
+    methodNames.add("delete");
+    methodNames.add("toString");
+
+    return methodNames;
+  }
+
   public Boolean matchOperationMethod(String fullOperation, String method) {
     String formattedMethod = StringFormatter.toUnderscore(method);
     TriState isMatch = new TriState(false);
@@ -3021,6 +3058,7 @@ class AssociationVariable
   {
     ArrayList<String> methodNames = new ArrayList<String>();      
     String attributeCapitalizedName = this.getUpperCaseName();
+
     String singularName = getUmpleClass().getSourceModel().getGlossary().getSingular(this.getName());
     String singularCapitalizedName = singularName.substring(0, 1).toUpperCase() + singularName.substring(1);
 
