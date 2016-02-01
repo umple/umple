@@ -373,6 +373,9 @@ class UmpleInternalParser
       checkNonReachableStates();
       //Issue 610
       checkAssociationClassKeys();
+
+      //Issue 686
+      checkCodeInjections();
     }
   }
 

@@ -3120,6 +3120,11 @@ class AssociationVariable
 
   public ArrayList<String> getMethodNames()
   {
+    if(!getIsNavigable())
+    {
+      return new ArrayList<String>();
+    }
+
     ArrayList<String> methodNames = new ArrayList<String>();      
     String attributeCapitalizedName = this.getUpperCaseName();
 
