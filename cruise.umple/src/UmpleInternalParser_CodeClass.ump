@@ -27,6 +27,8 @@ class UmpleInternalParser
   internal Map<UmpleClassifier,List<Token>> unlinkedExtendsTokensInterface = new HashMap <UmpleClassifier, List<Token>>();
   internal Map<UmpleClassifier,List<String>> unlinkedInterfaceExtends = new HashMap<UmpleClassifier,List<String>>();
 
+  internal Map<UmpleClassifier,List<Token>> unanalyzedInjectionTokens = new HashMap<UmpleClassifier,List<Token>>();
+
   // List of comments populated by the parser to be added to the next class, attribute, association, method, etc.
   internal Comment[] lastComments;
   
@@ -382,13 +384,13 @@ class UmpleInternalParser
   //Issue 686
   private void checkCodeInjections()
   {
-    for(UmpleClass uClass : model.getUmpleClasses())
-    { 
-      for(CodeInjection injection : uClass.getCodeInjections())
+    for(Map.Entry<UmpleClassifier, List<Token>> entry : unanalyzedInjectionTokens.entrySet())
+    {
+      for(Token injectToken : entry.getValue())
       {
-        checkCodeInjectionValidity(injection, uClass);
+        checkCodeInjectionValidity(injectToken, (UmpleClass) entry.getKey());
       }
-    }
+    } 
   }
 
   public void analyzeInvariants()
@@ -2572,14 +2574,11 @@ class UmpleInternalParser
     return value;
   }
 
-  //TODO I changed the parameter's type. please remove this comment;
-  private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
+  private String getOperationName(Token aToken)
   {
-    String type = injectToken.is("beforeCode") ? "before" : "after";
-    CodeBlock cb = new CodeBlock();
     StringBuilder operationName = new StringBuilder();
     String comma = "";
-    for(Token subToken:injectToken.getSubTokens())
+    for(Token subToken : aToken.getSubTokens())
     {
       if(subToken.is("operationName"))
       {
@@ -2587,7 +2586,25 @@ class UmpleInternalParser
         comma = ",";
       }
     }
-    CodeInjection injection = new CodeInjection(type,operationName.toString(),"",uClassifier);
+    return operationName.toString();
+  }
+
+  //TODO I changed the parameter's type. please remove this comment;
+  private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
+  {
+    if(!unanalyzedInjectionTokens.containsKey(uClassifier))
+    {
+      unanalyzedInjectionTokens.put(uClassifier, new ArrayList<Token>()); 
+    }
+
+    List<Token> currentTokens = unanalyzedInjectionTokens.get(uClassifier);
+    currentTokens.add(injectToken);
+
+    String type = injectToken.is("beforeCode") ? "before" : "after";
+    CodeBlock cb = new CodeBlock();
+    String operationName = getOperationName(injectToken);
+
+    CodeInjection injection = new CodeInjection(type,operationName,"",uClassifier);
     makeCodeInject(injectToken,injection,cb,uClassifier);
     injection.setSnippet(cb);
     if (uClassifier instanceof UmpleClass) {
@@ -2597,9 +2614,9 @@ class UmpleInternalParser
     }
   }
 
-  private boolean checkCodeInjectionValidity(CodeInjection injection, UmpleClass uClass) {
+  private boolean checkCodeInjectionValidity(Token injectToken, UmpleClass uClass) {
     ArrayList<String> methodNames = new ArrayList<String>();
-    String operationName = injection.getOperation();
+    String operationName = getOperationName(injectToken);
 
     ArrayList<String> todoExtendedClasses = new ArrayList<String>();
     ArrayList<String> todoInheritedInterfaces = new ArrayList<String>();
@@ -2662,7 +2679,7 @@ class UmpleInternalParser
       }
 
       if(!matches) {
-        getParseResult().addErrorMessage(new ErrorMessage(1012, injection.getPosition(), operation));
+        getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
       }
     }
     

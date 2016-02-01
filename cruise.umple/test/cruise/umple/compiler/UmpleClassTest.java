@@ -866,7 +866,7 @@ public class UmpleClassTest
   @Test
   public void getCodeInjectionUnfoundExtendedMethod_Complex()
   {
-    String code = "class A { 1 -- * C children; k; } class B { isA A; after setK,getK{ foo(); } class C { isA B; after addChild,getChildA,tsetK,getK{ foo(); }}";
+    String code = "class A { 1 -- * C children; k; } class B { isA A; after setK,getK{ foo(); } } class C { isA B; after addChild,getChildA,tsetK,getK{ foo(); }}";
     UmpleModel model = getModel(code);
     model.run();
     ParseResult result = model.getLastResult();
