@@ -26,7 +26,7 @@
    ASSIGN
      init( state ) := State_state1;
      next( state ) := case
-       t3 | t7 | t6 | t2 | t8 | t5 : State_state1;
+       t3 | t7 | t5 | t2 | t8 | t6 : State_state1;
        t1 | t4 : State_state2;
        TRUE : state;
      esac;
@@ -80,7 +80,7 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _state.t7 | _state.t6 | _state.t8 | _state.t5 : StateState12_state12;
+       _state.t7 | _state.t5 | _state.t8 | _state.t6 : StateState12_state12;
        _state.t1 | _state.t4 : null;
        _state.state = State_state1 : StateState12_state12;
        TRUE : state;
@@ -99,7 +99,7 @@
      init( state ) := null;
      next( state ) := case
        _state.t7 | _state.t8 : StateState12State12_state121;
-       _state.t6 | _state.t5 : StateState12State12_state122;
+       _state.t5 | _state.t6 : StateState12State12_state122;
        _state.t1 | _state.t3 | _state.t2 | _state.t4 : null;
        _stateState12.state = StateState12_state12 : StateState12State12_state121;
        TRUE : state;
@@ -117,8 +117,8 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _state.t6 | _state.t5 : StateState12State12State122_state1221;
-       _state.t1 | _state.t3 | _state.t7 | _state.t2 | _state.t4 | _state.t8 : null;
+       _state.t6 : StateState12State12State122_state1221;
+       _state.t2 | _state.t4 | _state.t7 | _state.t1 | _state.t3 | _state.t5 | _state.t8 : null;
        _stateState12State12.state = StateState12State12_state122 : StateState12State12State122_state1221;
        TRUE : state;
      esac;

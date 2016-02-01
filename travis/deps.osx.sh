@@ -8,8 +8,10 @@ fi
 
 brew tap caskroom/cask
 
-brew update #; brew doctor; brew update
+echo "brew update ..."
+brew update > /dev/null # There is no need for all of this output to be seen
 
-brew install ant brew-cask && brew cask install java
+brew install ant
+brew cask install java
 
 java -version

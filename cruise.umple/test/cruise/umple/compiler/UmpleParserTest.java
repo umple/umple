@@ -416,6 +416,21 @@ public class UmpleParserTest
   }
 
   @Test
+  public void abstractInterfaceExtends()
+  {
+    assertSimpleParse("423_interfaceInheritanceAbstract.ump");
+
+    Assert.assertEquals(1,model.getUmpleInterface("I").numberOfMethods());
+    Assert.assertEquals("I1",model.getUmpleInterface("I").getMethod(0).getName());
+    Assert.assertEquals(1,model.getUmpleClass("A").numberOfMethods());
+    Assert.assertEquals("I1",model.getUmpleClass("A").getMethod(0).getName());
+    Assert.assertEquals(0,model.getUmpleClass("B").numberOfMethods());
+    Assert.assertEquals(0,model.getUmpleClass("C").numberOfMethods());
+    Assert.assertEquals(1,model.getUmpleClass("D").numberOfMethods());
+    Assert.assertEquals("I1",model.getUmpleClass("D").getMethod(0).getName());
+  }
+
+  @Test
   public void immutableClass()
   {
     assertParse("022_immutableClass.ump");
@@ -2049,6 +2064,28 @@ public class UmpleParserTest
     Assert.assertEquals("after",inject.getType());
     Assert.assertEquals("getName",inject.getOperation());
     Assert.assertEquals("notReallyPossible();",inject.getCode());
+  }
+
+  @Test
+  public void multiInject()
+  {
+    assertSimpleParse("680_injectMultipleMethods.ump");
+
+    UmpleClass a = model.getUmpleClass("A");
+    Assert.assertEquals(1,a.numberOfCodeInjections());
+
+    CodeInjection aInject = a.getCodeInjection(0);
+    Assert.assertEquals("after",aInject.getType());
+    Assert.assertEquals("setX,setY", aInject.getOperation());
+    Assert.assertEquals("//this code will be injected",aInject.getCode());
+
+    UmpleClass b = model.getUmpleClass("B");
+    Assert.assertEquals(1,b.numberOfCodeInjections());
+
+    CodeInjection bInject = b.getCodeInjection(0);
+    Assert.assertEquals("before",bInject.getType());
+    Assert.assertEquals("setX,setY",bInject.getOperation());
+    Assert.assertEquals("//this code will be injected",bInject.getCode());
   }
 
   @Test

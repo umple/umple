@@ -57,6 +57,7 @@ class UmpleModel
     }catch( IOException e ){
       throw new RuntimeException("Error opening '/umple_core.grammar' resource", e);
     }
+    Arrays.sort(result);
     return result;
   }
 
@@ -230,9 +231,8 @@ class UmpleModel
   {
     String realLanguage = language;
     
-        // Ensure the target is specified in the proper case.
+    // Ensure the target is specified in the proper case.
     VALIDATE_GENERATE:
-    //for( String lang : UmpleModel.validLanguages ){
     for( String lang : UmpleModel.validLanguages ){
       if(lang.equalsIgnoreCase(language)){
         realLanguage = lang;
@@ -870,7 +870,7 @@ class CodeBlock
 		  				internalCode = internalCode+inGeneralTPApplied.getParameterMapping().get(strTemp);
 		  				continue;
 		  			} else {
-		  				internalCode = internalCode+"#"+strTemp+"#";
+		  				internalCode = internalCode+"#"+strTemp;
 		  			}
 
 		  		}
@@ -2036,21 +2036,33 @@ class ConstraintTree
    */
   private boolean negateVariable(ConstraintVariable variable){
     boolean wasOperationNegatable = false;
-    if(variable==null)
+    if((variable==null))
     {
       return false;
     }
     if(variable instanceof ConstraintOperator)
     {
-      if(((ConstraintOperator)variable).negate())
+      if(((ConstraintOperator)variable).isNegatable())
       {
-        return true;
-      }
-      else
-      {
-        boolean left = negateVariable(((ConstraintOperator)variable).getLeft());
-        boolean right = negateVariable(((ConstraintOperator)variable).getRight());
-        wasOperationNegatable = left||right;
+        if(((ConstraintOperator)variable).negate())
+        {
+          return true;
+        }
+        else
+        {
+          boolean left = isNegateVariable(((ConstraintOperator)variable).getLeft());
+          boolean right = isNegateVariable(((ConstraintOperator)variable).getRight());
+          wasOperationNegatable = left&&right;
+          if(wasOperationNegatable)
+          {
+           left = negateVariable(((ConstraintOperator)variable).getLeft());
+           right = negateVariable(((ConstraintOperator)variable).getRight());            
+          }
+          else
+          {
+            ((ConstraintOperator)variable).negate();
+          }
+        }
       }
     }
     else if(variable instanceof ConstraintTree)
@@ -2065,9 +2077,45 @@ class ConstraintTree
     if(!wasOperationNegatable)
     {
       displayNegation = !displayNegation;
+      wasOperationNegatable=!wasOperationNegatable;
     }
     return wasOperationNegatable;
   }
+
+/*
+To check if a subvariable of the ConstraintTree is negatable or not. Works like negateVariable but does not change the displayNegation.
+
+*/
+  private boolean isNegateVariable(ConstraintVariable variable){
+    boolean wasOperationNegatable = false;
+    if((variable==null))
+    {
+      return false;
+    }
+    if(variable instanceof ConstraintOperator)
+    {
+      if(((ConstraintOperator)variable).isNegatable())
+      {
+        return true;
+      }
+    }
+    else if(variable instanceof ConstraintTree)
+    {
+      wasOperationNegatable = ((ConstraintTree)variable).isNegatable();
+    }
+    else if(variable instanceof ConstraintLiteral||variable instanceof ConstraintUnassignedName)
+    {
+      return false;
+    }
+    if(displayNegation)
+    {
+      wasOperationNegatable=true;
+    }
+    return wasOperationNegatable;
+  }
+
+
+
 
   /*
    * The public counterpart to the negateVariabe method, it negates this ConstraintTree's root, starting off the recursive decent into the negation of the tree
@@ -2075,6 +2123,13 @@ class ConstraintTree
   public boolean negate()
   {
     return negateVariable(root);
+  }
+/*
+   * The public counterpart to the isNegateVariabe method, it checks negativability of this ConstraintTree's root, starting off the recursive decent into the negation of the tree
+   */
+  public boolean isNegatable()
+  {
+    return isNegateVariable(root);
   }
 
   /*
@@ -2438,6 +2493,15 @@ class ConstraintOperator
       value = "<";
     }
   }
+
+  public boolean isNegatable()
+    {
+        if(".".equals(value)||",".equals(value)||"".equals(value))
+      {
+        return false;
+      }
+      return true;
+    }
 
   /*
    * If this method is reached by the negateVariable in ConstraintTree it means that the parent ConstraintTree doesn't have to display the negation, the operator will handle it instead.
@@ -3468,11 +3532,11 @@ class Comment
     }
     else if (type == "RubyMultiline")
     {
-      commentDelimiter = "";
+      commentDelimiter = " ";
     }
     else if (type == "RubyMultiline Internal")
     {
-      commentDelimiter = "  ";
+      commentDelimiter = " ";
     }
     else if (type == "Multiline")
     {
@@ -3542,11 +3606,33 @@ class Comment
     }
     else if (type == "RubyMultiline")
     {
-      output = "=begin\n" + output + "=end";
+      // initialize sb at least as large as the output with 1 comment
+      StringBuilder sb = new StringBuilder( output.length() + 2 ); 
+      sb.append("#");
+      char c;
+      for( int i=0; i < output.length(); ++i ){
+        c = output.charAt(i);
+        sb.append(c);
+        if( (c == '\n') && (i != output.length()-1) ){
+          sb.append("#");
+        }
+      }
+      output = sb.toString();
     }
     else if (type == "RubyMultiline Internal")
     {
-      output = "  =begin\n" + output + "  =end";
+      // initialize sb at least as large as the output with 1 comment
+      StringBuilder sb = new StringBuilder( output.length() + 2 ); 
+      sb.append("#");
+      char c;
+      for( int i=0; i < output.length(); ++i ){
+        c = output.charAt(i);
+        sb.append(c);
+        if( (c == '\n') && (i != output.length()-1) ){
+          sb.append("  #");
+        }
+      }
+      output = sb.toString();
     }
     else if (type == "Multiline")
     {

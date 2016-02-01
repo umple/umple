@@ -32,7 +32,7 @@
      next( state ) := case
        t5 | t6 : State_neutral;
        t1 : State_reverse;
-       t7 | t2 | t8 | t12 | t3 | t11 | t4 | t9 | t10 : State_drive;
+       t3 | t11 | t8 | t12 | t2 | t7 | t4 | t9 | t10 : State_drive;
        TRUE : state;
      esac;
  
@@ -48,10 +48,10 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _state.t3 | _state.t11 | _state.t7 | _state.t2 : StateDrive_first;
+       _state.t7 | _state.t3 | _state.t11 : StateDrive_first;
        _state.t4 | _state.t9 | _state.t8 | _state.t12 : StateDrive_second;
        _state.t10 : StateDrive_third;
-       _state.t5 | _state.t1 | _state.t6 : null;
+       _state.t1 | _state.t5 | _state.t2 | _state.t6 : null;
        _state.state = State_drive : StateDrive_first;
        TRUE : state;
      esac;

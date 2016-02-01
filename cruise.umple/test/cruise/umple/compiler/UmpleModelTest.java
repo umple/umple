@@ -55,6 +55,9 @@ public class UmpleModelTest
     SampleFileWriter.destroy("Course.java");
     SampleFileWriter.destroy("Teacher.java");
     SampleFileWriter.destroy("sub/");
+    SampleFileWriter.destroy("Student2.php");
+    SampleFileWriter.destroy("Teacher.php");
+    SampleFileWriter.destroy("teachercdt.gv");
   }
 
   @Test

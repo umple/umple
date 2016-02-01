@@ -47,7 +47,9 @@ class NuSMVCoordinator
   	}
   	  	
   	private NuSMVModule generateParentModule( StateMachine sm ) {
-  		ModuleBody body = new ModuleBody( new IVarDeclaration(getEventList( sm )) );
+  		VariableSpecifier xxx = getEventList( sm );
+  		
+  		ModuleBody body = new ModuleBody( new IVarDeclaration( xxx ) );
   		body.addModuleElement( new VarDeclaration(getStateList(sm)) );
   		//Adding define declaration to module body
   		body.addModuleElement( getDefineDeclaration(sm) );
@@ -243,41 +245,69 @@ class NuSMVCoordinator
 				expr.addCaseStatement( initializeCompositeStartState( st ) );
 			
 		CaseStatement otherwise = new CaseStatement(bexp2, bexp1);
-    	expr.addCaseStatement( otherwise);
+    	expr.addCaseStatement( otherwise );
     	expr.removeCaseStatement(temp);
 		
     	NextAssign na = new NextAssign("state", expr);
     	return na;
   	}
+		
+	//Harvesting transitions for any given orthogonal state or region
+	private List<Transition> getAllTransitionsForOrthogonalState( State st ) {
+		List<Transition> results = new ArrayList<Transition>();
+		if( !st.isIsConcurrent() )
+			for( StateMachine sm : st.getNestedStateMachines() ) 
+				for( Transition trans : getAllTransitions( sm ) )
+					results.add( trans );
+		return results;
+	}
+	
+	//Harvesting transitions for a state machine
+	private List<Transition> getAllTransitions( StateMachine sm ) {
+		List<Transition> results = new ArrayList<Transition>();
+		for( State st : sm.getStates() ) {
+			for( Transition trans : st.getNextTransition() )
+  				results.add( trans );
+				if( st.hasNestedStateMachines() )
+					for( StateMachine smm : st.getNestedStateMachines() )
+						for( Transition transition : getAllTransitions( smm ) )
+							results.add( transition );
+		}
+		return results;
+	}
+	
+	private void printList( List<Transition> input, StateMachine root ) {
+		String results = "";
+		for( Transition element : input )
+			results += getTransitionIdentity( root, element ) +" ";
+		System.out.println( results );
+	}
   	
   	//Generates a list of next transitions for a state and its substates (where possible).
   	//That is transition that enables or activates a state
-  	private List<Transition> getAllTransitions( State st, StateMachine root ) {
-		//Handles transitions for simple state machines
-		if( ! isNested(root) || (st.getStateMachine().getParentState() == null && !st.hasNestedStateMachines()) )
+  	private List<Transition> getAllTransitions( State st ) {
+		if( !st.hasNestedStateMachines() ) {
 			return st.getNextTransition();
-			
-  		List<Transition> allTransitions = new ArrayList<Transition>();
-  		if( !st.hasNestedStateMachines() && !st.isIsStartState() )
-  			allTransitions = st.getNextTransition();
+		}
+		else {	
+			List<Transition> allTransitions = new ArrayList<Transition>();
+			for( Transition tr : st.getNextTransition() )
+				allTransitions.add(tr);
 		
-  		State parent = st.getStateMachine().getParentState();
-  		if( st.isIsStartState() && parent != null ) {
-  			for( Transition trans : st.getNextTransition() )
-  				allTransitions.add(trans);
-  			for( Transition tr : parent.getNextTransition() )
-  				allTransitions.add(tr);
-  		}
-  		for( StateMachine sm : st.getNestedStateMachines() )
-  			for( State state : sm.getStates() ) {
-  				for( Transition transition : getAllTransitions( state, root ) )
-  					allTransitions.add( transition );
-  			} 
-  		return allTransitions;
+			for( StateMachine sm : st.getNestedStateMachines() )
+				for( Transition transition : getAllTransitions( sm ) )
+					allTransitions.add( transition );
+		    return allTransitions;
+		}
   	}
 	
 	private CaseStatement getCaseStatementForNullState( State st, StateMachine root ) {
-		List<Transition> trans = getAllTransitions(st, root);
+	
+		List<Transition> trans = getAllTransitions(st);
+		if( st.hasNestedStateMachines() )
+			for( Transition transition : st.getNextTransition() )
+				trans.remove( transition );
+			
 		int counter = 0;
 		BasicExpression rt = new BasicExpression("root");
 		for( Transition tr : root.getAllTransitions() ) {
@@ -298,7 +328,7 @@ class NuSMVCoordinator
   	private CaseStatement getCaseStatement( StateMachine sm, State st, StateMachine parent ) {
   		int counter = 0;
   		BasicExpression root = new BasicExpression("root");
-  		for( Transition tr : getAllTransitions(st, parent) ) {
+  		for( Transition tr : getAllTransitions(st) ) {
 			//System.out.println( st.getName() );
 			BasicExpression bexp;
 			if(!parent.equals(sm))
@@ -378,6 +408,8 @@ class NuSMVCoordinator
   		VariableSpecifier vs = new VariableSpecifier("event");
   		for( Event event : sm.getAllEvents() ) 
   			vs.addTypeSpecifier("ev_"+event.getName());
+  		if( sm.getAllEvents().size() == 1 )
+  			vs.addTypeSpecifier("ev_null");
   		return vs;
   	}
   	
@@ -386,7 +418,7 @@ class NuSMVCoordinator
   		VariableSpecifier vs = new VariableSpecifier("state");
   		for(State st : sm.getStates())
   			vs.addTypeSpecifier(changeNameCase(st.getStateMachine().getFullName(),1)+"_"+st.getName());
-  		if(sm.getParentState() != null)
+  		if(sm.getParentState() != null || sm.getStates().size() == 1)
   			vs.addTypeSpecifier("null");
   		return vs;
   	}

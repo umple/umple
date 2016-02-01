@@ -9,7 +9,7 @@
     
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : HeatSystem_heatSys;
+     state : { HeatSystem_heatSys , null };
     
    -- This part defines macros that summarize the transitions of the given NuSMV module --
    DEFINE
@@ -43,7 +43,7 @@
    ASSIGN
      init( state ) := HeatSystem_heatSys;
      next( state ) := case
-       t4 | t1 | t3 | t5 | t9 | t13 | t15 | t11 | t18 | t20 | t23 | t25 | t24 | t7 | t7 | t2 | t8 | t6 | t10 | t14 | t17 | t16 | t12 | t22 | t20 | t21 | t19 : HeatSystem_heatSys;
+       t4 | t2 | t5 | t6 | t10 | t14 | t11 | t16 | t12 | t22 | t25 | t24 | t7 | t1 | t3 | t8 | t9 | t13 | t15 | t17 | t18 | t20 | t23 | t21 | t19 : HeatSystem_heatSys;
        TRUE : state;
      esac;
  
@@ -59,7 +59,7 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t4 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t9 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t11 | _heatSystem.t18 | _heatSystem.t7 | _heatSystem.t7 | _heatSystem.t2 | _heatSystem.t8 | _heatSystem.t6 | _heatSystem.t10 | _heatSystem.t14 | _heatSystem.t17 | _heatSystem.t16 | _heatSystem.t12 : HeatSystemHouse_house;
+       _heatSystem.t7 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t8 | _heatSystem.t9 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t18 | _heatSystem.t4 | _heatSystem.t2 | _heatSystem.t5 | _heatSystem.t6 | _heatSystem.t10 | _heatSystem.t14 | _heatSystem.t11 | _heatSystem.t16 | _heatSystem.t12 : HeatSystemHouse_house;
        _heatSystem.state = HeatSystem_heatSys : HeatSystemHouse_house;
        TRUE : state;
      esac;
@@ -76,7 +76,7 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t4 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t9 | _heatSystem.t7 | _heatSystem.t7 | _heatSystem.t2 | _heatSystem.t8 | _heatSystem.t6 | _heatSystem.t10 : HeatSystemHouseRoom_room;
+       _heatSystem.t7 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t8 | _heatSystem.t9 | _heatSystem.t4 | _heatSystem.t2 | _heatSystem.t5 | _heatSystem.t6 | _heatSystem.t10 : HeatSystemHouseRoom_room;
        _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
        _heatSystemHouse.state = HeatSystemHouse_house : HeatSystemHouseRoom_room;
        TRUE : state;
@@ -94,8 +94,8 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t7 | _heatSystem.t7 | _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t1 | _heatSystem.t3 : HeatSystemHouseRoomRoom_noHeatReq;
-       _heatSystem.t5 | _heatSystem.t9 | _heatSystem.t8 | _heatSystem.t6 | _heatSystem.t10 : HeatSystemHouseRoomRoom_heatReq;
+       _heatSystem.t4 | _heatSystem.t2 | _heatSystem.t7 | _heatSystem.t1 | _heatSystem.t3 : HeatSystemHouseRoomRoom_noHeatReq;
+       _heatSystem.t8 | _heatSystem.t9 | _heatSystem.t5 | _heatSystem.t6 | _heatSystem.t10 : HeatSystemHouseRoomRoom_heatReq;
        _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
        _heatSystemHouseRoom.state = HeatSystemHouseRoom_room : HeatSystemHouseRoomRoom_noHeatReq;
        TRUE : state;
@@ -113,9 +113,9 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t4 | _heatSystem.t7 : HeatSystemHouseRoomRoomNoHeatReq_idleNoHeat;
+       _heatSystem.t4 : HeatSystemHouseRoomRoomNoHeatReq_idleNoHeat;
        _heatSystem.t2 | _heatSystem.t1 | _heatSystem.t3 : HeatSystemHouseRoomRoomNoHeatReq_waitForHeat;
-       _heatSystem.t5 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t6 | _heatSystem.t9 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
+       _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
        _heatSystemHouseRoomRoom.state = HeatSystemHouseRoomRoom_noHeatReq : HeatSystemHouseRoomRoomNoHeatReq_idleNoHeat;
        TRUE : state;
      esac;
@@ -132,9 +132,9 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t8 | _heatSystem.t5 : HeatSystemHouseRoomRoomHeatReq_idleHeat;
+       _heatSystem.t8 : HeatSystemHouseRoomRoomHeatReq_idleHeat;
        _heatSystem.t9 | _heatSystem.t6 | _heatSystem.t10 : HeatSystemHouseRoomRoomHeatReq_waitForCool;
-       _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t7 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
+       _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t7 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
        _heatSystemHouseRoomRoom.state = HeatSystemHouseRoomRoom_heatReq : HeatSystemHouseRoomRoomHeatReq_idleHeat;
        TRUE : state;
      esac;
@@ -151,7 +151,7 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t11 | _heatSystem.t18 | _heatSystem.t14 | _heatSystem.t17 | _heatSystem.t16 | _heatSystem.t12 : HeatSystemHouseController_Controller;
+       _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t18 | _heatSystem.t14 | _heatSystem.t11 | _heatSystem.t16 | _heatSystem.t12 : HeatSystemHouseController_Controller;
        _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
        _heatSystemHouse.state = HeatSystemHouse_house : HeatSystemHouseController_Controller;
        TRUE : state;
@@ -170,7 +170,7 @@
      init( state ) := null;
      next( state ) := case
        _heatSystem.t14 | _heatSystem.t13 | _heatSystem.t15 : HeatSystemHouseControllerController_off;
-       _heatSystem.t17 | _heatSystem.t16 | _heatSystem.t11 | _heatSystem.t18 : HeatSystemHouseControllerController_ControllerOn;
+       _heatSystem.t11 | _heatSystem.t16 | _heatSystem.t17 | _heatSystem.t18 : HeatSystemHouseControllerController_ControllerOn;
        _heatSystem.t12 : HeatSystemHouseControllerController_error;
        _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
        _heatSystemHouseController.state = HeatSystemHouseController_Controller : HeatSystemHouseControllerController_off;
@@ -189,9 +189,9 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t17 | _heatSystem.t11 : HeatSystemHouseControllerControllerControllerOn_idle;
+       _heatSystem.t17 : HeatSystemHouseControllerControllerControllerOn_idle;
        _heatSystem.t16 | _heatSystem.t18 : HeatSystemHouseControllerControllerControllerOn_heaterActive;
-       _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
+       _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
        _heatSystemHouseControllerController.state = HeatSystemHouseControllerController_ControllerOn : HeatSystemHouseControllerControllerControllerOn_idle;
        TRUE : state;
      esac;
@@ -208,9 +208,8 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t16 : HeatSystemHouseControllerControllerControllerOnHeaterActive_actHeater;
        _heatSystem.t18 : HeatSystemHouseControllerControllerControllerOnHeaterActive_heaterRun;
-       _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t17 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
+       _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t20 | _heatSystem.t22 | _heatSystem.t24 | _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t19 | _heatSystem.t21 | _heatSystem.t23 | _heatSystem.t25 : null;
        _heatSystemHouseControllerControllerControllerOn.state = HeatSystemHouseControllerControllerControllerOn_heaterActive : HeatSystemHouseControllerControllerControllerOnHeaterActive_actHeater;
        TRUE : state;
      esac;
@@ -227,7 +226,7 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t20 | _heatSystem.t23 | _heatSystem.t25 | _heatSystem.t24 | _heatSystem.t22 | _heatSystem.t20 | _heatSystem.t21 | _heatSystem.t19 : HeatSystemFurnace_furnace;
+       _heatSystem.t22 | _heatSystem.t25 | _heatSystem.t24 | _heatSystem.t20 | _heatSystem.t23 | _heatSystem.t21 | _heatSystem.t19 : HeatSystemFurnace_furnace;
        _heatSystem.state = HeatSystem_heatSys : HeatSystemFurnace_furnace;
        TRUE : state;
      esac;
@@ -244,7 +243,7 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t22 | _heatSystem.t20 | _heatSystem.t21 | _heatSystem.t20 | _heatSystem.t23 | _heatSystem.t25 | _heatSystem.t24 : HeatSystemFurnaceFurnace_furnaceNormal;
+       _heatSystem.t20 | _heatSystem.t23 | _heatSystem.t21 | _heatSystem.t22 | _heatSystem.t25 | _heatSystem.t24 : HeatSystemFurnaceFurnace_furnaceNormal;
        _heatSystem.t19 : HeatSystemFurnaceFurnace_furnaceErr;
        _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 : null;
        _heatSystemFurnace.state = HeatSystemFurnace_furnace : HeatSystemFurnaceFurnace_furnaceNormal;
@@ -263,10 +262,10 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t23 | _heatSystem.t22 | _heatSystem.t20 : HeatSystemFurnaceFurnaceFurnaceNormal_furnaceOff;
+       _heatSystem.t22 | _heatSystem.t23 : HeatSystemFurnaceFurnaceFurnaceNormal_furnaceOff;
        _heatSystem.t25 : HeatSystemFurnaceFurnaceFurnaceNormal_furnaceRun;
        _heatSystem.t21 | _heatSystem.t24 : HeatSystemFurnaceFurnaceFurnaceNormal_furnaceAct;
-       _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 | _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t19 : null;
+       _heatSystem.t1 | _heatSystem.t3 | _heatSystem.t5 | _heatSystem.t7 | _heatSystem.t9 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t17 | _heatSystem.t19 | _heatSystem.t2 | _heatSystem.t4 | _heatSystem.t6 | _heatSystem.t8 | _heatSystem.t10 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 | _heatSystem.t18 | _heatSystem.t20 : null;
        _heatSystemFurnaceFurnace.state = HeatSystemFurnaceFurnace_furnaceNormal : HeatSystemFurnaceFurnaceFurnaceNormal_furnaceOff;
        TRUE : state;
      esac;

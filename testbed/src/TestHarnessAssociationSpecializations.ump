@@ -562,3 +562,13 @@ class Rbb { isA Rb; }
 
 association { * Fr fr -- * Rb rb; }
 association { 4..5 Frr fr -> 1 Rbb rb; }
+
+//
+// Case: Optional 1 down to optional 1
+//                                                                [59]
+class Supervisor {}
+class Employee {}
+class Janitor { isA Employee; }
+
+association { 0..1 Employee emp -- 0..1 Supervisor supervisor; }
+association { 0..1 Janitor emp -- 0..1 Supervisor supervisor; }

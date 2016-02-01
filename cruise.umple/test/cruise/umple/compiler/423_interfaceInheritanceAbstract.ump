@@ -1,0 +1,20 @@
+interface I {
+  Integer I1();
+}
+
+class A {
+  isA I;
+}
+
+class B {
+  isA A;
+}
+
+class C {
+  abstract;
+  isA I;
+}
+
+class D {
+  isA C;
+}

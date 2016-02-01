@@ -40,9 +40,8 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t2 : SmS2_s21;
        _sm.t4 : SmS2_s22;
-       _sm.t3 | _sm.t1 | _sm.t5 : null;
+       _sm.t1 | _sm.t3 | _sm.t2 | _sm.t5 : null;
        _sm.state = Sm_s2 : SmS2_s21;
        TRUE : state;
      esac;
@@ -59,7 +58,7 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t1 | _sm.t4 | _sm.t3 | _sm.t5 : null;
+       _sm.t2 | _sm.t4 | _sm.t1 | _sm.t3 | _sm.t5 : null;
        _smS2.state = SmS2_s21 : SmS2S21_s211;
        TRUE : state;
      esac;

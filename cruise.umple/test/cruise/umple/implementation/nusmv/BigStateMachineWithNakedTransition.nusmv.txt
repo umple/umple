@@ -33,7 +33,7 @@
      next( state ) := case
        t3 | t7 | t9 | t10 | t11 : Sm_Zxab;
        t6 : Sm_D;
-       t12 | t8 | t1 | t5 | t13 | t2 | t4 : Sm_Ge;
+       t2 | t12 | t1 | t8 | t5 | t13 | t4 : Sm_Ge;
        TRUE : state;
      esac;
  
@@ -87,9 +87,9 @@
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t12 | _sm.t8 | _sm.t5 | _sm.t13 | _sm.t2 : SmGe_G;
+       _sm.t12 | _sm.t5 | _sm.t13 : SmGe_G;
        _sm.t1 | _sm.t4 : SmGe_E;
-       _sm.t3 | _sm.t7 | _sm.t10 | _sm.t6 | _sm.t9 | _sm.t11 : null;
+       _sm.t2 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t3 | _sm.t7 | _sm.t9 | _sm.t11 : null;
        _sm.state = Sm_Ge : SmGe_G;
        TRUE : state;
      esac;

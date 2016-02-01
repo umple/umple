@@ -92,7 +92,7 @@ class IVarDeclaration {
   output <<! <<=getHeader()>>
     <<#for(VariableSpecifier vs : variableSpecifiers){#>><<=vs.toString()>>
     <<#}#>>!>>
-  emit toString()(comment, output);
+  emit toString()( comment, output );
 }
 
 class DefineDeclaration {

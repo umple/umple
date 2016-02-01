@@ -1,0 +1,16 @@
+class LightFixture {
+ boolean flag = false;
+ boolean x = true;
+  status {
+    on{
+      turnOff [!flag] -> off;
+    }
+    off{
+      turnOn0 [!!!(flag&&flag)] -> on;
+      turnOn1 [!(!flag&&!flag)] -> on;
+      turnOn2 [!(flag<=flag)] -> on;
+      turnOn3 [!((flag==flag)&&(!flag&&!flag))] -> on;
+      turnOn4 [!((!flag && x) || (!x && !x))] -> on;
+    }
+  }
+}
