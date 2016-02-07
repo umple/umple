@@ -1,0 +1,5 @@
+class TemplateTest{
+  template <<! x !>>
+  template <<! y !>>
+  emit test()(template); 
+}
