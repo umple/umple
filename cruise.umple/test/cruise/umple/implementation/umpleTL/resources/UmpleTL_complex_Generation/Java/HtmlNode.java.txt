@@ -1,0 +1,419 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+import java.util.regex.Pattern;
+import java.util.*;
+
+// line 1 "test.ump"
+public class HtmlNode
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  public static final String NL = System.getProperty("line.separator");
+  public static final String TEXT_0 = "<";
+  public static final String TEXT_1 = ">" + NL + "     ";
+  public static final String TEXT_2 = NL + "     </";
+  public static final String TEXT_3 = ">";
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //HtmlNode Attributes
+  private String tag;
+  private String content;
+
+  //HtmlNode Associations
+  private List<HtmlNode> children;
+  private HtmlNode htmlNode;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public HtmlNode(String aTag)
+  {
+    tag = aTag;
+    content = "";
+    children = new ArrayList<HtmlNode>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setTag(String aTag)
+  {
+    boolean wasSet = false;
+    tag = aTag;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setContent(String aContent)
+  {
+    boolean wasSet = false;
+    content = aContent;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getTag()
+  {
+    return tag;
+  }
+
+  public String getContent()
+  {
+    return content;
+  }
+
+  public HtmlNode getChild(int index)
+  {
+    HtmlNode aChild = children.get(index);
+    return aChild;
+  }
+
+  public List<HtmlNode> getChildren()
+  {
+    List<HtmlNode> newChildren = Collections.unmodifiableList(children);
+    return newChildren;
+  }
+
+  public int numberOfChildren()
+  {
+    int number = children.size();
+    return number;
+  }
+
+  public boolean hasChildren()
+  {
+    boolean has = children.size() > 0;
+    return has;
+  }
+
+  public int indexOfChild(HtmlNode aChild)
+  {
+    int index = children.indexOf(aChild);
+    return index;
+  }
+
+  public HtmlNode getHtmlNode()
+  {
+    return htmlNode;
+  }
+
+  public boolean hasHtmlNode()
+  {
+    boolean has = htmlNode != null;
+    return has;
+  }
+
+  public static int minimumNumberOfChildren()
+  {
+    return 0;
+  }
+
+  public boolean addChild(HtmlNode aChild)
+  {
+    boolean wasAdded = false;
+    if (children.contains(aChild)) { return false; }
+    HtmlNode existingHtmlNode = aChild.getHtmlNode();
+    if (existingHtmlNode == null)
+    {
+      aChild.setHtmlNode(this);
+    }
+    else if (!this.equals(existingHtmlNode))
+    {
+      existingHtmlNode.removeChild(aChild);
+      addChild(aChild);
+    }
+    else
+    {
+      children.add(aChild);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeChild(HtmlNode aChild)
+  {
+    boolean wasRemoved = false;
+    if (children.contains(aChild))
+    {
+      children.remove(aChild);
+      aChild.setHtmlNode(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addChildAt(HtmlNode aChild, int index)
+  {  
+    boolean wasAdded = false;
+    if(addChild(aChild))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfChildren()) { index = numberOfChildren() - 1; }
+      children.remove(aChild);
+      children.add(index, aChild);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveChildAt(HtmlNode aChild, int index)
+  {
+    boolean wasAdded = false;
+    if(children.contains(aChild))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfChildren()) { index = numberOfChildren() - 1; }
+      children.remove(aChild);
+      children.add(index, aChild);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addChildAt(aChild, index);
+    }
+    return wasAdded;
+  }
+
+  public boolean setHtmlNode(HtmlNode aHtmlNode)
+  {
+    boolean wasSet = false;
+    HtmlNode existingHtmlNode = htmlNode;
+    htmlNode = aHtmlNode;
+    if (existingHtmlNode != null && !existingHtmlNode.equals(aHtmlNode))
+    {
+      existingHtmlNode.removeChild(this);
+    }
+    if (aHtmlNode != null)
+    {
+      aHtmlNode.addChild(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    while( !children.isEmpty() )
+    {
+      children.get(0).setHtmlNode(null);
+    }
+    if (htmlNode != null)
+    {
+      HtmlNode placeholderHtmlNode = htmlNode;
+      this.htmlNode = null;
+      placeholderHtmlNode.removeChild(this);
+    }
+  }
+
+  // line 19 "test.ump"
+   public static  void main(String [] args){
+    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
+    HtmlNode html = new HtmlNode("html");
+		HtmlNode body = new HtmlNode("body");
+		html.addChild(body);
+		
+		HtmlNode table = new HtmlNode("table");
+		body.addChild(table);
+		          
+		for (String label : Arrays.asList(new String[] {
+		      "Row1", "Row2", "Row3" })) {
+		     HtmlNode row = new HtmlNode("tr");
+		     table.addChild(row);
+		          
+		     HtmlNode tableData = new HtmlNode("td");
+		     tableData.setContent(label);
+		     row.addChild(tableData);
+		}
+		     
+		System.out.println(html.generate());
+  }
+
+  private String _createSpacesString(int numSpaces){
+      StringBuilder spaces =  new StringBuilder();
+      for(int i=0; i <numSpaces; i++) {
+          spaces.append(" ");
+      }
+      return spaces.toString();
+    
+  }
+
+  public StringBuilder _generate(Integer numSpaces, StringBuilder sb){
+    String spaces="";
+    StringBuilder newCode = new StringBuilder();
+    StringBuilder realSb = sb;
+    if(numSpaces > 0) {
+        realSb = newCode;
+        spaces = _createSpacesString(numSpaces);
+        newCode.append(spaces);
+    }
+    
+    realSb.append(TEXT_0);
+    realSb.append(tag);
+    realSb.append(TEXT_1);
+    realSb.append(content);
+    realSb.append(nestedPrint());
+    realSb.append(TEXT_2);
+    realSb.append(tag);
+    realSb.append(TEXT_3);
+
+    if(numSpaces > 0) {
+        newCode.replace(0, newCode.length(), Pattern.compile(NL).matcher(newCode).replaceAll(NL + spaces));
+        sb.append(newCode);
+    }
+    return sb; 
+  }
+
+  public String generate(){
+        StringBuilder sb = new StringBuilder();
+    return this._generate(0,sb).toString(); 
+  }
+
+  private StringBuilder _nestedPrint(Integer numSpaces, StringBuilder sb){
+    String spaces="";
+    StringBuilder newCode = new StringBuilder();
+    StringBuilder realSb = sb;
+    if(numSpaces > 0) {
+        realSb = newCode;
+        spaces = _createSpacesString(numSpaces);
+        newCode.append(spaces);
+    }
+    
+    for(HtmlNode node: children) {  
+          
+    realSb.append(node.generate());
+    
+     }
+
+    if(numSpaces > 0) {
+        newCode.replace(0, newCode.length(), Pattern.compile(NL).matcher(newCode).replaceAll(NL + spaces));
+        sb.append(newCode);
+    }
+    return sb; 
+  }
+
+  private String nestedPrint(){
+        StringBuilder sb = new StringBuilder();
+    return this._nestedPrint(0,sb).toString(); 
+  }
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "tag" + ":" + getTag()+ "," +
+            "content" + ":" + getContent()+ "]"
+     + outputString;
+  }
+  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
+  {
+    public void uncaughtException(Thread t, Throwable e)
+    {
+      translate(e);
+      if(e.getCause()!=null)
+      {
+        translate(e.getCause());
+      }
+      e.printStackTrace();
+    }
+    public void translate(Throwable e)
+    {
+      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();
+      StackTraceElement[] elements = e.getStackTrace();
+      try
+      {
+        for(StackTraceElement element:elements)
+        {
+          String className = element.getClassName();
+          String methodName = element.getMethodName();
+          boolean methodFound = false;
+          int index = className.lastIndexOf('.')+1;
+          try {
+            java.lang.reflect.Method query = this.getClass().getMethod(className.substring(index)+"_"+methodName,new Class[]{});
+            UmpleSourceData sourceInformation = (UmpleSourceData)query.invoke(this,new Object[]{});
+            for(int i=0;i<sourceInformation.size();++i)
+            {
+              int distanceFromStart = element.getLineNumber()-sourceInformation.getJavaLine(i)-(("main".equals(methodName))?2:0);
+              if(distanceFromStart>=0&&distanceFromStart<=sourceInformation.getLength(i))
+              {
+                result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),sourceInformation.getFileName(i),sourceInformation.getUmpleLine(i)+distanceFromStart));
+                methodFound = true;
+                break;
+              }
+            }
+          }
+          catch (Exception e2){}
+          if(!methodFound)
+          {
+            result.add(element);
+          }
+        }
+      }
+      catch (Exception e1)
+      {
+        e1.printStackTrace();
+      }
+      e.setStackTrace(result.toArray(new StackTraceElement[0]));
+    }
+  //The following methods Map Java lines back to their original Umple file / line    
+    public UmpleSourceData HtmlNode__createSpacesString(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(14).setJavaLines(242).setLengths(2);}
+    public UmpleSourceData HtmlNode__nestedPrint(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(15).setJavaLines(282).setLengths(2);}
+    public UmpleSourceData HtmlNode__generate(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(14).setJavaLines(251).setLengths(2);}
+    public UmpleSourceData HtmlNode_main(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(18).setJavaLines(218).setLengths(3);}
+    public UmpleSourceData HtmlNode_generate(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(14).setJavaLines(277).setLengths(2);}
+    public UmpleSourceData HtmlNode_nestedPrint(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(15).setJavaLines(305).setLengths(2);}
+
+  }
+  public static class UmpleSourceData
+  {
+    String[] umpleFileNames;
+    Integer[] umpleLines;
+    Integer[] umpleJavaLines;
+    Integer[] umpleLengths;
+    
+    public UmpleSourceData(){
+    }
+    public String getFileName(int i){
+      return umpleFileNames[i];
+    }
+    public Integer getUmpleLine(int i){
+      return umpleLines[i];
+    }
+    public Integer getJavaLine(int i){
+      return umpleJavaLines[i];
+    }
+    public Integer getLength(int i){
+      return umpleLengths[i];
+    }
+    public UmpleSourceData setFileNames(String... filenames){
+      umpleFileNames = filenames;
+      return this;
+    }
+    public UmpleSourceData setUmpleLines(Integer... umplelines){
+      umpleLines = umplelines;
+      return this;
+    }
+    public UmpleSourceData setJavaLines(Integer... javalines){
+      umpleJavaLines = javalines;
+      return this;
+    }
+    public UmpleSourceData setLengths(Integer... lengths){
+      umpleLengths = lengths;
+      return this;
+    }
+    public int size(){
+      return umpleFileNames.length;
+    }
+  } 
+}

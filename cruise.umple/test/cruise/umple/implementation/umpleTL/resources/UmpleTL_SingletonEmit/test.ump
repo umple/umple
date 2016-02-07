@@ -1,0 +1,21 @@
+class HelperTemplate {
+      singleton;
+
+     newLineTemplate <<!
+!>>
+  
+     newTabTemplate <<!     !>>
+      
+     emit newLine()(newLineTemplate);
+     emit newTab()(newTabTemplate);
+}
+
+class TemplateTest {
+     templateTest <<!<<=HelperTemplate.getInstance().newLine()>>Test
+         <<=HelperTemplate.getInstance().newTab()>>!>>
+     emit generate()(templateTest);
+
+     public static void main(String[] args) {
+     	System.out.println(new TemplateTest().generate());
+     }
+}
