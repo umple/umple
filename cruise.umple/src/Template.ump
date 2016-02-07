@@ -94,7 +94,6 @@ class TemplateElement
 {
   abstract;
   lazy internal EmitResponse emitResponse;
-  Position position; 
   String content; 
 
   0..1 -- * TemplateField fields;
@@ -146,7 +145,7 @@ class TemplateElement
      return emitResponse;
   }
   
-  void emit(EmitResponse responseBuffer, UmpleClass template) throws TemplateException {}
+  void emit(EmitResponse responseBuffer, UmpleClass template) {}
 	
 }
 
@@ -155,7 +154,7 @@ class ExpressionElement {
   isA TemplateElement;	
 	
 	
-  void emit(EmitResponse responseBuffer, UmpleClass template) throws TemplateException 
+  void emit(EmitResponse responseBuffer, UmpleClass template) 
   {
     EmitResponse resetValue = computeContent();
     responseBuffer.getJavaCode().append("    ");      
@@ -174,7 +173,7 @@ class CodeBlockElement
 {
   isA TemplateElement;
 
-  void emit(EmitResponse responseBuffer, UmpleClass template) throws TemplateException {
+  void emit(EmitResponse responseBuffer, UmpleClass template) {
 	EmitResponse resetValue = computeContent();
 	
 	responseBuffer.getJavaCode().append("    ");
@@ -190,56 +189,42 @@ class CodeBlockElement
   }
 }
 
-//Include segment in a template
-class IncludeTemplateElement
-{
-	isA TemplateElement;
-	TemplateName templateName;
-	
-	void emit(EmitResponse responseBuffer, UmpleClass template) throws TemplateException {
-		String classname = getTemplateName().getClassName();
-		String key = getTemplateName().getName();
-		UmpleClass referenceTemplate = getTemplateName().getClassName()==null?template:template.getSourceModel().getUmpleClass(getTemplateName().getClassName());		
-		if(referenceTemplate!=null)
-		{
-			TemplateAttributeParser val = null;
-			val = referenceTemplate.getTemplateEmitStringMap().get(key);
-			if(val !=null)
-			{
-				for (TemplateElement templateElement : val.getElements())
-				{	  
-					templateElement.emit(responseBuffer,template);
-				}
-			} else {
-				String refTemplateFullName = key;
-				if(classname != null && classname.length() > 0) {
-					refTemplateFullName = classname + "." + refTemplateFullName;
-				}
-				throw new TemplateException(getPosition(), new ErrorMessage(3504, getPosition(),refTemplateFullName));
-			}
-		}
-	}
-}
-
 //Comment segment for a template contents
 class CommentElement {
   isA TemplateElement;
 	
-  void emit(EmitResponse responseBuffer, UmpleClass template) throws TemplateException  
+  void emit(EmitResponse responseBuffer, UmpleClass template) 
   {
-	  String javaContent = getEmitResponse().getJavaCode().toString();		
-	  javaContent = "/*" + javaContent + "*/";
-	  
-	  String cppContent = getEmitResponse().getCppCode().toString();
-	  cppContent = "/*" + cppContent + "*/";
-	  
-	  responseBuffer.getJavaCode().append("    ");	
-	  responseBuffer.getJavaCode().append(javaContent);
-	  responseBuffer.getJavaCode().append(System.getProperty("line.separator"));
-	  
-	  responseBuffer.getCppCode().append("    ");		
-	  responseBuffer.getCppCode().append(cppContent);
-	  responseBuffer.getCppCode().append(System.getProperty("line.separator"));	
+    boolean first = !getFilledClasses().containsKey(template);
+    if(first)
+    {
+      getFilledClasses().put(template,template.numberOfTemplateFields());
+    }
+    	    
+    String fieldId = TemplateField.TEMPLATE_TEXT_FIELD + getFilledClasses().get(template);
+    EmitResponse fieldValue = new EmitResponse();
+    String javaContent = getEmitResponse().getJavaCode().toString();		
+    javaContent = "/*" + javaContent + "*/";
+		
+    String cppContent = getEmitResponse().getCppCode().toString();
+    cppContent = "/*" + cppContent + "*/";
+		
+    fieldValue.getJavaCode().append(Utils.nlize("Java", javaContent));
+    fieldValue.getCppCode().append(Utils.nlize("Cpp", cppContent));
+				
+    if(first)
+    {
+      template.addTemplateField(new TemplateField(fieldId, fieldValue));
+    }
+		
+		
+    responseBuffer.getJavaCode().append("    ");		
+    Utils.getStringAppend("Java", responseBuffer.getJavaCode(), fieldId);
+    responseBuffer.getJavaCode().append(System.getProperty("line.separator"));
+ 
+    responseBuffer.getCppCode().append("    ");		
+    Utils.getStringAppend("Cpp", responseBuffer.getCppCode(), fieldId);
+    responseBuffer.getCppCode().append(System.getProperty("line.separator"));	
   }
 }
 
@@ -249,7 +234,7 @@ class TextElement
 
   int index = -1;
 
-  void emit(EmitResponse responseBuffer, UmpleClass template) throws TemplateException 
+  void emit(EmitResponse responseBuffer, UmpleClass template)
   {
     boolean first = !getFilledClasses().containsKey(template);
     if(first)

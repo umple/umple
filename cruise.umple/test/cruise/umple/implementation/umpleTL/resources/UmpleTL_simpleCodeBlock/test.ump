@@ -1,8 +1,0 @@
-class TemplateTest{
-     templateLabel <<!<<#if(true)#>>This will always be reached !>>
-     emit generate1()(templateLabel); 
-  
-       public static void main(String[] args) {
-     	System.out.println(new TemplateTest().generate1());
-     }
-}
