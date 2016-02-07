@@ -232,6 +232,8 @@ public class TestResource {
 				SampleFileWriter.destroy(filePath);
 			}
 		}
+		// Nullify mainMainClass
+		JavaClassGenerator.mainMainClass = null;
 	}
 
 	public void setPath(String aPath) {
