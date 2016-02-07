@@ -955,8 +955,8 @@ class ParsingCouple
     int level = 0;
     String[] quoteLikeOpen = new String[] {"//","/*","\"","\'"};
     String[] quoteLikeClose = new String[] {"\n","*/","\"","\'"};
-    String[] braceLikeOpen = new String[] {"<<!","<<#","<</*","<<=","<<$"};
-    String[] braceLikeClose = new String[] {"!>>","#>>","*/>>",">>",">>"}; 
+    String[] braceLikeOpen = new String[] {"<<!","<<#","<</*","<<=","<<$","<<@"};
+    String[] braceLikeClose = new String[] {"!>>","#>>","*/>>",">>",">>",">>"}; 
     int quoteLikeIndex = -1;
     int braceLikeIndex = -1;
     boolean braceLike = false;

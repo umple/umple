@@ -51,7 +51,8 @@ external Exception
   Exception parent;
 }
 
-class TemplateException {
+/*
+ class TemplateException {
 	isA Exception;
 	Token token;
 	Integer errorCode;
@@ -70,6 +71,20 @@ class TemplateException {
     	errMsg = aErrMsg;
   	}
 }
+ * */
+
+
+class TemplateException {
+	isA Exception;
+	Position position;
+	ErrorMessage errorMessage;
+	
+	public TemplateException(Position aPosition, ErrorMessage aErrorMessage) {
+	    super("", null);
+	    position = aPosition;
+	    errorMessage = aErrorMessage;
+	 }
+}
 
 //Parse existing attributes in a template
 class TemplateAttributeParser {
@@ -77,6 +92,9 @@ class TemplateAttributeParser {
 	depend java.util.ArrayList;
 	depend java.util.List;
 	depend java.io.IOException;
+	
+	UmpleInternalParser parser;
+	String templateName;	
 	Token rootToken;
 	0..1 -- * TemplateElement elements;
 	0..1 -- * TemplateField fields;
@@ -88,6 +106,7 @@ class TemplateAttributeParser {
 	const String TEMPLATE_EXPRESSION="templateExpression";
 	const String TEMPLATE_TEXT="templateText";
 	const String TEMPLATE_CODEBLOCK="templateCodeBlock";
+	const String TEMPLATE_INCLUDE="templateInclude";
 	const String IDENT = "indent";
 	const String TEXT="Text";
 	
@@ -95,7 +114,7 @@ class TemplateAttributeParser {
 	
 	TemplateElement analyzeExpression(Token token)
 	{
-	  ExpressionElement element = new ExpressionElement("");
+	  ExpressionElement element = new ExpressionElement(token.getPosition(), "");
 	  for(Token subToken: token.getSubTokens())
 	  {
 		if(subToken.is("templateExpressionContent"))
@@ -103,11 +122,11 @@ class TemplateAttributeParser {
 		  String expression = subToken.getValue().trim();
 		  if(parameterNames.contains(expression))
 		  {
-		    element.addSubElement(new VariableElement("",indexOfParameterName(expression)));
+		    element.addSubElement(new VariableElement(token.getPosition(), "",indexOfParameterName(expression)));
 		  }
 		  else
 		  {
-		    element.addSubElement(new ExpressionElement(expression));
+		    element.addSubElement(new ExpressionElement(token.getPosition(), expression));
 		  }		      
 		}
 		else if(subToken.is("templateExpression"))
@@ -130,13 +149,13 @@ class TemplateAttributeParser {
 		} 
 		else if(token.is(TEMPLATE_CODEBLOCK))
 		{
-		  CodeBlockElement element = new CodeBlockElement("");
+		  CodeBlockElement element = new CodeBlockElement(token.getPosition(), "");
 		  
 		  for(Token subToken: token.getSubTokens())
 		  {
 		    if(subToken.is("templateLanguageCode"))
 		    {
-		      element.addSubElement(new TextElement(subToken.getValue()));		      
+		      element.addSubElement(new TextElement(subToken.getPosition(), subToken.getValue()));		      
 		    }
 		    else if(subToken.is("templateExpression"))
 		    {
@@ -145,10 +164,31 @@ class TemplateAttributeParser {
 		  }
 		  addElement(element);
 		  tokenIdx++;
+		}
+		else if(token.is(TEMPLATE_INCLUDE)) 
+		{
+			Token templateRefToken = token.getSubToken(TEMPLATE_INCLUDE).getSubToken("templateName");
+			if(templateRefToken != null) {
+				String classname = templateRefToken.getValue("classname");
+				String key = templateRefToken.getValue("name");
+				TemplateName refTemplateName = new TemplateName(key,classname);
+				String refTemplateFullName = key;
+				if(classname != null && classname.length() > 0) {
+					refTemplateFullName = classname + "." + refTemplateFullName;
+				}
+				if(templateName.equals(refTemplateFullName)) {
+					parser.getParseResult().setPosition(templateRefToken.getPosition());
+					parser.getParseResult().addErrorMessage(new ErrorMessage(3503,templateRefToken.getPosition(),templateName));
+				} else {
+					addElement(new IncludeTemplateElement(token.getPosition(), "", refTemplateName));
+				}
+				
+			}
+			tokenIdx++;
 		} 
 		else if(token.is(TEMPLATE_COMMENT)) 
 		{
-		  addElement(new CommentElement(token.getSubToken(TEMPLATE_COMMENT).getValue("templateCommentContent")));
+		  addElement(new CommentElement(token.getPosition(), token.getSubToken(TEMPLATE_COMMENT).getValue("templateCommentContent")));
 		  tokenIdx++;
 		} 
 		else if(token.is(TEMPLATE_TEXT)) 
@@ -164,7 +204,7 @@ class TemplateAttributeParser {
 		  			text = Utils.trimTemplateBlockBeginigNewLine(text);		  		
 		  		}
 		  	}
-		    addElement(new TextElement(text));
+		    addElement(new TextElement(token.getPosition(),text));
 		    tokenIdx++;
 		  }
 		}
@@ -200,7 +240,12 @@ class TemplateAttributeParser {
 	  for (TemplateElement templateElement : elements)
 	  {	  
 	    setVariableElements(templateElement,methodBlock);  
-	    templateElement.emit(emisionContent,currentTemplate);
+	    try {
+			templateElement.emit(emisionContent,currentTemplate);
+		} catch (TemplateException e) {
+			parser.getParseResult().setPosition(e.getPosition());
+			parser.getParseResult().addErrorMessage(e.getErrorMessage());
+		}
 	    
 	  }
 	  return emisionContent;
@@ -221,6 +266,9 @@ class TemplateTokenAnalyzer {
 	lazy UmpleClass currentTemplate;
 	0..1 -- * UmpleClass templates;
 	
+	HashMap<String,Boolean> templateAttributes = new HashMap<String,Boolean>();
+	HashMap<String,Boolean> emitMethods = new HashMap<String,Boolean>();
+	
 	void prepare(final Token token) {
 		String templateName = token.getValue("name");
 		/*
@@ -233,6 +281,8 @@ class TemplateTokenAnalyzer {
     		}    		
     	});
     	*/
+		templateAttributes.clear();
+		emitMethods.clear();
     	currentTemplate = parser.getModel().getUmpleClass(templateName);
     	if(currentTemplate != null) {
     		addTemplate(currentTemplate);
@@ -270,8 +320,12 @@ class TemplateTokenAnalyzer {
 		  } 
 		  else
 		  { 
+			String classname = fld.getTemplate().getClassName();
+			if(classname == null || classname.length() ==0 ) {
+				classname = template.getName();
+			}
 			parser.getParseResult().setPosition(fld.getPosition());
-			parser.getParseResult().addErrorMessage(new ErrorMessage(3502,fld.getPosition(),fld.getTemplate().getClassName()+"."+key));
+			parser.getParseResult().addErrorMessage(new ErrorMessage(3502,fld.getPosition(),classname+"."+key));
 		  }
 		}
 	  }
@@ -283,6 +337,12 @@ class TemplateTokenAnalyzer {
       if(token!=null)
       {        
         TemplateName templateName = new TemplateName(token.getValue("name"),token.getValue("classname"));
+        
+        if(!Token.isValidIdentifier(templateName.getName())) {
+			parser.getParseResult().setPosition(token.getPosition());
+			parser.getParseResult().addErrorMessage(new ErrorMessage(3500,token.getPosition(),templateName.getName()));
+		}
+        
 	  	Token templateParameters = token.getSubToken("templateParameters");
 	  	if(templateParameters!=null)
 		{
@@ -307,8 +367,12 @@ class TemplateTokenAnalyzer {
         TemplateName templateNameObject = analyzeTemplateName(nameToken);
 	  	String templateName = templateNameObject.getName();
 	  	Token templateContent = token.getSubToken("templateAttribute");
-		
-		TemplateAttributeParser emitter = new TemplateAttributeParser(templateContent);
+	  	if(templateAttributes.containsKey(templateName)) {
+	  		parser.getParseResult().setPosition(nameToken.getPosition());
+			parser.getParseResult().addErrorMessage(new ErrorMessage(3506,nameToken.getPosition(),currentTemplate.getName(),templateName));
+	  	}
+	  	templateAttributes.put(templateName, true);
+		TemplateAttributeParser emitter = new TemplateAttributeParser(parser, templateName, templateContent);
 		for(String parameter: templateNameObject.getParameters())
 		{
 		  emitter.addParameterName(parameter);			  		  
@@ -345,8 +409,16 @@ class TemplateTokenAnalyzer {
     			{
     				if (methodToken.is("methodName"))
     				{
-    					aMethod.setName(methodToken.getValue());
+    					String mName = methodToken.getValue();
+    					aMethod.setName(mName);
     					aMethod.setType("String");
+    					
+    					if(emitMethods.containsKey(mName)) {
+    				  		parser.getParseResult().setPosition(methodToken.getPosition());
+    						parser.getParseResult().addErrorMessage(new ErrorMessage(3507,methodToken.getPosition(),currentTemplate.getName(),mName));
+    				  	}
+    					emitMethods.put(mName, true);
+    				  	
     					if (methodToken.getValue().equals("main"))
     					{
     						parser.getParseResult().setPosition(methodToken.getPosition());
@@ -503,11 +575,99 @@ class TemplateTokenAnalyzer {
 		template.addMethod(aMethod);
 		return paramSignature.toString(); 
 	}
-	
+
+	private boolean recursiveIncludeTemplateElementCycleCheck(UmpleClass template, TemplateAttributeParser ref, HashMap<String, Boolean> map){
+		boolean ret = true;
+		if(map == null) {
+			map = new HashMap<String,Boolean>();
+		}
+		for (TemplateElement templateElement : ref.getElements()) {
+			if(templateElement instanceof IncludeTemplateElement) {
+				IncludeTemplateElement incElm = (IncludeTemplateElement) templateElement; 
+				String classname = incElm.getTemplateName().getClassName();
+				String refName = incElm.getTemplateName().getName();
+				if(classname == null || classname.length() == 0) {
+					classname = template.getName();
+				}
+				String key = classname + "." + refName;
+				UmpleClass referenceTemplate = incElm.getTemplateName().getClassName()==null?template:template.getSourceModel().getUmpleClass(classname);
+				if(referenceTemplate != null) {
+
+					TemplateAttributeParser refValue = null;
+					if(referenceTemplate!=null)
+					{
+						refValue = referenceTemplate.getTemplateEmitStringMap().get(refName);
+					}
+					if(refValue == null) {
+						parser.getParseResult().setPosition(incElm.getPosition());
+						parser.getParseResult().addErrorMessage(new ErrorMessage(3504, incElm.getPosition(),key));
+					} else {
+						if(map.containsKey(key))
+							return false;
+						map.put(key, true);
+						ret = recursiveIncludeTemplateElementCycleCheck(referenceTemplate, refValue, map);
+						if(!ret)
+							break;
+					}
+				}
+			}
+
+		}	
+		return ret;
+	}
+
+
+	private boolean recursiveCycleCheck(UmpleClass template){
+		boolean ret = true;
+		for(TemplateMethod tMth : template.getEmitMethods()) {
+			for(TemplateMethodBlock fld : tMth.getTemplates())
+			{
+				String name = fld.getTemplate().getName();
+				UmpleClass parentTemplate = fld.getTemplate().getClassName()==null?template:template.getSourceModel().getUmpleClass(fld.getTemplate().getClassName());
+				String key = parentTemplate.getName() + "." + name;
+				TemplateAttributeParser val = null;
+				if(parentTemplate!=null)
+				{
+					val = parentTemplate.getTemplateEmitStringMap().get(name);
+				}
+				if(val != null && parentTemplate !=null)
+				{
+					for (TemplateElement templateElement : val.getElements()) {
+						if(templateElement instanceof IncludeTemplateElement) {
+							IncludeTemplateElement incElm = (IncludeTemplateElement) templateElement; 
+							String classname = incElm.getTemplateName().getClassName();
+							String refName = incElm.getTemplateName().getName();
+							UmpleClass referenceTemplate = incElm.getTemplateName().getClassName()==null?parentTemplate:parentTemplate.getSourceModel().getUmpleClass(classname);
+							String refKey = referenceTemplate.getName() + "." + refName;
+
+							TemplateAttributeParser refValue = null;
+							if(referenceTemplate!=null)
+							{
+								refValue = referenceTemplate.getTemplateEmitStringMap().get(refName);
+							}
+
+							HashMap<String, Boolean> map = new HashMap<String,Boolean>();
+							map.put(key, true);
+							boolean check = recursiveIncludeTemplateElementCycleCheck(referenceTemplate, refValue, map);
+							if(!check) {
+								parser.getParseResult().setPosition(incElm.getPosition());
+								parser.getParseResult().addErrorMessage(new ErrorMessage(3505,incElm.getPosition(),name,refKey));
+								ret = false;
+							}
+						}
+					}	
+				} 			  
+			}
+		}
+		return ret;
+	}
+
 	// Analyzer Events
 	void done() {
 	
 		for(UmpleClass template : getTemplates()) {
+			if(!recursiveCycleCheck(template))
+				continue;
 			String defaultGenerate = this.getParser().getModel().getDefaultGenerate();
 			if(template.numberOfEmitMethods() > 0) {
 				TemplateMethod tMth = template.getEmitMethod(0);

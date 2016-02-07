@@ -1,0 +1,8 @@
+class TemplateTest{
+     templateLabel <<! Base test !>>
+     emit generate1()(templateLabel);
+     
+     public static void main(String[] args) {
+     	System.out.println(new TemplateTest().generate1());
+     }
+}

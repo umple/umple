@@ -1,0 +1,8 @@
+class TemplateTest{
+     templateLabel <<!Parameter1:<<= param1>>; Parameter2:<<=param2>>!>>
+     emit generate1(String param1, String param2)(templateLabel);
+     
+     public static void main(String[] args) {
+        System.out.println(new TemplateTest().generate1("Value1", "Value2"));
+     }
+}

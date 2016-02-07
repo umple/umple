@@ -1,0 +1,185 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+import java.util.regex.Pattern;
+
+// line 1 "test.ump"
+public class TemplateTest
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  public static final String NL = System.getProperty("line.separator");
+  public static final String TEXT_0 = "Parameter1:";
+  public static final String TEXT_1 = "; Parameter2:";
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public TemplateTest()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+  // line 6 "test.ump"
+   public static  void main(String [] args){
+    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
+    System.out.println(new TemplateTest().generate1("Value1", "Value2"));
+  }
+
+  private String _createSpacesString(int numSpaces){
+      StringBuilder spaces =  new StringBuilder();
+      for(int i=0; i <numSpaces; i++) {
+          spaces.append(" ");
+      }
+      return spaces.toString();
+    
+  }
+
+  public StringBuilder _generate1(Integer numSpaces, StringBuilder sb, String param1, String param2){
+    String spaces="";
+    StringBuilder newCode = new StringBuilder();
+    StringBuilder realSb = sb;
+    if(numSpaces > 0) {
+        realSb = newCode;
+        spaces = _createSpacesString(numSpaces);
+        newCode.append(spaces);
+    }
+    
+    realSb.append(TEXT_0);
+    realSb.append(param1);
+    realSb.append(TEXT_1);
+    realSb.append(param2);
+
+    if(numSpaces > 0) {
+        newCode.replace(0, newCode.length(), Pattern.compile(NL).matcher(newCode).replaceAll(NL + spaces));
+        sb.append(newCode);
+    }
+    return sb; 
+  }
+
+  public String generate1(String param1, String param2){
+        StringBuilder sb = new StringBuilder();
+    return this._generate1(0,sb,param1,param2).toString(); 
+  }
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+ "]"
+     + outputString;
+  }
+  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
+  {
+    public void uncaughtException(Thread t, Throwable e)
+    {
+      translate(e);
+      if(e.getCause()!=null)
+      {
+        translate(e.getCause());
+      }
+      e.printStackTrace();
+    }
+    public void translate(Throwable e)
+    {
+      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();
+      StackTraceElement[] elements = e.getStackTrace();
+      try
+      {
+        for(StackTraceElement element:elements)
+        {
+          String className = element.getClassName();
+          String methodName = element.getMethodName();
+          boolean methodFound = false;
+          int index = className.lastIndexOf('.')+1;
+          try {
+            java.lang.reflect.Method query = this.getClass().getMethod(className.substring(index)+"_"+methodName,new Class[]{});
+            UmpleSourceData sourceInformation = (UmpleSourceData)query.invoke(this,new Object[]{});
+            for(int i=0;i<sourceInformation.size();++i)
+            {
+              int distanceFromStart = element.getLineNumber()-sourceInformation.getJavaLine(i)-(("main".equals(methodName))?2:0);
+              if(distanceFromStart>=0&&distanceFromStart<=sourceInformation.getLength(i))
+              {
+                result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),sourceInformation.getFileName(i),sourceInformation.getUmpleLine(i)+distanceFromStart));
+                methodFound = true;
+                break;
+              }
+            }
+          }
+          catch (Exception e2){}
+          if(!methodFound)
+          {
+            result.add(element);
+          }
+        }
+      }
+      catch (Exception e1)
+      {
+        e1.printStackTrace();
+      }
+      e.setStackTrace(result.toArray(new StackTraceElement[0]));
+    }
+  //The following methods Map Java lines back to their original Umple file / line    
+    public UmpleSourceData TemplateTest__createSpacesString(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(2).setJavaLines(44).setLengths(2);}
+    public UmpleSourceData TemplateTest__generate1(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(2).setJavaLines(53).setLengths(2);}
+    public UmpleSourceData TemplateTest_generate1(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(2).setJavaLines(75).setLengths(2);}
+    public UmpleSourceData TemplateTest_main(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(5).setJavaLines(37).setLengths(3);}
+
+  }
+  public static class UmpleSourceData
+  {
+    String[] umpleFileNames;
+    Integer[] umpleLines;
+    Integer[] umpleJavaLines;
+    Integer[] umpleLengths;
+    
+    public UmpleSourceData(){
+    }
+    public String getFileName(int i){
+      return umpleFileNames[i];
+    }
+    public Integer getUmpleLine(int i){
+      return umpleLines[i];
+    }
+    public Integer getJavaLine(int i){
+      return umpleJavaLines[i];
+    }
+    public Integer getLength(int i){
+      return umpleLengths[i];
+    }
+    public UmpleSourceData setFileNames(String... filenames){
+      umpleFileNames = filenames;
+      return this;
+    }
+    public UmpleSourceData setUmpleLines(Integer... umplelines){
+      umpleLines = umplelines;
+      return this;
+    }
+    public UmpleSourceData setJavaLines(Integer... javalines){
+      umpleJavaLines = javalines;
+      return this;
+    }
+    public UmpleSourceData setLengths(Integer... lengths){
+      umpleLengths = lengths;
+      return this;
+    }
+    public int size(){
+      return umpleFileNames.length;
+    }
+  } 
+}
