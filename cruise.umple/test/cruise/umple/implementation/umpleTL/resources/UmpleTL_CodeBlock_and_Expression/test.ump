@@ -1,0 +1,12 @@
+class TemplateTest{
+     templateLabel <<!<<#
+          for(int index=0; index<4; index++){
+               #>>Iteration; <<=index>>;<<# 
+          }#>>!>>
+
+     emit generate1()(templateLabel); 
+  
+       public static void main(String[] args) {
+     	System.out.println(new TemplateTest().generate1());
+     }
+}

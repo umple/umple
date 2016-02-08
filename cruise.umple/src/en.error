@@ -191,8 +191,14 @@
 
 # Messages related to templates
 3500: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;
-3501: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template emit method can not be a main;
-3502: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template name '{0}' can not be resolved;
+3501: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template emit method can not be a main.;
+3502: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template name '{0}' can not be resolved.;
+3503: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template reference '{0}' cannot refer to itself.;
+3504: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template reference '{0}' can not be resolved.;
+3505: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template reference '{0}' can not cyclically refer to '{1}'.;
+3506: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class '{0}' has duplicate template name {1} ;
+3507: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class '{0}' has duplicate method name {1} ;
+3508: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Emit name '{0}' must be alphanumeric and start with an alpha character, or _  ;
 
 # Messages related to fixml
 4500: 1,  "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The tag '{0}' is not closed correctly.  ;

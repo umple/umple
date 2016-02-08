@@ -1,0 +1,11 @@
+class TemplateTest{
+     templateTest <<!<<#_internalGenerate(4, sb);#>>!>>
+     internalTemplate <<!Some content!>>
+
+     emit generate()(templateTest);
+     emit internalGenerate()(internalTemplate);
+     
+     public static void main(String[] args) {
+     	System.out.println(new TemplateTest().generate());
+     }
+}
