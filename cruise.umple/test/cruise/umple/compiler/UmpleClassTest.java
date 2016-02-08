@@ -155,9 +155,8 @@ public class UmpleClassTest
   {
     Attribute a = new Attribute("a",null,"autounique",null,false,umpleClass);
     ArrayList<String> methods = a.getMethodNames();
-    Assert.assertTrue(methods.contains("setA"));
     Assert.assertTrue(methods.contains("getA"));
-    Assert.assertEquals(methods.size(),2);
+    Assert.assertEquals(methods.size(),1);
   }
 
   @Test
@@ -175,7 +174,12 @@ public class UmpleClassTest
   @Test
   public void getSingularAssociationMethods()
   {
+    String code = "class B { }";
+    UmpleModel model = getModel(code);
+    UmpleClass aClass = new UmpleClass("B", model);
     AssociationVariable av = new AssociationVariable("a","A",null,null,createMultiplicity(0,1),true);
+    av.setUmpleClass(aClass);
+
     ArrayList<String> methods = av.getMethodNames();
     Assert.assertTrue(methods.contains("setA"));
     Assert.assertTrue(methods.contains("getA"));
@@ -185,18 +189,23 @@ public class UmpleClassTest
   @Test
   public void getMultipleAssociationMethods()
   {
+    String code = "class B { }";
+    UmpleModel model = getModel(code);
+    UmpleClass aClass = new UmpleClass("B", model);
     AssociationVariable av = new AssociationVariable("as","A",null,null,createMultiplicity(0,-1),true);
+    av.setUmpleClass(aClass);
+
     ArrayList<String> methods = av.getMethodNames();
     Assert.assertTrue(methods.contains("getA"));
     Assert.assertTrue(methods.contains("getAs"));
     Assert.assertTrue(methods.contains("numberOfAs"));
-    Assert.assertTrue(methods.contains("hasA"));
+    Assert.assertTrue(methods.contains("hasAs"));
     Assert.assertTrue(methods.contains("indexOfA"));
     Assert.assertTrue(methods.contains("minimumNumberOfAs"));
     Assert.assertTrue(methods.contains("addA"));
     Assert.assertTrue(methods.contains("addAAt"));
     Assert.assertTrue(methods.contains("addOrMoveAAt"));
-    Assert.assertTrue(methods.contains("removeoveA"));
+    Assert.assertTrue(methods.contains("removeA"));
     Assert.assertEquals(methods.size(),10);
   }
   
@@ -866,7 +875,7 @@ public class UmpleClassTest
   @Test
   public void getCodeInjectionUnfoundExtendedMethod_Complex()
   {
-    String code = "class A { 1 -- * C children; k; } class B { isA A; after setK,getK{ foo(); } } class C { isA B; after addChild,getChildA,tsetK,getK{ foo(); }}";
+    String code = "class A { 1 -- * C children; k; } class B { isA A; after setK,getK{ foo(); } } class C { isA B; after addChild,getChild,setK,getK{ foo(); }}";
     UmpleModel model = getModel(code);
     model.run();
     ParseResult result = model.getLastResult();
