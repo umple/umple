@@ -49,142 +49,173 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
   private Map<UmpleTrait, List<StateMachine>> gatherStateMachinesFromTrait (UmpleTrait inTrait,GeneralTPApplied inGTPApplied, UmpleClass inClass) 
   {
-    Map<UmpleTrait, List<StateMachine>> traiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>(); 
-  	Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
-  	//----------------------------------------------------------------------------------------
-		if (!checkValidityOfSMTemplateSignature(inGTPApplied,inTrait)) return traiStateMachine;
-  	//----------------------------------------------------------------------------------------
-  	List<StateMachine> lSMachine = new ArrayList<StateMachine>();	  
-  	for (StateMachine sMachine : inTrait.getStateMachines()) {
-  	 	StateMachine stTemp = ApplyTypeParametersToStateMachine(sMachine,inGTPApplied,inClass, inTrait);
-  		if (stTemp!=null)	{
-  			ApplyTypeParametersToEventsOfStateMachines(stTemp, inGTPApplied);
-  			ApplyTypeParametersToActionCodesOfStateMachines(stTemp, inGTPApplied);
-  			lSMachine.add(stTemp);
-  			}
+    Map<UmpleTrait, List<StateMachine>> traitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>(); 
+  	Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();  	
+  	/*
+  	 * Duplicate state machines in order to be able modify them without effecting the original names;
+  	 */
+  	List<StateMachine> sMList = new ArrayList<StateMachine>();
+  	for (StateMachine sm: inTrait.getStateMachines()){
+  		 sMList.add(sm.clone());
   	}
-  	if (lSMachine.size()>0)traiStateMachine.put(inTrait,lSMachine);
-  	//----------------------------------------------------------------------------------------
+  	if (sMList.size()>0) traitStateMachine.put(inTrait,sMList);
+  	
+  	/*
+  	 * Go through the included traits.
+  	 */
   	for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
   		tempTraiStateMachine = gatherStateMachinesFromTrait(uTrait,inTrait.getGeneralTPAppliedByName(uTrait.getName()),inClass);	 
-  		if ( ! getParseResult().getWasSuccess() ) return traiStateMachine;
-  		if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traiStateMachine,tempTraiStateMachine,inTrait)) return traiStateMachine;
-  		AddStateMachineMapToAnother(traiStateMachine,tempTraiStateMachine);
+  		if ( ! getParseResult().getWasSuccess() ) return traitStateMachine;
+  		if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine,tempTraiStateMachine,inTrait)) return traitStateMachine;
+  		AddStateMachineMapToAnother(traitStateMachine,tempTraiStateMachine);
   	}
-  	return traiStateMachine;
+  	/*
+  	 * Check to make sure applied type parameters are valid;
+  	 */
+  	List<StateMachine> list = new ArrayList<StateMachine>();
+  	for(Map.Entry<UmpleTrait, List<StateMachine>> entry : traitStateMachine.entrySet()){
+  		list.addAll(entry.getValue());
+  	}
+  	if (!checkValidityOfSMTemplateSignature(inGTPApplied,list,inTrait)) return traitStateMachine;
+  	//----------------------------------------------------------------------------------------	  	
+		for(Map.Entry<UmpleTrait, List<StateMachine>> entry : traitStateMachine.entrySet()){
+			for (StateMachine sMachine : entry.getValue()) {
+		  	 	StateMachine stTemp = CompeletlyAllyTypeParametersToStateMachines(sMachine,inGTPApplied);
+		  		if (stTemp==null)	{
+		  			traitStateMachine.get(inTrait).remove(sMachine);
+		  		}
+		  	}
+		}
+  	return traitStateMachine;
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-  private boolean checkValidityOfSMTemplateSignature(GeneralTPApplied inGTPApplied, UmpleTrait inTrait) {
-    if (inGTPApplied!=null){
-	  	for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
-	  		//checks that the event exists in one of the state machines.
-	  		if (smTSignature.getStateMachine().equals("")){
-	  			Method method1 = smTSignature.getMethodTemplateSignature().getMethod();
-	  			boolean find = false;
-	  			for (StateMachine stMachine : inTrait.getStateMachines()){
-	  				Event event = stMachine.getEventByMethod(method1);	 				
-		 				if(event!=null)			{
-		 					find = true;
-		 					break;
-		 				}
-	  			}
-	 				if(find==false){
-  	 				getParseResult().addErrorMessage(new ErrorMessage(232,inTrait.getPosition(0),inTrait.getName(),method1.getSignature()));	
-		 				return false;
-	 				}
-	  		} else {
-		  		StateMachine sm = inTrait.getStateMachine(smTSignature.getStateMachine());
-		 			if ( sm == null ){
-		 				getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine()));	
-		 				return false;
-		 			} if (smTSignature.getMethodTemplateSignature()!=null){
-		 				Method method1 = smTSignature.getMethodTemplateSignature().getMethod();
-		 				Event event = sm.getEventByMethod(method1);	
-		 				if(event==null){
-	  	 				getParseResult().addErrorMessage(new ErrorMessage(231,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine(),method1.getSignature()));	
-			 				return false;
-		 				}
-		 				
-		 			}	else {
-						 StateMachine smTemp = sm;
-						 State tState=null;
-						 for (String s : smTSignature.getStates()){
-							 tState = smTemp.findState(s, false);
-							 if (tState==null){
-								 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),s));	
-				 		 		 return false;
-							 } else
-								 if(tState.hasNestedStateMachines()){
-		 						 smTemp = tState.getNestedStateMachine(0);
-		 					 }
-						 }				
-		 			}
-	  		}
-	  	}	 
-	  	return true;
-  	} else return true;
+  private boolean checkValidityOfSMTemplateSignature(GeneralTPApplied inGTPApplied, List<StateMachine> inStateMachines,UmpleTrait inTrait){
+     if (inGTPApplied!=null){
+ 	  	for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
+ 	  		//checks that the event exists in one of the state machines.
+ 	  		if (smTSignature.getStateMachine().equals("")){
+ 	  			Method method1 = smTSignature.getMethodTemplateSignature().getMethod();
+ 	  			boolean find = false;
+ 	  			for (StateMachine stMachine : inStateMachines){
+ 	  				Event event = stMachine.getEventByMethod(method1);	 				
+ 		 				if(event!=null)			{
+ 		 					find = true;
+ 		 					break;
+ 		 				}
+ 	  			}
+ 	 				if(find==false){
+   	 				getParseResult().addErrorMessage(new ErrorMessage(232,inTrait.getPosition(0),inTrait.getName(),method1.getSignature()));	
+ 		 				return false;
+ 	 				}
+ 	  		} else {
+ 	  			StateMachine sm = null;
+ 	  			for (StateMachine st : inStateMachines){				
+ 	  				if(st.getName().equals(smTSignature.getStateMachine())){
+ 	  					sm=st;
+ 	  				}
+ 	  			}
+
+ 		 			if ( sm == null ){
+ 		 				getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine()));	
+ 		 				return false;
+ 		 			} if (smTSignature.getMethodTemplateSignature()!=null){
+ 		 				Method method1 = smTSignature.getMethodTemplateSignature().getMethod();
+ 		 				Event event = sm.getEventByMethod(method1);	
+ 		 				if(event==null){
+ 	  	 				getParseResult().addErrorMessage(new ErrorMessage(231,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine(),method1.getSignature()));	
+ 			 				return false;
+ 		 				}
+ 		 				
+ 		 			}	else {
+ 						 StateMachine smTemp = sm;
+ 						 State tState=null;
+ 						 for (String s : smTSignature.getStates()){
+ 							 tState = smTemp.findState(s, false);
+ 							 if (tState==null){
+ 								 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),s));	
+ 				 		 		 return false;
+ 							 } else
+ 								 if(tState.hasNestedStateMachines()){
+ 		 						 smTemp = tState.getNestedStateMachine(0);
+ 		 					 }
+ 						 }				
+ 		 			}
+ 	  		}
+ 	  	}	 
+ 	  	return true;
+   	} else return true;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+	private StateMachine CompeletlyAllyTypeParametersToStateMachines(StateMachine inSMachine, GeneralTPApplied inGTPApplied) {
+		StateMachine stTemp = ApplyTypeParametersToStateMachine(inSMachine,inGTPApplied);
+		if (stTemp!=null)	{
+			ApplyTypeParametersToEventsOfStateMachines(stTemp, inGTPApplied);
+			ApplyTypeParametersToActionCodesOfStateMachines(stTemp, inGTPApplied);
+		}	
+		return stTemp;
 	}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
 
-	private StateMachine ApplyTypeParametersToStateMachine(StateMachine inSMachine, GeneralTPApplied inGTPApplied, UmpleClass inClass, UmpleTrait inTrait){
-  	StateMachine newSt = inSMachine.clone();
-    String track=null;
-    String mapped=null;
-    Map<String, String> nameMapping = new HashMap<String, String>();
-  		if (inGTPApplied!=null){
-  			for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
-  				if (smTSignature.getModifier().equals("-")) return null;
-  			 	if (smTSignature.getStateMachine().equals("")) break;
-  			 	mapped = nameMapping.get(smTSignature.getStateMachine());
-  			 	if (mapped==null) mapped = smTSignature.getStateMachine();
-  			 	track = smTSignature.getStateMachine();
-  			 	if (newSt.getName().equals(mapped)){
-    		  	if (smTSignature.getMethodTemplateSignature()!=null){
-  						changeEventName(newSt,smTSignature);
-  						continue;
-  				 	}
-  				if (smTSignature.numberOfStates()<=0) {
-  					newSt.setName(smTSignature.getAlias());
-  					for (State s : newSt.getStates()) s.setStateMachine(newSt);
-  					nameMapping.put(track, smTSignature.getAlias());
+  private StateMachine ApplyTypeParametersToStateMachine(StateMachine inSMachine, GeneralTPApplied inGTPApplied){
+	String track=null;
+	String mapped=null;
+	Map<String, String> nameMapping = new HashMap<String, String>();
+		if (inGTPApplied!=null){
+			for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
+				if (smTSignature.getModifier().equals("-")) return null;
+			 	if (smTSignature.getStateMachine().equals("")) break;
+			 	mapped = nameMapping.get(smTSignature.getStateMachine());
+			 	if (mapped==null) mapped = smTSignature.getStateMachine();
+			 	track = smTSignature.getStateMachine();
+			 	if (inSMachine.getName().equals(mapped)){
+			  	if (smTSignature.getMethodTemplateSignature()!=null){
+						changeEventName(inSMachine,smTSignature);
+						continue;
+				 	}
+				if (smTSignature.numberOfStates()<=0) {
+					inSMachine.setName(smTSignature.getAlias());
+					for (State s : inSMachine.getStates()) s.setStateMachine(inSMachine);
+					nameMapping.put(track, smTSignature.getAlias());
 	 				}else { 
-  					StateMachine smTemp = newSt;
-  					State tState=null;
-  					for (String s : smTSignature.getStates()){
-  						track = track+"."+s;
-  						mapped = nameMapping.get(track);
-  						if (mapped==null) mapped = s;
-  						tState = smTemp.findState(mapped, false);
- 							if(tState.hasNestedStateMachines()){
+					StateMachine smTemp = inSMachine;
+					State tState=null;
+					for (String s : smTSignature.getStates()){
+						track = track+"."+s;
+						mapped = nameMapping.get(track);
+						if (mapped==null) mapped = s;
+						tState = smTemp.findState(mapped, false);
+							if(tState.hasNestedStateMachines()){
 		 						smTemp = tState.getNestedStateMachine(0);
 		 					}
-  					}
-  					if (smTemp!=null) {
-  						tState.setName(smTSignature.getAlias());	
-  						if (tState.hasNestedStateMachines()) {
-  							smTemp.setName(smTSignature.getAlias());
-  						}
-  						nameMapping.put(track, smTSignature.getAlias());
-  					}
-  				} 					
+					}
+					if (smTemp!=null) {
+						tState.setName(smTSignature.getAlias());	
+						if (tState.hasNestedStateMachines()) {
+							smTemp.setName(smTSignature.getAlias());
+						}
+						nameMapping.put(track, smTSignature.getAlias());
+					}
+				} 					
 				}
 			}
-  		//This code is used to make sure the * pattern for renaming events name applies to all state machines.
-  		for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
-  	  	if (smTSignature.getStateMachine().equals("")){
-    			if (smTSignature.getMethodTemplateSignature()!=null){
-  					changeEventName(newSt,smTSignature);
-  					continue;
-  				}
-  			}
-  		}
-   	}
-  	return newSt;
+		//This code is used to make sure the * pattern for renaming events name applies to all state machines.
+		for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
+	  	if (smTSignature.getStateMachine().equals("")){
+				if (smTSignature.getMethodTemplateSignature()!=null){
+					changeEventName(inSMachine,smTSignature);
+					continue;
+				}
+			}
+		}
 	}
+	return inSMachine;
+  }
 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -250,8 +281,9 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-	private boolean CheckSMFromTraitIsNotAvaialbleInOtherTraits(Map<UmpleTrait, List<StateMachine>> inTraiStateMachine, Map<UmpleTrait, List<StateMachine>> inTempTraiStateMachine, UmpleClassifier inUmpleClassifier){
-  	if (inTraiStateMachine.size()==0){
+   private boolean CheckSMFromTraitIsNotAvaialbleInOtherTraits(Map<UmpleTrait, List<StateMachine>> inTraiStateMachine, Map<UmpleTrait, List<StateMachine>> inTempTraiStateMachine, UmpleClassifier inUmpleClassifier){
+    if (inTraiStateMachine==null) return true;
+    if (inTraiStateMachine.size()==0){
   		for(UmpleTrait tUTrait : inTempTraiStateMachine.keySet()){
   			inTraiStateMachine.put(tUTrait, inTempTraiStateMachine.get(tUTrait));
   		}
