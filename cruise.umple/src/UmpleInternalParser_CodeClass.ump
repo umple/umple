@@ -2592,14 +2592,6 @@ class UmpleInternalParser
   //TODO I changed the parameter's type. please remove this comment;
   private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
   {
-    if(!unanalyzedInjectionTokens.containsKey(uClassifier))
-    {
-      unanalyzedInjectionTokens.put(uClassifier, new ArrayList<Token>()); 
-    }
-
-    List<Token> currentTokens = unanalyzedInjectionTokens.get(uClassifier);
-    currentTokens.add(injectToken);
-
     String type = injectToken.is("beforeCode") ? "before" : "after";
     CodeBlock cb = new CodeBlock();
     String operationName = getOperationName(injectToken);
@@ -2609,6 +2601,14 @@ class UmpleInternalParser
     injection.setSnippet(cb);
     if (uClassifier instanceof UmpleClass) {
     	((UmpleClass)uClassifier).addCodeInjection(injection);
+
+      if(!unanalyzedInjectionTokens.containsKey(uClassifier))
+      {
+        unanalyzedInjectionTokens.put(uClassifier, new ArrayList<Token>()); 
+      }
+
+      List<Token> currentTokens = unanalyzedInjectionTokens.get(uClassifier);
+      currentTokens.add(injectToken);
     } else if (uClassifier instanceof UmpleTrait){
       ((UmpleTrait)uClassifier).addCodeInjection(injection);
     }
