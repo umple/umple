@@ -150,15 +150,16 @@ public class UmpleClassTest
     Assert.assertEquals(methods.size(),2);
   }
 
+  @Test
   public void getAutouniqueAttributeMethods()
   {
     Attribute a = new Attribute("a",null,"autounique",null,false,umpleClass);
     ArrayList<String> methods = a.getMethodNames();
-    Assert.assertTrue(methods.contains("setA"));
     Assert.assertTrue(methods.contains("getA"));
-    Assert.assertEquals(methods.size(),2);
+    Assert.assertEquals(methods.size(),1);
   }
 
+  @Test
   public void getDefaultedAttributeMethods()
   {
     Attribute a = new Attribute("a",null,"defaulted",null,false,umpleClass);
@@ -169,6 +170,44 @@ public class UmpleClassTest
     Assert.assertTrue(methods.contains("getDefaultA"));
     Assert.assertEquals(methods.size(),4);
   }
+
+  @Test
+  public void getSingularAssociationMethods()
+  {
+    String code = "class B { }";
+    UmpleModel model = getModel(code);
+    UmpleClass aClass = new UmpleClass("B", model);
+    AssociationVariable av = new AssociationVariable("a","A",null,null,createMultiplicity(0,1),true);
+    av.setUmpleClass(aClass);
+
+    ArrayList<String> methods = av.getMethodNames();
+    Assert.assertTrue(methods.contains("setA"));
+    Assert.assertTrue(methods.contains("getA"));
+    Assert.assertEquals(methods.size(),2);
+  }
+
+  @Test
+  public void getMultipleAssociationMethods()
+  {
+    String code = "class B { }";
+    UmpleModel model = getModel(code);
+    UmpleClass aClass = new UmpleClass("B", model);
+    AssociationVariable av = new AssociationVariable("as","A",null,null,createMultiplicity(0,-1),true);
+    av.setUmpleClass(aClass);
+
+    ArrayList<String> methods = av.getMethodNames();
+    Assert.assertTrue(methods.contains("getA"));
+    Assert.assertTrue(methods.contains("getAs"));
+    Assert.assertTrue(methods.contains("numberOfAs"));
+    Assert.assertTrue(methods.contains("hasAs"));
+    Assert.assertTrue(methods.contains("indexOfA"));
+    Assert.assertTrue(methods.contains("minimumNumberOfAs"));
+    Assert.assertTrue(methods.contains("addA"));
+    Assert.assertTrue(methods.contains("addAAt"));
+    Assert.assertTrue(methods.contains("addOrMoveAAt"));
+    Assert.assertTrue(methods.contains("removeA"));
+    Assert.assertEquals(methods.size(),10);
+  }
   
   @Test
   public void makeSingleton_AddingOfStaticVariable() throws UmpleCompilerException
@@ -178,7 +217,6 @@ public class UmpleClassTest
     Assert.assertEquals(true,umpleClass.getIsSingleton());
     Assert.assertEquals(count, umpleClass.getAssociationVariables().size());
   }
-
  
   @Test
   public void DoNotNeedAnUmpleFile()
@@ -739,54 +777,112 @@ public class UmpleClassTest
   }
 
   @Test
-  public void getCodeInjectionUnfoundMethodError_simple()
+  public void getCodeInjectionUnfoundAttriutesMethodError_simple()
   {
     String code = "class A{a; after test { foo(); }}";
     UmpleModel model = getModel(code);
-    model.run();
-    ParseResult result = model.getLastResult();
-    List<ErrorMessage> errors = result.getErrorMessages();
-    Assert.assertEquals(errors.size(), 1);
-    for(ErrorMessage er : errors)
-    {
-      Assert.assertTrue(er.toString().contains("1012") && er.toString().contains("test"));
+    boolean caught = false;
+    try {
+      model.run();
+      ParseResult result = model.getLastResult();
+      List<ErrorMessage> errors = result.getErrorMessages();
+      Assert.assertEquals(errors.size(), 1);
+    } catch (Exception e) {
+      caught = e.getMessage().contains("1012") && e.getMessage().contains("test");
+    } finally {
+      Assert.assertTrue(caught);
     }
   }
 
   @Test
-  public void getCodeInjectionUnfoundMethodError_complex()
+  public void getCodeInjectionUnfoundAttributesMethodError_complex()
   {
+    boolean test = false;
+    boolean setB = false;
+    boolean removeE = false;
     String code = "class A{a; internal b; defaulted c = \"s\"; String[] d; immutable String[] e; after setB,getA,test,resetC,addD,removeE { foo(); }}";
+    try {
+      UmpleModel model = getModel(code);
+      model.run();
+      ParseResult result = model.getLastResult();
+      List<ErrorMessage> errors = result.getErrorMessages();
+
+      Assert.assertEquals(errors.size(), 3);
+    } catch (Exception e) {
+      test = test || (e.getMessage().contains("1012") && e.getMessage().contains("test"));
+      setB = setB || (e.getMessage().contains("1012") && e.getMessage().contains("setB"));
+      removeE = removeE || (e.getMessage().contains("1012") && e.getMessage().contains("removeE"));
+    } finally {
+      Assert.assertTrue(test);
+      Assert.assertTrue(setB);
+      Assert.assertTrue(removeE);
+    }
+  }
+
+  @Test
+  public void getCodeInjectionUnfoundAssociationsMethodError_TwoSided()
+  {
+    boolean addChildren = false;
+    String code = "class A{1 -- 1 B; 1 -- * C children; after setB,addOrMoveChildAt,addChild,addChildren{ foo(); }} class B { before setA,getA{ foo(); } } class C {}";
+    try {
+      UmpleModel model = getModel(code);
+      model.run();
+      ParseResult result = model.getLastResult();
+      List<ErrorMessage> errors = result.getErrorMessages();
+      Assert.assertEquals(errors.size(), 1);
+    } catch (Exception e) {
+      addChildren = e.getMessage().contains("1012") && e.getMessage().contains("addChildren");
+    } finally {
+      Assert.assertTrue(addChildren);
+    }
+  }
+
+  @Test
+  public void getCodeInjectionUnfoundAssociationsMethodError_OneSided()
+  {
+    boolean addChildren = false;
+    boolean setA = false;
+    boolean getA = false;
+    String code = "class A{1 -> 1 B; 0..1 -> * C children; after setB,addOrMoveChildAt,addChild,addChildren{ foo(); }} class B { before setA,getA{ foo(); } } class C {}";
+    try {
+      UmpleModel model = getModel(code);
+      model.run();
+      ParseResult result = model.getLastResult();
+      List<ErrorMessage> errors = result.getErrorMessages();
+      Assert.assertEquals(errors.size(), 3);
+    } catch (Exception e) {
+      addChildren = addChildren || (e.getMessage().contains("1012") && e.getMessage().contains("addChildren"));
+      setA = setA || (e.getMessage().contains("1012") && e.getMessage().contains("getA"));
+      getA = getA || (e.getMessage().contains("1012") && e.getMessage().contains("setA"));
+    } finally {
+      Assert.assertTrue(addChildren);
+      Assert.assertTrue(getA);
+      Assert.assertTrue(setA);
+    }
+  }
+  
+  @Test
+  public void getCodeInjectionUnfoundExtendedMethod_Simple()
+  {
+    String code = "class A { k; } class B { isA A; after setK,getK{ foo(); } }";
     UmpleModel model = getModel(code);
     model.run();
     ParseResult result = model.getLastResult();
     List<ErrorMessage> errors = result.getErrorMessages();
-
-    Assert.assertEquals(errors.size(), 3);
-    boolean test = false;
-    boolean setB = false;
-    boolean removeE = false;
-    for(ErrorMessage er : errors)
-    {
-      if(er.toString().contains("1012") && er.toString().contains("test"))
-      {
-        test = true;
-      } 
-      else if(er.toString().contains("1012") && er.toString().contains("setB"))
-      {
-        setB = true;
-      }
-      else if(er.toString().contains("1012") && er.toString().contains("removeE"))
-      {
-        removeE = true;
-      }
-    }
-
-    Assert.assertTrue(test);
-    Assert.assertTrue(setB);
-    Assert.assertTrue(removeE);
+    Assert.assertEquals(errors.size(), 0);
   }
-  
+
+  @Test
+  public void getCodeInjectionUnfoundExtendedMethod_Complex()
+  {
+    String code = "class A { 1 -- * C children; k; } class B { isA A; after setK,getK{ foo(); } } class C { isA B; after addChild,getChild,setK,getK{ foo(); }}";
+    UmpleModel model = getModel(code);
+    model.run();
+    ParseResult result = model.getLastResult();
+    List<ErrorMessage> errors = result.getErrorMessages();
+    Assert.assertEquals(errors.size(), 0);
+  }
+
   @Test
   public void getAllStateMachines_none()
   {

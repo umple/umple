@@ -27,6 +27,8 @@ class UmpleInternalParser
   internal Map<UmpleClassifier,List<Token>> unlinkedExtendsTokensInterface = new HashMap <UmpleClassifier, List<Token>>();
   internal Map<UmpleClassifier,List<String>> unlinkedInterfaceExtends = new HashMap<UmpleClassifier,List<String>>();
 
+  internal Map<UmpleClassifier,List<Token>> unanalyzedInjectionTokens = new HashMap<UmpleClassifier,List<Token>>();
+
   // List of comments populated by the parser to be added to the next class, attribute, association, method, etc.
   internal Comment[] lastComments;
   
@@ -373,7 +375,22 @@ class UmpleInternalParser
       checkNonReachableStates();
       //Issue 610
       checkAssociationClassKeys();
+
+      //Issue 686
+      checkCodeInjections();
     }
+  }
+
+  //Issue 686
+  private void checkCodeInjections()
+  {
+    for(Map.Entry<UmpleClassifier, List<Token>> entry : unanalyzedInjectionTokens.entrySet())
+    {
+      for(Token injectToken : entry.getValue())
+      {
+        checkCodeInjectionValidity(injectToken, (UmpleClass) entry.getKey());
+      }
+    } 
   }
 
   public void analyzeInvariants()
@@ -1178,10 +1195,10 @@ class UmpleInternalParser
   {
     for (AssociationVariable av : unlinkedAssociationVariables)
     {
-       
+
       UmpleClass aClass = model.getUmpleClass(av.getType());
       UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType());   
-      
+
       if (aClass == null || bClass == null){ //Association is between Class and Interface
         continue;
       }   
@@ -1189,6 +1206,7 @@ class UmpleInternalParser
       Association assoc = bClass.getAssociation(bClass.indexOfAssociationVariable(av));
 
       boolean added = aClass.addAssociationVariable(av.getRelatedAssociation());
+
       if (!added)
       {
         if ((!aClass.isImmutable() && !av.getRelatedAssociation().getIsNavigable()) || (!bClass.isImmutable() && !av.getIsNavigable())) 
@@ -2556,14 +2574,11 @@ class UmpleInternalParser
     return value;
   }
 
-  //TODO I changed the parameter's type. please remove this comment;
-  private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
+  private String getOperationName(Token aToken)
   {
-    String type = injectToken.is("beforeCode") ? "before" : "after";
-    CodeBlock cb = new CodeBlock();
     StringBuilder operationName = new StringBuilder();
     String comma = "";
-    for(Token subToken:injectToken.getSubTokens())
+    for(Token subToken : aToken.getSubTokens())
     {
       if(subToken.is("operationName"))
       {
@@ -2571,54 +2586,90 @@ class UmpleInternalParser
         comma = ",";
       }
     }
-    CodeInjection injection = new CodeInjection(type,operationName.toString(),"",uClassifier);
+    return operationName.toString();
+  }
+
+  //TODO I changed the parameter's type. please remove this comment;
+  private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
+  {
+    String type = injectToken.is("beforeCode") ? "before" : "after";
+    CodeBlock cb = new CodeBlock();
+    String operationName = getOperationName(injectToken);
+
+    CodeInjection injection = new CodeInjection(type,operationName,"",uClassifier);
     makeCodeInject(injectToken,injection,cb,uClassifier);
     injection.setSnippet(cb);
     if (uClassifier instanceof UmpleClass) {
-      checkCodeInjectionValidity(injectToken, operationName.toString(), uClassifier);
-      ((UmpleClass)uClassifier).addCodeInjection(injection);
+    	((UmpleClass)uClassifier).addCodeInjection(injection);
+
+      if(!unanalyzedInjectionTokens.containsKey(uClassifier))
+      {
+        unanalyzedInjectionTokens.put(uClassifier, new ArrayList<Token>()); 
+      }
+
+      List<Token> currentTokens = unanalyzedInjectionTokens.get(uClassifier);
+      currentTokens.add(injectToken);
     } else if (uClassifier instanceof UmpleTrait){
       ((UmpleTrait)uClassifier).addCodeInjection(injection);
     }
   }
 
-  private boolean checkCodeInjectionValidity(Token injectToken, String operationName, UmpleClassifier uClassifier) {
+  private boolean checkCodeInjectionValidity(Token injectToken, UmpleClass uClass) {
+    ArrayList<String> methodNames = new ArrayList<String>();
+    String operationName = getOperationName(injectToken);
+
+    ArrayList<String> todoExtendedClasses = new ArrayList<String>();
+    ArrayList<String> todoInheritedInterfaces = new ArrayList<String>();
+
+    todoExtendedClasses.add(uClass.getName());
+    while(!todoExtendedClasses.isEmpty())
+    {
+      String className = todoExtendedClasses.get(0);
+      todoExtendedClasses.remove(className);
+
+      UmpleClass eClass = model.getUmpleClass(className);
+
+      if(eClass == null)
+      {
+        todoInheritedInterfaces.add(className);
+        continue;
+      }
+
+      todoExtendedClasses.remove(className);
+      if(unlinkedExtends.get(eClass) != null)
+      {
+        todoExtendedClasses.addAll(unlinkedExtends.get(eClass));
+      }
+
+      methodNames.addAll(eClass.getMethodNames()); 
+    }
+
+    while(!todoInheritedInterfaces.isEmpty())
+    {
+      String interfaceName = todoInheritedInterfaces.get(0);
+      todoInheritedInterfaces.remove(interfaceName); 
+
+      UmpleInterface eInterface = model.getUmpleInterface(interfaceName);
+
+      if(eInterface == null)
+      {
+        continue;
+      }
+
+      if(unlinkedInterfaceExtends.get(eInterface) != null)
+      {
+        todoInheritedInterfaces.addAll(unlinkedInterfaceExtends.get(eInterface));
+      }
+
+      for(Method m : eInterface.getMethods())
+      {
+        methodNames.add(m.getName());
+      }
+    }
+
     for(String operation : operationName.split(","))
     {
       Boolean matches = false;
-      UmpleClass uClass = (UmpleClass) uClassifier;
-
-      ArrayList<String> methodNames = new ArrayList<String>();
-      for(Method aMethod : uClass.getMethods())
-      {
-        methodNames.add(aMethod.getName());
-      }
-
-      for(Attribute attr : uClass.getAttributes())
-      {
-        methodNames.addAll(attr.getMethodNames());
-      }
-
-      for(AssociationVariable av : uClass.getAssociationVariables())
-      {
-        methodNames.addAll(av.getMethodNames());
-      }
-
-      for(StateMachine sm : uClass.getStateMachines())
-      {
-        String stateMachineName = sm.getName().substring(0, 1).toUpperCase() + sm.getName().substring(1);
-        methodNames.add("set" + stateMachineName);
-        methodNames.add("get" + stateMachineName);
-
-        for(Event ev : sm.getEvents())
-        {
-          methodNames.add(ev.getName());
-        }
-      }
-
-      methodNames.add("constructor");
-      methodNames.add("delete");
-      methodNames.add("toString");
 
       for(String methodName : methodNames) 
       { 
