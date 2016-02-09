@@ -95,6 +95,8 @@ class Documenter
     int numContents = 0;
 
     Hashtable<String,String> referenceLookup = createReferenceLookup();
+    String filename="";
+    int totPages=0;
     for (int gi=0; gi<numGroups; gi++)
     {
       group = getParser().getGroup(gi);
@@ -134,11 +136,12 @@ class Documenter
           return false;
         }
         
-        String filename = path + File.separator + content.getTitleFilename();
+        filename = path + File.separator + content.getTitleFilename();
         SampleFileWriter.createFile(filename,htmlOutput);
-        addMessage("Created: " + filename);
       }
+      totPages+=numContents;
     }
+    addMessage("Created "+totPages+" manual pages, in "+numGroups+" groups, including "+filename);
     return true;
   }
   
