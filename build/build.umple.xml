@@ -262,6 +262,7 @@
           classpath="${dist.dir}/${dist.umple.docs.jar}">
       <arg value="build/reference"/>
       <arg value="${dist.path}/reference"/>
+      <jvmarg value="-Xmx500m"/>      
     </java>
     <copy todir="${dist.path}/reference/files">
       <fileset dir="build/reference/files"/>
