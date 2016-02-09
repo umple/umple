@@ -72,12 +72,15 @@
 
     <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
+      <jvmarg value="-Xmx500m"/>
     </java>
     <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple.validator/src/Master.ump"/>
+      <jvmarg value="-Xmx500m"/>      
     </java>
     <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="cruise.umplificator/src/Master.ump"/>
+      <jvmarg value="-Xmx500m"/>
     </java>
   </target>
 
