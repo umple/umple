@@ -182,6 +182,7 @@
     <deps-get-path conf="test" pathid="test.ivy.classpath" />
 
     <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}" >
+      <jvmarg value="-Xmx500m"/>    
       <!-- <jmvarg value="-XstartOnFirstThread"/> -->
       <formatter type="xml" unless="${showJunitOutput}"/>
       <formatter usefile="false" type="brief" if="${showJunitOutput}"/>
