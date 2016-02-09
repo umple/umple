@@ -1,0 +1,48 @@
+version: 1.23.0-build-{build}
+
+clone_depth: 5
+
+cache:
+
+- '%HOME%\.ivy2'
+- '%HOME%\.m2'
+- '%HOME%\.ant\lib\'
+- '%APPVEYOR_BUILD_FOLDER%\dist\libs'
+- C:\tools\php
+- C:\ProgramData\chocolatey\lib\ant
+
+init:
+
+- ps: gem update --system
+- ps: cinst ant 2>&1 | Out-Null
+- ps: cinst php --version=5.6.17 2>&1 | Out-Null
+
+install:
+
+- ps: $env:Path="C:\Ruby21\bin;C:/tools/ruby22/bin;$($env:Path);C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
+
+- ps: ant -version
+- ps: pushd build
+
+- cmd: ant bootstrap
+- cmd: ant deps-resolve-all
+
+- ps: popd
+
+- ps: php.exe --version
+- ps: ruby.exe -v
+- cmd: java.exe -version # using ps causes it to fail because it prints to sterr
+- ps: ant -version
+- ps: rake.bat -V
+
+build_script:
+
+- ps: cd build
+
+- cmd: ant first-build
+- cmd: ant -f build.umple.xml -Dfirst.build=false
+
+test_script:
+
+- cmd: ant -f build.testbed.xml -Dfirst.build=false
+

@@ -198,7 +198,7 @@ class EcorePackage {
   emit getXmlHeader()(xmlHeader);
   
   String getCode(){
-    return getXmlHeader() + '\n' + super.getCode();
+    return getXmlHeader() + System.lineSeparator() + super.getCode();
   };
 }
 

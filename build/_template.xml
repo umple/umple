@@ -7,11 +7,56 @@
 
   <condition property="is.osx"><os family="mac" /></condition>
 
-  <property name="myenv" value="cc" />
+  <!-- Environment Detection: -->
+  <!-- Check different environment settings, eventually we will match to `wlocal` or `local` if no
+       special environment is detected. This may be overwritten with the `-Dmyenv` variable at 
+       runtime -->
+  <local name="env" />
+  <property environment="env"/>
+
+  <condition property="myenv" value="travis">
+    <and>
+      <isset property="env.CI" />
+      <isset property="env.TRAVIS" />
+    </and>
+  </condition>
+
+  <condition property="myenv" value="appveyor">
+    <and>
+      <isset property="env.CI" />
+      <isset property="env.APPVEYOR" />
+    </and>
+  </condition>
+
+  <local name="computer.hostname" />
+  <exec executable="hostname" outputproperty="computer.hostname"/>
+
+  <condition property="myenv" value="cc">
+    <and> <!-- Check for CC on cruise -->
+      <os family="unix" />
+      <equals arg1="${computer.hostname}" arg2="cruise" />
+    </and>
+  </condition>
+
+  <condition property="myenv" value="local">
+    <os family="unix" />
+  </condition>
+
+  <condition property="myenv" value="wlocal">
+    <os family="windows" />
+  </condition>
+
+  <echo message="Using myenv=${myenv}" />
+  <!-- /end Environment Detection -->
+
+
   <import file="_${myenv}.xml" />
   
   <property name="dist.dir"                     value="${basedir}/dist" />
   <property name="dist.libs.dir"                value="${dist.dir}/libs" />
+
+  <!-- Note: dist.dir and dist.libs.dir must be defined before importing this file. -->
+  <import file="build.deps.xml" />
 
   <!-- Macro that will build up jar properties: creates two, 
   1. dist.umple.@{name}.jar      -> most recent built jar
@@ -72,9 +117,6 @@
       <!-- 
         We ping three different sources that we know of to check if they are available. If they are not available
         then we know that the build is offline (as far as we are concerned).
-
-        Unfortunately, the <isreachable> tag from <condition> seems to return false negatives, thus doing an OS 
-        specific approach was required. This is handled in the custom <isreachable> macro defined above. 
       -->
       <parallel>
         <isreachable property="access.maven" 
@@ -106,8 +148,6 @@
       </if>
     </sequential>
   </macrodef>
-
-  <import file="build.deps.xml" />
 
   <!-- ```````````````````````````
     Clean up and initialize any potential byproduct
