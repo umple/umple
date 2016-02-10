@@ -679,26 +679,61 @@ class StateMachine{
 	//Please maintain this method if you're going to add new features to state machines.
 	//This code manually creates a clone of a state machine.  
   public StateMachine clone(){
-    StateMachine stM = new StateMachine(getName());
-  	stM.setContainsDeepHistoryState(getContainsDeepHistoryState());
-  	stM.setContainsHistoryState(getContainsHistoryState());
-  	stM.setParentState(getParentState());
-  	stM.setPooled(getPooled());
-  	stM.setQueued(getQueued());
-  	stM.setRecentSearchDepth(getRecentSearchDepth());
-  	stM.setUmpleClass(getUmpleClass());
-  	stM.setUmpleTrait(getUmpleTrait());
+    StateMachine newSTM = new StateMachine(getName());
+    newSTM.setContainsDeepHistoryState(getContainsDeepHistoryState());
+    newSTM.setContainsHistoryState(getContainsHistoryState());
+    newSTM.setPooled(getPooled());
+    newSTM.setQueued(getQueued());
+    newSTM.setRecentSearchDepth(getRecentSearchDepth());
+    newSTM.setUmpleClass(getUmpleClass());
+    newSTM.setUmpleTrait(getUmpleTrait());
+ 	
+    //duplicate states of the system 
+  	List<Transition> notClonedTransitions = new ArrayList<Transition>();
   	for (State st : getStates()) {
-  			stM.addState(st.clone(stM));
+  			State newState = st.clone(notClonedTransitions,newSTM);
+  			newSTM.addState(newState);
 		}
-  	for (Transition transition : getAllTransitions()) {
-  		State FromState = stM.findState(transition.getFromState().getName(),false);
-			State NextState = stM.findState(transition.getNextState().getName(),false);
-			transition.clone(FromState, NextState);
-  	}  	  		
-  	return  stM;
+  	
+  	//create transitions that their destinations were not available.
+  	for(Iterator<Transition> iternator = notClonedTransitions.iterator(); iternator.hasNext();){
+  		Transition transition = iternator.next();
+  		State fromState = newSTM.findState(transition.getFromState().getName(),true);
+  		State nextState = newSTM.findState(transition.getNextState().getName(),true);
+ 			if (fromState!=null  && nextState!=null ){
+ 				transition.clone(fromState, nextState);
+ 				iternator.remove();
+ 			}
+  	}
+  	return  newSTM;
   }	
-	
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------   
+ 	 /**
+    * @author Vahdat
+    * @param inTransitions the list of transitions that couldn't be cloned because their either source or destination have not been duplicated yet.
+    * @param parentState the state which includes this state machines as its nested state machines.
+    * @return returns a new state machines
+    * Please maintain this method if you're going to add new features to state machines.
+    * This code manually creates a clone of a state machine.
+    * This method must be called through states which have a nested state machines.
+    * 
+    */   
+  public StateMachine clone(List<Transition> inTransitions, State parentState){
+  	StateMachine newSTM = new StateMachine(getName());
+  	newSTM.setParentState(parentState);
+  	
+    //duplicate states of the system 
+  	for (State st : getStates()) {
+  			State newState = st.clone(inTransitions,newSTM);
+  			newSTM.addState(newState);
+		}
+  	return newSTM;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------   	
 	public Event getEventByMethod(Method inMethod) {
 	  if (inMethod == null)
     {
@@ -725,25 +760,39 @@ class StateMachine{
 //************************************NEW CLASS****************************************
 //*************************************************************************************  
 class State{
-//Please maintain this method if you're going to add new features to states.
-	//This code manually creates a clone of a state.
-	State clone(StateMachine inStateMachine){
-    State st = new State(getName(), inStateMachine);
-  	st.setFinalState(getFinalState());
-  	st.setIsDeepHistoryState(getIsDeepHistoryState());
-  	st.setIsHistoryState(getIsHistoryState());
-  	st.setIsInternal(getIsInternal());
-  	st.setIsStartState(getIsStartState());
-  	st.setIsVisited(getIsVisited());
-  	st.setPosition(getPosition());
+	/**
+	 * @author Vahdat
+	 * Please maintain this method if you're going to add new features to states.
+	 * This code manually creates a clone of a state.
+	 *  This method clones the state and also return the list of transitions that their destinations are not available yet in the duplicated state machine.
+	 */	
+	State clone(List<Transition> inTransitions, StateMachine inStateMachine){
+    State newState = new State(getName(), inStateMachine);
+    newState.setFinalState(getFinalState());
+    newState.setIsDeepHistoryState(getIsDeepHistoryState());
+    newState.setIsHistoryState(getIsHistoryState());
+    newState.setIsInternal(getIsInternal());
+    newState.setIsStartState(getIsStartState());
+    newState.setIsVisited(getIsVisited());
+    newState.setPosition(getPosition());
+  
   	for (int i = 0; i < getNestedStateMachines().size(); i++) {
-			StateMachine stMTemp = nestedStateMachines.get(i).clone();
-			st.addNestedStateMachine(stMTemp);
+			StateMachine newSTM = nestedStateMachines.get(i).clone(inTransitions,newState);
+			newState.addNestedStateMachine(newSTM);
 		}
   	for (Action action : actions) {
-			st.addAction(action.clone());
+  		newState.addAction(action.clone());
 		}
-  	return st;
+  	for (Transition transition : getTransitions()){
+  		State fromState = inStateMachine.findState(transition.getFromState().getName(),true);
+			State nextState = inStateMachine.findState(transition.getNextState().getName(),true);
+			if (fromState!=null && nextState!=null ){
+				transition.clone(fromState, nextState);
+			} else{
+				inTransitions.add(transition);
+			}		
+  	}
+  	return newState;
   }
 }
 
