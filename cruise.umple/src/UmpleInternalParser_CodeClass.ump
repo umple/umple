@@ -1355,7 +1355,7 @@ class UmpleInternalParser
     {
       for (Method aMethod : parentInterface.getMethods())
       {
-        boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
+        boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod, true);
         if (!(uClass.hasImplementedMethodIncludingWithinParentClasses(aMethod))
         && !(uClass.hasMethodInTraits(aMethod)) && !(uClass.isIsAbstract()) && shouldAddMethod)
         {
@@ -1375,7 +1375,7 @@ class UmpleInternalParser
    * 
    * @return True if the method is a constructor, getter/setter, false otherwise.
    */
-  private boolean verifyIfMethodIsConstructorOrGetSet(UmpleClass uClass, Method aMethod)
+  private boolean verifyIfMethodIsConstructorOrGetSet(UmpleClass uClass, Method aMethod, boolean checkingInInterface)
   {
     String methodName = aMethod.getName();
 
@@ -1390,7 +1390,9 @@ class UmpleInternalParser
         Attribute attr = uClass.getAttribute(possibleAttributeName);
         if (attr != null && !"internal".equals(attr.getModifier()))
         {
-          getParseResult().addErrorMessage(new ErrorMessage(1009, aMethod.getPosition(), methodName, attr.getName()));	
+          if(!checkingInInterface) {
+            getParseResult().addErrorMessage(new ErrorMessage(1009, aMethod.getPosition(), methodName, attr.getName(),uClass.getName()));
+          }
           return false;
         }
       }
@@ -2237,7 +2239,7 @@ class UmpleInternalParser
       UmpleClass uClass = (UmpleClass) uElement;
       
       // Add Getter/Setter/Constructor to Class
-      boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
+      boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod, false);
      
       //Issue 559
       if(uClass.hasMethod(aMethod))
