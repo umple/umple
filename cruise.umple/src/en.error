@@ -165,7 +165,7 @@
 1006: 3, "http://cruise.eecs.uottawa.ca/umple/W1006StateMachineNotParsed.html", State machine syntax could not be processed. It has been considered as Extra Code ;
 1007: 3, "http://cruise.eecs.uottawa.ca/umple/W1007ElementNotParsed.html", Attribute or Association syntax could not be processed. It has been considered as Extra Code ;
 1008: 3, "http://cruise.eecs.uottawa.ca/umple/W1008MethodNotParsed.html", Method syntax could not be processed. It has been considered as Extra Code ;
-1009: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Method '{0}' has a name conflict with automatic generated getter/setter methods for attribute '{1}'. The user definition is being disconsidered. Please use a different name ;
+1009: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Method '{0}' has a name conflict with automatic generated getter/setter methods for attribute '{1}' in class '{2}'. Please use a different method name ;
 1010: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Constraint syntax, {0}, could not be processed. It has been considered as Extra Code ;
 1011: 3, "http://cruise.eecs.uottawa.ca/umple/W1011InvalidAssociationClassKey.html", AssociationClass '{0}' missing needed '{1}' key, provided {2} ;
 1012: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Method '{0}' cannot be found. Injection was ignored. ;
