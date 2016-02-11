@@ -52,8 +52,8 @@
         }
         Position p = action.getPosition();
         if (p != null) {
-          entryActions.append("\n        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"");
-          entryFileNames.add(p.getRelativePath(sm.getUmpleClass(), "Java").replace("\\","/").replaceAll(".*/",""));
+          entryActions.append("\n        // line " + p.getLineNumber() + " \"" + ParserUtil.getRelativePath(p,sm.getUmpleClass(), "Java") + "\"");
+          entryFileNames.add(ParserUtil.getRelativePath(p,sm.getUmpleClass(), "Java").replace("\\","/").replaceAll(".*/",""));
           entryUmpleLineNumbers.add(p.getLineNumber());
           entryJavaLineNumbers.add(entryJavaLine-1);
           entryLengths.add(action.getActionCode().split("\\n").length);
@@ -124,9 +124,9 @@
         }
         Position p = action.getPosition();
         if (p != null) {
-          exitActions.append("\n        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"");
+          exitActions.append("\n        // line " + p.getLineNumber() + " \"" + ParserUtil.getRelativePath(p,sm.getUmpleClass(), "Java") + "\"");
           addUncaughtExceptionVariables(gen.translate("exitMethod",sm),
-                                        p.getRelativePath(sm.getUmpleClass(), "Java").replace("\\","/").replaceAll(".*/",""),
+                                        ParserUtil.getRelativePath(p,sm.getUmpleClass(), "Java").replace("\\","/").replaceAll(".*/",""),
                                         p.getLineNumber(),
                                         exitJavaLine-1,
                                         action.getActionCode().split("\\n").length);

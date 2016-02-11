@@ -1,0 +1,197 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.util;
+
+/*
+This class consists of exclusively static methods that operate on or returns
+Parser-related data with respect to the Umple Project.  
+*/
+class ParserUtil{
+  depend java.io.*;
+  depend java.nio.file.*;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.compiler.*;
+
+  /*
+  Counts the number of occurrences of the character <code>needle</code> in the 
+  supplied string <code>haystack</code>.
+  
+  @param haystack the string to search for
+  @param needle the character to find
+  @return the number of occurrences of that character
+  */
+  private static int countOccurrences(String haystack, char needle)
+  {
+    int count = 0;
+    for (int i = 0; i < haystack.length(); ++i)
+    {
+      if (haystack.charAt(i) == needle)
+      {
+        ++count;
+      }
+    }
+    return count;
+  }
+  
+  
+  /*
+  Replaces all instances of '\' with '/' in path strings
+  
+  @param str a string path tochange
+  @return the new string
+  */
+  private static String deWindowsify(String str)
+  {
+    return str.replace('\\','/');
+  }
+  
+  /*
+  Obtains the relative path between a parser <code>Position</code> and 
+  an <code>UmpleClass</code> for a specific generator language.
+  
+  This version of getRelativePath is complete, but uses the java.nio library, requiring Java 7.
+  It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
+  As a result, it has been replaced by the placeholder above, that simply returns the full path.
+  
+  @param position The position element
+  @param parent The parent UmpleClass object
+  @param language The language target to compare
+  
+  @return The string relative path between the parent and position
+  */
+  public static String getRelativePath(Position position, UmpleClass parent, String language)
+  {
+    String filename = position.getFilename();
+    
+    if (filename == null)
+    {
+      return "";
+    }
+    if (parent == null)
+    { //No parent class? This might happen with state machines
+      return Paths.get(filename).getFileName().toString();
+    }
+    
+    //Find path relative to namespace folders
+    String packageName = parent.getPackageName();
+    if (packageName == null || packageName.equals(""))
+    { //No package, file is output in current directory
+      return Paths.get(filename).getFileName().toString();
+    } 
+    else
+    { //Has a package, add appropriate number of ..
+      // Count occurrences of '.' in package name
+      int pathCount = countOccurrences(packageName, '.') + 1;
+      StringBuilder build = new StringBuilder();
+      for (int i = 0; i < pathCount; i++)
+      {
+        build.append("../");
+      }
+      
+      //Add on relative path from generator location
+      if (parent.getSourceModel() == null)
+      {
+        build.append(Paths.get(filename).getFileName());
+        return deWindowsify(build.toString());
+      }
+      Path currentPath = Paths.get(parent.getSourceModel().getUmpleFile().getPath()).toAbsolutePath();
+      Path generatesPath = null;
+      GenerateTarget [] generates = parent.getSourceModel().getGenerates();
+      for (int i = 0; i < generates.length; i++)
+      {
+        if (generates[i].getLanguage().equals(language))
+        {
+          generatesPath = currentPath.resolve(Paths.get(generates[i].getPath())).normalize();
+        }
+      }
+      if (generatesPath != null)
+      {
+      	Path result = generatesPath.relativize(currentPath);
+      	if (!result.equals(Paths.get("")))
+      	{
+      	  result = result.normalize();
+      	  build.append(result.toString() + '/');
+      	}
+      }
+      
+      build.append(Paths.get(filename).getFileName());
+      return deWindowsify(build.toString());
+    }
+  }
+
+  /*
+  Obtains the relative path between a parser <code>Position</code> and 
+  an <code>UmpleTrait</code> for a specific generator language.
+  
+  @param position The position element
+  @param parent The parent UmpleTrait object
+  @param language The language target to compare
+  
+  @return The string relative path between the parent and position
+  */
+  public static String getRelativePath(Position position, UmpleTrait parent, String language)
+  {
+    String filename = position.getFilename();
+	
+    if (filename == null)
+    {
+      return "";
+    }
+    if (parent == null)
+    { //No parent class? This might happen with state machines
+      return Paths.get(filename).getFileName().toString();
+    }
+    
+    //Find path relative to namespace folders
+    String packageName = parent.getPackageName();
+    if (packageName == null || packageName.equals(""))
+    { //No package, file is output in current directory
+      return Paths.get(filename).getFileName().toString();
+    } 
+    else
+    { //Has a package, add appropriate number of ..
+      int pathCount = countOccurrences(packageName, '.') + 1;
+      StringBuilder build = new StringBuilder();
+      for (int i = 0; i < pathCount; i++)
+      {
+        build.append("../");
+      }
+      
+      //Add on relative path from generator location
+      if (parent.getSourceModel() == null)
+      {
+        build.append(Paths.get(filename).getFileName());
+        return deWindowsify(build.toString());
+      }
+      Path currentPath = Paths.get(parent.getSourceModel().getUmpleFile().getPath()).toAbsolutePath();
+      Path generatesPath = null;
+      GenerateTarget [] generates = parent.getSourceModel().getGenerates();
+      for (int i = 0; i < generates.length; i++)
+      {
+        if (generates[i].getLanguage().equals(language))
+        {
+          generatesPath = currentPath.resolve(Paths.get(generates[i].getPath())).normalize();
+        }
+      }
+      if (generatesPath != null)
+      {
+      	Path result = generatesPath.relativize(currentPath);
+      	if (!result.equals(Paths.get("")))
+      	{
+      	  result = result.normalize();
+      	  build.append(result.toString() + '/');
+      	}
+      }
+      
+      build.append(Paths.get(filename).getFileName());
+      return deWindowsify(build.toString());
+    }
+  }
+}

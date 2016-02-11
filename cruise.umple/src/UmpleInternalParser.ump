@@ -82,3 +82,4 @@ use Umple.ump;
 use UmpleDiagram.ump;
 use StateMachine.ump;
 use UmpleInternalParser_Code.ump;
+use ParserUtil.ump;

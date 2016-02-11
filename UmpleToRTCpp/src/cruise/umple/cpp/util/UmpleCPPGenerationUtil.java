@@ -30,6 +30,7 @@ import cruise.umple.compiler.Position;
 import cruise.umple.compiler.UmpleClass;
 import cruise.umple.compiler.UmpleElement;
 import cruise.umple.compiler.UmpleModel;
+import cruise.umple.util.ParserUtil;
 
 public class UmpleCPPGenerationUtil {
 
@@ -71,7 +72,7 @@ public class UmpleCPPGenerationUtil {
 		    stringBuffer.append("// line "); //$NON-NLS-1$
 		    stringBuffer.append( p.getLineNumber() );
 		    stringBuffer.append(" \""); //$NON-NLS-1$
-		    stringBuffer.append( p.getRelativePath(umpleClass, language) );
+		    stringBuffer.append( ParserUtil.getRelativePath(p,umpleClass, language) );
 		    stringBuffer.append("\""); //$NON-NLS-1$
 		    positions.add(stringBuffer.toString());
 		}

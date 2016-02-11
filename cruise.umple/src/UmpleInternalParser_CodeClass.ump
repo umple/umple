@@ -841,7 +841,7 @@ class UmpleInternalParser
     // Add special position comment at the end if @outputumplesource had been 
     // detected earlier in a comment
     if(outputUmpleSource == true) {  
-      aClass.addComment(new Comment("@umplesource " + thePosition.getRelativePath((UmpleClass)null,"Java")+" "+thePosition.getLineNumber()));
+      aClass.addComment(new Comment("@umplesource " + ParserUtil.getRelativePath(thePosition,(UmpleClass)null,"Java")+" "+thePosition.getLineNumber()));
     }
 
   // If the "abstract" keyword is parsed, make the Umple class an abstract class.
@@ -3569,8 +3569,9 @@ class UmpleInternalParser
       }
 
       CodeBlock cb = new CodeBlock();
-      String rubyComment = ("# line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
-      String otherComment = ("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      String suffix = exception.getPosition().getLineNumber() + " " + ParserUtil.getRelativePath(exception.getPosition(), aClass, "Java");
+      String rubyComment = "# line " + suffix;
+      String otherComment = "// line " + suffix;
 
       cb.setCode(otherComment);
       cb.setCode("Ruby", rubyComment);
@@ -3595,7 +3596,7 @@ class UmpleInternalParser
         }
       }
       extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
-      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + ParserUtil.getRelativePath( exception.getPosition(),aClass, "Java"));
       aClass.appendExtraCode("  "+extraCode+"\n");
       setFailedPosition(sub.getPosition(), 1006, sub.getValue("name"));
     }
@@ -3610,7 +3611,7 @@ class UmpleInternalParser
         }
       }
       extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
-      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + ParserUtil.getRelativePath( exception.getPosition(),aClass, "Java"));
       aClass.appendExtraCode("  "+extraCode+"\n");
       setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
     }
@@ -3730,14 +3731,14 @@ class UmpleInternalParser
     //Append #line comment to indicate line and position of source
     if (token.getPosition() != null)
     {
-      String extraCodeLineNumberComment = " line " + token.getPosition().getLineNumber() + " " + token.getPosition().getRelativePath(aClass, "Java");
-	  String rubyComment = "#" + extraCodeLineNumberComment;
-	  String otherComment = "//" + extraCodeLineNumberComment;
- 	  if(aClass.hasExtraCode())
-	  {
-	    rubyComment = System.getProperty("line.separator") + rubyComment;
-	    otherComment = System.getProperty("line.separator") + otherComment;
-	  }
+      String extraCodeLineNumberComment = " line " + token.getPosition().getLineNumber() + " " + ParserUtil.getRelativePath(token.getPosition(), aClass, "Java");
+      String rubyComment = "#" + extraCodeLineNumberComment;
+      String otherComment = "//" + extraCodeLineNumberComment;
+      if(aClass.hasExtraCode())
+      {
+        rubyComment = System.getProperty("line.separator") + rubyComment;
+        otherComment = System.getProperty("line.separator") + otherComment;
+      }
       CodeBlock cb = new CodeBlock();
       cb.setCode(otherComment);
       cb.setCode("Ruby", rubyComment);
