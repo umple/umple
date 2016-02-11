@@ -4,9 +4,9 @@ clone_depth: 5
 
 cache:
 
-- '%HOME%\.ivy2'                -> appveyor.yml
-- '%HOME%\.ant'                 -> appveyor.yml
-- C:\tools\php                  -> appveyor.yml
+- C:\Users\appveyor\.ant -> appveyor.yml
+- C:\Users\appveyor\.ivy2 -> appveyor.yml
+- C:\tools\php -> appveyor.yml
 - C:\ProgramData\chocolatey\bin -> appveyor.yml
 - C:\ProgramData\chocolatey\lib -> appveyor.yml
 
