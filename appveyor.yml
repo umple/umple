@@ -6,7 +6,7 @@ cache:
 
 - %HOME%\.ivy2
 - %HOME%\.m2
-- %HOME%\.ant\lib\'
+- %HOME%\.ant\lib\
 - %APPVEYOR_BUILD_FOLDER%\dist\libs
 - C:\tools\php
 - C:\ProgramData\chocolatey\lib\ant
