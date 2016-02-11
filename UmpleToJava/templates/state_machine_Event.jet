@@ -79,7 +79,7 @@
         if (!"if ()\n{".equals(condition))
         {
             addUncaughtExceptionVariables(gen.translate("eventMethod",e),
-                                        t.getGuard().getPosition().getRelativePath(sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
+                                        ParserUtil.getRelativePath(t.getGuard().getPosition(),sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
                                         t.getGuard().getPosition().getLineNumber(),
                                         javaLine-1,
                                         condition.split("\\n").length-1);
@@ -98,11 +98,11 @@
           Position p = a1.getPosition();
           if (p != null) {
             addUncaughtExceptionVariables(gen.translate("eventMethod",e),
-                                        p.getRelativePath(sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
+                                        ParserUtil.getRelativePath(p,sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
                                         p.getLineNumber(),
                                         javaLine-2,
                                         a1.getActionCode().split("\\n").length);
-            allCases.append("        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"\n");
+            allCases.append("        // line " + p.getLineNumber() + " \"" + ParserUtil.getRelativePath(p,sm.getUmpleClass(), "Java") + "\"\n");
             javaLine++;
           }
           allCases.append(StringFormatter.format("{0}{1}\n",tabSpace,a1.getActionCode()));
