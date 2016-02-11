@@ -191,6 +191,8 @@
       <pathelement location="${umple.stable.jar}"/>
     </path>
 
+    <echo>umple.stable.jar=${umple.stable.jar}</echo>
+
     <taskdef name="umplec" classname="cruise.umple.util.UmplecAntTask" classpathref="umple.last.classpath" />
   </target>
 

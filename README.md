@@ -1,6 +1,6 @@
 #Umple Modelling Language
 
-[![Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple)
+[![Unix Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple) [![Windows Build status](https://ci.appveyor.com/api/projects/status/uwvrjpm6uis69es2/branch/master?svg=true)](https://ci.appveyor.com/project/Nava2/umple/branch/master)
 
 ##Introduction
 
@@ -25,7 +25,7 @@ More details can be found as follows
   * Live diagram of the metamodel: http://metamodel.umple.org
   * Architecture: http://architecture.umple.org
 
-Umple is continuously tested and build at the University of Ottawa using CruiseControl; see http://cc.umple.org . It is also built on Travis CI (https://travis-ci.org/).
+Umple is continuously tested and build at the University of Ottawa using CruiseControl; see http://cc.umple.org . It is also built on Travis CI (https://travis-ci.org/) and Appveyor (https://appveyor.com/).
  
 ###Project setup
 

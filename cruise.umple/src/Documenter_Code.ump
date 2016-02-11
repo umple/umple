@@ -20,7 +20,8 @@ class DocumenterMain
      
     if (args.length < 2)
     {
-      println("Usage: java -jar umpledocs.jar <data_dir> <output_dir>\nExample: java -jar umple-docs.jar docs output");
+      println("Usage: java -jar umpledocs.jar <data_dir> <output_dir>" + System.lineSeparator() 
+              + "Example: java -jar umple-docs.jar docs output");
       return;
     }
      
@@ -41,7 +42,7 @@ class DocumenterMain
    
   private static void println(String output)
   {
-    console += output + "\n";
+    console += output + System.lineSeparator();
     System.out.println(output);
   }
 }

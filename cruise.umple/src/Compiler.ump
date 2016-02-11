@@ -116,7 +116,7 @@ class CodeCompiler {
 
   private static void println(String output)
   {
-    console += output + "\n";
+    console += output + System.lineSeparator();
     System.out.println(output);
   }
 

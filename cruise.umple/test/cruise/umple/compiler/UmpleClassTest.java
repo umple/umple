@@ -30,6 +30,8 @@ public class UmpleClassTest
   public void tearDown()
   {
     umpleClass = null;
+
+    SampleFileWriter.destroy("umpleClassTest.ump");
   }
   
   @Test

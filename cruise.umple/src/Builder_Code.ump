@@ -7,6 +7,9 @@ class Command
 {
   depend  java.util.regex.*;  
   depend  java.lang.reflect.*;
+
+  const String NL = System.lineSeparator();
+
   String[] history;
   String[] messages;
   String[] attributes;
@@ -192,6 +195,8 @@ class Builder {
   depend org.apache.tools.ant.*;
   depend java.util.*;
   depend java.util.stream.*;
+
+  const String NL = System.lineSeparator();
   
   public URL compile(String directory, String jarname, String projectName, String javaTarget)
   {
@@ -243,7 +248,7 @@ class Builder {
   {
     // build string parameters:
 
-    final String exec = "ant" + (System.getProperty("os.name").toLowerCase().contains("windows") ? ".bat" : "");
+    final String exec = "ant";
     final String buildFilePath = (new File(buildFilename)).getAbsolutePath();
     String optionStr = "";
     if (options != null) {
@@ -274,17 +279,19 @@ class Builder {
           
           String line;
           while ((line = out.readLine()) != null) {
-            outSB.append(line + "\n");
+            outSB.append(line);
+            outSB.append(NL);
           }
 
           final StringBuilder errSB = new StringBuilder();
           while ((line = err.readLine()) != null) {
-            errSB.append(line + "\n");
+            errSB.append(line);
+            errSB.append(NL);
           }
 
           System.out.println("== Ant Task failed ==");
-          System.out.println("System.out => \n" + outSB);
-          System.err.println("System.err => \n" + errSB);
+          System.out.println("System.out => " + NL + outSB);
+          System.err.println("System.err => " + NL + errSB);
         }
         
       return false;
@@ -315,22 +322,22 @@ class Builder {
   {
     
     String antScript = "" +
-      "<project name=\"runtime-compiler\" default=\"go\" basedir=\".\">\n" +
-      "  <target name=\"clean\">\n" +
-      "    <delete file=\""+ jarname +"\" failonerror=\"false\" />\n" +
-      "    <delete failonerror=\"false\">\n" +
-      "        <fileset dir=\".\" includes=\"**/*.class\"/>\n" +
-      "      </delete>\n" +
-      "  </target>\n" +
-      "  <target name=\"compile\">\n" +
-      "    <javac debug=\"true\" debuglevel=\"source,lines,vars\" includeAntRuntime=\"false\" destdir=\".\" srcdir=\".\" target=\""+ javaTarget +"\">\n" +
-      "      <exclude name=\"**/.svn\"/>\n" +
-      "    </javac>\n" +
-      "  </target>\n" +
-      "  <target name=\"jar\">\n" +
-      "    <jar destfile=\""+ jarname +"\" basedir=\".\" excludes=\"**/.svn\" />\n" +
-      "  </target>\n" +
-      "  <target name=\"go\" depends=\"clean,compile,jar\" /> \n" +       
+      "<project name=\"runtime-compiler\" default=\"go\" basedir=\".\">" + NL +
+      "  <target name=\"clean\">" + NL +
+      "    <delete file=\""+ jarname +"\" failonerror=\"false\" />" + NL +
+      "    <delete failonerror=\"false\">" + NL +
+      "        <fileset dir=\".\" includes=\"**/*.class\"/>" + NL +
+      "      </delete>" + NL +
+      "  </target>" + NL +
+      "  <target name=\"compile\">" + NL +
+      "    <javac debug=\"true\" debuglevel=\"source,lines,vars\" includeAntRuntime=\"false\" destdir=\".\" srcdir=\".\" target=\""+ javaTarget +"\">" + NL +
+      "      <exclude name=\"**/.svn\"/>" + NL +
+      "    </javac>" + NL +
+      "  </target>" + NL +
+      "  <target name=\"jar\">" + NL +
+      "    <jar destfile=\""+ jarname +"\" basedir=\".\" excludes=\"**/.svn\" />" + NL +
+      "  </target>" + NL +
+      "  <target name=\"go\" depends=\"clean,compile,jar\" />" + NL +       
       "</project>";
     
     try {
