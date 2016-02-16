@@ -12799,8 +12799,13 @@ if (p != null) {
         String methodName = aMethod.getName();
         String methodType = aMethod.getType();
         String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));        
+
+        String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()));        
+
         String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
         customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
+
+        String customAfterInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", aMethod.getName()));        
         
         String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
         String properMethodBody = "    " + methodBody; 
@@ -12865,7 +12870,7 @@ if (p != null) {
           }
         }
         String methodExceptions = methodExceptionsBuilder.toString();
-
+      
         if(!"".equals(customPostconditionCode))
         {
           StringBuilder lineNumbers = new StringBuilder();
@@ -12931,18 +12936,42 @@ if (p != null) {
           appendln(stringBuffer, "{");
           for( TraceItem traceItem : traceItems )append(stringBuffer, (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, aMethod,"me_e", uClass):""));
           if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
+          if (customBeforeInjectionCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customBeforeInjectionCode, "    "));}
           
           addUncaughtExceptionVariables(methodName,p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline,stringBuffer.toString().split("\\n").length+1-javaline);
           String traceCode = "";
           if(properMethodBody.contains("return"))
           {
-          for( TraceItem traceItem : traceItems )traceCode += (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):"");
-            properMethodBody = properMethodBody.replaceAll("return", traceCode + "return");
+            for( TraceItem traceItem : traceItems )traceCode += (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):"");
+              properMethodBody = properMethodBody.replaceAll("return", traceCode + "return");
+
+            if (customAfterInjectionCode != null) { 
+              // inject the after injection code after every return, while appropriate indentation
+              String[] lines = customAfterInjectionCode.split("\\n", 2);
+              for(int i = -1; (i = properMethodBody.indexOf("return", i + 1)) != -1; ) {
+                // determine the indentation of the return
+                String indent = "";   
+                while(i >= 1 && properMethodBody.charAt(--i) == ' ') {
+                  indent += " ";
+                }
+                i += indent.length() + 1;
+                String indentedCustomAfterInjectionCode = lines[0] + GeneratorHelper.doIndent("\n" + lines[1] + "\n", indent); 
+                properMethodBody = properMethodBody.substring(0, i) + indentedCustomAfterInjectionCode + properMethodBody.substring(i);
+                i += indentedCustomAfterInjectionCode.length();
+              }
+
+              // if the last line isn't a return, insert the injection at the very end
+              lines = properMethodBody.split("\\n");
+              if(!lines[lines.length-1].contains("return")) {
+                properMethodBody += GeneratorHelper.doIndent("\n" + customAfterInjectionCode, "    ");
+              }
+            }
           }
           appendln(stringBuffer, properMethodBody);
           if(!properMethodBody.contains("return"))
           {
             for( TraceItem traceItem : traceItems )append(stringBuffer, (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):""));
+            if (customAfterInjectionCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customAfterInjectionCode, "    "));}
           }
           appendln(stringBuffer, "  }");
         }
