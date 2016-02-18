@@ -386,29 +386,52 @@ class Position
     return cruise.umple.util.StringFormatter.format("[{0},{1}]", getLineNumber(), getCharacterOffset());
   }
 
-  private int countChars(String str, char c)
+  /*
+  Counts the number of occurrences of the character <code>needle</code> in the 
+  supplied string <code>haystack</code>.
+  
+  @param haystack the string to search for
+  @param needle the character to find
+  @return the number of occurrences of that character
+  */
+  private static int countOccurrences(String haystack, char needle)
   {
     int count = 0;
-    for (int i = 0; i < str.length(); i++)
+    for (int i = 0; i < haystack.length(); ++i)
     {
-      if (str.charAt(i) == c)
+      if (haystack.charAt(i) == needle)
       {
-        count= count + 1;
+        ++count;
       }
     }
     return count;
   }
   
-  private String deWindowsify(String str)
+  
+  /*
+  Replaces all instances of '\' with '/' in path strings
+  
+  @param str a string path tochange
+  @return the new string
+  */
+  private static String deWindowsify(String str)
   {
     return str.replace('\\','/');
   }
-
-  //This version of getRelativePath is complete, but uses the java.nio library, requiring Java 7.
-  //It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
-  //As a result, it has been replaced by the placeholder above, that simply returns the full path.
-  public String getRelativePath(UmpleClass parent, String language)
+  
+  /*
+  Obtains the relative path between a parser <code>Position</code> and 
+  an <code>UmpleClassifier</code> for a specific generator language.
+    
+  @param parent The parent UmpleClassifier object
+  @param language The language target to compare
+  
+  @return The string relative path between the parent and position
+  */
+  public String getRelativePath( UmpleClassifier parent, String language)
   {
+    String filename = getFilename();
+    
     if (filename == null)
     {
       return "";
@@ -426,7 +449,8 @@ class Position
     } 
     else
     { //Has a package, add appropriate number of ..
-      int pathCount = countChars(packageName, '.') + 1;
+      // Count occurrences of '.' in package name
+      int pathCount = countOccurrences(packageName, '.') + 1;
       StringBuilder build = new StringBuilder();
       for (int i = 0; i < pathCount; i++)
       {
@@ -1968,4 +1992,3 @@ class ErrorTypeSingleton
     return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "");
   }
 }
-use Parser_Code_Trait.ump;

@@ -74,7 +74,7 @@ class UmpleModel
     UmpleInterface newInterface = getUmpleInterface(name);
     if (newInterface == null)
     {
-      newInterface = new UmpleInterface(name);
+      newInterface = new UmpleInterface(name, this);
       addUmpleInterface(newInterface);
     }
     return newInterface;
