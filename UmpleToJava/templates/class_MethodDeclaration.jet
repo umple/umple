@@ -171,23 +171,63 @@
             for( TraceItem traceItem : traceItems )traceCode += (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):"");
               properMethodBody = properMethodBody.replaceAll("return", traceCode + "return");
 
-            if (customAfterInjectionCode != null) {
+            if(customAfterInjectionCode != null) {
               // inject the after injection code after every return, while appropriate indentation
-              String[] lines = customAfterInjectionCode.split("\\n", 2);
               for(int i = -1; (i = properMethodBody.indexOf("return", i + 1)) != -1; ) {
                 // determine the indentation of the return
                 String indent = "";
                 while(i >= 1 && properMethodBody.charAt(--i) == ' ') {
                   indent += " ";
                 }
-                i += indent.length() + 1;
-                String indentedCustomAfterInjectionCode = lines[0] + GeneratorHelper.doIndent("\n" + lines[1] + "\n", indent);
-                properMethodBody = properMethodBody.substring(0, i) + indentedCustomAfterInjectionCode + properMethodBody.substring(i);
-                i += indentedCustomAfterInjectionCode.length();
+
+                // Need to determine if block has braces surrounding it. To do this, take the previous
+                // lines of code and apply some regex to remove all of the comments.
+                String[] previousLinesOfCode = properMethodBody.substring(0, i+1).replaceAll("\\/\\*([\\S\\s]+?)\\*\\/", "").replaceAll("(?s)/\\*.*?\\*/", "").replaceAll("//.*$", "").split("\\n");
+            
+                // set previousLine to be the first non-empty line
+                int previousLine = -1; 
+                for(int j = previousLinesOfCode.length - 1; j >= 0; j--) {
+                  if(previousLinesOfCode[j].trim().length() > 0) {
+                    previousLine = j;
+                    break;
+                  }
+                }
+              
+                // If we need to, insert braces, otherwise continue as normal
+                String indentedCustomAfterInjectionCode = GeneratorHelper.doIndent("\n" + customAfterInjectionCode, indent);
+                String braceIndent = "";
+                String brace = "";
+                if(previousLine != -1 && previousLinesOfCode[previousLine].charAt(previousLinesOfCode[previousLine].length()-1) != ')') {
+                  String[] methodLines = properMethodBody.split("\\n");
+                  // determine how indented the brace is
+                  int j = 0;
+                  while(j < methodLines[previousLine].length() && methodLines[previousLine].charAt(j) == ' ') {
+                    braceIndent += " ";
+                    j++;
+                  }
+                  methodLines[previousLine] = braceIndent + methodLines[previousLine].trim() + " {"; 
+
+                  // Set properMethodBody to be String.join(methodLines, "\\n")
+                  String newProperMethodBody = "";
+                  for(int k = 0; k < methodLines.length; k++) {
+                    newProperMethodBody += methodLines[k];
+                    if(k != methodLines.length - 1) {
+                      newProperMethodBody += "\n";
+                    }
+                  }
+                  properMethodBody = newProperMethodBody;
+
+                  brace = "}";
+                }
+
+                i += indent.length() + 2;
+                System.out.println(properMethodBody);
+                properMethodBody = properMethodBody.substring(0, i) + indentedCustomAfterInjectionCode + "\n" + indent + properMethodBody.substring(i) + "\n" + braceIndent + brace; 
+                i += indentedCustomAfterInjectionCode.length() + braceIndent.length() + 3;
               }
 
               // if the last line isn't a return, insert the injection at the very end
-              lines = properMethodBody.split("\\n");
+              String[] lines = properMethodBody.split("\\n");
               if(!lines[lines.length-1].contains("return")) {
                 properMethodBody += GeneratorHelper.doIndent("\n" + customAfterInjectionCode, "    ");
               }
