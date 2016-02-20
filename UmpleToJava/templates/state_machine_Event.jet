@@ -105,7 +105,7 @@
             if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
             
             addUncaughtExceptionVariables(gen.translate("eventMethod",e),
-                                        sm_temp.getUmpleClass().getRelativePath(t.getGuard().getPosition(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
+                                        sm_temp.getUmpleClass().getRelativePath(p,"Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
                                         p.getLineNumber(),
                                         javaLine-2,
                                         a1.getActionCode().split("\\n").length);
