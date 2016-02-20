@@ -1171,12 +1171,8 @@ class UmpleClassifier{
   
   
   /*
-  Obtains the relative path between a parser <code>Position</code> and 
-  an <code>UmpleClass</code> for a specific generator language.
-  
-  This version of getRelativePath is complete, but uses the java.nio library, requiring Java 7.
-  It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
-  As a result, it has been replaced by the placeholder above, that simply returns the full path.
+  Obtains the relative path between the source file for the UmpleClassifier and 
+  and the package name given the target language
   
   @param language The language target to compare
   

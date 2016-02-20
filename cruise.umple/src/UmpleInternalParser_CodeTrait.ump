@@ -86,13 +86,13 @@ class UmpleInternalParser
     // Add special position comment at the end if @outputumplesource had been 
     // detected earlier in a comment
     if(outputUmpleSource == true) {  
-//      String path = null;
-//      if( thePosition.getFilename() == null ){
-//        path = "";
-//      }else{
-//        path = Paths.get(thePosition.getFilename()).getFileName().toString();
-//      }
-//      aTrait.addComment(new Comment("@umplesource " + path + " "+thePosition.getLineNumber()));
+      String path = null;
+      if( thePosition.getFilename() == null ){
+        path = "";
+      }else{
+        path = Paths.get(thePosition.getFilename()).getFileName().toString();
+      }
+      aTrait.addComment(new Comment("@umplesource " + path + " "+thePosition.getLineNumber()));
     }
     
   	// If the "abstract" keyword is parsed, make the Umple trait an abstract trait.
