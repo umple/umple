@@ -471,6 +471,7 @@ class UmpleClassifier
   * -> * Depend;
   
   UmpleModel sourceModel;
+  String sourceFilename = "";
 
   // The constants contained within the Umple Classifier.
   1 -> 0..* Constant;

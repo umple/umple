@@ -79,6 +79,18 @@ class UmpleModel
     }
     return newInterface;
   }
+  
+  public UmpleInterface addUmpleInterface(String name, String sourceFilename )
+  {
+    UmpleInterface newInterface = getUmpleInterface(name);
+    if (newInterface == null)
+    {
+      newInterface = new UmpleInterface(name, this);
+      newInterface.setSourceFilename(sourceFilename);
+      addUmpleInterface(newInterface);
+    }
+    return newInterface;
+  }
 
   public UmpleClass addUmpleClass(String name)
   {
@@ -87,6 +99,18 @@ class UmpleModel
     {
       newClass = new UmpleClass(name, this);
       addUmpleClass(newClass);
+    }
+    return newClass;
+  }
+  
+  public UmpleClass addUmpleClass(String name, String sourceFilename)
+  {
+    UmpleClass newClass = getUmpleClass(name);
+    if (newClass == null)
+    {
+       newClass = new UmpleClass(name, this);
+       newClass.setSourceFilename(sourceFilename);
+       addUmpleClass(newClass);
     }
     return newClass;
   }
@@ -1112,7 +1136,7 @@ class UmpleClassifier{
   depend java.nio.file.*;
   depend cruise.umple.compiler.*;
 	
-	 /*
+	/*
   Counts the number of occurrences of the character <code>needle</code> in the 
   supplied string <code>haystack</code>.
   
@@ -1154,24 +1178,20 @@ class UmpleClassifier{
   It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
   As a result, it has been replaced by the placeholder above, that simply returns the full path.
   
-  @param position The position element
-  @param parent The parent UmpleClass object
   @param language The language target to compare
   
   @return The string relative path between the parent and position
   */
-  public String getRelativePath(Position position, String language)
+  public String getRelativePath(String language)
   {
-    String filename = position.getFilename();
-	
+    String filename = getSourceFilename();
+    
+    String p = getPackageName();
+ 	
     if (filename == null)
     {
       return "";
     }
-//    if (parent == null)
-//    { //No parent class? This might happen with state machines
-//      return Paths.get(filename).getFileName().toString();
-//    }
     
     //Find path relative to namespace folders
     String packageName = getPackageName();

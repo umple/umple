@@ -71,7 +71,7 @@ public class UmpleCPPGenerationUtil {
 		    stringBuffer.append("// line "); //$NON-NLS-1$
 		    stringBuffer.append( p.getLineNumber() );
 		    stringBuffer.append(" \""); //$NON-NLS-1$
-		    stringBuffer.append( umpleClass.getRelativePath(p, language) );
+		    stringBuffer.append( umpleClass.getRelativePath(language) );
 		    stringBuffer.append("\""); //$NON-NLS-1$
 		    positions.add(stringBuffer.toString());
 		}

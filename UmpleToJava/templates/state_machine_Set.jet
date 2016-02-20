@@ -55,8 +55,8 @@
           StateMachine sm_temp=sm;
           if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
           
-          entryActions.append("\n        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath(p, "Java") + "\"");
-          entryFileNames.add(sm_temp.getUmpleClass().getRelativePath(p, "Java").replace("\\","/").replaceAll(".*/",""));
+          entryActions.append("\n        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath("Java") + "\"");
+          entryFileNames.add(sm_temp.getUmpleClass().getRelativePath("Java").replace("\\","/").replaceAll(".*/",""));
           entryUmpleLineNumbers.add(p.getLineNumber());
           entryJavaLineNumbers.add(entryJavaLine-1);
           entryLengths.add(action.getActionCode().split("\\n").length);
@@ -130,9 +130,9 @@
           StateMachine sm_temp=sm;
           if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
           
-          exitActions.append("\n        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath(p, "Java") + "\"");
+          exitActions.append("\n        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath("Java") + "\"");
           addUncaughtExceptionVariables(gen.translate("exitMethod",sm),
-                                        sm_temp.getUmpleClass().getRelativePath(p, "Java").replace("\\","/").replaceAll(".*/",""),
+                                        sm_temp.getUmpleClass().getRelativePath("Java").replace("\\","/").replaceAll(".*/",""),
                                         p.getLineNumber(),
                                         exitJavaLine-1,
                                         action.getActionCode().split("\\n").length);

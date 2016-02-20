@@ -2742,7 +2742,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_5);
     stringBuffer.append( p.getLineNumber() );
     stringBuffer.append(TEXT_6);
-    stringBuffer.append( uClass.getRelativePath(p, "Java") );
+    stringBuffer.append( uClass.getRelativePath("Java") );
     stringBuffer.append(TEXT_7);
      } 
     stringBuffer.append(TEXT_8);
@@ -5375,7 +5375,7 @@ for (StateMachine smq : uClass.getStateMachines())
           if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
           
           addUncaughtExceptionVariables(gen.translate("eventMethod",e),
-                                      sm_temp.getUmpleClass().getRelativePath(t.getGuard().getPosition(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
+                                      sm_temp.getUmpleClass().getRelativePath("Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
                                       t.getGuard().getPosition().getLineNumber(),
                                       javaLine-1,
                                       condition.split("\\n").length-1);
@@ -5398,11 +5398,11 @@ for (StateMachine smq : uClass.getStateMachines())
             if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
             
             addUncaughtExceptionVariables(gen.translate("eventMethod",e),
-                                        sm_temp.getUmpleClass().getRelativePath(p,"Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
+                                        sm_temp.getUmpleClass().getRelativePath("Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
                                         p.getLineNumber(),
                                         javaLine-2,
                                         a1.getActionCode().split("\\n").length);
-            allCases.append("        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath(p, "Java") + "\"\n");
+            allCases.append("        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath("Java") + "\"\n");
             javaLine++;
           }
           allCases.append(StringFormatter.format("{0}{1}\n",tabSpace,a1.getActionCode()));
@@ -5677,8 +5677,8 @@ for (StateMachine smq : uClass.getStateMachines())
           StateMachine sm_temp=sm;
           if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
           
-          entryActions.append("\n        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath(p, "Java") + "\"");
-          entryFileNames.add(sm_temp.getUmpleClass().getRelativePath(p, "Java").replace("\\","/").replaceAll(".*/",""));
+          entryActions.append("\n        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath("Java") + "\"");
+          entryFileNames.add(sm_temp.getUmpleClass().getRelativePath("Java").replace("\\","/").replaceAll(".*/",""));
           entryUmpleLineNumbers.add(p.getLineNumber());
           entryJavaLineNumbers.add(entryJavaLine-1);
           entryLengths.add(action.getActionCode().split("\\n").length);
@@ -5752,9 +5752,9 @@ for (StateMachine smq : uClass.getStateMachines())
           StateMachine sm_temp=sm;
           if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
           
-          exitActions.append("\n        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath(p, "Java") + "\"");
+          exitActions.append("\n        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath("Java") + "\"");
           addUncaughtExceptionVariables(gen.translate("exitMethod",sm),
-                                        sm_temp.getUmpleClass().getRelativePath(p, "Java").replace("\\","/").replaceAll(".*/",""),
+                                        sm_temp.getUmpleClass().getRelativePath("Java").replace("\\","/").replaceAll(".*/",""),
                                         p.getLineNumber(),
                                         exitJavaLine-1,
                                         action.getActionCode().split("\\n").length);
@@ -12799,7 +12799,7 @@ if (p != null) {
         
         if (p != null) {
 //        use annotations instead
-        positionHeader = "  // line " + p.getLineNumber() + " \"" + uClass.getRelativePath(p, "Java") + "\"\n";
+        positionHeader = "  // line " + p.getLineNumber() + " \"" + uClass.getRelativePath("Java") + "\"\n";
 //        positionHeader = "\n  @umplesourcefile(line={"+p.getLineNumber()+"},file={\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+(javaline+4)+"},length={"+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length+2)+"})";          
         }
         else 
