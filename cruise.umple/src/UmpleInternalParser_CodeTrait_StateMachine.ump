@@ -340,6 +340,8 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
 	private StateMachine mergeTwoStateMachineWithTheSameNameDifferentInitialState(StateMachine inSMachine1, StateMachine inSMachine2) {
   	StateMachine newStateMachine = new StateMachine(inSMachine1.getName());
+    newStateMachine.setUmpleTrait(inSMachine1.getUmpleTrait());
+   	newStateMachine.setUmpleClass(inSMachine1.getUmpleClass());
     if (inSMachine1.getParentState()==null)
     	{
     	newStateMachine.addState(inSMachine1.getName());
