@@ -19,13 +19,14 @@ public class ClassGenerator
   public static final String TEXT_2 = " " + NL + "  ";
   public static final String TEXT_3 = NL + "    package ";
   public static final String TEXT_4 = ";" + NL + "    ";
-  public static final String TEXT_5 = "import ";
-  public static final String TEXT_6 = ";" + NL + "               ";
-  public static final String TEXT_7 = NL + "    class ";
-  public static final String TEXT_8 = " {" + NL + "        ";
-  public static final String TEXT_9 = NL + "        //TODO" + NL + "  ";
-  public static final String TEXT_10 = "      " + NL + "    }" + NL + "  ";
-  public static final String TEXT_11 = " " + NL + "  ";
+  public static final String TEXT_5 = "";
+  public static final String TEXT_6 = NL + "    import ";
+  public static final String TEXT_7 = ";";
+  public static final String TEXT_8 = NL + "    class ";
+  public static final String TEXT_9 = " {" + NL + "        ";
+  public static final String TEXT_10 = NL + "        //TODO" + NL + "  ";
+  public static final String TEXT_11 = "      " + NL + "    }" + NL + "  ";
+  public static final String TEXT_12 = " " + NL + "  ";
 
   //------------------------
   // MEMBER VARIABLES
@@ -83,20 +84,19 @@ public class ClassGenerator
     realSb.append(TEXT_3);
     realSb.append(path);
     realSb.append(TEXT_4);
-    
-          for(String _import:listOfImports){
-               
     realSb.append(TEXT_5);
-    realSb.append(_import);
+     for(String _import:listOfImports){
     realSb.append(TEXT_6);
+    realSb.append(_import);
+    realSb.append(TEXT_7);
      
           }
-    realSb.append(TEXT_7);
-    realSb.append(className);
     realSb.append(TEXT_8);
+    realSb.append(className);
     realSb.append(TEXT_9);
     realSb.append(TEXT_10);
     realSb.append(TEXT_11);
+    realSb.append(TEXT_12);
 
     if(numSpaces > 0) {
         newCode.replace(0, newCode.length(), Pattern.compile(NL).matcher(newCode).replaceAll(NL + spaces));
@@ -168,9 +168,9 @@ public class ClassGenerator
       e.setStackTrace(result.toArray(new StackTraceElement[0]));
     }
   //The following methods Map Java lines back to their original Umple file / line    
-    public UmpleSourceData ClassGenerator__createSpacesString(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(32).setJavaLines(61).setLengths(2);}
-    public UmpleSourceData ClassGenerator_main(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(35).setJavaLines(48).setLengths(3);}
-    public UmpleSourceData ClassGenerator__emitResults(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(32).setJavaLines(70).setLengths(2);}
+    public UmpleSourceData ClassGenerator__createSpacesString(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(32).setJavaLines(62).setLengths(2);}
+    public UmpleSourceData ClassGenerator_main(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(35).setJavaLines(49).setLengths(3);}
+    public UmpleSourceData ClassGenerator__emitResults(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(32).setJavaLines(71).setLengths(2);}
     public UmpleSourceData ClassGenerator_emitResults(){ return new UmpleSourceData().setFileNames("test.ump").setUmpleLines(32).setJavaLines(108).setLengths(2);}
 
   }

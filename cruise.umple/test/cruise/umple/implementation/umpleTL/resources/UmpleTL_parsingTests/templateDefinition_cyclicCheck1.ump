@@ -24,7 +24,7 @@ class C {
   !>>
 
   attribute2 <<! 
-  <<@ B.attribute1 >> 
+  <<@ B.attribute2 >> 
 
   !>>
 

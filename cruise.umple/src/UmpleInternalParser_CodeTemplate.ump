@@ -94,6 +94,7 @@ class TemplateAttributeParser {
 	depend java.io.IOException;
 	
 	UmpleInternalParser parser;
+	String className;
 	String templateName;	
 	Token rootToken;
 	0..1 -- * TemplateElement elements;
@@ -141,16 +142,22 @@ class TemplateAttributeParser {
 	  elements.clear();
       emisionContent = new EmitResponse();
 	  int tokenIdx = 0;
+	  TemplateElement lastElement = null;
 	  for(Token token:rootToken.getSubTokens()){	    
 		if(token.is(TEMPLATE_EXPRESSION))
 		{
-		  addElement(analyzeExpression(token));
+		  lastElement= analyzeExpression(token);
+		  addElement(lastElement);
 		  tokenIdx++;
 		} 
 		else if(token.is(TEMPLATE_CODEBLOCK))
 		{
 		  CodeBlockElement element = new CodeBlockElement(token.getPosition(), "");
-		  
+		  if(lastElement != null && !(lastElement instanceof CodeBlockElement)) {
+		  		String text = lastElement.getContent();
+		  		text = Utils.trimTemplateBlockEndNewLine(text);
+		  		lastElement.setContent(text);
+		  }
 		  for(Token subToken: token.getSubTokens())
 		  {
 		    if(subToken.is("templateLanguageCode"))
@@ -162,6 +169,7 @@ class TemplateAttributeParser {
 		      element.addSubElement(analyzeExpression(subToken));
 		    }
 		  }
+		  lastElement= element;
 		  addElement(element);
 		  tokenIdx++;
 		}
@@ -169,26 +177,36 @@ class TemplateAttributeParser {
 		{
 			Token templateRefToken = token.getSubToken(TEMPLATE_INCLUDE).getSubToken("templateName");
 			if(templateRefToken != null) {
-				String classname = templateRefToken.getValue("classname");
-				String key = templateRefToken.getValue("name");
-				TemplateName refTemplateName = new TemplateName(key,classname);
-				String refTemplateFullName = key;
-				if(classname != null && classname.length() > 0) {
-					refTemplateFullName = classname + "." + refTemplateFullName;
+			    String className = getClassName();
+				String key = templateName;
+				String refClassname = templateRefToken.getValue("classname");
+				if(refClassname == null || refClassname.length() ==0) {
+					refClassname = getClassName();
 				}
-				if(templateName.equals(refTemplateFullName)) {
+				String refKey = templateRefToken.getValue("name");
+				TemplateName refTemplateName = new TemplateName(refKey,refClassname);
+				String refTemplateFullName = refKey;
+				if(refClassname != null && refClassname.length() > 0) {
+					refTemplateFullName = refClassname + "." + refTemplateFullName;
+				}
+				String templateFullName = key;
+				if(className != null && className.length() > 0) {
+					templateFullName = className + "." + templateFullName;
+				}
+				if(templateFullName.equals(refTemplateFullName)) {
 					parser.getParseResult().setPosition(templateRefToken.getPosition());
 					parser.getParseResult().addErrorMessage(new ErrorMessage(3503,templateRefToken.getPosition(),templateName));
 				} else {
-					addElement(new IncludeTemplateElement(token.getPosition(), "", refTemplateName));
+				    lastElement= new IncludeTemplateElement(token.getPosition(), "", refTemplateName);
+					addElement(lastElement);
 				}
-				
 			}
 			tokenIdx++;
 		} 
 		else if(token.is(TEMPLATE_COMMENT)) 
 		{
-		  addElement(new CommentElement(token.getPosition(), token.getSubToken(TEMPLATE_COMMENT).getValue("templateCommentContent")));
+		  lastElement= new CommentElement(token.getPosition(), token.getSubToken(TEMPLATE_COMMENT).getValue("templateCommentContent")); 
+		  addElement(lastElement);
 		  tokenIdx++;
 		} 
 		else if(token.is(TEMPLATE_TEXT)) 
@@ -197,20 +215,20 @@ class TemplateAttributeParser {
 		  if(!"".equals(text)){
 		    /*if(tokenIdx == 0) {
 		    	text = Utils.trimTemplateBlockBeginigNewLine(text);
-		    }*/
+		    }
 		    if(numberOfElements() > 0) {
 		  		TemplateElement lastElement = getElement(numberOfElements() - 1);
 		  		if(lastElement instanceof CodeBlockElement) {
 		  			text = Utils.trimTemplateBlockBeginigNewLine(text);		  		
 		  		}
-		  	}
-		    addElement(new TextElement(token.getPosition(),text));
+		  	}*/
+		  	lastElement= new TextElement(token.getPosition(),text);
+		    addElement(lastElement);
 		    tokenIdx++;
 		  }
 		}
 	  }
 	  if(numberOfElements() > 0) {
-		  TemplateElement lastElement = getElement(numberOfElements() - 1);
 		  if(lastElement instanceof TextElement) {
 			  String text = lastElement.getContent();
 			  //text = Utils.trimTemplateBlockEndNewLine(text);
@@ -336,7 +354,12 @@ class TemplateTokenAnalyzer {
     {
       if(token!=null)
       {        
-        TemplateName templateName = new TemplateName(token.getValue("name"),token.getValue("classname"));
+        String classname = token.getValue("classname");
+		String key = token.getValue("name");
+		if(classname == null || classname.length() ==0) {
+			classname = currentTemplate.getName();
+		}
+        TemplateName templateName = new TemplateName(key,classname);
         
         if(!Token.isValidIdentifier(templateName.getName())) {
 			parser.getParseResult().setPosition(token.getPosition());
@@ -372,7 +395,7 @@ class TemplateTokenAnalyzer {
 			parser.getParseResult().addErrorMessage(new ErrorMessage(3506,nameToken.getPosition(),currentTemplate.getName(),templateName));
 	  	}
 	  	templateAttributes.put(templateName, true);
-		TemplateAttributeParser emitter = new TemplateAttributeParser(parser, templateName, templateContent);
+		TemplateAttributeParser emitter = new TemplateAttributeParser(parser, currentTemplate.getName(), templateName, templateContent);
 		for(String parameter: templateNameObject.getParameters())
 		{
 		  emitter.addParameterName(parameter);			  		  
@@ -608,6 +631,7 @@ class TemplateTokenAnalyzer {
 						ret = recursiveIncludeTemplateElementCycleCheck(referenceTemplate, refValue, map);
 						if(!ret)
 							break;
+						map.remove(key);
 					}
 				}
 			}

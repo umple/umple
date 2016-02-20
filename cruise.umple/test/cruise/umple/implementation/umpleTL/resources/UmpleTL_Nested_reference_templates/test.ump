@@ -1,9 +1,9 @@
 class ClassGenerator {
   
-  imports <<!<<#
-          for(String _import:listOfImports){
-               #>>import <<=_import>>;
-               <<# 
+  imports <<!
+    <<# for(String _import:listOfImports){#>>
+    import <<=_import>>;
+        <<# 
           }#>>!>>
             
             
