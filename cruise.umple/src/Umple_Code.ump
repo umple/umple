@@ -74,7 +74,19 @@ class UmpleModel
     UmpleInterface newInterface = getUmpleInterface(name);
     if (newInterface == null)
     {
-      newInterface = new UmpleInterface(name);
+      newInterface = new UmpleInterface(name, this);
+      addUmpleInterface(newInterface);
+    }
+    return newInterface;
+  }
+  
+  public UmpleInterface addUmpleInterface(String name, String sourceFilename )
+  {
+    UmpleInterface newInterface = getUmpleInterface(name);
+    if (newInterface == null)
+    {
+      newInterface = new UmpleInterface(name, this);
+      newInterface.setSourceFilename(sourceFilename);
       addUmpleInterface(newInterface);
     }
     return newInterface;
@@ -87,6 +99,18 @@ class UmpleModel
     {
       newClass = new UmpleClass(name, this);
       addUmpleClass(newClass);
+    }
+    return newClass;
+  }
+  
+  public UmpleClass addUmpleClass(String name, String sourceFilename)
+  {
+    UmpleClass newClass = getUmpleClass(name);
+    if (newClass == null)
+    {
+       newClass = new UmpleClass(name, this);
+       newClass.setSourceFilename(sourceFilename);
+       addUmpleClass(newClass);
     }
     return newClass;
   }
@@ -1105,6 +1129,111 @@ class AssociationClass
       setKey(key);
     }
   }
+}
+
+class UmpleClassifier{
+  
+  depend java.nio.file.*;
+  depend cruise.umple.compiler.*;
+	
+	/*
+  Counts the number of occurrences of the character <code>needle</code> in the 
+  supplied string <code>haystack</code>.
+  
+  @param haystack the string to search for
+  @param needle the character to find
+  @return the number of occurrences of that character
+  */
+  private static int countOccurrences(String haystack, char needle)
+  {
+    int count = 0;
+    for (int i = 0; i < haystack.length(); ++i)
+    {
+      if (haystack.charAt(i) == needle)
+      {
+        ++count;
+      }
+    }
+    return count;
+  }
+  
+  
+  /*
+  Replaces all instances of '\' with '/' in path strings
+  
+  @param str a string path to change
+  @return the new string
+  */
+  private static String deWindowsify(String str)
+  {
+    return str.replace('\\','/');
+  }
+  
+  
+  /*
+  Obtains the relative path between the source file for the UmpleClassifier and 
+  and the package name given the target language
+  
+  @param language The language target to compare
+  
+  @return The string relative path between the parent and position
+  */
+  public String getRelativePath(String language)
+  {
+    String filename = getSourceFilename();
+    
+    String p = getPackageName();
+ 	
+    if (filename == null)
+    {
+      return "";
+    }
+    
+    //Find path relative to namespace folders
+    String packageName = getPackageName();
+    if (packageName == null || packageName.equals(""))
+    { //No package, file is output in current directory
+      return Paths.get(filename).getFileName().toString();
+    } 
+    else
+    { //Has a package, add appropriate number of ..
+      int pathCount = countOccurrences(packageName, '.') + 1;
+      StringBuilder build = new StringBuilder();
+      for (int i = 0; i < pathCount; i++)
+      {
+        build.append("../");
+      }
+      
+      //Add on relative path from generator location
+      if (getSourceModel() == null)
+      {
+        build.append(Paths.get(filename).getFileName());
+        return deWindowsify(build.toString());
+      }
+      Path currentPath = Paths.get(getSourceModel().getUmpleFile().getPath()).toAbsolutePath();
+      Path generatesPath = null;
+      GenerateTarget [] generates = getSourceModel().getGenerates();
+      for (int i = 0; i < generates.length; i++)
+      {
+        if (generates[i].getLanguage().equals(language))
+        {
+          generatesPath = currentPath.resolve(Paths.get(generates[i].getPath())).normalize();
+        }
+      }
+      if (generatesPath != null)
+      {
+      	Path result = generatesPath.relativize(currentPath);
+      	if (!result.equals(Paths.get("")))
+      	{
+      	  result = result.normalize();
+      	  build.append(result.toString() + '/');
+      	}
+      }
+      
+      build.append(Paths.get(filename).getFileName());
+      return deWindowsify(build.toString());
+    }
+  }  
 }
 
 /*

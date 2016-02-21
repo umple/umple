@@ -13,6 +13,7 @@ import org.junit.*;
 
 public class UmpleInterfaceTest
 {
+  UmpleModel model;
   private UmpleInterface umpleClassInterface;
   private UmpleClass umpleClass;
   
@@ -20,6 +21,7 @@ public class UmpleInterfaceTest
   @Before
   public void setUp() throws Exception
   {
+    model = new UmpleModel(null);
 	  createInterface();
 	  createClass();
   }
@@ -32,7 +34,7 @@ public class UmpleInterfaceTest
 
   private void createInterface()
   {
-	umpleClassInterface = new UmpleInterface("Lion");
+	umpleClassInterface = new UmpleInterface("Lion", model);
 	// Creating a Method
 	Method aMethod = new Method("","getLion","Lion",false);
 	aMethod.setMethodBody(new MethodBody("return null"));
@@ -108,7 +110,7 @@ public class UmpleInterfaceTest
   @Test
   public void addSingleExtends()
   {
-    UmpleInterface booking = new UmpleInterface("Booking");
+    UmpleInterface booking = new UmpleInterface("Booking", model);
     umpleClassInterface.addExtendsInterface(booking);
     Assert.assertEquals("Booking", umpleClassInterface.getExtendsInterface(0).getName());
   }
@@ -116,8 +118,8 @@ public class UmpleInterfaceTest
   @Test
   public void addMultipleExtends()
   {
-	  UmpleInterface booking = new UmpleInterface("Booking");
-	  UmpleInterface price = new UmpleInterface("Price");
+	  UmpleInterface booking = new UmpleInterface("Booking", model);
+	  UmpleInterface price = new UmpleInterface("Price", model);
 	  umpleClassInterface.addExtendsInterface(booking);
 	  umpleClassInterface.addExtendsInterface(price);
 	  Assert.assertEquals("Booking", umpleClassInterface.getExtendsInterface(0).getName());

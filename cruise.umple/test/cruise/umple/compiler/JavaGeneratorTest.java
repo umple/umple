@@ -1146,7 +1146,7 @@ public class JavaGeneratorTest
   @Test
   public void isA_implements()
   {
-    UmpleInterface parent = new UmpleInterface("Parent");
+    UmpleInterface parent = new UmpleInterface("Parent", model);
     model.addUmpleInterface(parent);
     UmpleClass child = model.addUmpleClass("Child");
     child.addParentInterface(parent);
@@ -1185,7 +1185,7 @@ public class JavaGeneratorTest
   @Test
   public void getLanguageFor()
   {
-    UmpleInterface aInterface = new UmpleInterface("Student");
+    UmpleInterface aInterface = new UmpleInterface("Student", model);
     Assert.assertEquals(JavaInterfaceGenerator.class,generator.getLanguageFor(aInterface).getClass());
   }
   

@@ -416,6 +416,11 @@ class UmpleInternalParser
     }
 
     StateMachine sm = new StateMachine(name);
+    if (uClassifier instanceof UmpleTrait){
+      sm.setUmpleTrait((UmpleTrait)uClassifier);
+    } else if (uClassifier instanceof UmpleClass){
+      sm.setUmpleClass((UmpleClass)uClassifier);
+    }
     //------------
     boolean wasSet = true;
     if (uClassifier instanceof UmpleClass) {
@@ -520,6 +525,11 @@ class UmpleInternalParser
 	    else
 	    {
 	      sm = new StateMachine(name);
+        if (uClassifier instanceof UmpleTrait){
+          sm.setUmpleTrait((UmpleTrait)uClassifier);
+        } else if (uClassifier instanceof UmpleClass){
+          sm.setUmpleClass((UmpleClass)uClassifier);
+        }
 	      stateMachineNameToToken.put(name,stateMachineToken);
 	    }
     }

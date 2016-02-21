@@ -26,6 +26,18 @@ class UmpleModel {
     }
     return newTrait;
   }
+  
+  public UmpleTrait addUmpleTrait(String name, String sourceFilename)
+  {
+    UmpleTrait newTrait = getUmpleTrait(name);
+    if (newTrait == null)
+    {
+      newTrait = new UmpleTrait(name, this);
+      newTrait.setSourceFilename(sourceFilename);
+      addUmpleTrait(newTrait);
+    }
+    return newTrait;
+  }
 }
 //---------------------------------------------------------------------------------------------
 //------------------------------------class end------------------------------------------------

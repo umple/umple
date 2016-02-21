@@ -1468,7 +1468,7 @@ public class RubyGeneratorTest
 
   {
 
-	UmpleInterface aInterface = new UmpleInterface("IStudent");
+	UmpleInterface aInterface = new UmpleInterface("IStudent", model);
 
     Assert.assertEquals(RubyInterfaceGenerator.class,generator.getLanguageFor(aInterface).getClass());
 

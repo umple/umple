@@ -812,7 +812,7 @@ class UmpleInternalParser
     if(classToken.is("associationClassDefinition")){
         aClass = model.addAssociationClass(classToken.getValue("name"));
     }else{
-        aClass = model.addUmpleClass(classToken.getValue("name"));
+        aClass = model.addUmpleClass(classToken.getValue("name"),classToken.getPosition().getFilename());
     }
     if ( classToken.is("classDefinition") && "external".equals(aClass.getModifier()) )
       aClass.setModifier(""); // Remove the external modifier if a non-external specification of this class is found.
@@ -841,7 +841,13 @@ class UmpleInternalParser
     // Add special position comment at the end if @outputumplesource had been 
     // detected earlier in a comment
     if(outputUmpleSource == true) {  
-      aClass.addComment(new Comment("@umplesource " + thePosition.getRelativePath((UmpleClass)null,"Java")+" "+thePosition.getLineNumber()));
+      String path = null;
+      if( thePosition.getFilename() == null ){
+        path = "";
+      }else{
+        path = Paths.get(thePosition.getFilename()).getFileName().toString();
+      }
+      aClass.addComment(new Comment("@umplesource " + path +" "+thePosition.getLineNumber()));
     }
 
   // If the "abstract" keyword is parsed, make the Umple class an abstract class.
@@ -988,7 +994,8 @@ class UmpleInternalParser
       setFailedPosition(t.getPosition(), 111, interfaceName);
     }
   
-    UmpleInterface newInterface = new UmpleInterface(t.getValue("name"));
+    UmpleInterface newInterface = new UmpleInterface(t.getValue("name"),model);
+    newInterface.setSourceFilename(t.getPosition().getFilename());
     model.addUmpleInterface(newInterface);
     if(!"".equals(newInterface.getPackageName()) && !currentPackageName.equals(newInterface.getPackageName()) && !packageNameUsed){
       setFailedPosition(t.getPosition(), 30, newInterface.getName(), currentPackageName);
@@ -1152,7 +1159,7 @@ class UmpleInternalParser
       if (!isATrait && !isAClass && !isAInterface && !isTraitTypeParameter) //item referenced not a class or interface or a trait or a type parameter
       {
       	//TODO traits' error
-        UmpleClass aClass = model.addUmpleClass(e.getValue());
+        UmpleClass aClass = model.addUmpleClass(e.getValue(), e.getKey().getFilename());
         aClass.setPackageName(model.getDefaultNamespace());
         setFailedPosition(e.getKey(), 5, e.getValue());
         return false;
@@ -3569,8 +3576,8 @@ class UmpleInternalParser
       }
 
       CodeBlock cb = new CodeBlock();
-      String rubyComment = ("# line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
-      String otherComment = ("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      String rubyComment = ("# line " + exception.getPosition().getLineNumber() + " " + aClass.getRelativePath("Java"));
+      String otherComment = ("// line " + exception.getPosition().getLineNumber() + " " + aClass.getRelativePath("Java"));
 
       cb.setCode(otherComment);
       cb.setCode("Ruby", rubyComment);
@@ -3595,7 +3602,7 @@ class UmpleInternalParser
         }
       }
       extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
-      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + aClass.getRelativePath("Java"));
       aClass.appendExtraCode("  "+extraCode+"\n");
       setFailedPosition(sub.getPosition(), 1006, sub.getValue("name"));
     }
@@ -3610,7 +3617,7 @@ class UmpleInternalParser
         }
       }
       extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
-      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + aClass.getRelativePath("Java"));
       aClass.appendExtraCode("  "+extraCode+"\n");
       setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
     }
@@ -3676,8 +3683,8 @@ class UmpleInternalParser
       }
 
       CodeBlock cb = new CodeBlock();
-      //String rubyComment = ("# line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aInterface, "Java"));
-      //String otherComment = ("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aInterface, "Java"));
+      //String rubyComment = ("# line " + exception.getPosition().getLineNumber() + " " + aInterface.getRelativePath("Java"));
+      //String otherComment = ("// line " + exception.getPosition().getLineNumber() + " " + aInterface.getRelativePath("Java"));
 
       //cb.setCode(otherComment);
       //cb.setCode("Ruby", rubyComment);
@@ -3702,7 +3709,7 @@ class UmpleInternalParser
         }
       }
       extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
-      //aInterface.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aInterface, "Java"));
+      //aInterface.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + aInterface.getRelativePath("Java"));
       aInterface.appendExtraCode("  "+extraCode+"\n");
       setFailedPosition(sub.getPosition(), 1006, sub.getValue("name"));
     }
@@ -3717,7 +3724,7 @@ class UmpleInternalParser
         }
       }
       extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
-      //aInterface.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aInterface, "Java"));
+      //aInterface.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + aInterface.getRelativePath("Java"));
       aInterface.appendExtraCode("  "+extraCode+"\n");
       setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
     }
@@ -3730,7 +3737,7 @@ class UmpleInternalParser
     //Append #line comment to indicate line and position of source
     if (token.getPosition() != null)
     {
-      String extraCodeLineNumberComment = " line " + token.getPosition().getLineNumber() + " " + token.getPosition().getRelativePath(aClass, "Java");
+      String extraCodeLineNumberComment = " line " + token.getPosition().getLineNumber() + " " + aClass.getRelativePath("Java");
 	  String rubyComment = "#" + extraCodeLineNumberComment;
 	  String otherComment = "//" + extraCodeLineNumberComment;
  	  if(aClass.hasExtraCode())
