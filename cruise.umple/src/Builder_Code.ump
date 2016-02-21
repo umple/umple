@@ -203,20 +203,18 @@ class Builder {
 
   const String NL = System.lineSeparator();
   const Pattern ANT_EXEC_PATTERN = Pattern.compile("ant" + (System.getProperty("os.name").toLowerCase().contains("windows") ? "(?:\\.(?:bat|exe))?" : ""));
-    
+  
+  const String ANT_EXEC = findAntExec();  
+
   /**
    * Finds the `ant` executable within @link{ProcessBuilder::environment()}. 
    * @return String name of path
    * @throws IllegalStateException if the PATH is empty or `ant` can not be found.
    */
-  private static String findAntExec(final ProcessBuilder pb) {
-    if (pb == null) {
-      throw new NullPointerException("pb == null");
-    }
-
-    final String pathStr = pb.environment().get("PATH");
+  private static String findAntExec() {
+    final String pathStr = System.getenv("PATH");
     if (pathStr == null || pathStr.isEmpty()) {
-      throw new IllegalStateException("ProcessBuilder's PATH variable is empty or null.");
+      throw new IllegalStateException("System's PATH variable is empty or null.");
     }
 
     // Traverse all of the PATH directories, looking for the ANT executable
@@ -303,9 +301,8 @@ class Builder {
     try
     {
       ProcessBuilder pb = new ProcessBuilder();
-      final String antExec = findAntExec(pb);
 
-      List<String> cmd = Arrays.asList(antExec, "-f", buildFilePath, optionStr);
+      List<String> cmd = Arrays.asList(ANT_EXEC, "-f", buildFilePath, optionStr);
       // remove empty parameters
       cmd = cmd.stream().map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
       pb.command(cmd);
