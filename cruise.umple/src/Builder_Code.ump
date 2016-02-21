@@ -59,8 +59,8 @@ class Command
       }
     }
     
-    Matcher newObjectMatch = Pattern.compile("new ([^\\s]*)").matcher(input);
-    Matcher showMatch = Pattern.compile("show ([^\\s]*)").matcher(input);
+    Matcher newObjectMatch = Pattern.compile("new\\s([^\\s]*)").matcher(input);
+    Matcher showMatch = Pattern.compile("show\\s([^\\s]*)").matcher(input);
     Object answer = null;
     if (newObjectMatch.matches())
     {
@@ -191,19 +191,70 @@ class Command
 class Builder {
 
   depend java.io.*;
+  depend java.nio.*;
+  depend java.nio.file.*;
+  depend java.nio.file.attribute.*;
+
   depend java.net.*;
   depend org.apache.tools.ant.*;
   depend java.util.*;
+  depend java.util.regex.*;
   depend java.util.stream.*;
 
   const String NL = System.lineSeparator();
+  const Pattern ANT_EXEC_PATTERN = Pattern.compile("ant" + (System.getProperty("os.name").toLowerCase().contains("windows") ? "(?:\\.(?:bat|exe))?" : ""));
+    
+  /**
+   * Finds the `ant` executable within @link{ProcessBuilder::environment()}. 
+   * @return String name of path
+   * @throws IllegalStateException if the PATH is empty or `ant` can not be found.
+   */
+  private static String findAntExec(final ProcessBuilder pb) {
+    if (pb == null) {
+      throw new NullPointerException("pb == null");
+    }
+
+    final String pathStr = pb.environment().get("PATH");
+    if (pathStr == null || pathStr.isEmpty()) {
+      throw new IllegalStateException("ProcessBuilder's PATH variable is empty or null.");
+    }
+
+    // Traverse all of the PATH directories, looking for the ANT executable
+    List<Path> paths = Arrays.asList(pathStr.split(File.pathSeparator)).stream()
+      .map(File::new)
+      .filter(f -> (f.exists() && f.canRead())) // might be dead path entries :O
+      .map(f -> f.toPath())
+      .map(source -> {
+        PathExecFileVisitor v = new PathExecFileVisitor(source, ANT_EXEC_PATTERN);
+
+        try {
+
+          Files.walkFileTree(source, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, v);
+        } catch (AccessDeniedException ade) {
+          // ignore, v.path() will return Optional::none
+          // This happens if you try to read system32 on windows for example
+        } catch (IOException ioe) { 
+          // this should never happen, but bail out if it does.
+          throw new IllegalStateException(ioe); 
+        }
+        return v.path();
+      })
+      .filter(Optional::isPresent)
+      .map(Optional::get) // flat map it to a list of Path
+      .collect(Collectors.toList()); 
+
+    if (paths.size() > 0) {
+      // we found it.. thank god.
+      return paths.get(0).getFileName().toString();
+    }
+
+    throw new IllegalStateException("Could not find Ant executable on PATH (pattern: " + ANT_EXEC_PATTERN + ")");
+  }
   
-  public URL compile(String directory, String jarname, String projectName, String javaTarget)
-  {
+  public URL compile(String directory, String jarname, String projectName, String javaTarget) {
 
     String buildfile = createAntFile(directory, "build-"+ projectName +".xml", jarname, javaTarget);
-    if (buildfile == null)
-    {
+    if (buildfile == null) {
       return null;
     }
     
@@ -211,44 +262,32 @@ class Builder {
       runAnt(buildfile);
       File jarfile = new File(directory + "//" + jarname) ;
       return jarfile.exists() ? new URL("jar:file:///" + jarfile.getAbsolutePath() + "!/") : null;
-    } 
-    catch (MalformedURLException e) 
-    {
+    } catch (MalformedURLException e) {
       return null;
-    }
-    catch (BuildException e2)
-    {
+    } catch (BuildException e2) {
       return null;
     }
   }
   
-  public void load(String directory, String jarname) 
-  {
+  public void load(String directory, String jarname) {
     try {
       //String jarfile = "jar:file:///" + new File(directory).getAbsolutePath() + "/"+ jarname +"!/";
       DynamicClassPathLoader.addJar(directory, jarname);
-    } 
-    catch (IOException e) 
-    {
+    } catch (IOException e) {
       throw new RuntimeException("Unable to load application jar",e);
     }
   }
   
-  public boolean runAnt(String buildFilename)
-  {
+  public boolean runAnt(String buildFilename) {
     return runAnt(buildFilename, "", Collections.<String, String>emptyMap());
   }
 
-  public boolean runAnt(String buildFilename, final String target)
-    {
+  public boolean runAnt(String buildFilename, final String target) {
     return runAnt(buildFilename, target, Collections.<String, String>emptyMap());
-      }
+  }
 
-  public boolean runAnt(String buildFilename, final String target, final Map<String, String> options)
-  {
+  public boolean runAnt(String buildFilename, final String target, final Map<String, String> options) {
     // build string parameters:
-
-    final String exec = "ant";
     final String buildFilePath = (new File(buildFilename)).getAbsolutePath();
     String optionStr = "";
     if (options != null) {
@@ -259,15 +298,17 @@ class Builder {
       
       optionStr = String.join(" ", optionList);
     }
-    
-    List<String> cmd = Arrays.asList(exec, "-f", buildFilePath, optionStr);
-    // remove empty parameters
-    cmd = cmd.stream().map(String::trim).filter(s -> !"".equals(s)).collect(Collectors.toList());
-    
+
     Process p = null;
     try
     {
-      ProcessBuilder pb = new ProcessBuilder(cmd);
+      ProcessBuilder pb = new ProcessBuilder();
+      final String antExec = findAntExec(pb);
+
+      List<String> cmd = Arrays.asList(antExec, "-f", buildFilePath, optionStr);
+      // remove empty parameters
+      cmd = cmd.stream().map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
+      pb.command(cmd);
       
       p = pb.start();
       p.waitFor();
@@ -353,6 +394,50 @@ class Builder {
     }
   }
   
+  private static class PathExecFileVisitor extends SimpleFileVisitor<Path> {
+
+    final Path source;
+    final Pattern searchPattern;
+
+    private Optional<Path> matched = Optional.empty();
+
+    public PathExecFileVisitor(final Path source, final Pattern searchPattern) {
+      this.source = source;
+      this.searchPattern = searchPattern;
+    }
+
+    /** 
+     * Was the path pattern found
+     * @return `true` if found
+     */
+    public Optional<Path> path() {
+      return matched;
+    }
+
+    @Override 
+    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+      final File fdir = dir.toFile();
+      if (!dir.equals(source) && (!fdir.exists() || !fdir.canRead())) {
+        // Skip all directories, PATH doesn't care about subtrees
+        return FileVisitResult.SKIP_SUBTREE; 
+      }
+
+      return FileVisitResult.CONTINUE;
+    }
+
+    @Override
+    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+       throws IOException
+    {
+      final Matcher m = searchPattern.matcher(file.getFileName().toString());
+      if (m.matches()) {
+        matched = Optional.of(file);
+        return FileVisitResult.TERMINATE;
+      }
+
+      return FileVisitResult.CONTINUE;
+    }
+  }
 }
 
 
