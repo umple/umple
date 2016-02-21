@@ -10,7 +10,7 @@
 
 This is the main project for various Umple subprojects and components.
 
-Umple is a model-oriented programming technology. It allows developers to embed modelling concepts (e.g. associations, state machines), patterns and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP (and can be embedded in or embed these), as well as diagrams, metrics and many other artifacts.
+Umple is a model-oriented programming technology. It allows developers to embed modelling concepts (e.g. UML associations, state machines), patterns and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP (and can be embedded in or embed these), as well as diagrams, metrics and many other artifacts.
 
 The project homepage is located at http://umple.org/
 
