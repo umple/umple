@@ -37,6 +37,9 @@ class USEGenerator
     return typeName;
   }
   
+  
+  indent <<!    !>>
+  
   useAssociationEnd <<!
   <<=ae.getClassName()>>[<<#
   Multiplicity m = ae.getMultiplicity();
@@ -47,8 +50,8 @@ class USEGenerator
   } #>>]!>>
   private emit useAssociationEnd(AssociationEnd ae)(useAssociationEnd);
   
-  wholefile <<!<<# ArrayList<Association> externalAssociations = new ArrayList<Association>(); #>>
-model <<=model.getUmpleFile().getSimpleFileName()>>
+  wholefile <<!<<# ArrayList<Association> externalAssociations = new ArrayList<Association>(); 
+    #>>model <<=model.getUmpleFile().getSimpleFileName()>>
 <<# for(UmpleClass uClass : model.getUmpleClasses()) { #>>
 
 class <<=uClass.getName()>><<# if(uClass.getExtendsClass() != null) { #>><<=uClass.getExtendsClass().getName()>><<# } #>>
@@ -57,7 +60,7 @@ class <<=uClass.getName()>><<# if(uClass.getExtendsClass() != null) { #>><<=uCla
   attributes
 <<# } #>>
 <<# for(Attribute av : uClass.getAttributes()) { #>>
-    <<# if(av.getIsList()) { #>><<=getModel().getGlossary().getPlural(av.getName())>><<# } else { #>><<=getModel().getGlossary().getSingular(av.getName())>><<# } #>> : <<=getUSEType(av)>>
+<<@indent>><<# if(av.getIsList()) { #>><<=getModel().getGlossary().getPlural(av.getName())>><<# } else { #>><<=getModel().getGlossary().getSingular(av.getName())>><<# } #>> : <<=getUSEType(av)>>
 
 <<# } #>>
 <<# for(CodeInjection ci : uClass.getCodeInjections()) { #>>

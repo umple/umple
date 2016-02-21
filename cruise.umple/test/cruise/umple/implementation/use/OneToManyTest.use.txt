@@ -3,25 +3,21 @@ model OneToManyTest
 class Mentor
   attributes
     name : String
-
 end
 
 class Student
   attributes
     number : String
-
 end
 
 class Bank
   attributes
     name : String
-
 end
 
 class BankOfStuff
   attributes
     number : String
-
 end
 
 association Mentor__Student between 
