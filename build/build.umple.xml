@@ -73,13 +73,13 @@
 
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
-    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
     </java>
-    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="cruise.umple.validator/src/Master.ump"/>
     </java>
-    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="cruise.umplificator/src/Master.ump"/>
     </java>
   </target>

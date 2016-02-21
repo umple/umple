@@ -24,16 +24,16 @@ before_install:
 
 env:
   global:
-    - ANT_FIRST='ant -f build.umple.xml -Dmyenv=travis'
-    - ANT_BUILD='ant -f build.umple.xml -Dmyenv=travis -Dfirst.build=false'
-    - ANT_TESTBED='ant -f build.testbed.xml -Dmyenv=travis -Dfirst.build=false'
+    - ANT_FIRST='ant -f build.umple.xml'
+    - ANT_BUILD='ant -f build.umple.xml -Dfirst.build=false'
+    - ANT_TESTBED='ant -f build.testbed.xml -Dfirst.build=false'
 
 script:
   - php --version ; ruby -v
   - cd build/
-  - ant -Dmyenv=travis bootstrap
+  - ant bootstrap
   # We resolve all of the dependencies before, this way the command will be unlikely to time out
-  - ant -Dmyenv=travis deps-resolve-all
+  - ant deps-resolve-all
 
   # Do a modified version of `first-build`
   - $ANT_FIRST clean init codegen rtcpp template.setVersion resetUmpleSelf
