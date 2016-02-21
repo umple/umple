@@ -70,7 +70,7 @@ class EcoreGenericNode {
     }
     if(getNodeChildCount()==0){#>> /><<#
     }else{
-    #>><<=Xmltagend>>
+    #>><<=Xmltagend>><<@cr>>
 <<#    for(EcoreGenericNode node : getNodeChildren()){
     #>><<=node.getCode()>><<#
     }for(int i=0; i<<<=intent>>; i++)
@@ -78,7 +78,7 @@ class EcoreGenericNode {
     #>><<=Xmltagstart>>/<<=tagName>><<=Xmltagend>><<#}#>>
 !>>
 
-  emit getCode()(code, cr);
+  emit getCode()(code);
 }
 
 class EcorePackage {
