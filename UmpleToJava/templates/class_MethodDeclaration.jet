@@ -201,10 +201,12 @@
 
               properMethodBody = fixedProperMethodBody;
 
-              System.out.println(properMethodBody);
-              System.out.println("!!!!!!!!!");
-              
-
+              String properMethodIndent = "";
+              int indentIndex = 0;
+              while(indentIndex < properMethodBody.length() && properMethodBody.charAt(indentIndex) == ' ') {
+                properMethodIndent += " ";
+                indentIndex++;
+              }
 
               // inject the after injection code after every return, while appropriate indentation
               for(int i = -1; (i = properMethodBody.indexOf("return", i + 1)) != -1; ) {
@@ -236,15 +238,11 @@
                 }
               
                 // If we need to, insert braces, otherwise continue as normal
-                String[] afterInjectionLines = customAfterInjectionCode.split("\\n", 2);
-                String indentedCustomAfterInjectionCode = afterInjectionLines[0] + GeneratorHelper.doIndent("\n" + afterInjectionLines[1], indent);
+                String indentedCustomAfterInjectionCode = GeneratorHelper.doIndent("\n" + customAfterInjectionCode, indent);
                 String braceIndent = "";
                 String brace = "";
                 String braceNewLine = "";
                 if(previousLine != -1 && (previousLineStr.charAt(previousLineStr.length()-1) == ')' || previousLineStr.substring(previousLineStr.length()-4).equals("else"))) {
-                  System.out.println("TRUE");
-                  System.out.println(previousLineStr);
-
                   String[] methodLines = properMethodBody.split("\\n");
                   previousLine += commentLineCount;
 
@@ -272,14 +270,9 @@
                 }
 
                 i += indent.length() + 1;
-                System.out.println("A I: " + i);
-                System.out.println(properMethodBody.substring(i));
-                System.out.println(properMethodBody);
                 String[] returnAndRest = properMethodBody.substring(i).split(";", 2);
-                properMethodBody = properMethodBody.substring(0, i) + indentedCustomAfterInjectionCode + "\n" + indent + returnAndRest[0].trim() + ";" + braceNewLine + braceIndent + brace + returnAndRest[1]; 
+                properMethodBody = properMethodIndent + properMethodBody.substring(0, i).trim() + indentedCustomAfterInjectionCode + "\n" + indent + returnAndRest[0].trim() + ";" + braceNewLine + braceIndent + brace + returnAndRest[1]; 
                 i += indentedCustomAfterInjectionCode.length() + braceIndent.length() + 7;
-                System.out.println("NEW I: " + i);
-                System.out.println(properMethodBody.substring(i));
               }
 
               // if the last line isn't a return, insert the injection at the very end
