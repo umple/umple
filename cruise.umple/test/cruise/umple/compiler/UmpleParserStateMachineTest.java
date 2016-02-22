@@ -2637,9 +2637,10 @@ public class UmpleParserStateMachineTest
     UmpleFile file = new UmpleFile(pathToInput, filename);
     model = new UmpleModel(new UmpleFile(pathToInput, filename));
     model.setShouldGenerate(false);
-    RuleBasedParser rbp = new RuleBasedParser(model);
+    RuleBasedParser rbp = new RuleBasedParser();
     parser = new UmpleInternalParser(umpleParserName, model, rbp);
     ParseResult answer = rbp.parse(file);
+    model.extractAnalyzersFromParser(rbp);
     if (answer.getWasSuccess())
     {
       answer = parser.analyze(false);
@@ -2664,9 +2665,10 @@ public class UmpleParserStateMachineTest
     model = new UmpleModel(new UmpleFile(pathToInput, filename));
     model.setShouldGenerate(false);
     boolean answer = true;
-    RuleBasedParser rbp = new RuleBasedParser(model);
+    RuleBasedParser rbp = new RuleBasedParser();
     parser = new UmpleInternalParser(umpleParserName, model, rbp);
     ParseResult result = rbp.parse(file);
+    model.extractAnalyzersFromParser(rbp);
     answer = result.getWasSuccess();
     if (answer)
     {
@@ -2701,9 +2703,10 @@ public class UmpleParserStateMachineTest
     model = new UmpleModel(new UmpleFile(pathToInput, filename));
     model.setShouldGenerate(false);
     boolean answer = true;
-    RuleBasedParser rbp = new RuleBasedParser(model);
+    RuleBasedParser rbp = new RuleBasedParser();
     parser = new UmpleInternalParser(umpleParserName, model, rbp);
     ParseResult result = rbp.parse(file);
+    model.extractAnalyzersFromParser(rbp);
     answer = result.getWasSuccess();
     if (answer)
     {

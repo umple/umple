@@ -95,7 +95,7 @@ public class TestResource {
 	}
 
 	private void parseModel() {
-		RuleBasedParser ruleParser = new RuleBasedParser(umpleModel);
+		RuleBasedParser ruleParser = new RuleBasedParser();
 		UmpleParser parser = new UmpleInternalParser(parserName, umpleModel, ruleParser);
 		ParseResult result = ruleParser.parse(umpleModel.getUmpleFile());
 		umpleModel.setLastResult(result);

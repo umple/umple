@@ -28,6 +28,7 @@ class UmpleModel
   depend cruise.umple.analysis.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.parser.analysis.*;
   depend java.util.zip.*; // new
   isA Runnable;
 

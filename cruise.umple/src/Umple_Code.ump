@@ -232,9 +232,11 @@ class UmpleModel
   {
     boolean failed = false;
     String input;
-    cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser(this);
+    RuleBasedParser parser = new RuleBasedParser();
     UmpleParser analyzer = new UmpleInternalParser("UmpleInternalParser",this,parser);
     ParseResult result = parser.parse(umpleFile);
+    
+    this.extractAnalyzersFromParser(parser);
 
     failed = !result.getWasSuccess();
     lastResult = result;
@@ -697,6 +699,16 @@ class UmpleModel
       } 
     }
     return null;
+  }
+  
+  /*
+   * Extracts Analyzers from a <code>RuleBasedParser</code>, assigning the
+   * analyzers to this model
+   *
+   * @param parser the <code>RuleBasedParser</code> to extract parsers from.
+   */
+  public void extractAnalyzersFromParser( RuleBasedParser parser ){
+    setAnalyzers(parser.getAnalyzer().getAnalyzerMap());
   }
 }
 

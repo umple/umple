@@ -31,8 +31,6 @@ class RuleBasedParser
 
   //List of umple grammar files which will dictate the rule graph that is contructed.
   String[] grammarFiles;
-  
-  UmpleModel model;
 }
 
 /*
@@ -124,8 +122,6 @@ class RuleBasedParserThread
 
   //The data package of the previous parse, so that things like keys and the filenames already parsed can be passed along
   ParserDataPackage data;
-  
-  UmpleModel model;
 }
 
 /*
@@ -206,9 +202,6 @@ class GrammarAnalyzer
   
   //if a balanced rule is created, it needs to know if the current context is nospaces or not
   noSpaces = false;
-
-  //umple model object that will become the meta model
-  UmpleModel model;
   
   Map<String,Analyzer> analyzerMap = new HashMap<String,Analyzer>();  
 
