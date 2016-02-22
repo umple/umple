@@ -1,9 +1,10 @@
 #Umple Modelling Language
 
-* Travis CI `Mac` and `Linux` build status [![Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple)
+### Build Status
 
-* AppVeyor `windows` build status: [![Windows Build status](https://ci.appveyor.com/api/projects/status/gf9oqwtwgy4c45q6/branch/master?svg=true)](https://ci.appveyor.com/project/umple/umple/branch/master)   
-
+OS         | Linux  | OSX    | Windows  
+:--------- | ------ | ------ | -------- 
+**Status** | [![Travis-CI Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple) | [![Travis-CI Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple) | [![Windows Build status](https://ci.appveyor.com/api/projects/status/gf9oqwtwgy4c45q6/branch/master?svg=true)](https://ci.appveyor.com/project/umple/umple/branch/master) 
 
 
 ##Introduction
