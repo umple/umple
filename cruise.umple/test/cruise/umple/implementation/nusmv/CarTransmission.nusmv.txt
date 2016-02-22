@@ -1,17 +1,26 @@
 -- This file is generated from CarTransmission.ump --
 
- -- This defines a NuSMV module for State --
- MODULE State ( _stateDrive ) 
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
+
+
+-- This defines a NuSMV module for State --
+MODULE State ( _stateDrive )
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
      event : { ev_selectReverse , ev_selectDrive , ev_selectFirst , ev_selectSecond , ev_selectNeutral , ev_reachSecondSpeed , ev_reachThirdSpeed , ev_dropBelowSecondSpeed , ev_dropBelowThirdSpeed };
-    
+
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { State_neutral , State_reverse , State_drive };
-    
-   -- This part defines macros that summarize the transitions of the given NuSMV module --
+     driveSelected : boolean;
+     notdriveSelected : boolean;
+     a : integer;
+     b : integer;
+     c : integer;
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
      t1 := event = ev_selectReverse & state = State_neutral;
      t2 := event = ev_selectDrive & state = State_neutral;
@@ -21,12 +30,15 @@
      t6 := event = ev_selectNeutral & state = State_drive;
      t7 := event = ev_selectFirst & state = State_drive;
      t8 := event = ev_selectSecond & state = State_drive;
-     t9 := event = ev_reachSecondSpeed & _stateDrive.state = StateDrive_first;
-     t10 := event = ev_reachThirdSpeed & _stateDrive.state = StateDrive_second;
-     t11 := event = ev_dropBelowSecondSpeed & _stateDrive.state = StateDrive_second;
+     t9 := event = ev_reachSecondSpeed & _stateDrive.state = StateDrive_first & g1;
+     t10 := event = ev_reachThirdSpeed & _stateDrive.state = StateDrive_second & g2;
+     t11 := event = ev_dropBelowSecondSpeed & _stateDrive.state = StateDrive_second & g3;
      t12 := event = ev_dropBelowThirdSpeed & _stateDrive.state = StateDrive_third;
-  
-   -- This part defines the transitions from states to states for the given NuSMV module --
+     g1 := driveSelected;
+     g2 := !driveSelected;
+     g3 := ((a > b) | (driveSelected & ((b < a) | (c >= b))));
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := State_neutral;
      next( state ) := case
@@ -35,16 +47,35 @@
        t3 | t11 | t8 | t12 | t2 | t7 | t4 | t9 | t10 : State_drive;
        TRUE : state;
      esac;
- 
-   
- -- This defines a NuSMV module for StateDrive --
- MODULE StateDrive ( _state ) 
+
+   -- This part defines logic for the assignment of values to state variable "driveSelected" of this NuSMV module --
+   ASSIGN
+     init( driveSelected ) := FALSE;
+
+   -- This part defines logic for the assignment of values to state variable "notdriveSelected" of this NuSMV module --
+   ASSIGN
+     init( notdriveSelected ) := FALSE;
+
+   -- This part defines logic for the assignment of values to state variable "a" of this NuSMV module --
+   ASSIGN
+     init( a ) := 5;
+
+   -- This part defines logic for the assignment of values to state variable "b" of this NuSMV module --
+   ASSIGN
+     init( b ) := 3;
+
+   -- This part defines logic for the assignment of values to state variable "c" of this NuSMV module --
+   ASSIGN
+     init( c ) := 2;
+
+-- This defines a NuSMV module for StateDrive --
+MODULE StateDrive ( _state )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { StateDrive_first , StateDrive_second , StateDrive_third , null };
-    
-   -- This part defines the transitions from states to states for the given NuSMV module --
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
@@ -55,19 +86,17 @@
        _state.state = State_drive : StateDrive_first;
        TRUE : state;
      esac;
- 
-   
- -- This defines a NuSMV module for main --
- MODULE main
+
+-- This defines a NuSMV module for main --
+MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : State( stateDrive );
      stateDrive : StateDrive( state );
-    
-   CTLSPEC   EF  ( state.state = State_neutral )
-   CTLSPEC   EF  ( state.state = State_reverse )
-   CTLSPEC   EF  ( state.state = State_drive )
-   CTLSPEC   EF  ( stateDrive.state = StateDrive_first )
-   CTLSPEC   EF  ( stateDrive.state = StateDrive_second )
-   CTLSPEC   EF  ( stateDrive.state = StateDrive_third )
+CTLSPEC   EF( state.state = State_neutral )
+CTLSPEC   EF( state.state = State_reverse )
+CTLSPEC   EF( state.state = State_drive )
+CTLSPEC   EF( stateDrive.state = StateDrive_first )
+CTLSPEC   EF( stateDrive.state = StateDrive_second )
+CTLSPEC   EF( stateDrive.state = StateDrive_third )

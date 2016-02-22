@@ -5,7 +5,10 @@
 class CarTransmission {
 
   Boolean driveSelected;
-
+   Boolean notdriveSelected;
+   Integer a = 5;
+   Integer b = 3;
+   Integer c = 2;
   state {
     neutral {
       selectReverse -> reverse;
@@ -24,12 +27,12 @@ class CarTransmission {
       selectSecond -> second;
     
       first {
-        reachSecondSpeed [driveSelected] -> second;
+        reachSecondSpeed [driveSelected]  -> second;        
       }
       
       second {
-        reachThirdSpeed [driveSelected] -> third;
-        dropBelowSecondSpeed [driveSelected] -> first;
+        reachThirdSpeed [!driveSelected] -> third;
+        dropBelowSecondSpeed [ ((a > b) || (driveSelected && (!(b >= a) && (c < b)) ))] -> first;
       }
       
       third {

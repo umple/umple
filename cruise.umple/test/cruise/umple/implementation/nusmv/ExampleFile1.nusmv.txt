@@ -1,17 +1,21 @@
 -- This file is generated from ExampleFile1.ump --
 
- -- This defines a NuSMV module for State --
- MODULE State
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
+
+
+-- This defines a NuSMV module for State --
+MODULE State
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
      event : { ev_assignSeat , ev_cancel , ev_checkIn , ev_complete };
-    
+
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { State_newBooking , State_seatAssigned , State_checkedIn , State_cancelled , State_completed };
-    
-   -- This part defines macros that summarize the transitions of the given NuSMV module --
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
      t1 := event = ev_assignSeat & state = State_newBooking;
      t2 := event = ev_cancel & state = State_newBooking;
@@ -19,8 +23,8 @@
      t4 := event = ev_checkIn & state = State_seatAssigned;
      t5 := event = ev_cancel & state = State_checkedIn;
      t6 := event = ev_complete & state = State_checkedIn;
-  
-   -- This part defines the transitions from states to states for the given NuSMV module --
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := State_newBooking;
      next( state ) := case
@@ -30,17 +34,15 @@
        t6 : State_completed;
        TRUE : state;
      esac;
- 
-    
- -- This defines a NuSMV module for main --
- MODULE main
+
+-- This defines a NuSMV module for main --
+MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : State;
-    
-   CTLSPEC   EF  ( state.state = State_newBooking )
-   CTLSPEC   EF  ( state.state = State_seatAssigned )
-   CTLSPEC   EF  ( state.state = State_checkedIn )
-   CTLSPEC   EF  ( state.state = State_cancelled )
-   CTLSPEC   EF  ( state.state = State_completed )
+CTLSPEC   EF( state.state = State_newBooking )
+CTLSPEC   EF( state.state = State_seatAssigned )
+CTLSPEC   EF( state.state = State_checkedIn )
+CTLSPEC   EF( state.state = State_cancelled )
+CTLSPEC   EF( state.state = State_completed )

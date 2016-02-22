@@ -4,7 +4,9 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
 import java.io.*;
 
 import cruise.umple.implementation.TemplateTest;
@@ -41,7 +43,7 @@ public class EcoreGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/ecore/Filter.ecore");
   }
 
-  @Test
+  @Test @Ignore
   public void Ecore()
   {
     language = null;
@@ -49,7 +51,7 @@ public class EcoreGeneratorTest extends TemplateTest
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/Ecore.ecore")).exists());
   }
 
-  @Test
+  @Test @Ignore
   public void Associations()
   {
     language = null;
@@ -57,7 +59,7 @@ public class EcoreGeneratorTest extends TemplateTest
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/Associations.ecore")).exists());
   }
 
-  @Test
+  @Test @Ignore
   public void ShouldApplyFilterFirst()
   {
     language = null;
@@ -66,7 +68,7 @@ public class EcoreGeneratorTest extends TemplateTest
   }
 
 
-  @Test
+  @Test @Ignore
   public void UnidirectionalAssocaitions()
   {
     language = null;
@@ -74,7 +76,7 @@ public class EcoreGeneratorTest extends TemplateTest
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/AssociationsUnidirection.ecore")).exists());
   }
 
-  @Test
+  @Test @Ignore
   public void Namespaces()
   {
     language = null;
@@ -82,7 +84,7 @@ public class EcoreGeneratorTest extends TemplateTest
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/Namespace.ecore")).exists());
   }
 
-  @Test
+  @Test @Ignore
   public void No_Namespaces()
   {
     language = null;
@@ -90,7 +92,7 @@ public class EcoreGeneratorTest extends TemplateTest
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/NoNamespace.ecore")).exists());
   }
 
-  @Test
+  @Test @Ignore
   public void Multiple_Interfaces()
   {
     language = null;
@@ -98,42 +100,42 @@ public class EcoreGeneratorTest extends TemplateTest
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/MultipleInterfaces.ecore")).exists());
   }
 
-  @Test
+  @Test @Ignore
   public void Sole_Interface(){
     language = null;
     assertUmpleTemplateFor("ecore/SoleInterface.ump","ecore/SoleInterface.ecore.txt");
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/SoleInterface.ecore")).exists());
   }
 
-  @Test
+  @Test @Ignore
   public void Multiple_Interfaces_With_ExtendedClass(){
     language = null;
     assertUmpleTemplateFor("ecore/MultipleInterfacesWithExtendedClass.ump","ecore/MultipleInterfacesWithExtendedClass.ecore.txt");
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/MultipleInterfacesWithExtendedClass.ecore")).exists());
   }
 
-  @Test
+  @Test @Ignore
   public void Instance_Type_Search(){
     language = null;
     assertUmpleTemplateFor("ecore/InstanceTypeSearch.ump","ecore/InstanceTypeSearch.ecore.txt");
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/InstanceTypeSearch.ecore")).exists());
   }
 
-  @Test
+  @Test @Ignore
   public void Associations_Hide_Default_Multiplicity(){
     language = null;
     assertUmpleTemplateFor("ecore/AssociationsHideDefaultMultiplicity.ump","ecore/AssociationsHideDefaultMultiplicity.ecore.txt");
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/AssociationsHideDefaultMultiplicity.ecore")).exists());
   }
 
-  @Test
+  @Test @Ignore
   public void Associations_Role_Name_Plural_Form_Naming(){
     language = null;
     assertUmpleTemplateFor("ecore/AssociationsRoleNamePluralFormNaming.ump","ecore/AssociationsRoleNamePluralFormNaming.ecore.txt");
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/AssociationsRoleNamePluralFormNaming.ecore")).exists());
   }
 
-  @Test
+  @Test @Ignore
   public void Type_Argument(){
     language = null;
     assertUmpleTemplateFor("ecore/TypeArgument.ump","ecore/TypeArgument.ecore.txt");

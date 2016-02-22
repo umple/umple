@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cruise.umple.test.harness.resource.TemplateGeneratedOutput;
@@ -47,7 +48,7 @@ public class UmpleTLTest {
 		  }
 	  }
 
-	@Test 
+	@Test @Ignore
 	public void testExpressions() {
 		TestResource test = new TestResource("Expressions", pathToInput + "/UmpleTL_Expressions",
 				new TemplateGeneratedOutput[] {
@@ -58,7 +59,7 @@ public class UmpleTLTest {
 		test.assertUmpleTemplateCompilationAndRunOutput("TemplateTest");
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testCommentBlock() {
 		TestResource test = new TestResource("CommentBlock", pathToInput + "/UmpleTL_CommentBlock",
 				new TemplateGeneratedOutput[] {
@@ -69,7 +70,7 @@ public class UmpleTLTest {
 		test.assertUmpleTemplateCompilationAndRunOutput("TemplateTest");
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testComplexExample() {
 		TestResource test = new TestResource("Complex", pathToInput + "/UmpleTL_complex_Generation",
 				new TemplateGeneratedOutput[] {
@@ -80,7 +81,7 @@ public class UmpleTLTest {
 		test.assertUmpleTemplateCompilationAndRunOutput("HtmlNode");
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testEmitMethodWithSharedTemplateDefinitions() {
 		TestResource test = new TestResource("Emit Method - refer to a referenced templateDefinition", pathToInput + "/UmpleTL_Emit_referToSharedTemplateDefinition",
 				new TemplateGeneratedOutput[] {
@@ -92,7 +93,7 @@ public class UmpleTLTest {
 	}
 	
 
-	@Test 
+	@Test @Ignore
 	public void testEmitMethodWithManyTemplateDefinitions() {
 		TestResource test = new TestResource("Emit Method - many templateDefinitions", pathToInput + "/UmpleTL_Emit_with_many_templateDefinitions",
 				new TemplateGeneratedOutput[] {
@@ -104,7 +105,7 @@ public class UmpleTLTest {
 		
 	}
 
-	@Test 
+	@Test @Ignore
 	public void testEmitMethodWithManyParameters() {
 		TestResource test = new TestResource("Emit Method - many parameters", pathToInput + "/UmpleTL_Emit_with_parameters",
 				new TemplateGeneratedOutput[] {
@@ -115,7 +116,7 @@ public class UmpleTLTest {
 		test.assertUmpleTemplateCompilationAndRunOutput("TemplateTest");
 	}
 
-	@Test 
+	@Test @Ignore
 	public void testSpaceFormattingMethods() {
 		TestResource test =new TestResource("Space formatting methods", pathToInput + "/UmpleTL_ExactSpace_methods",
 				new TemplateGeneratedOutput[] {
@@ -126,7 +127,7 @@ public class UmpleTLTest {
 		test.assertUmpleTemplateCompilationAndRunOutput("TemplateTest");
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testCodBlocksAndExpressions() {
 		TestResource test =new TestResource("CodeBlock and Expressions", pathToInput + "/UmpleTL_CodeBlock_and_Expression",
 				new TemplateGeneratedOutput[] {
@@ -137,7 +138,7 @@ public class UmpleTLTest {
 		test.assertUmpleTemplateCompilationAndRunOutput("TemplateTest");
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testNestedReferenceTemplates() {
 		TestResource test =new TestResource("Nested Reference templates", pathToInput + "/UmpleTL_Nested_reference_templates",
 				new TemplateGeneratedOutput[] {
@@ -148,7 +149,7 @@ public class UmpleTLTest {
 		test.assertUmpleTemplateCompilationAndRunOutput("ClassGenerator");
 	}
 
-	@Test 
+	@Test @Ignore
 	public void testSimpleCodeBlock() {
 		TestResource test =new TestResource("Simple CodeBlock", pathToInput + "/UmpleTL_simpleCodeBlock",
 				new TemplateGeneratedOutput[] {
@@ -159,7 +160,7 @@ public class UmpleTLTest {
 		test.assertUmpleTemplateCompilationAndRunOutput("TemplateTest");
 	}
 
-	@Test 
+	@Test @Ignore
 	public void basicTest() {
 		TestResource test =new TestResource("Basic Test", pathToInput + "/UmpleTL_simpleTest",
 				new TemplateGeneratedOutput[] {
@@ -170,7 +171,7 @@ public class UmpleTLTest {
 		test.assertUmpleTemplateCompilationAndRunOutput("TemplateTest");
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testStaticEmit() {
 		TestResource test =new TestResource("Static Emit", pathToInput + "/UmpleTL_SingletonEmit",
 				new TemplateGeneratedOutput[] {
@@ -181,44 +182,44 @@ public class UmpleTLTest {
 		test.assertUmpleTemplateCompilationAndRunOutput("TemplateTest");
 	}
 
-	@Test 
+	@Test @Ignore
 	public void testDuplicatedEmitMethods() {
 		TestParseValidation test =new TestParseValidation("duplicated emit methods", pathToInput+ "/UmpleTL_parsingTests/emitMethod_duplicated.ump", 3507);
 		test.assertParsing();
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testTemplateDefinitionCanNotReferToItself() {
 		TestParseValidation test =new TestParseValidation("templateDefinition can not refer to itself", pathToInput+ "/UmpleTL_parsingTests/templateDefinition_canNotReferToItself.ump", 3503);
 		test.assertParsing();
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testCyclicCheck1() {
 		TestParseValidation test =new TestParseValidation("cyclic check", pathToInput+ "/UmpleTL_parsingTests/templateDefinition_cyclicCheck1.ump", 3505);
 		test.assertParsing();
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testCyclicCheck2() {
 		TestParseValidation test =new TestParseValidation("cyclic check", pathToInput+ "/UmpleTL_parsingTests/templateDefinition_cyclicCheck2.ump", 3505);
 		test.assertParsing();
 	}
 	
 	
-	@Test 
+	@Test @Ignore
 	public void testTemplateDefinitionInvalidName() {
 		TestParseValidation test =new TestParseValidation("templateDefinition invalid name", pathToInput+ "/UmpleTL_parsingTests/templateDefinition_invalidname.ump", 3500);
 		test.assertParsing();
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testTemplateDefinitionNotResolved() {
 		TestParseValidation test =new TestParseValidation("templateDefinition can not be resolved", pathToInput+ "/UmpleTL_parsingTests/templateDefinition_non_resolved.ump", 3502);
 		test.assertParsing();
 	}
 	
-	@Test 
+	@Test @Ignore
 	public void testDuplicatedTemplateDefinition() {
 		TestParseValidation test =new TestParseValidation("duplicated emit templateDefinitions", pathToInput+ "/UmpleTL_parsingTests/templateDefinition_duplicated.ump", 3506);
 		test.assertParsing();

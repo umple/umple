@@ -205,12 +205,140 @@ class Event
 class Guard
 {
   depend cruise.umple.compiler.Position;
+  depend java.util.*;
   
   isA ConstraintTree;
   
   lazy Position position;
   lazy Position endPosition;
   
+  private ArrayDeque<String> expressionQueue( ConstraintOperator operator ) {
+		ArrayDeque<String> tempNodes = new ArrayDeque<String>();
+		ConstraintVariable left = operator.getLeft(), right = operator.getRight();
+		
+		if( left != null ) 
+			add( left, tempNodes);
+		
+		if( operator != null ) {
+			if( operator .getValue().equals("object==") )
+				tempNodes.offer( "==" );
+			else if( operator .getValue().equals("object!=") )
+				tempNodes.offer( "!=" );
+			else
+				tempNodes.offer( operator .getValue() );
+		}
+		
+		if( right != null ) 
+			add( right, tempNodes );
+		
+		return tempNodes;
+	}
+	
+	private boolean add(ConstraintVariable element, ArrayDeque<String> nodes) {
+		if(element == null) return false;
+		if( element instanceof ConstraintTree ) {
+		
+			ConstraintTree exprTree = (ConstraintTree) element; 
+			ConstraintVariable root = exprTree.getRoot();
+			if( exprTree.getDisplayNegation() )
+				nodes.offer("!");
+				
+			if( exprTree.getShouldDisplayBrackets() )
+				nodes.offer("(");
+			
+			if( root != null && root instanceof ConstraintOperator )
+				for( String node : expressionQueue( (ConstraintOperator ) root ) )
+					nodes.offer( node );
+				
+			else if( root != null && root instanceof ConstraintTree  ) {
+						
+				ArrayDeque<String> tempNodes = new ArrayDeque<String>();
+				if( ((ConstraintTree) root).getDisplayNegation())
+					nodes.offer("!");
+				if( ((ConstraintTree) root).getDisplayBrackets())
+					nodes.offer("(");
+				ConstraintVariable newRoot = ((ConstraintTree) root).getRoot();
+				add( newRoot, tempNodes);
+				while( !tempNodes.isEmpty() )
+					nodes.offer( tempNodes.poll() );
+				if( ((ConstraintTree) root).getDisplayBrackets())
+					nodes.offer(")");
+			}
+			
+			else if( exprTree.getNumberOfElements() == 1 )
+				nodes.offer(exprTree.getNames().first());
+			
+			if( exprTree.getShouldDisplayBrackets() )
+				nodes.add(")");
+		}
+		
+		if( element instanceof ConstraintOperator )
+			for( String node : expressionQueue( (ConstraintOperator) element ) )
+				nodes.offer( node );
+				
+		if( element instanceof ConstraintNamed )
+			nodes.offer( ((ConstraintNamed) element).getName() );
+		
+		if( element instanceof ConstraintLiteral ) 
+			nodes.offer( ((ConstraintLiteral) element).getValue() );
+	
+		return true;
+	}
+	
+	//This builds an expression queue (of String type) from this Guard object. These include negation, operators, variable names etc.
+	public ArrayDeque<String> getQueuedExpression() {				
+		ArrayDeque<String> nodes = new ArrayDeque<String>();
+		add( this, nodes ); 
+		return nodes;
+	}
+
+  //checks the input string and reports if it is an operator or not
+  private boolean isOperator(String variable){
+		switch( variable ){
+			case "+" : return true;
+			case "-" : return true;
+			case "*" : return true;
+			case "/" : return true;
+			case "%" : return true;
+			case "&&" : return true;
+			case "||" : return true;
+			case "==" : return true;
+			case "!=" : return true;
+			case ">=" : return true;
+			case "<=" : return true;
+			case "<" : return true;
+			case ">" : return true;
+			case ">>" : return true;
+			case "<<" : return true;
+			case "+=" : return true;
+			case "-=" : return true;
+			case "*=" : return true;
+			case "%=" : return true;
+			case "/=" : return true;
+			case ">>=" : return true;
+			case "<<=" : return true;
+			//case "!" : return true;
+			default : return false;
+		}		
+	}
+
+	//This converts a guard expression into its equivalent string representation
+  public String getExpression() {
+		ArrayDeque<String> nodes = getQueuedExpression();
+		String temp = "";//, lastVariable = "";
+		if( this == null ) return temp;
+		
+		while( nodes.size() > 1) {
+			String variable = nodes.poll();
+			if( isOperator(variable) )
+				temp += " "+ variable +" ";
+			else
+				temp += variable;
+			//lastVariable = variable;
+		}
+		temp += nodes.poll();
+		return temp;	
+	}
 }
 
 use Umple.ump;

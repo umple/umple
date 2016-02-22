@@ -33,7 +33,7 @@ digraph "GuardedAutoTransition" {
 
   // All transitions
     start_X_sm -> X_sm_s1 [  tooltip = "start to s1" ] ;
-    X_sm_s1 -> X_sm_s2 [  label = "[getGuard()]", tooltip = "From s1 to s2 automatically&#13;Guard: [getGuard()]" ] ;
+    X_sm_s1 -> X_sm_s2 [  label = "[guard]", tooltip = "From s1 to s2 automatically&#13;Guard: [guard]" ] ;
   
 
 }
