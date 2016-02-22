@@ -172,6 +172,40 @@
               properMethodBody = properMethodBody.replaceAll("return", traceCode + "return");
 
             if(customAfterInjectionCode != null) {
+              // Do some pre-processing to handle returns not being on a new line. Doing this allows us to maintain suitable indentation.
+              String[] properMethodLines = properMethodBody.split("\\n");
+              String fixedProperMethodBody = "";
+              for(int i = 0; i < properMethodLines.length; i++) {
+                if(properMethodLines[i].contains("return") && !properMethodLines[i].trim().substring(0, 6).equals("return")) {
+                  String[] splitLines = properMethodLines[i].split("return", 2); 
+                  // Determine indentation of return by adding indentation amount to previous line
+                  String returnIndent = "";
+                  int j = 0;
+                  while(splitLines[0].charAt(j) == ' ') {
+                    returnIndent += " ";
+                    j++;
+                  }
+
+                  fixedProperMethodBody += returnIndent + splitLines[0].trim() + "\n";
+
+                  String[] returnLines = splitLines[1].split(";");
+                  if(returnLines.length > 1 && returnLines[1].trim().length() > 0) {
+                    fixedProperMethodBody += returnIndent + "  return " + returnLines[0].trim() + ";\n" + returnIndent + returnLines[1].trim() + "\n"; 
+                  } else {
+                    fixedProperMethodBody += returnIndent + "  return " + splitLines[1].trim() + "\n"; 
+                  }
+                } else {
+                  fixedProperMethodBody += properMethodLines[i] + "\n";
+                }
+              }
+
+              properMethodBody = fixedProperMethodBody;
+
+              System.out.println(properMethodBody);
+              System.out.println("!!!!!!!!!");
+              
+
+
               // inject the after injection code after every return, while appropriate indentation
               for(int i = -1; (i = properMethodBody.indexOf("return", i + 1)) != -1; ) {
                 // determine the indentation of the return
@@ -183,7 +217,8 @@
                 // Need to determine if block has braces surrounding it. To do this, take the previous
                 // lines of code and apply some regex to remove all of the comments.
                 String[] previousLinesOfCode = properMethodBody.substring(0, i+1).replaceAll("\\/\\*([\\S\\s]+?)\\*\\/", "").replaceAll("(?s)/\\*.*?\\*/", "").replaceAll("//.*$", "").split("\\n");
-            
+                int commentLineCount = properMethodBody.substring(0, i+1).split("\\n").length - previousLinesOfCode.length;
+
                 // set previousLine to be the first non-empty line
                 int previousLine = -1; 
                 for(int j = previousLinesOfCode.length - 1; j >= 0; j--) {
@@ -192,19 +227,34 @@
                     break;
                   }
                 }
+
+                String previousLineStr = previousLinesOfCode[previousLine].trim();
+
+                // Need to subtract the number of lines of comments between the return and the previous line of code
+                while(!properMethodBody.split("\\n")[previousLine + commentLineCount].trim().equals(previousLineStr)) {
+                  commentLineCount--;
+                }
               
                 // If we need to, insert braces, otherwise continue as normal
-                String indentedCustomAfterInjectionCode = GeneratorHelper.doIndent("\n" + customAfterInjectionCode, indent);
+                String[] afterInjectionLines = customAfterInjectionCode.split("\\n", 2);
+                String indentedCustomAfterInjectionCode = afterInjectionLines[0] + GeneratorHelper.doIndent("\n" + afterInjectionLines[1], indent);
                 String braceIndent = "";
                 String brace = "";
-                if(previousLine != -1 && previousLinesOfCode[previousLine].charAt(previousLinesOfCode[previousLine].length()-1) != ')') {
+                String braceNewLine = "";
+                if(previousLine != -1 && (previousLineStr.charAt(previousLineStr.length()-1) == ')' || previousLineStr.substring(previousLineStr.length()-4).equals("else"))) {
+                  System.out.println("TRUE");
+                  System.out.println(previousLineStr);
+
                   String[] methodLines = properMethodBody.split("\\n");
+                  previousLine += commentLineCount;
+
                   // determine how indented the brace is
                   int j = 0;
                   while(j < methodLines[previousLine].length() && methodLines[previousLine].charAt(j) == ' ') {
                     braceIndent += " ";
                     j++;
                   }
+
                   methodLines[previousLine] = braceIndent + methodLines[previousLine].trim() + " {"; 
 
                   // Set properMethodBody to be String.join(methodLines, "\\n")
@@ -218,12 +268,18 @@
                   properMethodBody = newProperMethodBody;
 
                   brace = "}";
+                  braceNewLine = "\n";
                 }
 
-                i += indent.length() + 2;
+                i += indent.length() + 1;
+                System.out.println("A I: " + i);
+                System.out.println(properMethodBody.substring(i));
                 System.out.println(properMethodBody);
-                properMethodBody = properMethodBody.substring(0, i) + indentedCustomAfterInjectionCode + "\n" + indent + properMethodBody.substring(i) + "\n" + braceIndent + brace; 
-                i += indentedCustomAfterInjectionCode.length() + braceIndent.length() + 3;
+                String[] returnAndRest = properMethodBody.substring(i).split(";", 2);
+                properMethodBody = properMethodBody.substring(0, i) + indentedCustomAfterInjectionCode + "\n" + indent + returnAndRest[0].trim() + ";" + braceNewLine + braceIndent + brace + returnAndRest[1]; 
+                i += indentedCustomAfterInjectionCode.length() + braceIndent.length() + 7;
+                System.out.println("NEW I: " + i);
+                System.out.println(properMethodBody.substring(i));
               }
 
               // if the last line isn't a return, insert the injection at the very end
