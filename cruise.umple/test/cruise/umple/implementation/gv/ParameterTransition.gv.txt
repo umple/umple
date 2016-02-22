@@ -72,7 +72,7 @@ digraph "ParameterTransition" {
     X_stateMachine2_s2b -> X_stateMachine2_s2a [  label = "e(int a) / {...}", tooltip = "From s2b to s2a on e(int a)&#13;Transition Action:
      System.out.println(&quot;e&quot;+a);" ] ;
   
-  X_stateMachine2_s2a -> X_stateMachine2_s2b [  label = "e(int a) [a>6] / {...}", tooltip = "From s2a to s2b on e(int a)&#13;Guard:  [a>6]&#13;Transition Action:
+  X_stateMachine2_s2a -> X_stateMachine2_s2b [  label = "e(int a) [a > 6] / {...}", tooltip = "From s2a to s2b on e(int a)&#13;Guard:  [a > 6]&#13;Transition Action:
      System.out.println(&quot;e&quot;+a);" ] ;
   
 

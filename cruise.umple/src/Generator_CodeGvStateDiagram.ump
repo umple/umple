@@ -405,7 +405,8 @@ node [shape = circle, fixedsize = true, width=.3];
           if(event.isAutoTransition()) guardString = "[";
           else guardString = " [";
 
-          guardString += guard.getCondition(gen).replaceAll("\"","&quot;") + "]";
+          //guardString += guard.getCondition(gen).replaceAll("\"","&quot;") + "]";
+	  guardString += guard.getExpression() + "]";
         }
         
         String orig = getTransitionNameForState(t.getFromState(),uClass,true);

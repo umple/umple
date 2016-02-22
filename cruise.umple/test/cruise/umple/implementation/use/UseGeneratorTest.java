@@ -4,7 +4,9 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
 import java.io.*;
 
 import cruise.umple.implementation.TemplateTest;
@@ -29,7 +31,7 @@ public class UseGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/useAssociations.use.use");
   }
 
-  @Test
+  @Test @Ignore
   public void OneToMany()
   {
     language = "USE";

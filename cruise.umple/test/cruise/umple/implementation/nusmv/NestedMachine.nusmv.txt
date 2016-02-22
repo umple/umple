@@ -1,17 +1,21 @@
 -- This file is generated from NestedMachine.ump --
 
- -- This defines a NuSMV module for Sm --
- MODULE Sm ( _smS2 ) 
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
+
+
+-- This defines a NuSMV module for Sm --
+MODULE Sm ( _smS2 )
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
      event : { ev_e1 , ev_e2 , ev_e3 , ev_e4 };
-    
+
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Sm_s1 , Sm_s2 , Sm_s3 , Sm_s4 };
-    
-   -- This part defines macros that summarize the transitions of the given NuSMV module --
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
      t1 := event = ev_e1 & state = Sm_s1;
      t2 := event = ev_e2 & state = Sm_s1;
@@ -21,8 +25,8 @@
      t6 := event = ev_e3 & _smS2.state = SmS2_s2b;
      t7 := event = ev_e4 & _smS2.state = SmS2_s2b;
      t8 := event = ev_e2 & _smS2.state = SmS2_s2b;
-  
-   -- This part defines the transitions from states to states for the given NuSMV module --
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := Sm_s1;
      next( state ) := case
@@ -32,16 +36,15 @@
        t3 : Sm_s4;
        TRUE : state;
      esac;
- 
-   
- -- This defines a NuSMV module for SmS2 --
- MODULE SmS2 ( _sm ) 
+
+-- This defines a NuSMV module for SmS2 --
+MODULE SmS2 ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { SmS2_s2a , SmS2_s2b , SmS2_s2c , null };
-    
-   -- This part defines the transitions from states to states for the given NuSMV module --
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
@@ -52,20 +55,18 @@
        _sm.state = Sm_s2 : SmS2_s2a;
        TRUE : state;
      esac;
- 
-   
- -- This defines a NuSMV module for main --
- MODULE main
+
+-- This defines a NuSMV module for main --
+MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
      sm : Sm( smS2 );
      smS2 : SmS2( sm );
-    
-   CTLSPEC   EF  ( sm.state = Sm_s1 )
-   CTLSPEC   EF  ( sm.state = Sm_s2 )
-   CTLSPEC   EF  ( sm.state = Sm_s3 )
-   CTLSPEC   EF  ( sm.state = Sm_s4 )
-   CTLSPEC   EF  ( smS2.state = SmS2_s2a )
-   CTLSPEC   EF  ( smS2.state = SmS2_s2b )
-   CTLSPEC   EF  ( smS2.state = SmS2_s2c )
+CTLSPEC   EF( sm.state = Sm_s1 )
+CTLSPEC   EF( sm.state = Sm_s2 )
+CTLSPEC   EF( sm.state = Sm_s3 )
+CTLSPEC   EF( sm.state = Sm_s4 )
+CTLSPEC   EF( smS2.state = SmS2_s2a )
+CTLSPEC   EF( smS2.state = SmS2_s2b )
+CTLSPEC   EF( smS2.state = SmS2_s2c )

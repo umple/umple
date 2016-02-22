@@ -46,14 +46,23 @@ class NuSMVCoordinator
   		return temp;
   	}
   	  	
-  	private NuSMVModule generateParentModule( StateMachine sm ) {
+  	private NuSMVModule generateParentModule( StateMachine sm, UmpleClass uClass ) {
   		VariableSpecifier xxx = getEventList( sm );
   		
   		ModuleBody body = new ModuleBody( new IVarDeclaration( xxx ) );
-  		body.addModuleElement( new VarDeclaration(getStateList(sm)) );
+		VarDeclaration vdec = new VarDeclaration( getStateList( sm ) );
+		for( VariableSpecifier vs : generateSpecifiersForAttributesOf( uClass ) )
+			vdec.addVariableSpecifier(vs);
+		
+  		body.addModuleElement( vdec );
   		//Adding define declaration to module body
   		body.addModuleElement( getDefineDeclaration(sm) );
   		body.addModuleElement( getAssignConstraint( sm, sm) );
+		
+		//Adding assign constraints for all the attributes
+		for( AssignConstraint constraint : getAssignConstraint( uClass ))
+			body.addModuleElement( constraint );
+		
   		NuSMVModule module = new NuSMVModule( changeNameCase( sm.getFullName(), 1 ), body );
   		generateParameters( module, sm, sm ); 
   		return module;
@@ -127,10 +136,10 @@ class NuSMVCoordinator
 		return nestedMachines;
 	}
   	
-  	public List<NuSMVModule> generateModuleForNestedStateMachine( StateMachine sm ) {
+  	public List<NuSMVModule> generateModuleForNestedStateMachine( StateMachine sm, UmpleClass uClass ) {
   		List<NuSMVModule> temp = new ArrayList<NuSMVModule>();
   		//Generates the parent state machine  		
-  		NuSMVModule module = generateParentModule( sm );
+  		NuSMVModule module = generateParentModule( sm, uClass );
   		temp.add(module);
   		StateMachine root = sm;
   		for( NuSMVModule mod : generateModuleForCompositeStatesOf( root, sm ) )
@@ -147,11 +156,11 @@ class NuSMVCoordinator
   	}
   	
   	//This generates modules generated from a simple state machine including its main
-  	public List<NuSMVModule> generateModuleForSimpleStateMachine( StateMachine sm ) {
+  	public List<NuSMVModule> generateModuleForSimpleStateMachine( StateMachine sm, UmpleClass uClass ) {
   
   		List<NuSMVModule> temp = new ArrayList<NuSMVModule>();
   		//Generating and setting the parent module
-  		temp.add( generateParentModule(sm) );
+  		temp.add( generateParentModule(sm, uClass) );
   		
   		//Generating the main module for the statemachine
   		ModuleBody body = new ModuleBody(genMainVariableFor( sm ));
@@ -170,15 +179,34 @@ class NuSMVCoordinator
   		return module;
   	}
   	
-  	private int getTransitionIdentity( StateMachine sm, Transition tr) {
+  	private int getObjectIdentity( StateMachine sm, Object obj) {
   		int pos = 1;
-  		for(Transition trans : sm.getAllTransitions() ) {
-  			if(trans.equals(tr))
+		if( obj instanceof Transition )
+			for(Transition trans : sm.getAllTransitions() ) {
+				if(trans.equals( (Transition) obj) )
+					return pos;
+				pos++;
+			}
+		if( obj instanceof Guard ) {
+			pos = 1;
+			for(Guard guard : getAllGuards( sm ) ) {
+				if(guard.equals(( Guard ) obj ))
+					return pos;
+				pos++;
+			}
+		}
+  		return -1;
+  	}
+	
+	/*private int getGuardIdentity( StateMachine sm, Guard gr) {
+  		int pos = 1;
+  		for(Guard guard : getAllGuards( sm ) ) {
+  			if(guard.equals(gr))
   				return pos;
   			pos++;
   		}
   		return -1;
-  	}
+  	}*/
   	
   	private void generateSpecForStateReachability( StateMachine sm, ModuleBody body ) {
   		
@@ -188,10 +216,10 @@ class NuSMVCoordinator
     		CTLExpression cexp = new CTLExpression("ctl");
     		cexp.addChild(bexp1);
     		cexp.addChild(bexp2);
-    		cexp.setOperator(cexp.getOperator().EQ);
+    		cexp.setOperator(BasicExpression.Operator.EQ);
     		cexp.setBracketed(true);
     		cexp.setQualified(true);
-    		cexp.setCtlOperator(cexp.getCtlOperator().EF);
+    		cexp.setCtlOperator(CTLExpression.CtlOperator.EF);
     		CTLSpecification cspec = new CTLSpecification(cexp);
     		body.addModuleElement(cspec);
     	}
@@ -209,6 +237,34 @@ class NuSMVCoordinator
   		return ac;
   	}
 	
+	private List<AssignConstraint> getAssignConstraint( UmpleClass uClass ) {
+		List<AssignConstraint> constraints = new ArrayList<AssignConstraint>();
+		
+		for( Attribute attribute : uClass.getAllAttributes() ) {
+			BasicExpression bexp = new BasicExpression("");
+			
+			if( attribute.getValue() != null ){
+				String value = attribute.getValue();
+				switch( value ){
+					case "true" : bexp = new BasicExpression("TRUE"); break;
+					case "false" : bexp = new BasicExpression("FALSE"); break;
+					default : bexp = new BasicExpression(value);
+				}
+			}
+			else if( attribute.getValue() == null && (attribute.getType().equals("Boolean") || attribute.getType().equals("boolean")))
+				bexp = new BasicExpression("FALSE");
+			else if( attribute.getValue() == null && (attribute.getType().equals("Integer") || attribute.getType().equals("int")))
+				bexp = new BasicExpression("0");
+			else if( attribute.getValue() == null && (attribute.getType().equals("Float") || attribute.getType().equals("float")))
+				bexp = new BasicExpression("0.0");
+			
+			InitAssign initialVal = new InitAssign(attribute.getName(), bexp);
+			AssignConstraint assignConstraint = new AssignConstraint( initialVal );
+			constraints.add( assignConstraint );
+		}
+  		return constraints;
+  	}
+	
 	private CaseStatement initializeCompositeStartState( State state ) {
 		
 		BasicExpression bexp3 = new BasicExpression( "expr" );
@@ -219,7 +275,7 @@ class NuSMVCoordinator
   			BasicExpression bexp2 = new BasicExpression(changeNameCase(bioparent.getStateMachine().getFullName(),1)+"_"+bioparent.getName());
 			bexp3.addChild( bexp1 );
   			bexp3.addChild( bexp2 );
-  			bexp3.setOperator( bexp1.getOperator().EQ );
+  			bexp3.setOperator( BasicExpression.Operator.EQ );
 			BasicExpression st = new BasicExpression( changeNameCase(state.getStateMachine().getFullName(),1)+"_"+state.getName() ); 
 			return new CaseStatement( bexp3, st );
   		}
@@ -253,7 +309,7 @@ class NuSMVCoordinator
   	}
 		
 	//Harvesting transitions for any given orthogonal state or region
-	private List<Transition> getAllTransitionsForOrthogonalState( State st ) {
+	public List<Transition> getAllTransitionsForOrthogonalState( State st ) {
 		List<Transition> results = new ArrayList<Transition>();
 		if( !st.isIsConcurrent() )
 			for( StateMachine sm : st.getNestedStateMachines() ) 
@@ -263,29 +319,47 @@ class NuSMVCoordinator
 	}
 	
 	//Harvesting transitions for a state machine
-	private List<Transition> getAllTransitions( StateMachine sm ) {
+	//Also generates a list of next transitions for a state and its substates (where possible).
+  	//That is transition that enables or activates a state
+	private List<Transition> getAllTransitions( Object obj ) {
 		List<Transition> results = new ArrayList<Transition>();
-		for( State st : sm.getStates() ) {
-			for( Transition trans : st.getNextTransition() )
-  				results.add( trans );
-				if( st.hasNestedStateMachines() )
-					for( StateMachine smm : st.getNestedStateMachines() )
-						for( Transition transition : getAllTransitions( smm ) )
-							results.add( transition );
+		if( obj instanceof StateMachine ){
+			
+			for( State st : ( (StateMachine) obj).getStates() ) {
+				for( Transition trans : st.getNextTransition() )
+					results.add( trans );
+					if( st.hasNestedStateMachines() )
+						for( StateMachine smm : st.getNestedStateMachines() )
+							for( Transition transition : getAllTransitions( smm ) )
+								results.add( transition );
+			}
+		}
+		else if( obj instanceof State ){
+			if( !((State) obj).hasNestedStateMachines() ) {
+				return ((State) obj).getNextTransition();
+			}
+			else {
+				for( Transition tr : ((State) obj).getNextTransition() )
+					results.add(tr);
+		
+				for( StateMachine smm : ((State) obj).getNestedStateMachines() )
+					for( Transition transition : getAllTransitions( smm ) )
+						results.add( transition );
+			}
 		}
 		return results;
 	}
 	
-	private void printList( List<Transition> input, StateMachine root ) {
+	public void printList( List<Transition> input, StateMachine root ) {
 		String results = "";
 		for( Transition element : input )
-			results += getTransitionIdentity( root, element ) +" ";
+			results += getObjectIdentity( root, element ) +" ";
 		System.out.println( results );
 	}
   	
   	//Generates a list of next transitions for a state and its substates (where possible).
   	//That is transition that enables or activates a state
-  	private List<Transition> getAllTransitions( State st ) {
+  	/*private List<Transition> getAllTransitions( State st ) {
 		if( !st.hasNestedStateMachines() ) {
 			return st.getNextTransition();
 		}
@@ -299,7 +373,7 @@ class NuSMVCoordinator
 					allTransitions.add( transition );
 		    return allTransitions;
 		}
-  	}
+  	}*/
 	
 	private CaseStatement getCaseStatementForNullState( State st, StateMachine root ) {
 	
@@ -313,7 +387,7 @@ class NuSMVCoordinator
 		for( Transition tr : root.getAllTransitions() ) {
 			BasicExpression bexp;
 			if( !has( trans, tr ) ) {
-				bexp = new BasicExpression("_"+changeNameCase(root.getFullName(),0)+".t"+getTransitionIdentity( root, tr) );	
+				bexp = new BasicExpression("_"+changeNameCase(root.getFullName(),0)+".t"+getObjectIdentity( root, tr) );	
 				rt = getExpressionTreeFor( rt, bexp );
 				counter++;
 			}
@@ -329,12 +403,11 @@ class NuSMVCoordinator
   		int counter = 0;
   		BasicExpression root = new BasicExpression("root");
   		for( Transition tr : getAllTransitions(st) ) {
-			//System.out.println( st.getName() );
 			BasicExpression bexp;
 			if(!parent.equals(sm))
-				bexp = new BasicExpression("_"+changeNameCase(parent.getFullName(),0)+".t"+getTransitionIdentity( parent, tr) );	
+				bexp = new BasicExpression("_"+changeNameCase(parent.getFullName(),0)+".t"+getObjectIdentity( parent, tr) );	
 			else	
-				bexp = new BasicExpression("t"+getTransitionIdentity( parent, tr) );
+				bexp = new BasicExpression("t"+getObjectIdentity( parent, tr) );
   			root = getExpressionTreeFor( root, bexp );	
   			counter++;
   		}
@@ -360,7 +433,7 @@ class NuSMVCoordinator
   	}
   	
   	//This adds expression to activate a composite start state
-  	private Stack<State> ancestorStack( State st ) {
+  	public Stack<State> ancestorStack( State st ) {
 		if(st.getStateMachine().getParentState() == null)
 			return null;
 		Stack<State> ancestors = new Stack<State>();
@@ -376,13 +449,13 @@ class NuSMVCoordinator
   	private BasicExpression getExpressionTreeFor( BasicExpression root, BasicExpression bexp ) {
   		if( root.getChildren().size() < 2) {
   			root.addChild(bexp); 
-  			root.setOperator(root.getOperator().OR);
+  			root.setOperator(BasicExpression.Operator.OR);
   		}
   		else {
   			BasicExpression temp = new BasicExpression(root.getChildren().get(0).getIdentifier());
   			temp.addChild(root.getChildren().get(0));
   			temp.addChild(bexp);
-  			temp.setOperator(temp.getOperator().OR);
+  			temp.setOperator(BasicExpression.Operator.OR);
   			root.addChild(temp);
   		}
   		return root;
@@ -422,56 +495,157 @@ class NuSMVCoordinator
   			vs.addTypeSpecifier("null");
   		return vs;
   	}
+	
+	private List<VariableSpecifier> generateSpecifiersForAttributesOf( UmpleClass uClass ){
+		List<VariableSpecifier> attributes = new ArrayList<VariableSpecifier>();
+		
+		for( Attribute attribute : uClass.getAllAttributes() ){
+			VariableSpecifier vs = new VariableSpecifier( attribute.getName() );
+			String type = attribute.getFullType();
+			//System.out.println( attribute.getValue() );
+			switch( type ){
+				case "Float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
+				case "Boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
+				case "Integer" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+				default : ;
+			}
+		}
+		return attributes;
+	}
   		
   	//Generates the define part for all the transitions of the system
   	private DefineDeclaration getDefineDeclaration( StateMachine sm ) {
-  		int i = 1;
   		BasicExpression temp = new BasicExpression("null");
   		DefineBody dnull = new DefineBody("null", temp);
   		DefineDeclaration ddec = new DefineDeclaration(dnull);
   		for( Transition tr : sm.getAllTransitions() ) {
-  			BasicExpression bexp = composeExpressionFor( tr );
-  			DefineBody dBody = new DefineBody("t"+getTransitionIdentity( sm, tr) , bexp);
+  			BasicExpression bexp = composeExpressionFor( tr, sm );
+  			DefineBody dBody = new DefineBody("t"+getObjectIdentity( sm, tr) , bexp);
   			ddec.addDefineBody(dBody);
-  			i++;
+  		}
+		for( Guard gr : getAllGuards(sm) ) {
+  			DefineBody dBody = new DefineBody("g"+getObjectIdentity( sm, gr) , generateRHS( gr ));
+  			ddec.addDefineBody(dBody);
   		}
   		ddec.removeDefineBody(dnull);
   		return ddec;
   	}
   	
-  	private BasicExpression composeExpressionFor( Transition tr ) {
+  	private BasicExpression composeExpressionFor( Transition tr, StateMachine sm ) {
   		BasicExpression bexp1 = new BasicExpression("event");
   		BasicExpression bexp2 = new BasicExpression("ev_"+tr.getEvent().getName());
   		BasicExpression bexp3 = new BasicExpression("eventExpr"); 
   		bexp3.addChild(bexp1);
   		bexp3.addChild(bexp2);
-  		bexp3.setOperator(bexp3.getOperator().EQ);
+  		bexp3.setOperator(BasicExpression.Operator.EQ);
   		
   		BasicExpression bexp4 = generateRHS(tr.getFromState());
   		BasicExpression bexp5 = new BasicExpression(changeNameCase(tr.getFromState().getStateMachine().getFullName(),1)+"_"+tr.getFromState().getName());
   		BasicExpression bexp6 = new BasicExpression("stateExpr");
   		bexp6.addChild(bexp4);
   		bexp6.addChild(bexp5);
-  		bexp6.setOperator(bexp6.getOperator().EQ); 
+  		bexp6.setOperator(BasicExpression.Operator.EQ); 
   			
   		BasicExpression bexp = new BasicExpression("state");
   		bexp.addChild(bexp3);
   		bexp.addChild(bexp6);
-  		//bexp.setBracketed(true);
-  		
+		
+		BasicExpression fBexp = new BasicExpression("fExp");
+		fBexp.setOperator( BasicExpression.Operator.AND );
+		if( tr.getGuard() != null ) {
+			BasicExpression guard = new BasicExpression("g"+getObjectIdentity( sm, tr.getGuard()));
+			fBexp.addChild(bexp);
+			fBexp.addChild(guard);
+			return fBexp;
+		}
+  		  		
   		return bexp;
   	}
   	
-  	private BasicExpression generateRHS( State st ) {
-  		BasicExpression bexp4;
-  		State state = st.getStateMachine().getParentState(); 
-  		if( state != null ) {
-  			StateMachine sm = st.getStateMachine();
-  			String name = changeNameCase("_"+sm.getFullName(), 0);
-  			bexp4 = new BasicExpression(name+".state"); 
-  		}
-  		else 
-  			bexp4 = new BasicExpression("state");
+  	private BasicExpression generateRHS( Object obj ) {
+  		BasicExpression bexp4 = null;
+		if( obj instanceof State ) {
+			State st = ( State ) obj;
+			State state = st.getStateMachine().getParentState(); 
+			if( state != null ) {
+				StateMachine sm = st.getStateMachine();
+				String name = changeNameCase("_" + sm.getFullName(), 0);
+				bexp4 = new BasicExpression(name + ".state"); 
+			}
+			else 
+				bexp4 = new BasicExpression("state");
+		}
+		if( obj instanceof Guard ) {
+			Guard guard = ( Guard ) obj;
+			bexp4 = new BasicExpression( getExpression( guard.getQueuedExpression() ) );
+		}
   		return bexp4;
   	}
+	
+	//checks the input string and reports if it is an operator or not
+	private boolean isOperator(String variable){
+		switch( variable ){
+			case "+" : return true;
+			case "-" : return true;
+			case "*" : return true;
+			case "/" : return true;
+			case "%" : return true;
+			case "&&" : return true;
+			case "||" : return true;
+			case "==" : return true;
+			case "!=" : return true;
+			case ">=" : return true;
+			case "<=" : return true;
+			case "<" : return true;
+			case ">" : return true;
+			case ">>" : return true;
+			case "<<" : return true;
+			case "+=" : return true;
+			case "-=" : return true;
+			case "*=" : return true;
+			case "%=" : return true;
+			case "/=" : return true;
+			case ">>=" : return true;
+			case "<<=" : return true;
+			default : return false;
+		}		
+	}
+	
+	public String getExpression( ArrayDeque<String> nodes ) {
+		String temp = "", lastVariable = "";
+		while( nodes.size() > 1) {
+			String variable = nodes.poll();
+			if( isOperator(variable) )
+				temp += " "+ mapOperator( variable ) +" ";
+			else	
+				temp += variable;
+			lastVariable = variable;
+		}
+		temp += mapOperator( nodes.poll() );
+		return temp;	
+	}
+	
+	private String mapOperator( String value ) {
+		switch( value ) {
+			case "&&" : return "&";
+			case "||" : return "|";
+			case "%" : return "mod";
+			case "==" : return "=";
+			//case "object==" : return "=";
+			case "true" : return "TRUE";
+			case "false" : return "FALSE";
+			default : return value;
+		}
+	}
+	
+	private List<Guard> getAllGuards( StateMachine sm ) {
+		List<Guard> allGuards = new ArrayList<Guard>();
+		for( Transition transition : sm.getAllTransitions() ) {
+			if( transition.getGuard() != null && !has(allGuards, transition.getGuard())) {
+				Guard guard = transition.getGuard();
+				allGuards.add( guard );
+			}
+		}
+		return allGuards;
+	}
   }

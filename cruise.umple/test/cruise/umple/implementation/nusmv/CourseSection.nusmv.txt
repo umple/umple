@@ -1,17 +1,21 @@
 -- This file is generated from CourseSection.ump --
 
- -- This defines a NuSMV module for Status --
- MODULE Status
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
+
+
+-- This defines a NuSMV module for Status --
+MODULE Status
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
      event : { ev_cancel , ev_openRegistration , ev_requestToRegister , ev_closeRegistration , ev_classSizeExceedsMinimum , ev_classSizeExceedsMaximum };
-    
+
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Status_Planned , Status_OpenNotEnoughStudents , Status_OpenEnoughStudents , Status_Cancelled , Status_Closed };
-    
-   -- This part defines macros that summarize the transitions of the given NuSMV module --
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
      t1 := event = ev_cancel & state = Status_Planned;
      t2 := event = ev_openRegistration & state = Status_Planned;
@@ -24,8 +28,8 @@
      t9 := event = ev_closeRegistration & state = Status_OpenEnoughStudents;
      t10 := event = ev_classSizeExceedsMaximum & state = Status_OpenEnoughStudents;
      t11 := event = ev_cancel & state = Status_Closed;
-  
-   -- This part defines the transitions from states to states for the given NuSMV module --
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := Status_Planned;
      next( state ) := case
@@ -35,17 +39,15 @@
        t9 | t10 : Status_Closed;
        TRUE : state;
      esac;
- 
-    
- -- This defines a NuSMV module for main --
- MODULE main
+
+-- This defines a NuSMV module for main --
+MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
      status : Status;
-    
-   CTLSPEC   EF  ( status.state = Status_Planned )
-   CTLSPEC   EF  ( status.state = Status_OpenNotEnoughStudents )
-   CTLSPEC   EF  ( status.state = Status_OpenEnoughStudents )
-   CTLSPEC   EF  ( status.state = Status_Cancelled )
-   CTLSPEC   EF  ( status.state = Status_Closed )
+CTLSPEC   EF( status.state = Status_Planned )
+CTLSPEC   EF( status.state = Status_OpenNotEnoughStudents )
+CTLSPEC   EF( status.state = Status_OpenEnoughStudents )
+CTLSPEC   EF( status.state = Status_Cancelled )
+CTLSPEC   EF( status.state = Status_Closed )
