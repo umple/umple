@@ -36,7 +36,7 @@ Guidelines for bug reports:
    case.
 
 Please try to be as detailed as possible in your report. Include information about
-your Operating System and the version of the compiler you are usig. Please make sure you are using the latest version of Umple. Please provide steps to
+your Operating System and the version of the compiler you are using. Please make sure you are using the latest version of Umple. Please provide steps to
 reproduce the issue as well as the outcome you were expecting! All these details
 will help developers to fix any potential bugs.
 
@@ -206,7 +206,8 @@ in order to craft an excellent pull request:
 5. Make sure all the tests are still passing.
 
   ```sh
-  cd build ** ant -Dmyenv=local
+  cd build 
+  ant 
   ```
 
   This command will compile the code in your branch and use that
