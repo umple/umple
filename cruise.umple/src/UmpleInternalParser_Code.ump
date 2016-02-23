@@ -44,12 +44,12 @@ class UmpleInternalParser
 
   public UmpleInternalParser()
   {
-    this("UmpleInternalParser", new UmpleModel(null), new RuleBasedParser(new UmpleModel(null)));
+    this("UmpleInternalParser", new UmpleModel(null), new RuleBasedParser());
   }
 
   public UmpleInternalParser(UmpleModel aModel)
   {
-    this("UmpleInternalParser", aModel, new RuleBasedParser(aModel));
+    this("UmpleInternalParser", aModel, new RuleBasedParser());
   }
 
   private void init()

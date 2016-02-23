@@ -129,7 +129,7 @@ public class UmpleUSEParserTest
     ErrorTypeSingleton.getInstance().reset();
     model = new UmpleModel(new UmpleFile(pathToInput,filename));
     model.setShouldGenerate(false);
-    RuleBasedParser rbp = new RuleBasedParser(model);
+    RuleBasedParser rbp = new RuleBasedParser();
     parser = new UmpleInternalParser(umpleParserName,model,rbp);
     ParseResult result = rbp.parse(file);
     model.setLastResult(result);

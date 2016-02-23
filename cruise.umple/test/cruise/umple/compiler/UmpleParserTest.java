@@ -2560,9 +2560,10 @@ public class UmpleParserTest
     ErrorTypeSingleton.getInstance().reset();
     model = new UmpleModel(new UmpleFile(pathToInput,filename));
     model.setShouldGenerate(false);
-    RuleBasedParser rbp = new RuleBasedParser(model);
+    RuleBasedParser rbp = new RuleBasedParser();
     parser = new UmpleInternalParser(umpleParserName,model,rbp);
     ParseResult result = rbp.parse(file);
+    model.extractAnalyzersFromParser(rbp);
     model.setLastResult(result);
     System.out.println(rbp.getRootToken());
     boolean answer = result.getWasSuccess();
@@ -2579,9 +2580,10 @@ public class UmpleParserTest
     UmpleFile file = new UmpleFile(pathToInput,filename);
     model = new UmpleModel(file);
     model.setShouldGenerate(false);
-    RuleBasedParser rbp = new RuleBasedParser(model);
+    RuleBasedParser rbp = new RuleBasedParser();
     parser = new UmpleInternalParser(umpleParserName,model,rbp);
     ParseResult result = rbp.parse(file);
+    model.extractAnalyzersFromParser(rbp);
     model.setLastResult(result);
     boolean answer = result.getWasSuccess();
     if (answer)
