@@ -1,3 +1,4 @@
+This is a *guide*, please remove unecessary sections as relevant. 
 
 ## Checklist
 
@@ -27,18 +28,16 @@ The expected action
 
 The erroneous action
 
-## Build/Test Log (if applicable)
+## Build/Test Log (as applicable)
 
 Please copy your log output and paste it into a [gist](https://gist.github.com/) and link to it here. 
 
-## System configuration
+## System configuration (as applicable)
 
 * Operating System: Linux, OSX, Windows, All
-* Java version: Run `java -version`
 * Most recent commit ID: Run `git status`, the number will be reported.
 
 ## Misc Information
-
 
 Please use Github's markdown formatting for easier reading. [Github Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
 
