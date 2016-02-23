@@ -1,44 +1,29 @@
-This is a *guide*, please remove unecessary sections as relevant. 
-
-## Checklist
-
-Before reporting an issue, please check the following:
-
-* [ ] The issue does not exist already
-* [ ] Using Java 8
-* [ ] The issue exists in the current `master` branch
+This is a *guide*, please remove this preamble and other irrelevant sections. Use [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) for formatting. *Before writing*, please search to ensure the issue doesn't exist, and verify you are using the latest `master` branch and using Java 8.
 
 ## Brief Description
 
 Brief, one or two sentences explaining the problem. 
 
-## Steps to Reproduce
+## Minimum Steps to Reproduce
 
-This is a **minimum** test case to validate the problem. Do not post large amounts of irrelevant code. If using a large code sample, feel free to use a [gist](https://gist.github.com/) or [UmpleOnline](http://cruise.eecs.uottawa.ca/umpleonline/).
+This is a **minimum** test case to validate the problem. 
 
 1. Step 1
 2. Step 2
 3. Step 3
 
+If using a large code sample, feel free to use a [gist](https://gist.github.com/) or [UmpleOnline](http://cruise.eecs.uottawa.ca/umpleonline/).
+
 ## Expected Result
 
-The expected action
+Expected results.
 
 ## Actual Result
 
-The erroneous action
+Actual results
 
-## Build/Test Log (as applicable)
+Please include your build log output. If long, please paste it into a [gist](https://gist.github.com/) and link to it here. 
 
-Please copy your log output and paste it into a [gist](https://gist.github.com/) and link to it here. 
+## Labelling and Assigning
 
-## System configuration (as applicable)
-
-* Operating System: Linux, OSX, Windows, All
-* Most recent commit ID: Run `git status`, the number will be reported.
-
-## Misc Information
-
-Please use Github's markdown formatting for easier reading. [Github Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
-
-Add any relevant label's for this issue. If you are planning on fixing this issue, or know who will, please assign it. Do **not** blindly assign an issue, leave it unassigned instead.
+Add any relevant label's for this issue. If you are planning on fixing this issue, or know who will, please assign it. Do **not** blindly assign an issue unless you are confident who will be fixing the issue.
