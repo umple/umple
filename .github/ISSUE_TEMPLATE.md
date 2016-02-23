@@ -9,8 +9,7 @@ Brief, one or two sentences explaining the problem.
 This is a **minimum** test case to validate the problem. 
 
 1. Step 1
-2. Step 2
-3. Step 3
+2. ...
 
 If using a large code sample, feel free to use a [gist](https://gist.github.com/) or [UmpleOnline](http://cruise.eecs.uottawa.ca/umpleonline/).
 
@@ -26,4 +25,6 @@ Please include your build log output. If long, please paste it into a [gist](htt
 
 ## Labelling and Assigning
 
-Add any relevant label's for this issue. If you are planning on fixing this issue, or know who will, please assign it. Do **not** blindly assign an issue unless you are confident who will be fixing the issue.
+Add any relevant label's for this issue, such as 'associations', 'Component-UmpleOnline', etc. as well as Priority- and Diffic- label.
+
+If you are planning on fixing this issue, or know who will, please assign it. Do **not** blindly assign an issue unless you are confident who will be fixing the issue.
