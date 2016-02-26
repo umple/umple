@@ -29,12 +29,14 @@ class StateMachine
   
   * nestedStateMachines -- 0..1 State parentState;
   
-  key { parentState, name } 
+  key { parentState, name }
   
   before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
   before setUmpleTrait { if (aUmpleTrait != null && aUmpleTrait.isImmutable()) { return false; } }
   //before getContainsHistoryState { if ("H".equals(name)) { containsHistoryState = true; } }
   //before getContainsDeepHistoryState { if ("HStar".equals(name)) { containsDeepHistoryState = true; } }
+
+ 
   
   Boolean queued = false;
   Boolean pooled = false;
@@ -317,7 +319,7 @@ class Guard
 			case "/=" : return true;
 			case ">>=" : return true;
 			case "<<=" : return true;
-			//case "!" : return true;
+			//case "^" : return true;
 			default : return false;
 		}		
 	}
