@@ -197,16 +197,6 @@ class NuSMVCoordinator
 		}
   		return -1;
   	}
-	
-	/*private int getGuardIdentity( StateMachine sm, Guard gr) {
-  		int pos = 1;
-  		for(Guard guard : getAllGuards( sm ) ) {
-  			if(guard.equals(gr))
-  				return pos;
-  			pos++;
-  		}
-  		return -1;
-  	}*/
   	
   	private void generateSpecForStateReachability( StateMachine sm, ModuleBody body ) {
   		
@@ -328,10 +318,10 @@ class NuSMVCoordinator
 			for( State st : ( (StateMachine) obj).getStates() ) {
 				for( Transition trans : st.getNextTransition() )
 					results.add( trans );
-					if( st.hasNestedStateMachines() )
-						for( StateMachine smm : st.getNestedStateMachines() )
-							for( Transition transition : getAllTransitions( smm ) )
-								results.add( transition );
+				if( st.hasNestedStateMachines() )
+					for( StateMachine smm : st.getNestedStateMachines() )
+						for( Transition transition : getAllTransitions( smm ) )
+							results.add( transition );
 			}
 		}
 		else if( obj instanceof State ){
@@ -356,24 +346,6 @@ class NuSMVCoordinator
 			results += getObjectIdentity( root, element ) +" ";
 		System.out.println( results );
 	}
-  	
-  	//Generates a list of next transitions for a state and its substates (where possible).
-  	//That is transition that enables or activates a state
-  	/*private List<Transition> getAllTransitions( State st ) {
-		if( !st.hasNestedStateMachines() ) {
-			return st.getNextTransition();
-		}
-		else {	
-			List<Transition> allTransitions = new ArrayList<Transition>();
-			for( Transition tr : st.getNextTransition() )
-				allTransitions.add(tr);
-		
-			for( StateMachine sm : st.getNestedStateMachines() )
-				for( Transition transition : getAllTransitions( sm ) )
-					allTransitions.add( transition );
-		    return allTransitions;
-		}
-  	}*/
 	
 	private CaseStatement getCaseStatementForNullState( State st, StateMachine root ) {
 	
@@ -607,6 +579,7 @@ class NuSMVCoordinator
 			case "/=" : return true;
 			case ">>=" : return true;
 			case "<<=" : return true;
+			//case "^" : return true;
 			default : return false;
 		}		
 	}
