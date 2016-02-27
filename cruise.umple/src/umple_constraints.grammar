@@ -23,7 +23,7 @@ negativeConstraint : ( ! | not ) ( [[constraintName]] | [[constraint]] )
 
 // A constraint body is a constraint expression (possibly with a linking operator such as && or ||). 
 constraintBody : OPEN_ROUND_BRACKET [[constraint]] CLOSE_ROUND_BRACKET
-linkingOp- : ( [=andOp:and|&&|&] | [!orOp:OPEN_ROUND_BRACKETor|\Q||\ECLOSE_ROUND_BRACKET] ) [[linkingOpBody]]
+linkingOp- : ( [=andOp:and|&&|&] | [[equalityOperator]] | [!orOp:OPEN_ROUND_BRACKETor|\Q||\ECLOSE_ROUND_BRACKET] ) [[linkingOpBody]]
 linkingOpBody : [[constraint]]
 constraintExpr- : [[statemachineExpr]] | [[stringExpr]] | [[boolExpr]] | [[numExpr]] | [[associationExpr]]  | [[genExpr]] | [[loneBoolean]] | { [!fakeContraint:[^\n]+] }
 

@@ -32,7 +32,7 @@ class CarTransmission {
       
       second {
         reachThirdSpeed [!driveSelected] -> third;
-        dropBelowSecondSpeed [ ((a > b) || (driveSelected && (!(b >= a) && (c < b)) ))] -> first;
+        dropBelowSecondSpeed [ ((a > b) || (driveSelected && (!(b >= a) && (c < b))))] -> first;
         dropBelowSecondSpeed [ ( (a + c) > b) ] -> first;
         dropBelowSecondSpeed [ (a - c) > b] -> first;
         dropBelowSecondSpeed [ (a - c) > (b + 2)] -> first;
@@ -42,10 +42,11 @@ class CarTransmission {
         dropBelowSecondSpeed [ ((a - c) > (b * 2)) || ((a - c) > (b ^ 2))] -> first;
         dropBelowSecondSpeed [ ((a - c) > (b * 2)) || driveSelected] -> first; //when a = driveSelected
         dropBelowSecondSpeed [ ((a - c) > (b * 2)) != ((a - c) > (b ^ 2))] -> first;
-        //dropBelowSecondSpeed [ ((a - c) > (b * 2)) == ((a - c) > (b ^ 2))] -> first;
+        dropBelowSecondSpeed [ ((a - c) > (b * 2)) == ((a - c) > (b ^ 2))] -> first;
       }
       
       third {
+        dropBelowThirdSpeed [ ((a - c) > (b * 2)) == ((a - c) > (b ^ 2))] -> second;
         dropBelowThirdSpeed-> second;
       }
     }

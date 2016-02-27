@@ -41,7 +41,10 @@ MODULE State ( _stateDrive )
      t17 := event = ev_dropBelowSecondSpeed & _stateDrive.state = StateDrive_second & g9;
      t18 := event = ev_dropBelowSecondSpeed & _stateDrive.state = StateDrive_second & g10;
      t19 := event = ev_dropBelowSecondSpeed & _stateDrive.state = StateDrive_second & g11;
-     t20 := event = ev_dropBelowThirdSpeed & _stateDrive.state = StateDrive_third;
+     t20 := event = ev_dropBelowSecondSpeed & _stateDrive.state = StateDrive_second & g12;
+     t21 := event = ev_dropBelowSecondSpeed & _stateDrive.state = StateDrive_second & g13;
+     t22 := event = ev_dropBelowThirdSpeed & _stateDrive.state = StateDrive_third & g13;
+     t23 := event = ev_dropBelowThirdSpeed & _stateDrive.state = StateDrive_third;
      g1 := driveSelected;
      g2 := !driveSelected;
      g3 := ((a > b) | (driveSelected & ((b < a) | (c >= b))));
@@ -53,6 +56,8 @@ MODULE State ( _stateDrive )
      g9 := ((a - c) > (b * 2)) | ((a - c) > (b * 2));
      g10 := ((a - c) > (b * 2)) | ((a - c) > (b^2));
      g11 := ((a - c) > (b * 2)) | driveSelected;
+     g12 := ((a - c) > (b * 2)) != ((a - c) > (b^2));
+     g13 := ((a - c) > (b * 2)) = ((a - c) > (b^2));
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
@@ -60,7 +65,7 @@ MODULE State ( _stateDrive )
      next( state ) := case
        t5 | t6 : State_neutral;
        t1 : State_reverse;
-       t3 | t11 | t13 | t15 | t17 | t19 | t8 | t20 | t2 | t7 | t12 | t14 | t16 | t18 | t4 | t9 | t10 : State_drive;
+       t2 | t7 | t12 | t14 | t16 | t18 | t20 | t4 | t9 | t23 | t3 | t11 | t13 | t15 | t17 | t19 | t21 | t8 | t22 | t10 : State_drive;
        TRUE : state;
      esac;
 
@@ -95,8 +100,8 @@ MODULE StateDrive ( _state )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _state.t7 | _state.t12 | _state.t14 | _state.t16 | _state.t18 | _state.t3 | _state.t11 | _state.t13 | _state.t15 | _state.t17 | _state.t19 : StateDrive_first;
-       _state.t4 | _state.t9 | _state.t8 | _state.t20 : StateDrive_second;
+       _state.t7 | _state.t12 | _state.t14 | _state.t16 | _state.t18 | _state.t20 | _state.t3 | _state.t11 | _state.t13 | _state.t15 | _state.t17 | _state.t19 | _state.t21 : StateDrive_first;
+       _state.t8 | _state.t22 | _state.t4 | _state.t9 | _state.t23 : StateDrive_second;
        _state.t10 : StateDrive_third;
        _state.t1 | _state.t5 | _state.t2 | _state.t6 : null;
        _state.state = State_drive : StateDrive_first;
