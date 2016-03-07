@@ -27,15 +27,16 @@ class NuSMVGenerator
  
  	//This appends comment to the model
     code.append(coord.commentModel(model));
-    String handle = "";
-    String dot = "";
+    code.append("-- PLEASE DO NOT EDIT THIS CODE --\n");
+    code.append("-- This code was generated using the UMPLE "+UmpleModel.VERSION_NUMBER+" modeling language! --\n\n");
+    
     for(UmpleClass uClass : model.getUmpleClasses()) {
   		for(StateMachine sm : uClass.getStateMachines()) {  			
   			if( !coord.isNested(sm) ) {	
-  				code.append( coord.generateSystem(coord. generateModuleForSimpleStateMachine( sm )) );
+  				code.append( coord.generateSystem(coord.generateModuleForSimpleStateMachine( sm, uClass )) );
   			}
   			else {
-  				code.append( coord.generateSystem( coord.generateModuleForNestedStateMachine( sm )) );				
+  				code.append( coord.generateSystem( coord.generateModuleForNestedStateMachine( sm, uClass )) );				
   			}
   		}
   	}

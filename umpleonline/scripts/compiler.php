@@ -23,6 +23,9 @@
 
 require_once("compiler_config.php");
 
+// Allow CORS so that any site may use the Umple compiler.
+header("Access-Control-Allow-Origin: *");
+
 if (isset($_REQUEST["save"]))
 {
   if(isset($_REQUEST["svgContent"]))

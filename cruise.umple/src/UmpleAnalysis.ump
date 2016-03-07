@@ -15,7 +15,6 @@ class Analyzer
   depend java.lang.reflect.*;
   abstract;
   name = null;
-  UmpleModel model = null;
   0..* parent -- 0..* Analyzer children;
   void analyzeToken(Token token)
   {
@@ -370,6 +369,7 @@ class ArithmeticCallAnalyzer
   public void analyze(Token token)
   {
     ConstraintTree cv = rawLine.createNew();
+    cv.setShouldDisplayBrackets(true);
     cv.addElementAll(rawLine.getRoot());
     personalRawLine.addElement(cv);
   }

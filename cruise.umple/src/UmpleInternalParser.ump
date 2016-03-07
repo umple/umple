@@ -25,6 +25,7 @@ class UmpleInternalParser
   isA UmpleParser;
   isA Parser;
   depend java.io.*;
+  depend java.nio.file.*;
   depend cruise.umple.util.*;
   depend cruise.umple.analysis.*;
   depend cruise.umple.parser.analysis.*;

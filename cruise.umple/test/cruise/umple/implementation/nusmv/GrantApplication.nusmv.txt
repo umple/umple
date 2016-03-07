@@ -1,17 +1,22 @@
 -- This file is generated from GrantApplication.ump --
 
- -- This defines a NuSMV module for Status --
- MODULE Status
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
+
+
+-- This defines a NuSMV module for Status --
+MODULE Status
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
      event : { ev_createApplication , ev_researcherDeclaresComplete , ev_editByResearcher , ev_returnToResearcher , ev_verified , ev_editByInstitution , ev_reOpen , ev_submit , ev_withdraw , ev_acceptForReview , ev_submissionCheck , ev_acceptForExpertReview , ev_bypassExpertReviewDueToMinorChanges , ev_returnToInstitition , ev_expertReviewsReturned , ev_finalAccept , ev_minorRevisionsNeeded , ev_reject , ev_tryAgain };
-    
+
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Status_Planned , Status_InProgress , Status_EvaluationByInstitution , Status_VerifiedByInstitution , Status_SubmittedByInstitution , Status_UnderAdministrativeReview , Status_UnderExpertReview , Status_AwaitingFinalDecision , Status_Accepted , Status_Rejected , Status_Withdrawn };
-    
-   -- This part defines macros that summarize the transitions of the given NuSMV module --
+     adminCheckOk : boolean;
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
      t1 := event = ev_createApplication & state = Status_Planned;
      t2 := event = ev_researcherDeclaresComplete & state = Status_InProgress;
@@ -23,8 +28,8 @@
      t8 := event = ev_submit & state = Status_VerifiedByInstitution;
      t9 := event = ev_withdraw & state = Status_SubmittedByInstitution;
      t10 := event = ev_acceptForReview & state = Status_SubmittedByInstitution;
-     t11 := event = ev_submissionCheck & state = Status_SubmittedByInstitution;
-     t12 := event = ev_submissionCheck & state = Status_SubmittedByInstitution;
+     t11 := event = ev_submissionCheck & state = Status_SubmittedByInstitution & g1;
+     t12 := event = ev_submissionCheck & state = Status_SubmittedByInstitution & g2;
      t13 := event = ev_acceptForExpertReview & state = Status_UnderAdministrativeReview;
      t14 := event = ev_bypassExpertReviewDueToMinorChanges & state = Status_UnderAdministrativeReview;
      t15 := event = ev_returnToInstitition & state = Status_UnderAdministrativeReview;
@@ -36,8 +41,10 @@
      t21 := event = ev_reject & state = Status_AwaitingFinalDecision;
      t22 := event = ev_tryAgain & state = Status_Rejected;
      t23 := event = ev_tryAgain & state = Status_Withdrawn;
-  
-   -- This part defines the transitions from states to states for the given NuSMV module --
+     g1 := (adminCheckOk & (!adminCheckOk));
+     g2 := !adminCheckOk;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := Status_Planned;
      next( state ) := case
@@ -53,23 +60,25 @@
        t16 | t9 | t18 : Status_Withdrawn;
        TRUE : state;
      esac;
- 
-    
- -- This defines a NuSMV module for main --
- MODULE main
+
+   -- This part defines logic for the assignment of values to state variable "adminCheckOk" of this NuSMV module --
+   ASSIGN
+     init( adminCheckOk ) := FALSE;
+
+-- This defines a NuSMV module for main --
+MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
      status : Status;
-    
-   CTLSPEC   EF  ( status.state = Status_Planned )
-   CTLSPEC   EF  ( status.state = Status_InProgress )
-   CTLSPEC   EF  ( status.state = Status_EvaluationByInstitution )
-   CTLSPEC   EF  ( status.state = Status_VerifiedByInstitution )
-   CTLSPEC   EF  ( status.state = Status_SubmittedByInstitution )
-   CTLSPEC   EF  ( status.state = Status_UnderAdministrativeReview )
-   CTLSPEC   EF  ( status.state = Status_UnderExpertReview )
-   CTLSPEC   EF  ( status.state = Status_AwaitingFinalDecision )
-   CTLSPEC   EF  ( status.state = Status_Accepted )
-   CTLSPEC   EF  ( status.state = Status_Rejected )
-   CTLSPEC   EF  ( status.state = Status_Withdrawn )
+CTLSPEC   EF( status.state = Status_Planned )
+CTLSPEC   EF( status.state = Status_InProgress )
+CTLSPEC   EF( status.state = Status_EvaluationByInstitution )
+CTLSPEC   EF( status.state = Status_VerifiedByInstitution )
+CTLSPEC   EF( status.state = Status_SubmittedByInstitution )
+CTLSPEC   EF( status.state = Status_UnderAdministrativeReview )
+CTLSPEC   EF( status.state = Status_UnderExpertReview )
+CTLSPEC   EF( status.state = Status_AwaitingFinalDecision )
+CTLSPEC   EF( status.state = Status_Accepted )
+CTLSPEC   EF( status.state = Status_Rejected )
+CTLSPEC   EF( status.state = Status_Withdrawn )

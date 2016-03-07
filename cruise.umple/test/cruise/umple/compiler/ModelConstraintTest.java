@@ -52,9 +52,10 @@ public class ModelConstraintTest {
 		ErrorTypeSingleton.getInstance().reset();
 		model = new UmpleModel(new UmpleFile(pathToInput,filename));
 		model.setShouldGenerate(false);
-		RuleBasedParser rbp = new RuleBasedParser(model);
+		RuleBasedParser rbp = new RuleBasedParser();
 		parser = new UmpleInternalParser(umpleParserName,model,rbp);
 		ParseResult result = rbp.parse(file);
+    model.extractAnalyzersFromParser(rbp);
 		model.setLastResult(result);
 		boolean answer = result.getWasSuccess();
 		if (answer)

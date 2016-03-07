@@ -130,7 +130,7 @@ class RuleBasedParser
         String currentLine = reader.readLine();
         if(analyzer==null)
         {
-          analyzer = new GrammarAnalyzer(getModel());
+          analyzer = new GrammarAnalyzer();
         }
 
         analyzer.getKeys().put("{}", new String[]{"{","}"});    
@@ -209,7 +209,6 @@ class RuleBasedParser
     }
     analyzer.init(file);
     analyzer.execute();
-    getModel().setAnalyzers(analyzer.getAnalyzerMap());
     setRootToken(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
@@ -223,7 +222,6 @@ class RuleBasedParser
     }
     analyzer.init(ruleName, input);
     analyzer.execute();
-    getModel().setAnalyzers(analyzer.getAnalyzerMap());
     setRootToken(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
@@ -380,7 +378,7 @@ class RuleBasedParser
         }
       }
     }
-    analyzer = new GrammarAnalyzer(getModel());
+    analyzer = new GrammarAnalyzer();
     analyzer.analyze(rootToken);
     analyzer.setupTerminals();
   }
@@ -502,7 +500,7 @@ class RuleBasedParserThread
     data.setParseResult(parseResult);
     data.init(token.getPosition());
     Token temp = new Token("ROOT","");
-    RuleBasedParser parser = new RuleBasedParser(getModel());
+    RuleBasedParser parser = new RuleBasedParser();
     parser.parse(root,temp,filename,data);
     Token answer = parser.getRootToken();
     synchronized(token)
@@ -542,7 +540,7 @@ class GrammarAnalyzer {
               rules.get("$ROOT$"),
               token,
               umpleFile.getPath() + File.separator+value,
-              data,getModel());
+              data);
             threads.add(thread);
             thread.start();
           }
@@ -585,7 +583,7 @@ class GrammarAnalyzer {
   public void execute()
   {
     setRootToken(new Token("ROOT",""));
-    RuleBasedParser parser = new RuleBasedParser(getModel());
+    RuleBasedParser parser = new RuleBasedParser();
     parser.parse(rules.get("$ROOT$"),getRootToken(), input,getData());
     setRootToken(parser.getRootToken());
     while(threads.size()>0)
@@ -629,7 +627,6 @@ class GrammarAnalyzer {
       Class cls = Class.forName(className);
       Analyzer a = (Analyzer) cls.newInstance();
       a.setName(name);
-      a.setModel(getModel());
       getAnalyzerMap().put(name,a);
       analyzerStack.push(a);
       wasMade = true;

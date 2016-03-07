@@ -22,8 +22,8 @@ class Elevator {
 
     InMotion {
       Moving {
-        approachingFloor [!floorRequested()] -> Moving;
-        approachedFloor  [floorRequested()] -> / {stop();} Stopping;
+        approachingFloor [!floorRequested] -> Moving;
+        approachedFloor  [floorRequested] -> / {stop();} Stopping;
       }
       Stopping {
         stopped -> / {openDoor();} DoorOpening;
@@ -35,7 +35,7 @@ class Elevator {
         doorOpened  -> AtFloor;
       }
       AtFloor {
-        after(timer) [!obstruction()] -> DoorClosing;
+        after(timer) [!obstruction] -> DoorClosing;
         doorClosingRequest -> DoorClosing;
       }
       DoorClosing {
@@ -55,5 +55,7 @@ class Elevator {
   void goDown(){}
   void stop(){}
   void openDoor(){}  
-  Boolean floorRequested() {return false;}
+  //Boolean floorRequested() {return false;}
+  Boolean floorRequested = false;
+  Boolean obstruction;
 }

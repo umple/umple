@@ -28,6 +28,7 @@ class UmpleModel
   depend cruise.umple.analysis.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.parser.analysis.*;
   depend java.util.zip.*; // new
   isA Runnable;
 
@@ -469,6 +470,9 @@ class UmpleClassifier
   1 -> 0..* Method;
 
   * -> * Depend;
+  
+  UmpleModel sourceModel;
+  String sourceFilename = "";
 
   // The constants contained within the Umple Classifier.
   1 -> 0..* Constant;
@@ -555,8 +559,6 @@ class UmpleClass
   // The comments associated with the Umple Class (such as the Javadoc above it).
   1 -> * Comment;
 
-  UmpleModel sourceModel;
-
   //This is used to assign inheritance parameters.
   1 -> * GeneralTPApplied;
 
@@ -626,8 +628,6 @@ class UmpleTrait {
 
   // The comments associated with the Umple Trait (such as the Javadoc above it).
   1 -> * Comment;
-
-  UmpleModel sourceModel;
 
   //The template parameters which are specified when traits are defined.
   1 -> * GeneralTemplateParameter;

@@ -1,16 +1,17 @@
 #Umple Modelling Language
 
-* Travis CI `Mac` and `Linux` build status [![Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple)
+### Build Status
 
-* AppVeyor `windows` build status: [![Windows Build status](https://ci.appveyor.com/api/projects/status/gf9oqwtwgy4c45q6/branch/master?svg=true)](https://ci.appveyor.com/project/umple/umple/branch/master)   
-
+OS         | Linux  | OSX    | Windows  
+:--------- | ------ | ------ | -------- 
+**Status** | [![Travis-CI Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple) | [![Travis-CI Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple) | [![Windows Build status](https://ci.appveyor.com/api/projects/status/gf9oqwtwgy4c45q6/branch/master?svg=true)](https://ci.appveyor.com/project/umple/umple/branch/master) 
 
 
 ##Introduction
 
 This is the main project for various Umple subprojects and components.
 
-Umple is a model-oriented programming technology. It allows developers to embed modelling concepts (e.g. associations, state machines), patterns and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP (and can be embedded in or embed these), as well as diagrams, metrics and many other artifacts.
+Umple is a model-oriented programming technology. It allows developers to embed modelling concepts (e.g. UML associations, state machines), patterns and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP (and can be embedded in or embed these), as well as diagrams, metrics and many other artifacts.
 
 The project homepage is located at http://umple.org/
 

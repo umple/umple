@@ -72,7 +72,7 @@ class GeneratorHelper
            
           Position p = inject.getPosition();
 	      if (p != null) {
-	          positionString =  "// line " + p.getLineNumber() + " \"" + p.getRelativePath((UmpleClass)(inject.getUmpleClassifier()), ((UmpleClass)inject.getUmpleClassifier()).getSourceModel().getDefaultGenerate() ) + "\"\n";
+	          positionString =  "// line " + p.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
 	      }
         }
         else

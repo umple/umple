@@ -17,15 +17,11 @@ class NuSMVModule {
 	}
   
   	1 -> 1 ModuleBody;
-  	comment <<! -- This defines a NuSMV module for <<=identifier>> --
- !>>
-	output <<!MODULE <<=getIdentifier()>><<#if(parameters.size() != 0){#>> ( <<=printParameters()>> ) 
-
-<<=moduleBody.toString()>><<#}
-	else {#>>
-
-
-<<=moduleBody.toString()>> <<#}#>> !>> 
+  	comment <<!
+-- This defines a NuSMV module for <<=identifier>> --
+!>>
+	output <<!MODULE <<=getIdentifier()>><<#if(parameters.size() != 0){#>> ( <<=printParameters()>> )<<=moduleBody.toString()>><<#}
+else {#>><<=moduleBody.toString()>><<#}#>>!>>
   emit toString()(comment, output);
 }
 
@@ -34,8 +30,8 @@ class ModuleBody {
   1 -> 1..* ModuleElement;
 	
 	//Defines the template for outputting the instance of this class
-	output <<!  <<#for(ModuleElement me : moduleElements){#>><<=me.toString()>>
-  <<#}#>>!>>
+	output <<!<<#for(ModuleElement me : moduleElements){#>>
+<<=me.toString()>><<#}#>>!>>
   emit toString()(output);
 }
 
@@ -49,11 +45,12 @@ class VarDeclaration {
   after constructor { setHeader("VAR"); }
   1 -> 1..* VariableSpecifier;
 
-  comment <<! -- This part declares state variables for the given NuSMV module --
-  !>>
-  output <<! <<=getHeader()>>
-    <<#for(VariableSpecifier vs : variableSpecifiers){#>><<=vs.toString()>>
-    <<#}#>>!>>
+  comment <<!
+   -- This part declares state variables for the given NuSMV module --
+!>>
+  output <<!   <<=getHeader()>>
+    <<#for(VariableSpecifier vs : variableSpecifiers){#>>
+     <<=vs.toString()>><<#}#>>!>>
   emit toString()(comment, output);
 }
 
@@ -74,7 +71,8 @@ class VariableSpecifier {
 		return temp;
   }
 	
-  output <<! <<#if(typeSpecifier.size() == 1 && !isBracketed){#>><<=getIdentifier()>> : <<=typeSpecifier.get(0)>>;<<#}
+  output <<!
+  <<#if(typeSpecifier.size() == 1 && !isBracketed){#>><<=getIdentifier()>> : <<=typeSpecifier.get(0)>>;<<#}
   else if( isBracketed ){#>><<=getIdentifier()>> : <<=getTypeName()>>( <<=print()>> );<<#}
   else {#>><<=getIdentifier()>> : { <<=print()>> };<<#}#>>!>>
   emit toString()(output);
@@ -85,12 +83,13 @@ class IVarDeclaration {
   isA ModuleElement;
   after constructor { setHeader("IVAR");}
 
-	1 -> 1..* VariableSpecifier;
-
-  comment <<! -- This part declares input variables for the given NuSMV module --
+  1 -> 1..* VariableSpecifier;
+  comment <<!
+   -- This part declares input variables for the given NuSMV module --
   !>>
   output <<! <<=getHeader()>>
-    <<#for(VariableSpecifier vs : variableSpecifiers){#>><<=vs.toString()>>
+    <<#for(VariableSpecifier vs : variableSpecifiers){#>>
+     <<=vs.toString()>>
     <<#}#>>!>>
   emit toString()( comment, output );
 }
@@ -100,7 +99,8 @@ class DefineDeclaration {
   isA ModuleElement;
   after constructor { setHeader("DEFINE");}
   1 -> 1..* DefineBody;
-  comment <<! -- This part defines macros that summarize the transitions of the given NuSMV module --
+  comment <<!
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
   !>>
   output <<! <<=getHeader()>>
   <<#for(DefineBody db : defineBodies){#>><<=db.toString()>>
@@ -112,7 +112,8 @@ class DefineBody {
   identifier;
   1 -> 1 BasicExpression;
   
-  output <<!   <<=getIdentifier()>> :=<<=basicExpression.toString()>>;!>>
+  output <<!
+     <<=getIdentifier()>> :=<<=basicExpression.toString()>>;!>>
   emit toString()(output);
 }
 
@@ -122,10 +123,12 @@ class BasicExpression {
 	//Variable Declarations
 	identifier;
   	lazy Boolean bracketed;
-	operator { AND, OR, XOR, XNOR, IMPLY, IFF, EQ, NE, LT, GT, LE, GE, NULL, NOT };
+	lazy Boolean displayNegation;
+	operator { AND, OR, XOR, XNOR, IMPLY, IFF, EQ, NE, LT, GT, LE, GE, NULL, NOT, MOD, PLUS, MUL, MINUS, DIV };
   	after constructor { setBracketed(false); }
+		after constructor { setDisplayNegation(false); }
     
-  	public String convertOperator(){
+  public String convertOperator(){
 		String op = getOperatorFullName();
 		switch( op ){
 			case "AND" : 		return " & ";
@@ -140,24 +143,31 @@ class BasicExpression {
 			case "GT" : 			return " > ";
 			case "LE" : 			return " <= ";
 			case "GE" : 			return " >= ";
-      		case "MINUS" : 	return " - ";
-      		case "NOT" : 		return " ! ";
+      case "MINUS" : 	return " - ";
+      case "NOT" : 		return " ! ";
+			case "MOD" : return " mod ";
+			case "PLUS" : return " + ";
+			case "MUL" : return " * ";
+			case "DIV" : return " / ";
+			
 			default : 				return "";
 		}
-  	}
+  }
 	public String getExpression() {
-  		String op = convertOperator();
-    	if(children.size() == 0)
-      		return getIdentifier();
+  	String op = convertOperator();
+			if(children.size() == 0)
+      	return getIdentifier();
     	if(getChildren().size() == 1)
-			if(getBracketed())
-				return "( "+ getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier() + " )";
-      		else return getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier();
+				if(getBracketed())
+					return "( "+ getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier() + " )";
+      	else return getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier();
     	else
-			if(getBracketed())
-				return "( "+ getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression()+" )";
-      		else return getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression();
-	}
+				if(getBracketed())
+					return "( "+ getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression()+" )";
+      	else return getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression();   	
+	}	
+
+	
   
   //Template for formatting output
   output <<! <<#if(getBracketed()){#>><<=getExpression()>><<#}
@@ -170,7 +180,7 @@ class CTLSpecification {
 	after constructor { setHeader("CTLSPEC"); }
 	1 -> 1 CTLExpression;
   	//Template for formatting output
-  	output <<! <<=getHeader()>>  <<=cTLExpression.toString()>>!>>
+  	output <<!<<=getHeader()>>  <<=cTLExpression.toString()>>!>>
   	emit toString()(output);
 }
 
@@ -195,7 +205,7 @@ class CTLExpression {
 	}
 	private String getRealExpression() {
 		if(qualified)
-			return getCtlOperatorFullName()+"  "+getExpression();
+			return getCtlOperatorFullName()+getExpression();
 		return getExpression();	
 	}	
 	//Template for formatting output
@@ -218,9 +228,39 @@ class AssignConstraint {
   after constructor { setHeader("ASSIGN"); }
 
 	//Association Definition
-  1 -> 1..* Assign;  
-  
-  comment <<! -- This part defines the transitions from states to states for the given NuSMV module --
+  1 -> 1..* Assign; 
+
+	private <E> boolean has( List<E> objectList, E whatToFind ) {
+  		boolean yes = false;
+  		for(E st : objectList) {
+  			if( st.equals(whatToFind) ) {
+  				yes = true;
+  				break;
+  			}
+  		}
+  		return yes;
+	} 
+
+	private String getVarNames(){
+		List<String> names = new ArrayList<String>();
+		for( Assign assign : assigns ) {
+			if(! has( names, assign.getIdentifier()))
+				names.add(assign.getIdentifier());
+		}		
+
+		if( names.size() == 1)
+			return names.get(0);
+		String temp = "";
+		int i = 0;
+		while( i < names.size() - 1 ){
+			temp += names.get(i) +", ";
+			i++;
+		}
+		temp += names.get(i);
+		return temp;
+	}
+  comment <<!
+   -- This part defines logic for the assignment of values to state variable "<<=getVarNames()>>" of this NuSMV module --
   !>>
   output <<! <<=getHeader()>>
  <<#for(Assign assign : assigns){#>><<=assign.toString()>>
@@ -239,7 +279,8 @@ class SimpleAssign {
 	isA Assign;
   
   //Template for formatting output
-  output <<!    <<=getIdentifier()>> :=<<=getBasicExpression().toString()>>;!>>
+  output <<!
+    <<=getIdentifier()>> :=<<=getBasicExpression().toString()>>;!>>
   emit toString()(output);
 }
 
@@ -247,7 +288,8 @@ class InitAssign {
 	isA Assign;
 
   //Template for formatting output
-  output <<!    init( <<=getIdentifier()>> ) :=<<=getBasicExpression().toString()>>;!>>
+  output <<!
+     init( <<=getIdentifier()>> ) :=<<=getBasicExpression().toString()>>;!>>
   emit toString()(output);
 }
 
@@ -255,7 +297,8 @@ class NextAssign {
 	isA Assign;
   
   //Template for formatting output
-  output <<!    next( <<=getIdentifier()>> ) :=<<=getBasicExpression().toString()>>;!>>
+  output <<!
+     next( <<=getIdentifier()>> ) :=<<=getBasicExpression().toString()>>;!>>
   emit toString()(output);
 }
 
@@ -266,7 +309,7 @@ class CaseExpression {
   output <<! case
   <<#for(CaseStatement stmt : caseStatements){#>><<=stmt.toString()>>
   <<#}#>>
-   esac!>>
+     esac!>>
   emit toString()(output);
 }
 
@@ -274,7 +317,8 @@ class CaseStatement {
   1 -> 2 BasicExpression;
   
   //Template for formatting output
-  output <<!    <<=basicExpressions.get(0).toString()>> :<<=basicExpressions.get(1).toString()>>;!>>
+  output <<!
+      <<=basicExpressions.get(0).toString()>> :<<=basicExpressions.get(1).toString()>>;!>>
   emit toString()(output);
 }
 

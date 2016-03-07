@@ -75,7 +75,7 @@ public class UmpleParserFilterTest
     model = new UmpleModel(new UmpleFile(pathToInput, filename));
     model.setShouldGenerate(false);
     boolean answer = true;
-    RuleBasedParser rbp = new RuleBasedParser(model);
+    RuleBasedParser rbp = new RuleBasedParser();
     parser = new UmpleInternalParser(umpleParserName, model, rbp);
     ParseResult result = rbp.parse(file);
     answer = result.getWasSuccess();

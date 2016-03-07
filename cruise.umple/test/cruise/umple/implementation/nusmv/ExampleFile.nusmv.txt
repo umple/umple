@@ -1,17 +1,21 @@
 -- This file is generated from ExampleFile.ump --
 
- -- This defines a NuSMV module for Status --
- MODULE Status
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
+
+
+-- This defines a NuSMV module for Status --
+MODULE Status
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
      event : { ev_buttonOrObstacle , ev_reachBottom , ev_reachTop };
-    
+
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Status_Open , Status_Closing , Status_Closed , Status_Opening , Status_HalfOpen };
-    
-   -- This part defines macros that summarize the transitions of the given NuSMV module --
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
      t1 := event = ev_buttonOrObstacle & state = Status_Open;
      t2 := event = ev_buttonOrObstacle & state = Status_Closing;
@@ -20,8 +24,8 @@
      t5 := event = ev_buttonOrObstacle & state = Status_Opening;
      t6 := event = ev_reachTop & state = Status_Opening;
      t7 := event = ev_buttonOrObstacle & state = Status_HalfOpen;
-  
-   -- This part defines the transitions from states to states for the given NuSMV module --
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := Status_Open;
      next( state ) := case
@@ -32,17 +36,15 @@
        t5 : Status_HalfOpen;
        TRUE : state;
      esac;
- 
-    
- -- This defines a NuSMV module for main --
- MODULE main
+
+-- This defines a NuSMV module for main --
+MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
      status : Status;
-    
-   CTLSPEC   EF  ( status.state = Status_Open )
-   CTLSPEC   EF  ( status.state = Status_Closing )
-   CTLSPEC   EF  ( status.state = Status_Closed )
-   CTLSPEC   EF  ( status.state = Status_Opening )
-   CTLSPEC   EF  ( status.state = Status_HalfOpen )
+CTLSPEC   EF( status.state = Status_Open )
+CTLSPEC   EF( status.state = Status_Closing )
+CTLSPEC   EF( status.state = Status_Closed )
+CTLSPEC   EF( status.state = Status_Opening )
+CTLSPEC   EF( status.state = Status_HalfOpen )

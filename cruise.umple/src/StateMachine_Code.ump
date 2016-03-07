@@ -128,13 +128,26 @@ class StateMachine
       {
         for (Transition t : state.getTransitions())
         {
-          allTransitions.add(t);
+					//preventing duplicated transitions (Issue #760) - Temporary solution to facilitate analyzable output by nuXmv code generator...
+					if( !has(allTransitions, t) )
+          	allTransitions.add(t);
         }
       }
     }
     return allTransitions;
   }
-  
+  //introduced to prevent duplicated transition - Issue #760
+  private <E> boolean has( List<E> objectList, E whatToFind ) {
+  	boolean yes = false;
+  	for(E st : objectList) {
+  		if( st.equals(whatToFind) ) {
+  			yes = true;
+  			break;
+  		}
+  	}
+  	return yes;
+	}
+
   //Issue 519
   public boolean deleteState(State aState)
   {

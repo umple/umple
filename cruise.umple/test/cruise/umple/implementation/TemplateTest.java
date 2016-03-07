@@ -362,9 +362,10 @@ public class TemplateTest
     model.setShouldGenerate(false);
     if( aTracer != null )
     	model.setTracer(new TracerDirective(aTracer));
-    RuleBasedParser rbp = new RuleBasedParser(model);
+    RuleBasedParser rbp = new RuleBasedParser();
     UmpleParser parser = new UmpleInternalParser(umpleParserName, model, rbp);
     ParseResult result = rbp.parse(file);
+    model.extractAnalyzersFromParser(rbp);
     model.setLastResult(result);
 
     if (!result.getWasSuccess())

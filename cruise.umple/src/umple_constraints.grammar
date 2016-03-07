@@ -23,14 +23,14 @@ negativeConstraint : ( ! | not ) ( [[constraintName]] | [[constraint]] )
 
 // A constraint body is a constraint expression (possibly with a linking operator such as && or ||). 
 constraintBody : OPEN_ROUND_BRACKET [[constraint]] CLOSE_ROUND_BRACKET
-linkingOp- : ( [=andOp:and|&&|&] | [!orOp:OPEN_ROUND_BRACKETor|\Q||\ECLOSE_ROUND_BRACKET] ) [[linkingOpBody]]
+linkingOp- : ( [=andOp:and|&&|&] | [[equalityOperator]] | [!orOp:OPEN_ROUND_BRACKETor|\Q||\ECLOSE_ROUND_BRACKET] ) [[linkingOpBody]]
 linkingOpBody : [[constraint]]
-constraintExpr- : [[statemachineExpr]] | [[stringExpr]] | [[boolExpr]] | [[numExpr]] | [[associationExpr]]  | [[genExpr]] | [[loneBoolean]] | { [!fakeContraint:[^\n]+] } 
+constraintExpr- : [[statemachineExpr]] | [[stringExpr]] | [[boolExpr]] | [[numExpr]] | [[associationExpr]]  | [[genExpr]] | [[loneBoolean]] | { [!fakeContraint:[^\n]+] }
 
 loneBoolean : [[constraintVariable]]
 
-//must be a boolean
-boolExpr :  [[constraintVariable]] [[equalityOperator]] [[boolLiteral]] | [[boolLiteral]] [[equalityOperator]]  [[constraintVariable]] | [[boolLiteral]]
+//must be a boolean //fixing is here!!!
+boolExpr :  [[constraintVariable]] [[equalityOperator]] [[boolLiteral]] | [[boolLiteral]] [[equalityOperator]] [[constraintVariable]] | [[boolLiteral]] 
 boolLiteral : [=literal:true|false]
 
 //must be string
@@ -53,9 +53,9 @@ numberExpression3- : ( [[arithmeticCall]] | [[numberLiteral]] ) [[equalityOperat
 numberExpression4- : ( [[arithmeticCall]] | [[numberLiteral]] ) [[equalityOperator]]    ( [[arithmeticCall]] | [[numberLiteral]] )
 numberLiteral- : [!number:[0-9]+([\\.][0-9]+)?]
 numberName- : [[numberLiteral]] | [[constraintVariable]]
-arithmeticCall : [[lowArithmeticOperatorCall]] | [[highArithmeticOperatorCall]]
-lowArithmeticOperatorCall- : ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] )? [=operator:+|-] ( [[arithmeticCall]] | [[arithmeticResolve]] ) 
-highArithmeticOperatorCall- : [[arithmeticResolve]] [=operator:*|/|^] ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] ) 
+arithmeticCall : OPEN_ROUND_BRACKET ( [[lowArithmeticOperatorCall]] | [[highArithmeticOperatorCall]] ) CLOSE_ROUND_BRACKET
+lowArithmeticOperatorCall- : ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] )? [=operator:+|-|>>|<<] ( [[arithmeticCall]] | [[arithmeticResolve]] ) 
+highArithmeticOperatorCall- : [[arithmeticResolve]] [=operator:*|/|^|%] ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] ) 
 arithmeticResolve- : -( [[arithmeticCall]] -) | [[numberName]]
 
 equalityOperator- :  [=equalsOp:==|equals] | [=notequalsOp:!=|/=|=!|=/=]

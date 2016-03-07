@@ -1529,7 +1529,7 @@ public class PhpGeneratorTest
 
   {
 
-    UmpleInterface parent = new UmpleInterface("Parent"); 
+    UmpleInterface parent = new UmpleInterface("Parent", model); 
 
     model.addUmpleInterface(parent);
 
@@ -1605,7 +1605,7 @@ public class PhpGeneratorTest
 
   {
 
-    UmpleInterface aInterface = new UmpleInterface("IStudent");
+    UmpleInterface aInterface = new UmpleInterface("IStudent", model);
 
     Assert.assertEquals(PhpInterfaceGenerator.class,generator.getLanguageFor(aInterface).getClass());
 
