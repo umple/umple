@@ -509,6 +509,15 @@ public class UmpleTraitTest {
 			Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine("st1").getStates().size());
 			Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine("st2").getStates().size());
 		}		
+		@Test
+		public void stateMachineTraits032Test() {
+			String code = "class A{  isA C;}"
+					+"trait Base{  fts{  zero{    water -> one;  }    one{    get -> zero;  }  }}"
+					+"trait C {  isA CC;  fts{    zero{    coin-> two;    }    two{    coffee -> one;     tea-> one;    }  }}"
+					+"trait CC{  isA Base;  fts{    zero{      card  -> three;      }    three{      pin -> two;    }   }}";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(3,model.getUmpleClass("A").getStateMachine("fts").getState(0).numberOfTransitions());
+		}		
 		
 //the last StateTest
 		
