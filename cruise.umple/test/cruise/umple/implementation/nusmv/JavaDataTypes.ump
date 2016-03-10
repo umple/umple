@@ -1,0 +1,14 @@
+class Example {
+  Integer a = 10;
+  Integer b = 20;
+  Float c = 0.566;
+  
+  sm {
+    s1 {
+      e1 ->/{ a = b + c; c = c + 2; b *= 2; }  s2;
+      e2 ->/{ b = a + c; } s2;
+      e3 ->/{ c = a + c; } s2;
+    }
+    s2{}
+  }
+}

@@ -479,6 +479,9 @@ class NuSMVCoordinator
 				case "Float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
 				case "Boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
 				case "Integer" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+				case "float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
+				case "boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
+				case "int" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
 				default : ;
 			}
 		}
