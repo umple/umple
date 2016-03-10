@@ -1451,6 +1451,12 @@ class UmpleClass
     return all;
   }
 
+  public List<CodeInjection> getApplicableCodeInjections(String type, String method, List<MethodParameter> parameters)
+  {
+    ArrayList<CodeInjection> all = new ArrayList<CodeInjection>();
+    return all;
+  }
+
   public List<StateMachine> getStateMachines(Event e)
   {
     List<StateMachine> allStateMachines = new ArrayList<StateMachine>();
