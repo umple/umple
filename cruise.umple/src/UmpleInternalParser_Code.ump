@@ -99,7 +99,7 @@ class UmpleInternalParser
     analyzeAllTokens(getRootToken());
     postTokenAnalysis();
     applyTraits();
-    //add analysis here!!!
+    //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
     checkDefaultedNameConflict();
 
     if (shouldGenerate && getParseResult().getWasSuccess())
