@@ -874,13 +874,24 @@ class MethodParameter
 }
 
 /*
+ * 
  */
 class CodeBlock
 {
+	
+  /*
+   * @author Vahdat
+   * @param another a CodeBlock that we would like to make a clone of.
+   * Please maintain this method if you're going to add new attributes to the class CodeBlock.
+   * This code manually creates a clone of a state machine.
+   * 
+   */	
   public CodeBlock(CodeBlock another){
+  	this.name = another.getName();
   	this.codes = new HashMap<String,String>();
   	this.codes.putAll(another.codes);
   }
+  
   public void ApplyTypeParameters(GeneralTPApplied inGeneralTPApplied){
 	   if (inGeneralTPApplied == null) return;
 	   Integer start=0,end=0;

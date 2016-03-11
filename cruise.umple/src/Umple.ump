@@ -415,6 +415,7 @@ class ConstraintVariable
 
 /*
  * A block of code in an arbitrary language to be injected into generated code
+ * Please update the method 'public CodeBlock(CodeBlock another)' if you add new attributes.
  */
 class CodeBlock
 {
