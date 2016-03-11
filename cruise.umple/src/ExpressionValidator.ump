@@ -1,0 +1,34 @@
+namespace cruise.umple.compiler;
+/* This class implements methods to validate the validity of expressions */
+
+class ExpressionValidator {
+	
+  	public boolean validate(){
+  		
+  	}
+  	
+  	private boolean isArithmetic( ConstraintVariable cv ) {
+  		String type = cv.getType();
+  		switch( type ){
+  			"int" : return true;
+  			"Integer" : return true;
+  			"float" : return true;
+  			"Float" : return true;
+  			"Double" : return true;
+  			"double" : return true;
+  			"Long" : return true;
+  			"long" : return true;
+  			default : return false;
+  		}
+  	}
+  	
+  	private boolean isBoolean( ConstraintVariable cv ) {
+  		String type = cv.getType();
+  		switch( type ){
+  			"Boolean" : return true;
+  			"boolean" : return true;
+  			default : return false;
+  		}
+  	}
+
+}
