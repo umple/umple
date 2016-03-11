@@ -785,6 +785,9 @@ class State{
   	for (Action action : actions) {
   		newState.addAction(action.clone());
 		}
+   	for (Activity activity : activities){
+  		newState.addActivity(activity.clone(newState));
+  	}
   	for (Transition transition : getTransitions()){
   		State fromState = inStateMachine.findState(transition.getFromState().getName(),true);
 			State nextState = inStateMachine.findState(transition.getNextState().getName(),true);
@@ -843,10 +846,15 @@ class Action{
 	//Please maintain this method if you're going to add new features to Actions.
 	//This code manually creates a clone of a Actions.
 	Action clone(){
-  	Action action = new Action(getActionCode());
+    Action action = new Action(getActionCode());
   	action.setActionType(getActionType());
   	action.setPosition(getPosition());
   	action.setEndPosition(getEndPosition());
+  	action.setIsInternal(isInternal);
+  	action.codeblock = new CodeBlock(codeblock);
+  	action.cachedHashCode = cachedHashCode;
+  	action.canSetActionCode = canSetActionCode;
+  	action.canSetActionType = canSetActionType;
   	return action;
   }
 	
@@ -863,6 +871,33 @@ class Guard{
   	//TODO: if we want to cover changing names of variables used in guard, I must modify this section to create new objects.
   	return guard;
   }
+}
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************
+/*
+ * Please keep updating the method 'public Activity clone(State inState)' if you add new attributes to this class.
+ */  
+class Activity{
+  /**
+   * 
+   * @author Vahdat
+   * Please maintain this method if you're going to add new attributes to Activity.
+   * This code manually creates a clone of a state.
+   */
+  public Activity clone(State inState){
+	  Activity activity = new Activity(getActivityCode(), inState);
+	  activity.position = getPosition();
+	  activity.endPosition=getEndPosition();
+	  activity.implementationPositions.putAll(getImplementationPositions());
+	  activity.codeblock=new CodeBlock(getCodeblock());
+	  /*
+	   * author:Vahdat
+	   * I'm not sure about the purpose of onCompletionEvent. I have to study it.
+	   */
+	  return activity;
+  }
+   	
 }
 //************************************************************************************* 
 //************************************NEW CLASS****************************************
