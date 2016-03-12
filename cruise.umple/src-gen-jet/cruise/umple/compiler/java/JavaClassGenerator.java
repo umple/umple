@@ -2739,6 +2739,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_4);
      if (uClass.numberOfComments() > 0) { append(stringBuffer, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } 
      for (Position p : uClass.getPositions()) { 
+     uClass.setSourceFilename( p.getFilename() ); 
     stringBuffer.append(TEXT_5);
     stringBuffer.append( p.getLineNumber() );
     stringBuffer.append(TEXT_6);
@@ -12799,6 +12800,7 @@ if (p != null) {
         
         if (p != null) {
 //        use annotations instead
+        uClass.setSourceFilename( p.getFilename() );
         positionHeader = "  // line " + p.getLineNumber() + " \"" + uClass.getRelativePath("Java") + "\"\n";
 //        positionHeader = "\n  @umplesourcefile(line={"+p.getLineNumber()+"},file={\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+(javaline+4)+"},length={"+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length+2)+"})";          
         }
