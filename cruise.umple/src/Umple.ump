@@ -729,6 +729,11 @@ class UmpleVariable
 
   before setName { if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); } }
   before getModifier { if (modifier == null) { return "settable"; } }
+	after constructor {
+  	if (type==""){
+  		 type= "String";
+  	}
+  }
 
   class UniqueIdentifier { }
 }

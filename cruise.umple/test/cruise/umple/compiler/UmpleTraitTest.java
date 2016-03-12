@@ -531,6 +531,40 @@ public class UmpleTraitTest {
 			Assert.assertEquals("test3();",model.getUmpleClass("A").getStateMachine("sm").getState(0).getAction(1).getCodeblock().getCode("Java"));		
 		}
 		
+		@Test
+		public void stateMachineTraits034Test() {
+			String code = "trait T{	Boolean requiredMethod ();}"
+					+"class A{	isA T;	sm{		s0{			requiredMethod() -> s1;		}		s1{			getBack() -> s0;		}	}}";			
+			UmpleModel model = getModel(code);
+			boolean result = false;
+			try {
+				model.run();	
+			} catch (Exception e) {
+				result = e.getMessage().contains("208");
+			} finally {
+				Assert.assertFalse(result);
+				SampleFileWriter.destroy("traitTest.ump");
+			}	
+		}
+		
+		@Test
+		public void stateMachineTraits035Test() {
+			String code = "trait T{	Boolean requiredMethod ();}"
+					+"class A{	sm{		s0{			requiredMethod() -> s1;		}		s1{			getBack() -> s0;		}	}}"
+					+"class B{isA T; isA A;}";			
+			UmpleModel model = getModel(code);
+			boolean result = false;
+			try {
+				model.run();	
+			} catch (Exception e) {
+				result = e.getMessage().contains("208");
+			} finally {
+				Assert.assertFalse(result);
+				SampleFileWriter.destroy("traitTest.ump");
+			}	
+			
+		}
+		
 //the last StateTest
 		
 	//This is related to issue #656

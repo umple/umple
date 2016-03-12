@@ -1564,7 +1564,14 @@ class UmpleClass
     if(aMethod!=null&&!aMethod.isIsAbstract()){
       return true;
     }
-    else if(getExtendsClass()!=null&&getExtendsClass().hasImplementedMethodIncludingWithinParentClasses(comparedMethod)){
+    if (numberOfStateMachines()>0){
+    	for(StateMachine sm : getStateMachines()){
+    		if (sm.getEventByMethod(comparedMethod)!=null){
+    			return true;
+    		}
+    	}
+    }
+    if(getExtendsClass()!=null&&getExtendsClass().hasImplementedMethodIncludingWithinParentClasses(comparedMethod)){
       return true;
     }
     return false;
