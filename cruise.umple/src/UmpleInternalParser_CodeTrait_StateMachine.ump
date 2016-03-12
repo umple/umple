@@ -97,6 +97,7 @@ class UmpleInternalParser
  	  		//checks that the event exists in one of the state machines.
  	  		if (smTSignature.getStateMachine().equals("")){
  	  			Method method1 = smTSignature.getMethodTemplateSignature().getMethod();
+ 	  			method1.setType("Boolean");
  	  			boolean find = false;
  	  			for (StateMachine stMachine : inStateMachines){
  	  				Event event = stMachine.getEventByMethod(method1);	 				
@@ -122,6 +123,7 @@ class UmpleInternalParser
  		 				return false;
  		 			} if (smTSignature.getMethodTemplateSignature()!=null){
  		 				Method method1 = smTSignature.getMethodTemplateSignature().getMethod();
+ 		 				method1.setType("Boolean");
  		 				Event event = sm.getEventByMethod(method1);	
  		 				if(event==null){
  	  	 				getParseResult().addErrorMessage(new ErrorMessage(231,inTrait.getPosition(0),inTrait.getName(),smTSignature.getStateMachine(),method1.getSignature()));	
@@ -649,7 +651,7 @@ class Method {
 //---------------------------------Start--------------------------------------   		
 boolean compareWithTheMethod(Method inMethod){
     if (getName().equals(inMethod.getName())){
-		 // if(method1.getType().equals(method2.getType())){
+		  if(getType().equals(inMethod.getType())){
 			  Integer numberOfParams = getMethodParameters().size();
 			  if ( numberOfParams== inMethod.getMethodParameters().size()) {
 		          boolean allSame = true;
@@ -666,7 +668,7 @@ boolean compareWithTheMethod(Method inMethod){
 		            return true;
 		          }
 		     }
-		 // }  
+		  }  
       }
 	  return false;
   } 		
@@ -749,7 +751,7 @@ class StateMachine{
         Event e = aTransition.getEvent();
         if (e != null )
         {
-        	Method m = new Method("",e.getName(),"",false);
+        	Method m = new Method("",e.getName(),e.getType(),false);
         	m.setMethodParameters(e.getParams());
         	if (m.compareWithTheMethod(inMethod))  return e;
         }

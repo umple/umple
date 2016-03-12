@@ -107,4 +107,13 @@ public class TransitionTest
     Assert.assertEquals(false, t.equals(t2));
   }  
   
+  @Test
+  public void checkDefaultReturnType()
+  {
+    Transition t =  new Transition(from, too);
+
+    t.setEvent(new Event("e"));
+    Assert.assertEquals("Boolean", t.getEvent().getType());
+  }
+  
 }

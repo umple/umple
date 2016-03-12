@@ -186,6 +186,7 @@ class Event
 {
   name;
   //String args = null;
+  
   Boolean isTimer = false;
   Boolean autoTransition = false;
   timerInSeconds = "0";  // TODO: how do you specify milliseconds etc.
@@ -196,6 +197,8 @@ class Event
   
   // The event parameters.
   1 -> 0..* MethodParameter params;
+  // The type of the method.
+  type = "Boolean";
     
   key { name }
 }
