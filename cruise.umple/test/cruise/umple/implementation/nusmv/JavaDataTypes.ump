@@ -1,7 +1,11 @@
 class Example {
   Integer a = 10;
-  Integer b = 20;
+  int b = 20;
   Float c = 0.566;
+  Double d = 0.566;
+  double e = 0.566;
+  long f;
+  short g;
   
   sm {
     s1 {

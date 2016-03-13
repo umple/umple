@@ -243,9 +243,12 @@ class NuSMVCoordinator
 			}
 			else if( attribute.getValue() == null && (attribute.getType().equals("Boolean") || attribute.getType().equals("boolean")))
 				bexp = new BasicExpression("FALSE");
-			else if( attribute.getValue() == null && (attribute.getType().equals("Integer") || attribute.getType().equals("int")))
+			else if( attribute.getValue() == null && (attribute.getType().equals("Integer") || attribute.getType().equals("int")
+				|| attribute.getType().equals("long") || attribute.getType().equals("Long") 
+				|| attribute.getType().equals("short") || attribute.getType().equals("Short")))
 				bexp = new BasicExpression("0");
-			else if( attribute.getValue() == null && (attribute.getType().equals("Float") || attribute.getType().equals("float")))
+			else if( attribute.getValue() == null && (attribute.getType().equals("Float") || attribute.getType().equals("float") 
+				|| attribute.getType().equals("double") || attribute.getType().equals("Double")))
 				bexp = new BasicExpression("0.0");
 			
 			InitAssign initialVal = new InitAssign(attribute.getName(), bexp);
@@ -479,6 +482,12 @@ class NuSMVCoordinator
 				case "Float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
 				case "Boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
 				case "Integer" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+				case "Long" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+				case "long" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+				case "Short" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+				case "short" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+				case "Double" : vs.addTypeSpecifier("real"); attributes.add( vs ); break;
+				case "double" : vs.addTypeSpecifier("real"); attributes.add( vs ); break;
 				case "float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
 				case "boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
 				case "int" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
