@@ -14,6 +14,16 @@ MODULE HeatSystem ( _heatSystemHouse , _heatSystemHouseRoom , _heatSystemHouseRo
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { HeatSystem_heatSys , null };
+     tooCold : boolean;
+     tooHot : boolean;
+     requestHeat : boolean;
+     furnaceTimer : integer;
+     furnaceStartupTime : integer;
+     valvePos : integer;
+     waitedForWarm : integer;
+     warmUpTimer : integer;
+     coolDownTimer : integer;
+     waitedForCool : integer;
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE

@@ -50,6 +50,7 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/MultiLevelStateMachineExampleCase2.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/nestedConcurrentMachine.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/concurrentMachineExample.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/JavaDataTypes.smv");
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
@@ -134,6 +135,13 @@ public class NuSMVTemplateTest extends TemplateTest{
 	  {
 	  		assertUmpleTemplateFor("nusmv/CarTransmission.ump","nusmv/CarTransmission.nusmv.txt");
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/CarTransmission.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM
+	  public void JavaDataTypes()
+	  {
+	  		assertUmpleTemplateFor("nusmv/JavaDataTypes.ump","nusmv/JavaDataTypes.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/JavaDataTypes.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM
