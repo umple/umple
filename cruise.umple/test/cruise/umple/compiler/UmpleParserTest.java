@@ -14,10 +14,16 @@ import java.util.*;
 
 import org.junit.*;
 
+import cruise.umple.parser.ErrorTypeSingleton;
+import cruise.umple.parser.ParseResult;
+import cruise.umple.parser.Position;
 import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.*;
 
 import java.io.*;
+
+import cruise.umple.parser.Token;
+import cruise.umple.parser.Position;
 
 public class UmpleParserTest
 {

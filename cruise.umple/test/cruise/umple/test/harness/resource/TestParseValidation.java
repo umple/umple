@@ -21,8 +21,8 @@ package cruise.umple.test.harness.resource;
 import java.io.File;
 import java.util.List;
 
-import cruise.umple.compiler.ErrorMessage;
-import cruise.umple.compiler.ParseResult;
+import cruise.umple.parser.ErrorMessage;
+import cruise.umple.parser.ParseResult;
 import cruise.umple.compiler.UmpleFile;
 import cruise.umple.compiler.UmpleInternalParser;
 import cruise.umple.compiler.UmpleModel;

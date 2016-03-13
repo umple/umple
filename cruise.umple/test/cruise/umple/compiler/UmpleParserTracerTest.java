@@ -15,6 +15,8 @@ import org.junit.*;
 
 import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.SampleFileWriter;
+import cruise.umple.parser.ParseResult;
+import cruise.umple.parser.ErrorTypeSingleton;
 
 public class UmpleParserTracerTest
 {

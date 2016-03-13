@@ -18,6 +18,9 @@ namespace cruise.umple.compiler;
 class CompositeStructureTokenAnalyzer {
 	depend java.util.HashMap;
 	depend java.util.Map;
+  depend cruise.umple.parser.Position;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.ErrorMessage;
 	depend cruise.umple.compiler.Port.Direction;
 	depend cruise.umple.compiler.ActiveMethod.ActiveType;
 	depend cruise.umple.compiler.ActiveDirectionHandler.DirectionHandler;
@@ -1485,6 +1488,7 @@ interface IAnalysisWalker {
 //Walk through definition tree while analyzing template tokens
 class CompositeStructureDefinitionWalker {
 	depend java.util.List;
+  depend cruise.umple.parser.Token;
 	isA IWalker;
 	UmpleInternalParser parser;
 

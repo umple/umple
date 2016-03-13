@@ -3,6 +3,7 @@ package cruise.umple.compiler.java;
 import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 import java.util.*;
+import cruise.umple.parser.Position;
 
 @SuppressWarnings("unused")
 public class JavaClassGenerator implements ILang 

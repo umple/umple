@@ -40,7 +40,7 @@ class RuleBasedParser
 interface ParserAction 
 {
   depend java.util.*;
-  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Token;
   depend cruise.umple.parser.rules.*;
 
   //method that will be called when this Action's token has been created successfully
@@ -55,8 +55,11 @@ class ParserDataPackage
 {  
   depend java.util.*;
   depend java.io.*;  
-  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.ErrorMessage;
   depend cruise.umple.parser.rules.*;
+  depend cruise.umple.compiler.UmpleFile; // TO DO: Refactor this out
 
   //the filename of the file that is being parsed
   filename;
@@ -108,7 +111,8 @@ class RuleBasedParserThread
   isA Thread;
   
   depend java.util.*;
-  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.ParseResult;
   depend cruise.umple.parser.rules.*;
 
   //The root of the rule graph that will be used for parsing
@@ -132,11 +136,14 @@ class GrammarAnalyzer
 {
   
   depend java.util.*;
-  depend cruise.umple.compiler.*;
-  depend cruise.umple.parser.rules.*;
   depend java.io.*;  
   depend java.lang.reflect.*;
-  depend cruise.umple.analysis.*;
+  depend cruise.umple.analysis.*; // TO DO: Refactor (?)
+  depend cruise.umple.parser.rules.*;
+  depend cruise.umple.parser.Position;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.compiler.UmpleFile; // TO DO: Refactor this out
 
   /*
     Inner class which is a wrapper for the objects that will go into the global hashmap

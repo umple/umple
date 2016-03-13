@@ -40,6 +40,7 @@ use SimpleMetrics_Util.ump;
 class ClassMetrics{
   depend java.util.*;
     depend java.text.*;
+  depend cruise.umple.parser.Position;
   isA SimpleMetricsGenerator;
   StringBuilder resultCode = new StringBuilder();
   UmpleModel model=null;

@@ -23,12 +23,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import cruise.umple.parser.Position;
 import cruise.umple.compiler.Action;
 import cruise.umple.compiler.Activity;
 import cruise.umple.compiler.ConstraintTree;
 import cruise.umple.compiler.Event;
 import cruise.umple.compiler.Guard;
-import cruise.umple.compiler.Position;
 import cruise.umple.compiler.State;
 import cruise.umple.compiler.StateMachine;
 import cruise.umple.compiler.Transition;

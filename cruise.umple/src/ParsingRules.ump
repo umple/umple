@@ -11,7 +11,8 @@ namespace cruise.umple.parser.rules;
 class ChoiceRule
 {
   depend java.util.*;
-  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.Position;
   depend cruise.umple.parser.analysis.*;
 
   name;
@@ -37,7 +38,7 @@ class ChainRule
 {
   isA ChoiceRule;
   depend java.util.*;
-  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Token;
   depend cruise.umple.parser.analysis.*;
 }
 
@@ -52,7 +53,7 @@ class RepeatableRule
 {
   isA ChoiceRule;
   depend java.util.*;
-  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Token;
   depend cruise.umple.parser.analysis.*;
 
   //the minimum number of times the subrule can be parsed for this rule to be successful
@@ -72,7 +73,7 @@ class Terminal
   isA ChoiceRule;  
   depend java.util.*;
   depend java.util.regex.*;
-  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Token;
   depend cruise.umple.parser.analysis.*;
 
   //the inner regex(i.e. not the whitespace considerations or the neccessary trailing .*
@@ -123,7 +124,7 @@ class RootRule
 {
   isA ChoiceRule;
   depend java.util.*;
-  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Token;
   depend cruise.umple.parser.analysis.*;
 }
 
@@ -135,8 +136,7 @@ class BalancedRule
 {
   isA ChoiceRule;
   depend java.util.*;
-  depend cruise.umple.compiler.*;
-  depend cruise.umple.parser.analysis.*;
+  depend cruise.umple.parser.Token;
   depend cruise.umple.parser.analysis.*;
 
   key = "";

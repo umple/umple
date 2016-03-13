@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cruise.umple.core.CommonConstants;
+import cruise.umple.parser.Position;
 import cruise.umple.compiler.Association;
 import cruise.umple.compiler.AssociationEnd;
 import cruise.umple.compiler.AssociationVariable;
 import cruise.umple.compiler.Comment;
-import cruise.umple.compiler.Position;
 import cruise.umple.compiler.UmpleClass;
 import cruise.umple.compiler.UmpleElement;
 import cruise.umple.compiler.UmpleModel;
