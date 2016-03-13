@@ -17,6 +17,10 @@ MODULE Sm
      a : integer;
      b : integer;
      c : real;
+     d : real;
+     e : real;
+     f : integer;
+     g : integer;
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
@@ -43,6 +47,22 @@ MODULE Sm
    -- This part defines logic for the assignment of values to state variable "c" of this NuSMV module --
    ASSIGN
      init( c ) := 0.566;
+
+   -- This part defines logic for the assignment of values to state variable "d" of this NuSMV module --
+   ASSIGN
+     init( d ) := 0.566;
+
+   -- This part defines logic for the assignment of values to state variable "e" of this NuSMV module --
+   ASSIGN
+     init( e ) := 0.566;
+
+   -- This part defines logic for the assignment of values to state variable "f" of this NuSMV module --
+   ASSIGN
+     init( f ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "g" of this NuSMV module --
+   ASSIGN
+     init( g ) := 0;
 
 -- This defines a NuSMV module for main --
 MODULE main
