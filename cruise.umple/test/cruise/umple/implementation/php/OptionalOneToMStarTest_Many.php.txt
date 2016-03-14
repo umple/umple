@@ -63,7 +63,7 @@ class Student
     $wasSet = false;
     
     $existingMentor = $this->mentor;
-	
+
     if ($existingMentor == null)
     {
       if ($aMentor != null)
@@ -103,7 +103,7 @@ class Student
     }
     return $wasSet;
   }
-  
+
   public function equals($compareTo)
   {
     return $this == $compareTo;
