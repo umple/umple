@@ -104,7 +104,7 @@ public class Foo
 
   public String toString()
   {
-	  String outputString = "";
+    String outputString = "";
     return super.toString() + "["+
             "testAttribute1" + ":" + getTestAttribute1()+ "," +
             "testAttribute2" + ":" + getTestAttribute2()+ "," +

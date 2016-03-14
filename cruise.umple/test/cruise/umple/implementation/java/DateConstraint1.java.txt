@@ -71,7 +71,7 @@ public class X
 
   public String toString()
   {
-	  String outputString = "";
+    String outputString = "";
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "d" + "=" + (getD() != null ? !getD().equals(this)  ? getD().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "e" + "=" + (getE() != null ? !getE().equals(this)  ? getE().toString().replaceAll("  ","    ") : "this" : "null")
