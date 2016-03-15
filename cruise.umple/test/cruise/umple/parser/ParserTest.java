@@ -52,6 +52,7 @@ public class ParserTest
   {
 
     SampleFileWriter.destroy("grammar01.txt");
+    ErrorTypeSingleton.getInstance().reset(); // Reset the singleton for the next user.
 
   }
 
