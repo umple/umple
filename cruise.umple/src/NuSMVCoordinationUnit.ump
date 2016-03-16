@@ -78,21 +78,38 @@ class NuSMVCoordinator
   		}
   		return yes;
 	}
+	//Building dependency set 
+	private List<String> getDependencySet( StateMachine root, StateMachine sm) {
+		List<StateMachine> smList = generateStateMachineList( root );
+		List<String> temp = new ArrayList<String>();
+		if( root.equals(sm) ) {
+			for(StateMachine stm : smList) 
+				if( !stm.getFullName().equals(sm.getFullName()) ) 
+					temp.add( changeNameCase(stm.getFullName(), 0) );
+		}
+		else {
+			temp.add( changeNameCase(root.getFullName(), 0) );
+			StateMachine bioParent = sm.getParentState().getStateMachine();
+			if( !bioParent.equals(root) )
+				temp.add( changeNameCase(bioParent.getFullName(), 0) );
+		}
+		return temp;
+	}
   	
   	private void generateParameters( NuSMVModule module, StateMachine parent, StateMachine sm ) {
   		List<StateMachine> smList = generateStateMachineList( parent );
-  		for(StateMachine stm : smList) 
-			if( !stm.getFullName().equals(sm.getFullName()) ) 
-				module.addParameter( "_"+changeNameCase(stm.getFullName(), 0) );	
+		List<String> dependencySet = getDependencySet( parent, sm);
+		for(String stm : dependencySet) 
+			module.addParameter( "_"+stm );
   	}
   	
 	private VariableSpecifier generateVariableSpecifierForMain( StateMachine sm, StateMachine root ) {
 		String identifier = changeNameCase( sm.getFullName(), 0);
 		List<StateMachine> smList = generateStateMachineList( root );
 		VariableSpecifier vs = new VariableSpecifier(identifier);
-  		for(StateMachine stm : smList )
-			if( !stm.getFullName().equals(sm.getFullName()) )
-				vs.addTypeSpecifier(changeNameCase( stm.getFullName(), 0 ) ); 
+		List<String> dependencySet = getDependencySet( root, sm);
+		for( String stm : dependencySet ) 
+			vs.addTypeSpecifier( stm );
 		vs.setIsBracketed(true);
 		vs.setTypeName( changeNameCase(sm.getFullName(), 1) );
 		return vs;
@@ -219,8 +236,9 @@ class NuSMVCoordinator
   		BasicExpression bexp;
   		if( sm.getParentState() == null )
   			bexp = new BasicExpression(changeNameCase(sm.getFullName(),1)+"_"+sm.getStartState().getName());
-  		else
+  		else 
   			bexp = new BasicExpression("null");
+			
   		InitAssign ia = new InitAssign("state", bexp);
   		AssignConstraint ac = new AssignConstraint(ia);
   		ac.addAssign(getNextAssign( sm, root ));
@@ -266,10 +284,42 @@ class NuSMVCoordinator
 			State bioparent = state.getStateMachine().getParentState();
   			BasicExpression bexp1 = new BasicExpression("_"+changeNameCase(bioparent.getStateMachine().getFullName(), 0)+".state");
   			BasicExpression bexp2 = new BasicExpression(changeNameCase(bioparent.getStateMachine().getFullName(),1)+"_"+bioparent.getName());
+			BasicExpression bexp7 = new BasicExpression( "expr" );
+			bexp7.addChild( bexp1 );
+  			bexp7.addChild( bexp2 );
+  			bexp7.setOperator( BasicExpression.Operator.EQ );
+			
+			BasicExpression bexp4 = new BasicExpression("state");
+			BasicExpression bexp5 = new BasicExpression("null");
+			BasicExpression bexp6 = new BasicExpression("temp");
+			bexp6.setOperator( BasicExpression.Operator.EQ );
+			bexp6.addChild( bexp4 );
+  			bexp6.addChild( bexp5 );
+			
+			bexp3.addChild(bexp7);
+			bexp3.addChild(bexp6);
+			bexp3.setOperator( BasicExpression.Operator.AND );
+			
+			BasicExpression st = new BasicExpression( changeNameCase(state.getStateMachine().getFullName(),1)+"_"+state.getName() ); 
+			return new CaseStatement( bexp3, st );
+  		}
+		return null;		
+	}
+	
+	//Disabling a composite state alone without other concurrent states
+	private CaseStatement diasableCompositeState( State state ) {
+		
+		BasicExpression bexp3 = new BasicExpression( "expr" );
+		
+		if( state.isIsStartState() && state.getStateMachine().getParentState() != null ) {
+			State bioparent = state.getStateMachine().getParentState();
+  			BasicExpression bexp1 = new BasicExpression("_"+changeNameCase(bioparent.getStateMachine().getFullName(), 0)+".state");
+  			BasicExpression bexp2 = new BasicExpression(changeNameCase(bioparent.getStateMachine().getFullName(),1)+"_"+bioparent.getName());
 			bexp3.addChild( bexp1 );
   			bexp3.addChild( bexp2 );
-  			bexp3.setOperator( BasicExpression.Operator.EQ );
-			BasicExpression st = new BasicExpression( changeNameCase(state.getStateMachine().getFullName(),1)+"_"+state.getName() ); 
+  			bexp3.setOperator( BasicExpression.Operator.NE );
+			
+			BasicExpression st = new BasicExpression( "null" ); 
 			return new CaseStatement( bexp3, st );
   		}
 		return null;		
@@ -288,11 +338,13 @@ class NuSMVCoordinator
 		if( sm.getParentState() != null && getCaseStatementForNullState(sm.getParentState(), root) != null )
 			expr.addCaseStatement( getCaseStatementForNullState(sm.getParentState(), root) );
 		
-		//Initializing composite start states
-		for(State st : sm.getStates() )
+		//Initializing and disabling composite states
+		for(State st : sm.getStates() ) {
 			if( initializeCompositeStartState( st ) != null )
 				expr.addCaseStatement( initializeCompositeStartState( st ) );
-			
+			if( diasableCompositeState( st ) != null )
+				expr.addCaseStatement( diasableCompositeState( st ) );
+		}
 		CaseStatement otherwise = new CaseStatement(bexp2, bexp1);
     	expr.addCaseStatement( otherwise );
     	expr.removeCaseStatement(temp);

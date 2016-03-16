@@ -19,14 +19,16 @@ MODULE Sm
      c : real;
      d : real;
      e : real;
+     h : boolean;
      f : integer;
      g : integer;
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     t1 := event = ev_e1 & state = Sm_s1;
+     t1 := event = ev_e1 & state = Sm_s1 & g1;
      t2 := event = ev_e2 & state = Sm_s1;
      t3 := event = ev_e3 & state = Sm_s1;
+     g1 := h = TRUE;
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
@@ -55,6 +57,10 @@ MODULE Sm
    -- This part defines logic for the assignment of values to state variable "e" of this NuSMV module --
    ASSIGN
      init( e ) := 0.566;
+
+   -- This part defines logic for the assignment of values to state variable "h" of this NuSMV module --
+   ASSIGN
+     init( h ) := FALSE;
 
    -- This part defines logic for the assignment of values to state variable "f" of this NuSMV module --
    ASSIGN

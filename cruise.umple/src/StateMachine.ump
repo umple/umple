@@ -212,7 +212,7 @@ class Guard
   isA ConstraintTree;
   
   lazy Position position;
-  lazy Position endPosition;
+  lazy Position endPosition;  
   
   private ArrayDeque<String> expressionQueue( ConstraintOperator operator ) {
 		ArrayDeque<String> tempNodes = new ArrayDeque<String>();
@@ -231,7 +231,7 @@ class Guard
 		}
 		
 		if( right != null ) 
-			add( right, tempNodes );
+			add(right, tempNodes);
 		
 		return tempNodes;
 	}
