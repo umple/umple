@@ -7,8 +7,6 @@ http://umple.org/license
 
  */
 
-namespace cruise.umple.compiler;
-
 class TextParser
 {
   private char[] _textCharacters;

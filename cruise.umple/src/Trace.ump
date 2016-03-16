@@ -157,6 +157,8 @@ interface TraceItem
  */
 class AttributeTraceItem
 {
+  depend cruise.umple.parser.Position;
+
   isA TraceItem;
   tracerType = {getTraceDirective().getTracerType()}
 
@@ -178,6 +180,8 @@ class AttributeTraceItem
  */
 class StateMachineTraceItem
 {
+  depend cruise.umple.parser.Position;
+
   isA TraceItem;
 
   ConstraintTree constraint = null;
@@ -207,6 +211,8 @@ class StateMachineTraceItem
  */
 class AssociationTraceItem
 {
+  depend cruise.umple.parser.Position;
+
   isA TraceItem;
   
   ConstraintTree constraint = null;
@@ -228,6 +234,8 @@ class AssociationTraceItem
 
 class MethodTraceItem
 {
+  depend cruise.umple.parser.Position;
+
   isA TraceItem;
   
   ConstraintTree constraint = null;

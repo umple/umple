@@ -14,8 +14,9 @@ import java.io.File;
 import org.apache.tools.ant.util.FileUtils;
 import org.junit.*;
 
-import cruise.umple.compiler.*;
+import cruise.umple.parser.ParseResult;
 import cruise.umple.parser.analysis.RuleBasedParser;
+import cruise.umple.compiler.*;
 import cruise.umple.util.SampleFileWriter;
 
 public class TemplateTest

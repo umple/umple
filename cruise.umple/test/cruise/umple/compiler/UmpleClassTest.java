@@ -13,6 +13,8 @@ import java.util.*;
 
 import org.junit.*;
 
+import cruise.umple.parser.ParseResult;
+import cruise.umple.parser.ErrorMessage;
 import cruise.umple.compiler.exceptions.UmpleCompilerException;
 import cruise.umple.util.SampleFileWriter;
 

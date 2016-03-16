@@ -9,7 +9,7 @@ Parser for the grammar that can be used to define any grammar
 UmpleParser.ump is the key example
 
  */
-namespace cruise.umple.compiler;
+namespace cruise.umple.parser;
 
 /* 
  * An open-close pair, such as open curly brackets and close curly brackets

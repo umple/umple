@@ -478,7 +478,7 @@ class ParserDataPackage
 }
 
 interface RuleBasedParserAction {
-  public void onSuccess(cruise.umple.compiler.Token token);
+  public void onSuccess(cruise.umple.parser.Token token);
 }
 
 external Thread { }

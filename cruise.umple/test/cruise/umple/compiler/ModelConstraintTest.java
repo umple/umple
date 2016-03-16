@@ -6,6 +6,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import cruise.umple.parser.ErrorTypeSingleton;
+import cruise.umple.parser.ParseResult;
 import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.SampleFileWriter;
 

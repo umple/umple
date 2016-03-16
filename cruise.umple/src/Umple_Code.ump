@@ -3928,7 +3928,7 @@ class MethodTemplateSignature{
 
 class ModelConstraintResult
 {
-  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
   Position position;
   int error;
   target;
@@ -3938,6 +3938,7 @@ class ModelConstraintResult
 class ModelConstraint
 {
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
 
   Position position;
   0..1 parentConstraint -- * ModelConstraint;
@@ -4011,6 +4012,7 @@ class ModelConstraintAssociation
 {
   isA ModelConstraint;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
 
   Multiplicity leftHandMultiplicity = new Multiplicity();
   Multiplicity rightHandMultiplicity = new Multiplicity();
@@ -4194,6 +4196,7 @@ class ModelConstraintSuperClass
 {
   isA ModelConstraint;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
 
   public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
   {
@@ -4244,6 +4247,7 @@ class ModelConstraintSubClass
 {
   isA ModelConstraint;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
 
   public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
   {
@@ -4301,6 +4305,7 @@ class ModelConstraintAttributeFromName
 {
   isA ModelConstraint;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
 
   public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
   {
@@ -4335,6 +4340,7 @@ class ModelConstraintAttributeFromClass
 {
   isA ModelConstraint;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
 
   public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
   {

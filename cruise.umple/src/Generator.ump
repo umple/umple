@@ -71,7 +71,7 @@ class SuperCodeGenerator {
 }
 class GeneratorHelper
 {
-
+  depend cruise.umple.parser.Position;
 }
 
 class EcoreGenerator
@@ -360,6 +360,7 @@ class XtextGenerator
   depend java.util.*;
   depend java.io.*;
   depend cruise.umple.util.*;
+  depend cruise.umple.parser.Rule;
 
   // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
   // off of what's contained in here.
@@ -459,6 +460,7 @@ class UmpleGenerator
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.parser.analysis.*;
   depend cruise.umple.parser.rules.*;
+  depend cruise.umple.parser.Token;
   // depend cruise.umple.compiler.umple.*;
 }
 

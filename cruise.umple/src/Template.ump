@@ -57,6 +57,8 @@ class TemplateName {
 }
 
 class TemplateMethodBlock {
+  depend cruise.umple.parser.Position;
+  
   Position position;
   TemplateName template;
   String[] parameters;
@@ -92,6 +94,8 @@ class EmitResponse {
 //A template element represents template contents to be built. It relies on a set of TemplateField
 class TemplateElement
 {
+  depend cruise.umple.parser.Position;
+
   abstract;
   lazy internal EmitResponse emitResponse;
   Position position; 
@@ -154,7 +158,7 @@ class TemplateElement
 class ExpressionElement {
   isA TemplateElement;	
 	
-	
+	depend cruise.umple.parser.Position;
   void emit(EmitResponse responseBuffer, UmpleClass template) throws TemplateException 
   {
     EmitResponse resetValue = computeContent();
@@ -174,6 +178,9 @@ class CodeBlockElement
 {
   isA TemplateElement;
 
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.Position;
+  
   void emit(EmitResponse responseBuffer, UmpleClass template) throws TemplateException {
 	EmitResponse resetValue = computeContent();
 	
@@ -195,6 +202,9 @@ class IncludeTemplateElement
 {
 	isA TemplateElement;
 	TemplateName templateName;
+  
+  depend cruise.umple.parser.Position;
+  depend cruise.umple.parser.ErrorMessage;
 	
 	void emit(EmitResponse responseBuffer, UmpleClass template) throws TemplateException {
 		String classname = getTemplateName().getClassName();
@@ -224,6 +234,8 @@ class IncludeTemplateElement
 //Comment segment for a template contents
 class CommentElement {
   isA TemplateElement;
+  
+  depend cruise.umple.parser.Position;
 	
   void emit(EmitResponse responseBuffer, UmpleClass template) throws TemplateException  
   {
@@ -246,6 +258,8 @@ class CommentElement {
 class TextElement
 {
   isA TemplateElement;
+  
+  depend cruise.umple.parser.Position;
 
   int index = -1;
 
@@ -283,6 +297,8 @@ class TextElement
 class VariableElement
 {
   isA TemplateElement;
+  
+  depend cruise.umple.parser.Position;
 
   Integer index;
 

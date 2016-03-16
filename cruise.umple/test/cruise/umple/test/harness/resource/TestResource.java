@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cruise.umple.compiler.ParseResult;
+import cruise.umple.parser.ParseResult;
 import cruise.umple.compiler.UmpleFile;
 import cruise.umple.compiler.UmpleInternalParser;
 import cruise.umple.compiler.UmpleModel;

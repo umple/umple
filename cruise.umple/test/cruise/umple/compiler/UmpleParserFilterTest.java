@@ -13,6 +13,7 @@ package cruise.umple.compiler;
 import org.junit.*;
 
 import cruise.umple.parser.analysis.RuleBasedParser;
+import cruise.umple.parser.ParseResult;
 import cruise.umple.util.*;
 
 public class UmpleParserFilterTest

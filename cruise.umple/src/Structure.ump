@@ -104,7 +104,7 @@ class Monitor {
 
 class BasicConstraint
 {
-  depend cruise.umple.compiler.Position;
+  depend cruise.umple.parser.Position;
   isA ConstraintTree;
   lazy Position position;
   lazy Position endPosition;
@@ -112,7 +112,7 @@ class BasicConstraint
 
 class PortConstraint
 {
-  depend cruise.umple.compiler.Position;
+  depend cruise.umple.parser.Position;
   lazy Position position;
   lazy Position endPosition;
   
@@ -122,7 +122,7 @@ class PortConstraint
 
 class TimerConstraint
 {
-  depend cruise.umple.compiler.Position;
+  depend cruise.umple.parser.Position;
   lazy Position position;
   lazy Position endPosition;
   
@@ -132,7 +132,7 @@ class TimerConstraint
 
 class MessageConstraint
 {
-  depend cruise.umple.compiler.Position;
+  depend cruise.umple.parser.Position;
   lazy Position position;
   lazy Position endPosition;
   
@@ -141,7 +141,7 @@ class MessageConstraint
 
 class ActiveMethod
 {
-	depend cruise.umple.compiler.Position;
+	depend cruise.umple.parser.Position;
 
 	activeType { ASYNCH{} SYNCH{} ATOMIC{} INTERCEPTOR{} }
   	modifier; 
@@ -160,6 +160,7 @@ class ActiveMethod
 
 class ActiveDirectionHandler
 {  
+  depend cruise.umple.parser.Position;
   directionHandler { FORWARD{} INVERSE{} }
   
   1 -> * ActiveDirectionHandlerBody;
@@ -170,6 +171,8 @@ class ActiveDirectionHandler
 }
 
 class ActiveDirectionHandlerBody {
+  depend cruise.umple.parser.Position;
+  
 	bodyType { CODE{} TRIGGER{} COMMENT{} }
 	lazy CodeBlock codeblock;
 	lazy Comment comment;
@@ -218,7 +221,7 @@ class PortFunction
 
 class AnonymousFunction
 {
-  depend cruise.umple.compiler.Position;
+  depend cruise.umple.parser.Position;
   
   lazy Position position;
   lazy Position endPosition; 
