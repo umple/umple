@@ -10,7 +10,7 @@
     $wasSet = false;
     
     $<%=gen.translate("parameterExisting",av)%> = $this-><%=gen.translate("associationOne",av)%>;
-	
+
     if ($<%=gen.translate("parameterExisting",av)%> == null)
     {
       if ($<%=gen.translate("parameterOne",av)%> != null)
@@ -50,4 +50,4 @@
     }
     return $wasSet;
   }
-  
+

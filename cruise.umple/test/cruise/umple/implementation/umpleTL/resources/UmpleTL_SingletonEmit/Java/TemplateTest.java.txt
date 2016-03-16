@@ -78,7 +78,7 @@ public class TemplateTest
 
   public String toString()
   {
-	  String outputString = "";
+    String outputString = "";
     return super.toString() + "["+ "]"
      + outputString;
   }

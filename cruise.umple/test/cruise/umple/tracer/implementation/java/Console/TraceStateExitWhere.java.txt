@@ -105,7 +105,7 @@ public class Light
 
   public String toString()
   {
-	  String outputString = "";
+    String outputString = "";
 	  
     return super.toString() + "["+
             "v" + ":" + getV()+ "," +

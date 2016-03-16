@@ -310,7 +310,7 @@ public class HtmlNode
 
   public String toString()
   {
-	  String outputString = "";
+    String outputString = "";
     return super.toString() + "["+
             "tag" + ":" + getTag()+ "," +
             "content" + ":" + getContent()+ "]"

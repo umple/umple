@@ -2662,7 +2662,7 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_2642 = NL + "  " + NL + "  @Override" + NL + "  public void run ()" + NL + "  {" + NL + "    boolean status=false;" + NL + "    while (true) " + NL + "    {" + NL;
   protected final String TEXT_2643 = NL + "      " + NL + "      switch (m.type)" + NL + "      {";
   protected final String TEXT_2644 = " " + NL + "        default:" + NL + "      }" + NL + "      if(!status)" + NL + "      {" + NL + "        // Error message is written or  exception is raised" + NL + "      }" + NL + "    }" + NL + "  }";
-  protected final String TEXT_2645 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";";
+  protected final String TEXT_2645 = NL + NL + "  public String toString()" + NL + "  {" + NL + "    String outputString = \"\";";
   protected final String TEXT_2646 = NL + "  }";
   protected final String TEXT_2647 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
   protected final String TEXT_2648 = NL + "  ";

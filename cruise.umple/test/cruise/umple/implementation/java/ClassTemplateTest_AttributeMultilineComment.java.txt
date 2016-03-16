@@ -48,7 +48,7 @@ public class Foo
 
   public String toString()
   {
-	  String outputString = "";
+    String outputString = "";
     return super.toString() + "["+
             "name" + ":" + getName()+ "]"
      + outputString;
