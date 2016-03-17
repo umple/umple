@@ -160,7 +160,7 @@ public class Teacher extends Person
 
   public String toString()
   {
-	  String outputString = "";
+    String outputString = "";
     return super.toString() + "["+
             "position" + ":" + getPosition()+ "]"
      + outputString;

@@ -1,0 +1,25 @@
+class UmpleToPhp {
+    state_machine_GetFull <<!<</*state_machine_GetFull*/>><<#
+  StringBuilder output = new StringBuilder(); 
+  List<StateMachine> allParents = new ArrayList<StateMachine>();
+  allParents.add(sm);
+  while (allParents.size() > 0) 
+  {
+    StateMachine parentSm = allParents.get(0);
+    allParents.remove(0);
+    for (StateMachine childSm : parentSm.getNestedStateMachines()) 
+    {
+      output.append(StringFormatter.format("\n    if ($this->{0} != self::${2}) { $answer .= \".\" . $this->{1}(); }",gen.translate("stateMachineOne",childSm),gen.translate("getMethod",childSm),gen.translate("stateNull",childSm)));
+      allParents.addAll(childSm.getNestedStateMachines());
+    }     
+  }
+  String outputAsString = output.toString();
+#>>
+  public function <<=gen.translate("getFullMethod",sm)>>()
+  {
+    $answer = $this-><<=gen.translate("getMethod",sm)>>();
+    <<# if (outputAsString.length() > 0) { append(realSb, "{0}",outputAsString); } #>>
+    return $answer;
+  }
+!>>
+}

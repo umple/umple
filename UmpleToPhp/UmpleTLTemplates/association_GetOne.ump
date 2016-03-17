@@ -1,0 +1,24 @@
+class UmpleToPhp {
+    association_GetOne <<!<</*association_GetOne*/>>
+  public function <<=gen.translate("getMethod",av)>>()
+  {
+    <<# if (customGetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+<<# if (customGetPostfixCode == null) { #>>
+    return $this-><<=gen.translate("associationOne",av)>>;
+<<# } else { #>>
+    $<<=gen.translate("parameterOne",av)>> = $this-><<=gen.translate("associationOne",av)>>;
+    <<# append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); #>>
+    return $<<=gen.translate("parameterOne",av)>>;
+<<# } #>>
+  }<<# 
+  if(av.getMultiplicity().getLowerBound() == 0) {
+  #>>
+
+  public function <<=gen.translate("hasMethod",av)>>()
+  {
+    $has = $this-><<=gen.translate("associationOne",av)>> != null;
+    return $has;
+  }
+<<# } #>>
+!>>
+}

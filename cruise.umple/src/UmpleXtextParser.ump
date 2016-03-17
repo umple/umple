@@ -17,6 +17,10 @@ namespace cruise.umple.compiler;
 class UmpleXtextParser
 {
   isA UmpleParser;
+  
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.Token;
+  
   // depend  java.io.*;
   // depend  org.eclipse.xtext.parser.*;
   // depend  org.eclipse.xtext.parser.antlr.*;

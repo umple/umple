@@ -1,0 +1,4 @@
+class UmpleToPhp {
+    constructor_AssociationCreateOneToOne <<!<</*constructor_AssociationCreateOneToOne*/>>
+    $<<=instanceIdentifier>>-><<=gen.translate("associationOne",av)>> = new <<=gen.translate("type",av)>>(<<=gen.translate("callerArgumentsForMandatory",relatedAssociation)>>);!>>
+}

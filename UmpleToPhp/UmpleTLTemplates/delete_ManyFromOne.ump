@@ -1,0 +1,7 @@
+class UmpleToPhp {
+    delete_ManyFromOne <<!<</*delete_ManyFromOne*/>>
+    foreach ($this-><<=gen.translate("associationMany",av)>> as $<<=gen.translate("parameterOne",av)>>)
+    {
+      $<<=gen.translate("parameterOne",av)>>->delete();
+    }!>>
+}

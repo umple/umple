@@ -1,4 +1,4 @@
-<%@ jet package="cruise.umple.compiler.java" class="JavaClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%@ jet package="cruise.umple.compiler.java" class="JavaClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.* cruise.umple.parser.Position" skeleton="generator.skeleton"%>
 <%@ include file="UmpleNotice.jet" %>
 <%
   UmpleClass uClass = (UmpleClass) uElement;
@@ -34,6 +34,7 @@
 
 <% if (uClass.numberOfComments() > 0) { append(stringBuffer, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } %>
 <% for (Position p : uClass.getPositions()) { %>
+<% uClass.setSourceFilename( p.getFilename() ); %>
 // line <%= p.getLineNumber() %> "<%= uClass.getRelativePath("Java") %>"
 <% } %>
 public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract"); } %>class <%=uClass.getName()%><%= gen.translate("isA",uClass) %><%

@@ -1,0 +1,35 @@
+class UmpleToPhp {
+    association_AddIndexControlFunctions <<!<</*association_AddIndexControlFunctions*/>>
+  public function <<=gen.translate("addAtMethod",av)>>($<<=gen.translate("parameterOne",av)>>, $index)
+  {  
+    $wasAdded = false;
+    if($this-><<=gen.translate("addMethod",av)>>($<<=gen.translate("parameterOne",av)>>))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this-><<=gen.translate("numberOfMethod",av)>>()) { $index = $this-><<=gen.translate("numberOfMethod",av)>>() - 1; }
+      array_splice($this-><<=gen.translate("associationMany",av)>>, $this-><<=gen.translate("indexOfMethod",av)>>($<<=gen.translate("parameterOne",av)>>), 1);
+      array_splice($this-><<=gen.translate("associationMany",av)>>, $index, 0, array($<<=gen.translate("parameterOne",av)>>));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function <<=gen.translate("addOrMoveAtMethod",av)>>($<<=gen.translate("parameterOne",av)>>, $index)
+  {
+    $wasAdded = false;
+    if($this-><<=gen.translate("indexOfMethod",av)>>($<<=gen.translate("parameterOne",av)>>) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this-><<=gen.translate("numberOfMethod",av)>>()) { $index = $this-><<=gen.translate("numberOfMethod",av)>>() - 1; }
+      array_splice($this-><<=gen.translate("associationMany",av)>>, $this-><<=gen.translate("indexOfMethod",av)>>($<<=gen.translate("parameterOne",av)>>), 1);
+      array_splice($this-><<=gen.translate("associationMany",av)>>, $index, 0, array($<<=gen.translate("parameterOne",av)>>));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this-><<=gen.translate("addAtMethod",av)>>($<<=gen.translate("parameterOne",av)>>, $index);
+    }
+    return $wasAdded;
+  }
+!>>
+}

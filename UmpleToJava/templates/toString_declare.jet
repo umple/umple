@@ -2,7 +2,7 @@
 
   public String toString()
   {
-	  String outputString = "";<%
+    String outputString = "";<%
 	  String customToStringPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toString"));
 	  String customToStringPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toString"));
 	  if (customToStringPrefixCode != null) 

@@ -1,0 +1,23 @@
+class UmpleToPhp {
+    attribute_SetDefaulted <<!<</*attribute_SetDefaulted*/>>
+  public function <<=gen.translate("setMethod",av)>>($<<=gen.translate("parameterOne",av)>>)
+  {
+    $wasSet = false;
+    <<# if (customSetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    $this-><<=gen.translate("attributeOne",av)>> = $<<=gen.translate("parameterOne",av)>>;
+    $wasSet = true;
+    <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return $wasSet;
+  }
+
+  public function <<=gen.translate("resetMethod",av)>>()
+  {
+    $wasReset = false;
+    <<# if (customResetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customResetPrefixCode, "    ")); } #>>
+    $this-><<=gen.translate("attributeOne",av)>> = $this-><<=gen.translate("getDefaultMethod",av)>>();
+    $wasReset = true;
+    <<# if (customResetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customResetPostfixCode, "    ")); } #>>
+    return $wasReset;
+  }
+!>>
+}

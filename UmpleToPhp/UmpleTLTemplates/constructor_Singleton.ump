@@ -1,0 +1,11 @@
+class UmpleToPhp {
+    constructor_Singleton <<!<</*constructor_Singleton*/>>
+  public static function getInstance()
+  {
+    if(self::$theInstance == null)
+    {
+      self::$theInstance = new <<=uClass.getName()>>();
+    }
+    return self::$theInstance;
+  }!>>
+}

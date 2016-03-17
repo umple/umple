@@ -1,0 +1,25 @@
+class UmpleToPhp {
+    members_AllDoActivities <<!<</*members_AllDoActivities*/>><<#
+{
+  isFirst = true;
+  for(StateMachine sm : uClass.getAllStateMachines())
+  {
+    
+    for (State state : sm.getStates())
+    {
+      for (Activity activity : state.getActivities())
+      {
+        if (isFirst)
+        {
+          appendln(realSb, "");
+          appendln(realSb, "");
+          append(realSb,"  //{0} Do Activity Threads", uClass.getName());
+          isFirst = false;
+        }
+        append(realSb, "\n  private ${0} = null;", gen.translate("doActivityThread",activity));
+      }
+    }
+  }
+}
+#>>!>>
+}

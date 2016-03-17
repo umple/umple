@@ -1,0 +1,24 @@
+class UmpleToPhp {
+    trace <<!<</*trace*/>><<#
+
+{
+
+	//==== Tracing Code    
+    if( model.getTraceType().equals("File") && uClass.hasTraceDirectives() )
+	{
+		appendln(realSb, "");
+		appendln(realSb, "  //------------------------");
+		appendln(realSb, "  // FILE TRACER METHOD");
+		appendln(realSb, "  //------------------------\n");
+		appendln(realSb, "  function fileTracer($tracedItem)");
+		appendln(realSb, "  {");
+		appendln(realSb, "    $file=fopen({0}TraceLog.txt{1},{3}a{4}) or exit({5}Unable to open file!{6});",'"','"','"','"','"','"','"');
+		appendln(realSb, "    fprintf($file,{0}Traced object value: $tracedItem{1}.PHP_EOL);",'"','"');
+		appendln(realSb, "    fprintf($file,{0}Trace time: {1}.date(DATE_RFC822).PHP_EOL);",'"','"');
+		appendln(realSb, "    fclose($file);");
+		appendln(realSb, "  }");
+	}
+}
+
+#>>!>>
+}

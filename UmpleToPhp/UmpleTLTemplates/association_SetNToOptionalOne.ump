@@ -1,0 +1,61 @@
+use association_GetPrivate.ump;
+
+
+class UmpleToPhp {
+    association_SetNToOptionalOne <<!<</*association_SetNToOptionalOne*/>>
+  public function <<=gen.translate("setManyMethod",av)>>($<<=gen.translate("parameterMany",av)>>)
+  {
+    $wasSet = false;
+    <<# if (customSetManyPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } #>>
+    $<<=gen.translate("parameterCheckNewMany",av)>> = array();
+    foreach ($<<=gen.translate("parameterMany",av)>> as $<<=gen.translate("parameterOne",av)>>)
+    {
+      if (array_search($<<=gen.translate("parameterOne",av)>>,$<<=gen.translate("parameterCheckNewMany",av)>>) !== false)
+      {
+        <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } #>>
+        return $wasSet;
+      }
+      else if ($<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>() != null && $this !== $<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>())
+      {
+        <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } #>>
+        return $wasSet;
+      }
+      $<<=gen.translate("parameterCheckNewMany",av)>>[] = $<<=gen.translate("parameterOne",av)>>;
+    }
+
+    if (count($<<=gen.translate("parameterCheckNewMany",av)>>) != self::<<=gen.translate("minimumNumberOfMethod",av)>>())
+    {
+      <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } #>>
+      return $wasSet;
+    }
+
+    foreach ($this-><<=gen.translate("associationMany",av)>> as $orphan) 
+    {
+      $wasFound = false;
+      foreach ($<<=gen.translate("parameterCheckNewMany",av)>> as $fosterCare)
+      {
+        if ($orphan == $fosterCare)
+        {
+          $wasFound = true;
+          break;
+        }
+      }
+
+      if (!$wasFound)
+      {
+        $this-><<=gen.relatedTranslate("setMethod",av)>>($orphan, null);
+      }
+    }
+
+    $this-><<=gen.translate("associationMany",av)>> = array();
+    foreach ($<<=gen.translate("parameterMany",av)>> as $<<=gen.translate("parameterOne",av)>>)
+    {
+      $this-><<=gen.relatedTranslate("setMethod",av)>>($<<=gen.translate("parameterOne",av)>>, $this);
+      $this-><<=gen.translate("associationMany",av)>>[] = $<<=gen.translate("parameterOne",av)>>;
+    }
+    $wasSet = true;
+    <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } #>>
+    return $wasSet;
+  }
+<<@ UmpleToPhp.association_GetPrivate >>!>>
+}

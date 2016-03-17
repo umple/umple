@@ -7,7 +7,6 @@ http://umple.org/license
 
  */
 
-namespace cruise.umple.compiler;
 class Couple
 {
 

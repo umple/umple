@@ -87,7 +87,7 @@ public class Student
 
   public String toString()
   {
-	  String outputString = "";
+    String outputString = "";
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "number" + ":" + getNumber()+ "]" + System.getProperties().getProperty("line.separator") +

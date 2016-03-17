@@ -73,7 +73,7 @@ constraintVariable- : [[negativeConstraint]] | [[constraintName]]
 constraintName : [=new]? [!name:[a-zA-Z_][a-zA-Z0-9_-]*] [[constraintIndexOperator]]* [[constraintParameterList]]? [[constraintScopeOperator]]?
 constraintIndexOperator- : [ [!index:[0-9]+] ]
 constraintScopeOperator :  ( . | -> ) [[constraintVariable]]
-constraintParameterList : OPEN_ROUND_BRACKET [[constraintParameter]]? ( [=comma:,] [[constraintParameter]] )* CLOSE_ROUND_BRACKET
+constraintParameterList : OPEN_ROUND_BRACKET ([[constraintParameter]] ([=comma:,] [[constraintParameter]])*)? CLOSE_ROUND_BRACKET
 constraintParameter : [=boolLit:true|false] | [[stringLiteral]] | [[constraintVariable]] | [[numberLiteral]]
 
 modelConstraint- : [ model : [[modelConstraintBody]] ]

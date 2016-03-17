@@ -28,6 +28,7 @@ class UmpleModel
   depend cruise.umple.analysis.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.parser.*;
   depend cruise.umple.parser.analysis.*;
   depend java.util.zip.*; // new
   isA Runnable;
@@ -108,7 +109,7 @@ class Filter
  */
 class UmpleElement
 {
-  depend cruise.umple.compiler.Position;
+  depend cruise.umple.parser.Position;
 
   // The name of the Umple element.
   name;
@@ -147,7 +148,7 @@ class UmpleElement
  */
 class Method
 {
-  depend cruise.umple.compiler.Position;
+  depend cruise.umple.parser.Position;
 
   // Specifies whether or not the Method is abstract.
   Boolean isAbstract = false;
@@ -194,6 +195,7 @@ class MethodBody
 {
 
   depend java.util.*;
+  depend cruise.umple.parser.Position;
 
   // The code within the method body.
   extraCode = {codeblock.getCode() != null ? codeblock.getCode() : ""}
@@ -260,6 +262,7 @@ class ConstraintVariable
   class ConstraintTree
   {
     depend cruise.umple.compiler.*;
+    depend cruise.umple.parser.Token;
     depend java.util.*;
 
     ConstraintVariable root = null;
@@ -293,6 +296,7 @@ class ConstraintVariable
      */
     class Postcondition
     {
+      depend cruise.umple.parser.Position;
       * -> 1 Method ; // The method postcondition belongs to
       lazy Position position;
     }
@@ -415,6 +419,7 @@ class ConstraintVariable
 
 /*
  * A block of code in an arbitrary language to be injected into generated code
+ * Please update the method 'public CodeBlock(CodeBlock another)' if you add new attributes.
  */
 class CodeBlock
 {
@@ -430,7 +435,7 @@ class CodeBlock
  */
 class CodeInjection
 {
-  depend cruise.umple.compiler.Position;
+  depend cruise.umple.parser.Position;
   depend cruise.umple.util.*;
 
   type;
@@ -729,6 +734,11 @@ class UmpleVariable
 
   before setName { if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); } }
   before getModifier { if (modifier == null) { return "settable"; } }
+	after constructor {
+  	if (type==""){
+  		 type= "String";
+  	}
+  }
 
   class UniqueIdentifier { }
 }
@@ -788,6 +798,8 @@ class Attribute
  */
 class Association
 {
+  depend cruise.umple.parser.Position;
+  
   // The name of the association.
   name = null;
   Boolean isLeftNavigable;

@@ -15,6 +15,9 @@ import java.util.List;
 
 import org.junit.*;
 
+import cruise.umple.parser.Position;
+import cruise.umple.parser.ParseResult;
+import cruise.umple.parser.ErrorMessage;
 import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.*;
 

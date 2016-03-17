@@ -1,0 +1,8 @@
+class UmpleToPhp {
+    attribute_IsBooleanDerived <<!<</*attribute_IsBooleanDerived*/>>
+  public <<=gen.translate("type",av)>> <<= gen.translate("isMethod",av) >>()
+  {
+    <<# if (customGetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    return <<=gen.translate("parameterValue",av)>>;
+  }!>>
+}

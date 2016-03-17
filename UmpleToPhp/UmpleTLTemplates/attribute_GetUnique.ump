@@ -1,0 +1,10 @@
+class UmpleToPhp {
+    attribute_GetUnique <<!<</*attribute_GetUnique*/>>
+  public static function <<=gen.translate("getUniqueMethod",av)>>($<<=gen.translate("parameterOne", av)>>)
+  {
+    <<# if (customGetUniquePrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetUniquePrefixCode, "    ")); } #>>
+    <<# for( TraceItem traceItem : traceItems )#>><<= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")>>
+    return <<=gen.translate("getUniqueMap",av)>>[(string)$<<=gen.translate("parameterOne",av)>>];
+  }
+!>>
+}

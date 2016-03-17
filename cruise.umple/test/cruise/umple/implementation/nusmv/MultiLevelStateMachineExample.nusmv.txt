@@ -33,7 +33,7 @@ MODULE Sm ( _smS2 , _smS2S21 )
      esac;
 
 -- This defines a NuSMV module for SmS2 --
-MODULE SmS2 ( _sm , _smS2S21 )
+MODULE SmS2 ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -45,7 +45,8 @@ MODULE SmS2 ( _sm , _smS2S21 )
      next( state ) := case
        _sm.t4 : SmS2_s22;
        _sm.t1 | _sm.t3 | _sm.t2 | _sm.t5 : null;
-       _sm.state = Sm_s2 : SmS2_s21;
+       _sm.state = Sm_s2 & state = null : SmS2_s21;
+       _sm.state != Sm_s2 : null;
        TRUE : state;
      esac;
 
@@ -61,7 +62,8 @@ MODULE SmS2S21 ( _sm , _smS2 )
      init( state ) := null;
      next( state ) := case
        _sm.t2 | _sm.t4 | _sm.t1 | _sm.t3 | _sm.t5 : null;
-       _smS2.state = SmS2_s21 : SmS2S21_s211;
+       _smS2.state = SmS2_s21 & state = null : SmS2S21_s211;
+       _smS2.state != SmS2_s21 : null;
        TRUE : state;
      esac;
 
@@ -71,7 +73,7 @@ MODULE main
    -- This part declares state variables for the given NuSMV module --
    VAR
      sm : Sm( smS2 , smS2S21 );
-     smS2 : SmS2( sm , smS2S21 );
+     smS2 : SmS2( sm );
      smS2S21 : SmS2S21( sm , smS2 );
 CTLSPEC   EF( sm.state = Sm_s1 )
 CTLSPEC   EF( sm.state = Sm_s2 )

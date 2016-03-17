@@ -1,0 +1,153 @@
+namespace cruise.umple.compiler;
+/* This class implements methods to validate the validity of expressions */
+
+class ExpressionValidator {
+	depend java.text.*;
+  	
+  	private boolean isNumeric( String type ) {
+  		switch( type ){
+  			"int" : return true;
+  			"Integer" : return true;
+  			"float" : return true;
+  			"Float" : return true;
+  			"Double" : return true;
+  			"double" : return true;
+  			"Long" : return true;
+  			"long" : return true;
+  			default : return false;
+  		}
+  	}
+  	
+  	private boolean isBoolean( ConstraintVariable cv ) {
+  		String type = cv.getType();
+  		switch( type ){
+  			"Boolean" : return true;
+  			"boolean" : return true;
+  			default : return false;
+  		}
+  	}
+
+   private String check(ConstraintVariable element) {
+    	String  xxx = null;
+		if(element == null) return false;
+		if( element instanceof ConstraintTree ) {
+		
+			ConstraintTree exprTree = (ConstraintTree) element; 
+			ConstraintVariable root = exprTree.getRoot();
+			if( root != null && root instanceof ConstraintOperator ) {
+				//xxx = isValid( (ConstraintOperator) root );
+			}
+			else if( root != null && root instanceof ConstraintTree  ) {		
+				ConstraintVariable newRoot = ((ConstraintTree) root).getRoot();
+				xxx = check( newRoot);
+			}
+			
+			else if( exprTree.getNumberOfElements() == 1 ) {
+				ConstraintVariable newRoot = ((ConstraintTree) root).getRoot();
+				xxx = check(newRoot);
+			}
+		}
+		
+		if( element instanceof ConstraintOperator ) {
+			
+		}
+		if( element instanceof ConstraintAttribute ) 
+			return ((ConstraintAttribute) element).getAttribute().getType();
+					
+		if( element instanceof ConstraintNamed )
+			return ((ConstraintNamed) element).getType();
+		
+		if( element instanceof ConstraintLiteral ) 
+			if( element instanceof ConstraintNumberLiteral )
+				return "Numeric";
+		
+		if( element instanceof ConstraintUnassignedName ) {
+		    String nelement = ((ConstraintUnassignedName) element).getValue();
+			if( nelement.equals("false") || nelement.equals("true")) 
+				return "Boolean";
+		}
+		return xxx;
+	}
+	
+	private boolean isLogical(ConstraintOperator operator) {
+		if( logicalEqual(operator) == true )
+			return true;
+  		String value = operator.getValue();
+  		switch( value ) {
+  			">=" : return true;
+  			"<=" : return true;
+  			">" : return true;
+  			"<" : return true;
+  			default : return false;
+  		}
+	}
+	
+	private boolean logicalEqual(ConstraintOperator operator){
+	    String value = operator.getValue();
+		switch( value ) {
+			"==" : return true;
+  			"!=" : return true;
+  			"object==" : return true;
+  			"object!=" : return true;
+  			default : false;
+  		}
+	}
+	
+	private boolean isArithmetic(ConstraintOperator operator) {
+  		String value = operator.getValue();
+  		switch( value ){
+  			"+" : return true;
+  			"-" : return true;
+  			"*" : return true;
+  			"/" : return true;
+  			"%" : return true;
+  			default : return false;
+  		}
+	}
+	
+	private String isValid( ConstraintOperator operator ) {
+		ArrayDeque<String> tempNodes = new ArrayDeque<String>();
+		ConstraintVariable left = operator.getLeft(), right = operator.getRight();
+		String bright = null, bleft = null;
+		
+		if( left != null ) 
+			bleft = check( left );
+		String temp = null;
+		if( operator != null ) {
+		    temp = operator .getValue();
+			if( temp.equals("object==") )
+				temp =  "==";
+			else if( temp.equals("object!=") )
+				temp = "!=";
+			else
+				temp = operator .getValue();
+		}
+		if( right != null ) 
+			bright = check( right );
+		return bright;
+	}
+	
+	private valid( bleft, temp, bright ) {
+		if( bleft == null && bright == null) 
+			return null;
+		if( bright )
+	}
+	
+	/*private boolean isNumeric( String str ) {
+    	DecimalFormatSymbols currentLocaleSymbols = DecimalFormatSymbols.getInstance();
+    	char localeMinusSign = currentLocaleSymbols.getMinusSign();
+    	if ( !Character.isDigit( str.charAt( 0 ) ) && str.charAt( 0 ) != localeMinusSign ) return false;
+    	boolean isDecimalSeparatorFound = false;
+    	char localeDecimalSeparator = currentLocaleSymbols.getDecimalSeparator();
+    	for ( char c : str.substring( 1 ).toCharArray() ) {
+        	if ( !Character.isDigit( c ) ) {
+            	if ( c == localeDecimalSeparator && !isDecimalSeparatorFound ) {
+                	isDecimalSeparatorFound = true;
+                	continue;
+            	}
+            	return false;
+        	}
+    	}
+    	return true;
+    }*/
+}

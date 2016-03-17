@@ -1,0 +1,16 @@
+class UmpleToPhp {
+    delete_OptionalOneFromMN_comp <<!<</*delete_OptionalOneFromMN_comp*/>>
+    if ($this-><<=gen.translate("associationOne",av)>> != null)
+    {
+      if ($this-><<=gen.translate("associationOne",av)>>-><<=gen.relatedTranslate("numberOfMethod",av)>>() <= <<=relatedAssociation.getMultiplicity().getLowerBound()>>)
+      {
+        $this-><<=gen.translate("associationOne",av)>>->delete();
+    $this-><<=gen.translate("associationOne",av)>> = null;
+      }
+      else
+      {
+        $this-><<=gen.translate("associationOne",av)>> = null;
+    $this-><<=gen.translate("associationOne",av)>>-><<=gen.relatedTranslate("removeMethod",av)>>($this);
+      }
+    }!>>
+}

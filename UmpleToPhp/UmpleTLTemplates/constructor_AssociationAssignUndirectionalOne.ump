@@ -1,0 +1,7 @@
+class UmpleToPhp {
+    constructor_AssociationAssignUndirectionalOne <<!<</*constructor_AssociationAssignUndirectionalOne*/>>
+    if (!$<<=instanceIdentifier>>-><<=gen.translate("setMethod",av)>>($<<=gen.translate("parameterOne",av)>>))
+    {
+      throw new Exception("Unable to create <<=gen.relatedTranslate("type",av)>> due to <<=gen.translate("parameterOne",av)>>");
+    }!>>
+}

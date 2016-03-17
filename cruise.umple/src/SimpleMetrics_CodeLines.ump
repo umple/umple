@@ -58,9 +58,12 @@ use SimpleMetrics_Util.ump;
 
 class CodeMetrics {
   isA SimpleMetricsGenerator;
+  
+  depend cruise.umple.parser.Position;
+
   StringBuilder resultCode = new StringBuilder();
   UmpleModel model = null;
-  
+    
   void calculate() {
     int totalLineCount = 0; //count lines per file
     int totalLoc = 0;

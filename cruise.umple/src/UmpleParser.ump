@@ -24,6 +24,9 @@ namespace cruise.umple.compiler;
 
 interface UmpleParser
 {
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.Token;
+
   public String toGrammar();
   public ParseResult parse(String ruleName, String codeToParse);
   public ParseResult analyze(boolean shouldGenerateCode);

@@ -1,0 +1,35 @@
+class UmpleToPhp {
+    constructor_AttributeAssignLazy <<!<</*constructor_AttributeAssignLazy*/>><<#
+  String parameterLookup = null; // av.getValue() == null ? "parameterOne" : "parameterValue";
+  String defaultValue = null;
+  
+ 
+  if(av.getValue() == null)
+  {
+     // Try to assign a null value or 0 value if we recognize
+     // one of Umple's built in data types. (http://cruise.site.uottawa.ca/umple/UmpleBuiltinDataTypes.html)
+
+     if(av.getType().equals("String") || av.getType().equals("Date") || av.getType().equals("Time"))
+     {
+  	   defaultValue = "NULL";
+     }
+     else if(av.getType().equals("Double") || av.getType().equals("Float") || av.getType().equals("Integer"))
+     {
+  	   defaultValue = "0";
+     }
+     else if(av.getType().equals("Boolean"))
+     {
+  	   defaultValue = "false";
+     }
+   }
+   else
+   {
+       defaultValue = gen.translate("parameterValue",av);
+   }
+  
+  // Only assign a value if we could find a default
+  if(defaultValue != null)
+  { #>>
+    $<<=instanceIdentifier>>-><<=gen.translate("attributeOne",av)>> = <<=defaultValue>>;
+<<#} #>>!>>
+}

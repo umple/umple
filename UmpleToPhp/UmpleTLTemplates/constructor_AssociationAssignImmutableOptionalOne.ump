@@ -1,0 +1,5 @@
+class UmpleToPhp {
+    constructor_AssociationAssignImmutableOptionalOne <<!<</*constructor_AssociationAssignImmutableOptionalOne*/>><<#   
+    append(realSb, "\n    ${0}->{1}(${2});", instanceIdentifier, gen.translate("setMethod",av), gen.translate("parameterOne",av));
+#>>!>>
+}

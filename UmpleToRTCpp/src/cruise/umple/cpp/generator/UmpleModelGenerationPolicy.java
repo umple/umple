@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import cruise.umple.parser.Position;
 import cruise.umple.compiler.AssociationEnd;
 import cruise.umple.compiler.AssociationVariable;
 import cruise.umple.compiler.Attribute;
@@ -46,7 +47,6 @@ import cruise.umple.compiler.GenerateTarget;
 import cruise.umple.compiler.Method;
 import cruise.umple.compiler.MethodBody;
 import cruise.umple.compiler.MethodParameter;
-import cruise.umple.compiler.Position;
 import cruise.umple.compiler.Precondition;
 import cruise.umple.compiler.UmpleClass;
 import cruise.umple.compiler.UmpleClassifier;

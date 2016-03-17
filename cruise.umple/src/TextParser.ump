@@ -7,7 +7,7 @@ http://umple.org/license
 
  */
 
-namespace cruise.umple.compiler;
+namespace cruise.umple.parser;
 
 /*
  * Parses textual input and used in conjunction with the umple parser and internal parser to tokenize the contents of a file such

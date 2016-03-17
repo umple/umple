@@ -24,6 +24,9 @@ class UpdatePositioningAction
   
   depend java.io.*;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.TextParser;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.ParseResult;
   depend cruise.umple.util.*;
   
   internal UmpleParser umpleParser = null;
@@ -40,6 +43,9 @@ class NewAction
   depend java.io.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.TextParser;
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.Token;
 }
 
 class EditAction
@@ -48,6 +54,9 @@ class EditAction
   
   depend java.io.*;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.TextParser;
   depend cruise.umple.util.*;
 }
 
@@ -57,6 +66,9 @@ class DeleteAction
   depend java.io.*;
   depend cruise.umple.compiler.*;
   depend cruise.umple.util.*;
+  depend cruise.umple.parser.TextParser;
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.Token;
 
   isA SynchronizationAction;
 }
@@ -69,6 +81,9 @@ class NewAssociationAction
   depend java.io.*;
   depend cruise.umple.compiler.*;
   depend cruise.umple.util.*;
+  depend cruise.umple.parser.TextParser;
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.Token;
 }
 
 
@@ -77,7 +92,10 @@ class EditAssociationAction
   depend java.io.*;
   depend cruise.umple.compiler.*;
   depend cruise.umple.util.*;
-
+  depend cruise.umple.parser.TextParser;
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.Token;
+  
   isA SynchronizationAction;
 }
 
@@ -86,6 +104,10 @@ class DeleteAssociationAction
   depend java.io.*;
   depend cruise.umple.compiler.*;
   depend cruise.umple.util.*;
+  depend cruise.umple.parser.TextParser;
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.Position;
 
   isA SynchronizationAction;
 }
@@ -95,6 +117,9 @@ class DeleteGeneralizationAction
   depend java.io.*;
   depend cruise.umple.compiler.*;
   depend cruise.umple.util.*;
+  depend cruise.umple.parser.TextParser;
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.Token;
 
   isA SynchronizationAction;
 }
@@ -106,6 +131,9 @@ class NewGeneralizationAction
   depend java.io.*;
   depend cruise.umple.compiler.*;
   depend cruise.umple.util.*;
+  depend cruise.umple.parser.TextParser;
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.Token;
 }
 
 use Parser.ump;

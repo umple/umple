@@ -205,7 +205,7 @@ public class RegularFlight
 
   public String toString()
   {
-	  String outputString = "";
+    String outputString = "";
     return super.toString() + "["+
             "flightNumber" + ":" + getFlightNumber()+ "," +
             "flightNumber3" + ":" + getFlightNumber3()+ "," +

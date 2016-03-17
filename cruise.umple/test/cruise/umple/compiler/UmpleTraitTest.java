@@ -517,7 +517,53 @@ public class UmpleTraitTest {
 					+"trait CC{  isA Base;  fts{    zero{      card  -> three;      }    three{      pin -> two;    }   }}";
 			UmpleModel model = getRunModel(code);
 			Assert.assertEquals(3,model.getUmpleClass("A").getStateMachine("fts").getState(0).numberOfTransitions());
-		}		
+		}	
+		
+		@Test
+		public void stateMachineTraits033Test() {
+			String code = "class A{	isA T;}"
+				    +"trait T{	void test1(){}	void test2(){}	void test3(){}	sm{		s0{	entry/Java{test1();}				do Java{test2();}				exit/Java{test3();}		}}}";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("sm").getState(0).numberOfActivities());
+			Assert.assertEquals(2,model.getUmpleClass("A").getStateMachine("sm").getState(0).numberOfActions());
+			Assert.assertEquals("test2();",model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivity(0).getActivityCode());
+			Assert.assertEquals("test1();",model.getUmpleClass("A").getStateMachine("sm").getState(0).getAction(0).getCodeblock().getCode("Java"));
+			Assert.assertEquals("test3();",model.getUmpleClass("A").getStateMachine("sm").getState(0).getAction(1).getCodeblock().getCode("Java"));		
+		}
+		
+		@Test
+		public void stateMachineTraits034Test() {
+			String code = "trait T{	Boolean requiredMethod ();}"
+					+"class A{	isA T;	sm{		s0{			requiredMethod() -> s1;		}		s1{			getBack() -> s0;		}	}}";			
+			UmpleModel model = getModel(code);
+			boolean result = false;
+			try {
+				model.run();	
+			} catch (Exception e) {
+				result = e.getMessage().contains("208");
+			} finally {
+				Assert.assertFalse(result);
+				SampleFileWriter.destroy("traitTest.ump");
+			}	
+		}
+		
+		@Test
+		public void stateMachineTraits035Test() {
+			String code = "trait T{	Boolean requiredMethod ();}"
+					+"class A{	sm{		s0{			requiredMethod() -> s1;		}		s1{			getBack() -> s0;		}	}}"
+					+"class B{isA T; isA A;}";			
+			UmpleModel model = getModel(code);
+			boolean result = false;
+			try {
+				model.run();	
+			} catch (Exception e) {
+				result = e.getMessage().contains("208");
+			} finally {
+				Assert.assertFalse(result);
+				SampleFileWriter.destroy("traitTest.ump");
+			}	
+			
+		}
 		
 //the last StateTest
 		

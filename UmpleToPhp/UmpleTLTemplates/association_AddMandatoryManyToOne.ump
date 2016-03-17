@@ -1,0 +1,58 @@
+class UmpleToPhp {
+    association_AddMandatoryManyToOne <<!<</*association_AddMandatoryManyToOne*/>>
+  public function <<=gen.translate("addViaMethod",av)>>(<<=gen.translate("methodArgumentsExcept",relatedAssociation)>>)
+  {
+    return new <<=gen.translate("type",av)>>(<<=gen.translate("callerArgumentsExcept",relatedAssociation)>>);
+  }
+
+  public function <<=gen.translate("addMethod",av)>>($<<=gen.translate("parameterOne",av)>>)
+  {
+    $wasAdded = false;
+    <<# if (customAddPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } #>>
+    $<<=gen.relatedTranslate("parameterExisting",av)>> = $<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>();
+    $<<=gen.relatedTranslate("parameterIsNew",av)>> = $<<=gen.relatedTranslate("parameterExisting",av)>> != null && $this !== $<<=gen.relatedTranslate("parameterExisting",av)>>;
+
+    if ($<<=gen.relatedTranslate("parameterIsNew",av)>> && $<<=gen.relatedTranslate("parameterExisting",av)>>-><<=gen.translate("numberOfMethod",av)>>() <= self::<<=gen.translate("minimumNumberOfMethod",av)>>())
+    {
+      return $wasAdded;
+    }
+
+    if ($<<=gen.relatedTranslate("parameterIsNew",av)>>)
+    {
+      $<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("setMethod",av)>>($this);
+    }
+    else
+    {
+      $this-><<=gen.translate("associationMany",av)>>[] = $<<=gen.translate("parameterOne",av)>>;
+    }
+    $wasAdded = true;
+    <<# if (customAddPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } #>>
+    return $wasAdded;
+  }
+
+  public function <<=gen.translate("removeMethod",av)>>($<<=gen.translate("parameterOne",av)>>)
+  {
+    $wasRemoved = false;
+    <<# if (customRemovePrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } #>>
+    //Unable to remove <<=gen.translate("parameterOne",av)>>, as it must always have a <<=gen.relatedTranslate("associationOne",av)>>
+    if ($this === $<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>())
+    {
+      <<# if (customRemovePostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } #>>
+      return $wasRemoved;
+    }
+
+    //<<=gen.relatedTranslate("associationOne",av)>> already at minimum (<<=av.getMultiplicity().getLowerBound()>>)
+    if ($this-><<=gen.translate("numberOfMethod",av)>>() <= self::<<=gen.translate("minimumNumberOfMethod",av)>>())
+    {
+      <<# if (customRemovePostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } #>>
+      return $wasRemoved;
+    }
+
+    unset($this-><<=gen.translate("attributeMany",av)>>[$this-><<=gen.translate("indexOfMethod",av)>>($<<=gen.translate("parameterOne",av)>>)]);
+    $this-><<=gen.translate("attributeMany",av)>> = array_values($this-><<=gen.translate("attributeMany",av)>>);
+    $wasRemoved = true;
+    <<# if (customRemovePostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } #>>
+    return $wasRemoved;
+  }
+!>>
+}

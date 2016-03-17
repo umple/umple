@@ -103,7 +103,7 @@ public class HelperTemplate
 
   public String toString()
   {
-	  String outputString = "";
+    String outputString = "";
     return super.toString() + "["+ "]"
      + outputString;
   }

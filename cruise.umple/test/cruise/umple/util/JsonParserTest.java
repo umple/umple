@@ -11,7 +11,7 @@ package cruise.umple.util;
 
 import org.junit.*;
 
-import cruise.umple.compiler.ParseResult;
+import cruise.umple.parser.ParseResult;
 
 public class JsonParserTest 
 {

@@ -1291,7 +1291,7 @@ public class PhpClassGenerator implements ILang
   protected final String TEXT_1271 = "($";
   protected final String TEXT_1272 = ")" + NL + "  {" + NL + "    //" + NL + "    // This source of this source generation is association_SetOptionalOneToMandatoryMany.jet" + NL + "    // This set file assumes the generation of a maximumNumberOfXXX method does not exist because " + NL + "    // it's not required (No upper bound)" + NL + "    //   " + NL + "" + NL + "    $wasSet = false;" + NL + "    " + NL + "    $";
   protected final String TEXT_1273 = " = $this->";
-  protected final String TEXT_1274 = ";" + NL + "\t" + NL + "    if ($";
+  protected final String TEXT_1274 = ";" + NL + "" + NL + "    if ($";
   protected final String TEXT_1275 = " == null)" + NL + "    {" + NL + "      if ($";
   protected final String TEXT_1276 = " != null)" + NL + "      {" + NL + "        if ($";
   protected final String TEXT_1277 = "->";
@@ -1320,7 +1320,7 @@ public class PhpClassGenerator implements ILang
   protected final String TEXT_1300 = " = $";
   protected final String TEXT_1301 = ";" + NL + "          $wasSet = true;" + NL + "        }" + NL + "      }" + NL + "    }" + NL + "    if ($wasSet)" + NL + "    {" + NL + "      $";
   protected final String TEXT_1302 = " = $";
-  protected final String TEXT_1303 = ";" + NL + "    }" + NL + "    return $wasSet;" + NL + "  }" + NL + "  ";
+  protected final String TEXT_1303 = ";" + NL + "    }" + NL + "    return $wasSet;" + NL + "  }" + NL;
   protected final String TEXT_1304 = NL + "//  public function ";
   protected final String TEXT_1305 = "($";
   protected final String TEXT_1306 = ")" + NL + "//  {" + NL + "//    //" + NL + "//    // The source of the code generation is association_SetOptionalOneToMN.jet" + NL + "//    // (this) set file assumes the generation of a maximumNumberOfXXX " + NL + "//    //   method ";

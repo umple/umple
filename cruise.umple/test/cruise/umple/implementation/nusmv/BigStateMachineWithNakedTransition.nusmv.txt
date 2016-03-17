@@ -42,7 +42,7 @@ MODULE Sm ( _smZxab , _smZxabZx , _smGe )
      esac;
 
 -- This defines a NuSMV module for SmZxab --
-MODULE SmZxab ( _sm , _smZxabZx , _smGe )
+MODULE SmZxab ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -56,12 +56,13 @@ MODULE SmZxab ( _sm , _smZxabZx , _smGe )
        _sm.t10 : SmZxab_A;
        _sm.t7 | _sm.t11 : SmZxab_B;
        _sm.t1 | _sm.t4 | _sm.t6 | _sm.t12 | _sm.t2 | _sm.t5 | _sm.t8 | _sm.t13 : null;
-       _sm.state = Sm_Zxab : SmZxab_Zx;
+       _sm.state = Sm_Zxab & state = null : SmZxab_Zx;
+       _sm.state != Sm_Zxab : null;
        TRUE : state;
      esac;
 
 -- This defines a NuSMV module for SmZxabZx --
-MODULE SmZxabZx ( _sm , _smZxab , _smGe )
+MODULE SmZxabZx ( _sm , _smZxab )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -73,12 +74,13 @@ MODULE SmZxabZx ( _sm , _smZxab , _smGe )
      next( state ) := case
        _sm.t9 | _sm.t3 : SmZxabZx_X;
        _sm.t2 | _sm.t5 | _sm.t7 | _sm.t10 | _sm.t12 | _sm.t1 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t11 | _sm.t13 : null;
-       _smZxab.state = SmZxab_Zx : SmZxabZx_Z;
+       _smZxab.state = SmZxab_Zx & state = null : SmZxabZx_Z;
+       _smZxab.state != SmZxab_Zx : null;
        TRUE : state;
      esac;
 
 -- This defines a NuSMV module for SmGe --
-MODULE SmGe ( _sm , _smZxab , _smZxabZx )
+MODULE SmGe ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -91,7 +93,8 @@ MODULE SmGe ( _sm , _smZxab , _smZxabZx )
        _sm.t12 | _sm.t5 | _sm.t13 : SmGe_G;
        _sm.t1 | _sm.t4 : SmGe_E;
        _sm.t2 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t3 | _sm.t7 | _sm.t9 | _sm.t11 : null;
-       _sm.state = Sm_Ge : SmGe_G;
+       _sm.state = Sm_Ge & state = null : SmGe_G;
+       _sm.state != Sm_Ge : null;
        TRUE : state;
      esac;
 
@@ -101,9 +104,9 @@ MODULE main
    -- This part declares state variables for the given NuSMV module --
    VAR
      sm : Sm( smZxab , smZxabZx , smGe );
-     smZxab : SmZxab( sm , smZxabZx , smGe );
-     smZxabZx : SmZxabZx( sm , smZxab , smGe );
-     smGe : SmGe( sm , smZxab , smZxabZx );
+     smZxab : SmZxab( sm );
+     smZxabZx : SmZxabZx( sm , smZxab );
+     smGe : SmGe( sm );
 CTLSPEC   EF( sm.state = Sm_Zxab )
 CTLSPEC   EF( sm.state = Sm_D )
 CTLSPEC   EF( sm.state = Sm_Ge )

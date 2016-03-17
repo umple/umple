@@ -874,13 +874,24 @@ class MethodParameter
 }
 
 /*
+ * 
  */
 class CodeBlock
 {
+	
+  /*
+   * @author Vahdat
+   * @param another a CodeBlock that we would like to make a clone of.
+   * Please maintain this method if you're going to add new attributes to the class CodeBlock.
+   * This code manually creates a clone of a state machine.
+   * 
+   */	
   public CodeBlock(CodeBlock another){
+  	this.name = another.getName();
   	this.codes = new HashMap<String,String>();
   	this.codes.putAll(another.codes);
   }
+  
   public void ApplyTypeParameters(GeneralTPApplied inGeneralTPApplied){
 	   if (inGeneralTPApplied == null) return;
 	   Integer start=0,end=0;
@@ -1635,7 +1646,14 @@ class UmpleClass
     if(aMethod!=null&&!aMethod.isIsAbstract()){
       return true;
     }
-    else if(getExtendsClass()!=null&&getExtendsClass().hasImplementedMethodIncludingWithinParentClasses(comparedMethod)){
+    if (numberOfStateMachines()>0){
+    	for(StateMachine sm : getStateMachines()){
+    		if (sm.getEventByMethod(comparedMethod)!=null){
+    			return true;
+    		}
+    	}
+    }
+    if(getExtendsClass()!=null&&getExtendsClass().hasImplementedMethodIncludingWithinParentClasses(comparedMethod)){
       return true;
     }
     return false;
@@ -3992,7 +4010,7 @@ class MethodTemplateSignature{
 
 class ModelConstraintResult
 {
-  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
   Position position;
   int error;
   target;
@@ -4002,6 +4020,7 @@ class ModelConstraintResult
 class ModelConstraint
 {
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
 
   Position position;
   0..1 parentConstraint -- * ModelConstraint;
@@ -4075,6 +4094,7 @@ class ModelConstraintAssociation
 {
   isA ModelConstraint;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
 
   Multiplicity leftHandMultiplicity = new Multiplicity();
   Multiplicity rightHandMultiplicity = new Multiplicity();
@@ -4258,6 +4278,7 @@ class ModelConstraintSuperClass
 {
   isA ModelConstraint;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
 
   public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
   {
@@ -4308,6 +4329,7 @@ class ModelConstraintSubClass
 {
   isA ModelConstraint;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
 
   public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
   {
@@ -4365,6 +4387,7 @@ class ModelConstraintAttributeFromName
 {
   isA ModelConstraint;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
 
   public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
   {
@@ -4399,6 +4422,7 @@ class ModelConstraintAttributeFromClass
 {
   isA ModelConstraint;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
 
   public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
   {

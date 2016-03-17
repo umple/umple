@@ -95,6 +95,14 @@
       <java jar="${umplejar.built.here}" fork="true" failonerror="true">
         <arg value="cruise.umplificator/src/Master.ump"/>
       </java>
+
+      <!-- Example of how to compile UmpleToPhp, just need to uncomment the following <java> to </java>-->
+    <!-- Will need to be moved somewhere else, since this is run after copying the templates -->
+    <!-- So need to create a new target, like name="makeTemplates" -->
+    <!-- Or could edit codejen. Have put it here to reduce how much I needed to change to add it -->
+    <!-- <java jar="${umplejar.built.here}" fork="true" failonerror="true">
+          <arg value="UmpleToPhp/UmpleTLTemplates/Master.ump"/>
+      </java> -->
     </parallel>
   </target>
 
@@ -144,6 +152,8 @@
     </copy>
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/php" overwrite="true">
       <fileset dir="UmpleToPhp/src/cruise/umple/compiler/php" excludes=".git*" />
+      <!-- Uncomment the following line, and comment the above fileset to instead use UmpleTemplate for php -->
+      <!-- <fileset dir="UmpleToPhp/src-gen-UmpleTL/cruise/umple/compiler/php" excludes=".git* UmpleToPhp.java" /> -->
     </copy>
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/ruby" overwrite="true">
       <fileset dir="UmpleToRuby/src/cruise/umple/compiler/ruby" excludes=".git*" />

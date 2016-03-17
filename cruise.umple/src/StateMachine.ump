@@ -47,6 +47,8 @@ class StateMachine
  */
 class State
 {
+  depend cruise.umple.parser.Position;
+
   isA Node;
   name;
   Boolean isConcurrent = { numberOfNestedStateMachines() > 1 }
@@ -78,7 +80,7 @@ class State
  */
 class Activity
 {
-  depend cruise.umple.compiler.Position;
+  depend cruise.umple.parser.Position;
   depend java.util.*;
 
   lazy Position position;
@@ -123,7 +125,7 @@ class Activity
  */
 class Transition
 {
-    
+  depend cruise.umple.parser.Position;
   Boolean isInternal = false;
   Boolean autoTransition = false;
 
@@ -145,7 +147,7 @@ class Transition
  */
 class Action
 {
-  depend cruise.umple.compiler.Position;
+  depend cruise.umple.parser.Position;
   
   lazy actionType;
   lazy Position position;
@@ -186,6 +188,7 @@ class Event
 {
   name;
   //String args = null;
+  
   Boolean isTimer = false;
   Boolean autoTransition = false;
   timerInSeconds = "0";  // TODO: how do you specify milliseconds etc.
@@ -196,6 +199,8 @@ class Event
   
   // The event parameters.
   1 -> 0..* MethodParameter params;
+  // The type of the method.
+  type = "Boolean";
     
   key { name }
 }
@@ -206,13 +211,13 @@ class Event
  */
 class Guard
 {
-  depend cruise.umple.compiler.Position;
+  depend cruise.umple.parser.Position;
   depend java.util.*;
   
   isA ConstraintTree;
   
   lazy Position position;
-  lazy Position endPosition;
+  lazy Position endPosition;  
   
   private ArrayDeque<String> expressionQueue( ConstraintOperator operator ) {
 		ArrayDeque<String> tempNodes = new ArrayDeque<String>();
@@ -231,7 +236,7 @@ class Guard
 		}
 		
 		if( right != null ) 
-			add( right, tempNodes );
+			add(right, tempNodes);
 		
 		return tempNodes;
 	}

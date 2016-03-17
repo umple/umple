@@ -1,0 +1,14 @@
+class UmpleToPhp {
+    association_IsNumberOfValidMethod <<!<</*association_IsNumberOfValidMethod*/>>
+  public function <<=gen.translate("isNumberOfValidMethod",av)>>()
+  {
+    <<# if (customIsNumberOfValidPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPrefixCode, "    ")); } #>>
+<<# if (av.getMultiplicity().isUpperBoundMany()) { #>>
+    $isValid = $this-><<=gen.translate("numberOfMethod",av)>>() >= self::<<=gen.translate("minimumNumberOfMethod",av)>>();
+<<# } else { #>>
+    $isValid = $this-><<=gen.translate("numberOfMethod",av)>>() >= self::<<=gen.translate("minimumNumberOfMethod",av)>>() && $this-><<=gen.translate("numberOfMethod",av)>>() <= self::<<=gen.translate("maximumNumberOfMethod",av)>>();
+<<# } #>>
+    <<# if (customIsNumberOfValidPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPostfixCode, "    ")); } #>>
+    return $isValid;
+  }!>>
+}

@@ -35,6 +35,11 @@ interface TokenAnalysisStub {
 class AnalysisParserTask {
 	isA AnalysisStub;
 	abstract;
+  
+  depend cruise.umple.parser.Parser;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.ErrorMessage;
+  
 	Parser parser;
 	Token token; 
 	Integer errorCode;
@@ -75,6 +80,9 @@ external Exception
 
 
 class TemplateException {
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.Position;
+  depend cruise.umple.parser.ErrorMessage;
 	isA Exception;
 	Position position;
 	ErrorMessage errorMessage;
@@ -92,6 +100,9 @@ class TemplateAttributeParser {
 	depend java.util.ArrayList;
 	depend java.util.List;
 	depend java.io.IOException;
+  depend cruise.umple.parser.Position;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.ErrorMessage;
 	
 	UmpleInternalParser parser;
 	String className;
@@ -279,6 +290,9 @@ class TemplateTokenAnalyzer {
 	depend java.util.HashMap;
 	depend java.util.Map;
 	depend java.util.regex.Pattern;
+  depend cruise.umple.parser.Position;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.ErrorMessage;
 
 	UmpleInternalParser parser;
 	lazy UmpleClass currentTemplate;
@@ -741,6 +755,7 @@ interface IAnalysisWalker {
 //Walk through definition tree while analyzing template tokens
 class TemplateDefinitionWalker {
 	depend java.util.List;
+  depend cruise.umple.parser.Token;
 	isA IWalker;
 	UmpleInternalParser parser;
 	

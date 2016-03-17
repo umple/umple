@@ -119,7 +119,7 @@ MODULE Sm ( _smRegular , _smRegularUpdate , _smChronometer , _smChronometerChron
      init( timer ) := 0;
 
 -- This defines a NuSMV module for SmRegular --
-MODULE SmRegular ( _sm , _smRegularUpdate , _smChronometer , _smChronometerChronoNormal , _smAlarmStatus , _smAlarmUpdate , _smAlarmUpdateHourMinuteUpdate )
+MODULE SmRegular ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -133,12 +133,13 @@ MODULE SmRegular ( _sm , _smRegularUpdate , _smChronometer , _smChronometerChron
        _sm.t4 : SmRegular_date;
        _sm.t20 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t11 | _sm.t3 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 : SmRegular_update;
        _sm.t6 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t5 | _sm.t7 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
-       _sm.state = Sm_regular : SmRegular_time;
+       _sm.state = Sm_regular & state = null : SmRegular_time;
+       _sm.state != Sm_regular : null;
        TRUE : state;
      esac;
 
 -- This defines a NuSMV module for SmRegularUpdate --
-MODULE SmRegularUpdate ( _sm , _smRegular , _smChronometer , _smChronometerChronoNormal , _smAlarmStatus , _smAlarmUpdate , _smAlarmUpdateHourMinuteUpdate )
+MODULE SmRegularUpdate ( _sm , _smRegular )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -155,12 +156,13 @@ MODULE SmRegularUpdate ( _sm , _smRegular , _smChronometer , _smChronometerChron
        _sm.t16 | _sm.t19 : SmRegularUpdate_day;
        _sm.t18 | _sm.t21 : SmRegularUpdate_year;
        _sm.t1 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t2 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
-       _smRegular.state = SmRegular_update : SmRegularUpdate_second;
+       _smRegular.state = SmRegular_update & state = null : SmRegularUpdate_second;
+       _smRegular.state != SmRegular_update : null;
        TRUE : state;
      esac;
 
 -- This defines a NuSMV module for SmChronometer --
-MODULE SmChronometer ( _sm , _smRegular , _smRegularUpdate , _smChronometerChronoNormal , _smAlarmStatus , _smAlarmUpdate , _smAlarmUpdateHourMinuteUpdate )
+MODULE SmChronometer ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -174,12 +176,13 @@ MODULE SmChronometer ( _sm , _smRegular , _smRegularUpdate , _smChronometerChron
        _sm.t29 | _sm.t24 : SmChronometer_lapRunning;
        _sm.t22 : SmChronometer_lapPaused;
        _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
-       _sm.state = Sm_chronometer : SmChronometer_chronoNormal;
+       _sm.state = Sm_chronometer & state = null : SmChronometer_chronoNormal;
+       _sm.state != Sm_chronometer : null;
        TRUE : state;
      esac;
 
 -- This defines a NuSMV module for SmChronometerChronoNormal --
-MODULE SmChronometerChronoNormal ( _sm , _smRegular , _smRegularUpdate , _smChronometer , _smAlarmStatus , _smAlarmUpdate , _smAlarmUpdateHourMinuteUpdate )
+MODULE SmChronometerChronoNormal ( _sm , _smChronometer )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -192,12 +195,13 @@ MODULE SmChronometerChronoNormal ( _sm , _smRegular , _smRegularUpdate , _smChro
        _sm.t28 | _sm.t27 | _sm.t25 : SmChronometerChronoNormal_paused;
        _sm.t26 | _sm.t23 : SmChronometerChronoNormal_running;
        _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t24 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
-       _smChronometer.state = SmChronometer_chronoNormal : SmChronometerChronoNormal_paused;
+       _smChronometer.state = SmChronometer_chronoNormal & state = null : SmChronometerChronoNormal_paused;
+       _smChronometer.state != SmChronometer_chronoNormal : null;
        TRUE : state;
      esac;
 
 -- This defines a NuSMV module for SmAlarmStatus --
-MODULE SmAlarmStatus ( _sm , _smRegular , _smRegularUpdate , _smChronometer , _smChronometerChronoNormal , _smAlarmUpdate , _smAlarmUpdateHourMinuteUpdate )
+MODULE SmAlarmStatus ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -212,12 +216,13 @@ MODULE SmAlarmStatus ( _sm , _smRegular , _smRegularUpdate , _smChronometer , _s
        _sm.t31 : SmAlarmStatus_bothOn;
        _sm.t32 : SmAlarmStatus_alarmOn;
        _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t35 | _sm.t37 | _sm.t39 : null;
-       _sm.state = Sm_alarmStatus : SmAlarmStatus_bothOff;
+       _sm.state = Sm_alarmStatus & state = null : SmAlarmStatus_bothOff;
+       _sm.state != Sm_alarmStatus : null;
        TRUE : state;
      esac;
 
 -- This defines a NuSMV module for SmAlarmUpdate --
-MODULE SmAlarmUpdate ( _sm , _smRegular , _smRegularUpdate , _smChronometer , _smChronometerChronoNormal , _smAlarmStatus , _smAlarmUpdateHourMinuteUpdate )
+MODULE SmAlarmUpdate ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -230,12 +235,13 @@ MODULE SmAlarmUpdate ( _sm , _smRegular , _smRegularUpdate , _smChronometer , _s
        _sm.t7 : SmAlarmUpdate_alarmTime;
        _sm.t35 | _sm.t38 | _sm.t36 | _sm.t37 | _sm.t34 | _sm.t39 : SmAlarmUpdate_hourMinuteUpdate;
        _sm.t1 | _sm.t3 | _sm.t5 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 : null;
-       _sm.state = Sm_alarmUpdate : SmAlarmUpdate_alarmTime;
+       _sm.state = Sm_alarmUpdate & state = null : SmAlarmUpdate_alarmTime;
+       _sm.state != Sm_alarmUpdate : null;
        TRUE : state;
      esac;
 
 -- This defines a NuSMV module for SmAlarmUpdateHourMinuteUpdate --
-MODULE SmAlarmUpdateHourMinuteUpdate ( _sm , _smRegular , _smRegularUpdate , _smChronometer , _smChronometerChronoNormal , _smAlarmStatus , _smAlarmUpdate )
+MODULE SmAlarmUpdateHourMinuteUpdate ( _sm , _smAlarmUpdate )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -248,7 +254,8 @@ MODULE SmAlarmUpdateHourMinuteUpdate ( _sm , _smRegular , _smRegularUpdate , _sm
        _sm.t37 | _sm.t35 | _sm.t38 : SmAlarmUpdateHourMinuteUpdate_alarmHour;
        _sm.t36 | _sm.t34 | _sm.t39 : SmAlarmUpdateHourMinuteUpdate_alarmMinute;
        _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 : null;
-       _smAlarmUpdate.state = SmAlarmUpdate_hourMinuteUpdate : SmAlarmUpdateHourMinuteUpdate_alarmHour;
+       _smAlarmUpdate.state = SmAlarmUpdate_hourMinuteUpdate & state = null : SmAlarmUpdateHourMinuteUpdate_alarmHour;
+       _smAlarmUpdate.state != SmAlarmUpdate_hourMinuteUpdate : null;
        TRUE : state;
      esac;
 
@@ -258,13 +265,13 @@ MODULE main
    -- This part declares state variables for the given NuSMV module --
    VAR
      sm : Sm( smRegular , smRegularUpdate , smChronometer , smChronometerChronoNormal , smAlarmStatus , smAlarmUpdate , smAlarmUpdateHourMinuteUpdate );
-     smRegular : SmRegular( sm , smRegularUpdate , smChronometer , smChronometerChronoNormal , smAlarmStatus , smAlarmUpdate , smAlarmUpdateHourMinuteUpdate );
-     smRegularUpdate : SmRegularUpdate( sm , smRegular , smChronometer , smChronometerChronoNormal , smAlarmStatus , smAlarmUpdate , smAlarmUpdateHourMinuteUpdate );
-     smChronometer : SmChronometer( sm , smRegular , smRegularUpdate , smChronometerChronoNormal , smAlarmStatus , smAlarmUpdate , smAlarmUpdateHourMinuteUpdate );
-     smChronometerChronoNormal : SmChronometerChronoNormal( sm , smRegular , smRegularUpdate , smChronometer , smAlarmStatus , smAlarmUpdate , smAlarmUpdateHourMinuteUpdate );
-     smAlarmStatus : SmAlarmStatus( sm , smRegular , smRegularUpdate , smChronometer , smChronometerChronoNormal , smAlarmUpdate , smAlarmUpdateHourMinuteUpdate );
-     smAlarmUpdate : SmAlarmUpdate( sm , smRegular , smRegularUpdate , smChronometer , smChronometerChronoNormal , smAlarmStatus , smAlarmUpdateHourMinuteUpdate );
-     smAlarmUpdateHourMinuteUpdate : SmAlarmUpdateHourMinuteUpdate( sm , smRegular , smRegularUpdate , smChronometer , smChronometerChronoNormal , smAlarmStatus , smAlarmUpdate );
+     smRegular : SmRegular( sm );
+     smRegularUpdate : SmRegularUpdate( sm , smRegular );
+     smChronometer : SmChronometer( sm );
+     smChronometerChronoNormal : SmChronometerChronoNormal( sm , smChronometer );
+     smAlarmStatus : SmAlarmStatus( sm );
+     smAlarmUpdate : SmAlarmUpdate( sm );
+     smAlarmUpdateHourMinuteUpdate : SmAlarmUpdateHourMinuteUpdate( sm , smAlarmUpdate );
 CTLSPEC   EF( sm.state = Sm_regular )
 CTLSPEC   EF( sm.state = Sm_chronometer )
 CTLSPEC   EF( sm.state = Sm_alarmStatus )

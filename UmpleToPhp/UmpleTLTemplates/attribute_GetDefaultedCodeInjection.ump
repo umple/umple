@@ -1,0 +1,11 @@
+class UmpleToPhp {
+    attribute_GetDefaultedCodeInjection <<!<</*attribute_GetDefaultedCodeInjection*/>>
+  public function <<=gen.translate("getDefaultMethod",av)>>()
+  {
+    <<# if (customGetDefaultPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } #>>
+    $<<=gen.translate("parameterOne",av)>> = <<= gen.translate("parameterValue",av) >>;
+    <<# if (customGetDefaultPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPostfixCode, "    ")); } #>>
+    return $<<=gen.translate("parameterOne",av)>>;
+  }
+!>>
+}

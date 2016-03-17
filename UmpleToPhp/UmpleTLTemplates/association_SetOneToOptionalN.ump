@@ -1,0 +1,39 @@
+class UmpleToPhp {
+    association_SetOneToOptionalN <<!<</*association_SetOneToOptionalN*/>>
+  public function <<=gen.translate("setMethod",av)>>($<<=gen.translate("parameterOne",av)>>)
+  {
+    $wasSet = false;
+    <<# if (customSetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    //Must provide <<=gen.translate("associationOne",av)>> to <<=gen.relatedTranslate("associationOne",av)>>
+    if ($<<=gen.translate("parameterOne",av)>> == null)
+    {
+      <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } #>>
+      return $wasSet;
+    }
+
+    //<<=gen.translate("associationOne",av)>> already at maximum (<<=relatedAssociation.getMultiplicity().getUpperBound()>>)
+    if ($<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("numberOfMethod",av)>>() >= <<=gen.translate("type",av)>>::<<=gen.relatedTranslate("maximumNumberOfMethod",av)>>())
+    {
+      <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } #>>
+      return $wasSet;
+    }
+    
+    $<<=gen.translate("parameterExisting",av)>> = $this-><<=gen.translate("associationOne",av)>>;
+    $this-><<=gen.translate("associationOne",av)>> = $<<=gen.translate("parameterOne",av)>>;
+    if ($<<=gen.translate("parameterExisting",av)>> != null && $<<=gen.translate("parameterExisting",av)>> != $<<=gen.translate("parameterOne",av)>>)
+    {
+      $didRemove = $<<=gen.translate("parameterExisting",av)>>-><<=gen.relatedTranslate("removeMethod",av)>>($this);
+      if (!$didRemove)
+      {
+        $this-><<=gen.translate("associationOne",av)>> = $<<=gen.translate("parameterExisting",av)>>;
+        <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "        ")); } #>>
+        return $wasSet;
+      }
+    }
+    $this-><<=gen.translate("associationOne",av)>>-><<=gen.relatedTranslate("addMethod",av)>>($this);
+    $wasSet = true;
+    <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return $wasSet;
+  }
+!>>
+}
