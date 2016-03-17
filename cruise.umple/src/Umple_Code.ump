@@ -1390,6 +1390,7 @@ class UmpleClass
     return isMatchOnExclude.isTrue() || isMatch.isTrue();
   }
 
+  // Gets applicable code injectiosn for generated methods
   public List<CodeInjection> getApplicableCodeInjections(String type, String method)
   {
     ArrayList<CodeInjection> all = new ArrayList<CodeInjection>();
@@ -1401,7 +1402,7 @@ class UmpleClass
 
     for (CodeInjection code : getCodeInjections())
     {
-      if (code.getOperation() == null || !type.equals(code.getType()))
+      if (code.getOperation() == null || !type.equals(code.getType()) || (!"all".equals(code.getOperationSource()) && !"generated".equals(code.getOperationSource())))
       {
         continue;
       }
@@ -1451,9 +1452,84 @@ class UmpleClass
     return all;
   }
 
-  public List<CodeInjection> getApplicableCodeInjections(String type, String method, List<MethodParameter> parameters)
+  // Gets applicable code injectiosn for custom defined methods
+  public List<CodeInjection> getApplicableCodeInjectionsCustomMethod(String type, String method)
   {
     ArrayList<CodeInjection> all = new ArrayList<CodeInjection>();
+    if (type == null || method == null)
+    {
+      return all;
+    }
+
+    String formattedMethod = StringFormatter.toUnderscore(method);
+    for (CodeInjection code : getCodeInjections())
+    {
+      if (code.getOperation() == null || !type.equals(code.getType()) || (!"all".equals(code.getOperationSource()) && !"custom".equals(code.getOperationSource())))
+      {
+        continue;
+      }
+
+      boolean isAllExcludes = true;
+      TriState isMatch = new TriState(false);
+      TriState isMatchOnExclude = new TriState(true);
+
+      String[] allOperations = code.getOperation().split(",");
+      for (String operation : allOperations)
+      {
+
+        boolean isNot = false;
+        if (operation.startsWith("!"))
+        {
+          isNot = true;
+          operation = operation.substring(1);
+        }
+        else
+        {
+          isAllExcludes = false;
+        }
+        isMatchOnExclude.setIsSet(true);
+
+        boolean customAllowed = (operation.indexOf('~') >= 0);
+
+        String regexOperation = StringFormatter.toUnderscore(operation);
+        regexOperation = regexOperation.replace("_*", "*");
+        regexOperation = regexOperation.replace("*", ".*");
+        regexOperation = regexOperation.replace("_~", "");
+        boolean isCurrentMatch = formattedMethod.matches(regexOperation);
+
+        // Determine whether the paremeters of the injection match the parameters
+        // of this method
+/*
+        boolean isParameterMatch = true;
+        int i = 0;
+        for(String parameterType : code.getParameters().split(",")) {
+          if(!parameterType.equals(parameters.get(i).getType())) {
+            isParameterMatch = false;
+          }
+          i++;
+        }
+
+        isCurrentMatch &= isParameterMatch;
+*/
+        isCurrentMatch &= customAllowed;
+
+        if (isNot && isCurrentMatch)
+        {
+          isMatch.setStatus(false);
+          isMatchOnExclude.setStatus(false);
+        }
+        else if (!isNot && isCurrentMatch)
+        {
+          isMatch.setStatus(true);
+        }
+      }
+
+      if ((isAllExcludes && isMatchOnExclude.isTrue()) || isMatch.isTrue())
+      {
+        all.add(code);
+      }
+    }
+
     return all;
   }
 

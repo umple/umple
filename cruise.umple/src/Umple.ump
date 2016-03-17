@@ -435,6 +435,7 @@ class CodeInjection
 
   type;
   operation;
+  lazy operationSource;
   CodeBlock snippet;
   lazy constraintParameterName;
   * -> 1 UmpleClassifier;

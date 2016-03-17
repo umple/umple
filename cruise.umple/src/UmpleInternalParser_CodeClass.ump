@@ -2583,6 +2583,20 @@ class UmpleInternalParser
     return value;
   }
 
+  private String getOperationSource(Token aToken)
+  {
+    StringBuilder operationSource = new StringBuilder();
+    String comma = "";
+    for(Token subToken : aToken.getSubTokens())
+    {
+      if(subToken.is("operationSource"))
+      {
+        operationSource.append(comma+subToken.getValue());
+      }
+    }
+    return operationSource.toString();
+  }
+
   private String getOperationName(Token aToken)
   {
     StringBuilder operationName = new StringBuilder();
@@ -2604,8 +2618,15 @@ class UmpleInternalParser
     String type = injectToken.is("beforeCode") ? "before" : "after";
     CodeBlock cb = new CodeBlock();
     String operationName = getOperationName(injectToken);
+    String operationSource = getOperationSource(injectToken).toLowerCase();
+
+    if(operationSource.equals("")) {
+      operationSource = "generated";
+    }
 
     CodeInjection injection = new CodeInjection(type,operationName,"",uClassifier);
+    injection.setOperationSource(operationSource);
+
     makeCodeInject(injectToken,injection,cb,uClassifier);
     injection.setSnippet(cb);
     if (uClassifier instanceof UmpleClass) {
