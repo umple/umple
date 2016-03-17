@@ -1,0 +1,26 @@
+use constructor_DeclareDefault.ump;
+use constructor_DeclareOneToOne.ump;
+
+
+class UmpleToPhp {
+    constructor_Declare_All <<!<</*constructor_Declare_All*/>><<#
+  boolean isOneToOne = false;
+  String instanceIdentifier = "this";
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+    AssociationVariable relatedAssocation = av.getRelatedAssociation();
+    if (av.isOnlyOne() && relatedAssocation.isOnlyOne() && av.getIsNavigable() && relatedAssocation.getIsNavigable())
+    {
+      isOneToOne = true;
+      break;
+    }
+  }
+  #>><<@ UmpleToPhp.constructor_DeclareDefault >><<#
+  if (isOneToOne)
+  {
+    instanceIdentifier = "thisInstance";
+    #>><<@ UmpleToPhp.constructor_DeclareOneToOne >><<#
+  }
+
+#>>!>>
+}

@@ -1,0 +1,9 @@
+class UmpleToPhp {
+    constructor_AssociationAssignImmutableOptionalN <<!<</*constructor_AssociationAssignImmutableOptionalN*/>><<# String requiredNumber = StringFormatter.format("{0}", av.getMultiplicity().getUpperBound()); #>>
+    $<<=instanceIdentifier>>-><<=gen.translate("associationMany",av)>> = array();
+    $<<=gen.translate("didAddMany",av)>> = $<<=instanceIdentifier>>-><<=gen.translate("setManyMethod",av)>>($<<=gen.translate("parameterAll",av)>>);
+    if (!$<<=gen.translate("didAddMany",av)>>)
+    {
+      throw new Exception("Unable to create <<=gen.relatedTranslate("type",av)>>, must have <<=requiredNumber>> or fewer <<=gen.translate("associationMany",av)>>, no duplicates.");
+    }!>>
+}

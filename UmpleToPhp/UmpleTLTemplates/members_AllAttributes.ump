@@ -1,0 +1,59 @@
+class UmpleToPhp {
+    members_AllAttributes <<!<</*members_AllAttributes*/>><<#
+{
+
+  appendln(realSb, "");
+  appendln(realSb, "");
+  appendln(realSb, "  //------------------------");
+  appendln(realSb, "  // MEMBER VARIABLES");
+  append(realSb, "  //------------------------");
+
+  isFirst = true;
+  for(Attribute av : uClass.getAttributes())
+  {
+    if (av.isConstant() || av.getIsAutounique() || av.getIsDerived())
+    {
+      continue;
+    }
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      append(realSb,"  //{0} Attributes", uClass.getName());
+      isFirst = false;
+    }
+    
+    String attribute = gen.translate("attributeOne",av);
+    if (av.getIsList())
+    {
+      attribute = gen.translate("attributeMany",av);
+    }
+
+    appendln(realSb, "");
+    
+    if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+    
+    append(realSb, "  private ${0};", attribute);
+  }
+  
+  isFirst = true;
+  for(Attribute av : uClass.getAttributes())
+  {
+    if (!av.getIsAutounique())
+    {
+      continue;
+    }
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      append(realSb,"  //Autounique Attributes");
+      isFirst = false;
+    }
+    appendln(realSb, "");
+    String lookup = av.getIsList() ? "attributeMany" : "attributeOne";
+    append(realSb, "  private ${0};", gen.translate(lookup,av));
+  }
+}
+#>>!>>
+}

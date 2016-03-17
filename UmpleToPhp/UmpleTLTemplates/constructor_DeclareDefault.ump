@@ -1,0 +1,299 @@
+use constructor_AssociationAssignDefault.ump;
+use constructor_AssociationAssignImmutableOptionalMany.ump;
+use constructor_AssociationAssignImmutableOptionalN.ump;
+use constructor_AssociationAssignImmutableOptionalOne.ump;
+use constructor_AssociationAssignMandatoryMany.ump;
+use constructor_AssociationAssignOne.ump;
+use constructor_AssociationAssignOneToOne.ump;
+use constructor_AssociationAssignOptionalMany.ump;
+use constructor_AssociationAssignUndirectionalOne.ump;
+use constructor_AttributeAssign.ump;
+use constructor_AttributeAssignAutounique.ump;
+use constructor_AttributeAssignDefaulted.ump;
+use constructor_AttributeAssignImmutable.ump;
+use constructor_AttributeAssignLazy.ump;
+use constructor_AttributeAssignList.ump;
+use constructor_AttributeAssignUnique.ump;
+use constructor_AttributeUnassignedImmutable.ump;
+use constructor_NestedStateMachineAssignDefault.ump;
+use constructor_Singleton.ump;
+use constructor_StateMachineAssignDefault.ump;
+
+
+class UmpleToPhp {
+    constructor_DeclareDefault <<!<</*constructor_DeclareDefault*/>><<#
+
+  String customConstructorPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","constructor"));
+  String customConstructorPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","constructor"));
+
+  appendln(realSb, "");
+
+  String constructorLookup = isOneToOne ? "constructorSignature_nulled" : "constructorSignature";
+  String accessibility = uClass.getIsSingleton() ? "private" : "public";
+  append(realSb,"  {0} function __construct({1})",accessibility, gClass.getLookup(constructorLookup));
+
+  appendln(realSb, "");
+  
+  boolean hasBody = false;
+  
+  append(realSb, "  {");
+  
+  if (isOneToOne)
+  {
+    appendln(realSb,"");
+    appendln(realSb,"    if (func_num_args() == 0) { return; }");
+  }
+  
+  if (!uClass.isRoot() && !"interface".equals(uClass.getExtendsClass().getModifier()))
+  {
+    appendln(realSb, "");
+    append(realSb, "    parent::__construct({0});", gClass.getParentClass().getLookup("constructorSignature_caller"));
+    hasBody = true;
+  }
+
+  if (customConstructorPrefixCode != null)
+  {
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customConstructorPrefixCode, "    "));
+    hasBody = true;
+  }
+  
+  if (uClass.getKey().isProvided())
+  {
+    hasBody = true;
+    appendln(realSb, "");
+    append(realSb, "    $this->cachedHashCode = -1;");
+  }
+  
+  for(String memberId : uClass.getKey().getMembers())
+  {
+    Attribute av = uClass.getAttribute(memberId);
+    AssociationVariable as = uClass.getAssociationVariable(memberId);
+    if (av != null  && !av.isImmutable())
+    {
+      hasBody = true;
+      appendln(realSb, "");
+      append(realSb, "    $this->{0} = true;", gen.translate("attributeCanSet",av));
+    }
+    else if (as != null)
+    {
+      hasBody = true;
+      appendln(realSb, "");
+      append(realSb, "    $this->{0} = true;", gen.translate("associationCanSet",as));
+    }
+  }
+  
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (av.getIsAutounique() || av.getIsUnique() || av.isConstant() || "theInstance".equals(gen.translate("attributeOne",av)) || av.getIsDerived())
+    {
+      continue;
+    }
+    
+    if (av.getIsList())
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AttributeAssignList >><<#
+    }
+    else if ("defaulted".equals(av.getModifier()))
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AttributeAssignDefaulted >><<# 
+    }
+    else if (av.isImmutable() && av.getIsLazy())
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AttributeUnassignedImmutable >><<#
+    }
+    else if (av.isImmutable())
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AttributeAssignImmutable >><<# 
+    }
+    else
+    {
+      hasBody = true;
+      if(!av.getIsLazy()){
+         #>><<@ UmpleToPhp.constructor_AttributeAssign >><<#
+      }
+      else
+      {
+         #>><<@ UmpleToPhp.constructor_AttributeAssignLazy >><<#
+      }
+    }
+  }
+
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (av.getIsAutounique())
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AttributeAssignAutounique >><<#
+    }
+    else if (av.getIsUnique())
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AttributeAssignUnique >><<#
+    }
+  }
+  
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+  	if (!av.getIsNavigable() || !av.isImmutable())
+  	{
+  	  continue;
+  	}
+    append(realSb, "\n    ${0}->{1} = true;", instanceIdentifier, gen.translate("associationCanSet",av));
+  }
+  
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+    AssociationVariable relatedAssociation = av.getRelatedAssociation();
+    
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    
+    if (!relatedAssociation.getIsNavigable())
+    {
+      if (av.isOnlyOne())
+      {
+        hasBody = true;
+        #>><<@ UmpleToPhp.constructor_AssociationAssignUndirectionalOne >><<#
+      }
+      else if (av.isOptionalOne() && av.isImmutable())
+      {
+        hasBody = true;
+        #>><<@ UmpleToPhp.constructor_AssociationAssignImmutableOptionalOne >><<#
+      }
+      else if (av.isMandatoryMany())
+      {
+        hasBody = true;
+        #>><<@ UmpleToPhp.constructor_AssociationAssignMandatoryMany >><<#
+      }
+      else if (av.isOptionalN() && av.isImmutable())
+      {
+        hasBody = true;
+        #>><<@ UmpleToPhp.constructor_AssociationAssignImmutableOptionalN >><<#
+      }
+      else if (av.isMany() && av.isImmutable())
+      {
+      	hasBody = true;
+        #>><<@ UmpleToPhp.constructor_AssociationAssignImmutableOptionalMany >><<#
+      }
+      else if (av.isMany())
+      {
+        hasBody = true;
+        #>><<@ UmpleToPhp.constructor_AssociationAssignOptionalMany >><<#
+      }
+      continue;
+    }
+    
+    if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AssociationAssignOneToOne >><<#
+    }
+    else if ((av.isMN() || av.isN()) && (relatedAssociation.isMandatory() || relatedAssociation.isOptionalN()))
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AssociationAssignOptionalMany >><<#
+    }
+    else if (av.isOnlyOne())
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AssociationAssignOne >><<#
+    }
+    else
+    {
+      #>><<@ UmpleToPhp.constructor_AssociationAssignDefault >><<#
+    }
+  }
+  
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    State state = sm.getStartState();
+    if (state == null)
+    {
+      continue;
+    }
+    hasBody = true;
+    for (StateMachine nestedSm : sm.getNestedStateMachines())
+    {
+      #>><<@ UmpleToPhp.constructor_NestedStateMachineAssignDefault >><<#
+    }
+    #>><<@ UmpleToPhp.constructor_StateMachineAssignDefault >><<#
+  }  
+
+  if (customConstructorPostfixCode != null)
+  {
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customConstructorPostfixCode, "    "));
+    hasBody = true;
+  }
+
+  if (hasBody)
+  {
+    appendln(realSb, "");
+    append(realSb, "  }");
+  }
+  else
+  {
+    append(realSb, "}");
+  }
+
+  //=========== fixml attribute (create empty constructor)
+  boolean fixmlAttr = false;
+  boolean emptyConstructor = false;
+  
+  for (Attribute av : uClass.getAttributes())
+	  if ("fixml".equals(av.getModifier()))
+	  {
+		  fixmlAttr = true;
+		  break;
+	  }
+
+  for( CodeInjection ci  : uClass.getCodeInjections())
+	  if( ci.getOperation().equals("emptyConstructor"))
+	  {
+		  emptyConstructor = true;
+		  break;
+	  }
+  
+  for (Attribute av : uClass.getAttributes())
+  {
+	  if ("fixml".equals(av.getModifier()))
+	  {
+		  accessibility = uClass.getIsSingleton() ? "private" : "public";
+		  append(realSb,"\n\n  {0} function __construct()",accessibility);
+		  appendln(realSb, "");
+		  append(realSb, "  {\n");
+		  for (Attribute a : uClass.getAttributes())
+			  if ("fixml".equals(a.getModifier()) && a.getValue() != null )
+				  append(realSb, "    $this->{0} = {1};\n", a.getName(),a.getValue());
+		  for( CodeInjection ci  : uClass.getCodeInjections())
+			  if( ci.getOperation().equals("emptyConstructor"))
+				  appendln(realSb,"    {0}",ci.getCode());
+		  appendln(realSb,"  }");
+		  break;
+	  }
+  }
+  
+  if( fixmlAttr == false && emptyConstructor == true )
+  {
+	  accessibility = uClass.getIsSingleton() ? "private" : "public";
+	  append(realSb,"\n\n  {0} function __construct()",accessibility);
+	  appendln(realSb, "");
+	  append(realSb, "  {\n");
+	  for( CodeInjection ci  : uClass.getCodeInjections())
+		  if( ci.getOperation().equals("emptyConstructor"))
+			  appendln(realSb,"    {0}",ci.getCode());
+	  appendln(realSb,"  }");
+  }
+  
+  if (uClass.getIsSingleton())
+  {
+    appendln(realSb, "");
+    #>><<@ UmpleToPhp.constructor_Singleton >><<#
+  }
+#>>!>>
+}

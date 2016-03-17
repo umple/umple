@@ -1,0 +1,111 @@
+class UmpleToPhp {
+    state_machine_Event <<!<</*state_machine_Event*/>><<#
+  StringBuffer allCases = new StringBuffer();
+  StringBuffer allDeclarations = new StringBuffer();
+  StringBuffer allArgs = new StringBuffer();
+
+  boolean firstStateMachine = true;
+  for(StateMachine sm : uClass.getStateMachines(e))
+  {
+    for( TraceDirective tc : uClass.getTraceDirectives() )
+  	{
+  		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+  		{
+  			if( tc.getStateMachineTraceItem(i).getStateMachine() == sm )
+  			{
+  				if( model.getTraceType().equals("Console"))
+  				{
+  					allCases.append(StringFormatter.format("\n    print(\"Event={0}\");\n    ",gen.translate("eventMethod",e)));
+  				}
+  				else if( model.getTraceType().equals("File"))
+  				{
+  					allCases.append(StringFormatter.format("\n    fileTracer(\"Event={0}\");\n    ",gen.translate("eventMethod",e)));
+  				}
+  			}
+  		}
+  	}
+  	allDeclarations.append(StringFormatter.format("\n    ${0} = $this->{1};",gen.translate("parameterOne",sm),gen.translate("stateMachineOne", sm)));
+  	
+    boolean first = true;
+    if (!firstStateMachine)
+    {
+      allCases.append("\n\n    ");
+    }
+
+    for(State state : sm.getStates())
+    {
+  
+      List<Transition> allT = state.getTransitionsFor(e);
+      
+      if (allT.size() == 0)
+      {
+        continue;
+      }
+      
+      if (first)
+      {
+        allCases.append(StringFormatter.format("\n    if (${0} == self::${1})\n",gen.translate("parameterOne",sm),gen.translate("stateOne",state)));
+      }
+      else
+      {
+        allCases.append(StringFormatter.format("\n    elseif (${0} == self::${1})\n",gen.translate("parameterOne",sm),gen.translate("stateOne",state)));
+      }
+      allCases.append(StringFormatter.format("    {\n"));
+  
+      boolean needsBreak = true;
+      for (Transition t : allT)
+      {
+        State nextState = t.getNextState();
+        String spaceOffset = t.getGuard() == null ? "" : "  ";
+        StateMachine exitSm = state.exitableStateMachine(nextState);
+        String condition = t.getGuard()!=null?gen.translate("Open",t.getGuard()):"if ()\n{";        
+        if (!"if ()\n{".equals(condition))
+        {
+          allCases.append(GeneratorHelper.doIndent(condition, "      ")+"\n");
+        }
+        if (exitSm != null && !e.getIsInternal() && !state.isSameState(nextState,exitSm)) 
+        {
+          allCases.append(StringFormatter.format("{0}      $this->{1}();\n",spaceOffset,gen.translate("exitMethod",exitSm)));
+        }
+        if (t.getAction() != null)
+        {
+          Action a1= t.getAction();
+          allCases.append(StringFormatter.format("{0}      {1}\n",spaceOffset,a1.getActionCode()));
+        }
+  
+        allCases.append(StringFormatter.format("{0}      $this->{1}(self::${2});\n",spaceOffset,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
+        allCases.append(StringFormatter.format("{0}      $wasEventProcessed = true;\n",spaceOffset));
+  
+        if (!"if ()\n{".equals(condition))
+        {
+          allCases.append(StringFormatter.format("      }\n"));
+        }
+      }
+      allCases.append(StringFormatter.format("    }"));
+      first = false;
+    }
+    firstStateMachine = false;
+  }
+  String[] split = e.getArgs().split(",");
+  if (split[0] != null && split[0] != "")
+  {
+    for (int i = 0; i < split.length; i++) {
+      if (i > 0)
+      {
+        allArgs.append(", ");
+      }
+      allArgs.append(StringFormatter.format("${0}",split[i].substring(split[i].indexOf(" ")+1)));
+    }
+  }
+  String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
+  String eventOutput = allDeclarations.toString() + allCases.toString();
+  String argsOutput = allArgs.toString();
+#>>
+  <<= scope >> function <<=gen.translate("eventMethod",e)>>(<<= argsOutput >>)
+  {
+    $wasEventProcessed = false;
+    <<= eventOutput >>
+    return $wasEventProcessed;
+  }
+!>>
+}

@@ -1,0 +1,10 @@
+class UmpleToPhp {
+    attribute_IsBooleanCodeInjectionDerived <<!<</*attribute_IsBooleanCodeInjectionDerived*/>>
+  public <<=gen.translate("type",av)>> <<= gen.translate("isMethod",av) >>()
+  {
+    <<# if (customGetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    <<= gen.translate("type",av) >> <<= gen.translate("parameterOne",av) >> = <<= gen.translate("parameterValue",av) >>;
+    <<# if (customGetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } #>>
+    return <<= gen.translate("parameterOne",av) >>;
+  }!>>
+}

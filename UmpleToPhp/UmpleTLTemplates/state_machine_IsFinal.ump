@@ -1,0 +1,22 @@
+class UmpleToPhp {
+    state_machine_IsFinal <<!<</*state_machine_IsFinal*/>><<#
+
+  StringBuilder output = new StringBuilder();
+  for(State state : sm.getFinalStates())
+  {
+    StateMachine finalSm = state.getStateMachine();
+    if (output.length() > 0)
+    {
+      output.append(" && ");
+    }
+    
+    output.append(StringFormatter.format("$this->{0} == self::${1}",gen.translate("stateMachineOne",finalSm),gen.translate("stateOne",state)));
+  }
+  String outputAsString = output.toString();
+#>>
+  private function <<=gen.translate("isFinalMethod",sm)>>()
+  {
+    return <<= outputAsString >>;
+  }
+!>>
+}

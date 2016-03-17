@@ -1,0 +1,20 @@
+class UmpleToPhp {
+    association_MinimumNumberOfMethod <<!<</*association_MinimumNumberOfMethod*/>><<#
+    String customMinimumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("minimumNumberOfMethod",av)));
+    String customMinimumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("minimumNumberOfMethod",av)));
+#>>
+<<# if (customMinimumNumberOfPrefixCode == null && customMinimumNumberOfPostfixCode == null) { #>>
+  public static function <<=gen.translate("minimumNumberOfMethod",av)>>()
+  {
+    return <<=av.getMultiplicity().getLowerBound()>>;
+  }
+<<# } else { #>>
+  public static function <<=gen.translate("minimumNumberOfMethod",av)>>()
+  {
+    <<# if (customMinimumNumberOfPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPrefixCode, "    ")); } #>>
+    $minimum = <<=av.getMultiplicity().getLowerBound()>>;
+    <<# if (customMinimumNumberOfPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPostfixCode, "    ")); } #>>
+    return $minimum;
+  }
+<<# } #>>!>>
+}

@@ -1,0 +1,8 @@
+class UmpleToPhp {
+    delete_MandatoryFromOptionalOne <<!<</*delete_MandatoryFromOptionalOne*/>>
+    foreach ($this-><<=gen.translate("associationMany",av)>> as $<<=gen.translate("parameterOne",av)>>)
+    {
+      $this-><<=gen.relatedTranslate("setMethod",av)>>($<<=gen.translate("parameterOne",av)>>,null);
+    }
+    $this-><<=gen.translate("associationMany",av)>> = array();!>>
+}

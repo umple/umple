@@ -1,0 +1,36 @@
+class UmpleToPhp {
+    members_AllAssociations <<!<</*members_AllAssociations*/>><<#
+{
+  isFirst = true;
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      append(realSb,"  //{0} Associations", uClass.getName());
+      isFirst = false;
+    }
+  
+    appendln(realSb, "");
+    String lookup = av.isOne() ? "associationOne" : "associationMany";
+    
+    if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Association Javadoc", av.getComments())); }
+    
+    if (av.isOptionalOne() && av.getRelatedAssociation().isMandatory() && !av.isImmutable())
+    {
+      append(realSb, "  public ${0}; //until PHP 5.3 (setAccessible)", gen.translate(lookup,av));
+    }
+    else
+    {
+      append(realSb, "  private ${0};", gen.translate(lookup,av));
+    }
+  }
+}
+#>>!>>
+}

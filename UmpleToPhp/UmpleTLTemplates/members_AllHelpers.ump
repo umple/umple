@@ -1,0 +1,74 @@
+class UmpleToPhp {
+    members_AllHelpers <<!<</*members_AllHelpers*/>><<#
+{
+
+  isFirst = true;
+  if (uClass.getKey().isProvided())
+  {
+    isFirst = false;
+    appendln(realSb, "");
+    appendln(realSb, "");
+    appendln(realSb,"  //Helper Variables");
+    append(realSb, "  private $cachedHashCode;");
+  }
+
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (av.isImmutable() && av.isIsLazy())
+    {
+      if (isFirst)
+      {
+        isFirst = false;
+        appendln(realSb, "");
+        appendln(realSb, "");
+        appendln(realSb,"  //Helper Variables");
+      }
+      else
+      {
+        appendln(realSb, "");
+      }
+      append(realSb, "  private ${0};", gen.translate("attributeCanSet",av));
+    }
+  }
+  
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    if (av.isImmutable())
+    {
+      if (isFirst)
+      {
+        isFirst = false;
+        appendln(realSb, "");
+        appendln(realSb, "");
+        appendln(realSb,"  //Helper Variables");
+      } 
+      else
+      {
+        appendln(realSb, "");
+      }
+      append(realSb, "  private ${0};", gen.translate("associationCanSet",av));
+    }
+  }
+  
+  for(String memberId : uClass.getKey().getMembers())
+  {
+    Attribute av = uClass.getAttribute(memberId);
+    AssociationVariable as = uClass.getAssociationVariable(memberId);
+    if (av != null  && !av.isImmutable())
+    {
+      appendln(realSb, "");
+      append(realSb, "  private ${0};", gen.translate("attributeCanSet",av));
+    }
+    else if (as != null)
+    {
+      appendln(realSb, "");
+      append(realSb, "  private ${0};", gen.translate("associationCanSet",as));
+    }
+  }
+}
+#>>!>>
+}

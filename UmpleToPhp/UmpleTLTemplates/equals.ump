@@ -1,0 +1,95 @@
+class UmpleToPhp {
+    equals <<!<</*equals*/>><<#
+
+  StringBuilder checks = new StringBuilder();
+  StringBuilder hash = new StringBuilder();
+  StringBuilder canSet = new StringBuilder();
+  
+  for(String memberId : uClass.getKey().getMembers())
+  {
+    Attribute av = uClass.getAttribute(memberId);
+    AssociationVariable as = uClass.getAssociationVariable(memberId);
+    if (av != null)
+    {
+      String attributeLabel = av.getIsList() ? "attributeMany" : "attributeOne";
+      canSet.append(StringFormatter.format("    $this->{0} = false;\n",gen.translate("attributeCanSet",av)));
+      checks.append(StringFormatter.format("    if ($this->{0} != $compareTo->{0})\n",gen.translate(attributeLabel,av)));
+      checks.append(StringFormatter.format("    {\n"));
+      checks.append(StringFormatter.format("      return false;\n"));
+      checks.append(StringFormatter.format("    }\n"));
+      checks.append("\n");
+    }
+    else if (as != null)
+    {
+      String associationLabel = as.isMany() ? "associationMany" : "associationOne";
+      canSet.append(StringFormatter.format("    $this->{0} = false;\n",gen.translate("associationCanSet",as)));
+      checks.append(StringFormatter.format("    if ($this->{0} != $compareTo->{0})\n",gen.translate(associationLabel,as)));
+      checks.append(StringFormatter.format("    {\n"));
+      checks.append(StringFormatter.format("      return false;\n"));
+      checks.append(StringFormatter.format("    }\n"));
+      checks.append("\n");
+    }
+    
+    if (av != null)
+    {
+      if (("Integer".equals(av.getType()) || "Double".equals(av.getType())) && !av.getIsList())
+      {
+        hash.append(StringFormatter.format("    $this->cachedHashCode = $this->cachedHashCode * 23 + $this->{0};\n",gen.translate("attributeOne",av)));
+      }
+      else if ("Boolean".equals(av.getType()) && !av.getIsList())
+      {
+        hash.append(StringFormatter.format("    $this->cachedHashCode = $this->cachedHashCode * 23 + ($this->{0} ? 1 : 0);\n",gen.translate("attributeOne",av)));
+      }
+      else
+      {
+        String attributeType = av.getIsList() ? "attributeMany" : "attributeOne";
+        hash.append(StringFormatter.format("    if ($this->{0} != null)\n",gen.translate(attributeType,av)));
+        hash.append(StringFormatter.format("    {\n"));
+        hash.append(StringFormatter.format("      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->{0});\n",gen.translate(attributeType,av)));
+        hash.append(StringFormatter.format("    }\n"));
+        hash.append(StringFormatter.format("    else\n"));
+        hash.append(StringFormatter.format("    {\n"));
+        hash.append(StringFormatter.format("      $this->cachedHashCode = $this->cachedHashCode * 23;\n"));
+        hash.append(StringFormatter.format("    }\n"));
+      }
+      hash.append("\n");
+    }
+    else if (as != null)
+    {
+      String attributeType = as.isOne() ? "attributeOne" : "attributeMany";
+      hash.append(StringFormatter.format("    if ($this->{0} != null)\n",gen.translate(attributeType,as)));
+      hash.append(StringFormatter.format("    {\n"));
+      hash.append(StringFormatter.format("      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->{0});\n",gen.translate(attributeType,as)));
+      hash.append(StringFormatter.format("    }\n"));
+      hash.append(StringFormatter.format("    else\n"));
+      hash.append(StringFormatter.format("    {\n"));
+      hash.append(StringFormatter.format("      $this->cachedHashCode = $this->cachedHashCode * 23;\n"));
+      hash.append(StringFormatter.format("    }\n"));
+    }
+  }
+
+#>>
+  public function equals($compareTo)
+  {
+    if ($compareTo == null) { return false; }
+    if (get_class($this) != get_class($compareTo)) { return false; }
+
+    <<= checks.toString().trim() >>
+
+    return true;
+  }
+
+  public function hashCode()
+  {
+    if ($this->cachedHashCode != -1)
+    {
+      return $this->cachedHashCode;
+    }
+    $this->cachedHashCode = 17;
+    <<= hash.toString().trim() >>
+
+    <<= canSet.toString().trim() >>
+    return $this->cachedHashCode;
+  }
+!>>
+}

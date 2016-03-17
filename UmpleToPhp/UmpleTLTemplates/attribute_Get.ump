@@ -1,0 +1,8 @@
+class UmpleToPhp {
+    attribute_Get <<!<</*attribute_Get*/>>
+  public function <<=gen.translate("getMethod",av)>>()
+  {
+    <<# if (customGetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    return $this-><<=gen.translate("associationOne",av)>>;
+  }!>>
+}

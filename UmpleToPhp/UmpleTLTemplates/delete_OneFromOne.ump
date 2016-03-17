@@ -1,0 +1,9 @@
+class UmpleToPhp {
+    delete_OneFromOne <<!<</*delete_OneFromOne*/>>
+    $<<=gen.translate("parameterExisting",av)>> = $this-><<=gen.translate("associationOne",av)>>;
+    $this-><<=gen.translate("associationOne",av)>> = null;
+    if ($<<=gen.translate("parameterExisting",av)>> != null)
+    {
+      $<<=gen.translate("parameterExisting",av)>>->delete();
+    }!>>
+}

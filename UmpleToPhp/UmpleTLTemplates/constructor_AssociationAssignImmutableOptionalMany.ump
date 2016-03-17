@@ -1,0 +1,9 @@
+class UmpleToPhp {
+    constructor_AssociationAssignImmutableOptionalMany <<!<</*constructor_AssociationAssignImmutableOptionalMany*/>>
+    $<<=instanceIdentifier>>-><<=gen.translate("associationMany",av)>> = array();
+    $<<=gen.translate("didAddMany",av)>> = $<<=instanceIdentifier>>-><<=gen.translate("setManyMethod",av)>>($<<=gen.translate("parameterAll",av)>>);
+    if (!$<<=gen.translate("didAddMany",av)>>)
+    {
+      throw new Exception("Unable to create <<=gen.relatedTranslate("type",av)>>, must not have duplicate <<=gen.translate("associationMany",av)>>.");
+    }!>>
+}

@@ -1,0 +1,12 @@
+class UmpleToPhp {
+    association_GetPrivate <<!<</*association_GetPrivate*/>>
+  private function <<=gen.relatedTranslate("setMethod",av)>>($<<=gen.translate("parameterOne",av)>>, $<<=gen.relatedTranslate("parameterOne",av)>>)
+  {
+    $<<=gen.translate("parameterOne",av)>>->mentor = $<<=gen.relatedTranslate("parameterOne",av)>>;
+    //$prop = new ReflectionProperty($<<=gen.translate("parameterOne",av)>>, '<<=gen.relatedTranslate("associationOne",av)>>');
+    //$prop->setAccessible(true);
+    //$prop->setValue($<<=gen.translate("parameterOne",av)>>,$<<=gen.relatedTranslate("parameterOne",av)>>);
+    //$prop->setAccessible(false);
+  }
+!>>
+}

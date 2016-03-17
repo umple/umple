@@ -1,0 +1,7 @@
+class UmpleToPhp {
+    constructor_AttributeAssignUnique <<!<</*constructor_AttributeAssignUnique*/>>
+    if (!$this-><<=gen.translate("setMethod", av)>>($<<=gen.translate("parameterOne", av)>>))
+    {
+      throw new RuntimeException("Cannot create due to duplicate <<=av.getName()>>");
+    }!>>
+}

@@ -1,0 +1,33 @@
+class UmpleToPhp {
+    association_SetOptionalOneToOne <<!<</*association_SetOptionalOneToOne*/>>
+  public function <<=gen.translate("setMethod",av)>>($<<=gen.translate("parameterNew",av)>>)
+  {
+    $wasSet = false;
+    <<# if (customSetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    if ($this-><<=gen.translate("associationOne",av)>> != null && $this-><<=gen.translate("associationOne",av)>> != $<<=gen.translate("parameterNew",av)>> && $this == $this-><<=gen.translate("associationOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>())
+    {
+      //Unable to <<=gen.translate("setMethod",av)>>, as existing <<=gen.translate("associationOne",av)>> would become an orphan
+      <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "      ")); } #>>
+      return $wasSet;
+    }
+    
+    $this-><<=gen.translate("associationOne",av)>> = $<<=gen.translate("parameterNew",av)>>;
+    $<<=gen.relatedTranslate("parameterOld",av)>> = $<<=gen.translate("parameterNew",av)>> != null ? $<<=gen.translate("parameterNew",av)>>-><<=gen.relatedTranslate("getMethod",av)>>() : null;
+    
+    if ($this != $<<=gen.relatedTranslate("parameterOld",av)>>)
+    {
+      if ($<<=gen.relatedTranslate("parameterOld",av)>> != null)
+      {
+        $<<=gen.relatedTranslate("parameterOld",av)>>-><<=gen.translate("associationOne",av)>> = null;
+      }
+      if ($this-><<=gen.translate("associationOne",av)>> != null)
+      {
+        $this-><<=gen.translate("associationOne",av)>>-><<=gen.relatedTranslate("setMethod",av)>>($this);
+      }
+    }
+    $wasSet = true;
+    <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return $wasSet;
+  }
+!>>
+}
