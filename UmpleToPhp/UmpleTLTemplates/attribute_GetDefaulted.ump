@@ -1,0 +1,9 @@
+class UmpleToPhp {
+    attribute_GetDefaulted <<!<</*attribute_GetDefaulted*/>>
+  public function <<=gen.translate("getDefaultMethod",av)>>()
+  {
+    <<# if (customGetDefaultPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } #>>
+    return <<= gen.translate("parameterValue",av) >>;
+  }
+!>>
+}

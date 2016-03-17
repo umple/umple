@@ -1,0 +1,16 @@
+class UmpleToPhp {
+    association_SetUnidirectionalOne <<!<</*association_SetUnidirectionalOne*/>><<# String accessModifier = (av.isImmutable()) ? "private" : "public"; #>>
+  <<= accessModifier >> function <<=gen.translate("setMethod",av)>>($<<=gen.translate("parameterNew",av)>>)
+  {
+    $wasSet = false;
+    <<# if (customSetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    if ($<<=gen.translate("parameterNew",av)>> != null)
+    {
+      $this-><<=gen.translate("associationOne",av)>> = $<<=gen.translate("parameterNew",av)>>;
+      $wasSet = true;
+    }
+    <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return $wasSet;
+  }
+!>>
+}

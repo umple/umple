@@ -1,0 +1,14 @@
+class UmpleToPhp {
+    attribute_SetImmutable <<!<</*attribute_SetImmutable*/>>
+  public function <<=gen.translate("setMethod",av)>>($<<=gen.translate("parameterOne",av)>>)
+  {
+    $wasSet = false;
+    <<# if (customSetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    $this-><<= gen.translate("attributeCanSet",av) >> = false;
+    $this-><<=gen.translate("associationOne",av)>> = $<<=gen.translate("parameterOne",av)>>;
+    $wasSet = true;
+    <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return $wasSet;
+  }
+!>>
+}

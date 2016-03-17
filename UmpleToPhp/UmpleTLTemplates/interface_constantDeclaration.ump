@@ -1,0 +1,15 @@
+class UmpleToPhp {
+    interface_constantDeclaration <<!<</*interface_constantDeclaration*/>><<#
+appendln(realSb, "");
+appendln(realSb,"  // CONSTANT MEMBERS  ");
+appendln(realSb, "");
+ for (Constant aConstant : uInterface.getConstants()) 
+ {
+ 	String constantName = aConstant.getName();
+ 	String constantValue =  aConstant.getValue();
+
+ 	append(realSb, " const {0} = {1};", constantName, constantValue);
+  	appendln(realSb, "");
+ }
+#>>!>>
+}

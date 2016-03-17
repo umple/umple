@@ -1,0 +1,85 @@
+use constructor_AssociationAssignDefault.ump;
+use constructor_AssociationCreateOneToOne.ump;
+use constructor_AttributeAssign.ump;
+use constructor_AttributeAssignAutounique.ump;
+use constructor_AttributeAssignDefaulted.ump;
+use constructor_AttributeAssignLazy.ump;
+use constructor_AttributeAssignList.ump;
+use constructor_CallParentConstructor.ump;
+
+
+class UmpleToPhp {
+    constructor_DeclareOneToOne <<!<</*constructor_DeclareOneToOne*/>><<#
+  String signature = gClass.getLookup("constructorSignature_mandatory");
+#>>
+  public static function newInstance(<<=gen.translate("constructorMandatory",uClass)>>)
+  {
+    $<<=instanceIdentifier>> = new <<=uClass.getName()>>();
+<<#
+  if (!uClass.isRoot())
+  {
+    appendln(realSb, "");
+    append(realSb, "    ${0}->__construct({1});", instanceIdentifier , gClass.getParentClass().getLookup("constructorSignature_caller"));
+  }
+  
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (av.getIsAutounique() || av.isConstant() || "theInstance".equals(gen.translate("attributeOne",av)))
+    {
+      continue;
+    }
+  
+    if (av.getIsList())
+    {
+      #>><<@ UmpleToPhp.constructor_AttributeAssignList >><<#
+    }
+    else if (av.getModifier().equals("defaulted"))
+    {
+      #>><<@ UmpleToPhp.constructor_AttributeAssignDefaulted >><<# 
+    }
+    else if (av.getIsLazy())
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AttributeAssignLazy >><<#
+    }
+    else
+    {
+      #>><<@ UmpleToPhp.constructor_AttributeAssign >><<#
+    }
+  }
+
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (av.getIsAutounique())
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AttributeAssignAutounique >><<#
+    }
+  }
+  
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+    AssociationVariable relatedAssociation = av.getRelatedAssociation();
+    
+    if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AssociationCreateOneToOne >><<#
+    }
+    else
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AssociationAssignDefault >><<#
+    }
+  }
+  
+  appendln(realSb, "");
+  appendln(realSb, "    return ${0};",instanceIdentifier);
+  append(realSb, "  }");
+  
+  if (!uClass.isRoot())
+  {
+    #>><<@ UmpleToPhp.constructor_CallParentConstructor >><<#
+  }
+#>>!>>
+}

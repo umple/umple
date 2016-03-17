@@ -1,0 +1,6 @@
+class UmpleToPhp {
+    constructor_AttributeAssign <<!<</*constructor_AttributeAssign*/>><<#
+  String assignValue = av.getValue() == null || av.getModifier().equals("fixml") ? "$" + gen.translate("parameterOne",av) : gen.translate("parameterValue",av);
+#>>
+    $<<=instanceIdentifier>>-><<=gen.translate("attributeOne",av)>> = <<=assignValue>>;!>>
+}

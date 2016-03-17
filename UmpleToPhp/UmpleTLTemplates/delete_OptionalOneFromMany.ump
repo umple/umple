@@ -1,0 +1,7 @@
+class UmpleToPhp {
+    delete_OptionalOneFromMany <<!<</*delete_OptionalOneFromMany*/>>
+    if ($this-><<=gen.translate("associationOne",av)>> != null)
+    {
+      $this-><<=gen.translate("associationOne",av)>>-><<=gen.relatedTranslate("removeMethod",av)>>($this);
+    }!>>
+}

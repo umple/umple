@@ -1,0 +1,12 @@
+class UmpleToPhp {
+    attribute_HasUniqueCodeInjection <<!<</*attribute_HasUniqueCodeInjection*/>>
+  public static function <<=gen.translate("hasUniqueMethod",av)>>($<<=gen.translate("parameterOne", av)>>)
+  {
+    <<# if (customHasUniquePrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customHasUniquePrefixCode, "    ")); } #>>
+    $<<=gen.translate("parameterHasUnique",av)>> = array_key_exists((string)$<<=gen.translate("parameterOne",av)>>, <<=gen.translate("getUniqueMap",av)>>);
+    <<# for( TraceItem traceItem : traceItems )#>><<= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")
+>><<# if (customHasUniquePostfixCode != null) { append(realSb, "{0}\n",GeneratorHelper.doIndent(customHasUniquePostfixCode, "    ")); } 
+#>>    return $<<=gen.translate("parameterHasUnique",av)>>;
+  }
+!>>
+}

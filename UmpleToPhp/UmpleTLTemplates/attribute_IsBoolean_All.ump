@@ -1,0 +1,45 @@
+use attribute_IsBoolean.ump;
+use attribute_IsBooleanCodeInjection.ump;
+use attribute_IsBooleanCodeInjectionDerived.ump;
+use attribute_IsBooleanDerived.ump;
+
+
+class UmpleToPhp {
+    attribute_IsBoolean_All <<!<</*attribute_IsBoolean_All*/>><<#
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
+  for (Attribute av : uClass.getAttributes()) 
+  {
+    if (!av.getType().equals("Boolean") || av.getIsAutounique() || av.isConstant() || "internal".equals(av.getModifier()))
+    {
+      continue;
+    }
+  
+    gen.setParameterConstraintName(av.getName());
+
+    List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
+
+    String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isMethod",av)));
+    String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("isMethod",av)));
+    
+    if (av.getIsDerived() && customGetPostfixCode != null)
+    {
+      #>><<@ UmpleToPhp.attribute_IsBooleanCodeInjectionDerived >><<#
+    }
+    else if (av.getIsDerived())
+    {
+      #>><<@ UmpleToPhp.attribute_IsBooleanDerived >><<#
+    }
+    else if (customGetPostfixCode != null)
+    {
+      #>><<@ UmpleToPhp.attribute_IsBooleanCodeInjection >><<#
+    }
+    else
+    {
+      #>><<@ UmpleToPhp.attribute_IsBoolean >><<#
+    }
+      
+    appendln(realSb, "");
+  }
+  gen.setParameterConstraintName("");
+#>>!>>
+}

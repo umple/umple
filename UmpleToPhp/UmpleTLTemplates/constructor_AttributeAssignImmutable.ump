@@ -1,0 +1,14 @@
+class UmpleToPhp {
+    constructor_AttributeAssignImmutable <<!<</*constructor_AttributeAssignImmutable*/>><<#
+  String parameterValue = "";
+  if (av.getValue() == null)
+  {
+    parameterValue = "$" + gen.translate("parameterOne",av);
+  }
+  else
+  {
+    parameterValue = gen.translate("parameterValue",av);
+  }
+#>>
+    $this-><<=gen.translate("attributeOne",av)>> = <<=parameterValue>>;!>>
+}

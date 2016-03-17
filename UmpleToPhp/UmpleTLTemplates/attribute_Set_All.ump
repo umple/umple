@@ -1,0 +1,102 @@
+use attribute_Set.ump;
+use attribute_SetDefaulted.ump;
+use attribute_SetDefaulted_subclass.ump;
+use attribute_SetImmutable.ump;
+use attribute_SetMany.ump;
+use attribute_SetMany_subclass.ump;
+use attribute_Set_subclass.ump;
+
+
+class UmpleToPhp {
+    attribute_Set_All <<!<</*attribute_Set_All*/>><<#
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (av.isConstant() || av.getIsAutounique() || "internal".equals(av.getModifier()) || av.getIsDerived())
+    {
+      continue;
+    }
+
+    gen.setParameterConstraintName(av.getName());    
+    
+    List<TraceItem> traceItems = av.getTraced("setMethod", uClass);
+    
+
+    String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
+    String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
+
+    String customResetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("resetMethod",av)));
+    String customResetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("resetMethod",av)));
+
+    String customAddPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("addMethod",av)));
+    String customAddPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("addMethod",av)));
+  
+    String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("removeMethod",av)));
+    String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("removeMethod",av)));
+    
+    if (av.isImmutable())
+    {
+      if (av.getIsLazy())
+      {
+        #>><<@ UmpleToPhp.attribute_SetImmutable >><<#
+      }
+    }
+    else if (av.getModifier().equals("defaulted"))
+    {
+      #>><<@ UmpleToPhp.attribute_SetDefaulted >><<#
+    }
+    else if (av.getIsList())
+    {
+      #>><<@ UmpleToPhp.attribute_SetMany >><<#
+    }
+    else
+    {
+      #>><<@ UmpleToPhp.attribute_Set >><<#
+    }
+  }
+
+  if(uClass.getExtendsClass()!=null)
+  {
+    for(Attribute av:uClass.getExtendsClass().getAttributes())
+    {
+      if (av.isConstant() || av.getIsAutounique() || "internal".equals(av.getModifier()) || av.getIsDerived())
+      {
+        continue;
+      }
+
+      List<TraceItem> traceItems = av.getTraced("setMethod", uClass);
+
+      gen.setParameterConstraintName(av.getName());
+
+      String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
+      String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
+
+//      String customResetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("resetMethod",av)));
+//      String customResetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("resetMethod",av)));
+      
+      String customAddPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("addMethod",av)));
+      String customAddPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("addMethod",av)));
+
+//      String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("removeMethod",av)));
+//      String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("removeMethod",av)));
+
+      if(customSetPrefixCode!=null||customSetPostfixCode!=null)
+      {
+        if (av.getModifier().equals("defaulted"))
+        {
+          #>><<@ UmpleToPhp.attribute_SetDefaulted_subclass >><<#
+        }
+        else if (av.getIsList())
+        {
+          #>><<@ UmpleToPhp.attribute_SetMany_subclass >><<#
+        }
+        else if(!av.isImmutable()||av.getIsLazy())//if(customSetPrefixCode!=null&&customSetPostfixCode!=null&&customSetPrefixCode.matches("[\\s]*if.*\\n[\\s]*.*"))
+        {
+          #>><<@ UmpleToPhp.attribute_Set_subclass >><<#
+        }
+      }    
+    }
+  }
+  gen.setParameterConstraintName("");
+#>>!>>
+}

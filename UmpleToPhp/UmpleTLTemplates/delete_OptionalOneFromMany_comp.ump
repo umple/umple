@@ -1,0 +1,11 @@
+class UmpleToPhp {
+    delete_OptionalOneFromMany_comp <<!<</*delete_OptionalOneFromMany_comp*/>>
+    while( count($this-><<=gen.translate("associationOne",av)>>) > 0 )
+    {
+      $this-><<=gen.translate("associationOne",av)>>[0]-><<=gen.relatedTranslate("setMethod",av)>>(null);
+      unset($this-><<=gen.translate("associationOne",av)>>[0]);
+      $this-><<=gen.translate("associationOne",av)>> = array_values($this-><<=gen.translate("associationOne",av)>>);
+    }
+    unset($this-><<=gen.translate("associationOne",av)>>);
+    $this-><<=gen.translate("associationOne",av)>> = array();!>>
+}

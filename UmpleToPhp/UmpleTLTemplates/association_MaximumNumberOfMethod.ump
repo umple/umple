@@ -1,0 +1,20 @@
+class UmpleToPhp {
+    association_MaximumNumberOfMethod <<!<</*association_MaximumNumberOfMethod*/>><<#
+    String customMaximumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("maximumNumberOfMethod",av)));
+    String customMaximumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("maximumNumberOfMethod",av)));
+#>>
+<<# if (customMaximumNumberOfPrefixCode == null && customMaximumNumberOfPostfixCode == null) { #>>
+  public static function <<=gen.translate("maximumNumberOfMethod",av)>>()
+  {
+    return <<=av.getMultiplicity().getUpperBound()>>;
+  }
+<<# } else { #>>
+  public static function <<=gen.translate("maximumNumberOfMethod",av)>>()
+  {
+    <<# if (customMaximumNumberOfPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPrefixCode, "    ")); } #>>
+    $maximum = <<=av.getMultiplicity().getUpperBound()>>;
+    <<# if (customMaximumNumberOfPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPostfixCode, "    ")); } #>>
+    return $maximum;
+  }
+<<# } #>>!>>
+}

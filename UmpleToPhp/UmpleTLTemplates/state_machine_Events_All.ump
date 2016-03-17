@@ -1,0 +1,14 @@
+use state_machine_Event.ump;
+
+
+class UmpleToPhp {
+    state_machine_Events_All <<!<</*state_machine_Events_All*/>><<#
+{
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
+  for(Event e : uClass.getEvents())
+  {
+    #>><<@ UmpleToPhp.state_machine_Event >><<#
+  }
+}
+#>>!>>
+}

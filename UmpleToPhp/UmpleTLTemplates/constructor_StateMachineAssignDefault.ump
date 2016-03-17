@@ -1,0 +1,4 @@
+class UmpleToPhp {
+    constructor_StateMachineAssignDefault <<!<</*constructor_StateMachineAssignDefault*/>>
+    $this-><<=gen.translate("setMethod",sm)>>(self::$<<=gen.translate("stateOne",state)>>);!>>
+}

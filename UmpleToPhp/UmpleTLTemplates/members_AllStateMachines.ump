@@ -1,0 +1,54 @@
+class UmpleToPhp {
+    members_AllStateMachines <<!<</*members_AllStateMachines*/>><<#
+{
+  isFirst = true;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    List<StateMachine> allNested = sm.getNestedStateMachines();
+
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      append(realSb,"  //{0} State Machines", uClass.getName());
+      isFirst = false;
+    }
+    else
+    {
+      appendln(realSb,"");
+    }
+  
+    int stateCounter = 0;
+    for(State state : sm.getStates())
+    {
+      if (stateCounter >= 0)
+      {
+        appendln(realSb,"");
+      }
+      stateCounter += 1;
+      append(realSb, "  private static ${0} = {1};", gen.translate("stateOne",state), stateCounter);
+    }
+
+    for (StateMachine nestedSm : allNested)
+    {
+      for(State state : nestedSm.getStates())
+      {
+        if (stateCounter >= 0)
+        {
+          appendln(realSb,"");
+        }
+        stateCounter += 1;
+        append(realSb, "  private static ${0} = {1};", gen.translate("stateOne",state), stateCounter);
+      }
+    }
+    
+    append(realSb, "\n  private ${0};", gen.translate("stateMachineOne", sm));
+    for (StateMachine nestedSm : allNested)
+    {
+      append(realSb, "\n  private ${0};", gen.translate("stateMachineOne", nestedSm));
+    }
+
+  }
+}
+#>>!>>
+}

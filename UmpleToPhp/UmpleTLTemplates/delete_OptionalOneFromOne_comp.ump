@@ -1,0 +1,10 @@
+class UmpleToPhp {
+    delete_OptionalOneFromOne_comp <<!<</*delete_OptionalOneFromOne_comp*/>>
+    
+    if ($this-><<=gen.translate("associationOne",av)>> != null)
+    {
+        $this-><<=gen.translate("associationOne",av)>>->delete();
+        $this-><<=gen.translate("associationOne",av)>> = null;
+    }
+    !>>
+}
