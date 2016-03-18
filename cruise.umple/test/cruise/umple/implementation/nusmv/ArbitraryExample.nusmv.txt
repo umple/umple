@@ -1,0 +1,189 @@
+-- This file is generated from ArbitraryExample.ump --
+
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
+
+
+-- This defines a NuSMV module for Sm --
+MODULE Sm ( _smA , _smAA , _smB , _smBB , _smC , _smCC )
+
+   -- This part declares input variables for the given NuSMV module --
+   IVAR
+     event : { ev_e1 , ev_e2 };
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm_s1 , Sm_s2 };
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     t1 := event = ev_e1 & state = Sm_s1;
+     t2 := event = ev_e1 & _smAA.state = SmAA_a1;
+     t3 := event = ev_e2 & _smAA.state = SmAA_a1;
+     t4 := event = ev_e1 & _smAA.state = SmAA_a2;
+     t5 := event = ev_e2 & _smAA.state = SmAA_a2;
+     t6 := event = ev_e1 & _smAA.state = SmAA_a3;
+     t7 := event = ev_e2 & _smBB.state = SmBB_b1;
+     t8 := event = ev_e1 & _smBB.state = SmBB_b1;
+     t9 := event = ev_e1 & _smBB.state = SmBB_b2;
+     t10 := event = ev_e1 & _smBB.state = SmBB_b3;
+     t11 := event = ev_e1 & _smBB.state = SmBB_b4;
+     t12 := event = ev_e2 & _smBB.state = SmBB_b4;
+     t13 := event = ev_e1 & _smCC.state = SmCC_c1;
+     t14 := event = ev_e2 & _smCC.state = SmCC_c1;
+     t15 := event = ev_e1 & _smCC.state = SmCC_c3;
+     t16 := event = ev_e2 & _smCC.state = SmCC_c3;
+     t17 := event = ev_e1 & _smCC.state = SmCC_c4;
+     t18 := event = ev_e2 & _smCC.state = SmCC_c4;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := Sm_s1;
+     next( state ) := case
+       t5 : Sm_s1;
+       t6 | t4 | t9 | t12 | t11 | t14 | t17 | t13 | t2 | t3 | t18 | t8 | t7 | t10 | t15 | t1 | t16 : Sm_s2;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for SmA --
+MODULE SmA ( _sm )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmA_A , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t6 | _sm.t4 | _sm.t2 | _sm.t3 | _sm.t18 : SmA_A;
+       _sm.t5 : null;
+       _sm.state = Sm_s2 & state = null : SmA_A;
+       _sm.state != Sm_s2 : null;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for SmAA --
+MODULE SmAA ( _sm , _smA )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmAA_a1 , SmAA_a2 , SmAA_a3 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t2 | _sm.t6 : SmAA_a2;
+       _sm.t4 | _sm.t3 | _sm.t18 : SmAA_a3;
+       _sm.t5 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t1 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 : null;
+       _smA.state = SmA_A & state = null : SmAA_a1;
+       _smA.state != SmA_A : null;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for SmB --
+MODULE SmB ( _sm )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmB_B , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t9 | _sm.t12 | _sm.t11 | _sm.t8 | _sm.t7 | _sm.t10 : SmB_B;
+       _sm.t5 : null;
+       _sm.state = Sm_s2 & state = null : SmB_B;
+       _sm.state != Sm_s2 : null;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for SmBB --
+MODULE SmBB ( _sm , _smB )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmBB_b1 , SmBB_b2 , SmBB_b3 , SmBB_b4 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t9 : SmBB_b1;
+       _sm.t8 | _sm.t12 : SmBB_b2;
+       _sm.t7 | _sm.t11 : SmBB_b3;
+       _sm.t10 : SmBB_b4;
+       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t14 | _sm.t16 | _sm.t18 : null;
+       _smB.state = SmB_B & state = null : SmBB_b1;
+       _smB.state != SmB_B : null;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for SmC --
+MODULE SmC ( _sm )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmC_C , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t14 | _sm.t17 | _sm.t13 | _sm.t15 | _sm.t1 | _sm.t16 : SmC_C;
+       _sm.t5 : null;
+       _sm.state = Sm_s2 & state = null : SmC_C;
+       _sm.state != Sm_s2 : null;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for SmCC --
+MODULE SmCC ( _sm , _smC )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmCC_c1 , SmCC_c2 , SmCC_c3 , SmCC_c4 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t15 | _sm.t14 | _sm.t17 : SmCC_c2;
+       _sm.t1 | _sm.t13 : SmCC_c3;
+       _sm.t16 : SmCC_c4;
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t18 : null;
+       _smC.state = SmC_C & state = null : SmCC_c1;
+       _smC.state != SmC_C : null;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for main --
+MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     sm : Sm( smA , smAA , smB , smBB , smC , smCC );
+     smA : SmA( sm );
+     smAA : SmAA( sm , smA );
+     smB : SmB( sm );
+     smBB : SmBB( sm , smB );
+     smC : SmC( sm );
+     smCC : SmCC( sm , smC );
+CTLSPEC   EF( sm.state = Sm_s1 )
+CTLSPEC   EF( sm.state = Sm_s2 )
+CTLSPEC   EF( smA.state = SmA_A )
+CTLSPEC   EF( smAA.state = SmAA_a1 )
+CTLSPEC   EF( smAA.state = SmAA_a2 )
+CTLSPEC   EF( smAA.state = SmAA_a3 )
+CTLSPEC   EF( smB.state = SmB_B )
+CTLSPEC   EF( smBB.state = SmBB_b1 )
+CTLSPEC   EF( smBB.state = SmBB_b2 )
+CTLSPEC   EF( smBB.state = SmBB_b3 )
+CTLSPEC   EF( smBB.state = SmBB_b4 )
+CTLSPEC   EF( smC.state = SmC_C )
+CTLSPEC   EF( smCC.state = SmCC_c1 )
+CTLSPEC   EF( smCC.state = SmCC_c2 )
+CTLSPEC   EF( smCC.state = SmCC_c3 )
+CTLSPEC   EF( smCC.state = SmCC_c4 )

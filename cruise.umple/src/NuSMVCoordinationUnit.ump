@@ -78,6 +78,7 @@ class NuSMVCoordinator
   		}
   		return yes;
 	}
+	
 	//Building dependency set 
 	private List<String> getDependencySet( StateMachine root, StateMachine sm) {
 		List<StateMachine> smList = generateStateMachineList( root );
@@ -85,13 +86,13 @@ class NuSMVCoordinator
 		if( root.equals(sm) ) {
 			for(StateMachine stm : smList) 
 				if( !stm.getFullName().equals(sm.getFullName()) ) 
-					temp.add( changeNameCase(stm.getFullName(), 0) );
+					temp.add( stm.getFullName() );
 		}
 		else {
 			temp.add( changeNameCase(root.getFullName(), 0) );
 			StateMachine bioParent = sm.getParentState().getStateMachine();
 			if( !bioParent.equals(root) )
-				temp.add( changeNameCase(bioParent.getFullName(), 0) );
+				temp.add( bioParent.getFullName() );
 		}
 		return temp;
 	}
@@ -100,7 +101,7 @@ class NuSMVCoordinator
   		List<StateMachine> smList = generateStateMachineList( parent );
 		List<String> dependencySet = getDependencySet( parent, sm);
 		for(String stm : dependencySet) 
-			module.addParameter( "_"+stm );
+			module.addParameter( "_"+changeNameCase(stm,0) );
   	}
   	
 	private VariableSpecifier generateVariableSpecifierForMain( StateMachine sm, StateMachine root ) {
@@ -109,16 +110,38 @@ class NuSMVCoordinator
 		VariableSpecifier vs = new VariableSpecifier(identifier);
 		List<String> dependencySet = getDependencySet( root, sm);
 		for( String stm : dependencySet ) 
-			vs.addTypeSpecifier( stm );
+			vs.addTypeSpecifier( changeNameCase(stm,0) );
 		vs.setIsBracketed(true);
 		vs.setTypeName( changeNameCase(sm.getFullName(), 1) );
 		return vs;
 	}
 	
+	//Created to generate the list of state machine
+	private List<StateMachine> generateStateMachineList1( StateMachine root ) {
+		List<StateMachine> nestedMachines = new ArrayList<StateMachine>();
+		nestedMachines.add(root);
+  		for( State st :  getCompositeStates(root) ) {
+			for( StateMachine stm : st.getNestedStateMachines() ) {
+				if(!st.isIsConcurrent())
+					nestedMachines.add( stm );
+				else {
+					//skips the wrapper of the region
+					StateMachine region = stm.getImmediateNestedStateMachines().get(0);
+					nestedMachines.add( region );
+					stm = region;
+				}	
+				if( isNested( stm ) )
+					for( StateMachine innerMachine : generateStateMachineList1( stm ) )
+						nestedMachines.add( innerMachine );
+			}
+  		}
+		return nestedMachines;
+	}
+	
   	private List<StateMachine> generateStateMachineList( StateMachine sm ) {
 		List<StateMachine> temp = new ArrayList<StateMachine>();
 		temp.add(sm);
-		for(State st : sm.getStates())
+		for(State st : sm.getStates()) {
 			if(st.hasNestedStateMachines()) {
 				if(!has(temp, st.getStateMachine()))
 					temp.add(st.getStateMachine());
@@ -127,6 +150,7 @@ class NuSMVCoordinator
 						temp.add(stt);
 				}
 			}
+		}
 		return temp;				
 	}
 	
@@ -140,15 +164,29 @@ class NuSMVCoordinator
 	
 	private List<NuSMVModule> generateModuleForCompositeStatesOf( StateMachine root, StateMachine parent ) {
 		List<NuSMVModule> nestedMachines = new ArrayList<NuSMVModule>();
+		
   		for( State st :  getCompositeStates(parent) ) {
-  			for( StateMachine stm : st.getNestedStateMachines() ) {
-  				NuSMVModule module = generateModuleForSubstate(stm, root);
-  				generateParameters( module, root, stm ); 
-				nestedMachines.add( module );
-  				if( isNested( stm ) )
-  					for( NuSMVModule innerModule : generateModuleForCompositeStatesOf( root, stm ) )
-						nestedMachines.add( innerModule );
+			if(!st.isIsConcurrent())
+				for( StateMachine stm : st.getNestedStateMachines() ) {
+					NuSMVModule module = generateModuleForSubstate(stm, root);
+					generateParameters( module, root, stm ); 
+					nestedMachines.add( module );
+					if( isNested( stm ) )
+						for( NuSMVModule innerModule : generateModuleForCompositeStatesOf( root, stm ) )
+							nestedMachines.add( innerModule );
+				
   			}
+			else {
+				for( StateMachine stm : st.getNestedStateMachines() ) {
+					StateMachine region = stm.getImmediateNestedStateMachines().get(0);
+					NuSMVModule module = generateModuleForSubstate(region, root);
+					generateParameters( module, root, region ); 
+					nestedMachines.add( module );
+					if( isNested( region ) )
+						for( NuSMVModule innerModule : generateModuleForCompositeStatesOf(root, region) )
+							nestedMachines.add( innerModule );
+				}
+			}
   		}
 		return nestedMachines;
 	}
@@ -198,15 +236,18 @@ class NuSMVCoordinator
   	
   	private int getObjectIdentity( StateMachine sm, Object obj) {
   		int pos = 1;
-		if( obj instanceof Transition )
+		if( obj instanceof Transition ){
 			for(Transition trans : sm.getAllTransitions() ) {
+				//System.out.println( trans.getEvent().getName()+"["+trans.getFromState().getName() +" -- "+trans.getNextState().getName()+"]");
 				if(trans.equals( (Transition) obj) )
 					return pos;
 				pos++;
 			}
+			//System.out.println( ((Transition)obj).getEvent().getName()+"["+((Transition)obj).getFromState().getName() +" -- "+((Transition)obj).getNextState().getName()+"]");
+		}
 		if( obj instanceof Guard ) {
 			pos = 1;
-			for(Guard guard : getAllGuards( sm ) ) {
+			for(Guard guard : sm.getAllGuards() ) {
 				if(guard.equals(( Guard ) obj ))
 					return pos;
 				pos++;
@@ -430,6 +471,8 @@ class NuSMVCoordinator
   		int counter = 0;
   		BasicExpression root = new BasicExpression("root");
   		for( Transition tr : getAllTransitions(st) ) {
+			
+			//System.out.println( tr.getEvent().getName()+"["+tr.getFromState().getName() +" -- "+tr.getNextState().getName()+"]");
 			BasicExpression bexp;
 			if(!parent.equals(sm))
 				bexp = new BasicExpression("_"+changeNameCase(parent.getFullName(),0)+".t"+getObjectIdentity( parent, tr) );	
@@ -505,6 +548,7 @@ class NuSMVCoordinator
   	
   	//Generates event enumeration for a given state machine
   	private  VariableSpecifier getEventList( StateMachine sm ) {
+		
   		VariableSpecifier vs = new VariableSpecifier("event");
   		for( Event event : sm.getAllEvents() ) 
   			vs.addTypeSpecifier("ev_"+event.getName());
@@ -559,7 +603,7 @@ class NuSMVCoordinator
   			DefineBody dBody = new DefineBody("t"+getObjectIdentity( sm, tr) , bexp);
   			ddec.addDefineBody(dBody);
   		}
-		for( Guard gr : getAllGuards(sm) ) {
+		for( Guard gr : sm.getAllGuards() ) {
   			DefineBody dBody = new DefineBody("g"+getObjectIdentity( sm, gr) , generateRHS( gr ));
   			ddec.addDefineBody(dBody);
   		}
@@ -605,8 +649,8 @@ class NuSMVCoordinator
 			State state = st.getStateMachine().getParentState(); 
 			if( state != null ) {
 				StateMachine sm = st.getStateMachine();
-				String name = changeNameCase("_" + sm.getFullName(), 0);
-				bexp4 = new BasicExpression(name + ".state"); 
+				String name = changeNameCase(sm.getFullName(), 0);
+				bexp4 = new BasicExpression("_" +name + ".state"); 
 			}
 			else 
 				bexp4 = new BasicExpression("state");
@@ -673,16 +717,5 @@ class NuSMVCoordinator
 			case "false" : return "FALSE";
 			default : return value;
 		}
-	}
-	
-	private List<Guard> getAllGuards( StateMachine sm ) {
-		List<Guard> allGuards = new ArrayList<Guard>();
-		for( Transition transition : sm.getAllTransitions() ) {
-			if( transition.getGuard() != null && !has(allGuards, transition.getGuard())) {
-				Guard guard = transition.getGuard();
-				allGuards.add( guard );
-			}
-		}
-		return allGuards;
 	}
   }

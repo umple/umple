@@ -65,10 +65,12 @@ class VariableSpecifier {
   
   private String print() {
     String temp = "";
-	for(int i = 0; i < typeSpecifier.size() - 1 ; i++)
-  	  temp += typeSpecifier.get(i) + " , ";
-  	temp += typeSpecifier.get(typeSpecifier.size() - 1);
-		return temp;
+    if(typeSpecifier.size() > 0){
+		for(int i = 0; i < typeSpecifier.size() - 1 ; i++)
+  	  		temp += typeSpecifier.get(i) + " , ";
+  		temp += typeSpecifier.get(typeSpecifier.size() - 1);
+  	}
+	return temp;
   }
 	
   output <<!
