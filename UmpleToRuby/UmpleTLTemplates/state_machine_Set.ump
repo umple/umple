@@ -1,0 +1,99 @@
+class UmpleToRuby {
+    state_machine_Set <<!<</*state_machine_Set*/>><<#
+  boolean hasEntry = false;
+  boolean hasExit = false;
+  boolean isFirstEntry = true;
+  boolean isFirstExit = true;
+
+  StringBuilder entryActions = new StringBuilder();
+  StringBuilder exitActions = new StringBuilder();
+  for(State state : sm.getStates())
+  {
+    boolean hasThisEntry = false;
+    boolean hasThisExit = false;
+    
+    for(Action action : state.getActions())
+    {
+      if ("entry".equals(action.getActionType()))
+      {
+        if (!hasThisEntry)
+        {
+          if (!isFirstEntry)
+          {
+            entryActions.append("\n      ");
+          }
+          entryActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
+        }
+        hasEntry = true;
+        hasThisEntry = true;
+        isFirstEntry = false;
+        entryActions.append("\n        " + action.getActionCode());
+      }
+      else if ("exit".equals(action.getActionType()))
+      {
+        if (!hasThisExit)
+        {
+          if (!isFirstExit)
+          {
+            exitActions.append("\n      ");
+          }
+          isFirstExit = false;
+          exitActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
+        }
+        hasExit = true;
+        hasThisExit = true;
+        isFirstExit = false;
+        exitActions.append("\n        " + action.getActionCode());
+      }
+    }
+  
+    for (Activity activity : state.getActivities())
+    {
+      if (!hasThisEntry)
+      {
+        if (!isFirstEntry)
+        {
+          entryActions.append("\n      ");
+        }
+        entryActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
+      }
+      hasEntry = true;
+      hasThisEntry = true;
+      isFirstEntry = false;
+      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",activity),gen.translate("doActivityThread",activity)));
+    }
+    
+    if (hasThisEntry)
+    {
+      entryActions.append("\n        break;");
+    }
+    
+    if (hasThisExit)
+    {
+      exitActions.append("\n        break;");
+    }
+  }
+#>>
+<<# if (hasExit) { #>>
+  def <<=gen.translate("exitMethod",sm)>>
+    switch(<<= gen.translate("stateMachineOne",sm) >>)
+      <<= exitActions >>
+    end
+  end
+
+
+<<# } #>>
+  private void <<=gen.translate("setMethod",sm)>>(<<= gen.translate("type",sm) >> <<= gen.translate("parameterOne",sm) >>)
+  {
+    <<= gen.translate("stateMachineOne",sm) >> = <<= gen.translate("parameterOne",sm) >>
+<<# if (hasEntry) { #>>
+
+    // entry actions and do activities
+    switch(<<= gen.translate("stateMachineOne",sm) >>)
+    {
+      <<= entryActions >>
+    }
+<<# } #>>
+  }
+!>>
+}

@@ -1,0 +1,11 @@
+class UmpleToRuby {
+    state_machine_Event_StartStopTimer <<!<</*state_machine_Event_StartStopTimer*/>>
+  def <<=gen.translate("eventStartMethod",e) >>
+    <<= gen.translate("eventHandler",e) >> = new TimedEventHandler(this,"<<= gen.translate("eventMethod",e) >>",<<= e.getTimerInSeconds() >>)
+  end
+
+  def <<=gen.translate("eventStopMethod",e) >>
+    <<= gen.translate("eventHandler",e) >>.stop()
+  end
+!>>
+}

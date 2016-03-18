@@ -1,0 +1,28 @@
+class UmpleToRuby {
+    association_SetOptionalOneToOne <<!<</*association_SetOptionalOneToOne*/>>
+  def <<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterNew",av)>>)
+    was_set = false
+    <<# if (customSetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    if !@<<=gen.translate("associationOne",av)>>.nil? and !@<<=gen.translate("associationOne",av)>>.eql?(<<=gen.translate("parameterNew",av)>>) and self.eql?(@<<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("getMethod",av)>>)
+      #Unable to <<=gen.translate("setMethod",av)>>, as existing @<<=gen.translate("associationOne",av)>> would become an orphan
+      <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "      ")); } #>>
+      return was_set
+    end
+
+    @<<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterNew",av)>>
+    <<=gen.relatedTranslate("parameterOld",av)>> = !<<=gen.translate("parameterNew",av)>>.nil? ? <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("getMethod",av)>> : nil
+
+    unless self.eql?(<<=gen.relatedTranslate("parameterOld",av)>>)
+      unless <<=gen.relatedTranslate("parameterOld",av)>>.nil?
+        <<=gen.relatedTranslate("parameterOld",av)>>.instance_variable_set("@<<=gen.translate("associationOne",av)>>",nil)
+      end
+      unless @<<=gen.translate("associationOne",av)>>.nil?
+        @<<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(self)
+      end
+    end
+    was_set = true
+    <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    was_set
+  end
+!>>
+}

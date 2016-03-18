@@ -1,0 +1,7 @@
+class UmpleToRuby {
+    state_machine_doActivity <<!<</*state_machine_doActivity*/>>
+  def <<= gen.translate("doActivityMethod",activity)>>
+    <<= activity.getActivityCode() >>
+  end
+!>>
+}

@@ -1,0 +1,6 @@
+class UmpleToRuby {
+    delete_ManyFromOne <<!<</*delete_ManyFromOne*/>>
+    @<<=gen.translate("associationMany",av)>>.each do |<<=gen.translate("parameterOne",av)>>|
+      <<=gen.translate("parameterOne",av)>>.delete
+    end!>>
+}

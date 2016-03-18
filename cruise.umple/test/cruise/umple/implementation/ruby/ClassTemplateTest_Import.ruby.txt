@@ -64,7 +64,7 @@ class Mentor
     wasSet = false
     
     existing_student = student;
-	
+    
     if existing_student.nil?
       if !a_student.nil
         if a_student.add_mentor(self)
@@ -95,7 +95,7 @@ class Mentor
     
     return wasSet;
   end
-  
+
   def delete
     @deleted = true
     unless @student.nil?

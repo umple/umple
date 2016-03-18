@@ -1,0 +1,18 @@
+class UmpleToRuby {
+    association_GetPrivate <<!<</*association_GetPrivate*/>>
+  # TODO: fix or remove
+  #private void <<=gen.relatedTranslate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>, <<=gen.relatedTranslate("parameterOne",av)>>)
+  #{
+  #  try
+  #  {
+  #    java.lang.reflect.Field mentorField = <<=gen.translate("parameterOne",av)>>.getClass().getDeclaredField("<<=gen.relatedTranslate("associationOne",av)>>");
+  #    mentorField.setAccessible(true);
+  #    mentorField.set(<<=gen.translate("parameterOne",av)>>, <<=gen.relatedTranslate("parameterOne",av)>>);
+  #  }
+  #  catch (Exception e)
+  #  {
+  #    throw new RuntimeException("Issue internally setting <<=gen.relatedTranslate("parameterOne",av)>> to <<=gen.translate("parameterOne",av)>>", e);
+  #  }
+  #}
+!>>
+}

@@ -1,0 +1,12 @@
+class UmpleToRuby {
+    state_machine_timedEvent_run <<!<</*state_machine_timedEvent_run*/>>
+      if ("<<= gen.translate("eventMethod",e) >>".eql?(timeoutMethodName))
+      {
+        shouldRestart = !controller.<<= gen.translate("eventMethod",e) >>
+        if (shouldRestart)
+        {
+          controller.<<= gen.translate("eventStartMethod",e) >>
+        }
+        return;
+      }!>>
+}

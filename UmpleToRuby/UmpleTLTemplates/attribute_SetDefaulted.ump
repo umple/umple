@@ -1,0 +1,21 @@
+class UmpleToRuby {
+    attribute_SetDefaulted <<!<</*attribute_SetDefaulted*/>>
+  def <<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+    was_set = false
+    <<# if (customSetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    @<<=gen.translate("attributeOne",av)>> = <<=gen.translate("parameterOne",av)>>
+    was_set = true
+    <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    was_set
+  end
+
+  def <<=gen.translate("resetMethod",av)>>
+    wasReset = false
+    <<# if (customResetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customResetPrefixCode, "    ")); } #>>
+    @<<=gen.translate("attributeOne",av)>> = <<=gen.translate("getDefaultMethod",av)>>
+    wasReset = true
+    <<# if (customResetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customResetPostfixCode, "    ")); } #>>
+    wasReset
+  end
+!>>
+}

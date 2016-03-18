@@ -1,0 +1,6 @@
+class UmpleToRuby {
+    delete_OptionalOneToOne <<!<</*delete_OptionalOneToOne*/>>
+    unless @<<=gen.translate("associationOne",av)>>.nil?
+      @<<=gen.translate("associationOne",av)>>.delete
+    end!>>
+}

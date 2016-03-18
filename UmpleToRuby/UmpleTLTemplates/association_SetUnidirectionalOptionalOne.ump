@@ -1,0 +1,12 @@
+class UmpleToRuby {
+    association_SetUnidirectionalOptionalOne <<!<</*association_SetUnidirectionalOptionalOne*/>>
+  def <<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterNew",av)>>)
+    was_set = false
+    <<# if (customSetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    @<<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterNew",av)>>
+    was_set = true
+    <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    was_set
+  end
+!>>
+}

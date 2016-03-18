@@ -1,0 +1,23 @@
+class UmpleToRuby {
+    association_AddUnidirectionalMany <<!<</*association_AddUnidirectionalMany*/>>
+  def <<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+    was_added = false
+    <<# if (customAddPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } #>>
+    @<<=gen.translate("associationMany",av)>> << <<=gen.translate("parameterOne",av)>>
+    was_added = true
+    <<# if (customAddPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } #>>
+    was_added
+  end
+
+  def <<=gen.translate("removeMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+    was_removed = false
+    <<# if (customRemovePrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } #>>
+    if @<<=gen.translate("associationMany",av)>>.include?(<<=gen.translate("parameterOne",av)>>)
+      @<<=gen.translate("associationMany",av)>>.delete(<<=gen.translate("parameterOne",av)>>)
+      was_removed = true
+    end
+    <<# if (customRemovePostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } #>>
+    was_removed
+  end
+!>>
+}

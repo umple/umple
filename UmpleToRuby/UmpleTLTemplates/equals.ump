@@ -1,0 +1,109 @@
+class UmpleToRuby {
+    equals <<!<</*equals*/>><<#
+
+  StringBuilder checks = new StringBuilder();
+  StringBuilder hash = new StringBuilder();
+  StringBuilder canSet = new StringBuilder();
+  
+  for(String memberId : uClass.getKey().getMembers())
+  {
+    Attribute av = uClass.getAttribute(memberId);
+    AssociationVariable as = uClass.getAssociationVariable(memberId);
+    if (av != null)
+    {
+      canSet.append(StringFormatter.format("    @{0} = false\n",gen.translate("attributeCanSet",av)));
+      if (av.getIsList())
+      {
+        checks.append(StringFormatter.format("    return false unless @{0}.size == compareTo.instance_variable_get(\"@{0}\").size\n",gen.translate("attributeMany",av)));
+        checks.append(StringFormatter.format("    @{0}.each do |me|\n",gen.translate("attributeMany",av)));
+        checks.append(StringFormatter.format("      them = compareTo.instance_variable_get(\"@{0}\").get(i)\n",gen.translate("attributeMany",av)));
+        checks.append(StringFormatter.format("      return false if (me.nil? and !them.nil?)\n"));
+        checks.append(StringFormatter.format("      return false if (!me.nil? and !me.eql?(them))\n"));
+        checks.append(StringFormatter.format("    end\n"));
+      }
+      else if ("Integer".equals(av.getType()) || "Boolean".equals(av.getType()) || "Double".equals(av.getType()))
+      {
+        checks.append(StringFormatter.format("    return false unless @{0} == compareTo.instance_variable_get(\"@{0}\")\n",gen.translate("attributeOne",av)));
+      }
+      else
+      {
+        checks.append(StringFormatter.format("    return false if (@{0}.nil? and !compareTo.instance_variable_get(\"@{0}\").nil?)\n",gen.translate("attributeOne",av)));
+        checks.append(StringFormatter.format("    return false if (!@{0}.nil? and !@{0}.eql?(compareTo.instance_variable_get(\"@{0}\")))\n",gen.translate("attributeOne",av)));
+      }
+      checks.append("\n");
+    }
+    else if (as != null)
+    {
+      canSet.append(StringFormatter.format("    @{0} = false\n",gen.translate("associationCanSet",as)));
+      if (as.isMany())
+      {
+        checks.append(StringFormatter.format("    return false unless @{0}.size == compareTo.instance_variable_get(\"@{0}\").size\n",gen.translate("associationMany",as)));
+        checks.append(StringFormatter.format("    @{0}.each do |me|\n",gen.translate("attributeMany",as)));
+        checks.append(StringFormatter.format("      them = compareTo.instance_variable_get(\"@{0}\").get(i)\n",gen.translate("associationMany",as)));
+        checks.append(StringFormatter.format("      return false if (me.nil? and !them.nil?)\n"));
+        checks.append(StringFormatter.format("      return false if (!me.nil? and !me.eql?(them))\n"));
+        checks.append(StringFormatter.format("    end\n"));
+      }
+      else
+      {
+        checks.append(StringFormatter.format("    return false if (@{0}.nil? and !compareTo.instance_variable_get(\"@{0}\").nil?)\n",gen.translate("attributeOne",as)));
+        checks.append(StringFormatter.format("    return false if (!@{0}.nil? and !@{0}.eql?(compareTo.instance_variable_get(\"@{0}\")))\n",gen.translate("attributeOne",as)));
+      }
+      checks.append("\n");
+    }
+    
+    if (av != null)
+    {
+      if ("Integer".equals(av.getType()) && !av.getIsList())
+      {
+        hash.append(StringFormatter.format("    @cachedHashCode = @cachedHashCode * 23 + @{0}\n",gen.translate("attributeOne",av)));
+      }
+      else if ("Double".equals(av.getType()) && !av.getIsList())
+      {
+        hash.append(StringFormatter.format("    @cachedHashCode = @cachedHashCode * 23 + @{0}.hash\n",gen.translate("attributeOne",av)));
+      }
+      else if ("Boolean".equals(av.getType()) && !av.getIsList())
+      {
+        hash.append(StringFormatter.format("    @cachedHashCode = @cachedHashCode * 23 + (@{0} ? 1 : 0)\n",gen.translate("attributeOne",av)));
+      }
+      else
+      {
+        String attributeType = av.getIsList() ? "attributeMany" : "attributeOne";
+        hash.append(StringFormatter.format("    if (!@{0}.nil?)\n",gen.translate(attributeType,av)));
+        hash.append(StringFormatter.format("      @cachedHashCode = @cachedHashCode * 23 + @{0}.hash\n",gen.translate(attributeType,av)));
+        hash.append(StringFormatter.format("    else\n"));
+        hash.append(StringFormatter.format("      @cachedHashCode = @cachedHashCode * 23\n"));
+        hash.append(StringFormatter.format("    end\n"));
+      }
+      hash.append("\n");
+    }
+    else if (as != null)
+    {
+      String attributeType = as.isOne() ? "attributeOne" : "attributeMany";
+      hash.append(StringFormatter.format("    if (!@{0}.nil?)\n",gen.translate(attributeType,as)));
+      hash.append(StringFormatter.format("      @cachedHashCode = @cachedHashCode * 23 + @{0}.hash\n",gen.translate(attributeType,as)));
+      hash.append(StringFormatter.format("    else\n"));
+      hash.append(StringFormatter.format("      @cachedHashCode = @cachedHashCode * 23\n"));
+      hash.append(StringFormatter.format("    end\n"));
+    }
+  }
+
+#>>
+  def eql?(obj)
+    return false if obj.nil?
+    return false unless self.class == obj.class
+
+    compareTo = obj
+    <<= checks.toString().trim() >>
+    true
+  end
+
+  def hash
+    return @cachedHashCode unless @cachedHashCode == -1
+    @cachedHashCode = 17
+    <<= hash.toString().trim() >>
+    <<= canSet.toString().trim() >>
+    @cachedHashCode
+  end
+!>>
+}

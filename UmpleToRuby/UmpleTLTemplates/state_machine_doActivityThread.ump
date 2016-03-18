@@ -1,0 +1,54 @@
+class UmpleToRuby {
+    state_machine_doActivityThread <<!<</*state_machine_doActivityThread*/>><<#   
+  StringBuffer output = new StringBuffer();
+
+  isFirst = true;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    for (State state : sm.getStates())
+    {
+      for (Activity activity : state.getActivities())
+      {
+        if (isFirst)
+        {
+          output.append(StringFormatter.format("if"));
+          isFirst = false;
+        }
+        else
+        {
+          output.append(StringFormatter.format("\n        else if"));
+        }
+        output.append(StringFormatter.format(" (\"{0}\".eql?(doActivityMethodName))\n",gen.translate("doActivityMethod",activity)));
+        output.append(StringFormatter.format("        {\n"));
+        output.append(StringFormatter.format("          controller.{0}\n",gen.translate("doActivityMethod",activity)));
+        output.append(StringFormatter.format("        }"));
+      }
+    }
+  }
+#>>
+  private static class DoActivityThread extends Thread
+  {
+    <<=gen.translate("type",uClass)>> controller;
+    String doActivityMethodName;
+    
+    public DoActivityThread(<<=gen.translate("type",uClass)>> aController,String aDoActivityMethodName)
+    {
+      controller = aController;
+      doActivityMethodName = aDoActivityMethodName;
+      start();
+    }
+    
+    def run()
+    {
+      try
+      {
+        <<= output >>
+      }
+      catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+!>>
+}

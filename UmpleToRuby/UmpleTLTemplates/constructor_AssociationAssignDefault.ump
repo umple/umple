@@ -1,0 +1,31 @@
+use constructor_AssociationAssignMandatoryMany.ump;
+
+
+class UmpleToRuby {
+    constructor_AssociationAssignDefault <<!<</*constructor_AssociationAssignDefault*/>><<#
+  if (!av.getIsNavigable())
+  {
+    continue;
+  }
+
+  if (av.isOptionalMany())
+  {
+    appendln(realSb,"");
+    append(realSb, "    @{0} = []", gen.translate("associationMany",av));
+  }
+  else if (av.isMandatoryMany())
+  {
+    #>><<@ UmpleToRuby.constructor_AssociationAssignMandatoryMany >><<#
+  }
+  else if (av.getMultiplicity().getLowerBound() > 0)
+  {
+    #>>@<<=gen.translate("associationMany",av)>> = []
+    @<<=gen.translate("associationMany",av)>> << <<=gen.translate("parameterOne",av)>><<#
+  }
+  else
+  {
+    appendln(realSb,"");
+    append(realSb, "    @{0} = nil", gen.translate("associationOne",av));
+  }
+#>>!>>
+}

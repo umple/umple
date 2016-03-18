@@ -1,0 +1,11 @@
+class UmpleToRuby {
+    delete_ManyFromMany_comp <<!<</*delete_ManyFromMany_comp*/>>
+    while @<<=gen.translate("associationMany",av)>>.any? do
+      curSize = @<<=gen.translate("associationMany",av)>>.size
+      @<<=gen.translate("associationMany",av)>>[0].<<=gen.relatedTranslate("removeMethod",av)>>(self)
+      if curSize == @<<=gen.translate("associationMany",av)>>.size
+          @<<=gen.translate("associationMany",av)>>.shift  # this deletes the first value in the array
+      end
+    end
+    @<<=gen.translate("associationMany",av)>>.clear!>>
+}

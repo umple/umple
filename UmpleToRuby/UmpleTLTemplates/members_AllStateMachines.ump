@@ -1,0 +1,41 @@
+class UmpleToRuby {
+    members_AllStateMachines <<!<</*members_AllStateMachines*/>><<#
+  boolean isFirstStateMachine = true;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    List<StateMachine> allNested = sm.getNestedStateMachines();
+
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      appendln(realSb, "  #------------------------");
+      appendln(realSb, "  # MEMBER VARIABLES");
+      append(realSb, "  #------------------------");
+      isFirst = false;
+    }
+
+    if (isFirstStateMachine)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      append(realSb,"  #{0} State Machines", uClass.getName());
+      isFirstStateMachine = false;
+    }
+  
+    append(realSb, "\n  enum {0} { {1} }", gen.translate("type",sm), gen.translate("listStates",sm));
+
+    for (StateMachine nestedSm : allNested)
+    {
+      append(realSb, "\n  enum {0} { {1} }", gen.translate("type",nestedSm), gen.translate("listStates",nestedSm));
+    }
+    
+    append(realSb, "\n  private {0} {1};", gen.translate("type",sm), gen.translate("stateMachineOne", sm));
+    for (StateMachine nestedSm : allNested)
+    {
+      append(realSb, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+    }
+
+  }
+#>>!>>
+}

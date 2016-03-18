@@ -1,0 +1,49 @@
+class UmpleToRuby {
+    members_AllStatics <<!<</*members_AllStatics*/>><<#
+
+  if (uClass.getIsSingleton())
+  {
+    append(realSb, "  include Singleton");
+  }
+
+  isFirst = true;
+  for(Attribute av : uClass.getAttributes())
+  {
+  
+    if (!av.isConstant() && !av.getIsAutounique() && !av.getIsUnique())
+    {
+      continue;
+    }
+
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      appendln(realSb, "  #------------------------");
+      appendln(realSb, "  # STATIC VARIABLES");
+      appendln(realSb, "  #------------------------");
+      isFirst = false;
+    }
+  
+    if (av.isConstant())
+    {
+      appendln(realSb, "");
+      append(realSb, "  {0} = {1};", gen.translate("attributeConstant",av), gen.translate("parameterValue",av));
+    }
+    else if (av.getIsAutounique())
+    {
+      String defaultValue = av.getValue() == null ? "1" : av.getValue();
+      appendln(realSb, "");
+      append(realSb, "  @@{0} = {1}", gen.translate("parameterNext",av), defaultValue);
+    }
+    else if (av.getIsUnique())
+    {
+      appendln(realSb, "");
+      append(realSb, "  class << self; attr_accessor :{0} end", gen.translate("uniqueMap", av));
+      appendln(realSb, "");
+      append(realSb, "  @{0} = Hash.new", gen.translate("uniqueMap", av));
+    }
+  }
+  
+#>>!>>
+}

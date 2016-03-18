@@ -1,0 +1,7 @@
+class UmpleToRuby {
+    attribute_Get <<!<</*attribute_Get*/>>
+  def <<= gen.translate("getMethod",av) >>
+    <<# if (customGetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    @<<=gen.translate("attributeOne",av)>>
+  end!>>
+}

@@ -1,0 +1,8 @@
+class UmpleToRuby {
+    constructor_AttributeAssign <<!<</*constructor_AttributeAssign*/>><<#
+  if(!av.getIsLazy()){
+    String parameterLookup = av.getValue() == null ? "parameterOne" : "parameterValue";
+#>>
+    @<<=gen.translate("attributeOne",av)>> = <<=gen.translate(parameterLookup,av)>>
+<<# } #>>!>>
+}

@@ -1,0 +1,36 @@
+class UmpleToRuby {
+    association_SetMStarToMany <<!<</*association_SetMStarToMany*/>>
+  def <<=gen.translate("setManyMethod",av)>>(<<=gen.translate("parameterMany",av)>>)
+    was_set = false
+    <<# if (customSetManyPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } #>>
+    <<=gen.translate("parameterVerifiedMany",av)>> = []
+    <<=gen.translate("parameterMany",av)>>.each do |<<=gen.translate("parameterOne",av)>>|
+      next if (<<=gen.translate("parameterVerifiedMany",av)>>.include?(<<=gen.translate("parameterOne",av)>>))
+      <<=gen.translate("parameterVerifiedMany",av)>> << <<=gen.translate("parameterOne",av)>>
+    end
+
+    if <<=gen.translate("parameterVerifiedMany",av)>>.size != <<=gen.translate("parameterMany",av)>>.size or <<=gen.translate("parameterVerifiedMany",av)>>.size < <<=uClass.getName()>>.<<=gen.translate("minimumNumberOfMethod",av)>>
+      <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } #>>
+      return was_set
+    end
+
+    <<=gen.translate("parameterOldMany",av)>> = @<<=gen.translate("associationMany",av)>>.dup
+    @<<=gen.translate("associationMany",av)>>.clear
+    <<=gen.translate("parameterVerifiedMany",av)>>.each do |<<=gen.translate("parameterNew",av)>>|
+      @<<=gen.translate("associationMany",av)>> << <<=gen.translate("parameterNew",av)>>
+      if <<=gen.translate("parameterOldMany",av)>>.include?(<<=gen.translate("parameterNew",av)>>)
+        <<=gen.translate("parameterOldMany",av)>>.delete(<<=gen.translate("parameterNew",av)>>)
+      else
+        <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(self)
+      end
+    end
+
+    <<=gen.translate("parameterOldMany",av)>>.each do |<<=gen.translate("parameterOld",av)>>|
+      <<=gen.translate("parameterOld",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(self)
+    end
+    was_set = true
+    <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } #>>
+    was_set
+  end
+!>>
+}

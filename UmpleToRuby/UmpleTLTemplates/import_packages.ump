@@ -1,0 +1,15 @@
+class UmpleToRuby {
+    import_packages <<!<</*import_packages*/>><<#
+  for (Depend depend : uClass.getDepends())
+  {
+    appendln(realSb, "");
+    append(realSb, "require '{0}'",depend.getName());
+  }
+  
+  for (String anImport : gClass.getMultiLookup("import"))
+  {
+    appendln(realSb, "");
+    append(realSb, "require '{0}'",anImport);
+  }
+#>>!>>
+}
