@@ -1405,7 +1405,7 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 					if (! aGeneralTPApplied.hasStateMachineTemplateSignature(stTSignature)){	
 						aGeneralTPApplied.addStateMachineTemplateSignature(stTSignature);
 					} else {
-						getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getStateMachine()));
+						getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
 						return;
 				}	
 		  } else if(subToken.is("StateMachineTransitionAlias")){
@@ -1413,7 +1413,7 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 					if (! aGeneralTPApplied.hasStateMachineTemplateSignature(stTSignature)){	
 						aGeneralTPApplied.addStateMachineTemplateSignature(stTSignature);
 					} else {
-						getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getStateMachine()));
+						getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
 						return;
 					}
 		  } else if (subToken.is("traitAppliedParameters")){
@@ -1460,18 +1460,35 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-   private StateMachineTemplateSignature obtainStateMachineTemplateSignature(Token inToken){
-    String iEStateMachineModifier="",stateMachineAliasName ="";
-  	 String smName = inToken.getValue("smName");
-  	 if (inToken.getValue("iEStateMachineModifier") != null) iEStateMachineModifier = inToken.getValue("iEStateMachineModifier");
-  	 if (inToken.getValue("AliasName") != null) stateMachineAliasName = inToken.getValue("AliasName");  	  
-		 StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(iEStateMachineModifier, smName, stateMachineAliasName);	 
-  	 while(inToken!=null && inToken.getSubToken("StateNames")!=null){  		
-  		 smTSignature.addState(inToken.getSubToken("StateNames").getValue("sName"));
-  		 inToken =  inToken.getSubToken("StateNames").getSubToken("StateNamesPassing");
-  	 }  		 
- 	   return smTSignature;
-  }
+	private StateMachineTemplateSignature obtainStateMachineTemplateSignature(Token inToken){
+  	String iEStateMachineModifier="",stateMachineAliasName ="";
+	 	String smName = inToken.getValue("smName");
+	 	String smDesName = "";
+		if (inToken.getValue("iEStateMachineModifier") != null) iEStateMachineModifier = inToken.getValue("iEStateMachineModifier");
+	 	if (inToken.getValue("smDesName") != null) stateMachineAliasName = inToken.getValue("smDesName");
+	 	Token smDesNameToken = inToken.getSubToken("DesStateNames");
+	 	if (smDesNameToken!=null){
+	 		smDesName = stateMachineAliasName;
+	 		stateMachineAliasName="";
+	 	}
+		StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(iEStateMachineModifier, smName, smDesName, stateMachineAliasName);	 
+	 	extractStatesFromTemplateSignature(inToken,smTSignature,"src");
+	 	extractStatesFromTemplateSignature(smDesNameToken,smTSignature,"des"); 	
+ 		return smTSignature;
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+	private void extractStatesFromTemplateSignature(Token inToken,StateMachineTemplateSignature inStateMachineTemplateSignature,String type){
+		while(inToken!=null && inToken.getSubToken("StateNames")!=null){  		
+			if (type=="src")	{
+				inStateMachineTemplateSignature.addSrcState(inToken.getSubToken("StateNames").getValue("sName"));
+			}	else if (type=="des"){
+				inStateMachineTemplateSignature.addDesState(inToken.getSubToken("StateNames").getValue("sName"));
+			}
+		inToken =  inToken.getSubToken("StateNames").getSubToken("StateNamesPassing");
+		}  	
+ 	}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -1491,7 +1508,7 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 				}
 			}
 		 }
-		 StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(smPattern, smName, stateMachineAliasName);
+		 StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(smPattern, smName,"", stateMachineAliasName);
 		 mtSignature = new MethodTemplateSignature(smPattern,stateMachineAliasName,method);
 		 smTSignature.setMethodTemplateSignature(mtSignature);
 	   return smTSignature;

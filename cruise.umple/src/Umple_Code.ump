@@ -3852,10 +3852,10 @@ class GeneralTPApplied {
 	boolean hasStateMachineTemplateSignature(StateMachineTemplateSignature inSMTSignature) {
     boolean find = false;
     for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
-    	if (smTSignature.getStateMachine().equals(inSMTSignature.getStateMachine()) && smTSignature.numberOfStates()==inSMTSignature.numberOfStates()){					
+    	if (smTSignature.getSrcStateMachine().equals(inSMTSignature.getSrcStateMachine()) && smTSignature.numberOfSrcStates()==inSMTSignature.numberOfSrcStates()){					
     		find = true;
-				for (int	i = 0; i<smTSignature.numberOfStates() ;i++) {
-					if (!smTSignature.getState(i).equals(inSMTSignature.getState(i))) {
+				for (int	i = 0; i<smTSignature.numberOfSrcStates() ;i++) {
+					if (!smTSignature.getSrcState(i).equals(inSMTSignature.getSrcState(i))) {
 						find = false;
 						break;
 					}
