@@ -25,19 +25,23 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
 //----------------------------------------------------------------------------   
   private void copyStateMachinesFromTraiToClass(UmpleClass inClass) {
-    Map<UmpleTrait, List<StateMachine>> traiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
-		Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
+    Map<UmpleTrait, List<StateMachine>> traitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
+		Map<UmpleTrait, List<StateMachine>> tempTraitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
 		for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
-			tempTraiStateMachine = gatherStateMachinesFromTrait(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
-			CheckSMFromTraitIsNotAvaialbleInOtherTraits(traiStateMachine, tempTraiStateMachine, inClass);
+			tempTraitStateMachine = gatherStateMachinesFromTrait(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
+			CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine, tempTraitStateMachine, inClass);
 			if ( ! getParseResult().getWasSuccess() ) return;
 			
-			AddStateMachineMapToAnother(traiStateMachine,tempTraiStateMachine);
+			AddStateMachineMapToAnother(traitStateMachine,tempTraitStateMachine);
 		}
-		if (!CheckSMFromTraitIsNotAvaialbleInClass(inClass,traiStateMachine)) return;
-		for (UmpleTrait t1 : traiStateMachine.keySet()) {
-			if (traiStateMachine.get(t1)!=null){
-				for (StateMachine sMachine : traiStateMachine.get(t1)) {
+		if (!CheckSMFromTraitIsNotAvaialbleInClass(inClass,traitStateMachine)) return;
+		//To assign a state machine to a state.
+		//----------------------------------------------------------------------------------------		
+			if (getParseResult().getWasSuccess()) AssignStateMachineToState(inClass,traitStateMachine);	
+		//----------------------------------------------------------------------------------------	
+		for (UmpleTrait t1 : traitStateMachine.keySet()) {
+			if (traitStateMachine.get(t1)!=null){
+				for (StateMachine sMachine : traitStateMachine.get(t1)) {
 					sMachine.setUmpleClass(inClass);
 	    		inClass.addStateMachine(sMachine);		
 				}
@@ -50,7 +54,7 @@ class UmpleInternalParser
   private Map<UmpleTrait, List<StateMachine>> gatherStateMachinesFromTrait (UmpleTrait inTrait,GeneralTPApplied inGTPApplied, UmpleClass inClass) 
   {
     Map<UmpleTrait, List<StateMachine>> traitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>(); 
-  	Map<UmpleTrait, List<StateMachine>> tempTraiStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();  	
+  	Map<UmpleTrait, List<StateMachine>> tempTraitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();  	
   	/*
   	 * Duplicate state machines in order to be able modify them without effecting the original names;
   	 */
@@ -64,10 +68,10 @@ class UmpleInternalParser
   	 * Go through the included traits.
   	 */
   	for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-  		tempTraiStateMachine = gatherStateMachinesFromTrait(uTrait,inTrait.getGeneralTPAppliedByName(uTrait.getName()),inClass);	 
+  		tempTraitStateMachine = gatherStateMachinesFromTrait(uTrait,inTrait.getGeneralTPAppliedByName(uTrait.getName()),inClass);	 
   		if ( ! getParseResult().getWasSuccess() ) return traitStateMachine;
-  		if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine,tempTraiStateMachine,inTrait)) return traitStateMachine;
-  		AddStateMachineMapToAnother(traitStateMachine,tempTraiStateMachine);
+  		if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine,tempTraitStateMachine,inTrait)) return traitStateMachine;
+  		AddStateMachineMapToAnother(traitStateMachine,tempTraitStateMachine);
   	}
   	/*
   	 * Check to make sure applied type parameters are valid;
@@ -95,57 +99,122 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-private void AssignStateMachineToState(UmpleTrait inTrait, Map<UmpleTrait, List<StateMachine>> traitStateMachine) {
-	for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-		if(inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null)
-		for (StateMachineTemplateSignature smTSignature : inTrait.getGeneralTPAppliedByName(uTrait.getName()).getStateMachineTemplateSignatures()) {
-			if (smTSignature.getDesStateMachine()!=""){
-				boolean thereIsAMappting = false;
-				for(Map.Entry<UmpleTrait, List<StateMachine>> entry : traitStateMachine.entrySet()){
-					for (StateMachine sMachine : entry.getValue()) {		
-						if(sMachine.getName().equals(smTSignature.getDesStateMachine()) ){
-							State foundState= null;
-							StateMachine smFinder = sMachine;
-							for(int i = 0; i<smTSignature.getDesStates().length;i++){
-								foundState = smFinder.findState(smTSignature.getDesState(i), false);
-								if (foundState!=null){
-									if(i+1<smTSignature.getDesStates().length){
-										StateMachine foundSM= null;
-										for(StateMachine nestedSM : foundState.getNestedStateMachines()){
-											foundState = nestedSM.findState(smTSignature.getDesState(i+1),false);
-											if(foundState!=null){
-												if(foundSM!=null){
-													getParseResult().addErrorMessage(new ErrorMessage(233,inTrait.getPosition(0),inTrait.getName(),smTSignature.getDesState(i+1)));	
-									 		 		 return;
-												} else {
-													foundSM = nestedSM;														
-												}
-											}
-										} 
-										if (foundSM==null){
-											getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getDesState(i+1) ));	
-							 		 		 return;
-										}
-									} else {
-										//TODO do assigning. 
-										//System.out.println("found. wow");
-									}
-								} else {
-									break;
-								}
-							}
-							thereIsAMappting = true;
-						}
-				  }
-				}
-				if (thereIsAMappting==false){
-					 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getDesStateMachine() ));	
-	 		 		 return;
-				}
+   private void AssignStateMachineToState(UmpleClassifier inClassfier, Map<UmpleTrait, List<StateMachine>> traitStateMachine){
+  	 //Important: This part of code has duplication because the common attributes of UmpleTrait and UmpleClass are not part of UmpleClassfierl.
+  	 //This must be done in the process of model refactoring.
+  	 if (inClassfier instanceof UmpleTrait){
+  		 UmpleTrait inTrait = (UmpleTrait)inClassfier;
+  		 for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+  				if(inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null)
+  					for (StateMachineTemplateSignature smTSignature : inTrait.getGeneralTPAppliedByName(uTrait.getName()).getStateMachineTemplateSignatures()) {
+  						if (smTSignature.getDesStateMachine()!=""){
+  							AssignStateMachineToStateSearchProcess(inTrait, traitStateMachine, uTrait, smTSignature);
+  						}
+  					}
+  		    }
+  	 } else if (inClassfier instanceof UmpleClass){
+  		 UmpleClass inClass = (UmpleClass)inClassfier;
+  		 for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+ 				if(inClass.getGeneralTPAppliedByName(uTrait.getName())!=null)
+ 					for (StateMachineTemplateSignature smTSignature : inClass.getGeneralTPAppliedByName(uTrait.getName()).getStateMachineTemplateSignatures()) {
+ 						State foundState = null;
+ 						if (smTSignature.getDesStateMachine()!=""){
+ 							foundState = findMatchingStateForMapping(inClassfier,inClass.getStateMachines(),smTSignature);
+ 							if (foundState!=null) {
+ 								addStateMachineToState(traitStateMachine, smTSignature, foundState);
+ 								return;
+ 							} else {
+ 								AssignStateMachineToStateSearchProcess(inClassfier, traitStateMachine, uTrait, smTSignature);	
+ 							}
+ 						}
+ 					}
+ 		    }
+  	 }
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+	private void AssignStateMachineToStateSearchProcess(UmpleClassifier inClassfier, Map<UmpleTrait, List<StateMachine>> traitStateMachine, UmpleTrait uTrait, StateMachineTemplateSignature smTSignature) {
+		State foundState = null;
+		for(Map.Entry<UmpleTrait, List<StateMachine>> entry : traitStateMachine.entrySet()){
+			foundState = findMatchingStateForMapping(inClassfier, entry.getValue() , smTSignature);
+			if (foundState!=null) {
+				addStateMachineToState(traitStateMachine, smTSignature, foundState);
+				return;
 			}
 		}
+		getParseResult().addErrorMessage(new ErrorMessage(230,inClassfier.getPosition(0),inClassfier.getName(),smTSignature.getDesStateMachine() ));	
+		return;
 	}
-} 
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+	private void addStateMachineToState(Map<UmpleTrait, List<StateMachine>> traitStateMachine,	StateMachineTemplateSignature smTSignature, State foundState) {	
+		if (foundState.numberOfNestedStateMachines()==0){
+				StateMachine mustbeAdded = null;
+				UmpleTrait foundTrait=null;
+				labelT:
+				for(UmpleTrait uTrait : traitStateMachine.keySet()) {
+					for (StateMachine desSM: traitStateMachine.get(uTrait)){
+						if (desSM.getName().equals(smTSignature.getSrcStateMachine())){
+							mustbeAdded = desSM;
+							foundTrait=uTrait;
+							break labelT;
+						}
+					}
+				}
+				if (foundState!=null){
+					traitStateMachine.get(foundTrait).remove(mustbeAdded);
+					mustbeAdded.setName(foundState.getName());
+					foundState.addNestedStateMachine(mustbeAdded);
+					return;
+				} 					
+			} else {
+				//TODO merge the state machine with other state machines.
+		}
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+	private State findMatchingStateForMapping(UmpleClassifier inClassfier,	List<StateMachine> inStateMachine , StateMachineTemplateSignature smTSignature) {
+		for (StateMachine sMachine : inStateMachine) {		
+			if(sMachine.getName().equals(smTSignature.getDesStateMachine()) ){
+				State foundState= null;
+				StateMachine smFinder = sMachine;
+				for(int i = 0; i<smTSignature.getDesStates().length;i++){
+					foundState = smFinder.findState(smTSignature.getDesState(i), false);
+					if (foundState!=null){
+						if(i+1<smTSignature.getDesStates().length){
+							StateMachine foundSM= null;
+							for(StateMachine nestedSM : foundState.getNestedStateMachines()){
+								foundState = nestedSM.findState(smTSignature.getDesState(i+1),false);
+								if(foundState!=null){
+									if(foundSM!=null){
+										getParseResult().addErrorMessage(new ErrorMessage(233,inClassfier.getPosition(0),inClassfier.getName(),smTSignature.getDesState(i+1)));	
+						 		 		 return null;
+									} else {
+										foundSM = nestedSM;														
+									}
+								}
+							} 
+							if (foundSM==null){
+								getParseResult().addErrorMessage(new ErrorMessage(230,inClassfier.getPosition(0),inClassfier.getName(),smTSignature.getDesState(i+1) ));	
+				 		 		 return null;
+							}
+						} else {
+							//The state has been found.
+								return foundState;
+						}
+					} else {
+						break;
+					}
+				}
+				if(foundState!=null) return foundState;
+			}
+		}
+		return null;
+	}
+
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
@@ -308,10 +377,10 @@ private void AssignStateMachineToState(UmpleTrait inTrait, Map<UmpleTrait, List<
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-	private boolean CheckSMFromTraitIsNotAvaialbleInClass(UmpleClass inClass, Map<UmpleTrait, List<StateMachine>> inTempTraiStateMachine){
-  	for (UmpleTrait uTrait : inTempTraiStateMachine.keySet()) {
+	private boolean CheckSMFromTraitIsNotAvaialbleInClass(UmpleClass inClass, Map<UmpleTrait, List<StateMachine>> inTempTraitStateMachine){
+  	for (UmpleTrait uTrait : inTempTraitStateMachine.keySet()) {
   		List<StateMachine> tListBeRemoved = new ArrayList<StateMachine>();
-    	for (StateMachine tSMachine : inTempTraiStateMachine.get(uTrait)) {
+    	for (StateMachine tSMachine : inTempTraitStateMachine.get(uTrait)) {
 				Map<StateMachine,String> listBeRemoved = new HashMap<StateMachine, String>();
 				for(StateMachine cSMachine : inClass.getStateMachines()){
 					if (compareStateMachineName(cSMachine, tSMachine)){
@@ -335,7 +404,7 @@ private void AssignStateMachineToState(UmpleTrait inTrait, Map<UmpleTrait, List<
 				}		
 			}
 			for(StateMachine stMachine : tListBeRemoved){
-				inTempTraiStateMachine.get(uTrait).remove(stMachine);
+				inTempTraitStateMachine.get(uTrait).remove(stMachine);
 			}
 		}
 		return true;
@@ -343,20 +412,20 @@ private void AssignStateMachineToState(UmpleTrait inTrait, Map<UmpleTrait, List<
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-   private boolean CheckSMFromTraitIsNotAvaialbleInOtherTraits(Map<UmpleTrait, List<StateMachine>> inTraiStateMachine, Map<UmpleTrait, List<StateMachine>> inTempTraiStateMachine, UmpleClassifier inUmpleClassifier){
-    if (inTraiStateMachine==null) return true;
-    if (inTraiStateMachine.size()==0){
-  		for(UmpleTrait tUTrait : inTempTraiStateMachine.keySet()){
-  			inTraiStateMachine.put(tUTrait, inTempTraiStateMachine.get(tUTrait));
+   private boolean CheckSMFromTraitIsNotAvaialbleInOtherTraits(Map<UmpleTrait, List<StateMachine>> inTraitStateMachine, Map<UmpleTrait, List<StateMachine>> inTempTraitStateMachine, UmpleClassifier inUmpleClassifier){
+    if (inTraitStateMachine==null) return true;
+    if (inTraitStateMachine.size()==0){
+  		for(UmpleTrait tUTrait : inTempTraitStateMachine.keySet()){
+  			inTraitStateMachine.put(tUTrait, inTempTraitStateMachine.get(tUTrait));
   		}
   		return true;
   	}
-  	for(UmpleTrait tUTrait : inTempTraiStateMachine.keySet()){
+  	for(UmpleTrait tUTrait : inTempTraitStateMachine.keySet()){
   		List<StateMachine> mustBeRemoved =new ArrayList<StateMachine>();
-	 		for (StateMachine tSMachine : inTempTraiStateMachine.get(tUTrait)) {
-				for(UmpleTrait uTrait : inTraiStateMachine.keySet()){
+	 		for (StateMachine tSMachine : inTempTraitStateMachine.get(tUTrait)) {
+				for(UmpleTrait uTrait : inTraitStateMachine.keySet()){
 					Map<StateMachine,StateMachine> listBeRemoved = new HashMap<StateMachine, StateMachine>();
-					for (StateMachine sMachine : inTraiStateMachine.get(uTrait)) {
+					for (StateMachine sMachine : inTraitStateMachine.get(uTrait)) {
 						if (compareStateMachineName(sMachine, tSMachine)){
 							if (inUmpleClassifier instanceof UmpleTrait){
 								if (uTrait.equals(((UmpleTrait)inUmpleClassifier)) ){
@@ -386,13 +455,13 @@ private void AssignStateMachineToState(UmpleTrait inTrait, Map<UmpleTrait, List<
 						}	
 					}
 					for(Map.Entry<StateMachine,StateMachine> entry : listBeRemoved.entrySet() ) {
-						inTraiStateMachine.get(uTrait).remove(entry.getValue());
-						inTraiStateMachine.get(uTrait).add(entry.getKey());
+						inTraitStateMachine.get(uTrait).remove(entry.getValue());
+						inTraitStateMachine.get(uTrait).add(entry.getKey());
 					}
 				}
 			}
 	 		for (StateMachine stMachine : mustBeRemoved){
-	 			inTempTraiStateMachine.get(tUTrait).remove(stMachine);
+	 			inTempTraitStateMachine.get(tUTrait).remove(stMachine);
 	 		}
 		}
 		return true;
@@ -424,17 +493,17 @@ private void AssignStateMachineToState(UmpleTrait inTrait, Map<UmpleTrait, List<
 //---------------------------------end----------------------------------------
 //---------------------------------------------------------------------------- 
 //---------------------------------Start--------------------------------------
-	private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inTraitStateMachine,	Map<UmpleTrait, List<StateMachine>> inTempTraiStateMachine) {
-	  for (UmpleTrait uTrait : inTempTraiStateMachine.keySet()) {
+	private void AddStateMachineMapToAnother(Map<UmpleTrait, List<StateMachine>> inTraitStateMachine,	Map<UmpleTrait, List<StateMachine>> inTempTraitStateMachine) {
+	  for (UmpleTrait uTrait : inTempTraitStateMachine.keySet()) {
 			if (inTraitStateMachine.containsKey(uTrait)){
-				if (inTempTraiStateMachine.get(uTrait).size()>0)
-					for (StateMachine st : inTempTraiStateMachine.get(uTrait)){
+				if (inTempTraitStateMachine.get(uTrait).size()>0)
+					for (StateMachine st : inTempTraitStateMachine.get(uTrait)){
 						if (!inTraitStateMachine.get(uTrait).contains(st)){
 							inTraitStateMachine.get(uTrait).add(st);
 						}
 					}
 			} else{
-				inTraitStateMachine.put(uTrait, inTempTraiStateMachine.get(uTrait));
+				inTraitStateMachine.put(uTrait, inTempTraitStateMachine.get(uTrait));
 			}	
 		}
 	}

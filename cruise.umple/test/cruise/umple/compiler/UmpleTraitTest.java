@@ -565,7 +565,57 @@ public class UmpleTraitTest {
 			}	
 			
 		}
+	
+		@Test
+		public void stateMachineTraits036Test() {
+			String code = "class A{	isA T <sm as system.executing>;	system {		initial{			excute -> executing;	}		executing{					}	}}"
+					+"trait T{	sm{			s0{goS1-> s1;}			s1{}		}}";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("system").getState(1).numberOfNestedStateMachines());
+			Assert.assertEquals("executing",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getName());
+			Assert.assertEquals(2,model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(0).getStateMachine().numberOfStates());
+	
+		}
 		
+		@Test
+		public void stateMachineTraits037Test() {
+			String code = "class A{	isA T2;}"
+					+"trait T2{	isA T <sm as system.executing>;	system {		initial{			excute -> executing;		}		executing{					}	}}"
+					+"trait T{	sm{			s0{goS1-> s1;}			s1{}		}}";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("system").getState(1).numberOfNestedStateMachines());
+			Assert.assertEquals("executing",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getName());
+			Assert.assertEquals(2,model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(0).getStateMachine().numberOfStates());
+	
+		}
+		
+		@Test
+		public void stateMachineTraits038Test() {
+			String code = "class A{	isA T2;}"
+					+"trait T2{	isA T <sm2 as system.executing>;	system {		initial{			excute -> executing;		}		executing{				}	}}"
+					+"trait T{	isA T1;	sm2{			s20{goS21-> s21;}			s21{}		}}"
+					+"trait T1{	sm{			s0{goS1-> s1;}			s1{}		}}";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("system").getState(1).numberOfNestedStateMachines());
+			Assert.assertEquals("executing",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getName());
+			Assert.assertEquals(2,model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(0).getStateMachine().numberOfStates());
+			Assert.assertEquals("s20",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(0).getStateMachine().getState(0).getName());
+		}
+		
+		@Test
+		public void stateMachineTraits039Test() {
+			String code = "class A{	isA T3<sm2 as system.executing>;}"
+					+"trait T3{	isA T2;	system {		initial{			excute -> executing;		}		executing{					}	}}"
+					+"trait T2{	isA T1<sm as sm2.s21>;	sm2{			s20{goS21-> s21;}			s21{}	}}"
+					+"trait T1{	sm{			s0{goS1-> s1;}			s1{}		}}";
+
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("system").getState(1).numberOfNestedStateMachines());
+			Assert.assertEquals("executing",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getName());
+			Assert.assertEquals(2,model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(1).getStateMachine().numberOfStates());
+			Assert.assertEquals("s20",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(0).getStateMachine().getState(0).getName());
+			Assert.assertEquals("s0",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(1).getNestedStateMachine(0).getState(0).getStateMachine().getState(0).getName());
+		}
 //the last StateTest
 		
 	//This is related to issue #656
