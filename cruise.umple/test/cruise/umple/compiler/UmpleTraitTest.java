@@ -630,6 +630,33 @@ public class UmpleTraitTest {
 			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("base_Behavior").getState(2).numberOfNestedStateMachines());
 		}
 		
+		@Test
+		public void stateMachineTraits041Test() {
+			String code = "class A{	isA T2;	isA T<sm1 as sw2,sm1 as sm.s2>;}"
+					+"trait T{	sm1{		s1{			goS1-> s1;		}		s3{				}	}}"
+					+"trait T2{	sm{		s1{			goS2-> s2;		}		s2{	}	}}";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("sm").getState(1).numberOfNestedStateMachines());
+		}
+		
+		
+		@Test
+		public void stateMachineTraits042Test() {
+			String code = "class A{	isA T2;}"
+					+"trait T2{	isA T<sm as sm2.s2,sm as sm2.s2>;sm2{		s2{					}	}}"
+					+"trait T{	sm{		so{			go->so;		}	}}";			
+			UmpleModel model = getModel(code);
+			boolean result = false;
+			try {
+				model.run();	
+			} catch (Exception e) {
+				result = e.getMessage().contains("229");
+			} finally {
+				Assert.assertTrue(result);
+				SampleFileWriter.destroy("traitTest.ump");
+			}	
+			
+		}
 //the last StateTest
 		
 	//This is related to issue #656

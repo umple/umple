@@ -298,6 +298,21 @@ class UmpleInternalParser
 			for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
 				if (smTSignature.getModifier().equals("-") && inSMachine.getName().equals(smTSignature.getSrcStateMachine())) return null;
 			 	if (smTSignature.getSrcStateMachine().equals("")) break;
+			 	//------------------------------------------------------------------------------------------------------
+			 	//This makes sure we are not going to change the name of a state machine and then assign it to state.
+			 	//This won't affect the result.
+			 	boolean mustBeRejected = false;
+			 	if (smTSignature.getAlias()!=""){
+			 		for (StateMachineTemplateSignature smTSignatureTemp : inGTPApplied.getStateMachineTemplateSignatures()){
+			 			if (smTSignature!=smTSignatureTemp && smTSignatureTemp.getDesStateMachine()!=""){
+			 				mustBeRejected= true;
+			 				
+			 			}
+			 		}
+			 	}
+			 	if (mustBeRejected) continue;
+			 	//------------------------------------------------------------------------------------------------------
+			 	
 			 	mapped = nameMapping.get(smTSignature.getSrcStateMachine());
 			 	if (mapped==null) mapped = smTSignature.getSrcStateMachine();
 			 	track = smTSignature.getSrcStateMachine();
