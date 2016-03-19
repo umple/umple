@@ -8,9 +8,12 @@ import cruise.umple.util.SampleFileWriter;
 public class UmpleTraitTest {
 	String pathToInput;
 	UmpleModel uMode;
+	String defaultPath;
 	
 	@Before
 	public void setup() {	
+		defaultPath= SampleFileWriter.rationalize("test/cruise/umple/compiler");
+		 
 		String  code = "class A { isA T;}"
 				+ "trait T {"
 				+ "depend cruise.umple.util.*;"
@@ -20,6 +23,7 @@ public class UmpleTraitTest {
 				+ "[tAge>=18]"
 				+ "}"; 	
 		uMode = getRunModel(code);
+		
 	}	
 	@After
 	public void tearDown()
@@ -616,6 +620,16 @@ public class UmpleTraitTest {
 			Assert.assertEquals("s20",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(0).getStateMachine().getState(0).getName());
 			Assert.assertEquals("s0",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(1).getNestedStateMachine(0).getState(0).getStateMachine().getState(0).getName());
 		}
+		
+		@Test
+		public void stateMachineTraits040Test() {
+			UmpleModel model = getRunModelByFilename("trait_test_data_0001.ump");
+			
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("base_Behavior").getState(0).numberOfNestedStateMachines());
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("base_Behavior").getState(1).numberOfNestedStateMachines());
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("base_Behavior").getState(2).numberOfNestedStateMachines());
+		}
+		
 //the last StateTest
 		
 	//This is related to issue #656
@@ -1674,6 +1688,7 @@ public class UmpleTraitTest {
 		SampleFileWriter.createFile("traitTest.ump",inCode);	
 		UmpleFile uFile = new UmpleFile("traitTest.ump");	
 		uMode = new UmpleModel(uFile);
+		uMode.setShouldGenerate(false);
 		try {
 			uMode.run();
 		} catch (Exception e) {
@@ -1683,10 +1698,39 @@ public class UmpleTraitTest {
 		return uMode;
 	}
 	
+	private UmpleModel getRunModelByFilename(String filename) {
+		UmpleFile uFile = new UmpleFile(defaultPath,filename);	
+		uMode = new UmpleModel(uFile);
+		uMode.setShouldGenerate(false);
+		try {
+			uMode.run();
+		} catch (Exception e) {
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+		return uMode;
+	}
+
+	/*
+	 * This function is used to fetch a model from a string including umple code.
+	 * It's used when the example is small and there is no need to create an external file.
+	 */
 	private UmpleModel getModel(String inCode) {
 		SampleFileWriter.createFile("traitTest.ump",inCode);	
 		UmpleFile uFile = new UmpleFile("traitTest.ump");	
 		uMode = new UmpleModel(uFile);
 		return uMode;
 	}	
+	
+	/*
+	 * This function is used to fetch a model from a Umple file.
+	 * It's used when the example is big and there is a need to keep it organized for more exploration.
+	 */
+	
+	private UmpleModel getModelByFilename(String fileName){
+		UmpleFile uFile = new UmpleFile(defaultPath,fileName);	
+		uMode = new UmpleModel(uFile);
+		uMode.setShouldGenerate(false);
+		return uMode;
+	}
 }
