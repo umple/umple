@@ -1,0 +1,56 @@
+class A{
+	isA Initial<sm as base_Behavior.initial >;
+	isA Execution<sm2 as base_Behavior.execution >;
+	isA Shutdown<sm3 as base_Behavior.shutdown >;
+	base_Behavior{
+		initial{
+		execute -> execution;
+		}
+		execution{
+			shutdown -> shutdown;
+		}
+		shutdown{
+			
+		}
+	}
+}
+
+trait Initial {
+	sm{
+		I1{
+			goI2-> I2;
+		}
+		I2{
+			goI3-> I3;
+		}
+		I3{
+			
+		}
+	}
+}
+trait Execution {
+	sm2{
+		E1{
+			goE2-> E2;
+		}
+		E2{
+			goE3-> E3;
+		}
+		E3{
+			
+		}
+	}
+}
+trait Shutdown {
+	sm3{
+		S1{
+			goS2-> S2;
+		}
+		S2{
+			goS3-> S3;
+		}
+		S3{
+			
+		}
+	}
+}

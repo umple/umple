@@ -5,7 +5,7 @@
 
 
 -- This defines a NuSMV module for State --
-MODULE State ( _stateA , _stateAA , _stateB , _stateBB , _stateBBS24 )
+MODULE State ( _stateAA , _stateBB , _stateBBS24 )
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
@@ -36,26 +36,8 @@ MODULE State ( _stateA , _stateAA , _stateB , _stateBB , _stateBBS24 )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for StateA --
-MODULE StateA ( _state )
-
-   -- This part declares state variables for the given NuSMV module --
-   VAR
-     state : { StateA_A , null };
-
-   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
-   ASSIGN
-     init( state ) := null;
-     next( state ) := case
-       _state.t1 : StateA_A;
-       _state.t2 | _state.t6 : null;
-       _state.state = State_s1 & state = null : StateA_A;
-       _state.state != State_s1 : null;
-       TRUE : state;
-     esac;
-
 -- This defines a NuSMV module for StateAA --
-MODULE StateAA ( _state , _stateA )
+MODULE StateAA ( _state )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -66,32 +48,13 @@ MODULE StateAA ( _state , _stateA )
      init( state ) := null;
      next( state ) := case
        _state.t1 : StateAA_s12;
-       _state.t2 | _state.t4 | _state.t6 | _state.t8 | _state.t3 | _state.t5 | _state.t7 | _state.t9 : null;
-       _stateA.state = StateA_A & state = null : StateAA_s11;
-       _stateA.state != StateA_A : null;
-       TRUE : state;
-     esac;
-
--- This defines a NuSMV module for StateB --
-MODULE StateB ( _state )
-
-   -- This part declares state variables for the given NuSMV module --
-   VAR
-     state : { StateB_B , null };
-
-   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
-   ASSIGN
-     init( state ) := null;
-     next( state ) := case
-       _state.t4 | _state.t3 | _state.t8 | _state.t7 | _state.t5 | _state.t9 : StateB_B;
-       _state.t2 | _state.t6 : null;
-       _state.state = State_s1 & state = null : StateB_B;
+       _state.state = State_s1 & state = null : StateAA_s11;
        _state.state != State_s1 : null;
        TRUE : state;
      esac;
 
 -- This defines a NuSMV module for StateBB --
-MODULE StateBB ( _state , _stateB )
+MODULE StateBB ( _state )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -104,9 +67,8 @@ MODULE StateBB ( _state , _stateB )
        _state.t4 | _state.t7 : StateBB_s21;
        _state.t3 : StateBB_s22;
        _state.t8 | _state.t5 | _state.t9 : StateBB_s24;
-       _state.t2 | _state.t1 | _state.t6 : null;
-       _stateB.state = StateB_B & state = null : StateBB_s21;
-       _stateB.state != StateB_B : null;
+       _state.state = State_s1 & state = null : StateBB_s21;
+       _state.state != State_s1 : null;
        TRUE : state;
      esac;
 
@@ -123,7 +85,6 @@ MODULE StateBBS24 ( _state , _stateBB )
      next( state ) := case
        _state.t5 | _state.t8 : StateBBS24_s31;
        _state.t9 : StateBBS24_s32;
-       _state.t1 | _state.t3 | _state.t6 | _state.t2 | _state.t4 | _state.t7 : null;
        _stateBB.state = StateBB_s24 & state = null : StateBBS24_s31;
        _stateBB.state != StateBB_s24 : null;
        TRUE : state;
@@ -134,18 +95,14 @@ MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : State( stateA , stateAA , stateB , stateBB , stateBBS24 );
-     stateA : StateA( state );
-     stateAA : StateAA( state , stateA );
-     stateB : StateB( state );
-     stateBB : StateBB( state , stateB );
+     state : State( stateAA , stateBB , stateBBS24 );
+     stateAA : StateAA( state );
+     stateBB : StateBB( state );
      stateBBS24 : StateBBS24( state , stateBB );
 CTLSPEC   EF( state.state = State_s1 )
 CTLSPEC   EF( state.state = State_s2 )
-CTLSPEC   EF( stateA.state = StateA_A )
 CTLSPEC   EF( stateAA.state = StateAA_s11 )
 CTLSPEC   EF( stateAA.state = StateAA_s12 )
-CTLSPEC   EF( stateB.state = StateB_B )
 CTLSPEC   EF( stateBB.state = StateBB_s21 )
 CTLSPEC   EF( stateBB.state = StateBB_s22 )
 CTLSPEC   EF( stateBB.state = StateBB_s24 )
