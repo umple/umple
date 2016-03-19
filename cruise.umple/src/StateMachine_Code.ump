@@ -60,6 +60,17 @@ class StateMachine
     return null;
   }
   
+  public List<Guard> getAllGuards() {
+		List<Guard> allGuards = new ArrayList<Guard>();
+		for( Transition transition : getAllTransitions() ) {
+			if( transition.getGuard() != null && !has(allGuards, transition.getGuard())) {
+				Guard guard = transition.getGuard();
+				allGuards.add( guard );
+			}
+		}
+		return allGuards;
+	}
+  
   public List<Event> getAllEvents()
   {
     ArrayList<Event> allEvents = new ArrayList<Event>();

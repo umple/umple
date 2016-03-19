@@ -55,7 +55,6 @@ MODULE SmZxab ( _sm )
        _sm.t9 | _sm.t3 : SmZxab_Zx;
        _sm.t10 : SmZxab_A;
        _sm.t7 | _sm.t11 : SmZxab_B;
-       _sm.t1 | _sm.t4 | _sm.t6 | _sm.t12 | _sm.t2 | _sm.t5 | _sm.t8 | _sm.t13 : null;
        _sm.state = Sm_Zxab & state = null : SmZxab_Zx;
        _sm.state != Sm_Zxab : null;
        TRUE : state;
@@ -73,7 +72,6 @@ MODULE SmZxabZx ( _sm , _smZxab )
      init( state ) := null;
      next( state ) := case
        _sm.t9 | _sm.t3 : SmZxabZx_X;
-       _sm.t2 | _sm.t5 | _sm.t7 | _sm.t10 | _sm.t12 | _sm.t1 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t11 | _sm.t13 : null;
        _smZxab.state = SmZxab_Zx & state = null : SmZxabZx_Z;
        _smZxab.state != SmZxab_Zx : null;
        TRUE : state;
@@ -92,7 +90,6 @@ MODULE SmGe ( _sm )
      next( state ) := case
        _sm.t12 | _sm.t5 | _sm.t13 : SmGe_G;
        _sm.t1 | _sm.t4 : SmGe_E;
-       _sm.t2 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t3 | _sm.t7 | _sm.t9 | _sm.t11 : null;
        _sm.state = Sm_Ge & state = null : SmGe_G;
        _sm.state != Sm_Ge : null;
        TRUE : state;

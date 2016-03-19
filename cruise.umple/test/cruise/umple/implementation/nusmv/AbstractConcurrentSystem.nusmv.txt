@@ -5,7 +5,7 @@
 
 
 -- This defines a NuSMV module for State --
-MODULE State ( _stateState11 , _stateState11State11 , _stateState12 , _stateState12State12 )
+MODULE State ( _stateState11State11 , _stateState12State12 )
 
    -- This part declares input variables for the given NuSMV module --
    IVAR
@@ -17,10 +17,10 @@ MODULE State ( _stateState11 , _stateState11State11 , _stateState12 , _stateStat
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     t1 := event = ev_e5 & _stateState11.state = StateState11_state11;
+     t1 := event = ev_e5 & _stateState11State11.state != null;
      t2 := event = ev_e1 & _stateState11State11.state = StateState11State11_state111;
      t3 := event = ev_e4 & _stateState11State11.state = StateState11State11_state112;
-     t4 := event = ev_e5 & _stateState12.state = StateState12_state12;
+     t4 := event = ev_e5 & _stateState12State12.state != null;
      t5 := event = ev_e2 & _stateState12State12.state = StateState12State12_state121;
      t6 := event = ev_e3 & _stateState12State12.state = StateState12State12_state122;
 
@@ -33,26 +33,8 @@ MODULE State ( _stateState11 , _stateState11State11 , _stateState12 , _stateStat
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for StateState11 --
-MODULE StateState11 ( _state )
-
-   -- This part declares state variables for the given NuSMV module --
-   VAR
-     state : { StateState11_state11 , null };
-
-   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
-   ASSIGN
-     init( state ) := null;
-     next( state ) := case
-       _state.t3 | _state.t2 : StateState11_state11;
-       _state.t1 | _state.t4 : null;
-       _state.state = State_state1 & state = null : StateState11_state11;
-       _state.state != State_state1 : null;
-       TRUE : state;
-     esac;
-
 -- This defines a NuSMV module for StateState11State11 --
-MODULE StateState11State11 ( _state , _stateState11 )
+MODULE StateState11State11 ( _state )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -64,32 +46,13 @@ MODULE StateState11State11 ( _state , _stateState11 )
      next( state ) := case
        _state.t3 : StateState11State11_state111;
        _state.t2 : StateState11State11_state112;
-       _state.t1 | _state.t5 | _state.t4 | _state.t6 : null;
-       _stateState11.state = StateState11_state11 & state = null : StateState11State11_state111;
-       _stateState11.state != StateState11_state11 : null;
-       TRUE : state;
-     esac;
-
--- This defines a NuSMV module for StateState12 --
-MODULE StateState12 ( _state )
-
-   -- This part declares state variables for the given NuSMV module --
-   VAR
-     state : { StateState12_state12 , null };
-
-   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
-   ASSIGN
-     init( state ) := null;
-     next( state ) := case
-       _state.t6 | _state.t5 : StateState12_state12;
-       _state.t1 | _state.t4 : null;
-       _state.state = State_state1 & state = null : StateState12_state12;
+       _state.state = State_state1 & state = null : StateState11State11_state111;
        _state.state != State_state1 : null;
        TRUE : state;
      esac;
 
 -- This defines a NuSMV module for StateState12State12 --
-MODULE StateState12State12 ( _state , _stateState12 )
+MODULE StateState12State12 ( _state )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -101,9 +64,8 @@ MODULE StateState12State12 ( _state , _stateState12 )
      next( state ) := case
        _state.t6 : StateState12State12_state121;
        _state.t5 : StateState12State12_state122;
-       _state.t1 | _state.t3 | _state.t2 | _state.t4 : null;
-       _stateState12.state = StateState12_state12 & state = null : StateState12State12_state121;
-       _stateState12.state != StateState12_state12 : null;
+       _state.state = State_state1 & state = null : StateState12State12_state121;
+       _state.state != State_state1 : null;
        TRUE : state;
      esac;
 
@@ -112,16 +74,12 @@ MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : State( stateState11 , stateState11State11 , stateState12 , stateState12State12 );
-     stateState11 : StateState11( state );
-     stateState11State11 : StateState11State11( state , stateState11 );
-     stateState12 : StateState12( state );
-     stateState12State12 : StateState12State12( state , stateState12 );
+     state : State( stateState11State11 , stateState12State12 );
+     stateState11State11 : StateState11State11( state );
+     stateState12State12 : StateState12State12( state );
 CTLSPEC   EF( state.state = State_state1 )
 CTLSPEC   EF( state.state = State_state2 )
-CTLSPEC   EF( stateState11.state = StateState11_state11 )
 CTLSPEC   EF( stateState11State11.state = StateState11State11_state111 )
 CTLSPEC   EF( stateState11State11.state = StateState11State11_state112 )
-CTLSPEC   EF( stateState12.state = StateState12_state12 )
 CTLSPEC   EF( stateState12State12.state = StateState12State12_state121 )
 CTLSPEC   EF( stateState12State12.state = StateState12State12_state122 )

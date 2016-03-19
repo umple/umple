@@ -36,7 +36,7 @@ class StateMachine
   //before getContainsHistoryState { if ("H".equals(name)) { containsHistoryState = true; } }
   //before getContainsDeepHistoryState { if ("HStar".equals(name)) { containsDeepHistoryState = true; } }
 
- 
+  
   
   Boolean queued = false;
   Boolean pooled = false;
