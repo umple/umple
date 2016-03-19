@@ -10,9 +10,10 @@ class A {
         }
         state112 { 
           e4 -> state111;
-        } }
-      ||
-      state12 {
+        } 
+     }
+     ||
+     state12 {
         e5 -> state2; 
         state121 {
           e2 -> state122;
