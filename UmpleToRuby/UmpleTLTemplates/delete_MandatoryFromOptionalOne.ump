@@ -1,0 +1,7 @@
+class UmpleToRuby {
+    delete_MandatoryFromOptionalOne <<!<</*delete_MandatoryFromOptionalOne*/>>
+    @<<=gen.translate("associationMany",av)>>.each do |<<=gen.translate("parameterOne",av)>>|
+      <<=gen.translate("parameterOne",av)>>.instance_variable_set("@<<=gen.relatedTranslate("associationOne",av)>>",nil)
+    end
+    @<<=gen.translate("associationMany",av)>>.clear!>>
+}

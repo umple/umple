@@ -1,0 +1,9 @@
+class UmpleToRuby {
+    attribute_GetCodeInjection <<!<</*attribute_GetCodeInjection*/>>
+  def <<= gen.translate("getMethod",av) >>
+    <<# if (customGetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    <<= gen.translate("parameterOne",av) >> = @<<=gen.translate("attributeOne",av)>>
+    <<# if (customGetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } #>>
+    <<= gen.translate("parameterOne",av) >>
+  end!>>
+}

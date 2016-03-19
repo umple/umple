@@ -28,13 +28,13 @@ class Student
     raise "Unable to create two due to @m2" unless did_add_m2
     @m3s = []
     did_add_m3s = set_m3s(all_m3s)
-    raise "Unable to create Student, must have 1 to 3 @m3s" unless did_add_m3s 
+    raise "Unable to create Student, must have 1 to 3 @m3s" unless did_add_m3s
     @m4s = []
     did_add_m4s = set_m4s(all_m4s)
-    raise "Unable to create Student, must have 4 to 7 @m4s" unless did_add_m4s 
+    raise "Unable to create Student, must have 4 to 7 @m4s" unless did_add_m4s
     @m5s = []
     did_add_m5s = set_m5s(all_m5s)
-    raise "Unable to create Student, must have at least 2 @m5s" unless did_add_m5s 
+    raise "Unable to create Student, must have at least 2 @m5s" unless did_add_m5s
     @m6s = []
     @initialized = true
   end

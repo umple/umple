@@ -1,0 +1,13 @@
+class UmpleToRuby {
+    delete_OptionalOneFromMN_comp <<!<</*delete_OptionalOneFromMN_comp*/>>
+    if @<<=gen.translate("associationOne",av)>> != nil
+      if @<<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>> <= <<=relatedAssociation.getMultiplicity().getLowerBound()>>
+        @<<=gen.translate("associationOne",av)>>.delete
+    @<<=gen.translate("associationOne",av)>> = nil
+      else
+        <<=gen.translate("parameterOne",av)>> = @<<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("getMethod",av)>>
+    <<=gen.translate("parameterOne",av)>>.delete(@<<=gen.translate("associationOne",av)>>)
+    @<<=gen.translate("associationOne",av)>> = nil
+      end
+    end!>>
+}

@@ -1,0 +1,13 @@
+class UmpleToRuby {
+    attribute_SetImmutable <<!<</*attribute_SetImmutable*/>>
+  def <<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+    was_set = false
+    <<# if (customSetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    @<<= gen.translate("attributeCanSet",av) >> = false
+    @<<=gen.translate("attributeOne",av)>> = <<=gen.translate("parameterOne",av)>>
+    was_set = true
+    <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    was_set
+  end
+!>>
+}

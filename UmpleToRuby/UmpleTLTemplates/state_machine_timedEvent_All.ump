@@ -1,0 +1,26 @@
+use state_machine_Event_StartStopTimer.ump;
+use state_machine_timedEvent_Handler.ump;
+
+
+class UmpleToRuby {
+    state_machine_timedEvent_All <<!<</*state_machine_timedEvent_All*/>><<#
+{ 
+  boolean hasTimedEvents = false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    for (Event e : sm.getEvents())
+    {
+      if (e.getIsTimer())
+      {
+        hasTimedEvents = true;
+        #>><<@ UmpleToRuby.state_machine_Event_StartStopTimer >><<#
+      }
+    }
+  }
+  if (hasTimedEvents)
+  {
+    #>><<@ UmpleToRuby.state_machine_timedEvent_Handler >><<#
+  }
+}
+#>>!>>
+}

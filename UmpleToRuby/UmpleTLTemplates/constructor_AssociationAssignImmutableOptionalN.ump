@@ -1,0 +1,6 @@
+class UmpleToRuby {
+    constructor_AssociationAssignImmutableOptionalN <<!<</*constructor_AssociationAssignImmutableOptionalN*/>><<# String requiredNumber = "" + av.getMultiplicity().getUpperBound(); #>>
+    @<<=gen.translate("associationMany",av)>> = []
+    <<=gen.translate("didAddMany",av)>> = <<=gen.translate("setManyMethod",av)>>(<<=gen.translate("parameterAll",av)>>)
+    raise "Unable to create <<=gen.relatedTranslate("type",av)>>, must have <<=requiredNumber>> or fewer @<<=gen.translate("associationMany",av)>>, no duplicates" unless <<=gen.translate("didAddMany",av)>>!>>
+}

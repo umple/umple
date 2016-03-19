@@ -1,0 +1,8 @@
+class UmpleToRuby {
+    attribute_GetDefaulted <<!<</*attribute_GetDefaulted*/>>
+  def <<=gen.translate("getDefaultMethod",av)>>
+    <<# if (customGetDefaultPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } #>>
+    <<= gen.translate("parameterValue",av) >>
+  end
+!>>
+}

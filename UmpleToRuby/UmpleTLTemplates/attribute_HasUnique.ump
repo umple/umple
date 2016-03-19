@@ -1,0 +1,9 @@
+class UmpleToRuby {
+    attribute_HasUnique <<!<</*attribute_HasUnique*/>>
+  def <<=av.getUmpleClass().getName()>>::<<=gen.translate("hasUniqueMethod",av)>>?(<<=gen.translate("parameterOne", av)>>)
+    <<# if (customHasUniquePrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customHasUniquePrefixCode, "    ")); } #>>
+    <<# for( TraceItem traceItem : traceItems )#>><<= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")>>
+    <<=gen.translate("getUniqueMethod",av)>>(<<=gen.translate("parameterOne",av)>>) != nil
+  end
+!>>
+}

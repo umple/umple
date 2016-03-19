@@ -257,9 +257,11 @@ class Mentor
   def Mentor::get_with_id(a_id)
     @mentors_by_id[a_id]
   end
+
   def Mentor::has_with_id?(a_id)
     get_with_id(a_id) != nil
   end
+
   def get_p
     @p
   end

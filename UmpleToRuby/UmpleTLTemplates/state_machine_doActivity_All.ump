@@ -1,0 +1,26 @@
+use state_machine_doActivity.ump;
+use state_machine_doActivityThread.ump;
+
+
+class UmpleToRuby {
+    state_machine_doActivity_All <<!<</*state_machine_doActivity_All*/>><<#
+{ 
+  boolean hasActivities = false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    for (State state : sm.getStates())
+    {
+      for (Activity activity : state.getActivities())
+      {
+        hasActivities = true;
+        #>><<@ UmpleToRuby.state_machine_doActivity >><<#
+      }
+    }
+  } 
+  if (hasActivities)
+  {
+    #>><<@ UmpleToRuby.state_machine_doActivityThread >><<#
+  }
+}
+#>>!>>
+}

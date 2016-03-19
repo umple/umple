@@ -1,0 +1,15 @@
+class UmpleToRuby {
+    attribute_Set_subclass <<!<</*attribute_Set_subclass*/>>
+  def <<= gen.translate("setMethod",av) >>(<<=gen.translate("parameterOne",av)>>)
+    was_set = false
+    <<# if (customSetPrefixCode != null) {
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+      <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"at_s", uClass,gen.translate("parameterOne",av)):"")>>
+      was_set = super
+      <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"at_s", uClass):"")>>
+    <<# if (customSetPostfixCode != null) {
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    was_set
+  end
+!>>
+}

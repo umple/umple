@@ -1,0 +1,19 @@
+class UmpleToRuby {
+    attribute_SetMany <<!<</*attribute_SetMany*/>>
+  def <<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+    was_added = false
+    <<# if (customAddPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } #>>
+    was_added = <<=gen.translate("attributeMany",av)>> << <<=gen.translate("parameterOne",av)>>
+    <<# if (customAddPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } #>>
+    was_added
+  end
+
+  def <<=gen.translate("removeMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+    was_removed = false
+    <<# if (customRemovePrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } #>>
+    was_removed = <<=gen.translate("attributeMany",av)>>.delete(<<=gen.translate("parameterOne",av)>>)
+    <<# if (customRemovePostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } #>>
+    was_removed
+  end
+!>>
+}

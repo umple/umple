@@ -30,7 +30,7 @@ class Student
     @can_set_mentors = true
     @mentors = []
     did_add_mentors = set_mentors(all_mentors)
-    raise "Unable to create Student, must have at least 1 @mentors" unless did_add_mentors 
+    raise "Unable to create Student, must have at least 1 @mentors" unless did_add_mentors
     @initialized = true
   end
 

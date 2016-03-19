@@ -146,6 +146,9 @@
       <java jar="${umple.stable.jar}" fork="true" failonerror="true">
         <arg value="UmpleToPhp/UmpleTLTemplates/Master.ump"/>
       </java>
+      <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+        <arg value="UmpleToRuby/UmpleTLTemplates/Master.ump"/>
+      </java>
     </parallel>
 
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/java" overwrite="true">
@@ -155,7 +158,7 @@
       <fileset dir="UmpleToPhp/src-gen-UmpleTL/cruise/umple/compiler/php" excludes=".git* UmpleToPhp.java" />
     </copy>
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/ruby" overwrite="true">
-      <fileset dir="UmpleToRuby/src/cruise/umple/compiler/ruby" excludes=".git*" />
+      <fileset dir="UmpleToRuby/src-gen-UmpleTL/cruise/umple/compiler/ruby" excludes=".git* UmpleToRuby.java" />
     </copy>
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/cpp" overwrite="true">
       <fileset dir="UmpleToCpp/src/cruise/umple/compiler/cpp" excludes=".git*" />

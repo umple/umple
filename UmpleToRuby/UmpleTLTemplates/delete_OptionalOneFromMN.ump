@@ -1,0 +1,10 @@
+class UmpleToRuby {
+    delete_OptionalOneFromMN <<!<</*delete_OptionalOneFromMN*/>>
+    unless @<<=gen.translate("associationOne",av)>>.nil?
+      if @<<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>> <= <<=relatedAssociation.getMultiplicity().getLowerBound()>>
+        @<<=gen.translate("associationOne",av)>>.delete
+      else
+        @<<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(self)
+      end
+    end!>>
+}

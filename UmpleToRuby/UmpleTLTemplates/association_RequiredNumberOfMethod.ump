@@ -1,0 +1,18 @@
+class UmpleToRuby {
+    association_RequiredNumberOfMethod <<!<</*association_RequiredNumberOfMethod*/>><<#
+    String customRequiredNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("requiredNumberOfMethod",av)));
+    String customRequiredNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("requiredNumberOfMethod",av)));
+#>>
+<<# if (customRequiredNumberOfPrefixCode == null && customRequiredNumberOfPostfixCode == null) { #>>
+  def self.<<=gen.translate("requiredNumberOfMethod",av)>>
+    <<=av.getMultiplicity().getLowerBound()>>
+  end
+<<# } else { #>>
+  def self.<<=gen.translate("requiredNumberOfMethod",av)>>
+    <<# if (customRequiredNumberOfPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPrefixCode, "    ")); } #>>
+    minimum = <<=av.getMultiplicity().getLowerBound()>>
+    <<# if (customRequiredNumberOfPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPostfixCode, "    ")); } #>>
+    minimum
+  end
+<<# } #>>!>>
+}

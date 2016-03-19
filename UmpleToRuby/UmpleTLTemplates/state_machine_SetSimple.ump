@@ -1,0 +1,9 @@
+class UmpleToRuby {
+    state_machine_SetSimple <<!<</*state_machine_SetSimple*/>>
+  def <<=gen.translate("setMethod",sm)>>(<<= gen.translate("type",sm) >> <<= gen.translate("parameterOne",sm) >>)
+  {
+    <<= gen.translate("stateMachineOne",sm) >> = <<= gen.translate("parameterOne",sm) >>
+    return true;
+  }
+!>>
+}

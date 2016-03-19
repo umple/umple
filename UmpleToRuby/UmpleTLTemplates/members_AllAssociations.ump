@@ -1,0 +1,41 @@
+class UmpleToRuby {
+    members_AllAssociations <<!<</*members_AllAssociations*/>><<#
+
+  boolean isFirstAssociation = true;
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    
+    String attribute = av.isOne() ? gen.translate("attributeOne",av) : gen.translate("attributeMany",av);
+ 
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      appendln(realSb, "  #------------------------");
+      appendln(realSb, "  # MEMBER VARIABLES");
+      append(realSb, "  #------------------------");
+      isFirst = false;
+    }
+    
+    if (isFirstAssociation)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      appendln(realSb,"  #{0} Associations - for documentation purposes", uClass.getName());
+      
+      if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("RubyMultiline Internal", av.getComments())); }
+      
+      append(realSb,"  #attr_reader :{0}",attribute);
+      isFirstAssociation = false;
+    }
+    else
+    {
+      append(realSb,", :{0}",attribute);
+    }
+  }
+#>>!>>
+}

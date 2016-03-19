@@ -1,0 +1,19 @@
+class UmpleToRuby {
+    association_SetOptionalOneToMany <<!<</*association_SetOptionalOneToMany*/>>
+  def <<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+    was_set = false
+    <<# if (customSetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    <<=gen.translate("parameterExisting",av)>> = @<<=gen.translate("associationOne",av)>>
+    @<<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterOne",av)>>
+    if !<<=gen.translate("parameterExisting",av)>>.nil? and !<<=gen.translate("parameterExisting",av)>>.eql?(<<=gen.translate("parameterOne",av)>>)
+      <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(self)
+    end
+    unless <<=gen.translate("parameterOne",av)>>.nil?
+      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(self)
+    end
+    was_set = true
+    <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    was_set
+  end
+!>>
+}

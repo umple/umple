@@ -1,0 +1,12 @@
+class UmpleToRuby {
+    delete_ManyFromMN <<!<</*delete_ManyFromMN*/>>
+    <<=gen.translate("parameterCopyOfMany",av)>> = @<<=gen.translate("associationMany",av)>>.dup
+    @<<=gen.translate("associationMany",av)>>.clear
+    <<=gen.translate("parameterCopyOfMany",av)>>.each do |<<=gen.translate("parameterOne",av)>>|
+      if <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>> <= <<=gen.translate("type",av)>>.<<=gen.relatedTranslate("minimumNumberOfMethod",av)>>
+        <<=gen.translate("parameterOne",av)>>.delete
+      else
+        <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(self)
+      end
+    end!>>
+}

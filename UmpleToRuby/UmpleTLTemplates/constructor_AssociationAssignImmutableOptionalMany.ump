@@ -1,0 +1,6 @@
+class UmpleToRuby {
+    constructor_AssociationAssignImmutableOptionalMany <<!<</*constructor_AssociationAssignImmutableOptionalMany*/>>
+    @<<=gen.translate("associationMany",av)>> = []
+    <<=gen.translate("didAddMany",av)>> = <<=gen.translate("setManyMethod",av)>>(<<=gen.translate("parameterAll",av)>>)
+    raise "Unable to create <<=gen.relatedTranslate("type",av)>>, must not have duplicate @<<=gen.translate("associationMany",av)>>" unless <<=gen.translate("didAddMany",av)>>!>>
+}

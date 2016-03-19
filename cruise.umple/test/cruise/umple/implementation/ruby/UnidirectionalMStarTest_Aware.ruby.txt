@@ -28,7 +28,7 @@ class Mentor
     @name = a_name
     @students = []
     did_add_students = set_students(all_students)
-    raise "Unable to create Mentor, must have at least 1 @students" unless did_add_students 
+    raise "Unable to create Mentor, must have at least 1 @students" unless did_add_students
     @initialized = true
   end
 

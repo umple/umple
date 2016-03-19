@@ -1,0 +1,15 @@
+class UmpleToRuby {
+    delete_OptionalOne <<!<</*delete_OptionalOne*/>>
+  def <<=gen.translate("deleteMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+  {
+    wasDeleted = false;
+    <<# if (customDeletePrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customDeletePrefixCode, "    ")); } #>>
+    if @<<=gen.translate("associationOne",av)>>.eql?(<<=gen.translate("parameterOne",av)>>)
+      @<<=gen.translate("associationOne",av)>> = nil
+      wasDeleted = true
+    end
+    <<# if (customDeletePostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customDeletePostfixCode, "    ")); } #>>
+    wasDeleted
+  end
+!>>
+}

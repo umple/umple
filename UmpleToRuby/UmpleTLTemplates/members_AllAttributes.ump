@@ -1,0 +1,67 @@
+class UmpleToRuby {
+    members_AllAttributes <<!<</*members_AllAttributes*/>><<#
+  
+  isFirst = true;
+  for(Attribute av : uClass.getAttributes())
+  {
+    if (av.isConstant() || av.getIsAutounique() || av.getIsDerived())
+    {
+      continue;
+    }
+    String attribute = av.getIsList() ? gen.translate("attributeMany",av) : gen.translate("attributeOne",av);
+ 
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      appendln(realSb, "  #------------------------");
+      appendln(realSb, "  # MEMBER VARIABLES");
+      append(realSb, "  #------------------------");
+      appendln(realSb, "");
+      appendln(realSb, "");
+      appendln(realSb,"  #{0} Attributes - for documentation purposes", uClass.getName());
+      
+      if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("RubyMultiline Internal", av.getComments())); }
+      
+      append(realSb,"  #attr_reader :{0}",attribute);
+      isFirst = false;
+    }
+    else
+    {
+      append(realSb,", :{0}",attribute);
+    }
+  }
+  
+  boolean isFirstAutounique = true;
+  for(Attribute av : uClass.getAttributes())
+  {
+    if (!av.getIsAutounique())
+    {
+      continue;
+    }
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      appendln(realSb, "  #------------------------");
+      appendln(realSb, "  # MEMBER VARIABLES");
+      append(realSb, "  #------------------------");
+      appendln(realSb, "");
+      appendln(realSb, "");
+      isFirst = false;
+    }
+    
+    if (isFirstAutounique)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      append(realSb,"  #Autounique Attributes - for documentation purposes");
+      isFirstAutounique = false;
+    }
+    appendln(realSb, "");
+    String attribute = av.getIsList() ? gen.translate("attributeMany",av) : gen.translate("attributeOne",av);
+    append(realSb, "  #attr_reader {0};", attribute);
+  }
+
+#>>!>>
+}

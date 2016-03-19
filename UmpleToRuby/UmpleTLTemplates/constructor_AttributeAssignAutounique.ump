@@ -1,0 +1,5 @@
+class UmpleToRuby {
+    constructor_AttributeAssignAutounique <<!<</*constructor_AttributeAssignAutounique*/>>
+    @<<=gen.translate("attributeOne",av)>> = @@<<=gen.translate("parameterNext",av)>>
+    @@<<=gen.translate("parameterNext",av)>> += 1!>>
+}

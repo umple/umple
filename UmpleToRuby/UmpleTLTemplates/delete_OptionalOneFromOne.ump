@@ -1,0 +1,8 @@
+class UmpleToRuby {
+    delete_OptionalOneFromOne <<!<</*delete_OptionalOneFromOne*/>>
+    <<=gen.translate("parameterExisting",av)>> = @<<=gen.translate("associationOne",av)>>
+    @<<=gen.translate("associationOne",av)>> = nil
+    unless <<=gen.translate("parameterExisting",av)>>.nil?
+      <<=gen.translate("parameterExisting",av)>>.delete
+    end!>>
+}

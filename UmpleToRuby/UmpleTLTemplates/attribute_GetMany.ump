@@ -1,0 +1,39 @@
+class UmpleToRuby {
+    attribute_GetMany <<!<</*attribute_GetMany*/>>
+  def <<=gen.translate("getMethod",av)>>(index)
+    <<# if (customGetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    <<=gen.translate("parameterOne",av)>> = <<=gen.translate("attributeMany",av)>>[index]
+    <<# if (customGetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } #>>
+    <<=gen.translate("parameterOne",av)>>
+  end
+
+  def <<=gen.translate("getManyMethod",av)>>
+    <<# if (customGetManyPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } #>>
+    <<=gen.translate("type",av)>>[] <<=gen.translate("parameterMany",av)>> = <<=gen.translate("attributeMany",av)>>.toArray(new <<=gen.translate("type",av)>>[<<=gen.translate("attributeMany",av)>>.size])
+    <<# if (customGetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetManyPostfixCode, "    ")); } #>>
+    <<=gen.translate("parameterMany",av)>>
+  end
+
+  def <<=gen.translate("numberOfMethod",av)>>
+    <<# if (customNumberOfPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customNumberOfPrefixCode, "    ")); } #>>
+    number = <<=gen.translate("attributeMany",av)>>.size
+    <<# if (customNumberOfPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customNumberOfPostfixCode, "    ")); } #>>
+    number;
+  end
+
+  def <<=gen.translate("hasManyMethod",av)>>
+    <<# if (customHasManyPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customHasManyPrefixCode, "    ")); } #>>
+    has = <<=gen.translate("attributeMany",av)>>.size > 0
+    <<# if (customHasManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customHasManyPostfixCode, "    ")); } #>>
+    has
+  end
+
+  def <<=gen.translate("indexOfMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+    <<# if (customIndexOfPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customIndexOfPrefixCode, "    ")); } #>>
+    index = <<=gen.translate("attributeMany",av)>>.index(<<=gen.translate("parameterOne",av)>>)
+    index = -1 if index.nil?
+    <<# if (customIndexOfPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customIndexOfPostfixCode, "    ")); } #>>
+    index
+  end
+!>>
+}

@@ -1,0 +1,7 @@
+class UmpleToRuby {
+    attribute_IsBooleanDerived <<!<</*attribute_IsBooleanDerived*/>>
+  def <<= gen.translate("isMethod",av) >>?
+    <<# if (customGetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    @<<=gen.translate("attributeOne",av)>>
+  end!>>
+}

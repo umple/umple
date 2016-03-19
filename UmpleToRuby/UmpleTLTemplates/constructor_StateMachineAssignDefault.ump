@@ -1,0 +1,4 @@
+class UmpleToRuby {
+    constructor_StateMachineAssignDefault <<!<</*constructor_StateMachineAssignDefault*/>>
+    <<=gen.translate("setMethod",sm)>>(<<=gen.translate("type",sm)>>.<<=gen.translate("stateOne",state)>>)!>>
+}

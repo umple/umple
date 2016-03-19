@@ -1,0 +1,7 @@
+class UmpleToRuby {
+    state_machine_Get <<!<</*state_machine_Get*/>>
+  public <<=gen.translate("type",sm)>> <<=gen.translate("getMethod",sm)>>
+    <<= gen.translate("stateOne",sm) >>
+  end
+!>>
+}

@@ -1,0 +1,25 @@
+class UmpleToRuby {
+    members_AllDoActivities <<!<</*members_AllDoActivities*/>><<#
+{
+  boolean isFirstDoActivity = true;
+  for(StateMachine sm : uClass.getAllStateMachines())
+  {
+    
+    for (State state : sm.getStates())
+    {
+      for (Activity activity : state.getActivities())
+      {
+        if (isFirstDoActivity)
+        {
+          appendln(realSb, "");
+          appendln(realSb, "");
+          append(realSb,"  #{0} Do Activity Threads", uClass.getName());
+          isFirstDoActivity = false;
+        }
+        append(realSb, "\n  #attr_reader {0};", gen.translate("doActivityThread",activity));
+      }
+    }
+  }
+}
+#>>!>>
+}
