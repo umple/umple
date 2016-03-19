@@ -1,4 +1,4 @@
-
+THIS IS DEPRECATED AND WILL BE DELETED SHORTLY
 
 This project is currently under development, the goal of this project to generate C++ code from Umple.
 
