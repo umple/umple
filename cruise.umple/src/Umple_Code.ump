@@ -3931,6 +3931,7 @@ class GeneralTPApplied {
 	boolean hasStateMachineTemplateSignature(StateMachineTemplateSignature inSMTSignature) {
     boolean find = false;
     for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
+    	if (smTSignature.getAlias()!="" && inSMTSignature.getAlias()!="")
     	if (smTSignature.getSrcStateMachine().equals(inSMTSignature.getSrcStateMachine()) && smTSignature.numberOfSrcStates()==inSMTSignature.numberOfSrcStates()){					
     		find = true;
 				for (int	i = 0; i<smTSignature.numberOfSrcStates() ;i++) {
@@ -3948,8 +3949,23 @@ class GeneralTPApplied {
     	}
     	if (find) return true;
 		}
-		return false;
+		return hasSMTAssigningToStateToTimes(inSMTSignature);
 	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+ public boolean hasSMTAssigningToStateToTimes(StateMachineTemplateSignature inSMTSignature){
+  	boolean matches = false;
+    for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
+    	if (smTSignature.getSrcStateMachine().equals(inSMTSignature.getSrcStateMachine()))
+    	{
+    		if (smTSignature.getDesStateMachine()!="" && inSMTSignature.getDesStateMachine()!=""){
+    				return true;
+    			}
+    	}
+		}
+  	return false;
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------
