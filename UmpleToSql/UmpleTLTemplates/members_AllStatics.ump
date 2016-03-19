@@ -1,0 +1,27 @@
+class UmpleToSql {
+    members_AllStatics <<!<</*members_AllStatics*/>><<#
+  /*
+  This file declares constant attributes for tables. 
+  The "constant" requirement is enforced with a check statement.
+  */
+  
+  isFirst = true;
+  for(Attribute av : uClass.getAttributes())
+  {
+  
+    if (!av.isConstant())
+    {
+      continue;
+    }
+
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb,"  /*{0} Constants*/", gen.translate("type", uClass));      
+      isFirst = false;
+    }
+  
+    appendln(realSb, "  {0} {1} DEFAULT {2} CHECK ({0} = {2}),", gen.translate("attributeConstant",av), gen.translate("type",av), gen.translate("parameterValueQuoted",av));
+  }
+#>>!>>
+}
