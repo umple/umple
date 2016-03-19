@@ -1,0 +1,51 @@
+class UmpleToSql {
+    members_AllConstantTriggers <<!<</*members_AllConstantTriggers*/>><<#
+{
+  /*
+  This file declares constant attributes for tables. 
+  The "constant" requirement is enforced with a check statement.
+  */
+  
+  isFirst = true;
+  String triggerContents = "";
+  for(Attribute av : uClass.getAttributes())
+  {
+  
+    if (!av.isConstant())
+    {
+      continue;
+    }
+
+    if (isFirst)
+    {  
+      isFirst = false;
+    }
+    else
+    {
+      triggerContents += "\n";
+    }
+
+    triggerContents += "  IF NEW." + gen.translate("attributeConstantQuoted",av) + " <> " +gen.translate("parameterValueQuoted",av) + " THEN" + "\n";
+    triggerContents += "    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ERROR: Attempt to modify constant attribute " + gen.translate("attributeConstantQuoted",av) + " in  " + gen.translate("typeQuoted",uClass) + "';" + "\n";
+    triggerContents += "  END IF;";
+  }
+  if (!isFirst)
+  {      
+    appendln(realSb, "");
+    appendln(realSb, "/*{0} Constant Enforcement*/", gen.translate("type", uClass));   
+    appendln(realSb, "DELIMITER //");   
+    appendln(realSb, "CREATE TRIGGER `const_insert` BEFORE insert ON {0}", gen.translate("typeWithPackage",uClass));
+    appendln(realSb, "FOR EACH ROW BEGIN");
+    appendln(realSb, triggerContents);
+    appendln(realSb, "END;");
+    appendln(realSb, "//");
+    appendln(realSb, "CREATE TRIGGER `const_update` BEFORE update ON {0}", gen.translate("typeWithPackage",uClass));
+    appendln(realSb, "FOR EACH ROW BEGIN");
+    appendln(realSb, triggerContents);
+    appendln(realSb, "END;");
+    appendln(realSb, "//");
+    appendln(realSb, "DELIMITER ;");
+  }
+}
+#>>!>>
+}

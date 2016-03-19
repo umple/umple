@@ -1,0 +1,47 @@
+class UmpleToSql {
+    members_AllAssociations <<!<</*members_AllAssociations*/>><<#
+/*
+This file creates the necessary attributes that the class will need for a successful foreign key to another class (association)
+It creates local copies of the foreign class' private key attributes. 
+Note: The foreign key constraint is not defined here, as the associated class may not be defined yet. See the members_AllForeignKeys.jet file for those.
+*/
+  appendln(realSb, "");
+  appendln(realSb, "  /*------------------------*/");
+  appendln(realSb, "  /* MEMBER VARIABLES       */");
+  appendln(realSb, "  /*------------------------*/");
+  
+  isFirst = true;
+  
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    
+    String attribute = av.isOne() ? gen.translate("attributeOne",av) : gen.translate("attributeMany",av);
+ 
+    if (av.isOptionalOne() || av.isOnlyOne() || av.isN())
+    { 
+      if (isFirst)
+      {
+        appendln(realSb, "");
+        appendln(realSb,"  /*{0} Associations*/", gen.translate("type", uClass));
+        isFirst = false;
+      }
+      UmpleClass associatedUClass = av.getRelatedAssociation().getUmpleClass();
+      List<Attribute> foreignPKList = gen.resolvePrimaryKey(associatedUClass);
+      for(int i = 1; i <= av.getMultiplicity().getUpperBound(); i += 1)
+      { 
+	    for(Attribute foreignPK : foreignPKList)
+	    {
+	      appendln(realSb, "  {0}_{1}{2} {3},", gen.translate("type", associatedUClass),
+	                                                     gen.translate("attributeOne", foreignPK), 
+	                                                     av.isN() ? "_" + i : "", 
+	                                                     gen.translate("type", foreignPK));
+	    }
+      }
+    }
+  }
+#>>!>>
+}

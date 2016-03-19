@@ -1,0 +1,16 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This is the Umple sql template master files that calls all major sql template files.
+By compiling this file, Umple will regenerate all Sql generator files
+
+*/
+
+generate Java "../src-gen-UmpleTL";
+
+use sqlClassGenerator.ump;
+use sqlInterfaceGenerator.ump;
