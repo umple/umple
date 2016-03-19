@@ -1,0 +1,58 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.23.0-3bd2bc7 modeling language!*/
+
+
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+  public String foo(int a){
+    System.out.println("Starting foo with argument: " + a);
+    if(a < 0) {
+      /*
+        {
+      */      
+      System.out.println("Returning from foo!");
+      return 0;
+    }
+    else if(a == 1) {
+      // foo()      
+      System.out.println("Returning from foo!");
+      return -1;
+    }
+    else {
+      // {      
+      System.out.println("Returning from foo!");
+      return 4;
+    }
+
+    for(int i = 0; i < a; i++) {
+      // TODO: call foo()
+      if(i == a/4) {        
+        System.out.println("Returning from foo!");
+        return a;
+      }
+    }    
+    System.out.println("Returning from foo!");
+    return 4;
+  }
+
+}

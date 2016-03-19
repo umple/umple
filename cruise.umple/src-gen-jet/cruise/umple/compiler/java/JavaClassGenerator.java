@@ -12814,10 +12814,12 @@ if (p != null) {
         String methodImplementationModifier = aMethod.getIsAbstract() ? " abstract" : "";
         String methodName = aMethod.getName();
         String methodType = aMethod.getType();
+        String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName()));
+        String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", aMethod.getName()));
         String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));        
         String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
         customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
-        
+
         String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
         String properMethodBody = "    " + methodBody; 
         String override =  aMethod.getIsImplemented() ? "  @Override\n" : "";
@@ -12947,18 +12949,131 @@ if (p != null) {
           appendln(stringBuffer, "{");
           for( TraceItem traceItem : traceItems )append(stringBuffer, (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, aMethod,"me_e", uClass):""));
           if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
+          if (customBeforeInjectionCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customBeforeInjectionCode, "    "));}
           
           addUncaughtExceptionVariables(methodName,p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline,stringBuffer.toString().split("\\n").length+1-javaline);
           String traceCode = "";
           if(properMethodBody.contains("return"))
           {
-          for( TraceItem traceItem : traceItems )traceCode += (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):"");
-            properMethodBody = properMethodBody.replaceAll("return", traceCode + "return");
+            for( TraceItem traceItem : traceItems )traceCode += (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):"");
+              properMethodBody = properMethodBody.replaceAll("return", traceCode + "return");
+
+            if(customAfterInjectionCode != null) {
+              // Do some pre-processing to handle returns not being on a new line. Doing this allows us to maintain suitable indentation.
+              String[] properMethodLines = properMethodBody.split("\\n");
+              String fixedProperMethodBody = "";
+              for(int i = 0; i < properMethodLines.length; i++) {
+                if(properMethodLines[i].contains("return") && !properMethodLines[i].trim().substring(0, 6).equals("return")) {
+                  String[] splitLines = properMethodLines[i].split("return", 2); 
+                  // Determine indentation of return by adding indentation amount to previous line
+                  String returnIndent = "";
+                  int j = 0;
+                  while(splitLines[0].charAt(j) == ' ') {
+                    returnIndent += " ";
+                    j++;
+                  }
+
+                  fixedProperMethodBody += returnIndent + splitLines[0].trim() + "\n";
+
+                  String[] returnLines = splitLines[1].split(";");
+                  if(returnLines.length > 1 && returnLines[1].trim().length() > 0) {
+                    fixedProperMethodBody += returnIndent + "  return " + returnLines[0].trim() + ";\n" + returnIndent + returnLines[1].trim() + "\n"; 
+                  } else {
+                    fixedProperMethodBody += returnIndent + "  return " + splitLines[1].trim() + "\n"; 
+                  }
+                } else {
+                  fixedProperMethodBody += properMethodLines[i] + "\n";
+                }
+              }
+
+              properMethodBody = fixedProperMethodBody;
+
+              String properMethodIndent = "";
+              int indentIndex = 0;
+              while(indentIndex < properMethodBody.length() && properMethodBody.charAt(indentIndex) == ' ') {
+                properMethodIndent += " ";
+                indentIndex++;
+              }
+
+              // inject the after injection code after every return, while appropriate indentation
+              for(int i = -1; (i = properMethodBody.indexOf("return", i + 1)) != -1; ) {
+                // determine the indentation of the return
+                String indent = "";
+                while(i >= 1 && properMethodBody.charAt(--i) == ' ') {
+                  indent += " ";
+                }
+
+                // Need to determine if block has braces surrounding it. To do this, take the previous
+                // lines of code and apply some regex to remove all of the comments.
+                String[] previousLinesOfCode = properMethodBody.substring(0, i+1).replaceAll("\\/\\*([\\S\\s]+?)\\*\\/", "").replaceAll("(?s)/\\*.*?\\*/", "").replaceAll("//.*$", "").split("\\n");
+                int commentLineCount = properMethodBody.substring(0, i+1).split("\\n").length - previousLinesOfCode.length;
+
+                // set previousLine to be the first non-empty line
+                int previousLine = -1; 
+                for(int j = previousLinesOfCode.length - 1; j >= 0; j--) {
+                  if(previousLinesOfCode[j].trim().length() > 0) {
+                    previousLine = j;
+                    break;
+                  }
+                }
+
+                String previousLineStr = previousLinesOfCode[previousLine].trim();
+
+                // Need to subtract the number of lines of comments between the return and the previous line of code
+                while(!properMethodBody.split("\\n")[previousLine + commentLineCount].trim().equals(previousLineStr)) {
+                  commentLineCount--;
+                }
+              
+                // If we need to, insert braces, otherwise continue as normal
+                String indentedCustomAfterInjectionCode = GeneratorHelper.doIndent("\n" + customAfterInjectionCode, indent);
+                String braceIndent = "";
+                String brace = "";
+                String braceNewLine = "";
+                if(previousLine != -1 && (previousLineStr.charAt(previousLineStr.length()-1) == ')' || (previousLineStr.length() >= 4 && previousLineStr.substring(previousLineStr.length()-4).equals("else")))) {
+                  String[] methodLines = properMethodBody.split("\\n");
+                  previousLine += commentLineCount;
+
+                  // determine how indented the brace is
+                  int j = 0;
+                  while(j < methodLines[previousLine].length() && methodLines[previousLine].charAt(j) == ' ') {
+                    braceIndent += " ";
+                    j++;
+                  }
+
+                  methodLines[previousLine] = braceIndent + methodLines[previousLine].trim() + " {"; 
+
+                  // Set properMethodBody to be String.join(methodLines, "\\n")
+                  String newProperMethodBody = "";
+                  for(int k = 0; k < methodLines.length; k++) {
+                    newProperMethodBody += methodLines[k];
+                    if(k != methodLines.length - 1) {
+                      newProperMethodBody += "\n";
+                    }
+                  }
+                  properMethodBody = newProperMethodBody;
+
+                  brace = "}";
+                  braceNewLine = "\n";
+                }
+
+                i += indent.length() + 1;
+                String[] returnAndRest = properMethodBody.substring(i).split(";", 2);
+                properMethodBody = properMethodIndent + properMethodBody.substring(0, i).trim() + indentedCustomAfterInjectionCode + "\n" + indent + returnAndRest[0].trim() + ";" + braceNewLine + braceIndent + brace + returnAndRest[1]; 
+                i += indentedCustomAfterInjectionCode.length() + braceIndent.length() + 7;
+              }
+
+              // if the last line isn't a return, insert the injection at the very end
+              String[] lines = properMethodBody.split("\\n");
+              if(!lines[lines.length-1].contains("return")) {
+                properMethodBody += GeneratorHelper.doIndent("\n" + customAfterInjectionCode, "    ");
+              }
+            }
           }
           appendln(stringBuffer, properMethodBody);
           if(!properMethodBody.contains("return"))
           {
             for( TraceItem traceItem : traceItems )append(stringBuffer, (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):""));
+            if (customAfterInjectionCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customAfterInjectionCode, "    "));}
           }
           appendln(stringBuffer, "  }");
         }

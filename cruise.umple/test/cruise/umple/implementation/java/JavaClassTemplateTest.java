@@ -74,6 +74,30 @@ public class JavaClassTemplateTest extends ClassTemplateTest
   }
 
   @Test
+  public void ClassCodeInjections_Basic()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsBasic.ump", languagePath + "/ClassTemplateTest_CodeInjectionsBasic." + languagePath + ".txt", "Student");
+  }
+
+  @Test
+  public void ClassCodeInjections_NoBraces()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsNoBraces.ump", languagePath + "/ClassTemplateTest_CodeInjectionsNoBraces." + languagePath + ".txt", "Student");
+  }
+
+  @Test
+  public void ClassCodeInjections_Comments()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsComments.ump", languagePath + "/ClassTemplateTest_CodeInjectionsComments." + languagePath + ".txt", "Student");
+  }
+
+  @Test
+  public void ClassCodeInjections_SingleLine()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsSingleLine.ump", languagePath + "/ClassTemplateTest_CodeInjectionsSingleLine." + languagePath + ".txt", "Student");
+  }
+
+  @Test
   public void InternalAndConstantAndDerivedAttributeComments()
   {
         assertUmpleTemplateFor("ClassTemplateTest_AttributeComments.ump",languagePath+"/ClassTemplateTest_AttributeComments." + languagePath + ".txt","Student");
