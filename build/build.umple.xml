@@ -109,6 +109,9 @@
 		<arg value="InsertDebugCodeScript.rb" />
 	</exec>
 	-->
+	  <echo>Copying of common templates no longer active</echo>
+	  <!-- DEPRECATED Templates in Jet not being used any more. We may reinstate
+	       UmplTL common templates later 
     <copy todir="UmpleToJava/templates" overwrite="true">
       <fileset dir="UmpleToTemplate/templates" excludes=".git*" />
     </copy>
@@ -118,9 +121,10 @@
     <copy todir="UmpleToRuby/templates" overwrite="true">
       <fileset dir="UmpleToTemplate/templates" excludes=".git*" />
     </copy>
-    <copy todir="UmpleToCpp/templates" overwrite="true">
+      -->
+    <!-- OLD CPP Deprecated <copy todir="UmpleToCpp/templates" overwrite="true">
       <fileset dir="UmpleToTemplate/templates" excludes=".git*" />
-    </copy>
+    </copy> -->
   </target>
 
   <!-- Unzip JDT libraries into the jar construction folder -->
@@ -163,6 +167,7 @@
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/ruby" overwrite="true">
       <fileset dir="UmpleToRuby/src-gen-UmpleTL/cruise/umple/compiler/ruby" excludes=".git* UmpleToRuby.java" />
     </copy>
+    <!-- OLD CPP DEPRECATED -->
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/cpp" overwrite="true">
       <fileset dir="UmpleToCpp/src/cruise/umple/compiler/cpp" excludes=".git*" />
     </copy>
