@@ -1466,7 +1466,6 @@ class UmpleClass
   // Gets applicable code injectiosn for custom defined methods
   public List<CodeInjection> getApplicableCodeInjectionsCustomMethod(String type, String method)
   {
-    System.out.println("CUSTOM: " + method + " " + type);
     ArrayList<CodeInjection> all = new ArrayList<CodeInjection>();
     if (type == null || method == null)
     {
@@ -1476,7 +1475,6 @@ class UmpleClass
     String formattedMethod = StringFormatter.toUnderscore(method);
     for (CodeInjection code : getCodeInjections())
     {
-      System.out.println("CODE INJECTION: " + code.getOperation() + " " + code.getOperationSource());
       if (code.getOperation() == null || !type.equals(code.getType()) || (!"all".equals(code.getOperationSource()) && !"custom".equals(code.getOperationSource())))
       {
         continue;
@@ -1536,7 +1534,6 @@ class UmpleClass
 
       if ((isAllExcludes && isMatchOnExclude.isTrue()) || isMatch.isTrue())
       {
-        System.out.println("CODE INJECTION ACCEPTED");
         all.add(code);
       }
     }

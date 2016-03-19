@@ -243,7 +243,7 @@
                 String braceIndent = "";
                 String brace = "";
                 String braceNewLine = "";
-                if(previousLine != -1 && (previousLineStr.charAt(previousLineStr.length()-1) == ')' || previousLineStr.substring(previousLineStr.length()-4).equals("else"))) {
+                if(previousLine != -1 && (previousLineStr.charAt(previousLineStr.length()-1) == ')' || (previousLineStr.length() >= 4 && previousLineStr.substring(previousLineStr.length()-4).equals("else")))) {
                   String[] methodLines = properMethodBody.split("\\n");
                   previousLine += commentLineCount;
 
