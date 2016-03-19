@@ -122,7 +122,6 @@ class UmpleInternalParser
  							foundState = findMatchingStateForMapping(inClassfier,inClass.getStateMachines(),smTSignature);
  							if (foundState!=null) {
  								addStateMachineToState(traitStateMachine, smTSignature, foundState);
- 								return;
  							} else {
  								AssignStateMachineToStateSearchProcess(inClassfier, traitStateMachine, uTrait, smTSignature);	
  							}
