@@ -440,7 +440,7 @@ class CodeInjection
 
   type;
   operation;
-  lazy operationSource;
+  lazy operationSource = "generated";
   CodeBlock snippet;
   lazy constraintParameterName;
   * -> 1 UmpleClassifier;
