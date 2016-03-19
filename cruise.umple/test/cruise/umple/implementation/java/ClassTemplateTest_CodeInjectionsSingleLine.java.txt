@@ -14,7 +14,7 @@ public class Student
   // CONSTRUCTOR
   //------------------------
 
-  public A()
+  public Student()
   {}
 
   //------------------------
