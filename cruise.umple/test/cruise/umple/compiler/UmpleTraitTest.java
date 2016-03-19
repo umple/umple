@@ -8,9 +8,12 @@ import cruise.umple.util.SampleFileWriter;
 public class UmpleTraitTest {
 	String pathToInput;
 	UmpleModel uMode;
+	String defaultPath;
 	
 	@Before
 	public void setup() {	
+		defaultPath= SampleFileWriter.rationalize("test/cruise/umple/compiler");
+		 
 		String  code = "class A { isA T;}"
 				+ "trait T {"
 				+ "depend cruise.umple.util.*;"
@@ -20,6 +23,7 @@ public class UmpleTraitTest {
 				+ "[tAge>=18]"
 				+ "}"; 	
 		uMode = getRunModel(code);
+		
 	}	
 	@After
 	public void tearDown()
@@ -309,9 +313,10 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void stateMachineTraits014Test() {
-		String code = "class A {isA T1 <-status>;} trait T1 { status { on { activate -> on;}} }";
+		String code = "class A {isA T1 <-status>;} trait T1 { status { on { activate -> on;}} status2{so{}} }";
 		UmpleModel model = getRunModel(code);
-		Assert.assertEquals(0, model.getUmpleClass("A").numberOfStateMachines());
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfStateMachines());
+		Assert.assertEquals("status2", model.getUmpleClass("A").getStateMachine(0).getName());
 
 	}	
 	
@@ -563,6 +568,66 @@ public class UmpleTraitTest {
 				SampleFileWriter.destroy("traitTest.ump");
 			}	
 			
+		}
+	
+		@Test
+		public void stateMachineTraits036Test() {
+			String code = "class A{	isA T <sm as system.executing>;	system {		initial{			excute -> executing;	}		executing{					}	}}"
+					+"trait T{	sm{			s0{goS1-> s1;}			s1{}		}}";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("system").getState(1).numberOfNestedStateMachines());
+			Assert.assertEquals("executing",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getName());
+			Assert.assertEquals(2,model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(0).getStateMachine().numberOfStates());
+	
+		}
+		
+		@Test
+		public void stateMachineTraits037Test() {
+			String code = "class A{	isA T2;}"
+					+"trait T2{	isA T <sm as system.executing>;	system {		initial{			excute -> executing;		}		executing{					}	}}"
+					+"trait T{	sm{			s0{goS1-> s1;}			s1{}		}}";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("system").getState(1).numberOfNestedStateMachines());
+			Assert.assertEquals("executing",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getName());
+			Assert.assertEquals(2,model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(0).getStateMachine().numberOfStates());
+	
+		}
+		
+		@Test
+		public void stateMachineTraits038Test() {
+			String code = "class A{	isA T2;}"
+					+"trait T2{	isA T <sm2 as system.executing>;	system {		initial{			excute -> executing;		}		executing{				}	}}"
+					+"trait T{	isA T1;	sm2{			s20{goS21-> s21;}			s21{}		}}"
+					+"trait T1{	sm{			s0{goS1-> s1;}			s1{}		}}";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("system").getState(1).numberOfNestedStateMachines());
+			Assert.assertEquals("executing",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getName());
+			Assert.assertEquals(2,model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(0).getStateMachine().numberOfStates());
+			Assert.assertEquals("s20",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(0).getStateMachine().getState(0).getName());
+		}
+		
+		@Test
+		public void stateMachineTraits039Test() {
+			String code = "class A{	isA T3<sm2 as system.executing>;}"
+					+"trait T3{	isA T2;	system {		initial{			excute -> executing;		}		executing{					}	}}"
+					+"trait T2{	isA T1<sm as sm2.s21>;	sm2{			s20{goS21-> s21;}			s21{}	}}"
+					+"trait T1{	sm{			s0{goS1-> s1;}			s1{}		}}";
+
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("system").getState(1).numberOfNestedStateMachines());
+			Assert.assertEquals("executing",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getName());
+			Assert.assertEquals(2,model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(1).getStateMachine().numberOfStates());
+			Assert.assertEquals("s20",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(0).getStateMachine().getState(0).getName());
+			Assert.assertEquals("s0",model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getState(1).getNestedStateMachine(0).getState(0).getStateMachine().getState(0).getName());
+		}
+		
+		@Test
+		public void stateMachineTraits040Test() {
+			UmpleModel model = getRunModelByFilename("trait_test_data_0001.ump");
+			
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("base_Behavior").getState(0).numberOfNestedStateMachines());
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("base_Behavior").getState(1).numberOfNestedStateMachines());
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("base_Behavior").getState(2).numberOfNestedStateMachines());
 		}
 		
 //the last StateTest
@@ -1623,6 +1688,7 @@ public class UmpleTraitTest {
 		SampleFileWriter.createFile("traitTest.ump",inCode);	
 		UmpleFile uFile = new UmpleFile("traitTest.ump");	
 		uMode = new UmpleModel(uFile);
+		uMode.setShouldGenerate(false);
 		try {
 			uMode.run();
 		} catch (Exception e) {
@@ -1632,10 +1698,39 @@ public class UmpleTraitTest {
 		return uMode;
 	}
 	
+	private UmpleModel getRunModelByFilename(String filename) {
+		UmpleFile uFile = new UmpleFile(defaultPath,filename);	
+		uMode = new UmpleModel(uFile);
+		uMode.setShouldGenerate(false);
+		try {
+			uMode.run();
+		} catch (Exception e) {
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+		return uMode;
+	}
+
+	/*
+	 * This function is used to fetch a model from a string including umple code.
+	 * It's used when the example is small and there is no need to create an external file.
+	 */
 	private UmpleModel getModel(String inCode) {
 		SampleFileWriter.createFile("traitTest.ump",inCode);	
 		UmpleFile uFile = new UmpleFile("traitTest.ump");	
 		uMode = new UmpleModel(uFile);
 		return uMode;
 	}	
+	
+	/*
+	 * This function is used to fetch a model from a Umple file.
+	 * It's used when the example is big and there is a need to keep it organized for more exploration.
+	 */
+	
+	private UmpleModel getModelByFilename(String fileName){
+		UmpleFile uFile = new UmpleFile(defaultPath,fileName);	
+		uMode = new UmpleModel(uFile);
+		uMode.setShouldGenerate(false);
+		return uMode;
+	}
 }

@@ -27,8 +27,9 @@ traitAppliedParameters : [~pName] = [~rName]
 
 StateMachineIncludeExcludeAlias- : [[ StateMachineInExAlias]] ( , [[StateMachineInExAlias]]  )*
 StateMachineInExAlias- : [[StateMachineAliasName]] | [[iEStateMachine]] | [[StateMachineTransitionAlias]]
-StateMachineAliasName : ([=iEStateMachineModifier:+])? [~smName] ([[StateNames]])? as [~AliasName]
+StateMachineAliasName : ([=iEStateMachineModifier:+])? [~smName] ([[StateNames]])? as [~smDesName] ([[DesStateNames]])?
 StateNames : . [~sName] ( [[StateNamesPassing]] )*
+DesStateNames :[[StateNames]]
 StateNamesPassing : [[StateNames]]
 iEStateMachine : [=iEStateMachineModifier:+|-] [~smName]
 
