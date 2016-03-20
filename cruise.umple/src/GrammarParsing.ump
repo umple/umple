@@ -11,7 +11,7 @@ class RuleBasedParser
 {
   depend java.io.*;
   depend java.util.*;
-  depend cruise.umple.compiler.*;
+  depend cruise.umple.compiler.UmpleFile;
   depend cruise.umple.parser.rules.*;
 
   //the iteration of parsing done(there is a possibility to do two pass parsing, but for umple it is not implemented or neccessary yet)

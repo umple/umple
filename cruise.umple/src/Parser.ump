@@ -86,8 +86,6 @@ class ErrorTypeSingleton
   singleton;
   1 -> * ErrorType;
 
-  depend cruise.umple.compiler.exceptions.UmpleCompilerException;
-  depend cruise.umple.util.SampleFileWriter;
   depend java.io.*;
 }
 
@@ -186,7 +184,6 @@ class RulePart
 class Parser
 {
   depend java.io.*;
-  depend cruise.umple.util.*;
 
   // The Umple file (.ump) that will be parsed.
   String filename = null;
