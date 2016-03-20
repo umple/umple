@@ -41,8 +41,6 @@ class ParseResult
 
   // The error messages related to parsing.
   * -> * ErrorMessage;
-
-  depend  cruise.umple.util.StringFormatter;
 }
 
 /*
@@ -57,7 +55,7 @@ class ErrorMessage
 
   String[] parameters;
 
-  depend  cruise.umple.util.StringFormatter;
+  depend  java.io.File;
 }
 
 /*

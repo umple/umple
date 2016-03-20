@@ -382,7 +382,7 @@ class Position
 
   public String toString()
   {
-    return cruise.umple.util.StringFormatter.format("[{0},{1}]", getLineNumber(), getCharacterOffset());
+    return "[" + getLineNumber() + "," + getCharacterOffset() + "]";
   }
 }
 
@@ -979,9 +979,9 @@ class Parser
     Parser innerParser = new Parser("innerParser");
     while (ruleParser.lookFor("(",")",true) != null)
     {
-      String anonymousRuleName = cruise.umple.util.StringFormatter.format("anonymous::{0}::{1}",name,++index);
+      String anonymousRuleName = "anonymous::" + name + "::" + (++index);
       String anonymousRuleDefinition = ruleParser.name().substring(1,ruleParser.name().length() - 1).trim();
-      innerParser.addRule(cruise.umple.util.StringFormatter.format("{0}- : {1}",anonymousRuleName,anonymousRuleDefinition));
+      innerParser.addRule(anonymousRuleName + "- : " + anonymousRuleDefinition);
       ruleParser.replace("[[" + anonymousRuleName + "]]");
     }
     ruleParser.reset(startIndex);
@@ -1725,6 +1725,26 @@ class ParseResult
     return ret;
   }
 
+  private static String sanitizeForJson(String input){
+    String ret = "";
+    for (int i=0; i<input.length(); i++)
+    {
+      switch(input.charAt(i))
+      {
+        case '\\':            
+          ret += "\\\\";
+          break;
+          case  '"':
+            ret += "\\\"";
+            break;
+          default:
+            ret += input.charAt(i);
+            break;
+      }
+    }
+    return ret;   
+  }
+  
   public String toJSON ()
   {
     String ret = "{ \"results\" : [ ";
@@ -1734,11 +1754,11 @@ class ParseResult
       ErrorType et = em.getErrorType();
 
       String line     = String.valueOf(em.getPosition().getLineNumber());
-      String file     = StringFormatter.sanitizeForJson(em.getPosition().getFilename());
-      String message  = StringFormatter.sanitizeForJson(em.getFormattedMessage());
+      String file     = sanitizeForJson(em.getPosition().getFilename());
+      String message  = sanitizeForJson(em.getFormattedMessage());
       String severity = String.valueOf(et.getSeverity());
       String code     = String.valueOf(et.getErrorCode());
-      String url    = StringFormatter.sanitizeForJson(et.getErrorUrl());
+      String url      = sanitizeForJson(et.getErrorUrl());
 
       ret += "{ \"errorCode\" : \"" + code + "\",";
       ret += " \"severity\" : \"" +severity + "\", ";
@@ -1763,15 +1783,27 @@ class ErrorMessage
     this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
     this.parameters = Arrays.asList(parameters);
   }
+  
+
+  
   public String getFormattedMessage()
   {
     return errorType.format(this.parameters);
   }
+  
+  private static String stripLeadingPath(String filename)
+  {   
+    int index = 0;
+    while(filename.indexOf(File.separatorChar, index) != -1)
+      index = filename.indexOf(File.separatorChar, index) + 1;
+    return filename.substring(index);
+  }
+  
   public String toString()
   {
     String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
     String err = sev + " " + errorType.getErrorCode() + " on line " + this.position.getLineNumber();
-    err += " of file \"" + StringFormatter.stripLeadingPath(this.position.getFilename()) + "\":\n";
+    err += " of file \"" + stripLeadingPath(this.position.getFilename()) + "\":\n";
     return  err + errorType.format(this.parameters);
   }
 
@@ -1779,12 +1811,41 @@ class ErrorMessage
 
 class ErrorType
 {
-  depend cruise.umple.util.StringFormatter;
   depend java.util.List;
 
+  /*
+   * Formats error messages by replacing tokens {1}, {2}, ... with the 
+   * corresponding positional arguments supplied in variables
+   *
+   * @param format the string formatting statement
+   * @param variables the variables to insert into the format
+   *
+   * @return the formatted string
+   */
+  private static String formatErrorMessage(String format, Object... variables)
+  {
+    String result = format;
+    for (int i=0; i<variables.length; ++i)
+    {
+      String toReplace = "{" + i + "}";
+      String toReplaceWith = (variables[i] == null ? "" : variables[i].toString());
+      result = result.replace(toReplace, toReplaceWith);
+    }
+    
+    return result;
+  }
+  
+  /*
+   * Formats error messages by replacing tokens {1}, {2}, ... with the 
+   * corresponding positional arguments supplied in arguments
+   *
+   * @param arguments the arguments to insert into the tokens postion
+   *
+   * @return the formatted string
+   */
   public String format(List<String> arguments)
   {
-    return StringFormatter.format(errorFormat, arguments.toArray());
+    return formatErrorMessage(errorFormat, arguments.toArray());
   }
 }
 
