@@ -148,6 +148,9 @@
     <!-- Default to using the stable version of umple since it should always be available -->
     <parallel>
       <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+        <arg value="UmpleToJava/UmpleTLTemplates/Master.ump"/>
+      </java>
+      <java jar="${umple.stable.jar}" fork="true" failonerror="true">
         <arg value="UmpleToPhp/UmpleTLTemplates/Master.ump"/>
       </java>
       <java jar="${umple.stable.jar}" fork="true" failonerror="true">

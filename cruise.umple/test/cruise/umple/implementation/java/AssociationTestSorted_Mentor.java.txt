@@ -135,7 +135,7 @@ public class Mentor
     return wasRemoved;
   }
 
-  
+
   public void delete()
   {
     ArrayList<Student> copyOfStudents = new ArrayList<Student>(students);
