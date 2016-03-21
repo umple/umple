@@ -2609,6 +2609,14 @@ public class JavaSpecGenerator
   // i.e. format("Hello {0} {1}", "andrew","forward");
   private void append(StringBuffer buffer, String input, Object... variables)
   {
+    buffer.append(StringFormatter.format(input,variables));
+  }
+
+  // This method will have the JET stuff inserted into it.
+  // Will not be called anywhere, but will ensure the rest of the file works
+  // as expected
+  private void genHere()
+  {
     final StringBuffer stringBuffer = new StringBuffer();
     stringBuffer.append(TEXT_1);
     
@@ -4683,6 +4691,22 @@ public class JavaSpecGenerator
    /* Method Gen skipped due to special specialization syntax */
 
         // TODO!!
+      }
+      else if (includeFile == "association_SetOptionalNToMany.jet")
+      {
+        
+    
+   /* Method Gen skipped due to special specialization syntax */
+
+        // TODO?
+      }
+      else if (includeFile == "specializationSkip.jet")
+      {
+        
+    
+   /* Method Gen skipped due to special specialization syntax */
+
+        // TODO?
       }
       else if (includeFile != null)
       {
