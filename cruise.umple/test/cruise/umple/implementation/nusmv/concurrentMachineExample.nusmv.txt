@@ -48,8 +48,8 @@ MODULE StateAA ( _state )
      init( state ) := null;
      next( state ) := case
        _state.t1 : StateAA_s12;
+       _state.t2 | _state.t6 : null;
        _state.state = State_s1 & state = null : StateAA_s11;
-       _state.state != State_s1 : null;
        TRUE : state;
      esac;
 
@@ -67,8 +67,8 @@ MODULE StateBB ( _state )
        _state.t4 | _state.t7 : StateBB_s21;
        _state.t3 : StateBB_s22;
        _state.t8 | _state.t5 | _state.t9 : StateBB_s24;
+       _state.t2 | _state.t6 : null;
        _state.state = State_s1 & state = null : StateBB_s21;
-       _state.state != State_s1 : null;
        TRUE : state;
      esac;
 
@@ -85,8 +85,8 @@ MODULE StateBBS24 ( _state , _stateBB )
      next( state ) := case
        _state.t5 | _state.t8 : StateBBS24_s31;
        _state.t9 : StateBBS24_s32;
+       _state.t1 | _state.t3 | _state.t6 | _state.t2 | _state.t4 | _state.t7 : null;
        _stateBB.state = StateBB_s24 & state = null : StateBBS24_s31;
-       _stateBB.state != StateBB_s24 : null;
        TRUE : state;
      esac;
 

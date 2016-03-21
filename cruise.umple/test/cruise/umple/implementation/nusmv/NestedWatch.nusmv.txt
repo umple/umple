@@ -132,8 +132,8 @@ MODULE SmRegular ( _sm )
        _sm.t8 | _sm.t1 | _sm.t9 | _sm.t2 : SmRegular_time;
        _sm.t4 : SmRegular_date;
        _sm.t20 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t11 | _sm.t3 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 : SmRegular_update;
+       _sm.t6 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t5 | _sm.t7 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.state = Sm_regular & state = null : SmRegular_time;
-       _sm.state != Sm_regular : null;
        TRUE : state;
      esac;
 
@@ -154,8 +154,8 @@ MODULE SmRegularUpdate ( _sm , _smRegular )
        _sm.t14 | _sm.t17 : SmRegularUpdate_month;
        _sm.t16 | _sm.t19 : SmRegularUpdate_day;
        _sm.t18 | _sm.t21 : SmRegularUpdate_year;
+       _sm.t1 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t2 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _smRegular.state = SmRegular_update & state = null : SmRegularUpdate_second;
-       _smRegular.state != SmRegular_update : null;
        TRUE : state;
      esac;
 
@@ -173,8 +173,8 @@ MODULE SmChronometer ( _sm )
        _sm.t28 | _sm.t26 | _sm.t27 | _sm.t25 | _sm.t23 : SmChronometer_chronoNormal;
        _sm.t29 | _sm.t24 : SmChronometer_lapRunning;
        _sm.t22 : SmChronometer_lapPaused;
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.state = Sm_chronometer & state = null : SmChronometer_chronoNormal;
-       _sm.state != Sm_chronometer : null;
        TRUE : state;
      esac;
 
@@ -191,8 +191,8 @@ MODULE SmChronometerChronoNormal ( _sm , _smChronometer )
      next( state ) := case
        _sm.t28 | _sm.t27 | _sm.t25 : SmChronometerChronoNormal_paused;
        _sm.t26 | _sm.t23 : SmChronometerChronoNormal_running;
+       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t24 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _smChronometer.state = SmChronometer_chronoNormal & state = null : SmChronometerChronoNormal_paused;
-       _smChronometer.state != SmChronometer_chronoNormal : null;
        TRUE : state;
      esac;
 
@@ -211,8 +211,8 @@ MODULE SmAlarmStatus ( _sm )
        _sm.t30 : SmAlarmStatus_chimeOn;
        _sm.t31 : SmAlarmStatus_bothOn;
        _sm.t32 : SmAlarmStatus_alarmOn;
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.state = Sm_alarmStatus & state = null : SmAlarmStatus_bothOff;
-       _sm.state != Sm_alarmStatus : null;
        TRUE : state;
      esac;
 
@@ -229,8 +229,8 @@ MODULE SmAlarmUpdate ( _sm )
      next( state ) := case
        _sm.t7 : SmAlarmUpdate_alarmTime;
        _sm.t35 | _sm.t38 | _sm.t36 | _sm.t37 | _sm.t34 | _sm.t39 : SmAlarmUpdate_hourMinuteUpdate;
+       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 : null;
        _sm.state = Sm_alarmUpdate & state = null : SmAlarmUpdate_alarmTime;
-       _sm.state != Sm_alarmUpdate : null;
        TRUE : state;
      esac;
 
@@ -247,8 +247,8 @@ MODULE SmAlarmUpdateHourMinuteUpdate ( _sm , _smAlarmUpdate )
      next( state ) := case
        _sm.t37 | _sm.t35 | _sm.t38 : SmAlarmUpdateHourMinuteUpdate_alarmHour;
        _sm.t36 | _sm.t34 | _sm.t39 : SmAlarmUpdateHourMinuteUpdate_alarmMinute;
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 : null;
        _smAlarmUpdate.state = SmAlarmUpdate_hourMinuteUpdate & state = null : SmAlarmUpdateHourMinuteUpdate_alarmHour;
-       _smAlarmUpdate.state != SmAlarmUpdate_hourMinuteUpdate : null;
        TRUE : state;
      esac;
 

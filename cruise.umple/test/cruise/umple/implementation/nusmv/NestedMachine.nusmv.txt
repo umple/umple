@@ -51,8 +51,8 @@ MODULE SmS2 ( _sm )
        _sm.t6 : SmS2_s2a;
        _sm.t2 | _sm.t5 : SmS2_s2b;
        _sm.t8 : SmS2_s2c;
+       _sm.t1 | _sm.t4 | _sm.t3 | _sm.t7 : null;
        _sm.state = Sm_s2 & state = null : SmS2_s2a;
-       _sm.state != Sm_s2 : null;
        TRUE : state;
      esac;
 

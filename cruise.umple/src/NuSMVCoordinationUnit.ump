@@ -437,15 +437,16 @@ class NuSMVCoordinator
     		if( cstatement != null)
     			expr.addCaseStatement(cstatement);
     	}
-		//if( sm.getParentState() != null && getCaseStatementForNullState(sm.getParentState(), root) != null )
-			//expr.addCaseStatement( getCaseStatementForNullState(sm.getParentState(), root) );
+		//*****changes made here....
+		if( sm.getParentState() != null && getCaseStatementForNullState(sm, root) != null )
+			expr.addCaseStatement( getCaseStatementForNullState(sm, root) );
 		
 		//Initializing and disabling composite states
 		for(State st : sm.getStates() ) {
 			if( initializeCompositeStartState( st ) != null )
 				expr.addCaseStatement( initializeCompositeStartState( st ) );
-			if( diasableCompositeState( st ) != null )
-				expr.addCaseStatement( diasableCompositeState( st ) );
+			//if( diasableCompositeState( st ) != null )
+				//expr.addCaseStatement( diasableCompositeState( st ) );
 		}
 		CaseStatement otherwise = new CaseStatement(bexp2, bexp1);
     	expr.addCaseStatement( otherwise );
@@ -460,7 +461,7 @@ class NuSMVCoordinator
 		List<Transition> results = new ArrayList<Transition>();
 		if( !st.isIsConcurrent() )
 			for( StateMachine sm : st.getNestedStateMachines() ) 
-				for( Transition trans : getAllTransitions( sm ) )
+				for( Transition trans : getAllEnablingTransitions( sm ) )
 					results.add( trans );
 		return results;
 	}
@@ -468,7 +469,7 @@ class NuSMVCoordinator
 	//Harvesting transitions for a state machine
 	//Also generates a list of next transitions for a state and its substates (where possible).
   	//That is transition that enables or activates a state
-	private List<Transition> getAllTransitions( Object obj ) {
+	private List<Transition> getAllEnablingTransitions( Object obj ) {
 		List<Transition> results = new ArrayList<Transition>();
 		if( obj instanceof StateMachine ){
 			
@@ -477,7 +478,7 @@ class NuSMVCoordinator
 					results.add( trans );
 				if( st.hasNestedStateMachines() )
 					for( StateMachine smm : st.getNestedStateMachines() )
-						for( Transition transition : getAllTransitions( smm ) )
+						for( Transition transition : getAllEnablingTransitions( smm ) )
 							results.add( transition );
 			}
 		}
@@ -488,13 +489,108 @@ class NuSMVCoordinator
 			else {
 				for( Transition tr : ((State) obj).getNextTransition() )
 					results.add(tr);
-		
 				for( StateMachine smm : ((State) obj).getNestedStateMachines() )
-					for( Transition transition : getAllTransitions( smm ) )
+					for( Transition transition : getAllEnablingTransitions( smm ) )
 						results.add( transition );
 			}
 		}
 		return results;
+	}
+	
+	private List<StateMachine> getNestedStateMachines(State state){
+		if(!state.hasNestedStateMachines())
+			return null;
+		List<StateMachine> stateMachines = new ArrayList<StateMachine>();
+		if(!state.isIsConcurrent())
+			for(StateMachine sm : state.getNestedStateMachines())
+				stateMachines.add(sm);
+		else {
+			//skips the wrapper of the region
+			for(StateMachine nsm : state.getNestedStateMachines())
+				for( StateMachine region : nsm.getImmediateNestedStateMachines() ){
+					stateMachines.add(region);
+				}
+		}
+		return stateMachines;	
+	}
+	
+	//This method the set of and-cross transitions for a state machine
+	private List<Transition> andCross(StateMachine sm){
+		
+		List<State> embeddedStates = getEmbeddedStates(sm);
+		List<State> friendStates = new ArrayList<State>();
+		State parent = getParentState(sm);
+		for(StateMachine smm : parent.getNestedStateMachines()) {
+		
+			//skipping the wrapper of regions
+			for(StateMachine region : smm.getImmediateNestedStateMachines())
+				if( !region.equals(sm) )
+					for(State st : getEmbeddedStates(smm))
+						if(!has(friendStates,st))
+							friendStates.add(st);
+		}
+		
+		List<Transition> andCrossTransitions = new ArrayList<Transition>();
+		for( Transition tr : sm.getAllTransitions() ) {
+		
+			//defines a constraint for and-cross transitions
+			if(!has(embeddedStates, tr.getNextState()) && has(friendStates, tr.getNextState()))
+				andCrossTransitions.add(tr);
+		}
+		
+		return andCrossTransitions;
+	}
+	
+	//Computes the exit transitions for a concurrent region
+	private List<Transition> getExitTransitionsForConcurrentRegion(StateMachine region, StateMachine root){
+		List<Transition> trans = getAllEnablingTransitions(getParentState(region));
+		List<Transition> temp = new ArrayList<Transition>();
+		for( Transition tr : root.getAllTransitions() )
+			if( !has( trans, tr ) )
+				temp.add(tr);
+	
+		//adding and-cross transitions for a given region
+		for(Transition tr : andCross(region))
+			if( !has( temp, tr ) )
+				temp.add(tr);
+		return temp;
+	}
+	
+	//Computes exit transitions for non-orthogonal composite state
+	private List<Transition> getExitTransitions(State st, StateMachine root){
+		List<Transition> transitions = new ArrayList<Transition>();
+		for( Transition transition : root.getAllTransitions() ){
+			if(st.hasNestedStateMachines() && !st.isIsConcurrent() )				
+				for( StateMachine sm : st.getNestedStateMachines() ){
+					List<State> embeddedStates = getEmbeddedStates(sm);
+					if(!has(embeddedStates, transition.getNextState()) && !has(transitions,transition))
+						transitions.add(transition);
+						
+					//This section handles nested regions
+					for( StateMachine region : sm.getImmediateNestedStateMachines() )
+						if( region.getParentState() != null )
+							for( Transition tr : getExitTransitions(region.getParentState(), root))
+								if(!has(embeddedStates, transition.getNextState()) && !has(transitions,transition))
+									transitions.add(transition);
+				}
+		}
+		return transitions;
+	}
+	
+	private List<State> getEmbeddedStates(StateMachine sm ){
+		List<State> embeddedStates = new ArrayList<State>();
+		for(State state : sm.getStates() ){
+			if(!state.hasNestedStateMachines())
+				embeddedStates.add(state);
+			else {
+				for( StateMachine stm : generateStateMachineList(sm) ){
+					for(State st : getEmbeddedStates(stm))
+						embeddedStates.add(st);
+					//checks if statemachine stm has wrapper --- to-do here!						
+				}
+			}
+		}
+		return embeddedStates;
 	}
 	
 	public void printList( List<Transition> input, StateMachine root ) {
@@ -504,23 +600,27 @@ class NuSMVCoordinator
 		System.out.println( results );
 	}
 	
-	private CaseStatement getCaseStatementForNullState( State st, StateMachine root ) {
-	
-		List<Transition> trans = getAllTransitions(st);
-		if( st.hasNestedStateMachines() )
-			for( Transition transition : st.getNextTransition() )
-				trans.remove( transition );
+	//****on-going work here -- disables non-orthogonal region
+	private CaseStatement getCaseStatementForNullState( StateMachine sm, StateMachine root ) {
 			
 		int counter = 0;
 		BasicExpression rt = new BasicExpression("root");
-		for( Transition tr : root.getAllTransitions() ) {
-			BasicExpression bexp;
-			if( !has( trans, tr ) ) {
+		List<Transition> trans;
+		if(!(getParentState(sm).isIsConcurrent())){
+			if(sm.equals(root))
+				return null;
+			trans = getExitTransitions( getParentState(sm), root );
+		}
+		else
+			trans = getExitTransitionsForConcurrentRegion(sm, root);
+
+		for( Transition tr : trans ) {
+				BasicExpression bexp;
 				bexp = new BasicExpression("_"+changeNameCase(root.getFullName(),0)+".t"+getObjectIdentity( root, tr) );	
 				rt = getExpressionTreeFor( rt, bexp );
 				counter++;
-			}
 		}
+		
 		if(counter > 0) {
   			BasicExpression state = new BasicExpression( "null" ); 
   			return new CaseStatement( rt, state );
@@ -531,7 +631,7 @@ class NuSMVCoordinator
   	private CaseStatement getCaseStatement( StateMachine sm, State st, StateMachine parent ) {
   		int counter = 0;
   		BasicExpression root = new BasicExpression("root");
-  		for( Transition tr : getAllTransitions(st) ) {
+  		for( Transition tr : getAllEnablingTransitions(st) ) {
 			
 			//System.out.println( tr.getEvent().getName()+"["+tr.getFromState().getName() +" -- "+tr.getNextState().getName()+"]");
 			BasicExpression bexp;

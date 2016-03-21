@@ -46,8 +46,8 @@ MODULE StateState11State11 ( _state )
      next( state ) := case
        _state.t3 : StateState11State11_state111;
        _state.t2 : StateState11State11_state112;
+       _state.t1 | _state.t4 : null;
        _state.state = State_state1 & state = null : StateState11State11_state111;
-       _state.state != State_state1 : null;
        TRUE : state;
      esac;
 
@@ -64,8 +64,8 @@ MODULE StateState12State12 ( _state )
      next( state ) := case
        _state.t6 : StateState12State12_state121;
        _state.t5 : StateState12State12_state122;
+       _state.t1 | _state.t4 : null;
        _state.state = State_state1 & state = null : StateState12State12_state121;
-       _state.state != State_state1 : null;
        TRUE : state;
      esac;
 

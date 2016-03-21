@@ -103,8 +103,8 @@ MODULE StateDrive ( _state )
        _state.t7 | _state.t12 | _state.t14 | _state.t16 | _state.t18 | _state.t20 | _state.t3 | _state.t11 | _state.t13 | _state.t15 | _state.t17 | _state.t19 | _state.t21 : StateDrive_first;
        _state.t8 | _state.t22 | _state.t4 | _state.t9 | _state.t23 : StateDrive_second;
        _state.t10 : StateDrive_third;
+       _state.t1 | _state.t5 | _state.t2 | _state.t6 : null;
        _state.state = State_drive & state = null : StateDrive_first;
-       _state.state != State_drive : null;
        TRUE : state;
      esac;
 
