@@ -1,0 +1,42 @@
+class UmpleToJava {
+    import_packages_interface <<!<</*import_packages_interface*/>><<#
+  for (Depend depend : uInterface.getDepends())
+  {
+    appendln(realSb, "");
+    append(realSb, "import {0};",depend.getName());
+  }
+
+  Boolean hasDate = false;
+  Boolean hasTime = false;
+  for(Constant aConstant : uInterface.getConstants())
+  {
+    if(aConstant.getType().equals("Time"))
+    {
+      hasTime = true;
+    }
+    else if(aConstant.getType().equals("Date"))
+    {
+      hasDate = true;
+    }
+  }
+
+  if(hasDate == true)
+  {
+    appendln(realSb, "");
+    append(realSb, "import java.sql.Date;");
+  }
+
+  if(hasTime == true)
+  {
+    appendln(realSb, "");
+    append(realSb, "import java.sql.Time;");
+  }
+  
+  // TODO: No test failed from removing this
+  // for (String anImport : gInterface.getMultiLookup("import"))
+  // {
+  //  appendln(realSb, "");
+  //  append(realSb, "import {0};",anImport);
+  // }
+#>>!>>
+}

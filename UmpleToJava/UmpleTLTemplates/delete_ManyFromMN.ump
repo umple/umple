@@ -1,0 +1,16 @@
+class UmpleToJava {
+    delete_ManyFromMN <<!<</*delete_ManyFromMN*/>>
+    ArrayList<<<=gen.translate("type",av)>>> <<=gen.translate("parameterCopyOfMany",av)>> = new ArrayList<<<=gen.translate("type",av)>>>(<<=gen.translate("associationMany",av)>>);
+    <<=gen.translate("associationMany",av)>>.clear();
+    for(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>> : <<=gen.translate("parameterCopyOfMany",av)>>)
+    {
+      if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>>() <= <<=gen.translate("type",av)>>.<<=gen.relatedTranslate("minimumNumberOfMethod",av)>>())
+      {
+        <<=gen.translate("parameterOne",av)>>.delete();
+      }
+      else
+      {
+        <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+      }
+    }!>>
+}

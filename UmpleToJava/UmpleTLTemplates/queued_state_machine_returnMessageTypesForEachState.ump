@@ -1,0 +1,31 @@
+class UmpleToJava {
+    queued_state_machine_returnMessageTypesForEachState <<!<</*queued_state_machine_returnMessageTypesForEachState*/>><<#
+  append(realSb,"\n  // A method to return a list of message types for each state of the {0}", uClass.getName()); 
+  append(realSb,"state machine");
+  append(realSb,"\n  public List<MessageType> getStateMsgTypeList({0}", gen.translate("type",smq));
+  append(realSb," state){");
+  append(realSb,"\n    List<MessageType> msg = null;");
+  append(realSb,"\n    switch (state)");
+  append(realSb,"\n    {");
+
+  int countNumberOfStates=0;
+  
+  for(State state : smq.getStates()){
+    String stateNumber="";
+    countNumberOfStates++;
+    append(realSb,"\n      case {0}",gen.translate("stateOne",state));
+    append(realSb,":");
+    append(realSb,"\n        msg=state");
+    stateNumber+=countNumberOfStates;
+    append(realSb,stateNumber);
+    append(realSb,"MsgTypeList;");
+    append(realSb,"\n        break;");
+  }
+
+  append(realSb,"\n      default:");
+  append(realSb,"\n    }");
+  append(realSb,"\n    return msg;");
+  append(realSb,"\n  }");
+  append(realSb,"\n");
+#>>!>>
+}

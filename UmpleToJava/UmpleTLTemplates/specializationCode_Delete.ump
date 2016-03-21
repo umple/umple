@@ -1,0 +1,12 @@
+class UmpleToJava {
+    specializationCode_Delete <<!<</*specializationCode_Delete*/>><<#
+    AssociationVariable relatedAssociation = av.getRelatedAssociation();
+    //Association relatedAssoc = uClass.getAssociation(uClass.indexOfAssociationVariable(av));
+
+    boolean reqSuperCode = av.getNeedsSuperCode();
+    boolean reqCommonCode = av.getNeedsCommonCode();
+    boolean mulChangedToOne = av.getMulChangedToOne();
+    boolean relMulChangedToOne = relatedAssociation.getMulChangedToOne();
+    
+#>>!>>
+}

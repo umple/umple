@@ -1,0 +1,7 @@
+class UmpleToJava {
+    constructor_AssociationAssignUndirectionalOne <<!<</*constructor_AssociationAssignUndirectionalOne*/>>
+    if (!<<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>))
+    {
+      throw new RuntimeException("Unable to create <<=gen.relatedTranslate("type",av)>> due to <<=gen.translate("parameterOne",av)>>");
+    }!>>
+}

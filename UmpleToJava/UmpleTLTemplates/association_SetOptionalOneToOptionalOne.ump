@@ -1,0 +1,43 @@
+class UmpleToJava {
+    association_SetOptionalOneToOptionalOne <<!<</*association_SetOptionalOneToOptionalOne*/>>
+  public boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterNew",av)>>)
+  {
+    boolean wasSet = false;
+    <<# if (customSetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    if (<<=gen.translate("parameterNew",av)>> == null)
+    {
+      <<=gen.translate("type",av)>> <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("associationOne",av)>>;
+      <<=gen.translate("associationOne",av)>> = null;
+      
+      if (<<=gen.translate("parameterExisting",av)>> != null && <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("getMethod",av)>>() != null)
+      {
+        <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(null);
+      }
+      wasSet = true;
+      <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } #>>
+      return wasSet;
+    }
+
+    <<=gen.translate("type",av)>> <<=gen.translate("parameterCurrent",av)>> = <<=gen.translate("getMethod",av)>>();
+    if (<<=gen.translate("parameterCurrent",av)>> != null && !<<=gen.translate("parameterCurrent",av)>>.equals(<<=gen.translate("parameterNew",av)>>))
+    {
+      <<=gen.translate("parameterCurrent",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(null);
+    }
+
+    <<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterNew",av)>>;
+    <<=gen.relatedTranslate("type",av)>> <<=gen.relatedTranslate("parameterExisting",av)>> = <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("getMethod",av)>>();
+
+    if (!equals(<<=gen.relatedTranslate("parameterExisting",av)>>))
+    {
+      <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(this);
+    }
+    wasSet = true;<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<=
+    (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,"1"):"")>>
+    <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return wasSet;
+  }
+!>>
+}

@@ -1,0 +1,21 @@
+class UmpleToJava {
+    state_machine_IsFinal <<!<</*state_machine_IsFinal*/>><<#
+
+  StringBuilder output = new StringBuilder();
+  for(State state : sm.getFinalStates())
+  {
+    StateMachine finalSm = state.getStateMachine();
+    if (output.length() > 0)
+    {
+      output.append(" && ");
+    }
+    output.append(StringFormatter.format("{0} == {1}.{2}",gen.translate("stateMachineOne",finalSm),gen.translate("type",finalSm),gen.translate("stateOne",state)));
+  }
+  String outputAsString = output.toString();
+#>>
+  private boolean <<=gen.translate("isFinalMethod",sm)>>()
+  {
+    return <<= outputAsString >>;
+  }
+!>>
+}

@@ -1,0 +1,381 @@
+use delete_MandatoryFromOptionalOne.ump;
+use delete_MandatoryFromOptionalOne_specialization.ump;
+use delete_ManyFromMN.ump;
+use delete_ManyFromMN_specialization.ump;
+use delete_ManyFromMN_specialization_relCommon.ump;
+use delete_ManyFromMany.ump;
+use delete_ManyFromMany_specialization.ump;
+use delete_ManyFromOne.ump;
+use delete_ManyFromOne_specialization.ump;
+use delete_ManyFromOptionalOne.ump;
+use delete_ManyFromOptionalOne_specialization.ump;
+use delete_ManyFromX_comp.ump;
+use delete_ManyFromX_comp_specialization.ump;
+use delete_OneFromMany.ump;
+use delete_OneFromMany_specialization.ump;
+use delete_OneFromOne.ump;
+use delete_OneFromOne_specialization.ump;
+use delete_OneFromOptionalOne.ump;
+use delete_OneFromOptionalOne_specialization.ump;
+use delete_OptionalOneFromMN.ump;
+use delete_OptionalOneFromMN_comp.ump;
+use delete_OptionalOneFromMN_comp_specialization.ump;
+use delete_OptionalOneFromMN_specialization.ump;
+use delete_OptionalOneFromMany.ump;
+use delete_OptionalOneFromMany_comp.ump;
+use delete_OptionalOneFromMany_comp_specialization.ump;
+use delete_OptionalOneFromMany_specialization.ump;
+use delete_OptionalOneFromN.ump;
+use delete_OptionalOneFromN_comp.ump;
+use delete_OptionalOneFromN_comp_specialization.ump;
+use delete_OptionalOneFromN_specialization.ump;
+use delete_OptionalOneFromOne.ump;
+use delete_OptionalOneFromOne_comp.ump;
+use delete_OptionalOneFromOne_comp_specialization.ump;
+use delete_OptionalOneFromOne_specialization.ump;
+use delete_OptionalOneFromOptionalOne.ump;
+use delete_OptionalOneFromOptionalOne_specialization.ump;
+use delete_UndirectionalMany.ump;
+use delete_UndirectionalMany_specialization.ump;
+use delete_UndirectionalOne.ump;
+use delete_UndirectionalOne_specialization.ump;
+use specializationCode_Delete.ump;
+use specializationSkip.ump;
+
+
+class UmpleToJava {
+    delete_All <<!<</*delete_All*/>><<#
+  String customDeletePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","delete"));
+  String customDeletePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","delete"));
+
+  appendln(realSb,"\n  public void delete()");
+  append(realSb,"  {");
+
+  boolean hasSomethingToDelete = false;  
+
+  if (customDeletePrefixCode != null) 
+  {
+    addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customDeletePrefixCode,"delete");
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customDeletePrefixCode, "    "));
+    hasSomethingToDelete = true;
+  }
+
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+    #>><<@ UmpleToJava.specializationCode_Delete >><<#
+    
+    if (!av.getIsNavigable() || av.isImmutable())
+    {
+      continue;
+    }
+    
+    if ( reqCommonCode )      /* Same Class Specialization Case */
+    {
+      #>><<@ UmpleToJava.specializationSkip >><<#
+    }
+    else if (reqSuperCode)    /* Subclass Case */
+    {
+      if (!relatedAssociation.getIsNavigable())
+      {
+        if (av.isOne())
+        {
+          hasSomethingToDelete = true;
+          #>><<@ UmpleToJava.delete_UndirectionalOne_specialization >><<#
+        }
+        else if (av.isMany())
+        {
+          hasSomethingToDelete = true;
+          #>><<@ UmpleToJava.delete_UndirectionalMany_specialization >><<#
+        }
+        continue;
+      }
+      
+     
+      if (relatedAssociation.getIsComposition()) {
+      	if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isOnlyOne()) {
+      		#>><<@ UmpleToJava.delete_OneFromOne_specialization >><<#
+      	}
+      	else if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isOptionalOne()) {
+      		#>><<@ UmpleToJava.delete_OptionalOneFromOne_comp_specialization >><<#
+      	}
+      	else if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isMany()) {
+      		#>><<@ UmpleToJava.delete_ManyFromX_comp_specialization >><<#
+      	}
+      	
+      	else if (relatedAssociation.isMany() && av.isOnlyOne()) {
+      		#>><<@ UmpleToJava.delete_OneFromOne_specialization >><<#
+      	}
+      	else if (relatedAssociation.isMany() && av.isOptionalOne()) {
+      	    #>><<@ UmpleToJava.delete_OptionalOneFromOne_specialization >><<#
+      	}
+      	else if (relatedAssociation.isMany() && av.isMany()) {
+      	    #>><<@ UmpleToJava.delete_ManyFromX_comp_specialization >><<#
+      	}
+      	else {
+      		continue;
+      	}
+      	
+      	
+      }
+      
+      else if (av.getIsComposition() && (av.isMany() && relatedAssociation.isOnlyOne())) { 
+      	// normally this is the same for compositions, except for ManyToOne, the
+      	// list has to be cleared on the Many end (here, the ones are successfully deleted, 
+      	// but they are not removed from the list)
+    		// this functionality is not present for compositions, since, in the case
+    		// of deleting one from many, this would be on the composition end, and OneFromOne would
+    		// be called so the object is actually deleted. 	
+    
+      	#>><<@ UmpleToJava.delete_ManyFromX_comp_specialization >><<#
+  	  
+      }
+      
+      else if (av.getIsComposition() && (av.isMany() && relatedAssociation.isOptionalOne() && !av.isMandatory())) { 
+      	
+      	#>><<@ UmpleToJava.delete_OptionalOneFromMany_comp_specialization >><<#
+  	  
+      }
+      
+      else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && !relatedAssociation.isMandatory())) { 
+      	
+      	#>><<@ UmpleToJava.delete_OptionalOneFromMN_comp_specialization >><<#
+  	  
+      }
+      
+      else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && relatedAssociation.isMandatory())) { 
+      	
+      	#>><<@ UmpleToJava.delete_OptionalOneFromN_comp_specialization >><<#
+  	  
+      }
+      
+      
+      else {
+      
+  	    if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
+  	    {
+  	      #>><<@ UmpleToJava.delete_OneFromOne_specialization >><<#
+  	    }
+  	    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
+  	    {
+  	      #>><<@ UmpleToJava.delete_OptionalOneFromOptionalOne_specialization >><<#
+  	    }
+  	    else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
+  	    {
+  	      #>><<@ UmpleToJava.delete_OneFromOptionalOne_specialization >><<#
+  	    }
+  	    else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
+  	    {
+  	      #>><<@ UmpleToJava.delete_OptionalOneFromOne_specialization >><<#
+  	    }
+  	    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
+  	    {
+  	      #>><<@ UmpleToJava.delete_OptionalOneFromMany_specialization >><<#
+  	    }
+  	    else if (av.isOptionalOne() && relatedAssociation.isN())
+  	    {
+  	      #>><<@ UmpleToJava.delete_OptionalOneFromN_specialization >><<#
+  	    }
+  	    else if (av.isOptionalOne() && relatedAssociation.isMN())
+  	    {
+  	      #>><<@ UmpleToJava.delete_OptionalOneFromMN_specialization >><<#
+  	    }
+  	    else if (av.isOne() && relatedAssociation.isMany())
+  	    {
+  	      #>><<@ UmpleToJava.delete_OneFromMany_specialization >><<#
+  	    }
+  	    else if (av.isMandatory() && relatedAssociation.isOptionalOne())
+  	    {
+          #>><<@ UmpleToJava.delete_MandatoryFromOptionalOne_specialization >><<#
+  	    }
+  	    else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
+  	    {
+          if (relatedAssociation.getNeedsCommonCode())
+          {
+            #>><<@ UmpleToJava.delete_ManyFromMN_specialization_relCommon >><<#
+          }
+          else
+          {
+            #>><<@ UmpleToJava.delete_ManyFromMN_specialization >><<#
+  	      }
+        }
+  	    else if (av.isMany() && relatedAssociation.isMany())
+  	    {
+          #>><<@ UmpleToJava.delete_ManyFromMany_specialization >><<#
+  	    }
+  	    else if (av.isMany() && relatedAssociation.isOnlyOne()) 
+  	    {
+  	      #>><<@ UmpleToJava.delete_ManyFromOne_specialization >><<#
+  	    }
+  	    else if (av.isMany() && relatedAssociation.isOptionalOne())
+  	    {
+  	      #>><<@ UmpleToJava.delete_ManyFromOptionalOne_specialization >><<#
+  	    }
+  	    else
+  	    {
+  	      continue;
+  	    }
+  	  }
+	  }
+    else  /* Normal Case */
+    {
+      if (!relatedAssociation.getIsNavigable())
+      {
+        if (av.isOne())
+        {
+          hasSomethingToDelete = true;
+          #>><<@ UmpleToJava.delete_UndirectionalOne >><<#
+        }
+        else if (av.isMany())
+        {
+          hasSomethingToDelete = true;
+          #>><<@ UmpleToJava.delete_UndirectionalMany >><<#
+        }
+        continue;
+      }
+      
+     
+      if (relatedAssociation.getIsComposition()) {
+      	if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isOnlyOne()) {
+      		#>><<@ UmpleToJava.delete_OneFromOne >><<#
+      	}
+      	else if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isOptionalOne()) {
+      		#>><<@ UmpleToJava.delete_OptionalOneFromOne_comp >><<#
+      	}
+      	else if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isMany()) {
+      		#>><<@ UmpleToJava.delete_ManyFromX_comp >><<#
+      	}
+      	
+      	else if (relatedAssociation.isMany() && av.isOnlyOne()) {
+      		#>><<@ UmpleToJava.delete_OneFromOne >><<#
+      	}
+      	else if (relatedAssociation.isMany() && av.isOptionalOne()) {
+      	    #>><<@ UmpleToJava.delete_OptionalOneFromOne >><<#
+      	}
+      	else if (relatedAssociation.isMany() && av.isMany()) {
+      	    #>><<@ UmpleToJava.delete_ManyFromX_comp >><<#
+      	}
+      	else {
+      		continue;
+      	}
+      	
+      	
+      }
+      
+      else if (av.getIsComposition() && (av.isMany() && relatedAssociation.isOnlyOne())) { 
+        // normally this is the same for compositions, except for ManyToOne, the
+        // list has to be cleared on the Many end (here, the ones are successfully deleted, 
+        // but they are not removed from the list)
+        // this functionality is not present for compositions, since, in the case
+        // of deleting one from many, this would be on the composition end, and OneFromOne would
+        // be called so the object is actually deleted.   
+    
+        #>><<@ UmpleToJava.delete_ManyFromX_comp >><<#
+      
+      }
+      
+      else if (av.getIsComposition() && (av.isMany() && relatedAssociation.isOptionalOne() && !av.isMandatory())) { 
+        
+        #>><<@ UmpleToJava.delete_OptionalOneFromMany_comp >><<#
+      
+      }
+      
+      else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && !relatedAssociation.isMandatory())) { 
+        
+        #>><<@ UmpleToJava.delete_OptionalOneFromMN_comp >><<#
+      
+      }
+      
+      else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && relatedAssociation.isMandatory())) { 
+        
+        #>><<@ UmpleToJava.delete_OptionalOneFromN_comp >><<#
+      
+      }
+      else 
+      {
+        if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
+        {
+          #>><<@ UmpleToJava.delete_OneFromOne >><<#
+        }
+        else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
+        {
+          #>><<@ UmpleToJava.delete_OptionalOneFromOptionalOne >><<#
+        }
+        else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
+        {
+          #>><<@ UmpleToJava.delete_OneFromOptionalOne >><<#
+        }
+        else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
+        {
+          #>><<@ UmpleToJava.delete_OptionalOneFromOne >><<#
+        }
+        else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
+        {
+          #>><<@ UmpleToJava.delete_OptionalOneFromMany >><<#
+        }
+        else if (av.isOptionalOne() && relatedAssociation.isN())
+        {
+          #>><<@ UmpleToJava.delete_OptionalOneFromN >><<#
+        }
+        else if (av.isOptionalOne() && relatedAssociation.isMN())
+        {
+          #>><<@ UmpleToJava.delete_OptionalOneFromMN >><<#
+        }
+        else if (av.isOne() && relatedAssociation.isMany())
+        {
+          #>><<@ UmpleToJava.delete_OneFromMany >><<#
+        }
+        else if (av.isMandatory() && relatedAssociation.isOptionalOne())
+        {
+          #>><<@ UmpleToJava.delete_MandatoryFromOptionalOne >><<#
+        }
+        else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
+        {
+          #>><<@ UmpleToJava.delete_ManyFromMN >><<#
+        }
+        else if (av.isMany() && relatedAssociation.isMany())
+        {
+          #>><<@ UmpleToJava.delete_ManyFromMany >><<#
+        }
+        else if (av.isMany() && relatedAssociation.isOnlyOne()) 
+        {
+          #>><<@ UmpleToJava.delete_ManyFromOne >><<#
+        }
+        else if (av.isMany() && relatedAssociation.isOptionalOne())
+        {
+          #>><<@ UmpleToJava.delete_ManyFromOptionalOne >><<#
+        }
+        else
+        {
+          continue;
+        }
+      }
+    }
+  	hasSomethingToDelete = true;
+  }
+  
+  if (!uClass.isRoot() && !"external".equals(uClass.getExtendsClass().getModifier()))
+  {
+    hasSomethingToDelete = true;
+    appendln(realSb,"");
+    append(realSb, "    super.delete();");
+  }
+
+  if (customDeletePostfixCode != null) 
+  {
+    addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customDeletePostfixCode,"delete");
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customDeletePostfixCode, "    "));
+    hasSomethingToDelete = true;
+  }
+
+  if (hasSomethingToDelete)
+  {
+    appendln(realSb, "");
+    appendln(realSb, "  }");
+  }
+  else
+  {
+    appendln(realSb, "}");
+  }
+
+#>>!>>
+}

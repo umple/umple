@@ -1,0 +1,12 @@
+class UmpleToJava {
+    state_machine_timedEvent_run_NestedStates <<!<</*state_machine_timedEvent_run_NestedStates*/>>
+      if ("<<= gen.translate("eventMethod",event) >>".equals(timeoutMethodName))
+      {
+        boolean shouldRestart = !controller.<<= gen.translate("eventMethod",event) >>();
+        if (shouldRestart)
+        {
+          controller.<<= gen.translate("eventStartMethod",event) >>();
+        }
+        return;
+      }!>>
+}

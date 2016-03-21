@@ -1,0 +1,15 @@
+class UmpleToJava {
+    attribute_GetDefaultedCodeInjection <<!<</*attribute_GetDefaultedCodeInjection*/>>
+  public <<=gen.translate("type",av)>> <<=gen.translate("getDefaultMethod",av)>>()
+  {
+    <<# if (customGetDefaultPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPrefixCode,gen.translate("getDefaultMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } #>>
+    <<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>> = <<= gen.translate("parameterValue",av) >>;
+    <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")>>
+
+
+<<# if (customGetDefaultPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetDefaultPostfixCode,gen.translate("getDefaultMethod",av));
+      append(realSb, "{0}\n",GeneratorHelper.doIndent(customGetDefaultPostfixCode, "    ")); } #>>    return <<=gen.translate("parameterOne",av)>>;
+  }
+!>>
+}

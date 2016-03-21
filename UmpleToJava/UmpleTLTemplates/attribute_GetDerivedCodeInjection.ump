@@ -1,0 +1,14 @@
+class UmpleToJava {
+    attribute_GetDerivedCodeInjection <<!<</*attribute_GetDerivedCodeInjection*/>><<# if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); } #>><<= umpleSourceFile >>
+  public <<=gen.translate("type",av)>> <<= gen.translate("getMethod",av) >>()
+  {
+    <<# if (customGetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPrefixCode,gen.translate("getMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    <<= gen.translate("type",av) >> <<= gen.translate("parameterOne",av) >> = <<= gen.translate("parameterValue",av) >>;
+    <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")>>
+
+
+<<# if (customGetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPostfixCode,gen.translate("getMethod",av));
+    append(realSb, "{0}\n",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } #>>    return <<= gen.translate("parameterOne",av) >>;<<#addUncaughtExceptionVariables(gen.translate("getMethod",av),av.getPosition().getFilename(),av.getPosition().getLineNumber(),realSb.toString().split("\\n").length-1,1);#>>
+  }!>>
+}

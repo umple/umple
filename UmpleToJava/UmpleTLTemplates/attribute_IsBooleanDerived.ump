@@ -1,0 +1,10 @@
+class UmpleToJava {
+    attribute_IsBooleanDerived <<!<</*attribute_IsBooleanDerived*/>>
+  public <<=gen.translate("type",av)>> <<= gen.translate("isMethod",av) >>()
+  {
+    <<# if (customGetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPrefixCode,gen.translate("isMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null?traceItem.trace(gen, av,"at_i", uClass, gen.translate("parameterOne",av), "index"):"")>>
+    return <<=gen.translate("parameterValue",av)>>;
+  }!>>
+}

@@ -1,0 +1,8 @@
+class UmpleToJava {
+    constructor_AssociationAssignOneToOne <<!<</*constructor_AssociationAssignOneToOne*/>>
+    if (<<=gen.translate("parameterOne",av)>> == null || <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("getMethod",av)>>() != null)
+    {
+      throw new RuntimeException("Unable to create <<=gen.relatedTranslate("type",av)>> due to <<=gen.translate("parameterOne",av)>>");
+    }
+    <<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterOne",av)>>;!>>
+}

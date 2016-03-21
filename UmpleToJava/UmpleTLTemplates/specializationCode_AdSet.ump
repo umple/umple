@@ -1,0 +1,24 @@
+class UmpleToJava {
+    specializationCode_AdSet <<!<</*specializationCode_AdSet*/>><<#
+    AssociationVariable relatedAssociation = av.getRelatedAssociation();
+    
+    Association relatedAssoc = uClass.getAssociation(uClass.indexOfAssociationVariable(av));
+    
+    
+    boolean avTypeCommon = av.getType().equals(relatedAssoc.getCommonClassName());
+    boolean rAvTypeCommon = relatedAssociation.getType().equals(relatedAssoc.getCommonClassName());
+    boolean assocTypeCommon = relatedAssoc.getCommonClassName().equals(uClass.getName());
+    
+    // if the current assocVar's class is equal to it's association's duplicate class...
+    // this may no longer be relevant.
+    if ((avTypeCommon || rAvTypeCommon) && assocTypeCommon)
+    {
+      isRelSpec = true;
+    }
+    
+    // in the case of a specialization, this will let us know what kind of code we nee
+    boolean reqSuperCode = av.getNeedsSuperCode();
+    boolean reqCommonCode = av.getNeedsCommonCode();
+
+#>>!>>
+}

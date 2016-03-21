@@ -1,0 +1,118 @@
+class UmpleToJava {
+    members_AllStateMachines <<!<</*members_AllStateMachines*/>><<#
+{
+  isFirst = true;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    List<StateMachine> allNested = sm.getNestedStateMachines();
+
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      append(realSb,"  //{0} State Machines", uClass.getName());
+      isFirst = false;
+    }
+  
+    append(realSb, "\n  public enum {0} { {1} }", gen.translate("type", sm), gen.translate("listStates", sm));
+
+    for (StateMachine nestedSm : allNested)
+    {
+      append(realSb, "\n  public enum {0} { {1} }", gen.translate("type", nestedSm), 
+             gen.translate("listStates",nestedSm));
+    }
+    
+    append(realSb, "\n  private {0} {1};", gen.translate("type",sm), gen.translate("stateMachineOne", sm));
+    for (StateMachine nestedSm : allNested)
+    {
+      append(realSb, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+      if(nestedSm.getContainsHistoryState())
+      {
+        append(realSb, "\n  private {0} {1}H;", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+      }
+      if(nestedSm.getContainsDeepHistoryState())
+      {
+        append(realSb, "\n  private {0} {1}HStar;", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+      }
+    }  
+  }
+  
+  boolean foundQueued = false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    if(sm.isQueued())
+    {
+      foundQueued = true;
+    }
+  }
+  if(foundQueued == true)
+  {
+    append(realSb,"\n  ");
+    append(realSb,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
+    append(realSb, "\n  protected enum MessageType { {0} }", gen.translate("listEventsForQSM",uClass));   
+  }
+
+  boolean foundQueuedSM = false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    if(sm.isQueued())
+    {
+       foundQueuedSM = true;
+    }
+  }
+  if(foundQueuedSM == true)
+  {
+    append(realSb,"\n  ");
+    append(realSb,"\n  MessageQueue queue;");
+    append(realSb,"\n  Thread removal;");
+  } 
+ 
+  boolean foundPooledSM = false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {  
+    if(sm.isPooled())
+    {
+      foundPooledSM = true;
+    }
+  }
+  if(foundPooledSM == true)
+  {
+    append(realSb,"\n  ");
+    append(realSb,"\n  MessagePool pool;");
+    append(realSb,"\n  Thread removal;");
+    append(realSb,"\n  ");
+    append(realSb,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
+    append(realSb, "\n  protected enum MessageType { {0} }", gen.translate("listEventsForPooledSM",uClass));
+  } 
+
+  boolean foundPooled = false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    if (sm.isPooled()){
+      foundPooled = true;
+    }
+  }
+  if(foundPooled == true)
+  {
+    append(realSb,"\n");
+    append(realSb,"\n  // Map for a {0} pooled state machine that allows querying which events are possible in each map", uClass.getName());
+    append(realSb,"\n");
+    append(realSb,"\n  public static final Map<Object, HashSet<MessageType>> stateMessageMap = new HashMap<Object, HashSet<MessageType>>();");
+    append(realSb,"\n  static {");
+  }
+   
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    if(sm.isPooled())
+    {
+      append(realSb,"\n  {0}",gen.translate("listMessageTypesStates",sm));
+    }
+  }
+  
+  if(foundPooled == true)
+  {
+    append(realSb,"\n  }");
+  }
+}
+#>>!>>
+}

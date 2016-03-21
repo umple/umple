@@ -1,0 +1,94 @@
+class UmpleToJava {
+    toString_declare <<!<</*toString_declare*/>>
+
+  public String toString()
+  {
+    String outputString = "";<<#
+	  String customToStringPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toString"));
+	  String customToStringPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toString"));
+	  if (customToStringPrefixCode != null) 
+	  {
+		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToStringPrefixCode, "    "));
+	  }
+	  if (customToStringPostfixCode != null) 
+	  {
+		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToStringPostfixCode, "    "));
+	  }
+	  String ret = "";
+
+	  LinkedList<String> displayedAttributes = new LinkedList<String>();
+	  LinkedList<String> nameOfAttributes = new LinkedList<String>();
+	  LinkedList<String> displayedPrimitives = new LinkedList<String>();
+	  LinkedList<String> nameOfPrimitives = new LinkedList<String>();
+	  List<String> keys = new ArrayList<String>();
+	  List<String> reflexiveNames = new ArrayList<String>();
+	  List<String> reflexive = new ArrayList<String>();
+	  for(String k: uClass.getKey().getMembers())
+		  keys.add(k);
+	  for(Attribute av: uClass.getAttributes())
+	  {
+	      
+		  if(!av.getIsList()&&!"internal".equals(av.getModifier())&&!"const".equals(av.getModifier())&&("String".equals(av.getType())||"int".equals(av.getType())||"Integer".equals(av.getType())||"boolean".equals(av.getType().toLowerCase())||"float".equals(av.getType())||"Float".equals(av.getType())||"double".equals(av.getType())||"Double".equals(av.getType())||"byte".equals(av.getType())||"Byte".equals(av.getType())||"char".equals(av.getType())||"Character".equals(av.getType())||"long".equals(av.getType())||"Long".equals(av.getType())||"short".equals(av.getType())||"Short".equals(av.getType())))
+		  {
+			  if(av.getIsAutounique() || keys.contains(av.getName())){
+				  nameOfPrimitives.addFirst(av.getName());
+				  displayedPrimitives.addFirst(gen.translate("getMethod",av)+"()");
+			  }
+			  else {
+				  nameOfPrimitives.addLast(av.getName());
+				  displayedPrimitives.addLast(gen.translate("getMethod",av)+"()");
+			  }
+		  }
+		  else if(!av.getIsList()&&!"const".equals(av.getModifier())&&!"internal".equals(av.getModifier()))
+		  {
+			  if(av.getIsAutounique() || keys.contains(av.getName())){
+				  nameOfAttributes.addFirst(av.getName());
+				  displayedAttributes.addFirst(gen.translate("getMethod",av)+"()");
+			  }
+			  else {
+				  nameOfAttributes.addLast(av.getName());
+				  displayedAttributes.addLast(gen.translate("getMethod",av)+"()");
+			  }
+		  }
+	  }
+	  for(AssociationVariable av: uClass.getAssociationVariables())
+	  {
+	    if(av.isIsNavigable()&&av.getUmpleClass()!=av.getRelatedAssociation().getUmpleClass())
+	    {
+	      if("1".equals(av.getMultiplicity().getMinimum())||"0".equals(av.getMultiplicity().getMinimum())||"1".equals(av.getMultiplicity().getBound()))
+	      {
+	        if("1".equals(av.getMultiplicity().getMaximum())||"1".equals(av.getMultiplicity().getBound()))
+	        {
+	          reflexiveNames.add(av.getName());
+	          reflexive.add(gen.translate("getMethod",av)+"()");
+		    }
+		  }
+		}
+		  
+	  }
+	  ret += "super.toString() + \"[\"";
+	  boolean firstStr = true;
+	  for(int m=0;m<displayedPrimitives.size();m++)
+	  {
+		  if(firstStr)
+			  firstStr = false;
+		  else
+			  ret += "+ \",\" ";
+		  ret += "+\n            \"" + nameOfPrimitives.get(m) + "\" + \":\" + " + displayedPrimitives.get(m); 
+	  }
+	  ret += "+ \"]\"";
+	  for(int m=0;m<displayedAttributes.size();m++)
+	  {          
+		  ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";      
+		  ret += "\"  \" + " + "\"" + nameOfAttributes.get(m) + "\" + \"=\" + (" + displayedAttributes.get(m) + " != null ? !" + displayedAttributes.get(m) + ".equals(this)  ? " + displayedAttributes.get(m) + ".toString().replaceAll(\"  \",\"    \") : \"this\" : \"null\")";
+
+	  }
+	  for(int m=0;m<reflexive.size();m++){
+	      ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";
+	      ret += "\"  \" + " +  "\""+reflexiveNames.get(m)+" = \"+("+reflexive.get(m)+"!=null?Integer.toHexString(System.identityHashCode("+reflexive.get(m)+")):\"null\")";
+	  }
+	  ret += "\n     + outputString";
+	  append(realSb,"\n    return {0};", ret);
+	  #>>
+  }!>>
+}

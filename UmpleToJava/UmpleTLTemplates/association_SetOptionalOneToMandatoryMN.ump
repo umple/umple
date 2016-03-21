@@ -1,0 +1,57 @@
+class UmpleToJava {
+    association_SetOptionalOneToMandatoryMN <<!<</*association_SetOptionalOneToMandatoryMN*/>>
+//  public boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+//  {
+//    //
+//    // The source of the code generation is association_SetOptionalOneToMN.jet
+//    // (this) set file assumes the generation of a maximumNumberOfXXX 
+//    //   method <<=gen.relatedTranslate("maximumNumberOfMethod",av)>>
+//    // Currently this will not compile due to Issue351 - the template code is fine.
+//    //
+//
+//    boolean wasSet = false;
+//    <<=gen.translate("type",av)>> <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("associationOne",av)>>;
+//  
+//    if (<<=gen.translate("parameterExisting",av)>> == null)
+//    {  
+//      if (<<=gen.translate("parameterOne",av)>> != null)
+//      { 
+//        if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this))
+//          <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("parameterOne",av)>>;
+//          wasSet = true;
+//        }
+//      }
+//    }
+//    else
+//    {
+//      if (<<=gen.translate("parameterExisting",av)>> != null)
+//      {
+//        if (<<=gen.translate("parameterOne",av)>> == null)
+//        {
+//          if (<<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("minimumNumberOfMethod",av)>> < <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>>)
+//            <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+//            <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("parameterOne",av)>>  // <<=gen.translate("parameterOne",av)>> == null;
+//            wasSet = true;
+//        }
+//      }
+//      else
+//      {
+//        if (   <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("minimumNumberOfMethod",av)>> < <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>>()
+//            && <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("maximumNumberOfMethod",av)>> > <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>>()
+//           )
+//          <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+//          <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this);
+//          <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("parameterOne",av)>>;
+//          wasSet = true;
+//        }
+//      }
+//    }
+//    
+//    if (wasSet)
+//    {
+//      <<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterExisting",av)>>;
+//    }
+//    
+//    return wasSet;
+//  }!>>
+}

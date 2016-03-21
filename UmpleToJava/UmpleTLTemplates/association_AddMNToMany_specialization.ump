@@ -1,0 +1,27 @@
+class UmpleToJava {
+    association_AddMNToMany_specialization <<!<</*association_AddMNToMany_specialization*/>>
+  public boolean <<=gen.translate("removeMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  {
+    boolean wasRemoved = false;
+    <<# if (customRemovePrefixCode != null) { #>>
+    List<<<=gen.translate("type",av)>>> <<=gen.translate("associationMany",av)>> = <<=gen.translate("getManyMethod",av)>>_<<=gen.translate("type",av)>>();
+    <<# } #>>
+    <<# if (customRemovePrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customRemovePrefixCode,gen.translate("removeMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } #>>
+
+    if (<<=gen.translate("numberOfMethod",av)>>() <= <<=gen.translate("minimumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>())
+    {
+      <<# if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } #>>
+      return wasRemoved;
+    }
+
+    wasRemoved = super.<<=gen.translate("removeMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+
+    
+<<# if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } #>>
+    return wasRemoved;
+  }
+!>>
+}

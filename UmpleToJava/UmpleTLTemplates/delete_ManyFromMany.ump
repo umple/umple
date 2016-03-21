@@ -1,0 +1,9 @@
+class UmpleToJava {
+    delete_ManyFromMany <<!<</*delete_ManyFromMany*/>>
+    ArrayList<<<=gen.translate("type",av)>>> <<=gen.translate("parameterCopyOfMany",av)>> = new ArrayList<<<=gen.translate("type",av)>>>(<<=gen.translate("associationMany",av)>>);
+    <<=gen.translate("associationMany",av)>>.clear();
+    for(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>> : <<=gen.translate("parameterCopyOfMany",av)>>)
+    {
+      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+    }!>>
+}

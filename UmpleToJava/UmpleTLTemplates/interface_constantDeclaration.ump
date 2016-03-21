@@ -1,0 +1,23 @@
+class UmpleToJava {
+    interface_constantDeclaration <<!<</*interface_constantDeclaration*/>><<#
+appendln(realSb, "");
+appendln(realSb,"  // CONSTANT MEMBERS  ");
+ for (Constant aConstant : uInterface.getConstants()) 
+ {
+ 	String constantName = aConstant.getName();
+ 	String constantModifier = "public static final";
+    String constantType =  gen.translateInterfaceType(aConstant.getType());
+ 	String constantValue =  gen.translateInterfaceValue(aConstant.getValue(), constantType);
+
+ 
+ if (!(constantValue.equals(""))){
+ 	appendln(realSb, "");
+ 	append(realSb, " {0} {1} {2} = {3};", constantModifier, constantType, constantName, constantValue);
+ }
+ else{
+ 	appendln(realSb, "");
+ 	append(realSb, " {0} {1} {2};", constantModifier, constantType, constantName);
+ }
+ }
+#>>!>>
+}

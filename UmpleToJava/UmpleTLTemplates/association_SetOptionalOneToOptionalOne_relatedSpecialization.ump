@@ -1,0 +1,59 @@
+use association_GetPrivate.ump;
+
+
+class UmpleToJava {
+    association_SetOptionalOneToOptionalOne_relatedSpecialization <<!<</*association_SetOptionalOneToOptionalOne_relatedSpecialization*/>>
+  public boolean <<=gen.translate("setMethod",av)>>_<<=gen.translate("type",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterNew",av)>>)
+  {
+    boolean wasSet = false;
+    <<# if (customSetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    if (<<=gen.translate("parameterNew",av)>> == null)
+    {
+      <<=gen.translate("type",av)>> <<=gen.translate("parameterExisting",av)>> = <<# if (mulChangedToOne) { #>><<=gen.translate("getMethod",av)>>_One<<=gen.translate("type",av)>>()<<# } else {#>>(<<=gen.translate("type",av)>>)<<=gen.translate("associationOne",av)>><<# } #>>;
+      clear_<<=gen.translate("associationOne",av)>>();
+      
+      if (<<=gen.translate("parameterExisting",av)>> != null && <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("getMethod",av)>>() != null)
+      {
+        <<=gen.translate("parameterExisting",av)>>.clear_<<=gen.relatedTranslate("associationOne",av)>>();
+      }
+      wasSet = true;
+      <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } #>>
+      return wasSet;
+    }
+
+    <<=gen.translate("type",av)>> <<=gen.translate("parameterCurrent",av)>> = <<=gen.translate("getMethod",av)>>_One<<=gen.translate("type",av)>>();
+    if (<<=gen.translate("parameterCurrent",av)>> != null && !<<=gen.translate("parameterCurrent",av)>>.equals(<<=gen.translate("parameterNew",av)>>))
+    {
+      <<=gen.translate("parameterCurrent",av)>>.clear_<<=gen.relatedTranslate("associationOne",av)>>();
+    }
+
+    <<=gen.translate("associationOne",av)>> = <<# if (!mulChangedToOne) { #>><<=gen.translate("parameterNew",av)>><<# } else { #>>new ArrayList<<<=scName>>>()<<# } #>>;
+    <<# if (mulChangedToOne) { #>><<=gen.translate("associationOne",av)>>.add(<<=gen.translate("parameterNew",av)>>);<<# } #>>
+    <<=gen.relatedTranslate("type",av)>> <<=gen.relatedTranslate("parameterExisting",av)>> = <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.relatedTranslate("type",av)>>()<<# } else if (relMulChangedToOne) { #>>(0)<<# } else { #>>()<<# } #>>;
+
+    if (!equals(<<=gen.relatedTranslate("parameterExisting",av)>>))
+    {
+      <<# if (mulChangedToOne) { #>> 
+      for (<<=scName>> orphan : <<=gen.translate("associationOne",av)>>)
+      {
+        <<=gen.relatedTranslate("setMethod",av)>><<# if (relReqCommonCode) { #>>_<<=gen.relatedTranslate("type",av)>><<# } #>>((<<=gen.translate("type",av)>>)orphan,this);
+      }      
+      <<# } else if (relMulChangedToOne) { #>>
+        <<=gen.relatedTranslate("setMethod",av)>><<# if (relReqCommonCode) { #>>_<<=gen.relatedTranslate("type",av)>><<# } #>>(<<=gen.translate("parameterNew",av)>>,this);
+      <<# } else { #>>
+      <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("setMethod",av)>><<# if (relReqCommonCode) { #>>_<<=gen.relatedTranslate("type",av)>><<# } #>>(this);
+      <<# } #>>
+    }
+    wasSet = true;<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<=
+    (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,"1"):"")>>
+    <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return wasSet;
+  }
+
+
+<<# if (mulChangedToOne || relMulChangedToOne) { #>><<@ UmpleToJava.association_GetPrivate >>
+<<# } #>>!>>
+}

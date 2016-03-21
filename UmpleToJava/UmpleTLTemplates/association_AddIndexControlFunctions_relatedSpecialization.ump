@@ -1,0 +1,47 @@
+class UmpleToJava {
+    association_AddIndexControlFunctions_relatedSpecialization <<!<</*association_AddIndexControlFunctions_relatedSpecialization*/>>
+  public boolean <<=gen.translate("addAtMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>, int index)
+  {  
+    boolean wasAdded = false;
+    if(<<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > <<=gen.translate("numberOfMethod",av)>>()) { index = <<=gen.translate("numberOfMethod",av)>>() - 1; }<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+>>
+      <<=gen.translate("associationMany",av)>>.remove(<<=gen.translate("parameterOne",av)>>);
+      <<=gen.translate("associationMany",av)>>.add(index, <<=gen.translate("parameterOne",av)>>);<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+>>
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean <<=gen.translate("addOrMoveAtMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>, int index)
+  {
+    boolean wasAdded = false;
+    if(<<=gen.translate("associationMany",av)>>.contains(<<=gen.translate("parameterOne",av)>>))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > <<=gen.translate("numberOfMethod",av)>>()) { index = <<=gen.translate("numberOfMethod",av)>>() - 1; }<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+>>
+      <<=gen.translate("associationMany",av)>>.remove(<<=gen.translate("parameterOne",av)>>);
+      <<=gen.translate("associationMany",av)>>.add(index, <<=gen.translate("parameterOne",av)>>);<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+>>
+      wasAdded = true;
+    } 
+    else 
+    {<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+>>
+      wasAdded = <<=gen.translate("addAtMethod",av)>>(<<=gen.translate("parameterOne",av)>>, index);<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+>>
+    }
+    return wasAdded;
+  }
+!>>
+}

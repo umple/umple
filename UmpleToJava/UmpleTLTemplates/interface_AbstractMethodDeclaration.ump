@@ -1,0 +1,35 @@
+class UmpleToJava {
+    interface_AbstractMethodDeclaration <<!<</*interface_AbstractMethodDeclaration*/>><<#
+	 appendln(realSb, "");
+     appendln(realSb,"  // ABSTRACT METHODS ");
+    	for (Method aMethod : uInterface.getMethods()) 
+    	{
+    		String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
+    		String methodName = aMethod.getName();
+    		String methodType = aMethod.getType();
+    		String paramName="";
+    		String paramType="";
+    		String aSingleParameter="";
+    		String isList="";
+    	    String parameters = "";
+    		if (aMethod.hasMethodParameters())
+    		{
+    			for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
+    			{
+    				paramName = aMethodParam.getName();
+    				paramType = aMethodParam.getType();
+        			isList = aMethodParam.getIsList() ? " [] " : " ";
+    				aSingleParameter = paramType + isList + paramName;
+        			parameters += aSingleParameter + ", ";
+    			}
+    			String finalParams = parameters.substring(0, parameters.length()-2);
+    			appendln(realSb, "");
+    			append(realSb, " {0} {1} {2}({3});", methodModifier, methodType, methodName, finalParams);	
+    		}
+    		else{
+    			appendln(realSb, "");
+    			append(realSb, " {0} {1} {2}();", methodModifier, methodType, methodName);
+    		}
+    	}
+#>>!>>
+}

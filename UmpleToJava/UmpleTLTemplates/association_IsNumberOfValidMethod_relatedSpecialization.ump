@@ -1,0 +1,16 @@
+class UmpleToJava {
+    association_IsNumberOfValidMethod_relatedSpecialization <<!<</*association_IsNumberOfValidMethod_relatedSpecialization*/>>
+  public boolean <<=gen.translate("isNumberOfValidMethod",av)>>_<<=gen.translate("type",av)>>()
+  {
+    <<# if (customIsNumberOfValidPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customIsNumberOfValidPrefixCode,gen.translate("isNumberOfValidMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPrefixCode, "    ")); } #>>
+<<# if (av.getMultiplicity().isUpperBoundMany()) { #>>
+    boolean isValid = <<=gen.translate("numberOfMethod",av)>>() >= <<=gen.translate("minimumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>();
+<<# } else { #>>
+    boolean isValid = <<=gen.translate("numberOfMethod",av)>>() >= <<=gen.translate("minimumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>() && <<=gen.translate("numberOfMethod",av)>>() <= <<=gen.translate("maximumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>();
+<<# } #>>
+    <<# if (customIsNumberOfValidPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customIsNumberOfValidPostfixCode,gen.translate("isNumberOfValidMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPostfixCode, "    ")); } #>>
+    return isValid;
+  }!>>
+}

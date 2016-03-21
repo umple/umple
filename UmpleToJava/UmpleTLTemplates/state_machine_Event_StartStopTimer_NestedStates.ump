@@ -1,0 +1,13 @@
+class UmpleToJava {
+    state_machine_Event_StartStopTimer_NestedStates <<!<</*state_machine_Event_StartStopTimer_NestedStates*/>>
+  private void <<=gen.translate("eventStartMethod",event) >>()
+  {
+    <<= gen.translate("eventHandler", event) >> = new TimedEventHandler(this,"<<= gen.translate("eventMethod",event) >>",<<= event.getTimerInSeconds() >>);
+  }
+
+  private void <<=gen.translate("eventStopMethod",event) >>()
+  {
+    <<= gen.translate("eventHandler",event) >>.stop();
+  }
+!>>
+}

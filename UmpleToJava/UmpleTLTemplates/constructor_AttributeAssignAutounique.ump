@@ -1,0 +1,4 @@
+class UmpleToJava {
+    constructor_AttributeAssignAutounique <<!<</*constructor_AttributeAssignAutounique*/>>
+    <<=gen.translate("attributeOne",av)>> = <<=gen.translate("parameterNext",av)>>++;!>>
+}

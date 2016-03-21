@@ -1,0 +1,31 @@
+class UmpleToJava {
+    attribute_SetDefaulted <<!<</*attribute_SetDefaulted*/>>
+  public boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  {
+    boolean wasSet = false;
+    <<# if (customSetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"at_s", uClass,gen.translate("parameterOne",av)):"")>>
+    <<= gen.translate("attributeOne",av)>> = <<=gen.translate("parameterOne",av)>>;
+    <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"at_s", uClass):"")>>
+    wasSet = true;
+    <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return wasSet;
+  }
+
+  public boolean <<=gen.translate("resetMethod",av)>>()
+  {
+    boolean wasReset = false;
+    <<# if (customResetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customResetPrefixCode,gen.translate("resetMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customResetPrefixCode, "    ")); } #>>
+    <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"at_t", uClass,gen.translate("parameterOne",av)):"")>>
+    <<= gen.translate("attributeOne",av)>> = <<=gen.translate("getDefaultMethod",av)>>();
+    <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"at_t", uClass):"")>>
+    wasReset = true;
+    <<# if (customResetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customResetPostfixCode,gen.translate("resetMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customResetPostfixCode, "    ")); } #>>
+    return wasReset;
+  }
+!>>
+}

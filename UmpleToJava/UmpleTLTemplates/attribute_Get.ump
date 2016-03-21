@@ -1,0 +1,10 @@
+class UmpleToJava {
+    attribute_Get <<!<</*attribute_Get*/>><<# if (av.numberOfComments() > 0) { append(realSb, "\n  {0}", Comment.format("Attribute Javadoc", av.getComments())); } #>><<= umpleSourceFile >>
+  public <<=gen.translate("type",av)>> <<= gen.translate("getMethod",av) >>()
+  {
+    <<# if (customGetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPrefixCode,gen.translate("getMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")>>
+    return <<=gen.translate("attributeOne",av)>>;
+  }!>>
+}

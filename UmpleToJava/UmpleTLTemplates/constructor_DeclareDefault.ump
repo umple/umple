@@ -1,0 +1,370 @@
+use constructor_AssociationAssignDefault.ump;
+use constructor_AssociationAssignImmutableOptionalMany.ump;
+use constructor_AssociationAssignImmutableOptionalN.ump;
+use constructor_AssociationAssignImmutableOptionalOne.ump;
+use constructor_AssociationAssignMandatoryMany.ump;
+use constructor_AssociationAssignOneToOne.ump;
+use constructor_AssociationAssignOptionalMany.ump;
+use constructor_AssociationAssignUndirectionalOne.ump;
+use constructor_AttributeAssign.ump;
+use constructor_AttributeAssignAutounique.ump;
+use constructor_AttributeAssignDefaulted.ump;
+use constructor_AttributeAssignImmutable.ump;
+use constructor_AttributeAssignLazy.ump;
+use constructor_AttributeAssignList.ump;
+use constructor_AttributeAssignUnique.ump;
+use constructor_AttributeUnassignedImmutable.ump;
+use constructor_NestedStateMachineAssignDefault.ump;
+use constructor_Singleton.ump;
+use constructor_StateMachineAssignDefault.ump;
+use specializationCode_Constructor.ump;
+
+
+class UmpleToJava {
+    constructor_DeclareDefault <<!<</*constructor_DeclareDefault*/>><<#
+
+  String customConstructorPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","constructor"));
+  String customConstructorPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","constructor"));
+
+  String accessibility = uClass.getIsSingleton() ? "private" : "public";
+  append(realSb,"\n  {0} {1}({2})",new Object[] {accessibility, uClass.getName(), gClass.getLookup("constructorSignature")});
+
+  String extraNote = null;
+  
+  appendln(realSb, "");
+  
+  boolean hasBody = false;
+
+  append(realSb, "  {");
+  if (!uClass.isRoot() && !"interface".equals(uClass.getExtendsClass().getModifier()))
+  {
+    appendln(realSb, "");
+    append(realSb, "    super({0});", gClass.getParentClass().getLookup("constructorSignature_caller"));
+    hasBody = true;
+  }
+  
+  if (customConstructorPrefixCode != null)
+  {
+    addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customConstructorPrefixCode,uClass.getName());
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customConstructorPrefixCode, "    "));
+    hasBody = true;
+  }
+
+  if (uClass.getKey().isProvided())
+  {
+    hasBody = true;
+    appendln(realSb, "");
+    append(realSb, "    cachedHashCode = -1;");
+  }
+  
+  for(String memberId : uClass.getKey().getMembers())
+  {
+    Attribute av = uClass.getAttribute(memberId);
+    AssociationVariable as = uClass.getAssociationVariable(memberId);
+    if (av != null  && !av.isImmutable())
+    {
+      hasBody = true;
+      appendln(realSb, "");
+      append(realSb, "    {0} = true;", gen.translate("attributeCanSet",av));
+    }
+    else if (as != null)
+    {
+      hasBody = true;
+      appendln(realSb, "");
+      append(realSb, "    {0} = true;", gen.translate("associationCanSet",as));
+    }
+  } 
+  
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (av.getIsAutounique() || av.getIsUnique() || av.isConstant() || "theInstance".equals(gen.translate("attributeOne",av)) || av.getIsDerived())
+    {
+      continue;
+    }
+    
+    List<TraceItem> traceItems= av.getTraced("constructor",uClass);
+    
+    if (av.getIsList())
+    {
+      hasBody = true;
+      #>><<@ UmpleToJava.constructor_AttributeAssignList >><<#
+    }
+    else if ("defaulted".equals(av.getModifier()))
+    {
+      hasBody = true;
+      #>><<@ UmpleToJava.constructor_AttributeAssignDefaulted >><<# 
+    }
+    else if (av.isImmutable() && av.getIsLazy())
+    {
+      hasBody = true;
+      #>><<@ UmpleToJava.constructor_AttributeUnassignedImmutable >><<#
+    }
+    else if (av.isImmutable())
+    {
+      hasBody = true;
+      #>><<@ UmpleToJava.constructor_AttributeAssignImmutable >><<# 
+    }
+    else
+    {
+      hasBody = true;
+      if(!av.getIsLazy()){
+         #>><<@ UmpleToJava.constructor_AttributeAssign >><<#
+      }
+      else
+      {
+         #>><<@ UmpleToJava.constructor_AttributeAssignLazy >><<#
+      }
+    }
+    
+    if(!traceItems.isEmpty())
+    {
+#>>
+    ( new Thread()
+    {
+      Thread thread;
+      {
+        thread = Thread.currentThread();
+      }
+      public void run()
+      {
+        while( thread.isAlive() )
+        {
+          <<# for( TraceItem traceItem : traceItems ) #>><<= traceItem.trace(gen,av,"at_p",uClass) >>
+          try
+          {
+            Thread.sleep(<<# for( TraceItem traceItem : traceItems ) #>><<= traceItem.getPeriodClause() >>);
+          }
+          catch (InterruptedException e)
+          {
+            e.printStackTrace();
+          }
+        }
+      }
+    }
+    ).start();<<#
+    }
+  }
+
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (av.getIsAutounique())
+    {
+      hasBody = true;
+      #>><<@ UmpleToJava.constructor_AttributeAssignAutounique >><<#
+    }
+    else if (av.getIsUnique())
+    {
+   	  hasBody = true;
+   	  #>><<@ UmpleToJava.constructor_AttributeAssignUnique >><<#
+    }
+  }
+  
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+
+    #>><<@ UmpleToJava.specializationCode_Constructor >><<#
+
+    if (!av.getIsNavigable() || !av.isImmutable())
+    {
+      continue;
+    }
+    append(realSb, "\n    {0} = true;", gen.translate("associationCanSet",av));
+  }
+  boolean doneOnce=false;
+  String firstSorted = "";
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+
+    #>><<@ UmpleToJava.specializationCode_Constructor >><<#
+
+  	if (av.isOnlyOne() && av.getRelatedAssociation().isMany() && av.getRelatedAssociation().isSorted() && av.getIsNavigable())
+  	{
+  		if("".equals(firstSorted))
+  		{
+  			firstSorted = gen.translate("attributeOne",av) + "=" + gen.translate("parameterOne",av) + ";";
+  		}
+  		else
+  		{
+  			if(!doneOnce)
+  			{
+  				append(realSb,"\n    {0}\n    {1}\n    {2}","// Direct set of variable needed to ensure consistency","// for multiple sorted associations",firstSorted);
+  				doneOnce = true;
+  			}	
+  			append(realSb,"\n    {0}={1};", gen.translate("attributeOne",av),gen.translate("parameterOne",av));
+    	}
+  	}
+  }
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+    #>><<@ UmpleToJava.specializationCode_Constructor >><<#
+    
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    
+    if (!relatedAssociation.getIsNavigable())
+    {
+      if (av.isOnlyOne())
+      {
+        hasBody = true;
+        #>><<@ UmpleToJava.constructor_AssociationAssignUndirectionalOne >><<#
+      }
+      else if (av.isOptionalOne() && av.isImmutable())
+      {
+        hasBody = true;
+        #>><<@ UmpleToJava.constructor_AssociationAssignImmutableOptionalOne >><<#
+      }
+      else if (av.isMandatoryMany())
+      {
+        hasBody = true;
+        #>><<@ UmpleToJava.constructor_AssociationAssignMandatoryMany >><<#
+      }
+      else if (av.isOptionalN() && av.isImmutable())
+      {
+        hasBody = true;
+        #>><<@ UmpleToJava.constructor_AssociationAssignImmutableOptionalN >><<#
+      }
+      else if (av.isMany() && av.isImmutable())
+      {
+      	hasBody = true;
+        #>><<@ UmpleToJava.constructor_AssociationAssignImmutableOptionalMany >><<#
+      }
+      else if (av.isMany())
+      {
+        hasBody = true;
+        #>><<@ UmpleToJava.constructor_AssociationAssignOptionalMany >><<#
+      }
+      continue;
+    }
+    
+    if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
+    {
+      hasBody = true;
+      #>><<@ UmpleToJava.constructor_AssociationAssignOneToOne >><<#
+    }
+    else if ((av.isMN() || av.isN()) && (relatedAssociation.isMandatory() || relatedAssociation.isOptionalN()))
+    {
+      hasBody = true;
+      #>><<@ UmpleToJava.constructor_AssociationAssignOptionalMany >><<#
+    }
+    else
+    {
+      #>><<@ UmpleToJava.constructor_AssociationAssignDefault >><<#
+    }
+  }
+  
+  boolean foundQueued=false;
+  boolean foundPooled=false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    State state = sm.getStartState();
+    if (state == null)
+    {
+      continue;
+    }
+    hasBody = true;
+    for (StateMachine nestedSm : sm.getNestedStateMachines())
+    {
+      #>><<@ UmpleToJava.constructor_NestedStateMachineAssignDefault >><<#
+    }
+    #>><<@ UmpleToJava.constructor_StateMachineAssignDefault >><<#
+    if (sm.isQueued())
+    {
+      foundQueued = true;
+    }
+    if (sm.isPooled())
+    {
+      foundPooled = true;
+    }
+  }
+  if(foundQueued == true)
+  {
+    append(realSb,"\n    queue = new MessageQueue();");
+    append(realSb,"\n    removal=new Thread(this);");
+    append(realSb,"\n    //start the thread of {0}", uClass.getName());
+    append(realSb,"\n    removal.start();");
+  }
+  if(foundPooled == true)
+  {
+    append(realSb,"\n    pool = new MessagePool();");
+    append(realSb,"\n    removal=new Thread(this);");
+    append(realSb,"\n    //start the thread of {0}", uClass.getName());
+    append(realSb,"\n    removal.start();");
+  }
+  
+  if (customConstructorPostfixCode != null)
+  {
+    addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customConstructorPostfixCode,uClass.getName());
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customConstructorPostfixCode, "    "));
+    hasBody = true;
+  }
+
+  if (hasBody)
+  {
+    appendln(realSb, "");
+    append(realSb, "  }");
+  }
+  else
+  {
+    append(realSb, "}");
+  }
+  
+  // fixml attribute (create empty constructor)
+  boolean fixmlAttr = false;
+  boolean emptyConstructor = false;
+  
+  for (Attribute av : uClass.getAttributes())
+	  if ("fixml".equals(av.getModifier()))
+	  {
+		  fixmlAttr = true;
+		  break;
+	  }
+
+  for( CodeInjection ci  : uClass.getCodeInjections())
+	  if( ci.getOperation().equals("emptyConstructor"))
+	  {
+		  emptyConstructor = true;
+		  break;
+	  }
+
+  for (Attribute av : uClass.getAttributes())
+  {
+	  if ("fixml".equals(av.getModifier()))
+	  {
+		  accessibility = uClass.getIsSingleton() ? "private" : "public";
+		  appendln(realSb,"");
+		  appendln(realSb,"");
+		  appendln(realSb,"  {0} {1}()",new Object[] {accessibility, uClass.getName()});
+		  appendln(realSb,"  {");
+		  for (Attribute a : uClass.getAttributes())
+			  if ("fixml".equals(a.getModifier()) && a.getValue() != null )
+				  append(realSb, "    {0} = {1};\n", a.getName(),a.getValue());
+		  for( CodeInjection ci  : uClass.getCodeInjections())
+			  if( ci.getOperation().equals("emptyConstructor"))
+				  appendln(realSb,"    {0}",ci.getCode());
+		  appendln(realSb,"  }");
+		  break;
+	  }
+  }
+
+  if( fixmlAttr == false && emptyConstructor == true )
+  {
+	  accessibility = uClass.getIsSingleton() ? "private" : "public";
+	  appendln(realSb,"");
+	  appendln(realSb,"");
+	  appendln(realSb,"  {0} {1}()",new Object[] {accessibility, uClass.getName()});
+	  appendln(realSb,"  {");
+	  for( CodeInjection ci  : uClass.getCodeInjections())
+		  if( ci.getOperation().equals("emptyConstructor"))
+			  appendln(realSb,"    {0}",ci.getCode());
+	  appendln(realSb,"  }");
+  }
+
+  if (uClass.getIsSingleton())
+  {
+    appendln(realSb, "");
+    #>><<@ UmpleToJava.constructor_Singleton >><<#
+  }
+#>>!>>
+}

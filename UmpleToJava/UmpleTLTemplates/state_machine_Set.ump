@@ -1,0 +1,225 @@
+class UmpleToJava {
+    state_machine_Set <<!<</*state_machine_Set*/>><<#
+  boolean hasEntry = false;
+  boolean hasExit = false;
+  boolean isFirstEntry = true;
+  boolean isFirstExit = true;
+  State parentState = sm.getParentState();
+  StateMachine parentSm = parentState != null ? parentState.getStateMachine() : null;
+  String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",sm)));
+  String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",sm)));
+  String customExitPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("exitMethod",sm)));
+  String customExitPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("exitMethod",sm)));
+  
+  StringBuilder entryActions = new StringBuilder();
+  StringBuilder exitActions = new StringBuilder();
+
+  List<String> entryFileNames = new ArrayList<String>();
+  List<Integer> entryUmpleLineNumbers = new ArrayList<Integer>();
+  List<Integer> entryJavaLineNumbers = new ArrayList<Integer>();
+  List<Integer> entryLengths = new ArrayList<Integer>();
+  int preJavaLine = realSb.toString().split("\\n").length;
+  int entryJavaLine = realSb.toString().split("\\n").length+(customSetPostfixCode != null?customSetPostfixCode.split("\\n").length:0)+(customSetPrefixCode != null?customSetPrefixCode.split("\\n").length:0)+10+(parentState != null?2:0);
+  int exitJavaLine = realSb.toString().split("\\n").length+(customExitPrefixCode != null?customExitPrefixCode.split("\\n").length:0)+7;
+  
+  for(State state : sm.getStates())
+  {
+    boolean hasThisEntry = false;
+    boolean hasThisExit = false;
+    for(Action action : state.getActions())
+    {
+      if ("entry".equals(action.getActionType()))
+      {
+        TraceItem traceItem = state.getTraced("entry",uClass);
+        TraceItem traceItemActivity = state.getTraced("activity",uClass);
+        if (!hasThisEntry)
+        {
+          if (!isFirstEntry)
+          {
+            entryActions.append("\n      ");
+            entryJavaLine++;
+          }
+          entryActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
+          entryJavaLine++;
+        }
+        hasEntry = true;
+        hasThisEntry = true;
+        isFirstEntry = false;
+        if(traceItem!=null)
+        {
+          entryActions.append("\n"+traceItem.trace(gen, state,"sm_e", uClass));
+          entryJavaLine++;
+        }
+        Position p = action.getPosition();
+        if (p != null) {
+          StateMachine sm_temp=sm;
+          if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
+          
+          entryActions.append("\n        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath("Java") + "\"");
+          entryFileNames.add(sm_temp.getUmpleClass().getRelativePath("Java").replace("\\","/").replaceAll(".*/",""));
+          entryUmpleLineNumbers.add(p.getLineNumber());
+          entryJavaLineNumbers.add(entryJavaLine-1);
+          entryLengths.add(action.getActionCode().split("\\n").length);
+        }
+
+        if (state.getIsDeepHistoryState() == true){
+          
+          String actionCode = action.getActionCode();
+          int x = actionCode.lastIndexOf('.');
+          int y = actionCode.indexOf(')',x);
+          String substate = actionCode.substring(x+1,y);
+          String beginning = actionCode.substring(0,x + 1);
+          String end = actionCode.substring(y);
+          actionCode = beginning.concat("HStar").concat(end);
+          
+          entryActions.append(StringFormatter.format("\n        if({0}HStar == {1}.{2})", gen.translate("stateMachineOne",sm), gen.translate("type",sm), substate));
+          entryJavaLine++;
+          entryActions.append("\n        {");
+          entryJavaLine++;  
+          
+          entryActions.append("\n          " + actionCode);
+          entryJavaLine+=actionCode.split("\\n").length;
+          
+
+          //TODO: add more spaces if deepHistory
+          //entryActions.append(StringFormatter.format("{0}{1}({2}{3});","\n          ",gen.translate("setMethod",state.getStateMachine()),gen.translate("stateMachineOne",state.getStateMachine()),gen.translate("stateOne",state)));
+          //entryJavaLine++;
+          entryActions.append("\n        }");
+          entryJavaLine++;
+        }
+        else if(traceItemActivity!=null)
+        {
+          for (Activity activity : state.getActivities())
+          {
+            entryActions.append("\n        " + action.getActionCode().substring(0, action.getActionCode().length() - 1).concat(traceItemActivity.trace(gen, activity,"sm_di", uClass))+" }");
+            entryJavaLine+=action.getActionCode().split("\\n").length;
+          }
+        }
+        else{
+          entryActions.append("\n        " + action.getActionCode());
+          entryJavaLine+=action.getActionCode().split("\\n").length;
+        }
+
+      }
+      else if ("exit".equals(action.getActionType()))
+      {
+        TraceItem traceItem = state.getTraced("exit",uClass);
+        TraceItem traceItemActivity = state.getTraced("activity",uClass);
+        
+        if (!hasThisExit)
+        {
+          if (!isFirstExit)
+          {
+            exitActions.append("\n      ");
+            exitJavaLine++;
+          }
+          isFirstExit = false;
+          exitActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
+          exitJavaLine++;
+        }
+        hasExit = true;
+        hasThisExit = true;
+        isFirstExit = false;
+        if(traceItem!=null)
+        {
+          exitActions.append("\n"+traceItem.trace(gen, state,"sm_x", uClass));
+          exitJavaLine++;
+        }
+        Position p = action.getPosition();
+        if (p != null) {
+          StateMachine sm_temp=sm;
+          if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
+          
+          exitActions.append("\n        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath("Java") + "\"");
+          addUncaughtExceptionVariables(gen.translate("exitMethod",sm),
+                                        sm_temp.getUmpleClass().getRelativePath("Java").replace("\\","/").replaceAll(".*/",""),
+                                        p.getLineNumber(),
+                                        exitJavaLine-1,
+                                        action.getActionCode().split("\\n").length);
+        }
+        if(traceItemActivity!=null)
+        {
+          for (Activity activity : state.getActivities())
+          {
+            exitActions.append("\n        " + action.getActionCode().substring(0, action.getActionCode().length() - 1).concat(traceItemActivity.trace(gen, activity,"sm_di", uClass))+" }");
+            exitJavaLine+=action.getActionCode().split("\\n").length;
+            exitJavaLine++;
+          }
+        }
+        else
+        {
+        	exitActions.append("\n        " + action.getActionCode());
+            exitJavaLine+=action.getActionCode().split("\\n").length;
+        }
+      }
+    }
+    
+    if (hasThisEntry)
+    {
+      entryActions.append("\n        break;");
+      entryJavaLine++;
+    }
+    
+    if (hasThisExit)
+    {
+      exitActions.append("\n        break;");
+      exitJavaLine++;
+    }
+    
+  }
+#>>
+<<# if (hasExit) {
+  #>>
+  private void <<=gen.translate("exitMethod",sm)>>()
+  {
+    <<# if (customExitPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customExitPrefixCode,gen.translate("exitMethod",sm));
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customExitPrefixCode, "    ")); } #>>
+    switch(<<= gen.translate("stateMachineOne",sm) >>)
+    {
+      <<= exitActions >>
+    }
+    <<# if (customExitPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customExitPostfixCode,gen.translate("exitMethod",sm)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customExitPostfixCode, "    ")); } #>>
+  }
+
+
+<<# 
+    List<Integer> tempList = new ArrayList<Integer>();
+    tempList.addAll(entryJavaLineNumbers);
+    entryJavaLineNumbers.clear();
+    for(Integer i: tempList){
+      entryJavaLineNumbers.add(i+(realSb.toString().split("\\n").length-preJavaLine));
+    }
+  }
+  if(entryJavaLineNumbers.size()>0){
+    String methodName = gen.translate("setMethod",sm);
+    for(int i=0;i<entryJavaLineNumbers.size();++i){
+      addUncaughtExceptionVariables(methodName,entryFileNames.get(i),entryUmpleLineNumbers.get(i),entryJavaLineNumbers.get(i),entryLengths.get(i));
+    }
+  } #>>
+  private void <<=gen.translate("setMethod",sm)>>(<<= gen.translate("type",sm) >> <<= gen.translate("parameterOne",sm) >>)
+  {
+    <<# if (customSetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",sm)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    <<= gen.translate("stateMachineOne",sm) >> = <<= gen.translate("parameterOne",sm) >>;
+<<# if (parentState != null) { #>>
+    if (<<= gen.translate("stateMachineOne",parentSm) >> != <<= gen.translate("type",parentSm) >>.<<= gen.translate("stateOne",parentState) >> && <<= gen.translate("parameterOne",sm) >> != <<= gen.translate("type",sm) >>.<<= gen.translate("stateNull",sm) >>) { <<=gen.translate("setMethod",parentSm)>>(<<= gen.translate("type",parentSm) >>.<<= gen.translate("stateOne",parentState) >>); }
+<<# } #>>
+    <<# if (customSetPostfixCode != null) {  addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",sm));
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+<<# if (hasEntry) { #>>
+
+    // entry actions and do activities
+    switch(<<= gen.translate("stateMachineOne",sm) >>)
+    {
+      <<= entryActions >>
+    }
+<<# } #>>
+<<# if (parentState != null) { #>>
+  <<# if (sm.getContainsDeepHistoryState()) { #>>
+    if (<<= gen.translate("parameterOne",sm) >> == <<= gen.translate("type",sm)  >>.HStar) { <<= gen.translate("stateMachineOne",sm) >> = <<= gen.translate("stateMachineOne", sm) >>HStar;}
+  <<# } #>>
+<<# } #>>
+  }
+!>>
+}

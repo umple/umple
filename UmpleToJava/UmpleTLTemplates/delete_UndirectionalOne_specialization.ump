@@ -1,0 +1,5 @@
+class UmpleToJava {
+    delete_UndirectionalOne_specialization <<!<</*delete_UndirectionalOne_specialization*/>>
+    <<=gen.translate("type",av)>> <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>();
+    <<=gen.translate("parameterExisting",av)>> = null;!>>
+}

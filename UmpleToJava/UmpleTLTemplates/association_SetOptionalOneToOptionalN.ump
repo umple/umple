@@ -1,0 +1,31 @@
+class UmpleToJava {
+    association_SetOptionalOneToOptionalN <<!<</*association_SetOptionalOneToOptionalN*/>>
+  public boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  {
+    boolean wasSet = false;
+    <<# if (customSetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    if (<<=gen.translate("parameterOne",av)>> != null && <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>>() >= <<=gen.translate("type",av)>>.<<=gen.relatedTranslate("maximumNumberOfMethod",av)>>())
+    {
+      <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } #>>
+      return wasSet;
+    }
+
+    <<=gen.translate("type",av)>> <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("associationOne",av)>>;
+    <<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterOne",av)>>;
+    if (<<=gen.translate("parameterExisting",av)>> != null && !<<=gen.translate("parameterExisting",av)>>.equals(<<=gen.translate("parameterOne",av)>>))
+    {
+      <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+    }
+    if (<<=gen.translate("parameterOne",av)>> != null)
+    {
+      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this);
+    }
+    wasSet = true;
+    <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return wasSet;
+  }
+!>>
+}
