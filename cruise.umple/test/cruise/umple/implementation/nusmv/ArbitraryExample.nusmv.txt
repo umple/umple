@@ -58,8 +58,8 @@ MODULE SmAA ( _sm )
      next( state ) := case
        _sm.t2 | _sm.t6 : SmAA_a2;
        _sm.t4 | _sm.t3 | _sm.t18 : SmAA_a3;
+       _sm.t5 : null;
        _sm.state = Sm_s2 & state = null : SmAA_a1;
-       _sm.state != Sm_s2 : null;
        TRUE : state;
      esac;
 
@@ -78,8 +78,8 @@ MODULE SmBB ( _sm )
        _sm.t8 | _sm.t12 : SmBB_b2;
        _sm.t7 | _sm.t11 : SmBB_b3;
        _sm.t10 : SmBB_b4;
+       _sm.t5 : null;
        _sm.state = Sm_s2 & state = null : SmBB_b1;
-       _sm.state != Sm_s2 : null;
        TRUE : state;
      esac;
 
@@ -97,8 +97,8 @@ MODULE SmCC ( _sm )
        _sm.t15 | _sm.t14 | _sm.t17 : SmCC_c2;
        _sm.t1 | _sm.t13 : SmCC_c3;
        _sm.t16 : SmCC_c4;
+       _sm.t5 | _sm.t18 : null;
        _sm.state = Sm_s2 & state = null : SmCC_c1;
-       _sm.state != Sm_s2 : null;
        TRUE : state;
      esac;
 

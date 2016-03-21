@@ -51,8 +51,8 @@ MODULE StatusOpen ( _status )
      next( state ) := case
        _status.t2 : StatusOpen_NotEnoughStudents;
        _status.t7 : StatusOpen_EnoughStudents;
+       _status.t1 | _status.t4 | _status.t6 | _status.t9 | _status.t3 | _status.t5 | _status.t8 | _status.t10 : null;
        _status.state = Status_Open & state = null : StatusOpen_NotEnoughStudents;
-       _status.state != Status_Open : null;
        TRUE : state;
      esac;
 

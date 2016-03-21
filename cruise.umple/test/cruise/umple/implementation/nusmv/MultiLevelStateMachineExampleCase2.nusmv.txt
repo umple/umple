@@ -44,8 +44,8 @@ MODULE SmS2 ( _sm )
      init( state ) := null;
      next( state ) := case
        _sm.t4 : SmS2_s22;
+       _sm.t1 | _sm.t3 | _sm.t2 | _sm.t5 : null;
        _sm.state = Sm_s2 & state = null : SmS2_s21;
-       _sm.state != Sm_s2 : null;
        TRUE : state;
      esac;
 
@@ -60,8 +60,8 @@ MODULE SmS2S21 ( _sm , _smS2 )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t2 | _sm.t4 | _sm.t1 | _sm.t3 | _sm.t5 : null;
        _smS2.state = SmS2_s21 & state = null : SmS2S21_s211;
-       _smS2.state != SmS2_s21 : null;
        TRUE : state;
      esac;
 
