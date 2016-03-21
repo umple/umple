@@ -30,4 +30,10 @@ public class CLASS
     buffer.append(StringFormatter.format(input,variables));
   }
 
+  // This method will have the JET stuff inserted into it.
+  // Will not be called anywhere, but will ensure the rest of the file works
+  // as expected
+  private void genHere() {
+  
+  }
 }
