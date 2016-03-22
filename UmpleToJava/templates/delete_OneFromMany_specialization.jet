@@ -1,4 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%>
-    <%=gen.translate("type",av)%> <%=gen.translate("removeParameterOne",av)%> = <%=gen.translate("getMethod",av)%>_One<%=gen.translate("type",av)%>();
-    clear_<%=gen.translate("associationOne",av)%>();
-    <%=gen.translate("removeParameterOne",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(this);

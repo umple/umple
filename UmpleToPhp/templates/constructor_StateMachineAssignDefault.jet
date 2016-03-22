@@ -1,3 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore" %>
-    $this-><%=gen.translate("setMethod",sm)%>(self::$<%=gen.translate("stateOne",state)%>);
-  

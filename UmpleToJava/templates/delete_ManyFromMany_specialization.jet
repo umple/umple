@@ -1,7 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%>
-    ArrayList<<%=gen.translate("type",av)%>> <%=gen.translate("parameterCopyOfMany",av)%> = new ArrayList<<%=gen.translate("type",av)%>>(<%=gen.translate("getManyMethod",av)%>_<%=gen.translate("type",av)%>());
-    clear_<%=gen.translate("associationMany",av)%>();
-    for(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("parameterCopyOfMany",av)%>)
-    {
-      <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(this);
-    }

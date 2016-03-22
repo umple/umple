@@ -1,5 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%>
-    while( !<%=gen.translate("associationMany",av)%>.isEmpty() )
-    {
-      <%=gen.translate("associationMany",av)%>.get(0).<%=gen.relatedTranslate("setMethod",av)%>(null);
-    }

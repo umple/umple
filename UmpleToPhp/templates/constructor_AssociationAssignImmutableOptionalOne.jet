@@ -1,4 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore" %>
-<%   
-    append(stringBuffer, "\n    ${0}->{1}(${2});", instanceIdentifier, gen.translate("setMethod",av), gen.translate("parameterOne",av));
-%>

@@ -1,4 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore" %>
-    unless <%=gen.translate("setMethod",av)%>(<%=gen.translate("parameterOne",av)%>)
-      raise "Unable to create <%=gen.relatedTranslate("type",av)%> due to <%=gen.translate("parameterOne",av)%>" 
-    end

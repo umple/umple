@@ -1,9 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore" %>
-  public static function getInstance()
-  {
-    if(self::$theInstance == null)
-    {
-      self::$theInstance = new <%=uClass.getName()%>();
-    }
-    return self::$theInstance;
-  }

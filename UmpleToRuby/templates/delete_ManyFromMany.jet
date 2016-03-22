@@ -1,6 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%>
-    <%=gen.translate("parameterCopyOfMany",av)%> = @<%=gen.translate("associationMany",av)%>.dup
-    @<%=gen.translate("associationMany",av)%>.clear
-    <%=gen.translate("parameterCopyOfMany",av)%>.each do |<%=gen.translate("parameterOne",av)%>|
-      <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(self)
-    end

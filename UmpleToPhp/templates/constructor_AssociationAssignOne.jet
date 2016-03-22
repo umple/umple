@@ -1,6 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore" %>
-    $<%=gen.translate("didAdd",av)%> = $<%=instanceIdentifier%>-><%=gen.translate("setMethod",av)%>($<%=gen.translate("parameterOne",av)%>);
-    if (!$<%=gen.translate("didAdd",av)%>)
-    {
-      throw new Exception("Unable to create <%=gen.relatedTranslate("associationOne",av)%> due to <%=gen.translate("associationOne",av)%>");
-    }
