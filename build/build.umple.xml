@@ -104,27 +104,7 @@
 
   <!-- Move the generic JET templates into the various UmpleTo* projects -->
   <target name="templates">
-	<!--
-	<exec executable="ruby" failonerror="true" dir="build">
-		<arg value="InsertDebugCodeScript.rb" />
-	</exec>
-	-->
-	  <echo>Copying of common templates no longer active</echo>
-	  <!-- DEPRECATED Templates in Jet not being used any more. We may reinstate
-	       UmplTL common templates later 
-    <copy todir="UmpleToJava/templates" overwrite="true">
-      <fileset dir="UmpleToTemplate/templates" excludes=".git*" />
-    </copy>
-    <copy todir="UmpleToPhp/templates" overwrite="true">
-      <fileset dir="UmpleToTemplate/templates" excludes=".git*" />
-    </copy>
-    <copy todir="UmpleToRuby/templates" overwrite="true">
-      <fileset dir="UmpleToTemplate/templates" excludes=".git*" />
-    </copy>
-      -->
-    <!-- OLD CPP Deprecated <copy todir="UmpleToCpp/templates" overwrite="true">
-      <fileset dir="UmpleToTemplate/templates" excludes=".git*" />
-    </copy> -->
+    <echo>Copying of common templates no longer active</echo>
   </target>
 
   <!-- Unzip JDT libraries into the jar construction folder -->
@@ -146,11 +126,10 @@
 
     <!-- First compile the Umple templates -->
     <!-- Default to using the stable version of umple since it should always be available -->
-    <!--
     <parallel>
-      <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+      <!-- <java jar="${umple.stable.jar}" fork="true" failonerror="true">
         <arg value="UmpleToJava/UmpleTLTemplates/Master.ump"/>
-      </java>
+      </java> -->
       <java jar="${umple.stable.jar}" fork="true" failonerror="true">
         <arg value="UmpleToPhp/UmpleTLTemplates/Master.ump"/>
       </java>
@@ -160,26 +139,22 @@
       <java jar="${umple.stable.jar}" fork="true" failonerror="true">
         <arg value="UmpleToSql/UmpleTLTemplates/Master.ump"/>
       </java>
-    </parallel> -->
+    </parallel>
 
     <!-- To compile the following (other than CPP) with Umple templates:
-       1) Uncomment the above parallel
-       2) Change the UmpleTo*/src/cruise/... to UmpleTo*/src-gen-UmpleTL/cruise... -->
+       1) Uncomment the above commented out block
+       2) Change the UmpleToJava/src/cruise/... to UmpleTo*/src-gen-UmpleTL/cruise... -->
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/java" overwrite="true">
       <fileset dir="UmpleToJava/src/cruise/umple/compiler/java" excludes=".git* UmpleToJava.java" />
     </copy>
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/php" overwrite="true">
-      <fileset dir="UmpleToPhp/src/cruise/umple/compiler/php" excludes=".git* UmpleToPhp.java" />
+      <fileset dir="UmpleToPhp/src-gen-UmpleTL/cruise/umple/compiler/php" excludes=".git* UmpleToPhp.java" />
     </copy>
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/ruby" overwrite="true">
-      <fileset dir="UmpleToRuby/src/cruise/umple/compiler/ruby" excludes=".git* UmpleToRuby.java" />
+      <fileset dir="UmpleToRuby/src-gen-UmpleTL/cruise/umple/compiler/ruby" excludes=".git* UmpleToRuby.java" />
     </copy>
-    <!-- OLD CPP DEPRECATED To DELETE  -->
-    <!-- <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/cpp" overwrite="true">
-      <fileset dir="UmpleToCpp/src/cruise/umple/compiler/cpp" excludes=".git*" />
-    </copy> -->
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/sql" overwrite="true">
-      <fileset dir="UmpleToSql/src/cruise/umple/compiler/sql" excludes=".git* UmpleToSql.java" />
+      <fileset dir="UmpleToSql/src-gen-UmpleTL/cruise/umple/compiler/sql" excludes=".git* UmpleToSql.java" />
     </copy>
   </target>
 
