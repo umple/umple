@@ -1,0 +1,34 @@
+class UmpleToJava {
+    state_machine_doActivity <<!<</*state_machine_doActivity*/>><<#
+  Event e = activity.getOnCompletionEvent();
+  String postTransition = e != null ? gen.translate("eventMethod",e) : null; 
+#>>
+<<# Position p = activity.getPosition();
+if (p != null) { 
+   int javaline = realSb.toString().split("\\n").length;
+   addUncaughtExceptionVariables(gen.translate("doActivityMethod",activity),p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline+7,activity.getActivityCode().split("\\n").length); 
+  } #>>
+  private void <<= gen.translate("doActivityMethod",activity)>>()
+  {
+    try
+    {
+      <<= activity.getActivityCode() >>
+      Thread.sleep(1);
+      <<# if (postTransition != null)
+      { 
+        for (Activity a : state.getActivities())
+        {
+          if(a != activity){
+            append(realSb, "\n      {0}.join();",gen.translate("doActivityThread",a));
+          }
+        }
+        append(realSb, "\n      {0}();",postTransition); 
+      } #>>
+    }
+    catch (InterruptedException e)
+    {
+
+    }
+  }
+!>>
+}

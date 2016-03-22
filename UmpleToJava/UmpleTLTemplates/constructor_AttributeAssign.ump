@@ -1,0 +1,6 @@
+class UmpleToJava {
+    constructor_AttributeAssign <<!<</*constructor_AttributeAssign*/>><<#
+  String parameterLookup = av.getValue() == null || av.getModifier().equals("fixml") ? "parameterOne" : "parameterValue";
+#>>
+    <<=gen.translate("attributeOne",av)>> = <<=gen.translate(parameterLookup,av)>>;!>>
+}

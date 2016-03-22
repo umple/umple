@@ -1,0 +1,17 @@
+class UmpleToJava {
+    attribute_SetDefaulted_subclass <<!<</*attribute_SetDefaulted_subclass*/>>
+  public boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  {
+    boolean wasSet = false;
+    <<# if (customSetPrefixCode != null) { 
+      addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+      <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"at_s", uClass,gen.translate("parameterOne",av)):"")>>
+      wasSet = super.<<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+      <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"at_s", uClass):"")>>
+    <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return wasSet;
+  }
+!>>
+}

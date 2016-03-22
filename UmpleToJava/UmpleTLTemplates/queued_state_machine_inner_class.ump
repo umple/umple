@@ -1,0 +1,138 @@
+class UmpleToJava {
+    queued_state_machine_inner_class <<!<</*queued_state_machine_inner_class*/>><<#
+  appendln(realSb,"\n  protected class Message");
+  appendln(realSb,"  {");
+  appendln(realSb,"    MessageType type;"); 
+  appendln(realSb,"    ");  
+  appendln(realSb,"    //Message parameters");
+  appendln(realSb,"    Vector<Object> param;"); 
+  appendln(realSb,"    ");   
+  appendln(realSb,"    public Message(MessageType t, Vector<Object> p)");
+  appendln(realSb,"    {");
+  appendln(realSb,"      type = t; "); 
+  appendln(realSb,"      param = p;");
+  appendln(realSb,"    }");
+  appendln(realSb,"");
+  appendln(realSb,"    @Override");
+  appendln(realSb,"    public String toString()");
+  appendln(realSb,"    {");
+  appendln(realSb,"      return type + \",\" + param;");
+  appendln(realSb,"    }");
+  appendln(realSb,"  }");
+  appendln(realSb,"  ");  
+ 
+  if (smq.isQueued())
+  {
+    appendln(realSb,"  protected class MessageQueue {");
+    appendln(realSb,"    Queue<Message> messages = new LinkedList<Message>();");
+    appendln(realSb,"    ");   
+    appendln(realSb,"    public synchronized void put(Message m)");
+    appendln(realSb,"    {");
+    appendln(realSb,"      messages.add(m); "); 
+    appendln(realSb,"      notify();");
+    appendln(realSb,"    }");
+    appendln(realSb,"");  
+    appendln(realSb,"    public synchronized Message getNext()");
+    appendln(realSb,"    {");
+    appendln(realSb,"      try {");
+    appendln(realSb,"        while (messages.isEmpty()) "); 
+    appendln(realSb,"        {");
+    appendln(realSb,"          wait();");
+    appendln(realSb,"        }");
+    appendln(realSb,"      } catch (InterruptedException e) { e.printStackTrace(); } "); 
+    appendln(realSb,"");
+    appendln(realSb,"      //The element to be removed");
+    appendln(realSb,"      Message m = messages.remove(); "); 
+    appendln(realSb,"      return (m);");
+    appendln(realSb,"    }");
+    append(realSb,"  }");  
+  }
+  else if(smq.isPooled())
+  {
+    appendln(realSb,"  protected class MessagePool {");
+    appendln(realSb,"    Queue<Message> messages = new LinkedList<Message>();");
+    appendln(realSb,"    ");   
+    appendln(realSb,"    public synchronized void put(Message m)");
+    appendln(realSb,"    {");
+    appendln(realSb,"      messages.add(m); "); 
+    appendln(realSb,"      notify();");
+    appendln(realSb,"    }");
+    appendln(realSb,"");  
+    appendln(realSb,"    public synchronized Message getNext()");
+    appendln(realSb,"    {");
+    appendln(realSb,"      Message message=null;");
+    appendln(realSb,"");
+    appendln(realSb,"      try {");
+    appendln(realSb,"        message=getNextProcessableMessage();");
+    appendln(realSb,"        while (message==null)");
+    appendln(realSb,"        {");
+    appendln(realSb,"          wait();");
+    appendln(realSb,"          message=getNextProcessableMessage();");
+    appendln(realSb,"        }");
+    appendln(realSb,"      } catch (InterruptedException e) { e.printStackTrace(); }");
+    appendln(realSb,"");
+    appendln(realSb,"      // return the message");
+    appendln(realSb,"      return (message);");
+    appendln(realSb,"    }");
+    appendln(realSb,"");
+    appendln(realSb,"    public Message getNextProcessableMessage()");
+    appendln(realSb,"    {");
+    appendln(realSb,"      // Iterate through messages and remove the first message that matches one of the Messages list");
+    appendln(realSb,"      // otherwise return null");
+    appendln(realSb,"      for (Message msg: messages)");
+    appendln(realSb,"      {");
+    
+    for(StateMachine sm: uClass.getStateMachines())
+    {
+      if(sm.isPooled())
+      {
+        if(sm.getNestedStateMachines().isEmpty())
+        {
+          append(realSb,"        if(stateMessageMap.get(get");
+          append(realSb,"{0}", gen.translate("type",sm));
+          appendln(realSb,"()).contains(msg.type))");
+          appendln(realSb,"        {");
+          appendln(realSb,"          //The element to be removed");
+          appendln(realSb,"          messages.remove(msg);");
+          appendln(realSb,"          return (msg);");
+          appendln(realSb,"        }");
+        }
+        else if(!sm.getNestedStateMachines().isEmpty())
+        {
+          append(realSb,"        if(stateMessageMap.get(get");
+          append(realSb,"{0}", gen.translate("type",sm));
+          appendln(realSb,"()).contains(msg.type))");
+          appendln(realSb,"        {");
+          appendln(realSb,"          //The element to be removed");
+          appendln(realSb,"          messages.remove(msg);");
+          appendln(realSb,"          return (msg);");
+          appendln(realSb,"        }");
+          append(realSb,"        else");
+          int nsmSize = sm.getNestedStateMachines().size();
+          int nesCount = 0;
+          for(StateMachine nsm : sm.getNestedStateMachines())
+          {
+            nesCount++;
+            append(realSb," if(stateMessageMap.get(get");
+            append(realSb,"{0}", gen.translate("type",nsm));
+            appendln(realSb,"()).contains(msg.type))");
+            appendln(realSb,"        {");
+            appendln(realSb,"          //The element to be removed");
+            appendln(realSb,"          messages.remove(msg);");
+            appendln(realSb,"          return (msg);");
+            appendln(realSb,"        }");
+            if(nsmSize > nesCount)
+            {
+              append(realSb,"        else");
+            }
+          }
+        }
+      }
+    }
+    appendln(realSb,"      }");
+    appendln(realSb,"      return null;");
+    appendln(realSb,"    }");
+    append(realSb,"  }"); 
+  }
+#>>!>>
+}

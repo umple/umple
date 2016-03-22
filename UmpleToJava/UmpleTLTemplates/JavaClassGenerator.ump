@@ -1,0 +1,264 @@
+use UmpleNotice.ump;
+use association_Get_All.ump;
+use association_Set_All.ump;
+use attribute_Get_All.ump;
+use attribute_IsBoolean_All.ump;
+use attribute_Set_All.ump;
+use class_MethodDeclaration.ump;
+use constructor_Declare_All.ump;
+use delete_All.ump;
+use equals.ump;
+use import_packages.ump;
+use members_AllAssociations.ump;
+use members_AllAttributes.ump;
+use members_AllDoActivities.ump;
+use members_AllHelpers.ump;
+use members_AllStateMachines.ump;
+use members_AllStatics.ump;
+use queued_state_machine_inner_class.ump;
+use queued_state_machine_queuedEvent.ump;
+use queued_state_machine_removalThread_run.ump;
+use state_machine_Events_All.ump;
+use state_machine_Get_All.ump;
+use state_machine_Set_All.ump;
+use state_machine_doActivity_All.ump;
+use state_machine_timedEvent_All.ump;
+use toString_declare.ump;
+use trace.ump;
+use uncaught_exception.ump;
+
+
+namespace cruise.umple.compiler.java;
+
+external interface ILang{}
+
+class JavaClassGenerator {
+    depend cruise.umple.compiler.*;
+    depend cruise.umple.util.*;
+    depend java.util.*;
+    depend cruise.umple.parser.Position;
+
+    isA ILang;
+
+    // Add a newline to the end of the input
+    private void appendln(StringBuilder buffer, String input, Object... variables)
+    {
+        append(buffer, input + "\n", variables);
+    }
+
+    // This method will be used to append formatted strings
+    // i.e. format("Hello {0} {1}", "andrew","forward");
+    private void append(StringBuilder buffer, String input, Object... variables)
+    {
+        buffer.append(StringFormatter.format(input,variables));
+    }
+
+    emit getCode(UmpleModel model, UmpleElement uElement)(JavaClassGenerator);
+
+
+    JavaClassGenerator <<!<</*JavaClassGenerator*/>><<@ UmpleToJava.UmpleNotice >>
+<<#
+  UmpleClass uClass = (UmpleClass) uElement;
+  globalUmpleClass = uClass;  
+  GeneratedClass gClass = uClass.getGeneratedClass();
+  JavaGenerator gen = new JavaGenerator();
+  gen.setModel(model);
+  GeneratorHelper.generator = gen;
+
+  HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
+  for (CodeInjection inject : uClass.getCodeInjections())
+  {
+    String operation = StringFormatter.toUnderscore(inject.getOperation());
+    String key = inject.getType() + ":" + operation;
+    String newCodeToInject = "";
+    String injectCode = inject.getConstraintTree()==null?inject.getCode():inject.getConstraintCode(gen);
+    if (codeInjectionMap.containsKey(key))
+    {
+      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),injectCode);
+    }
+    else
+    {
+      newCodeToInject = injectCode;
+    }
+    codeInjectionMap.put(key,newCodeToInject);
+  }
+
+  boolean isFirst = true;
+#>>
+
+<<=gen.translate("packageDefinition",uClass)>><<@ UmpleToJava.import_packages >>
+
+
+<<# if (uClass.numberOfComments() > 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } #>>
+<<# for (Position p : uClass.getPositions()) { #>>
+<<# uClass.setSourceFilename( p.getFilename() ); #>>
+// line <<= p.getLineNumber() >> "<<= uClass.getRelativePath("Java") >>"
+<<# } #>>
+public <<# if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
+
+for (StateMachine smq : uClass.getStateMachines())
+  {
+    if (smq.isQueued())
+    {
+      append(realSb," implements Runnable");
+      break;
+    }
+    else if(smq.isPooled())
+    {
+      append(realSb," implements Runnable");
+      break;
+    }
+  }
+
+#>>
+{
+  <<#getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
+  getConstructorCode(realSb, model,uClass,gClass,gen,isFirst, false);
+  getAttributeCode(realSb, model,uClass,gClass,gen,isFirst,false);
+  getStateMachine1Code(realSb, model,uClass,gClass,gen,isFirst,false);
+  getAssociationCode(realSb, model,uClass,gClass,gen,isFirst,false);
+  getEqualsCode(realSb, model,uClass,gClass,gen,isFirst);
+  getStateMachine2Code(realSb, model,uClass,gClass,gen,isFirst);
+  getDeleteCode(realSb, model,uClass,gClass,gen,isFirst,false);
+  getExtraMethodsCode(realSb, model,uClass,gClass,gen,isFirst);
+  getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
+  return realSb;
+    } 
+    private String getMemberCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {#>><<@ UmpleToJava.members_AllStatics >><<@ UmpleToJava.members_AllAttributes >><<@ UmpleToJava.members_AllStateMachines >><<@ UmpleToJava.members_AllDoActivities >><<@ UmpleToJava.members_AllAssociations >><<@ UmpleToJava.members_AllHelpers >>
+  <<#return realSb.toString();
+    }
+  private UmpleClass globalUmpleClass = null;
+  public Map<String,UncaughtException> uncaughtExceptions = new HashMap<String,UncaughtException>();
+  
+    private String getConstructorCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  {
+    Integer baseJavaLine = realSb.toString().split("\\n").length;
+    boolean reqSuperCode, reqCommonCode;
+    AssociationVariable relatedAssociation;
+    Association relatedAssoc;#>>
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+<<@ UmpleToJava.constructor_Declare_All >>
+  <<#return realSb.toString();
+    } 
+    private String getAttributeCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  { 
+    String umpleSourceFile = "";
+    Integer baseJavaLine = realSb.toString().split("\\n").length;#>>
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+<<@ UmpleToJava.attribute_Set_All >><<@ UmpleToJava.attribute_Get_All >><<@ UmpleToJava.attribute_IsBoolean_All >>
+  <<#return realSb.toString();
+    } 
+    private String getStateMachine1Code(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  {
+    Integer baseJavaLine = realSb.toString().split("\\n").length;#>><<@ UmpleToJava.state_machine_Get_All >><<@ UmpleToJava.state_machine_Events_All >><<@ UmpleToJava.state_machine_Set_All >><<#
+    return realSb.toString(); 
+  } 
+  private String getAssociationCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  {
+    String umpleSourceFile = "";
+    Integer baseJavaLine = realSb.toString().split("\\n").length+3;#>><<@ UmpleToJava.association_Get_All >><<@ UmpleToJava.association_Set_All >>
+  <<#return realSb.toString();
+    } 
+    
+    private String getEqualsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {#>>
+<<# if (uClass.getKey().isProvided()) { #>><<@ UmpleToJava.equals >>
+<<# } #>>
+  <<#return realSb.toString();
+    } 
+    private String getStateMachine2Code(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {#>><<@ UmpleToJava.state_machine_doActivity_All >><<@ UmpleToJava.state_machine_timedEvent_All >>
+  <<#return realSb.toString();
+    } 
+    private String getDeleteCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  {
+    Integer baseJavaLine = realSb.toString().split("\\n").length+1; #>><<@ UmpleToJava.delete_All >>
+    <<# for (StateMachine smq : uClass.getStateMachines())
+     {
+       if (smq.isPooled())
+       {#>><<@ UmpleToJava.queued_state_machine_inner_class >><<@ UmpleToJava.queued_state_machine_queuedEvent >><<@ UmpleToJava.queued_state_machine_removalThread_run >>
+       <<# break;
+       }       
+       if (smq.isQueued())
+       {#>><<@ UmpleToJava.queued_state_machine_inner_class >><<@ UmpleToJava.queued_state_machine_queuedEvent >><<@ UmpleToJava.queued_state_machine_removalThread_run >>
+       <<# break;
+       }
+     }#>>
+  <<#return realSb.toString();
+    } 
+    private String getExtraMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {#>>
+<<# if (uClass.hasMethods()) { #>><<@ UmpleToJava.class_MethodDeclaration >>
+<<# } #>><<# 
+   boolean matchFound = false;
+   UmpleClass parent = uClass.getExtendsClass(); 
+   if(uClass.getExtraCode() != null)
+   {
+     matchFound = java.util.regex.Pattern.compile(".*((public)|(protected)|(private))\\s+(String)\\s+(toString)\\s*\\(\\s*\\).*", java.util.regex.Pattern.DOTALL).matcher(uClass.getExtraCode()).matches();
+   }
+   if(parent!=null && parent.getExtraCode() != null)
+   {
+     matchFound = java.util.regex.Pattern.compile(".*((public)|(protected)|(private))\\s+(String)\\s+(toString)\\s*\\(\\s*\\).*", java.util.regex.Pattern.DOTALL).matcher(parent.getExtraCode()).matches();
+   }
+   if(!matchFound)
+   for(Method meth: uClass.getMethods())
+   {
+     if("toString".equals(meth.getName()))
+     {
+       matchFound = true;
+       break;
+     }
+   }
+   if(!matchFound && parent!=null)
+   for(Method meth: parent.getMethods())
+   {
+     if("toString".equals(meth.getName()))
+     {
+       matchFound = true;
+       break;
+     }
+   }
+   if (uClass.getAttributes().size()>0 && !matchFound){ #>><<@ UmpleToJava.toString_declare >>
+<<# } #>>
+  <<#return realSb.toString();
+    } 
+    private String getAllExtraCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {#>>
+<<# 
+  boolean isMainClass = false;
+  if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { #>>  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  <<=uClass.getExtraCode()>>
+  
+
+<<# } #>><<@ UmpleToJava.trace >><<#if(uClass!=mainMainClass){#>>
+}<<#}
+  return realSb.toString();
+}
+#>><<@ UmpleToJava.uncaught_exception >><<#
+
+
+
+/* This function is meant purely to properly end the emit code in Umple
+   Should never be called
+   Only purpose is to make sure the 'if (numSpaces > 0)' part of the template
+   Doesn't cause errors */
+private StringBuilder endTemplate()
+{
+  GeneratorHelper.generator = null;
+  int numSpaces = 0;
+  StringBuilder newCode = null;
+  StringBuilder sb = null;
+  String spaces = "";
+#>>!>>
+}

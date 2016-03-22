@@ -1,0 +1,13 @@
+class UmpleToJava {
+    state_machine_Event_StartStopTimer <<!<</*state_machine_Event_StartStopTimer*/>>
+  private void <<=gen.translate("eventStartMethod",e) >>()
+  {
+    <<= gen.translate("eventHandler",e) >> = new TimedEventHandler(this,"<<= gen.translate("eventMethod",e) >>",<<= e.getTimerInSeconds() >>);
+  }
+
+  private void <<=gen.translate("eventStopMethod",e) >>()
+  {
+    <<= gen.translate("eventHandler",e) >>.stop();
+  }
+!>>
+}

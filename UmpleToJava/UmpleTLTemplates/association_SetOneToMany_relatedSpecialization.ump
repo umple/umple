@@ -1,0 +1,28 @@
+class UmpleToJava {
+    association_SetOneToMany_relatedSpecialization <<!<</*association_SetOneToMany_relatedSpecialization*/>>
+  public boolean <<=gen.translate("setMethod",av)>>_<<=gen.translate("type",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  {
+    boolean wasSet = false;
+    <<# if (customSetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    if (<<=gen.translate("parameterOne",av)>> == null)
+    {
+      <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } #>>
+      return wasSet;
+    }
+
+    <<=gen.translate("type",av)>> <<=gen.translate("parameterExisting",av)>> = <<# if (mulChangedToOne) { #>><<=gen.translate("getMethod",av)>>_One<<=gen.translate("type",av)>>()<<# } else {#>>(<<=gen.translate("type",av)>>)<<=gen.translate("associationOne",av)>><<# } #>>;
+    <<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterOne",av)>>;
+    if (<<=gen.translate("parameterExisting",av)>> != null && !<<=gen.translate("parameterExisting",av)>>.equals(<<=gen.translate("parameterOne",av)>>))
+    {
+      <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+    }
+    <<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this);
+    wasSet = true;
+    <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return wasSet;
+  }
+!>>
+}

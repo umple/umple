@@ -1,0 +1,10 @@
+class UmpleToJava {
+    delete_ManyFromX_comp_specialization <<!<</*delete_ManyFromX_comp_specialization*/>>
+    while (<<=gen.translate("getManyMethod",av)>>_<<=gen.translate("type",av)>>().size() > 0)
+    {
+      <<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>> = <<=gen.translate("getManyMethod",av)>>_<<=gen.translate("type",av)>>().get(<<=gen.translate("getManyMethod",av)>>_<<=gen.translate("type",av)>>().size() - 1);
+      <<=gen.translate("parameterOne",av)>>.delete();
+      <<=gen.translate("getManyMethod",av)>>_<<=gen.translate("type",av)>>().remove(<<=gen.translate("parameterOne",av)>>);
+    }
+    !>>
+}

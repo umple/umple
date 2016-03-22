@@ -1,0 +1,204 @@
+class UmpleToJava {
+    queued_state_machine_queuedEvent <<!<</*queued_state_machine_queuedEvent*/>><<#
+  append(realSb,"\n");
+  append(realSb,"\n  //------------------------------");
+  append(realSb,"\n  //messages accepted ");
+  append(realSb,"\n  //------------------------------");
+  append(realSb,"\n");
+  
+  
+  String evName="";
+  boolean sameEvName=false;
+  List<String> evList=new ArrayList<String>();
+          
+  for (StateMachine sm : uClass.getStateMachines())
+  {
+    if(sm.isQueued() || sm.isPooled()) 
+    { 
+      for(Event event : sm.getEvents())
+      { 
+        for(int i=0; i<evList.size(); i++)
+        {
+          if(evList.get(i).equals(event.getName()))
+          {
+            sameEvName=true;
+          }
+        }
+             
+        if(sameEvName == false)
+        {
+          if(event.isAutoTransition() == false)
+          {
+            if(event.getIsTimer())
+            {
+               evList.add(event.getName());
+               append(realSb,"\n");
+               append(realSb,"  public boolean ");
+               append(realSb,"{0} ()",gen.translate("eventMethod",event));
+               append(realSb,"\n  {");
+               append(realSb,"\n    boolean wasAdded = false;");
+          
+               if(sm.isQueued())
+               {
+                 append(realSb,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+               }
+               if(sm.isPooled())
+               {
+                 append(realSb,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+               }
+               append(realSb,"_M, null));");
+       
+               append(realSb,"\n    wasAdded = true;");
+               append(realSb,"\n    return wasAdded;");
+               append(realSb,"\n  }");
+               append(realSb,"\n");
+               evName = event.getName();
+            }
+            if(!event.isUnspecified())
+            {
+              if( !evName.equals(event.getName()))
+              {
+                evList.add(event.getName());
+                append(realSb,"\n");
+                append(realSb,"  public void ");
+                append(realSb,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
+                append(realSb,"\n  {");
+          
+                if (!event.getArgs().equals(""))
+                {
+                  append(realSb,"\n    Vector v = new Vector({0});", event.getParams().size());
+                  for ( int i=0; i < event.getParams().size(); i++)
+                  {
+                    append(realSb,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
+                  }
+                  if(sm.isQueued())
+                  {
+                    append(realSb,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                  }
+                  if(sm.isPooled())
+                  {
+                    append(realSb,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                  }
+                  append(realSb,"_M, v));");
+                }
+                else
+                {
+                  if(sm.isQueued())
+                  {
+                    append(realSb,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                  }
+                  if(sm.isPooled())
+                  {
+                    append(realSb,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                  }
+                  append(realSb,"_M, null));");
+                }
+                append(realSb,"\n  }");
+                append(realSb,"\n");
+                evName = event.getName();
+              }
+            }
+          }
+        }
+        sameEvName = false;        
+      }
+
+
+      for (StateMachine nsm : sm.getNestedStateMachines())
+      {
+        for (Event e : nsm.getEvents())
+        {
+          for(int i=0; i<evList.size(); i++)
+          {
+            if(evList.get(i).equals(e.getName()))
+            {
+              sameEvName=true;
+            }
+          }
+        
+          if(sameEvName == false)
+          {
+            if(e.isAutoTransition() == false)
+            {
+              if(e.getIsTimer())
+              {
+                evList.add(e.getName());
+                append(realSb,"\n");
+                append(realSb,"  public boolean ");
+                append(realSb,"{0} ()",gen.translate("eventMethod",e));
+                append(realSb,"\n  {");
+                append(realSb,"\n    boolean wasAdded = false;");
+          
+                if(sm.isQueued())
+                {
+                  append(realSb,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                }
+                if(sm.isPooled())
+                {
+                  append(realSb,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                }
+                append(realSb,"_M, null));");
+       
+                append(realSb,"\n    wasAdded = true;");
+                append(realSb,"\n    return wasAdded;");
+                append(realSb,"\n  }");
+                append(realSb,"\n");
+                evName = e.getName();
+              }
+              if(!e.isUnspecified())
+              {
+                 if(e.getIsInternal() == false)
+                 {
+                   if( !evName.equals(e.getName()))
+                   {
+                     evList.add(e.getName());
+                     append(realSb,"\n");
+                     append(realSb,"  public void ");
+                     append(realSb,"{0} ({1})",gen.translate("eventMethod",e), e.getArgs());
+                     append(realSb,"\n  {");
+        
+                     if (!e.getArgs().equals(""))
+                     {
+                       evList.add(e.getName());
+                       append(realSb,"\n    Vector v = new Vector({0});", e.getParams().size());
+                       for ( int i=0; i < e.getParams().size(); i++)
+                       {
+                         append(realSb,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
+                       }
+                       if(sm.isQueued())
+                       {
+                         append(realSb,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                       }
+                       if(sm.isPooled())
+                       {
+                         append(realSb,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                       } 
+                       append(realSb,"_M, v));"); 
+                     }
+                     else
+                     {
+                       if(sm.isQueued())
+                       {
+                         append(realSb,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                       }
+                       if(sm.isPooled())
+                       {
+                         append(realSb,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                       }
+                       append(realSb,"_M, null));");
+                     }
+                     append(realSb,"\n  }");
+                     append(realSb,"\n");
+                     evName = e.getName();
+                   }
+                 }
+               }
+             }
+           }
+           sameEvName=false;
+         }
+        }
+      }
+    }
+#>>!>>
+}

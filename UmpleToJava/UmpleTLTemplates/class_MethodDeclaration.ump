@@ -1,0 +1,297 @@
+class UmpleToJava {
+    class_MethodDeclaration <<!<</*class_MethodDeclaration*/>><<#
+    if (uClass.hasMethods())
+    {
+      for (Method aMethod : uClass.getMethods()) 
+      {
+        List<TraceItem> traceItems= aMethod.getTraced("method",uClass);
+        
+        if(!aMethod.getExistsInLanguage("Java"))
+          continue;
+        
+          
+        Position p = aMethod.getCodePosition();
+        String positionHeader = "";        
+        
+        if (p != null) {
+//        use annotations instead
+        uClass.setSourceFilename( p.getFilename() );
+        positionHeader = "  // line " + p.getLineNumber() + " \"" + uClass.getRelativePath("Java") + "\"\n";
+//        positionHeader = "\n  @umplesourcefile(line={"+p.getLineNumber()+"},file={\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+(javaline+4)+"},length={"+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length+2)+"})";          
+        }
+        else 
+        {
+          p = aMethod.getPosition();
+//          positionHeader = "\n  @umplesourcefile(line={"+p.getLineNumber()+"},file={\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+(javaline+3)+"},length={"+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length+2)+"})";
+        }
+        String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
+        String methodImplementationModifier = aMethod.getIsAbstract() ? " abstract" : "";
+        String methodName = aMethod.getName();
+        String methodType = aMethod.getType();
+        String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName()));
+        String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", aMethod.getName()));
+        String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));        
+        String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
+        customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
+
+        String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
+        String properMethodBody = "    " + methodBody; 
+        String override =  aMethod.getIsImplemented() ? "  @Override\n" : "";
+        String paramName="";
+        String paramType="";
+        String aSingleParameter="";
+        String isList="";
+        String finalParams = "";        
+        String finalParamsWithoutTypes = "";
+        if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static"))
+        {
+          String exceptionHandlerPackage = "";
+          if(mainMainClass!=null)
+          {
+            exceptionHandlerPackage = mainMainClass.getPackageName()+"."+mainMainClass.getName()+".";
+          }
+          else
+          {
+            mainMainClass = uClass;
+          }
+          properMethodBody = "    Thread.currentThread().setUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+
+                             "    Thread.setDefaultUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+properMethodBody;
+          uClass.setHasMainMethod(true);
+        }
+        StringBuilder parameters = new StringBuilder();
+        StringBuilder parametersWithoutTypes = new StringBuilder();
+        if (aMethod.hasMethodParameters())
+        {
+          for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
+          {
+            paramName = aMethodParam.getName();
+            paramType = aMethodParam.getType();
+            isList = aMethodParam.getIsList() ? " [] " : " ";
+            aSingleParameter = paramType + isList + paramName;
+            parameters.append(aSingleParameter + ", ");
+            parametersWithoutTypes.append(aMethodParam.getName() + ", ");
+          }
+          
+          finalParams = parameters.toString().substring(0, parameters.toString().length()-2);
+          finalParamsWithoutTypes = parametersWithoutTypes.toString().substring(0, parametersWithoutTypes.toString().length()-2);
+        }
+        
+        if (aMethod.numberOfComments() > 0) { append(realSb, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
+        
+        append(realSb,"\n");
+        int javaline = realSb.toString().split("\\n").length+(aMethod.numberOfComments() > 0?0:1);
+
+        StringBuilder methodExceptionsBuilder = new StringBuilder();
+        if(aMethod.getExceptions()!=null&&aMethod.numberOfExceptions()>0)
+        {
+          methodExceptionsBuilder.append(" throws ");
+          String exceptioncomma = "";
+          for(String methodException:aMethod.getExceptions())
+          {
+            if(!"".equals(methodException))
+            {
+              methodExceptionsBuilder.append(exceptioncomma);
+              methodExceptionsBuilder.append(methodException);
+              exceptioncomma = ",";
+            }
+          }
+        }
+        String methodExceptions = methodExceptionsBuilder.toString();
+
+        if(!"".equals(customPostconditionCode))
+        {
+          StringBuilder lineNumbers = new StringBuilder();
+          StringBuilder javaLineNumbers = new StringBuilder();
+          StringBuilder filenames = new StringBuilder();
+          StringBuilder lengths = new StringBuilder();
+          String comma = "";
+          if(p!=null)
+          {
+            int previousConditionsFound = 0;
+            for(Postcondition condition:uClass.getPostconditions())
+            {
+              if(condition.getMethod().equals(aMethod)&&condition.getPosition()!=null)
+              {
+                lineNumbers.append(comma+(condition.getPosition().getLineNumber()));
+                filenames.append(comma+condition.getPosition().getFilename());
+                javaLineNumbers.append(comma+(javaline+7+3*previousConditionsFound));
+                lengths.append(comma+"1");
+                comma = ",";
+                previousConditionsFound++;
+              }
+            }
+          }
+          if(!"".equals(lineNumbers.toString())){
+            String positionEndHeader = "\n";
+          }
+                    
+          append(realSb,positionHeader);
+          append(realSb,override);
+          append(realSb, "{5}  {0}{1} {2} {3}({4}){6}", methodModifier, methodImplementationModifier, methodType, methodName, finalParams, positionHeader, methodExceptions);
+        
+          appendln(realSb, "{");
+          if(!"".equals(methodType)&&!"void".equals(methodType))
+          {
+            append(realSb, "    {0} result = {1}_Original({2});\n", methodType, methodName, finalParamsWithoutTypes);
+          }
+          else
+          {
+            append(realSb, "    {0}_Original({1});\n", methodName, finalParamsWithoutTypes);
+          }
+          appendln(realSb, GeneratorHelper.doIndent(customPostconditionCode, "    "));
+          if(!"".equals(methodType)&&!"void".equals(methodType))
+          {
+            append(realSb, "    return result;\n");
+            javaline++;
+          }          
+          appendln(realSb, "  }");
+          
+          javaline+= 5+customPostconditionCode.split("\\n").length;
+          append(realSb, "\n  {0}{1} {2} {3}_Original({4}){5}", methodModifier, methodImplementationModifier, methodType, methodName, finalParams, methodExceptions);
+        }
+        else
+        {
+          append(realSb,override);
+          append(realSb, "{5}  {0}{1} {2} {3}({4}){6}", methodModifier, methodImplementationModifier, methodType, methodName, finalParams, positionHeader, methodExceptions);
+        }
+        if(aMethod.getIsAbstract())
+        {
+          append(realSb, ";");
+        }
+        else
+        {
+          appendln(realSb, "{");
+          for( TraceItem traceItem : traceItems )append(realSb, (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, aMethod,"me_e", uClass):""));
+          if (customPreconditionCode != null) { append(realSb, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
+          if (customBeforeInjectionCode != null) { append(realSb, "{0}\n",GeneratorHelper.doIndent(customBeforeInjectionCode, "    "));}
+          
+          addUncaughtExceptionVariables(methodName,p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline,realSb.toString().split("\\n").length+1-javaline);
+          String traceCode = "";
+          if(properMethodBody.contains("return"))
+          {
+            for( TraceItem traceItem : traceItems )traceCode += (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):"");
+              properMethodBody = properMethodBody.replaceAll("return", traceCode + "return");
+
+            if(customAfterInjectionCode != null) {
+              // Do some pre-processing to handle returns not being on a new line. Doing this allows us to maintain suitable indentation.
+              String[] properMethodLines = properMethodBody.split("\\n");
+              String fixedProperMethodBody = "";
+              for(int i = 0; i < properMethodLines.length; i++) {
+                if(properMethodLines[i].contains("return") && !properMethodLines[i].trim().substring(0, 6).equals("return")) {
+                  String[] splitLines = properMethodLines[i].split("return", 2); 
+                  // Determine indentation of return by adding indentation amount to previous line
+                  String returnIndent = "";
+                  int j = 0;
+                  while(splitLines[0].charAt(j) == ' ') {
+                    returnIndent += " ";
+                    j++;
+                  }
+
+                  fixedProperMethodBody += returnIndent + splitLines[0].trim() + "\n";
+
+                  String[] returnLines = splitLines[1].split(";");
+                  if(returnLines.length > 1 && returnLines[1].trim().length() > 0) {
+                    fixedProperMethodBody += returnIndent + "  return " + returnLines[0].trim() + ";\n" + returnIndent + returnLines[1].trim() + "\n"; 
+                  } else {
+                    fixedProperMethodBody += returnIndent + "  return " + splitLines[1].trim() + "\n"; 
+                  }
+                } else {
+                  fixedProperMethodBody += properMethodLines[i] + "\n";
+                }
+              }
+
+              properMethodBody = fixedProperMethodBody;
+
+              String properMethodIndent = "";
+              int indentIndex = 0;
+              while(indentIndex < properMethodBody.length() && properMethodBody.charAt(indentIndex) == ' ') {
+                properMethodIndent += " ";
+                indentIndex++;
+              }
+
+              // inject the after injection code after every return, while appropriate indentation
+              for(int i = -1; (i = properMethodBody.indexOf("return", i + 1)) != -1; ) {
+                // determine the indentation of the return
+                String indent = "";
+                while(i >= 1 && properMethodBody.charAt(--i) == ' ') {
+                  indent += " ";
+                }
+
+                // Need to determine if block has braces surrounding it. To do this, take the previous
+                // lines of code and apply some regex to remove all of the comments.
+                String[] previousLinesOfCode = properMethodBody.substring(0, i+1).replaceAll("\\/\\*([\\S\\s]+?)\\*\\/", "").replaceAll("(?s)/\\*.*?\\*/", "").replaceAll("//.*$", "").split("\\n");
+                int commentLineCount = properMethodBody.substring(0, i+1).split("\\n").length - previousLinesOfCode.length;
+
+                // set previousLine to be the first non-empty line
+                int previousLine = -1; 
+                for(int j = previousLinesOfCode.length - 1; j >= 0; j--) {
+                  if(previousLinesOfCode[j].trim().length() > 0) {
+                    previousLine = j;
+                    break;
+                  }
+                }
+
+                String previousLineStr = previousLinesOfCode[previousLine].trim();
+
+                // Need to subtract the number of lines of comments between the return and the previous line of code
+                while(!properMethodBody.split("\\n")[previousLine + commentLineCount].trim().equals(previousLineStr)) {
+                  commentLineCount--;
+                }
+              
+                // If we need to, insert braces, otherwise continue as normal
+                String indentedCustomAfterInjectionCode = GeneratorHelper.doIndent("\n" + customAfterInjectionCode, indent);
+                String braceIndent = "";
+                String brace = "";
+                String braceNewLine = "";
+                if(previousLine != -1 && (previousLineStr.charAt(previousLineStr.length()-1) == ')' || (previousLineStr.length() >= 4 && previousLineStr.substring(previousLineStr.length()-4).equals("else")))) {
+                  String[] methodLines = properMethodBody.split("\\n");
+                  previousLine += commentLineCount;
+
+                  // determine how indented the brace is
+                  int j = 0;
+                  while(j < methodLines[previousLine].length() && methodLines[previousLine].charAt(j) == ' ') {
+                    braceIndent += " ";
+                    j++;
+                  }
+
+                  methodLines[previousLine] = braceIndent + methodLines[previousLine].trim() + " {"; 
+
+                  // Set properMethodBody to be String.join(methodLines, "\\n")
+                  String newProperMethodBody = "";
+                  for(int k = 0; k < methodLines.length; k++) {
+                    newProperMethodBody += methodLines[k];
+                    if(k != methodLines.length - 1) {
+                      newProperMethodBody += "\n";
+                    }
+                  }
+                  properMethodBody = newProperMethodBody;
+
+                  brace = "}";
+                  braceNewLine = "\n";
+                }
+
+                i += indent.length() + 1;
+                String[] returnAndRest = properMethodBody.substring(i).split(";", 2);
+                properMethodBody = properMethodIndent + properMethodBody.substring(0, i).trim() + indentedCustomAfterInjectionCode + "\n" + indent + returnAndRest[0].trim() + ";" + braceNewLine + braceIndent + brace + returnAndRest[1]; 
+                i += indentedCustomAfterInjectionCode.length() + braceIndent.length() + 7;
+              }
+
+              // if the last line isn't a return, insert the injection at the very end
+              String[] lines = properMethodBody.split("\\n");
+              if(!lines[lines.length-1].contains("return")) {
+                properMethodBody += GeneratorHelper.doIndent("\n" + customAfterInjectionCode, "    ");
+              }
+            }
+          }
+          appendln(realSb, properMethodBody);
+          if(!properMethodBody.contains("return"))
+          {
+            for( TraceItem traceItem : traceItems )append(realSb, (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):""));
+            if (customAfterInjectionCode != null) { append(realSb, "{0}\n",GeneratorHelper.doIndent(customAfterInjectionCode, "    "));}
+          }
+          appendln(realSb, "  }");
+        }
+      }
+    }
+#>>!>>
+}

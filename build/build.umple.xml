@@ -146,7 +146,11 @@
 
     <!-- First compile the Umple templates -->
     <!-- Default to using the stable version of umple since it should always be available -->
+    <!--
     <parallel>
+      <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+        <arg value="UmpleToJava/UmpleTLTemplates/Master.ump"/>
+      </java>
       <java jar="${umple.stable.jar}" fork="true" failonerror="true">
         <arg value="UmpleToPhp/UmpleTLTemplates/Master.ump"/>
       </java>
@@ -156,23 +160,26 @@
       <java jar="${umple.stable.jar}" fork="true" failonerror="true">
         <arg value="UmpleToSql/UmpleTLTemplates/Master.ump"/>
       </java>
-    </parallel>
+    </parallel> -->
 
+    <!-- To compile the following (other than CPP) with Umple templates:
+       1) Uncomment the above parallel
+       2) Change the UmpleTo*/src/cruise/... to UmpleTo*/src-gen-UmpleTL/cruise... -->
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/java" overwrite="true">
-      <fileset dir="UmpleToJava/src/cruise/umple/compiler/java" excludes=".git*" />
+      <fileset dir="UmpleToJava/src/cruise/umple/compiler/java" excludes=".git* UmpleToJava.java" />
     </copy>
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/php" overwrite="true">
-      <fileset dir="UmpleToPhp/src-gen-UmpleTL/cruise/umple/compiler/php" excludes=".git* UmpleToPhp.java" />
+      <fileset dir="UmpleToPhp/src/cruise/umple/compiler/php" excludes=".git* UmpleToPhp.java" />
     </copy>
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/ruby" overwrite="true">
-      <fileset dir="UmpleToRuby/src-gen-UmpleTL/cruise/umple/compiler/ruby" excludes=".git* UmpleToRuby.java" />
+      <fileset dir="UmpleToRuby/src/cruise/umple/compiler/ruby" excludes=".git* UmpleToRuby.java" />
     </copy>
     <!-- OLD CPP DEPRECATED To DELETE  -->
     <!-- <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/cpp" overwrite="true">
       <fileset dir="UmpleToCpp/src/cruise/umple/compiler/cpp" excludes=".git*" />
     </copy> -->
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/sql" overwrite="true">
-      <fileset dir="UmpleToSql/src-gen-UmpleTL/cruise/umple/compiler/sql" excludes=".git* UmpleToSql.java" />
+      <fileset dir="UmpleToSql/src/cruise/umple/compiler/sql" excludes=".git* UmpleToSql.java" />
     </copy>
   </target>
 

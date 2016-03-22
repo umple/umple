@@ -1,0 +1,58 @@
+use UmpleNotice.ump;
+use import_packages_interface.ump;
+use interface_AbstractMethodDeclaration.ump;
+use interface_constantDeclaration.ump;
+
+
+namespace cruise.umple.compiler.java;
+
+external interface ILang{}
+
+class JavaInterfaceGenerator {
+    depend cruise.umple.compiler.*;
+    depend cruise.umple.util.*;
+    depend java.util.*;
+
+    isA ILang;
+
+    // Add a newline to the end of the input
+    private void appendln(StringBuilder buffer, String input, Object... variables)
+    {
+        append(buffer, input + "\n", variables);
+    }
+
+    // This method will be used to append formatted strings
+    // i.e. format("Hello {0} {1}", "andrew","forward");
+    private void append(StringBuilder buffer, String input, Object... variables)
+    {
+        buffer.append(StringFormatter.format(input,variables));
+    }
+
+    emit getCode(UmpleModel model, UmpleElement uElement)(JavaInterfaceGenerator);
+
+
+    JavaInterfaceGenerator <<!<</*JavaInterfaceGenerator*/>><<@ UmpleToJava.UmpleNotice >>
+<<#
+  UmpleInterface uInterface = (UmpleInterface) uElement;
+  //GeneratedInterface gInterface = uInterface.getGeneratedInterface();
+  JavaGenerator gen = new JavaGenerator();
+  gen.setModel(model);
+
+  String extraCode = "";
+  if (uInterface.getExtraCode() != null)
+  {
+    extraCode = uInterface.getExtraCode();
+  }
+
+#>>
+<<=gen.translate("packageDefinition",uInterface)>><<@ UmpleToJava.import_packages_interface >>
+
+public interface <<=uInterface.getName()>><<= gen.translate("isA",uInterface) >>
+{
+  <<=extraCode>>
+<<# if (uInterface.hasConstants()) { #>><<@ UmpleToJava.interface_constantDeclaration >>
+<<# } #>>
+ <<# if (uInterface.hasMethods()) { #>><<@ UmpleToJava.interface_AbstractMethodDeclaration >>
+<<# } #>>
+}!>>
+}

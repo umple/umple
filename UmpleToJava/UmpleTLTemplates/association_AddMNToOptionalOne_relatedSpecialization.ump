@@ -1,0 +1,59 @@
+class UmpleToJava {
+    association_AddMNToOptionalOne_relatedSpecialization <<!<</*association_AddMNToOptionalOne_relatedSpecialization*/>>
+  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  {
+    boolean wasAdded = false;
+    <<# if (customAddPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPrefixCode,gen.translate("addMethod",av));
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } #>>
+<<# if (!av.isStar()) { #>>
+    if (<<=gen.translate("numberOfMethod",av)>>() >= <<=gen.translate("maximumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>())
+    {
+      <<# if (customAddPostfixCode != null) {addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } #>>
+      return wasAdded;
+    }
+<<# } #>>
+    <<=gen.relatedTranslate("type",av)>> <<=gen.relatedTranslate("parameterExisting",av)>> = <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("getMethod",av)>><<# if (relMulChangedToOne) { #>>_One<<=gen.relatedTranslate("type",av)>><<# } #>>();
+    if (<<=gen.relatedTranslate("parameterExisting",av)>> != null && <<=gen.relatedTranslate("parameterExisting",av)>>.<<=gen.translate("numberOfMethod",av)>>() <= <<=gen.translate("minimumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>())
+    {
+      <<# if (customAddPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } #>>
+      return wasAdded;
+    }
+    else if (<<=gen.relatedTranslate("parameterExisting",av)>> != null)
+    {
+      <<=gen.relatedTranslate("parameterExisting",av)>>.<<=gen.translate("associationMany",av)>>.remove(<<=gen.translate("parameterOne",av)>>);
+    }<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+>>
+    <<=gen.translate("associationMany",av)>>.add(<<=gen.translate("parameterOne",av)>>);<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+>>
+    <<=gen.relatedTranslate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>,this);
+    wasAdded = true;
+    <<# if (customAddPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } #>>
+    return wasAdded;
+  }
+
+  public boolean <<=gen.translate("removeMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  {
+    boolean wasRemoved = false;
+    <<# if (customRemovePrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customRemovePrefixCode,gen.translate("removeMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } #>>
+    if (<<=gen.translate("associationMany",av)>>.contains(<<=gen.translate("parameterOne",av)>>) && <<=gen.translate("numberOfMethod",av)>>() > <<=gen.translate("minimumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>())
+    {<<#for( TraceItem traceItemAssocRemove : traceItemAssocRemoves )#>><<= 
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+>>
+      <<=gen.translate("associationMany",av)>>.remove(<<=gen.translate("parameterOne",av)>>);<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+>>
+      <<=gen.relatedTranslate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>,null);
+      wasRemoved = true;
+    }
+    <<# if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } #>>
+    return wasRemoved;
+  }
+!>>
+}

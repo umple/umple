@@ -1,0 +1,22 @@
+class UmpleToJava {
+    association_MinimumNumberOfMethod_specialization <<!<</*association_MinimumNumberOfMethod_specialization*/>><<#
+    String customMinimumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("minimumNumberOfMethod",av)));
+    String customMinimumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("minimumNumberOfMethod",av)));
+    #>>
+<<# if (customMinimumNumberOfPrefixCode == null && customMinimumNumberOfPostfixCode == null) { #>>
+  public static int <<=gen.translate("minimumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>()
+  {
+    return <<=av.getMultiplicity().getLowerBound()>>;
+  }
+<<# } else { #>>
+  public static int <<=gen.translate("minimumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>()
+  {
+    <<# if (customMinimumNumberOfPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customMinimumNumberOfPrefixCode,gen.translate("minimumNumberOfMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPrefixCode, "    ")); } #>>
+    int minimum = <<=av.getMultiplicity().getLowerBound()>>;
+    <<# if (customMinimumNumberOfPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customMinimumNumberOfPostfixCode,gen.translate("minimumNumberOfMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPostfixCode, "    ")); } #>>
+    return minimum;
+  }
+<<# } #>>!>>
+}

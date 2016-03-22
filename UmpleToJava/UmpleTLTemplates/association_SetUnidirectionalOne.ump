@@ -1,0 +1,18 @@
+class UmpleToJava {
+    association_SetUnidirectionalOne <<!<</*association_SetUnidirectionalOne*/>><<# String accessModifier = (av.isImmutable()) ? "private" : "public"; #>>
+  <<= accessModifier >> boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterNew",av)>>)
+  {
+    boolean wasSet = false;
+    <<# if (customSetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    if (<<=gen.translate("parameterNew",av)>> != null)
+    {
+      <<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterNew",av)>>;
+      wasSet = true;
+    }
+    <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return wasSet;
+  }
+!>>
+}

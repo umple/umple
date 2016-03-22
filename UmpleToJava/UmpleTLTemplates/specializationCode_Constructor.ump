@@ -1,0 +1,19 @@
+class UmpleToJava {
+    specializationCode_Constructor <<!<</*specializationCode_Constructor*/>><<#
+    relatedAssociation = av.getRelatedAssociation();
+    
+    //relatedAssoc = uClass.getAssociation(uClass.indexOfAssociationVariable(av));
+
+    //reqSuperCode = relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsSuperCode();
+    //reqCommonCode = relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsCommonCode();
+    
+    reqSuperCode = av.getNeedsSuperCode();
+	reqCommonCode = av.getNeedsCommonCode(); 
+    
+    if (reqSuperCode || reqCommonCode)
+    {
+      continue;
+    }
+    
+#>>!>>
+}

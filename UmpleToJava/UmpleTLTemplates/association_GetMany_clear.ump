@@ -1,0 +1,8 @@
+class UmpleToJava {
+    association_GetMany_clear <<!<</*association_GetMany_clear*/>>
+  protected void clear_<<=gen.translate("associationMany",av)>>()
+  {
+    <<=gen.translate("associationMany",av)>>.clear();
+  }
+!>>
+}

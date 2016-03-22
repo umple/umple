@@ -1,0 +1,16 @@
+class UmpleToJava {
+    delete_OptionalOneFromMN_specialization <<!<</*delete_OptionalOneFromMN_specialization*/>>
+    if (<<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>() != null)
+    {
+      if (<<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>().<<=gen.relatedTranslate("numberOfMethod",av)>>() <= <<=relatedAssociation.getMultiplicity().getLowerBound()>>)
+      {
+        <<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>().delete();
+      }
+      else
+      {
+        <<=gen.translate("type",av)>> <<=gen.translate("removeParameterOne",av)>> = <<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>();
+        clear_<<=gen.translate("associationOne",av)>>();
+        <<=gen.translate("removeParameterOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+      }
+    }!>>
+}

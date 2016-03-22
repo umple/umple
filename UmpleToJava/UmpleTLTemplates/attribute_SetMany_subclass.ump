@@ -1,0 +1,18 @@
+class UmpleToJava {
+    attribute_SetMany_subclass <<!<</*attribute_SetMany_subclass*/>>
+  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("typeMany",av)>> <<=gen.translate("parameterOne",av)>>)
+  {
+    boolean wasAdded = false;
+    <<# if (customAddPrefixCode != null) {
+      addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPrefixCode,gen.translate("addMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } #>>
+      <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"at_a", uClass,gen.translate("parameterOne",av)):"")>>
+      wasAdded = super.<<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+      <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"at_a", uClass):"")>>
+    <<# if (customAddPostfixCode != null) {
+      addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
+      append(realSb, "{0}\n",GeneratorHelper.doIndent(customAddPostfixCode, "    "));
+    } #>>
+    return wasAdded;
+  }!>>
+}

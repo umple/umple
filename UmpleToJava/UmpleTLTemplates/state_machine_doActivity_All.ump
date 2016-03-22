@@ -1,0 +1,40 @@
+use state_machine_doActivity.ump;
+use state_machine_doActivityThread.ump;
+
+
+class UmpleToJava {
+    state_machine_doActivity_All <<!<</*state_machine_doActivity_All*/>><<#
+{ 
+  boolean hasActivities = false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    List<StateMachine> allNested = sm.getNestedStateMachines();
+    
+    for (StateMachine nestedSm : allNested)
+    {
+      for (State state : nestedSm.getStates())
+      {
+        for (Activity activity : state.getActivities())
+        {
+          hasActivities = true;
+          #>><<@ UmpleToJava.state_machine_doActivity >><<#
+        }
+      }
+    }
+    
+    for (State state : sm.getStates())
+    {
+      for (Activity activity : state.getActivities())
+      {
+        hasActivities = true;
+        #>><<@ UmpleToJava.state_machine_doActivity >><<#
+      }
+    }
+  } 
+  if (hasActivities)
+  {
+    #>><<@ UmpleToJava.state_machine_doActivityThread >><<#
+  }
+}
+#>>!>>
+}

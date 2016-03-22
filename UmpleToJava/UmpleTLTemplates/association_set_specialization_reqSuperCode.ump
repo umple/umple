@@ -1,0 +1,505 @@
+use association_AddIndexControlFunctions_specialization.ump;
+use association_AddMNToMany_specialization.ump;
+use association_AddMNToOnlyOne_specialization.ump;
+use association_AddMNToOptionalOne_specialization.ump;
+use association_AddMStarToMany_specialization.ump;
+use association_AddMandatoryManyToOne_specialization.ump;
+use association_AddManyToManyMethod_specialization.ump;
+use association_AddManyToOne_specialization.ump;
+use association_AddManyToOptionalOne_specialization.ump;
+use association_AddOptionalNToOne_specialization.ump;
+use association_AddOptionalNToOptionalOne_specialization.ump;
+use association_AddUnidirectionalMN_specialization.ump;
+use association_AddUnidirectionalMany_specialization.ump;
+use association_AddUnidirectionalOptionalN_specialization.ump;
+use association_IsNumberOfValidMethod_specialization.ump;
+use association_MaximumNumberOfMethod_specialization.ump;
+use association_MinimumNumberOfMethod_specialization.ump;
+use association_RequiredNumberOfMethod_specialization.ump;
+use association_SetMNToMany_specialization.ump;
+use association_SetMNToOptionalOne_specialization.ump;
+use association_SetMStarToMany_specialization.ump;
+use association_SetNToOptionalOne_specialization.ump;
+use association_SetOneToAtMostN_specialization.ump;
+use association_SetOneToMandatoryMany_specialization.ump;
+use association_SetOneToMany_specialization.ump;
+use association_SetOptionalNToMany_specialization.ump;
+use association_SetOptionalOneToMandatoryMany_specialization.ump;
+use association_SetOptionalOneToOptionalN_specialization.ump;
+use association_SetUnidirectionalMN_specialization.ump;
+use association_SetUnidirectionalMStar_specialization.ump;
+use association_SetUnidirectionalMany_specialization.ump;
+use association_SetUnidirectionalN_specialization.ump;
+use association_SetUnidirectionalOptionalN_specialization.ump;
+use association_Sort.ump;
+use specializationSkip.ump;
+
+
+class UmpleToJava {
+    association_set_specialization_reqSuperCode <<!<</*association_set_specialization_reqSuperCode*/>><<#
+	String customIsNumberOfValidPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isNumberOfValidMethod",av)));
+    String customIsNumberOfValidPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("isNumberOfValidMethod",av)));
+    
+    String includeFileOne = null;
+    String includeFileTwo = null;
+    
+    boolean hasIsNumberOfValidMethod = false;
+    boolean hasAddManyToManyTemplateMethod = false;
+    boolean hasMaximumNumberOfMethod = av.isMany() && !av.isStar();
+    boolean hasMinimumNumberOfMethod = av.isMany();
+    boolean hasRequiredNumberOfMethod = av.isN();
+    boolean hasRemoveManyTemplateMethod = false;
+    
+	  if (!relatedAssociation.getIsNavigable())
+      {
+        if (av.isOptionalOne())
+        {
+          includeFile = "specializationSkip.jet";
+        }
+        else if (av.isOnlyOne())
+        {
+          includeFile = "specializationSkip.jet";
+        }
+        else if (av.isMStar())
+        {
+          if (!av.isImmutable())
+          {
+            includeFile = "specializationSkip.jet";
+          }
+          includeFile2 = "association_SetUnidirectionalMStar_specialization.jet";
+        }
+        else if (av.isMN())
+        {
+          if (!av.isImmutable())
+          {
+            includeFile = "association_AddUnidirectionalMN_specialization.jet";
+          }
+          includeFile2 = "association_SetUnidirectionalMN_specialization.jet";
+        }
+        else if (av.isN())
+        {
+          includeFile = "association_SetUnidirectionalN_specialization.jet";
+        }
+        else if (av.isOptionalN())
+        {
+          if (!av.isImmutable())
+          {
+            includeFile = "association_AddUnidirectionalOptionalN_specialization.jet";
+          }
+          includeFile2 = "association_SetUnidirectionalOptionalN_specialization.jet";
+        }
+        else if (av.isImmutable() && av.isMany())
+        {
+          includeFile = "association_SetUnidirectionalMany_specialization.jet";
+        }
+        else if (av.isMany())
+        {
+          includeFile = "association_AddUnidirectionalMany_specialization.jet";
+        }
+      }
+      else if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
+      {
+        //ignore
+      }  
+      else if (av.isN() && relatedAssociation.isOptionalOne())
+      { 
+        includeFile = "association_SetNToOptionalOne_specialization.jet";
+      }
+      else if (av.isMN() && relatedAssociation.isOptionalOne())
+      {
+        includeFile = "association_AddMNToOptionalOne_specialization.jet";
+        includeFile2 = "association_SetMNToOptionalOne_specialization.jet";
+      }
+      else if (av.isMandatoryMany() && av.isStar() && relatedAssociation.isMany())
+      {
+        hasIsNumberOfValidMethod = true;
+        hasAddManyToManyTemplateMethod = true;
+        includeFile = "association_AddMStarToMany_specialization.jet";
+        includeFile2 = "association_SetMStarToMany_specialization.jet";
+      }
+      else if ((av.isMN() || av.isN()) && relatedAssociation.isMandatoryMany())
+      {
+        hasIsNumberOfValidMethod = true;
+        hasAddManyToManyTemplateMethod = true;
+        hasAddManyToManyTemplateMethod = true;
+        includeFile = "association_AddMNToMany_specialization.jet";
+        includeFile2 = "association_SetMNToMany_specialization.jet";
+      }
+      else if ((av.isMN() || av.isN()) && relatedAssociation.isOptionalN())
+      {
+        hasIsNumberOfValidMethod = true;
+        hasAddManyToManyTemplateMethod = true;
+        hasAddManyToManyTemplateMethod = true;
+        includeFile = "association_AddMNToMany_specialization.jet";
+      }
+      else if ((av.isMN() || av.isN()) && !relatedAssociation.isOne())
+      {
+        hasIsNumberOfValidMethod = true;
+        hasAddManyToManyTemplateMethod = true;
+        includeFile = "association_AddMNToMany_specialization.jet";
+        includeFile2 = "association_SetMNToMany_specialization.jet";
+      }
+      else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
+      {
+        includeFile = "specializationSkip.jet";
+      }
+      else if (av.isOptionalOne() && relatedAssociation.isOne())
+      {
+        includeFile = "specializationSkip.jet";
+      }
+      else if (av.isOne() && relatedAssociation.isOptionalOne())
+      {
+        includeFile = "specializationSkip.jet";
+      }
+      else if (av.isMandatoryMany() && av.isStar() && relatedAssociation.isOne())
+      {
+        hasIsNumberOfValidMethod = true;
+        includeFile = "association_AddMandatoryManyToOne_specialization.jet";
+      }
+      else if ((av.isMN() || av.isN()) && relatedAssociation.isOnlyOne())
+      {
+        hasIsNumberOfValidMethod = true;
+        includeFile = "association_AddMNToOnlyOne_specialization.jet";
+      }
+      else if (av.isOptionalN() && relatedAssociation.isOnlyOne())
+      {
+        includeFile = "association_AddOptionalNToOne_specialization.jet";
+      }
+      else if (av.isOptionalN() && (relatedAssociation.isMN() || relatedAssociation.isOptionalN()))
+      {
+        hasAddManyToManyTemplateMethod = true;
+        if (!av.isImmutable())
+        {
+          hasRemoveManyTemplateMethod = true;
+        }
+      }
+      else if (av.isOptionalN() && relatedAssociation.isOptionalMany())
+      {
+        hasAddManyToManyTemplateMethod = true;
+        if (!av.isImmutable())
+        {
+          hasRemoveManyTemplateMethod = true;
+        }
+        includeFile = "association_SetOptionalNToMany.jet";
+      }
+      else if (av.isMany() && relatedAssociation.isOnlyOne())
+      {
+        includeFile = "association_AddManyToOne_specialization.jet";
+      }
+      else if (av.isOptionalN() && (relatedAssociation.isMN() || relatedAssociation.isN()))
+      {
+        hasAddManyToManyTemplateMethod = true;
+        if (!av.isImmutable())
+        {
+          hasRemoveManyTemplateMethod = true;
+        }
+      }
+      else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN() || relatedAssociation.isMany()))
+      {
+        hasAddManyToManyTemplateMethod = true;
+        if (!av.isImmutable())
+        {
+          hasRemoveManyTemplateMethod = true;
+        }
+      }
+      else if (av.isOptionalN() && relatedAssociation.isOptionalOne())
+      {
+        includeFile = "association_AddOptionalNToOptionalOne_specialization.jet";
+      }
+      else if (av.isMany() && relatedAssociation.isOptionalOne())
+      {
+        includeFile = "specializationSkip.jet";
+      }
+      else if (av.isOnlyOne() && relatedAssociation.isMandatoryMany() && relatedAssociation.isStar())
+      {
+        includeFile = "association_SetOneToMandatoryMany_specialization.jet";
+      }
+      else if (av.isOnlyOne() && (relatedAssociation.isMN() || relatedAssociation.isN()))
+      {
+        includeFile = "association_SetOneToAtMostN_specialization.jet";
+      }
+      else if (av.isOnlyOne() && relatedAssociation.isOptionalN())
+      {
+        includeFile = "association_SetOneToAtMostN_specialization.jet";
+      }
+      else if (av.isOnlyOne() && relatedAssociation.isMany() && !(av.isMandatory() && !av.isOne()) && !(uClass instanceof AssociationClass))
+      {
+        includeFile = "specializationSkip.jet";
+      }
+      else if (av.isOnlyOne() && relatedAssociation.isMany() && !(av.isMandatory() && !av.isOne()) && (uClass instanceof AssociationClass))
+      {
+        includeFile = "specializationSkip.jet";
+      }
+      else if (av.isOptionalOne() && relatedAssociation.isOptionalN())
+      {
+        includeFile = "association_SetOptionalOneToOptionalN_specialization.jet";
+      }
+      else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
+      {
+        includeFile = "specializationSkip.jet";
+      }
+      else if (av.isOptionalOne() && relatedAssociation.isMandatoryMany())
+      {
+        // Insert code to include code here
+        if (relatedAssociation.isUpperBounded())
+        {
+          //
+          // This program cannot currently include SetOptionalOneToMandatoryMN.jet because of Issue351 where add/remove methods do not generate
+          //
+          //          PLEASE NOTE
+          // If Issue351 is resolved, remember to change the specialization
+          // code as well -- do not just include this here.
+          //
+          // includeFile = "association_SetOptionalOneToMandatoryMN.jet";
+        } 
+        else
+        {
+          //
+          // We can include association_SetOptionalOneToMandatoryMany.jet
+          // 
+          includeFile = "association_SetOptionalOneToMandatoryMany_specialization.jet";
+        } 
+      }
+      else if (av.isOptionalOne() && relatedAssociation.isMandatory())
+      {
+        //ignore
+      }
+
+      else
+      {
+        #>>//FIXME - FOUND UNKNOWN ASSOCIATION RELATIONSHIP <<=av>> : <<=relatedAssociation>><<#
+      }
+      
+      if(av.isSorted())
+      {
+        includeFile3 = "association_Sort.jet";
+      }
+      else if(av.isMany() && !av.isImmutable() && !av.isN())
+      {
+        includeFile3 = "association_AddIndexControlFunctions_specialization.jet";
+      }
+
+      addNewLine = false;
+      if (hasIsNumberOfValidMethod)
+      {
+        if (addNewLine) { appendln(realSb,""); }
+        addNewLine = true;
+        #>><<#
+        #>><<@ UmpleToJava.association_IsNumberOfValidMethod_specialization >><<#
+      }
+      
+      if (hasRequiredNumberOfMethod)
+      {
+        if (addNewLine) { appendln(realSb,""); }
+        addNewLine = true;
+        #>><<#
+        #>><<@ UmpleToJava.association_RequiredNumberOfMethod_specialization >><<#
+      }
+
+      if (hasMinimumNumberOfMethod)
+      {
+        if (addNewLine) { appendln(realSb,""); }
+        addNewLine = true;
+        #>><<#
+        #>><<@ UmpleToJava.association_MinimumNumberOfMethod_specialization >><<#
+      }
+      
+      if (hasMaximumNumberOfMethod)
+      {
+        if (addNewLine) { appendln(realSb,""); }
+        addNewLine = true;
+        #>><<#
+        #>><<@ UmpleToJava.association_MaximumNumberOfMethod_specialization >><<#
+      }
+      
+      if (hasAddManyToManyTemplateMethod)
+      {
+        if (addNewLine) { appendln(realSb,""); }
+        addNewLine = true;
+        #>><<@ UmpleToJava.association_AddManyToManyMethod_specialization >><<#
+      }
+      
+      if (hasRemoveManyTemplateMethod)
+      {
+        if (addNewLine) { appendln(realSb,""); }
+        addNewLine = true;
+        #>><<@ UmpleToJava.specializationSkip >><<#
+      }
+	    
+    if (addNewLine) { appendln(realSb,""); }
+    addNewLine = true;	
+	
+      if (includeFile == "association_SetUnidirectionalOptionalOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+      }
+      else if (includeFile == "association_SetUnidirectionalOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+      }
+      else if (includeFile == "association_SetOptionalOneToOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+      }
+      else if (includeFile == "association_SetOneToOptionalOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+      }
+      else if (includeFile == "association_AddMandatoryManyToOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_AddMandatoryManyToOne_specialization >><<#
+      }
+      else if (includeFile == "association_AddMNToOnlyOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_AddMNToOnlyOne_specialization >><<#
+      }
+      else if (includeFile == "association_AddOptionalNToOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_AddOptionalNToOne_specialization >><<#
+      }
+      else if (includeFile == "association_SetOptionalNToMany_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetOptionalNToMany_specialization >><<#
+      }
+      else if (includeFile == "association_AddManyToOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_AddManyToOne_specialization >><<#
+      }
+      else if (includeFile == "association_SetOptionalOneToOptionalOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+      }
+      else if (includeFile == "association_AddMNToMany_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_AddMNToMany_specialization >><<#
+      }
+      else if (includeFile == "association_AddMStarToMany_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_AddMStarToMany_specialization >><<#
+      }
+      else if (includeFile == "association_SetOptionalOneToOptionalN_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetOptionalOneToOptionalN_specialization >><<#
+      }
+      else if (includeFile == "association_SetOneToMany_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetOneToMany_specialization >><<#
+      }
+      else if (includeFile == "association_SetOneToManyAssociationClass_specialization.jet")
+      {
+        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+      }
+      else if (includeFile == "association_SetOneToAtMostN_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetOneToAtMostN_specialization >><<#
+      }
+      else if (includeFile == "association_SetOneToMandatoryMany_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetOneToMandatoryMany_specialization >><<#
+      }
+      else if (includeFile == "association_AddManyToOptionalOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_AddManyToOptionalOne_specialization >><<#
+      }
+      else if (includeFile == "association_SetOptionalOneToMany_specialization.jet")
+      {
+        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+      }
+      else if (includeFile == "association_AddOptionalNToOptionalOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_AddOptionalNToOptionalOne_specialization >><<#
+      }
+      else if (includeFile == "association_AddUnidirectionalMN_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_AddUnidirectionalMN_specialization >><<#
+      }
+      else if (includeFile == "association_AddMNToOptionalOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_AddMNToOptionalOne_specialization >><<#
+      }
+      else if (includeFile == "association_SetNToOptionalOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetNToOptionalOne_specialization >><<#
+      }
+      else if (includeFile == "association_AddUnidirectionalMany_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_AddUnidirectionalMany_specialization >><<#
+      }
+      else if (includeFile == "association_AddUnidirectionalOptionalN_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_AddUnidirectionalOptionalN_specialization >><<#
+      }
+      else if (includeFile == "association_AddUnidirectionalMStar_specialization.jet")
+      {
+        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+      }
+      else if (includeFile == "association_SetUnidirectionalN_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetUnidirectionalN_specialization >><<#
+      }
+      else if (includeFile == "association_SetUnidirectionalMany_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetUnidirectionalMany_specialization >><<#
+      }
+      else if (includeFile == "association_SetOptionalOneToMandatoryMany_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetOptionalOneToMandatoryMany_specialization >><<#
+      }
+      else if (includeFile == "association_SetOptionalOneToMandatoryMN_specialization.jet")
+      {
+        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+      }
+      else if (includeFile == "association_SetOptionalNToMany.jet")
+      {
+        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO?
+      }
+      else if (includeFile == "specializationSkip.jet")
+      {
+        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO?
+      }
+      else if (includeFile != null)
+      {
+        appendln(realSb,"You forgot to include {0}",includeFile);
+      }
+      
+      #>><<#
+      if (includeFile2 == "association_SetMNToMany_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetMNToMany_specialization >><<#
+      }
+      else if (includeFile2 == "association_SetMStarToMany_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetMStarToMany_specialization >><<#
+      }
+      else if (includeFile2 == "association_SetUnidirectionalMN_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetUnidirectionalMN_specialization >><<#
+      }
+      else if (includeFile2 == "association_SetMNToOptionalOne_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetMNToOptionalOne_specialization >><<#
+      }
+      else if (includeFile2 == "association_SetUnidirectionalOptionalN_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetUnidirectionalOptionalN_specialization >><<#
+      }
+      else if (includeFile2 == "association_SetUnidirectionalMStar_specialization.jet")
+      {
+        #>><<@ UmpleToJava.association_SetUnidirectionalMStar_specialization >><<#
+      }
+      else if (includeFile2 != null)
+      {
+        appendln(realSb,"You forgot to include {0}",includeFile2);
+      }
+      
+      if(includeFile3 == "association_Sort.jet" && !sortMethodAdded)
+      {
+        #>><<@ UmpleToJava.association_Sort >><<#
+        sortMethodAdded = true; //after the sort method has been added, this boolean stops it from being added again
+      }
+      else if(includeFile3 == "association_AddIndexControlFunctions.jet")
+      {
+        #>><<@ UmpleToJava.association_AddIndexControlFunctions_specialization >><<#
+      }
+#>>!>>
+}

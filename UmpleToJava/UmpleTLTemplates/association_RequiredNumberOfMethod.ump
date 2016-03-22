@@ -1,0 +1,22 @@
+class UmpleToJava {
+    association_RequiredNumberOfMethod <<!<</*association_RequiredNumberOfMethod*/>><<#
+    String customRequiredNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("requiredNumberOfMethod",av)));
+    String customRequiredNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("requiredNumberOfMethod",av)));
+#>>
+<<# if (customRequiredNumberOfPrefixCode == null && customRequiredNumberOfPostfixCode == null) { #>><<= umpleSourceFile >>
+  public static int <<=gen.translate("requiredNumberOfMethod",av)>>()
+  {
+    return <<=av.getMultiplicity().getLowerBound()>>;
+  }
+<<# } else { #>>
+  public static int <<=gen.translate("requiredNumberOfMethod",av)>>()
+  {
+    <<# if (customRequiredNumberOfPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customRequiredNumberOfPrefixCode,gen.translate("requiredNumberOfMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPrefixCode, "    ")); } #>>
+    int required = <<=av.getMultiplicity().getLowerBound()>>;
+    <<# if (customRequiredNumberOfPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customRequiredNumberOfPostfixCode,gen.translate("requiredNumberOfMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPostfixCode, "    ")); } #>>
+    return required;
+  }
+<<# } #>>!>>
+}

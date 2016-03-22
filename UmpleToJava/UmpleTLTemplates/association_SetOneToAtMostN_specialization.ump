@@ -1,0 +1,36 @@
+class UmpleToJava {
+    association_SetOneToAtMostN_specialization <<!<</*association_SetOneToAtMostN_specialization*/>>
+  public boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  {
+    boolean wasSet = false;
+    <<# if (customSetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    //Must provide <<=gen.translate("associationOne",av)>> to <<=gen.relatedTranslate("associationOne",av)>>
+    if (<<=gen.translate("parameterOne",av)>> == null)
+    {
+      <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } #>>
+      return wasSet;
+    }
+
+    //<<=gen.translate("associationOne",av)>> already at maximum (<<=relatedAssociation.getMultiplicity().getUpperBound()>>)
+    if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>>() >= <<=gen.translate("type",av)>>.<<=gen.relatedTranslate("maximumNumberOfMethod",av)>>_<<=gen.relatedTranslate("type",av)>>())
+    {
+      <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } #>>
+      return wasSet;
+    }
+
+    
+<<# if ( !reqSetCode ) { #>>
+    wasSet = super.<<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+    <<# } else { #>>
+    super.clear_<<=gen.translate("associationOne",av)>>();
+    wasSet = <<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+    <<# } #>>
+    <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+    return wasSet;
+  }
+!>>
+}

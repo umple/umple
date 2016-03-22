@@ -1,0 +1,37 @@
+use association_GetPrivate.ump;
+
+
+class UmpleToJava {
+    association_SetMNToOptionalOne_specialization <<!<</*association_SetMNToOptionalOne_specialization*/>><<#
+  String existingToNewMap = StringFormatter.format("{0}ToNew{1}", relatedAssociation.getName(), av.getUpperCaseName());
+  String orCheckMaxBound = av.isStar() ? "" : StringFormatter.format(" || {0}.length > {1}{2}{3}()", gen.translate("parameterMany",av), gen.translate("maximumNumberOfMethod",av), "_", gen.translate("type",av));
+#>>
+  public boolean <<=gen.translate("setManyMethod",av)>>(<<=gen.translate("type",av)>>... <<=gen.translate("parameterMany",av)>>)
+  {
+    boolean wasSet = false;
+    <<# if (customSetManyPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetManyPrefixCode,gen.translate("setManyMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } #>>
+    if (<<=gen.translate("parameterMany",av)>>.length < <<=gen.translate("minimumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>()<<=orCheckMaxBound>>)
+    {
+      <<# if (customSetManyPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetManyPostfixCode,gen.translate("setManyMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } #>>
+      return wasSet;
+    }
+    
+    
+<<# if ( !reqSetCode ) { #>>
+    wasSet = super.<<=gen.translate("setManyMethod",av)>>(<<=gen.translate("parameterMany",av)>>);
+    <<# } else { #>>
+    super.clear_<<=gen.translate("associationMany",av)>>();
+    for ( <<=gen.translate("type",av)>> orphan : <<=gen.translate("parameterMany",av)>> )
+    {
+      <<=gen.translate("addMethod",av)>>(orphan);
+    }
+    wasSet = true;
+    <<# } #>>
+    <<# if (customSetManyPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetManyPostfixCode,gen.translate("setManyMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } #>>
+    return wasSet;
+  }
+<<@ UmpleToJava.association_GetPrivate >>!>>
+}

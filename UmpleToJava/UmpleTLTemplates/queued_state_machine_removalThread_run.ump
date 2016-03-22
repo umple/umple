@@ -1,0 +1,145 @@
+class UmpleToJava {
+    queued_state_machine_removalThread_run <<!<</*queued_state_machine_removalThread_run*/>>
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+
+      <<#
+      if(smq.isPooled())
+      {
+        append(realSb,"      Message m = pool.getNext();");
+      }
+      if(smq.isQueued())
+      {
+        append(realSb,"      Message m = queue.getNext();");
+      }
+      #>>
+      
+      switch (m.type)
+      {
+        <<# 
+        String eveNameSM="";
+        boolean sameEventNameSM=false;
+        List<String> eventListSM=new ArrayList<String>();
+          
+        for(StateMachine sm: uClass.getStateMachines())
+        {
+           for(Event event : sm.getEvents())
+           {
+             for(int i=0; i<eventListSM.size(); i++)
+             {
+               if(eventListSM.get(i).equals(event.getName()))
+               {
+                 sameEventNameSM=true;
+               }
+             }
+             
+             if(sameEventNameSM == false)
+             {
+               if(event.isAutoTransition() == false)
+               {
+                 if(!event.isUnspecified())
+                 {
+                   if( !eveNameSM.equals(event.getName()))
+                   {
+                     eventListSM.add(event.getName());
+                     append(realSb,"\n        case {0}",gen.translate("eventMethod",event));
+                     append(realSb,"_M:");
+                     if (!event.getArgs().equals(""))
+                     {
+                       append(realSb,"\n          status = _{0}(",gen.translate("eventMethod",event));
+                       String allParameters="";
+                       for ( int i=0; i < event.getParams().size(); i++)
+                       {
+                         if (allParameters.length() > 0)
+                         {
+                           allParameters += ", ";
+                         }
+                         allParameters += "("+event.getParam(i).getType()+") m.param.elementAt("+i+")";
+                       }
+                       append(realSb,"{0});",allParameters);
+                     }
+                     else
+                     {
+                       append(realSb,"\n          status = _{0}",gen.translate("eventMethod",event));
+                       append(realSb,"();");
+                     }
+                     append(realSb,"\n          break;");
+                     eveNameSM = event.getName();
+                   }
+                 }
+               }
+             }
+             sameEventNameSM = false;             
+           }
+
+
+           for (StateMachine nsm : sm.getNestedStateMachines())
+           {
+             for (Event e : nsm.getEvents())
+             {
+               for(int i=0; i<eventListSM.size(); i++)
+               {
+                 if(eventListSM.get(i).equals(e.getName()))
+                 {
+                   sameEventNameSM=true;
+                 }
+               }
+
+               if(sameEventNameSM == false)
+               {
+                 if(e.isAutoTransition() == false)
+                 {
+                   if(!e.isUnspecified())
+                   {
+                     if(e.getIsInternal() == false)
+                     {
+                       if( !eveNameSM.equals(e.getName()))
+                       {
+                         eventListSM.add(e.getName());
+                         append(realSb,"\n        case {0}",gen.translate("eventMethod",e));
+                         append(realSb,"_M:");
+                         if (!e.getArgs().equals(""))
+                         {
+                           append(realSb,"\n          status = _{0}(",gen.translate("eventMethod",e));
+                           String allParameters="";
+                           for ( int i=0; i < e.getParams().size(); i++)
+                           {
+                             if (allParameters.length() > 0)
+                             {
+                               allParameters += ", ";
+                             }
+                             allParameters += "("+e.getParam(i).getType()+") m.param.elementAt("+i+")";
+                           }
+                           append(realSb,"{0});",allParameters);
+                         }
+                         else
+                         {
+                           append(realSb,"\n          status = _{0}",gen.translate("eventMethod",e));
+                           append(realSb,"();");
+                         }
+                         append(realSb,"\n          break;");
+                         eveNameSM = e.getName();
+                       }
+                     }
+                   }
+                 }
+               }
+               sameEventNameSM = false;
+             }
+           }
+         }
+           #>> 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }!>>
+}

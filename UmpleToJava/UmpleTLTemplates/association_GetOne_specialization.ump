@@ -1,0 +1,28 @@
+class UmpleToJava {
+    association_GetOne_specialization <<!<</*association_GetOne_specialization*/>>
+  public <<=gen.translate("type",av)>> <<=gen.translate("getMethod",av)>>_One<<=gen.translate("type",av)>>()
+  {
+    <<# if (customGetPrefixCode != null && mulChangedToOne) { #>>
+    <<=gen.translate("type",av)>> <<=gen.translate("associationOne",av)>> = <<#if (relReqSuperCode) { #>>(<<=gen.translate("type",av)>>)<<# } #>>super.<<=gen.translate("getMethod",av)>>(0);%>
+    <<# } else if (customGetPrefixCode != null) { #>>
+    <<=gen.translate("type",av)>> <<=gen.translate("associationOne",av)>> = <<#if (relReqSuperCode) { #>>(<<=gen.translate("type",av)>>)<<# } #>>super.<<=gen.translate("getMethod",av)>>();%>
+    <<# } #>>
+    <<# if (customGetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPrefixCode,gen.translate("getMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+<<# if (customGetPostfixCode == null) { #>><<# for( TraceItem traceItem : traceItems ) #>><<= 
+(traceItem!=null?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("associationOne",av)):"")
+>>
+    return <<#if (relReqSuperCode) { #>>(<<=gen.translate("type",av)>>)<<# } #>>super.<<=gen.translate("getMethod",av)>>(<<#if (mulChangedToOne) { #>>0<<# } #>>);
+<<# } else { #>><<# for( TraceItem traceItem : traceItems ) #>><<= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("associationOne",av)):"")
+>>
+    <<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>> = (<<=gen.translate("type",av)>>)super.<<=gen.translate("getMethod",av)>>(<<#if (mulChangedToOne)#>>0);<<# for( TraceItem traceItem : traceItems ) #>><<= 
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("parameterOne",av)):"")
+>>
+    <<# addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPostfixCode,gen.translate("getMethod",av));
+     append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); #>>
+    return <<=gen.translate("parameterOne",av)>>;
+<<# } #>>
+  }
+!>>
+}

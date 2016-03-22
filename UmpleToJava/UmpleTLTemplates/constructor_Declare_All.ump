@@ -1,0 +1,28 @@
+use constructor_DeclareDefault.ump;
+use constructor_DeclareOneToOne.ump;
+use specializationCode_Constructor.ump;
+
+
+class UmpleToJava {
+    constructor_Declare_All <<!<</*constructor_Declare_All*/>><<#
+  boolean isOneToOne = false;
+
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+
+   #>><<@ UmpleToJava.specializationCode_Constructor >><<#
+
+    if (av.isOnlyOne() && relatedAssociation.isOnlyOne() && av.getIsNavigable() && relatedAssociation.getIsNavigable())
+    {
+      isOneToOne = true;
+      break;
+    }
+  }
+  #>><<@ UmpleToJava.constructor_DeclareDefault >><<#
+  if (isOneToOne)
+  {
+    #>><<@ UmpleToJava.constructor_DeclareOneToOne >><<#
+  }
+
+#>>!>>
+}

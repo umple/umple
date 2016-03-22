@@ -1,0 +1,9 @@
+class UmpleToJava {
+    delete_OptionalOneFromN_comp_specialization <<!<</*delete_OptionalOneFromN_comp_specialization*/>>
+    if (<<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>() != null)
+    {
+        <<=gen.translate("type",av)>> <<=gen.translate("removeParameterOne",av)>> = <<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>();
+        clear_<<=gen.translate("associationOne",av)>>();
+        <<=gen.translate("removeParameterOne",av)>>.delete();
+    }!>>
+}

@@ -1,0 +1,33 @@
+class UmpleToJava {
+    association_SetUnidirectionalMN_relatedSpecialization <<!<</*association_SetUnidirectionalMN_relatedSpecialization*/>><<# String accessModifier = (av.isImmutable()) ? "private" : "public"; #>>
+  <<= accessModifier >> boolean <<=gen.translate("setManyMethod",av)>>(<<=gen.translate("type",av)>>... <<=gen.translate("parameterMany",av)>>)
+  {
+    boolean wasSet = false;
+    <<# if (customSetManyPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetManyPrefixCode,gen.translate("setManyMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } #>>
+    ArrayList<<<=gen.translate("type",av)>>> <<=gen.translate("parameterVerifiedMany",av)>> = new ArrayList<<<=gen.translate("type",av)>>>();
+    for (<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>> : <<=gen.translate("parameterMany",av)>>)
+    {
+      if (<<=gen.translate("parameterVerifiedMany",av)>>.contains(<<=gen.translate("parameterOne",av)>>))
+      {
+        continue;
+      }
+      <<=gen.translate("parameterVerifiedMany",av)>>.add(<<=gen.translate("parameterOne",av)>>);
+    }
+
+    if (<<=gen.translate("parameterVerifiedMany",av)>>.size() != <<=gen.translate("parameterMany",av)>>.length || <<=gen.translate("parameterVerifiedMany",av)>>.size() < <<=gen.translate("minimumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>() || <<=gen.translate("parameterVerifiedMany",av)>>.size() > <<=gen.translate("maximumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>())
+    {
+      <<# if (customSetManyPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetManyPostfixCode,gen.translate("setManyMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } #>>
+      return wasSet;
+    }
+
+    <<=gen.translate("associationMany",av)>>.clear();
+    <<=gen.translate("associationMany",av)>>.addAll(<<=gen.translate("parameterVerifiedMany",av)>>);
+    wasSet = true;
+    <<# if (customSetManyPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetManyPostfixCode,gen.translate("setManyMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } #>>
+    return wasSet;
+  }
+!>>
+}

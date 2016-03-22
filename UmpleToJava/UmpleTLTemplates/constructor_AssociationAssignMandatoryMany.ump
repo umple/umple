@@ -1,0 +1,24 @@
+class UmpleToJava {
+    constructor_AssociationAssignMandatoryMany <<!<</*constructor_AssociationAssignMandatoryMany*/>><<#
+  String requiredNumber = "";
+  if (av.isN())
+  {
+    requiredNumber += av.getMultiplicity().getLowerBound();
+  }
+  else if (av.isStar())
+  {
+    requiredNumber = StringFormatter.format("at least {0}", av.getMultiplicity().getLowerBound());
+  }
+  else
+  {
+    requiredNumber = StringFormatter.format("{0} to {1}", av.getMultiplicity().getLowerBound(), av.getMultiplicity().getUpperBound());
+  }
+  
+#>>
+    <<=gen.translate("associationMany",av)>> = new ArrayList<<<=gen.translate("type",av)>>>();
+    boolean <<=gen.translate("didAddMany",av)>> = <<=gen.translate("setManyMethod",av)>>(<<=gen.translate("parameterAll",av)>>);
+    if (!<<=gen.translate("didAddMany",av)>>)
+    {
+      throw new RuntimeException("Unable to create <<=gen.relatedTranslate("type",av)>>, must have <<=requiredNumber>> <<=gen.translate("associationMany",av)>>");
+    }!>>
+}

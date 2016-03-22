@@ -1,0 +1,25 @@
+class UmpleToJava {
+    association_MaximumNumberOfMethod <<!<</*association_MaximumNumberOfMethod*/>><<#
+    String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
+
+    String customMaximumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("maximumNumberOfMethod",av)));
+    String customMaximumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("maximumNumberOfMethod",av)));
+    
+    #>>
+<<# if (customMaximumNumberOfPrefixCode == null && customMaximumNumberOfPostfixCode == null) { #>>
+  public static int <<=gen.translate("maximumNumberOfMethod",av)>>()
+  {
+    return <<=av.getMultiplicity().getUpperBound()>>;
+  }
+<<# } else { #>><<=umpleSourceFile>>
+  public static int <<=gen.translate("maximumNumberOfMethod",av)>>()
+  {
+    <<# if (customMaximumNumberOfPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customMaximumNumberOfPrefixCode,gen.translate("maximumNumberOfMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPrefixCode, "    ")); } #>>
+    int maximum = <<=av.getMultiplicity().getUpperBound()>>;
+    <<# if (customMaximumNumberOfPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customMaximumNumberOfPostfixCode,gen.translate("maximumNumberOfMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPostfixCode, "    ")); } #>>
+    return maximum;
+  }
+<<# } #>>!>>
+}

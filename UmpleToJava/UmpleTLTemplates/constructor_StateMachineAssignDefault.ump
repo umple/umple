@@ -1,0 +1,13 @@
+class UmpleToJava {
+    constructor_StateMachineAssignDefault <<!<</*constructor_StateMachineAssignDefault*/>>
+    <<=gen.translate("setMethod",sm)>>(<<=gen.translate("type",sm)>>.<<=gen.translate("stateOne",state)>>);
+<<#
+    for (StateMachine smq : uClass.getStateMachines())
+    {
+      if (smq.isQueued() || smq.isPooled())
+      {
+        //nothing to do
+      }
+    }
+#>>!>>
+}

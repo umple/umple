@@ -1,0 +1,15 @@
+class UmpleToJava {
+    attribute_GetUniqueCodeInjection <<!<</*attribute_GetUniqueCodeInjection*/>>
+  public static <<=av.getUmpleClass().getName()>> <<=gen.translate("getUniqueMethod",av)>>(<<=gen.translate("type", av)>> <<=gen.translate("parameterOne", av)>>)
+  {
+    <<# if (customGetUniquePrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetUniquePrefixCode,gen.translate("getUniqueMethod",av)); 
+    append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetUniquePrefixCode, "    ")); } #>>
+    <<=av.getUmpleClass().getName()>> <<=gen.translate("parameterGetUnique",av)>> = <<=gen.translate("uniqueMap",av)>>.get(<<=gen.translate("parameterOne",av)>>);
+    <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")>>
+
+
+<<# if (customGetUniquePostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetUniquePostfixCode,gen.translate("getUniqueMethod",av)); 
+    append(realSb, "{0}\n",GeneratorHelper.doIndent(customGetUniquePostfixCode, "    ")); } #>>    return <<=gen.translate("parameterGetUnique",av)>>;
+  }
+!>>
+}

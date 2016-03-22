@@ -1,0 +1,132 @@
+class UmpleToJava {
+    uncaught_exception <<!<</*uncaught_exception*/>><<#
+java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) (.*)");
+public static UmpleClass mainMainClass = null;
+private void addUncaughtExceptionVariables(int javaline, String code, String methodname)
+{
+  String[] lines = code.split("\\n");
+  java.util.regex.Matcher matcher = lineNumberPattern.matcher(lines[0]);
+  if(matcher.matches())
+  {
+    if(!uncaughtExceptions.containsKey(methodname))
+    {
+      uncaughtExceptions.put(methodname,new UncaughtException(globalUmpleClass.getName(), methodname));
+    }
+    uncaughtExceptions.get(methodname).addUncaughtFileName(matcher.group(2));
+    uncaughtExceptions.get(methodname).addUncaughtUmpleLine(Integer.parseInt(matcher.group(1))-1);
+    uncaughtExceptions.get(methodname).addUncaughtJavaLine(javaline+1);
+    uncaughtExceptions.get(methodname).addUncaughtLength(lines.length);
+  }  
+}
+private void addUncaughtExceptionVariables(String methodname, String filename, int umpleline, int javaline, int length)
+{
+  if(!uncaughtExceptions.containsKey(methodname))
+  {
+    uncaughtExceptions.put(methodname,new UncaughtException(globalUmpleClass.getName(), methodname));
+  }
+  
+  uncaughtExceptions.get(methodname).addUncaughtFileName(filename);
+  uncaughtExceptions.get(methodname).addUncaughtUmpleLine(umpleline-1);
+  uncaughtExceptions.get(methodname).addUncaughtJavaLine(javaline+1);
+  uncaughtExceptions.get(methodname).addUncaughtLength(length);
+}
+public String getExceptionHandler(String exceptions) { 
+  StringBuilder realSb = new StringBuilder();#>>
+  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
+  {
+    public void uncaughtException(Thread t, Throwable e)
+    {
+      translate(e);
+      if(e.getCause()!=null)
+      {
+        translate(e.getCause());
+      }
+      e.printStackTrace();
+    }
+    public void translate(Throwable e)
+    {
+      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();
+      StackTraceElement[] elements = e.getStackTrace();
+      try
+      {
+        for(StackTraceElement element:elements)
+        {
+          String className = element.getClassName();
+          String methodName = element.getMethodName();
+          boolean methodFound = false;
+          int index = className.lastIndexOf('.')+1;
+          try {
+            java.lang.reflect.Method query = this.getClass().getMethod(className.substring(index)+"_"+methodName,new Class[]{});
+            UmpleSourceData sourceInformation = (UmpleSourceData)query.invoke(this,new Object[]{});
+            for(int i=0;i<sourceInformation.size();++i)
+            {
+              int distanceFromStart = element.getLineNumber()-sourceInformation.getJavaLine(i)-(("main".equals(methodName))?2:0);
+              if(distanceFromStart>=0&&distanceFromStart<=sourceInformation.getLength(i))
+              {
+                result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),sourceInformation.getFileName(i),sourceInformation.getUmpleLine(i)+distanceFromStart));
+                methodFound = true;
+                break;
+              }
+            }
+          }
+          catch (Exception e2){}
+          if(!methodFound)
+          {
+            result.add(element);
+          }
+        }
+      }
+      catch (Exception e1)
+      {
+        e1.printStackTrace();
+      }
+      e.setStackTrace(result.toArray(new StackTraceElement[0]));
+    }
+  //The following methods Map Java lines back to their original Umple file / line    
+<<=exceptions>>
+  }
+  public static class UmpleSourceData
+  {
+    String[] umpleFileNames;
+    Integer[] umpleLines;
+    Integer[] umpleJavaLines;
+    Integer[] umpleLengths;
+    
+    public UmpleSourceData(){
+    }
+    public String getFileName(int i){
+      return umpleFileNames[i];
+    }
+    public Integer getUmpleLine(int i){
+      return umpleLines[i];
+    }
+    public Integer getJavaLine(int i){
+      return umpleJavaLines[i];
+    }
+    public Integer getLength(int i){
+      return umpleLengths[i];
+    }
+    public UmpleSourceData setFileNames(String... filenames){
+      umpleFileNames = filenames;
+      return this;
+    }
+    public UmpleSourceData setUmpleLines(Integer... umplelines){
+      umpleLines = umplelines;
+      return this;
+    }
+    public UmpleSourceData setJavaLines(Integer... javalines){
+      umpleJavaLines = javalines;
+      return this;
+    }
+    public UmpleSourceData setLengths(Integer... lengths){
+      umpleLengths = lengths;
+      return this;
+    }
+    public int size(){
+      return umpleFileNames.length;
+    }
+  } 
+}<<#
+  return realSb.toString();
+}#>>!>>
+}

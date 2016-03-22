@@ -1,0 +1,93 @@
+use association_GetMany.ump;
+use association_GetMany_clear.ump;
+use association_GetMany_relatedSpecialization.ump;
+use association_GetMany_specialization.ump;
+use association_GetOne.ump;
+use association_GetOne_clear.ump;
+use association_GetOne_relatedSpecialization.ump;
+use association_GetOne_specialization.ump;
+use specializationCode_Get.ump;
+
+
+class UmpleToJava {
+    association_Get_All <<!<</*association_Get_All*/>><<#
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+    #>><<@ UmpleToJava.specializationCode_Get >><<# 
+
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+
+    gen.setParameterConstraintName(av.getName());
+
+    List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
+
+    String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
+    String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
+
+    String customGetDefaultPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getDefaultMethod",av)));
+    String customGetDefaultPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getDefaultMethod",av)));
+
+    String customGetManyPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getManyMethod",av)));
+    String customGetManyPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getManyMethod",av)));
+
+    String customNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("numberOfMethod",av)));
+    String customNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("numberOfMethod",av)));
+
+    String customHasManyPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("hasManyMethod",av)));
+    String customHasManyPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("hasManyMethod",av)));
+
+    String customIndexOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("indexOfMethod",av)));
+    String customIndexOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("indexOfMethod",av)));
+
+    boolean hasCodeInjections = customGetPrefixCode != null || customGetPostfixCode != null;
+  
+    if (av.isOne())
+    {
+      if (reqSuperCode)
+      {
+        #>><<@ UmpleToJava.association_GetOne_specialization >><<#
+      }
+      else if (reqCommonCode)
+      {
+        #>><<@ UmpleToJava.association_GetOne_relatedSpecialization >><<#
+      }
+      else
+      {
+        #>><<@ UmpleToJava.association_GetOne >><<#
+        if (relatedAssoc != null && relatedAssoc.getIsSpecialized())
+        {
+          #>><<@ UmpleToJava.association_GetOne_clear >><<#
+        }
+      }
+    }
+    else if (av.isMany())
+    {
+      if (reqSuperCode)
+      {
+        #>><<@ UmpleToJava.association_GetMany_specialization >><<#
+      }
+      else if (reqCommonCode)
+      {
+        #>><<@ UmpleToJava.association_GetMany_relatedSpecialization >><<#
+      }
+      else
+      {
+        #>><<@ UmpleToJava.association_GetMany >><<#
+        if (relatedAssoc != null && relatedAssoc.getIsSpecialized())
+        {
+          #>><<@ UmpleToJava.association_GetMany_clear >><<#
+        }
+      }
+    }
+    else
+    {
+      #>>UNABLE TO UNDERSAND association variable (see association_Get_All.jet)<<#
+    }
+ }
+ gen.setParameterConstraintName("");
+#>>!>>
+}

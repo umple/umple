@@ -1,0 +1,9 @@
+class UmpleToJava {
+    delete_OptionalOneFromMany <<!<</*delete_OptionalOneFromMany*/>>
+    if (<<=gen.translate("associationOne",av)>> != null)
+    {
+      <<=gen.translate("type",av)>> <<=gen.translate("removeParameterOne",av)>> = <<=gen.translate("associationOne",av)>>;
+      this.<<=gen.translate("associationOne",av)>> = null;
+      <<=gen.translate("removeParameterOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+    }!>>
+}

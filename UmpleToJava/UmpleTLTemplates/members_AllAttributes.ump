@@ -1,0 +1,105 @@
+class UmpleToJava {
+    members_AllAttributes <<!<</*members_AllAttributes*/>><<#
+{
+
+  appendln(realSb, "");
+  appendln(realSb, "");
+  appendln(realSb, "  //------------------------");
+  appendln(realSb, "  // MEMBER VARIABLES");
+  append(realSb, "  //------------------------");
+
+  isFirst = true;
+  for(Attribute av : uClass.getAttributes())
+  {
+    if (av.isConstant() || av.getIsAutounique() || av.getIsDerived())
+    {
+      continue;
+    }
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      append(realSb,"  //{0} Attributes", uClass.getName());
+      isFirst = false;
+    }
+    
+    String type = gen.translate("type",av);
+    String attribute = gen.translate("attributeOne",av);
+    if (av.getIsList())
+    {
+      attribute = gen.translate("attributeMany",av);
+      type = StringFormatter.format("List<{0}>",gen.translate("typeMany",av));
+    }
+
+    appendln(realSb, "");
+    
+    if("internal".equals(av.getModifier()))
+    {
+      if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+    }
+    append(realSb, "  private {0} {1};", type, attribute);
+  }
+  
+  isFirst = true;
+  for(Attribute av : uClass.getAttributes())
+  {
+    if (!av.getIsAutounique())
+    {
+      continue;
+    }
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      append(realSb,"  //Autounique Attributes");
+      isFirst = false;
+    }
+    appendln(realSb, "");
+    if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+    append(realSb, "  private int {0};", gen.translate("attributeOne",av));
+  }
+  
+  isFirst = true;
+  for( TraceDirective td : uClass.getTraceDirectives() )
+  {
+	  for( TraceCondition traceCond : td.getCondition() )
+	  {
+		  if (isFirst && (traceCond.getConditionType().equals("until") ||  traceCond.getConditionType().equals("after")))
+		  {
+			  appendln(realSb, "");
+			  append(realSb, "  //Trace Attributes");
+			  isFirst = false;
+		  }
+		  if(traceCond.getConditionType().equals("until") )
+		  {
+			  for( AttributeTraceItem traceAttr : td.getAttributeTraceItems() )
+			  {
+				  for( UmpleVariable attr : traceAttr.getUmpleVariables() )
+				  {
+					  String attrName = gen.translate("attribute",(Attribute)attr);
+					  attrName = attrName.substring(0,1).toUpperCase()+attrName.substring(1).toLowerCase();
+					  appendln(realSb, "");
+					  append(realSb, "  private boolean {0} = true;", "trace" + attrName + "Until");  
+				  }
+			  }  
+		  }
+		  if(traceCond.getConditionType().equals("after") )
+		  {
+			  for( AttributeTraceItem traceAttr : td.getAttributeTraceItems() )
+			  {
+				  for( UmpleVariable attr : traceAttr.getUmpleVariables() )
+				  {
+					  String attrName = gen.translate("attribute",(Attribute)attr);
+					  attrName = attrName.substring(0,1).toUpperCase()+attrName.substring(1).toLowerCase();
+					  appendln(realSb, "");
+					  append(realSb, "  private boolean {0} = false;", "trace" + attrName + "After");  
+				  }
+			  }
+		  }
+		  
+	  }
+	  
+  }
+}
+#>>!>>
+}

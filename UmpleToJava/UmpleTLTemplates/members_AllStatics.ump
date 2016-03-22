@@ -1,0 +1,61 @@
+class UmpleToJava {
+    members_AllStatics <<!<</*members_AllStatics*/>><<#
+{
+  isFirst = true;
+  for(Attribute av : uClass.getAttributes())
+  {
+  
+    if (!av.isConstant() && !av.getIsAutounique() && !av.getIsUnique())
+    {
+      continue;
+    }
+
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      appendln(realSb, "  //------------------------");
+      appendln(realSb, "  // STATIC VARIABLES");
+      appendln(realSb, "  //------------------------");
+      isFirst = false;
+    }
+  
+    if (av.isConstant())
+    {
+      appendln(realSb, "");
+      if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+      append(realSb, "  public static final {0} {1} = {2};", gen.getType(av), av.getName(), gen.translate("parameterValue",av));
+    }
+    else if (av.getIsAutounique())
+    {
+      String defaultValue = av.getValue() == null ? "1" : av.getValue();
+      appendln(realSb, "");
+      append(realSb, "  private static int next{0} = {1};", av.getUpperCaseName(), defaultValue);
+    }
+    else if (av.getIsUnique())
+    {
+      appendln(realSb, "");
+      append(realSb, "  private static Map<{0}, {1}> {2} = new HashMap<{0}, {1}>();",
+        av.getType(),
+        av.getUmpleClass().getName(),
+        gen.translate("uniqueMap", av));
+    }
+  }
+  
+  if (uClass.getIsSingleton())
+  {
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      appendln(realSb, "  //------------------------");
+      appendln(realSb, "  // STATIC VARIABLES");
+      appendln(realSb, "  //------------------------");
+      appendln(realSb, "");
+      isFirst = false;
+    }
+    append(realSb, "  private static {0} theInstance = null;", uClass.getName());
+  }
+}
+#>>!>>
+}

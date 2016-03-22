@@ -1,0 +1,58 @@
+class UmpleToJava {
+    association_SetOptionalOneToMandatoryMany_specialization <<!<</*association_SetOptionalOneToMandatoryMany_specialization*/>>
+  public boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  {
+    //
+    // This source of this source generation is association_SetOptionalOneToMandatoryMany.jet
+    // This set file assumes the generation of a maximumNumberOfXXX method does not exist because 
+    // it's not required (No upper bound)
+    //   
+    boolean wasSet = false;
+    <<=gen.translate("type",av)>> <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>();
+
+    if (<<=gen.translate("parameterExisting",av)>> == null)
+    {
+      if (<<=gen.translate("parameterOne",av)>> != null)
+      {
+        if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this))
+        {
+          <<# if (!reqSetCode) { #>>
+          wasSet = super.<<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+          <<# } else { #>>
+          super.clear_<<=gen.translate("associationOne",av)>>();
+          wasSet = <<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+          <<# } #>>
+        }
+      }
+    } 
+    else if (<<=gen.translate("parameterExisting",av)>> != null)
+    {
+      if (<<=gen.translate("parameterOne",av)>> == null)
+      {
+        if (<<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("minimumNumberOfMethod",av)>>_<<=gen.relatedTranslate("type",av)>>() < <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>>())
+        {
+          <<# if ( !reqSetCode ) { #>>
+          wasSet = super.<<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+          <<# } else { #>>
+          super.clear_<<=gen.translate("associationOne",av)>>();
+          wasSet = <<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+          <<# } #>>
+        }
+      } 
+      else
+      {
+        if (<<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("minimumNumberOfMethod",av)>>_<<=gen.relatedTranslate("type",av)>>() < <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>>())
+        {
+          <<# if (!reqSetCode) { #>>
+          wasSet = super.<<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+          <<# } else { #>>
+          super.clear_<<=gen.translate("associationOne",av)>>();
+          wasSet = <<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+          <<# } #>>
+        }
+      }
+    }
+    return wasSet;
+  }
+  !>>
+}
