@@ -1,4 +1,105 @@
-namespace cruise.umple.parser.analysis;
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+class Analyzer
+{
+  
+  /*
+   * Analyzes the token tree by instantiating the appropriate analyzer
+   * for each token rule.
+   *
+   * Note: This method makes heavy use of reflection
+   * Todo: consider simplifying and making use of the inheritance structure
+   */
+  public void analyzeToken(Token token)
+  {
+    prepare(token);
+    for(Token subtoken:token.getSubTokens())
+    {
+      for(Analyzer analyzer:children)
+      {
+        if(analyzer.getName().equals(subtoken.getName()))
+        {
+          List<Class> classes = new ArrayList<Class>();
+          List<String> variables = new ArrayList<String>();
+          for(Field field:analyzer.getClass().getDeclaredFields())
+          {
+            Class<? extends Analyzer> clazz = this.getClass();
+            while(clazz!=null&&!"Analyzer".equals(clazz.getSimpleName()))
+            {
+              for(Field mfield:clazz.getDeclaredFields())
+              {
+                if(field.getName().equals(mfield.getName()))
+       	        {
+       	          try 
+                  {
+	            classes.add(field.getType());
+	            variables.add(field.getName().substring(0,1).toUpperCase()+field.getName().substring(1));
+                    break;
+                  } 
+                  catch (IllegalArgumentException e)
+                  {
+	            e.printStackTrace();
+	          } 
+                  catch (NullPointerException nullPointerException)
+                  {
+                  }
+                }
+              }
+              clazz = (Class<? extends Analyzer>)clazz.getSuperclass();
+            }
+          }
+          try 
+          {
+            List<Analyzer> originalChildren = analyzer.getChildren();
+            analyzer = analyzer.getClass().newInstance();
+            for(Analyzer child:originalChildren)
+            {
+              analyzer.addChild(child);
+            }
+	    for(int i=0;i<classes.size();++i)
+	    {
+	      Object object = this.getClass().getMethod("get"+variables.get(i),new Class[]{}).invoke(this);
+	      analyzer.getClass().getMethod("set"+variables.get(i),new Class[]{classes.get(i)}).invoke(analyzer,object);
+	    }
+	  } catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
+	    e.printStackTrace();
+	  }
+          analyzer.analyzeToken(subtoken);
+          break;
+        }
+      }
+    }
+    analyze(token);
+  }
+  
+  /* 
+   * Prepare is called before analyzing the token, allowing edits or 
+   * sanitizing to be done
+   */
+  public void prepare(Token token){}
+  
+  /*
+   * Analyze is called to analyze the particular token
+   */
+  public void analyze(Token token){}
+
+  public String toString()
+  {
+    StringBuilder children = new StringBuilder();
+    return "Analyzer:"+getName();
+  }
+  
+}
+
+
+
 
 class RuleBasedParser 
 {
@@ -617,7 +718,6 @@ class GrammarAnalyzer {
     analyze(token);    
   }
 
-  Stack<Analyzer> analyzerStack = new Stack<Analyzer>(); 
   public boolean makeAnalyzer(String name)
   {
     boolean wasMade = false;

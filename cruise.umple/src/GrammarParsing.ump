@@ -1,4 +1,36 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
 namespace cruise.umple.parser.analysis;
+
+/*
+  This is the base class for all Analyzers used in the GrammarAnalyzer.
+  
+  To properly extend and make use of Analyzer, implementing subclasses
+  must be named the same as the rule they are to analyze in titlecase.
+  
+  For example, if you were to write an analyzer for the rule "precondition",
+  the analyzer would be named "PreconditionAnalyzer". Then just override 
+  analyze(Token) or prepare(Token) as needed.
+*/
+class Analyzer
+{
+  abstract;
+  depend java.util.*;
+  depend cruise.umple.parser.*;
+  depend cruise.umple.parser.Token;
+  depend java.io.*;  
+  depend java.lang.reflect.*;
+  
+  name = null;
+  0..* parent -- 0..* Analyzer children;
+}
 
 /*
   The rule based parser takes in umple grammar files and parses them into Rule objects(ChoiceRule, ChainRule, etc.). Really what happens is
@@ -138,7 +170,6 @@ class GrammarAnalyzer
   depend java.util.*;
   depend java.io.*;  
   depend java.lang.reflect.*;
-  depend cruise.umple.analysis.*; // TO DO: Refactor (?)
   depend cruise.umple.parser.rules.*;
   depend cruise.umple.parser.Position;
   depend cruise.umple.parser.Token;
@@ -210,6 +241,8 @@ class GrammarAnalyzer
   //if a balanced rule is created, it needs to know if the current context is nospaces or not
   noSpaces = false;
   
+  Stack<Analyzer> analyzerStack = new Stack<Analyzer>(); 
+  
   Map<String,Analyzer> analyzerMap = new HashMap<String,Analyzer>();  
 
   //resulting parse result from the parse
@@ -225,5 +258,5 @@ class GrammarAnalyzer
   Analyzer[] analyzers;
   boolean mustSetupAnalyzers = true;
 }
-use GrammarParsing_Code.ump;
 
+use GrammarParsing_Code.ump;
