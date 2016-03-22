@@ -79,18 +79,6 @@ class UmpleModel
     }
     return newInterface;
   }
-  
-  public UmpleInterface addUmpleInterface(String name, String sourceFilename )
-  {
-    UmpleInterface newInterface = getUmpleInterface(name);
-    if (newInterface == null)
-    {
-      newInterface = new UmpleInterface(name, this);
-      newInterface.setSourceFilename(sourceFilename);
-      addUmpleInterface(newInterface);
-    }
-    return newInterface;
-  }
 
   public UmpleClass addUmpleClass(String name)
   {
@@ -99,18 +87,6 @@ class UmpleModel
     {
       newClass = new UmpleClass(name, this);
       addUmpleClass(newClass);
-    }
-    return newClass;
-  }
-  
-  public UmpleClass addUmpleClass(String name, String sourceFilename)
-  {
-    UmpleClass newClass = getUmpleClass(name);
-    if (newClass == null)
-    {
-       newClass = new UmpleClass(name, this);
-       newClass.setSourceFilename(sourceFilename);
-       addUmpleClass(newClass);
     }
     return newClass;
   }
@@ -1197,14 +1173,13 @@ class UmpleClassifier{
   Obtains the relative path between the source file for the UmpleClassifier and 
   and the package name given the target language
   
+  @param filename the file name to get the relative path from
   @param language The language target to compare
   
   @return The string relative path between the parent and position
   */
-  public String getRelativePath(String language)
-  {
-    String filename = getSourceFilename();
-    
+  public String getRelativePath(String filename, String language)
+  {    
     String p = getPackageName();
  	
     if (filename == null)

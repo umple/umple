@@ -54,9 +54,9 @@ class UmpleToJava {
         if (p != null) {
           StateMachine sm_temp=sm;
           if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
-          
-          entryActions.append("\n        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath("Java") + "\"");
-          entryFileNames.add(sm_temp.getUmpleClass().getRelativePath("Java").replace("\\","/").replaceAll(".*/",""));
+          final String relativePath = sm_temp.getUmpleClass().getRelativePath(p.getFilename(),"Java");
+          entryActions.append("\n        // line " + p.getLineNumber() + " \"" + relativePath + "\"");
+          entryFileNames.add(relativePath.replace("\\","/").replaceAll(".*/",""));
           entryUmpleLineNumbers.add(p.getLineNumber());
           entryJavaLineNumbers.add(entryJavaLine-1);
           entryLengths.add(action.getActionCode().split("\\n").length);
@@ -130,9 +130,11 @@ class UmpleToJava {
           StateMachine sm_temp=sm;
           if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
           
-          exitActions.append("\n        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath("Java") + "\"");
+          final String relativePath = sm_temp.getUmpleClass().getRelativePath(p.getFilename(),"Java");
+          
+          exitActions.append("\n        // line " + p.getLineNumber() + " \"" + relativePath + "\"");
           addUncaughtExceptionVariables(gen.translate("exitMethod",sm),
-                                        sm_temp.getUmpleClass().getRelativePath("Java").replace("\\","/").replaceAll(".*/",""),
+                                        relativePath.replace("\\","/").replaceAll(".*/",""),
                                         p.getLineNumber(),
                                         exitJavaLine-1,
                                         action.getActionCode().split("\\n").length);

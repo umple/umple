@@ -91,8 +91,7 @@ class JavaClassGenerator {
 
 <<# if (uClass.numberOfComments() > 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } #>>
 <<# for (Position p : uClass.getPositions()) { #>>
-<<# uClass.setSourceFilename( p.getFilename() ); #>>
-// line <<= p.getLineNumber() >> "<<= uClass.getRelativePath("Java") >>"
+// line <<= p.getLineNumber() >> "<<= uClass.getRelativePath(p.getFilename(),"Java") >>"
 <<# } #>>
 public <<# if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
 
