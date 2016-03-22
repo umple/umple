@@ -980,32 +980,66 @@ class UmpleInternalParser
     return anInterface;
   }
 
-  private UmpleInterface analyzeInterface(Token t)
+  private UmpleInterface analyzeInterface(Token interfaceToken)
   {
-    String interfaceName = t.getValue("name");   
+    String interfaceName = interfaceToken.getValue("name");   
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
     if (Token.isValidIdentifier(interfaceName, "[A-Za-z|@]") != true) {
       if(!interfaceName.matches("[A-Za-z|@]+<.+>"))
       {
-        setFailedPosition(t.getPosition(), 110, interfaceName);
+        setFailedPosition(interfaceToken.getPosition(), 110, interfaceName);
       }
     }
     else if ( interfaceName.matches("[a-z].*") ){ // Warn when interface name doesn't start with a capital letter.
-      setFailedPosition(t.getPosition(), 111, interfaceName);
+      setFailedPosition(interfaceToken.getPosition(), 111, interfaceName);
+    }
+    
+    UmpleInterface anInterface = new UmpleInterface(interfaceToken.getValue("name"),model);
+    model.addUmpleInterface(anInterface);
+    
+    Position thePosition = interfaceToken.getPosition();
+    Position endPosition = interfaceToken.getEndPosition();
+
+    // Set the original .ump file and line number
+    anInterface.addPosition(thePosition);
+    anInterface.addEndPosition(endPosition);
+
+    // Add all the comments in the comment list to the Umple class.
+    // But add them before any umplesource special comments
+    int regularCommentCountEnd = 0;
+    for (Comment c : anInterface.getComments()) {
+      if(c.getText().startsWith("@umplesource")) break;
+      regularCommentCountEnd++;
+    }
+
+    for (Comment c : lastComments)
+    {
+      anInterface.addCommentAt(c,regularCommentCountEnd);
+      regularCommentCountEnd++;
+    }
+    
+    // Add special position comment at the end if @outputumplesource had been 
+    // detected earlier in a comment
+    if(outputUmpleSource == true) {  
+      String path = null;
+      if( thePosition.getFilename() == null ){
+        path = "";
+      }else{
+        path = Paths.get(thePosition.getFilename()).getFileName().toString();
+      }
+      anInterface.addComment(new Comment("@umplesource " + path +" "+thePosition.getLineNumber()));
     }
   
-    UmpleInterface newInterface = new UmpleInterface(t.getValue("name"),model);
-    model.addUmpleInterface(newInterface);
-    if(!"".equals(newInterface.getPackageName()) && !currentPackageName.equals(newInterface.getPackageName()) && !packageNameUsed){
-      setFailedPosition(t.getPosition(), 30, newInterface.getName(), currentPackageName);
-      newInterface.setPackageName(currentPackageName);    
+    if(!"".equals(anInterface.getPackageName()) && !currentPackageName.equals(anInterface.getPackageName()) && !packageNameUsed){
+      setFailedPosition(interfaceToken.getPosition(), 30, anInterface.getName(), currentPackageName);
+      anInterface.setPackageName(currentPackageName);    
     }    
-    if("".equals(newInterface.getPackageName())){
-      newInterface.setPackageName(currentPackageName);
-  }
-  packageNameUsed = true;
-    analyzeInterface(t,newInterface);
-    return newInterface;
+    if("".equals(anInterface.getPackageName())){
+      anInterface.setPackageName(currentPackageName);
+    }
+    packageNameUsed = true;
+    analyzeInterface(interfaceToken,anInterface);
+    return anInterface;
   }
 
   private void analyzeInterface(Token interfaceToken, UmpleInterface aInterface)
