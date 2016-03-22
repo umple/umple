@@ -424,19 +424,6 @@ class RTCppGenerator
   String output = "";
 }
 
-class CppGenerator
-{
-  isA SuperCodeGenerator;
-  isA CodeTranslator;
-  depend java.util.*;
-  depend java.io.*;
-  depend cruise.umple.util.*;
-
-  depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.cpp.*;
-}
-
-
 class PhpGenerator
 {
   isA SuperCodeGenerator;
@@ -510,7 +497,6 @@ use Generator_CodeJava.ump;
 use Generator_CodeRTCpp.ump;
 use Generator_CodePhp.ump;
 use Generator_CodeUigu2.ump;
-use Generator_CodeCpp.ump;
 use Generator_CodeSql.ump;
 use Generator_CodeUmpleSelf.ump;
 use Generator_CodeUSE.ump;

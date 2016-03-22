@@ -53,8 +53,6 @@ public class TemplateTest
 
     SampleFileWriter.destroy(pathToInput + "/ISomething.java");
     SampleFileWriter.destroy(pathToInput + "/Token.java");
-    SampleFileWriter.destroy(pathToInput + "/Token.h");
-    SampleFileWriter.destroy(pathToInput + "/Token.cpp");
     SampleFileWriter.destroy(pathToInput + "/Garbage.php");
     SampleFileWriter.destroy(pathToInput + "/IGarbage.php");
     SampleFileWriter.destroy(pathToInput + "/Mentor.php");
@@ -86,8 +84,6 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Light.php");
     SampleFileWriter.destroy(pathToInput + "/LightFixture.php");
     SampleFileWriter.destroy(pathToInput + "/LightFixture.java");
-    SampleFileWriter.destroy(pathToInput + "/LightFixture.cpp");
-    SampleFileWriter.destroy(pathToInput + "/LightFixture.h");
     SampleFileWriter.destroy(pathToInput + "/Tracer.java");
     SampleFileWriter.destroy(pathToInput + "/ConsoleTracer.php");
     SampleFileWriter.destroy(pathToInput + "/Company.php");
@@ -97,8 +93,6 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/X.java");
     SampleFileWriter.destroy(pathToInput + "/X.php");
     SampleFileWriter.destroy(pathToInput + "/x.ruby");
-    SampleFileWriter.destroy(pathToInput + "/X.h");
-    SampleFileWriter.destroy(pathToInput + "/X.cpp");
 
     SampleFileWriter.destroy(pathToInput + "/StrobeLight.php");
     SampleFileWriter.destroy(pathToInput + "/Lamp.php");
@@ -109,9 +103,6 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/example.rb");
     SampleFileWriter.destroy(pathToInput + "/Example.java");
     SampleFileWriter.destroy(pathToInput + "/GarageDoor.php");
-
-    SampleFileWriter.destroy(pathToInput + "/student.cpp");
-    SampleFileWriter.destroy(pathToInput + "/student.h");
 
     SampleFileWriter.destroy(pathToInput + "/ICodeTranslator.php");
     SampleFileWriter.destroy(pathToInput + "/IFirstChild.php");
@@ -183,21 +174,6 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Bar3.java");
     SampleFileWriter.destroy(pathToInput + "/Bar4.java");
 
-    SampleFileWriter.destroy(pathToInput + "/Bar.cpp");
-    SampleFileWriter.destroy(pathToInput + "/Bar1.cpp");
-    SampleFileWriter.destroy(pathToInput + "/Bar2.cpp");
-    SampleFileWriter.destroy(pathToInput + "/Bar3.cpp");
-    SampleFileWriter.destroy(pathToInput + "/Bar4.cpp");
-
-    SampleFileWriter.destroy(pathToInput + "/Foo.cpp");
-    SampleFileWriter.destroy(pathToInput + "/Foo.h");
-
-    SampleFileWriter.destroy(pathToInput + "/Bar.h");
-    SampleFileWriter.destroy(pathToInput + "/Bar1.h");
-    SampleFileWriter.destroy(pathToInput + "/Bar2.h");
-    SampleFileWriter.destroy(pathToInput + "/Bar3.h");
-    SampleFileWriter.destroy(pathToInput + "/Bar4.h");
-
     SampleFileWriter.destroy(pathToInput + "/bar_1.rb");
     SampleFileWriter.destroy(pathToInput + "/bar_2.rb");
     SampleFileWriter.destroy(pathToInput + "/bar_3.rb");
@@ -220,16 +196,10 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/QueuedSMwithConcurrentStates_2.php");
     SampleFileWriter.destroy(pathToInput + "/CourseAttempt.php");
     SampleFileWriter.destroy(pathToInput + "/QSMwithUnspecifiedRecep.php");
-    SampleFileWriter.destroy(pathToInput + "/Course.cpp");
     SampleFileWriter.destroy(pathToInput + "/Course.java");
-    SampleFileWriter.destroy(pathToInput + "/Course.h");
     SampleFileWriter.destroy(pathToInput + "/QSMwithUnspecifiedRecep.java");
-    SampleFileWriter.destroy(pathToInput + "/QSMwithUnspecifiedRecep.cpp");
-    SampleFileWriter.destroy(pathToInput + "/QSMwithUnspecifiedRecep.h");
     SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.java");    
     SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.php");    
-    SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.cpp");    
-    SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.h");    
 
     //
     // Tear down abstract class tests.
@@ -245,8 +215,6 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Client.java");
     SampleFileWriter.destroy(pathToInput + "/client.rb");
     SampleFileWriter.destroy(pathToInput + "/Client.php");
-    SampleFileWriter.destroy(pathToInput + "/Client.h");
-    SampleFileWriter.destroy(pathToInput + "/Client.cpp");
   }
 
   @Test

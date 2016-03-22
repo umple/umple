@@ -1,9 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore" %>
-<%
-if(att.getType() =="Integer")		
-		{ appendln(tp_code,"intfield,"); }
-		if(att.getType() == "Double")
-		{ appendln(tp_code,"doublefield,") ;}
-		if(att.getType() == "String")
-		{ appendln(tp_code,"message,") ;} 
-		%>

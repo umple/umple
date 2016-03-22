@@ -1,6 +1,0 @@
-generate SimpleCpp;
-namespace example;
-
-class Mentor 
-{
-}

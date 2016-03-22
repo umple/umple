@@ -594,14 +594,6 @@ public class UmpleParserTest
   }
 
   @Test
-  public void cppLanguage()
-  {
-    assertParse("001_cppLanguage.ump");
-    Assert.assertEquals("Cpp", model.getDefaultGenerate());
-  }
-
-
-  @Test
   public void otherLanguage()
   {
     assertFailedParse("001_otherLanguage.ump", new Position("001_otherLanguage.ump", 1,0,0));

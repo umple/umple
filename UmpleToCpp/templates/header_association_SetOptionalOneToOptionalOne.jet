@@ -1,2 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  bool <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%>* <%=gen.translate("parameterNew",av)%>);

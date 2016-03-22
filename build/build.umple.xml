@@ -167,10 +167,10 @@
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/ruby" overwrite="true">
       <fileset dir="UmpleToRuby/src-gen-UmpleTL/cruise/umple/compiler/ruby" excludes=".git* UmpleToRuby.java" />
     </copy>
-    <!-- OLD CPP DEPRECATED -->
-    <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/cpp" overwrite="true">
+    <!-- OLD CPP DEPRECATED To DELETE  -->
+    <!-- <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/cpp" overwrite="true">
       <fileset dir="UmpleToCpp/src/cruise/umple/compiler/cpp" excludes=".git*" />
-    </copy>
+    </copy> -->
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/sql" overwrite="true">
       <fileset dir="UmpleToSql/src-gen-UmpleTL/cruise/umple/compiler/sql" excludes=".git* UmpleToSql.java" />
     </copy>
