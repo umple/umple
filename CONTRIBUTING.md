@@ -114,9 +114,7 @@ The umple project is split into many smaller subproject, the folder hierarchy is
 
 * `UmpleToRuby` - Code generation for Ruby*
 
-* `UmpleToRTCpp` - Code generation for Real-time C++ *
-
-* `~~UmpleToCpp/~~` - Code generation for alternative C++ - historical; to be deleted
+* `UmpleToRTCpp` - Code generation for C++ *
 
 * `UmpleToSDL` - Code generation to convert Umple to SDL*
 

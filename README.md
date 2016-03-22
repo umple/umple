@@ -11,16 +11,16 @@ OS         | Linux  | OSX    | Windows
 
 This is the main project for various Umple subprojects and components.
 
-Umple is a model-oriented programming technology. It allows developers to embed modelling concepts (e.g. UML associations, state machines), patterns and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP (and can be embedded in or embed these), as well as diagrams, metrics and many other artifacts.
+Umple is a model-oriented programming technology. It allows developers to embed modelling concepts (e.g. UML associations, state machines), patterns, generation templates, and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP (and can be embedded in or embed these), as well as diagrams, metrics and many other artifacts.
 
 The project homepage is located at http://umple.org/
 
 ##Development
 Umple is developed in itself, guaranteeing robustness, the most recent version of the compiler must be used to compile itself. See the wiki for development setup.
 
-Development follows a model-driven, test-driven, agile, continuous-integration process. Umple is hosted currently on Github at http://code.umple.org. It was first released in 2007, and the master was on Google Code from 2011 to 2015.
+Development follows a model-driven, test-driven, agile, continuous-integration process. Umple is hosted currently on Github at http://code.umple.org. It was first released in 2007, and the master was on Google Code from 2011 to mid 2015.
 
-Umple has been largely developed as a research project at the University of Ottawa, Canada, by numerous PhD and masters students, Many undergraduates from across Canada and the USA have also contributed. See the license file for the list of contributors.
+Umple has been largely developed as a research project at the University of Ottawa, Canada, by numerous PhD and masters students, Many undergraduates from across Canada and the USA have also contributed through the UCOSP program. See the license file for the list of contributors.
 
 More details can be found as follows
 
@@ -37,7 +37,7 @@ Umple is continuously tested and build at the University of Ottawa using CruiseC
 The umple project is split into many smaller subproject, the folder hierarchy is explained below to better describe the structure.
 
 * build/
-  * Ant build scripts and related information
+  * Ant build scripts and related information including user manual raw data
 
 * cruise.umple/ *Umple compiler*
   * See its own ReadMe.txt for further details
@@ -68,17 +68,16 @@ The umple project is split into many smaller subproject, the folder hierarchy is
 
 * ExternalTextEditorPlugins *Plugins for external editors, Notepad++, etc*
 
-* sandbox *What is this?*
+* sandbox *Small test done before a build to make sure testing and compiling works*
 
 * testbed/, testbed_php/, testbed_ruby/ *Test suites for Java, Php and Ruby respectively*
 * UmpleToJava/ *Code generation for Java*
 * UmpleToPhp/ *Code generation for Php*
 * UmpleToRuby/ *Code generation for Ruby*
-* UmpleToRTCpp/ *Code generation for Real-time C++ *
-* ~~UmpleToCpp/~~ *Code generation for alternative C++ - historical; to be deleted
-* UmpleToSDL/ *Code generation to convert Umple to SDL*
+* UmpleToRTCpp/ *Code generation for C++ *
+* UmpleToSDL/ *Code generation to convert Umple to SDL* (in early development)
 * UmpleToSql/ *Code generation SQL from Umple models*
-* UmpleToTemplate/ *Template for creating new code generation subprojects*
+* UmpleToTemplate/ *Location for templates that could be common to subprojects*
 
 * umpleonline/ *The UmpleOnline web application*
   * UmpleOnline allows generation of code from Umple directly in a web browser, and also editing of Umple both graphically and textually. Available at http://try.umple.org
