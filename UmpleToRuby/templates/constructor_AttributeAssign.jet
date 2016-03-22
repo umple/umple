@@ -1,7 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore" %>
-<%
-  if(!av.getIsLazy()){
-    String parameterLookup = av.getValue() == null ? "parameterOne" : "parameterValue";
-%>
-    @<%=gen.translate("attributeOne",av)%> = <%=gen.translate(parameterLookup,av)%>
-<% } %>

@@ -1,7 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%>
-    while( !<%=gen.translate("associationOne",av)%>.isEmpty() )
-    {
-      <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("associationOne",av)%>.get(0);
-      <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(null);
-      <%=gen.translate("associationOne",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
-    }

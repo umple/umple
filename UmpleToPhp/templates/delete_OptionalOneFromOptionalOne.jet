@@ -1,5 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%>
-    if ($this-><%=gen.translate("associationOne",av)%> != null)
-    {
-      $this-><%=gen.translate("associationOne",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(null);
-    }

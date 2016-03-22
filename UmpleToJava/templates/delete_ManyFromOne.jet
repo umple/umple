@@ -1,6 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%>
-    for(int i=<%=gen.translate("associationMany",av)%>.size(); i > 0; i--)
-    {
-      <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("associationMany",av)%>.get(i - 1);
-      <%=gen.translate("parameterOne",av)%>.delete();
-    }

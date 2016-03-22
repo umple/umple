@@ -1,5 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%>
-# PLEASE DO NOT EDIT THIS CODE
-# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
-# NOTE: Ruby generator is experimental and is missing some features available in
-# in other Umple generated languages like Java or PHP

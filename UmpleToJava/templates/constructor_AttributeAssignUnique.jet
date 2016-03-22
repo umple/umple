@@ -1,5 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore" %>
-    if (!<%=gen.translate("setMethod", av)%>(<%=gen.translate("parameterOne", av)%>))
-    {
-      throw new RuntimeException("Cannot create due to duplicate <%=av.getName()%>");
-    }

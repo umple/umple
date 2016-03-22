@@ -1,5 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%>
-    if (<%=gen.translate("getMethod",av)%><% if (mulChangedToOne) { %>_One<%=gen.translate("type",av)%><% } %>() != null)
-    {
-      <%=gen.translate("getMethod",av)%><% if (mulChangedToOne) { %>_One<%=gen.translate("type",av)%><% } %>().clear_<%=gen.relatedTranslate("associationOne",av)%>();
-    }
