@@ -1,8 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  <%=gen.translate("type",av)%> <%=gen.translate("type",uClass)%>::<%=gen.translate("getDefaultMethod",av)%>() const
-  {
-    <% if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } %>
-    return <%= gen.translate("parameterValue",av) %>;
-  }
-
-  

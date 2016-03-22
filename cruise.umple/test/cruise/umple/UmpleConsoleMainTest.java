@@ -93,54 +93,12 @@ public class UmpleConsoleMainTest {
      }
   }
   
-   // Ignore the following - currently does exit
-  @Test
-  @Ignore
-  public void generateOverride() {
-    String[] cppargs = new String[] { "-g", "Cpp", "--override",
-        "testclass.ump" };
-		
-		try {
-      SampleFileWriter.createFile("testclass.ump", "generate Java; class testclass {}");
-		    
-		    UmpleConsoleMain.main(cppargs);
-		    
-      SampleFileWriter.assertFileExists("testclass.java");
-      SampleFileWriter.assertFileExists("testclass.cpp");
-      SampleFileWriter.assertFileExists("testclass.h");
-    } finally {
-      SampleFileWriter.destroy("testclass.java", "testclass.cpp",
-          "testclass.h", "testclass.ump");
-		}
-  }
   
-  // Ignore the following - currently does exit
-  @Test
-  @Ignore
-  public void generatePath() throws IOException {
-    Path tmpDir = Files.createTempDirectory(Paths.get("."), "tmp"); // let the jvm delete this one
-    String tmpPath = tmpDir.toAbsolutePath().toString();
-
-    String[] cppargs = new String[] { "-g", "Cpp", "--path", tmpPath,
-        "testclass.ump" };
-		
-		try {
-      SampleFileWriter.createFile("testclass.ump", "class testclass {}");
-		    
-		    UmpleConsoleMain.main(cppargs);
-      SampleFileWriter.assertFileExists(tmpPath + "/testclass.cpp");
-      SampleFileWriter.assertFileExists(tmpPath + "/testclass.h");
-    } finally {
-      SampleFileWriter.destroy("testclass.ump");
-		}
-  }
-  
-   // Ignore the following - currently does exit
+   // Ignore the following - currently does exit - Probably needs adapting for RTCPP
   @Test
   @Ignore
   public void outputLang() {
     String[] javaargs = new String[] { "-g", "Java", "testclass.ump" };
-    String[] cppargs = new String[] { "-g", "Cpp", "testclass.ump" };
     String[] phpargs = new String[] { "-g", "Php", "testclass.ump" };
 	
 	try {
@@ -149,16 +107,11 @@ public class UmpleConsoleMainTest {
 	    UmpleConsoleMain.main(javaargs);
       SampleFileWriter.assertFileExists("testclass.java");
 	    
-	    UmpleConsoleMain.main(cppargs);
-      SampleFileWriter.assertFileExists("testclass.cpp");
-      SampleFileWriter.assertFileExists("testclass.h");
-	    
 	    UmpleConsoleMain.main(phpargs);
       SampleFileWriter.assertFileExists("testclass.php");
     } finally {
       SampleFileWriter.destroy("testclass.ump", 
           "testclass.java",
-          "testclass.cpp", "testclass.h", 
           "testclass.php");
 	}
   }

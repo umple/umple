@@ -1,5 +1,0 @@
- <%@ jet package="cruise.umple.ignore" class="Ignore"%>
- bool equals(Object obj);
- int hashCode();
-
- 
