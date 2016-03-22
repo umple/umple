@@ -186,13 +186,14 @@ class UmpleInternalParser
 						if(i+1<smTSignature.getDesStates().length){
 							StateMachine foundSM= null;
 							for(StateMachine nestedSM : foundState.getNestedStateMachines()){
-								foundState = nestedSM.findState(smTSignature.getDesState(i+1),false);
-								if(foundState!=null){
+								State foundStateTemp = nestedSM.findState(smTSignature.getDesState(i+1),false);
+								if(foundStateTemp!=null){
 									if(foundSM!=null){
 										getParseResult().addErrorMessage(new ErrorMessage(233,inClassfier.getPosition(0),inClassfier.getName(),smTSignature.getDesState(i+1)));	
 						 		 		 return null;
 									} else {
-										foundSM = nestedSM;														
+										foundSM = nestedSM;		
+										foundState=foundStateTemp;												
 									}
 								}
 							} 
@@ -200,6 +201,7 @@ class UmpleInternalParser
 								getParseResult().addErrorMessage(new ErrorMessage(230,inClassfier.getPosition(0),inClassfier.getName(),smTSignature.getDesState(i+1) ));	
 				 		 		 return null;
 							}
+							i++;
 						} else {
 							//The state has been found.
 								return foundState;
