@@ -12,7 +12,7 @@ public class UmpleTraitTest {
 	
 	@Before
 	public void setup() {	
-		defaultPath= SampleFileWriter.rationalize("test/cruise/umple/compiler");
+		defaultPath= SampleFileWriter.rationalize("test/cruise/umple/compiler/trait/test/resources");
 		 
 		String  code = "class A { isA T;}"
 				+ "trait T {"
@@ -657,6 +657,16 @@ public class UmpleTraitTest {
 			}	
 			
 		}
+		
+		@Test
+		public void stateMachineTraits043Test() {
+			UmpleModel model = getRunModelByFilename("trait_test_data_0002.ump");
+			
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("status").getState(0).numberOfNestedStateMachines());
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("status").getState(1).numberOfNestedStateMachines());
+			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("status").getState(2).numberOfNestedStateMachines());
+		}
+		
 //the last StateTest
 		
 	//This is related to issue #656
