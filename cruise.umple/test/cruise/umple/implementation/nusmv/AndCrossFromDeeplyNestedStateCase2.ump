@@ -1,0 +1,36 @@
+class A {
+  
+  state {
+  
+    state1 {
+      state11 {
+        e5 -> state2; 
+        state111 { 
+          e1 -> state112;
+        }
+        state112 { 
+          e4 -> state111;
+          e2 -> state12211;
+        } 
+      }
+      ||
+      state12 {
+        e5 -> state2; 
+        state121 {
+          e2 -> state122;
+          e4 -> state1221;
+        }
+        state122 {
+          state1221 {
+              state12211{ e2 -> state112; }
+          }
+          ||
+           state1222 {
+              state12221{ e6 -> state112; }
+          }
+        } 
+      } 
+    }
+    state2{}
+  }
+}
