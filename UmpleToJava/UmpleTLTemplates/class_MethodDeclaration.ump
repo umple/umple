@@ -15,8 +15,7 @@ class UmpleToJava {
         
         if (p != null) {
 //        use annotations instead
-        uClass.setSourceFilename( p.getFilename() );
-        positionHeader = "  // line " + p.getLineNumber() + " \"" + uClass.getRelativePath("Java") + "\"\n";
+        positionHeader = "  // line " + p.getLineNumber() + " \"" + uClass.getRelativePath(p.getFilename(),"Java") + "\"\n";
 //        positionHeader = "\n  @umplesourcefile(line={"+p.getLineNumber()+"},file={\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+(javaline+4)+"},length={"+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length+2)+"})";          
         }
         else 

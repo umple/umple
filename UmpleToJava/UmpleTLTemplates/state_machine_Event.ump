@@ -82,7 +82,7 @@ class UmpleToJava {
           if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
           
           addUncaughtExceptionVariables(gen.translate("eventMethod",e),
-                                      sm_temp.getUmpleClass().getRelativePath("Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
+                                      sm_temp.getUmpleClass().getRelativePath(t.getGuard().getPosition().getFilename(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
                                       t.getGuard().getPosition().getLineNumber(),
                                       javaLine-1,
                                       condition.split("\\n").length-1);
@@ -104,12 +104,14 @@ class UmpleToJava {
             StateMachine sm_temp=sm;
             if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
             
+            final String relativePath = sm_temp.getUmpleClass().getRelativePath(p.getFilename(),"Java");
+            
             addUncaughtExceptionVariables(gen.translate("eventMethod",e),
-                                        sm_temp.getUmpleClass().getRelativePath("Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
+                                        relativePath.replace("\\","/").replaceAll(".*/","").replace("\"",""),
                                         p.getLineNumber(),
                                         javaLine-2,
                                         a1.getActionCode().split("\\n").length);
-            allCases.append("        // line " + p.getLineNumber() + " \"" + sm_temp.getUmpleClass().getRelativePath("Java") + "\"\n");
+            allCases.append("        // line " + p.getLineNumber() + " \"" + relativePath + "\"\n");
             javaLine++;
           }
           allCases.append(StringFormatter.format("{0}{1}\n",tabSpace,a1.getActionCode()));

@@ -9,6 +9,7 @@ namespace cruise.umple.compiler.java;
 external interface ILang{}
 
 class JavaInterfaceGenerator {
+    depend cruise.umple.parser.Position;
     depend cruise.umple.compiler.*;
     depend cruise.umple.util.*;
     depend java.util.*;
@@ -47,6 +48,10 @@ class JavaInterfaceGenerator {
 #>>
 <<=gen.translate("packageDefinition",uInterface)>><<@ UmpleToJava.import_packages_interface >>
 
+<<# if (uInterface.numberOfComments() > 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uInterface.getComments())); } #>>
+<<# for (Position p : uInterface.getPositions()) { #>>
+// line <<= p.getLineNumber() >> "<<= uInterface.getRelativePath(p.getFilename(),"Java") >>"
+<<# } #>>
 public interface <<=uInterface.getName()>><<= gen.translate("isA",uInterface) >>
 {
   <<=extraCode>>

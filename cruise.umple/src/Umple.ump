@@ -478,7 +478,6 @@ class UmpleClassifier
   * -> * Depend;
   
   UmpleModel sourceModel;
-  String sourceFilename = "";
 
   // The constants contained within the Umple Classifier.
   1 -> 0..* Constant;
@@ -496,6 +495,8 @@ class UmpleInterface
 
   * -> 0..* UmpleInterface extendsInterface;
 
+  // The comments associated with the Umple Interface (such as the Javadoc above it).
+  1 -> * Comment;
 
   before setPackageName { if (aPackageName == null) { return false; } }
   before addDepend { if (depends.contains(aDepend)) { return false; } }
