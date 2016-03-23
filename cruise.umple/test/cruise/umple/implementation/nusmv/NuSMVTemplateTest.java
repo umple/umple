@@ -52,6 +52,22 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/concurrentMachineExample.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/JavaDataTypes.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/ArbitraryExample.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/AndCrossExample.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/AndCrossFromDeeplyNestedState.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/AndCrossFromDeeplyNestedStateCase2.smv");
+	  }
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
+	  public void AndCrossFromDeeplyNestedStateCase2()
+	  {
+	  		assertUmpleTemplateFor("nusmv/AndCrossFromDeeplyNestedStateCase2.ump","nusmv/AndCrossFromDeeplyNestedStateCase2.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/AndCrossFromDeeplyNestedStateCase2.smv")).exists());
+	  }	  
+	  
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
+	  public void AndCrossFromDeeplyNestedState()
+	  {
+	  		assertUmpleTemplateFor("nusmv/AndCrossFromDeeplyNestedState.ump","nusmv/AndCrossFromDeeplyNestedState.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/AndCrossFromDeeplyNestedState.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
@@ -143,6 +159,13 @@ public class NuSMVTemplateTest extends TemplateTest{
 	  {
 	  		assertUmpleTemplateFor("nusmv/ArbitraryExample.ump","nusmv/ArbitraryExample.nusmv.txt");
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/ArbitraryExample.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM
+	  public void AndCrossExample()
+	  {
+	  		assertUmpleTemplateFor("nusmv/AndCrossExample.ump","nusmv/AndCrossExample.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/AndCrossExample.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM
