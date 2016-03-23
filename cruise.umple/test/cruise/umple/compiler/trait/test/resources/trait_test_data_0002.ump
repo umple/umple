@@ -1,0 +1,35 @@
+class A{
+	isA T2<sm as status.off>;
+	isA T<sm as status.on, sm2 as status.tt>;
+	
+	status {
+		on{
+			goOff-> off;
+		}
+		off{
+			
+		}
+		tt{
+			
+		}
+	}
+}
+trait T2{
+	sm{
+		ssss{
+			
+		}
+	}
+} 
+trait T{
+	sm{
+		so{
+			
+		}
+	}
+	sm2{
+		so2{
+			
+		}
+	}
+}
