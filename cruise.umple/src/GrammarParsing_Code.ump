@@ -98,9 +98,6 @@ class Analyzer
   
 }
 
-
-
-
 class RuleBasedParser 
 {
   //This variable exists to speed up multiple passes through the parser, say in junit tests, because the grammar analysis only has to be performed once.
@@ -645,6 +642,19 @@ class GrammarAnalyzer {
     Sets up the actionTokens, and initializes the global variable
   */
   after constructor { 
+    set("anon_index",0);
+    set("analyzer",this);
+    set("stack",new Stack<ChoiceRule>());//new RuleStack());
+    ChoiceRule root = new ChoiceRule("root");
+    stacks.get("stack").push(root);
+    // added extra space character issue 579 p{Z} matches non breaking space
+    Terminal.space(" \\t\\n\\p{Z}"); 
+    // Terminal.space(" \\t\\n");
+    ParsingCouple.ignoreLevel = -1;
+    
+  }
+  
+  after constructor {
     addParserAction("useStatement", new ParserAction()
     {
       @Override
@@ -657,9 +667,9 @@ class GrammarAnalyzer {
           {
             data.getHasParsed().add(value);
             RuleBasedParserThread thread = new RuleBasedParserThread(
-              rules.get("$ROOT$"),
+              getRules().get("$ROOT$"),
               token,
-              file.getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value,
+              getFile().getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value,
               data);
             threads.add(thread);
             thread.start();
@@ -667,15 +677,6 @@ class GrammarAnalyzer {
         }
       }
     });
-    set("anon_index",0);
-    set("analyzer",this);
-    set("stack",new Stack<ChoiceRule>());//new RuleStack());
-    ChoiceRule root = new ChoiceRule("root");
-    stacks.get("stack").push(root);
-    // added extra space character issue 579 p{Z} matches non breaking space
-    Terminal.space(" \\t\\n\\p{Z}"); 
-    // Terminal.space(" \\t\\n");
-    ParsingCouple.ignoreLevel = -1;
   }
   
   /*
@@ -742,7 +743,7 @@ class GrammarAnalyzer {
     setFailedPosition(parser.getFailedPosition());
     setParseResult(getData().getParseResult());
     if(mustSetupAnalyzers)
-	{
+	  {
       setupAnalyzers();
       mustSetupAnalyzers = false;
     }
@@ -755,25 +756,34 @@ class GrammarAnalyzer {
   public void rules(Token token) {
     analyze(token);    
   }
-
-  public boolean makeAnalyzer(String name)
-  {
-    boolean wasMade = false;
-    if(!getAnalyzerMap().containsKey(name))
-    try {
+  
+  public Analyzer makeAnalyzerFromName(String name){
+    try{
       String className = "cruise.umple.analysis."+name.substring(0,1).toUpperCase()+name.substring(1)+"Analyzer";
       Class cls = Class.forName(className);
       Analyzer a = (Analyzer) cls.newInstance();
       a.setName(name);
-      getAnalyzerMap().put(name,a);
-      analyzerStack.push(a);
-      wasMade = true;
-   } 
-   catch (ClassNotFoundException c){} catch( InstantiationException | IllegalAccessException | IllegalArgumentException  e)
-   {
-     e.printStackTrace();
-   }
-   return wasMade;
+      return a;
+    }
+    catch(ClassNotFoundException e){}
+    catch(InstantiationException | IllegalAccessException | IllegalArgumentException  e){
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public boolean makeAnalyzer(String name)
+  {
+    boolean wasMade = false;
+    if(!getAnalyzerMap().containsKey(name)){
+      Analyzer a = makeAnalyzerFromName(name);
+      if( a != null ){
+        getAnalyzerMap().put(name,a);
+        analyzerStack.push(a);
+        wasMade = true;
+      }
+    }
+    return wasMade;
   }
   /*
     The rule token denotes the beginning of a rule definition.

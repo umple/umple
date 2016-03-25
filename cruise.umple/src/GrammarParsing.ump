@@ -99,7 +99,7 @@ class ParserDataPackage
 
   //the filename of the file that is being parsed
   filename;
-
+  
   //the string that is the file that is being parsed
   input = "";
 
@@ -159,7 +159,7 @@ class RuleBasedParserThread
 
   //The filename of the file that this Thread will parse
   filename;
-
+  
   //The data package of the previous parse, so that things like keys and the filenames already parsed can be passed along
   ParserDataPackage data;
 }

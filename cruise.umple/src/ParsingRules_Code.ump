@@ -196,7 +196,7 @@ class ChoiceRule
           addAllTokens(token,self);
         }
 
-        if(action!=null&&this.getName().equals("useStatement"))
+        if(action!=null)
         {
           action.onSuccess(getNegate()?token:self,data);
         }
