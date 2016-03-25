@@ -51,6 +51,10 @@ class RuleBasedParser
   
   public static HashMap<String,ChoiceRule> choicerules = new HashMap<String,ChoiceRule>();
   private static HashMap<String,String> todeclare = new HashMap<String,String>();
+  
+  // List of actions for the parser to perform. This has to be static because of choicerules and todeclare,
+  // but hopefully someday this will change.
+  private static HashMap<String,ParserAction> actionedTokens = new HashMap<String,ParserAction>();
 
   //the Root Token that will be contain the result of the parse of the umple file
   Token rootToken = null;
@@ -91,7 +95,7 @@ class ParserDataPackage
   depend cruise.umple.parser.ParseResult;
   depend cruise.umple.parser.ErrorMessage;
   depend cruise.umple.parser.rules.*;
-  depend cruise.umple.compiler.UmpleFile; // TO DO: Refactor this out
+  depend cruise.umple.compiler.UmpleFile;
 
   //the filename of the file that is being parsed
   filename;
@@ -233,7 +237,7 @@ class GrammarAnalyzer
   RuleBasedParserThread[] threads;
   
   //Umple file that will be parsed(like Master.ump)
-  UmpleFile umpleFile = null;
+  File file = null;
 
   //filename of the file to be parsed
   input = null;

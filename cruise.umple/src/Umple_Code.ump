@@ -60,6 +60,18 @@ class UmpleModel
     Arrays.sort(result);
     return result;
   }
+  
+  after constructor{
+    if(aUmpleFile!=null){
+      String[] linked = aUmpleFile.getLinkedFiles().split("\n");
+      this.linkedFiles = Arrays.asList(linked);
+    }
+  }
+  
+  public UmpleModel(UmpleFile umpleFile, List<String> linkedFiles ){
+    this(umpleFile);
+    this.linkedFiles = linkedFiles;
+  }
 
   public List<UmpleElement> getUmpleElements()
   {

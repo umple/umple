@@ -140,6 +140,17 @@ class RuleBasedParser
     }
     parsing--;
   }
+  
+  /*
+   * Adds a parser action to operate on an action token of the specified name
+   *
+   * @param name the name of the token to perform the action
+   * @param action the ParserAction to perform
+   */
+  void addParserAction(String name, ParserAction action){
+    actionedTokens.put(name,action);
+  }
+
 
   public void parse(ChoiceRule root, Token token, String filename,int line, ParserDataPackage data)
   {
@@ -232,6 +243,10 @@ class RuleBasedParser
         if(analyzer==null)
         {
           analyzer = new GrammarAnalyzer();
+          // Add all the parser actions to the analyzer
+          for( Map.Entry<String,ParserAction> entry : actionedTokens.entrySet() ){
+            analyzer.addParserAction(entry.getKey(), entry.getValue());
+          }
         }
 
         analyzer.getKeys().put("{}", new String[]{"{","}"});    
@@ -309,6 +324,7 @@ class RuleBasedParser
       setupRules();
     }
     analyzer.init(file);
+    //analyzer.init( new File(file.getPath() + File.separator + file.getFileName()) ); /*** CHANGE ***/
     analyzer.execute();
     setRootToken(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
@@ -480,6 +496,9 @@ class RuleBasedParser
       }
     }
     analyzer = new GrammarAnalyzer();
+    for( Map.Entry<String,ParserAction> entry : actionedTokens.entrySet() ){
+      analyzer.addParserAction(entry.getKey(), entry.getValue());
+    }
     analyzer.analyze(rootToken);
     analyzer.setupTerminals();
   }
@@ -626,7 +645,7 @@ class GrammarAnalyzer {
     Sets up the actionTokens, and initializes the global variable
   */
   after constructor { 
-    actionedTokens.put("useStatement", new ParserAction()
+    addParserAction("useStatement", new ParserAction()
     {
       @Override
       public void onSuccess(Token token, ParserDataPackage data)
@@ -640,7 +659,7 @@ class GrammarAnalyzer {
             RuleBasedParserThread thread = new RuleBasedParserThread(
               rules.get("$ROOT$"),
               token,
-              umpleFile.getPath() + File.separator+value,
+              file.getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value,
               data);
             threads.add(thread);
             thread.start();
@@ -658,21 +677,40 @@ class GrammarAnalyzer {
     // Terminal.space(" \\t\\n");
     ParsingCouple.ignoreLevel = -1;
   }
+  
+  /*
+   * Adds a parser action to operate on an action token of the specified name
+   *
+   * @param name the name of the token to perform the action
+   * @param action the ParserAction to perform
+   */
+  void addParserAction(String name, ParserAction action){
+    actionedTokens.put(name,action);
+  }
   /*
     Must be called before use with the execute function, this function sets up the file for parsing
   */
-  public void init (UmpleFile file)
+  public void init(File file)
   {
-    setUmpleFile(file);
-    input = file.getPath()+File.separator+file.getFileName();
+    setFile( file );
+    input = file.getAbsolutePath();
     setData(new ParserDataPackage(input));
     getData().setKeys(keys);
     getData().init(null);
-	getData().AddExtraFiles(file);	
+	  getData().AddExtraFiles( new UmpleFile(file) );	/*** Change ***/
   }
   
-  public void init(String ruleName, String input2) {
-    input = input2;
+  public void init(UmpleFile file){
+    setFile( new File(file.getPath() + File.separator + file.getFileName()) );
+    input = file.getPath() + File.separator + file.getFileName();
+    setData(new ParserDataPackage(input));
+    getData().setKeys(keys);
+    getData().init(null);
+	  getData().AddExtraFiles( file );	/*** Change ***/
+  }
+  
+  public void init(String ruleName, String input) {
+    this.input = input;
     setData(new ParserDataPackage("temp"));
     getData().setKeys(keys);
     getData().init(input,null);  

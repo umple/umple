@@ -158,7 +158,7 @@ class UmpleConsoleMain
         .filter(File::exists)
         .map(File::getPath)
         .forEach(umpleFile::addLinkedFiles);
-
+       
     final UmpleModel model = new UmpleModel(umpleFile);
 
     if (postModelOptionProcess(model)) {
