@@ -100,6 +100,8 @@ class ParserDataPackage
   //the filename of the file that is being parsed
   filename;
   
+  GrammarAnalyzer analyzer;
+  
   //the string that is the file that is being parsed
   input = "";
 
@@ -114,7 +116,7 @@ class ParserDataPackage
 
   //keeps track of the furthest token position attained during the parse.
   Position position = new Position(aFilename,0,0,0);
-
+  
   //Associated to each key is a couple
   HashMap<String,ParsingCouple> couples = new HashMap<String,ParsingCouple>();
 

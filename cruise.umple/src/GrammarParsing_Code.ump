@@ -483,7 +483,7 @@ class RuleBasedParser
     rootToken = new Token("ROOT","");
     for(String filename:getGrammarFiles())
     {
-      ParserDataPackage data = new ParserDataPackage(filename);
+      ParserDataPackage data = new ParserDataPackage(filename,getAnalyzer());
       data.getKeys().put("[]",keys);
       data.init(null);
       for(int i=0;i<data.numberOfLines();++i){
@@ -611,13 +611,14 @@ class RuleBasedParserThread
     HashMap<String,String[]> keys = data.getKeys();
     List<String> hasParsed = data.getHasParsed();
     ParseResult parseResult = data.getParseResult();
-    data = new ParserDataPackage(filename);
+    data = new ParserDataPackage(filename, null);
     data.setKeys(keys);
     data.setHasParsed(hasParsed);
     data.setParseResult(parseResult);
     data.init(token.getPosition());
     Token temp = new Token("ROOT","");
     RuleBasedParser parser = new RuleBasedParser();
+    data.setAnalyzer(parser.getAnalyzer());
     parser.parse(root,temp,filename,data);
     Token answer = parser.getRootToken();
     synchronized(token)
@@ -651,7 +652,6 @@ class GrammarAnalyzer {
     Terminal.space(" \\t\\n\\p{Z}"); 
     // Terminal.space(" \\t\\n");
     ParsingCouple.ignoreLevel = -1;
-    
   }
   
   after constructor {
@@ -667,9 +667,9 @@ class GrammarAnalyzer {
           {
             data.getHasParsed().add(value);
             RuleBasedParserThread thread = new RuleBasedParserThread(
-              getRules().get("$ROOT$"),
+              data.getAnalyzer().getRules().get("$ROOT$"),
               token,
-              getFile().getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value,
+              data.getAnalyzer().getFile().getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value,
               data);
             threads.add(thread);
             thread.start();
@@ -695,7 +695,7 @@ class GrammarAnalyzer {
   {
     setFile( file );
     input = file.getAbsolutePath();
-    setData(new ParserDataPackage(input));
+    setData(new ParserDataPackage(input,this));
     getData().setKeys(keys);
     getData().init(null);
 	  getData().AddExtraFiles( new UmpleFile(file) );	/*** Change ***/
@@ -704,7 +704,7 @@ class GrammarAnalyzer {
   public void init(UmpleFile file){
     setFile( new File(file.getPath() + File.separator + file.getFileName()) );
     input = file.getPath() + File.separator + file.getFileName();
-    setData(new ParserDataPackage(input));
+    setData(new ParserDataPackage(input,this));
     getData().setKeys(keys);
     getData().init(null);
 	  getData().AddExtraFiles( file );	/*** Change ***/
@@ -712,7 +712,7 @@ class GrammarAnalyzer {
   
   public void init(String ruleName, String input) {
     this.input = input;
-    setData(new ParserDataPackage("temp"));
+    setData(new ParserDataPackage("temp",this));
     getData().setKeys(keys);
     getData().init(input,null);  
   }
@@ -754,7 +754,7 @@ class GrammarAnalyzer {
     The rules token contains all the rules in a grammar file.
   */
   public void rules(Token token) {
-    analyze(token);    
+    analyze(token);
   }
   
   public Analyzer makeAnalyzerFromName(String name){
