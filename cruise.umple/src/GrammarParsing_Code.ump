@@ -695,35 +695,6 @@ class GrammarAnalyzer {
     ParsingCouple.ignoreLevel = -1;
   }
   
-  //---------------------------------------------------------------------------
-  
-  after constructor {
-    addParserAction("useStatement", new ParserAction()
-    {
-      @Override
-      public void onSuccess(Token token, ParserDataPackage data)
-      {
-        String value = token.getValue("use");
-        synchronized(data.getHasParsed())
-        {
-          if(!data.getHasParsed().contains(value))
-          {
-            data.getHasParsed().add(value);
-            RuleBasedParserThread thread = new RuleBasedParserThread(
-              data.getAnalyzer().getRules().get("$ROOT$"),
-              token,
-              data.getAnalyzer().getFile().getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value,
-              data);
-            threads.add(thread);
-            thread.start();
-          }
-        }
-      }
-    });
-  }
-  
-  //---------------------------------------------------------------------------
-  
   /*
    * Adds a parser action to operate on an action token of the specified name
    *

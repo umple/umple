@@ -83,7 +83,7 @@ interface AnalyzerGeneratorHandler{
    *
    * @return the constructed analyzer if successful, null otherwise
    */
-  Analyzer generateFromName( String name );
+  public Analyzer generateFromName( String name );
 }
 
 /*
