@@ -240,6 +240,8 @@ class RuleBasedParser
         if(analyzer==null)
         {
           analyzer = new GrammarAnalyzer();
+          analyzer.setLinkedFileHandler(getLinkedFileHandler());
+          analyzer.setAnalyzerGenerator(getAnalyzerGenerator());
           // Add all the parser actions to the analyzer
           for( Map.Entry<String,ParserAction> entry : actionedTokens.entrySet() ){
             analyzer.addParserAction(entry.getKey(), entry.getValue());
@@ -311,9 +313,23 @@ class RuleBasedParser
       e.printStackTrace();
     }
   }
+  
   /*
     Takes an umple file and parses it. It returns the ParseResult.
   */
+  public ParseResult parse(File file, File[] linkedFiles)
+  {
+    if(analyzer==null)
+    {
+      setupRules();
+    }
+    analyzer.init(file, linkedFiles);
+    analyzer.execute();
+    setRootToken(analyzer.getRootToken());
+    setParseResult(analyzer.getParseResult());
+    return getParseResult();
+  }
+  
   public ParseResult parse(UmpleFile file)
   {
     if(analyzer==null)
@@ -321,7 +337,6 @@ class RuleBasedParser
       setupRules();
     }
     analyzer.init(file);
-    //analyzer.init( new File(file.getPath() + File.separator + file.getFileName()) ); /*** CHANGE ***/
     analyzer.execute();
     setRootToken(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
@@ -493,11 +508,27 @@ class RuleBasedParser
       }
     }
     analyzer = new GrammarAnalyzer();
+    analyzer.setLinkedFileHandler(getLinkedFileHandler());
+    analyzer.setAnalyzerGenerator(getAnalyzerGenerator());
     for( Map.Entry<String,ParserAction> entry : actionedTokens.entrySet() ){
       analyzer.addParserAction(entry.getKey(), entry.getValue());
     }
     analyzer.analyze(rootToken);
     analyzer.setupTerminals();
+  }
+  
+  // retroactively change the linked file handler if an analyzer is already constructed
+  after setLinkedFileHandler{
+    if( analyzer != null ){
+      analyzer.setLinkedFileHandler(getLinkedFileHandler());
+    }
+  }
+  
+  // retroactively change the analyzer generator if an analyzer is already constructed
+  after setAnalyzerGenerator{
+    if( analyzer != null ){
+      analyzer.setAnalyzerGenerator(getAnalyzerGenerator());
+    }
   }
 }
 
@@ -565,6 +596,16 @@ class ParserDataPackage
   //This is used to have multiple Umple files in command line;
   public void AddExtraFiles(UmpleFile file){
 	  input = input+file.getLinkedFiles();
+  }
+  /*
+   * Links files together at compile-time, provided a handler and the filenames.
+   * 
+   * Note: This has no effect if the handler is null
+   */
+  public void linkFiles( LinkedFileHandler handler, File[] linkedFiles ){
+    if( handler != null ){
+      input = handler.onFileLink( input, linkedFiles );
+    }
   }
   
   public void init(String rawinput, Position usePosition){
@@ -654,6 +695,8 @@ class GrammarAnalyzer {
     ParsingCouple.ignoreLevel = -1;
   }
   
+  //---------------------------------------------------------------------------
+  
   after constructor {
     addParserAction("useStatement", new ParserAction()
     {
@@ -679,6 +722,8 @@ class GrammarAnalyzer {
     });
   }
   
+  //---------------------------------------------------------------------------
+  
   /*
    * Adds a parser action to operate on an action token of the specified name
    *
@@ -691,14 +736,14 @@ class GrammarAnalyzer {
   /*
     Must be called before use with the execute function, this function sets up the file for parsing
   */
-  public void init(File file)
+  public void init(File file, File[] linkedFiles)
   {
     setFile( file );
     input = file.getAbsolutePath();
     setData(new ParserDataPackage(input,this));
     getData().setKeys(keys);
     getData().init(null);
-	  getData().AddExtraFiles( new UmpleFile(file) );	/*** Change ***/
+	  getData().linkFiles( getLinkedFileHandler(), linkedFiles );
   }
   
   public void init(UmpleFile file){
@@ -776,7 +821,11 @@ class GrammarAnalyzer {
   {
     boolean wasMade = false;
     if(!getAnalyzerMap().containsKey(name)){
-      Analyzer a = makeAnalyzerFromName(name);
+      Analyzer a = null;
+      if( getAnalyzerGenerator() != null ){
+        a = getAnalyzerGenerator().generateFromName(name);
+      }
+      a = makeAnalyzerFromName(name); /** Change **/
       if( a != null ){
         getAnalyzerMap().put(name,a);
         analyzerStack.push(a);

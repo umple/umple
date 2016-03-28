@@ -63,12 +63,20 @@ class UmpleModel
   
   after constructor{
     if(aUmpleFile!=null){
-      String[] linked = aUmpleFile.getLinkedFiles().split("\n");
-      this.linkedFiles = Arrays.asList(linked);
+      String[] linkedFilenames = aUmpleFile.getLinkedFiles().split("use");
+      
+      for( String filename : linkedFilenames ){
+        // Remove blankspace and newlines
+        filename = filename.trim();
+        // Create a file from the name, removing the last ';' from the string
+        if( filename.length()>1 ){
+          this.linkedFiles.add(new File(filename.substring(0,filename.length()-1)));
+        }
+      }
     }
   }
   
-  public UmpleModel(UmpleFile umpleFile, List<String> linkedFiles ){
+  public UmpleModel(UmpleFile umpleFile, List<File> linkedFiles ){
     this(umpleFile);
     this.linkedFiles = linkedFiles;
   }

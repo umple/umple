@@ -63,7 +63,7 @@ class UmpleModel
   internal Coordinate offsetFromEdge = new Coordinate(10,30,0,0);
   internal int reflexiveSegmentLength = 15;
   
-  internal List<String> linkedFiles = new ArrayList<String>();
+  internal List<File> linkedFiles = new ArrayList<File>();
 
   // The Associations contained within the model.
   1 -> * Association;

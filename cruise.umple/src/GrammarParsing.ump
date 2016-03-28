@@ -32,6 +32,60 @@ class Analyzer
   0..* parent -- 0..* Analyzer children;
 }
 
+ /*
+  This is a handler/delegate class that handles linked files supplied at 
+  compile time.
+  
+  Override this class to provide custom implementations for to file linkage.
+*/
+interface LinkedFileHandler
+{
+  
+  depend java.io.File;
+  
+  /*
+   * This method is called before parsing the main file to be linked. 
+   * It is supplied the input of the first file provided, along with the
+   * names of all the linked files supplied at compile-time. 
+   *
+   * Override this to provide custom implementations, such as manually 
+   * appending data from each file -- or appending custom "import <file>"
+   * notation that will be done prior to parsing. 
+   *
+   * Example:
+   *   This is used in Umple to produce a series of `use <filename>.ump` 
+   *   statements after the initial input.
+   *
+   * @param input the input from the first file
+   * @param linkedFilenames list of the linked filenames
+   *
+   * @return the modified string output
+   */
+  public String onFileLink( String input, File[] linkedFiles );
+}
+
+/*
+ This is a handler/delegate class that handles construction of Analyzer classes
+ at runtime. 
+ 
+ Override this class in order to construct Analyzer objects by name, where
+ necessary.
+*/
+interface AnalyzerGeneratorHandler{
+  
+  /*
+   * This method is called to create Analyzer objects by name.
+   *
+   * A null value being returned indicates that an Analyzer could not be created, and 
+   * a non-null object indicates an Analyzer was successfully created.
+   *
+   * @param name the name of the analyzer to construct
+   *
+   * @return the constructed analyzer if successful, null otherwise
+   */
+  Analyzer generateFromName( String name );
+}
+
 /*
   The rule based parser takes in umple grammar files and parses them into Rule objects(ChoiceRule, ChainRule, etc.). Really what happens is
   that the rulebasedparser contstructs an initial rootToken that contains all the grammar rules, and then the grammaranalyzer turns those
@@ -58,6 +112,12 @@ class RuleBasedParser
 
   //the Root Token that will be contain the result of the parse of the umple file
   Token rootToken = null;
+  
+  // The handler to control linked files supplied at compile-time
+  LinkedFileHandler linkedFileHandler = null;
+  
+  // The handler to control generation of Analyzer objects at runtime
+  AnalyzerGeneratorHandler analyzerGenerator = null;
 
   //The failed position, if one exists(i.e. if the parse failed). otherwise it will be null
   1 -> 0..1 Position failedPosition;
@@ -164,6 +224,7 @@ class RuleBasedParserThread
   
   //The data package of the previous parse, so that things like keys and the filenames already parsed can be passed along
   ParserDataPackage data;
+  
 }
 
 /*
@@ -208,6 +269,11 @@ class GrammarAnalyzer
   boolean done = false;
   boolean first = true;
 
+  // The handler for dealing with linked files
+  LinkedFileHandler linkedFileHandler = null;
+
+  // The handler to control generation of Analyzer objects at runtime
+  AnalyzerGeneratorHandler analyzerGenerator = null;
 
   //hashmap of global variables(local to the class, not local to methods)
   HashMap<String,Object> global = new HashMap<String,Object>();
