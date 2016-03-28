@@ -150,7 +150,7 @@ public class Student
     return wasRemoved;
   }
 
-  
+
   public void delete()
   {
     ArrayList<Mentor> copyOfProfs = new ArrayList<Mentor>(Profs);

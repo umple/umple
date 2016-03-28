@@ -2616,6 +2616,38 @@ class UmpleInternalParser
     return value;
   }
 
+  private String getOperationParameters(Token aToken)
+  {
+    StringBuilder operationParameters = new StringBuilder();  
+    String delimeter = "";
+    for(Token subToken : aToken.getSubTokens())
+    {
+      if(subToken.is("parameterType"))
+      {
+        operationParameters.append(delimeter+subToken.getValue());
+        delimeter = ",";
+      } 
+      else if(subToken.is("parameterTypes")) 
+      {
+        operationParameters.append(delimeter+getOperationParameters(subToken));
+      }
+    }
+    return operationParameters.toString();
+  }
+
+  private ArrayList<String> getOperationsParameters(Token aToken)
+  {
+    ArrayList<String> operationsParameters = new ArrayList<String>();
+    for(Token subToken : aToken.getSubTokens())
+    {
+      if(subToken.is("injectionOperation"))
+      {
+        operationsParameters.add(getOperationParameters(subToken));
+      }
+    }
+    return operationsParameters;
+  }
+
   private String getOperationSource(Token aToken)
   {
     StringBuilder operationSource = new StringBuilder();
@@ -2640,6 +2672,11 @@ class UmpleInternalParser
       {
         operationName.append(comma+subToken.getValue());
         comma = ",";
+      } 
+      else if(subToken.is("injectionOperation")) 
+      {
+        operationName.append(comma+getOperationName(subToken));
+        comma = ",";
       }
     }
     return operationName.toString();
@@ -2659,6 +2696,11 @@ class UmpleInternalParser
 
     CodeInjection injection = new CodeInjection(type,operationName,"",uClassifier);
     injection.setOperationSource(operationSource);
+
+    ArrayList<String> operationsParameters = getOperationsParameters(injectToken);
+    for(String operationParameters : operationsParameters) {
+      injection.addParameter(operationParameters);      
+    }
 
     makeCodeInject(injectToken,injection,cb,uClassifier);
     injection.setSnippet(cb);
