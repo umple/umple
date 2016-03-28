@@ -12,6 +12,8 @@ package cruise.umple.compiler;
 
 import org.junit.*;
 
+import java.io.File;
+
 import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.parser.ParseResult;
 import cruise.umple.util.*;
@@ -72,7 +74,7 @@ public class UmpleParserFilterTest
 
   private void assertParse(String filename, String expectedOutput, boolean expected)
   {
-    UmpleFile file = new UmpleFile(pathToInput, filename);
+    File file = new File(pathToInput, filename);
     model = new UmpleModel(new UmpleFile(pathToInput, filename));
     model.setShouldGenerate(false);
     boolean answer = true;

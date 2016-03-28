@@ -230,65 +230,6 @@ class UmpleModel
     String input;
     RuleBasedParser parser = new RuleBasedParser();
     
-    //-- Set up Parser Handlers -----------------------------------------------
-
-    // Add parser action for use statements
-    parser.addParserAction("useStatement", new ParserAction()
-    {
-      @Override
-      public void onSuccess(Token token, ParserDataPackage data)
-      {
-        String value = token.getValue("use");
-        synchronized(data.getHasParsed())
-        {
-          if(!data.getHasParsed().contains(value))
-          {
-            data.getHasParsed().add(value);
-            RuleBasedParserThread thread = new RuleBasedParserThread(
-              data.getAnalyzer().getRules().get("$ROOT$"),
-              token,
-              data.getAnalyzer().getFile().getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value,
-              data
-            );
-            data.getAnalyzer().addThread(thread);
-            thread.start();
-          }
-        }
-      }
-    });
-    
-    // Add linked file handler
-    parser.setLinkedFileHandler(new LinkedFileHandler(){
-      @Override
-      public String onFileLink( String input, File[] linkedFiles ){
-        for( File file : linkedFiles ){
-          input += "\nuse " + file.getPath() + ";";
-        }
-        return input;
-      }
-    });
-    
-    // Add analyzer generator
-    parser.setAnalyzerGenerator( new AnalyzerGeneratorHandler(){
-      @Override
-      public Analyzer generateFromName( String name ){
-        try{
-          String className = "cruise.umple.analysis."+name.substring(0,1).toUpperCase()+name.substring(1)+"Analyzer";
-          Class cls = Class.forName(className);
-          Analyzer a = (Analyzer) cls.newInstance();
-          a.setName(name);
-          return a;
-        }
-        catch(ClassNotFoundException e){}
-        catch(InstantiationException | IllegalAccessException | IllegalArgumentException  e){
-          e.printStackTrace();
-        }
-        return null;
-      }
-    });
-    
-    //-- !Handler setup -------------------------------------------------------
-    
     UmpleParser analyzer = new UmpleInternalParser("UmpleInternalParser",this,parser);
     //ParseResult result = parser.parse(umpleFile);
     ParseResult result = parser.parse( new File(umpleFile.getPath() + File.separator + umpleFile.getFileName()), this.linkedFiles.toArray(new File[0]) );

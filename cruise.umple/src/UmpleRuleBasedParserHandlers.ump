@@ -1,0 +1,79 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Handlers for the RuleBasedParser.
+
+ */
+ 
+namespace cruise.umple.compiler;
+
+class UseStatementParserAction{
+  depend java.io.File;
+  depend cruise.umple.parser.analysis.ParserAction;
+  depend cruise.umple.parser.analysis.ParserDataPackage;
+  depend cruise.umple.parser.analysis.RuleBasedParserThread;
+  depend cruise.umple.parser.Token;
+  
+  isA ParserAction;
+  
+  public void onSuccess(Token token, ParserDataPackage data)
+  {
+    String value = token.getValue("use");
+    synchronized(data.getHasParsed())
+    {
+      if(!data.getHasParsed().contains(value))
+      {
+        data.getHasParsed().add(value);
+        RuleBasedParserThread thread = new RuleBasedParserThread(
+          data.getAnalyzer().getRules().get("$ROOT$"),
+          token,
+          data.getAnalyzer().getFile().getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value,
+          data
+        );
+        data.getAnalyzer().addThread(thread);
+        thread.start();
+      }
+    }
+  }
+}
+
+class UmpleLinkedFileHandler{ 
+  depend java.io.File;
+  depend cruise.umple.parser.analysis.LinkedFileHandler;
+  
+  isA LinkedFileHandler;
+
+  public String onFileLink( String input, File[] linkedFiles ){
+    for( File file : linkedFiles ){
+      input += "\nuse " + file.getPath() + ";";
+    }
+    return input;
+  }
+}
+
+class UmpleAnalyzerGeneratorHandler{
+  depend cruise.umple.parser.analysis.AnalyzerGeneratorHandler;
+  depend cruise.umple.parser.analysis.Analyzer;
+  depend java.lang.reflect.*;
+
+  isA AnalyzerGeneratorHandler;
+  
+  public Analyzer generateFromName( String name ){
+    try{
+      String className = "cruise.umple.analysis."+name.substring(0,1).toUpperCase()+name.substring(1)+"Analyzer";
+      Class cls = Class.forName(className);
+      Analyzer a = (Analyzer) cls.newInstance();
+      a.setName(name);
+      return a;
+    }
+    catch(ClassNotFoundException e){}
+    catch(InstantiationException | IllegalAccessException | IllegalArgumentException  e){
+      e.printStackTrace();
+    }
+    return null;
+  }
+}

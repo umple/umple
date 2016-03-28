@@ -97,7 +97,6 @@ class RuleBasedParser
 {
   depend java.io.*;
   depend java.util.*;
-  depend cruise.umple.compiler.UmpleFile;
   depend cruise.umple.parser.rules.*;
 
   //the iteration of parsing done(there is a possibility to do two pass parsing, but for umple it is not implemented or neccessary yet)
@@ -114,10 +113,10 @@ class RuleBasedParser
   Token rootToken = null;
   
   // The handler to control linked files supplied at compile-time
-  LinkedFileHandler linkedFileHandler = null;
+  static LinkedFileHandler linkedFileHandler = null;
   
   // The handler to control generation of Analyzer objects at runtime
-  AnalyzerGeneratorHandler analyzerGenerator = null;
+  static AnalyzerGeneratorHandler analyzerGenerator = null;
 
   //The failed position, if one exists(i.e. if the parse failed). otherwise it will be null
   1 -> 0..1 Position failedPosition;
@@ -155,7 +154,6 @@ class ParserDataPackage
   depend cruise.umple.parser.ParseResult;
   depend cruise.umple.parser.ErrorMessage;
   depend cruise.umple.parser.rules.*;
-  depend cruise.umple.compiler.UmpleFile;
 
   //the filename of the file that is being parsed
   filename;
@@ -241,7 +239,6 @@ class GrammarAnalyzer
   depend cruise.umple.parser.Position;
   depend cruise.umple.parser.Token;
   depend cruise.umple.parser.ParseResult;
-  depend cruise.umple.compiler.UmpleFile; // TO DO: Refactor this out
 
   /*
     Inner class which is a wrapper for the objects that will go into the global hashmap

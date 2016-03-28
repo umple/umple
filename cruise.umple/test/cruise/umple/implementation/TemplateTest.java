@@ -326,8 +326,8 @@ public class TemplateTest
 
   public UmpleModel createUmpleSystem(String path, String filename)
   {
-    UmpleFile file = new UmpleFile(pathToInput, filename);
-    UmpleModel model = new UmpleModel(file);
+    File file = new File(pathToInput, filename);
+    UmpleModel model = new UmpleModel(new UmpleFile(pathToInput, filename));
     model.setShouldGenerate(false);
     if( aTracer != null )
     	model.setTracer(new TracerDirective(aTracer));
