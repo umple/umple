@@ -85,6 +85,7 @@ class ErrorTypeSingleton
   1 -> * ErrorType;
 
   depend java.io.*;
+  depend java.lang.IllegalStateException;
 }
 
 /*
@@ -182,6 +183,7 @@ class RulePart
 class Parser
 {
   depend java.io.*;
+  depend java.lang.IllegalStateException;
 
   // The Umple file (.ump) that will be parsed.
   String filename = null;

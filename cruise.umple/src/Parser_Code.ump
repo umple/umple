@@ -890,20 +890,6 @@ class Parser
   {
     return currentToken.toString(stringSoFar,rootToken);
   }
-  
-  private static <T extends Closeable> void closeAsRequired(T reader){
-    if (reader != null)
-    {
-      try
-      {
-        reader.close();
-      }
-      catch (IOException e)
-      {
-        e.printStackTrace();
-      }
-    }
-  }
 
   public int addRulesInFile(String filenameOrResourcePath)
   {
@@ -950,8 +936,20 @@ class Parser
     }
     finally
     {
-      closeAsRequired(reader);
-      closeAsRequired(resourceStream);
+      if(reader != null){
+        try{
+          reader.close();
+        }catch (IOException e){
+          throw new IllegalStateException("Error closing reader");
+        }
+      }
+      if(resourceStream != null){
+        try{
+          resourceStream.close();
+        }catch (IOException e){
+          throw new IllegalStateException("Error closing resourceStream");
+        }
+      }
     }
     return numberOfRulesProcessed;
   }
@@ -1734,12 +1732,12 @@ class ParseResult
         case '\\':            
           ret += "\\\\";
           break;
-          case  '"':
-            ret += "\\\"";
-            break;
-          default:
-            ret += input.charAt(i);
-            break;
+        case  '"':
+          ret += "\\\"";
+          break;
+        default:
+          ret += input.charAt(i);
+          break;
       }
     }
     return ret;   
@@ -1860,20 +1858,6 @@ class ErrorTypeSingleton
     parse(new TextParser(filename, input));
   }
 
-  private static <T extends Closeable> void closeAsRequired(T reader){
-    if (reader != null)
-    {
-      try
-      {
-        reader.close();
-      }
-      catch (IOException e)
-      {
-        e.printStackTrace();
-      }
-    }
-  }
-  
   public String readFile(String filenameOrResourcePath)
   {
     InputStream resourceStream = null;
@@ -1900,8 +1884,20 @@ class ErrorTypeSingleton
     }
     finally
     {
-      closeAsRequired(reader);
-      closeAsRequired(resourceStream);
+      if(reader != null){
+        try{
+          reader.close();
+        }catch (IOException e){
+          throw new IllegalStateException("Error closing reader");
+        }
+      }
+      if(resourceStream != null){
+        try{
+          resourceStream.close();
+        }catch (IOException e){
+          throw new IllegalStateException("Error closing resourceStream");
+        }
+      }
     }    
     return str;
   }
@@ -1930,7 +1926,7 @@ class ErrorTypeSingleton
       int severityInt;
 
       if(code == null || severity == null || url == null || formatString == null)
-        throw new RuntimeException("Error parsing error definitions (line " + p.getLineNumber()+")");
+        throw new IllegalStateException("Error parsing error definitions (line " + p.getLineNumber()+")");
 
       try
       {
@@ -1938,7 +1934,7 @@ class ErrorTypeSingleton
       }
       catch(NumberFormatException e)
       {
-        throw new RuntimeException("Error code must be an integer (line " + p.getLineNumber()+")");
+        throw new IllegalStateException("Error code must be an integer (line " + p.getLineNumber()+")");
       }
 
       try
@@ -1947,11 +1943,11 @@ class ErrorTypeSingleton
       }
       catch(NumberFormatException e)
       {
-        throw new RuntimeException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")");
+        throw new IllegalStateException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")");
       }
 
       if(severityInt < 1 || severityInt > 5)
-        throw new RuntimeException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")");
+        throw new IllegalStateException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")");
 
       this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, url));
     }

@@ -1146,7 +1146,7 @@ public class UmpleParserTracerTest
 
 	private void assertParse(String filename, String expectedOutput, boolean expected)
 	{
-    File file = new File(pathToInput,filename);
+		File file = new File(pathToInput,filename);
 		ErrorTypeSingleton.getInstance().reset();
 		model = new UmpleModel(new UmpleFile(pathToInput,filename));
 		model.setShouldGenerate(false);

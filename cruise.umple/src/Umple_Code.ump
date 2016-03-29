@@ -231,7 +231,6 @@ class UmpleModel
     RuleBasedParser parser = new RuleBasedParser();
     
     UmpleParser analyzer = new UmpleInternalParser("UmpleInternalParser",this,parser);
-    //ParseResult result = parser.parse(umpleFile);
     ParseResult result = parser.parse( new File(umpleFile.getPath() + File.separator + umpleFile.getFileName()), this.linkedFiles.toArray(new File[0]) );
     this.extractAnalyzersFromParser(parser);
 

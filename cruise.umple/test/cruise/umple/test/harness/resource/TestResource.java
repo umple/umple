@@ -97,7 +97,7 @@ public class TestResource {
 	private void parseModel() {
 		RuleBasedParser ruleParser = new RuleBasedParser();
 		UmpleParser parser = new UmpleInternalParser(parserName, umpleModel, ruleParser);
-    File file = new File(umpleModel.getUmpleFile().getPath() + File.separator + umpleModel.getUmpleFile().getFileName());
+		File file = new File(umpleModel.getUmpleFile().getPath() + File.separator + umpleModel.getUmpleFile().getFileName());
 		ParseResult result = ruleParser.parse( file );
 		umpleModel.setLastResult(result);
 		if (!result.getWasSuccess()) {

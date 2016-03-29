@@ -27,6 +27,7 @@ class Analyzer
   depend cruise.umple.parser.Token;
   depend java.io.*;  
   depend java.lang.reflect.*;
+  depend java.lang.IllegalStateException;
   
   name = null;
   0..* parent -- 0..* Analyzer children;
@@ -107,7 +108,7 @@ class RuleBasedParser
   
   // List of actions for the parser to perform. This has to be static because of choicerules and todeclare,
   // but hopefully someday this will change.
-  private static HashMap<String,ParserAction> actionedTokens = new HashMap<String,ParserAction>();
+  private static Map<String,ParserAction> actionedTokens = new HashMap<String,ParserAction>();
 
   //the Root Token that will be contain the result of the parse of the umple file
   Token rootToken = null;
