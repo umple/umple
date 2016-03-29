@@ -60,6 +60,26 @@ class UmpleModel
     Arrays.sort(result);
     return result;
   }
+  
+  after constructor{
+    if(aUmpleFile!=null){
+      String[] linkedFilenames = aUmpleFile.getLinkedFiles().split("use");
+      
+      for( String filename : linkedFilenames ){
+        // Remove blankspace and newlines
+        filename = filename.trim();
+        // Create a file from the name, removing the last ';' from the string
+        if( filename.length()>1 ){
+          this.linkedFiles.add(new File(filename.substring(0,filename.length()-1)));
+        }
+      }
+    }
+  }
+  
+  public UmpleModel(UmpleFile umpleFile, List<File> linkedFiles ){
+    this(umpleFile);
+    this.linkedFiles = linkedFiles;
+  }
 
   public List<UmpleElement> getUmpleElements()
   {
@@ -209,9 +229,9 @@ class UmpleModel
     boolean failed = false;
     String input;
     RuleBasedParser parser = new RuleBasedParser();
-    UmpleParser analyzer = new UmpleInternalParser("UmpleInternalParser",this,parser);
-    ParseResult result = parser.parse(umpleFile);
     
+    UmpleParser analyzer = new UmpleInternalParser("UmpleInternalParser",this,parser);
+    ParseResult result = parser.parse( new File(umpleFile.getPath() + File.separator + umpleFile.getFileName()), this.linkedFiles.toArray(new File[0]) );
     this.extractAnalyzersFromParser(parser);
 
     failed = !result.getWasSuccess();

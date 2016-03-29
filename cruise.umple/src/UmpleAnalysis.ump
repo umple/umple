@@ -5,93 +5,14 @@ Copyright: All contributers to the Umple Project
 This file is made available subject to the open source license found at:
 http://umple.org/license
 
- */
+*/
 namespace cruise.umple.analysis;
-class Analyzer
-{
-  depend java.util.*;
-  depend cruise.umple.compiler.*;
-  depend cruise.umple.parser.*;
-  depend cruise.umple.parser.Token;
-  depend java.io.*;  
-  depend java.lang.reflect.*;
-  abstract;
-  name = null;
-  0..* parent -- 0..* Analyzer children;
-  void analyzeToken(Token token)
-  {
-    prepare(token);
-    for(Token subtoken:token.getSubTokens())
-    {
-      for(Analyzer analyzer:children)
-      {
-        if(analyzer.getName().equals(subtoken.getName()))
-        {
-          List<Class> classes = new ArrayList<Class>();
-          List<String> variables = new ArrayList<String>();
-          for(Field field:analyzer.getClass().getDeclaredFields())
-          {
-            Class<? extends Analyzer> clazz = this.getClass();
-            while(clazz!=null&&!"Analyzer".equals(clazz.getSimpleName()))
-            {
-              for(Field mfield:clazz.getDeclaredFields())
-              {
-                if(field.getName().equals(mfield.getName()))
-       	        {
-       	          try 
-                  {
-	            classes.add(field.getType());
-	            variables.add(field.getName().substring(0,1).toUpperCase()+field.getName().substring(1));
-                    break;
-                  } 
-                  catch (IllegalArgumentException e)
-                  {
-	            e.printStackTrace();
-	          } 
-                  catch (NullPointerException nullPointerException)
-                  {
-                  }
-                }
-              }
-              clazz = (Class<? extends Analyzer>)clazz.getSuperclass();
-            }
-          }
-          try 
-          {
-            List<Analyzer> originalChildren = analyzer.getChildren();
-            analyzer = analyzer.getClass().newInstance();
-            for(Analyzer child:originalChildren)
-            {
-              analyzer.addChild(child);
-            }
-	    for(int i=0;i<classes.size();++i)
-	    {
-	      Object object = this.getClass().getMethod("get"+variables.get(i),new Class[]{}).invoke(this);
-	      analyzer.getClass().getMethod("set"+variables.get(i),new Class[]{classes.get(i)}).invoke(analyzer,object);
-	    }
-	  } catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
-	    e.printStackTrace();
-	  }
-          analyzer.analyzeToken(subtoken);
-          break;
-        }
-      }
-    }
-    analyze(token);
-  }
-  public void prepare(Token token){}
-  public void analyze(Token token){}
 
-  public String toString()
-  {
-    StringBuilder children = new StringBuilder();
-    return "Analyzer:"+getName();
-  }
-}
 
 class GuardAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -114,6 +35,7 @@ class GuardAnalyzer
 class PreconditionAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -143,6 +65,7 @@ class PreconditionAnalyzer
 class PostconditionAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -173,6 +96,7 @@ class PostconditionAnalyzer
 class ConstraintTokenAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -190,6 +114,7 @@ class ConstraintTokenAnalyzer
 class InvariantAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -213,6 +138,7 @@ class InvariantAnalyzer
 class GenExprAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -230,6 +156,7 @@ class GenExprAnalyzer
 class StringExprAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -240,6 +167,7 @@ class StringExprAnalyzer
 class LoneBooleanAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -250,6 +178,7 @@ class LoneBooleanAnalyzer
 class BoolExprAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -262,6 +191,7 @@ class BoolExprAnalyzer
 class NumExprAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -274,6 +204,7 @@ class NumExprAnalyzer
 class ConstraintBodyAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -293,6 +224,7 @@ class ConstraintBodyAnalyzer
 class NegativeConstraintAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -313,6 +245,7 @@ class NegativeConstraintAnalyzer
 class LinkingOpBodyAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -332,6 +265,7 @@ class LinkingOpBodyAnalyzer
 class AndOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -345,6 +279,7 @@ class AndOpAnalyzer
 class OrOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -358,6 +293,7 @@ class OrOpAnalyzer
 class ArithmeticCallOperatorAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -371,6 +307,7 @@ class ArithmeticCallOperatorAnalyzer
 class ArithmeticCallAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -397,6 +334,7 @@ class ArithmeticCallAnalyzer
 class NumExprNumberAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -411,6 +349,7 @@ class NumExprNumberAnalyzer
 class ConstraintParameterNumberAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -426,6 +365,7 @@ class ConstraintParameterNumberAnalyzer
 class BoolLiteralAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -439,6 +379,7 @@ class BoolLiteralAnalyzer
 class StatemachineExprAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -455,6 +396,7 @@ class StatemachineExprAnalyzer
 class AssociationExprAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -473,6 +415,7 @@ class AssociationExprAnalyzer
 class AssociationExprFirstOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -493,6 +436,7 @@ class AssociationExprFirstOpAnalyzer
 class AssociationExprMoreOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -506,6 +450,7 @@ class AssociationExprMoreOpAnalyzer
 class AssociationExprSmallerOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -519,6 +464,7 @@ class AssociationExprSmallerOpAnalyzer
 class AssociationExprEqualsOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -532,6 +478,7 @@ class AssociationExprEqualsOpAnalyzer
 class AssociationExprNotequalsOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -545,6 +492,7 @@ class AssociationExprNotequalsOpAnalyzer
 class AssociationExprLessOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -558,6 +506,7 @@ class AssociationExprLessOpAnalyzer
 class AssociationExprGreaterOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -571,6 +520,7 @@ class AssociationExprGreaterOpAnalyzer
 class AssociationExprAllAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -584,6 +534,7 @@ class AssociationExprAllAnalyzer
 class AssociationLiteralAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -626,6 +577,7 @@ class AssociationLiteralAnalyzer
 class IsNotInOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -639,6 +591,7 @@ class IsNotInOpAnalyzer
 class IsInOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -652,6 +605,7 @@ class IsInOpAnalyzer
 class ConstraintParameterListAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -676,6 +630,7 @@ class ConstraintParameterListAnalyzer
 class ConstraintParameterAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -708,6 +663,7 @@ class ConstraintParameterAnalyzer
 class ConstraintParameterListCommaAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -722,6 +678,7 @@ class ConstraintParameterListCommaAnalyzer
 class ConstraintNameAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -754,6 +711,7 @@ class ConstraintNameAnalyzer
 class StatemachineExprStateNameAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -798,6 +756,7 @@ class StatemachineExprStateNameAnalyzer
 class ConstraintNameNameAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   
   depend cruise.umple.compiler.*;
@@ -958,6 +917,7 @@ class ConstraintNameNameAnalyzer
 class ConstraintNameNewAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   
   depend cruise.umple.compiler.*;
@@ -973,6 +933,7 @@ class ConstraintNameNewAnalyzer
 class ConstraintNameIndexAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1007,6 +968,7 @@ class ConstraintNameIndexAnalyzer
 class ConstraintScopeOperatorAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1031,6 +993,7 @@ class ConstraintScopeOperatorAnalyzer
 class StringExprQuoteAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1044,6 +1007,7 @@ class StringExprQuoteAnalyzer
 class StringComplexExpressionAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1078,6 +1042,7 @@ class StringComplexExpressionAnalyzer
 class StringComplexExpressionConcatAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1091,6 +1056,7 @@ class StringComplexExpressionConcatAnalyzer
 class NumExprEqualsOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1104,6 +1070,7 @@ class NumExprEqualsOpAnalyzer
 class NumExprNotequalsOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1118,6 +1085,7 @@ class NumExprNotequalsOpAnalyzer
 class EqualsOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1131,6 +1099,7 @@ class EqualsOpAnalyzer
 class NotequalsOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1144,6 +1113,7 @@ class NotequalsOpAnalyzer
 class GreaterOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1157,6 +1127,7 @@ class GreaterOpAnalyzer
 class SmallerOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1170,6 +1141,7 @@ class SmallerOpAnalyzer
 class MoreOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1183,6 +1155,7 @@ class MoreOpAnalyzer
 class LessOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1196,6 +1169,7 @@ class LessOpAnalyzer
 class ModelConstraintBodyAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1222,6 +1196,7 @@ class ModelConstraintBodyAnalyzer
 class ModelLinkingOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token; 
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1242,6 +1217,7 @@ class ModelLinkingOpAnalyzer
 class ModelExprAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1262,6 +1238,7 @@ class ModelExprAnalyzer
 class ModelRelationOpInheritanceAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1271,6 +1248,7 @@ class ModelRelationOpInheritanceAnalyzer
 class ModelRelationOpInheritanceSubclassAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1284,6 +1262,7 @@ class ModelRelationOpInheritanceSubclassAnalyzer
 class ModelRelationOpInheritanceSuperclassAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1297,6 +1276,7 @@ class ModelRelationOpInheritanceSuperclassAnalyzer
 class ModelRelationOpAttributeAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1314,6 +1294,7 @@ class ModelRelationOpAttributeAnalyzer
 class ModelRelationOpAttributeClassificationAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1335,6 +1316,7 @@ class ModelRelationOpAttributeClassificationAnalyzer
 class ModelRelationOpAssociationAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1349,6 +1331,7 @@ class ModelRelationOpAssociationAnalyzer
 class ModelRelationOpAssociationOpAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   depend java.util.*;
@@ -1363,6 +1346,7 @@ class ModelRelationOpAssociationOpAnalyzer
 class ModelRelationAssociationEndAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
   lazy ModelConstraint modelConstraint;
@@ -1382,6 +1366,7 @@ class ModelRelationAssociationEndAnalyzer
 class ModelRelationAssociationEndBoundAnalyzer
 {
   isA Analyzer;
+  depend cruise.umple.parser.analysis.Analyzer;
   depend cruise.umple.parser.Token;
   depend cruise.umple.compiler.*;
 

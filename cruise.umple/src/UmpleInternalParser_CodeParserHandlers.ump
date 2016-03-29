@@ -1,0 +1,98 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Handlers for the RuleBasedParser.
+
+*/
+ 
+namespace cruise.umple.compiler;
+
+/* This is the ParserAction to handle 'use' tokens in Umple. 
+ *
+ * This is called any time a 'useStatement' token is read, in which it 
+ * dispatches a `RuleBasedParserThread` on the discovered token, which
+ * effectively reads the new file into the token location
+ */
+class UseStatementParserAction{
+  depend java.io.File;
+  depend cruise.umple.parser.analysis.ParserAction;
+  depend cruise.umple.parser.analysis.ParserDataPackage;
+  depend cruise.umple.parser.analysis.RuleBasedParserThread;
+  depend cruise.umple.parser.Token;
+  
+  isA ParserAction;
+  
+  public void onSuccess(Token token, ParserDataPackage data)
+  {
+    String value = token.getValue("use");
+    synchronized(data.getHasParsed())
+    {
+      if(!data.getHasParsed().contains(value))
+      {
+        data.getHasParsed().add(value);
+        RuleBasedParserThread thread = new RuleBasedParserThread(
+          data.getAnalyzer().getRules().get("$ROOT$"),
+          token,
+          data.getAnalyzer().getFile().getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value,
+          data
+        );
+        data.getAnalyzer().addThread(thread);
+        thread.start();
+      }
+    }
+  }
+}
+
+/* This is the LinkedFileHandler for the Umple language. 
+ *
+ * This handler takes all linked files and appends a series of 'use' statements
+ * to the end of the current input of the main file. This is all done prior to 
+ * parsing so that the statements get interpreted properly.
+ */
+class UmpleLinkedFileHandler{ 
+  depend java.io.File;
+  depend cruise.umple.parser.analysis.LinkedFileHandler;
+  
+  isA LinkedFileHandler;
+
+  public String onFileLink( String input, File[] linkedFiles ){
+    for( File file : linkedFiles ){
+      input += "\nuse " + file.getPath() + ";";
+    }
+    return input;
+  }
+}
+
+/* This is the AnalyzerGeneratorHandler for the Umple language
+ * 
+ * This handler constructs Analyzers by name by using reflection
+ * in the `cruise.umple.analysis` namespace
+ */
+class UmpleAnalyzerGeneratorHandler{
+  depend cruise.umple.parser.analysis.AnalyzerGeneratorHandler;
+  depend cruise.umple.parser.analysis.Analyzer;
+  depend java.lang.reflect.*;
+  depend java.lang.IllegalStateException;
+
+  isA AnalyzerGeneratorHandler;
+  
+  public Analyzer generateFromName( String name ){
+    try{
+      String className = "cruise.umple.analysis."+name.substring(0,1).toUpperCase()+name.substring(1)+"Analyzer";
+      Class cls = Class.forName(className);
+      Analyzer a = (Analyzer) cls.newInstance();
+      a.setName(name);
+      return a;
+    }
+    catch(ClassNotFoundException e){
+      return null;
+    }
+    catch(InstantiationException | IllegalAccessException | IllegalArgumentException  e){
+      throw new IllegalStateException("Error instantiating class " + name + ": " + e.getMessage());
+    }
+  }
+}

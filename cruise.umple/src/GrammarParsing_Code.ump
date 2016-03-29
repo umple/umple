@@ -1,4 +1,97 @@
-namespace cruise.umple.parser.analysis;
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+class Analyzer
+{
+  
+  /*
+   * Analyzes the token tree by instantiating the appropriate analyzer
+   * for each token rule.
+   *
+   * Note: This method makes heavy use of reflection
+   * Todo: consider simplifying and making use of the inheritance structure
+   */
+  public void analyzeToken(Token token)
+  {
+    prepare(token);
+    for(Token subtoken:token.getSubTokens())
+    {
+      for(Analyzer analyzer:children)
+      {
+        if(analyzer.getName().equals(subtoken.getName()))
+        {
+          List<Class> classes = new ArrayList<Class>();
+          List<String> variables = new ArrayList<String>();
+          for(Field field:analyzer.getClass().getDeclaredFields())
+          {
+            Class<? extends Analyzer> clazz = this.getClass();
+            while(clazz!=null&&!"Analyzer".equals(clazz.getSimpleName()))
+            {
+              for(Field mfield:clazz.getDeclaredFields())
+              {
+                if(field.getName().equals(mfield.getName()))
+                {
+                  try 
+                  {
+                    classes.add(field.getType());
+                    variables.add(field.getName().substring(0,1).toUpperCase()+field.getName().substring(1));
+                    break;
+                  }catch (IllegalArgumentException e){
+                    throw new IllegalStateException("Illegal argument encountered", e);
+                  }catch (NullPointerException e){
+                    throw new IllegalStateException("Null state encountered", e);
+                  }
+                }
+              }
+              clazz = (Class<? extends Analyzer>)clazz.getSuperclass();
+            }
+          }
+          try{
+            List<Analyzer> originalChildren = analyzer.getChildren();
+            analyzer = analyzer.getClass().newInstance();
+            for(Analyzer child:originalChildren)
+            {
+              analyzer.addChild(child);
+            }
+            for(int i=0;i<classes.size();++i)
+            {
+              Object object = this.getClass().getMethod("get"+variables.get(i),new Class[]{}).invoke(this);
+              analyzer.getClass().getMethod("set"+variables.get(i),new Class[]{classes.get(i)}).invoke(analyzer,object);
+            }
+          } catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
+           throw new IllegalStateException("Error instantiating method", e);
+          }
+          analyzer.analyzeToken(subtoken);
+          break;
+        }
+      }
+    }
+    analyze(token);
+  }
+  
+  /* 
+   * Prepare is called before analyzing the token, allowing edits or 
+   * sanitizing to be done
+   */
+  public void prepare(Token token){}
+  
+  /*
+   * Analyze is called to analyze the particular token
+   */
+  public void analyze(Token token){}
+
+  public String toString()
+  {
+    return "Analyzer:"+getName();
+  }
+  
+}
 
 class RuleBasedParser 
 {
@@ -39,6 +132,17 @@ class RuleBasedParser
     }
     parsing--;
   }
+  
+  /*
+   * Adds a parser action to operate on an action token of the specified name
+   *
+   * @param name the name of the token to perform the action
+   * @param action the ParserAction to perform
+   */
+  void addParserAction(String name, ParserAction action){
+    actionedTokens.put(name,action);
+  }
+
 
   public void parse(ChoiceRule root, Token token, String filename,int line, ParserDataPackage data)
   {
@@ -131,6 +235,12 @@ class RuleBasedParser
         if(analyzer==null)
         {
           analyzer = new GrammarAnalyzer();
+          analyzer.setLinkedFileHandler(getLinkedFileHandler());
+          analyzer.setAnalyzerGenerator(getAnalyzerGenerator());
+          // Add all the parser actions to the analyzer
+          for( Map.Entry<String,ParserAction> entry : actionedTokens.entrySet() ){
+            analyzer.addParserAction(entry.getKey(), entry.getValue());
+          }
         }
 
         analyzer.getKeys().put("{}", new String[]{"{","}"});    
@@ -198,22 +308,40 @@ class RuleBasedParser
       e.printStackTrace();
     }
   }
+  
   /*
-    Takes an umple file and parses it. It returns the ParseResult.
-  */
-  public ParseResult parse(UmpleFile file)
+   * Takes a file and parses it, returning the ParseResult
+   * 
+   * @param file the file to parse
+   * 
+   * @return the result of this parsing as a ParseResult
+   */
+  public ParseResult parse(File file, File[] linkedFiles)
   {
     if(analyzer==null)
     {
       setupRules();
     }
-    analyzer.init(file);
+    if( linkedFiles != null){
+      analyzer.init(file, linkedFiles);
+    }
     analyzer.execute();
     setRootToken(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
   }
   
+  /*
+   * Takes a file and parses it, returning the ParseResult
+   * 
+   * @param file the file to parse
+   * 
+   * @return the result of this parsing as a ParseResult
+   */
+  public ParseResult parse(File file){
+    return parse(file, new File[0]);
+  }
+
   public ParseResult parse(String ruleName, String input)
   {
     if(analyzer==null)
@@ -369,7 +497,7 @@ class RuleBasedParser
     rootToken = new Token("ROOT","");
     for(String filename:getGrammarFiles())
     {
-      ParserDataPackage data = new ParserDataPackage(filename);
+      ParserDataPackage data = new ParserDataPackage(filename,getAnalyzer());
       data.getKeys().put("[]",keys);
       data.init(null);
       for(int i=0;i<data.numberOfLines();++i){
@@ -379,8 +507,37 @@ class RuleBasedParser
       }
     }
     analyzer = new GrammarAnalyzer();
+    analyzer.setLinkedFileHandler(getLinkedFileHandler());
+    analyzer.setAnalyzerGenerator(getAnalyzerGenerator());
+    for( Map.Entry<String,ParserAction> entry : actionedTokens.entrySet() ){
+      analyzer.addParserAction(entry.getKey(), entry.getValue());
+    }
     analyzer.analyze(rootToken);
     analyzer.setupTerminals();
+  }
+  
+  // retroactively change the linked file handler if an analyzer is already constructed
+  void setLinkedFileHandler(LinkedFileHandler aLinkedFileHandler){
+    linkedFileHandler = aLinkedFileHandler;
+    if( analyzer != null ){
+      analyzer.setLinkedFileHandler(aLinkedFileHandler);
+    }
+  }
+  
+  LinkedFileHandler getLinkedFileHandler(){
+    return linkedFileHandler;
+  }
+  
+  // retroactively change the analyzer generator if an analyzer is already constructed
+  void setAnalyzerGenerator(AnalyzerGeneratorHandler aAnalyzerGenerator){
+    analyzerGenerator = aAnalyzerGenerator;
+    if( analyzer != null ){
+      analyzer.setAnalyzerGenerator(analyzerGenerator);
+    }
+  }
+  
+  AnalyzerGeneratorHandler getAnalyzerGenerator(){
+    return analyzerGenerator;
   }
 }
 
@@ -445,9 +602,16 @@ class ParserDataPackage
       }
     }
   }
-  //This is used to have multiple Umple files in command line;
-  public void AddExtraFiles(UmpleFile file){
-	  input = input+file.getLinkedFiles();
+  
+  /*
+   * Links files together at compile-time, provided a handler and the filenames.
+   * 
+   * Note: This has no effect if the handler is null
+   */
+  public void linkFiles( LinkedFileHandler handler, File[] linkedFiles ){
+    if( handler != null ){
+      input = handler.onFileLink( input, linkedFiles );
+    }
   }
   
   public void init(String rawinput, Position usePosition){
@@ -494,13 +658,14 @@ class RuleBasedParserThread
     HashMap<String,String[]> keys = data.getKeys();
     List<String> hasParsed = data.getHasParsed();
     ParseResult parseResult = data.getParseResult();
-    data = new ParserDataPackage(filename);
+    data = new ParserDataPackage(filename, null);
     data.setKeys(keys);
     data.setHasParsed(hasParsed);
     data.setParseResult(parseResult);
     data.init(token.getPosition());
     Token temp = new Token("ROOT","");
     RuleBasedParser parser = new RuleBasedParser();
+    data.setAnalyzer(parser.getAnalyzer());
     parser.parse(root,temp,filename,data);
     Token answer = parser.getRootToken();
     synchronized(token)
@@ -525,28 +690,6 @@ class GrammarAnalyzer {
     Sets up the actionTokens, and initializes the global variable
   */
   after constructor { 
-    actionedTokens.put("useStatement", new ParserAction()
-    {
-      @Override
-      public void onSuccess(Token token, ParserDataPackage data)
-      {
-        String value = token.getValue("use");
-        synchronized(data.getHasParsed())
-        {
-          if(!data.getHasParsed().contains(value))
-          {
-            data.getHasParsed().add(value);
-            RuleBasedParserThread thread = new RuleBasedParserThread(
-              rules.get("$ROOT$"),
-              token,
-              umpleFile.getPath() + File.separator+value,
-              data);
-            threads.add(thread);
-            thread.start();
-          }
-        }
-      }
-    });
     set("anon_index",0);
     set("analyzer",this);
     set("stack",new Stack<ChoiceRule>());//new RuleStack());
@@ -557,22 +700,32 @@ class GrammarAnalyzer {
     // Terminal.space(" \\t\\n");
     ParsingCouple.ignoreLevel = -1;
   }
+  
+  /*
+   * Adds a parser action to operate on an action token of the specified name
+   *
+   * @param name the name of the token to perform the action
+   * @param action the ParserAction to perform
+   */
+  void addParserAction(String name, ParserAction action){
+    actionedTokens.put(name,action);
+  }
   /*
     Must be called before use with the execute function, this function sets up the file for parsing
   */
-  public void init (UmpleFile file)
+  public void init(File file, File[] linkedFiles)
   {
-    setUmpleFile(file);
-    input = file.getPath()+File.separator+file.getFileName();
-    setData(new ParserDataPackage(input));
+    setFile( file );
+    input = file.getAbsolutePath();
+    setData(new ParserDataPackage(input,this));
     getData().setKeys(keys);
     getData().init(null);
-	getData().AddExtraFiles(file);	
+    getData().linkFiles( getLinkedFileHandler(), linkedFiles );
   }
-  
-  public void init(String ruleName, String input2) {
-    input = input2;
-    setData(new ParserDataPackage("temp"));
+    
+  public void init(String ruleName, String input) {
+    this.input = input;
+    setData(new ParserDataPackage("temp",this));
     getData().setKeys(keys);
     getData().init(input,null);  
   }
@@ -603,7 +756,7 @@ class GrammarAnalyzer {
     setFailedPosition(parser.getFailedPosition());
     setParseResult(getData().getParseResult());
     if(mustSetupAnalyzers)
-	{
+    {
       setupAnalyzers();
       mustSetupAnalyzers = false;
     }
@@ -614,28 +767,24 @@ class GrammarAnalyzer {
     The rules token contains all the rules in a grammar file.
   */
   public void rules(Token token) {
-    analyze(token);    
+    analyze(token);
   }
-
-  Stack<Analyzer> analyzerStack = new Stack<Analyzer>(); 
+  
   public boolean makeAnalyzer(String name)
   {
     boolean wasMade = false;
-    if(!getAnalyzerMap().containsKey(name))
-    try {
-      String className = "cruise.umple.analysis."+name.substring(0,1).toUpperCase()+name.substring(1)+"Analyzer";
-      Class cls = Class.forName(className);
-      Analyzer a = (Analyzer) cls.newInstance();
-      a.setName(name);
-      getAnalyzerMap().put(name,a);
-      analyzerStack.push(a);
-      wasMade = true;
-   } 
-   catch (ClassNotFoundException c){} catch( InstantiationException | IllegalAccessException | IllegalArgumentException  e)
-   {
-     e.printStackTrace();
-   }
-   return wasMade;
+    if(!getAnalyzerMap().containsKey(name)){
+      Analyzer a = null;
+      if( getAnalyzerGenerator() != null ){
+        a = getAnalyzerGenerator().generateFromName(name);
+      }
+      if( a != null ){
+        getAnalyzerMap().put(name,a);
+        analyzerStack.push(a);
+        wasMade = true;
+      }
+    }
+    return wasMade;
   }
   /*
     The rule token denotes the beginning of a rule definition.
@@ -1245,7 +1394,7 @@ class GrammarAnalyzer {
              "[a-zA-Z_]([a-zA-Z0-9_]|-[a-zA-Z0-9_])*([ \\t]*<(([^\\{\\}\\(\\);\\n\\[\\]>]|\\[\\])*)>+)?",
              "\\s[a-zA-Z_]([a-zA-Z0-9_]|-[a-zA-Z0-9_])*([ \\t]*<(([^\\{\\}\\(\\);\\n\\[\\]>]|\\[\\])*)>+)?");
 
-	value = value.replace(
+  value = value.replace(
              "[a-zA-Z_]([a-zA-Z0-9_]|-[a-zA-Z0-9_])*([ \\t]*<(([^\\{\\}\\(\\);\\n\\[\\]>@]|\\[\\])*)>+)?",
              "\\s[a-zA-Z_]([a-zA-Z0-9_]|-[a-zA-Z0-9_])*([ \\t]*<(([^\\{\\}\\(\\);\\n\\[\\@]>]|\\[\\])*)>+)?");
         
@@ -1325,7 +1474,7 @@ class GrammarAnalyzer {
     return null;
   }
   
-  public List<Analyzer>  setupAnalyzers(Analyzer analyzer, ChoiceRule parent, List<ChoiceRule> checked)
+  public List<Analyzer> setupAnalyzers(Analyzer analyzer, ChoiceRule parent, List<ChoiceRule> checked)
   {
     List<Analyzer> children = new ArrayList<Analyzer>();
     if(parent==null)return children;

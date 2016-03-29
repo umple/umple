@@ -2,6 +2,8 @@ package cruise.umple.compiler;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +52,7 @@ public class ModelConstraintTest {
 	public boolean parse(String filename)
 	{
 		//String input = SampleFileWriter.readContent(new File(pathToInput, filename));
-		UmpleFile file = new UmpleFile(pathToInput,filename);
+		File file = new File(pathToInput,filename);
 		ErrorTypeSingleton.getInstance().reset();
 		model = new UmpleModel(new UmpleFile(pathToInput,filename));
 		model.setShouldGenerate(false);

@@ -41,8 +41,6 @@ class ParseResult
 
   // The error messages related to parsing.
   * -> * ErrorMessage;
-
-  depend  cruise.umple.util.StringFormatter;
 }
 
 /*
@@ -57,7 +55,7 @@ class ErrorMessage
 
   String[] parameters;
 
-  depend  cruise.umple.util.StringFormatter;
+  depend  java.io.File;
 }
 
 /*
@@ -86,9 +84,8 @@ class ErrorTypeSingleton
   singleton;
   1 -> * ErrorType;
 
-  depend cruise.umple.compiler.exceptions.UmpleCompilerException;
-  depend cruise.umple.util.SampleFileWriter;
   depend java.io.*;
+  depend java.lang.IllegalStateException;
 }
 
 /*
@@ -186,7 +183,7 @@ class RulePart
 class Parser
 {
   depend java.io.*;
-  depend cruise.umple.util.*;
+  depend java.lang.IllegalStateException;
 
   // The Umple file (.ump) that will be parsed.
   String filename = null;

@@ -11,6 +11,8 @@ package cruise.umple.compiler;
 
 import junit.framework.Assert;
 
+import java.io.File;
+
 import org.junit.*;
 
 import cruise.umple.parser.analysis.RuleBasedParser;
@@ -1144,7 +1146,7 @@ public class UmpleParserTracerTest
 
 	private void assertParse(String filename, String expectedOutput, boolean expected)
 	{
-		UmpleFile file = new UmpleFile(pathToInput,filename);
+		File file = new File(pathToInput,filename);
 		ErrorTypeSingleton.getInstance().reset();
 		model = new UmpleModel(new UmpleFile(pathToInput,filename));
 		model.setShouldGenerate(false);

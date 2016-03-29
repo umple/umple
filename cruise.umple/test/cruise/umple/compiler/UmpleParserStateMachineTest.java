@@ -2637,7 +2637,7 @@ public class UmpleParserStateMachineTest
 
   public void assertFailedParse(String filename, Position expectedPosition, int expectedError)
   {
-    UmpleFile file = new UmpleFile(pathToInput, filename);
+    File file = new File(pathToInput, filename);
     model = new UmpleModel(new UmpleFile(pathToInput, filename));
     model.setShouldGenerate(false);
     RuleBasedParser rbp = new RuleBasedParser();
@@ -2664,7 +2664,7 @@ public class UmpleParserStateMachineTest
 
   private void assertHasWarning(String filename, int expectedWarningIndex, int expectedError, Position expectedPosition)
   {
-    UmpleFile file = new UmpleFile(pathToInput, filename);
+    File file = new File(pathToInput, filename);
     model = new UmpleModel(new UmpleFile(pathToInput, filename));
     model.setShouldGenerate(false);
     boolean answer = true;
@@ -2702,7 +2702,7 @@ public class UmpleParserStateMachineTest
   {
     // String input = SampleFileWriter.readContent(new File(pathToInput,
     // filename));
-    UmpleFile file = new UmpleFile(pathToInput, filename);
+    File file = new File(pathToInput, filename);
     model = new UmpleModel(new UmpleFile(pathToInput, filename));
     model.setShouldGenerate(false);
     boolean answer = true;

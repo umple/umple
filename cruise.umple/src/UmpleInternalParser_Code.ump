@@ -69,6 +69,12 @@ class UmpleInternalParser
     braces.addIgnore(new Couple("//","\n"));
 
     addCouple(braces);
+    
+    // Set up needed parser actions
+    parser.addParserAction("useStatement", new UseStatementParserAction() );
+    parser.setLinkedFileHandler( new UmpleLinkedFileHandler() );
+    parser.setAnalyzerGenerator( new UmpleAnalyzerGeneratorHandler() );
+    
     parser.addGrammarFile("/umple_core.grammar");
     parser.addGrammarFile("/umple_classes.grammar");
     parser.addGrammarFile("/umple_traits.grammar");
@@ -466,3 +472,4 @@ use UmpleInternalParser_CodeTrace.ump;
 use UmpleInternalParser_CodeLayout.ump;
 use UmpleInternalParser_CodeUSE.ump;
 use UmpleInternalParser_CodeFilter.ump;
+use UmpleInternalParser_CodeParserHandlers.ump;

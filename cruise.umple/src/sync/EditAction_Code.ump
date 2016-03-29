@@ -19,8 +19,8 @@ class EditAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
-      UmpleModel umpleModel = new UmpleModel(umpleFile);
+      File umpleFile = new File(getFilename());    
+      UmpleModel umpleModel = new UmpleModel( new UmpleFile(umpleFile) );
       cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
       UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
       ParseResult result = parser.parse(umpleFile);

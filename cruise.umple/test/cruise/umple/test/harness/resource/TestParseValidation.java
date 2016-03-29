@@ -69,7 +69,8 @@ public class TestParseValidation {
 		initUmpleModel();
 		RuleBasedParser ruleParser = new RuleBasedParser();
 		UmpleParser parser = new UmpleInternalParser(parserName, umpleModel, ruleParser);
-		ParseResult result = ruleParser.parse(umpleModel.getUmpleFile());
+		File file = new File(umpleModel.getUmpleFile().getPath() + File.separator + umpleModel.getUmpleFile().getFileName());
+		ParseResult result = ruleParser.parse( file );
 		umpleModel.setLastResult(result);
 		result = parser.analyze(true);
 		assertParseResults(result);
