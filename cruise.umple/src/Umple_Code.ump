@@ -1483,17 +1483,18 @@ class UmpleClass
         boolean isCurrentMatch = formattedMethod.matches(regexOperation);
 
         boolean isParameterMatch = true;
+        String currentParameters = code.getParameters()[opInd];
 
-        if("...".equals(code.getParameters()[opInd])) {
+        if("...".equals(currentParameters)) {
           isParameterMatch = true;
         }
-        else if(parameters.size() != code.getParameters()[opInd].split(",").length)
+        else if(parameters.size() != currentParameters.split(",").length)
         {
           isParameterMatch = false;
         } 
         else {
           int indx = 0;
-          for(String parameterType : code.getParameters()[opInd].split(",")) {
+          for(String parameterType : currentParameters.split(",")) {
             if(!parameterType.equals(parameters.get(indx).getType())) {
               isParameterMatch = false;
             }

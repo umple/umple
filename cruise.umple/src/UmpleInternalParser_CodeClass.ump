@@ -2640,7 +2640,7 @@ class UmpleInternalParser
     return operationParameters.toString();
   }
 
-  private ArrayList<String> getOperationsParameters(Token aToken)
+  private List<String> getOperationsParameters(Token aToken)
   {
     ArrayList<String> operationsParameters = new ArrayList<String>();
     for(Token subToken : aToken.getSubTokens())
@@ -2702,7 +2702,7 @@ class UmpleInternalParser
     CodeInjection injection = new CodeInjection(type,operationName,"",uClassifier);
     injection.setOperationSource(operationSource);
 
-    ArrayList<String> operationsParameters = getOperationsParameters(injectToken);
+    List<String> operationsParameters = getOperationsParameters(injectToken);
     for(String operationParameters : operationsParameters) {
       injection.addParameter(operationParameters);      
     }
