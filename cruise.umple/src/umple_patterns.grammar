@@ -28,7 +28,7 @@ keyDefinition- : [[defaultKey]] | [[key]]
 codeInjection- : [[beforeCode]] | [[afterCode]]
 
 parameterTypes : [parameterType] (, [parameterType])*
-injectionOperation : [operationName] (OPEN_ROUND_BRACKET [[parameterTypes]] CLOSE_ROUND_BRACKET)? 
+injectionOperation : [operationName] (OPEN_ROUND_BRACKET ([[parameterTypes]])? CLOSE_ROUND_BRACKET)? 
 
 beforeCode : before ([=operationSource:custom|generated|all])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
 afterCode : after ([=operationSource:custom|generated|all])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*

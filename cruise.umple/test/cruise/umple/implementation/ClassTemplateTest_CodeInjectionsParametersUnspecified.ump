@@ -1,0 +1,24 @@
+class Student {
+  String foo(int a) {
+    if(a < 0) {
+      return 4;
+    }
+
+    return 3;
+  }
+
+  String foo(int a, String b) {
+    if(a > 0 && "".equals(b))
+      return 3;
+
+    return 1;
+  }
+
+  after custom foo {
+    System.out.println("Returning from foo, a: " + a);
+  }
+
+  before custom foo(...) {
+    System.out.println("Starting foo...");
+  }
+}
