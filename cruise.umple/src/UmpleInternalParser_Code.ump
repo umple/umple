@@ -472,3 +472,4 @@ use UmpleInternalParser_CodeTrace.ump;
 use UmpleInternalParser_CodeLayout.ump;
 use UmpleInternalParser_CodeUSE.ump;
 use UmpleInternalParser_CodeFilter.ump;
+use UmpleInternalParser_CodeParserHandlers.ump;
