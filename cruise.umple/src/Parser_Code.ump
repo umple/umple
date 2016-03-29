@@ -940,14 +940,14 @@ class Parser
         try{
           reader.close();
         }catch (IOException e){
-          throw new IllegalStateException("Error closing reader");
+          throw new IllegalStateException("Error closing reader", e);
         }
       }
       if(resourceStream != null){
         try{
           resourceStream.close();
         }catch (IOException e){
-          throw new IllegalStateException("Error closing resourceStream");
+          throw new IllegalStateException("Error closing resourceStream", e);
         }
       }
     }

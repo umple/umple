@@ -43,9 +43,9 @@ class Analyzer
                     variables.add(field.getName().substring(0,1).toUpperCase()+field.getName().substring(1));
                     break;
                   }catch (IllegalArgumentException e){
-                    throw new IllegalStateException("Illegal argument encountered: " + e.getMessage());
+                    throw new IllegalStateException("Illegal argument encountered", e);
                   }catch (NullPointerException e){
-                    throw new IllegalStateException("Null state encountered: " + e.getMessage());
+                    throw new IllegalStateException("Null state encountered", e);
                   }
                 }
               }
@@ -65,7 +65,7 @@ class Analyzer
               analyzer.getClass().getMethod("set"+variables.get(i),new Class[]{classes.get(i)}).invoke(analyzer,object);
             }
           } catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
-           throw new IllegalStateException("Error instantiating method: " + e.getMessage());
+           throw new IllegalStateException("Error instantiating method", e);
           }
           analyzer.analyzeToken(subtoken);
           break;
