@@ -1308,11 +1308,6 @@ class UmpleClass
   public ArrayList<String> getMethodNames()
   {
     ArrayList<String> methodNames = new ArrayList<String>();
-    for(Method aMethod : this.getMethods())
-    {
-      methodNames.add(aMethod.getName());
-    }
-
     for(Attribute attr : this.getAttributes())
     {
       methodNames.addAll(attr.getMethodNames());
@@ -1485,7 +1480,7 @@ class UmpleClass
         boolean isParameterMatch = true;
         String currentParameters = code.getParameters()[opInd];
 
-        if("...".equals(currentParameters)) {
+        if((parameters.size() == 0 && "".equals(currentParameters)) || "...".equals(currentParameters)) {
           isParameterMatch = true;
         }
         else if(parameters.size() != currentParameters.split(",").length)
