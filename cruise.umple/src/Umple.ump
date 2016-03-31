@@ -443,6 +443,7 @@ class CodeInjection
   type;
   operation;
   lazy operationSource = "generated";
+  lazy String[] parameters;
   CodeBlock snippet;
   lazy constraintParameterName;
   * -> 1 UmpleClassifier;

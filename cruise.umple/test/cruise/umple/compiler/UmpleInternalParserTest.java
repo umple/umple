@@ -214,8 +214,8 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("018_key.ump","[classDefinition][name:Student][attribute][name:id][attribute][name:name][key][keyId:id][keyId:name][classDefinition][name:Mentor][attribute][name:employeeId][key][keyId:employeeId][classDefinition][name:Course][attribute][name:code][defaultKey]");
     fileToOutputs.put("018_cannotHaveDuplicateKeys.ump", "[classDefinition][name:Student][attribute][name:id][attribute][name:name][attribute][name:age][key][keyId:id][keyId:name][key][keyId:age]");
     fileToOutputs.put("018_inheritedKeys.ump", "[classDefinition][name:Student][attribute][type:Integer][name:a][classDefinition][name:Mentor][extendsName:Student][attribute][type:Integer][name:b][key][keyId:a][keyId:b]");
-    fileToOutputs.put("019_before.ump","[classDefinition][name:Student][attribute][name:name][beforeCode][operationName:setName][code:doSomething();]");
-    fileToOutputs.put("019_after.ump","[classDefinition][name:Student][attribute][name:name][afterCode][operationName:getName][code:notReallyPossible();]");
+    fileToOutputs.put("019_before.ump","[classDefinition][name:Student][attribute][name:name][beforeCode][injectionOperation][operationName:setName][code:doSomething();]");
+    fileToOutputs.put("019_after.ump","[classDefinition][name:Student][attribute][name:name][afterCode][injectionOperation][operationName:getName][code:notReallyPossible();]");
     fileToOutputs.put("020_enumEmpty.ump","[classDefinition][name:Student][stateMachine][enum][name:status]");
     fileToOutputs.put("020_enum.ump","[classDefinition][name:Student][stateMachine][enum][name:status][stateName:FullTime][stateName:PartTime][stateName:MidTime][stateMachine][enum][name:grade][stateName:High]");
     fileToOutputs.put("020_enumLongHand.ump","[classDefinition][name:Student][stateMachine][inlineStateMachine][name:status][state][stateName:FullTime][state][stateName:PartTime]");

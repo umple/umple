@@ -97,6 +97,23 @@ public class JavaClassTemplateTest extends ClassTemplateTest
     assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsSingleLine.ump", languagePath + "/ClassTemplateTest_CodeInjectionsSingleLine." + languagePath + ".txt", "Student");
   }
 
+  public void ClassCodeInjections_ParametersBasic()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsParametersBasic.ump", languagePath + "/ClassTemplateTest_CodeInjectionsParametersBasic." + languagePath + ".txt", "Student");
+  }
+
+  @Test
+  public void ClassCodeInjections_ParametersUnspecified()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsParametersUnspecified.ump", languagePath + "/ClassTemplateTest_CodeInjectionsParametersUnspecified." + languagePath + ".txt", "Student");
+  }
+
+  @Test
+  public void ClassCodeInjections_ParametersMulti()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsParametersMulti.ump", languagePath + "/ClassTemplateTest_CodeInjectionsParametersMulti." + languagePath + ".txt", "Student");
+  }
+
   @Test
   public void InternalAndConstantAndDerivedAttributeComments()
   {

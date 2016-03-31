@@ -27,6 +27,10 @@ keyDefinition- : [[defaultKey]] | [[key]]
 // Aspect oriented code injection: [*BeforeandAfterStatements*]
 codeInjection- : [[beforeCode]] | [[afterCode]]
 
-beforeCode : before ([=operationSource:custom|generated|all])? [operationName] ( , [operationName] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
-afterCode : after ([=operationSource:custom|generated|all])? [operationName] ( , [operationName] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+parameterTypes : [parameterType] (, [parameterType])*
+parameterListing : OPEN_ROUND_BRACKET ([[parameterTypes]])? CLOSE_ROUND_BRACKET
 
+injectionOperation : [operationName] ([[parameterListing]])?
+
+beforeCode : before ([=operationSource:custom|generated|all])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+afterCode : after ([=operationSource:custom|generated|all])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*

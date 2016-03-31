@@ -1,0 +1,40 @@
+class Student {
+  String foo(int a) {
+    if(a < 0) {
+      return 4;
+    }
+
+    return 3;
+  }
+
+  String foo(int a, String b) {
+    if(a > 0 && "".equals(b))
+      return 3;
+
+    return 1;
+  }
+
+  String bar() {
+    int a = 4;
+
+    if(a == 3) return 2;
+    
+    return 1;
+  }
+
+  before custom foo(int),foo(int,String) {
+    System.out.println("Starting foo...");
+  }
+
+  after custom foo(int, String) {
+    System.out.println("Returning from foo, a: " + a ", b: " + b);
+  }
+
+  before custom bar() {
+    // TODO: fix asap
+  }
+
+  before custom foo(int),bar {
+    System.out.println("Starting execution...");
+  }
+}

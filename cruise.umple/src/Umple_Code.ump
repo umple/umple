@@ -1328,11 +1328,6 @@ class UmpleClass
   public ArrayList<String> getMethodNames()
   {
     ArrayList<String> methodNames = new ArrayList<String>();
-    for(Method aMethod : this.getMethods())
-    {
-      methodNames.add(aMethod.getName());
-    }
-
     for(Attribute attr : this.getAttributes())
     {
       methodNames.addAll(attr.getMethodNames());
@@ -1459,7 +1454,7 @@ class UmpleClass
   }
 
   // Gets applicable code injectiosn for custom defined methods
-  public List<CodeInjection> getApplicableCodeInjectionsCustomMethod(String type, String method)
+  public List<CodeInjection> getApplicableCodeInjectionsCustomMethod(String type, String method, List<MethodParameter> parameters)
   {
     ArrayList<CodeInjection> all = new ArrayList<CodeInjection>();
     if (type == null || method == null)
@@ -1480,8 +1475,9 @@ class UmpleClass
       TriState isMatchOnExclude = new TriState(true);
 
       String[] allOperations = code.getOperation().split(",");
-      for (String operation : allOperations)
+      for (int opInd = 0; opInd < allOperations.length; opInd++)
       {
+        String operation = allOperations[opInd];
 
         boolean isNot = false;
         if (operation.startsWith("!"))
@@ -1501,20 +1497,27 @@ class UmpleClass
         regexOperation = regexOperation.replace("_~", "");
         boolean isCurrentMatch = formattedMethod.matches(regexOperation);
 
-        // Determine whether the paremeters of the injection match the parameters
-        // of this method
-/*
         boolean isParameterMatch = true;
-        int i = 0;
-        for(String parameterType : code.getParameters().split(",")) {
-          if(!parameterType.equals(parameters.get(i).getType())) {
-            isParameterMatch = false;
-          }
-          i++;
+        String currentParameters = code.getParameters()[opInd];
+
+        if((parameters.size() == 0 && "".equals(currentParameters)) || "...".equals(currentParameters)) {
+          isParameterMatch = true;
         }
+        else if(parameters.size() != currentParameters.split(",").length)
+        {
+          isParameterMatch = false;
+        } 
+        else {
+          int indx = 0;
+          for(String parameterType : currentParameters.split(",")) {
+            if(!parameterType.equals(parameters.get(indx).getType())) {
+              isParameterMatch = false;
+            }
+            indx++;
+          }
+        } 
 
         isCurrentMatch &= isParameterMatch;
-*/
 
         if (isNot && isCurrentMatch)
         {
