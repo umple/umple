@@ -11,6 +11,10 @@ namespace cruise.umple.util;
 
 class JsonParser
 {
+  depend cruise.umple.compiler.Parser;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.ParseResult;
+  
   isA Parser;
 }
 
@@ -22,5 +26,4 @@ class Json
   Json[] arrays;
 }
 
-use Parser.ump;
 use Json_Code.ump;

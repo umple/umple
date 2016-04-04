@@ -11,6 +11,10 @@ Handlers for the RuleBasedParser.
  
 namespace cruise.umple.compiler;
 
+external interface ParserAction{}
+external interface LinkedFileHandler{}
+external interface AnalyzerGeneratorHandler{}
+
 /* This is the ParserAction to handle 'use' tokens in Umple. 
  *
  * This is called any time a 'useStatement' token is read, in which it 

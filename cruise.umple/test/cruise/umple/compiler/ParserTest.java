@@ -7,7 +7,7 @@
 
 */
 
-package cruise.umple.parser;
+package cruise.umple.compiler;
 
 
 
@@ -20,6 +20,13 @@ import org.junit.*;
 
 
 import cruise.umple.util.SampleFileWriter;
+
+import cruise.umple.parser.Token;
+import cruise.umple.parser.Position;
+import cruise.umple.parser.ParseResult;
+import cruise.umple.parser.ErrorMessage;
+import cruise.umple.parser.ErrorType;
+import cruise.umple.parser.ErrorTypeSingleton;
 
 
 

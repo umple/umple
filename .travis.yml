@@ -36,12 +36,12 @@ script:
   - ant deps-resolve-all
 
   # Do a modified version of `first-build`
-  - $ANT_FIRST clean init codegen rtcpp template.setVersion resetUmpleSelf
+  - $ANT_FIRST clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf
   - $ANT_FIRST compile compileValidator compileUmplificator
   - $ANT_FIRST package template.resetVersion
 
   # Do a modified version of `build`
-  - $ANT_BUILD clean init codegen rtcpp template.setVersion resetUmpleSelf
+  - $ANT_BUILD clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf
   - $ANT_BUILD compile compileValidator compileUmplificator
   - $ANT_BUILD package 
   - $ANT_BUILD template.test template.resetVersion
