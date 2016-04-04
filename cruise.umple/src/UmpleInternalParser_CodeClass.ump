@@ -391,8 +391,7 @@ class UmpleInternalParser
         String operationSource = getOperationSource(injectToken);
         if("all".equals(operationSource))
         {
-          checkCodeInjectionValidity(injectToken, (UmpleClass) entry.getKey());
-          checkCodeInjectionValidityCustom(injectToken, (UmpleClass) entry.getKey());
+          checkCodeInjectionValidityAll(injectToken, (UmpleClass) entry.getKey());
         }
         else if("custom".equals(operationSource)) 
         {
@@ -2739,65 +2738,33 @@ class UmpleInternalParser
       ((UmpleTrait)uClassifier).addCodeInjection(injection);
     }
   }
-  
-  private boolean checkCodeInjectionValidityCustom(Token injectToken, UmpleClass uClass) {
-    List<Method> methods = uClass.getMethods();
-    String[] allOperations = getOperationName(injectToken).split(",");
-    List<String> allParameters = getOperationsParameters(injectToken);
 
-    for(int opInd = 0; opInd < allOperations.length; opInd++)
+  private boolean checkParameterMatch(List<MethodParameter> parameters, String currentParameters) {
+    // Check if method parameters match injection parameters
+    boolean isParameterMatch = true;
+
+    if("...".equals(currentParameters) || (parameters.size() == 0 && "".equals(currentParameters))) {
+      isParameterMatch = true;
+    }
+    else if(parameters.size() != currentParameters.split(",").length)
     {
-      String operation = allOperations[opInd];
-      String currentParameters = allParameters.get(opInd);
-
-      Boolean matches = false;
-
-      for(Method method : methods) 
-      { 
-        boolean tmpMatches = false;
-
-        // Check if method matches operation
-        if (uClass.matchOperationMethod(operation, method.getName())) {
-          tmpMatches = true;
-        }
-      
-        // Check if method parameters match injection parameters
-        boolean isParameterMatch = true;
-        List<MethodParameter> parameters = method.getMethodParameters();
-
-        if("...".equals(currentParameters) || (parameters.size() == 0 && "".equals(currentParameters))) {
-          isParameterMatch = true;
-        }
-        else if(parameters.size() != currentParameters.split(",").length)
-        {
+      isParameterMatch = false;
+    }
+    else {
+      int indx = 0;
+      for(String parameterType : currentParameters.split(",")) {
+        if(!parameterType.equals(parameters.get(indx).getType())) {
           isParameterMatch = false;
         }
-        else {
-          int indx = 0;
-          for(String parameterType : currentParameters.split(",")) {
-            if(!parameterType.equals(parameters.get(indx).getType())) {
-              isParameterMatch = false;
-            }
-            indx++;
-          }
-        }
-
-        tmpMatches &= isParameterMatch;
-        matches = matches || tmpMatches;
-      }
-
-      if(!matches) {
-        getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
+        indx++;
       }
     }
-    
-    return false;
-  } 
 
-  private boolean checkCodeInjectionValidity(Token injectToken, UmpleClass uClass) {
+    return isParameterMatch;
+  }
+
+  ArrayList<String> getAllMethodNames(UmpleClass uClass) {
     ArrayList<String> methodNames = new ArrayList<String>();
-    String operationName = getOperationName(injectToken);
-
     ArrayList<String> todoExtendedClasses = new ArrayList<String>();
     ArrayList<String> todoInheritedInterfaces = new ArrayList<String>();
 
@@ -2847,8 +2814,97 @@ class UmpleInternalParser
       }
     }
 
-    for(String operation : operationName.split(","))
+    return methodNames;
+  }
+
+  
+  private void checkCodeInjectionValidityCustom(Token injectToken, UmpleClass uClass) {
+    List<Method> methods = uClass.getMethods();
+    String[] allOperations = getOperationName(injectToken).split(",");
+    List<String> allParameters = getOperationsParameters(injectToken);
+
+    String operationSource = getOperationSource(injectToken);
+    if("".equals(operationSource)) {
+      operationSource = "generated";
+    }
+
+    for(int opInd = 0; opInd < allOperations.length; opInd++)
     {
+      String operation = allOperations[opInd];
+      String currentParameters = allParameters.get(opInd);
+
+      Boolean matches = false;
+
+      for(Method method : methods) 
+      { 
+        boolean tmpMatches = uClass.matchOperationMethod(operation, method.getName()) && checkParameterMatch(method.getMethodParameters(), currentParameters);
+        matches = matches || tmpMatches;
+      }
+
+      if(!matches) {
+        getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
+      }
+    }
+  } 
+
+  private void checkCodeInjectionValidityAll(Token injectToken, UmpleClass uClass) {
+    List<Method> methods = uClass.getMethods();
+    ArrayList<String> methodNames = getAllMethodNames(uClass);
+    String[] allOperations = getOperationName(injectToken).split(",");
+    List<String> allParameters = getOperationsParameters(injectToken);
+
+    String operationSource = getOperationSource(injectToken);
+    if("".equals(operationSource)) {
+      operationSource = "generated";
+    }
+
+    for(int opInd = 0; opInd < allOperations.length; opInd++)
+    {
+      String operation = allOperations[opInd];
+      String currentParameters = allParameters.get(opInd);
+
+      Boolean matches = false;
+
+      // check against generated methods
+      for(String methodName : methodNames) 
+      { 
+        if (uClass.matchOperationMethod(operation, methodName)) {
+          matches = true;
+        }
+      }
+
+      // check against custom methods
+      for(Method method : methods) 
+      { 
+        boolean tmpMatches = uClass.matchOperationMethod(operation, method.getName()) && checkParameterMatch(method.getMethodParameters(), currentParameters);
+        matches = matches || tmpMatches;
+      }
+
+      if(!matches) {
+        getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
+      }
+
+      if(!"...".equals(currentParameters)) {
+        getParseResult().addErrorMessage(new ErrorMessage(1013, injectToken.getPosition(), operationSource));
+      }
+    }
+  }
+
+  private void checkCodeInjectionValidity(Token injectToken, UmpleClass uClass) {
+    ArrayList<String> methodNames = getAllMethodNames(uClass);
+    String[] allOperations = getOperationName(injectToken).split(",");
+    List<String> allParameters = getOperationsParameters(injectToken);
+
+    String operationSource = getOperationSource(injectToken);
+    if("".equals(operationSource)) {
+      operationSource = "generated";
+    }
+
+    for(int opInd = 0; opInd < allOperations.length; opInd++)
+    {
+      String operation = allOperations[opInd];
+      String currentParameters = allParameters.get(opInd);
+
       Boolean matches = false;
 
       for(String methodName : methodNames) 
@@ -2861,9 +2917,11 @@ class UmpleInternalParser
       if(!matches) {
         getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
       }
+
+      if(!"...".equals(currentParameters)) {
+        getParseResult().addErrorMessage(new ErrorMessage(1013, injectToken.getPosition(), operationSource));
+      }
     }
-    
-    return false;
   }
   
   //TODO I changed the parameter's type. please remove this comment;
