@@ -2801,6 +2801,11 @@ class UmpleInternalParser
     ArrayList<String> todoExtendedClasses = new ArrayList<String>();
     ArrayList<String> todoInheritedInterfaces = new ArrayList<String>();
 
+    String operationSource = getOperationSource(injectToken);
+    if("".equals(operationSource)) {
+      operationSource = "generated";
+    }
+
     todoExtendedClasses.add(uClass.getName());
     while(!todoExtendedClasses.isEmpty())
     {
@@ -2847,8 +2852,14 @@ class UmpleInternalParser
       }
     }
 
-    for(String operation : operationName.split(","))
+    String[] allOperations = getOperationName(injectToken).split(",");
+    List<String> allParameters = getOperationsParameters(injectToken);
+
+    for(int opInd = 0; opInd < allOperations.length; opInd++)
     {
+      String operation = allOperations[opInd];
+      String currentParameters = allParameters.get(opInd);
+
       Boolean matches = false;
 
       for(String methodName : methodNames) 
@@ -2860,6 +2871,10 @@ class UmpleInternalParser
 
       if(!matches) {
         getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
+      }
+
+      if(!"...".equals(currentParameters)) {
+        getParseResult().addErrorMessage(new ErrorMessage(1013, injectToken.getPosition(), operationSource));
       }
     }
     

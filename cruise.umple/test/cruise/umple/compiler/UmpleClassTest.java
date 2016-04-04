@@ -824,6 +824,28 @@ public class UmpleClassTest
   }
 
   @Test
+  public void getCodeInjectionParametersIgnoredError()
+  {
+    boolean custom = false;
+    boolean generated = false;
+    String code = "class A{a; void foo(int k) { foo(k-1); } after custom foo(int) { return true; } after generated setA(int) { return true; }}";
+    try {
+      UmpleModel model = getModel(code);
+      model.run();
+      ParseResult result = model.getLastResult();
+      List<ErrorMessage> errors = result.getErrorMessages();
+
+      Assert.assertEquals(errors.size(), 2);
+    } catch (Exception e) {
+      generated = generated || (e.getMessage().contains("1013") && e.getMessage().contains("generated"));
+      custom = custom || (e.getMessage().contains("1013") && e.getMessage().contains("custom"));
+    } finally {
+      Assert.assertTrue(generated);
+      Assert.assertFalse(custom);
+    }
+  }
+
+  @Test
   public void getCodeInjectionUnfoundAssociationsMethodError_TwoSided()
   {
     boolean addChildren = false;
