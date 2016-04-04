@@ -94,10 +94,13 @@ class CodeSnippet
  */
 class VmlParser
 {
+  depend cruise.umple.compiler.Parser;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.ParseResult;
+
   isA Parser;
   
   0..1 -> 0..1 VmlSystem system;
 }
 
-use Parser.ump;
 use Vml_Code.ump;

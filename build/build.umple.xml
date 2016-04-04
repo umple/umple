@@ -120,6 +120,17 @@
 	  <unjar src="lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
 	  <unjar src="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
   </target>
+  
+  <!-- Generate UmpleParser code and move to cruise.umple -->
+  <target name="umpleParser">
+    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+      <arg value="UmpleParser/src/Master.ump"/>
+    </java>
+    
+    <copy todir="cruise.umple/src-gen-umple/cruise/umple/parser" overwrite="true">
+      <fileset dir="UmpleParser/src-gen-umple/cruise/umple/parser" excludes=".git*" />
+    </copy>
+  </target>
 
   <!-- Move the generated code from UmpleTo* to cruise.umple -->
   <target name="codegen">
@@ -508,6 +519,7 @@
     <antcall target="clean" />
     <antcall target="init" />
     <antcall target="codegen" />
+    <antcall target="umpleParser" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
     <antcall target="resetUmpleSelf" />
@@ -530,6 +542,7 @@
     <antcall target="clean" />
     <antcall target="init" />
     <antcall target="codegen" />
+    <antcall target="umpleParser" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
     <antcall target="umpleSelf" />
@@ -555,6 +568,7 @@
     <antcall target="clean" />
     <antcall target="init" />
     <antcall target="codegen" />
+    <antcall target="umpleParser" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
     <antcall target="umpleSelf" />
@@ -574,6 +588,7 @@
     <antcall target="clean" />
     <antcall target="init" />
     <antcall target="codegen" />
+    <antcall target="umpleParser" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
     <antcall target="umpleSelf" />
@@ -610,6 +625,7 @@
     <antcall target="clean" />
     <antcall target="init" />
     <antcall target="codegen" />
+    <antcall target="umpleParser" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
     <antcall target="compile" />

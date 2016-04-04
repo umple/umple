@@ -1,0 +1,12 @@
+generate Java "../src-gen-umple";
+
+strictness allow 1006;
+strictness allow 1007;
+strictness allow 1008;
+strictness allow 46;
+strictness allow 36;
+
+use ParseUtilities.ump;
+use ParsingRules.ump;
+use TextParser.ump;
+use GrammarParsing.ump;

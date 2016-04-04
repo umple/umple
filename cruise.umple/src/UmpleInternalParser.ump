@@ -7,6 +7,9 @@ http://umple.org/license
 
 */
 
+external ErrorType{}
+external ErrorMessage{}
+
 /*
 This is our internal parser implementation for the Umple language.  It uses
 a generic Parser that can read an external EBNF grammar file, and then populate
@@ -28,6 +31,7 @@ class UmpleInternalParser
   depend java.nio.file.*;
   depend cruise.umple.util.*;
   depend cruise.umple.analysis.*;
+  depend cruise.umple.parser.*;
   depend cruise.umple.parser.analysis.*;
   
   currentPackageName = "";

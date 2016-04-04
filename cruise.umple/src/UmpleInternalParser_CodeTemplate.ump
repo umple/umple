@@ -36,7 +36,7 @@ class AnalysisParserTask {
 	isA AnalysisStub;
 	abstract;
   
-  depend cruise.umple.parser.Parser;
+  depend cruise.umple.compiler.Parser;
   depend cruise.umple.parser.Token;
   depend cruise.umple.parser.ErrorMessage;
   

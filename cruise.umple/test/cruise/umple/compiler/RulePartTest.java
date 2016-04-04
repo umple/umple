@@ -7,7 +7,9 @@
 
 */
 
-package cruise.umple.parser;
+package cruise.umple.compiler;
+
+import cruise.umple.parser.Position;
 
 import org.junit.*;
 

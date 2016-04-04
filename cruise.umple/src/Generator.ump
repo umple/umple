@@ -360,7 +360,7 @@ class XtextGenerator
   depend java.util.*;
   depend java.io.*;
   depend cruise.umple.util.*;
-  depend cruise.umple.parser.Rule;
+  depend cruise.umple.compiler.Rule;
 
   // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
   // off of what's contained in here.

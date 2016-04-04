@@ -9,6 +9,8 @@ http://umple.org/license
 namespace cruise.umple.analysis;
 
 
+external Analyzer{}
+
 class GuardAnalyzer
 {
   isA Analyzer;

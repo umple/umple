@@ -12,6 +12,10 @@ The main Umple metamodel.
 namespace cruise.umple.compiler;
 external interface Runnable {}
 
+external Position{}
+external Token{}
+external RuleBasedParser{}
+
 /*
  * Class UmpleModel is the central class describing the system being compiled.
  *
@@ -475,6 +479,9 @@ class UmpleClassifier
 {
   abstract;
   isA UmpleElement;
+  
+  depend cruise.umple.parser.Token;
+  
   // The methods contained within the Umple Classifier.
   1 -> 0..* Method;
 
@@ -672,6 +679,8 @@ class GeneralTemplateParameter {
 
 //This class is used to assign parameters in classes and traits.
 class GeneralTPApplied {
+  depend cruise.umple.parser.Position;
+
 	inheritanceName;
 	String[] parameters;
 	1 -> 0..1 Position positions;
@@ -758,6 +767,8 @@ class UmpleVariable
  */
 class Attribute
 {
+  depend cruise.umple.parser.Position;
+
   isA UmpleVariable;
 
   // Specifies whether or not the method parameter is auto unique.

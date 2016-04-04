@@ -42,6 +42,8 @@ class Primitive {
 // component
 
 class Port {
+
+  depend cruise.umple.parser.Position;
 	
 	direction { IN{} OUT{} BOTH{} }
 	type { END{} RELAY{} SERVICE{} CUSTOM{} }

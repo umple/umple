@@ -73,6 +73,10 @@ class Group
  */
 class ContentParser
 {
+  depend cruise.umple.compiler.Parser;
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.parser.ParseResult;
+
   isA Parser;
   1 -> * Group;
 }
@@ -91,5 +95,4 @@ class Template
   const NavigationItemTemplateNoAnchor = navigationItemTemplateNoAnchor();
 }
 
-use Parser.ump;
 use Documenter_Code.ump;
