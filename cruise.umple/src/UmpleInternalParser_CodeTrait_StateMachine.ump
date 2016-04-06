@@ -306,7 +306,7 @@ class UmpleInternalParser
 			 	//This makes sure we are not going to change the name of a state machine and then assign it to state.
 			 	//This won't affect the result.
 			 	boolean mustBeRejected = false;
-			 	if (smTSignature.getAlias()!=""){
+			 	if (smTSignature.getAlias()!="" && smTSignature.numberOfSrcStates()==0){
 			 		for (StateMachineTemplateSignature smTSignatureTemp : inGTPApplied.getStateMachineTemplateSignatures()){
 			 			if (smTSignature!=smTSignatureTemp && smTSignatureTemp.getDesStateMachine()!=""){
 			 				mustBeRejected= true;

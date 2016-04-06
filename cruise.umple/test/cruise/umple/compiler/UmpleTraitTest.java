@@ -667,6 +667,14 @@ public class UmpleTraitTest {
 			Assert.assertEquals(1,model.getUmpleClass("A").getStateMachine("status").getState(2).numberOfNestedStateMachines());
 		}
 		
+		@Test
+		public void stateMachineTraits044Test() {
+			String code = "trait T{	sm{		s1{			goS1->s1;		}}}"
+					+"trait T2{	isA T<sm.s1 as SS1, sm as sm2.a.ac>;	sm2{		a{			ac{}		}		}}"
+					+"class A{	isA T2;}";
+			UmpleModel model = getRunModel(code);
+			Assert.assertEquals("SS1",model.getUmpleClass("A").getStateMachine("sm2").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getName());
+		}
 //the last StateTest
 		
 	//This is related to issue #656
