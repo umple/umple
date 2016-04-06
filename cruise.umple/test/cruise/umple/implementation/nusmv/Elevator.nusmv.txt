@@ -7,19 +7,17 @@
 -- This defines a NuSMV module for Elevator_state_machine --
 MODULE Elevator_state_machine ( _elevator_state_machinePrepareUp , _elevator_state_machinePrepareDown , _elevator_state_machineInMotion , _elevator_state_machineOnFloor )
 
-   -- This part declares input variables for the given NuSMV module --
-   IVAR
-     event : { ev_upRequest , ev_downRequest , ev_started , ev_doorClosed , ev_approachingFloor , ev_approachedFloor , ev_stopped , ev_doorOpened , ev_timeoutAtFloorToDoorClosing , ev_doorClosingRequest , ev_doorCLosed , ev_obstruction , ev_doorOpeningRequest , ev_noRequest };
-
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Elevator_state_machine_Idle , Elevator_state_machine_PrepareUp , Elevator_state_machine_PrepareDown , Elevator_state_machine_InMotion , Elevator_state_machine_OnFloor };
      timer : integer;
      floorRequested : boolean;
      obstruction : boolean;
+     event : { ev_upRequest , ev_downRequest , ev_started , ev_doorClosed , ev_approachingFloor , ev_approachedFloor , ev_stopped , ev_doorOpened , ev_timeoutAtFloorToDoorClosing , ev_doorClosingRequest , ev_doorCLosed , ev_obstruction , ev_doorOpeningRequest , ev_noRequest , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
+     elevator_state_machine_stable :=  !( event = ev_upRequest | event = ev_started | event = ev_approachingFloor | event = ev_stopped | event = ev_timeoutAtFloorToDoorClosing | event = ev_doorCLosed | event = ev_doorOpeningRequest | event = ev_downRequest | event = ev_doorClosed | event = ev_approachedFloor | event = ev_doorOpened | event = ev_doorClosingRequest | event = ev_obstruction | event = ev_noRequest );
      t1 := event = ev_upRequest & state = Elevator_state_machine_Idle;
      t2 := event = ev_downRequest & state = Elevator_state_machine_Idle;
      t3 := event = ev_started & state = Elevator_state_machine_PrepareUp;
@@ -52,6 +50,14 @@ MODULE Elevator_state_machine ( _elevator_state_machinePrepareUp , _elevator_sta
        t5 | t3 | t7 | t6 | t4 | t8 : Elevator_state_machine_InMotion;
        t14 | t10 | t12 | t9 | t15 | t11 | t13 : Elevator_state_machine_OnFloor;
        TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       elevator_state_machine_stable : { ev_upRequest , ev_downRequest , ev_started , ev_doorClosed , ev_approachingFloor , ev_approachedFloor , ev_stopped , ev_doorOpened , ev_timeoutAtFloorToDoorClosing , ev_doorClosingRequest , ev_doorCLosed , ev_obstruction , ev_doorOpeningRequest , ev_noRequest };
+       TRUE : ev_null;
      esac;
 
    -- This part defines logic for the assignment of values to state variable "timer" of this NuSMV module --
@@ -159,3 +165,133 @@ CTLSPEC   EF( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloo
 CTLSPEC   EF( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_AtFloor )
 CTLSPEC   EF( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorClosing )
 CTLSPEC   EF( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_CheckingNextDestination )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t2 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t3 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t4 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t5 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t6 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t7 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t8 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t9 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t10 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t11 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t12 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t13 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t1 & elevator_state_machine.t17 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t3 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t4 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t5 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t6 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t7 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t8 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t9 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t10 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t11 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t12 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t13 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t2 & elevator_state_machine.t17 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t4 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t5 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t6 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t7 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t8 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t9 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t10 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t11 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t12 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t13 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t3 & elevator_state_machine.t17 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t5 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t6 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t7 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t8 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t9 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t10 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t11 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t12 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t13 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t4 & elevator_state_machine.t17 )
+CTLSPEC   AG !( elevator_state_machine.t5 & elevator_state_machine.t6 )
+CTLSPEC   AG !( elevator_state_machine.t5 & elevator_state_machine.t7 )
+CTLSPEC   AG !( elevator_state_machine.t5 & elevator_state_machine.t8 )
+CTLSPEC   AG !( elevator_state_machine.t5 & elevator_state_machine.t9 )
+CTLSPEC   AG !( elevator_state_machine.t5 & elevator_state_machine.t10 )
+CTLSPEC   AG !( elevator_state_machine.t5 & elevator_state_machine.t11 )
+CTLSPEC   AG !( elevator_state_machine.t5 & elevator_state_machine.t12 )
+CTLSPEC   AG !( elevator_state_machine.t5 & elevator_state_machine.t13 )
+CTLSPEC   AG !( elevator_state_machine.t5 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t5 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t5 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t5 & elevator_state_machine.t17 )
+CTLSPEC   AG !( elevator_state_machine.t6 & elevator_state_machine.t7 )
+CTLSPEC   AG !( elevator_state_machine.t6 & elevator_state_machine.t8 )
+CTLSPEC   AG !( elevator_state_machine.t6 & elevator_state_machine.t9 )
+CTLSPEC   AG !( elevator_state_machine.t6 & elevator_state_machine.t10 )
+CTLSPEC   AG !( elevator_state_machine.t6 & elevator_state_machine.t11 )
+CTLSPEC   AG !( elevator_state_machine.t6 & elevator_state_machine.t12 )
+CTLSPEC   AG !( elevator_state_machine.t6 & elevator_state_machine.t13 )
+CTLSPEC   AG !( elevator_state_machine.t6 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t6 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t6 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t6 & elevator_state_machine.t17 )
+CTLSPEC   AG !( elevator_state_machine.t7 & elevator_state_machine.t8 )
+CTLSPEC   AG !( elevator_state_machine.t7 & elevator_state_machine.t9 )
+CTLSPEC   AG !( elevator_state_machine.t7 & elevator_state_machine.t10 )
+CTLSPEC   AG !( elevator_state_machine.t7 & elevator_state_machine.t11 )
+CTLSPEC   AG !( elevator_state_machine.t7 & elevator_state_machine.t12 )
+CTLSPEC   AG !( elevator_state_machine.t7 & elevator_state_machine.t13 )
+CTLSPEC   AG !( elevator_state_machine.t7 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t7 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t7 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t7 & elevator_state_machine.t17 )
+CTLSPEC   AG !( elevator_state_machine.t8 & elevator_state_machine.t9 )
+CTLSPEC   AG !( elevator_state_machine.t8 & elevator_state_machine.t10 )
+CTLSPEC   AG !( elevator_state_machine.t8 & elevator_state_machine.t11 )
+CTLSPEC   AG !( elevator_state_machine.t8 & elevator_state_machine.t12 )
+CTLSPEC   AG !( elevator_state_machine.t8 & elevator_state_machine.t13 )
+CTLSPEC   AG !( elevator_state_machine.t8 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t8 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t8 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t8 & elevator_state_machine.t17 )
+CTLSPEC   AG !( elevator_state_machine.t9 & elevator_state_machine.t10 )
+CTLSPEC   AG !( elevator_state_machine.t9 & elevator_state_machine.t11 )
+CTLSPEC   AG !( elevator_state_machine.t9 & elevator_state_machine.t12 )
+CTLSPEC   AG !( elevator_state_machine.t9 & elevator_state_machine.t13 )
+CTLSPEC   AG !( elevator_state_machine.t9 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t9 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t9 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t9 & elevator_state_machine.t17 )
+CTLSPEC   AG !( elevator_state_machine.t10 & elevator_state_machine.t11 )
+CTLSPEC   AG !( elevator_state_machine.t10 & elevator_state_machine.t12 )
+CTLSPEC   AG !( elevator_state_machine.t10 & elevator_state_machine.t13 )
+CTLSPEC   AG !( elevator_state_machine.t10 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t10 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t10 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t10 & elevator_state_machine.t17 )
+CTLSPEC   AG !( elevator_state_machine.t11 & elevator_state_machine.t12 )
+CTLSPEC   AG !( elevator_state_machine.t11 & elevator_state_machine.t13 )
+CTLSPEC   AG !( elevator_state_machine.t11 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t11 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t11 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t11 & elevator_state_machine.t17 )
+CTLSPEC   AG !( elevator_state_machine.t12 & elevator_state_machine.t13 )
+CTLSPEC   AG !( elevator_state_machine.t12 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t12 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t12 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t12 & elevator_state_machine.t17 )
+CTLSPEC   AG !( elevator_state_machine.t13 & elevator_state_machine.t14 )
+CTLSPEC   AG !( elevator_state_machine.t13 & elevator_state_machine.t15 )
+CTLSPEC   AG !( elevator_state_machine.t13 & elevator_state_machine.t16 )
+CTLSPEC   AG !( elevator_state_machine.t13 & elevator_state_machine.t17 )

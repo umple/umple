@@ -63,7 +63,7 @@ class VariableSpecifier {
   
   after constructor { isBracketed = false; typeName = ""; }
   
-  private String print() {
+  public String print() {
     String temp = "";
     if(typeSpecifier.size() > 0){
 		for(int i = 0; i < typeSpecifier.size() - 1 ; i++)
@@ -128,7 +128,7 @@ class BasicExpression {
 	lazy Boolean displayNegation;
 	operator { AND, OR, XOR, XNOR, IMPLY, IFF, EQ, NE, LT, GT, LE, GE, NULL, NOT, MOD, PLUS, MUL, MINUS, DIV };
   	after constructor { setBracketed(false); }
-		after constructor { setDisplayNegation(false); }
+	after constructor { setDisplayNegation(false); }
     
   public String convertOperator(){
 		String op = getOperatorFullName();
@@ -156,21 +156,25 @@ class BasicExpression {
 		}
   }
 	public String getExpression() {
-  	String op = convertOperator();
-			if(children.size() == 0)
-      	return getIdentifier();
+  		String op = convertOperator();
+  		String temp = "";
+		if(children.size() == 0)
+      		return getIdentifier();
     	if(getChildren().size() == 1)
 				if(getBracketed())
-					return "( "+ getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier() + " )";
-      	else return getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier();
+					temp = "( "+ getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier() + " )";
+      			else  
+      				temp = getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier();
     	else
 				if(getBracketed())
-					return "( "+ getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression()+" )";
-      	else return getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression();   	
+					temp = "( "+ getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression()+" )";
+      			else 
+      				temp = getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression();   	
+      	if(getDisplayNegation())
+      		return " !"+temp;
+      	return temp;
 	}	
 
-	
-  
   //Template for formatting output
   output <<! <<#if(getBracketed()){#>><<=getExpression()>><<#}
   else{#>><<=getExpression()>><<#}#>>!>>
@@ -191,20 +195,7 @@ class CTLExpression {
 	ctlOperator { EG, EX, EF, AG, AX, AF, E, A, U };
 	lazy Boolean qualified;
 	after constructor { setQualified(false); }
-	
-	public String getExpression() {
-  		String op = convertOperator();
-    	if(getChildren().size() == 0)
-      		return getIdentifier();
-    	if(getChildren().size() == 1)
-			if(getBracketed())
-				return "( "+ getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier() + " )";
-      		else return getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier();
-    	else
-			if(getBracketed())
-				return "( "+ getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression()+" )";
-      		else return getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression();
-	}
+
 	private String getRealExpression() {
 		if(qualified)
 			return getCtlOperatorFullName()+getExpression();

@@ -7,16 +7,14 @@
 -- This defines a NuSMV module for Sm --
 MODULE Sm ( _smZxab , _smZxabZx , _smGe )
 
-   -- This part declares input variables for the given NuSMV module --
-   IVAR
-     event : { ev_e5 , ev_e2 , ev_e3 , ev_e1 , ev_e4 };
-
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Sm_Zxab , Sm_Da , Sm_Ge };
+     event : { ev_e5 , ev_e2 , ev_e3 , ev_e1 , ev_e4 , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
+     sm_stable :=  !( event = ev_e2 | event = ev_e1 | event = ev_e5 | event = ev_e3 | event = ev_e4 );
      t1 := event = ev_e5 & state = Sm_Da;
      t2 := event = ev_e2 & state = Sm_Da;
      t3 := event = ev_e5 & _smZxab.state = SmZxab_Aa;
@@ -46,6 +44,14 @@ MODULE Sm ( _smZxab , _smZxabZx , _smGe )
        t3 : Sm_Da;
        t14 | t6 | t9 | t15 | t20 | t16 | t8 | t17 | t7 | t12 | t19 | t13 | t5 | t2 : Sm_Ge;
        TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       sm_stable : { ev_e5 , ev_e2 , ev_e3 , ev_e1 , ev_e4 };
+       TRUE : ev_null;
      esac;
 
 -- This defines a NuSMV module for SmZxab --
@@ -121,3 +127,69 @@ CTLSPEC   EF( smZxabZx.state = SmZxabZx_Za )
 CTLSPEC   EF( smZxabZx.state = SmZxabZx_Xa )
 CTLSPEC   EF( smGe.state = SmGe_Ga )
 CTLSPEC   EF( smGe.state = SmGe_Ea )
+CTLSPEC   AG !( sm.t1 & sm.t2 )
+CTLSPEC   AG !( sm.t1 & sm.t3 )
+CTLSPEC   AG !( sm.t1 & sm.t4 )
+CTLSPEC   AG !( sm.t1 & sm.t5 )
+CTLSPEC   AG !( sm.t1 & sm.t6 )
+CTLSPEC   AG !( sm.t1 & sm.t7 )
+CTLSPEC   AG !( sm.t1 & sm.t8 )
+CTLSPEC   AG !( sm.t1 & sm.t9 )
+CTLSPEC   AG !( sm.t1 & sm.t10 )
+CTLSPEC   AG !( sm.t1 & sm.t11 )
+CTLSPEC   AG !( sm.t1 & sm.t12 )
+CTLSPEC   AG !( sm.t1 & sm.t13 )
+CTLSPEC   AG !( sm.t1 & sm.t14 )
+CTLSPEC   AG !( sm.t1 & sm.t15 )
+CTLSPEC   AG !( sm.t1 & sm.t16 )
+CTLSPEC   AG !( sm.t1 & sm.t17 )
+CTLSPEC   AG !( sm.t1 & sm.t18 )
+CTLSPEC   AG !( sm.t1 & sm.t19 )
+CTLSPEC   AG !( sm.t2 & sm.t3 )
+CTLSPEC   AG !( sm.t2 & sm.t4 )
+CTLSPEC   AG !( sm.t2 & sm.t5 )
+CTLSPEC   AG !( sm.t2 & sm.t6 )
+CTLSPEC   AG !( sm.t2 & sm.t7 )
+CTLSPEC   AG !( sm.t2 & sm.t8 )
+CTLSPEC   AG !( sm.t2 & sm.t9 )
+CTLSPEC   AG !( sm.t2 & sm.t10 )
+CTLSPEC   AG !( sm.t2 & sm.t11 )
+CTLSPEC   AG !( sm.t2 & sm.t12 )
+CTLSPEC   AG !( sm.t2 & sm.t13 )
+CTLSPEC   AG !( sm.t2 & sm.t14 )
+CTLSPEC   AG !( sm.t2 & sm.t15 )
+CTLSPEC   AG !( sm.t2 & sm.t16 )
+CTLSPEC   AG !( sm.t2 & sm.t17 )
+CTLSPEC   AG !( sm.t2 & sm.t18 )
+CTLSPEC   AG !( sm.t2 & sm.t19 )
+CTLSPEC   AG !( sm.t3 & sm.t4 )
+CTLSPEC   AG !( sm.t3 & sm.t5 )
+CTLSPEC   AG !( sm.t3 & sm.t6 )
+CTLSPEC   AG !( sm.t3 & sm.t7 )
+CTLSPEC   AG !( sm.t3 & sm.t8 )
+CTLSPEC   AG !( sm.t3 & sm.t9 )
+CTLSPEC   AG !( sm.t3 & sm.t10 )
+CTLSPEC   AG !( sm.t3 & sm.t11 )
+CTLSPEC   AG !( sm.t3 & sm.t12 )
+CTLSPEC   AG !( sm.t3 & sm.t13 )
+CTLSPEC   AG !( sm.t3 & sm.t14 )
+CTLSPEC   AG !( sm.t3 & sm.t15 )
+CTLSPEC   AG !( sm.t3 & sm.t16 )
+CTLSPEC   AG !( sm.t3 & sm.t17 )
+CTLSPEC   AG !( sm.t3 & sm.t18 )
+CTLSPEC   AG !( sm.t3 & sm.t19 )
+CTLSPEC   AG !( sm.t4 & sm.t5 )
+CTLSPEC   AG !( sm.t4 & sm.t6 )
+CTLSPEC   AG !( sm.t4 & sm.t7 )
+CTLSPEC   AG !( sm.t4 & sm.t8 )
+CTLSPEC   AG !( sm.t4 & sm.t9 )
+CTLSPEC   AG !( sm.t4 & sm.t10 )
+CTLSPEC   AG !( sm.t4 & sm.t11 )
+CTLSPEC   AG !( sm.t4 & sm.t12 )
+CTLSPEC   AG !( sm.t4 & sm.t13 )
+CTLSPEC   AG !( sm.t4 & sm.t14 )
+CTLSPEC   AG !( sm.t4 & sm.t15 )
+CTLSPEC   AG !( sm.t4 & sm.t16 )
+CTLSPEC   AG !( sm.t4 & sm.t17 )
+CTLSPEC   AG !( sm.t4 & sm.t18 )
+CTLSPEC   AG !( sm.t4 & sm.t19 )

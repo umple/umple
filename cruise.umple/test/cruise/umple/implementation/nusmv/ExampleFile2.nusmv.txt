@@ -7,19 +7,17 @@
 -- This defines a NuSMV module for LockState --
 MODULE LockState
 
-   -- This part declares input variables for the given NuSMV module --
-   IVAR
-     event : { ev_boatRequestsToEnterAndGoDown , ev_boatRequestsToEnterAndGoUp , ev_upperGateFullyOpen , ev_boatInLockRequestingToGoDown , ev_after3minutes , ev_upperGateFullyClosed , ev_waterLevelMatchesDownStream , ev_lowerGateFullyOpen , ev_boatInLockRequestingToGoUp , ev_lowerGateFullyClosed , ev_waterLevelMatchesUpStream };
-
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { LockState_BothDoorsClosedLockFull , LockState_OpeningUpperGate , LockState_UpperGateOpen , LockState_ClosingUpperGate , LockState_LoweringWater , LockState_BothDoorsClosedLockEmpty , LockState_OpeningLowerGate , LockState_LowerGateOpen , LockState_ClosingLowerGate , LockState_RaisingWater };
      boatGoingDown : boolean;
      boatGoingUp : boolean;
      boatBlockingGate : boolean;
+     event : { ev_boatRequestsToEnterAndGoDown , ev_boatRequestsToEnterAndGoUp , ev_upperGateFullyOpen , ev_boatInLockRequestingToGoDown , ev_after3minutes , ev_upperGateFullyClosed , ev_waterLevelMatchesDownStream , ev_lowerGateFullyOpen , ev_boatInLockRequestingToGoUp , ev_lowerGateFullyClosed , ev_waterLevelMatchesUpStream , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
+     lockState_stable :=  !( event = ev_boatRequestsToEnterAndGoUp | event = ev_boatInLockRequestingToGoDown | event = ev_upperGateFullyClosed | event = ev_lowerGateFullyOpen | event = ev_lowerGateFullyClosed | event = ev_boatRequestsToEnterAndGoDown | event = ev_upperGateFullyOpen | event = ev_after3minutes | event = ev_waterLevelMatchesDownStream | event = ev_boatInLockRequestingToGoUp | event = ev_waterLevelMatchesUpStream );
      t1 := event = ev_boatRequestsToEnterAndGoDown & state = LockState_BothDoorsClosedLockFull;
      t2 := event = ev_boatRequestsToEnterAndGoUp & state = LockState_BothDoorsClosedLockFull;
      t3 := event = ev_upperGateFullyOpen & state = LockState_OpeningUpperGate;
@@ -59,6 +57,14 @@ MODULE LockState
        TRUE : state;
      esac;
 
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       lockState_stable : { ev_boatRequestsToEnterAndGoDown , ev_boatRequestsToEnterAndGoUp , ev_upperGateFullyOpen , ev_boatInLockRequestingToGoDown , ev_after3minutes , ev_upperGateFullyClosed , ev_waterLevelMatchesDownStream , ev_lowerGateFullyOpen , ev_boatInLockRequestingToGoUp , ev_lowerGateFullyClosed , ev_waterLevelMatchesUpStream };
+       TRUE : ev_null;
+     esac;
+
    -- This part defines logic for the assignment of values to state variable "boatGoingDown" of this NuSMV module --
    ASSIGN
      init( boatGoingDown ) := FALSE;
@@ -87,3 +93,98 @@ CTLSPEC   EF( lockState.state = LockState_OpeningLowerGate )
 CTLSPEC   EF( lockState.state = LockState_LowerGateOpen )
 CTLSPEC   EF( lockState.state = LockState_ClosingLowerGate )
 CTLSPEC   EF( lockState.state = LockState_RaisingWater )
+CTLSPEC   AG !( lockState.t1 & lockState.t2 )
+CTLSPEC   AG !( lockState.t1 & lockState.t3 )
+CTLSPEC   AG !( lockState.t1 & lockState.t4 )
+CTLSPEC   AG !( lockState.t1 & lockState.t5 )
+CTLSPEC   AG !( lockState.t1 & lockState.t6 )
+CTLSPEC   AG !( lockState.t1 & lockState.t7 )
+CTLSPEC   AG !( lockState.t1 & lockState.t8 )
+CTLSPEC   AG !( lockState.t1 & lockState.t9 )
+CTLSPEC   AG !( lockState.t1 & lockState.t10 )
+CTLSPEC   AG !( lockState.t1 & lockState.t11 )
+CTLSPEC   AG !( lockState.t1 & lockState.t12 )
+CTLSPEC   AG !( lockState.t1 & lockState.t13 )
+CTLSPEC   AG !( lockState.t1 & lockState.t14 )
+CTLSPEC   AG !( lockState.t1 & lockState.t15 )
+CTLSPEC   AG !( lockState.t2 & lockState.t3 )
+CTLSPEC   AG !( lockState.t2 & lockState.t4 )
+CTLSPEC   AG !( lockState.t2 & lockState.t5 )
+CTLSPEC   AG !( lockState.t2 & lockState.t6 )
+CTLSPEC   AG !( lockState.t2 & lockState.t7 )
+CTLSPEC   AG !( lockState.t2 & lockState.t8 )
+CTLSPEC   AG !( lockState.t2 & lockState.t9 )
+CTLSPEC   AG !( lockState.t2 & lockState.t10 )
+CTLSPEC   AG !( lockState.t2 & lockState.t11 )
+CTLSPEC   AG !( lockState.t2 & lockState.t12 )
+CTLSPEC   AG !( lockState.t2 & lockState.t13 )
+CTLSPEC   AG !( lockState.t2 & lockState.t14 )
+CTLSPEC   AG !( lockState.t2 & lockState.t15 )
+CTLSPEC   AG !( lockState.t3 & lockState.t4 )
+CTLSPEC   AG !( lockState.t3 & lockState.t5 )
+CTLSPEC   AG !( lockState.t3 & lockState.t6 )
+CTLSPEC   AG !( lockState.t3 & lockState.t7 )
+CTLSPEC   AG !( lockState.t3 & lockState.t8 )
+CTLSPEC   AG !( lockState.t3 & lockState.t9 )
+CTLSPEC   AG !( lockState.t3 & lockState.t10 )
+CTLSPEC   AG !( lockState.t3 & lockState.t11 )
+CTLSPEC   AG !( lockState.t3 & lockState.t12 )
+CTLSPEC   AG !( lockState.t3 & lockState.t13 )
+CTLSPEC   AG !( lockState.t3 & lockState.t14 )
+CTLSPEC   AG !( lockState.t3 & lockState.t15 )
+CTLSPEC   AG !( lockState.t4 & lockState.t5 )
+CTLSPEC   AG !( lockState.t4 & lockState.t6 )
+CTLSPEC   AG !( lockState.t4 & lockState.t7 )
+CTLSPEC   AG !( lockState.t4 & lockState.t8 )
+CTLSPEC   AG !( lockState.t4 & lockState.t9 )
+CTLSPEC   AG !( lockState.t4 & lockState.t10 )
+CTLSPEC   AG !( lockState.t4 & lockState.t11 )
+CTLSPEC   AG !( lockState.t4 & lockState.t12 )
+CTLSPEC   AG !( lockState.t4 & lockState.t13 )
+CTLSPEC   AG !( lockState.t4 & lockState.t14 )
+CTLSPEC   AG !( lockState.t4 & lockState.t15 )
+CTLSPEC   AG !( lockState.t5 & lockState.t6 )
+CTLSPEC   AG !( lockState.t5 & lockState.t7 )
+CTLSPEC   AG !( lockState.t5 & lockState.t8 )
+CTLSPEC   AG !( lockState.t5 & lockState.t9 )
+CTLSPEC   AG !( lockState.t5 & lockState.t10 )
+CTLSPEC   AG !( lockState.t5 & lockState.t11 )
+CTLSPEC   AG !( lockState.t5 & lockState.t12 )
+CTLSPEC   AG !( lockState.t5 & lockState.t13 )
+CTLSPEC   AG !( lockState.t5 & lockState.t14 )
+CTLSPEC   AG !( lockState.t5 & lockState.t15 )
+CTLSPEC   AG !( lockState.t6 & lockState.t7 )
+CTLSPEC   AG !( lockState.t6 & lockState.t8 )
+CTLSPEC   AG !( lockState.t6 & lockState.t9 )
+CTLSPEC   AG !( lockState.t6 & lockState.t10 )
+CTLSPEC   AG !( lockState.t6 & lockState.t11 )
+CTLSPEC   AG !( lockState.t6 & lockState.t12 )
+CTLSPEC   AG !( lockState.t6 & lockState.t13 )
+CTLSPEC   AG !( lockState.t6 & lockState.t14 )
+CTLSPEC   AG !( lockState.t6 & lockState.t15 )
+CTLSPEC   AG !( lockState.t7 & lockState.t8 )
+CTLSPEC   AG !( lockState.t7 & lockState.t9 )
+CTLSPEC   AG !( lockState.t7 & lockState.t10 )
+CTLSPEC   AG !( lockState.t7 & lockState.t11 )
+CTLSPEC   AG !( lockState.t7 & lockState.t12 )
+CTLSPEC   AG !( lockState.t7 & lockState.t13 )
+CTLSPEC   AG !( lockState.t7 & lockState.t14 )
+CTLSPEC   AG !( lockState.t7 & lockState.t15 )
+CTLSPEC   AG !( lockState.t8 & lockState.t9 )
+CTLSPEC   AG !( lockState.t8 & lockState.t10 )
+CTLSPEC   AG !( lockState.t8 & lockState.t11 )
+CTLSPEC   AG !( lockState.t8 & lockState.t12 )
+CTLSPEC   AG !( lockState.t8 & lockState.t13 )
+CTLSPEC   AG !( lockState.t8 & lockState.t14 )
+CTLSPEC   AG !( lockState.t8 & lockState.t15 )
+CTLSPEC   AG !( lockState.t9 & lockState.t10 )
+CTLSPEC   AG !( lockState.t9 & lockState.t11 )
+CTLSPEC   AG !( lockState.t9 & lockState.t12 )
+CTLSPEC   AG !( lockState.t9 & lockState.t13 )
+CTLSPEC   AG !( lockState.t9 & lockState.t14 )
+CTLSPEC   AG !( lockState.t9 & lockState.t15 )
+CTLSPEC   AG !( lockState.t10 & lockState.t11 )
+CTLSPEC   AG !( lockState.t10 & lockState.t12 )
+CTLSPEC   AG !( lockState.t10 & lockState.t13 )
+CTLSPEC   AG !( lockState.t10 & lockState.t14 )
+CTLSPEC   AG !( lockState.t10 & lockState.t15 )

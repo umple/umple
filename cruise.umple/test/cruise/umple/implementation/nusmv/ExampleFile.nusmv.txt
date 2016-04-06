@@ -7,16 +7,14 @@
 -- This defines a NuSMV module for Status --
 MODULE Status
 
-   -- This part declares input variables for the given NuSMV module --
-   IVAR
-     event : { ev_buttonOrObstacle , ev_reachBottom , ev_reachTop };
-
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Status_Open , Status_Closing , Status_Closed , Status_Opening , Status_HalfOpen };
+     event : { ev_buttonOrObstacle , ev_reachBottom , ev_reachTop , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
+     status_stable :=  !( event = ev_reachBottom | event = ev_buttonOrObstacle | event = ev_reachTop );
      t1 := event = ev_buttonOrObstacle & state = Status_Open;
      t2 := event = ev_buttonOrObstacle & state = Status_Closing;
      t3 := event = ev_reachBottom & state = Status_Closing;
@@ -37,6 +35,14 @@ MODULE Status
        TRUE : state;
      esac;
 
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       status_stable : { ev_buttonOrObstacle , ev_reachBottom , ev_reachTop };
+       TRUE : ev_null;
+     esac;
+
 -- This defines a NuSMV module for main --
 MODULE main
 
@@ -48,3 +54,12 @@ CTLSPEC   EF( status.state = Status_Closing )
 CTLSPEC   EF( status.state = Status_Closed )
 CTLSPEC   EF( status.state = Status_Opening )
 CTLSPEC   EF( status.state = Status_HalfOpen )
+CTLSPEC   AG !( status.t1 & status.t2 )
+CTLSPEC   AG !( status.t1 & status.t3 )
+CTLSPEC   AG !( status.t1 & status.t4 )
+CTLSPEC   AG !( status.t1 & status.t5 )
+CTLSPEC   AG !( status.t1 & status.t6 )
+CTLSPEC   AG !( status.t2 & status.t3 )
+CTLSPEC   AG !( status.t2 & status.t4 )
+CTLSPEC   AG !( status.t2 & status.t5 )
+CTLSPEC   AG !( status.t2 & status.t6 )
