@@ -7,16 +7,14 @@
 -- This defines a NuSMV module for S2 --
 MODULE S2
 
-   -- This part declares input variables for the given NuSMV module --
-   IVAR
-     event : { ev_e1 , ev_e3 };
-
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { S2_s2a , S2_s2b , S2_s1 };
+     event : { ev_e1 , ev_e3 , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
+     s2_stable :=  !( event = ev_e1 | event = ev_e3 );
      t1 := event = ev_e1 & state = S2_s2a;
      t2 := event = ev_e3 & state = S2_s2a;
      t3 := event = ev_e3 & state = S2_s2b;
@@ -29,6 +27,14 @@ MODULE S2
        t2 : S2_s2b;
        t1 : S2_s1;
        TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       s2_stable : { ev_e1 , ev_e3 };
+       TRUE : ev_null;
      esac;
 
 -- This defines a NuSMV module for main --

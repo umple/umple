@@ -7,16 +7,14 @@
 -- This defines a NuSMV module for Sm --
 MODULE Sm ( _smAA , _smBB , _smCC )
 
-   -- This part declares input variables for the given NuSMV module --
-   IVAR
-     event : { ev_e1 , ev_e2 };
-
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Sm_s1 , Sm_s2 };
+     event : { ev_e1 , ev_e2 , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
+     Sm_stable :=  !( event = ev_e1 | event = ev_e2 );
      t1 := event = ev_e1 & state = Sm_s1;
      t2 := event = ev_e1 & _smAA.state = SmAA_a1;
      t3 := event = ev_e2 & _smAA.state = SmAA_a1;
@@ -43,6 +41,14 @@ MODULE Sm ( _smAA , _smBB , _smCC )
        t5 : Sm_s1;
        t6 | t4 | t9 | t12 | t11 | t14 | t17 | t13 | t2 | t3 | t18 | t8 | t7 | t10 | t15 | t1 | t16 : Sm_s2;
        TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       Sm_stable : { ev_e1 , ev_e2 };
+       TRUE : ev_null;
      esac;
 
 -- This defines a NuSMV module for SmAA --
@@ -124,3 +130,19 @@ CTLSPEC   EF( smCC.state = SmCC_c1 )
 CTLSPEC   EF( smCC.state = SmCC_c2 )
 CTLSPEC   EF( smCC.state = SmCC_c3 )
 CTLSPEC   EF( smCC.state = SmCC_c4 )
+CTLSPEC   AG !( sm.t1 & sm.t2 )
+CTLSPEC   AG !( sm.t1 & sm.t3 )
+CTLSPEC   AG !( sm.t1 & sm.t4 )
+CTLSPEC   AG !( sm.t1 & sm.t5 )
+CTLSPEC   AG !( sm.t1 & sm.t6 )
+CTLSPEC   AG !( sm.t1 & sm.t7 )
+CTLSPEC   AG !( sm.t1 & sm.t8 )
+CTLSPEC   AG !( sm.t1 & sm.t9 )
+CTLSPEC   AG !( sm.t1 & sm.t10 )
+CTLSPEC   AG !( sm.t1 & sm.t11 )
+CTLSPEC   AG !( sm.t1 & sm.t12 )
+CTLSPEC   AG !( sm.t1 & sm.t13 )
+CTLSPEC   AG !( sm.t1 & sm.t14 )
+CTLSPEC   AG !( sm.t1 & sm.t15 )
+CTLSPEC   AG !( sm.t1 & sm.t16 )
+CTLSPEC   AG !( sm.t1 & sm.t17 )

@@ -7,16 +7,14 @@
 -- This defines a NuSMV module for Status --
 MODULE Status ( _statusOpen )
 
-   -- This part declares input variables for the given NuSMV module --
-   IVAR
-     event : { ev_cancel , ev_openRegistration , ev_requestToRegister , ev_closeRegistration , ev_classSizeExceedsMinimum , ev_classSizeExceedsMaximum };
-
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Status_Planned , Status_Open , Status_Cancelled , Status_Closed };
+     event : { ev_cancel , ev_openRegistration , ev_requestToRegister , ev_closeRegistration , ev_classSizeExceedsMinimum , ev_classSizeExceedsMaximum , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
+     status_stable :=  !( event = ev_cancel | event = ev_requestToRegister | event = ev_classSizeExceedsMinimum | event = ev_openRegistration | event = ev_closeRegistration | event = ev_classSizeExceedsMaximum );
      t1 := event = ev_cancel & state = Status_Planned;
      t2 := event = ev_openRegistration & state = Status_Planned;
      t3 := event = ev_cancel & state = Status_Open;
@@ -36,6 +34,14 @@ MODULE Status ( _statusOpen )
        t1 | t6 | t3 | t4 : Status_Cancelled;
        t9 | t10 : Status_Closed;
        TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       status_stable : { ev_cancel , ev_openRegistration , ev_requestToRegister , ev_closeRegistration , ev_classSizeExceedsMinimum , ev_classSizeExceedsMaximum };
+       TRUE : ev_null;
      esac;
 
 -- This defines a NuSMV module for StatusOpen --
@@ -69,3 +75,33 @@ CTLSPEC   EF( status.state = Status_Cancelled )
 CTLSPEC   EF( status.state = Status_Closed )
 CTLSPEC   EF( statusOpen.state = StatusOpen_NotEnoughStudents )
 CTLSPEC   EF( statusOpen.state = StatusOpen_EnoughStudents )
+CTLSPEC   AG !( status.t1 & status.t2 )
+CTLSPEC   AG !( status.t1 & status.t3 )
+CTLSPEC   AG !( status.t1 & status.t4 )
+CTLSPEC   AG !( status.t1 & status.t5 )
+CTLSPEC   AG !( status.t1 & status.t6 )
+CTLSPEC   AG !( status.t1 & status.t7 )
+CTLSPEC   AG !( status.t1 & status.t8 )
+CTLSPEC   AG !( status.t1 & status.t9 )
+CTLSPEC   AG !( status.t2 & status.t3 )
+CTLSPEC   AG !( status.t2 & status.t4 )
+CTLSPEC   AG !( status.t2 & status.t5 )
+CTLSPEC   AG !( status.t2 & status.t6 )
+CTLSPEC   AG !( status.t2 & status.t7 )
+CTLSPEC   AG !( status.t2 & status.t8 )
+CTLSPEC   AG !( status.t2 & status.t9 )
+CTLSPEC   AG !( status.t3 & status.t4 )
+CTLSPEC   AG !( status.t3 & status.t5 )
+CTLSPEC   AG !( status.t3 & status.t6 )
+CTLSPEC   AG !( status.t3 & status.t7 )
+CTLSPEC   AG !( status.t3 & status.t8 )
+CTLSPEC   AG !( status.t3 & status.t9 )
+CTLSPEC   AG !( status.t4 & status.t5 )
+CTLSPEC   AG !( status.t4 & status.t6 )
+CTLSPEC   AG !( status.t4 & status.t7 )
+CTLSPEC   AG !( status.t4 & status.t8 )
+CTLSPEC   AG !( status.t4 & status.t9 )
+CTLSPEC   AG !( status.t5 & status.t6 )
+CTLSPEC   AG !( status.t5 & status.t7 )
+CTLSPEC   AG !( status.t5 & status.t8 )
+CTLSPEC   AG !( status.t5 & status.t9 )

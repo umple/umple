@@ -7,16 +7,14 @@
 -- This defines a NuSMV module for State --
 MODULE State ( _stateState11State11 , _stateState12State12 , _stateState12State12State122 )
 
-   -- This part declares input variables for the given NuSMV module --
-   IVAR
-     event : { ev_e5 , ev_e1 , ev_e4 , ev_e2 , ev_e3 };
-
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { State_state1 , State_state2 };
+     event : { ev_e5 , ev_e1 , ev_e4 , ev_e2 , ev_e3 , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
+     state_stable :=  !( event = ev_e1 | event = ev_e2 | event = ev_e5 | event = ev_e4 | event = ev_e3 );
      t1 := event = ev_e5 & _stateState11State11.state != null;
      t2 := event = ev_e1 & _stateState11State11.state = StateState11State11_state111;
      t3 := event = ev_e4 & _stateState11State11.state = StateState11State11_state112;
@@ -33,6 +31,14 @@ MODULE State ( _stateState11State11 , _stateState12State12 , _stateState12State1
        t3 | t7 | t5 | t2 | t8 | t6 : State_state1;
        t1 | t4 : State_state2;
        TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       state_stable : { ev_e5 , ev_e1 , ev_e4 , ev_e2 , ev_e3 };
+       TRUE : ev_null;
      esac;
 
 -- This defines a NuSMV module for StateState11State11 --
@@ -104,3 +110,21 @@ CTLSPEC   EF( stateState11State11.state = StateState11State11_state112 )
 CTLSPEC   EF( stateState12State12.state = StateState12State12_state121 )
 CTLSPEC   EF( stateState12State12.state = StateState12State12_state122 )
 CTLSPEC   EF( stateState12State12State122.state = StateState12State12State122_state1221 )
+CTLSPEC   AG !( state.t1 & state.t2 )
+CTLSPEC   AG !( state.t1 & state.t3 )
+CTLSPEC   AG !( state.t1 & state.t4 )
+CTLSPEC   AG !( state.t1 & state.t5 )
+CTLSPEC   AG !( state.t1 & state.t6 )
+CTLSPEC   AG !( state.t1 & state.t7 )
+CTLSPEC   AG !( state.t2 & state.t3 )
+CTLSPEC   AG !( state.t2 & state.t4 )
+CTLSPEC   AG !( state.t2 & state.t5 )
+CTLSPEC   AG !( state.t2 & state.t6 )
+CTLSPEC   AG !( state.t2 & state.t7 )
+CTLSPEC   AG !( state.t3 & state.t4 )
+CTLSPEC   AG !( state.t3 & state.t5 )
+CTLSPEC   AG !( state.t3 & state.t6 )
+CTLSPEC   AG !( state.t3 & state.t7 )
+CTLSPEC   AG !( state.t4 & state.t5 )
+CTLSPEC   AG !( state.t4 & state.t6 )
+CTLSPEC   AG !( state.t4 & state.t7 )

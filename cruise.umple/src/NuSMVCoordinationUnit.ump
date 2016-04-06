@@ -47,17 +47,18 @@ class NuSMVCoordinator
   	}
   	  	
   	private NuSMVModule generateParentModule( StateMachine sm, UmpleClass uClass ) {
-  		VariableSpecifier xxx = getEventList( sm );
-  		
-  		ModuleBody body = new ModuleBody( new IVarDeclaration( xxx ) );
+  		  		
 		VarDeclaration vdec = new VarDeclaration( getStateList( sm ) );
 		for( VariableSpecifier vs : generateSpecifiersForAttributesOf( uClass ) )
 			vdec.addVariableSpecifier(vs);
-		
+		vdec.addVariableSpecifier( getEventList( sm ) );
+		ModuleBody body = new ModuleBody( vdec );
   		body.addModuleElement( vdec );
+		
   		//Adding define declaration to module body
   		body.addModuleElement( getDefineDeclaration(sm) );
   		body.addModuleElement( getAssignConstraint( sm, sm) );
+		body.addModuleElement( getEventAssignConstraint(sm) );
 		
 		//Adding assign constraints for all the attributes
 		for( AssignConstraint constraint : getAssignConstraint( uClass ))
@@ -265,7 +266,7 @@ class NuSMVCoordinator
   		ModuleBody body = new ModuleBody(genMainVariableFor( sm ));
 		for( StateMachine smm : generateStateMachineList( sm ) )
 			generateSpecForStateReachability( smm, body );
-		
+		generateSpecForTransitionDeterminism( sm, body);
 		NuSMVModule mainmodule = new NuSMVModule("main", body);	
 		temp.add(mainmodule);
   		return temp;
@@ -282,6 +283,7 @@ class NuSMVCoordinator
   		ModuleBody body = new ModuleBody(genMainVariableFor( sm ));
   		NuSMVModule module = new NuSMVModule("main", body);	
   		generateSpecForStateReachability( sm, body ); 
+		generateSpecForTransitionDeterminism(sm, body);
   		temp.add( module );
   		return temp;
   	}
@@ -333,6 +335,29 @@ class NuSMVCoordinator
     		body.addModuleElement(cspec);
     	}
   	}
+	
+	private void generateSpecForTransitionDeterminism( StateMachine sm, ModuleBody body ) {
+  		int i = 1;
+  		while( i < sm.getAllEvents().size() ) {
+			int j = i + 1;
+			while( j < sm.getAllTransitions().size() ) {
+				BasicExpression bexp1 = new BasicExpression(changeNameCase(sm.getFullName(), 0)+".t"+i);
+				BasicExpression bexp2 = new BasicExpression(changeNameCase(sm.getFullName(), 0)+".t"+j);
+				CTLExpression cexp = new CTLExpression("ctl");
+				cexp.addChild(bexp1);
+				cexp.addChild(bexp2);
+				cexp.setOperator(BasicExpression.Operator.AND);
+				cexp.setBracketed(true);
+				cexp.setQualified(true);
+				cexp.setDisplayNegation(true);
+				cexp.setCtlOperator(CTLExpression.CtlOperator.AG);
+				CTLSpecification cspec = new CTLSpecification(cexp);
+				body.addModuleElement(cspec);
+				j++;
+			}
+			i++;
+    	}
+  	}
   	
   	private AssignConstraint getAssignConstraint( StateMachine sm, StateMachine root) {
   		BasicExpression bexp;
@@ -345,6 +370,32 @@ class NuSMVCoordinator
   		AssignConstraint ac = new AssignConstraint(ia);
   		ac.addAssign(getNextAssign( sm, root ));
   		return ac;
+  	}
+	
+	private AssignConstraint getEventAssignConstraint( StateMachine sm) {
+
+		VariableSpecifier eventset = new VariableSpecifier("events");
+		for( Event event : sm.getAllEvents() )
+			eventset.addTypeSpecifier( "ev_"+event.getName() );
+			
+		BasicExpression lhs = new BasicExpression( sm.getFullName()+"_stable" );
+    	BasicExpression rhs = new BasicExpression( "{ "+eventset.print()+" }" );
+		CaseStatement stable = new CaseStatement(lhs, rhs);
+			
+		//defining otherwise case
+		BasicExpression bexp1 = new BasicExpression("ev_null");
+    	BasicExpression bexp2 = new BasicExpression("TRUE");
+		CaseStatement otherwise = new CaseStatement(bexp2, bexp1);
+		
+		CaseExpression expr = new CaseExpression("",stable);
+    	expr.addCaseStatement( otherwise );	
+		NextAssign na = new NextAssign("event", expr);
+	
+  		BasicExpression bexp = new BasicExpression("ev_null");
+  		InitAssign ia = new InitAssign("event", bexp);
+  		AssignConstraint ac = new AssignConstraint( ia );
+  		ac.addAssign( na );
+  		return ac;	
   	}
 	
 	private List<AssignConstraint> getAssignConstraint( UmpleClass uClass ) {
@@ -713,8 +764,7 @@ class NuSMVCoordinator
   		VariableSpecifier vs = new VariableSpecifier("event");
   		for( Event event : sm.getAllEvents() ) 
   			vs.addTypeSpecifier("ev_"+event.getName());
-  		if( sm.getAllEvents().size() == 1 )
-  			vs.addTypeSpecifier("ev_null");
+  		vs.addTypeSpecifier("ev_null");
   		return vs;
   	}
   	
@@ -756,9 +806,9 @@ class NuSMVCoordinator
   		
   	//Generates the define part for all the transitions of the system
   	private DefineDeclaration getDefineDeclaration( StateMachine sm ) {
-  		BasicExpression temp = new BasicExpression("null");
-  		DefineBody dnull = new DefineBody("null", temp);
-  		DefineDeclaration ddec = new DefineDeclaration(dnull);
+  		BasicExpression temp = composeExpressionForStability(sm);
+  		DefineBody stable = new DefineBody(sm.getFullName()+"_stable", temp);
+  		DefineDeclaration ddec = new DefineDeclaration(stable);
   		for( Transition tr : sm.getAllTransitions() ) {
   			BasicExpression bexp = composeExpressionFor( tr, sm );
   			DefineBody dBody = new DefineBody("t"+getObjectIdentity( sm, tr) , bexp);
@@ -768,7 +818,7 @@ class NuSMVCoordinator
   			DefineBody dBody = new DefineBody("g"+getObjectIdentity( sm, gr) , generateRHS( gr ));
   			ddec.addDefineBody(dBody);
   		}
-  		ddec.removeDefineBody(dnull);
+  		//ddec.removeDefineBody(dnull);
   		return ddec;
   	}
 	
@@ -817,6 +867,23 @@ class NuSMVCoordinator
   		  		
   		return bexp;
   	}
+	
+	private BasicExpression composeExpressionForStability( StateMachine sm ) {
+		BasicExpression root = new BasicExpression("root");
+		for(Event event : sm.getAllEvents() ){
+			BasicExpression bexp1 = new BasicExpression("event");
+			BasicExpression bexp2 = new BasicExpression("ev_"+event.getName());
+			BasicExpression bexp3 = new BasicExpression("eventExpr"); 
+			bexp3.addChild(bexp1);
+			bexp3.addChild(bexp2);
+			bexp3.setOperator(BasicExpression.Operator.EQ);
+			root = getExpressionTreeFor( root, bexp3 );
+		}
+		root.setDisplayNegation(true);
+		root.setBracketed(true);
+  		return root;
+  	}
+	
   	
   	private BasicExpression generateRHS( Object obj, Transition tr ) {
   		BasicExpression bexp4 = null;
