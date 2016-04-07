@@ -81,6 +81,9 @@ class UmpleInternalParser
   		list.addAll(entry.getValue());
   	}
   	if (!checkValidityOfSMTemplateSignature(inGTPApplied,list,inTrait)) return traitStateMachine;
+  	//To assign a state machine to a state.
+		//----------------------------------------------------------------------------------------		
+			if (getParseResult().getWasSuccess()) AssignStateMachineToState(inTrait,traitStateMachine);	
   	//----------------------------------------------------------------------------------------	  	
 		for(Map.Entry<UmpleTrait, List<StateMachine>> entry : traitStateMachine.entrySet()){
 			List<StateMachine> mustBeRemoved =  new ArrayList<StateMachine>();	
@@ -90,10 +93,7 @@ class UmpleInternalParser
 		  	}
 			for(StateMachine sm : mustBeRemoved)	traitStateMachine.get(entry.getKey()).remove(sm);
 		}
-		//To assign a state machine to a state.
-		//----------------------------------------------------------------------------------------		
-			if (getParseResult().getWasSuccess()) AssignStateMachineToState(inTrait,traitStateMachine);	
-		//----------------------------------------------------------------------------------------	
+
   	return traitStateMachine;
   }
 //---------------------------------end----------------------------------------
