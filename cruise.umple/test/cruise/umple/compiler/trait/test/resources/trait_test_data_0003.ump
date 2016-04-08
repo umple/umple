@@ -1,0 +1,49 @@
+/*
+ * 
+ * based on the example (state machine) at: http://www.eclipse.org/etrice/documentation/release/introduction.html
+ * 
+ */
+
+//A high level asset which needs to be customized later (maybe).
+trait BaseBlinkingLED{	
+	sm{
+		off{
+			start -> blinking;
+		}
+		blinking{
+			stop -> off;
+		}
+	}
+}
+
+//An asset developed blinking a LED with user-defined speed.
+trait BlinkingLED{
+	/*
+	 * This method is a required method (or we can consider it as an adaptation point)
+	 * This is used to specify the delay needed for blinking.
+	 */
+	Double getDelay();
+	
+	//behavior of the trait
+	b_sm{
+		on{
+			after(getDelay()) -> off;
+		}
+		off{
+			after (getDelay()) -> on;
+		}
+	}
+}
+trait ControllableLED{
+	isA BaseBlinkingLED;
+	isA BlinkingLED<b_sm as sm.blinking>;
+}
+
+//This uses the trait "ControllableLED" which needs the developers to specify the blinking speed (or implement the adaptation point);
+class A {
+	//The following command use the trait while changes the name of state machines so as to be suitable for the domain.
+	isA ControllableLED<sm as status>;
+	private Double getDelay(){
+		return 0.5;
+	}
+}
