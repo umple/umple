@@ -53,7 +53,9 @@ class RubyClassGenerator {
   UmpleClass uClass = (UmpleClass) uElement;
   GeneratedClass gClass = uClass.getGeneratedClass();
   RubyGenerator gen = new RubyGenerator();
+  JavaGenerator jgen = new JavaGenerator();
   GeneratorHelper.generator = gen;
+  jgen.setModel(model);
   gen.setModel(model);
 
   HashMap<String,String> codeInjectionMap = new HashMap<String,String>();

@@ -22,17 +22,17 @@ class UmpleToRuby {
     List<TraceItem> traceItems = av.getTraced("setMethod", uClass);
     
 
-    String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
-    String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
+    String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", jgen.translate("setMethod",av)));
+    String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", jgen.translate("setMethod",av)));
 
-    String customResetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("resetMethod",av)));
-    String customResetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("resetMethod",av)));
+    String customResetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", jgen.translate("resetMethod",av)));
+    String customResetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", jgen.translate("resetMethod",av)));
 
-    String customAddPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("addMethod",av)));
-    String customAddPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("addMethod",av)));
+    String customAddPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", jgen.translate("addMethod",av)));
+    String customAddPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", jgen.translate("addMethod",av)));
   
-    String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("removeMethod",av)));
-    String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("removeMethod",av)));
+    String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", jgen.translate("removeMethod",av)));
+    String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", jgen.translate("removeMethod",av)));
     
     if (av.isImmutable())
     {
@@ -68,17 +68,17 @@ class UmpleToRuby {
 
       gen.setParameterConstraintName(av.getName());
 
-      String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
-      String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
+      String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", jgen.translate("setMethod",av)));
+      String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", jgen.translate("setMethod",av)));
 
-//      String customResetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("resetMethod",av)));
-//      String customResetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("resetMethod",av)));
+//      String customResetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", jgen.translate("resetMethod",av)));
+//      String customResetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", jgen.translate("resetMethod",av)));
       
-      String customAddPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("addMethod",av)));
-      String customAddPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("addMethod",av)));
+      String customAddPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", jgen.translate("addMethod",av)));
+      String customAddPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", jgen.translate("addMethod",av)));
 
-//      String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("removeMethod",av)));
-//      String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("removeMethod",av)));
+//      String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", jgen.translate("removeMethod",av)));
+//      String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", jgen.translate("removeMethod",av)));
 
       if(customSetPrefixCode!=null||customSetPostfixCode!=null)
       {
