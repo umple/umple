@@ -159,6 +159,9 @@ class ParserDataPackage
   //the filename of the file that is being parsed
   filename;
   
+  //This is used to save the full address of the fileName.
+  fullFileAddress = "";
+  
   GrammarAnalyzer analyzer;
   
   //the string that is the file that is being parsed
