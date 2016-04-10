@@ -33,15 +33,30 @@ class UseStatementParserAction{
   public void onSuccess(Token token, ParserDataPackage data)
   {
     String value = token.getValue("use");
+    String fileName="";
+		String path = "";    
+    int index =-1;
+    if (data!=null && data.getFullFileAddress()!=null)    index = data.getFullFileAddress().lastIndexOf("/") ;
+    if (index==-1) index = data.getFullFileAddress().lastIndexOf("\\");  
+    if (index!=-1){
+    	path = data.getFullFileAddress().substring(0,index+1 );
+    }
+    
     synchronized(data.getHasParsed())
     {
-      if(!data.getHasParsed().contains(value))
+        fileName = data.getAnalyzer().getFile().getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value;
+				//I used this technique because I noticed this function is used to several purposes.
+				// The correct implementation is just to set fileName = path +value; and remove the above code.
+				//TODO: this issue must be investigated more. Currently it is working with the following solution. 
+				File f = new File(fileName);
+        if (!f.exists()) fileName = path +value;
+      if(!data.getHasParsed().contains(fileName))
       {
-        data.getHasParsed().add(value);
+        data.getHasParsed().add(fileName);
         RuleBasedParserThread thread = new RuleBasedParserThread(
           data.getAnalyzer().getRules().get("$ROOT$"),
           token,
-          data.getAnalyzer().getFile().getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value,
+          fileName,
           data
         );
         data.getAnalyzer().addThread(thread);

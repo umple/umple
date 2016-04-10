@@ -550,6 +550,7 @@ class ParserDataPackage
   public void init(Position usePosition) 
   {
     String file = filename;
+    fullFileAddress = filename;
     filename = file.split("\\Q"+File.separator+"\\E")[file.split("\\Q"+File.separator+"\\E").length-1];
     int offset = 0;
     int linenumber = 0;
