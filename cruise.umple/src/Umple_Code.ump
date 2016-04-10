@@ -1399,7 +1399,7 @@ class UmpleClass
     {
       return all;
     }
-    System.out.println(method);
+
     String formattedMethod = method;
 
     for (CodeInjection code : getCodeInjections())
@@ -1430,7 +1430,6 @@ class UmpleClass
         isMatchOnExclude.setIsSet(true);
 
         String regexOperation = operation;
-        System.out.println("OPERATION: " + operation);
         regexOperation = regexOperation.replace("_*", "*");
         regexOperation = regexOperation.replace("*", ".*");
         boolean isCurrentMatch = formattedMethod.matches(regexOperation);
@@ -1494,7 +1493,6 @@ class UmpleClass
         isMatchOnExclude.setIsSet(true);
 
         String regexOperation = operation;
-        System.out.println("OPERATION: " + operation);
         regexOperation = regexOperation.replace("_*", "*");
         regexOperation = regexOperation.replace("*", ".*");
         regexOperation = regexOperation.replace("_~", "");

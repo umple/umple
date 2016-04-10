@@ -1,7 +1,7 @@
 class UmpleToRuby {
     association_MinimumNumberOfMethod <<!<</*association_MinimumNumberOfMethod*/>><<#
-    String customMinimumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("minimumNumberOfMethod",av)));
-    String customMinimumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("minimumNumberOfMethod",av)));
+    String customMinimumNumberOfPrefixCode = GeneratorHelper.toCode(gen.getApplicableCodeInjections(uClass, "before", "minimumNumberOfMethod", av));
+    String customMinimumNumberOfPostfixCode = GeneratorHelper.toCode(gen.getApplicableCodeInjections(uClass, "after", "minimumNumberOfMethod", av));
 #>>
 <<# if (customMinimumNumberOfPrefixCode == null && customMinimumNumberOfPostfixCode == null) { #>>
   def self.<<=gen.translate("minimumNumberOfMethod",av)>>

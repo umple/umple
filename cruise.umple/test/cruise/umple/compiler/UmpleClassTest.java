@@ -685,22 +685,6 @@ public class UmpleClassTest
   }  
   
   @Test
-  public void getCodeInjectionsFor_supportDifferentNamingConvention()
-  {
-    UmpleClass c = new UmpleClass("Student");
-    CodeInjection code = new CodeInjection("before","my_opp","//the code",c);
-
-    List<CodeInjection> allCodes;
-        
-    c.addCodeInjection(code);
-
-    allCodes = c.getApplicableCodeInjections("before","myOpp");
-    Assert.assertEquals(1,allCodes.size());
-    Assert.assertEquals(code,allCodes.get(0));
-
-  }
-  
-  @Test
   public void getCodeInjectionsFor_commaDelimit()
   {
     List<CodeInjection> allCodes;

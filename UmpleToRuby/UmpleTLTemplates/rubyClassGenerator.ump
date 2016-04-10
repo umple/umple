@@ -49,14 +49,14 @@ class RubyClassGenerator {
     emit getCode(UmpleModel model, UmpleElement uElement)(rubyClassGenerator);
 
     rubyClassGenerator <<!<</*rubyClassGenerator*/>><<@ UmpleToRuby.UmpleNotice >>
+
 <<#
   UmpleClass uClass = (UmpleClass) uElement;
   GeneratedClass gClass = uClass.getGeneratedClass();
   RubyGenerator gen = new RubyGenerator();
-  JavaGenerator jgen = new JavaGenerator();
   GeneratorHelper.generator = gen;
-  jgen.setModel(model);
   gen.setModel(model);
+  gen.jgen.setModel(model);
 
   HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
   for (CodeInjection inject : uClass.getCodeInjections())
