@@ -1358,7 +1358,7 @@ class UmpleClass
   }
 
   public Boolean matchOperationMethod(String fullOperation, String method) {
-    String formattedMethod = StringFormatter.toUnderscore(method);
+    String formattedMethod = method;
     TriState isMatch = new TriState(false);
     TriState isMatchOnExclude = new TriState(true);
 
@@ -1372,7 +1372,7 @@ class UmpleClass
         operation = operation.substring(1);
       }
 
-      String regexOperation = StringFormatter.toUnderscore(operation);
+      String regexOperation = operation;
       regexOperation = regexOperation.replace("_*", "*");
       regexOperation = regexOperation.replace("*", ".*");
       boolean isCurrentMatch = formattedMethod.matches(regexOperation);
