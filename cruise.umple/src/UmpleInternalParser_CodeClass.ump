@@ -4058,17 +4058,17 @@ class UmpleInternalParser
     String currentNameSpace="";
     boolean twice = false;
     boolean resetClass = false;
-    int index=-1;
+    //int index=-1;
     for(int i = 0; i<inToken.getParentToken().getSubTokens().size();i++){
       Token t1 = inToken.getParentToken().getSubTokens().get(i);
       if (t1.equals(inToken)) {
-    	  index=i;
+    	  //index=i;
     	  break;
       }
       if (t1.getName().equals("classDefinition")) {
     	  resetClass=true;
     	  twice =false;
-    	  currentNameSpace="";
+    	 // currentNameSpace="";
       }
       if (t1.getName().equals("namespace")&& !t1.getValue().equals("STATIC"))  {
     	  currentNameSpace = t1.getValue();
@@ -4084,33 +4084,34 @@ class UmpleInternalParser
     	  }
       }
     }
-    boolean finalCheck = false;
-    String extraNamespace = "";
-    int counter = -1;
-    Token forReport = null;
-    for (int j=index+1;j<inToken.getParentToken().getSubTokens().size();j++){
-    	Token t1 = inToken.getParentToken().getSubTokens().get(j);
-    	if (t1.getName().equals("classDefinition")) {
-        finalCheck = true;
-    	} else if (t1.getName().equals("namespace") && !t1.getValue().equals("STATIC")){
-        extraNamespace = t1.getValue();
-        counter++;
-        forReport = t1;
-    	}
-    }
-    if (finalCheck) return currentNameSpace;
-    if (counter<0) return  currentNameSpace; 
-    else if(counter==0 ) {
-    	if (currentNameSpace!=""){
-        setFailedPosition(forReport.getPosition(),31,currentPackageName,forReport.getValue());
-        return  currentNameSpace; 
-    	} else{
-        return extraNamespace;
-    	}
-    } else {
-    	setFailedPosition(forReport.getPosition(),31,currentPackageName,forReport.getValue());
-    	return extraNamespace;
-    }
+    return currentNameSpace;
+//    boolean finalCheck = false;
+//    String extraNamespace = "";
+//    int counter = -1;
+//    Token forReport = null;
+//    for (int j=index+1;j<inToken.getParentToken().getSubTokens().size();j++){
+//    	Token t1 = inToken.getParentToken().getSubTokens().get(j);
+//    	if (t1.getName().equals("classDefinition")) {
+//        finalCheck = true;
+//    	} else if (t1.getName().equals("namespace") && !t1.getValue().equals("STATIC")){
+//        extraNamespace = t1.getValue();
+//        counter++;
+//        forReport = t1;
+//    	}
+//    }
+//    if (finalCheck) return currentNameSpace;
+//    if (counter<0) return  currentNameSpace; 
+//    else if(counter==0 ) {
+//    	if (currentNameSpace!=""){
+//        setFailedPosition(forReport.getPosition(),31,currentPackageName,forReport.getValue());
+//        return  currentNameSpace; 
+//    	} else{
+//        return extraNamespace;
+//    	}
+//    } else {
+//    	setFailedPosition(forReport.getPosition(),31,currentPackageName,forReport.getValue());
+//    	return extraNamespace;
+//    }
 	}
   
 } 
