@@ -7,15 +7,7 @@ The file that actually gets packaged with the final .jar is: cruise.umplificator
 */
 
 tracer log4j noconfig;
-
 // MOTL trace specification
-
-class Umplificator {
-	//trace needSubDirectories where [ needSubDirectories==true ] record "umplificator will create subdirectories based on the namespace of the model" logLevel info;
-	trace outputFolder where [outputFolder==null] logLevel fatal;
-	trace filesUmplified;
-	trace umplifyCPP record "not implemented yet" logLevel error;
-}
 
 class JavaParser {
   trace parseUnit logLevel debug record "Parsing Compilation Unit";
@@ -36,4 +28,12 @@ class RuleRunner {
   trace insertUmpleModel logLevel debug record "RuleRunner.insertUmpleModel - Insert Umple Model into working memory";	
   trace insertUmpleInterface logLevel debug record "RuleRunner.insertUmpleInterface- Insert uInterface into working memory";
   trace fireAllRules logLevel debug record "RuleRunner.fireAllRules - Fire rules";
+}
+
+namespace cruise.umplificator.core;
+class Umplificator {
+  //trace needSubDirectories where [ needSubDirectories==true ] record "umplificator will create subdirectories based on the namespace of the model" logLevel info;
+  trace outputFolder where [outputFolder==null] logLevel fatal;
+  trace filesUmplified;
+  trace umplifyCPP record "not implemented yet" logLevel error;
 }

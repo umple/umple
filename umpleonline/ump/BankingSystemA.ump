@@ -87,12 +87,32 @@ class Division{
 }
 //$?[End_of_model]$?
 // Positioning
+namespace BankingSystem.core.intangableResources;
 class Account
 {
   position 438 270 189 96;
   position.association Account__AccountType 190,15 0,27;
 }
+class AccountType
+{
+  position 665 258 152 79;
+  position.association AccountType__Privilege 70,0 67,62;
+}
+class Privilege
+{
+  position 668 146 149 62;
+}
 
+class MortgageAccount
+{
+  position 565 416 137 58;
+}
+class CreditCardAccount
+{
+  position 391 416 139 58;
+  position.association Card__CreditCardAccount 0,14 153,15;
+}
+namespace BankingSystem.core.humanResources;
 class Client
 {
   position 444 125 166 96;
@@ -104,47 +124,6 @@ class Person
   position 35 45 166 96;
   position.association Person__PersonRole 167,10 0,24;
 }
-
-class Branch
-{
-  position 200 283 171 79;
-  position.association Account__Branch 172,15 0,28;
-}
-
-class AccountType
-{
-  position 665 258 152 79;
-  position.association AccountType__Privilege 70,0 67,62;
-}
-
-class Card
-{
-  position 161 415 153 58;
-}
-
-class Privilege
-{
-  position 668 146 149 62;
-}
-
-class MortgageAccount
-{
-  position 565 416 137 58;
-}
-
-class CreditCardAccount
-{
-  position 391 416 139 58;
-  position.association Card__CreditCardAccount 0,14 153,15;
-}
-
-class Division
-{
-  position 86 185 112 77;
-  position.association Division__Employee 112,0 0,31;
-  position.association Division__Division:subDivision 0,63 10,77;
-}
-
 class Manager
 {
   position 252 216 109 41;
@@ -160,3 +139,21 @@ class PersonRole
 {
   position 350 31 110 45;
 }
+namespace BankingSystem.core.tangableResources;
+class Branch
+{
+  position 200 283 171 79;
+  position.association Account__Branch 172,15 0,28;
+}
+class Card
+{
+  position 161 415 153 58;
+}
+
+class Division
+{
+  position 86 185 112 77;
+  position.association Division__Employee 112,0 0,31;
+  position.association Division__Division:subDivision 0,63 10,77;
+}
+

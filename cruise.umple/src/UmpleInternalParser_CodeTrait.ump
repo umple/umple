@@ -117,10 +117,12 @@ class UmpleInternalParser
     }
     
     if("".equals(aTrait.getPackageName())){
+      //If one day traits are going to be a modular-runtime elements and there is a need for package use, the following code can be useful.
+      //setFailedPosition(classToken.getPosition(), 30, aClass.getName(), currentPackageName);
+      //aClass.setPackageName(currentPackageName); 
       aTrait.setPackageName(currentPackageName);
   	}
   	
- 	packageNameUsed = true;
     if (aTrait.getIsSingleton()) 
     {
       traitToken.setName(traitToken.getName());  

@@ -92,14 +92,11 @@ class UmpleInternalParser
     }      
     else if (t.is("namespace"))
     {
-      if(!packageNameUsed && !t.getValue().equals(currentPackageName))
-        setFailedPosition(t.getPosition(),31,currentPackageName,t.getValue());
       currentPackageName = t.getValue();
       if (model.getDefaultNamespace() == null)
       {
         model.setDefaultNamespace(currentPackageName);  
       }
-      packageNameUsed = false;
     }
     else if (t.is("inlineComment"))
     {
@@ -881,14 +878,13 @@ class UmpleInternalParser
     {
       aClass.setIsSingleton(true);
     }
-    if(!"".equals(aClass.getPackageName()) && !currentPackageName.equals(aClass.getPackageName()) && !packageNameUsed){
+    if(!"".equals(aClass.getPackageName()) && !currentPackageName.equals(aClass.getPackageName())){
       setFailedPosition(classToken.getPosition(), 30, aClass.getName(), currentPackageName);
-      aClass.setPackageName(currentPackageName);    
     }    
     if("".equals(aClass.getPackageName())){
-      aClass.setPackageName(currentPackageName);
+      String pkgName = getCurrentNameSpace(classToken);
+      aClass.setPackageName( pkgName!="" ? pkgName : currentPackageName);
   }
-  packageNameUsed = true;
     if (aClass.getIsSingleton()) 
     {
       classToken.setName(classToken.getName());  
@@ -943,7 +939,7 @@ class UmpleInternalParser
   	//Checks list of extends tokens to prevent multiple class inheritance
     if(numberOfExtendsClass(extendsTokenList) > 1)
 	{
-	  Token t = extendsTokenList.get(0);			
+	  Token t = extendsTokenList.get(0);    	
 	  getParseResult().addErrorMessage(new ErrorMessage(34,t.getPosition(),aClassifier.getName(),t.getValue()));
 	}
   }
@@ -955,7 +951,7 @@ class UmpleInternalParser
 	for(Token t : extList)
 	{	
 	  if(isAnUmpleClass(t.getValue("extendsName")))
-		counter++;
+    counter++;
 	}
 	return counter;
   }
@@ -967,9 +963,9 @@ class UmpleInternalParser
 	{
 	  if(aClass != null)
 	  {
-		String nam = aClass.getName();
-		if(nam.equals(name))
-		  return true;
+    String nam = aClass.getName();
+    if(nam.equals(name))
+      return true;
 	  }
 	}
 	return false;
@@ -1042,14 +1038,13 @@ class UmpleInternalParser
       anInterface.addComment(new Comment("@umplesource " + path +" "+thePosition.getLineNumber()));
     }
   
-    if(!"".equals(anInterface.getPackageName()) && !currentPackageName.equals(anInterface.getPackageName()) && !packageNameUsed){
+    if(!"".equals(anInterface.getPackageName()) && !currentPackageName.equals(anInterface.getPackageName())){
       setFailedPosition(interfaceToken.getPosition(), 30, anInterface.getName(), currentPackageName);
-      anInterface.setPackageName(currentPackageName);    
     }    
     if("".equals(anInterface.getPackageName())){
-      anInterface.setPackageName(currentPackageName);
+      String pkgName = getCurrentNameSpace(interfaceToken);
+      anInterface.setPackageName( pkgName!="" ? pkgName : currentPackageName);
     }
-    packageNameUsed = true;
     analyzeInterface(interfaceToken,anInterface);
     return anInterface;
   }
@@ -1472,7 +1467,7 @@ class UmpleInternalParser
     ArrayList<Association> visited = new ArrayList<Association>();
     int aLLB, aLUB, aRLB, aRUB, bLLB, bLUB, bRLB, bRUB;
     Boolean lLowerBoundOK, rLowerBoundOK, lUpperBoundOK, rUpperBoundOK, boundsOK, subclassOK, namesOK, reverseNames,
-    		lMulChToOne, rMulChToOne, lMulChToN, rMulChToN, lNeedsSetCode, rNeedsSetCode;
+        lMulChToOne, rMulChToOne, lMulChToN, rMulChToN, lNeedsSetCode, rNeedsSetCode;
     String aLName, aRName, bLName, bRName;
     ArrayList<String> leftHierarchy, rightHierarchy;
     UmpleClass currentLeftClass, currentRightClass, parentLeftClass, parentRightClass;
@@ -1570,7 +1565,7 @@ class UmpleInternalParser
       	rLowerBoundOK = (bRLB <= aRLB);
       	lUpperBoundOK = (bLUB >= aLUB);
       	rUpperBoundOK = (bRUB >= aRUB);
-      		  
+            
       	if (bLUB != 1 && aLUB == 1)
           lMulChToOne = true;
           
@@ -1582,7 +1577,7 @@ class UmpleInternalParser
           
         if (aRUB == aRLB && bRLB == 0 && bRUB > 1) //  && aRUB > 1
           rMulChToN = true;
-      		  
+            
       	// changed to MN (or M*) -- this may need to change when set method generation is fixed	  
         if (aLUB >= aLLB && aLLB != 0 && aLUB > 1 && ((bLLB == 0 && bLUB > 1) || bLUB == -1))
           lMulChToN = true;
@@ -1590,7 +1585,7 @@ class UmpleInternalParser
         // changed to MN (or M*)
         if (aRUB >= aRLB && aRLB != 0 && aRUB > 1 && ((bRLB == 0 && bRUB > 1) || bRUB == -1))
           rMulChToN = true;	  
-      		 
+           
         // special case for * multiplicity
       	if ( bLUB == -1 ) 
       	{ 
@@ -2220,8 +2215,8 @@ class UmpleInternalParser
         {
         	if( (cb.getCode("") != null) && (!cb.getCode("").equals("")) && (!cb.getCode("").equals("\n")))	  
         	getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
-	    		  	  aMethod.getName(),aMethod.getClass().getName(), implementationPositions.get("").getLineNumber()+"", implementationPositions.get("").getFilename(),
-	    		  	  token.getPosition().getLineNumber()+"", token.getPosition().getFilename(), ""));
+	          	  aMethod.getName(),aMethod.getClass().getName(), implementationPositions.get("").getLineNumber()+"", implementationPositions.get("").getFilename(),
+	          	  token.getPosition().getLineNumber()+"", token.getPosition().getFilename(), ""));
           else
           {
 	          cb.setCode(token.getValue());
@@ -2238,11 +2233,11 @@ class UmpleInternalParser
           {
         	  if( (cb.getCode(str) != null) && (!cb.getCode(str).equals("")) && (!cb.getCode(str).equals("\n")))	  
 	        	  getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
-	    	    		  	  aMethod.getName(),aMethod.getClass().getName(), implementationPositions.get(str).getLineNumber()+"", implementationPositions.get(str).getFilename(),
-	    	    		  	  token.getPosition().getLineNumber()+"", token.getPosition().getFilename(), str));
+	    	          	  aMethod.getName(),aMethod.getClass().getName(), implementationPositions.get(str).getLineNumber()+"", implementationPositions.get(str).getFilename(),
+	    	          	  token.getPosition().getLineNumber()+"", token.getPosition().getFilename(), str));
         	  else
         	  {
-        		implementationPositions.put(iValue, iPosition);
+            implementationPositions.put(iValue, iPosition);
 	            cb.setCode(str,/*(cb.getCode(str)!=null?cb.getCode(str)+"\n":"")+*/ token.getValue());
 	            if("Java".equals(str))
 	            {
@@ -2301,39 +2296,39 @@ class UmpleInternalParser
     	  List<String> implementations = new ArrayList<String>();
     	  
     	  for(String l : langsImplementation)
-    		  if(actualMethod.getExistsInLanguage(l))
-    			  implementations.add(l);
-    		  else
-    		  {
-    			  if(!l.equals(""))
-    			    actualMethod.getMethodBody().setExtraCode(l, aMethod.getMethodBody().getExtraCode(l));
-    			  else
-    				actualMethod.getMethodBody().setExtraCode("", aMethod.getMethodBody().getExtraCode(l));
-				  
-    			  actualMethod.getMethodBody().getImplementationPositions().put(l, aMethod.getMethodBody().getImplementationPositions().get(l));
-    		  }
-    		  
+          if(actualMethod.getExistsInLanguage(l))
+        	  implementations.add(l);
+          else
+          {
+        	  if(!l.equals(""))
+        	    actualMethod.getMethodBody().setExtraCode(l, aMethod.getMethodBody().getExtraCode(l));
+        	  else
+            actualMethod.getMethodBody().setExtraCode("", aMethod.getMethodBody().getExtraCode(l));
+          
+        	  actualMethod.getMethodBody().getImplementationPositions().put(l, aMethod.getMethodBody().getImplementationPositions().get(l));
+          }
+          
     	  if(!implementations.isEmpty())
     	  {
-    		  for(String l : implementations)
-    		  {
-    			  if((actualMethod.getMethodBody().getExtraCode(l).equals("") || 
-    				  actualMethod.getMethodBody().getExtraCode(l).equals("\n"))&&
-    				 (!aMethod.getMethodBody().getExtraCode(l).equals("") ||
-    			      !aMethod.getMethodBody().getExtraCode(l).equals("\n")) &&
-    			     (!actualMethod.getMethodBody().getExtraCode(l).equals(aMethod.getMethodBody().getExtraCode(l))))
-    			  {
-    				  actualMethod.getMethodBody().setExtraCode(l, aMethod.getMethodBody().getExtraCode(l));
-    				  actualMethod.getMethodBody().getImplementationPositions().put(l, aMethod.getMethodBody().getImplementationPositions().get(l));
-    			  }
-    			  else
-    			  {
-    				  getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
-    		    		  	  aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
-    		    		  	  aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
-    			  }
-    			  
-    		  }
+          for(String l : implementations)
+          {
+        	  if((actualMethod.getMethodBody().getExtraCode(l).equals("") || 
+              actualMethod.getMethodBody().getExtraCode(l).equals("\n"))&&
+             (!aMethod.getMethodBody().getExtraCode(l).equals("") ||
+        	      !aMethod.getMethodBody().getExtraCode(l).equals("\n")) &&
+        	     (!actualMethod.getMethodBody().getExtraCode(l).equals(aMethod.getMethodBody().getExtraCode(l))))
+        	  {
+              actualMethod.getMethodBody().setExtraCode(l, aMethod.getMethodBody().getExtraCode(l));
+              actualMethod.getMethodBody().getImplementationPositions().put(l, aMethod.getMethodBody().getImplementationPositions().get(l));
+        	  }
+        	  else
+        	  {
+              getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
+                  	  aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
+                  	  aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
+        	  }
+        	  
+          }
     	  }
     	  
     	  /*
@@ -2341,14 +2336,14 @@ class UmpleInternalParser
     	  if ((actualMethod.getMethodBody().getExtraCode().isEmpty()) &&
     	      (!aMethod.getMethodBody().getExtraCode().isEmpty()))
     	  {
-    		  actualMethod.setMethodBody(aMethod.getMethodBody());
-    		  actualMethod.setPosition(aMethod.getPosition());
+          actualMethod.setMethodBody(aMethod.getMethodBody());
+          actualMethod.setPosition(aMethod.getPosition());
     	  }
     	  else
     	  {
     	    getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
-    		  	  aMethod.getName(),uClass.getName(), actualMethod.getPosition().getLineNumber()+"", actualMethod.getPosition().getFilename(),
-    			  aMethod.getPosition().getLineNumber()+"", aMethod.getPosition().getFilename()));
+          	  aMethod.getName(),uClass.getName(), actualMethod.getPosition().getLineNumber()+"", actualMethod.getPosition().getFilename(),
+        	  aMethod.getPosition().getLineNumber()+"", aMethod.getPosition().getFilename()));
     	  }    
     	  
     	  */
@@ -2386,11 +2381,11 @@ class UmpleInternalParser
         if (!uTrait.hasMethod(aMethod)) // && shouldAddMethod)
         {
         	String msg = "Please do not modify the following method.";
-			aMethod.addCommentAt(new Comment(msg),0);
+    	aMethod.addCommentAt(new Comment(msg),0);
         	msg = "The following method comes from trait "+uTrait.getName()+".";
-			aMethod.addCommentAt(new Comment(msg),1);
-			msg = "Trait "+uTrait.getName()+" has been used in classes: ";
-			aMethod.addCommentAt(new Comment(msg),2);
+    	aMethod.addCommentAt(new Comment(msg),1);
+    	msg = "Trait "+uTrait.getName()+" has been used in classes: ";
+    	aMethod.addCommentAt(new Comment(msg),2);
         	uTrait.addMethod(aMethod); 
         } 
 
@@ -2994,15 +2989,15 @@ class UmpleInternalParser
       //Issue #449
 	UmpleClass child = aClass;
 	while(unlinkedExtends.get(child) != null){
-		for(Attribute parentAttribute : model.getUmpleClass(unlinkedExtends.get(child).get(0)).getAttributes())
-		{
-			if(parentAttribute.getName().equals(tokenVal))
-		    {
-			tokenMatch = true;
-			break;
-			}
-		}
-		child = model.getUmpleClass(unlinkedExtends.get(child).get(0));  
+    for(Attribute parentAttribute : model.getUmpleClass(unlinkedExtends.get(child).get(0)).getAttributes())
+    {
+    	if(parentAttribute.getName().equals(tokenVal))
+        {
+    	tokenMatch = true;
+    	break;
+    	}
+    }
+    child = model.getUmpleClass(unlinkedExtends.get(child).get(0));  
 	}
    
     if(!aClass.hasAttributes() && !aClass.hasAssociations() && !aClass.hasStateMachines() && !tokenMatch)
@@ -3453,9 +3448,9 @@ class UmpleInternalParser
         String bound = "";
         //case of mandatory constraint
     	if(nonConstraintEndLower.equals(nonConstraintEndUpper))
-    		bound = nonConstraintEndLower;
+        bound = nonConstraintEndLower;
     	else	
-    		bound = "[" +nonConstraintEndLower+", "+nonConstraintEndUpper+"]";
+        bound = "[" +nonConstraintEndLower+", "+nonConstraintEndUpper+"]";
         setFailedPosition(associationToken.getPosition(), 36, bound);
       }
     }
@@ -3489,7 +3484,7 @@ class UmpleInternalParser
     
     if(isAutounique || attributeToken.getValue("modifier") != null){
     	if(attributeAutouniqueImmutable == null)
-    		attributeAutouniqueImmutable = new HashMap<Token, UmpleClass>();
+        attributeAutouniqueImmutable = new HashMap<Token, UmpleClass>();
     	attributeAutouniqueImmutable.put(attributeToken, aClass);
     }
     
@@ -4058,4 +4053,64 @@ class UmpleInternalParser
       setFailedPosition(position,1502,identifier);
     }
   }
+  
+  private String getCurrentNameSpace(Token inToken) {
+    String currentNameSpace="";
+    boolean twice = false;
+    boolean resetClass = false;
+    int index=-1;
+    for(int i = 0; i<inToken.getParentToken().getSubTokens().size();i++){
+      Token t1 = inToken.getParentToken().getSubTokens().get(i);
+      if (t1.equals(inToken)) {
+    	  index=i;
+    	  break;
+      }
+      if (t1.getName().equals("classDefinition")) {
+    	  resetClass=true;
+    	  twice =false;
+    	  currentNameSpace="";
+      }
+      if (t1.getName().equals("namespace")&& !t1.getValue().equals("STATIC"))  {
+    	  currentNameSpace = t1.getValue();
+    	  if (!twice){
+          twice = true;
+          resetClass = false;
+
+    	  } else {
+          	if (!resetClass){
+              setFailedPosition(t1.getPosition(),31,currentPackageName,t1.getValue());
+              continue;
+          	}
+    	  }
+      }
+    }
+    boolean finalCheck = false;
+    String extraNamespace = "";
+    int counter = -1;
+    Token forReport = null;
+    for (int j=index+1;j<inToken.getParentToken().getSubTokens().size();j++){
+    	Token t1 = inToken.getParentToken().getSubTokens().get(j);
+    	if (t1.getName().equals("classDefinition")) {
+        finalCheck = true;
+    	} else if (t1.getName().equals("namespace") && !t1.getValue().equals("STATIC")){
+        extraNamespace = t1.getValue();
+        counter++;
+        forReport = t1;
+    	}
+    }
+    if (finalCheck) return currentNameSpace;
+    if (counter<0) return  currentNameSpace; 
+    else if(counter==0 ) {
+    	if (currentNameSpace!=""){
+        setFailedPosition(forReport.getPosition(),31,currentPackageName,forReport.getValue());
+        return  currentNameSpace; 
+    	} else{
+        return extraNamespace;
+    	}
+    } else {
+    	setFailedPosition(forReport.getPosition(),31,currentPackageName,forReport.getValue());
+    	return extraNamespace;
+    }
+	}
+  
 } 
