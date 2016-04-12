@@ -10,6 +10,7 @@ MODULE HeatSystem ( _heatSystemHouseRoom , _heatSystemHouseRoomRoom , _heatSyste
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { HeatSystem_heatSys , null };
+     event : { ev_furnaceFault , ev_furnaceReset , ev_heatSwitchOn , ev_heatSwitchOff , ev_userReset , ev_activate , ev_deactivate , ev_t5 , ev_furnaceRunning , ev_t15 , ev_t17 , ev_t18 , ev_t20 , ev_t21 , ev_t19 , ev_t22 , ev_t24 , ev_t23 , ev_null };
      tooCold : boolean;
      tooHot : boolean;
      requestHeat : boolean;
@@ -20,7 +21,6 @@ MODULE HeatSystem ( _heatSystemHouseRoom , _heatSystemHouseRoomRoom , _heatSyste
      warmUpTimer : integer;
      coolDownTimer : integer;
      waitedForCool : integer;
-     event : { ev_furnaceFault , ev_furnaceReset , ev_heatSwitchOn , ev_heatSwitchOff , ev_userReset , ev_activate , ev_deactivate , ev_t5 , ev_furnaceRunning , ev_t15 , ev_t17 , ev_t18 , ev_t20 , ev_t21 , ev_t19 , ev_t22 , ev_t24 , ev_t23 , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE

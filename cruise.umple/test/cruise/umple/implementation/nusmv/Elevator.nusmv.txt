@@ -10,10 +10,10 @@ MODULE Elevator_state_machine ( _elevator_state_machinePrepareUp , _elevator_sta
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Elevator_state_machine_Idle , Elevator_state_machine_PrepareUp , Elevator_state_machine_PrepareDown , Elevator_state_machine_InMotion , Elevator_state_machine_OnFloor };
+     event : { ev_upRequest , ev_downRequest , ev_started , ev_doorClosed , ev_approachingFloor , ev_approachedFloor , ev_stopped , ev_doorOpened , ev_timeoutAtFloorToDoorClosing , ev_doorClosingRequest , ev_doorCLosed , ev_obstruction , ev_doorOpeningRequest , ev_noRequest , ev_null };
      timer : integer;
      floorRequested : boolean;
      obstruction : boolean;
-     event : { ev_upRequest , ev_downRequest , ev_started , ev_doorClosed , ev_approachingFloor , ev_approachedFloor , ev_stopped , ev_doorOpened , ev_timeoutAtFloorToDoorClosing , ev_doorClosingRequest , ev_doorCLosed , ev_obstruction , ev_doorOpeningRequest , ev_noRequest , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE

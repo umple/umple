@@ -49,9 +49,9 @@ class NuSMVCoordinator
   	private NuSMVModule generateParentModule( StateMachine sm, UmpleClass uClass ) {
   		  		
 		VarDeclaration vdec = new VarDeclaration( getStateList( sm ) );
+		vdec.addVariableSpecifier( getEventList( sm ) );
 		for( VariableSpecifier vs : generateSpecifiersForAttributesOf( uClass ) )
 			vdec.addVariableSpecifier(vs);
-		vdec.addVariableSpecifier( getEventList( sm ) );
 		ModuleBody body = new ModuleBody( vdec );
   		body.addModuleElement( vdec );
 		
@@ -258,8 +258,7 @@ class NuSMVCoordinator
   		//Generates the parent state machine  		
   		NuSMVModule module = generateParentModule( sm, uClass );
   		temp.add(module);
-  		StateMachine root = sm;
-  		for( NuSMVModule mod : generateModuleForCompositeStatesOf( root, sm ) )
+  		for( NuSMVModule mod : generateModuleForCompositeStatesOf( sm, sm ) )
   			temp.add( mod );
 			
 		//Generating the main module for the statemachine
@@ -577,7 +576,7 @@ class NuSMVCoordinator
 			for(StateMachine region : smm.getImmediateNestedStateMachines())
 				if( !region.equals(sm) )
 					for(State st : getEmbeddedStates(smm))
-						if(!has(friendStates,st))
+						if( !has( friendStates, st))
 							friendStates.add(st);
 		}
 		
@@ -588,27 +587,39 @@ class NuSMVCoordinator
 			if(!has(embeddedStates, tr.getNextState()) && has(friendStates, tr.getNextState()))
 				andCrossTransitions.add(tr);
 		}
-		
 		return andCrossTransitions;
+	}
+	
+	//This computes and-cross transitions of a given state.
+	private List<Transition> getAndCross( State state ) {
+		List<Transition> andCross = new ArrayList<Transition>();
+		if( ! state.isIsConcurrent() )
+			return andCross;
+		
+		for( StateMachine sm : state.getNestedStateMachines() )
+			for( Transition transition : andCross( sm ) )
+				andCross.add( transition );
+		return andCross;
 	}
 	
 	//Computes the exit transitions for a concurrent region
 	private List<Transition> getExitTransitionsForConcurrentRegion(StateMachine region, StateMachine root){
-		List<Transition> trans = getAllEnablingTransitions(getParentState(region));
+		List<Transition> trans = getAllEnablingTransitions( getParentState(region) );
 		List<Transition> temp = new ArrayList<Transition>();
 		for( Transition tr : root.getAllTransitions() )
 			if( !has( trans, tr ) )
-				temp.add(tr);
+				temp.add( tr ); //adds to temp every other transitions not enclosed by the parent state 
 	
 		//adding and-cross transitions for a given region
-		for(Transition tr : andCross(region))
-			if( !has( temp, tr ) )
+		List<State> embeddedStates = getEmbeddedStates( region );
+		for( Transition tr : getAndCross( getParentState( region ) ) )
+			if( !has( embeddedStates, tr.getNextState() ) )
 				temp.add(tr);
 		return temp;
 	}
 	
 	//Computes exit transitions for non-orthogonal composite state
-	private List<Transition> getExitTransitions(State st, StateMachine root){
+	private List<Transition> getExitTransitions(State st, StateMachine root) {
 		List<Transition> transitions = new ArrayList<Transition>();
 		for( Transition transition : root.getAllTransitions() ){
 			if(st.hasNestedStateMachines() && !st.isIsConcurrent() )				
@@ -628,18 +639,15 @@ class NuSMVCoordinator
 		return transitions;
 	}
 	
-	private List<State> getEmbeddedStates(StateMachine sm ){
+	private List<State> getEmbeddedStates(StateMachine sm ) {
 		List<State> embeddedStates = new ArrayList<State>();
-		for(State state : sm.getStates() ){
+		for(State state : sm.getStates() ) {
 			if(!state.hasNestedStateMachines())
 				embeddedStates.add(state);
-			else {
-				for( StateMachine stm : generateStateMachineList(sm) ){
+			else
+				for( StateMachine stm : generateStateMachineList(sm) )
 					for(State st : getEmbeddedStates(stm))
-						embeddedStates.add(st);
-					//checks if statemachine stm has wrapper --- to-do here!						
-				}
-			}
+						embeddedStates.add(st);						
 		}
 		return embeddedStates;
 	}
@@ -657,21 +665,19 @@ class NuSMVCoordinator
 		int counter = 0;
 		BasicExpression rt = new BasicExpression("root");
 		List<Transition> trans;
-		if(!(getParentState(sm).isIsConcurrent())){
-			if(sm.equals(root))
-				return null;
-			trans = getExitTransitions( getParentState(sm), root );
+		if(!( getParentState( sm ).isIsConcurrent() )) {
+			if( sm.equals(root) ) return null;
+			trans = getExitTransitions( getParentState( sm ), root );
 		}
 		else
 			trans = getExitTransitionsForConcurrentRegion(sm, root);
 
 		for( Transition tr : trans ) {
-				BasicExpression bexp;
-				bexp = new BasicExpression("_"+changeNameCase(root.getFullName(),0)+".t"+getObjectIdentity( root, tr) );	
-				rt = getExpressionTreeFor( rt, bexp );
-				counter++;
+			BasicExpression bexp;
+			bexp = new BasicExpression("_"+changeNameCase(root.getFullName(),0)+".t"+getObjectIdentity( root, tr) );	
+			rt = getExpressionTreeFor( rt, bexp );
+			counter++;
 		}
-		
 		if(counter > 0) {
   			BasicExpression state = new BasicExpression( "null" ); 
   			return new CaseStatement( rt, state );
@@ -692,21 +698,7 @@ class NuSMVCoordinator
 				bexp = new BasicExpression("t"+getObjectIdentity( parent, tr) );
   			root = getExpressionTreeFor( root, bexp );	
   			counter++;
-  		}
-  		/*if( st.isIsStartState() && st.getStateMachine().getParentState() != null ) {
-  			State bioparent = st.getStateMachine().getParentState();
-  			BasicExpression bexp1 = new BasicExpression("_"+changeNameCase(bioparent.getStateMachine().getFullName(), 0)+".state");
-  			BasicExpression bexp2 = new BasicExpression(changeNameCase(tr.getFromState().getStateMachine().getFullName(),1)+"_"+bioparent.getName());
-  			BasicExpression bexp3 = new BasicExpression("expr");
-  			bexp3.addChild(bexp1);
-  			bexp3.addChild(bexp2);
-  			bexp3.setOperator( bexp1.getOperator().EQ );
-  			if(root.getChildren().size() == 0)
-  				root = bexp3;
-  			else
-  				root = getExpressionTreeFor( root, bexp3 );
-  			counter++;
-  		}*/  			
+  		} 			
   		if(counter > 0) {
   			BasicExpression state = new BasicExpression( changeNameCase(st.getStateMachine().getFullName(),1)+"_"+st.getName() ); 
   			return new CaseStatement( root, state );

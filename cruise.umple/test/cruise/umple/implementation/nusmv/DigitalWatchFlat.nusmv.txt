@@ -10,6 +10,7 @@ MODULE Sm
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Sm_time , Sm_date , Sm_paused , Sm_running , Sm_lapRunning , Sm_lapPaused , Sm_bothOff , Sm_chimeOn , Sm_bothOn , Sm_alarmOn , Sm_alarmTime , Sm_alarmHour , Sm_alarmMinute , Sm_second , Sm_minute , Sm_hour , Sm_month , Sm_day , Sm_year };
+     event : { ev_s1 , ev_s2 , ev_s3 , ev_s3during2Secs , ev_notS1 , ev_notS2 , ev_null };
      day : integer;
      month : integer;
      year : integer;
@@ -20,7 +21,6 @@ MODULE Sm
      alarmMinute : integer;
      alarmSecond : integer;
      timer : integer;
-     event : { ev_s1 , ev_s2 , ev_s3 , ev_s3during2Secs , ev_notS1 , ev_notS2 , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
