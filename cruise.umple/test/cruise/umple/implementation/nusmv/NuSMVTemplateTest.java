@@ -55,7 +55,16 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/AndCrossExample.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/AndCrossFromDeeplyNestedState.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/AndCrossFromDeeplyNestedStateCase2.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/EnhancedBitCounter.smv");
 	  }
+	  
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
+	  public void EnhancedBitCounter()
+	  {
+	  		assertUmpleTemplateFor("nusmv/EnhancedBitCounter.ump","nusmv/EnhancedBitCounter.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/EnhancedBitCounter.smv")).exists());
+	  }
+	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
 	  public void AndCrossFromDeeplyNestedStateCase2()
 	  {

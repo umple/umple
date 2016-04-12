@@ -1,0 +1,47 @@
+//Bit Counter from Nancy A. Day
+
+class A {
+  sm {
+    stable {
+      e0 -> Counter;
+    }
+    Counter{
+      Bit1{
+        Bit11{
+          e1 -> Bit12;
+        }
+        Bit12 {
+          e2 -> Bit11;
+        }
+      }
+      ||
+      Bit2{
+        Bit21{
+          e1 -> Bit22;
+        }
+        Bit22 {
+          e2 -> Max;
+        }
+      }
+       ||
+      Status {
+         Counting { 
+           Bit3{
+             Bit31{
+               e1 -> Bit41;
+             }
+           }
+           ||
+           Bit4{
+             Bit41{
+               e2 -> Bit31;
+             }
+           }
+         }
+        Max {
+          reset -> Counting;
+        }
+      }
+    }
+  }
+}
