@@ -10,10 +10,10 @@ MODULE LockState
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { LockState_BothDoorsClosedLockFull , LockState_OpeningUpperGate , LockState_UpperGateOpen , LockState_ClosingUpperGate , LockState_LoweringWater , LockState_BothDoorsClosedLockEmpty , LockState_OpeningLowerGate , LockState_LowerGateOpen , LockState_ClosingLowerGate , LockState_RaisingWater };
+     event : { ev_boatRequestsToEnterAndGoDown , ev_boatRequestsToEnterAndGoUp , ev_upperGateFullyOpen , ev_boatInLockRequestingToGoDown , ev_after3minutes , ev_upperGateFullyClosed , ev_waterLevelMatchesDownStream , ev_lowerGateFullyOpen , ev_boatInLockRequestingToGoUp , ev_lowerGateFullyClosed , ev_waterLevelMatchesUpStream , ev_null };
      boatGoingDown : boolean;
      boatGoingUp : boolean;
      boatBlockingGate : boolean;
-     event : { ev_boatRequestsToEnterAndGoDown , ev_boatRequestsToEnterAndGoUp , ev_upperGateFullyOpen , ev_boatInLockRequestingToGoDown , ev_after3minutes , ev_upperGateFullyClosed , ev_waterLevelMatchesDownStream , ev_lowerGateFullyOpen , ev_boatInLockRequestingToGoUp , ev_lowerGateFullyClosed , ev_waterLevelMatchesUpStream , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE

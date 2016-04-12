@@ -10,12 +10,12 @@ MODULE State ( _stateDrive )
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { State_neutral , State_reverse , State_drive };
+     event : { ev_selectReverse , ev_selectDrive , ev_selectFirst , ev_selectSecond , ev_selectNeutral , ev_reachSecondSpeed , ev_reachThirdSpeed , ev_dropBelowSecondSpeed , ev_dropBelowThirdSpeed , ev_null };
      driveSelected : boolean;
      notdriveSelected : boolean;
      a : integer;
      b : integer;
      c : integer;
-     event : { ev_selectReverse , ev_selectDrive , ev_selectFirst , ev_selectSecond , ev_selectNeutral , ev_reachSecondSpeed , ev_reachThirdSpeed , ev_dropBelowSecondSpeed , ev_dropBelowThirdSpeed , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE

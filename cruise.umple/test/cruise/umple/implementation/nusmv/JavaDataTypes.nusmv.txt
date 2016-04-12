@@ -10,6 +10,7 @@ MODULE Sm
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Sm_s1 , Sm_s2 };
+     event : { ev_e1 , ev_e2 , ev_e3 , ev_null };
      a : integer;
      b : integer;
      c : real;
@@ -18,7 +19,6 @@ MODULE Sm
      h : boolean;
      f : integer;
      g : integer;
-     event : { ev_e1 , ev_e2 , ev_e3 , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE

@@ -84,7 +84,7 @@ MODULE SmBB ( _sm )
        _sm.t8 | _sm.t12 : SmBB_b2;
        _sm.t7 | _sm.t11 : SmBB_b3;
        _sm.t10 : SmBB_b4;
-       _sm.t5 : null;
+       _sm.t5 | _sm.t18 : null;
        _sm.state = Sm_s2 & state = null : SmBB_b1;
        TRUE : state;
      esac;
