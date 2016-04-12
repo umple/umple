@@ -1,0 +1,165 @@
+-- This file is generated from EnhancedBitCounter.ump --
+
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
+
+
+-- This defines a NuSMV module for Sm --
+MODULE Sm ( _smBit1Bit1 , _smBit2Bit2 , _smStatusStatus , _smStatusStatusBit3Bit3 , _smStatusStatusBit4Bit4 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm_stable , Sm_Counter };
+     event : { ev_e0 , ev_e1 , ev_e2 , ev_reset , ev_null };
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     sm_stable :=  !( event = ev_e0 | event = ev_e2 | event = ev_e1 | event = ev_reset );
+     t1 := event = ev_e0 & state = Sm_stable;
+     t2 := event = ev_e1 & _smBit1Bit1.state = SmBit1Bit1_Bit11;
+     t3 := event = ev_e2 & _smBit1Bit1.state = SmBit1Bit1_Bit12;
+     t4 := event = ev_e1 & _smBit2Bit2.state = SmBit2Bit2_Bit21;
+     t5 := event = ev_e2 & _smBit2Bit2.state = SmBit2Bit2_Bit22;
+     t6 := event = ev_reset & _smStatusStatus.state = SmStatusStatus_Max;
+     t7 := event = ev_e1 & _smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31;
+     t8 := event = ev_e2 & _smStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := Sm_stable;
+     next( state ) := case
+       t1 | t2 | t6 | t7 | t3 | t4 | t8 | t5 : Sm_Counter;
+       TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       sm_stable : { ev_e0 , ev_e1 , ev_e2 , ev_reset };
+       TRUE : ev_null;
+     esac;
+
+-- This defines a NuSMV module for SmBit1Bit1 --
+MODULE SmBit1Bit1 ( _sm )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmBit1Bit1_Bit11 , SmBit1Bit1_Bit12 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t3 : SmBit1Bit1_Bit11;
+       _sm.t2 : SmBit1Bit1_Bit12;
+       _sm.t1 | _sm.t5 : null;
+       _sm.state = Sm_Counter & state = null : SmBit1Bit1_Bit11;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for SmBit2Bit2 --
+MODULE SmBit2Bit2 ( _sm )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmBit2Bit2_Bit21 , SmBit2Bit2_Bit22 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t4 : SmBit2Bit2_Bit22;
+       _sm.t1 | _sm.t5 : null;
+       _sm.state = Sm_Counter & state = null : SmBit2Bit2_Bit21;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for SmStatusStatus --
+MODULE SmStatusStatus ( _sm )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmStatusStatus_Counting , SmStatusStatus_Max , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t8 | _sm.t6 | _sm.t7 : SmStatusStatus_Counting;
+       _sm.t5 : SmStatusStatus_Max;
+       _sm.t1 : null;
+       _sm.state = Sm_Counter & state = null : SmStatusStatus_Counting;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for SmStatusStatusBit3Bit3 --
+MODULE SmStatusStatusBit3Bit3 ( _sm , _smStatusStatus )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmStatusStatusBit3Bit3_Bit31 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t8 : SmStatusStatusBit3Bit3_Bit31;
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 : null;
+       _smStatusStatus.state = SmStatusStatus_Counting & state = null : SmStatusStatusBit3Bit3_Bit31;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for SmStatusStatusBit4Bit4 --
+MODULE SmStatusStatusBit4Bit4 ( _sm , _smStatusStatus )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmStatusStatusBit4Bit4_Bit41 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t7 : SmStatusStatusBit4Bit4_Bit41;
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t8 : null;
+       _smStatusStatus.state = SmStatusStatus_Counting & state = null : SmStatusStatusBit4Bit4_Bit41;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for main --
+MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     sm : Sm( smBit1Bit1 , smBit2Bit2 , smStatusStatus , smStatusStatusBit3Bit3 , smStatusStatusBit4Bit4 );
+     smBit1Bit1 : SmBit1Bit1( sm );
+     smBit2Bit2 : SmBit2Bit2( sm );
+     smStatusStatus : SmStatusStatus( sm );
+     smStatusStatusBit3Bit3 : SmStatusStatusBit3Bit3( sm , smStatusStatus );
+     smStatusStatusBit4Bit4 : SmStatusStatusBit4Bit4( sm , smStatusStatus );
+CTLSPEC   EF( sm.state = Sm_stable )
+CTLSPEC   EF( sm.state = Sm_Counter )
+CTLSPEC   EF( smBit1Bit1.state = SmBit1Bit1_Bit11 )
+CTLSPEC   EF( smBit1Bit1.state = SmBit1Bit1_Bit12 )
+CTLSPEC   EF( smBit2Bit2.state = SmBit2Bit2_Bit21 )
+CTLSPEC   EF( smBit2Bit2.state = SmBit2Bit2_Bit22 )
+CTLSPEC   EF( smStatusStatus.state = SmStatusStatus_Counting )
+CTLSPEC   EF( smStatusStatus.state = SmStatusStatus_Max )
+CTLSPEC   EF( smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 )
+CTLSPEC   EF( smStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41 )
+CTLSPEC   AG !( sm.t1 & sm.t2 )
+CTLSPEC   AG !( sm.t1 & sm.t3 )
+CTLSPEC   AG !( sm.t1 & sm.t4 )
+CTLSPEC   AG !( sm.t1 & sm.t5 )
+CTLSPEC   AG !( sm.t1 & sm.t6 )
+CTLSPEC   AG !( sm.t1 & sm.t7 )
+CTLSPEC   AG !( sm.t2 & sm.t3 )
+CTLSPEC   AG !( sm.t2 & sm.t4 )
+CTLSPEC   AG !( sm.t2 & sm.t5 )
+CTLSPEC   AG !( sm.t2 & sm.t6 )
+CTLSPEC   AG !( sm.t2 & sm.t7 )
+CTLSPEC   AG !( sm.t3 & sm.t4 )
+CTLSPEC   AG !( sm.t3 & sm.t5 )
+CTLSPEC   AG !( sm.t3 & sm.t6 )
+CTLSPEC   AG !( sm.t3 & sm.t7 )

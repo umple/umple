@@ -602,10 +602,20 @@ class NuSMVCoordinator
 		return andCross;
 	}
 	
+	private List<Transition> getEnclosedTransitions( State state ) {
+	
+		List<Transition> enclosedTransitions = new ArrayList<Transition>();
+		for( Transition tr : getAllEnablingTransitions( state ) )
+			if( !tr.getNextState().equals( state ))
+				enclosedTransitions.add( tr );
+		return enclosedTransitions;
+	}
+	
 	//Computes the exit transitions for a concurrent region
 	private List<Transition> getExitTransitionsForConcurrentRegion(StateMachine region, StateMachine root){
-		List<Transition> trans = getAllEnablingTransitions( getParentState(region) );
+		List<Transition> trans = getEnclosedTransitions( getParentState(region) );
 		List<Transition> temp = new ArrayList<Transition>();
+		
 		for( Transition tr : root.getAllTransitions() )
 			if( !has( trans, tr ) )
 				temp.add( tr ); //adds to temp every other transitions not enclosed by the parent state 

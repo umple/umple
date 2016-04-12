@@ -89,7 +89,7 @@ MODULE StateState12State12State1221State1221 ( _state , _stateState12State12 )
      init( state ) := null;
      next( state ) := case
        _state.t4 : StateState12State12State1221State1221_state12211;
-       _state.t1 | _state.t3 | _state.t8 | _state.t2 | _state.t5 | _state.t9 : null;
+       _state.t2 | _state.t5 | _state.t8 | _state.t1 | _state.t3 | _state.t6 | _state.t9 : null;
        _stateState12State12.state = StateState12State12_state122 & state = null : StateState12State12State1221State1221_state12211;
        TRUE : state;
      esac;
@@ -105,7 +105,7 @@ MODULE StateState12State12State1222State1222 ( _state , _stateState12State12 )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _state.t1 | _state.t3 | _state.t8 | _state.t2 | _state.t5 | _state.t9 : null;
+       _state.t2 | _state.t5 | _state.t8 | _state.t1 | _state.t3 | _state.t6 | _state.t9 : null;
        _stateState12State12.state = StateState12State12_state122 & state = null : StateState12State12State1222State1222_state12221;
        TRUE : state;
      esac;
