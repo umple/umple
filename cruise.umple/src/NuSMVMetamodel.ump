@@ -145,8 +145,8 @@ class BasicExpression {
 			case "GT" : 			return " > ";
 			case "LE" : 			return " <= ";
 			case "GE" : 			return " >= ";
-      case "MINUS" : 	return " - ";
-      case "NOT" : 		return " ! ";
+            case "MINUS" : 	return " - ";
+            case "NOT" : 		return " ! ";
 			case "MOD" : return " mod ";
 			case "PLUS" : return " + ";
 			case "MUL" : return " * ";
@@ -195,15 +195,36 @@ class CTLExpression {
 	ctlOperator { EG, EX, EF, AG, AX, AF, E, A, U };
 	lazy Boolean qualified;
 	after constructor { setQualified(false); }
-
-	private String getRealExpression() {
-		if(qualified)
-			return getCtlOperatorFullName()+getExpression();
-		return getExpression();	
+	
+    public String getExpression() {
+  		String op = convertOperator();
+  		String temp = "";
+		if(getChildren().size() == 0)
+      		return getIdentifier();
+    	if(getChildren().size() == 1)
+				if(getBracketed())
+					temp = "( "+ getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier() + " )";
+      			else  
+      				temp = getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier();
+    	else
+				if(getBracketed())
+					temp = "( "+ getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression()+" )";
+      			else 
+      				temp = getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression();   	
+      	if(getDisplayNegation())
+      		temp = " !"+temp;
+      	if( qualified )
+      		return getCtlOperatorFullName() + temp;
+      	return temp;
 	}	
+	/*public String getRealExpression() {
+	    if( qualified )
+			return +getExpression();
+		return getExpression();	
+	}*/	
 	//Template for formatting output
-  output <<! <<#if(getBracketed()){#>><<=getRealExpression()>><<#}
-  else{#>><<=getRealExpression()>><<#}#>>!>>
+  output <<! <<#if(getBracketed()){#>><<=getExpression()>><<#}
+  else{#>><<=getExpression()>><<#}#>>!>>
   emit toString()(output);
 }
 
