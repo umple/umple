@@ -5,7 +5,7 @@
 
 
 -- This defines a NuSMV module for CruiseControlSystem --
-MODULE CruiseControlSystem ( _cruiseControlSystemControlCruiseController , _cruiseControlSystemControlCruiseControllerCruiseController , _cruiseControlSystemControlCruiseControllerCruiseControllerInactive , _cruiseControlSystemControlCruiseControllerCruiseControllerActive , _cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState , _cruiseControlSystemControlCruiseControllerCruiseControllerCruising , _cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1 , _cruiseControlSystemControlCruiseControllerCruiseControllerStandby , _cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1 , _cruiseControlSystemControlSpeedControl , _cruiseControlSystemControlSpeedControlSpeedControl , _cruiseControlSystemInputSpeedInputSpeed , _cruiseControlSystemThrottleThrottle )
+MODULE CruiseControlSystem ( _cruiseControlSystemControlCruiseController , _cruiseControlSystemControlCruiseControllerCruiseController , _cruiseControlSystemControlCruiseControllerCruiseControllerInactive , _cruiseControlSystemControlCruiseControllerCruiseControllerActive , _cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState , _cruiseControlSystemControlCruiseControllerCruiseControllerCruising , _cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1 , _cruiseControlSystemControlCruiseControllerCruiseControllerStandby , _cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1 , _cruiseControlSystemControlSpeedControl , _cruiseControlSystemControlSpeedControlSpeedControl , _cruiseControlSystemSensorScan , _cruiseControlSystemInputSpeedInputSpeed , _cruiseControlSystemThrottleThrottle )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -264,6 +264,22 @@ MODULE CruiseControlSystemControlSpeedControlSpeedControl ( _cruiseControlSystem
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for CruiseControlSystemSensorScan --
+MODULE CruiseControlSystemSensorScan ( _cruiseControlSystem )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { CruiseControlSystemSensorScan_sensorScan , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 : CruiseControlSystemSensorScan_sensorScan;
+       _cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & state = null : CruiseControlSystemSensorScan_sensorScan;
+       TRUE : state;
+     esac;
+
 -- This defines a NuSMV module for CruiseControlSystemInputSpeedInputSpeed --
 MODULE CruiseControlSystemInputSpeedInputSpeed ( _cruiseControlSystem )
 
@@ -301,7 +317,7 @@ MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     cruiseControlSystem : CruiseControlSystem( cruiseControlSystemControlCruiseController , cruiseControlSystemControlCruiseControllerCruiseController , cruiseControlSystemControlCruiseControllerCruiseControllerInactive , cruiseControlSystemControlCruiseControllerCruiseControllerActive , cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState , cruiseControlSystemControlCruiseControllerCruiseControllerCruising , cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1 , cruiseControlSystemControlCruiseControllerCruiseControllerStandby , cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1 , cruiseControlSystemControlSpeedControl , cruiseControlSystemControlSpeedControlSpeedControl , cruiseControlSystemInputSpeedInputSpeed , cruiseControlSystemThrottleThrottle );
+     cruiseControlSystem : CruiseControlSystem( cruiseControlSystemControlCruiseController , cruiseControlSystemControlCruiseControllerCruiseController , cruiseControlSystemControlCruiseControllerCruiseControllerInactive , cruiseControlSystemControlCruiseControllerCruiseControllerActive , cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState , cruiseControlSystemControlCruiseControllerCruiseControllerCruising , cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1 , cruiseControlSystemControlCruiseControllerCruiseControllerStandby , cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1 , cruiseControlSystemControlSpeedControl , cruiseControlSystemControlSpeedControlSpeedControl , cruiseControlSystemSensorScan , cruiseControlSystemInputSpeedInputSpeed , cruiseControlSystemThrottleThrottle );
      cruiseControlSystemControlCruiseController : CruiseControlSystemControlCruiseController( cruiseControlSystem );
      cruiseControlSystemControlCruiseControllerCruiseController : CruiseControlSystemControlCruiseControllerCruiseController( cruiseControlSystem , cruiseControlSystemControl );
      cruiseControlSystemControlCruiseControllerCruiseControllerInactive : CruiseControlSystemControlCruiseControllerCruiseControllerInactive( cruiseControlSystem , cruiseControlSystemControlCruiseControllerCruiseController );
@@ -313,6 +329,7 @@ MODULE main
      cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1 : CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1( cruiseControlSystem , cruiseControlSystemControlCruiseControllerCruiseControllerStandby );
      cruiseControlSystemControlSpeedControl : CruiseControlSystemControlSpeedControl( cruiseControlSystem );
      cruiseControlSystemControlSpeedControlSpeedControl : CruiseControlSystemControlSpeedControlSpeedControl( cruiseControlSystem , cruiseControlSystemControl );
+     cruiseControlSystemSensorScan : CruiseControlSystemSensorScan( cruiseControlSystem );
      cruiseControlSystemInputSpeedInputSpeed : CruiseControlSystemInputSpeedInputSpeed( cruiseControlSystem );
      cruiseControlSystemThrottleThrottle : CruiseControlSystemThrottleThrottle( cruiseControlSystem );
 CTLSPEC   EF( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem )
@@ -334,5 +351,6 @@ CTLSPEC   EF( cruiseControlSystemControlSpeedControl.state = CruiseControlSystem
 CTLSPEC   EF( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled )
 CTLSPEC   EF( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled )
 CTLSPEC   EF( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_tempState )
+CTLSPEC   EF( cruiseControlSystemSensorScan.state = CruiseControlSystemSensorScan_sensorScan )
 CTLSPEC   EF( cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed )
 CTLSPEC   EF( cruiseControlSystemThrottleThrottle.state = CruiseControlSystemThrottleThrottle_tempState )

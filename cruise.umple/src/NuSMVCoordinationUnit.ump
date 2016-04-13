@@ -139,6 +139,8 @@ class NuSMVCoordinator
 				}
 				else {
 					//skips the wrapper of the region
+					if( stm.getImmediateNestedStateMachines().size() == 0 )
+						nestedMachines.add( stm );
 					for( StateMachine region : stm.getImmediateNestedStateMachines() ){
 						if(!has(nestedMachines, stm)){
 							nestedMachines.add( region );
@@ -224,7 +226,7 @@ class NuSMVCoordinator
 		return temp;				
 	}
 	
-	private List<NuSMVModule> generateModuleForCompositeStatesOf( StateMachine root, StateMachine parent ) {
+	/*private List<NuSMVModule> generateModuleForCompositeStatesOf( StateMachine root, StateMachine parent ) {
 		List<NuSMVModule> nestedMachines = new ArrayList<NuSMVModule>();
   		for( State st :  getCompositeStates(parent) ) {
 			if(!st.isIsConcurrent()) {
@@ -250,6 +252,18 @@ class NuSMVCoordinator
 				}
 			}
   		}
+		return nestedMachines;
+	}*/
+	
+	private List<NuSMVModule> generateModuleForCompositeStatesOf( StateMachine root, StateMachine parent ) {
+		List<NuSMVModule> nestedMachines = new ArrayList<NuSMVModule>();
+  		for( StateMachine stm : generateStateMachineList(root) ) {
+			if( !stm.equals( root ) ) {
+				NuSMVModule module = generateModuleForSubstate(stm, root);
+				generateParameters( module, root, stm ); 
+				nestedMachines.add( module );
+			}
+		}
 		return nestedMachines;
 	}
   	
