@@ -74,30 +74,29 @@ class CruiseControlSystem
 		||
 		sensorScan {
             term -> terminal;
-			engineOn -> sensorScan;
-			engineOff -> sensorScan;
-			on -> sensorScan;
-			off -> sensorScan;
-			resume -> sensorScan;
-			brake -> sensorScan;
-			accelerator -> sensorScan;
+			engineOn -> adaptiveControlSystem;
+			engineOff -> adaptiveControlSystem;
+			on -> adaptiveControlSystem;
+			off -> adaptiveControlSystem;
+			resume -> adaptiveControlSystem;
+			brake -> adaptiveControlSystem;
+			accelerator -> adaptiveControlSystem;
 		}
 		||
 		inputSpeed {
             term -> terminal;
 			engineOn -> checkSpeed;
+            engineOff -> adaptiveControlSystem;
 			checkSpeed {
 				speed -> checkSpeed;
-				engineOff -> inputSpeed;
 			}
 		}
 		||
 		throttle {
             term -> terminal;
 			setThrottle -> throttle.tempState;
-			tempState {
-				zoom -> throttle;
-			}
+            zoom -> adaptiveControlSystem;
+			tempState {}
 		}
       }
       terminal{}

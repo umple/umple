@@ -139,6 +139,9 @@ class NuSMVCoordinator
 				}
 				else {
 					//skips the wrapper of the region
+					if( stm.getImmediateNestedStateMachines().size() == 0 )
+						nestedMachines.add( stm );
+					
 					for( StateMachine region : stm.getImmediateNestedStateMachines() ){
 						if(!has(nestedMachines, stm)){
 							nestedMachines.add( region );
@@ -147,42 +150,13 @@ class NuSMVCoordinator
 									nestedMachines.add( innerMachine );
 						}
 					}
+					if( stm.getImmediateNestedStateMachines().size() > 1 )
+						nestedMachines.add( stm );
 				}
 			}
   		}
 		return nestedMachines;
 	}
-	
-	//Created to generate the list of state machine
-	/*private List<StateMachine> generateStateMachineList( StateMachine root ) {
-		List<StateMachine> nestedMachines = new ArrayList<StateMachine>();
-		nestedMachines.add(root);
-  		for( State st :  getCompositeStates(root) ) {
-			for( StateMachine stm : st.getNestedStateMachines() ) {
-				if(!st.isIsConcurrent()){
-					if(!has(nestedMachines, stm))
-						nestedMachines.add( stm );
-					if( isNested( stm ) )
-							for( StateMachine innerMachine : generateStateMachineList( stm ) )
-								if(!has(nestedMachines, innerMachine))
-									nestedMachines.add( innerMachine );
-				}
-				else {
-					//skips the wrapper of the region
-					for( StateMachine region : stm.getImmediateNestedStateMachines() ){
-						if(!has(nestedMachines, region))
-							nestedMachines.add( region );
-						stm = region;
-						if( isNested( stm ) )
-							for( StateMachine innerMachine : generateStateMachineList( stm ) )
-								if(!has(nestedMachines, innerMachine))
-									nestedMachines.add( innerMachine );
-					}
-				}
-			}
-  		}
-		return nestedMachines;
-	}*/
 	
 	private boolean isHighLevelTransition( Transition transition ){
 		State source = transition.getFromState();
@@ -200,22 +174,6 @@ class NuSMVCoordinator
 		return source.getImmediateNestedStateMachines().get(0);
 	}
 	
-  	/*private List<StateMachine> generateStateMachineList1( StateMachine sm ) {
-		List<StateMachine> temp = new ArrayList<StateMachine>();
-		temp.add(sm);
-		for(State st : sm.getStates()) {
-			if(st.hasNestedStateMachines()) {
-				if(!has(temp, st.getStateMachine()))
-					temp.add(st.getStateMachine());
-				for(StateMachine stm : st.getNestedStateMachines()) {
-					for(StateMachine stt : generateStateMachineList1(stm))
-						temp.add(stt);
-				}
-			}
-		}
-		return temp;				
-	}*/
-	
 	private List<State> getCompositeStates(StateMachine sm) {
 		List<State> temp = new ArrayList<State>();
 		for(State st : sm.getStates())
@@ -226,30 +184,13 @@ class NuSMVCoordinator
 	
 	private List<NuSMVModule> generateModuleForCompositeStatesOf( StateMachine root, StateMachine parent ) {
 		List<NuSMVModule> nestedMachines = new ArrayList<NuSMVModule>();
-  		for( State st :  getCompositeStates(parent) ) {
-			if(!st.isIsConcurrent()) {
-				for( StateMachine stm : st.getNestedStateMachines() ) {
-					NuSMVModule module = generateModuleForSubstate(stm, root);
-					generateParameters( module, root, stm ); 
-					nestedMachines.add( module );
-					if( isNested( stm ) )
-						for( NuSMVModule innerModule : generateModuleForCompositeStatesOf( root, stm ) )
-							nestedMachines.add( innerModule );
-				}
+  		for( StateMachine stm : generateStateMachineList(root) ) {
+			if( !stm.equals( root ) ) {
+				NuSMVModule module = generateModuleForSubstate(stm, root);
+				generateParameters( module, root, stm ); 
+				nestedMachines.add( module );
 			}
-			else {
-				for( StateMachine stm : st.getNestedStateMachines() ) {
-					for(StateMachine region : stm.getImmediateNestedStateMachines()){
-						NuSMVModule module = generateModuleForSubstate(region, root);
-						generateParameters( module, root, region ); 
-						nestedMachines.add( module );
-						if( isNested( region ) )
-							for( NuSMVModule innerModule : generateModuleForCompositeStatesOf(root, region) )
-								nestedMachines.add( innerModule );
-					}
-				}
-			}
-  		}
+		}
 		return nestedMachines;
 	}
   	
@@ -370,16 +311,23 @@ class NuSMVCoordinator
 		return null;
 	}
 	
+	private StateMachine skipWrapper( StateMachine sm ){
+		if( sm.getImmediateNestedStateMachines().size() == 1 && sm.getStates().size() > 0 )
+			return sm.getImmediateNestedStateMachines().get( 0 );
+		return sm;
+		
+	}
+	
 	private CTLExpression generateDestinationStatesExpr( Transition first, Transition second ) {
 				
-		BasicExpression f1 = new BasicExpression( changeNameCase(first.getNextState().getStateMachine().getFullName(), 0)+".state" );
+		BasicExpression f1 = new BasicExpression( changeNameCase( first.getNextState().getStateMachine().getFullName(), 0)+".state" );
     	BasicExpression f2 = new BasicExpression( changeNameCase( first.getNextState().getStateMachine().getFullName(),1)+"_"+first.getNextState().getName());
 		BasicExpression firstExpr = new BasicExpression("first");
 		firstExpr.addChild(f1);
 		firstExpr.addChild(f2);
 		firstExpr.setOperator(BasicExpression.Operator.EQ);
 		
-		BasicExpression s1 = new BasicExpression( changeNameCase( second.getNextState().getStateMachine().getFullName(), 0)+".state" );
+		BasicExpression s1 = new BasicExpression( changeNameCase( second.getNextState().getStateMachine().getFullName(),0)+".state" );
     	BasicExpression s2 = new BasicExpression( changeNameCase( second.getNextState().getStateMachine().getFullName(),1)+"_"+second.getNextState().getName());
 		BasicExpression secondExpr = new BasicExpression("second");
 		secondExpr.addChild(s1);
@@ -596,7 +544,8 @@ class NuSMVCoordinator
 		else {
 			//skips the wrapper of the region
 			for(StateMachine nsm : state.getNestedStateMachines()) {
-				if( nsm.getImmediateNestedStateMachines().size() == 0 )
+				System.out.println( nsm.getFullName() );
+				if( nsm.getImmediateNestedStateMachines().size() != 1 )
 					stateMachines.add(nsm);
 				for( StateMachine region : nsm.getImmediateNestedStateMachines() ){
 					stateMachines.add(region);
@@ -607,7 +556,7 @@ class NuSMVCoordinator
 	}
 	
 	//This method the set of and-cross transitions for a state machine
-	private List<Transition> andCross(StateMachine sm){
+	private List<Transition> andCross(StateMachine sm) {
 		
 		List<State> embeddedStates = getEmbeddedStates(sm);
 		List<State> friendStates = new ArrayList<State>();

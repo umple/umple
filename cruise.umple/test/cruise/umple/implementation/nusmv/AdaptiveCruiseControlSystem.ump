@@ -71,29 +71,31 @@ class CruiseControlSystem
 		}
 		||
 		sensorScan {
-			engineOn -> sensorScan;
-			engineOff -> sensorScan;
-			on -> sensorScan;
-			off -> sensorScan;
-			resume -> sensorScan;
-			brake -> sensorScan;
-			accelerator -> sensorScan;
+			engineOn ->  adaptiveControlSystem;
+			engineOff ->  adaptiveControlSystem;
+			on ->  adaptiveControlSystem;
+			off ->  adaptiveControlSystem;
+			resume ->  adaptiveControlSystem;
+			brake ->  adaptiveControlSystem;
+			accelerator ->  adaptiveControlSystem;
 		}
 		||
 		inputSpeed {
 			engineOn -> checkSpeed;
 			checkSpeed {
 				speed -> checkSpeed;
-				engineOff -> inputSpeed;
+				engineOff -> adaptiveControlSystem;
 			}
 		}
 		||
 		throttle {
 			setThrottle -> throttle.tempState;
 			tempState {
-				zoom -> throttle;
+				zoom ->  adaptiveControlSystem;
 			}
 		}
       }
 	}
 }
+
+generate NuSMV;
