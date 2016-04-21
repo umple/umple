@@ -62,9 +62,9 @@ MODULE SmAA ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t5 : null;
        _sm.t2 | _sm.t6 : SmAA_a2;
        _sm.t4 | _sm.t3 | _sm.t18 : SmAA_a3;
-       _sm.t5 : null;
        _sm.state = Sm_s2 & state = null : SmAA_a1;
        TRUE : state;
      esac;
@@ -80,11 +80,11 @@ MODULE SmBB ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t5 | _sm.t18 : null;
        _sm.t9 : SmBB_b1;
        _sm.t8 | _sm.t12 : SmBB_b2;
        _sm.t7 | _sm.t11 : SmBB_b3;
        _sm.t10 : SmBB_b4;
-       _sm.t5 | _sm.t18 : null;
        _sm.state = Sm_s2 & state = null : SmBB_b1;
        TRUE : state;
      esac;
@@ -100,10 +100,10 @@ MODULE SmCC ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t5 | _sm.t18 : null;
        _sm.t15 | _sm.t14 | _sm.t17 : SmCC_c2;
        _sm.t1 | _sm.t13 : SmCC_c3;
        _sm.t16 : SmCC_c4;
-       _sm.t5 | _sm.t18 : null;
        _sm.state = Sm_s2 & state = null : SmCC_c1;
        TRUE : state;
      esac;
@@ -130,39 +130,22 @@ CTLSPEC   EF( smCC.state = SmCC_c1 )
 CTLSPEC   EF( smCC.state = SmCC_c2 )
 CTLSPEC   EF( smCC.state = SmCC_c3 )
 CTLSPEC   EF( smCC.state = SmCC_c4 )
-CTLSPEC   AG( sm.t8 & sm.t1 -> EX( smBB.state = SmBB_b2 & smCC.state = SmCC_c3 ) )
-CTLSPEC   AG( sm.t9 & sm.t1 -> EX( smBB.state = SmBB_b1 & smCC.state = SmCC_c3 ) )
-CTLSPEC   AG( sm.t13 & sm.t14 -> EX( smCC.state = SmCC_c3 & smCC.state = SmCC_c2 ) )
-CTLSPEC   AG( sm.t13 & sm.t1 -> EX( smCC.state = SmCC_c3 & smCC.state = SmCC_c3 ) )
-CTLSPEC   AG( sm.t14 & sm.t1 -> EX( smCC.state = SmCC_c2 & smCC.state = SmCC_c3 ) )
-CTLSPEC   AG( sm.t2 & sm.t3 -> EX( smAA.state = SmAA_a2 & smAA.state = SmAA_a3 ) )
-CTLSPEC   AG( sm.t2 & sm.t18 -> EX( smAA.state = SmAA_a2 & smAA.state = SmAA_a3 ) )
-CTLSPEC   AG( sm.t2 & sm.t1 -> EX( smAA.state = SmAA_a2 & smCC.state = SmCC_c3 ) )
-CTLSPEC   AG( sm.t17 & sm.t18 -> EX( smCC.state = SmCC_c2 & smAA.state = SmAA_a3 ) )
-CTLSPEC   AG( sm.t17 & sm.t1 -> EX( smCC.state = SmCC_c2 & smCC.state = SmCC_c3 ) )
-CTLSPEC   AG( sm.t18 & sm.t1 -> EX( smAA.state = SmAA_a3 & smCC.state = SmCC_c3 ) )
+CTLSPEC   AG( sm.t18 & sm.t2 -> EX( smAA.state = SmAA_a3 & smAA.state = SmAA_a2 ) )
+CTLSPEC   AG( sm.t18 & sm.t3 -> EX( smAA.state = SmAA_a3 & smAA.state = SmAA_a3 ) )
+CTLSPEC   AG( sm.t18 & sm.t4 -> EX( smAA.state = SmAA_a3 & smAA.state = SmAA_a3 ) )
+CTLSPEC   AG( sm.t18 & sm.t6 -> EX( smAA.state = SmAA_a3 & smAA.state = SmAA_a2 ) )
 CTLSPEC   AG( sm.t18 & sm.t7 -> EX( smAA.state = SmAA_a3 & smBB.state = SmBB_b3 ) )
 CTLSPEC   AG( sm.t18 & sm.t8 -> EX( smAA.state = SmAA_a3 & smBB.state = SmBB_b2 ) )
 CTLSPEC   AG( sm.t18 & sm.t9 -> EX( smAA.state = SmAA_a3 & smBB.state = SmBB_b1 ) )
 CTLSPEC   AG( sm.t18 & sm.t10 -> EX( smAA.state = SmAA_a3 & smBB.state = SmBB_b4 ) )
 CTLSPEC   AG( sm.t18 & sm.t11 -> EX( smAA.state = SmAA_a3 & smBB.state = SmBB_b3 ) )
 CTLSPEC   AG( sm.t18 & sm.t12 -> EX( smAA.state = SmAA_a3 & smBB.state = SmBB_b2 ) )
-CTLSPEC   AG( sm.t10 & sm.t1 -> EX( smBB.state = SmBB_b4 & smCC.state = SmCC_c3 ) )
+CTLSPEC   AG( sm.t17 & sm.t18 -> EX( smCC.state = SmCC_c2 & smAA.state = SmAA_a3 ) )
 CTLSPEC   AG( sm.t4 & sm.t5 -> EX( smAA.state = SmAA_a3 & sm.state = Sm_s1 ) )
-CTLSPEC   AG( sm.t4 & sm.t18 -> EX( smAA.state = SmAA_a3 & smAA.state = SmAA_a3 ) )
-CTLSPEC   AG( sm.t4 & sm.t1 -> EX( smAA.state = SmAA_a3 & smCC.state = SmCC_c3 ) )
 CTLSPEC   AG( sm.t11 & sm.t12 -> EX( smBB.state = SmBB_b3 & smBB.state = SmBB_b2 ) )
-CTLSPEC   AG( sm.t11 & sm.t1 -> EX( smBB.state = SmBB_b3 & smCC.state = SmCC_c3 ) )
-CTLSPEC   AG( sm.t6 & sm.t18 -> EX( smAA.state = SmAA_a2 & smAA.state = SmAA_a3 ) )
-CTLSPEC   AG( sm.t6 & sm.t1 -> EX( smAA.state = SmAA_a2 & smCC.state = SmCC_c3 ) )
-CTLSPEC   AG( sm.t16 & sm.t1 -> EX( smCC.state = SmCC_c4 & smCC.state = SmCC_c3 ) )
 CTLSPEC   AG( sm.t15 & sm.t16 -> EX( smCC.state = SmCC_c2 & smCC.state = SmCC_c4 ) )
-CTLSPEC   AG( sm.t15 & sm.t1 -> EX( smCC.state = SmCC_c2 & smCC.state = SmCC_c3 ) )
+CTLSPEC   AG( sm.t13 & sm.t14 -> EX( smCC.state = SmCC_c3 & smCC.state = SmCC_c2 ) )
 CTLSPEC   AG( sm.t7 & sm.t8 -> EX( smBB.state = SmBB_b3 & smBB.state = SmBB_b2 ) )
-CTLSPEC   AG( sm.t7 & sm.t1 -> EX( smBB.state = SmBB_b3 & smCC.state = SmCC_c3 ) )
-CTLSPEC   AG( sm.t12 & sm.t1 -> EX( smBB.state = SmBB_b2 & smCC.state = SmCC_c3 ) )
-CTLSPEC   AG( sm.t5 & sm.t18 -> EX( sm.state = Sm_s1 & smAA.state = SmAA_a3 ) )
-CTLSPEC   AG( sm.t5 & sm.t1 -> EX( sm.state = Sm_s1 & smCC.state = SmCC_c3 ) )
 CTLSPEC   AG( sm.t5 & sm.t7 -> EX( sm.state = Sm_s1 & smBB.state = SmBB_b3 ) )
 CTLSPEC   AG( sm.t5 & sm.t8 -> EX( sm.state = Sm_s1 & smBB.state = SmBB_b2 ) )
 CTLSPEC   AG( sm.t5 & sm.t9 -> EX( sm.state = Sm_s1 & smBB.state = SmBB_b1 ) )
@@ -174,4 +157,5 @@ CTLSPEC   AG( sm.t5 & sm.t14 -> EX( sm.state = Sm_s1 & smCC.state = SmCC_c2 ) )
 CTLSPEC   AG( sm.t5 & sm.t15 -> EX( sm.state = Sm_s1 & smCC.state = SmCC_c2 ) )
 CTLSPEC   AG( sm.t5 & sm.t16 -> EX( sm.state = Sm_s1 & smCC.state = SmCC_c4 ) )
 CTLSPEC   AG( sm.t5 & sm.t17 -> EX( sm.state = Sm_s1 & smCC.state = SmCC_c2 ) )
-CTLSPEC   AG( sm.t3 & sm.t18 -> EX( smAA.state = SmAA_a3 & smAA.state = SmAA_a3 ) )
+CTLSPEC   AG( sm.t5 & sm.t18 -> EX( sm.state = Sm_s1 & smAA.state = SmAA_a3 ) )
+CTLSPEC   AG( sm.t2 & sm.t3 -> EX( smAA.state = SmAA_a2 & smAA.state = SmAA_a3 ) )

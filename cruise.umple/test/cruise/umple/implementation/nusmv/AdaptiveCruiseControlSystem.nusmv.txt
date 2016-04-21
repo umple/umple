@@ -83,8 +83,8 @@ MODULE CruiseControlSystemControlCruiseController ( _cruiseControlSystem )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t12 | _cruiseControlSystem.t13 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t15 | _cruiseControlSystem.t11 | _cruiseControlSystem.t4 | _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t16 | _cruiseControlSystem.t10 | _cruiseControlSystem.t19 : CruiseControlSystemControlCruiseController_cruiseController;
        _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t38 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t12 | _cruiseControlSystem.t13 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t15 | _cruiseControlSystem.t11 | _cruiseControlSystem.t4 | _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t16 | _cruiseControlSystem.t10 | _cruiseControlSystem.t19 : CruiseControlSystemControlCruiseController_cruiseController;
        _cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & state = null : CruiseControlSystemControlCruiseController_cruiseController;
        TRUE : state;
      esac;
@@ -100,11 +100,11 @@ MODULE CruiseControlSystemControlCruiseControllerCruiseController ( _cruiseContr
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
        _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t4 | _cruiseControlSystem.t1 : CruiseControlSystemControlCruiseControllerCruiseController_inactive;
        _cruiseControlSystem.t3 | _cruiseControlSystem.t12 | _cruiseControlSystem.t13 : CruiseControlSystemControlCruiseControllerCruiseController_active;
        _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t16 : CruiseControlSystemControlCruiseControllerCruiseController_cruising;
        _cruiseControlSystem.t15 | _cruiseControlSystem.t11 | _cruiseControlSystem.t10 | _cruiseControlSystem.t19 : CruiseControlSystemControlCruiseControllerCruiseController_standby;
-       _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
        _cruiseControlSystemControl.state = CruiseControlSystemControl_control & state = null : CruiseControlSystemControlCruiseControllerCruiseController_inactive;
        TRUE : state;
      esac;
@@ -120,8 +120,8 @@ MODULE CruiseControlSystemControlCruiseControllerCruiseControllerInactive ( _cru
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t1 : CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState;
        _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystem.t1 : CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState;
        _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive & state = null : CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState;
        TRUE : state;
      esac;
@@ -137,8 +137,8 @@ MODULE CruiseControlSystemControlCruiseControllerCruiseControllerActive ( _cruis
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t3 | _cruiseControlSystem.t13 : CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState;
        _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystem.t3 | _cruiseControlSystem.t13 : CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState;
        _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_active & state = null : CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState;
        TRUE : state;
      esac;
@@ -154,8 +154,8 @@ MODULE CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t13 : CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1;
        _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystem.t13 : CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1;
        _cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState & state = null : CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1;
        TRUE : state;
      esac;
@@ -171,9 +171,9 @@ MODULE CruiseControlSystemControlCruiseControllerCruiseControllerCruising ( _cru
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
        _cruiseControlSystem.t6 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 : CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState;
        _cruiseControlSystem.t8 | _cruiseControlSystem.t16 : CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1;
-       _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
        _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising & state = null : CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState;
        TRUE : state;
      esac;
@@ -189,8 +189,8 @@ MODULE CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempSta
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t16 : CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2;
        _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t17 | _cruiseControlSystem.t19 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t18 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystem.t16 : CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2;
        _cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 & state = null : CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2;
        TRUE : state;
      esac;
@@ -206,9 +206,9 @@ MODULE CruiseControlSystemControlCruiseControllerCruiseControllerStandby ( _crui
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
        _cruiseControlSystem.t10 : CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState;
        _cruiseControlSystem.t11 | _cruiseControlSystem.t19 : CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1;
-       _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
        _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby & state = null : CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState;
        TRUE : state;
      esac;
@@ -224,8 +224,8 @@ MODULE CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempStat
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t19 : CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2;
        _cruiseControlSystem.t2 | _cruiseControlSystem.t4 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t10 | _cruiseControlSystem.t12 | _cruiseControlSystem.t14 | _cruiseControlSystem.t16 | _cruiseControlSystem.t18 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t25 | _cruiseControlSystem.t27 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t9 | _cruiseControlSystem.t11 | _cruiseControlSystem.t13 | _cruiseControlSystem.t15 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t22 | _cruiseControlSystem.t24 | _cruiseControlSystem.t26 | _cruiseControlSystem.t28 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystem.t19 : CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2;
        _cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 & state = null : CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2;
        TRUE : state;
      esac;
@@ -241,8 +241,8 @@ MODULE CruiseControlSystemControlSpeedControl ( _cruiseControlSystem )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t24 | _cruiseControlSystem.t28 | _cruiseControlSystem.t22 | _cruiseControlSystem.t27 | _cruiseControlSystem.t26 | _cruiseControlSystem.t25 : CruiseControlSystemControlSpeedControl_speedControl;
        _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t38 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t24 | _cruiseControlSystem.t28 | _cruiseControlSystem.t22 | _cruiseControlSystem.t27 | _cruiseControlSystem.t26 | _cruiseControlSystem.t25 : CruiseControlSystemControlSpeedControl_speedControl;
        _cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & state = null : CruiseControlSystemControlSpeedControl_speedControl;
        TRUE : state;
      esac;
@@ -258,10 +258,10 @@ MODULE CruiseControlSystemControlSpeedControlSpeedControl ( _cruiseControlSystem
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
        _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t22 | _cruiseControlSystem.t27 : CruiseControlSystemControlSpeedControlSpeedControl_disabled;
        _cruiseControlSystem.t26 | _cruiseControlSystem.t24 | _cruiseControlSystem.t28 : CruiseControlSystemControlSpeedControlSpeedControl_enabled;
        _cruiseControlSystem.t25 : CruiseControlSystemControlSpeedControlSpeedControl_tempState;
-       _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t37 | _cruiseControlSystem.t39 | _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t36 | _cruiseControlSystem.t38 | _cruiseControlSystem.t40 : null;
        _cruiseControlSystemControl.state = CruiseControlSystemControl_control & state = null : CruiseControlSystemControlSpeedControlSpeedControl_disabled;
        TRUE : state;
      esac;
@@ -277,8 +277,8 @@ MODULE CruiseControlSystemControl ( _cruiseControlSystem )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t12 | _cruiseControlSystem.t13 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t15 | _cruiseControlSystem.t11 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t24 | _cruiseControlSystem.t28 | _cruiseControlSystem.t4 | _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t16 | _cruiseControlSystem.t10 | _cruiseControlSystem.t19 | _cruiseControlSystem.t22 | _cruiseControlSystem.t27 | _cruiseControlSystem.t26 | _cruiseControlSystem.t25 : CruiseControlSystemControl_control;
        _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t38 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystem.t2 | _cruiseControlSystem.t9 | _cruiseControlSystem.t12 | _cruiseControlSystem.t13 | _cruiseControlSystem.t17 | _cruiseControlSystem.t20 | _cruiseControlSystem.t6 | _cruiseControlSystem.t8 | _cruiseControlSystem.t15 | _cruiseControlSystem.t11 | _cruiseControlSystem.t21 | _cruiseControlSystem.t23 | _cruiseControlSystem.t24 | _cruiseControlSystem.t28 | _cruiseControlSystem.t4 | _cruiseControlSystem.t1 | _cruiseControlSystem.t3 | _cruiseControlSystem.t14 | _cruiseControlSystem.t18 | _cruiseControlSystem.t5 | _cruiseControlSystem.t7 | _cruiseControlSystem.t16 | _cruiseControlSystem.t10 | _cruiseControlSystem.t19 | _cruiseControlSystem.t22 | _cruiseControlSystem.t27 | _cruiseControlSystem.t26 | _cruiseControlSystem.t25 : CruiseControlSystemControl_control;
        _cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & state = null : CruiseControlSystemControl_control;
        TRUE : state;
      esac;
@@ -310,8 +310,8 @@ MODULE CruiseControlSystemInputSpeedInputSpeed ( _cruiseControlSystem )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t36 | _cruiseControlSystem.t37 : CruiseControlSystemInputSpeedInputSpeed_checkSpeed;
        _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t38 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystem.t36 | _cruiseControlSystem.t37 : CruiseControlSystemInputSpeedInputSpeed_checkSpeed;
        _cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & state = null : CruiseControlSystemInputSpeedInputSpeed_checkSpeed;
        TRUE : state;
      esac;
@@ -327,8 +327,8 @@ MODULE CruiseControlSystemThrottleThrottle ( _cruiseControlSystem )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _cruiseControlSystem.t39 : CruiseControlSystemThrottleThrottle_tempState;
        _cruiseControlSystem.t30 | _cruiseControlSystem.t32 | _cruiseControlSystem.t34 | _cruiseControlSystem.t38 | _cruiseControlSystem.t29 | _cruiseControlSystem.t31 | _cruiseControlSystem.t33 | _cruiseControlSystem.t35 | _cruiseControlSystem.t40 : null;
+       _cruiseControlSystem.t39 : CruiseControlSystemThrottleThrottle_tempState;
        _cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & state = null : CruiseControlSystemThrottleThrottle_tempState;
        TRUE : state;
      esac;

@@ -59,10 +59,10 @@ MODULE SmS21S21 ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t1 | _sm.t8 | _sm.t15 | _sm.t2 | _sm.t9 | _sm.t6 : null;
        _sm.t5 : SmS21S21_a;
        _sm.t3 | _sm.t7 : SmS21S21_b;
        _sm.t4 : SmS21S21_c;
-       _sm.t1 | _sm.t8 | _sm.t15 | _sm.t2 | _sm.t9 | _sm.t6 : null;
        _sm.state = Sm_s2 & state = null : SmS21S21_a;
        TRUE : state;
      esac;
@@ -78,9 +78,9 @@ MODULE SmS22S22 ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t2 | _sm.t9 | _sm.t1 | _sm.t8 | _sm.t15 : null;
        _sm.t11 | _sm.t6 | _sm.t14 : SmS22S22_e;
        _sm.t12 | _sm.t10 | _sm.t13 : SmS22S22_f;
-       _sm.t2 | _sm.t9 | _sm.t1 | _sm.t8 | _sm.t15 : null;
        _sm.state = Sm_s2 & state = null : SmS22S22_d;
        TRUE : state;
      esac;
@@ -101,9 +101,6 @@ CTLSPEC   EF( smS21S21.state = SmS21S21_c )
 CTLSPEC   EF( smS22S22.state = SmS22S22_d )
 CTLSPEC   EF( smS22S22.state = SmS22S22_e )
 CTLSPEC   EF( smS22S22.state = SmS22S22_f )
-CTLSPEC   AG( sm.t10 & sm.t11 -> EX( smS22S22.state = SmS22S22_f & smS22S22.state = SmS22S22_e ) )
-CTLSPEC   AG( sm.t10 & sm.t12 -> EX( smS22S22.state = SmS22S22_f & smS22S22.state = SmS22S22_f ) )
-CTLSPEC   AG( sm.t10 & sm.t6 -> EX( smS22S22.state = SmS22S22_f & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t2 & sm.t3 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_b ) )
 CTLSPEC   AG( sm.t2 & sm.t4 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_c ) )
 CTLSPEC   AG( sm.t2 & sm.t5 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_a ) )
@@ -117,16 +114,17 @@ CTLSPEC   AG( sm.t2 & sm.t12 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22
 CTLSPEC   AG( sm.t2 & sm.t13 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
 CTLSPEC   AG( sm.t2 & sm.t14 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t2 & sm.t15 -> EX( sm.state = Sm_s1 & sm.state = Sm_s1 ) )
-CTLSPEC   AG( sm.t12 & sm.t6 -> EX( smS22S22.state = SmS22S22_f & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t10 & sm.t11 -> EX( smS22S22.state = SmS22S22_f & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t10 & sm.t12 -> EX( smS22S22.state = SmS22S22_f & smS22S22.state = SmS22S22_f ) )
 CTLSPEC   AG( sm.t11 & sm.t12 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_f ) )
-CTLSPEC   AG( sm.t11 & sm.t6 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t7 & sm.t8 -> EX( smS21S21.state = SmS21S21_b & sm.state = Sm_s1 ) )
-CTLSPEC   AG( sm.t13 & sm.t6 -> EX( smS22S22.state = SmS22S22_f & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t6 & sm.t10 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t6 & sm.t11 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t6 & sm.t12 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t6 & sm.t13 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t6 & sm.t14 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t5 & sm.t6 -> EX( smS21S21.state = SmS21S21_a & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t14 & sm.t15 -> EX( smS22S22.state = SmS22S22_e & sm.state = Sm_s1 ) )
-CTLSPEC   AG( sm.t14 & sm.t6 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_e ) )
-CTLSPEC   AG( sm.t4 & sm.t5 -> EX( smS21S21.state = SmS21S21_c & smS21S21.state = SmS21S21_a ) )
-CTLSPEC   AG( sm.t4 & sm.t6 -> EX( smS21S21.state = SmS21S21_c & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t8 & sm.t9 -> EX( sm.state = Sm_s1 & sm.state = Sm_s1 ) )
 CTLSPEC   AG( sm.t8 & sm.t10 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
 CTLSPEC   AG( sm.t8 & sm.t11 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
@@ -134,19 +132,21 @@ CTLSPEC   AG( sm.t8 & sm.t12 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22
 CTLSPEC   AG( sm.t8 & sm.t13 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
 CTLSPEC   AG( sm.t8 & sm.t14 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t8 & sm.t15 -> EX( sm.state = Sm_s1 & sm.state = Sm_s1 ) )
-CTLSPEC   AG( sm.t9 & sm.t10 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
-CTLSPEC   AG( sm.t9 & sm.t11 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
-CTLSPEC   AG( sm.t9 & sm.t12 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
-CTLSPEC   AG( sm.t9 & sm.t13 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
-CTLSPEC   AG( sm.t9 & sm.t14 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
-CTLSPEC   AG( sm.t9 & sm.t15 -> EX( sm.state = Sm_s1 & sm.state = Sm_s1 ) )
+CTLSPEC   AG( sm.t4 & sm.t5 -> EX( smS21S21.state = SmS21S21_c & smS21S21.state = SmS21S21_a ) )
+CTLSPEC   AG( sm.t4 & sm.t6 -> EX( smS21S21.state = SmS21S21_c & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t9 & sm.t3 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_b ) )
 CTLSPEC   AG( sm.t9 & sm.t4 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_c ) )
 CTLSPEC   AG( sm.t9 & sm.t5 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_a ) )
 CTLSPEC   AG( sm.t9 & sm.t6 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t9 & sm.t7 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_b ) )
-CTLSPEC   AG( sm.t15 & sm.t6 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t9 & sm.t10 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t9 & sm.t11 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t9 & sm.t12 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t9 & sm.t13 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t9 & sm.t14 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t15 & sm.t3 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_b ) )
 CTLSPEC   AG( sm.t15 & sm.t4 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_c ) )
 CTLSPEC   AG( sm.t15 & sm.t5 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_a ) )
+CTLSPEC   AG( sm.t15 & sm.t6 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t15 & sm.t7 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_b ) )
+CTLSPEC   AG( sm.t15 & sm.t9 -> EX( sm.state = Sm_s1 & sm.state = Sm_s1 ) )

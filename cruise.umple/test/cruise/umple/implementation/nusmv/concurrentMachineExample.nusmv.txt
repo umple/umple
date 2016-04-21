@@ -53,8 +53,8 @@ MODULE StateAA ( _state )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _state.t1 : StateAA_s12;
        _state.t2 | _state.t6 : null;
+       _state.t1 : StateAA_s12;
        _state.state = State_s1 & state = null : StateAA_s11;
        TRUE : state;
      esac;
@@ -70,10 +70,10 @@ MODULE StateBB ( _state )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _state.t2 | _state.t6 : null;
        _state.t4 | _state.t7 : StateBB_s21;
        _state.t3 : StateBB_s22;
        _state.t8 | _state.t5 | _state.t9 : StateBB_s24;
-       _state.t2 | _state.t6 : null;
        _state.state = State_s1 & state = null : StateBB_s21;
        TRUE : state;
      esac;
@@ -89,9 +89,9 @@ MODULE StateBBS24 ( _state , _stateBB )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _state.t1 | _state.t3 | _state.t6 | _state.t2 | _state.t4 | _state.t7 : null;
        _state.t5 | _state.t8 : StateBBS24_s31;
        _state.t9 : StateBBS24_s32;
-       _state.t1 | _state.t3 | _state.t6 | _state.t2 | _state.t4 | _state.t7 : null;
        _stateBB.state = StateBB_s24 & state = null : StateBBS24_s31;
        TRUE : state;
      esac;
@@ -114,13 +114,11 @@ CTLSPEC   EF( stateBB.state = StateBB_s22 )
 CTLSPEC   EF( stateBB.state = StateBB_s24 )
 CTLSPEC   EF( stateBBS24.state = StateBBS24_s31 )
 CTLSPEC   EF( stateBBS24.state = StateBBS24_s32 )
-CTLSPEC   AG( state.t8 & state.t9 -> EX( stateBBS24.state = StateBBS24_s31 & stateBBS24.state = StateBBS24_s32 ) )
-CTLSPEC   AG( state.t8 & state.t5 -> EX( stateBBS24.state = StateBBS24_s31 & stateBBS24.state = StateBBS24_s31 ) )
-CTLSPEC   AG( state.t6 & state.t8 -> EX( state.state = State_s2 & stateBBS24.state = StateBBS24_s31 ) )
-CTLSPEC   AG( state.t6 & state.t9 -> EX( state.state = State_s2 & stateBBS24.state = StateBBS24_s32 ) )
 CTLSPEC   AG( state.t6 & state.t1 -> EX( state.state = State_s2 & stateAA.state = StateAA_s12 ) )
 CTLSPEC   AG( state.t6 & state.t7 -> EX( state.state = State_s2 & stateBB.state = StateBB_s21 ) )
-CTLSPEC   AG( state.t9 & state.t5 -> EX( stateBBS24.state = StateBBS24_s32 & stateBBS24.state = StateBBS24_s31 ) )
+CTLSPEC   AG( state.t6 & state.t8 -> EX( state.state = State_s2 & stateBBS24.state = StateBBS24_s31 ) )
+CTLSPEC   AG( state.t6 & state.t9 -> EX( state.state = State_s2 & stateBBS24.state = StateBBS24_s32 ) )
+CTLSPEC   AG( state.t8 & state.t9 -> EX( stateBBS24.state = StateBBS24_s31 & stateBBS24.state = StateBBS24_s32 ) )
 CTLSPEC   AG( state.t4 & state.t5 -> EX( stateBB.state = StateBB_s21 & stateBBS24.state = StateBBS24_s31 ) )
 CTLSPEC   AG( state.t2 & state.t3 -> EX( state.state = State_s2 & stateBB.state = StateBB_s22 ) )
 CTLSPEC   AG( state.t2 & state.t4 -> EX( state.state = State_s2 & stateBB.state = StateBB_s21 ) )

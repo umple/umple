@@ -54,10 +54,10 @@ MODULE SmS2 ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t1 | _sm.t4 | _sm.t3 | _sm.t7 : null;
        _sm.t6 : SmS2_s2a;
        _sm.t2 | _sm.t5 : SmS2_s2b;
        _sm.t8 : SmS2_s2c;
-       _sm.t1 | _sm.t4 | _sm.t3 | _sm.t7 : null;
        _sm.state = Sm_s2 & state = null : SmS2_s2a;
        TRUE : state;
      esac;
@@ -83,8 +83,6 @@ CTLSPEC   AG( sm.t4 & sm.t5 -> EX( sm.state = Sm_s1 & smS2.state = SmS2_s2b ) )
 CTLSPEC   AG( sm.t4 & sm.t6 -> EX( sm.state = Sm_s1 & smS2.state = SmS2_s2a ) )
 CTLSPEC   AG( sm.t4 & sm.t7 -> EX( sm.state = Sm_s1 & sm.state = Sm_s3 ) )
 CTLSPEC   AG( sm.t4 & sm.t8 -> EX( sm.state = Sm_s1 & smS2.state = SmS2_s2c ) )
-CTLSPEC   AG( sm.t8 & sm.t2 -> EX( smS2.state = SmS2_s2c & smS2.state = SmS2_s2b ) )
 CTLSPEC   AG( sm.t6 & sm.t7 -> EX( smS2.state = SmS2_s2a & sm.state = Sm_s3 ) )
 CTLSPEC   AG( sm.t6 & sm.t8 -> EX( smS2.state = SmS2_s2a & smS2.state = SmS2_s2c ) )
-CTLSPEC   AG( sm.t6 & sm.t2 -> EX( smS2.state = SmS2_s2a & smS2.state = SmS2_s2b ) )
 CTLSPEC   AG( sm.t7 & sm.t8 -> EX( sm.state = Sm_s3 & smS2.state = SmS2_s2c ) )

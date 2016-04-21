@@ -135,10 +135,10 @@ MODULE SmRegular ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t6 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t5 | _sm.t7 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.t8 | _sm.t1 | _sm.t9 | _sm.t2 : SmRegular_time;
        _sm.t4 : SmRegular_date;
        _sm.t20 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t11 | _sm.t3 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 : SmRegular_update;
-       _sm.t6 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t5 | _sm.t7 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.state = Sm_regular & state = null : SmRegular_time;
        TRUE : state;
      esac;
@@ -154,13 +154,13 @@ MODULE SmRegularUpdate ( _sm , _smRegular )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t1 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t2 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.t20 | _sm.t11 | _sm.t3 : SmRegularUpdate_second;
        _sm.t10 | _sm.t13 : SmRegularUpdate_minute;
        _sm.t12 | _sm.t15 : SmRegularUpdate_hour;
        _sm.t14 | _sm.t17 : SmRegularUpdate_month;
        _sm.t16 | _sm.t19 : SmRegularUpdate_day;
        _sm.t18 | _sm.t21 : SmRegularUpdate_year;
-       _sm.t1 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t2 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _smRegular.state = SmRegular_update & state = null : SmRegularUpdate_second;
        TRUE : state;
      esac;
@@ -176,10 +176,10 @@ MODULE SmChronometer ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.t28 | _sm.t26 | _sm.t27 | _sm.t25 | _sm.t23 : SmChronometer_chronoNormal;
        _sm.t29 | _sm.t24 : SmChronometer_lapRunning;
        _sm.t22 : SmChronometer_lapPaused;
-       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.state = Sm_chronometer & state = null : SmChronometer_chronoNormal;
        TRUE : state;
      esac;
@@ -195,9 +195,9 @@ MODULE SmChronometerChronoNormal ( _sm , _smChronometer )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t24 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.t28 | _sm.t27 | _sm.t25 : SmChronometerChronoNormal_paused;
        _sm.t26 | _sm.t23 : SmChronometerChronoNormal_running;
-       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t24 | _sm.t30 | _sm.t32 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t29 | _sm.t31 | _sm.t33 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _smChronometer.state = SmChronometer_chronoNormal & state = null : SmChronometerChronoNormal_paused;
        TRUE : state;
      esac;
@@ -213,11 +213,11 @@ MODULE SmAlarmStatus ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.t33 : SmAlarmStatus_bothOff;
        _sm.t30 : SmAlarmStatus_chimeOn;
        _sm.t31 : SmAlarmStatus_bothOn;
        _sm.t32 : SmAlarmStatus_alarmOn;
-       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t34 | _sm.t36 | _sm.t38 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t35 | _sm.t37 | _sm.t39 : null;
        _sm.state = Sm_alarmStatus & state = null : SmAlarmStatus_bothOff;
        TRUE : state;
      esac;
@@ -233,9 +233,9 @@ MODULE SmAlarmUpdate ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 : null;
        _sm.t7 : SmAlarmUpdate_alarmTime;
        _sm.t35 | _sm.t38 | _sm.t36 | _sm.t37 | _sm.t34 | _sm.t39 : SmAlarmUpdate_hourMinuteUpdate;
-       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 : null;
        _sm.state = Sm_alarmUpdate & state = null : SmAlarmUpdate_alarmTime;
        TRUE : state;
      esac;
@@ -251,9 +251,9 @@ MODULE SmAlarmUpdateHourMinuteUpdate ( _sm , _smAlarmUpdate )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 : null;
        _sm.t37 | _sm.t35 | _sm.t38 : SmAlarmUpdateHourMinuteUpdate_alarmHour;
        _sm.t36 | _sm.t34 | _sm.t39 : SmAlarmUpdateHourMinuteUpdate_alarmMinute;
-       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t26 | _sm.t28 | _sm.t30 | _sm.t32 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t25 | _sm.t27 | _sm.t29 | _sm.t31 | _sm.t33 : null;
        _smAlarmUpdate.state = SmAlarmUpdate_hourMinuteUpdate & state = null : SmAlarmUpdateHourMinuteUpdate_alarmHour;
        TRUE : state;
      esac;
@@ -297,16 +297,6 @@ CTLSPEC   EF( smAlarmUpdate.state = SmAlarmUpdate_alarmTime )
 CTLSPEC   EF( smAlarmUpdate.state = SmAlarmUpdate_hourMinuteUpdate )
 CTLSPEC   EF( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour )
 CTLSPEC   EF( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute )
-CTLSPEC   AG( sm.t13 & sm.t3 -> EX( smRegularUpdate.state = SmRegularUpdate_minute & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t13 & sm.t1 -> EX( smRegularUpdate.state = SmRegularUpdate_minute & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t13 & sm.t2 -> EX( smRegularUpdate.state = SmRegularUpdate_minute & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t21 & sm.t3 -> EX( smRegularUpdate.state = SmRegularUpdate_year & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t21 & sm.t1 -> EX( smRegularUpdate.state = SmRegularUpdate_year & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t21 & sm.t2 -> EX( smRegularUpdate.state = SmRegularUpdate_year & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t12 & sm.t13 -> EX( smRegularUpdate.state = SmRegularUpdate_hour & smRegularUpdate.state = SmRegularUpdate_minute ) )
-CTLSPEC   AG( sm.t12 & sm.t3 -> EX( smRegularUpdate.state = SmRegularUpdate_hour & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t12 & sm.t1 -> EX( smRegularUpdate.state = SmRegularUpdate_hour & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t12 & sm.t2 -> EX( smRegularUpdate.state = SmRegularUpdate_hour & smRegular.state = SmRegular_time ) )
 CTLSPEC   AG( sm.t9 & sm.t10 -> EX( smRegular.state = SmRegular_time & smRegularUpdate.state = SmRegularUpdate_minute ) )
 CTLSPEC   AG( sm.t9 & sm.t11 -> EX( smRegular.state = SmRegular_time & smRegularUpdate.state = SmRegularUpdate_second ) )
 CTLSPEC   AG( sm.t9 & sm.t12 -> EX( smRegular.state = SmRegular_time & smRegularUpdate.state = SmRegularUpdate_hour ) )
@@ -319,65 +309,18 @@ CTLSPEC   AG( sm.t9 & sm.t18 -> EX( smRegular.state = SmRegular_time & smRegular
 CTLSPEC   AG( sm.t9 & sm.t19 -> EX( smRegular.state = SmRegular_time & smRegularUpdate.state = SmRegularUpdate_day ) )
 CTLSPEC   AG( sm.t9 & sm.t20 -> EX( smRegular.state = SmRegular_time & smRegularUpdate.state = SmRegularUpdate_second ) )
 CTLSPEC   AG( sm.t9 & sm.t21 -> EX( smRegular.state = SmRegular_time & smRegularUpdate.state = SmRegularUpdate_year ) )
-CTLSPEC   AG( sm.t9 & sm.t1 -> EX( smRegular.state = SmRegular_time & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t9 & sm.t2 -> EX( smRegular.state = SmRegular_time & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t9 & sm.t3 -> EX( smRegular.state = SmRegular_time & smRegularUpdate.state = SmRegularUpdate_second ) )
+CTLSPEC   AG( sm.t12 & sm.t13 -> EX( smRegularUpdate.state = SmRegularUpdate_hour & smRegularUpdate.state = SmRegularUpdate_minute ) )
 CTLSPEC   AG( sm.t10 & sm.t11 -> EX( smRegularUpdate.state = SmRegularUpdate_minute & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t10 & sm.t3 -> EX( smRegularUpdate.state = SmRegularUpdate_minute & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t10 & sm.t1 -> EX( smRegularUpdate.state = SmRegularUpdate_minute & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t10 & sm.t2 -> EX( smRegularUpdate.state = SmRegularUpdate_minute & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t19 & sm.t3 -> EX( smRegularUpdate.state = SmRegularUpdate_day & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t19 & sm.t1 -> EX( smRegularUpdate.state = SmRegularUpdate_day & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t19 & sm.t2 -> EX( smRegularUpdate.state = SmRegularUpdate_day & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t7 & sm.t1 -> EX( smAlarmUpdate.state = SmAlarmUpdate_alarmTime & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t7 & sm.t2 -> EX( smAlarmUpdate.state = SmAlarmUpdate_alarmTime & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t7 & sm.t3 -> EX( smAlarmUpdate.state = SmAlarmUpdate_alarmTime & smRegularUpdate.state = SmRegularUpdate_second ) )
+CTLSPEC   AG( sm.t18 & sm.t19 -> EX( smRegularUpdate.state = SmRegularUpdate_year & smRegularUpdate.state = SmRegularUpdate_day ) )
 CTLSPEC   AG( sm.t6 & sm.t7 -> EX( sm.state = Sm_chronometer & smAlarmUpdate.state = SmAlarmUpdate_alarmTime ) )
-CTLSPEC   AG( sm.t6 & sm.t1 -> EX( sm.state = Sm_chronometer & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t6 & sm.t2 -> EX( sm.state = Sm_chronometer & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t6 & sm.t3 -> EX( sm.state = Sm_chronometer & smRegularUpdate.state = SmRegularUpdate_second ) )
 CTLSPEC   AG( sm.t4 & sm.t5 -> EX( smRegular.state = SmRegular_date & sm.state = Sm_alarmStatus ) )
 CTLSPEC   AG( sm.t4 & sm.t6 -> EX( smRegular.state = SmRegular_date & sm.state = Sm_chronometer ) )
 CTLSPEC   AG( sm.t4 & sm.t7 -> EX( smRegular.state = SmRegular_date & smAlarmUpdate.state = SmAlarmUpdate_alarmTime ) )
-CTLSPEC   AG( sm.t4 & sm.t1 -> EX( smRegular.state = SmRegular_date & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t4 & sm.t2 -> EX( smRegular.state = SmRegular_date & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t4 & sm.t3 -> EX( smRegular.state = SmRegular_date & smRegularUpdate.state = SmRegularUpdate_second ) )
 CTLSPEC   AG( sm.t5 & sm.t6 -> EX( sm.state = Sm_alarmStatus & sm.state = Sm_chronometer ) )
 CTLSPEC   AG( sm.t5 & sm.t7 -> EX( sm.state = Sm_alarmStatus & smAlarmUpdate.state = SmAlarmUpdate_alarmTime ) )
-CTLSPEC   AG( sm.t5 & sm.t1 -> EX( sm.state = Sm_alarmStatus & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t5 & sm.t2 -> EX( sm.state = Sm_alarmStatus & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t5 & sm.t3 -> EX( sm.state = Sm_alarmStatus & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t16 & sm.t17 -> EX( smRegularUpdate.state = SmRegularUpdate_day & smRegularUpdate.state = SmRegularUpdate_month ) )
-CTLSPEC   AG( sm.t16 & sm.t3 -> EX( smRegularUpdate.state = SmRegularUpdate_day & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t16 & sm.t1 -> EX( smRegularUpdate.state = SmRegularUpdate_day & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t16 & sm.t2 -> EX( smRegularUpdate.state = SmRegularUpdate_day & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t14 & sm.t15 -> EX( smRegularUpdate.state = SmRegularUpdate_month & smRegularUpdate.state = SmRegularUpdate_hour ) )
-CTLSPEC   AG( sm.t14 & sm.t3 -> EX( smRegularUpdate.state = SmRegularUpdate_month & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t14 & sm.t1 -> EX( smRegularUpdate.state = SmRegularUpdate_month & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t14 & sm.t2 -> EX( smRegularUpdate.state = SmRegularUpdate_month & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t15 & sm.t3 -> EX( smRegularUpdate.state = SmRegularUpdate_hour & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t15 & sm.t1 -> EX( smRegularUpdate.state = SmRegularUpdate_hour & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t15 & sm.t2 -> EX( smRegularUpdate.state = SmRegularUpdate_hour & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t18 & sm.t19 -> EX( smRegularUpdate.state = SmRegularUpdate_year & smRegularUpdate.state = SmRegularUpdate_day ) )
-CTLSPEC   AG( sm.t18 & sm.t3 -> EX( smRegularUpdate.state = SmRegularUpdate_year & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t18 & sm.t1 -> EX( smRegularUpdate.state = SmRegularUpdate_year & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t18 & sm.t2 -> EX( smRegularUpdate.state = SmRegularUpdate_year & smRegular.state = SmRegular_time ) )
 CTLSPEC   AG( sm.t20 & sm.t21 -> EX( smRegularUpdate.state = SmRegularUpdate_second & smRegularUpdate.state = SmRegularUpdate_year ) )
-CTLSPEC   AG( sm.t20 & sm.t3 -> EX( smRegularUpdate.state = SmRegularUpdate_second & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t20 & sm.t1 -> EX( smRegularUpdate.state = SmRegularUpdate_second & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t20 & sm.t2 -> EX( smRegularUpdate.state = SmRegularUpdate_second & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t17 & sm.t3 -> EX( smRegularUpdate.state = SmRegularUpdate_month & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t17 & sm.t1 -> EX( smRegularUpdate.state = SmRegularUpdate_month & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t17 & sm.t2 -> EX( smRegularUpdate.state = SmRegularUpdate_month & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t8 & sm.t1 -> EX( smRegular.state = SmRegular_time & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t8 & sm.t2 -> EX( smRegular.state = SmRegular_time & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t8 & sm.t3 -> EX( smRegular.state = SmRegular_time & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t11 & sm.t3 -> EX( smRegularUpdate.state = SmRegularUpdate_second & smRegularUpdate.state = SmRegularUpdate_second ) )
-CTLSPEC   AG( sm.t11 & sm.t1 -> EX( smRegularUpdate.state = SmRegularUpdate_second & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t11 & sm.t2 -> EX( smRegularUpdate.state = SmRegularUpdate_second & smRegular.state = SmRegular_time ) )
-CTLSPEC   AG( sm.t26 & sm.t27 -> EX( smChronometerChronoNormal.state = SmChronometerChronoNormal_running & smChronometerChronoNormal.state = SmChronometerChronoNormal_paused ) )
-CTLSPEC   AG( sm.t26 & sm.t25 -> EX( smChronometerChronoNormal.state = SmChronometerChronoNormal_running & smChronometerChronoNormal.state = SmChronometerChronoNormal_paused ) )
-CTLSPEC   AG( sm.t26 & sm.t23 -> EX( smChronometerChronoNormal.state = SmChronometerChronoNormal_running & smChronometerChronoNormal.state = SmChronometerChronoNormal_running ) )
+CTLSPEC   AG( sm.t16 & sm.t17 -> EX( smRegularUpdate.state = SmRegularUpdate_day & smRegularUpdate.state = SmRegularUpdate_month ) )
+CTLSPEC   AG( sm.t14 & sm.t15 -> EX( smRegularUpdate.state = SmRegularUpdate_month & smRegularUpdate.state = SmRegularUpdate_hour ) )
 CTLSPEC   AG( sm.t1 & sm.t22 -> EX( smRegular.state = SmRegular_time & smChronometer.state = SmChronometer_lapPaused ) )
 CTLSPEC   AG( sm.t1 & sm.t23 -> EX( smRegular.state = SmRegular_time & smChronometerChronoNormal.state = SmChronometerChronoNormal_running ) )
 CTLSPEC   AG( sm.t1 & sm.t24 -> EX( smRegular.state = SmRegular_time & smChronometer.state = SmChronometer_lapRunning ) )
@@ -386,26 +329,15 @@ CTLSPEC   AG( sm.t1 & sm.t26 -> EX( smRegular.state = SmRegular_time & smChronom
 CTLSPEC   AG( sm.t1 & sm.t27 -> EX( smRegular.state = SmRegular_time & smChronometerChronoNormal.state = SmChronometerChronoNormal_paused ) )
 CTLSPEC   AG( sm.t1 & sm.t28 -> EX( smRegular.state = SmRegular_time & smChronometerChronoNormal.state = SmChronometerChronoNormal_paused ) )
 CTLSPEC   AG( sm.t1 & sm.t29 -> EX( smRegular.state = SmRegular_time & smChronometer.state = SmChronometer_lapRunning ) )
-CTLSPEC   AG( sm.t29 & sm.t25 -> EX( smChronometer.state = SmChronometer_lapRunning & smChronometerChronoNormal.state = SmChronometerChronoNormal_paused ) )
-CTLSPEC   AG( sm.t29 & sm.t23 -> EX( smChronometer.state = SmChronometer_lapRunning & smChronometerChronoNormal.state = SmChronometerChronoNormal_running ) )
+CTLSPEC   AG( sm.t26 & sm.t27 -> EX( smChronometerChronoNormal.state = SmChronometerChronoNormal_running & smChronometerChronoNormal.state = SmChronometerChronoNormal_paused ) )
 CTLSPEC   AG( sm.t22 & sm.t23 -> EX( smChronometer.state = SmChronometer_lapPaused & smChronometerChronoNormal.state = SmChronometerChronoNormal_running ) )
 CTLSPEC   AG( sm.t28 & sm.t29 -> EX( smChronometerChronoNormal.state = SmChronometerChronoNormal_paused & smChronometer.state = SmChronometer_lapRunning ) )
-CTLSPEC   AG( sm.t28 & sm.t25 -> EX( smChronometerChronoNormal.state = SmChronometerChronoNormal_paused & smChronometerChronoNormal.state = SmChronometerChronoNormal_paused ) )
-CTLSPEC   AG( sm.t28 & sm.t23 -> EX( smChronometerChronoNormal.state = SmChronometerChronoNormal_paused & smChronometerChronoNormal.state = SmChronometerChronoNormal_running ) )
 CTLSPEC   AG( sm.t24 & sm.t25 -> EX( smChronometer.state = SmChronometer_lapRunning & smChronometerChronoNormal.state = SmChronometerChronoNormal_paused ) )
-CTLSPEC   AG( sm.t27 & sm.t25 -> EX( smChronometerChronoNormal.state = SmChronometerChronoNormal_paused & smChronometerChronoNormal.state = SmChronometerChronoNormal_paused ) )
-CTLSPEC   AG( sm.t27 & sm.t23 -> EX( smChronometerChronoNormal.state = SmChronometerChronoNormal_paused & smChronometerChronoNormal.state = SmChronometerChronoNormal_running ) )
 CTLSPEC   AG( sm.t2 & sm.t30 -> EX( smRegular.state = SmRegular_time & smAlarmStatus.state = SmAlarmStatus_chimeOn ) )
 CTLSPEC   AG( sm.t2 & sm.t31 -> EX( smRegular.state = SmRegular_time & smAlarmStatus.state = SmAlarmStatus_bothOn ) )
 CTLSPEC   AG( sm.t2 & sm.t32 -> EX( smRegular.state = SmRegular_time & smAlarmStatus.state = SmAlarmStatus_alarmOn ) )
 CTLSPEC   AG( sm.t2 & sm.t33 -> EX( smRegular.state = SmRegular_time & smAlarmStatus.state = SmAlarmStatus_bothOff ) )
 CTLSPEC   AG( sm.t38 & sm.t39 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute ) )
-CTLSPEC   AG( sm.t38 & sm.t35 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour ) )
-CTLSPEC   AG( sm.t38 & sm.t34 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute ) )
-CTLSPEC   AG( sm.t38 & sm.t7 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour & smAlarmUpdate.state = SmAlarmUpdate_alarmTime ) )
-CTLSPEC   AG( sm.t39 & sm.t35 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour ) )
-CTLSPEC   AG( sm.t39 & sm.t34 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute ) )
-CTLSPEC   AG( sm.t39 & sm.t7 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute & smAlarmUpdate.state = SmAlarmUpdate_alarmTime ) )
 CTLSPEC   AG( sm.t3 & sm.t34 -> EX( smRegularUpdate.state = SmRegularUpdate_second & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute ) )
 CTLSPEC   AG( sm.t3 & sm.t35 -> EX( smRegularUpdate.state = SmRegularUpdate_second & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour ) )
 CTLSPEC   AG( sm.t3 & sm.t36 -> EX( smRegularUpdate.state = SmRegularUpdate_second & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute ) )
@@ -413,12 +345,4 @@ CTLSPEC   AG( sm.t3 & sm.t37 -> EX( smRegularUpdate.state = SmRegularUpdate_seco
 CTLSPEC   AG( sm.t3 & sm.t38 -> EX( smRegularUpdate.state = SmRegularUpdate_second & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour ) )
 CTLSPEC   AG( sm.t3 & sm.t39 -> EX( smRegularUpdate.state = SmRegularUpdate_second & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute ) )
 CTLSPEC   AG( sm.t36 & sm.t37 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour ) )
-CTLSPEC   AG( sm.t36 & sm.t35 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour ) )
-CTLSPEC   AG( sm.t36 & sm.t34 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute ) )
-CTLSPEC   AG( sm.t36 & sm.t7 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute & smAlarmUpdate.state = SmAlarmUpdate_alarmTime ) )
 CTLSPEC   AG( sm.t34 & sm.t35 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour ) )
-CTLSPEC   AG( sm.t34 & sm.t7 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute & smAlarmUpdate.state = SmAlarmUpdate_alarmTime ) )
-CTLSPEC   AG( sm.t37 & sm.t35 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour ) )
-CTLSPEC   AG( sm.t37 & sm.t34 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour & smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute ) )
-CTLSPEC   AG( sm.t37 & sm.t7 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour & smAlarmUpdate.state = SmAlarmUpdate_alarmTime ) )
-CTLSPEC   AG( sm.t35 & sm.t7 -> EX( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour & smAlarmUpdate.state = SmAlarmUpdate_alarmTime ) )

@@ -315,7 +315,7 @@ class NuSMVCoordinator
 	private void generateSpecForTransitionDeterminism( StateMachine sm, ModuleBody body ) {
   		
 		for(State st : sm.getStates() ) {
-			for( Map.Entry<Transition,Transition> map : getPairableTransitions(st).entries() ){
+			for( Map.Entry<Transition,Transition> map : matchMakeTransitions(st).entries() ){
 				Transition key = map.getKey();
 				int i = getObjectIdentity( sm, key );
 				Transition value = map.getValue();
@@ -352,30 +352,49 @@ class NuSMVCoordinator
   		return yes;
 	}
 	
-	private boolean equals( Map.Entry<Transition,Transition> first, Map.Entry<Transition,Transition> second ) {
-		return first.getKey().equals(second.getKey()) && first.getValue().equals(second.getValue());
+	//match making 
+	private void match( List<Transition> first, List<Transition> second, Multimap< Transition,Transition > pairable, boolean defaulted ) {
+		int i = 0;
+		int x = first.size(), y = second.size(); 
+		if( !defaulted ) 
+			x = x - 1;
+		while( i < x ) {
+			int j = 0;
+			if( !defaulted ) 
+				j = i + 1;
+			while( j < y ) {
+				Map.Entry<Transition, Transition> entry = new AbstractMap.SimpleEntry<Transition, Transition>( first.get(i), second.get(j));
+				if( !has( pairable, entry ) && !entry.getKey().equals(entry.getValue()) )
+					pairable.put( entry.getKey(), entry.getValue() );
+				j++;
+			}
+			i++;
+		}
+	}
+	
+	private Multimap< Transition,Transition > matchMakeTransitions( State state ) {
+
+		Multimap< Transition,Transition > pairable = matchMaker( state );
+		int i = 0;	
+		while( i < getEmbeddedStates( state ).size() ) {
+			for( Map.Entry<Transition,Transition> map : matchMaker( getEmbeddedStates( state ).get(i) ).entries() )
+				if(! has( pairable, map ) && !map.getKey().equals(map.getValue()) )
+					pairable.put( map.getKey(), map.getValue() );
+			i++;
+		}
+		return pairable;
 	}
 	
 	//Constructs a map of pairable transitions
-	private Multimap< Transition,Transition > getPairableTransitions( State state ) {
+	private Multimap< Transition,Transition > matchMaker( State state ) {
 		Multimap< Transition,Transition > pairable = ArrayListMultimap.create();
 		List<Transition> outgoingTransitions = new ArrayList<Transition>();
-		StateMachine parentMachine = state.getStateMachine();
+		
 		if( state.getNestedStateMachines().size() == 0 ) {
-			for( Transition transition : parentMachine.getAllTransitions() )
+			for( Transition transition : state.getStateMachine().getAllTransitions() )
 				if( transition.getFromState().equals( state ) && !has( outgoingTransitions, transition ) )
 					outgoingTransitions.add( transition );
-			int i = 0, j;
-			while( i < outgoingTransitions.size() - 1 ) {
-				j = i + 1;
-				while( j < outgoingTransitions.size() ) {
-					Map.Entry<Transition, Transition> entry = new AbstractMap.SimpleEntry<Transition, Transition>(outgoingTransitions.get(i), outgoingTransitions.get(j));
-					if( !has( pairable, entry ) && !entry.getKey().equals(entry.getValue()) )
-						pairable.put( entry.getKey(), entry.getValue() );
-					j++;
-				}
-				i++;
-			}
+			match( outgoingTransitions, outgoingTransitions, pairable, false );
 		}
 		else if( state.getNestedStateMachines().size() >= 1 ) {
 			
@@ -386,52 +405,18 @@ class NuSMVCoordinator
 			for( Transition transition : state.getStateMachine().getAllTransitions() ) {
 				if( transition.getFromState().equals( state ) && !has( highLevelTransitions, transition ))
 					highLevelTransitions.add( transition );
-				for( State embeddedState : getEmbeddedStates( state ) ) { 
+				
+				for( State embeddedState : getEmbeddedStates( state ) )  
 					if( transition.getFromState().equals( embeddedState ) )
-						embeddedTransitions.add( transition );
-					for( Map.Entry<Transition,Transition> map : getPairableTransitions( embeddedState ).entries() )
-						if(! has( pairable, map ) && !map.getKey().equals(map.getValue()) )
-							pairable.put( map.getKey(), map.getValue() );	
-				}
+						embeddedTransitions.add( transition );				
 			}
-			int i = 0;
-			while( i < highLevelTransitions.size() ) {
-				int j = 0;
-				while( j < embeddedTransitions.size() ) {
-					Map.Entry<Transition, Transition> entry = new AbstractMap.SimpleEntry<Transition, Transition>( highLevelTransitions.get(i), embeddedTransitions.get(j));
-					if( !has( pairable, entry ) && !entry.getKey().equals(entry.getValue()) )
-						pairable.put( entry.getKey(), entry.getValue() );
-					j++;
-				}
-				i++;
-			}
+			match( highLevelTransitions, embeddedTransitions, pairable, true );
+			
 			//------------------------ ending extraction of highlevel transitions for composite state ------------------------- 
-			
-			
-			
-			//------------------------ extracting incoming transitions of a composite state ------------------------- 
-			List<Transition> incomingTransitions = new ArrayList<Transition>();
-			for( Transition transition : getEnclosedTransitions( state ) )
-				if( ! has( embeddedTransitions, transition) )
-					incomingTransitions.add( transition );
-					
-			int a = 0;
-			while( a < embeddedTransitions.size() ) {
-				int b = 0;
-				while( b < incomingTransitions.size() ) {
-					Map.Entry<Transition, Transition> entry = new AbstractMap.SimpleEntry<Transition, Transition>( embeddedTransitions.get(a), incomingTransitions.get(b));
-					if( !has( pairable, entry ) && !entry.getKey().equals(entry.getValue()) )
-						pairable.put( entry.getKey(), entry.getValue() );
-					b++;
-				}
-				a++;
-			}
-			//------------------------ ending extraction of incoming transitions for a composite state ------------------------- 
 			
 			if( state.getNestedStateMachines().size() > 1 ) {
 				StateMachine parent = state.getStateMachine();
 				List<Transition> allOutGoingTransitions = new ArrayList<Transition>();
-				
 				
 				//------------------------ extracting pairable set of outgoing transitions for an orthogonal state ------------------------- 
 				for( State embeddedState : getEmbeddedStates( state ) ) { 
@@ -443,17 +428,7 @@ class NuSMVCoordinator
 					for( Transition trans : parent.getAllTransitions() )
 						if( has( getExternalStateOf( embeddedState, state ), trans.getFromState() ) ) //&& !has( allOutGoingTransitions,trans )
 							external.add( trans );
-					int k = 0;
-					while( k < outgoing.size() ) {
-						int j = 0;
-						while( j < external.size() ) {
-							Map.Entry<Transition, Transition> entry = new AbstractMap.SimpleEntry<Transition, Transition>( outgoing.get(k), external.get(j));
-							if( !has( pairable, entry ) && !entry.getKey().equals(entry.getValue()) )
-								pairable.put( entry.getKey(), entry.getValue() );
-							j++;
-						}
-						k++;
-					}
+					match( outgoing, external, pairable, true );
 				}
 				//------------------------ ending extraction -------------------------
 				
@@ -465,7 +440,7 @@ class NuSMVCoordinator
 					for( Transition tr : state.getStateMachine().getAllTransitions() )
 						if( has( external, tr.getFromState() ) ) {
 							Map.Entry<Transition, Transition> entry = new AbstractMap.SimpleEntry<Transition, Transition>( trans, tr);
-							if( !has( pairable, entry ) && !entry.getKey().equals(entry.getValue()) )
+							if( !has( pairable, entry ) && !entry.getKey().equals( entry.getValue() ) )
 								pairable.put( entry.getKey(), entry.getValue() );
 						}
 					for( Transition tr : highLevelTransitions ){
@@ -477,6 +452,7 @@ class NuSMVCoordinator
 				//------------------------ ending and-cross management -------------------------
 			}
 		}
+		
 		return pairable;
 	}
 	
@@ -514,10 +490,10 @@ class NuSMVCoordinator
 	//composing the set u(z,s) of states 
 	private List<State> getExternalStateOf(State child, State parent ) {
 		StateMachine sm = child.getStateMachine();
-		List<State> embeddedStates = getEmbeddedStates( sm );
+		List<State> closRelations = getEmbeddedStates( sm );
 		List<State> states = new ArrayList<State>();
 		for( State state : getEmbeddedStates( parent ) )
-			if(! has( embeddedStates, state ))
+			if(! has( closRelations, state ))
 				states.add( state );
 		return states;
 	}
@@ -688,22 +664,22 @@ class NuSMVCoordinator
     	BasicExpression bexp2 = new BasicExpression("TRUE");
     	CaseStatement temp = new CaseStatement(bexp2, bexp1);
     	CaseExpression expr = new CaseExpression("",temp);
+		
+		//*****changes made here....
+		if( sm.getParentState() != null && getCaseStatementForNullState(sm, root) != null )
+			expr.addCaseStatement( getCaseStatementForNullState(sm, root) );
+		
     	for(State st : sm.getStates() ) {
     		CaseStatement cstatement = getCaseStatement(sm, st, root);
     		if( cstatement != null)
     			expr.addCaseStatement(cstatement);
     	}
-		//*****changes made here....
-		if( sm.getParentState() != null && getCaseStatementForNullState(sm, root) != null )
-			expr.addCaseStatement( getCaseStatementForNullState(sm, root) );
 		
 		//Initializing and disabling composite states
-		for(State st : sm.getStates() ) {
+		for(State st : sm.getStates() )
 			if( initializeCompositeStartState( st ) != null )
 				expr.addCaseStatement( initializeCompositeStartState( st ) );
-			//if( diasableCompositeState( st ) != null )
-				//expr.addCaseStatement( diasableCompositeState( st ) );
-		}
+				
 		CaseStatement otherwise = new CaseStatement(bexp2, bexp1);
     	expr.addCaseStatement( otherwise );
     	expr.removeCaseStatement(temp);

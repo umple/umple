@@ -58,10 +58,10 @@ MODULE SmZxab ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t1 | _sm.t4 | _sm.t6 | _sm.t12 | _sm.t2 | _sm.t5 | _sm.t8 | _sm.t13 : null;
        _sm.t9 | _sm.t3 : SmZxab_Zx;
        _sm.t10 : SmZxab_A;
        _sm.t7 | _sm.t11 : SmZxab_B;
-       _sm.t1 | _sm.t4 | _sm.t6 | _sm.t12 | _sm.t2 | _sm.t5 | _sm.t8 | _sm.t13 : null;
        _sm.state = Sm_Zxab & state = null : SmZxab_Zx;
        TRUE : state;
      esac;
@@ -77,8 +77,8 @@ MODULE SmZxabZx ( _sm , _smZxab )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t9 | _sm.t3 : SmZxabZx_X;
        _sm.t2 | _sm.t5 | _sm.t7 | _sm.t10 | _sm.t12 | _sm.t1 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t11 | _sm.t13 : null;
+       _sm.t9 | _sm.t3 : SmZxabZx_X;
        _smZxab.state = SmZxab_Zx & state = null : SmZxabZx_Z;
        TRUE : state;
      esac;
@@ -94,9 +94,9 @@ MODULE SmGe ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t2 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t3 | _sm.t7 | _sm.t9 | _sm.t11 : null;
        _sm.t12 | _sm.t5 | _sm.t13 : SmGe_G;
        _sm.t1 | _sm.t4 : SmGe_E;
-       _sm.t2 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t3 | _sm.t7 | _sm.t9 | _sm.t11 : null;
        _sm.state = Sm_Ge & state = null : SmGe_G;
        TRUE : state;
      esac;
@@ -120,11 +120,21 @@ CTLSPEC   EF( smZxabZx.state = SmZxabZx_Z )
 CTLSPEC   EF( smZxabZx.state = SmZxabZx_X )
 CTLSPEC   EF( smGe.state = SmGe_G )
 CTLSPEC   EF( smGe.state = SmGe_E )
-CTLSPEC   AG( sm.t8 & sm.t3 -> EX( sm.state = Sm_Ge & smZxabZx.state = SmZxabZx_X ) )
-CTLSPEC   AG( sm.t8 & sm.t11 -> EX( sm.state = Sm_Ge & smZxab.state = SmZxab_B ) )
-CTLSPEC   AG( sm.t5 & sm.t9 -> EX( smGe.state = SmGe_G & smZxabZx.state = SmZxabZx_X ) )
-CTLSPEC   AG( sm.t5 & sm.t10 -> EX( smGe.state = SmGe_G & smZxab.state = SmZxab_A ) )
-CTLSPEC   AG( sm.t5 & sm.t3 -> EX( smGe.state = SmGe_G & smZxabZx.state = SmZxabZx_X ) )
-CTLSPEC   AG( sm.t5 & sm.t11 -> EX( smGe.state = SmGe_G & smZxab.state = SmZxab_B ) )
 CTLSPEC   AG( sm.t1 & sm.t5 -> EX( smGe.state = SmGe_E & smGe.state = SmGe_G ) )
 CTLSPEC   AG( sm.t1 & sm.t6 -> EX( smGe.state = SmGe_E & sm.state = Sm_D ) )
+CTLSPEC   AG( sm.t1 & sm.t7 -> EX( smGe.state = SmGe_E & smZxab.state = SmZxab_B ) )
+CTLSPEC   AG( sm.t1 & sm.t8 -> EX( smGe.state = SmGe_E & sm.state = Sm_Ge ) )
+CTLSPEC   AG( sm.t1 & sm.t9 -> EX( smGe.state = SmGe_E & smZxabZx.state = SmZxabZx_X ) )
+CTLSPEC   AG( sm.t1 & sm.t10 -> EX( smGe.state = SmGe_E & smZxab.state = SmZxab_A ) )
+CTLSPEC   AG( sm.t5 & sm.t9 -> EX( smGe.state = SmGe_G & smZxabZx.state = SmZxabZx_X ) )
+CTLSPEC   AG( sm.t5 & sm.t10 -> EX( smGe.state = SmGe_G & smZxab.state = SmZxab_A ) )
+CTLSPEC   AG( sm.t2 & sm.t5 -> EX( sm.state = Sm_Ge & smGe.state = SmGe_G ) )
+CTLSPEC   AG( sm.t2 & sm.t6 -> EX( sm.state = Sm_Ge & sm.state = Sm_D ) )
+CTLSPEC   AG( sm.t2 & sm.t7 -> EX( sm.state = Sm_Ge & smZxab.state = SmZxab_B ) )
+CTLSPEC   AG( sm.t2 & sm.t8 -> EX( sm.state = Sm_Ge & sm.state = Sm_Ge ) )
+CTLSPEC   AG( sm.t2 & sm.t9 -> EX( sm.state = Sm_Ge & smZxabZx.state = SmZxabZx_X ) )
+CTLSPEC   AG( sm.t2 & sm.t10 -> EX( sm.state = Sm_Ge & smZxab.state = SmZxab_A ) )
+CTLSPEC   AG( sm.t6 & sm.t7 -> EX( sm.state = Sm_D & smZxab.state = SmZxab_B ) )
+CTLSPEC   AG( sm.t9 & sm.t10 -> EX( smZxabZx.state = SmZxabZx_X & smZxab.state = SmZxab_A ) )
+CTLSPEC   AG( sm.t3 & sm.t4 -> EX( smZxabZx.state = SmZxabZx_X & smGe.state = SmGe_E ) )
+CTLSPEC   AG( sm.t12 & sm.t13 -> EX( smGe.state = SmGe_G & smGe.state = SmGe_G ) )

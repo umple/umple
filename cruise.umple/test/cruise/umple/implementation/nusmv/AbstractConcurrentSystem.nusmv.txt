@@ -50,9 +50,9 @@ MODULE StateState11State11 ( _state )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _state.t1 | _state.t4 : null;
        _state.t3 : StateState11State11_state111;
        _state.t2 : StateState11State11_state112;
-       _state.t1 | _state.t4 : null;
        _state.state = State_state1 & state = null : StateState11State11_state111;
        TRUE : state;
      esac;
@@ -68,9 +68,9 @@ MODULE StateState12State12 ( _state )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _state.t1 | _state.t4 : null;
        _state.t6 : StateState12State12_state121;
        _state.t5 : StateState12State12_state122;
-       _state.t1 | _state.t4 : null;
        _state.state = State_state1 & state = null : StateState12State12_state121;
        TRUE : state;
      esac;
@@ -89,12 +89,12 @@ CTLSPEC   EF( stateState11State11.state = StateState11State11_state111 )
 CTLSPEC   EF( stateState11State11.state = StateState11State11_state112 )
 CTLSPEC   EF( stateState12State12.state = StateState12State12_state121 )
 CTLSPEC   EF( stateState12State12.state = StateState12State12_state122 )
-CTLSPEC   AG( state.t4 & state.t5 -> EX( state.state = State_state2 & stateState12State12.state = StateState12State12_state122 ) )
-CTLSPEC   AG( state.t4 & state.t6 -> EX( state.state = State_state2 & stateState12State12.state = StateState12State12_state121 ) )
 CTLSPEC   AG( state.t4 & state.t2 -> EX( state.state = State_state2 & stateState11State11.state = StateState11State11_state112 ) )
 CTLSPEC   AG( state.t4 & state.t3 -> EX( state.state = State_state2 & stateState11State11.state = StateState11State11_state111 ) )
-CTLSPEC   AG( state.t1 & state.t2 -> EX( state.state = State_state2 & stateState11State11.state = StateState11State11_state112 ) )
-CTLSPEC   AG( state.t1 & state.t3 -> EX( state.state = State_state2 & stateState11State11.state = StateState11State11_state111 ) )
+CTLSPEC   AG( state.t4 & state.t5 -> EX( state.state = State_state2 & stateState12State12.state = StateState12State12_state122 ) )
+CTLSPEC   AG( state.t4 & state.t6 -> EX( state.state = State_state2 & stateState12State12.state = StateState12State12_state121 ) )
 CTLSPEC   AG( state.t1 & state.t4 -> EX( state.state = State_state2 & state.state = State_state2 ) )
 CTLSPEC   AG( state.t1 & state.t5 -> EX( state.state = State_state2 & stateState12State12.state = StateState12State12_state122 ) )
 CTLSPEC   AG( state.t1 & state.t6 -> EX( state.state = State_state2 & stateState12State12.state = StateState12State12_state121 ) )
+CTLSPEC   AG( state.t1 & state.t2 -> EX( state.state = State_state2 & stateState11State11.state = StateState11State11_state112 ) )
+CTLSPEC   AG( state.t1 & state.t3 -> EX( state.state = State_state2 & stateState11State11.state = StateState11State11_state111 ) )

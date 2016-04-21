@@ -115,9 +115,9 @@ MODULE Elevator_state_machineInMotion ( _elevator_state_machine )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _elevator_state_machine.t1 | _elevator_state_machine.t5 | _elevator_state_machine.t9 | _elevator_state_machine.t11 | _elevator_state_machine.t13 | _elevator_state_machine.t15 | _elevator_state_machine.t17 | _elevator_state_machine.t2 | _elevator_state_machine.t6 | _elevator_state_machine.t10 | _elevator_state_machine.t12 | _elevator_state_machine.t14 | _elevator_state_machine.t16 | _elevator_state_machine.t18 : null;
        _elevator_state_machine.t4 | _elevator_state_machine.t3 | _elevator_state_machine.t7 : Elevator_state_machineInMotion_Moving;
        _elevator_state_machine.t8 : Elevator_state_machineInMotion_Stopping;
-       _elevator_state_machine.t1 | _elevator_state_machine.t5 | _elevator_state_machine.t9 | _elevator_state_machine.t11 | _elevator_state_machine.t13 | _elevator_state_machine.t15 | _elevator_state_machine.t17 | _elevator_state_machine.t2 | _elevator_state_machine.t6 | _elevator_state_machine.t10 | _elevator_state_machine.t12 | _elevator_state_machine.t14 | _elevator_state_machine.t16 | _elevator_state_machine.t18 : null;
        _elevator_state_machine.state = Elevator_state_machine_InMotion & state = null : Elevator_state_machineInMotion_Moving;
        TRUE : state;
      esac;
@@ -133,11 +133,11 @@ MODULE Elevator_state_machineOnFloor ( _elevator_state_machine )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _elevator_state_machine.t2 | _elevator_state_machine.t4 | _elevator_state_machine.t6 | _elevator_state_machine.t8 | _elevator_state_machine.t17 | _elevator_state_machine.t1 | _elevator_state_machine.t3 | _elevator_state_machine.t5 | _elevator_state_machine.t7 | _elevator_state_machine.t16 | _elevator_state_machine.t18 : null;
        _elevator_state_machine.t14 | _elevator_state_machine.t9 | _elevator_state_machine.t15 : Elevator_state_machineOnFloor_DoorOpening;
        _elevator_state_machine.t10 : Elevator_state_machineOnFloor_AtFloor;
        _elevator_state_machine.t11 | _elevator_state_machine.t12 : Elevator_state_machineOnFloor_DoorClosing;
        _elevator_state_machine.t13 : Elevator_state_machineOnFloor_CheckingNextDestination;
-       _elevator_state_machine.t2 | _elevator_state_machine.t4 | _elevator_state_machine.t6 | _elevator_state_machine.t8 | _elevator_state_machine.t17 | _elevator_state_machine.t1 | _elevator_state_machine.t3 | _elevator_state_machine.t5 | _elevator_state_machine.t7 | _elevator_state_machine.t16 | _elevator_state_machine.t18 : null;
        _elevator_state_machine.state = Elevator_state_machine_OnFloor & state = null : Elevator_state_machineOnFloor_DoorOpening;
        TRUE : state;
      esac;
@@ -168,24 +168,11 @@ CTLSPEC   EF( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloo
 CTLSPEC   AG( elevator_state_machine.t1 & elevator_state_machine.t2 -> EX( elevator_state_machine.state = Elevator_state_machine_PrepareUp & elevator_state_machine.state = Elevator_state_machine_PrepareDown ) )
 CTLSPEC   AG( elevator_state_machine.t3 & elevator_state_machine.t5 -> EX( elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving & elevator_state_machine.state = Elevator_state_machine_InMotion ) )
 CTLSPEC   AG( elevator_state_machine.t4 & elevator_state_machine.t6 -> EX( elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving & elevator_state_machine.state = Elevator_state_machine_InMotion ) )
-CTLSPEC   AG( elevator_state_machine.t8 & elevator_state_machine.t3 -> EX( elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Stopping & elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving ) )
-CTLSPEC   AG( elevator_state_machine.t8 & elevator_state_machine.t4 -> EX( elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Stopping & elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving ) )
 CTLSPEC   AG( elevator_state_machine.t7 & elevator_state_machine.t8 -> EX( elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving & elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Stopping ) )
-CTLSPEC   AG( elevator_state_machine.t7 & elevator_state_machine.t3 -> EX( elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving & elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving ) )
-CTLSPEC   AG( elevator_state_machine.t7 & elevator_state_machine.t4 -> EX( elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving & elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving ) )
-CTLSPEC   AG( elevator_state_machine.t9 & elevator_state_machine.t3 -> EX( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening & elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving ) )
-CTLSPEC   AG( elevator_state_machine.t9 & elevator_state_machine.t4 -> EX( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening & elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving ) )
 CTLSPEC   AG( elevator_state_machine.t16 & elevator_state_machine.t17 -> EX( elevator_state_machine.state = Elevator_state_machine_PrepareUp & elevator_state_machine.state = Elevator_state_machine_PrepareDown ) )
 CTLSPEC   AG( elevator_state_machine.t16 & elevator_state_machine.t18 -> EX( elevator_state_machine.state = Elevator_state_machine_PrepareUp & elevator_state_machine.state = Elevator_state_machine_Idle ) )
-CTLSPEC   AG( elevator_state_machine.t16 & elevator_state_machine.t9 -> EX( elevator_state_machine.state = Elevator_state_machine_PrepareUp & elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening ) )
 CTLSPEC   AG( elevator_state_machine.t11 & elevator_state_machine.t12 -> EX( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorClosing & elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorClosing ) )
-CTLSPEC   AG( elevator_state_machine.t11 & elevator_state_machine.t9 -> EX( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorClosing & elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening ) )
 CTLSPEC   AG( elevator_state_machine.t13 & elevator_state_machine.t14 -> EX( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_CheckingNextDestination & elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening ) )
 CTLSPEC   AG( elevator_state_machine.t13 & elevator_state_machine.t15 -> EX( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_CheckingNextDestination & elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening ) )
-CTLSPEC   AG( elevator_state_machine.t13 & elevator_state_machine.t9 -> EX( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_CheckingNextDestination & elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening ) )
 CTLSPEC   AG( elevator_state_machine.t14 & elevator_state_machine.t15 -> EX( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening & elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening ) )
-CTLSPEC   AG( elevator_state_machine.t14 & elevator_state_machine.t9 -> EX( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening & elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening ) )
-CTLSPEC   AG( elevator_state_machine.t10 & elevator_state_machine.t9 -> EX( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_AtFloor & elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening ) )
-CTLSPEC   AG( elevator_state_machine.t15 & elevator_state_machine.t9 -> EX( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening & elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening ) )
-CTLSPEC   AG( elevator_state_machine.t18 & elevator_state_machine.t9 -> EX( elevator_state_machine.state = Elevator_state_machine_Idle & elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening ) )
 CTLSPEC   AG( elevator_state_machine.t17 & elevator_state_machine.t18 -> EX( elevator_state_machine.state = Elevator_state_machine_PrepareDown & elevator_state_machine.state = Elevator_state_machine_Idle ) )
