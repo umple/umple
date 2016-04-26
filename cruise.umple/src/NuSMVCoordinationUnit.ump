@@ -315,7 +315,7 @@ class NuSMVCoordinator
 	private void generateSpecForTransitionDeterminism( StateMachine sm, ModuleBody body ) {
   		
 		for(State st : sm.getStates() ) {
-			for( Map.Entry<Transition,Transition> map : matchMakeTransitions(st).entries() ){
+			for( Map.Entry<Transition,Transition> map : matchMakeTransitions( st ).entries() ){
 				Transition key = map.getKey();
 				int i = getObjectIdentity( sm, key );
 				Transition value = map.getValue();
@@ -371,7 +371,7 @@ class NuSMVCoordinator
 			i++;
 		}
 	}
-	
+	//mmmmm
 	private Multimap< Transition,Transition > matchMakeTransitions( State state ) {
 
 		Multimap< Transition,Transition > pairable = matchMaker( state );
@@ -390,7 +390,16 @@ class NuSMVCoordinator
 		Multimap< Transition,Transition > pairable = ArrayListMultimap.create();
 		List<Transition> outgoingTransitions = new ArrayList<Transition>();
 		
+		/*-------------------- we consider four different cases in developing an efficient match making algorithm
+		  - Case 1 - every two transitions from the same state...
+		  - Case 2 - highlevel transition is matched with a transition from an embedded sub-state...
+          - Case 3 - outgoing transition is matched with transitions (i.e external) from sub-states of parallel (or orthogonal) state machines... 
+		  - Case 4 - and-cross are matched with external transitions...
+		*/
+		
+		//Case 1 is defined here...
 		if( state.getNestedStateMachines().size() == 0 ) {
+			
 			for( Transition transition : state.getStateMachine().getAllTransitions() )
 				if( transition.getFromState().equals( state ) && !has( outgoingTransitions, transition ) )
 					outgoingTransitions.add( transition );
@@ -405,7 +414,6 @@ class NuSMVCoordinator
 			for( Transition transition : state.getStateMachine().getAllTransitions() ) {
 				if( transition.getFromState().equals( state ) && !has( highLevelTransitions, transition ))
 					highLevelTransitions.add( transition );
-				
 				for( State embeddedState : getEmbeddedStates( state ) )  
 					if( transition.getFromState().equals( embeddedState ) )
 						embeddedTransitions.add( transition );				
@@ -421,9 +429,9 @@ class NuSMVCoordinator
 				//------------------------ extracting pairable set of outgoing transitions for an orthogonal state ------------------------- 
 				for( State embeddedState : getEmbeddedStates( state ) ) { 
 					List<Transition> outgoing = isOutgoingOfOrthogonal( embeddedState, state );
-					for( Transition trans : outgoing )
+					/*for( Transition trans : outgoing )
 						if( !has( allOutGoingTransitions, trans ) )
-							allOutGoingTransitions.add( trans );
+							allOutGoingTransitions.add( trans );*/
 					List<Transition> external = new ArrayList<Transition>();
 					for( Transition trans : parent.getAllTransitions() )
 						if( has( getExternalStateOf( embeddedState, state ), trans.getFromState() ) ) //&& !has( allOutGoingTransitions,trans )
@@ -436,9 +444,9 @@ class NuSMVCoordinator
 				List<Transition> andCross = getAndCross( state );
 				for( Transition trans : andCross ) {
 					State source = trans.getFromState();
-					List<State> external = getExternalStateOf( source, state );
+					List<State> newexternal = getExternalStateOf( source, state );
 					for( Transition tr : state.getStateMachine().getAllTransitions() )
-						if( has( external, tr.getFromState() ) ) {
+						if( has( newexternal, tr.getFromState() ) ) {
 							Map.Entry<Transition, Transition> entry = new AbstractMap.SimpleEntry<Transition, Transition>( trans, tr);
 							if( !has( pairable, entry ) && !entry.getKey().equals( entry.getValue() ) )
 								pairable.put( entry.getKey(), entry.getValue() );
@@ -468,7 +476,7 @@ class NuSMVCoordinator
 		return embeddedStates;
 	} 
 	
-	/*private List<State> getEmbeddedStates(State state ) {
+	/*private List<State> getEmbeddedStates( State state ) {
 		List<State> embeddedStates = new ArrayList<State>();
 		for( StateMachine smm : getEmbeddedStateMachines( state ) )
 			for( State embeddedState : getEmbeddedStates( smm ) ) 
@@ -510,7 +518,6 @@ class NuSMVCoordinator
 		if( sm.getImmediateNestedStateMachines().size() == 1 && sm.getStates().size() > 0 )
 			return sm.getImmediateNestedStateMachines().get( 0 );
 		return sm;
-		
 	}
 	
 	private CTLExpression generateDestinationStatesExpr( Transition first, Transition second ) {
@@ -543,7 +550,7 @@ class NuSMVCoordinator
   	private AssignConstraint getAssignConstraint( StateMachine sm, StateMachine root) {
   		BasicExpression bexp;
   		if( sm.getParentState() == null )
-  			bexp = new BasicExpression(changeNameCase(sm.getFullName(),1)+"_"+sm.getStartState().getName());
+  			bexp = new BasicExpression(changeNameCase( sm.getFullName(),1 )+"_"+sm.getStartState().getName());
   		else 
   			bexp = new BasicExpression("null");
 			
@@ -553,7 +560,7 @@ class NuSMVCoordinator
   		return ac;
   	}
 	
-	private AssignConstraint getEventAssignConstraint( StateMachine sm) {
+	private AssignConstraint getEventAssignConstraint( StateMachine sm ) {
 
 		VariableSpecifier eventset = new VariableSpecifier("events");
 		for( Event event : sm.getAllEvents() )

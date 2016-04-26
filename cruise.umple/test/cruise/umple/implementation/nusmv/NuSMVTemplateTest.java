@@ -57,14 +57,14 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/AndCrossFromDeeplyNestedStateCase2.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/EnhancedBitCounter.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/OutgoingTransitionOfConcurrentState.smv");
-	    SampleFileWriter.destroy(pathToInput + "/nusmv/OutgoingTransitionOfConcurrentStateWithAndCross.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/OutgoingTransitionOfConcurrentStateWithAndCross1.smv");
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
-	  public void OutgoingTransitionOfConcurrentStateWithAndCross()
+	  public void OutgoingTransitionOfConcurrentStateWithAndCross1()
 	  {
-	  		assertUmpleTemplateFor("nusmv/OutgoingTransitionOfConcurrentStateWithAndCross.ump","nusmv/OutgoingTransitionOfConcurrentStateWithAndCross.nusmv.txt");
-	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/OutgoingTransitionOfConcurrentStateWithAndCross.smv")).exists());
+	  		assertUmpleTemplateFor("nusmv/OutgoingTransitionOfConcurrentStateWithAndCross1.ump","nusmv/OutgoingTransitionOfConcurrentStateWithAndCross1.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/OutgoingTransitionOfConcurrentStateWithAndCross1.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
