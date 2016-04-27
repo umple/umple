@@ -51,9 +51,9 @@ MODULE SmBit1Bit1 ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t1 | _sm.t5 : null;
        _sm.t3 : SmBit1Bit1_Bit11;
        _sm.t2 : SmBit1Bit1_Bit12;
-       _sm.t1 | _sm.t5 : null;
        _sm.state = Sm_Counter & state = null : SmBit1Bit1_Bit11;
        TRUE : state;
      esac;
@@ -69,8 +69,8 @@ MODULE SmBit2Bit2 ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t4 : SmBit2Bit2_Bit22;
        _sm.t1 | _sm.t5 : null;
+       _sm.t4 : SmBit2Bit2_Bit22;
        _sm.state = Sm_Counter & state = null : SmBit2Bit2_Bit21;
        TRUE : state;
      esac;
@@ -86,9 +86,9 @@ MODULE SmStatusStatus ( _sm )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t1 : null;
        _sm.t8 | _sm.t6 | _sm.t7 : SmStatusStatus_Counting;
        _sm.t5 : SmStatusStatus_Max;
-       _sm.t1 : null;
        _sm.state = Sm_Counter & state = null : SmStatusStatus_Counting;
        TRUE : state;
      esac;
@@ -104,8 +104,8 @@ MODULE SmStatusStatusBit3Bit3 ( _sm , _smStatusStatus )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t8 : SmStatusStatusBit3Bit3_Bit31;
        _sm.t2 | _sm.t4 | _sm.t6 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 : null;
+       _sm.t8 : SmStatusStatusBit3Bit3_Bit31;
        _smStatusStatus.state = SmStatusStatus_Counting & state = null : SmStatusStatusBit3Bit3_Bit31;
        TRUE : state;
      esac;
@@ -121,8 +121,8 @@ MODULE SmStatusStatusBit4Bit4 ( _sm , _smStatusStatus )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t7 : SmStatusStatusBit4Bit4_Bit41;
        _sm.t2 | _sm.t4 | _sm.t6 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t8 : null;
+       _sm.t7 : SmStatusStatusBit4Bit4_Bit41;
        _smStatusStatus.state = SmStatusStatus_Counting & state = null : SmStatusStatusBit4Bit4_Bit41;
        TRUE : state;
      esac;
@@ -148,31 +148,9 @@ CTLSPEC   EF( smStatusStatus.state = SmStatusStatus_Counting )
 CTLSPEC   EF( smStatusStatus.state = SmStatusStatus_Max )
 CTLSPEC   EF( smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 )
 CTLSPEC   EF( smStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41 )
-CTLSPEC   AG( sm.t1 & sm.t2 -> EX( sm.state = Sm_Counter & smBit1Bit1.state = SmBit1Bit1_Bit12 ) )
-CTLSPEC   AG( sm.t1 & sm.t3 -> EX( sm.state = Sm_Counter & smBit1Bit1.state = SmBit1Bit1_Bit11 ) )
-CTLSPEC   AG( sm.t1 & sm.t4 -> EX( sm.state = Sm_Counter & smBit2Bit2.state = SmBit2Bit2_Bit22 ) )
-CTLSPEC   AG( sm.t1 & sm.t5 -> EX( sm.state = Sm_Counter & smStatusStatus.state = SmStatusStatus_Max ) )
-CTLSPEC   AG( sm.t1 & sm.t6 -> EX( sm.state = Sm_Counter & smStatusStatus.state = SmStatusStatus_Counting ) )
-CTLSPEC   AG( sm.t1 & sm.t7 -> EX( sm.state = Sm_Counter & smStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41 ) )
-CTLSPEC   AG( sm.t1 & sm.t8 -> EX( sm.state = Sm_Counter & smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 ) )
-CTLSPEC   AG( sm.t2 & sm.t3 -> EX( smBit1Bit1.state = SmBit1Bit1_Bit12 & smBit1Bit1.state = SmBit1Bit1_Bit11 ) )
-CTLSPEC   AG( sm.t2 & sm.t4 -> EX( smBit1Bit1.state = SmBit1Bit1_Bit12 & smBit2Bit2.state = SmBit2Bit2_Bit22 ) )
-CTLSPEC   AG( sm.t2 & sm.t5 -> EX( smBit1Bit1.state = SmBit1Bit1_Bit12 & smStatusStatus.state = SmStatusStatus_Max ) )
-CTLSPEC   AG( sm.t2 & sm.t6 -> EX( smBit1Bit1.state = SmBit1Bit1_Bit12 & smStatusStatus.state = SmStatusStatus_Counting ) )
-CTLSPEC   AG( sm.t2 & sm.t7 -> EX( smBit1Bit1.state = SmBit1Bit1_Bit12 & smStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41 ) )
-CTLSPEC   AG( sm.t2 & sm.t8 -> EX( smBit1Bit1.state = SmBit1Bit1_Bit12 & smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 ) )
-CTLSPEC   AG( sm.t3 & sm.t4 -> EX( smBit1Bit1.state = SmBit1Bit1_Bit11 & smBit2Bit2.state = SmBit2Bit2_Bit22 ) )
-CTLSPEC   AG( sm.t3 & sm.t5 -> EX( smBit1Bit1.state = SmBit1Bit1_Bit11 & smStatusStatus.state = SmStatusStatus_Max ) )
-CTLSPEC   AG( sm.t3 & sm.t6 -> EX( smBit1Bit1.state = SmBit1Bit1_Bit11 & smStatusStatus.state = SmStatusStatus_Counting ) )
-CTLSPEC   AG( sm.t3 & sm.t7 -> EX( smBit1Bit1.state = SmBit1Bit1_Bit11 & smStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41 ) )
-CTLSPEC   AG( sm.t3 & sm.t8 -> EX( smBit1Bit1.state = SmBit1Bit1_Bit11 & smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 ) )
-CTLSPEC   AG( sm.t4 & sm.t5 -> EX( smBit2Bit2.state = SmBit2Bit2_Bit22 & smStatusStatus.state = SmStatusStatus_Max ) )
-CTLSPEC   AG( sm.t4 & sm.t6 -> EX( smBit2Bit2.state = SmBit2Bit2_Bit22 & smStatusStatus.state = SmStatusStatus_Counting ) )
-CTLSPEC   AG( sm.t4 & sm.t7 -> EX( smBit2Bit2.state = SmBit2Bit2_Bit22 & smStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41 ) )
-CTLSPEC   AG( sm.t4 & sm.t8 -> EX( smBit2Bit2.state = SmBit2Bit2_Bit22 & smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 ) )
+CTLSPEC   AG( sm.t5 & sm.t2 -> EX( smStatusStatus.state = SmStatusStatus_Max & smBit1Bit1.state = SmBit1Bit1_Bit12 ) )
+CTLSPEC   AG( sm.t5 & sm.t3 -> EX( smStatusStatus.state = SmStatusStatus_Max & smBit1Bit1.state = SmBit1Bit1_Bit11 ) )
 CTLSPEC   AG( sm.t5 & sm.t6 -> EX( smStatusStatus.state = SmStatusStatus_Max & smStatusStatus.state = SmStatusStatus_Counting ) )
 CTLSPEC   AG( sm.t5 & sm.t7 -> EX( smStatusStatus.state = SmStatusStatus_Max & smStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41 ) )
 CTLSPEC   AG( sm.t5 & sm.t8 -> EX( smStatusStatus.state = SmStatusStatus_Max & smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 ) )
-CTLSPEC   AG( sm.t6 & sm.t7 -> EX( smStatusStatus.state = SmStatusStatus_Counting & smStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41 ) )
-CTLSPEC   AG( sm.t6 & sm.t8 -> EX( smStatusStatus.state = SmStatusStatus_Counting & smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 ) )
 CTLSPEC   AG( sm.t7 & sm.t8 -> EX( smStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41 & smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 ) )

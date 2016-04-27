@@ -10,17 +10,18 @@ MODULE State
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { State_newBooking , State_seatAssigned , State_checkedIn , State_cancelled , State_completed };
-     event : { ev_assignSeat , ev_cancel , ev_checkIn , ev_complete , ev_null };
+     event : { ev_assignSeat , ev_cancel , ev_checkIn , ev_cance , ev_complete , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     state_stable :=  !( event = ev_assignSeat | event = ev_checkIn | event = ev_cancel | event = ev_complete );
+     state_stable :=  !( event = ev_cancel | event = ev_cance | event = ev_assignSeat | event = ev_checkIn | event = ev_complete );
      t1 := event = ev_assignSeat & state = State_newBooking;
      t2 := event = ev_cancel & state = State_newBooking;
      t3 := event = ev_cancel & state = State_seatAssigned;
      t4 := event = ev_checkIn & state = State_seatAssigned;
-     t5 := event = ev_cancel & state = State_checkedIn;
-     t6 := event = ev_complete & state = State_checkedIn;
+     t5 := event = ev_cance & state = State_seatAssigned;
+     t6 := event = ev_cancel & state = State_checkedIn;
+     t7 := event = ev_complete & state = State_checkedIn;
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
@@ -28,8 +29,8 @@ MODULE State
      next( state ) := case
        t1 : State_seatAssigned;
        t4 : State_checkedIn;
-       t3 | t2 | t5 : State_cancelled;
-       t6 : State_completed;
+       t2 | t5 | t3 | t6 : State_cancelled;
+       t7 : State_completed;
        TRUE : state;
      esac;
 
@@ -37,7 +38,7 @@ MODULE State
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       state_stable : { ev_assignSeat , ev_cancel , ev_checkIn , ev_complete };
+       state_stable : { ev_assignSeat , ev_cancel , ev_checkIn , ev_cance , ev_complete };
        TRUE : ev_null;
      esac;
 
@@ -53,17 +54,7 @@ CTLSPEC   EF( state.state = State_checkedIn )
 CTLSPEC   EF( state.state = State_cancelled )
 CTLSPEC   EF( state.state = State_completed )
 CTLSPEC   AG( state.t1 & state.t2 -> EX( state.state = State_seatAssigned & state.state = State_cancelled ) )
-CTLSPEC   AG( state.t1 & state.t3 -> EX( state.state = State_seatAssigned & state.state = State_cancelled ) )
-CTLSPEC   AG( state.t1 & state.t4 -> EX( state.state = State_seatAssigned & state.state = State_checkedIn ) )
-CTLSPEC   AG( state.t1 & state.t5 -> EX( state.state = State_seatAssigned & state.state = State_cancelled ) )
-CTLSPEC   AG( state.t1 & state.t6 -> EX( state.state = State_seatAssigned & state.state = State_completed ) )
-CTLSPEC   AG( state.t2 & state.t3 -> EX( state.state = State_cancelled & state.state = State_cancelled ) )
-CTLSPEC   AG( state.t2 & state.t4 -> EX( state.state = State_cancelled & state.state = State_checkedIn ) )
-CTLSPEC   AG( state.t2 & state.t5 -> EX( state.state = State_cancelled & state.state = State_cancelled ) )
-CTLSPEC   AG( state.t2 & state.t6 -> EX( state.state = State_cancelled & state.state = State_completed ) )
 CTLSPEC   AG( state.t3 & state.t4 -> EX( state.state = State_cancelled & state.state = State_checkedIn ) )
 CTLSPEC   AG( state.t3 & state.t5 -> EX( state.state = State_cancelled & state.state = State_cancelled ) )
-CTLSPEC   AG( state.t3 & state.t6 -> EX( state.state = State_cancelled & state.state = State_completed ) )
 CTLSPEC   AG( state.t4 & state.t5 -> EX( state.state = State_checkedIn & state.state = State_cancelled ) )
-CTLSPEC   AG( state.t4 & state.t6 -> EX( state.state = State_checkedIn & state.state = State_completed ) )
-CTLSPEC   AG( state.t5 & state.t6 -> EX( state.state = State_cancelled & state.state = State_completed ) )
+CTLSPEC   AG( state.t6 & state.t7 -> EX( state.state = State_cancelled & state.state = State_completed ) )

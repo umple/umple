@@ -1,7 +1,7 @@
 -- This file is generated from CourseSectionNested.ump --
 
 -- PLEASE DO NOT EDIT THIS CODE --
--- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
+-- This code was generated using the UMPLE 1.23.0-3bd2bc7 modeling language! --
 
 
 -- This defines a NuSMV module for Status --
@@ -55,9 +55,9 @@ MODULE StatusOpen ( _status )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _status.t1 | _status.t4 | _status.t6 | _status.t9 | _status.t3 | _status.t5 | _status.t8 | _status.t10 : null;
        _status.t2 : StatusOpen_NotEnoughStudents;
        _status.t7 : StatusOpen_EnoughStudents;
-       _status.t1 | _status.t4 | _status.t6 | _status.t9 | _status.t3 | _status.t5 | _status.t8 | _status.t10 : null;
        _status.state = Status_Open & state = null : StatusOpen_NotEnoughStudents;
        TRUE : state;
      esac;
@@ -76,47 +76,15 @@ CTLSPEC   EF( status.state = Status_Closed )
 CTLSPEC   EF( statusOpen.state = StatusOpen_NotEnoughStudents )
 CTLSPEC   EF( statusOpen.state = StatusOpen_EnoughStudents )
 CTLSPEC   AG( status.t1 & status.t2 -> EX( status.state = Status_Cancelled & statusOpen.state = StatusOpen_NotEnoughStudents ) )
-CTLSPEC   AG( status.t1 & status.t3 -> EX( status.state = Status_Cancelled & status.state = Status_Cancelled ) )
-CTLSPEC   AG( status.t1 & status.t4 -> EX( status.state = Status_Cancelled & status.state = Status_Cancelled ) )
-CTLSPEC   AG( status.t1 & status.t5 -> EX( status.state = Status_Cancelled & status.state = Status_Open ) )
-CTLSPEC   AG( status.t1 & status.t6 -> EX( status.state = Status_Cancelled & status.state = Status_Cancelled ) )
-CTLSPEC   AG( status.t1 & status.t7 -> EX( status.state = Status_Cancelled & statusOpen.state = StatusOpen_EnoughStudents ) )
-CTLSPEC   AG( status.t1 & status.t8 -> EX( status.state = Status_Cancelled & status.state = Status_Open ) )
-CTLSPEC   AG( status.t1 & status.t9 -> EX( status.state = Status_Cancelled & status.state = Status_Closed ) )
-CTLSPEC   AG( status.t1 & status.t10 -> EX( status.state = Status_Cancelled & status.state = Status_Closed ) )
-CTLSPEC   AG( status.t2 & status.t3 -> EX( statusOpen.state = StatusOpen_NotEnoughStudents & status.state = Status_Cancelled ) )
-CTLSPEC   AG( status.t2 & status.t4 -> EX( statusOpen.state = StatusOpen_NotEnoughStudents & status.state = Status_Cancelled ) )
-CTLSPEC   AG( status.t2 & status.t5 -> EX( statusOpen.state = StatusOpen_NotEnoughStudents & status.state = Status_Open ) )
-CTLSPEC   AG( status.t2 & status.t6 -> EX( statusOpen.state = StatusOpen_NotEnoughStudents & status.state = Status_Cancelled ) )
-CTLSPEC   AG( status.t2 & status.t7 -> EX( statusOpen.state = StatusOpen_NotEnoughStudents & statusOpen.state = StatusOpen_EnoughStudents ) )
-CTLSPEC   AG( status.t2 & status.t8 -> EX( statusOpen.state = StatusOpen_NotEnoughStudents & status.state = Status_Open ) )
-CTLSPEC   AG( status.t2 & status.t9 -> EX( statusOpen.state = StatusOpen_NotEnoughStudents & status.state = Status_Closed ) )
-CTLSPEC   AG( status.t2 & status.t10 -> EX( statusOpen.state = StatusOpen_NotEnoughStudents & status.state = Status_Closed ) )
-CTLSPEC   AG( status.t3 & status.t4 -> EX( status.state = Status_Cancelled & status.state = Status_Cancelled ) )
 CTLSPEC   AG( status.t3 & status.t5 -> EX( status.state = Status_Cancelled & status.state = Status_Open ) )
 CTLSPEC   AG( status.t3 & status.t6 -> EX( status.state = Status_Cancelled & status.state = Status_Cancelled ) )
 CTLSPEC   AG( status.t3 & status.t7 -> EX( status.state = Status_Cancelled & statusOpen.state = StatusOpen_EnoughStudents ) )
 CTLSPEC   AG( status.t3 & status.t8 -> EX( status.state = Status_Cancelled & status.state = Status_Open ) )
 CTLSPEC   AG( status.t3 & status.t9 -> EX( status.state = Status_Cancelled & status.state = Status_Closed ) )
 CTLSPEC   AG( status.t3 & status.t10 -> EX( status.state = Status_Cancelled & status.state = Status_Closed ) )
-CTLSPEC   AG( status.t4 & status.t5 -> EX( status.state = Status_Cancelled & status.state = Status_Open ) )
-CTLSPEC   AG( status.t4 & status.t6 -> EX( status.state = Status_Cancelled & status.state = Status_Cancelled ) )
-CTLSPEC   AG( status.t4 & status.t7 -> EX( status.state = Status_Cancelled & statusOpen.state = StatusOpen_EnoughStudents ) )
-CTLSPEC   AG( status.t4 & status.t8 -> EX( status.state = Status_Cancelled & status.state = Status_Open ) )
-CTLSPEC   AG( status.t4 & status.t9 -> EX( status.state = Status_Cancelled & status.state = Status_Closed ) )
-CTLSPEC   AG( status.t4 & status.t10 -> EX( status.state = Status_Cancelled & status.state = Status_Closed ) )
 CTLSPEC   AG( status.t5 & status.t6 -> EX( status.state = Status_Open & status.state = Status_Cancelled ) )
 CTLSPEC   AG( status.t5 & status.t7 -> EX( status.state = Status_Open & statusOpen.state = StatusOpen_EnoughStudents ) )
-CTLSPEC   AG( status.t5 & status.t8 -> EX( status.state = Status_Open & status.state = Status_Open ) )
-CTLSPEC   AG( status.t5 & status.t9 -> EX( status.state = Status_Open & status.state = Status_Closed ) )
-CTLSPEC   AG( status.t5 & status.t10 -> EX( status.state = Status_Open & status.state = Status_Closed ) )
 CTLSPEC   AG( status.t6 & status.t7 -> EX( status.state = Status_Cancelled & statusOpen.state = StatusOpen_EnoughStudents ) )
-CTLSPEC   AG( status.t6 & status.t8 -> EX( status.state = Status_Cancelled & status.state = Status_Open ) )
-CTLSPEC   AG( status.t6 & status.t9 -> EX( status.state = Status_Cancelled & status.state = Status_Closed ) )
-CTLSPEC   AG( status.t6 & status.t10 -> EX( status.state = Status_Cancelled & status.state = Status_Closed ) )
-CTLSPEC   AG( status.t7 & status.t8 -> EX( statusOpen.state = StatusOpen_EnoughStudents & status.state = Status_Open ) )
-CTLSPEC   AG( status.t7 & status.t9 -> EX( statusOpen.state = StatusOpen_EnoughStudents & status.state = Status_Closed ) )
-CTLSPEC   AG( status.t7 & status.t10 -> EX( statusOpen.state = StatusOpen_EnoughStudents & status.state = Status_Closed ) )
 CTLSPEC   AG( status.t8 & status.t9 -> EX( status.state = Status_Open & status.state = Status_Closed ) )
 CTLSPEC   AG( status.t8 & status.t10 -> EX( status.state = Status_Open & status.state = Status_Closed ) )
 CTLSPEC   AG( status.t9 & status.t10 -> EX( status.state = Status_Closed & status.state = Status_Closed ) )

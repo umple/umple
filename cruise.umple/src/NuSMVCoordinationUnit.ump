@@ -6,7 +6,7 @@ class NuSMVCoordinator
 {
   depend cruise.umple.compiler.*;
   depend java.util.*;
-
+  //depend com.google.common.collect.IdentityHashMap;
 	space <<!
 
 !>>
@@ -69,7 +69,7 @@ class NuSMVCoordinator
   		return module;
   	}
   	
-	private <E> boolean has( List<E> objectList, E whatToFind ) {
+	private <E> boolean has( Collection<E> objectList, E whatToFind ) {
   		boolean yes = false;
   		for(E st : objectList) {
   			if( st.equals(whatToFind) ) {
@@ -128,34 +128,42 @@ class NuSMVCoordinator
 		List<StateMachine> nestedMachines = new ArrayList<StateMachine>();
 		if(root.getParentState() == null)
 			nestedMachines.add(root);
-  		for( State st :  getCompositeStates(root) ) {
-			for( StateMachine stm : st.getNestedStateMachines() ) {
-				if(!st.isIsConcurrent()){
-					if(!has(nestedMachines, stm))
-						nestedMachines.add( stm );
-					if( isNested( stm ) )
-						for( StateMachine innerMachine : generateStateMachineList( stm ) )
-								nestedMachines.add( innerMachine );
-				}
-				else {
-					//skips the wrapper of the region
-					if( stm.getImmediateNestedStateMachines().size() == 0 )
-						nestedMachines.add( stm );
-					
-					for( StateMachine region : stm.getImmediateNestedStateMachines() ){
-						if(!has(nestedMachines, stm)){
-							nestedMachines.add( region );
-							if( isNested( region ) )
-								for( StateMachine innerMachine : generateStateMachineList( region ) )
-									nestedMachines.add( innerMachine );
-						}
-					}
-					if( stm.getImmediateNestedStateMachines().size() > 1 )
-						nestedMachines.add( stm );
-				}
-			}
-  		}
+  		for( State st :  getCompositeStates(root) )
+			for( StateMachine stm : getEmbeddedStateMachines(st) )
+					nestedMachines.add( stm );
 		return nestedMachines;
+	}
+	
+	//Computes the list of embeddedStateMachines of a composite state
+	private List<StateMachine> getEmbeddedStateMachines( State state ) {
+		List<StateMachine> nestedMachines = new ArrayList<StateMachine>();
+ 
+		for( StateMachine stm : state.getNestedStateMachines() ) {
+			if(!state.isIsConcurrent()){
+				if(!has(nestedMachines, stm))
+					nestedMachines.add( stm );
+				if( isNested( stm ) )
+					for( StateMachine innerMachine : generateStateMachineList( stm ) )
+							nestedMachines.add( innerMachine );
+			}
+			else {
+				//skips the wrapper of the region
+				if( stm.getImmediateNestedStateMachines().size() == 0 )
+					nestedMachines.add( stm );
+				
+				for( StateMachine region : stm.getImmediateNestedStateMachines() ){
+					if(!has(nestedMachines, stm)){
+						nestedMachines.add( region );
+						if( isNested( region ) )
+							for( StateMachine innerMachine : generateStateMachineList( region ) )
+								nestedMachines.add( innerMachine );
+					}
+				}
+				if( stm.getImmediateNestedStateMachines().size() > 1 )
+					nestedMachines.add( stm );
+			}
+		}
+		return nestedMachines;	
 	}
 	
 	private boolean isHighLevelTransition( Transition transition ){
@@ -276,7 +284,7 @@ class NuSMVCoordinator
     	}
   	}
 	
-	private void generateSpecForTransitionDeterminism( StateMachine sm, ModuleBody body ) {
+	/*private void generateSpecForTransitionDeterminism( StateMachine sm, ModuleBody body ) {
   		int i = 1;
   		while( i <= sm.getAllTransitions().size() ) {
 			int j = i + 1;
@@ -301,7 +309,205 @@ class NuSMVCoordinator
 			}
 			i++;
     	}
+  	}*/
+	
+	private void generateSpecForTransitionDeterminism( StateMachine sm, ModuleBody body ) {
+  		
+		for(State st : sm.getStates() ) {
+			for( HashMap<Transition,Transition> entry : matchMakeTransitions( st ) ){
+				for( HashMap.Entry<Transition,Transition> map : entry.entrySet() ) {
+					Transition key = map.getKey();
+					int i = getObjectIdentity( sm, key );
+					Transition value = map.getValue();
+					int j = getObjectIdentity( sm, value );
+					BasicExpression bexp1 = new BasicExpression(changeNameCase(sm.getFullName(), 0)+".t"+i);
+					BasicExpression bexp2 = new BasicExpression(changeNameCase(sm.getFullName(), 0)+".t"+j);
+					BasicExpression bexp3 = new BasicExpression("temp");
+					bexp3.addChild(bexp1);
+					bexp3.addChild(bexp2);				
+				
+					CTLExpression cexp = new CTLExpression("ctl");
+					cexp.addChild(bexp3);
+					cexp.addChild( generateDestinationStatesExpr( mapIdentity( sm, i), mapIdentity( sm, j) ));
+					cexp.setOperator( BasicExpression.Operator.IMPLY );
+					cexp.setBracketed(true);
+					cexp.setQualified(true);
+					cexp.setCtlOperator(CTLExpression.CtlOperator.AG);
+				
+					CTLSpecification cspec = new CTLSpecification(cexp);
+					body.addModuleElement(cspec);
+				}
+			}
+		}
   	}
+	//scans through the list and returns true whenever what to find is contained in the list
+	private <Transition> boolean has( List< HashMap<Transition,Transition> > objectList, HashMap<Transition,Transition> whatToFind ) {
+  		boolean yes = false;
+		
+  		for( HashMap<Transition,Transition> entry : objectList ) {
+			for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
+				for( HashMap.Entry<Transition,Transition> findMap : whatToFind.entrySet() )
+					if( (map.getKey().equals(findMap.getKey()) && map.getValue().equals(findMap.getValue()))
+						|| (map.getValue().equals(findMap.getKey()) && map.getKey().equals(findMap.getValue())) ) {
+						yes = true;
+						break;
+					}
+  		}
+  		return yes;
+	}
+	
+	//match making 
+	private void match( List<Transition> first, List<Transition> second, List< HashMap<Transition,Transition> > pairable, boolean defaulted ) {
+		int i = 0;
+		int x = first.size(), y = second.size(); 
+		if( !defaulted ) 
+			x = x - 1;
+		while( i < x ) {
+			int j = 0;
+			if( !defaulted ) 
+				j = i + 1;
+			while( j < y ) {
+				HashMap<Transition, Transition> entry = new HashMap();
+				entry.put(first.get(i), second.get(j));
+				for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
+					if( !has( pairable, entry ) && !map.getKey().equals( map.getValue() ) )
+						pairable.add( entry );
+				j++;
+			}
+			i++;
+		}
+	}
+	
+	private List< HashMap<Transition,Transition> > matchMakeTransitions( State state ) {
+
+		List< HashMap<Transition,Transition> > pairable = matchMaker( state );
+		int i = 0;	
+		while( i < getEmbeddedStates( state ).size() ) {
+			for( HashMap<Transition,Transition> entry : matchMaker( getEmbeddedStates( state ).get(i) ) )
+				for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
+					if( !has( pairable, entry ) && !map.getKey().equals(map.getValue()) )
+						pairable.add( entry );
+			i++;
+		}
+		return pairable;
+	}
+	
+	//Constructs a map of pairable transitions
+	private List< HashMap< Transition,Transition > > matchMaker( State state ) {
+		List< HashMap< Transition,Transition > > pairable = new ArrayList< HashMap< Transition,Transition > >();
+		List<Transition> outgoingTransitions = new ArrayList<Transition>();
+		
+		if( state.getNestedStateMachines().size() == 0 ) {
+			for( Transition transition : state.getStateMachine().getAllTransitions() )
+				if( transition.getFromState().equals( state ) && !has( outgoingTransitions, transition ) )
+					outgoingTransitions.add( transition );
+			match( outgoingTransitions, outgoingTransitions, pairable, false );
+		}
+		else if( state.getNestedStateMachines().size() >= 1 ) {
+			
+			List<Transition> highLevelTransitions = new ArrayList<Transition>();
+			List<Transition> embeddedTransitions = new ArrayList<Transition>();			
+			
+			//------------------------ extracting highlevel transitions of a composite state ------------------------- 
+			for( Transition transition : state.getStateMachine().getAllTransitions() ) {
+				if( transition.getFromState().equals( state ) && !has( highLevelTransitions, transition ))
+					highLevelTransitions.add( transition );
+				
+				for( State embeddedState : getEmbeddedStates( state ) )  
+					if( transition.getFromState().equals( embeddedState ) )
+						embeddedTransitions.add( transition );				
+			}
+			match( highLevelTransitions, embeddedTransitions, pairable, true );
+			
+			//------------------------ ending extraction of highlevel transitions for composite state ------------------------- 
+			
+			if( state.getNestedStateMachines().size() > 1 ) {
+				StateMachine parent = state.getStateMachine();
+				List<Transition> allOutGoingTransitions = new ArrayList<Transition>();
+				
+				//------------------------ extracting pairable set of outgoing transitions for an orthogonal state ------------------------- 
+				for( State embeddedState : getEmbeddedStates( state ) ) { 
+					List<Transition> outgoing = isOutgoingOfOrthogonal( embeddedState, state );
+					for( Transition trans : outgoing )
+						if( !has( allOutGoingTransitions, trans ) )
+							allOutGoingTransitions.add( trans );
+					List<Transition> external = new ArrayList<Transition>();
+					for( Transition trans : parent.getAllTransitions() )
+						if( has( getExternalStateOf( embeddedState, state ), trans.getFromState() ) ) //&& !has( allOutGoingTransitions,trans )
+							external.add( trans );
+					match( outgoing, external, pairable, true );
+				}
+				//------------------------ ending extraction -------------------------
+				
+				//------------------------ managing and-cross transitions -------------------------
+				List<Transition> andCross = getAndCross( state );
+				for( Transition trans : andCross ) {
+					State source = trans.getFromState();
+					List<State> external = getExternalStateOf( source, state );
+					for( Transition tr : state.getStateMachine().getAllTransitions() )
+						if( has( external, tr.getFromState() ) ) {
+							HashMap<Transition, Transition> entry = new HashMap();
+							entry.put(trans, tr);
+							for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
+								if( !has( pairable, entry ) && !map.getKey().equals(map.getValue()) )
+									pairable.add( entry );
+						}
+					for( Transition tr : highLevelTransitions ){
+						HashMap<Transition, Transition> entry = new HashMap();
+						entry.put(trans, tr);
+						for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
+							if( !has( pairable, entry ) && !map.getKey().equals( map.getValue() ) )
+								pairable.add( entry );
+					}
+				}
+				//------------------------ ending and-cross management -------------------------
+			}
+		}
+		
+		return pairable;
+	}
+	
+	private List<State> getEmbeddedStates(State state ) {
+		List<State> embeddedStates = new ArrayList<State>();
+		for( StateMachine smm : state.getNestedStateMachines() ) {
+			for( State innerState : smm.getStates() ) {
+				embeddedStates.add( innerState );
+				for( State st : getEmbeddedStates(innerState) )
+					embeddedStates.add( st ); 
+			}
+		}
+		return embeddedStates;
+	} 
+	
+	/*private List<State> getEmbeddedStates(State state ) {
+		List<State> embeddedStates = new ArrayList<State>();
+		for( StateMachine smm : getEmbeddedStateMachines( state ) )
+			for( State embeddedState : getEmbeddedStates( smm ) ) 
+				embeddedStates.add( embeddedState );
+		return embeddedStates;
+	}*/ 
+	
+	//Determines if a transition is an out-going transition of a concurrent state
+	private List<Transition> isOutgoingOfOrthogonal( State state, State parent ) {
+		List<State> embeddedStates = getEmbeddedStates( parent );
+		StateMachine sm = parent.getStateMachine();
+		List<Transition> outGoingTransitions = new ArrayList<Transition>();
+		for( Transition transition : sm.getAllTransitions() )
+			if( transition.getFromState().equals( state ) && !has( embeddedStates, transition.getNextState()))
+				outGoingTransitions.add( transition );
+		return outGoingTransitions;
+	}
+	
+	//composing the set u(z,s) of states 
+	private List<State> getExternalStateOf(State child, State parent ) {
+		StateMachine sm = child.getStateMachine();
+		List<State> closRelations = getEmbeddedStates( sm );
+		List<State> states = new ArrayList<State>();
+		for( State state : getEmbeddedStates( parent ) )
+			if(! has( closRelations, state ))
+				states.add( state );
+		return states;
+	}
 	
 	private Transition mapIdentity( StateMachine root, int id ) {
 		
@@ -469,22 +675,22 @@ class NuSMVCoordinator
     	BasicExpression bexp2 = new BasicExpression("TRUE");
     	CaseStatement temp = new CaseStatement(bexp2, bexp1);
     	CaseExpression expr = new CaseExpression("",temp);
+		
+		//*****changes made here....
+		if( sm.getParentState() != null && getCaseStatementForNullState(sm, root) != null )
+			expr.addCaseStatement( getCaseStatementForNullState(sm, root) );
+		
     	for(State st : sm.getStates() ) {
     		CaseStatement cstatement = getCaseStatement(sm, st, root);
     		if( cstatement != null)
     			expr.addCaseStatement(cstatement);
     	}
-		//*****changes made here....
-		if( sm.getParentState() != null && getCaseStatementForNullState(sm, root) != null )
-			expr.addCaseStatement( getCaseStatementForNullState(sm, root) );
 		
 		//Initializing and disabling composite states
-		for(State st : sm.getStates() ) {
+		for(State st : sm.getStates() )
 			if( initializeCompositeStartState( st ) != null )
 				expr.addCaseStatement( initializeCompositeStartState( st ) );
-			//if( diasableCompositeState( st ) != null )
-				//expr.addCaseStatement( diasableCompositeState( st ) );
-		}
+				
 		CaseStatement otherwise = new CaseStatement(bexp2, bexp1);
     	expr.addCaseStatement( otherwise );
     	expr.removeCaseStatement(temp);
