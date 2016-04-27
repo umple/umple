@@ -43,8 +43,6 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/BigStateMachineWithNakedTransition.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/myTemporaryTest.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/FurnaceControlSystem.smv");
-	    SampleFileWriter.destroy(pathToInput + "/nusmv/AdaptiveCruiseControlSystem.smv");
-	    SampleFileWriter.destroy(pathToInput + "/nusmv/AdaptiveCruiseControlWithTerminalState.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/AbstractConcurrentSystem.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/MultiLevelStateMachineExample.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/MultiLevelStateMachineExampleCase2.smv");
@@ -58,6 +56,8 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/EnhancedBitCounter.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/OutgoingTransitionOfConcurrentState.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/OutgoingTransitionOfConcurrentStateWithAndCross1.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/AdaptiveCruiseControlSystem.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/AdaptiveCruiseControlWithTerminalState.smv");
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
@@ -208,17 +208,17 @@ public class NuSMVTemplateTest extends TemplateTest{
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM
-	  public void BigStateMachineWithNakedTransition()
-	  {
-	  		assertUmpleTemplateFor("nusmv/BigStateMachineWithNakedTransition.ump","nusmv/BigStateMachineWithNakedTransition.nusmv.txt");
-	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/BigStateMachineWithNakedTransition.smv")).exists());
-	  }
-	  
-	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM
 	  public void FurnaceControlSystem()
 	  {
 	  		assertUmpleTemplateFor("nusmv/FurnaceControlSystem.ump","nusmv/FurnaceControlSystem.nusmv.txt");
 				Assert.assertEquals(true, (new File(pathToInput + "/nusmv/FurnaceControlSystem.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM
+	  public void BigStateMachineWithNakedTransition()
+	  {
+	  		assertUmpleTemplateFor("nusmv/BigStateMachineWithNakedTransition.ump","nusmv/BigStateMachineWithNakedTransition.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/BigStateMachineWithNakedTransition.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM

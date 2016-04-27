@@ -101,381 +101,6 @@ CTLSPEC   EF( smS21S21.state = SmS21S21_c )
 CTLSPEC   EF( smS22S22.state = SmS22S22_d )
 CTLSPEC   EF( smS22S22.state = SmS22S22_e )
 CTLSPEC   EF( smS22S22.state = SmS22S22_f )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t18 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t19 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t20 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t21 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t22 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t23 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t24 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t25 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t26 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t27 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t28 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t36 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t37 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t38 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t39 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemThrottleThrottle.state = CruiseControlSystemThrottleThrottle_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t40 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t34 & cruiseControlSystem.t35 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t4 & cruiseControlSystem.t15 -> EX( cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby ) )
-CTLSPEC   AG( cruiseControlSystem.t4 & cruiseControlSystem.t16 -> EX( cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive & cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t4 & cruiseControlSystem.t17 -> EX( cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t1 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerInactive.state = CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t2 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t3 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t4 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t5 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t6 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t7 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t8 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t9 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t10 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t11 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t12 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_active ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t13 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState.state = CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t14 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t15 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t16 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t17 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t18 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t19 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t20 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t21 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t22 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t23 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t24 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t25 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t26 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t27 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t28 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t36 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t39 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemThrottleThrottle.state = CruiseControlSystemThrottleThrottle_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t38 & cruiseControlSystem.t40 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t11 & cruiseControlSystem.t18 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t11 & cruiseControlSystem.t19 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 & cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t11 & cruiseControlSystem.t20 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t1 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerInactive.state = CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t2 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t3 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t4 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t5 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t6 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t7 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t8 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t9 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t10 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t11 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t12 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_active ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t13 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState.state = CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t14 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t15 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t16 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t17 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t18 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t19 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t20 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t21 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t22 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t23 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t24 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t25 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t26 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t27 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t28 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t36 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t37 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t38 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t39 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemThrottleThrottle.state = CruiseControlSystemThrottleThrottle_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t40 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t34 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t33 & cruiseControlSystem.t35 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t6 & cruiseControlSystem.t15 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby ) )
-CTLSPEC   AG( cruiseControlSystem.t6 & cruiseControlSystem.t16 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState & cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t6 & cruiseControlSystem.t17 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t8 & cruiseControlSystem.t15 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby ) )
-CTLSPEC   AG( cruiseControlSystem.t8 & cruiseControlSystem.t16 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 & cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t8 & cruiseControlSystem.t17 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t19 & cruiseControlSystem.t20 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2 & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t10 & cruiseControlSystem.t18 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t10 & cruiseControlSystem.t19 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState & cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t10 & cruiseControlSystem.t20 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t23 & cruiseControlSystem.t24 -> EX( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t21 & cruiseControlSystem.t22 -> EX( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t21 & cruiseControlSystem.t23 -> EX( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t21 & cruiseControlSystem.t24 -> EX( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t16 & cruiseControlSystem.t17 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t25 & cruiseControlSystem.t26 -> EX( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_tempState & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t25 & cruiseControlSystem.t27 -> EX( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_tempState & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t36 & cruiseControlSystem.t37 -> EX( cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t1 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerInactive.state = CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t2 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t3 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t4 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t5 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t6 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t7 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t8 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t9 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t10 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t11 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t12 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_active ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t13 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState.state = CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t14 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t15 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t16 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t17 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t18 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t19 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t20 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t21 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t22 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t23 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t24 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t25 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t26 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t27 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t28 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t36 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t37 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t38 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t39 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemThrottleThrottle.state = CruiseControlSystemThrottleThrottle_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t40 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t30 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t31 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t32 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t33 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t34 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t29 & cruiseControlSystem.t35 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t5 & cruiseControlSystem.t15 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby ) )
-CTLSPEC   AG( cruiseControlSystem.t5 & cruiseControlSystem.t16 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState & cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t5 & cruiseControlSystem.t17 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t13 & cruiseControlSystem.t14 -> EX( cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState.state = CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1 & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t1 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerInactive.state = CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t2 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t3 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t4 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t5 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t6 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t7 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t8 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t9 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t10 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t11 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t12 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_active ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t13 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState.state = CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t14 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t15 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t16 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t17 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t18 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t19 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t20 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t21 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t22 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t23 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t24 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t25 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t26 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t27 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t28 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t36 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t37 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t38 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t39 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemThrottleThrottle.state = CruiseControlSystemThrottleThrottle_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t35 & cruiseControlSystem.t40 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t1 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerInactive.state = CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t2 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t3 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t4 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t5 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t6 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t7 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t8 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t9 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t10 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t11 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t12 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_active ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t13 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState.state = CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t14 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t15 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t16 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t17 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t18 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t19 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t20 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t21 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t22 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t23 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t24 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t25 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t26 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t27 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t28 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t36 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t37 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t38 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t39 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemThrottleThrottle.state = CruiseControlSystemThrottleThrottle_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t40 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t33 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t34 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t32 & cruiseControlSystem.t35 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t1 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerInactive.state = CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t2 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t3 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerActive.state = CruiseControlSystemControlCruiseControllerCruiseControllerActive_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t4 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t5 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t6 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t7 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t8 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruising.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruising_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t9 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t10 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t11 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandby.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandby_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t12 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_active ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t13 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState.state = CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t14 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t15 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_standby ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t16 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerCruisingTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t17 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t18 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t19 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1.state = CruiseControlSystemControlCruiseControllerCruiseControllerStandbyTempState_1_tempState_2 ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t20 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t21 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t22 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t23 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t24 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t25 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t26 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t27 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t28 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t36 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t37 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemInputSpeedInputSpeed.state = CruiseControlSystemInputSpeedInputSpeed_checkSpeed ) )
-CTLSPEC   AG( cruiseControlSystem.t40 & cruiseControlSystem.t39 -> EX( cruiseControlSystem.state = CruiseControlSystem_adaptiveControlSystem & cruiseControlSystemThrottleThrottle.state = CruiseControlSystemThrottleThrottle_tempState ) )
-CTLSPEC   AG( cruiseControlSystem.t26 & cruiseControlSystem.t27 -> EX( cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_enabled & cruiseControlSystemControlSpeedControlSpeedControl.state = CruiseControlSystemControlSpeedControlSpeedControl_disabled ) )
-CTLSPEC   AG( cruiseControlSystem.t2 & cruiseControlSystem.t13 -> EX( cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive & cruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState.state = CruiseControlSystemControlCruiseControllerCruiseControllerActiveTempState_tempState_1 ) )
-CTLSPEC   AG( cruiseControlSystem.t2 & cruiseControlSystem.t14 -> EX( cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive & cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_cruising ) )
-
--- This file is generated from OutgoingTransitionOfConcurrentStateWithAndCross1.ump --
-
--- PLEASE DO NOT EDIT THIS CODE --
--- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
-
-
--- This defines a NuSMV module for Sm --
-MODULE Sm ( _smS21S21 , _smS22S22 )
-
-   -- This part declares state variables for the given NuSMV module --
-   VAR
-     state : { Sm_s1 , Sm_s2 };
-     event : { ev_e1 , ev_e4 , ev_e5 , ev_e2 , ev_e3 , ev_null };
-
-   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
-   DEFINE
-     sm_stable :=  !( event = ev_e4 | event = ev_e2 | event = ev_e1 | event = ev_e5 | event = ev_e3 );
-     t1 := event = ev_e1 & state = Sm_s1;
-     t2 := event = ev_e4 & state = Sm_s2;
-     t3 := event = ev_e1 & _smS21S21.state = SmS21S21_a;
-     t4 := event = ev_e1 & _smS21S21.state = SmS21S21_b;
-     t5 := event = ev_e2 & _smS21S21.state = SmS21S21_b;
-     t6 := event = ev_e3 & _smS21S21.state = SmS21S21_b;
-     t7 := event = ev_e1 & _smS21S21.state = SmS21S21_c;
-     t8 := event = ev_e2 & _smS21S21.state = SmS21S21_c;
-     t9 := event = ev_e5 & _smS22S22.state != null;
-     t10 := event = ev_e1 & _smS22S22.state = SmS22S22_d;
-     t11 := event = ev_e2 & _smS22S22.state = SmS22S22_d;
-     t12 := event = ev_e3 & _smS22S22.state = SmS22S22_d;
-     t13 := event = ev_e1 & _smS22S22.state = SmS22S22_e;
-     t14 := event = ev_e1 & _smS22S22.state = SmS22S22_f;
-     t15 := event = ev_e2 & _smS22S22.state = SmS22S22_f;
-
-   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
-   ASSIGN
-     init( state ) := Sm_s1;
-     next( state ) := case
-       t2 | t15 | t8 | t9 : Sm_s1;
-       t5 | t7 | t6 | t14 | t12 | t1 | t3 | t4 | t11 | t10 | t13 : Sm_s2;
-       TRUE : state;
-     esac;
-
-   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
-   ASSIGN
-     init( event ) := ev_null;
-     next( event ) := case
-       sm_stable : { ev_e1 , ev_e4 , ev_e5 , ev_e2 , ev_e3 };
-       TRUE : ev_null;
-     esac;
-
--- This defines a NuSMV module for SmS21S21 --
-MODULE SmS21S21 ( _sm )
-
-   -- This part declares state variables for the given NuSMV module --
-   VAR
-     state : { SmS21S21_a , SmS21S21_b , SmS21S21_c , null };
-
-   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
-   ASSIGN
-     init( state ) := null;
-     next( state ) := case
-       _sm.t1 | _sm.t8 | _sm.t15 | _sm.t2 | _sm.t9 | _sm.t6 : null;
-       _sm.t5 : SmS21S21_a;
-       _sm.t3 | _sm.t7 : SmS21S21_b;
-       _sm.t4 : SmS21S21_c;
-       _sm.state = Sm_s2 & state = null : SmS21S21_a;
-       TRUE : state;
-     esac;
-
--- This defines a NuSMV module for SmS22S22 --
-MODULE SmS22S22 ( _sm )
-
-   -- This part declares state variables for the given NuSMV module --
-   VAR
-     state : { SmS22S22_d , SmS22S22_e , SmS22S22_f , null };
-
-   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
-   ASSIGN
-     init( state ) := null;
-     next( state ) := case
-       _sm.t2 | _sm.t9 | _sm.t1 | _sm.t8 | _sm.t15 : null;
-       _sm.t11 | _sm.t6 | _sm.t14 : SmS22S22_e;
-       _sm.t12 | _sm.t10 | _sm.t13 : SmS22S22_f;
-       _sm.state = Sm_s2 & state = null : SmS22S22_d;
-       TRUE : state;
-     esac;
-
--- This defines a NuSMV module for main --
-MODULE main
-
-   -- This part declares state variables for the given NuSMV module --
-   VAR
-     sm : Sm( smS21S21 , smS22S22 );
-     smS21S21 : SmS21S21( sm );
-     smS22S22 : SmS22S22( sm );
-CTLSPEC   EF( sm.state = Sm_s1 )
-CTLSPEC   EF( sm.state = Sm_s2 )
-CTLSPEC   EF( smS21S21.state = SmS21S21_a )
-CTLSPEC   EF( smS21S21.state = SmS21S21_b )
-CTLSPEC   EF( smS21S21.state = SmS21S21_c )
-CTLSPEC   EF( smS22S22.state = SmS22S22_d )
-CTLSPEC   EF( smS22S22.state = SmS22S22_e )
-CTLSPEC   EF( smS22S22.state = SmS22S22_f )
-CTLSPEC   AG( sm.t5 & sm.t6 -> EX( smS21S21.state = SmS21S21_a & smS22S22.state = SmS22S22_e ) )
-CTLSPEC   AG( sm.t10 & sm.t11 -> EX( smS22S22.state = SmS22S22_f & smS22S22.state = SmS22S22_e ) )
-CTLSPEC   AG( sm.t10 & sm.t12 -> EX( smS22S22.state = SmS22S22_f & smS22S22.state = SmS22S22_f ) )
-CTLSPEC   AG( sm.t9 & sm.t3 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_b ) )
-CTLSPEC   AG( sm.t9 & sm.t4 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_c ) )
-CTLSPEC   AG( sm.t9 & sm.t5 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_a ) )
-CTLSPEC   AG( sm.t9 & sm.t6 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
-CTLSPEC   AG( sm.t9 & sm.t7 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_b ) )
-CTLSPEC   AG( sm.t9 & sm.t10 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
-CTLSPEC   AG( sm.t9 & sm.t11 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
-CTLSPEC   AG( sm.t9 & sm.t12 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
-CTLSPEC   AG( sm.t9 & sm.t13 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
-CTLSPEC   AG( sm.t9 & sm.t14 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
-CTLSPEC   AG( sm.t6 & sm.t10 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_f ) )
-CTLSPEC   AG( sm.t6 & sm.t11 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_e ) )
-CTLSPEC   AG( sm.t6 & sm.t12 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_f ) )
-CTLSPEC   AG( sm.t6 & sm.t13 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_f ) )
-CTLSPEC   AG( sm.t6 & sm.t14 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t2 & sm.t3 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_b ) )
 CTLSPEC   AG( sm.t2 & sm.t4 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_c ) )
 CTLSPEC   AG( sm.t2 & sm.t5 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_a ) )
@@ -489,7 +114,6 @@ CTLSPEC   AG( sm.t2 & sm.t12 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22
 CTLSPEC   AG( sm.t2 & sm.t13 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
 CTLSPEC   AG( sm.t2 & sm.t14 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t2 & sm.t15 -> EX( sm.state = Sm_s1 & sm.state = Sm_s1 ) )
-CTLSPEC   AG( sm.t14 & sm.t15 -> EX( smS22S22.state = SmS22S22_e & sm.state = Sm_s1 ) )
 CTLSPEC   AG( sm.t8 & sm.t9 -> EX( sm.state = Sm_s1 & sm.state = Sm_s1 ) )
 CTLSPEC   AG( sm.t8 & sm.t10 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
 CTLSPEC   AG( sm.t8 & sm.t11 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
@@ -497,13 +121,32 @@ CTLSPEC   AG( sm.t8 & sm.t12 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22
 CTLSPEC   AG( sm.t8 & sm.t13 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
 CTLSPEC   AG( sm.t8 & sm.t14 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t8 & sm.t15 -> EX( sm.state = Sm_s1 & sm.state = Sm_s1 ) )
-CTLSPEC   AG( sm.t4 & sm.t5 -> EX( smS21S21.state = SmS21S21_c & smS21S21.state = SmS21S21_a ) )
-CTLSPEC   AG( sm.t4 & sm.t6 -> EX( smS21S21.state = SmS21S21_c & smS22S22.state = SmS22S22_e ) )
-CTLSPEC   AG( sm.t11 & sm.t12 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t9 & sm.t3 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_b ) )
+CTLSPEC   AG( sm.t9 & sm.t4 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_c ) )
+CTLSPEC   AG( sm.t9 & sm.t5 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_a ) )
+CTLSPEC   AG( sm.t9 & sm.t6 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t9 & sm.t7 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_b ) )
 CTLSPEC   AG( sm.t15 & sm.t3 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_b ) )
 CTLSPEC   AG( sm.t15 & sm.t4 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_c ) )
 CTLSPEC   AG( sm.t15 & sm.t5 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_a ) )
 CTLSPEC   AG( sm.t15 & sm.t6 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t15 & sm.t7 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_b ) )
 CTLSPEC   AG( sm.t15 & sm.t9 -> EX( sm.state = Sm_s1 & sm.state = Sm_s1 ) )
+CTLSPEC   AG( sm.t6 & sm.t10 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t6 & sm.t11 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t6 & sm.t12 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t6 & sm.t13 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t6 & sm.t14 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t4 & sm.t5 -> EX( smS21S21.state = SmS21S21_c & smS21S21.state = SmS21S21_a ) )
+CTLSPEC   AG( sm.t4 & sm.t6 -> EX( smS21S21.state = SmS21S21_c & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t5 & sm.t6 -> EX( smS21S21.state = SmS21S21_a & smS22S22.state = SmS22S22_e ) )
 CTLSPEC   AG( sm.t7 & sm.t8 -> EX( smS21S21.state = SmS21S21_b & sm.state = Sm_s1 ) )
+CTLSPEC   AG( sm.t9 & sm.t10 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t9 & sm.t11 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t9 & sm.t12 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t9 & sm.t13 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t9 & sm.t14 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t10 & sm.t11 -> EX( smS22S22.state = SmS22S22_f & smS22S22.state = SmS22S22_e ) )
+CTLSPEC   AG( sm.t10 & sm.t12 -> EX( smS22S22.state = SmS22S22_f & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t11 & sm.t12 -> EX( smS22S22.state = SmS22S22_e & smS22S22.state = SmS22S22_f ) )
+CTLSPEC   AG( sm.t14 & sm.t15 -> EX( smS22S22.state = SmS22S22_e & sm.state = Sm_s1 ) )
