@@ -356,7 +356,7 @@ class NuSMVCoordinator
   		return yes;
 	}
 	
-	//match making 
+	//match making algorithm now includes filter 
 	private void match( List<Transition> first, List<Transition> second, List< HashMap<Transition,Transition> > pairable, boolean defaulted ) {
 		int i = 0;
 		int x = first.size(), y = second.size(); 
@@ -368,10 +368,13 @@ class NuSMVCoordinator
 				j = i + 1;
 			while( j < y ) {
 				HashMap<Transition, Transition> entry = new HashMap();
-				entry.put(first.get(i), second.get(j));
-				for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
-					if( !has( pairable, entry ) && !map.getKey().equals( map.getValue() ) )
-						pairable.add( entry );
+				if( first.get(i).getEvent().equals( second.get(j).getEvent() ) 
+					&& !first.get(i).getNextState().equals( second.get(j).getNextState()) ) {
+					entry.put(first.get(i), second.get(j));
+					for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
+						if( !has( pairable, entry ) && !map.getKey().equals( map.getValue() ) )
+							pairable.add( entry );
+				}
 				j++;
 			}
 			i++;
@@ -445,7 +448,7 @@ class NuSMVCoordinator
 					State source = trans.getFromState();
 					List<State> external = getExternalStateOf( source, state );
 					for( Transition tr : state.getStateMachine().getAllTransitions() )
-						if( has( external, tr.getFromState() ) ) {
+						if( has( external, tr.getFromState() ) && tr.getEvent().equals( trans.getEvent() ) && !tr.getNextState().equals( trans.getNextState()) ) {
 							HashMap<Transition, Transition> entry = new HashMap();
 							entry.put(trans, tr);
 							for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
@@ -453,11 +456,13 @@ class NuSMVCoordinator
 									pairable.add( entry );
 						}
 					for( Transition tr : highLevelTransitions ){
-						HashMap<Transition, Transition> entry = new HashMap();
-						entry.put(trans, tr);
-						for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
-							if( !has( pairable, entry ) && !map.getKey().equals( map.getValue() ) )
-								pairable.add( entry );
+						if( tr.getEvent().equals( trans.getEvent() ) && !tr.getNextState().equals( trans.getNextState()) ) {
+							HashMap<Transition, Transition> entry = new HashMap();
+							entry.put(trans, tr);
+							for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
+								if( !has( pairable, entry ) && !map.getKey().equals( map.getValue() ) )
+									pairable.add( entry );
+						}
 					}
 				}
 				//------------------------ ending and-cross management -------------------------

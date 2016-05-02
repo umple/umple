@@ -84,6 +84,3 @@ MODULE main
      sm : Sm;
 CTLSPEC   EF( sm.state = Sm_s1 )
 CTLSPEC   EF( sm.state = Sm_s2 )
-CTLSPEC   AG( sm.t1 & sm.t2 -> EX( sm.state = Sm_s2 & sm.state = Sm_s2 ) )
-CTLSPEC   AG( sm.t1 & sm.t3 -> EX( sm.state = Sm_s2 & sm.state = Sm_s2 ) )
-CTLSPEC   AG( sm.t2 & sm.t3 -> EX( sm.state = Sm_s2 & sm.state = Sm_s2 ) )
