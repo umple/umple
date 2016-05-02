@@ -356,7 +356,7 @@ class NuSMVCoordinator
   		return yes;
 	}
 	
-	//match making 
+	//match making algorithm now includes filter 
 	private void match( List<Transition> first, List<Transition> second, List< HashMap<Transition,Transition> > pairable, boolean defaulted ) {
 		int i = 0;
 		int x = first.size(), y = second.size(); 
