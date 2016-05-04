@@ -133,4 +133,3 @@ CTLSPEC   EF( stateState12State12State122.state = StateState12State12State122_st
 CTLSPEC   EF( stateState12State12State122State1221.state = StateState12State12State122State1221_state12211 )
 CTLSPEC   AG( state.t4 & state.t6 -> EX( stateState12State12State122State1221.state = StateState12State12State122State1221_state12211 & stateState12State12.state = StateState12State12_state122 ) )
 CTLSPEC   AG( state.t4 & state.t10 -> EX( stateState12State12State122State1221.state = StateState12State12State122State1221_state12211 & stateState11State11.state = StateState11State11_state112 ) )
-CTLSPEC   AG( state.t10 & state.t6 -> EX( stateState11State11.state = StateState11State11_state112 & stateState12State12.state = StateState12State12_state122 ) )

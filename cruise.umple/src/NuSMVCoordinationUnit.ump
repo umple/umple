@@ -313,8 +313,8 @@ class NuSMVCoordinator
 	
 	private void generateSpecForTransitionDeterminism( StateMachine sm, ModuleBody body ) {
   		
-		for(State st : sm.getStates() ) {
-			for( HashMap<Transition,Transition> entry : matchMakeTransitions( st ) ){
+		for(State st : sm.getStates() )
+			for( HashMap<Transition,Transition> entry : matchMakeTransitions( st ) )
 				for( HashMap.Entry<Transition,Transition> map : entry.entrySet() ) {
 					Transition key = map.getKey();
 					int i = getObjectIdentity( sm, key );
@@ -337,8 +337,6 @@ class NuSMVCoordinator
 					CTLSpecification cspec = new CTLSpecification(cexp);
 					body.addModuleElement(cspec);
 				}
-			}
-		}
   	}
 	//scans through the list and returns true whenever what to find is contained in the list
 	private <Transition> boolean has( List< HashMap<Transition,Transition> > objectList, HashMap<Transition,Transition> whatToFind ) {
@@ -369,7 +367,7 @@ class NuSMVCoordinator
 			while( j < y ) {
 				HashMap<Transition, Transition> entry = new HashMap();
 				if( first.get(i).getEvent().equals( second.get(j).getEvent() ) 
-					&& !first.get(i).getNextState().equals( second.get(j).getNextState()) ) {
+					&& !first.get(i).getNextState().equals( second.get(j).getNextState() ) ) {
 					entry.put(first.get(i), second.get(j));
 					for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
 						if( !has( pairable, entry ) && !map.getKey().equals( map.getValue() ) )
@@ -436,7 +434,7 @@ class NuSMVCoordinator
 							allOutGoingTransitions.add( trans );
 					List<Transition> external = new ArrayList<Transition>();
 					for( Transition trans : parent.getAllTransitions() )
-						if( has( getExternalStateOf( embeddedState, state ), trans.getFromState() ) ) //&& !has( allOutGoingTransitions,trans )
+						if( has( getExternalStateOf( embeddedState, state ), trans.getFromState() ) )
 							external.add( trans );
 					match( outgoing, external, pairable, true );
 				}
@@ -472,6 +470,7 @@ class NuSMVCoordinator
 		return pairable;
 	}
 	
+	//Returns the list of states embedded in the given state
 	private List<State> getEmbeddedStates(State state ) {
 		List<State> embeddedStates = new ArrayList<State>();
 		for( StateMachine smm : state.getNestedStateMachines() ) {
@@ -484,15 +483,7 @@ class NuSMVCoordinator
 		return embeddedStates;
 	} 
 	
-	/*private List<State> getEmbeddedStates(State state ) {
-		List<State> embeddedStates = new ArrayList<State>();
-		for( StateMachine smm : getEmbeddedStateMachines( state ) )
-			for( State embeddedState : getEmbeddedStates( smm ) ) 
-				embeddedStates.add( embeddedState );
-		return embeddedStates;
-	}*/ 
-	
-	//Determines if a transition is an out-going transition of a concurrent state
+	//Determines if a transition is an out-going transition of a concurrent state and returns the list of all outgoing transitions 
 	private List<Transition> isOutgoingOfOrthogonal( State state, State parent ) {
 		List<State> embeddedStates = getEmbeddedStates( parent );
 		StateMachine sm = parent.getStateMachine();
@@ -503,9 +494,21 @@ class NuSMVCoordinator
 		return outGoingTransitions;
 	}
 	
+	//obtaining the least common ancestor
+	private StateMachine getGCA( State child, State parent ){
+		StateMachine sm = child.getStateMachine();
+		if( sm.getParentState().equals( parent ) )
+			return sm;
+		while( !sm.getParentState().equals( parent ) ){
+			State gParent = sm.getParentState();
+			sm = gParent.getStateMachine();
+		}
+		return sm;
+	}
+	
 	//composing the set u(z,s) of states 
 	private List<State> getExternalStateOf(State child, State parent ) {
-		StateMachine sm = child.getStateMachine();
+		StateMachine sm = getGCA( child, parent );
 		List<State> closRelations = getEmbeddedStates( sm );
 		List<State> states = new ArrayList<State>();
 		for( State state : getEmbeddedStates( parent ) )
