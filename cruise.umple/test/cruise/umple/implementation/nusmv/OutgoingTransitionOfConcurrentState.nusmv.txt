@@ -45,6 +45,8 @@ MODULE Sm ( _smS21S21 , _smS22S22 )
        sm_stable : { ev_e1 , ev_e4 , ev_e2 , ev_e3 };
        TRUE : ev_null;
      esac;
+   INVARSPEC   ( t7 & t9 -> next( state = Sm_s1 & _smS22S22.state = SmS22S22_e ) )
+   INVARSPEC   ( t13 & t5 -> next( state = Sm_s1 & _smS21S21.state = SmS21S21_a ) )
 
 -- This defines a NuSMV module for SmS21S21 --
 MODULE SmS21S21 ( _sm )
@@ -99,5 +101,3 @@ CTLSPEC   EF( smS21S21.state = SmS21S21_c )
 CTLSPEC   EF( smS22S22.state = SmS22S22_d )
 CTLSPEC   EF( smS22S22.state = SmS22S22_e )
 CTLSPEC   EF( smS22S22.state = SmS22S22_f )
-CTLSPEC   AG( sm.t7 & sm.t9 -> EX( sm.state = Sm_s1 & smS22S22.state = SmS22S22_e ) )
-CTLSPEC   AG( sm.t13 & sm.t5 -> EX( sm.state = Sm_s1 & smS21S21.state = SmS21S21_a ) )

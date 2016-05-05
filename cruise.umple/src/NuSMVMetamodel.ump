@@ -191,6 +191,40 @@ class CTLSpecification {
   	emit toString()(output);
 }
 
+class InvarExpression {
+	isA BasicExpression;
+	invarOperator { next };
+	lazy Boolean qualified;
+	after constructor { setQualified(false); }
+	
+    public String getExpression() {
+  		String op = convertOperator();
+  		String temp = "";
+		if(getChildren().size() == 0)
+      		return getIdentifier();
+    	if(getChildren().size() == 1)
+				if(getBracketed()) {
+					temp += "( ";
+					temp += getChildren().get(0) == null ? getChildren().get(1).getExpression() : getChildren().get(0).getExpression() + " )";
+				}
+      			else  
+      				temp = getChildren().get(0) == null ? getChildren().get(1).getExpression() : getChildren().get(0).getExpression();
+    	else
+				if(getBracketed())
+					temp = "( "+ getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression()+" )";
+      			else 
+      				temp = getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression();   	
+      	if(getDisplayNegation())
+      		temp = " !"+temp;
+      	if( qualified )
+      		return getInvarOperatorFullName() + temp;
+      	return temp;
+	}	
+	//Template for formatting output
+  output <<! <<=getExpression()>>!>>
+  emit toString()(output);
+}
+
 class CTLExpression {
 	isA BasicExpression;
 	ctlOperator { EG, EX, EF, AG, AX, AF, E, A, U };
@@ -203,10 +237,12 @@ class CTLExpression {
 		if(getChildren().size() == 0)
       		return getIdentifier();
     	if(getChildren().size() == 1)
-				if(getBracketed())
-					temp = "( "+ getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier() + " )";
+				if(getBracketed()) {
+					temp += "( ";
+					temp += getChildren().get(0) == null ? getChildren().get(1).getExpression() : getChildren().get(0).getExpression() + " )";
+				}
       			else  
-      				temp = getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier();
+      				temp = getChildren().get(0) == null ? getChildren().get(1).getExpression() : getChildren().get(0).getExpression();
     	else
 				if(getBracketed())
 					temp = "( "+ getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression()+" )";
@@ -218,14 +254,8 @@ class CTLExpression {
       		return getCtlOperatorFullName() + temp;
       	return temp;
 	}	
-	/*public String getRealExpression() {
-	    if( qualified )
-			return +getExpression();
-		return getExpression();	
-	}*/	
 	//Template for formatting output
-  output <<! <<#if(getBracketed()){#>><<=getExpression()>><<#}
-  else{#>><<=getExpression()>><<#}#>>!>>
+  output <<! <<=getExpression()>>!>>
   emit toString()(output);
 }
 
@@ -377,17 +407,16 @@ class InitConstraint {
 class InvarConstraint {
   
   isA ModuleElement;
-  after constructor { setHeader("INVAR"); setTerminated(false); }
+  after constructor { setHeader("INVARSPEC"); setTerminated(false); }
   
-	//Defines associations with basic expressions
-	1 -> 1 BasicExpression;  
-
+  //Defines associations with basic expressions
+  1 -> 1 InvarExpression;
   lazy Boolean terminated;
-	//Template for formatting output
-  output <<! <<=getHeader()>>
-  <<#if(terminated){#>>  <<=basicExpression.toString()>>;
+  //Template for formatting output
+  output <<!   <<=getHeader()>>
+  <<#if(terminated){#>>  <<=invarExpression.toString()>>;
   <<#}
-  else{#>>  <<=basicExpression.toString()>>
+  else{#>>  <<=invarExpression.toString()>>
   <<#}#>>!>>
   emit toString()(output); 
 }

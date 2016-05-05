@@ -41,6 +41,8 @@ MODULE State ( _stateState11State11 , _stateState12State12 , _stateState12State1
        state_stable : { ev_e5 , ev_e1 , ev_e4 , ev_e2 , ev_e6 };
        TRUE : ev_null;
      esac;
+   INVARSPEC   ( t4 & t6 -> next( _stateState12State12State1221State1221.state = StateState12State12State1221State1221_state12211 & _stateState12State12.state = StateState12State12_state122 ) )
+   INVARSPEC   ( t4 & t8 -> next( _stateState12State12State1221State1221.state = StateState12State12State1221State1221_state12211 & _stateState11State11.state = StateState11State11_state112 ) )
 
 -- This defines a NuSMV module for StateState11State11 --
 MODULE StateState11State11 ( _state )

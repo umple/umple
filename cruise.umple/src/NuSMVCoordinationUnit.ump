@@ -63,7 +63,7 @@ class NuSMVCoordinator
 		//Adding assign constraints for all the attributes
 		for( AssignConstraint constraint : getAssignConstraint( uClass ))
 			body.addModuleElement( constraint );
-		
+		generateSpecForTransitionDeterminism( sm, body );
   		NuSMVModule module = new NuSMVModule( changeNameCase( sm.getFullName(), 1 ), body );
   		generateParameters( module, sm, sm ); 
   		return module;
@@ -214,7 +214,6 @@ class NuSMVCoordinator
   		ModuleBody body = new ModuleBody(genMainVariableFor( sm ));
 		for( StateMachine smm : generateStateMachineList( sm ) )
 			generateSpecForStateReachability( smm, body );
-		generateSpecForTransitionDeterminism( sm, body);
 		NuSMVModule mainmodule = new NuSMVModule("main", body);	
 		temp.add(mainmodule);
   		return temp;
@@ -231,7 +230,6 @@ class NuSMVCoordinator
   		ModuleBody body = new ModuleBody(genMainVariableFor( sm ));
   		NuSMVModule module = new NuSMVModule("main", body);	
   		generateSpecForStateReachability( sm, body ); 
-		generateSpecForTransitionDeterminism(sm, body);
   		temp.add( module );
   		return temp;
   	}
@@ -297,7 +295,7 @@ class NuSMVCoordinator
 				
 				CTLExpression cexp = new CTLExpression("ctl");
 				cexp.addChild(bexp3);
-				cexp.addChild( generateDestinationStatesExpr( mapIdentity( sm, i), mapIdentity( sm, j) ));
+				cexp.addChild( generateDestinationStatesExpr( sm, mapIdentity( sm, i), mapIdentity( sm, j) ));
 				cexp.setOperator( BasicExpression.Operator.IMPLY );
 				cexp.setBracketed(true);
 				cexp.setQualified(true);
@@ -311,32 +309,39 @@ class NuSMVCoordinator
     	}
   	}*/
 	
-	private void generateSpecForTransitionDeterminism( StateMachine sm, ModuleBody body ) {
-  		
-		for(State st : sm.getStates() )
-			for( HashMap<Transition,Transition> entry : matchMakeTransitions( st ) )
-				for( HashMap.Entry<Transition,Transition> map : entry.entrySet() ) {
-					Transition key = map.getKey();
-					int i = getObjectIdentity( sm, key );
-					Transition value = map.getValue();
-					int j = getObjectIdentity( sm, value );
-					BasicExpression bexp1 = new BasicExpression(changeNameCase(sm.getFullName(), 0)+".t"+i);
-					BasicExpression bexp2 = new BasicExpression(changeNameCase(sm.getFullName(), 0)+".t"+j);
-					BasicExpression bexp3 = new BasicExpression("temp");
-					bexp3.addChild(bexp1);
-					bexp3.addChild(bexp2);				
+	private void generateSpecForTransitionDeterminism( StateMachine root, ModuleBody body ) {
+		BasicExpression bexp1;
+		BasicExpression bexp2;
+		for( StateMachine sm : generateStateMachineList(root))
+			for(State st : sm.getStates() )
+				for( HashMap<Transition,Transition> entry : matchMakeTransitions( st ) )
+					for( HashMap.Entry<Transition,Transition> map : entry.entrySet() ) {
+						Transition key = map.getKey();
+						int i = getObjectIdentity( sm, key );
+						Transition value = map.getValue();
+						int j = getObjectIdentity( sm, value );
+					
+						if( sm.equals(root) ) 
+							bexp1 = new BasicExpression("t"+i);
+						else
+							bexp1 = new BasicExpression(changeNameCase(sm.getFullName(), 0)+".t"+i);
+						if( sm.equals(root) ) 
+							bexp2 = new BasicExpression("t"+j);
+						else
+							bexp2 = new BasicExpression(changeNameCase(sm.getFullName(), 0)+".t"+j);
+						BasicExpression bexp3 = new BasicExpression("temp");
+						bexp3.addChild(bexp1);
+						bexp3.addChild(bexp2);				
 				
-					CTLExpression cexp = new CTLExpression("ctl");
-					cexp.addChild(bexp3);
-					cexp.addChild( generateDestinationStatesExpr( mapIdentity( sm, i), mapIdentity( sm, j) ));
-					cexp.setOperator( BasicExpression.Operator.IMPLY );
-					cexp.setBracketed(true);
-					cexp.setQualified(true);
-					cexp.setCtlOperator(CTLExpression.CtlOperator.AG);
+						InvarExpression cexp = new InvarExpression("ctl");
+						cexp.addChild(bexp3);
+						cexp.addChild( generateDestinationStatesExpr( sm, mapIdentity( sm, i), mapIdentity( sm, j) ));
+						cexp.setOperator( BasicExpression.Operator.IMPLY );
+						cexp.setBracketed(true);
 				
-					CTLSpecification cspec = new CTLSpecification(cexp);
-					body.addModuleElement(cspec);
-				}
+						InvarConstraint cspec = new InvarConstraint(cexp);
+						body.addModuleElement(cspec);
+					}
   	}
 	//scans through the list and returns true whenever what to find is contained in the list
 	private <Transition> boolean has( List< HashMap<Transition,Transition> > objectList, HashMap<Transition,Transition> whatToFind ) {
@@ -530,28 +535,36 @@ class NuSMVCoordinator
 		
 	}
 	
-	private CTLExpression generateDestinationStatesExpr( Transition first, Transition second ) {
+	private InvarExpression generateDestinationStatesExpr( StateMachine sm, Transition first, Transition second ) {
 				
-		BasicExpression f1 = new BasicExpression( changeNameCase( first.getNextState().getStateMachine().getFullName(), 0)+".state" );
+		BasicExpression s1;
+		BasicExpression f1;
+		if( first.getNextState().getStateMachine().equals( sm ) )
+			f1 = new BasicExpression( "state" );
+		else
+			f1 = new BasicExpression( "_"+changeNameCase( first.getNextState().getStateMachine().getFullName(), 0)+".state" );
     	BasicExpression f2 = new BasicExpression( changeNameCase( first.getNextState().getStateMachine().getFullName(),1)+"_"+first.getNextState().getName());
 		BasicExpression firstExpr = new BasicExpression("first");
 		firstExpr.addChild(f1);
 		firstExpr.addChild(f2);
 		firstExpr.setOperator(BasicExpression.Operator.EQ);
 		
-		BasicExpression s1 = new BasicExpression( changeNameCase( second.getNextState().getStateMachine().getFullName(),0)+".state" );
+		if( second.getNextState().getStateMachine().equals( sm ) )
+			s1 = new BasicExpression( "state" );
+		else
+			s1 = new BasicExpression( "_"+changeNameCase( second.getNextState().getStateMachine().getFullName(),0)+".state" );
     	BasicExpression s2 = new BasicExpression( changeNameCase( second.getNextState().getStateMachine().getFullName(),1)+"_"+second.getNextState().getName());
 		BasicExpression secondExpr = new BasicExpression("second");
 		secondExpr.addChild(s1);
 		secondExpr.addChild(s2);
 		secondExpr.setOperator(BasicExpression.Operator.EQ);
 		
-		CTLExpression cexp = new CTLExpression("ctl");
+		InvarExpression cexp = new InvarExpression("ctl");
 		cexp.addChild( firstExpr );
 		cexp.addChild( secondExpr );
 		cexp.setOperator(BasicExpression.Operator.AND);
 		cexp.setBracketed(true);
-		cexp.setCtlOperator( CTLExpression.CtlOperator.EX );
+		cexp.setInvarOperator( InvarExpression.InvarOperator.next );
 		cexp.setQualified(true);
 		
 		return cexp;
