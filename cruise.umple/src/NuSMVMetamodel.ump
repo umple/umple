@@ -161,10 +161,12 @@ class BasicExpression {
 		if(children.size() == 0)
       		return getIdentifier();
     	if(getChildren().size() == 1)
-				if(getBracketed())
-					temp = "( "+ getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier() + " )";
+				if(getBracketed()) {
+					temp += "( ";
+					temp += getChildren().get(0) == null ? getChildren().get(1).getExpression() : getChildren().get(0).getExpression() + " )";
+				}
       			else  
-      				temp = getChildren().get(0) == null ? getChildren().get(1).getIdentifier() : getChildren().get(0).getIdentifier();
+      				temp = getChildren().get(0) == null ? getChildren().get(1).getExpression() : getChildren().get(0).getExpression();
     	else
 				if(getBracketed())
 					temp = "( "+ getChildren().get(0).getExpression() + op + getChildren().get(1).getExpression()+" )";
@@ -176,8 +178,7 @@ class BasicExpression {
 	}	
 
   //Template for formatting output
-  output <<! <<#if(getBracketed()){#>><<=getExpression()>><<#}
-  else{#>><<=getExpression()>><<#}#>>!>>
+  output <<! <<=getExpression()>>!>>
   emit toString()(output);
 }
 

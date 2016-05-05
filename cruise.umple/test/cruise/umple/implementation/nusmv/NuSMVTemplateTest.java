@@ -58,6 +58,14 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/OutgoingTransitionOfConcurrentStateWithAndCross1.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/AdaptiveCruiseControlSystem.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/AdaptiveCruiseControlWithTerminalState.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/SingleEventMachine.smv");
+	  }
+	  
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
+	  public void SingleEventMachine()
+	  {
+	  		assertUmpleTemplateFor("nusmv/SingleEventMachine.ump","nusmv/SingleEventMachine.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/SingleEventMachine.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740

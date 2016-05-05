@@ -495,11 +495,9 @@ class NuSMVCoordinator
 	}
 	
 	//obtaining the least common ancestor
-	private StateMachine getGCA( State child, State parent ){
+	private StateMachine getLCA( State child, State ancestor ){
 		StateMachine sm = child.getStateMachine();
-		if( sm.getParentState().equals( parent ) )
-			return sm;
-		while( !sm.getParentState().equals( parent ) ){
+		while( !sm.getParentState().equals( ancestor ) ){
 			State gParent = sm.getParentState();
 			sm = gParent.getStateMachine();
 		}
@@ -507,11 +505,11 @@ class NuSMVCoordinator
 	}
 	
 	//composing the set u(z,s) of states 
-	private List<State> getExternalStateOf(State child, State parent ) {
-		StateMachine sm = getGCA( child, parent );
+	private List<State> getExternalStateOf(State child, State ancestor ) {
+		StateMachine sm = getLCA( child, ancestor );
 		List<State> closRelations = getEmbeddedStates( sm );
 		List<State> states = new ArrayList<State>();
-		for( State state : getEmbeddedStates( parent ) )
+		for( State state : getEmbeddedStates( ancestor ) )
 			if(! has( closRelations, state ))
 				states.add( state );
 		return states;
@@ -1013,9 +1011,9 @@ class NuSMVCoordinator
   		
   	//Generates the define part for all the transitions of the system
   	private DefineDeclaration getDefineDeclaration( StateMachine sm ) {
-  		BasicExpression temp = composeExpressionForStability(sm);
-  		DefineBody stable = new DefineBody(sm.getFullName()+"_stable", temp);
-  		DefineDeclaration ddec = new DefineDeclaration(stable);
+  		BasicExpression temp = composeExpressionForStability( sm );
+  		DefineBody stable = new DefineBody( sm.getFullName()+"_stable", temp );
+  		DefineDeclaration ddec = new DefineDeclaration( stable );
   		for( Transition tr : sm.getAllTransitions() ) {
   			BasicExpression bexp = composeExpressionFor( tr, sm );
   			DefineBody dBody = new DefineBody("t"+getObjectIdentity( sm, tr) , bexp);
@@ -1077,10 +1075,11 @@ class NuSMVCoordinator
 	
 	private BasicExpression composeExpressionForStability( StateMachine sm ) {
 		BasicExpression root = new BasicExpression("root");
+		BasicExpression bexp3;
 		for(Event event : sm.getAllEvents() ){
 			BasicExpression bexp1 = new BasicExpression("event");
 			BasicExpression bexp2 = new BasicExpression("ev_"+event.getName());
-			BasicExpression bexp3 = new BasicExpression("eventExpr"); 
+			bexp3 = new BasicExpression("eventExpr"); 
 			bexp3.addChild(bexp1);
 			bexp3.addChild(bexp2);
 			bexp3.setOperator(BasicExpression.Operator.EQ);
