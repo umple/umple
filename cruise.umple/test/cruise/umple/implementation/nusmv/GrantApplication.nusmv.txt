@@ -70,6 +70,7 @@ MODULE Status
    -- This part defines logic for the assignment of values to state variable "adminCheckOk" of this NuSMV module --
    ASSIGN
      init( adminCheckOk ) := FALSE;
+   INVARSPEC   ( t11 & t12 -> next( state = Status_SubmittedByInstitution & state = Status_EvaluationByInstitution ) )
 
 -- This defines a NuSMV module for main --
 MODULE main
@@ -88,4 +89,3 @@ CTLSPEC   EF( status.state = Status_AwaitingFinalDecision )
 CTLSPEC   EF( status.state = Status_Accepted )
 CTLSPEC   EF( status.state = Status_Rejected )
 CTLSPEC   EF( status.state = Status_Withdrawn )
-CTLSPEC   AG( status.t11 & status.t12 -> EX( status.state = Status_SubmittedByInstitution & status.state = Status_EvaluationByInstitution ) )

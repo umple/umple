@@ -39,6 +39,8 @@ MODULE Sm ( _smBit1Bit1 , _smBit2Bit2 , _smStatusStatus , _smStatusStatusBit3Bit
        sm_stable : { ev_e0 , ev_e1 , ev_e2 , ev_reset };
        TRUE : ev_null;
      esac;
+   INVARSPEC   ( t5 & t3 -> next( _smStatusStatus.state = SmStatusStatus_Max & _smBit1Bit1.state = SmBit1Bit1_Bit11 ) )
+   INVARSPEC   ( t5 & t8 -> next( _smStatusStatus.state = SmStatusStatus_Max & _smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 ) )
 
 -- This defines a NuSMV module for SmBit1Bit1 --
 MODULE SmBit1Bit1 ( _sm )
@@ -148,5 +150,3 @@ CTLSPEC   EF( smStatusStatus.state = SmStatusStatus_Counting )
 CTLSPEC   EF( smStatusStatus.state = SmStatusStatus_Max )
 CTLSPEC   EF( smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 )
 CTLSPEC   EF( smStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41 )
-CTLSPEC   AG( sm.t5 & sm.t3 -> EX( smStatusStatus.state = SmStatusStatus_Max & smBit1Bit1.state = SmBit1Bit1_Bit11 ) )
-CTLSPEC   AG( sm.t5 & sm.t8 -> EX( smStatusStatus.state = SmStatusStatus_Max & smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 ) )

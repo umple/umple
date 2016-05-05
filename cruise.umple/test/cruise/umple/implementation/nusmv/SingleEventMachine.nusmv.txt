@@ -1,7 +1,7 @@
 -- This file is generated from SingleEventMachine.ump --
 
 -- PLEASE DO NOT EDIT THIS CODE --
--- This code was generated using the UMPLE 1.24.0-a5736ac modeling language! --
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
 -- This defines a NuSMV module for Sm --
@@ -9,7 +9,7 @@ MODULE Sm
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { Sm_s1 , Sm_s2 };
+     state : { Sm_s1 , Sm_s2 , Sm_s3 };
      event : { ev_e , ev_null };
      a : integer;
      b : integer;
@@ -18,16 +18,18 @@ MODULE Sm
    DEFINE
      sm_stable :=  !( event = ev_e );
      t1 := event = ev_e & state = Sm_s1 & g1;
-     t2 := event = ev_e & state = Sm_s2 & g2;
-     g1 := a < b;
+     t2 := event = ev_e & state = Sm_s1 & g2;
+     t3 := event = ev_e & state = Sm_s2 & g2;
+     g1 := a <= b;
      g2 := a = b;
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := Sm_s1;
      next( state ) := case
-       t2 : Sm_s1;
+       t3 : Sm_s1;
        t1 : Sm_s2;
+       t2 : Sm_s3;
        TRUE : state;
      esac;
 
@@ -46,6 +48,7 @@ MODULE Sm
    -- This part defines logic for the assignment of values to state variable "b" of this NuSMV module --
    ASSIGN
      init( b ) := 5;
+   INVARSPEC   ( t1 & t2 -> next( state = Sm_s2 & state = Sm_s3 ) )
 
 -- This defines a NuSMV module for main --
 MODULE main
@@ -55,3 +58,4 @@ MODULE main
      sm : Sm;
 CTLSPEC   EF( sm.state = Sm_s1 )
 CTLSPEC   EF( sm.state = Sm_s2 )
+CTLSPEC   EF( sm.state = Sm_s3 )

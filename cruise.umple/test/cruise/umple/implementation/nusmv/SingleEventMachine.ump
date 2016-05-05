@@ -3,10 +3,12 @@ class X {
   Integer b = 5;
   sm {
     s1 {
-      e [a < b] -> s2;
+      e [a <= b] -> s2;
+      e [a == b] -> s3;
     }
     s2 {
       e [ a == b] -> s1;
     }
+    s3{}
   }
 }
