@@ -59,6 +59,14 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/AdaptiveCruiseControlSystem.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/AdaptiveCruiseControlWithTerminalState.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/SingleEventMachine.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/SimpleCaseOfNondeterminism.smv");
+	  }
+	  
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
+	  public void SimpleCaseOfNondeterminism()
+	  {
+	  		assertUmpleTemplateFor("nusmv/SimpleCaseOfNondeterminism.ump","nusmv/SimpleCaseOfNondeterminism.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/SimpleCaseOfNondeterminism.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
