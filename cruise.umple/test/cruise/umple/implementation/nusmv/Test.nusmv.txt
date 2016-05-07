@@ -10,11 +10,11 @@ MODULE State
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { State_newBooking , State_seatAssigned , State_checkedIn , State_cancelled , State_completed };
-     event : { ev_assignSeat , ev_cancel , ev_checkIn , ev_cance , ev_complete , ev_null };
+     event : { ev_cancel , ev_cance , ev_checkIn , ev_assignSeat , ev_complete , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     state_stable :=  !( event = ev_cancel | event = ev_cance | event = ev_assignSeat | event = ev_checkIn | event = ev_complete );
+     state_stable :=  !( event = ev_cance | event = ev_assignSeat | event = ev_cancel | event = ev_checkIn | event = ev_complete );
      t1 := event = ev_assignSeat & state = State_newBooking;
      t2 := event = ev_cancel & state = State_newBooking;
      t3 := event = ev_cancel & state = State_seatAssigned;
@@ -38,7 +38,7 @@ MODULE State
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       state_stable : { ev_assignSeat , ev_cancel , ev_checkIn , ev_cance , ev_complete };
+       state_stable : { ev_cancel , ev_cance , ev_checkIn , ev_assignSeat , ev_complete };
        TRUE : ev_null;
      esac;
 

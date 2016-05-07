@@ -60,6 +60,22 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/AdaptiveCruiseControlWithTerminalState.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/SingleEventMachine.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/SimpleCaseOfNondeterminism.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/SingleLaneBridge.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/RoomHeatingSystem.smv");
+	  }
+	  
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
+	  public void RoomHeatingSystem()
+	  {
+	  		assertUmpleTemplateFor("nusmv/RoomHeatingSystem.ump","nusmv/RoomHeatingSystem.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/RoomHeatingSystem.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
+	  public void SingleLaneBridge()
+	  {
+	  		assertUmpleTemplateFor("nusmv/SingleLaneBridge.ump","nusmv/SingleLaneBridge.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/SingleLaneBridge.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740

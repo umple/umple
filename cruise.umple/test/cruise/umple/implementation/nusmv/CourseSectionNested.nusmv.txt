@@ -10,11 +10,11 @@ MODULE Status ( _statusOpen )
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Status_Planned , Status_Open , Status_Cancelled , Status_Closed };
-     event : { ev_cancel , ev_openRegistration , ev_requestToRegister , ev_closeRegistration , ev_classSizeExceedsMinimum , ev_classSizeExceedsMaximum , ev_null };
+     event : { ev_cancel , ev_classSizeExceedsMinimum , ev_openRegistration , ev_requestToRegister , ev_classSizeExceedsMaximum , ev_closeRegistration , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     status_stable :=  !( event = ev_cancel | event = ev_requestToRegister | event = ev_classSizeExceedsMinimum | event = ev_openRegistration | event = ev_closeRegistration | event = ev_classSizeExceedsMaximum );
+     status_stable :=  !( event = ev_cancel | event = ev_openRegistration | event = ev_classSizeExceedsMaximum | event = ev_classSizeExceedsMinimum | event = ev_requestToRegister | event = ev_closeRegistration );
      t1 := event = ev_cancel & state = Status_Planned;
      t2 := event = ev_openRegistration & state = Status_Planned;
      t3 := event = ev_cancel & state = Status_Open;
@@ -40,7 +40,7 @@ MODULE Status ( _statusOpen )
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       status_stable : { ev_cancel , ev_openRegistration , ev_requestToRegister , ev_closeRegistration , ev_classSizeExceedsMinimum , ev_classSizeExceedsMaximum };
+       status_stable : { ev_cancel , ev_classSizeExceedsMinimum , ev_openRegistration , ev_requestToRegister , ev_classSizeExceedsMaximum , ev_closeRegistration };
        TRUE : ev_null;
      esac;
 

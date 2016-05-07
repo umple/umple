@@ -10,12 +10,12 @@ MODULE Status
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Status_Planned , Status_InProgress , Status_EvaluationByInstitution , Status_VerifiedByInstitution , Status_SubmittedByInstitution , Status_UnderAdministrativeReview , Status_UnderExpertReview , Status_AwaitingFinalDecision , Status_Accepted , Status_Rejected , Status_Withdrawn };
-     event : { ev_createApplication , ev_researcherDeclaresComplete , ev_editByResearcher , ev_returnToResearcher , ev_verified , ev_editByInstitution , ev_reOpen , ev_submit , ev_withdraw , ev_acceptForReview , ev_submissionCheck , ev_acceptForExpertReview , ev_bypassExpertReviewDueToMinorChanges , ev_returnToInstitition , ev_expertReviewsReturned , ev_finalAccept , ev_minorRevisionsNeeded , ev_reject , ev_tryAgain , ev_null };
+     event : { ev_reOpen , ev_returnToInstitition , ev_expertReviewsReturned , ev_submit , ev_verified , ev_tryAgain , ev_acceptForReview , ev_returnToResearcher , ev_acceptForExpertReview , ev_bypassExpertReviewDueToMinorChanges , ev_editByResearcher , ev_createApplication , ev_minorRevisionsNeeded , ev_reject , ev_researcherDeclaresComplete , ev_editByInstitution , ev_submissionCheck , ev_finalAccept , ev_withdraw , ev_null };
      adminCheckOk : boolean;
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     status_stable :=  !( event = ev_researcherDeclaresComplete | event = ev_returnToResearcher | event = ev_editByInstitution | event = ev_submit | event = ev_acceptForReview | event = ev_acceptForExpertReview | event = ev_returnToInstitition | event = ev_finalAccept | event = ev_reject | event = ev_createApplication | event = ev_editByResearcher | event = ev_verified | event = ev_reOpen | event = ev_withdraw | event = ev_submissionCheck | event = ev_bypassExpertReviewDueToMinorChanges | event = ev_expertReviewsReturned | event = ev_minorRevisionsNeeded | event = ev_tryAgain );
+     status_stable :=  !( event = ev_returnToInstitition | event = ev_submit | event = ev_tryAgain | event = ev_returnToResearcher | event = ev_bypassExpertReviewDueToMinorChanges | event = ev_createApplication | event = ev_reject | event = ev_editByInstitution | event = ev_finalAccept | event = ev_reOpen | event = ev_expertReviewsReturned | event = ev_verified | event = ev_acceptForReview | event = ev_acceptForExpertReview | event = ev_editByResearcher | event = ev_minorRevisionsNeeded | event = ev_researcherDeclaresComplete | event = ev_submissionCheck | event = ev_withdraw );
      t1 := event = ev_createApplication & state = Status_Planned;
      t2 := event = ev_researcherDeclaresComplete & state = Status_InProgress;
      t3 := event = ev_editByResearcher & state = Status_InProgress;
@@ -63,7 +63,7 @@ MODULE Status
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       status_stable : { ev_createApplication , ev_researcherDeclaresComplete , ev_editByResearcher , ev_returnToResearcher , ev_verified , ev_editByInstitution , ev_reOpen , ev_submit , ev_withdraw , ev_acceptForReview , ev_submissionCheck , ev_acceptForExpertReview , ev_bypassExpertReviewDueToMinorChanges , ev_returnToInstitition , ev_expertReviewsReturned , ev_finalAccept , ev_minorRevisionsNeeded , ev_reject , ev_tryAgain };
+       status_stable : { ev_reOpen , ev_returnToInstitition , ev_expertReviewsReturned , ev_submit , ev_verified , ev_tryAgain , ev_acceptForReview , ev_returnToResearcher , ev_acceptForExpertReview , ev_bypassExpertReviewDueToMinorChanges , ev_editByResearcher , ev_createApplication , ev_minorRevisionsNeeded , ev_reject , ev_researcherDeclaresComplete , ev_editByInstitution , ev_submissionCheck , ev_finalAccept , ev_withdraw };
        TRUE : ev_null;
      esac;
 

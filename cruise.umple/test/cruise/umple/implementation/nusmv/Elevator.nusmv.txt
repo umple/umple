@@ -10,14 +10,14 @@ MODULE Elevator_state_machine ( _elevator_state_machinePrepareUp , _elevator_sta
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Elevator_state_machine_Idle , Elevator_state_machine_PrepareUp , Elevator_state_machine_PrepareDown , Elevator_state_machine_InMotion , Elevator_state_machine_OnFloor };
-     event : { ev_upRequest , ev_downRequest , ev_started , ev_doorClosed , ev_approachingFloor , ev_approachedFloor , ev_stopped , ev_doorOpened , ev_timeoutAtFloorToDoorClosing , ev_doorClosingRequest , ev_doorCLosed , ev_obstruction , ev_doorOpeningRequest , ev_noRequest , ev_null };
+     event : { ev_stopped , ev_obstruction , ev_upRequest , ev_doorClosed , ev_doorCLosed , ev_started , ev_approachedFloor , ev_downRequest , ev_approachingFloor , ev_doorOpened , ev_doorOpeningRequest , ev_timeoutAtFloorToDoorClosing , ev_doorClosingRequest , ev_noRequest , ev_null };
      timer : integer;
      floorRequested : boolean;
      obstruction : boolean;
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     elevator_state_machine_stable :=  !( event = ev_upRequest | event = ev_started | event = ev_approachingFloor | event = ev_stopped | event = ev_timeoutAtFloorToDoorClosing | event = ev_doorCLosed | event = ev_doorOpeningRequest | event = ev_downRequest | event = ev_doorClosed | event = ev_approachedFloor | event = ev_doorOpened | event = ev_doorClosingRequest | event = ev_obstruction | event = ev_noRequest );
+     elevator_state_machine_stable :=  !( event = ev_stopped | event = ev_upRequest | event = ev_doorCLosed | event = ev_approachedFloor | event = ev_approachingFloor | event = ev_doorOpeningRequest | event = ev_doorClosingRequest | event = ev_obstruction | event = ev_doorClosed | event = ev_started | event = ev_downRequest | event = ev_doorOpened | event = ev_timeoutAtFloorToDoorClosing | event = ev_noRequest );
      t1 := event = ev_upRequest & state = Elevator_state_machine_Idle;
      t2 := event = ev_downRequest & state = Elevator_state_machine_Idle;
      t3 := event = ev_started & state = Elevator_state_machine_PrepareUp;
@@ -56,7 +56,7 @@ MODULE Elevator_state_machine ( _elevator_state_machinePrepareUp , _elevator_sta
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       elevator_state_machine_stable : { ev_upRequest , ev_downRequest , ev_started , ev_doorClosed , ev_approachingFloor , ev_approachedFloor , ev_stopped , ev_doorOpened , ev_timeoutAtFloorToDoorClosing , ev_doorClosingRequest , ev_doorCLosed , ev_obstruction , ev_doorOpeningRequest , ev_noRequest };
+       elevator_state_machine_stable : { ev_stopped , ev_obstruction , ev_upRequest , ev_doorClosed , ev_doorCLosed , ev_started , ev_approachedFloor , ev_downRequest , ev_approachingFloor , ev_doorOpened , ev_doorOpeningRequest , ev_timeoutAtFloorToDoorClosing , ev_doorClosingRequest , ev_noRequest };
        TRUE : ev_null;
      esac;
 

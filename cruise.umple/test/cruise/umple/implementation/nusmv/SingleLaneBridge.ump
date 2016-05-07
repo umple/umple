@@ -1,0 +1,122 @@
+/*
+Source - Model Checking Template-Semantics Specifications 
+Technical Report by Y. Liu, Joanne Atlee, Nancy A. Day
+Publication Date - 2004 (University of Waterloo)
+*/
+
+class System {
+  int numRed;
+  int numBlue;
+  sm {
+  	SingleLaneBridge {
+  		//Bridge definition
+    	Bridge { 
+    		//Definitions of the Car state machine starts here
+    		Car {
+    	    RedCar {   
+    	      RedA {
+    	        waitRedA { 
+    	          enterRedA [numRed < 2 & numBlue == 0] -> onRedA;
+    	        }
+    	        onRedA {
+    	          exitRedA -> waitRedA;
+    	        }
+    	      }
+    	      ||
+    	      RedB {
+    	        waitRedB { 
+    	          enterRedB [numRed < 2 & numBlue == 0] -> onRedB;
+    	        }
+    	        onRedB {
+    	          exitRedB -> waitRedB;
+    	        }
+    	      }
+    	    }
+    	    ||
+    	    BlueCar {   
+    	      BlueA {
+    	        waitBlueA { 
+    	          enterBlueA [numBlue < 2 & numRed == 0] -> onBlueA;
+    	        }
+    	        onBlueA {
+    	          exitBlueA -> waitBlueA;
+    	        }
+    	      }
+    	      ||
+    	      BlueB {
+    	        waitBlueB { 
+    	          enterBlueB [numBlue < 2 & numRed == 0] -> onBlueB;
+    	        }
+    	        onBlueB {
+    	          exitBlueB -> waitBlueB;
+    	        }
+    	      }
+    	    }
+				}
+    		||
+    		BridgeStatus {
+    	  	empty {
+    	    	inRed / { numRed = numRed + 1; } -> oneRed;
+    	    	inBlue / { numBlue = numBlue + 1; } -> oneBlue;
+    	  	}
+    	  	oneRed {
+    	    	outRed / { numRed = numRed - 1; } -> empty;
+						inRed / { numRed = numRed + 1; } -> twoRed;
+    	  	}
+    	  	oneBlue {
+    	    	outBlue / { numBlue = numBlue - 1; } -> empty;
+						inBlue / { numBlue = numBlue + 1; } -> twoBlue;
+    	  	}
+					twoRed {
+						outRed / { numRed = numRed - 1; } -> oneRed;
+					}
+					twoBlue {
+						outBlue / { numBlue = numBlue -1; } -> oneBlue;
+					}
+    		}
+  		}
+			||
+			Coord {
+				CoordRed {
+					redCoordEnt {
+						coordEntRedA {
+							entRedA -> coordEntRedB;
+						}
+						coordEntRedB {
+							entRedB -> coordEntRedA;
+						}
+					}
+					||
+					redCoordExit {
+						coordExitRedA { 
+							exitRedA -> coordExitRedB; 
+						}
+						coordExitRedB {
+							exitRedB -> coordExitRedA;
+						}
+					}
+				}
+				||
+				CoordBlue {
+					blueCoordEnt {
+						coordEntBlueA {
+							entBlueA -> coordEntBlueB;
+						}
+						coordEntBlueB {
+							entBlueB -> coordEntBlueA;
+						}
+					}
+					||
+					blueCoordExit {
+						coordExitBlueA { 
+							exitBlueA -> coordExitBlueB; 
+						}
+						coordExitBlueB {
+							exitBlueB -> coordExitBlueA;
+						}
+					}
+				}			
+			}
+		} 	 
+	}
+}
