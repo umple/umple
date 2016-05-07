@@ -10,11 +10,11 @@ MODULE CruiseControlSystem ( _cruiseControlSystemControlCruiseController , _crui
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { CruiseControlSystem_adaptiveControlSystem , CruiseControlSystem_terminal };
-     event : { ev_term , ev_engineOn , ev_engineOff , ev_on , ev_off , ev_resume , ev_brake , ev_accelerator , ev_setThrottle , ev_zoom , ev_speed , ev_clearSpeed , ev_recordSpeed , ev_enableControl , ev_disableControl , ev_null };
+     event : { ev_resume , ev_engineOff , ev_accelerator , ev_engineOn , ev_zoom , ev_enableControl , ev_recordSpeed , ev_disableControl , ev_off , ev_speed , ev_brake , ev_setThrottle , ev_term , ev_clearSpeed , ev_on , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     cruiseControlSystem_stable :=  !( event = ev_engineOn | event = ev_on | event = ev_resume | event = ev_accelerator | event = ev_zoom | event = ev_clearSpeed | event = ev_enableControl | event = ev_term | event = ev_engineOff | event = ev_off | event = ev_brake | event = ev_setThrottle | event = ev_speed | event = ev_recordSpeed | event = ev_disableControl );
+     cruiseControlSystem_stable :=  !( event = ev_engineOff | event = ev_engineOn | event = ev_enableControl | event = ev_disableControl | event = ev_speed | event = ev_setThrottle | event = ev_clearSpeed | event = ev_resume | event = ev_accelerator | event = ev_zoom | event = ev_recordSpeed | event = ev_off | event = ev_brake | event = ev_term | event = ev_on );
      t1 := event = ev_term & _cruiseControlSystemControlCruiseControllerCruiseController.state != null;
      t2 := event = ev_engineOn & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_inactive;
      t3 := event = ev_engineOff & _cruiseControlSystemControlCruiseControllerCruiseController.state = CruiseControlSystemControlCruiseControllerCruiseController_active;
@@ -74,7 +74,7 @@ MODULE CruiseControlSystem ( _cruiseControlSystemControlCruiseController , _crui
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       cruiseControlSystem_stable : { ev_term , ev_engineOn , ev_engineOff , ev_on , ev_off , ev_resume , ev_brake , ev_accelerator , ev_setThrottle , ev_zoom , ev_speed , ev_clearSpeed , ev_recordSpeed , ev_enableControl , ev_disableControl };
+       cruiseControlSystem_stable : { ev_resume , ev_engineOff , ev_accelerator , ev_engineOn , ev_zoom , ev_enableControl , ev_recordSpeed , ev_disableControl , ev_off , ev_speed , ev_brake , ev_setThrottle , ev_term , ev_clearSpeed , ev_on };
        TRUE : ev_null;
      esac;
    INVARSPEC   ( t32 & t2 -> next( state = CruiseControlSystem_adaptiveControlSystem & _cruiseControlSystemControlCruiseControllerCruiseControllerInactive.state = CruiseControlSystemControlCruiseControllerCruiseControllerInactive_tempState ) )

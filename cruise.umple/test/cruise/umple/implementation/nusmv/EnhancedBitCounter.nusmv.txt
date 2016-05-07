@@ -10,11 +10,11 @@ MODULE Sm ( _smBit1Bit1 , _smBit2Bit2 , _smStatusStatus , _smStatusStatusBit3Bit
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Sm_stable , Sm_Counter };
-     event : { ev_e0 , ev_e1 , ev_e2 , ev_reset , ev_null };
+     event : { ev_reset , ev_e0 , ev_e1 , ev_e2 , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     sm_stable :=  !( event = ev_e0 | event = ev_e2 | event = ev_e1 | event = ev_reset );
+     sm_stable :=  !( event = ev_reset | event = ev_e1 | event = ev_e0 | event = ev_e2 );
      t1 := event = ev_e0 & state = Sm_stable;
      t2 := event = ev_e1 & _smBit1Bit1.state = SmBit1Bit1_Bit11;
      t3 := event = ev_e2 & _smBit1Bit1.state = SmBit1Bit1_Bit12;
@@ -36,7 +36,7 @@ MODULE Sm ( _smBit1Bit1 , _smBit2Bit2 , _smStatusStatus , _smStatusStatusBit3Bit
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       sm_stable : { ev_e0 , ev_e1 , ev_e2 , ev_reset };
+       sm_stable : { ev_reset , ev_e0 , ev_e1 , ev_e2 };
        TRUE : ev_null;
      esac;
    INVARSPEC   ( t5 & t3 -> next( _smStatusStatus.state = SmStatusStatus_Max & _smBit1Bit1.state = SmBit1Bit1_Bit11 ) )

@@ -10,11 +10,11 @@ MODULE Sm ( _smS21S21 , _smS22S22 )
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Sm_s1 , Sm_s2 };
-     event : { ev_e1 , ev_e4 , ev_e5 , ev_e2 , ev_e3 , ev_null };
+     event : { ev_e5 , ev_e1 , ev_e2 , ev_e3 , ev_e4 , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     sm_stable :=  !( event = ev_e4 | event = ev_e2 | event = ev_e1 | event = ev_e5 | event = ev_e3 );
+     sm_stable :=  !( event = ev_e1 | event = ev_e3 | event = ev_e5 | event = ev_e2 | event = ev_e4 );
      t1 := event = ev_e1 & state = Sm_s1;
      t2 := event = ev_e4 & state = Sm_s2;
      t3 := event = ev_e1 & _smS21S21.state = SmS21S21_a;
@@ -44,7 +44,7 @@ MODULE Sm ( _smS21S21 , _smS22S22 )
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       sm_stable : { ev_e1 , ev_e4 , ev_e5 , ev_e2 , ev_e3 };
+       sm_stable : { ev_e5 , ev_e1 , ev_e2 , ev_e3 , ev_e4 };
        TRUE : ev_null;
      esac;
    INVARSPEC   ( t8 & t11 -> next( state = Sm_s1 & _smS22S22.state = SmS22S22_e ) )

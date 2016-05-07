@@ -10,11 +10,11 @@ MODULE Sm ( _smZxab , _smZxabZx , _smGe )
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Sm_Zxab , Sm_Da , Sm_Ge };
-     event : { ev_e5 , ev_e2 , ev_e3 , ev_e1 , ev_e4 , ev_null };
+     event : { ev_e5 , ev_e1 , ev_e2 , ev_e3 , ev_e4 , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     sm_stable :=  !( event = ev_e2 | event = ev_e1 | event = ev_e5 | event = ev_e3 | event = ev_e4 );
+     sm_stable :=  !( event = ev_e1 | event = ev_e3 | event = ev_e5 | event = ev_e2 | event = ev_e4 );
      t1 := event = ev_e5 & state = Sm_Da;
      t2 := event = ev_e2 & state = Sm_Da;
      t3 := event = ev_e5 & _smZxab.state = SmZxab_Aa;
@@ -50,7 +50,7 @@ MODULE Sm ( _smZxab , _smZxabZx , _smGe )
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       sm_stable : { ev_e5 , ev_e2 , ev_e3 , ev_e1 , ev_e4 };
+       sm_stable : { ev_e5 , ev_e1 , ev_e2 , ev_e3 , ev_e4 };
        TRUE : ev_null;
      esac;
 

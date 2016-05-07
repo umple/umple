@@ -10,11 +10,11 @@ MODULE State ( _stateAA , _stateBB , _stateBBS24 )
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { State_s1 , State_s2 };
-     event : { ev_e2 , ev_e1 , ev_e5 , ev_e7 , ev_e11 , ev_e3 , ev_e9 , ev_e10 , ev_null };
+     event : { ev_e5 , ev_e7 , ev_e11 , ev_e9 , ev_e10 , ev_e1 , ev_e2 , ev_e3 , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     state_stable :=  !( event = ev_e2 | event = ev_e5 | event = ev_e11 | event = ev_e9 | event = ev_e1 | event = ev_e7 | event = ev_e3 | event = ev_e10 );
+     state_stable :=  !( event = ev_e5 | event = ev_e11 | event = ev_e10 | event = ev_e2 | event = ev_e7 | event = ev_e9 | event = ev_e1 | event = ev_e3 );
      t1 := event = ev_e2 & _stateAA.state = StateAA_s11;
      t2 := event = ev_e1 & _stateAA.state = StateAA_s12;
      t3 := event = ev_e5 & _stateBB.state = StateBB_s21;
@@ -38,7 +38,7 @@ MODULE State ( _stateAA , _stateBB , _stateBBS24 )
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       state_stable : { ev_e2 , ev_e1 , ev_e5 , ev_e7 , ev_e11 , ev_e3 , ev_e9 , ev_e10 };
+       state_stable : { ev_e5 , ev_e7 , ev_e11 , ev_e9 , ev_e10 , ev_e1 , ev_e2 , ev_e3 };
        TRUE : ev_null;
      esac;
 

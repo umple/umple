@@ -10,7 +10,7 @@ MODULE HeatSystem ( _heatSystemHouseRoom , _heatSystemHouseRoomRoom , _heatSyste
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { HeatSystem_heatSys , null };
-     event : { ev_furnaceFault , ev_furnaceReset , ev_heatSwitchOn , ev_heatSwitchOff , ev_userReset , ev_activate , ev_deactivate , ev_t5 , ev_furnaceRunning , ev_t15 , ev_t17 , ev_t18 , ev_t20 , ev_t21 , ev_t19 , ev_t22 , ev_t24 , ev_t23 , ev_null };
+     event : { ev_t5 , ev_heatSwitchOn , ev_furnaceReset , ev_furnaceFault , ev_furnaceRunning , ev_deactivate , ev_t21 , ev_t20 , ev_heatSwitchOff , ev_t23 , ev_t22 , ev_t24 , ev_activate , ev_t15 , ev_userReset , ev_t18 , ev_t17 , ev_t19 , ev_null };
      tooCold : boolean;
      tooHot : boolean;
      requestHeat : boolean;
@@ -24,7 +24,7 @@ MODULE HeatSystem ( _heatSystemHouseRoom , _heatSystemHouseRoomRoom , _heatSyste
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     heatSystem_stable :=  !( event = ev_furnaceFault | event = ev_heatSwitchOn | event = ev_userReset | event = ev_deactivate | event = ev_furnaceRunning | event = ev_t17 | event = ev_t20 | event = ev_t19 | event = ev_t24 | event = ev_furnaceReset | event = ev_heatSwitchOff | event = ev_activate | event = ev_t5 | event = ev_t15 | event = ev_t18 | event = ev_t21 | event = ev_t22 | event = ev_t23 );
+     heatSystem_stable :=  !( event = ev_t5 | event = ev_furnaceReset | event = ev_furnaceRunning | event = ev_t21 | event = ev_heatSwitchOff | event = ev_t22 | event = ev_activate | event = ev_userReset | event = ev_t17 | event = ev_heatSwitchOn | event = ev_furnaceFault | event = ev_deactivate | event = ev_t20 | event = ev_t23 | event = ev_t24 | event = ev_t15 | event = ev_t18 | event = ev_t19 );
      t1 := event = ev_t15 & _heatSystemHouseRoomRoomNoHeatReq.state = HeatSystemHouseRoomRoomNoHeatReq_idleNoHeat & g1;
      t2 := event = ev_t17 & _heatSystemHouseRoomRoomNoHeatReq.state = HeatSystemHouseRoomRoomNoHeatReq_waitForHeat & g2;
      t3 := event = ev_t18 & _heatSystemHouseRoomRoomNoHeatReq.state = HeatSystemHouseRoomRoomNoHeatReq_waitForHeat & g3;
@@ -77,7 +77,7 @@ MODULE HeatSystem ( _heatSystemHouseRoom , _heatSystemHouseRoomRoom , _heatSyste
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       heatSystem_stable : { ev_furnaceFault , ev_furnaceReset , ev_heatSwitchOn , ev_heatSwitchOff , ev_userReset , ev_activate , ev_deactivate , ev_t5 , ev_furnaceRunning , ev_t15 , ev_t17 , ev_t18 , ev_t20 , ev_t21 , ev_t19 , ev_t22 , ev_t24 , ev_t23 };
+       heatSystem_stable : { ev_t5 , ev_heatSwitchOn , ev_furnaceReset , ev_furnaceFault , ev_furnaceRunning , ev_deactivate , ev_t21 , ev_t20 , ev_heatSwitchOff , ev_t23 , ev_t22 , ev_t24 , ev_activate , ev_t15 , ev_userReset , ev_t18 , ev_t17 , ev_t19 };
        TRUE : ev_null;
      esac;
 

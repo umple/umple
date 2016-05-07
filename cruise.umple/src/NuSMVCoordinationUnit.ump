@@ -247,12 +247,12 @@ class NuSMVCoordinator
   		int pos = 1;
 		if( obj instanceof Transition ){
 			for(Transition trans : sm.getAllTransitions() ) {
-				//System.out.println( trans.getEvent().getName()+"["+trans.getFromState().getName() +" -- "+trans.getNextState().getName()+"]");
+				//System.out.println( getEventName( trans.getEvent() )+"["+trans.getFromState().getName() +" -- "+trans.getNextState().getName()+"]");
 				if(trans.equals( (Transition) obj) )
 					return pos;
 				pos++;
 			}
-			//System.out.println( ((Transition)obj).getEvent().getName()+"["+((Transition)obj).getFromState().getName() +" -- "+((Transition)obj).getNextState().getName()+"]");
+			//System.out.println( getEventName(((Transition)obj).getEvent())+"["+((Transition)obj).getFromState().getName() +" -- "+((Transition)obj).getNextState().getName()+"]");
 		}
 		if( obj instanceof Guard ) {
 			pos = 1;
@@ -309,39 +309,32 @@ class NuSMVCoordinator
     	}
   	}*/
 	
-	private void generateSpecForTransitionDeterminism( StateMachine root, ModuleBody body ) {
+	private void generateSpecForTransitionDeterminism( StateMachine sm, ModuleBody body ) {
 		BasicExpression bexp1;
 		BasicExpression bexp2;
-		for( StateMachine sm : generateStateMachineList(root))
-			for(State st : sm.getStates() )
-				for( HashMap<Transition,Transition> entry : matchMakeTransitions( st ) )
-					for( HashMap.Entry<Transition,Transition> map : entry.entrySet() ) {
-						Transition key = map.getKey();
-						int i = getObjectIdentity( sm, key );
-						Transition value = map.getValue();
-						int j = getObjectIdentity( sm, value );
+		for(State st : sm.getStates() )
+			for( HashMap<Transition,Transition> entry : matchMakeTransitions( st ) )
+				for( HashMap.Entry<Transition,Transition> map : entry.entrySet() ) {
+					Transition key = map.getKey();
+					int i = getObjectIdentity( sm, key );
+					Transition value = map.getValue();
+					int j = getObjectIdentity( sm, value );
 					
-						if( sm.equals(root) ) 
-							bexp1 = new BasicExpression("t"+i);
-						else
-							bexp1 = new BasicExpression(changeNameCase(sm.getFullName(), 0)+".t"+i);
-						if( sm.equals(root) ) 
-							bexp2 = new BasicExpression("t"+j);
-						else
-							bexp2 = new BasicExpression(changeNameCase(sm.getFullName(), 0)+".t"+j);
-						BasicExpression bexp3 = new BasicExpression("temp");
-						bexp3.addChild(bexp1);
-						bexp3.addChild(bexp2);				
+					bexp1 = new BasicExpression("t"+i);
+					bexp2 = new BasicExpression("t"+j);
+					BasicExpression bexp3 = new BasicExpression("temp");
+					bexp3.addChild(bexp1);
+					bexp3.addChild(bexp2);				
 				
-						InvarExpression cexp = new InvarExpression("ctl");
-						cexp.addChild(bexp3);
-						cexp.addChild( generateDestinationStatesExpr( sm, mapIdentity( sm, i), mapIdentity( sm, j) ));
-						cexp.setOperator( BasicExpression.Operator.IMPLY );
-						cexp.setBracketed(true);
+					InvarExpression cexp = new InvarExpression("ctl");
+					cexp.addChild(bexp3);
+					cexp.addChild( generateDestinationStatesExpr( sm, mapIdentity( sm, i), mapIdentity( sm, j) ));
+					cexp.setOperator( BasicExpression.Operator.IMPLY );
+					cexp.setBracketed(true);
 				
-						InvarConstraint cspec = new InvarConstraint(cexp);
-						body.addModuleElement(cspec);
-					}
+					InvarConstraint cspec = new InvarConstraint(cexp);
+					body.addModuleElement(cspec);
+				}
   	}
 	//scans through the list and returns true whenever what to find is contained in the list
 	private <Transition> boolean has( List< HashMap<Transition,Transition> > objectList, HashMap<Transition,Transition> whatToFind ) {
@@ -369,9 +362,9 @@ class NuSMVCoordinator
 			int j = 0;
 			if( !defaulted ) 
 				j = i + 1;
-			while( j < y ) {
+			while( j < y ) { //( tr.getEvent().equals( trans.getEvent() ) || getEventName( tr.getEvent() ).equals( getEventName( trans.getEvent()) ))
 				HashMap<Transition, Transition> entry = new HashMap();
-				if( first.get(i).getEvent().equals( second.get(j).getEvent() ) 
+				if( ( first.get(i).getEvent().equals( second.get(j).getEvent() ) || getEventName(first.get(i).getEvent()).equals( getEventName(second.get(j).getEvent()) )) 
 					&& !first.get(i).getNextState().equals( second.get(j).getNextState() ) ) {
 					entry.put(first.get(i), second.get(j));
 					for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
@@ -451,7 +444,9 @@ class NuSMVCoordinator
 					State source = trans.getFromState();
 					List<State> external = getExternalStateOf( source, state );
 					for( Transition tr : state.getStateMachine().getAllTransitions() )
-						if( has( external, tr.getFromState() ) && tr.getEvent().equals( trans.getEvent() ) && !tr.getNextState().equals( trans.getNextState()) ) {
+						if( has( external, tr.getFromState() ) && 
+							( tr.getEvent().equals( trans.getEvent() ) || getEventName( tr.getEvent() ).equals( getEventName( trans.getEvent()) )) && 
+							!tr.getNextState().equals( trans.getNextState()) ) {
 							HashMap<Transition, Transition> entry = new HashMap();
 							entry.put(trans, tr);
 							for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
@@ -459,7 +454,8 @@ class NuSMVCoordinator
 									pairable.add( entry );
 						}
 					for( Transition tr : highLevelTransitions ){
-						if( tr.getEvent().equals( trans.getEvent() ) && !tr.getNextState().equals( trans.getNextState()) ) {
+						if( ( tr.getEvent().equals( trans.getEvent() ) || getEventName( tr.getEvent() ).equals( getEventName( trans.getEvent()) )) && 
+							!tr.getNextState().equals( trans.getNextState()) ) {
 							HashMap<Transition, Transition> entry = new HashMap();
 							entry.put(trans, tr);
 							for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
@@ -586,8 +582,8 @@ class NuSMVCoordinator
 	private AssignConstraint getEventAssignConstraint( StateMachine sm) {
 
 		VariableSpecifier eventset = new VariableSpecifier("events");
-		for( Event event : sm.getAllEvents() )
-			eventset.addTypeSpecifier( "ev_"+event.getName() );
+		for( String event : getAllEventNames( sm ) )
+			eventset.addTypeSpecifier( "ev_"+ event );
 			
 		BasicExpression lhs = new BasicExpression( sm.getFullName()+"_stable" );
     	BasicExpression rhs = new BasicExpression( "{ "+eventset.print()+" }" );
@@ -916,7 +912,7 @@ class NuSMVCoordinator
   		BasicExpression root = new BasicExpression("root");
   		for( Transition tr : getAllEnablingTransitions(st) ) {
 			
-			//System.out.println( tr.getEvent().getName()+"["+tr.getFromState().getName() +" -- "+tr.getNextState().getName()+"]");
+			//System.out.println( getEventName(tr.getEvent())+"["+tr.getFromState().getName() +" -- "+tr.getNextState().getName()+"]");
 			BasicExpression bexp;
 			if(!parent.equals(sm))
 				bexp = new BasicExpression("_"+changeNameCase(parent.getFullName(),0)+".t"+getObjectIdentity( parent, tr) );	
@@ -980,8 +976,8 @@ class NuSMVCoordinator
   	private  VariableSpecifier getEventList( StateMachine sm ) {
 		
   		VariableSpecifier vs = new VariableSpecifier("event");
-  		for( Event event : sm.getAllEvents() ) 
-  			vs.addTypeSpecifier("ev_"+event.getName());
+  		for( String event : getAllEventNames(sm) ) 
+  			vs.addTypeSpecifier("ev_"+event );
   		vs.addTypeSpecifier("ev_null");
   		return vs;
   	}
@@ -1050,7 +1046,7 @@ class NuSMVCoordinator
   	
   	private BasicExpression composeExpressionFor( Transition tr, StateMachine sm ) {
   		BasicExpression bexp1 = new BasicExpression("event");
-  		BasicExpression bexp2 = new BasicExpression("ev_"+tr.getEvent().getName());
+  		BasicExpression bexp2 = new BasicExpression("ev_" + getEventName( tr.getEvent() ));
   		BasicExpression bexp3 = new BasicExpression("eventExpr"); 
   		bexp3.addChild(bexp1);
   		bexp3.addChild(bexp2);
@@ -1086,12 +1082,26 @@ class NuSMVCoordinator
   		return bexp;
   	}
 	
+	//we exterminate uniqueness of auto-transitions
+	public Set<String> getAllEventNames( StateMachine sm ) {
+		Set<String> allEvents = new HashSet<String>();
+		for( Event event : sm.getAllEvents() )
+			allEvents.add( getEventName( event ) );	
+		return allEvents;
+	}
+	
+	private String getEventName( Event event ){
+		if( event.getName().length() > "__autotransition".length() && event.getName().substring( 0, 16).equals( "__autotransition" ) )
+			return event.getName().substring( 0, 16)+"__";
+		return event.getName();
+	}
+	
 	private BasicExpression composeExpressionForStability( StateMachine sm ) {
 		BasicExpression root = new BasicExpression("root");
 		BasicExpression bexp3;
-		for(Event event : sm.getAllEvents() ){
+		for( String event : getAllEventNames( sm ) ){
 			BasicExpression bexp1 = new BasicExpression("event");
-			BasicExpression bexp2 = new BasicExpression("ev_"+event.getName());
+			BasicExpression bexp2 = new BasicExpression("ev_"+ event );
 			bexp3 = new BasicExpression("eventExpr"); 
 			bexp3.addChild(bexp1);
 			bexp3.addChild(bexp2);

@@ -10,7 +10,7 @@ MODULE State ( _stateDrive )
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { State_neutral , State_reverse , State_drive };
-     event : { ev_selectReverse , ev_selectDrive , ev_selectFirst , ev_selectSecond , ev_selectNeutral , ev_reachSecondSpeed , ev_reachThirdSpeed , ev_dropBelowSecondSpeed , ev_dropBelowThirdSpeed , ev_null };
+     event : { ev_selectDrive , ev_selectFirst , ev_selectNeutral , ev_reachSecondSpeed , ev_selectSecond , ev_reachThirdSpeed , ev_dropBelowSecondSpeed , ev_selectReverse , ev_dropBelowThirdSpeed , ev_null };
      driveSelected : boolean;
      notdriveSelected : boolean;
      a : integer;
@@ -19,7 +19,7 @@ MODULE State ( _stateDrive )
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     state_stable :=  !( event = ev_selectDrive | event = ev_selectSecond | event = ev_reachSecondSpeed | event = ev_dropBelowSecondSpeed | event = ev_selectReverse | event = ev_selectFirst | event = ev_selectNeutral | event = ev_reachThirdSpeed | event = ev_dropBelowThirdSpeed );
+     state_stable :=  !( event = ev_selectFirst | event = ev_reachSecondSpeed | event = ev_reachThirdSpeed | event = ev_selectReverse | event = ev_selectDrive | event = ev_selectNeutral | event = ev_selectSecond | event = ev_dropBelowSecondSpeed | event = ev_dropBelowThirdSpeed );
      t1 := event = ev_selectReverse & state = State_neutral;
      t2 := event = ev_selectDrive & state = State_neutral;
      t3 := event = ev_selectFirst & state = State_neutral;
@@ -71,7 +71,7 @@ MODULE State ( _stateDrive )
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       state_stable : { ev_selectReverse , ev_selectDrive , ev_selectFirst , ev_selectSecond , ev_selectNeutral , ev_reachSecondSpeed , ev_reachThirdSpeed , ev_dropBelowSecondSpeed , ev_dropBelowThirdSpeed };
+       state_stable : { ev_selectDrive , ev_selectFirst , ev_selectNeutral , ev_reachSecondSpeed , ev_selectSecond , ev_reachThirdSpeed , ev_dropBelowSecondSpeed , ev_selectReverse , ev_dropBelowThirdSpeed };
        TRUE : ev_null;
      esac;
 

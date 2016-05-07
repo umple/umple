@@ -10,7 +10,7 @@ MODULE Sm
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Sm_time , Sm_date , Sm_paused , Sm_running , Sm_lapRunning , Sm_lapPaused , Sm_bothOff , Sm_chimeOn , Sm_bothOn , Sm_alarmOn , Sm_alarmTime , Sm_alarmHour , Sm_alarmMinute , Sm_second , Sm_minute , Sm_hour , Sm_month , Sm_day , Sm_year };
-     event : { ev_s1 , ev_s2 , ev_s3 , ev_s3during2Secs , ev_notS1 , ev_notS2 , ev_null };
+     event : { ev_s3 , ev_s3during2Secs , ev_notS2 , ev_notS1 , ev_s1 , ev_s2 , ev_null };
      day : integer;
      month : integer;
      year : integer;
@@ -24,7 +24,7 @@ MODULE Sm
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     sm_stable :=  !( event = ev_s1 | event = ev_s3 | event = ev_notS1 | event = ev_s2 | event = ev_s3during2Secs | event = ev_notS2 );
+     sm_stable :=  !( event = ev_s3 | event = ev_notS2 | event = ev_s1 | event = ev_s3during2Secs | event = ev_notS1 | event = ev_s2 );
      t1 := event = ev_s1 & state = Sm_time;
      t2 := event = ev_s2 & state = Sm_time;
      t3 := event = ev_s3 & state = Sm_time;
@@ -108,7 +108,7 @@ MODULE Sm
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       sm_stable : { ev_s1 , ev_s2 , ev_s3 , ev_s3during2Secs , ev_notS1 , ev_notS2 };
+       sm_stable : { ev_s3 , ev_s3during2Secs , ev_notS2 , ev_notS1 , ev_s1 , ev_s2 };
        TRUE : ev_null;
      esac;
 

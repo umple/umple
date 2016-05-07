@@ -10,11 +10,11 @@ MODULE Status
    -- This part declares state variables for the given NuSMV module --
    VAR
      state : { Status_Open , Status_Closing , Status_Closed , Status_Opening , Status_HalfOpen };
-     event : { ev_buttonOrObstacle , ev_reachBottom , ev_reachTop , ev_null };
+     event : { ev_reachBottom , ev_reachTop , ev_buttonOrObstacle , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
-     status_stable :=  !( event = ev_reachBottom | event = ev_buttonOrObstacle | event = ev_reachTop );
+     status_stable :=  !( event = ev_reachTop | event = ev_reachBottom | event = ev_buttonOrObstacle );
      t1 := event = ev_buttonOrObstacle & state = Status_Open;
      t2 := event = ev_buttonOrObstacle & state = Status_Closing;
      t3 := event = ev_reachBottom & state = Status_Closing;
@@ -39,7 +39,7 @@ MODULE Status
    ASSIGN
      init( event ) := ev_null;
      next( event ) := case
-       status_stable : { ev_buttonOrObstacle , ev_reachBottom , ev_reachTop };
+       status_stable : { ev_reachBottom , ev_reachTop , ev_buttonOrObstacle };
        TRUE : ev_null;
      esac;
 
