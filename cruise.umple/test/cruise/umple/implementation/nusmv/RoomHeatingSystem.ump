@@ -39,6 +39,7 @@ class HeatControlSystem {
 						}
 						waitForCool {
 							[(valvePos != 0) & (coolDownTimer == waitedForCool)] / { valvePos--; waitedForCool = 0; } -> waitForCool;	
+                            [(valvePos == 0) & (coolDownTimer == waitedForCool) & ((actualTemp - setTemp) > 2)] / { requestHeat = false; } -> noHeatReq;
 							[waitedForCool < coolDownTimer] / { waitedForCool++; } -> waitForCool;
 							[!((actualTemp - setTemp) > 2)] -> idleHeat;
 						}

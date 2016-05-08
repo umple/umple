@@ -106,7 +106,7 @@ MODULE SmStatusStatusBit3Bit3 ( _sm , _smStatusStatus )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 : null;
+       _sm.t6 | _sm.t7 : null;
        _sm.t8 : SmStatusStatusBit3Bit3_Bit31;
        _smStatusStatus.state = SmStatusStatus_Counting & state = null : SmStatusStatusBit3Bit3_Bit31;
        TRUE : state;
@@ -123,7 +123,7 @@ MODULE SmStatusStatusBit4Bit4 ( _sm , _smStatusStatus )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t8 : null;
+       _sm.t6 | _sm.t8 : null;
        _sm.t7 : SmStatusStatusBit4Bit4_Bit41;
        _smStatusStatus.state = SmStatusStatus_Counting & state = null : SmStatusStatusBit4Bit4_Bit41;
        TRUE : state;

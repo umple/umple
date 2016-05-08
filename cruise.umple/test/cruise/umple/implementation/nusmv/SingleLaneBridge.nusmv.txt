@@ -95,7 +95,6 @@ MODULE SmBridgeCarRedCarRedA ( _sm , _smBridgeCar )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 : null;
        _sm.t2 | _sm.t1 : SmBridgeCarRedCarRedA_RedA;
        _smBridgeCar.state = SmBridgeCar_Car & state = null : SmBridgeCarRedCarRedA_RedA;
        TRUE : state;
@@ -112,7 +111,6 @@ MODULE SmBridgeCarRedCarRedARedA ( _sm , _smBridgeCarRedCar )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 : null;
        _sm.t2 : SmBridgeCarRedCarRedARedA_waitRedA;
        _sm.t1 : SmBridgeCarRedCarRedARedA_onRedA;
        _smBridgeCarRedCar.state = SmBridgeCarRedCar_RedCar & state = null : SmBridgeCarRedCarRedARedA_waitRedA;
@@ -130,7 +128,6 @@ MODULE SmBridgeCarRedCarRedB ( _sm , _smBridgeCar )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 : null;
        _sm.t4 | _sm.t3 : SmBridgeCarRedCarRedB_RedB;
        _smBridgeCar.state = SmBridgeCar_Car & state = null : SmBridgeCarRedCarRedB_RedB;
        TRUE : state;
@@ -147,7 +144,6 @@ MODULE SmBridgeCarRedCarRedBRedB ( _sm , _smBridgeCarRedCar )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 : null;
        _sm.t4 : SmBridgeCarRedCarRedBRedB_waitRedB;
        _sm.t3 : SmBridgeCarRedCarRedBRedB_onRedB;
        _smBridgeCarRedCar.state = SmBridgeCarRedCar_RedCar & state = null : SmBridgeCarRedCarRedBRedB_waitRedB;
@@ -165,7 +161,6 @@ MODULE SmBridgeCarRedCar ( _sm , _smBridge )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 : null;
        _sm.t2 | _sm.t4 | _sm.t1 | _sm.t3 : SmBridgeCarRedCar_RedCar;
        _smBridge.state = SmBridge_Bridge & state = null : SmBridgeCarRedCar_RedCar;
        TRUE : state;
@@ -182,7 +177,6 @@ MODULE SmBridgeCarBlueCarBlueA ( _sm , _smBridgeCar )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 : null;
        _sm.t6 | _sm.t5 : SmBridgeCarBlueCarBlueA_BlueA;
        _smBridgeCar.state = SmBridgeCar_Car & state = null : SmBridgeCarBlueCarBlueA_BlueA;
        TRUE : state;
@@ -199,7 +193,6 @@ MODULE SmBridgeCarBlueCarBlueABlueA ( _sm , _smBridgeCarBlueCar )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t1 | _sm.t3 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t2 | _sm.t4 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 : null;
        _sm.t6 : SmBridgeCarBlueCarBlueABlueA_waitBlueA;
        _sm.t5 : SmBridgeCarBlueCarBlueABlueA_onBlueA;
        _smBridgeCarBlueCar.state = SmBridgeCarBlueCar_BlueCar & state = null : SmBridgeCarBlueCarBlueABlueA_waitBlueA;
@@ -217,7 +210,6 @@ MODULE SmBridgeCarBlueCarBlueB ( _sm , _smBridgeCar )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 : null;
        _sm.t8 | _sm.t7 : SmBridgeCarBlueCarBlueB_BlueB;
        _smBridgeCar.state = SmBridgeCar_Car & state = null : SmBridgeCarBlueCarBlueB_BlueB;
        TRUE : state;
@@ -234,7 +226,6 @@ MODULE SmBridgeCarBlueCarBlueBBlueB ( _sm , _smBridgeCarBlueCar )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t1 | _sm.t3 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t2 | _sm.t4 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 : null;
        _sm.t8 : SmBridgeCarBlueCarBlueBBlueB_waitBlueB;
        _sm.t7 : SmBridgeCarBlueCarBlueBBlueB_onBlueB;
        _smBridgeCarBlueCar.state = SmBridgeCarBlueCar_BlueCar & state = null : SmBridgeCarBlueCarBlueBBlueB_waitBlueB;
@@ -252,7 +243,6 @@ MODULE SmBridgeCarBlueCar ( _sm , _smBridge )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 : null;
        _sm.t6 | _sm.t8 | _sm.t5 | _sm.t7 : SmBridgeCarBlueCar_BlueCar;
        _smBridge.state = SmBridge_Bridge & state = null : SmBridgeCarBlueCar_BlueCar;
        TRUE : state;
@@ -285,7 +275,6 @@ MODULE SmBridgeBridgeStatusBridgeStatus ( _sm , _smBridge )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 | _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 : null;
        _sm.t11 | _sm.t13 : SmBridgeBridgeStatusBridgeStatus_empty;
        _sm.t9 | _sm.t15 : SmBridgeBridgeStatusBridgeStatus_oneRed;
        _sm.t10 | _sm.t16 : SmBridgeBridgeStatusBridgeStatus_oneBlue;
@@ -338,7 +327,6 @@ MODULE SmCoordCoordRedRedCoordEntRedCoordEnt ( _sm , _smCoordCoordRed )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t21 | _sm.t23 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t22 | _sm.t24 : null;
        _sm.t18 : SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA;
        _sm.t17 : SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedB;
        _smCoordCoordRed.state = SmCoordCoordRed_CoordRed & state = null : SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA;
@@ -356,7 +344,6 @@ MODULE SmCoordCoordRedRedCoordExitRedCoordExit ( _sm , _smCoordCoordRed )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t21 | _sm.t23 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t22 | _sm.t24 : null;
        _sm.t20 : SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA;
        _sm.t19 : SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedB;
        _smCoordCoordRed.state = SmCoordCoordRed_CoordRed & state = null : SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA;
@@ -390,7 +377,6 @@ MODULE SmCoordCoordBlueBlueCoordEntBlueCoordEnt ( _sm , _smCoordCoordBlue )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 : null;
        _sm.t22 : SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA;
        _sm.t21 : SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueB;
        _smCoordCoordBlue.state = SmCoordCoordBlue_CoordBlue & state = null : SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA;
@@ -408,7 +394,6 @@ MODULE SmCoordCoordBlueBlueCoordExitBlueCoordExit ( _sm , _smCoordCoordBlue )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t9 | _sm.t11 | _sm.t13 | _sm.t15 | _sm.t17 | _sm.t19 | _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t10 | _sm.t12 | _sm.t14 | _sm.t16 | _sm.t18 | _sm.t20 : null;
        _sm.t24 : SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA;
        _sm.t23 : SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueB;
        _smCoordCoordBlue.state = SmCoordCoordBlue_CoordBlue & state = null : SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA;

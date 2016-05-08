@@ -89,7 +89,7 @@ MODULE StateBBS24 ( _state , _stateBB )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _state.t1 | _state.t3 | _state.t6 | _state.t2 | _state.t4 | _state.t7 : null;
+       _state.t3 | _state.t6 | _state.t4 | _state.t7 : null;
        _state.t5 | _state.t8 : StateBBS24_s31;
        _state.t9 : StateBBS24_s32;
        _stateBB.state = StateBB_s24 & state = null : StateBBS24_s31;
