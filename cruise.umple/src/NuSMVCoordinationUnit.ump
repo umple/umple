@@ -828,14 +828,14 @@ class NuSMVCoordinator
 		List<Transition> trans = getEnclosedTransitions( getParentState(region) );
 		List<Transition> temp = new ArrayList<Transition>();
 		
-		for( Transition tr : root.getAllTransitions() )
+		for( Transition tr : getParentState(region).getStateMachine().getAllTransitions() )
 			if( !has( trans, tr ) )
 				temp.add( tr ); //adds to temp every other transitions not enclosed by the parent state 
 	
 		//adding and-cross transitions for a given region
 		List<State> embeddedStates = getEmbeddedStates( region );
 		for( Transition tr : getAndCross( getParentState( region ) ) )
-			if( !has( embeddedStates, tr.getNextState() ) )
+			if( !has( embeddedStates, tr.getNextState() ) && !has(temp,tr) )
 				temp.add(tr);
 		return temp;
 	}
@@ -843,7 +843,7 @@ class NuSMVCoordinator
 	//Computes exit transitions for non-orthogonal composite state
 	private List<Transition> getExitTransitions(State st, StateMachine root) {
 		List<Transition> transitions = new ArrayList<Transition>();
-		for( Transition transition : root.getAllTransitions() ){
+		for( Transition transition : st.getStateMachine().getAllTransitions() ){
 			if(st.hasNestedStateMachines() && !st.isIsConcurrent() )				
 				for( StateMachine sm : st.getNestedStateMachines() ){
 					List<State> embeddedStates = getEmbeddedStates(sm);

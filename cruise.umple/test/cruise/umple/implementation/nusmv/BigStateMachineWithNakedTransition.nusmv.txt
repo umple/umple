@@ -77,7 +77,7 @@ MODULE SmZxabZx ( _sm , _smZxab )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t2 | _sm.t5 | _sm.t7 | _sm.t10 | _sm.t12 | _sm.t1 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t11 | _sm.t13 : null;
+       _sm.t6 | _sm.t8 | _sm.t5 | _sm.t7 | _sm.t10 : null;
        _sm.t9 | _sm.t3 : SmZxabZx_X;
        _smZxab.state = SmZxab_Zx & state = null : SmZxabZx_Z;
        TRUE : state;
