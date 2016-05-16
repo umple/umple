@@ -94,6 +94,23 @@ class Documenter
     Content content = null;
     int numGroups = getParser().numberOfGroups();
     int numContents = 0;
+    
+    // NEW
+    StringBuilder combinedHtmlOutput = new StringBuilder();
+    combinedHtmlOutput.append(
+        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
+        "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
+        "<head>" + "\n" +
+        "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
+        "  <link rel=\"stylesheet\" type=\"text/css\" href=\"files/layout.css\" />" + "\n" +
+        "  <script type=\"text/javascript\" src=\"files/script.js\"></script>" + "\n" +
+        "  <title>Umple Combined User Manual</title>" + "\n" +
+        "  <style> h1 {page-break-before: always; font-size: 200%;}</style>\n"+
+        "  <style> .largeCentered {text-align: center; font-size: 300%  }</style>\n" +  
+        "  <meta name='viewport' content='width=device-width, initial-scale=1'>\n  " +
+        "</head>\n<body>\n" +
+        "<div class='largeCentered'>Umple User Manual<br><a href='http://www.umple.org'>http://www.umple.org</a></div>"
+        );
 
     Hashtable<String,String> referenceLookup = createReferenceLookup();
     String filename="";
@@ -130,6 +147,11 @@ class Documenter
           prevNextOutput +="<a href=\"" + getParser().getGroup(gi+1).getContent(0).getTitleFilename() + "\">[Next]</a>&nbsp &nbsp;";
         }
         String htmlOutput = toHtml(content, navigationOutput, sectionsToHide, prevNextOutput);
+
+        // NEW FOR COMBINED
+        String tempCombined = Template.HtmlCoreTemplate;
+        tempCombined = substituteCoreElements(tempCombined, content);
+        combinedHtmlOutput.append(tempCombined);
         
         if (htmlOutput.length() == 0)
         {
@@ -142,6 +164,13 @@ class Documenter
       }
       totPages+=numContents;
     }
+    
+    // NEW FOR COMBINED
+    combinedHtmlOutput.append(Template.HtmlHighlighterTemplate);
+    combinedHtmlOutput.append("\n</body>\n</html>");
+    filename = path + File.separator + "UmpleUserManualCombined.html";
+    SampleFileWriter.createFile(filename,combinedHtmlOutput.toString());
+    
     addMessage("Created "+totPages+" manual pages, in "+numGroups+" groups, including "+filename);
     return true;
   }
@@ -236,6 +265,22 @@ class Documenter
   
   private String toHtml(Content selectedContent, String navigationOutput, String toHideOutput, String prevNextOutput)
   {
+    if (selectedContent == null)
+    {
+      return "";
+    }
+
+    String htmlOutput = Template.HtmlTemplate;
+    htmlOutput = htmlOutput.replace("@@PREVNEXT@@", prevNextOutput);
+    htmlOutput = htmlOutput.replace("@@NAVIGATION@@", navigationOutput);
+    htmlOutput = htmlOutput.replace("@@SECTIONSTOHIDE@@", toHideOutput);
+    
+    htmlOutput = substituteCoreElements(htmlOutput, selectedContent);
+
+    return htmlOutput;
+  }
+  
+  private String substituteCoreElements(String htmlOutput, Content selectedContent) {
     int endOfExampleBeforePosition=0;
     
     if (selectedContent == null)
@@ -246,13 +291,9 @@ class Documenter
     UmpleInternalParser grammarparser = new UmpleInternalParser();
     for(String file:grammarparser.getParser().getGrammarFiles()){
       grammarparser.addRulesInFile(file);
-    }
-    
-    String htmlOutput = Template.HtmlTemplate;
+    }  
+  
     htmlOutput = htmlOutput.replace("@@TITLE@@", selectedContent.getTitle());
-    htmlOutput = htmlOutput.replace("@@PREVNEXT@@", prevNextOutput);
-    htmlOutput = htmlOutput.replace("@@NAVIGATION@@", navigationOutput);
-    htmlOutput = htmlOutput.replace("@@SECTIONSTOHIDE@@", toHideOutput);
 
     htmlOutput = htmlOutput.replace("@@DESCRIPTION@@", selectedContent.getDescription());
     
@@ -530,6 +571,7 @@ class Template
         "      }" + "\n" +
         "    }" + "\n" +
         "  </script>" + "\n" +
+        "  <meta name='viewport' content='width=device-width, initial-scale=1'>\n  " +
         "</head>" + "\n" +
         "" + "\n" +
         "<body>" + "\n" +
@@ -571,25 +613,42 @@ class Template
         
         
 /// End code from Google
-        "      <h1><font size=\"+1\">@@TITLE@@</font></h1>" + "\n" +
-        "      <p class=\"description\">@@DESCRIPTION@@</p>" + "\n" +
-        "" + "\n" +
-        "@@EXAMPLE@@" + "\n" +
-        "@@SYNTAX@@" + "\n" +
+        Template.HtmlCoreTemplate +
         "      </td>" + "\n" +
         "    </tr>" + "\n" +
         "  </tbody></table>" + 
-        "<link type=\"text/css\" rel=\"stylesheet\" href=\"syntaxhighlighter/SyntaxHighlighter.css\"></link>" + "\n" +
-        "<script language=\"javascript\" src=\"syntaxhighlighter/shCore.js\"></script>" + "\n" +
-        "<script language=\"javascript\" src=\"syntaxhighlighter/shBrushCSharp.js\"></script>" + "\n" +
-        "<script language=\"javascript\" src=\"syntaxhighlighter/shBrushXml.js\"></script>" + "\n" +
+        Template.HtmlHighlighterTemplate +
         "<script language=\"javascript\">" + "\n" +
-        "@@SECTIONSTOHIDE@@" + "\n" +
-        "dp.SyntaxHighlighter.ClipboardSwf = 'syntaxhighlighter/clipboard.swf';" + "\n" +
-        "dp.SyntaxHighlighter.HighlightAll('code');" + "\n" +
+        "@@SECTIONSTOHIDE@@" + "\n" +        
         "</script>" + "\n" +
         "</body>" + "\n" +
         "</html>";
     return template; 
+  }
+  
+  // NEW
+  private static String htmlHighlighterTemplate() {
+    String template = "" +
+        "<link type=\"text/css\" rel=\"stylesheet\" href=\"syntaxhighlighter/SyntaxHighlighter.css\"></link>" + "\n" +      
+        "<script language=\"javascript\" src=\"syntaxhighlighter/shCore.js\"></script>" + "\n" +
+        "<script language=\"javascript\" src=\"syntaxhighlighter/shBrushCSharp.js\"></script>" + "\n" +
+        "<script language=\"javascript\" src=\"syntaxhighlighter/shBrushXml.js\"></script>" + "\n" +
+        "<script language=\"javascript\">" + "\n" +
+        "dp.SyntaxHighlighter.ClipboardSwf = 'syntaxhighlighter/clipboard.swf';" + "\n" +
+        "dp.SyntaxHighlighter.HighlightAll('code');" + "\n" +
+        "</script>" + "\n";
+    return template;
+  }
+  
+  // NEW
+  private static String htmlCoreTemplate()
+  {
+    String template = "" + 
+        "      <h1><font size=\"+1\">@@TITLE@@</font></h1>" + "\n" +
+        "      <p class=\"description\">@@DESCRIPTION@@</p>" + "\n" +
+        "" + "\n" +
+        "@@EXAMPLE@@" + "\n" +
+        "@@SYNTAX@@" + "\n";
+    return template;
   }
 }

@@ -17,7 +17,7 @@ noreferences
 
 <li>'after constructor' to inject additional constructor code
 
-<ul>
+</ul>
 
 
 @@example

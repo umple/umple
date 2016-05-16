@@ -87,6 +87,8 @@ class ContentParser
  */
 class Template
 {
+  const HtmlHighlighterTemplate = htmlHighlighterTemplate();
+  const HtmlCoreTemplate = htmlCoreTemplate();
   const HtmlTemplate = htmlTemplate();
   const ExampleTemplate = exampleTemplate();
   const SyntaxTemplate = syntaxTemplate();
