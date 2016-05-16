@@ -121,7 +121,7 @@ DISABLED BECAUSE OF MAJOR CHANGES WHEN GENERATING USER MANUAL
     Assert.assertEquals(true,(new File("example/myTitle.html")).exists());
     Assert.assertEquals(true,(new File("example/myTitle3.html")).exists());
     Assert.assertEquals(1,documenter.numberOfMessages());
-    AssertHelper.assertPathEquals("Created 2 manual pages, in 1 groups, including example\\myTitle3.html",documenter.getMessage(0));
+    AssertHelper.assertPathEquals("Created 2 manual pages, in 1 groups, including example\\UmpleUserManualCombined.html",documenter.getMessage(0));
   }
   
   @Test

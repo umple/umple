@@ -25,5 +25,5 @@ in a list which would be preceded by a question mark.</p>
 
 <li>?filename=xxxxx: Load the model xxxxx. xxxxx is a URL with the leading http:// left off.<p>
 
-<ul>
+</ul>
 

@@ -214,9 +214,9 @@
 
         <echo>Fetching org.eclipse.cdt.core_5.5.0.jar</echo>
 
-        <echo level="warning">WARNING: This is merely wget-ing https://umple.googlecode.com/svn/trunk/lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0*.jar</echo>
+        <echo level="warning">WARNING: This is merely wget-itng http://www.mirrorservice.org/sites/download.eclipse.org/eclipseMirror/tools/cdt/releases/kepler/sr1/plugins/org.eclipse.cdt.core_5.5.0.201309180223.jar</echo>
         <mkdir dir="${umple.deps.manual.dir}" />
-        <get src="https://umple.googlecode.com/svn/trunk/lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"
+        <get src="http://www.mirrorservice.org/sites/download.eclipse.org/eclipseMirror/tools/cdt/releases/kepler/sr1/plugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"
              dest="${umple.deps.manual.dir}/"
              usetimestamp="true" />
       </else>
