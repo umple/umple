@@ -84,26 +84,26 @@ class NuSMVCoordinator
 	private List<String> getDependencySet( StateMachine root, StateMachine sm) {
 		List<StateMachine> smList = generateStateMachineList( root );
 		List<String> temp = new ArrayList<String>();
-		if( root.equals(sm) ) {
+		if( root.equals( sm ) ) {
 			for(StateMachine stm : smList) 
 				if( !stm.getFullName().equals(sm.getFullName()) ) 
 					temp.add( stm.getFullName() );
 		}
 		else {
 			temp.add( changeNameCase(root.getFullName(), 0) );
-			State parent = getParentState(sm); 
+			State parent = getParentState( sm ); 
 			if( !parent.getStateMachine().equals(root) )
-					temp.add( parent.getStateMachine().getFullName() );
+				temp.add( parent.getStateMachine().getFullName() );
 		}
 		return temp;
 	}
 	
-	private State getParentState(StateMachine sm) {
-			State bioParent = sm.getParentState();
-			State gParent = sm.getParentState().getStateMachine().getParentState();
-			if( gParent != null && gParent.isIsConcurrent() )
-				return gParent;
-			return bioParent;	
+	private State getParentState( StateMachine sm ) {
+		State bioParent = sm.getParentState();
+		State gParent = sm.getParentState().getStateMachine().getParentState();
+		if( gParent != null && gParent.isIsConcurrent() )
+			bioParent = gParent;
+		return bioParent;	
 	}
   	
   	private void generateParameters( NuSMVModule module, StateMachine parent, StateMachine sm ) {
@@ -353,7 +353,7 @@ class NuSMVCoordinator
 	}
 	
 	//match making algorithm now includes filter 
-	private void match( List<Transition> first, List<Transition> second, List< HashMap<Transition,Transition> > pairable, boolean defaulted ) {
+	private void match( List<Transition> first, List<Transition> second, List< HashMap<Transition,Transition> > pairable, boolean defaulted, State state ) {
 		int i = 0;
 		int x = first.size(), y = second.size(); 
 		if( !defaulted ) 
@@ -362,10 +362,10 @@ class NuSMVCoordinator
 			int j = 0;
 			if( !defaulted ) 
 				j = i + 1;
-			while( j < y ) { //( tr.getEvent().equals( trans.getEvent() ) || getEventName( tr.getEvent() ).equals( getEventName( trans.getEvent()) ))
+			while( j < y ) { 
 				HashMap<Transition, Transition> entry = new HashMap();
 				if( ( first.get(i).getEvent().equals( second.get(j).getEvent() ) || getEventName(first.get(i).getEvent()).equals( getEventName(second.get(j).getEvent()) )) 
-					&& !first.get(i).getNextState().equals( second.get(j).getNextState() ) ) {
+					&& !isSameDestination(first.get(i), second.get(j), state) ) {
 					entry.put(first.get(i), second.get(j));
 					for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
 						if( !has( pairable, entry ) && !map.getKey().equals( map.getValue() ) )
@@ -391,6 +391,68 @@ class NuSMVCoordinator
 		return pairable;
 	}
 	
+	//This checks whether the input transitions are ignorable for non-determinism
+	public boolean isIgnorablePair( Transition first, Transition second, State supremum ) {
+		boolean sameDestination = first.getNextState().equals( second.getNextState() );
+		List< Transition > andCross = getAndCross( supremum );
+		for( Transition transition : andCross )
+			if( transition.equals( first ) || transition.equals( second ))
+				return false || sameDestination;
+		
+		List< State > descendantsOfFirst = getEmbeddedStates( first.getNextState() );
+		List< State > descendantsOfSecond = getEmbeddedStates( second.getNextState() );
+		boolean embedded = false;
+		
+		if( has(descendantsOfFirst, second.getNextState()) || has(descendantsOfSecond, first.getNextState()) )
+			embedded = true;
+		return ( embedded && !isSourceEmbedded( first, second )) || sameDestination;
+	}
+	
+	//This checks whether the input transitions are ignorable for non-determinism
+	private boolean isSameDestination( Transition first, Transition second, State supremum ) {
+		return first.getNextState().equals( second.getNextState() );		
+	}
+	
+	//Tracks non-determinism whenever one of the pairable transitions incidents on the supremum and the other incidents on an embedded state
+	public boolean isSourceEmbedded( Transition first, Transition second ){
+
+		State a = first.getFromState(), b = second.getFromState(), 
+			y = first.getNextState(), x = second.getNextState();
+		
+		List< State > embeddedStatesOfFirst = getEmbeddedStates( x );
+		List< State > embeddedStatesOfSecond = getEmbeddedStates( y );
+		return has( embeddedStatesOfFirst, a) 
+			|| has( embeddedStatesOfFirst, b) 
+			|| has( embeddedStatesOfSecond, a) 
+			|| has( embeddedStatesOfSecond, b);
+	}
+	
+	
+	//Tracks non-determinism whenever one of the pairable transitions incidents on the supremum and the other incidents on an embedded state
+	private boolean isEmbeddedSourceInconsistent( Transition first, Transition second ){
+
+		State a = first.getFromState(), b = second.getFromState(), 
+			y = first.getNextState(), x = second.getNextState();
+			
+		if( !y.isIsConcurrent() && !x.isIsConcurrent() )
+			return false;
+
+		List< State > embeddedStatesOfFirst = getEmbeddedStates( x );
+		boolean hasY = has( embeddedStatesOfFirst, y);
+		boolean hasA = has( embeddedStatesOfFirst, a);
+		boolean hasB = has( embeddedStatesOfFirst, b);
+		
+		if( hasY && hasA && hasB )
+			return true;
+		
+		List< State > embeddedStatesOfSecond = getEmbeddedStates( y );
+		boolean hasX = has( embeddedStatesOfSecond, x);
+		hasA = has( embeddedStatesOfSecond, a);
+		hasB = has( embeddedStatesOfSecond, b);
+		
+		return hasX && hasA && hasB;
+	}
+	
 	//Constructs a map of pairable transitions
 	private List< HashMap< Transition,Transition > > matchMaker( State state ) {
 		List< HashMap< Transition,Transition > > pairable = new ArrayList< HashMap< Transition,Transition > >();
@@ -400,7 +462,7 @@ class NuSMVCoordinator
 			for( Transition transition : state.getStateMachine().getAllTransitions() )
 				if( transition.getFromState().equals( state ) && !has( outgoingTransitions, transition ) )
 					outgoingTransitions.add( transition );
-			match( outgoingTransitions, outgoingTransitions, pairable, false );
+			match( outgoingTransitions, outgoingTransitions, pairable, false, state );
 		}
 		else if( state.getNestedStateMachines().size() >= 1 ) {
 			
@@ -416,10 +478,9 @@ class NuSMVCoordinator
 					if( transition.getFromState().equals( embeddedState ) )
 						embeddedTransitions.add( transition );				
 			}
-			match( highLevelTransitions, embeddedTransitions, pairable, true );
+			match( highLevelTransitions, embeddedTransitions, pairable, true, state );
 			
 			//------------------------ ending extraction of highlevel transitions for composite state ------------------------- 
-			
 			if( state.getNestedStateMachines().size() > 1 ) {
 				StateMachine parent = state.getStateMachine();
 				List<Transition> allOutGoingTransitions = new ArrayList<Transition>();
@@ -434,7 +495,7 @@ class NuSMVCoordinator
 					for( Transition trans : parent.getAllTransitions() )
 						if( has( getExternalStateOf( embeddedState, state ), trans.getFromState() ) )
 							external.add( trans );
-					match( outgoing, external, pairable, true );
+					match( outgoing, external, pairable, true, state );
 				}
 				//------------------------ ending extraction -------------------------
 				
@@ -445,8 +506,7 @@ class NuSMVCoordinator
 					List<State> external = getExternalStateOf( source, state );
 					for( Transition tr : state.getStateMachine().getAllTransitions() )
 						if( has( external, tr.getFromState() ) && 
-							( tr.getEvent().equals( trans.getEvent() ) || getEventName( tr.getEvent() ).equals( getEventName( trans.getEvent()) )) && 
-							!tr.getNextState().equals( trans.getNextState()) ) {
+							( tr.getEvent().equals( trans.getEvent() ) || getEventName( tr.getEvent() ).equals( getEventName( trans.getEvent()) )) && !isSameDestination(tr, trans, state) ) {
 							HashMap<Transition, Transition> entry = new HashMap();
 							entry.put(trans, tr);
 							for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
@@ -454,8 +514,7 @@ class NuSMVCoordinator
 									pairable.add( entry );
 						}
 					for( Transition tr : highLevelTransitions ){
-						if( ( tr.getEvent().equals( trans.getEvent() ) || getEventName( tr.getEvent() ).equals( getEventName( trans.getEvent()) )) && 
-							!tr.getNextState().equals( trans.getNextState()) ) {
+						if( ( tr.getEvent().equals( trans.getEvent() ) || getEventName( tr.getEvent() ).equals( getEventName( trans.getEvent()) )) && !isSameDestination(tr, trans, state) ) {
 							HashMap<Transition, Transition> entry = new HashMap();
 							entry.put(trans, tr);
 							for( HashMap.Entry<Transition,Transition> map : entry.entrySet() )
@@ -779,17 +838,17 @@ class NuSMVCoordinator
 	//This method the set of and-cross transitions for a state machine
 	private List<Transition> andCross(StateMachine sm) {
 		
-		List<State> embeddedStates = getEmbeddedStates(sm);
+		List<State> embeddedStates = getEmbeddedStates( sm );
 		List<State> friendStates = new ArrayList<State>();
-		State parent = getParentState(sm);
-		for(StateMachine smm : parent.getNestedStateMachines()) {
+		State parent = getParentState( sm );
+		for( StateMachine smm : parent.getNestedStateMachines() ) {
 		
 			//skipping the wrapper of regions
 			for(StateMachine region : smm.getImmediateNestedStateMachines())
 				if( !region.equals(sm) )
-					for(State st : getEmbeddedStates(smm))
+					for(State st : getEmbeddedStates( smm ))
 						if( !has( friendStates, st))
-							friendStates.add(st);
+							friendStates.add( st );
 		}
 		
 		List<Transition> andCrossTransitions = new ArrayList<Transition>();
@@ -797,7 +856,7 @@ class NuSMVCoordinator
 		
 			//defines a constraint for and-cross transitions
 			if(!has(embeddedStates, tr.getNextState()) && has(friendStates, tr.getNextState()))
-				andCrossTransitions.add(tr);
+				andCrossTransitions.add( tr );
 		}
 		return andCrossTransitions;
 	}
@@ -805,7 +864,7 @@ class NuSMVCoordinator
 	//This computes and-cross transitions of a given state.
 	private List<Transition> getAndCross( State state ) {
 		List<Transition> andCross = new ArrayList<Transition>();
-		if( ! state.isIsConcurrent() )
+		if( !state.isIsConcurrent() )
 			return andCross;
 		
 		for( StateMachine sm : state.getNestedStateMachines() )
@@ -822,13 +881,14 @@ class NuSMVCoordinator
 				enclosedTransitions.add( tr );
 		return enclosedTransitions;
 	}
-	
+
 	//Computes the exit transitions for a concurrent region
-	private List<Transition> getExitTransitionsForConcurrentRegion(StateMachine region, StateMachine root){
-		List<Transition> trans = getEnclosedTransitions( getParentState(region) );
+	private List<Transition> getExitTransitionsForConcurrentRegion( StateMachine region ){
+		State parent = getParentState( region );
+		List<Transition> trans = getEnclosedTransitions( parent );		
 		List<Transition> temp = new ArrayList<Transition>();
 		
-		for( Transition tr : getParentState(region).getStateMachine().getAllTransitions() )
+		for( Transition tr : parent.getStateMachine().getAllTransitions() )
 			if( !has( trans, tr ) )
 				temp.add( tr ); //adds to temp every other transitions not enclosed by the parent state 
 	
@@ -836,12 +896,12 @@ class NuSMVCoordinator
 		List<State> embeddedStates = getEmbeddedStates( region );
 		for( Transition tr : getAndCross( getParentState( region ) ) )
 			if( !has( embeddedStates, tr.getNextState() ) && !has(temp,tr) )
-				temp.add(tr);
+				temp.add( tr );
 		return temp;
 	}
 	
 	//Computes exit transitions for non-orthogonal composite state
-	private List<Transition> getExitTransitions(State st, StateMachine root) {
+	private List<Transition> getExitTransitions(State st ) {
 		List<Transition> transitions = new ArrayList<Transition>();
 		for( Transition transition : st.getStateMachine().getAllTransitions() ){
 			if(st.hasNestedStateMachines() && !st.isIsConcurrent() )				
@@ -853,7 +913,7 @@ class NuSMVCoordinator
 					//This section handles nested regions
 					for( StateMachine region : sm.getImmediateNestedStateMachines() )
 						if( region.getParentState() != null )
-							for( Transition tr : getExitTransitions(region.getParentState(), root))
+							for( Transition tr : getExitTransitions(region.getParentState()))
 								if(!has(embeddedStates, transition.getNextState()) && !has(transitions,transition))
 									transitions.add(transition);
 				}
@@ -889,10 +949,10 @@ class NuSMVCoordinator
 		List<Transition> trans;
 		if(!( getParentState( sm ).isIsConcurrent() )) {
 			if( sm.equals(root) ) return null;
-			trans = getExitTransitions( getParentState( sm ), root );
+			trans = getExitTransitions( getParentState( sm ) );
 		}
 		else
-			trans = getExitTransitionsForConcurrentRegion(sm, root);
+			trans = getExitTransitionsForConcurrentRegion( sm );
 
 		for( Transition tr : trans ) {
 			BasicExpression bexp;
