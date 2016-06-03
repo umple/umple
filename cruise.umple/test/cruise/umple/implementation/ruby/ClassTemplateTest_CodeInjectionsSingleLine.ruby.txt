@@ -1,0 +1,56 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class Student
+
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def delete
+    @deleted = true
+  end
+
+  def foo (a)
+    System.out.println("Starting foo with argument: " + a);
+    if(a < 0)      
+      System.out.println("Returning from foo!");
+      return 0;
+    else if(a == 1) {      
+      System.out.println("Returning from foo!");
+      return -1;
+    }
+    else      
+      System.out.println("Returning from foo!");
+      return 4;
+
+    for(int i = 0; i < a; i++) {
+      // TODO: call foo()
+      if(i == a/4) {        
+        System.out.println("Returning from foo!");
+        return a;
+      }
+    }    
+    System.out.println("Returning from foo!");
+    return 4;
+
+  end
+
+
+
+end

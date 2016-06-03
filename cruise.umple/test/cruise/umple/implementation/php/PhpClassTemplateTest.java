@@ -65,4 +65,5 @@ public class PhpClassTemplateTest extends ClassTemplateTest
   public void immutableNotLazyAttributeConstructor(){
 	  assertUmpleTemplateFor("php/ImmutableNotLazyAttributeConstructor.ump","php/StudentImmutableNotLazyTest.php.txt","Student");
   }
+
 }

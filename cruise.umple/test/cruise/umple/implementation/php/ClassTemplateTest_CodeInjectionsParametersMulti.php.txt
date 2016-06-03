@@ -1,0 +1,68 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+  public function foo(int a)
+  {
+
+    System.out.println("Starting foo...");
+    System.out.println("Starting execution...");
+    if(a < 0) {
+      return 4;
+    }
+
+    return 3;
+  }
+
+  public function foo(int a, String b)
+  {
+
+    System.out.println("Starting foo...");
+    if(a > 0 && "".equals(b)) {      
+      System.out.println("Returning from foo, a: " + a ", b: " + b);
+      return 3;
+    }    
+    System.out.println("Returning from foo, a: " + a ", b: " + b);
+    return 1;
+  }
+
+  public function bar()
+  {
+
+    // TODO: fix asap
+    System.out.println("Starting execution...");
+    int a = 4;
+
+    if(a == 3) return 2;
+    
+    return 1;
+  }
+
+}
+?>
