@@ -2385,7 +2385,7 @@ public class UmpleParserTest
 	  Assert.assertEquals("B",parser.getModel().getUmpleClass("Y").getPackageName());
 
 	  assertHasWarningsParse("213_mixin_namespaces_3.ump",30);
-	  Assert.assertEquals("C",parser.getModel().getUmpleClass("X").getPackageName());
+	  Assert.assertEquals("A",parser.getModel().getUmpleClass("X").getPackageName());
 	  Assert.assertEquals("B",parser.getModel().getUmpleClass("Y").getPackageName());
 
   }

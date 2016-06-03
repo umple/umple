@@ -1,4 +1,4 @@
-namespace cruise.umplificator;
+namespace cruise.umplificator.core;
 
 class Umplificator
 {
