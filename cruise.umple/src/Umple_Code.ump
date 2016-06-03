@@ -1358,7 +1358,7 @@ class UmpleClass
   }
 
   public Boolean matchOperationMethod(String fullOperation, String method) {
-    String formattedMethod = StringFormatter.toUnderscore(method);
+    String formattedMethod = method;
     TriState isMatch = new TriState(false);
     TriState isMatchOnExclude = new TriState(true);
 
@@ -1372,7 +1372,7 @@ class UmpleClass
         operation = operation.substring(1);
       }
 
-      String regexOperation = StringFormatter.toUnderscore(operation);
+      String regexOperation = operation;
       regexOperation = regexOperation.replace("_*", "*");
       regexOperation = regexOperation.replace("*", ".*");
       boolean isCurrentMatch = formattedMethod.matches(regexOperation);
@@ -1399,7 +1399,8 @@ class UmpleClass
     {
       return all;
     }
-    String formattedMethod = StringFormatter.toUnderscore(method);
+
+    String formattedMethod = method;
 
     for (CodeInjection code : getCodeInjections())
     {
@@ -1428,7 +1429,7 @@ class UmpleClass
         }
         isMatchOnExclude.setIsSet(true);
 
-        String regexOperation = StringFormatter.toUnderscore(operation);
+        String regexOperation = operation;
         regexOperation = regexOperation.replace("_*", "*");
         regexOperation = regexOperation.replace("*", ".*");
         boolean isCurrentMatch = formattedMethod.matches(regexOperation);
@@ -1462,7 +1463,7 @@ class UmpleClass
       return all;
     }
 
-    String formattedMethod = StringFormatter.toUnderscore(method);
+    String formattedMethod = method;
     for (CodeInjection code : getCodeInjections())
     {
       if (code.getOperation() == null || !type.equals(code.getType()) || (!"all".equals(code.getOperationSource()) && !"custom".equals(code.getOperationSource())))
@@ -1491,7 +1492,7 @@ class UmpleClass
         }
         isMatchOnExclude.setIsSet(true);
 
-        String regexOperation = StringFormatter.toUnderscore(operation);
+        String regexOperation = operation;
         regexOperation = regexOperation.replace("_*", "*");
         regexOperation = regexOperation.replace("*", ".*");
         regexOperation = regexOperation.replace("_~", "");

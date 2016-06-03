@@ -21,12 +21,6 @@ public class CodeInjectionTest extends TemplateTest
   }
 
   @Test
-  public void SupportUnderscoreNamingToo()
-  {
-    assertUmpleTemplateFor("CodeInjectionTest_underscore.ump",languagePath + "/CodeInjectionTest_underscore."+ languagePath +".txt","Student");
-  }
-
-  @Test
   public void Associations()
   {
     assertUmpleTemplateFor("CodeInjectionAssociationTest.ump",languagePath + "/CodeInjectionTest_Association."+ languagePath +".txt","Student");

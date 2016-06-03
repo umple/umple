@@ -18,6 +18,8 @@ class RubyGenerator
   private static Map<String,String> AsIsPluralLookupMap;
   private static List<String> OneOrManyLookup;
 
+  public JavaGenerator jgen = new JavaGenerator();
+
   static
   {
 
@@ -149,6 +151,45 @@ class RubyGenerator
     {
       return name;
     }
+  }
+
+  // Retrieve the applicable injections with the Ruby naming convention and the typical Java naming convention
+  public List<CodeInjection> getApplicableCodeInjections(UmpleClass uClass, String injectType, String methodDesc, Attribute av) {
+    List<CodeInjection> injections = uClass.getApplicableCodeInjections(injectType, jgen.translate(methodDesc, av));
+
+    for(CodeInjection cd : uClass.getApplicableCodeInjections(injectType, translate(methodDesc, av))) {
+      boolean add = true;
+      for(CodeInjection cd2 : injections) {
+        if(cd.equals(cd2)) {
+          add = false;
+        }
+      }
+
+      if(add) {
+        injections.add(cd);
+      }
+    }
+
+    return injections;
+  }
+
+  public List<CodeInjection> getApplicableCodeInjections(UmpleClass uClass, String injectType, String methodDesc, AssociationVariable av) {
+    List<CodeInjection> injections = uClass.getApplicableCodeInjections(injectType, jgen.translate(methodDesc, av));
+
+    for(CodeInjection cd : uClass.getApplicableCodeInjections(injectType, translate(methodDesc, av))) {
+      boolean add = true;
+      for(CodeInjection cd2 : injections) {
+        if(cd.equals(cd2)) {
+          add = false;
+        }
+      }
+
+      if(add) {
+        injections.add(cd);
+      }
+    }
+
+    return injections;
   }
   
   public String translate(String name, UmpleInterface aInterface)
