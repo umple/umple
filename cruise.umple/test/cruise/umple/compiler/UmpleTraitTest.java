@@ -3,6 +3,7 @@ package cruise.umple.compiler;
 
 import org.junit.*;
 
+import cruise.umple.compiler.Method.Source;
 import cruise.umple.util.SampleFileWriter;
 
 public class UmpleTraitTest {
@@ -1570,6 +1571,18 @@ public class UmpleTraitTest {
 		
 	}	
 
+	@Test
+	public void templateInCode04Test() {
+		String code = "interface B {  Boolean isEmpty();  void push(String e,String b);}"
+				+"class A{  isA B;  isA TStack <T=String>; }"
+				+"trait TStack<T>{    Boolean isEmpty() {   return true;   }   void push(T e,T b) {  	  } }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(Source.fTrait, model.getUmpleClass("A").getMethod(0).getSource());
+		Assert.assertEquals(Source.fTrait, model.getUmpleClass("A").getMethod(1).getSource());
+		
+	}	
+	
+	
 	@Test
 	public void InterfaceForTemplates001() {
 		String code = "class A{isA T< X = B >;} class B{} interface I{} trait T<X isA I>{}";
