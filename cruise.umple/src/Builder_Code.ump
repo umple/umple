@@ -248,7 +248,11 @@ class Builder {
   {
     // build string parameters:
 
-    final String exec = "ant";
+    String exec = "ant";
+    if (System.getProperty("os.name").startsWith("Window")){
+    	exec = "ant.bat";
+    }
+    
     final String buildFilePath = (new File(buildFilename)).getAbsolutePath();
     String optionStr = "";
     if (options != null) {
