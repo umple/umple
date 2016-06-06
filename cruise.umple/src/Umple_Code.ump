@@ -1677,6 +1677,10 @@ class UmpleClass
 	          }
 	          if(allSame)
 	          {
+	          	if (aMethod.getSource()==Method.Source.fAuto){
+	        		  this.removeMethod(aMethod);
+	        		  return false;
+	        	  }
 	            return true;
 	          }
 	        }
