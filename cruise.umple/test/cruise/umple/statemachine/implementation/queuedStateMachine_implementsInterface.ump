@@ -1,0 +1,11 @@
+namespace example;
+interface IX{
+}
+class X{
+  isA IX;
+  queued sm{
+    s1{
+      e->s1; 
+    }
+  }
+}

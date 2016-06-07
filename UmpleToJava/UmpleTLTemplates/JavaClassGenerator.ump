@@ -98,17 +98,27 @@ public <<# if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #
 for (StateMachine smq : uClass.getStateMachines())
   {
     if (smq.isQueued())
-    {
-      append(realSb," implements Runnable");
+    { 
+      if (uClass.hasParentInterface() == false){
+        append(realSb," implements Runnable");
+      }
+      else{
+        append(realSb,", Runnable");
+      } 
       break;
     }
     else if(smq.isPooled())
     {
-      append(realSb," implements Runnable");
+      if (uClass.hasParentInterface() == false){
+        append(realSb," implements Runnable");
+      }
+      else{
+        append(realSb,", Runnable");
+      } 
       break;
     }
   }
-
+  
 #>>
 {
   <<#getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
