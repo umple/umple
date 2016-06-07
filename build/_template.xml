@@ -171,7 +171,7 @@
 
   <target name="template.setVersion">
     <echo message="Setting Version: ${umple.version}" />
-    <replace dir="cruise.umple/src-gen-jet/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
+    <replace dir="cruise.umple/src-gen-umpletl/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
       <include name="**/*.java"/>
     </replace>
     <replace file="cruise.umple/src/UmpleVersion.ump" token="@UMPLE_VERSION@" value="${umple.version}" />
@@ -193,7 +193,7 @@
 
     <echo message="Resetting To Last Version: ${umple.version} -> $${last.version}" />
     <replace dir="cruise.umple/src-gen-umple/cruise" token="${umple.version}" value="$${last.version}"><include name="**/*.java"/></replace>
-    <replace dir="cruise.umple/src-gen-jet/cruise" token="${umple.version}" value="$${last.version}">
+    <replace dir="cruise.umple/src-gen-umpletl/cruise" token="${umple.version}" value="$${last.version}">
       <include name="**/*.java"/>
     </replace>
 
@@ -207,7 +207,7 @@
     <replace dir="cruise.umple/src-gen-umple/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
       <include name="**/*.java"/>
     </replace>
-    <replace dir="cruise.umple/src-gen-jet/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
+    <replace dir="cruise.umple/src-gen-umpletl/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
       <include name="**/*.java"/>
     </replace>
   </target>
