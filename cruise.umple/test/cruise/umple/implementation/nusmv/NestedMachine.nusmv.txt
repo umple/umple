@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Sm --
-MODULE Sm ( _smS2 )
+-- This defines a NuSMV module for ASm --
+MODULE ASm ( _smS2 )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -43,8 +43,8 @@ MODULE Sm ( _smS2 )
        TRUE : ev_null;
      esac;
 
--- This defines a NuSMV module for SmS2 --
-MODULE SmS2 ( _sm )
+-- This defines a NuSMV module for ASmS2 --
+MODULE ASmS2 ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -62,17 +62,26 @@ MODULE SmS2 ( _sm )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for ASm_Machine --
+MODULE ASm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     aSm : ASm( aSmS2 );
+     aSmS2 : ASmS2( aSm );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     sm : Sm( smS2 );
-     smS2 : SmS2( sm );
-CTLSPEC   EF( sm.state = Sm_s1 )
-CTLSPEC   EF( sm.state = Sm_s2 )
-CTLSPEC   EF( sm.state = Sm_s3 )
-CTLSPEC   EF( sm.state = Sm_s4 )
-CTLSPEC   EF( smS2.state = SmS2_s2a )
-CTLSPEC   EF( smS2.state = SmS2_s2b )
-CTLSPEC   EF( smS2.state = SmS2_s2c )
+     aSm_Machine : ASm_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s1 )
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s2 )
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s3 )
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s4 )
+   CTLSPEC   EF( aSm_Machine.aSmS2.state = SmS2_s2a )
+   CTLSPEC   EF( aSm_Machine.aSmS2.state = SmS2_s2b )
+   CTLSPEC   EF( aSm_Machine.aSmS2.state = SmS2_s2c )

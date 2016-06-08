@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Status --
-MODULE Status
+-- This defines a NuSMV module for GrantApplicationStatus --
+MODULE GrantApplicationStatus
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -70,22 +70,33 @@ MODULE Status
    -- This part defines logic for the assignment of values to state variable "adminCheckOk" of this NuSMV module --
    ASSIGN
      init( adminCheckOk ) := FALSE;
-   INVARSPEC   ( t11 & t12 -> next( state = Status_SubmittedByInstitution & state = Status_EvaluationByInstitution ) )
+
+-- This defines a NuSMV module for GrantApplicationStatus_Machine --
+MODULE GrantApplicationStatus_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     grantApplicationStatus : GrantApplicationStatus;
 
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     status : Status;
-CTLSPEC   EF( status.state = Status_Planned )
-CTLSPEC   EF( status.state = Status_InProgress )
-CTLSPEC   EF( status.state = Status_EvaluationByInstitution )
-CTLSPEC   EF( status.state = Status_VerifiedByInstitution )
-CTLSPEC   EF( status.state = Status_SubmittedByInstitution )
-CTLSPEC   EF( status.state = Status_UnderAdministrativeReview )
-CTLSPEC   EF( status.state = Status_UnderExpertReview )
-CTLSPEC   EF( status.state = Status_AwaitingFinalDecision )
-CTLSPEC   EF( status.state = Status_Accepted )
-CTLSPEC   EF( status.state = Status_Rejected )
-CTLSPEC   EF( status.state = Status_Withdrawn )
+     grantApplicationStatus_Machine : GrantApplicationStatus_Machine;
+
+   -- The following properties are specified to certify that this model is free of non-determinism. 
+   INVARSPEC   ( grantApplicationStatus_Machine.grantApplicationStatus.t11 & grantApplicationStatus_Machine.grantApplicationStatus.t12 -> next( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_SubmittedByInstitution & grantApplicationStatus_Machine.grantApplicationStatus.state = Status_EvaluationByInstitution ) )
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_Planned )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_InProgress )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_EvaluationByInstitution )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_VerifiedByInstitution )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_SubmittedByInstitution )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_UnderAdministrativeReview )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_UnderExpertReview )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_AwaitingFinalDecision )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_Accepted )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_Rejected )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_Withdrawn )

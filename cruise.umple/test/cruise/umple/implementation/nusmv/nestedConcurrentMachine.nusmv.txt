@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for State --
-MODULE State ( _stateState11State11 , _stateState12State12 , _stateState12State12State122 )
+-- This defines a NuSMV module for AState --
+MODULE AState ( _stateState11State11 , _stateState12State12 , _stateState12State12State122 )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -41,8 +41,8 @@ MODULE State ( _stateState11State11 , _stateState12State12 , _stateState12State1
        TRUE : ev_null;
      esac;
 
--- This defines a NuSMV module for StateState11State11 --
-MODULE StateState11State11 ( _state )
+-- This defines a NuSMV module for AStateState11State11 --
+MODULE AStateState11State11 ( _state )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -59,8 +59,8 @@ MODULE StateState11State11 ( _state )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for StateState12State12 --
-MODULE StateState12State12 ( _state )
+-- This defines a NuSMV module for AStateState12State12 --
+MODULE AStateState12State12 ( _state )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -77,8 +77,8 @@ MODULE StateState12State12 ( _state )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for StateState12State12State122 --
-MODULE StateState12State12State122 ( _state , _stateState12State12 )
+-- This defines a NuSMV module for AStateState12State12State122 --
+MODULE AStateState12State12State122 ( _state , _stateState12State12 )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -94,19 +94,28 @@ MODULE StateState12State12State122 ( _state , _stateState12State12 )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for AState_Machine --
+MODULE AState_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     aState : AState( aStateState11State11 , aStateState12State12 , aStateState12State12State122 );
+     aStateState11State11 : AStateState11State11( aState );
+     aStateState12State12 : AStateState12State12( aState );
+     aStateState12State12State122 : AStateState12State12State122( aState , aStateState12State12 );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : State( stateState11State11 , stateState12State12 , stateState12State12State122 );
-     stateState11State11 : StateState11State11( state );
-     stateState12State12 : StateState12State12( state );
-     stateState12State12State122 : StateState12State12State122( state , stateState12State12 );
-CTLSPEC   EF( state.state = State_state1 )
-CTLSPEC   EF( state.state = State_state2 )
-CTLSPEC   EF( stateState11State11.state = StateState11State11_state111 )
-CTLSPEC   EF( stateState11State11.state = StateState11State11_state112 )
-CTLSPEC   EF( stateState12State12.state = StateState12State12_state121 )
-CTLSPEC   EF( stateState12State12.state = StateState12State12_state122 )
-CTLSPEC   EF( stateState12State12State122.state = StateState12State12State122_state1221 )
+     aState_Machine : AState_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( aState_Machine.aState.state = State_state1 )
+   CTLSPEC   EF( aState_Machine.aState.state = State_state2 )
+   CTLSPEC   EF( aState_Machine.aStateState11State11.state = StateState11State11_state111 )
+   CTLSPEC   EF( aState_Machine.aStateState11State11.state = StateState11State11_state112 )
+   CTLSPEC   EF( aState_Machine.aStateState12State12.state = StateState12State12_state121 )
+   CTLSPEC   EF( aState_Machine.aStateState12State12.state = StateState12State12_state122 )
+   CTLSPEC   EF( aState_Machine.aStateState12State12State122.state = StateState12State12State122_state1221 )

@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Sm --
-MODULE Sm
+-- This defines a NuSMV module for ExampleSm --
+MODULE ExampleSm
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -76,11 +76,20 @@ MODULE Sm
    ASSIGN
      init( g ) := 0;
 
+-- This defines a NuSMV module for ExampleSm_Machine --
+MODULE ExampleSm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     exampleSm : ExampleSm;
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     sm : Sm;
-CTLSPEC   EF( sm.state = Sm_s1 )
-CTLSPEC   EF( sm.state = Sm_s2 )
+     exampleSm_Machine : ExampleSm_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( exampleSm_Machine.exampleSm.state = Sm_s1 )
+   CTLSPEC   EF( exampleSm_Machine.exampleSm.state = Sm_s2 )

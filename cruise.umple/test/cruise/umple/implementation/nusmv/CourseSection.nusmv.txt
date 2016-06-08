@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Status --
-MODULE Status
+-- This defines a NuSMV module for CourseSectionStatus --
+MODULE CourseSectionStatus
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -46,14 +46,23 @@ MODULE Status
        TRUE : ev_null;
      esac;
 
+-- This defines a NuSMV module for CourseSectionStatus_Machine --
+MODULE CourseSectionStatus_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     courseSectionStatus : CourseSectionStatus;
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     status : Status;
-CTLSPEC   EF( status.state = Status_Planned )
-CTLSPEC   EF( status.state = Status_OpenNotEnoughStudents )
-CTLSPEC   EF( status.state = Status_OpenEnoughStudents )
-CTLSPEC   EF( status.state = Status_Cancelled )
-CTLSPEC   EF( status.state = Status_Closed )
+     courseSectionStatus_Machine : CourseSectionStatus_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( courseSectionStatus_Machine.courseSectionStatus.state = Status_Planned )
+   CTLSPEC   EF( courseSectionStatus_Machine.courseSectionStatus.state = Status_OpenNotEnoughStudents )
+   CTLSPEC   EF( courseSectionStatus_Machine.courseSectionStatus.state = Status_OpenEnoughStudents )
+   CTLSPEC   EF( courseSectionStatus_Machine.courseSectionStatus.state = Status_Cancelled )
+   CTLSPEC   EF( courseSectionStatus_Machine.courseSectionStatus.state = Status_Closed )

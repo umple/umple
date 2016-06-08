@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Sm --
-MODULE Sm ( _smBit1Bit1 , _smBit2Bit2 , _smStatusStatus , _smStatusStatusBit3Bit3 , _smStatusStatusBit4Bit4 )
+-- This defines a NuSMV module for ASm --
+MODULE ASm ( _smBit1Bit1 , _smBit2Bit2 , _smStatusStatus , _smStatusStatusBit3Bit3 , _smStatusStatusBit4Bit4 )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -39,11 +39,9 @@ MODULE Sm ( _smBit1Bit1 , _smBit2Bit2 , _smStatusStatus , _smStatusStatusBit3Bit
        sm_stable : { ev_reset , ev_e0 , ev_e1 , ev_e2 };
        TRUE : ev_null;
      esac;
-   INVARSPEC   ( t5 & t3 -> next( _smStatusStatus.state = SmStatusStatus_Max & _smBit1Bit1.state = SmBit1Bit1_Bit11 ) )
-   INVARSPEC   ( t5 & t8 -> next( _smStatusStatus.state = SmStatusStatus_Max & _smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 ) )
 
--- This defines a NuSMV module for SmBit1Bit1 --
-MODULE SmBit1Bit1 ( _sm )
+-- This defines a NuSMV module for ASmBit1Bit1 --
+MODULE ASmBit1Bit1 ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -60,8 +58,8 @@ MODULE SmBit1Bit1 ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBit2Bit2 --
-MODULE SmBit2Bit2 ( _sm )
+-- This defines a NuSMV module for ASmBit2Bit2 --
+MODULE ASmBit2Bit2 ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -77,8 +75,8 @@ MODULE SmBit2Bit2 ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmStatusStatus --
-MODULE SmStatusStatus ( _sm )
+-- This defines a NuSMV module for ASmStatusStatus --
+MODULE ASmStatusStatus ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -95,8 +93,8 @@ MODULE SmStatusStatus ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmStatusStatusBit3Bit3 --
-MODULE SmStatusStatusBit3Bit3 ( _sm , _smStatusStatus )
+-- This defines a NuSMV module for ASmStatusStatusBit3Bit3 --
+MODULE ASmStatusStatusBit3Bit3 ( _sm , _smStatusStatus )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -112,8 +110,8 @@ MODULE SmStatusStatusBit3Bit3 ( _sm , _smStatusStatus )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmStatusStatusBit4Bit4 --
-MODULE SmStatusStatusBit4Bit4 ( _sm , _smStatusStatus )
+-- This defines a NuSMV module for ASmStatusStatusBit4Bit4 --
+MODULE ASmStatusStatusBit4Bit4 ( _sm , _smStatusStatus )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -129,24 +127,37 @@ MODULE SmStatusStatusBit4Bit4 ( _sm , _smStatusStatus )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for ASm_Machine --
+MODULE ASm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     aSm : ASm( aSmBit1Bit1 , aSmBit2Bit2 , aSmStatusStatus , aSmStatusStatusBit3Bit3 , aSmStatusStatusBit4Bit4 );
+     aSmBit1Bit1 : ASmBit1Bit1( aSm );
+     aSmBit2Bit2 : ASmBit2Bit2( aSm );
+     aSmStatusStatus : ASmStatusStatus( aSm );
+     aSmStatusStatusBit3Bit3 : ASmStatusStatusBit3Bit3( aSm , aSmStatusStatus );
+     aSmStatusStatusBit4Bit4 : ASmStatusStatusBit4Bit4( aSm , aSmStatusStatus );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     sm : Sm( smBit1Bit1 , smBit2Bit2 , smStatusStatus , smStatusStatusBit3Bit3 , smStatusStatusBit4Bit4 );
-     smBit1Bit1 : SmBit1Bit1( sm );
-     smBit2Bit2 : SmBit2Bit2( sm );
-     smStatusStatus : SmStatusStatus( sm );
-     smStatusStatusBit3Bit3 : SmStatusStatusBit3Bit3( sm , smStatusStatus );
-     smStatusStatusBit4Bit4 : SmStatusStatusBit4Bit4( sm , smStatusStatus );
-CTLSPEC   EF( sm.state = Sm_stable )
-CTLSPEC   EF( sm.state = Sm_Counter )
-CTLSPEC   EF( smBit1Bit1.state = SmBit1Bit1_Bit11 )
-CTLSPEC   EF( smBit1Bit1.state = SmBit1Bit1_Bit12 )
-CTLSPEC   EF( smBit2Bit2.state = SmBit2Bit2_Bit21 )
-CTLSPEC   EF( smBit2Bit2.state = SmBit2Bit2_Bit22 )
-CTLSPEC   EF( smStatusStatus.state = SmStatusStatus_Counting )
-CTLSPEC   EF( smStatusStatus.state = SmStatusStatus_Max )
-CTLSPEC   EF( smStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 )
-CTLSPEC   EF( smStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41 )
+     aSm_Machine : ASm_Machine;
+
+   -- The following properties are specified to certify that this model is free of non-determinism. 
+   INVARSPEC   ( aSm_Machine.aSm.t5 & aSm_Machine.aSm.t3 -> next( aSm_Machine.aSmStatusStatus.state = SmStatusStatus_Max & aSm_Machine.aSmBit1Bit1.state = SmBit1Bit1_Bit11 ) )
+   INVARSPEC   ( aSm_Machine.aSm.t5 & aSm_Machine.aSm.t8 -> next( aSm_Machine.aSmStatusStatus.state = SmStatusStatus_Max & aSm_Machine.aSmStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 ) )
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_stable )
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_Counter )
+   CTLSPEC   EF( aSm_Machine.aSmBit1Bit1.state = SmBit1Bit1_Bit11 )
+   CTLSPEC   EF( aSm_Machine.aSmBit1Bit1.state = SmBit1Bit1_Bit12 )
+   CTLSPEC   EF( aSm_Machine.aSmBit2Bit2.state = SmBit2Bit2_Bit21 )
+   CTLSPEC   EF( aSm_Machine.aSmBit2Bit2.state = SmBit2Bit2_Bit22 )
+   CTLSPEC   EF( aSm_Machine.aSmStatusStatus.state = SmStatusStatus_Counting )
+   CTLSPEC   EF( aSm_Machine.aSmStatusStatus.state = SmStatusStatus_Max )
+   CTLSPEC   EF( aSm_Machine.aSmStatusStatusBit3Bit3.state = SmStatusStatusBit3Bit3_Bit31 )
+   CTLSPEC   EF( aSm_Machine.aSmStatusStatusBit4Bit4.state = SmStatusStatusBit4Bit4_Bit41 )

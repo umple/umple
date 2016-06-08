@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for State --
-MODULE State ( _stateDrive )
+-- This defines a NuSMV module for CarTransmissionState --
+MODULE CarTransmissionState ( _stateDrive )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -95,8 +95,8 @@ MODULE State ( _stateDrive )
    ASSIGN
      init( c ) := 2;
 
--- This defines a NuSMV module for StateDrive --
-MODULE StateDrive ( _state )
+-- This defines a NuSMV module for CarTransmissionStateDrive --
+MODULE CarTransmissionStateDrive ( _state )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -114,16 +114,25 @@ MODULE StateDrive ( _state )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for CarTransmissionState_Machine --
+MODULE CarTransmissionState_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     carTransmissionState : CarTransmissionState( carTransmissionStateDrive );
+     carTransmissionStateDrive : CarTransmissionStateDrive( carTransmissionState );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : State( stateDrive );
-     stateDrive : StateDrive( state );
-CTLSPEC   EF( state.state = State_neutral )
-CTLSPEC   EF( state.state = State_reverse )
-CTLSPEC   EF( state.state = State_drive )
-CTLSPEC   EF( stateDrive.state = StateDrive_first )
-CTLSPEC   EF( stateDrive.state = StateDrive_second )
-CTLSPEC   EF( stateDrive.state = StateDrive_third )
+     carTransmissionState_Machine : CarTransmissionState_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionState.state = State_neutral )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionState.state = State_reverse )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionState.state = State_drive )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionStateDrive.state = StateDrive_first )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionStateDrive.state = StateDrive_second )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionStateDrive.state = StateDrive_third )

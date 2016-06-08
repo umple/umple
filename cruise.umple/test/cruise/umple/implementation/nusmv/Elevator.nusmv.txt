@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Elevator_state_machine --
-MODULE Elevator_state_machine ( _elevator_state_machinePrepareUp , _elevator_state_machinePrepareDown , _elevator_state_machineInMotion , _elevator_state_machineOnFloor )
+-- This defines a NuSMV module for ElevatorElevator_state_machine --
+MODULE ElevatorElevator_state_machine ( _elevator_state_machinePrepareUp , _elevator_state_machinePrepareDown , _elevator_state_machineInMotion , _elevator_state_machineOnFloor )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -72,8 +72,8 @@ MODULE Elevator_state_machine ( _elevator_state_machinePrepareUp , _elevator_sta
    ASSIGN
      init( obstruction ) := FALSE;
 
--- This defines a NuSMV module for Elevator_state_machinePrepareUp --
-MODULE Elevator_state_machinePrepareUp ( _elevator_state_machine )
+-- This defines a NuSMV module for ElevatorElevator_state_machinePrepareUp --
+MODULE ElevatorElevator_state_machinePrepareUp ( _elevator_state_machine )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -88,8 +88,8 @@ MODULE Elevator_state_machinePrepareUp ( _elevator_state_machine )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for Elevator_state_machinePrepareDown --
-MODULE Elevator_state_machinePrepareDown ( _elevator_state_machine )
+-- This defines a NuSMV module for ElevatorElevator_state_machinePrepareDown --
+MODULE ElevatorElevator_state_machinePrepareDown ( _elevator_state_machine )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -104,8 +104,8 @@ MODULE Elevator_state_machinePrepareDown ( _elevator_state_machine )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for Elevator_state_machineInMotion --
-MODULE Elevator_state_machineInMotion ( _elevator_state_machine )
+-- This defines a NuSMV module for ElevatorElevator_state_machineInMotion --
+MODULE ElevatorElevator_state_machineInMotion ( _elevator_state_machine )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -122,8 +122,8 @@ MODULE Elevator_state_machineInMotion ( _elevator_state_machine )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for Elevator_state_machineOnFloor --
-MODULE Elevator_state_machineOnFloor ( _elevator_state_machine )
+-- This defines a NuSMV module for ElevatorElevator_state_machineOnFloor --
+MODULE ElevatorElevator_state_machineOnFloor ( _elevator_state_machine )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -142,26 +142,35 @@ MODULE Elevator_state_machineOnFloor ( _elevator_state_machine )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for ElevatorElevator_state_machine_Machine --
+MODULE ElevatorElevator_state_machine_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     elevatorElevator_state_machine : ElevatorElevator_state_machine( elevatorElevator_state_machinePrepareUp , elevatorElevator_state_machinePrepareDown , elevatorElevator_state_machineInMotion , elevatorElevator_state_machineOnFloor );
+     elevatorElevator_state_machinePrepareUp : ElevatorElevator_state_machinePrepareUp( elevatorElevator_state_machine );
+     elevatorElevator_state_machinePrepareDown : ElevatorElevator_state_machinePrepareDown( elevatorElevator_state_machine );
+     elevatorElevator_state_machineInMotion : ElevatorElevator_state_machineInMotion( elevatorElevator_state_machine );
+     elevatorElevator_state_machineOnFloor : ElevatorElevator_state_machineOnFloor( elevatorElevator_state_machine );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     elevator_state_machine : Elevator_state_machine( elevator_state_machinePrepareUp , elevator_state_machinePrepareDown , elevator_state_machineInMotion , elevator_state_machineOnFloor );
-     elevator_state_machinePrepareUp : Elevator_state_machinePrepareUp( elevator_state_machine );
-     elevator_state_machinePrepareDown : Elevator_state_machinePrepareDown( elevator_state_machine );
-     elevator_state_machineInMotion : Elevator_state_machineInMotion( elevator_state_machine );
-     elevator_state_machineOnFloor : Elevator_state_machineOnFloor( elevator_state_machine );
-CTLSPEC   EF( elevator_state_machine.state = Elevator_state_machine_Idle )
-CTLSPEC   EF( elevator_state_machine.state = Elevator_state_machine_PrepareUp )
-CTLSPEC   EF( elevator_state_machine.state = Elevator_state_machine_PrepareDown )
-CTLSPEC   EF( elevator_state_machine.state = Elevator_state_machine_InMotion )
-CTLSPEC   EF( elevator_state_machine.state = Elevator_state_machine_OnFloor )
-CTLSPEC   EF( elevator_state_machinePrepareUp.state = Elevator_state_machinePrepareUp_DoorClosingMovingUp )
-CTLSPEC   EF( elevator_state_machinePrepareDown.state = Elevator_state_machinePrepareDown_DoorClosingMovingDown )
-CTLSPEC   EF( elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving )
-CTLSPEC   EF( elevator_state_machineInMotion.state = Elevator_state_machineInMotion_Stopping )
-CTLSPEC   EF( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening )
-CTLSPEC   EF( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_AtFloor )
-CTLSPEC   EF( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorClosing )
-CTLSPEC   EF( elevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_CheckingNextDestination )
+     elevatorElevator_state_machine_Machine : ElevatorElevator_state_machine_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machine.state = Elevator_state_machine_Idle )
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machine.state = Elevator_state_machine_PrepareUp )
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machine.state = Elevator_state_machine_PrepareDown )
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machine.state = Elevator_state_machine_InMotion )
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machine.state = Elevator_state_machine_OnFloor )
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machinePrepareUp.state = Elevator_state_machinePrepareUp_DoorClosingMovingUp )
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machinePrepareDown.state = Elevator_state_machinePrepareDown_DoorClosingMovingDown )
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machineInMotion.state = Elevator_state_machineInMotion_Moving )
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machineInMotion.state = Elevator_state_machineInMotion_Stopping )
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorOpening )
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_AtFloor )
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_DoorClosing )
+   CTLSPEC   EF( elevatorElevator_state_machine_Machine.elevatorElevator_state_machineOnFloor.state = Elevator_state_machineOnFloor_CheckingNextDestination )
