@@ -146,6 +146,7 @@ public class StateMachineTest extends StateMachineTemplateTest
 	  assertUmpleTemplateFor("EventTransitionSpacing.ump",languagePath + "/EventTransition_NewState."+ languagePath +".txt","Light");
   }
   
+ 
   /**
    * Test spacing issues by changing the spacing in the test file for {@link #EventTransitionNewState()}.
    * @see #stateNameSpacingForNoStates()
@@ -638,4 +639,13 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
     assertUmpleTemplateFor("pooledStateMachine_timedTransition_2.ump",languagePath + "/pooledStateMachine_timedTransition_2."+ languagePath +".txt","X");
   }
+  //Implementing an interface for classes containing queued and pooled state machines
+  @Test
+  public void queuedStateMachine_implements()
+  {
+	assertUmpleTemplateFor("queuedStateMachine_implementsInterface.ump",languagePath + "/queuedStateMachine_interfaceX."+ languagePath +".txt","IX");
+    assertUmpleTemplateFor("queuedStateMachine_implementsInterface.ump",languagePath + "/queuedStateMachine_implementsInterface."+ languagePath +".txt","X");
+    
+  }
+  
 }
