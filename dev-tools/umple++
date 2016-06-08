@@ -160,13 +160,13 @@ function clean()
   clean_command=''
   case "${_ARGV[0]}" in
     "all") 
-      clean_command='svn revert -R src-gen-jet src-gen-umple'
+      clean_command='svn revert -R src-gen-umpletl src-gen-umple'
       ;;
     "compiler")
       clean_command='svn revert -R src-gen-umple'
       ;;
     "jet")
-      clean_command='svn revert -R src-gen-jet'
+      clean_command='svn revert -R src-gen-umpletl'
       ;;
     *)
       echo -e "${bold}clean: Unrecognized clean type, '${_ARGV[0]}'${normal}" >&2

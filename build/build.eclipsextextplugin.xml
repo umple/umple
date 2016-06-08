@@ -41,7 +41,7 @@
 
     <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.7" target="1.7">
       <src path="cruise.umple/src"/>
-      <src path="cruise.umple/src-gen-jet"/>
+      <src path="cruise.umple/src-gen-umpletl"/>
       <src path="cruise.umple/src-gen-umple"/>
 	    <src path="cruise.umple.xtext/src"/>
       <src path="cruise.umple.xtext/src-gen"/>

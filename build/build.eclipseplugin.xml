@@ -43,7 +43,7 @@
       <src path="${project.path}/src"/>
       <src path="${project.path}/test"/>
       <src path="cruise.umple/src"/>
-      <src path="cruise.umple/src-gen-jet"/>
+      <src path="cruise.umple/src-gen-umpletl"/>
       <src path="cruise.umple/src-gen-umple"/>
       <exclude name="**/.svn"/>
       <exclude name="**/*.ump" />
