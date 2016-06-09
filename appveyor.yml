@@ -18,7 +18,7 @@ init:
 
 install:
 
-- ps: $env:Path="C:\Ruby21\bin;C:/tools/ruby22/bin;$($env:Path);C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
+- ps: $env:Path="C:\Ruby21\bin;C:/tools/ruby22/bin;C:\Program Files (x86)\Java\jdk1.8.0\bin;$($env:Path);C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
 
 - ps: ant -version
 - ps: pushd build
