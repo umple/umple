@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for State --
-MODULE State
+-- This defines a NuSMV module for BookingState --
+MODULE BookingState
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -42,14 +42,23 @@ MODULE State
        TRUE : ev_null;
      esac;
 
+-- This defines a NuSMV module for BookingState_Machine --
+MODULE BookingState_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     bookingState : BookingState;
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : State;
-CTLSPEC   EF( state.state = State_newBooking )
-CTLSPEC   EF( state.state = State_seatAssigned )
-CTLSPEC   EF( state.state = State_checkedIn )
-CTLSPEC   EF( state.state = State_cancelled )
-CTLSPEC   EF( state.state = State_completed )
+     bookingState_Machine : BookingState_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( bookingState_Machine.bookingState.state = State_newBooking )
+   CTLSPEC   EF( bookingState_Machine.bookingState.state = State_seatAssigned )
+   CTLSPEC   EF( bookingState_Machine.bookingState.state = State_checkedIn )
+   CTLSPEC   EF( bookingState_Machine.bookingState.state = State_cancelled )
+   CTLSPEC   EF( bookingState_Machine.bookingState.state = State_completed )

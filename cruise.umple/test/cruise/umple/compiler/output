@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<counter-example type="0" desc="CTL Counterexample" >
+	<node>
+		<state id="1">
+			<value variable="sm.state">Sm_s1</value>
+			<value variable="sm.event">ev_null</value>
+			<value variable="sm.a">4</value>
+			<value variable="sm.b">5</value>
+			<value variable="sm.g2">FALSE</value>
+			<value variable="sm.g1">TRUE</value>
+			<value variable="sm.t2">FALSE</value>
+			<value variable="sm.t1">FALSE</value>
+			<value variable="sm.sm_stable">TRUE</value>
+		</state>
+	</node>
+	<node>
+		<state id="2">
+			<value variable="sm.state">Sm_s1</value>
+			<value variable="sm.event">ev_e</value>
+			<value variable="sm.a">63</value>
+			<value variable="sm.b">69</value>
+			<value variable="sm.g2">FALSE</value>
+			<value variable="sm.g1">TRUE</value>
+			<value variable="sm.t2">FALSE</value>
+			<value variable="sm.t1">TRUE</value>
+			<value variable="sm.sm_stable">FALSE</value>
+		</state>
+	</node>
+	<node>
+		<state id="3">
+			<value variable="sm.state">Sm_s2</value>
+			<value variable="sm.event">ev_null</value>
+			<value variable="sm.a">0</value>
+			<value variable="sm.b">0</value>
+			<value variable="sm.g2">TRUE</value>
+			<value variable="sm.g1">FALSE</value>
+			<value variable="sm.t2">FALSE</value>
+			<value variable="sm.t1">FALSE</value>
+			<value variable="sm.sm_stable">TRUE</value>
+		</state>
+	</node>
+	<loops> </loops>
+</counter-example>

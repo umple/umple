@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Sm --
-MODULE Sm
+-- This defines a NuSMV module for DigitalWatchSm --
+MODULE DigitalWatchSm
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -152,28 +152,37 @@ MODULE Sm
    ASSIGN
      init( timer ) := 0;
 
+-- This defines a NuSMV module for DigitalWatchSm_Machine --
+MODULE DigitalWatchSm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     digitalWatchSm : DigitalWatchSm;
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     sm : Sm;
-CTLSPEC   EF( sm.state = Sm_time )
-CTLSPEC   EF( sm.state = Sm_date )
-CTLSPEC   EF( sm.state = Sm_paused )
-CTLSPEC   EF( sm.state = Sm_running )
-CTLSPEC   EF( sm.state = Sm_lapRunning )
-CTLSPEC   EF( sm.state = Sm_lapPaused )
-CTLSPEC   EF( sm.state = Sm_bothOff )
-CTLSPEC   EF( sm.state = Sm_chimeOn )
-CTLSPEC   EF( sm.state = Sm_bothOn )
-CTLSPEC   EF( sm.state = Sm_alarmOn )
-CTLSPEC   EF( sm.state = Sm_alarmTime )
-CTLSPEC   EF( sm.state = Sm_alarmHour )
-CTLSPEC   EF( sm.state = Sm_alarmMinute )
-CTLSPEC   EF( sm.state = Sm_second )
-CTLSPEC   EF( sm.state = Sm_minute )
-CTLSPEC   EF( sm.state = Sm_hour )
-CTLSPEC   EF( sm.state = Sm_month )
-CTLSPEC   EF( sm.state = Sm_day )
-CTLSPEC   EF( sm.state = Sm_year )
+     digitalWatchSm_Machine : DigitalWatchSm_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_time )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_date )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_paused )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_running )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_lapRunning )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_lapPaused )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_bothOff )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_chimeOn )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_bothOn )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmOn )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmTime )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmHour )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmMinute )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_second )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_minute )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_hour )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_month )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_day )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_year )

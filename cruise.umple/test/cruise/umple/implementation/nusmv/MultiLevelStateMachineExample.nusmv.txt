@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Sm --
-MODULE Sm ( _smS2 , _smS2S21 )
+-- This defines a NuSMV module for ASm --
+MODULE ASm ( _smS2 , _smS2S21 )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -38,8 +38,8 @@ MODULE Sm ( _smS2 , _smS2S21 )
        TRUE : ev_null;
      esac;
 
--- This defines a NuSMV module for SmS2 --
-MODULE SmS2 ( _sm )
+-- This defines a NuSMV module for ASmS2 --
+MODULE ASmS2 ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -55,8 +55,8 @@ MODULE SmS2 ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmS2S21 --
-MODULE SmS2S21 ( _sm , _smS2 )
+-- This defines a NuSMV module for ASmS2S21 --
+MODULE ASmS2S21 ( _sm , _smS2 )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -71,16 +71,25 @@ MODULE SmS2S21 ( _sm , _smS2 )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for ASm_Machine --
+MODULE ASm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     aSm : ASm( aSmS2 , aSmS2S21 );
+     aSmS2 : ASmS2( aSm );
+     aSmS2S21 : ASmS2S21( aSm , aSmS2 );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     sm : Sm( smS2 , smS2S21 );
-     smS2 : SmS2( sm );
-     smS2S21 : SmS2S21( sm , smS2 );
-CTLSPEC   EF( sm.state = Sm_s1 )
-CTLSPEC   EF( sm.state = Sm_s2 )
-CTLSPEC   EF( smS2.state = SmS2_s21 )
-CTLSPEC   EF( smS2.state = SmS2_s22 )
-CTLSPEC   EF( smS2S21.state = SmS2S21_s211 )
+     aSm_Machine : ASm_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s1 )
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s2 )
+   CTLSPEC   EF( aSm_Machine.aSmS2.state = SmS2_s21 )
+   CTLSPEC   EF( aSm_Machine.aSmS2.state = SmS2_s22 )
+   CTLSPEC   EF( aSm_Machine.aSmS2S21.state = SmS2S21_s211 )

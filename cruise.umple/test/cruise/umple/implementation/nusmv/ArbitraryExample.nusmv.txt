@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Sm --
-MODULE Sm ( _smAA , _smBB , _smCC )
+-- This defines a NuSMV module for TestSmSm --
+MODULE TestSmSm ( _smAA , _smBB , _smCC )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -50,16 +50,9 @@ MODULE Sm ( _smAA , _smBB , _smCC )
        Sm_stable : { ev_e1 , ev_e2 };
        TRUE : ev_null;
      esac;
-   INVARSPEC   ( t5 & t7 -> next( state = Sm_s1 & _smBB.state = SmBB_b3 ) )
-   INVARSPEC   ( t5 & t12 -> next( state = Sm_s1 & _smBB.state = SmBB_b2 ) )
-   INVARSPEC   ( t5 & t14 -> next( state = Sm_s1 & _smCC.state = SmCC_c2 ) )
-   INVARSPEC   ( t5 & t16 -> next( state = Sm_s1 & _smCC.state = SmCC_c4 ) )
-   INVARSPEC   ( t5 & t18 -> next( state = Sm_s1 & _smAA.state = SmAA_a3 ) )
-   INVARSPEC   ( t18 & t7 -> next( _smAA.state = SmAA_a3 & _smBB.state = SmBB_b3 ) )
-   INVARSPEC   ( t18 & t12 -> next( _smAA.state = SmAA_a3 & _smBB.state = SmBB_b2 ) )
 
--- This defines a NuSMV module for SmAA --
-MODULE SmAA ( _sm )
+-- This defines a NuSMV module for TestSmSmAA --
+MODULE TestSmSmAA ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -76,8 +69,8 @@ MODULE SmAA ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBB --
-MODULE SmBB ( _sm )
+-- This defines a NuSMV module for TestSmSmBB --
+MODULE TestSmSmBB ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -96,8 +89,8 @@ MODULE SmBB ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmCC --
-MODULE SmCC ( _sm )
+-- This defines a NuSMV module for TestSmSmCC --
+MODULE TestSmSmCC ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -115,25 +108,43 @@ MODULE SmCC ( _sm )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for TestSmSm_Machine --
+MODULE TestSmSm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     testSmSm : TestSmSm( testSmSmAA , testSmSmBB , testSmSmCC );
+     testSmSmAA : TestSmSmAA( testSmSm );
+     testSmSmBB : TestSmSmBB( testSmSm );
+     testSmSmCC : TestSmSmCC( testSmSm );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     sm : Sm( smAA , smBB , smCC );
-     smAA : SmAA( sm );
-     smBB : SmBB( sm );
-     smCC : SmCC( sm );
-CTLSPEC   EF( sm.state = Sm_s1 )
-CTLSPEC   EF( sm.state = Sm_s2 )
-CTLSPEC   EF( smAA.state = SmAA_a1 )
-CTLSPEC   EF( smAA.state = SmAA_a2 )
-CTLSPEC   EF( smAA.state = SmAA_a3 )
-CTLSPEC   EF( smBB.state = SmBB_b1 )
-CTLSPEC   EF( smBB.state = SmBB_b2 )
-CTLSPEC   EF( smBB.state = SmBB_b3 )
-CTLSPEC   EF( smBB.state = SmBB_b4 )
-CTLSPEC   EF( smCC.state = SmCC_c1 )
-CTLSPEC   EF( smCC.state = SmCC_c2 )
-CTLSPEC   EF( smCC.state = SmCC_c3 )
-CTLSPEC   EF( smCC.state = SmCC_c4 )
+     testSmSm_Machine : TestSmSm_Machine;
+
+   -- The following properties are specified to certify that this model is free of non-determinism. 
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t7 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmBB.state = SmBB_b3 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t12 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmBB.state = SmBB_b2 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t14 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmCC.state = SmCC_c2 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t16 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmCC.state = SmCC_c4 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t18 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmAA.state = SmAA_a3 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t18 & testSmSm_Machine.testSmSm.t7 -> next( testSmSm_Machine.testSmSmAA.state = SmAA_a3 & testSmSm_Machine.testSmSmBB.state = SmBB_b3 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t18 & testSmSm_Machine.testSmSm.t12 -> next( testSmSm_Machine.testSmSmAA.state = SmAA_a3 & testSmSm_Machine.testSmSmBB.state = SmBB_b2 ) )
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( testSmSm_Machine.testSmSm.state = Sm_s1 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSm.state = Sm_s2 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmAA.state = SmAA_a1 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmAA.state = SmAA_a2 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmAA.state = SmAA_a3 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmBB.state = SmBB_b1 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmBB.state = SmBB_b2 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmBB.state = SmBB_b3 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmBB.state = SmBB_b4 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmCC.state = SmCC_c1 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmCC.state = SmCC_c2 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmCC.state = SmCC_c3 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmCC.state = SmCC_c4 )

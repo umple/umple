@@ -1,11 +1,11 @@
 -- This file is generated from CourseSectionNested.ump --
 
 -- PLEASE DO NOT EDIT THIS CODE --
--- This code was generated using the UMPLE 1.23.0-3bd2bc7 modeling language! --
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Status --
-MODULE Status ( _statusOpen )
+-- This defines a NuSMV module for CourseSectionStatus --
+MODULE CourseSectionStatus ( _statusOpen )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -44,8 +44,8 @@ MODULE Status ( _statusOpen )
        TRUE : ev_null;
      esac;
 
--- This defines a NuSMV module for StatusOpen --
-MODULE StatusOpen ( _status )
+-- This defines a NuSMV module for CourseSectionStatusOpen --
+MODULE CourseSectionStatusOpen ( _status )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -62,16 +62,25 @@ MODULE StatusOpen ( _status )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for CourseSectionStatus_Machine --
+MODULE CourseSectionStatus_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     courseSectionStatus : CourseSectionStatus( courseSectionStatusOpen );
+     courseSectionStatusOpen : CourseSectionStatusOpen( courseSectionStatus );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     status : Status( statusOpen );
-     statusOpen : StatusOpen( status );
-CTLSPEC   EF( status.state = Status_Planned )
-CTLSPEC   EF( status.state = Status_Open )
-CTLSPEC   EF( status.state = Status_Cancelled )
-CTLSPEC   EF( status.state = Status_Closed )
-CTLSPEC   EF( statusOpen.state = StatusOpen_NotEnoughStudents )
-CTLSPEC   EF( statusOpen.state = StatusOpen_EnoughStudents )
+     courseSectionStatus_Machine : CourseSectionStatus_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( courseSectionStatus_Machine.courseSectionStatus.state = Status_Planned )
+   CTLSPEC   EF( courseSectionStatus_Machine.courseSectionStatus.state = Status_Open )
+   CTLSPEC   EF( courseSectionStatus_Machine.courseSectionStatus.state = Status_Cancelled )
+   CTLSPEC   EF( courseSectionStatus_Machine.courseSectionStatus.state = Status_Closed )
+   CTLSPEC   EF( courseSectionStatus_Machine.courseSectionStatusOpen.state = StatusOpen_NotEnoughStudents )
+   CTLSPEC   EF( courseSectionStatus_Machine.courseSectionStatusOpen.state = StatusOpen_EnoughStudents )

@@ -56,18 +56,22 @@ class NuSMVCoordinator
   		body.addModuleElement( vdec );
 		
   		//Adding define declaration to module body
-  		body.addModuleElement( getDefineDeclaration(sm) );
+  		body.addModuleElement( getDefineDeclaration( sm ) );
   		body.addModuleElement( getAssignConstraint( sm, sm) );
-		body.addModuleElement( getEventAssignConstraint(sm) );
+		body.addModuleElement( getEventAssignConstraint( sm ) );
 		
 		//Adding assign constraints for all the attributes
 		for( AssignConstraint constraint : getAssignConstraint( uClass ))
 			body.addModuleElement( constraint );
-		generateSpecForTransitionDeterminism( sm, body );
-  		NuSMVModule module = new NuSMVModule( changeNameCase( sm.getFullName(), 1 ), body );
+		//generateSpecForTransitionDeterminism( sm, body );
+  		NuSMVModule module = new NuSMVModule( changeNameCase( getAbsoluteName( sm, sm ), 1 ), body );
   		generateParameters( module, sm, sm ); 
   		return module;
   	}
+	
+	private String getAbsoluteName( StateMachine root, StateMachine sm ) {
+		return root.getUmpleClass().getName() + changeNameCase(sm.getFullName(),1);
+	}
   	
 	private <E> boolean has( Collection<E> objectList, E whatToFind ) {
   		boolean yes = false;
@@ -87,13 +91,13 @@ class NuSMVCoordinator
 		if( root.equals( sm ) ) {
 			for(StateMachine stm : smList) 
 				if( !stm.getFullName().equals(sm.getFullName()) ) 
-					temp.add( stm.getFullName() );
+					temp.add( changeNameCase(stm.getFullName(),1) );
 		}
 		else {
-			temp.add( changeNameCase(root.getFullName(), 0) );
+			temp.add( changeNameCase(root.getFullName(), 1) );
 			State parent = getParentState( sm ); 
 			if( !parent.getStateMachine().equals(root) )
-				temp.add( parent.getStateMachine().getFullName() );
+				temp.add( changeNameCase(parent.getStateMachine().getFullName(),1) );
 		}
 		return temp;
 	}
@@ -113,20 +117,20 @@ class NuSMVCoordinator
   	}
   	
 	private VariableSpecifier generateVariableSpecifierForMain( StateMachine sm, StateMachine root ) {
-		String identifier = changeNameCase( sm.getFullName(), 0);
+		String identifier = changeNameCase( getAbsoluteName( root, sm ), 0);
 		VariableSpecifier vs = new VariableSpecifier(identifier);
 		List<String> dependencySet = getDependencySet( root, sm);
 		for( String stm : dependencySet ) 
-			vs.addTypeSpecifier( changeNameCase(stm,0) );
+			vs.addTypeSpecifier( changeNameCase(root.getUmpleClass().getName() + stm,0) );
 		vs.setIsBracketed(true);
-		vs.setTypeName( changeNameCase(sm.getFullName(), 1) );
+		vs.setTypeName( changeNameCase( getAbsoluteName( root, sm ), 1) );
 		return vs;
 	}
 	
 	//Created to generate the list of state machine
 	private List<StateMachine> generateStateMachineList( StateMachine root ) {
 		List<StateMachine> nestedMachines = new ArrayList<StateMachine>();
-		if(root.getParentState() == null)
+		if( root.getParentState() == null )
 			nestedMachines.add(root);
   		for( State st :  getCompositeStates(root) )
 			for( StateMachine stm : getEmbeddedStateMachines(st) )
@@ -201,6 +205,87 @@ class NuSMVCoordinator
 		}
 		return nestedMachines;
 	}
+	
+	//this generates variable declaration section for the entire Umple model
+	private VarDeclaration genMainVariableFor( List<NuSMVModule> capsules ) {
+  		VariableSpecifier vs = new VariableSpecifier( changeNameCase(capsules.get(0).getIdentifier(), 0));	
+  		vs.addTypeSpecifier( changeNameCase(capsules.get(0).getIdentifier(), 1));
+  		VarDeclaration vdec = new VarDeclaration(vs); 
+		
+  		for( int i = 1; i < capsules.size(); i++ ) {
+  			VariableSpecifier vss = new VariableSpecifier( changeNameCase(capsules.get(i).getIdentifier(), 0));	
+			vss.addTypeSpecifier( changeNameCase(capsules.get(i).getIdentifier(), 1));
+			vdec.addVariableSpecifier( vss ); 
+  		}
+  		return vdec;
+  	}
+	
+	//Generates modules from an Umple model
+	public StringBuilder generateModules( UmpleModel uModel ) {
+	
+  		List<NuSMVModule> temp = new ArrayList<NuSMVModule>();
+		List<VariableSpecifier> mainContents = new ArrayList<VariableSpecifier>();
+  		List<NuSMVModule> capsules = new ArrayList<NuSMVModule>();
+		List<CTLSpecification> reachability = new ArrayList<CTLSpecification>();
+		List<InvarConstraint> nonDeterminism = new ArrayList<InvarConstraint>();
+		List<ModuleElement> properties = new ArrayList< ModuleElement >();
+		
+		StringBuilder output = new StringBuilder();
+		
+		for( UmpleClass uClass : uModel.getUmpleClasses() )	{
+			
+			//Generating the capsule module for the statemachine
+			for( StateMachine sMachine : uClass.getStateMachines() ) {
+		
+				//Generates the parent state machine  		
+				NuSMVModule module = generateParentModule( sMachine, uClass );
+				temp.add(module);
+				for( NuSMVModule mod : generateModuleForCompositeStatesOf( sMachine, sMachine ) )
+					temp.add( mod );
+		
+				ModuleBody body = new ModuleBody( genMainVariableFor( sMachine ) );				
+				NuSMVModule capsuleModule = new NuSMVModule( uClass.getName() + changeNameCase( sMachine.getFullName(), 1 )+"_Machine" , body);	
+				temp.add( capsuleModule );
+				capsules.add( capsuleModule );
+			
+				//Generates reachability specifications for the nested state machines of hierarchical system under generation.
+				for( StateMachine machine : generateStateMachineList( sMachine ) ) {
+					for( CTLSpecification spec : generateSpecForStateReachability( sMachine, machine, capsuleModule ) ){
+						reachability.add( spec );
+						properties.add( spec );
+					}
+					
+					//Generates invariance specifications for non-determinism
+					for( InvarConstraint spec : generateSpecForTransitionDeterminism( sMachine, machine, capsuleModule ) ){
+						nonDeterminism.add( spec );
+						properties.add( spec );
+					}
+				}					
+			}
+		}
+		
+		//creating main module for the model
+		ModuleBody body = new ModuleBody( genMainVariableFor( capsules ) );
+		NuSMVModule mainmodule = new NuSMVModule( "main" , body );	
+		temp.add( mainmodule );
+		
+		for( NuSMVModule module : temp )
+			output.append( module.toString() +"\n" );
+		
+		if( nonDeterminism.size() > 0 ) {
+			output.append("\n   -- The following properties are specified to certify that this model is free of non-determinism. \n");	
+			for( InvarConstraint element : nonDeterminism )
+				output.append( element.toString() +"\n" );
+		}
+		
+		if( reachability.size() > 0 ) {
+			output.append("\n   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. \n");	
+			for( CTLSpecification element : reachability )
+				output.append( element.toString() +"\n" );
+		}
+		
+  		return output;
+  	}
   	
   	public List<NuSMVModule> generateModuleForNestedStateMachine( StateMachine sm, UmpleClass uClass ) {
   		List<NuSMVModule> temp = new ArrayList<NuSMVModule>();
@@ -211,11 +296,11 @@ class NuSMVCoordinator
   			temp.add( mod );
 			
 		//Generating the main module for the statemachine
-  		ModuleBody body = new ModuleBody(genMainVariableFor( sm ));
+  		ModuleBody body = new ModuleBody( genMainVariableFor( sm ) );
 		for( StateMachine smm : generateStateMachineList( sm ) )
-			generateSpecForStateReachability( smm, body );
-		NuSMVModule mainmodule = new NuSMVModule("main", body);	
-		temp.add(mainmodule);
+			generateSpecForStateReachability( smm , body );
+		NuSMVModule mainmodule = new NuSMVModule( "main" , body);	
+		temp.add( mainmodule );
   		return temp;
   	}
   	
@@ -239,7 +324,7 @@ class NuSMVCoordinator
   		ModuleBody body = new ModuleBody( new VarDeclaration(getStateList(sm)) );
   		//Adding define declaration to module body
   		body.addModuleElement( getAssignConstraint( sm, root) );
-  		NuSMVModule module = new NuSMVModule( changeNameCase(sm.getFullName(),1), body );	
+  		NuSMVModule module = new NuSMVModule( changeNameCase(getAbsoluteName( root, sm ), 1), body );	
   		return module;
   	}
   	
@@ -263,6 +348,85 @@ class NuSMVCoordinator
 			}
 		}
   		return -1;
+  	}
+	
+	private InvarExpression generateDestinationStatesExpr( StateMachine sm, Transition first, Transition second, StateMachine root, NuSMVModule capsule ) {
+		
+		BasicExpression f1 = new BasicExpression( changeNameCase(capsule.getIdentifier(),0)+"."+changeNameCase( getAbsoluteName(root ,first.getNextState().getStateMachine()), 0)+".state" );
+    	BasicExpression f2 = new BasicExpression( changeNameCase( first.getNextState().getStateMachine().getFullName(),1)+"_"+first.getNextState().getName());
+		BasicExpression firstExpr = new BasicExpression("first");
+		firstExpr.addChild(f1);
+		firstExpr.addChild(f2);
+		firstExpr.setOperator(BasicExpression.Operator.EQ);
+		
+		BasicExpression s1 = new BasicExpression( changeNameCase(capsule.getIdentifier(),0)+"."+changeNameCase( getAbsoluteName(root ,second.getNextState().getStateMachine()),0)+".state" );
+    	BasicExpression s2 = new BasicExpression( changeNameCase( second.getNextState().getStateMachine().getFullName(),1)+"_"+second.getNextState().getName());
+		BasicExpression secondExpr = new BasicExpression("second");
+		secondExpr.addChild(s1);
+		secondExpr.addChild(s2);
+		secondExpr.setOperator(BasicExpression.Operator.EQ);
+		
+		InvarExpression cexp = new InvarExpression("ctl");
+		cexp.addChild( firstExpr );
+		cexp.addChild( secondExpr );
+		cexp.setOperator(BasicExpression.Operator.AND);
+		cexp.setBracketed(true);
+		cexp.setInvarOperator( InvarExpression.InvarOperator.next );
+		cexp.setQualified(true);
+		
+		return cexp;
+	}
+	
+	private List<InvarConstraint> generateSpecForTransitionDeterminism( StateMachine root, StateMachine sm, NuSMVModule capsule ) {
+		BasicExpression bexp1;
+		BasicExpression bexp2;
+		String rootName = changeNameCase(capsule.getIdentifier(),0)+"."+changeNameCase(getAbsoluteName(root,root),0);
+		List<InvarConstraint> constraints = new ArrayList<InvarConstraint>();
+		for(State st : sm.getStates() )
+			for( HashMap<Transition,Transition> entry : matchMakeTransitions( st ) )
+				for( HashMap.Entry<Transition,Transition> map : entry.entrySet() ) {
+					Transition key = map.getKey();
+					int i = getObjectIdentity( sm, key );
+					Transition value = map.getValue();
+					int j = getObjectIdentity( sm, value );
+					
+					bexp1 = new BasicExpression(rootName + ".t"+i);
+					bexp2 = new BasicExpression(rootName + ".t"+j);
+					BasicExpression bexp3 = new BasicExpression("temp");
+					bexp3.addChild(bexp1);
+					bexp3.addChild(bexp2);				
+				
+					InvarExpression cexp = new InvarExpression("ctl");
+					cexp.addChild(bexp3);
+					cexp.addChild( generateDestinationStatesExpr( sm, mapIdentity( sm, i), mapIdentity( sm, j), root, capsule ) );
+					cexp.setOperator( BasicExpression.Operator.IMPLY );
+					cexp.setBracketed(true);
+				
+					InvarConstraint cspec = new InvarConstraint(cexp);
+					constraints.add(cspec);
+				}
+		return constraints;
+  	}
+	
+	//Generates specifications for reachability of states in a given system...
+	private List<CTLSpecification> generateSpecForStateReachability( StateMachine root, StateMachine sm, NuSMVModule capsule ) {
+	
+  		List<CTLSpecification> reachabilitySpecifications = new ArrayList<CTLSpecification>();
+  		for( State st : sm.getStates() ) {
+  			BasicExpression bexp1 = new BasicExpression( changeNameCase(capsule.getIdentifier(),0) + "." + changeNameCase(getAbsoluteName(root , sm), 0)+".state");
+    		BasicExpression bexp2 = new BasicExpression( changeNameCase(st.getStateMachine().getFullName(),1)+"_"+st.getName());
+    		CTLExpression cexp = new CTLExpression("ctl");
+    		cexp.addChild(bexp1);
+    		cexp.addChild(bexp2);
+    		cexp.setOperator(BasicExpression.Operator.EQ);
+    		cexp.setBracketed(true);
+    		cexp.setQualified(true);
+    		cexp.setCtlOperator(CTLExpression.CtlOperator.EF);
+    		CTLSpecification cspec = new CTLSpecification(cexp);
+    		reachabilitySpecifications.add(cspec);
+    	}
+		
+		return reachabilitySpecifications;
   	}
   	
   	private void generateSpecForStateReachability( StateMachine sm, ModuleBody body ) {
@@ -645,7 +809,7 @@ class NuSMVCoordinator
 			eventset.addTypeSpecifier( "ev_"+ event );
 			
 		BasicExpression lhs = new BasicExpression( sm.getFullName()+"_stable" );
-    	BasicExpression rhs = new BasicExpression( "{ "+eventset.print()+" }" );
+    	BasicExpression rhs = new BasicExpression( "{ "+eventset.printArray( Arrays.asList( eventset.getTypeSpecifier() ) )+" }" );
 		CaseStatement stable = new CaseStatement(lhs, rhs);
 			
 		//defining otherwise case
@@ -1018,8 +1182,8 @@ class NuSMVCoordinator
   	}
   	
   	private VarDeclaration genMainVariableFor( StateMachine sm ) {
-  		VariableSpecifier vs = new VariableSpecifier(changeNameCase(sm.getFullName(), 0));	
-  		vs.addTypeSpecifier( changeNameCase(sm.getFullName(), 1));
+  		VariableSpecifier vs = new VariableSpecifier(changeNameCase(getAbsoluteName( sm, sm ), 0));	
+  		vs.addTypeSpecifier( changeNameCase(getAbsoluteName( sm, sm ), 1));
   		VarDeclaration vdec = new VarDeclaration(vs); 
   		if(!isNested(sm)) 
   			return vdec;

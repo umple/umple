@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Status --
-MODULE Status
+-- This defines a NuSMV module for GarageDoorStatus --
+MODULE GarageDoorStatus
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -43,14 +43,23 @@ MODULE Status
        TRUE : ev_null;
      esac;
 
+-- This defines a NuSMV module for GarageDoorStatus_Machine --
+MODULE GarageDoorStatus_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     garageDoorStatus : GarageDoorStatus;
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     status : Status;
-CTLSPEC   EF( status.state = Status_Open )
-CTLSPEC   EF( status.state = Status_Closing )
-CTLSPEC   EF( status.state = Status_Closed )
-CTLSPEC   EF( status.state = Status_Opening )
-CTLSPEC   EF( status.state = Status_HalfOpen )
+     garageDoorStatus_Machine : GarageDoorStatus_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( garageDoorStatus_Machine.garageDoorStatus.state = Status_Open )
+   CTLSPEC   EF( garageDoorStatus_Machine.garageDoorStatus.state = Status_Closing )
+   CTLSPEC   EF( garageDoorStatus_Machine.garageDoorStatus.state = Status_Closed )
+   CTLSPEC   EF( garageDoorStatus_Machine.garageDoorStatus.state = Status_Opening )
+   CTLSPEC   EF( garageDoorStatus_Machine.garageDoorStatus.state = Status_HalfOpen )

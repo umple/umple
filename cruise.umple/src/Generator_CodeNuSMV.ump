@@ -24,13 +24,14 @@ class NuSMVGenerator
   	
   	NuSMVCoordinator coord = new NuSMVCoordinator();
     StringBuilder code = new StringBuilder(); 
- 
+    //StringBuilder code1 = new StringBuilder(); 
  	//This appends comment to the model
     code.append(coord.commentModel(model));
     code.append("-- PLEASE DO NOT EDIT THIS CODE --\n");
     code.append("-- This code was generated using the UMPLE "+UmpleModel.VERSION_NUMBER+" modeling language! --\n\n");
     
-    for(UmpleClass uClass : model.getUmpleClasses()) {
+   
+    /*for(UmpleClass uClass : model.getUmpleClasses()) {
   		for(StateMachine sm : uClass.getStateMachines()) {  			
   			if( !coord.isNested(sm) ) {	
   				code.append( coord.generateSystem(coord.generateModuleForSimpleStateMachine( sm, uClass )) );
@@ -39,8 +40,9 @@ class NuSMVGenerator
   				code.append( coord.generateSystem( coord.generateModuleForNestedStateMachine( sm, uClass )) );				
   			}
   		}
-  	}
-  	//This writes the generated code.
+  		 
+  	}*/
+  	code.append( coord.generateModules( model ) );
     terminateCode(code);
   }
   

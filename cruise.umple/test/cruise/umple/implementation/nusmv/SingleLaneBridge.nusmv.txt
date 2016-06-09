@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Sm --
-MODULE Sm ( _smBridgeCar , _smBridgeCarRedCarRedA , _smBridgeCarRedCarRedARedA , _smBridgeCarRedCarRedB , _smBridgeCarRedCarRedBRedB , _smBridgeCarRedCar , _smBridgeCarBlueCarBlueA , _smBridgeCarBlueCarBlueABlueA , _smBridgeCarBlueCarBlueB , _smBridgeCarBlueCarBlueBBlueB , _smBridgeCarBlueCar , _smBridgeBridgeStatus , _smBridgeBridgeStatusBridgeStatus , _smBridge , _smCoordCoordRed , _smCoordCoordRedRedCoordEntRedCoordEnt , _smCoordCoordRedRedCoordExitRedCoordExit , _smCoordCoordBlue , _smCoordCoordBlueBlueCoordEntBlueCoordEnt , _smCoordCoordBlueBlueCoordExitBlueCoordExit , _smCoord )
+-- This defines a NuSMV module for SystemSm --
+MODULE SystemSm ( _smBridgeCar , _smBridgeCarRedCarRedA , _smBridgeCarRedCarRedARedA , _smBridgeCarRedCarRedB , _smBridgeCarRedCarRedBRedB , _smBridgeCarRedCar , _smBridgeCarBlueCarBlueA , _smBridgeCarBlueCarBlueABlueA , _smBridgeCarBlueCarBlueB , _smBridgeCarBlueCarBlueBBlueB , _smBridgeCarBlueCar , _smBridgeBridgeStatus , _smBridgeBridgeStatusBridgeStatus , _smBridge , _smCoordCoordRed , _smCoordCoordRedRedCoordEntRedCoordEnt , _smCoordCoordRedRedCoordExitRedCoordExit , _smCoordCoordBlue , _smCoordCoordBlueBlueCoordEntBlueCoordEnt , _smCoordCoordBlueBlueCoordExitBlueCoordExit , _smCoord )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -68,8 +68,8 @@ MODULE Sm ( _smBridgeCar , _smBridgeCarRedCarRedA , _smBridgeCarRedCarRedARedA ,
    ASSIGN
      init( numBlue ) := 0;
 
--- This defines a NuSMV module for SmBridgeCar --
-MODULE SmBridgeCar ( _sm )
+-- This defines a NuSMV module for SystemSmBridgeCar --
+MODULE SystemSmBridgeCar ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -84,8 +84,8 @@ MODULE SmBridgeCar ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridgeCarRedCarRedA --
-MODULE SmBridgeCarRedCarRedA ( _sm , _smBridgeCar )
+-- This defines a NuSMV module for SystemSmBridgeCarRedCarRedA --
+MODULE SystemSmBridgeCarRedCarRedA ( _sm , _smBridgeCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -100,8 +100,8 @@ MODULE SmBridgeCarRedCarRedA ( _sm , _smBridgeCar )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridgeCarRedCarRedARedA --
-MODULE SmBridgeCarRedCarRedARedA ( _sm , _smBridgeCarRedCar )
+-- This defines a NuSMV module for SystemSmBridgeCarRedCarRedARedA --
+MODULE SystemSmBridgeCarRedCarRedARedA ( _sm , _smBridgeCarRedCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -117,8 +117,8 @@ MODULE SmBridgeCarRedCarRedARedA ( _sm , _smBridgeCarRedCar )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridgeCarRedCarRedB --
-MODULE SmBridgeCarRedCarRedB ( _sm , _smBridgeCar )
+-- This defines a NuSMV module for SystemSmBridgeCarRedCarRedB --
+MODULE SystemSmBridgeCarRedCarRedB ( _sm , _smBridgeCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -133,8 +133,8 @@ MODULE SmBridgeCarRedCarRedB ( _sm , _smBridgeCar )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridgeCarRedCarRedBRedB --
-MODULE SmBridgeCarRedCarRedBRedB ( _sm , _smBridgeCarRedCar )
+-- This defines a NuSMV module for SystemSmBridgeCarRedCarRedBRedB --
+MODULE SystemSmBridgeCarRedCarRedBRedB ( _sm , _smBridgeCarRedCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -150,8 +150,8 @@ MODULE SmBridgeCarRedCarRedBRedB ( _sm , _smBridgeCarRedCar )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridgeCarRedCar --
-MODULE SmBridgeCarRedCar ( _sm , _smBridge )
+-- This defines a NuSMV module for SystemSmBridgeCarRedCar --
+MODULE SystemSmBridgeCarRedCar ( _sm , _smBridge )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -166,8 +166,8 @@ MODULE SmBridgeCarRedCar ( _sm , _smBridge )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridgeCarBlueCarBlueA --
-MODULE SmBridgeCarBlueCarBlueA ( _sm , _smBridgeCar )
+-- This defines a NuSMV module for SystemSmBridgeCarBlueCarBlueA --
+MODULE SystemSmBridgeCarBlueCarBlueA ( _sm , _smBridgeCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -182,8 +182,8 @@ MODULE SmBridgeCarBlueCarBlueA ( _sm , _smBridgeCar )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridgeCarBlueCarBlueABlueA --
-MODULE SmBridgeCarBlueCarBlueABlueA ( _sm , _smBridgeCarBlueCar )
+-- This defines a NuSMV module for SystemSmBridgeCarBlueCarBlueABlueA --
+MODULE SystemSmBridgeCarBlueCarBlueABlueA ( _sm , _smBridgeCarBlueCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -199,8 +199,8 @@ MODULE SmBridgeCarBlueCarBlueABlueA ( _sm , _smBridgeCarBlueCar )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridgeCarBlueCarBlueB --
-MODULE SmBridgeCarBlueCarBlueB ( _sm , _smBridgeCar )
+-- This defines a NuSMV module for SystemSmBridgeCarBlueCarBlueB --
+MODULE SystemSmBridgeCarBlueCarBlueB ( _sm , _smBridgeCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -215,8 +215,8 @@ MODULE SmBridgeCarBlueCarBlueB ( _sm , _smBridgeCar )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridgeCarBlueCarBlueBBlueB --
-MODULE SmBridgeCarBlueCarBlueBBlueB ( _sm , _smBridgeCarBlueCar )
+-- This defines a NuSMV module for SystemSmBridgeCarBlueCarBlueBBlueB --
+MODULE SystemSmBridgeCarBlueCarBlueBBlueB ( _sm , _smBridgeCarBlueCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -232,8 +232,8 @@ MODULE SmBridgeCarBlueCarBlueBBlueB ( _sm , _smBridgeCarBlueCar )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridgeCarBlueCar --
-MODULE SmBridgeCarBlueCar ( _sm , _smBridge )
+-- This defines a NuSMV module for SystemSmBridgeCarBlueCar --
+MODULE SystemSmBridgeCarBlueCar ( _sm , _smBridge )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -248,8 +248,8 @@ MODULE SmBridgeCarBlueCar ( _sm , _smBridge )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridgeBridgeStatus --
-MODULE SmBridgeBridgeStatus ( _sm )
+-- This defines a NuSMV module for SystemSmBridgeBridgeStatus --
+MODULE SystemSmBridgeBridgeStatus ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -264,8 +264,8 @@ MODULE SmBridgeBridgeStatus ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridgeBridgeStatusBridgeStatus --
-MODULE SmBridgeBridgeStatusBridgeStatus ( _sm , _smBridge )
+-- This defines a NuSMV module for SystemSmBridgeBridgeStatusBridgeStatus --
+MODULE SystemSmBridgeBridgeStatusBridgeStatus ( _sm , _smBridge )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -284,8 +284,8 @@ MODULE SmBridgeBridgeStatusBridgeStatus ( _sm , _smBridge )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmBridge --
-MODULE SmBridge ( _sm )
+-- This defines a NuSMV module for SystemSmBridge --
+MODULE SystemSmBridge ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -300,8 +300,8 @@ MODULE SmBridge ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmCoordCoordRed --
-MODULE SmCoordCoordRed ( _sm )
+-- This defines a NuSMV module for SystemSmCoordCoordRed --
+MODULE SystemSmCoordCoordRed ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -316,8 +316,8 @@ MODULE SmCoordCoordRed ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmCoordCoordRedRedCoordEntRedCoordEnt --
-MODULE SmCoordCoordRedRedCoordEntRedCoordEnt ( _sm , _smCoordCoordRed )
+-- This defines a NuSMV module for SystemSmCoordCoordRedRedCoordEntRedCoordEnt --
+MODULE SystemSmCoordCoordRedRedCoordEntRedCoordEnt ( _sm , _smCoordCoordRed )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -333,8 +333,8 @@ MODULE SmCoordCoordRedRedCoordEntRedCoordEnt ( _sm , _smCoordCoordRed )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmCoordCoordRedRedCoordExitRedCoordExit --
-MODULE SmCoordCoordRedRedCoordExitRedCoordExit ( _sm , _smCoordCoordRed )
+-- This defines a NuSMV module for SystemSmCoordCoordRedRedCoordExitRedCoordExit --
+MODULE SystemSmCoordCoordRedRedCoordExitRedCoordExit ( _sm , _smCoordCoordRed )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -350,8 +350,8 @@ MODULE SmCoordCoordRedRedCoordExitRedCoordExit ( _sm , _smCoordCoordRed )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmCoordCoordBlue --
-MODULE SmCoordCoordBlue ( _sm )
+-- This defines a NuSMV module for SystemSmCoordCoordBlue --
+MODULE SystemSmCoordCoordBlue ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -366,8 +366,8 @@ MODULE SmCoordCoordBlue ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmCoordCoordBlueBlueCoordEntBlueCoordEnt --
-MODULE SmCoordCoordBlueBlueCoordEntBlueCoordEnt ( _sm , _smCoordCoordBlue )
+-- This defines a NuSMV module for SystemSmCoordCoordBlueBlueCoordEntBlueCoordEnt --
+MODULE SystemSmCoordCoordBlueBlueCoordEntBlueCoordEnt ( _sm , _smCoordCoordBlue )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -383,8 +383,8 @@ MODULE SmCoordCoordBlueBlueCoordEntBlueCoordEnt ( _sm , _smCoordCoordBlue )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmCoordCoordBlueBlueCoordExitBlueCoordExit --
-MODULE SmCoordCoordBlueBlueCoordExitBlueCoordExit ( _sm , _smCoordCoordBlue )
+-- This defines a NuSMV module for SystemSmCoordCoordBlueBlueCoordExitBlueCoordExit --
+MODULE SystemSmCoordCoordBlueBlueCoordExitBlueCoordExit ( _sm , _smCoordCoordBlue )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -400,8 +400,8 @@ MODULE SmCoordCoordBlueBlueCoordExitBlueCoordExit ( _sm , _smCoordCoordBlue )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmCoord --
-MODULE SmCoord ( _sm )
+-- This defines a NuSMV module for SystemSmCoord --
+MODULE SystemSmCoord ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -416,64 +416,73 @@ MODULE SmCoord ( _sm )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for SystemSm_Machine --
+MODULE SystemSm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     systemSm : SystemSm( systemSmBridgeCar , systemSmBridgeCarRedCarRedA , systemSmBridgeCarRedCarRedARedA , systemSmBridgeCarRedCarRedB , systemSmBridgeCarRedCarRedBRedB , systemSmBridgeCarRedCar , systemSmBridgeCarBlueCarBlueA , systemSmBridgeCarBlueCarBlueABlueA , systemSmBridgeCarBlueCarBlueB , systemSmBridgeCarBlueCarBlueBBlueB , systemSmBridgeCarBlueCar , systemSmBridgeBridgeStatus , systemSmBridgeBridgeStatusBridgeStatus , systemSmBridge , systemSmCoordCoordRed , systemSmCoordCoordRedRedCoordEntRedCoordEnt , systemSmCoordCoordRedRedCoordExitRedCoordExit , systemSmCoordCoordBlue , systemSmCoordCoordBlueBlueCoordEntBlueCoordEnt , systemSmCoordCoordBlueBlueCoordExitBlueCoordExit , systemSmCoord );
+     systemSmBridgeCar : SystemSmBridgeCar( systemSm );
+     systemSmBridgeCarRedCarRedA : SystemSmBridgeCarRedCarRedA( systemSm , systemSmBridgeCar );
+     systemSmBridgeCarRedCarRedARedA : SystemSmBridgeCarRedCarRedARedA( systemSm , systemSmBridgeCarRedCar );
+     systemSmBridgeCarRedCarRedB : SystemSmBridgeCarRedCarRedB( systemSm , systemSmBridgeCar );
+     systemSmBridgeCarRedCarRedBRedB : SystemSmBridgeCarRedCarRedBRedB( systemSm , systemSmBridgeCarRedCar );
+     systemSmBridgeCarRedCar : SystemSmBridgeCarRedCar( systemSm , systemSmBridge );
+     systemSmBridgeCarBlueCarBlueA : SystemSmBridgeCarBlueCarBlueA( systemSm , systemSmBridgeCar );
+     systemSmBridgeCarBlueCarBlueABlueA : SystemSmBridgeCarBlueCarBlueABlueA( systemSm , systemSmBridgeCarBlueCar );
+     systemSmBridgeCarBlueCarBlueB : SystemSmBridgeCarBlueCarBlueB( systemSm , systemSmBridgeCar );
+     systemSmBridgeCarBlueCarBlueBBlueB : SystemSmBridgeCarBlueCarBlueBBlueB( systemSm , systemSmBridgeCarBlueCar );
+     systemSmBridgeCarBlueCar : SystemSmBridgeCarBlueCar( systemSm , systemSmBridge );
+     systemSmBridgeBridgeStatus : SystemSmBridgeBridgeStatus( systemSm );
+     systemSmBridgeBridgeStatusBridgeStatus : SystemSmBridgeBridgeStatusBridgeStatus( systemSm , systemSmBridge );
+     systemSmBridge : SystemSmBridge( systemSm );
+     systemSmCoordCoordRed : SystemSmCoordCoordRed( systemSm );
+     systemSmCoordCoordRedRedCoordEntRedCoordEnt : SystemSmCoordCoordRedRedCoordEntRedCoordEnt( systemSm , systemSmCoordCoordRed );
+     systemSmCoordCoordRedRedCoordExitRedCoordExit : SystemSmCoordCoordRedRedCoordExitRedCoordExit( systemSm , systemSmCoordCoordRed );
+     systemSmCoordCoordBlue : SystemSmCoordCoordBlue( systemSm );
+     systemSmCoordCoordBlueBlueCoordEntBlueCoordEnt : SystemSmCoordCoordBlueBlueCoordEntBlueCoordEnt( systemSm , systemSmCoordCoordBlue );
+     systemSmCoordCoordBlueBlueCoordExitBlueCoordExit : SystemSmCoordCoordBlueBlueCoordExitBlueCoordExit( systemSm , systemSmCoordCoordBlue );
+     systemSmCoord : SystemSmCoord( systemSm );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     sm : Sm( smBridgeCar , smBridgeCarRedCarRedA , smBridgeCarRedCarRedARedA , smBridgeCarRedCarRedB , smBridgeCarRedCarRedBRedB , smBridgeCarRedCar , smBridgeCarBlueCarBlueA , smBridgeCarBlueCarBlueABlueA , smBridgeCarBlueCarBlueB , smBridgeCarBlueCarBlueBBlueB , smBridgeCarBlueCar , smBridgeBridgeStatus , smBridgeBridgeStatusBridgeStatus , smBridge , smCoordCoordRed , smCoordCoordRedRedCoordEntRedCoordEnt , smCoordCoordRedRedCoordExitRedCoordExit , smCoordCoordBlue , smCoordCoordBlueBlueCoordEntBlueCoordEnt , smCoordCoordBlueBlueCoordExitBlueCoordExit , smCoord );
-     smBridgeCar : SmBridgeCar( sm );
-     smBridgeCarRedCarRedA : SmBridgeCarRedCarRedA( sm , smBridgeCar );
-     smBridgeCarRedCarRedARedA : SmBridgeCarRedCarRedARedA( sm , smBridgeCarRedCar );
-     smBridgeCarRedCarRedB : SmBridgeCarRedCarRedB( sm , smBridgeCar );
-     smBridgeCarRedCarRedBRedB : SmBridgeCarRedCarRedBRedB( sm , smBridgeCarRedCar );
-     smBridgeCarRedCar : SmBridgeCarRedCar( sm , smBridge );
-     smBridgeCarBlueCarBlueA : SmBridgeCarBlueCarBlueA( sm , smBridgeCar );
-     smBridgeCarBlueCarBlueABlueA : SmBridgeCarBlueCarBlueABlueA( sm , smBridgeCarBlueCar );
-     smBridgeCarBlueCarBlueB : SmBridgeCarBlueCarBlueB( sm , smBridgeCar );
-     smBridgeCarBlueCarBlueBBlueB : SmBridgeCarBlueCarBlueBBlueB( sm , smBridgeCarBlueCar );
-     smBridgeCarBlueCar : SmBridgeCarBlueCar( sm , smBridge );
-     smBridgeBridgeStatus : SmBridgeBridgeStatus( sm );
-     smBridgeBridgeStatusBridgeStatus : SmBridgeBridgeStatusBridgeStatus( sm , smBridge );
-     smBridge : SmBridge( sm );
-     smCoordCoordRed : SmCoordCoordRed( sm );
-     smCoordCoordRedRedCoordEntRedCoordEnt : SmCoordCoordRedRedCoordEntRedCoordEnt( sm , smCoordCoordRed );
-     smCoordCoordRedRedCoordExitRedCoordExit : SmCoordCoordRedRedCoordExitRedCoordExit( sm , smCoordCoordRed );
-     smCoordCoordBlue : SmCoordCoordBlue( sm );
-     smCoordCoordBlueBlueCoordEntBlueCoordEnt : SmCoordCoordBlueBlueCoordEntBlueCoordEnt( sm , smCoordCoordBlue );
-     smCoordCoordBlueBlueCoordExitBlueCoordExit : SmCoordCoordBlueBlueCoordExitBlueCoordExit( sm , smCoordCoordBlue );
-     smCoord : SmCoord( sm );
-CTLSPEC   EF( sm.state = Sm_SingleLaneBridge )
-CTLSPEC   EF( smBridgeCar.state = SmBridgeCar_Car )
-CTLSPEC   EF( smBridgeCarRedCarRedA.state = SmBridgeCarRedCarRedA_RedA )
-CTLSPEC   EF( smBridgeCarRedCarRedARedA.state = SmBridgeCarRedCarRedARedA_waitRedA )
-CTLSPEC   EF( smBridgeCarRedCarRedARedA.state = SmBridgeCarRedCarRedARedA_onRedA )
-CTLSPEC   EF( smBridgeCarRedCarRedB.state = SmBridgeCarRedCarRedB_RedB )
-CTLSPEC   EF( smBridgeCarRedCarRedBRedB.state = SmBridgeCarRedCarRedBRedB_waitRedB )
-CTLSPEC   EF( smBridgeCarRedCarRedBRedB.state = SmBridgeCarRedCarRedBRedB_onRedB )
-CTLSPEC   EF( smBridgeCarRedCar.state = SmBridgeCarRedCar_RedCar )
-CTLSPEC   EF( smBridgeCarBlueCarBlueA.state = SmBridgeCarBlueCarBlueA_BlueA )
-CTLSPEC   EF( smBridgeCarBlueCarBlueABlueA.state = SmBridgeCarBlueCarBlueABlueA_waitBlueA )
-CTLSPEC   EF( smBridgeCarBlueCarBlueABlueA.state = SmBridgeCarBlueCarBlueABlueA_onBlueA )
-CTLSPEC   EF( smBridgeCarBlueCarBlueB.state = SmBridgeCarBlueCarBlueB_BlueB )
-CTLSPEC   EF( smBridgeCarBlueCarBlueBBlueB.state = SmBridgeCarBlueCarBlueBBlueB_waitBlueB )
-CTLSPEC   EF( smBridgeCarBlueCarBlueBBlueB.state = SmBridgeCarBlueCarBlueBBlueB_onBlueB )
-CTLSPEC   EF( smBridgeCarBlueCar.state = SmBridgeCarBlueCar_BlueCar )
-CTLSPEC   EF( smBridgeBridgeStatus.state = SmBridgeBridgeStatus_BridgeStatus )
-CTLSPEC   EF( smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_empty )
-CTLSPEC   EF( smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_oneRed )
-CTLSPEC   EF( smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_oneBlue )
-CTLSPEC   EF( smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_twoRed )
-CTLSPEC   EF( smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_twoBlue )
-CTLSPEC   EF( smBridge.state = SmBridge_Bridge )
-CTLSPEC   EF( smCoordCoordRed.state = SmCoordCoordRed_CoordRed )
-CTLSPEC   EF( smCoordCoordRedRedCoordEntRedCoordEnt.state = SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA )
-CTLSPEC   EF( smCoordCoordRedRedCoordEntRedCoordEnt.state = SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedB )
-CTLSPEC   EF( smCoordCoordRedRedCoordExitRedCoordExit.state = SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA )
-CTLSPEC   EF( smCoordCoordRedRedCoordExitRedCoordExit.state = SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedB )
-CTLSPEC   EF( smCoordCoordBlue.state = SmCoordCoordBlue_CoordBlue )
-CTLSPEC   EF( smCoordCoordBlueBlueCoordEntBlueCoordEnt.state = SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA )
-CTLSPEC   EF( smCoordCoordBlueBlueCoordEntBlueCoordEnt.state = SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueB )
-CTLSPEC   EF( smCoordCoordBlueBlueCoordExitBlueCoordExit.state = SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA )
-CTLSPEC   EF( smCoordCoordBlueBlueCoordExitBlueCoordExit.state = SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueB )
-CTLSPEC   EF( smCoord.state = SmCoord_Coord )
+     systemSm_Machine : SystemSm_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( systemSm_Machine.systemSm.state = Sm_SingleLaneBridge )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCar.state = SmBridgeCar_Car )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCarRedA.state = SmBridgeCarRedCarRedA_RedA )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCarRedARedA.state = SmBridgeCarRedCarRedARedA_waitRedA )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCarRedARedA.state = SmBridgeCarRedCarRedARedA_onRedA )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCarRedB.state = SmBridgeCarRedCarRedB_RedB )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCarRedBRedB.state = SmBridgeCarRedCarRedBRedB_waitRedB )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCarRedBRedB.state = SmBridgeCarRedCarRedBRedB_onRedB )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCar.state = SmBridgeCarRedCar_RedCar )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCarBlueA.state = SmBridgeCarBlueCarBlueA_BlueA )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCarBlueABlueA.state = SmBridgeCarBlueCarBlueABlueA_waitBlueA )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCarBlueABlueA.state = SmBridgeCarBlueCarBlueABlueA_onBlueA )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCarBlueB.state = SmBridgeCarBlueCarBlueB_BlueB )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCarBlueBBlueB.state = SmBridgeCarBlueCarBlueBBlueB_waitBlueB )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCarBlueBBlueB.state = SmBridgeCarBlueCarBlueBBlueB_onBlueB )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCar.state = SmBridgeCarBlueCar_BlueCar )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeBridgeStatus.state = SmBridgeBridgeStatus_BridgeStatus )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_empty )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_oneRed )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_oneBlue )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_twoRed )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_twoBlue )
+   CTLSPEC   EF( systemSm_Machine.systemSmBridge.state = SmBridge_Bridge )
+   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordRed.state = SmCoordCoordRed_CoordRed )
+   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordRedRedCoordEntRedCoordEnt.state = SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA )
+   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordRedRedCoordEntRedCoordEnt.state = SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedB )
+   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordRedRedCoordExitRedCoordExit.state = SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA )
+   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordRedRedCoordExitRedCoordExit.state = SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedB )
+   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordBlue.state = SmCoordCoordBlue_CoordBlue )
+   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordBlueBlueCoordEntBlueCoordEnt.state = SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA )
+   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordBlueBlueCoordEntBlueCoordEnt.state = SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueB )
+   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordBlueBlueCoordExitBlueCoordExit.state = SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA )
+   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordBlueBlueCoordExitBlueCoordExit.state = SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueB )
+   CTLSPEC   EF( systemSm_Machine.systemSmCoord.state = SmCoord_Coord )

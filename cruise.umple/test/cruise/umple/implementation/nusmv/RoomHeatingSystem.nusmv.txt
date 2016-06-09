@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Sm --
-MODULE Sm ( _smHouseRoom , _smHouseRoomRoom , _smHouseRoomRoomNoHeatReq , _smHouseRoomRoomHeatReq , _smHouseController , _smHouseControllerController , _smHouseControllerControllerControllerOn , _smHouseControllerControllerControllerOnHeaterActive , _smHouse , _smFurnaceFurnace , _smFurnaceFurnaceFurnaceNormal )
+-- This defines a NuSMV module for HeatControlSystemSm --
+MODULE HeatControlSystemSm ( _smHouseRoom , _smHouseRoomRoom , _smHouseRoomRoomNoHeatReq , _smHouseRoomRoomHeatReq , _smHouseController , _smHouseControllerController , _smHouseControllerControllerControllerOn , _smHouseControllerControllerControllerOnHeaterActive , _smHouse , _smFurnaceFurnace , _smFurnaceFurnaceFurnaceNormal )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -143,23 +143,9 @@ MODULE Sm ( _smHouseRoom , _smHouseRoomRoom , _smHouseRoomRoomNoHeatReq , _smHou
    -- This part defines logic for the assignment of values to state variable "furnaceReset" of this NuSMV module --
    ASSIGN
      init( furnaceReset ) := FALSE;
-   INVARSPEC   ( t2 & t4 -> next( _smHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & _smHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat ) )
-   INVARSPEC   ( t2 & t5 -> next( _smHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & _smHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
-   INVARSPEC   ( t3 & t4 -> next( _smHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & _smHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat ) )
-   INVARSPEC   ( t3 & t5 -> next( _smHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & _smHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
-   INVARSPEC   ( t4 & t5 -> next( _smHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat & _smHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
-   INVARSPEC   ( t7 & t8 -> next( _smHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & _smHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq ) )
-   INVARSPEC   ( t7 & t10 -> next( _smHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & _smHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
-   INVARSPEC   ( t8 & t9 -> next( _smHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq & _smHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool ) )
-   INVARSPEC   ( t8 & t10 -> next( _smHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq & _smHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
-   INVARSPEC   ( t9 & t10 -> next( _smHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & _smHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
-   INVARSPEC   ( t16 & t17 -> next( _smHouseControllerControllerControllerOn.state = SmHouseControllerControllerControllerOn_idle & _smHouseControllerControllerControllerOnHeaterActive.state = SmHouseControllerControllerControllerOnHeaterActive_heaterRun ) )
-   INVARSPEC   ( t21 & t22 -> next( _smFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceOff & _smFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceAct ) )
-   INVARSPEC   ( t21 & t23 -> next( _smFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceOff & _smFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceRun ) )
-   INVARSPEC   ( t22 & t23 -> next( _smFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceAct & _smFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceRun ) )
 
--- This defines a NuSMV module for SmHouseRoom --
-MODULE SmHouseRoom ( _sm )
+-- This defines a NuSMV module for HeatControlSystemSmHouseRoom --
+MODULE HeatControlSystemSmHouseRoom ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -174,8 +160,8 @@ MODULE SmHouseRoom ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmHouseRoomRoom --
-MODULE SmHouseRoomRoom ( _sm , _smHouse )
+-- This defines a NuSMV module for HeatControlSystemSmHouseRoomRoom --
+MODULE HeatControlSystemSmHouseRoomRoom ( _sm , _smHouse )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -191,8 +177,8 @@ MODULE SmHouseRoomRoom ( _sm , _smHouse )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmHouseRoomRoomNoHeatReq --
-MODULE SmHouseRoomRoomNoHeatReq ( _sm , _smHouseRoomRoom )
+-- This defines a NuSMV module for HeatControlSystemSmHouseRoomRoomNoHeatReq --
+MODULE HeatControlSystemSmHouseRoomRoomNoHeatReq ( _sm , _smHouseRoomRoom )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -209,8 +195,8 @@ MODULE SmHouseRoomRoomNoHeatReq ( _sm , _smHouseRoomRoom )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmHouseRoomRoomHeatReq --
-MODULE SmHouseRoomRoomHeatReq ( _sm , _smHouseRoomRoom )
+-- This defines a NuSMV module for HeatControlSystemSmHouseRoomRoomHeatReq --
+MODULE HeatControlSystemSmHouseRoomRoomHeatReq ( _sm , _smHouseRoomRoom )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -227,8 +213,8 @@ MODULE SmHouseRoomRoomHeatReq ( _sm , _smHouseRoomRoom )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmHouseController --
-MODULE SmHouseController ( _sm )
+-- This defines a NuSMV module for HeatControlSystemSmHouseController --
+MODULE HeatControlSystemSmHouseController ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -243,8 +229,8 @@ MODULE SmHouseController ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmHouseControllerController --
-MODULE SmHouseControllerController ( _sm , _smHouse )
+-- This defines a NuSMV module for HeatControlSystemSmHouseControllerController --
+MODULE HeatControlSystemSmHouseControllerController ( _sm , _smHouse )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -261,8 +247,8 @@ MODULE SmHouseControllerController ( _sm , _smHouse )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmHouseControllerControllerControllerOn --
-MODULE SmHouseControllerControllerControllerOn ( _sm , _smHouseControllerController )
+-- This defines a NuSMV module for HeatControlSystemSmHouseControllerControllerControllerOn --
+MODULE HeatControlSystemSmHouseControllerControllerControllerOn ( _sm , _smHouseControllerController )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -279,8 +265,8 @@ MODULE SmHouseControllerControllerControllerOn ( _sm , _smHouseControllerControl
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmHouseControllerControllerControllerOnHeaterActive --
-MODULE SmHouseControllerControllerControllerOnHeaterActive ( _sm , _smHouseControllerControllerControllerOn )
+-- This defines a NuSMV module for HeatControlSystemSmHouseControllerControllerControllerOnHeaterActive --
+MODULE HeatControlSystemSmHouseControllerControllerControllerOnHeaterActive ( _sm , _smHouseControllerControllerControllerOn )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -296,8 +282,8 @@ MODULE SmHouseControllerControllerControllerOnHeaterActive ( _sm , _smHouseContr
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmHouse --
-MODULE SmHouse ( _sm )
+-- This defines a NuSMV module for HeatControlSystemSmHouse --
+MODULE HeatControlSystemSmHouse ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -312,8 +298,8 @@ MODULE SmHouse ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmFurnaceFurnace --
-MODULE SmFurnaceFurnace ( _sm )
+-- This defines a NuSMV module for HeatControlSystemSmFurnaceFurnace --
+MODULE HeatControlSystemSmFurnaceFurnace ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -329,8 +315,8 @@ MODULE SmFurnaceFurnace ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmFurnaceFurnaceFurnaceNormal --
-MODULE SmFurnaceFurnaceFurnaceNormal ( _sm , _smFurnaceFurnace )
+-- This defines a NuSMV module for HeatControlSystemSmFurnaceFurnaceFurnaceNormal --
+MODULE HeatControlSystemSmFurnaceFurnaceFurnaceNormal ( _sm , _smFurnaceFurnace )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -348,42 +334,552 @@ MODULE SmFurnaceFurnaceFurnaceNormal ( _sm , _smFurnaceFurnace )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for HeatControlSystemSm_Machine --
+MODULE HeatControlSystemSm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     heatControlSystemSm : HeatControlSystemSm( heatControlSystemSmHouseRoom , heatControlSystemSmHouseRoomRoom , heatControlSystemSmHouseRoomRoomNoHeatReq , heatControlSystemSmHouseRoomRoomHeatReq , heatControlSystemSmHouseController , heatControlSystemSmHouseControllerController , heatControlSystemSmHouseControllerControllerControllerOn , heatControlSystemSmHouseControllerControllerControllerOnHeaterActive , heatControlSystemSmHouse , heatControlSystemSmFurnaceFurnace , heatControlSystemSmFurnaceFurnaceFurnaceNormal );
+     heatControlSystemSmHouseRoom : HeatControlSystemSmHouseRoom( heatControlSystemSm );
+     heatControlSystemSmHouseRoomRoom : HeatControlSystemSmHouseRoomRoom( heatControlSystemSm , heatControlSystemSmHouse );
+     heatControlSystemSmHouseRoomRoomNoHeatReq : HeatControlSystemSmHouseRoomRoomNoHeatReq( heatControlSystemSm , heatControlSystemSmHouseRoomRoom );
+     heatControlSystemSmHouseRoomRoomHeatReq : HeatControlSystemSmHouseRoomRoomHeatReq( heatControlSystemSm , heatControlSystemSmHouseRoomRoom );
+     heatControlSystemSmHouseController : HeatControlSystemSmHouseController( heatControlSystemSm );
+     heatControlSystemSmHouseControllerController : HeatControlSystemSmHouseControllerController( heatControlSystemSm , heatControlSystemSmHouse );
+     heatControlSystemSmHouseControllerControllerControllerOn : HeatControlSystemSmHouseControllerControllerControllerOn( heatControlSystemSm , heatControlSystemSmHouseControllerController );
+     heatControlSystemSmHouseControllerControllerControllerOnHeaterActive : HeatControlSystemSmHouseControllerControllerControllerOnHeaterActive( heatControlSystemSm , heatControlSystemSmHouseControllerControllerControllerOn );
+     heatControlSystemSmHouse : HeatControlSystemSmHouse( heatControlSystemSm );
+     heatControlSystemSmFurnaceFurnace : HeatControlSystemSmFurnaceFurnace( heatControlSystemSm );
+     heatControlSystemSmFurnaceFurnaceFurnaceNormal : HeatControlSystemSmFurnaceFurnaceFurnaceNormal( heatControlSystemSm , heatControlSystemSmFurnaceFurnace );
+
+-- This defines a NuSMV module for HeatControlSystemSm1 --
+MODULE HeatControlSystemSm1 ( _sm1HouseRoom , _sm1HouseRoomRoom , _sm1HouseRoomRoomNoHeatReq , _sm1HouseRoomRoomHeatReq , _sm1HouseController , _sm1HouseControllerController , _sm1HouseControllerControllerControllerOn , _sm1HouseControllerControllerControllerOnHeaterActive , _sm1House , _sm1FurnaceFurnace , _sm1FurnaceFurnaceFurnaceNormal )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm1_heatingSystem , null };
+     event : { ev_heatSwitchOn , ev_heatSwitchOff , ev___autotransition__ , ev_userReset , ev_furnaceFault , ev_null };
+     furnaceStartUpTime : integer;
+     furnaceTimer : integer;
+     setTemp : integer;
+     actualTemp : integer;
+     waitedForWarm : integer;
+     warmUpTimer : integer;
+     valvePos : integer;
+     waitedForCool : integer;
+     coolDownTimer : integer;
+     furnaceRunning : boolean;
+     activate : boolean;
+     deactivate : boolean;
+     requestHeat : boolean;
+     furnaceReset : boolean;
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     sm1_stable :=  !( event = ev_heatSwitchOff | event = ev_userReset | event = ev_heatSwitchOn | event = ev___autotransition__ | event = ev_furnaceFault );
+     t1 := event = ev___autotransition__ & _sm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat & g1;
+     t2 := event = ev___autotransition__ & _sm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & g2;
+     t3 := event = ev___autotransition__ & _sm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & g3;
+     t4 := event = ev___autotransition__ & _sm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & g4;
+     t5 := event = ev___autotransition__ & _sm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & g5;
+     t6 := event = ev___autotransition__ & _sm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat & g6;
+     t7 := event = ev___autotransition__ & _sm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & g7;
+     t8 := event = ev___autotransition__ & _sm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & g8;
+     t9 := event = ev___autotransition__ & _sm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & g9;
+     t10 := event = ev___autotransition__ & _sm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & g10;
+     t11 := event = ev_heatSwitchOn & _sm1HouseControllerController.state = Sm1HouseControllerController_off;
+     t12 := event = ev_heatSwitchOff & _sm1HouseControllerController.state = Sm1HouseControllerController_controllerOn;
+     t13 := event = ev_furnaceFault & _sm1HouseControllerController.state = Sm1HouseControllerController_controllerOn;
+     t14 := event = ev_userReset & _sm1HouseControllerController.state = Sm1HouseControllerController_error;
+     t15 := event = ev___autotransition__ & _sm1HouseControllerControllerControllerOn.state = Sm1HouseControllerControllerControllerOn_idle & g11;
+     t16 := event = ev___autotransition__ & _sm1HouseControllerControllerControllerOn.state = Sm1HouseControllerControllerControllerOn_heaterActive & g12;
+     t17 := event = ev___autotransition__ & _sm1HouseControllerControllerControllerOnHeaterActive.state = Sm1HouseControllerControllerControllerOnHeaterActive_actHeater & g13;
+     t18 := event = ev_furnaceFault & _sm1FurnaceFurnace.state = Sm1FurnaceFurnace_furnaceNormal;
+     t19 := event = ev___autotransition__ & _sm1FurnaceFurnace.state = Sm1FurnaceFurnace_furnaceErr & g14;
+     t20 := event = ev___autotransition__ & _sm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceOff & g15;
+     t21 := event = ev___autotransition__ & _sm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceAct & g16;
+     t22 := event = ev___autotransition__ & _sm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceAct & g17;
+     t23 := event = ev___autotransition__ & _sm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceAct & g18;
+     t24 := event = ev___autotransition__ & _sm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceRun & g16;
+     g1 := (setTemp - actualTemp) > 2;
+     g2 := waitedForWarm < warmUpTimer;
+     g3 := (valvePos != 2) & (waitedForWarm = warmUpTimer);
+     g4 := ((setTemp - actualTemp) <= 2);
+     g5 := (waitedForWarm = warmUpTimer) & (valvePos = 2) & ((setTemp - actualTemp) > 2);
+     g6 := (actualTemp - setTemp) > 2;
+     g7 := (valvePos != 0) & (coolDownTimer = waitedForCool);
+     g8 := (valvePos = 0) & (coolDownTimer = waitedForCool) & ((actualTemp - setTemp) > 2);
+     g9 := waitedForCool < coolDownTimer;
+     g10 := ((actualTemp - setTemp) <= 2);
+     g11 := requestHeat = TRUE;
+     g12 := requestHeat = FALSE;
+     g13 := furnaceRunning = TRUE;
+     g14 := furnaceReset = TRUE;
+     g15 := activate = TRUE;
+     g16 := deactivate = TRUE;
+     g17 := furnaceStartUpTime < furnaceTimer;
+     g18 := furnaceStartUpTime = furnaceTimer;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := Sm1_heatingSystem;
+     next( state ) := case
+       t8 | t1 | t3 | t10 | t7 | t12 | t11 | t15 | t13 | t21 | t20 | t23 | t4 | t2 | t5 | t6 | t9 | t14 | t16 | t17 | t19 | t24 | t22 | t18 : Sm1_heatingSystem;
+       TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       sm1_stable : { ev_heatSwitchOn , ev_heatSwitchOff , ev___autotransition__ , ev_userReset , ev_furnaceFault };
+       TRUE : ev_null;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "furnaceStartUpTime" of this NuSMV module --
+   ASSIGN
+     init( furnaceStartUpTime ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "furnaceTimer" of this NuSMV module --
+   ASSIGN
+     init( furnaceTimer ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "setTemp" of this NuSMV module --
+   ASSIGN
+     init( setTemp ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "actualTemp" of this NuSMV module --
+   ASSIGN
+     init( actualTemp ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "waitedForWarm" of this NuSMV module --
+   ASSIGN
+     init( waitedForWarm ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "warmUpTimer" of this NuSMV module --
+   ASSIGN
+     init( warmUpTimer ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "valvePos" of this NuSMV module --
+   ASSIGN
+     init( valvePos ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "waitedForCool" of this NuSMV module --
+   ASSIGN
+     init( waitedForCool ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "coolDownTimer" of this NuSMV module --
+   ASSIGN
+     init( coolDownTimer ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "furnaceRunning" of this NuSMV module --
+   ASSIGN
+     init( furnaceRunning ) := FALSE;
+
+   -- This part defines logic for the assignment of values to state variable "activate" of this NuSMV module --
+   ASSIGN
+     init( activate ) := FALSE;
+
+   -- This part defines logic for the assignment of values to state variable "deactivate" of this NuSMV module --
+   ASSIGN
+     init( deactivate ) := FALSE;
+
+   -- This part defines logic for the assignment of values to state variable "requestHeat" of this NuSMV module --
+   ASSIGN
+     init( requestHeat ) := FALSE;
+
+   -- This part defines logic for the assignment of values to state variable "furnaceReset" of this NuSMV module --
+   ASSIGN
+     init( furnaceReset ) := FALSE;
+
+-- This defines a NuSMV module for HeatControlSystemSm1HouseRoom --
+MODULE HeatControlSystemSm1HouseRoom ( _sm1 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm1HouseRoom_room , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm1.t8 | _sm1.t1 | _sm1.t3 | _sm1.t10 | _sm1.t7 | _sm1.t4 | _sm1.t2 | _sm1.t5 | _sm1.t6 | _sm1.t9 : Sm1HouseRoom_room;
+       _sm1.state = Sm1_heatingSystem & state = null : Sm1HouseRoom_room;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for HeatControlSystemSm1HouseRoomRoom --
+MODULE HeatControlSystemSm1HouseRoomRoom ( _sm1 , _sm1House )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm1HouseRoomRoom_noHeatReq , Sm1HouseRoomRoom_heatReq , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm1.t4 | _sm1.t2 | _sm1.t8 | _sm1.t1 | _sm1.t3 : Sm1HouseRoomRoom_noHeatReq;
+       _sm1.t10 | _sm1.t7 | _sm1.t5 | _sm1.t6 | _sm1.t9 : Sm1HouseRoomRoom_heatReq;
+       _sm1House.state = Sm1House_house & state = null : Sm1HouseRoomRoom_noHeatReq;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for HeatControlSystemSm1HouseRoomRoomNoHeatReq --
+MODULE HeatControlSystemSm1HouseRoomRoomNoHeatReq ( _sm1 , _sm1HouseRoomRoom )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm1HouseRoomRoomNoHeatReq_idleNotHeat , Sm1HouseRoomRoomNoHeatReq_waitForHeat , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm1.t5 | _sm1.t7 | _sm1.t9 | _sm1.t6 | _sm1.t8 | _sm1.t10 : null;
+       _sm1.t4 : Sm1HouseRoomRoomNoHeatReq_idleNotHeat;
+       _sm1.t2 | _sm1.t1 | _sm1.t3 : Sm1HouseRoomRoomNoHeatReq_waitForHeat;
+       _sm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq & state = null : Sm1HouseRoomRoomNoHeatReq_idleNotHeat;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for HeatControlSystemSm1HouseRoomRoomHeatReq --
+MODULE HeatControlSystemSm1HouseRoomRoomHeatReq ( _sm1 , _sm1HouseRoomRoom )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm1HouseRoomRoomHeatReq_idleHeat , Sm1HouseRoomRoomHeatReq_waitForCool , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm1.t1 | _sm1.t3 | _sm1.t5 | _sm1.t2 | _sm1.t4 | _sm1.t8 : null;
+       _sm1.t10 : Sm1HouseRoomRoomHeatReq_idleHeat;
+       _sm1.t7 | _sm1.t6 | _sm1.t9 : Sm1HouseRoomRoomHeatReq_waitForCool;
+       _sm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq & state = null : Sm1HouseRoomRoomHeatReq_idleHeat;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for HeatControlSystemSm1HouseController --
+MODULE HeatControlSystemSm1HouseController ( _sm1 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm1HouseController_controller , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm1.t14 | _sm1.t16 | _sm1.t17 | _sm1.t12 | _sm1.t11 | _sm1.t15 | _sm1.t13 : Sm1HouseController_controller;
+       _sm1.state = Sm1_heatingSystem & state = null : Sm1HouseController_controller;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for HeatControlSystemSm1HouseControllerController --
+MODULE HeatControlSystemSm1HouseControllerController ( _sm1 , _sm1House )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm1HouseControllerController_off , Sm1HouseControllerController_controllerOn , Sm1HouseControllerController_error , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm1.t12 | _sm1.t14 : Sm1HouseControllerController_off;
+       _sm1.t11 | _sm1.t15 | _sm1.t16 | _sm1.t17 : Sm1HouseControllerController_controllerOn;
+       _sm1.t13 : Sm1HouseControllerController_error;
+       _sm1House.state = Sm1House_house & state = null : Sm1HouseControllerController_off;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for HeatControlSystemSm1HouseControllerControllerControllerOn --
+MODULE HeatControlSystemSm1HouseControllerControllerControllerOn ( _sm1 , _sm1HouseControllerController )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm1HouseControllerControllerControllerOn_idle , Sm1HouseControllerControllerControllerOn_heaterActive , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm1.t12 | _sm1.t14 | _sm1.t11 | _sm1.t13 | _sm1.t15 : null;
+       _sm1.t16 : Sm1HouseControllerControllerControllerOn_idle;
+       _sm1.t15 | _sm1.t17 : Sm1HouseControllerControllerControllerOn_heaterActive;
+       _sm1HouseControllerController.state = Sm1HouseControllerController_controllerOn & state = null : Sm1HouseControllerControllerControllerOn_idle;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for HeatControlSystemSm1HouseControllerControllerControllerOnHeaterActive --
+MODULE HeatControlSystemSm1HouseControllerControllerControllerOnHeaterActive ( _sm1 , _sm1HouseControllerControllerControllerOn )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm1HouseControllerControllerControllerOnHeaterActive_actHeater , Sm1HouseControllerControllerControllerOnHeaterActive_heaterRun , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm1.t15 | _sm1.t16 : null;
+       _sm1.t17 : Sm1HouseControllerControllerControllerOnHeaterActive_heaterRun;
+       _sm1HouseControllerControllerControllerOn.state = Sm1HouseControllerControllerControllerOn_heaterActive & state = null : Sm1HouseControllerControllerControllerOnHeaterActive_actHeater;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for HeatControlSystemSm1House --
+MODULE HeatControlSystemSm1House ( _sm1 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm1House_house , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm1.t4 | _sm1.t2 | _sm1.t5 | _sm1.t6 | _sm1.t9 | _sm1.t14 | _sm1.t16 | _sm1.t17 | _sm1.t8 | _sm1.t1 | _sm1.t3 | _sm1.t10 | _sm1.t7 | _sm1.t12 | _sm1.t11 | _sm1.t15 | _sm1.t13 : Sm1House_house;
+       _sm1.state = Sm1_heatingSystem & state = null : Sm1House_house;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for HeatControlSystemSm1FurnaceFurnace --
+MODULE HeatControlSystemSm1FurnaceFurnace ( _sm1 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm1FurnaceFurnace_furnaceNormal , Sm1FurnaceFurnace_furnaceErr , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm1.t19 | _sm1.t24 | _sm1.t22 | _sm1.t21 | _sm1.t20 | _sm1.t23 : Sm1FurnaceFurnace_furnaceNormal;
+       _sm1.t18 : Sm1FurnaceFurnace_furnaceErr;
+       _sm1.state = Sm1_heatingSystem & state = null : Sm1FurnaceFurnace_furnaceNormal;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for HeatControlSystemSm1FurnaceFurnaceFurnaceNormal --
+MODULE HeatControlSystemSm1FurnaceFurnaceFurnaceNormal ( _sm1 , _sm1FurnaceFurnace )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm1FurnaceFurnaceFurnaceNormal_furnaceOff , Sm1FurnaceFurnaceFurnaceNormal_furnaceAct , Sm1FurnaceFurnaceFurnaceNormal_furnaceRun , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm1.t18 | _sm1.t19 : null;
+       _sm1.t21 | _sm1.t24 : Sm1FurnaceFurnaceFurnaceNormal_furnaceOff;
+       _sm1.t20 | _sm1.t22 : Sm1FurnaceFurnaceFurnaceNormal_furnaceAct;
+       _sm1.t23 : Sm1FurnaceFurnaceFurnaceNormal_furnaceRun;
+       _sm1FurnaceFurnace.state = Sm1FurnaceFurnace_furnaceNormal & state = null : Sm1FurnaceFurnaceFurnaceNormal_furnaceOff;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for HeatControlSystemSm1_Machine --
+MODULE HeatControlSystemSm1_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     heatControlSystemSm1 : HeatControlSystemSm1( heatControlSystemSm1HouseRoom , heatControlSystemSm1HouseRoomRoom , heatControlSystemSm1HouseRoomRoomNoHeatReq , heatControlSystemSm1HouseRoomRoomHeatReq , heatControlSystemSm1HouseController , heatControlSystemSm1HouseControllerController , heatControlSystemSm1HouseControllerControllerControllerOn , heatControlSystemSm1HouseControllerControllerControllerOnHeaterActive , heatControlSystemSm1House , heatControlSystemSm1FurnaceFurnace , heatControlSystemSm1FurnaceFurnaceFurnaceNormal );
+     heatControlSystemSm1HouseRoom : HeatControlSystemSm1HouseRoom( heatControlSystemSm1 );
+     heatControlSystemSm1HouseRoomRoom : HeatControlSystemSm1HouseRoomRoom( heatControlSystemSm1 , heatControlSystemSm1House );
+     heatControlSystemSm1HouseRoomRoomNoHeatReq : HeatControlSystemSm1HouseRoomRoomNoHeatReq( heatControlSystemSm1 , heatControlSystemSm1HouseRoomRoom );
+     heatControlSystemSm1HouseRoomRoomHeatReq : HeatControlSystemSm1HouseRoomRoomHeatReq( heatControlSystemSm1 , heatControlSystemSm1HouseRoomRoom );
+     heatControlSystemSm1HouseController : HeatControlSystemSm1HouseController( heatControlSystemSm1 );
+     heatControlSystemSm1HouseControllerController : HeatControlSystemSm1HouseControllerController( heatControlSystemSm1 , heatControlSystemSm1House );
+     heatControlSystemSm1HouseControllerControllerControllerOn : HeatControlSystemSm1HouseControllerControllerControllerOn( heatControlSystemSm1 , heatControlSystemSm1HouseControllerController );
+     heatControlSystemSm1HouseControllerControllerControllerOnHeaterActive : HeatControlSystemSm1HouseControllerControllerControllerOnHeaterActive( heatControlSystemSm1 , heatControlSystemSm1HouseControllerControllerControllerOn );
+     heatControlSystemSm1House : HeatControlSystemSm1House( heatControlSystemSm1 );
+     heatControlSystemSm1FurnaceFurnace : HeatControlSystemSm1FurnaceFurnace( heatControlSystemSm1 );
+     heatControlSystemSm1FurnaceFurnaceFurnaceNormal : HeatControlSystemSm1FurnaceFurnaceFurnaceNormal( heatControlSystemSm1 , heatControlSystemSm1FurnaceFurnace );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     sm : Sm( smHouseRoom , smHouseRoomRoom , smHouseRoomRoomNoHeatReq , smHouseRoomRoomHeatReq , smHouseController , smHouseControllerController , smHouseControllerControllerControllerOn , smHouseControllerControllerControllerOnHeaterActive , smHouse , smFurnaceFurnace , smFurnaceFurnaceFurnaceNormal );
-     smHouseRoom : SmHouseRoom( sm );
-     smHouseRoomRoom : SmHouseRoomRoom( sm , smHouse );
-     smHouseRoomRoomNoHeatReq : SmHouseRoomRoomNoHeatReq( sm , smHouseRoomRoom );
-     smHouseRoomRoomHeatReq : SmHouseRoomRoomHeatReq( sm , smHouseRoomRoom );
-     smHouseController : SmHouseController( sm );
-     smHouseControllerController : SmHouseControllerController( sm , smHouse );
-     smHouseControllerControllerControllerOn : SmHouseControllerControllerControllerOn( sm , smHouseControllerController );
-     smHouseControllerControllerControllerOnHeaterActive : SmHouseControllerControllerControllerOnHeaterActive( sm , smHouseControllerControllerControllerOn );
-     smHouse : SmHouse( sm );
-     smFurnaceFurnace : SmFurnaceFurnace( sm );
-     smFurnaceFurnaceFurnaceNormal : SmFurnaceFurnaceFurnaceNormal( sm , smFurnaceFurnace );
-CTLSPEC   EF( sm.state = Sm_heatingSystem )
-CTLSPEC   EF( smHouseRoom.state = SmHouseRoom_room )
-CTLSPEC   EF( smHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq )
-CTLSPEC   EF( smHouseRoomRoom.state = SmHouseRoomRoom_heatReq )
-CTLSPEC   EF( smHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat )
-CTLSPEC   EF( smHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat )
-CTLSPEC   EF( smHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat )
-CTLSPEC   EF( smHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool )
-CTLSPEC   EF( smHouseController.state = SmHouseController_controller )
-CTLSPEC   EF( smHouseControllerController.state = SmHouseControllerController_off )
-CTLSPEC   EF( smHouseControllerController.state = SmHouseControllerController_controllerOn )
-CTLSPEC   EF( smHouseControllerController.state = SmHouseControllerController_error )
-CTLSPEC   EF( smHouseControllerControllerControllerOn.state = SmHouseControllerControllerControllerOn_idle )
-CTLSPEC   EF( smHouseControllerControllerControllerOn.state = SmHouseControllerControllerControllerOn_heaterActive )
-CTLSPEC   EF( smHouseControllerControllerControllerOnHeaterActive.state = SmHouseControllerControllerControllerOnHeaterActive_actHeater )
-CTLSPEC   EF( smHouseControllerControllerControllerOnHeaterActive.state = SmHouseControllerControllerControllerOnHeaterActive_heaterRun )
-CTLSPEC   EF( smHouse.state = SmHouse_house )
-CTLSPEC   EF( smFurnaceFurnace.state = SmFurnaceFurnace_furnaceNormal )
-CTLSPEC   EF( smFurnaceFurnace.state = SmFurnaceFurnace_furnaceErr )
-CTLSPEC   EF( smFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceOff )
-CTLSPEC   EF( smFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceAct )
-CTLSPEC   EF( smFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceRun )
+     heatControlSystemSm_Machine : HeatControlSystemSm_Machine;
+     heatControlSystemSm1_Machine : HeatControlSystemSm1_Machine;
+
+   -- The following properties are specified to certify that this model is free of non-determinism. 
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t4 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t7 & heatControlSystemSm_Machine.heatControlSystemSm.t8 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t7 & heatControlSystemSm_Machine.heatControlSystemSm.t10 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t8 & heatControlSystemSm_Machine.heatControlSystemSm.t9 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t8 & heatControlSystemSm_Machine.heatControlSystemSm.t10 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t9 & heatControlSystemSm_Machine.heatControlSystemSm.t10 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t16 & heatControlSystemSm_Machine.heatControlSystemSm.t17 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOn.state = SmHouseControllerControllerControllerOn_idle & heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOnHeaterActive.state = SmHouseControllerControllerControllerOnHeaterActive_heaterRun ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t21 & heatControlSystemSm_Machine.heatControlSystemSm.t22 -> next( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceOff & heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceAct ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t21 & heatControlSystemSm_Machine.heatControlSystemSm.t23 -> next( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceOff & heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceRun ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t22 & heatControlSystemSm_Machine.heatControlSystemSm.t23 -> next( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceAct & heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceRun ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t4 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t7 & heatControlSystemSm_Machine.heatControlSystemSm.t8 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t7 & heatControlSystemSm_Machine.heatControlSystemSm.t10 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t8 & heatControlSystemSm_Machine.heatControlSystemSm.t9 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t8 & heatControlSystemSm_Machine.heatControlSystemSm.t10 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t9 & heatControlSystemSm_Machine.heatControlSystemSm.t10 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t4 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t7 & heatControlSystemSm_Machine.heatControlSystemSm.t8 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t7 & heatControlSystemSm_Machine.heatControlSystemSm.t10 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t8 & heatControlSystemSm_Machine.heatControlSystemSm.t9 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t8 & heatControlSystemSm_Machine.heatControlSystemSm.t10 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t9 & heatControlSystemSm_Machine.heatControlSystemSm.t10 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t4 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t3 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t4 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t6 & heatControlSystemSm_Machine.heatControlSystemSm.t7 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOn.state = SmHouseControllerControllerControllerOn_idle & heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOnHeaterActive.state = SmHouseControllerControllerControllerOnHeaterActive_heaterRun ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t6 & heatControlSystemSm_Machine.heatControlSystemSm.t7 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOn.state = SmHouseControllerControllerControllerOn_idle & heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOnHeaterActive.state = SmHouseControllerControllerControllerOnHeaterActive_heaterRun ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t3 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOn.state = SmHouseControllerControllerControllerOn_idle & heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOnHeaterActive.state = SmHouseControllerControllerControllerOnHeaterActive_heaterRun ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t4 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t7 & heatControlSystemSm_Machine.heatControlSystemSm.t8 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t7 & heatControlSystemSm_Machine.heatControlSystemSm.t10 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t8 & heatControlSystemSm_Machine.heatControlSystemSm.t9 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t8 & heatControlSystemSm_Machine.heatControlSystemSm.t10 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t9 & heatControlSystemSm_Machine.heatControlSystemSm.t10 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool & heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t16 & heatControlSystemSm_Machine.heatControlSystemSm.t17 -> next( heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOn.state = SmHouseControllerControllerControllerOn_idle & heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOnHeaterActive.state = SmHouseControllerControllerControllerOnHeaterActive_heaterRun ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t4 & heatControlSystemSm_Machine.heatControlSystemSm.t5 -> next( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceOff & heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceAct ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t4 & heatControlSystemSm_Machine.heatControlSystemSm.t6 -> next( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceOff & heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceRun ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t5 & heatControlSystemSm_Machine.heatControlSystemSm.t6 -> next( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceAct & heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceRun ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t3 -> next( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceOff & heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceAct ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t2 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceOff & heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceRun ) )
+   INVARSPEC   ( heatControlSystemSm_Machine.heatControlSystemSm.t3 & heatControlSystemSm_Machine.heatControlSystemSm.t4 -> next( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceAct & heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceRun ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t4 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t7 & heatControlSystemSm1_Machine.heatControlSystemSm1.t8 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t7 & heatControlSystemSm1_Machine.heatControlSystemSm1.t10 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t8 & heatControlSystemSm1_Machine.heatControlSystemSm1.t9 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t8 & heatControlSystemSm1_Machine.heatControlSystemSm1.t10 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t9 & heatControlSystemSm1_Machine.heatControlSystemSm1.t10 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t16 & heatControlSystemSm1_Machine.heatControlSystemSm1.t17 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOn.state = Sm1HouseControllerControllerControllerOn_idle & heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOnHeaterActive.state = Sm1HouseControllerControllerControllerOnHeaterActive_heaterRun ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t21 & heatControlSystemSm1_Machine.heatControlSystemSm1.t22 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceOff & heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceAct ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t21 & heatControlSystemSm1_Machine.heatControlSystemSm1.t23 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceOff & heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceRun ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t22 & heatControlSystemSm1_Machine.heatControlSystemSm1.t23 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceAct & heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceRun ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t4 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t7 & heatControlSystemSm1_Machine.heatControlSystemSm1.t8 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t7 & heatControlSystemSm1_Machine.heatControlSystemSm1.t10 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t8 & heatControlSystemSm1_Machine.heatControlSystemSm1.t9 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t8 & heatControlSystemSm1_Machine.heatControlSystemSm1.t10 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t9 & heatControlSystemSm1_Machine.heatControlSystemSm1.t10 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t4 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t7 & heatControlSystemSm1_Machine.heatControlSystemSm1.t8 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t7 & heatControlSystemSm1_Machine.heatControlSystemSm1.t10 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t8 & heatControlSystemSm1_Machine.heatControlSystemSm1.t9 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t8 & heatControlSystemSm1_Machine.heatControlSystemSm1.t10 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t9 & heatControlSystemSm1_Machine.heatControlSystemSm1.t10 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t4 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t3 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t4 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t6 & heatControlSystemSm1_Machine.heatControlSystemSm1.t7 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOn.state = Sm1HouseControllerControllerControllerOn_idle & heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOnHeaterActive.state = Sm1HouseControllerControllerControllerOnHeaterActive_heaterRun ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t6 & heatControlSystemSm1_Machine.heatControlSystemSm1.t7 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOn.state = Sm1HouseControllerControllerControllerOn_idle & heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOnHeaterActive.state = Sm1HouseControllerControllerControllerOnHeaterActive_heaterRun ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t3 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOn.state = Sm1HouseControllerControllerControllerOn_idle & heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOnHeaterActive.state = Sm1HouseControllerControllerControllerOnHeaterActive_heaterRun ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t4 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t7 & heatControlSystemSm1_Machine.heatControlSystemSm1.t8 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t7 & heatControlSystemSm1_Machine.heatControlSystemSm1.t10 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t8 & heatControlSystemSm1_Machine.heatControlSystemSm1.t9 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t8 & heatControlSystemSm1_Machine.heatControlSystemSm1.t10 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t9 & heatControlSystemSm1_Machine.heatControlSystemSm1.t10 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool & heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t16 & heatControlSystemSm1_Machine.heatControlSystemSm1.t17 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOn.state = Sm1HouseControllerControllerControllerOn_idle & heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOnHeaterActive.state = Sm1HouseControllerControllerControllerOnHeaterActive_heaterRun ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t4 & heatControlSystemSm1_Machine.heatControlSystemSm1.t5 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceOff & heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceAct ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t4 & heatControlSystemSm1_Machine.heatControlSystemSm1.t6 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceOff & heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceRun ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t5 & heatControlSystemSm1_Machine.heatControlSystemSm1.t6 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceAct & heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceRun ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t3 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceOff & heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceAct ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t2 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceOff & heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceRun ) )
+   INVARSPEC   ( heatControlSystemSm1_Machine.heatControlSystemSm1.t3 & heatControlSystemSm1_Machine.heatControlSystemSm1.t4 -> next( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceAct & heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceRun ) )
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSm.state = Sm_heatingSystem )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseRoom.state = SmHouseRoom_room )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_noHeatReq )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoom.state = SmHouseRoomRoom_heatReq )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_idleNotHeat )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomNoHeatReq.state = SmHouseRoomRoomNoHeatReq_waitForHeat )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_idleHeat )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseRoomRoomHeatReq.state = SmHouseRoomRoomHeatReq_waitForCool )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseController.state = SmHouseController_controller )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseControllerController.state = SmHouseControllerController_off )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseControllerController.state = SmHouseControllerController_controllerOn )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseControllerController.state = SmHouseControllerController_error )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOn.state = SmHouseControllerControllerControllerOn_idle )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOn.state = SmHouseControllerControllerControllerOn_heaterActive )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOnHeaterActive.state = SmHouseControllerControllerControllerOnHeaterActive_actHeater )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouseControllerControllerControllerOnHeaterActive.state = SmHouseControllerControllerControllerOnHeaterActive_heaterRun )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmHouse.state = SmHouse_house )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnace.state = SmFurnaceFurnace_furnaceNormal )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnace.state = SmFurnaceFurnace_furnaceErr )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceOff )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceAct )
+   CTLSPEC   EF( heatControlSystemSm_Machine.heatControlSystemSmFurnaceFurnaceFurnaceNormal.state = SmFurnaceFurnaceFurnaceNormal_furnaceRun )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1.state = Sm1_heatingSystem )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoom.state = Sm1HouseRoom_room )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_noHeatReq )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoom.state = Sm1HouseRoomRoom_heatReq )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_idleNotHeat )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomNoHeatReq.state = Sm1HouseRoomRoomNoHeatReq_waitForHeat )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_idleHeat )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseRoomRoomHeatReq.state = Sm1HouseRoomRoomHeatReq_waitForCool )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseController.state = Sm1HouseController_controller )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerController.state = Sm1HouseControllerController_off )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerController.state = Sm1HouseControllerController_controllerOn )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerController.state = Sm1HouseControllerController_error )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOn.state = Sm1HouseControllerControllerControllerOn_idle )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOn.state = Sm1HouseControllerControllerControllerOn_heaterActive )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOnHeaterActive.state = Sm1HouseControllerControllerControllerOnHeaterActive_actHeater )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1HouseControllerControllerControllerOnHeaterActive.state = Sm1HouseControllerControllerControllerOnHeaterActive_heaterRun )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1House.state = Sm1House_house )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnace.state = Sm1FurnaceFurnace_furnaceNormal )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnace.state = Sm1FurnaceFurnace_furnaceErr )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceOff )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceAct )
+   CTLSPEC   EF( heatControlSystemSm1_Machine.heatControlSystemSm1FurnaceFurnaceFurnaceNormal.state = Sm1FurnaceFurnaceFurnaceNormal_furnaceRun )

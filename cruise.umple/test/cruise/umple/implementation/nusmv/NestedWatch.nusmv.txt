@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Sm --
-MODULE Sm ( _smRegular , _smRegularUpdate , _smChronometer , _smChronometerChronoNormal , _smAlarmStatus , _smAlarmUpdate , _smAlarmUpdateHourMinuteUpdate )
+-- This defines a NuSMV module for DigitalWatchSm --
+MODULE DigitalWatchSm ( _smRegular , _smRegularUpdate , _smChronometer , _smChronometerChronoNormal , _smAlarmStatus , _smAlarmUpdate , _smAlarmUpdateHourMinuteUpdate )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -124,8 +124,8 @@ MODULE Sm ( _smRegular , _smRegularUpdate , _smChronometer , _smChronometerChron
    ASSIGN
      init( timer ) := 0;
 
--- This defines a NuSMV module for SmRegular --
-MODULE SmRegular ( _sm )
+-- This defines a NuSMV module for DigitalWatchSmRegular --
+MODULE DigitalWatchSmRegular ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -143,8 +143,8 @@ MODULE SmRegular ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmRegularUpdate --
-MODULE SmRegularUpdate ( _sm , _smRegular )
+-- This defines a NuSMV module for DigitalWatchSmRegularUpdate --
+MODULE DigitalWatchSmRegularUpdate ( _sm , _smRegular )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -165,8 +165,8 @@ MODULE SmRegularUpdate ( _sm , _smRegular )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmChronometer --
-MODULE SmChronometer ( _sm )
+-- This defines a NuSMV module for DigitalWatchSmChronometer --
+MODULE DigitalWatchSmChronometer ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -184,8 +184,8 @@ MODULE SmChronometer ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmChronometerChronoNormal --
-MODULE SmChronometerChronoNormal ( _sm , _smChronometer )
+-- This defines a NuSMV module for DigitalWatchSmChronometerChronoNormal --
+MODULE DigitalWatchSmChronometerChronoNormal ( _sm , _smChronometer )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -202,8 +202,8 @@ MODULE SmChronometerChronoNormal ( _sm , _smChronometer )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmAlarmStatus --
-MODULE SmAlarmStatus ( _sm )
+-- This defines a NuSMV module for DigitalWatchSmAlarmStatus --
+MODULE DigitalWatchSmAlarmStatus ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -222,8 +222,8 @@ MODULE SmAlarmStatus ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmAlarmUpdate --
-MODULE SmAlarmUpdate ( _sm )
+-- This defines a NuSMV module for DigitalWatchSmAlarmUpdate --
+MODULE DigitalWatchSmAlarmUpdate ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -240,8 +240,8 @@ MODULE SmAlarmUpdate ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmAlarmUpdateHourMinuteUpdate --
-MODULE SmAlarmUpdateHourMinuteUpdate ( _sm , _smAlarmUpdate )
+-- This defines a NuSMV module for DigitalWatchSmAlarmUpdateHourMinuteUpdate --
+MODULE DigitalWatchSmAlarmUpdateHourMinuteUpdate ( _sm , _smAlarmUpdate )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -257,42 +257,51 @@ MODULE SmAlarmUpdateHourMinuteUpdate ( _sm , _smAlarmUpdate )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for DigitalWatchSm_Machine --
+MODULE DigitalWatchSm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     digitalWatchSm : DigitalWatchSm( digitalWatchSmRegular , digitalWatchSmRegularUpdate , digitalWatchSmChronometer , digitalWatchSmChronometerChronoNormal , digitalWatchSmAlarmStatus , digitalWatchSmAlarmUpdate , digitalWatchSmAlarmUpdateHourMinuteUpdate );
+     digitalWatchSmRegular : DigitalWatchSmRegular( digitalWatchSm );
+     digitalWatchSmRegularUpdate : DigitalWatchSmRegularUpdate( digitalWatchSm , digitalWatchSmRegular );
+     digitalWatchSmChronometer : DigitalWatchSmChronometer( digitalWatchSm );
+     digitalWatchSmChronometerChronoNormal : DigitalWatchSmChronometerChronoNormal( digitalWatchSm , digitalWatchSmChronometer );
+     digitalWatchSmAlarmStatus : DigitalWatchSmAlarmStatus( digitalWatchSm );
+     digitalWatchSmAlarmUpdate : DigitalWatchSmAlarmUpdate( digitalWatchSm );
+     digitalWatchSmAlarmUpdateHourMinuteUpdate : DigitalWatchSmAlarmUpdateHourMinuteUpdate( digitalWatchSm , digitalWatchSmAlarmUpdate );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     sm : Sm( smRegular , smRegularUpdate , smChronometer , smChronometerChronoNormal , smAlarmStatus , smAlarmUpdate , smAlarmUpdateHourMinuteUpdate );
-     smRegular : SmRegular( sm );
-     smRegularUpdate : SmRegularUpdate( sm , smRegular );
-     smChronometer : SmChronometer( sm );
-     smChronometerChronoNormal : SmChronometerChronoNormal( sm , smChronometer );
-     smAlarmStatus : SmAlarmStatus( sm );
-     smAlarmUpdate : SmAlarmUpdate( sm );
-     smAlarmUpdateHourMinuteUpdate : SmAlarmUpdateHourMinuteUpdate( sm , smAlarmUpdate );
-CTLSPEC   EF( sm.state = Sm_regular )
-CTLSPEC   EF( sm.state = Sm_chronometer )
-CTLSPEC   EF( sm.state = Sm_alarmStatus )
-CTLSPEC   EF( sm.state = Sm_alarmUpdate )
-CTLSPEC   EF( smRegular.state = SmRegular_time )
-CTLSPEC   EF( smRegular.state = SmRegular_date )
-CTLSPEC   EF( smRegular.state = SmRegular_update )
-CTLSPEC   EF( smRegularUpdate.state = SmRegularUpdate_second )
-CTLSPEC   EF( smRegularUpdate.state = SmRegularUpdate_minute )
-CTLSPEC   EF( smRegularUpdate.state = SmRegularUpdate_hour )
-CTLSPEC   EF( smRegularUpdate.state = SmRegularUpdate_month )
-CTLSPEC   EF( smRegularUpdate.state = SmRegularUpdate_day )
-CTLSPEC   EF( smRegularUpdate.state = SmRegularUpdate_year )
-CTLSPEC   EF( smChronometer.state = SmChronometer_chronoNormal )
-CTLSPEC   EF( smChronometer.state = SmChronometer_lapRunning )
-CTLSPEC   EF( smChronometer.state = SmChronometer_lapPaused )
-CTLSPEC   EF( smChronometerChronoNormal.state = SmChronometerChronoNormal_paused )
-CTLSPEC   EF( smChronometerChronoNormal.state = SmChronometerChronoNormal_running )
-CTLSPEC   EF( smAlarmStatus.state = SmAlarmStatus_bothOff )
-CTLSPEC   EF( smAlarmStatus.state = SmAlarmStatus_chimeOn )
-CTLSPEC   EF( smAlarmStatus.state = SmAlarmStatus_bothOn )
-CTLSPEC   EF( smAlarmStatus.state = SmAlarmStatus_alarmOn )
-CTLSPEC   EF( smAlarmUpdate.state = SmAlarmUpdate_alarmTime )
-CTLSPEC   EF( smAlarmUpdate.state = SmAlarmUpdate_hourMinuteUpdate )
-CTLSPEC   EF( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour )
-CTLSPEC   EF( smAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute )
+     digitalWatchSm_Machine : DigitalWatchSm_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_regular )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_chronometer )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmStatus )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmUpdate )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmRegular.state = SmRegular_time )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmRegular.state = SmRegular_date )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmRegular.state = SmRegular_update )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmRegularUpdate.state = SmRegularUpdate_second )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmRegularUpdate.state = SmRegularUpdate_minute )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmRegularUpdate.state = SmRegularUpdate_hour )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmRegularUpdate.state = SmRegularUpdate_month )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmRegularUpdate.state = SmRegularUpdate_day )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmRegularUpdate.state = SmRegularUpdate_year )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmChronometer.state = SmChronometer_chronoNormal )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmChronometer.state = SmChronometer_lapRunning )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmChronometer.state = SmChronometer_lapPaused )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmChronometerChronoNormal.state = SmChronometerChronoNormal_paused )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmChronometerChronoNormal.state = SmChronometerChronoNormal_running )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmAlarmStatus.state = SmAlarmStatus_bothOff )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmAlarmStatus.state = SmAlarmStatus_chimeOn )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmAlarmStatus.state = SmAlarmStatus_bothOn )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmAlarmStatus.state = SmAlarmStatus_alarmOn )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmAlarmUpdate.state = SmAlarmUpdate_alarmTime )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmAlarmUpdate.state = SmAlarmUpdate_hourMinuteUpdate )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmHour )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSmAlarmUpdateHourMinuteUpdate.state = SmAlarmUpdateHourMinuteUpdate_alarmMinute )

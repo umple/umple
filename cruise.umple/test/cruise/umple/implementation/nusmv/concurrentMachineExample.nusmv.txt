@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for State --
-MODULE State ( _stateAA , _stateBB , _stateBBS24 )
+-- This defines a NuSMV module for ExampleState --
+MODULE ExampleState ( _stateAA , _stateBB , _stateBBS24 )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -42,8 +42,8 @@ MODULE State ( _stateAA , _stateBB , _stateBBS24 )
        TRUE : ev_null;
      esac;
 
--- This defines a NuSMV module for StateAA --
-MODULE StateAA ( _state )
+-- This defines a NuSMV module for ExampleStateAA --
+MODULE ExampleStateAA ( _state )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -59,8 +59,8 @@ MODULE StateAA ( _state )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for StateBB --
-MODULE StateBB ( _state )
+-- This defines a NuSMV module for ExampleStateBB --
+MODULE ExampleStateBB ( _state )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -78,8 +78,8 @@ MODULE StateBB ( _state )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for StateBBS24 --
-MODULE StateBBS24 ( _state , _stateBB )
+-- This defines a NuSMV module for ExampleStateBBS24 --
+MODULE ExampleStateBBS24 ( _state , _stateBB )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -96,21 +96,30 @@ MODULE StateBBS24 ( _state , _stateBB )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for ExampleState_Machine --
+MODULE ExampleState_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     exampleState : ExampleState( exampleStateAA , exampleStateBB , exampleStateBBS24 );
+     exampleStateAA : ExampleStateAA( exampleState );
+     exampleStateBB : ExampleStateBB( exampleState );
+     exampleStateBBS24 : ExampleStateBBS24( exampleState , exampleStateBB );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : State( stateAA , stateBB , stateBBS24 );
-     stateAA : StateAA( state );
-     stateBB : StateBB( state );
-     stateBBS24 : StateBBS24( state , stateBB );
-CTLSPEC   EF( state.state = State_s1 )
-CTLSPEC   EF( state.state = State_s2 )
-CTLSPEC   EF( stateAA.state = StateAA_s11 )
-CTLSPEC   EF( stateAA.state = StateAA_s12 )
-CTLSPEC   EF( stateBB.state = StateBB_s21 )
-CTLSPEC   EF( stateBB.state = StateBB_s22 )
-CTLSPEC   EF( stateBB.state = StateBB_s24 )
-CTLSPEC   EF( stateBBS24.state = StateBBS24_s31 )
-CTLSPEC   EF( stateBBS24.state = StateBBS24_s32 )
+     exampleState_Machine : ExampleState_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( exampleState_Machine.exampleState.state = State_s1 )
+   CTLSPEC   EF( exampleState_Machine.exampleState.state = State_s2 )
+   CTLSPEC   EF( exampleState_Machine.exampleStateAA.state = StateAA_s11 )
+   CTLSPEC   EF( exampleState_Machine.exampleStateAA.state = StateAA_s12 )
+   CTLSPEC   EF( exampleState_Machine.exampleStateBB.state = StateBB_s21 )
+   CTLSPEC   EF( exampleState_Machine.exampleStateBB.state = StateBB_s22 )
+   CTLSPEC   EF( exampleState_Machine.exampleStateBB.state = StateBB_s24 )
+   CTLSPEC   EF( exampleState_Machine.exampleStateBBS24.state = StateBBS24_s31 )
+   CTLSPEC   EF( exampleState_Machine.exampleStateBBS24.state = StateBBS24_s32 )

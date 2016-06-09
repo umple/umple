@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Sm --
-MODULE Sm ( _smZxab , _smZxabZx , _smGe )
+-- This defines a NuSMV module for BigStateMachineTestSm --
+MODULE BigStateMachineTestSm ( _smZxab , _smZxabZx , _smGe )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -47,8 +47,8 @@ MODULE Sm ( _smZxab , _smZxabZx , _smGe )
        TRUE : ev_null;
      esac;
 
--- This defines a NuSMV module for SmZxab --
-MODULE SmZxab ( _sm )
+-- This defines a NuSMV module for BigStateMachineTestSmZxab --
+MODULE BigStateMachineTestSmZxab ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -66,8 +66,8 @@ MODULE SmZxab ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmZxabZx --
-MODULE SmZxabZx ( _sm , _smZxab )
+-- This defines a NuSMV module for BigStateMachineTestSmZxabZx --
+MODULE BigStateMachineTestSmZxabZx ( _sm , _smZxab )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -83,8 +83,8 @@ MODULE SmZxabZx ( _sm , _smZxab )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmGe --
-MODULE SmGe ( _sm )
+-- This defines a NuSMV module for BigStateMachineTestSmGe --
+MODULE BigStateMachineTestSmGe ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -101,22 +101,31 @@ MODULE SmGe ( _sm )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for BigStateMachineTestSm_Machine --
+MODULE BigStateMachineTestSm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     bigStateMachineTestSm : BigStateMachineTestSm( bigStateMachineTestSmZxab , bigStateMachineTestSmZxabZx , bigStateMachineTestSmGe );
+     bigStateMachineTestSmZxab : BigStateMachineTestSmZxab( bigStateMachineTestSm );
+     bigStateMachineTestSmZxabZx : BigStateMachineTestSmZxabZx( bigStateMachineTestSm , bigStateMachineTestSmZxab );
+     bigStateMachineTestSmGe : BigStateMachineTestSmGe( bigStateMachineTestSm );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     sm : Sm( smZxab , smZxabZx , smGe );
-     smZxab : SmZxab( sm );
-     smZxabZx : SmZxabZx( sm , smZxab );
-     smGe : SmGe( sm );
-CTLSPEC   EF( sm.state = Sm_Zxab )
-CTLSPEC   EF( sm.state = Sm_D )
-CTLSPEC   EF( sm.state = Sm_Ge )
-CTLSPEC   EF( smZxab.state = SmZxab_Zx )
-CTLSPEC   EF( smZxab.state = SmZxab_A )
-CTLSPEC   EF( smZxab.state = SmZxab_B )
-CTLSPEC   EF( smZxabZx.state = SmZxabZx_Z )
-CTLSPEC   EF( smZxabZx.state = SmZxabZx_X )
-CTLSPEC   EF( smGe.state = SmGe_G )
-CTLSPEC   EF( smGe.state = SmGe_E )
+     bigStateMachineTestSm_Machine : BigStateMachineTestSm_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSm.state = Sm_Zxab )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSm.state = Sm_D )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSm.state = Sm_Ge )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSmZxab.state = SmZxab_Zx )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSmZxab.state = SmZxab_A )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSmZxab.state = SmZxab_B )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSmZxabZx.state = SmZxabZx_Z )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSmZxabZx.state = SmZxabZx_X )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSmGe.state = SmGe_G )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSmGe.state = SmGe_E )

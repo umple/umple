@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for Sm --
-MODULE Sm ( _smS21S21 , _smS22S22 )
+-- This defines a NuSMV module for ASm --
+MODULE ASm ( _smS21S21 , _smS22S22 )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -45,11 +45,9 @@ MODULE Sm ( _smS21S21 , _smS22S22 )
        sm_stable : { ev_e1 , ev_e2 , ev_e3 , ev_e4 };
        TRUE : ev_null;
      esac;
-   INVARSPEC   ( t7 & t9 -> next( state = Sm_s1 & _smS22S22.state = SmS22S22_e ) )
-   INVARSPEC   ( t13 & t5 -> next( state = Sm_s1 & _smS21S21.state = SmS21S21_a ) )
 
--- This defines a NuSMV module for SmS21S21 --
-MODULE SmS21S21 ( _sm )
+-- This defines a NuSMV module for ASmS21S21 --
+MODULE ASmS21S21 ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -67,8 +65,8 @@ MODULE SmS21S21 ( _sm )
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SmS22S22 --
-MODULE SmS22S22 ( _sm )
+-- This defines a NuSMV module for ASmS22S22 --
+MODULE ASmS22S22 ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -85,19 +83,32 @@ MODULE SmS22S22 ( _sm )
        TRUE : state;
      esac;
 
+-- This defines a NuSMV module for ASm_Machine --
+MODULE ASm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     aSm : ASm( aSmS21S21 , aSmS22S22 );
+     aSmS21S21 : ASmS21S21( aSm );
+     aSmS22S22 : ASmS22S22( aSm );
+
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     sm : Sm( smS21S21 , smS22S22 );
-     smS21S21 : SmS21S21( sm );
-     smS22S22 : SmS22S22( sm );
-CTLSPEC   EF( sm.state = Sm_s1 )
-CTLSPEC   EF( sm.state = Sm_s2 )
-CTLSPEC   EF( smS21S21.state = SmS21S21_a )
-CTLSPEC   EF( smS21S21.state = SmS21S21_b )
-CTLSPEC   EF( smS21S21.state = SmS21S21_c )
-CTLSPEC   EF( smS22S22.state = SmS22S22_d )
-CTLSPEC   EF( smS22S22.state = SmS22S22_e )
-CTLSPEC   EF( smS22S22.state = SmS22S22_f )
+     aSm_Machine : ASm_Machine;
+
+   -- The following properties are specified to certify that this model is free of non-determinism. 
+   INVARSPEC   ( aSm_Machine.aSm.t7 & aSm_Machine.aSm.t9 -> next( aSm_Machine.aSm.state = Sm_s1 & aSm_Machine.aSmS22S22.state = SmS22S22_e ) )
+   INVARSPEC   ( aSm_Machine.aSm.t13 & aSm_Machine.aSm.t5 -> next( aSm_Machine.aSm.state = Sm_s1 & aSm_Machine.aSmS21S21.state = SmS21S21_a ) )
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s1 )
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s2 )
+   CTLSPEC   EF( aSm_Machine.aSmS21S21.state = SmS21S21_a )
+   CTLSPEC   EF( aSm_Machine.aSmS21S21.state = SmS21S21_b )
+   CTLSPEC   EF( aSm_Machine.aSmS21S21.state = SmS21S21_c )
+   CTLSPEC   EF( aSm_Machine.aSmS22S22.state = SmS22S22_d )
+   CTLSPEC   EF( aSm_Machine.aSmS22S22.state = SmS22S22_e )
+   CTLSPEC   EF( aSm_Machine.aSmS22S22.state = SmS22S22_f )

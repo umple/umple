@@ -4,8 +4,8 @@
 -- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
 
 
--- This defines a NuSMV module for LockState --
-MODULE LockState
+-- This defines a NuSMV module for LockLockState --
+MODULE LockLockState
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -76,22 +76,33 @@ MODULE LockState
    -- This part defines logic for the assignment of values to state variable "boatBlockingGate" of this NuSMV module --
    ASSIGN
      init( boatBlockingGate ) := FALSE;
-   INVARSPEC   ( t6 & t7 -> next( state = LockState_LoweringWater & state = LockState_BothDoorsClosedLockFull ) )
-   INVARSPEC   ( t14 & t15 -> next( state = LockState_RaisingWater & state = LockState_BothDoorsClosedLockEmpty ) )
+
+-- This defines a NuSMV module for LockLockState_Machine --
+MODULE LockLockState_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     lockLockState : LockLockState;
 
 -- This defines a NuSMV module for main --
 MODULE main
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     lockState : LockState;
-CTLSPEC   EF( lockState.state = LockState_BothDoorsClosedLockFull )
-CTLSPEC   EF( lockState.state = LockState_OpeningUpperGate )
-CTLSPEC   EF( lockState.state = LockState_UpperGateOpen )
-CTLSPEC   EF( lockState.state = LockState_ClosingUpperGate )
-CTLSPEC   EF( lockState.state = LockState_LoweringWater )
-CTLSPEC   EF( lockState.state = LockState_BothDoorsClosedLockEmpty )
-CTLSPEC   EF( lockState.state = LockState_OpeningLowerGate )
-CTLSPEC   EF( lockState.state = LockState_LowerGateOpen )
-CTLSPEC   EF( lockState.state = LockState_ClosingLowerGate )
-CTLSPEC   EF( lockState.state = LockState_RaisingWater )
+     lockLockState_Machine : LockLockState_Machine;
+
+   -- The following properties are specified to certify that this model is free of non-determinism. 
+   INVARSPEC   ( lockLockState_Machine.lockLockState.t6 & lockLockState_Machine.lockLockState.t7 -> next( lockLockState_Machine.lockLockState.state = LockState_LoweringWater & lockLockState_Machine.lockLockState.state = LockState_BothDoorsClosedLockFull ) )
+   INVARSPEC   ( lockLockState_Machine.lockLockState.t14 & lockLockState_Machine.lockLockState.t15 -> next( lockLockState_Machine.lockLockState.state = LockState_RaisingWater & lockLockState_Machine.lockLockState.state = LockState_BothDoorsClosedLockEmpty ) )
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( lockLockState_Machine.lockLockState.state = LockState_BothDoorsClosedLockFull )
+   CTLSPEC   EF( lockLockState_Machine.lockLockState.state = LockState_OpeningUpperGate )
+   CTLSPEC   EF( lockLockState_Machine.lockLockState.state = LockState_UpperGateOpen )
+   CTLSPEC   EF( lockLockState_Machine.lockLockState.state = LockState_ClosingUpperGate )
+   CTLSPEC   EF( lockLockState_Machine.lockLockState.state = LockState_LoweringWater )
+   CTLSPEC   EF( lockLockState_Machine.lockLockState.state = LockState_BothDoorsClosedLockEmpty )
+   CTLSPEC   EF( lockLockState_Machine.lockLockState.state = LockState_OpeningLowerGate )
+   CTLSPEC   EF( lockLockState_Machine.lockLockState.state = LockState_LowerGateOpen )
+   CTLSPEC   EF( lockLockState_Machine.lockLockState.state = LockState_ClosingLowerGate )
+   CTLSPEC   EF( lockLockState_Machine.lockLockState.state = LockState_RaisingWater )
