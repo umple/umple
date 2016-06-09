@@ -20,7 +20,7 @@ class NuSMVGenerator
 {
   depend cruise.umple.nusmv.*;
     
-  public void generate(){
+  public void generate() {
   	
   	NuSMVCoordinator coord = new NuSMVCoordinator();
     StringBuilder code = new StringBuilder(); 
