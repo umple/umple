@@ -47,6 +47,9 @@ class Content
 
   // Grammar rules associated with this user manual page
   syntax;
+  
+  // Original source filename
+  filename;
 
   // Short samples of Umple code
   0..1 -> * ManualExample examples;

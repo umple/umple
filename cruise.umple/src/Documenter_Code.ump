@@ -106,10 +106,11 @@ class Documenter
         "  <script type=\"text/javascript\" src=\"files/script.js\"></script>" + "\n" +
         "  <title>Umple Combined User Manual</title>" + "\n" +
         "  <style> h1 {page-break-before: always; font-size: 200%;}</style>\n"+
-        "  <style> .largeCentered {text-align: center; font-size: 300%  }</style>\n" +  
+        "  <style> .largeCentered {text-align: center; font-size: 200%  }</style>\n" +  
+        "  <style> .regCentered {text-align: center; font-size: 110%  }</style>\n" +  
         "  <meta name='viewport' content='width=device-width, initial-scale=1'>\n  " +
         "</head>\n<body>\n" +
-        "<div class='largeCentered'>Umple User Manual<br><a href='http://www.umple.org'>http://www.umple.org</a></div>"
+        "<div class='largeCentered'>Umple Combined User Manual<br><a href='http://www.umple.org'>http://www.umple.org</a></div><div class='regCentered'>This version is one large page and is intended to allow searching through the entire manual, or easy printing to pdf for offline reading. For most purposes you will want to work with the individual manual pages at <a href='http://manual.umple.org'>http://manual.umple.org</a> </div>"
         );
 
     Hashtable<String,String> referenceLookup = createReferenceLookup();
@@ -146,7 +147,7 @@ class Documenter
         else if(gi<(numGroups -1)&&getParser().getGroup(gi+1).numberOfContents()>0) {
           prevNextOutput +="<a href=\"" + getParser().getGroup(gi+1).getContent(0).getTitleFilename() + "\">[Next]</a>&nbsp &nbsp;";
         }
-        String htmlOutput = toHtml(content, navigationOutput, sectionsToHide, prevNextOutput);
+        String htmlOutput = toHtml(content, navigationOutput, sectionsToHide, prevNextOutput, content.getFilename());
 
         // NEW FOR COMBINED
         String tempCombined = Template.HtmlCoreTemplate;
@@ -193,7 +194,7 @@ class Documenter
       }
     }
     
-    return toHtml(selectedContent, toNavigationHtml(selectedGroup, selectedContent),  toSectionsToHideHtml(selectedGroup), "");
+    return toHtml(selectedContent, toNavigationHtml(selectedGroup, selectedContent),  toSectionsToHideHtml(selectedGroup), "", selectedContent.getTitleFilename());
   }
 
   private Hashtable<String, String> createReferenceLookup()
@@ -243,7 +244,7 @@ class Documenter
     {
       if (aFile.getName().endsWith(".txt"))
       {
-        if (!getParser().parse("content", SampleFileWriter.readContent(aFile)).getWasSuccess())
+        if (!getParser().parse("content", SampleFileWriter.readContent(aFile)+" @@Filename "+aFile.getName()).getWasSuccess())
         {
           addMessage("Unable to parse "+ getParser().getParseResult().getPosition() +": " + aFile.getName() );
         }
@@ -263,7 +264,7 @@ class Documenter
     }
   }
   
-  private String toHtml(Content selectedContent, String navigationOutput, String toHideOutput, String prevNextOutput)
+  private String toHtml(Content selectedContent, String navigationOutput, String toHideOutput, String prevNextOutput, String srcFileOutput)
   {
     if (selectedContent == null)
     {
@@ -274,7 +275,8 @@ class Documenter
     htmlOutput = htmlOutput.replace("@@PREVNEXT@@", prevNextOutput);
     htmlOutput = htmlOutput.replace("@@NAVIGATION@@", navigationOutput);
     htmlOutput = htmlOutput.replace("@@SECTIONSTOHIDE@@", toHideOutput);
-    
+    htmlOutput = htmlOutput.replace("@@SRCFILENAME@@", srcFileOutput);
+        
     htmlOutput = substituteCoreElements(htmlOutput, selectedContent);
 
     return htmlOutput;
@@ -426,7 +428,7 @@ class ContentParser
   private int init()
   {
     addRule("groupOrder : ( [**group] ; )*");
-    addRule("content : [*title] [*group] [=noreferences]? @@description [**description] (@@syntax [**syntax])? [[example]]*");
+    addRule("content : [*title] [*group] [=noreferences]? @@description [**description] (@@syntax [**syntax])? [[example]]* @@Filename [*filename]");
     addRule("example- : @@example [**example] @@endexample");
     init += 1;
     return init;
@@ -453,7 +455,7 @@ class ContentParser
       if (t.is("content"))
       {
         Group g = getGroup(t.getValue("group"));
-        Content content = new Content(t.getValue("title"), t.getValue("description"), t.getValue("syntax"));
+        Content content = new Content(t.getValue("title"), t.getValue("description"), t.getValue("syntax"), t.getValue("filename"));
         
         if (t.getValue("noreferences") != null)
         {
@@ -586,6 +588,8 @@ class Template
         "    <td class=\"menu\">" + "\n" +
         "      <div class=\"title\"><a href=\"http://cruise.site.uottawa.ca/umple\">Umple Home<br/>Page</a></div>" + "\n" +
         "@@NAVIGATION@@" + "\n" +
+        "<div class=\"level1\"><a href=\"UmpleUserManualCombined.html\">Combined Version</a></div>\n" +  
+        "<div class=\"level1\"><a href=\"https://github.com/umple/umple/tree/master/build/reference/@@SRCFILENAME@@\">Edit on Github</a></div>\n" +                
         "<div class=\"level1\">@@PREVNEXT@@</div>\n" +
         "    </td>" + "\n" +
         "" + "\n" +
