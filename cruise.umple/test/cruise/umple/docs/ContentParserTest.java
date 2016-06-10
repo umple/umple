@@ -30,7 +30,7 @@ public class ContentParserTest
   @Test
   public void oneExample()
   {
-    assertParse("001_oneExample.txt", "[content][title:myTitle][group:Misc][description:This is\nmy content][syntax:the syntax looks like this][example:here is an example to consider]");
+    assertParse("001_oneExample.txt", "[content][title:myTitle][group:Misc][description:This is\nmy content][syntax:the syntax looks like this][example:here is an example to consider][filename:001_oneExample.txt]");
     
     Assert.assertEquals(1,parser.numberOfGroups());
     Group misc = parser.getGroup(0);
@@ -49,7 +49,7 @@ public class ContentParserTest
   @Test
   public void multipleExamples()
   {
-    assertParse("001_multiExample.txt", "[content][title:myTitle2][group:Misc][description:This is\nmy content2][syntax:the syntax looks like this2][example:one example to consider][example:a second example to consider]");
+    assertParse("001_multiExample.txt", "[content][title:myTitle2][group:Misc][description:This is\nmy content2][syntax:the syntax looks like this2][example:one example to consider][example:a second example to consider][filename:001_multiExample.txt]");
 
     Assert.assertEquals(1,parser.numberOfGroups());
     Group misc = parser.getGroup(0);
@@ -69,7 +69,7 @@ public class ContentParserTest
   @Test
   public void explicitGroup()
   {
-    assertParse("002_explicitGroup.txt", "[content][title:aTitle][group:aGroupName][description:the description][syntax:the syntax][example:the example]");
+    assertParse("002_explicitGroup.txt", "[content][title:aTitle][group:aGroupName][description:the description][syntax:the syntax][example:the example][filename:002_explicitGroup.txt]");
     
     Assert.assertEquals(1,parser.numberOfGroups());
     Group misc = parser.getGroup(0);
@@ -81,7 +81,7 @@ public class ContentParserTest
   @Test
   public void noReferences()
   {
-    assertParse("006_noref.txt", "[content][title:MyTitle][group:MyGroup][noreferences:noreferences][description:This is a description]");
+    assertParse("006_noref.txt", "[content][title:MyTitle][group:MyGroup][noreferences:noreferences][description:This is a description][filename:006_noref.txt]");
     Content content = parser.getGroup(0).getContent(0);
     Assert.assertEquals(false,content.getShouldIncludeReferences());
   }
@@ -89,7 +89,7 @@ public class ContentParserTest
   @Test
   public void defaultHasReferences()
   {
-    assertParse("002_explicitGroup.txt", "[content][title:aTitle][group:aGroupName][description:the description][syntax:the syntax][example:the example]");
+    assertParse("002_explicitGroup.txt", "[content][title:aTitle][group:aGroupName][description:the description][syntax:the syntax][example:the example][filename:002_explicitGroup.txt]");
     Content content = parser.getGroup(0).getContent(0);
     Assert.assertEquals(true,content.getShouldIncludeReferences());
   }

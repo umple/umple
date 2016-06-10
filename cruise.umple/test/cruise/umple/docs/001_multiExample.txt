@@ -14,3 +14,4 @@ one example to consider
 @@example
 a second example to consider
 @@endexample
+@@Filename 001_multiExample.txt
