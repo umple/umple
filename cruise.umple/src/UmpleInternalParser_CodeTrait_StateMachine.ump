@@ -732,14 +732,15 @@ class Transition{
 //----------------------------------------------------------------------------	
   boolean isEqualToTransition(Transition inTransition){
   	if (inTransition.equals(null)) return false;
-    if (!getEvent().equals(inTransition.getEvent())) return false;
-    if (getAutoTransition()!=inTransition.getAutoTransition()) return false;
-	  if (getEvent().numberOfParams() != inTransition.getEvent().numberOfParams()) return false;
-	  for (int i = 0; i < inTransition.getEvent().numberOfParams(); i++) {
-		  if (!getEvent().getParam(i).getType().equals(inTransition.getEvent().getParam(i).getType())) return false;
-	  }
-	  
-	  if (!getNextState().getName().equals(inTransition.getNextState().getName())) return false;
+    if (getAutoTransition()!=inTransition.getAutoTransition())  return false;
+    if (!getAutoTransition() && !inTransition.getAutoTransition()){
+    	if (!getEvent().equals(inTransition.getEvent())) return false;
+    	if (getEvent().numberOfParams() != inTransition.getEvent().numberOfParams()) return false;
+   	  	for (int i = 0; i < inTransition.getEvent().numberOfParams(); i++) {
+   	  		if (!getEvent().getParam(i).getType().equals(inTransition.getEvent().getParam(i).getType())) return false;
+   	  	}
+    }  
+    if (!getNextState().getName().equals(inTransition.getNextState().getName())) return false;
 		/*
 		 * The following comments try to compare guards and actions of a transition. However, I noticed I don't need to do it in my algorithm because they have to be overwritten later.
 		 * There are here for reference (I may need them later).
