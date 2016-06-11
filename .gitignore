@@ -7,6 +7,12 @@ nohup.out
 # umple specific
 umpleonline/ump/tmp*
 
+# generated Umple code that is not saved
+src-gen-umple/
+
+# generated umpleTL code that is not saved
+src-gen-umpleTL/
+src-gen-umpletl/
 
 # os specific:
 .DS_Store
@@ -17,7 +23,6 @@ umpleonline/ump/tmp*
 .recommenders
 
 *swp
-src-gen-umple/
 
 # eclipse
 .classpath

@@ -39,6 +39,8 @@
   <target name="clean">
     <antcall target="template.clean" />
     <delete dir="${project.path}/src-gen-umple" failonerror="false" />
+    <delete dir="${project.path}/src-gen-umpleTL" failonerror="false" />
+    <delete dir="${project.path}/src-gen-umpletl" failonerror="false" />
     <delete dir="cruise.umplificator/src-gen-umple" failonerror="false" />
     <delete dir="cruise.umple.validator/src-gen-umple" failonerror="false" />
   </target>
@@ -99,10 +101,10 @@
   </target>
 
  <!-- ```````````````````````````
-    Generate JET Templates
+    Generate Templates
   ``````````````````````````` -->
 
-  <!-- Move the generic JET templates into the various UmpleTo* projects -->
+  <!-- Move the generic templates into the various UmpleTo* projects -->
   <target name="templates">
     <echo>Copying of common templates no longer active</echo>
   </target>
