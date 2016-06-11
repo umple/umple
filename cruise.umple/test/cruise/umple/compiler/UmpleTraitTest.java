@@ -243,11 +243,13 @@ public class UmpleTraitTest {
 
 	@Test
 	public void stateMachineTraits008Test() {
-		String code = "class A {isA T1; status { on { turnOn[x>0] -> on;}} } trait T1 { status { on { turnOn[z>0] -> on;}} }";
+		String code = "class A {isA T1; status { on { turnOn[x>0] -> on; [x] -> on;}  } } trait T1 { status { on { turnOn[z>0] -> on; [y] -> on;} } }";
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfTransitions());
+		Assert.assertEquals("x > 0", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getGuard().getExpression());
+		Assert.assertEquals("x", model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(1).getGuard().getExpression());
 	}
-	
+	//here
 	@Test
 	public void stateMachineTraits009Test() {
 		String code = "class A {isA T1; status { on { turnOn -> on;}} } trait T1 { status { on { activate -> on;}} }";
@@ -683,6 +685,7 @@ public class UmpleTraitTest {
 			UmpleModel model = getRunModelByFilename("trait_test_data_0003.ump");		
 			Assert.assertEquals(2,model.getUmpleClass("A").getStateMachine("status").getState(1).getNestedStateMachine(0).numberOfStates());
 		}
+		
 //the last StateTest
 		
 	//This is related to issue #656

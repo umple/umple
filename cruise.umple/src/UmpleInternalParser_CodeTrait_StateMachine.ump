@@ -618,9 +618,14 @@ class UmpleInternalParser
 					Transition tTransition = state.getTransition(i); 		  		
 				  boolean find = false;
 				  for(Transition mainlTrans : mainState.getTransitions() ){
-					  if (tTransition.isEqualToTransition(mainlTrans)){ find = true; }
+					  if (tTransition.isEqualToTransition(mainlTrans)){ 
+					  	find = true;
+					  	break;
+					  }
 				  }
-				  if(!find) {			
+				  if(find){
+				  	state.removeTransition(tTransition);
+				  } else  if(!find) {			
 				  	State nextState = inSMachine1.findState(tTransition.getNextState().getName());
 						if(nextState==null){
 							tTransition.getNextState().setStateMachine(inSMachine1);
@@ -727,25 +732,31 @@ class Transition{
 //----------------------------------------------------------------------------	
   boolean isEqualToTransition(Transition inTransition){
   	if (inTransition.equals(null)) return false;
-    if (!getEvent().equals(inTransition.getEvent())) return false;
-    if (getAutoTransition()!=inTransition.getAutoTransition()) return false;
-	  if (getEvent().numberOfParams() != inTransition.getEvent().numberOfParams()) return false;
-	  for (int i = 0; i < inTransition.getEvent().numberOfParams(); i++) {
-		  if (!getEvent().getParam(i).getType().equals(inTransition.getEvent().getParam(i).getType())) return false;
-	  }
-	  
-	  if (getGuard()!=null){
-		  if (!getGuard().isEqualToGuard(inTransition.getGuard())) return false; 
-	  } else {
-	  	if (inTransition.getGuard()!=null) 	return false;
-	  }
-
-	  if (getAction()!=null){
-	  	//Please the following equals API is generated automatically.It must be checked always and make sure it's correct.
-		  if (!getAction().equals(inTransition.getAction())) return false; 
-	  } else {
-	  	if (inTransition.getAction()!=null) 	return false;
-	  }
+    if (getAutoTransition()!=inTransition.getAutoTransition())  return false;
+    if (!getAutoTransition() && !inTransition.getAutoTransition()){
+    	if (!getEvent().equals(inTransition.getEvent())) return false;
+    	if (getEvent().numberOfParams() != inTransition.getEvent().numberOfParams()) return false;
+   	  	for (int i = 0; i < inTransition.getEvent().numberOfParams(); i++) {
+   	  		if (!getEvent().getParam(i).getType().equals(inTransition.getEvent().getParam(i).getType())) return false;
+   	  	}
+    }  
+    if (!getNextState().getName().equals(inTransition.getNextState().getName())) return false;
+		/*
+		 * The following comments try to compare guards and actions of a transition. However, I noticed I don't need to do it in my algorithm because they have to be overwritten later.
+		 * There are here for reference (I may need them later).
+		 */
+		//	  if (getGuard()!=null){
+		//		  if (!getGuard().isEqualToGuard(inTransition.getGuard())) return false; 
+		//	  } else {
+		//	  	if (inTransition.getGuard()!=null) 	return false;
+		//	  }
+		//
+		//	  if (getAction()!=null){
+		//	  	//Please the following equals API is generated automatically.It must be checked always and make sure it's correct.
+		//		  if (!getAction().equals(inTransition.getAction())) return false; 
+		//	  } else {
+		//	  	if (inTransition.getAction()!=null) 	return false;
+		//	  }
     return true;
 	}
 }

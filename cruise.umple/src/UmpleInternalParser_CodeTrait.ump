@@ -1037,8 +1037,16 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  	
   private void checkTypeParameterAvailability(GeneralTPApplied inGeneralTPApplied) {
-	if (inGeneralTPApplied == null ) return;
+		if (inGeneralTPApplied == null ) return;
     UmpleTrait localTrait = getModel().getUmpleTrait(inGeneralTPApplied.getInheritanceName());
+    if (localTrait==null) {
+    	/*
+    	 * This is necessary because the current approach in Umple is that it raises a warning for no seeing the trait.
+    	 * However, in this case I need to raise an error because I cannot continue. 
+    	 */ 
+    	getParseResult().addErrorMessage(new ErrorMessage(202,inGeneralTPApplied.getPositions(),inGeneralTPApplied.getInheritanceName()));
+    	return;
+    }
     for (GeneralTemplateParameter gtp : localTrait.getGeneralTemplateParameters()) {
 	    if (! inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName())){
 	 	   getParseResult().addErrorMessage(new ErrorMessage(219,inGeneralTPApplied.getPositions(),gtp.getName(),localTrait.getName())); 
