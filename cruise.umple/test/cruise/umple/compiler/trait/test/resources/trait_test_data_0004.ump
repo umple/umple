@@ -1,0 +1,43 @@
+class A{
+	isA T1;
+}
+class B{
+	isA T2;
+}
+trait T{
+	sm{
+		s0{
+			e1 -> /{ System.out.printf("T->s0.e1");}  s1;
+		}
+		s1{
+		}
+	}
+}
+
+trait T1{
+	isA T;
+	sm{
+		s0{
+			e1 -> /{superCall; System.out.printf("T1->s0.e1");} s1;
+		}
+		s1{
+		}
+		s2{
+			
+		}
+	}
+}
+
+trait T2{
+	isA T1;
+	sm{
+		s0{
+			e1 -> /{ superCall; System.out.printf("T2->s0.e1");} s1;
+		}
+		s1{
+		}
+		s3{
+			
+		}
+	}
+}

@@ -47,6 +47,11 @@ class UmpleInternalParser
 				}
 			}
 		}
+		for (StateMachine sm : inClass.getStateMachines()){
+			for(Transition trans:sm.getAllTransitions()){
+				if (trans.getAction()!=null) trans.getAction().getCodeblock().removeKeyword("superCall;");
+			}
+		}
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -616,16 +621,17 @@ class UmpleInternalParser
 		  } else {
 		  	for (int i = 0; i < state.numberOfTransitions(); i++) {
 					Transition tTransition = state.getTransition(i); 		  		
-				  boolean find = false;
+				  Transition findTransition= null;
 				  for(Transition mainlTrans : mainState.getTransitions() ){
 					  if (tTransition.isEqualToTransition(mainlTrans)){ 
-					  	find = true;
+					  	findTransition = mainlTrans;
 					  	break;
 					  }
 				  }
-				  if(find){
+				  if(findTransition!=null){
+				  	if (findTransition.getAction()!=null)	findTransition.getAction().getCodeblock().findKeywordAndReplace("superCall;", tTransition.getAction().getCodeblock(),inSMachine2);
 				  	state.removeTransition(tTransition);
-				  } else  if(!find) {			
+				  } else  {			
 				  	State nextState = inSMachine1.findState(tTransition.getNextState().getName());
 						if(nextState==null){
 							tTransition.getNextState().setStateMachine(inSMachine1);
