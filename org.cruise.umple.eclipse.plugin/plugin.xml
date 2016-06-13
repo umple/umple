@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.cruise.umple.eclipse.plugin.category.wizards"
+            name="Umple Projects">
+      </category>
+      <wizard
+            category="org.cruise.umple.eclipse.plugin.category.wizards"
+            class="org.cruise.umple.eclipse.plugin.wizards.GeneralUmpleProjectWizard"
+            id="org.cruise.umple.eclipse.plugin.wizard.general.umple.project"
+            name="General Umple Project">
+      </wizard>
+      <wizard
+            category="org.cruise.umple.eclipse.plugin.category.wizards"
+            class="org.cruise.umple.eclipse.plugin.wizards.JavaBaseUmpleProjectWizard"
+            id="org.cruise.umple.eclipse.plugin.wizard.java.umple.project"
+            name="Java-based Umple Project">
+      </wizard>
+      <wizard
+            category="org.cruise.umple.eclipse.plugin.category.wizards"
+            class="org.cruise.umple.eclipse.plugin.wizards.CppBaseUmpleProjectWizard"
+            id="org.cruise.umple.eclipse.plugin.wizard.cpp.umple.project"
+            name="Cpp-Based Umple Project">
+      </wizard>
+      <wizard
+            category="org.cruise.umple.eclipse.plugin.category.wizards"
+            class="org.cruise.umple.eclipse.plugin.wizards.PhpBaseUmpleProjectWizard"
+            id="org.cruise.umple.eclipse.plugin.wizard.php.umple.project"
+            name="Php-Based Umple Project">
+      </wizard>
+      <wizard
+            category="org.cruise.umple.eclipse.plugin.category.wizards"
+            class="org.cruise.umple.eclipse.plugin.wizards.NusmvBaseUmpleProjectWizard"
+            id="org.cruise.umple.eclipse.plugin.wizard.nusmv.umple.project"
+            name="NuSMV-based Umple Project">
+      </wizard>
+   </extension>
+
+</plugin>
