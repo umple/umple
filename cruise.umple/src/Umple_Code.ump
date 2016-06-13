@@ -888,6 +888,9 @@ class CodeBlock
   	this.codes.putAll(another.codes);
   }
   
+  /*
+   * @author Vahdat
+   */
   public void ApplyTypeParameters(GeneralTPApplied inGeneralTPApplied){
 	   if (inGeneralTPApplied == null) return;
 	   Integer start=0,end=0;
@@ -924,6 +927,32 @@ class CodeBlock
 		   codes.put(language, internalCode);
 	   }
   }
+  
+  /*
+   * @author Vahdat
+   * The following part of code may not generate proper code-style code generation.
+   * Currently, we deal with code style at the code generation level (UmpleTemplate Language);
+   */
+	public void findKeywordAndReplace(String keyword, CodeBlock cBlock, StateMachine inStateMachine){
+    if(keyword==null || keyword=="") return;
+    for (String language : codes.keySet()) {
+    	String replacement=System.lineSeparator()+"\t\t//This part of code comes from the trait '"+inStateMachine.getUmpleTrait().getName()+"' -> begins"+System.lineSeparator()+"\t\t";
+    	replacement = replacement+cBlock.codes.get(language).replace(keyword, "");
+    	replacement=replacement+System.lineSeparator()+"\t\t//The code coming from trait '"+inStateMachine.getUmpleTrait().getName()+"' ends here"+System.lineSeparator()+"\t\t";
+    	codes.put(language,codes.get(language).replace(keyword,replacement+keyword)) ;
+    }
+  } 
+  
+    /*
+   * @author Vahdat
+   */
+	public void removeKeyword(String keyword){
+    if(keyword==null || keyword=="") return;
+    for (String language : codes.keySet()) {
+    	codes.put(language, codes.get(language).replace(keyword,"")) ;
+    }
+  }  
+   
   public CodeBlock(String add)
   {
     this();
