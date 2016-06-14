@@ -27,6 +27,7 @@ class CounterExampleTable {
 	//defines attribute(s)
 	String [] rowLabels;
 	String sourceMachine; 
+	String sourceClass;
 	
 	public String printRequirement() {
 	    //we want to validate that the requirement is in a class of INVARSPEC or CTLSPEC
@@ -105,16 +106,16 @@ class CounterExampleTable {
 		if( columns == null )
 			return this;
 		
-		CounterExampleTable table = new CounterExampleTable(sourceMachine, requirement);
+		CounterExampleTable table = new CounterExampleTable(sourceMachine, sourceClass, requirement);
 		for( CounterExampleColumn column : columns )
 			table.addCounterExampleColumn( column );
 		 
-		 table.setRowLabels( rowLabels );
+		 //table.setRowLabels( rowLabels );
 		 return table;
 	}
 	
 	output <<!
-	Root State Machine :: <<=sourceMachine>> 
+	Source State Machine :: <<=sourceClass>> 
 	Requirement Under Verification (RUV) :: <<=printRequirement()>>
 	<<#for(CounterExampleColumn col : counterExampleColumns){#>>
        <<=col.printColumnEntries()>><<#}#>>
