@@ -23,8 +23,8 @@ class NuSMVGenerator
   public void generate() {
   	
   	NuSMVCoordinator coord = new NuSMVCoordinator();
-    StringBuilder code = new StringBuilder(); 
-    //StringBuilder code1 = new StringBuilder(); 
+    StringBuilder code = new StringBuilder();
+ 
  	//This appends comment to the model
     code.append(coord.commentModel(model));
     code.append("-- PLEASE DO NOT EDIT THIS CODE --\n");
@@ -43,11 +43,13 @@ class NuSMVGenerator
   		 
   	}*/
   	code.append( coord.generateModules( model ) );
-    terminateCode(code);
+    terminateCode( code );
+    
+    coord.analyzeModel( model );
   }
   
   private void terminateCode(StringBuilder code) {
-    model.setCode(code.toString());
+    model.setCode( code.toString() );
     writeModel();
   }
   

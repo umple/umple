@@ -28,16 +28,16 @@ public class CounterExampleGeneratorTest {
 		  public void setUp()
 		  {
 		  		header = new ArrayList< String >();
-		  		myColumns = builderFactory(  );
+		  		myColumns = builderFactory( "output" );
 		  		if( header.size() != 0 )
 		  				name = header.get(0);
 					sourceMachine = getName( name, '.', 0 );
-					machineAbsoluteName = getName(getName( name, '.', 0 ), '.',1);
+					machineAbsoluteName = NuSMVCoordinator.changeNameCase(getName(getName( name, '.', 0 ), '.',1),1);
 		  }
 		  
-		  private CTLSpecification composeRequirement(){
+		  private CTLSpecification composeRequirement( String state ) {
 		  		BasicExpression bexp1 = new BasicExpression(sourceMachine+".state");
-	    		BasicExpression bexp2 = new BasicExpression(sourceMachine+"_s2");
+	    		BasicExpression bexp2 = new BasicExpression(sourceMachine+"_"+state);
 	    		CTLExpression expression = new CTLExpression("ctl");
 	    		expression.addChild(bexp1);
 	    		expression.addChild(bexp2);
@@ -50,8 +50,8 @@ public class CounterExampleGeneratorTest {
 		  
 		  private CounterExampleTable composeTable(List< CounterExampleColumn > columns) {
 		  		
-		  		CTLSpecification aRequirement = composeRequirement();
-		  		CounterExampleTable table = new CounterExampleTable(machineAbsoluteName, aRequirement);
+		  		CTLSpecification aRequirement = composeRequirement("s2");
+		  		CounterExampleTable table = new CounterExampleTable(sourceMachine, machineAbsoluteName, aRequirement);
 		  		for( CounterExampleColumn column : columns )
 		  				table.addCounterExampleColumn( column );
 		 
@@ -61,7 +61,7 @@ public class CounterExampleGeneratorTest {
 		  }
 		  
 		  //returns the first occurrence of delimiter from the rear
-		  private int getPosOfDelimeter( String input , char delimiter){
+		  private int getPosOfDelimeter( String input , char delimiter) {
 		  	 int length = input.length() ;
 		  	 
 		  		while( length > 1) {
@@ -72,17 +72,21 @@ public class CounterExampleGeneratorTest {
 				return -1;
 		  }
 		  
+		  //the input string is splitted using the delimiter counting from the back and returns the result in the given direction
+		  // 1 - right direction; 0 - left direction 
 		  private String getName( String input, char delimiter, int direction ) {
-		  		if(input.length() > 2)
+		  		int pos = getPosOfDelimeter( input, delimiter );
+		  		if( input.length() > 2 ) {
 		  				if( direction == 0)
-		  						return input.substring(0, getPosOfDelimeter(input,delimiter) -1);
+		  						return input.substring( 0, pos - 1);
 		  				if( direction == 1)
-		  						return input.substring(getPosOfDelimeter(input,delimiter), input.length() );
+		  						return input.substring( pos, input.length() );
+		  		}
 		  		return "";
 		  }
 		  
 		 @SuppressWarnings("static-access")
-		 private List< CounterExampleColumn > builderFactory() {
+		 private List< CounterExampleColumn > builderFactory(String fileName) {
 				List< CounterExampleColumn > maincolumns = new ArrayList< CounterExampleColumn >(); 
 					DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -90,7 +94,7 @@ public class CounterExampleGeneratorTest {
 					try {
 						DocumentBuilder builder = factory.newDocumentBuilder();
 						try {
-								Document doc = builder.parse(pathToInput + "outputV2");
+								Document doc = builder.parse(pathToInput + fileName);
 								NodeList stateList = doc.getElementsByTagName("state");
 								
 								for(int i = 0; i < stateList.getLength(); i++ ) {
@@ -150,7 +154,6 @@ public class CounterExampleGeneratorTest {
 		  @Test
 		  public void validateTable()
 		  {	
-		  		myColumns = builderFactory();
 					CounterExampleTable table = composeTable( myColumns ) ;
 		  		System.out.println(table.toString());
 	  		  

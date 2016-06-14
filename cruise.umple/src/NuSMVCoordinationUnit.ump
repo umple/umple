@@ -6,6 +6,7 @@ class NuSMVCoordinator
 {
   depend cruise.umple.compiler.*;
   depend java.util.*;
+  depend java.io.*;
   //depend com.google.common.collect.IdentityHashMap;
 	space <<!
 
@@ -19,7 +20,9 @@ class NuSMVCoordinator
   * @param index value 0 - Lowercase, 1 - Uppercase, Otherwise no change
   * @return the resulting string value.
   */
-  public String changeNameCase(String str , int index) {
+  public static String changeNameCase(String str , int index) {
+  		if( str.length() < 1)
+  			return "";
     	char[] stringArray = str.trim().toCharArray();
     	if(index == 1)
     		stringArray[0] = Character.toUpperCase(stringArray[0]);
@@ -220,16 +223,12 @@ class NuSMVCoordinator
   		return vdec;
   	}
 	
-	//Generates modules from an Umple model
-	public StringBuilder generateModules( UmpleModel uModel ) {
 	
-  		List<NuSMVModule> temp = new ArrayList<NuSMVModule>();
-		List<VariableSpecifier> mainContents = new ArrayList<VariableSpecifier>();
-  		List<NuSMVModule> capsules = new ArrayList<NuSMVModule>();
-		List<CTLSpecification> reachability = new ArrayList<CTLSpecification>();
-		List<InvarConstraint> nonDeterminism = new ArrayList<InvarConstraint>();
-		List<ModuleElement> properties = new ArrayList< ModuleElement >();
+	
+	//Generates a String builder for the modeling elements
+	public StringBuilder generateModel( UmpleModel uModel, List<NuSMVModule> capsules, List<CTLSpecification> reachability, List<ModuleElement> properties, List<InvarConstraint> nonDeterminism ) { 
 		
+		List<NuSMVModule> temp = new ArrayList<NuSMVModule>();
 		StringBuilder output = new StringBuilder();
 		
 		for( UmpleClass uClass : uModel.getUmpleClasses() )	{
@@ -250,14 +249,15 @@ class NuSMVCoordinator
 			
 				//Generates reachability specifications for the nested state machines of hierarchical system under generation.
 				for( StateMachine machine : generateStateMachineList( sMachine ) ) {
-					for( CTLSpecification spec : generateSpecForStateReachability( sMachine, machine, capsuleModule ) ){
-						reachability.add( spec );
-						properties.add( spec );
-					}
 					
 					//Generates invariance specifications for non-determinism
 					for( InvarConstraint spec : generateSpecForTransitionDeterminism( sMachine, machine, capsuleModule ) ){
 						nonDeterminism.add( spec );
+						properties.add( spec );
+					}
+					
+					for( CTLSpecification spec : generateSpecForStateReachability( sMachine, machine, capsuleModule ) ){
+						reachability.add( spec );
 						properties.add( spec );
 					}
 				}					
@@ -271,7 +271,136 @@ class NuSMVCoordinator
 		
 		for( NuSMVModule module : temp )
 			output.append( module.toString() +"\n" );
+	
+		return output;
+	}
+	
+	//the file with the input name on the specified path, and extension is created whenever this method returns a string (i.e. absolute file name).
+	public String createFile( UmpleModel model, StringBuilder sb,  String addOn, String extension ) {
 		
+		String modelFileName = null;
+		File file;
+		try {
+			String path = model.getUmpleFile().getPath();
+			file = new File( path );
+			file.mkdirs();
+			modelFileName = path + File.separator + addOn + model.getUmpleFile().getSimpleFileName() + "." + extension;
+			
+			BufferedWriter bw = new BufferedWriter( new FileWriter( modelFileName ) );
+			bw.write( sb.toString() );
+			bw.flush();
+			bw.close();
+		}
+		catch(Exception ex) {
+			return modelFileName;
+		}
+		return modelFileName;
+	}
+
+	//the file with the input name on the specified path, and extension is deleted whenever this method returns true.
+	public boolean deleteFile( String modelFileName ){
+
+		boolean deleted = false;
+		File file;
+		try {
+			file = new File( modelFileName );
+			if( file.delete() )
+				deleted = true;
+			else
+				deleted = false;
+		}
+		catch(Exception ex) {
+			return deleted;
+		}
+		return deleted;
+	}
+	
+	//prepares all files needed for analysis under consideration... 
+	public void prepareAnalysisFiles( UmpleModel model, StringBuilder output ) {
+		String fileName = createFile( model, output, "_", "smv" );
+		StringBuilder sb = new StringBuilder();
+		String runscript = "_" + model.getUmpleFile().getSimpleFileName()+".sh";
+		String modelName = "_" + model.getUmpleFile().getSimpleFileName()+".smv";
+		sb.append( "nuXmv -source " + runscript +" "+ modelName );
+		String runFileName = createFile( model, sb, "", "sh" );
+		
+		StringBuilder nsb = new StringBuilder();
+		nsb.append( "go" + "\n" );
+		nsb.append( "check_property" + "\n" );
+		nsb.append( "show_traces -p 4 -o " + model.getUmpleFile().getSimpleFileName() + "\n" );
+		nsb.append( "quit" );
+		String runFileName1 = createFile( model, nsb, "_", "sh" );		
+	}
+	
+	
+	public void analyzeModel( UmpleModel model ){
+		
+		List<NuSMVModule> capsules = new ArrayList<NuSMVModule>();
+		List<CTLSpecification> reachability = new ArrayList<CTLSpecification>();
+		List<InvarConstraint> nonDeterminism = new ArrayList<InvarConstraint>();
+		List<ModuleElement> properties = new ArrayList< ModuleElement >();
+		
+		StringBuilder output = generateModel( model, capsules, reachability, properties, nonDeterminism );
+		for( ModuleElement element : properties ) {
+			StringBuilder myOutput = generateModules( model, true );
+			appendConstraint( myOutput, element );
+			prepareAnalysisFiles( model, myOutput );
+    	
+			//invoke model checker here...
+			//and determine whether there is a counterexample or not...
+			//if there is a counterexample, generate a table to present the result...
+			
+		}
+		deleteAnalysisFiles( model );
+	}
+	
+	//deletes all files used for analysis under consideration... 
+	public void deleteAnalysisFiles( UmpleModel model ) {
+		
+		String npath = model.getUmpleFile().getPath() + File.separator;
+		String fileName = npath + "_" + model.getUmpleFile().getSimpleFileName()+".sh";
+		String runFileName = npath + "_" + model.getUmpleFile().getSimpleFileName()+".smv";
+		String runFileName1 = npath + model.getUmpleFile().getSimpleFileName()+".sh";
+		
+		
+		deleteFile( fileName );
+		deleteFile( runFileName );
+		deleteFile( runFileName1 );
+	}
+	
+	
+	
+	//Generates models from an Umple model for analysis purpose
+	public void appendConstraint( StringBuilder output, ModuleElement property ) {
+		
+		if( property != null ) {
+			output.append("\n   -- The following property are specified to certify that this model is free of non-determinism. \n");	
+			output.append( property.toString() +"\n" );
+		}
+	}
+	
+	//Generates modules from an Umple model
+	public StringBuilder generateModules( UmpleModel uModel, boolean temp ) {
+	
+  		List<NuSMVModule> capsules = new ArrayList<NuSMVModule>();
+		List<CTLSpecification> reachability = new ArrayList<CTLSpecification>();
+		List<InvarConstraint> nonDeterminism = new ArrayList<InvarConstraint>();
+		List<ModuleElement> properties = new ArrayList< ModuleElement >();
+
+		StringBuilder output = generateModel( uModel, capsules, reachability, properties, nonDeterminism );		
+  		return output;
+  	}
+  	
+	
+	//Generates modules from an Umple model
+	public StringBuilder generateModules( UmpleModel uModel ) {
+	
+  		List<NuSMVModule> capsules = new ArrayList<NuSMVModule>();
+		List<CTLSpecification> reachability = new ArrayList<CTLSpecification>();
+		List<InvarConstraint> nonDeterminism = new ArrayList<InvarConstraint>();
+		List<ModuleElement> properties = new ArrayList<ModuleElement>();
+
+		StringBuilder output = generateModel( uModel, capsules, reachability, properties, nonDeterminism );
 		if( nonDeterminism.size() > 0 ) {
 			output.append("\n   -- The following properties are specified to certify that this model is free of non-determinism. \n");	
 			for( InvarConstraint element : nonDeterminism )

@@ -115,7 +115,7 @@ class CounterExampleTable {
 	}
 	
 	output <<!
-	Source State Machine :: <<=sourceMachine>> 
+	Source State Machine :: <<=sourceClass>> 
 	Requirement Under Verification (RUV) :: <<=printRequirement()>>
 	<<#for(CounterExampleColumn col : counterExampleColumns){#>>
        <<=col.printColumnEntries()>><<#}#>>
