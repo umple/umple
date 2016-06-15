@@ -1,0 +1,43 @@
+class A{
+	isA T;
+	isA T1;
+	isA T2;
+}
+
+trait T{
+	sm{
+		s0{
+			entry /{T_entry();}
+			do {T_do();}
+			exit /{T_exit();}
+		}
+		s1{
+		}
+	}
+}
+
+trait T1{
+	sm{
+		s0{
+			entry /{T1_entry();}
+			do {T1_do();}
+			exit /{T1_exit();}
+		}
+		s1{
+		}
+		s2{
+			
+		}
+	}
+}
+
+trait T2{
+	sm{
+		s0{
+			entry /{T2_entry();}
+			do {T2_do();}
+			exit /{T2_exit();}
+		}
+	}
+}
+
