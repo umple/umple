@@ -573,6 +573,22 @@ class State
     return false;
   }
 
+	/*
+	 * @author: Vahdat
+	 */
+	public List<Action> getActionsByType(String actionType)
+  {
+  	List<Action> actions = new ArrayList<Action>(); 
+	  for(Action action : getActions())
+	  {
+	    if (actionType.equals(action.getActionType()))
+	    {
+	    	actions.add(action);
+	    }
+	  }
+	  return actions;
+  }
+
   public StateMachine exitableStateMachine(State nextState)
   {
     if (getHasExitAction() && !equals(nextState))

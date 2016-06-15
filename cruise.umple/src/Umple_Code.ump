@@ -943,7 +943,7 @@ class CodeBlock
     }
   } 
   
-    /*
+  /*
    * @author Vahdat
    */
 	public void removeKeyword(String keyword){
@@ -952,6 +952,17 @@ class CodeBlock
     	codes.put(language, codes.get(language).replace(keyword,"")) ;
     }
   }  
+  
+  /*
+   * @author Vahdat
+   */
+  public void addKeyword(String keyword){
+    if(keyword==null || keyword=="") return;
+    for (String language : codes.keySet()) {
+    	codes.put(language, codes.get(language)+keyword) ;
+    }
+  }
+  
    
   public CodeBlock(String add)
   {
