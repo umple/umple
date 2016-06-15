@@ -692,6 +692,7 @@ class UmpleInternalParser
 				  if (inSMachine1.getRootStateMachine().getUmpleClass().equals( (UmpleClass)inUmpleClassfier )){
 					  applyCompositionAndSuperKwywordToStateAction(inSMachine2, bState, cState,"entry");
 					  applyCompositionAndSuperKwywordToStateAction(inSMachine2, bState, cState,"exit");
+					  applyCompositionAndSuperKwywordToStateActivity(inSMachine2, bState, cState);
 				  } else{
 					  //not implemented.
 				  }
@@ -699,6 +700,7 @@ class UmpleInternalParser
 			  } else {
 				  //comes from a trait
 				  applyCompositionAndSuperKwywordToStateActionE(bState, cState);
+				  applyCompositionAndSuperKwywordToStateActivityE(bState, cState);
 			  }
 		} else {
 			  if (inSMachine1.getRootStateMachine().getUmpleTrait()!=null){
@@ -706,14 +708,45 @@ class UmpleInternalParser
 				  if (inSMachine1.getRootStateMachine().getUmpleTrait().equals( (UmpleTrait)inUmpleClassfier )){
 					  applyCompositionAndSuperKwywordToStateAction(inSMachine2, bState, cState,"entry");  
 					  applyCompositionAndSuperKwywordToStateAction(inSMachine2, bState, cState,"exit"); 
+					  applyCompositionAndSuperKwywordToStateActivity(inSMachine2, bState, cState);
 				  } else{
 					  applyCompositionAndSuperKwywordToStateActionE(bState, cState);
+					  applyCompositionAndSuperKwywordToStateActivityE(bState, cState);
 				  }	  
 			  } else {
 				  //comes from a class
 				}
 		}
-	} 
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------		 
+	private void applyCompositionAndSuperKwywordToStateActivityE(State bState, State cState) {
+		for(Activity cActivity : cState.getActivities()){
+			  cActivity.getCodeblock().removeKeyword("superCall;");
+			  Activity activity = new Activity("",bState);
+		  	activity.setCodeblock(cActivity.getCodeblock());
+		}
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	
+	private void applyCompositionAndSuperKwywordToStateActivity(StateMachine inSMachine, State bState, State cState) {
+		if (bState.numberOfActivities()>0) {
+			  for(Activity mActivity: bState.getActivities()){
+				  for(Activity cActivity : cState.getActivities()){
+					  mActivity.getCodeblock().findKeywordAndReplace("superCall;", cActivity.getCodeblock(),inSMachine);
+				  }
+			  }
+		 }else  {
+			  for(Activity cActivity : cState.getActivities()){
+				  cActivity.getCodeblock().removeKeyword("superCall;");
+				  Activity activity = new Activity("",bState);
+		    	activity.setCodeblock(cActivity.getCodeblock());
+			  }						  
+			  Activity activity  = new Activity("superCall;",bState);
+		 }
+	}	
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -743,7 +776,7 @@ class UmpleInternalParser
 				  bState.addAction(cAction);
 			  }
 		  	  Action action  = new Action("superCall;");
-		      action.setActionType("type");
+		      action.setActionType(type);
 		      bState.addAction(action);
 		  }
 	}
