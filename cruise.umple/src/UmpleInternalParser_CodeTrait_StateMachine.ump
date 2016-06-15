@@ -47,11 +47,21 @@ class UmpleInternalParser
 				}
 			}
 		}
-		for (StateMachine sm : inClass.getStateMachines()){
-			for(Transition trans:sm.getAllTransitions()){
-				if (trans.getAction()!=null) trans.getAction().getCodeblock().removeKeyword("superCall;");
+		removeSuperKeywordTracks(inClass);
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+	private void removeSuperKeywordTracks(UmpleClass inClass) {
+ 		for (StateMachine sm : inClass.getStateMachines()){
+			for(State state:sm.getStates()){
+				for(Action action : state.getActions()) action.getCodeblock().removeKeyword("superCall;");
+				for(Activity activity : state.getActivities()) activity.getCodeblock().removeKeyword("superCall;");		
 			}
-		}
+ 			for(Transition trans:sm.getAllTransitions()){
+ 				if (trans.getAction()!=null) trans.getAction().getCodeblock().removeKeyword("superCall;");
+ 			}
+ 		}
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
