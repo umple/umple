@@ -652,6 +652,10 @@ class UmpleInternalParser
 						
 						tTransition.setFromState(mainState);
 						tTransition.setNextState(nextState);
+						if (tTransition.getAction()!=null){
+							tTransition.getAction().getCodeblock().removeKeyword("superCall;");
+							tTransition.getAction().setActionCode(tTransition.getAction().getActionCode()+System.lineSeparator()+"superCall;");
+						}
 						i--;
 				  }
 				}
@@ -742,9 +746,9 @@ class UmpleInternalParser
 			  for(Activity cActivity : cState.getActivities()){
 				  cActivity.getCodeblock().removeKeyword("superCall;");
 				  Activity activity = new Activity("",bState);
-		    	activity.setCodeblock(cActivity.getCodeblock());
+		      activity.setCodeblock(cActivity.getCodeblock());
+		      activity.getCodeblock().addKeyword("superCall;");
 			  }						  
-			  Activity activity  = new Activity("superCall;",bState);
 		 }
 	}	
 //---------------------------------end----------------------------------------
@@ -764,7 +768,13 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 	private void applyCompositionAndSuperKwywordToStateAction(StateMachine inSMachine, State bState, State cState,String type) {
-		if (bState.getHasEntryAction()) {
+		boolean checkAvailability = false;
+		if (type=="entry"){
+	  	checkAvailability=bState.getHasEntryAction();
+	  }else if (type=="exit"){
+	  	checkAvailability=bState.getHasExitAction();
+	  }
+		if (checkAvailability) {
 			  for(Action mAction: bState.getActionsByType(type)){
 				  for(Action cAction : cState.getActionsByType(type)){
 					  mAction.getCodeblock().findKeywordAndReplace("superCall;", cAction.getCodeblock(),inSMachine);
@@ -784,6 +794,7 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 	private void applyCompositionAndSuperKeywordToTransition(StateMachine inSMachine1, StateMachine inSMachine2, Transition fTransition,Transition rTransition, UmpleClassifier inUmpleClassfier) {
+		if (rTransition.getAction()==null) return;
 		if (inUmpleClassfier instanceof UmpleClass){
 			  if (inSMachine1.getRootStateMachine().getUmpleClass()!=null){
 				  //comes from a class

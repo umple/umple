@@ -958,6 +958,10 @@ class CodeBlock
    */
   public void addKeyword(String keyword){
     if(keyword==null || keyword=="") return;
+//    if (codes.isEmpty()) {
+//    	setCode(keyword);
+//    	return;
+//    }
     for (String language : codes.keySet()) {
     	codes.put(language, codes.get(language)+keyword) ;
     }
