@@ -739,17 +739,28 @@ class UmpleInternalParser
 		if (bState.numberOfActivities()>0) {
 			  for(Activity mActivity: bState.getActivities()){
 				  for(Activity cActivity : cState.getActivities()){
-					  mActivity.getCodeblock().findKeywordAndReplace("superCall;", cActivity.getCodeblock(),inSMachine);
+					  if (! mActivity.getComposed()){ 
+						  mActivity.getCodeblock().findKeywordAndReplace("superCall;", cActivity.getCodeblock(),inSMachine);
+					  } else {
+						  creareActivityWithoutSuperCall(bState, cActivity);
+					      return;
+					  }
 				  }
 			  }
 		 }else  {
 			  for(Activity cActivity : cState.getActivities()){
-				  cActivity.getCodeblock().removeKeyword("superCall;");
-				  Activity activity = new Activity("",bState);
-		      activity.setCodeblock(cActivity.getCodeblock());
-		      activity.getCodeblock().addKeyword("superCall;");
+				  creareActivityWithoutSuperCall(bState, cActivity);
 			  }						  
 		 }
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+	private void creareActivityWithoutSuperCall(State bState, Activity cActivity) {
+		cActivity.getCodeblock().removeKeyword("superCall;");
+		  Activity activity = new Activity("",bState);
+		  activity.setCodeblock(cActivity.getCodeblock());
+		  activity.setComposed(true);
 	}	
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1224,7 +1235,14 @@ class Guard{
 /*
  * Please keep updating the method 'public Activity clone(State inState)' if you add new attributes to this class.
  */  
-class Activity{
+ class Activity{
+	
+	/*
+	 * This is used to detect if an activity has been added to the state by its used traits.
+	 */
+	Boolean composed = false;
+	
+	
   /**
    * 
    * @author Vahdat
