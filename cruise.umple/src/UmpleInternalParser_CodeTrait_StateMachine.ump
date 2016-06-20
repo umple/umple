@@ -591,10 +591,66 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
+	/*
+	 * author: Vahdat.
+	 * TODO: this doesn't support multiple languages.
+	 */
+	private boolean compareActions(State mainState, State state) {
+		if (mainState==null || state == null) return false;
+		if(mainState.numberOfActions()!=state.numberOfActions()) return false;
+		for (Action mAction : mainState.getActionsByType("entry")){
+			boolean find = false;
+			for (Action cAction : state.getActionsByType("entry")){
+				if (mAction.getActionCode().equals(cAction.getActionCode())) {
+					find=true;
+					break;
+				}
+				if (!find) return false;
+			}
+		}
+		for (Action mAction : mainState.getActionsByType("exit")){
+			boolean find = false;
+			for (Action cAction : state.getActionsByType("exit")){
+				if (mAction.getActionCode().equals(cAction.getActionCode())) {
+					find=true;
+					break;
+				}
+				if (!find) return false;
+			}
+		}
+		return true;
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+ 	/*
+	 * author: Vahdat.
+	 * TODO: this doesn't support multiple languages.
+	 */
+	private boolean compareActivities(State mainState, State state) {
+		if (mainState==null || state == null) return false;
+		if(mainState.numberOfActivities()!=state.numberOfActivities()) return false;
+		for (Activity mActivity : mainState.getActivities()) {
+			boolean find = false;
+			for (Activity cActivity : state.getActivities()) {
+				if (mActivity.getActivityCode().equals(cActivity.getActivityCode())){
+					find = true;
+					break;
+				}
+			}
+			if (!find) return false;
+		}
+		return true;
+	}  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private boolean compareStatesAndTransitions(StateMachine inSMachine1, StateMachine inSMachine2) {
 	  for (State state : inSMachine2.getStates()) {
 		  State mainState = inSMachine1.findState(state.getName());
 		  if (mainState ==null){
+			  return false;
+		  } else if (!compareActions(mainState,state) || !compareActivities(mainState,state)){
 			  return false;
 		  } else if (state.numberOfNestedStateMachines()==mainState.numberOfNestedStateMachines()){
 		  	for (StateMachine sm2: state.getNestedStateMachines()){
@@ -618,7 +674,7 @@ class UmpleInternalParser
 		  }
 	  }
 	  return true;
-   }
+	}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -739,17 +795,28 @@ class UmpleInternalParser
 		if (bState.numberOfActivities()>0) {
 			  for(Activity mActivity: bState.getActivities()){
 				  for(Activity cActivity : cState.getActivities()){
-					  mActivity.getCodeblock().findKeywordAndReplace("superCall;", cActivity.getCodeblock(),inSMachine);
+					  if (! mActivity.getComposed()){ 
+						  mActivity.getCodeblock().findKeywordAndReplace("superCall;", cActivity.getCodeblock(),inSMachine);
+					  } else {
+						  creareActivityWithoutSuperCall(bState, cActivity);
+					      return;
+					  }
 				  }
 			  }
 		 }else  {
 			  for(Activity cActivity : cState.getActivities()){
-				  cActivity.getCodeblock().removeKeyword("superCall;");
-				  Activity activity = new Activity("",bState);
-		      activity.setCodeblock(cActivity.getCodeblock());
-		      activity.getCodeblock().addKeyword("superCall;");
+				  creareActivityWithoutSuperCall(bState, cActivity);
 			  }						  
 		 }
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+	private void creareActivityWithoutSuperCall(State bState, Activity cActivity) {
+		cActivity.getCodeblock().removeKeyword("superCall;");
+		  Activity activity = new Activity("",bState);
+		  activity.setCodeblock(cActivity.getCodeblock());
+		  activity.setComposed(true);
 	}	
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1224,7 +1291,14 @@ class Guard{
 /*
  * Please keep updating the method 'public Activity clone(State inState)' if you add new attributes to this class.
  */  
-class Activity{
+ class Activity{
+	
+	/*
+	 * This is used to detect if an activity has been added to the state by its used traits.
+	 */
+	Boolean composed = false;
+	
+	
   /**
    * 
    * @author Vahdat
