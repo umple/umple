@@ -1041,9 +1041,38 @@ public class UmpleTraitTest {
 	}
 	
 	@Test
-	public void stateMachineTraits06Test() {
+	public void stateMachineTraits062Test() {
 		UmpleModel model = getRunModelByFilename("trait_test_data_0020.ump");
 		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfActivities());
+	}
+	
+	/*
+	 * TODO:This test case is not covering multiple languages. Will fix it later.
+	 */
+	@Test
+	public void stateMachineTraits063Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0021.ump");
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("t1_entry"));
+		Assert.assertTrue(str.contains("t2_entry1"));
+		Assert.assertTrue(str.contains("t2_entry2"));
+		str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("t1_exit"));
+		Assert.assertTrue(str.contains("t2_exit1"));
+		Assert.assertTrue(str.contains("t2_exit2"));
+		str= "";
+		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
+			str = str+ activity.getActivityCode();			
+		}
+		Assert.assertTrue(str.contains("t1_do1"));
+		Assert.assertTrue(str.contains("t2_do1"));
+		Assert.assertTrue(str.contains("t2_do2"));
 	}
 
 	
