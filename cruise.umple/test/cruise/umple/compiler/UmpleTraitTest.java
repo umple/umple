@@ -1076,6 +1076,20 @@ public class UmpleTraitTest {
 	}
 
 	
+	@Test
+	public void stateMachineTraits064Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0022.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("234");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
 	// the last StateTest
 
 	// This is related to issue #656

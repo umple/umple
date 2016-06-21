@@ -54,14 +54,21 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
 	private void removeSuperKeywordTracks(UmpleClass inClass) {
  		for (StateMachine sm : inClass.getStateMachines()){
-			for(State state:sm.getStates()){
-				for(Action action : state.getActions()) action.getCodeblock().removeKeyword("superCall;");
-				for(Activity activity : state.getActivities()) activity.getCodeblock().removeKeyword("superCall;");		
-			}
- 			for(Transition trans:sm.getAllTransitions()){
- 				if (trans.getAction()!=null) trans.getAction().getCodeblock().removeKeyword("superCall;");
- 			}
+			removeSuperKeywordTracksReculsively(sm);
  		}
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+	private void removeSuperKeywordTracksReculsively(StateMachine inStateMachine){
+		for(State state:inStateMachine.getStates()){
+			for(Action action : state.getActions()) action.getCodeblock().removeKeyword("superCall;");
+			for(Activity activity : state.getActivities()) activity.getCodeblock().removeKeyword("superCall;");	
+			for (StateMachine nSM : state.getNestedStateMachines()) removeSuperKeywordTracksReculsively(nSM);
+		}
+		for(Transition trans:inStateMachine.getAllTransitions()){
+			if (trans.getAction()!=null) trans.getAction().getCodeblock().removeKeyword("superCall;");
+		}
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -206,6 +213,7 @@ class UmpleInternalParser
 								State foundStateTemp = nestedSM.findState(smTSignature.getDesState(i+1),false);
 								if(foundStateTemp!=null){
 									if(foundSM!=null){
+										//TODO this error code is not valid.
 										getParseResult().addErrorMessage(new ErrorMessage(233,inClassfier.getPosition(0),inClassfier.getName(),smTSignature.getDesState(i+1)));	
 						 		 		 return null;
 									} else {
@@ -668,7 +676,7 @@ class UmpleInternalParser
 		  for(Transition trans : state.getTransitions() ){
 			  boolean find = false;
 			  for(Transition mainlTrans : mainState.getTransitions() ){
-				  if (trans.isEqualToTransition(mainlTrans)){ find = true; }
+				  if (trans.isEqualToTransition(mainlTrans)&& trans.getNextState().getName().equals(mainlTrans.getNextState().getName())) find = true; 
 			  }
 			  if(!find) return false;
 		  }
@@ -689,16 +697,26 @@ class UmpleInternalParser
 		  	for (int i = 0; i < state.numberOfTransitions(); i++) {
 					Transition tTransition = state.getTransition(i); 		  		
 				  Transition findTransition= null;
+				  State noneDeterminisimDetection = null;
 				  for(Transition mainlTrans : mainState.getTransitions() ){
 					  if (tTransition.isEqualToTransition(mainlTrans)){ 
-					  	findTransition = mainlTrans;
-					  	break;
+					  	if(tTransition.getNextState().getName().equals(mainlTrans.getNextState().getName())){ 
+							  findTransition = mainlTrans;
+						  } else {
+							  noneDeterminisimDetection = tTransition.getNextState();  
+						  }		  	
 					  }
 				  }
 				  if(findTransition!=null){
 				  	applyCompositionAndSuperKeywordToTransition(inSMachine1, inSMachine2, findTransition, tTransition,inUmpleClassfier);
 				  	state.removeTransition(tTransition);
 				  } else  {			
+				  	if (noneDeterminisimDetection!=null){
+						  String n1 = inSMachine1.getUmpleClass() ==null ? inSMachine1.getUmpleTrait().getName() : inSMachine1.getUmpleClass().getName(); 
+						  String n2 = inSMachine2.getUmpleClass() ==null ? inSMachine2.getUmpleTrait().getName() : inSMachine2.getUmpleClass().getName();
+						  getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),tTransition.getEvent().getName(),n1,n2));
+						  return;		  
+						}
 				  	State nextState = inSMachine1.findState(tTransition.getNextState().getName());
 						if(nextState==null){
 							tTransition.getNextState().setStateMachine(inSMachine1);
@@ -969,7 +987,6 @@ class Transition{
    	  		if (!getEvent().getParam(i).getType().equals(inTransition.getEvent().getParam(i).getType())) return false;
    	  	}
     }  
-    if (!getNextState().getName().equals(inTransition.getNextState().getName())) return false;
 		/*
 		 * The following comments try to compare guards and actions of a transition. However, I noticed I don't need to do it in my algorithm because they have to be overwritten later.
 		 * There are here for reference (I may need them later).
