@@ -1,0 +1,33 @@
+class A{
+	
+	isA T1;
+}
+
+trait T{
+	status {
+		RECEIVED{
+			check[acceptanceCheck()] -> ACCEPTED;
+			check[!acceptanceCheck()] -> ABORTED;
+		}
+		ACCEPTED{
+			
+		}
+		ABORTED{}
+		
+	}
+}
+
+trait T1{
+	isA T;
+	status {
+		RECEIVED{
+			check[acceptanceCheck()] /{action1();}-> ACCEPTED;
+			check[!acceptanceCheck()] /{action2();} -> ABORTED;
+		}
+		ACCEPTED{
+			
+		}
+		ABORTED{}
+		
+	}
+}
