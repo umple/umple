@@ -1,0 +1,100 @@
+// Home Heating System state machine written in Umple
+// Source: Model Checking Template-Semantics Specifications (TR: CS-2004-20)
+// University of Waterloo, Waterloo, Ontario, N2L 3G1
+// Authors: Yun Lu, Joanne M. Atlee, Nancy A. Day, Jianwei Niu
+// Date: April 05, 2004
+
+class HeatControlSystem {
+
+	int furnaceStartUpTime;
+	int furnaceTimer;
+	int setTemp;
+	int actualTemp;
+	int waitedForWarm;
+	int warmUpTimer;
+	int valvePos;
+	int waitedForCool;
+	int coolDownTimer;
+
+	//internally generated events
+	boolean furnaceRunning;
+	boolean activate;
+	boolean deactivate;
+	boolean requestHeat;
+	boolean furnaceReset;
+
+
+	sm {
+		heatingSystem {
+			house {
+				room {
+					noHeatReq {
+						idleNotHeat {
+							[(setTemp - actualTemp) > 2] / { valvePos++; waitedForWarm = 0; } ->	waitForHeat;					
+						}
+						waitForHeat {
+							[waitedForWarm < warmUpTimer] /{ waitedForWarm++; } -> waitForHeat;
+							[(valvePos != 2) & (waitedForWarm == warmUpTimer)] /{ valvePos++; waitedForWarm = 0; } -> waitForHeat;
+							[!((setTemp - actualTemp) > 2)] -> idleNotHeat;
+							[(waitedForWarm == warmUpTimer) & (valvePos == 2) & ((setTemp - actualTemp) > 2)] / { requestHeat = true; } -> heatReq;
+						}
+					}
+					heatReq {
+						idleHeat {
+							[(actualTemp - setTemp) > 2]	/ { valvePos--; waitedForCool = 0; } ->	waitForCool;		
+						}
+						waitForCool {
+							[(valvePos != 0) & (coolDownTimer == waitedForCool)] / { valvePos--; waitedForCool = 0; } -> waitForCool;	
+                            [(valvePos == 0) & (coolDownTimer == waitedForCool) & ((actualTemp - setTemp) > 2)] / { requestHeat = false; } -> noHeatReq;
+							[waitedForCool < coolDownTimer] / { waitedForCool++; } -> waitForCool;
+							[!((actualTemp - setTemp) > 2)] -> idleHeat;
+						}
+					}
+				}
+				||
+				controller {
+					off {
+						heatSwitchOn -> controllerOn;
+					}
+					controllerOn {
+						heatSwitchOff / { deactivate = true; } -> off;
+						furnaceFault -> error;
+						idle {
+							[requestHeat == true] / { activate = true; } -> heaterActive;
+						}
+						heaterActive {
+							[requestHeat == false] / { deactivate = true; } -> idle;
+							actHeater {
+								[furnaceRunning == true] -> heaterRun;
+							}
+							heaterRun { }
+						}
+					}
+					error {
+						userReset / { furnaceReset = true; } -> off;
+					}
+				}
+			}
+			||
+			furnace {
+				furnaceNormal {
+					furnaceFault -> furnaceErr;
+					furnaceOff {
+						[activate == true] / { furnaceStartUpTime = 0; } -> furnaceAct;
+					}
+					furnaceAct {
+						[deactivate == true] -> furnaceOff;
+						[furnaceStartUpTime < furnaceTimer] / { furnaceStartUpTime++ } -> furnaceAct;
+						[furnaceStartUpTime == furnaceTimer] / { furnaceRunning = true; } -> furnaceRun;
+					}
+					furnaceRun {
+						[deactivate == true] -> furnaceOff;
+					}
+				}
+				furnaceErr {
+					[furnaceReset == true] -> furnaceNormal;
+				}
+			}
+		}
+	}
+}

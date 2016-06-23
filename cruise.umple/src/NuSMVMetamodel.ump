@@ -358,10 +358,17 @@ class BasicExpression {
 
 class CTLSpecification {
 	isA ModuleElement;
-	after constructor { setHeader("CTLSPEC"); }
+	lazy Boolean displayNegation;
+	after constructor { setHeader("CTLSPEC");  displayNegation = false; }
 	1 -> 1 CTLExpression;
+	
+	private String printExpression() {
+		if( displayNegation )
+			return "! " + cTLExpression.toString();
+		return cTLExpression.toString();
+	}
   	//Template for formatting output
-  	output <<!   <<=getHeader()>>  <<=cTLExpression.toString()>>!>>
+  	output <<!   <<=getHeader()>>  <<=printExpression()>>!>>
   	emit toString()(output);
 }
 

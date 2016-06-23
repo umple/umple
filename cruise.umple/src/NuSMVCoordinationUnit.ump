@@ -315,8 +315,50 @@ class NuSMVCoordinator
 		return deleted;
 	}
 	
+	//command invoking program
+	private void executeCommand(String command) {
+
+		StringBuffer output = new StringBuffer();
+
+		Process p;
+		try {
+			p = Runtime.getRuntime().exec(command);
+			p.waitFor();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+			String line = "";			
+			while ((line = reader.readLine())!= null) {
+				output.append(line + "\n");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//return output.toString();
+	}
+	
+	private boolean hasInfiniteDomain( UmpleModel model, StringBuilder output ) {
+		
+		boolean test0 = false;
+		for( UmpleClass uClass : model.getUmpleClasses() )
+			for( Attribute attribute : uClass.getAttributes() ) {
+				if( attribute.getFullType().equals( "Float" ) || 
+					attribute.getFullType().equals( "float" ) ||
+					attribute.getFullType().equals( "Integer" ) ||
+					attribute.getFullType().equals( "int" ) )
+				
+				test0 = test0 || true;					
+				output.append( "\n ... Attribute "+ attribute.getName() +" of type "+ attribute.getFullType() +" cannot be analyzed with CTL properties..." );
+			}
+		return test0;
+	}
+	
 	//prepares all files needed for analysis under consideration... 
-	public void prepareAnalysisFiles( UmpleModel model, StringBuilder output ) {
+	public void prepareAnalysisFiles( UmpleModel model, StringBuilder output, ModuleElement element ) {
+		
+		//house cleaning or garbage collection
+		deleteAnalysisFiles( model );
+		
 		String fileName = createFile( model, output, "_", "smv" );
 		StringBuilder sb = new StringBuilder();
 		String runscript = "_" + model.getUmpleFile().getSimpleFileName()+".sh";
@@ -324,14 +366,34 @@ class NuSMVCoordinator
 		sb.append( "nuXmv -source " + runscript +" "+ modelName );
 		String runFileName = createFile( model, sb, "", "sh" );
 		
-		StringBuilder nsb = new StringBuilder();
-		nsb.append( "go" + "\n" );
-		nsb.append( "check_property" + "\n" );
-		nsb.append( "show_traces -p 4 -o " + model.getUmpleFile().getSimpleFileName() + "\n" );
-		nsb.append( "quit" );
-		String runFileName1 = createFile( model, nsb, "_", "sh" );		
+		StringBuilder nsb;
+		if( element instanceof InvarConstraint ) {
+			
+			nsb = new StringBuilder();
+			if( hasInfiniteDomain(model, output) ) {
+				nsb.append( "go_msat" + "\n" );
+				nsb.append( "check_invar_ic3" + "\n" );
+			}
+			else {
+				nsb.append( "go" + "\n" ); 
+				nsb.append( "check_invar" + "\n" );
+			}
+			
+			nsb.append( "show_traces -p 4 -o " + model.getUmpleFile().getSimpleFileName() + "\n" );
+			nsb.append( "quit" );
+			String runFileName1 = createFile( model, nsb, "_", "sh" );		
+		}
+		
+		//System.out.println(hasInfiniteDomain( model, output ));
+		if( ( element instanceof CTLSpecification ) && !hasInfiniteDomain( model, output ) ) {
+			nsb = new StringBuilder();
+			nsb.append( "go" + "\n" );
+			nsb.append( "check_ctlspec" + "\n" );
+			nsb.append( "show_traces -p 4 -o " + model.getUmpleFile().getSimpleFileName() + "\n" );
+			nsb.append( "quit" );
+			String runFileName1 = createFile( model, nsb, "_", "sh" );		
+		}
 	}
-	
 	
 	public void analyzeModel( UmpleModel model ){
 		
@@ -339,14 +401,19 @@ class NuSMVCoordinator
 		List<CTLSpecification> reachability = new ArrayList<CTLSpecification>();
 		List<InvarConstraint> nonDeterminism = new ArrayList<InvarConstraint>();
 		List<ModuleElement> properties = new ArrayList< ModuleElement >();
-		
+		String npath = model.getUmpleFile().getPath() + File.separator;
+		String fileName = "sh " + npath + model.getUmpleFile().getSimpleFileName()+".sh";
+
 		StringBuilder output = generateModel( model, capsules, reachability, properties, nonDeterminism );
 		for( ModuleElement element : properties ) {
 			StringBuilder myOutput = generateModules( model, true );
 			appendConstraint( myOutput, element );
-			prepareAnalysisFiles( model, myOutput );
+			prepareAnalysisFiles( model, myOutput, element );
     	
 			//invoke model checker here...
+			executeCommand( fileName );
+			//System.out.println( out );
+			
 			//and determine whether there is a counterexample or not...
 			//if there is a counterexample, generate a table to present the result...
 			
@@ -361,11 +428,12 @@ class NuSMVCoordinator
 		String fileName = npath + "_" + model.getUmpleFile().getSimpleFileName()+".sh";
 		String runFileName = npath + "_" + model.getUmpleFile().getSimpleFileName()+".smv";
 		String runFileName1 = npath + model.getUmpleFile().getSimpleFileName()+".sh";
-		
+		String xmlFile = npath + model.getUmpleFile().getSimpleFileName()+".xml";
 		
 		deleteFile( fileName );
 		deleteFile( runFileName );
 		deleteFile( runFileName1 );
+		//deleteFile( xmlFile );
 	}
 	
 	
@@ -552,6 +620,7 @@ class NuSMVCoordinator
     		cexp.setQualified(true);
     		cexp.setCtlOperator(CTLExpression.CtlOperator.EF);
     		CTLSpecification cspec = new CTLSpecification(cexp);
+			//cspec.setDisplayNegation( true );
     		reachabilitySpecifications.add(cspec);
     	}
 		

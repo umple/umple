@@ -62,6 +62,8 @@ ToolTips.tooltipEntries = {
   ttToggleAttributes: ['li', "Show/Hide attributes on class diagrams </br><b>Shortcut: [ctrl+a]"],
   ttToggleMethods: ['li', "Show/Hide the methods on class diagrams </br><b>Shortcut: [ctrl+m]"],
   ttToggleActions: ['li', "Show/Hide the actions on the state diagrams"],
+  ttToggleTransitionLabel: ['li', "Show/Hide the transition labels on the state diagrams"],
+  ttToggleGuardLabel: ['li', "Show/Hide the guard labels on the state diagrams"],
 
   // diagram type tooltips
   ttShowEditableClassDiagram: ["li", "Display a graphically editable class diagram </br><b>Shortcut: [ctrl+e]</b>"],

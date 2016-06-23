@@ -27,6 +27,9 @@ class GvStateDiagramGenerator
 {
   Boolean hideActions = false;
   Boolean hideGuards = false;
+  Boolean hideTransitionLabels = false;
+  Boolean hideGuardLabels = false;
+  lazy StateMachine root;
  
   internal Map<Transition,String> internalBoundaryTrans
     = new HashMap<Transition,String>();
@@ -68,6 +71,8 @@ digraph "<<=filename>>" {
     
     hideActions = hasSuboption("hideactions");
     hideGuards = hasSuboption("hideguards");
+    hideTransitionLabels = hasSuboption("hidetransitionlabels");
+    hideGuardLabels = hasSuboption("hideguardlabels");
     
     // Output basic gv file header
     _graphStart(0,code,model.getUmpleFile().getSimpleFileName());
@@ -101,6 +106,7 @@ digraph "<<=filename>>" {
       // Process the top level state machines in a class
       for (StateMachine sm : uClass.getStateMachines())
       {
+      	root = sm;
         if(sm.getParentState() == null) 
         { // This check shouldn't be needed
           appendStateMachineRecursively(code, transitions, sm, uClass, className, true, smCount, 4);
@@ -218,6 +224,27 @@ node [shape = circle, fixedsize = true, width=.3];
 !>>
   emit topLevelBorder(String clSmName, String className, String smName)(topLevelBorder); 
 
+  //we introduce this method to generate a unique identity for a given transition using a universal set of transitions
+  private int getObjectIdentity( StateMachine sm, Object obj) {
+  		int pos = 1;
+		if( obj instanceof Transition ) {
+			for(Transition trans : sm.getAllTransitions() ) {
+				if(trans.equals( (Transition) obj) )
+					return pos;
+				pos++;
+			}
+		}
+		if( obj instanceof Guard ) {
+			pos = 1;
+			for(Guard guard : sm.getAllGuards() ) {
+				if(guard.equals(( Guard ) obj ))
+					return pos;
+				pos++;
+			}
+		}
+  		return -1;
+  	}
+  
   private void appendStateMachineRecursively(StringBuilder code, StringBuilder transitions, StateMachine sm,
       UmpleClass uClass, String className, boolean isTopLevel,
       int smCount, int indentLevel) 
@@ -227,7 +254,7 @@ node [shape = circle, fixedsize = true, width=.3];
     boolean isPseudo = false;    
     Event event;
     Action action;
-    String transitionLabel, guardString, actionCode, transitionAction, blah = "blah";
+    String transitionLabel, guardString, actionCode, transitionAction, blah = "blah", guardLabel;
     Guard guard;
     List<StateMachine> allNestedStateMachines = sm.getImmediateNestedStateMachines();
 
@@ -361,25 +388,32 @@ node [shape = circle, fixedsize = true, width=.3];
       {
         event = t.getEvent();
         action = t.getAction();
+        hideTransitionLabels = true;
+        if ( hideTransitionLabels ) {
+          transitionLabel = "";
+        }
+        else {
+           transitionLabel = "   t"+getObjectIdentity( root, t )+": ";
+        }       
         
         if(event.isAutoTransition()) 
         {
-          transitionLabel = "";
+          transitionLabel += "";
         } 
         else {
           if (event.getIsTimer()) 
           {
-            transitionLabel = "after("+event.getTimerInSeconds()+")";
+            transitionLabel += "after("+event.getTimerInSeconds()+")";
           }
           else 
           {
             if(event.getArgs() == null || event.getArgs() == "") 
             {
-              transitionLabel = event.getName();
+              transitionLabel += event.getName();
             }
             else 
             {
-              transitionLabel = event.getName()+"("+event.getArgs()+")";
+              transitionLabel += event.getName()+"("+event.getArgs()+")";
             }
           }
         }
@@ -399,14 +433,20 @@ node [shape = circle, fixedsize = true, width=.3];
         if (guard == null || hideGuards) guardString = "";
         else 
         {
+          hideGuardLabels = true;
+          if ( hideGuardLabels ) {
+          	guardLabel = "";
+          }
+          else {
+            guardLabel = ":g"+getObjectIdentity( root, guard );
+          }
           JavaGenerator gen = new JavaGenerator();
           gen.setModel(getModel());
-          
           if(event.isAutoTransition()) guardString = "[";
           else guardString = " [";
 
           //guardString += guard.getCondition(gen).replaceAll("\"","&quot;") + "]";
-	  guardString += guard.getExpression() + "]";
+	      guardString += guard.getExpression() + "]"+guardLabel;
         }
         
         String orig = getTransitionNameForState(t.getFromState(),uClass,true);
@@ -665,4 +705,3 @@ node [shape = circle, fixedsize = true, width=.3];
     }
   } 
 }
-

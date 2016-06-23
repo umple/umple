@@ -162,6 +162,10 @@ window.onbeforeunload = function(event) {
       cookie_view += "a";
     if(jQuery("#buttonToggleMethods").attr("checked"))
       cookie_view += "m"
+    if(jQuery("#buttonToggleTransitionLabel").attr("checked"))
+      cookie_view += "r";
+    if(jQuery("#buttonToggleGuardLabel").attr("checked"))
+      cookie_view += "g";
     cookie_view += ";" + "expires="+date.toGMTString() + ";";    
     document.cookie = cookie_view;
       
