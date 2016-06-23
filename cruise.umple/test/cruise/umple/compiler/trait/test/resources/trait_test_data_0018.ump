@@ -1,0 +1,39 @@
+//There should be exactly to thread in the code generation level.
+class A{
+	isA T;
+	isA T1;
+		sm{
+		s0{
+			entry /{superCall; T2_entry();}
+		
+			exit /{superCall; T2_exit();}
+		}
+	}
+}
+
+trait T{
+	sm{
+		s0{
+			entry /{T_entry();}
+			do {T_do();}
+			exit /{T_exit();}
+		}
+		s1{
+		}
+	}
+}
+
+trait T1{
+	sm{
+		s0{
+			entry /{T1_entry();}
+			do {T1_do();}
+			exit /{T1_exit();}
+		}
+		s1{
+		}
+		s2{
+			
+		}
+	}
+}

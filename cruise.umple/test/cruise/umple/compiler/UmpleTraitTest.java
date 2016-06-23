@@ -242,11 +242,9 @@ public class UmpleTraitTest {
 	public void stateMachineTraits008Test() {
 		String code = "class A {isA T1; status { on { turnOn[x>0] -> on; [x] -> on;}  } } trait T1 { status { on { turnOn[z>0] -> on; [y] -> on;} } }";
 		UmpleModel model = getRunModel(code);
-		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfTransitions());
-		Assert.assertEquals("x > 0",
-				model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getGuard().getExpression());
-		Assert.assertEquals("x",
-				model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(1).getGuard().getExpression());
+		Assert.assertEquals(4, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfTransitions());
+//		Assert.assertEquals("x > 0",model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getGuard().getExpression());
+//		Assert.assertEquals("x",model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(1).getGuard().getExpression());
 	}
 
 	@Test
@@ -764,7 +762,360 @@ public class UmpleTraitTest {
 
 	}
 
+	@Test
+	public void stateMachineTraits048Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0006.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T->s0.e1"));
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T1->s0.e1"));
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T2->s0.e1"));
+		Assert.assertFalse(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("superCall;"));
 
+	}
+	
+	@Test
+	public void stateMachineTraits049Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0007.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T->s0.e1"));
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T1->s0.e1"));
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T2->s0.e1"));
+		Assert.assertFalse(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("superCall;"));
+
+	}
+	
+	@Test
+	public void stateMachineTraits050Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0008.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T->s0.e1"));
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T1->s0.e1"));
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T2->s0.e1"));
+		Assert.assertFalse(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("superCall;"));
+
+	}
+	/*
+	 * TODO:This test case is not covering multiple languages. Will fix it later.
+	 */
+	@Test
+	public void stateMachineTraits051Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0009.ump");
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_entry"));
+		Assert.assertTrue(str.contains("T1_entry"));
+		Assert.assertTrue(str.contains("T2_entry"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_exit"));
+		Assert.assertTrue(str.contains("T1_exit"));
+		Assert.assertTrue(str.contains("T2_exit"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
+			str = str+ activity.getActivityCode();			
+		}
+		Assert.assertTrue(str.contains("T_do"));
+		Assert.assertTrue(str.contains("T1_do"));
+		Assert.assertTrue(str.contains("T2_do"));
+		Assert.assertFalse(str.contains("superCall;"));
+	}
+	
+	/*
+	 * TODO:This test case is not covering multiple languages. Will fix it later.
+	 */
+	@Test
+	public void stateMachineTraits052Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0010.ump");
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_entry"));
+		Assert.assertTrue(str.contains("T1_entry"));
+		Assert.assertTrue(str.contains("T2_entry"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_exit"));
+		Assert.assertTrue(str.contains("T1_exit"));
+		Assert.assertTrue(str.contains("T2_exit"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
+			str = str+ activity.getActivityCode();			
+		}
+		Assert.assertTrue(str.contains("T_do"));
+		Assert.assertTrue(str.contains("T1_do"));
+		Assert.assertTrue(str.contains("T2_do"));
+		Assert.assertFalse(str.contains("superCall;"));
+	}
+	
+	/*
+	 * TODO:This test case is not covering multiple languages. Will fix it later.
+	 */
+	@Test
+	public void stateMachineTraits053Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0011.ump");
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_entry"));
+		Assert.assertTrue(str.contains("T1_entry"));
+		Assert.assertTrue(str.contains("T2_entry"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_exit"));
+		Assert.assertTrue(str.contains("T1_exit"));
+		Assert.assertTrue(str.contains("T2_exit"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
+			str = str+ activity.getActivityCode();			
+		}
+		Assert.assertTrue(str.contains("T_do"));
+		Assert.assertTrue(str.contains("T1_do"));
+		Assert.assertTrue(str.contains("T2_do"));
+		Assert.assertFalse(str.contains("superCall;"));
+	}
+
+	/*
+	 * TODO:This test case is not covering multiple languages. Will fix it later.
+	 */
+	@Test
+	public void stateMachineTraits054Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0012.ump");
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_entry"));
+		Assert.assertTrue(str.contains("T1_entry"));
+		Assert.assertTrue(str.contains("T2_entry"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_exit"));
+		Assert.assertTrue(str.contains("T1_exit"));
+		Assert.assertTrue(str.contains("T2_exit"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
+			str = str+ activity.getActivityCode();			
+		}
+		Assert.assertTrue(str.contains("T_do"));
+		Assert.assertTrue(str.contains("T1_do"));
+		Assert.assertTrue(str.contains("T2_do"));
+		Assert.assertFalse(str.contains("superCall;"));
+	}
+	
+	/*
+	 * TODO:This test case is not covering multiple languages. Will fix it later.
+	 */
+	@Test
+	public void stateMachineTraits055Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0013.ump");
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_entry"));
+		Assert.assertTrue(str.contains("T1_entry"));
+		Assert.assertTrue(str.contains("T2_entry"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_exit"));
+		Assert.assertTrue(str.contains("T1_exit"));
+		Assert.assertTrue(str.contains("T2_exit"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
+			str = str+ activity.getActivityCode();			
+		}
+		Assert.assertTrue(str.contains("T_do"));
+		Assert.assertTrue(str.contains("T1_do"));
+		Assert.assertTrue(str.contains("T2_do"));
+		Assert.assertFalse(str.contains("superCall;"));
+	}
+	
+	
+	@Test
+	public void stateMachineTraits056Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0014.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T->s0.e1"));
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T1->s0.e1"));
+		Assert.assertFalse(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("superCall;"));
+
+	}
+	
+	@Test
+	public void stateMachineTraits057Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0015.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T->s0.e1"));
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("T1->s0.e1"));
+		Assert.assertFalse(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("superCall;"));
+
+	}
+	
+	/*
+	 * TODO:This test case is not covering multiple languages. Will fix it later.
+	 */
+	@Test
+	public void stateMachineTraits058Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0016.ump");
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_entry"));
+		Assert.assertTrue(str.contains("T1_entry"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_exit"));
+		Assert.assertTrue(str.contains("T1_exit"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
+			str = str+ activity.getActivityCode();			
+		}
+		Assert.assertTrue(str.contains("T_do"));
+		Assert.assertTrue(str.contains("T1_do"));
+		Assert.assertFalse(str.contains("superCall;"));
+	}
+	
+	
+	@Test
+	public void stateMachineTraits059Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0017.ump");
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_entry"));
+		Assert.assertTrue(str.contains("T1_entry"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("T_exit"));
+		Assert.assertTrue(str.contains("T1_exit"));
+		Assert.assertFalse(str.contains("superCall;"));
+		str= "";
+		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
+			str = str+ activity.getActivityCode();			
+		}
+		Assert.assertTrue(str.contains("T_do"));
+		Assert.assertTrue(str.contains("T1_do"));
+		Assert.assertFalse(str.contains("superCall;"));
+	}
+	
+	@Test
+	public void stateMachineTraits060Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0018.ump");
+		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfActivities());
+	}
+	
+	@Test
+	public void stateMachineTraits061Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0019.ump");
+		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfActivities());
+	}
+	
+	@Test
+	public void stateMachineTraits062Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0020.ump");
+		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfActivities());
+	}
+	
+	/*
+	 * TODO:This test case is not covering multiple languages. Will fix it later.
+	 */
+	@Test
+	public void stateMachineTraits063Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0021.ump");
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("t1_entry"));
+		Assert.assertTrue(str.contains("t2_entry1"));
+		Assert.assertTrue(str.contains("t2_entry2"));
+		str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("t1_exit"));
+		Assert.assertTrue(str.contains("t2_exit1"));
+		Assert.assertTrue(str.contains("t2_exit2"));
+		str= "";
+		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
+			str = str+ activity.getActivityCode();			
+		}
+		Assert.assertTrue(str.contains("t1_do1"));
+		Assert.assertTrue(str.contains("t2_do1"));
+		Assert.assertTrue(str.contains("t2_do2"));
+	}
+
+	
+	@Test
+	public void stateMachineTraits064Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0022.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("234");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits065Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0023.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("234");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits066Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0024.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("226");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
 	// the last StateTest
 
 	// This is related to issue #656

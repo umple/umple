@@ -1,5 +1,8 @@
-
-
+// Home Heating System state machine written in Umple
+// Source: Model Checking Template-Semantics Specifications (TR: CS-2004-20)
+// University of Waterloo, Waterloo, Ontario, N2L 3G1
+// Authors: Yun Lu, Joanne M. Atlee, Nancy A. Day, Jianwei Niu
+// Date: April 05, 2004
 
 class HeatControlSystem {
 

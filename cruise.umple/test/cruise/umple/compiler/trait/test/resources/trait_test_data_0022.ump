@@ -1,0 +1,42 @@
+/*
+ * There is a conflict which results in non-determinism
+ * There should be an error.
+ */ 
+
+
+class A{
+	isA T2;
+}
+
+trait T{
+	sm{
+		s0{
+			e1 -> /{ System.out.printf("T->s0.e1");}  s1;
+		}
+		s1{
+		}
+	}
+}
+
+trait T1{
+	sm{
+		s0{
+			e1 -> /{superCall; System.out.printf("T1->s0.e1");} s2;
+		}
+		s2{
+			
+		}
+	}
+}
+
+trait T2{
+	isA T;
+	isA T1;
+	sm{
+		s0{
+			
+		}
+		s1{
+		}
+	}
+} 
