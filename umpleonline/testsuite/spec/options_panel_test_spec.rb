@@ -157,6 +157,44 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
     end
   end
+  
+  describe "Clicking the show/hide transition label option" do
+      it "clicks the input box" do
+        reset_page_to_options unless get_checkbox_state("#buttonToggleTransitionLabel")
+        find(:css, "#buttonToggleTransitionLabel").click
+        expect(get_checkbox_state("#buttonToggleTransitionLabel")).to eq(false)
+        find(:css, "#buttonToggleTransitionLabel").click
+        expect(get_checkbox_state("#buttonToggleTransitionLabel")).to eq(true)
+      end
+
+      it "clicks the label text" do
+        reset_page_to_options unless get_checkbox_state("#labelToggleTransitionLabel")
+        find(:css, "#labelToggleTransitionLabel").click
+        expect(get_checkbox_state("#labelToggleTransitionLabel")).to eq(false)
+        find(:css, "#labelToggleTransitionLabel").click
+        expect(get_checkbox_state("#labelToggleTransitionLabel")).to eq(true)
+      end
+    end
+  end
+  
+  describe "Clicking the show/hide guard label option" do
+      it "clicks the input box" do
+        reset_page_to_options unless get_checkbox_state("#buttonToggleGuardLabel")
+        find(:css, "#buttonToggleGuardLabel").click
+        expect(get_checkbox_state("#buttonToggleGuardLabel")).to eq(false)
+        find(:css, "#buttonToggleGuardLabel").click
+        expect(get_checkbox_state("#buttonToggleGuardLabel")).to eq(true)
+      end
+
+      it "clicks the label text" do
+        reset_page_to_options unless get_checkbox_state("#labelToggleGuardLabel")
+        find(:css, "#labelToggleGuardLabel").click
+        expect(get_checkbox_state("#labelToggleGuardLabel")).to eq(false)
+        find(:css, "#labelToggleGuardLabel").click
+        expect(get_checkbox_state("#labelToggleGuardLabel")).to eq(true)
+      end
+    end
+  end
 
   describe "Show views functionality" do
     describe "Diagram show/hide option" do

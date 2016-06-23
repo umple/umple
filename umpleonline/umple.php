@@ -298,6 +298,7 @@ $output = readTemporaryFile("ump/" . $filename);
                 <option name = "optionExample" value="TollBooth.ump">Toll Booth</option>
                 <option name = "optionExample" value="TrafficLightsA.ump">Traffic Lights A</option>
                 <option name = "optionExample" value="TrafficLightsB.ump">Traffic Lights B</option>
+		<option name = "optionExample" value="HomeHeater.ump">Home Heating System</option>
                 <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
@@ -384,6 +385,14 @@ $output = readTemporaryFile("ump/" . $filename);
             <li id="ttToggleTraits" class="layoutListItem"> 
               <input id="buttonToggleTraits" class="checkbox" type="checkbox"/> 
               <a id="labelToggleTraits" class="buttonExtend">Traits</a> 
+            </li>
+            <li id="ttToggleTransitionLabel" class="layoutListItem"> 
+              <input id="buttonToggleTransitionLabel" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleTransitionLabel" class="buttonExtend">Transition Label</a> 
+            </li>
+            <li id="ttToggleGuardLabel" class="layoutListItem"> 
+              <input id="buttonToggleGuardLabel" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleGuardLabel" class="buttonExtend">Guard Label</a> 
             </li>
           </ul>
           <ul class="second">

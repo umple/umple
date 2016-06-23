@@ -274,4 +274,3 @@ trait Subject <Observer> {
   0..1  -> * Observer;
   void notifyObservers() {/*implementation*/ }
 }
-

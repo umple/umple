@@ -111,6 +111,8 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleMethods");
   Page.initHighlighter("buttonToggleAttributes");
   Page.initHighlighter("buttonToggleActions");
+  Page.initHighlighter("buttonToggleTransitionLabel");
+  Page.initHighlighter("buttonToggleGuardLabel");
   Page.initHighlighter("buttonToggleTraits");
   
   Page.initToggleTool("buttonAddClass");
@@ -156,6 +158,8 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleAttributes");
   Page.initAction("buttonToggleActions");
   Page.initAction("buttonToggleTraits");
+  Page.initAction("buttonToggleTransitionLabel");
+  Page.initAction("buttonToggleGuardLabel");
   
   Page.initLabels();
 
@@ -203,6 +207,8 @@ Page.initOptions = function()
 	jQuery("#ttTabsCheckbox").hide();
   jQuery("#buttonToggleAttributes").prop('checked',true);
   jQuery("#buttonToggleActions").prop('checked',true);
+  jQuery("#buttonToggleTransitionLabel").prop('checked',true);
+  jQuery("#buttonToggleGuardLabel").prop('checked',true);
   jQuery("#buttonToggleTraits").prop('checked',false);
   
   if(Page.useEditableClassDiagram)

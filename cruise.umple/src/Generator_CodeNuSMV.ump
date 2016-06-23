@@ -45,7 +45,7 @@ class NuSMVGenerator
   	code.append( coord.generateModules( model ) );
     terminateCode( code );
     
-    coord.analyzeModel( model );
+    //coord.analyzeModel( model );
   }
   
   private void terminateCode(StringBuilder code) {
