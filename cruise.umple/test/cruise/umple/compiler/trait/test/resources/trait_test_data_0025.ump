@@ -1,0 +1,41 @@
+/*
+ * There is an extra state in GV that needs to be fixed.
+ * generated code looks ok.
+ */
+class A{
+  isA T;
+  status {
+    on{
+      turnOff -> off;
+    }
+    off{
+      turnOn -> on;
+    }
+  }
+}
+trait T{
+  isA T2<sm as status.on>;
+status {
+    on{
+      pause -> pause;
+    }
+    off{
+      goOn-> on;
+    }
+	  pause{
+    	resume-> on;
+		}
+  }
+
+}
+trait T2{
+  sm{
+    playing{
+      -> nextFrame;
+    }
+    nextFrame{
+      -> playing;
+    }
+    
+  }
+}

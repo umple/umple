@@ -1116,6 +1116,12 @@ public class UmpleTraitTest {
 		}
 	}
 	
+	@Test
+	public void stateMachineTraits067Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0025.ump");
+		Assert.assertEquals(3, model.getUmpleClass("A").getStateMachine(0).numberOfStates());
+	}
+	
 	// the last StateTest
 
 	// This is related to issue #656
