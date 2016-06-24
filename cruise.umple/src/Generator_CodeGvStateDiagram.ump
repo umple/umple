@@ -27,8 +27,8 @@ class GvStateDiagramGenerator
 {
   Boolean hideActions = false;
   Boolean hideGuards = false;
-  Boolean hideTransitionLabels = false;
-  Boolean hideGuardLabels = false;
+  Boolean showTransitionLabels = false;
+  Boolean showGuardLabels = false;
   lazy StateMachine root;
  
   internal Map<Transition,String> internalBoundaryTrans
@@ -71,8 +71,8 @@ digraph "<<=filename>>" {
     
     hideActions = hasSuboption("hideactions");
     hideGuards = hasSuboption("hideguards");
-    hideTransitionLabels = hasSuboption("hidetransitionlabels");
-    hideGuardLabels = hasSuboption("hideguardlabels");
+    showTransitionLabels = hasSuboption("showtransitionlabels");
+    showGuardLabels = hasSuboption("showguardlabels");
     
     // Output basic gv file header
     _graphStart(0,code,model.getUmpleFile().getSimpleFileName());
@@ -388,8 +388,8 @@ node [shape = circle, fixedsize = true, width=.3];
       {
         event = t.getEvent();
         action = t.getAction();
-        hideTransitionLabels = true;
-        if ( hideTransitionLabels ) {
+        //showTransitionLabels = true;
+        if ( !showTransitionLabels ) {
           transitionLabel = "";
         }
         else {
@@ -433,8 +433,8 @@ node [shape = circle, fixedsize = true, width=.3];
         if (guard == null || hideGuards) guardString = "";
         else 
         {
-          hideGuardLabels = true;
-          if ( hideGuardLabels ) {
+          //showGuardLabels = true;
+          if ( !showGuardLabels ) {
           	guardLabel = "";
           }
           else {

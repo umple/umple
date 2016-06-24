@@ -386,13 +386,13 @@ $output = readTemporaryFile("ump/" . $filename);
               <input id="buttonToggleTraits" class="checkbox" type="checkbox"/> 
               <a id="labelToggleTraits" class="buttonExtend">Traits</a> 
             </li>
-            <li id="ttToggleTransitionLabel" class="layoutListItem"> 
-              <input id="buttonToggleTransitionLabel" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleTransitionLabel" class="buttonExtend">Transition Label</a> 
+            <li id="ttToggleTransitionLabels" class="layoutListItem"> 
+              <input id="buttonToggleTransitionLabels" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleTransitionLabels" class="buttonExtend">Transition Labels</a> 
             </li>
-            <li id="ttToggleGuardLabel" class="layoutListItem"> 
-              <input id="buttonToggleGuardLabel" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleGuardLabel" class="buttonExtend">Guard Label</a> 
+            <li id="ttToggleGuardLabels" class="layoutListItem"> 
+              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
             </li>
           </ul>
           <ul class="second">

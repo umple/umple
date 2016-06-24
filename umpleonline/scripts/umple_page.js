@@ -34,6 +34,8 @@ Page.showAttributes = true;
 Page.showMethods = false;
 Page.showActions = true;
 Page.showTraits = false;
+Page.showTransitionLabels = false;
+Page.showGuardLabels = false;
 Page.modifiedDiagrams = false;
 
 // The following is set called from umple.php
@@ -111,8 +113,8 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleMethods");
   Page.initHighlighter("buttonToggleAttributes");
   Page.initHighlighter("buttonToggleActions");
-  Page.initHighlighter("buttonToggleTransitionLabel");
-  Page.initHighlighter("buttonToggleGuardLabel");
+  Page.initHighlighter("buttonToggleTransitionLabels");
+  Page.initHighlighter("buttonToggleGuardLabels");
   Page.initHighlighter("buttonToggleTraits");
   
   Page.initToggleTool("buttonAddClass");
@@ -158,8 +160,8 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleAttributes");
   Page.initAction("buttonToggleActions");
   Page.initAction("buttonToggleTraits");
-  Page.initAction("buttonToggleTransitionLabel");
-  Page.initAction("buttonToggleGuardLabel");
+  Page.initAction("buttonToggleTransitionLabels");
+  Page.initAction("buttonToggleGuardLabels");
   
   Page.initLabels();
 
@@ -207,8 +209,8 @@ Page.initOptions = function()
 	jQuery("#ttTabsCheckbox").hide();
   jQuery("#buttonToggleAttributes").prop('checked',true);
   jQuery("#buttonToggleActions").prop('checked',true);
-  jQuery("#buttonToggleTransitionLabel").prop('checked',true);
-  jQuery("#buttonToggleGuardLabel").prop('checked',true);
+  jQuery("#buttonToggleTransitionLabels").prop('checked',false);
+  jQuery("#buttonToggleGuardLabels").prop('checked',false);
   jQuery("#buttonToggleTraits").prop('checked',false);
   
   if(Page.useEditableClassDiagram)
@@ -384,6 +386,8 @@ Page.initCodeMirrorEditor = function() {
           "Ctrl-A": function(cm) {Page.clickToggleAttributes()},
           "Ctrl-M": function(cm) {Page.clickToggleMethods()},
           "Ctrl-R": function(cm) {Page.clickToggleTraits()},
+          "Ctrl-I": function(cm) {Page.clickToggleTransitionLabels()},
+          "Ctrl-K": function(cm) {Page.clickToggleGuardLabels()},
           "Esc": function(cm) {cm.getInputField().blur()}
           }
         }
@@ -431,6 +435,13 @@ Page.clickToggleTraits = function() {
   jQuery('#buttonToggleTraits').trigger('click');
 }
 
+Page.clickToggleTransitionLabels = function() {
+  jQuery('#buttonToggleTransitionLabels').trigger('click');
+}
+
+Page.clickToggleGuardLabels = function() {
+  jQuery('#buttonToggleGuardLabels').trigger('click');
+}
 
 Page.isPhotoReady = function()
 {
