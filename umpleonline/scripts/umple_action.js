@@ -178,6 +178,14 @@ Action.clicked = function(event)
   {
     Action.toggleTraits();
   }  
+  else if (action == "ToggleTransitionLabels")
+  {
+    Action.toggleTransitionLabels();
+  }  
+  else if (action == "ToggleGuardLabels")
+  {
+    Action.toggleGuardLabels();
+  }
   else if(action == "StructureLink")
   {
     Action.generateStructureDiagramFile();
@@ -1505,6 +1513,8 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   // append any suboptions needed for GvStateDiagram
   if(Page.useGvStateDiagram) { 
     if(!Page.showActions) language=language+".hideactions";
+    if(Page.showTransitionLabels) language=language+".showtransitionlabels";
+    if(Page.showGuardLabels) language=language+".showguardlabels";
   }
   // append any suboptions needed for GvClassDiagram
   if(Page.useGvClassDiagram) { 
@@ -1721,6 +1731,18 @@ Action.toggleMethods = function()
 Action.toggleActions = function()
 {
   Page.showActions = !Page.showActions;
+  Action.redrawDiagram()
+}
+
+Action.toggleTransitionLabels = function()
+{
+  Page.showTransitionLabels = !Page.showTransitionLabels;
+  Action.redrawDiagram()
+}
+
+Action.toggleGuardLabels = function()
+{
+  Page.showGuardLabels = !Page.showGuardLabels;
   Action.redrawDiagram()
 }
 
@@ -2029,6 +2051,22 @@ Mousetrap.bind(['ctrl+r'], function(e){
   if(jQuery('.focus').length != 0)
   {
     Page.clickToggleTraits();
+    return false; //equivalent to e.preventDefault();
+  }
+});
+
+Mousetrap.bind(['ctrl+i'], function(e){
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickToggleTransitionLabels();
+    return false; //equivalent to e.preventDefault();
+  }
+});
+
+Mousetrap.bind(['ctrl+k'], function(e){
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickToggleGuardLabels();
     return false; //equivalent to e.preventDefault();
   }
 });
