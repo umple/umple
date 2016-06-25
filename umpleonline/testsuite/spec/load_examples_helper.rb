@@ -75,7 +75,8 @@ STATE_EXAMPLES = {
   "TicTacToe.ump" => ["edge7", "node5"],
   "TollBooth.ump" => ["clust2", "edge19", "node11"],
   "TrafficLightsA.ump" => ["edge10", "node6"],
-  "TrafficLightsB.ump" => ["clust6", "node30", "edge24"]
+  "TrafficLightsB.ump" => ["clust6", "node30", "edge24"],
+  "HomeHeater.ump" => ["edge23", "node37"]
 }
 
 COMPOSITE_STRUCTURES_EXAMPLES = {
