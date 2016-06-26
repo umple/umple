@@ -1,0 +1,32 @@
+/*
+ * changing the name of event is not working.
+ * This is because of assigning a state machine to another state.
+ */
+
+class A{
+  isA T1 <player as status.on, player.stop() as end>;
+  status {
+    on{
+      turnOff -> off;
+    }
+    off{
+      turnOn -> on;
+    }
+  }
+}
+
+trait T1{
+  player {
+    stopped{
+      play-> playing;
+    }
+    playing{
+      pause -> pause;
+      stop -> stopped;
+    }
+    pause{
+       resume-> playing;
+       stop -> stopped;
+    }
+  }
+}
