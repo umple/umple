@@ -24,6 +24,9 @@ src-gen-umpletl/
 
 *swp
 
+.bak
+.vscode
+
 # eclipse
 .classpath
 .project
