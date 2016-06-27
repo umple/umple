@@ -446,7 +446,7 @@ class CodeInjection
 
   type;
   operation;
-  lazy operationSource = "generated";
+  operationSource = "generated";
   lazy String[] parameters;
   CodeBlock snippet;
   lazy constraintParameterName;
@@ -581,7 +581,7 @@ class UmpleClass
 
   before addDepend { if (depends.contains(aDepend)) { return false; } }
 
-  before setImmutable { if (!canBeImmutable()) { return false; } }
+  //---before setImmutable { if (!canBeImmutable()) { return false; } }
 
   before addAssociationVariable { if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; } }
 
@@ -657,11 +657,11 @@ class UmpleTrait {
 
   //--- before addDepend { if (depends.contains(aDepend)) { return false; } }
 
-  before setImmutable { if (!canBeImmutable()) { return false; } }
+  //--- before setImmutable { if (!canBeImmutable()) { return false; } }
 
   //--- before addAssociationVariable { if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; } }
 
-  before setExtendsTrait { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
+  //--- before setExtendsTrait { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
 
   before addStateMachine { if (isImmutable()) { return false; } }
 
