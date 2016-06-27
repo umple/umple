@@ -418,13 +418,13 @@ node [shape = circle, fixedsize = true, width=.3];
           }
         }
         
-        if (action == null || action.getActionCode() == "" || hideActions) 
+        if (action == null || getAvailableActionCode(action) == "" || hideActions) 
         {
           transitionAction = "";
         }
         else 
         {
-          actionCode = action.getActionCode();
+          actionCode = getAvailableActionCode(action);
           if (actionCode.length() > 15) transitionAction = " / {...}";
           else transitionAction = " / "+actionCode.replaceAll("\"","&quot;");
         }
@@ -572,7 +572,7 @@ node [shape = circle, fixedsize = true, width=.3];
     String transitionAction = "";
     if (action != null)
     {
-      transitionAction = action.getActionCode();
+      transitionAction = getAvailableActionCode(action);
     }
     if (transitionAction != "" && !hideActions)
     {	
@@ -596,7 +596,7 @@ node [shape = circle, fixedsize = true, width=.3];
       for (Action action : st.getActions())
       {
         String actionType = action.getActionType();
-        String actionCode = retFiveLines(action.getActionCode().replaceAll("\"","&quot;"));
+        String actionCode = retFiveLines(getAvailableActionCode(action).replaceAll("\"","&quot;"));
         if ("entry".equals(actionType))
         {
           tooltip = tooltip+"&#13;"+"Entry:\n"+actionCode;
@@ -704,4 +704,24 @@ node [shape = circle, fixedsize = true, width=.3];
       throw new UmpleCompilerException("There was a problem with generating GraphViz State Machine code." + e, e);
     }
   } 
+   
+    /*
+   * @author : Vahdat
+   * This method tries to go through all action languages and get the action code for the first language.
+   * This is needed because sometimes we want to generate two languages, but in the diagram we should show just one language which in this case is just the first valid language.
+   * 
+   */
+  private String getAvailableActionCode(Action action) {
+		String actionCode = action.getActionCode();
+		if (actionCode.equals("null")) {
+			  for (GenerateTarget gTarget  : getModel().getGenerates()){
+				  actionCode = action.getCodeblock().getCode(gTarget.getLanguage());
+				  if (!actionCode.equals("null")) break;
+			  }
+		  }
+		return actionCode;
+	}
+  
+  
+  }
 }
