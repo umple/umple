@@ -1,0 +1,14 @@
+
+//I this example the singleton class does not have a subclass and is correct
+class Airplane
+{
+  
+}
+class TheAirplane
+{
+  singleton;
+}
+class F16
+{
+	isA Airplane;
+}

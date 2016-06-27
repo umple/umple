@@ -973,7 +973,12 @@ public class UmpleParserTest
   {
 		assertFailedParse("007_isA_MultipleInher.ump", 34);
   }
-
+	@Test
+	  public void Singleton_Class_Extended()
+  {
+		assertFailedParse("007_singleton_extended.ump", 40);
+		assertFailedParse("007_singleton_extended2.ump", 40);
+  }
 	@Test
   public void singleIsA_MultipleClass_Inheritance()
   {

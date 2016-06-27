@@ -1,0 +1,21 @@
+E040 Singleton Has Subclasses
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error generated when a singleton class has subclasses</h2>
+
+<p>Singleton is a software pattern to allow only one instance of a class. A singleton class has a private constructor and cannot be inherited.</p>
+
+<p>
+</p>
+
+@@example
+@@source manualexamples/E040_singleton_inherited.ump
+@@endexample
+
+@@example
+@@source manualexamples/E040_singleton_inheritedFix.ump
+@@endexample
+
