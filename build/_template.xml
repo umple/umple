@@ -91,7 +91,7 @@
       <!-- get a temporary file to write to -->
       <tempfile property="temp.file" prefix="@{property}."/>
       <!-- Actually fetch the URL into the temporary file -->
-      <get src="@{host}" dest="${temp.file}" />
+      <get src="@{host}" dest="${temp.file}" ignoreerrors="true" />
       
       <!-- See if the downloaded resource is larger than 0 -->
       <condition property="@{property}">
