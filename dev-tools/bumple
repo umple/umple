@@ -4,6 +4,7 @@ if ! $?UMPLEROOT then
 endif
 cd $UMPLEROOT/build
 echo Doing FULL build of Umple at $UMPLEROOT using ant -Dmyenv=local
+echo If you are running on Windows you would need to use wlocal
 echo This should take 2-5 minutes. Do not interrupt.
 echo You should always have done 'git pull' or fetch then merge before running this and resolved conflicts
 ant -Dmyenv=local
