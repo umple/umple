@@ -1,0 +1,10 @@
+
+// In this example a singleton class has subclasses and it generates an error
+class Airplane
+{
+  singleton;
+}
+class F16
+{
+	isA Airplane;
+}

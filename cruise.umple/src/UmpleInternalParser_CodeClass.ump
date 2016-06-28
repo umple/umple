@@ -375,6 +375,21 @@ class UmpleInternalParser
 
       //Issue 686
       checkCodeInjections();
+      //issue 841
+      checkSingletonParent();
+    }
+  }
+
+  //Issue 841
+  private void checkSingletonParent()
+  {
+    for (UmpleClass uClass:  model.getUmpleClasses())
+    { 
+      if(uClass.getExtendsClass()!=null) {
+        if(uClass.getExtendsClass().getIsSingleton()) {
+          getParseResult().addErrorMessage(new ErrorMessage(40,uClass.getPosition(0),uClass.getName(),uClass.getExtendsClass().getName()));
+        }
+      }
     }
   }
 

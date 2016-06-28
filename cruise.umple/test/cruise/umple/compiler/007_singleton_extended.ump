@@ -1,0 +1,9 @@
+
+class Airplane
+{
+  singleton;
+}
+class F16
+{
+	isA Airplane;
+}
