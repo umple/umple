@@ -29,6 +29,7 @@ class GvStateDiagramGenerator
   Boolean hideGuards = false;
   Boolean showTransitionLabels = false;
   Boolean showGuardLabels = false;
+  internal String display_language = "";
   lazy StateMachine root;
  
   internal Map<Transition,String> internalBoundaryTrans
@@ -73,6 +74,7 @@ digraph "<<=filename>>" {
     hideGuards = hasSuboption("hideguards");
     showTransitionLabels = hasSuboption("showtransitionlabels");
     showGuardLabels = hasSuboption("showguardlabels");
+    display_language = getDisplayLanguage();
     
     // Output basic gv file header
     _graphStart(0,code,model.getUmpleFile().getSimpleFileName());
@@ -114,6 +116,20 @@ digraph "<<=filename>>" {
       } // End iteration through state machines of a class
     } // End iteration through classes
     terminateCode(code, transitions);
+  }
+
+  /*
+   * @author: Vahdat
+   * This function is used to detect the language used to display actions on the diagram. 
+   */
+  private String getDisplayLanguage() {
+    if (hasSuboption("Java")) return "Java";
+    if (hasSuboption("Cpp")) return "Cpp";
+    if (hasSuboption("Php")) return "Php";
+    if (hasSuboption("RTCpp")) return "RTCpp";
+    if (hasSuboption("SimpleCpp")) return "SimpleCpp";
+    if (hasSuboption("Ruby")) return "Ruby";
+    return "";
   }
   
   private void terminateCode(StringBuilder code, StringBuilder transitions) {
@@ -712,14 +728,17 @@ node [shape = circle, fixedsize = true, width=.3];
    * 
    */
   private String getAvailableActionCode(Action action) {
-		String actionCode = action.getActionCode();
-		if (actionCode.equals("null")) {
-			  for (GenerateTarget gTarget  : getModel().getGenerates()){
-				  actionCode = action.getCodeblock().getCode(gTarget.getLanguage());
-				  if (!actionCode.equals("null")) break;
-			  }
-		  }
-		return actionCode;
+		String actionCode = "";
+    if (display_language!=""){
+      actionCode = action.getCodeblock().getCode(display_language);
+      if (actionCode=="" && display_language=="Java"){
+        actionCode = action.getActionCode();
+      }
+    } else {
+      actionCode =action.getActionCode();
+    }
+    if (actionCode.equals("null")) actionCode = "";
+    return actionCode;
 	}
   
   

@@ -693,6 +693,12 @@ Action.generateCode = function(languageStyle, languageName)
     additionalCallback = StateTree.colourEventSequences;
   }
 
+  //Vahdat
+  if(languageName === "stateDiagram")
+  {
+    actualLanguage = languageName+"."+$("inputGenerateCode").value.split(":")[1];
+  }
+  
   jQuery(generateCodeSelector).showLoading();
   Action.ajax(
     function(response) { 
@@ -1515,6 +1521,7 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
     if(!Page.showActions) language=language+".hideactions";
     if(Page.showTransitionLabels) language=language+".showtransitionlabels";
     if(Page.showGuardLabels) language=language+".showguardlabels";
+    language=language+"."+$("inputGenerateCode").value.split(":")[1];
   }
   // append any suboptions needed for GvClassDiagram
   if(Page.useGvClassDiagram) { 
