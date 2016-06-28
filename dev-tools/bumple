@@ -7,4 +7,16 @@ echo Doing FULL build of Umple at $UMPLEROOT using ant -Dmyenv=local
 echo If you are running on Windows you would need to use wlocal
 echo This should take 2-5 minutes. Do not interrupt.
 echo You should always have done 'git pull' before running this and resolved conflicts
-ant -Dmyenv=local
+set logfile="/tmp/umplebuildlog$$.txt"
+ant -Dmyenv=local | tee $logfile
+grep -qi failed $logfile
+if ($status == 0) then
+  echo "************************"
+  echo The word FAILED was found in the above. Build was NOT SUCCESSFUL.
+  echo Build log is at $logfile
+  echo Test log can be opened in a web browser at $UMPLEROOT/dist/qa/index.php
+else
+  rm $logfile
+endif
+
+

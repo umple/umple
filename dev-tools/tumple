@@ -3,5 +3,19 @@ if ! $?UMPLEROOT then
   setenv UMPLEROOT ~/umple
 endif
 echo Running basic tests in $UMPLEROOT using template.test
+echo This does not run the testbed tests. Do a full build for those.
 cd $UMPLEROOT/build
-ant -Dmyenv=local -f build.umple.xml template.test
+set logfile="/tmp/umplebuildlog$$.txt"
+ant -Dmyenv=local -f build.umple.xml template.test | tee $logfile
+grep -qi failed $logfile
+set failedstatus=$status
+grep -qi error $logfile
+if ($status == 0 || $failedstatus == 0) then
+  echo "************************"
+  echo The word FAILED or ERROR was found in the above. Build was NOT SUCCESSFUL.
+  echo Build log is at $logfile
+  echo Test log can be opened in a web browser at $UMPLEROOT/dist/qa/index.php
+else
+  rm $logfile
+endif
+
