@@ -1029,8 +1029,11 @@ class Guard{
 //----------------------------------------------------------------------------  
 //---------------------------------Start--------------------------------------
 //----------------------------------------------------------------------------	
-	//TODO inserted by Vahda [Nov 30, 2015,4:49:56 PM]: please provide a comprehensive comparison
-  //This comparison just supports sequential comparing of boolean operations. If the order is changed then it'll show false.
+	/*
+	 * @author Vahdat
+	 * This comparison just supports sequential comparing of boolean operations. If the order is changed then it'll show false.
+	 * TODO: please provide a comprehensive comparison
+	 */
   boolean isEqualToGuard(Guard inGuard) {
   	if (inGuard==null) return false;
 		if (getNumberOfElements()!=inGuard.getNumberOfElements()) return false;
@@ -1040,6 +1043,9 @@ class Guard{
 			ConstraintVariable mCV = main.next();
 			ConstraintVariable cCV = compareTo.next();
 			if (mCV.getType()!=cCV.getType()) return false;
+			if ( mCV instanceof ConstraintTree && cCV instanceof ConstraintTree){
+				if (((ConstraintTree)mCV).getDisplayNegation()!=((ConstraintTree)cCV).getDisplayNegation()) return false;
+			}
 			if (mCV instanceof ConstraintOperator && cCV instanceof ConstraintOperator) {
 				ConstraintOperator new_name1 = (ConstraintOperator) mCV;
 				ConstraintOperator new_name2 = (ConstraintOperator) cCV;

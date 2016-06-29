@@ -462,7 +462,7 @@ node [shape = circle, fixedsize = true, width=.3];
           else guardString = " [";
 
           //guardString += guard.getCondition(gen).replaceAll("\"","&quot;") + "]";
-	      guardString += guard.getExpression() + "]"+guardLabel;
+	      guardString += guard.getExpression().replaceAll("\"","&quot;") + "]"+guardLabel;
         }
         
         String orig = getTransitionNameForState(t.getFromState(),uClass,true);
