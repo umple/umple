@@ -878,13 +878,17 @@ class UmpleInternalParser
 				  }
 			  }
 		  }else  {
+		  	boolean happened = false;
 			  for(Action cAction : cState.getActionsByType(type)){
 				  cAction.getCodeblock().removeKeyword("superCall;");
 				  bState.addAction(cAction);
+				  happened = true;
 			  }
+			  if (happened){
 		  	  Action action  = new Action("superCall;");
 		      action.setActionType(type);
 		      bState.addAction(action);
+		    }
 		  }
 	}
 //---------------------------------end----------------------------------------
