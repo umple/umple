@@ -50,9 +50,9 @@ class UseStatementParserAction{
       //TODO: this issue must be investigated more. Currently it is working with the following solution. 
       File f = new File(fileName);
       if (!f.exists()) fileName = path +value;
-      if(!data.getHasParsed().contains(fileName))
+      if(!data.getHasParsed().contains(f.getAbsolutePath()))
       {
-        data.getHasParsed().add(fileName);
+        data.getHasParsed().add(f.getAbsolutePath());
         RuleBasedParserThread thread = new RuleBasedParserThread(
           data.getAnalyzer().getRules().get("$ROOT$"),
           token,
