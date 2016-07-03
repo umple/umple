@@ -38,5 +38,30 @@
             name="NuSMV-based Umple Project">
       </wizard>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="org.cruise.umple.eclipse.plugin.toolbars.umple.generator">
+            <command
+                  commandId="org.cruise.umple.eclipse.plugin.commands.generator"
+                  icon="resources/favicon.ico"
+                  label="Umple Generator"
+                  style="push"
+                  tooltip="This will generate code for the current open Umple file.">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="commands.UmpleGenerator"
+            id="org.cruise.umple.eclipse.plugin.commands.generator"
+            name="UmpleGenerator">
+      </command>
+   </extension>
 
 </plugin>
