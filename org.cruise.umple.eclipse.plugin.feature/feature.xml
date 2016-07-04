@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.cruise.umple.eclipse.plugin.feature"
-      label="Feature"
+      label="Umple Plugin"
       version="1.0.0.qualifier">
 
    <description url="http://www.example.com/description">
@@ -15,13 +15,6 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
-
-   <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.ui.ide" version="3.11.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.resources"/>
-   </requires>
 
    <plugin
          id="org.cruise.umple.eclipse.plugin"
