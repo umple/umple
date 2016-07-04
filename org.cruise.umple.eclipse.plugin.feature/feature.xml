@@ -16,6 +16,13 @@
       [Enter License Description here.]
    </license>
 
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui.ide" version="3.11.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.resources"/>
+   </requires>
+
    <plugin
          id="org.cruise.umple.eclipse.plugin"
          download-size="0"

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.cruise.umple.eclipse.plugin.feature_1.0.0.201607040228.jar" id="org.cruise.umple.eclipse.plugin.feature" version="1.0.0.201607040228">
+      <category name="UmpleEclipsePlugins"/>
+   </feature>
+   <category-def name="UmpleEclipsePlugins" label="Umple Eclipse Plugins"/>
+</site>
