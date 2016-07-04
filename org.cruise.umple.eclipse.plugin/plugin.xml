@@ -44,23 +44,228 @@
             allPopups="false"
             locationURI="toolbar:org.eclipse.ui.main.toolbar">
          <toolbar
-               id="org.cruise.umple.eclipse.plugin.toolbars.umple.generator">
+               id="org.cruise.umple.eclipse.plugin.toolbars.umple.generator"
+               label="Umple Toolbar">
             <command
                   commandId="org.cruise.umple.eclipse.plugin.commands.generator"
-                  icon="resources/favicon.ico"
-                  label="Umple Generator"
+                  icon="resources/umple.ico"
+                  label="Generate Umple Artifacts"
                   style="push"
-                  tooltip="This will generate code for the current open Umple file.">
+                  tooltip="This will generate code for the current Umple file.">
             </command>
          </toolbar>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               id="UmpleMenu"
+               label="Umple">
+            <command
+                  commandId="org.cruise.umple.eclipse.plugin.commands.just.compile"
+                  icon="resources/umple.ico"
+                  label="Compile"
+                  style="push"
+                  tooltip="This will compile the current Umple file without generating any artifact.">
+            </command>
+            <command
+                  commandId="org.cruise.umple.eclipse.plugin.commands.generator"
+                  icon="resources/umple.ico"
+                  label="Generate"
+                  style="push"
+                  tooltip="This will genearte the target artifact based on information inside umple files.">
+            </command>
+            <menu
+                  id="PLMenu"
+                  label="Programming Languages">
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.java"
+                     icon="resources/java.ico"
+                     label="Generate Java Code"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.real.time.cpp"
+                     icon="resources/cpp.ico"
+                     label="Generate Real-time Cpp Code"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.php"
+                     icon="resources/php.ico"
+                     label="Generate PhP Code"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.ruby"
+                     icon="resources/ruby.ico"
+                     label="Generate Ruby Code"
+                     style="push">
+               </command>
+            </menu>
+            <menu
+                  icon="resources/UML.ico"
+                  id="DiagramsMenu"
+                  label="Diagrams">
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.class.diagram"
+                     label="Generate Class Diagram"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.state.machine.diagram"
+                     label="Generate State Machine Diagram"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.class.trait.diagram"
+                     label="Generate Class-trait Diagram"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.entity.relationship.diagram"
+                     label="Generate Entity Relationship Diagram"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.all.diagrams"
+                     label="Generate All Diagrams"
+                     style="push"
+                     tooltip="This will genearte graphviz files.">
+               </command>
+            </menu>
+            <menu
+                  id="FRMenu"
+                  label="Formal Representations">
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.alloy"
+                     label="Generate Alloy Code"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.nusmv"
+                     label="Generate NuSMV Code"
+                     style="push">
+               </command>
+            </menu>
+            <menu
+                  id="OtherMenu"
+                  label="Others">
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.sql"
+                     label="Generate SQL Code"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.umple.itself"
+                     label="Generate Umple Internal Representation"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.use"
+                     label="Generate USE Code"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.simple.metrics"
+                     label="Generate Simple Metrics"
+                     style="push">
+               </command>
+            </menu>
+         </menu>
       </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="commands.UmpleGenerator"
+            defaultHandler="commands.Generate"
             id="org.cruise.umple.eclipse.plugin.commands.generator"
             name="UmpleGenerator">
+      </command>
+      <command
+            defaultHandler="commands.CompileUmpleFile"
+            id="org.cruise.umple.eclipse.plugin.commands.just.compile"
+            name="compile umple file">
+      </command>
+      <command
+            defaultHandler="commands.GenerateJava"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.java"
+            name="generate java code">
+      </command>
+      <command
+            defaultHandler="commands.GenerateRTCpp"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.real.time.cpp"
+            name="generate real time cpp code">
+      </command>
+      <command
+            defaultHandler="commands.GeneratePhp"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.php"
+            name="generate php code">
+      </command>
+      <command
+            defaultHandler="commands.GenerateRuby"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.ruby"
+            name="generate ruby code">
+      </command>
+      <command
+            defaultHandler="commands.GenerateClassDiagram"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.class.diagram"
+            name="generate class diagram">
+      </command>
+      <command
+            defaultHandler="commands.GenerateStateMachineDiagram"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.state.machine.diagram"
+            name="genarte state machine diagram">
+      </command>
+      <command
+            defaultHandler="commands.GenerateGraphviz"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.all.diagrams"
+            name="generate all diagrams">
+      </command>
+      <command
+            defaultHandler="commands.GenerateClassTraitDiagram"
+            id="org.cruise.umple.eclipse.plugin.commands.class.trait.diagram"
+            name="genarte class-trait diagram">
+      </command>
+      <command
+            defaultHandler="commands.GenerateEntityRelationshipDiagram"
+            id="org.cruise.umple.eclipse.plugin.commands.entity.relationship.diagram"
+            name="generate entity relationship diagram">
+      </command>
+      <command
+            defaultHandler="commands.GenerateAlloy"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.alloy"
+            name="generate alloy code">
+      </command>
+      <command
+            defaultHandler="commands.GenearteNusmv"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.nusmv"
+            name="generate nusmv code">
+      </command>
+      <command
+            defaultHandler="commands.GenerateJavaDoc"
+            id="org.cruise.umple.eclipse.plugin.commands.java.api.doc"
+            name="generate java api doc">
+      </command>
+      <command
+            defaultHandler="commands.GenerateSQL"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.sql"
+            name="generate sql code">
+      </command>
+      <command
+            defaultHandler="commands.GenerateUmpleItself"
+            id="org.cruise.umple.eclipse.plugin.commands.umple.itself"
+            name="generate umpleitself">
+      </command>
+      <command
+            defaultHandler="commands.GenerateUSE"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.use"
+            name="generate use code">
+      </command>
+      <command
+            defaultHandler="commands.GenerateSimpleMetrics"
+            id="org.cruise.umple.eclipse.plugin.commands.simple.metrics"
+            name="generate simple metrics">
       </command>
    </extension>
 
