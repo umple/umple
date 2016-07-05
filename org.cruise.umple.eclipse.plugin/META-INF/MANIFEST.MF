@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Plugin
+Bundle-SymbolicName: org.cruise.umple.eclipse.plugin;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.cruise.umple.eclipse.plugin.Activator
+Bundle-Vendor: cruise team at University of Ottawa
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.ide;bundle-version="3.11.0",
+ org.eclipse.ui.console;bundle-version="3.6.100"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.core.resources
+Bundle-ClassPath: umple.jar,
+ .
+
