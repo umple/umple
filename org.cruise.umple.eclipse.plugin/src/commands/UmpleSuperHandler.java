@@ -1,27 +1,30 @@
 package commands;
-import java.util.Iterator;
+import java.io.PrintStream;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.internal.win32.FILETIME;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.console.*;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.swt.graphics.Color;
 
-import cruise.umple.compiler.GenerateTarget;
 import cruise.umple.compiler.UmpleFile;
 import cruise.umple.compiler.UmpleModel;
 
 public class UmpleSuperHandler {
+	
+	
+
 	
 	/*
 	 * @author Vahdat
 	 * used to execute UmpleModel based on the current open file.
 	 */
 	protected void compileUmpleFile(ExecutionEvent event,boolean generate,String... language){
+		setDefualtConsole();
 		IEditorInput editorInput = HandlerUtil.getActiveEditorInput(event);
 		IFileEditorInput fileEditorInput =(IFileEditorInput)editorInput.getAdapter(IFileEditorInput.class);
 		IFile iFile = fileEditorInput.getFile();
@@ -34,11 +37,12 @@ public class UmpleSuperHandler {
 	        	runUmpleModel(uModel,event,generate,language);
 	        	refreshProjectFoler(editorInput);
 			} catch (Exception e) {
-				e.printStackTrace();
-				MessageDialog.openInformation(HandlerUtil.getActiveWorkbenchWindow(event).getShell(), "Error",e.getMessage());
+				showErrorMessage(e.getMessage());
 			}
-		} else 
-		MessageDialog.openInformation(HandlerUtil.getActiveWorkbenchWindow(event).getShell(), "Info","Please select an Umple file.");
+		} else{ 
+			showErrorMessage("Please select an Umple file. The file must have .ump extension.");
+		}
+		
 	}
 	
 	/*
@@ -55,17 +59,17 @@ public class UmpleSuperHandler {
 			uModel.run();
 			if (uModel.getLastResult().getWasSuccess()){
 				if (generate){
-					MessageDialog.openInformation(HandlerUtil.getActiveWorkbenchWindow(event).getShell(), "Info","Umple file: "+uModel.getUmpleFile().getFileName()+
-							System.lineSeparator()+"File Path: "+uModel.getUmpleFile().getPath()+System.lineSeparator()+"Umple generated the target artifac successfully.");
+					showMessage("Umple file: "+uModel.getUmpleFile().getFileName()+
+							System.lineSeparator()+"File Path: "+uModel.getUmpleFile().getPath()+System.lineSeparator()+"Umple generated the target artifacts successfully.");
+					
 				} else {
-					MessageDialog.openInformation(HandlerUtil.getActiveWorkbenchWindow(event).getShell(), "Info","Umple file: "+uModel.getUmpleFile().getFileName()+
+					showMessage("Umple file: "+uModel.getUmpleFile().getFileName()+
 							System.lineSeparator()+"File Path: "+uModel.getUmpleFile().getPath()+System.lineSeparator()+"Umple file was compiled successfully.");
 				}
 			}
 					
 		} catch (Exception e) {
-			e.printStackTrace();
-			MessageDialog.openInformation(HandlerUtil.getActiveWorkbenchWindow(event).getShell(), "Error",e.getMessage());
+			showErrorMessage(uModel.getLastResult().getErrorMessages().toString());
 		}
 	}
 	
@@ -81,7 +85,6 @@ public class UmpleSuperHandler {
 	        model = new UmpleModel(file);	
 		} catch (Exception e) {
 			e.printStackTrace();
-			MessageDialog.openInformation(HandlerUtil.getActiveWorkbenchWindow(event).getShell(), "Error",e.getMessage());
 		}
 		return model;
 	}
@@ -94,7 +97,6 @@ public class UmpleSuperHandler {
 			IResource iResource = (IResource) iEditorInput.getAdapter(IResource.class);
 			iResource.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -104,5 +106,57 @@ public class UmpleSuperHandler {
 	 */
 	private void removeAlreadyDefinedGenerators(UmpleModel uModel){
 		//I couldn't find anyway to remove generated languages.
+	}
+
+	/*
+	 * This show info messages. You could change it to be a visual message if you like.
+	 */
+	private void showMessage(String msg){
+
+		System.out.println(msg);
+		//Comment: you have to have the value for "event" to be able to use the following visual message.
+		//MessageDialog.openInformation(HandlerUtil.getActiveWorkbenchWindow(event).getShell(), "Info",msg);
+	}
+	
+	/*
+	 * This show error messages. You could change it to be a visual message if you like.
+	 */
+	private void showErrorMessage(String msg){
+		System.err.println(msg);
+		//Comment: you have to have the value for "event" to be able to use the following visual message.
+		//MessageDialog.openInformation(HandlerUtil.getActiveWorkbenchWindow(event).getShell(), "Error",msg);
+	}
+	
+	/*
+	 * This method create the proper console in Eclipse environment
+	 */
+	private void setDefualtConsole(){	
+		try {
+			MessageConsole umpleConsole = findConsole("Umple Compiler");
+			umpleConsole.clearConsole(); 
+	        umpleConsole.activate();
+	        System.setOut(new PrintStream(umpleConsole.newOutputStream()));
+	        IOConsoleOutputStream io = umpleConsole.newOutputStream();
+	        io.setColor(new Color(null, 255, 0, 0));
+	        System.setErr(new PrintStream(io));
+		} catch (Exception e) {
+			showErrorMessage(e.getMessage());
+		}
+	}
+	
+	/*
+	 * This method comes from https://wiki.eclipse.org/FAQ_How_do_I_write_to_the_console_from_a_plug-in%3F
+	 */
+	private MessageConsole findConsole(String name) {
+		ConsolePlugin plugin = ConsolePlugin.getDefault();
+	    IConsoleManager conMan = plugin.getConsoleManager();
+	    IConsole[] existing = conMan.getConsoles();
+	    	for (int i = 0; i < existing.length; i++)
+	    		if (name.equals(existing[i].getName()))
+	    			return (MessageConsole) existing[i];
+	    //no console found, so create a new one
+	    MessageConsole myConsole = new MessageConsole(name, null);
+	    conMan.addConsoles(new IConsole[]{myConsole});
+	    return myConsole;
 	}
 }

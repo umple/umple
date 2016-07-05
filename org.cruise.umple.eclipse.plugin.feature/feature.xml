@@ -20,6 +20,7 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.ui.ide" version="3.11.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.console" version="3.6.100" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources"/>
    </requires>
 
