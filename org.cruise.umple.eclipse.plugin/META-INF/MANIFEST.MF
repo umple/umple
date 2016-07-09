@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Plugin
 Bundle-SymbolicName: org.cruise.umple.eclipse.plugin;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.24.0
 Bundle-Activator: org.cruise.umple.eclipse.plugin.Activator
 Bundle-Vendor: cruise team at University of Ottawa
 Require-Bundle: org.eclipse.ui,
