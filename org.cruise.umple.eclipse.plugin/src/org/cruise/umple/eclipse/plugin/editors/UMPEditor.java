@@ -24,10 +24,10 @@ public class UMPEditor extends TextEditor {
 	@Override
 	protected void createActions() {	
 		super.createActions();
-//		IAction action = new ContentAssistAction(new UmpResourceBoundle(), "ContentAssistProposal.", this); 
-//		String id = ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS;
-//		action.setActionDefinitionId(id);
-//		setAction("ContentAssistProposal", action); 
-//		markAsStateDependentAction("ContentAssistProposal", true);
+		IAction action = new ContentAssistAction(new UmpResourceBoundle(), "ContentAssistProposal.", this); 
+		String id = ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS;
+		action.setActionDefinitionId(id);
+		setAction("ContentAssistProposal", action); 
+		markAsStateDependentAction("ContentAssistProposal", true);
 	}
 }
