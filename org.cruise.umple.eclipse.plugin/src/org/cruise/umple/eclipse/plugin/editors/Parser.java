@@ -6,7 +6,7 @@ public class Parser {
 			"use","isA","const","lazy","settable","internal","autounique","defaulted",
 			"after","before","--","->","<-","<@>-","-<@>","sorted","return",
 			"entry","do","exit","queued","pooled","||","active",
-			"singleton","immutable","trace"};
+			"singleton","immutable","trace", "external","depend"};
 	public static final String[] KEYWORDS_TYPES = {"String","Boolean","Integer","Double","Float","void","Date","Time"};
 	public static final String[] KEYWORDS_VISIBILITY = {"public","private","protected"};
 	public static final String[] KEYWORDS_LANGUAGES = {"Java","Php","Cpp","Ruby"};

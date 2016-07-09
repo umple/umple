@@ -2,7 +2,11 @@ package org.cruise.umple.eclipse.plugin.editors;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
+import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
@@ -48,6 +52,23 @@ public class UMPConfiguration extends SourceViewerConfiguration {
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
 		return reconciler;
+	}
+
+	@Override
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		ContentAssistant ca = new ContentAssistant();
+        IContentAssistProcessor cap = new CompletionProcessor();
+        ca.setContentAssistProcessor(cap, IDocument.DEFAULT_CONTENT_TYPE);
+        ca.enableAutoActivation(true);
+        ca.setAutoActivationDelay(500);
+        ca.setProposalPopupOrientation(IContentAssistant.CONTEXT_INFO_BELOW);
+        ca.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+        return ca;
+	}
+	
+	@Override
+	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
+		return new TextHover();
 	}
 
 }
