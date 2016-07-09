@@ -2,7 +2,7 @@
 <feature
       id="org.cruise.umple.eclipse.plugin.feature"
       label="Umple Plugin"
-      version="1.0.0.qualifier">
+      version="1.24.0">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -21,6 +21,8 @@
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.ui.ide" version="3.11.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.console" version="3.6.100" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.editors" version="3.10.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jface.text" version="3.11.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources"/>
    </requires>
 
@@ -28,7 +30,7 @@
          id="org.cruise.umple.eclipse.plugin"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.24.0"
          unpack="false"/>
 
 </feature>
