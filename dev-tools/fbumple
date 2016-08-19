@@ -8,24 +8,21 @@ if ($OSTYPE == 'cygwin' || $OSTYPE == 'msys' | $OSTYPE == 'win32') then
 else
   set buildenv="local"
 endif
-echo Doing FULL build of Umple at $UMPLEROOT using ant -Dmyenv=$buildenv
-echo Building repo at $UMPLEROOT
-# If you are running on Windows the above should run as myenv=wlocal
-echo This should take 2-5 minutes. Do not interrupt.
+echo Doing FIRST build of Umple at $UMPLEROOT using ant -Dmyenv=$buildenv
+echo This resets dependencies and is needed only after installing a fresh repo or
+echo or to clean up.
+echo This should take 1-2 minutes and does not run tests. Do not interrupt. Then do full build
 echo You should always have done 'git pull' before running this and resolved conflicts
 set logfile="/tmp/umplebuildlog$$.txt"
-ant -Dmyenv=$buildenv | tee $logfile
+ant -Dmyenv=$buildenv first-build | tee $logfile
 grep -qi failed $logfile
 if ($status == 0) then
   echo "************************"
-  echo Script bumple ended ABNORMALLY at $UMPLEROOT
+  echo Script fbumple ended ABNORMALLY at $UMPLEROOT
   echo The word FAILED was found in the above. Build was NOT SUCCESSFUL.
   echo Build log is at $logfile
-  echo Test log can be opened in a web browser at $UMPLEROOT/dist/qa/index.php
 else
   rm $logfile
-  echo Script bumple ended normally at $UMPLEROOT
-  echo Full build complete. You may push or open a PR.
+  echo Script fbumple ended normally at $UMPLEROOT
+  echo First build complete. You should now do a full build bumple to ensure tests pass.
 endif
-
-
