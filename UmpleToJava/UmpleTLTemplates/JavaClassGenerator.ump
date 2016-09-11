@@ -94,12 +94,14 @@ class JavaClassGenerator {
 // line <<= p.getLineNumber() >> "<<= uClass.getRelativePath(p.getFilename(),"Java") >>"
 <<# } #>>
 public <<# if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
+boolean hasParentInterface=uClass.hasParentInterface();
+
 
 for (StateMachine smq : uClass.getStateMachines())
   {
     if (smq.isQueued())
     { 
-      if (uClass.hasParentInterface() == false){
+      if (hasParentInterface == false){
         append(realSb," implements Runnable");
       }
       else{
@@ -109,7 +111,7 @@ for (StateMachine smq : uClass.getStateMachines())
     }
     else if(smq.isPooled())
     {
-      if (uClass.hasParentInterface() == false){
+      if (hasParentInterface == false){
         append(realSb," implements Runnable");
       }
       else{

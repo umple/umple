@@ -1501,6 +1501,8 @@ class JavaGenerator
     return "UNKNOWN ID: " + keyName;
   }
   
+
+
   public void prepare()
   {
     List<UmpleClass> allClasses = new ArrayList<UmpleClass>(getModel().getUmpleClasses());
@@ -1667,7 +1669,7 @@ class JavaGenerator
   {
     injectIntoUnique("delete", injection, when, av, aClass);
   }
-    
+
   private void prepare(UmpleClass aClass)
   {
 
@@ -1797,6 +1799,7 @@ class JavaGenerator
     boolean hasTimedEvents = false;
     boolean foundQueued = false;    
     boolean foundPooled = false;
+    
     for (StateMachine sm : aClass.getStateMachines())
     {
       // Make sure state machine name is decapitalized
@@ -2361,7 +2364,6 @@ class JavaGenerator
       }
     }
   }
-  
   private void addImports(UmpleClass aClass, GeneratedClass genClass)
   {
     addAttributeImports(aClass,genClass);
@@ -2395,8 +2397,17 @@ class JavaGenerator
         genClass.addMultiLookup("import", "java.lang.Thread");
       }
     }
-  }
   
+    if(aClass.getIsDistributed()==true)
+    { if(aClass.getDistributeTechnology().equals("distributableRMI"))
+      {
+        genClass.addMultiLookup("import", "java.rmi.registry.Registry");
+        genClass.addMultiLookup("import", "java.rmi.registry.LocateRegistry");
+        genClass.addMultiLookup("import", "java.rmi.RemoteException");
+        genClass.addMultiLookup("import", "java.rmi.server.UnicastRemoteObject");
+      }
+    }
+  }
   private String nameOf(Attribute av)
   {
     return nameOf(av.getName(),av.getIsList());
