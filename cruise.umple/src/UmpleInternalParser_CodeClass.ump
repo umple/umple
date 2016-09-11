@@ -377,7 +377,21 @@ class UmpleInternalParser
       checkCodeInjections();
       //issue 841
       checkSingletonParent();
+
     }
+  }
+
+/*
+* Analyze subtoken distributable to check which keyword is parsed
+*/
+  private void analyzeDistributableInterface(Token distributableToken, UmpleInterface aInterface){
+      // If the "DistributableRMI" keyword is parsed, make the Umple interface Distributable.
+    if (distributableToken.getValue("distributable")!= null)
+    {
+      aInterface.setIsDistributable(true);
+      aInterface.setIsDistributed(true);
+      aInterface.setDistributeTechnology(distributableToken.getValue("distributable"));
+    } 
   }
 
   //Issue 841
@@ -893,6 +907,14 @@ class UmpleInternalParser
     {
       aClass.setIsSingleton(true);
     }
+    // If the "DistributableRMI" keyword is parsed, make the Umple class Distributable.
+    if (classToken.getValue("distributable") != null)
+    {
+      aClass.setIsDistributable(true);
+      aClass.setIsDistributed(true);
+      aClass.setDistributeTechnology(classToken.getValue("distributable"));
+
+    }
     if(!"".equals(aClass.getPackageName()) && !currentPackageName.equals(aClass.getPackageName())){
       setFailedPosition(classToken.getPosition(), 30, aClass.getName(), currentPackageName);
     }    
@@ -1019,7 +1041,6 @@ class UmpleInternalParser
     
     UmpleInterface anInterface = new UmpleInterface(interfaceToken.getValue("name"),model);
     model.addUmpleInterface(anInterface);
-    
     Position thePosition = interfaceToken.getPosition();
     Position endPosition = interfaceToken.getEndPosition();
 
@@ -1067,7 +1088,7 @@ class UmpleInternalParser
   private void analyzeInterface(Token interfaceToken, UmpleInterface aInterface)
   {
     for(Token token : interfaceToken.getSubTokens())
-    {
+    {   
       if (token.is("depend"))
       {
         Depend d = new Depend(token.getValue());
@@ -1142,14 +1163,20 @@ class UmpleInternalParser
   }
 
   private void analyzeInterfaceMembers(Token interfaceMemberToken, UmpleInterface aInterface)
-  {
+  { 
+    
     for(Token childToken : interfaceMemberToken.getSubTokens())
-    {
+    { 
       addExtendsTo(interfaceMemberToken, aInterface, unlinkedInterfaceExtends, unlinkedExtendsTokensInterface);
+      
       if(childToken.is("abstractMethodDeclaration"))
       {
         analyzeMethod(childToken, aInterface);   
-      }  
+      }
+      else if (childToken.is("distributableInterface"))
+      {
+        analyzeDistributableInterface(childToken, aInterface);   
+      }
       else if (childToken.is("constantDeclaration"))
       {
         analyzeConstant(childToken, aInterface);    

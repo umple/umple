@@ -25,7 +25,7 @@ associationDefinition : association [name]? { ([[comment]] | [[association]])* }
 associationClassDefinition : associationClass [name] { [[associationClassContent]]* }
 
 // The following items can be found inside the body of classes or association classes
-classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
+classContent- : [[comment]] | [[distributable]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
 associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[association]] | [[inlineAssociation]] | ; | [[extraCode]]
 
 
@@ -33,8 +33,8 @@ associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [
 // followed, then the body will extraCode and passed to the base language
 // See user manual page [*interfaceDefinition*]
 interfaceBody- : [[interfaceMemberDeclaration]]*
-interfaceMemberDeclaration : [[comment]] | [[constantDeclaration]] | [[constantDeclarationDeprecated]] | [[abstractMethodDeclaration]] | [[position]] | [[displayColor]] | [[isA]] | [[exception]] | [[extraCode]]
-
+interfaceMemberDeclaration : [[comment]] | [[constantDeclaration]] | [[constantDeclarationDeprecated]] | [[abstractMethodDeclaration]] | [[position]] | [[displayColor]] | [[isA]] | [[distributableInterface]] | [[exception]] | [[extraCode]]
+distributableInterface : [[distributable]]
 // Constants in interfaces (e.g. const String ACONSTANT="aValue";)
 // Note: in Classes const is a modifier
 constantDeclarationDeprecated : constant [[typedName]] (= [**value])? ;
@@ -42,6 +42,8 @@ constantDeclaration : const [[typedName]] (= [**value])? ;
 
 //TODO Should we use modifier for concrete methods [=modifier:public|protected|private]?
 //TODO Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?
+
+distributable- : [=distributable:distributableRMI|distributableWS] ;
 
 moreCode- : [[codeLangs]] { [**code] }
 codeLangs- : ([=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|Alloy|UmpleSelf] ( , [=codeLang:Java|Alloy|RTCpp|SimpleCpp|Cpp|Php|Ruby|UmpleSelf] )* )?
