@@ -50,7 +50,8 @@ public class TemplateTest
   {
 
     SampleFileWriter.destroy(pathToInput + "/example");
-
+    SampleFileWriter.destroy(pathToInput + "/java/example");
+    SampleFileWriter.destroy(pathToInput + "/IX.php");
     SampleFileWriter.destroy(pathToInput + "/ISomething.java");
     SampleFileWriter.destroy(pathToInput + "/Token.java");
     SampleFileWriter.destroy(pathToInput + "/Garbage.php");
@@ -213,6 +214,10 @@ public class TemplateTest
 
     // Tear down Client
     SampleFileWriter.destroy(pathToInput + "/Client.java");
+    SampleFileWriter.destroy(pathToInput + "/java/IClient.java");
+    SampleFileWriter.destroy(pathToInput + "/java/Client.java");
+    SampleFileWriter.destroy(pathToInput + "/java/Microwave.java");
+    SampleFileWriter.destroy(pathToInput + "/java/IMicrowave.java");
     SampleFileWriter.destroy(pathToInput + "/client.rb");
     SampleFileWriter.destroy(pathToInput + "/Client.php");
   }
