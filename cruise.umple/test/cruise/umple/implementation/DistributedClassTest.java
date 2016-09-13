@@ -30,13 +30,23 @@ public class DistributedClassTest extends TemplateTest
   @Test
   public void TestInterfaceModel()
   {
-	  UmpleModel model2 = createUmpleSystem(pathToInput , languagePath + "/Interface_DistributableRMI.ump");
-	  model2.generate();
+	 UmpleModel model2 = createUmpleSystem(pathToInput , languagePath + "/Interface_DistributableRMI.ump");
+	 model2.generate();
 	  
-	  Assert.assertEquals(true, model2.getUmpleInterface(0).getIsDistributed());  
-	  Assert.assertEquals("distributableRMI", model2.getUmpleInterface(0).getDistributeTechnology());
+	 Assert.assertEquals(true, model2.getUmpleInterface(0).getIsDistributed());  
+	 Assert.assertEquals("distributableRMI", model2.getUmpleInterface(0).getDistributeTechnology());
 	 Assert.assertEquals(true, model2.getUmpleInterface(0).getIsDistributable());
+	 //Assert.assertEquals(true, model2.getUmpleInterface(0).getDepends());
   }
-  
+  @Test
+  public void ClassDependencyTest(){
+		assertUmpleTemplateFor("java/Class_DistributableRMI.ump", languagePath + "/Class_DistributableRMI."+ languagePath +".txt", "Client");
+
+  }
+  @Test
+  public void InterfaceDependencyTest(){
+		assertUmpleTemplateFor("java/Interface_DistributableRMI.ump", languagePath + "/Interface_DistributableRMI."+ languagePath +".txt", "Client");
+
+  }
   
 }

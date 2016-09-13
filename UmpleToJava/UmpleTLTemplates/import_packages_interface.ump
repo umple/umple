@@ -6,6 +6,16 @@ class UmpleToJava {
     append(realSb, "import {0};",depend.getName());
   }
 
+    if(uInterface.getIsDistributed()==true)
+    { if(uInterface.getDistributeTechnology().equals("distributableRMI"))
+      {
+        appendln(realSb, "");
+        append(realSb,"import {0};", "java.rmi.Remote");
+        appendln(realSb, "");
+        append(realSb,"import {0};", "java.rmi.RemoteException");
+      }
+    }
+
   Boolean hasDate = false;
   Boolean hasTime = false;
   for(Constant aConstant : uInterface.getConstants())
