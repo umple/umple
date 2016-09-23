@@ -203,6 +203,9 @@
       <classpath refid="validator.project.classpath"/>
       <classpath refid="core.ivy.classpath" />
       <classpath refid="test.ivy.classpath" />
+	    <!-- Add compiler arguments here, see https://ant.apache.org/manual/using.html#arg for details, example below
+			  <compilerarg value="-Xlint:deprecation" />
+		-->
     </javac>
     
     <copy todir="${bin.path}" overwrite="true">
