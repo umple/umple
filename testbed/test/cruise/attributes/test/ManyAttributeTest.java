@@ -34,7 +34,7 @@ public class ManyAttributeTest
     m1.addWork(3);
     Assert.assertEquals(1, m1.getWork(0).intValue());
     Integer[] works = {1,2,3};
-    Assert.assertEquals(works, m1.getWorks());
+    Assert.assertArrayEquals(works, m1.getWorks());
   }
 //test hasAttribute and getAttributeNumber
   @Test
