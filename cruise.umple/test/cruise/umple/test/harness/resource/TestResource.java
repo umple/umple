@@ -40,7 +40,8 @@ import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.test.harness.compiler.JavaInternalCompiler;
 import cruise.umple.test.harness.compiler.interfaces.ICompiler;
 import cruise.umple.util.SampleFileWriter;
-import junit.framework.Assert;
+
+import org.junit.Assert;
 
 public class TestResource {
 	public static final int timeout = 10000; 

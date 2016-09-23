@@ -36,7 +36,8 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 
 import cruise.umple.test.harness.compiler.interfaces.IMemoryLanguageObjectBuilder;
-import junit.framework.Assert;
+
+import org.junit.Assert;
 
 public class JavaMemoryObjectBuilder implements IMemoryLanguageObjectBuilder<SimpleJavaFileObject> {
 	List<SimpleJavaFileObject> objects;

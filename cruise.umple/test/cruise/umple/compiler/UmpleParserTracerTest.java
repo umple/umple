@@ -9,8 +9,6 @@
 
 package cruise.umple.compiler;
 
-import junit.framework.Assert;
-
 import java.io.File;
 
 import org.junit.*;

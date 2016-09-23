@@ -9,8 +9,6 @@
 
 package cruise.umple.util;
 
-import junit.framework.Assert;
-
 import org.junit.*;
 
 import cruise.umple.util.Language;

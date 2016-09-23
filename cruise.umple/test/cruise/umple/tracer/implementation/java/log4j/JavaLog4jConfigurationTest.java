@@ -11,8 +11,6 @@ package cruise.umple.tracer.implementation.java.log4j;
 
 import java.io.File;
 
-import junit.framework.Assert;
-
 import org.junit.*;
 
 import cruise.umple.implementation.TemplateTest;

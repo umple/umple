@@ -8,12 +8,13 @@
  */
 
 package cruise.umple.util;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.StringReader;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 public class AssertHelper 
 {
