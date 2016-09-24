@@ -181,7 +181,7 @@ class Action
   	codeblock.setCode(lang,code);
   }
   
-  key { actionType, actionCode } 
+  key { actionType, actionCode, position } 
 }
 
 class Event
