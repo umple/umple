@@ -1,0 +1,100 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.24.0-7aed471 modeling language!*/
+
+package example;
+
+public class Duplicate
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Duplicate State Machines
+  public enum Sm { s0, s1 }
+  private Sm sm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Duplicate()
+  {
+    setSm(Sm.s0);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public boolean e0()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s0:
+        exitSm();
+        setSm(Sm.s1);
+        wasEventProcessed = true;
+        break;
+      case s1:
+        setSm(Sm.s1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case s0:
+        s0_exit1();
+        s0_exit2();
+        break;
+      case s1:
+        s1_exit1();
+        s1_exit1();
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case s0:
+        s0_entr1();
+        s0_entry2();
+        break;
+      case s1:
+        s1_entry1();
+        s1_entry1();
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+}

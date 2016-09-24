@@ -1,0 +1,20 @@
+namespace example;
+
+class Duplicate{
+    sm{
+      s0{
+        entry / {s0_entr1();}
+        entry / {s0_entry2();}
+        e0 -> s1;
+        exit /{s0_exit1();}
+        exit /{s0_exit2();}
+      }
+      s1{
+        entry / {s1_entry1();}
+        entry / {s1_entry1();}
+        e0 -> s1;
+        exit /{s1_exit1();}
+        exit /{s1_exit1();}
+      }
+  }
+}

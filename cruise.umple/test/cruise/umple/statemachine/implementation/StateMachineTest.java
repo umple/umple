@@ -240,6 +240,12 @@ public class StateMachineTest extends StateMachineTemplateTest
   }
 
   @Test
+  public void entryExitActionDuplicates()
+  {
+  assertUmpleTemplateFor("entryExitActionDuplicates.ump",languagePath + "/entryExitActionDuplicates." + languagePath + ".txt", "Duplicate");    
+  }
+  
+  @Test
   public void externalStateMachine()
   {
     assertUmpleTemplateFor("externalStateMachine.ump",languagePath + "/externalStateMachine."+ languagePath +".txt","Course");
