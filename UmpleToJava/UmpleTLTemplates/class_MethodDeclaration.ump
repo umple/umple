@@ -8,6 +8,8 @@ class UmpleToJava {
         
         if(!aMethod.getExistsInLanguage("Java"))
           continue;
+        if(aMethod.existsAlreadyInClass(uClass))
+          continue;
         
           
         Position p = aMethod.getCodePosition();

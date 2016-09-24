@@ -778,7 +778,38 @@ class Method
 	  }
 	  this. comments = another.getComments();
   }
-
+  public boolean existsAlreadyInClass(final UmpleClassifier umpleClass) {
+	if (umpleClass != null && umpleClass.getMethods() != null) {
+		for (final Method method : umpleClass.getMethods()) {
+			// Ensure the method names match
+			if (!method.getName().equals(this.name)) {
+				continue;
+			}
+			
+			// Check if parameters match
+			boolean isSame = true;
+			if (method.getMethodParameters() != null && this.methodParameters != null) {
+				for (final MethodParameter parameter : this.methodParameters) {
+					boolean parameterExists = false;
+					for (final MethodParameter otherParameter : method.getMethodParameters()) {
+						if (parameter.getName().equals(otherParameter.getName()) && parameter.getType().equals(otherParameter.getType())) {
+							parameterExists = true;
+							break;
+						}
+					}
+					
+					if (!parameterExists) {
+						isSame = false;
+					}
+				}
+			}
+			
+			return isSame;
+		}
+	}  
+  
+  	return false;
+  }
   public boolean getExistsInLanguage(String lang)
   {
     if (!hasMethodBody()){
