@@ -29,7 +29,8 @@ import cruise.umple.compiler.UmpleModel;
 import cruise.umple.compiler.UmpleParser;
 import cruise.umple.compiler.java.JavaClassGenerator;
 import cruise.umple.parser.analysis.RuleBasedParser;
-import junit.framework.Assert;
+
+import org.junit.Assert;
 
 public class TestParseValidation {
 

@@ -52,7 +52,8 @@ import cruise.umple.test.harness.compiler.JavaMemoryObjectBuilder.InternalJavaCl
 import cruise.umple.test.harness.compiler.JavaMemoryObjectBuilder.JavaMemoryObjectLoader;
 import cruise.umple.test.harness.compiler.interfaces.ICompiler;
 import cruise.umple.test.harness.compiler.interfaces.IMemoryLanguageObjectBuilder;
-import junit.framework.Assert;
+
+import org.junit.Assert;
 
 public class JavaInternalCompiler implements ICompiler {
 	private String tempClassFiles;

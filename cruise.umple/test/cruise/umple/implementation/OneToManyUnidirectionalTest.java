@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.*;
 
 public class OneToManyUnidirectionalTest extends TemplateTest
