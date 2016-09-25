@@ -105,6 +105,7 @@ class UmpleInternalParser
     analyzeAllTokens(getRootToken());
     postTokenAnalysis();
     applyTraits();
+    secondPostTokenAnalysis();
     //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
     checkDefaultedNameConflict();
 
@@ -303,12 +304,7 @@ class UmpleInternalParser
     {
       postTokenClassAnalysis();
     }
-
-    if (getParseResult().getWasSuccess())
-    {
-      postTokenStateMachineAnalysis();
-    }
-
+    
     if (getParseResult().getWasSuccess())
     {
       postTokenTraceAnalysis();
@@ -337,7 +333,16 @@ class UmpleInternalParser
       postTokenModelConstraintAnalysis();
     }
   }
-
+  
+  //This is used for the cases that will be resolved by traits and we don't need to see those warnings.
+  private void secondPostTokenAnalysis()
+  {
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenStateMachineAnalysis();
+    }
+  }
+  
   private void postTokenModelConstraintAnalysis(){
     for(UmpleClass uClass:model.getUmpleClasses())
     {

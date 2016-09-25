@@ -693,8 +693,8 @@ class UmpleInternalParser
 		  	state.setStateMachine(inSMachine1);
 			  changeTransitionNextState(inSMachine1.findState(state.getName()),inSMachine1);
 		  } else {
+		  	checkSatifcationOfRequiredStates(state,inSMachine2);
 		  	applyCompositionAndSuperKwywordToState(inSMachine1, inSMachine2, inUmpleClassfier, mainState, state);
-		  	Map<Transition,State> movedItems = new HashMap<Transition, State>();
 		  	for (int i = 0; i < state.numberOfTransitions(); i++) {
 					Transition tTransition = state.getTransition(i); 		  		
 				  Transition findTransition= null;
@@ -752,7 +752,30 @@ class UmpleInternalParser
 		  }  
 	  }
   }
-  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+  private void checkSatifcationOfRequiredStates(State inState, StateMachine inSMachine){
+  	for (State checkState : possiblyUnknownStates.keySet()){
+      if (checkState.getName().equals(inState.getName()) ){
+	     if (checkState.getStateMachine().getUmpleClass()!=null && inSMachine.getUmpleClass()!=null) {
+	            if (checkState.getStateMachine().getUmpleClass().getName().equals(inSMachine.getUmpleClass().getName()) ) return;
+	     } else if (checkState.getStateMachine().getUmpleTrait()!=null && inSMachine.getUmpleTrait()!=null){
+	            if (checkState.getStateMachine().getUmpleTrait().getName().equals(inSMachine.getUmpleTrait().getName()) ) return;
+	     }
+      }  
+    }
+    State find = null;
+	for (State checkState : possiblyUnknownStates.keySet()){
+      if (checkState.getName().equals(inState.getName()) ){
+         if (checkState.getStateMachine().getUmpleClass()!=null){
+                find = checkState;
+               	break;
+         }
+	  }
+  	} 
+  	if (find!=null) possiblyUnknownStates.remove(find); 
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
