@@ -214,7 +214,10 @@ public class TemplateTest
 
     // Tear down Client
     SampleFileWriter.destroy(pathToInput + "/Client.java");
-    SampleFileWriter.destroy(pathToInput + "/example/Client.java");
+    SampleFileWriter.destroy(pathToInput + "/java/IClient.java");
+    SampleFileWriter.destroy(pathToInput + "/java/Client.java");
+    SampleFileWriter.destroy(pathToInput + "/java/Microwave.java");
+    SampleFileWriter.destroy(pathToInput + "/java/IMicrowave.java");
     SampleFileWriter.destroy(pathToInput + "/client.rb");
     SampleFileWriter.destroy(pathToInput + "/Client.php");
   }
