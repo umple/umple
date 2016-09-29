@@ -1,6 +1,6 @@
 namespace example;
 
-interface Client
+interface IClient
 {
 distributableRMI;
 }

@@ -1,0 +1,9 @@
+namespace example;
+
+class Client
+{
+  distributableRMI;
+  Integer a;
+0..1 -- * CC;
+}
+class CC{}

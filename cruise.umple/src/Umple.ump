@@ -528,7 +528,7 @@ class UmpleClass
   depend cruise.umple.util.*;
 
   isA UmpleClassifier;
-
+  Boolean hasProxyPattern = false;
   // Specifies whether or not in the filter
   Boolean filteredin = false;
 

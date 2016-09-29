@@ -126,6 +126,7 @@ class JavaGenerator
     {
       writeUncaughtExceptionFile(mainClasses.get(0));
     }
+
     postpare();
   }
   
@@ -2425,6 +2426,92 @@ class JavaGenerator
     return typeOf(aType);
   }
   
+  private String WriteProxyFiles(String classContents,UmpleClass aClass,String path) throws IOException 
+  {
+    String interfaceName="I"+aClass.getName();
+    String remoteInterfaceName="RemoteI"+aClass.getName();
+    String remoteInterfaceContent="";
+    String interfaceContent="";
+    Integer scopeDepth=0;// if it is 1 means we are in the main class. If depth more than 1 it means we are in an inner class.
+    
+    String[] lines = classContents.split(System.getProperty("line.separator"));
+    String line;
+    for(int lineNumber=0; lineNumber<lines.length;lineNumber+=1)
+    {   
+      line=lines[lineNumber];
+      String[] tokensInMethod = line.split(" ");
+      if (tokensInMethod!=null && tokensInMethod.length>0){
+        if ((tokensInMethod[0].contains("package"))||(lineNumber<3)) 
+        {
+          interfaceContent+=line+"\n";
+          remoteInterfaceContent+=line+"\n";
+        }
+      }
+        if((scopeDepth==0)&&(line.contains("class")))
+        {
+          interfaceContent+="interface "+interfaceName+"\n{\n";
+          remoteInterfaceContent+="interface "+remoteInterfaceName+" extends java.rmi.Remote, "+interfaceName+"\n{\n}";
+        }
+      String lineWOSpace= line.replace(" ", "");
+      for(int i=0;i<tokensInMethod.length;i+=1)
+      {
+        if ((tokensInMethod[i].contains("public"))&&(!line.contains("static"))&&(!line.contains("enum"))&&(!line.contains("["))&&(scopeDepth==1))
+        {
+          if (!tokensInMethod[i+1].contains(aClass.getName())){
+            if(!lineWOSpace.substring(lineWOSpace.length()-2,lineWOSpace.length()).contains("{"))//}
+              interfaceContent+=line.substring(0,line.length())+";\n";
+            else
+              interfaceContent+=line.substring(0,line.length()-1)+";\n";
+          }
+        }       
+      } 
+      scopeDepth += line.length() - line.replace("{", "").length(); // counting the number of "{" in the line and increasing the scopeDepth
+      scopeDepth -= line.length() - line.replace("}", "").length(); // counting the number of "}" in the line and increasing the scopeDepth      
+    }
+    interfaceContent+="}";//
+    
+    String filename = path + File.separator + interfaceName + ".java";
+    File file = new File(path);
+    file.mkdirs();
+    BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+
+    //putting the code in the model and writing the file.
+    getModel().getGeneratedCode().put(interfaceName,interfaceContent);
+
+    try
+    {
+      bw.write(interfaceContent);
+      bw.flush();
+    }
+    finally
+    {
+      bw.close();
+    } 
+// writing the generated code for the remote interface
+    if (aClass.getIsDistributed()){
+      filename = path + File.separator + remoteInterfaceName + ".java";
+      File fileRemote = new File(path);
+      fileRemote.mkdirs();
+      BufferedWriter bwRemote = new BufferedWriter(new FileWriter(filename));
+
+      //putting the code in the model and writing the file.
+      getModel().getGeneratedCode().put(remoteInterfaceName,remoteInterfaceContent);
+
+      try
+      {
+        bwRemote.write(interfaceContent);
+        bwRemote.flush();
+      }
+      finally
+      {
+        bwRemote.close();
+      } 
+    }
+    return classContents;
+  }
+
+
+
   public void writeFile(UmpleElement aClass) throws IOException
   {
     ILang language = getLanguageFor(aClass);
@@ -2440,7 +2527,15 @@ class JavaGenerator
 
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
     String contents = language.getCode(getModel(), aClass);
+    if (aClass instanceof UmpleClass)
+    { 
+      UmpleClass uClass=(UmpleClass)aClass; 
+      if(uClass.getHasProxyPattern())
+          contents=WriteProxyFiles(contents,uClass,path);
+          
+    }
     getModel().getGeneratedCode().put(aClass.getName(),contents);
+
     try
     {
       bw.write(contents);

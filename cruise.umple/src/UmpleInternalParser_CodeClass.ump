@@ -912,6 +912,7 @@ class UmpleInternalParser
     {
       aClass.setIsDistributable(true);
       aClass.setIsDistributed(true);
+      aClass.setHasProxyPattern(true);
       aClass.setDistributeTechnology(classToken.getValue("distributable"));
 
     }
