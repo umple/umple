@@ -1,0 +1,40 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+
+package example;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+public class Client
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Client()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+  public int action(int i){
+    if(isProxy())
+    {
+      return;
+    }
+    int f=i;
+    return f;
+  }
+
+}
