@@ -2407,7 +2407,8 @@ class JavaGenerator
   private String WriteProxyFiles(String classContents,UmpleClass aClass,String path) throws IOException 
   {
     String interfaceName="I"+aClass.getName();
-    
+    String remoteInterfaceName="RemoteI"+aClass.getName();
+    String remoteInterfaceContent="";
     String interfaceContent="";
     Integer scopeDepth=0;// if it is 1 means we are in the main class. If depth more than 1 it means we are in an inner class.
     
@@ -2418,9 +2419,17 @@ class JavaGenerator
       line=lines[lineNumber];
       String[] tokensInMethod = line.split(" ");
       if (tokensInMethod!=null && tokensInMethod.length>0){
-        if ((tokensInMethod[0].contains("package"))||(lineNumber<3)) interfaceContent+=line+"\n";
+        if ((tokensInMethod[0].contains("package"))||(lineNumber<3)) 
+        {
+          interfaceContent+=line+"\n";
+          remoteInterfaceContent+=line+"\n";
         }
-        if((scopeDepth==0)&&(line.contains("class")))interfaceContent+="interface "+interfaceName+"\n{\n";
+      }
+        if((scopeDepth==0)&&(line.contains("class")))
+        {
+          interfaceContent+="interface "+interfaceName+"\n{\n";
+          remoteInterfaceContent+="interface "+remoteInterfaceName+" extends java.rmi.Remote, "+interfaceName+"\n{\n}";
+        }
       String lineWOSpace= line.replace(" ", "");
       for(int i=0;i<tokensInMethod.length;i+=1)
       {
@@ -2446,6 +2455,7 @@ class JavaGenerator
 
     //putting the code in the model and writing the file.
     getModel().getGeneratedCode().put(interfaceName,interfaceContent);
+
     try
     {
       bw.write(interfaceContent);
@@ -2455,8 +2465,26 @@ class JavaGenerator
     {
       bw.close();
     } 
+// writing the generated code for the remote interface
+    if (aClass.getIsDistributed()){
+      filename = path + File.separator + remoteInterfaceName + ".java";
+      File fileRemote = new File(path);
+      fileRemote.mkdirs();
+      BufferedWriter bwRemote = new BufferedWriter(new FileWriter(filename));
 
+      //putting the code in the model and writing the file.
+      getModel().getGeneratedCode().put(remoteInterfaceName,remoteInterfaceContent);
 
+      try
+      {
+        bwRemote.write(interfaceContent);
+        bwRemote.flush();
+      }
+      finally
+      {
+        bwRemote.close();
+      } 
+    }
     return classContents;
   }
 
@@ -2482,6 +2510,7 @@ class JavaGenerator
       UmpleClass uClass=(UmpleClass)aClass; 
       if(uClass.getHasProxyPattern())
           contents=WriteProxyFiles(contents,uClass,path);
+          
     }
     getModel().getGeneratedCode().put(aClass.getName(),contents);
 
