@@ -1,24 +1,7 @@
-Open-Source License for the Umple Model-Oriented Software Technology
-====================================================================
+The MIT License for Umple 
+=========================
 
-Based on the MIT License
-
-Copyright © 2008-2016 Timothy C. Lethbridge, Andrew Forward, Omar Badreddin, 
-Dusan Brestovansky, Julie Filion, Miguel Garzon, Hamoud Aljamaan, Ali Fatolahi, 
-Julian Solano, Joshua Horacsek, Joel Hobson, Alvina Lee, Sultan Eid, Jordan Johns, 
-Sonya Adams, James Zhao, Adam Dzialoszynski, Luna Lu, Song Bae Choi, Thomas Morrison, 
-Sacha Bagasan, Andrew Paugh, Stuart Erskine, Russell Staughton, Christopher Hogan, 
-Geoffrey Guest, Gabriel Blais Bourget, Robin Jastrzebski, Quinlan Jung,
-Blakeley Quebec Desloges, Jesus Zambrano, Ahmed Orabi, Mahmoud Orabi, Tonio Resende, 
-Vahdat Abdelzad, Opeyemi Adesina, Aliaa Alghamdi, Tiago Nascimento, Tianyuan Chu, 
-Fiodar Kazhamiaka, Greg Hysen, Jean-Christophe Charbonneau, Kenan Kigunda,
-Adriaan Cody Schuffelen, Marc Antoine Gosselin-Lavigne, Pedro Augusto Vincente,
-Jason Canto, Ellen Arteca, Alexi Turcotte, Karin Ng, Mark Galloway,
-Alexander Ringeri, Antonio Maria Pereria de Resende, Craig Bryan, Eric Telmer, 
-Charles Wang, Chan Chun Kit, Nabil Maadarani, John Zweip, Kevin Brightwell,
-Warren Marivel, Ashley Merman, Xinxin Kou, Aymen Ben Rkhis, Curtis Meerkerk, Adam Kereliuk,
-Matthew Fritze, Michael Mkicik, Victoria Lacroix, Morgan Redshaw, Matthew Rodusek,
-Shikib Mehri
+Copyright 2008-2016 Timothy C. Lethbridge, Andrew Forward, Omar Badreddin, Dusan Brestovansky, Julie Filion, Miguel Garzon, Hamoud Aljamaan, Ali Fatolahi, Julian Solano, Joshua Horacsek, Joel Hobson, Alvina Lee, Sultan Eid, Jordan Johns, Sonya Adams, James Zhao, Adam Dzialoszynski, Luna Lu, Song Bae Choi, Thomas Morrison, Sacha Bagasan, Andrew Paugh, Stuart Erskine, Russell Staughton, Christopher Hogan, Geoffrey Guest, Gabriel Blais Bourget, Robin Jastrzebski, Quinlan Jung, Blakeley Quebec Desloges, Jesus Zambrano, Ahmed Orabi, Mahmoud Orabi, Tonio Resende, Vahdat Abdelzad, Opeyemi Adesina, Aliaa Alghamdi, Tiago Nascimento, Tianyuan Chu, Fiodar Kazhamiaka, Greg Hysen, Jean-Christophe Charbonneau, Kenan Kigunda, Adriaan Cody Schuffelen, Marc Antoine Gosselin-Lavigne, Pedro Augusto Vincente, Jason Canto, Ellen Arteca, Alexi Turcotte, Karin Ng, Mark Galloway, Alexander Ringeri, Antonio Maria Pereria de Resende, Craig Bryan, Eric Telmer, Charles Wang, Chan Chun Kit, Nabil Maadarani, John Zweip, Kevin Brightwell, Warren Marivel, Ashley Merman, Xinxin Kou, Aymen Ben Rkhis, Curtis Meerkerk, Adam Kereliuk, Matthew Fritze, Michael Mkicik, Victoria Lacroix, Morgan Redshaw, Matthew Rodusek, Shikib Mehri, Amid Zakariapour, Marc de Niverville, Alex Hochheiden
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
