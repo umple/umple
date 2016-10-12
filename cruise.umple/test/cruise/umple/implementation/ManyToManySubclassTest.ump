@@ -1,0 +1,16 @@
+namespace example;
+
+class Analyzer
+{
+  0..* parent -- 0..* Analyzer children;
+}
+
+class GuardAnalyzer
+{
+  isA Analyzer;
+}
+
+class AnotherAnalyser
+{
+  isA Analyzer;
+}

@@ -1,0 +1,272 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import java.util.*;
+
+public class Analyzer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Analyzer Associations
+  private List<Analyzer> children;
+  private List<Analyzer> parent;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Analyzer()
+  {
+    children = new ArrayList<Analyzer>();
+    parent = new ArrayList<Analyzer>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Analyzer getChild(int index)
+  {
+    Analyzer aChild = children.get(index);
+    return aChild;
+  }
+
+  public List<Analyzer> getChildren()
+  {
+    List<Analyzer> newChildren = Collections.unmodifiableList(children);
+    return newChildren;
+  }
+
+  public int numberOfChildren()
+  {
+    int number = children.size();
+    return number;
+  }
+
+  public boolean hasChildren()
+  {
+    boolean has = children.size() > 0;
+    return has;
+  }
+
+  public int indexOfChild(Analyzer aChild)
+  {
+    int index = children.indexOf(aChild);
+    return index;
+  }
+
+  public Analyzer getParent(int index)
+  {
+    Analyzer aParent = parent.get(index);
+    return aParent;
+  }
+
+  public List<Analyzer> getParent()
+  {
+    List<Analyzer> newParent = Collections.unmodifiableList(parent);
+    return newParent;
+  }
+
+  public int numberOfParent()
+  {
+    int number = parent.size();
+    return number;
+  }
+
+  public boolean hasParent()
+  {
+    boolean has = parent.size() > 0;
+    return has;
+  }
+
+  public int indexOfParent(Analyzer aParent)
+  {
+    int index = parent.indexOf(aParent);
+    return index;
+  }
+
+  public static int minimumNumberOfChildren()
+  {
+    return 0;
+  }
+
+  public boolean addChild(Analyzer aChild)
+  {
+    boolean wasAdded = false;
+    if (children.contains(aChild)) { return false; }
+    children.add(aChild);
+    if (aChild.indexOfParent(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aChild.addParent(this);
+      if (!wasAdded)
+      {
+        children.remove(aChild);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeChild(Analyzer aChild)
+  {
+    boolean wasRemoved = false;
+    if (!children.contains(aChild))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = children.indexOf(aChild);
+    children.remove(oldIndex);
+    if (aChild.indexOfParent(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aChild.removeParent(this);
+      if (!wasRemoved)
+      {
+        children.add(oldIndex,aChild);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addChildAt(Analyzer aChild, int index)
+  {  
+    boolean wasAdded = false;
+    if(addChild(aChild))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfChildren()) { index = numberOfChildren() - 1; }
+      children.remove(aChild);
+      children.add(index, aChild);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveChildAt(Analyzer aChild, int index)
+  {
+    boolean wasAdded = false;
+    if(children.contains(aChild))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfChildren()) { index = numberOfChildren() - 1; }
+      children.remove(aChild);
+      children.add(index, aChild);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addChildAt(aChild, index);
+    }
+    return wasAdded;
+  }
+
+  public static int minimumNumberOfParent()
+  {
+    return 0;
+  }
+
+  public boolean addParent(Analyzer aParent)
+  {
+    boolean wasAdded = false;
+    if (parent.contains(aParent)) { return false; }
+    parent.add(aParent);
+    if (aParent.indexOfChild(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aParent.addChild(this);
+      if (!wasAdded)
+      {
+        parent.remove(aParent);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeParent(Analyzer aParent)
+  {
+    boolean wasRemoved = false;
+    if (!parent.contains(aParent))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = parent.indexOf(aParent);
+    parent.remove(oldIndex);
+    if (aParent.indexOfChild(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aParent.removeChild(this);
+      if (!wasRemoved)
+      {
+        parent.add(oldIndex,aParent);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addParentAt(Analyzer aParent, int index)
+  {  
+    boolean wasAdded = false;
+    if(addParent(aParent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfParent()) { index = numberOfParent() - 1; }
+      parent.remove(aParent);
+      parent.add(index, aParent);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveParentAt(Analyzer aParent, int index)
+  {
+    boolean wasAdded = false;
+    if(parent.contains(aParent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfParent()) { index = numberOfParent() - 1; }
+      parent.remove(aParent);
+      parent.add(index, aParent);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addParentAt(aParent, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    ArrayList<Analyzer> copyOfChildren = new ArrayList<Analyzer>(children);
+    children.clear();
+    for(Analyzer aChild : copyOfChildren)
+    {
+      aChild.removeParent(this);
+    }
+    ArrayList<Analyzer> copyOfParent = new ArrayList<Analyzer>(parent);
+    parent.clear();
+    for(Analyzer aParent : copyOfParent)
+    {
+      aParent.removeChild(this);
+    }
+  }
+
+}
