@@ -1,0 +1,152 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import java.util.*;
+
+public class Analyzer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Analyzer Associations
+  private List<X> offspring;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Analyzer()
+  {
+    offspring = new ArrayList<X>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public X getOffspring(int index)
+  {
+    X aOffspring = offspring.get(index);
+    return aOffspring;
+  }
+
+  public List<X> getOffspring()
+  {
+    List<X> newOffspring = Collections.unmodifiableList(offspring);
+    return newOffspring;
+  }
+
+  public int numberOfOffspring()
+  {
+    int number = offspring.size();
+    return number;
+  }
+
+  public boolean hasOffspring()
+  {
+    boolean has = offspring.size() > 0;
+    return has;
+  }
+
+  public int indexOfOffspring(X aOffspring)
+  {
+    int index = offspring.indexOf(aOffspring);
+    return index;
+  }
+
+  public static int minimumNumberOfOffspring()
+  {
+    return 0;
+  }
+
+  public boolean addOffspring(X aOffspring)
+  {
+    boolean wasAdded = false;
+    if (offspring.contains(aOffspring)) { return false; }
+    offspring.add(aOffspring);
+    if (aOffspring.indexOfParent(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aOffspring.addParent(this);
+      if (!wasAdded)
+      {
+        offspring.remove(aOffspring);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeOffspring(X aOffspring)
+  {
+    boolean wasRemoved = false;
+    if (!offspring.contains(aOffspring))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = offspring.indexOf(aOffspring);
+    offspring.remove(oldIndex);
+    if (aOffspring.indexOfParent(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aOffspring.removeParent(this);
+      if (!wasRemoved)
+      {
+        offspring.add(oldIndex,aOffspring);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addOffspringAt(X aOffspring, int index)
+  {  
+    boolean wasAdded = false;
+    if(addOffspring(aOffspring))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOffspring()) { index = numberOfOffspring() - 1; }
+      offspring.remove(aOffspring);
+      offspring.add(index, aOffspring);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveOffspringAt(X aOffspring, int index)
+  {
+    boolean wasAdded = false;
+    if(offspring.contains(aOffspring))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOffspring()) { index = numberOfOffspring() - 1; }
+      offspring.remove(aOffspring);
+      offspring.add(index, aOffspring);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addOffspringAt(aOffspring, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    ArrayList<X> copyOfOffspring = new ArrayList<X>(offspring);
+    offspring.clear();
+    for(X aOffspring : copyOfOffspring)
+    {
+      aOffspring.removeParent(this);
+    }
+  }
+
+}

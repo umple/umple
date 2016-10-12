@@ -114,7 +114,7 @@ class JavaGenerator
       }
     }
     catch(Exception e){
-      throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);	
+      throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
     }
     
     if (lastElement == null)
@@ -1574,8 +1574,8 @@ class JavaGenerator
   private void addJavaLttngImport(){
     for(UmpleClass umpleClass : getModel().getUmpleClasses())
     {
-    	// imports
-    	umpleClass.addDepend(new Depend("java.util.logging.*"));
+      // imports
+      umpleClass.addDepend(new Depend("java.util.logging.*"));
       umpleClass.addDepend(new Depend("org.lttng.ust.agent.LTTngAgent"));
       // code injection in constructor
       CodeBlock cb = new CodeBlock("LTTngAgent lttngAgent = LTTngAgent.getLTTngAgent();");
@@ -1649,13 +1649,13 @@ class JavaGenerator
   {
     String code = StringFormatter.format(injection,
       translate("type", av),
-	    translate("parameterOne", av),
-	    translate("parameterOld", av),
-	    translate("getMethod", av),
-	    translate("hasUniqueMethod", av),
-	    translate("uniqueMap", av));
+      translate("parameterOne", av),
+      translate("parameterOld", av),
+      translate("getMethod", av),
+      translate("hasUniqueMethod", av),
+      translate("uniqueMap", av));
     CodeInjection set = new CodeInjection(when, method, code, aClass);
-	  aClass.addCodeInjection(set);
+    aClass.addCodeInjection(set);
   }
   
   private void injectIntoUniqueSet(String injection, String when, Attribute av, UmpleClass aClass)
@@ -1682,11 +1682,11 @@ class JavaGenerator
           if (!av.getIsSpecialization()) continue;
           Association relatedAssoc = aClass.getAssociation(aClass.indexOfAssociationVariable(av));
           av.setNeedsCommonCode( relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsCommonCode());
-          av.setNeedsSuperCode( relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsSuperCode());         	 
+          av.setNeedsSuperCode( relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsSuperCode());          
           av.setMulChangedToOne( relatedAssoc.getEnd(av.getRelevantEnd()).getMulChangedToOne());
           av.setMulChangedToN( relatedAssoc.getEnd(av.getRelevantEnd()).getMulChangedToN());
           av.setReqSetCode( relatedAssoc.getEnd(av.getRelevantEnd()).getReqSetCode());
-	  av.setScName( relatedAssoc.getEnd(av.getRelevantEnd()).getSuperClassName());
+          av.setScName( relatedAssoc.getEnd(av.getRelevantEnd()).getSuperClassName());
         } 
         catch ( IndexOutOfBoundsException wat )
         {
@@ -1736,7 +1736,7 @@ class JavaGenerator
                  "  }");
     lookups.put("fileTracer","public static void handle(String message)\n"+
                "  {\n"+
-    		       "    if(!open){\n"+
+               "    if(!open){\n"+
                "      try{\n"+
                "        // Open an output stream\n"+
                "        fout = new FileOutputStream (filename,true);\n"+
@@ -1853,13 +1853,13 @@ class JavaGenerator
   
   private void prepareCodeInjection(UmpleClass aClass)
   {
-  	prepareCodeInjectionForAttributes(aClass);
-  	prepareCodeInjectionForAssociations(aClass);
+    prepareCodeInjectionForAttributes(aClass);
+    prepareCodeInjectionForAssociations(aClass);
   }
   
   private void prepareCodeInjectionForAttributes(UmpleClass aClass)
   {
-  	for(Attribute av : aClass.getAttributes())
+    for(Attribute av : aClass.getAttributes())
     {
       prepareCodeInjectionForAttribute(aClass, av);
     }
@@ -1867,7 +1867,7 @@ class JavaGenerator
   
   private void prepareCodeInjectionForAssociations(UmpleClass aClass)
   {
-  	for(AssociationVariable av : aClass.getAssociationVariables())
+    for(AssociationVariable av : aClass.getAssociationVariables())
     {
       prepareCodeInjectionForAssociation(aClass, av);
     }
@@ -1875,7 +1875,7 @@ class JavaGenerator
   
   private void prepareCodeInjectionForAttribute(UmpleClass aClass, Attribute av)
   {
-  	if ((av.isImmutable() || aClass.getKey().isMember(av)))
+    if ((av.isImmutable() || aClass.getKey().isMember(av)))
     {
       String code = StringFormatter.format("if (!{0}) { return false; }",translate("attributeCanSet",av));
       CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code, aClass);
@@ -1906,12 +1906,12 @@ class JavaGenerator
         "{5}.put({1}, this);", "after", av, aClass);
       injectIntoUniqueDelete(
         "{5}.remove({3}());", "before", av, aClass);
-  	}
+    }
   }
   
   private void prepareCodeInjectionForAssociation(UmpleClass aClass, AssociationVariable av)
   {
-  	if (aClass.getKey().isMember(av))
+    if (aClass.getKey().isMember(av))
     {
       String code = StringFormatter.format("if (!{0}) { return false; }",translate("associationCanSet",av));
       String methods = StringFormatter.format("{0},{1},{2},{3},{4}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("setMethod",av),translate("resetMethod",av));
@@ -2309,11 +2309,11 @@ class JavaGenerator
         
         //add related imports in multilevel
         UmpleClass rootUClass = aClass;
-		while (!rootUClass.isRoot()) 
-		{
-			addImports(rootUClass.getExtendsClass(), genClass);
-			rootUClass = rootUClass.getExtendsClass();
-		}
+        while (!rootUClass.isRoot()) 
+        {
+            addImports(rootUClass.getExtendsClass(), genClass);
+            rootUClass = rootUClass.getExtendsClass();
+        }
       }
       
       for (AssociationVariable av : aClass.getAssociationVariables()) 
