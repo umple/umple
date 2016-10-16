@@ -134,6 +134,12 @@ Action.clicked = function(event)
   {
     Action.changeDiagramType({type:"editableClass"});
   }
+  else if (action == "ShowJointJSClassDiagram")
+  {
+    // TODO: delete this line
+    console.log(" ****************   MAGIC JUST HAPPENED   **************");
+    Action.changeDiagramType({type:"JointJSClass"});
+  }
   else if (action == "ShowGvClassDiagram")
   {
     Action.changeDiagramType({type:"GVClass"});
@@ -317,15 +323,27 @@ Action.changeDiagramType = function(newDiagramType)
   if(newDiagramType.type == "editableClass") { 
     if(Page.useEditableClassDiagram) return;
     Page.useEditableClassDiagram = true;
+    Page.useJointJSClassDiagram = false;
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowEditableClassDiagram").prop('checked', 'checked');
   }
+  else if(newDiagramType.type == "JointJSClass") { 
+    if(Page.useJointJSClassDiagram) return;
+    Page.useEditableClassDiagram = false;
+    Page.useJointJSClassDiagram = true;
+    Page.useGvClassDiagram = false;
+    Page.useGvStateDiagram = false;
+    Page.useStructureDiagram = false;
+    changedType = true;
+    jQuery("#buttonShowJointJSClassDiagram").prop('checked', 'checked');
+  }  
   else if(newDiagramType.type == "GVClass") { 
     if(Page.useGvClassDiagram) return;
     Page.useEditableClassDiagram = false;
+    Page.useJointJSClassDiagram = false;
     Page.useGvClassDiagram = true;
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
@@ -335,6 +353,7 @@ Action.changeDiagramType = function(newDiagramType)
   else if(newDiagramType.type == "GVState") {
     if(Page.useGvStateDiagram) return;
     Page.useEditableClassDiagram = false;
+    Page.useJointJSClassDiagram = false;
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = true;
     Page.useStructureDiagram = false;
@@ -344,6 +363,7 @@ Action.changeDiagramType = function(newDiagramType)
   else if(newDiagramType.type == "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
     Page.useEditableClassDiagram = false;
+    Page.useJointJSClassDiagram = false;
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = true;
@@ -1984,6 +2004,14 @@ Mousetrap.bind(['ctrl+e'], function(e){
   if(jQuery('.focus').length != 0)
   {
     Page.clickShowEditableClassDiagram();
+    return false; //equivalent to e.preventDefault();
+  }
+});
+
+Mousetrap.bind(['ctrl+j'], function(e){
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickShowJointJSClassDiagram();
     return false; //equivalent to e.preventDefault();
   }
 });
