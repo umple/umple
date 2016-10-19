@@ -1,0 +1,102 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.24.0-7aed471 modeling language!*/
+
+class Duplicate
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Duplicate State Machines
+  private static $SmS0 = 1;
+  private static $SmS1 = 2;
+  private $sm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setSm(self::$SmS0);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getSmFullName()
+  {
+    $answer = $this->getSm();
+    return $answer;
+  }
+
+  public function getSm()
+  {
+    if ($this->sm == self::$SmS0) { return "SmS0"; }
+    elseif ($this->sm == self::$SmS1) { return "SmS1"; }
+    return null;
+  }
+
+  public function e0()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS0)
+    {
+      $this->exitSm();
+      $this->setSm(self::$SmS1);
+      $wasEventProcessed = true;
+    }
+    elseif ($aSm == self::$SmS1)
+    {
+      $this->setSm(self::$SmS1);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitSm()
+  {
+    if ($this->sm == self::$SmS0)
+    {
+      s0_exit1();
+      s0_exit2();
+    }
+    elseif ($this->sm == self::$SmS1)
+    {
+      s1_exit1();
+      s1_exit1();
+    }
+  }
+
+  private function setSm($aSm)
+  {
+    $this->sm = $aSm;
+
+    // entry actions and do activities
+    if ($this->sm == self::$SmS0)
+    {
+      s0_entr1();
+      s0_entry2();
+    }
+    elseif ($this->sm == self::$SmS1)
+    {
+      s1_entry1();
+      s1_entry1();
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

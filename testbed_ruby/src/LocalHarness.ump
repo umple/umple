@@ -34,5 +34,5 @@ class DoorG
 
 class ExtraCodeTest
 {
-  extracode
+  // extracode
 }
