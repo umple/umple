@@ -16,7 +16,7 @@ class UmpleToJava {
 //    {  
 //      if (<<=gen.translate("parameterOne",av)>> != null)
 //      { 
-//        if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this))
+//        if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(<<=self>>))
 //          <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("parameterOne",av)>>;
 //          wasSet = true;
 //        }
@@ -29,7 +29,7 @@ class UmpleToJava {
 //        if (<<=gen.translate("parameterOne",av)>> == null)
 //        {
 //          if (<<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("minimumNumberOfMethod",av)>> < <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>>)
-//            <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+//            <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(<<=self>>);
 //            <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("parameterOne",av)>>  // <<=gen.translate("parameterOne",av)>> == null;
 //            wasSet = true;
 //        }
@@ -39,8 +39,8 @@ class UmpleToJava {
 //        if (   <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("minimumNumberOfMethod",av)>> < <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>>()
 //            && <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("maximumNumberOfMethod",av)>> > <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("numberOfMethod",av)>>()
 //           )
-//          <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
-//          <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this);
+//          <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(<<=self>>);
+//          <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(<<=self>>);
 //          <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("parameterOne",av)>>;
 //          wasSet = true;
 //        }

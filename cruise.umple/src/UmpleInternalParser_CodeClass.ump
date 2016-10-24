@@ -377,9 +377,157 @@ class UmpleInternalParser
       checkCodeInjections();
       //issue 841
       checkSingletonParent();
-
+      // this method sets the isDistributed flag for classes.
+        analyzeDistributedClasses();
+        setParentClassesDefaultInterface();
     }
   }
+
+/*
+* Parent of each class that has default interface must have default interface.
+*/
+
+private void setParentClassesDefaultInterface()
+{
+  for (UmpleClass uClass:  model.getUmpleClasses())
+  {
+    if ((uClass.getNeedsDefaultInterface())||(uClass.getIsDistributed())||(uClass.getHasProxyPattern()))
+    {
+      if(uClass.getExtendsClass()!=null) 
+      {
+        if(!uClass.getExtendsClass().getNeedsDefaultInterface()&&!uClass.getExtendsClass().getIsDistributed())
+        {
+          setParentDefaultInterfaceRecursive(uClass.getExtendsClass());
+        }
+      }
+    }
+  }
+}
+
+private void setParentDefaultInterfaceRecursive(UmpleClass uClass)
+{
+  uClass.setNeedsDefaultInterface(true);
+  if(uClass.getExtendsClass()!=null) 
+  {
+    if(!uClass.getExtendsClass().getNeedsDefaultInterface())
+    {
+      setParentDefaultInterfaceRecursive(uClass.getExtendsClass());
+    }
+  }
+}
+
+/*
+* Checking each class for distributabilty and chekning parent classes and interfaces as well as the system.
+*/
+private void analyzeDistributedClasses()
+{ 
+  if(model.getDistributeOn())
+  { 
+    for (UmpleClass uClass:  model.getUmpleClasses())
+    { 
+      if (model.getDistributeForced())
+      { model.setDistributed(true);
+        uClass.setIsDistributed(true);
+        uClass.setHasProxyPattern(true);
+        uClass.setNeedsDefaultInterface(true);
+      }
+	    if (!uClass.getIsDistributed())
+      { if(checkIsDistributed(uClass))
+        { 
+        	uClass.setNeedsDefaultInterface(true);
+        }
+      }    
+  	  for(UmpleInterface parentInterface :uClass.getParentInterface())
+  	  { 
+  	    if (parentInterface.getIsDistributable())
+  	    { 
+		      uClass.setNeedsDefaultInterface(false);
+        }
+  	  }      
+    }
+
+
+
+  }    
+}  
+
+private Boolean checkIsDistributed(UmpleClass uClass)
+{
+
+ /******
+  if the class implements d distributable interface it is also distributed. Here it has to be checked whether the class has more than one immediate distributable interfaces
+ First check the parent interfaces, then check the class itself, if none are distributable, check for parent classes
+ ******/
+  int distributedParents=0; 
+  for (UmpleInterface parentInterface: uClass.getParentInterface())
+  { 
+    if(checkIsDistributed(parentInterface))
+    {  
+      distributedParents+=1;
+      uClass.setDistributeTechnology(parentInterface.getDistributeTechnology());
+      uClass.setIsDistributed(true);
+      model.setDistributed(true);
+      uClass.setHasProxyPattern(true);
+      uClass.setNeedsDefaultInterface(false);
+      if (parentInterface.getIsDistributable())
+      { 
+        uClass.setNeedsDefaultInterface(false);
+      }     
+    }
+  }
+  if(distributedParents==1)
+  {
+    return true;
+  }
+
+
+/*
+First it is checked if the class is distributable itself. Then the parent classes
+*/
+  if(uClass.getIsDistributable())
+  {
+    uClass.setHasProxyPattern(true);
+    uClass.setNeedsDefaultInterface(true);
+    uClass.setIsDistributed(true);
+    model.setDistributed(true);
+    return true;
+  }
+
+
+
+
+  if(uClass.getExtendsClass()!=null) 
+  {
+    if(checkIsDistributed(uClass.getExtendsClass()))
+    { 
+      uClass.setIsDistributed(true);
+      model.setDistributed(true);
+      uClass.setHasProxyPattern(true);
+      uClass.setNeedsDefaultInterface(true);
+      uClass.setDistributeTechnology(uClass.getExtendsClass().getDistributeTechnology());
+      return true;
+    }
+  }  
+
+  return false;
+}
+// this method checks for all of the interfaces recursively and returns true if the interface extends a distributable interface
+private Boolean checkIsDistributed(UmpleInterface uInterface)
+{
+  if(uInterface.getIsDistributable())
+  {
+    return true;
+  }
+  /*for (UmpleInterface parentInterface  : uInterface.getExtendsInterface())
+  {
+    if(checkIsDistributed(parentInterface))
+    {
+     uInterface.setDistributeTechnology(parentInterface.getDistributeTechnology());
+     return true;
+    }
+  }*/
+  return false;
+}
 
 /*
 * Analyze subtoken distributable to check which keyword is parsed
@@ -389,8 +537,8 @@ class UmpleInternalParser
     if (distributableToken.getValue("distributable")!= null)
     {
       aInterface.setIsDistributable(true);
-      aInterface.setIsDistributed(true);
-      aInterface.setDistributeTechnology(distributableToken.getValue("distributable"));
+      if(distributableToken.getValue("distributable").equals("distributableRMI"))
+      	aInterface.setDistributeTechnology("RMI");
     } 
   }
 
@@ -671,7 +819,7 @@ class UmpleInternalParser
       if(C.getExtendsClass() != null)
       {
         if(C.equals(recursiveCycleCheck(C.getExtendsClass(), C, vistedMap))) 
-        {
+        { model.setDistributeOn(false);
           Token t = C.getExtendsToken();
           if(t.getValue().equals(C.getName()))
             getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),"Class",C.getName()));
@@ -911,10 +1059,14 @@ class UmpleInternalParser
     if (classToken.getValue("distributable") != null)
     {
       aClass.setIsDistributable(true);
-      aClass.setIsDistributed(true);
-      aClass.setHasProxyPattern(true);
-      aClass.setDistributeTechnology(classToken.getValue("distributable"));
+      if(classToken.getValue("distributable").equals("distributableRMI"))
+      	aClass.setDistributeTechnology("RMI");
 
+    }
+    if (classToken.getValue("proxyPattern")!=null)
+    {
+      aClass.setHasProxyPattern(true);
+      aClass.setNeedsDefaultInterface(true);
     }
     if(!"".equals(aClass.getPackageName()) && !currentPackageName.equals(aClass.getPackageName())){
       setFailedPosition(classToken.getPosition(), 30, aClass.getName(), currentPackageName);

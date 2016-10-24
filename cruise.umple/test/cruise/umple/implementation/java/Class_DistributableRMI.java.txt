@@ -1,13 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.24.0-7aed471 modeling language!*/
 
-package example;
+
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Client
+public class ClientImpl implements RemoteIClientImpl
 {
 
   //------------------------
@@ -18,8 +18,25 @@ public class Client
   // CONSTRUCTOR
   //------------------------
 
-  public Client()
+  public ClientImpl()
   {}
+  //------------------------
+  // Reference to the proxy
+  //------------------------
+  Client realSelf;
+  
+  public void setRealSelf(Client self)
+  {
+    realSelf=self;
+  }
+
+  //------------------------
+  // Start RMI Server
+  //------------------------
+  public void startRMI()
+  {
+    
+  }
 
   //------------------------
   // INTERFACE

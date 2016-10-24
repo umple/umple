@@ -1,0 +1,10 @@
+class UmpleToJava {
+    objectFactory_listOfObjects_instantiation_All <<!<</*objectFactory_listOfObjects_instantiation_All*/>><<#
+  for(UmpleClass uClass : model.getUmpleClasses())
+  {if (uClass.getIsDistributed()){
+  #>>
+    listOf<<=uClass.getName()>> = new ArrayList<<<="RemoteI"+uClass.getName()+"Impl">>>();
+  <<#
+  }}
+#>>!>>
+}

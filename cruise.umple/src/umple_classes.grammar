@@ -25,7 +25,7 @@ associationDefinition : association [name]? { ([[comment]] | [[association]])* }
 associationClassDefinition : associationClass [name] { [[associationClassContent]]* }
 
 // The following items can be found inside the body of classes or association classes
-classContent- : [[comment]] | [[distributable]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
+classContent- : [[comment]] | [[distributable]] | [[proxyPattern]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
 associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[association]] | [[inlineAssociation]] | ; | [[extraCode]]
 
 
@@ -44,7 +44,7 @@ constantDeclaration : const [[typedName]] (= [**value])? ;
 //TODO Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?
 
 distributable- : [=distributable:distributableRMI|distributableWS] ;
-
+proxyPattern- : [=proxyPattern:proxyPattern] ;
 moreCode- : [[codeLangs]] { [**code] }
 codeLangs- : ([=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|Alloy|UmpleSelf] ( , [=codeLang:Java|Alloy|RTCpp|SimpleCpp|Cpp|Php|Ruby|UmpleSelf] )* )?
 

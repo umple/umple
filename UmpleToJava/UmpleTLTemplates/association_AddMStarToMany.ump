@@ -26,13 +26,13 @@ class UmpleToJava {
     <<=gen.translate("associationMany",av)>>.remove(oldIndex);<<#for( TraceItem traceItemAssocRemove : traceItemAssocRemoves )#>><<= 
 (traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 >>
-    if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("indexOfMethod",av)>>(this) == -1)
+    if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("indexOfMethod",av)>>(<<=self>>) == -1)
     {
       wasRemoved = true;
     }
     else
     {
-      wasRemoved = <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+      wasRemoved = <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(<<=self>>);
       if (!wasRemoved)
       {
         <<=gen.translate("associationMany",av)>>.add(oldIndex,<<=gen.translate("parameterOne",av)>>);
