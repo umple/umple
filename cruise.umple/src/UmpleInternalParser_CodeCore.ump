@@ -35,11 +35,15 @@ class UmpleInternalParser
     }
     else if (t.is("debug"))
     {
-    	model.setDebugMode(true);
+      model.setDebugMode(true);
     }
     else if (t.is("toplevelExtracode"))
     {
-    	analyzeTopLevelCode(t);
+      analyzeTopLevelCode(t);
+    }
+    else if (t.is("distribute"))
+    {
+   	 analyzeDistribute(t);
     }
   }
 
@@ -133,6 +137,30 @@ class UmpleInternalParser
 	   model.addExtraCode(languageSpecificCode);
    }
 
+
+  //setting the model distribute on or off.
+  private void analyzeDistribute(Token distributeToken)
+  {
+    for(Token distributeSubToken : distributeToken.getSubTokens())
+    {
+      if(distributeSubToken.is("distributeVal"))
+      {
+        if(distributeSubToken.getValue().equals("off"))
+        {
+          model.setDistributeOn(false);
+          model.setDistributeForced(false);
+        }
+        else if(distributeSubToken.getValue().equals("forced"))
+        {
+          model.setDistributeForced(true);
+          model.setDistributeOn(true);
+        }
+        {
+        
+        }
+      }
+    }
+  } 
 
   // Add singular / plural forms of words to the glossary to be used by the code generator
   private void analyzeGlossary(Token glossaryToken)

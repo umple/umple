@@ -1,0 +1,14 @@
+use RMI_objectFactory_add_methods.ump;
+class UmpleToJava {
+    objectFactory_add_DeclareDefault <<!<</*objectFactory_add_DeclareDefault*/>>
+    <<#
+  accessibility = "public "+uClass.getName()+"Impl";
+  arguments=gClass.getLookup("constructorSignature");
+  argumentscomma="";
+  if(!arguments.equals(""))
+    argumentscomma+=", ";
+  caller=gClass.getLookup("constructorSignature_caller");
+  #>>
+  <<@ RMI_objectFactory_add_methods >>
+!>>
+}

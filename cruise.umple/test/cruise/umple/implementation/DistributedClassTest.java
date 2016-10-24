@@ -84,7 +84,7 @@ public class DistributedClassTest extends TemplateTest
 	  Assert.assertEquals(true, model.getUmpleClass(0).getIsDistributable());
 	  Assert.assertEquals(true, model.getUmpleClass(0).getHasProxyPattern());
 	  
-	  Assert.assertEquals("distributableRMI", model.getUmpleClass(0).getDistributeTechnology());
+	  Assert.assertEquals("RMI", model.getUmpleClass(0).getDistributeTechnology());
   }
   @Test
   public void TestClassModel2()
@@ -92,10 +92,10 @@ public class DistributedClassTest extends TemplateTest
 	  UmpleModel model2 = createUmpleSystem(pathToInput , languagePath + "/Class_DistributableRMI_WithMethods.ump");
 	  model2.generate();
 	  
-	  Assert.assertEquals(true, model2.getUmpleClass(0).getIsDistributed());  
+	 // Assert.assertEquals(true, model2.getUmpleClass(0).getIsDistributed());  
 	  Assert.assertEquals(true, model2.getUmpleClass(0).getIsDistributable());
 	  Assert.assertEquals(true, model2.getUmpleClass(0).getHasProxyPattern()); 
-	  Assert.assertEquals("distributableRMI", model2.getUmpleClass(0).getDistributeTechnology());
+	  Assert.assertEquals("RMI", model2.getUmpleClass(0).getDistributeTechnology());
   }
   @Test
   public void TestInterfaceModel()
@@ -103,8 +103,8 @@ public class DistributedClassTest extends TemplateTest
 	 UmpleModel modelI = createUmpleSystem(pathToInput , languagePath + "/Interface_DistributableRMI.ump");
 	 modelI.generate();
 	  
-	 Assert.assertEquals(true, modelI.getUmpleInterface(0).getIsDistributed());  
-	 Assert.assertEquals("distributableRMI", modelI.getUmpleInterface(0).getDistributeTechnology());
+	// Assert.assertEquals(true, modelI.getUmpleInterface(0).getIsDistributed());  
+	 Assert.assertEquals("RMI", modelI.getUmpleInterface(0).getDistributeTechnology());
 	 Assert.assertEquals(true, modelI.getUmpleInterface(0).getIsDistributable());
 	 //Assert.assertEquals(true, modelI.getUmpleInterface(0).getDepends());
   }
@@ -118,6 +118,7 @@ public class DistributedClassTest extends TemplateTest
 		assertUmpleTemplateFor("java/Interface_DistributableRMI.ump", languagePath + "/Interface_DistributableRMI."+ languagePath +".txt", "IClient");
 
   }
+  
   @Test
   public void MethodProxyTest(){
 		assertUmpleTemplateFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods."+ languagePath +".txt", "Microwave");
@@ -127,7 +128,7 @@ public class DistributedClassTest extends TemplateTest
   }
   @Test
   public void MethodProxyTest2(){
-		//assertUmpleTemplateFor("java/Class_DistributableRMI_WithMethods2.ump", languagePath + "/Class_DistributableRMI_WithMethods2."+ languagePath +".txt", "Client");
+		assertUmpleTemplateFor("java/Class_DistributableRMI_WithMethods2.ump", languagePath + "/Class_DistributableRMI_WithMethods2."+ languagePath +".txt", "Client");
 
   }
 }

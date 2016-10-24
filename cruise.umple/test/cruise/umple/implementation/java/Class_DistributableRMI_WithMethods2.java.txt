@@ -1,40 +1,168 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
 
-package example;
+
+import java.util.*;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Client
+public class ClientImpl
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
+  //ClientImpl Attributes
+  private int a;
+
+  //ClientImpl Associations
+  private List<CC> cCs;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Client()
-  {}
+  public ClientImpl(int aA)
+  {
+    a = aA;
+    cCs = new ArrayList<CC>();
+  }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public void delete()
-  {}
-
-  public int action(int i){
-    if(isProxy())
-    {
-      return;
-    }
-    int f=i;
-    return f;
+  public boolean setA(int aA)
+  {
+    boolean wasSet = false;
+    a = aA;
+    wasSet = true;
+    return wasSet;
   }
 
+  public int getA()
+  {
+    return a;
+  }
+
+  public CC getCC(int index)
+  {
+    CC aCC = cCs.get(index);
+    return aCC;
+  }
+
+  public List<CC> getCCs()
+  {
+    List<CC> newCCs = Collections.unmodifiableList(cCs);
+    return newCCs;
+  }
+
+  public int numberOfCCs()
+  {
+    int number = cCs.size();
+    return number;
+  }
+
+  public boolean hasCCs()
+  {
+    boolean has = cCs.size() > 0;
+    return has;
+  }
+
+  public int indexOfCC(CC aCC)
+  {
+    int index = cCs.indexOf(aCC);
+    return index;
+  }
+
+  public static int minimumNumberOfCCs()
+  {
+    return 0;
+  }
+
+  public boolean addCC(CC aCC)
+  {
+    boolean wasAdded = false;
+    if (cCs.contains(aCC)) { return false; }
+    Client existingClient = aCC.getClient();
+    if (existingClient == null)
+    {
+      aCC.setClient(this);
+    }
+    else if (!this.equals(existingClient))
+    {
+      existingClient.removeCC(aCC);
+      addCC(aCC);
+    }
+    else
+    {
+      cCs.add(aCC);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeCC(CC aCC)
+  {
+    boolean wasRemoved = false;
+    if (cCs.contains(aCC))
+    {
+      cCs.remove(aCC);
+      aCC.setClient(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addCCAt(CC aCC, int index)
+  {  
+    boolean wasAdded = false;
+    if(addCC(aCC))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCCs()) { index = numberOfCCs() - 1; }
+      cCs.remove(aCC);
+      cCs.add(index, aCC);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveCCAt(CC aCC, int index)
+  {
+    boolean wasAdded = false;
+    if(cCs.contains(aCC))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCCs()) { index = numberOfCCs() - 1; }
+      cCs.remove(aCC);
+      cCs.add(index, aCC);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCCAt(aCC, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    while( !cCs.isEmpty() )
+    {
+      cCs.get(0).setClient(null);
+    }
+  }
+
+
+  public String toString()
+  {
+    String outputString = "";
+    return super.toString() + "["+
+            "a" + ":" + getA()+ "]"
+     + outputString;
+  }
 }

@@ -1,0 +1,39 @@
+use objectFactory_add_DeclareDefault.ump;
+use objectFactory_add_DeclareOneToOne.ump;
+
+
+class UmpleToJava {
+    objectFactory_add_Declare_All <<!<</*objectFactory_add_Declare_All*/>><<#
+  for(UmpleClass uClass : model.getUmpleClasses())
+  {
+    boolean reqSuperCode, reqCommonCode;
+    AssociationVariable relatedAssociation;
+    Association relatedAssoc;
+    boolean isFake=false;
+    GeneratedClass gClass = uClass.getGeneratedClass();
+    boolean isOneToOne = false;
+    Boolean hasBody=false;
+    String arguments;
+    String caller;
+    String argumentscomma;
+    String accessibility;
+    for (AssociationVariable av : uClass.getAssociationVariables()) 
+    {
+      relatedAssociation = av.getRelatedAssociation();
+
+      if (av.isOnlyOne() && relatedAssociation.isOnlyOne() && av.getIsNavigable() && relatedAssociation.getIsNavigable())
+      {
+        isOneToOne = true;
+        break;
+      }
+    }
+    #>><<@ UmpleToJava.objectFactory_add_DeclareDefault >><<#
+    if (isOneToOne)
+    {
+      #>>
+      <<@ UmpleToJava.objectFactory_add_DeclareOneToOne >>
+      <<#
+    }
+  }
+#>>!>>
+}

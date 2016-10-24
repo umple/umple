@@ -1,0 +1,38 @@
+class UmpleToJava {
+    RMI_objectFactory_add_methods <<!<</*RMI_objectFactory_add_methods*/>>
+    <<#
+  append(realSb,"\n  {0} {1}({2}int component)",new Object[] {accessibility, "add"+uClass.getName(), argumentscomma+arguments});
+  if(isInterface==true){
+  #>>;<<#
+  }
+  else{
+  #>>
+  {
+    //return remoteFactories.get(component).instantiateMicrowave(<<=gClass.getLookup("constructorSignature_caller")>>);
+  }
+  <<#
+  }
+  append(realSb,"\n  {0} {1}({2}String component)",new Object[] {accessibility, "add"+uClass.getName(), argumentscomma+arguments});
+  if(isInterface==true){
+  #>>;<<#
+  }
+  else{
+  #>>
+  {
+   //return add<<=uClass.getName()>>(<<=gClass.getLookup("constructorSignature_caller")+argumentscomma>>getComponentId(component));
+  }
+    <<#
+    }
+  append(realSb,"\n  {0} {1}({2})",new Object[] {accessibility, "instantiate"+uClass.getName(), arguments});
+  if(isInterface==true){
+  #>>throws RemoteException;<<#
+  }
+  else{
+#>>
+  {
+  //return (new <<=uClass.getName()>>Impl(<<=arguments>>));
+  }
+  <<#
+    }#>>
+  !>>
+}

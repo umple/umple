@@ -12,6 +12,8 @@ By compiling this file, Umple will regenerate all Php generator files
 
 generate Java "../src-gen-UmpleTL";
 
+use JavaObjectFactoryInterfaceGenerator.ump;
+use JavaObjectFactoryClassGenerator.ump;
 use JavaClassGenerator.ump;
 use JavaInterfaceGenerator.ump;
 use JavaSpecGenerator.ump;

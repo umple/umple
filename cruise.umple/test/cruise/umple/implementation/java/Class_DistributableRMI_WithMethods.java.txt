@@ -9,7 +9,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Microwave implements Runnable
+public class MicrowaveImpl implements Runnable
 {
 
   //------------------------
@@ -22,31 +22,31 @@ public class Microwave implements Runnable
   // MEMBER VARIABLES
   //------------------------
 
-  //Microwave Attributes
+  //MicrowaveImpl Attributes
   private boolean lightOn;
   private boolean powerTubeOn;
   private boolean isDoorOpened;
   private boolean isButtonPressed;
   private Timer timer;
 
-  //Microwave State Machines
+  //MicrowaveImpl State Machines
   public enum OperatingMicrowaveStateMachine { readyToCook, doorOpen, cooking, cookingInterrupted, cookingComplete, cookingExtended }
   private OperatingMicrowaveStateMachine operatingMicrowaveStateMachine;
   
-  //enumeration type of messages accepted by Microwave
+  //enumeration type of messages accepted by MicrowaveImpl
   protected enum MessageType { doorOpened_M, buttonPressed_M, doorClosed_M, timerTimesout_M }
   
   MessageQueue queue;
   Thread removal;
 
-  //Microwave Do Activity Threads
+  //MicrowaveImpl Do Activity Threads
   Thread doActivityOperatingMicrowaveStateMachineCookingThread = null;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Microwave()
+  public MicrowaveImpl()
   {
     lightOn = false;
     powerTubeOn = false;
@@ -56,7 +56,7 @@ public class Microwave implements Runnable
     setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.readyToCook);
     queue = new MessageQueue();
     removal=new Thread(this);
-    //start the thread of Microwave
+    //start the thread of MicrowaveImpl
     removal.start();
   }
 
@@ -323,10 +323,10 @@ public class Microwave implements Runnable
 
   private static class DoActivityThread extends Thread
   {
-    Microwave controller;
+    MicrowaveImpl controller;
     String doActivityMethodName;
     
-    public DoActivityThread(Microwave aController,String aDoActivityMethodName)
+    public DoActivityThread(MicrowaveImpl aController,String aDoActivityMethodName)
     {
       controller = aController;
       doActivityMethodName = aDoActivityMethodName;
@@ -548,15 +548,15 @@ public class Microwave implements Runnable
       e.setStackTrace(result.toArray(new StackTraceElement[0]));
     }
   //The following methods Map Java lines back to their original Umple file / line    
-    public UmpleSourceData Microwave_doActivityOperatingMicrowaveStateMachineCooking(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(43).setJavaLines(334).setLengths(1);}
-    public UmpleSourceData Microwave_turnOff(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(88).setJavaLines(486).setLengths(3);}
-    public UmpleSourceData Microwave_energizePowerTube(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(82).setJavaLines(479).setLengths(3);}
-    public UmpleSourceData Microwave_doorClosed(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump").setUmpleLines(25, 50).setJavaLines(230, 236).setLengths(1, 1);}
-    public UmpleSourceData Microwave_turnLightOn(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(75).setJavaLines(468).setLengths(3);}
-    public UmpleSourceData Microwave_doorOpened(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump").setUmpleLines(16, 40, 55, 66).setJavaLines(152, 159, 165, 171).setLengths(1, 1, 1, 1);}
-    public UmpleSourceData Microwave_main(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(99).setJavaLines(498).setLengths(3);}
-    public UmpleSourceData Microwave_buttonPressed(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump").setUmpleLines(17, 41, 56, 67).setJavaLines(191, 198, 204, 210).setLengths(1, 1, 1, 1);}
-    public UmpleSourceData Microwave_setOperatingMicrowaveStateMachine(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump").setUmpleLines(12, 21, 29, 49, 54, 60).setJavaLines(290, 295, 300, 312, 316, 320).setLengths(2, 2, 8, 1, 1, 4);}
+    public UmpleSourceData MicrowaveImpl_doActivityOperatingMicrowaveStateMachineCooking(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(43).setJavaLines(334).setLengths(1);}
+    public UmpleSourceData MicrowaveImpl_turnOff(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(88).setJavaLines(486).setLengths(3);}
+    public UmpleSourceData MicrowaveImpl_energizePowerTube(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(82).setJavaLines(479).setLengths(3);}
+    public UmpleSourceData MicrowaveImpl_doorClosed(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump").setUmpleLines(25, 50).setJavaLines(230, 236).setLengths(1, 1);}
+    public UmpleSourceData MicrowaveImpl_turnLightOn(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(75).setJavaLines(468).setLengths(3);}
+    public UmpleSourceData MicrowaveImpl_doorOpened(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump").setUmpleLines(16, 40, 55, 66).setJavaLines(152, 159, 165, 171).setLengths(1, 1, 1, 1);}
+    public UmpleSourceData MicrowaveImpl_main(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(99).setJavaLines(498).setLengths(3);}
+    public UmpleSourceData MicrowaveImpl_buttonPressed(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump").setUmpleLines(17, 41, 56, 67).setJavaLines(191, 198, 204, 210).setLengths(1, 1, 1, 1);}
+    public UmpleSourceData MicrowaveImpl_setOperatingMicrowaveStateMachine(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump").setUmpleLines(12, 21, 29, 49, 54, 60).setJavaLines(290, 295, 300, 312, 316, 320).setLengths(2, 2, 8, 1, 1, 4);}
 
   }
   public static class UmpleSourceData
