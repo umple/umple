@@ -10,7 +10,7 @@ class UmpleToJava {
 >>
     if (<<=gen.relatedTranslate("parameterExisting",av)>> == null)
     {
-      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(this);
+      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(<<=self>>);
     }
     else if (!this.equals(<<=gen.relatedTranslate("parameterExisting",av)>>))
     {

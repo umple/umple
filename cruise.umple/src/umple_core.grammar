@@ -17,12 +17,12 @@ umpleProgram- : ( [[comment]] | [[directive]] | ; )*
 // Directives are the top-level items in an umple file. See manual page [*TypesofDirectives*]
 // A directive is either used to configure the system or else is
 // an actual entity of the system to be modelled or generated
-directive- : [[glossary]] | [[generate]] | [[generate_path]] | [[filter]] | [[useStatement]] | [[namespace]] | [[tracerDirective]] | [[entity]] | [[debug]] | [[strictness]] | [[toplevelExtracode]] | [[toplevelException]]
+directive- : [[glossary]] | [[generate]] | [[distribute]] | [[generate_path]] | [[filter]] | [[useStatement]] | [[namespace]] | [[tracerDirective]] | [[entity]] | [[debug]] | [[strictness]] | [[toplevelExtracode]] | [[toplevelException]]
 
 // A glossary item is used to fine tune pluralization during code generation
 glossary : glossary { [[word]]* }
 word : [singular] : [plural] ;
-
+distribute :distribute [=distributeVal:on|off|forced] ;
 // A high level of strictness will cause warnings to be issued when base language code
 // is found, where it might not have been intended. Strictness can also be used
 // To either suppress certain messages, or to declare that they should be present.
