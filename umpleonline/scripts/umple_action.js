@@ -1606,6 +1606,7 @@ Action.updateUmpleDiagramCallback = function(response)
     });
 
     graph.addCells(JJsParse.makeClasses(model));
+    graph.addCells(JJsParse.makeAssociations(model));
 
     // call this after having added all diagram elements to scale them to fit the available space
     paper.scaleContentToFit();

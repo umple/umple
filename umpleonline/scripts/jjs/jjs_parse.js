@@ -95,5 +95,23 @@ var JJsParse = {
 		}
 
 		return classes;
+	},
+
+	makeAssociations: function(model) {
+		var i, text, UMLassoc, max = model.umpleAssociations.length, associations = new Array();
+		var new_assoc;
+
+		for (i = 0; i < max; i++) {
+			UMLassoc = model.umpleAssociations[i];
+
+			new_assoc = new joint.shapes.uml.Association({
+		        source: { id: UMLassoc.classOneId },
+		        target: { id: UMLassoc.classTwoId }
+			});
+
+			associations.push(new_assoc);
+		}
+		return associations;
+
 	}
 };
