@@ -113,6 +113,46 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals("if (((getFlag()!=getFlag())||(getFlag()||getFlag())))\n{\n  {0}\n}", gen.translate("on", t3.getGuard()));
     Assert.assertEquals("if ((!(!getFlag()&&getX())&&(getX()||getX())))\n{\n  {0}\n}", gen.translate("on", t4.getGuard()));
   }
+  
+  // Issue 796
+  @Test
+  public void handleBooleanValueComparisonGuard()
+  {
+   assertNoWarnings("GuardWithBooleanComparison.ump");
+    UmpleClass c = model.getUmpleClass("BooleanGuards");
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("status", sm.getName());
+    State state1 = sm.getState(0);
+    State state2 = sm.getState(1);
+    State state3 = sm.getState(2);
+    State state4 = sm.getState(3);
+    State state5 = sm.getState(4);
+    State state6 = sm.getState(5);
+    State state7 = sm.getState(6);
+    State state8 = sm.getState(7);
+    Assert.assertEquals(8, sm.numberOfStates());
+    // Assert.assertEquals(0,state.numberOfTransitions());
+    Transition t1 = state1.getTransition(0);
+    Transition t2 = state2.getTransition(0);
+    Transition t3 = state3.getTransition(0);
+    Transition t4 = state4.getTransition(0);
+    Transition t5 = state5.getTransition(0);
+    Transition t6 = state6.getTransition(0);
+    Transition t7 = state7.getTransition(0);
+    Transition t8 = state8.getTransition(0);
+    
+    JavaGenerator gen = new JavaGenerator();
+    gen.setModel(model);
+    
+    Assert.assertEquals("if (getResult())\n{\n  {0}\n}", gen.translate("on", t1.getGuard()));
+    Assert.assertEquals("if (!getResult())\n{\n  {0}\n}", gen.translate("on", t2.getGuard()));
+    Assert.assertEquals("if (!getResult())\n{\n  {0}\n}", gen.translate("on", t3.getGuard()));
+    Assert.assertEquals("if (getResult())\n{\n  {0}\n}", gen.translate("on", t4.getGuard()));
+    Assert.assertEquals("if (getResult())\n{\n  {0}\n}", gen.translate("on", t5.getGuard()));
+    Assert.assertEquals("if (!getResult())\n{\n  {0}\n}", gen.translate("on", t6.getGuard()));
+    Assert.assertEquals("if (getResult())\n{\n  {0}\n}", gen.translate("on", t7.getGuard()));
+    Assert.assertEquals("if (getResult())\n{\n  {0}\n}", gen.translate("on", t8.getGuard()));
+  }
 
 
   // Issue 492
