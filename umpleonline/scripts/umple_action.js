@@ -136,8 +136,6 @@ Action.clicked = function(event)
   }
   else if (action == "ShowJointJSClassDiagram")
   {
-    // TODO: delete this line
-    console.log(" ****************   MAGIC JUST HAPPENED   **************");
     Action.changeDiagramType({type:"JointJSClass"});
   }
   else if (action == "ShowGvClassDiagram")
@@ -1524,7 +1522,8 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   }
   Action.savedCanonical=canonical;
   Page.showCanvasLoading();
-  if(Page.useEditableClassDiagram) {language="language=Json"}
+  // Want to use JSON for JointJS too
+  if(Page.useEditableClassDiagram || Page.useJointJSClassDiagram) {language="language=Json"}
   else if(Page.useGvClassDiagram) {
     if(Page.showTraits) {
       language="language=traitDiagram";
@@ -1591,6 +1590,27 @@ Action.updateUmpleDiagramCallback = function(response)
         // jQuery("div.umpleClass").addClass("unselectable");
       }
     }
+    else if(Page.useJointJSClassDiagram) {
+      var model = JSON.parse(diagramCode);
+      // console.log(model);
+      // console.log(model.length);
+      jQuery("#umpleCanvas").html('<div id="myholder"></div>');
+      var graph = new joint.dia.Graph;
+
+      var paper = new joint.dia.Paper({
+          el: jQuery('#myholder'),
+          width: 700,
+          height: 500,
+          model: graph,
+          gridSize: 1
+    });
+
+    graph.addCells(JJsParse.makeClasses(model));
+
+    // call this after having added all diagram elements to scale them to fit the available space
+    paper.scaleContentToFit();
+
+    }
     // Display static svg diagram
     else if(Page.useGvClassDiagram || Page.useGvStateDiagram)
     {
@@ -1618,7 +1638,8 @@ Action.getDiagramCode = function(responseText)
 {
   var output = "";
   
-  if(Page.useEditableClassDiagram)
+  // Also want to use the same response for JointJS
+  if(Page.useEditableClassDiagram || Page.useJointJSClassDiagram)
   {
     output = responseText.split('URL_SPLIT')[1];
     
