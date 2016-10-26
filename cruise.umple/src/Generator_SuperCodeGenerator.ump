@@ -60,6 +60,87 @@ class SuperCodeGenerator {
     }
     return false;
   }
+  
+   private String getBooleanResultIfExists(ConstraintVariable left, ConstraintVariable right, String leftString, String rightString, String operator)
+   {
+     String booleanResult = "";
+     if(checkStringForEqualsOperator(operator) || checkStringForNotEqualsOperator(operator))
+     {
+       if(testForBooleanConstraint(left) && testForBooleanValueConstraint(right))
+       {
+         booleanResult = getBooleanResult(leftString, rightString, operator);
+       } 
+       else if(testForBooleanConstraint(right) && testForBooleanValueConstraint(left)) 
+       {
+         booleanResult = getBooleanResult(rightString, leftString, operator);
+       }
+     }
+     return booleanResult;
+   }
+   
+   private boolean testForBooleanConstraint(ConstraintVariable variable)
+   {
+     if(variable instanceof ConstraintAttribute)
+     {
+         return "Boolean".equals(((ConstraintAttribute)variable).getAttribute().getType());
+     }
+     else if(variable instanceof ConstraintTree)
+     {
+       return testForBooleanConstraint(((ConstraintTree)variable).getRoot());
+     }
+     return false;
+   }
+    
+   private boolean testForBooleanValueConstraint(ConstraintVariable variable)
+   {
+     if(variable instanceof ConstraintUnassignedName)
+     {
+       String variableValue = ((ConstraintUnassignedName)variable).getValue();
+       return "true".equalsIgnoreCase(variableValue) || "false".equalsIgnoreCase(variableValue);
+     }
+     else if(variable instanceof ConstraintTree)
+     {
+       return testForBooleanValueConstraint(((ConstraintTree)variable).getRoot());
+     }
+     return false;
+   }
+   
+   private String getBooleanResult(String booleanObject, String booleanValue, String operator)
+   {
+     StringBuilder builder = new StringBuilder();
+     builder.append(booleanObject);
+     if(checkStringForNotEqualsOperator(operator))
+     {
+       addNegationToCondition(builder);
+     }
+     if("false".equalsIgnoreCase(booleanValue))
+     {
+       addNegationToCondition(builder);
+     }
+     return builder.toString();
+   }
+   
+   private Boolean checkStringForEqualsOperator(String value)
+   {
+     return "object==".equals(value) || "==".equals(value);
+   }
+   
+   private Boolean checkStringForNotEqualsOperator(String value)
+   {
+     return "object!=".equals(value) || "!=".equals(value);
+   }
+   
+   private void addNegationToCondition(StringBuilder builder)
+   {
+     if(builder.indexOf("!") == 0)
+     {
+       builder.deleteCharAt(0);
+     }
+     else
+     {
+       builder.insert(0, '!');
+     }
+   }
 
   public String translate(String id, ConstraintVariable cv)
   {
@@ -83,6 +164,13 @@ class SuperCodeGenerator {
       }
       String leftString = (left instanceof ConstraintOperator)?translate(left.getType(),left):translate(left.getType(),left,true);
       String rightString = (right instanceof ConstraintOperator)?translate(right.getType(),right):translate(right.getType(),right,true);
+      
+      String checkForBooleanResult = getBooleanResultIfExists(left, right, leftString, rightString, ((ConstraintOperator)cv).getValue());
+      if(!checkForBooleanResult.isEmpty())
+      {
+        return checkForBooleanResult;
+      }
+      
       String value = translate(id,cv,true);
       return StringFormatter.format(value,leftString,rightString);
     }
