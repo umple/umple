@@ -1591,25 +1591,60 @@ Action.updateUmpleDiagramCallback = function(response)
       }
     }
     else if(Page.useJointJSClassDiagram) {
+      // console.log(diagramCode);
       var model = JSON.parse(diagramCode);
-      // console.log(model);
-      // console.log(model.length);
-      jQuery("#umpleCanvas").html('<div id="myholder"></div>');
+
+      var umpleCanvas = jQuery("#umpleCanvas");
+      umpleCanvas.html('<div id="myholder"></div>');
+
       var graph = new joint.dia.Graph;
 
+      // start my making the paper the same size as umpleCanvas and then scaling the model to fit
       var paper = new joint.dia.Paper({
-          el: jQuery('#myholder'),
-          width: 700,
-          height: 500,
+          el: jQuery("#myholder"),
+          width: umpleCanvas.width(),
+          height: umpleCanvas.height(),
           model: graph,
           gridSize: 1
-    });
+      });
 
-    graph.addCells(JJsParse.makeClasses(model));
-    graph.addCells(JJsParse.makeAssociations(model));
+      graph.addCells(JJsParse.makeClasses(model));
+      graph.addCells(JJsParse.makeAssociations(model));
 
-    // call this after having added all diagram elements to scale them to fit the available space
-    paper.scaleContentToFit();
+      // call this after having added all diagram elements to scale them to fit the available space
+      paper.scaleContentToFit({padding: 15});
+
+      // zooming with the mouse wheel or finger swipe
+      var MouseWheelHandler = function (event){
+        // console.log(event.deltaY);
+        if (event.ctrlKey === true) {
+          var paperHeight = paper.options.height;
+          var paperWidth = paper.options.width;
+          // scaleFactor is either 1.1 or 0.9
+          var scaleFactor = 1 + (Math.abs(event.deltaY) / (event.deltaY * 10));
+          // console.log(scaleFactor);
+          paper.setDimensions(paperWidth * scaleFactor, paperHeight * scaleFactor)
+          // paper.height = paperHeight * scaleFactor;
+          // paper.width = paperWidth * scaleFactor;
+
+          // console.log(paper);
+          console.log(paper.options);
+          // console.log(paper.svg.height());
+          paper.scaleContentToFit({padding: 15});
+        }
+      };
+
+      // using the umpleCanvas as the mouse wheel event target, as it is a stable entity
+      var paperHolder = document.getElementById("umpleCanvas");
+
+      if (paperHolder.addEventListener) {
+        // IE9, Chrome, Safari, Opera
+        paperHolder.addEventListener("mousewheel", MouseWheelHandler, false);
+        // Firefox
+        paperHolder.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
+      }
+      // IE 6/7/8
+      else {paperHolder.attachEvent("onmousewheel", MouseWheelHandler);}
 
     }
     // Display static svg diagram
