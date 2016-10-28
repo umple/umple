@@ -1623,12 +1623,8 @@ Action.updateUmpleDiagramCallback = function(response)
           var paperWidth = paper.options.width;
           // scaleFactor is either 1.1 or 0.9
           var scaleFactor = 1 + (Math.abs(delta) / (delta * 10));
-          // console.log(scaleFactor);
           paper.setDimensions(paperWidth * scaleFactor, paperHeight * scaleFactor)
 
-          // console.log(paper);
-          // console.log(paper.options);
-          // console.log(paper.svg.height());
           paper.scaleContentToFit({padding: 15});
         }
       };

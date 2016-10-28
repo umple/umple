@@ -15,7 +15,6 @@ var JJsParse = {
 
 	addMethods: function(meths) {
 		// {type: "void", name: "setDoorTimer", parameters: "Integer", visibility: "public", isAbstract: "false"}
-		// console.log(meths);
 		var methods = new Array();
 
 		var parseMethods = function (method) {
@@ -56,7 +55,6 @@ var JJsParse = {
 			var new_class;
 
 			if (UMLclass.isAbstract === "true") {
-				// console.log("made ABSTRACT class");
 				new_class = new joint.shapes.uml.Abstract({
 					position: UMLclass.position,
 					size: UMLclass.position,
@@ -67,7 +65,6 @@ var JJsParse = {
 				});
 			}
 			else if (UMLclass.isInterface === "true") {
-				// console.log("made INTERFACE class");
 				new_class = new joint.shapes.uml.Interface({
 					position: UMLclass.position,
 					size: UMLclass.position,
@@ -78,7 +75,6 @@ var JJsParse = {
 				});
 			}
 			else {
-				// console.log("made reg class");
 				new_class = new joint.shapes.uml.Class({
 					position: UMLclass.position,
 					size: UMLclass.position,
@@ -90,7 +86,6 @@ var JJsParse = {
 			}
 
 			classes.push(new_class);
-			// console.log(new_class);
 		};
 
 		model.umpleClasses.forEach(instantiate);
