@@ -2,7 +2,7 @@ use RMI_objectFactory_add_methods.ump;
 class UmpleToJava {
     objectFactory_add_DeclareDefault <<!<</*objectFactory_add_DeclareDefault*/>>
     <<#
-  accessibility = "public "+uClass.getName()+"Impl";
+  accessibility = "public "+uClass.getName();
   arguments=gClass.getLookup("constructorSignature");
   argumentscomma="";
   if(!arguments.equals(""))

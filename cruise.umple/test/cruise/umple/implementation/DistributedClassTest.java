@@ -71,9 +71,64 @@ public class DistributedClassTest extends TemplateTest
 	    {
 	      SampleFileWriter.assertPartialFileContent(expected, actual);
 	    }
-
 	  }	
-   
+
+	public void assertUmpleProxyFor(String umpleFile, String codeFile, String className,String ProxyName, boolean isFullMatch, boolean ignoreLineComments)
+	  {
+	    
+	    String checkFile = pathToInput + "/" + umpleFile;
+	    if (!(new File(checkFile).exists()))
+	    {
+	      Assert.fail("Unable to locate umple file: " + checkFile);
+	    }
+
+	    checkFile = pathToInput + "/" + codeFile;
+	    if (!(new File(pathToInput + "/" + codeFile).exists()))
+	    {
+	      Assert.fail("Unable to locate code file: " + checkFile);
+	    }
+	        
+	    UmpleModel model = createUmpleSystem(pathToInput, umpleFile);
+	    
+
+	    String actual = null;
+	    if (className == null)
+	    {
+	      actual = model.getCode();
+	    }
+	    else
+	    {
+	      if (model.getUmpleClass(className) == null && model.getUmpleInterface(className) == null)
+	      {
+	        Assert.fail("Unknown class / interface:" + className);
+	      }
+
+	      if (model.getGeneratedCode().get(ProxyName) == null)
+	      {
+	        Assert.fail("No generated code:" + ProxyName);
+	      }
+
+	      actual = model.getGeneratedCode().get(ProxyName);
+	    }
+
+	    File expected = new File(pathToInput, codeFile);
+	    System.out.println(actual);
+
+
+	    if (isFullMatch)
+	    {
+	      if (ignoreLineComments)
+	        SampleFileWriter.assertFileContent(expected, actual, true);
+	      else
+	        SampleFileWriter.assertFileContent(expected, actual, false);
+
+	    }
+	    else
+	    {
+	      SampleFileWriter.assertPartialFileContent(expected, actual);
+	    }
+	  }		
+	
   @Test
   public void TestClassModel()
   {
@@ -124,7 +179,8 @@ public class DistributedClassTest extends TemplateTest
 		assertUmpleTemplateFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods."+ languagePath +".txt", "Microwave");
 		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods_interface."+ languagePath +".txt", "Microwave","IMicrowave",true,true);
 		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods_remoteInterface."+ languagePath +".txt", "Microwave","RemoteIMicrowave",true,true);
-		
+		assertUmpleProxyFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods_proxy."+ languagePath +".txt","Microwave", "MicrowaveProxy",true,true);
+
   }
   @Test
   public void MethodProxyTest2(){

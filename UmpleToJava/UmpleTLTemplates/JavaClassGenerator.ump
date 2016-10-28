@@ -125,6 +125,7 @@ for (StateMachine smq : uClass.getStateMachines())
 {
   <<#getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
   getConstructorCode(realSb, model,uClass,gClass,gen,isFirst, false);
+  getProxyReferenceCode(realSb, model,uClass,gClass,gen,isFirst);
   getAttributeCode(realSb, model,uClass,gClass,gen,isFirst,false);
   getStateMachine1Code(realSb, model,uClass,gClass,gen,isFirst,false);
   getAssociationCode(realSb, model,uClass,gClass,gen,isFirst,false);
@@ -135,6 +136,21 @@ for (StateMachine smq : uClass.getStateMachines())
   getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
   return realSb;
     } 
+    
+    private String getProxyReferenceCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+    {if(uClass.getHasProxyPattern()){#>>
+  //------------------------
+  // Reference to the proxy
+  //------------------------
+  <<=uClass.getName().substring(0,uClass.getName().length()-4)>> realSelf=this;
+  
+  public void setRealSelf(<<=uClass.getName().substring(0,uClass.getName().length()-4)>> self)
+  {
+    realSelf=self;
+  }
+
+    <<#}return realSb.toString();
+    }
     private String getMemberCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   {#>><<@ UmpleToJava.members_AllStatics >><<@ UmpleToJava.members_AllAttributes >><<@ UmpleToJava.members_AllStateMachines >><<@ UmpleToJava.members_AllDoActivities >><<@ UmpleToJava.members_AllAssociations >><<@ UmpleToJava.members_AllHelpers >>
   <<#return realSb.toString();

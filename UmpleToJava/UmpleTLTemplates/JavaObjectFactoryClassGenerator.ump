@@ -1,7 +1,8 @@
 use UmpleNotice.ump;
 use uncaught_exception.ump;
 use objectFactory_add_Declare_All.ump;
-
+use objectFactory_listOfObjects_All.ump;
+use objectFactory_listOfObjects_instantiation_All.ump;
 namespace cruise.umple.compiler.java;
 
 external interface ILang{}
@@ -49,6 +50,8 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
 {
   private static UmpleObjectFactory theInstance = new UmpleObjectFactory();
   List<IUmpleObjectFactory> remoteFactories;
+
+  <<@ UmpleToJava.objectFactory_listOfObjects_All >>
   Registry rmiRegistry;
   int thisComponentId=0;
   public int getThisComponentId(){
@@ -56,17 +59,20 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
   }
   private UmpleObjectFactory()
   { 
-  initialize();
+    <<@ UmpleToJava.objectFactory_listOfObjects_instantiation_All >>
+    remoteFactories= new List<IUmpleObjectFactory>();
+    initialize();
   }
+  
   public int getComponentId(String umpleComponentName)
   {
     int ComponentId=0;
-
     return ComponentId;
-
   }
   public void initialize()
-  {    /*
+  {    
+    int numberOfComponents=0;
+    /*
     File file = new File("userdata.xml");
     DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
             .newInstance();
@@ -75,6 +81,17 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
     String usr = document.getElementsByTagName("Name").item(0).getTextContent();
     String pwd = document.getElementsByTagName("password").item(0).getTextContent();
     */
+    for(int component=0;component<numberOfComponents;component=component+1)
+    {
+      if(component==getThisComponentId())
+      {
+        remoteFactories.append(this);
+      }
+      else
+      {
+
+      } 
+    }
 
   }
   public void startRMI() 
@@ -92,13 +109,14 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
           e.printStackTrace();
       }
   }
-  public void stopRMI() throws Exception {
+  public void stopRMI() throws Exception 
+  {
     rmiRegistry.unbind("UmpleObjectFactory");
     //unexportObject(this, true);
     //unexportObject(rmiRegistry, true);
     System.out.println("Component stopped");
     }
   <<@ UmpleToJava.objectFactory_add_Declare_All >>
-}
+  }
  !>>
 }

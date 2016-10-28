@@ -1,36 +1,39 @@
 class UmpleToJava {
     RMI_objectFactory_add_methods <<!<</*RMI_objectFactory_add_methods*/>>
     <<#
-  append(realSb,"\n  {0} {1}({2}int component)",new Object[] {accessibility, "add"+uClass.getName(), argumentscomma+arguments});
+  append(realSb,"\n  {0} {1}({2}int component{3} proxy)",new Object[] {accessibility, "add"+uClass.getName(), argumentscomma+arguments,", "+uClass.getName()});
   if(isInterface==true){
   #>>;<<#
   }
   else{
   #>>
   {
-    //return remoteFactories.get(component).instantiateMicrowave(<<=gClass.getLookup("constructorSignature_caller")>>);
+    return remoteFactories.get(component).create<<=uClass.getName()>>(<<=gClass.getLookup("constructorSignature_caller")>>,<<=argumentscomma+uClass.getName()>> proxy);
   }
   <<#
   }
-  append(realSb,"\n  {0} {1}({2}String component)",new Object[] {accessibility, "add"+uClass.getName(), argumentscomma+arguments});
+  append(realSb,"\n  {0} {1}({2}String component{3} proxy)",new Object[] {accessibility, "add"+uClass.getName(), argumentscomma+arguments, ", "+uClass.getName()});
   if(isInterface==true){
   #>>;<<#
   }
   else{
   #>>
   {
-   //return add<<=uClass.getName()>>(<<=gClass.getLookup("constructorSignature_caller")+argumentscomma>>getComponentId(component));
+   return add<<=uClass.getName()>>(<<=gClass.getLookup("constructorSignature_caller")+argumentscomma>>getComponentId(component),proxy);
   }
     <<#
     }
-  append(realSb,"\n  {0} {1}({2})",new Object[] {accessibility, "instantiate"+uClass.getName(), arguments});
+  append(realSb,"\n  {0} {1}({2}{3} proxy)",new Object[] {accessibility, "create"+uClass.getName(), arguments,argumentscomma+uClass.getName()});
   if(isInterface==true){
   #>>throws RemoteException;<<#
   }
   else{
 #>>
   {
-  //return (new <<=uClass.getName()>>Impl(<<=arguments>>));
+  <<=uClass.getName()>> object = new <<=uClass.getName()>>Impl(<<=arguments>>);
+  object.setRealSelf(proxy);
+  listOf<<uClass.getName>>.append(object);
+  return object;
   }
   <<#
     }#>>

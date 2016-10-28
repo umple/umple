@@ -1,0 +1,111 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+
+class Microwave implements IMicrowave
+{
+  IMicrowave realObject;
+  public MicrowaveImpl(String component)
+  {
+  realObject = UmpleObjectFactory.createMicrowave(component);
+  }
+  public MicrowaveImpl(int component)
+  {
+  realObject = UmpleObjectFactory.createMicrowave(component);
+  }
+  public MicrowaveImpl()
+  {
+  realObject = UmpleObjectFactory.createMicrowave();
+  }
+  public boolean setLightOn(boolean aLightOn)
+  {
+  return realObject.setLightOn(aLightOn);
+  }
+  public boolean setPowerTubeOn(boolean aPowerTubeOn)
+  {
+  return realObject.setPowerTubeOn(aPowerTubeOn);
+  }
+  public boolean setIsDoorOpened(boolean aIsDoorOpened)
+  {
+  return realObject.setIsDoorOpened(aIsDoorOpened);
+  }
+  public boolean setIsButtonPressed(boolean aIsButtonPressed)
+  {
+  return realObject.setIsButtonPressed(aIsButtonPressed);
+  }
+  public boolean setTimer(Timer aTimer)
+  {
+  return realObject.setTimer(aTimer);
+  }
+  public boolean getLightOn()
+  {
+  return realObject.getLightOn();
+  }
+  public boolean getPowerTubeOn()
+  {
+  return realObject.getPowerTubeOn();
+  }
+  public boolean getIsDoorOpened()
+  {
+  return realObject.getIsDoorOpened();
+  }
+  public boolean getIsButtonPressed()
+  {
+  return realObject.getIsButtonPressed();
+  }
+  public Timer getTimer()
+  {
+  return realObject.getTimer();
+  }
+  public String getOperatingMicrowaveStateMachineFullName()
+  {
+  return realObject.getOperatingMicrowaveStateMachineFullName();
+  }
+  public OperatingMicrowaveStateMachine getOperatingMicrowaveStateMachine()
+  {
+  return realObject.getOperatingMicrowaveStateMachine();
+  }
+  public boolean _doorOpened()
+  {
+  return realObject._doorOpened();
+  }
+  public boolean _buttonPressed()
+  {
+  return realObject._buttonPressed();
+  }
+  public boolean _doorClosed()
+  {
+  return realObject._doorClosed();
+  }
+  public boolean _timerTimesout()
+  {
+  return realObject._timerTimesout();
+  }
+  public void delete()
+  {
+  realObject.delete();
+  }
+  public void doorOpened ()
+  {
+  realObject.doorOpened();
+  }
+  public void buttonPressed ()
+  {
+  realObject.buttonPressed();
+  }
+  public void doorClosed ()
+  {
+  realObject.doorClosed();
+  }
+  public void timerTimesout ()
+  {
+  realObject.timerTimesout();
+  }
+  public void run ()
+  {
+  realObject.run();
+  }
+  public String toString()
+  {
+  return realObject.toString();
+  }
+}

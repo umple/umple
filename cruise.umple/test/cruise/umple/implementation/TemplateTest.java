@@ -228,8 +228,8 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Client.php");
     
    // destroying the object factory
-    SampleFileWriter.destroy(pathToInput + "/java/UmpleObjectFactory.java");
-    SampleFileWriter.destroy(pathToInput + "/java/IUmpleObjectFactory.java");
+    //SampleFileWriter.destroy(pathToInput + "/java/UmpleObjectFactory.java");
+    //SampleFileWriter.destroy(pathToInput + "/java/IUmpleObjectFactory.java");
   }
 
   @Test

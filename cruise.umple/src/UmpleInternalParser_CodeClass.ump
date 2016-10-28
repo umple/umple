@@ -379,8 +379,42 @@ class UmpleInternalParser
       checkSingletonParent();
       // this method sets the isDistributed flag for classes.
         analyzeDistributedClasses();
+        setParentClassesDefaultInterface();
     }
   }
+
+/*
+* Parent of each class that has default interface must have default interface.
+*/
+
+private void setParentClassesDefaultInterface()
+{
+  for (UmpleClass uClass:  model.getUmpleClasses())
+  {
+    if ((uClass.getNeedsDefaultInterface())||(uClass.getIsDistributed())||(uClass.getHasProxyPattern()))
+    {
+      if(uClass.getExtendsClass()!=null) 
+      {
+        if(!uClass.getExtendsClass().getNeedsDefaultInterface())
+        {
+          setParentDefaultInterfaceRecursive(uClass.getExtendsClass());
+        }
+      }
+    }
+  }
+}
+
+private void setParentDefaultInterfaceRecursive(UmpleClass uClass)
+{
+  uClass.setNeedsDefaultInterface(true);
+  if(uClass.getExtendsClass()!=null) 
+  {
+    if(!uClass.getExtendsClass().getNeedsDefaultInterface())
+    {
+      setParentDefaultInterfaceRecursive(uClass.getExtendsClass());
+    }
+  }
+}
 
 /*
 * Checking each class for distributabilty and chekning parent classes and interfaces as well as the system.

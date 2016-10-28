@@ -14,6 +14,7 @@ interface IMicrowave
   public boolean getIsButtonPressed();
   public Timer getTimer();
   public String getOperatingMicrowaveStateMachineFullName();
+  public OperatingMicrowaveStateMachine getOperatingMicrowaveStateMachine();
   public boolean _doorOpened();
   public boolean _buttonPressed();
   public boolean _doorClosed();

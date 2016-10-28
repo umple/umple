@@ -1,0 +1,10 @@
+class UmpleToJava {
+    objectFactory_listOfObjects_All <<!<</*objectFactory_listOfObjects_All*/>><<#
+  for(UmpleClass uClass : model.getUmpleClasses())
+  {
+      #>>
+      private List<<<=uClass.getName()>>> listOf<<=uClass.getName()>>;
+      <<#
+  }
+#>>!>>
+}
