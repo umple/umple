@@ -1,30 +1,30 @@
 var JJsParse = {
-	addToArray: function (item) {
-		arr = new Array();
-		arr.push(item);
-		return arr;
-	},
 
 	addAttributes: function (attrs) {
 		// { "type" : "String", "name" : "startTime", "modifier" : "", "traceColor" : "black" }
-		var i, text, attribute, max = attrs.length, attributes = new Array();
-		for (i = 0; i < max; i++) {
-			attribute = attrs[i];
-			text = this.makeModifier(attribute.modifier) + " " + attribute.name + ": " + attribute.type;
+		var attributes = new Array();
+
+		var parseAttributes = function (attribute) {
+			var text = JJsParse.makeModifier(attribute.modifier) + " " + attribute.name + ": " + attribute.type;
 			attributes.push(text);
-		}
+		};
+
+		attrs.forEach(parseAttributes);
 		return attributes;
 	},
 
 	addMethods: function(meths) {
 		// {type: "void", name: "setDoorTimer", parameters: "Integer", visibility: "public", isAbstract: "false"}
 		// console.log(meths);
-		var i, text, method, max = meths.length, methods = new Array();
-		for (i = 0; i < max; i++) {
-			method = meths[i];
-			text =  this.makeModifier(method.visibility) + " " + method.name + "(" + method.parameters + ") : " + method.type;
+		var methods = new Array();
+
+		var parseMethods = function (method) {
+			var text =  JJsParse.makeModifier(method.visibility) + " " + method.name + "(" + method.parameters + ") : " + method.type;
 			methods.push(text);  
-		}
+		};
+
+		meths.forEach(parseMethods);
+
 		return methods;
 	},
 
@@ -50,31 +50,30 @@ var JJsParse = {
 	},
 
 	makeClasses: function (model) {
-		var i, text, UMLclass, max = model.umpleClasses.length, classes = new Array();
-		var new_class;
+		var classes = new Array();
 
-		for (i = 0; i < max; i++) {
-			UMLclass = model.umpleClasses[i];
+		var instantiate = function(UMLclass) {
+			var new_class;
 
-			if (UMLclass.isAbstract == "true") {
+			if (UMLclass.isAbstract === "true") {
 				// console.log("made ABSTRACT class");
 				new_class = new joint.shapes.uml.Abstract({
 					position: UMLclass.position,
 					size: UMLclass.position,
-					name: this.addToArray(UMLclass.name),
-					attributes: this.addAttributes(UMLclass.attributes),
-					methods: this.addMethods(UMLclass.methods),
+					name: [UMLclass.name],
+					attributes: JJsParse.addAttributes(UMLclass.attributes),
+					methods: JJsParse.addMethods(UMLclass.methods),
 					id: UMLclass.id
 				});
 			}
-			else if (UMLclass.isInterface  == "true") {
+			else if (UMLclass.isInterface === "true") {
 				// console.log("made INTERFACE class");
 				new_class = new joint.shapes.uml.Interface({
 					position: UMLclass.position,
 					size: UMLclass.position,
-					name: this.addToArray(UMLclass.name),
-					attributes: this.addAttributes(UMLclass.attributes),
-					methods: this.addMethods(UMLclass.methods),
+					name: [UMLclass.name],
+					attributes: JJsParse.addAttributes(UMLclass.attributes),
+					methods: JJsParse.addMethods(UMLclass.methods),
 					id: UMLclass.id
 				});
 			}
@@ -83,35 +82,37 @@ var JJsParse = {
 				new_class = new joint.shapes.uml.Class({
 					position: UMLclass.position,
 					size: UMLclass.position,
-					name: this.addToArray(UMLclass.name),
-					attributes: this.addAttributes(UMLclass.attributes),
-					methods: this.addMethods(UMLclass.methods),
+					name: [UMLclass.name],
+					attributes: JJsParse.addAttributes(UMLclass.attributes),
+					methods: JJsParse.addMethods(UMLclass.methods),
 					id: UMLclass.id
 				});
 			}
 
 			classes.push(new_class);
 			// console.log(new_class);
-		}
+		};
+
+		model.umpleClasses.forEach(instantiate);
 
 		return classes;
 	},
 
 	makeAssociations: function(model) {
-		var i, text, UMLassoc, max = model.umpleAssociations.length, associations = new Array();
-		var new_assoc;
+		var associations = new Array();
 
-		for (i = 0; i < max; i++) {
-			UMLassoc = model.umpleAssociations[i];
-
+		var instantiate = function (UMLassoc) {
+			var new_assoc;
 			new_assoc = new joint.shapes.uml.Association({
 		        source: { id: UMLassoc.classOneId },
 		        target: { id: UMLassoc.classTwoId }
 			});
 
 			associations.push(new_assoc);
-		}
-		return associations;
+		};
 
+		model.umpleAssociations.forEach(instantiate);
+
+		return associations;
 	}
 };

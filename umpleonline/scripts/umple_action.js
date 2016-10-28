@@ -1595,13 +1595,13 @@ Action.updateUmpleDiagramCallback = function(response)
       var model = JSON.parse(diagramCode);
 
       var umpleCanvas = jQuery("#umpleCanvas");
-      umpleCanvas.html('<div id="myholder"></div>');
+      umpleCanvas.html('<div id="jjsPaper"></div>');
 
       var graph = new joint.dia.Graph;
 
       // start my making the paper the same size as umpleCanvas and then scaling the model to fit
       var paper = new joint.dia.Paper({
-          el: jQuery("#myholder"),
+          el: jQuery("#jjsPaper"),
           width: umpleCanvas.width(),
           height: umpleCanvas.height(),
           model: graph,
@@ -1616,19 +1616,18 @@ Action.updateUmpleDiagramCallback = function(response)
 
       // zooming with the mouse wheel or finger swipe
       var MouseWheelHandler = function (event){
-        // console.log(event.deltaY);
-        if (event.ctrlKey === true) {
+        var delta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
+        // console.log(event);
+        if (event.altKey === true) {
           var paperHeight = paper.options.height;
           var paperWidth = paper.options.width;
           // scaleFactor is either 1.1 or 0.9
-          var scaleFactor = 1 + (Math.abs(event.deltaY) / (event.deltaY * 10));
+          var scaleFactor = 1 + (Math.abs(delta) / (delta * 10));
           // console.log(scaleFactor);
           paper.setDimensions(paperWidth * scaleFactor, paperHeight * scaleFactor)
-          // paper.height = paperHeight * scaleFactor;
-          // paper.width = paperWidth * scaleFactor;
 
           // console.log(paper);
-          console.log(paper.options);
+          // console.log(paper.options);
           // console.log(paper.svg.height());
           paper.scaleContentToFit({padding: 15});
         }

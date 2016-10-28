@@ -797,7 +797,6 @@ Page.getSelectedExample = function()
         Action.changeDiagramType({type: "GVClass"});
       }
       else {
-        // TODO: determine what behaviour should occur w/r/t JointJS
         // if diagram type not a class diagram, set it to a class diagram
         if(!(Page.useEditableClassDiagram || Page.useGvClassDiagram)) {
           jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
