@@ -114,7 +114,7 @@ class JavaGenerator
       }
     }
     catch(Exception e){
-      throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);	
+      throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
     }
     
     if (lastElement == null)
@@ -1574,8 +1574,8 @@ class JavaGenerator
   private void addJavaLttngImport(){
     for(UmpleClass umpleClass : getModel().getUmpleClasses())
     {
-    	// imports
-    	umpleClass.addDepend(new Depend("java.util.logging.*"));
+      // imports
+      umpleClass.addDepend(new Depend("java.util.logging.*"));
       umpleClass.addDepend(new Depend("org.lttng.ust.agent.LTTngAgent"));
       // code injection in constructor
       CodeBlock cb = new CodeBlock("LTTngAgent lttngAgent = LTTngAgent.getLTTngAgent();");
@@ -1649,13 +1649,13 @@ class JavaGenerator
   {
     String code = StringFormatter.format(injection,
       translate("type", av),
-	    translate("parameterOne", av),
-	    translate("parameterOld", av),
-	    translate("getMethod", av),
-	    translate("hasUniqueMethod", av),
-	    translate("uniqueMap", av));
+      translate("parameterOne", av),
+      translate("parameterOld", av),
+      translate("getMethod", av),
+      translate("hasUniqueMethod", av),
+      translate("uniqueMap", av));
     CodeInjection set = new CodeInjection(when, method, code, aClass);
-	  aClass.addCodeInjection(set);
+    aClass.addCodeInjection(set);
   }
   
   private void injectIntoUniqueSet(String injection, String when, Attribute av, UmpleClass aClass)
@@ -1682,11 +1682,11 @@ class JavaGenerator
           if (!av.getIsSpecialization()) continue;
           Association relatedAssoc = aClass.getAssociation(aClass.indexOfAssociationVariable(av));
           av.setNeedsCommonCode( relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsCommonCode());
-          av.setNeedsSuperCode( relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsSuperCode());         	 
+          av.setNeedsSuperCode( relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsSuperCode());          
           av.setMulChangedToOne( relatedAssoc.getEnd(av.getRelevantEnd()).getMulChangedToOne());
           av.setMulChangedToN( relatedAssoc.getEnd(av.getRelevantEnd()).getMulChangedToN());
           av.setReqSetCode( relatedAssoc.getEnd(av.getRelevantEnd()).getReqSetCode());
-	  av.setScName( relatedAssoc.getEnd(av.getRelevantEnd()).getSuperClassName());
+          av.setScName( relatedAssoc.getEnd(av.getRelevantEnd()).getSuperClassName());
         } 
         catch ( IndexOutOfBoundsException wat )
         {
@@ -1701,12 +1701,12 @@ class JavaGenerator
     {
       GeneratedClass genClass = aClass.createGeneratedClass(getModel());
       generateConstructorSignature(genClass);
-      //return;
     }
     else if (aClass.isRoot())
     {
       GeneratedClass genClass = aClass.createGeneratedClass(getModel());
       generateConstructorSignature(genClass);
+      prepareCodeInjection(aClass);
     }
     else
     {
@@ -1715,90 +1715,7 @@ class JavaGenerator
       GeneratedClass genClass = aClass.createGeneratedClass(getModel());
       genClass.setParentClass(parent.getGeneratedClass());
       generateConstructorSignature(genClass);
-    }
-
-    for(Attribute av : aClass.getAttributes())
-    {
-      if (av.isImmutable() || aClass.getKey().isMember(av))
-      {
-        String code = StringFormatter.format("if (!{0}) { return false; }",translate("attributeCanSet",av));
-        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code, aClass);
-        set.setIsInternal(true);
-        aClass.addCodeInjection(set);
-      }
-    
-      if (aClass.getKey().isMember(av))
-      {
-        String code = StringFormatter.format("if (!{0}) { return false; }",translate("attributeCanSet",av));
-        String methods = StringFormatter.format("{0},{1},{2},{3}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before", methods, code, aClass);
-        inject.setIsInternal(true);
-        aClass.addCodeInjection(inject);
-      }
-      
-      if (av.getIsUnique())
-      {
-        injectIntoUniqueSet(
-          av.getType() + " {2} = {3}();" + "\n" + 
-          "if ({4}({1})) {" + "\n" + 
-          "  return wasSet;" + "\n" +
-          "}", "before", av, aClass);
-        injectIntoUniqueSet(
-          "if ({2} != null) {" + "\n" +
-          "  {5}.remove({2});" + "\n" +
-          "}" + "\n" +
-          "{5}.put({1}, this);", "after", av, aClass);
-        injectIntoUniqueDelete(
-          "{5}.remove({3}());", "before", av, aClass);
-      }
-    }
-    for(AssociationVariable av : aClass.getAssociationVariables())
-    {
-      if (aClass.getKey().isMember(av))
-      {
-        String code = StringFormatter.format("if (!{0}) { return false; }",translate("associationCanSet",av));
-        String methods = StringFormatter.format("{0},{1},{2},{3},{4}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("setMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before",methods , code, aClass);
-        inject.setIsInternal(true);
-        aClass.addCodeInjection(inject);
-      }
-      
-      if (av.isImmutable())
-      {
-        String code = StringFormatter.format("if (!{0}) { return false; }\n{0} = false;",translate("associationCanSet",av));
-        String methods = StringFormatter.format("{0},{1}",translate("setManyMethod",av),translate("setMethod",av));
-        CodeInjection set = new CodeInjection("before", methods, code, aClass);
-        set.setIsInternal(true);
-        aClass.addCodeInjection(set);
-      }
-      
-      if (av.isMany())
-      {
-        String code = StringFormatter.format("if ({0}.contains({1})) { return false; }",translate("attributeMany",av),translate("parameterOne",av));
-        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code, aClass);
-        set.setIsInternal(true);
-        aClass.addCodeInjection(set);
-      }
-      
-      if(av.isSorted())
-      { 
-        String codeblock = 
-          "{ |x, y| "+
-                "x.get_"+av.getPriority() +"() <=> "+ 
-                "y.get_"+ av.getPriority() +"()"+
-                "}";
-        String java_code = StringFormatter.format("if(wasAdded)\n    Collections.sort({0}, {0}Priority);\n",translate("attributeMany",av));
-        String php_code = StringFormatter.format("if(wasAdded)\n    usort($this->{0}, $this->{0}Priority);\n",translate("attributeMany",av));
-        String ruby_code = StringFormatter.format("@{0}.sort! "+codeblock+" if wasAdded\n",translate("attributeMany",av));
-        String methods = translate("addMethod",av);
-        CodeInjection set = new CodeInjection("after", methods,"", aClass);
-        CodeBlock cb = new CodeBlock();
-        cb.setCode("Java",java_code);
-        cb.setCode("Php",php_code);
-        cb.setCode("Ruby",ruby_code);
-        set.setSnippet(cb);
-        aClass.addCodeInjection(set);
-      }
+      prepareCodeInjection(aClass);
     }
     
     prepareConstraints(aClass);
@@ -1819,7 +1736,7 @@ class JavaGenerator
                  "  }");
     lookups.put("fileTracer","public static void handle(String message)\n"+
                "  {\n"+
-    		       "    if(!open){\n"+
+               "    if(!open){\n"+
                "      try{\n"+
                "        // Open an output stream\n"+
                "        fout = new FileOutputStream (filename,true);\n"+
@@ -1934,7 +1851,112 @@ class JavaGenerator
     }            
   }
   
+  private void prepareCodeInjection(UmpleClass aClass)
+  {
+    prepareCodeInjectionForAttributes(aClass);
+    prepareCodeInjectionForAssociations(aClass);
+  }
   
+  private void prepareCodeInjectionForAttributes(UmpleClass aClass)
+  {
+    for(Attribute av : aClass.getAttributes())
+    {
+      prepareCodeInjectionForAttribute(aClass, av);
+    }
+  }
+  
+  private void prepareCodeInjectionForAssociations(UmpleClass aClass)
+  {
+    for(AssociationVariable av : aClass.getAssociationVariables())
+    {
+      prepareCodeInjectionForAssociation(aClass, av);
+    }
+  }
+  
+  private void prepareCodeInjectionForAttribute(UmpleClass aClass, Attribute av)
+  {
+    if ((av.isImmutable() || aClass.getKey().isMember(av)))
+    {
+      String code = StringFormatter.format("if (!{0}) { return false; }",translate("attributeCanSet",av));
+      CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code, aClass);
+      set.setIsInternal(true);
+      aClass.addCodeInjection(set);
+    }
+    
+    if (aClass.getKey().isMember(av))
+    {
+      String code = StringFormatter.format("if (!{0}) { return false; }",translate("attributeCanSet",av));
+      String methods = StringFormatter.format("{0},{1},{2},{3}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("resetMethod",av));
+      CodeInjection inject = new CodeInjection("before", methods, code, aClass);
+      inject.setIsInternal(true);
+      aClass.addCodeInjection(inject);
+    }
+      
+    if (av.getIsUnique())
+    {
+      injectIntoUniqueSet(
+        av.getType() + " {2} = {3}();" + "\n" + 
+        "if ({4}({1})) {" + "\n" + 
+        "  return wasSet;" + "\n" +
+        "}", "before", av, aClass);
+      injectIntoUniqueSet(
+        "if ({2} != null) {" + "\n" +
+        "  {5}.remove({2});" + "\n" +
+        "}" + "\n" +
+        "{5}.put({1}, this);", "after", av, aClass);
+      injectIntoUniqueDelete(
+        "{5}.remove({3}());", "before", av, aClass);
+    }
+  }
+  
+  private void prepareCodeInjectionForAssociation(UmpleClass aClass, AssociationVariable av)
+  {
+    if (aClass.getKey().isMember(av))
+    {
+      String code = StringFormatter.format("if (!{0}) { return false; }",translate("associationCanSet",av));
+      String methods = StringFormatter.format("{0},{1},{2},{3},{4}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("setMethod",av),translate("resetMethod",av));
+      CodeInjection inject = new CodeInjection("before",methods , code, aClass);
+      inject.setIsInternal(true);
+      aClass.addCodeInjection(inject);
+    }
+      
+    if (av.isImmutable())
+    {
+      String code = StringFormatter.format("if (!{0}) { return false; }\n{0} = false;",translate("associationCanSet",av));
+      String methods = StringFormatter.format("{0},{1}",translate("setManyMethod",av),translate("setMethod",av));
+      CodeInjection set = new CodeInjection("before", methods, code, aClass);
+      set.setIsInternal(true);
+      aClass.addCodeInjection(set);
+    }
+      
+    if (av.isMany())
+    {
+      String code = StringFormatter.format("if ({0}.contains({1})) { return false; }",translate("attributeMany",av),translate("parameterOne",av));
+      CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code, aClass);
+      set.setIsInternal(true);
+      aClass.addCodeInjection(set);
+    }
+      
+    if(av.isSorted())
+    { 
+      String codeblock = 
+        "{ |x, y| "+
+              "x.get_"+av.getPriority() +"() <=> "+ 
+              "y.get_"+ av.getPriority() +"()"+
+              "}";
+      String java_code = StringFormatter.format("if(wasAdded)\n    Collections.sort({0}, {0}Priority);\n",translate("attributeMany",av));
+      String php_code = StringFormatter.format("if(wasAdded)\n    usort($this->{0}, $this->{0}Priority);\n",translate("attributeMany",av));
+      String ruby_code = StringFormatter.format("@{0}.sort! "+codeblock+" if wasAdded\n",translate("attributeMany",av));
+      String methods = translate("addMethod",av);
+      CodeInjection set = new CodeInjection("after", methods,"", aClass);
+      CodeBlock cb = new CodeBlock();
+      cb.setCode("Java",java_code);
+      cb.setCode("Php",php_code);
+      cb.setCode("Ruby",ruby_code);
+      set.setSnippet(cb);
+      aClass.addCodeInjection(set);
+    }
+  }
    
   private boolean prepareTimedEvents(StateMachine sm)
   {
@@ -2287,11 +2309,11 @@ class JavaGenerator
         
         //add related imports in multilevel
         UmpleClass rootUClass = aClass;
-		while (!rootUClass.isRoot()) 
-		{
-			addImports(rootUClass.getExtendsClass(), genClass);
-			rootUClass = rootUClass.getExtendsClass();
-		}
+        while (!rootUClass.isRoot()) 
+        {
+            addImports(rootUClass.getExtendsClass(), genClass);
+            rootUClass = rootUClass.getExtendsClass();
+        }
       }
       
       for (AssociationVariable av : aClass.getAssociationVariables()) 

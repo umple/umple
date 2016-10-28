@@ -1,0 +1,29 @@
+class BooleanGuards{
+    Boolean result;
+    status {
+        s0{
+            go [result==true] -> s1;
+        }
+        s1{
+            go [result!=true] -> s2;
+        }
+        s2{
+            go [result==false] -> s3;
+        }
+        s3{
+            go [result!=false] -> s4;
+        }
+        s4{
+        	go [true==result] -> s5;
+        }
+        s5{
+        	go [false==result] -> s6;
+        }
+        s6{
+        	go [!!result!=false] -> s7;
+        }
+        s7{
+            go [!result!=true] -> s0;
+        }
+    }
+}
