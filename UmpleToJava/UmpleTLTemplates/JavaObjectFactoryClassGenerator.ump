@@ -60,7 +60,7 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
   private UmpleObjectFactory()
   { 
     <<@ UmpleToJava.objectFactory_listOfObjects_instantiation_All >>
-    remoteFactories= new List<IUmpleObjectFactory>();
+    remoteFactories= new ArrayList<IUmpleObjectFactory>();
     initialize();
   }
   
@@ -73,14 +73,9 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
   {    
     int numberOfComponents=0;
     /*
-    File file = new File("userdata.xml");
-    DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
-            .newInstance();
-    DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-    Document document = documentBuilder.parse(file);
-    String usr = document.getElementsByTagName("Name").item(0).getTextContent();
-    String pwd = document.getElementsByTagName("password").item(0).getTextContent();
+    Read configuration file
     */
+    startRMI();
     for(int component=0;component<numberOfComponents;component=component+1)
     {
       if(component==getThisComponentId())
@@ -89,13 +84,13 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
       }
       else
       {
-
+      //connect-to remote
       } 
     }
 
   }
   public void startRMI() 
-  {
+  {/*
     try {
           
       IUmpleObjectFactory stub = (IUmpleObjectFactory) UnicastRemoteObject.exportObject(this, 0);
@@ -108,6 +103,8 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
           System.err.println("Server exception: " + e.toString());
           e.printStackTrace();
       }
+
+      */
   }
   public void stopRMI() throws Exception 
   {

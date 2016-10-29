@@ -178,7 +178,7 @@ public class DistributedClassTest extends TemplateTest
   public void MethodProxyTest(){
 		assertUmpleTemplateFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods."+ languagePath +".txt", "Microwave");
 		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods_interface."+ languagePath +".txt", "Microwave","IMicrowave",true,true);
-		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods_remoteInterface."+ languagePath +".txt", "Microwave","RemoteIMicrowave",true,true);
+		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods_remoteInterface."+ languagePath +".txt", "Microwave","RemoteIMicrowaveImpl",true,true);
 		assertUmpleProxyFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods_proxy."+ languagePath +".txt","Microwave", "MicrowaveProxy",true,true);
 
   }

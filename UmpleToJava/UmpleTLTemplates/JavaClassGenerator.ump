@@ -95,7 +95,16 @@ class JavaClassGenerator {
 <<# } #>>
 public <<# if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
 boolean hasParentInterface=uClass.hasParentInterface();
-
+if(uClass.getIsDistributed())
+{
+  if (hasParentInterface == false){
+        append(realSb," implements RemoteI"+uClass.getName());
+        hasParentInterface=true;
+      }
+      else{
+        append(realSb,", Runnable");
+      } 
+}
 
 for (StateMachine smq : uClass.getStateMachines())
   {
@@ -127,6 +136,7 @@ for (StateMachine smq : uClass.getStateMachines())
   getConstructorCode(realSb, model,uClass,gClass,gen,isFirst, false);
   getProxyReferenceCode(realSb, model,uClass,gClass,gen,isFirst);
   getAttributeCode(realSb, model,uClass,gClass,gen,isFirst,false);
+  getDistributedMethodsCode(realSb, model,uClass,gClass,gen,isFirst);
   getStateMachine1Code(realSb, model,uClass,gClass,gen,isFirst,false);
   getAssociationCode(realSb, model,uClass,gClass,gen,isFirst,false);
   getEqualsCode(realSb, model,uClass,gClass,gen,isFirst);
@@ -136,7 +146,19 @@ for (StateMachine smq : uClass.getStateMachines())
   getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
   return realSb;
     } 
+    private String getDistributedMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+    {if(uClass.getIsDistributed())
+      if(uClass.getDistributeTechnology().equals("RMI"))
+    {#>>
+  //------------------------
+  // Start RMI Server
+  //------------------------
+  public void StartRMI()
+  {
     
+  }
+    <<#}return realSb.toString();
+    }
     private String getProxyReferenceCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
     {if(uClass.getHasProxyPattern()){#>>
   //------------------------

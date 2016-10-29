@@ -220,10 +220,10 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/java/CC.java");
     SampleFileWriter.destroy(pathToInput + "/java/CCImpl.java");
     SampleFileWriter.destroy(pathToInput + "/java/RemoteIClient.java");
-    SampleFileWriter.destroy(pathToInput + "/java/Microwave.java");
-    SampleFileWriter.destroy(pathToInput + "/java/MicrowaveImpl.java");
-    SampleFileWriter.destroy(pathToInput + "/java/IMicrowave.java");
-    SampleFileWriter.destroy(pathToInput + "/java/RemoteIMicrowave.java");
+   // SampleFileWriter.destroy(pathToInput + "/java/Microwave.java");
+    //SampleFileWriter.destroy(pathToInput + "/java/MicrowaveImpl.java");
+    //SampleFileWriter.destroy(pathToInput + "/java/IMicrowave.java");
+    //SampleFileWriter.destroy(pathToInput + "/java/RemoteIMicrowave.java");
     SampleFileWriter.destroy(pathToInput + "/client.rb");
     SampleFileWriter.destroy(pathToInput + "/Client.php");
     

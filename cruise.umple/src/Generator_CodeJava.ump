@@ -2438,7 +2438,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       }
     }
 
-    String remoteInterfaceName="Remote"+interfaceName;  
+    String remoteInterfaceName="Remote"+interfaceName+"Impl";  
     String remoteInterfaceContent="";
     String interfaceContent="";
 
@@ -2530,21 +2530,22 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
             {
               if (isSerializable==true)
                 interfaceContent+=line.substring(0,line.length())+";\n";
-              proxyContent+=line.substring(0,line.length())+"\n  {\n    "+returnString+"realSelf."+methodName+"("+callerSignature+");\n  }\n";
+              proxyContent+=line.substring(0,line.length())+"\n  {\n    "+returnString+"realObject."+methodName+"("+callerSignature+");\n  }\n";
             }
            else
             {
               if (isSerializable==true)
                 interfaceContent+=line.substring(0,line.length()-1)+";\n";
-              proxyContent+=line.substring(0,line.length()-1)+"\n  {\n  "+returnString+"realSelf."+methodName+"("+callerSignature+");\n  }\n";
+              proxyContent+=line.substring(0,line.length()-1)+"\n  {\n  "+returnString+"realObject."+methodName+"("+callerSignature+");\n  }\n";
             } 
           }
           else{
             String lastArgument="";
             if (!callerSignature.isEmpty())
               lastArgument=", ";
-            proxyContent+=methodType+"("+arguments+lastArgument+"String component)\n  {\n    realSelf = UmpleObjectFactory.create"+aClass.getName()+"("+callerSignature+lastArgument+"component, this);\n  }\n";
-            proxyContent+=methodType+"("+arguments+lastArgument+"int component)\n  {\n    realSelf = UmpleObjectFactory.create"+aClass.getName()+"("+callerSignature+lastArgument+"component, this);\n  }\n";
+            methodType= "public "+proxyName;
+            proxyContent+=methodType+"("+arguments+lastArgument+"String component)\n  {\n    realObject = UmpleObjectFactory.create"+aClass.getName()+"("+callerSignature+lastArgument+"component, this);\n  }\n";
+            proxyContent+=methodType+"("+arguments+lastArgument+"int component)\n  {\n    realObject = UmpleObjectFactory.create"+aClass.getName()+"("+callerSignature+lastArgument+"component, this);\n  }\n";
 
             proxyContent+=methodType+"("+arguments+")\n  {\n    realObject = UmpleObjectFactory.add"+aClass.getName()+"("+callerSignature+lastArgument+"this);\n  }\n";
           }      
@@ -2618,7 +2619,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
 
       try
       {
-        bwRemote.write(interfaceContent);
+        bwRemote.write(remoteInterfaceContent);
         bwRemote.flush();
       }
       finally
@@ -2680,7 +2681,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   }
   public void writeFile(UmpleElement aClass) throws IOException
   {
-    ILang language = getLanguageFor(aClass);
+    
     String className=aClass.getName();
     UmpleClass uClass;
     if (aClass instanceof UmpleClass)
@@ -2690,6 +2691,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         aClass.setName(className+"Impl");
           }
     }
+    ILang language = getLanguageFor(aClass);
     String contents = language.getCode(getModel(), aClass);
     aClass.setName(className);
     String path = StringFormatter.addPathOrAbsolute( 
@@ -2740,15 +2742,23 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   public void writeUncaughtExceptionFile(UmpleClass aClass)
   {
     try {
-   
+       // if the name of the class has been changed for proxy pattern, change it for the exceptions too.
+    String className=aClass.getName();
+    if(aClass.getHasProxyPattern())
+      aClass.setName(className+"Impl");
+
     ILang language = getLanguageFor(aClass);
     
+    aClass.setName(className);
+    if(aClass.getHasProxyPattern())
+      className=className+"Impl"; 
+
     String path = StringFormatter.addPathOrAbsolute( 
                   getModel().getUmpleFile().getPath(), 
                             getOutput()) + 
                             aClass.getPackageName().replace(".", File.separator);
-    
-    String filename = path + File.separator + aClass.getName() + ".java";
+
+    String filename = path + File.separator + className + ".java";
     File file = new File(path);
     file.mkdirs();
 
