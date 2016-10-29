@@ -18,6 +18,8 @@
 *******************************************************************************/
 package cruise.umple.core;
 
+import java.util.Objects;
+
 public class GenerationArgumentDescriptor{
 	private String fId;
 	private Object fValue;
@@ -41,6 +43,7 @@ public class GenerationArgumentDescriptor{
 	
 	@Override
 	public String toString() {
-		return this.id()+ CommonConstants.UNDERSCORE+ this.value();
+		String value= this.getClass().getName() + "@" + Integer.toHexString(Objects.hashCode(this));
+		return this.id()+ CommonConstants.UNDERSCORE+ value;
 	}
 }

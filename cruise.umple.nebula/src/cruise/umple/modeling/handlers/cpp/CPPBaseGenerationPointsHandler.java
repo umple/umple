@@ -321,7 +321,7 @@ public class CPPBaseGenerationPointsHandler{
 	public static void modelCodeIncludes(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationBaseElement Object modelPackage){
 		
-		for(String include: new String[]{ISTLConstants.VECTOR, ISTLConstants.ALGORITHM, ISTLConstants.IO_STREAM, ISTLConstants.STRING,
+		for(String include: new String[]{ISTLConstants.VECTOR, ISTLConstants.ALGORITHM, ISTLConstants.IO_STREAM, ISTLConstants.CSTRING,
 				ISTLConstants.EXCEPTION, ISTLConstants.STD_EXCEPTION, ISTLConstants.ASSERT_LIBRARY, ISTLConstants.STUDIO}){
 			generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
 					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, include), 
@@ -600,14 +600,14 @@ public class CPPBaseGenerationPointsHandler{
 					endDefinition= endDefinition.replace(CommonConstants.UNDERSCORE+ CommonConstants.UNDERSCORE, 
 							CommonConstants.UNDERSCORE);
 					
-					if(!beginDefinition.startsWith(CommonConstants.UNDERSCORE)){
-						beginDefinition= CommonConstants.UNDERSCORE+ beginDefinition;
+					if(!beginDefinition.endsWith(CommonConstants.UNDERSCORE)){
+						beginDefinition= beginDefinition+ CommonConstants.UNDERSCORE;
 					}
 					String begin = generationValueGetter.use(ICppDefinitions.DEFINE, beginDefinition, 
 							namepaceUse);
 					
-					if(!endDefinition.startsWith(CommonConstants.UNDERSCORE)){
-						endDefinition= CommonConstants.UNDERSCORE+ endDefinition;
+					if(!endDefinition.endsWith(CommonConstants.UNDERSCORE)){
+						endDefinition= endDefinition+ CommonConstants.UNDERSCORE;
 					}
 					String end = generationValueGetter.use(ICppDefinitions.DEFINE, endDefinition, 
 							CommonConstants.CLOSE_BRACE);
@@ -943,11 +943,11 @@ public class CPPBaseGenerationPointsHandler{
 			return definition;
 		}
 		
-		if(!definition.startsWith(CommonConstants.UNDERSCORE)){
-			definition= CommonConstants.UNDERSCORE+ definition;
-		}
+		//if(!definition.endsWith(CommonConstants.UNDERSCORE)){
+			//definition= definition+ CommonConstants.UNDERSCORE;
+		//}
 		
-		return definition+ CommonConstants.UNDERSCORE+ identifier.toUpperCase();
+		return definition+ CommonConstants.UNDERSCORE+ identifier.toUpperCase()+ CommonConstants.UNDERSCORE;
 	}
 	
 	@GenerationPoint(generationPoint = IModelingDecisions.MODEL_PATH)
@@ -1207,10 +1207,13 @@ public class CPPBaseGenerationPointsHandler{
 				GenerationArgumentDescriptor.arg(IModelingConstants.ROOT, parent));
 		List<String> conditions= new ArrayList<String>();
 		for(Object constraint: constraints){
-			String current= generationValueGetter.generationPointString(constraint, IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS_CONTENTS,constraint);
+			String current= generationValueGetter.getString(constraint, IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS_CONTENTS,
+					GenerationArgumentDescriptor.arg(IModelingConstants.ROOT, parent));
+
 			if(current.isEmpty()){
 				continue;
 			}
+			
 			conditions.add(generationValueGetter.generationPointString(constraint, IModelingElementDefinitions.CONSTRAINT_CHECK_THROW, current, Boolean.TRUE));
 		}
 		
