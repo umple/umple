@@ -38,6 +38,9 @@ public interface IModelingElementDefinitions {
 	public static final String CONSTRAINTS= "constraints"; //$NON-NLS-1$
 	public static final String ACTIVE_METHOD_PORTS= "activeMEthodPorts"; //$NON-NLS-1$
 	public static final String CONSTRAINT_EXPRESSIONS= "constraintExpressions"; //$NON-NLS-1$
+	public static final String ATTRIBUTES_FROM_CONSTRAINTS= "attributesFromConstraints"; //$NON-NLS-1$
+	public static final String CONSTRAINTS_FOR_ATTRIBUTE= "constraintsForAttribute"; //$NON-NLS-1$
+	public static final String CONSTRAINT_LIST= "constraintList"; //$NON-NLS-1$
 	public static final String CONSTRAINT_EXPRESSION_TYPE= "constraintExrpessionType"; //$NON-NLS-1$
 	public static final String CONSTRAINT_EXPRESSION_VALUE= "constraintExrpessionValue"; //$NON-NLS-1$
 	public static final String CONSTRAINT_EXPRESSION_IS_ATTRIBUTE= "constraintExrpessionIsAttribute"; //$NON-NLS-1$
