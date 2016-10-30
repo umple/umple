@@ -401,6 +401,10 @@ $output = readTemporaryFile("ump/" . $filename);
               <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
               <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
             </li>
+            <li id="ttShowJointJSClassDiagram"> 
+              <input id="buttonShowJointJSClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeJointJSClassDiagram"/> 
+              <a id="labelShowJointJSClassDiagram" class="buttonExtend">JointJS Class</a> 
+            </li>
             <li id="ttShowGvClassDiagram"> 
               <input id="buttonShowGvClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> 
               <a id="labelShowGvClassDiagram" class="buttonExtend">GraphViz Class</a> 

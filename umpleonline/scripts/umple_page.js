@@ -139,6 +139,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowHideTextEditor");
   Page.initAction("buttonShowHideCanvas");
   Page.initAction("buttonShowEditableClassDiagram");
+  Page.initAction("buttonShowJointJSClassDiagram");
   Page.initAction("buttonShowGvClassDiagram");
   Page.initAction("buttonShowGvStateDiagram");
   Page.initAction("buttonShowStructureDiagram");
@@ -214,7 +215,9 @@ Page.initOptions = function()
   jQuery("#buttonToggleTraits").prop('checked',false);
   
   if(Page.useEditableClassDiagram)
-   jQuery("#buttonShowEditableClassDiagram").prop('checked', true); 
+   jQuery("#buttonShowEditableClassDiagram").prop('checked', true);
+  if(Page.useJointJSClassDiagram)
+   jQuery("#buttonShowJointJSClassDiagram").prop('checked', true);
   if(Page.useGvClassDiagram)
     jQuery("#buttonShowGvClassDiagram").prop('checked', true);
   if(Page.useGvStateDiagram)
@@ -335,6 +338,7 @@ Page.initLabels = function()
   }
 }
 
+// BOOKMARK: adding basic event handlers to model and layout editors:: calls to Action...
 Page.initUmpleTextArea = function()
 {
   var modelEditor = jQuery("#umpleModelEditorText");
@@ -373,6 +377,7 @@ Page.initCodeMirrorEditor = function() {
           Action.umpleCodeMirrorCursorActivity();},
         extraKeys: { // Change consistently in umple_action.js for Mousetrap
           "Ctrl-E": function(cm) {Page.clickShowEditableClassDiagram()},
+          "Ctrl-J": function(cm) {Page.clickShowJointJSClassDiagram()},
           "Ctrl-G": function(cm) {Page.clickShowGvClassDiagram()},
           "Ctrl-S": function(cm) {Page.clickShowGvStateDiagram()},
           "Ctrl-L": function(cm) {Page.clickShowStructureDiagram()},
@@ -399,6 +404,9 @@ Page.initCodeMirrorEditor = function() {
 // Functions to click various menu items - invoked by code mirror and MouseTrap
 Page.clickShowEditableClassDiagram = function() {
   jQuery('#buttonShowEditableClassDiagram').trigger('click');
+}
+Page.clickShowJointJSClassDiagram = function() {
+  jQuery('#buttonShowJointJSClassDiagram').trigger('click');
 }
 Page.clickShowGvClassDiagram = function() {
   jQuery('#buttonShowGvClassDiagram').trigger('click');
