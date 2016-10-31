@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import cruise.umple.parser.Position;
 import cruise.umple.compiler.AssociationEnd;
 import cruise.umple.compiler.AssociationVariable;
 import cruise.umple.compiler.Attribute;
@@ -36,7 +35,9 @@ import cruise.umple.compiler.ConstraintAssociation;
 import cruise.umple.compiler.ConstraintAttribute;
 import cruise.umple.compiler.ConstraintLiteral;
 import cruise.umple.compiler.ConstraintMethodParameter;
+import cruise.umple.compiler.ConstraintNamed;
 import cruise.umple.compiler.ConstraintOperator;
+import cruise.umple.compiler.ConstraintPort;
 import cruise.umple.compiler.ConstraintState;
 import cruise.umple.compiler.ConstraintStateMachine;
 import cruise.umple.compiler.ConstraintTree;
@@ -62,6 +63,7 @@ import cruise.umple.cpp.util.UmpleCPPGenerationUtil;
 import cruise.umple.cpp.utils.StringUtil;
 import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 import cruise.umple.modeling.handlers.VisibilityConstants;
+import cruise.umple.parser.Position;
 
 public class UmpleModelGenerationPolicy{
 	
@@ -290,6 +292,72 @@ public class UmpleModelGenerationPolicy{
 		return element.getConstraintTrees();
 	}
 	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.ATTRIBUTES_FROM_CONSTRAINTS)
+	public static List<Attribute> constraintAttributes(@GenerationBaseElement UmpleClass element){
+		List<ConstraintAttribute> constraintAttributes = getConstraintAttributes(element);
+		
+		List<Attribute> attributes= new ArrayList<Attribute>();
+ 		for(ConstraintAttribute constrainedAttribute: constraintAttributes){
+ 			Attribute attribute = constrainedAttribute.getAttribute();
+ 			if(!attributes.contains(attribute)&& !attribute.isConstant()&& !attribute.isInternal()&& !attribute.isIsLazy()&& attribute.isSettable()){
+ 				attributes.add(attribute);
+ 			}
+ 		}
+		
+		return attributes;
+	}
+
+	private static List<ConstraintAttribute> getConstraintAttributes(UmpleClass element) {
+		List<ConstraintAttribute> constraintAttributes= new ArrayList<ConstraintAttribute>();
+		for(ConstraintTree tree: element.getConstraintTrees()){
+			getConstraintAttributes(tree, null, constraintAttributes, new ArrayList<ConstraintOperator>());
+		}
+		return constraintAttributes;
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS_FOR_ATTRIBUTE)
+	public static List<ConstraintOperator> constraintsForAttribute(@GenerationBaseElement Attribute attribute){
+		List<ConstraintOperator> constraintTrees= new ArrayList<ConstraintOperator>();
+		for(ConstraintTree tree: attribute.getUmpleClass().getConstraintTrees()){
+			getConstraintAttributes(tree, attribute, new ArrayList<ConstraintAttribute>(), constraintTrees);
+		}
+		
+		return constraintTrees;
+	}
+
+	private static List<ConstraintAttribute> getConstraintAttributes(ConstraintVariable variable, Attribute attribute,
+			List<ConstraintAttribute> constraintAttributes, List<ConstraintOperator> constraintTrees) {
+		return getConstraintAttributes(variable, attribute, constraintAttributes, constraintTrees, new ArrayList<Object>(), null);
+	}
+
+	private static List<ConstraintAttribute> getConstraintAttributes(ConstraintVariable variable, Attribute attribute, 
+			List<ConstraintAttribute> constraintAttributes, List<ConstraintOperator> constraintTrees, ArrayList<Object> visited, ConstraintOperator carryout) {
+		if(visited.contains(variable)){
+			return constraintAttributes;
+		}
+		
+		visited.add(variable);
+		
+		if(variable instanceof ConstraintTree){
+			ConstraintTree constraintTree = (ConstraintTree)variable;
+			ConstraintVariable root = constraintTree.getRoot();
+			getConstraintAttributes(root, attribute, constraintAttributes, constraintTrees, visited, carryout);
+		}else if(variable instanceof ConstraintAttribute){
+			ConstraintAttribute constraintAttribute = (ConstraintAttribute) variable;
+			constraintAttributes.add(constraintAttribute);
+			
+			if(attribute== null|| attribute.equals(constraintAttribute.getAttribute())){
+				constraintTrees.add(carryout);
+			}
+		}else if(variable instanceof ConstraintOperator){
+			ConstraintOperator constraintOperator= (ConstraintOperator) variable;
+			getConstraintAttributes(constraintOperator.getLeft(), attribute, constraintAttributes, constraintTrees, visited, constraintOperator);
+			getConstraintAttributes(constraintOperator.getRight(), attribute, constraintAttributes, constraintTrees, visited, constraintOperator);
+		}
+		
+		return constraintAttributes;
+	}
+
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
 	public static List<Precondition> constraints(@GenerationBaseElement Method element,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR/*, IModelingElementDefinitions.INTERFACES_PROCESSOR*/}) UmpleClass parent){
@@ -775,4 +843,132 @@ public class UmpleModelGenerationPolicy{
 		return attribute.isIsAutounique();
 	}
 	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_LIST)
+	public static List<String> processConstraintsExpressions(@GenerationBaseElement ConstraintVariable constraint){
+		return expressions(constraint);
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS_CONTENTS)
+	public static String processConstraintsExpressionString(@GenerationBaseElement ConstraintVariable constraint){
+		return expressionToString(constraint);
+	}
+	
+	public static String expressionToString(ConstraintVariable element) {
+		String expressionString = "";
+		if (element == null){
+			return expressionString;
+		}
+		
+		for(String expression: expressions(element)){
+			if (isOperator(expression)){
+				expressionString += " " + expression + " ";
+			}else{
+				expressionString += expression;
+			}
+		}
+		
+		return expressionString;
+	}
+	
+	final static List<String> OPERATORS= Collections.unmodifiableList(Arrays.asList(new String[]{"+", "-", "*", "/", "%", "&&","||", "==", "!=", ">=", "<=", 
+			"<", ">", ">>", "<<", "+=", "-=", "*=", "%=", "/=", ">>=", "<<="}));
+	
+	private static boolean isOperator(String operator){
+		return OPERATORS.contains(operator);
+	}
+
+	public static List<String> expressions(ConstraintVariable element) {				
+		return add(element, new ArrayList<String>()); 
+	}
+	
+	private static List<String> add(ConstraintVariable element, List<String> expressions) {
+		if(element == null){
+			return expressions;
+		}
+		
+		if( element instanceof ConstraintTree ) {
+			ConstraintTree constraintTree = (ConstraintTree) element; 
+			ConstraintVariable root = constraintTree.getRoot();
+			
+			addOpen(expressions, constraintTree);
+			
+			if( root instanceof ConstraintOperator ){
+				ConstraintOperator constraintRoot = (ConstraintOperator )root;
+				for( String node : searchOperator(constraintRoot) ){
+					expressions.add(node);
+				}
+			} else if(root instanceof ConstraintTree  ) {
+				ConstraintTree rootTree = (ConstraintTree) root;
+				
+				addOpen(expressions, rootTree);
+				expressions.addAll(add(rootTree.getRoot(), new ArrayList<String>()));
+				addEnd(expressions, rootTree);
+			}else if(constraintTree.getNumberOfElements()== 1){
+				expressions.add(constraintTree.getNames().first());
+			}
+				
+			addEnd(expressions, constraintTree);
+		}
+		
+		if( element instanceof ConstraintOperator ){
+			expressions.addAll(searchOperator((ConstraintOperator)element));
+		}
+				
+		if( element instanceof ConstraintNamed ){
+			expressions.add(((ConstraintNamed)element).getName());
+		}
+				
+		if( element instanceof ConstraintLiteral ){
+			expressions.add(((ConstraintLiteral)element).getValue() );
+		}
+	
+		return expressions;
+	}
+
+	private static void addOpen(List<String> nodes, ConstraintTree constraintTree) {
+		if(constraintTree.getDisplayNegation()){
+			nodes.add("!");
+		}
+
+		if( constraintTree.getShouldDisplayBrackets()){
+			nodes.add("(");
+		}
+	}
+	
+	private static void addEnd(List<String> nodes, ConstraintTree constraintTree) {
+		if( constraintTree.getShouldDisplayBrackets() ){
+			nodes.add(")");
+		}
+	}
+	
+	private static List<String> searchOperator( ConstraintOperator operator) {
+		List<String> expressions = new ArrayList<String>();
+		ConstraintVariable left, right= null;
+		if(operator.getRight() instanceof ConstraintTree && ((ConstraintTree)operator.getRight()).getRoot() instanceof ConstraintPort){
+			//Temp hack until fixing why the order of constraints come wrong in port constraints
+			left = operator.getRight();
+			right = operator.getLeft();
+		}else{
+			left = operator.getLeft();
+			right = operator.getRight();
+		}
+		
+		add(left, expressions);
+		
+		if( operator != null ) {
+			if( operator .getValue().equals("object==") ){
+				expressions.add( "==" );
+			}else if( operator .getValue().equals("object!=")){
+				expressions.add( "!=" );
+			}else{
+				expressions.add( operator.getValue());
+			}
+		}
+		 
+		add(right, expressions);
+				
+		return expressions;
+	}
+	
+
 } 

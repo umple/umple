@@ -42,6 +42,7 @@ public interface ISTLConstants {
 	public static final String OSTREAM= "ostream"; //$NON-NLS-1$
 	public static final String HASH_MAP= "hash_map"; //$NON-NLS-1$
 	public static final String STRING= "string"; //$NON-NLS-1$
+	public static final String CSTRING= "cstring"; //$NON-NLS-1$
 	public static final String EXCEPTION= "exception"; //$NON-NLS-1$
 	public static final String STD_EXCEPTION= "stdexcept"; //$NON-NLS-1$
 	

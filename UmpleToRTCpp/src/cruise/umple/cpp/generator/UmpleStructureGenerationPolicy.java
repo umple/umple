@@ -19,11 +19,11 @@
 package cruise.umple.cpp.generator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.tools.ant.types.CommandlineJava.SysProperties;
+import java.util.TreeSet;
 
 import cruise.umple.compiler.ActiveDirectionHandler;
 import cruise.umple.compiler.ActiveDirectionHandlerBody;
@@ -32,7 +32,10 @@ import cruise.umple.compiler.Attribute;
 import cruise.umple.compiler.BasicConstraint;
 import cruise.umple.compiler.CodeBlock;
 import cruise.umple.compiler.Comment;
+import cruise.umple.compiler.ConstraintAttribute;
+import cruise.umple.compiler.ConstraintOperator;
 import cruise.umple.compiler.ConstraintPort;
+import cruise.umple.compiler.ConstraintTree;
 import cruise.umple.compiler.ConstraintUnassignedName;
 import cruise.umple.compiler.ConstraintVariable;
 import cruise.umple.compiler.Monitor;
@@ -41,11 +44,8 @@ import cruise.umple.compiler.PortBinding;
 import cruise.umple.compiler.PortConstraint;
 import cruise.umple.compiler.Protocol;
 import cruise.umple.compiler.UmpleClass;
-import cruise.umple.compiler.ConstraintTree;
-import cruise.umple.compiler.ConstraintOperator;
-import cruise.umple.compiler.ConstraintLiteral;
-import cruise.umple.compiler.ConstraintAttribute;
 import cruise.umple.core.CommonConstants;
+import cruise.umple.core.GenerationArgumentDescriptor;
 import cruise.umple.core.GenerationCallback.GenerationArgument;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
@@ -53,8 +53,6 @@ import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.core.GenerationValueAnnotation;
 import cruise.umple.core.IGenerationPointPriorityConstants;
-import cruise.umple.cpp.utils.CommonTypesConstants;
-import cruise.umple.cpp.utils.GenerationUtil;
 import cruise.umple.modeling.handlers.IModelingConstants;
 import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 import cruise.umple.modeling.handlers.IStructureConstants;
@@ -161,15 +159,16 @@ public class UmpleStructureGenerationPolicy{
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
-	public static List<BasicConstraint> getPortConstraints(@GenerationBaseElement Port port,
+	public static List<BasicConstraint> getPortConstraints(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Port port,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR/*, IModelingElementDefinitions.INTERFACES_PROCESSOR*/}) UmpleClass parent){
-		return processconstraints(parent, port.getProtocol().getWatchList(), port.getName());
+		return processconstraints(parent, port.getProtocol().getWatchList(), port.getName(),generationValueGetter);
 	}
 
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS, priority= IGenerationPointPriorityConstants.HIGHEST)
-	public static List<BasicConstraint> getActiveMethodConstraints(@GenerationBaseElement ActiveMethod activeMethod,
+	public static List<BasicConstraint> getActiveMethodConstraints(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationBaseElement ActiveMethod activeMethod,
 			@GenerationArgument(id= IModelingConstants.ROOT) Object root){
-		return processconstraints(null, activeMethod.getWatchList(), null);
+		return processconstraints(null, activeMethod.getWatchList(), null, generationValueGetter);
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.ACTIVE_METHOD_PORTS)
@@ -191,6 +190,11 @@ public class UmpleStructureGenerationPolicy{
 		}
 		
 		return ports;
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.ATTRIBUTES_FROM_CONSTRAINTS)
+	public static List<Object> constraintAttributes(@GenerationBaseElement BasicConstraint element){
+		return Arrays.asList(element.getNames().toArray());
 	}
 
 	private static void generatePortsFromConstraints(ConstraintVariable constraint, Monitor monitor, List<Port> ports, Map<String, Port> portMap){
@@ -223,53 +227,7 @@ public class UmpleStructureGenerationPolicy{
 		}
 	}
 	
-	private static void generateBasicConstraintsFromConstraints(ConstraintVariable constraint, BasicConstraint basicConstraint, Monitor monitor, Map<String, Port> portMap, List<String> values, List<BasicConstraint> basicConstraints, String type)
-        {
-          if(constraint == null) return;
-          if(constraint instanceof ConstraintTree)
-          {
-             generateBasicConstraintsFromConstraints(((ConstraintTree)constraint).getRoot(),basicConstraint,monitor,portMap,values,basicConstraints,type);
-          }
-          else if(constraint instanceof ConstraintOperator)
-          {
-	    String value = ((ConstraintOperator)constraint).getValue();
-	    if(type.equals(value)&&!values.contains(value))
-            {
-              Port port = portMap.get(value);
-//FIXME FIXME FIXME
-//	        String signalType = port.getSignalType();
-//              if(!signalType.equals(CommonTypesConstants.BOOLEAN)&& !signalType.equals("bool")){ //$NON-NLS-1$
-//
-//	        }
-//	        else
-//              {
-                basicConstraints.add(basicConstraint);
-                values.add(value);
-//              }
-            }
-            else
-            {
-              generateBasicConstraintsFromConstraints(((ConstraintOperator)constraint).getLeft(),basicConstraint,monitor,portMap,values,basicConstraints,type);
-              generateBasicConstraintsFromConstraints(((ConstraintOperator)constraint).getRight(),basicConstraint,monitor,portMap,values,basicConstraints,type);
-            }
-          }
-	  else if(constraint instanceof ConstraintLiteral){
-             String value = ((ConstraintLiteral)constraint).getValue();
-	    if(type.equals(value)&&!values.contains(value))
-            {
-              Port port = portMap.get(value);
-//FIXME FIXME FIXME
-//	      String signalType = port.getSignalType();
-//	      if(!signalType.equals(CommonTypesConstants.BOOLEAN)&& !signalType.equals("bool")){ //$NON-NLS-1$
-//		return;
-//	      }
-	      basicConstraints.add(basicConstraint);
-	      values.add(value);
-        }
-	  }
-    }
-
-	private static List<BasicConstraint> processconstraints(UmpleClass parent, List<Monitor> monitors, String type) {
+	private static List<BasicConstraint> processconstraints(UmpleClass parent, List<Monitor> monitors, String type, GenerationPolicyRegistry generationValueGetter) {
 		List<String> portStrings = new ArrayList<String>();
 		
 		Map<String, Port> portMap= new HashMap<String, Port>();
@@ -279,30 +237,37 @@ public class UmpleStructureGenerationPolicy{
 		}
 		
 		List<BasicConstraint> basicContraints= new ArrayList<BasicConstraint>();
-		List<String> values= new ArrayList<String>();
 		for(Monitor monitor: monitors){
 			List<BasicConstraint> constraints = monitor.getConstraints();
 			for(BasicConstraint constraint: constraints){
-				generateBasicConstraintsFromConstraints(constraint,constraint,monitor,portMap,values,constraints,type);
-//				if(expressions.length==1){
-//					ConstraintVariable constraintVariable = expressions[0];
-//					if(constraintVariable.getFoundAttribute()== null){
-//						String value = constraintVariable.getValue();
-//						if(portStrings.contains(value)){
-//							//Avoid the main port definition
-//							continue;
-//						}
-//					}
-//				}
-//				
-//				basicContraints.add(contraint);
+				
+				List<?> expressions= generationValueGetter.getList(constraint, IModelingElementDefinitions.CONSTRAINT_LIST,
+						GenerationArgumentDescriptor.arg(IModelingConstants.ROOT, parent));
+				
+				int count=0;
+				for(Object expr: expressions){
+					if(!portStrings.contains(expr)){
+						count++;
+					}
+				}
+						
+				TreeSet<String> names = constraint.getNames();
+				//Check for size > 1 in order to ignore the conditions where we listen to a specific port; i.e. [pin1]
+				if(names.contains(type)&& count>0){
+					basicContraints.add(constraint);
+				}
+				
+				//TODO
+				//String signalType = port.getSignalType();
+				//if(!signalType.equals(CommonTypesConstants.BOOLEAN)&& !signalType.equals("bool")){ //$NON-NLS-1$
+				//
+				//}
 			}
 		}
-		
 		return basicContraints;
 	}
 	
-	//TODO: still better work to do to catch multipe variables in active methods
+	//TODO: still better work to do to catch multiple variables in active methods
 	@GenerationValueAnnotation(fieldName= IStructureConstants.ACTIVE_METHODS)
 	public static List<Object> activeMethods(@GenerationBaseElement Port port,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) UmpleClass clazz){
