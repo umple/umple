@@ -298,7 +298,7 @@ public class CppStatemachinePointsHandler{
 					Boolean.valueOf(isNested));
 			
 			String enumImplementation = generationValueGetter.generate(ICppDefinitions.ENUM_IMPLEMENTATION, uClass,
-					CommonConstants.UNDERSCORE+ statemachineQualifiedTypeName, 
+					statemachineQualifiedTypeName+ CommonConstants.UNDERSCORE, 
 					enumValues, first, second,stringValues, GenerationArgumentDescriptor.arg(ICppDefinitions.OWING_NAMESPACE_OBJECT, uClass));
 			
 			generationValueGetter.generationPointString(uClass, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 

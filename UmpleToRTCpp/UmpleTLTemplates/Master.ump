@@ -1,0 +1,15 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This is the Umple php template master files that calls all major php template files.
+By compiling this file, Umple will regenerate all Php generator files
+
+*/
+
+generate Java "../src-gen-UmpleTL";
+
+use CMake.ump;

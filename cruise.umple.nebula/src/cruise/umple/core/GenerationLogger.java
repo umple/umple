@@ -37,8 +37,9 @@ public class GenerationLogger {
 		StringBuffer contents= new StringBuffer();
 		contents.append("Errors:"+ CommonConstants.NEW_LINE); //$NON-NLS-1$
 		for(LogDescriptor descriptor: this.errors){
-			contents.append(CommonConstants.NEW_LINE+ descriptor.getMessage());
-			contents.append(CommonConstants.NEW_LINE+ descriptor.getExceptionDetails());
+			descriptor.fException.printStackTrace();
+			//contents.append(CommonConstants.NEW_LINE+ descriptor.getMessage());
+			//contents.append(CommonConstants.NEW_LINE+ descriptor.getExceptionDetails());
 		}
 		contents.append("-----------------------------------------------------"+ CommonConstants.NEW_LINE); //$NON-NLS-1$
 		
