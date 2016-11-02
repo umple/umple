@@ -161,6 +161,7 @@
     <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/java" overwrite="true">
       <fileset dir="UmpleToJava/src-gen-UmpleTL/cruise/umple/compiler/java" excludes=".git* UmpleToJava.java" />
     </copy>
+    <copy todir="cruise.umple/src-gen-umpletl" overwrite="true">
       <fileset dir="UmpleToRTCpp/src-gen-UmpleTL" excludes=".git*" />
     </copy>  	
     <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/php" overwrite="true">
