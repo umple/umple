@@ -1,0 +1,71 @@
+namespace cruise.umple.cpp.gen;
+
+class GenerationTemplate {
+  depend cruise.umple.core.GenerationPolicyRegistry;
+  depend java.util.stream.Collectors;
+  
+  immutable GenerationPolicyRegistry g;
+  
+  String join(String id, Object... element){
+    return this.getG().getValues(id, element).stream().map(Object::toString).collect(Collectors.joining("\n"));
+  }
+  
+  String string(String id, Object element){
+    return this.getG().getString(element, id);
+  }
+}
+
+class Header {
+  isA GenerationTemplate;
+  depend cruise.umple.core.GenerationPolicyRegistry;
+  depend cruise.umple.modeling.handlers.IModelingElementDefinitions;
+  depend cruise.umple.modeling.handlers.cpp.ICppDefinitions;
+  depend cruise.umple.core.Generator;
+  depend cruise.umple.cpp.core.IGenerationCommonConstants;
+  depend java.util.stream.Collectors;
+  depend cruise.umple.cpp.core.ContentsDescriptor;
+
+//////////////////////////////////////////////////////////////////////////
+cMakeFoldersT <<!include_directories(<<=directory>>)
+!>>
+////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////
+cMakeT <<!cmake_minimum_required(VERSION 3.6)
+project(<<=projectName>>)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+include_directories(${CMAKE_SOURCE_DIR})
+<<=this.getG().generator.generate(Generator.HEADER_CMAKE_FOLDER, element)>>
+set(SOURCE_FILES
+   <<=includes>>)
+
+add_executable(<<=projectName>> ${SOURCE_FILES})!>>
+////////////////////////////////////////////////////////////////////////
+
+  emit cMake(Object element, String projectName, String includes)(cMakeT);
+  String cMake(Object element){
+     String directory= this.string(IModelingElementDefinitions.NAME, element); 
+     
+     String collect = this.getG().getValues(IGenerationCommonConstants.CONTENTS_DESCRIPTORS).stream().map(t -> {
+    	ContentsDescriptor descriptor= (ContentsDescriptor) t;
+ 		String path = descriptor.getPath();
+ 		if(path.isEmpty()){
+ 			return descriptor.getFileName();
+ 		}
+ 		return path+ "/"+ descriptor.getFileName();
+	 }).collect(Collectors.joining("\n"));
+        
+     return cMake(element, directory, collect);
+  }
+  
+  emit cMakeFolders(String directory)(cMakeFoldersT);
+  String cMakeFolders(){
+	  StringBuilder sb= new StringBuilder();
+	  this.getG().getValues(ICppDefinitions.MAKE_FOLDERS).stream().forEach(directory -> {
+		  _cMakeFolders(0, sb, directory.toString());
+	  });
+        
+     return sb.toString();
+  }
+}

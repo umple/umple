@@ -49,6 +49,7 @@ import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPoint.InterceptorResponse;
 import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.core.GenerationPolicyRegistryPriorities;
+import cruise.umple.core.Generator;
 import cruise.umple.core.IGenerationPointPriorityConstants;
 import cruise.umple.core.LoopProcessorAnnotation;
 import cruise.umple.core.LoopProcessorAnnotation.LoopAspectConstants;
@@ -112,7 +113,10 @@ public class CPPBaseGenerationPointsHandler{
 		for(String split: splits){
 			open= open+ generationValueGetter.use(ICppDefinitions.NAMESPACE, split)+ CommonConstants.SPACE+ CommonConstants.OPEN_BRACE+ CommonConstants.SPACE;
 			close= close+ CommonConstants.CLOSE_BRACE+ CommonConstants.SPACE;
-			defineBaseString= defineBaseString+ CommonConstants.UNDERSCORE+ split;
+			if(!defineBaseString.isEmpty()){
+				defineBaseString= defineBaseString+ CommonConstants.UNDERSCORE;
+			}
+			defineBaseString= defineBaseString+ split;
 		}
 		
 		String begin = defineBaseString+ CommonConstants.UNDERSCORE+ CPPCommonConstants.BEGIN.toUpperCase();
@@ -402,6 +406,10 @@ public class CPPBaseGenerationPointsHandler{
 		
 		ContentsDescriptor contentsDescriptor = new ContentsDescriptor(generate, fileName, modelPath);
 		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, contentsDescriptor);
+		
+		ContentsDescriptor makeContentsDescriptor = new ContentsDescriptor(generationValueGetter.generate(Generator.HEADER_CMAKE, model), 
+				"CMakeLists.txt", modelPath);
+		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, makeContentsDescriptor);
 	}
 
 	private static String normalizeNamespace(String object) {
@@ -550,7 +558,7 @@ public class CPPBaseGenerationPointsHandler{
 			if(compareObject.equals(compareNamespace)){
 				continue;
 			}
-			elementValue= elementValue+ obj;
+			elementValue= elementValue+ obj.toString();
 			if(elementsIterator.hasNext()){
 				elementValue= CommonConstants.UNDERSCORE+ elementValue;
 			}
@@ -580,7 +588,7 @@ public class CPPBaseGenerationPointsHandler{
 			
 			Iterator<String> nestedIterator = next.iterator();
 			while(nestedIterator.hasNext()){
-				String string = nestedIterator.next();
+				String string = nestedIterator.next().toString();
 				if(!definitionString.isEmpty()){
 					definitionString= definitionString+ CommonConstants.UNDERSCORE;
 				}
@@ -605,7 +613,6 @@ public class CPPBaseGenerationPointsHandler{
 					}
 					String begin = generationValueGetter.use(ICppDefinitions.DEFINE, beginDefinition, 
 							namepaceUse);
-					
 					if(!endDefinition.endsWith(CommonConstants.UNDERSCORE)){
 						endDefinition= endDefinition+ CommonConstants.UNDERSCORE;
 					}
@@ -695,7 +702,7 @@ public class CPPBaseGenerationPointsHandler{
 			while(namespacesIterator.hasNext()){
 				String segment = namespacesIterator.next();
 				if(!namespacesIterator.hasNext()){
-					segment= CommonConstants.UNDERSCORE+ segment;
+					segment= segment+ CommonConstants.UNDERSCORE;
 				}
 				
 				qualifiedNamespaceCallDeclaration= qualifiedNamespaceCallDeclaration+ CPPCommonConstants.DECLARATION_COMMON_PREFIX+ segment;

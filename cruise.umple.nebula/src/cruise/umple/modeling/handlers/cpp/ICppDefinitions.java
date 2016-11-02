@@ -103,6 +103,8 @@ public interface ICppDefinitions {
 	public final static String CLASS_DECLARATION= "cpp.class.declaration"; //$NON-NLS-1$
 	public final static String CLASS_PREFIX= "method.method.caller.prefix"; //$NON-NLS-1$
 	public final static String INCLUDE_STATEMENT= "class.include"; //$NON-NLS-1$
+	public final static String MAKE_INCLUDES= "make.includes"; //$NON-NLS-1$
+	public static final String MAKE_FOLDERS = "make.folders";
 	public final static String INCLUDE_DIRECT_STATEMENT= "class.direct.include"; //$NON-NLS-1$
 	public final static String BUILTIN_INCLUDE_STATEMENT= "class.builtin.include"; //$NON-NLS-1$
 	

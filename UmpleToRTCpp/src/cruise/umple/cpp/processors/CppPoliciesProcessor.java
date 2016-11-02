@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cruise.umple.core.GenerationPolicyRegistry;
+import cruise.umple.core.Generator;
 import cruise.umple.core.IPoliciesProcessor;
 import cruise.umple.cpp.core.ContentsDescriptor;
 import cruise.umple.cpp.core.IGenerationCommonConstants;
@@ -49,25 +50,28 @@ import cruise.umple.modeling.handlers.cpp.CPPContentsPointsHandler;
 import cruise.umple.modeling.handlers.cpp.CPPDependsPointsHandler;
 import cruise.umple.modeling.handlers.cpp.CppCustomGetterFunctionsPointsHandler;
 import cruise.umple.modeling.handlers.cpp.CppStatemachinePointsHandler;
-import cruise.umple.modeling.handlers.cpp.CppTestsPointsHandler;
 import cruise.umple.modeling.handlers.cpp.ICppModelingPriorityHandler;
 import cruise.umple.modeling.handlers.cpp.StlGenerationPointsHandler;
 import cruise.umple.modeling.handlers.cpp.StructurePointsHandler;
 
 abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 	
+	
 	private GenerationPolicyRegistry generationPolicyRegistry = new GenerationPolicyRegistry();
+	private Generator generator;
 	
 	public void generateRootElement(Object rootElement) {
 		this.getGenerationPolicyRegistry().process(rootElement);
 		this.handleGeneratedContents(getContentDescriptors());
-		
 		//this.generationPolicyRegistry.getGenerationLogger().showLogDetails();
 	}
 	
 	abstract public void handleGeneratedContents(List<ContentsDescriptor> contentsDescriptor);
 	
 	public CppPoliciesProcessor() {
+		generator= new Generator(generationPolicyRegistry);
+		generationPolicyRegistry.generator= generator;
+		
 		registerGenerationLanguages();
 		registerTypesPolicies();
 		registerGenerationPoints();
@@ -115,7 +119,7 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 		this.getGenerationPolicyRegistry().register(new CppStatemachinePointsHandler());
 		this.getGenerationPolicyRegistry().register(new StructurePointsHandler());
 		
-		this.getGenerationPolicyRegistry().register(new CppTestsPointsHandler());
+		//this.getGenerationPolicyRegistry().register(new CppTestsPointsHandler());
 	}
 	
 	public List<ContentsDescriptor> getContentDescriptors(){
@@ -129,6 +133,7 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 			}
 			return descriptors;
 		}
+		
 		return descriptors;
 	}
 	

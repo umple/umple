@@ -1239,6 +1239,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	}
 	
 	private ArgumentsRetrieval argumentRetriever= new ArgumentsRetrieval();
+	public Generator generator;
 	
 	public void addList(String id, Object values, boolean unique, Object... element){
 		if(values instanceof Collection<?> == false){

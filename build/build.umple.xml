@@ -41,6 +41,7 @@
     <delete dir="${project.path}/src-gen-umple" failonerror="false" />
     <delete dir="${project.path}/src-gen-umpleTL" failonerror="false" />
     <delete dir="${project.path}/src-gen-umpletl" failonerror="false" />
+  	<delete dir="UmpleToRTCpp/src-gen-UmpleTL" failonerror="false" />
     <delete dir="cruise.umplificator/src-gen-umple" failonerror="false" />
     <delete dir="cruise.umple.validator/src-gen-umple" failonerror="false" />
   </target>
@@ -144,6 +145,9 @@
         <arg value="UmpleToJava/UmpleTLTemplates/Master.ump"/>
       </java>
       <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+        <arg value="UmpleToRTCpp/UmpleTLTemplates/Master.ump"/>
+      </java>
+      <java jar="${umple.stable.jar}" fork="true" failonerror="true">
         <arg value="UmpleToPhp/UmpleTLTemplates/Master.ump"/>
       </java>
       <java jar="${umple.stable.jar}" fork="true" failonerror="true">
@@ -157,6 +161,8 @@
     <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/java" overwrite="true">
       <fileset dir="UmpleToJava/src-gen-UmpleTL/cruise/umple/compiler/java" excludes=".git* UmpleToJava.java" />
     </copy>
+      <fileset dir="UmpleToRTCpp/src-gen-UmpleTL" excludes=".git*" />
+    </copy>  	
     <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/php" overwrite="true">
       <fileset dir="UmpleToPhp/src-gen-UmpleTL/cruise/umple/compiler/php" excludes=".git* UmpleToPhp.java" />
     </copy>
