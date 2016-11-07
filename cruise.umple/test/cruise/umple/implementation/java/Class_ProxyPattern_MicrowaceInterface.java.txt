@@ -2,14 +2,9 @@
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 import java.util.*;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-interface IMicrowave
+interface IMicrowave extends IClient
 {
   public void setRealSelf(Microwave self);
-  public void startRMI();
   public boolean setX(int aX);
   public boolean setF(String aF);
   public int getX();

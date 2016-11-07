@@ -71,7 +71,7 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
   }
   public void initialize()
   {    
-    int numberOfComponents=0;
+    int numberOfComponents=1;
     /*
     Read configuration file
     */

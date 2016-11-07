@@ -23,25 +23,25 @@ public class ClientImpl implements RemoteIClientImpl
   //------------------------
   // Reference to the proxy
   //------------------------
-  Client realSelf=this;
+  Client realSelf;
   
   public void setRealSelf(Client self)
   {
     realSelf=self;
   }
 
+  //------------------------
+  // Start RMI Server
+  //------------------------
+  public void startRMI()
+  {
+    
+  }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  //------------------------
-  // Start RMI Server
-  //------------------------
-  public void StartRMI()
-  {
-    
-  }
   public void delete()
   {}
 

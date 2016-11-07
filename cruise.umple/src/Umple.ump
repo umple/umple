@@ -491,7 +491,7 @@ class UmpleClassifier
   
   // Specifies whether or not the Umple class or implemented classes are distributable with RMI technology.
   Boolean isDistributable = false;
-  String distributeTechnology="";
+  String distributeTechnology="RMI";
   UmpleModel sourceModel;
 
   // The constants contained within the Umple Classifier.

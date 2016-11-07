@@ -429,20 +429,21 @@ private void analyzeDistributedClasses()
       { model.setDistributed(true);
         uClass.setIsDistributed(true);
         uClass.setHasProxyPattern(true);
+        uClass.setNeedsDefaultInterface(true);
       }
 	    if (!uClass.getIsDistributed())
       { if(checkIsDistributed(uClass))
         { 
         	uClass.setNeedsDefaultInterface(true);
-  		    for(UmpleInterface parentInterface :uClass.getParentInterface())
-  		    { 
-  		      if (parentInterface.getIsDistributable())
-  		      { 
-  		        uClass.setNeedsDefaultInterface(false);
-  		      }
-  	    	}
-        }	
-      }      
+        }
+      }    
+  	  for(UmpleInterface parentInterface :uClass.getParentInterface())
+  	  { 
+  	    if (parentInterface.getIsDistributable())
+  	    { 
+		      uClass.setNeedsDefaultInterface(false);
+        }
+  	  }      
     }
 
 

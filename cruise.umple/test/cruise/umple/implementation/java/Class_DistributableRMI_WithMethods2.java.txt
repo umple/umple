@@ -51,7 +51,7 @@ public class MicrowaveImpl extends CCImpl implements RemoteIMicrowaveImpl, Runna
     isButtonPressed = false;
     setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.readyToCook);
     queue = new MessageQueue();
-    removal=new Thread(realSelf);
+    removal=new Thread(this);
     //start the thread of MicrowaveImpl
     removal.start();
   }
@@ -65,6 +65,13 @@ public class MicrowaveImpl extends CCImpl implements RemoteIMicrowaveImpl, Runna
     realSelf=self;
   }
 
+  //------------------------
+  // Start RMI Server
+  //------------------------
+  public void startRMI()
+  {
+    
+  }
 
   //------------------------
   // INTERFACE
@@ -122,13 +129,6 @@ public class MicrowaveImpl extends CCImpl implements RemoteIMicrowaveImpl, Runna
     return isButtonPressed;
   }
 
-  //------------------------
-  // Start RMI Server
-  //------------------------
-  public void startRMI()
-  {
-    
-  }
   public String getOperatingMicrowaveStateMachineFullName()
   {
     String answer = operatingMicrowaveStateMachine.toString();
@@ -168,7 +168,7 @@ public class MicrowaveImpl extends CCImpl implements RemoteIMicrowaveImpl, Runna
         wasEventProcessed = true;
         break;
       default:
-        // Other states do respond to realSelf event
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -202,7 +202,7 @@ public class MicrowaveImpl extends CCImpl implements RemoteIMicrowaveImpl, Runna
         wasEventProcessed = true;
         break;
       default:
-        // Other states do respond to realSelf event
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -226,7 +226,7 @@ public class MicrowaveImpl extends CCImpl implements RemoteIMicrowaveImpl, Runna
         wasEventProcessed = true;
         break;
       default:
-        // Other states do respond to realSelf event
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

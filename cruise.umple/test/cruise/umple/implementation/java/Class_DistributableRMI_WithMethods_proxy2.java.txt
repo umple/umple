@@ -26,6 +26,10 @@ public class Microwave implements IMicrowave
   {
     realObject.setRealSelf(self);
   }
+  public void startRMI()
+  {
+    realObject.startRMI();
+  }
   public boolean setLightOn(boolean aLightOn)
   {
     return realObject.setLightOn(aLightOn);
@@ -57,10 +61,6 @@ public class Microwave implements IMicrowave
   public boolean getIsButtonPressed()
   {
     return realObject.getIsButtonPressed();
-  }
-  public void startRMI()
-  {
-    realObject.startRMI();
   }
   public String getOperatingMicrowaveStateMachineFullName()
   {

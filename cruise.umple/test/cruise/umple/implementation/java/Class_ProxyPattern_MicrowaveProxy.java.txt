@@ -2,13 +2,9 @@
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 import java.util.*;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 public class Microwave implements IMicrowave
 {
-  RemoteIMicrowaveImpl realObject;
+  IMicrowave realObject;
   public Microwave(int aX, String aF, String component)
   {
     realObject = UmpleObjectFactory.theInstance.addMicrowave(aX,aF, component, this);
@@ -24,10 +20,6 @@ public class Microwave implements IMicrowave
   public void setRealSelf(Microwave self)
   {
     realObject.setRealSelf(self);
-  }
-  public void startRMI()
-  {
-    realObject.startRMI();
   }
   public boolean setX(int aX)
   {

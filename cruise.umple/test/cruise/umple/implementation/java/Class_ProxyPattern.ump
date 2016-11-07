@@ -1,0 +1,14 @@
+interface ClientI
+{
+}
+class Client
+{
+  isA ClientI;
+}
+class Microwave
+{	proxyPattern;
+	isA Client;
+	Integer x;
+	String f;
+	* -- * Client;
+}

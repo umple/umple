@@ -24,7 +24,7 @@ class UmpleToJava {
     
     <<=gen.translate("type",av)>> <<=gen.translate("parameterOld",av)>> = <<=gen.translate("associationOne",av)>>;
     <<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterNew",av)>>;
-    <<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(this);
+    <<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(<<=self>>);
 
     if (<<=gen.translate("parameterOld",av)>> != null)
     {

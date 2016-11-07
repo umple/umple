@@ -10,6 +10,7 @@ import java.rmi.server.UnicastRemoteObject;
 interface IMicrowave
 {
   public void setRealSelf(Microwave self);
+  public void startRMI();
   public boolean setLightOn(boolean aLightOn);
   public boolean setPowerTubeOn(boolean aPowerTubeOn);
   public boolean setIsDoorOpened(boolean aIsDoorOpened);
@@ -18,7 +19,6 @@ interface IMicrowave
   public boolean getPowerTubeOn();
   public boolean getIsDoorOpened();
   public boolean getIsButtonPressed();
-  public void startRMI();
   public String getOperatingMicrowaveStateMachineFullName();
   public OperatingMicrowaveStateMachine getOperatingMicrowaveStateMachine();
   public boolean _doorOpened();

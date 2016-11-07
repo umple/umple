@@ -8,6 +8,6 @@ import java.rmi.server.UnicastRemoteObject;
 interface IClient
 {
   public void setRealSelf(Client self);
-  public void StartRMI();
+  public void startRMI();
   public void delete();
 }

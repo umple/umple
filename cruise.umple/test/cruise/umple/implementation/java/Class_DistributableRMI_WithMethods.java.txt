@@ -57,13 +57,20 @@ public class MicrowaveImpl implements RemoteIMicrowaveImpl, Runnable
   //------------------------
   // Reference to the proxy
   //------------------------
-  Microwave realSelf=this;
+  Microwave realSelf;
   
   public void setRealSelf(Microwave self)
   {
     realSelf=self;
   }
 
+  //------------------------
+  // Start RMI Server
+  //------------------------
+  public void startRMI()
+  {
+    
+  }
 
   //------------------------
   // INTERFACE
@@ -121,13 +128,6 @@ public class MicrowaveImpl implements RemoteIMicrowaveImpl, Runnable
     return isButtonPressed;
   }
 
-  //------------------------
-  // Start RMI Server
-  //------------------------
-  public void StartRMI()
-  {
-    
-  }
   public String getOperatingMicrowaveStateMachineFullName()
   {
     String answer = operatingMicrowaveStateMachine.toString();

@@ -32,11 +32,6 @@ public class ClientImpl extends CC implements RemoteIClientImpl
     realSelf=self;
   }
 
-
-  //------------------------
-  // INTERFACE
-  //------------------------
-
   //------------------------
   // Start RMI Server
   //------------------------
@@ -44,6 +39,11 @@ public class ClientImpl extends CC implements RemoteIClientImpl
   {
     
   }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
   public void delete()
   {
     super.delete();
