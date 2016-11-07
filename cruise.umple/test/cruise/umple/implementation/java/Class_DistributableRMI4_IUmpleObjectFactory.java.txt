@@ -1,0 +1,16 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface IUmpleObjectFactory extends Remote
+{
+  
+  
+  public MicrowaveImpl addMicrowave(int component, Microwave proxy);
+  public MicrowaveImpl addMicrowave(String component, Microwave proxy);
+  public MicrowaveImpl createMicrowave(Microwave proxy);
+
+}
+ 

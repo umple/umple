@@ -1,0 +1,10 @@
+class Client
+{
+   isA CC;
+   distributableRMI;
+}
+class CC
+{
+  public void someMethod1()
+  {}	
+}

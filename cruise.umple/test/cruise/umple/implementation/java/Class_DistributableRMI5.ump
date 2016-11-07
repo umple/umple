@@ -1,0 +1,29 @@
+interface ClientI
+{
+}
+class Client
+{
+  distributableRMI;
+  isA ClientI;
+  isA CC;
+}
+class CC
+{
+  isA Father;
+  public void someMethod1()
+  {}
+}
+class Father
+{
+	public void method1()
+	{
+
+	}
+}
+class Microwave
+{
+	isA Client;
+	Integer x;
+	String f;
+	* -- * Client;
+}

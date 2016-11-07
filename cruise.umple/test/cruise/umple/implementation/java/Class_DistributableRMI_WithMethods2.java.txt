@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 import java.util.*;
@@ -8,7 +8,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ClientImpl
+public class ClientImpl implements RemoteIClientImpl
 {
 
   //------------------------
@@ -30,6 +30,16 @@ public class ClientImpl
     a = aA;
     cCs = new ArrayList<CC>();
   }
+  //------------------------
+  // Reference to the proxy
+  //------------------------
+  Client realSelf=this;
+  
+  public void setRealSelf(Client self)
+  {
+    realSelf=self;
+  }
+
 
   //------------------------
   // INTERFACE
@@ -48,6 +58,13 @@ public class ClientImpl
     return a;
   }
 
+  //------------------------
+  // Start RMI Server
+  //------------------------
+  public void StartRMI()
+  {
+    
+  }
   public CC getCC(int index)
   {
     CC aCC = cCs.get(index);

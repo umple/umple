@@ -7,7 +7,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ClientImpl implements RemoteIClientImpl
+public class ClientImpl extends CC implements RemoteIClientImpl
 {
 
   //------------------------
@@ -19,11 +19,13 @@ public class ClientImpl implements RemoteIClientImpl
   //------------------------
 
   public ClientImpl()
-  {}
+  {
+    super();
+  }
   //------------------------
   // Reference to the proxy
   //------------------------
-  Client realSelf=this;
+  Client realSelf;
   
   public void setRealSelf(Client self)
   {
@@ -38,11 +40,13 @@ public class ClientImpl implements RemoteIClientImpl
   //------------------------
   // Start RMI Server
   //------------------------
-  public void StartRMI()
+  public void startRMI()
   {
     
   }
   public void delete()
-  {}
+  {
+    super.delete();
+  }
 
 }

@@ -2443,6 +2443,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     String interfaceContent="";
 
     Integer scopeDepth=0;// if it is 1 means we are in the main class. If depth more than 1 it means we are in an inner class.
+    boolean inMethod=false;
     String[] lines = classContent.split(System.getProperty("line.separator"));
     String newLines="";
     /*
@@ -2464,7 +2465,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         }
       }
       if((scopeDepth==0)&&(line.contains("class")))
-      { 
+      { inMethod=false;
         interfaceContent+="interface "+interfaceName;
         proxyContent+="class "+proxyName+" implements "+interfaceName;
         interfaceContent+="\n{\n";
@@ -2476,6 +2477,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       int position=-1;
       
       if (scopeDepth==1){
+        inMethod=false;
         int startSignature=line.indexOf("(");
         int endSignature=line.lastIndexOf(")");
         for(int i=0;i<tokensInMethod.length;i+=1)
@@ -2493,9 +2495,15 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
             isSerializable=false;
           }  
         } 
-      
+        if(inMethod==true&&scopeDepth>1)
+        {
+          newLine=newLine.replace("this","object_Self");
+          newLine=newLine.replace("object_Self.","this.");
+        }
+
+
         if(position>=0)
-        { 
+        { inMethod=true;
           String methodType=line.substring(0,startSignature).replaceAll("\\s+$", "");// trimming the spaces on the righ
           String methodName=methodType.substring(methodType.lastIndexOf(" ")+1);
 
@@ -2549,7 +2557,6 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
 
             proxyContent+=methodType+"("+arguments+")\n  {\n    realObject = UmpleObjectFactory.add"+aClass.getName()+"("+callerSignature+lastArgument+"this);\n  }\n";
           }      
-        newLine=newLine.replace("this","object_Self");
         }
       }
       
@@ -2704,15 +2711,15 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         contents=WriteProxyFiles(contents,uClass,path);
       }    
       if(uClass.getHasProxyPattern()){
-        className=className+"Impl";
+        aClass.setName(className+"Impl");
           }    
           
     }
     File file = new File(path);
     file.mkdirs();   
-    String filename = path + File.separator + className + ".java";
+    String filename = path + File.separator + aClass.getName() + ".java";
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-    getModel().getGeneratedCode().put(aClass.getName(),contents);
+    getModel().getGeneratedCode().put(className,contents);
 
     try
     {
@@ -2737,6 +2744,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         mainClasses.add((UmpleClass)aClass);
       }
     }
+    aClass.setName(className);
   }
 
   public void writeUncaughtExceptionFile(UmpleClass aClass)

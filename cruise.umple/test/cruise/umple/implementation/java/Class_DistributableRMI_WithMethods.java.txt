@@ -9,7 +9,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class MicrowaveImpl implements Runnable
+public class MicrowaveImpl implements RemoteIMicrowaveImpl, Runnable
 {
 
   //------------------------
@@ -27,20 +27,16 @@ public class MicrowaveImpl implements Runnable
   private boolean powerTubeOn;
   private boolean isDoorOpened;
   private boolean isButtonPressed;
-  private Timer timer;
 
   //MicrowaveImpl State Machines
   public enum OperatingMicrowaveStateMachine { readyToCook, doorOpen, cooking, cookingInterrupted, cookingComplete, cookingExtended }
   private OperatingMicrowaveStateMachine operatingMicrowaveStateMachine;
   
   //enumeration type of messages accepted by MicrowaveImpl
-  protected enum MessageType { doorOpened_M, buttonPressed_M, doorClosed_M, timerTimesout_M }
+  protected enum MessageType { doorOpened_M, buttonPressed_M, doorClosed_M }
   
   MessageQueue queue;
   Thread removal;
-
-  //MicrowaveImpl Do Activity Threads
-  Thread doActivityOperatingMicrowaveStateMachineCookingThread = null;
 
   //------------------------
   // CONSTRUCTOR
@@ -52,13 +48,22 @@ public class MicrowaveImpl implements Runnable
     powerTubeOn = false;
     isDoorOpened = false;
     isButtonPressed = false;
-    timer = new Timer();
     setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.readyToCook);
     queue = new MessageQueue();
     removal=new Thread(this);
     //start the thread of MicrowaveImpl
     removal.start();
   }
+  //------------------------
+  // Reference to the proxy
+  //------------------------
+  Microwave realSelf=this;
+  
+  public void setRealSelf(Microwave self)
+  {
+    realSelf=self;
+  }
+
 
   //------------------------
   // INTERFACE
@@ -96,14 +101,6 @@ public class MicrowaveImpl implements Runnable
     return wasSet;
   }
 
-  public boolean setTimer(Timer aTimer)
-  {
-    boolean wasSet = false;
-    timer = aTimer;
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean getLightOn()
   {
     return lightOn;
@@ -124,11 +121,13 @@ public class MicrowaveImpl implements Runnable
     return isButtonPressed;
   }
 
-  public Timer getTimer()
+  //------------------------
+  // Start RMI Server
+  //------------------------
+  public void StartRMI()
   {
-    return timer;
+    
   }
-
   public String getOperatingMicrowaveStateMachineFullName()
   {
     String answer = operatingMicrowaveStateMachine.toString();
@@ -153,7 +152,6 @@ public class MicrowaveImpl implements Runnable
         wasEventProcessed = true;
         break;
       case cooking:
-        exitOperatingMicrowaveStateMachine();
         setIsDoorOpened(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingInterrupted);
         wasEventProcessed = true;
@@ -188,7 +186,6 @@ public class MicrowaveImpl implements Runnable
         wasEventProcessed = true;
         break;
       case cooking:
-        exitOperatingMicrowaveStateMachine();
         setIsButtonPressed(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingExtended);
         wasEventProcessed = true;
@@ -234,39 +231,6 @@ public class MicrowaveImpl implements Runnable
     return wasEventProcessed;
   }
 
-  public boolean _timerTimesout()
-  {
-    boolean wasEventProcessed = false;
-    
-    OperatingMicrowaveStateMachine aOperatingMicrowaveStateMachine = operatingMicrowaveStateMachine;
-    switch (aOperatingMicrowaveStateMachine)
-    {
-      case cooking:
-        exitOperatingMicrowaveStateMachine();
-        setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingComplete);
-        wasEventProcessed = true;
-        break;
-      case cookingExtended:
-        setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingComplete);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private void exitOperatingMicrowaveStateMachine()
-  {
-    switch(operatingMicrowaveStateMachine)
-    {
-      case cooking:
-        if (doActivityOperatingMicrowaveStateMachineCookingThread != null) { doActivityOperatingMicrowaveStateMachineCookingThread.interrupt(); }
-        break;
-    }
-  }
-
   private void setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine aOperatingMicrowaveStateMachine)
   {
     operatingMicrowaveStateMachine = aOperatingMicrowaveStateMachine;
@@ -289,9 +253,6 @@ public class MicrowaveImpl implements Runnable
         energizePowerTube(true);
         //release a button
         setIsButtonPressed(false);
-        // start timer
-        timer.setTimeMs(TimeIncrementMs);
-        doActivityOperatingMicrowaveStateMachineCookingThread = new DoActivityThread(this,"doActivityOperatingMicrowaveStateMachineCooking");
         break;
       case cookingInterrupted:
         turnOff();
@@ -300,45 +261,9 @@ public class MicrowaveImpl implements Runnable
         turnOff();
         break;
       case cookingExtended:
-        // add 1 minute to timer
-        timer.setTimeMs(TimeIncrementMs + timer.getTimeMs());
         //release a button
         setIsButtonPressed(false);
         break;
-    }
-  }
-
-  private void doActivityOperatingMicrowaveStateMachineCooking()
-  {
-    try
-    {
-      timer.tick(timer.getTimeMs());
-      Thread.sleep(1);
-    }
-    catch (InterruptedException e)
-    {
-
-    }
-  }
-
-  private static class DoActivityThread extends Thread
-  {
-    MicrowaveImpl controller;
-    String doActivityMethodName;
-    
-    public DoActivityThread(MicrowaveImpl aController,String aDoActivityMethodName)
-    {
-      controller = aController;
-      doActivityMethodName = aDoActivityMethodName;
-      start();
-    }
-    
-    public void run()
-    {
-      if ("doActivityOperatingMicrowaveStateMachineCooking".equals(doActivityMethodName))
-      {
-        controller.doActivityOperatingMicrowaveStateMachineCooking();
-      }
     }
   }
 
@@ -408,11 +333,6 @@ public class MicrowaveImpl implements Runnable
     queue.put(new Message(MessageType.doorClosed_M, null));
   }
 
-  public void timerTimesout ()
-  {
-    queue.put(new Message(MessageType.timerTimesout_M, null));
-  }
-
   
   @Override
   public void run ()
@@ -432,9 +352,6 @@ public class MicrowaveImpl implements Runnable
           break;
         case doorClosed_M:
           status = _doorClosed();
-          break;
-        case timerTimesout_M:
-          status = _timerTimesout();
           break; 
         default:
       }
@@ -471,18 +388,10 @@ public class MicrowaveImpl implements Runnable
     setIsButtonPressed(false);
     // de-energize power tube
     energizePowerTube(false);
-    // clear timer
-    timer.setTimeMs(0);
   }
 
-   public static  void main(String [] args){
-    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
-    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
-    Microwave microwave=new Microwave();
-    //microwave.doorOpened();
-    microwave.buttonPressed();
-    //microwave.buttonPressed();
-    microwave.timerTimesout();
+   public static  void someMethod(){
+    
   }
 
 
@@ -493,111 +402,7 @@ public class MicrowaveImpl implements Runnable
             "lightOn" + ":" + getLightOn()+ "," +
             "powerTubeOn" + ":" + getPowerTubeOn()+ "," +
             "isDoorOpened" + ":" + getIsDoorOpened()+ "," +
-            "isButtonPressed" + ":" + getIsButtonPressed()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "timer" + "=" + (getTimer() != null ? !getTimer().equals(this)  ? getTimer().toString().replaceAll("  ","    ") : "this" : "null")
+            "isButtonPressed" + ":" + getIsButtonPressed()+ "]"
      + outputString;
   }
-  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
-  {
-    public void uncaughtException(Thread t, Throwable e)
-    {
-      translate(e);
-      if(e.getCause()!=null)
-      {
-        translate(e.getCause());
-      }
-      e.printStackTrace();
-    }
-    public void translate(Throwable e)
-    {
-      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();
-      StackTraceElement[] elements = e.getStackTrace();
-      try
-      {
-        for(StackTraceElement element:elements)
-        {
-          String className = element.getClassName();
-          String methodName = element.getMethodName();
-          boolean methodFound = false;
-          int index = className.lastIndexOf('.')+1;
-          try {
-            java.lang.reflect.Method query = this.getClass().getMethod(className.substring(index)+"_"+methodName,new Class[]{});
-            UmpleSourceData sourceInformation = (UmpleSourceData)query.invoke(this,new Object[]{});
-            for(int i=0;i<sourceInformation.size();++i)
-            {
-              int distanceFromStart = element.getLineNumber()-sourceInformation.getJavaLine(i)-(("main".equals(methodName))?2:0);
-              if(distanceFromStart>=0&&distanceFromStart<=sourceInformation.getLength(i))
-              {
-                result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),sourceInformation.getFileName(i),sourceInformation.getUmpleLine(i)+distanceFromStart));
-                methodFound = true;
-                break;
-              }
-            }
-          }
-          catch (Exception e2){}
-          if(!methodFound)
-          {
-            result.add(element);
-          }
-        }
-      }
-      catch (Exception e1)
-      {
-        e1.printStackTrace();
-      }
-      e.setStackTrace(result.toArray(new StackTraceElement[0]));
-    }
-  //The following methods Map Java lines back to their original Umple file / line    
-    public UmpleSourceData MicrowaveImpl_doActivityOperatingMicrowaveStateMachineCooking(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(43).setJavaLines(334).setLengths(1);}
-    public UmpleSourceData MicrowaveImpl_turnOff(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(88).setJavaLines(486).setLengths(3);}
-    public UmpleSourceData MicrowaveImpl_energizePowerTube(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(82).setJavaLines(479).setLengths(3);}
-    public UmpleSourceData MicrowaveImpl_doorClosed(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump").setUmpleLines(25, 50).setJavaLines(230, 236).setLengths(1, 1);}
-    public UmpleSourceData MicrowaveImpl_turnLightOn(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(75).setJavaLines(468).setLengths(3);}
-    public UmpleSourceData MicrowaveImpl_doorOpened(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump").setUmpleLines(16, 40, 55, 66).setJavaLines(152, 159, 165, 171).setLengths(1, 1, 1, 1);}
-    public UmpleSourceData MicrowaveImpl_main(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump").setUmpleLines(99).setJavaLines(498).setLengths(3);}
-    public UmpleSourceData MicrowaveImpl_buttonPressed(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump").setUmpleLines(17, 41, 56, 67).setJavaLines(191, 198, 204, 210).setLengths(1, 1, 1, 1);}
-    public UmpleSourceData MicrowaveImpl_setOperatingMicrowaveStateMachine(){ return new UmpleSourceData().setFileNames("Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump"," Class_DistributableRMI_WithMethods.ump").setUmpleLines(12, 21, 29, 49, 54, 60).setJavaLines(290, 295, 300, 312, 316, 320).setLengths(2, 2, 8, 1, 1, 4);}
-
-  }
-  public static class UmpleSourceData
-  {
-    String[] umpleFileNames;
-    Integer[] umpleLines;
-    Integer[] umpleJavaLines;
-    Integer[] umpleLengths;
-    
-    public UmpleSourceData(){
-    }
-    public String getFileName(int i){
-      return umpleFileNames[i];
-    }
-    public Integer getUmpleLine(int i){
-      return umpleLines[i];
-    }
-    public Integer getJavaLine(int i){
-      return umpleJavaLines[i];
-    }
-    public Integer getLength(int i){
-      return umpleLengths[i];
-    }
-    public UmpleSourceData setFileNames(String... filenames){
-      umpleFileNames = filenames;
-      return this;
-    }
-    public UmpleSourceData setUmpleLines(Integer... umplelines){
-      umpleLines = umplelines;
-      return this;
-    }
-    public UmpleSourceData setJavaLines(Integer... javalines){
-      umpleJavaLines = javalines;
-      return this;
-    }
-    public UmpleSourceData setLengths(Integer... lengths){
-      umpleLengths = lengths;
-      return this;
-    }
-    public int size(){
-      return umpleFileNames.length;
-    }
-  } 
 }

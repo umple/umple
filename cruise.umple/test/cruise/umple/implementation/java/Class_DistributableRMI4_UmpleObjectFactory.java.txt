@@ -1,0 +1,100 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+import java.io.File;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.*;
+
+
+public class UmpleObjectFactory implements IUmpleObjectFactory
+{
+  public static UmpleObjectFactory theInstance = new UmpleObjectFactory();
+  List<IUmpleObjectFactory> remoteFactories;
+
+  
+  private List<RemoteIMicrowaveImpl> listOfMicrowave;
+  Registry rmiRegistry;
+  int thisComponentId=0;
+  public int getThisComponentId(){
+  return thisComponentId;
+  }
+  private UmpleObjectFactory()
+  { 
+    
+    listOfMicrowave = new ArrayList<RemoteIMicrowaveImpl>();
+    remoteFactories= new ArrayList<IUmpleObjectFactory>();
+    initialize();
+  }
+  
+  public int getComponentId(String umpleComponentName)
+  {
+    int ComponentId=0;
+    return ComponentId;
+  }
+  public void initialize()
+  {    
+    int numberOfComponents=0;
+    /*
+    Read configuration file
+    */
+    startRMI();
+    for(int component=0;component<numberOfComponents;component=component+1)
+    {
+      if(component==getThisComponentId())
+      {
+        remoteFactories.add(this);
+      }
+      else
+      {
+      //connect-to remote
+      } 
+    }
+
+  }
+  public void startRMI() 
+  {/*
+    try {
+          
+      IUmpleObjectFactory stub = (IUmpleObjectFactory) UnicastRemoteObject.exportObject(this, 0);
+
+      //Bind the remote object's stub in the registry
+      rmiRegistry = LocateRegistry.getRegistry();
+      rmiRegistry.bind("UmpleObjectFactory", stub);
+      System.err.println("Component ready");
+      } catch (Exception e) {
+          System.err.println("Server exception: " + e.toString());
+          e.printStackTrace();
+      }
+
+      */
+  }
+  public void stopRMI() throws Exception 
+  {
+    rmiRegistry.unbind("UmpleObjectFactory");
+    //unexportObject(this, true);
+    //unexportObject(rmiRegistry, true);
+    System.out.println("Component stopped");
+    }
+  
+  
+  public MicrowaveImpl addMicrowave(int component, Microwave proxy)
+  {
+    return remoteFactories.get(component).createMicrowave(proxy);
+  }
+  public MicrowaveImpl addMicrowave(String component, Microwave proxy)
+  {
+   return addMicrowave(getComponentId(component),proxy);
+  }
+  public MicrowaveImpl createMicrowave(Microwave proxy)
+  {
+  MicrowaveImpl object = new MicrowaveImpl();
+  object.setRealSelf(proxy);
+  object.startRMI();
+  listOfMicrowave.add(object);
+  return object;
+  }
+
+  }
+ 

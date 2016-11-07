@@ -1,20 +1,26 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
-class Microwave implements IMicrowave
+import java.util.*;
+import java.lang.Thread;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+public class Microwave implements IMicrowave
 {
-  IMicrowave realObject;
-public Microwave(String component)
+  RemoteIMicrowaveImpl realObject;
+  public Microwave(String component)
   {
-    realObject = UmpleObjectFactory.createMicrowave(component, this);
+    realObject = UmpleObjectFactory.theInstance.addMicrowave(component, this);
   }
-public Microwave(int component)
+  public Microwave(int component)
   {
-    realObject = UmpleObjectFactory.createMicrowave(component, this);
+    realObject = UmpleObjectFactory.theInstance.addMicrowave(component, this);
   }
-public Microwave()
+  public Microwave()
   {
-    realObject = UmpleObjectFactory.addMicrowave(this);
+    realObject = UmpleObjectFactory.theInstance.createMicrowave(this);
   }
   public void setRealSelf(Microwave self)
   {
@@ -52,9 +58,9 @@ public Microwave()
   {
     return realObject.getIsButtonPressed();
   }
-  public void StartRMI()
+  public void startRMI()
   {
-    realObject.StartRMI();
+    realObject.startRMI();
   }
   public String getOperatingMicrowaveStateMachineFullName()
   {
@@ -100,16 +106,9 @@ public Microwave()
   {
   realObject.turnLightOn(on);
   }
-   public void energizePowerTube(boolean on)
-  {
-  realObject.energizePowerTube(on);
-  }
-   public void turnOff()
-  {
-  realObject.turnOff();
-  }
   public String toString()
   {
     return realObject.toString();
   }
+
 }

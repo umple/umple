@@ -1,6 +1,8 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
-interface RemoteIMicrowaveImpl extends java.rmi.Remote, IMicrowave
+interface ICC extends IFather
 {
+  public void delete();
+   public void someMethod1();
 }

@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-7aed471 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 import java.rmi.registry.Registry;
@@ -7,7 +7,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ClientImpl implements RemoteIClientImpl
+public class MicrowaveImpl extends CC implements RemoteIMicrowaveImpl
 {
 
   //------------------------
@@ -18,14 +18,16 @@ public class ClientImpl implements RemoteIClientImpl
   // CONSTRUCTOR
   //------------------------
 
-  public ClientImpl()
-  {}
+  public MicrowaveImpl()
+  {
+    super();
+  }
   //------------------------
   // Reference to the proxy
   //------------------------
-  Client realSelf=this;
+  Microwave realSelf;
   
-  public void setRealSelf(Client self)
+  public void setRealSelf(Microwave self)
   {
     realSelf=self;
   }
@@ -38,11 +40,17 @@ public class ClientImpl implements RemoteIClientImpl
   //------------------------
   // Start RMI Server
   //------------------------
-  public void StartRMI()
+  public void startRMI()
   {
     
   }
   public void delete()
-  {}
+  {
+    super.delete();
+  }
+
+   public int method1(int f){
+    return f*2;
+  }
 
 }

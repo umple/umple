@@ -164,11 +164,6 @@ public class DistributedClassTest extends TemplateTest
 	 //Assert.assertEquals(true, modelI.getUmpleInterface(0).getDepends());
   }
   @Test
-  public void ClassDependencyTest()
-  {
-		assertUmpleTemplateFor("java/Class_DistributableRMI.ump", languagePath + "/Class_DistributableRMI."+ languagePath +".txt", "Client");
-  }
-  @Test
   public void InterfaceDependencyTest(){
 		assertUmpleTemplateFor("java/Interface_DistributableRMI.ump", languagePath + "/Interface_DistributableRMI."+ languagePath +".txt", "IClient");
 
@@ -186,5 +181,10 @@ public class DistributedClassTest extends TemplateTest
   public void MethodProxyTest2(){
 		assertUmpleTemplateFor("java/Class_DistributableRMI_WithMethods2.ump", languagePath + "/Class_DistributableRMI_WithMethods2."+ languagePath +".txt", "Client");
 
+  }
+  @Test
+  public void ClassDependencyTest()
+  {
+		assertUmpleTemplateFor("java/Class_DistributableRMI.ump", languagePath + "/Class_DistributableRMI."+ languagePath +".txt", "Client");
   }
 }
