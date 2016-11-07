@@ -48,7 +48,7 @@ import java.util.*;
 
 public class UmpleObjectFactory implements IUmpleObjectFactory
 {
-  private static UmpleObjectFactory theInstance = new UmpleObjectFactory();
+  public static UmpleObjectFactory theInstance = new UmpleObjectFactory();
   List<IUmpleObjectFactory> remoteFactories;
 
   <<@ UmpleToJava.objectFactory_listOfObjects_All >>
@@ -80,7 +80,7 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
     {
       if(component==getThisComponentId())
       {
-        remoteFactories.append(this);
+        remoteFactories.add(this);
       }
       else
       {

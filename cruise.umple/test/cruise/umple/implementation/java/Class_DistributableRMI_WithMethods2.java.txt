@@ -3,39 +3,64 @@
 
 
 import java.util.*;
+import java.lang.Thread;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ClientImpl implements RemoteIClientImpl
+public class MicrowaveImpl extends CCImpl implements RemoteIMicrowaveImpl, Runnable
 {
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  public static final int TimeIncrementMs = 1000;
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //ClientImpl Attributes
-  private int a;
+  //MicrowaveImpl Attributes
+  private boolean lightOn;
+  private boolean powerTubeOn;
+  private boolean isDoorOpened;
+  private boolean isButtonPressed;
 
-  //ClientImpl Associations
-  private List<CC> cCs;
+  //MicrowaveImpl State Machines
+  public enum OperatingMicrowaveStateMachine { readyToCook, doorOpen, cooking, cookingInterrupted, cookingComplete, cookingExtended }
+  private OperatingMicrowaveStateMachine operatingMicrowaveStateMachine;
+  
+  //enumeration type of messages accepted by MicrowaveImpl
+  protected enum MessageType { doorOpened_M, buttonPressed_M, doorClosed_M }
+  
+  MessageQueue queue;
+  Thread removal;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public ClientImpl(int aA)
+  public MicrowaveImpl()
   {
-    a = aA;
-    cCs = new ArrayList<CC>();
+    super();
+    lightOn = false;
+    powerTubeOn = false;
+    isDoorOpened = false;
+    isButtonPressed = false;
+    setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.readyToCook);
+    queue = new MessageQueue();
+    removal=new Thread(realSelf);
+    //start the thread of MicrowaveImpl
+    removal.start();
   }
   //------------------------
   // Reference to the proxy
   //------------------------
-  Client realSelf=this;
+  Microwave realSelf;
   
-  public void setRealSelf(Client self)
+  public void setRealSelf(Microwave self)
   {
     realSelf=self;
   }
@@ -45,133 +70,312 @@ public class ClientImpl implements RemoteIClientImpl
   // INTERFACE
   //------------------------
 
-  public boolean setA(int aA)
+  public boolean setLightOn(boolean aLightOn)
   {
     boolean wasSet = false;
-    a = aA;
+    lightOn = aLightOn;
     wasSet = true;
     return wasSet;
   }
 
-  public int getA()
+  public boolean setPowerTubeOn(boolean aPowerTubeOn)
   {
-    return a;
+    boolean wasSet = false;
+    powerTubeOn = aPowerTubeOn;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setIsDoorOpened(boolean aIsDoorOpened)
+  {
+    boolean wasSet = false;
+    isDoorOpened = aIsDoorOpened;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setIsButtonPressed(boolean aIsButtonPressed)
+  {
+    boolean wasSet = false;
+    isButtonPressed = aIsButtonPressed;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean getLightOn()
+  {
+    return lightOn;
+  }
+
+  public boolean getPowerTubeOn()
+  {
+    return powerTubeOn;
+  }
+
+  public boolean getIsDoorOpened()
+  {
+    return isDoorOpened;
+  }
+
+  public boolean getIsButtonPressed()
+  {
+    return isButtonPressed;
   }
 
   //------------------------
   // Start RMI Server
   //------------------------
-  public void StartRMI()
+  public void startRMI()
   {
     
   }
-  public CC getCC(int index)
+  public String getOperatingMicrowaveStateMachineFullName()
   {
-    CC aCC = cCs.get(index);
-    return aCC;
+    String answer = operatingMicrowaveStateMachine.toString();
+    return answer;
   }
 
-  public List<CC> getCCs()
+  public OperatingMicrowaveStateMachine getOperatingMicrowaveStateMachine()
   {
-    List<CC> newCCs = Collections.unmodifiableList(cCs);
-    return newCCs;
+    return operatingMicrowaveStateMachine;
   }
 
-  public int numberOfCCs()
+  public boolean _doorOpened()
   {
-    int number = cCs.size();
-    return number;
-  }
-
-  public boolean hasCCs()
-  {
-    boolean has = cCs.size() > 0;
-    return has;
-  }
-
-  public int indexOfCC(CC aCC)
-  {
-    int index = cCs.indexOf(aCC);
-    return index;
-  }
-
-  public static int minimumNumberOfCCs()
-  {
-    return 0;
-  }
-
-  public boolean addCC(CC aCC)
-  {
-    boolean wasAdded = false;
-    if (cCs.contains(aCC)) { return false; }
-    Client existingClient = aCC.getClient();
-    if (existingClient == null)
+    boolean wasEventProcessed = false;
+    
+    OperatingMicrowaveStateMachine aOperatingMicrowaveStateMachine = operatingMicrowaveStateMachine;
+    switch (aOperatingMicrowaveStateMachine)
     {
-      aCC.setClient(this);
+      case readyToCook:
+        setIsDoorOpened(true);
+        setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.doorOpen);
+        wasEventProcessed = true;
+        break;
+      case cooking:
+        setIsDoorOpened(true);
+        setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingInterrupted);
+        wasEventProcessed = true;
+        break;
+      case cookingComplete:
+        setIsDoorOpened(true);
+        setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.doorOpen);
+        wasEventProcessed = true;
+        break;
+      case cookingExtended:
+        setIsDoorOpened(true);
+        setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingInterrupted);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to realSelf event
     }
-    else if (!this.equals(existingClient))
-    {
-      existingClient.removeCC(aCC);
-      addCC(aCC);
-    }
-    else
-    {
-      cCs.add(aCC);
-    }
-    wasAdded = true;
-    return wasAdded;
+
+    return wasEventProcessed;
   }
 
-  public boolean removeCC(CC aCC)
+  public boolean _buttonPressed()
   {
-    boolean wasRemoved = false;
-    if (cCs.contains(aCC))
+    boolean wasEventProcessed = false;
+    
+    OperatingMicrowaveStateMachine aOperatingMicrowaveStateMachine = operatingMicrowaveStateMachine;
+    switch (aOperatingMicrowaveStateMachine)
     {
-      cCs.remove(aCC);
-      aCC.setClient(null);
-      wasRemoved = true;
+      case readyToCook:
+        setIsButtonPressed(true);
+        setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cooking);
+        wasEventProcessed = true;
+        break;
+      case cooking:
+        setIsButtonPressed(true);
+        setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingExtended);
+        wasEventProcessed = true;
+        break;
+      case cookingComplete:
+        setIsButtonPressed(true);
+        setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cooking);
+        wasEventProcessed = true;
+        break;
+      case cookingExtended:
+        setIsButtonPressed(true);
+        setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingExtended);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to realSelf event
     }
-    return wasRemoved;
+
+    return wasEventProcessed;
   }
 
-  public boolean addCCAt(CC aCC, int index)
-  {  
-    boolean wasAdded = false;
-    if(addCC(aCC))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCCs()) { index = numberOfCCs() - 1; }
-      cCs.remove(aCC);
-      cCs.add(index, aCC);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveCCAt(CC aCC, int index)
+  public boolean _doorClosed()
   {
-    boolean wasAdded = false;
-    if(cCs.contains(aCC))
+    boolean wasEventProcessed = false;
+    
+    OperatingMicrowaveStateMachine aOperatingMicrowaveStateMachine = operatingMicrowaveStateMachine;
+    switch (aOperatingMicrowaveStateMachine)
     {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCCs()) { index = numberOfCCs() - 1; }
-      cCs.remove(aCC);
-      cCs.add(index, aCC);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addCCAt(aCC, index);
+      case doorOpen:
+        setIsDoorOpened(false);
+        setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.readyToCook);
+        wasEventProcessed = true;
+        break;
+      case cookingInterrupted:
+        setIsDoorOpened(false);
+        setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.readyToCook);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to realSelf event
     }
-    return wasAdded;
+
+    return wasEventProcessed;
+  }
+
+  private void setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine aOperatingMicrowaveStateMachine)
+  {
+    operatingMicrowaveStateMachine = aOperatingMicrowaveStateMachine;
+
+    // entry actions and do activities
+    switch(operatingMicrowaveStateMachine)
+    {
+      case readyToCook:
+        // turn off light
+        turnOff();
+        break;
+      case doorOpen:
+        // turn on light
+        turnLightOn(true);
+        break;
+      case cooking:
+        // turn on light
+        turnLightOn(true);
+        // energize power tube
+        energizePowerTube(true);
+        //release a button
+        setIsButtonPressed(false);
+        break;
+      case cookingInterrupted:
+        turnOff();
+        break;
+      case cookingComplete:
+        turnOff();
+        break;
+      case cookingExtended:
+        //release a button
+        setIsButtonPressed(false);
+        break;
+    }
   }
 
   public void delete()
   {
-    while( !cCs.isEmpty() )
+    super.delete();
+  }
+
+  protected class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
     {
-      cCs.get(0).setClient(null);
+      type = t; 
+      param = p;
     }
+
+    @Override
+    public String toString()
+    {
+      return type + "," + param;
+    }
+  }
+  
+  protected class MessageQueue {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      try {
+        while (messages.isEmpty()) 
+        {
+          wait();
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); } 
+
+      //The element to be removed
+      Message m = messages.remove(); 
+      return (m);
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  public void doorOpened ()
+  {
+    queue.put(new Message(MessageType.doorOpened_M, null));
+  }
+
+  public void buttonPressed ()
+  {
+    queue.put(new Message(MessageType.buttonPressed_M, null));
+  }
+
+  public void doorClosed ()
+  {
+    queue.put(new Message(MessageType.doorClosed_M, null));
+  }
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = queue.getNext();
+      
+      switch (m.type)
+      {
+        case doorOpened_M:
+          status = _doorOpened();
+          break;
+        case buttonPressed_M:
+          status = _buttonPressed();
+          break;
+        case doorClosed_M:
+          status = _doorClosed();
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
+
+  /**
+   * turn on light
+   */
+   public void turnLightOn(boolean on){
+    System.out.println("turns the light "+ (on ? "on" : "off"));
+    System.out.println("light " + (on ? "on" : "off"));
+    setLightOn(on);
+  }
+
+   public static  void someMethod(){
+    
   }
 
 
@@ -179,7 +383,10 @@ public class ClientImpl implements RemoteIClientImpl
   {
     String outputString = "";
     return super.toString() + "["+
-            "a" + ":" + getA()+ "]"
+            "lightOn" + ":" + getLightOn()+ "," +
+            "powerTubeOn" + ":" + getPowerTubeOn()+ "," +
+            "isDoorOpened" + ":" + getIsDoorOpened()+ "," +
+            "isButtonPressed" + ":" + getIsButtonPressed()+ "]"
      + outputString;
   }
 }

@@ -1,7 +1,7 @@
 
 class UmpleToJava {
   rmi_objectFactory_add_methods <<!<</*rmi_objectFactory_add_methods*/>><<#
-  append(realSb,"\n  {0} {1}({2}int component{3} proxy)",new Object[] {accessibility, "add"+uClass.getName(), argumentscomma+arguments,", "+uClass.getName()});
+  append(realSb,"\n  {0} {1}({2}int component{3} proxy)",new Object[] {accessibility, "add"+uClass.getName(), arguments+argumentscomma,", "+uClass.getName()});
   if(isInterface==true){
   #>>;<<#
   }
@@ -12,7 +12,7 @@ class UmpleToJava {
   }
   <<#
   }
-  append(realSb,"\n  {0} {1}({2}String component{3} proxy)",new Object[] {accessibility, "add"+uClass.getName(), argumentscomma+arguments, ", "+uClass.getName()});
+  append(realSb,"\n  {0} {1}({2}String component{3} proxy)",new Object[] {accessibility, "add"+uClass.getName(), arguments+argumentscomma, ", "+uClass.getName()});
   if(isInterface==true){
   #>>;<<#
   }
@@ -25,15 +25,15 @@ class UmpleToJava {
     }
   append(realSb,"\n  {0} {1}({2}{3} proxy)",new Object[] {accessibility, "create"+uClass.getName(), arguments,argumentscomma+uClass.getName()});
   if(isInterface==true){
-  #>>throws RemoteException;<<#
+  #>>;<<#
   }
   else{
 #>>
   {
-  <<=uClass.getName()>>Impl object = new <<=uClass.getName()>>Impl(<<=arguments>>);
+  <<=uClass.getName()>>Impl object = new <<=uClass.getName()>>Impl(<<=gClass.getLookup("constructorSignature_caller")>>);
   object.setRealSelf(proxy);
   object.startRMI();
-  listOf<<=uClass.getName()>>.append(object);
+  listOf<<=uClass.getName()>>.add(object);
   return object;
   }
   <<#

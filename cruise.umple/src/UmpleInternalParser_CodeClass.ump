@@ -395,7 +395,7 @@ private void setParentClassesDefaultInterface()
     {
       if(uClass.getExtendsClass()!=null) 
       {
-        if(!uClass.getExtendsClass().getNeedsDefaultInterface())
+        if(!uClass.getExtendsClass().getNeedsDefaultInterface()&&!uClass.getExtendsClass().getIsDistributed())
         {
           setParentDefaultInterfaceRecursive(uClass.getExtendsClass());
         }
@@ -429,9 +429,8 @@ private void analyzeDistributedClasses()
       { model.setDistributed(true);
         uClass.setIsDistributed(true);
         uClass.setHasProxyPattern(true);
-        uClass.setNeedsDefaultInterface(true);
       }
-	    else if (!uClass.getIsDistributed())
+	    if (!uClass.getIsDistributed())
       { if(checkIsDistributed(uClass))
         { 
         	uClass.setNeedsDefaultInterface(true);
@@ -470,16 +469,20 @@ private Boolean checkIsDistributed(UmpleClass uClass)
       uClass.setHasProxyPattern(true);
       uClass.setNeedsDefaultInterface(false);
       if (parentInterface.getIsDistributable())
-	    { 
-	      uClass.setNeedsDefaultInterface(false);
-	    }     
+      { 
+        uClass.setNeedsDefaultInterface(false);
+      }     
     }
   }
   if(distributedParents==1)
   {
-	  return true;
+    return true;
   }
 
+
+/*
+First it is checked if the class is distributable itself. Then the parent classes
+*/
   if(uClass.getIsDistributable())
   {
     uClass.setHasProxyPattern(true);
@@ -488,6 +491,9 @@ private Boolean checkIsDistributed(UmpleClass uClass)
     model.setDistributed(true);
     return true;
   }
+
+
+
 
   if(uClass.getExtendsClass()!=null) 
   {
