@@ -33,13 +33,13 @@ class UmpleToJava {
       }
       else
       {
-        <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this);
+        <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(<<=self>>);
       }
     }
 
     for (<<=gen.translate("type",av)>> <<=gen.translate("parameterOld",av)>> : <<=gen.translate("parameterOldMany",av)>>)
     {
-      <<=gen.translate("parameterOld",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+      <<=gen.translate("parameterOld",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(<<=self>>);
     }
     wasSet = true;
     <<# if (customSetManyPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetManyPostfixCode,gen.translate("setManyMethod",av)); 

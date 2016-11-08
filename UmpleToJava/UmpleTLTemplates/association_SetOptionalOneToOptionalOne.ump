@@ -31,7 +31,7 @@ class UmpleToJava {
 
     if (!equals(<<=gen.relatedTranslate("parameterExisting",av)>>))
     {
-      <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(this);
+      <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(<<=self>>);
     }
     wasSet = true;<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<=
     (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,"1"):"")>>

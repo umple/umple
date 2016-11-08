@@ -10,7 +10,7 @@ class UmpleToJava {
       }
       else
       {
-        <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+        <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(<<=self>>);
       }
     }!>>
 }
