@@ -1,0 +1,16 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+import java.util.*;
+interface IClient
+{
+  public Microwave getMicrowave(int index);
+  public int numberOfMicrowaves();
+  public boolean hasMicrowaves();
+  public int indexOfMicrowave(Microwave aMicrowave);
+  public boolean addMicrowave(Microwave aMicrowave);
+  public boolean removeMicrowave(Microwave aMicrowave);
+  public boolean addMicrowaveAt(Microwave aMicrowave, int index);
+  public boolean addOrMoveMicrowaveAt(Microwave aMicrowave, int index);
+  public void delete();
+}

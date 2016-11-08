@@ -50,6 +50,7 @@ class JavaSpecGenerator {
   		String customSetManyPrefixCode, String customSetManyPostfixCode, List<TraceItem> traceItemAssocRemoves, List<TraceItem> traceItemAssocAdds, UmpleClass uClass, boolean sortMethodAdded, String umpleSourceFile,
   		Map<String,UncaughtException> uncaughtExceptions, UmpleClass globalUmpleClass, boolean addNewLine, boolean mulChangedToOne, boolean relMulChangedToOne, boolean mulChangedToN, boolean reqSetCode, boolean relReqCommonCode, boolean relReqSetCode, String scName) 
   	{
+     String self="this";
   	 this.uncaughtExceptions = uncaughtExceptions;
   	 this.globalUmpleClass = globalUmpleClass;
   #>><<@ UmpleToJava.association_set_specialization_reqCommonCode >><<# 

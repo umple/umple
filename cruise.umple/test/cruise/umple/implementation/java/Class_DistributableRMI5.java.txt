@@ -1,0 +1,216 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+
+
+import java.util.*;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+public class MicrowaveImpl extends ClientImpl implements RemoteIMicrowaveImpl
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //MicrowaveImpl Attributes
+  private int x;
+  private String f;
+
+  //MicrowaveImpl Associations
+  private List<Client> clients;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public MicrowaveImpl(int aX, String aF)
+  {
+    super();
+    x = aX;
+    f = aF;
+    clients = new ArrayList<Client>();
+  }
+  //------------------------
+  // Reference to the proxy
+  //------------------------
+  Microwave realSelf;
+  
+  public void setRealSelf(Microwave self)
+  {
+    realSelf=self;
+  }
+
+  //------------------------
+  // Start RMI Server
+  //------------------------
+  public void startRMI()
+  {
+    
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setX(int aX)
+  {
+    boolean wasSet = false;
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setF(String aF)
+  {
+    boolean wasSet = false;
+    f = aF;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getX()
+  {
+    return x;
+  }
+
+  public String getF()
+  {
+    return f;
+  }
+
+  public Client getClient(int index)
+  {
+    Client aClient = clients.get(index);
+    return aClient;
+  }
+
+  public List<Client> getClients()
+  {
+    List<Client> newClients = Collections.unmodifiableList(clients);
+    return newClients;
+  }
+
+  public int numberOfClients()
+  {
+    int number = clients.size();
+    return number;
+  }
+
+  public boolean hasClients()
+  {
+    boolean has = clients.size() > 0;
+    return has;
+  }
+
+  public int indexOfClient(Client aClient)
+  {
+    int index = clients.indexOf(aClient);
+    return index;
+  }
+
+  public static int minimumNumberOfClients()
+  {
+    return 0;
+  }
+
+  public boolean addClient(Client aClient)
+  {
+    boolean wasAdded = false;
+    if (clients.contains(aClient)) { return false; }
+    clients.add(aClient);
+    if (aClient.indexOfMicrowave(realSelf) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aClient.addMicrowave(realSelf);
+      if (!wasAdded)
+      {
+        clients.remove(aClient);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeClient(Client aClient)
+  {
+    boolean wasRemoved = false;
+    if (!clients.contains(aClient))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = clients.indexOf(aClient);
+    clients.remove(oldIndex);
+    if (aClient.indexOfMicrowave(realSelf) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aClient.removeMicrowave(realSelf);
+      if (!wasRemoved)
+      {
+        clients.add(oldIndex,aClient);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addClientAt(Client aClient, int index)
+  {  
+    boolean wasAdded = false;
+    if(addClient(aClient))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfClients()) { index = numberOfClients() - 1; }
+      clients.remove(aClient);
+      clients.add(index, aClient);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveClientAt(Client aClient, int index)
+  {
+    boolean wasAdded = false;
+    if(clients.contains(aClient))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfClients()) { index = numberOfClients() - 1; }
+      clients.remove(aClient);
+      clients.add(index, aClient);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addClientAt(aClient, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    ArrayList<Client> copyOfClients = new ArrayList<Client>(clients);
+    clients.clear();
+    for(Client aClient : copyOfClients)
+    {
+      aClient.removeMicrowave(realSelf);
+    }
+    super.delete();
+  }
+
+
+  public String toString()
+  {
+    String outputString = "";
+    return super.toString() + "["+
+            "x" + ":" + getX()+ "," +
+            "f" + ":" + getF()+ "]"
+     + outputString;
+  }
+}

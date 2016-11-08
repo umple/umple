@@ -1,0 +1,24 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+public class Client implements ClientI
+{
+  RemoteIClientImpl realObject;
+  public Client(String component)
+  {
+    realObject = UmpleObjectFactory.theInstance.addClient(component, this);
+  }
+  public Client(int component)
+  {
+    realObject = UmpleObjectFactory.theInstance.addClient(component, this);
+  }
+  public Client()
+  {
+    realObject = UmpleObjectFactory.theInstance.createClient(this);
+  }
+
+}
