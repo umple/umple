@@ -29,10 +29,6 @@ var JJSdiagram = {
 
 	JJsUtils: {
 
-		getCellCenter: function (cellId) {
-			// point of this method is to help create an association path for self-associated classes
-		},
-
 		// from JointJS tutorial: http://resources.jointjs.com/tutorial/multiple-links-between-elements
 		adjustVertices: function (graph, cell) {
 
@@ -131,6 +127,12 @@ var JJSdiagram = {
 			};
 
 			attrs.forEach(parseAttributes);
+
+			// If there are no attributes, then reveal their absence
+			if (attributes.length == 0 && Page.showAttributes) {
+				attributes.push(" ");
+			}
+
 			return attributes;
 		},
 
@@ -144,6 +146,11 @@ var JJSdiagram = {
 			};
 
 			meths.forEach(parseMethods);
+
+			// If there are no methods, then reveal their absence
+			if (methods.length == 0 && Page.showMethods) {
+				methods.push(" ");
+			}
 
 			return methods;
 		},
@@ -168,6 +175,44 @@ var JJSdiagram = {
 				}
 			return symbol;
 		},
+
+	    updateRectangles: function(UMLclass) {
+
+	        var attrs = UMLclass.get('attrs');
+
+	        var rects = [
+	            { type: 'name', text: UMLclass.getClassName() },
+	            { type: 'attrs', text: UMLclass.get('attributes') },
+	            { type: 'methods', text: UMLclass.get('methods') }
+	        ];
+
+	        var offsetY = 0, maxWidth = UMLclass.attributes.size.width;
+
+	        _.each(rects, function(rect) {
+
+	            var lines = _.isArray(rect.text) ? rect.text : [rect.text];
+	            var rectHeight = lines[0] != null ? lines.length * 9 + 10 : 0;
+
+		        // Calculate the longest attribute or method string
+	            lines.forEach(function(line) {
+	            	if (line !== null) {
+		            	if (line.length * 4 > maxWidth) {
+		            		maxWidth = line.length * 4;
+		            	}	            		
+	            	}
+	            });
+
+	            attrs['.uml-class-' + rect.type + '-text'].text = lines.join('\n');
+	            attrs['.uml-class-' + rect.type + '-rect'].height = rectHeight;
+	            attrs['.uml-class-' + rect.type + '-rect'].transform = 'translate(0,' + offsetY + ')';
+
+	            offsetY += rectHeight;
+	        });
+
+	        // Now resize the parent SVG to offsetY and the longest string
+	        var current_size = UMLclass.attributes.size;
+	        UMLclass.resize(maxWidth, offsetY);
+	    },
 
 		makeClasses: function (model) {
 			var classes = new Array();
@@ -207,11 +252,16 @@ var JJSdiagram = {
 						position: UMLclass.position,
 						size: UMLclass.position,
 						name: [UMLclass.name],
-						attributes: JJSdiagram.JJsParse.addAttributes(UMLclass.attributes),
-						methods: JJSdiagram.JJsParse.addMethods(UMLclass.methods),
+						attributes: Page.showAttributes ? JJSdiagram.JJsParse.addAttributes(UMLclass.attributes) : null,
+						methods: Page.showMethods ? JJSdiagram.JJsParse.addMethods(UMLclass.methods) : null,
 						id: UMLclass.id
 					});
 				}
+
+				// Update all class views to properly fit the contained text strings.
+				new_class.attr( {'.uml-class-attrs-text': { 'font-size': '7pt' },
+								'.uml-class-methods-text': { 'font-size': '7pt'} });
+				JJSdiagram.JJsParse.updateRectangles(new_class);
 
 				switch (UMLclass.displayColor) {
 
