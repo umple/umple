@@ -18,6 +18,8 @@ var JJSdiagram = {
 
 		graph.addCells(this.JJsParse.makeClasses(model));
 		graph.addCells(this.JJsParse.makeAssociations(model));
+		graph.addCells(this.JJsParse.makeGeneralizationLinks(model));
+		graph.addCells(this.JJsParse.makeInterfaceLinks(model));
 
 		// call this after having added all diagram elements to scale them to fit the available space
 		this.paper.scaleContentToFit({padding: 15});
@@ -192,6 +194,13 @@ var JJSdiagram = {
 						methods: JJSdiagram.JJsParse.addMethods(UMLclass.methods),
 						id: UMLclass.id
 					});
+					// Assign default Interface colours if not already assigned
+					if (UMLclass.displayColor === "") {
+						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#eed3d3' },
+							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#ffe3e3' },
+							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#ffe3e3' } });
+						UMLclass.displayColor = "assigned";
+					}
 				}
 				else {
 					new_class = new joint.shapes.uml.Class({
@@ -230,16 +239,63 @@ var JJSdiagram = {
 							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#e3e3e3' } });
 						break;
 
-					default:
+					case "":
 						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#d3d3d3' },
 							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#e3e3e3' },
 							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#e3e3e3' } });
+						break;
+
+					case "assigned":
+						break;
+
+					default:
+						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': UMLclass.displayColor },
+							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': UMLclass.displayColor },
+							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': UMLclass.displayColor } });
 				}
 
 				classes.push(new_class);
 			};
 
+			var findGeneralizations = function (UMLclass) {
+				if (UMLclass.extendsClass !== undefined) {
+					if (UMLclass.extendsClass !== "") {
+						var generalization = {
+							source: { id: UMLclass.id },
+							target: { id: UMLclass.extendsClass }
+						};
+					model.generalizationLinks.push(generalization);
+					}
+				}
+			};
+
+			var findInterfaces = function (UMLclass) {
+				if (UMLclass.implementedInterfaces !== undefined) {
+					if (UMLclass.implementedInterfaces !== []) {
+						UMLclass.implementedInterfaces.forEach( function (each) {
+							var interfaceLink = {
+								source: { id: UMLclass.id },
+								target: { id: each.interfacesName }
+							};
+							model.interfaceLinks.push(interfaceLink);
+						});
+					}
+				}
+			};
+
+			var findAbstracts = function (UMLclass) {
+				if (UMLclass.isAbstract === "true") {
+					// TODO: determine the pattern from an actual example
+					console.log(">>>>>>>>>>>>>>> found an ABSTRACT");
+				}
+			};
+
 			model.umpleClasses.forEach(instantiate);
+			model.generalizationLinks = new Array();;
+			model.umpleClasses.forEach(findGeneralizations);
+			model.interfaceLinks = new Array();;
+			model.umpleClasses.forEach(findInterfaces);
+			model.umpleClasses.forEach(findAbstracts);
 
 			return classes;
 		},
@@ -318,15 +374,66 @@ var JJSdiagram = {
 					new_assoc.attr({ '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} });
 				}
 
-				// console.log(new_assoc);
-
 				associations.push(new_assoc);
 			};
-
 
 			model.umpleAssociations.forEach(instantiate);
 
 			return associations;
+		},
+
+		makeGeneralizationLinks: function (model) {
+			var generalizationLinks = new Array();
+
+			var setPathVertices = function (source, target) {
+				var sourceCell = JJSdiagram.paper.model.getCell(source);
+				var targetCell = JJSdiagram.paper.model.getCell(target);
+				var sourceCellBBox = JJSdiagram.paper.findViewByModel(sourceCell).getBBox();
+				var targetCellBBox = JJSdiagram.paper.findViewByModel(targetCell).getBBox();
+
+				var point1 = {
+					x: sourceCellBBox.center().x,
+					y: targetCellBBox.y + targetCellBBox.height + 25
+				};
+				var point2 = {
+					x: targetCellBBox.center().x,
+					y: targetCellBBox.y + targetCellBBox.height + 25
+				};
+
+				return [point1, point2];
+			}
+
+			var instantiate = function (UMLgeneralization) {
+				UMLgeneralization.vertices = setPathVertices(UMLgeneralization.source.id, UMLgeneralization.target.id);
+				var new_generalization = new joint.shapes.uml.Generalization(UMLgeneralization)
+
+				new_generalization.attr({ '.connection-wrap': {fill: 'none'},
+										  '.connection': {fill: 'none'},
+										  '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'white' }});
+
+				generalizationLinks.push(new_generalization);
+			}
+
+			model.generalizationLinks.forEach(instantiate);
+
+			return generalizationLinks;
+		},
+
+		makeInterfaceLinks: function (model) {
+			var interfaceLinks = new Array();
+
+			var instantiate = function (UMLinterface) {
+				var new_interface = new joint.shapes.uml.Implementation(UMLinterface)
+
+				new_interface.attr({'.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'white' },
+       						        '.connection': { 'stroke-dasharray': '3,3' }});
+
+				interfaceLinks.push(new_interface);
+			}
+
+			model.interfaceLinks.forEach(instantiate);
+
+			return interfaceLinks;
 		}
 	}
 };
