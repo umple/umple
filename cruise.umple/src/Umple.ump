@@ -39,7 +39,9 @@ class UmpleModel
 
   // The Umple file (.ump) that was used to populate the model.
   UmpleFile umpleFile;
-
+  Boolean distributeOn=true;
+  Boolean distributeForced=false;
+  Boolean distributed=false;
   defaultPackage = null;
   GenerateTarget[] generates;
   Boolean shouldGenerate = true;
@@ -487,6 +489,9 @@ class UmpleClassifier
 
   * -> * Depend;
   
+  // Specifies whether or not the Umple class or implemented classes are distributable with RMI technology.
+  Boolean isDistributable = false;
+  String distributeTechnology="RMI";
   UmpleModel sourceModel;
 
   // The constants contained within the Umple Classifier.
@@ -524,7 +529,9 @@ class UmpleClass
   depend cruise.umple.util.*;
 
   isA UmpleClassifier;
-
+  Boolean hasProxyPattern = false;
+  Boolean needsDefaultInterface=false;
+  Boolean isDistributed = false;
   // Specifies whether or not in the filter
   Boolean filteredin = false;
 

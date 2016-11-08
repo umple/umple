@@ -1,0 +1,81 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+import java.util.*;
+public class Microwave implements IMicrowave
+{
+  IMicrowave realObject;
+  public Microwave(int aX, String aF, String component)
+  {
+    realObject = UmpleObjectFactory.theInstance.addMicrowave(aX,aF, component, this);
+  }
+  public Microwave(int aX, String aF, int component)
+  {
+    realObject = UmpleObjectFactory.theInstance.addMicrowave(aX,aF, component, this);
+  }
+  public Microwave(int aX, String aF)
+  {
+    realObject = UmpleObjectFactory.theInstance.createMicrowave(aX,aF, this);
+  }
+  public void setRealSelf(Microwave self)
+  {
+    realObject.setRealSelf(self);
+  }
+  public boolean setX(int aX)
+  {
+    return realObject.setX(aX);
+  }
+  public boolean setF(String aF)
+  {
+    return realObject.setF(aF);
+  }
+  public int getX()
+  {
+    return realObject.getX();
+  }
+  public String getF()
+  {
+    return realObject.getF();
+  }
+  public Client getClient(int index)
+  {
+    return realObject.getClient(index);
+  }
+  public int numberOfClients()
+  {
+    return realObject.numberOfClients();
+  }
+  public boolean hasClients()
+  {
+    return realObject.hasClients();
+  }
+  public int indexOfClient(Client aClient)
+  {
+    return realObject.indexOfClient(aClient);
+  }
+  public boolean addClient(Client aClient)
+  {
+    return realObject.addClient(aClient);
+  }
+  public boolean removeClient(Client aClient)
+  {
+    return realObject.removeClient(aClient);
+  }
+  public boolean addClientAt(Client aClient, int index)
+  {
+    return realObject.addClientAt(aClient,index);
+  }
+  public boolean addOrMoveClientAt(Client aClient, int index)
+  {
+    return realObject.addOrMoveClientAt(aClient,index);
+  }
+  public void delete()
+  {
+    realObject.delete();
+  }
+  public String toString()
+  {
+    return realObject.toString();
+  }
+
+}

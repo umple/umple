@@ -16,9 +16,9 @@ class UmpleToJava {
     <<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterOne",av)>>;
     if (<<=gen.translate("parameterExisting",av)>> != null && !<<=gen.translate("parameterExisting",av)>>.equals(<<=gen.translate("parameterOne",av)>>))
     {
-      <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+      <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(<<=self>>);
     }
-    if (!<<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this))
+    if (!<<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(<<=self>>))
     {
       <<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterExisting",av)>>;
       wasSet = false;

@@ -1,0 +1,92 @@
+
+class Microwave{
+  
+  boolean lightOn=false;
+  boolean powerTubeOn=false;
+  boolean isDoorOpened=false;
+  boolean isButtonPressed=false;
+  const Integer TimeIncrementMs = 1000;
+    distributableRMI;
+  queued operatingMicrowaveStateMachine{
+    readyToCook{
+      entry / {
+        // turn off light
+        turnOff();
+      }
+      doorOpened /{setIsDoorOpened(true);}-> doorOpen;
+      buttonPressed /{setIsButtonPressed(true);}-> cooking;
+    }
+    
+    doorOpen{
+      entry / {
+        // turn on light
+        turnLightOn(true);
+      }
+      doorClosed /{setIsDoorOpened(false);} -> readyToCook;
+    }
+    
+    cooking{
+      entry / { 
+        // turn on light
+        turnLightOn(true);
+        // energize power tube
+        energizePowerTube(true);
+        //release a button
+        setIsButtonPressed(false);  
+      }
+      
+      doorOpened /{setIsDoorOpened(true);}-> cookingInterrupted;
+      buttonPressed /{setIsButtonPressed(true);}-> cookingExtended;
+    }
+    
+    cookingInterrupted{
+      entry / {turnOff();}
+      doorClosed /{setIsDoorOpened(false);} -> readyToCook;   
+    }
+    
+    cookingComplete{
+      entry / {turnOff();}
+      doorOpened /{setIsDoorOpened(true);} -> doorOpen;
+      buttonPressed /{setIsButtonPressed(true);}-> cooking;
+    }
+    
+    cookingExtended{
+      entry / {
+        //release a button
+        setIsButtonPressed(false);
+      }
+      doorOpened /{setIsDoorOpened(true);} -> cookingInterrupted;
+      buttonPressed /{setIsButtonPressed(true);}-> cookingExtended;
+    }
+  }
+    
+  
+  // turn on light
+  public void turnLightOn(boolean on){
+    System.out.println("turns the light "+ (on ? "on" : "off"));
+    System.out.println("light " + (on ? "on" : "off"));
+    setLightOn(on);
+  }
+  
+  // energize/deenergize power tube
+  public void energizePowerTube(boolean on){
+    System.out.println("energizes/deenergize the power tube");
+    System.out.println("power tube " + (on ? "on" : "off"));
+    setPowerTubeOn(on);
+  }
+  
+  public void turnOff() {
+    // turn off light
+    turnLightOn(false);
+    //release button
+    setIsButtonPressed(false);
+    // de-energize power tube
+    energizePowerTube(false);
+  }
+  public static void someMethod()
+  {}
+
+}
+
+
+
