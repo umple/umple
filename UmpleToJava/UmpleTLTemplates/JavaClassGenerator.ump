@@ -43,7 +43,7 @@ class JavaClassGenerator {
     // Add a newline to the end of the input
     private void appendln(StringBuilder buffer, String input, Object... variables)
     {
-        append(buffer, input + "\n", variables);
+        append(buffer, input + NL, variables);
     }
 
     // This method will be used to append formatted strings
