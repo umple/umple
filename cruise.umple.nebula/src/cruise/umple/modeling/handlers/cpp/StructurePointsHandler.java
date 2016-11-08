@@ -621,7 +621,7 @@ public class StructurePointsHandler{
 		String second= ports.isEmpty()?CPPCommonConstants.NIL: generationValueGetter.getString(ports.get(ports.size()-1), IModelingElementDefinitions.NAME);
 		
 		String enumImplementation = generationValueGetter.generate(ICppDefinitions.ENUM_IMPLEMENTATION, uClass,
-				CommonConstants.UNDERSCORE+ protocolName, 
+				protocolName+ CommonConstants.UNDERSCORE, 
 				enumValues, first, second,stringValues, GenerationArgumentDescriptor.arg(ICppDefinitions.OWING_NAMESPACE_OBJECT, uClass), StringUtil.firstCharacterToLowerCase(PORT));
 		
 		generationValueGetter.generationPointString(uClass, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
@@ -681,7 +681,7 @@ public class StructurePointsHandler{
 		String second= list.size()<2?list.get(0).getKey(): list.get(list.size()-1).getKey();
 		
 		String enumImplementation = generationValueGetter.generate(ICppDefinitions.ENUM_IMPLEMENTATION, uClass,
-				CommonConstants.UNDERSCORE+ protocolName, 
+				protocolName+ CommonConstants.UNDERSCORE, 
 				enumValues, first, second,stringValues, GenerationArgumentDescriptor.arg(ICppDefinitions.OWING_NAMESPACE_OBJECT, uClass)/*, StringUtil.firstCharacterToLowerCase(EVENT)*/);
 		
 //		String enumImplementation = generationValueGetter.generate(ICppDefinitions.ENUM_IMPLEMENTATION, uClass,

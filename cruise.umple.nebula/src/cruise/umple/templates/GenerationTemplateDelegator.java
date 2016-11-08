@@ -59,6 +59,19 @@ public class GenerationTemplateDelegator implements IGenerationTemplateRegistry{
 	
 	@Override
 	public String generate(String id, Object element, Object... arguments) {
+		if(element!= null){
+			String val= this.fRegistry.generator.generate(id, element, arguments);
+			if(val!= null){
+				return val;
+			}
+		}else{
+			String val= this.fRegistry.generator.generate(id, arguments);
+			if(val!= null){
+				return val;
+			}
+		}
+		
+		
 		List<IGenerationProcdure> list = this.procedureInvocations.get(id);
 		if(list== null){
 			return CommonConstants.BLANK;

@@ -234,7 +234,11 @@ public class UmpleStatemachineGenerationPolicy{
 	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_ON_COMPLETION_EVENT)
 	public static String getStateDoActivityOnCompletionEvent(@GenerationBaseElement State element){
-		Activity activity = element.getActivity(0);
+		List<Activity> activities = element.getActivities();
+		if(activities.isEmpty()){
+			return CommonConstants.BLANK;
+		}
+		Activity activity = activities.get(0);
 		if(activity== null){
 			return CommonConstants.BLANK;
 		}

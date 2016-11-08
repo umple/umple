@@ -1051,6 +1051,7 @@ public class CPPDependsPointsHandler{
 		Object rootType;
 		String typeName= CommonConstants.BLANK;
 		String includeStatement= CommonConstants.BLANK;
+		String depend= CommonConstants.BLANK;
 		if(isCustom){
 			if(type instanceof String== false){
 				return;
@@ -1079,6 +1080,13 @@ public class CPPDependsPointsHandler{
 			
 			String expectedModelPath = modelPath== null?generationValueGetter.generationPointString(rootType, IModelingDecisions.MODEL_PATH):modelPath;
 			includeStatement = generationValueGetter.use(ICppDefinitions.INCLUDE_STATEMENT, typeName, expectedModelPath);
+			
+			depend= typeName;
+			if(!expectedModelPath.isEmpty()){
+				depend= expectedModelPath+ "/"+ depend;
+			}
+			
+			generationValueGetter.addUniqueValue(ICppDefinitions.MAKE_FOLDERS, expectedModelPath); //$NON-NLS-1$
 		}
 		
 		SimpleEntry<Object, String> entry= new SimpleEntry<Object, String>(rootType, includeStatement);
