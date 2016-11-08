@@ -1591,28 +1591,14 @@ Action.updateUmpleDiagramCallback = function(response)
       }
     }
     else if(Page.useJointJSClassDiagram) {
-      // console.log(diagramCode);
+      console.log(diagramCode);
       var model = JSON.parse(diagramCode);
 
       var umpleCanvas = jQuery("#umpleCanvas");
-      umpleCanvas.html('<div id="jjsPaper"></div>');
 
-      var graph = new joint.dia.Graph;
+      var paper = JJSdiagram.makeDiagram(umpleCanvas, model);
 
-      // start my making the paper the same size as umpleCanvas and then scaling the model to fit
-      var paper = new joint.dia.Paper({
-          el: jQuery("#jjsPaper"),
-          width: umpleCanvas.width(),
-          height: umpleCanvas.height(),
-          model: graph,
-          gridSize: 1
-      });
-
-      graph.addCells(JJsParse.makeClasses(model));
-      graph.addCells(JJsParse.makeAssociations(model));
-
-      // call this after having added all diagram elements to scale them to fit the available space
-      paper.scaleContentToFit({padding: 15});
+      // console.log(graph);
 
       // zooming with the mouse wheel or finger swipe
       var MouseWheelHandler = function (event){
