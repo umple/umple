@@ -232,8 +232,7 @@ public class DistributedClassTest extends TemplateTest
   {
 	  UmpleModel model2 = createUmpleSystem(pathToInput , languagePath + "/Class_DistributableRMI_WithMethods.ump");
 	  model2.generate();
-	  
-	 // Assert.assertEquals(true, model2.getUmpleClass(0).getIsDistributed());  
+	    
 	  Assert.assertEquals(true, model2.getUmpleClass(0).getIsDistributable());
 	  Assert.assertEquals(true, model2.getUmpleClass(0).getHasProxyPattern()); 
 	  Assert.assertEquals("RMI", model2.getUmpleClass(0).getDistributeTechnology());
@@ -247,7 +246,6 @@ public class DistributedClassTest extends TemplateTest
 	// Assert.assertEquals(true, modelI.getUmpleInterface(0).getIsDistributed());  
 	 Assert.assertEquals("RMI", modelI.getUmpleInterface(0).getDistributeTechnology());
 	 Assert.assertEquals(true, modelI.getUmpleInterface(0).getIsDistributable());
-	 //Assert.assertEquals(true, modelI.getUmpleInterface(0).getDepends());
   }
   @Test
   public void InterfaceDependencyTest(){

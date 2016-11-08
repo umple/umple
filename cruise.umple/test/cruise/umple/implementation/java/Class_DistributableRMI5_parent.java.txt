@@ -88,7 +88,6 @@ public class ClientImpl extends CC implements ClientI, RemoteIClientImpl
   {
     boolean wasAdded = false;
     if (microwaves.contains(aMicrowave)) { return false; }
-    if (microwaves.contains(aMicrowave)) { return false; }
     microwaves.add(aMicrowave);
     if (aMicrowave.indexOfClient(realSelf) != -1)
     {

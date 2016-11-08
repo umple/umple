@@ -66,7 +66,6 @@ public class Client implements ClientI
   {
     boolean wasAdded = false;
     if (microwaves.contains(aMicrowave)) { return false; }
-    if (microwaves.contains(aMicrowave)) { return false; }
     microwaves.add(aMicrowave);
     if (aMicrowave.indexOfClient(this) != -1)
     {
