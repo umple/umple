@@ -1,0 +1,176 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+import java.util.*;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+public class ClientImpl extends CC implements ClientI, RemoteIClientImpl
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //ClientImpl Associations
+  private List<Microwave> microwaves;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public ClientImpl()
+  {
+    super();
+    microwaves = new ArrayList<Microwave>();
+  }
+  //------------------------
+  // Reference to the proxy
+  //------------------------
+  Client realSelf;
+  
+  public void setRealSelf(Client self)
+  {
+    realSelf=self;
+  }
+
+  //------------------------
+  // Start RMI Server
+  //------------------------
+  public void startRMI()
+  {
+    
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Microwave getMicrowave(int index)
+  {
+    Microwave aMicrowave = microwaves.get(index);
+    return aMicrowave;
+  }
+
+  public List<Microwave> getMicrowaves()
+  {
+    List<Microwave> newMicrowaves = Collections.unmodifiableList(microwaves);
+    return newMicrowaves;
+  }
+
+  public int numberOfMicrowaves()
+  {
+    int number = microwaves.size();
+    return number;
+  }
+
+  public boolean hasMicrowaves()
+  {
+    boolean has = microwaves.size() > 0;
+    return has;
+  }
+
+  public int indexOfMicrowave(Microwave aMicrowave)
+  {
+    int index = microwaves.indexOf(aMicrowave);
+    return index;
+  }
+
+  public static int minimumNumberOfMicrowaves()
+  {
+    return 0;
+  }
+
+  public boolean addMicrowave(Microwave aMicrowave)
+  {
+    boolean wasAdded = false;
+    if (microwaves.contains(aMicrowave)) { return false; }
+    if (microwaves.contains(aMicrowave)) { return false; }
+    microwaves.add(aMicrowave);
+    if (aMicrowave.indexOfClient(realSelf) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aMicrowave.addClient(realSelf);
+      if (!wasAdded)
+      {
+        microwaves.remove(aMicrowave);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeMicrowave(Microwave aMicrowave)
+  {
+    boolean wasRemoved = false;
+    if (!microwaves.contains(aMicrowave))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = microwaves.indexOf(aMicrowave);
+    microwaves.remove(oldIndex);
+    if (aMicrowave.indexOfClient(realSelf) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aMicrowave.removeClient(realSelf);
+      if (!wasRemoved)
+      {
+        microwaves.add(oldIndex,aMicrowave);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addMicrowaveAt(Microwave aMicrowave, int index)
+  {  
+    boolean wasAdded = false;
+    if(addMicrowave(aMicrowave))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMicrowaves()) { index = numberOfMicrowaves() - 1; }
+      microwaves.remove(aMicrowave);
+      microwaves.add(index, aMicrowave);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveMicrowaveAt(Microwave aMicrowave, int index)
+  {
+    boolean wasAdded = false;
+    if(microwaves.contains(aMicrowave))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMicrowaves()) { index = numberOfMicrowaves() - 1; }
+      microwaves.remove(aMicrowave);
+      microwaves.add(index, aMicrowave);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addMicrowaveAt(aMicrowave, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    ArrayList<Microwave> copyOfMicrowaves = new ArrayList<Microwave>(microwaves);
+    microwaves.clear();
+    for(Microwave aMicrowave : copyOfMicrowaves)
+    {
+      aMicrowave.removeClient(realSelf);
+    }
+    super.delete();
+  }
+
+}

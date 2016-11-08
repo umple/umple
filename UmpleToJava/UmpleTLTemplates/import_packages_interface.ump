@@ -5,7 +5,17 @@ class UmpleToJava {
     appendln(realSb, "");
     append(realSb, "import {0};",depend.getName());
   }
-
+/* code for distributable interfaces.
+    if(uInterface.getIsDistributed()==true)
+    { if(uInterface.getDistributeTechnology().equals("RMI"))
+      {
+        appendln(realSb, "");
+        append(realSb,"import {0};", "java.rmi.Remote");
+        appendln(realSb, "");
+        append(realSb,"import {0};", "java.rmi.RemoteException");
+      }
+    }
+*/
   Boolean hasDate = false;
   Boolean hasTime = false;
   for(Constant aConstant : uInterface.getConstants())

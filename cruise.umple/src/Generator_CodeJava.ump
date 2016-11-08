@@ -126,6 +126,19 @@ class JavaGenerator
     {
       writeUncaughtExceptionFile(mainClasses.get(0));
     }
+	  if(getModel().getDistributed())
+    {
+	    try
+	    {
+	      writeObjectFactoryClass();
+        writeObjectFactoryInterface();
+	    }    
+	    catch(Exception e)
+      {
+        throw new UmpleCompilerException("There was a problem with generating the Object factory. " + e, e);	
+      }
+    }
+	  
     postpare();
   }
   
@@ -1314,7 +1327,9 @@ class JavaGenerator
 
       return extendsString + implementsString; 
   }
-
+/*
+the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real name has changed because of proxy pattern mechanism
+*/
   private String getExtendClassesNames(UmpleClass uClass)
   {
       UmpleClass parent = uClass.getExtendsClass();
@@ -1323,7 +1338,9 @@ class JavaGenerator
           return "";
       }
       else{
-          return   " extends " + parent.getName();  
+        if(parent.getHasProxyPattern())
+          return   " extends " + parent.getName()+"Impl"; 
+        return   " extends " + parent.getName();   
       }
   }
 
@@ -1336,9 +1353,15 @@ class JavaGenerator
       }
       else{
           for (UmpleInterface uInterface : uClass.getParentInterface())
-          {
-              implementedInterfaces += uInterface.getName() + "," ; 
-          }
+          {   if(uInterface.getIsDistributable()==false)
+              {
+                implementedInterfaces += uInterface.getName() + "," ; 
+              }  
+              else
+              {
+                implementedInterfaces += "RemoteI"+uClass.getName()+ "," ;
+              }   
+          }            
           implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
           return " implements " + implementedInterfaces;
       }
@@ -1501,6 +1524,8 @@ class JavaGenerator
     return "UNKNOWN ID: " + keyName;
   }
   
+
+
   public void prepare()
   {
     List<UmpleClass> allClasses = new ArrayList<UmpleClass>(getModel().getUmpleClasses());
@@ -1667,7 +1692,7 @@ class JavaGenerator
   {
     injectIntoUnique("delete", injection, when, av, aClass);
   }
-    
+
   private void prepare(UmpleClass aClass)
   {
 
@@ -1797,6 +1822,7 @@ class JavaGenerator
     boolean hasTimedEvents = false;
     boolean foundQueued = false;    
     boolean foundPooled = false;
+    
     for (StateMachine sm : aClass.getStateMachines())
     {
       // Make sure state machine name is decapitalized
@@ -2361,7 +2387,6 @@ class JavaGenerator
       }
     }
   }
-  
   private void addImports(UmpleClass aClass, GeneratedClass genClass)
   {
     addAttributeImports(aClass,genClass);
@@ -2395,8 +2420,17 @@ class JavaGenerator
         genClass.addMultiLookup("import", "java.lang.Thread");
       }
     }
-  }
   
+    if(aClass.getIsDistributed()==true)
+    { if(aClass.getDistributeTechnology().equals("RMI"))
+      {
+        genClass.addMultiLookup("import", "java.rmi.registry.Registry");
+        genClass.addMultiLookup("import", "java.rmi.registry.LocateRegistry");
+        genClass.addMultiLookup("import", "java.rmi.RemoteException");
+        genClass.addMultiLookup("import", "java.rmi.server.UnicastRemoteObject");
+      }
+    }
+  }
   private String nameOf(Attribute av)
   {
     return nameOf(av.getName(),av.getIsList());
@@ -2414,22 +2448,317 @@ class JavaGenerator
     return typeOf(aType);
   }
   
+  private void WriteProxyFiles(String classContent,UmpleClass aClass,String path) throws IOException 
+  {
+    String interfaceName="I"+aClass.getName();
+    String proxyName=aClass.getName();
+    String proxyContent="";
+    String proxyImplements="";
+    String realClassName=aClass.getName();
+    String parentDefaultInterface="";
+    UmpleInterface parentInterface=null;
+    /* if distributed class has a distributable interface parent and does not need parent interface the remote interface needs to know the name of it
+    */
+    for(UmpleInterface interfaceParent: aClass.getParentInterface())
+    { 
+      if(interfaceParent.getIsDistributable()){
+        interfaceName=interfaceParent.getName();
+        parentInterface=interfaceParent;
+      }
+    }    
+
+    if(aClass.getExtendsClass()!=null){
+      if(aClass.getExtendsClass().getNeedsDefaultInterface())
+      {
+        parentDefaultInterface=", I"+aClass.getExtendsClass().getName();
+      }
+      if(aClass.getExtendsClass().getIsDistributed())
+      {
+        parentDefaultInterface=", RemoteI"+aClass.getExtendsClass().getName()+"Impl";
+      }
+    }
+    if (aClass.getHasProxyPattern())
+      realClassName=aClass.getName()+"Impl";
+
+    String remoteInterfaceName="RemoteI"+realClassName; 
+    if(aClass.getIsDistributed()==false)
+      remoteInterfaceName="I"+aClass.getName();
+
+    String remoteInterfaceContent="";
+    String interfaceContent="";
+
+    Integer scopeDepth=0;// if it is 1 means we are in the main class. If depth more than 1 it means we are in an inner class.
+    String[] lines = classContent.split(System.getProperty("line.separator"));
+    /*
+    ** Loop going through all of the class file line by line
+    */
+
+    for(int lineNumber=0; lineNumber<lines.length;lineNumber+=1)
+    {
+      String line=lines[lineNumber];
+      String[] tokensInMethod = line.split(" |<|>|\\(|\\)|,");
+
+      if (tokensInMethod!=null && tokensInMethod.length>0){
+        if ((tokensInMethod[0].contains("package"))||(lineNumber<3)||(tokensInMethod[0].contains("import"))) 
+        {
+          interfaceContent+=line+"\n";
+          proxyContent+=line+"\n";
+          remoteInterfaceContent+=line+"\n";
+        }
+      }
+      if((scopeDepth==0)&&(line.contains("class")))
+      { 
+        interfaceContent+="interface "+interfaceName;
+        if(!aClass.getIsDistributed())
+        {
+          if(parentDefaultInterface.length()>0)
+            interfaceContent+= " extends "+ parentDefaultInterface.substring(2);
+        }
+        proxyContent+="public class "+proxyName+" implements "+interfaceName;
+        interfaceContent+="\n{\n";
+        proxyContent+="\n{\n  "+remoteInterfaceName+" realObject;\n";
+        remoteInterfaceContent+="interface "+remoteInterfaceName+" extends java.rmi.Remote, "+interfaceName+parentDefaultInterface+"\n{\n}";
+      }
+      boolean isSerializable=true;
+      String lineWOSpace= line.replace(" ", "");
+      int position=-1;
+
+      if (scopeDepth==1){
+        if (line.contains(";")){
+          //proxyContent+="";
+          }
+        int startSignature=line.indexOf("(");
+        int endSignature=line.lastIndexOf(")");
+        for(int i=0;i<tokensInMethod.length;i+=1)
+        {
+          if ((tokensInMethod[i].contains("public"))&&(startSignature<endSignature))
+          {position=i;
+          }     
+          if((tokensInMethod[i].equals("enum"))||(tokensInMethod[i].equals("static"))||tokensInMethod[i].contains("abstract")||(tokensInMethod[i].equals("List")))
+          {
+            position=-1;
+            continue;  
+          }
+          if ((tokensInMethod[i].contains("[")))
+          {
+            isSerializable=false;
+          }  
+        } 
+        if(position>=0)
+        {
+          String methodType=line.substring(0,startSignature).replaceAll("\\s+$", "");// trimming the spaces on the right
+          String methodName=methodType.substring(methodType.lastIndexOf(" ")+1);
+
+          String returnString="return ";
+          if(methodType.indexOf("void")>=0)
+            returnString="";
+
+          String callerSignature="";
+          String arguments=line.substring(startSignature+1,endSignature).replaceAll("^\\s+", "");// trimming the spaces on the left
+          int depth=0;
+          for (int i=0;i<arguments.length();i+=1)
+          { 
+            if((arguments.charAt(i)=='(')||(arguments.charAt(i)=='['))
+              depth+=1;
+            else if((arguments.charAt(i)==')')||(arguments.charAt(i)==']'))
+              depth-=1;
+            else if (depth==0)
+            {
+              if(arguments.charAt(i)==',')
+              {
+                callerSignature+=arguments.substring(arguments.substring(0,i).replaceAll("\\s+$", "").lastIndexOf(" ")+1,i+1);
+              }
+            }
+          }
+          callerSignature+=arguments.substring(arguments.replaceAll("\\s+$", "").lastIndexOf(" ")+1,arguments.length());
+          
+          if (!methodName.equals(realClassName)){
+            if(!lineWOSpace.substring(lineWOSpace.length()-2,lineWOSpace.length()).contains("{"))
+            {
+              if (isSerializable==true)
+                interfaceContent+=line.substring(0,line.length())+";\n";
+              if(parentInterface==null)
+                proxyContent+=line.substring(0,line.length())+"\n  {\n    "+returnString+"realObject."+methodName+"("+callerSignature+");\n  }\n";
+            }
+           else
+            {
+              if (isSerializable==true)
+                interfaceContent+=line.substring(0,line.length()-1)+";\n";
+              if(parentInterface==null)
+                proxyContent+=line.substring(0,line.length()-1)+"\n  {\n  "+returnString+"realObject."+methodName+"("+callerSignature+");\n  }\n";
+            } 
+          }
+          else{
+            String lastArgument="";
+            if (!callerSignature.isEmpty())
+              lastArgument=", ";
+            methodType= "  public "+proxyName;
+            proxyContent+=methodType+"("+arguments+lastArgument+"String component)\n  {\n    realObject = UmpleObjectFactory.theInstance.add"+aClass.getName()+"("+callerSignature+lastArgument+"component, this);\n  }\n";
+            proxyContent+=methodType+"("+arguments+lastArgument+"int component)\n  {\n    realObject = UmpleObjectFactory.theInstance.add"+aClass.getName()+"("+callerSignature+lastArgument+"component, this);\n  }\n";
+
+            proxyContent+=methodType+"("+arguments+")\n  {\n    realObject = UmpleObjectFactory.theInstance.create"+aClass.getName()+"("+callerSignature+lastArgument+"this);\n  }\n";
+          }      
+        }
+      }
+       
+      scopeDepth += line.length() - line.replace("{", "").length(); // counting the number of "{" in the line and increasing the scopeDepth
+      scopeDepth -= line.length() - line.replace("}", "").length(); // counting the number of "}" in the line and increasing the scopeDepth      
+    }
+    interfaceContent+="}";
+
+    if(parentInterface!=null){
+    ILang language = new JavaProxyGenerator();
+    proxyContent+= language.getCode(getModel(),parentInterface);
+    }
+
+
+    proxyContent+="\n}";
+    String filename;
+
+    // write file only if needs default interface
+    if (aClass.getNeedsDefaultInterface()){
+	    filename = path + File.separator + interfaceName + ".java";
+	    File file = new File(path);
+	    file.mkdirs();
+	    BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+	
+	    //putting the code in the model and writing the file.
+	    getModel().getGeneratedCode().put(interfaceName,interfaceContent);
+	
+	    try
+	    {
+	      bw.write(interfaceContent);
+	      bw.flush();
+	    }
+	    finally
+	    {
+	      bw.close();
+	    } 
+    }
+
+    // write generated proxy code
+    if (aClass.getHasProxyPattern()){
+      filename = path + File.separator + proxyName + ".java";
+      File file = new File(path);
+      file.mkdirs();
+      BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+  
+      //putting the code in the model and writing the file.
+      getModel().getGeneratedCode().put(proxyName+"Proxy",proxyContent);
+  
+      try
+      {
+        bw.write(proxyContent);
+        bw.flush();
+      }
+      finally
+      {
+        bw.close();
+      } 
+    }
+
+
+// writing the generated code for the remote interface
+    if (aClass.getIsDistributed() && aClass.getDistributeTechnology().equals("RMI")){
+      filename = path + File.separator + remoteInterfaceName + ".java";
+      File fileRemote = new File(path);
+      fileRemote.mkdirs();
+      BufferedWriter bwRemote = new BufferedWriter(new FileWriter(filename));
+
+      //putting the code in the model and writing the file.
+      getModel().getGeneratedCode().put(remoteInterfaceName,remoteInterfaceContent);
+
+      try
+      {
+        bwRemote.write(remoteInterfaceContent);
+        bwRemote.flush();
+      }
+      finally
+      {
+        bwRemote.close();
+      } 
+    }
+  }
+
+  public void writeObjectFactoryClass() throws IOException
+  {
+    String name="UmpleObjectFactory";
+  	ILang language = new JavaObjectFactoryClassGenerator();
+    String path = StringFormatter.addPathOrAbsolute(getModel().getUmpleFile().getPath(), getOutput()); 
+    String filename = path + File.separator + name+".java";
+    File file = new File(path);
+    file.mkdirs();
+    BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+    String contents = language.getCode(getModel(),new UmpleElement(name));
+    getModel().getGeneratedCode().put(name,contents); 
+     try
+    {
+      bw.write(contents);
+      bw.flush();
+    }
+    finally
+    {
+      bw.close();
+    }  
+                       	
+  }
+  public void writeObjectFactoryInterface() throws IOException
+  {     
+    String name="IUmpleObjectFactory";
+    ILang language = new JavaObjectFactoryInterfaceGenerator();
+    String path = StringFormatter.addPathOrAbsolute(getModel().getUmpleFile().getPath(), getOutput()); 
+    String filename = path + File.separator + name +".java";
+    File file = new File(path);
+    file.mkdirs();
+    BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+    String contents = language.getCode(getModel(),new UmpleElement(name));
+    getModel().getGeneratedCode().put(name,contents); 
+     try
+    {
+      bw.write(contents);
+      bw.flush();
+    }
+    finally
+    {
+      bw.close();
+    }  
+                        
+  }
   public void writeFile(UmpleElement aClass) throws IOException
   {
-    ILang language = getLanguageFor(aClass);
     
+    String className=aClass.getName();
+    UmpleClass uClass;
+    if (aClass instanceof UmpleClass)
+    { 
+      uClass=(UmpleClass)aClass; 
+      if(uClass.getHasProxyPattern()){
+        aClass.setName(className+"Impl");
+          }
+    }
+    ILang language = getLanguageFor(aClass);
+    String contents = language.getCode(getModel(), aClass);
+    aClass.setName(className);
     String path = StringFormatter.addPathOrAbsolute( 
                   getModel().getUmpleFile().getPath(), 
                             getOutput()) + 
-                            aClass.getPackageName().replace(".", File.separator);
-    
-    String filename = path + File.separator + aClass.getName() + ".java";
+                            aClass.getPackageName().replace(".", File.separator);  
+    if (aClass instanceof UmpleClass)
+    { uClass=(UmpleClass)aClass;
+      if(uClass.getNeedsDefaultInterface()||uClass.getIsDistributed()||uClass.getHasProxyPattern()){
+        WriteProxyFiles(contents,uClass,path);
+      }    
+      if(uClass.getHasProxyPattern()){
+        aClass.setName(className+"Impl");
+          }    
+          
+    }
     File file = new File(path);
-    file.mkdirs();
-
+    file.mkdirs();   
+    String filename = path + File.separator + aClass.getName() + ".java";
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-    String contents = language.getCode(getModel(), aClass);
-    getModel().getGeneratedCode().put(aClass.getName(),contents);
+    getModel().getGeneratedCode().put(className,contents);
+
     try
     {
       bw.write(contents);
@@ -2453,20 +2782,29 @@ class JavaGenerator
         mainClasses.add((UmpleClass)aClass);
       }
     }
+    aClass.setName(className);
   }
 
   public void writeUncaughtExceptionFile(UmpleClass aClass)
   {
     try {
-   
+       // if the name of the class has been changed for proxy pattern, change it for the exceptions too.
+    String className=aClass.getName();
+    if(aClass.getHasProxyPattern())
+      aClass.setName(className+"Impl");
+
     ILang language = getLanguageFor(aClass);
     
+    aClass.setName(className);
+    if(aClass.getHasProxyPattern())
+      className=className+"Impl"; 
+
     String path = StringFormatter.addPathOrAbsolute( 
                   getModel().getUmpleFile().getPath(), 
                             getOutput()) + 
                             aClass.getPackageName().replace(".", File.separator);
-    
-    String filename = path + File.separator + aClass.getName() + ".java";
+
+    String filename = path + File.separator + className + ".java";
     File file = new File(path);
     file.mkdirs();
 
