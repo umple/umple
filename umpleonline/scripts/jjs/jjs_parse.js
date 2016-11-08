@@ -21,6 +21,10 @@ var JJSdiagram = {
 		graph.addCells(this.JJsParse.makeGeneralizationLinks(model));
 		graph.addCells(this.JJsParse.makeInterfaceLinks(model));
 
+		JJSdiagram.paper.model.getCells().forEach(function(cell) {
+			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model,cell);
+		});
+
 		// call this after having added all diagram elements to scale them to fit the available space
 		this.paper.scaleContentToFit({padding: 15});
 
@@ -71,7 +75,10 @@ var JJSdiagram = {
 
 			case 1:
 				// There is only one link between the source and target. No vertices needed.
-				cell.unset('vertices');
+
+				// Have commented this out, as the positive benefits are unknown,
+				//   but it certainly breaks the work established to make generalization links and self-referential associations
+				// cell.unset('vertices');
 				break;
 
 			default:
