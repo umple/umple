@@ -24,7 +24,7 @@ class UmpleToJava {
     <<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterOne",av)>>;
     if (<<=gen.translate("parameterExisting",av)>> != null && !<<=gen.translate("parameterExisting",av)>>.equals(<<=gen.translate("parameterOne",av)>>))
     {
-      boolean didRemove = <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+      boolean didRemove = <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(<<=self>>);
       if (!didRemove)
       {
         <<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterExisting",av)>>;
@@ -33,7 +33,7 @@ class UmpleToJava {
         return wasSet;
       }
     }
-    <<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this);
+    <<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(<<=self>>);
     wasSet = true;
     <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>

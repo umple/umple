@@ -1,0 +1,13 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+interface IClient
+{
+  public void setRealSelf(Client self);
+  public void startRMI();
+  public void delete();
+}

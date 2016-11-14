@@ -25,7 +25,7 @@ class UmpleToJava {
 >>
     if (<<=gen.relatedTranslate("parameterIsNew",av)>>)
     {
-      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(this);
+      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(<<=self>>);
     }
     else
     {

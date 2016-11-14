@@ -9,11 +9,11 @@ class UmpleToJava {
     <<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterOne",av)>>;
     if (<<=gen.translate("parameterExisting",av)>> != null && !<<=gen.translate("parameterExisting",av)>>.equals(<<=gen.translate("parameterOne",av)>>))
     {
-      <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+      <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(<<=self>>);
     }
     if (<<=gen.translate("parameterOne",av)>> != null)
     {
-      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this);
+      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(<<=self>>);
     }
     wasSet = true;
     <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
