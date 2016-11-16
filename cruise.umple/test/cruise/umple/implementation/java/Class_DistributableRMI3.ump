@@ -1,0 +1,14 @@
+interface ClientI
+{
+	distributableRMI;
+}
+class Client
+{
+  isA ClientI;
+  isA CC;
+}
+class CC
+{
+  public void someMethod1()
+  {}	
+}

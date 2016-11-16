@@ -1,0 +1,114 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+import java.util.*;
+import java.lang.Thread;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+public class Microwave implements IMicrowave
+{
+  RemoteIMicrowaveImpl realObject;
+  public Microwave(String component)
+  {
+    realObject = UmpleObjectFactory.theInstance.addMicrowave(component, this);
+  }
+  public Microwave(int component)
+  {
+    realObject = UmpleObjectFactory.theInstance.addMicrowave(component, this);
+  }
+  public Microwave()
+  {
+    realObject = UmpleObjectFactory.theInstance.createMicrowave(this);
+  }
+  public void setRealSelf(Microwave self)
+  {
+    realObject.setRealSelf(self);
+  }
+  public void startRMI()
+  {
+    realObject.startRMI();
+  }
+  public boolean setLightOn(boolean aLightOn)
+  {
+    return realObject.setLightOn(aLightOn);
+  }
+  public boolean setPowerTubeOn(boolean aPowerTubeOn)
+  {
+    return realObject.setPowerTubeOn(aPowerTubeOn);
+  }
+  public boolean setIsDoorOpened(boolean aIsDoorOpened)
+  {
+    return realObject.setIsDoorOpened(aIsDoorOpened);
+  }
+  public boolean setIsButtonPressed(boolean aIsButtonPressed)
+  {
+    return realObject.setIsButtonPressed(aIsButtonPressed);
+  }
+  public boolean getLightOn()
+  {
+    return realObject.getLightOn();
+  }
+  public boolean getPowerTubeOn()
+  {
+    return realObject.getPowerTubeOn();
+  }
+  public boolean getIsDoorOpened()
+  {
+    return realObject.getIsDoorOpened();
+  }
+  public boolean getIsButtonPressed()
+  {
+    return realObject.getIsButtonPressed();
+  }
+  public String getOperatingMicrowaveStateMachineFullName()
+  {
+    return realObject.getOperatingMicrowaveStateMachineFullName();
+  }
+  public OperatingMicrowaveStateMachine getOperatingMicrowaveStateMachine()
+  {
+    return realObject.getOperatingMicrowaveStateMachine();
+  }
+  public boolean _doorOpened()
+  {
+    return realObject._doorOpened();
+  }
+  public boolean _buttonPressed()
+  {
+    return realObject._buttonPressed();
+  }
+  public boolean _doorClosed()
+  {
+    return realObject._doorClosed();
+  }
+  public void delete()
+  {
+    realObject.delete();
+  }
+  public void doorOpened ()
+  {
+    realObject.doorOpened();
+  }
+  public void buttonPressed ()
+  {
+    realObject.buttonPressed();
+  }
+  public void doorClosed ()
+  {
+    realObject.doorClosed();
+  }
+  public void run ()
+  {
+    realObject.run();
+  }
+   public void turnLightOn(boolean on)
+  {
+  realObject.turnLightOn(on);
+  }
+  public String toString()
+  {
+    return realObject.toString();
+  }
+
+}

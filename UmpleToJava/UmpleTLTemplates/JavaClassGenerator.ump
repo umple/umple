@@ -43,7 +43,7 @@ class JavaClassGenerator {
     // Add a newline to the end of the input
     private void appendln(StringBuilder buffer, String input, Object... variables)
     {
-        append(buffer, input + "\n", variables);
+        append(buffer, input + NL, variables);
     }
 
     // This method will be used to append formatted strings
@@ -94,12 +94,24 @@ class JavaClassGenerator {
 // line <<= p.getLineNumber() >> "<<= uClass.getRelativePath(p.getFilename(),"Java") >>"
 <<# } #>>
 public <<# if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
+boolean hasParentInterface=uClass.hasParentInterface();
+if(uClass.getIsDistributed())
+{
+  if (hasParentInterface == false){
+        append(realSb," implements RemoteI"+uClass.getName());
+        hasParentInterface=true;
+      }
+      else{
+        if(uClass.getNeedsDefaultInterface())
+          append(realSb,", RemoteI"+uClass.getName());
+      } 
+}
 
 for (StateMachine smq : uClass.getStateMachines())
   {
     if (smq.isQueued())
     { 
-      if (uClass.hasParentInterface() == false){
+      if (hasParentInterface == false){
         append(realSb," implements Runnable");
       }
       else{
@@ -109,7 +121,7 @@ for (StateMachine smq : uClass.getStateMachines())
     }
     else if(smq.isPooled())
     {
-      if (uClass.hasParentInterface() == false){
+      if (hasParentInterface == false){
         append(realSb," implements Runnable");
       }
       else{
@@ -123,6 +135,8 @@ for (StateMachine smq : uClass.getStateMachines())
 {
   <<#getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
   getConstructorCode(realSb, model,uClass,gClass,gen,isFirst, false);
+  getProxyReferenceCode(realSb, model,uClass);
+  getDistributedMethodsCode(realSb, model,uClass);
   getAttributeCode(realSb, model,uClass,gClass,gen,isFirst,false);
   getStateMachine1Code(realSb, model,uClass,gClass,gen,isFirst,false);
   getAssociationCode(realSb, model,uClass,gClass,gen,isFirst,false);
@@ -133,8 +147,39 @@ for (StateMachine smq : uClass.getStateMachines())
   getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
   return realSb;
     } 
+    private String getDistributedMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
+    {if(uClass.getIsDistributed()){
+      if(uClass.getDistributeTechnology().equals("RMI"))
+    {#>>
+  //------------------------
+  // Start RMI Server
+  //------------------------
+  public void startRMI()
+  {
+    
+  }
+    <<#}}return realSb.toString();
+    }
+    private String getProxyReferenceCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
+    {if(uClass.getHasProxyPattern()){#>>
+  //------------------------
+  // Reference to the proxy
+  //------------------------
+  <<=uClass.getName().substring(0,uClass.getName().length()-4)>> realSelf;
+  
+  public void setRealSelf(<<=uClass.getName().substring(0,uClass.getName().length()-4)>> self)
+  {
+    realSelf=self;
+  }
+
+    <<#}return realSb.toString();
+    }
     private String getMemberCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
-  {#>><<@ UmpleToJava.members_AllStatics >><<@ UmpleToJava.members_AllAttributes >><<@ UmpleToJava.members_AllStateMachines >><<@ UmpleToJava.members_AllDoActivities >><<@ UmpleToJava.members_AllAssociations >><<@ UmpleToJava.members_AllHelpers >>
+  { 
+    String self="this";
+    if(uClass.getHasProxyPattern())
+      self="realSelf";
+  #>><<@ UmpleToJava.members_AllStatics >><<@ UmpleToJava.members_AllAttributes >><<@ UmpleToJava.members_AllStateMachines >><<@ UmpleToJava.members_AllDoActivities >><<@ UmpleToJava.members_AllAssociations >><<@ UmpleToJava.members_AllHelpers >>
   <<#return realSb.toString();
     }
   private UmpleClass globalUmpleClass = null;
@@ -170,7 +215,9 @@ for (StateMachine smq : uClass.getStateMachines())
     return realSb.toString(); 
   } 
   private String getAssociationCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
-  {
+  { String self="this";
+    if(uClass.getHasProxyPattern())
+      self="realSelf";
     String umpleSourceFile = "";
     Integer baseJavaLine = realSb.toString().split("\\n").length+3;#>><<@ UmpleToJava.association_Get_All >><<@ UmpleToJava.association_Set_All >>
   <<#return realSb.toString();
@@ -188,6 +235,9 @@ for (StateMachine smq : uClass.getStateMachines())
     } 
     private String getDeleteCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   {
+    String self="this";
+    if(uClass.getHasProxyPattern())
+      self="realSelf";
     Integer baseJavaLine = realSb.toString().split("\\n").length+1; #>><<@ UmpleToJava.delete_All >>
     <<# for (StateMachine smq : uClass.getStateMachines())
      {

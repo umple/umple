@@ -1,0 +1,42 @@
+interface ClientI
+{
+}
+class Client
+{
+  distributableRMI;
+  isA ClientI;
+  isA CC;
+}
+class CC
+{
+  isA Father;
+  public void someMethod1()
+  {}
+}
+class Father
+{
+	public void method1()
+	{
+
+	}
+}
+class Microwave
+{
+	isA Client;
+	Integer x;
+	String f;
+	* -- * Client;
+}
+class Main
+{
+  public static void main(String[] args)
+  {
+    Client c = new Client();
+    Client c2= new Client(0);
+    Microwave m1= new Microwave(12,"There");
+    Microwave m2= new Microwave(1,"Hi");
+    c.addMicrowave(m1);
+    m2.addClient(c2);
+    System.out.println(c2.getMicrowave(0).getF()+c.getMicrowave(0).getF());
+  }
+  }

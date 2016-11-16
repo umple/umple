@@ -24,7 +24,7 @@ class UmpleToJava {
       }
       if (<<=gen.translate("associationOne",av)>> != null)
       {
-        <<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(this);
+        <<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(<<=self>>);
       }
     }
     wasSet = true;<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<=

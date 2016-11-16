@@ -1,0 +1,31 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.24.0-7aed471 modeling language!*/
+
+
+
+public class CC
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public CC()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+   public void someMethod1(){
+    
+  }
+
+}

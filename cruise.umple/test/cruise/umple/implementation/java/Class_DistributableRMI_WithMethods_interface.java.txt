@@ -1,0 +1,36 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+import java.util.*;
+import java.lang.Thread;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+interface IMicrowave
+{
+  public void setRealSelf(Microwave self);
+  public void startRMI();
+  public boolean setLightOn(boolean aLightOn);
+  public boolean setPowerTubeOn(boolean aPowerTubeOn);
+  public boolean setIsDoorOpened(boolean aIsDoorOpened);
+  public boolean setIsButtonPressed(boolean aIsButtonPressed);
+  public boolean getLightOn();
+  public boolean getPowerTubeOn();
+  public boolean getIsDoorOpened();
+  public boolean getIsButtonPressed();
+  public String getOperatingMicrowaveStateMachineFullName();
+  public OperatingMicrowaveStateMachine getOperatingMicrowaveStateMachine();
+  public boolean _doorOpened();
+  public boolean _buttonPressed();
+  public boolean _doorClosed();
+  public void delete();
+  public void doorOpened ();
+  public void buttonPressed ();
+  public void doorClosed ();
+  public void run ();
+   public void turnLightOn(boolean on);
+   public void energizePowerTube(boolean on);
+   public void turnOff();
+  public String toString();
+}

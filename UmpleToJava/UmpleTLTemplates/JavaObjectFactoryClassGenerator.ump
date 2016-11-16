@@ -1,0 +1,119 @@
+use UmpleNotice.ump;
+use uncaught_exception.ump;
+use objectFactory_add_Declare_All.ump;
+use objectFactory_listOfObjects_All.ump;
+use objectFactory_listOfObjects_instantiation_All.ump;
+namespace cruise.umple.compiler.java;
+
+external interface ILang{}
+
+class JavaObjectFactoryClassGenerator {
+    depend cruise.umple.compiler.*;
+    depend cruise.umple.util.*;
+    depend java.util.*;
+    depend cruise.umple.parser.Position;
+
+    isA ILang;
+
+    // Add a newline to the end of the input
+    private void appendln(StringBuilder buffer, String input, Object... variables)
+    {
+        append(buffer, input + "\n", variables);
+    }
+
+    // This method will be used to append formatted strings
+    // i.e. format("Hello {0} {1}", "andrew","forward");
+    private void append(StringBuilder buffer, String input, Object... variables)
+    {
+        buffer.append(StringFormatter.format(input,variables));
+    }
+
+    emit getCode(UmpleModel model, UmpleElement uElement)(JavaObjectFactoryClassGenerator);
+
+
+    JavaObjectFactoryClassGenerator <<!<</*JavaObjectFactoryClassGenerator*/>><<@ UmpleToJava.UmpleNotice >>
+<<#
+  JavaGenerator gen = new JavaGenerator();
+  gen.setModel(model);
+  GeneratorHelper.generator = gen;
+  Boolean isInterface=false;
+#>>
+import java.io.File;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.*;
+
+
+public class UmpleObjectFactory implements IUmpleObjectFactory
+{
+  public static UmpleObjectFactory theInstance = new UmpleObjectFactory();
+  List<IUmpleObjectFactory> remoteFactories;
+
+  <<@ UmpleToJava.objectFactory_listOfObjects_All >>
+  Registry rmiRegistry;
+  int thisComponentId=0;
+  public int getThisComponentId(){
+  return thisComponentId;
+  }
+  private UmpleObjectFactory()
+  { 
+    <<@ UmpleToJava.objectFactory_listOfObjects_instantiation_All >>
+    remoteFactories= new ArrayList<IUmpleObjectFactory>();
+    initialize();
+  }
+  
+  public int getComponentId(String umpleComponentName)
+  {
+    int ComponentId=0;
+    return ComponentId;
+  }
+  public void initialize()
+  {    
+    int numberOfComponents=1;
+    /*
+    Read configuration file
+    */
+    startRMI();
+    for(int component=0;component<numberOfComponents;component=component+1)
+    {
+      if(component==getThisComponentId())
+      {
+        remoteFactories.add(this);
+      }
+      else
+      {
+      //connect-to remote
+      } 
+    }
+
+  }
+  public void startRMI() 
+  {/*
+    try {
+          
+      IUmpleObjectFactory stub = (IUmpleObjectFactory) UnicastRemoteObject.exportObject(this, 0);
+
+      //Bind the remote object's stub in the registry
+      rmiRegistry = LocateRegistry.getRegistry();
+      rmiRegistry.bind("UmpleObjectFactory", stub);
+      System.err.println("Component ready");
+      } catch (Exception e) {
+          System.err.println("Server exception: " + e.toString());
+          e.printStackTrace();
+      }
+
+      */
+  }
+  public void stopRMI() throws Exception 
+  {
+    rmiRegistry.unbind("UmpleObjectFactory");
+    //unexportObject(this, true);
+    //unexportObject(rmiRegistry, true);
+    System.out.println("Component stopped");
+    }
+  <<@ UmpleToJava.objectFactory_add_Declare_All >>
+  }
+ !>>
+}

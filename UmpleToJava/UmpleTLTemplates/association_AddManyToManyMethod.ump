@@ -20,13 +20,13 @@ class UmpleToJava {
     <<=gen.translate("associationMany",av)>>.add(<<=gen.translate("parameterOne",av)>>);<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 >>
-    if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("indexOfMethod",av)>>(this) != -1)
+    if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("indexOfMethod",av)>>(<<=self>>) != -1)
     {
       wasAdded = true;
     }
     else
     {
-      wasAdded = <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this);
+      wasAdded = <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(<<=self>>);
       if (!wasAdded)
       {
         <<=gen.translate("associationMany",av)>>.remove(<<=gen.translate("parameterOne",av)>>);
