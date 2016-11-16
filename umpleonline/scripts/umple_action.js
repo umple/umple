@@ -1591,7 +1591,6 @@ Action.updateUmpleDiagramCallback = function(response)
       }
     }
     else if(Page.useJointJSClassDiagram) {
-      console.log(diagramCode);
       var model = JSON.parse(diagramCode);
 
       var umpleCanvas = jQuery("#umpleCanvas");
@@ -1626,6 +1625,9 @@ Action.updateUmpleDiagramCallback = function(response)
       }
       // IE 6/7/8
       else {paperHolder.attachEvent("onmousewheel", MouseWheelHandler);}
+
+      // Simulate a click on the canvas to draw focus and enable keyboard shortcuts.
+      jQuery("#jjsPaper").click(function(){ Action.focusOn(Page.umpleCanvasId(), true);});
 
     }
     // Display static svg diagram
@@ -2039,109 +2041,70 @@ Mousetrap.bind(['shift+right'], function(e){
 
 //Functions for changing diagram view - change consistently in umple_page.js
 Mousetrap.bind(['ctrl+e'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickShowEditableClassDiagram();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickShowEditableClassDiagram();
+  return false; //equivalent to e.preventDefault();
 });
 
 Mousetrap.bind(['ctrl+j'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickShowJointJSClassDiagram();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickShowJointJSClassDiagram();
+  return false; //equivalent to e.preventDefault();
 });
 
 Mousetrap.bind(['ctrl+g'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickShowGvClassDiagram();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickShowGvClassDiagram();
+  return false; //equivalent to e.preventDefault();
 });
 
 Mousetrap.bind(['ctrl+s'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickShowGvStateDiagram();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickShowGvStateDiagram();
+  return false; //equivalent to e.preventDefault();
 });
 
 Mousetrap.bind(['ctrl+l'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickShowStructureDiagram();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickShowStructureDiagram();
+  return false; //equivalent to e.preventDefault();
 });
 
 //Functions for showing and hiding parts of the view
 Mousetrap.bind(['ctrl+t', 'ctrl+alt+shift+t'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickShowHideText();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickShowHideText();
+  return false; //equivalent to e.preventDefault();
 });
 
 Mousetrap.bind(['ctrl+d'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickShowHideCanvas();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickShowHideCanvas();
+  return false; //equivalent to e.preventDefault();
 });
 
 Mousetrap.bind(['ctrl+n', 'ctrl+alt+n'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickShowHideMenu();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickShowHideMenu();
+  return false; //equivalent to e.preventDefault();
 });
 
 // Functions for changing what is shown on the diagram
 Mousetrap.bind(['ctrl+a'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickToggleAttributes();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickToggleAttributes();
+  return false; //equivalent to e.preventDefault();
 });
 
 Mousetrap.bind(['ctrl+m'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickToggleMethods();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickToggleMethods();
+  return false; //equivalent to e.preventDefault();
 });
 
 Mousetrap.bind(['ctrl+r'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickToggleTraits();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickToggleTraits();
+  return false; //equivalent to e.preventDefault();
 });
 
 Mousetrap.bind(['ctrl+i'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickToggleTransitionLabels();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickToggleTransitionLabels();
+  return false; //equivalent to e.preventDefault();
 });
 
 Mousetrap.bind(['ctrl+k'], function(e){
-  if(jQuery('.focus').length != 0)
-  {
-    Page.clickToggleGuardLabels();
-    return false; //equivalent to e.preventDefault();
-  }
+  Page.clickToggleGuardLabels();
+  return false; //equivalent to e.preventDefault();
 });
 
 // Functions for editing the diagram - using shift
