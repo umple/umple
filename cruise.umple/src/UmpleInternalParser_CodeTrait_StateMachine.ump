@@ -143,7 +143,7 @@ class UmpleInternalParser
  						if (smTSignature.getDesStateMachine()!=""){
  							foundState = findMatchingStateForMapping(inClassfier,inClass.getStateMachines(),smTSignature);
  							if (foundState!=null) {
- 								addStateMachineToState(traitStateMachine, smTSignature, foundState);
+ 								addStateMachineToState(traitStateMachine, smTSignature, foundState,inClassfier);
  							} else {
  								AssignStateMachineToStateSearchProcess(inClassfier, traitStateMachine, uTrait, smTSignature);	
  							}
@@ -160,7 +160,7 @@ class UmpleInternalParser
 		for(Map.Entry<UmpleTrait, List<StateMachine>> entry : traitStateMachine.entrySet()){
 			foundState = findMatchingStateForMapping(inClassfier, entry.getValue() , smTSignature);
 			if (foundState!=null) {
-				addStateMachineToState(traitStateMachine, smTSignature, foundState);
+				addStateMachineToState(traitStateMachine, smTSignature, foundState,inClassfier);
 				return;
 			}
 		}
@@ -170,31 +170,44 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-	private void addStateMachineToState(Map<UmpleTrait, List<StateMachine>> traitStateMachine,	StateMachineTemplateSignature smTSignature, State foundState) {	
-		if (foundState.numberOfNestedStateMachines()==0){
-				StateMachine mustbeAdded = null;
-				UmpleTrait foundTrait=null;
-				labelT:
-				for(UmpleTrait uTrait : traitStateMachine.keySet()) {
-					for (StateMachine desSM: traitStateMachine.get(uTrait)){
-						if (desSM.getName().equals(smTSignature.getSrcStateMachine())){
-							mustbeAdded = desSM;
-							foundTrait=uTrait;
-							break labelT;
-						}
-					}
-				}
-				if (foundTrait!=null){
-					traitStateMachine.get(foundTrait).remove(mustbeAdded);
-					mustbeAdded.setName(foundState.getName());
-					foundState.addNestedStateMachine(mustbeAdded);
-					return;
-				} else {
-					//TODO show an error.
-				}					
-			} else {
-				//TODO merge the state machine with other state machines.
-		}
+	private void addStateMachineToState(Map<UmpleTrait, List<StateMachine>> traitStateMachine,	StateMachineTemplateSignature smTSignature, State foundState, UmpleClassifier inUmpleClassfier) {	
+    StateMachine mustbeAdded = null;
+    UmpleTrait foundTrait=null;
+    labelT:
+    for(UmpleTrait uTrait : traitStateMachine.keySet()) {
+      for (StateMachine desSM: traitStateMachine.get(uTrait)){ 
+        if (desSM.getName().equals(smTSignature.getSrcStateMachine())){
+        mustbeAdded = desSM;
+        foundTrait=uTrait;
+        break labelT;
+        }
+      }
+    }
+    if (foundState.numberOfNestedStateMachines()==0){
+    if (foundTrait!=null){
+      traitStateMachine.get(foundTrait).remove(mustbeAdded);
+      mustbeAdded.setName(foundState.getName());
+      foundState.addNestedStateMachine(mustbeAdded);
+      return;
+      } else {
+          //TODO show an error.
+      }         
+    } else {
+    //TODO merge the state machine with other state machines.
+      if (foundTrait!=null){
+        StateMachine smNested = foundState.getNestedStateMachine(0);          
+        if (!smNested.getStartState().getName().equals(mustbeAdded.getStartState().getName())){
+          StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(smNested,mustbeAdded);
+          if (checkSM!=null)  {
+            foundState.removeNestedStateMachine(smNested);
+            foundState.addNestedStateMachine(checkSM);
+          }
+        } else {          
+          addExtraStatesAndTransitions(smNested, mustbeAdded,inUmpleClassfier);
+          traitStateMachine.get(foundTrait).remove(mustbeAdded);
+        } 
+      }       
+    }
 	}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -930,10 +943,13 @@ class UmpleInternalParser
 				  
 			  } else {
 				  //comes from a trait
-//				  rTransition.getAction().getCodeblock().removeKeyword("superCall;");
-				  fTransition.getAction().getCodeblock().removeKeyword("superCall;");
-				  fTransition.getAction().getCodeblock().addKeyword("superCall;");
-				  fTransition.getAction().getCodeblock().findKeywordAndReplace("superCall;", rTransition.getAction().getCodeblock(),inSMachine2);
+          if (fTransition.getAction()!=null)  {
+            fTransition.getAction().getCodeblock().removeKeyword("superCall;");
+            fTransition.getAction().getCodeblock().addKeyword("superCall;");
+            fTransition.getAction().getCodeblock().findKeywordAndReplace("superCall;", rTransition.getAction().getCodeblock(),inSMachine2);
+          } else {
+            fTransition.setAction(rTransition.getAction());
+          }
 			  }
 		} else {
 			  if (inSMachine1.getRootStateMachine().getUmpleTrait()!=null){
@@ -942,9 +958,13 @@ class UmpleInternalParser
 					  if (fTransition.getAction()!=null)	fTransition.getAction().getCodeblock().findKeywordAndReplace("superCall;", rTransition.getAction().getCodeblock(),inSMachine2);  
 				  } else{
 //					  rTransition.getAction().getCodeblock().removeKeyword("superCall;");
-					  fTransition.getAction().getCodeblock().removeKeyword("superCall;");
-					  fTransition.getAction().getCodeblock().addKeyword("superCall;");
-					  fTransition.getAction().getCodeblock().findKeywordAndReplace("superCall;", rTransition.getAction().getCodeblock(),inSMachine2);
+					  if (fTransition.getAction()!=null)  {
+					   fTransition.getAction().getCodeblock().removeKeyword("superCall;");
+					   fTransition.getAction().getCodeblock().addKeyword("superCall;");
+					   fTransition.getAction().getCodeblock().findKeywordAndReplace("superCall;", rTransition.getAction().getCodeblock(),inSMachine2);
+					  } else{
+					    fTransition.setAction(rTransition.getAction());
+					  }
 				  }	  
 			  } else {
 				  //comes from a class
