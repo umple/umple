@@ -1,0 +1,42 @@
+trait T{
+  sm{
+    s1{
+     e2->s2; 
+    }
+    s2{
+      e1-> s1;
+    }
+  }
+}
+
+trait T1{
+  sm1{
+    t1{
+     e1-> t2; 
+    }
+    t2{
+     e2-> t1; 
+    }
+  }
+}
+
+trait T2{
+  isA T;
+  isA T1<sm1 as sm.s2>;
+}
+
+trait T3{
+    sm1{
+    t1{
+     e1-> /{ww();} t2; 
+    }
+    t2{
+     e2-> /{ww1();} t1; 
+    }
+  }
+}
+
+class A{
+  isA  T2;
+  isA T3<sm1 as sm.s2>;
+}
