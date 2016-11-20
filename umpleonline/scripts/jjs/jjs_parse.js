@@ -13,7 +13,8 @@ var JJSdiagram = {
 			width: container.width(),
 			height: container.height(),
 			model: graph,
-			gridSize: 1
+			gridSize: 1,
+			padding: 15
 		});
 
 		graph.addCells(this.JJsParse.makeClasses(model));
@@ -24,9 +25,6 @@ var JJSdiagram = {
 		JJSdiagram.paper.model.getCells().forEach(function(cell) {
 			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model,cell);
 		});
-
-		// call this after having added all diagram elements to scale them to fit the available space
-		this.paper.scaleContentToFit({padding: 15});
 
 		return this.paper;
 	},
@@ -291,15 +289,15 @@ var JJSdiagram = {
 						break;
 
 					case "lightgrey":
-						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#d3d3d3' },
-							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#e3e3e3' },
-							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#e3e3e3' } });
+						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#eaeaea' },
+							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#fafafa' },
+							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#fafafa' } });
 						break;
 
 					case "":
-						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#d3d3d3' },
-							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#e3e3e3' },
-							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#e3e3e3' } });
+						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#eaeaea' },
+							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#fafafa' },
+							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#fafafa' } });
 						break;
 
 					case "assigned":
