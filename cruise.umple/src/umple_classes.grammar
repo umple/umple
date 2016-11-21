@@ -43,7 +43,7 @@ constantDeclaration : const [[typedName]] (= [**value])? ;
 //TODO Should we use modifier for concrete methods [=modifier:public|protected|private]?
 //TODO Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?
 
-distributable- : [=distributable:distributableRMI|distributableWS] ;
+distributable- : [=distributable:distributable] [=distributeTech:RMI|WS]? ;
 proxyPattern- : [=proxyPattern:proxyPattern] ;
 moreCode- : [[codeLangs]] { [**code] }
 codeLangs- : ([=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|Alloy|UmpleSelf] ( , [=codeLang:Java|Alloy|RTCpp|SimpleCpp|Cpp|Php|Ruby|UmpleSelf] )* )?

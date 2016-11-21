@@ -3,7 +3,7 @@ interface ClientI
 }
 class Client
 {
-  distributableRMI;
+  distributable RMI;
   isA ClientI;
   isA CC;
 }

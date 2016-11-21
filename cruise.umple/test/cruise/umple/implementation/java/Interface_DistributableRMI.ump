@@ -1,4 +1,4 @@
 interface IClient
 {
-distributableRMI;
+distributable;
 }

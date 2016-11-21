@@ -42,6 +42,7 @@ class UmpleModel
   Boolean distributeOn=true;
   Boolean distributeForced=false;
   Boolean distributed=false;
+  String distributeTechnology="RMI";
   defaultPackage = null;
   GenerateTarget[] generates;
   Boolean shouldGenerate = true;

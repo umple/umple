@@ -427,6 +427,7 @@ private void analyzeDistributedClasses()
     { 
       if (model.getDistributeForced())
       { model.setDistributed(true);
+        uClass.setDistributeTechnology(model.getDistributeTechnology());
         uClass.setIsDistributed(true);
         uClass.setHasProxyPattern(true);
         uClass.setNeedsDefaultInterface(true);
@@ -537,8 +538,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     if (distributableToken.getValue("distributable")!= null)
     {
       aInterface.setIsDistributable(true);
-      if(distributableToken.getValue("distributable").equals("distributableRMI"))
-      	aInterface.setDistributeTechnology("RMI");
+      if(distributableToken.getValue("distributeTech")!=null)
+      	aInterface.setDistributeTechnology(distributableToken.getValue("distributeTech"));
     } 
   }
 
@@ -1059,8 +1060,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     if (classToken.getValue("distributable") != null)
     {
       aClass.setIsDistributable(true);
-      if(classToken.getValue("distributable").equals("distributableRMI"))
-      	aClass.setDistributeTechnology("RMI");
+      if(classToken.getValue("distributeTech")!=null)
+      	aClass.setDistributeTechnology(classToken.getValue("distributeTech"));
 
     }
     if (classToken.getValue("proxyPattern")!=null)
