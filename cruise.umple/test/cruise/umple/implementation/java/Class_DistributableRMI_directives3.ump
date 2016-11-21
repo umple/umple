@@ -11,7 +11,7 @@ class Father
 }
 class Microwave
 {	isA CC;
-	distributableRMI;
+	distributable;
 	public int method1(int f){
 
 	  return f*2;
@@ -26,5 +26,5 @@ interface IClient
 }
 interface ClientI
 {
-	distributableRMI;
+	distributable;
 }

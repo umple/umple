@@ -72,7 +72,7 @@ class Microwave{
 
 }
 class CC{
-  distributableRMI;
+  distributable RMI;
     public void energizePowerTube(boolean on){
     System.out.println("energizes/deenergize the power tube");
     System.out.println("power tube " + (on ? "on" : "off"));
