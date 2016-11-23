@@ -168,7 +168,6 @@ public class DistributedClassTest extends TemplateTest
 	      SampleFileWriter.assertPartialFileContent(expected, actual);
 	    }
 	  }
-	
   @Test
   public void TestDistributableDirectivesTest1()
   {
@@ -426,8 +425,9 @@ public class DistributedClassTest extends TemplateTest
   @Test
   public void ClassDistributedExtention5()
   {
-	  assertUmpleTemplateFor("java/Class_DistributableRMI5.ump", languagePath + "/Class_DistributableRMI5."+ languagePath +".txt", "Microwave");
+	  assertUmpleTemplateFor("java/Class_DistributableRMI6.ump", languagePath + "/Class_DistributableRMI5."+ languagePath +".txt", "Microwave");
   }
+ /* 
   @Test
   public void ClassDistributedExtention5_parent()
   {
@@ -458,7 +458,5 @@ public class DistributedClassTest extends TemplateTest
   public void ClassDistributedExtention5_objectFactory()
   {
 	  assertObjectFactory("java/Class_DistributableRMI5.ump", languagePath + "/Class_DistributableRMI5_UmpleObjectFactory."+ languagePath +".txt",languagePath + "/Class_DistributableRMI5_IUmpleObjectFactory."+ languagePath +".txt");
-  } 
-   
-	
+  } */
 }

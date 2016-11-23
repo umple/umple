@@ -1,4 +1,4 @@
-
+namespace distributed.rmi.withMethods;
 class Microwave{
   
   boolean lightOn=false;

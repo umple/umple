@@ -1,17 +1,31 @@
+namespace distributed.rmi5;
 interface ClientI
 {
 }
 class Client
 {
-  distributable RMI;
-  isA ClientI;
-  isA CC;
+  //isA ClientI;
+   id="s";
+  //key{id}
+  //isA CC;
+  public static void method2()
+  {
+
+  }
+  static int method3()
+  {
+    return 12;
+  }
 }
 class CC
 {
   isA Father;
   public void someMethod1()
   {}
+}
+class Client
+{
+  distributable RMI;
 }
 class Father
 {
@@ -22,9 +36,11 @@ class Father
 }
 class Microwave
 {
-	isA Client;
+  //isA Client;
+	distributable;
 	Integer x;
 	String f;
+  //key{x,f}
 	* -- * Client;
 }
 class Main
