@@ -893,7 +893,7 @@ class CompositeStructureTokenAnalyzer {
 		   }
 		   else if(sub.is("name"))
 		   {
-			   ConstraintNamed name = (ConstraintNamed)(ConstraintNameNameAnalyzer.analyzeName(cv,uClassifier,sub.getValue()));
+			   ConstraintNamed name = (ConstraintNamed)(ConstraintNameNameAnalyzer.analyzeName(cv,uClassifier,sub.getValue(),sub.getParentToken().getSubToken("constraintParameterList")!=null));
 			   cv.addElement(name);
 			   if (grandparentToken.is("precondition")||grandparentToken.is("postcondition"))
 			   { //if it was a precondition or postcondition, check if it matches any of the method arguments
