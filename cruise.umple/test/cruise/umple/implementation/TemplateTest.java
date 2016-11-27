@@ -248,6 +248,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Mentor.java");
 
     // Tear down Client
+    
     SampleFileWriter.destroy(pathToInput + "/Client.java");
    
     SampleFileWriter.destroy(pathToInput + "/java/IClient.java");

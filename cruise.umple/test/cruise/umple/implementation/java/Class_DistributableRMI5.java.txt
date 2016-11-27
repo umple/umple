@@ -1,14 +1,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
 
-
+package distributed.rmi5;
 import java.util.*;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class MicrowaveImpl extends ClientImpl implements RemoteIMicrowaveImpl
+public class MicrowaveImpl implements IMicrowaveImpl
 {
 
   //------------------------
@@ -26,9 +26,22 @@ public class MicrowaveImpl extends ClientImpl implements RemoteIMicrowaveImpl
   // CONSTRUCTOR
   //------------------------
 
-  public MicrowaveImpl(int aX, String aF)
+  public MicrowaveImpl(int aX, String aF, Microwave proxy)
   {
-    super();
+    realSelf=proxy;
+    realSelf.setRealObject(this);
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(this,0);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+      }
+    } 
     x = aX;
     f = aF;
     clients = new ArrayList<Client>();
@@ -44,11 +57,11 @@ public class MicrowaveImpl extends ClientImpl implements RemoteIMicrowaveImpl
   }
 
   //------------------------
-  // Start RMI Server
+  // Returning the Hashcode
   //------------------------
-  public void startRMI()
+  public int getHashCode()
   {
-    
+    return hashCode();
   }
 
   //------------------------
@@ -87,6 +100,9 @@ public class MicrowaveImpl extends ClientImpl implements RemoteIMicrowaveImpl
     return aClient;
   }
 
+  /**
+   * key{x,f}
+   */
   public List<Client> getClients()
   {
     List<Client> newClients = Collections.unmodifiableList(clients);
@@ -201,7 +217,6 @@ public class MicrowaveImpl extends ClientImpl implements RemoteIMicrowaveImpl
     {
       aClient.removeMicrowave(realSelf);
     }
-    super.delete();
   }
 
 

@@ -1,8 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
 
-interface ICC
+package distributed.rmi2;
+import java.rmi.RemoteException;
+public interface ICCImpl extends java.rmi.Remote
 {
-  public void delete();
-   public void someMethod1();
+  public void delete() throws RemoteException;
+   public void someMethod1() throws RemoteException;
 }

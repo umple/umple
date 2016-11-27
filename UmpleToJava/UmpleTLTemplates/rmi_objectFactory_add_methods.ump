@@ -36,19 +36,7 @@ class UmpleToJava {
   {
   <<=uClass.getName()>>Impl object = new <<=uClass.getName()>>Impl(<<=gClass.getLookup("constructorSignature_caller")+argumentscomma>>proxy);
   listOf<<=uClass.getName()>>.add(object);
-  while(true){
-    try
-    {  
-      UnicastRemoteObject.exportObject(object,0);
-      listOf<<=uClass.getName()>>.add(object);
-      proxy.setRealObject(object);
-      return object;
-    } 
-    catch (Exception e)
-    {
-      System.err.println("Server Exception: " + e.toString());
-    }
-  } 
+  return object; 
   }
   <<#
     }#>>!>>
