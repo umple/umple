@@ -323,33 +323,128 @@ class JsonMixedGenerator
   private String parseStateMachines (StateMachine sm) {
     String jsonForStateMachines = "";
     if(sm.getParentState() == null) 
-    { // This check shouldn't be needed
+    { // This check shouldn't be needed ... check carried over from GvStateDiagram
       String states = "";
-      int index = 0;
+      String transitions = "";
+      int indexState = 0;
+      int indexTrans = 0;
 
       for (State s : sm.getStates()) {
 
-        if (index > 0) {
+      	String internals = "";
+      	int indexInterns = 0;
+
+        if (indexState > 0) {
           states += ", ";
         }
-        index += 1;
+        indexState += 1;
+
+        // transitions += parseTransitions(s);
+        Set<Transition> allT = new HashSet<Transition>();
+        allT.addAll(s.getTransitions());
+        for (Transition t: allT) {
+
+          if (t.getFromState().equals(t.getNextState())) {
+            if (indexInterns > 0) {
+              internals += ", ";
+            }
+            indexInterns += 1;
+          	// make an internal transition
+          	internals += parseInternalTransition(t);
+          }
+          else {
+            if (indexTrans > 0) {
+              transitions += ", ";
+            }
+            indexTrans += 1;
+          	transitions += parseSingleTransition(t);
+          }
+
+        }
+
+        //if (transitions.charAt(transitions.length() - 1) == '}') {
+        //  transitions += ", ";
+        //}
 
         states += StringFormatter.format(
-          "{ {0}name{0}: {0}{1}{0}, {0}transitions{0}: [{2}], {0}actions{0}: [{3}] }",
+          "{ {0}name{0}: {0}{1}{0}, {0}id{0}: {0}{1}{0}, {0}actions{0}: [{2}], " +
+            "{0}isstart{0}: {3}, {0}isfinal{0}: {4}, " + 
+            "{0}size{0}: { {0}width{0}: 50, {0}height{0}: 50 }, " +
+            "{0}internals{0}: [{5}] }",
           "\"",
           s.getName(),
-          parseTransitions(s),
-          parseStateActions(s)
+          parseStateActions(s),
+          s.getIsStartState(),
+          s.getFinalState(),
+          internals
         );
       }
 
       jsonForStateMachines += StringFormatter.format(
-      "{ {0}name{0}: {0}{1}{0}, {0}states{0}: [{2}] } ",
+      "{ {0}name{0}: {0}{1}{0}, {0}states{0}: [{2}], {0}transitions{0}: [{3}] } ",
       "\"",
       sm.getName(),
-      states);
+      states,
+      transitions
+      );
     }
     return jsonForStateMachines;
+  }
+
+  private String parseSingleTransition (Transition t) {
+    String transitionLabel = t.getEvent().getName();
+    if (t.getGuard() != null) {
+      transitionLabel += " [" + t.getGuard().getExpression() + "]";
+    }
+
+    String actionCode = "";
+    Action action = t.getAction();
+    if (action != null) {
+      actionCode = action.getActionCode();
+      if (actionCode.equals("null")) {
+        actionCode = "";
+      }
+      else {
+        transitionLabel += " / " + actionCode;
+      }
+    }
+
+    String text = StringFormatter.format(
+      "{ {0}source{0}: { {0}id{0}: {0}{1}{0} }, " + 
+      "{0}target{0}: { {0}id{0}: {0}{2}{0} }, " +
+      "{0}labels{0}: [{ {0}position{0}: .5, {0}attrs{0}: { {0}text{0}: { {0}text{0}: " +
+      "{0}{3}{0} || {0}{0}, {0}font-weight{0}: {0}bold{0} } } }] }",
+      "\"",
+      t.getFromState().getName(),
+      t.getNextState().getName(),
+      transitionLabel
+    );
+
+    return text;
+  }
+
+  private String parseInternalTransition (Transition t) {
+    String transition = t.getEvent().getName();
+    if (t.getGuard() != null) {
+      transition += " [" + t.getGuard().getExpression() + "]";
+    }
+
+    String actionCode = "";
+    Action action = t.getAction();
+    if (action != null) {
+      actionCode = action.getActionCode();
+      if (actionCode.equals("null")) {
+        actionCode = "";
+      }
+      else {
+        transition += " / " + actionCode;
+      }
+    }
+    return StringFormatter.format(
+      "{0}{1}{0}",
+      "\"",
+      transition
+      );
   }
 
   private String parseTransitions (State s) {
@@ -363,30 +458,32 @@ class JsonMixedGenerator
       }
       index += 1;
 
-    String guardExpression = "";
+      String transitionLabel = t.getEvent().getName();
       if (t.getGuard() != null) {
-      guardExpression = t.getGuard().getExpression();
-    }
-
-    String actionCode = "";
-    Action action = t.getAction();
-      if (action != null) {
-      actionCode = action.getActionCode();
-      if (actionCode.equals("null")) 
-      {
-        actionCode = "";
+        transitionLabel += " [" + t.getGuard().getExpression() + "]";
       }
+
+      String actionCode = "";
+      Action action = t.getAction();
+      if (action != null) {
+        actionCode = action.getActionCode();
+        if (actionCode.equals("null")) {
+          actionCode = "";
+        }
+        else {
+          transitionLabel += " / " + actionCode;
+        }
       }
 
       transitions += StringFormatter.format(
-        "{ {0}fromstate{0}: {0}{1}{0}, {0}tostate{0}: {0}{2}{0}, " +
-        "{0}event{0}: {0}{3}{0}, {0}guard{0}: {0}{4}{0}, {0}action{0}: {0}{5}{0} }",
+        "{ {0}source{0}: { {0}id{0}: {0}{1}{0} }, " + 
+          "{0}target{0}: { {0}id{0}: {0}{2}{0} }, " +
+          "{0}labels{0}: [{ {0}position{0}: .5, {0}attrs{0}: { {0}text{0}: { {0}text{0}: " +
+          "{0}{3}{0} || {0}{0}, {0}font-weight{0}: {0}bold{0} } } }] }",
         "\"",
         t.getFromState().getName(),
         t.getNextState().getName(),
-        t.getEvent().getName(),
-        guardExpression,
-        actionCode
+        transitionLabel
       );
     }
     return transitions;
@@ -402,12 +499,14 @@ class JsonMixedGenerator
       index += 1;
 
       actions += StringFormatter.format(
-        "{ {0}actionType{0}: {0}{1}{0}, " +
-        "{0}actionCode{0}: {0}{2}{0}}",
+        "{0}{1} / {2}{0}",
         "\"",
         action.getActionType(),
         action.getActionCode()
       );
+      // Some action code is comprised of multiple lines, so requires being split
+      // into separate items.
+      actions = java.util.regex.Pattern.compile("[\\n]").matcher(actions).replaceAll("\",\"");
     }
     return actions;
   }
