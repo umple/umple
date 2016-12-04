@@ -98,15 +98,21 @@ document.write('<script type="text/javascript" src="scripts/umple_tooltips.js"><
 document.write('<script type="text/javascript" src="scripts/statetable/state_table_colourer.js"></script>');
 
 // JointJS support from local directories
-document.write('<script type="text/javascript" src="scripts/jjs/lodash.js"></script>');
-document.write('<script type="text/javascript" src="scripts/jjs/backbone.js"></script>');
-document.write('<script type="text/javascript" src="scripts/jjs/joint.js"></script>');
 document.write('<link href="scripts/jjs/joint.css" rel="stylesheet" type="text/css" />');
+
+document.write('<script type="text/javascript" src="scripts/jjs/index.js"></script>');
+document.write('<script type="text/javascript" src="scripts/jjs/backbone.js"></script>');
+document.write('<script type="text/javascript" src="scripts/jjs/graphlib.min.js"></script>');
+document.write('<script type="text/javascript" src="scripts/jjs/dagre.min.js"></script>');
+document.write('<script type="text/javascript" src="scripts/jjs/joint.js"></script>');
+
 // JointJS support from CDN
 // document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.min.js"></script>');
 // document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone-min.js"></script>');
 // document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/1.0.1/joint.js"></script>');
 // document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/1.0.1/joint.min.css" />');
 
+// Own plug-in for JointJS to draw the state machines
+document.write('<script type="text/javascript" src="scripts/jjs/joint.shapes.uml-state-machine.js"></script>');
 // Own script to glue Umple to JointJS
 document.write('<script type="text/javascript" src="scripts/jjs/jjs_parse.js"></script>');

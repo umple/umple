@@ -6,6 +6,7 @@ var JJSdiagram = {
 		container.html('<div id="jjsPaper"></div>');
 
 		var graph = new joint.dia.Graph;
+		var classesWithStateMachines = [];
 
 		// start by making the paper the same size as container and then scaling the model to fit
 		this.paper = new joint.dia.Paper({
@@ -14,7 +15,8 @@ var JJSdiagram = {
 			height: container.height(),
 			model: graph,
 			gridSize: 1,
-			padding: 15
+			padding: 15,
+			elementView: ClickableView
 		});
 
 		graph.addCells(this.JJsParse.makeClasses(model));
@@ -22,10 +24,31 @@ var JJSdiagram = {
 		graph.addCells(this.JJsParse.makeGeneralizationLinks(model));
 		graph.addCells(this.JJsParse.makeInterfaceLinks(model));
 
+		model.umpleClasses.forEach(function(UMLclass) {
+			// If the class has state machines, we will instantiate and embed after the
+			// class has been added to the graph.
+			var target = graph.getCell(UMLclass.id);
+			if (UMLclass.stateMachines.length > 0) {
+				var icon = new joint.shapes.uml_state_machine.PseudoStart({ 
+					position: target.attributes.position,
+					id: target.id + " sm icon" });
+				graph.addCell(icon);
+				graph.getCell(UMLclass.id).embed(icon);
+				console.log(graph.getCell(UMLclass.id));
+			}
+
+		});
+
 		JJSdiagram.paper.model.getCells().forEach(function(cell) {
 			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model,cell);
 		});
 
+	    // joint.layout.DirectedGraph.layout(graph, { setLinkVertices: false });
+
+	    this.paper.on('cell:click', function (e) {
+	    	console.log(e);
+	    	console.log(e.model.id);
+		});
 		return this.paper;
 	},
 
@@ -492,3 +515,21 @@ var JJSdiagram = {
 		}
 	}
 };
+
+var ClickableView = joint.dia.ElementView.extend({
+    pointerdown: function () {
+        this._click = true;
+        joint.dia.ElementView.prototype.pointerdown.apply(this, arguments);
+    },
+    pointermove: function () {
+        this._click = false;
+        joint.dia.ElementView.prototype.pointermove.apply(this, arguments);
+    },
+    pointerup: function (evt, x, y) {
+        if (this._click) {
+            this.notify('cell:click', evt, x, y);
+        } else {
+            joint.dia.ElementView.prototype.pointerup.apply(this, arguments);
+        }
+    }
+});
