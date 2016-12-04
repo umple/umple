@@ -409,11 +409,14 @@ class JsonMixedGenerator
       }
     }
 
+    transitionLabel = java.util.regex.Pattern.compile("[\"]").matcher(transitionLabel).replaceAll("'");
+    transitionLabel = java.util.regex.Pattern.compile("[\\n]").matcher(transitionLabel).replaceAll("\",\"");
+
     String text = StringFormatter.format(
       "{ {0}source{0}: { {0}id{0}: {0}{1}{0} }, " + 
       "{0}target{0}: { {0}id{0}: {0}{2}{0} }, " +
-      "{0}labels{0}: [{ {0}position{0}: .5, {0}attrs{0}: { {0}text{0}: { {0}text{0}: " +
-      "{0}{3}{0} || {0}{0}, {0}font-weight{0}: {0}bold{0} } } }] }",
+      "{0}labels{0}: [{ {0}position{0}: 0.5, {0}attrs{0}: { {0}text{0}: { {0}text{0}: " +
+      "{0}{3}{0}, {0}font-weight{0}: {0}bold{0} } } }] }",
       "\"",
       t.getFromState().getName(),
       t.getNextState().getName(),
@@ -440,6 +443,10 @@ class JsonMixedGenerator
         transition += " / " + actionCode;
       }
     }
+
+    transition = java.util.regex.Pattern.compile("[\"]").matcher(transition).replaceAll("'");
+    transition = java.util.regex.Pattern.compile("[\\n]").matcher(transition).replaceAll("\",\"");
+
     return StringFormatter.format(
       "{0}{1}{0}",
       "\"",
@@ -474,12 +481,14 @@ class JsonMixedGenerator
           transitionLabel += " / " + actionCode;
         }
       }
+      transitionLabel = java.util.regex.Pattern.compile("[\"]").matcher(transitionLabel).replaceAll("'");
+      transitionLabel = java.util.regex.Pattern.compile("[\\n]").matcher(transitionLabel).replaceAll("\",\"");
 
       transitions += StringFormatter.format(
         "{ {0}source{0}: { {0}id{0}: {0}{1}{0} }, " + 
           "{0}target{0}: { {0}id{0}: {0}{2}{0} }, " +
-          "{0}labels{0}: [{ {0}position{0}: .5, {0}attrs{0}: { {0}text{0}: { {0}text{0}: " +
-          "{0}{3}{0} || {0}{0}, {0}font-weight{0}: {0}bold{0} } } }] }",
+          "{0}labels{0}: [{ {0}position{0}: 0.5, {0}attrs{0}: { {0}text{0}: { {0}text{0}: " +
+          "{0}{3}{0}, {0}font-weight{0}: {0}bold{0} } } }] }",
         "\"",
         t.getFromState().getName(),
         t.getNextState().getName(),
@@ -504,8 +513,11 @@ class JsonMixedGenerator
         action.getActionType(),
         action.getActionCode()
       );
+      // Action code can include a print statement, 
+      // which includes double quotes to screw up the JSON parsing in the client.
+      actions = java.util.regex.Pattern.compile("[\"]").matcher(actions).replaceAll("'");
       // Some action code is comprised of multiple lines, so requires being split
-      // into separate items.
+      // into separate items for display.
       actions = java.util.regex.Pattern.compile("[\\n]").matcher(actions).replaceAll("\",\"");
     }
     return actions;
