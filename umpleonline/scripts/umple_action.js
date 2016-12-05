@@ -1522,8 +1522,9 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   }
   Action.savedCanonical=canonical;
   Page.showCanvasLoading();
-  // Want to use JSON for JointJS too
-  if(Page.useEditableClassDiagram || Page.useJointJSClassDiagram) {language="language=Json"}
+  if(Page.useEditableClassDiagram) {language="language=Json";}
+  // JointJS receives the full model (class and state machine) in JSON
+  else if(Page.useJointJSClassDiagram) {language="language=JsonMixed";}
   else if(Page.useGvClassDiagram) {
     if(Page.showTraits) {
       language="language=traitDiagram";
@@ -1595,14 +1596,11 @@ Action.updateUmpleDiagramCallback = function(response)
 
       var umpleCanvas = jQuery("#umpleCanvas");
 
-      var paper = JJSdiagram.makeDiagram(umpleCanvas, model);
-
-      // console.log(graph);
+      var paper = JJSdiagram.initJJSDiagram(umpleCanvas, model);
 
       // zooming with the mouse wheel or finger swipe
       var MouseWheelHandler = function (event){
         var delta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
-        // console.log(event);
         if (event.altKey === true) {
           var paperHeight = paper.options.height;
           var paperWidth = paper.options.width;

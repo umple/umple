@@ -1,55 +1,144 @@
 var JJSdiagram = {
 
 	paper: null,
+	container: null,
+	// model represents the JSON model
+	JSONmodel: null,
+	diagram_type: null,
 
-	makeDiagram: function(container, model) {
+	initJJSDiagram: function(container, model) {
+
+		this.container = container;
+		this.JSONmodel = model;
+
+		// Modifying the JointJS uml.Class prototpye to add the icon indicating presence of state machines.
+		joint.shapes.uml.Class.prototype.markup = ['<g class="rotatable">',
+							'<g class="scalable">',
+							'<rect class="uml-class-name-rect"/><rect class="uml-class-attrs-rect"/><rect class="uml-class-methods-rect"/>',
+							'</g>',
+							'<rect class="sm-icon"/><text class="uml-class-name-text"/><text class="uml-class-attrs-text"/><text class="uml-class-methods-text"/>',
+							'</g>'
+							].join('');
+
 		container.html('<div id="jjsPaper"></div>');
 
 		var graph = new joint.dia.Graph;
-		var classesWithStateMachines = [];
 
-		// start by making the paper the same size as container and then scaling the model to fit
+		// Start by making the paper an arbitrary size; it will later be re-scaled to fit the model
 		this.paper = new joint.dia.Paper({
 			el: jQuery("#jjsPaper"),
-			width: container.width(),
-			height: container.height(),
+			width: 100,
+			height: 100,
 			model: graph,
 			gridSize: 1,
-			padding: 15,
-			elementView: ClickableView
+			padding: 15
 		});
 
-		graph.addCells(this.JJsParse.makeClasses(model));
-		graph.addCells(this.JJsParse.makeAssociations(model));
-		graph.addCells(this.JJsParse.makeGeneralizationLinks(model));
-		graph.addCells(this.JJsParse.makeInterfaceLinks(model));
+		this.makeUMLclassDiagram();
 
-		model.umpleClasses.forEach(function(UMLclass) {
-			// If the class has state machines, we will instantiate and embed after the
-			// class has been added to the graph.
-			var target = graph.getCell(UMLclass.id);
-			if (UMLclass.stateMachines.length > 0) {
-				var icon = new joint.shapes.uml_state_machine.PseudoStart({ 
-					position: target.attributes.position,
-					id: target.id + " sm icon" });
-				graph.addCell(icon);
-				graph.getCell(UMLclass.id).embed(icon);
-				console.log(graph.getCell(UMLclass.id));
+		return this.paper;
+	},
+
+	setPaperListener: function() {
+		this.paper.on('cell:pointerdown', 
+			function(cellView, evt, x, y) { 
+				console.log(cellView.model.id);
+				if (JJSdiagram.diagram_type === "UMLclass") {
+					var cellPosition = cellView.model.get('position');
+					// Make sure the user has clicked on a cellView (and not a transition)
+					console.log(cellView.model.id);
+					if (cellPosition !== undefined) {
+						// Determine if user has clicked on the state-machine icon
+						if (x - cellPosition.x < 18 && y - cellPosition.y < 18) {
+							// We recycle the JJSdiagram.paper by clearing out the current cells 
+							// and re-populating it with the state-machine cells.
+							var cellsToRemove = JJSdiagram.paper.model.getCells();
+							JJSdiagram.paper.model.removeCells(cellsToRemove);
+							// Now delegate to draw the state machine
+							JJSdiagram.makeUMLstateDiagram(cellView.model.id);
+						}
+					}
+				}
+				// else JJSdiagram.diagram_type === "UMLstate"
+				else {
+					console.log(cellView.model.id);
+					if (cellView.model.id === "back_button") {
+						// Recycling the paper
+						var cellsToRemove = JJSdiagram.paper.model.getCells();
+						JJSdiagram.paper.model.removeCells(cellsToRemove);
+
+						// Resetting the origin change made in makeUMLstateDiagram
+						JJSdiagram.paper.setOrigin(0, 0);
+
+						JJSdiagram.makeUMLclassDiagram();
+					}
+				}
 			}
+		);	
+	},
 
-		});
+	makeUMLclassDiagram: function() {
 
+		this.diagram_type = "UMLclass";
+
+		JJSdiagram.paper.model.addCells(this.JJsParse.makeClasses(this.JSONmodel));
+		JJSdiagram.paper.model.addCells(this.JJsParse.makeAssociations(this.JSONmodel));
+		JJSdiagram.paper.model.addCells(this.JJsParse.makeGeneralizationLinks(this.JSONmodel));
+		JJSdiagram.paper.model.addCells(this.JJsParse.makeInterfaceLinks(this.JSONmodel));
+
+		var bbox = JJSdiagram.paper.model.getBBox(JJSdiagram.paper.model.getElements());
+		// This occurs when no model has been loaded.
+		if (bbox !== null) {
+			// Resize the paper to fit all of the cells.
+			this.paper.setDimensions(Math.max(bbox.width + 100, this.container.width()), Math.max(bbox.height + 100, this.container.height()));
+		}
+
+		// Sort out the overlapping associations
 		JJSdiagram.paper.model.getCells().forEach(function(cell) {
 			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model,cell);
 		});
 
-	    // joint.layout.DirectedGraph.layout(graph, { setLinkVertices: false });
+		JJSdiagram.setPaperListener();
+	},
 
-	    this.paper.on('cell:click', function (e) {
-	    	console.log(e);
-	    	console.log(e.model.id);
+	makeUMLstateDiagram: function(UMLclassName) {
+		this.diagram_type = "UMLstate";
+
+		var class_sms = _.find(JJSdiagram.JSONmodel.umpleClasses, { "name": UMLclassName }).stateMachines;
+
+		// Only set up for a single top-level state machine
+		var graph_cells = JJSdiagram.JJsParse.parseStateMachine(class_sms[0]);
+
+		// Add the states and transitions to the graph
+		JJSdiagram.paper.model.addCells(graph_cells.states);
+		JJSdiagram.paper.model.addCells(graph_cells.transitions);
+
+		// Make the back button and add it to the graph
+		var back = new joint.shapes.uml_state_machine.BackButton({
+			position: { x: 0, y: 0},
+			size: {width: 100, height: 40},
+			id: "back_button"
 		});
-		return this.paper;
+		JJSdiagram.paper.model.addCell(back);
+
+		// Auto-layout the model.
+		joint.layout.DirectedGraph.layout(JJSdiagram.paper.model, { setLinkVertices: false });
+
+		// Because the auto-layout squeezes the diagram towards the left-hand side.
+		JJSdiagram.paper.setOrigin(100, 50);
+
+		var bbox = JJSdiagram.paper.model.getBBox(JJSdiagram.paper.model.getElements());
+		// This occurs when no model has been loaded.
+		if (bbox !== null) {
+			// Resize the paper to fit all of the cells, plus some breathing room.
+			this.paper.setDimensions(Math.max(bbox.width + 200, this.container.width()), Math.max(bbox.height + 150, this.container.height()));
+		}
+
+		// Sort out overlapping transitions
+		JJSdiagram.paper.model.getCells().forEach(function(cell) {
+			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model,cell);
+		});
+
 	},
 
 	JJsUtils: {
@@ -243,6 +332,7 @@ var JJSdiagram = {
 	    },
 
 		makeClasses: function (model) {
+
 			var classes = new Array();
 
 			var instantiate = function(UMLclass) {
@@ -276,6 +366,10 @@ var JJSdiagram = {
 					}
 				}
 				else {
+					var hasStateMachine = false;
+					if (UMLclass.stateMachines.length > 0) {
+						hasStateMachine = true;
+					}
 					new_class = new joint.shapes.uml.Class({
 						position: UMLclass.position,
 						size: UMLclass.position,
@@ -284,6 +378,11 @@ var JJSdiagram = {
 						methods: Page.showMethods ? JJSdiagram.JJsParse.addMethods(UMLclass.methods) : null,
 						id: UMLclass.id
 					});
+
+					if (hasStateMachine) {
+						new_class.attr( {'.sm-icon': {'width': 13, 'height': 13	, 'fill': '#ff0000', 'transform': 'translate(3, 3)'}});
+					}
+
 				}
 
 				// Update all class views to properly fit the contained text strings.
@@ -449,6 +548,7 @@ var JJSdiagram = {
 						new_assoc.attr('.marker-target', { d: 'M 15 0 L 0 7.5 L 15 15', fill: 'white' });
 					}
 
+			        // Can get rid of this once the CSS bugs are fixed
 					new_assoc.attr({ '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} });
 				}
 
@@ -512,24 +612,73 @@ var JJSdiagram = {
 			model.interfaceLinks.forEach(instantiate);
 
 			return interfaceLinks;
+		},
+
+		parseStateMachine: function(sm) {
+
+			var states = [];
+			var transitions = [];
+			var position = {x: 0, y: 0};
+			var startState = null;
+
+
+			var parseState = function(state) {
+				// An alternate layout, in the event that auto-layout does not work.
+				position.x = position.x + 150;
+				position.y = position.y + 150;
+
+				if (state.isfinal == true) {
+					var cell = new joint.shapes.uml_state_machine.FinalState({ 
+						position: position,
+						attrs: { text : { text: state.name }},
+						id: state.name
+					});
+				}
+				else {
+					state.position = position;
+					var cell = new joint.shapes.uml_state_machine.State(state);
+				}
+
+				if (state.isstart == true) {
+					startState = cell.id;
+				}
+				states.push(cell);
+			};
+
+			var parseTransition = function(transition) {
+				var link = new joint.shapes.uml_state_machine.Transition(transition);
+
+				// Can get rid of this once the CSS bugs are fixed
+				link.attr({ '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} });
+
+				var labels = link.get('labels');
+				labels.forEach(function(label) {
+					_.extend(label.attrs.text, {'font-size': 9 });
+				})
+				// console.log(sts);
+				transitions.push(link);
+			};
+
+
+			// Create the Start pseudo-state
+			var ss = new joint.shapes.uml_state_machine.PseudoStart({ position: position, id: "pseudo_start"});
+			states.push(ss);
+
+			// Create the balance of the states
+			sm.states.forEach(parseState);
+
+			// Create the transitions
+			sm.transitions.forEach(parseTransition);
+
+			// Create the transistion from pseudo-start to starting state
+			transitions.push(new joint.shapes.uml_state_machine.Transition({
+				source: { id: "pseudo_start" },
+				target: { id: startState },
+				labels: [{ position: .5, attrs: { text: { text: 'start', 'font-weight': 'bold', 'font-size': 9 } } }],
+				attrs: { '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} }
+			}));
+
+			return { "states": states, "transitions": transitions };
 		}
 	}
 };
-
-var ClickableView = joint.dia.ElementView.extend({
-    pointerdown: function () {
-        this._click = true;
-        joint.dia.ElementView.prototype.pointerdown.apply(this, arguments);
-    },
-    pointermove: function () {
-        this._click = false;
-        joint.dia.ElementView.prototype.pointermove.apply(this, arguments);
-    },
-    pointerup: function (evt, x, y) {
-        if (this._click) {
-            this.notify('cell:click', evt, x, y);
-        } else {
-            joint.dia.ElementView.prototype.pointerup.apply(this, arguments);
-        }
-    }
-});

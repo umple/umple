@@ -5,6 +5,54 @@ joint.shapes.uml_state_machine.StateMachine = {};
 
 joint.shapes.uml_state_machine.Composite = {};
 
+joint.shapes.uml_state_machine.BackButton = joint.shapes.basic.Generic.extend({
+
+    markup: [
+        '<g class="rotatable">',
+        '<g class="scalable">',
+        '<rect class="button-rect"/>',
+        '</g>',
+        '<text class="button-text"/>',
+        '</g>'
+        ].join(''),
+
+    defaults: _.defaultsDeep({
+
+        type: 'uml_state_machine.BackButton',
+
+        attrs: {
+            rect: { 'width': 100 },
+
+            '.button-rect': { 'stroke': '#318c00', 'stroke-width': 2, 'fill': '#64e220', 'rx': 8, 'ry': 8, 'width': 110, 'height': 35 },
+
+            '.button-text': {
+                'ref': '.button-rect', 'ref-y': .5, 'ref-x': .5, 'text-anchor': 'middle', 'y-alignment': 'middle', 'font-weight': 'bold',
+                'fill': 'black', 'font-size': 14, 'font-family': 'Times New Roman'
+            }
+        }
+    }),
+
+    initialize: function() {
+
+        this.on('change:name change:actions change:internals', function() {
+            this.updateRectangles();
+            this.trigger('uml-update');
+        }, this);
+
+        this.updateRectangles();
+
+        joint.shapes.basic.Generic.prototype.initialize.apply(this, arguments);
+    },
+
+    updateRectangles: function() {
+
+        var attrs = this.get('attrs');
+
+        attrs['.button-text'].text = '< Back to UML';
+    }
+
+});
+
 joint.shapes.uml_state_machine.State = joint.shapes.basic.Generic.extend({
 
     markup: [
