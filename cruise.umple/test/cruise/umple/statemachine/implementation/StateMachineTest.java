@@ -611,6 +611,18 @@ public class StateMachineTest extends StateMachineTemplateTest
   }
   
   @Test
+  public void nestedStateMachineExtendedByClass()
+  {
+    assertUmpleTemplateFor("nestedStateMachineExtendedByClass.ump",languagePath + "/nestedStateMachineExtendedByClass."+ languagePath +".txt","Animal");
+  }
+  
+  @Test
+  public void nestedStateMachineExtendedByMultipleClasses()
+  {
+    assertUmpleTemplateFor("nestedStateMachineExtendedByMultipleClasses.ump",languagePath + "/nestedStateMachineExtendedByMultipleClasses."+ languagePath +".txt","Animal");
+  }
+  
+  @Test
   public void nestedStates_timedTransition()
   {
     assertUmpleTemplateFor("nestedStates_timedTransition.ump",languagePath + "/nestedStates_timedTransition."+ languagePath +".txt","X");

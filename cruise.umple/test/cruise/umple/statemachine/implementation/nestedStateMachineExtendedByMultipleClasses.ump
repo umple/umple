@@ -1,0 +1,41 @@
+class Animal {
+  Boolean isAlive;
+
+  state {
+    alive {
+      kill -> dead;
+      normal {
+           zombify -> zombie;
+      }
+      zombie {
+        haveBaby -> normal;
+      }
+    }
+    dead {
+    }  
+  }
+}
+
+class Sheep {
+  isA Animal;
+}
+
+class Bear {
+  isA Animal;
+}
+
+class Cow {
+  isA Animal;
+}
+
+class Cat {
+  isA Animal;
+}
+
+class Dog {
+  isA Animal;
+}
+
+class Moose {
+  isA Animal;
+}
