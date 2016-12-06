@@ -106,6 +106,22 @@ public class UmpleTraitTest {
 	}
 
 	@Test
+	public void checkUniqueNameTest02() {
+		String code = "interface I {} trait I{}";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("203");
+
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
 	public void selfInheritanceTest() {
 		String code = "class A{isA T;} trait T { isA T;}";
 		UmpleModel model = getModel(code);

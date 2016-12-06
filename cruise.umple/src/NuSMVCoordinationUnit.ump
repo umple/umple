@@ -51,22 +51,22 @@ class NuSMVCoordinator
   	  	
   	private NuSMVModule generateParentModule( StateMachine sm, UmpleClass uClass ) {
   		  		
-		VarDeclaration vdec = new VarDeclaration( getStateList( sm ) );
-		vdec.addVariableSpecifier( getEventList( sm ) );
-		for( VariableSpecifier vs : generateSpecifiersForAttributesOf( uClass ) )
-			vdec.addVariableSpecifier(vs);
-		ModuleBody body = new ModuleBody( vdec );
+			VarDeclaration vdec = new VarDeclaration( getStateList( sm ) );
+			vdec.addVariableSpecifier( getEventList( sm ) );
+			for( VariableSpecifier vs : generateSpecifiersForAttributesOf( uClass ) )
+				vdec.addVariableSpecifier(vs);
+			ModuleBody body = new ModuleBody( vdec );
   		body.addModuleElement( vdec );
 		
   		//Adding define declaration to module body
   		body.addModuleElement( getDefineDeclaration( sm ) );
   		body.addModuleElement( getAssignConstraint( sm, sm) );
-		body.addModuleElement( getEventAssignConstraint( sm ) );
+			body.addModuleElement( getEventAssignConstraint( sm ) );
 		
-		//Adding assign constraints for all the attributes
-		for( AssignConstraint constraint : getAssignConstraint( uClass ))
-			body.addModuleElement( constraint );
-		//generateSpecForTransitionDeterminism( sm, body );
+			//Adding assign constraints for all the attributes
+			for( AssignConstraint constraint : getAssignConstraint( uClass ))
+				body.addModuleElement( constraint );
+			//generateSpecForTransitionDeterminism( sm, body );
   		NuSMVModule module = new NuSMVModule( changeNameCase( getAbsoluteName( sm, sm ), 1 ), body );
   		generateParameters( module, sm, sm ); 
   		return module;
@@ -246,15 +246,15 @@ class NuSMVCoordinator
 				NuSMVModule capsuleModule = new NuSMVModule( uClass.getName() + changeNameCase( sMachine.getFullName(), 1 )+"_Machine" , body);	
 				temp.add( capsuleModule );
 				capsules.add( capsuleModule );
+
+				//Generates invariance specifications for non-determinism
+				for( InvarConstraint spec : generateSpecForTransitionDeterminism( sMachine, capsuleModule ) ){
+					nonDeterminism.add( spec );
+					properties.add( spec );
+				}
 			
 				//Generates reachability specifications for the nested state machines of hierarchical system under generation.
 				for( StateMachine machine : generateStateMachineList( sMachine ) ) {
-					
-					//Generates invariance specifications for non-determinism
-					for( InvarConstraint spec : generateSpecForTransitionDeterminism( sMachine, machine, capsuleModule ) ){
-						nonDeterminism.add( spec );
-						properties.add( spec );
-					}
 					
 					for( CTLSpecification spec : generateSpecForStateReachability( sMachine, machine, capsuleModule ) ){
 						reachability.add( spec );
@@ -574,10 +574,10 @@ class NuSMVCoordinator
 		return cexp;
 	}
 	
-	private List<InvarConstraint> generateSpecForTransitionDeterminism( StateMachine root, StateMachine sm, NuSMVModule capsule ) {
+	private List<InvarConstraint> generateSpecForTransitionDeterminism( StateMachine sm, NuSMVModule capsule ) {
 		BasicExpression bexp1;
 		BasicExpression bexp2;
-		String rootName = changeNameCase(capsule.getIdentifier(),0)+"."+changeNameCase(getAbsoluteName(root,root),0);
+		String rootName = changeNameCase(capsule.getIdentifier(),0)+"."+changeNameCase(getAbsoluteName(sm,sm),0);
 		List<InvarConstraint> constraints = new ArrayList<InvarConstraint>();
 		for(State st : sm.getStates() )
 			for( HashMap<Transition,Transition> entry : matchMakeTransitions( st ) )
@@ -595,7 +595,7 @@ class NuSMVCoordinator
 				
 					InvarExpression cexp = new InvarExpression("ctl");
 					cexp.addChild(bexp3);
-					cexp.addChild( generateDestinationStatesExpr( sm, mapIdentity( sm, i), mapIdentity( sm, j), root, capsule ) );
+					cexp.addChild( generateDestinationStatesExpr( sm, mapIdentity( sm, i), mapIdentity( sm, j), sm, capsule ) );
 					cexp.setOperator( BasicExpression.Operator.IMPLY );
 					cexp.setBracketed(true);
 				

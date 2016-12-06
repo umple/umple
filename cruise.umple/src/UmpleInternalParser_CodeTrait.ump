@@ -1270,7 +1270,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 		for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
 			for(UmpleClass uClass : getModel().getUmpleClasses()) {
 				if (uTrait.getName().equals(uClass.getName())) {
-          			getParseResult().addErrorMessage(new ErrorMessage(203,uTrait.getPosition(0),uTrait.getName()));
+          			getParseResult().addErrorMessage(new ErrorMessage(203,uTrait.getPosition(0),"class",uTrait.getName()));
           			return;
 				}
 			}
@@ -1283,7 +1283,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 	  for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
 		  for (UmpleInterface uInterface : getModel().getUmpleInterfaces()) {
 			  if (uTrait.getName().equals(uInterface.getName())) {
-        			getParseResult().addErrorMessage(new ErrorMessage(204,uTrait.getPosition(0),uTrait.getName()));
+        			getParseResult().addErrorMessage(new ErrorMessage(203,uTrait.getPosition(0),"interface",uTrait.getName()));
         			return;
 				}
 		  }

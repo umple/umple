@@ -113,8 +113,8 @@
 200: 2, "http://cruise.eecs.uottawa.ca/umple/E200TraitIdentifierInvalid.html", Trait name '{0}' must be alphanumeric and start with an alpha character, or _  ;
 201: 4, "http://cruise.eecs.uottawa.ca/umple/W201TraitNameSyntax.html", Trait name '{0}' should start with a capital letter ;
 202: 1, "http://cruise.eecs.uottawa.ca/umple/E202Traitnotdefined.html", The trait named '{0}' is not available. ;
-203: 1, "http://cruise.eecs.uottawa.ca/umple/E203Nothavinganuniqueidentifier.html", There is a class and a trait with the same name '{0}'. Solution: Please just change the name of trait or class and give it an unique name. ;
-204: 1, "http://cruise.eecs.uottawa.ca/umple/E20|| (tempMethod != null && tempMethod.isIsAbstract())4SelfInheritance.html", Trait named '{0}' cannot inherit from itself. Solution: Please check the name of super trait or change your design not to have this inheritance. ;
+203: 1, "http://cruise.eecs.uottawa.ca/umple/E203Nothavinganuniqueidentifier.html", There is a {0} and a trait with the same name '{1}'. Solution: Please just change the name of trait or {0} and give it an unique name. ;
+204: 1, "http://cruise.eecs.uottawa.ca/umple/E204SelfInheritance.html", Trait named '{0}' cannot inherit from itself. Solution: Please check the name of super trait or change your design not to have this inheritance. ;
 #need to be added to manual
 205: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must implement interface '{5}';
 206: 1, "http://cruise.eecs.uottawa.ca/umple/E206CycleinTraits.html", Trait '{0}' cannot cyclically extend '{1}'. ;
