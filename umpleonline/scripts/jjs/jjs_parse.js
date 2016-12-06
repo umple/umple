@@ -619,16 +619,15 @@ var JJSdiagram = {
 			var states = [];
 			var transitions = [];
 			var position = {x: 0, y: 0};
-			var startState = null;
-
 
 			var parseState = function(state) {
 				// An alternate layout, in the event that auto-layout does not work.
+				var cell;
 				position.x = position.x + 150;
 				position.y = position.y + 150;
 
 				if (state.isfinal == true) {
-					var cell = new joint.shapes.uml_state_machine.FinalState({ 
+					cell = new joint.shapes.uml_state_machine.FinalState({ 
 						position: position,
 						attrs: { text : { text: state.name }},
 						id: state.name
@@ -636,12 +635,43 @@ var JJSdiagram = {
 				}
 				else {
 					state.position = position;
-					var cell = new joint.shapes.uml_state_machine.State(state);
+					cell = new joint.shapes.uml_state_machine.State(state);
 				}
 
 				if (state.isstart == true) {
-					startState = cell.id;
+					// Create a new pseudo-start state
+					var ps_name = "pseudo_start_" + state.name;
+					var ps = new joint.shapes.uml_state_machine.PseudoStart({ position: position, id: ps_name});
+					states.push(ps);
+
+					// Create the transistion from pseudo-start to starting state
+					transitions.push(new joint.shapes.uml_state_machine.Transition({
+						source: { id: ps_name },
+						target: { id: cell.id },
+						labels: [{ position: .5, attrs: { text: { text: 'start', 'font-weight': 'bold', 'font-size': 9 } } }],
+						attrs: { '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} }
+					}));
 				}
+
+				// Recursive parsing of state machines; not yet encapsulated with the parent state.
+				// PLAN: do this earlier, can then determine which elements are to be contained, 
+				// and what type of state to instantiate for the parent.
+				// ... only trouble is the auto-layout ...
+				// Magic will have to happen in the Composite.updateRectangles method (applied after auto-layout) !
+				for (var i = 0; i < state.stateMachines.length; i++) {
+					var nestedMachines = JJSdiagram.JJsParse.parseStateMachine(state.stateMachines[i]);
+					states.push(nestedMachines.states);
+					transitions.push(nestedMachines.transitions);
+				}
+				// To make nested state machines work, there must be a certain order of operations:
+				//	1. Instantiate all sub-state trees (lowest level), and add those states to the graph.
+				//	2. Instantiate all of the transitions within those sub-state trees and add them to the graph.
+				//		.this is complex since we are traversing the graph with recursive operations
+				//	3. Perform the auto-layout operation on the current graph (a forest of sub-state-machines).
+				//	4. Instantiate and add the parent states, level by level, and add them to the graph.
+				//	5. Instantiate and add all remaining transitions.
+				//	X. Hope that no further auto-layout is necessary.
+
 				states.push(cell);
 			};
 
@@ -659,24 +689,12 @@ var JJSdiagram = {
 				transitions.push(link);
 			};
 
-
-			// Create the Start pseudo-state
-			var ss = new joint.shapes.uml_state_machine.PseudoStart({ position: position, id: "pseudo_start"});
-			states.push(ss);
-
 			// Create the balance of the states
 			sm.states.forEach(parseState);
 
 			// Create the transitions
 			sm.transitions.forEach(parseTransition);
 
-			// Create the transistion from pseudo-start to starting state
-			transitions.push(new joint.shapes.uml_state_machine.Transition({
-				source: { id: "pseudo_start" },
-				target: { id: startState },
-				labels: [{ position: .5, attrs: { text: { text: 'start', 'font-weight': 'bold', 'font-size': 9 } } }],
-				attrs: { '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} }
-			}));
 
 			return { "states": states, "transitions": transitions };
 		}

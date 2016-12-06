@@ -3,8 +3,80 @@ joint.shapes.uml_state_machine = {};
 
 joint.shapes.uml_state_machine.StateMachine = {};
 
-joint.shapes.uml_state_machine.Composite = {};
+joint.shapes.uml_state_machine.CompositeState = joint.shapes.basic.Generic.extend({
 
+    markup: [
+        '<g class="rotatable">',
+        '<rect class="composite-state-rect"/>',
+        '<g class="scalable">',
+        '<line class="composite-state-separator"/>',
+        '</g>',
+        '<text class="composite-state-text"/>',
+        '</g>'
+        ].join(''),
+
+    defaults: _.defaultsDeep({
+
+        type: 'uml_state_machine.CompositeState',
+
+        attrs: {
+
+            // We want the state to take as little space as possible during auto-layout.
+            rect: { 'width': 1 },
+
+            '.composite-state-rect': { 'stroke': '#000000', 'stroke-width': 2, 'fill': '#ffffff', 'fill-opacity': '0.0', 'rx': 25, 'ry': 25},
+
+            '.composite-state-text': {
+                'ref': '.composite-state-rect', 'ref-y': 2, 'ref-x': .5, 'text-anchor': 'middle', 'y-alignment': 'top', 'font-weight': 'bold',
+                'fill': 'black', 'font-size': 14, 'font-family': 'Times New Roman'
+            }
+        },
+
+        name: [],
+        nestedStates: []
+
+    }, joint.shapes.basic.Generic.prototype.defaults),
+
+
+    updateRectangles: function(paper) {
+
+        var attrs = this.get('attrs');
+
+        attrs['.composite-state-text'].text = this.getCompStateName();
+
+        // Noting that this update procedure can only take place after the graph has auto-layout applied,
+        // and before this cell has been added to the graph.
+        if (paper !== undefined) {
+            var bbox = paper.model.getBBox(this.get('nestedStates'));
+
+            attrs['.composite-state-rect'].width = bbox.width + 20;
+            attrs['.composite-state-rect'].height = bbox.height + 40;
+            attrs['.composite-state-rect'].x = bbox.x - 10;
+            attrs['.composite-state-rect'].y = bbox.y - 30;
+        }
+
+        // The cell's <rect/> has been moved outside of the <g class="scalable/>
+        // BACK-UP plan:        this.resize(maxWidth, offsetY);
+
+    },
+
+    initialize: function() {
+
+        this.on('change:name change:actions change:internals', function() {
+            this.updateRectangles();
+            this.trigger('uml-update');
+        }, this);
+
+        this.updateRectangles();
+
+        joint.shapes.basic.Generic.prototype.initialize.apply(this, arguments);
+    },
+
+    getCompStateName: function() {
+        return this.get('name');
+    }
+
+});
 joint.shapes.uml_state_machine.BackButton = joint.shapes.basic.Generic.extend({
 
     markup: [

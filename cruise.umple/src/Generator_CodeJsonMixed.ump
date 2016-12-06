@@ -322,8 +322,8 @@ class JsonMixedGenerator
 
   private String parseStateMachines (StateMachine sm) {
     String jsonForStateMachines = "";
-    if(sm.getParentState() == null) 
-    { // This check shouldn't be needed ... check carried over from GvStateDiagram
+    // This check shouldn't be needed ... check carried over from GvStateDiagram
+    // if(sm.getParentState() == null) { 
       String states = "";
       String transitions = "";
       int indexState = 0;
@@ -331,8 +331,8 @@ class JsonMixedGenerator
 
       for (State s : sm.getStates()) {
 
-      	String internals = "";
-      	int indexInterns = 0;
+        String internals = "";
+        int indexInterns = 0;
 
         if (indexState > 0) {
           states += ", ";
@@ -349,15 +349,15 @@ class JsonMixedGenerator
               internals += ", ";
             }
             indexInterns += 1;
-          	// make an internal transition
-          	internals += parseInternalTransition(t);
+            // make an internal transition
+            internals += parseInternalTransition(t);
           }
           else {
             if (indexTrans > 0) {
               transitions += ", ";
             }
             indexTrans += 1;
-          	transitions += parseSingleTransition(t);
+            transitions += parseSingleTransition(t);
           }
 
         }
@@ -365,18 +365,31 @@ class JsonMixedGenerator
         //if (transitions.charAt(transitions.length() - 1) == '}') {
         //  transitions += ", ";
         //}
+        String jsonForNestedMachines = "";
+        int indexNested = 0;
+        Set<StateMachine> nested = new HashSet<StateMachine>();
+        nested.addAll(s.getNestedStateMachines());
+        for (StateMachine ns : nested) {
+          if (indexNested > 0) {
+            jsonForNestedMachines += ", ";
+          }
+          indexState += 1;
+
+          jsonForNestedMachines += parseStateMachines(ns);
+        }
 
         states += StringFormatter.format(
           "{ {0}name{0}: {0}{1}{0}, {0}id{0}: {0}{1}{0}, {0}actions{0}: [{2}], " +
             "{0}isstart{0}: {3}, {0}isfinal{0}: {4}, " + 
             "{0}size{0}: { {0}width{0}: 50, {0}height{0}: 50 }, " +
-            "{0}internals{0}: [{5}] }",
+            "{0}internals{0}: [{5}], {0}stateMachines{0}: [{6}] }",
           "\"",
           s.getName(),
           parseStateActions(s),
           s.getIsStartState(),
           s.getFinalState(),
-          internals
+          internals,
+          jsonForNestedMachines
         );
       }
 
@@ -387,7 +400,10 @@ class JsonMixedGenerator
       states,
       transitions
       );
-    }
+    // }
+    //else {
+    //	jsonForStateMachines = "skipped";
+    //}
     return jsonForStateMachines;
   }
 
@@ -507,18 +523,20 @@ class JsonMixedGenerator
       }
       index += 1;
 
+      String actionCode = action.getActionCode();
+      // Action code can include a print statement, 
+      // which includes double quotes to screw up the JSON parsing in the client.
+      actionCode = java.util.regex.Pattern.compile("[\"]").matcher(actionCode).replaceAll("'");
+      // Some action code is comprised of multiple lines, so requires being split
+      // into separate items for display.
+      actionCode = java.util.regex.Pattern.compile("[\\n]").matcher(actionCode).replaceAll("\",\"");
+
       actions += StringFormatter.format(
         "{0}{1} / {2}{0}",
         "\"",
         action.getActionType(),
-        action.getActionCode()
+        actionCode
       );
-      // Action code can include a print statement, 
-      // which includes double quotes to screw up the JSON parsing in the client.
-      actions = java.util.regex.Pattern.compile("[\"]").matcher(actions).replaceAll("'");
-      // Some action code is comprised of multiple lines, so requires being split
-      // into separate items for display.
-      actions = java.util.regex.Pattern.compile("[\\n]").matcher(actions).replaceAll("\",\"");
     }
     return actions;
   }
