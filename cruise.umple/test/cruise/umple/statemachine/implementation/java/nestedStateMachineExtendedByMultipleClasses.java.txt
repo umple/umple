@@ -1,0 +1,207 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+public class Animal
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Animal Attributes
+  private boolean isAlive;
+
+  //Animal State Machines
+  public enum State { alive, dead }
+  public enum StateAlive { Null, normal, zombie }
+  private State state;
+  private StateAlive stateAlive;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Animal(boolean aIsAlive)
+  {
+    isAlive = aIsAlive;
+    setStateAlive(StateAlive.Null);
+    setState(State.alive);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setIsAlive(boolean aIsAlive)
+  {
+    boolean wasSet = false;
+    isAlive = aIsAlive;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean getIsAlive()
+  {
+    return isAlive;
+  }
+
+  public boolean isIsAlive()
+  {
+    return isAlive;
+  }
+
+  public String getStateFullName()
+  {
+    String answer = state.toString();
+    if (stateAlive != StateAlive.Null) { answer += "." + stateAlive.toString(); }
+    return answer;
+  }
+
+  public State getState()
+  {
+    return state;
+  }
+
+  public StateAlive getStateAlive()
+  {
+    return stateAlive;
+  }
+
+  public boolean kill()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    switch (aState)
+    {
+      case alive:
+        exitState();
+        setState(State.dead);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean enterAlive()
+  {
+    boolean wasEventProcessed = false;
+    
+    StateAlive aStateAlive = stateAlive;
+    switch (aStateAlive)
+    {
+      case Null:
+        setStateAlive(StateAlive.normal);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitAlive()
+  {
+    boolean wasEventProcessed = false;
+    
+    StateAlive aStateAlive = stateAlive;
+    switch (aStateAlive)
+    {
+      case normal:
+        setStateAlive(StateAlive.Null);
+        wasEventProcessed = true;
+        break;
+      case zombie:
+        setStateAlive(StateAlive.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean zombify()
+  {
+    boolean wasEventProcessed = false;
+    
+    StateAlive aStateAlive = stateAlive;
+    switch (aStateAlive)
+    {
+      case normal:
+        setStateAlive(StateAlive.zombie);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean haveBaby()
+  {
+    boolean wasEventProcessed = false;
+    
+    StateAlive aStateAlive = stateAlive;
+    switch (aStateAlive)
+    {
+      case zombie:
+        setStateAlive(StateAlive.normal);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitState()
+  {
+    switch(state)
+    {
+      case alive:
+        exitAlive();
+        break;
+    }
+  }
+
+  private void setState(State aState)
+  {
+    state = aState;
+
+    // entry actions and do activities
+    switch(state)
+    {
+      case alive:
+        if (stateAlive == StateAlive.Null) { setStateAlive(StateAlive.normal); }
+        break;
+    }
+  }
+
+  private void setStateAlive(StateAlive aStateAlive)
+  {
+    stateAlive = aStateAlive;
+    if (state != State.alive && aStateAlive != StateAlive.Null) { setState(State.alive); }
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    String outputString = "";
+    return super.toString() + "["+
+            "isAlive" + ":" + getIsAlive()+ "]"
+     + outputString;
+  }
+}

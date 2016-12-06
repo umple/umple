@@ -253,6 +253,18 @@ class StateMachine
     return null;
   }
   
+  public State getNullState()
+  {
+    for (State aState : states)
+    {
+      if (aState.getName() == "Null")
+      {
+        return aState;
+      }
+    }
+    return null;
+  }
+  
   public String getType()
   {
     for (State aState : states)

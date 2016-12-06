@@ -1,0 +1,136 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+
+
+
+public class A
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //A Attributes
+  private boolean repeatCheck;
+
+  //A State Machines
+  public enum Status { s1, s2, s3 }
+  private Status status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public A()
+  {
+    repeatCheck = false;
+    setStatus(Status.s1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setRepeatCheck(boolean aRepeatCheck)
+  {
+    boolean wasSet = false;
+    repeatCheck = aRepeatCheck;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean getRepeatCheck()
+  {
+    return repeatCheck;
+  }
+
+  public boolean isRepeatCheck()
+  {
+    return repeatCheck;
+  }
+
+  public String getStatusFullName()
+  {
+    String answer = status.toString();
+    return answer;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  private boolean __autotransition2__()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case s1:
+        if (repeatCheck())
+        {
+          setStatus(Status.s2);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition3__()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case s1:
+        if (repeatCheck())
+        {
+          setStatus(Status.s3);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setStatus(Status aStatus)
+  {
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case s1:
+        __autotransition2__();
+        __autotransition3__();
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+  public Boolean repeatCheck(){
+    return true;
+  }
+
+
+  public String toString()
+  {
+    String outputString = "";
+    return super.toString() + "["+
+            "repeatCheck" + ":" + getRepeatCheck()+ "]"
+     + outputString;
+  }
+}

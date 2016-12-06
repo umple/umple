@@ -1,0 +1,53 @@
+class World {
+  name;
+1 -- * Animal;
+  * -- * Player gamers;
+
+}
+
+
+class ThingInWorld {
+}
+
+class Animal {
+  isA ThingInWorld;
+  * --* ThingInWorld drops;
+  Boolean isAlive;
+
+  state {
+    alive {
+      kill -> dead;
+      normal {
+
+        baby {
+          growUp -> adult;
+        }
+        adult {
+           zombify -> zombie;
+        }
+      }
+      zombie {
+        haveBaby -> adult;
+      }
+    }
+    dead {
+    }  
+  }
+}
+
+class Player {
+  1 -- 0..1 Session;
+}
+
+class Session {
+
+}
+
+class Sheep {
+  isA Animal;
+}
+
+class Game {
+
+  }
+}

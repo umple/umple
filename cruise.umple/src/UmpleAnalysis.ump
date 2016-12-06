@@ -768,12 +768,12 @@ class ConstraintNameNameAnalyzer
   
   public void analyze(Token token)
   {
-    cv.addElement(analyzeName(cv,uClassifier,token.getValue()));
+    cv.addElement(analyzeName(cv,uClassifier,token.getValue(), token.getParentToken().getSubToken("constraintParameterList")!=null ));
   }
 
-  public static ConstraintVariable analyzeName(ConstraintTree cv, UmpleClassifier uClassifier, String value)
+  public static ConstraintVariable analyzeName(ConstraintTree cv, UmpleClassifier uClassifier, String value, Boolean hasParameter)
   {
-    return generateConstraintName(retrieveClass(cv,uClassifier),value);
+    return generateConstraintName(retrieveClass(cv,uClassifier),value,hasParameter);
   }
 
   private static UmpleClassifier retrieveClass(ConstraintTree cv, UmpleClassifier defaultClass)
@@ -829,7 +829,7 @@ class ConstraintNameNameAnalyzer
     return uClass;
   }
 
-  private static ConstraintVariable generateConstraintName(UmpleClassifier uClassifier, String value)
+  private static ConstraintVariable generateConstraintName(UmpleClassifier uClassifier, String value, Boolean hasParameter)
   {
     Attribute attribute;
     if (uClassifier instanceof UmpleClass)
@@ -842,6 +842,7 @@ class ConstraintNameNameAnalyzer
     }
     if(attribute!=null)
     {
+      if (hasParameter) return new ConstraintUnassignedName(value);
       ConstraintAttribute name = new ConstraintAttribute(attribute);
       return name;
     }
@@ -898,14 +899,14 @@ class ConstraintNameNameAnalyzer
       UmpleClass uClass = ((UmpleClass)uClassifier).getExtendsClass();
       if(uClass!=null)
       {
-        return generateConstraintName(uClass,value);
+        return generateConstraintName(uClass,value,hasParameter);
       }
     }
     else if(uClassifier instanceof UmpleTrait)
     {
       for(UmpleTrait uTrait:((UmpleTrait)uClassifier).getExtendsTraits())
       {
-        ConstraintVariable var = generateConstraintName(uTrait,value);
+        ConstraintVariable var = generateConstraintName(uTrait,value,hasParameter);
         if(!(var instanceof ConstraintUnassignedName))
         {
           return var;

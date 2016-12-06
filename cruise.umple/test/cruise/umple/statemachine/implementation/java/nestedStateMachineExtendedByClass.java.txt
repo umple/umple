@@ -1,0 +1,445 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+import java.util.*;
+
+public class Animal extends ThingInWorld
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Animal Attributes
+  private boolean isAlive;
+
+  //Animal State Machines
+  public enum State { alive, dead }
+  public enum StateAlive { Null, normal, zombie }
+  public enum StateAliveNormal { Null, baby, adult }
+  private State state;
+  private StateAlive stateAlive;
+  private StateAliveNormal stateAliveNormal;
+
+  //Animal Associations
+  private List<ThingInWorld> drops;
+  private World world;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Animal(boolean aIsAlive, World aWorld)
+  {
+    super();
+    isAlive = aIsAlive;
+    drops = new ArrayList<ThingInWorld>();
+    boolean didAddWorld = setWorld(aWorld);
+    if (!didAddWorld)
+    {
+      throw new RuntimeException("Unable to create animal due to world");
+    }
+    setStateAlive(StateAlive.Null);
+    setStateAliveNormal(StateAliveNormal.Null);
+    setState(State.alive);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setIsAlive(boolean aIsAlive)
+  {
+    boolean wasSet = false;
+    isAlive = aIsAlive;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean getIsAlive()
+  {
+    return isAlive;
+  }
+
+  public boolean isIsAlive()
+  {
+    return isAlive;
+  }
+
+  public String getStateFullName()
+  {
+    String answer = state.toString();
+    if (stateAlive != StateAlive.Null) { answer += "." + stateAlive.toString(); }
+    if (stateAliveNormal != StateAliveNormal.Null) { answer += "." + stateAliveNormal.toString(); }
+    return answer;
+  }
+
+  public State getState()
+  {
+    return state;
+  }
+
+  public StateAlive getStateAlive()
+  {
+    return stateAlive;
+  }
+
+  public StateAliveNormal getStateAliveNormal()
+  {
+    return stateAliveNormal;
+  }
+
+  public boolean kill()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    switch (aState)
+    {
+      case alive:
+        exitState();
+        setState(State.dead);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean enterAlive()
+  {
+    boolean wasEventProcessed = false;
+    
+    StateAlive aStateAlive = stateAlive;
+    StateAliveNormal aStateAliveNormal = stateAliveNormal;
+    switch (aStateAlive)
+    {
+      case Null:
+        setStateAlive(StateAlive.normal);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aStateAliveNormal)
+    {
+      case Null:
+        setStateAliveNormal(StateAliveNormal.baby);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitAlive()
+  {
+    boolean wasEventProcessed = false;
+    
+    StateAlive aStateAlive = stateAlive;
+    StateAliveNormal aStateAliveNormal = stateAliveNormal;
+    switch (aStateAlive)
+    {
+      case normal:
+        setStateAlive(StateAlive.Null);
+        wasEventProcessed = true;
+        break;
+      case zombie:
+        setStateAlive(StateAlive.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aStateAliveNormal)
+    {
+      case baby:
+        setStateAliveNormal(StateAliveNormal.Null);
+        wasEventProcessed = true;
+        break;
+      case adult:
+        setStateAliveNormal(StateAliveNormal.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean haveBaby()
+  {
+    boolean wasEventProcessed = false;
+    
+    StateAlive aStateAlive = stateAlive;
+    switch (aStateAlive)
+    {
+      case zombie:
+        setStateAliveNormal(StateAliveNormal.adult);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean growUp()
+  {
+    boolean wasEventProcessed = false;
+    
+    StateAliveNormal aStateAliveNormal = stateAliveNormal;
+    switch (aStateAliveNormal)
+    {
+      case baby:
+        setStateAliveNormal(StateAliveNormal.adult);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean zombify()
+  {
+    boolean wasEventProcessed = false;
+    
+    StateAliveNormal aStateAliveNormal = stateAliveNormal;
+    switch (aStateAliveNormal)
+    {
+      case adult:
+        exitStateAlive();
+        setStateAlive(StateAlive.zombie);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitState()
+  {
+    switch(state)
+    {
+      case alive:
+        exitAlive();
+        break;
+    }
+  }
+
+  private void setState(State aState)
+  {
+    state = aState;
+
+    // entry actions and do activities
+    switch(state)
+    {
+      case alive:
+        if (stateAlive == StateAlive.Null) { setStateAlive(StateAlive.normal); }
+        break;
+    }
+  }
+
+  private void exitStateAlive()
+  {
+    switch(stateAlive)
+    {
+      case normal:
+        exitAlive();
+        break;
+    }
+  }
+
+  private void setStateAlive(StateAlive aStateAlive)
+  {
+    stateAlive = aStateAlive;
+    if (state != State.alive && aStateAlive != StateAlive.Null) { setState(State.alive); }
+
+    // entry actions and do activities
+    switch(stateAlive)
+    {
+      case normal:
+        if (stateAliveNormal == StateAliveNormal.Null) { setStateAliveNormal(StateAliveNormal.baby); }
+        break;
+    }
+  }
+
+  private void setStateAliveNormal(StateAliveNormal aStateAliveNormal)
+  {
+    stateAliveNormal = aStateAliveNormal;
+    if (stateAlive != StateAlive.normal && aStateAliveNormal != StateAliveNormal.Null) { setStateAlive(StateAlive.normal); }
+  }
+
+  public ThingInWorld getDrop(int index)
+  {
+    ThingInWorld aDrop = drops.get(index);
+    return aDrop;
+  }
+
+  public List<ThingInWorld> getDrops()
+  {
+    List<ThingInWorld> newDrops = Collections.unmodifiableList(drops);
+    return newDrops;
+  }
+
+  public int numberOfDrops()
+  {
+    int number = drops.size();
+    return number;
+  }
+
+  public boolean hasDrops()
+  {
+    boolean has = drops.size() > 0;
+    return has;
+  }
+
+  public int indexOfDrop(ThingInWorld aDrop)
+  {
+    int index = drops.indexOf(aDrop);
+    return index;
+  }
+
+  public World getWorld()
+  {
+    return world;
+  }
+
+  public static int minimumNumberOfDrops()
+  {
+    return 0;
+  }
+
+  public boolean addDrop(ThingInWorld aDrop)
+  {
+    boolean wasAdded = false;
+    if (drops.contains(aDrop)) { return false; }
+    drops.add(aDrop);
+    if (aDrop.indexOfAnimal(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aDrop.addAnimal(this);
+      if (!wasAdded)
+      {
+        drops.remove(aDrop);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeDrop(ThingInWorld aDrop)
+  {
+    boolean wasRemoved = false;
+    if (!drops.contains(aDrop))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = drops.indexOf(aDrop);
+    drops.remove(oldIndex);
+    if (aDrop.indexOfAnimal(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aDrop.removeAnimal(this);
+      if (!wasRemoved)
+      {
+        drops.add(oldIndex,aDrop);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addDropAt(ThingInWorld aDrop, int index)
+  {  
+    boolean wasAdded = false;
+    if(addDrop(aDrop))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfDrops()) { index = numberOfDrops() - 1; }
+      drops.remove(aDrop);
+      drops.add(index, aDrop);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveDropAt(ThingInWorld aDrop, int index)
+  {
+    boolean wasAdded = false;
+    if(drops.contains(aDrop))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfDrops()) { index = numberOfDrops() - 1; }
+      drops.remove(aDrop);
+      drops.add(index, aDrop);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addDropAt(aDrop, index);
+    }
+    return wasAdded;
+  }
+
+  public boolean setWorld(World aWorld)
+  {
+    boolean wasSet = false;
+    if (aWorld == null)
+    {
+      return wasSet;
+    }
+
+    World existingWorld = world;
+    world = aWorld;
+    if (existingWorld != null && !existingWorld.equals(aWorld))
+    {
+      existingWorld.removeAnimal(this);
+    }
+    world.addAnimal(this);
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    ArrayList<ThingInWorld> copyOfDrops = new ArrayList<ThingInWorld>(drops);
+    drops.clear();
+    for(ThingInWorld aDrop : copyOfDrops)
+    {
+      aDrop.removeAnimal(this);
+    }
+    World placeholderWorld = world;
+    this.world = null;
+    placeholderWorld.removeAnimal(this);
+    super.delete();
+  }
+
+
+  public String toString()
+  {
+    String outputString = "";
+    return super.toString() + "["+
+            "isAlive" + ":" + getIsAlive()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "world = "+(getWorld()!=null?Integer.toHexString(System.identityHashCode(getWorld())):"null")
+     + outputString;
+  }
+}

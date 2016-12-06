@@ -1,0 +1,13 @@
+class A{
+ Boolean repeatCheck = false;
+  status {
+    s1{
+        [repeatCheck != repeatCheck()]-> s2;
+    }
+    s2{
+    }
+  }
+  Boolean repeatCheck() {
+    return true;
+  }
+}
