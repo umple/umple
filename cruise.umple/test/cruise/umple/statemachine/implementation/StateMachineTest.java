@@ -88,6 +88,24 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("multipleGuardsSameEventWithDefaultNoGuard.ump",languagePath + "/multipleGuardsSameEventWithDefaultNoGuard."+ languagePath +".txt","LightFixture");
   }
   
+  @Test
+  public void guardNameBothAttributeAndMethod()
+  {
+    assertUmpleTemplateFor("guardNameBothAttributeAndMethod.ump",languagePath + "/guardNameBothAttributeAndMethod."+ languagePath +".txt","A");
+  }
+  
+  @Test
+  public void guardNameBothAttributeAndMethod2()
+  {
+    assertUmpleTemplateFor("guardNameBothAttributeAndMethod2.ump",languagePath + "/guardNameBothAttributeAndMethod2."+ languagePath +".txt","A");
+  }
+  
+  @Test
+  public void guardNameBothAttributeAndMethod3()
+  {
+    assertUmpleTemplateFor("guardNameBothAttributeAndMethod3.ump",languagePath + "/guardNameBothAttributeAndMethod3."+ languagePath +".txt","A");
+  }
+  
   // SPACING
   
   // Spacing of state transaction actions
@@ -608,6 +626,18 @@ public class StateMachineTest extends StateMachineTemplateTest
   public void eventlessStateMachine_before_PooledStateMachine()
   {
     assertUmpleTemplateFor("eventlessStateMachine_PooledStateMachine.ump",languagePath + "/eventlessStateMachine_PooledStateMachine."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void nestedStateMachineExtendedByClass()
+  {
+    assertUmpleTemplateFor("nestedStateMachineExtendedByClass.ump",languagePath + "/nestedStateMachineExtendedByClass."+ languagePath +".txt","Animal");
+  }
+  
+  @Test
+  public void nestedStateMachineExtendedByMultipleClasses()
+  {
+    assertUmpleTemplateFor("nestedStateMachineExtendedByMultipleClasses.ump",languagePath + "/nestedStateMachineExtendedByMultipleClasses."+ languagePath +".txt","Animal");
   }
   
   @Test

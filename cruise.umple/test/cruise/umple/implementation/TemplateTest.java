@@ -200,7 +200,37 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Course.java");
     SampleFileWriter.destroy(pathToInput + "/QSMwithUnspecifiedRecep.java");
     SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.java");    
-    SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.php");    
+    SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.php"); 
+    
+    SampleFileWriter.destroy(pathToInput + "/Animal.java");
+    SampleFileWriter.destroy(pathToInput + "/Bear.java");
+    SampleFileWriter.destroy(pathToInput + "/Cat.java");
+    SampleFileWriter.destroy(pathToInput + "/Cow.java");
+    SampleFileWriter.destroy(pathToInput + "/Dog.java");
+    SampleFileWriter.destroy(pathToInput + "/Moose.java");
+    SampleFileWriter.destroy(pathToInput + "/Sheep.java");
+    SampleFileWriter.destroy(pathToInput + "/ThingInWorld.java");
+    SampleFileWriter.destroy(pathToInput + "/World.java");
+    SampleFileWriter.destroy(pathToInput + "/Player.java");
+    SampleFileWriter.destroy(pathToInput + "/Session.java");
+    SampleFileWriter.destroy(pathToInput + "/Game.java");
+    
+    SampleFileWriter.destroy(pathToInput + "/Animal.php");
+    SampleFileWriter.destroy(pathToInput + "/Bear.php");
+    SampleFileWriter.destroy(pathToInput + "/Cat.php");
+    SampleFileWriter.destroy(pathToInput + "/Cow.php");
+    SampleFileWriter.destroy(pathToInput + "/Dog.php");
+    SampleFileWriter.destroy(pathToInput + "/Moose.php");
+    SampleFileWriter.destroy(pathToInput + "/Sheep.php");
+    SampleFileWriter.destroy(pathToInput + "/ThingInWorld.php");
+    SampleFileWriter.destroy(pathToInput + "/World.php");
+    SampleFileWriter.destroy(pathToInput + "/Player.php");
+    SampleFileWriter.destroy(pathToInput + "/Session.php");
+    SampleFileWriter.destroy(pathToInput + "/Game.php");
+    
+    SampleFileWriter.destroy(pathToInput + "/A.java");
+    SampleFileWriter.destroy(pathToInput + "/A.php");
+    
 
     //
     // Tear down abstract class tests.

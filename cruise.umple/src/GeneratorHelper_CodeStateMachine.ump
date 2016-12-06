@@ -106,7 +106,10 @@ class GeneratorHelper
   
     State parentState = sm.getParentState();
     StateMachine firstSm = parentState.getNestedStateMachine(0);
-    State nullState = sm.addState("Null",0);
+    State nullState = sm.getNullState();
+    if(nullState == null){
+      nullState = sm.addState("Null",0);
+    }
     nullState.setIsInternal(true);
 
     if (sm.getStartState() != null)
