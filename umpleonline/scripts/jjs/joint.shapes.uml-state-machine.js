@@ -44,8 +44,8 @@ joint.shapes.uml_state_machine.CompositeState = joint.shapes.basic.Generic.exten
 
         attrs['.composite-state-text'].text = this.getCompStateName();
 
-        // Noting that this update procedure can only take place after the graph has auto-layout applied,
-        // and before this cell has been added to the graph.
+        // Noting that this part of the update procedure should take place after the graph
+        // has auto-layout applied, and before this cell has been added to the graph.
         if (paper !== undefined) {
             var bbox = paper.model.getBBox(this.get('nestedStates'));
 
@@ -54,20 +54,32 @@ joint.shapes.uml_state_machine.CompositeState = joint.shapes.basic.Generic.exten
             attrs['.composite-state-rect'].x = bbox.x - 10;
             attrs['.composite-state-rect'].y = bbox.y - 30;
         }
+    },
 
-        // The cell's <rect/> has been moved outside of the <g class="scalable/>
-        // BACK-UP plan:        this.resize(maxWidth, offsetY);
+    /*
+     * doEmbed performs the task of converting the names of cells into cell references,
+     * then performs the embed() function with them.
+     * Note that this must be called before updateRectangles() in order to get correct resizing.
+     */
+    doEmbed: function(paper) {
+        var nestedCells = [];
+        this.get('nestedStates').forEach(function(name) {
+            nestedCells.push(paper.model.getCell(name));
+        });
+        this.set({'nestedStates': nestedCells });
 
+        var nestedCells = this.get('nestedStates');
+        for (var i = 0; i < nestedCells.length; i++) {
+            this.embed(nestedCells[i]);            
+        }
     },
 
     initialize: function() {
 
-        this.on('change:name change:actions change:internals', function() {
+        this.on('change:name', function() {
             this.updateRectangles();
             this.trigger('uml-update');
         }, this);
-
-        this.updateRectangles();
 
         joint.shapes.basic.Generic.prototype.initialize.apply(this, arguments);
     },
@@ -120,7 +132,7 @@ joint.shapes.uml_state_machine.BackButton = joint.shapes.basic.Generic.extend({
 
         var attrs = this.get('attrs');
 
-        attrs['.button-text'].text = '< Back to UML';
+        attrs['.button-text'].text = '< UML class';
     }
 
 });
@@ -238,9 +250,6 @@ joint.shapes.uml_state_machine.State = joint.shapes.basic.Generic.extend({
 
 });
 
-/*
- * One odd characterisitc: cannot assign an id that persists, such as id: "pseudo_start"...
- */
 joint.shapes.uml_state_machine.PseudoStart = joint.dia.Element.extend({
 
     markup: '<g class="rotatable"><g class="scalable"><circle/></g></g>',
@@ -258,6 +267,7 @@ joint.shapes.uml_state_machine.PseudoStart = joint.dia.Element.extend({
         }
     }, joint.dia.Element.prototype.defaults)
 });
+
 /*
  * Note the arrow scoots around the text. Actually, there is a bounding box around
  * the composite element that defines how it connects.

@@ -36,17 +36,17 @@ var JJSdiagram = {
 
 		this.makeUMLclassDiagram();
 
+		JJSdiagram.setPaperListener();
+
 		return this.paper;
 	},
 
 	setPaperListener: function() {
 		this.paper.on('cell:pointerdown', 
 			function(cellView, evt, x, y) { 
-				console.log(cellView.model.id);
 				if (JJSdiagram.diagram_type === "UMLclass") {
 					var cellPosition = cellView.model.get('position');
 					// Make sure the user has clicked on a cellView (and not a transition)
-					console.log(cellView.model.id);
 					if (cellPosition !== undefined) {
 						// Determine if user has clicked on the state-machine icon
 						if (x - cellPosition.x < 18 && y - cellPosition.y < 18) {
@@ -54,14 +54,13 @@ var JJSdiagram = {
 							// and re-populating it with the state-machine cells.
 							var cellsToRemove = JJSdiagram.paper.model.getCells();
 							JJSdiagram.paper.model.removeCells(cellsToRemove);
-							// Now delegate to draw the state machine
+
 							JJSdiagram.makeUMLstateDiagram(cellView.model.id);
 						}
 					}
 				}
 				// else JJSdiagram.diagram_type === "UMLstate"
 				else {
-					console.log(cellView.model.id);
 					if (cellView.model.id === "back_button") {
 						// Recycling the paper
 						var cellsToRemove = JJSdiagram.paper.model.getCells();
@@ -97,8 +96,6 @@ var JJSdiagram = {
 		JJSdiagram.paper.model.getCells().forEach(function(cell) {
 			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model,cell);
 		});
-
-		JJSdiagram.setPaperListener();
 	},
 
 	makeUMLstateDiagram: function(UMLclassName) {
@@ -108,10 +105,6 @@ var JJSdiagram = {
 
 		// Only set up for a single top-level state machine
 		var graph_cells = JJSdiagram.JJsParse.parseStateMachine(class_sms[0]);
-
-		// Add the states and transitions to the graph
-		JJSdiagram.paper.model.addCells(graph_cells.states);
-		JJSdiagram.paper.model.addCells(graph_cells.transitions);
 
 		// Make the back button and add it to the graph
 		var back = new joint.shapes.uml_state_machine.BackButton({
@@ -124,6 +117,24 @@ var JJSdiagram = {
 		// Auto-layout the model.
 		joint.layout.DirectedGraph.layout(JJSdiagram.paper.model, { setLinkVertices: false });
 
+		// Add the last states and transitions to the graph, after making the list FILO.
+		JJSdiagram.JJsParse.notYetAddedStatesStack.reverse()
+		JJSdiagram.JJsParse.notYetAddedStatesStack.forEach(function(cell) {
+			cell.doEmbed(JJSdiagram.paper);
+			cell.updateRectangles(JJSdiagram.paper);
+		});
+		JJSdiagram.paper.model.addCells(JJSdiagram.JJsParse.notYetAddedStatesStack);
+		JJSdiagram.paper.model.addCells(JJSdiagram.JJsParse.notYetAddedTransitionsStack);
+
+		// Reset the stacks, or see these entities show up in other diagrams.
+		JJSdiagram.JJsParse.notYetAddedStatesStack = [];
+		JJSdiagram.JJsParse.notYetAddedTransitionsStack = [];
+
+		// Sort out overlapping transitions
+		JJSdiagram.paper.model.getCells().forEach(function(cell) {
+			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model,cell);
+		});
+
 		// Because the auto-layout squeezes the diagram towards the left-hand side.
 		JJSdiagram.paper.setOrigin(100, 50);
 
@@ -133,12 +144,6 @@ var JJSdiagram = {
 			// Resize the paper to fit all of the cells, plus some breathing room.
 			this.paper.setDimensions(Math.max(bbox.width + 200, this.container.width()), Math.max(bbox.height + 150, this.container.height()));
 		}
-
-		// Sort out overlapping transitions
-		JJSdiagram.paper.model.getCells().forEach(function(cell) {
-			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model,cell);
-		});
-
 	},
 
 	JJsUtils: {
@@ -614,89 +619,105 @@ var JJSdiagram = {
 			return interfaceLinks;
 		},
 
+		/* 
+			To make nested state machines work, there must be a certain order of operations:
+			1. Instantiate all sub-state trees (lowest level), and add those states to the graph.
+			2. Instantiate all of the transitions within those sub-state trees and add them to the graph.
+			3. Perform the auto-layout operation on the current graph (a forest of sub-state-machines).
+			4. Add the parent states, level by level, and add them to the graph.
+			5. Add all remaining transitions.
+			X. Ideally, each additional level of the state machine tree would have an auto-layout operation performed on it. 
+		*/
+
+		notYetAddedStatesStack: [],
+
+		notYetAddedTransitionsStack: [],
+
 		parseStateMachine: function(sm) {
 
-			var states = [];
-			var transitions = [];
-			var position = {x: 0, y: 0};
-
-			var parseState = function(state) {
-				// An alternate layout, in the event that auto-layout does not work.
+			var instantiateState = function(state) {
 				var cell;
-				position.x = position.x + 150;
-				position.y = position.y + 150;
+				var composite = false;
 
 				if (state.isfinal == true) {
 					cell = new joint.shapes.uml_state_machine.FinalState({ 
-						position: position,
 						attrs: { text : { text: state.name }},
 						id: state.name
 					});
+					JJSdiagram.paper.model.addCell(cell);
+				}
+				else if (state.stateMachines.length > 0) {
+					// Pass each nested machine for parsing.
+					state.stateMachines.forEach(JJSdiagram.JJsParse.parseStateMachine);
+					// Get the names of all nested states (direct children only).
+					var nestedStates = [];
+					state.stateMachines.forEach(function(sm) {
+						sm.states.forEach(function(s) {
+							nestedStates.push(s.name);
+						});
+					});
+					state.nestedStates = nestedStates;
+
+					cell = new joint.shapes.uml_state_machine.CompositeState(state);
+					// Then push that state's cell onto the stack
+					JJSdiagram.JJsParse.notYetAddedStatesStack.push(cell);
+					composite = true;
 				}
 				else {
-					state.position = position;
 					cell = new joint.shapes.uml_state_machine.State(state);
+					JJSdiagram.paper.model.addCell(cell);
 				}
 
 				if (state.isstart == true) {
 					// Create a new pseudo-start state
 					var ps_name = "pseudo_start_" + state.name;
-					var ps = new joint.shapes.uml_state_machine.PseudoStart({ position: position, id: ps_name});
-					states.push(ps);
+					var ps = new joint.shapes.uml_state_machine.PseudoStart({ id: ps_name});
+					JJSdiagram.paper.model.addCell(ps);
 
-					// Create the transistion from pseudo-start to starting state
-					transitions.push(new joint.shapes.uml_state_machine.Transition({
+					// Create the transistion from pseudo-start to starting state.
+					var link = new joint.shapes.uml_state_machine.Transition({
 						source: { id: ps_name },
 						target: { id: cell.id },
 						labels: [{ position: .5, attrs: { text: { text: 'start', 'font-weight': 'bold', 'font-size': 9 } } }],
 						attrs: { '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} }
-					}));
+					});
+					if (!composite) {
+						JJSdiagram.paper.model.addCell(link);
+					}
+					else {
+						JJSdiagram.JJsParse.notYetAddedTransitionsStack.push(link);
+					}
 				}
-
-				// Recursive parsing of state machines; not yet encapsulated with the parent state.
-				// PLAN: do this earlier, can then determine which elements are to be contained, 
-				// and what type of state to instantiate for the parent.
-				// ... only trouble is the auto-layout ...
-				// Magic will have to happen in the Composite.updateRectangles method (applied after auto-layout) !
-				for (var i = 0; i < state.stateMachines.length; i++) {
-					var nestedMachines = JJSdiagram.JJsParse.parseStateMachine(state.stateMachines[i]);
-					states.push(nestedMachines.states);
-					transitions.push(nestedMachines.transitions);
-				}
-				// To make nested state machines work, there must be a certain order of operations:
-				//	1. Instantiate all sub-state trees (lowest level), and add those states to the graph.
-				//	2. Instantiate all of the transitions within those sub-state trees and add them to the graph.
-				//		.this is complex since we are traversing the graph with recursive operations
-				//	3. Perform the auto-layout operation on the current graph (a forest of sub-state-machines).
-				//	4. Instantiate and add the parent states, level by level, and add them to the graph.
-				//	5. Instantiate and add all remaining transitions.
-				//	X. Hope that no further auto-layout is necessary.
-
-				states.push(cell);
 			};
 
-			var parseTransition = function(transition) {
+			var instantiateTransition = function(transition) {
+				// Must check whether both source and target are in the graph already.
+				var sourceCell = _.find(JJSdiagram.paper.model.getCells(), { "id": transition.source.id });
+				var targetCell = _.find(JJSdiagram.paper.model.getCells(), { "id": transition.target.id });
+
 				var link = new joint.shapes.uml_state_machine.Transition(transition);
 
 				// Can get rid of this once the CSS bugs are fixed
 				link.attr({ '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} });
 
+				// Because the default font-size is 14
 				var labels = link.get('labels');
 				labels.forEach(function(label) {
 					_.extend(label.attrs.text, {'font-size': 9 });
-				})
-				// console.log(sts);
-				transitions.push(link);
+				});
+
+				if (sourceCell && targetCell) {
+					JJSdiagram.paper.model.addCell(link);
+				}
+				else {
+					JJSdiagram.JJsParse.notYetAddedTransitionsStack.push(link);
+				}
+
 			};
 
-			// Create the balance of the states
-			sm.states.forEach(parseState);
+			sm.states.forEach(instantiateState);
 
-			// Create the transitions
-			sm.transitions.forEach(parseTransition);
-
-
-			return { "states": states, "transitions": transitions };
+			sm.transitions.forEach(instantiateTransition);			
 		}
 	}
 };
