@@ -42,7 +42,7 @@ class NuSMVGenerator
   		}
   		 
   	}*/
-  	code.append( coord.generateModules( model ) );
+    code.append( coord.generateModules( model ) );
     terminateCode( code );
     
     //coord.analyzeModel( model );
