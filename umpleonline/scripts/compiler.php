@@ -177,7 +177,7 @@ else if (isset($_REQUEST["umpleCode"]))
     }
     $errors = getErrorHtml($errorFilename, 0);
     
-    if ($language != "Json")
+    if ($language != "Json" && $language != "JsonMixed")
     {
       $sourceCode = htmlspecialchars($sourceCode);
     }

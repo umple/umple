@@ -383,6 +383,17 @@ class JsonGenerator
   String output = "";
 }
 
+class JsonMixedGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend cruise.umple.util.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+}
+
 class StructureDiagramGenerator
 {
   isA CodeGeneratorWithSubptions;
@@ -519,6 +530,7 @@ use Generator_CodeSimulate.ump;
 use Generator_CodeYuml.ump;
 use Generator_CodeXtext.ump;
 use Generator_CodeJson.ump;
+use Generator_CodeJsonMixed.ump;
 use Generator_CodeStructureDiagram.ump;
 use Generator_SuperCodeGenerator.ump;
 use Generator_SuperGvGenerator.ump; // ABSTRACT CLASS FOR GV!!
