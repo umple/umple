@@ -42,6 +42,7 @@ class UmpleModel
   Boolean distributeOn=true;
   Boolean distributeForced=false;
   Boolean distributed=false;
+  String distributeTechnology="RMI";
   defaultPackage = null;
   GenerateTarget[] generates;
   Boolean shouldGenerate = true;
@@ -944,7 +945,7 @@ class Multiplicity
   lazy minimum;
   lazy maximum;
 
-  parserable = { getBound() != null ? getBound() : getMinimum().equals("0") && getMaximum().equals("*") ? "*" : getMinimum() + ".." + getMaximum() }
+  parserable = { getBound() != null ? getBound() : ( (getMinimum() == null ||  getMinimum().equals("0")) && (getMaximum() == null || getMaximum().equals("*")) ? "*" : ""+ getMinimum() + ".." + getMaximum()) }
 
   key { bound, minimum, maximum }
 

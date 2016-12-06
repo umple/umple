@@ -1,7 +1,7 @@
 class Client
 {
    isA CC;
-   distributableRMI;
+   distributable RMI;
 }
 class CC
 {

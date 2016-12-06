@@ -159,6 +159,10 @@ class UmpleInternalParser
         
         }
       }
+      if(distributeSubToken.is("distributeTech"))
+      {
+        model.setDistributeTechnology(distributeSubToken.getValue());
+      }
     }
   } 
 

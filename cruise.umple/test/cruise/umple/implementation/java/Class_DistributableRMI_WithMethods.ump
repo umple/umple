@@ -6,7 +6,7 @@ class Microwave{
   boolean isDoorOpened=false;
   boolean isButtonPressed=false;
   const Integer TimeIncrementMs = 1000;
-    distributableRMI;
+    distributable RMI;
   queued operatingMicrowaveStateMachine{
     readyToCook{
       entry / {

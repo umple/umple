@@ -10,7 +10,7 @@ class Father
 }
 class Microwave
 {	isA CC;
-	distributableRMI;
+	distributable RMI;
 	public int method1(int f){
 
 	  return f*2;
