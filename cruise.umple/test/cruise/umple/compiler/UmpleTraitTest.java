@@ -1542,6 +1542,20 @@ public class UmpleTraitTest {
 		}
 	}
 
+	@Test
+	public void includeExcludeRule14Test() {
+		String code = "class A{ isA T1<-pm1(),-pm2()>;} trait T1{  void pm1(){}  void pm2(){}  void pm3(String value){}  void pm4(String value, Integer date){}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+	}
+
+	@Test
+	public void includeExcludeRule15Test() {
+		String code = "class A{ isA T1<-pm1(),-pm4(String,Integer)>;} trait T1{  void pm1(){}  void pm2(){}  void pm3(String value){}  void pm4(String value, Integer date){}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+	}
+
 	@Ignore
 	public void includeExcludeRuleAlias1Test() {
 		String code = "class A{isA T1<+test(Integer), -test(String) as t >;}trait T1{void test(String str){/*T1-S*/}void test(Integer inData){/*T1-I*/}void test(String str,Integer inData){/*T1-SI*/}}";

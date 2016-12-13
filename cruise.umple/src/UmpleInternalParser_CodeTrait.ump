@@ -1809,49 +1809,49 @@ private void AddAssociationMapToAnother(Map<UmpleTrait, List<AssociationVariable
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 private void ApplyExludeIncludeAliasToMethod(Map<UmpleTrait, List<Method>> intraitMethods, GeneralTPApplied inGTPApplied){
-	   if (inGTPApplied == null) return;
-	   for (UmpleTrait uTrait : intraitMethods.keySet()) {
-		   List<Method> shouldBeIncluded = new ArrayList<Method>();
-		   for (int i = 0; i < intraitMethods.get(uTrait).size(); i++) {
-			   Method newMethod = intraitMethods.get(uTrait).get(i);
-			   MethodTemplateSignature mTSignature = inGTPApplied.hasMethod(newMethod);
-			   if (mTSignature!=null){
-				   if (mTSignature.getModifier().equals("-")){
-					   intraitMethods.get(uTrait).remove(newMethod);
-				   } else if (mTSignature.getModifier().equals("+")){
-					   if (!mTSignature.getAlias().equals("")){
-						   Method temMethod = new Method(newMethod);
-						   temMethod.setName(mTSignature.getAlias());
-						   if (checkMethodInMapTraitsMethod(intraitMethods,temMethod)!=null){
-							   getParseResult().addErrorMessage(new ErrorMessage(220,inGTPApplied.getPositions(),mTSignature.getAlias(),mTSignature.getMethod().getName()));	
-							   return;
-						   }
-						   newMethod.setName(mTSignature.getAlias());
+  if (inGTPApplied == null) return; 
+  for(Map.Entry<UmpleTrait, List<Method>> entry : intraitMethods.entrySet()){
+    List<Method> shouldBeIncluded = new ArrayList<Method>();
+    for(Iterator<Method> iterator = entry.getValue().iterator(); iterator.hasNext();){
+      Method method = iterator.next();
+      MethodTemplateSignature mTSignature = inGTPApplied.hasMethod(method);
+     if (mTSignature!=null){
+       if (mTSignature.getModifier().equals("-")){
+         iterator.remove();
+       } else if (mTSignature.getModifier().equals("+")){
+         if (!mTSignature.getAlias().equals("")){
+           Method temMethod = new Method(method);
+           temMethod.setName(mTSignature.getAlias());
+           if (checkMethodInMapTraitsMethod(intraitMethods,temMethod)!=null){
+             getParseResult().addErrorMessage(new ErrorMessage(220,inGTPApplied.getPositions(),mTSignature.getAlias(),mTSignature.getMethod().getName()));  
+             return;
+           }
+           method.setName(mTSignature.getAlias());
 
-				       }
-					   if (!mTSignature.getMethod().getModifier().equals("")){
-						   newMethod.setModifier(mTSignature.getMethod().getModifier());
-						   //here I must check this new name is unique.
-					   }
-					   shouldBeIncluded.add(newMethod);
-				  } else if (mTSignature.getModifier().equals("")){
-					  if (!mTSignature.getAlias().equals("")){
-						   Method temMethod = new Method(newMethod);
-						   temMethod.setName(mTSignature.getAlias());
-						   if (checkMethodInMapTraitsMethod(intraitMethods,temMethod)!=null){
-							   getParseResult().addErrorMessage(new ErrorMessage(220,inGTPApplied.getPositions(),mTSignature.getAlias(),mTSignature.getMethod().getName()));	
-							   return;
-						   }
-						  newMethod.setName(mTSignature.getAlias());
-					  }						
-					  if (!mTSignature.getMethod().getModifier().equals("")){
-						  newMethod.setModifier(mTSignature.getMethod().getModifier());
-					  }
-				  }
-			   }
-		   }
-		   if (shouldBeIncluded.size()>0)  intraitMethods.put(uTrait, shouldBeIncluded) ;
-	}  
+           }
+         if (!mTSignature.getMethod().getModifier().equals("")){
+           method.setModifier(mTSignature.getMethod().getModifier());
+           //here I must check this new name is unique.
+         }
+         shouldBeIncluded.add(method);
+      } else if (mTSignature.getModifier().equals("")){
+        if (!mTSignature.getAlias().equals("")){
+           Method temMethod = new Method(method);
+           temMethod.setName(mTSignature.getAlias());
+           if (checkMethodInMapTraitsMethod(intraitMethods,temMethod)!=null){
+             getParseResult().addErrorMessage(new ErrorMessage(220,inGTPApplied.getPositions(),mTSignature.getAlias(),mTSignature.getMethod().getName()));  
+             return;
+           }
+          method.setName(mTSignature.getAlias());
+        }           
+        if (!mTSignature.getMethod().getModifier().equals("")){
+          method.setModifier(mTSignature.getMethod().getModifier());
+        }
+      }
+     }
+    }
+    if (shouldBeIncluded.size()>0)  intraitMethods.put(entry.getKey(), shouldBeIncluded) ;
+  }  
 }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
