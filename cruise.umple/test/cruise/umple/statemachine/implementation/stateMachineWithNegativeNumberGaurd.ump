@@ -1,0 +1,10 @@
+class stateMachineWithNegativeNumberGaurd{
+  status{
+    on{
+      turnOff (Integer pn) [pn > -1] -> off;
+    }
+    off{
+      turnOn -> on;
+    }
+  }
+}

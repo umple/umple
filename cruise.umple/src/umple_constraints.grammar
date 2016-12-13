@@ -51,7 +51,7 @@ numberExpression1- : ( [[arithmeticCall]] | [[numberName]] ) [[ordinalOp]] ( [[a
 numberExpression2- : ( [[arithmeticCall]] | [[constraintVariable]] ) [[equalityOperator]] ( [[arithmeticCall]] | [[numberLiteral]] )
 numberExpression3- : ( [[arithmeticCall]] | [[numberLiteral]] ) [[equalityOperator]]    ( [[arithmeticCall]] | [[constraintVariable]] )
 numberExpression4- : ( [[arithmeticCall]] | [[numberLiteral]] ) [[equalityOperator]]    ( [[arithmeticCall]] | [[numberLiteral]] )
-numberLiteral- : [!number:[0-9]+([\\.][0-9]+)?]
+numberLiteral- : [!number:-?[0-9]+([\\.][0-9]+)?]
 numberName- : [[numberLiteral]] | [[constraintVariable]]
 arithmeticCall : OPEN_ROUND_BRACKET ( [[lowArithmeticOperatorCall]] | [[highArithmeticOperatorCall]] ) CLOSE_ROUND_BRACKET
 lowArithmeticOperatorCall- : ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] )? [=operator:+|-|>>|<<] ( [[arithmeticCall]] | [[arithmeticResolve]] ) 

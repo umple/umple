@@ -684,4 +684,16 @@ public class StateMachineTest extends StateMachineTemplateTest
     
   }
   
+  @Test
+  public void stateMachineWithNegativeNumberGaurd()
+  {
+    assertUmpleTemplateFor("stateMachineWithNegativeNumberGaurd.ump",languagePath + "/stateMachineWithNegativeNumberGaurd."+ languagePath +".txt","stateMachineWithNegativeNumberGaurd");
+  }
+  
+  @Test
+  public void stateMachineWithNegativeNumberGaurd2()
+  {
+    assertUmpleTemplateFor("stateMachineWithNegativeNumberGaurd2.ump",languagePath + "/stateMachineWithNegativeNumberGaurd2."+ languagePath +".txt","stateMachineWithNegativeNumberGaurd2");
+  }
+  
 }
