@@ -1,0 +1,89 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+
+
+
+public class stateMachineWithNegativeNumberGaurd
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //stateMachineWithNegativeNumberGaurd State Machines
+  public enum Status { on, off }
+  private Status status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public stateMachineWithNegativeNumberGaurd()
+  {
+    setStatus(Status.on);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getStatusFullName()
+  {
+    String answer = status.toString();
+    return answer;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public boolean turnOff(Integer pn)
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case on:
+        if (pn>-1)
+        {
+          setStatus(Status.off);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean turnOn()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case off:
+        setStatus(Status.on);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setStatus(Status aStatus)
+  {
+    status = aStatus;
+  }
+
+  public void delete()
+  {}
+
+}

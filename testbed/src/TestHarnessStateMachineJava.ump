@@ -395,3 +395,14 @@ class DeepHistoryCourse
     }
   }
 }
+
+class StateMachineWithNegativeNumberGaurd{
+  Status{
+    On{
+      turnOff (Integer pn) [pn > -1] -> Off;
+    }
+    Off{
+      turnOn -> On;
+    }
+  }
+}
