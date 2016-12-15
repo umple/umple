@@ -64,7 +64,7 @@ public class UmpleTraitTest {
 	}
 
 	@Test
-	public void dependTest() {
+	public void depTest() {
 		Assert.assertEquals(1, uMode.getUmpleClass("A").numberOfDepends());
 	}
 
@@ -1168,6 +1168,7 @@ public class UmpleTraitTest {
 		UmpleModel model = getRunModelByFilename("trait_test_data_0031.ump");
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).numberOfNestedStateMachines(),1);
 	}
+	
 	// the last StateTest
 
 	// This is related to issue #656

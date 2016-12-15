@@ -188,18 +188,17 @@ class UmpleInternalParser
     if (newSMName!="") mustbeAdded.setName(newSMName);
       if (foundTrait!=null){
         for (StateMachine nsm :foundState.getNestedStateMachines() ) {
-      if (nsm.getName().equals(mustbeAdded.getName())){
-        StateMachine smNested = nsm;          
-            if (!smNested.getStartState().getName().equals(mustbeAdded.getStartState().getName())){
-              StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(smNested,mustbeAdded);
+      if (nsm.getName().equals(mustbeAdded.getName())){        
+            if (!nsm.getStartState().getName().equals(mustbeAdded.getStartState().getName())){
+              StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(nsm,mustbeAdded);
               if (checkSM!=null)  {
-                foundState.removeNestedStateMachine(smNested);
+                foundState.removeNestedStateMachine(nsm);
                 foundState.addNestedStateMachine(checkSM);
               }
             } else {          
-              addExtraStatesAndTransitions(smNested, mustbeAdded,inUmpleClassfier);
-              traitStateMachine.get(foundTrait).remove(mustbeAdded);
+              addExtraStatesAndTransitions(nsm, mustbeAdded,inUmpleClassfier);
             } 
+            traitStateMachine.get(foundTrait).remove(mustbeAdded);
             return;
       }
       }
