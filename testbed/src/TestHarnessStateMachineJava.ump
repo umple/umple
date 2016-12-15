@@ -406,3 +406,24 @@ class StateMachineWithNegativeNumberGaurd{
     }
   }
 }
+
+class ExitActionSelfTransition{
+  boolean b = false;
+  boolean exitCodeCalled = false;
+  
+  void execute_exit_code()
+  {
+    setExitCodeCalled(true);
+  }
+  
+  sm{
+    created{
+      exit /{execute_exit_code();}
+      init [b==false] -> created;
+      init [b==true] -> initialized;
+    }
+    initialized{
+      getback ->created;
+    }
+  } 
+}

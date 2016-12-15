@@ -51,6 +51,7 @@ public class Duplicate
         wasEventProcessed = true;
         break;
       case s1:
+        exitSm();
         setSm(Sm.s1);
         wasEventProcessed = true;
         break;

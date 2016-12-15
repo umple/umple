@@ -74,6 +74,7 @@ class UmpleToJava {
         State nextState = t.getNextState();
         String tabSpace = t.getGuard() == null ? "        " : "          ";
         StateMachine exitSm = state.exitableStateMachine(nextState);
+        StateMachine exitSmSelfTransition = state.exitableSelfTransition(nextState);
         
         String condition = t.getGuard()!=null?gen.translate("Open",t.getGuard()):"if ()\n{";
         if (!"if ()\n{".equals(condition))
@@ -90,7 +91,12 @@ class UmpleToJava {
           javaLine+=1+condition.split("\\n").length;
           
         }
-        if (exitSm != null && !e.getIsInternal() && !state.isSameState(nextState,exitSm)) 
+        if (exitSmSelfTransition != null)
+        {
+          allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",exitSmSelfTransition)));
+          javaLine++;
+        }
+        else if (exitSm != null && !e.getIsInternal() && !state.isSameState(nextState,exitSm)) 
         {
           allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",exitSm)));
           javaLine++;
