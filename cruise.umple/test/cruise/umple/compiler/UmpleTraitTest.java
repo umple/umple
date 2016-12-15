@@ -621,7 +621,7 @@ public class UmpleTraitTest {
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(1,
 				model.getUmpleClass("A").getStateMachine("system").getState(1).numberOfNestedStateMachines());
-		Assert.assertEquals("executing",
+		Assert.assertEquals("sm",
 				model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getName());
 		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0)
 				.getState(0).getStateMachine().numberOfStates());
@@ -636,7 +636,7 @@ public class UmpleTraitTest {
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(1,
 				model.getUmpleClass("A").getStateMachine("system").getState(1).numberOfNestedStateMachines());
-		Assert.assertEquals("executing",
+		Assert.assertEquals("sm",
 				model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getName());
 		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0)
 				.getState(0).getStateMachine().numberOfStates());
@@ -652,7 +652,7 @@ public class UmpleTraitTest {
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(1,
 				model.getUmpleClass("A").getStateMachine("system").getState(1).numberOfNestedStateMachines());
-		Assert.assertEquals("executing",
+		Assert.assertEquals("sm2",
 				model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getName());
 		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0)
 				.getState(0).getStateMachine().numberOfStates());
@@ -670,7 +670,7 @@ public class UmpleTraitTest {
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(1,
 				model.getUmpleClass("A").getStateMachine("system").getState(1).numberOfNestedStateMachines());
-		Assert.assertEquals("executing",
+		Assert.assertEquals("sm2",
 				model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0).getName());
 		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine("system").getState(1).getNestedStateMachine(0)
 				.getState(1).getStateMachine().numberOfStates());
@@ -1151,6 +1151,23 @@ public class UmpleTraitTest {
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(1).numberOfNestedStateMachines(),2);
 	}
 	
+	@Test
+	public void stateMachineTraits070Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0029.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).numberOfNestedStateMachines(),2);
+	}
+	
+	@Test
+	public void stateMachineTraits071Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0030.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).numberOfNestedStateMachines(),1);
+	}
+	
+	@Test
+	public void stateMachineTraits072Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0031.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).numberOfNestedStateMachines(),1);
+	}
 	// the last StateTest
 
 	// This is related to issue #656

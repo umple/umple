@@ -1,0 +1,20 @@
+class A{
+  isA T;
+  isA T2<t2_sm as status.on>;
+  isA T3<t3_sm as status.on>;
+}
+trait T{
+  status{
+    on{turnOn-> on;}
+  }
+}
+trait T2{
+  t2_sm{
+    s2 {e2-> s2;}
+  }
+}
+trait T3{
+  t3_sm{
+    s2 {e3-> s2;}
+  }
+}
