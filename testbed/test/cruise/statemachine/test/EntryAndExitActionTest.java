@@ -48,4 +48,13 @@ public class EntryAndExitActionTest
     Assert.assertEquals("Exit Off 2", course.getLog(3));
   }
 
+  @Test
+  public void ExitActionSelfTransition()
+  {
+    ExitActionSelfTransition sm = new ExitActionSelfTransition();
+	Assert.assertEquals(ExitActionSelfTransition.Sm.created, sm.getSm());
+	sm.init();
+	Assert.assertEquals(ExitActionSelfTransition.Sm.created, sm.getSm());
+	Assert.assertTrue(sm.getExitCodeCalled());
+  }
 }

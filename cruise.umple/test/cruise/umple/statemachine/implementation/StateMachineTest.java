@@ -238,6 +238,12 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
     assertUmpleTemplateFor("exitAction.ump",languagePath + "/exitAction."+ languagePath +".txt","LightFixture");
   }
+  
+  @Test 
+  public void exitActionSelfTransition()
+  {
+    assertUmpleTemplateFor("exitActionSelfTransition.ump",languagePath + "/exitActionSelfTransition."+ languagePath +".txt","A");
+  }
 
   @Test 
   public void entryExitTransitionAction()

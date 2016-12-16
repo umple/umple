@@ -622,6 +622,15 @@ class State
     }
     return null;
   }
+  
+  public StateMachine exitableSelfTransition(State nextState)
+  {
+    if (getHasExitAction() && equals(nextState))
+    {
+      return getStateMachine();
+    }
+    return null;
+  }
 
   public void visit()
   {
