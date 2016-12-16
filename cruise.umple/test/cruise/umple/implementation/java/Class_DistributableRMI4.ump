@@ -1,3 +1,4 @@
+namespace distributed.rmi4;
 class CC
 {
   isA Father;

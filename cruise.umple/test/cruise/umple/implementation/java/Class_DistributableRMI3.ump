@@ -1,3 +1,4 @@
+namespace distributed.rmi3;
 interface ClientI
 {
 	distributable;

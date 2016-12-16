@@ -1,19 +1,22 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
 
-
+package distributed.rmi5;
 import java.util.*;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ClientImpl extends CC implements ClientI, RemoteIClientImpl
+public class ClientImpl implements IClientImpl
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
+
+  //ClientImpl Attributes
+  private String id;
 
   //ClientImpl Associations
   private List<Microwave> microwaves;
@@ -22,9 +25,23 @@ public class ClientImpl extends CC implements ClientI, RemoteIClientImpl
   // CONSTRUCTOR
   //------------------------
 
-  public ClientImpl()
+  public ClientImpl(Client proxy)
   {
-    super();
+    realSelf=proxy;
+    realSelf.setRealObject(this);
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(this,0);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+      }
+    } 
+    id = "s";
     microwaves = new ArrayList<Microwave>();
   }
   //------------------------
@@ -38,16 +55,32 @@ public class ClientImpl extends CC implements ClientI, RemoteIClientImpl
   }
 
   //------------------------
-  // Start RMI Server
+  // Returning the Hashcode
   //------------------------
-  public void startRMI()
+  public int getHashCode()
   {
-    
+    return hashCode();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setId(String aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  /**
+   * isA ClientI;
+   */
+  public String getId()
+  {
+    return id;
+  }
 
   public Microwave getMicrowave(int index)
   {
@@ -169,7 +202,27 @@ public class ClientImpl extends CC implements ClientI, RemoteIClientImpl
     {
       aMicrowave.removeClient(realSelf);
     }
-    super.delete();
   }
 
+
+  /**
+   * key{id}
+   * isA CC;
+   */
+   public static  void method2(){
+    
+  }
+
+   static  int method3(){
+    return 12;
+  }
+
+
+  public String toString()
+  {
+    String outputString = "";
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "]"
+     + outputString;
+  }
 }

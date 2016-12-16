@@ -701,6 +701,16 @@ class Event
      return args;
   }
   
+  
+  public boolean compareWithAnotherEvent(Event inEvent){
+    if (!equals(inEvent)) return false;
+    if (numberOfParams() != inEvent.numberOfParams()) return false;
+      for (int i = 0; i < inEvent.numberOfParams(); i++) {
+        if (!getParam(i).getType().equals(inEvent.getParam(i).getType())) return false;
+      }
+    return true;
+  }
+     
   class Guard
   {
     String getCondition(CodeTranslator gen){

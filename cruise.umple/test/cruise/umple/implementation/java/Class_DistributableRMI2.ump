@@ -1,3 +1,4 @@
+namespace distributed.rmi2;
 class Client
 {
    isA CC;
@@ -6,5 +7,5 @@ class Client
 class CC
 {
   public void someMethod1()
-  {}	
+  {}
 }

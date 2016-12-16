@@ -204,12 +204,13 @@ public class DistributedClassTest extends TemplateTest
 	Assert.assertEquals(false, model.getUmpleClass(3).getIsDistributed());
 	Assert.assertEquals(true, model.getDistributed());
   }
-  
+  /*
   @Test
   public void ClassProxyPatternTest()
   {
 	  assertUmpleTemplateFor("java/Class_ProxyPattern.ump", languagePath + "/Class_ProxyPattern_Microwave."+ languagePath +".txt", "Microwave");
   }
+  
     @Test
   public void ClassProxyPatternTest_client()
   {
@@ -230,7 +231,7 @@ public class DistributedClassTest extends TemplateTest
   public void ClassProxyPatternTest_proxy()
   {
 	  assertUmpleProxyFor("java/Class_ProxyPattern.ump", languagePath + "/Class_ProxyPattern_MicrowaveProxy."+ languagePath +".txt","Microwave", "MicrowaveProxy",true,true);
-  }
+  }*/
   @Test
   public void TestClassModel()
   {
@@ -273,14 +274,15 @@ public class DistributedClassTest extends TemplateTest
   public void MethodProxyTest(){
 		assertUmpleTemplateFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods."+ languagePath +".txt", "Microwave");
   }
-    
+    /*
   @Test
   public void MethodProxyTest_interface(){
 		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods_interface."+ languagePath +".txt", "Microwave","IMicrowave",true,true);
-  }  
+  } 
+  */ 
   @Test
   public void MethodProxyTest_remoteInterface(){
-		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods_remoteInterface."+ languagePath +".txt", "Microwave","RemoteIMicrowaveImpl",true,true);
+		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods.ump", languagePath + "/Class_DistributableRMI_WithMethods_remoteInterface."+ languagePath +".txt", "Microwave","IMicrowaveImpl",true,true);
   }  
   @Test
   public void MethodProxyTest_proxy(){
@@ -307,19 +309,19 @@ public class DistributedClassTest extends TemplateTest
   @Test
   public void ClassDistributedExtention_parentInterface()
   {
-	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI2.ump", languagePath + "/Class_DistributableRMI2_parentInterface."+ languagePath +".txt", "CC","ICC",true,true);
+	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI2.ump", languagePath + "/Class_DistributableRMI2_parentInterface."+ languagePath +".txt", "CC","ICCImpl",true,true);
   }
-    
+    /*
   @Test
   public void ClassDistributedExtention_interface()
   {
 	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI2.ump", languagePath + "/Class_DistributableRMI2_interface."+ languagePath +".txt", "Client","IClient",true,true);
   }
-    
+    */
   @Test
   public void ClassDistributedExtention_remoteInterface()
   {
-	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI2.ump", languagePath + "/Class_DistributableRMI2_remoteInterface."+ languagePath +".txt", "Client","RemoteIClientImpl",true,true);
+	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI2.ump", languagePath + "/Class_DistributableRMI2_remoteInterface."+ languagePath +".txt", "Client","IClientImpl",true,true);
   }
   
   @Test
@@ -327,17 +329,17 @@ public class DistributedClassTest extends TemplateTest
   {
 		assertUmpleTemplateFor("java/Class_DistributableRMI_WithMethods2.ump", languagePath + "/Class_DistributableRMI_WithMethods2."+ languagePath +".txt", "Microwave");
   }
-    
+    /*
   @Test
   public void ClassDistributedExtention2_interface()
   {
 		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods2.ump", languagePath + "/Class_DistributableRMI_WithMethods_interface2."+ languagePath +".txt", "Microwave","IMicrowave",true,true);
   }
-    
+    */
   @Test
   public void ClassDistributedExtention2_remoteInterface()
   {
-		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods2.ump", languagePath + "/Class_DistributableRMI_WithMethods_remoteInterface2."+ languagePath +".txt", "Microwave","RemoteIMicrowaveImpl",true,true);
+		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods2.ump", languagePath + "/Class_DistributableRMI_WithMethods_remoteInterface2."+ languagePath +".txt", "Microwave","IMicrowaveImpl",true,true);
   }
     
   @Test
@@ -349,7 +351,7 @@ public class DistributedClassTest extends TemplateTest
   @Test
   public void ClassDistributedExtention2_parentInterface()
   {
-  		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods2.ump", languagePath + "/Class_DistributableRMI_WithMethods_parentInterface2."+ languagePath +".txt", "CC","RemoteICCImpl",true,true);
+  		assertUmpleProxyInterfaceFor("java/Class_DistributableRMI_WithMethods2.ump", languagePath + "/Class_DistributableRMI_WithMethods_parentInterface2."+ languagePath +".txt", "CC","ICCImpl",true,true);
   }
   
   @Test
@@ -364,22 +366,17 @@ public class DistributedClassTest extends TemplateTest
 	  assertUmpleTemplateFor("java/Class_DistributableRMI3.ump", languagePath + "/Class_DistributableRMI3_parent."+ languagePath +".txt", "CC");
   }
     
-  @Test
-  public void ClassDistributedExtention3_parentInterface()
-  {
-	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI3.ump", languagePath + "/Class_DistributableRMI3_parentInterface."+ languagePath +".txt", "CC","ICC",true,true);
-  }
     
   @Test
-  public void ClassDistributedExtention3_interface()
+  public void ClassDistributedExtention3_distributableInterface()
   {
-	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI3.ump", languagePath + "/Class_DistributableRMI3_interface."+ languagePath +".txt", "Client","ClientI",true,true);
+	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI3.ump", languagePath + "/Class_DistributableRMI3_distributableInterface."+ languagePath +".txt", "Client","ClientI",true,true);
   }
-    
+   
   @Test
   public void ClassDistributedExtention3_remoteInterface()
   {
-	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI3.ump", languagePath + "/Class_DistributableRMI3_remoteInterface."+ languagePath +".txt", "Client","RemoteIClientImpl",true,true);
+	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI3.ump", languagePath + "/Class_DistributableRMI3_remoteInterface."+ languagePath +".txt", "Client","IClientImpl",true,true);
   }
     
   @Test
@@ -400,17 +397,19 @@ public class DistributedClassTest extends TemplateTest
   @Test
   public void ClassDistributedExtention4_parentInterface()
   {
-	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI4.ump", languagePath + "/Class_DistributableRMI4_parentInterface."+ languagePath +".txt", "CC","ICC",true,true);
+	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI4.ump", languagePath + "/Class_DistributableRMI4_parentInterface."+ languagePath +".txt", "CC","ICCImpl",true,true);
   }
+  /*
   @Test
   public void ClassDistributedExtention4_interface()
   {
-	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI4.ump", languagePath + "/Class_DistributableRMI4_interface."+ languagePath +".txt", "Microwave","IMicrowave",true,true);
+	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI4.ump", languagePath + "/Class_DistributableRMI4_interface."+ languagePath +".txt", "Microwave","IMicrowaveImpl",true,true);
   }
+  */
   @Test
   public void ClassDistributedExtention4_remoteInterface()
   {
-	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI4.ump", languagePath + "/Class_DistributableRMI4_remoteInterface."+ languagePath +".txt", "Microwave","RemoteIMicrowaveImpl",true,true);
+	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI4.ump", languagePath + "/Class_DistributableRMI4_remoteInterface."+ languagePath +".txt", "Microwave","IMicrowaveImpl",true,true);
   }
   @Test
   public void ClassDistributedExtention4_proxy()
@@ -418,16 +417,19 @@ public class DistributedClassTest extends TemplateTest
 	  assertUmpleProxyFor("java/Class_DistributableRMI4.ump", languagePath + "/Class_DistributableRMI4_proxy."+ languagePath +".txt","Microwave", "MicrowaveProxy",true,true);
 
   }
+  /*
   @Test
   public void ClassDistributedExtention4_objectFactory()
   {
 	  assertObjectFactory("java/Class_DistributableRMI4.ump", languagePath + "/Class_DistributableRMI4_UmpleObjectFactory."+ languagePath +".txt",languagePath + "/Class_DistributableRMI4_IUmpleObjectFactory."+ languagePath +".txt");
   }
+  */
   @Test
   public void ClassDistributedExtention5()
   {
 	  assertUmpleTemplateFor("java/Class_DistributableRMI5.ump", languagePath + "/Class_DistributableRMI5."+ languagePath +".txt", "Microwave");
   }
+  
   @Test
   public void ClassDistributedExtention5_parent()
   {
@@ -438,15 +440,17 @@ public class DistributedClassTest extends TemplateTest
   {
 	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI5.ump", languagePath + "/Class_DistributableRMI5_parentInterface."+ languagePath +".txt", "Client","ClientI",true,true);
   }
+  /*
   @Test
   public void ClassDistributedExtention5_interface()
   {
-	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI5.ump", languagePath + "/Class_DistributableRMI5_interface."+ languagePath +".txt", "Microwave","IMicrowave",true,true);
+	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI5.ump", languagePath + "/Class_DistributableRMI5_interface."+ languagePath +".txt", "Microwave","IMicrowaveImpl",true,true);
   }
+  */
   @Test
   public void ClassDistributedExtention5_remoteInterface()
   {
-	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI5.ump", languagePath + "/Class_DistributableRMI5_remoteInterface."+ languagePath +".txt", "Microwave","RemoteIMicrowaveImpl",true,true);
+	  assertUmpleProxyInterfaceFor("java/Class_DistributableRMI5.ump", languagePath + "/Class_DistributableRMI5_remoteInterface."+ languagePath +".txt", "Microwave","IMicrowaveImpl",true,true);
   }
   @Test
   public void ClassDistributedExtention5_proxy()
@@ -454,11 +458,10 @@ public class DistributedClassTest extends TemplateTest
 	  assertUmpleProxyFor("java/Class_DistributableRMI5.ump", languagePath + "/Class_DistributableRMI5_proxy."+ languagePath +".txt","Microwave", "MicrowaveProxy",true,true);
 
   }
+  /*
   @Test
   public void ClassDistributedExtention5_objectFactory()
   {
 	  assertObjectFactory("java/Class_DistributableRMI5.ump", languagePath + "/Class_DistributableRMI5_UmpleObjectFactory."+ languagePath +".txt",languagePath + "/Class_DistributableRMI5_IUmpleObjectFactory."+ languagePath +".txt");
-  } 
-   
-	
+  } */
 }

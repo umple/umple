@@ -3,7 +3,7 @@ class UmpleToJava {
   for(UmpleClass uClass : model.getUmpleClasses())
   {if (uClass.getIsDistributed()){
   #>>
-    listOf<<=uClass.getName()>> = new ArrayList<<<="RemoteI"+uClass.getName()+"Impl">>>();
+    listOf<<=uClass.getName()>> = new ArrayList<<<="I"+uClass.getName()+"Impl">>>();
   <<#
   }}
 #>>!>>

@@ -250,29 +250,13 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Mentor.java");
 
     // Tear down Client
+    
     SampleFileWriter.destroy(pathToInput + "/Client.java");
-    
+   
     SampleFileWriter.destroy(pathToInput + "/java/IClient.java");
-    SampleFileWriter.destroy(pathToInput + "/java/ClientI.java");
-    SampleFileWriter.destroy(pathToInput + "/java/Client.java");
-    SampleFileWriter.destroy(pathToInput + "/java/ClientImpl.java");
-    SampleFileWriter.destroy(pathToInput + "/java/FatherImpl.java");
-    SampleFileWriter.destroy(pathToInput + "/java/CC.java");
-    SampleFileWriter.destroy(pathToInput + "/java/CCImpl.java");
-    SampleFileWriter.destroy(pathToInput + "/java/RemoteICCImpl.java");
-    SampleFileWriter.destroy(pathToInput + "/java/ICC.java");
-    SampleFileWriter.destroy(pathToInput + "/java/RemoteIClientImpl.java");
-    SampleFileWriter.destroy(pathToInput + "/java/Microwave.java");
-    SampleFileWriter.destroy(pathToInput + "/java/MicrowaveImpl.java");
-    SampleFileWriter.destroy(pathToInput + "/java/IMicrowave.java");
-    SampleFileWriter.destroy(pathToInput + "/java/Father.java");
-    SampleFileWriter.destroy(pathToInput + "/java/IFather.java");
-    SampleFileWriter.destroy(pathToInput + "/java/RemoteIFatherImpl.java");
-    SampleFileWriter.destroy(pathToInput + "/java/RemoteIMicrowaveImpl.java");
-    SampleFileWriter.destroy(pathToInput + "/java/UmpleObjectFactory.java");
-    SampleFileWriter.destroy(pathToInput + "/java/IUmpleObjectFactory.java");
-    SampleFileWriter.destroy(pathToInput + "/java/Main.java");
-    
+    SampleFileWriter.destroy(pathToInput + "/java/distributed/");
+    SampleFileWriter.destroy(pathToInput + "/java/proxyPattern/");
+
     SampleFileWriter.destroy(pathToInput + "/client.rb");
     SampleFileWriter.destroy(pathToInput + "/Client.php");
     

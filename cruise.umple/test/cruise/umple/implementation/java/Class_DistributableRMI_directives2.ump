@@ -1,3 +1,4 @@
+namespace distributed.rmi.directives2;
 distribute RMI off;
 class CC
 {

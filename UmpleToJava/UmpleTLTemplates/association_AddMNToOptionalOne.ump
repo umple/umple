@@ -29,7 +29,7 @@ class UmpleToJava {
     <<=gen.translate("associationMany",av)>>.add(<<=gen.translate("parameterOne",av)>>);<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 >>
-    <<=gen.relatedTranslate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>,this);
+    <<=gen.relatedTranslate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>,<<=self>>);
     wasAdded = true;
     <<# if (customAddPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } #>>
