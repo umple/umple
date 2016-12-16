@@ -1183,6 +1183,25 @@ public class UmpleTraitTest {
 		}
 	}
 	
+	@Test
+	public void stateMachineTraits074Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0033.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).numberOfTransitions(),1);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getGuard().getExpression(),"y");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getActionCode(),"action1();");
+	}
+	
+	@Test
+	public void stateMachineTraits075Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0034.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).numberOfTransitions(),2);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getGuard().getExpression(),"y");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getActionCode(),"action1();");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(1).getGuard().getExpression(),"x");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(1).getAction(),null);
+	}
+	
+	
 	// the last StateTest
 
 	// This is related to issue #656

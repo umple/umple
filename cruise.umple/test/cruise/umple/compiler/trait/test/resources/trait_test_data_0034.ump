@@ -1,0 +1,21 @@
+class A {
+   isA T;
+   sm {
+     s1 {
+       e1-> s2;
+     }
+     s2 {}
+   }
+}
+
+trait T {
+   sm {
+     s1 {
+      e1[y]->/{action1();} s2;
+      e2[x]-> s3;
+     }
+     s2 {}
+     s3{}
+   }
+   void action1(){ }
+}

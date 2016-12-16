@@ -709,7 +709,7 @@ class UmpleInternalParser
 					Transition tTransition = state.getTransition(i); 		  		
 				  Transition findTransition= null;
 				  for(Transition mainlTrans : mainState.getTransitions() ){
-					  if (tTransition.isEqualToTransition(mainlTrans)&& tTransition.getNextState().getName().equals(mainlTrans.getNextState().getName())){ 
+					  if (mainlTrans.isEqualToTransition(tTransition)&& tTransition.getNextState().getName().equals(mainlTrans.getNextState().getName())){ 
 					  	findTransition = mainlTrans;
 					  	break;
 					  }
@@ -949,7 +949,13 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 	private void applyCompositionAndSuperKeywordToTransition(StateMachine inSMachine1, StateMachine inSMachine2, Transition fTransition,Transition rTransition, UmpleClassifier inUmpleClassfier) {
-		if (rTransition.getAction()==null) return;
+	  if(fTransition.getGuard()==null && rTransition.getGuard()!=null) fTransition.setGuard(rTransition.getGuard());   
+    if (fTransition.getAction()==null && rTransition.getAction()!=null){
+      rTransition.getAction().getCodeblock().removeKeyword("superCall;");
+      fTransition.setAction(rTransition.getAction());
+      return;
+    }
+    if (rTransition.getAction()==null) return;
 		if (inUmpleClassfier instanceof UmpleClass){
 			  if (inSMachine1.getRootStateMachine().getUmpleClass()!=null){
 				  //comes from a class
@@ -1063,7 +1069,7 @@ class Transition{
 	  if (getGuard()!=null){
 		  if (!getGuard().isEqualToGuard(inTransition.getGuard())) return false; 
 	  } else {
-	  	if (inTransition.getGuard()!=null) 	return false;
+	  	//if (inTransition.getGuard()!=null) 	return false;
 	  }
 		/*
 		 * The following comments try to compare actions of a transition. However, I noticed I don't need to do it in my algorithm because they have to be overwritten later.
