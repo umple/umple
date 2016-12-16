@@ -1,40 +1,77 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
 
+package distributed.rmi4;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-public class Microwave implements IMicrowave
+import java.io.Serializable;
+import distributed.rmi4.UmpleObjectFactory;
+public class Microwave extends CC implements java.io.Serializable
 {
-  RemoteIMicrowaveImpl realObject;
+  IMicrowaveImpl realObject;
+  public void setRealObject(IMicrowaveImpl aObject)
+  {
+    realObject=aObject;
+  }
+  public IMicrowaveImpl getRealObject()
+  {
+    return realObject;
+  }
   public Microwave(String component)
   {
-    realObject = UmpleObjectFactory.theInstance.addMicrowave(component, this);
+    realObject = UmpleObjectFactory.getInstance().addMicrowave(component, this);
   }
   public Microwave(int component)
   {
-    realObject = UmpleObjectFactory.theInstance.addMicrowave(component, this);
+    realObject = UmpleObjectFactory.getInstance().addMicrowave(component, this);
   }
   public Microwave()
   {
-    realObject = UmpleObjectFactory.theInstance.createMicrowave(this);
+    realObject = UmpleObjectFactory.getInstance().createMicrowave(this);
   }
   public void setRealSelf(Microwave self)
   {
-    realObject.setRealSelf(self);
+    while(true)
+      try{
+        realObject.setRealSelf(self);
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
-  public void startRMI()
+  public int getHashCode()
   {
-    realObject.startRMI();
+    while(true)
+      try{
+        return realObject.getHashCode();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public void delete()
   {
-    realObject.delete();
+    while(true)
+      try{
+        realObject.delete();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
    public int method1(int f)
   {
-  return realObject.method1(f);
+    while(true)
+      try{
+        return realObject.method1(f);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
 
+  public boolean equals(Object obj)
+  {
+    if(obj==null)
+      return false;
+    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((Microwave)obj).getHashCode());
+  }
 }

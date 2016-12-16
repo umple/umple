@@ -1,10 +1,15 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
 
+package distributed.rmi4;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-interface RemoteIMicrowaveImpl extends java.rmi.Remote, IMicrowave, ICC
+public interface IMicrowaveImpl extends java.rmi.Remote, ICCImpl
 {
+  public void setRealSelf(Microwave self) throws RemoteException;
+  public int getHashCode() throws RemoteException;
+  public void delete() throws RemoteException;
+   public int method1(int f) throws RemoteException;
 }

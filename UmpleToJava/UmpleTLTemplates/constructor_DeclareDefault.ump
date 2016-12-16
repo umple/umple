@@ -25,9 +25,20 @@ class UmpleToJava {
 
   String customConstructorPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","constructor"));
   String customConstructorPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","constructor"));
-
+  String proxySignature="";
+  if(uClass.getIsDistributed())
+  {    
+    if(!gClass.getLookup("constructorSignature").equals(""))
+    {
+      proxySignature=", "+uClass.getName().substring(0,uClass.getName().length()-4)+" proxy";
+    }
+    else
+    {
+      proxySignature=uClass.getName().substring(0,uClass.getName().length()-4)+" proxy";
+    }  
+  }  
   String accessibility = uClass.getIsSingleton() ? "private" : "public";
-  append(realSb,"\n  {0} {1}({2})",new Object[] {accessibility, uClass.getName(), gClass.getLookup("constructorSignature")});
+  append(realSb,"\n  {0} {1}({2}{3})",new Object[] {accessibility, uClass.getName(), gClass.getLookup("constructorSignature"),proxySignature});
 
   String extraNote = null;
   
@@ -36,6 +47,25 @@ class UmpleToJava {
   boolean hasBody = false;
 
   append(realSb, "  {");
+  if(uClass.getIsDistributed())
+  {
+    #>>
+    realSelf=proxy;
+    realSelf.setRealObject(this);
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(this,0);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+      }
+    } 
+    <<#
+  }
   if (!uClass.isRoot() && !"interface".equals(uClass.getExtendsClass().getModifier()))
   {
     appendln(realSb, "");

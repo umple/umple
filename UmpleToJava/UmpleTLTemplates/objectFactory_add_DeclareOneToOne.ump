@@ -2,7 +2,7 @@
 use rmi_objectFactory_add_methods.ump;
 class UmpleToJava {
     objectFactory_add_DeclareOneToOne <<!<</*objectFactory_add_DeclareOneToOne*/>><<#
-  accessibility = "public "+uClass.getName()+"Impl";
+  accessibility = "public RemoteI"+uClass.getName()+"Impl";
   String signature = gClass.getLookup("constructorSignature_mandatory");
   hasBody = false;
   arguments=gen.translate("constructorMandatory",uClass);

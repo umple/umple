@@ -1,3 +1,4 @@
+namespace distributed.rmi.directives3;
 distribute on;
 class CC
 {

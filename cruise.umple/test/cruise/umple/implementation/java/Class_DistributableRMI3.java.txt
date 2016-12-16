@@ -1,13 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-7aed471 modeling language!*/
+/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
 
-
+package distributed.rmi3;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ClientImpl extends CC implements RemoteIClientImpl
+public class ClientImpl extends CC implements IClientImpl
 {
 
   //------------------------
@@ -18,8 +18,22 @@ public class ClientImpl extends CC implements RemoteIClientImpl
   // CONSTRUCTOR
   //------------------------
 
-  public ClientImpl()
+  public ClientImpl(Client proxy)
   {
+    realSelf=proxy;
+    realSelf.setRealObject(this);
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(this,0);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+      }
+    } 
     super();
   }
   //------------------------
@@ -33,11 +47,11 @@ public class ClientImpl extends CC implements RemoteIClientImpl
   }
 
   //------------------------
-  // Start RMI Server
+  // Returning the Hashcode
   //------------------------
-  public void startRMI()
+  public int getHashCode()
   {
-    
+    return hashCode();
   }
 
   //------------------------

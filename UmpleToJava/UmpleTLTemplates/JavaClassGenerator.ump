@@ -95,15 +95,15 @@ class JavaClassGenerator {
 <<# } #>>
 public <<# if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
 boolean hasParentInterface=uClass.hasParentInterface();
-if(uClass.getIsDistributed())
+if(uClass.getHasProxyPattern())
 {
   if (hasParentInterface == false){
-        append(realSb," implements RemoteI"+uClass.getName());
+        append(realSb," implements I"+uClass.getName());
         hasParentInterface=true;
       }
       else{
         if(uClass.getNeedsDefaultInterface())
-          append(realSb,", RemoteI"+uClass.getName());
+          append(realSb,", I"+uClass.getName());
       } 
 }
 
@@ -148,17 +148,16 @@ for (StateMachine smq : uClass.getStateMachines())
   return realSb;
     } 
     private String getDistributedMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
-    {if(uClass.getIsDistributed()){
-      if(uClass.getDistributeTechnology().equals("RMI"))
-    {#>>
+    {if(uClass.getHasProxyPattern()){#>>
   //------------------------
-  // Start RMI Server
+  // Returning the Hashcode
   //------------------------
-  public void startRMI()
+  public int getHashCode()
   {
-    
+    return hashCode();
   }
-    <<#}}return realSb.toString();
+    <<#
+    }return realSb.toString();
     }
     private String getProxyReferenceCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
     {if(uClass.getHasProxyPattern()){#>>

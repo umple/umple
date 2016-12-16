@@ -533,6 +533,7 @@ class UmpleClass
   Boolean hasProxyPattern = false;
   Boolean needsDefaultInterface=false;
   Boolean isDistributed = false;
+  Boolean isDefaultInterfaceRemoteRMI=false;
   // Specifies whether or not in the filter
   Boolean filteredin = false;
 

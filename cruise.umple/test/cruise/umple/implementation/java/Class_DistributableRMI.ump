@@ -1,3 +1,4 @@
+namespace distributed.rmi1;
 class Client
 {
    distributable;

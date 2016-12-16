@@ -1,11 +1,28 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
 
+package distributed.rmi5;
 import java.util.*;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-interface RemoteIMicrowaveImpl extends java.rmi.Remote, IMicrowave, RemoteIClientImpl
+public interface IMicrowaveImpl extends java.rmi.Remote
 {
+  public void setRealSelf(Microwave self) throws RemoteException;
+  public int getHashCode() throws RemoteException;
+  public boolean setX(int aX) throws RemoteException;
+  public boolean setF(String aF) throws RemoteException;
+  public int getX() throws RemoteException;
+  public String getF() throws RemoteException;
+  public Client getClient(int index) throws RemoteException;
+  public List<Client> getClients() throws RemoteException;
+  public int numberOfClients() throws RemoteException;
+  public boolean hasClients() throws RemoteException;
+  public int indexOfClient(Client aClient) throws RemoteException;
+  public boolean addClient(Client aClient) throws RemoteException;
+  public boolean removeClient(Client aClient) throws RemoteException;
+  public boolean addClientAt(Client aClient, int index) throws RemoteException;
+  public boolean addOrMoveClientAt(Client aClient, int index) throws RemoteException;
+  public void delete() throws RemoteException;
 }

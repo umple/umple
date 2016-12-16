@@ -37,6 +37,10 @@ class JavaObjectFactoryInterfaceGenerator {
   Boolean isInterface=true;
 #>>
 
+<<#if (model.getDefaultNamespace()!=null){#>>
+package <<=model.getDefaultNamespace()>>;
+<<#}#>>
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 

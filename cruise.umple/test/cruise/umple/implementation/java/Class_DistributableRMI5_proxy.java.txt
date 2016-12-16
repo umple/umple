@@ -1,89 +1,190 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
 
+package distributed.rmi5;
 import java.util.*;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-public class Microwave implements IMicrowave
+import java.io.Serializable;
+import distributed.rmi5.UmpleObjectFactory;
+public class Microwave implements java.io.Serializable
 {
-  RemoteIMicrowaveImpl realObject;
+  IMicrowaveImpl realObject;
+  public void setRealObject(IMicrowaveImpl aObject)
+  {
+    realObject=aObject;
+  }
+  public IMicrowaveImpl getRealObject()
+  {
+    return realObject;
+  }
   public Microwave(int aX, String aF, String component)
   {
-    realObject = UmpleObjectFactory.theInstance.addMicrowave(aX,aF, component, this);
+    realObject = UmpleObjectFactory.getInstance().addMicrowave(aX,aF, component, this);
   }
   public Microwave(int aX, String aF, int component)
   {
-    realObject = UmpleObjectFactory.theInstance.addMicrowave(aX,aF, component, this);
+    realObject = UmpleObjectFactory.getInstance().addMicrowave(aX,aF, component, this);
   }
   public Microwave(int aX, String aF)
   {
-    realObject = UmpleObjectFactory.theInstance.createMicrowave(aX,aF, this);
+    realObject = UmpleObjectFactory.getInstance().createMicrowave(aX,aF, this);
   }
   public void setRealSelf(Microwave self)
   {
-    realObject.setRealSelf(self);
+    while(true)
+      try{
+        realObject.setRealSelf(self);
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
-  public void startRMI()
+  public int getHashCode()
   {
-    realObject.startRMI();
+    while(true)
+      try{
+        return realObject.getHashCode();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean setX(int aX)
   {
-    return realObject.setX(aX);
+    while(true)
+      try{
+        return realObject.setX(aX);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean setF(String aF)
   {
-    return realObject.setF(aF);
+    while(true)
+      try{
+        return realObject.setF(aF);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public int getX()
   {
-    return realObject.getX();
+    while(true)
+      try{
+        return realObject.getX();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public String getF()
   {
-    return realObject.getF();
+    while(true)
+      try{
+        return realObject.getF();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public Client getClient(int index)
   {
-    return realObject.getClient(index);
+    while(true)
+      try{
+        return realObject.getClient(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Client> getClients()
+  {
+    while(true)
+      try{
+        return realObject.getClients();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public int numberOfClients()
   {
-    return realObject.numberOfClients();
+    while(true)
+      try{
+        return realObject.numberOfClients();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean hasClients()
   {
-    return realObject.hasClients();
+    while(true)
+      try{
+        return realObject.hasClients();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public int indexOfClient(Client aClient)
   {
-    return realObject.indexOfClient(aClient);
+    while(true)
+      try{
+        return realObject.indexOfClient(aClient);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public static int minimumNumberOfClients()
+  {
+    while(true)
+      try{
+        return MicrowaveImpl.minimumNumberOfClients();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean addClient(Client aClient)
   {
-    return realObject.addClient(aClient);
+    while(true)
+      try{
+        return realObject.addClient(aClient);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean removeClient(Client aClient)
   {
-    return realObject.removeClient(aClient);
+    while(true)
+      try{
+        return realObject.removeClient(aClient);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean addClientAt(Client aClient, int index)
   {
-    return realObject.addClientAt(aClient,index);
+    while(true)
+      try{
+        return realObject.addClientAt(aClient,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean addOrMoveClientAt(Client aClient, int index)
   {
-    return realObject.addOrMoveClientAt(aClient,index);
+    while(true)
+      try{
+        return realObject.addOrMoveClientAt(aClient,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public void delete()
   {
-    realObject.delete();
+    while(true)
+      try{
+        realObject.delete();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public String toString()
   {
-    return realObject.toString();
+    while(true)
+      try{
+        return realObject.toString();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
 
+  public boolean equals(Object obj)
+  {
+    if(obj==null)
+      return false;
+    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((Microwave)obj).getHashCode());
+  }
 }

@@ -1,114 +1,221 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
 
+package distributed.rmi.withMethods2;
 import java.util.*;
 import java.lang.Thread;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-public class Microwave implements IMicrowave
+import java.io.Serializable;
+import distributed.rmi.withMethods2.UmpleObjectFactory;
+public class Microwave extends CC implements java.io.Serializable
 {
-  RemoteIMicrowaveImpl realObject;
+  IMicrowaveImpl realObject;
+  public void setRealObject(IMicrowaveImpl aObject)
+  {
+    realObject=aObject;
+  }
+  public IMicrowaveImpl getRealObject()
+  {
+    return realObject;
+  }
   public Microwave(String component)
   {
-    realObject = UmpleObjectFactory.theInstance.addMicrowave(component, this);
+    realObject = UmpleObjectFactory.getInstance().addMicrowave(component, this);
   }
   public Microwave(int component)
   {
-    realObject = UmpleObjectFactory.theInstance.addMicrowave(component, this);
+    realObject = UmpleObjectFactory.getInstance().addMicrowave(component, this);
   }
   public Microwave()
   {
-    realObject = UmpleObjectFactory.theInstance.createMicrowave(this);
+    realObject = UmpleObjectFactory.getInstance().createMicrowave(this);
   }
   public void setRealSelf(Microwave self)
   {
-    realObject.setRealSelf(self);
+    while(true)
+      try{
+        realObject.setRealSelf(self);
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
-  public void startRMI()
+  public int getHashCode()
   {
-    realObject.startRMI();
+    while(true)
+      try{
+        return realObject.getHashCode();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean setLightOn(boolean aLightOn)
   {
-    return realObject.setLightOn(aLightOn);
+    while(true)
+      try{
+        return realObject.setLightOn(aLightOn);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean setPowerTubeOn(boolean aPowerTubeOn)
   {
-    return realObject.setPowerTubeOn(aPowerTubeOn);
+    while(true)
+      try{
+        return realObject.setPowerTubeOn(aPowerTubeOn);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean setIsDoorOpened(boolean aIsDoorOpened)
   {
-    return realObject.setIsDoorOpened(aIsDoorOpened);
+    while(true)
+      try{
+        return realObject.setIsDoorOpened(aIsDoorOpened);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean setIsButtonPressed(boolean aIsButtonPressed)
   {
-    return realObject.setIsButtonPressed(aIsButtonPressed);
+    while(true)
+      try{
+        return realObject.setIsButtonPressed(aIsButtonPressed);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean getLightOn()
   {
-    return realObject.getLightOn();
+    while(true)
+      try{
+        return realObject.getLightOn();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean getPowerTubeOn()
   {
-    return realObject.getPowerTubeOn();
+    while(true)
+      try{
+        return realObject.getPowerTubeOn();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean getIsDoorOpened()
   {
-    return realObject.getIsDoorOpened();
+    while(true)
+      try{
+        return realObject.getIsDoorOpened();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean getIsButtonPressed()
   {
-    return realObject.getIsButtonPressed();
-  }
-  public String getOperatingMicrowaveStateMachineFullName()
-  {
-    return realObject.getOperatingMicrowaveStateMachineFullName();
-  }
-  public OperatingMicrowaveStateMachine getOperatingMicrowaveStateMachine()
-  {
-    return realObject.getOperatingMicrowaveStateMachine();
+    while(true)
+      try{
+        return realObject.getIsButtonPressed();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean _doorOpened()
   {
-    return realObject._doorOpened();
+    while(true)
+      try{
+        return realObject._doorOpened();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean _buttonPressed()
   {
-    return realObject._buttonPressed();
+    while(true)
+      try{
+        return realObject._buttonPressed();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public boolean _doorClosed()
   {
-    return realObject._doorClosed();
+    while(true)
+      try{
+        return realObject._doorClosed();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public void delete()
   {
-    realObject.delete();
+    while(true)
+      try{
+        realObject.delete();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public void doorOpened ()
   {
-    realObject.doorOpened();
+    while(true)
+      try{
+        realObject.doorOpened();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public void buttonPressed ()
   {
-    realObject.buttonPressed();
+    while(true)
+      try{
+        realObject.buttonPressed();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public void doorClosed ()
   {
-    realObject.doorClosed();
+    while(true)
+      try{
+        realObject.doorClosed();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public void run ()
   {
-    realObject.run();
+    while(true)
+      try{
+        realObject.run();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
    public void turnLightOn(boolean on)
   {
-  realObject.turnLightOn(on);
+    while(true)
+      try{
+        realObject.turnLightOn(on);
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public static  void someMethod()
+  {
+    while(true)
+      try{
+        MicrowaveImpl.someMethod();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
   public String toString()
   {
-    return realObject.toString();
+    while(true)
+      try{
+        return realObject.toString();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
 
+  public boolean equals(Object obj)
+  {
+    if(obj==null)
+      return false;
+    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((Microwave)obj).getHashCode());
+  }
 }

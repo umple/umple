@@ -1,4 +1,4 @@
-
+namespace distributed.rmi.withMethods2;
 class Microwave{
   isA CC;
   boolean lightOn=false;

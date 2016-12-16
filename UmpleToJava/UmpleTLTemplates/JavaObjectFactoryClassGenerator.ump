@@ -38,43 +38,89 @@ class JavaObjectFactoryClassGenerator {
   GeneratorHelper.generator = gen;
   Boolean isInterface=false;
 #>>
+
+<<#if (model.getDefaultNamespace()!=null){#>>
+package <<=model.getDefaultNamespace()>>;
+<<#}#>>
+
 import java.io.File;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.*;
-
+<<#for(UmpleClass uClass: model.getUmpleClasses())
+{
+  if (uClass.getIsDistributed())
+  {
+#>>
+import <<=uClass.getPackageName()>>.<<=uClass.getName()>>;
+<<#  
+  }
+}
+ #>>
 
 public class UmpleObjectFactory implements IUmpleObjectFactory
 {
-  public static UmpleObjectFactory theInstance = new UmpleObjectFactory();
+  public static UmpleObjectFactory theInstance = null;
   List<IUmpleObjectFactory> remoteFactories;
+  private String fileAddress="";
 
   <<@ UmpleToJava.objectFactory_listOfObjects_All >>
+  private List<UmpleComponent> components;
   Registry rmiRegistry;
-  int thisComponentId=0;
-  public int getThisComponentId(){
-  return thisComponentId;
+  static int thisComponentId=-1;
+
+  public static int getThisComponentId()
+  {
+    return thisComponentId;
   }
+    private static void setThisComponentId(int id)
+  {
+    thisComponentId=id;
+  } 
+  public static UmpleObjectFactory getInstance()
+  {
+    if(theInstance==null)
+      theInstance = new UmpleObjectFactory();
+    return theInstance;
+  }
+  public void setFileAddress(String address)
+  {
+    fileAddress=address;
+  }
+ 
   private UmpleObjectFactory()
   { 
     <<@ UmpleToJava.objectFactory_listOfObjects_instantiation_All >>
     remoteFactories= new ArrayList<IUmpleObjectFactory>();
+    components= new ArrayList<UmpleComponent>();
     initialize();
   }
-  
+  public int getComponentId(int umpleComponentId)
+  {
+    int componentId=umpleComponentId;
+    if(componentId>=components.size())
+      componentId=components.size()-1;
+    return componentId;
+  }
   public int getComponentId(String umpleComponentName)
   {
-    int ComponentId=0;
-    return ComponentId;
+    int componentId=0;
+    return getComponentId(componentId);
   }
   public void initialize()
   {    
-    int numberOfComponents=1;
-    /*
-    Read configuration file
-    */
+
+    if(getThisComponentId()<0)
+      readConfigFile();
+    readComponentsFile();
+    int numberOfComponents= getComponentId(components.size())+1;
+    System.out.println(getThisComponentId());
     startRMI();
     for(int component=0;component<numberOfComponents;component=component+1)
     {
@@ -83,28 +129,43 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
         remoteFactories.add(this);
       }
       else
-      {
-      //connect-to remote
+      {System.out.println(component);
+        while(true)
+        {
+          try 
+          {
+            Registry registry = LocateRegistry.getRegistry(components.get(component).getIp(),components.get(component).getPort());
+            IUmpleObjectFactory stub = (IUmpleObjectFactory) registry.lookup("UmpleObjectFactory"+String.valueOf(component));
+            remoteFactories.add(stub);
+            break;
+          } 
+          catch (Exception e) 
+          {
+            System.err.println("Client exception: " + e.toString());
+            e.printStackTrace();
+          }
+        } 
       } 
     }
-
   }
   public void startRMI() 
-  {/*
-    try {
-          
-      IUmpleObjectFactory stub = (IUmpleObjectFactory) UnicastRemoteObject.exportObject(this, 0);
-
-      //Bind the remote object's stub in the registry
-      rmiRegistry = LocateRegistry.getRegistry();
-      rmiRegistry.bind("UmpleObjectFactory", stub);
-      System.err.println("Component ready");
-      } catch (Exception e) {
-          System.err.println("Server exception: " + e.toString());
-          e.printStackTrace();
+  {
+    IUmpleObjectFactory stub;
+    while(true){
+      try
+      {  
+        // Bind the remote object's stub in the registry
+        rmiRegistry= LocateRegistry.createRegistry(components.get(getThisComponentId()).getPort());
+        stub = (IUmpleObjectFactory) UnicastRemoteObject.exportObject(this, 0);
+        rmiRegistry.rebind("UmpleObjectFactory"+String.valueOf(getThisComponentId()), stub);
+        System.err.println("Server ready");
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("binding exception: " + e.toString());
       }
-
-      */
+    }
   }
   public void stopRMI() throws Exception 
   {
@@ -112,8 +173,181 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
     //unexportObject(this, true);
     //unexportObject(rmiRegistry, true);
     System.out.println("Component stopped");
-    }
-  <<@ UmpleToJava.objectFactory_add_Declare_All >>
   }
+
+  private void readComponentsFile()
+  {
+   UmpleComponent c=new UmpleComponent();
+   c.setNumber(0);
+   c.setPort(2024);
+   components.add(c);
+  UmpleComponent c1=new UmpleComponent();
+   c1.setNumber(1);
+   c1.setPort(2028);
+   components.add(c1);
+  }
+
+  private void readConfigFile()
+  {
+      String location="ComponentsConfig.xml";
+      Properties prop = new Properties();
+      InputStream input = null;
+
+    try {
+
+      input = new FileInputStream("config.properties");
+      prop.load(input);
+      setThisComponentId(Integer.parseInt(prop.getProperty("component")));
+      location=prop.getProperty("location");
+      setFileAddress(location);
+    } catch (IOException e)
+    {
+      e.printStackTrace();
+      setThisComponentId(0);    
+    } 
+    finally {
+      if (input != null) {
+        try {
+          input.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+  <<@ UmpleToJava.objectFactory_add_Declare_All >>
+
+  public static void main (String [] args)
+  {
+    if (args.length>1){
+      setThisComponentId(Integer.parseInt(args[0]));
+      UmpleObjectFactory.getInstance().setFileAddress(args[1]);
+    }
+    else
+      UmpleObjectFactory.getInstance();
+  }
+
+  private class UmpleComponent
+  {
+
+    //------------------------
+    // MEMBER VARIABLES
+    //------------------------
+
+    //UmpleComponent Attributes
+    private int number;
+    private String name;
+    private String ip;
+    private String url;
+    private int port;
+    private int rmiRegistry;
+    //------------------------
+    // CONSTRUCTOR
+    //------------------------
+
+    public UmpleComponent()
+    {
+      name="";
+      ip=null;
+      url="";
+    }
+
+    //------------------------
+    // INTERFACE
+    //------------------------
+
+    public boolean setNumber(int aNumber)
+    {
+      boolean wasSet = false;
+      number = aNumber;
+      wasSet = true;
+      return wasSet;
+    }
+
+    public boolean setName(String aName)
+    {
+      boolean wasSet = false;
+      name = aName;
+      wasSet = true;
+      return wasSet;
+    }
+
+    public boolean setIp(String aIp)
+    {
+      boolean wasSet = false;
+      ip = aIp;
+      wasSet = true;
+      return wasSet;
+    }
+
+    public boolean setUrl(String aUrl)
+    {
+      boolean wasSet = false;
+      url = aUrl;
+      wasSet = true;
+      return wasSet;
+    }
+
+    public boolean setPort(int aPort)
+    {
+      boolean wasSet = false;
+      port = aPort;
+      wasSet = true;
+      return wasSet;
+    }
+
+    public boolean setRmiRegistry(int armiRegistry)
+    {
+      boolean wasSet = false;
+      rmiRegistry = armiRegistry;
+      wasSet = true;
+      return wasSet;
+    }
+
+    public int getNumber()
+    {
+      return number;
+    }
+
+    public String getName()
+    {
+      return name;
+    }
+
+    public String getIp()
+    {
+      return ip;
+    }
+
+    public String getUrl()
+    {
+      return url;
+    }
+
+    public int getPort()
+    {
+      return port;
+    }
+
+    public int getRmiRegistry()
+    {
+      return rmiRegistry;
+    }
+    public void delete()
+    {}
+
+    public String toString()
+    {
+      String outputString = "";
+      return super.toString() + "["+
+              "number" + ":" + getNumber()+ "," +
+              "name" + ":" + getName()+ "," +
+              "ip" + ":" + getIp()+ "," +
+              "url" + ":" + getUrl()+ "," +
+              "port" + ":" + getPort()+ "]"
+       + outputString;
+    }
+  }  
+}
  !>>
 }
