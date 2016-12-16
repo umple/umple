@@ -231,12 +231,14 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/A.java");
     SampleFileWriter.destroy(pathToInput + "/A.php");
     
-    SampleFileWriter.destroy(pathToInput + "/stateMachineWithNegativeNumberGaurd.java");
-    SampleFileWriter.destroy(pathToInput + "/stateMachineWithNegativeNumberGaurd.php");
-    SampleFileWriter.destroy(pathToInput + "/stateMachineWithNegativeNumberGaurd2.java");
-    SampleFileWriter.destroy(pathToInput + "/stateMachineWithNegativeNumberGaurd2.php");
+    SampleFileWriter.destroy(pathToInput + "/stateMachineWithNegativeNumberGuard.java");
+    SampleFileWriter.destroy(pathToInput + "/stateMachineWithNegativeNumberGuard.php");
+    SampleFileWriter.destroy(pathToInput + "/stateMachineWithNegativeNumberGuard2.java");
+    SampleFileWriter.destroy(pathToInput + "/stateMachineWithNegativeNumberGuard2.php");
     
-
+    SampleFileWriter.destroy(pathToInput + "/stateMachineWithStringComparisonGuard.java");
+    SampleFileWriter.destroy(pathToInput + "/stateMachineWithStringComparisonGuard.php");
+    
     //
     // Tear down abstract class tests.
     //

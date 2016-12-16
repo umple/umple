@@ -368,7 +368,7 @@ class DeepHistoryCourse
       }
       Ss2 {
         Sss1{
-          toSss2 -> S1.Sss2;
+          toSss2 -> S1.Ss1.Sss2;
           toS2 -> S2;
         }
         Sss2{
@@ -396,13 +396,35 @@ class DeepHistoryCourse
   }
 }
 
-class StateMachineWithNegativeNumberGaurd{
+class StateMachineWithNegativeNumberGuard{
   Status{
     On{
       turnOff (Integer pn) [pn > -1] -> Off;
     }
     Off{
       turnOn -> On;
+    }
+  }
+}
+
+class StateMachineWithStringComparisonGuard{
+  String cmdString = "";
+  Boolean isCommandValid(String cmdString)
+  {
+    return cmdString=="valid";
+  }
+
+  CommandControl{
+    IDLE{
+	  execute -> CHECK_AVAILABILITY;
+    }
+    CHECK_AVAILABILITY{
+      execute [cmdString!=""]-> COMMAND_VALIDITY;
+    }
+    COMMAND_VALIDITY{
+      execute [isCommandValid(cmdString)] -> EXECUTION;
+    }
+    EXECUTION{
     }
   }
 }
