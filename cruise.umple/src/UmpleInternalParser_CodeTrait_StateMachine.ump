@@ -795,30 +795,30 @@ class UmpleInternalParser
     for(int  i =0 ; i<mainState.numberOfTransitions()-1;i++){
       Transition tI= mainState.getTransition(i);
       if (tI.getAutoTransition() && tI.getGuard()== null && mainState.numberOfTransitions()>1) {
-          getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),tI.getEvent().getName(),n1,n2));
+          getParseResult().addErrorMessage(new ErrorMessage(234,tI.getPosition(),tI.getEvent().getName(),n1,n2));
           return true;  
       }
       for (int j = i+1; j<mainState.numberOfTransitions();j++){
         Transition tJ = mainState.getTransition(j);
         if (tJ.getAutoTransition() && tJ.getGuard()==null){
-          getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),tJ.getEvent().getName(),n1,n2));
+          getParseResult().addErrorMessage(new ErrorMessage(234,tJ.getPosition(),tJ.getEvent().getName(),n1,n2));
           return true;
         } else if(tI.getEvent().compareWithAnotherEvent(tJ.getEvent())){
             if (tI.getGuard()!=null){
               if (!tI.getGuard().equals(tJ.getGuard()) && !tI.getNextState().getName().equals(tJ.getNextState().getName())) {
-                getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),tJ.getEvent().getName(),n1,n2));
+                getParseResult().addErrorMessage(new ErrorMessage(234,tJ.getPosition(),tJ.getEvent().getName(),n1,n2));
                 return true;
               }
             } else {
-              if (tI.getGuard()!=null)  {
-                getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),tJ.getEvent().getName(),n1,n2));
+              if (tJ.getGuard()!=null)  {
+                getParseResult().addErrorMessage(new ErrorMessage(234,tJ.getPosition(),tJ.getEvent().getName(),n1,n2));
               return true;
               }
             }
         }
         if (tI.isEqualToTransition(tJ)){
           if(!tI.getNextState().getName().equals(tJ.getNextState().getName())){
-              getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),tJ.getEvent().getName(),n1,n2));
+              getParseResult().addErrorMessage(new ErrorMessage(234,tJ.getPosition(),tJ.getEvent().getName(),n1,n2));
               return true;  
           }
         }
