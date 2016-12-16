@@ -789,21 +789,42 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-	private boolean checkNoneDeterminismAfterComposition(StateMachine inSMachine1, StateMachine inSMachine2,
-			UmpleClassifier inUmpleClassfier, State mainState) {
-		for(int  i =0 ; i<mainState.numberOfTransitions()-1;i++){
-			for (int j = i+1; j<mainState.numberOfTransitions();j++){
-				if (mainState.getTransition(i).isEqualToTransition(mainState.getTransition(j))){
-					if(!mainState.getTransition(i).getNextState().getName().equals(mainState.getTransition(j).getNextState().getName())){
-						  String n1 = inSMachine1.getUmpleClass() ==null ? inSMachine1.getUmpleTrait().getName() : inSMachine1.getUmpleClass().getName(); 
-						  String n2 = inSMachine2.getUmpleClass() ==null ? inSMachine2.getUmpleTrait().getName() : inSMachine2.getUmpleClass().getName();
-						  getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),mainState.getTransition(j).getEvent().getName(),n1,n2));
-						  return true;	
-					}
-				}
-			}
-		}
-		return false;
+	private boolean checkNoneDeterminismAfterComposition(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassfier, State mainState) {
+    String n1 = inSMachine1.getUmpleClass() ==null ? inSMachine1.getUmpleTrait().getName() : inSMachine1.getUmpleClass().getName(); 
+    String n2 = inSMachine2.getUmpleClass() ==null ? inSMachine2.getUmpleTrait().getName() : inSMachine2.getUmpleClass().getName();
+    for(int  i =0 ; i<mainState.numberOfTransitions()-1;i++){
+      Transition tI= mainState.getTransition(i);
+      if (tI.getAutoTransition() && tI.getGuard()== null && mainState.numberOfTransitions()>1) {
+          getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),tI.getEvent().getName(),n1,n2));
+          return true;  
+      }
+      for (int j = i+1; j<mainState.numberOfTransitions();j++){
+        Transition tJ = mainState.getTransition(j);
+        if (tJ.getAutoTransition() && tJ.getGuard()==null){
+          getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),tJ.getEvent().getName(),n1,n2));
+          return true;
+        } else if(tI.getEvent().compareWithAnotherEvent(tJ.getEvent())){
+            if (tI.getGuard()!=null){
+              if (!tI.getGuard().equals(tJ.getGuard()) && !tI.getNextState().getName().equals(tJ.getNextState().getName())) {
+                getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),tJ.getEvent().getName(),n1,n2));
+                return true;
+              }
+            } else {
+              if (tI.getGuard()!=null)  {
+                getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),tJ.getEvent().getName(),n1,n2));
+              return true;
+              }
+            }
+        }
+        if (tI.isEqualToTransition(tJ)){
+          if(!tI.getNextState().getName().equals(tJ.getNextState().getName())){
+              getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),tJ.getEvent().getName(),n1,n2));
+              return true;  
+          }
+        }
+      }
+    } 
+    return false;
 	}  
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1037,11 +1058,7 @@ class Transition{
   	if (inTransition.equals(null)) return false;
     if (getAutoTransition()!=inTransition.getAutoTransition())  return false;
     if (!getAutoTransition() && !inTransition.getAutoTransition()){
-    	if (!getEvent().equals(inTransition.getEvent())) return false;
-    	if (getEvent().numberOfParams() != inTransition.getEvent().numberOfParams()) return false;
-   	  	for (int i = 0; i < inTransition.getEvent().numberOfParams(); i++) {
-   	  		if (!getEvent().getParam(i).getType().equals(inTransition.getEvent().getParam(i).getType())) return false;
-   	  	}
+    	if (!getEvent().compareWithAnotherEvent(inTransition.getEvent())) return false;
     }  
 	  if (getGuard()!=null){
 		  if (!getGuard().isEqualToGuard(inTransition.getGuard())) return false; 
