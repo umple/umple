@@ -188,18 +188,17 @@ class UmpleInternalParser
     if (newSMName!="") mustbeAdded.setName(newSMName);
       if (foundTrait!=null){
         for (StateMachine nsm :foundState.getNestedStateMachines() ) {
-      if (nsm.getName().equals(mustbeAdded.getName())){
-        StateMachine smNested = nsm;          
-            if (!smNested.getStartState().getName().equals(mustbeAdded.getStartState().getName())){
-              StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(smNested,mustbeAdded);
+      if (nsm.getName().equals(mustbeAdded.getName())){        
+            if (!nsm.getStartState().getName().equals(mustbeAdded.getStartState().getName())){
+              StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(nsm,mustbeAdded);
               if (checkSM!=null)  {
-                foundState.removeNestedStateMachine(smNested);
+                foundState.removeNestedStateMachine(nsm);
                 foundState.addNestedStateMachine(checkSM);
               }
             } else {          
-              addExtraStatesAndTransitions(smNested, mustbeAdded,inUmpleClassfier);
-              traitStateMachine.get(foundTrait).remove(mustbeAdded);
+              addExtraStatesAndTransitions(nsm, mustbeAdded,inUmpleClassfier);
             } 
+            traitStateMachine.get(foundTrait).remove(mustbeAdded);
             return;
       }
       }
@@ -710,7 +709,7 @@ class UmpleInternalParser
 					Transition tTransition = state.getTransition(i); 		  		
 				  Transition findTransition= null;
 				  for(Transition mainlTrans : mainState.getTransitions() ){
-					  if (tTransition.isEqualToTransition(mainlTrans)&& tTransition.getNextState().getName().equals(mainlTrans.getNextState().getName())){ 
+					  if (mainlTrans.isEqualToTransition(tTransition)&& tTransition.getNextState().getName().equals(mainlTrans.getNextState().getName())){ 
 					  	findTransition = mainlTrans;
 					  	break;
 					  }
@@ -790,21 +789,42 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-	private boolean checkNoneDeterminismAfterComposition(StateMachine inSMachine1, StateMachine inSMachine2,
-			UmpleClassifier inUmpleClassfier, State mainState) {
-		for(int  i =0 ; i<mainState.numberOfTransitions()-1;i++){
-			for (int j = i+1; j<mainState.numberOfTransitions();j++){
-				if (mainState.getTransition(i).isEqualToTransition(mainState.getTransition(j))){
-					if(!mainState.getTransition(i).getNextState().getName().equals(mainState.getTransition(j).getNextState().getName())){
-						  String n1 = inSMachine1.getUmpleClass() ==null ? inSMachine1.getUmpleTrait().getName() : inSMachine1.getUmpleClass().getName(); 
-						  String n2 = inSMachine2.getUmpleClass() ==null ? inSMachine2.getUmpleTrait().getName() : inSMachine2.getUmpleClass().getName();
-						  getParseResult().addErrorMessage(new ErrorMessage(234,inUmpleClassfier.getPosition(0),mainState.getTransition(j).getEvent().getName(),n1,n2));
-						  return true;	
-					}
-				}
-			}
-		}
-		return false;
+	private boolean checkNoneDeterminismAfterComposition(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassfier, State mainState) {
+    String n1 = inSMachine1.getUmpleClass() ==null ? inSMachine1.getUmpleTrait().getName() : inSMachine1.getUmpleClass().getName(); 
+    String n2 = inSMachine2.getUmpleClass() ==null ? inSMachine2.getUmpleTrait().getName() : inSMachine2.getUmpleClass().getName();
+    for(int  i =0 ; i<mainState.numberOfTransitions()-1;i++){
+      Transition tI= mainState.getTransition(i);
+      if (tI.getAutoTransition() && tI.getGuard()== null && mainState.numberOfTransitions()>1) {
+          getParseResult().addErrorMessage(new ErrorMessage(234,tI.getPosition(),tI.getEvent().getName(),n1,n2));
+          return true;  
+      }
+      for (int j = i+1; j<mainState.numberOfTransitions();j++){
+        Transition tJ = mainState.getTransition(j);
+        if (tJ.getAutoTransition() && tJ.getGuard()==null){
+          getParseResult().addErrorMessage(new ErrorMessage(234,tJ.getPosition(),tJ.getEvent().getName(),n1,n2));
+          return true;
+        } else if(tI.getEvent().compareWithAnotherEvent(tJ.getEvent())){
+            if (tI.getGuard()!=null){
+              if (!tI.getGuard().equals(tJ.getGuard()) && !tI.getNextState().getName().equals(tJ.getNextState().getName())) {
+                getParseResult().addErrorMessage(new ErrorMessage(234,tJ.getPosition(),tJ.getEvent().getName(),n1,n2));
+                return true;
+              }
+            } else {
+              if (tJ.getGuard()!=null)  {
+                getParseResult().addErrorMessage(new ErrorMessage(234,tJ.getPosition(),tJ.getEvent().getName(),n1,n2));
+              return true;
+              }
+            }
+        }
+        if (tI.isEqualToTransition(tJ)){
+          if(!tI.getNextState().getName().equals(tJ.getNextState().getName())){
+              getParseResult().addErrorMessage(new ErrorMessage(234,tJ.getPosition(),tJ.getEvent().getName(),n1,n2));
+              return true;  
+          }
+        }
+      }
+    } 
+    return false;
 	}  
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -929,7 +949,13 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 	private void applyCompositionAndSuperKeywordToTransition(StateMachine inSMachine1, StateMachine inSMachine2, Transition fTransition,Transition rTransition, UmpleClassifier inUmpleClassfier) {
-		if (rTransition.getAction()==null) return;
+	  if(fTransition.getGuard()==null && rTransition.getGuard()!=null) fTransition.setGuard(rTransition.getGuard());   
+    if (fTransition.getAction()==null && rTransition.getAction()!=null){
+      rTransition.getAction().getCodeblock().removeKeyword("superCall;");
+      fTransition.setAction(rTransition.getAction());
+      return;
+    }
+    if (rTransition.getAction()==null) return;
 		if (inUmpleClassfier instanceof UmpleClass){
 			  if (inSMachine1.getRootStateMachine().getUmpleClass()!=null){
 				  //comes from a class
@@ -1038,16 +1064,12 @@ class Transition{
   	if (inTransition.equals(null)) return false;
     if (getAutoTransition()!=inTransition.getAutoTransition())  return false;
     if (!getAutoTransition() && !inTransition.getAutoTransition()){
-    	if (!getEvent().equals(inTransition.getEvent())) return false;
-    	if (getEvent().numberOfParams() != inTransition.getEvent().numberOfParams()) return false;
-   	  	for (int i = 0; i < inTransition.getEvent().numberOfParams(); i++) {
-   	  		if (!getEvent().getParam(i).getType().equals(inTransition.getEvent().getParam(i).getType())) return false;
-   	  	}
+    	if (!getEvent().compareWithAnotherEvent(inTransition.getEvent())) return false;
     }  
 	  if (getGuard()!=null){
 		  if (!getGuard().isEqualToGuard(inTransition.getGuard())) return false; 
 	  } else {
-	  	if (inTransition.getGuard()!=null) 	return false;
+	  	//if (inTransition.getGuard()!=null) 	return false;
 	  }
 		/*
 		 * The following comments try to compare actions of a transition. However, I noticed I don't need to do it in my algorithm because they have to be overwritten later.
