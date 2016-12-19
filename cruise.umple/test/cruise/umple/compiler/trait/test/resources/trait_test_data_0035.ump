@@ -1,0 +1,26 @@
+class A{
+  isA T2;
+}
+
+trait T{ 
+  status{
+    on{
+      turnOff[y]-> off;
+    }
+    off{
+      turnOn-> on;
+    }
+  }
+}
+
+trait T2{
+  isA T;
+  status{
+    on{
+      turnOff [x] -> on;
+    }
+    off{
+      turnOn-> on;
+    }
+  }
+}
