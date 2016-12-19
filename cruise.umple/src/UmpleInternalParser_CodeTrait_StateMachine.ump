@@ -805,7 +805,7 @@ class UmpleInternalParser
           return true;
         } else if(tI.getEvent().compareWithAnotherEvent(tJ.getEvent())){
             if (tI.getGuard()!=null){
-              if (!tI.getGuard().equals(tJ.getGuard()) && !tI.getNextState().getName().equals(tJ.getNextState().getName())) {
+              if (tI.getGuard().isEqualToGuard(tJ.getGuard()) && !tI.getNextState().getName().equals(tJ.getNextState().getName())) {
                 getParseResult().addErrorMessage(new ErrorMessage(234,tJ.getPosition(),tJ.getEvent().getName(),n1,n2));
                 return true;
               }

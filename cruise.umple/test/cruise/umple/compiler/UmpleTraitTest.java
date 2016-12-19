@@ -1201,6 +1201,12 @@ public class UmpleTraitTest {
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(1).getAction(),null);
 	}
 	
+	@Test
+	public void stateMachineTraits076Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0035.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).numberOfTransitions(),2);
+		
+	}
 	
 	// the last StateTest
 
