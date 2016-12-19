@@ -3,14 +3,14 @@
 
 
 
-public class stateMachineWithNegativeNumberGaurd2
+public class stateMachineWithNegativeNumberGuard
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //stateMachineWithNegativeNumberGaurd2 State Machines
+  //stateMachineWithNegativeNumberGuard State Machines
   public enum Status { on, off }
   private Status status;
 
@@ -18,7 +18,7 @@ public class stateMachineWithNegativeNumberGaurd2
   // CONSTRUCTOR
   //------------------------
 
-  public stateMachineWithNegativeNumberGaurd2()
+  public stateMachineWithNegativeNumberGuard()
   {
     setStatus(Status.on);
   }
@@ -46,7 +46,7 @@ public class stateMachineWithNegativeNumberGaurd2
     switch (aStatus)
     {
       case on:
-        if (pn<-1)
+        if (pn>-1)
         {
           setStatus(Status.off);
           wasEventProcessed = true;

@@ -1,0 +1,17 @@
+class stateMachineWithStringComparisonGuard{
+    String cmdString = "";
+
+    CommandControl{
+        IDLE{
+            execute -> CHECK_AVAILABILITY;
+        }
+        CHECK_AVAILABILITY{
+        	execute [cmdString!=""]-> COMMAND_VALIDITY;
+        }
+        COMMAND_VALIDITY{
+            execute [isCommandValid(cmdString)] -> EXECUTION;
+        }
+        EXECUTION{
+        }
+    }
+}

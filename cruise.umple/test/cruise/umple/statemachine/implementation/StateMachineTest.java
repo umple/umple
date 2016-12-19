@@ -691,15 +691,21 @@ public class StateMachineTest extends StateMachineTemplateTest
   }
   
   @Test
-  public void stateMachineWithNegativeNumberGaurd()
+  public void stateMachineWithNegativeNumberGuard()
   {
-    assertUmpleTemplateFor("stateMachineWithNegativeNumberGaurd.ump",languagePath + "/stateMachineWithNegativeNumberGaurd."+ languagePath +".txt","stateMachineWithNegativeNumberGaurd");
+    assertUmpleTemplateFor("stateMachineWithNegativeNumberGuard.ump",languagePath + "/stateMachineWithNegativeNumberGuard."+ languagePath +".txt","stateMachineWithNegativeNumberGuard");
   }
   
   @Test
-  public void stateMachineWithNegativeNumberGaurd2()
+  public void stateMachineWithNegativeNumberGuard2()
   {
-    assertUmpleTemplateFor("stateMachineWithNegativeNumberGaurd2.ump",languagePath + "/stateMachineWithNegativeNumberGaurd2."+ languagePath +".txt","stateMachineWithNegativeNumberGaurd2");
+    assertUmpleTemplateFor("stateMachineWithNegativeNumberGuard2.ump",languagePath + "/stateMachineWithNegativeNumberGuard2."+ languagePath +".txt","stateMachineWithNegativeNumberGuard2");
+  }
+  
+  @Test
+  public void stateMachineWithStringComparisonGuard()
+  {
+    assertUmpleTemplateFor("stateMachineWithStringComparisonGuard.ump",languagePath + "/stateMachineWithStringComparisonGuard."+ languagePath +".txt","stateMachineWithStringComparisonGuard");
   }
   
 }

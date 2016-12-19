@@ -1,4 +1,4 @@
-class stateMachineWithNegativeNumberGaurd{
+class stateMachineWithNegativeNumberGuard{
   status{
     on{
       turnOff (Integer pn) [pn > -1] -> off;
