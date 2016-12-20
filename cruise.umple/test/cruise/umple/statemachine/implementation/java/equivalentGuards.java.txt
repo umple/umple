@@ -76,6 +76,18 @@ public class A
           wasEventProcessed = true;
           break;
         }
+        if ("test".equals(x))
+        {
+          setStatus(Status.s2);
+          wasEventProcessed = true;
+          break;
+        }
+        if (x.equals("test"+"hello"))
+        {
+          setStatus(Status.s2);
+          wasEventProcessed = true;
+          break;
+        }
         if (((5*2)<=11))
         {
           setStatus(Status.s2);

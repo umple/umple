@@ -19,6 +19,12 @@ class A{
         test[x==y]->s2;
         test[y equals x]->s2;
         
+        test[x == "test"]-> s2;
+        test["test" == x]->s2;
+        
+        test[x == "test" + "hello"]-> s2;
+        test["test" + "hello" == x]-> s2;
+        
         test[!((5 * 2) > 11)]-> s2;
     	test[(!(!(!(11 <= (2 * 5)))))]-> s2;
     	
