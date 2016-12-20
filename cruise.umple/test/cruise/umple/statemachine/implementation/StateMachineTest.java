@@ -708,4 +708,10 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("stateMachineWithStringComparisonGuard.ump",languagePath + "/stateMachineWithStringComparisonGuard."+ languagePath +".txt","stateMachineWithStringComparisonGuard");
   }
   
+  @Test
+  public void equivalentGuards()
+  {
+    assertUmpleTemplateFor("equivalentGuards.ump",languagePath + "/equivalentGuards."+ languagePath +".txt","A");
+  }
+  
 }

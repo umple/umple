@@ -74,6 +74,8 @@
 67: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html",  State '{0}' from StateMachine '{1}' is non-reachable. ;
 68: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Destiny state '{0}' of transition on line '{1}' has not been found. This transition is being disconsidered;
 69: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Auto-Transition to '{0}' on line '{1}' conflicts with a previous exisiting transition. This transition is being disconsidered;
+70: 4, "http://cruise.eecs.uottawa.ca/umple/W054DuplicateEvents.html", Guarded Transition {0} will be ignored due to a duplicate event with an equivalent guard;
+
 
 80: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", State '{0}' was not found in state machine '{1}'. Processed as if the state exists ;
 
