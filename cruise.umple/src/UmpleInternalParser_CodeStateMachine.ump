@@ -1602,11 +1602,11 @@ class UmpleInternalParser
 
    private Boolean numericalExprOperatorsAreOpposite(String operatorOne, String operatorTwo)
    {
-     if ((GREATER_THAN.equals(operatorOne) && LESS_THAN_OR_EQUAL.equals(operatorTwo)) || (GREATER_THAN.equals(operatorTwo) && LESS_THAN_OR_EQUAL.equals(operatorOne)))
+     if ((GREATER_THAN.equals(operatorOne) && LESS_THAN.equals(operatorTwo)) || (GREATER_THAN.equals(operatorTwo) && LESS_THAN.equals(operatorOne)))
      {
        return true;
      }
-     else if ((LESS_THAN.equals(operatorOne) && GREATER_THAN_OR_EQUAL.equals(operatorTwo)) || (LESS_THAN.equals(operatorTwo) && GREATER_THAN_OR_EQUAL.equals(operatorOne)))
+     else if ((LESS_THAN_OR_EQUAL.equals(operatorOne) && GREATER_THAN_OR_EQUAL.equals(operatorTwo)) || (LESS_THAN_OR_EQUAL.equals(operatorTwo) && GREATER_THAN_OR_EQUAL.equals(operatorOne)))
      {
        return true;
      }

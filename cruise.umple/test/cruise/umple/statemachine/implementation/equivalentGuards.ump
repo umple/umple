@@ -3,15 +3,15 @@ class A{
     s1{
         test[y > z]-> s2;
         test[y > z]-> s2;
-        test[z <= y]-> s2;
+        test[z < y]-> s2;
         
         test[(x + y) > z]-> s2;
         test[(y + x) > z]-> s2;
-        test[z <= (x + y) ]-> s2;
-        test[z <= (y + x)]-> s2;
+        test[z < (x + y) ]-> s2;
+        test[z < (y + x)]-> s2;
         
         test[(5 * 2) < 11]-> s2;
-        test[11 >= (2 * 5)]->s2;
+        test[11 > (2 * 5)]->s2;
         
         test[(x+y) == z]->s2;
         test[z == (y+x)]->s2;
@@ -30,14 +30,14 @@ class A{
     	
     	test[ ((a > b) || (variable && (!(b >= a) && (c < b))))] -> s2;
     	test[ ((variable && (!(b >= a) && (c < b))) || (a > b))] -> s2;
-    	test[ (((!(a < b) && (b >= c)) && variable) || (a > b))] -> s2;
+    	test[ (((!(a <= b) && (b > c)) && variable) || (a > b))] -> s2;
         test[ ((a > b) || (variable && (!(b >= a) && (c < b))))] -> s2;
-    	test[ (((!(b >= c) && (b >= a)) && variable) || (a > b))] -> s2;
-    	test[ (((!(b >= a) && (b >= c)) && (!((!((variable)))))) || (!(!(a > b))))] -> s2;
+    	test[ (((!(b > c) && (b >= a)) && variable) || (a > b))] -> s2;
+    	test[ (((!(b >= a) && (b > c)) && (!((!((variable)))))) || (!(!(a > b))))] -> s2;
     	
         test[ ((a - c) > (b * 2)) != ((a - c) > (b ^ 2))] -> s2;
     	test[ !(((a - c) > (b * 2)) == ((a - c) > (b ^ 2)))] -> s2;
-    	test[ !(((a - c) > (b ^ 2)) == ((2 * b) <= (a - c)))] -> s2;		
+    	test[ !(((a - c) > (b ^ 2)) == ((2 * b) < (a - c)))] -> s2;		
     }
     s2{
     }
