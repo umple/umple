@@ -258,7 +258,7 @@ MODULE HeatControlSystemSmHouseControllerControllerControllerOn ( _sm , _smHouse
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t12 | _sm.t14 | _sm.t11 | _sm.t13 | _sm.t15 : null;
+       _sm.t11 | _sm.t13 | _sm.t12 | _sm.t14 : null;
        _sm.t16 : SmHouseControllerControllerControllerOn_idle;
        _sm.t15 | _sm.t17 : SmHouseControllerControllerControllerOn_heaterActive;
        _smHouseControllerController.state = SmHouseControllerController_controllerOn & state = null : SmHouseControllerControllerControllerOn_idle;
@@ -276,7 +276,7 @@ MODULE HeatControlSystemSmHouseControllerControllerControllerOnHeaterActive ( _s
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t15 | _sm.t16 : null;
+       _sm.t15 | _sm.t12 | _sm.t16 | _sm.t13 : null;
        _sm.t17 : SmHouseControllerControllerControllerOnHeaterActive_heaterRun;
        _smHouseControllerControllerControllerOn.state = SmHouseControllerControllerControllerOn_heaterActive & state = null : SmHouseControllerControllerControllerOnHeaterActive_actHeater;
        TRUE : state;
@@ -606,7 +606,7 @@ MODULE HeatControlSystemSm1HouseControllerControllerControllerOn ( _sm1 , _sm1Ho
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm1.t12 | _sm1.t14 | _sm1.t11 | _sm1.t13 | _sm1.t15 : null;
+       _sm1.t11 | _sm1.t13 | _sm1.t12 | _sm1.t14 : null;
        _sm1.t16 : Sm1HouseControllerControllerControllerOn_idle;
        _sm1.t15 | _sm1.t17 : Sm1HouseControllerControllerControllerOn_heaterActive;
        _sm1HouseControllerController.state = Sm1HouseControllerController_controllerOn & state = null : Sm1HouseControllerControllerControllerOn_idle;
@@ -624,7 +624,7 @@ MODULE HeatControlSystemSm1HouseControllerControllerControllerOnHeaterActive ( _
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm1.t15 | _sm1.t16 : null;
+       _sm1.t15 | _sm1.t12 | _sm1.t16 | _sm1.t13 : null;
        _sm1.t17 : Sm1HouseControllerControllerControllerOnHeaterActive_heaterRun;
        _sm1HouseControllerControllerControllerOn.state = Sm1HouseControllerControllerControllerOn_heaterActive & state = null : Sm1HouseControllerControllerControllerOnHeaterActive_actHeater;
        TRUE : state;

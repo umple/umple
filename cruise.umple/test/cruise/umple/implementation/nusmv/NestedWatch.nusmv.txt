@@ -195,7 +195,7 @@ MODULE DigitalWatchSmChronometerChronoNormal ( _sm , _smChronometer )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t24 | _sm.t22 | _sm.t29 : null;
+       _sm.t22 | _sm.t29 | _sm.t24 | _sm.t1 : null;
        _sm.t28 | _sm.t27 | _sm.t25 : SmChronometerChronoNormal_paused;
        _sm.t26 | _sm.t23 : SmChronometerChronoNormal_running;
        _smChronometer.state = SmChronometer_chronoNormal & state = null : SmChronometerChronoNormal_paused;
@@ -251,6 +251,7 @@ MODULE DigitalWatchSmAlarmUpdateHourMinuteUpdate ( _sm , _smAlarmUpdate )
    ASSIGN
      init( state ) := null;
      next( state ) := case
+       _sm.t3 : null;
        _sm.t37 | _sm.t35 | _sm.t38 : SmAlarmUpdateHourMinuteUpdate_alarmHour;
        _sm.t36 | _sm.t34 | _sm.t39 : SmAlarmUpdateHourMinuteUpdate_alarmMinute;
        _smAlarmUpdate.state = SmAlarmUpdate_hourMinuteUpdate & state = null : SmAlarmUpdateHourMinuteUpdate_alarmHour;

@@ -235,7 +235,7 @@ MODULE HeatingSystemHeatSystemHouseControllerControllerControllerOn ( _heatSyste
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 | _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t16 : null;
+       _heatSystem.t12 | _heatSystem.t14 | _heatSystem.t11 | _heatSystem.t13 | _heatSystem.t15 : null;
        _heatSystem.t17 : HeatSystemHouseControllerControllerControllerOn_idle;
        _heatSystem.t16 | _heatSystem.t18 : HeatSystemHouseControllerControllerControllerOn_heaterActive;
        _heatSystemHouseControllerController.state = HeatSystemHouseControllerController_ControllerOn & state = null : HeatSystemHouseControllerControllerControllerOn_idle;
@@ -253,7 +253,7 @@ MODULE HeatingSystemHeatSystemHouseControllerControllerControllerOnHeaterActive 
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t16 | _heatSystem.t17 : null;
+       _heatSystem.t16 | _heatSystem.t12 | _heatSystem.t17 | _heatSystem.t13 : null;
        _heatSystem.t18 : HeatSystemHouseControllerControllerControllerOnHeaterActive_heaterRun;
        _heatSystemHouseControllerControllerControllerOn.state = HeatSystemHouseControllerControllerControllerOn_heaterActive & state = null : HeatSystemHouseControllerControllerControllerOnHeaterActive_actHeater;
        TRUE : state;

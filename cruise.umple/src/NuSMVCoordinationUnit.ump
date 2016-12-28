@@ -59,7 +59,7 @@ class NuSMVCoordinator
   		body.addModuleElement( vdec );
 		
   		//Adding define declaration to module body
-  		body.addModuleElement( getDefineDeclaration( sm ) );
+  		body.addModuleElement( getDefineDeclaration( sm, uClass ) );
   		body.addModuleElement( getAssignConstraint( sm, sm) );
 			body.addModuleElement( getEventAssignConstraint( sm ) );
 		
@@ -230,6 +230,7 @@ class NuSMVCoordinator
 		
 		List<NuSMVModule> temp = new ArrayList<NuSMVModule>();
 		StringBuilder output = new StringBuilder();
+		double elapsedMemory = 0;
 		
 		for( UmpleClass uClass : uModel.getUmpleClasses() )	{
 			
@@ -247,11 +248,14 @@ class NuSMVCoordinator
 				temp.add( capsuleModule );
 				capsules.add( capsuleModule );
 
+				double startTime = (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024*1024);
 				//Generates invariance specifications for non-determinism
 				for( InvarConstraint spec : generateSpecForTransitionDeterminism( sMachine, capsuleModule ) ){
 					nonDeterminism.add( spec );
 					properties.add( spec );
 				}
+				double stopTime = (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024*1024);
+      	elapsedMemory = stopTime - startTime;
 			
 				//Generates reachability specifications for the nested state machines of hierarchical system under generation.
 				for( StateMachine machine : generateStateMachineList( sMachine ) ) {
@@ -272,6 +276,8 @@ class NuSMVCoordinator
 		for( NuSMVModule module : temp )
 			output.append( module.toString() +"\n" );
 	
+		//output.append( "--Elapsed Memory to discover non-determinism (ms): "+elapsedMemory);		
+				
 		return output;
 	}
 	
@@ -1030,32 +1036,34 @@ class NuSMVCoordinator
 		List<AssignConstraint> constraints = new ArrayList<AssignConstraint>();
 		
 		for( Attribute attribute : uClass.getAllAttributes() ) {
-			BasicExpression bexp = new BasicExpression("");
+			if( !attribute.isConstant() ) {
+				BasicExpression bexp = new BasicExpression("");
 			
-			if( attribute.getValue() != null ){
-				String value = attribute.getValue();
-				switch( value ){
-					case "true" : bexp = new BasicExpression("TRUE"); break;
-					case "false" : bexp = new BasicExpression("FALSE"); break;
-					default : bexp = new BasicExpression(value);
+				if( attribute.getValue() != null ){
+					String value = attribute.getValue();
+					switch( value ){
+						case "true" : bexp = new BasicExpression("TRUE"); break;
+						case "false" : bexp = new BasicExpression("FALSE"); break;
+						default : bexp = new BasicExpression(value);
+					}
 				}
-			}
-			else if( attribute.getValue() == null && (attribute.getType().equals("Boolean") || attribute.getType().equals("boolean")))
-				bexp = new BasicExpression("FALSE");
-			else if( attribute.getValue() == null && (attribute.getType().equals("Integer") || attribute.getType().equals("int")
-				|| attribute.getType().equals("long") || attribute.getType().equals("Long") 
-				|| attribute.getType().equals("short") || attribute.getType().equals("Short")))
-				bexp = new BasicExpression("0");
-			else if( attribute.getValue() == null && (attribute.getType().equals("Float") || attribute.getType().equals("float") 
-				|| attribute.getType().equals("double") || attribute.getType().equals("Double")))
-				bexp = new BasicExpression("0.0");
+				else if( attribute.getValue() == null && (attribute.getType().equals("Boolean") || attribute.getType().equals("boolean")))
+					bexp = new BasicExpression("FALSE");
+				else if( attribute.getValue() == null && (attribute.getType().equals("Integer") || attribute.getType().equals("int")
+					|| attribute.getType().equals("long") || attribute.getType().equals("Long") 
+					|| attribute.getType().equals("short") || attribute.getType().equals("Short")))
+					bexp = new BasicExpression("0");
+				else if( attribute.getValue() == null && (attribute.getType().equals("Float") || attribute.getType().equals("float") 
+					|| attribute.getType().equals("double") || attribute.getType().equals("Double")))
+					bexp = new BasicExpression("0.0");
 			
-			InitAssign initialVal = new InitAssign(attribute.getName(), bexp);
-			AssignConstraint assignConstraint = new AssignConstraint( initialVal );
-			constraints.add( assignConstraint );
+				InitAssign initialVal = new InitAssign(attribute.getName(), bexp);
+				AssignConstraint assignConstraint = new AssignConstraint( initialVal );
+				constraints.add( assignConstraint );
+			}
 		}
-  		return constraints;
-  	}
+  	return constraints;
+  }
 	
 	private CaseStatement initializeCompositeStartState( State state ) {
 		
@@ -1244,16 +1252,22 @@ class NuSMVCoordinator
 		return enclosedTransitions;
 	}
 
+  
+
 	//Computes the exit transitions for a concurrent region
-	private List<Transition> getExitTransitionsForConcurrentRegion( StateMachine region ){
+	private List<Transition> getExitTransitionsForConcurrentRegion( StateMachine region ) {
 		State parent = getParentState( region );
-		List<Transition> trans = getEnclosedTransitions( parent );		
+		List<Transition> temp = getExternalTransitions( parent );
+		
+
+		/*List<Transition> trans = getEnclosedTransitions( parent );		
 		List<Transition> temp = new ArrayList<Transition>();
 		
 		for( Transition tr : parent.getStateMachine().getAllTransitions() )
 			if( !has( trans, tr ) )
 				temp.add( tr ); //adds to temp every other transitions not enclosed by the parent state 
-	
+		*/
+
 		//adding and-cross transitions for a given region
 		List<State> embeddedStates = getEmbeddedStates( region );
 		for( Transition tr : getAndCross( getParentState( region ) ) )
@@ -1263,8 +1277,11 @@ class NuSMVCoordinator
 	}
 	
 	//Computes exit transitions for non-orthogonal composite state
-	private List<Transition> getExitTransitions(State st ) {
+	private List<Transition> getExitTransitions( State st ) {
 		List<Transition> transitions = new ArrayList<Transition>();
+		
+
+
 		for( Transition transition : st.getStateMachine().getAllTransitions() ){
 			if(st.hasNestedStateMachines() && !st.isIsConcurrent() )				
 				for( StateMachine sm : st.getNestedStateMachines() ){
@@ -1282,6 +1299,8 @@ class NuSMVCoordinator
 		}
 		return transitions;
 	}
+
+  
 	
 	private List<State> getEmbeddedStates(StateMachine sm ) {
 		List<State> embeddedStates = new ArrayList<State>();
@@ -1309,9 +1328,9 @@ class NuSMVCoordinator
 		int counter = 0;
 		BasicExpression rt = new BasicExpression("root");
 		List<Transition> trans;
-		if(!( getParentState( sm ).isIsConcurrent() )) {
+		if(!( getParentState( sm ).isIsConcurrent() ) ) {
 			if( sm.equals(root) ) return null;
-			trans = getExitTransitions( getParentState( sm ) );
+			trans = getExternalTransitions( getParentState( sm ) );
 		}
 		else
 			trans = getExitTransitionsForConcurrentRegion( sm );
@@ -1328,8 +1347,38 @@ class NuSMVCoordinator
   		}
   		return null;
 	}
+
+  private List<Transition> getExternalTransitions( State state ) {
+		
+		StateMachine sm = state.getStateMachine();
+		List<Transition> highLevelTransitions = new ArrayList<Transition>();
+
+		if( sm.getParentState() != null ) {
+		
+			State ancestor = sm.getParentState();
+			StateMachine smm = ancestor.getStateMachine();	
+			for( Transition transition : smm.getAllTransitions() )
+				if( transition.getFromState().equals( ancestor ) )
+					highLevelTransitions.add( transition );
+		}
+			
+		List<Transition> embeddedTransitions = new ArrayList<Transition>();
+		for( Transition transition : getAllEnablingTransitions( state ) )
+			if( transition.getNextState().equals( state ) )
+					continue;
+			else
+				embeddedTransitions.add( transition );
+		
+		List<Transition> enablingTransitions = sm.getAllTransitions();
+		enablingTransitions.addAll( highLevelTransitions );
+		enablingTransitions.removeAll( embeddedTransitions );
+
+		return enablingTransitions;		
+	}
+
+  
   	
-  	private CaseStatement getCaseStatement( StateMachine sm, State st, StateMachine parent ) {
+  private CaseStatement getCaseStatement( StateMachine sm, State st, StateMachine parent ) {
   		int counter = 0;
   		BasicExpression root = new BasicExpression("root");
   		for( Transition tr : getAllEnablingTransitions(st) ) {
@@ -1418,30 +1467,32 @@ class NuSMVCoordinator
 		List<VariableSpecifier> attributes = new ArrayList<VariableSpecifier>();
 		
 		for( Attribute attribute : uClass.getAllAttributes() ){
-			VariableSpecifier vs = new VariableSpecifier( attribute.getName() );
-			String type = attribute.getFullType();
-			//System.out.println( attribute.getValue() );
-			switch( type ){
-				case "Float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
-				case "Boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
-				case "Integer" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
-				case "Long" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
-				case "long" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
-				case "Short" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
-				case "short" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
-				case "Double" : vs.addTypeSpecifier("real"); attributes.add( vs ); break;
-				case "double" : vs.addTypeSpecifier("real"); attributes.add( vs ); break;
-				case "float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
-				case "boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
-				case "int" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
-				default : ;
-			}
+			if( !attribute.isConstant() ) { 
+				VariableSpecifier vs = new VariableSpecifier( attribute.getName() );
+				String type = attribute.getFullType();
+	
+				switch( type ) {
+					case "Float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
+					case "Boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
+					case "Integer" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+					case "Long" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+					case "long" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+					case "Short" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+					case "short" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+					case "Double" : vs.addTypeSpecifier("real"); attributes.add( vs ); break;
+					case "double" : vs.addTypeSpecifier("real"); attributes.add( vs ); break;
+					case "float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
+					case "boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
+					case "int" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+					default : ;
+				}
+      }
 		}
 		return attributes;
 	}
   		
   	//Generates the define part for all the transitions of the system
-  	private DefineDeclaration getDefineDeclaration( StateMachine sm ) {
+  	private DefineDeclaration getDefineDeclaration( StateMachine sm, UmpleClass uClass ) {
   		BasicExpression temp = composeExpressionForStability( sm );
   		DefineBody stable = new DefineBody( sm.getFullName()+"_stable", temp );
   		DefineDeclaration ddec = new DefineDeclaration( stable );
@@ -1450,10 +1501,18 @@ class NuSMVCoordinator
   			DefineBody dBody = new DefineBody("t"+getObjectIdentity( sm, tr) , bexp);
   			ddec.addDefineBody(dBody);
   		}
-		for( Guard gr : sm.getAllGuards() ) {
+
+			for( Guard gr : sm.getAllGuards() ) {
   			DefineBody dBody = new DefineBody("g"+getObjectIdentity( sm, gr) , generateRHS( gr ));
   			ddec.addDefineBody(dBody);
   		}
+
+			for( Attribute attr : uClass.getAllAttributes() )
+				if( attr.isConstant() ) {
+					DefineBody dBody = new DefineBody( attr.getName() , new BasicExpression( attr.getValue() ) );
+  				ddec.addDefineBody(dBody);
+				}
+      
   		//ddec.removeDefineBody(dnull);
   		return ddec;
   	}
