@@ -1,0 +1,106 @@
+class Example {
+
+	Integer warningRadius = 100;
+	Boolean driveSelected;	
+  Boolean k = SmObjectDetectorObjectDetector.state == Emergency;
+
+	sm { 
+		CollisionAvoidance {
+			ObjectDetector {
+				Normal { objectDiscovered[warningRadius == 10] -> Warning; }	 
+				Warning { [warningRadius <= 3] -> Emergency; }
+				Emergency { -> Normal; }
+			}
+			||
+			Brake {
+				Released { 
+					applyBrake -> AntiLockBraking; 
+					[k] -> BrakeApplied;
+				} 
+				AntiLockBraking {
+					
+					release -> Released;
+					Inactive {
+						wheelNormal -> BrakeApplied;
+						wheelLocked[ lock == true ] -> ResolveLock;
+            [k] -> BrakeApplied;
+					}
+					ResolveLock {
+						wheelNormal -> Inactive;
+						wheelLocked -> MonitorDeclaration;
+						decreasePressure[ lock == true ] -> PressureReduction;
+						applyBrake[ lock == false ] -> BrakeApplied;
+            [k] -> BrakeApplied;
+					}
+					MonitorDeclaration {
+						rapidDeclaration -> ResolveLock;
+						wheelNormal -> MonitorDeclaration;
+            [k] -> BrakeApplied;
+					}
+					PressureReduction {
+						decreasePressure[ lock == false ] -> ResolveLock;
+						decreasePressure[ lock == true ] -> PressureReduction;
+            [k] -> BrakeApplied;
+					}
+					BrakeApplied {
+						wheelLocked[ lock == true ] -> ResolveLock;
+						applyBrake -> BrakeApplied;
+            [k] -> BrakeApplied;
+					} 
+				} 
+			}
+			||
+			Transmission {
+				ParkAndNeutral {
+					
+					selectReverse -> Reverse;
+					selectDrive/{driveSelected = true; } -> Drive; 
+					Park { 
+            selectneutral -> Neutral;
+          }
+					Neutral { 
+            selectPark/{driveSelected = false;} -> Park; 
+            [k] -> Park;
+          } 
+				}
+				Reverse { 
+					selectPark -> Park; 
+					[k] -> Park;
+				} 
+				Drive { 
+					selectNeutral -> Neutral; 
+					selectFirst -> First;
+					selectSecond -> Second;
+					
+					First { 
+						reachSecondSpeed[ driveSelected ] -> Second; 
+            [k] -> Park;
+					}
+					Second { 
+						reachThirdSpeed[ driveSelected ] -> Third;
+            [k] -> Park;
+					}
+					Third { 
+						dropBelowThirdSpeed -> Second; 
+            [k] -> Park;
+					}
+				} 
+			}
+			||
+			Engine {
+				Off { 
+					turnOn -> Idle;
+				}
+				Idle { 
+					accelerate -> Driving; 
+					[k] -> Off;
+				}
+				Driving { 
+					release -> Idle;
+					applyBrake -> Idle; 
+					[k] -> Off;
+				} 
+			} 
+		} 
+	}	 
+}
