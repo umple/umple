@@ -61,6 +61,14 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/SimpleCaseOfNondeterminism.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/SingleLaneBridge.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/RoomHeatingSystem.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmv/ConstantTest.smv");
+	  }
+
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
+	  public void ConstantTest()
+	  {
+	  		assertUmpleTemplateFor("nusmv/ConstantTest.ump","nusmv/ConstantTest.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/ConstantTest.smv")).exists());
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740

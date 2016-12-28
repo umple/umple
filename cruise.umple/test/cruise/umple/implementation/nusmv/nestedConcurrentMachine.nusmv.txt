@@ -88,7 +88,7 @@ MODULE AStateState12State12State122 ( _state , _stateState12State12 )
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _state.t7 | _state.t5 | _state.t8 : null;
+       _state.t5 | _state.t8 | _state.t7 | _state.t4 : null;
        _state.t6 : StateState12State12State122_state1221;
        _stateState12State12.state = StateState12State12_state122 & state = null : StateState12State12State122_state1221;
        TRUE : state;
