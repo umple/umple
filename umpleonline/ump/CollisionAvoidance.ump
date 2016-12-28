@@ -1,0 +1,69 @@
+class CollisionAvoidance {
+	Integer warningRadius;
+	Boolean driveSelected;	
+	sm { 
+		CollisionAvoidance {
+			ObjectDetector {
+				Normal { objectDiscovered[warningRadius == 10] -> Warning; }	 
+				Warning { [warningRadius <= 3] -> Emergency; }
+				Emergency { -> BrakeApplied; }
+			}
+			||
+			Brake {
+				Released { applyBrake -> AntiLockBraking; } 
+					AntiLockBraking { 
+						release -> Released;
+						Inactive {
+							wheelNormal -> BrakeApplied;
+							wheelLocked[ lock == true ] -> ResolveLock;
+						}
+					ResolveLock {
+						wheelNormal -> Inactive;
+						wheelLocked -> MonitorDeclaration;
+						decreasePressure[ lock == true ] -> PressureReduction;
+						applyBrake[ lock == false ] -> BrakeApplied;
+					}
+					MonitorDeclaration {
+						rapidDeclaration -> ResolveLock;
+						wheelNormal -> MonitorDeclaration;
+					}
+					PressureReduction {
+						decreasePressure[ lock == false ] -> ResolveLock;
+						decreasePressure[ lock == true ] -> PressureReduction;
+					}
+					BrakeApplied {
+						wheelLocked[ lock == true ] -> ResolveLock;
+						applyBrake -> BrakeApplied;
+					} 
+				} 
+			}
+			||
+			Transmission {
+				ParkAndNeutral {
+					selectReverse -> Reverse;
+					selectDrive/{ driveSelected = true; } -> Drive; 
+					Park { selectneutral -> Neutral; }
+					Neutral { selectPark/{ driveSelected = false; } -> Park; }
+				}
+				Reverse { selectPark -> Park; } 
+				Drive { 
+					selectNeutral -> Neutral; 
+					selectFirst -> First;
+					selectSecond -> Second;
+					First { reachSecondSpeed[ driveSelected ] -> Second; }
+					Second { reachThirdSpeed[ driveSelected ] -> Third; }
+					Third { dropBelowThirdSpeed -> Second; }
+				} 
+			}
+			||
+			Engine {
+				Off { turnOn -> Idle; }
+				Idle { accelerate -> Driving; }
+				Driving { 
+					release -> Idle;
+					applyBrake -> Idle; 
+				} 
+			} 
+		} 
+	} 
+}

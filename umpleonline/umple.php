@@ -275,6 +275,10 @@ $output = readTemporaryFile("ump/" . $filename);
                 <option name = "optionExample" value="Booking.ump">Booking (Airline)</option>
                 <option name = "optionExample" value="CanalLockStateMachine.ump">Canal Lock</option>
                 <option name = "optionExample" value="CarTransmission.ump">Car Transmission</option>
+		<option name = "optionExample" value="CollisionAvoidance.ump">Collision Avoidance With And-Cross Transition</option>
+		<option name = "optionExample" value="CollisionAvoidanceA1.ump">Collision Avoidance - Alternative 1</option>
+		<option name = "optionExample" value="CollisionAvoidanceA2.ump">Collision Avoidance - Alternative 2</option>
+		<option name = "optionExample" value="CollisionAvoidanceA3.ump">Collision Avoidance - Alternative 3</option>
                 <option name = "optionExample" value="ComplexStateMachine.ump">Complex Symbolic</option>
                 <option name = "optionExample" value="CourseSectionFlat.ump">Course Section</option>
                 <option name = "optionExample" value="CourseSectionNested.ump">Course Section (Nested)</option>
@@ -282,6 +286,7 @@ $output = readTemporaryFile("ump/" . $filename);
                 <option name = "optionExample" value="DigitalWatchFlat.ump">Digital Watch (Flat)</option>
                 <option name = "optionExample" value="Elevator_State_Machine.ump">Elevator</option>
                 <option name = "optionExample" value="GarageDoor.ump">Garage Door</option>
+		<option name = "optionExample" value="HomeHeater.ump">Home Heating System</option>
                 <option name = "optionExample" value="LibraryLoanStateMachine.ump">Library Loan</option>
                 <option name = "optionExample" value="Lights.ump">Light (3 alternatives)</option>
                 <option name = "optionExample" value="MicrowaveOven2.ump">Microwave Oven</option>
@@ -298,7 +303,6 @@ $output = readTemporaryFile("ump/" . $filename);
                 <option name = "optionExample" value="TollBooth.ump">Toll Booth</option>
                 <option name = "optionExample" value="TrafficLightsA.ump">Traffic Lights A</option>
                 <option name = "optionExample" value="TrafficLightsB.ump">Traffic Lights B</option>
-		<option name = "optionExample" value="HomeHeater.ump">Home Heating System</option>
                 <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
