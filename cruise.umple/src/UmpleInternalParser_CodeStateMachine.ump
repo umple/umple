@@ -24,6 +24,39 @@ class UmpleInternalParser
   internal List<Token> ignoredTransitions = new ArrayList<Token>();
   
   
+  //------------------------
+  // CONSTANTS
+  //------------------------
+  private static final String GUARD = "guard";
+  private static final String LONE_BOOLEAN = "loneBoolean";
+  private static final String CONSTRAINT_BODY = "constraintBody";
+  private static final String LINKING_OP_BODY = "linkingOpBody";
+  private static final String NEGATIVE_CONSTRAINT = "negativeConstraint";
+  private static final String NEGATIVE_CONSTRAINT_APPLIED = "negativeConstraintApplied";
+  private static final String NUMBER = "number";
+  private static final String QUOTE = "quote";
+  private static final String CONCAT = "concat";
+  private static final String BOOL_LITERAL = "boolLiteral";
+  private static final String CONSTRAINT_NAME = "constraintName";
+  private static final String NUMBER_LITERAL = "numberLiteral";
+  private static final String ASSOCIATION_EXPR = "associationExpr";
+  private static final String STATEMACHINE_EXPR = "statemachineExpr";
+   
+  private static final Integer LHS_POSITION = 0;
+  private static final Integer OPERATOR_POSITION = 1;
+  private static final Integer RHS_POSITION = 2;
+  private static final String EQUALS_OP = "equalsOp";
+  private static final String NOT_EQUALS_OP = "notequalsOp";
+  private static final String AND_OP = "andOp";
+  private static final String OR_OP = "orOp";
+  private static final String GREATER_THAN_OR_EQUAL = "greaterOp";
+  private static final String GREATER_THAN = "moreOp";
+  private static final String LESS_THAN_OR_EQUAL = "lessOp";
+  private static final String LESS_THAN = "smallerOp";
+  private static final String OP = "Op";
+  private static final String OPERATOR = "operator";
+  private static final String STATIC = "STATIC";
+  
   // Allow to declare several active objects within the same class, the name of the generated state-machine
   // will be "stateMachine<numberOfActiveObjects>"
   private static int numberOfActiveObjects = 1;
@@ -1202,6 +1235,7 @@ class UmpleInternalParser
     String priorAutoTransitionState = null;
     List<Token> transitions = new ArrayList<Token>();
     List<Token> activityTransform = new ArrayList<Token>();
+    List<Token> guardedTransitions = new ArrayList<Token>();
     
     
     if(superStateEvents == null){
@@ -1233,6 +1267,10 @@ class UmpleInternalParser
         priorAutoTransitionState = subToken.getValue("stateName");
         priorAutoTransitionExists = true;
         superStateEvents.add(null);
+      }
+      else if(subToken.is("autoTransition"))
+      {
+        transitions.add(subToken);  
       }
       else if(subToken.is("state")){
         subStates.add(subToken);
@@ -1267,6 +1305,34 @@ class UmpleInternalParser
           if(subToken.getValue("timer") == null)
           	unguardedEvents.add(subToken.getValue("event"));
         }
+        else
+        {
+          Boolean guardsAreEqual = false;
+          for(Token guardedTransition : guardedTransitions){
+            Boolean subTokenIsAutoTransition = subToken.is("autoTransition");
+            Boolean guardTransitionIsAutoTransition = guardedTransition.is("autoTransition");
+            if ((guardTransitionIsAutoTransition && subTokenIsAutoTransition) || (!guardTransitionIsAutoTransition && guardedTransition.getValue("event").equals(subToken.getValue("event"))))
+            {
+              Position subTokenPosition = subToken.getPosition();
+              String subTokenValue = subToken.getValue("event");
+              if (subTokenIsAutoTransition)
+              {
+                subTokenValue = "(Auto Transition)";
+              }
+              guardsAreEqual = compareExpressions(guardedTransition.getSubToken("guard"), subToken.getSubToken("guard"), false, false);
+              if (guardsAreEqual)
+              {
+                setFailedPosition(subTokenPosition, 70, subTokenValue);
+                ignoredTransitions.add(subToken);
+                break;
+              }
+            }
+          }
+          if (!guardsAreEqual)
+          {
+            guardedTransitions.add(subToken);    
+          }
+        }
     }
     
     unguardedEvents.addAll(superStateEvents);
@@ -1283,6 +1349,280 @@ class UmpleInternalParser
     
     return;
 	}
+	
+   private Boolean compareExpressions(Token exprOne, Token exprTwo, Boolean exprOneNegation, Boolean exprTwoNegation)
+   {
+    
+     Token exprOneCopy = exprOne.copy();
+     Token exprTwoCopy = exprTwo.copy();
+    
+     Boolean exprOneNeedsTraversal = checkIfExpressionNeedsTraversal(exprOneCopy);
+     Boolean exprTwoNeedsTraversal = checkIfExpressionNeedsTraversal(exprTwoCopy);
+    
+     if (exprOneCopy.is(NEGATIVE_CONSTRAINT))
+     {
+       exprOneNegation = switchNegation(exprOneNegation);
+       exprOneCopy.setName(NEGATIVE_CONSTRAINT_APPLIED);
+     }
+     if (exprTwoCopy.is(NEGATIVE_CONSTRAINT))
+     {
+       exprTwoNegation = switchNegation(exprTwoNegation);
+       exprTwoCopy.setName(NEGATIVE_CONSTRAINT_APPLIED);
+     }
+     
+     if (exprOneNeedsTraversal || exprTwoNeedsTraversal)
+     {
+       if (exprOneNeedsTraversal)
+       {
+         Integer startIndexOne = getSubTokenStartIndex(exprOneCopy);
+         exprOneCopy = exprOneCopy.getSubToken(startIndexOne + LHS_POSITION);
+       }
+       if (exprTwoNeedsTraversal)
+       {
+         Integer startIndexTwo = getSubTokenStartIndex(exprTwoCopy);
+         exprTwoCopy = exprTwoCopy.getSubToken(startIndexTwo + LHS_POSITION);
+       }
+       return compareExpressions(exprOneCopy, exprTwoCopy, exprOneNegation, exprTwoNegation);
+     }
+     else if (exprOneCopy.getName().equals(exprTwoCopy.getName()) || (tokenIsGeneric(exprOneCopy) && tokenIsGeneric(exprTwoCopy)))
+     {
+       Integer startIndexOne = getSubTokenStartIndex(exprOneCopy);
+       Integer startIndexTwo = getSubTokenStartIndex(exprTwoCopy);
+       Token operatorOne = getExpressionOperator(exprOneCopy, startIndexOne);
+       Token operatorTwo = getExpressionOperator(exprTwoCopy, startIndexTwo);
+       
+       if ((operatorOne == null) == (operatorTwo == null))
+       {
+         if (operatorOne != null)
+         {
+           return compareExpressionsWithOperands(exprOneCopy, exprTwoCopy, operatorOne, operatorTwo, exprOneNegation, exprTwoNegation, startIndexOne, startIndexTwo);
+         }
+         else
+         {
+           Token exprOneNoOperator = exprOneCopy;
+           Token exprTwoNoOperator = exprTwoCopy;
+           if (!expressionIsBasicValue(exprOneCopy))
+           {
+             exprOneNoOperator = exprOneCopy.getSubToken(startIndexOne + LHS_POSITION);
+           }
+           if (!expressionIsBasicValue(exprTwoCopy)){
+             exprTwoNoOperator = exprTwoCopy.getSubToken(startIndexTwo + LHS_POSITION);
+           }
+           
+           Boolean exprOneIsBasicValue = expressionIsBasicValue(exprOneNoOperator);
+           Boolean exprTwoIsBasicValue = expressionIsBasicValue(exprTwoNoOperator);
+           if (exprOneIsBasicValue == exprTwoIsBasicValue)
+           {
+             if(exprOneIsBasicValue)
+             {
+               return (exprOneNoOperator.toString().equals(exprTwoNoOperator.toString())) && exprOneNegation == exprTwoNegation;
+             }
+             else
+             {
+               return compareExpressions(exprOneNoOperator, exprTwoNoOperator, exprOneNegation, exprTwoNegation);
+             }
+           }
+         }
+       }
+     }
+     return false;
+   }
+   
+   private Boolean checkIfExpressionNeedsTraversal(Token token)
+   {
+     Integer startIndex = getSubTokenStartIndex(token);
+     Token operator = getExpressionOperator(token, startIndex);
+     if (tokenIsGeneric(token) && operator == null)
+     {
+       return true;
+     }
+     else if (token.is(LONE_BOOLEAN) && (token.getSubToken(NEGATIVE_CONSTRAINT) != null))
+     {
+       return true;
+     }
+     return false;
+   }
+   
+   private Integer getSubTokenStartIndex(Token expression)
+   {
+     int i = 0;
+      for (Token token : expression.getSubTokens())
+      {
+        if(!STATIC.equals(token.getValue()))
+        {
+          break;
+        }
+        i++;
+      }
+      return i;
+    }
+   
+   private Token getExpressionOperator(Token expression, Integer startIndex)
+   {
+     Integer operatorPosition = startIndex + OPERATOR_POSITION;
+     if (operatorPosition < expression.getSubTokens().size())
+     {
+       Token operator = expression.getSubToken(operatorPosition);
+       String operatorName = operator.getName();
+       if (operatorName.contains(OP) || OPERATOR.equals(operatorName))
+       {
+         return operator;
+       }
+     }
+     return null;
+   }
+   
+   private Boolean switchNegation(Boolean negation)
+   {
+     if (negation)
+     {
+       return false;
+     }
+     else
+     {
+       return true;
+     }
+   }
+   
+   private Boolean tokenIsGeneric(Token token)
+   {
+     return token.is(GUARD) || token.is(CONSTRAINT_BODY) || token.is(LINKING_OP_BODY) || token.is(NEGATIVE_CONSTRAINT);
+   }
+
+   private Boolean compareExpressionsWithOperands(Token exprOne, Token exprTwo, Token opOneToken, Token opTwoToken, Boolean exprOneNegation, Boolean exprTwoNegation, Integer startIndexOne, Integer startIndexTwo)
+   {
+     Token exprOneLHS = exprOne.getSubToken(startIndexOne + LHS_POSITION);
+     Token exprOneRHS = exprOne.getSubToken(startIndexOne + RHS_POSITION);
+     Token exprTwoLHS = exprTwo.getSubToken(startIndexTwo + LHS_POSITION);
+     Token exprTwoRHS = exprTwo.getSubToken(startIndexTwo + RHS_POSITION);
+     
+     String opOne = applyOperatorNegation(opOneToken, exprOneNegation);
+     exprOneNegation = checkIfNegationApplied(opOneToken, opOne, exprOneNegation);
+     String opTwo = applyOperatorNegation(opTwoToken, exprTwoNegation);
+     exprTwoNegation = checkIfNegationApplied(opTwoToken, opTwo, exprTwoNegation);
+
+     if (operatorsAreEqual(opOne, opTwo, opOneToken.getValue(), opTwoToken.getValue(), exprOneNegation, exprTwoNegation))
+     {
+       if (compareExpressions(exprOneLHS, exprTwoLHS, exprOneNegation, exprTwoNegation) && compareExpressions(exprOneRHS, exprTwoRHS, exprOneNegation, exprTwoNegation))
+       {
+         return true;
+       }
+       else if (operandOrderDoesNotMatter(opOne, opOneToken.getValue()))
+       {
+         if (compareExpressions(exprOneLHS, exprTwoRHS, exprOneNegation, exprTwoNegation) && compareExpressions(exprOneRHS, exprTwoLHS, exprOneNegation, exprTwoNegation))
+         {
+           return true;
+         }
+       }
+     }
+     else if (numericalExprOperatorsAreOpposite(opOne, opTwo))
+     {
+       if (compareExpressions(exprOneLHS, exprTwoRHS, false, false) && compareExpressions(exprOneRHS, exprTwoLHS, false, false))
+       {
+         return true;
+       }
+     }
+     return false;
+   }
+   
+   private String applyOperatorNegation(Token operatorToken, Boolean exprNegation)
+   {
+     String operator = operatorToken.getName();
+     if (exprNegation)
+     {
+       if (EQUALS_OP.equals(operator))
+       {
+         operator = NOT_EQUALS_OP;
+       }
+       else if (NOT_EQUALS_OP.equals(operator))
+       {
+         operator = EQUALS_OP;
+       }
+       else if (GREATER_THAN_OR_EQUAL.equals(operator))
+       {
+         operator = LESS_THAN;
+       }
+       else if (LESS_THAN_OR_EQUAL.equals(operator))
+       {
+         operator = GREATER_THAN;
+       }
+       else if (GREATER_THAN.equals(operator))
+       {
+         operator = LESS_THAN_OR_EQUAL;
+       }
+       else if (LESS_THAN.equals(operator))
+       {
+         operator = GREATER_THAN_OR_EQUAL;
+       }
+     }
+     return operator;
+   }
+   
+   private Boolean checkIfNegationApplied(Token operatorToken, String operator, Boolean exprNegation)
+   {
+     if (operatorToken.getName().equals(operator)){
+       return exprNegation;
+     }
+     else
+     {
+       return false;
+     }
+   }
+   
+   private Boolean operatorsAreEqual(String opOne, String opTwo, String opOneValue, String opTwoValue, Boolean exprOneNegation, Boolean exprTwoNegation)
+   {
+     if (opOne.equals(opTwo))
+     {
+       if (OPERATOR.equals(opOne) && (opOneValue.equals(opTwoValue)))
+       {
+         return true;
+       }
+       else if (!OPERATOR.equals(opOne))
+       {
+         return true; 
+       }  
+     }
+     else if (operatorIsAndOrOr(opOne) && operatorIsAndOrOr(opTwo) && exprOneNegation != exprTwoNegation)
+     {
+       return true;
+     }
+     return false;
+   }
+  
+   private Boolean operandOrderDoesNotMatter(String operatorName, String operatorValue)
+   {
+     return EQUALS_OP.equals(operatorName) || NOT_EQUALS_OP.equals(operatorName) || OR_OP.equals(operatorName) 
+         || AND_OP.equals(operatorName) || "+".equals(operatorValue) || "*".equals(operatorValue);
+   }
+  
+   private Boolean operatorIsAndOrOr(String operator)
+   {
+     return AND_OP.equals(operator) || OR_OP.equals(operator);
+   }
+
+   private Boolean numericalExprOperatorsAreOpposite(String operatorOne, String operatorTwo)
+   {
+     if ((GREATER_THAN.equals(operatorOne) && LESS_THAN.equals(operatorTwo)) || (GREATER_THAN.equals(operatorTwo) && LESS_THAN.equals(operatorOne)))
+     {
+       return true;
+     }
+     else if ((LESS_THAN_OR_EQUAL.equals(operatorOne) && GREATER_THAN_OR_EQUAL.equals(operatorTwo)) || (LESS_THAN_OR_EQUAL.equals(operatorTwo) && GREATER_THAN_OR_EQUAL.equals(operatorOne)))
+     {
+       return true;
+     }
+     return false;
+   }
+
+   private Boolean expressionIsBasicValue(Token expression)
+   {
+    if (expression.is(BOOL_LITERAL) || expression.is(NUMBER_LITERAL) || expression.is(CONSTRAINT_NAME) || expression.is(QUOTE)
+        || expression.getSubToken(CONCAT) != null || expression.is(NUMBER) || expression.is(ASSOCIATION_EXPR) || expression.is(STATEMACHINE_EXPR))
+     {
+       return true;
+     }
+     return false;
+   }
+  
 	//End Telmer
 
   private void transformAutoTransitionToActivity(Token autoTransition){
