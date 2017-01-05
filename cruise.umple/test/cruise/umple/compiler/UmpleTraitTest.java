@@ -349,7 +349,7 @@ public class UmpleTraitTest {
 
 	@Test
 	public void stateMachineTraits016Test() {
-		String code = "class A {isA T1 <status.on.running.mode1.submode1 as sm1, status.on.running.mode1.submode2 as sm2>;} trait T1 { status { on { running{mode1{ submode1{goSubMode2 -> submode2;}submode2{goSubMode1 -> submode1;}}} }} }";
+		String code = "class A {isA T1 <status.on.on.running.running.mode1.mode1.submode1 as sm1, status.on.on.running.running.mode1.mode1.submode2 as sm2>;} trait T1 { status { on { running{mode1{ submode1{goSubMode2 -> submode2;}submode2{goSubMode1 -> submode1;}}} }} }";
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals("sm1", model.getUmpleClass("A").getStateMachine(0).findState("sm1", true).getName());
 		Assert.assertEquals("sm2", model.getUmpleClass("A").getStateMachine(0).findState("sm2", true).getName());
@@ -1208,6 +1208,33 @@ public class UmpleTraitTest {
 		
 	}
 	
+	
+	@Test
+	public void stateMachineTraits077Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0036.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getName(),"s1");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(0).getName(),"s1");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(0).getState(0).getName(),"s2");
+		
+	}
+	
+	@Test
+	public void stateMachineTraits078Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0037.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getName(),"state1");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(0).getName(),"s11");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getName(),"s12");
+	}
+	
+	@Test
+	public void stateMachineTraits079Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0038.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getName(),"state1");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(0).getName(),"nstate11");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getName(),"nstate12");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(0).getState(0).getName(),"state11");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getState(0).getName(),"state12");
+	}
 	// the last StateTest
 
 	// This is related to issue #656

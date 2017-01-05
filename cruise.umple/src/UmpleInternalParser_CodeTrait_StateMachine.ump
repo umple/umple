@@ -296,16 +296,24 @@ class UmpleInternalParser
  		 			}	else {
  						 StateMachine smTemp = sm;
  						 State tState=null;
- 						 for (String s : smTSignature.getSrcStates()){
- 							 tState = smTemp.findState(s, false);
- 							 if (tState==null){
- 								 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),s));	
- 				 		 		 return false;
- 							 } else
- 								 if(tState.hasNestedStateMachines()){
- 		 						 smTemp = tState.getNestedStateMachine(0);
- 		 					 }
- 						 }				
+             for(int i = 0; i<smTSignature.numberOfSrcStates();i++){
+              if(i % 2==0) {
+                tState = smTemp.findState(smTSignature.getSrcState(i), false);
+              } else {
+                boolean validNSM=false;
+                for(StateMachine nSM:tState.getNestedStateMachines()){
+                  if(nSM.getName().equals(smTSignature.getSrcState(i))){
+                    validNSM = true;
+                    smTemp = nSM;
+                    break;
+                  }
+                }
+                if(!validNSM){
+                  getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getSrcState(i))); 
+                   return false;
+                }
+              }
+            }  			
  		 			}
  	  		}
  	  	}	 
@@ -367,25 +375,36 @@ class UmpleInternalParser
 	 			}else { 
 					StateMachine smTemp = inSMachine;
 					State tState=null;
-					for (String s : smTSignature.getSrcStates()){
-						track = track+"."+s;
-						mapped = nameMapping.get(track);
-						if (mapped==null) mapped = s;
-						tState = smTemp.findState(mapped, false);
-							if(tState.hasNestedStateMachines()){
-		 						smTemp = tState.getNestedStateMachine(0);
-		 					}
-					}
-					if (smTemp!=null) {
-						tState.setName(smTSignature.getAlias());	
-						if (tState.hasNestedStateMachines()) {
-							smTemp.setName(smTSignature.getAlias());
-						}
-						nameMapping.put(track, smTSignature.getAlias());
-					}
+					Boolean itsSM = false;
+          for(int i = 0; i<smTSignature.numberOfSrcStates();i++){
+            track = track+"."+smTSignature.getSrcState(i);
+            mapped = nameMapping.get(track);
+            if (mapped==null) mapped = smTSignature.getSrcState(i);
+            if(i % 2==0) {
+              tState = smTemp.findState(mapped, false);
+              itsSM=false;
+            } else{
+              for(StateMachine nSM:tState.getNestedStateMachines()){
+                if(nSM.getName().equals(smTSignature.getSrcState(i))){
+                  smTemp = nSM;
+                  itsSM=true;
+                  break;
+                }
+              }
+            }
+          }
+					if(itsSM){
+            smTemp.setName(smTSignature.getAlias());
+          } else if (smTemp!=null) {
+            tState.setName(smTSignature.getAlias());
+            if (tState.numberOfNestedStateMachines()==1) {
+              tState.getNestedStateMachine(0).setName(smTSignature.getAlias());
+            }
+            nameMapping.put(track, smTSignature.getAlias());
+          }
 				} 					
-				}
 			}
+		}
 		//This code is used to make sure the * pattern for renaming events name applies to all state machines.
 		for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
 	  	if (smTSignature.getSrcStateMachine().equals("")){
@@ -397,7 +416,7 @@ class UmpleInternalParser
 		}
 	}
 	return inSMachine;
-  }
+}
 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
