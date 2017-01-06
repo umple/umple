@@ -1235,6 +1235,8 @@ public class UmpleTraitTest {
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(0).getState(0).getName(),"state11");
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getState(0).getName(),"state12");
 	}
+	
+	
 	// the last StateTest
 
 	// This is related to issue #656
