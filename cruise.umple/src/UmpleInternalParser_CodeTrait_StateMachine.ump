@@ -299,6 +299,10 @@ class UmpleInternalParser
              for(int i = 0; i<smTSignature.numberOfSrcStates();i++){
               if(i % 2==0) {
                 tState = smTemp.findState(smTSignature.getSrcState(i), false);
+                if(tState==null){
+                    getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getSrcState(i))); 
+                     return false;
+                }
               } else {
                 boolean validNSM=false;
                 for(StateMachine nSM:tState.getNestedStateMachines()){
@@ -336,46 +340,56 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------  
 
   private StateMachine ApplyTypeParametersToStateMachine(StateMachine inSMachine, GeneralTPApplied inGTPApplied){
-	String track=null;
-	String mapped=null;
-	Map<String, String> nameMapping = new HashMap<String, String>();
-		if (inGTPApplied!=null){
-			for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
-				if (smTSignature.getModifier().equals("-") && inSMachine.getName().equals(smTSignature.getSrcStateMachine())) return null;
-			 	if (smTSignature.getSrcStateMachine().equals("")) break;
-			 	//------------------------------------------------------------------------------------------------------
-			 	//This makes sure we are not going to change the name of a state machine and then assign it to state.
-			 	//This won't affect the result.
-			 	boolean mustBeRejected = false;
-			 	if (smTSignature.getAlias()!="" && smTSignature.numberOfSrcStates()==0){
-			 		for (StateMachineTemplateSignature smTSignatureTemp : inGTPApplied.getStateMachineTemplateSignatures()){
-			 			if (smTSignature!=smTSignatureTemp && smTSignatureTemp.getDesStateMachine()!=""){
-			 				mustBeRejected= true;
-			 				
-			 			}
-			 		}
-			 	}
-			 	if (mustBeRejected) continue;
-			 	//------------------------------------------------------------------------------------------------------
-			 	
-			 	mapped = nameMapping.get(smTSignature.getSrcStateMachine());
-			 	if (mapped==null) mapped = smTSignature.getSrcStateMachine();
-			 	track = smTSignature.getSrcStateMachine();
-			 	if (inSMachine.getName().equals(mapped)){
-			  	if (smTSignature.getMethodTemplateSignature()!=null){
-						changeEventName(inSMachine,smTSignature);
-						continue;
-				 	}
-				if (smTSignature.numberOfSrcStates()<=0) {
-					if (smTSignature.getAlias()!=""){
-						inSMachine.setName(smTSignature.getAlias());
-						for (State s : inSMachine.getStates()) s.setStateMachine(inSMachine);
-							nameMapping.put(track, smTSignature.getAlias());
-					}
-	 			}else { 
-					StateMachine smTemp = inSMachine;
-					State tState=null;
-					Boolean itsSM = false;
+  String track=null;
+  String mapped=null;
+  Map<String, String> nameMapping = new HashMap<String, String>();
+  if (inGTPApplied!=null){
+    for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
+      if (smTSignature.getModifier().equals("-")) {
+        if (smTSignature.getMethodTemplateSignature()!=null){
+          removeTransition(inSMachine,smTSignature);
+          continue;
+        } else if(smTSignature.getSrcStates().length>0){
+          removeState(inSMachine,smTSignature);
+          continue; 
+        } else if ( inSMachine.getName().equals(smTSignature.getSrcStateMachine())){
+          return null;
+        }
+      }
+       if (smTSignature.getSrcStateMachine().equals("")) break;
+       //------------------------------------------------------------------------------------------------------
+       //This makes sure we are not going to change the name of a state machine and then assign it to state.
+       //This won't affect the result.
+       boolean mustBeRejected = false;
+       if (smTSignature.getAlias()!="" && smTSignature.numberOfSrcStates()==0){
+         for (StateMachineTemplateSignature smTSignatureTemp : inGTPApplied.getStateMachineTemplateSignatures()){
+           if (smTSignature!=smTSignatureTemp && smTSignatureTemp.getDesStateMachine()!=""){
+             mustBeRejected= true;
+             
+           }
+         }
+       }
+       if (mustBeRejected) continue;
+       //------------------------------------------------------------------------------------------------------
+       
+       mapped = nameMapping.get(smTSignature.getSrcStateMachine());
+       if (mapped==null) mapped = smTSignature.getSrcStateMachine();
+       track = smTSignature.getSrcStateMachine();
+       if (inSMachine.getName().equals(mapped)){
+        if (smTSignature.getMethodTemplateSignature()!=null){
+          changeEventName(inSMachine,smTSignature);
+          continue;
+         }
+        if (smTSignature.numberOfSrcStates()<=0) {
+          if (smTSignature.getAlias()!=""){
+            inSMachine.setName(smTSignature.getAlias());
+            for (State s : inSMachine.getStates()) s.setStateMachine(inSMachine);
+              nameMapping.put(track, smTSignature.getAlias());
+          }
+         }else { 
+          StateMachine smTemp = inSMachine;
+          State tState=null;
+          Boolean itsSM = false;
           for(int i = 0; i<smTSignature.numberOfSrcStates();i++){
             track = track+"."+smTSignature.getSrcState(i);
             mapped = nameMapping.get(track);
@@ -393,7 +407,7 @@ class UmpleInternalParser
               }
             }
           }
-					if(itsSM){
+          if(itsSM){
             smTemp.setName(smTSignature.getAlias());
           } else if (smTemp!=null) {
             tState.setName(smTSignature.getAlias());
@@ -402,47 +416,83 @@ class UmpleInternalParser
             }
             nameMapping.put(track, smTSignature.getAlias());
           }
-				} 					
-			}
-		}
-		//This code is used to make sure the * pattern for renaming events name applies to all state machines.
-		for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
-	  	if (smTSignature.getSrcStateMachine().equals("")){
-				if (smTSignature.getMethodTemplateSignature()!=null){
-					changeEventName(inSMachine,smTSignature);
-					continue;
-				}
-			}
-		}
-	}
-	return inSMachine;
+        }           
+      }
+    }
+    //This code is used to make sure the * pattern for renaming events name applies to all state machines.
+    for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
+      if (smTSignature.getSrcStateMachine().equals("")){
+        if (smTSignature.getMethodTemplateSignature()!=null){
+          changeEventName(inSMachine,smTSignature);
+          continue;
+        }
+      }
+    }
+  }
+  return inSMachine;
 }
 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
+  private void removeTransition(StateMachine inSM, StateMachineTemplateSignature inSMTSignature) {
+    State foundState =inSM.findStateBasedOnSequence(inSMTSignature.getSrcStates());
+    if(foundState!=null){
+      for (Transition t : foundState.getTransitions()){
+        Method m = new Method("",t.getEvent().getName(),"",false);
+          m.setMethodParameters(t.getEvent().getParams());
+          if (compareTwoMethdos(m, inSMTSignature.getMethodTemplateSignature().getMethod())){
+            t.delete();
+            return;
+          }
+      }
+    }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  private void removeState(StateMachine inSM, StateMachineTemplateSignature inSMTSignature) {
+    State foundState =inSM.findStateBasedOnSequence(inSMTSignature.getSrcStates());
+    if (foundState.isIsStartState()){
+      getParseResult().addErrorMessage(new ErrorMessage(233,foundState.getPosition(),inSM.getUmpleTrait().getName(),"initial",foundState.getName()));
+      return;
+    } 
+    if (foundState.isFinalState()){
+      getParseResult().addErrorMessage(new ErrorMessage(233,foundState.getPosition(),inSM.getUmpleTrait().getName(),"final",foundState.getName()));
+      return;
+    } 
+    if(foundState!=null){
+      for(int i=0;i<foundState.numberOfTransitions();i++)         foundState.getTransition(i).delete();
+      for(int i=0;i<foundState.numberOfNextTransition();i++)      foundState.getNextTransition(i).delete();     
+      foundState.delete(); 
+    } 
+  }
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
  private void ApplyTypeParametersToEventsOfStateMachines(StateMachine inStateMachine, GeneralTPApplied inGeneralTPApplied){
-	 if (inGeneralTPApplied == null) return;
-	 for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
-		 String newName = inGeneralTPApplied.getParameterMapping().get(strType);
-		 for(Event e : inStateMachine.getAllEvents()){
-			 for(MethodParameter p : e.getParams()){
-				 if (p.getType().equals(strType)){
-					 p.setType(newName);
-				 }
-			 }
-		 }
-	 }
+   if (inGeneralTPApplied == null) return;
+   for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
+     String newName = inGeneralTPApplied.getParameterMapping().get(strType);
+     for(Event e : inStateMachine.getAllEvents()){
+       for(MethodParameter p : e.getParams()){
+         if (p.getType().equals(strType)){
+           p.setType(newName);
+         }
+       }
+     }
+   }
  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
   private void ApplyTypeParametersToActionCodesOfStateMachines(StateMachine inStateMachine, GeneralTPApplied inGeneralTPApplied){
-	 if (inGeneralTPApplied == null) return;
-	 for (Transition transition : inStateMachine.getAllTransitions()){
-		if (transition.getAction()!=null )
-			transition.getAction().getCodeblock().ApplyTypeParameters(inGeneralTPApplied);
-	 }
+   if (inGeneralTPApplied == null) return;
+   for (Transition transition : inStateMachine.getAllTransitions()){
+    if (transition.getAction()!=null )
+      transition.getAction().getCodeblock().ApplyTypeParameters(inGeneralTPApplied);
+   }
  }  
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1290,6 +1340,26 @@ class StateMachine{
     }
     return null;
 	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 	
+  public State findStateBasedOnSequence(String[] inSequence){
+    State foundState =null;
+    StateMachine smTemp = this;    
+      for(int i = 0; i<inSequence.length;i++){
+        if(i % 2==0) {
+          foundState = smTemp.findState(inSequence[i], false);
+        } else {
+          for(StateMachine nSM:foundState.getNestedStateMachines()){
+            if(nSM.getName().equals(inSequence[i])){
+              smTemp = nSM;
+              foundState=null;
+            }
+          }
+       }
+    }
+    return foundState;
+  }
 }
 //************************************************************************************* 
 //************************************NEW CLASS****************************************

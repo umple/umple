@@ -1236,7 +1236,99 @@ public class UmpleTraitTest {
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getState(0).getName(),"state12");
 	}
 	
+	@Test
+	public void stateMachineTraits080Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0039.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").numberOfStates(),4);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).numberOfTransitions(),3);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(1).numberOfTransitions(),3);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(2).numberOfTransitions(),3);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getAllTransitions().size(),9);
+	}
 	
+	@Test
+	public void stateMachineTraits081Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0040.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("233");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits082Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0041.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("233");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits083Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0042.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("229");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits084Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0043.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("229");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits085Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0044.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("229");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits086Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0045.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("229");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
 	// the last StateTest
 
 	// This is related to issue #656

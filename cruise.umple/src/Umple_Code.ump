@@ -3976,43 +3976,44 @@ class GeneralTPApplied {
 //----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------
 	boolean hasStateMachineTemplateSignature(StateMachineTemplateSignature inSMTSignature) {
-    boolean find = false;
-    for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
-    	if (smTSignature.getAlias()!="" && inSMTSignature.getAlias()!="")
-    	if (smTSignature.getSrcStateMachine().equals(inSMTSignature.getSrcStateMachine()) && smTSignature.numberOfSrcStates()==inSMTSignature.numberOfSrcStates()){					
-    		find = true;
-				for (int	i = 0; i<smTSignature.numberOfSrcStates() ;i++) {
-					if (!smTSignature.getSrcState(i).equals(inSMTSignature.getSrcState(i))) {
-						find = false;
-						break;
-					}
-				}
-				if (!find) continue;
-				if (smTSignature.getMethodTemplateSignature()!=null ^ inSMTSignature.getMethodTemplateSignature()!=null){
-						find = false;
-				} else if (smTSignature.getMethodTemplateSignature()!=null && inSMTSignature.getMethodTemplateSignature()!=null){
-						if (!smTSignature.getMethodTemplateSignature().getMethod().compareWithTheMethod(inSMTSignature.getMethodTemplateSignature().getMethod())) find = false; 
-				}
-    	}
-    	if (find) return true;
-		}
-		return hasSMTAssigningToStateToTimes(inSMTSignature);
+   for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
+      if (smTSignature.getSrcStateMachine().equals(inSMTSignature.getSrcStateMachine()) && smTSignature.numberOfSrcStates()==inSMTSignature.numberOfSrcStates()){
+        boolean find = true;
+      for (int  i = 0; i<smTSignature.numberOfSrcStates() ;i++) {
+        if (!smTSignature.getSrcState(i).equals(inSMTSignature.getSrcState(i))) {
+          find = false;
+          break;
+        }
+      }
+      if (!find) continue;
+      //TODO I can raise a different error for each of the following conditions
+        if (smTSignature.getModifier().equals("-") && inSMTSignature.getModifier().equals("+")) return true;
+        if (smTSignature.getModifier().equals("+") && inSMTSignature.getModifier().equals("-")) return true;
+        if (smTSignature.getModifier().equals("-") && !inSMTSignature.getAlias().equals("")) return true;
+        if (!smTSignature.getAlias().equals("")     && inSMTSignature.getModifier().equals("-")) return true;
+        if (!smTSignature.getDesStateMachine().equals(inSMTSignature.getDesStateMachine()) && smTSignature.numberOfDesStates()==0 && inSMTSignature.numberOfDesStates()==0) return true;
+        if (smTSignature.getMethodTemplateSignature()==null && inSMTSignature.getMethodTemplateSignature()==null){
+          if (smTSignature.getAlias().equals(inSMTSignature.getAlias())){
+            if ((smTSignature.getModifier().equals("+")&&inSMTSignature.getModifier().equals("+"))||(smTSignature.getModifier().equals("-")&&inSMTSignature.getModifier().equals("-")) ){
+              return true;
+            }
+          }
+          if (!smTSignature.getAlias().equals(inSMTSignature.getAlias()) && !smTSignature.getAlias().equals("") && !inSMTSignature.getAlias().equals("")) return true; 
+          if (smTSignature.getDesStateMachine().equals(inSMTSignature.getDesStateMachine())) return true;     
+        }
+        if (smTSignature.getMethodTemplateSignature()!=null && inSMTSignature.getMethodTemplateSignature()!=null){
+          if (smTSignature.getMethodTemplateSignature().getMethod().compareWithTheMethod(inSMTSignature.getMethodTemplateSignature().getMethod())){
+            if (smTSignature.getAlias().equals(inSMTSignature.getAlias())){
+              if ((smTSignature.getModifier().equals("+")&&inSMTSignature.getModifier().equals("+"))||(smTSignature.getModifier().equals("-")&&inSMTSignature.getModifier().equals("-")) ){
+                return true;
+              }
+            } else return true;
+          }        
+      }     
+      }
+    }
+    return false;
 	}
-//---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------
-//---------------------------------Start--------------------------------------
- public boolean hasSMTAssigningToStateToTimes(StateMachineTemplateSignature inSMTSignature){
-  	boolean matches = false;
-    for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
-    	if (smTSignature.getSrcStateMachine().equals(inSMTSignature.getSrcStateMachine()))
-    	{
-    		if (smTSignature.getDesStateMachine()!="" && inSMTSignature.getDesStateMachine()!=""){
-    				return true;
-    			}
-    	}
-		}
-  	return false;
-  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------

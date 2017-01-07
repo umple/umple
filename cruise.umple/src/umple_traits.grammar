@@ -15,7 +15,7 @@ AllInclusionExclusionAlias- : [[InclusionExclusionAlias]] ( , [[InclusionExclusi
 InclusionExclusionAlias- : [[functionIncludeExcludeAlias]] | [[StateMachineIncludeExcludeAlias]] 
 functionIncludeExcludeAlias- : [[functionInExAlias]]  ( , [[functionInExAlias]]  )*
 functionInExAlias- : [[functionAliasName]] | [[iEFunction]] | [[traitAppliedParameters]]
-iEFunction : [=modifier:+|-]? [~methodName] [[iEParameterList]]
+iEFunction : [=modifier:+|-]? ( ( [~smName] | [!smPattern:\d+|[*]]) [[StateNames]]+ .)? [~methodName] [[iEParameterList]]
 iEParameterList : OPEN_ROUND_BRACKET ( [parameter] ( , [parameter] )* )? CLOSE_ROUND_BRACKET
 functionAliasName : [=modifier:+]? ( ( [~smName] | [!smPattern:\d+|[*]]) .)? [~methodName] [[iEParameterList]] as [[IEVisiAlias]]
 
@@ -32,7 +32,7 @@ StateMachineAliasName : ([=iEStateMachineModifier:+])? [~smName] ([[StateNames]]
 StateNames : . [~sName] ( [[StateNamesPassing]] )*
 DesStateNames :[[StateNames]]
 StateNamesPassing : [[StateNames]]
-iEStateMachine : [=iEStateMachineModifier:+|-] [~smName] ([[StateNames]])?
+iEStateMachine : [=iEStateMachineModifier:+|-] [~smName] [[StateNames]]?
 
 //This is for events in state machines
 //StateMachineTransitionAlias : ( [~smName] | [!smPattern:\d+|[*]]) . [~eventName] [[iEParameterList]] as [~AliasName]

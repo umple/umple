@@ -1506,13 +1506,15 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 	private StateMachineTemplateSignature obtainStateMachineTemplateSignatureForTransitions(Token inToken) {
-    String smPattern="";
+     String smPattern="";
      String stateMachineAliasName =inToken.getValue("aliasName");
      String smName = "";
+     String modifier = "";
      String eventName = inToken.getValue("methodName");
      MethodTemplateSignature mtSignature = null;
      if (inToken.getValue("smName") != null) smName = inToken.getValue("smName");
-     if (inToken.getValue("smPattern") != null) smPattern = inToken.getValue("smPattern");           
+     if (inToken.getValue("smPattern") != null) smPattern = inToken.getValue("smPattern"); 
+     if (inToken.getValue("modifier") != null) modifier = inToken.getValue("modifier");          
      Method method = new Method("public", eventName, "", false); 
      if (inToken.getSubToken("iEParameterList") != null){
       for (Token subToken : inToken.getSubToken("iEParameterList").getSubTokens()) {
@@ -1521,7 +1523,7 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
         }
       }
      }
-     StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(smPattern, smName,"", stateMachineAliasName);
+     StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(modifier, smName,"", stateMachineAliasName);
      mtSignature = new MethodTemplateSignature(smPattern,stateMachineAliasName,method);
      smTSignature.setMethodTemplateSignature(mtSignature);
      return smTSignature;
