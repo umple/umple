@@ -767,75 +767,71 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
   private void addExtraStatesAndTransitions(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassfier) {
     for (State state : inSMachine2.getStates()) {
-		  State mainState = inSMachine1.findState(state.getName());
-		  if (mainState==null){
-		  	state.setStateMachine(inSMachine1);
-			  changeTransitionNextState(inSMachine1.findState(state.getName()),inSMachine1);
-		  } else {
-		  	checkSatifcationOfRequiredStates(state,inSMachine2);
-		  	applyCompositionAndSuperKwywordToState(inSMachine1, inSMachine2, inUmpleClassfier, mainState, state);
-		  	for (int i = 0; i < state.numberOfTransitions(); i++) {
-					Transition tTransition = state.getTransition(i); 		  		
-				  Transition findTransition= null;
-				  for(Transition mainlTrans : mainState.getTransitions() ){
-					  if (mainlTrans.isEqualToTransition(tTransition)&& tTransition.getNextState().getName().equals(mainlTrans.getNextState().getName())){ 
-					  	findTransition = mainlTrans;
-					  	break;
-					  }
-				  }
-				  if(findTransition!=null){
-				  	applyCompositionAndSuperKeywordToTransition(inSMachine1, inSMachine2, findTransition, tTransition,inUmpleClassfier);
-				  	state.removeTransition(tTransition);
-				  } else  {			
-				  	State nextState = inSMachine1.findState(tTransition.getNextState().getName());
-						if(nextState==null){
-							tTransition.getNextState().setStateMachine(inSMachine1);
-						  changeTransitionNextState(inSMachine1.findState(tTransition.getNextState().getName()),inSMachine1);
-							nextState = inSMachine1.findState(tTransition.getNextState().getName());													
-						}
-						
-						tTransition.setFromState(mainState);
-						tTransition.setNextState(nextState);
-						if (tTransition.getAction()!=null){
-							tTransition.getAction().getCodeblock().removeKeyword("superCall;");
-							tTransition.getAction().setActionCode(tTransition.getAction().getActionCode()+System.lineSeparator()+"superCall;");
-						}
-						i--;
-				  }
-				}
-				if (checkNoneDeterminismAfterComposition(inSMachine1, inSMachine2, inUmpleClassfier, mainState) ) return;
-		  	for (int i=0; i<state.numberOfNestedStateMachines();i++){
-		  	StateMachine comingSM = state.getNestedStateMachine(i);	
-		  		boolean equal = false;
-		  		for(StateMachine comparingSM:mainState.getNestedStateMachines()){
-		  			if (compareStateMachineName(comparingSM, comingSM)){
-		  				equal = true;
-		  			}
-		  		}
-		  		if (!equal){
-			  		//
-		  			if (mainState.getNestedStateMachines().size()<=0){
-			  			mainState.addNestedStateMachine(state.getNestedStateMachine(0));
-			  		} else {
-			  			if (!mainState.getNestedStateMachine(0).getStartState().getName().equals(state.getNestedStateMachine(0).getStartState().getName())){
-			  				StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(mainState.getNestedStateMachine(0), state.getNestedStateMachine(0));
-			  				if (checkSM!=null ) mainState.addNestedStateMachine(checkSM); 
-			  				i--;
-			  			} else {
-			  				addExtraStatesAndTransitions(mainState.getNestedStateMachine(0),state.getNestedStateMachine(0),inUmpleClassfier);
-			  			}
-			  		}
-			  		////
-		  		}
-		  	}				
-		  }  
-	  }
+      State mainState = inSMachine1.findState(state.getName());
+      if (mainState==null){
+        state.setStateMachine(inSMachine1);
+        changeTransitionNextState(inSMachine1.findState(state.getName()),inSMachine1);
+      } else {
+        checkSatifcationOfRequiredStates(state,inSMachine2);
+        applyCompositionAndSuperKwywordToState(inSMachine1, inSMachine2, inUmpleClassfier, mainState, state);
+        for (int i = 0; i < state.numberOfTransitions(); i++) {
+          Transition tTransition = state.getTransition(i);           
+          Transition findTransition= null;
+          for(Transition mainlTrans : mainState.getTransitions() ){
+            if (mainlTrans.isEqualToTransition(tTransition)){ 
+              findTransition = mainlTrans;
+              break;
+            }
+          }
+          if(findTransition!=null){
+            applyCompositionAndSuperKeywordToTransition(inSMachine1, inSMachine2, findTransition, tTransition,inUmpleClassfier);
+            tTransition.delete();
+          } else  {      
+            State nextState = inSMachine1.findState(tTransition.getNextState().getName());
+            if(nextState==null)  nextState = new State(tTransition.getNextState().getName(), inSMachine1);
+                        
+            tTransition.setFromState(mainState);
+            tTransition.setNextState(nextState);
+            if (tTransition.getAction()!=null){
+              tTransition.getAction().getCodeblock().removeKeyword("superCall;");
+              tTransition.getAction().setActionCode(tTransition.getAction().getActionCode()+System.lineSeparator()+"superCall;");
+            }
+            i--;
+          }
+        }
+        if (checkNoneDeterminismAfterComposition(inSMachine1, inSMachine2, inUmpleClassfier, mainState) ) return;
+        for (int i=0; i<state.numberOfNestedStateMachines();i++){
+        StateMachine comingSM = state.getNestedStateMachine(i);  
+          boolean equal = false;
+          for(StateMachine comparingSM:mainState.getNestedStateMachines()){
+            if (compareStateMachineName(comparingSM, comingSM)){
+              equal = true;
+            }
+          }
+          if (!equal){
+            //
+            if (mainState.getNestedStateMachines().size()<=0){
+              mainState.addNestedStateMachine(state.getNestedStateMachine(0));
+            } else {
+              if (!mainState.getNestedStateMachine(0).getStartState().getName().equals(state.getNestedStateMachine(0).getStartState().getName())){
+                StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(mainState.getNestedStateMachine(0), state.getNestedStateMachine(0));
+                if (checkSM!=null ) mainState.addNestedStateMachine(checkSM); 
+                i--;
+              } else {
+                addExtraStatesAndTransitions(mainState.getNestedStateMachine(0),state.getNestedStateMachine(0),inUmpleClassfier);
+              }
+            }
+            ////
+          }
+        }        
+      }  
+    }
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
   private void checkSatifcationOfRequiredStates(State inState, StateMachine inSMachine){
-  	for (State checkState : possiblyUnknownStates.keySet()){
+    for (State checkState : possiblyUnknownStates.keySet()){
       if (checkState.getName().equals(inState.getName()) ){
 	     if (checkState.getStateMachine().getUmpleClass()!=null && inSMachine.getUmpleClass()!=null) {
 	            if (checkState.getStateMachine().getUmpleClass().getName().equals(inSMachine.getUmpleClass().getName()) ) return;
@@ -1138,7 +1134,7 @@ class Transition{
 	  if (getGuard()!=null){
 		  if (!getGuard().isEqualToGuard(inTransition.getGuard())) return false; 
 	  } else {
-	  	//if (inTransition.getGuard()!=null) 	return false;
+	  	if (inTransition.getGuard()!=null) 	return false;
 	  }
 		/*
 		 * The following comments try to compare actions of a transition. However, I noticed I don't need to do it in my algorithm because they have to be overwritten later.

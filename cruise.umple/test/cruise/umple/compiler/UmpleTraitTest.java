@@ -1106,16 +1106,11 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void stateMachineTraits065Test() {
-		UmpleModel model = getModelByFilename("trait_test_data_0023.ump");
-		boolean result = false;
-		try {
-			model.run();
-		} catch (Exception e) {
-			result = e.getMessage().contains("234");
-		} finally {
-			Assert.assertTrue(result);
-			SampleFileWriter.destroy("traitTest.ump");
-		}
+		UmpleModel model = getRunModelByFilename("trait_test_data_0023.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getAllTransitions().size(),3);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(0).getNextState().getName(),"on");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(1).getNextState().getName(),"on");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(2).getNextState().getName(),"on");
 	}
 	
 	@Test
@@ -1185,20 +1180,30 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void stateMachineTraits074Test() {
-		UmpleModel model = getRunModelByFilename("trait_test_data_0033.ump");
-		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).numberOfTransitions(),1);
-		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getGuard().getExpression(),"y");
-		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getActionCode(),"action1();");
+		UmpleModel model = getModelByFilename("trait_test_data_0033.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("234");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
 	}
 	
 	@Test
 	public void stateMachineTraits075Test() {
-		UmpleModel model = getRunModelByFilename("trait_test_data_0034.ump");
-		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).numberOfTransitions(),2);
-		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getGuard().getExpression(),"y");
-		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getActionCode(),"action1();");
-		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(1).getGuard().getExpression(),"x");
-		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(1).getAction(),null);
+		UmpleModel model = getModelByFilename("trait_test_data_0034.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("234");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
 	}
 	
 	@Test
