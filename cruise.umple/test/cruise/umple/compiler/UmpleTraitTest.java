@@ -1253,16 +1253,12 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void stateMachineTraits081Test() {
-		UmpleModel model = getModelByFilename("trait_test_data_0040.ump");
-		boolean result = false;
-		try {
-			model.run();
-		} catch (Exception e) {
-			result = e.getMessage().contains("233");
-		} finally {
-			Assert.assertTrue(result);
-			SampleFileWriter.destroy("traitTest.ump");
-		}
+		UmpleModel model = getRunModelByFilename("trait_test_data_0040.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").numberOfStates(),4);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).numberOfTransitions(),3);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(1).numberOfTransitions(),3);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(2).numberOfTransitions(),3);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(3).numberOfTransitions(),3);
 	}
 	
 	@Test
@@ -1334,6 +1330,12 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}
 	}
+	
+	@Test
+	public void stateMachineTraits087Test() {
+
+	}
+	
 	// the last StateTest
 
 	// This is related to issue #656

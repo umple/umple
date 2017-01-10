@@ -456,11 +456,7 @@ class UmpleInternalParser
     if (foundState.isIsStartState()){
       getParseResult().addErrorMessage(new ErrorMessage(233,foundState.getPosition(),inSM.getUmpleTrait().getName(),"initial",foundState.getName()));
       return;
-    } 
-    if (foundState.isFinalState()){
-      getParseResult().addErrorMessage(new ErrorMessage(233,foundState.getPosition(),inSM.getUmpleTrait().getName(),"final",foundState.getName()));
-      return;
-    } 
+    }
     if(foundState!=null){
       for(int i=0;i<foundState.numberOfTransitions();i++)         foundState.getTransition(i).delete();
       for(int i=0;i<foundState.numberOfNextTransition();i++)      foundState.getNextTransition(i).delete();     
