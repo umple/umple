@@ -77,14 +77,7 @@ class UmpleInternalParser
   {
     Map<UmpleTrait, List<StateMachine>> traitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>(); 
   	Map<UmpleTrait, List<StateMachine>> tempTraitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();  	
-  	/*
-  	 * Duplicate state machines in order to be able modify them without effecting the original names;
-  	 */
-  	List<StateMachine> sMList = new ArrayList<StateMachine>();
-  	for (StateMachine sm: inTrait.getStateMachines()){
-  		 sMList.add(sm.clone());
-  	}
-  	if (sMList.size()>0) traitStateMachine.put(inTrait,sMList);
+
   	
   	/*
   	 * Go through the included traits.
@@ -95,6 +88,17 @@ class UmpleInternalParser
   		if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine,tempTraitStateMachine,inTrait)) return traitStateMachine;
   		AddStateMachineMapToAnother(traitStateMachine,tempTraitStateMachine);
   	}
+  	
+  	   /*
+     * Duplicate state machines in order to be able modify them without effecting the original names;
+     */
+    List<StateMachine> sMList = new ArrayList<StateMachine>();
+    for (StateMachine sm: inTrait.getStateMachines()){
+       sMList.add(sm.clone());
+    }
+    if (sMList.size()>0) traitStateMachine.put(inTrait,sMList);
+  	if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine,tempTraitStateMachine,inTrait)) return traitStateMachine;
+  	
   	/*
   	 * Check to make sure applied type parameters are valid;
   	 */
@@ -776,8 +780,12 @@ class UmpleInternalParser
           for(Transition mainlTrans : mainState.getTransitions() ){
             if (mainlTrans.isEqualToTransition(tTransition)){ 
               findTransition = mainlTrans;
+              if(inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName()) && inSMachine2.getUmpleTrait()!=null && !inSMachine2.getUmpleTrait().getName().equals(inUmpleClassfier.getName())) {
+                getParseResult().addErrorMessage(new ErrorMessage(235,tTransition.getPosition(),tTransition.getEvent().getName(),inSMachine1.getName(),inSMachine2.getName()));
+                return;
+               }
+              }
               break;
-            }
           }
           if(findTransition!=null){
             applyCompositionAndSuperKeywordToTransition(inSMachine1, inSMachine2, findTransition, tTransition,inUmpleClassfier);
@@ -909,7 +917,20 @@ class UmpleInternalParser
 			  }
 		} else {
 			  if (inSMachine1.getRootStateMachine().getUmpleTrait()!=null){
+				  
 				  //comes from a trait
+	          if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   bState.getActionsByType("entry")!=null && cState.getActionsByType("entry")!=null)) {
+              getParseResult().addErrorMessage(new ErrorMessage(235,bState.getPosition(),bState.getName(),bState.getName(),bState.getName()));
+                      return;
+            }
+            if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   bState.getActionsByType("exit")!=null && cState.getActionsByType("exit")!=null)) {
+              getParseResult().addErrorMessage(new ErrorMessage(235,bState.getPosition(),bState.getName(),bState.getName(),bState.getName()));
+                      return;
+            }
+            if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   bState.getActivities()!=null && cState.getActivities()!=null)) {
+              getParseResult().addErrorMessage(new ErrorMessage(235,bState.getPosition(),bState.getName(),bState.getName(),bState.getName()));
+                      return;
+            }
 				  if (inSMachine1.getRootStateMachine().getUmpleTrait().equals( (UmpleTrait)inUmpleClassfier )){
 					  applyCompositionAndSuperKwywordToStateAction(inSMachine2, bState, cState,"entry");  
 					  applyCompositionAndSuperKwywordToStateAction(inSMachine2, bState, cState,"exit"); 
