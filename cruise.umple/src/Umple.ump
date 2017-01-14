@@ -695,6 +695,7 @@ class GeneralTPApplied {
 	1 -> 0..1 Position positions;
 	1 -> * MethodTemplateSignature;
 	1 -> * StateMachineTemplateSignature;
+	1 -> * StateMachineModifier;
 
 }
 
@@ -713,6 +714,33 @@ class StateMachineTemplateSignature{
 	0..1 -> 0..1 MethodTemplateSignature;
 	alias;
 }
+
+
+class StateMachineModifier{
+  modifier;
+  srcStateMachine;
+  alias;
+}
+
+//This is used to remove and rename a state.
+class StateModifier{
+  isA StateMachineModifier;
+  String[] srcStates;
+}
+
+//This is used to remove an event or a transition.
+class EventModifier{
+  isA StateModifier;
+  0..1 -> 0..1 Method;
+  0..1 -> 0..1 Guard;
+}
+
+//This is used to extend a state with a state machine.
+class ExtendStateByStateMachine{
+  isA StateMachineModifier;
+  String[] desStates;
+}
+
 /*
  * A depend relationship indicates a package on which this class depends
  */

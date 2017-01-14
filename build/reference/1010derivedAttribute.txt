@@ -3,7 +3,7 @@ Attributes
 noreferences
 
 @@description
-<p>When declaring an attribute in Umple, you can specify at arbitrary expression after the equals sign to create
+<p>When declaring an attribute in Umple, you can specify an arbitrary expression after the equals sign to create
 an attribute that will be computed. There will be no <em>set</em> method on such
 an attribute.</p>
 

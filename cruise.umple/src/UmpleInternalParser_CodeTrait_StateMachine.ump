@@ -107,6 +107,7 @@ class UmpleInternalParser
   		list.addAll(entry.getValue());
   	}
   	if (!checkValidityOfSMTemplateSignature(inGTPApplied,list,inTrait)) return traitStateMachine;
+  	if (!checkValidityOfSMModifier(inGTPApplied,list,inTrait)) return traitStateMachine;
   	//To assign a state machine to a state.
 		//----------------------------------------------------------------------------------------		
 			if (getParseResult().getWasSuccess()) AssignStateMachineToState(inTrait,traitStateMachine);	
@@ -330,9 +331,76 @@ class UmpleInternalParser
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private boolean checkValidityOfSMModifier(GeneralTPApplied inGTPApplied, List<StateMachine> inStateMachines, UmpleTrait inTrait) {
+    if (inGTPApplied!=null){
+        for (StateMachineModifier smModifier : inGTPApplied.getStateMachineModifiers()) {
+          //Thsi checks to make sure the source state machine is Valid. 
+          StateMachine smFound = null;
+          State sFound = null;
+          StateMachine rFound = null;
+          for (StateMachine sm : inStateMachines){        
+            if(sm.getName().equals(smModifier.getSrcStateMachine())){
+              smFound=sm;
+            }
+          }
+          if ( smFound == null ){
+              getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smModifier.getSrcStateMachine())); 
+              return false;
+          }
+          //---
+          if (smModifier instanceof EventModifier){  
+            sFound = smFound.findStateBasedOnSequence(((StateModifier)smModifier).getSrcStates());
+               if (sFound==null ){
+                 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),Arrays.toString(((EventModifier)smModifier).getSrcStates())));               
+                   return false;
+               } else {
+                 Method method = ((EventModifier)smModifier).getMethod();
+                 method.setType("Boolean");
+                 Event event = null;
+                 for(Transition transition : sFound.getTransitions()){
+                      Event e = transition.getEvent();
+                      if (e != null )
+                      {
+                        Method m = new Method("",e.getName(),e.getType(),false);
+                        m.setMethodParameters(e.getParams());
+                        if (m.compareWithTheMethod(method)){
+                          event = e;
+                          break;
+                        }
+                      }
+                 }
+                 if (event == null){
+                   getParseResult().addErrorMessage(new ErrorMessage(232,inTrait.getPosition(0),inTrait.getName(),method.getSignature()));  
+                       return false;
+                 }
+               }
+          }else if (smModifier instanceof StateModifier){  
+            if (((StateModifier)smModifier).numberOfSrcStates() %2 >0){
+              sFound = smFound.findStateBasedOnSequence(((StateModifier)smModifier).getSrcStates());          
+                    if (sFound==null  ){
+                     getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),Arrays.toString(((StateModifier)smModifier).getSrcStates())));               
+                        return false;
+                    }   
+
+            }else{
+              rFound = smFound.findRegionBasedOnSequence(((StateModifier)smModifier).getSrcStates());
+                    if (rFound==null ){
+                       getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),Arrays.toString(((StateModifier)smModifier).getSrcStates())));               
+                         return false;
+                     }   
+            } 
+          }
+        }
+    }
+    return true;
+  }  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
 	private StateMachine CompeletlyAllyTypeParametersToStateMachines(StateMachine inSMachine, GeneralTPApplied inGTPApplied) {
-		StateMachine stTemp = ApplyTypeParametersToStateMachine(inSMachine,inGTPApplied);
+		StateMachine stTemp = ApplyRemoveAndInclude(inSMachine,inGTPApplied);
+		if (stTemp!=null) stTemp = ApplyTypeParametersToStateMachine(inSMachine,inGTPApplied);		
 		if (stTemp!=null)	{
 			ApplyTypeParametersToEventsOfStateMachines(stTemp, inGTPApplied);
 			ApplyTypeParametersToActionCodesOfStateMachines(stTemp, inGTPApplied);
@@ -349,18 +417,6 @@ class UmpleInternalParser
   Map<String, String> nameMapping = new HashMap<String, String>();
   if (inGTPApplied!=null){
     for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
-      if (smTSignature.getModifier().equals("-")) {
-        if (smTSignature.getMethodTemplateSignature()!=null){
-          removeTransition(inSMachine,smTSignature);
-          continue;
-        } else if(smTSignature.getSrcStates().length>0){
-          removeState(inSMachine,smTSignature);
-          continue; 
-        } else if ( inSMachine.getName().equals(smTSignature.getSrcStateMachine())){
-          return null;
-        }
-      }
-       if (smTSignature.getSrcStateMachine().equals("")) break;
        //------------------------------------------------------------------------------------------------------
        //This makes sure we are not going to change the name of a state machine and then assign it to state.
        //This won't affect the result.
@@ -435,6 +491,39 @@ class UmpleInternalParser
   }
   return inSMachine;
 }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private StateMachine ApplyRemoveAndInclude(StateMachine inSMachine, GeneralTPApplied inGTPApplied) {
+    StateMachine modifiedSM = inSMachine;
+    if (inGTPApplied!=null){
+      for (StateMachineModifier smModifier : inGTPApplied.getStateMachineModifiers()) {
+      if(smModifier.getSrcStateMachine().equals(inSMachine.getName())){
+            if(smModifier.getModifier().equals("-")){
+              if (smModifier instanceof EventModifier){
+                removeTransition2(modifiedSM,(EventModifier)smModifier);
+                continue;
+              } else if (smModifier instanceof StateModifier){
+                removeState2(modifiedSM,(StateModifier)smModifier);
+                continue;
+              } else if (smModifier instanceof StateMachineModifier){ 
+                return null;
+              }
+            } else if(smModifier.getModifier().equals("+")) {
+               //TOD
+            } else  {
+              if (smModifier instanceof EventModifier){
+                 EventModifier eventModifier= (EventModifier)smModifier;
+              } else if (smModifier instanceof StateModifier){
+                 StateModifier sModifier = (StateModifier)smModifier;
+              } else if (smModifier instanceof StateMachineModifier){               
+            } 
+          }   
+      }
+      }
+    } 
+    return modifiedSM;
+  }
 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -455,6 +544,22 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
+  private void removeTransition2(StateMachine inSM, EventModifier inEventModifier){
+    State foundState =inSM.findStateBasedOnSequence(inEventModifier.getSrcStates());
+    if(foundState!=null){
+      for (Transition t : foundState.getTransitions()){
+        Method m = new Method("",t.getEvent().getName(),"",false);
+        m.setMethodParameters(t.getEvent().getParams());
+        if (compareTwoMethdos(m, inEventModifier.getMethod())){
+          t.delete();
+          return;
+        }
+      }
+    }
+  } 
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
   private void removeState(StateMachine inSM, StateMachineTemplateSignature inSMTSignature) {
     State foundState =inSM.findStateBasedOnSequence(inSMTSignature.getSrcStates());
     if (foundState.isIsStartState()){
@@ -467,7 +572,21 @@ class UmpleInternalParser
       foundState.delete(); 
     } 
   }
-
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  private void removeState2(StateMachine inSM, StateModifier sModifier){
+    State foundState =inSM.findStateBasedOnSequence(sModifier.getSrcStates());
+    if (foundState.isIsStartState()){
+      getParseResult().addErrorMessage(new ErrorMessage(233,foundState.getPosition(),inSM.getUmpleTrait().getName(),"initial",foundState.getName()));
+      return;
+    }
+    if(foundState!=null){
+      for(int i=0;i<foundState.numberOfTransitions();i++)         foundState.getTransition(i).delete();
+      for(int i=0;i<foundState.numberOfNextTransition();i++)      foundState.getNextTransition(i).delete();     
+      foundState.delete(); 
+    }
+  } 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
@@ -1362,17 +1481,47 @@ class StateMachine{
       for(int i = 0; i<inSequence.length;i++){
         if(i % 2==0) {
           foundState = smTemp.findState(inSequence[i], false);
+          smTemp = null;
+          if(foundState==null) return null;
         } else {
           for(StateMachine nSM:foundState.getNestedStateMachines()){
             if(nSM.getName().equals(inSequence[i])){
               smTemp = nSM;
               foundState=null;
+              break;
             }
           }
+          if(smTemp==null) return null ;
        }
     }
     return foundState;
   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  public StateMachine findRegionBasedOnSequence(String [] inSequence){
+    State foundState =null;
+    StateMachine smTemp = this;    
+      for(int i = 0; i<inSequence.length;i++){
+        if(i % 2==0) {
+          foundState = smTemp.findState(inSequence[i], false);
+          smTemp = null;
+          if(foundState==null) return null;
+        } else {
+          for(StateMachine nSM:foundState.getNestedStateMachines()){
+            if(nSM.getName().equals(inSequence[i])){
+              smTemp = nSM;
+              foundState=null;
+              break;
+            }
+          }
+          if(smTemp==null) return null ;
+       }
+    }
+    return smTemp;
+  } 
+ 
+  
 }
 //************************************************************************************* 
 //************************************NEW CLASS****************************************

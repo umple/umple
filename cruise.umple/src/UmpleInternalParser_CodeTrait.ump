@@ -1429,6 +1429,14 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
               getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
               return;
             } 
+        } else if (subToken.is("iEStateMachine2")){ 
+            StateMachineModifier stTSignature = obtainStateMachineModifier(subToken);
+            if (! aGeneralTPApplied.hasStateMachineModifier(stTSignature)){  
+              aGeneralTPApplied.addStateMachineModifier(stTSignature);
+            } else {
+              getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
+              return;
+            } 
         } else if (subToken.is("traitAppliedParameters")){
             parameterName = subToken.getValue("pName");
             if (aGeneralTPApplied.getParameterMapping().containsKey(parameterName)){
@@ -1448,6 +1456,55 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
+  private StateMachineModifier obtainStateMachineModifier(Token inToken) {
+        StateMachineModifier smModifier = null;
+      String modifier=inToken.getValue("modifier");
+      String smName = inToken.getValue("smName");
+      if (inToken.getValue("StateNames")==null){
+       smModifier = new StateMachineModifier(modifier,smName,"");
+      } else {
+        List<String> states = new ArrayList<String>();      
+        String eventName="";
+        Token t = inToken;        
+        while(t!=null && t.getSubToken("StateNames")!=null){      
+          if(t.getSubToken("StateNames").getSubToken("StateNamesPassing")!=null){
+            states.add(t.getSubToken("StateNames").getValue("sName"));
+          }else{
+            if( inToken.getSubToken("iEParameterList")!=null)
+                 eventName = t.getSubToken("StateNames").getValue("sName");
+            else
+             states.add(t.getSubToken("StateNames").getValue("sName"));   
+          }
+          t =  t.getSubToken("StateNames").getSubToken("StateNamesPassing");
+        }  
+        if (eventName.equals("") && states.size() >0 && inToken.getSubToken("guardOption")==null){
+           smModifier = new StateModifier(modifier,smName,"");
+           for(String state:states)  ((StateModifier)smModifier).addSrcState(state);
+        } else {
+          smModifier = new EventModifier(modifier,smName,"");
+            for(String state:states)  ((EventModifier)smModifier).addSrcState(state);
+            Method method = new Method("", eventName, "Boolean", false);
+            extractIEParameters(inToken, method);
+            ((EventModifier)smModifier).setMethod(method);
+        }
+      } 
+      return smModifier;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void extractIEParameters(Token inToken, Method method) {
+    if (inToken.getSubToken("iEParameterList") != null){
+        for (Token subToken : inToken.getSubToken("iEParameterList").getSubTokens()) {
+          if (subToken.is("parameter")) {
+            method.addMethodParameter(new MethodParameter("", subToken.getValue(), "", "", false));
+          }
+        }
+    }
+  }  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
   private MethodTemplateSignature obtainMethodTemplateSignature(Token inToken) {
 	  String modifier="",aliasName ="";
     String methodName = inToken.getValue("methodName");
@@ -1456,16 +1513,7 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
     if (inToken.getValue("aliasName") != null) aliasName = inToken.getValue("aliasName");
     if (inToken.getValue("iEVisibility") != null)  iEVisibility = inToken.getValue("iEVisibility");
     Method method = new Method(iEVisibility, methodName, "", false); 
-    if (inToken.getSubToken("iEParameterList") != null){
-      for (Token subToken : inToken.getSubToken("iEParameterList")
-          .getSubTokens()) {
-        if (subToken.is("parameter")) {
-          method.addMethodParameter(new MethodParameter("", subToken
-              .getValue(), "", "", false));
-        }
-      }
-     }
-     
+    extractIEParameters(inToken, method);     
     MethodTemplateSignature mtSignature = new MethodTemplateSignature(modifier,aliasName, method); 
     return mtSignature;
   }
