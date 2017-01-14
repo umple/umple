@@ -26,14 +26,14 @@ IEVisiAlias3- : [~aliasName]
 traitAppliedParameters : [~pName] = [~rName]
 
 StateMachineIncludeExcludeAlias- : [[ StateMachineInExAlias]] ( , [[StateMachineInExAlias]]  )*
-StateMachineInExAlias- : [[StateMachineAliasName]] | [[iEStateMachine2]] 
+StateMachineInExAlias- : [[StateMachineAliasName]] | [[iEStateMachine]] 
 //| [[StateMachineTransitionAlias]] 
 StateMachineAliasName : ([=iEStateMachineModifier:+])? [~smName] ([[StateNames]])? as [~smDesName] ([[DesStateNames]])?
 StateNames : . [~sName] ( [[StateNamesPassing]] )*
 DesStateNames :[[StateNames]]
 StateNamesPassing : [[StateNames]]
 //iEStateMachine : [=iEStateMachineModifier:+|-] [~smName] [[StateNames]]?
-iEStateMachine2 :  [=modifier:+|-] [~smName]  (  [[StateNames]] ( ( [[iEParameterList]] [[guardOption]] ) | ( . [[guardOption]] ) )?   )?
+iEStateMachine :  [=modifier:+|-] [~smName]  (  [[StateNames]] ( ( [[iEParameterList]] [[guardOption]]? ) | ( . [[guardOption]] ) )?   )?
 guardOption : [[guard]] | []
 //This is for events in state machines
 //StateMachineTransitionAlias : ( [~smName] | [!smPattern:\d+|[*]]) . [~eventName] [[iEParameterList]] as [~AliasName]

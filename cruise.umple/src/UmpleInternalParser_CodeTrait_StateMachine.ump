@@ -357,20 +357,39 @@ class UmpleInternalParser
                } else {
                  Method method = ((EventModifier)smModifier).getMethod();
                  method.setType("Boolean");
-                 Event event = null;
-                 for(Transition transition : sFound.getTransitions()){
-                      Event e = transition.getEvent();
-                      if (e != null )
-                      {
-                        Method m = new Method("",e.getName(),e.getType(),false);
-                        m.setMethodParameters(e.getParams());
-                        if (m.compareWithTheMethod(method)){
-                          event = e;
-                          break;
-                        }
-                      }
+                 boolean valid = false;
+                 if (method.getName().equals("")){
+                     for(Transition transition : sFound.getTransitions()){
+                         if (transition.getAutoTransition()){
+                           Guard guard = transition.getGuard();
+                             if (guard==null )
+                             {
+                               if (((EventModifier)smModifier).getGuard()==null ){
+                                 valid = true;
+                                break;
+                               }
+                             } else if(guard.isEqualToGuard( ((EventModifier)smModifier).getGuard() ) ) {
+                               valid = true;
+                               break; 
+                             }
+                         }
+
+                    }
+                 } else {
+                     for(Transition transition : sFound.getTransitions()){
+                         Event e = transition.getEvent();
+                         if (e != null )
+                         {
+                           Method m = new Method("",e.getName(),e.getType(),false);
+                           m.setMethodParameters(e.getParams());
+                           if (m.compareWithTheMethod(method)){
+                             valid = true;
+                             break;
+                           }
+                         }
+                    }
                  }
-                 if (event == null){
+                 if (!valid){
                    getParseResult().addErrorMessage(new ErrorMessage(232,inTrait.getPosition(0),inTrait.getName(),method.getSignature()));  
                        return false;
                  }
@@ -545,14 +564,27 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
   private void removeTransition2(StateMachine inSM, EventModifier inEventModifier){
-    State foundState =inSM.findStateBasedOnSequence(inEventModifier.getSrcStates());
-    if(foundState!=null){
-      for (Transition t : foundState.getTransitions()){
-        Method m = new Method("",t.getEvent().getName(),"",false);
-        m.setMethodParameters(t.getEvent().getParams());
-        if (compareTwoMethdos(m, inEventModifier.getMethod())){
+     State foundState =inSM.findStateBasedOnSequence(inEventModifier.getSrcStates());
+      if(foundState!=null){
+        for (Transition t : foundState.getTransitions()){
+           Guard guard = t.getGuard();
+        if(inEventModifier.getMethod().getName().equals("")){
+          if(guard==null){
+            if (inEventModifier.getGuard()==null){
+              t.delete();
+              return;
+            }
+          } else if(guard.isEqualToGuard(inEventModifier.getGuard())) {
+            t.delete();
+          return;
+          }
+        } else {
+          Method m = new Method("",t.getEvent().getName(),"",false);
+          m.setMethodParameters(t.getEvent().getParams());
+          if (compareTwoMethdos(m, inEventModifier.getMethod())){
           t.delete();
           return;
+        }
         }
       }
     }

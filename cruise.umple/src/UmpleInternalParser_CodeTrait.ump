@@ -1,5 +1,6 @@
 
 namespace cruise.umple.compiler;
+
 //************************************************************************************* 
 //************************************NEW CLASS****************************************
 //*************************************************************************************  
@@ -1421,7 +1422,7 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
                 return;
             }
           }
-        } else if (subToken.is("StateMachineAliasName")|| subToken.is("iEStateMachine")){ 
+        } else if (subToken.is("StateMachineAliasName")){ 
             StateMachineTemplateSignature stTSignature = obtainStateMachineTemplateSignature(subToken);
             if (! aGeneralTPApplied.hasStateMachineTemplateSignature(stTSignature)){  
               aGeneralTPApplied.addStateMachineTemplateSignature(stTSignature);
@@ -1429,7 +1430,7 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
               getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
               return;
             } 
-        } else if (subToken.is("iEStateMachine2")){ 
+        } else if (subToken.is("iEStateMachine")){ 
             StateMachineModifier stTSignature = obtainStateMachineModifier(subToken);
             if (! aGeneralTPApplied.hasStateMachineModifier(stTSignature)){  
               aGeneralTPApplied.addStateMachineModifier(stTSignature);
@@ -1481,12 +1482,32 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
            smModifier = new StateModifier(modifier,smName,"");
            for(String state:states)  ((StateModifier)smModifier).addSrcState(state);
         } else {
-          smModifier = new EventModifier(modifier,smName,"");
+            smModifier = new EventModifier(modifier,smName,"");
             for(String state:states)  ((EventModifier)smModifier).addSrcState(state);
             Method method = new Method("", eventName, "Boolean", false);
             extractIEParameters(inToken, method);
             ((EventModifier)smModifier).setMethod(method);
+            if (inToken.getSubToken("guardOption")!=null){
+                Token guardToken = inToken.getSubToken("guardOption").getSubToken("guard");
+                if (guardToken != null)
+                {
+                  //01 is a dummy name
+                  StateMachine tempSM = new StateMachine("01");
+                  UmpleClass tempClass = new UmpleClass("01");
+                  tempClass.addStateMachine(tempSM);
+                  State s1 = new State("s1", tempSM);
+                  State s2 = new State("s2", tempSM);
+                  Transition t1 = new Transition(s1, s2); 
+                  ((GuardAnalyzer)model.getAnalyzer("guard")).setUClassifier(tempClass);
+                  ((GuardAnalyzer)model.getAnalyzer("guard")).setT(t1);
+                  model.getAnalyzer("guard").analyzeToken(guardToken);
+                  ((EventModifier)smModifier).setGuard(t1.getGuard());
+                  tempSM.delete();
+                  tempClass.delete();
+                }
+            }
         }
+        
       } 
       return smModifier;
   }

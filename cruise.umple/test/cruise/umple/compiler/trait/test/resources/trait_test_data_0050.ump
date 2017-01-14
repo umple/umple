@@ -1,5 +1,5 @@
 class A{
-  isA T < -status.s2.e1()>;
+  isA T < -status.s2.e1(), -status.s2.e2()>;
 }
 
 trait T{  

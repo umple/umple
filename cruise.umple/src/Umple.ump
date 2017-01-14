@@ -733,6 +733,7 @@ class EventModifier{
   isA StateModifier;
   0..1 -> 0..1 Method;
   0..1 -> 0..1 Guard;
+//  Token guardToken = null;
 }
 
 //This is used to extend a state with a state machine.
