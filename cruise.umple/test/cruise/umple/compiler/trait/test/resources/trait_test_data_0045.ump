@@ -1,0 +1,15 @@
+class A{
+  isA T <status.s2 as s1, status.s2 as s2>;
+}
+
+trait T{  
+  status{
+    s1{
+      e2->s2;
+    }
+    s2{
+      e1->s1;      
+    }
+    final end{}
+  }
+}

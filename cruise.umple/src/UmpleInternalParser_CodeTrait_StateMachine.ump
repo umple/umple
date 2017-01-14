@@ -77,14 +77,7 @@ class UmpleInternalParser
   {
     Map<UmpleTrait, List<StateMachine>> traitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>(); 
   	Map<UmpleTrait, List<StateMachine>> tempTraitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();  	
-  	/*
-  	 * Duplicate state machines in order to be able modify them without effecting the original names;
-  	 */
-  	List<StateMachine> sMList = new ArrayList<StateMachine>();
-  	for (StateMachine sm: inTrait.getStateMachines()){
-  		 sMList.add(sm.clone());
-  	}
-  	if (sMList.size()>0) traitStateMachine.put(inTrait,sMList);
+
   	
   	/*
   	 * Go through the included traits.
@@ -95,6 +88,17 @@ class UmpleInternalParser
   		if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine,tempTraitStateMachine,inTrait)) return traitStateMachine;
   		AddStateMachineMapToAnother(traitStateMachine,tempTraitStateMachine);
   	}
+  	
+  	   /*
+     * Duplicate state machines in order to be able modify them without effecting the original names;
+     */
+    List<StateMachine> sMList = new ArrayList<StateMachine>();
+    for (StateMachine sm: inTrait.getStateMachines()){
+       sMList.add(sm.clone());
+    }
+    if (sMList.size()>0) traitStateMachine.put(inTrait,sMList);
+  	if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine,tempTraitStateMachine,inTrait)) return traitStateMachine;
+  	
   	/*
   	 * Check to make sure applied type parameters are valid;
   	 */
@@ -103,6 +107,7 @@ class UmpleInternalParser
   		list.addAll(entry.getValue());
   	}
   	if (!checkValidityOfSMTemplateSignature(inGTPApplied,list,inTrait)) return traitStateMachine;
+  	if (!checkValidityOfSMModifier(inGTPApplied,list,inTrait)) return traitStateMachine;
   	//To assign a state machine to a state.
 		//----------------------------------------------------------------------------------------		
 			if (getParseResult().getWasSuccess()) AssignStateMachineToState(inTrait,traitStateMachine);	
@@ -296,16 +301,28 @@ class UmpleInternalParser
  		 			}	else {
  						 StateMachine smTemp = sm;
  						 State tState=null;
- 						 for (String s : smTSignature.getSrcStates()){
- 							 tState = smTemp.findState(s, false);
- 							 if (tState==null){
- 								 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),s));	
- 				 		 		 return false;
- 							 } else
- 								 if(tState.hasNestedStateMachines()){
- 		 						 smTemp = tState.getNestedStateMachine(0);
- 		 					 }
- 						 }				
+             for(int i = 0; i<smTSignature.numberOfSrcStates();i++){
+              if(i % 2==0) {
+                tState = smTemp.findState(smTSignature.getSrcState(i), false);
+                if(tState==null){
+                    getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getSrcState(i))); 
+                     return false;
+                }
+              } else {
+                boolean validNSM=false;
+                for(StateMachine nSM:tState.getNestedStateMachines()){
+                  if(nSM.getName().equals(smTSignature.getSrcState(i))){
+                    validNSM = true;
+                    smTemp = nSM;
+                    break;
+                  }
+                }
+                if(!validNSM){
+                  getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smTSignature.getSrcState(i))); 
+                   return false;
+                }
+              }
+            }  			
  		 			}
  	  		}
  	  	}	 
@@ -314,9 +331,95 @@ class UmpleInternalParser
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private boolean checkValidityOfSMModifier(GeneralTPApplied inGTPApplied, List<StateMachine> inStateMachines, UmpleTrait inTrait) {
+    if (inGTPApplied!=null){
+        for (StateMachineModifier smModifier : inGTPApplied.getStateMachineModifiers()) {
+          //Thsi checks to make sure the source state machine is Valid. 
+          StateMachine smFound = null;
+          State sFound = null;
+          StateMachine rFound = null;
+          for (StateMachine sm : inStateMachines){        
+            if(sm.getName().equals(smModifier.getSrcStateMachine())){
+              smFound=sm;
+            }
+          }
+          if ( smFound == null ){
+              getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),smModifier.getSrcStateMachine())); 
+              return false;
+          }
+          //---
+          if (smModifier instanceof EventModifier){  
+            sFound = smFound.findStateBasedOnSequence(((StateModifier)smModifier).getSrcStates());
+               if (sFound==null ){
+                 getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),Arrays.toString(((EventModifier)smModifier).getSrcStates())));               
+                   return false;
+               } else {
+                 Method method = ((EventModifier)smModifier).getMethod();
+                 method.setType("Boolean");
+                 boolean valid = false;
+                 if (method.getName().equals("")){
+                     for(Transition transition : sFound.getTransitions()){
+                         if (transition.getAutoTransition()){
+                           Guard guard = transition.getGuard();
+                             if (guard==null )
+                             {
+                               if (((EventModifier)smModifier).getGuard()==null ){
+                                 valid = true;
+                                break;
+                               }
+                             } else if(guard.isEqualToGuard( ((EventModifier)smModifier).getGuard() ) ) {
+                               valid = true;
+                               break; 
+                             }
+                         }
+
+                    }
+                 } else {
+                     for(Transition transition : sFound.getTransitions()){
+                         Event e = transition.getEvent();
+                         if (e != null )
+                         {
+                           Method m = new Method("",e.getName(),e.getType(),false);
+                           m.setMethodParameters(e.getParams());
+                           if (m.compareWithTheMethod(method)){
+                             valid = true;
+                             break;
+                           }
+                         }
+                    }
+                 }
+                 if (!valid){
+                   getParseResult().addErrorMessage(new ErrorMessage(232,inTrait.getPosition(0),inTrait.getName(),method.getSignature()));  
+                       return false;
+                 }
+               }
+          }else if (smModifier instanceof StateModifier){  
+            if (((StateModifier)smModifier).numberOfSrcStates() %2 >0){
+              sFound = smFound.findStateBasedOnSequence(((StateModifier)smModifier).getSrcStates());          
+                    if (sFound==null  ){
+                     getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),Arrays.toString(((StateModifier)smModifier).getSrcStates())));               
+                        return false;
+                    }   
+
+            }else{
+              rFound = smFound.findRegionBasedOnSequence(((StateModifier)smModifier).getSrcStates());
+                    if (rFound==null ){
+                       getParseResult().addErrorMessage(new ErrorMessage(230,inTrait.getPosition(0),inTrait.getName(),Arrays.toString(((StateModifier)smModifier).getSrcStates())));               
+                         return false;
+                     }   
+            } 
+          }
+        }
+    }
+    return true;
+  }  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
 	private StateMachine CompeletlyAllyTypeParametersToStateMachines(StateMachine inSMachine, GeneralTPApplied inGTPApplied) {
-		StateMachine stTemp = ApplyTypeParametersToStateMachine(inSMachine,inGTPApplied);
+		StateMachine stTemp = ApplyRemoveAndInclude(inSMachine,inGTPApplied);
+		if (stTemp!=null) stTemp = ApplyTypeParametersToStateMachine(inSMachine,inGTPApplied);		
 		if (stTemp!=null)	{
 			ApplyTypeParametersToEventsOfStateMachines(stTemp, inGTPApplied);
 			ApplyTypeParametersToActionCodesOfStateMachines(stTemp, inGTPApplied);
@@ -328,102 +431,219 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------  
 
   private StateMachine ApplyTypeParametersToStateMachine(StateMachine inSMachine, GeneralTPApplied inGTPApplied){
-	String track=null;
-	String mapped=null;
-	Map<String, String> nameMapping = new HashMap<String, String>();
-		if (inGTPApplied!=null){
-			for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
-				if (smTSignature.getModifier().equals("-") && inSMachine.getName().equals(smTSignature.getSrcStateMachine())) return null;
-			 	if (smTSignature.getSrcStateMachine().equals("")) break;
-			 	//------------------------------------------------------------------------------------------------------
-			 	//This makes sure we are not going to change the name of a state machine and then assign it to state.
-			 	//This won't affect the result.
-			 	boolean mustBeRejected = false;
-			 	if (smTSignature.getAlias()!="" && smTSignature.numberOfSrcStates()==0){
-			 		for (StateMachineTemplateSignature smTSignatureTemp : inGTPApplied.getStateMachineTemplateSignatures()){
-			 			if (smTSignature!=smTSignatureTemp && smTSignatureTemp.getDesStateMachine()!=""){
-			 				mustBeRejected= true;
-			 				
-			 			}
-			 		}
-			 	}
-			 	if (mustBeRejected) continue;
-			 	//------------------------------------------------------------------------------------------------------
-			 	
-			 	mapped = nameMapping.get(smTSignature.getSrcStateMachine());
-			 	if (mapped==null) mapped = smTSignature.getSrcStateMachine();
-			 	track = smTSignature.getSrcStateMachine();
-			 	if (inSMachine.getName().equals(mapped)){
-			  	if (smTSignature.getMethodTemplateSignature()!=null){
-						changeEventName(inSMachine,smTSignature);
-						continue;
-				 	}
-				if (smTSignature.numberOfSrcStates()<=0) {
-					if (smTSignature.getAlias()!=""){
-						inSMachine.setName(smTSignature.getAlias());
-						for (State s : inSMachine.getStates()) s.setStateMachine(inSMachine);
-							nameMapping.put(track, smTSignature.getAlias());
-					}
-	 			}else { 
-					StateMachine smTemp = inSMachine;
-					State tState=null;
-					for (String s : smTSignature.getSrcStates()){
-						track = track+"."+s;
-						mapped = nameMapping.get(track);
-						if (mapped==null) mapped = s;
-						tState = smTemp.findState(mapped, false);
-							if(tState.hasNestedStateMachines()){
-		 						smTemp = tState.getNestedStateMachine(0);
-		 					}
-					}
-					if (smTemp!=null) {
-						tState.setName(smTSignature.getAlias());	
-						if (tState.hasNestedStateMachines()) {
-							smTemp.setName(smTSignature.getAlias());
-						}
-						nameMapping.put(track, smTSignature.getAlias());
-					}
-				} 					
-				}
-			}
-		//This code is used to make sure the * pattern for renaming events name applies to all state machines.
-		for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
-	  	if (smTSignature.getSrcStateMachine().equals("")){
-				if (smTSignature.getMethodTemplateSignature()!=null){
-					changeEventName(inSMachine,smTSignature);
-					continue;
-				}
-			}
-		}
-	}
-	return inSMachine;
+  String track=null;
+  String mapped=null;
+  Map<String, String> nameMapping = new HashMap<String, String>();
+  if (inGTPApplied!=null){
+    for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
+       //------------------------------------------------------------------------------------------------------
+       //This makes sure we are not going to change the name of a state machine and then assign it to state.
+       //This won't affect the result.
+       boolean mustBeRejected = false;
+       if (smTSignature.getAlias()!="" && smTSignature.numberOfSrcStates()==0){
+         for (StateMachineTemplateSignature smTSignatureTemp : inGTPApplied.getStateMachineTemplateSignatures()){
+           if (smTSignature!=smTSignatureTemp && smTSignatureTemp.getDesStateMachine()!=""){
+             mustBeRejected= true;
+             
+           }
+         }
+       }
+       if (mustBeRejected) continue;
+       //------------------------------------------------------------------------------------------------------
+       
+       mapped = nameMapping.get(smTSignature.getSrcStateMachine());
+       if (mapped==null) mapped = smTSignature.getSrcStateMachine();
+       track = smTSignature.getSrcStateMachine();
+       if (inSMachine.getName().equals(mapped)){
+        if (smTSignature.getMethodTemplateSignature()!=null){
+          changeEventName(inSMachine,smTSignature);
+          continue;
+         }
+        if (smTSignature.numberOfSrcStates()<=0) {
+          if (smTSignature.getAlias()!=""){
+            inSMachine.setName(smTSignature.getAlias());
+            for (State s : inSMachine.getStates()) s.setStateMachine(inSMachine);
+              nameMapping.put(track, smTSignature.getAlias());
+          }
+         }else { 
+          StateMachine smTemp = inSMachine;
+          State tState=null;
+          Boolean itsSM = false;
+          for(int i = 0; i<smTSignature.numberOfSrcStates();i++){
+            track = track+"."+smTSignature.getSrcState(i);
+            mapped = nameMapping.get(track);
+            if (mapped==null) mapped = smTSignature.getSrcState(i);
+            if(i % 2==0) {
+              tState = smTemp.findState(mapped, false);
+              itsSM=false;
+            } else{
+              for(StateMachine nSM:tState.getNestedStateMachines()){
+                if(nSM.getName().equals(smTSignature.getSrcState(i))){
+                  smTemp = nSM;
+                  itsSM=true;
+                  break;
+                }
+              }
+            }
+          }
+          if(itsSM){
+            smTemp.setName(smTSignature.getAlias());
+          } else if (smTemp!=null) {
+            tState.setName(smTSignature.getAlias());
+            if (tState.numberOfNestedStateMachines()==1) {
+              tState.getNestedStateMachine(0).setName(smTSignature.getAlias());
+            }
+            nameMapping.put(track, smTSignature.getAlias());
+          }
+        }           
+      }
+    }
+    //This code is used to make sure the * pattern for renaming events name applies to all state machines.
+    for (StateMachineTemplateSignature smTSignature : inGTPApplied.getStateMachineTemplateSignatures()) {
+      if (smTSignature.getSrcStateMachine().equals("")){
+        if (smTSignature.getMethodTemplateSignature()!=null){
+          changeEventName(inSMachine,smTSignature);
+          continue;
+        }
+      }
+    }
+  }
+  return inSMachine;
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private StateMachine ApplyRemoveAndInclude(StateMachine inSMachine, GeneralTPApplied inGTPApplied) {
+    StateMachine modifiedSM = inSMachine;
+    if (inGTPApplied!=null){
+      for (StateMachineModifier smModifier : inGTPApplied.getStateMachineModifiers()) {
+      if(smModifier.getSrcStateMachine().equals(inSMachine.getName())){
+            if(smModifier.getModifier().equals("-")){
+              if (smModifier instanceof EventModifier){
+                removeTransition2(modifiedSM,(EventModifier)smModifier);
+                continue;
+              } else if (smModifier instanceof StateModifier){
+                removeState2(modifiedSM,(StateModifier)smModifier);
+                continue;
+              } else if (smModifier instanceof StateMachineModifier){ 
+                return null;
+              }
+            } else if(smModifier.getModifier().equals("+")) {
+               //TOD
+            } else  {
+              if (smModifier instanceof EventModifier){
+                 EventModifier eventModifier= (EventModifier)smModifier;
+              } else if (smModifier instanceof StateModifier){
+                 StateModifier sModifier = (StateModifier)smModifier;
+              } else if (smModifier instanceof StateMachineModifier){               
+            } 
+          }   
+      }
+      }
+    } 
+    return modifiedSM;
   }
 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
+  private void removeTransition(StateMachine inSM, StateMachineTemplateSignature inSMTSignature) {
+    State foundState =inSM.findStateBasedOnSequence(inSMTSignature.getSrcStates());
+    if(foundState!=null){
+      for (Transition t : foundState.getTransitions()){
+        Method m = new Method("",t.getEvent().getName(),"",false);
+          m.setMethodParameters(t.getEvent().getParams());
+          if (compareTwoMethdos(m, inSMTSignature.getMethodTemplateSignature().getMethod())){
+            t.delete();
+            return;
+          }
+      }
+    }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  private void removeTransition2(StateMachine inSM, EventModifier inEventModifier){
+     State foundState =inSM.findStateBasedOnSequence(inEventModifier.getSrcStates());
+      if(foundState!=null){
+        for (Transition t : foundState.getTransitions()){
+           Guard guard = t.getGuard();
+        if(inEventModifier.getMethod().getName().equals("")){
+          if(guard==null){
+            if (inEventModifier.getGuard()==null){
+              t.delete();
+              return;
+            }
+          } else if(guard.isEqualToGuard(inEventModifier.getGuard())) {
+            t.delete();
+          return;
+          }
+        } else {
+          Method m = new Method("",t.getEvent().getName(),"",false);
+          m.setMethodParameters(t.getEvent().getParams());
+          if (compareTwoMethdos(m, inEventModifier.getMethod())){
+          t.delete();
+          return;
+        }
+        }
+      }
+    }
+  } 
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  private void removeState(StateMachine inSM, StateMachineTemplateSignature inSMTSignature) {
+    State foundState =inSM.findStateBasedOnSequence(inSMTSignature.getSrcStates());
+    if (foundState.isIsStartState()){
+      getParseResult().addErrorMessage(new ErrorMessage(233,foundState.getPosition(),inSM.getUmpleTrait().getName(),"initial",foundState.getName()));
+      return;
+    }
+    if(foundState!=null){
+      for(int i=0;i<foundState.numberOfTransitions();i++)         foundState.getTransition(i).delete();
+      for(int i=0;i<foundState.numberOfNextTransition();i++)      foundState.getNextTransition(i).delete();     
+      foundState.delete(); 
+    } 
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  private void removeState2(StateMachine inSM, StateModifier sModifier){
+    State foundState =inSM.findStateBasedOnSequence(sModifier.getSrcStates());
+    if (foundState.isIsStartState()){
+      getParseResult().addErrorMessage(new ErrorMessage(233,foundState.getPosition(),inSM.getUmpleTrait().getName(),"initial",foundState.getName()));
+      return;
+    }
+    if(foundState!=null){
+      for(int i=0;i<foundState.numberOfTransitions();i++)         foundState.getTransition(i).delete();
+      for(int i=0;i<foundState.numberOfNextTransition();i++)      foundState.getNextTransition(i).delete();     
+      foundState.delete(); 
+    }
+  } 
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
  private void ApplyTypeParametersToEventsOfStateMachines(StateMachine inStateMachine, GeneralTPApplied inGeneralTPApplied){
-	 if (inGeneralTPApplied == null) return;
-	 for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
-		 String newName = inGeneralTPApplied.getParameterMapping().get(strType);
-		 for(Event e : inStateMachine.getAllEvents()){
-			 for(MethodParameter p : e.getParams()){
-				 if (p.getType().equals(strType)){
-					 p.setType(newName);
-				 }
-			 }
-		 }
-	 }
+   if (inGeneralTPApplied == null) return;
+   for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
+     String newName = inGeneralTPApplied.getParameterMapping().get(strType);
+     for(Event e : inStateMachine.getAllEvents()){
+       for(MethodParameter p : e.getParams()){
+         if (p.getType().equals(strType)){
+           p.setType(newName);
+         }
+       }
+     }
+   }
  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
   private void ApplyTypeParametersToActionCodesOfStateMachines(StateMachine inStateMachine, GeneralTPApplied inGeneralTPApplied){
-	 if (inGeneralTPApplied == null) return;
-	 for (Transition transition : inStateMachine.getAllTransitions()){
-		if (transition.getAction()!=null )
-			transition.getAction().getCodeblock().ApplyTypeParameters(inGeneralTPApplied);
-	 }
+   if (inGeneralTPApplied == null) return;
+   for (Transition transition : inStateMachine.getAllTransitions()){
+    if (transition.getAction()!=null )
+      transition.getAction().getCodeblock().ApplyTypeParameters(inGeneralTPApplied);
+   }
  }  
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -698,75 +918,75 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
   private void addExtraStatesAndTransitions(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassfier) {
     for (State state : inSMachine2.getStates()) {
-		  State mainState = inSMachine1.findState(state.getName());
-		  if (mainState==null){
-		  	state.setStateMachine(inSMachine1);
-			  changeTransitionNextState(inSMachine1.findState(state.getName()),inSMachine1);
-		  } else {
-		  	checkSatifcationOfRequiredStates(state,inSMachine2);
-		  	applyCompositionAndSuperKwywordToState(inSMachine1, inSMachine2, inUmpleClassfier, mainState, state);
-		  	for (int i = 0; i < state.numberOfTransitions(); i++) {
-					Transition tTransition = state.getTransition(i); 		  		
-				  Transition findTransition= null;
-				  for(Transition mainlTrans : mainState.getTransitions() ){
-					  if (mainlTrans.isEqualToTransition(tTransition)&& tTransition.getNextState().getName().equals(mainlTrans.getNextState().getName())){ 
-					  	findTransition = mainlTrans;
-					  	break;
-					  }
-				  }
-				  if(findTransition!=null){
-				  	applyCompositionAndSuperKeywordToTransition(inSMachine1, inSMachine2, findTransition, tTransition,inUmpleClassfier);
-				  	state.removeTransition(tTransition);
-				  } else  {			
-				  	State nextState = inSMachine1.findState(tTransition.getNextState().getName());
-						if(nextState==null){
-							tTransition.getNextState().setStateMachine(inSMachine1);
-						  changeTransitionNextState(inSMachine1.findState(tTransition.getNextState().getName()),inSMachine1);
-							nextState = inSMachine1.findState(tTransition.getNextState().getName());													
-						}
-						
-						tTransition.setFromState(mainState);
-						tTransition.setNextState(nextState);
-						if (tTransition.getAction()!=null){
-							tTransition.getAction().getCodeblock().removeKeyword("superCall;");
-							tTransition.getAction().setActionCode(tTransition.getAction().getActionCode()+System.lineSeparator()+"superCall;");
-						}
-						i--;
-				  }
-				}
-				if (checkNoneDeterminismAfterComposition(inSMachine1, inSMachine2, inUmpleClassfier, mainState) ) return;
-		  	for (int i=0; i<state.numberOfNestedStateMachines();i++){
-		  	StateMachine comingSM = state.getNestedStateMachine(i);	
-		  		boolean equal = false;
-		  		for(StateMachine comparingSM:mainState.getNestedStateMachines()){
-		  			if (compareStateMachineName(comparingSM, comingSM)){
-		  				equal = true;
-		  			}
-		  		}
-		  		if (!equal){
-			  		//
-		  			if (mainState.getNestedStateMachines().size()<=0){
-			  			mainState.addNestedStateMachine(state.getNestedStateMachine(0));
-			  		} else {
-			  			if (!mainState.getNestedStateMachine(0).getStartState().getName().equals(state.getNestedStateMachine(0).getStartState().getName())){
-			  				StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(mainState.getNestedStateMachine(0), state.getNestedStateMachine(0));
-			  				if (checkSM!=null ) mainState.addNestedStateMachine(checkSM); 
-			  				i--;
-			  			} else {
-			  				addExtraStatesAndTransitions(mainState.getNestedStateMachine(0),state.getNestedStateMachine(0),inUmpleClassfier);
-			  			}
-			  		}
-			  		////
-		  		}
-		  	}				
-		  }  
-	  }
+      State mainState = inSMachine1.findState(state.getName());
+      if (mainState==null){
+        state.setStateMachine(inSMachine1);
+        changeTransitionNextState(inSMachine1.findState(state.getName()),inSMachine1);
+      } else {
+        checkSatifcationOfRequiredStates(state,inSMachine2);
+        applyCompositionAndSuperKwywordToState(inSMachine1, inSMachine2, inUmpleClassfier, mainState, state);
+        for (int i = 0; i < state.numberOfTransitions(); i++) {
+          Transition tTransition = state.getTransition(i);           
+          Transition findTransition= null;
+          for(Transition mainlTrans : mainState.getTransitions() ){
+            if (mainlTrans.isEqualToTransition(tTransition)){ 
+              findTransition = mainlTrans;
+              if(inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName()) && inSMachine2.getUmpleTrait()!=null && !inSMachine2.getUmpleTrait().getName().equals(inUmpleClassfier.getName())) {
+                getParseResult().addErrorMessage(new ErrorMessage(235,tTransition.getPosition(),tTransition.getEvent().getName(),inSMachine1.getName(),inSMachine2.getName()));
+                return;
+               }
+              }
+              break;
+          }
+          if(findTransition!=null){
+            applyCompositionAndSuperKeywordToTransition(inSMachine1, inSMachine2, findTransition, tTransition,inUmpleClassfier);
+            tTransition.delete();
+          } else  {      
+            State nextState = inSMachine1.findState(tTransition.getNextState().getName());
+            if(nextState==null)  nextState = new State(tTransition.getNextState().getName(), inSMachine1);
+                        
+            tTransition.setFromState(mainState);
+            tTransition.setNextState(nextState);
+            if (tTransition.getAction()!=null){
+              tTransition.getAction().getCodeblock().removeKeyword("superCall;");
+              tTransition.getAction().setActionCode(tTransition.getAction().getActionCode()+System.lineSeparator()+"superCall;");
+            }
+            i--;
+          }
+        }
+        if (checkNoneDeterminismAfterComposition(inSMachine1, inSMachine2, inUmpleClassfier, mainState) ) return;
+        for (int i=0; i<state.numberOfNestedStateMachines();i++){
+        StateMachine comingSM = state.getNestedStateMachine(i);  
+          boolean equal = false;
+          for(StateMachine comparingSM:mainState.getNestedStateMachines()){
+            if (compareStateMachineName(comparingSM, comingSM)){
+              equal = true;
+            }
+          }
+          if (!equal){
+            //
+            if (mainState.getNestedStateMachines().size()<=0){
+              mainState.addNestedStateMachine(state.getNestedStateMachine(0));
+            } else {
+              if (!mainState.getNestedStateMachine(0).getStartState().getName().equals(state.getNestedStateMachine(0).getStartState().getName())){
+                StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(mainState.getNestedStateMachine(0), state.getNestedStateMachine(0));
+                if (checkSM!=null ) mainState.addNestedStateMachine(checkSM); 
+                i--;
+              } else {
+                addExtraStatesAndTransitions(mainState.getNestedStateMachine(0),state.getNestedStateMachine(0),inUmpleClassfier);
+              }
+            }
+            ////
+          }
+        }        
+      }  
+    }
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
   private void checkSatifcationOfRequiredStates(State inState, StateMachine inSMachine){
-  	for (State checkState : possiblyUnknownStates.keySet()){
+    for (State checkState : possiblyUnknownStates.keySet()){
       if (checkState.getName().equals(inState.getName()) ){
 	     if (checkState.getStateMachine().getUmpleClass()!=null && inSMachine.getUmpleClass()!=null) {
 	            if (checkState.getStateMachine().getUmpleClass().getName().equals(inSMachine.getUmpleClass().getName()) ) return;
@@ -848,7 +1068,20 @@ class UmpleInternalParser
 			  }
 		} else {
 			  if (inSMachine1.getRootStateMachine().getUmpleTrait()!=null){
+				  
 				  //comes from a trait
+	          if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   bState.getActionsByType("entry")!=null && cState.getActionsByType("entry")!=null)) {
+              getParseResult().addErrorMessage(new ErrorMessage(235,bState.getPosition(),bState.getName(),bState.getName(),bState.getName()));
+                      return;
+            }
+            if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   bState.getActionsByType("exit")!=null && cState.getActionsByType("exit")!=null)) {
+              getParseResult().addErrorMessage(new ErrorMessage(235,bState.getPosition(),bState.getName(),bState.getName(),bState.getName()));
+                      return;
+            }
+            if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   bState.getActivities()!=null && cState.getActivities()!=null)) {
+              getParseResult().addErrorMessage(new ErrorMessage(235,bState.getPosition(),bState.getName(),bState.getName(),bState.getName()));
+                      return;
+            }
 				  if (inSMachine1.getRootStateMachine().getUmpleTrait().equals( (UmpleTrait)inUmpleClassfier )){
 					  applyCompositionAndSuperKwywordToStateAction(inSMachine2, bState, cState,"entry");  
 					  applyCompositionAndSuperKwywordToStateAction(inSMachine2, bState, cState,"exit"); 
@@ -1069,7 +1302,7 @@ class Transition{
 	  if (getGuard()!=null){
 		  if (!getGuard().isEqualToGuard(inTransition.getGuard())) return false; 
 	  } else {
-	  	//if (inTransition.getGuard()!=null) 	return false;
+	  	if (inTransition.getGuard()!=null) 	return false;
 	  }
 		/*
 		 * The following comments try to compare actions of a transition. However, I noticed I don't need to do it in my algorithm because they have to be overwritten later.
@@ -1271,6 +1504,56 @@ class StateMachine{
     }
     return null;
 	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 	
+  public State findStateBasedOnSequence(String[] inSequence){
+    State foundState =null;
+    StateMachine smTemp = this;    
+      for(int i = 0; i<inSequence.length;i++){
+        if(i % 2==0) {
+          foundState = smTemp.findState(inSequence[i], false);
+          smTemp = null;
+          if(foundState==null) return null;
+        } else {
+          for(StateMachine nSM:foundState.getNestedStateMachines()){
+            if(nSM.getName().equals(inSequence[i])){
+              smTemp = nSM;
+              foundState=null;
+              break;
+            }
+          }
+          if(smTemp==null) return null ;
+       }
+    }
+    return foundState;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  public StateMachine findRegionBasedOnSequence(String [] inSequence){
+    State foundState =null;
+    StateMachine smTemp = this;    
+      for(int i = 0; i<inSequence.length;i++){
+        if(i % 2==0) {
+          foundState = smTemp.findState(inSequence[i], false);
+          smTemp = null;
+          if(foundState==null) return null;
+        } else {
+          for(StateMachine nSM:foundState.getNestedStateMachines()){
+            if(nSM.getName().equals(inSequence[i])){
+              smTemp = nSM;
+              foundState=null;
+              break;
+            }
+          }
+          if(smTemp==null) return null ;
+       }
+    }
+    return smTemp;
+  } 
+ 
+  
 }
 //************************************************************************************* 
 //************************************NEW CLASS****************************************

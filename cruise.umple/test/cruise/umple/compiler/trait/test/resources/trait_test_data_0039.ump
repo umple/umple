@@ -1,0 +1,34 @@
+class A{
+  isA T <-status.s2>;
+}
+
+trait T{
+  
+  status{
+    s1{
+      e2->s2;
+      e3->s3;
+      e4->s4;  
+      e -> end;
+    }
+    s2{
+      e1->s1;
+      e3->s3;
+      e4->s4; 
+      e-> end;       
+    }
+    s3{
+      e1->s1;
+      e2->s2;
+      e4->s4; 
+      e-> end;    
+    }
+    s4{
+      e1->s1;
+      e2->s2;
+      e3->s3;
+      e-> end;      
+    }
+    final end{}
+  }
+}
