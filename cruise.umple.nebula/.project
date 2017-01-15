@@ -26,6 +26,13 @@
 			</arguments>
 		</buildCommand>
 	</buildSpec>
+	<linkedResources>
+	  <link>
+		  <name>src-gen-rtcpp-UmpleTL</name>
+		  <type>2</type>
+		  <locationURI>PARENT-1-PROJECT_LOC/UmpleToRTCpp/src-gen-UmpleTL</locationURI>
+	  </link>
+	</linkedResources>
 	<natures>
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
