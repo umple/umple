@@ -12,6 +12,6 @@ trait T{
     s2{
       [x>0]->s1;   
     }
-    final end{}
+    end{}
   }
 }
