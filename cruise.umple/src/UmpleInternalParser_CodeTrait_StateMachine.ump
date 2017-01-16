@@ -1013,7 +1013,7 @@ class UmpleInternalParser
             if (mainlTrans.isEqualToTransition(tTransition)){ 
               findTransition = mainlTrans;
               if(inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName()) && inSMachine2.getUmpleTrait()!=null && !inSMachine2.getUmpleTrait().getName().equals(inUmpleClassfier.getName())) {
-                getParseResult().addErrorMessage(new ErrorMessage(235,tTransition.getPosition(),tTransition.getEvent().getName(),inSMachine1.getName(),inSMachine2.getName()));
+                getParseResult().addErrorMessage(new ErrorMessage(235,tTransition.getPosition(),tTransition.getEvent().getName(),state.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
                 return;
                }
               }
@@ -1151,16 +1151,16 @@ class UmpleInternalParser
 			  if (inSMachine1.getRootStateMachine().getUmpleTrait()!=null){
 				  
 				  //comes from a trait
-	          if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   bState.getActionsByType("entry")!=null && cState.getActionsByType("entry")!=null)) {
-              getParseResult().addErrorMessage(new ErrorMessage(235,bState.getPosition(),bState.getName(),bState.getName(),bState.getName()));
+            if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   !bState.getActionsByType("entry").isEmpty() && !cState.getActionsByType("entry").isEmpty())) {
+              getParseResult().addErrorMessage(new ErrorMessage(236,bState.getPosition(),"entry",bState.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
                       return;
             }
-            if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   bState.getActionsByType("exit")!=null && cState.getActionsByType("exit")!=null)) {
-              getParseResult().addErrorMessage(new ErrorMessage(235,bState.getPosition(),bState.getName(),bState.getName(),bState.getName()));
+            if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   !bState.getActionsByType("exit").isEmpty() && !cState.getActionsByType("exit").isEmpty())) {
+              getParseResult().addErrorMessage(new ErrorMessage(236,bState.getPosition(),"exit",bState.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
                       return;
             }
-            if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   bState.getActivities()!=null && cState.getActivities()!=null)) {
-              getParseResult().addErrorMessage(new ErrorMessage(235,bState.getPosition(),bState.getName(),bState.getName(),bState.getName()));
+            if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   !bState.getActivities().isEmpty() && !cState.getActivities().isEmpty())) {
+              getParseResult().addErrorMessage(new ErrorMessage(236,bState.getPosition(),"do", bState.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
                       return;
             }
 				  if (inSMachine1.getRootStateMachine().getUmpleTrait().equals( (UmpleTrait)inUmpleClassfier )){
