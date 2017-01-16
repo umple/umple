@@ -945,7 +945,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			result = e.getMessage().contains("235");
+			result = e.getMessage().contains("236");
 		} finally {
 			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -1019,7 +1019,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			result = e.getMessage().contains("235");
+			result = e.getMessage().contains("236");
 		} finally {
 			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -1096,7 +1096,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			result = e.getMessage().contains("235");
+			result = e.getMessage().contains("236");
 		} finally {
 			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -1145,7 +1145,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			result = e.getMessage().contains("235");
+			result = e.getMessage().contains("236");
 		} finally {
 			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
