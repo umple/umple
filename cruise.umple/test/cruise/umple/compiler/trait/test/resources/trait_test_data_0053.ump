@@ -1,5 +1,5 @@
 class A{
-  isA T < -status.s2.e1()>;
+  isA T < +status.s2>;
 }
 
 trait T{  
@@ -8,6 +8,15 @@ trait T{
       e2->s2;
       e1->s1;
       end-> end;
+      s11{
+       e12-> s12; 
+      }
+      s12{
+        e13-> s13;
+      }
+      s13{
+        
+      }
     }
     s2{
       e1->s1;   

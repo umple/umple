@@ -120,7 +120,8 @@ class UmpleInternalParser
 		  	}
 			for(StateMachine sm : mustBeRemoved)	traitStateMachine.get(entry.getKey()).remove(sm);
 		}
-
+		//TODO this part must be mixed with the previous part when I do refactoring.
+    keepStateMachine(traitStateMachine,inGTPApplied);
   	return traitStateMachine;
   }
 //---------------------------------end----------------------------------------
@@ -529,7 +530,14 @@ class UmpleInternalParser
                 return null;
               }
             } else if(smModifier.getModifier().equals("+")) {
-               //TOD
+              if (smModifier instanceof EventModifier){
+                keepTransition(modifiedSM,(EventModifier)smModifier);
+                continue;
+              } else if (smModifier instanceof StateModifier){
+                keepState(modifiedSM,(StateModifier)smModifier);
+              } else if (smModifier instanceof StateMachineModifier){                 
+                //This part is done later. I need to refactor my algorithm
+              }
             } else  {
               if (smModifier instanceof EventModifier){
                  EventModifier eventModifier= (EventModifier)smModifier;
@@ -563,11 +571,14 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
+  /*
+   * This function finds and removes a transition defined in 'inEventModifier'
+   */
   private void removeTransition2(StateMachine inSM, EventModifier inEventModifier){
-     State foundState =inSM.findStateBasedOnSequence(inEventModifier.getSrcStates());
-      if(foundState!=null){
-        for (Transition t : foundState.getTransitions()){
-           Guard guard = t.getGuard();
+    State foundState =inSM.findStateBasedOnSequence(inEventModifier.getSrcStates());
+    if(foundState!=null){
+      for (Transition t : foundState.getTransitions()){
+        Guard guard = t.getGuard();
         if(inEventModifier.getMethod().getName().equals("")){
           if(guard==null){
             if (inEventModifier.getGuard()==null){
@@ -576,17 +587,48 @@ class UmpleInternalParser
             }
           } else if(guard.isEqualToGuard(inEventModifier.getGuard())) {
             t.delete();
-          return;
+            return;
           }
         } else {
           Method m = new Method("",t.getEvent().getName(),"",false);
           m.setMethodParameters(t.getEvent().getParams());
           if (compareTwoMethdos(m, inEventModifier.getMethod())){
-          t.delete();
-          return;
-        }
+            t.delete();
+            return;
+          }
         }
       }
+    }
+  } 
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  /*
+   * This function finds and keeps a transition defined in 'inEventModifier'. Other transition will be removed.
+   */
+  private void keepTransition(StateMachine inSM, EventModifier inEventModifier){
+    State foundState =inSM.findStateBasedOnSequence(inEventModifier.getSrcStates());
+    if(foundState!=null){
+      List<Transition> mustbeRemoved = new ArrayList<Transition>(); 
+      for (Transition t : foundState.getTransitions()){
+        Guard guard = t.getGuard();
+        if(inEventModifier.getMethod().getName().equals("")){
+          if(guard==null){
+            if (inEventModifier.getGuard()!=null){
+              mustbeRemoved.add(t);
+            }
+          } else if(!guard.isEqualToGuard(inEventModifier.getGuard())) {
+            mustbeRemoved.add(t);
+          }
+        } else {
+          Method m = new Method("",t.getEvent().getName(),"",false);
+          m.setMethodParameters(t.getEvent().getParams());
+          if (!compareTwoMethdos(m, inEventModifier.getMethod())){
+            mustbeRemoved.add(t);
+          }
+        }
+      }
+      mustbeRemoved.forEach(t -> t.delete());  
     }
   } 
 //---------------------------------end----------------------------------------
@@ -618,7 +660,46 @@ class UmpleInternalParser
       for(int i=0;i<foundState.numberOfNextTransition();i++)      foundState.getNextTransition(i).delete();     
       foundState.delete(); 
     }
-  } 
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+   private void keepStateMachine( Map<UmpleTrait, List<StateMachine>> inStateMachine, GeneralTPApplied inGTPApplied){
+     if (inGTPApplied!=null){
+       for (StateMachineModifier smModifier : inGTPApplied.getStateMachineModifiers()) {
+         if(smModifier.getModifier().equals("+") && !(smModifier instanceof EventModifier) && !(smModifier instanceof StateModifier) && smModifier instanceof StateMachineModifier ) {
+          for(List<StateMachine> list : inStateMachine.values()){
+             for(Iterator<StateMachine> iterator = list.iterator();iterator.hasNext();){
+               StateMachine sss = iterator.next();
+               if(!smModifier.getSrcStateMachine().equals(sss.getName())  ){
+                 iterator.remove();
+               }
+             }
+           }
+         }
+       } 
+    }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  /*
+   * This function will keep the state defined in sModifier and removes others. I won't remove initial state.
+   */  
+  private void keepState(StateMachine inSM, StateModifier sModifier){
+    State foundState =inSM.findStateBasedOnSequence(sModifier.getSrcStates());
+  //This is used to find the nest state machine and remove the state just from that region.
+  StateMachine sm = foundState.getStateMachine();
+  List<State> mustBeRemoved = new ArrayList<State>();
+  for (State state : sm.getStates()){
+    if (!state.getName().equals(foundState.getName()) && state.getIsStartState()==false){
+      for(int i=0;i<state.numberOfTransitions();i++)         state.getTransition(i).delete();
+        for(int i=0;i<state.numberOfNextTransition();i++)      state.getNextTransition(i).delete();     
+        mustBeRemoved.add(state);       
+    }
+  }
+  mustBeRemoved.forEach(state-> state.delete());
+  }    
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 

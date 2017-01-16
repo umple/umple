@@ -14,6 +14,6 @@ trait T{
       e2-> s2;
       end-> end;   
     }
-    final end{}
+    end{}
   }
 }
