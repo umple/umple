@@ -369,7 +369,7 @@ class UmpleInternalParser
                                  valid = true;
                                 break;
                                }
-                             } else if(guard.isEqualToGuard( ((EventModifier)smModifier).getGuard() ) ) {
+                             } else if(guard.isEqualTo( ((EventModifier)smModifier).getGuard() ) ) {
                                valid = true;
                                break; 
                              }
@@ -585,7 +585,7 @@ class UmpleInternalParser
               t.delete();
               return;
             }
-          } else if(guard.isEqualToGuard(inEventModifier.getGuard())) {
+          } else if(guard.isEqualTo(inEventModifier.getGuard())) {
             t.delete();
             return;
           }
@@ -617,7 +617,7 @@ class UmpleInternalParser
             if (inEventModifier.getGuard()!=null){
               mustbeRemoved.add(t);
             }
-          } else if(!guard.isEqualToGuard(inEventModifier.getGuard())) {
+          } else if(!guard.isEqualTo(inEventModifier.getGuard())) {
             mustbeRemoved.add(t);
           }
         } else {
@@ -1106,7 +1106,7 @@ class UmpleInternalParser
           return true;
         } else if(tI.getEvent().compareWithAnotherEvent(tJ.getEvent())){
             if (tI.getGuard()!=null){
-              if (tI.getGuard().isEqualToGuard(tJ.getGuard()) && !tI.getNextState().getName().equals(tJ.getNextState().getName())) {
+              if (tI.getGuard().isEqualTo(tJ.getGuard()) && !tI.getNextState().getName().equals(tJ.getNextState().getName())) {
                 getParseResult().addErrorMessage(new ErrorMessage(234,tJ.getPosition(),tJ.getEvent().getName(),n1,n2));
                 return true;
               }
@@ -1381,7 +1381,7 @@ class Transition{
     	if (!getEvent().compareWithAnotherEvent(inTransition.getEvent())) return false;
     }  
 	  if (getGuard()!=null){
-		  if (!getGuard().isEqualToGuard(inTransition.getGuard())) return false; 
+		  if (!getGuard().isEqualTo(inTransition.getGuard())) return false; 
 	  } else {
 	  	if (inTransition.getGuard()!=null) 	return false;
 	  }
@@ -1404,7 +1404,7 @@ class Transition{
 //************************************NEW CLASS****************************************
 //*************************************************************************************  
 
-class Guard{
+class ConstraintTree{
 	depend java.util.Iterator;
 
 //----------------------------------------------------------------------------  
@@ -1412,40 +1412,126 @@ class Guard{
 //----------------------------------------------------------------------------	
 	/*
 	 * @author Vahdat
-	 * This comparison just supports sequential comparing of boolean operations. If the order is changed then it'll show false.
+	 * This comparison work properly currently for boolean operators. Developers must pay attention to parantheses.
 	 * TODO: please provide a comprehensive comparison
 	 */
-  boolean isEqualToGuard(Guard inGuard) {
-  	if (inGuard==null) return false;
-		if (getNumberOfElements()!=inGuard.getNumberOfElements()) return false;
-		Iterator<ConstraintVariable> main = iterator();
-		Iterator<ConstraintVariable> compareTo = inGuard.iterator();
-		while(main.hasNext()&& compareTo.hasNext()){
-			ConstraintVariable mCV = main.next();
-			ConstraintVariable cCV = compareTo.next();
-			if (mCV.getType()!=cCV.getType()) return false;
-			if ( mCV instanceof ConstraintTree && cCV instanceof ConstraintTree){
-				if (((ConstraintTree)mCV).getDisplayNegation()!=((ConstraintTree)cCV).getDisplayNegation()) return false;
-			}
-			if (mCV instanceof ConstraintOperator && cCV instanceof ConstraintOperator) {
-				ConstraintOperator new_name1 = (ConstraintOperator) mCV;
-				ConstraintOperator new_name2 = (ConstraintOperator) cCV;
-			  if (!new_name1.getValue().equals(new_name2.getValue())) return false;
-			}
-			if (mCV instanceof ConstraintNamed && cCV instanceof ConstraintNamed) {
-				ConstraintNamed new_name1 = (ConstraintNamed) mCV;
-				ConstraintNamed new_name2 = (ConstraintNamed) cCV;
-			  if (!new_name1.getName().equals(new_name2.getName())) return false;
-			}
-			if (mCV instanceof ConstraintLiteral && cCV instanceof ConstraintLiteral) {
-				ConstraintLiteral new_name1 = (ConstraintLiteral) mCV;
-				ConstraintLiteral new_name2 = (ConstraintLiteral) cCV;
-			  if (!new_name1.getValue().equals(new_name2.getValue())) return false;
-			}
-			
-		}
-  	return true;
-  	}
+  public boolean isEqualTo(ConstraintTree inConstraintTree){
+    if (inConstraintTree==null) return false;
+    if (getNumberOfElements()!=inConstraintTree.getNumberOfElements()) return false;  
+    Collection<String>  lFirst = new ArrayList<String>(getNames());
+    lFirst.removeAll(inConstraintTree.getNames());
+    if(lFirst.size()>0) return false;
+    if(getRoot() instanceof ConstraintOperator && inConstraintTree.getRoot() instanceof ConstraintOperator){
+        ConstraintOperator mcOperator = (ConstraintOperator)getRoot();
+        ConstraintOperator ccOperator = (ConstraintOperator)inConstraintTree.getRoot(); 
+        if (!mcOperator.getValue().equals(  ccOperator.getValue() ) ) return false;
+        ConstraintVariable mLeft= ((ConstraintOperator)getRoot()).getLeft();        
+        ConstraintVariable mRight = ((ConstraintOperator)getRoot()).getRight();
+        if ( !(mRight instanceof ConstraintLiteral)){
+          mRight= ((ConstraintTree) ( ((ConstraintOperator)getRoot()).getRight() ) ).getRoot(); 
+        } 
+        ConstraintVariable cLeft= ((ConstraintOperator)inConstraintTree.getRoot()).getLeft();
+        ConstraintVariable cRight = ((ConstraintOperator)inConstraintTree.getRoot()).getRight();
+        if ( !(mRight instanceof ConstraintLiteral)){
+          cRight= ((ConstraintTree) ( ((ConstraintOperator)inConstraintTree.getRoot()).getRight() ) ).getRoot();
+        } 
+        return compareBranches(mLeft,cLeft,cRight) && compareBranches(mRight,cLeft,cRight);
+      }else if(getRoot() instanceof ConstraintLiteral&& inConstraintTree.getRoot() instanceof ConstraintLiteral){
+        ConstraintLiteral mcLiteral = (ConstraintLiteral)getRoot();
+        ConstraintLiteral ccLiteral = (ConstraintLiteral)inConstraintTree.getRoot();
+        if (mcLiteral.getValue().equals(ccLiteral.getValue())) return true; else return false;
+      }else if(getRoot() instanceof ConstraintNamed && inConstraintTree.getRoot() instanceof ConstraintNamed){
+        ConstraintNamed mcNamed = (ConstraintNamed)getRoot();
+        ConstraintNamed ccNamed = (ConstraintNamed)inConstraintTree.getRoot();
+        if (mcNamed.getName().equals(ccNamed.getName())) return true; else return false;          
+      }else if(getRoot() instanceof ConstraintUnassignedName && inConstraintTree.getRoot() instanceof ConstraintUnassignedName){
+        ConstraintUnassignedName mcUnNamed = (ConstraintUnassignedName)getRoot();
+        ConstraintUnassignedName ccUnNamed = (ConstraintUnassignedName)inConstraintTree.getRoot();
+        if (mcUnNamed.getName().equals(ccUnNamed.getName())) return true; else return false;            
+      }else if(getRoot() instanceof ConstraintTree && inConstraintTree.getRoot() instanceof ConstraintTree){
+        ConstraintTree mcTree = (ConstraintTree)getRoot();
+        ConstraintTree ccTree = (ConstraintTree)inConstraintTree.getRoot();
+        return mcTree.isEqualTo(ccTree);
+      } 
+    return false;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+ private Boolean compareBranches(ConstraintVariable mLeft, ConstraintVariable cLeft,ConstraintVariable cRight) {
+  //-----------------For ConstraintLiteral:
+    if (mLeft instanceof ConstraintLiteral ){
+      if ( cLeft instanceof ConstraintLiteral) {
+        if( ((ConstraintLiteral)mLeft).getValue().equals(((ConstraintLiteral)cLeft).getValue()) ){
+          return true;
+        }
+      } 
+      if (cRight instanceof ConstraintLiteral){
+        if(((ConstraintLiteral)mLeft).getValue().equals(((ConstraintLiteral)cRight).getValue()) ){
+          return true;
+        }     
+      }
+    }       
+  //-----------------ConstraintUnassignedName:
+  if (mLeft instanceof ConstraintUnassignedName ){
+      if ( cLeft instanceof ConstraintUnassignedName) {
+        if( ((ConstraintUnassignedName)mLeft).getName().equals(((ConstraintUnassignedName)cLeft).getName()) ){
+          return true;
+        }
+      } 
+      if (cRight instanceof ConstraintUnassignedName){
+        if(((ConstraintUnassignedName)mLeft).getName().equals(((ConstraintUnassignedName)cRight).getName()) ){
+          return true;
+        }     
+      }
+    } 
+    //-----------------For ConstraintNamed:
+    if (mLeft instanceof ConstraintNamed ){
+      if ( cLeft instanceof ConstraintNamed) {
+        if( ((ConstraintNamed)mLeft).getName().equals(((ConstraintNamed)cLeft).getName()) ){
+          return true;
+        }
+      } 
+      if (cRight instanceof ConstraintNamed){
+        if(((ConstraintNamed)mLeft).getName().equals(((ConstraintNamed)cRight).getName()) ){
+          return true;
+        }     
+      }
+    }       
+
+    //-----------------For ConstraintTree:
+    if (mLeft instanceof ConstraintTree ){
+      if ( cLeft instanceof ConstraintTree) {
+        if( ((ConstraintTree)mLeft).isEqualTo(((ConstraintTree)cLeft)) ){
+          return true;
+        }
+      } 
+      if (cRight instanceof ConstraintTree){
+        if( ((ConstraintTree)mLeft).isEqualTo( (ConstraintTree)cRight) ){
+          return true;
+        }     
+      }
+    } 
+    //-----------------For ConstraintOperator: 
+    if (mLeft instanceof ConstraintOperator ){
+      if ( cLeft instanceof ConstraintOperator) {
+        if( ((ConstraintOperator)mLeft).getValue().equals(((ConstraintOperator)cLeft).getValue()) ){
+          return true;
+        }
+      } 
+      if (cRight instanceof ConstraintOperator){
+        if(((ConstraintOperator)mLeft).getValue().equals(((ConstraintOperator)cRight).getValue()) ){
+          return true;
+        }     
+      }
+    } 
+    return false;
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  
+  
 }
 
 
