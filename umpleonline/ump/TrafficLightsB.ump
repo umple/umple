@@ -3,14 +3,14 @@ class IntersectionTimerDriven {
   
   // Traffic lights are green for 25s in one direction
   // and 20s in the other. 
-  Integer directionOneGoTime=25000;
-  Integer directionTwoGoTime=20000;
+  Integer directionOneGoTime = 25;
+  Integer directionTwoGoTime = 20;
 
   // Lights are yellow for 5s
-  Integer yellowTime=5000;
+  Integer yellowTime = 5;
 
   // Pedestrians have 10s extra warning
-  Integer extraPedestrianWarning=10000;  
+  Integer extraPedestrianWarning = 10;  
   
   flow {
     FourWayStop 
