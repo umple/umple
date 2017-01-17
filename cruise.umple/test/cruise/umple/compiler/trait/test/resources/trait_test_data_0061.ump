@@ -1,0 +1,20 @@
+class X{
+  
+  isA T < -status.off.e3()>;
+}
+
+
+trait T{
+  status{
+    on{
+      e-> off;
+    }
+    off{
+      e1-> on;
+      e2-> off;
+      e3[x>0]-> on;
+      e3[x<0]-> on;
+      e4-> off;
+    }
+  } 
+}

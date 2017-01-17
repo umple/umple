@@ -358,16 +358,16 @@ class UmpleInternalParser
                } else {
                  Method method = ((EventModifier)smModifier).getMethod();
                  method.setType("Boolean");
-                 boolean valid = false;
-                 if (method.getName().equals("")){
-                     for(Transition transition : sFound.getTransitions()){
-                         if (transition.getAutoTransition()){
-                           Guard guard = transition.getGuard();
+                 boolean valid = false;   
+                 for(Transition transition : sFound.getTransitions()){
+                   Guard guard = transition.getGuard();
+                   if (method.getName().equals("")){                     
+                         if (transition.getAutoTransition()){                        
                              if (guard==null )
                              {
                                if (((EventModifier)smModifier).getGuard()==null ){
                                  valid = true;
-                                break;
+                                 break;
                                }
                              } else if(guard.isEqualTo( ((EventModifier)smModifier).getGuard() ) ) {
                                valid = true;
@@ -375,24 +375,30 @@ class UmpleInternalParser
                              }
                          }
 
-                    }
-                 } else {
-                     for(Transition transition : sFound.getTransitions()){
+                    }  else {
                          Event e = transition.getEvent();
                          if (e != null )
                          {
                            Method m = new Method("",e.getName(),e.getType(),false);
                            m.setMethodParameters(e.getParams());
-                           if (m.compareWithTheMethod(method)){
-                             valid = true;
-                             break;
+                           if (m.compareWithTheMethod(method)){                          
+                           if(guard==null){
+                               if (((EventModifier)smModifier).getGuard()==null){
+                                 valid = true;
+                                   break;
+                               }
+                             } else if(guard.isEqualTo(((EventModifier)smModifier).getGuard())) {
+                               valid = true;
+                               break;
+                             }
                            }
                          }
                     }
                  }
                  if (!valid){
-                   getParseResult().addErrorMessage(new ErrorMessage(232,inTrait.getPosition(0),inTrait.getName(),method.getSignature()));  
-                       return false;
+                     String gMSG = ((EventModifier)smModifier).getGuard()!=null ? ((EventModifier)smModifier).getGuard().getExpression() : "";  
+                     getParseResult().addErrorMessage(new ErrorMessage(232,inTrait.getPosition(0),inTrait.getName(),method.getSignature()+gMSG ));  
+                     return false;
                  }
                }
           }else if (smModifier instanceof StateModifier){  
@@ -521,7 +527,7 @@ class UmpleInternalParser
       if(smModifier.getSrcStateMachine().equals(inSMachine.getName())){
             if(smModifier.getModifier().equals("-")){
               if (smModifier instanceof EventModifier){
-                removeTransition2(modifiedSM,(EventModifier)smModifier);
+                removeTransition(modifiedSM,(EventModifier)smModifier);
                 continue;
               } else if (smModifier instanceof StateModifier){
                 removeState2(modifiedSM,(StateModifier)smModifier);
@@ -555,26 +561,10 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
-  private void removeTransition(StateMachine inSM, StateMachineTemplateSignature inSMTSignature) {
-    State foundState =inSM.findStateBasedOnSequence(inSMTSignature.getSrcStates());
-    if(foundState!=null){
-      for (Transition t : foundState.getTransitions()){
-        Method m = new Method("",t.getEvent().getName(),"",false);
-          m.setMethodParameters(t.getEvent().getParams());
-          if (compareTwoMethdos(m, inSMTSignature.getMethodTemplateSignature().getMethod())){
-            t.delete();
-            return;
-          }
-      }
-    }
-  }
-//---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start-------------------------------------- 
   /*
    * This function finds and removes a transition defined in 'inEventModifier'
    */
-  private void removeTransition2(StateMachine inSM, EventModifier inEventModifier){
+  private void removeTransition(StateMachine inSM, EventModifier inEventModifier){
     State foundState =inSM.findStateBasedOnSequence(inEventModifier.getSrcStates());
     if(foundState!=null){
       for (Transition t : foundState.getTransitions()){
@@ -593,8 +583,15 @@ class UmpleInternalParser
           Method m = new Method("",t.getEvent().getName(),"",false);
           m.setMethodParameters(t.getEvent().getParams());
           if (compareTwoMethdos(m, inEventModifier.getMethod())){
-            t.delete();
-            return;
+            if(guard==null){
+              if (inEventModifier.getGuard()==null){
+                t.delete();
+                return;
+              }
+            } else if(guard.isEqualTo(inEventModifier.getGuard())) {
+              t.delete();
+              return;
+            }
           }
         }
       }
@@ -624,7 +621,7 @@ class UmpleInternalParser
           Method m = new Method("",t.getEvent().getName(),"",false);
           m.setMethodParameters(t.getEvent().getParams());
           if (!compareTwoMethdos(m, inEventModifier.getMethod())){
-            mustbeRemoved.add(t);
+              mustbeRemoved.add(t);
           }
         }
       }
