@@ -2467,7 +2467,9 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
 
     if(aClass.getExtendsClass()!=null){
       extendsProxy=" extends "+aClass.getExtendsClass().getName();
-        parentDefaultInterface=", I"+aClass.getExtendsClass().getName()+"Impl"; 
+      if(aClass.getExtendsClass().getNeedsDefaultInterface()){
+        parentDefaultInterface=", I"+aClass.getExtendsClass().getName()+"Impl";
+      } 
     }
 
     realClassName=aClass.getName();

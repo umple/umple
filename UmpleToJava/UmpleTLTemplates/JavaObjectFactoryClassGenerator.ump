@@ -54,12 +54,13 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.*;
 <<#for(UmpleClass uClass: model.getUmpleClasses())
-{
+{ GeneratedClass gClass = uClass.getGeneratedClass();
+  #>><<@ UmpleToJava.import_packages >><<#
   if (uClass.getIsDistributed())
   {
 #>>
-import <<=uClass.getPackageName()>>.<<=uClass.getName()>>;
-<<#  
+import <<#if(!uClass.getPackageName().equals("")){#>><<=uClass.getPackageName()>>.<<#}#>><<=uClass.getName()>>;
+<<#
   }
 }
  #>>
