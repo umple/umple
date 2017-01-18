@@ -50,16 +50,6 @@ class UmpleToJava {
         String finalParamsWithoutTypes = "";
         StringBuilder parameters = new StringBuilder();
         StringBuilder parametersWithoutTypes = new StringBuilder();
-        /*
-        to change the name of the user defined constructors
-        */
-        if(uClass.getHasProxyPattern()||(uClass.getNeedsDefaultInterface()&&model.getDistributePattern()>0))
-        {
-          if(("".equals(methodType))&&(uClass.getName().equals(methodName+"Impl")))
-          {
-            methodName+="Impl";
-          }
-        }
         if (aMethod.hasMethodParameters())
         {
           for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 

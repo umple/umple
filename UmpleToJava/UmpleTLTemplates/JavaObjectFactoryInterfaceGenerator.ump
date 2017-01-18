@@ -35,14 +35,44 @@ class JavaObjectFactoryInterfaceGenerator {
   gen.setModel(model);
   GeneratorHelper.generator = gen;
   Boolean isInterface=true;
-#>>
+  
+  Set<String> packageSet = new HashSet<String>();
+  packageSet.add("java.rmi.Remote");
+  packageSet.add("java.rmi.RemoteException");
 
-<<#if (model.getDefaultNamespace()!=null){#>>
+  for(UmpleClass uClass: model.getUmpleClasses())
+  { GeneratedClass gClass = uClass.getGeneratedClass();
+    for (Depend depend : uClass.getDepends())
+      {
+        packageSet.add(depend.getName());
+      }
+      
+      for (String anImport : gClass.getMultiLookup("import"))
+      {
+        packageSet.add(anImport);
+      }    
+    if (uClass.getIsDistributed())
+    {
+      String packageName="";
+      if(!uClass.getPackageName().equals("")){
+        packageName=uClass.getPackageName()+".";
+        packageName+=uClass.getName();
+        packageSet.add(packageName);
+      }
+    }
+  }
+
+  if (model.getDefaultNamespace()!=null){#>>
 package <<=model.getDefaultNamespace()>>;
-<<#}#>>
-
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+  <<#
+  }
+  for(String packageName: packageSet)
+  {
+#>>
+import <<=packageName>>;
+<<#
+  }
+#>>
 
 public interface IUmpleObjectFactory extends Remote
 {

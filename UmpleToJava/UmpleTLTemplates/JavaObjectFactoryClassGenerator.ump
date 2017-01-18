@@ -37,33 +37,51 @@ class JavaObjectFactoryClassGenerator {
   gen.setModel(model);
   GeneratorHelper.generator = gen;
   Boolean isInterface=false;
-#>>
+  Set<String> packageSet = new HashSet<String>();
+  packageSet.add("java.io.File");
+  packageSet.add("java.rmi.registry.Registry");
+  packageSet.add("java.rmi.registry.LocateRegistry");
+  packageSet.add("java.rmi.RemoteException");
+  packageSet.add("java.rmi.server.UnicastRemoteObject");
+  packageSet.add("java.io.FileInputStream");
+  packageSet.add("java.io.IOException");
+  packageSet.add("java.io.InputStream");
+  packageSet.add("java.util.Properties");
+  packageSet.add("java.util.*");
 
-<<#if (model.getDefaultNamespace()!=null){#>>
+  for(UmpleClass uClass: model.getUmpleClasses())
+  { GeneratedClass gClass = uClass.getGeneratedClass();
+    for (Depend depend : uClass.getDepends())
+      {
+        packageSet.add(depend.getName());
+      }
+      
+      for (String anImport : gClass.getMultiLookup("import"))
+      {
+        packageSet.add(anImport);
+      }    
+    if (uClass.getIsDistributed())
+    {
+      String packageName="";
+      if(!uClass.getPackageName().equals("")){
+        packageName=uClass.getPackageName()+".";
+        packageName+=uClass.getName();
+        packageSet.add(packageName);
+      }
+    }
+  }
+
+  if (model.getDefaultNamespace()!=null){#>>
 package <<=model.getDefaultNamespace()>>;
-<<#}#>>
-
-import java.io.File;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-import java.util.*;
-<<#for(UmpleClass uClass: model.getUmpleClasses())
-{ GeneratedClass gClass = uClass.getGeneratedClass();
-  #>><<@ UmpleToJava.import_packages >><<#
-  if (uClass.getIsDistributed())
+  <<#
+  }
+  for(String packageName: packageSet)
   {
 #>>
-import <<#if(!uClass.getPackageName().equals("")){#>><<=uClass.getPackageName()>>.<<#}#>><<=uClass.getName()>>;
+import <<=packageName>>;
 <<#
   }
-}
- #>>
+  #>>
 
 public class UmpleObjectFactory implements IUmpleObjectFactory
 {
@@ -217,7 +235,6 @@ public class UmpleObjectFactory implements IUmpleObjectFactory
     }
   }
   <<@ UmpleToJava.objectFactory_add_Declare_All >>
-
   public static void main (String [] args)
   {
     if (args.length>1){
