@@ -2483,7 +2483,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         if(interfaceParent.getIsDistributable()){
           parentInterface=interfaceParent;
           parentDefaultInterface=" ,"+parentInterface.getName();
-          proxyImplements=", "+parentInterface.getName();
+          proxyImplements+=", "+parentInterface.getName();
         }
       }
     }    
@@ -2498,7 +2498,16 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     /*
     ** Loop going through all of the class file line by line
     */
-
+    String defaultNamespace ="";
+    if (getModel().getDefaultNamespace()!=null && aClass.getIsDistributed())
+    {
+      defaultNamespace="import "+getModel().getDefaultNamespace()+".UmpleObjectFactory;"+NL;
+    }
+    String remoteImports="";
+    if(!aClass.getHasProxyPattern()&&aClass.getNeedsDefaultInterface())
+    {
+      remoteImports="import java.rmi.RemoteException;"+NL;
+    }
     for(int lineNumber=0; lineNumber<lines.length;lineNumber+=1)
     {
       String line=lines[lineNumber];
@@ -2511,17 +2520,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           remoteInterfaceContent+=line+NL;
         }
       }
-      String defaultNamespace ="";
-      if (getModel().getDefaultNamespace()!=null && aClass.getIsDistributed())
-      {
-        defaultNamespace="import "+getModel().getDefaultNamespace()+".UmpleObjectFactory;"+NL;
-      }
-      String remoteImports="";
-      if(!aClass.getHasProxyPattern()&&aClass.getNeedsDefaultInterface())
-      {
-        remoteImports="import java.rmi.RemoteException;"+NL;
-      }
-      if((scopeDepth==0)&&(line.contains("class")))
+      if((scopeDepth==0)&&(line.contains("class "+realClassName)))
       { 
         
         proxyContent+=remoteImports+"import java.io.Serializable;"+NL+defaultNamespace+"public class "+proxyName+extendsProxy+proxyImplements;

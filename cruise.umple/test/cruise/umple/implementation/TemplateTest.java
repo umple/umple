@@ -261,7 +261,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/java/UmpleObjectFactory.java");
     SampleFileWriter.destroy(pathToInput + "/java/IUmpleObjectFactory.java");
     
-    SampleFileWriter.destroy(pathToInput + "/java/distributed/");
+    //SampleFileWriter.destroy(pathToInput + "/java/distributed/");
     SampleFileWriter.destroy(pathToInput + "/java/proxyPattern/");
 
     SampleFileWriter.destroy(pathToInput + "/client.rb");

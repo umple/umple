@@ -27,12 +27,12 @@ class UmpleToJava {
         String methodImplementationModifier = aMethod.getIsAbstract() ? " abstract" : "";
         String methodName = aMethod.getName();
         String methodType = aMethod.getType();
-		// Fix issue 969
-		if (!methodName.equals(uClass.getName()))
-		{
-			// If this is not a constructor, this method should return "void"
-			methodType = methodType.equals("") ? "void" : methodType;
-		}
+    // Fix issue 969
+    if (!methodName.equals(uClass.getName()))
+    {
+      // If this is not a constructor, this method should return "void"
+      methodType = methodType.equals("") ? "void" : methodType;
+    }
         String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName(), aMethod.getMethodParameters()));
         String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", aMethod.getName(), aMethod.getMethodParameters()));
         String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));        
@@ -50,6 +50,16 @@ class UmpleToJava {
         String finalParamsWithoutTypes = "";
         StringBuilder parameters = new StringBuilder();
         StringBuilder parametersWithoutTypes = new StringBuilder();
+        /*
+        to change the name of the user defined constructors
+        */
+        if(uClass.getHasProxyPattern()||(uClass.getNeedsDefaultInterface()&&model.getDistributePattern()>0))
+        {
+          if(("".equals(methodType))&&(uClass.getName().equals(methodName+"Impl")))
+          {
+            methodName+="Impl";
+          }
+        }
         if (aMethod.hasMethodParameters())
         {
           for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
@@ -66,7 +76,7 @@ class UmpleToJava {
           finalParamsWithoutTypes = parametersWithoutTypes.toString().substring(0, parametersWithoutTypes.toString().length()-2);
         }
         
-		if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static")&&paramType.equals("String")&&isList.equals(" [] ")&&paramName.equals("args"))
+    if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static")&&paramType.equals("String")&&isList.equals(" [] ")&&paramName.equals("args"))
         {
           String exceptionHandlerPackage = "";
           if(mainMainClass!=null)
@@ -81,7 +91,7 @@ class UmpleToJava {
                              "    Thread.setDefaultUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+properMethodBody;
           uClass.setHasMainMethod(true);
         }
-		
+    
         if (aMethod.numberOfComments() > 0) { append(realSb, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
         
         append(realSb,"\n");
@@ -279,6 +289,29 @@ class UmpleToJava {
                 i += indent.length() + 1;
                 String[] returnAndRest = properMethodBody.substring(i).split(";", 2);
                 properMethodBody = properMethodIndent + properMethodBody.substring(0, i).trim() + indentedCustomAfterInjectionCode + "\n" + indent + returnAndRest[0].trim() + ";" + braceNewLine + braceIndent + brace + returnAndRest[1]; 
+                i += indentedCustomAfterInjectionCode.length() + braceIndent.length() + 7;
+              }
+
+              // if the last line isn't a return, insert the injection at the very end
+              String[] lines = properMethodBody.split("\\n");
+              if(!lines[lines.length-1].contains("return")) {
+                properMethodBody += GeneratorHelper.doIndent("\n" + customAfterInjectionCode, "    ");
+              }
+            }
+          }
+          appendln(realSb, properMethodBody);
+          if(!properMethodBody.contains("return"))
+          {
+            for( TraceItem traceItem : traceItems )append(realSb, (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):""));
+            if (customAfterInjectionCode != null) { append(realSb, "{0}\n",GeneratorHelper.doIndent(customAfterInjectionCode, "    "));}
+          }
+          appendln(realSb, "  }");
+        }
+      }
+    }
+#>>!>>
+}
++ indent + returnAndRest[0].trim() + ";" + braceNewLine + braceIndent + brace + returnAndRest[1]; 
                 i += indentedCustomAfterInjectionCode.length() + braceIndent.length() + 7;
               }
 
