@@ -427,7 +427,7 @@ private void analyzeDistributedClasses()
   { 
     for (UmpleClass uClass:  model.getUmpleClasses())
     { 
-      if (model.getDistributeForced()&&!(uClass.getIsAbstract()))
+      if (model.getDistributeForced()&&!(uClass.getIsAbstract())&&!aClass.isImmutable())
       { model.setDistributed(true);
         uClass.setDistributeTechnology(model.getDistributeTechnology());
         uClass.setIsDistributed(true);
@@ -464,7 +464,7 @@ private Boolean checkIsDistributed(UmpleClass uClass)
   int distributedParents=0; 
   for (UmpleInterface parentInterface: uClass.getParentInterface())
   { 
-    if(checkIsDistributed(parentInterface)&&!(uClass.getIsAbstract()))
+    if(checkIsDistributed(parentInterface)&&!(uClass.getIsAbstract())&&!aClass.isImmutable())
     {  
       distributedParents+=1;
       uClass.setDistributeTechnology(parentInterface.getDistributeTechnology());
@@ -487,7 +487,7 @@ private Boolean checkIsDistributed(UmpleClass uClass)
 /*
 First it is checked if the class is distributable itself. Then the parent classes
 */
-  if(uClass.getIsDistributable()&&!(uClass.getIsAbstract()))
+  if(uClass.getIsDistributable()&&!(uClass.getIsAbstract())&&!aClass.isImmutable())
   {
     uClass.setHasProxyPattern(true);
     uClass.setNeedsDefaultInterface(true);
