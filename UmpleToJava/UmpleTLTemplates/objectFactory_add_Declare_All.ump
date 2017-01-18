@@ -28,6 +28,7 @@ class UmpleToJava {
           break;
         }
       }
+      caller=gClass.getLookup("constructorSignature_caller");
     #>><<@ UmpleToJava.objectFactory_add_DeclareDefault >><<#
       if (isOneToOne)
       {
@@ -46,10 +47,13 @@ class UmpleToJava {
           /*
           user defined constructors
           */
-          if(("".equals(methodType))&&(uClass.getName().equals(methodName)))
+          if(("".equals(methodType))&&(uClass.getName().equals(methodName))&&!aMethod.getModifier().equals("private"))
           {
             StringBuilder parameters = new StringBuilder();
             StringBuilder parametersWithoutTypes = new StringBuilder();
+            arguments="";
+            
+            caller="";
             String paramName="";
             String paramType="";
             String aSingleParameter="";
@@ -57,7 +61,8 @@ class UmpleToJava {
             String finalParams = "";        
             String finalParamsWithoutTypes = "";
             if (aMethod.hasMethodParameters())
-            {
+            { 
+              argumentscomma=", ";
               for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
               {
                 paramName = aMethodParam.getName();
@@ -69,12 +74,13 @@ class UmpleToJava {
               }
               
               arguments = parameters.toString().substring(0, parameters.toString().length()-2);
-              argumentscomma="";
-              if(!arguments.equals(""))
-                argumentscomma+=", ";              
               caller = parametersWithoutTypes.toString().substring(0, parametersWithoutTypes.toString().length()-2);
-              #>><<@ UmpleToJava.rmi_objectFactory_add_methods >><<#
             }
+            else{
+              argumentscomma=""; 
+            }
+            #>><<@ UmpleToJava.rmi_objectFactory_add_methods >><<#
+            
           }
         }
       }            

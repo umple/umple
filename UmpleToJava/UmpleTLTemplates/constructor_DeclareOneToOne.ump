@@ -16,40 +16,11 @@ class UmpleToJava {
   hasBody = false;
 #>>
 
-  public <<=uClass.getName()>>(<<=gen.translate("constructorMandatory",uClass)>><<#
-  if(uClass.getIsDistributed())
-  {  
-    if(!gen.translate("constructorMandatory",uClass).equals(""))
-    {
-      append(realSb, ", "+uClass.getName().substring(0,uClass.getName().length()-4)+" proxy");
-    }
-    else
-    {
-      append(realSb,uClass.getName().substring(0,uClass.getName().length()-4)+" proxy");
-    }
-  }  
-  #>>)
+  public <<=uClass.getName()>>(<<=gen.translate("constructorMandatory",uClass)>>)
   {
+   
 <<#
-  if(uClass.getIsDistributed())
-  {
-    #>>
-    realSelf=proxy;
-    realSelf.setRealObject(this);
-    while(true)
-    {
-      try
-      {  
-        UnicastRemoteObject.exportObject(this,0);
-        break;
-      } 
-      catch (Exception e)
-      {
-        System.err.println("Server Exception: " + e.toString());
-      }
-    } 
-    <<#
-  }
+
   if (!uClass.isRoot())
   {
     appendln(realSb, "");

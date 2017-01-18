@@ -163,6 +163,10 @@ class UmpleInternalParser
       {
         model.setDistributeTechnology(distributeSubToken.getValue());
       }
+      if(distributeSubToken.is("distributePattern"))
+      {
+        model.setDistributePattern(Integer.parseInt(distributeSubToken.getValue()));
+      }
     }
   } 
 
