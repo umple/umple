@@ -84,7 +84,7 @@ class HeatControlSystem {
 					}
 					furnaceAct {
 						[deactivate == true] -> furnaceOff;
-						[furnaceStartUpTime < furnaceTimer] / { furnaceStartUpTime++ } -> furnaceAct;
+						[furnaceStartUpTime < furnaceTimer] / { furnaceStartUpTime++; } -> furnaceAct;
 						[furnaceStartUpTime == furnaceTimer] / { furnaceRunning = true; } -> furnaceRun;
 					}
 					furnaceRun {
