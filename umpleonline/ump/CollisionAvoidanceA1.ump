@@ -1,8 +1,8 @@
-class Example {
+class CollisionAvoidanceA1 {
 	Integer warningRadius = 100;
 	Boolean driveSelected;	
 	Boolean lock;
-  Boolean k = SmObjectDetectorObjectDetector.state == Emergency;
+  Boolean emergencyDetected = (getSmObjectDetectorObjectDetector() == SmObjectDetectorObjectDetector.Emergency);
 	sm { 
 		CollisionAvoidance {
 			ObjectDetector {
@@ -14,10 +14,10 @@ class Example {
 			Brake {
 				Released { 
 					applyBrake -> AntiLockBraking; 
-					[k] -> BrakeApplied;
+					[emergencyDetected] -> BrakeApplied;
 				} 
 				AntiLockBraking {
-					[k] -> BrakeApplied;
+					[emergencyDetected] -> BrakeApplied;
 					release -> Released;
 					Inactive {
 						wheelNormal -> BrakeApplied;
@@ -46,7 +46,7 @@ class Example {
 			||
 			Transmission {
 				ParkAndNeutral {
-					[k] -> Park;
+					[emergencyDetected] -> Park;
 					selectReverse -> Reverse;
 					selectDrive/{driveSelected = true; } -> Drive; 
 					Park { selectneutral -> Neutral; }
@@ -54,13 +54,13 @@ class Example {
 				}
 				Reverse { 
 					selectPark -> Park; 
-					[k] -> Park;
+					[emergencyDetected] -> Park;
 				} 
 				Drive { 
 					selectNeutral -> Neutral; 
 					selectFirst -> First;
 					selectSecond -> Second;
-					[k] -> Park;
+					[emergencyDetected] -> Park;
 					First { 
 						reachSecondSpeed[ driveSelected ] -> Second; 
 					}
@@ -79,12 +79,12 @@ class Example {
 				}
 				Idle { 
 					accelerate -> Driving; 
-					[k] -> Off;
+					[emergencyDetected] -> Off;
 				}
 				Driving { 
 					release -> Idle;
 					applyBrake -> Idle; 
-					[k] -> Off;
+					[emergencyDetected] -> Off;
 				} 
 			} 
 		} 
