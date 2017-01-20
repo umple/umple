@@ -96,33 +96,34 @@ class UmpleInternalParser
     for (StateMachine sm: inTrait.getStateMachines()){
        sMList.add(sm.clone());
     }
-    if (sMList.size()>0) traitStateMachine.put(inTrait,sMList);
-  	if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine,tempTraitStateMachine,inTrait)) return traitStateMachine;
-  	
+    Map<UmpleTrait, List<StateMachine>> traitStateMachine2 = new HashMap<UmpleTrait, List<StateMachine>>();
+    if (sMList.size()>0) traitStateMachine2.put(inTrait,sMList);
+  	if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine2,traitStateMachine,inTrait)) return traitStateMachine2;
+  	AddStateMachineMapToAnother(traitStateMachine2,traitStateMachine);
   	/*
   	 * Check to make sure applied type parameters are valid;
   	 */
   	List<StateMachine> list = new ArrayList<StateMachine>();
-  	for(Map.Entry<UmpleTrait, List<StateMachine>> entry : traitStateMachine.entrySet()){
+  	for(Map.Entry<UmpleTrait, List<StateMachine>> entry : traitStateMachine2.entrySet()){
   		list.addAll(entry.getValue());
   	}
-  	if (!checkValidityOfSMTemplateSignature(inGTPApplied,list,inTrait)) return traitStateMachine;
-  	if (!checkValidityOfSMModifier(inGTPApplied,list,inTrait)) return traitStateMachine;
+  	if (!checkValidityOfSMTemplateSignature(inGTPApplied,list,inTrait)) return traitStateMachine2;
+  	if (!checkValidityOfSMModifier(inGTPApplied,list,inTrait)) return traitStateMachine2;
   	//To assign a state machine to a state.
 		//----------------------------------------------------------------------------------------		
-			if (getParseResult().getWasSuccess()) AssignStateMachineToState(inTrait,traitStateMachine);	
+			if (getParseResult().getWasSuccess()) AssignStateMachineToState(inTrait,traitStateMachine2);	
   	//----------------------------------------------------------------------------------------	  	
-		for(Map.Entry<UmpleTrait, List<StateMachine>> entry : traitStateMachine.entrySet()){
+		for(Map.Entry<UmpleTrait, List<StateMachine>> entry : traitStateMachine2.entrySet()){
 			List<StateMachine> mustBeRemoved =  new ArrayList<StateMachine>();	
 			for (StateMachine sMachine : entry.getValue()) {
 		  	 	StateMachine stTemp = CompeletlyAllyTypeParametersToStateMachines(sMachine,inGTPApplied);
 		  		if (stTemp==null) mustBeRemoved.add(sMachine);
 		  	}
-			for(StateMachine sm : mustBeRemoved)	traitStateMachine.get(entry.getKey()).remove(sm);
+			for(StateMachine sm : mustBeRemoved)	traitStateMachine2.get(entry.getKey()).remove(sm);
 		}
 		//TODO this part must be mixed with the previous part when I do refactoring.
-    keepStateMachine(traitStateMachine,inGTPApplied);
-  	return traitStateMachine;
+    keepStateMachine(traitStateMachine2,inGTPApplied);
+  	return traitStateMachine2;
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
