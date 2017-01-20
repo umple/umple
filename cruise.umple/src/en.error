@@ -51,7 +51,7 @@
 46: 4, "http://cruise.eecs.uottawa.ca/umple/W046AttributeHasTemplateType.html", Attribute {0} in class {1} is declared using a collection template type {2}. Use a directed association (->) or multi-valued attribute([]) to follow proper modelling conventions ;
 47: 4, "http://cruise.eecs.uottawa.ca/umple/W047EmptyKeyStatement.html", Empty key statement in class {0} ;
 48: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Attribute '{0}' in class '{1}' generates method '{2}' which is duplicate;
-49: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", A {6} implementation of Method '{0}' in class '{1}' is already defined at line {2} of '{3}' file. New definition at line {4} of '{5}' file is being disconsidered;
+49: 4, "http://cruise.eecs.uottawa.ca/umple/W049DuplicatedMethodName.html", A {6} implementation of Method '{0}' in class '{1}' is already defined at line {2} of '{3}' file. New definition at line {4} of '{5}' file is being disconsidered;
 
 # State-Machine related messages
 50: 4, "http://cruise.eecs.uottawa.ca/umple/W050TargetStateNotFound.html", State '{0}' has not been declared, it is being treated as an new state ;
@@ -75,7 +75,7 @@
 68: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Destiny state '{0}' of transition on line '{1}' has not been found. This transition is being disconsidered;
 69: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Auto-Transition to '{0}' on line '{1}' conflicts with a previous exisiting transition. This transition is being disconsidered;
 70: 4, "http://cruise.eecs.uottawa.ca/umple/W054DuplicateEvents.html", Guarded Transition {0} will be ignored due to a duplicate event with an equivalent guard;
-
+71: 4, "http://cruise.eecs.uottawa.ca/umple/W071DupMethodNameDiffType.html", A {6} implementation of Method '{0}' in class '{1}' is already defined at line {2} of '{3}' file. New definition at line {4} of '{5}' file is being disconsidered;
 
 80: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", State '{0}' was not found in state machine '{1}'. Processed as if the state exists ;
 
