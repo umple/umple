@@ -1,6 +1,7 @@
 class CollisionAvoidance {
 	Integer warningRadius;
 	Boolean driveSelected;	
+	Boolean lock;
 	sm { 
 		CollisionAvoidance {
 			ObjectDetector {
