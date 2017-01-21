@@ -851,31 +851,45 @@ public class UmpleTraitTest {
 	 */
 	@Test
 	public void stateMachineTraits051Test() {
-		UmpleModel model = getRunModelByFilename("trait_test_data_0009.ump");
-		String str= "";
-		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
-			str = str+ action.getActionCode();			
+		
+		UmpleModel model = getModelByFilename("trait_test_data_0009.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("236");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
 		}
-		Assert.assertTrue(str.contains("T_entry"));
-		Assert.assertTrue(str.contains("T1_entry"));
-		Assert.assertTrue(str.contains("T2_entry"));
-		Assert.assertFalse(str.contains("superCall;"));
-		str= "";
-		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
-			str = str+ action.getActionCode();			
-		}
-		Assert.assertTrue(str.contains("T_exit"));
-		Assert.assertTrue(str.contains("T1_exit"));
-		Assert.assertTrue(str.contains("T2_exit"));
-		Assert.assertFalse(str.contains("superCall;"));
-		str= "";
-		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
-			str = str+ activity.getActivityCode();			
-		}
-		Assert.assertTrue(str.contains("T_do"));
-		Assert.assertTrue(str.contains("T1_do"));
-		Assert.assertTrue(str.contains("T2_do"));
-		Assert.assertFalse(str.contains("superCall;"));
+		
+		
+		
+//		UmpleModel model = getRunModelByFilename("trait_test_data_0009.ump");
+//		String str= "";
+//		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
+//			str = str+ action.getActionCode();			
+//		}
+//		Assert.assertTrue(str.contains("T_entry"));
+//		Assert.assertTrue(str.contains("T1_entry"));
+//		Assert.assertTrue(str.contains("T2_entry"));
+//		Assert.assertFalse(str.contains("superCall;"));
+//		str= "";
+//		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
+//			str = str+ action.getActionCode();			
+//		}
+//		Assert.assertTrue(str.contains("T_exit"));
+//		Assert.assertTrue(str.contains("T1_exit"));
+//		Assert.assertTrue(str.contains("T2_exit"));
+//		Assert.assertFalse(str.contains("superCall;"));
+//		str= "";
+//		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
+//			str = str+ activity.getActivityCode();			
+//		}
+//		Assert.assertTrue(str.contains("T_do"));
+//		Assert.assertTrue(str.contains("T1_do"));
+//		Assert.assertTrue(str.contains("T2_do"));
+//		Assert.assertFalse(str.contains("superCall;"));
 	}
 	
 	/*
@@ -883,31 +897,43 @@ public class UmpleTraitTest {
 	 */
 	@Test
 	public void stateMachineTraits052Test() {
-		UmpleModel model = getRunModelByFilename("trait_test_data_0010.ump");
-		String str= "";
-		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
-			str = str+ action.getActionCode();			
+		UmpleModel model = getModelByFilename("trait_test_data_0010.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("236");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
 		}
-		Assert.assertTrue(str.contains("T_entry"));
-		Assert.assertTrue(str.contains("T1_entry"));
-		Assert.assertTrue(str.contains("T2_entry"));
-		Assert.assertFalse(str.contains("superCall;"));
-		str= "";
-		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
-			str = str+ action.getActionCode();			
-		}
-		Assert.assertTrue(str.contains("T_exit"));
-		Assert.assertTrue(str.contains("T1_exit"));
-		Assert.assertTrue(str.contains("T2_exit"));
-		Assert.assertFalse(str.contains("superCall;"));
-		str= "";
-		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
-			str = str+ activity.getActivityCode();			
-		}
-		Assert.assertTrue(str.contains("T_do"));
-		Assert.assertTrue(str.contains("T1_do"));
-		Assert.assertTrue(str.contains("T2_do"));
-		Assert.assertFalse(str.contains("superCall;"));
+		
+		
+//		UmpleModel model = getRunModelByFilename("trait_test_data_0010.ump");
+//		String str= "";
+//		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
+//			str = str+ action.getActionCode();			
+//		}
+//		Assert.assertTrue(str.contains("T_entry"));
+//		Assert.assertTrue(str.contains("T1_entry"));
+//		Assert.assertTrue(str.contains("T2_entry"));
+//		Assert.assertFalse(str.contains("superCall;"));
+//		str= "";
+//		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
+//			str = str+ action.getActionCode();			
+//		}
+//		Assert.assertTrue(str.contains("T_exit"));
+//		Assert.assertTrue(str.contains("T1_exit"));
+//		Assert.assertTrue(str.contains("T2_exit"));
+//		Assert.assertFalse(str.contains("superCall;"));
+//		str= "";
+//		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
+//			str = str+ activity.getActivityCode();			
+//		}
+//		Assert.assertTrue(str.contains("T_do"));
+//		Assert.assertTrue(str.contains("T1_do"));
+//		Assert.assertTrue(str.contains("T2_do"));
+//		Assert.assertFalse(str.contains("superCall;"));
 	}
 	
 	/*
@@ -1106,34 +1132,56 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void stateMachineTraits059Test() {
-		UmpleModel model = getRunModelByFilename("trait_test_data_0017.ump");
-		String str= "";
-		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
-			str = str+ action.getActionCode();			
+		UmpleModel model = getModelByFilename("trait_test_data_0017.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("236");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
 		}
-		Assert.assertTrue(str.contains("T_entry"));
-		Assert.assertTrue(str.contains("T1_entry"));
-		Assert.assertFalse(str.contains("superCall;"));
-		str= "";
-		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
-			str = str+ action.getActionCode();			
-		}
-		Assert.assertTrue(str.contains("T_exit"));
-		Assert.assertTrue(str.contains("T1_exit"));
-		Assert.assertFalse(str.contains("superCall;"));
-		str= "";
-		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
-			str = str+ activity.getActivityCode();			
-		}
-		Assert.assertTrue(str.contains("T_do"));
-		Assert.assertTrue(str.contains("T1_do"));
-		Assert.assertFalse(str.contains("superCall;"));
+		
+		
+//		UmpleModel model = getRunModelByFilename("trait_test_data_0017.ump");
+//		String str= "";
+//		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry")){
+//			str = str+ action.getActionCode();			
+//		}
+//		Assert.assertTrue(str.contains("T_entry"));
+//		Assert.assertTrue(str.contains("T1_entry"));
+//		Assert.assertFalse(str.contains("superCall;"));
+//		str= "";
+//		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit")){
+//			str = str+ action.getActionCode();			
+//		}
+//		Assert.assertTrue(str.contains("T_exit"));
+//		Assert.assertTrue(str.contains("T1_exit"));
+//		Assert.assertFalse(str.contains("superCall;"));
+//		str= "";
+//		for(Activity activity : model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities()){
+//			str = str+ activity.getActivityCode();			
+//		}
+//		Assert.assertTrue(str.contains("T_do"));
+//		Assert.assertTrue(str.contains("T1_do"));
+//		Assert.assertFalse(str.contains("superCall;"));
 	}
 	
 	@Test
 	public void stateMachineTraits060Test() {
-		UmpleModel model = getRunModelByFilename("trait_test_data_0018.ump");
-		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfActivities());
+		UmpleModel model = getModelByFilename("trait_test_data_0018.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("236");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+//		UmpleModel model = getRunModelByFilename("trait_test_data_0018.ump");
+//		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfActivities());
 	}
 	
 	@Test
@@ -1154,8 +1202,19 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void stateMachineTraits062Test() {
-		UmpleModel model = getRunModelByFilename("trait_test_data_0020.ump");
-		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfActivities());
+		UmpleModel model = getModelByFilename("trait_test_data_0020.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("236");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+		
+//		UmpleModel model = getRunModelByFilename("trait_test_data_0020.ump");
+//		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfActivities());
 	}
 	
 	/*
@@ -1185,12 +1244,13 @@ public class UmpleTraitTest {
 //		Assert.assertTrue(str.contains("t1_do1"));
 //		Assert.assertTrue(str.contains("t2_do1"));
 //		Assert.assertTrue(str.contains("t2_do2"));
+	
 		UmpleModel model = getModelByFilename("trait_test_data_0021.ump");
 		boolean result = false;
 		try {
 			model.run();
 		} catch (Exception e) {
-			result = e.getMessage().contains("235");
+			result = e.getMessage().contains("236");
 		} finally {
 			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -1590,6 +1650,22 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}
 	}
+	
+	
+	@Test
+	public void stateMachineTraits107Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0062.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("236");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
 	// the last StateTest
 
 	// This is related to issue #656
