@@ -1,7 +1,6 @@
-// This example generates the message
+// The following shows how to avoid the message.
 class A{
-  void test1(){return("hello world")}
-  void test1(){return("dlrow olleh")}
+  void test1(){}
+  void test2(){}
 }
-
 

@@ -1,6 +1,7 @@
-// The following shows how to avoid the message.
+// This example generates the message
 class A{
-  void test1(){}
-  void test1(){}
+  void test1(){return("hello world")}
+  void test1(){return("dlrow olleh")}
 }
+
 

@@ -1699,6 +1699,7 @@ class UmpleClass
     return false;
   }
   
+  //Issue 771
   public boolean hasSameType(Method comparedMethod){
     String methodType = comparedMethod.getType();
     for (Method aMethod : this.getMethods()){
