@@ -286,4 +286,4 @@ trait Subject <Observer> {
   void notifyObservers() {/*implementation*/ }
 }
 
-// @@@skipphpcompile - due to incompatible methods such as boolean isEqual(Color object) in class Color
+// @@@skipphpcompile -  skip PHP compilation until issue #964 "Umple's PHP method generation fails to create valid method parameters" is fixed
