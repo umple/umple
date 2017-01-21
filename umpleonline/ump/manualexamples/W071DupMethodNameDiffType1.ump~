@@ -1,6 +1,0 @@
-// The following shows how to avoid the message.
-class A{
-  void test1(){}
-  Integer test1(){}
-}
-
