@@ -1,4 +1,4 @@
-W049 Duplicated Method Name Return Differnt Types
+W071 Duplicated Method Name Return Differnt Types
 Errors and Warnings
 noreferences
 

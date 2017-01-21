@@ -1103,7 +1103,7 @@ class UmpleInterface
     for (Method aMethod : this.getMethods()){
       // Compare method names
       if (aMethod.getName().equals(methodName)){
-      	//if(aMethod.getType().equals(methodType)){
+      	if(aMethod.getType().equals(methodType)){
 	        // Now compare parameters
 	        if (numberOfParams == aMethod.getMethodParameters().size()){
 	          for (MethodParameter param: aMethod.getMethodParameters()){
@@ -1117,7 +1117,7 @@ class UmpleInterface
 	            }
 	          }
 	        }
-	    //}
+	    }
       }
     }
     return isMethod;
