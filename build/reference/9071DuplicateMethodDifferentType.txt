@@ -13,9 +13,9 @@ In some programming languages like Java, you cannot have the same methods' names
 
 
 @@example
-@@source manualexamples/W071DupMethodNameDiffType1.ump
+@@source manualexamples/W071DuplicateMethodDifferentType1.ump
 @@endexample
 
 @@example
-@@source manualexamples/W071DupMethodNameDiffType2.ump
+@@source manualexamples/W071DuplicateMethodDifferentType2.ump
 @@endexample
