@@ -79,7 +79,8 @@ class PhpClassGenerator {
 
 
 <<# if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).getIsInline()) {append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(realSb, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } #>>
-class <<= uClass.getName() >><<= gen.translate("isA",uClass) >>
+<<# append(realSb, System.lineSeparator()); #>>
+<<# if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<= uClass.getName() >><<= gen.translate("isA",uClass) >>
 {<<@ UmpleToPhp.members_AllStatics >><<@ UmpleToPhp.members_AllAttributes >><<@ UmpleToPhp.members_AllStateMachines >><<@ UmpleToPhp.members_AllDoActivities >><<@ UmpleToPhp.members_AllAssociations >><<@ UmpleToPhp.members_AllHelpers >>
 
   //------------------------
