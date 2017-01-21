@@ -48,9 +48,9 @@ class CollisionAvoidanceA1 {
 				ParkAndNeutral {
 					[emergencyDetected] -> Park;
 					selectReverse -> Reverse;
-					selectDrive/{driveSelected = true; } -> Drive; 
-					Park { selectneutral -> Neutral; }
-					Neutral { selectPark/{driveSelected = false;} -> Park; } 
+					selectDrive/{setDriveSelected(true); } -> Drive; 
+					Park { selectNeutral -> Neutral; }
+					Neutral { selectPark/{setDriveSelected(false);} -> Park; } 
 				}
 				Reverse { 
 					selectPark -> Park; 
