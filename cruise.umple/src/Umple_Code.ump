@@ -1707,7 +1707,6 @@ class UmpleClass
     for (Method aMethod : this.getMethods()){
       // Compare method names
       if (aMethod.getName().equals(methodName)){
-    	  //if(aMethod.getType().equals(methodType)){
 	        // Now compare parameters
 	        if (numberOfParams == aMethod.getMethodParameters().size())
 	        {
@@ -1729,49 +1728,21 @@ class UmpleClass
 	            return true;
 	          }
 	        }
-    	  //}
       }
     }
     return false;
   }
   
-  //test starts
-  public boolean hasMethodWithSameType(Method comparedMethod){
-    String methodName = comparedMethod.getName();
+  public boolean hasSameType(Method comparedMethod){
     String methodType = comparedMethod.getType();
-    int numberOfParams = comparedMethod.getMethodParameters().size();
     for (Method aMethod : this.getMethods()){
-      // Compare method names
-      if (aMethod.getName().equals(methodName)){
-    	  if(aMethod.getType().equals(methodType)){
-	        // Now compare parameters
-	        if (numberOfParams == aMethod.getMethodParameters().size())
-	        {
-	          boolean allSame = true;
-	          for (int i = 0; i < numberOfParams; i++)
-	          {
-	            if(!aMethod.getMethodParameter(i).getType().equals(comparedMethod.getMethodParameter(i).getType()))
-	            {
-	              allSame = false;
-	              break;
-	            }
-	          }
-	          if(allSame)
-	          {
-	          	if (aMethod.getSource()==Method.Source.fAuto){
-	        		  this.removeMethod(aMethod);
-	        		  return false;
-	        	  }
-	            return true;
-	          }
-	        }
-    	  }
-      }
+    	if(aMethod.getType().equals(methodType)){
+    		return true;
+    	}
     }
     return false;
   }
   
-  //test ends
 
   public Method getMethod(Method comparedMethod){
     String methodName = comparedMethod.getName();

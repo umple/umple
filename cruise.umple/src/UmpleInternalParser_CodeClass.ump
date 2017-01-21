@@ -2520,7 +2520,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         	  }
         	  else
         	  {
-        	  if(uClass.hasMethodWithSameType(aMethod)) 
+        	  if(uClass.hasSameType(aMethod)) 
         	  {
               getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
                   	  aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
