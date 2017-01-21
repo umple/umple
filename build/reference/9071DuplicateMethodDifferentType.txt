@@ -1,4 +1,4 @@
-W071 Duplicated Method Name Return Differnt Types
+W071 Duplicate Method Different Type
 Errors and Warnings
 noreferences
 
@@ -19,4 +19,3 @@ In some programming languages like Java, you cannot have the same methods' names
 @@example
 @@source manualexamples/W071DupMethodNameDiffType2.ump
 @@endexample
-

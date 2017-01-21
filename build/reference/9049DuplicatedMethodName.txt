@@ -19,4 +19,3 @@ You cannot have two methods that have the same names and types. The warning is s
 @@example
 @@source manualexamples/W049DuplicatedMethodName2.ump
 @@endexample
-
