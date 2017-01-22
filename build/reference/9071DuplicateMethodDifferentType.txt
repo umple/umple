@@ -4,10 +4,9 @@ noreferences
 
 @@description
 
-<h2>Umple semantic warning reported when two methods have the same class names but return different types</h2>
+<h2>Umple sematic warning reported when two methods have the same names but different types</h2>
 
-<p>
-In some programming languages like Java, you cannot have the same methods' names even the return types are different. The warning is shown to notify the developer of the potential mistake.
+<p>In some programming languages like Java, you cannot have the same method names even the return types are different. The warning is shown to notify the developer of the potential mistake.
 
 </p>
 
@@ -19,3 +18,4 @@ In some programming languages like Java, you cannot have the same methods' names
 @@example
 @@source manualexamples/W071DuplicateMethodDifferentType2.ump
 @@endexample
+
