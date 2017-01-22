@@ -287,3 +287,4 @@ trait Subject <Observer> {
 }
 
 // @@@skipphpcompile -  skip PHP compilation until issue #964 "Umple's PHP method generation fails to create valid method parameters" is fixed
+// @@@skipjavacompile - skip Java compilation until issue with TComparable is resolved
