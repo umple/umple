@@ -13,17 +13,17 @@ class Color{
 	isA RootClass;
 	isA TEquality<TP1=Color>;
 	String rgb;
-	int getRed(){/*implementation */}
-	int getBlue(){/*implementation */}
-	int getGreen(){/*implementation */}
-	boolean isEqual(Color object){/*implementation */}
+	int getRed(){return 1;}
+	int getBlue(){return 2;}
+	int getGreen(){return 3;}
+	boolean isEqual(Color object){return true;}
 }
 
 //used to draw geometric objects.
 class Canvas {	
 	isA RootClass;
-	void paint(Geometry g){/*implementation*/}
-	void update(Geometry g){/*implementation*/}
+	void paint(GeometricObject g){/*implementation*/}
+	void update(GeometricObject g){/*implementation*/}
 }
 
 // a root abstract class for geometric objects.
@@ -61,7 +61,7 @@ class Point {
 	isA TEquality<TP1=Point>;
 	double pX;
 	double pY;
-	boolean isEqual(Point object){/*implementation */}
+	boolean isEqual(Point object){return true;}
 }
 
 //a class for lines. A line doesn't have an end.
@@ -70,7 +70,7 @@ class Line {
 	isA TEquality<TP1=Line>;
 	Point pA;
 	Point pB;
-	boolean isEqual(Line object){/*implementation */}
+	boolean isEqual(Line object){return true;}
 }
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
@@ -115,10 +115,10 @@ class NonPolyhedra{
 class Circle{
 	isA CurvedShape;
 	double radius;
-	double getArea(){/*implementation */}
-	double getPerimeterLength(){/*implementation */}
-	boolean isLessThan(CurvedShape object){/*implementation */}
-	boolean isEqual(CurvedShape object){/*implementation */}
+	double getArea(){return 1.0;}
+	double getPerimeterLength(){return 1.0;}
+	boolean isLessThan(CurvedShape object){return true;}
+	boolean isEqual(CurvedShape object){return true;}
 }
 class Ellipse {
 	isA CurvedShape;
@@ -126,65 +126,70 @@ class Ellipse {
 	double minorAxis;
 	Point fFocus;
 	Point gFocus;
-	Point[2] getFoci(){/*implementation */}
-	double getArea(){/*implementation */}
-	double getPerimeterLength(){/*implementation */}
-	Line getTangent(){/*implementation */}
-	boolean isLessThan(CurvedShape object){}
-	boolean isEqual(CurvedShape object){}
+	Point[] getFoci(){return new Point[2];}
+	double getArea(){return 1.0;}
+	double getPerimeterLength(){return 1.0;}
+	Line getTangent(){return new Line(fFocus, gFocus);}
+	boolean isLessThan(CurvedShape object){return true;}
+	boolean isEqual(CurvedShape object){return true;}
 }
 class Quadrilateral{
 	isA Polygon;
-	double getArea(){/*implementation */}
-	double getPerimeterLength(){/*implementation */}
-	boolean isLessThan(Polygon object){}
-	boolean isEqual(Polygon object){}
+	double getArea(){return 1.0;}
+	double getPerimeterLength(){return 1.0;}
+	boolean isLessThan(Polygon object){return true;}
+	boolean isEqual(Polygon object){return true;}
+	boolean isEqual(CurvedShape object){return false;}
 }
 
 class Rectangle{
 	isA Quadrilateral;
 	//overwrite for better calculation
-	double getArea(){/*implementation */}
+	double getArea(){return 1.0;}
 	//overwrite for better calculation
-	double getPerimeterLength(){/*implementation */}	
+	double getPerimeterLength(){return 1.0;}	
 }
 class ArbitraryPolygon{
 	isA Polygon;
-	double getArea(){/*implementation */}
-	double getPerimeterLength(){/*implementation */}
-	boolean isLessThan(Polygon object){}
-	boolean isEqual(Polygon object){}	
+	double getArea(){return 1.0;}
+	double getPerimeterLength(){return 1.0;}
+	boolean isLessThan(Polygon object){return true;}
+	boolean isEqual(Polygon object){return true;}
+	boolean isEqual(CurvedShape object){return true;}	
 }
 
 class Sphere{
 	isA NonPolyhedra;
 	double radius;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}
-	boolean isEqual(NonPolyhedra object){/*implementation */}
-	boolean isLessThan(NonPolyhedra object){/*implementation */}
+	double volume(){return 1.0;}
+	double surfaceArea(){return 1.0;}
+	boolean isEqual(NonPolyhedra object){return true;}
+	boolean isEqual(CurvedShape object){return true;}
+	boolean isLessThan(NonPolyhedra object){return true;}
 }
 
 class Torus {
 	isA NonPolyhedra;
 	double radius_r; 
-	double radiusr_R;
+	double radius_R;
 	double theta;
 	double phi;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}
-	boolean isEqual(NonPolyhedra object){/*implementation */}
-	boolean isLessThan(NonPolyhedra object){/*implementation */}
+	double volume(){return 1.0;}
+	double surfaceArea(){return 1.0;}
+	boolean isEqual(NonPolyhedra object){return true;}
+	boolean isEqual(CurvedShape object){return true;}
+	boolean isLessThan(NonPolyhedra object){return true;}
 }
 
 class Cylinder{
 	isA NonPolyhedra;
 	double radius;
 	double height;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}	
-	boolean isEqual(NonPolyhedra object){/*implementation */}
-	boolean isLessThan(NonPolyhedra object){/*implementation */}
+	double volume(){return 1.0;}
+	double surfaceArea(){return 1.0;}	
+	boolean isEqual(NonPolyhedra object){return true;}
+	boolean isEqual(CurvedShape object){return true;}
+	boolean isLessThan(NonPolyhedra object){return true;}
 }
 
 class Cone{
@@ -192,19 +197,22 @@ class Cone{
 	double radius;
 	double height;
 	double sideLength;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}
-	boolean isEqual(NonPolyhedra object){/*implementation */}
-	boolean isLessThan(NonPolyhedra object){/*implementation */}			
+	double volume(){return 1.0;}
+	double surfaceArea(){return 1.0;}
+	boolean isEqual(NonPolyhedra object){return true;}
+	boolean isEqual(CurvedShape object){return true;}
+	boolean isLessThan(NonPolyhedra object){return true;}			
 }
 
 class Cube{
 	isA Polyhedra;
 	double edgeLength;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}		
-	boolean isEqual(Polyhedra object){/*implementation */}
-	boolean isLessThan(Polyhedra object){/*implementation */}	
+	double volume(){return 1.0;}
+	double surfaceArea(){return 1.0;}		
+	boolean isEqual(NonPolyhedra object){return true;}
+	boolean isEqual(CurvedShape object){return true;}
+	boolean isLessThan(Polyhedra object){return true;}	
+	boolean isLessThan(NonPolyhedra object){return true;}	
 }
 
 class RectangularPrism{
@@ -212,20 +220,23 @@ class RectangularPrism{
 	double length;
 	double width;
 	double height;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}	
-	boolean isEqual(Polyhedra object){/*implementation */}
-	boolean isLessThan(Polyhedra object){/*implementation */}		
+	double volume(){return 1.0;}
+	double surfaceArea(){return 1.0;}	
+	boolean isEqual(NonPolyhedra object){return true;}
+	boolean isEqual(CurvedShape object){return true;}
+	boolean isLessThan(Polyhedra object){return true;}	
+	boolean isLessThan(NonPolyhedra object){return true;}		
 }
 
 class TriangularPyramid{
 	isA Polyhedra;
 	double slideLength;
 	double height;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}
-	boolean isEqual(Polyhedra object){/*implementation */}
-	boolean isLessThan(Polyhedra object){/*implementation */}			
+	double volume(){return 1.0;}
+	double surfaceArea(){return 1.0;}
+	boolean isEqual(Polyhedra object){return true;}
+	boolean isEqual(CurvedShape object){return true;}
+	boolean isLessThan(Polyhedra object){return true;}			
 }
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
@@ -233,7 +244,7 @@ class TriangularPyramid{
 //for example: point, line
 trait TEquality<TP1>{
 	abstract boolean isEqual(TP1 object);
-	boolean isNotEqual(TP1 object){/*implementation */}
+	boolean isNotEqual(TP1 object){return true;}
 }
 
 //used for elements which can be compared regarding being equal, bigger, smaller, etc.
@@ -241,17 +252,17 @@ trait TEquality<TP1>{
 trait TComparable<TP2>{
 	isA TEquality<TP1=TP2>;
 	abstract boolean isLessThan(TP2 object);
-	boolean isLessAndEqual(TP2 object){/*implementation */}
-	boolean isBiggerThan(TP2 object){/*implementation */}
-	boolean isBiggerAndEqual(TP2 object){/*implementation */}
+	boolean isLessAndEqual(TP2 object){return true;}
+	boolean isBiggerThan(TP2 object){return true;}
+	boolean isBiggerAndEqual(TP2 object){return true;}
 }
 
 //For geometric objects that cannot have color for edges.
 trait TDrawable {
 	0..1 -> * Color color;
-	int getRed(){/*implementation */}
-	int getBlue(){/*implementation */}
-	int getGreen(){/*implementation */}
+	int getRed(){return 1;}
+	int getBlue(){return 2;}
+	int getGreen(){return 3;}
 	void applyTransparency(int percentage){/*implementation */}
 	void applyPattern(int type){/*implementation */}
 	void applyColorFilter(int f){/*implementation */}
@@ -260,9 +271,9 @@ trait TDrawable {
 //For geometric objects that can have colors for filling and edges.
 trait TDrawableWithEdge{
 	isA TDrawable;
-	int getERed(){/*implementation */}
-	int getEBlue(){/*implementation */}
-	int getEGreen(){/*implementation */}	
+	int getERed(){return 1;}
+	int getEBlue(){return 2;}
+	int getEGreen(){return 3;}	
 	void applyETransparency(int percentage){/*implementation */}
 	void applyEPattern(int type){/*implementation */}
 	void applyEColorFilter(int f){/*implementation */}
@@ -274,3 +285,6 @@ trait Subject <Observer> {
   0..1  -> * Observer;
   void notifyObservers() {/*implementation*/ }
 }
+
+// @@@skipphpcompile -  skip PHP compilation until issue #964 "Umple's PHP method generation fails to create valid method parameters" is fixed
+// @@@skipjavacompile - skip Java compilation until issue with TComparable is resolved

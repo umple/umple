@@ -1,8 +1,9 @@
-class Example {
+class CollisionAvoidanceA3 {
 
 	Integer warningRadius = 100;
 	Boolean driveSelected;	
-  Boolean k = SmObjectDetectorObjectDetector.state == Emergency;
+	Boolean lock;
+  Boolean emergencyDetected = (getSmObjectDetectorObjectDetector() == SmObjectDetectorObjectDetector.Emergency);
 
 	sm { 
 		CollisionAvoidance {
@@ -15,7 +16,7 @@ class Example {
 			Brake {
 				Released { 
 					applyBrake -> AntiLockBraking; 
-					[k] -> BrakeApplied;
+					[emergencyDetected] -> BrakeApplied;
 				} 
 				AntiLockBraking {
 					
@@ -23,29 +24,29 @@ class Example {
 					Inactive {
 						wheelNormal -> BrakeApplied;
 						wheelLocked[ lock == true ] -> ResolveLock;
-            [k] -> BrakeApplied;
+            [emergencyDetected] -> BrakeApplied;
 					}
 					ResolveLock {
 						wheelNormal -> Inactive;
 						wheelLocked -> MonitorDeclaration;
 						decreasePressure[ lock == true ] -> PressureReduction;
 						applyBrake[ lock == false ] -> BrakeApplied;
-            [k] -> BrakeApplied;
+            [emergencyDetected] -> BrakeApplied;
 					}
 					MonitorDeclaration {
 						rapidDeclaration -> ResolveLock;
 						wheelNormal -> MonitorDeclaration;
-            [k] -> BrakeApplied;
+            [emergencyDetected] -> BrakeApplied;
 					}
 					PressureReduction {
 						decreasePressure[ lock == false ] -> ResolveLock;
 						decreasePressure[ lock == true ] -> PressureReduction;
-            [k] -> BrakeApplied;
+            [emergencyDetected] -> BrakeApplied;
 					}
 					BrakeApplied {
 						wheelLocked[ lock == true ] -> ResolveLock;
 						applyBrake -> BrakeApplied;
-            [k] -> BrakeApplied;
+            [emergencyDetected] -> BrakeApplied;
 					} 
 				} 
 			}
@@ -54,18 +55,18 @@ class Example {
 				ParkAndNeutral {
 					
 					selectReverse -> Reverse;
-					selectDrive/{driveSelected = true; } -> Drive; 
+					selectDrive/{setDriveSelected(true); } -> Drive; 
 					Park { 
-            selectneutral -> Neutral;
+            selectNeutral -> Neutral;
           }
 					Neutral { 
-            selectPark/{driveSelected = false;} -> Park; 
-            [k] -> Park;
+            selectPark/{setDriveSelected(false);} -> Park; 
+            [emergencyDetected] -> Park;
           } 
 				}
 				Reverse { 
 					selectPark -> Park; 
-					[k] -> Park;
+					[emergencyDetected] -> Park;
 				} 
 				Drive { 
 					selectNeutral -> Neutral; 
@@ -74,15 +75,15 @@ class Example {
 					
 					First { 
 						reachSecondSpeed[ driveSelected ] -> Second; 
-            [k] -> Park;
+            [emergencyDetected] -> Park;
 					}
 					Second { 
 						reachThirdSpeed[ driveSelected ] -> Third;
-            [k] -> Park;
+            [emergencyDetected] -> Park;
 					}
 					Third { 
 						dropBelowThirdSpeed -> Second; 
-            [k] -> Park;
+            [emergencyDetected] -> Park;
 					}
 				} 
 			}
@@ -93,12 +94,12 @@ class Example {
 				}
 				Idle { 
 					accelerate -> Driving; 
-					[k] -> Off;
+					[emergencyDetected] -> Off;
 				}
 				Driving { 
 					release -> Idle;
 					applyBrake -> Idle; 
-					[k] -> Off;
+					[emergencyDetected] -> Off;
 				} 
 			} 
 		} 

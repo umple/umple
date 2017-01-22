@@ -30,23 +30,40 @@ class HeatControlSystem {
 				room {
 					noHeatReq {
 						idleNotHeat {
-							[(setTemp - actualTemp) > 2] / { valvePos++; waitedForWarm = 0; } ->	waitForHeat;					
+							[(setTemp - actualTemp) > 2] / { 
+								setValvePos(valvePos + 1); 
+								setWaitedForWarm(0); } ->	waitForHeat;					
 						}
 						waitForHeat {
-							[waitedForWarm < warmUpTimer] /{ waitedForWarm++; } -> waitForHeat;
-							[(valvePos != 2) & (waitedForWarm == warmUpTimer)] /{ valvePos++; waitedForWarm = 0; } -> waitForHeat;
+							[waitedForWarm < warmUpTimer] /{ 
+								setWaitedForWarm(waitedForWarm + 1); 
+							} -> waitForHeat;
+							[(valvePos != 2) & (waitedForWarm == warmUpTimer)] /{ 
+								setValvePos(valvePos + 1); 
+								setWaitedForWarm(0); 
+							} -> waitForHeat;
 							[!((setTemp - actualTemp) > 2)] -> idleNotHeat;
-							[(waitedForWarm == warmUpTimer) & (valvePos == 2) & ((setTemp - actualTemp) > 2)] / { requestHeat = true; } -> heatReq;
+							[(waitedForWarm == warmUpTimer) & (valvePos == 2) & ((setTemp - actualTemp) > 2)] /{
+								setRequestHeat(true); 
+							} -> heatReq;
 						}
 					}
 					heatReq {
 						idleHeat {
-							[(actualTemp - setTemp) > 2]	/ { valvePos--; waitedForCool = 0; } ->	waitForCool;		
+							[(actualTemp - setTemp) > 2]	/ { 
+								setValvePos(valvePos - 1); 
+								setWaitedForCool(0); 
+							} ->	waitForCool;		
 						}
 						waitForCool {
-							[(valvePos != 0) & (coolDownTimer == waitedForCool)] / { valvePos--; waitedForCool = 0; } -> waitForCool;	
-                            [(valvePos == 0) & (coolDownTimer == waitedForCool) & ((actualTemp - setTemp) > 2)] / { requestHeat = false; } -> noHeatReq;
-							[waitedForCool < coolDownTimer] / { waitedForCool++; } -> waitForCool;
+							[(valvePos != 0) && (coolDownTimer == waitedForCool)] /{ 
+								setValvePos(valvePos - 1); 
+								setWaitedForCool(0); 
+							} -> waitForCool;	
+              [(valvePos == 0) & (coolDownTimer == waitedForCool) & ((actualTemp - setTemp) > 2)] /{ 
+              	setRequestHeat(false); 
+              } -> noHeatReq;
+							[waitedForCool < coolDownTimer] / { setWaitedForCool(waitedForCool + 1); } -> waitForCool;
 							[!((actualTemp - setTemp) > 2)] -> idleHeat;
 						}
 					}
@@ -57,13 +74,13 @@ class HeatControlSystem {
 						heatSwitchOn -> controllerOn;
 					}
 					controllerOn {
-						heatSwitchOff / { deactivate = true; } -> off;
+						heatSwitchOff / { setDeactivate(true); } -> off;
 						furnaceFault -> error;
 						idle {
-							[requestHeat == true] / { activate = true; } -> heaterActive;
+							[requestHeat == true] / { setActivate(true); } -> heaterActive;
 						}
 						heaterActive {
-							[requestHeat == false] / { deactivate = true; } -> idle;
+							[requestHeat == false] / { setDeactivate(true); } -> idle;
 							actHeater {
 								[furnaceRunning == true] -> heaterRun;
 							}
@@ -71,7 +88,7 @@ class HeatControlSystem {
 						}
 					}
 					error {
-						userReset / { furnaceReset = true; } -> off;
+						userReset / { setFurnaceReset(true); } -> off;
 					}
 				}
 			}
@@ -80,12 +97,12 @@ class HeatControlSystem {
 				furnaceNormal {
 					furnaceFault -> furnaceErr;
 					furnaceOff {
-						[activate == true] / { furnaceStartUpTime = 0; } -> furnaceAct;
+						[activate == true] / { setFurnaceStartUpTime(0); } -> furnaceAct;
 					}
 					furnaceAct {
 						[deactivate == true] -> furnaceOff;
-						[furnaceStartUpTime < furnaceTimer] / { furnaceStartUpTime++ } -> furnaceAct;
-						[furnaceStartUpTime == furnaceTimer] / { furnaceRunning = true; } -> furnaceRun;
+						[furnaceStartUpTime < furnaceTimer] / { setFurnaceStartUpTime(furnaceStartUpTime + 1); } -> furnaceAct;
+						[furnaceStartUpTime == furnaceTimer] / { setFurnaceRunning(true); } -> furnaceRun;
 					}
 					furnaceRun {
 						[deactivate == true] -> furnaceOff;
