@@ -3116,6 +3116,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         if (uClass.matchOperationMethod(operation, methodName)) {
           matches = true;
         }
+        // issue#682
+        if(operation.charAt(0) =='!') {
+          matches = true;
+        }
       }
 
       if(!matches) {
