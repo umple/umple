@@ -1,0 +1,7 @@
+// This example generates the message
+class A{
+  void test1(){return("hello world")}
+  Integer test1(){return("dlrow olleh")}
+}
+
+

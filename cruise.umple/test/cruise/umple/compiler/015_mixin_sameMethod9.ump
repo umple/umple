@@ -1,5 +1,5 @@
 class X{
-	void test(){
+	test(){
 	}
 }
 
@@ -11,17 +11,17 @@ class X{
 
 class X{
 
-	void test()
+	Integer test()
 	{
 	  int x = 3;
 	}
 	
-	void test()
+	Boolean test()
 	{
 	  int x = 4;
 	}
 	
-	void test(int a)
+	Date test(int a)
 	{
 	  int x = 5;
 	}

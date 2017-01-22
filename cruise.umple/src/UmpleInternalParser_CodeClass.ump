@@ -2520,9 +2520,19 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         	  }
         	  else
         	  {
+        	  //Issue 771
+        	  if(uClass.hasSameType(aMethod)) 
+        	  {
               getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
                   	  aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
                   	  aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
+              }
+              else
+              {
+              getParseResult().addErrorMessage(new ErrorMessage(71,aMethod.getPosition(),
+                  	  aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
+                  	  aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
+              }
         	  }
         	  
           }
@@ -2546,6 +2556,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     	  */
     	  
       }
+
+           
      
       if (!uClass.hasMethod(aMethod) && shouldAddMethod)
       {

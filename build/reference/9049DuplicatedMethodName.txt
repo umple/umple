@@ -1,0 +1,21 @@
+W049 Duplicated Method Name
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when two methods have the same names and return types</h2>
+
+<p>
+You cannot have two methods that have the same names and return types. The warning is shown to notify the developer of the potential mistake.
+
+</p>
+
+
+@@example
+@@source manualexamples/W049DuplicatedMethodName1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W049DuplicatedMethodName2.ump
+@@endexample
