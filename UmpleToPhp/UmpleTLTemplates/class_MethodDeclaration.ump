@@ -2,6 +2,7 @@ class UmpleToPhp {
     class_MethodDeclaration <<!<</*class_MethodDeclaration*/>><<#
     if (uClass.hasMethods())
     {
+        List<String> primitives = Arrays.asList("string", "boolean", "integer", "float", "double");
     	for (Method aMethod : uClass.getMethods()) 
     	{
     	    if(!aMethod.getExistsInLanguage("Php"))
@@ -10,8 +11,8 @@ class UmpleToPhp {
     		String methodImplementationModifier = aMethod.getIsAbstract() ? " abstract" : "";
     		String methodName = aMethod.getName();
     		String methodType = "function";
-        String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName(), aMethod.getMethodParameters()));
-        String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", aMethod.getName(), aMethod.getMethodParameters()));
+            String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName(), aMethod.getMethodParameters()));
+            String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", aMethod.getName(), aMethod.getMethodParameters()));
     		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
             customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
         
@@ -30,14 +31,23 @@ class UmpleToPhp {
     		String aSingleParameter="";
     		String finalParams = "";
     		String isList="";
-    	  String parameters = "";
+            String parameters = "";
     		if (aMethod.hasMethodParameters())
     		{
     			for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
     			{
-    				paramName = aMethodParam.getName();
-    				paramType = aMethodParam.getType();
-    				isList = aMethodParam.getIsList() ? " [] " : " ";
+    				paramName = "$" + aMethodParam.getName();
+                    if (!aMethodParam.getIsList()){
+                      paramType = aMethodParam.getType();
+                      if (primitives.contains(paramType)) {
+                        paramType = "";
+                      }else{
+                        paramType+=" ";}
+
+                    }else{
+                      paramType = "";
+                    }
+    				//isList = aMethodParam.getIsList() ? " [] " : " ";
     				aSingleParameter = paramType + isList + paramName;
         			parameters += aSingleParameter + ", ";
     			}
