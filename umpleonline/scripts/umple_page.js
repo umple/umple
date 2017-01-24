@@ -878,7 +878,7 @@ Page.showGeneratedCode = function(code,language,tabnumber)
 			// Clear tab row contents
 			jQuery('#tabRow').html('');
 			// Generate tabs
-			Action.generateTabsCode();
+			Action.generateTabsCode(code);
 			Action.toggleTabs();
 		}
   }
