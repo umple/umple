@@ -867,7 +867,7 @@ Page.showGeneratedCode = function(code,language,tabnumber)
   if(language == "java" || language == "php" || language == "cpp" 
     || language == "ruby" || language == "xml" || language == "sql" || language == "alloy" || language == "nusmv")
   {
-		jQuery("#innerGeneratedCodeRow" + tabnumber).innerHTML = 
+		document.querySelector("#innerGeneratedCodeRow" + tabnumber).innerHTML = 
 		  formatOnce('<pre class="brush: {1};">{0}</pre>', generatedMarkup, language);
     SyntaxHighlighter.highlight("code");
 
