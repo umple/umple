@@ -2191,7 +2191,7 @@ Action.toggleTabs = function()
   }
 }
 
-Action.generateTabsCode = function()
+Action.generateTabsCode = function(theCode)
 {
   var arrCodeFiles = [];
   var intFileCounter = 0;
@@ -2201,12 +2201,13 @@ Action.generateTabsCode = function()
   var skipSpace = false;
 
   // Read full code output line by line
-  jQuery('.content').each(function(){
+  theCode.split('URL_SPLIT')[1].split("\n").forEach(function(theLine){
+
     // If New File Beginning
-    if(jQuery(this).text().indexOf("//%%") >= 0){
+    if(theLine.indexOf("//%%") >= 0){
       intFileCounter++;
       if(intFileCounter > 1){ arrCodeFiles[intFileCounter] += "</p>"; }
-      strFileName = jQuery(this).text().slice(14);
+      strFileName = theLine.slice(14);
       strFileName = strFileName.substr(0, strFileName.indexOf(' '));
       arrFileNames[intFileCounter] = strFileName;
       jQuery('#generatedCodeRow').append("<div id='innerGeneratedCodeRow" + intFileCounter + "'></div>");
@@ -2215,7 +2216,7 @@ Action.generateTabsCode = function()
     }
     else{
       if(!skipSpace){
-        arrCodeFiles[intFileCounter] += jQuery(this).text() + "\n";
+         arrCodeFiles[intFileCounter] += theLine + "\n";
       }
       else{
         skipSpace = false;
