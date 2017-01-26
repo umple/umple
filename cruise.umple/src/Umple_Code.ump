@@ -3933,13 +3933,14 @@ class GeneralTPApplied {
 //----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------
 	public GeneralTPApplied(GeneralTPApplied another) {
-	  this.parameterMapping = another.parameterMapping;
+	  if (another == null) return;
+	  this.parameterMapping = new HashMap<String, String>(another.parameterMapping);
 	  this.inheritanceName = another.inheritanceName;
 	  methodTemplateSignatures = new ArrayList<MethodTemplateSignature>();
 	  for (MethodTemplateSignature mtSignature : another.getMethodTemplateSignatures()) {
 		  methodTemplateSignatures.add(new MethodTemplateSignature(mtSignature));
 	  }
-  	}
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------
