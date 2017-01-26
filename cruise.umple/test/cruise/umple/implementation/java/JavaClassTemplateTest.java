@@ -149,9 +149,23 @@ public class JavaClassTemplateTest extends ClassTemplateTest
   }
   
   @Test
-  public void stateMachineImplementsInterface(){
+  public void StateMachineImplementsInterface(){
       assertUmpleTemplateFor("java/ClassTemplateTest_StateMachineImplementsInterface.ump",
                              "java/ClassTemplateTest_StateMachineImplementsInterface.java.txt",
                              "FileLogger");
+  }
+  
+  @Test
+  public void StateMachineImplementsPartialInterface(){
+	  assertUmpleTemplateFor("java/ClassTemplateTest_StateMachineImplementsPartialInterface.ump",
+              				 "java/ClassTemplateTest_StateMachineImplementsPartialInterface.java.txt",
+              				 "FileLogger");
+  }
+  
+  @Test
+  public void StateMachineDoesNotImplementInterface(){
+	  assertUmpleTemplateFor("java/ClassTemplateTest_StateMachineDoesNotImplementInterface.ump",
+				 			 "java/ClassTemplateTest_StateMachineDoesNotImplementInterface.java.txt",
+				 			 "FileLogger");
   }
 }

@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.25.0-963d2bd modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 
@@ -42,8 +42,7 @@ public class FileLogger implements Logger
     return status;
   }
 
-  @Override
-  public boolean connect()
+  public boolean attemptConnection()
   {
     boolean wasEventProcessed = false;
     
@@ -61,8 +60,7 @@ public class FileLogger implements Logger
     return wasEventProcessed;
   }
 
-  @Override
-  public boolean disconnect()
+  public boolean signalDisconnect()
   {
     boolean wasEventProcessed = false;
     
@@ -80,8 +78,7 @@ public class FileLogger implements Logger
     return wasEventProcessed;
   }
 
-  @Override
-  public boolean write(String String)
+  public boolean communicate(String message)
   {
     boolean wasEventProcessed = false;
     
@@ -106,6 +103,21 @@ public class FileLogger implements Logger
 
   public void delete()
   {}
+
+  @Override
+  public boolean connect(){
+          return false;
+  }
+
+  @Override
+  public boolean disconnect(){
+          return false;
+  }
+
+  @Override
+  public boolean write(String data){
+          return false;
+  }
 
 
   public String toString()
