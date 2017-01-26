@@ -1725,6 +1725,23 @@ public class UmpleTraitTest {
 		Assert.assertEquals("test", model.getUmpleClass("A").getMethod(0).getName());
 		Assert.assertEquals(true, model.getUmpleClass("A").getMethod(0).isIsAbstract());
 	}
+	
+	
+	@Test
+	public void checkRequiredMethodTest3() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0063.ump");
+		Assert.assertEquals(model.getUmpleClass("A").numberOfMethods(),2);
+		Assert.assertEquals(model.getUmpleClass("B").numberOfMethods(),2);
+		Assert.assertEquals(model.getUmpleClass("A").getMethod(0).getName(),"isEqual");
+		Assert.assertEquals(model.getUmpleClass("A").getMethod(1).getName(),"isLessThan");
+		Assert.assertEquals(model.getUmpleClass("A").getMethod(0).getMethodParameter(0).getType(),"A");
+		Assert.assertEquals(model.getUmpleClass("A").getMethod(1).getMethodParameter(0).getType(),"A");
+		Assert.assertEquals(model.getUmpleClass("B").getMethod(0).getName(),"isEqual");
+		Assert.assertEquals(model.getUmpleClass("B").getMethod(1).getName(),"isLessThan");
+		Assert.assertEquals(model.getUmpleClass("B").getMethod(0).getMethodParameter(0).getType(),"B");
+		Assert.assertEquals(model.getUmpleClass("B").getMethod(1).getMethodParameter(0).getType(),"B");		
+	}
+		
 
 	@Ignore
 	public void GeneraParameterTest() {

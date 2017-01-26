@@ -1,0 +1,19 @@
+class A {
+  abstract;
+  isA TComparable <TP2=A>;
+}
+
+
+class B{
+  abstract;
+  isA TComparable <TP2=B>;
+}
+
+trait TEquality<TP1>{
+  abstract boolean isEqual(TP1 object);
+}
+
+trait TComparable<TP2>{
+  isA TEquality<TP1=TP2>;
+  abstract boolean isLessThan(TP2 object);
+}

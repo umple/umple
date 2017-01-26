@@ -900,8 +900,12 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
      traitMethods.put(inTrait,methods);
      //----------------------------------------------------------------------------------------
      for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-     	 checkClassSupportTraitsInterfaces(inTrait.getGeneralTPAppliedByName(uTrait.getName()),inTrait);
- 		 if ( ! getParseResult().getWasSuccess() ) return traitMethods;
+       GeneralTPApplied newGTParameter = inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null ? new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName())) : null;
+       if (newGTParameter!=null){
+         ApplyTypeParametersToTypeParameters(newGTParameter, inGTPApplied);       
+     	   checkClassSupportTraitsInterfaces(newGTParameter,inTrait);
+     	 }
+ 		   if ( ! getParseResult().getWasSuccess() ) return traitMethods;
      	 tempTraitMethods = gatherConcreteMethods(uTrait,getNewGeneralTPAppliedWithP2P(inTrait,uTrait,inGTPApplied));	 
     	 if ( ! getParseResult().getWasSuccess() ) return traitMethods;
     	 if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitMethods,inTrait)) return traitMethods;
@@ -1349,10 +1353,10 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
   private void recursiveCheckRequiredMethods(UmpleClass inClass, UmpleTrait inTrait, GeneralTPApplied inGeneralTPApplied) {
 	  if ( !getParseResult().getWasSuccess() ) return; 
 	  for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-		  GeneralTPApplied newGeneralTPApplied =null;
-		  if (inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null)  newGeneralTPApplied = new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName()));
-		  recursiveCheckRequiredMethods(inClass,uTrait,newGeneralTPApplied);
-      }
+      GeneralTPApplied newGeneralTPApplied =inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null ? new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName())) : null;
+      if (newGeneralTPApplied!=null)  ApplyTypeParametersToTypeParameters(newGeneralTPApplied,inGeneralTPApplied);
+      recursiveCheckRequiredMethods(inClass,uTrait,newGeneralTPApplied);
+    }
 	  for (Method uMethod : inTrait.getMethods() ) {
 		  if (uMethod.isIsAbstract()) {
 			  Method newMethod = new Method(uMethod);
@@ -1691,7 +1695,11 @@ private Map<UmpleTrait, List<AssociationVariable>> gatherAssociations(UmpleTrait
  	traitAssociationVariables.put(inTrait,associationVariables);
      //----------------------------------------------------------------------------------------
      for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-    	 tempTraitAssociationVariables = gatherAssociations(uTrait,inTrait.getGeneralTPAppliedByName(uTrait.getName()),inClass);	 
+       GeneralTPApplied newGTParameter = inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null ? new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName())) : null;     
+       if (newGTParameter!=null){
+         ApplyTypeParametersToTypeParameters(newGTParameter, inGTPApplied);       
+    	   tempTraitAssociationVariables = gatherAssociations(uTrait,newGTParameter,inClass);   
+    	 }	 
     	 if ( ! getParseResult().getWasSuccess() ) return traitAssociationVariables;
 //    	 if (CheckAssociationsComeFromTraitsIsAvaialbleInOtherTraits(traitAssociations,tempTraitAssociations,inTrait)) return traitAssociations;
     	 AddAssociationMapToAnother(traitAssociationVariables,tempTraitAssociationVariables);
