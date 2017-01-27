@@ -3111,19 +3111,20 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
       Boolean matches = false;
       
-      Boolean exclusionMatch = true;
+      Boolean exclusionMatch = false;
 
       for(String methodName : methodNames) 
       { 
         if (uClass.matchOperationMethod(operation, methodName)) {
           matches = true;
+          exclusionMatch = true;
         }
         
         // issue#682
         else if(operation.charAt(0) =='!') {
           matches = true;
-          if (!uClass.matchOperationMethod(operation.substring(1), methodName)) {
-            exclusionMatch = false;
+          if (uClass.matchOperationMethod(operation.substring(1), methodName)) {
+            exclusionMatch = true;
           }
         }
       }
