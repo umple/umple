@@ -69,9 +69,31 @@ public class PhpClassTemplateTest extends ClassTemplateTest
 	  
     SampleFileWriter.assertFileContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"), actual);
   }
+
   @Test 
   public void immutableNotLazyAttributeConstructor(){
 	  assertUmpleTemplateFor("php/ImmutableNotLazyAttributeConstructor.ump","php/StudentImmutableNotLazyTest.php.txt","Student");
+  }
+
+  @Test
+  public void StateMachineImplementsInterface(){
+    assertUmpleTemplateFor("php/ClassTemplateTest_StateMachineImplementsInterface.ump", 
+                           "php/ClassTemplateTest_StateMachineImplementsInterface.php.txt",
+                           "Router");
+  }
+
+  @Test
+  public void StateMachineImplementsPartialInterface(){
+    assertUmpleTemplateFor("php/ClassTemplateTest_StateMachineImplementsPartialInterface.ump", 
+                           "php/ClassTemplateTest_StateMachineImplementsPartialInterface.php.txt",
+                           "Router");
+  }
+
+  @Test
+  public void StateMachineDoesNotImplementInterface(){
+    assertUmpleTemplateFor("php/ClassTemplateTest_StateMachineDoesNotImplementInterface.ump", 
+                           "php/ClassTemplateTest_StateMachineDoesNotImplementInterface.php.txt",
+                           "Router");
   }
 
 }
