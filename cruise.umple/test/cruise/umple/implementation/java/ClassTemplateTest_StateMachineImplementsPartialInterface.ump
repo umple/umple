@@ -1,0 +1,18 @@
+interface Logger {
+	boolean connect();
+	boolean disconnect();
+	boolean write(String data);
+}
+
+class FileLogger{
+	isA Logger;
+	internal fileName;
+	status{
+		disconnected{
+			connect -> connected;
+		}
+		connected{
+			disconnect -> disconnected;
+		}	
+	}
+}
