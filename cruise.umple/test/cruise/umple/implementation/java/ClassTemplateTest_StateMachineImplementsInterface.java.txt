@@ -81,7 +81,7 @@ public class FileLogger implements Logger
   }
 
   @Override
-  public boolean write(String String)
+  public boolean write(String data)
   {
     boolean wasEventProcessed = false;
     

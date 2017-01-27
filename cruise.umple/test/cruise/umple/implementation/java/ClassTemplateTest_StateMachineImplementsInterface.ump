@@ -1,7 +1,7 @@
 interface Logger {
 	boolean connect();
 	boolean disconnect();
-	boolean write(String Data);
+	boolean write(String data);
 }
 
 class FileLogger{
@@ -13,7 +13,7 @@ class FileLogger{
 		}
 		connected{
 			disconnect -> disconnected;
-			write(String) -> connected;
+			write(data) -> connected;
 		}	
 	}
 }
