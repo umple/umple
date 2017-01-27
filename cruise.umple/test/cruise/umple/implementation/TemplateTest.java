@@ -260,6 +260,12 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/client.rb");
     SampleFileWriter.destroy(pathToInput + "/Client.php");
     
+    // Tear down issue 923 tests
+    SampleFileWriter.destroy(pathToInput + "/java/FileLogger.java");
+    SampleFileWriter.destroy(pathToInput + "/java/Logger.java");
+    SampleFileWriter.destroy(pathToInput + "/php/NetworkNode.php");
+    SampleFileWriter.destroy(pathToInput + "/php/Router.php");
+    
    // destroying the object factory
   }
 
