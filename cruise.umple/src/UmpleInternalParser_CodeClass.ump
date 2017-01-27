@@ -3110,15 +3110,21 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       String currentParameters = allParameters.get(opInd);
 
       Boolean matches = false;
+      
+      Boolean exclusionMatch = true;
 
       for(String methodName : methodNames) 
       { 
         if (uClass.matchOperationMethod(operation, methodName)) {
           matches = true;
         }
+        
         // issue#682
-        if(operation.charAt(0) =='!') {
+        else if(operation.charAt(0) =='!') {
           matches = true;
+          if (!uClass.matchOperationMethod(operation.substring(1), methodName)) {
+            exclusionMatch = false;
+          }
         }
       }
 
@@ -3128,6 +3134,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
       if(!"...".equals(currentParameters)) {
         getParseResult().addErrorMessage(new ErrorMessage(1013, injectToken.getPosition(), operationSource));
+      }
+      
+      if(!exclusionMatch) {
+        getParseResult().addErrorMessage(new ErrorMessage(1014, injectToken.getPosition(), operation));
       }
     }
   }
