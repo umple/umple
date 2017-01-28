@@ -2,7 +2,10 @@ class UmpleToPhp {
     class_MethodDeclaration <<!<</*class_MethodDeclaration*/>><<#
     if (uClass.hasMethods())
     {
-        List<String> primitives = Arrays.asList("string", "boolean", "integer", "float", "double");
+        // method parameters of primitives should not explicitly list the parameter type
+        // ex: function f($a){} and not f(integer $a){}
+        List<String> primitives = Arrays.asList("string", "boolean", "integer", "float", "double", 
+                                                "String", "Boolean", "Integer", "Float", "Double");
     	for (Method aMethod : uClass.getMethods()) 
     	{
     	    if(!aMethod.getExistsInLanguage("Php"))
