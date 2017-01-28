@@ -1,0 +1,10 @@
+class Object {
+        void example_obj(Object g){/*implementation*/}
+        void example_bool(Boolean b) {}
+        void example_int(Integer i) {}
+        void example_float(Float f) {}
+        void example_double(Double d) {}
+        void example_string(String s) {}
+        void example_obj_array(Object[] gs){}
+        void example_primitive_array(Integer[] is){}
+}

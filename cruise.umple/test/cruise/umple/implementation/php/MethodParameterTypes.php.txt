@@ -1,0 +1,72 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.25.0-963d2bd modeling language!*/
+
+class Object
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+  public function example_obj(Object $g)
+  {
+    /*implementation*/
+  }
+
+  public function example_bool($b)
+  {
+    
+  }
+
+  public function example_int($i)
+  {
+    
+  }
+
+  public function example_float($f)
+  {
+    
+  }
+
+  public function example_double($d)
+  {
+    
+  }
+
+  public function example_string($s)
+  {
+    
+  }
+
+  public function example_obj_array($gs)
+  {
+    
+  }
+
+  public function example_primitive_array($is)
+  {
+    
+  }
+
+}
+?>
