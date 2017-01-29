@@ -1,0 +1,18 @@
+class A {
+* -> * D assoc;
+}
+
+class B {
+isA A;
+}
+
+class C {
+isA B;
+* -> 0..1 E assoc;
+}
+
+class D {
+}
+
+class E {
+}

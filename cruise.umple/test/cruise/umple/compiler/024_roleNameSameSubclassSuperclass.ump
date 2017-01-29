@@ -1,0 +1,14 @@
+class A{
+  0..1 -> *C assoc;
+}
+
+class B{
+  isA A;
+  0..1 -> *D assoc;
+}
+
+class C{
+}
+
+class D{
+}

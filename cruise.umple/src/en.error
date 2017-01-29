@@ -110,6 +110,7 @@
 160: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Constant name '{0}' must be alphanumeric, starting with a upper-case letter ;
 161: 4, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Constant name '{0}' should start with a upper-case letter ;
 
+180: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class '{0}' is a subclass of class '{1}' and may not have multiple associations with the same name '{2}' ;
 
 # Messages related to traits
 200: 2, "http://cruise.eecs.uottawa.ca/umple/E200TraitIdentifierInvalid.html", Trait name '{0}' must be alphanumeric and start with an alpha character, or _  ;
@@ -182,6 +183,8 @@
 1502 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: Structure of '{0}' invalid ;
 1503 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: {0}, did you mean {1} ;  
 1510 : 1, "http://cruise.eecs.uottawa.ca/umple/E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
+
+
 
 # Messages to be emitted when embedded code from another language is compiled and you are passing on the error
 2001: 5, "http://cruise.eecs.uottawa.ca/umple/W20xxErrorinEmbeddedCode.html", Error in Java embedded in Umple: '{0}' ;
