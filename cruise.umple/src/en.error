@@ -176,6 +176,7 @@
 1011: 3, "http://cruise.eecs.uottawa.ca/umple/W1011InvalidAssociationClassKey.html", AssociationClass '{0}' missing needed '{1}' key, provided {2} ;
 1012: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Method '{0}' cannot be found. Injection was ignored. ;
 1013: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Parameter specification does not apply to code injections with the '{0}' keyword. The injection was applied to all generated methods. ;
+1014: 5, "http://cruise.eecs.uottawa.ca/umple/ConstructorConflict.html", Method '{0}' has a name conflict with the automatically generated constructor method in class '{0}' and has been removed. Please refrain from using explicit constructors -- configure Umple to generate the constructor you want instead.;
 
 1500 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: '{0}' not understood ; 
 1501 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 

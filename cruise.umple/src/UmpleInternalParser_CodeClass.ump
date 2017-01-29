@@ -2556,8 +2556,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     	  */
     	  
       }
-
-           
+      
+      // Fix issue 958
+      if (aMethod.getName().equals(uElement.getName()))
+      {
+      	setFailedPosition(aMethod.getCodePosition(), 1014, aMethod.getName(), uElement.getName());
+      	shouldAddMethod = false;
+      }
      
       if (!uClass.hasMethod(aMethod) && shouldAddMethod)
       {
@@ -2642,6 +2647,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         {
           uElement.setHasMainMethod(true);
         }
+        
       }
       if (methodToken.is("parameterList"))
       {
