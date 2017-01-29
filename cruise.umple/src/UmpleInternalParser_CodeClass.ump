@@ -3096,7 +3096,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   private void checkCodeInjectionValidity(Token injectToken, UmpleClass uClass) {
     ArrayList<String> methodNames = getAllMethodNames(uClass);
+    
     String[] allOperations = getOperationName(injectToken).split(",");
+    
     List<String> allParameters = getOperationsParameters(injectToken);
 
     String operationSource = getOperationSource(injectToken);
@@ -3108,38 +3110,35 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       String operation = allOperations[opInd];
       String currentParameters = allParameters.get(opInd);
+      Boolean hasExclusion = false;
+      if(operation.charAt(0) == '!') {
+        hasExclusion = true;
+      	operation = operation.substring(1);
+      }
 
       Boolean matches = false;
-      
-      Boolean exclusionMatch = false;
 
       for(String methodName : methodNames) 
       { 
         if (uClass.matchOperationMethod(operation, methodName)) {
           matches = true;
-          exclusionMatch = true;
         }
         
-        // issue#682
-        else if(operation.charAt(0) =='!') {
-          matches = true;
-          if (uClass.matchOperationMethod(operation.substring(1), methodName)) {
-            exclusionMatch = true;
-          }
-        }
       }
 
       if(!matches) {
-        getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
+        if(hasExclusion) {
+          getParseResult().addErrorMessage(new ErrorMessage(1014, injectToken.getPosition(), operation));
+        }
+        else {
+          getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
+      	}
       }
 
       if(!"...".equals(currentParameters)) {
         getParseResult().addErrorMessage(new ErrorMessage(1013, injectToken.getPosition(), operationSource));
       }
-      
-      if(!exclusionMatch) {
-        getParseResult().addErrorMessage(new ErrorMessage(1014, injectToken.getPosition(), operation));
-      }
+       
     }
   }
   
