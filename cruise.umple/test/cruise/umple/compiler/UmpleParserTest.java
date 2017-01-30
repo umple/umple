@@ -455,14 +455,21 @@ public class UmpleParserTest
     assertHasWarningsParse("015_mixin_sameMethod5.ump", 49);
     assertHasWarningsParse("015_mixin_sameMethod6.ump", 49);
     
+    //Issue 771
     //same method name, different types
     assertHasWarningsParse("015_mixin_sameMethod7.ump", 71);
     assertHasWarningsParse("015_mixin_sameMethod8.ump", 71);
     assertHasWarningsParse("015_mixin_sameMethod9.ump", 71);
     assertHasWarningsParse("015_mixin_sameMethod10.ump", 71);
     assertHasWarningsParse("015_mixin_sameMethod11.ump", 71);
-
-
+  }
+  
+  //Issue 682
+  @Test
+  public void operationNotFound()
+  {
+	  assertHasWarningsParse("1012_operationNotFound1.ump", 1012);
+	  assertHasWarningsParse("1014_operationNotFound1.ump", 1014);
   }
 
   @Test
