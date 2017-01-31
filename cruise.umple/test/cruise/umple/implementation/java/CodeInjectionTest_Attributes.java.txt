@@ -222,14 +222,12 @@ public class Student
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
             "name" + ":" + getName()+ "," +
             "type" + ":" + getType()+ "," +
             "funName" + ":" + getFunName()+ "," +
             "injBool" + ":" + getInjBool()+ "," +
-            "dInjBool" + ":" + getDInjBool()+ "]"
-     + outputString;
+            "dInjBool" + ":" + getDInjBool()+ "]";
   }
 }

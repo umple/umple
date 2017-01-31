@@ -60,10 +60,8 @@ public class Student
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "f1" + ":" + getF1()+ "," +
-            "f2" + ":" + getF2()+ "]"
-     + outputString;
+            "f2" + ":" + getF2()+ "]";
   }
 }

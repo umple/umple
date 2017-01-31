@@ -113,11 +113,9 @@ public class TemplateTest
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "string1" + ":" + getString1()+ "," +
-            "string2" + ":" + getString2()+ "]"
-     + outputString;
+            "string2" + ":" + getString2()+ "]";
   }
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {

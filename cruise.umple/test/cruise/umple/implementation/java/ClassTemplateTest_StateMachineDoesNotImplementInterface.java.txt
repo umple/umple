@@ -122,8 +122,6 @@ public class FileLogger implements Logger
 
   public String toString()
   {
-    String outputString = "";
-    return super.toString() + "["+ "]"
-     + outputString;
+    return super.toString() + "["+ "]";
   }
 }

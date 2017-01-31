@@ -45,9 +45,7 @@ public class Student
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
-            "name" + ":" + getName()+ "]"
-     + outputString;
+            "name" + ":" + getName()+ "]";
   }
 }

@@ -48,9 +48,7 @@ public class SubMentor2 extends Mentor
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
-            "subName" + ":" + getSubName()+ "]"
-     + outputString;
+            "subName" + ":" + getSubName()+ "]";
   }
 }

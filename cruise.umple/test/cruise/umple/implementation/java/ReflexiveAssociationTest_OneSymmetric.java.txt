@@ -87,11 +87,9 @@ public class OneSymmetric
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "number" + ":" + getNumber()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "friend = "+(getFriend()!=null?Integer.toHexString(System.identityHashCode(getFriend())):"null")
-     + outputString;
+            "  " + "friend = "+(getFriend()!=null?Integer.toHexString(System.identityHashCode(getFriend())):"null");
   }
 }

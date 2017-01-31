@@ -350,9 +350,7 @@ public class X implements Runnable
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
-            "ev" + ":" + getEv()+ "]"
-     + outputString;
+            "ev" + ":" + getEv()+ "]";
   }
 }

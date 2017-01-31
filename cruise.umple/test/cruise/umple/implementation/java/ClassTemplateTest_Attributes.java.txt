@@ -383,7 +383,6 @@ public class Mentor
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "x" + ":" + getX()+ "," +
             "str" + ":" + getStr()+ "," +
@@ -403,7 +402,6 @@ public class Mentor
             "  " + "tt" + "=" + (getTt() != null ? !getTt().equals(this)  ? getTt().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "u" + "=" + (getU() != null ? !getU().equals(this)  ? getU().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "v" + "=" + (getV() != null ? !getV().equals(this)  ? getV().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "w" + "=" + (getW() != null ? !getW().equals(this)  ? getW().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
+            "  " + "w" + "=" + (getW() != null ? !getW().equals(this)  ? getW().toString().replaceAll("  ","    ") : "this" : "null");
   }
 }

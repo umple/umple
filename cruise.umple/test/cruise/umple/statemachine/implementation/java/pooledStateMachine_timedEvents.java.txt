@@ -324,9 +324,7 @@ public class Mentor implements Runnable
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
-            "howLongUntilOk" + ":" + getHowLongUntilOk()+ "]"
-     + outputString;
+            "howLongUntilOk" + ":" + getHowLongUntilOk()+ "]";
   }
 }
