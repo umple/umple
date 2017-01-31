@@ -114,11 +114,9 @@ public class Registration
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "grade" + ":" + getGrade()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "student = "+(getStudent()!=null?Integer.toHexString(System.identityHashCode(getStudent())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "courseSection = "+(getCourseSection()!=null?Integer.toHexString(System.identityHashCode(getCourseSection())):"null")
-     + outputString;
+            "  " + "courseSection = "+(getCourseSection()!=null?Integer.toHexString(System.identityHashCode(getCourseSection())):"null");
   }
 }

@@ -73,10 +73,8 @@ public class Tracer
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
-            "name" + ":" + getName()+ "]"
-     + outputString;
+            "name" + ":" + getName()+ "]";
   }
 }

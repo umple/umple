@@ -100,9 +100,7 @@ public class LightBulb
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
-            "v" + ":" + getV()+ "]"
-     + outputString;
+            "v" + ":" + getV()+ "]";
   }
 }

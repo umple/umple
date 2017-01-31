@@ -71,10 +71,8 @@ public class Range
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "start" + ":" + getStart()+ "," +
-            "end" + ":" + getEnd()+ "]"
-     + outputString;
+            "end" + ":" + getEnd()+ "]";
   }
 }

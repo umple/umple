@@ -82,11 +82,9 @@ public class Mentor
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "capacity" + ":" + getCapacity()+ "," +
             "id" + ":" + getId()+ "," +
-            "name" + ":" + getName()+ "]"
-     + outputString;
+            "name" + ":" + getName()+ "]";
   }
 }

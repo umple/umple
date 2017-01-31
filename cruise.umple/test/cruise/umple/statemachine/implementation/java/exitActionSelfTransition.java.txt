@@ -132,9 +132,7 @@ public class A
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
-            "result" + ":" + getResult()+ "]"
-     + outputString;
+            "result" + ":" + getResult()+ "]";
   }
 }

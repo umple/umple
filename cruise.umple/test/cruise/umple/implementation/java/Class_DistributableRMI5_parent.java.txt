@@ -220,9 +220,7 @@ public class ClientImpl implements IClientImpl
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
-            "id" + ":" + getId()+ "]"
-     + outputString;
+            "id" + ":" + getId()+ "]";
   }
 }

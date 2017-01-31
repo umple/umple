@@ -143,9 +143,7 @@ public class LightFixture
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
-            "brightness" + ":" + getBrightness()+ "]"
-     + outputString;
+            "brightness" + ":" + getBrightness()+ "]";
   }
 }
