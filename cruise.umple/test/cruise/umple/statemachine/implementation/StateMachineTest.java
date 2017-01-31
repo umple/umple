@@ -714,4 +714,10 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("equivalentGuards.ump",languagePath + "/equivalentGuards."+ languagePath +".txt","A");
   }
   
+  @Test
+  public void removeInvalidFinalStateElements()
+  {
+	  assertUmpleTemplateFor("removeInvalidFinalStateElements.ump",languagePath + "/removeInvalidFinalStateElements."+ languagePath +".txt","X");
+  }
+  
 }
