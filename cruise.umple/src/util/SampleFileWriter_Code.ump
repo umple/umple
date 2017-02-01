@@ -196,18 +196,12 @@ class SampleFileWriter
         line++;
         
         // HACK: To deal with umple version issues
-        if (expectedLine != null && actualLine != null && expectedLine.indexOf("This code was generated using the UMPLE") == -1)
+        if (expectedLine != null && expectedLine.indexOf("This code was generated using the UMPLE") == -1)
         {
           Assert.assertEquals("Failed at:" + line,expectedLine,actualLine);  
         }
       } 
       while (expectedLine != null && actualLine != null);
-      
-      if ((expectedLine == null && actualLine != null) || expectedLine != null && actualLine == null) 
-      {
-    	  // Length mismatch between expected and actual
-    	  Assert.fail("Length mismatch between expected and actual at line " + line);
-      }
     }
     catch (Exception e)
     {
