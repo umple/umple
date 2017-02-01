@@ -27,6 +27,12 @@ class UmpleToJava {
         String methodImplementationModifier = aMethod.getIsAbstract() ? " abstract" : "";
         String methodName = aMethod.getName();
         String methodType = aMethod.getType();
+		// Fix issue 969
+		if (!methodName.equals(uClass.getName()))
+		{
+			// If this is not a constructor, this method should return "void"
+			methodType = methodType.equals("") ? "void" : methodType;
+		}
         String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName(), aMethod.getMethodParameters()));
         String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", aMethod.getName(), aMethod.getMethodParameters()));
         String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));        
