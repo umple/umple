@@ -952,24 +952,48 @@ class UmpleInternalParser
   /* Issue 925 - Final states cannot have do activities, exit actions, transitions, 
                  nor nested state machines
   */
-  private void analyzeFinalState(Token finalStateToken, State finalState)
+  private boolean analyzeFinalState(Token finalStateToken, State finalState)
   {
+  	   boolean foundInvalidElement = false;
+  	   
        for (Token subToken : finalStateToken.getSubTokens())
 	   {
 		   // Final states are only allowed to contain entry actions
-		   if (isEntryAction(subToken)) {
-			   finalState.addAction(analyzeAction(subToken, finalState));
-		   } else if(subToken.is("final")) {
-			   finalState.setFinalState(true);
+		   if (isEntryActionToken(subToken)) 
+		   {
+				finalState.addAction(analyzeAction(subToken, finalState));
+		   } else if(subToken.is("final")) 
+		   {
+				finalState.setFinalState(true);
+		   } else if(!foundInvalidElement && isInvalidFinalStateElement(subToken))
+		   {
+		   		foundInvalidElement = true;
 		   }
 	   }
+	   
+	   return foundInvalidElement;
   }
   
   // Helper function for issue 925
-  private boolean isEntryAction(Token stateToken)
+  private boolean isEntryActionToken(Token stateToken)
   {
 	   return stateToken.is("entryOrExitAction") && (stateToken.getValue("type").equals("entry"));
   }
+  
+  // Helper function for issue 925
+  private boolean isExitActionToken(Token stateToken)
+  {
+	   return stateToken.is("entryOrExitAction") && (stateToken.getValue("type").equals("exit"));
+  }
+  
+  // Helper function for issue 925
+  private boolean isInvalidFinalStateElement(Token stateToken)
+  {
+	   return stateToken.is("activity") || stateToken.is("transition") || stateToken.is("state") || isExitActionToken(stateToken);
+  }
+  
+  
+  
 
   private void analyzeState(Token stateToken, State fromState)
   {
@@ -980,7 +1004,14 @@ class UmpleInternalParser
     
     if (stateToken.getSubToken("final") != null)
     {
-    	analyzeFinalState(stateToken, fromState);
+    	boolean foundInvalidElement = analyzeFinalState(stateToken, fromState);
+    	if (foundInvalidElement)
+    	{
+    		getParseResult().addErrorMessage(new ErrorMessage(72, 
+    														  fromState.getPosition(), 
+    														  fromState.getName(), 
+    														  fromState.getStateMachine().getName()));
+    	}
     	return;
     }
     

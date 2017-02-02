@@ -2632,6 +2632,25 @@ public class UmpleParserStateMachineTest
 
     Assert.assertEquals(expectedStates, returnedStates);
   }
+  
+  @Test
+  public void refactorFinalState()
+  {
+	  assertHasWarning("486_finalState_hasDoActivity.ump", 0, 72, new Position("486_finalState_hasDoActivity.ump", 5, 17, 67));
+	  for (ErrorMessage er : parser.getParseResult().getErrorMessages())
+	      System.out.println(er.getFormattedMessage());
+	  assertHasWarning("486_finalState_hasExitAction.ump", 0, 72, new Position("486_finalState_hasExitAction.ump", 5, 17, 67));
+	  for (ErrorMessage er : parser.getParseResult().getErrorMessages())
+	      System.out.println(er.getFormattedMessage());
+	  assertHasWarning("486_finalState_hasTransition.ump", 0, 72, new Position("486_finalState_hasTransition.ump", 5, 17, 67));
+	  for (ErrorMessage er : parser.getParseResult().getErrorMessages())
+	      System.out.println(er.getFormattedMessage());
+	  assertHasWarning("486_finalState_hasNestedStateMachine.ump", 0, 72, new Position("486_finalState_hasNestedStateMachine.ump", 5, 17, 67));
+	  for (ErrorMessage er : parser.getParseResult().getErrorMessages())
+	      System.out.println(er.getFormattedMessage());
+	  assertNoWarnings("486_finalState_hasEntryAction.ump");
+	  assertNoWarnings("486_finalState_isEmpty.ump");
+  }
 
   public void walkGraphTwiceNested_StateMachineGraph_ClearNodes()
   {
