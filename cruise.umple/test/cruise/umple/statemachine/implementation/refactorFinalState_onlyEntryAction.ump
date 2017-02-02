@@ -1,0 +1,16 @@
+namespace example;
+
+class X {
+  status{
+    on{
+      turnoff -> off;
+      powerOff-> FINAL;
+    }    
+    off{
+      turnOn -> on;  
+    }
+    final FINAL{
+      entry/{entry();}
+    }
+  }
+}

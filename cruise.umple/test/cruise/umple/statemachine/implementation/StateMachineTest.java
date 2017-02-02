@@ -715,9 +715,27 @@ public class StateMachineTest extends StateMachineTemplateTest
   }
   
   @Test
-  public void removeInvalidFinalStateElements()
+  public void refactorFinalState_hasAllInvalidElements()
   {
-	  assertUmpleTemplateFor("removeInvalidFinalStateElements.ump",languagePath + "/removeInvalidFinalStateElements."+ languagePath +".txt","X");
+	  assertUmpleTemplateFor("refactorFinalState_hasAllInvalidElements.ump",languagePath + "/refactorFinalState_hasAllInvalidElements."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void refactorFinalState_onlyEntryAction()
+  {
+	  assertUmpleTemplateFor("refactorFinalState_onlyEntryAction.ump",languagePath + "/refactorFinalState_onlyEntryAction."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void refactorFinalState_empty()
+  {
+	  assertUmpleTemplateFor("refactorFinalState_empty.ump",languagePath + "/refactorFinalState_empty."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void refactorFinalState_invalidElementsInNestedFinalState()
+  {
+	  assertUmpleTemplateFor("refactorFinalState_invalidElementsInNestedFinalState.ump",languagePath + "/refactorFinalState_invalidElementsInNestedFinalState."+ languagePath +".txt","X");
   }
   
 }

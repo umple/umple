@@ -1,0 +1,236 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  public enum Status { on, off, FINAL }
+  public enum StatusFINAL { Null, nestedSm }
+  public enum StatusFINALNestedSm { Null, nestedFinal }
+  private Status status;
+  private StatusFINAL statusFINAL;
+  private StatusFINALNestedSm statusFINALNestedSm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X()
+  {
+    setStatusFINAL(StatusFINAL.Null);
+    setStatusFINALNestedSm(StatusFINALNestedSm.Null);
+    setStatus(Status.on);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getStatusFullName()
+  {
+    String answer = status.toString();
+    if (statusFINAL != StatusFINAL.Null) { answer += "." + statusFINAL.toString(); }
+    if (statusFINALNestedSm != StatusFINALNestedSm.Null) { answer += "." + statusFINALNestedSm.toString(); }
+    return answer;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public StatusFINAL getStatusFINAL()
+  {
+    return statusFINAL;
+  }
+
+  public StatusFINALNestedSm getStatusFINALNestedSm()
+  {
+    return statusFINALNestedSm;
+  }
+
+  public boolean turnoff()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case on:
+        setStatus(Status.off);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean powerOff()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case on:
+        setStatus(Status.FINAL);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean turnOn()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case off:
+        setStatus(Status.on);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean enterFINAL()
+  {
+    boolean wasEventProcessed = false;
+    
+    StatusFINAL aStatusFINAL = statusFINAL;
+    StatusFINALNestedSm aStatusFINALNestedSm = statusFINALNestedSm;
+    switch (aStatusFINAL)
+    {
+      case Null:
+        setStatusFINAL(StatusFINAL.nestedSm);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aStatusFINALNestedSm)
+    {
+      case Null:
+        setStatusFINALNestedSm(StatusFINALNestedSm.nestedFinal);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitFINAL()
+  {
+    boolean wasEventProcessed = false;
+    
+    StatusFINAL aStatusFINAL = statusFINAL;
+    StatusFINALNestedSm aStatusFINALNestedSm = statusFINALNestedSm;
+    switch (aStatusFINAL)
+    {
+      case nestedSm:
+        setStatusFINAL(StatusFINAL.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aStatusFINALNestedSm)
+    {
+      case nestedFinal:
+        setStatusFINALNestedSm(StatusFINALNestedSm.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitStatus()
+  {
+    switch(status)
+    {
+      case FINAL:
+        exitFINAL();
+        break;
+    }
+  }
+
+  private void setStatus(Status aStatus)
+  {
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case FINAL:
+        if (statusFINAL == StatusFINAL.Null) { setStatusFINAL(StatusFINAL.nestedSm); }
+        break;
+    }
+  }
+
+  private void exitStatusFINAL()
+  {
+    switch(statusFINAL)
+    {
+      case nestedSm:
+        exitFINAL();
+        break;
+    }
+  }
+
+  private void setStatusFINAL(StatusFINAL aStatusFINAL)
+  {
+    statusFINAL = aStatusFINAL;
+    if (status != Status.FINAL && aStatusFINAL != StatusFINAL.Null) { setStatus(Status.FINAL); }
+
+    // entry actions and do activities
+    switch(statusFINAL)
+    {
+      case nestedSm:
+        if (statusFINALNestedSm == StatusFINALNestedSm.Null) { setStatusFINALNestedSm(StatusFINALNestedSm.nestedFinal); }
+        break;
+    }
+  }
+
+  private void setStatusFINALNestedSm(StatusFINALNestedSm aStatusFINALNestedSm)
+  {
+    statusFINALNestedSm = aStatusFINALNestedSm;
+    if (statusFINAL != StatusFINAL.nestedSm && aStatusFINALNestedSm != StatusFINALNestedSm.Null) { setStatusFINAL(StatusFINAL.nestedSm); }
+
+    // entry actions and do activities
+    switch(statusFINALNestedSm)
+    {
+      case nestedFinal:
+        entry();
+        delete();
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+}
