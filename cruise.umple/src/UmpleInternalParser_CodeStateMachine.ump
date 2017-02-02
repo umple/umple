@@ -948,6 +948,28 @@ class UmpleInternalParser
     }
 
   }
+  
+  /* Issue 925 - Final states cannot have do activities, exit actions, transitions, 
+                 nor nested state machines
+  */
+  private void analyzeFinalState(Token finalStateToken, State finalState)
+  {
+       for (Token subToken : finalStateToken.getSubTokens())
+	   {
+		   // Final states are only allowed to contain entry actions
+		   if (isEntryAction(subToken)) {
+			   finalState.addAction(analyzeAction(subToken, finalState));
+		   } else if(subToken.is("final")) {
+			   finalState.setFinalState(true);
+		   }
+	   }
+  }
+  
+  // Helper function for issue 925
+  private boolean isEntryAction(Token stateToken)
+  {
+	   return stateToken.is("entryOrExitAction") && (stateToken.getValue("type").equals("entry"));
+  }
 
   private void analyzeState(Token stateToken, State fromState)
   {
@@ -955,6 +977,12 @@ class UmpleInternalParser
     boolean isConcurrentState = false;
     boolean isFinalState = false;
     String changeType = null;
+    
+    if (stateToken.getSubToken("final") != null)
+    {
+    	analyzeFinalState(stateToken, fromState);
+    	return;
+    }
     
     for(Token subToken : stateToken.getSubTokens())
     {
