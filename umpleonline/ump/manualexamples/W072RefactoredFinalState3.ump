@@ -1,0 +1,16 @@
+// The following shows how to avoid the warning
+
+class X {
+  status{
+    on{
+      turnoff -> off;
+      powerOff-> FINAL;
+    }    
+    off{
+      turnOn -> on;  
+    }
+    final FINAL{
+
+    }
+  }
+}
