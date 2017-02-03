@@ -2,7 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-class Student
+class Object
 {
 
   //------------------------
@@ -28,29 +28,44 @@ class Student
   public function delete()
   {}
 
-  public function foo(int $a)
+  public function example_obj(Object $g)
   {
-
-    System.out.println("Starting foo...");
-    if(a < 0) {      
-      System.out.println("Returning from foo, a: " + a);
-      return 4;
-    }    
-    System.out.println("Returning from foo, a: " + a);
-    return 3;
-
+    /*implementation*/
   }
 
-  public function foo(int $a, $b)
+  public function example_bool($b)
   {
+    
+  }
 
-    System.out.println("Starting foo...");
-    if(a > 0 && "".equals(b)) {      
-      System.out.println("Returning from foo, a: " + a);
-      return 3;
-    }    
-    System.out.println("Returning from foo, a: " + a);
-    return 1;
+  public function example_int($i)
+  {
+    
+  }
+
+  public function example_float($f)
+  {
+    
+  }
+
+  public function example_double($d)
+  {
+    
+  }
+
+  public function example_string($s)
+  {
+    
+  }
+
+  public function example_obj_array($gs)
+  {
+    
+  }
+
+  public function example_primitive_array($is)
+  {
+    
   }
 
 }

@@ -46,9 +46,9 @@ class Client
   public function delete()
   {}
 
-  public function someMethod(Integer arg)
+  public function someMethod($arg)
   {
-    $result = someMethodOriginal(Integer arg);
+    $result = someMethodOriginal($arg);
     if ($this->arg<=5)
     {
         throw new RuntimeException("Please provide a valid arg");
@@ -56,7 +56,7 @@ class Client
     return $result;
   }
 
-  public function someMethodOriginal(Integer arg)
+  public function someMethodOriginal($arg)
   {
     // rest of stuff that we don't interpret
    return 0;
