@@ -76,6 +76,7 @@
 69: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Auto-Transition to '{0}' on line '{1}' conflicts with a previous exisiting transition. This transition is being disconsidered;
 70: 4, "http://cruise.eecs.uottawa.ca/umple/W054DuplicateEvents.html", Guarded Transition {0} will be ignored due to a duplicate event with an equivalent guard;
 71: 4, "http://cruise.eecs.uottawa.ca/umple/W071DuplicateMethodDifferentType.html", A {6} implementation of Method '{0}' in class '{1}' is already defined at line {2} of '{3}' file, which returns a different type. New definition at line {4} of '{5}' file is being disconsidered;
+72: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Removed do activities, exit actions, transitions, and/or nested state machines from final State '{0}' of StateMachine '{1}';
 
 80: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", State '{0}' was not found in state machine '{1}'. Processed as if the state exists ;
 

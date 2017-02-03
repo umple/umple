@@ -1,0 +1,24 @@
+W072 Refactored Final State
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple sematic warning when do activities, exit actions, outgoing transitions, and/or nested state machines are removed by the compiler from final states.</h2>
+
+<p>
+In Umple, final states are allowed to be empty, or they can contain entry actions.
+</p>
+
+
+@@example
+@@source manualexamples/W072RefactoredFinalState1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W072RefactoredFinalState2.ump
+@@endexample
+
+@@example
+@@source manualexamples/W072RefactoredFinalState3.ump
+@@endexample

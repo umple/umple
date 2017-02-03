@@ -948,6 +948,52 @@ class UmpleInternalParser
     }
 
   }
+  
+  /* Issue 925 - Final states cannot have do activities, exit actions, transitions, 
+                 nor nested state machines
+  */
+  private boolean analyzeFinalState(Token finalStateToken, State finalState)
+  {
+  	   boolean foundInvalidElement = false;
+  	   
+       for (Token subToken : finalStateToken.getSubTokens())
+	   {
+		   // Final states are only allowed to contain entry actions
+		   if (isEntryActionToken(subToken)) 
+		   {
+				finalState.addAction(analyzeAction(subToken, finalState));
+		   } else if(subToken.is("final")) 
+		   {
+				finalState.setFinalState(true);
+		   } else if(!foundInvalidElement && isInvalidFinalStateElement(subToken))
+		   {
+		   		foundInvalidElement = true;
+		   }
+	   }
+	   
+	   return foundInvalidElement;
+  }
+  
+  // Helper function for issue 925
+  private boolean isEntryActionToken(Token stateToken)
+  {
+	   return stateToken.is("entryOrExitAction") && (stateToken.getValue("type").equals("entry"));
+  }
+  
+  // Helper function for issue 925
+  private boolean isExitActionToken(Token stateToken)
+  {
+	   return stateToken.is("entryOrExitAction") && (stateToken.getValue("type").equals("exit"));
+  }
+  
+  // Helper function for issue 925
+  private boolean isInvalidFinalStateElement(Token stateToken)
+  {
+	   return stateToken.is("activity") || stateToken.is("transition") || stateToken.is("state") || isExitActionToken(stateToken);
+  }
+  
+  
+  
 
   private void analyzeState(Token stateToken, State fromState)
   {
@@ -955,6 +1001,19 @@ class UmpleInternalParser
     boolean isConcurrentState = false;
     boolean isFinalState = false;
     String changeType = null;
+    
+    if (stateToken.getSubToken("final") != null)
+    {
+    	boolean foundInvalidElement = analyzeFinalState(stateToken, fromState);
+    	if (foundInvalidElement)
+    	{
+    		getParseResult().addErrorMessage(new ErrorMessage(72,
+    		                                                  fromState.getPosition(),
+    		                                                  fromState.getName(),
+    		                                                  fromState.getStateMachine().getName()));
+    	}
+    	return;
+    }
     
     for(Token subToken : stateToken.getSubTokens())
     {
