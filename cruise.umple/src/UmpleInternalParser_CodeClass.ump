@@ -1979,6 +1979,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         {
           AssociationEnd assocEnd = getDifferingEnd(assoc, uClass.getName());
           
+          ArrayList<String> existingNames = new ArrayList<String>();
+          
           // Check only associations that have a user-defined role name, and is not a specialization.
           if (assocEnd != null && !assocEnd.getIsDefaultRoleName() && !assoc.getIsSpecialization())
           {
@@ -1986,13 +1988,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             for (Association superAssoc : superClass.getAssociations())
             {
               AssociationEnd superAssocEnd = getDifferingEnd(superAssoc, superClass.getName());
-              if (superAssocEnd != null && !superAssocEnd.getIsDefaultRoleName() &&
-              		superAssocEnd.getRoleName().equals(roleName) &&
-                	!superAssocEnd.getClassName().equals(assocEnd.getClassName()))
+              String superAssocRoleName = superAssocEnd.getRoleName();
+              
+              if (superAssocEnd != null && superAssocRoleName.equals(roleName) &&
+              		!existingNames.contains(superAssocRoleName) && !superAssocEnd.getClassName().equals(assocEnd.getClassName()))
               {
                 getParseResult().addErrorMessage(new ErrorMessage(180,assoc.getTokenPosition(),
                 	uClass.getName(),superClass.getName(),roleName));
               }
+              existingNames.add(superAssocRoleName);
             }
           }
         }
