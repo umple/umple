@@ -1,0 +1,12 @@
+E1014 Constructor Conflict
+Errors and Warnings
+noreferences
+
+@@description
+<h2>Umple semantic warning reported when an explicit constructor has been declared by the user and removed by Umple </h2>
+<p>Umple is configured to automatically generate the constructor of a class based on the class information provided in the Umple model by the user. Providing an explicit constructor may cause conflicts with the automatically generated constructor, and goes against the Umple philosophy of model-driven development. Consequently, any such explicitly specified constructors are automatically removed by Umple. 
+
+If the constructor Umple generates is lacking required functionality, consider changing the Umple model or using <a href="BeforeandAfterStatements.html">before or after statements</a>  in conjunction with the automatically generated constructor. </p> 
+@@example
+@@source manualexamples/E1014ConstructorConflict1.ump
+@@endexample

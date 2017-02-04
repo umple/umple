@@ -20,11 +20,6 @@ import cruise.umple.parser.Position;
 import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.*;
 
-import java.io.*;
-
-import cruise.umple.parser.Token;
-import cruise.umple.parser.Position;
-
 public class UmpleParserTest
 {
 
@@ -2472,7 +2467,7 @@ public class UmpleParserTest
   public void attributeAndAssociationNameClashingSeparate(){
 
   	  assertFailedParse("024_separate_back_unidirectional.ump",36,0);
-  	assertFailedParse("024_separate_back_unidirectional.ump",23,1);
+  	  assertFailedParse("024_separate_back_unidirectional.ump",23,1);
 	  assertFailedParse("024_separate_bidirectional.ump",23);
 	  assertFailedParse("024_separate_unidirectional.ump",36,0);
 	  assertFailedParse("024_separate_unidirectional.ump",23,1);
@@ -2571,6 +2566,17 @@ public class UmpleParserTest
     assertHasWarningsParse("380_noLineEndingTrait.ump",1007);
     assertHasWarningsParse("380_multipleNoLineEndingsClass.ump",1007);
     assertHasWarningsParse("380_multipleNoLineEndingsTrait.ump",1007);
+  }
+  
+  /*
+   * Test for issue 958
+   * Author: Adam Bolding-Jones
+   */
+  @Test
+  public void explicitConstructorDeclaration() 
+  {
+	  assertHasWarningsParse("003_explicitConstructor.ump",1014);
+	  assertHasWarningsParse("003_explicitConstructors.ump",1014);
   }
 
   public boolean parse(String filename)

@@ -12,7 +12,8 @@ The <b> Umplificator </b> is a reverse engineering tool for the incremental auto
 <li><b>Eclipse</b>: To use the Umplificator with Eclipse, you need to load the the Umplificator plugin (cruise.umplificator.eclipse.X.X.X.jar). This can be obtained from our <a href="http:/dl.umple.org">downloads site</a>. </li>
 <br />
 
-<li><b>Command-line based compiler</b>: You can use the Umplificator from the command line.  Simply download the latest officially released version of the <a href=""http:/dl.umple.org"> umplificator jar</a>, and run it as "java -jar umplificator.jar *.java". </li>
+<li><b>Command-line based compiler</b>: You can use the Umplificator from the command line.  Simply download the latest officially released version of the <a href="http:/dl.umple.org"> umplificator jar</a>, and run it as "java -jar umplificator.jar *.java". </li>
 Note that it is also possible to umplify files with extension ".ump". 
 </ul>
+
 
