@@ -356,6 +356,7 @@ class UmpleInternalParser
       //required for parsing specializedAssociations
       createSpecializedLinks();
       checkDuplicateAssociationNames();
+      checkDuplicateAssociationNamesClassHierarchy();
       checkExtendsForCycles();
       checkSortedAssociations();
       checkClassInterfaceAssocations();
@@ -1954,6 +1955,86 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       
       visited.add(A);
     }
+  }
+  
+  // Issue #961. Ensure that all superclasses and subclasses do not have associations to two different
+  // classes that use the same role name, and is not a specialization.
+  private void checkDuplicateAssociationNamesClassHierarchy()
+  {
+  	for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      List<String> visitedSupers = new ArrayList<String>();
+      UmpleClass superClass = uClass.getExtendsClass();
+
+      while (superClass != null)
+      {
+      	// Prevent cycles.
+        if (visitedSupers.contains(superClass.getName()))
+        {
+          break;
+        }
+        visitedSupers.add(superClass.getName());
+        
+        ArrayList<String> duplicateNames = new ArrayList<String>();
+
+        for(Association assoc : uClass.getAssociations())
+        {
+          AssociationEnd assocEnd = getDifferingEnd(assoc, uClass.getName());
+          
+          ArrayList<String> existingNames = new ArrayList<String>();
+          
+          String roleName = assocEnd.getRoleName();
+          
+          // Check only associations that have a user-defined role name, and is not a specialization.
+          if (!assocEnd.getIsDefaultRoleName() && !assoc.getIsSpecialization() && !duplicateNames.contains(roleName))
+          {
+            for (Association superAssoc : superClass.getAssociations())
+            {
+              AssociationEnd superAssocEnd = getDifferingEnd(superAssoc, superClass.getName());
+              String superAssocRoleName = superAssocEnd.getRoleName();
+              
+              if (superAssocEnd != null && superAssocRoleName.equals(roleName) &&
+              		!existingNames.contains(superAssocRoleName) && !superAssocEnd.getClassName().equals(assocEnd.getClassName()))
+              {
+                getParseResult().addErrorMessage(new ErrorMessage(180,assoc.getTokenPosition(),
+                	uClass.getName(),superClass.getName(),roleName));
+                duplicateNames.add(roleName);
+              }
+              existingNames.add(superAssocRoleName);
+            }
+          }
+        }
+        superClass = superClass.getExtendsClass();
+      }
+    }
+  }
+  
+  // Get the end of an association opposite to the given class. If the association is reflexive,
+  // return the end with a user defined role name.
+  private AssociationEnd getDifferingEnd(Association assoc, String className)
+  {
+  	AssociationEnd firstEnd = assoc.getEnd(0);
+    AssociationEnd secondEnd = assoc.getEnd(1);
+     
+  	Boolean checkFirstEnd = !firstEnd.getClassName().equals(className);
+    Boolean checkSecondEnd = !secondEnd.getClassName().equals(className);
+    
+    if (!checkFirstEnd && !checkSecondEnd)
+    {
+    	// Association is reflexive. Both ends are the same, but we want the one with a user defined role name.
+    	if (!firstEnd.getIsDefaultRoleName())
+    	{
+    		return firstEnd;
+    	}
+    	return secondEnd;
+    }
+    
+    if (checkFirstEnd)
+    {
+    	return firstEnd;
+    }
+    return secondEnd;
+  	
   }
 
   private void checkDuplicateAssociationNames()

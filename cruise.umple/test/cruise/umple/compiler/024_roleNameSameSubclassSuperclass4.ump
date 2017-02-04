@@ -1,0 +1,11 @@
+class A{
+  0..1 -> * B;
+}
+class B{
+   isA A;
+}
+class D{
+  isA B;
+  0..1 -> * D bs;
+}
+class C{}

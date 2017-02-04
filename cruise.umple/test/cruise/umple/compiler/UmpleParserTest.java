@@ -2280,6 +2280,16 @@ public class UmpleParserTest
 
     assertParse("024_multipleUnnamedOneWayAssociationsToSameClass.ump");
   }
+  
+  @Test
+  public void duplicateAssociationNamesClassHierarchy()
+  {
+	  assertFailedParse("024_roleNameSameSubclassSuperclass.ump", 180);
+	  assertFailedParse("024_roleNameSameSubclassSuperclass1.ump", 180);
+	  assertFailedParse("024_roleNameSameSubclassSuperclass2.ump", 180);
+	  assertFailedParse("024_roleNameSameSubclassSuperclass3.ump", 180);
+	  assertFailedParse("024_roleNameSameSubclassSuperclass4.ump", 180);
+  }
 
   @Test
   public void duplicateAttributesNames(){
