@@ -1974,6 +1974,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           break;
         }
         visitedSupers.add(superClass.getName());
+        
+        ArrayList<String> duplicateNames = new ArrayList<String>();
 
         for(Association assoc : uClass.getAssociations())
         {
@@ -1981,10 +1983,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           
           ArrayList<String> existingNames = new ArrayList<String>();
           
+          String roleName = assocEnd.getRoleName();
+          
           // Check only associations that have a user-defined role name, and is not a specialization.
-          if (assocEnd != null && !assocEnd.getIsDefaultRoleName() && !assoc.getIsSpecialization())
+          if (!assocEnd.getIsDefaultRoleName() && !assoc.getIsSpecialization() && !duplicateNames.contains(roleName))
           {
-          	String roleName = assocEnd.getRoleName();
             for (Association superAssoc : superClass.getAssociations())
             {
               AssociationEnd superAssocEnd = getDifferingEnd(superAssoc, superClass.getName());
@@ -1995,6 +1998,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
               {
                 getParseResult().addErrorMessage(new ErrorMessage(180,assoc.getTokenPosition(),
                 	uClass.getName(),superClass.getName(),roleName));
+                duplicateNames.add(roleName);
               }
               existingNames.add(superAssocRoleName);
             }
