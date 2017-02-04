@@ -2,6 +2,6 @@ namespace example;
 
 class Mentor 
 {
-  public static main(String[] args)
+  public main(String[] args)
   {}
 }

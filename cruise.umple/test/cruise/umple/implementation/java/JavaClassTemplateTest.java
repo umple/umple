@@ -128,10 +128,25 @@ public class JavaClassTemplateTest extends ClassTemplateTest
     assertUmpleTemplateFor("java/ClassTemplateTest_Java.ump","java/ClassTemplateTest_Java.java.txt","Mentor");
   }
   
+  // Tests fix for issue 969 and 986
   @Test
   public void Generated()
   {
+	/* Test that "void" is added to a non-constructor method with no specified return type, 
+	 * and that the correct threading code is generated when "public static void main(String[] args)" is specified
+	 */
     assertUmpleTemplateFor("java/ClassTemplateTest_Generated.ump","java/ClassTemplateTest_Generated.java.txt","Mentor");
+    /*
+     *  Check that a "main" function (in the Java sense) is only detected (and accompanying threading code generated)
+     *  when a function matches the "public static void main(String[] args)" format exactly.
+     */
+    assertUmpleTemplateFor("java/ClassTemplateTest_Generated2.ump","java/ClassTemplateTest_Generated2.java.txt","Mentor");
+    assertUmpleTemplateFor("java/ClassTemplateTest_Generated3.ump","java/ClassTemplateTest_Generated3.java.txt","Mentor");
+    
+    // Check that void is not added twice if the user explicitly includes it in the .ump file
+    assertUmpleTemplateFor("java/ClassTemplateTest_Generated3.ump","java/ClassTemplateTest_Generated3.java.txt","Mentor");
+
+    
   }
   
   @Test

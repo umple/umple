@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package example;
 
@@ -27,6 +27,10 @@ public class Mentor
    public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
+    
+  }
+
+  public void foo(){
     
   }
 
@@ -81,7 +85,8 @@ public class Mentor
       e.setStackTrace(result.toArray(new StackTraceElement[0]));
     }
   //The following methods Map Java lines back to their original Umple file / line    
-    public UmpleSourceData Mentor_main(){ return new UmpleSourceData().setFileNames("ClassTemplateTest_Generated.ump").setUmpleLines(5).setJavaLines(28).setLengths(3);}
+    public UmpleSourceData Mentor_foo(){ return new UmpleSourceData().setFileNames("ClassTemplateTest_Generated4.ump").setUmpleLines(9).setJavaLines(35).setLengths(3);}
+    public UmpleSourceData Mentor_main(){ return new UmpleSourceData().setFileNames("ClassTemplateTest_Generated4.ump").setUmpleLines(5).setJavaLines(28).setLengths(3);}
 
   }
   public static class UmpleSourceData

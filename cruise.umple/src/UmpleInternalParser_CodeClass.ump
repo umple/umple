@@ -2719,10 +2719,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if (methodToken.is("methodName"))
       {
         aMethod.setName(methodToken.getValue());
-        if (methodToken.getValue().equals("main"))
-        {
-          uElement.setHasMainMethod(true);
-        }
       }
       if (methodToken.is("parameterList"))
       {

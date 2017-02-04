@@ -39,6 +39,8 @@ import cruise.umple.compiler.java.JavaClassGenerator;
 import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.test.harness.compiler.JavaInternalCompiler;
 import cruise.umple.test.harness.compiler.interfaces.ICompiler;
+import cruise.umple.test.harness.resource.TemplateGeneratedOutput;
+
 import cruise.umple.util.SampleFileWriter;
 
 import org.junit.Assert;
