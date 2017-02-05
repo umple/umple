@@ -91,19 +91,26 @@ public class StateMachineTest extends StateMachineTemplateTest
   @Test
   public void guardNameBothAttributeAndMethod()
   {
-    assertUmpleTemplateFor("guardNameBothAttributeAndMethod.ump",languagePath + "/guardNameBothAttributeAndMethod."+ languagePath +".txt","A");
+	// Reset autotransition counter so isn't carried over to the next test (it's passed from the java test to the php test)
+	Event.setNextAutoTransitionId(1); 
+	assertUmpleTemplateFor("guardNameBothAttributeAndMethod.ump",languagePath + "/guardNameBothAttributeAndMethod."+ languagePath +".txt","A");
+	Event.setNextAutoTransitionId(1); 
   }
   
   @Test
   public void guardNameBothAttributeAndMethod2()
   {
-    assertUmpleTemplateFor("guardNameBothAttributeAndMethod2.ump",languagePath + "/guardNameBothAttributeAndMethod2."+ languagePath +".txt","A");
+	Event.setNextAutoTransitionId(1); 
+	assertUmpleTemplateFor("guardNameBothAttributeAndMethod2.ump",languagePath + "/guardNameBothAttributeAndMethod2."+ languagePath +".txt","A");
+    Event.setNextAutoTransitionId(1);
   }
   
   @Test
   public void guardNameBothAttributeAndMethod3()
   {
-    assertUmpleTemplateFor("guardNameBothAttributeAndMethod3.ump",languagePath + "/guardNameBothAttributeAndMethod3."+ languagePath +".txt","A");
+	Event.setNextAutoTransitionId(1); 
+	assertUmpleTemplateFor("guardNameBothAttributeAndMethod3.ump",languagePath + "/guardNameBothAttributeAndMethod3."+ languagePath +".txt","A");
+    Event.setNextAutoTransitionId(1);
   }
   
   // SPACING

@@ -1,0 +1,107 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.25.0-89f4041 modeling language!*/
+
+class stateMachineWithStringComparisonGuard
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //stateMachineWithStringComparisonGuard Attributes
+  private $cmdString;
+
+  //stateMachineWithStringComparisonGuard State Machines
+  private static $CommandControlIDLE = 1;
+  private static $CommandControlCHECK_AVAILABILITY = 2;
+  private static $CommandControlCOMMAND_VALIDITY = 3;
+  private static $CommandControlEXECUTION = 4;
+  private $CommandControl;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->cmdString = "";
+    $this->setCommandControl(self::$CommandControlIDLE);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setCmdString($aCmdString)
+  {
+    $wasSet = false;
+    $this->cmdString = $aCmdString;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getCmdString()
+  {
+    return $this->cmdString;
+  }
+
+  public function getCommandControlFullName()
+  {
+    $answer = $this->getCommandControl();
+    return $answer;
+  }
+
+  public function getCommandControl()
+  {
+    if ($this->CommandControl == self::$CommandControlIDLE) { return "CommandControlIDLE"; }
+    elseif ($this->CommandControl == self::$CommandControlCHECK_AVAILABILITY) { return "CommandControlCHECK_AVAILABILITY"; }
+    elseif ($this->CommandControl == self::$CommandControlCOMMAND_VALIDITY) { return "CommandControlCOMMAND_VALIDITY"; }
+    elseif ($this->CommandControl == self::$CommandControlEXECUTION) { return "CommandControlEXECUTION"; }
+    return null;
+  }
+
+  public function execute()
+  {
+    $wasEventProcessed = false;
+    
+    $aCommandControl = $this->CommandControl;
+    if ($aCommandControl == self::$CommandControlIDLE)
+    {
+      $this->setCommandControl(self::$CommandControlCHECK_AVAILABILITY);
+      $wasEventProcessed = true;
+    }
+    elseif ($aCommandControl == self::$CommandControlCHECK_AVAILABILITY)
+    {
+      if (!(""==$this->getCmdString()))
+      {
+        $this->setCommandControl(self::$CommandControlCOMMAND_VALIDITY);
+        $wasEventProcessed = true;
+      }
+    }
+    elseif ($aCommandControl == self::$CommandControlCOMMAND_VALIDITY)
+    {
+      if ($this->isCommandValid($this->getCmdString()))
+      {
+        $this->setCommandControl(self::$CommandControlEXECUTION);
+        $wasEventProcessed = true;
+      }
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setCommandControl($aCommandControl)
+  {
+    $this->CommandControl = $aCommandControl;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>
