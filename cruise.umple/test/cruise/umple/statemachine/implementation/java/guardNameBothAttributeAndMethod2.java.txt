@@ -1,8 +1,9 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 
+// line 1 "guardNameBothAttributeAndMethod2.ump"
 public class A
 {
 
@@ -60,7 +61,7 @@ public class A
     return status;
   }
 
-  private boolean __autotransition3__()
+  private boolean __autotransition1__()
   {
     boolean wasEventProcessed = false;
     
@@ -90,7 +91,7 @@ public class A
     switch(status)
     {
       case s1:
-        __autotransition3__();
+        __autotransition1__();
         break;
     }
   }
@@ -98,6 +99,7 @@ public class A
   public void delete()
   {}
 
+  // line 11 "guardNameBothAttributeAndMethod2.ump"
   public Boolean repeatCheck(){
     return true;
   }

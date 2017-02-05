@@ -1,0 +1,118 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class A
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //A State Machines
+  private static $StatusS1 = 1;
+  private static $StatusS2 = 2;
+  private $status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setStatus(self::$StatusS1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusS1) { return "StatusS1"; }
+    elseif ($this->status == self::$StatusS2) { return "StatusS2"; }
+    return null;
+  }
+
+  public function test()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusS1)
+    {
+      if ($this->y>$this->z)
+      {
+        $this->setStatus(self::$StatusS2);
+        $wasEventProcessed = true;
+      }
+      if (($this->x+$this->y)>$this->z)
+      {
+        $this->setStatus(self::$StatusS2);
+        $wasEventProcessed = true;
+      }
+      if ((5*2)<11)
+      {
+        $this->setStatus(self::$StatusS2);
+        $wasEventProcessed = true;
+      }
+      if (($this->x+$this->y)==$this->z)
+      {
+        $this->setStatus(self::$StatusS2);
+        $wasEventProcessed = true;
+      }
+      if ($this->x==$this->y)
+      {
+        $this->setStatus(self::$StatusS2);
+        $wasEventProcessed = true;
+      }
+      if ("test"==$this->x)
+      {
+        $this->setStatus(self::$StatusS2);
+        $wasEventProcessed = true;
+      }
+      if ($this->x=="test"."hello")
+      {
+        $this->setStatus(self::$StatusS2);
+        $wasEventProcessed = true;
+      }
+      if (((5*2)<=11))
+      {
+        $this->setStatus(self::$StatusS2);
+        $wasEventProcessed = true;
+      }
+      if ((($this->a>$this->b)||($this->variable&&(($this->b<$this->a)||($this->c>=$this->b)))))
+      {
+        $this->setStatus(self::$StatusS2);
+        $wasEventProcessed = true;
+      }
+      if (!((($this->a-$this->c)>($this->b*2))==(($this->a-$this->c)>($this->b^2))))
+      {
+        $this->setStatus(self::$StatusS2);
+        $wasEventProcessed = true;
+      }
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->status = $aStatus;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

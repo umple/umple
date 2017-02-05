@@ -1,0 +1,220 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Animal
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Animal Attributes
+  private $isAlive;
+
+  //Animal State Machines
+  private static $StateAlive = 1;
+  private static $StateDead = 2;
+  private static $StateAliveNull = 3;
+  private static $StateAliveNormal = 4;
+  private static $StateAliveZombie = 5;
+  private $state;
+  private $stateAlive;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aIsAlive)
+  {
+    $this->isAlive = $aIsAlive;
+    $this->setStateAlive(self::$StateAliveNull);
+    $this->setState(self::$StateAlive);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setIsAlive($aIsAlive)
+  {
+    $wasSet = false;
+    $this->isAlive = $aIsAlive;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getIsAlive()
+  {
+    return $this->isAlive;
+  }
+
+  public function isIsAlive()
+  {
+    return $this->isAlive;
+  }
+
+  public function getStateFullName()
+  {
+    $answer = $this->getState();
+    if ($this->stateAlive != self::$StateAliveNull) { $answer .= "." . $this->getStateAlive(); }
+    return $answer;
+  }
+
+  public function getState()
+  {
+    if ($this->state == self::$StateAlive) { return "StateAlive"; }
+    elseif ($this->state == self::$StateDead) { return "StateDead"; }
+    return null;
+  }
+
+  public function getStateAlive()
+  {
+    if ($this->stateAlive == self::$StateAliveNull) { return "StateAliveNull"; }
+    elseif ($this->stateAlive == self::$StateAliveNormal) { return "StateAliveNormal"; }
+    elseif ($this->stateAlive == self::$StateAliveZombie) { return "StateAliveZombie"; }
+    return null;
+  }
+
+  public function kill()
+  {
+    $wasEventProcessed = false;
+    
+    $aState = $this->state;
+    if ($aState == self::$StateAlive)
+    {
+      $this->exitState();
+      $this->setState(self::$StateDead);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function enterAlive()
+  {
+    $wasEventProcessed = false;
+    
+    $aStateAlive = $this->stateAlive;
+    if ($aStateAlive == self::$StateAliveNull)
+    {
+      $this->setStateAlive(self::$StateAliveNormal);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNormal);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNormal);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNormal);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNormal);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNormal);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNormal);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitAlive()
+  {
+    $wasEventProcessed = false;
+    
+    $aStateAlive = $this->stateAlive;
+    if ($aStateAlive == self::$StateAliveNormal)
+    {
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+    }
+    elseif ($aStateAlive == self::$StateAliveZombie)
+    {
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function zombify()
+  {
+    $wasEventProcessed = false;
+    
+    $aStateAlive = $this->stateAlive;
+    if ($aStateAlive == self::$StateAliveNormal)
+    {
+      $this->setStateAlive(self::$StateAliveZombie);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function haveBaby()
+  {
+    $wasEventProcessed = false;
+    
+    $aStateAlive = $this->stateAlive;
+    if ($aStateAlive == self::$StateAliveZombie)
+    {
+      $this->setStateAlive(self::$StateAliveNormal);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitState()
+  {
+    if ($this->state == self::$StateAlive)
+    {
+      $this->exitAlive();
+    }
+  }
+
+  private function setState($aState)
+  {
+    $this->state = $aState;
+
+    // entry actions and do activities
+    if ($this->state == self::$StateAlive)
+    {
+      if ($this->stateAlive == self::$StateAliveNull) { $this->setStateAlive(self::$StateAliveNormal); }
+    }
+  }
+
+  private function setStateAlive($aStateAlive)
+  {
+    $this->stateAlive = $aStateAlive;
+    if ($this->state != self::$StateAlive && $aStateAlive != self::$StateAliveNull) { $this->setState(self::$StateAlive); }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>
