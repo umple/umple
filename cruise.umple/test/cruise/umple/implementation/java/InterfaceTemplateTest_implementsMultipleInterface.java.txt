@@ -1,0 +1,38 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+// line 45 "../InterfaceTemplateTest.ump"
+public class A implements ISecondChild
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public A()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+  @Override
+  public String getCode(String [] aParam, Integer anotherParam){
+          return "";
+  }
+
+  @Override
+  public String isValid(){
+          return "";
+  }
+
+}

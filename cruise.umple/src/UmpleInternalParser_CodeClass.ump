@@ -1596,20 +1596,27 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private void addImplementedMethodsFromInterface(UmpleInterface parentInterface, UmpleClass uClass)
   {
     //GET AND SET METHODS CHECK?
-    if (parentInterface.hasMethods())
-    {
-      for (Method aMethod : parentInterface.getMethods())
-      {
-        boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod, true);
-        if (!(uClass.hasImplementedMethodIncludingWithinParentClasses(aMethod))
-        && !(uClass.hasMethodInTraits(aMethod)) && !(uClass.isIsAbstract()) && shouldAddMethod)
-        {
-          aMethod.setIsImplemented("".equals(aMethod.getMethodBody().getExtraCode("")));
-          aMethod.setSource(Method.Source.fAuto);
-          uClass.addMethod(aMethod);
-        }
-      }
-    }
+	// Fix issue 992
+    List<UmpleInterface> parentInterfaces = new Vector<UmpleInterface>();
+	  parentInterfaces.addAll(parentInterface.getExtendsInterface());
+	  parentInterfaces.add(parentInterface);
+	  for (UmpleInterface pi : parentInterfaces)
+	  {
+		  if (pi.hasMethods())
+		    {
+		      for (Method aMethod : pi.getMethods())
+		      {
+		        boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod, true);
+		        if (!(uClass.hasImplementedMethodIncludingWithinParentClasses(aMethod))
+		        && !(uClass.hasMethodInTraits(aMethod)) && !(uClass.isIsAbstract()) && shouldAddMethod)
+		        {
+		          aMethod.setIsImplemented("".equals(aMethod.getMethodBody().getExtraCode("")));
+		          aMethod.setSource(Method.Source.fAuto);
+		          uClass.addMethod(aMethod);
+		        }
+		      }
+		    }
+	  }
   }
 
   /*
