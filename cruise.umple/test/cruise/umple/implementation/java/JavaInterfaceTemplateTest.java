@@ -37,7 +37,7 @@ public class JavaInterfaceTemplateTest extends InterfaceTemplateTest
 	@Test
 	public void implementsMultipleInterface()
 	{
-		assertUmpleTemplateFor("InterfaceTemplateTest.ump",languagePath + "/InterfaceTemplateTest_implementsMultipleInterface."+ languagePath +".txt","A");
+		assertUmpleTemplateFor("InterfaceTemplateTest2.ump",languagePath + "/InterfaceTemplateTest_implementsMultipleInterface."+ languagePath +".txt","A");
 	}
 	
 	@Test
