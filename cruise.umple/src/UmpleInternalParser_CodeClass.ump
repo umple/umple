@@ -1602,20 +1602,20 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 	  parentInterfaces.add(parentInterface);
 	  for (UmpleInterface pi : parentInterfaces)
 	  {
-		  if (pi.hasMethods())
-		    {
-		      for (Method aMethod : pi.getMethods())
-		      {
-		        boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod, true);
-		        if (!(uClass.hasImplementedMethodIncludingWithinParentClasses(aMethod))
-		        && !(uClass.hasMethodInTraits(aMethod)) && !(uClass.isIsAbstract()) && shouldAddMethod)
-		        {
-		          aMethod.setIsImplemented("".equals(aMethod.getMethodBody().getExtraCode("")));
-		          aMethod.setSource(Method.Source.fAuto);
-		          uClass.addMethod(aMethod);
-		        }
-		      }
-		    }
+		if (pi.hasMethods())
+		{
+		  for (Method aMethod : pi.getMethods())
+		  {
+			boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod, true);
+			if (!(uClass.hasImplementedMethodIncludingWithinParentClasses(aMethod))
+			&& !(uClass.hasMethodInTraits(aMethod)) && !(uClass.isIsAbstract()) && shouldAddMethod)
+			{
+			  aMethod.setIsImplemented("".equals(aMethod.getMethodBody().getExtraCode("")));
+			  aMethod.setSource(Method.Source.fAuto);
+			  uClass.addMethod(aMethod);
+			}
+		  }
+		}
 	  }
   }
 
