@@ -45,3 +45,7 @@ interface ISecondChild{
 class A{
 	isA ISecondChild;
 }
+
+class B{
+	isA A;
+}
