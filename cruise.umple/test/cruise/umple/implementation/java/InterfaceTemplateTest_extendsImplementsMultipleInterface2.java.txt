@@ -1,0 +1,43 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+// line 12 "test.ump"
+public class A implements I3
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public A()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+  @Override
+  public void test3(){
+          return ;
+  }
+
+  @Override
+  public void test2(){
+          return ;
+  }
+
+  @Override
+  public void test(){
+          return ;
+  }
+
+}
