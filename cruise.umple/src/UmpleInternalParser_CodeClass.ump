@@ -1569,9 +1569,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
     }
     for(UmpleClass uClass: getModel().getUmpleClasses()) {
-      for (UmpleInterface uInterface : getAllParentInterface(uClass)) {
-        addImplementedMethodsFromInterface(uInterface, uClass);
-      }
+        addImplementedMethodsFromInterface(getAllParentInterface(uClass), uClass);
     }
   }  
 
@@ -1595,14 +1593,23 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     return temp;
   }
 
-  private void addImplementedMethodsFromInterface(UmpleInterface parentInterface, UmpleClass uClass)
+  private void addImplementedMethodsFromInterface(List<UmpleInterface> parentInterfaces, UmpleClass uClass)
   {
     //GET AND SET METHODS CHECK?
     // Fix issue 992
-    List<UmpleInterface> parentInterfaces = new Vector<UmpleInterface>();
-    parentInterfaces.addAll(parentInterface.getExtendsInterface());
-    parentInterfaces.add(parentInterface);
-    for (UmpleInterface pi : parentInterfaces)
+    List<UmpleInterface> ancestorInterfaces = new Vector<UmpleInterface>();
+    Stack<UmpleInterface> toProcess = new Stack<UmpleInterface>();
+    toProcess.addAll(parentInterfaces);
+    ancestorInterfaces.addAll(parentInterfaces);
+    
+    while(!toProcess.isEmpty())
+    {
+    	parentInterfaces  = toProcess.pop().getExtendsInterface();
+    	toProcess.addAll(parentInterfaces);
+    	ancestorInterfaces.addAll(parentInterfaces);
+    }
+    
+    for (UmpleInterface pi : ancestorInterfaces)
     {
       if (pi.hasMethods())
       {
