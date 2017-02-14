@@ -251,7 +251,7 @@ public class DistributedClassTest extends TemplateTest
 	  
 	  Assert.assertEquals(true, model.getUmpleClass(0).getIsDistributed());  
 	  Assert.assertEquals(true, model.getUmpleClass(0).getIsDistributable());
-	  Assert.assertEquals(true, model.getUmpleClass(0).getHasProxyPattern());
+	 // Assert.assertEquals(false, model.getUmpleClass(0).getHasProxyPattern());
 	  
 	  Assert.assertEquals("RMI", model.getUmpleClass(0).getDistributeTechnology());
   }
@@ -262,7 +262,7 @@ public class DistributedClassTest extends TemplateTest
 	  model2.generate();
 	    
 	  Assert.assertEquals(true, model2.getUmpleClass(0).getIsDistributable());
-	  Assert.assertEquals(true, model2.getUmpleClass(0).getHasProxyPattern()); 
+	  Assert.assertEquals(false, model2.getUmpleClass(0).getHasProxyPattern()); 
 	  Assert.assertEquals("RMI", model2.getUmpleClass(0).getDistributeTechnology());
   }
   @Test

@@ -2418,15 +2418,20 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     }
   
     if(aClass.getIsDistributed()==true)
-    { if(aClass.getDistributeTechnology().equals("RMI"))
-      {
+    { 
         if(getModel().getDistributePattern()==0)
           genClass.addMultiLookup("import", "java.io.Serializable");
         else if (getModel().getDistributePattern()==1)
         {
-          genClass.addMultiLookup("import", "java.rmi.RemoteException");
-          genClass.addMultiLookup("import", "java.rmi.server.UnicastRemoteObject");
-        }  
+          if(aClass.getDistributeTechnology()=="RMI")
+          {
+            genClass.addMultiLookup("import", "java.rmi.RemoteException");
+            genClass.addMultiLookup("import", "java.rmi.server.UnicastRemoteObject");
+          }
+          else if(aClass.getDistributeTechnology()=="WS")
+          {
+            genClass.addMultiLookup("import", "javax.jws.WebService");
+          } 
       }
     }
   }
@@ -2470,6 +2475,8 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     {
       methodPostfix="Impl";
     }
+    if(getModel().getDistributePattern()==2)
+      remoteInterfaceName=aClass.getName();
     /* if distributed class has a distributable interface parent and does not need parent interface the remote interface needs to know the name of it
     */    
 
@@ -2496,10 +2503,10 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       proxyImplements=" implements java.io.Serializable";
       for(UmpleInterface interfaceParent: aClass.getParentInterface())
       { 
-        proxyImplements+=", "+parentInterface.getName();
+        proxyImplements+=", "+interfaceParent.getName();
         if(interfaceParent.getIsDistributable()){
           parentInterface=interfaceParent;
-          parentDefaultInterface+=" ,"+parentInterface.getName();
+          parentDefaultInterface+=" ,"+interfaceParent.getName();
         }
       }
     }    
@@ -2512,7 +2519,6 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     Integer scopeDepth=0;// if it is 1 means we are in the main class. If depth more than 1 it means we are in an inner class.
     String[] lines = classContent.split("\n|"+System.getProperty("line.separator"));
     classContent="";
-
 
 
     /*
@@ -2546,13 +2552,22 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       }
       if((scopeDepth==0)&&(line.contains("class "+realClassName)))
       { 
-        remoteContent+=NL+"import java.rmi.registry.Registry;"+NL+"import java.rmi.registry.LocateRegistry;"+NL+"import java.rmi.server.UnicastRemoteObject;"+NL+"public class " + remoteName+extendsRemoteProxy+" implements "+remoteInterfaceName+NL+"{";
+
+      if(getModel().getDistributeTechnology().equals("WS"))
+        {
+          parentDefaultInterface=parentDefaultInterface.replace(", "," extends ");
+          remoteInterfaceContent+="import javax.jws.WebMethod;"+NL+"import javax.jws.WebService;"+NL+"import javax.jws.soap.SOAPBinding;"+NL+"import javax.jws.soap.SOAPBinding.Style;"+NL+remoteImports+"@WebService"+NL+"@SOAPBinding(style = Style.RPC)"+NL+"public interface "+remoteInterfaceName+parentDefaultInterface+NL+"{"+NL;
+          String classPackageName= aClass.getPackageName().length() == 0 ? "" : aClass.getPackageName() + "."; 
+          remoteContent+=NL+"import javax.jws.WebService;"+NL+"@WebService(endpointInterface = \""+classPackageName+remoteInterfaceName+"\")"+NL+"public class " + remoteName+extendsRemoteProxy+" implements "+remoteInterfaceName+NL+"{";
+        }
+        else{
+          remoteInterfaceContent+=remoteImports+"public interface "+remoteInterfaceName+" extends java.rmi.Remote"+parentDefaultInterface+NL+"{"+NL;
+          remoteContent+=NL+"import java.rmi.registry.Registry;"+NL+"import java.rmi.registry.LocateRegistry;"+NL+"import java.rmi.server.UnicastRemoteObject;"+NL+"public class " + remoteName+extendsRemoteProxy+" implements "+remoteInterfaceName+NL+"{";
+        }
+        
         
         proxyPrecode+=remoteImports+"import java.io.Serializable;"+NL+defaultNamespace+"public class "+proxyName+extendsProxy+proxyImplements+NL+"{";
 
-        if(getModel().getDistributePattern()==0)
-          proxyContent+=NL+"  "+remoteInterfaceName+" realObject=this;"+NL;
-        else
           proxyContent+=NL+"  "+remoteInterfaceName+" realObject;"+NL;
         proxyContent+="  public void setRealObject("+remoteInterfaceName+" aObject)"+NL+"  {"+NL;
         proxyContent+="    realObject=aObject;"+NL+"  }"+NL;
@@ -2564,8 +2579,6 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         remoteContent+="    realObject=aObject;"+NL+"  }"+NL;
         remoteContent+="  public "+realClassName+" getRealObject()"+NL+"  {"+NL;
         remoteContent+="    return realObject;"+NL+"  }"+NL;
-
-        remoteInterfaceContent+=remoteImports+"public interface "+remoteInterfaceName+" extends java.rmi.Remote"+parentDefaultInterface+NL+"{"+NL;
       }
       boolean isSerializable=true;
       String lineWOSpace= line.replace(" ", "");
@@ -2854,8 +2867,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
 
 
 // writing the generated code for the remote interface
-    if(getModel().getDistributePattern()==3)
-      remoteInterfaceName=aClass.getName();
+
     if ((aClass.getIsDistributed()|| aClass.getNeedsDefaultInterface())&& aClass.getDistributeTechnology().equals("RMI"))
     {
       filename = path + File.separator + remoteInterfaceName + ".java";

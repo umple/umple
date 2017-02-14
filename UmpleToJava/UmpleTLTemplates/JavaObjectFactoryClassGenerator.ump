@@ -38,11 +38,24 @@ class JavaObjectFactoryClassGenerator {
   GeneratorHelper.generator = gen;
   Boolean isInterface=false;
   Set<String> packageSet = new HashSet<String>();
-  packageSet.add("java.io.File");
-  packageSet.add("java.rmi.registry.Registry");
-  packageSet.add("java.rmi.registry.LocateRegistry");
-  packageSet.add("java.rmi.RemoteException");
-  packageSet.add("java.rmi.server.UnicastRemoteObject");
+  if(model.getDistributeTechnology().equals("RMI")){
+    packageSet.add("java.io.File");
+    packageSet.add("java.rmi.registry.Registry");
+    packageSet.add("java.rmi.registry.LocateRegistry");
+    packageSet.add("java.rmi.RemoteException");
+    packageSet.add("java.rmi.server.UnicastRemoteObject");
+  }
+  if(model.getDistributeTechnology().equals("WS"))
+  {
+    packageSet.add("javax.jws.WebMethod");
+    packageSet.add("javax.jws.WebService");
+    packageSet.add("javax.jws.soap.SOAPBinding");
+    packageSet.add("javax.jws.soap.SOAPBinding.Style");
+    packageSet.add("javax.xml.ws.Endpoint");
+    packageSet.add("java.net.URL");
+    packageSet.add("javax.xml.namespace.QName");
+    packageSet.add("javax.xml.ws.Service");
+  }  
   packageSet.add("java.io.FileInputStream");
   packageSet.add("java.io.IOException");
   packageSet.add("java.io.InputStream");
@@ -70,15 +83,24 @@ class JavaObjectFactoryClassGenerator {
       }
     }
   }
-
+String defaultNamespace="";
+String qname="";
   if (model.getDefaultNamespace()!=null){#>>
 package <<=model.getDefaultNamespace()>>;
   <<#
+    defaultNamespace=model.getDefaultNamespace()+".";
+    qname=defaultNamespace+"/";
   }
   for(String packageName: packageSet)
   {
 #>>
 import <<=packageName>>;
+<<#
+  }
+  if(model.getDistributeTechnology().equals("WS"))
+  {
+#>>
+@WebService(endpointInterface = "<<#append(realSb,defaultNamespace);#>>IUmpleRuntime")
 <<#
   }
   #>>
@@ -147,7 +169,7 @@ public class UmpleRuntime implements IUmpleRuntime
 
     <<@ UmpleToJava.objectFactory_listOfObjects_All >>
     
-    Registry rmiRegistry;
+    
 
     public static UmpleRuntime getInstance()
     {
@@ -189,8 +211,11 @@ public class UmpleRuntime implements IUmpleRuntime
      nodes.add(an2);
     components.put("1",c1);
     }
-
-
+    <<#
+    if(model.getDistributeTechnology().equals("RMI"))
+    {
+    #>>
+    Registry rmiRegistry;
     public void initialize()
     {    
 
@@ -252,6 +277,53 @@ public class UmpleRuntime implements IUmpleRuntime
       //unexportObject(rmiRegistry, true);
       System.out.println("Component stopped");
     }
+    <<#}
+    if(model.getDistributeTechnology().equals("WS"))
+    {
+    #>>
+    public void initialize()
+    {    
+      if(getThisNodeId()<0)
+        readConfigFile();
+      readComponentsFile();
+      int numberOfNodes= nodes.size();
+      System.out.println(getThisNodeId());
+      Endpoint.publish(nodes.get(getThisNodeId()).getUrl()+":"+String.valueOf(nodes.get(getThisNodeId()).getPort())+"/hw",this);
+
+      for(int node=0;node<numberOfNodes;node=node+1)
+      {
+        if(node==getThisNodeId())
+        {
+          remoteFactories.add(this);
+        }
+        else
+        {System.out.println(node);
+          while(true)
+          {
+            try 
+            {
+              URL url = new URL(nodes.get(node).getUrl()+String.valueOf(nodes.get(node).getPort())+"/hw?wsdl");
+             
+              QName qname = new QName("<<#append(realSb,qname);#>>",
+                  "UmpleRuntimeService");
+              Service service = Service.create(url, qname);
+              IUmpleRuntime proxy = service.getPort(IUmpleRuntime.class);
+              remoteFactories.add(proxy);
+              break;
+            } 
+            catch (Exception e) 
+            {
+              System.err.println("Client exception: " + e.toString());
+              e.printStackTrace();
+            }
+          } 
+        } 
+      }
+    }
+
+    <<#
+    }
+    #>>
     <<@ UmpleToJava.objectFactory_add_Declare_All >>
   public static void main (String [] args)
   {
@@ -269,9 +341,8 @@ public class UmpleRuntime implements IUmpleRuntime
       //------------------------
       private int id;
       private String ip="localhost";
-      private String url="localhost";
+      private String url="http://127.0.0.1";
       private int port=1098;
-      private int rmiRegistry=1098;
       //------------------------
       // CONSTRUCTOR
       //------------------------
@@ -315,14 +386,6 @@ public class UmpleRuntime implements IUmpleRuntime
         wasSet = true;
         return wasSet;
       }
-
-      public boolean setRmiRegistry(int armiRegistry)
-      {
-        boolean wasSet = false;
-        rmiRegistry = armiRegistry;
-        wasSet = true;
-        return wasSet;
-      }
       public int getId()
       {
         return id;
@@ -340,11 +403,6 @@ public class UmpleRuntime implements IUmpleRuntime
       public int getPort()
       {
         return port;
-      }
-
-      public int getRmiRegistry()
-      {
-        return rmiRegistry;
       }
       public String toString()
       {

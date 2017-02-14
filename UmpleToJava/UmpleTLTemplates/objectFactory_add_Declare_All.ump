@@ -18,6 +18,16 @@ class UmpleToJava {
       String caller;
       String argumentscomma;
       String accessibility = "public I"+uClass.getName()+"Impl";
+      if(model.getDistributePattern()==2)
+        accessibility = "public "+uClass.getName();
+      String webMethod="";
+      if(model.getDistributeTechnology().equals("WS")){
+        webMethod="@WebMethod"+NL; 
+      /*  accessibility="public "+uClass.getName()+"Impl";
+        if(model.getDistributePattern()==0)
+          accessibility = "public "+uClass.getName();      
+          */  
+        }
       for (AssociationVariable av : uClass.getAssociationVariables()) 
       {
         relatedAssociation = av.getRelatedAssociation();

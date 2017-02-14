@@ -39,7 +39,13 @@ class JavaObjectFactoryInterfaceGenerator {
   Set<String> packageSet = new HashSet<String>();
   packageSet.add("java.rmi.Remote");
   packageSet.add("java.rmi.RemoteException");
-
+  if(model.getDistributeTechnology().equals("WS"))
+  {
+    packageSet.add("javax.jws.WebMethod");
+    packageSet.add("javax.jws.WebService");
+    packageSet.add("javax.jws.soap.SOAPBinding");
+    packageSet.add("javax.jws.soap.SOAPBinding.Style");
+  }
   for(UmpleClass uClass: model.getUmpleClasses())
   { GeneratedClass gClass = uClass.getGeneratedClass();
     for (Depend depend : uClass.getDepends())
@@ -72,6 +78,12 @@ package <<=model.getDefaultNamespace()>>;
 import <<=packageName>>;
 <<#
   }
+  if(model.getDistributeTechnology().equals("WS"))
+  {
+  #>>
+  @WebService
+  @SOAPBinding(style = Style.RPC)
+  <<#}
 #>>
 
 public interface IUmpleRuntime extends Remote

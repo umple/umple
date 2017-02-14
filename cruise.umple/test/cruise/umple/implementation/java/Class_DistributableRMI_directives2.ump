@@ -1,5 +1,5 @@
 namespace distributed.rmi.directives2;
-distribute RMI off;
+distributable RMI off;
 class CC
 {
   isA Father;

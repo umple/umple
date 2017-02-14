@@ -36,7 +36,7 @@ class UmpleToJava {
   }
     <<#
     }
-  append(realSb,"\n  {0} {1}({2}{3} proxy)",new Object[] {accessibility, "new"+uClass.getName(), arguments,argumentscomma+uClass.getName()});
+  append(realSb,"\n  {0}{1} {2}({3}{4} proxy)",new Object[] {webMethod,accessibility, "new"+uClass.getName(), arguments,argumentscomma+uClass.getName()});
   if(isInterface==true){
   #>>throws RemoteException;<<#
   }
@@ -49,8 +49,14 @@ class UmpleToJava {
     while(true)
     {
       try
-      {  
+      { 
+        <<#if(uClass.getDistributeTechnology().equals("RMI")){#>> 
         UnicastRemoteObject.exportObject(object,0);
+        <<#}
+        else if(uClass.getDistributeTechnology().equals("WS")){
+        #>>
+        Endpoint.publish(nodes.get(getThisNodeId()).getUrl()+":"+String.valueOf(nodes.get(getThisNodeId()).getPort())+"/hw",object);
+        <<#}#>>
         break;
       } 
       catch (Exception e)
@@ -60,7 +66,7 @@ class UmpleToJava {
     } 
 
   listOf<<=uClass.getName()>>.add(object);
-  return object; 
+  return remoteObject; 
   }
   <<#
     }#>>!>>
