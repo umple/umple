@@ -62,10 +62,8 @@ public class Student
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "firstName" + ":" + getFirstName()+ "," +
-            "lastName" + ":" + getLastName()+ "]"
-     + outputString;
+            "lastName" + ":" + getLastName()+ "]";
   }
 }

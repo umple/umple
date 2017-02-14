@@ -1,5 +1,28 @@
 class UmpleToJava {
     state_machine_Event <<!<</*state_machine_Event*/>><<#
+  
+  // Issue 923 Fix: Prevent default implmentation of interface methods when a state machine implements them
+  boolean implementsInterfaceMethod = false;
+  for (UmpleInterface uInterface : uClass.getParentInterface())
+  {
+  	for (Method m : uInterface.getMethods())
+  	{
+  		Method eventMethod = new Method("",e.getName(),e.getType().toLowerCase(),false);
+  		eventMethod.setMethodParameters(e.getParams());
+  		if (m.compareWithTheMethod(eventMethod))
+  		{
+  			uClass.removeMethod(m);
+  			implementsInterfaceMethod = true;
+  			break;
+  		}
+  	}
+  	
+  	if (implementsInterfaceMethod)
+  	{
+  		break;
+  	}
+  }
+  
   int javaLine = realSb.toString().split("\\n").length+7;
 
   StringBuilder allCases = new StringBuilder();
@@ -220,10 +243,14 @@ class UmpleToJava {
     javaLine+=3;
   }
 
-  
+  String override =  (implementsInterfaceMethod) ? "@Override\n" : "";
   String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
+  if (implementsInterfaceMethod)
+  {
+  	scope = "  " + scope;
+  }
   String eventOutput = allDeclarations.toString() + allCases.toString();#>>
-  <<= scope >> boolean <<#for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false && e.isAutoTransition() == false && !e.isUnspecified()) || (sm.isPooled() && e.getIsInternal() == false && e.isAutoTransition() == false && !e.isUnspecified())){append(realSb,"_");}break;}#>><<=gen.translate("eventMethod",e)>>(<<= (e.getArgs()==null?"":e.getArgs())>><<#if(e.isUnspecified()){append(realSb,"String state, String event");}#>>)
+  <<= override >><<= scope >> boolean <<#for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false && e.isAutoTransition() == false && !e.isUnspecified()) || (sm.isPooled() && e.getIsInternal() == false && e.isAutoTransition() == false && !e.isUnspecified())){append(realSb,"_");}break;}#>><<=gen.translate("eventMethod",e)>>(<<= (e.getArgs()==null?"":e.getArgs())>><<#if(e.isUnspecified()){append(realSb,"String state, String event");}#>>)
   {<<# if (customEventPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customEventPrefixCode,gen.translate("eventMethod",e));
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customEventPrefixCode, "    ")); } #>>
     boolean wasEventProcessed = false;

@@ -51,7 +51,7 @@
 46: 4, "http://cruise.eecs.uottawa.ca/umple/W046AttributeHasTemplateType.html", Attribute {0} in class {1} is declared using a collection template type {2}. Use a directed association (->) or multi-valued attribute([]) to follow proper modelling conventions ;
 47: 4, "http://cruise.eecs.uottawa.ca/umple/W047EmptyKeyStatement.html", Empty key statement in class {0} ;
 48: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Attribute '{0}' in class '{1}' generates method '{2}' which is duplicate;
-49: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", A {6} implementation of Method '{0}' in class '{1}' is already defined at line {2} of '{3}' file. New definition at line {4} of '{5}' file is being disconsidered;
+49: 4, "http://cruise.eecs.uottawa.ca/umple/W049DuplicatedMethodName.html", A {6} implementation of Method '{0}' in class '{1}' is already defined at line {2} of '{3}' file. New definition at line {4} of '{5}' file is being disconsidered;
 
 # State-Machine related messages
 50: 4, "http://cruise.eecs.uottawa.ca/umple/W050TargetStateNotFound.html", State '{0}' has not been declared, it is being treated as an new state ;
@@ -74,6 +74,9 @@
 67: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html",  State '{0}' from StateMachine '{1}' is non-reachable. ;
 68: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Destiny state '{0}' of transition on line '{1}' has not been found. This transition is being disconsidered;
 69: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Auto-Transition to '{0}' on line '{1}' conflicts with a previous exisiting transition. This transition is being disconsidered;
+70: 4, "http://cruise.eecs.uottawa.ca/umple/W054DuplicateEvents.html", Guarded Transition {0} will be ignored due to a duplicate event with an equivalent guard;
+71: 4, "http://cruise.eecs.uottawa.ca/umple/W071DuplicateMethodDifferentType.html", A {6} implementation of Method '{0}' in class '{1}' is already defined at line {2} of '{3}' file, which returns a different type. New definition at line {4} of '{5}' file is being disconsidered;
+72: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Removed do activities, exit actions, transitions, and/or nested state machines from final State '{0}' of StateMachine '{1}';
 
 80: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", State '{0}' was not found in state machine '{1}'. Processed as if the state exists ;
 
@@ -108,6 +111,7 @@
 160: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Constant name '{0}' must be alphanumeric, starting with a upper-case letter ;
 161: 4, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Constant name '{0}' should start with a upper-case letter ;
 
+180: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class '{0}' is a subclass of class '{1}' and may not have multiple associations with the same name '{2}' ;
 
 # Messages related to traits
 200: 2, "http://cruise.eecs.uottawa.ca/umple/E200TraitIdentifierInvalid.html", Trait name '{0}' must be alphanumeric and start with an alpha character, or _  ;
@@ -148,8 +152,10 @@
 230: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', the state machine/state '{1}' does not exist. ;
 231: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}' and its state machine '{1}', the event '{2}' does not exist. ;
 232: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}' and its state machines, the event '{1}' does not exist. ;
-
+233: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', the {1} state {2} cannot be removed.;
 234: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the even '{0}' which comes from '{1}' and '{2}' results in none-determinism so the composition is not allowed.;
+235: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the even '{0}' in state '{1}' which comes from traits '{2}' and '{3}' results in a conflict.;
+236: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the '{0}' activity/action in state '{1}', which comes from traits '{2}' and '{3}', results in a conflict.;
 
 # Messages related to MOTL
 301: 4,  "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Tracing of non-existent model entity  ;
@@ -178,6 +184,8 @@
 1502 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: Structure of '{0}' invalid ;
 1503 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: {0}, did you mean {1} ;  
 1510 : 1, "http://cruise.eecs.uottawa.ca/umple/E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
+
+
 
 # Messages to be emitted when embedded code from another language is compiled and you are passing on the error
 2001: 5, "http://cruise.eecs.uottawa.ca/umple/W20xxErrorinEmbeddedCode.html", Error in Java embedded in Umple: '{0}' ;

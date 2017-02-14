@@ -1,0 +1,11 @@
+class Person {
+	* -> * Person friends;
+}
+
+class Student {
+	isA Person;
+	* -> * Dog friends;
+}
+
+class Dog {
+}

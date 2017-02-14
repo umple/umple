@@ -12,6 +12,7 @@ package cruise.umple.implementation;
 import org.junit.*;
 
 import cruise.umple.compiler.UmpleModel;
+import cruise.umple.compiler.java.JavaClassGenerator;
 import cruise.umple.util.SampleFileWriter;
 
 import java.io.File;
@@ -168,6 +169,16 @@ public class DistributedClassTest extends TemplateTest
 	      SampleFileWriter.assertPartialFileContent(expected, actual);
 	    }
 	  }
+	
+
+  @After
+  public void tearDown() {
+	/* Nullify mainMainClass. It's a static variable, if we don't do this the state will
+	 * affect the next set of JUnit tests that use mainMainClass.
+	 */
+	
+	JavaClassGenerator.mainMainClass = null;
+  }	
 	
   @Test
   public void TestDistributableDirectivesTest1()

@@ -31,7 +31,7 @@
 
   <property name="php.simpletest.version" value="1.1" />
   <property name="php.simpletest.url" 
-            value="http://downloads.sourceforge.net/project/simpletest/simpletest/simpletest_${php.simpletest.version}/simpletest_${php.simpletest.version}.0.tar.gz" />
+            value="https://github.com/git-mirror/simpletest/archive/${php.simpletest.version}.0.tar.gz" />
   <property name="php.libs.dir" value="${dist.dir}/libs/php" />
 
   <path id="project.classpath">
@@ -123,6 +123,9 @@
         <untar  src="${php.simpletest.dir}.tar"
                 dest="${php.libs.dir}/" />
         <delete file="${php.simpletest.dir}.tar" />
+        <move todir="${php.simpletest.dir}">
+          <fileset dir="${php.simpletest.dir}-${php.simpletest.version}.0"/>
+        </move>        
       </then>
     </if>
 

@@ -93,10 +93,8 @@ public class Student
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "number" + ":" + getNumber()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "mentor = "+(getMentor()!=null?Integer.toHexString(System.identityHashCode(getMentor())):"null")
-     + outputString;
+            "  " + "mentor = "+(getMentor()!=null?Integer.toHexString(System.identityHashCode(getMentor())):"null");
   }
 }

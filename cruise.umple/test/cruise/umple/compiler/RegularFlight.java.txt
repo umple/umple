@@ -205,13 +205,11 @@ public class RegularFlight
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "flightNumber" + ":" + getFlightNumber()+ "," +
             "flightNumber3" + ":" + getFlightNumber3()+ "," +
             "flightNumber4" + ":" + getFlightNumber4()+ "," +
             "lala" + ":" + getLala()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
+            "  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null");
   }
 }

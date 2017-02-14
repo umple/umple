@@ -1,0 +1,22 @@
+class A{
+  isA T < +status>;
+}
+
+trait T{  
+  status{
+    s1{
+      e1-> s1;
+    }
+  }
+  status2{
+    s1{
+      e1-> s1;
+    }
+  }  
+  status3{
+    s1{
+      e1-> s1;
+    }
+  }  
+  
+}

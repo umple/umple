@@ -3,7 +3,7 @@ class UmpleToJava {
 
   public String toString()
   {
-    String outputString = "";<<#
+    <<#
 	  String customToStringPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toString"));
 	  String customToStringPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toString"));
 	  if (customToStringPrefixCode != null) 
@@ -87,7 +87,6 @@ class UmpleToJava {
 	      ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";
 	      ret += "\"  \" + " +  "\""+reflexiveNames.get(m)+" = \"+("+reflexive.get(m)+"!=null?Integer.toHexString(System.identityHashCode("+reflexive.get(m)+")):\"null\")";
 	  }
-	  ret += "\n     + outputString";
 	  append(realSb,"\n    return {0};", ret);
 	  #>>
   }!>>

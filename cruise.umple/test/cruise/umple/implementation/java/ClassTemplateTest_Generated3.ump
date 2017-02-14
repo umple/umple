@@ -1,0 +1,7 @@
+namespace example;
+
+class Mentor 
+{
+  public static void main()
+  {}
+}

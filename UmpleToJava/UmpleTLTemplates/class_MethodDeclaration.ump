@@ -27,6 +27,12 @@ class UmpleToJava {
         String methodImplementationModifier = aMethod.getIsAbstract() ? " abstract" : "";
         String methodName = aMethod.getName();
         String methodType = aMethod.getType();
+		// Fix issue 969
+		if (!methodName.equals(uClass.getName()))
+		{
+			// If this is not a constructor, this method should return "void"
+			methodType = methodType.equals("") ? "void" : methodType;
+		}
         String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName(), aMethod.getMethodParameters()));
         String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", aMethod.getName(), aMethod.getMethodParameters()));
         String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));        
@@ -42,21 +48,6 @@ class UmpleToJava {
         String isList="";
         String finalParams = "";        
         String finalParamsWithoutTypes = "";
-        if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static"))
-        {
-          String exceptionHandlerPackage = "";
-          if(mainMainClass!=null)
-          {
-            exceptionHandlerPackage = mainMainClass.getPackageName()+"."+mainMainClass.getName()+".";
-          }
-          else
-          {
-            mainMainClass = uClass;
-          }
-          properMethodBody = "    Thread.currentThread().setUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+
-                             "    Thread.setDefaultUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+properMethodBody;
-          uClass.setHasMainMethod(true);
-        }
         StringBuilder parameters = new StringBuilder();
         StringBuilder parametersWithoutTypes = new StringBuilder();
         if (aMethod.hasMethodParameters())
@@ -75,6 +66,22 @@ class UmpleToJava {
           finalParamsWithoutTypes = parametersWithoutTypes.toString().substring(0, parametersWithoutTypes.toString().length()-2);
         }
         
+		if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static")&&paramType.equals("String")&&isList.equals(" [] ")&&paramName.equals("args"))
+        {
+          String exceptionHandlerPackage = "";
+          if(mainMainClass!=null)
+          {
+            exceptionHandlerPackage = mainMainClass.getPackageName()+"."+mainMainClass.getName()+".";
+          }
+          else
+          {
+            mainMainClass = uClass;
+          }
+          properMethodBody = "    Thread.currentThread().setUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+
+                             "    Thread.setDefaultUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+properMethodBody;
+          uClass.setHasMainMethod(true);
+        }
+		
         if (aMethod.numberOfComments() > 0) { append(realSb, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
         
         append(realSb,"\n");

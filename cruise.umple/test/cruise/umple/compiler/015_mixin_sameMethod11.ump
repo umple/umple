@@ -1,0 +1,7 @@
+use 015_mixin_sameMethod11B.ump;
+class X {
+  m1 () 
+  {
+    int a = 1;
+  }
+}

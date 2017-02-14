@@ -310,11 +310,9 @@ public class HtmlNode
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "tag" + ":" + getTag()+ "," +
-            "content" + ":" + getContent()+ "]"
-     + outputString;
+            "content" + ":" + getContent()+ "]";
   }
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {

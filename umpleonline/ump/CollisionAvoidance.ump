@@ -1,6 +1,7 @@
 class CollisionAvoidance {
 	Integer warningRadius;
 	Boolean driveSelected;	
+	Boolean lock;
 	sm { 
 		CollisionAvoidance {
 			ObjectDetector {
@@ -41,9 +42,9 @@ class CollisionAvoidance {
 			Transmission {
 				ParkAndNeutral {
 					selectReverse -> Reverse;
-					selectDrive/{ driveSelected = true; } -> Drive; 
-					Park { selectneutral -> Neutral; }
-					Neutral { selectPark/{ driveSelected = false; } -> Park; }
+					selectDrive/{ setDriveSelected(true); } -> Drive; 
+					Park { selectNeutral -> Neutral; }
+					Neutral { selectPark/{ setDriveSelected(false); } -> Park; }
 				}
 				Reverse { selectPark -> Park; } 
 				Drive { 

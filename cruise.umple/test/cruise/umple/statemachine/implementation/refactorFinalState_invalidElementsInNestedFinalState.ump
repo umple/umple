@@ -1,0 +1,23 @@
+namespace example;
+
+class X {
+  status{
+    on{
+      turnoff -> off;
+      powerOff-> FINAL;
+    }    
+    off{
+      turnOn -> on;  
+    }
+    FINAL{
+      nestedSm {
+        final nestedFinal {
+      	  entry/{entry();}
+          do{exe();}
+          reboot -> on;
+          exit/{exit();}
+        }
+      }
+    }
+  }
+}

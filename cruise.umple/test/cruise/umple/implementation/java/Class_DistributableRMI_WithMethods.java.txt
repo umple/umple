@@ -411,12 +411,10 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "lightOn" + ":" + getLightOn()+ "," +
             "powerTubeOn" + ":" + getPowerTubeOn()+ "," +
             "isDoorOpened" + ":" + getIsDoorOpened()+ "," +
-            "isButtonPressed" + ":" + getIsButtonPressed()+ "]"
-     + outputString;
+            "isButtonPressed" + ":" + getIsButtonPressed()+ "]";
   }
 }

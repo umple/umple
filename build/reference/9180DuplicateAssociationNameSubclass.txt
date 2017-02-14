@@ -1,0 +1,17 @@
+E180 Duplicate Association Name Class Hierarchy
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when a subclass has an association that is not a specialization named the same as a superclass association</h2>
+
+<p>A subclass can not have an association with the same role name as an association of its superclass, unless it is a valid specialization. 
+</p>
+
+
+@@example
+@@source manualexamples/E180DuplicateRoleNameSubclass.ump
+@@endexample
+
+

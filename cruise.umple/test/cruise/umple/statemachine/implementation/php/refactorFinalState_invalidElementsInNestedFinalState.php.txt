@@ -1,0 +1,211 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  private static $StatusOn = 1;
+  private static $StatusOff = 2;
+  private static $StatusFINAL = 3;
+  private static $StatusFINALNull = 4;
+  private static $StatusFINALNestedSm = 5;
+  private static $StatusFINALNestedSmNull = 6;
+  private static $StatusFINALNestedSmNestedFinal = 7;
+  private $status;
+  private $statusFINAL;
+  private $statusFINALNestedSm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setStatusFINAL(self::$StatusFINALNull);
+    $this->setStatusFINALNestedSm(self::$StatusFINALNestedSmNull);
+    $this->setStatus(self::$StatusOn);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    if ($this->statusFINAL != self::$StatusFINALNull) { $answer .= "." . $this->getStatusFINAL(); }
+    if ($this->statusFINALNestedSm != self::$StatusFINALNestedSmNull) { $answer .= "." . $this->getStatusFINALNestedSm(); }
+    return $answer;
+  }
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusOn) { return "StatusOn"; }
+    elseif ($this->status == self::$StatusOff) { return "StatusOff"; }
+    elseif ($this->status == self::$StatusFINAL) { return "StatusFINAL"; }
+    return null;
+  }
+
+  public function getStatusFINAL()
+  {
+    if ($this->statusFINAL == self::$StatusFINALNull) { return "StatusFINALNull"; }
+    elseif ($this->statusFINAL == self::$StatusFINALNestedSm) { return "StatusFINALNestedSm"; }
+    return null;
+  }
+
+  public function getStatusFINALNestedSm()
+  {
+    if ($this->statusFINALNestedSm == self::$StatusFINALNestedSmNull) { return "StatusFINALNestedSmNull"; }
+    elseif ($this->statusFINALNestedSm == self::$StatusFINALNestedSmNestedFinal) { return "StatusFINALNestedSmNestedFinal"; }
+    return null;
+  }
+
+  public function turnoff()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOn)
+    {
+      $this->setStatus(self::$StatusOff);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function powerOff()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOn)
+    {
+      $this->setStatus(self::$StatusFINAL);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function turnOn()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOff)
+    {
+      $this->setStatus(self::$StatusOn);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function enterFINAL()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatusFINAL = $this->statusFINAL;
+    $aStatusFINALNestedSm = $this->statusFINALNestedSm;
+    if ($aStatusFINAL == self::$StatusFINALNull)
+    {
+      $this->setStatusFINAL(self::$StatusFINALNestedSm);
+      $wasEventProcessed = true;
+    }
+
+    
+    if ($aStatusFINALNestedSm == self::$StatusFINALNestedSmNull)
+    {
+      $this->setStatusFINALNestedSm(self::$StatusFINALNestedSmNestedFinal);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitFINAL()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatusFINAL = $this->statusFINAL;
+    $aStatusFINALNestedSm = $this->statusFINALNestedSm;
+    if ($aStatusFINAL == self::$StatusFINALNestedSm)
+    {
+      $this->setStatusFINAL(self::$StatusFINALNull);
+      $wasEventProcessed = true;
+    }
+
+    
+    if ($aStatusFINALNestedSm == self::$StatusFINALNestedSmNestedFinal)
+    {
+      $this->setStatusFINALNestedSm(self::$StatusFINALNestedSmNull);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitStatus()
+  {
+    if ($this->status == self::$StatusFINAL)
+    {
+      $this->exitFINAL();
+    }
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->status = $aStatus;
+
+    // entry actions and do activities
+    if ($this->status == self::$StatusFINAL)
+    {
+      if ($this->statusFINAL == self::$StatusFINALNull) { $this->setStatusFINAL(self::$StatusFINALNestedSm); }
+    }
+  }
+
+  private function exitStatusFINAL()
+  {
+    if ($this->statusFINAL == self::$StatusFINALNestedSm)
+    {
+      $this->exitFINAL();
+    }
+  }
+
+  private function setStatusFINAL($aStatusFINAL)
+  {
+    $this->statusFINAL = $aStatusFINAL;
+    if ($this->status != self::$StatusFINAL && $aStatusFINAL != self::$StatusFINALNull) { $this->setStatus(self::$StatusFINAL); }
+
+    // entry actions and do activities
+    if ($this->statusFINAL == self::$StatusFINALNestedSm)
+    {
+      if ($this->statusFINALNestedSm == self::$StatusFINALNestedSmNull) { $this->setStatusFINALNestedSm(self::$StatusFINALNestedSmNestedFinal); }
+    }
+  }
+
+  private function setStatusFINALNestedSm($aStatusFINALNestedSm)
+  {
+    $this->statusFINALNestedSm = $aStatusFINALNestedSm;
+    if ($this->statusFINAL != self::$StatusFINALNestedSm && $aStatusFINALNestedSm != self::$StatusFINALNestedSmNull) { $this->setStatusFINAL(self::$StatusFINALNestedSm); }
+
+    // entry actions and do activities
+    if ($this->statusFINALNestedSm == self::$StatusFINALNestedSmNestedFinal)
+    {
+      entry();
+      $this->delete();
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

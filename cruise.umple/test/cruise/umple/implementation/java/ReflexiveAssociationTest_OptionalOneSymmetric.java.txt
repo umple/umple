@@ -97,10 +97,8 @@ public class Mentor
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "superMentor = "+(getSuperMentor()!=null?Integer.toHexString(System.identityHashCode(getSuperMentor())):"null")
-     + outputString;
+            "  " + "superMentor = "+(getSuperMentor()!=null?Integer.toHexString(System.identityHashCode(getSuperMentor())):"null");
   }
 }

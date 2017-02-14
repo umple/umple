@@ -1,93 +1,92 @@
 //In order to see the class diagram with traits, please select option "GraphViz Class" in the menu "OPTIONS" and then checkout traits in the section "SHOW VIEW".
 //developed by Vahdat Abdelzad, in August 2015.
 
-
 //A root class for all elements (classes) in the system.
 class RootClass{
-	abstract;
-	autounique id;	
+  abstract;
+  autounique id;  
 }
 
 //A class which represent basic features of color.
 class Color{
-	isA RootClass;
-	isA TEquality<TP1=Color>;
-	String rgb;
-	int getRed(){/*implementation */}
-	int getBlue(){/*implementation */}
-	int getGreen(){/*implementation */}
-	boolean isEqual(Color object){/*implementation */}
+  isA RootClass;
+  isA TEquality<TP1=Color>;
+  String rgb;
+  int getRed(){return 1;}
+  int getBlue(){return 2;}
+  int getGreen(){return 3;}
+  boolean isEqual(Color object){return true;}
 }
 
 //used to draw geometric objects.
-class Canvas {	
-	isA RootClass;
-	void paint(Geometry g){/*implementation*/}
-	void update(Geometry g){/*implementation*/}
+class Canvas {  
+  isA RootClass;
+  void paint(GeometricObject g){/*implementation*/}
+  void update(GeometricObject g){/*implementation*/}
 }
 
 // a root abstract class for geometric objects.
 class GeometricObject {
-	abstract;
-	isA RootClass;
-	isA TDrawable;
-	isA Subject<Observer=Canvas>;
+  abstract;
+  isA RootClass;
+  isA TDrawable;
+  isA Subject<Observer=Canvas>;
 }
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //an abstract class for two-dimensional objects such as circles and rectangles.
 class Shape2D{
-	abstract;
-	isA GeometricObject;	
-	isA TDrawableWithEdge;
-	Point center;
-	abstract double getArea();
-	abstract double getPerimeterLength();
-	
+  abstract;
+  isA GeometricObject;  
+  isA TDrawableWithEdge;
+  Point center;
+  abstract double getArea();
+  abstract double getPerimeterLength();
+  
 }
 
 //an abstract class for three-dimensional objects such as cubes, prisms, cylinders and spheres.
 class Shape3D {
-	abstract;
-	isA GeometricObject;
-	Point center;
-	abstract double volume();
-	abstract double surfaceArea();
+  abstract;
+  isA GeometricObject;
+  Point center;
+  abstract double volume();
+  abstract double surfaceArea();
 }
 
 // a class for points. A point doesn't have a dimension.
 class Point {
-	isA GeometricObject;
-	isA TEquality<TP1=Point>;
-	double pX;
-	double pY;
-	boolean isEqual(Point object){/*implementation */}
+  isA GeometricObject;
+  isA TEquality<TP1=Point>;
+  double pX;
+  double pY;
+  boolean isEqual(Point object){return true;}
 }
 
 //a class for lines. A line doesn't have an end.
 class Line {
-	isA GeometricObject;
-	isA TEquality<TP1=Line>;
-	Point pA;
-	Point pB;
-	boolean isEqual(Line object){/*implementation */}
+  isA GeometricObject;
+  isA TEquality<TP1=Line>;
+  Point pA;
+  Point pB;
+  boolean isEqual(Line object){return true;}
 }
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 // an abstract class for curved two-dimensional shapes.
 //Trait TComparable applied here because we wanted to have type-checking through parameters. For example, curved shapes can only be accepted in the related methods.
 class CurvedShape{
-	abstract;
-	isA Shape2D;
-	isA TComparable <TP2=CurvedShape>;
+  abstract;
+  isA Shape2D;
+  isA TComparable <TP2=CurvedShape>;
 }
 
 // an abstract class for polygon.
 //Trait TComparable applied here because we wanted to have type-checking through parameters. For example, polygon shapes can only be accepted in the related methods.
 class Polygon {
-	abstract;
-	isA Shape2D;
-	isA TComparable <TP2=Polygon>;
+  abstract;
+  isA Shape2D;
+  isA TComparable <TP2=Polygon>;
     0..1 -> 3..* Point vertices;
 }
 
@@ -95,177 +94,177 @@ class Polygon {
 //an abstract class for Polyhedra.
 //Trait TComparable applied here because we wanted to have type-checking through parameters. For example, polyhedra shapes can only be accepted in the related methods.
 class Polyhedra{
-	abstract;
-	isA Shape3D;
-	isA TComparable <TP2=Polyhedra>;
-	isA TDrawableWithEdge;
-	0..1-> *  Point vertices;
+  abstract;
+  isA Shape3D;
+  isA TComparable <TP2=Polyhedra>;
+  isA TDrawableWithEdge;
+  0..1-> *  Point vertices;
 } 
 
 //three-dimensional shapes that don't have any flat surface
 //an abstract class for non-polyhedra shapes.
 //Trait TComparable applied here because we wanted to have type-checking through parameters. For example, non-polyhedra shapes can only be accepted in related methods.
 class NonPolyhedra{
-	abstract;
-	isA Shape3D;
-	isA TComparable <TP2=NonPolyhedra>;
+  abstract;
+  isA Shape3D;
+  isA TComparable <TP2=NonPolyhedra>;
 }
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 class Circle{
-	isA CurvedShape;
-	double radius;
-	double getArea(){/*implementation */}
-	double getPerimeterLength(){/*implementation */}
-	boolean isLessThan(CurvedShape object){/*implementation */}
-	boolean isEqual(CurvedShape object){/*implementation */}
+  isA CurvedShape;
+  double radius;
+  double getArea(){return 1.0;}
+  double getPerimeterLength(){return 1.0;}
+  boolean isEqual(CurvedShape object){return true;}
+  boolean isLessThan(CurvedShape object){return true;}
 }
 class Ellipse {
-	isA CurvedShape;
-	double majorAxis;
-	double minorAxis;
-	Point fFocus;
-	Point gFocus;
-	Point[2] getFoci(){/*implementation */}
-	double getArea(){/*implementation */}
-	double getPerimeterLength(){/*implementation */}
-	Line getTangent(){/*implementation */}
-	boolean isLessThan(CurvedShape object){}
-	boolean isEqual(CurvedShape object){}
+  isA CurvedShape;
+  double majorAxis;
+  double minorAxis;
+  Point fFocus;
+  Point gFocus;
+  Point[] getFoci(){return new Point[2];}
+  double getArea(){return 1.0;}
+  double getPerimeterLength(){return 1.0;}
+  Line getTangent(){return new Line(fFocus, gFocus);}
+  boolean isEqual(CurvedShape object){return true;}
+  boolean isLessThan(CurvedShape object){return true;}
 }
 class Quadrilateral{
-	isA Polygon;
-	double getArea(){/*implementation */}
-	double getPerimeterLength(){/*implementation */}
-	boolean isLessThan(Polygon object){}
-	boolean isEqual(Polygon object){}
+  isA Polygon;
+  double getArea(){return 1.0;}
+  double getPerimeterLength(){return 1.0;}
+  boolean isEqual(Polygon object){return true;}
+  boolean isLessThan(Polygon object){return true;}
 }
 
 class Rectangle{
-	isA Quadrilateral;
-	//overwrite for better calculation
-	double getArea(){/*implementation */}
-	//overwrite for better calculation
-	double getPerimeterLength(){/*implementation */}	
+  isA Quadrilateral;
+  //overwrite for better calculation
+  double getArea(){return 1.0;}
+  //overwrite for better calculation
+  double getPerimeterLength(){return 1.0;}  
 }
 class ArbitraryPolygon{
-	isA Polygon;
-	double getArea(){/*implementation */}
-	double getPerimeterLength(){/*implementation */}
-	boolean isLessThan(Polygon object){}
-	boolean isEqual(Polygon object){}	
+  isA Polygon;
+  double getArea(){return 1.0;}
+  double getPerimeterLength(){return 1.0;}
+  boolean isEqual(Polygon object){return true;}
+  boolean isLessThan(Polygon object){return true;}
 }
 
 class Sphere{
-	isA NonPolyhedra;
-	double radius;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}
-	boolean isEqual(NonPolyhedra object){/*implementation */}
-	boolean isLessThan(NonPolyhedra object){/*implementation */}
+  isA NonPolyhedra;
+  double radius;
+  double volume(){return 1.0;}
+  double surfaceArea(){return 1.0;}
+  boolean isEqual(NonPolyhedra object){return true;}
+  boolean isLessThan(NonPolyhedra object){return true;}
 }
 
 class Torus {
-	isA NonPolyhedra;
-	double radius_r; 
-	double radiusr_R;
-	double theta;
-	double phi;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}
-	boolean isEqual(NonPolyhedra object){/*implementation */}
-	boolean isLessThan(NonPolyhedra object){/*implementation */}
+  isA NonPolyhedra;
+  double radius_r; 
+  double radius_R;
+  double theta;
+  double phi;
+  double volume(){return 1.0;}
+  double surfaceArea(){return 1.0;}
+  boolean isEqual(NonPolyhedra object){return true;}
+  boolean isLessThan(NonPolyhedra object){return true;}
 }
 
 class Cylinder{
-	isA NonPolyhedra;
-	double radius;
-	double height;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}	
-	boolean isEqual(NonPolyhedra object){/*implementation */}
-	boolean isLessThan(NonPolyhedra object){/*implementation */}
+  isA NonPolyhedra;
+  double radius;
+  double height;
+  double volume(){return 1.0;}
+  double surfaceArea(){return 1.0;} 
+  boolean isEqual(NonPolyhedra object){return true;}
+  boolean isLessThan(NonPolyhedra object){return true;}
 }
 
 class Cone{
-	isA NonPolyhedra;
-	double radius;
-	double height;
-	double sideLength;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}
-	boolean isEqual(NonPolyhedra object){/*implementation */}
-	boolean isLessThan(NonPolyhedra object){/*implementation */}			
+  isA NonPolyhedra;
+  double radius;
+  double height;
+  double sideLength;
+  double volume(){return 1.0;}
+  double surfaceArea(){return 1.0;}
+  boolean isEqual(NonPolyhedra object){return true;}
+  boolean isLessThan(NonPolyhedra object){return true;}     
 }
 
 class Cube{
-	isA Polyhedra;
-	double edgeLength;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}		
-	boolean isEqual(Polyhedra object){/*implementation */}
-	boolean isLessThan(Polyhedra object){/*implementation */}	
+  isA Polyhedra;
+  double edgeLength;
+  double volume(){return 1.0;}
+  double surfaceArea(){return 1.0;}   
+  boolean isEqual(Polyhedra object){return true;}
+  boolean isLessThan(Polyhedra object){return true;}  
 }
 
 class RectangularPrism{
-	isA Polyhedra;	
-	double length;
-	double width;
-	double height;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}	
-	boolean isEqual(Polyhedra object){/*implementation */}
-	boolean isLessThan(Polyhedra object){/*implementation */}		
+  isA Polyhedra;  
+  double length;
+  double width;
+  double height;
+  double volume(){return 1.0;}
+  double surfaceArea(){return 1.0;} 
+  boolean isEqual(Polyhedra object){return true;}
+  boolean isLessThan(Polyhedra object){return true;}  
 }
 
 class TriangularPyramid{
-	isA Polyhedra;
-	double slideLength;
-	double height;
-	double volume(){/*implementation */}
-	double surfaceArea(){/*implementation */}
-	boolean isEqual(Polyhedra object){/*implementation */}
-	boolean isLessThan(Polyhedra object){/*implementation */}			
+  isA Polyhedra;
+  double slideLength;
+  double height;
+  double volume(){return 1.0;}
+  double surfaceArea(){return 1.0;}
+  boolean isEqual(Polyhedra object){return true;}
+  boolean isLessThan(Polyhedra object){return true;}      
 }
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //used for all elements that can be just compared regarding being equal or not. These elements cannot compare regarding being either bigger or smaller.
 //for example: point, line
 trait TEquality<TP1>{
-	abstract boolean isEqual(TP1 object);
-	boolean isNotEqual(TP1 object){/*implementation */}
+  abstract boolean isEqual(TP1 object);
+  boolean isNotEqual(TP1 object){return true;}
 }
 
 //used for elements which can be compared regarding being equal, bigger, smaller, etc.
 //for example, 2-dimensional shapes.  
 trait TComparable<TP2>{
-	isA TEquality<TP1=TP2>;
-	abstract boolean isLessThan(TP2 object);
-	boolean isLessAndEqual(TP2 object){/*implementation */}
-	boolean isBiggerThan(TP2 object){/*implementation */}
-	boolean isBiggerAndEqual(TP2 object){/*implementation */}
+  isA TEquality<TP1=TP2>;
+  abstract boolean isLessThan(TP2 object);
+  boolean isLessAndEqual(TP2 object){return true;}
+  boolean isBiggerThan(TP2 object){return true;}
+  boolean isBiggerAndEqual(TP2 object){return true;}
 }
 
 //For geometric objects that cannot have color for edges.
 trait TDrawable {
-	0..1 -> * Color color;
-	int getRed(){/*implementation */}
-	int getBlue(){/*implementation */}
-	int getGreen(){/*implementation */}
-	void applyTransparency(int percentage){/*implementation */}
-	void applyPattern(int type){/*implementation */}
-	void applyColorFilter(int f){/*implementation */}
+  0..1 -> * Color color;
+  int getRed(){return 1;}
+  int getBlue(){return 2;}
+  int getGreen(){return 3;}
+  void applyTransparency(int percentage){/*implementation */}
+  void applyPattern(int type){/*implementation */}
+  void applyColorFilter(int f){/*implementation */}
 }
 
 //For geometric objects that can have colors for filling and edges.
 trait TDrawableWithEdge{
-	isA TDrawable;
-	int getERed(){/*implementation */}
-	int getEBlue(){/*implementation */}
-	int getEGreen(){/*implementation */}	
-	void applyETransparency(int percentage){/*implementation */}
-	void applyEPattern(int type){/*implementation */}
-	void applyEColorFilter(int f){/*implementation */}
+  isA TDrawable;
+  int getERed(){return 1;}
+  int getEBlue(){return 2;}
+  int getEGreen(){return 3;}  
+  void applyETransparency(int percentage){/*implementation */}
+  void applyEPattern(int type){/*implementation */}
+  void applyEColorFilter(int f){/*implementation */}
 }
 
 //this trait brings the features that a Subject must have in Observerable Pattern.
@@ -274,3 +273,5 @@ trait Subject <Observer> {
   0..1  -> * Observer;
   void notifyObservers() {/*implementation*/ }
 }
+
+// @@@skipphpcompile -  skip PHP compilation until issue #964 "Umple's PHP method generation fails to create valid method parameters" is fixed

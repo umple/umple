@@ -454,6 +454,13 @@ public class UmpleParserTest
     assertSimpleParse("015_mixin_sameMethod4.ump");
     assertHasWarningsParse("015_mixin_sameMethod5.ump", 49);
     assertHasWarningsParse("015_mixin_sameMethod6.ump", 49);
+    
+    //same method name, different types
+    assertHasWarningsParse("015_mixin_sameMethod7.ump", 71);
+    assertHasWarningsParse("015_mixin_sameMethod8.ump", 71);
+    assertHasWarningsParse("015_mixin_sameMethod9.ump", 71);
+    assertHasWarningsParse("015_mixin_sameMethod10.ump", 71);
+    assertHasWarningsParse("015_mixin_sameMethod11.ump", 71);
 
 
   }
@@ -2272,6 +2279,16 @@ public class UmpleParserTest
     assertFailedParse("024_multiAssocToSameClassNeedRoleName.ump", 19);
 
     assertParse("024_multipleUnnamedOneWayAssociationsToSameClass.ump");
+  }
+  
+  @Test
+  public void duplicateAssociationNamesClassHierarchy()
+  {
+	  assertFailedParse("024_roleNameSameSubclassSuperclass.ump", 180);
+	  assertFailedParse("024_roleNameSameSubclassSuperclass1.ump", 180);
+	  assertFailedParse("024_roleNameSameSubclassSuperclass2.ump", 180);
+	  assertFailedParse("024_roleNameSameSubclassSuperclass3.ump", 180);
+	  assertFailedParse("024_roleNameSameSubclassSuperclass4.ump", 180);
   }
 
   @Test

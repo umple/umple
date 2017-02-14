@@ -205,8 +205,9 @@ in order to craft an excellent pull request:
 
   ```sh
   cd build 
-  ant 
+  ant Dmyenv=local
   ```
+  Don't forget to use ant -Dmyenv=wlocal if you're on Windows.
 
   This command will compile the code in your branch and use that
   version of Umple to run the tests. This is needed to ensure your changes can

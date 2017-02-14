@@ -222,10 +222,8 @@ public class MicrowaveImpl implements IMicrowaveImpl
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "x" + ":" + getX()+ "," +
-            "f" + ":" + getF()+ "]"
-     + outputString;
+            "f" + ":" + getF()+ "]";
   }
 }

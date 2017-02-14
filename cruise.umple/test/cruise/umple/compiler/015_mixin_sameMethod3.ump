@@ -11,7 +11,7 @@ class X{
 
 class X{
 
-	int test()
+	void test()
 	{
 	  int x = 3;
 	}

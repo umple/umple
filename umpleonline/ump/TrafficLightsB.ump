@@ -3,51 +3,51 @@ class IntersectionTimerDriven {
   
   // Traffic lights are green for 25s in one direction
   // and 20s in the other. 
-  Integer directionOneGoTime=25000;
-  Integer directionTwoGoTime=20000;
+  Integer directionOneGoTime = 25;
+  Integer directionTwoGoTime = 20;
 
   // Lights are yellow for 5s
-  Integer yellowTime=5000;
+  Integer yellowTime = 5;
 
   // Pedestrians have 10s extra warning
-  Integer extraPedestrianWarning=10000;  
+  Integer extraPedestrianWarning = 10;  
   
   flow {
     FourWayStop 
     {
       entry / {
-        directionOneLight = DirectionOneLight.FlashingRed;
-        directionTwoLight = directionTwoLight.FlashingRed;
+        setDirectionOneLight(DirectionOneLight.FlashingRed);
+        setDirectionTwoLight(DirectionTwoLight.FlashingRed);
       }
       initiateRegularOperation -> DirectionOneGo;    
     }
     DirectionOneGo
     {
       entry / {
-        directionOneLight = directionOneLight.Green;
-        directionTwoLight = directionTwoLight.Red;
+        setDirectionOneLight(DirectionOneLight.Green);
+        setDirectionTwoLight(DirectionTwoLight.Red);
       }
       after(directionOneGoTime) -> DirectionOneHalting;
       detectMalfunction -> FourWayStop;
     }
     DirectionOneHalting
     {
-      entry / {directionOneLight = directionOneLight.Yellow; }
+      entry / {setDirectionOneLight(DirectionOneLight.Yellow);}
       after(yellowTime) -> DirectionTwoGo;
       detectMalfunction -> FourWayStop;
     }
     DirectionTwoGo
     {
       entry / {
-        directionOneLight = directionOneLight.Red;
-        directionTwoLight = directionTwoLight.Green;
+        setDirectionOneLight(DirectionOneLight.Red);
+        setDirectionTwoLight(DirectionTwoLight.Green);
       }
       after(directionOneGoTime) -> DirectionTwoHalting;
       detectMalfunction -> FourWayStop;
     }
     DirectionTwoHalting 
     {
-      entry / {directionTwoLight = directionTwoLight.Yellow; }
+      entry / {setDirectionTwoLight(DirectionTwoLight.Yellow);}
       after(yellowTime) -> DirectionOneGo;
       detectMalfunction -> FourWayStop;
     }        
@@ -57,37 +57,40 @@ class IntersectionTimerDriven {
   {
     FourWayStop
     {
-      entry / {P1Light = P1Light.DoNotWalk;  P2Light = P2Light.DoNotWalk;}
+      entry / {
+	setP1Light(P1Light.DoNotWalk);  
+	setP2Light(P2Light.DoNotWalk);
+      }
       initiateRegularOperation -> P2Go;
     }
     P1Go
     {
-      entry / {P1Light = P1Light.Walk;}
+      entry / {setP1Light(P1Light.Walk);}
       after(directionOneGoTime-extraPedestrianWarning)-> P1Halting;
       detectMalfunction -> FourWayStop;
     }
     P1Halting
     {
-      entry / {P1Light = P1Light.Flashing;}
+      entry / {setP1Light(P1Light.Flashing);}
       after(extraPedestrianWarning+yellowTime) -> P2Go;
       detectMalfunction -> FourWayStop;
     }
     P2Go
     {
-      entry / {P2Light = P2Light.Walk;}
+      entry / {setP2Light(P2Light.Walk);}
       after(directionTwoGoTime-extraPedestrianWarning) -> P2Halting;
       detectMalfunction -> FourWayStop;
     }
     P2Halting
     {
-      entry / {P2Light = P2Light.Flashing;}
+      entry / {setP2Light(P2Light.Flashing);}
       after(extraPedestrianWarning+yellowTime)  -> P1Go;
       detectMalfunction -> FourWayStop;
     }
   }
   
   
-  directionOneLight 
+  DirectionOneLight 
   {
     FlashingRed {} 
     Red {}
@@ -95,7 +98,7 @@ class IntersectionTimerDriven {
     Green {}    
   }
   
-  directionTwoLight
+  DirectionTwoLight
   {
     FlashingRed {}
     Red {}
@@ -117,5 +120,3 @@ class IntersectionTimerDriven {
   }
 }
 //$?[End_of_model]$?
-// @@@skipcompile - will not compile until issue 695 is fixed
-// @@@skiprubycompile - incorrect ruby code generated until issue 694 fixed

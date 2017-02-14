@@ -3,7 +3,29 @@ class UmpleToPhp {
   StringBuffer allCases = new StringBuffer();
   StringBuffer allDeclarations = new StringBuffer();
   StringBuffer allArgs = new StringBuffer();
-
+  
+  // Issue 923 Fix: Prevent default implmentation of interface methods when a state machine implements them
+  boolean implementsInterfaceMethod = false;
+  for (UmpleInterface uInterface : uClass.getParentInterface())
+  {
+  	for (Method m : uInterface.getMethods())
+  	{
+  		Method eventMethod = new Method("",e.getName(),e.getType().toLowerCase(),false);
+  		eventMethod.setMethodParameters(e.getParams());
+  		if (m.compareWithTheMethod(eventMethod))
+  		{
+  			uClass.removeMethod(m);
+  			implementsInterfaceMethod = true;
+  			break;
+  		}
+  	}
+  	
+  	if (implementsInterfaceMethod)
+  	{
+  		break;
+  	}
+  }
+   
   boolean firstStateMachine = true;
   for(StateMachine sm : uClass.getStateMachines(e))
   {

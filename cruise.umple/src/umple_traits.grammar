@@ -15,23 +15,25 @@ AllInclusionExclusionAlias- : [[InclusionExclusionAlias]] ( , [[InclusionExclusi
 InclusionExclusionAlias- : [[functionIncludeExcludeAlias]] | [[StateMachineIncludeExcludeAlias]] 
 functionIncludeExcludeAlias- : [[functionInExAlias]]  ( , [[functionInExAlias]]  )*
 functionInExAlias- : [[functionAliasName]] | [[iEFunction]] | [[traitAppliedParameters]]
-iEFunction : [=iEFunctionModifier:+|-] [methodName] [[iEParameterList]]
+iEFunction : [=modifier:+|-]? [~methodName] [[iEParameterList]]
 iEParameterList : OPEN_ROUND_BRACKET ( [parameter] ( , [parameter] )* )? CLOSE_ROUND_BRACKET
-functionAliasName : ([=iEFunctionModifier:+])? [~methodName] [[iEParameterList]] as [[IEVisiAlias]]
+functionAliasName : [=modifier:+]? ( ( [~smName] | [!smPattern:\d+|[*]]) .)? [~methodName] [[iEParameterList]] as [[IEVisiAlias]]
 
 IEVisiAlias- : [[IEVisiAlias1]] | [[IEVisiAlias2]] | [[IEVisiAlias3]]
-IEVisiAlias1- : [=iEVisibility:public|private|protected] [~methodAliasName]
+IEVisiAlias1- : [=iEVisibility:public|private|protected] [~aliasName]
 IEVisiAlias2- : [=iEVisibility:public|private|protected]
-IEVisiAlias3- : [~methodAliasName]
+IEVisiAlias3- : [~aliasName]
 traitAppliedParameters : [~pName] = [~rName]
 
 StateMachineIncludeExcludeAlias- : [[ StateMachineInExAlias]] ( , [[StateMachineInExAlias]]  )*
-StateMachineInExAlias- : [[StateMachineAliasName]] | [[iEStateMachine]] | [[StateMachineTransitionAlias]]
+StateMachineInExAlias- : [[StateMachineAliasName]] | [[iEStateMachine]] 
+//| [[StateMachineTransitionAlias]] 
 StateMachineAliasName : ([=iEStateMachineModifier:+])? [~smName] ([[StateNames]])? as [~smDesName] ([[DesStateNames]])?
 StateNames : . [~sName] ( [[StateNamesPassing]] )*
 DesStateNames :[[StateNames]]
 StateNamesPassing : [[StateNames]]
-iEStateMachine : [=iEStateMachineModifier:+|-] [~smName]
-
+//iEStateMachine : [=iEStateMachineModifier:+|-] [~smName] [[StateNames]]?
+iEStateMachine :  [=modifier:+|-] [~smName]  (  [[StateNames]] ( ( [[iEParameterList]] [[guardOption]]? ) | ( . [[guardOption]] ) )?   )?
+guardOption : [[guard]] | []
 //This is for events in state machines
-StateMachineTransitionAlias : ( [~smName] | [!smPattern:\d+|[*]]) . [~eventName] [[iEParameterList]] as [~AliasName]
+//StateMachineTransitionAlias : ( [~smName] | [!smPattern:\d+|[*]]) . [~eventName] [[iEParameterList]] as [~AliasName]

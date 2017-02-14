@@ -28,7 +28,7 @@ class Student
   public function delete()
   {}
 
-  public function foo(int a)
+  public function foo(int $a)
   {
 
     System.out.println("Starting foo with argument: " + a);

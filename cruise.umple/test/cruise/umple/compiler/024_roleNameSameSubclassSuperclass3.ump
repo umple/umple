@@ -1,0 +1,8 @@
+class A{
+  0..1 -> * B;
+}
+class B{
+   isA A;
+   0..1 -> * D bs;
+}
+class D{}

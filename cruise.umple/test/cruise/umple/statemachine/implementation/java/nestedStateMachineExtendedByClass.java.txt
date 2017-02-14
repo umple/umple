@@ -436,10 +436,8 @@ public class Animal extends ThingInWorld
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "isAlive" + ":" + getIsAlive()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "world = "+(getWorld()!=null?Integer.toHexString(System.identityHashCode(getWorld())):"null")
-     + outputString;
+            "  " + "world = "+(getWorld()!=null?Integer.toHexString(System.identityHashCode(getWorld())):"null");
   }
 }

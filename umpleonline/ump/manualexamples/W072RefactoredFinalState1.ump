@@ -1,0 +1,29 @@
+// The following shows how to generate the warning
+
+class InvalidFinalState {
+  status{
+    on{
+      turnoff -> off;
+      powerOff-> FINAL;
+    }
+    
+    off{
+      turnOn -> on;  
+    }
+
+    final FINAL{
+      entry/{entry();}
+      do{exe();}
+      reboot -> on;
+      nestedSm {
+        s1 {
+          -> s2;
+        }
+        s2 {
+
+        }
+      }
+      exit/{exit();}
+    }
+  }
+}

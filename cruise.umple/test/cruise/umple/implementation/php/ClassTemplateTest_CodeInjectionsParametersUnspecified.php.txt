@@ -28,7 +28,7 @@ class Student
   public function delete()
   {}
 
-  public function foo(int a)
+  public function foo(int $a)
   {
 
     System.out.println("Starting foo...");
@@ -41,7 +41,7 @@ class Student
 
   }
 
-  public function foo(int a, String b)
+  public function foo(int $a, $b)
   {
 
     System.out.println("Starting foo...");

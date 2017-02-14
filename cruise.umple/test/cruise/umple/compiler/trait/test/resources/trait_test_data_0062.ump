@@ -1,0 +1,29 @@
+class A{
+  isA T;
+  isA T1;
+  
+}
+
+trait T {
+    status {
+        off{
+          entry /{x1();}
+          e1-> on;       
+        }
+        on{
+          e-> off;
+        }
+    }
+}
+
+trait T1{
+    status {
+        off{
+          entry /{x();}
+          e-> m2;       
+        }
+        m2{
+           t -> off;   
+        }
+    }
+}

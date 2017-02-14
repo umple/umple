@@ -100,9 +100,7 @@ public class stateMachineWithStringComparisonGuard
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
-            "cmdString" + ":" + getCmdString()+ "]"
-     + outputString;
+            "cmdString" + ":" + getCmdString()+ "]";
   }
 }

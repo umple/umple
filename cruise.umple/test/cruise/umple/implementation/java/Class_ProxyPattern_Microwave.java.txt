@@ -196,10 +196,8 @@ public class MicrowaveImpl extends Client
 
   public String toString()
   {
-    String outputString = "";
     return super.toString() + "["+
             "x" + ":" + getX()+ "," +
-            "f" + ":" + getF()+ "]"
-     + outputString;
+            "f" + ":" + getF()+ "]";
   }
 }

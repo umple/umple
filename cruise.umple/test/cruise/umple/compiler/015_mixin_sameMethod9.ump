@@ -1,0 +1,28 @@
+class X{
+	test(){
+	}
+}
+
+class X{
+	void test(){
+	 int x = 2;
+	}
+}
+
+class X{
+
+	Integer test()
+	{
+	  int x = 3;
+	}
+	
+	Boolean test()
+	{
+	  int x = 4;
+	}
+	
+	Date test(int a)
+	{
+	  int x = 5;
+	}
+}

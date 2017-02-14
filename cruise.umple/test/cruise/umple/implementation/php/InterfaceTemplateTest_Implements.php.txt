@@ -28,7 +28,7 @@ class Something implements ISomething
   public function delete()
   {}
 
-  public function getCode(String [] aParam, Integer anotherParam)
+  public function getCode($aParam, $anotherParam)
   {
           return "";
   }

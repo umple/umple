@@ -1,0 +1,30 @@
+class A{
+  isA T3< -status.s2.[T and ((x and y) or (w and x))]> ;
+
+}
+trait T3{
+  isA T2;
+}
+
+trait T2{
+   isA T;
+   status{
+    s1{
+      e2->s2;
+    }
+    s2{
+      [((x and y) or (w and x)) and Z]-> s1;
+    }
+  }
+}
+
+trait T{  
+  status{
+    s1{
+      e22->s2;
+    }
+    s2{
+      [T and ((x and y) or (w and x))]->s2;   
+    }
+  }
+}

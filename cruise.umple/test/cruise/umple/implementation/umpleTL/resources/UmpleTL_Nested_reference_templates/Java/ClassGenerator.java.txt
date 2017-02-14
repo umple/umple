@@ -113,9 +113,7 @@ public class ClassGenerator
 
   public String toString()
   {
-    String outputString = "";
-    return super.toString() + "["+ "]"
-     + outputString;
+    return super.toString() + "["+ "]";
   }
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {

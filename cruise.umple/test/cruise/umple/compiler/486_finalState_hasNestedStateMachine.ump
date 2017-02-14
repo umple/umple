@@ -1,0 +1,21 @@
+class X {
+  status{
+    on{
+      turnoff -> off;
+      powerOff-> FINAL;
+    }    
+    off{
+      turnOn -> on;  
+    }
+    final FINAL{
+      nestedSm {
+        s1 {
+          -> s2;
+        }
+        s2 {
+
+        }
+      }
+    }
+  }
+}
