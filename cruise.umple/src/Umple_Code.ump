@@ -18,6 +18,15 @@ namespace cruise.umple.compiler;
 class UmpleModel
 {
 
+    //ParsingTime represents Parsing end time
+    //gTime1 represents code generation start time
+    //gTime2 represents code generation end time
+    Double parsingTime = 0.0;
+    internal Double gTime1 = 0.0;
+    internal Double gTime2 = 0.0;
+    
+    Map<String, String> hashMap = new HashMap<String, String>();
+    
   public static String[] findValidLanguages()
   {
     final String NONTERMINAL = "generate";
@@ -295,6 +304,7 @@ class UmpleModel
   {
     applyFilter(null);
     boolean foundGenerator;
+    parsingTime = System.currentTimeMillis()/1000.0;
     try
     {
       for (GenerateTarget target : getGenerates())
@@ -305,7 +315,11 @@ class UmpleModel
         for (String subopt : target.getSuboptions()) {
         	 generator.setSuboption(subopt);
         }
+        gTime1 = System.currentTimeMillis()/1000.0;
         generator.generate();
+        gTime2 = System.currentTimeMillis()/1000.0;
+        Double gTime = gTime2 - gTime1;
+        hashMap.put(target.getLanguage(),(String.valueOf(gTime)));
       }
     }
     catch (Exception ex)
