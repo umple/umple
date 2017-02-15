@@ -2653,12 +2653,16 @@ public class UmpleParserStateMachineTest
   }
   
   @Test
-  public void duplicateParallelStateMachineName()
+  public void duplicateParallelStateMachineName_InSameNsm()
   {
-    assertHasWarning("487_parallelStateMachines_sameRegionSameNames_1.ump", 0, 73, new Position("487_parallelStateMachines_sameRegionSameNames_1.ump", 5, 17, 67));
-    assertHasWarning("487_parallelStateMachines_sameRegionSameNames_2.ump", 0, 73, new Position("487_parallelStateMachines_sameRegionSameNames_2.ump", 5, 17, 67));
-    assertNoWarnings("487_parallelStateMachines_sameRegionDiffNames_1.ump");
-    assertNoWarnings("487_parallelStateMachines_sameRegionDiffNames_2.ump");
+    assertFailedParse("487_parallelStateMachines_sameNsmSameNames.ump", new Position("487_parallelStateMachines_sameNsmSameNames.ump", 3, 4, 20), 73);
+    assertNoWarnings("487_parallelStateMachines_sameNsmDiffNames.ump");
+  }
+  
+  @Test
+  public void duplicateParallelStateMachineName_InSameRegion()
+  {
+    assertFailedParse("487_parallelStateMachines_sameRegionSameNames.ump", new Position("487_parallelStateMachines_sameRegionSameNames.ump", 5, 17, 67), 74);
     assertNoWarnings("487_parallelStateMachines_diffRegionSameNames.ump");
     assertNoWarnings("487_parallelStateMachines_diffRegionDiffNames.ump");
   }
