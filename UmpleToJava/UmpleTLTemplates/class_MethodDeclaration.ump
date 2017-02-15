@@ -65,6 +65,17 @@ class UmpleToJava {
           finalParams = parameters.toString().substring(0, parameters.toString().length()-2);
           finalParamsWithoutTypes = parametersWithoutTypes.toString().substring(0, parametersWithoutTypes.toString().length()-2);
         }
+
+        /*
+        to change the name of the user defined constructors
+        */
+        if(uClass.getHasProxyPattern()||(uClass.getNeedsDefaultInterface()&&model.getDistributePattern()>0))
+        {
+          if(("".equals(methodType))&&(uClass.getName().equals(methodName+"Impl")))
+          {
+            methodName+="Impl";
+          }
+        }
         
     if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static")&&paramType.equals("String")&&isList.equals(" [] ")&&paramName.equals("args"))
         {
@@ -279,29 +290,6 @@ class UmpleToJava {
                 i += indent.length() + 1;
                 String[] returnAndRest = properMethodBody.substring(i).split(";", 2);
                 properMethodBody = properMethodIndent + properMethodBody.substring(0, i).trim() + indentedCustomAfterInjectionCode + "\n" + indent + returnAndRest[0].trim() + ";" + braceNewLine + braceIndent + brace + returnAndRest[1]; 
-                i += indentedCustomAfterInjectionCode.length() + braceIndent.length() + 7;
-              }
-
-              // if the last line isn't a return, insert the injection at the very end
-              String[] lines = properMethodBody.split("\\n");
-              if(!lines[lines.length-1].contains("return")) {
-                properMethodBody += GeneratorHelper.doIndent("\n" + customAfterInjectionCode, "    ");
-              }
-            }
-          }
-          appendln(realSb, properMethodBody);
-          if(!properMethodBody.contains("return"))
-          {
-            for( TraceItem traceItem : traceItems )append(realSb, (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):""));
-            if (customAfterInjectionCode != null) { append(realSb, "{0}\n",GeneratorHelper.doIndent(customAfterInjectionCode, "    "));}
-          }
-          appendln(realSb, "  }");
-        }
-      }
-    }
-#>>!>>
-}
-+ indent + returnAndRest[0].trim() + ";" + braceNewLine + braceIndent + brace + returnAndRest[1]; 
                 i += indentedCustomAfterInjectionCode.length() + braceIndent.length() + 7;
               }
 
