@@ -1081,7 +1081,7 @@ class UmpleInternalParser
           nestedStateMachine = fromState.getNestedStateMachine(lastIndex);
         }
         
-        if (isConcurrentState)
+        if (isConcurrentState && addNewSm)
         {
           // Issue 778
           State duplicateState = checkParentForDuplicateParallelSms(subToken.getValue("stateName"), fromState);
