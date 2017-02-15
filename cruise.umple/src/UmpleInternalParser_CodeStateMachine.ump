@@ -64,6 +64,42 @@ class UmpleInternalParser
   //Issue 531. Number of ocurrences of a given state in a state machine. 
   //More than one means that the transition is ambiguous and should generate a warning message 
   private int numberOfOcurrences;
+  
+  // Issue 778 - A helper class for checking that parallel state machines in the same region do not
+  // have the same name
+  private class ParallelSm 
+  {
+    private Token pSmToken;
+    private Token regionToken;
+    ParallelSm(Token pSmToken_, Token regionToken_) {
+      pSmToken = pSmToken_;
+      regionToken = regionToken_;
+    }
+    
+    public Token getPSmToken() {
+      return pSmToken;
+    }
+    
+    public Token getRegionToken() {
+      return regionToken;
+    }
+    
+    // Returns true if aParallelSm has the same name and region
+    public boolean hasSameNameAndRegion(ParallelSm aParallelSm) {
+      Token regionToken = aParallelSm.getRegionToken();
+      String aParallelSmName = aParallelSm.getPSmToken().getValue("stateName");
+      String aRegion = (regionToken.getSubToken("name") != null) ? regionToken.getValue("name") : regionToken.getValue("stateName");
+      if (this.getRegionToken().getSubToken("name") != null) {
+        return this.pSmToken.getValue("stateName").equals(aParallelSmName) && this.regionToken.getValue("name").equals(aRegion);
+      } else {
+        return this.pSmToken.getValue("stateName").equals(aParallelSmName) && this.regionToken.getValue("stateName").equals(aRegion);
+      }
+    }
+  }
+  
+  // Issue 778 - A list to keep track of all parallel state machines in order to check if
+  // 			 parallel regions have parallel state machines with the same name
+  private Hashtable<Token, ParallelSm> parallelSms = new Hashtable<Token, ParallelSm>();
    
   //Check if "extra code" is likely a malformed state machine
   private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
@@ -946,6 +982,10 @@ class UmpleInternalParser
         }
       }
     }
+    
+    // Issue 778 - After populating a state machine, check if its parallel regions contain parallel state
+    //             machines with the same name
+    checkParallelRegionsForParallelSmsWithSameName();
 
   }
   
@@ -1081,19 +1121,22 @@ class UmpleInternalParser
           nestedStateMachine = fromState.getNestedStateMachine(lastIndex);
         }
         
-        if (isConcurrentState && addNewSm)
+        // Issue 778
+        if (isConcurrentState && addNewSm && parallelSms.get(subToken) == null)
         {
-          // Issue 778
-          State duplicateState = checkParentForDuplicateParallelSms(subToken.getValue("stateName"), fromState);
+          State duplicateState = checkParentForParallelSmsWithSameName(subToken.getValue("stateName"), fromState);
           if (duplicateState != null)
           {
             getParseResult().addErrorMessage(new ErrorMessage(73,
                                                               fromState.getPosition(),
                                                               fromState.getName(),
+                                                              duplicateState.getName(),
                                                               "" + duplicateState.getPosition().getLineNumber(),
                                                               "" + subToken.getPosition().getLineNumber()));
           } else {
-            // create a new ParallelSm and add it to parallelSms
+            // Add to parallelSms, which will be checked for parallel state machines with the
+            // same name in the same region after populating a state machine
+            parallelSms.put(subToken, new ParallelSm(subToken, stateToken.getParentToken()));
           }
         }
         
@@ -1114,19 +1157,56 @@ class UmpleInternalParser
     }
   }
   
-  // Issue 778 - First check if the parallel state machine has the same name as one of the states in 
+  // Issue 778 - First, check if the parallel state machine has the same name as one of the states in 
   //             its parent state. If we find a state with the same name, we return it to provide the corresponding error message
-  private State checkParentForDuplicateParallelSms(String parallelSmName, State parentState)
+  private State checkParentForParallelSmsWithSameName(String parallelSmName, State parentState)
   {
-    for (StateMachine nsm : parentState.getNestedStateMachines()) {
-      for (State s : nsm.getStates()) {
-        if (s.getName().equals(parallelSmName)) {
+    for (StateMachine nsm : parentState.getNestedStateMachines()) 
+    {
+      for (State s : nsm.getStates()) 
+      {
+        if (s.getName().equals(parallelSmName)) 
+        {
           return s;
         }
       }
     }
     
     return null;
+  }
+  
+  // Issue 778 - After collecting all parallel state machines in parallelSms, we will check if a parallel region
+  //             contains parallel state machines with the same name. We will provide the corresponding error message(s) as they
+  //             are detected.
+  private void checkParallelRegionsForParallelSmsWithSameName()
+  {
+    if (parallelSms.size() <= 1) 
+    {
+       parallelSms.clear();
+       return;
+    }
+    
+    ParallelSm[] psms = parallelSms.values().toArray(new ParallelSm[parallelSms.size()]);
+     
+	for (int i = 0; i < psms.length; i++) 
+	{
+	  for(int j = i + 1; j < psms.length; j++) 
+	  {
+	    if (psms[i].hasSameNameAndRegion(psms[j])) 
+	    {
+	      Token regionToken = psms[i].getRegionToken();
+	      String regionName = (regionToken.getValue("name") == null) ? regionToken.getValue("stateName") : regionToken.getValue("name");
+	      getParseResult().addErrorMessage(new ErrorMessage(74,
+	                                                        regionToken.getPosition(),
+	                                                        regionName,
+	                                                        psms[i].getPSmToken().getValue("stateName"),
+	                                                        "" + psms[i].getPSmToken().getPosition().getLineNumber(),
+	                                                        "" + psms[j].getPSmToken().getPosition().getLineNumber()));
+	     }
+	   }
+	 }
+	 
+	 parallelSms.clear();
   }
   
   //Issue 148

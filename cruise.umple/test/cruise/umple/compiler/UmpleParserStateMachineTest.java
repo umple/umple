@@ -2662,7 +2662,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void duplicateParallelStateMachineName_InSameRegion()
   {
-    assertFailedParse("487_parallelStateMachines_sameRegionSameNames.ump", new Position("487_parallelStateMachines_sameRegionSameNames.ump", 5, 17, 67), 74);
+    assertFailedParse("487_parallelStateMachines_sameRegionSameNames.ump", new Position("487_parallelStateMachines_sameRegionSameNames.ump", 2, 2, 12), 74);
     assertNoWarnings("487_parallelStateMachines_diffRegionSameNames.ump");
     assertNoWarnings("487_parallelStateMachines_diffRegionDiffNames.ump");
   }
