@@ -24,6 +24,12 @@ public class UmpleConsoleConfigTest {
   }
 
   @Test
+  public void testGetPerformance() {
+	    UmpleConsoleConfig cfg = new UmpleConsoleConfig(set("-p"));
+	    
+	    assertTrue("Performance flag was not triggered by '-p'", cfg.getPerformance());
+	  }
+  @Test
   public void testGetHelp() {
     UmpleConsoleConfig cfg = new UmpleConsoleConfig(set("--help"));
     

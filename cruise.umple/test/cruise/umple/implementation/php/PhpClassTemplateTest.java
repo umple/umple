@@ -27,6 +27,7 @@ public class PhpClassTemplateTest extends ClassTemplateTest
     SampleFileWriter.destroy(pathToInput + "/Lamp.php");
     SampleFileWriter.destroy(pathToInput + "/Switch.php");
     SampleFileWriter.destroy(pathToInput + "/php/Student.php");
+    SampleFileWriter.destroy(pathToInput + "/php/Object.php");
   }
   
   

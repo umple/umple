@@ -76,8 +76,9 @@ class UmpleToJava {
             methodName+="Impl";
           }
         }
-        
-    if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static")&&paramType.equals("String")&&isList.equals(" [] ")&&paramName.equals("args"))
+    
+        if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static")
+          &&paramType.equals("String")&&isList.equals(" [] "))
         {
           String exceptionHandlerPackage = "";
           if(mainMainClass!=null)
