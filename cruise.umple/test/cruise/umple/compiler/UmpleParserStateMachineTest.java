@@ -2665,6 +2665,7 @@ public class UmpleParserStateMachineTest
   {
     assertFailedParse("487_parallelStateMachines_sameRegionSameNames.ump", new Position("487_parallelStateMachines_sameRegionSameNames.ump", 2, 2, 12), 74);
     assertFailedParse("487_parallelStateMachines_sameRegionSameNames_2.ump", new Position("487_parallelStateMachines_sameRegionSameNames_2.ump", 13, 4, 131), 74);
+    assertNoWarnings("487_parallelStateMachines_sameRegionDiffNames.ump");
     assertNoWarnings("487_parallelStateMachines_diffRegionSameNames.ump");
     assertNoWarnings("487_parallelStateMachines_diffRegionDiffNames.ump");
   }

@@ -1,0 +1,24 @@
+E074 Duplicate Parallel State Machine Name in Parallel Region
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when parallel state machines in the same parallel region have the same names.</h2>
+
+<p>
+In Umple, parallel state machines in the same parallel region must have different names.
+</p>
+
+
+@@example
+@@source manualexamples/E074DuplicateParallelStateMachineNameInParallelRegion1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E074DuplicateParallelStateMachineNameInParallelRegion2.ump
+@@endexample
+
+@@example
+@@source manualexamples/E074DuplicateParallelStateMachineNameInParallelRegion3.ump
+@@endexample
