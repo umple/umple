@@ -1,4 +1,4 @@
-distribute RMI forced;
+distributable RMI forced;
 namespace distributed.rmi.directives1;
 class CC
 {

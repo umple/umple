@@ -407,13 +407,18 @@ private void setParentClassesDefaultInterface()
 
 private void setParentDefaultInterfaceRecursive(UmpleClass uClass,Boolean isDistributed)
 {
-  uClass.setIsDefaultInterfaceRemoteRMI(isDistributed);
-  uClass.setNeedsDefaultInterface(true);
-  if(uClass.getExtendsClass()!=null) 
+  //if(!(uClass.getIsAbstract())&&!uClass.isImmutable()&&!uClass.getIsSingleton())
+  if(true)
   {
-    if(!uClass.getExtendsClass().getNeedsDefaultInterface())
+
+    uClass.setIsDefaultInterfaceRemoteRMI(isDistributed);
+    uClass.setNeedsDefaultInterface(true);
+    if(uClass.getExtendsClass()!=null) 
     {
-      setParentDefaultInterfaceRecursive(uClass.getExtendsClass(),isDistributed);
+      if(!uClass.getExtendsClass().getNeedsDefaultInterface())
+      {
+        setParentDefaultInterfaceRecursive(uClass.getExtendsClass(),isDistributed);
+      }
     }
   }
 }
@@ -427,11 +432,11 @@ private void analyzeDistributedClasses()
   { 
     for (UmpleClass uClass:  model.getUmpleClasses())
     { 
-      if (model.getDistributeForced())
+      if (model.getDistributeForced()&&!(uClass.getIsAbstract())&&!uClass.isImmutable()&&!uClass.getIsSingleton())
       { model.setDistributed(true);
         uClass.setDistributeTechnology(model.getDistributeTechnology());
         uClass.setIsDistributed(true);
-        uClass.setHasProxyPattern(true);
+        //uClass.setHasProxyPattern(true);
         uClass.setNeedsDefaultInterface(true);
       }
 	    if (!uClass.getIsDistributed())
@@ -464,13 +469,13 @@ private Boolean checkIsDistributed(UmpleClass uClass)
   int distributedParents=0; 
   for (UmpleInterface parentInterface: uClass.getParentInterface())
   { 
-    if(checkIsDistributed(parentInterface))
+    if(checkIsDistributed(parentInterface)&&!(uClass.getIsAbstract())&&!uClass.isImmutable()&&!uClass.getIsSingleton())
     {  
       distributedParents+=1;
       uClass.setDistributeTechnology(parentInterface.getDistributeTechnology());
       uClass.setIsDistributed(true);
       model.setDistributed(true);
-      uClass.setHasProxyPattern(true);
+      //uClass.setHasProxyPattern(true);
       uClass.setNeedsDefaultInterface(false);
       if (parentInterface.getIsDistributable())
       { 
@@ -487,25 +492,22 @@ private Boolean checkIsDistributed(UmpleClass uClass)
 /*
 First it is checked if the class is distributable itself. Then the parent classes
 */
-  if(uClass.getIsDistributable())
+  if(uClass.getIsDistributable()&&!(uClass.getIsAbstract())&&!uClass.isImmutable()&&!uClass.getIsSingleton())
   {
-    uClass.setHasProxyPattern(true);
+    //uClass.setHasProxyPattern(true);
     uClass.setNeedsDefaultInterface(true);
     uClass.setIsDistributed(true);
     model.setDistributed(true);
     return true;
   }
 
-
-
-
   if(uClass.getExtendsClass()!=null) 
   {
-    if(checkIsDistributed(uClass.getExtendsClass()))
+    if(checkIsDistributed(uClass.getExtendsClass())&&!(uClass.getIsAbstract()))
     { 
       uClass.setIsDistributed(true);
       model.setDistributed(true);
-      uClass.setHasProxyPattern(true);
+      //uClass.setHasProxyPattern(true);
       uClass.setNeedsDefaultInterface(true);
       uClass.setDistributeTechnology(uClass.getExtendsClass().getDistributeTechnology());
       return true;

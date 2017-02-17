@@ -1,5 +1,5 @@
 namespace distributed.rmi.directives3;
-distribute on;
+distributable on;
 class CC
 {
   isA Father;

@@ -254,6 +254,15 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Client.java");
    
     SampleFileWriter.destroy(pathToInput + "/java/IClient.java");
+    
+    SampleFileWriter.destroy(pathToInput + "/java/IClientImpl.java");
+    SampleFileWriter.destroy(pathToInput + "/java/Client.java");
+    SampleFileWriter.destroy(pathToInput + "/java/ClientImpl.java");
+    SampleFileWriter.destroy(pathToInput + "/java/ClientRemote.java");
+    SampleFileWriter.destroy(pathToInput + "/java/UmpleRuntime.java");
+    SampleFileWriter.destroy(pathToInput + "/java/IUmpleRuntime.java");
+    SampleFileWriter.destroy(pathToInput + "/java/IUmpleObjectFactory.java");
+    
     SampleFileWriter.destroy(pathToInput + "/java/distributed/");
     SampleFileWriter.destroy(pathToInput + "/java/proxyPattern/");
 

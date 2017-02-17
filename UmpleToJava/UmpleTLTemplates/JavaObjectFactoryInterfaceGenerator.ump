@@ -35,16 +35,58 @@ class JavaObjectFactoryInterfaceGenerator {
   gen.setModel(model);
   GeneratorHelper.generator = gen;
   Boolean isInterface=true;
+  
+  Set<String> packageSet = new HashSet<String>();
+  packageSet.add("java.rmi.Remote");
+  packageSet.add("java.rmi.RemoteException");
+  if(model.getDistributeTechnology().equals("WS"))
+  {
+    packageSet.add("javax.jws.WebMethod");
+    packageSet.add("javax.jws.WebService");
+    packageSet.add("javax.jws.soap.SOAPBinding");
+    packageSet.add("javax.jws.soap.SOAPBinding.Style");
+  }
+  for(UmpleClass uClass: model.getUmpleClasses())
+  { GeneratedClass gClass = uClass.getGeneratedClass();
+    for (Depend depend : uClass.getDepends())
+      {
+        packageSet.add(depend.getName());
+      }
+      
+      for (String anImport : gClass.getMultiLookup("import"))
+      {
+        packageSet.add(anImport);
+      }    
+    if (uClass.getIsDistributed())
+    {
+      String packageName="";
+      if(!uClass.getPackageName().equals("")){
+        packageName=uClass.getPackageName()+".";
+        packageName+=uClass.getName();
+        packageSet.add(packageName);
+      }
+    }
+  }
+
+  if (model.getDefaultNamespace()!=null){#>>
+package <<=model.getDefaultNamespace()>>;
+  <<#
+  }
+  for(String packageName: packageSet)
+  {
+#>>
+import <<=packageName>>;
+<<#
+  }
+  if(model.getDistributeTechnology().equals("WS"))
+  {
+  #>>
+  @WebService
+  @SOAPBinding(style = Style.RPC)
+  <<#}
 #>>
 
-<<#if (model.getDefaultNamespace()!=null){#>>
-package <<=model.getDefaultNamespace()>>;
-<<#}#>>
-
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-
-public interface IUmpleObjectFactory extends Remote
+public interface IUmpleRuntime extends Remote
 {
   <<@ UmpleToJava.objectFactory_add_Declare_All >>
 }

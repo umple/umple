@@ -95,15 +95,26 @@ class JavaClassGenerator {
 <<# } #>>
 public <<# if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
 boolean hasParentInterface=uClass.hasParentInterface();
-if(uClass.getHasProxyPattern())
+
+if(uClass.getNeedsDefaultInterface())
 {
   if (hasParentInterface == false){
-        append(realSb," implements I"+uClass.getName());
+        if(model.getDistributePattern()==0)
+          append(realSb," implements java.io.Serializable");
+        else if(model.getDistributePattern()==1&&uClass.getIsDistributed())
+          append(realSb," implements java.io.Serializable , I"+uClass.getName());
+        else if(model.getDistributePattern()==2)
+           append(realSb," implements java.io.Serializable ,I"+uClass.getName().substring(0,uClass.getName().length()-4)); 
         hasParentInterface=true;
       }
       else{
         if(uClass.getNeedsDefaultInterface())
-          append(realSb,", I"+uClass.getName());
+                 if(model.getDistributePattern()==0)
+          append(realSb," ,java.io.Serializable");
+        else if(model.getDistributePattern()==1&&uClass.getIsDistributed())
+          append(realSb," ,java.io.Serializable , I"+uClass.getName());
+        else if(model.getDistributePattern()==2)
+           append(realSb," ,java.io.Serializable ,I"+uClass.getName().substring(0,uClass.getName().length()-4));
       } 
 }
 
@@ -148,7 +159,7 @@ for (StateMachine smq : uClass.getStateMachines())
   return realSb;
     } 
     private String getDistributedMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
-    {if(uClass.getHasProxyPattern()){#>>
+    {if(uClass.getHasProxyPattern()||uClass.getIsDistributed()){#>>
   //------------------------
   // Returning the Hashcode
   //------------------------
@@ -160,15 +171,15 @@ for (StateMachine smq : uClass.getStateMachines())
     }return realSb.toString();
     }
     private String getProxyReferenceCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
-    {if(uClass.getHasProxyPattern()){#>>
+    {if(uClass.getIsDistributed()&&model.getDistributePattern()==1){#>>
   //------------------------
   // Reference to the proxy
   //------------------------
-  <<=uClass.getName().substring(0,uClass.getName().length()-4)>> realSelf;
+  <<=uClass.getName().substring(0,uClass.getName().length()-4)>> self;
   
-  public void setRealSelf(<<=uClass.getName().substring(0,uClass.getName().length()-4)>> self)
+  public void setSelf(<<=uClass.getName().substring(0,uClass.getName().length()-4)>> proxy)
   {
-    realSelf=self;
+    self=proxy;
   }
 
     <<#}return realSb.toString();
@@ -176,8 +187,8 @@ for (StateMachine smq : uClass.getStateMachines())
     private String getMemberCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   { 
     String self="this";
-    if(uClass.getHasProxyPattern())
-      self="realSelf";
+    if(uClass.getIsDistributed()&&model.getDistributePattern()==1)
+      self="self";
   #>><<@ UmpleToJava.members_AllStatics >><<@ UmpleToJava.members_AllAttributes >><<@ UmpleToJava.members_AllStateMachines >><<@ UmpleToJava.members_AllDoActivities >><<@ UmpleToJava.members_AllAssociations >><<@ UmpleToJava.members_AllHelpers >>
   <<#return realSb.toString();
     }
@@ -215,8 +226,10 @@ for (StateMachine smq : uClass.getStateMachines())
   } 
   private String getAssociationCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   { String self="this";
-    if(uClass.getHasProxyPattern())
-      self="realSelf";
+    
+    if(uClass.getIsDistributed()&&model.getDistributePattern()==1)
+      self="self";
+      
     String umpleSourceFile = "";
     Integer baseJavaLine = realSb.toString().split("\\n").length+3;#>><<@ UmpleToJava.association_Get_All >><<@ UmpleToJava.association_Set_All >>
   <<#return realSb.toString();
@@ -235,8 +248,9 @@ for (StateMachine smq : uClass.getStateMachines())
     private String getDeleteCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   {
     String self="this";
-    if(uClass.getHasProxyPattern())
-      self="realSelf";
+    if(uClass.getIsDistributed()&&model.getDistributePattern()==1)
+      self="self";
+      
     Integer baseJavaLine = realSb.toString().split("\\n").length+1; #>><<@ UmpleToJava.delete_All >>
     <<# for (StateMachine smq : uClass.getStateMachines())
      {

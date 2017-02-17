@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.io.Serializable;
 import distributed.rmi3.UmpleObjectFactory;
-public class Client extends CC, ClientI
+public class Client extends CC implements java.io.Serializable, ClientI
 {
   IClientImpl realObject;
   public void setRealObject(IClientImpl aObject)

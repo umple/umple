@@ -1,6 +1,6 @@
 use objectFactory_add_DeclareDefault.ump;
 use objectFactory_add_DeclareOneToOne.ump;
-
+use rmi_objectFactory_add_methods.ump;
 
 class UmpleToJava {
     objectFactory_add_Declare_All <<!<</*objectFactory_add_Declare_All*/>><<#
@@ -17,7 +17,17 @@ class UmpleToJava {
       String arguments;
       String caller;
       String argumentscomma;
-      String accessibility;
+      String accessibility = "public I"+uClass.getName()+"Impl";
+      if(model.getDistributePattern()==2)
+        accessibility = "public "+uClass.getName();
+      String webMethod="";
+      if(model.getDistributeTechnology().equals("WS")){
+        webMethod="@WebMethod"+NL; 
+      /*  accessibility="public "+uClass.getName()+"Impl";
+        if(model.getDistributePattern()==0)
+          accessibility = "public "+uClass.getName();      
+          */  
+        }
       for (AssociationVariable av : uClass.getAssociationVariables()) 
       {
         relatedAssociation = av.getRelatedAssociation();
@@ -28,6 +38,7 @@ class UmpleToJava {
           break;
         }
       }
+      caller=gClass.getLookup("constructorSignature_caller");
     #>><<@ UmpleToJava.objectFactory_add_DeclareDefault >><<#
       if (isOneToOne)
       {
@@ -35,7 +46,55 @@ class UmpleToJava {
       <<@ UmpleToJava.objectFactory_add_DeclareOneToOne >>
       <<#
       }
-    }
+      if (uClass.hasMethods())
+      {
+        for (Method aMethod : uClass.getMethods()) 
+        {
+          if(!aMethod.getExistsInLanguage("Java"))
+            continue;
+          String methodName = aMethod.getName();
+          String methodType = aMethod.getType();
+          /*
+          user defined constructors
+          */
+          if(("".equals(methodType))&&(uClass.getName().equals(methodName))&&!aMethod.getModifier().equals("private"))
+          {
+            StringBuilder parameters = new StringBuilder();
+            StringBuilder parametersWithoutTypes = new StringBuilder();
+            arguments="";
+            
+            caller="";
+            String paramName="";
+            String paramType="";
+            String aSingleParameter="";
+            String isList="";
+            String finalParams = "";        
+            String finalParamsWithoutTypes = "";
+            if (aMethod.hasMethodParameters())
+            { 
+              argumentscomma=", ";
+              for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
+              {
+                paramName = aMethodParam.getName();
+                paramType = aMethodParam.getType();
+                isList = aMethodParam.getIsList() ? " [] " : " ";
+                aSingleParameter = paramType + isList + paramName;
+                parameters.append(aSingleParameter + ", ");
+                parametersWithoutTypes.append(aMethodParam.getName() + ", ");
+              }
+              
+              arguments = parameters.toString().substring(0, parameters.toString().length()-2);
+              caller = parametersWithoutTypes.toString().substring(0, parametersWithoutTypes.toString().length()-2);
+            }
+            else{
+              argumentscomma=""; 
+            }
+            #>><<@ UmpleToJava.rmi_objectFactory_add_methods >><<#
+            
+          }
+        }
+      }            
+    }    
   }
 #>>!>>
 }

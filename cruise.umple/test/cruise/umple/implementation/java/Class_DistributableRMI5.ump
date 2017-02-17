@@ -1,9 +1,11 @@
 namespace distributed.rmi5;
 interface ClientI
 {
+
 }
 class Client
 {
+  depend java.applet.*;
   //isA ClientI;
    id="s";
   //key{id}
