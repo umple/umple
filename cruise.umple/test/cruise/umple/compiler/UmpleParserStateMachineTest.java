@@ -2653,21 +2653,11 @@ public class UmpleParserStateMachineTest
   }
   
   @Test
-  public void duplicateParallelStateMachineName_InSameNsm()
+  public void duplicateParallelStateMachineName()
   {
     assertFailedParse("487_parallelStateMachines_sameNsmSameNames.ump", new Position("487_parallelStateMachines_sameNsmSameNames.ump", 3, 4, 20), 73);
     assertFailedParse("487_parallelStateMachines_sameNsmSameNames_2.ump", new Position("487_parallelStateMachines_sameNsmSameNames_2.ump", 4, 6, 30), 73);
     assertNoWarnings("487_parallelStateMachines_sameNsmDiffNames.ump");
-  }
-  
-  @Test
-  public void duplicateParallelStateMachineName_InSameRegion()
-  {
-    assertFailedParse("487_parallelStateMachines_sameRegionSameNames.ump", new Position("487_parallelStateMachines_sameRegionSameNames.ump", 2, 2, 12), 74);
-    assertFailedParse("487_parallelStateMachines_sameRegionSameNames_2.ump", new Position("487_parallelStateMachines_sameRegionSameNames_2.ump", 13, 4, 131), 74);
-    assertNoWarnings("487_parallelStateMachines_sameRegionDiffNames.ump");
-    assertNoWarnings("487_parallelStateMachines_diffRegionSameNames.ump");
-    assertNoWarnings("487_parallelStateMachines_diffRegionDiffNames.ump");
   }
 
   public void walkGraphTwiceNested_StateMachineGraph_ClearNodes()
