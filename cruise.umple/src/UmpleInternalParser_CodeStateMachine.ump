@@ -1112,8 +1112,8 @@ class UmpleInternalParser
     }
   }
   
-  // Issue 778 - First, check if the parallel state machine has the same name as one of the states in 
-  //             its parent state. If we find a state with the same name, we return it to provide the corresponding error message
+  // Issue 778 - Check if the parallel state machine has the same name as one of the states in 
+  //             its parent composite state. If we find a state with the same name, we return it to provide the corresponding error message.
   private State checkParentForParallelSmsWithSameName(String parallelSmName, State parentState)
   {
     for (StateMachine nsm : parentState.getNestedStateMachines()) 
