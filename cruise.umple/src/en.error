@@ -178,6 +178,7 @@
 1011: 3, "http://cruise.eecs.uottawa.ca/umple/W1011InvalidAssociationClassKey.html", AssociationClass '{0}' missing needed '{1}' key, provided {2} ;
 1012: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Method '{0}' cannot be found. Injection was ignored. ;
 1013: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Parameter specification does not apply to code injections with the '{0}' keyword. The injection was applied to all generated methods. ;
+1014: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Excluded method '{0}' cannot be found. The exclusion was ignored. ;
 
 1500 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: '{0}' not understood ; 
 1501 : 1, "http://cruise.eecs.uottawa.ca/umple/E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 
