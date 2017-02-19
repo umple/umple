@@ -2651,6 +2651,14 @@ public class UmpleParserStateMachineTest
 	  assertNoWarnings("486_finalState_hasEntryAction.ump");
 	  assertNoWarnings("486_finalState_isEmpty.ump");
   }
+  
+  @Test
+  public void duplicateParallelStateMachineName()
+  {
+    assertFailedParse("487_parallelStateMachines_sameNsmSameNames.ump", new Position("487_parallelStateMachines_sameNsmSameNames.ump", 3, 4, 20), 73);
+    assertFailedParse("487_parallelStateMachines_sameNsmSameNames_2.ump", new Position("487_parallelStateMachines_sameNsmSameNames_2.ump", 4, 6, 30), 73);
+    assertNoWarnings("487_parallelStateMachines_sameNsmDiffNames.ump");
+  }
 
   public void walkGraphTwiceNested_StateMachineGraph_ClearNodes()
   {

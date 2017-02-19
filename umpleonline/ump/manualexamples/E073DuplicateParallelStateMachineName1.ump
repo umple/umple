@@ -1,0 +1,18 @@
+// The following example generates the error
+// "s1" has two parallel state machines that are named "t1"
+
+class X {
+  sm{
+    s1{
+      t1{
+        goT2-> t2;
+      }
+      t2{ }
+      ||
+      t1{
+        goT4-> t4;
+      }
+      t4{}
+    }
+  }
+}

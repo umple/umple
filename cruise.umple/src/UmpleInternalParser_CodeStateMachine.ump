@@ -946,7 +946,6 @@ class UmpleInternalParser
         }
       }
     }
-
   }
   
   /* Issue 925 - Final states cannot have do activities, exit actions, transitions, 
@@ -1080,6 +1079,22 @@ class UmpleInternalParser
           int lastIndex = fromState.numberOfNestedStateMachines() - 1;
           nestedStateMachine = fromState.getNestedStateMachine(lastIndex);
         }
+        
+        // Issue 778
+        if (isConcurrentState && addNewSm)
+        {
+          State duplicateState = checkParentForParallelSmsWithSameName(subToken.getValue("stateName"), fromState);
+          if (duplicateState != null)
+          {
+            getParseResult().addErrorMessage(new ErrorMessage(73,
+                                                              fromState.getPosition(),
+                                                              fromState.getName(),
+                                                              duplicateState.getName(),
+                                                              "" + duplicateState.getPosition().getLineNumber(),
+                                                              "" + subToken.getPosition().getLineNumber()));
+          }
+        }
+        
         State s = createStateFromDefinition(subToken,nestedStateMachine);
         //alignStateDefinitionWithStateMachine(s,nestedStateMachine);
         if (addNewSm)
@@ -1095,6 +1110,24 @@ class UmpleInternalParser
         analyzeState(subToken, s);
       }
     }
+  }
+  
+  // Issue 778 - Check if the parallel state machine has the same name as one of the states in 
+  //             its parent composite state. If we find a state with the same name, we return it to provide the corresponding error message.
+  private State checkParentForParallelSmsWithSameName(String parallelSmName, State parentState)
+  {
+    for (StateMachine nsm : parentState.getNestedStateMachines()) 
+    {
+      for (State s : nsm.getStates()) 
+      {
+        if (s.getName().equals(parallelSmName)) 
+        {
+          return s;
+        }
+      }
+    }
+    
+    return null;
   }
   
   //Issue 148
