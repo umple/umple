@@ -11,16 +11,16 @@ OS         | Linux  | OSX    | Windows
 
 This is the main project for various Umple subprojects and components.
 
-Umple is a model-oriented programming technology. It allows developers to embed modelling concepts (e.g. UML associations, state machines), patterns, generation templates, and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP (and can be embedded in or embed these), as well as diagrams, metrics and many other artifacts.
+Umple is a model-oriented programming technology, allowing developers to embed modelling concepts (e.g. UML associations, state machines), patterns, generation templates, and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP, as well as diagrams, metrics and many other artifacts. It can be embeded in as well as embed the above mentioned.
 
 The project homepage is located at http://umple.org/
 
 ##Development
-Umple is developed in itself, guaranteeing robustness, the most recent version of the compiler must be used to compile itself. See the wiki for development setup.
+Umple is developed in itself, guaranteeing robustness; the most recent version of the compiler must be used to compile itself. See the wiki for development setup.
 
 Development follows a model-driven, test-driven, agile, continuous-integration process. Umple is hosted currently on Github at http://code.umple.org. It was first released in 2007, and the master was on Google Code from 2011 to mid 2015.
 
-Umple has been largely developed as a research project at the University of Ottawa, Canada, by numerous PhD and masters students, Many undergraduates from across Canada and the USA have also contributed through the UCOSP program. See the license file for the list of contributors.
+Umple has been largely developed as a research project at the University of Ottawa, Canada, by numerous PhD and masters students: many undergraduates from across Canada and the USA have also contributed through the UCOSP program. See the license file for the list of contributors.
 
 More details can be found as follows
 
@@ -30,11 +30,11 @@ More details can be found as follows
   * Live diagram of the metamodel: http://metamodel.umple.org
   * Architecture: http://architecture.umple.org
 
-Umple is continuously tested and build at the University of Ottawa using CruiseControl; see http://cc.umple.org . It is also built on Travis CI (https://travis-ci.org/) and Appveyor (https://appveyor.com/).
+Umple is continuously tested and built at the University of Ottawa using CruiseControl; see http://cc.umple.org . It is also built on Travis CI (https://travis-ci.org/) and Appveyor (https://appveyor.com/).
  
 ###Project setup
 
-The umple project is split into many smaller subproject, the folder hierarchy is explained below to better describe the structure.
+The umple project is split into many smaller subprojects; the folder hierarchy is explained below to better describe the structure.
 
 * build/
   * Ant build scripts and related information including user manual raw data
