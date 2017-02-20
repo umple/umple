@@ -738,4 +738,10 @@ public class StateMachineTest extends StateMachineTemplateTest
 	  assertUmpleTemplateFor("refactorFinalState_invalidElementsInNestedFinalState.ump",languagePath + "/refactorFinalState_invalidElementsInNestedFinalState."+ languagePath +".txt","X");
   }
   
+  @Test
+  public void parallelSm_sameNameDiffStates()
+  {
+    assertUmpleTemplateFor("parallelSm_sameNameDiffStates.ump",languagePath + "/parallelSm_sameNameDiffStates."+ languagePath +".txt","X");
+  }
+  
 }
