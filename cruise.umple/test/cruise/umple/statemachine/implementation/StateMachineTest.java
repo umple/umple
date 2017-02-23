@@ -742,14 +742,36 @@ public class StateMachineTest extends StateMachineTemplateTest
   public void parallelSm_sameNameDiffStates()
   {
     assertUmpleTemplateFor("parallelSm_sameNameDiffStates.ump",languagePath + "/parallelSm_sameNameDiffStates."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void parallelSm_sameNameDiffStates_2()
+  {
     assertUmpleTemplateFor("parallelSm_sameNameDiffStates_2.ump",languagePath + "/parallelSm_sameNameDiffStates_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void parallelSm_sameNameDiffStatesEntryExitActions()
+  {
+    assertUmpleTemplateFor("parallelSm_sameNameDiffStatesEntryExitActions.ump",languagePath + "/parallelSm_sameNameDiffStatesEntryExitActions."+ languagePath +".txt","X");
   }
   
   @Test
   public void parallelSm_diffNamesDiffStates()
   {
     assertUmpleTemplateFor("parallelSm_diffNamesDiffStates.ump",languagePath + "/parallelSm_diffNamesDiffStates."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void parallelSm_diffNamesDiffStates_2()
+  {
     assertUmpleTemplateFor("parallelSm_diffNamesDiffStates_2.ump",languagePath + "/parallelSm_diffNamesDiffStates_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void parallelSm_diffNamesDiffStatesEntryExitActions()
+  {
+    assertUmpleTemplateFor("parallelSm_diffNamesDiffStatesEntryExitActions.ump",languagePath + "/parallelSm_diffNamesDiffStatesEntryExitActions."+ languagePath +".txt","X");
   }
   
 }

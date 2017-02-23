@@ -1,0 +1,33 @@
+class X {
+  sm{
+    s0{
+      t1 {
+        goS1-> s1;
+      }
+      ||
+      t2 {
+        entry /{t2_entry_action();}
+        exit /{t2_exit_action();}
+        goT3-> t3;
+      }
+      t3{ }
+    }
+    s1{
+      t4{
+        goT5-> t5;
+      }
+      t5{ }
+      ||
+      t6{
+        entry /{t6_entry_action();}
+        exit /{t6_exit_action();}
+        goT7-> t7;
+      }
+      t7{ }
+    }
+  }
+  void t2_entry_action(){}
+  void t6_entry_action(){}
+  void t2_exit_action(){}
+  void t6_exit_action(){}
+}

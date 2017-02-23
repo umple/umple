@@ -17,20 +17,17 @@ class X
   private static $SmS0T2Null = 5;
   private static $SmS0T2T2 = 6;
   private static $SmS0T2T3 = 7;
-  private static $SmS1Null = 8;
-  private static $SmS1S2 = 9;
-  private static $SmS1S2T4Null = 10;
-  private static $SmS1S2T4T4 = 11;
-  private static $SmS1S2T4T5 = 12;
-  private static $SmS1S2T6Null = 13;
-  private static $SmS1S2T6T6 = 14;
-  private static $SmS1S2T6T7 = 15;
+  private static $SmS1T4Null = 8;
+  private static $SmS1T4T4 = 9;
+  private static $SmS1T4T5 = 10;
+  private static $SmS1T6Null = 11;
+  private static $SmS1T6T6 = 12;
+  private static $SmS1T6T7 = 13;
   private $sm;
   private $smS0T1;
   private $smS0T2;
-  private $smS1;
-  private $smS1S2T4;
-  private $smS1S2T6;
+  private $smS1T4;
+  private $smS1T6;
 
   //------------------------
   // CONSTRUCTOR
@@ -40,9 +37,8 @@ class X
   {
     $this->setSmS0T1(self::$SmS0T1Null);
     $this->setSmS0T2(self::$SmS0T2Null);
-    $this->setSmS1(self::$SmS1Null);
-    $this->setSmS1S2T4(self::$SmS1S2T4Null);
-    $this->setSmS1S2T6(self::$SmS1S2T6Null);
+    $this->setSmS1T4(self::$SmS1T4Null);
+    $this->setSmS1T6(self::$SmS1T6Null);
     $this->setSm(self::$SmS0);
   }
 
@@ -55,9 +51,8 @@ class X
     $answer = $this->getSm();
     if ($this->smS0T1 != self::$SmS0T1Null) { $answer .= "." . $this->getSmS0T1(); }
     if ($this->smS0T2 != self::$SmS0T2Null) { $answer .= "." . $this->getSmS0T2(); }
-    if ($this->smS1 != self::$SmS1Null) { $answer .= "." . $this->getSmS1(); }
-    if ($this->smS1S2T4 != self::$SmS1S2T4Null) { $answer .= "." . $this->getSmS1S2T4(); }
-    if ($this->smS1S2T6 != self::$SmS1S2T6Null) { $answer .= "." . $this->getSmS1S2T6(); }
+    if ($this->smS1T4 != self::$SmS1T4Null) { $answer .= "." . $this->getSmS1T4(); }
+    if ($this->smS1T6 != self::$SmS1T6Null) { $answer .= "." . $this->getSmS1T6(); }
     return $answer;
   }
 
@@ -83,26 +78,19 @@ class X
     return null;
   }
 
-  public function getSmS1()
+  public function getSmS1T4()
   {
-    if ($this->smS1 == self::$SmS1Null) { return "SmS1Null"; }
-    elseif ($this->smS1 == self::$SmS1S2) { return "SmS1S2"; }
+    if ($this->smS1T4 == self::$SmS1T4Null) { return "SmS1T4Null"; }
+    elseif ($this->smS1T4 == self::$SmS1T4T4) { return "SmS1T4T4"; }
+    elseif ($this->smS1T4 == self::$SmS1T4T5) { return "SmS1T4T5"; }
     return null;
   }
 
-  public function getSmS1S2T4()
+  public function getSmS1T6()
   {
-    if ($this->smS1S2T4 == self::$SmS1S2T4Null) { return "SmS1S2T4Null"; }
-    elseif ($this->smS1S2T4 == self::$SmS1S2T4T4) { return "SmS1S2T4T4"; }
-    elseif ($this->smS1S2T4 == self::$SmS1S2T4T5) { return "SmS1S2T4T5"; }
-    return null;
-  }
-
-  public function getSmS1S2T6()
-  {
-    if ($this->smS1S2T6 == self::$SmS1S2T6Null) { return "SmS1S2T6Null"; }
-    elseif ($this->smS1S2T6 == self::$SmS1S2T6T6) { return "SmS1S2T6T6"; }
-    elseif ($this->smS1S2T6 == self::$SmS1S2T6T7) { return "SmS1S2T6T7"; }
+    if ($this->smS1T6 == self::$SmS1T6Null) { return "SmS1T6Null"; }
+    elseif ($this->smS1T6 == self::$SmS1T6T6) { return "SmS1T6T6"; }
+    elseif ($this->smS1T6 == self::$SmS1T6T7) { return "SmS1T6T7"; }
     return null;
   }
 
@@ -174,6 +162,7 @@ class X
     $aSmS0T2 = $this->smS0T2;
     if ($aSmS0T2 == self::$SmS0T2T2)
     {
+      $this->exitSmS0T2();
       $this->setSmS0T2(self::$SmS0T2T3);
       $wasEventProcessed = true;
     }
@@ -184,26 +173,18 @@ class X
   {
     $wasEventProcessed = false;
     
-    $aSmS1 = $this->smS1;
-    $aSmS1S2T4 = $this->smS1S2T4;
-    $aSmS1S2T6 = $this->smS1S2T6;
-    if ($aSmS1 == self::$SmS1Null)
+    $aSmS1T4 = $this->smS1T4;
+    $aSmS1T6 = $this->smS1T6;
+    if ($aSmS1T4 == self::$SmS1T4Null)
     {
-      $this->setSmS1(self::$SmS1S2);
+      $this->setSmS1T4(self::$SmS1T4T4);
       $wasEventProcessed = true;
     }
 
     
-    if ($aSmS1S2T4 == self::$SmS1S2T4Null)
+    if ($aSmS1T6 == self::$SmS1T6Null)
     {
-      $this->setSmS1S2T4(self::$SmS1S2T4T4);
-      $wasEventProcessed = true;
-    }
-
-    
-    if ($aSmS1S2T6 == self::$SmS1S2T6Null)
-    {
-      $this->setSmS1S2T6(self::$SmS1S2T6T6);
+      $this->setSmS1T6(self::$SmS1T6T6);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -213,36 +194,28 @@ class X
   {
     $wasEventProcessed = false;
     
-    $aSmS1 = $this->smS1;
-    $aSmS1S2T4 = $this->smS1S2T4;
-    $aSmS1S2T6 = $this->smS1S2T6;
-    if ($aSmS1 == self::$SmS1S2)
+    $aSmS1T4 = $this->smS1T4;
+    $aSmS1T6 = $this->smS1T6;
+    if ($aSmS1T4 == self::$SmS1T4T4)
     {
-      $this->setSmS1(self::$SmS1Null);
+      $this->setSmS1T4(self::$SmS1T4Null);
+      $wasEventProcessed = true;
+    }
+    elseif ($aSmS1T4 == self::$SmS1T4T5)
+    {
+      $this->setSmS1T4(self::$SmS1T4Null);
       $wasEventProcessed = true;
     }
 
     
-    if ($aSmS1S2T4 == self::$SmS1S2T4T4)
+    if ($aSmS1T6 == self::$SmS1T6T6)
     {
-      $this->setSmS1S2T4(self::$SmS1S2T4Null);
+      $this->setSmS1T6(self::$SmS1T6Null);
       $wasEventProcessed = true;
     }
-    elseif ($aSmS1S2T4 == self::$SmS1S2T4T5)
+    elseif ($aSmS1T6 == self::$SmS1T6T7)
     {
-      $this->setSmS1S2T4(self::$SmS1S2T4Null);
-      $wasEventProcessed = true;
-    }
-
-    
-    if ($aSmS1S2T6 == self::$SmS1S2T6T6)
-    {
-      $this->setSmS1S2T6(self::$SmS1S2T6Null);
-      $wasEventProcessed = true;
-    }
-    elseif ($aSmS1S2T6 == self::$SmS1S2T6T7)
-    {
-      $this->setSmS1S2T6(self::$SmS1S2T6Null);
+      $this->setSmS1T6(self::$SmS1T6Null);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -252,10 +225,10 @@ class X
   {
     $wasEventProcessed = false;
     
-    $aSmS1S2T4 = $this->smS1S2T4;
-    if ($aSmS1S2T4 == self::$SmS1S2T4T4)
+    $aSmS1T4 = $this->smS1T4;
+    if ($aSmS1T4 == self::$SmS1T4T4)
     {
-      $this->setSmS1S2T4(self::$SmS1S2T4T5);
+      $this->setSmS1T4(self::$SmS1T4T5);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -265,10 +238,11 @@ class X
   {
     $wasEventProcessed = false;
     
-    $aSmS1S2T6 = $this->smS1S2T6;
-    if ($aSmS1S2T6 == self::$SmS1S2T6T6)
+    $aSmS1T6 = $this->smS1T6;
+    if ($aSmS1T6 == self::$SmS1T6T6)
     {
-      $this->setSmS1S2T6(self::$SmS1S2T6T7);
+      $this->exitSmS1T6();
+      $this->setSmS1T6(self::$SmS1T6T7);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -298,7 +272,8 @@ class X
     }
     elseif ($this->sm == self::$SmS1)
     {
-      if ($this->smS1 == self::$SmS1Null) { $this->setSmS1(self::$SmS1S2); }
+      if ($this->smS1T4 == self::$SmS1T4Null) { $this->setSmS1T4(self::$SmS1T4T4); }
+      if ($this->smS1T6 == self::$SmS1T6Null) { $this->setSmS1T6(self::$SmS1T6T6); }
     }
   }
 
@@ -308,43 +283,50 @@ class X
     if ($this->sm != self::$SmS0 && $aSmS0T1 != self::$SmS0T1Null) { $this->setSm(self::$SmS0); }
   }
 
+  private function exitSmS0T2()
+  {
+    if ($this->smS0T2 == self::$SmS0T2T2)
+    {
+      t2_exit_action();
+    }
+  }
+
   private function setSmS0T2($aSmS0T2)
   {
     $this->smS0T2 = $aSmS0T2;
     if ($this->sm != self::$SmS0 && $aSmS0T2 != self::$SmS0T2Null) { $this->setSm(self::$SmS0); }
-  }
-
-  private function exitSmS1()
-  {
-    if ($this->smS1 == self::$SmS1S2)
-    {
-      $this->exitS1();
-    }
-  }
-
-  private function setSmS1($aSmS1)
-  {
-    $this->smS1 = $aSmS1;
-    if ($this->sm != self::$SmS1 && $aSmS1 != self::$SmS1Null) { $this->setSm(self::$SmS1); }
 
     // entry actions and do activities
-    if ($this->smS1 == self::$SmS1S2)
+    if ($this->smS0T2 == self::$SmS0T2T2)
     {
-      if ($this->smS1S2T4 == self::$SmS1S2T4Null) { $this->setSmS1S2T4(self::$SmS1S2T4T4); }
-      if ($this->smS1S2T6 == self::$SmS1S2T6Null) { $this->setSmS1S2T6(self::$SmS1S2T6T6); }
+      t2_entry_action();
     }
   }
 
-  private function setSmS1S2T4($aSmS1S2T4)
+  private function setSmS1T4($aSmS1T4)
   {
-    $this->smS1S2T4 = $aSmS1S2T4;
-    if ($this->smS1 != self::$SmS1S2 && $aSmS1S2T4 != self::$SmS1S2T4Null) { $this->setSmS1(self::$SmS1S2); }
+    $this->smS1T4 = $aSmS1T4;
+    if ($this->sm != self::$SmS1 && $aSmS1T4 != self::$SmS1T4Null) { $this->setSm(self::$SmS1); }
   }
 
-  private function setSmS1S2T6($aSmS1S2T6)
+  private function exitSmS1T6()
   {
-    $this->smS1S2T6 = $aSmS1S2T6;
-    if ($this->smS1 != self::$SmS1S2 && $aSmS1S2T6 != self::$SmS1S2T6Null) { $this->setSmS1(self::$SmS1S2); }
+    if ($this->smS1T6 == self::$SmS1T6T6)
+    {
+      t6_exit_action();
+    }
+  }
+
+  private function setSmS1T6($aSmS1T6)
+  {
+    $this->smS1T6 = $aSmS1T6;
+    if ($this->sm != self::$SmS1 && $aSmS1T6 != self::$SmS1T6Null) { $this->setSm(self::$SmS1); }
+
+    // entry actions and do activities
+    if ($this->smS1T6 == self::$SmS1T6T6)
+    {
+      t6_entry_action();
+    }
   }
 
   public function equals($compareTo)
@@ -354,6 +336,26 @@ class X
 
   public function delete()
   {}
+
+  public function t2_entry_action()
+  {
+    
+  }
+
+  public function t6_entry_action()
+  {
+    
+  }
+
+  public function t2_exit_action()
+  {
+    
+  }
+
+  public function t6_exit_action()
+  {
+    
+  }
 
 }
 ?>
