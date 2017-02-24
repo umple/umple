@@ -5,7 +5,7 @@
 
 
 -- This defines a NuSMV module for ASm --
-MODULE ASm ( _smS21S21 , _smS22S22 )
+MODULE ASm ( _smS2S21S21 , _smS2S22S22 )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -17,19 +17,19 @@ MODULE ASm ( _smS21S21 , _smS22S22 )
      sm_stable :=  !( event = ev_e1 | event = ev_e3 | event = ev_e5 | event = ev_e2 | event = ev_e4 );
      t1 := event = ev_e1 & state = Sm_s1;
      t2 := event = ev_e4 & state = Sm_s2;
-     t3 := event = ev_e1 & _smS21S21.state = SmS21S21_a;
-     t4 := event = ev_e1 & _smS21S21.state = SmS21S21_b;
-     t5 := event = ev_e2 & _smS21S21.state = SmS21S21_b;
-     t6 := event = ev_e3 & _smS21S21.state = SmS21S21_b;
-     t7 := event = ev_e1 & _smS21S21.state = SmS21S21_c;
-     t8 := event = ev_e2 & _smS21S21.state = SmS21S21_c;
-     t9 := event = ev_e5 & _smS22S22.state != null;
-     t10 := event = ev_e1 & _smS22S22.state = SmS22S22_d;
-     t11 := event = ev_e2 & _smS22S22.state = SmS22S22_d;
-     t12 := event = ev_e3 & _smS22S22.state = SmS22S22_d;
-     t13 := event = ev_e1 & _smS22S22.state = SmS22S22_e;
-     t14 := event = ev_e1 & _smS22S22.state = SmS22S22_f;
-     t15 := event = ev_e2 & _smS22S22.state = SmS22S22_f;
+     t3 := event = ev_e1 & _smS2S21S21.state = SmS2S21S21_a;
+     t4 := event = ev_e1 & _smS2S21S21.state = SmS2S21S21_b;
+     t5 := event = ev_e2 & _smS2S21S21.state = SmS2S21S21_b;
+     t6 := event = ev_e3 & _smS2S21S21.state = SmS2S21S21_b;
+     t7 := event = ev_e1 & _smS2S21S21.state = SmS2S21S21_c;
+     t8 := event = ev_e2 & _smS2S21S21.state = SmS2S21S21_c;
+     t9 := event = ev_e5 & _smS2S22S22.state != null;
+     t10 := event = ev_e1 & _smS2S22S22.state = SmS2S22S22_d;
+     t11 := event = ev_e2 & _smS2S22S22.state = SmS2S22S22_d;
+     t12 := event = ev_e3 & _smS2S22S22.state = SmS2S22S22_d;
+     t13 := event = ev_e1 & _smS2S22S22.state = SmS2S22S22_e;
+     t14 := event = ev_e1 & _smS2S22S22.state = SmS2S22S22_f;
+     t15 := event = ev_e2 & _smS2S22S22.state = SmS2S22S22_f;
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
@@ -48,40 +48,40 @@ MODULE ASm ( _smS21S21 , _smS22S22 )
        TRUE : ev_null;
      esac;
 
--- This defines a NuSMV module for ASmS21S21 --
-MODULE ASmS21S21 ( _sm )
+-- This defines a NuSMV module for ASmS2S21S21 --
+MODULE ASmS2S21S21 ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmS21S21_a , SmS21S21_b , SmS21S21_c , null };
+     state : { SmS2S21S21_a , SmS2S21S21_b , SmS2S21S21_c , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
        _sm.t1 | _sm.t8 | _sm.t15 | _sm.t2 | _sm.t9 | _sm.t6 : null;
-       _sm.t5 : SmS21S21_a;
-       _sm.t3 | _sm.t7 : SmS21S21_b;
-       _sm.t4 : SmS21S21_c;
-       _sm.state = Sm_s2 & state = null : SmS21S21_a;
+       _sm.t5 : SmS2S21S21_a;
+       _sm.t3 | _sm.t7 : SmS2S21S21_b;
+       _sm.t4 : SmS2S21S21_c;
+       _sm.state = Sm_s2 & state = null : SmS2S21S21_a;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for ASmS22S22 --
-MODULE ASmS22S22 ( _sm )
+-- This defines a NuSMV module for ASmS2S22S22 --
+MODULE ASmS2S22S22 ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmS22S22_d , SmS22S22_e , SmS22S22_f , null };
+     state : { SmS2S22S22_d , SmS2S22S22_e , SmS2S22S22_f , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
        _sm.t2 | _sm.t9 | _sm.t1 | _sm.t8 | _sm.t15 : null;
-       _sm.t11 | _sm.t6 | _sm.t14 : SmS22S22_e;
-       _sm.t12 | _sm.t10 | _sm.t13 : SmS22S22_f;
-       _sm.state = Sm_s2 & state = null : SmS22S22_d;
+       _sm.t11 | _sm.t6 | _sm.t14 : SmS2S22S22_e;
+       _sm.t12 | _sm.t10 | _sm.t13 : SmS2S22S22_f;
+       _sm.state = Sm_s2 & state = null : SmS2S22S22_d;
        TRUE : state;
      esac;
 
@@ -90,9 +90,9 @@ MODULE ASm_Machine
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     aSm : ASm( aSmS21S21 , aSmS22S22 );
-     aSmS21S21 : ASmS21S21( aSm );
-     aSmS22S22 : ASmS22S22( aSm );
+     aSm : ASm( aSmS2S21S21 , aSmS2S22S22 );
+     aSmS2S21S21 : ASmS2S21S21( aSm );
+     aSmS2S22S22 : ASmS2S22S22( aSm );
 
 -- This defines a NuSMV module for main --
 MODULE main
@@ -102,16 +102,16 @@ MODULE main
      aSm_Machine : ASm_Machine;
 
    -- The following properties are specified to certify that this model is free of non-determinism. 
-   INVARSPEC   ( aSm_Machine.aSm.t8 & aSm_Machine.aSm.t11 -> next( aSm_Machine.aSm.state = Sm_s1 & aSm_Machine.aSmS22S22.state = SmS22S22_e ) )
-   INVARSPEC   ( aSm_Machine.aSm.t15 & aSm_Machine.aSm.t5 -> next( aSm_Machine.aSm.state = Sm_s1 & aSm_Machine.aSmS21S21.state = SmS21S21_a ) )
-   INVARSPEC   ( aSm_Machine.aSm.t6 & aSm_Machine.aSm.t12 -> next( aSm_Machine.aSmS22S22.state = SmS22S22_e & aSm_Machine.aSmS22S22.state = SmS22S22_f ) )
+   INVARSPEC   ( aSm_Machine.aSm.t8 & aSm_Machine.aSm.t11 -> next( aSm_Machine.aSm.state = Sm_s1 & aSm_Machine.aSmS2S22S22.state = SmS2S22S22_e ) )
+   INVARSPEC   ( aSm_Machine.aSm.t15 & aSm_Machine.aSm.t5 -> next( aSm_Machine.aSm.state = Sm_s1 & aSm_Machine.aSmS2S21S21.state = SmS2S21S21_a ) )
+   INVARSPEC   ( aSm_Machine.aSm.t6 & aSm_Machine.aSm.t12 -> next( aSm_Machine.aSmS2S22S22.state = SmS2S22S22_e & aSm_Machine.aSmS2S22S22.state = SmS2S22S22_f ) )
 
    -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
    CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s1 )
    CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s2 )
-   CTLSPEC   EF( aSm_Machine.aSmS21S21.state = SmS21S21_a )
-   CTLSPEC   EF( aSm_Machine.aSmS21S21.state = SmS21S21_b )
-   CTLSPEC   EF( aSm_Machine.aSmS21S21.state = SmS21S21_c )
-   CTLSPEC   EF( aSm_Machine.aSmS22S22.state = SmS22S22_d )
-   CTLSPEC   EF( aSm_Machine.aSmS22S22.state = SmS22S22_e )
-   CTLSPEC   EF( aSm_Machine.aSmS22S22.state = SmS22S22_f )
+   CTLSPEC   EF( aSm_Machine.aSmS2S21S21.state = SmS2S21S21_a )
+   CTLSPEC   EF( aSm_Machine.aSmS2S21S21.state = SmS2S21S21_b )
+   CTLSPEC   EF( aSm_Machine.aSmS2S21S21.state = SmS2S21S21_c )
+   CTLSPEC   EF( aSm_Machine.aSmS2S22S22.state = SmS2S22S22_d )
+   CTLSPEC   EF( aSm_Machine.aSmS2S22S22.state = SmS2S22S22_e )
+   CTLSPEC   EF( aSm_Machine.aSmS2S22S22.state = SmS2S22S22_f )
