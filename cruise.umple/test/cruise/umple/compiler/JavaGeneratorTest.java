@@ -1296,10 +1296,10 @@ public class JavaGeneratorTest
     Assert.assertEquals("exitOn();",onState.getAction(0).getActionCode());
     
     Assert.assertEquals("entry",onState.getAction(1).getActionType());
-    Assert.assertEquals("if (bulbA == BulbA.Null) { setBulbA(BulbA.Normal); }",onState.getAction(1).getActionCode());
+    Assert.assertEquals("if (bulbOnA == BulbOnA.Null) { setBulbOnA(BulbOnA.Normal); }",onState.getAction(1).getActionCode());
 
     Assert.assertEquals("entry",onState.getAction(2).getActionType());
-    Assert.assertEquals("if (bulbB == BulbB.Null) { setBulbB(BulbB.Normal2); }",onState.getAction(2).getActionCode());
+    Assert.assertEquals("if (bulbOnB == BulbOnB.Null) { setBulbOnB(BulbOnB.Normal2); }",onState.getAction(2).getActionCode());
     
     GeneratorHelper.postpare(model);
     Assert.assertEquals(0,onState.numberOfActions());
