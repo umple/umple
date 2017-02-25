@@ -15,8 +15,8 @@ class FinalStateTest extends UnitTestCase
   {
     $c = new CourseL();
     $this->assertEqual("StatusOn",$c->getStatus());
-    $this->assertEqual("StatusMotorIdleMotorIdle",$c->getStatusMotorIdle());
-    $this->assertEqual("StatusFanIdleFanIdle",$c->getStatusFanIdle());
+    $this->assertEqual("StatusOnMotorIdleMotorIdle",$c->getStatusOnMotorIdle());
+    $this->assertEqual("StatusOnFanIdleFanIdle",$c->getStatusOnFanIdle());
 
     $c->flip();
 
@@ -24,8 +24,8 @@ class FinalStateTest extends UnitTestCase
     $this->assertEqual("deleted",$c->getLog(0));
 
     $this->assertEqual("StatusOn",$c->getStatus());
-    $this->assertEqual("StatusMotorIdleFinal",$c->getStatusMotorIdle());
-    $this->assertEqual("StatusFanIdleFanIdle",$c->getStatusFanIdle());
+    $this->assertEqual("StatusOnMotorIdleFinal",$c->getStatusOnMotorIdle());
+    $this->assertEqual("StatusOnFanIdleFanIdle",$c->getStatusOnFanIdle());
   }
   
 }
