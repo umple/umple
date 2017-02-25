@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3239 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
 import java.util.*;
@@ -14,11 +14,11 @@ public class QueuedWithConcurrentStateMachines implements Runnable
 
   //QueuedWithConcurrentStateMachines State Machines
   public enum Sm { s1, s2 }
-  public enum SmS2a { Null, s2a }
-  public enum SmS2b { Null, s2b }
+  public enum SmS2S2a { Null, s2a }
+  public enum SmS2S2b { Null, s2b }
   private Sm sm;
-  private SmS2a smS2a;
-  private SmS2b smS2b;
+  private SmS2S2a smS2S2a;
+  private SmS2S2b smS2S2b;
   
   //enumeration type of messages accepted by QueuedWithConcurrentStateMachines
   protected enum MessageType { e1_M, e2_M }
@@ -32,8 +32,8 @@ public class QueuedWithConcurrentStateMachines implements Runnable
 
   public QueuedWithConcurrentStateMachines()
   {
-    setSmS2a(SmS2a.Null);
-    setSmS2b(SmS2b.Null);
+    setSmS2S2a(SmS2S2a.Null);
+    setSmS2S2b(SmS2S2b.Null);
     setSm(Sm.s1);
     queue = new MessageQueue();
     removal=new Thread(this);
@@ -48,8 +48,8 @@ public class QueuedWithConcurrentStateMachines implements Runnable
   public String getSmFullName()
   {
     String answer = sm.toString();
-    if (smS2a != SmS2a.Null) { answer += "." + smS2a.toString(); }
-    if (smS2b != SmS2b.Null) { answer += "." + smS2b.toString(); }
+    if (smS2S2a != SmS2S2a.Null) { answer += "." + smS2S2a.toString(); }
+    if (smS2S2b != SmS2S2b.Null) { answer += "." + smS2S2b.toString(); }
     return answer;
   }
 
@@ -58,14 +58,14 @@ public class QueuedWithConcurrentStateMachines implements Runnable
     return sm;
   }
 
-  public SmS2a getSmS2a()
+  public SmS2S2a getSmS2S2a()
   {
-    return smS2a;
+    return smS2S2a;
   }
 
-  public SmS2b getSmS2b()
+  public SmS2S2b getSmS2S2b()
   {
-    return smS2b;
+    return smS2S2b;
   }
 
   public boolean _e1()
@@ -90,22 +90,22 @@ public class QueuedWithConcurrentStateMachines implements Runnable
   {
     boolean wasEventProcessed = false;
     
-    SmS2a aSmS2a = smS2a;
-    SmS2b aSmS2b = smS2b;
-    switch (aSmS2a)
+    SmS2S2a aSmS2S2a = smS2S2a;
+    SmS2S2b aSmS2S2b = smS2S2b;
+    switch (aSmS2S2a)
     {
       case Null:
-        setSmS2a(SmS2a.s2a);
+        setSmS2S2a(SmS2S2a.s2a);
         wasEventProcessed = true;
         break;
       default:
         // Other states do respond to this event
     }
 
-    switch (aSmS2b)
+    switch (aSmS2S2b)
     {
       case Null:
-        setSmS2b(SmS2b.s2b);
+        setSmS2S2b(SmS2S2b.s2b);
         wasEventProcessed = true;
         break;
       default:
@@ -119,22 +119,22 @@ public class QueuedWithConcurrentStateMachines implements Runnable
   {
     boolean wasEventProcessed = false;
     
-    SmS2a aSmS2a = smS2a;
-    SmS2b aSmS2b = smS2b;
-    switch (aSmS2a)
+    SmS2S2a aSmS2S2a = smS2S2a;
+    SmS2S2b aSmS2S2b = smS2S2b;
+    switch (aSmS2S2a)
     {
       case s2a:
-        setSmS2a(SmS2a.Null);
+        setSmS2S2a(SmS2S2a.Null);
         wasEventProcessed = true;
         break;
       default:
         // Other states do respond to this event
     }
 
-    switch (aSmS2b)
+    switch (aSmS2S2b)
     {
       case s2b:
-        setSmS2b(SmS2b.Null);
+        setSmS2S2b(SmS2S2b.Null);
         wasEventProcessed = true;
         break;
       default:
@@ -148,19 +148,19 @@ public class QueuedWithConcurrentStateMachines implements Runnable
   {
     boolean wasEventProcessed = false;
     
-    SmS2a aSmS2a = smS2a;
-    SmS2b aSmS2b = smS2b;
-    switch (aSmS2a)
+    SmS2S2a aSmS2S2a = smS2S2a;
+    SmS2S2b aSmS2S2b = smS2S2b;
+    switch (aSmS2S2a)
     {
       case s2a:
-        setSmS2b(SmS2b.s2b);
+        setSmS2S2b(SmS2S2b.s2b);
         wasEventProcessed = true;
         break;
       default:
         // Other states do respond to this event
     }
 
-    switch (aSmS2b)
+    switch (aSmS2S2b)
     {
       case s2b:
         exitSm();
@@ -192,22 +192,22 @@ public class QueuedWithConcurrentStateMachines implements Runnable
     switch(sm)
     {
       case s2:
-        if (smS2a == SmS2a.Null) { setSmS2a(SmS2a.s2a); }
-        if (smS2b == SmS2b.Null) { setSmS2b(SmS2b.s2b); }
+        if (smS2S2a == SmS2S2a.Null) { setSmS2S2a(SmS2S2a.s2a); }
+        if (smS2S2b == SmS2S2b.Null) { setSmS2S2b(SmS2S2b.s2b); }
         break;
     }
   }
 
-  private void setSmS2a(SmS2a aSmS2a)
+  private void setSmS2S2a(SmS2S2a aSmS2S2a)
   {
-    smS2a = aSmS2a;
-    if (sm != Sm.s2 && aSmS2a != SmS2a.Null) { setSm(Sm.s2); }
+    smS2S2a = aSmS2S2a;
+    if (sm != Sm.s2 && aSmS2S2a != SmS2S2a.Null) { setSm(Sm.s2); }
   }
 
-  private void setSmS2b(SmS2b aSmS2b)
+  private void setSmS2S2b(SmS2S2b aSmS2S2b)
   {
-    smS2b = aSmS2b;
-    if (sm != Sm.s2 && aSmS2b != SmS2b.Null) { setSm(Sm.s2); }
+    smS2S2b = aSmS2S2b;
+    if (sm != Sm.s2 && aSmS2S2b != SmS2S2b.Null) { setSm(Sm.s2); }
   }
 
   public void delete()
