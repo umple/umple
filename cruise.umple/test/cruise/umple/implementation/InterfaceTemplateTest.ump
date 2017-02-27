@@ -41,3 +41,7 @@ interface IFirstChild{
 interface ISecondChild{
 	isA ISomething, IGarbage;
 }
+
+class A{
+	isA ISecondChild;
+}

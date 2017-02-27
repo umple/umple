@@ -1,0 +1,106 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class A
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //A Attributes
+  private $repeatCheck;
+
+  //A State Machines
+  private static $StatusS1 = 1;
+  private static $StatusS2 = 2;
+  private $status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->repeatCheck = false;
+    $this->setStatus(self::$StatusS1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setRepeatCheck($aRepeatCheck)
+  {
+    $wasSet = false;
+    $this->repeatCheck = $aRepeatCheck;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getRepeatCheck()
+  {
+    return $this->repeatCheck;
+  }
+
+  public function isRepeatCheck()
+  {
+    return $this->repeatCheck;
+  }
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusS1) { return "StatusS1"; }
+    elseif ($this->status == self::$StatusS2) { return "StatusS2"; }
+    return null;
+  }
+
+  private function __autotransition1__()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusS1)
+    {
+      if ($this->getRepeatCheck()<$this->repeatCheck($this->z))
+      {
+        $this->setStatus(self::$StatusS2);
+        $wasEventProcessed = true;
+      }
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->status = $aStatus;
+
+    // entry actions and do activities
+    if ($this->status == self::$StatusS1)
+    {
+      $this->__autotransition1__();
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+  public function repeatCheck()
+  {
+    return true;
+  }
+
+}
+?>

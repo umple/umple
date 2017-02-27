@@ -1,0 +1,16 @@
+namespace example;
+
+interface I{
+  void test();
+}
+interface I2{
+  isA I;
+  void test2();
+}
+interface I3{
+  isA I2;
+  void test3();
+}
+class A{
+  isA I3;
+}

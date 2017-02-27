@@ -180,9 +180,10 @@ class SampleFileWriter
       String actualLine = null;
       
       int line = 0;
-      do 
+    do 
       {
         actualLine = actualReader.readLine();
+        expectedLine = expectedReader.readLine();
         if (ignoreLineComments)
         {
           // HACK: To deal with // line # comments
@@ -190,8 +191,12 @@ class SampleFileWriter
           { //Ignore the line, go to next
             actualLine = actualReader.readLine();
           }
-        }
-        expectedLine = expectedReader.readLine();
+          
+          while (expectedLine != null && expectedLine.indexOf("// line") != -1)
+          { 
+        	  expectedLine = expectedReader.readLine();
+          }
+        } 
         
         line++;
         
@@ -202,6 +207,11 @@ class SampleFileWriter
         }
       } 
       while (expectedLine != null && actualLine != null);
+      
+      if(expectedLine == null && line == 1)
+      {
+      	Assert.fail(("Expected output file is empty."));
+      }
     }
     catch (Exception e)
     {
