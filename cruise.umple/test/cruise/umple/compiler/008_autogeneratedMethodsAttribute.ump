@@ -1,0 +1,13 @@
+class X
+{
+  const Integer MAX = 100;
+  internal Boolean internalAttr = false;
+  
+  immutable String str;
+  autounique x;
+
+  lazy immutable String str2;
+  lazy Double lDoub;
+  Date d;
+  defaulted String p = "robot";
+}
