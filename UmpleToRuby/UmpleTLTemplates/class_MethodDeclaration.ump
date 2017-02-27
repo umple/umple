@@ -4,6 +4,8 @@ class UmpleToRuby {
   // the for loop will terminate immediately even if there are none with little to no 
     for (Method aMethod : uClass.getMethods())
   	{
+      if (aMethod.getSource() == Method.Source.fAutoAPI)
+        continue;
       String methodName = aMethod.getName();
       String methodType = aMethod.getType();
       String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName(), aMethod.getMethodParameters()));

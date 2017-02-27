@@ -8,7 +8,7 @@ class UmpleToPhp {
                                                 "String", "Boolean", "Integer", "Float", "Double");
     	for (Method aMethod : uClass.getMethods()) 
     	{
-    	    if(!aMethod.getExistsInLanguage("Php"))
+    	    if(!aMethod.getExistsInLanguage("Php") || aMethod.getSource() == Method.Source.fAutoAPI)
     		  continue;
     		String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
     		String methodImplementationModifier = aMethod.getIsAbstract() ? " abstract" : "";

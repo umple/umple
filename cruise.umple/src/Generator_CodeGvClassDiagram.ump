@@ -129,6 +129,9 @@ class GvClassDiagramGenerator
     if (hasSuboption("showmethods")) {
       boolean isFirstMethod = true;
       for (Method uMethod : inUmpleClassifier.getMethods()) {
+      	if (uMethod.getSource() == Method.Source.fAutoAPI)
+      	  continue;
+
         if (manyClass) {
           if(isFirstMethod) code.append("|"); // method block starter
           else code.append("\\\n"); // separator between attributes

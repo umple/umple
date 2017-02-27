@@ -185,7 +185,8 @@ class Method
   //This supposed to show from where this method came.
   //fTrait means it comes from traits.
   //fAuto means it comes from auto generation mechanism.
-  source {none,fTrait,fAuto}
+  //fAutoAPI means it comes from auto generation mechanism to represent API methods at the model level.
+  source {none,fTrait,fAuto,fAutoAPI}
 
   // The method parameters.
   1 -> 0..* MethodParameter;

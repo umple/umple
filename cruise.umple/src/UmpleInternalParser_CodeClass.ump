@@ -3950,6 +3950,52 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     lastattr = attribute;
     lastassoc = null;
     
+  	if (!attribute.getModifier().equals("internal") && !attribute.getModifier().equals("const"))
+  	{
+    	addAPIMethods(attribute, aClass);
+    }
+  }
+  
+  private void addAPIMethods(Attribute attribute, UmpleClass aClass)
+  {
+  	Glossary g = new Glossary();
+  	Boolean isMany = attribute.getIsList();
+  	String singularName = isMany ? g.getSingular(attribute.getName()) : attribute.getName();
+    String pluralName = isMany ? attribute.getName() : g.getPlural(attribute.getName());
+    String getSetName = isMany ? pluralName : singularName;
+    
+    addGetMethod(getSetName, attribute, aClass);
+    	
+    if (!attribute.getIsAutounique() && (!attribute.getModifier().equals("immutable") || attribute.getIsLazy()))
+    {
+    	addSetMethod(getSetName, attribute, aClass);
+    }
+    	
+  }
+  
+  private void addSetMethod(String name, Attribute attribute, UmpleClass aClass)
+  {
+  		String setName = StringFormatter.format("set{0}", StringFormatter.toPascalCase(name));
+  		
+  		Method aMethod = new Method("public", setName, "Boolean", false);
+  		aMethod.setMethodBody(new MethodBody(""));
+  		aMethod.setPosition(new Position("", 0, 0, 0));
+  		aMethod.setSource(Method.Source.fAutoAPI);
+  		aMethod.addMethodParameter(new MethodParameter("a" + name, attribute.getType(), "", "", false));
+  		aClass.addMethod(aMethod);
+    	
+  }
+  
+  private void addGetMethod(String name, Attribute attribute, UmpleClass aClass)
+  {
+  		String getName = StringFormatter.format("get{0}", StringFormatter.toPascalCase(name));
+    	
+  		Method aMethod = new Method("public",getName, attribute.getType(), false);
+  		aMethod.setMethodBody(new MethodBody(""));
+  		aMethod.setPosition(new Position("", 0, 0, 0));
+  		aMethod.setSource(Method.Source.fAutoAPI);
+  		aClass.addMethod(aMethod);
+  
   }
   
 
