@@ -12,11 +12,11 @@ public class LightFixture
 
   //LightFixture State Machines
   public enum Status { Off, On }
-  public enum StatusMotorIdle { Null, MotorIdle, MotorRunning }
-  public enum StatusFanIdle { Null, FanIdle, FanRunning }
+  public enum StatusOnMotorIdle { Null, MotorIdle, MotorRunning }
+  public enum StatusOnFanIdle { Null, FanIdle, FanRunning }
   private Status status;
-  private StatusMotorIdle statusMotorIdle;
-  private StatusFanIdle statusFanIdle;
+  private StatusOnMotorIdle statusOnMotorIdle;
+  private StatusOnFanIdle statusOnFanIdle;
 
   //------------------------
   // CONSTRUCTOR
@@ -24,8 +24,8 @@ public class LightFixture
 
   public LightFixture()
   {
-    setStatusMotorIdle(StatusMotorIdle.Null);
-    setStatusFanIdle(StatusFanIdle.Null);
+    setStatusOnMotorIdle(StatusOnMotorIdle.Null);
+    setStatusOnFanIdle(StatusOnFanIdle.Null);
     setStatus(Status.Off);
   }
 
@@ -36,8 +36,8 @@ public class LightFixture
   public String getStatusFullName()
   {
     String answer = status.toString();
-    if (statusMotorIdle != StatusMotorIdle.Null) { answer += "." + statusMotorIdle.toString(); }
-    if (statusFanIdle != StatusFanIdle.Null) { answer += "." + statusFanIdle.toString(); }
+    if (statusOnMotorIdle != StatusOnMotorIdle.Null) { answer += "." + statusOnMotorIdle.toString(); }
+    if (statusOnFanIdle != StatusOnFanIdle.Null) { answer += "." + statusOnFanIdle.toString(); }
     return answer;
   }
 
@@ -46,14 +46,14 @@ public class LightFixture
     return status;
   }
 
-  public StatusMotorIdle getStatusMotorIdle()
+  public StatusOnMotorIdle getStatusOnMotorIdle()
   {
-    return statusMotorIdle;
+    return statusOnMotorIdle;
   }
 
-  public StatusFanIdle getStatusFanIdle()
+  public StatusOnFanIdle getStatusOnFanIdle()
   {
-    return statusFanIdle;
+    return statusOnFanIdle;
   }
 
   public boolean turnOn()
@@ -78,22 +78,22 @@ public class LightFixture
   {
     boolean wasEventProcessed = false;
     
-    StatusMotorIdle aStatusMotorIdle = statusMotorIdle;
-    StatusFanIdle aStatusFanIdle = statusFanIdle;
-    switch (aStatusMotorIdle)
+    StatusOnMotorIdle aStatusOnMotorIdle = statusOnMotorIdle;
+    StatusOnFanIdle aStatusOnFanIdle = statusOnFanIdle;
+    switch (aStatusOnMotorIdle)
     {
       case Null:
-        setStatusMotorIdle(StatusMotorIdle.MotorIdle);
+        setStatusOnMotorIdle(StatusOnMotorIdle.MotorIdle);
         wasEventProcessed = true;
         break;
       default:
         // Other states do respond to this event
     }
 
-    switch (aStatusFanIdle)
+    switch (aStatusOnFanIdle)
     {
       case Null:
-        setStatusFanIdle(StatusFanIdle.FanIdle);
+        setStatusOnFanIdle(StatusOnFanIdle.FanIdle);
         wasEventProcessed = true;
         break;
       default:
@@ -107,30 +107,30 @@ public class LightFixture
   {
     boolean wasEventProcessed = false;
     
-    StatusMotorIdle aStatusMotorIdle = statusMotorIdle;
-    StatusFanIdle aStatusFanIdle = statusFanIdle;
-    switch (aStatusMotorIdle)
+    StatusOnMotorIdle aStatusOnMotorIdle = statusOnMotorIdle;
+    StatusOnFanIdle aStatusOnFanIdle = statusOnFanIdle;
+    switch (aStatusOnMotorIdle)
     {
       case MotorIdle:
-        setStatusMotorIdle(StatusMotorIdle.Null);
+        setStatusOnMotorIdle(StatusOnMotorIdle.Null);
         wasEventProcessed = true;
         break;
       case MotorRunning:
-        setStatusMotorIdle(StatusMotorIdle.Null);
+        setStatusOnMotorIdle(StatusOnMotorIdle.Null);
         wasEventProcessed = true;
         break;
       default:
         // Other states do respond to this event
     }
 
-    switch (aStatusFanIdle)
+    switch (aStatusOnFanIdle)
     {
       case FanIdle:
-        setStatusFanIdle(StatusFanIdle.Null);
+        setStatusOnFanIdle(StatusOnFanIdle.Null);
         wasEventProcessed = true;
         break;
       case FanRunning:
-        setStatusFanIdle(StatusFanIdle.Null);
+        setStatusOnFanIdle(StatusOnFanIdle.Null);
         wasEventProcessed = true;
         break;
       default:
@@ -144,15 +144,15 @@ public class LightFixture
   {
     boolean wasEventProcessed = false;
     
-    StatusMotorIdle aStatusMotorIdle = statusMotorIdle;
-    switch (aStatusMotorIdle)
+    StatusOnMotorIdle aStatusOnMotorIdle = statusOnMotorIdle;
+    switch (aStatusOnMotorIdle)
     {
       case MotorIdle:
-        setStatusMotorIdle(StatusMotorIdle.MotorRunning);
+        setStatusOnMotorIdle(StatusOnMotorIdle.MotorRunning);
         wasEventProcessed = true;
         break;
       case MotorRunning:
-        setStatusMotorIdle(StatusMotorIdle.MotorIdle);
+        setStatusOnMotorIdle(StatusOnMotorIdle.MotorIdle);
         wasEventProcessed = true;
         break;
       default:
@@ -166,15 +166,15 @@ public class LightFixture
   {
     boolean wasEventProcessed = false;
     
-    StatusFanIdle aStatusFanIdle = statusFanIdle;
-    switch (aStatusFanIdle)
+    StatusOnFanIdle aStatusOnFanIdle = statusOnFanIdle;
+    switch (aStatusOnFanIdle)
     {
       case FanIdle:
-        setStatusFanIdle(StatusFanIdle.FanRunning);
+        setStatusOnFanIdle(StatusOnFanIdle.FanRunning);
         wasEventProcessed = true;
         break;
       case FanRunning:
-        setStatusFanIdle(StatusFanIdle.FanIdle);
+        setStatusOnFanIdle(StatusOnFanIdle.FanIdle);
         wasEventProcessed = true;
         break;
       default:
@@ -202,22 +202,22 @@ public class LightFixture
     switch(status)
     {
       case On:
-        if (statusMotorIdle == StatusMotorIdle.Null) { setStatusMotorIdle(StatusMotorIdle.MotorIdle); }
-        if (statusFanIdle == StatusFanIdle.Null) { setStatusFanIdle(StatusFanIdle.FanIdle); }
+        if (statusOnMotorIdle == StatusOnMotorIdle.Null) { setStatusOnMotorIdle(StatusOnMotorIdle.MotorIdle); }
+        if (statusOnFanIdle == StatusOnFanIdle.Null) { setStatusOnFanIdle(StatusOnFanIdle.FanIdle); }
         break;
     }
   }
 
-  private void setStatusMotorIdle(StatusMotorIdle aStatusMotorIdle)
+  private void setStatusOnMotorIdle(StatusOnMotorIdle aStatusOnMotorIdle)
   {
-    statusMotorIdle = aStatusMotorIdle;
-    if (status != Status.On && aStatusMotorIdle != StatusMotorIdle.Null) { setStatus(Status.On); }
+    statusOnMotorIdle = aStatusOnMotorIdle;
+    if (status != Status.On && aStatusOnMotorIdle != StatusOnMotorIdle.Null) { setStatus(Status.On); }
   }
 
-  private void setStatusFanIdle(StatusFanIdle aStatusFanIdle)
+  private void setStatusOnFanIdle(StatusOnFanIdle aStatusOnFanIdle)
   {
-    statusFanIdle = aStatusFanIdle;
-    if (status != Status.On && aStatusFanIdle != StatusFanIdle.Null) { setStatus(Status.On); }
+    statusOnFanIdle = aStatusOnFanIdle;
+    if (status != Status.On && aStatusOnFanIdle != StatusOnFanIdle.Null) { setStatus(Status.On); }
   }
 
   public void delete()

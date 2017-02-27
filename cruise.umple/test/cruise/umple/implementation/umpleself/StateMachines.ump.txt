@@ -223,9 +223,9 @@ class X18
     }
     On {
       exit / { exitOn(); }
-      entry / { if (statusMotorIdle == StatusMotorIdle.Null) { setStatusMotorIdle(StatusMotorIdle.MotorIdle); } }
-      entry / { if (statusFanIdle == StatusFanIdle.Null) { setStatusFanIdle(StatusFanIdle.FanIdle); } }
-      StatusMotorIdle {
+      entry / { if (statusOnMotorIdle == StatusOnMotorIdle.Null) { setStatusOnMotorIdle(StatusOnMotorIdle.MotorIdle); } }
+      entry / { if (statusOnFanIdle == StatusOnFanIdle.Null) { setStatusOnFanIdle(StatusOnFanIdle.FanIdle); } }
+      StatusOnMotorIdle {
         Null {
           enterOn -> MotorIdle;
         }
@@ -238,7 +238,7 @@ class X18
           flip -> MotorIdle;
         }
       }
-      StatusFanIdle {
+      StatusOnFanIdle {
         Null {
           enterOn -> FanIdle;
         }

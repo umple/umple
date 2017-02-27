@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 class CourseAttempt
 {
@@ -13,17 +13,17 @@ class CourseAttempt
   private static $CourseAttemptSMStudying = 1;
   private static $CourseAttemptSMFailed = 2;
   private static $CourseAttemptSMPassed = 3;
-  private static $CourseAttemptSMLab1Null = 4;
-  private static $CourseAttemptSMLab1Lab1 = 5;
-  private static $CourseAttemptSMLab1Lab2 = 6;
-  private static $CourseAttemptSMTermProjectNull = 7;
-  private static $CourseAttemptSMTermProjectTermProject = 8;
-  private static $CourseAttemptSMFinalExamNull = 9;
-  private static $CourseAttemptSMFinalExamFinalExam = 10;
+  private static $CourseAttemptSMStudyingLab1Null = 4;
+  private static $CourseAttemptSMStudyingLab1Lab1 = 5;
+  private static $CourseAttemptSMStudyingLab1Lab2 = 6;
+  private static $CourseAttemptSMStudyingTermProjectNull = 7;
+  private static $CourseAttemptSMStudyingTermProjectTermProject = 8;
+  private static $CourseAttemptSMStudyingFinalExamNull = 9;
+  private static $CourseAttemptSMStudyingFinalExamFinalExam = 10;
   private $courseAttemptSM;
-  private $courseAttemptSMLab1;
-  private $courseAttemptSMTermProject;
-  private $courseAttemptSMFinalExam;
+  private $courseAttemptSMStudyingLab1;
+  private $courseAttemptSMStudyingTermProject;
+  private $courseAttemptSMStudyingFinalExam;
 
   //------------------------
   // CONSTRUCTOR
@@ -31,9 +31,9 @@ class CourseAttempt
 
   public function __construct()
   {
-    $this->setCourseAttemptSMLab1(self::$CourseAttemptSMLab1Null);
-    $this->setCourseAttemptSMTermProject(self::$CourseAttemptSMTermProjectNull);
-    $this->setCourseAttemptSMFinalExam(self::$CourseAttemptSMFinalExamNull);
+    $this->setCourseAttemptSMStudyingLab1(self::$CourseAttemptSMStudyingLab1Null);
+    $this->setCourseAttemptSMStudyingTermProject(self::$CourseAttemptSMStudyingTermProjectNull);
+    $this->setCourseAttemptSMStudyingFinalExam(self::$CourseAttemptSMStudyingFinalExamNull);
     $this->setCourseAttemptSM(self::$CourseAttemptSMStudying);
   }
 
@@ -44,9 +44,9 @@ class CourseAttempt
   public function getCourseAttemptSMFullName()
   {
     $answer = $this->getCourseAttemptSM();
-    if ($this->courseAttemptSMLab1 != self::$CourseAttemptSMLab1Null) { $answer .= "." . $this->getCourseAttemptSMLab1(); }
-    if ($this->courseAttemptSMTermProject != self::$CourseAttemptSMTermProjectNull) { $answer .= "." . $this->getCourseAttemptSMTermProject(); }
-    if ($this->courseAttemptSMFinalExam != self::$CourseAttemptSMFinalExamNull) { $answer .= "." . $this->getCourseAttemptSMFinalExam(); }
+    if ($this->courseAttemptSMStudyingLab1 != self::$CourseAttemptSMStudyingLab1Null) { $answer .= "." . $this->getCourseAttemptSMStudyingLab1(); }
+    if ($this->courseAttemptSMStudyingTermProject != self::$CourseAttemptSMStudyingTermProjectNull) { $answer .= "." . $this->getCourseAttemptSMStudyingTermProject(); }
+    if ($this->courseAttemptSMStudyingFinalExam != self::$CourseAttemptSMStudyingFinalExamNull) { $answer .= "." . $this->getCourseAttemptSMStudyingFinalExam(); }
     return $answer;
   }
 
@@ -58,25 +58,25 @@ class CourseAttempt
     return null;
   }
 
-  public function getCourseAttemptSMLab1()
+  public function getCourseAttemptSMStudyingLab1()
   {
-    if ($this->courseAttemptSMLab1 == self::$CourseAttemptSMLab1Null) { return "CourseAttemptSMLab1Null"; }
-    elseif ($this->courseAttemptSMLab1 == self::$CourseAttemptSMLab1Lab1) { return "CourseAttemptSMLab1Lab1"; }
-    elseif ($this->courseAttemptSMLab1 == self::$CourseAttemptSMLab1Lab2) { return "CourseAttemptSMLab1Lab2"; }
+    if ($this->courseAttemptSMStudyingLab1 == self::$CourseAttemptSMStudyingLab1Null) { return "CourseAttemptSMStudyingLab1Null"; }
+    elseif ($this->courseAttemptSMStudyingLab1 == self::$CourseAttemptSMStudyingLab1Lab1) { return "CourseAttemptSMStudyingLab1Lab1"; }
+    elseif ($this->courseAttemptSMStudyingLab1 == self::$CourseAttemptSMStudyingLab1Lab2) { return "CourseAttemptSMStudyingLab1Lab2"; }
     return null;
   }
 
-  public function getCourseAttemptSMTermProject()
+  public function getCourseAttemptSMStudyingTermProject()
   {
-    if ($this->courseAttemptSMTermProject == self::$CourseAttemptSMTermProjectNull) { return "CourseAttemptSMTermProjectNull"; }
-    elseif ($this->courseAttemptSMTermProject == self::$CourseAttemptSMTermProjectTermProject) { return "CourseAttemptSMTermProjectTermProject"; }
+    if ($this->courseAttemptSMStudyingTermProject == self::$CourseAttemptSMStudyingTermProjectNull) { return "CourseAttemptSMStudyingTermProjectNull"; }
+    elseif ($this->courseAttemptSMStudyingTermProject == self::$CourseAttemptSMStudyingTermProjectTermProject) { return "CourseAttemptSMStudyingTermProjectTermProject"; }
     return null;
   }
 
-  public function getCourseAttemptSMFinalExam()
+  public function getCourseAttemptSMStudyingFinalExam()
   {
-    if ($this->courseAttemptSMFinalExam == self::$CourseAttemptSMFinalExamNull) { return "CourseAttemptSMFinalExamNull"; }
-    elseif ($this->courseAttemptSMFinalExam == self::$CourseAttemptSMFinalExamFinalExam) { return "CourseAttemptSMFinalExamFinalExam"; }
+    if ($this->courseAttemptSMStudyingFinalExam == self::$CourseAttemptSMStudyingFinalExamNull) { return "CourseAttemptSMStudyingFinalExamNull"; }
+    elseif ($this->courseAttemptSMStudyingFinalExam == self::$CourseAttemptSMStudyingFinalExamFinalExam) { return "CourseAttemptSMStudyingFinalExamFinalExam"; }
     return null;
   }
 
@@ -98,26 +98,26 @@ class CourseAttempt
   {
     $wasEventProcessed = false;
     
-    $aCourseAttemptSMLab1 = $this->courseAttemptSMLab1;
-    $aCourseAttemptSMTermProject = $this->courseAttemptSMTermProject;
-    $aCourseAttemptSMFinalExam = $this->courseAttemptSMFinalExam;
-    if ($aCourseAttemptSMLab1 == self::$CourseAttemptSMLab1Null)
+    $aCourseAttemptSMStudyingLab1 = $this->courseAttemptSMStudyingLab1;
+    $aCourseAttemptSMStudyingTermProject = $this->courseAttemptSMStudyingTermProject;
+    $aCourseAttemptSMStudyingFinalExam = $this->courseAttemptSMStudyingFinalExam;
+    if ($aCourseAttemptSMStudyingLab1 == self::$CourseAttemptSMStudyingLab1Null)
     {
-      $this->setCourseAttemptSMLab1(self::$CourseAttemptSMLab1Lab1);
+      $this->setCourseAttemptSMStudyingLab1(self::$CourseAttemptSMStudyingLab1Lab1);
       $wasEventProcessed = true;
     }
 
     
-    if ($aCourseAttemptSMTermProject == self::$CourseAttemptSMTermProjectNull)
+    if ($aCourseAttemptSMStudyingTermProject == self::$CourseAttemptSMStudyingTermProjectNull)
     {
-      $this->setCourseAttemptSMTermProject(self::$CourseAttemptSMTermProjectTermProject);
+      $this->setCourseAttemptSMStudyingTermProject(self::$CourseAttemptSMStudyingTermProjectTermProject);
       $wasEventProcessed = true;
     }
 
     
-    if ($aCourseAttemptSMFinalExam == self::$CourseAttemptSMFinalExamNull)
+    if ($aCourseAttemptSMStudyingFinalExam == self::$CourseAttemptSMStudyingFinalExamNull)
     {
-      $this->setCourseAttemptSMFinalExam(self::$CourseAttemptSMFinalExamFinalExam);
+      $this->setCourseAttemptSMStudyingFinalExam(self::$CourseAttemptSMStudyingFinalExamFinalExam);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -127,31 +127,31 @@ class CourseAttempt
   {
     $wasEventProcessed = false;
     
-    $aCourseAttemptSMLab1 = $this->courseAttemptSMLab1;
-    $aCourseAttemptSMTermProject = $this->courseAttemptSMTermProject;
-    $aCourseAttemptSMFinalExam = $this->courseAttemptSMFinalExam;
-    if ($aCourseAttemptSMLab1 == self::$CourseAttemptSMLab1Lab1)
+    $aCourseAttemptSMStudyingLab1 = $this->courseAttemptSMStudyingLab1;
+    $aCourseAttemptSMStudyingTermProject = $this->courseAttemptSMStudyingTermProject;
+    $aCourseAttemptSMStudyingFinalExam = $this->courseAttemptSMStudyingFinalExam;
+    if ($aCourseAttemptSMStudyingLab1 == self::$CourseAttemptSMStudyingLab1Lab1)
     {
-      $this->setCourseAttemptSMLab1(self::$CourseAttemptSMLab1Null);
+      $this->setCourseAttemptSMStudyingLab1(self::$CourseAttemptSMStudyingLab1Null);
       $wasEventProcessed = true;
     }
-    elseif ($aCourseAttemptSMLab1 == self::$CourseAttemptSMLab1Lab2)
+    elseif ($aCourseAttemptSMStudyingLab1 == self::$CourseAttemptSMStudyingLab1Lab2)
     {
-      $this->setCourseAttemptSMLab1(self::$CourseAttemptSMLab1Null);
-      $wasEventProcessed = true;
-    }
-
-    
-    if ($aCourseAttemptSMTermProject == self::$CourseAttemptSMTermProjectTermProject)
-    {
-      $this->setCourseAttemptSMTermProject(self::$CourseAttemptSMTermProjectNull);
+      $this->setCourseAttemptSMStudyingLab1(self::$CourseAttemptSMStudyingLab1Null);
       $wasEventProcessed = true;
     }
 
     
-    if ($aCourseAttemptSMFinalExam == self::$CourseAttemptSMFinalExamFinalExam)
+    if ($aCourseAttemptSMStudyingTermProject == self::$CourseAttemptSMStudyingTermProjectTermProject)
     {
-      $this->setCourseAttemptSMFinalExam(self::$CourseAttemptSMFinalExamNull);
+      $this->setCourseAttemptSMStudyingTermProject(self::$CourseAttemptSMStudyingTermProjectNull);
+      $wasEventProcessed = true;
+    }
+
+    
+    if ($aCourseAttemptSMStudyingFinalExam == self::$CourseAttemptSMStudyingFinalExamFinalExam)
+    {
+      $this->setCourseAttemptSMStudyingFinalExam(self::$CourseAttemptSMStudyingFinalExamNull);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -172,53 +172,53 @@ class CourseAttempt
     // entry actions and do activities
     if ($this->courseAttemptSM == self::$CourseAttemptSMStudying)
     {
-      if ($this->courseAttemptSMLab1 == self::$CourseAttemptSMLab1Null) { $this->setCourseAttemptSMLab1(self::$CourseAttemptSMLab1Lab1); }
-      if ($this->courseAttemptSMTermProject == self::$CourseAttemptSMTermProjectNull) { $this->setCourseAttemptSMTermProject(self::$CourseAttemptSMTermProjectTermProject); }
-      if ($this->courseAttemptSMFinalExam == self::$CourseAttemptSMFinalExamNull) { $this->setCourseAttemptSMFinalExam(self::$CourseAttemptSMFinalExamFinalExam); }
+      if ($this->courseAttemptSMStudyingLab1 == self::$CourseAttemptSMStudyingLab1Null) { $this->setCourseAttemptSMStudyingLab1(self::$CourseAttemptSMStudyingLab1Lab1); }
+      if ($this->courseAttemptSMStudyingTermProject == self::$CourseAttemptSMStudyingTermProjectNull) { $this->setCourseAttemptSMStudyingTermProject(self::$CourseAttemptSMStudyingTermProjectTermProject); }
+      if ($this->courseAttemptSMStudyingFinalExam == self::$CourseAttemptSMStudyingFinalExamNull) { $this->setCourseAttemptSMStudyingFinalExam(self::$CourseAttemptSMStudyingFinalExamFinalExam); }
       $this->__autotransition1__();
     }
   }
 
-  private function exitCourseAttemptSMLab1()
+  private function exitCourseAttemptSMStudyingLab1()
   {
-    if ($this->courseAttemptSMLab1 == self::$CourseAttemptSMLab1Lab2)
+    if ($this->courseAttemptSMStudyingLab1 == self::$CourseAttemptSMStudyingLab1Lab2)
     {
       lab2Done();
     }
   }
 
-  private function setCourseAttemptSMLab1($aCourseAttemptSMLab1)
+  private function setCourseAttemptSMStudyingLab1($aCourseAttemptSMStudyingLab1)
   {
-    $this->courseAttemptSMLab1 = $aCourseAttemptSMLab1;
-    if ($this->courseAttemptSM != self::$CourseAttemptSMStudying && $aCourseAttemptSMLab1 != self::$CourseAttemptSMLab1Null) { $this->setCourseAttemptSM(self::$CourseAttemptSMStudying); }
+    $this->courseAttemptSMStudyingLab1 = $aCourseAttemptSMStudyingLab1;
+    if ($this->courseAttemptSM != self::$CourseAttemptSMStudying && $aCourseAttemptSMStudyingLab1 != self::$CourseAttemptSMStudyingLab1Null) { $this->setCourseAttemptSM(self::$CourseAttemptSMStudying); }
   }
 
-  private function exitCourseAttemptSMTermProject()
+  private function exitCourseAttemptSMStudyingTermProject()
   {
-    if ($this->courseAttemptSMTermProject == self::$CourseAttemptSMTermProjectTermProject)
+    if ($this->courseAttemptSMStudyingTermProject == self::$CourseAttemptSMStudyingTermProjectTermProject)
     {
       projectDone();
     }
   }
 
-  private function setCourseAttemptSMTermProject($aCourseAttemptSMTermProject)
+  private function setCourseAttemptSMStudyingTermProject($aCourseAttemptSMStudyingTermProject)
   {
-    $this->courseAttemptSMTermProject = $aCourseAttemptSMTermProject;
-    if ($this->courseAttemptSM != self::$CourseAttemptSMStudying && $aCourseAttemptSMTermProject != self::$CourseAttemptSMTermProjectNull) { $this->setCourseAttemptSM(self::$CourseAttemptSMStudying); }
+    $this->courseAttemptSMStudyingTermProject = $aCourseAttemptSMStudyingTermProject;
+    if ($this->courseAttemptSM != self::$CourseAttemptSMStudying && $aCourseAttemptSMStudyingTermProject != self::$CourseAttemptSMStudyingTermProjectNull) { $this->setCourseAttemptSM(self::$CourseAttemptSMStudying); }
   }
 
-  private function exitCourseAttemptSMFinalExam()
+  private function exitCourseAttemptSMStudyingFinalExam()
   {
-    if ($this->courseAttemptSMFinalExam == self::$CourseAttemptSMFinalExamFinalExam)
+    if ($this->courseAttemptSMStudyingFinalExam == self::$CourseAttemptSMStudyingFinalExamFinalExam)
     {
       pass();
     }
   }
 
-  private function setCourseAttemptSMFinalExam($aCourseAttemptSMFinalExam)
+  private function setCourseAttemptSMStudyingFinalExam($aCourseAttemptSMStudyingFinalExam)
   {
-    $this->courseAttemptSMFinalExam = $aCourseAttemptSMFinalExam;
-    if ($this->courseAttemptSM != self::$CourseAttemptSMStudying && $aCourseAttemptSMFinalExam != self::$CourseAttemptSMFinalExamNull) { $this->setCourseAttemptSM(self::$CourseAttemptSMStudying); }
+    $this->courseAttemptSMStudyingFinalExam = $aCourseAttemptSMStudyingFinalExam;
+    if ($this->courseAttemptSM != self::$CourseAttemptSMStudying && $aCourseAttemptSMStudyingFinalExam != self::$CourseAttemptSMStudyingFinalExamNull) { $this->setCourseAttemptSM(self::$CourseAttemptSMStudying); }
   }
 
   public function equals($compareTo)

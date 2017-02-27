@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 class LightFixture
 {
@@ -12,15 +12,15 @@ class LightFixture
   //LightFixture State Machines
   private static $StatusOff = 1;
   private static $StatusOn = 2;
-  private static $StatusMotorIdleNull = 3;
-  private static $StatusMotorIdleMotorIdle = 4;
-  private static $StatusMotorIdleMotorRunning = 5;
-  private static $StatusFanIdleNull = 6;
-  private static $StatusFanIdleFanIdle = 7;
-  private static $StatusFanIdleFanRunning = 8;
+  private static $StatusOnMotorIdleNull = 3;
+  private static $StatusOnMotorIdleMotorIdle = 4;
+  private static $StatusOnMotorIdleMotorRunning = 5;
+  private static $StatusOnFanIdleNull = 6;
+  private static $StatusOnFanIdleFanIdle = 7;
+  private static $StatusOnFanIdleFanRunning = 8;
   private $status;
-  private $statusMotorIdle;
-  private $statusFanIdle;
+  private $statusOnMotorIdle;
+  private $statusOnFanIdle;
 
   //------------------------
   // CONSTRUCTOR
@@ -28,8 +28,8 @@ class LightFixture
 
   public function __construct()
   {
-    $this->setStatusMotorIdle(self::$StatusMotorIdleNull);
-    $this->setStatusFanIdle(self::$StatusFanIdleNull);
+    $this->setStatusOnMotorIdle(self::$StatusOnMotorIdleNull);
+    $this->setStatusOnFanIdle(self::$StatusOnFanIdleNull);
     $this->setStatus(self::$StatusOff);
   }
 
@@ -40,8 +40,8 @@ class LightFixture
   public function getStatusFullName()
   {
     $answer = $this->getStatus();
-    if ($this->statusMotorIdle != self::$StatusMotorIdleNull) { $answer .= "." . $this->getStatusMotorIdle(); }
-    if ($this->statusFanIdle != self::$StatusFanIdleNull) { $answer .= "." . $this->getStatusFanIdle(); }
+    if ($this->statusOnMotorIdle != self::$StatusOnMotorIdleNull) { $answer .= "." . $this->getStatusOnMotorIdle(); }
+    if ($this->statusOnFanIdle != self::$StatusOnFanIdleNull) { $answer .= "." . $this->getStatusOnFanIdle(); }
     return $answer;
   }
 
@@ -52,19 +52,19 @@ class LightFixture
     return null;
   }
 
-  public function getStatusMotorIdle()
+  public function getStatusOnMotorIdle()
   {
-    if ($this->statusMotorIdle == self::$StatusMotorIdleNull) { return "StatusMotorIdleNull"; }
-    elseif ($this->statusMotorIdle == self::$StatusMotorIdleMotorIdle) { return "StatusMotorIdleMotorIdle"; }
-    elseif ($this->statusMotorIdle == self::$StatusMotorIdleMotorRunning) { return "StatusMotorIdleMotorRunning"; }
+    if ($this->statusOnMotorIdle == self::$StatusOnMotorIdleNull) { return "StatusOnMotorIdleNull"; }
+    elseif ($this->statusOnMotorIdle == self::$StatusOnMotorIdleMotorIdle) { return "StatusOnMotorIdleMotorIdle"; }
+    elseif ($this->statusOnMotorIdle == self::$StatusOnMotorIdleMotorRunning) { return "StatusOnMotorIdleMotorRunning"; }
     return null;
   }
 
-  public function getStatusFanIdle()
+  public function getStatusOnFanIdle()
   {
-    if ($this->statusFanIdle == self::$StatusFanIdleNull) { return "StatusFanIdleNull"; }
-    elseif ($this->statusFanIdle == self::$StatusFanIdleFanIdle) { return "StatusFanIdleFanIdle"; }
-    elseif ($this->statusFanIdle == self::$StatusFanIdleFanRunning) { return "StatusFanIdleFanRunning"; }
+    if ($this->statusOnFanIdle == self::$StatusOnFanIdleNull) { return "StatusOnFanIdleNull"; }
+    elseif ($this->statusOnFanIdle == self::$StatusOnFanIdleFanIdle) { return "StatusOnFanIdleFanIdle"; }
+    elseif ($this->statusOnFanIdle == self::$StatusOnFanIdleFanRunning) { return "StatusOnFanIdleFanRunning"; }
     return null;
   }
 
@@ -85,18 +85,18 @@ class LightFixture
   {
     $wasEventProcessed = false;
     
-    $aStatusMotorIdle = $this->statusMotorIdle;
-    $aStatusFanIdle = $this->statusFanIdle;
-    if ($aStatusMotorIdle == self::$StatusMotorIdleNull)
+    $aStatusOnMotorIdle = $this->statusOnMotorIdle;
+    $aStatusOnFanIdle = $this->statusOnFanIdle;
+    if ($aStatusOnMotorIdle == self::$StatusOnMotorIdleNull)
     {
-      $this->setStatusMotorIdle(self::$StatusMotorIdleMotorIdle);
+      $this->setStatusOnMotorIdle(self::$StatusOnMotorIdleMotorIdle);
       $wasEventProcessed = true;
     }
 
     
-    if ($aStatusFanIdle == self::$StatusFanIdleNull)
+    if ($aStatusOnFanIdle == self::$StatusOnFanIdleNull)
     {
-      $this->setStatusFanIdle(self::$StatusFanIdleFanIdle);
+      $this->setStatusOnFanIdle(self::$StatusOnFanIdleFanIdle);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -106,28 +106,28 @@ class LightFixture
   {
     $wasEventProcessed = false;
     
-    $aStatusMotorIdle = $this->statusMotorIdle;
-    $aStatusFanIdle = $this->statusFanIdle;
-    if ($aStatusMotorIdle == self::$StatusMotorIdleMotorIdle)
+    $aStatusOnMotorIdle = $this->statusOnMotorIdle;
+    $aStatusOnFanIdle = $this->statusOnFanIdle;
+    if ($aStatusOnMotorIdle == self::$StatusOnMotorIdleMotorIdle)
     {
-      $this->setStatusMotorIdle(self::$StatusMotorIdleNull);
+      $this->setStatusOnMotorIdle(self::$StatusOnMotorIdleNull);
       $wasEventProcessed = true;
     }
-    elseif ($aStatusMotorIdle == self::$StatusMotorIdleMotorRunning)
+    elseif ($aStatusOnMotorIdle == self::$StatusOnMotorIdleMotorRunning)
     {
-      $this->setStatusMotorIdle(self::$StatusMotorIdleNull);
+      $this->setStatusOnMotorIdle(self::$StatusOnMotorIdleNull);
       $wasEventProcessed = true;
     }
 
     
-    if ($aStatusFanIdle == self::$StatusFanIdleFanIdle)
+    if ($aStatusOnFanIdle == self::$StatusOnFanIdleFanIdle)
     {
-      $this->setStatusFanIdle(self::$StatusFanIdleNull);
+      $this->setStatusOnFanIdle(self::$StatusOnFanIdleNull);
       $wasEventProcessed = true;
     }
-    elseif ($aStatusFanIdle == self::$StatusFanIdleFanRunning)
+    elseif ($aStatusOnFanIdle == self::$StatusOnFanIdleFanRunning)
     {
-      $this->setStatusFanIdle(self::$StatusFanIdleNull);
+      $this->setStatusOnFanIdle(self::$StatusOnFanIdleNull);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -137,15 +137,15 @@ class LightFixture
   {
     $wasEventProcessed = false;
     
-    $aStatusMotorIdle = $this->statusMotorIdle;
-    if ($aStatusMotorIdle == self::$StatusMotorIdleMotorIdle)
+    $aStatusOnMotorIdle = $this->statusOnMotorIdle;
+    if ($aStatusOnMotorIdle == self::$StatusOnMotorIdleMotorIdle)
     {
-      $this->setStatusMotorIdle(self::$StatusMotorIdleMotorRunning);
+      $this->setStatusOnMotorIdle(self::$StatusOnMotorIdleMotorRunning);
       $wasEventProcessed = true;
     }
-    elseif ($aStatusMotorIdle == self::$StatusMotorIdleMotorRunning)
+    elseif ($aStatusOnMotorIdle == self::$StatusOnMotorIdleMotorRunning)
     {
-      $this->setStatusMotorIdle(self::$StatusMotorIdleMotorIdle);
+      $this->setStatusOnMotorIdle(self::$StatusOnMotorIdleMotorIdle);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -155,15 +155,15 @@ class LightFixture
   {
     $wasEventProcessed = false;
     
-    $aStatusFanIdle = $this->statusFanIdle;
-    if ($aStatusFanIdle == self::$StatusFanIdleFanIdle)
+    $aStatusOnFanIdle = $this->statusOnFanIdle;
+    if ($aStatusOnFanIdle == self::$StatusOnFanIdleFanIdle)
     {
-      $this->setStatusFanIdle(self::$StatusFanIdleFanRunning);
+      $this->setStatusOnFanIdle(self::$StatusOnFanIdleFanRunning);
       $wasEventProcessed = true;
     }
-    elseif ($aStatusFanIdle == self::$StatusFanIdleFanRunning)
+    elseif ($aStatusOnFanIdle == self::$StatusOnFanIdleFanRunning)
     {
-      $this->setStatusFanIdle(self::$StatusFanIdleFanIdle);
+      $this->setStatusOnFanIdle(self::$StatusOnFanIdleFanIdle);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -184,21 +184,21 @@ class LightFixture
     // entry actions and do activities
     if ($this->status == self::$StatusOn)
     {
-      if ($this->statusMotorIdle == self::$StatusMotorIdleNull) { $this->setStatusMotorIdle(self::$StatusMotorIdleMotorIdle); }
-      if ($this->statusFanIdle == self::$StatusFanIdleNull) { $this->setStatusFanIdle(self::$StatusFanIdleFanIdle); }
+      if ($this->statusOnMotorIdle == self::$StatusOnMotorIdleNull) { $this->setStatusOnMotorIdle(self::$StatusOnMotorIdleMotorIdle); }
+      if ($this->statusOnFanIdle == self::$StatusOnFanIdleNull) { $this->setStatusOnFanIdle(self::$StatusOnFanIdleFanIdle); }
     }
   }
 
-  private function setStatusMotorIdle($aStatusMotorIdle)
+  private function setStatusOnMotorIdle($aStatusOnMotorIdle)
   {
-    $this->statusMotorIdle = $aStatusMotorIdle;
-    if ($this->status != self::$StatusOn && $aStatusMotorIdle != self::$StatusMotorIdleNull) { $this->setStatus(self::$StatusOn); }
+    $this->statusOnMotorIdle = $aStatusOnMotorIdle;
+    if ($this->status != self::$StatusOn && $aStatusOnMotorIdle != self::$StatusOnMotorIdleNull) { $this->setStatus(self::$StatusOn); }
   }
 
-  private function setStatusFanIdle($aStatusFanIdle)
+  private function setStatusOnFanIdle($aStatusOnFanIdle)
   {
-    $this->statusFanIdle = $aStatusFanIdle;
-    if ($this->status != self::$StatusOn && $aStatusFanIdle != self::$StatusFanIdleNull) { $this->setStatus(self::$StatusOn); }
+    $this->statusOnFanIdle = $aStatusOnFanIdle;
+    if ($this->status != self::$StatusOn && $aStatusOnFanIdle != self::$StatusOnFanIdleNull) { $this->setStatus(self::$StatusOn); }
   }
 
   public function equals($compareTo)

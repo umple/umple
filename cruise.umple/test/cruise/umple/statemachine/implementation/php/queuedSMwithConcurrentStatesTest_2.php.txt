@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.22.0.5146 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 class QueuedSMwithConcurrentStates_2
 {
@@ -13,13 +13,13 @@ class QueuedSMwithConcurrentStates_2
   private static $SmState1 = 1;
   private static $SmState2 = 2;
   private static $SmState3 = 3;
-  private static $SmSubState1Null = 4;
-  private static $SmSubState1SubState1 = 5;
-  private static $SmSubState2Null = 6;
-  private static $SmSubState2SubState2 = 7;
+  private static $SmState1SubState1Null = 4;
+  private static $SmState1SubState1SubState1 = 5;
+  private static $SmState1SubState2Null = 6;
+  private static $SmState1SubState2SubState2 = 7;
   private $sm;
-  private $smSubState1;
-  private $smSubState2;
+  private $smState1SubState1;
+  private $smState1SubState2;
 
   //QueuedSMwithConcurrentStates_2 Do Activity Threads
   private $doActivitySmState2Thread = null;
@@ -31,8 +31,8 @@ class QueuedSMwithConcurrentStates_2
 
   public function __construct()
   {
-    $this->setSmSubState1(self::$SmSubState1Null);
-    $this->setSmSubState2(self::$SmSubState2Null);
+    $this->setSmState1SubState1(self::$SmState1SubState1Null);
+    $this->setSmState1SubState2(self::$SmState1SubState2Null);
     $this->setSm(self::$SmState1);
   }
 
@@ -43,8 +43,8 @@ class QueuedSMwithConcurrentStates_2
   public function getSmFullName()
   {
     $answer = $this->getSm();
-    if ($this->smSubState1 != self::$SmSubState1Null) { $answer .= "." . $this->getSmSubState1(); }
-    if ($this->smSubState2 != self::$SmSubState2Null) { $answer .= "." . $this->getSmSubState2(); }
+    if ($this->smState1SubState1 != self::$SmState1SubState1Null) { $answer .= "." . $this->getSmState1SubState1(); }
+    if ($this->smState1SubState2 != self::$SmState1SubState2Null) { $answer .= "." . $this->getSmState1SubState2(); }
     return $answer;
   }
 
@@ -56,17 +56,17 @@ class QueuedSMwithConcurrentStates_2
     return null;
   }
 
-  public function getSmSubState1()
+  public function getSmState1SubState1()
   {
-    if ($this->smSubState1 == self::$SmSubState1Null) { return "SmSubState1Null"; }
-    elseif ($this->smSubState1 == self::$SmSubState1SubState1) { return "SmSubState1SubState1"; }
+    if ($this->smState1SubState1 == self::$SmState1SubState1Null) { return "SmState1SubState1Null"; }
+    elseif ($this->smState1SubState1 == self::$SmState1SubState1SubState1) { return "SmState1SubState1SubState1"; }
     return null;
   }
 
-  public function getSmSubState2()
+  public function getSmState1SubState2()
   {
-    if ($this->smSubState2 == self::$SmSubState2Null) { return "SmSubState2Null"; }
-    elseif ($this->smSubState2 == self::$SmSubState2SubState2) { return "SmSubState2SubState2"; }
+    if ($this->smState1SubState2 == self::$SmState1SubState2Null) { return "SmState1SubState2Null"; }
+    elseif ($this->smState1SubState2 == self::$SmState1SubState2SubState2) { return "SmState1SubState2SubState2"; }
     return null;
   }
 
@@ -88,18 +88,18 @@ class QueuedSMwithConcurrentStates_2
   {
     $wasEventProcessed = false;
     
-    $aSmSubState1 = $this->smSubState1;
-    $aSmSubState2 = $this->smSubState2;
-    if ($aSmSubState1 == self::$SmSubState1Null)
+    $aSmState1SubState1 = $this->smState1SubState1;
+    $aSmState1SubState2 = $this->smState1SubState2;
+    if ($aSmState1SubState1 == self::$SmState1SubState1Null)
     {
-      $this->setSmSubState1(self::$SmSubState1SubState1);
+      $this->setSmState1SubState1(self::$SmState1SubState1SubState1);
       $wasEventProcessed = true;
     }
 
     
-    if ($aSmSubState2 == self::$SmSubState2Null)
+    if ($aSmState1SubState2 == self::$SmState1SubState2Null)
     {
-      $this->setSmSubState2(self::$SmSubState2SubState2);
+      $this->setSmState1SubState2(self::$SmState1SubState2SubState2);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -109,18 +109,18 @@ class QueuedSMwithConcurrentStates_2
   {
     $wasEventProcessed = false;
     
-    $aSmSubState1 = $this->smSubState1;
-    $aSmSubState2 = $this->smSubState2;
-    if ($aSmSubState1 == self::$SmSubState1SubState1)
+    $aSmState1SubState1 = $this->smState1SubState1;
+    $aSmState1SubState2 = $this->smState1SubState2;
+    if ($aSmState1SubState1 == self::$SmState1SubState1SubState1)
     {
-      $this->setSmSubState1(self::$SmSubState1Null);
+      $this->setSmState1SubState1(self::$SmState1SubState1Null);
       $wasEventProcessed = true;
     }
 
     
-    if ($aSmSubState2 == self::$SmSubState2SubState2)
+    if ($aSmState1SubState2 == self::$SmState1SubState2SubState2)
     {
-      $this->setSmSubState2(self::$SmSubState2Null);
+      $this->setSmState1SubState2(self::$SmState1SubState2Null);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -141,8 +141,8 @@ class QueuedSMwithConcurrentStates_2
     // entry actions and do activities
     if ($this->sm == self::$SmState1)
     {
-      if ($this->smSubState1 == self::$SmSubState1Null) { $this->setSmSubState1(self::$SmSubState1SubState1); }
-      if ($this->smSubState2 == self::$SmSubState2Null) { $this->setSmSubState2(self::$SmSubState2SubState2); }
+      if ($this->smState1SubState1 == self::$SmState1SubState1Null) { $this->setSmState1SubState1(self::$SmState1SubState1SubState1); }
+      if ($this->smState1SubState2 == self::$SmState1SubState2Null) { $this->setSmState1SubState2(self::$SmState1SubState2SubState2); }
     }
     elseif ($this->sm == self::$SmState2)
     {
@@ -154,16 +154,16 @@ class QueuedSMwithConcurrentStates_2
     }
   }
 
-  private function setSmSubState1($aSmSubState1)
+  private function setSmState1SubState1($aSmState1SubState1)
   {
-    $this->smSubState1 = $aSmSubState1;
-    if ($this->sm != self::$SmState1 && $aSmSubState1 != self::$SmSubState1Null) { $this->setSm(self::$SmState1); }
+    $this->smState1SubState1 = $aSmState1SubState1;
+    if ($this->sm != self::$SmState1 && $aSmState1SubState1 != self::$SmState1SubState1Null) { $this->setSm(self::$SmState1); }
   }
 
-  private function setSmSubState2($aSmSubState2)
+  private function setSmState1SubState2($aSmState1SubState2)
   {
-    $this->smSubState2 = $aSmSubState2;
-    if ($this->sm != self::$SmState1 && $aSmSubState2 != self::$SmSubState2Null) { $this->setSm(self::$SmState1); }
+    $this->smState1SubState2 = $aSmState1SubState2;
+    if ($this->sm != self::$SmState1 && $aSmState1SubState2 != self::$SmState1SubState2Null) { $this->setSm(self::$SmState1); }
   }
 
   public function equals($compareTo)

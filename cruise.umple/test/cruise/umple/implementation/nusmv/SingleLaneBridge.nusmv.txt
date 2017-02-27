@@ -5,7 +5,7 @@
 
 
 -- This defines a NuSMV module for SystemSm --
-MODULE SystemSm ( _smBridgeCar , _smBridgeCarRedCarRedA , _smBridgeCarRedCarRedARedA , _smBridgeCarRedCarRedB , _smBridgeCarRedCarRedBRedB , _smBridgeCarRedCar , _smBridgeCarBlueCarBlueA , _smBridgeCarBlueCarBlueABlueA , _smBridgeCarBlueCarBlueB , _smBridgeCarBlueCarBlueBBlueB , _smBridgeCarBlueCar , _smBridgeBridgeStatus , _smBridgeBridgeStatusBridgeStatus , _smBridge , _smCoordCoordRed , _smCoordCoordRedRedCoordEntRedCoordEnt , _smCoordCoordRedRedCoordExitRedCoordExit , _smCoordCoordBlue , _smCoordCoordBlueBlueCoordEntBlueCoordEnt , _smCoordCoordBlueBlueCoordExitBlueCoordExit , _smCoord )
+MODULE SystemSm ( _smSingleLaneBridgeBridgeCar , _smSingleLaneBridgeBridgeCarRedCarRedA , _smSingleLaneBridgeBridgeCarRedCarRedARedA , _smSingleLaneBridgeBridgeCarRedCarRedB , _smSingleLaneBridgeBridgeCarRedCarRedBRedB , _smSingleLaneBridgeBridgeCarRedCar , _smSingleLaneBridgeBridgeCarBlueCarBlueA , _smSingleLaneBridgeBridgeCarBlueCarBlueABlueA , _smSingleLaneBridgeBridgeCarBlueCarBlueB , _smSingleLaneBridgeBridgeCarBlueCarBlueBBlueB , _smSingleLaneBridgeBridgeCarBlueCar , _smSingleLaneBridgeBridgeBridgeStatus , _smSingleLaneBridgeBridgeBridgeStatusBridgeStatus , _smSingleLaneBridgeBridge , _smSingleLaneBridgeCoordCoordRed , _smSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt , _smSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit , _smSingleLaneBridgeCoordCoordBlue , _smSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt , _smSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit , _smSingleLaneBridgeCoord )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -17,30 +17,30 @@ MODULE SystemSm ( _smBridgeCar , _smBridgeCarRedCarRedA , _smBridgeCarRedCarRedA
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
      sm_stable :=  !( event = ev_inBlue | event = ev_exitBlueB | event = ev_enterBlueB | event = ev_enterRedA | event = ev_enterRedB | event = ev_outBlue | event = ev_exitRedA | event = ev_exitRedB | event = ev_entRedA | event = ev_exitBlueA | event = ev_entRedB | event = ev_outRed | event = ev_enterBlueA | event = ev_inRed | event = ev_entBlueB | event = ev_entBlueA );
-     t1 := event = ev_enterRedA & _smBridgeCarRedCarRedARedA.state = SmBridgeCarRedCarRedARedA_waitRedA & g1;
-     t2 := event = ev_exitRedA & _smBridgeCarRedCarRedARedA.state = SmBridgeCarRedCarRedARedA_onRedA;
-     t3 := event = ev_enterRedB & _smBridgeCarRedCarRedBRedB.state = SmBridgeCarRedCarRedBRedB_waitRedB & g1;
-     t4 := event = ev_exitRedB & _smBridgeCarRedCarRedBRedB.state = SmBridgeCarRedCarRedBRedB_onRedB;
-     t5 := event = ev_enterBlueA & _smBridgeCarBlueCarBlueABlueA.state = SmBridgeCarBlueCarBlueABlueA_waitBlueA & g2;
-     t6 := event = ev_exitBlueA & _smBridgeCarBlueCarBlueABlueA.state = SmBridgeCarBlueCarBlueABlueA_onBlueA;
-     t7 := event = ev_enterBlueB & _smBridgeCarBlueCarBlueBBlueB.state = SmBridgeCarBlueCarBlueBBlueB_waitBlueB & g2;
-     t8 := event = ev_exitBlueB & _smBridgeCarBlueCarBlueBBlueB.state = SmBridgeCarBlueCarBlueBBlueB_onBlueB;
-     t9 := event = ev_inRed & _smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_empty;
-     t10 := event = ev_inBlue & _smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_empty;
-     t11 := event = ev_outRed & _smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_oneRed;
-     t12 := event = ev_inRed & _smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_oneRed;
-     t13 := event = ev_outBlue & _smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_oneBlue;
-     t14 := event = ev_inBlue & _smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_oneBlue;
-     t15 := event = ev_outRed & _smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_twoRed;
-     t16 := event = ev_outBlue & _smBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_twoBlue;
-     t17 := event = ev_entRedA & _smCoordCoordRedRedCoordEntRedCoordEnt.state = SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA;
-     t18 := event = ev_entRedB & _smCoordCoordRedRedCoordEntRedCoordEnt.state = SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedB;
-     t19 := event = ev_exitRedA & _smCoordCoordRedRedCoordExitRedCoordExit.state = SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA;
-     t20 := event = ev_exitRedB & _smCoordCoordRedRedCoordExitRedCoordExit.state = SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedB;
-     t21 := event = ev_entBlueA & _smCoordCoordBlueBlueCoordEntBlueCoordEnt.state = SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA;
-     t22 := event = ev_entBlueB & _smCoordCoordBlueBlueCoordEntBlueCoordEnt.state = SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueB;
-     t23 := event = ev_exitBlueA & _smCoordCoordBlueBlueCoordExitBlueCoordExit.state = SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA;
-     t24 := event = ev_exitBlueB & _smCoordCoordBlueBlueCoordExitBlueCoordExit.state = SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueB;
+     t1 := event = ev_enterRedA & _smSingleLaneBridgeBridgeCarRedCarRedARedA.state = SmSingleLaneBridgeBridgeCarRedCarRedARedA_waitRedA & g1;
+     t2 := event = ev_exitRedA & _smSingleLaneBridgeBridgeCarRedCarRedARedA.state = SmSingleLaneBridgeBridgeCarRedCarRedARedA_onRedA;
+     t3 := event = ev_enterRedB & _smSingleLaneBridgeBridgeCarRedCarRedBRedB.state = SmSingleLaneBridgeBridgeCarRedCarRedBRedB_waitRedB & g1;
+     t4 := event = ev_exitRedB & _smSingleLaneBridgeBridgeCarRedCarRedBRedB.state = SmSingleLaneBridgeBridgeCarRedCarRedBRedB_onRedB;
+     t5 := event = ev_enterBlueA & _smSingleLaneBridgeBridgeCarBlueCarBlueABlueA.state = SmSingleLaneBridgeBridgeCarBlueCarBlueABlueA_waitBlueA & g2;
+     t6 := event = ev_exitBlueA & _smSingleLaneBridgeBridgeCarBlueCarBlueABlueA.state = SmSingleLaneBridgeBridgeCarBlueCarBlueABlueA_onBlueA;
+     t7 := event = ev_enterBlueB & _smSingleLaneBridgeBridgeCarBlueCarBlueBBlueB.state = SmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB_waitBlueB & g2;
+     t8 := event = ev_exitBlueB & _smSingleLaneBridgeBridgeCarBlueCarBlueBBlueB.state = SmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB_onBlueB;
+     t9 := event = ev_inRed & _smSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_empty;
+     t10 := event = ev_inBlue & _smSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_empty;
+     t11 := event = ev_outRed & _smSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_oneRed;
+     t12 := event = ev_inRed & _smSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_oneRed;
+     t13 := event = ev_outBlue & _smSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_oneBlue;
+     t14 := event = ev_inBlue & _smSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_oneBlue;
+     t15 := event = ev_outRed & _smSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_twoRed;
+     t16 := event = ev_outBlue & _smSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_twoBlue;
+     t17 := event = ev_entRedA & _smSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt.state = SmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA;
+     t18 := event = ev_entRedB & _smSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt.state = SmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedB;
+     t19 := event = ev_exitRedA & _smSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit.state = SmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA;
+     t20 := event = ev_exitRedB & _smSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit.state = SmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit_coordExitRedB;
+     t21 := event = ev_entBlueA & _smSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt.state = SmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA;
+     t22 := event = ev_entBlueB & _smSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt.state = SmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueB;
+     t23 := event = ev_exitBlueA & _smSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit.state = SmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA;
+     t24 := event = ev_exitBlueB & _smSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit.state = SmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueB;
      g1 := numRed < 2 & numBlue = 0;
      g2 := numBlue < 2 & numRed = 0;
 
@@ -68,351 +68,351 @@ MODULE SystemSm ( _smBridgeCar , _smBridgeCarRedCarRedA , _smBridgeCarRedCarRedA
    ASSIGN
      init( numBlue ) := 0;
 
--- This defines a NuSMV module for SystemSmBridgeCar --
-MODULE SystemSmBridgeCar ( _sm )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeCar --
+MODULE SystemSmSingleLaneBridgeBridgeCar ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeCar_Car , null };
+     state : { SmSingleLaneBridgeBridgeCar_Car , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 : SmBridgeCar_Car;
-       _sm.state = Sm_SingleLaneBridge & state = null : SmBridgeCar_Car;
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 : SmSingleLaneBridgeBridgeCar_Car;
+       _sm.state = Sm_SingleLaneBridge & state = null : SmSingleLaneBridgeBridgeCar_Car;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridgeCarRedCarRedA --
-MODULE SystemSmBridgeCarRedCarRedA ( _sm , _smBridgeCar )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeCarRedCarRedA --
+MODULE SystemSmSingleLaneBridgeBridgeCarRedCarRedA ( _sm , _smSingleLaneBridgeBridgeCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeCarRedCarRedA_RedA , null };
+     state : { SmSingleLaneBridgeBridgeCarRedCarRedA_RedA , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t2 | _sm.t1 : SmBridgeCarRedCarRedA_RedA;
-       _smBridgeCar.state = SmBridgeCar_Car & state = null : SmBridgeCarRedCarRedA_RedA;
+       _sm.t2 | _sm.t1 : SmSingleLaneBridgeBridgeCarRedCarRedA_RedA;
+       _smSingleLaneBridgeBridgeCar.state = SmSingleLaneBridgeBridgeCar_Car & state = null : SmSingleLaneBridgeBridgeCarRedCarRedA_RedA;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridgeCarRedCarRedARedA --
-MODULE SystemSmBridgeCarRedCarRedARedA ( _sm , _smBridgeCarRedCar )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeCarRedCarRedARedA --
+MODULE SystemSmSingleLaneBridgeBridgeCarRedCarRedARedA ( _sm , _smSingleLaneBridgeBridgeCarRedCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeCarRedCarRedARedA_waitRedA , SmBridgeCarRedCarRedARedA_onRedA , null };
+     state : { SmSingleLaneBridgeBridgeCarRedCarRedARedA_waitRedA , SmSingleLaneBridgeBridgeCarRedCarRedARedA_onRedA , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t2 : SmBridgeCarRedCarRedARedA_waitRedA;
-       _sm.t1 : SmBridgeCarRedCarRedARedA_onRedA;
-       _smBridgeCarRedCar.state = SmBridgeCarRedCar_RedCar & state = null : SmBridgeCarRedCarRedARedA_waitRedA;
+       _sm.t2 : SmSingleLaneBridgeBridgeCarRedCarRedARedA_waitRedA;
+       _sm.t1 : SmSingleLaneBridgeBridgeCarRedCarRedARedA_onRedA;
+       _smSingleLaneBridgeBridgeCarRedCar.state = SmSingleLaneBridgeBridgeCarRedCar_RedCar & state = null : SmSingleLaneBridgeBridgeCarRedCarRedARedA_waitRedA;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridgeCarRedCarRedB --
-MODULE SystemSmBridgeCarRedCarRedB ( _sm , _smBridgeCar )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeCarRedCarRedB --
+MODULE SystemSmSingleLaneBridgeBridgeCarRedCarRedB ( _sm , _smSingleLaneBridgeBridgeCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeCarRedCarRedB_RedB , null };
+     state : { SmSingleLaneBridgeBridgeCarRedCarRedB_RedB , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t4 | _sm.t3 : SmBridgeCarRedCarRedB_RedB;
-       _smBridgeCar.state = SmBridgeCar_Car & state = null : SmBridgeCarRedCarRedB_RedB;
+       _sm.t4 | _sm.t3 : SmSingleLaneBridgeBridgeCarRedCarRedB_RedB;
+       _smSingleLaneBridgeBridgeCar.state = SmSingleLaneBridgeBridgeCar_Car & state = null : SmSingleLaneBridgeBridgeCarRedCarRedB_RedB;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridgeCarRedCarRedBRedB --
-MODULE SystemSmBridgeCarRedCarRedBRedB ( _sm , _smBridgeCarRedCar )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeCarRedCarRedBRedB --
+MODULE SystemSmSingleLaneBridgeBridgeCarRedCarRedBRedB ( _sm , _smSingleLaneBridgeBridgeCarRedCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeCarRedCarRedBRedB_waitRedB , SmBridgeCarRedCarRedBRedB_onRedB , null };
+     state : { SmSingleLaneBridgeBridgeCarRedCarRedBRedB_waitRedB , SmSingleLaneBridgeBridgeCarRedCarRedBRedB_onRedB , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t4 : SmBridgeCarRedCarRedBRedB_waitRedB;
-       _sm.t3 : SmBridgeCarRedCarRedBRedB_onRedB;
-       _smBridgeCarRedCar.state = SmBridgeCarRedCar_RedCar & state = null : SmBridgeCarRedCarRedBRedB_waitRedB;
+       _sm.t4 : SmSingleLaneBridgeBridgeCarRedCarRedBRedB_waitRedB;
+       _sm.t3 : SmSingleLaneBridgeBridgeCarRedCarRedBRedB_onRedB;
+       _smSingleLaneBridgeBridgeCarRedCar.state = SmSingleLaneBridgeBridgeCarRedCar_RedCar & state = null : SmSingleLaneBridgeBridgeCarRedCarRedBRedB_waitRedB;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridgeCarRedCar --
-MODULE SystemSmBridgeCarRedCar ( _sm , _smBridge )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeCarRedCar --
+MODULE SystemSmSingleLaneBridgeBridgeCarRedCar ( _sm , _smSingleLaneBridgeBridge )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeCarRedCar_RedCar , null };
+     state : { SmSingleLaneBridgeBridgeCarRedCar_RedCar , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t2 | _sm.t4 | _sm.t1 | _sm.t3 : SmBridgeCarRedCar_RedCar;
-       _smBridge.state = SmBridge_Bridge & state = null : SmBridgeCarRedCar_RedCar;
+       _sm.t2 | _sm.t4 | _sm.t1 | _sm.t3 : SmSingleLaneBridgeBridgeCarRedCar_RedCar;
+       _smSingleLaneBridgeBridge.state = SmSingleLaneBridgeBridge_Bridge & state = null : SmSingleLaneBridgeBridgeCarRedCar_RedCar;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridgeCarBlueCarBlueA --
-MODULE SystemSmBridgeCarBlueCarBlueA ( _sm , _smBridgeCar )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeCarBlueCarBlueA --
+MODULE SystemSmSingleLaneBridgeBridgeCarBlueCarBlueA ( _sm , _smSingleLaneBridgeBridgeCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeCarBlueCarBlueA_BlueA , null };
+     state : { SmSingleLaneBridgeBridgeCarBlueCarBlueA_BlueA , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t6 | _sm.t5 : SmBridgeCarBlueCarBlueA_BlueA;
-       _smBridgeCar.state = SmBridgeCar_Car & state = null : SmBridgeCarBlueCarBlueA_BlueA;
+       _sm.t6 | _sm.t5 : SmSingleLaneBridgeBridgeCarBlueCarBlueA_BlueA;
+       _smSingleLaneBridgeBridgeCar.state = SmSingleLaneBridgeBridgeCar_Car & state = null : SmSingleLaneBridgeBridgeCarBlueCarBlueA_BlueA;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridgeCarBlueCarBlueABlueA --
-MODULE SystemSmBridgeCarBlueCarBlueABlueA ( _sm , _smBridgeCarBlueCar )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeCarBlueCarBlueABlueA --
+MODULE SystemSmSingleLaneBridgeBridgeCarBlueCarBlueABlueA ( _sm , _smSingleLaneBridgeBridgeCarBlueCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeCarBlueCarBlueABlueA_waitBlueA , SmBridgeCarBlueCarBlueABlueA_onBlueA , null };
+     state : { SmSingleLaneBridgeBridgeCarBlueCarBlueABlueA_waitBlueA , SmSingleLaneBridgeBridgeCarBlueCarBlueABlueA_onBlueA , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t6 : SmBridgeCarBlueCarBlueABlueA_waitBlueA;
-       _sm.t5 : SmBridgeCarBlueCarBlueABlueA_onBlueA;
-       _smBridgeCarBlueCar.state = SmBridgeCarBlueCar_BlueCar & state = null : SmBridgeCarBlueCarBlueABlueA_waitBlueA;
+       _sm.t6 : SmSingleLaneBridgeBridgeCarBlueCarBlueABlueA_waitBlueA;
+       _sm.t5 : SmSingleLaneBridgeBridgeCarBlueCarBlueABlueA_onBlueA;
+       _smSingleLaneBridgeBridgeCarBlueCar.state = SmSingleLaneBridgeBridgeCarBlueCar_BlueCar & state = null : SmSingleLaneBridgeBridgeCarBlueCarBlueABlueA_waitBlueA;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridgeCarBlueCarBlueB --
-MODULE SystemSmBridgeCarBlueCarBlueB ( _sm , _smBridgeCar )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeCarBlueCarBlueB --
+MODULE SystemSmSingleLaneBridgeBridgeCarBlueCarBlueB ( _sm , _smSingleLaneBridgeBridgeCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeCarBlueCarBlueB_BlueB , null };
+     state : { SmSingleLaneBridgeBridgeCarBlueCarBlueB_BlueB , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t8 | _sm.t7 : SmBridgeCarBlueCarBlueB_BlueB;
-       _smBridgeCar.state = SmBridgeCar_Car & state = null : SmBridgeCarBlueCarBlueB_BlueB;
+       _sm.t8 | _sm.t7 : SmSingleLaneBridgeBridgeCarBlueCarBlueB_BlueB;
+       _smSingleLaneBridgeBridgeCar.state = SmSingleLaneBridgeBridgeCar_Car & state = null : SmSingleLaneBridgeBridgeCarBlueCarBlueB_BlueB;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridgeCarBlueCarBlueBBlueB --
-MODULE SystemSmBridgeCarBlueCarBlueBBlueB ( _sm , _smBridgeCarBlueCar )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB --
+MODULE SystemSmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB ( _sm , _smSingleLaneBridgeBridgeCarBlueCar )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeCarBlueCarBlueBBlueB_waitBlueB , SmBridgeCarBlueCarBlueBBlueB_onBlueB , null };
+     state : { SmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB_waitBlueB , SmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB_onBlueB , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t8 : SmBridgeCarBlueCarBlueBBlueB_waitBlueB;
-       _sm.t7 : SmBridgeCarBlueCarBlueBBlueB_onBlueB;
-       _smBridgeCarBlueCar.state = SmBridgeCarBlueCar_BlueCar & state = null : SmBridgeCarBlueCarBlueBBlueB_waitBlueB;
+       _sm.t8 : SmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB_waitBlueB;
+       _sm.t7 : SmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB_onBlueB;
+       _smSingleLaneBridgeBridgeCarBlueCar.state = SmSingleLaneBridgeBridgeCarBlueCar_BlueCar & state = null : SmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB_waitBlueB;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridgeCarBlueCar --
-MODULE SystemSmBridgeCarBlueCar ( _sm , _smBridge )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeCarBlueCar --
+MODULE SystemSmSingleLaneBridgeBridgeCarBlueCar ( _sm , _smSingleLaneBridgeBridge )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeCarBlueCar_BlueCar , null };
+     state : { SmSingleLaneBridgeBridgeCarBlueCar_BlueCar , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t6 | _sm.t8 | _sm.t5 | _sm.t7 : SmBridgeCarBlueCar_BlueCar;
-       _smBridge.state = SmBridge_Bridge & state = null : SmBridgeCarBlueCar_BlueCar;
+       _sm.t6 | _sm.t8 | _sm.t5 | _sm.t7 : SmSingleLaneBridgeBridgeCarBlueCar_BlueCar;
+       _smSingleLaneBridgeBridge.state = SmSingleLaneBridgeBridge_Bridge & state = null : SmSingleLaneBridgeBridgeCarBlueCar_BlueCar;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridgeBridgeStatus --
-MODULE SystemSmBridgeBridgeStatus ( _sm )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeBridgeStatus --
+MODULE SystemSmSingleLaneBridgeBridgeBridgeStatus ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeBridgeStatus_BridgeStatus , null };
+     state : { SmSingleLaneBridgeBridgeBridgeStatus_BridgeStatus , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t11 | _sm.t9 | _sm.t10 | _sm.t12 | _sm.t13 | _sm.t15 | _sm.t16 | _sm.t14 : SmBridgeBridgeStatus_BridgeStatus;
-       _sm.state = Sm_SingleLaneBridge & state = null : SmBridgeBridgeStatus_BridgeStatus;
+       _sm.t11 | _sm.t9 | _sm.t10 | _sm.t12 | _sm.t13 | _sm.t15 | _sm.t16 | _sm.t14 : SmSingleLaneBridgeBridgeBridgeStatus_BridgeStatus;
+       _sm.state = Sm_SingleLaneBridge & state = null : SmSingleLaneBridgeBridgeBridgeStatus_BridgeStatus;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridgeBridgeStatusBridgeStatus --
-MODULE SystemSmBridgeBridgeStatusBridgeStatus ( _sm , _smBridge )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridgeBridgeStatusBridgeStatus --
+MODULE SystemSmSingleLaneBridgeBridgeBridgeStatusBridgeStatus ( _sm , _smSingleLaneBridgeBridge )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridgeBridgeStatusBridgeStatus_empty , SmBridgeBridgeStatusBridgeStatus_oneRed , SmBridgeBridgeStatusBridgeStatus_oneBlue , SmBridgeBridgeStatusBridgeStatus_twoRed , SmBridgeBridgeStatusBridgeStatus_twoBlue , null };
+     state : { SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_empty , SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_oneRed , SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_oneBlue , SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_twoRed , SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_twoBlue , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t11 | _sm.t13 : SmBridgeBridgeStatusBridgeStatus_empty;
-       _sm.t9 | _sm.t15 : SmBridgeBridgeStatusBridgeStatus_oneRed;
-       _sm.t10 | _sm.t16 : SmBridgeBridgeStatusBridgeStatus_oneBlue;
-       _sm.t12 : SmBridgeBridgeStatusBridgeStatus_twoRed;
-       _sm.t14 : SmBridgeBridgeStatusBridgeStatus_twoBlue;
-       _smBridge.state = SmBridge_Bridge & state = null : SmBridgeBridgeStatusBridgeStatus_empty;
+       _sm.t11 | _sm.t13 : SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_empty;
+       _sm.t9 | _sm.t15 : SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_oneRed;
+       _sm.t10 | _sm.t16 : SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_oneBlue;
+       _sm.t12 : SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_twoRed;
+       _sm.t14 : SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_twoBlue;
+       _smSingleLaneBridgeBridge.state = SmSingleLaneBridgeBridge_Bridge & state = null : SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_empty;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmBridge --
-MODULE SystemSmBridge ( _sm )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeBridge --
+MODULE SystemSmSingleLaneBridgeBridge ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBridge_Bridge , null };
+     state : { SmSingleLaneBridgeBridge_Bridge , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t11 | _sm.t9 | _sm.t10 | _sm.t12 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t13 | _sm.t15 | _sm.t16 | _sm.t14 : SmBridge_Bridge;
-       _sm.state = Sm_SingleLaneBridge & state = null : SmBridge_Bridge;
+       _sm.t2 | _sm.t4 | _sm.t6 | _sm.t8 | _sm.t11 | _sm.t9 | _sm.t10 | _sm.t12 | _sm.t1 | _sm.t3 | _sm.t5 | _sm.t7 | _sm.t13 | _sm.t15 | _sm.t16 | _sm.t14 : SmSingleLaneBridgeBridge_Bridge;
+       _sm.state = Sm_SingleLaneBridge & state = null : SmSingleLaneBridgeBridge_Bridge;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmCoordCoordRed --
-MODULE SystemSmCoordCoordRed ( _sm )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeCoordCoordRed --
+MODULE SystemSmSingleLaneBridgeCoordCoordRed ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmCoordCoordRed_CoordRed , null };
+     state : { SmSingleLaneBridgeCoordCoordRed_CoordRed , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t18 | _sm.t20 | _sm.t17 | _sm.t19 : SmCoordCoordRed_CoordRed;
-       _sm.state = Sm_SingleLaneBridge & state = null : SmCoordCoordRed_CoordRed;
+       _sm.t18 | _sm.t20 | _sm.t17 | _sm.t19 : SmSingleLaneBridgeCoordCoordRed_CoordRed;
+       _sm.state = Sm_SingleLaneBridge & state = null : SmSingleLaneBridgeCoordCoordRed_CoordRed;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmCoordCoordRedRedCoordEntRedCoordEnt --
-MODULE SystemSmCoordCoordRedRedCoordEntRedCoordEnt ( _sm , _smCoordCoordRed )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt --
+MODULE SystemSmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt ( _sm , _smSingleLaneBridgeCoordCoordRed )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA , SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedB , null };
+     state : { SmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA , SmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedB , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t18 : SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA;
-       _sm.t17 : SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedB;
-       _smCoordCoordRed.state = SmCoordCoordRed_CoordRed & state = null : SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA;
+       _sm.t18 : SmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA;
+       _sm.t17 : SmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedB;
+       _smSingleLaneBridgeCoordCoordRed.state = SmSingleLaneBridgeCoordCoordRed_CoordRed & state = null : SmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmCoordCoordRedRedCoordExitRedCoordExit --
-MODULE SystemSmCoordCoordRedRedCoordExitRedCoordExit ( _sm , _smCoordCoordRed )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit --
+MODULE SystemSmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit ( _sm , _smSingleLaneBridgeCoordCoordRed )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA , SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedB , null };
+     state : { SmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA , SmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit_coordExitRedB , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t20 : SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA;
-       _sm.t19 : SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedB;
-       _smCoordCoordRed.state = SmCoordCoordRed_CoordRed & state = null : SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA;
+       _sm.t20 : SmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA;
+       _sm.t19 : SmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit_coordExitRedB;
+       _smSingleLaneBridgeCoordCoordRed.state = SmSingleLaneBridgeCoordCoordRed_CoordRed & state = null : SmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmCoordCoordBlue --
-MODULE SystemSmCoordCoordBlue ( _sm )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeCoordCoordBlue --
+MODULE SystemSmSingleLaneBridgeCoordCoordBlue ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmCoordCoordBlue_CoordBlue , null };
+     state : { SmSingleLaneBridgeCoordCoordBlue_CoordBlue , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t22 | _sm.t24 | _sm.t21 | _sm.t23 : SmCoordCoordBlue_CoordBlue;
-       _sm.state = Sm_SingleLaneBridge & state = null : SmCoordCoordBlue_CoordBlue;
+       _sm.t22 | _sm.t24 | _sm.t21 | _sm.t23 : SmSingleLaneBridgeCoordCoordBlue_CoordBlue;
+       _sm.state = Sm_SingleLaneBridge & state = null : SmSingleLaneBridgeCoordCoordBlue_CoordBlue;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmCoordCoordBlueBlueCoordEntBlueCoordEnt --
-MODULE SystemSmCoordCoordBlueBlueCoordEntBlueCoordEnt ( _sm , _smCoordCoordBlue )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt --
+MODULE SystemSmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt ( _sm , _smSingleLaneBridgeCoordCoordBlue )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA , SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueB , null };
+     state : { SmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA , SmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueB , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t22 : SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA;
-       _sm.t21 : SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueB;
-       _smCoordCoordBlue.state = SmCoordCoordBlue_CoordBlue & state = null : SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA;
+       _sm.t22 : SmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA;
+       _sm.t21 : SmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueB;
+       _smSingleLaneBridgeCoordCoordBlue.state = SmSingleLaneBridgeCoordCoordBlue_CoordBlue & state = null : SmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmCoordCoordBlueBlueCoordExitBlueCoordExit --
-MODULE SystemSmCoordCoordBlueBlueCoordExitBlueCoordExit ( _sm , _smCoordCoordBlue )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit --
+MODULE SystemSmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit ( _sm , _smSingleLaneBridgeCoordCoordBlue )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA , SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueB , null };
+     state : { SmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA , SmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueB , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t24 : SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA;
-       _sm.t23 : SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueB;
-       _smCoordCoordBlue.state = SmCoordCoordBlue_CoordBlue & state = null : SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA;
+       _sm.t24 : SmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA;
+       _sm.t23 : SmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueB;
+       _smSingleLaneBridgeCoordCoordBlue.state = SmSingleLaneBridgeCoordCoordBlue_CoordBlue & state = null : SmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for SystemSmCoord --
-MODULE SystemSmCoord ( _sm )
+-- This defines a NuSMV module for SystemSmSingleLaneBridgeCoord --
+MODULE SystemSmSingleLaneBridgeCoord ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmCoord_Coord , null };
+     state : { SmSingleLaneBridgeCoord_Coord , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 : SmCoord_Coord;
-       _sm.state = Sm_SingleLaneBridge & state = null : SmCoord_Coord;
+       _sm.t18 | _sm.t20 | _sm.t22 | _sm.t24 | _sm.t17 | _sm.t19 | _sm.t21 | _sm.t23 : SmSingleLaneBridgeCoord_Coord;
+       _sm.state = Sm_SingleLaneBridge & state = null : SmSingleLaneBridgeCoord_Coord;
        TRUE : state;
      esac;
 
@@ -421,28 +421,28 @@ MODULE SystemSm_Machine
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     systemSm : SystemSm( systemSmBridgeCar , systemSmBridgeCarRedCarRedA , systemSmBridgeCarRedCarRedARedA , systemSmBridgeCarRedCarRedB , systemSmBridgeCarRedCarRedBRedB , systemSmBridgeCarRedCar , systemSmBridgeCarBlueCarBlueA , systemSmBridgeCarBlueCarBlueABlueA , systemSmBridgeCarBlueCarBlueB , systemSmBridgeCarBlueCarBlueBBlueB , systemSmBridgeCarBlueCar , systemSmBridgeBridgeStatus , systemSmBridgeBridgeStatusBridgeStatus , systemSmBridge , systemSmCoordCoordRed , systemSmCoordCoordRedRedCoordEntRedCoordEnt , systemSmCoordCoordRedRedCoordExitRedCoordExit , systemSmCoordCoordBlue , systemSmCoordCoordBlueBlueCoordEntBlueCoordEnt , systemSmCoordCoordBlueBlueCoordExitBlueCoordExit , systemSmCoord );
-     systemSmBridgeCar : SystemSmBridgeCar( systemSm );
-     systemSmBridgeCarRedCarRedA : SystemSmBridgeCarRedCarRedA( systemSm , systemSmBridgeCar );
-     systemSmBridgeCarRedCarRedARedA : SystemSmBridgeCarRedCarRedARedA( systemSm , systemSmBridgeCarRedCar );
-     systemSmBridgeCarRedCarRedB : SystemSmBridgeCarRedCarRedB( systemSm , systemSmBridgeCar );
-     systemSmBridgeCarRedCarRedBRedB : SystemSmBridgeCarRedCarRedBRedB( systemSm , systemSmBridgeCarRedCar );
-     systemSmBridgeCarRedCar : SystemSmBridgeCarRedCar( systemSm , systemSmBridge );
-     systemSmBridgeCarBlueCarBlueA : SystemSmBridgeCarBlueCarBlueA( systemSm , systemSmBridgeCar );
-     systemSmBridgeCarBlueCarBlueABlueA : SystemSmBridgeCarBlueCarBlueABlueA( systemSm , systemSmBridgeCarBlueCar );
-     systemSmBridgeCarBlueCarBlueB : SystemSmBridgeCarBlueCarBlueB( systemSm , systemSmBridgeCar );
-     systemSmBridgeCarBlueCarBlueBBlueB : SystemSmBridgeCarBlueCarBlueBBlueB( systemSm , systemSmBridgeCarBlueCar );
-     systemSmBridgeCarBlueCar : SystemSmBridgeCarBlueCar( systemSm , systemSmBridge );
-     systemSmBridgeBridgeStatus : SystemSmBridgeBridgeStatus( systemSm );
-     systemSmBridgeBridgeStatusBridgeStatus : SystemSmBridgeBridgeStatusBridgeStatus( systemSm , systemSmBridge );
-     systemSmBridge : SystemSmBridge( systemSm );
-     systemSmCoordCoordRed : SystemSmCoordCoordRed( systemSm );
-     systemSmCoordCoordRedRedCoordEntRedCoordEnt : SystemSmCoordCoordRedRedCoordEntRedCoordEnt( systemSm , systemSmCoordCoordRed );
-     systemSmCoordCoordRedRedCoordExitRedCoordExit : SystemSmCoordCoordRedRedCoordExitRedCoordExit( systemSm , systemSmCoordCoordRed );
-     systemSmCoordCoordBlue : SystemSmCoordCoordBlue( systemSm );
-     systemSmCoordCoordBlueBlueCoordEntBlueCoordEnt : SystemSmCoordCoordBlueBlueCoordEntBlueCoordEnt( systemSm , systemSmCoordCoordBlue );
-     systemSmCoordCoordBlueBlueCoordExitBlueCoordExit : SystemSmCoordCoordBlueBlueCoordExitBlueCoordExit( systemSm , systemSmCoordCoordBlue );
-     systemSmCoord : SystemSmCoord( systemSm );
+     systemSm : SystemSm( systemSmSingleLaneBridgeBridgeCar , systemSmSingleLaneBridgeBridgeCarRedCarRedA , systemSmSingleLaneBridgeBridgeCarRedCarRedARedA , systemSmSingleLaneBridgeBridgeCarRedCarRedB , systemSmSingleLaneBridgeBridgeCarRedCarRedBRedB , systemSmSingleLaneBridgeBridgeCarRedCar , systemSmSingleLaneBridgeBridgeCarBlueCarBlueA , systemSmSingleLaneBridgeBridgeCarBlueCarBlueABlueA , systemSmSingleLaneBridgeBridgeCarBlueCarBlueB , systemSmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB , systemSmSingleLaneBridgeBridgeCarBlueCar , systemSmSingleLaneBridgeBridgeBridgeStatus , systemSmSingleLaneBridgeBridgeBridgeStatusBridgeStatus , systemSmSingleLaneBridgeBridge , systemSmSingleLaneBridgeCoordCoordRed , systemSmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt , systemSmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit , systemSmSingleLaneBridgeCoordCoordBlue , systemSmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt , systemSmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit , systemSmSingleLaneBridgeCoord );
+     systemSmSingleLaneBridgeBridgeCar : SystemSmSingleLaneBridgeBridgeCar( systemSm );
+     systemSmSingleLaneBridgeBridgeCarRedCarRedA : SystemSmSingleLaneBridgeBridgeCarRedCarRedA( systemSm , systemSmSingleLaneBridgeBridgeCar );
+     systemSmSingleLaneBridgeBridgeCarRedCarRedARedA : SystemSmSingleLaneBridgeBridgeCarRedCarRedARedA( systemSm , systemSmSingleLaneBridgeBridgeCarRedCar );
+     systemSmSingleLaneBridgeBridgeCarRedCarRedB : SystemSmSingleLaneBridgeBridgeCarRedCarRedB( systemSm , systemSmSingleLaneBridgeBridgeCar );
+     systemSmSingleLaneBridgeBridgeCarRedCarRedBRedB : SystemSmSingleLaneBridgeBridgeCarRedCarRedBRedB( systemSm , systemSmSingleLaneBridgeBridgeCarRedCar );
+     systemSmSingleLaneBridgeBridgeCarRedCar : SystemSmSingleLaneBridgeBridgeCarRedCar( systemSm , systemSmSingleLaneBridgeBridge );
+     systemSmSingleLaneBridgeBridgeCarBlueCarBlueA : SystemSmSingleLaneBridgeBridgeCarBlueCarBlueA( systemSm , systemSmSingleLaneBridgeBridgeCar );
+     systemSmSingleLaneBridgeBridgeCarBlueCarBlueABlueA : SystemSmSingleLaneBridgeBridgeCarBlueCarBlueABlueA( systemSm , systemSmSingleLaneBridgeBridgeCarBlueCar );
+     systemSmSingleLaneBridgeBridgeCarBlueCarBlueB : SystemSmSingleLaneBridgeBridgeCarBlueCarBlueB( systemSm , systemSmSingleLaneBridgeBridgeCar );
+     systemSmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB : SystemSmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB( systemSm , systemSmSingleLaneBridgeBridgeCarBlueCar );
+     systemSmSingleLaneBridgeBridgeCarBlueCar : SystemSmSingleLaneBridgeBridgeCarBlueCar( systemSm , systemSmSingleLaneBridgeBridge );
+     systemSmSingleLaneBridgeBridgeBridgeStatus : SystemSmSingleLaneBridgeBridgeBridgeStatus( systemSm );
+     systemSmSingleLaneBridgeBridgeBridgeStatusBridgeStatus : SystemSmSingleLaneBridgeBridgeBridgeStatusBridgeStatus( systemSm , systemSmSingleLaneBridgeBridge );
+     systemSmSingleLaneBridgeBridge : SystemSmSingleLaneBridgeBridge( systemSm );
+     systemSmSingleLaneBridgeCoordCoordRed : SystemSmSingleLaneBridgeCoordCoordRed( systemSm );
+     systemSmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt : SystemSmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt( systemSm , systemSmSingleLaneBridgeCoordCoordRed );
+     systemSmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit : SystemSmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit( systemSm , systemSmSingleLaneBridgeCoordCoordRed );
+     systemSmSingleLaneBridgeCoordCoordBlue : SystemSmSingleLaneBridgeCoordCoordBlue( systemSm );
+     systemSmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt : SystemSmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt( systemSm , systemSmSingleLaneBridgeCoordCoordBlue );
+     systemSmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit : SystemSmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit( systemSm , systemSmSingleLaneBridgeCoordCoordBlue );
+     systemSmSingleLaneBridgeCoord : SystemSmSingleLaneBridgeCoord( systemSm );
 
 -- This defines a NuSMV module for main --
 MODULE main
@@ -453,36 +453,36 @@ MODULE main
 
    -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
    CTLSPEC   EF( systemSm_Machine.systemSm.state = Sm_SingleLaneBridge )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCar.state = SmBridgeCar_Car )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCarRedA.state = SmBridgeCarRedCarRedA_RedA )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCarRedARedA.state = SmBridgeCarRedCarRedARedA_waitRedA )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCarRedARedA.state = SmBridgeCarRedCarRedARedA_onRedA )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCarRedB.state = SmBridgeCarRedCarRedB_RedB )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCarRedBRedB.state = SmBridgeCarRedCarRedBRedB_waitRedB )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCarRedBRedB.state = SmBridgeCarRedCarRedBRedB_onRedB )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarRedCar.state = SmBridgeCarRedCar_RedCar )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCarBlueA.state = SmBridgeCarBlueCarBlueA_BlueA )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCarBlueABlueA.state = SmBridgeCarBlueCarBlueABlueA_waitBlueA )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCarBlueABlueA.state = SmBridgeCarBlueCarBlueABlueA_onBlueA )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCarBlueB.state = SmBridgeCarBlueCarBlueB_BlueB )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCarBlueBBlueB.state = SmBridgeCarBlueCarBlueBBlueB_waitBlueB )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCarBlueBBlueB.state = SmBridgeCarBlueCarBlueBBlueB_onBlueB )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeCarBlueCar.state = SmBridgeCarBlueCar_BlueCar )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeBridgeStatus.state = SmBridgeBridgeStatus_BridgeStatus )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_empty )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_oneRed )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_oneBlue )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_twoRed )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridgeBridgeStatusBridgeStatus.state = SmBridgeBridgeStatusBridgeStatus_twoBlue )
-   CTLSPEC   EF( systemSm_Machine.systemSmBridge.state = SmBridge_Bridge )
-   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordRed.state = SmCoordCoordRed_CoordRed )
-   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordRedRedCoordEntRedCoordEnt.state = SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA )
-   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordRedRedCoordEntRedCoordEnt.state = SmCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedB )
-   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordRedRedCoordExitRedCoordExit.state = SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA )
-   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordRedRedCoordExitRedCoordExit.state = SmCoordCoordRedRedCoordExitRedCoordExit_coordExitRedB )
-   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordBlue.state = SmCoordCoordBlue_CoordBlue )
-   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordBlueBlueCoordEntBlueCoordEnt.state = SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA )
-   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordBlueBlueCoordEntBlueCoordEnt.state = SmCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueB )
-   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordBlueBlueCoordExitBlueCoordExit.state = SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA )
-   CTLSPEC   EF( systemSm_Machine.systemSmCoordCoordBlueBlueCoordExitBlueCoordExit.state = SmCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueB )
-   CTLSPEC   EF( systemSm_Machine.systemSmCoord.state = SmCoord_Coord )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCar.state = SmSingleLaneBridgeBridgeCar_Car )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarRedCarRedA.state = SmSingleLaneBridgeBridgeCarRedCarRedA_RedA )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarRedCarRedARedA.state = SmSingleLaneBridgeBridgeCarRedCarRedARedA_waitRedA )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarRedCarRedARedA.state = SmSingleLaneBridgeBridgeCarRedCarRedARedA_onRedA )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarRedCarRedB.state = SmSingleLaneBridgeBridgeCarRedCarRedB_RedB )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarRedCarRedBRedB.state = SmSingleLaneBridgeBridgeCarRedCarRedBRedB_waitRedB )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarRedCarRedBRedB.state = SmSingleLaneBridgeBridgeCarRedCarRedBRedB_onRedB )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarRedCar.state = SmSingleLaneBridgeBridgeCarRedCar_RedCar )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarBlueCarBlueA.state = SmSingleLaneBridgeBridgeCarBlueCarBlueA_BlueA )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarBlueCarBlueABlueA.state = SmSingleLaneBridgeBridgeCarBlueCarBlueABlueA_waitBlueA )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarBlueCarBlueABlueA.state = SmSingleLaneBridgeBridgeCarBlueCarBlueABlueA_onBlueA )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarBlueCarBlueB.state = SmSingleLaneBridgeBridgeCarBlueCarBlueB_BlueB )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB.state = SmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB_waitBlueB )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB.state = SmSingleLaneBridgeBridgeCarBlueCarBlueBBlueB_onBlueB )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeCarBlueCar.state = SmSingleLaneBridgeBridgeCarBlueCar_BlueCar )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatus_BridgeStatus )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_empty )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_oneRed )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_oneBlue )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_twoRed )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridgeBridgeStatusBridgeStatus.state = SmSingleLaneBridgeBridgeBridgeStatusBridgeStatus_twoBlue )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeBridge.state = SmSingleLaneBridgeBridge_Bridge )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeCoordCoordRed.state = SmSingleLaneBridgeCoordCoordRed_CoordRed )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt.state = SmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedA )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt.state = SmSingleLaneBridgeCoordCoordRedRedCoordEntRedCoordEnt_coordEntRedB )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit.state = SmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit_coordExitRedA )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit.state = SmSingleLaneBridgeCoordCoordRedRedCoordExitRedCoordExit_coordExitRedB )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeCoordCoordBlue.state = SmSingleLaneBridgeCoordCoordBlue_CoordBlue )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt.state = SmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueA )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt.state = SmSingleLaneBridgeCoordCoordBlueBlueCoordEntBlueCoordEnt_coordEntBlueB )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit.state = SmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueA )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit.state = SmSingleLaneBridgeCoordCoordBlueBlueCoordExitBlueCoordExit_coordExitBlueB )
+   CTLSPEC   EF( systemSm_Machine.systemSmSingleLaneBridgeCoord.state = SmSingleLaneBridgeCoord_Coord )

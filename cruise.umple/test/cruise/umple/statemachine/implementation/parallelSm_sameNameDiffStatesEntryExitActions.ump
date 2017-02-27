@@ -1,0 +1,42 @@
+class X {
+  sm{
+    s0{
+      t1 {
+        entry /{s0_t1_entry();}
+        exit /{s0_t1_exit();}
+        goS1-> s1;
+      }
+      ||
+      t2 {
+        entry /{s0_t2_entry();}
+        exit /{s0_t2_exit();}
+        goT3-> t3;
+      }
+      t3{ }
+    }
+    s1{
+      t1{
+        entry /{s1_t1_entry();}
+        exit /{s1_t1_exit();}
+        goT4-> t4;
+      }
+      t4{ }
+      ||
+      t2{
+        entry /{s1_t2_entry();}
+        exit /{s1_t2_exit();}
+        goT5-> t5;
+      }
+      t5{ }
+    }
+  }
+
+  void s0_t1_entry(){}
+  void s0_t2_entry(){}
+  void s1_t1_entry(){}
+  void s1_t2_entry(){}
+  void s0_t1_exit(){}
+  void s0_t2_exit(){}
+  void s1_t1_exit(){}
+  void s1_t2_exit(){}
+}

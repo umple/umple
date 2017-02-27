@@ -11,13 +11,13 @@ public class ConcurrentStateMachineTest
   {
     CourseF course = new CourseF();
     Assert.assertEquals(CourseF.Status.Off, course.getStatus());
-    Assert.assertEquals(CourseF.StatusMotorIdle.Null, course.getStatusMotorIdle());    
-    Assert.assertEquals(CourseF.StatusFanIdle.Null, course.getStatusFanIdle());
+    Assert.assertEquals(CourseF.StatusOnMotorIdle.Null, course.getStatusOnMotorIdle());    
+    Assert.assertEquals(CourseF.StatusOnFanIdle.Null, course.getStatusOnFanIdle());
     
     course.turnOn();
     Assert.assertEquals(CourseF.Status.On, course.getStatus());
-    Assert.assertEquals(CourseF.StatusMotorIdle.MotorIdle, course.getStatusMotorIdle());    
-    Assert.assertEquals(CourseF.StatusFanIdle.FanIdle, course.getStatusFanIdle());
+    Assert.assertEquals(CourseF.StatusOnMotorIdle.MotorIdle, course.getStatusOnMotorIdle());    
+    Assert.assertEquals(CourseF.StatusOnFanIdle.FanIdle, course.getStatusOnFanIdle());
   }
 
   @Test
@@ -25,18 +25,18 @@ public class ConcurrentStateMachineTest
   {
     CourseF course = new CourseF();
     Assert.assertEquals(CourseF.Status.Off, course.getStatus());
-    Assert.assertEquals(CourseF.StatusMotorIdle.Null, course.getStatusMotorIdle());    
-    Assert.assertEquals(CourseF.StatusFanIdle.Null, course.getStatusFanIdle());
+    Assert.assertEquals(CourseF.StatusOnMotorIdle.Null, course.getStatusOnMotorIdle());    
+    Assert.assertEquals(CourseF.StatusOnFanIdle.Null, course.getStatusOnFanIdle());
     
     course.turnOn();
     Assert.assertEquals(CourseF.Status.On, course.getStatus());
-    Assert.assertEquals(CourseF.StatusMotorIdle.MotorIdle, course.getStatusMotorIdle());    
-    Assert.assertEquals(CourseF.StatusFanIdle.FanIdle, course.getStatusFanIdle());
+    Assert.assertEquals(CourseF.StatusOnMotorIdle.MotorIdle, course.getStatusOnMotorIdle());    
+    Assert.assertEquals(CourseF.StatusOnFanIdle.FanIdle, course.getStatusOnFanIdle());
     
     course.turnOff();
     Assert.assertEquals(CourseF.Status.Off, course.getStatus());
-    Assert.assertEquals(CourseF.StatusMotorIdle.Null, course.getStatusMotorIdle());    
-    Assert.assertEquals(CourseF.StatusFanIdle.Null, course.getStatusFanIdle());
+    Assert.assertEquals(CourseF.StatusOnMotorIdle.Null, course.getStatusOnMotorIdle());    
+    Assert.assertEquals(CourseF.StatusOnFanIdle.Null, course.getStatusOnFanIdle());
     
   }
 
@@ -48,14 +48,14 @@ public class ConcurrentStateMachineTest
     course.flip();
 
     Assert.assertEquals(CourseF.Status.On, course.getStatus());
-    Assert.assertEquals(CourseF.StatusMotorIdle.MotorRunning, course.getStatusMotorIdle());    
-    Assert.assertEquals(CourseF.StatusFanIdle.FanIdle, course.getStatusFanIdle());
+    Assert.assertEquals(CourseF.StatusOnMotorIdle.MotorRunning, course.getStatusOnMotorIdle());    
+    Assert.assertEquals(CourseF.StatusOnFanIdle.FanIdle, course.getStatusOnFanIdle());
 
     course.flop();
 
     Assert.assertEquals(CourseF.Status.On, course.getStatus());
-    Assert.assertEquals(CourseF.StatusMotorIdle.MotorRunning, course.getStatusMotorIdle());    
-    Assert.assertEquals(CourseF.StatusFanIdle.FanRunning, course.getStatusFanIdle());
+    Assert.assertEquals(CourseF.StatusOnMotorIdle.MotorRunning, course.getStatusOnMotorIdle());    
+    Assert.assertEquals(CourseF.StatusOnFanIdle.FanRunning, course.getStatusOnFanIdle());
   }
   
 

@@ -436,7 +436,16 @@ class StateMachine
     }
     else
     {
-      return getParentState().getStateMachine().getFullName() + StringFormatter.toPascalCase(name);
+      // Issue 1001 - Append the name of the composite state that the concurrent state machine is in
+      String appendToFullName = name;
+      if (getParentState().getIsConcurrent()) 
+      {
+        if(!getParentState().getName().equals(getParentState().getStateMachine().getName())) 
+        {
+        	appendToFullName = parentState.getName() + "." + appendToFullName;
+        }
+      }
+      return getParentState().getStateMachine().getFullName() + StringFormatter.toPascalCase(appendToFullName);
     }
   }
   

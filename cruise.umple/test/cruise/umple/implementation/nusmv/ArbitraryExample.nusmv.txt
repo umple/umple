@@ -5,7 +5,7 @@
 
 
 -- This defines a NuSMV module for TestSmSm --
-MODULE TestSmSm ( _smAA , _smBB , _smCC )
+MODULE TestSmSm ( _smS2AA , _smS2BB , _smS2CC )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
@@ -16,23 +16,23 @@ MODULE TestSmSm ( _smAA , _smBB , _smCC )
    DEFINE
      Sm_stable :=  !( event = ev_e1 | event = ev_e2 );
      t1 := event = ev_e1 & state = Sm_s1;
-     t2 := event = ev_e1 & _smAA.state = SmAA_a1;
-     t3 := event = ev_e2 & _smAA.state = SmAA_a1;
-     t4 := event = ev_e1 & _smAA.state = SmAA_a2;
-     t5 := event = ev_e2 & _smAA.state = SmAA_a2;
-     t6 := event = ev_e1 & _smAA.state = SmAA_a3;
-     t7 := event = ev_e2 & _smBB.state = SmBB_b1;
-     t8 := event = ev_e1 & _smBB.state = SmBB_b1;
-     t9 := event = ev_e1 & _smBB.state = SmBB_b2;
-     t10 := event = ev_e1 & _smBB.state = SmBB_b3;
-     t11 := event = ev_e1 & _smBB.state = SmBB_b4;
-     t12 := event = ev_e2 & _smBB.state = SmBB_b4;
-     t13 := event = ev_e1 & _smCC.state = SmCC_c1;
-     t14 := event = ev_e2 & _smCC.state = SmCC_c1;
-     t15 := event = ev_e1 & _smCC.state = SmCC_c3;
-     t16 := event = ev_e2 & _smCC.state = SmCC_c3;
-     t17 := event = ev_e1 & _smCC.state = SmCC_c4;
-     t18 := event = ev_e2 & _smCC.state = SmCC_c4;
+     t2 := event = ev_e1 & _smS2AA.state = SmS2AA_a1;
+     t3 := event = ev_e2 & _smS2AA.state = SmS2AA_a1;
+     t4 := event = ev_e1 & _smS2AA.state = SmS2AA_a2;
+     t5 := event = ev_e2 & _smS2AA.state = SmS2AA_a2;
+     t6 := event = ev_e1 & _smS2AA.state = SmS2AA_a3;
+     t7 := event = ev_e2 & _smS2BB.state = SmS2BB_b1;
+     t8 := event = ev_e1 & _smS2BB.state = SmS2BB_b1;
+     t9 := event = ev_e1 & _smS2BB.state = SmS2BB_b2;
+     t10 := event = ev_e1 & _smS2BB.state = SmS2BB_b3;
+     t11 := event = ev_e1 & _smS2BB.state = SmS2BB_b4;
+     t12 := event = ev_e2 & _smS2BB.state = SmS2BB_b4;
+     t13 := event = ev_e1 & _smS2CC.state = SmS2CC_c1;
+     t14 := event = ev_e2 & _smS2CC.state = SmS2CC_c1;
+     t15 := event = ev_e1 & _smS2CC.state = SmS2CC_c3;
+     t16 := event = ev_e2 & _smS2CC.state = SmS2CC_c3;
+     t17 := event = ev_e1 & _smS2CC.state = SmS2CC_c4;
+     t18 := event = ev_e2 & _smS2CC.state = SmS2CC_c4;
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
@@ -51,60 +51,60 @@ MODULE TestSmSm ( _smAA , _smBB , _smCC )
        TRUE : ev_null;
      esac;
 
--- This defines a NuSMV module for TestSmSmAA --
-MODULE TestSmSmAA ( _sm )
+-- This defines a NuSMV module for TestSmSmS2AA --
+MODULE TestSmSmS2AA ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmAA_a1 , SmAA_a2 , SmAA_a3 , null };
+     state : { SmS2AA_a1 , SmS2AA_a2 , SmS2AA_a3 , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
        _sm.t5 : null;
-       _sm.t2 | _sm.t6 : SmAA_a2;
-       _sm.t4 | _sm.t3 | _sm.t18 : SmAA_a3;
-       _sm.state = Sm_s2 & state = null : SmAA_a1;
+       _sm.t2 | _sm.t6 : SmS2AA_a2;
+       _sm.t4 | _sm.t3 | _sm.t18 : SmS2AA_a3;
+       _sm.state = Sm_s2 & state = null : SmS2AA_a1;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for TestSmSmBB --
-MODULE TestSmSmBB ( _sm )
+-- This defines a NuSMV module for TestSmSmS2BB --
+MODULE TestSmSmS2BB ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmBB_b1 , SmBB_b2 , SmBB_b3 , SmBB_b4 , null };
+     state : { SmS2BB_b1 , SmS2BB_b2 , SmS2BB_b3 , SmS2BB_b4 , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
        _sm.t5 | _sm.t18 : null;
-       _sm.t9 : SmBB_b1;
-       _sm.t8 | _sm.t12 : SmBB_b2;
-       _sm.t7 | _sm.t11 : SmBB_b3;
-       _sm.t10 : SmBB_b4;
-       _sm.state = Sm_s2 & state = null : SmBB_b1;
+       _sm.t9 : SmS2BB_b1;
+       _sm.t8 | _sm.t12 : SmS2BB_b2;
+       _sm.t7 | _sm.t11 : SmS2BB_b3;
+       _sm.t10 : SmS2BB_b4;
+       _sm.state = Sm_s2 & state = null : SmS2BB_b1;
        TRUE : state;
      esac;
 
--- This defines a NuSMV module for TestSmSmCC --
-MODULE TestSmSmCC ( _sm )
+-- This defines a NuSMV module for TestSmSmS2CC --
+MODULE TestSmSmS2CC ( _sm )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { SmCC_c1 , SmCC_c2 , SmCC_c3 , SmCC_c4 , null };
+     state : { SmS2CC_c1 , SmS2CC_c2 , SmS2CC_c3 , SmS2CC_c4 , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
        _sm.t5 | _sm.t18 : null;
-       _sm.t15 | _sm.t14 | _sm.t17 : SmCC_c2;
-       _sm.t1 | _sm.t13 : SmCC_c3;
-       _sm.t16 : SmCC_c4;
-       _sm.state = Sm_s2 & state = null : SmCC_c1;
+       _sm.t15 | _sm.t14 | _sm.t17 : SmS2CC_c2;
+       _sm.t1 | _sm.t13 : SmS2CC_c3;
+       _sm.t16 : SmS2CC_c4;
+       _sm.state = Sm_s2 & state = null : SmS2CC_c1;
        TRUE : state;
      esac;
 
@@ -113,10 +113,10 @@ MODULE TestSmSm_Machine
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     testSmSm : TestSmSm( testSmSmAA , testSmSmBB , testSmSmCC );
-     testSmSmAA : TestSmSmAA( testSmSm );
-     testSmSmBB : TestSmSmBB( testSmSm );
-     testSmSmCC : TestSmSmCC( testSmSm );
+     testSmSm : TestSmSm( testSmSmS2AA , testSmSmS2BB , testSmSmS2CC );
+     testSmSmS2AA : TestSmSmS2AA( testSmSm );
+     testSmSmS2BB : TestSmSmS2BB( testSmSm );
+     testSmSmS2CC : TestSmSmS2CC( testSmSm );
 
 -- This defines a NuSMV module for main --
 MODULE main
@@ -126,25 +126,25 @@ MODULE main
      testSmSm_Machine : TestSmSm_Machine;
 
    -- The following properties are specified to certify that this model is free of non-determinism. 
-   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t7 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmBB.state = SmBB_b3 ) )
-   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t12 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmBB.state = SmBB_b2 ) )
-   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t14 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmCC.state = SmCC_c2 ) )
-   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t16 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmCC.state = SmCC_c4 ) )
-   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t18 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmAA.state = SmAA_a3 ) )
-   INVARSPEC   ( testSmSm_Machine.testSmSm.t18 & testSmSm_Machine.testSmSm.t7 -> next( testSmSm_Machine.testSmSmAA.state = SmAA_a3 & testSmSm_Machine.testSmSmBB.state = SmBB_b3 ) )
-   INVARSPEC   ( testSmSm_Machine.testSmSm.t18 & testSmSm_Machine.testSmSm.t12 -> next( testSmSm_Machine.testSmSmAA.state = SmAA_a3 & testSmSm_Machine.testSmSmBB.state = SmBB_b2 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t7 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmS2BB.state = SmS2BB_b3 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t12 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmS2BB.state = SmS2BB_b2 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t14 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmS2CC.state = SmS2CC_c2 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t16 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmS2CC.state = SmS2CC_c4 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t5 & testSmSm_Machine.testSmSm.t18 -> next( testSmSm_Machine.testSmSm.state = Sm_s1 & testSmSm_Machine.testSmSmS2AA.state = SmS2AA_a3 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t18 & testSmSm_Machine.testSmSm.t7 -> next( testSmSm_Machine.testSmSmS2AA.state = SmS2AA_a3 & testSmSm_Machine.testSmSmS2BB.state = SmS2BB_b3 ) )
+   INVARSPEC   ( testSmSm_Machine.testSmSm.t18 & testSmSm_Machine.testSmSm.t12 -> next( testSmSm_Machine.testSmSmS2AA.state = SmS2AA_a3 & testSmSm_Machine.testSmSmS2BB.state = SmS2BB_b2 ) )
 
    -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
    CTLSPEC   EF( testSmSm_Machine.testSmSm.state = Sm_s1 )
    CTLSPEC   EF( testSmSm_Machine.testSmSm.state = Sm_s2 )
-   CTLSPEC   EF( testSmSm_Machine.testSmSmAA.state = SmAA_a1 )
-   CTLSPEC   EF( testSmSm_Machine.testSmSmAA.state = SmAA_a2 )
-   CTLSPEC   EF( testSmSm_Machine.testSmSmAA.state = SmAA_a3 )
-   CTLSPEC   EF( testSmSm_Machine.testSmSmBB.state = SmBB_b1 )
-   CTLSPEC   EF( testSmSm_Machine.testSmSmBB.state = SmBB_b2 )
-   CTLSPEC   EF( testSmSm_Machine.testSmSmBB.state = SmBB_b3 )
-   CTLSPEC   EF( testSmSm_Machine.testSmSmBB.state = SmBB_b4 )
-   CTLSPEC   EF( testSmSm_Machine.testSmSmCC.state = SmCC_c1 )
-   CTLSPEC   EF( testSmSm_Machine.testSmSmCC.state = SmCC_c2 )
-   CTLSPEC   EF( testSmSm_Machine.testSmSmCC.state = SmCC_c3 )
-   CTLSPEC   EF( testSmSm_Machine.testSmSmCC.state = SmCC_c4 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmS2AA.state = SmS2AA_a1 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmS2AA.state = SmS2AA_a2 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmS2AA.state = SmS2AA_a3 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmS2BB.state = SmS2BB_b1 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmS2BB.state = SmS2BB_b2 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmS2BB.state = SmS2BB_b3 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmS2BB.state = SmS2BB_b4 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmS2CC.state = SmS2CC_c1 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmS2CC.state = SmS2CC_c2 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmS2CC.state = SmS2CC_c3 )
+   CTLSPEC   EF( testSmSm_Machine.testSmSmS2CC.state = SmS2CC_c4 )
