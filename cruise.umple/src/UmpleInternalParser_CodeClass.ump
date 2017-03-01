@@ -1630,18 +1630,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     if (methodName.length() >= 3)
     {
       //1. Verify if method to be added is a setter or a getter
-      String accessorName = methodName.substring(0,3);
-      if ((accessorName.equals("get") && aMethod.numberOfMethodParameters()==0) || (accessorName.equals("set")&& aMethod.numberOfMethodParameters()==1))
+      if (uClass.hasMethod(aMethod) && uClass.getMethod(aMethod).getSource() == Method.Source.fAutoAPI)
       {
-        String possibleAttributeName =   methodName.substring(3,methodName.length()).toLowerCase();
-        Attribute attr = uClass.getAttribute(possibleAttributeName);
-        if (attr != null && !"internal".equals(attr.getModifier()))
-        {
-          if(!checkingInInterface) {
-            getParseResult().addErrorMessage(new ErrorMessage(1009, aMethod.getPosition(), methodName, attr.getName(),uClass.getName()));
-          }
-          return false;
+        String attributeName = methodName.substring(3,methodName.length()).toLowerCase();
+        if(!checkingInInterface) {
+          getParseResult().addErrorMessage(new ErrorMessage(1009, aMethod.getPosition(), methodName, attributeName,uClass.getName()));
         }
+        return false;
       }
       //2. Verify if method to be added is a constructor
       if (aMethod.getType().equals("public"))
