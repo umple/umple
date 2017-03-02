@@ -19,8 +19,8 @@ public class FinalStateTest
   {
     CourseL c = new CourseL();
     Assert.assertEquals(CourseL.Status.On,c.getStatus());
-    Assert.assertEquals(CourseL.StatusMotorIdle.MotorIdle,c.getStatusMotorIdle());
-    Assert.assertEquals(CourseL.StatusFanIdle.FanIdle,c.getStatusFanIdle());
+    Assert.assertEquals(CourseL.StatusOnMotorIdle.MotorIdle,c.getStatusOnMotorIdle());
+    Assert.assertEquals(CourseL.StatusOnFanIdle.FanIdle,c.getStatusOnFanIdle());
 
     c.flip();
 
@@ -28,8 +28,8 @@ public class FinalStateTest
     Assert.assertEquals("deleted",c.getLog(0));
 
     Assert.assertEquals(CourseL.Status.On,c.getStatus());
-    Assert.assertEquals(CourseL.StatusMotorIdle.Final,c.getStatusMotorIdle());
-    Assert.assertEquals(CourseL.StatusFanIdle.FanIdle,c.getStatusFanIdle());
+    Assert.assertEquals(CourseL.StatusOnMotorIdle.Final,c.getStatusOnMotorIdle());
+    Assert.assertEquals(CourseL.StatusOnFanIdle.FanIdle,c.getStatusOnFanIdle());
     
   }
   

@@ -1,0 +1,437 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Animal extends ThingInWorld
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Animal Attributes
+  private $isAlive;
+
+  //Animal State Machines
+  private static $StateAlive = 1;
+  private static $StateDead = 2;
+  private static $StateAliveNull = 3;
+  private static $StateAliveNormal = 4;
+  private static $StateAliveZombie = 5;
+  private static $StateAliveNormalNull = 6;
+  private static $StateAliveNormalBaby = 7;
+  private static $StateAliveNormalAdult = 8;
+  private $state;
+  private $stateAlive;
+  private $stateAliveNormal;
+
+  //Animal Associations
+  private $drops;
+  private $world;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aIsAlive, $aWorld)
+  {
+    parent::__construct();
+    $this->isAlive = $aIsAlive;
+    $this->drops = array();
+    $didAddWorld = $this->setWorld($aWorld);
+    if (!$didAddWorld)
+    {
+      throw new Exception("Unable to create animal due to world");
+    }
+    $this->setStateAlive(self::$StateAliveNull);
+    $this->setStateAliveNormal(self::$StateAliveNormalNull);
+    $this->setState(self::$StateAlive);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setIsAlive($aIsAlive)
+  {
+    $wasSet = false;
+    $this->isAlive = $aIsAlive;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getIsAlive()
+  {
+    return $this->isAlive;
+  }
+
+  public function isIsAlive()
+  {
+    return $this->isAlive;
+  }
+
+  public function getStateFullName()
+  {
+    $answer = $this->getState();
+    if ($this->stateAlive != self::$StateAliveNull) { $answer .= "." . $this->getStateAlive(); }
+    if ($this->stateAliveNormal != self::$StateAliveNormalNull) { $answer .= "." . $this->getStateAliveNormal(); }
+    return $answer;
+  }
+
+  public function getState()
+  {
+    if ($this->state == self::$StateAlive) { return "StateAlive"; }
+    elseif ($this->state == self::$StateDead) { return "StateDead"; }
+    return null;
+  }
+
+  public function getStateAlive()
+  {
+    if ($this->stateAlive == self::$StateAliveNull) { return "StateAliveNull"; }
+    elseif ($this->stateAlive == self::$StateAliveNormal) { return "StateAliveNormal"; }
+    elseif ($this->stateAlive == self::$StateAliveZombie) { return "StateAliveZombie"; }
+    return null;
+  }
+
+  public function getStateAliveNormal()
+  {
+    if ($this->stateAliveNormal == self::$StateAliveNormalNull) { return "StateAliveNormalNull"; }
+    elseif ($this->stateAliveNormal == self::$StateAliveNormalBaby) { return "StateAliveNormalBaby"; }
+    elseif ($this->stateAliveNormal == self::$StateAliveNormalAdult) { return "StateAliveNormalAdult"; }
+    return null;
+  }
+
+  public function kill()
+  {
+    $wasEventProcessed = false;
+    
+    $aState = $this->state;
+    if ($aState == self::$StateAlive)
+    {
+      $this->exitState();
+      $this->setState(self::$StateDead);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function enterAlive()
+  {
+    $wasEventProcessed = false;
+    
+    $aStateAlive = $this->stateAlive;
+    $aStateAliveNormal = $this->stateAliveNormal;
+    if ($aStateAlive == self::$StateAliveNull)
+    {
+      $this->setStateAlive(self::$StateAliveNormal);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNormal);
+      $wasEventProcessed = true;
+    }
+
+    
+    if ($aStateAliveNormal == self::$StateAliveNormalNull)
+    {
+      $this->setStateAliveNormal(self::$StateAliveNormalBaby);
+      $wasEventProcessed = true;
+      $this->setStateAliveNormal(self::$StateAliveNormalBaby);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitAlive()
+  {
+    $wasEventProcessed = false;
+    
+    $aStateAlive = $this->stateAlive;
+    $aStateAliveNormal = $this->stateAliveNormal;
+    if ($aStateAlive == self::$StateAliveNormal)
+    {
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+    }
+    elseif ($aStateAlive == self::$StateAliveZombie)
+    {
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+      $this->setStateAlive(self::$StateAliveNull);
+      $wasEventProcessed = true;
+    }
+
+    
+    if ($aStateAliveNormal == self::$StateAliveNormalBaby)
+    {
+      $this->setStateAliveNormal(self::$StateAliveNormalNull);
+      $wasEventProcessed = true;
+      $this->setStateAliveNormal(self::$StateAliveNormalNull);
+      $wasEventProcessed = true;
+    }
+    elseif ($aStateAliveNormal == self::$StateAliveNormalAdult)
+    {
+      $this->setStateAliveNormal(self::$StateAliveNormalNull);
+      $wasEventProcessed = true;
+      $this->setStateAliveNormal(self::$StateAliveNormalNull);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function haveBaby()
+  {
+    $wasEventProcessed = false;
+    
+    $aStateAlive = $this->stateAlive;
+    if ($aStateAlive == self::$StateAliveZombie)
+    {
+      $this->setStateAliveNormal(self::$StateAliveNormalAdult);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function growUp()
+  {
+    $wasEventProcessed = false;
+    
+    $aStateAliveNormal = $this->stateAliveNormal;
+    if ($aStateAliveNormal == self::$StateAliveNormalBaby)
+    {
+      $this->setStateAliveNormal(self::$StateAliveNormalAdult);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function zombify()
+  {
+    $wasEventProcessed = false;
+    
+    $aStateAliveNormal = $this->stateAliveNormal;
+    if ($aStateAliveNormal == self::$StateAliveNormalAdult)
+    {
+      $this->exitStateAlive();
+      $this->setStateAlive(self::$StateAliveZombie);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitState()
+  {
+    if ($this->state == self::$StateAlive)
+    {
+      $this->exitAlive();
+    }
+  }
+
+  private function setState($aState)
+  {
+    $this->state = $aState;
+
+    // entry actions and do activities
+    if ($this->state == self::$StateAlive)
+    {
+      if ($this->stateAlive == self::$StateAliveNull) { $this->setStateAlive(self::$StateAliveNormal); }
+    }
+  }
+
+  private function exitStateAlive()
+  {
+    if ($this->stateAlive == self::$StateAliveNormal)
+    {
+      $this->exitAlive();
+    }
+  }
+
+  private function setStateAlive($aStateAlive)
+  {
+    $this->stateAlive = $aStateAlive;
+    if ($this->state != self::$StateAlive && $aStateAlive != self::$StateAliveNull) { $this->setState(self::$StateAlive); }
+
+    // entry actions and do activities
+    if ($this->stateAlive == self::$StateAliveNormal)
+    {
+      if ($this->stateAliveNormal == self::$StateAliveNormalNull) { $this->setStateAliveNormal(self::$StateAliveNormalBaby); }
+    }
+  }
+
+  private function setStateAliveNormal($aStateAliveNormal)
+  {
+    $this->stateAliveNormal = $aStateAliveNormal;
+    if ($this->stateAlive != self::$StateAliveNormal && $aStateAliveNormal != self::$StateAliveNormalNull) { $this->setStateAlive(self::$StateAliveNormal); }
+  }
+
+  public function getDrop_index($index)
+  {
+    $aDrop = $this->drops[$index];
+    return $aDrop;
+  }
+
+  public function getDrops()
+  {
+    $newDrops = $this->drops;
+    return $newDrops;
+  }
+
+  public function numberOfDrops()
+  {
+    $number = count($this->drops);
+    return $number;
+  }
+
+  public function hasDrops()
+  {
+    $has = $this->numberOfDrops() > 0;
+    return $has;
+  }
+
+  public function indexOfDrop($aDrop)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->drops as $drop)
+    {
+      if ($drop->equals($aDrop))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public function getWorld()
+  {
+    return $this->world;
+  }
+
+  public static function minimumNumberOfDrops()
+  {
+    return 0;
+  }
+
+  public function addDrop($aDrop)
+  {
+    $wasAdded = false;
+    if ($this->indexOfDrop($aDrop) !== -1) { return false; }
+    if ($this->indexOfDrop($aDrop) !== -1) { return false; }
+    $this->drops[] = $aDrop;
+    if ($aDrop->indexOfAnimal($this) != -1)
+    {
+      $wasAdded = true;
+    }
+    else
+    {
+      $wasAdded = $aDrop->addAnimal($this);
+      if (!$wasAdded)
+      {
+        array_pop($this->drops);
+      }
+    }
+    return $wasAdded;
+  }
+
+  public function removeDrop($aDrop)
+  {
+    $wasRemoved = false;
+    if ($this->indexOfDrop($aDrop) == -1)
+    {
+      return $wasRemoved;
+    }
+
+    $oldIndex = $this->indexOfDrop($aDrop);
+    unset($this->drops[$oldIndex]);
+    if ($aDrop->indexOfAnimal($this) == -1)
+    {
+      $wasRemoved = true;
+    }
+    else
+    {
+      $wasRemoved = $aDrop->removeAnimal($this);
+      if (!$wasRemoved)
+      {
+        $this->drops[$oldIndex] = $aDrop;
+        ksort($this->drops);
+      }
+    }
+    $this->drops = array_values($this->drops);
+    return $wasRemoved;
+  }
+
+  public function addDropAt($aDrop, $index)
+  {  
+    $wasAdded = false;
+    if($this->addDrop($aDrop))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfDrops()) { $index = $this->numberOfDrops() - 1; }
+      array_splice($this->drops, $this->indexOfDrop($aDrop), 1);
+      array_splice($this->drops, $index, 0, array($aDrop));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveDropAt($aDrop, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfDrop($aDrop) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfDrops()) { $index = $this->numberOfDrops() - 1; }
+      array_splice($this->drops, $this->indexOfDrop($aDrop), 1);
+      array_splice($this->drops, $index, 0, array($aDrop));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addDropAt($aDrop, $index);
+    }
+    return $wasAdded;
+  }
+
+  public function setWorld($aWorld)
+  {
+    $wasSet = false;
+    if ($aWorld == null)
+    {
+      return $wasSet;
+    }
+    
+    $existingWorld = $this->world;
+    $this->world = $aWorld;
+    if ($existingWorld != null && $existingWorld != $aWorld)
+    {
+      $existingWorld->removeAnimal($this);
+    }
+    $this->world->addAnimal($this);
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $copyOfDrops = $this->drops;
+    $this->drops = array();
+    foreach ($copyOfDrops as $aDrop)
+    {
+      $aDrop->removeAnimal($this);
+    }
+    $placeholderWorld = $this->world;
+    $this->world = null;
+    $placeholderWorld->removeAnimal($this);
+    parent::delete();
+  }
+
+}
+?>

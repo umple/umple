@@ -91,19 +91,26 @@ public class StateMachineTest extends StateMachineTemplateTest
   @Test
   public void guardNameBothAttributeAndMethod()
   {
-    assertUmpleTemplateFor("guardNameBothAttributeAndMethod.ump",languagePath + "/guardNameBothAttributeAndMethod."+ languagePath +".txt","A");
+	// Reset autotransition counter so isn't carried over to the next test (it's passed from the java test to the php test)
+	Event.setNextAutoTransitionId(1); 
+	assertUmpleTemplateFor("guardNameBothAttributeAndMethod.ump",languagePath + "/guardNameBothAttributeAndMethod."+ languagePath +".txt","A");
+	Event.setNextAutoTransitionId(1); 
   }
   
   @Test
   public void guardNameBothAttributeAndMethod2()
   {
-    assertUmpleTemplateFor("guardNameBothAttributeAndMethod2.ump",languagePath + "/guardNameBothAttributeAndMethod2."+ languagePath +".txt","A");
+	Event.setNextAutoTransitionId(1); 
+	assertUmpleTemplateFor("guardNameBothAttributeAndMethod2.ump",languagePath + "/guardNameBothAttributeAndMethod2."+ languagePath +".txt","A");
+    Event.setNextAutoTransitionId(1);
   }
   
   @Test
   public void guardNameBothAttributeAndMethod3()
   {
-    assertUmpleTemplateFor("guardNameBothAttributeAndMethod3.ump",languagePath + "/guardNameBothAttributeAndMethod3."+ languagePath +".txt","A");
+	Event.setNextAutoTransitionId(1); 
+	assertUmpleTemplateFor("guardNameBothAttributeAndMethod3.ump",languagePath + "/guardNameBothAttributeAndMethod3."+ languagePath +".txt","A");
+    Event.setNextAutoTransitionId(1);
   }
   
   // SPACING
@@ -736,6 +743,42 @@ public class StateMachineTest extends StateMachineTemplateTest
   public void refactorFinalState_invalidElementsInNestedFinalState()
   {
 	  assertUmpleTemplateFor("refactorFinalState_invalidElementsInNestedFinalState.ump",languagePath + "/refactorFinalState_invalidElementsInNestedFinalState."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void parallelSm_sameNameDiffStates()
+  {
+    assertUmpleTemplateFor("parallelSm_sameNameDiffStates.ump",languagePath + "/parallelSm_sameNameDiffStates."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void parallelSm_sameNameDiffStates_2()
+  {
+    assertUmpleTemplateFor("parallelSm_sameNameDiffStates_2.ump",languagePath + "/parallelSm_sameNameDiffStates_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void parallelSm_sameNameDiffStatesEntryExitActions()
+  {
+    assertUmpleTemplateFor("parallelSm_sameNameDiffStatesEntryExitActions.ump",languagePath + "/parallelSm_sameNameDiffStatesEntryExitActions."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void parallelSm_diffNamesDiffStates()
+  {
+    assertUmpleTemplateFor("parallelSm_diffNamesDiffStates.ump",languagePath + "/parallelSm_diffNamesDiffStates."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void parallelSm_diffNamesDiffStates_2()
+  {
+    assertUmpleTemplateFor("parallelSm_diffNamesDiffStates_2.ump",languagePath + "/parallelSm_diffNamesDiffStates_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void parallelSm_diffNamesDiffStatesEntryExitActions()
+  {
+    assertUmpleTemplateFor("parallelSm_diffNamesDiffStatesEntryExitActions.ump",languagePath + "/parallelSm_diffNamesDiffStatesEntryExitActions."+ languagePath +".txt","X");
   }
   
 }

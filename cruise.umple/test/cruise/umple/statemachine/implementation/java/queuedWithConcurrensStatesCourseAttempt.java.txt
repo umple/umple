@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
 import java.util.*;
@@ -14,13 +14,13 @@ public class CourseAttempt implements Runnable
 
   //CourseAttempt State Machines
   public enum CourseAttemptSM { studying, failed, passed }
-  public enum CourseAttemptSMLab1 { Null, lab1, lab2 }
-  public enum CourseAttemptSMTermProject { Null, termProject }
-  public enum CourseAttemptSMFinalExam { Null, finalExam }
+  public enum CourseAttemptSMStudyingLab1 { Null, lab1, lab2 }
+  public enum CourseAttemptSMStudyingTermProject { Null, termProject }
+  public enum CourseAttemptSMStudyingFinalExam { Null, finalExam }
   private CourseAttemptSM courseAttemptSM;
-  private CourseAttemptSMLab1 courseAttemptSMLab1;
-  private CourseAttemptSMTermProject courseAttemptSMTermProject;
-  private CourseAttemptSMFinalExam courseAttemptSMFinalExam;
+  private CourseAttemptSMStudyingLab1 courseAttemptSMStudyingLab1;
+  private CourseAttemptSMStudyingTermProject courseAttemptSMStudyingTermProject;
+  private CourseAttemptSMStudyingFinalExam courseAttemptSMStudyingFinalExam;
   
   //enumeration type of messages accepted by CourseAttempt
   protected enum MessageType {  }
@@ -34,9 +34,9 @@ public class CourseAttempt implements Runnable
 
   public CourseAttempt()
   {
-    setCourseAttemptSMLab1(CourseAttemptSMLab1.Null);
-    setCourseAttemptSMTermProject(CourseAttemptSMTermProject.Null);
-    setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam.Null);
+    setCourseAttemptSMStudyingLab1(CourseAttemptSMStudyingLab1.Null);
+    setCourseAttemptSMStudyingTermProject(CourseAttemptSMStudyingTermProject.Null);
+    setCourseAttemptSMStudyingFinalExam(CourseAttemptSMStudyingFinalExam.Null);
     setCourseAttemptSM(CourseAttemptSM.studying);
     queue = new MessageQueue();
     removal=new Thread(this);
@@ -51,9 +51,9 @@ public class CourseAttempt implements Runnable
   public String getCourseAttemptSMFullName()
   {
     String answer = courseAttemptSM.toString();
-    if (courseAttemptSMLab1 != CourseAttemptSMLab1.Null) { answer += "." + courseAttemptSMLab1.toString(); }
-    if (courseAttemptSMTermProject != CourseAttemptSMTermProject.Null) { answer += "." + courseAttemptSMTermProject.toString(); }
-    if (courseAttemptSMFinalExam != CourseAttemptSMFinalExam.Null) { answer += "." + courseAttemptSMFinalExam.toString(); }
+    if (courseAttemptSMStudyingLab1 != CourseAttemptSMStudyingLab1.Null) { answer += "." + courseAttemptSMStudyingLab1.toString(); }
+    if (courseAttemptSMStudyingTermProject != CourseAttemptSMStudyingTermProject.Null) { answer += "." + courseAttemptSMStudyingTermProject.toString(); }
+    if (courseAttemptSMStudyingFinalExam != CourseAttemptSMStudyingFinalExam.Null) { answer += "." + courseAttemptSMStudyingFinalExam.toString(); }
     return answer;
   }
 
@@ -62,19 +62,19 @@ public class CourseAttempt implements Runnable
     return courseAttemptSM;
   }
 
-  public CourseAttemptSMLab1 getCourseAttemptSMLab1()
+  public CourseAttemptSMStudyingLab1 getCourseAttemptSMStudyingLab1()
   {
-    return courseAttemptSMLab1;
+    return courseAttemptSMStudyingLab1;
   }
 
-  public CourseAttemptSMTermProject getCourseAttemptSMTermProject()
+  public CourseAttemptSMStudyingTermProject getCourseAttemptSMStudyingTermProject()
   {
-    return courseAttemptSMTermProject;
+    return courseAttemptSMStudyingTermProject;
   }
 
-  public CourseAttemptSMFinalExam getCourseAttemptSMFinalExam()
+  public CourseAttemptSMStudyingFinalExam getCourseAttemptSMStudyingFinalExam()
   {
-    return courseAttemptSMFinalExam;
+    return courseAttemptSMStudyingFinalExam;
   }
 
   private boolean __autotransition1__()
@@ -100,33 +100,33 @@ public class CourseAttempt implements Runnable
   {
     boolean wasEventProcessed = false;
     
-    CourseAttemptSMLab1 aCourseAttemptSMLab1 = courseAttemptSMLab1;
-    CourseAttemptSMTermProject aCourseAttemptSMTermProject = courseAttemptSMTermProject;
-    CourseAttemptSMFinalExam aCourseAttemptSMFinalExam = courseAttemptSMFinalExam;
-    switch (aCourseAttemptSMLab1)
+    CourseAttemptSMStudyingLab1 aCourseAttemptSMStudyingLab1 = courseAttemptSMStudyingLab1;
+    CourseAttemptSMStudyingTermProject aCourseAttemptSMStudyingTermProject = courseAttemptSMStudyingTermProject;
+    CourseAttemptSMStudyingFinalExam aCourseAttemptSMStudyingFinalExam = courseAttemptSMStudyingFinalExam;
+    switch (aCourseAttemptSMStudyingLab1)
     {
       case Null:
-        setCourseAttemptSMLab1(CourseAttemptSMLab1.lab1);
+        setCourseAttemptSMStudyingLab1(CourseAttemptSMStudyingLab1.lab1);
         wasEventProcessed = true;
         break;
       default:
         // Other states do respond to this event
     }
 
-    switch (aCourseAttemptSMTermProject)
+    switch (aCourseAttemptSMStudyingTermProject)
     {
       case Null:
-        setCourseAttemptSMTermProject(CourseAttemptSMTermProject.termProject);
+        setCourseAttemptSMStudyingTermProject(CourseAttemptSMStudyingTermProject.termProject);
         wasEventProcessed = true;
         break;
       default:
         // Other states do respond to this event
     }
 
-    switch (aCourseAttemptSMFinalExam)
+    switch (aCourseAttemptSMStudyingFinalExam)
     {
       case Null:
-        setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam.finalExam);
+        setCourseAttemptSMStudyingFinalExam(CourseAttemptSMStudyingFinalExam.finalExam);
         wasEventProcessed = true;
         break;
       default:
@@ -140,37 +140,37 @@ public class CourseAttempt implements Runnable
   {
     boolean wasEventProcessed = false;
     
-    CourseAttemptSMLab1 aCourseAttemptSMLab1 = courseAttemptSMLab1;
-    CourseAttemptSMTermProject aCourseAttemptSMTermProject = courseAttemptSMTermProject;
-    CourseAttemptSMFinalExam aCourseAttemptSMFinalExam = courseAttemptSMFinalExam;
-    switch (aCourseAttemptSMLab1)
+    CourseAttemptSMStudyingLab1 aCourseAttemptSMStudyingLab1 = courseAttemptSMStudyingLab1;
+    CourseAttemptSMStudyingTermProject aCourseAttemptSMStudyingTermProject = courseAttemptSMStudyingTermProject;
+    CourseAttemptSMStudyingFinalExam aCourseAttemptSMStudyingFinalExam = courseAttemptSMStudyingFinalExam;
+    switch (aCourseAttemptSMStudyingLab1)
     {
       case lab1:
-        setCourseAttemptSMLab1(CourseAttemptSMLab1.Null);
+        setCourseAttemptSMStudyingLab1(CourseAttemptSMStudyingLab1.Null);
         wasEventProcessed = true;
         break;
       case lab2:
-        setCourseAttemptSMLab1(CourseAttemptSMLab1.Null);
+        setCourseAttemptSMStudyingLab1(CourseAttemptSMStudyingLab1.Null);
         wasEventProcessed = true;
         break;
       default:
         // Other states do respond to this event
     }
 
-    switch (aCourseAttemptSMTermProject)
+    switch (aCourseAttemptSMStudyingTermProject)
     {
       case termProject:
-        setCourseAttemptSMTermProject(CourseAttemptSMTermProject.Null);
+        setCourseAttemptSMStudyingTermProject(CourseAttemptSMStudyingTermProject.Null);
         wasEventProcessed = true;
         break;
       default:
         // Other states do respond to this event
     }
 
-    switch (aCourseAttemptSMFinalExam)
+    switch (aCourseAttemptSMStudyingFinalExam)
     {
       case finalExam:
-        setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam.Null);
+        setCourseAttemptSMStudyingFinalExam(CourseAttemptSMStudyingFinalExam.Null);
         wasEventProcessed = true;
         break;
       default:
@@ -198,17 +198,17 @@ public class CourseAttempt implements Runnable
     switch(courseAttemptSM)
     {
       case studying:
-        if (courseAttemptSMLab1 == CourseAttemptSMLab1.Null) { setCourseAttemptSMLab1(CourseAttemptSMLab1.lab1); }
-        if (courseAttemptSMTermProject == CourseAttemptSMTermProject.Null) { setCourseAttemptSMTermProject(CourseAttemptSMTermProject.termProject); }
-        if (courseAttemptSMFinalExam == CourseAttemptSMFinalExam.Null) { setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam.finalExam); }
+        if (courseAttemptSMStudyingLab1 == CourseAttemptSMStudyingLab1.Null) { setCourseAttemptSMStudyingLab1(CourseAttemptSMStudyingLab1.lab1); }
+        if (courseAttemptSMStudyingTermProject == CourseAttemptSMStudyingTermProject.Null) { setCourseAttemptSMStudyingTermProject(CourseAttemptSMStudyingTermProject.termProject); }
+        if (courseAttemptSMStudyingFinalExam == CourseAttemptSMStudyingFinalExam.Null) { setCourseAttemptSMStudyingFinalExam(CourseAttemptSMStudyingFinalExam.finalExam); }
         __autotransition1__();
         break;
     }
   }
 
-  private void exitCourseAttemptSMLab1()
+  private void exitCourseAttemptSMStudyingLab1()
   {
-    switch(courseAttemptSMLab1)
+    switch(courseAttemptSMStudyingLab1)
     {
       case lab2:
         lab2Done();
@@ -216,15 +216,15 @@ public class CourseAttempt implements Runnable
     }
   }
 
-  private void setCourseAttemptSMLab1(CourseAttemptSMLab1 aCourseAttemptSMLab1)
+  private void setCourseAttemptSMStudyingLab1(CourseAttemptSMStudyingLab1 aCourseAttemptSMStudyingLab1)
   {
-    courseAttemptSMLab1 = aCourseAttemptSMLab1;
-    if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMLab1 != CourseAttemptSMLab1.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
+    courseAttemptSMStudyingLab1 = aCourseAttemptSMStudyingLab1;
+    if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMStudyingLab1 != CourseAttemptSMStudyingLab1.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
   }
 
-  private void exitCourseAttemptSMTermProject()
+  private void exitCourseAttemptSMStudyingTermProject()
   {
-    switch(courseAttemptSMTermProject)
+    switch(courseAttemptSMStudyingTermProject)
     {
       case termProject:
         projectDone();
@@ -232,15 +232,15 @@ public class CourseAttempt implements Runnable
     }
   }
 
-  private void setCourseAttemptSMTermProject(CourseAttemptSMTermProject aCourseAttemptSMTermProject)
+  private void setCourseAttemptSMStudyingTermProject(CourseAttemptSMStudyingTermProject aCourseAttemptSMStudyingTermProject)
   {
-    courseAttemptSMTermProject = aCourseAttemptSMTermProject;
-    if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMTermProject != CourseAttemptSMTermProject.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
+    courseAttemptSMStudyingTermProject = aCourseAttemptSMStudyingTermProject;
+    if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMStudyingTermProject != CourseAttemptSMStudyingTermProject.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
   }
 
-  private void exitCourseAttemptSMFinalExam()
+  private void exitCourseAttemptSMStudyingFinalExam()
   {
-    switch(courseAttemptSMFinalExam)
+    switch(courseAttemptSMStudyingFinalExam)
     {
       case finalExam:
         pass();
@@ -248,10 +248,10 @@ public class CourseAttempt implements Runnable
     }
   }
 
-  private void setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam aCourseAttemptSMFinalExam)
+  private void setCourseAttemptSMStudyingFinalExam(CourseAttemptSMStudyingFinalExam aCourseAttemptSMStudyingFinalExam)
   {
-    courseAttemptSMFinalExam = aCourseAttemptSMFinalExam;
-    if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMFinalExam != CourseAttemptSMFinalExam.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
+    courseAttemptSMStudyingFinalExam = aCourseAttemptSMStudyingFinalExam;
+    if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMStudyingFinalExam != CourseAttemptSMStudyingFinalExam.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
   }
 
   public void delete()

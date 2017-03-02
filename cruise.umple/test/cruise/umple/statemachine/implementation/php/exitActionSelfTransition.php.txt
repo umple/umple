@@ -1,0 +1,123 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class A
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //A Attributes
+  private $result;
+
+  //A State Machines
+  private static $SmCreated = 1;
+  private static $SmInitialized = 2;
+  private $sm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->result = false;
+    $this->setSm(self::$SmCreated);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setResult($aResult)
+  {
+    $wasSet = false;
+    $this->result = $aResult;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getResult()
+  {
+    return $this->result;
+  }
+
+  public function getSmFullName()
+  {
+    $answer = $this->getSm();
+    return $answer;
+  }
+
+  public function getSm()
+  {
+    if ($this->sm == self::$SmCreated) { return "SmCreated"; }
+    elseif ($this->sm == self::$SmInitialized) { return "SmInitialized"; }
+    return null;
+  }
+
+  public function init()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmCreated)
+    {
+      if ($this->b==$this->false)
+      {
+        $this->setSm(self::$SmCreated);
+        $wasEventProcessed = true;
+      }
+      if ($this->b==$this->true)
+      {
+        $this->exitSm();
+        $this->setSm(self::$SmInitialized);
+        $wasEventProcessed = true;
+      }
+    }
+    return $wasEventProcessed;
+  }
+
+  public function getback()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmInitialized)
+    {
+      $this->setSm(self::$SmCreated);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitSm()
+  {
+    if ($this->sm == self::$SmCreated)
+    {
+      execute_exit_code();
+    }
+  }
+
+  private function setSm($aSm)
+  {
+    $this->sm = $aSm;
+
+    // entry actions and do activities
+    if ($this->sm == self::$SmCreated)
+    {
+      execute_entry_code();
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>
