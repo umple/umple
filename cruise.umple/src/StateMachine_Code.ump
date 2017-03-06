@@ -655,6 +655,12 @@ class State
   {
     return this.isVisited;
   }
+  
+  // Issue 935 - Helper function to retrieve the number of actions
+  public int getActionCount()
+  {
+    return actions.size();
+  }
  
 }
 
