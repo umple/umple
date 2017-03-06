@@ -217,7 +217,7 @@ public class X
     switch (aSmOnS1)
     {
       case m1:
-      	exitSm();
+        exitSm();
         setSmOnS1(SmOnS1.m2);
         wasEventProcessed = true;
         break;
@@ -236,7 +236,7 @@ public class X
     switch (aSmOnS1)
     {
       case m1:
-      	exitSm();
+        exitSm();
         setSmOnS1(SmOnS1.m1);
         wasEventProcessed = true;
         break;
@@ -255,7 +255,7 @@ public class X
     switch (aSmOnS1)
     {
       case m1:
-      	exitSm();
+        exitSm();
         setSmOn(SmOn.s1);
         wasEventProcessed = true;
         break;
@@ -418,13 +418,12 @@ public class X
         break;
     }
   }
-  
+
   private void exitSmOnS1()
   {
     switch(smOnS1)
     {
       case m1:
-        exitSmOnS1();
         setSmOnS1(SmOnS1.Null);
         break;
       case m2:
@@ -446,8 +445,8 @@ public class X
         break;
     }
   }
-  
-  private void exitSmOnS1()
+
+  private void exitSmOff()
   {
     switch(smOff)
     {

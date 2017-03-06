@@ -77,6 +77,11 @@ class UmpleToJava {
     allCases.append(StringFormatter.format("\n    switch ({0})\n",gen.translate("parameterOne",sm)));
     allCases.append(StringFormatter.format("    {\n"));
     javaLine+=3;
+    
+    // Issue 935 - Need to retrieve the super state machine and have states first make a call it's exit method to perform an external transition
+    StateMachine superStateMachine = sm.getSuperStateMachine();
+    State nullState = sm.getNullState();
+    
     for(State state : sm.getStates())
     {
   	  TraceItem traceItem = state.getTraced("transition",uClass);
@@ -96,8 +101,6 @@ class UmpleToJava {
         
         State nextState = t.getNextState();
         String tabSpace = t.getGuard() == null ? "        " : "          ";
-        StateMachine exitSm = state.exitableStateMachine(nextState);
-        StateMachine exitSmSelfTransition = state.exitableSelfTransition(nextState);
         
         String condition = t.getGuard()!=null?gen.translate("Open",t.getGuard()):"if ()\n{";
         if (!"if ()\n{".equals(condition))
@@ -114,16 +117,13 @@ class UmpleToJava {
           javaLine+=1+condition.split("\\n").length;
           
         }
-        if (exitSmSelfTransition != null)
+        
+        if (state != nullState) 
         {
-          allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",exitSmSelfTransition)));
+          allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",superStateMachine)));
           javaLine++;
         }
-        else if (exitSm != null && !e.getIsInternal() && !state.isSameState(nextState,exitSm)) 
-        {
-          allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",exitSm)));
-          javaLine++;
-        }
+        
         if (t.getAction() != null)
         {
           Action a1 = t.getAction();

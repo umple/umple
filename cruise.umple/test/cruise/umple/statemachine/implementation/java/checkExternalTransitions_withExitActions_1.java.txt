@@ -377,6 +377,7 @@ public class X
         break;
       case m2:
         setSmOnS1(SmOnS1.Null);
+        break;
     }
   }
 

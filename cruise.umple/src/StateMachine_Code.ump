@@ -457,6 +457,26 @@ class StateMachine
     return newState;
   }
   
+  /*
+   * Issue 935 - A helper function to retrieve the super state machine (state machine that has no parent state)
+   */
+  public StateMachine getSuperStateMachine() 
+  {
+    if (getParentState() == null) 
+    {
+      return this;
+    } 
+    else 
+    {
+      StateMachine superStateMachine = getParentState().getStateMachine();
+      while(superStateMachine.getParentState() != null) 
+      {
+        superStateMachine = superStateMachine.getParentState().getStateMachine();
+      }
+      return superStateMachine;
+    }
+  }
+  
 }
 
 class State
