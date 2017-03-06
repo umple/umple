@@ -781,4 +781,22 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("parallelSm_diffNamesDiffStatesEntryExitActions.ump",languagePath + "/parallelSm_diffNamesDiffStatesEntryExitActions."+ languagePath +".txt","X");
   }
   
+  @Test
+  public void checkExternalTransitions_withExitActions_1()
+  {
+    assertUmpleTemplateFor("checkExternalTransitions_withExitActions_1.ump",languagePath + "/checkExternalTransitions_withExitActions_1."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void checkExternalTransitions_withExitActions_2()
+  {
+    assertUmpleTemplateFor("checkExternalTransitions_withExitActions_2.ump",languagePath + "/checkExternalTransitions_withExitActions_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void checkExternalTransitions_noExitActions_1()
+  {
+    assertUmpleTemplateFor("checkExternalTransitions_noExitActions_1.ump",languagePath + "/checkExternalTransitions_noExitActions_1."+ languagePath +".txt","X");
+  }
+  
 }

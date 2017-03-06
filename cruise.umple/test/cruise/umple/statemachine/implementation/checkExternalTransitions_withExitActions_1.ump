@@ -1,0 +1,31 @@
+class X{
+  sm{
+    on{
+      exit /{on_exit_action();}
+      e1-> off;
+      e2-> on;
+      s1{
+        exit /{s1_exit_action();}
+        e3-> s2;
+        e4-> s1;
+        e5-> on;
+        e6-> off;
+        m1{
+          exit /{m1_exit_action();}
+          e7-> m2;
+          e8-> m1;
+          e9-> s1;
+          e10->s2;
+          e11->on;
+          e12->off;
+        } 
+        m2{} 
+      }
+      s2{}
+    }
+    off{}
+  }
+  void on_exit_action(){System.out.println("exited on");}
+  void s1_exit_action(){System.out.println("exited s1");}
+  void m1_exit_action(){System.out.println("exited m1");}
+}

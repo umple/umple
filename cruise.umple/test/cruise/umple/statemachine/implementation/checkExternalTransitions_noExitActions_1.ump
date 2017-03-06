@@ -1,0 +1,37 @@
+class X{
+  sm{
+    on{
+      entry/{on_entry_action();}
+      e1-> off;
+      e2-> on;
+      s1{
+        entry/{s1_entry_action();}
+        e3-> s2;
+        e4-> s1;
+        e5-> on;
+        e6-> off;
+        m1{
+          entry/{m1_entry_action();}
+          e7-> m2;
+          e8-> m1;
+          e9-> s1;
+          e10->s2;
+          e11->on;
+          e12->off;
+        } 
+        m2{} 
+      }
+      s2{}
+    }
+    off{
+      s3{
+        e13->s4;
+      }
+      s4{}
+    }
+  }
+
+  void on_entry_action(){}
+  void s1_entry_action(){}
+  void m1_entry_action(){}
+}
