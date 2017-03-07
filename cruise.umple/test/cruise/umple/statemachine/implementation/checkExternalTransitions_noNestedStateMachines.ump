@@ -1,0 +1,11 @@
+class X {
+  sm {
+    s1 {
+      goToS2 -> s2;
+    }
+    s2 {
+      goToS3 -> s3;
+    }
+    s3 {}
+  }
+}

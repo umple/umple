@@ -118,7 +118,8 @@ class UmpleToJava {
           
         }
         
-        if (state != nullState) 
+        // Issue 935
+        if (state != nullState && state.getHasExitAction()) 
         {
           allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",superStateMachine)));
           javaLine++;

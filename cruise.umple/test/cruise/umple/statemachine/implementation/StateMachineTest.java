@@ -799,4 +799,10 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("checkExternalTransitions_noExitActions_1.ump",languagePath + "/checkExternalTransitions_noExitActions_1."+ languagePath +".txt","X");
   }
   
+  @Test
+  public void checkExternalTransitions_noNestedStateMachines()
+  {
+    assertUmpleTemplateFor("checkExternalTransitions_noNestedStateMachines.ump",languagePath + "/checkExternalTransitions_noNestedStateMachines."+ languagePath +".txt","X");
+  }
+  
 }
