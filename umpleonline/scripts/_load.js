@@ -14,7 +14,8 @@ document.write('<script type="text/javascript" src="scripts/prototype.js"></scri
 //JQUERY
 // OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-1.4.2.min.js"></script>');
 // OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.min.js"></script>');
-document.write('<script type="text/javascript" src="scripts/jquery/jquery-1.11.1.min.js"></script>');
+// OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-1.11.1.min.js"></script>');
+document.write('<script type="text/javascript" src="scripts/jquery/jquery-2.2.4.min.js"></script>');
 
 // Jquery UI
 // OLD document.write('<link href="scripts/jquery/jquery-ui-1.8.17.custom.css" rel="stylesheet" media="screen" /> ');
