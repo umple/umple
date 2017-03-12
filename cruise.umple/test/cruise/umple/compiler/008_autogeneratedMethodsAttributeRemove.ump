@@ -1,0 +1,7 @@
+class X
+{
+  autounique x;
+
+  String str;
+  Integer test;
+}
