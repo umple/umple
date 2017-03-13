@@ -1,0 +1,39 @@
+class X {
+  sm {
+    s1 {
+      s2 {
+        a {
+          exit/{exit_a_action();}
+          t1 {
+            goToT2 -> t2;
+          }
+          t2 {
+            goToT4 -> t4;
+          }
+        }
+        ||
+        b {
+          exit/{exit_b_action();}
+          t3 { 
+            goToT5 -> t5;
+          }
+          t4 {
+            goToS4 -> s4;
+          }
+        }
+      }
+      ||
+      s3 {
+        t5{
+          goToT6 -> t6;
+        }
+        t6 {
+          goToS1T2 -> t2;
+        }
+      }
+    }
+    s4 {
+
+    }
+  }
+}

@@ -477,6 +477,21 @@ class StateMachine
     }
   }
   
+  /*
+   * Issue 935 - A helper function to determine if a state machine is in a concurrent state
+   */
+  public boolean isInConcurrentState() 
+  {
+	if (getParentState() == null || getParentState().getStateMachine().getParentState() == null) 
+	{
+      return false;
+	} 
+	else 
+	{
+	  return getParentState().getStateMachine().getParentState().getIsConcurrent();
+	}
+  }
+  
 }
 
 class State

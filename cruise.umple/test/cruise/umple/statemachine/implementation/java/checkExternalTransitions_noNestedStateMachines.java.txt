@@ -1,9 +1,8 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.25.0-963d2bd modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 
-// line 1 "checkExternalTransitions_noNestedStateMachines.ump"
 public class X
 {
 

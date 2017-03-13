@@ -1,0 +1,494 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the @UMPLE_VERSION@ modeling language!*/
+
+
+
+public class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  public enum Sm { s1, s4 }
+  public enum SmS1S2 { Null, s2 }
+  public enum SmS1S2A { Null, a }
+  public enum SmS1S2AA { Null, t1, t2 }
+  public enum SmS1S2B { Null, b }
+  public enum SmS1S2BB { Null, t3, t4 }
+  public enum SmS1S3 { Null, s3 }
+  public enum SmS1S3S3 { Null, t5, t6 }
+  private Sm sm;
+  private SmS1S2 smS1S2;
+  private SmS1S2A smS1S2A;
+  private SmS1S2AA smS1S2AA;
+  private SmS1S2B smS1S2B;
+  private SmS1S2BB smS1S2BB;
+  private SmS1S3 smS1S3;
+  private SmS1S3S3 smS1S3S3;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X()
+  {
+    setSmS1S2(SmS1S2.Null);
+    setSmS1S2A(SmS1S2A.Null);
+    setSmS1S2AA(SmS1S2AA.Null);
+    setSmS1S2B(SmS1S2B.Null);
+    setSmS1S2BB(SmS1S2BB.Null);
+    setSmS1S3(SmS1S3.Null);
+    setSmS1S3S3(SmS1S3S3.Null);
+    setSm(Sm.s1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    if (smS1S2 != SmS1S2.Null) { answer += "." + smS1S2.toString(); }
+    if (smS1S2A != SmS1S2A.Null) { answer += "." + smS1S2A.toString(); }
+    if (smS1S2AA != SmS1S2AA.Null) { answer += "." + smS1S2AA.toString(); }
+    if (smS1S2B != SmS1S2B.Null) { answer += "." + smS1S2B.toString(); }
+    if (smS1S2BB != SmS1S2BB.Null) { answer += "." + smS1S2BB.toString(); }
+    if (smS1S3 != SmS1S3.Null) { answer += "." + smS1S3.toString(); }
+    if (smS1S3S3 != SmS1S3S3.Null) { answer += "." + smS1S3S3.toString(); }
+    if (smS1S2AA != SmS1S2AA.Null) { answer += "." + smS1S2AA.toString(); }
+    if (smS1S2BB != SmS1S2BB.Null) { answer += "." + smS1S2BB.toString(); }
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public SmS1S2 getSmS1S2()
+  {
+    return smS1S2;
+  }
+
+  public SmS1S2A getSmS1S2A()
+  {
+    return smS1S2A;
+  }
+
+  public SmS1S2AA getSmS1S2AA()
+  {
+    return smS1S2AA;
+  }
+
+  public SmS1S2B getSmS1S2B()
+  {
+    return smS1S2B;
+  }
+
+  public SmS1S2BB getSmS1S2BB()
+  {
+    return smS1S2BB;
+  }
+
+  public SmS1S3 getSmS1S3()
+  {
+    return smS1S3;
+  }
+
+  public SmS1S3S3 getSmS1S3S3()
+  {
+    return smS1S3S3;
+  }
+
+  private boolean enterS1()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1S2 aSmS1S2 = smS1S2;
+    SmS1S2A aSmS1S2A = smS1S2A;
+    SmS1S2AA aSmS1S2AA = smS1S2AA;
+    SmS1S2B aSmS1S2B = smS1S2B;
+    SmS1S2BB aSmS1S2BB = smS1S2BB;
+    SmS1S3 aSmS1S3 = smS1S3;
+    SmS1S3S3 aSmS1S3S3 = smS1S3S3;
+    switch (aSmS1S2)
+    {
+      case Null:
+        setSmS1S2(SmS1S2.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmS1S2A)
+    {
+      case Null:
+        setSmS1S2A(SmS1S2A.a);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmS1S2AA)
+    {
+      case Null:
+        setSmS1S2AA(SmS1S2AA.t1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmS1S2B)
+    {
+      case Null:
+        setSmS1S2B(SmS1S2B.b);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmS1S2BB)
+    {
+      case Null:
+        setSmS1S2BB(SmS1S2BB.t3);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmS1S3)
+    {
+      case Null:
+        setSmS1S3(SmS1S3.s3);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmS1S3S3)
+    {
+      case Null:
+        setSmS1S3S3(SmS1S3S3.t5);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean goToT2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1S2AA aSmS1S2AA = smS1S2AA;
+    switch (aSmS1S2AA)
+    {
+      case t1:
+        exitSmS1S2A();
+        setSmS1S2AA(SmS1S2AA.t2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean goToT4()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1S2AA aSmS1S2AA = smS1S2AA;
+    switch (aSmS1S2AA)
+    {
+      case t2:
+        exitSmS1S2();
+        setSmS1S2BB(SmS1S2BB.t4);
+        setSmS1S2AA(SmS1S2AA.t1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean goToT5()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1S2BB aSmS1S2BB = smS1S2BB;
+    switch (aSmS1S2BB)
+    {
+      case t3:
+        exitSm();
+        setSmS1S3S3(SmS1S3S3.t5);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean goToS4()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1S2BB aSmS1S2BB = smS1S2BB;
+    switch (aSmS1S2BB)
+    {
+      case t4:
+        exitSm();
+        setSm(Sm.s4);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean goToT6()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1S3S3 aSmS1S3S3 = smS1S3S3;
+    switch (aSmS1S3S3)
+    {
+      case t5:
+        exitSmS1S3();
+        setSmS1S3S3(SmS1S3S3.t6);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean goToS1T2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1S3S3 aSmS1S3S3 = smS1S3S3;
+    switch (aSmS1S3S3)
+    {
+      case t6:
+        exitSm();
+        setSmS1S2AA(SmS1S2AA.t2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case s1:
+        exitSmS1S2();
+        exitSmS1S3();
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case s1:
+        if (smS1S2 == SmS1S2.Null) { setSmS1S2(SmS1S2.s2); }
+        if (smS1S3 == SmS1S3.Null) { setSmS1S3(SmS1S3.s3); }
+        break;
+    }
+  }
+
+  private void exitSmS1S2()
+  {
+    switch(smS1S2)
+    {
+      case s2:
+        exitSmS1S2A();
+        exitSmS1S2B();
+        setSmS1S2(SmS1S2.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S2(SmS1S2 aSmS1S2)
+  {
+    smS1S2 = aSmS1S2;
+    if (sm != Sm.s1 && aSmS1S2 != SmS1S2.Null) { setSm(Sm.s1); }
+
+    // entry actions and do activities
+    switch(smS1S2)
+    {
+      case s2:
+        if (smS1S2A == SmS1S2A.Null) { setSmS1S2A(SmS1S2A.a); }
+        if (smS1S2B == SmS1S2B.Null) { setSmS1S2B(SmS1S2B.b); }
+        break;
+    }
+  }
+
+  private void exitSmS1S2A()
+  {
+    switch(smS1S2A)
+    {
+      case a:
+        exitSmS1S2AA();
+        exit_a_action();
+        setSmS1S2A(SmS1S2A.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S2A(SmS1S2A aSmS1S2A)
+  {
+    smS1S2A = aSmS1S2A;
+    if (smS1S2 != SmS1S2.s2 && aSmS1S2A != SmS1S2A.Null) { setSmS1S2(SmS1S2.s2); }
+
+    // entry actions and do activities
+    switch(smS1S2A)
+    {
+      case a:
+        if (smS1S2AA == SmS1S2AA.Null) { setSmS1S2AA(SmS1S2AA.t1); }
+        break;
+    }
+  }
+
+  private void exitSmS1S2AA()
+  {
+    switch(smS1S2AA)
+    {
+      case t1:
+        setSmS1S2AA(SmS1S2AA.Null);
+        break;
+      case t2:
+        setSmS1S2AA(SmS1S2AA.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S2AA(SmS1S2AA aSmS1S2AA)
+  {
+    smS1S2AA = aSmS1S2AA;
+    if (smS1S2A != SmS1S2A.a && aSmS1S2AA != SmS1S2AA.Null) { setSmS1S2A(SmS1S2A.a); }
+  }
+
+  private void exitSmS1S2B()
+  {
+    switch(smS1S2B)
+    {
+      case b:
+        exitSmS1S2BB();
+        exit_b_action();
+        setSmS1S2B(SmS1S2B.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S2B(SmS1S2B aSmS1S2B)
+  {
+    smS1S2B = aSmS1S2B;
+    if (smS1S2 != SmS1S2.s2 && aSmS1S2B != SmS1S2B.Null) { setSmS1S2(SmS1S2.s2); }
+
+    // entry actions and do activities
+    switch(smS1S2B)
+    {
+      case b:
+        if (smS1S2BB == SmS1S2BB.Null) { setSmS1S2BB(SmS1S2BB.t3); }
+        break;
+    }
+  }
+
+  private void exitSmS1S2BB()
+  {
+    switch(smS1S2BB)
+    {
+      case t3:
+        setSmS1S2BB(SmS1S2BB.Null);
+        break;
+      case t4:
+        setSmS1S2BB(SmS1S2BB.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S2BB(SmS1S2BB aSmS1S2BB)
+  {
+    smS1S2BB = aSmS1S2BB;
+    if (smS1S2B != SmS1S2B.b && aSmS1S2BB != SmS1S2BB.Null) { setSmS1S2B(SmS1S2B.b); }
+  }
+
+  private void exitSmS1S3()
+  {
+    switch(smS1S3)
+    {
+      case s3:
+        exitSmS1S3S3();
+        setSmS1S3(SmS1S3.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S3(SmS1S3 aSmS1S3)
+  {
+    smS1S3 = aSmS1S3;
+    if (sm != Sm.s1 && aSmS1S3 != SmS1S3.Null) { setSm(Sm.s1); }
+
+    // entry actions and do activities
+    switch(smS1S3)
+    {
+      case s3:
+        if (smS1S3S3 == SmS1S3S3.Null) { setSmS1S3S3(SmS1S3S3.t5); }
+        break;
+    }
+  }
+
+  private void exitSmS1S3S3()
+  {
+    switch(smS1S3S3)
+    {
+      case t5:
+        setSmS1S3S3(SmS1S3S3.Null);
+        break;
+      case t6:
+        setSmS1S3S3(SmS1S3S3.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S3S3(SmS1S3S3 aSmS1S3S3)
+  {
+    smS1S3S3 = aSmS1S3S3;
+    if (smS1S3 != SmS1S3.s3 && aSmS1S3S3 != SmS1S3S3.Null) { setSmS1S3(SmS1S3.s3); }
+  }
+
+  public void delete()
+  {}
+
+}

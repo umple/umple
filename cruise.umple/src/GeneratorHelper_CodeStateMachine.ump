@@ -117,7 +117,7 @@ class GeneratorHelper
 	  // Issue 935 - Have the parent state call the exit method for this state machine
       Action parentExitAction = new Action(parentExitActionCode);
       parentExitAction.setActionType("exit");
-      parentState.addAction(parentExitAction, 0);
+      parentState.addAction(parentExitAction, concurrentIndex);
 
       Event enterEvent = firstSm.findOrCreateEvent(entryEventName);
       enterEvent.setIsInternal(true);
