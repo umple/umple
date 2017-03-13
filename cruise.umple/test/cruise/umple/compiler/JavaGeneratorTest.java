@@ -1234,13 +1234,13 @@ public class JavaGeneratorTest
     Assert.assertEquals(2,onState.numberOfActions());
 
     Assert.assertEquals("exit",onState.getAction(0).getActionType());
-    Assert.assertEquals("exitOn();",onState.getAction(0).getActionCode());
+    Assert.assertEquals("exitBulbOn();",onState.getAction(0).getActionCode());
     
     Assert.assertEquals("entry",onState.getAction(1).getActionType());
     Assert.assertEquals("if (bulbOn == BulbOn.Null) { setBulbOn(BulbOn.Normal); }",onState.getAction(1).getActionCode());
     
     GeneratorHelper.postpare(model);
-    Assert.assertEquals(0,onState.numberOfActions());
+    Assert.assertEquals(1,onState.numberOfActions());
   }  
 
   @Test
