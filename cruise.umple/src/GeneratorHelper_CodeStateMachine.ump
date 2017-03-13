@@ -132,7 +132,7 @@ class GeneratorHelper
         if (state == nullState) { continue; }
         Action setSmToNullExitAction = new Action(setSmToNullExitActionCode);
         setSmToNullExitAction.setActionType("exit");
-        state.addAction(setSmToNullExitAction, state.getActionCount());
+        state.addAction(setSmToNullExitAction);
       }
 
       Action parentEntryAction = new Action(parentEntryActionCode);
