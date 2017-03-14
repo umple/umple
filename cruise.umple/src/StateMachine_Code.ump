@@ -476,22 +476,6 @@ class StateMachine
       return superStateMachine;
     }
   }
-  
-  /*
-   * Issue 935 - A helper function to determine if a state machine is in a concurrent state
-   */
-  public boolean isInConcurrentState() 
-  {
-	if (getParentState() == null || getParentState().getStateMachine().getParentState() == null) 
-	{
-      return false;
-	} 
-	else 
-	{
-	  return getParentState().getStateMachine().getParentState().getIsConcurrent();
-	}
-  }
-  
 }
 
 class State
@@ -691,10 +675,19 @@ class State
     return this.isVisited;
   }
   
-  // Issue 935 - Helper function to retrieve the number of actions
-  public int getActionCount()
-  {
-    return actions.size();
+  /* Issue 935
+     A helper function to determine if a state is in a concurrent state machine
+  */
+  public boolean isInConcurrentSm() {
+    State parentState = getStateMachine().getParentState();
+    while (parentState != null) {
+      if (parentState.getIsConcurrent()) {
+        return true;
+      } else {
+        parentState = parentState.getStateMachine().getParentState();
+      }
+    }
+    return false;
   }
  
 }

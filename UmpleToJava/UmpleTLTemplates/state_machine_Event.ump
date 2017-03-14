@@ -123,25 +123,34 @@ class UmpleToJava {
         if (state != nullState && state.getHasExitAction()) 
         {
           // Concurrent state machines require additional handling
-          if (sm.isInConcurrentState()) {
-            State fromState = t.getFromState();
+          if (state.isInConcurrentSm()) {
             StateMachine concurrentSmToExit = null;
             
-            if (fromState.getStateMachine().equals(superStateMachine) || nextState.getStateMachine().equals(superStateMachine)) {
+            if (state.getStateMachine().equals(superStateMachine) || nextState.getStateMachine().equals(superStateMachine)) {
               concurrentSmToExit = superStateMachine;
-            } else if (fromState.getStateMachine().equals(nextState.getStateMachine())) {
-              concurrentSmToExit = fromState.getStateMachine().getParentState().getStateMachine();
-            } else { 
-              StateMachine fromStateParentSm = fromState.getStateMachine().getParentState().getStateMachine();
-              StateMachine nextStateParentSm = nextState.getStateMachine().getParentState().getStateMachine();
-              if (fromStateParentSm.getParentState().equals(nextStateParentSm.getParentState())) {
+            } else if (state.getStateMachine().equals(nextState.getStateMachine())) {
+              concurrentSmToExit = state.getStateMachine().getParentState().getStateMachine();
+            } else if (nextState.isInConcurrentSm()){ 
+              State fromConcurrentParent = state.getStateMachine().getParentState();
+              State nextConcurrentParent = nextState.getStateMachine().getParentState();
+              
+              while (!fromConcurrentParent.getIsConcurrent()) {
+                fromConcurrentParent = fromConcurrentParent.getStateMachine().getParentState();
+              }
+              
+              while (!nextConcurrentParent.getIsConcurrent()) {
+                nextConcurrentParent = nextConcurrentParent.getStateMachine().getParentState();
+              }
+              
+              if (fromConcurrentParent.equals(nextConcurrentParent)) {
                 transitionIsAndCross = true;
-                concurrentSmToExit = fromStateParentSm.getParentState().getStateMachine();
+                concurrentSmToExit = fromConcurrentParent.getStateMachine();
               } else {
                 concurrentSmToExit = superStateMachine;
               }
+            } else {
+              concurrentSmToExit = superStateMachine;
             }
-            
             allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",concurrentSmToExit))); 
           } else {
             allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",superStateMachine))); 
