@@ -195,7 +195,7 @@ public class X
     switch (aSmS1S2AA)
     {
       case t1:
-        exitSmS1S2A();
+        exitSmS1S2AA();
         setSmS1S2AA(SmS1S2AA.t2);
         wasEventProcessed = true;
         break;
@@ -216,7 +216,7 @@ public class X
       case t2:
         exitSmS1S2();
         setSmS1S2BB(SmS1S2BB.t4);
-        setSmS1S2AA(SmS1S2AA.t1);
+        setSmS1S2A(SmS1S2A.a);
         wasEventProcessed = true;
         break;
       default:
@@ -272,7 +272,7 @@ public class X
     switch (aSmS1S3S3)
     {
       case t5:
-        exitSmS1S3();
+        exitSmS1S3S3();
         setSmS1S3S3(SmS1S3S3.t6);
         wasEventProcessed = true;
         break;
@@ -283,7 +283,7 @@ public class X
     return wasEventProcessed;
   }
 
-  public boolean goToS1T2()
+  public boolean goToAT2()
   {
     boolean wasEventProcessed = false;
     

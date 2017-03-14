@@ -136,56 +136,14 @@ public class CourseAttempt implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean exitStudying()
-  {
-    boolean wasEventProcessed = false;
-    
-    CourseAttemptSMStudyingLab1 aCourseAttemptSMStudyingLab1 = courseAttemptSMStudyingLab1;
-    CourseAttemptSMStudyingTermProject aCourseAttemptSMStudyingTermProject = courseAttemptSMStudyingTermProject;
-    CourseAttemptSMStudyingFinalExam aCourseAttemptSMStudyingFinalExam = courseAttemptSMStudyingFinalExam;
-    switch (aCourseAttemptSMStudyingLab1)
-    {
-      case lab1:
-        setCourseAttemptSMStudyingLab1(CourseAttemptSMStudyingLab1.Null);
-        wasEventProcessed = true;
-        break;
-      case lab2:
-        setCourseAttemptSMStudyingLab1(CourseAttemptSMStudyingLab1.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aCourseAttemptSMStudyingTermProject)
-    {
-      case termProject:
-        setCourseAttemptSMStudyingTermProject(CourseAttemptSMStudyingTermProject.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aCourseAttemptSMStudyingFinalExam)
-    {
-      case finalExam:
-        setCourseAttemptSMStudyingFinalExam(CourseAttemptSMStudyingFinalExam.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   private void exitCourseAttemptSM()
   {
     switch(courseAttemptSM)
     {
       case studying:
-        exitStudying();
+        exitCourseAttemptSMStudyingLab1();
+        exitCourseAttemptSMStudyingTermProject();
+        exitCourseAttemptSMStudyingFinalExam();
         break;
     }
   }
@@ -210,8 +168,12 @@ public class CourseAttempt implements Runnable
   {
     switch(courseAttemptSMStudyingLab1)
     {
+      case lab1:
+        setCourseAttemptSMStudyingLab1(CourseAttemptSMStudyingLab1.Null);
+        break;
       case lab2:
         lab2Done();
+        setCourseAttemptSMStudyingLab1(CourseAttemptSMStudyingLab1.Null);
         break;
     }
   }
@@ -228,6 +190,7 @@ public class CourseAttempt implements Runnable
     {
       case termProject:
         projectDone();
+        setCourseAttemptSMStudyingTermProject(CourseAttemptSMStudyingTermProject.Null);
         break;
     }
   }
@@ -244,6 +207,7 @@ public class CourseAttempt implements Runnable
     {
       case finalExam:
         pass();
+        setCourseAttemptSMStudyingFinalExam(CourseAttemptSMStudyingFinalExam.Null);
         break;
     }
   }

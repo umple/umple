@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3254 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
 import java.util.*;
@@ -86,28 +86,6 @@ public class NestedStatesWthSameEventNames implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean exitNestedState1()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmNestedState1 aSmNestedState1 = smNestedState1;
-    switch (aSmNestedState1)
-    {
-      case state1:
-        setSmNestedState1(SmNestedState1.Null);
-        wasEventProcessed = true;
-        break;
-      case state2:
-        setSmNestedState1(SmNestedState1.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean _moveTo()
   {
     boolean wasEventProcessed = false;
@@ -117,6 +95,7 @@ public class NestedStatesWthSameEventNames implements Runnable
     switch (aSmNestedState1)
     {
       case state1:
+        exitSm();
         setSmNestedState1(SmNestedState1.state2);
         wasEventProcessed = true;
         break;
@@ -127,6 +106,7 @@ public class NestedStatesWthSameEventNames implements Runnable
     switch (aSmNestedState2)
     {
       case state3:
+        exitSm();
         setSmNestedState2(SmNestedState2.state4);
         wasEventProcessed = true;
         break;
@@ -186,37 +166,15 @@ public class NestedStatesWthSameEventNames implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean exitNestedState2()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmNestedState2 aSmNestedState2 = smNestedState2;
-    switch (aSmNestedState2)
-    {
-      case state3:
-        setSmNestedState2(SmNestedState2.Null);
-        wasEventProcessed = true;
-        break;
-      case state4:
-        setSmNestedState2(SmNestedState2.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   private void exitSm()
   {
     switch(sm)
     {
       case nestedState1:
-        exitNestedState1();
+        exitSmNestedState1();
         break;
       case nestedState2:
-        exitNestedState2();
+        exitSmNestedState2();
         break;
     }
   }
@@ -237,10 +195,36 @@ public class NestedStatesWthSameEventNames implements Runnable
     }
   }
 
+  private void exitSmNestedState1()
+  {
+    switch(smNestedState1)
+    {
+      case state1:
+        setSmNestedState1(SmNestedState1.Null);
+        break;
+      case state2:
+        setSmNestedState1(SmNestedState1.Null);
+        break;
+    }
+  }
+
   private void setSmNestedState1(SmNestedState1 aSmNestedState1)
   {
     smNestedState1 = aSmNestedState1;
     if (sm != Sm.nestedState1 && aSmNestedState1 != SmNestedState1.Null) { setSm(Sm.nestedState1); }
+  }
+
+  private void exitSmNestedState2()
+  {
+    switch(smNestedState2)
+    {
+      case state3:
+        setSmNestedState2(SmNestedState2.Null);
+        break;
+      case state4:
+        setSmNestedState2(SmNestedState2.Null);
+        break;
+    }
   }
 
   private void setSmNestedState2(SmNestedState2 aSmNestedState2)

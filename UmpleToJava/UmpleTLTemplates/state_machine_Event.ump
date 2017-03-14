@@ -120,6 +120,7 @@ class UmpleToJava {
         }
         
         // Issue 935
+        State concurrentParent = null;
         if (state != nullState && state.getHasExitAction()) 
         {
           // Concurrent state machines require additional handling
@@ -129,7 +130,7 @@ class UmpleToJava {
             if (state.getStateMachine().equals(superStateMachine) || nextState.getStateMachine().equals(superStateMachine)) {
               concurrentSmToExit = superStateMachine;
             } else if (state.getStateMachine().equals(nextState.getStateMachine())) {
-              concurrentSmToExit = state.getStateMachine().getParentState().getStateMachine();
+              concurrentSmToExit = state.getStateMachine();
             } else if (nextState.isInConcurrentSm()){ 
               State fromConcurrentParent = state.getStateMachine().getParentState();
               State nextConcurrentParent = nextState.getStateMachine().getParentState();
@@ -144,6 +145,7 @@ class UmpleToJava {
               
               if (fromConcurrentParent.equals(nextConcurrentParent)) {
                 transitionIsAndCross = true;
+                concurrentParent = fromConcurrentParent;
                 concurrentSmToExit = fromConcurrentParent.getStateMachine();
               } else {
                 concurrentSmToExit = superStateMachine;
@@ -208,8 +210,22 @@ class UmpleToJava {
 
         // Issue 935 - Additional processing for concurrent state machines
         if (transitionIsAndCross) {
-            StateMachine smToReset = t.getFromState().getStateMachine();
-            allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod", smToReset),gen.translate("type", smToReset),gen.translate("stateOne", smToReset.getStartState())));
+            for (StateMachine smToReset : concurrentParent.getNestedStateMachines()) {
+              boolean reset = true;
+              if(smToReset.indexOfState(nextState) != -1) {
+                reset = false;
+              } else {
+                for(StateMachine nestedStateMachine : smToReset.getNestedStateMachines()) {
+                  if (nestedStateMachine.indexOfState(nextState) != -1) {
+                    reset = false;
+                    break;
+                  }
+                }
+              }
+              if (reset) {
+                allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod", smToReset),gen.translate("type", smToReset),gen.translate("stateOne", smToReset.getStartState()))); 
+              }
+            }
         }
 //        allCases.append(traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
 

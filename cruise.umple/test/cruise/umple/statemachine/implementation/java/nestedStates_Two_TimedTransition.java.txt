@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSINO@ modeling language!*/
 
 
 import java.util.*;
@@ -79,28 +79,6 @@ public class X
     return wasEventProcessed;
   }
 
-  private boolean exitS1()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmS1 aSmS1 = smS1;
-    switch (aSmS1)
-    {
-      case s1a:
-        setSmS1(SmS1.Null);
-        wasEventProcessed = true;
-        break;
-      case s1b:
-        setSmS1(SmS1.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean timeouts1aTos1b()
   {
     boolean wasEventProcessed = false;
@@ -109,7 +87,7 @@ public class X
     switch (aSmS1)
     {
       case s1a:
-        exitSmS1();
+        exitSm();
         setSmS1(SmS1.s1b);
         wasEventProcessed = true;
         break;
@@ -157,28 +135,6 @@ public class X
     return wasEventProcessed;
   }
 
-  private boolean exitS2()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmS2 aSmS2 = smS2;
-    switch (aSmS2)
-    {
-      case s2a:
-        setSmS2(SmS2.Null);
-        wasEventProcessed = true;
-        break;
-      case s2b:
-        setSmS2(SmS2.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean e2()
   {
     boolean wasEventProcessed = false;
@@ -206,7 +162,7 @@ public class X
     switch (aSmS2)
     {
       case s2b:
-        exitSmS2();
+        exitSm();
         setSmS1(SmS1.s1b);
         wasEventProcessed = true;
         break;
@@ -222,10 +178,10 @@ public class X
     switch(sm)
     {
       case s1:
-        exitS1();
+        exitSmS1();
         break;
       case s2:
-        exitS2();
+        exitSmS2();
         break;
     }
   }
@@ -251,7 +207,11 @@ public class X
     switch(smS1)
     {
       case s1a:
+        setSmS1(SmS1.Null);
         stopTimeouts1aTos1bHandler();
+        break;
+      case s1b:
+        setSmS1(SmS1.Null);
         break;
     }
   }
@@ -274,7 +234,11 @@ public class X
   {
     switch(smS2)
     {
+      case s2a:
+        setSmS2(SmS2.Null);
+        break;
       case s2b:
+        setSmS2(SmS2.Null);
         stopTimeouts2bTos1bHandler();
         break;
     }

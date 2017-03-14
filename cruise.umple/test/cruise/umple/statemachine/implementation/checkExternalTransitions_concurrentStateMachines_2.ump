@@ -28,7 +28,7 @@ class X {
           goToT6 -> t6;
         }
         t6 {
-          goToS1T2 -> t2;
+          goToAT2 -> t2;
         }
       }
     }

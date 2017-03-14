@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 import java.util.*;
@@ -87,28 +87,6 @@ public class X
     return wasEventProcessed;
   }
 
-  private boolean exitS1()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmS1 aSmS1 = smS1;
-    switch (aSmS1)
-    {
-      case s1a:
-        setSmS1(SmS1.Null);
-        wasEventProcessed = true;
-        break;
-      case s1b:
-        setSmS1(SmS1.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean timeouts1aTos1b()
   {
     boolean wasEventProcessed = false;
@@ -117,7 +95,7 @@ public class X
     switch (aSmS1)
     {
       case s1a:
-        exitSmS1();
+        exitSm();
         setSmS1(SmS1.s1b);
         wasEventProcessed = true;
         break;
@@ -152,7 +130,7 @@ public class X
     switch(sm)
     {
       case s1:
-        exitS1();
+        exitSmS1();
         break;
     }
   }
@@ -175,7 +153,11 @@ public class X
     switch(smS1)
     {
       case s1a:
+        setSmS1(SmS1.Null);
         stopTimeouts1aTos1bHandler();
+        break;
+      case s1b:
+        setSmS1(SmS1.Null);
         break;
     }
   }

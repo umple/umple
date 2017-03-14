@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 import java.util.*;
@@ -138,43 +138,6 @@ public class Animal extends ThingInWorld
     return wasEventProcessed;
   }
 
-  private boolean exitAlive()
-  {
-    boolean wasEventProcessed = false;
-    
-    StateAlive aStateAlive = stateAlive;
-    StateAliveNormal aStateAliveNormal = stateAliveNormal;
-    switch (aStateAlive)
-    {
-      case normal:
-        setStateAlive(StateAlive.Null);
-        wasEventProcessed = true;
-        break;
-      case zombie:
-        setStateAlive(StateAlive.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aStateAliveNormal)
-    {
-      case baby:
-        setStateAliveNormal(StateAliveNormal.Null);
-        wasEventProcessed = true;
-        break;
-      case adult:
-        setStateAliveNormal(StateAliveNormal.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean haveBaby()
   {
     boolean wasEventProcessed = false;
@@ -183,6 +146,7 @@ public class Animal extends ThingInWorld
     switch (aStateAlive)
     {
       case zombie:
+        exitState();
         setStateAliveNormal(StateAliveNormal.adult);
         wasEventProcessed = true;
         break;
@@ -201,6 +165,7 @@ public class Animal extends ThingInWorld
     switch (aStateAliveNormal)
     {
       case baby:
+        exitState();
         setStateAliveNormal(StateAliveNormal.adult);
         wasEventProcessed = true;
         break;
@@ -219,7 +184,7 @@ public class Animal extends ThingInWorld
     switch (aStateAliveNormal)
     {
       case adult:
-        exitStateAlive();
+        exitState();
         setStateAlive(StateAlive.zombie);
         wasEventProcessed = true;
         break;
@@ -235,7 +200,7 @@ public class Animal extends ThingInWorld
     switch(state)
     {
       case alive:
-        exitAlive();
+        exitStateAlive();
         break;
     }
   }
@@ -258,7 +223,11 @@ public class Animal extends ThingInWorld
     switch(stateAlive)
     {
       case normal:
-        exitAlive();
+        exitStateAliveNormal();
+        setStateAlive(StateAlive.Null);
+        break;
+      case zombie:
+        setStateAlive(StateAlive.Null);
         break;
     }
   }
@@ -273,6 +242,19 @@ public class Animal extends ThingInWorld
     {
       case normal:
         if (stateAliveNormal == StateAliveNormal.Null) { setStateAliveNormal(StateAliveNormal.baby); }
+        break;
+    }
+  }
+
+  private void exitStateAliveNormal()
+  {
+    switch(stateAliveNormal)
+    {
+      case baby:
+        setStateAliveNormal(StateAliveNormal.Null);
+        break;
+      case adult:
+        setStateAliveNormal(StateAliveNormal.Null);
         break;
     }
   }

@@ -115,35 +115,6 @@ public class QueuedWithConcurrentStateMachines implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean exitS2()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmS2S2a aSmS2S2a = smS2S2a;
-    SmS2S2b aSmS2S2b = smS2S2b;
-    switch (aSmS2S2a)
-    {
-      case s2a:
-        setSmS2S2a(SmS2S2a.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aSmS2S2b)
-    {
-      case s2b:
-        setSmS2S2b(SmS2S2b.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean _e2()
   {
     boolean wasEventProcessed = false;
@@ -153,7 +124,9 @@ public class QueuedWithConcurrentStateMachines implements Runnable
     switch (aSmS2S2a)
     {
       case s2a:
+        exitSm();
         setSmS2S2b(SmS2S2b.s2b);
+        setSmS2S2a(SmS2S2a.s2a);
         wasEventProcessed = true;
         break;
       default:
@@ -179,7 +152,8 @@ public class QueuedWithConcurrentStateMachines implements Runnable
     switch(sm)
     {
       case s2:
-        exitS2();
+        exitSmS2S2a();
+        exitSmS2S2b();
         break;
     }
   }
@@ -198,10 +172,30 @@ public class QueuedWithConcurrentStateMachines implements Runnable
     }
   }
 
+  private void exitSmS2S2a()
+  {
+    switch(smS2S2a)
+    {
+      case s2a:
+        setSmS2S2a(SmS2S2a.Null);
+        break;
+    }
+  }
+
   private void setSmS2S2a(SmS2S2a aSmS2S2a)
   {
     smS2S2a = aSmS2S2a;
     if (sm != Sm.s2 && aSmS2S2a != SmS2S2a.Null) { setSm(Sm.s2); }
+  }
+
+  private void exitSmS2S2b()
+  {
+    switch(smS2S2b)
+    {
+      case s2b:
+        setSmS2S2b(SmS2S2b.Null);
+        break;
+    }
   }
 
   private void setSmS2S2b(SmS2S2b aSmS2S2b)

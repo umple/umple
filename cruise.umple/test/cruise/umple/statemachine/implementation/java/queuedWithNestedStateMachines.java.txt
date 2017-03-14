@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3239 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
 import java.util.*;
@@ -95,28 +95,6 @@ public class QueuedWithNestedStateMachines implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean exitS2()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmS2 aSmS2 = smS2;
-    switch (aSmS2)
-    {
-      case s2a:
-        setSmS2(SmS2.Null);
-        wasEventProcessed = true;
-        break;
-      case s2b:
-        setSmS2(SmS2.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean _e2()
   {
     boolean wasEventProcessed = false;
@@ -125,6 +103,7 @@ public class QueuedWithNestedStateMachines implements Runnable
     switch (aSmS2)
     {
       case s2a:
+        exitSm();
         setSmS2(SmS2.s2b);
         wasEventProcessed = true;
         break;
@@ -143,6 +122,7 @@ public class QueuedWithNestedStateMachines implements Runnable
     switch (aSmS2)
     {
       case s2b:
+        exitSm();
         setSmS2(SmS2.s2a);
         wasEventProcessed = true;
         break;
@@ -158,7 +138,7 @@ public class QueuedWithNestedStateMachines implements Runnable
     switch(sm)
     {
       case s2:
-        exitS2();
+        exitSmS2();
         break;
     }
   }
@@ -172,6 +152,19 @@ public class QueuedWithNestedStateMachines implements Runnable
     {
       case s2:
         if (smS2 == SmS2.Null) { setSmS2(SmS2.s2a); }
+        break;
+    }
+  }
+
+  private void exitSmS2()
+  {
+    switch(smS2)
+    {
+      case s2a:
+        setSmS2(SmS2.Null);
+        break;
+      case s2b:
+        setSmS2(SmS2.Null);
         break;
     }
   }
