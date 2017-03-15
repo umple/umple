@@ -676,18 +676,18 @@ class State
   }
   
   /* Issue 935
-     A helper function to determine if a state is in a concurrent state machine
+     A helper function to obtain the concurrent parent state
   */
-  public boolean isInConcurrentSm() {
-    State parentState = getStateMachine().getParentState();
-    while (parentState != null) {
-      if (parentState.getIsConcurrent()) {
-        return true;
+  public State getConcurrentParentState(){
+    State concurrentParentState = getStateMachine().getParentState();
+    while (concurrentParentState != null) {
+      if (concurrentParentState.getIsConcurrent()) {
+        return concurrentParentState;
       } else {
-        parentState = parentState.getStateMachine().getParentState();
+        concurrentParentState = concurrentParentState.getStateMachine().getParentState();
       }
     }
-    return false;
+    return null;
   }
  
 }

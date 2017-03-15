@@ -124,35 +124,29 @@ class UmpleToJava {
         if (state != nullState && state.getHasExitAction()) 
         {
           // Concurrent state machines require additional handling
-          if (state.isInConcurrentSm()) {
+          State fromConcurrentParentState = state.getConcurrentParentState();
+          if (fromConcurrentParentState != null) {
             StateMachine concurrentSmToExit = null;
             
-            if (state.getStateMachine().equals(superStateMachine) || nextState.getStateMachine().equals(superStateMachine)) {
+            if (nextState.getStateMachine().equals(superStateMachine)) {
               concurrentSmToExit = superStateMachine;
             } else if (state.getStateMachine().equals(nextState.getStateMachine())) {
               concurrentSmToExit = state.getStateMachine();
-            } else if (nextState.isInConcurrentSm()){ 
-              State fromConcurrentParent = state.getStateMachine().getParentState();
-              State nextConcurrentParent = nextState.getStateMachine().getParentState();
-              
-              while (!fromConcurrentParent.getIsConcurrent()) {
-                fromConcurrentParent = fromConcurrentParent.getStateMachine().getParentState();
-              }
-              
-              while (!nextConcurrentParent.getIsConcurrent()) {
-                nextConcurrentParent = nextConcurrentParent.getStateMachine().getParentState();
-              }
-              
-              if (fromConcurrentParent.equals(nextConcurrentParent)) {
-                transitionIsAndCross = true;
-                concurrentParent = fromConcurrentParent;
-                concurrentSmToExit = fromConcurrentParent.getStateMachine();
+            } else {
+              State nextConcurrentParentState = nextState.getConcurrentParentState();
+              if (nextConcurrentParentState != null) {
+                if (fromConcurrentParentState.equals(nextConcurrentParentState)) {
+                  transitionIsAndCross = true;
+                  concurrentParent = fromConcurrentParentState;
+                  concurrentSmToExit = fromConcurrentParentState.getStateMachine();
+                } else {
+                  concurrentSmToExit = superStateMachine;
+                }
               } else {
                 concurrentSmToExit = superStateMachine;
               }
-            } else {
-              concurrentSmToExit = superStateMachine;
             }
+            
             allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",concurrentSmToExit))); 
           } else {
             allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",superStateMachine))); 
