@@ -149,7 +149,8 @@ class UmpleToJava {
             
             allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",concurrentSmToExit))); 
           } else {
-            allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",superStateMachine))); 
+            StateMachine smToExit = t.getSmToExit(superStateMachine);
+            allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",smToExit))); 
           }
           javaLine++;
         }

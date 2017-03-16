@@ -140,7 +140,7 @@ public class X
     switch (aSmOn)
     {
       case s1:
-        exitSm();
+        exitSmOn();
         setSmOn(SmOn.s2);
         wasEventProcessed = true;
         break;
@@ -159,7 +159,7 @@ public class X
     switch (aSmOn)
     {
       case s1:
-        exitSm();
+        exitSmOn();
         setSmOn(SmOn.s1);
         wasEventProcessed = true;
         break;
@@ -216,7 +216,7 @@ public class X
     switch (aSmOnS1)
     {
       case m1:
-        exitSm();
+        exitSmOnS1();
         setSmOnS1(SmOnS1.m2);
         wasEventProcessed = true;
         break;
@@ -235,7 +235,7 @@ public class X
     switch (aSmOnS1)
     {
       case m1:
-        exitSm();
+        exitSmOnS1();
         setSmOnS1(SmOnS1.m1);
         wasEventProcessed = true;
         break;
@@ -254,7 +254,7 @@ public class X
     switch (aSmOnS1)
     {
       case m1:
-        exitSm();
+        exitSmOn();
         setSmOn(SmOn.s1);
         wasEventProcessed = true;
         break;
@@ -273,7 +273,7 @@ public class X
     switch (aSmOnS1)
     {
       case m1:
-        exitSm();
+        exitSmOn();
         setSmOn(SmOn.s2);
         wasEventProcessed = true;
         break;
@@ -348,7 +348,7 @@ public class X
     switch (aSmOff)
     {
       case s3:
-        exitSm();
+        exitSmOff();
         setSmOff(SmOff.s4);
         wasEventProcessed = true;
         break;

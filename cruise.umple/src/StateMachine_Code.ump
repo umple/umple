@@ -700,6 +700,60 @@ class Transition
     State nullState = new State("null",nullSm);
     return new Transition(nullState, nextState);
   }
+  
+  /*
+   * Issue 935 Helper Function - Determine the state machine to exit in a transition
+   */
+  public StateMachine getSmToExit(StateMachine defaultToExit) {
+    StateMachine smToExit = defaultToExit;
+    if (fromState.getStateMachine().getParentState() != null && nextState.getStateMachine().getParentState() != null) {
+      State fromStateSuperParent = fromState.getStateMachine().getParentState();
+      if (nextState.equals(fromStateSuperParent)) {
+        smToExit = fromStateSuperParent.getStateMachine();
+      } else if(nextState.equals(fromState)) {
+        smToExit = fromState.getStateMachine();
+      } else {
+        boolean foundSmToExit = false;
+        
+        // First, traverse up "nextState" and see if it is contained in "fromState"
+        State nextStateTraverser = nextState;
+        while (nextStateTraverser.getStateMachine().getParentState() != null && !foundSmToExit) {
+          State nextStateSuperParent = nextStateTraverser.getStateMachine().getParentState();
+          if (nextStateSuperParent.equals(fromState)) {
+            smToExit = nextStateTraverser.getStateMachine();
+            foundSmToExit = true;
+          } else if (nextStateSuperParent.equals(fromStateSuperParent)) {
+            smToExit = fromState.getStateMachine();
+            foundSmToExit = true;
+          } else {
+            nextStateTraverser = nextStateSuperParent;
+          }
+        }
+        
+        // If we did not find smToExit, traverse up "fromState" and see if it is contained in "nextState"
+        State fromStateTraverser = fromState;
+        while (fromStateTraverser.getStateMachine().getParentState() != null && !foundSmToExit) {
+          if (fromStateTraverser.getStateMachine().getParentState().equals(nextState)) {
+            smToExit = nextState.getStateMachine();
+            foundSmToExit = true;
+          } else {
+            fromStateTraverser = fromStateTraverser.getStateMachine().getParentState();
+          }
+        }
+        
+        if (!foundSmToExit && fromStateTraverser.equals(nextStateTraverser)) {
+          for (StateMachine nsm : fromStateTraverser.getStateMachine().getNestedStateMachines()) {
+            if (nsm.getParentState().equals(fromStateTraverser)) {
+              smToExit = nsm;
+              break;
+            }
+          }
+        }
+      }
+    }
+    
+    return smToExit;
+  }
 }
 
 class Event

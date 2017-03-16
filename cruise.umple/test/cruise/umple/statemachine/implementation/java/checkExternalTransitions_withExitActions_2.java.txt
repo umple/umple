@@ -112,7 +112,7 @@ public class X
     switch (aSmOn)
     {
       case m1:
-        exitSm();
+        exitSmOn();
         setSmOn(SmOn.m2);
         wasEventProcessed = true;
         break;
@@ -131,7 +131,7 @@ public class X
     switch (aSmOnM1)
     {
       case t2:
-        exitSm();
+        exitSmOnM1();
         setSmOnM1(SmOnM1.t3);
         wasEventProcessed = true;
         break;
