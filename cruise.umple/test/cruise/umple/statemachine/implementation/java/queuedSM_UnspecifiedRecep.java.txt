@@ -226,7 +226,7 @@ public class AutomatedTellerMachine implements Runnable
     switch (aSmActive)
     {
       case validating:
-        exitSm();
+        exitSmActive();
         setSmActive(SmActive.selecting);
         wasEventProcessed = true;
         break;
@@ -246,7 +246,7 @@ public class AutomatedTellerMachine implements Runnable
     switch (aSmActive)
     {
       case selecting:
-        exitSm();
+        exitSmActive();
         setSmActive(SmActive.processing);
         wasEventProcessed = true;
         break;
@@ -265,7 +265,7 @@ public class AutomatedTellerMachine implements Runnable
     switch (aSmActive)
     {
       case processing:
-        exitSm();
+        exitSmActive();
         setSmActive(SmActive.selecting);
         wasEventProcessed = true;
         break;
@@ -284,7 +284,7 @@ public class AutomatedTellerMachine implements Runnable
     switch (aSmActive)
     {
       case processing:
-        exitSm();
+        exitSmActive();
         setSmActive(SmActive.printing);
         wasEventProcessed = true;
         break;

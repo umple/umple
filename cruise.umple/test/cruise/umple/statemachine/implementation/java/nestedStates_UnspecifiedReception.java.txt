@@ -82,7 +82,7 @@ public class NestedStatesWthSameEventNames
     switch (aSmNestedState1)
     {
       case state1:
-        exitSm();
+        exitSmNestedState1();
         setSmNestedState1(SmNestedState1.state2);
         wasEventProcessed = true;
         break;
@@ -103,7 +103,7 @@ public class NestedStatesWthSameEventNames
     switch (aSmNestedState1)
     {
       case state1:
-        exitSm();
+        exitSmNestedState1();
         setSmNestedState1(SmNestedState1.state1);
         wasEventProcessed = true;
         break;

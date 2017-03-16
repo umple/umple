@@ -54,17 +54,16 @@ public class NestedStateMachineTest
     course.push();
     course.turnOff();
 
-    Assert.assertEquals(10,course.numberOfLogs());
+    Assert.assertEquals(9,course.numberOfLogs());
     Assert.assertEquals("Enter Off", course.getLog(0));
     Assert.assertEquals("Exit Off", course.getLog(1));
     Assert.assertEquals("Enter On", course.getLog(2));
     Assert.assertEquals("Enter Play", course.getLog(3));
     Assert.assertEquals("Exit Play", course.getLog(4));
-    Assert.assertEquals("Exit On", course.getLog(5));
-    Assert.assertEquals("Enter Pause", course.getLog(6));
-    Assert.assertEquals("Exit Pause", course.getLog(7));
-    Assert.assertEquals("Exit On", course.getLog(8));
-    Assert.assertEquals("Enter Off", course.getLog(9));
+    Assert.assertEquals("Enter Pause", course.getLog(5));
+    Assert.assertEquals("Exit Pause", course.getLog(6));
+    Assert.assertEquals("Exit On", course.getLog(7));
+    Assert.assertEquals("Enter Off", course.getLog(8));
     
     Assert.assertEquals(CourseE.Status.Off, course.getStatus());
     Assert.assertEquals(CourseE.StatusOn.Null, course.getStatusOn());    

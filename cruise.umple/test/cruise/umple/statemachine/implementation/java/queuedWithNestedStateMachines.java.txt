@@ -103,7 +103,7 @@ public class QueuedWithNestedStateMachines implements Runnable
     switch (aSmS2)
     {
       case s2a:
-        exitSm();
+        exitSmS2();
         setSmS2(SmS2.s2b);
         wasEventProcessed = true;
         break;
@@ -122,7 +122,7 @@ public class QueuedWithNestedStateMachines implements Runnable
     switch (aSmS2)
     {
       case s2b:
-        exitSm();
+        exitSmS2();
         setSmS2(SmS2.s2a);
         wasEventProcessed = true;
         break;

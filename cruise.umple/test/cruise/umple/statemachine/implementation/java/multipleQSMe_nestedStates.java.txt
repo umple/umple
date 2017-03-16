@@ -90,7 +90,7 @@ public class X implements Runnable
     switch (aSm)
     {
       case s1:
-        exitSm();
+        exitSmS1();
         setSmS1(SmS1.s1a);
         wasEventProcessed = true;
         break;
@@ -145,7 +145,7 @@ public class X implements Runnable
     switch (aSm1)
     {
       case s4:
-        exitSm1();
+        exitSm1S4();
         setSm1S4(Sm1S4.s4a);
         wasEventProcessed = true;
         break;
@@ -182,7 +182,7 @@ public class X implements Runnable
     switch (aSmS1)
     {
       case s1a:
-        exitSm();
+        exitSmS1();
         setSmS1(SmS1.s1b);
         wasEventProcessed = true;
         break;
@@ -238,7 +238,7 @@ public class X implements Runnable
     switch (aSm1S4)
     {
       case s4a:
-        exitSm1();
+        exitSm1S4();
         setSm1S4(Sm1S4.s4b);
         wasEventProcessed = true;
         break;

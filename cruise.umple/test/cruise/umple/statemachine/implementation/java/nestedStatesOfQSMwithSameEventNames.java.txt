@@ -95,7 +95,7 @@ public class NestedStatesWthSameEventNames implements Runnable
     switch (aSmNestedState1)
     {
       case state1:
-        exitSm();
+        exitSmNestedState1();
         setSmNestedState1(SmNestedState1.state2);
         wasEventProcessed = true;
         break;
@@ -106,7 +106,7 @@ public class NestedStatesWthSameEventNames implements Runnable
     switch (aSmNestedState2)
     {
       case state3:
-        exitSm();
+        exitSmNestedState2();
         setSmNestedState2(SmNestedState2.state4);
         wasEventProcessed = true;
         break;

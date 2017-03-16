@@ -704,7 +704,7 @@ class Transition
   /*
    * Issue 935 Helper Function - Determine the state machine to exit in a transition
    */
-  public StateMachine getSmToExit(StateMachine defaultToExit) {
+   public StateMachine getSmToExit(StateMachine defaultToExit){
     StateMachine smToExit = defaultToExit;
     if (fromState.getStateMachine().getParentState() != null && nextState.getStateMachine().getParentState() != null) {
       State fromStateSuperParent = fromState.getStateMachine().getParentState();
@@ -747,6 +747,20 @@ class Transition
               smToExit = nsm;
               break;
             }
+          }
+        }
+      }
+    } else if (nextState.getStateMachine().getParentState() != null) {
+      // Need to see if "nextState" is contained within "fromState"
+      State nextStateTraverser = nextState.getStateMachine().getParentState();
+      while (nextStateTraverser.getStateMachine().getParentState() != null) {
+        nextStateTraverser = nextStateTraverser.getStateMachine().getParentState();
+      }
+      if (nextStateTraverser.equals(fromState)) {
+        for (StateMachine nsm : fromState.getStateMachine().getNestedStateMachines()) {
+          if (nsm.getParentState().equals(fromState)) {
+            smToExit = nsm;
+            break;
           }
         }
       }

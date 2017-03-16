@@ -95,7 +95,7 @@ public class X
     switch (aSmS1)
     {
       case s1a:
-        exitSm();
+        exitSmS1();
         setSmS1(SmS1.s1b);
         wasEventProcessed = true;
         break;

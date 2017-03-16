@@ -146,7 +146,7 @@ public class Animal extends ThingInWorld
     switch (aStateAlive)
     {
       case zombie:
-        exitState();
+        exitStateAlive();
         setStateAliveNormal(StateAliveNormal.adult);
         wasEventProcessed = true;
         break;
@@ -165,7 +165,7 @@ public class Animal extends ThingInWorld
     switch (aStateAliveNormal)
     {
       case baby:
-        exitState();
+        exitStateAliveNormal();
         setStateAliveNormal(StateAliveNormal.adult);
         wasEventProcessed = true;
         break;
@@ -184,7 +184,7 @@ public class Animal extends ThingInWorld
     switch (aStateAliveNormal)
     {
       case adult:
-        exitState();
+        exitStateAlive();
         setStateAlive(StateAlive.zombie);
         wasEventProcessed = true;
         break;
