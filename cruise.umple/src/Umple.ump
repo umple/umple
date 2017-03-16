@@ -163,6 +163,9 @@ class Method
   // Specifies whether or not the Method is abstract.
   Boolean isAbstract = false;
 
+  // Specifies whether this is a constructor for the Umple class.
+  Boolean isConstructor = false;
+
   // The modifier associated with the method.
   modifier;
 
