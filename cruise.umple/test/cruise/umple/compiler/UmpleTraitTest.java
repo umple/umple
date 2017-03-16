@@ -1751,6 +1751,7 @@ public class UmpleTraitTest {
 
 	}
 
+	//explained in my thesis
 	@Test
 	public void checkDuplicatedMethods1Test() {
 		String code = "class A{isA T1; isA T2;} trait T1 { String test(){}} trait T2 { String test(){}}";
@@ -1766,6 +1767,7 @@ public class UmpleTraitTest {
 		}
 	}
 
+	//explained in my thesis
 	@Test
 	public void checkDuplicatedMethods2Test() {
 		String code = "class A{isA T;}trait T{isA T1;isA T2;}trait T1{void test(){/*T1*/}}trait T2{void test(){/*T2*/}}";
