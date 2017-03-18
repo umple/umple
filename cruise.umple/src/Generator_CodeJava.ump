@@ -2568,7 +2568,10 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         
         proxyPrecode+=remoteImports+"import java.io.Serializable;"+NL+defaultNamespace+"public class "+proxyName+extendsProxy+proxyImplements+NL+"{";
 
-          proxyContent+=NL+"  "+remoteInterfaceName+" realObject;"+NL;
+          proxyContent+=NL+"  "+remoteInterfaceName+" realObject";
+          if(getModel().getDistributePattern()==0)
+            proxyContent+="=this";
+          proxyContent+=";"+NL;
         proxyContent+="  public void setRealObject("+remoteInterfaceName+" aObject)"+NL+"  {"+NL;
         proxyContent+="    realObject=aObject;"+NL+"  }"+NL;
         proxyContent+="  public "+remoteInterfaceName+" getRealObject()"+NL+"  {"+NL;
@@ -2801,7 +2804,11 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       proxyContent+=NL+"  public boolean equals(Object obj)"+NL+"  {"+NL+"    if(obj==null)"+NL+"      return false;"+NL+"    if(obj.getClass()!=this.getClass())"+NL+"      return false;"+NL+"    return (getHashCode()==(("+aClass.getName()+")obj).getHashCode());"+NL+"  }";
     remoteContent+=NL+"}";
     if(getModel().getDistributePattern()==0)
+    {
+      if(aClass.getIsSingleton())
+        proxyContent+="  public static "+aClass.getName()+" getInstance(UmpleRuntime.UmpleComponent umpleComponent)"+NL+"{"+NL+"if(theInstance == null)"+NL+"{"+NL+"theInstance = new "+aClass.getName()+"(umpleComponent);"+NL+"}"+NL+"return theInstance;"+NL+"}";
       classContent+=proxyContent+NL+"}";
+    }
     else if (getModel().getDistributePattern()==1)
       proxyContent=proxyPrecode+ proxyContent +NL+"}";
 

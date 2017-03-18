@@ -57,10 +57,16 @@ class JavaObjectFactoryClassGenerator {
     packageSet.add("javax.xml.ws.Service");
   }  
   packageSet.add("java.io.FileInputStream");
+  packageSet.add("java.io.InputStreamReader;");
+  packageSet.add("java.io.BufferedReader");
+  packageSet.add("java.io.FileReader");
   packageSet.add("java.io.IOException");
   packageSet.add("java.io.InputStream");
   packageSet.add("java.util.Properties");
   packageSet.add("java.util.*");
+  packageSet.add("java.io.*");
+  packageSet.add("java.util.regex.Pattern");
+  packageSet.add("java.util.regex.Matcher");
 
   for(UmpleClass uClass: model.getUmpleClasses())
   { GeneratedClass gClass = uClass.getGeneratedClass();
@@ -199,19 +205,113 @@ public class UmpleRuntime implements IUmpleRuntime
 
     private void readComponentsFile()
     {
-     UmpleComponent c0=new UmpleComponent("local");
-     components.put("local",c0);
-     UmpleNode an1= new UmpleNode(0);
-     an1.setPort(2024);
-     UmpleComponent c=new UmpleComponent("main",an1);
-     nodes.add(an1);
-     components.put("main",c);
-     
-     UmpleNode an2= new UmpleNode(1);
-     an2.setPort(2028);
-     UmpleComponent c1=new UmpleComponent("1",an2);
-     nodes.add(an2);
-    components.put("1",c1);
+      String input="{id=0; port=1099}";
+      try (BufferedReader br = new BufferedReader(new FileReader(fileAddress))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+           // Merging the lines
+          input+=line+";";
+        }
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();   
+      }
+      finally {
+        if (input != null)
+        {
+          int startIndex=input.indexOf("{");
+          if(startIndex>=0)
+          //while(startIndex>=0)
+          { 
+            Pattern pattern1 = Pattern.compile("([\\{|\\(])([^\\}\\)]+)([\\{|\\(])");
+            Pattern pattern2 = Pattern.compile("([\\}|\\)])([^\\{\\(]+)([\\}|\\)])");
+            Pattern pattern3 = Pattern.compile("([\\{|\\(])([^\\{\\(\\}\\)]+)([\\}|\\)])");
+            Pattern patternURL = Pattern.compile("(url)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)");
+            Pattern patternName = Pattern.compile("(id|name)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)");
+            Pattern patternPort = Pattern.compile("(port)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)"); 
+            Pattern patternIp = Pattern.compile("(ip)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)"); 
+            Pattern patternComponent = Pattern.compile("(\\s*)([^;,\\s]*)(\\s*)([,|;|\\r\\n|\\t])");                 
+            Matcher matcher1 = pattern1.matcher(input); 
+            Matcher matcher2 = pattern2.matcher(input);
+            Matcher matcher3 = pattern3.matcher(input);
+            String url="";
+            String ip="";
+            String name="";
+            int port=1111;
+            String part1="";
+            String part2="";
+            String part3="";
+            String runtimeComponents="";
+            String machine="";
+            Boolean condition1=matcher1.find();
+            Boolean condition2=matcher2.find();
+            Boolean condition3=matcher3.find();
+            while (condition1||condition2||condition3) 
+            { 
+              url="";
+              ip="";
+              name="";
+              port=1111;
+              part1="";
+              part2="";
+              part3="";
+              runtimeComponents="";
+              machine="";
+              if(condition1)
+                part1=matcher1.group(2);
+              if(condition2)
+                part2=matcher2.group(2);
+              if(condition3)
+                part3=matcher3.group(2);
+              
+              if(condition1&&matcher3.end()>matcher1.end())
+              {
+                machine=part1.toLowerCase()+part2.toLowerCase();
+                runtimeComponents=part3.toLowerCase()+";";
+                condition1=matcher1.find();
+                condition2=matcher2.find();
+                condition3=matcher3.find();
+              }else
+              {
+                machine=part3.toLowerCase();
+                condition3=matcher3.find();
+              }
+              Matcher matcherURL = patternURL.matcher(machine);
+              if(matcherURL.find())
+                url=matcherURL.group(3);
+
+              Matcher matcherName = patternName.matcher(machine);
+              if(matcherName.find())
+                name=matcherName.group(3);
+
+              Matcher matcherIp = patternIp.matcher(machine);
+              if(matcherIp.find())
+                ip=matcherIp.group(3);
+
+              Matcher matcherPort = patternPort.matcher(machine);
+              if(matcherPort.find())
+                port=Integer.parseInt(matcherPort.group(3));
+              UmpleNode aNode= new UmpleNode(Integer.parseInt(name));
+              Matcher matcherComponent = patternComponent.matcher(runtimeComponents);
+              while(matcherComponent.find())
+              { String component=matcherComponent.group(2);
+                UmpleComponent aComponent=new UmpleComponent(component,aNode);
+                components.put(component,aComponent);
+              }
+              if(Integer.parseInt(name)==getThisNodeId())
+              {
+                UmpleComponent aComponent=new UmpleComponent("local",aNode);
+                components.put("local",aComponent);
+              }
+              aNode.setPort(port);
+              aNode.setUrl(url);
+              aNode.setIp(ip);
+              nodes.add(aNode);
+            }
+          }      
+        }    
+      }
     }
     <<#
     if(model.getDistributeTechnology().equals("RMI"))
@@ -431,11 +531,6 @@ public class UmpleRuntime implements IUmpleRuntime
       {
         name=aName;
         node=aNode;
-      }
-        public UmpleComponent(String aName)
-      {
-        name=aName;
-        node=null;
       }
       //------------------------
       // INTERFACE

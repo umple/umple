@@ -52,7 +52,7 @@ class UmpleToJava {
     appendln(realSb, "");
     append(realSb, "      return;");
     appendln(realSb, "    }");
-    appendln(realSb, "    realObject=this;");
+    //appendln(realSb, "    realObject=this;");
     hasBody = true;
   }
   

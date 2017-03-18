@@ -65,9 +65,19 @@ class UmpleToJava {
   #>>throws RemoteException;<<#
   }
   else{
-#>>
+    if(uClass.getIsSingleton()){
+    #>>
+    {
+    <<=uClass.getName()>> object= <<=uClass.getName()>>.getInstance(UmpleRuntime.getComponent("local"));
+    <<#
+    }
+   else
+   { 
+  #>>
   {
   <<=uClass.getName()>> object= new <<=uClass.getName()>>(<<=caller>><<=argumentscomma>> UmpleRuntime.getComponent("local"));
+  <<#}
+  #>>
   return object.getRealObject();
   }
   <<#
