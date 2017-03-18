@@ -2751,8 +2751,18 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
                 
               }              
              
-             if(getModel().getDistributePattern()==0){
-              proxyContent+="  public "+proxyName+"("+arguments+lastArgument+"UmpleRuntime.UmpleComponent component)"+NL+"  {"+NL+"    this("+callerSignature+");"+NL+"    realObject = UmpleRuntime.getInstance().add"+aClass.getName()+"("+callerSignature+lastArgument+"component);"+NL+"  }"+NL;
+             if(getModel().getDistributePattern()==0&&arguments.contains("UmpleRuntime.UmpleComponent umpleComponent")){
+                callerSignature=callerSignature.substring(0,callerSignature.length()-14);
+                if(arguments.contains(", UmpleRuntime"))
+                {
+                  arguments=arguments.substring(0,arguments.length()-44);
+                }
+                else
+                {
+                  arguments=arguments.substring(0,arguments.length()-42);
+                }  
+                proxyContent+=methodType+methodName+"("+arguments+")"+NL+"  {"+NL;
+                proxyContent+=NL+"this("+callerSignature+"UmpleRuntime.getComponent(\""+aClass.getName()+"\"));"+NL+"  }"+NL+"";
               }
               if(getModel().getDistributePattern()==1){
                 proxyContent+="  public "+proxyName+"("+arguments+lastArgument+"UmpleRuntime.UmpleComponent component)"+NL+"  {"+NL+"    realObject = UmpleRuntime.getInstance().add"+aClass.getName()+"("+callerSignature+lastArgument+"component, this);"+NL+"  }"+NL;

@@ -24,24 +24,9 @@ class UmpleToJava {
     constructor_DeclareDefault <<!<</*constructor_DeclareDefault*/>><<#
 
   String customConstructorPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","constructor"));
-  String customConstructorPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","constructor"));
-  String proxySignature="";
-/*  
-  if(uClass.getIsDistributed())
-  {    
-    if(!gClass.getLookup("constructorSignature").equals(""))
-    {
-      proxySignature=", "+uClass.getName().substring(0,uClass.getName().length()-4)+" proxy";
-    }
-    else
-    {
-      proxySignature=uClass.getName().substring(0,uClass.getName().length()-4)+" proxy";
-    }  
-  } 
-*/
-  
+  String customConstructorPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","constructor"));  
   String accessibility = uClass.getIsSingleton() ? "private" : "public";
-  append(realSb,"\n  {0} {1}({2}{3})",new Object[] {accessibility, uClass.getName(), gClass.getLookup("constructorSignature"),proxySignature});
+  append(realSb,"\n  {0} {1}({2}{3})",new Object[] {accessibility, uClass.getName(), gClass.getLookup("constructorSignature"),componentSignature});
 
   String extraNote = null;
   
@@ -55,6 +40,19 @@ class UmpleToJava {
   {
     appendln(realSb, "");
     append(realSb, "    super({0});", gClass.getParentClass().getLookup("constructorSignature_caller"));
+    hasBody = true;
+  }
+  if(uClass.getIsDistributed()&&model.getDistributePattern()==0)
+  {
+    appendln(realSb, "");
+    append(realSb, "    if(!umpleComponent.getName().equals(\"local\"))");
+    appendln(realSb, "    {");
+    appendln(realSb, "    if(this instanceof {0})",uClass.getName());
+    appendln(realSb, "        realObject=UmpleRuntime.getInstance().add{0}({1}{2} umpleComponent, this);",uClass.getName(),gClass.getLookup("constructorSignature_caller"),lastArgumentComma);
+    appendln(realSb, "");
+    append(realSb, "      return;");
+    appendln(realSb, "    }");
+    appendln(realSb, "    realObject=this;");
     hasBody = true;
   }
   

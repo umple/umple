@@ -46,6 +46,7 @@ class UmpleToJava {
       <<@ UmpleToJava.objectFactory_add_DeclareOneToOne >>
       <<#
       }
+      /*
       if (uClass.hasMethods())
       {
         for (Method aMethod : uClass.getMethods()) 
@@ -93,7 +94,8 @@ class UmpleToJava {
             
           }
         }
-      }            
+      }
+      */            
     }    
   }
 #>>!>>

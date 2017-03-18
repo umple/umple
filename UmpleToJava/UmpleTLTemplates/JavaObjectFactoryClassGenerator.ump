@@ -160,7 +160,7 @@ public class UmpleRuntime implements IUmpleRuntime
     if (aComponent!=null)
       return aComponent;
     else
-      return components.get("main");  
+      return components.get("local");  
   }
 // ******************************** Factory
     public static UmpleRuntime theInstance = null;
@@ -199,6 +199,8 @@ public class UmpleRuntime implements IUmpleRuntime
 
     private void readComponentsFile()
     {
+     UmpleComponent c0=new UmpleComponent("local");
+     components.put("local",c0);
      UmpleNode an1= new UmpleNode(0);
      an1.setPort(2024);
      UmpleComponent c=new UmpleComponent("main",an1);
@@ -430,7 +432,11 @@ public class UmpleRuntime implements IUmpleRuntime
         name=aName;
         node=aNode;
       }
-
+        public UmpleComponent(String aName)
+      {
+        name=aName;
+        node=null;
+      }
       //------------------------
       // INTERFACE
       //------------------------
