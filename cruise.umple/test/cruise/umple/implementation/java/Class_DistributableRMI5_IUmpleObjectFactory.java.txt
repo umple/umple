@@ -1,21 +1,22 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
-
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+package distributed.rmi5;
+import distributed.rmi5.Client;
 import java.rmi.Remote;
+import java.applet.*;
+import java.util.*;
+import distributed.rmi5.Microwave;
 import java.rmi.RemoteException;
+import java.io.Serializable;
 
-public interface IUmpleObjectFactory extends Remote
+public interface IUmpleRuntime extends Remote
 {
   
   
-  public ClientImpl addClient(int component, Client proxy);
-  public ClientImpl addClient(String component, Client proxy);
-  public ClientImpl createClient(Client proxy);
+  public IClientImpl newClient()throws RemoteException;
 
   
-  public MicrowaveImpl addMicrowave(int aX, String aF, int component, Microwave proxy);
-  public MicrowaveImpl addMicrowave(int aX, String aF, String component, Microwave proxy);
-  public MicrowaveImpl createMicrowave(int aX, String aF, Microwave proxy);
+  public IMicrowaveImpl newMicrowave(int aX, String aF)throws RemoteException;
 
 }
  

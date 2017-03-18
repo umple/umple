@@ -2869,7 +2869,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
   
       //putting the code in the model and writing the file.
-      getModel().getGeneratedCode().put(remoteName+"Remote",remoteContent);
+      getModel().getGeneratedCode().put(remoteName,remoteContent);
   
       try
       {

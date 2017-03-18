@@ -1,64 +1,45 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi5;
 import java.applet.*;
 import java.util.*;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
+import java.io.Serializable;
 
-public class ClientImpl implements IClientImpl
+// line 6 "../../Class_DistributableRMI5.ump"
+// line 28 "../../Class_DistributableRMI5.ump"
+public class Client implements java.io.Serializable,IClientImpl
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //ClientImpl Attributes
+  //Client Attributes
   private String id;
 
-  //ClientImpl Associations
+  //Client Associations
   private List<Microwave> microwaves;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public ClientImpl(Client proxy)
+  public Client(UmpleRuntime.UmpleComponent umpleComponent)
   {
-    realSelf=proxy;
-    realSelf.setRealObject(this);
-    while(true)
-    {
-      try
-      {  
-        UnicastRemoteObject.exportObject(this,0);
-        break;
-      } 
-      catch (Exception e)
-      {
-        System.err.println("Server Exception: " + e.toString());
-      }
-    } 
+    if(!umpleComponent.getName().equals("local"))    {
+    if(this instanceof Client)
+        realObject=UmpleRuntime.getInstance().addClient( umpleComponent, this);
+
+      return;    }
+
     id = "s";
     microwaves = new ArrayList<Microwave>();
   }
   //------------------------
-  // Reference to the proxy
-  //------------------------
-  Client realSelf;
-  
-  public void setRealSelf(Client self)
-  {
-    realSelf=self;
-  }
-
-  //------------------------
   // Returning the Hashcode
   //------------------------
-  public int getHashCode()
+  public int getHashCodeImpl()
   {
     return hashCode();
   }
@@ -67,7 +48,7 @@ public class ClientImpl implements IClientImpl
   // INTERFACE
   //------------------------
 
-  public boolean setId(String aId)
+  public boolean setIdImpl(String aId)
   {
     boolean wasSet = false;
     id = aId;
@@ -78,36 +59,36 @@ public class ClientImpl implements IClientImpl
   /**
    * isA ClientI;
    */
-  public String getId()
+  public String getIdImpl()
   {
     return id;
   }
 
-  public Microwave getMicrowave(int index)
+  public Microwave getMicrowaveImpl(int index)
   {
     Microwave aMicrowave = microwaves.get(index);
     return aMicrowave;
   }
 
-  public List<Microwave> getMicrowaves()
+  public List<Microwave> getMicrowavesImpl()
   {
     List<Microwave> newMicrowaves = Collections.unmodifiableList(microwaves);
     return newMicrowaves;
   }
 
-  public int numberOfMicrowaves()
+  public int numberOfMicrowavesImpl()
   {
     int number = microwaves.size();
     return number;
   }
 
-  public boolean hasMicrowaves()
+  public boolean hasMicrowavesImpl()
   {
     boolean has = microwaves.size() > 0;
     return has;
   }
 
-  public int indexOfMicrowave(Microwave aMicrowave)
+  public int indexOfMicrowaveImpl(Microwave aMicrowave)
   {
     int index = microwaves.indexOf(aMicrowave);
     return index;
@@ -118,18 +99,18 @@ public class ClientImpl implements IClientImpl
     return 0;
   }
 
-  public boolean addMicrowave(Microwave aMicrowave)
+  public boolean addMicrowaveImpl(Microwave aMicrowave)
   {
     boolean wasAdded = false;
     if (microwaves.contains(aMicrowave)) { return false; }
     microwaves.add(aMicrowave);
-    if (aMicrowave.indexOfClient(realSelf) != -1)
+    if (aMicrowave.indexOfClient(this) != -1)
     {
       wasAdded = true;
     }
     else
     {
-      wasAdded = aMicrowave.addClient(realSelf);
+      wasAdded = aMicrowave.addClient(this);
       if (!wasAdded)
       {
         microwaves.remove(aMicrowave);
@@ -138,7 +119,7 @@ public class ClientImpl implements IClientImpl
     return wasAdded;
   }
 
-  public boolean removeMicrowave(Microwave aMicrowave)
+  public boolean removeMicrowaveImpl(Microwave aMicrowave)
   {
     boolean wasRemoved = false;
     if (!microwaves.contains(aMicrowave))
@@ -148,13 +129,13 @@ public class ClientImpl implements IClientImpl
 
     int oldIndex = microwaves.indexOf(aMicrowave);
     microwaves.remove(oldIndex);
-    if (aMicrowave.indexOfClient(realSelf) == -1)
+    if (aMicrowave.indexOfClient(this) == -1)
     {
       wasRemoved = true;
     }
     else
     {
-      wasRemoved = aMicrowave.removeClient(realSelf);
+      wasRemoved = aMicrowave.removeClient(this);
       if (!wasRemoved)
       {
         microwaves.add(oldIndex,aMicrowave);
@@ -163,7 +144,7 @@ public class ClientImpl implements IClientImpl
     return wasRemoved;
   }
 
-  public boolean addMicrowaveAt(Microwave aMicrowave, int index)
+  public boolean addMicrowaveAtImpl(Microwave aMicrowave, int index)
   {  
     boolean wasAdded = false;
     if(addMicrowave(aMicrowave))
@@ -177,7 +158,7 @@ public class ClientImpl implements IClientImpl
     return wasAdded;
   }
 
-  public boolean addOrMoveMicrowaveAt(Microwave aMicrowave, int index)
+  public boolean addOrMoveMicrowaveAtImpl(Microwave aMicrowave, int index)
   {
     boolean wasAdded = false;
     if(microwaves.contains(aMicrowave))
@@ -195,13 +176,13 @@ public class ClientImpl implements IClientImpl
     return wasAdded;
   }
 
-  public void delete()
+  public void deleteImpl()
   {
     ArrayList<Microwave> copyOfMicrowaves = new ArrayList<Microwave>(microwaves);
     microwaves.clear();
     for(Microwave aMicrowave : copyOfMicrowaves)
     {
-      aMicrowave.removeClient(realSelf);
+      aMicrowave.removeClient(this);
     }
   }
 
@@ -210,10 +191,12 @@ public class ClientImpl implements IClientImpl
    * key{id}
    * isA CC;
    */
+  // line 16 "../../Class_DistributableRMI5.ump"
    public static  void method2(){
     
   }
 
+  // line 19 "../../Class_DistributableRMI5.ump"
    static  int method3(){
     return 12;
   }
@@ -223,5 +206,134 @@ public class ClientImpl implements IClientImpl
   {
     return super.toString() + "["+
             "id" + ":" + getId()+ "]";
+  }
+
+  IClientImpl realObject=this;
+  public void setRealObject(IClientImpl aObject)
+  {
+    realObject=aObject;
+  }
+  public IClientImpl getRealObject()
+  {
+    return realObject;
+  }
+  public Client()
+  {
+
+this(UmpleRuntime.getComponent("Client"));
+  }
+  public int getHashCode()
+  {
+    while(true)
+      try{
+        return realObject.getHashCodeImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setId(String aId)
+  {
+    while(true)
+      try{
+        return realObject.setIdImpl(aId);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public String getId()
+  {
+    while(true)
+      try{
+        return realObject.getIdImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Microwave getMicrowave(int index)
+  {
+    while(true)
+      try{
+        return realObject.getMicrowaveImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Microwave> getMicrowaves()
+  {
+    while(true)
+      try{
+        return realObject.getMicrowavesImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfMicrowaves()
+  {
+    while(true)
+      try{
+        return realObject.numberOfMicrowavesImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasMicrowaves()
+  {
+    while(true)
+      try{
+        return realObject.hasMicrowavesImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfMicrowave(Microwave aMicrowave)
+  {
+    while(true)
+      try{
+        return realObject.indexOfMicrowaveImpl(aMicrowave);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addMicrowave(Microwave aMicrowave)
+  {
+    while(true)
+      try{
+        return realObject.addMicrowaveImpl(aMicrowave);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeMicrowave(Microwave aMicrowave)
+  {
+    while(true)
+      try{
+        return realObject.removeMicrowaveImpl(aMicrowave);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addMicrowaveAt(Microwave aMicrowave, int index)
+  {
+    while(true)
+      try{
+        return realObject.addMicrowaveAtImpl(aMicrowave,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveMicrowaveAt(Microwave aMicrowave, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveMicrowaveAtImpl(aMicrowave,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void delete()
+  {
+    while(true)
+      try{
+        realObject.deleteImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+
+  public boolean equals(Object obj)
+  {
+    if(obj==null)
+      return false;
+    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((Client)obj).getHashCode());
   }
 }

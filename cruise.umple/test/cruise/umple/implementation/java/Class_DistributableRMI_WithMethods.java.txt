@@ -1,15 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package distributed.rmi.withMethods;
 import java.util.*;
 import java.lang.Thread;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
+import java.io.Serializable;
 
-public class MicrowaveImpl implements IMicrowaveImpl, Runnable
+// line 2 "../../../Class_DistributableRMI_WithMethods.ump"
+public class Microwave implements java.io.Serializable,IMicrowaveImpl, Runnable
 {
 
   //------------------------
@@ -22,17 +20,17 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
   // MEMBER VARIABLES
   //------------------------
 
-  //MicrowaveImpl Attributes
+  //Microwave Attributes
   private boolean lightOn;
   private boolean powerTubeOn;
   private boolean isDoorOpened;
   private boolean isButtonPressed;
 
-  //MicrowaveImpl State Machines
+  //Microwave State Machines
   public enum OperatingMicrowaveStateMachine { readyToCook, doorOpen, cooking, cookingInterrupted, cookingComplete, cookingExtended }
   private OperatingMicrowaveStateMachine operatingMicrowaveStateMachine;
   
-  //enumeration type of messages accepted by MicrowaveImpl
+  //enumeration type of messages accepted by Microwave
   protected enum MessageType { doorOpened_M, buttonPressed_M, doorClosed_M }
   
   MessageQueue queue;
@@ -42,22 +40,14 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
   // CONSTRUCTOR
   //------------------------
 
-  public MicrowaveImpl(Microwave proxy)
+  public Microwave(UmpleRuntime.UmpleComponent umpleComponent)
   {
-    realSelf=proxy;
-    realSelf.setRealObject(this);
-    while(true)
-    {
-      try
-      {  
-        UnicastRemoteObject.exportObject(this,0);
-        break;
-      } 
-      catch (Exception e)
-      {
-        System.err.println("Server Exception: " + e.toString());
-      }
-    } 
+    if(!umpleComponent.getName().equals("local"))    {
+    if(this instanceof Microwave)
+        realObject=UmpleRuntime.getInstance().addMicrowave( umpleComponent, this);
+
+      return;    }
+
     lightOn = false;
     powerTubeOn = false;
     isDoorOpened = false;
@@ -65,23 +55,13 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.readyToCook);
     queue = new MessageQueue();
     removal=new Thread(this);
-    //start the thread of MicrowaveImpl
+    //start the thread of Microwave
     removal.start();
   }
   //------------------------
-  // Reference to the proxy
-  //------------------------
-  Microwave realSelf;
-  
-  public void setRealSelf(Microwave self)
-  {
-    realSelf=self;
-  }
-
-  //------------------------
   // Returning the Hashcode
   //------------------------
-  public int getHashCode()
+  public int getHashCodeImpl()
   {
     return hashCode();
   }
@@ -90,7 +70,7 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
   // INTERFACE
   //------------------------
 
-  public boolean setLightOn(boolean aLightOn)
+  public boolean setLightOnImpl(boolean aLightOn)
   {
     boolean wasSet = false;
     lightOn = aLightOn;
@@ -98,7 +78,7 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     return wasSet;
   }
 
-  public boolean setPowerTubeOn(boolean aPowerTubeOn)
+  public boolean setPowerTubeOnImpl(boolean aPowerTubeOn)
   {
     boolean wasSet = false;
     powerTubeOn = aPowerTubeOn;
@@ -106,7 +86,7 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     return wasSet;
   }
 
-  public boolean setIsDoorOpened(boolean aIsDoorOpened)
+  public boolean setIsDoorOpenedImpl(boolean aIsDoorOpened)
   {
     boolean wasSet = false;
     isDoorOpened = aIsDoorOpened;
@@ -114,7 +94,7 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     return wasSet;
   }
 
-  public boolean setIsButtonPressed(boolean aIsButtonPressed)
+  public boolean setIsButtonPressedImpl(boolean aIsButtonPressed)
   {
     boolean wasSet = false;
     isButtonPressed = aIsButtonPressed;
@@ -122,22 +102,22 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     return wasSet;
   }
 
-  public boolean getLightOn()
+  public boolean getLightOnImpl()
   {
     return lightOn;
   }
 
-  public boolean getPowerTubeOn()
+  public boolean getPowerTubeOnImpl()
   {
     return powerTubeOn;
   }
 
-  public boolean getIsDoorOpened()
+  public boolean getIsDoorOpenedImpl()
   {
     return isDoorOpened;
   }
 
-  public boolean getIsButtonPressed()
+  public boolean getIsButtonPressedImpl()
   {
     return isButtonPressed;
   }
@@ -153,7 +133,7 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     return operatingMicrowaveStateMachine;
   }
 
-  public boolean _doorOpened()
+  public boolean _doorOpenedImpl()
   {
     boolean wasEventProcessed = false;
     
@@ -161,21 +141,25 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     switch (aOperatingMicrowaveStateMachine)
     {
       case readyToCook:
+        // line 16 "../../../Class_DistributableRMI_WithMethods.ump"
         setIsDoorOpened(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.doorOpen);
         wasEventProcessed = true;
         break;
       case cooking:
+        // line 38 "../../../Class_DistributableRMI_WithMethods.ump"
         setIsDoorOpened(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingInterrupted);
         wasEventProcessed = true;
         break;
       case cookingComplete:
+        // line 49 "../../../Class_DistributableRMI_WithMethods.ump"
         setIsDoorOpened(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.doorOpen);
         wasEventProcessed = true;
         break;
       case cookingExtended:
+        // line 58 "../../../Class_DistributableRMI_WithMethods.ump"
         setIsDoorOpened(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingInterrupted);
         wasEventProcessed = true;
@@ -187,7 +171,7 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     return wasEventProcessed;
   }
 
-  public boolean _buttonPressed()
+  public boolean _buttonPressedImpl()
   {
     boolean wasEventProcessed = false;
     
@@ -195,21 +179,25 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     switch (aOperatingMicrowaveStateMachine)
     {
       case readyToCook:
+        // line 17 "../../../Class_DistributableRMI_WithMethods.ump"
         setIsButtonPressed(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cooking);
         wasEventProcessed = true;
         break;
       case cooking:
+        // line 39 "../../../Class_DistributableRMI_WithMethods.ump"
         setIsButtonPressed(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingExtended);
         wasEventProcessed = true;
         break;
       case cookingComplete:
+        // line 50 "../../../Class_DistributableRMI_WithMethods.ump"
         setIsButtonPressed(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cooking);
         wasEventProcessed = true;
         break;
       case cookingExtended:
+        // line 59 "../../../Class_DistributableRMI_WithMethods.ump"
         setIsButtonPressed(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingExtended);
         wasEventProcessed = true;
@@ -221,7 +209,7 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     return wasEventProcessed;
   }
 
-  public boolean _doorClosed()
+  public boolean _doorClosedImpl()
   {
     boolean wasEventProcessed = false;
     
@@ -229,11 +217,13 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     switch (aOperatingMicrowaveStateMachine)
     {
       case doorOpen:
+        // line 25 "../../../Class_DistributableRMI_WithMethods.ump"
         setIsDoorOpened(false);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.readyToCook);
         wasEventProcessed = true;
         break;
       case cookingInterrupted:
+        // line 44 "../../../Class_DistributableRMI_WithMethods.ump"
         setIsDoorOpened(false);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.readyToCook);
         wasEventProcessed = true;
@@ -253,14 +243,17 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     switch(operatingMicrowaveStateMachine)
     {
       case readyToCook:
+        // line 12 "../../../Class_DistributableRMI_WithMethods.ump"
         // turn off light
         turnOff();
         break;
       case doorOpen:
+        // line 21 "../../../Class_DistributableRMI_WithMethods.ump"
         // turn on light
         turnLightOn(true);
         break;
       case cooking:
+        // line 29 "../../../Class_DistributableRMI_WithMethods.ump"
         // turn on light
         turnLightOn(true);
         // energize power tube
@@ -269,19 +262,22 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
         setIsButtonPressed(false);
         break;
       case cookingInterrupted:
+        // line 43 "../../../Class_DistributableRMI_WithMethods.ump"
         turnOff();
         break;
       case cookingComplete:
+        // line 48 "../../../Class_DistributableRMI_WithMethods.ump"
         turnOff();
         break;
       case cookingExtended:
+        // line 54 "../../../Class_DistributableRMI_WithMethods.ump"
         //release a button
         setIsButtonPressed(false);
         break;
     }
   }
 
-  public void delete()
+  public void deleteImpl()
   {}
 
   protected class Message
@@ -332,24 +328,24 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
   //messages accepted 
   //------------------------------
 
-  public void doorOpened ()
+  public void doorOpenedImpl()
   {
     queue.put(new Message(MessageType.doorOpened_M, null));
   }
 
-  public void buttonPressed ()
+  public void buttonPressedImpl()
   {
     queue.put(new Message(MessageType.buttonPressed_M, null));
   }
 
-  public void doorClosed ()
+  public void doorClosedImpl()
   {
     queue.put(new Message(MessageType.doorClosed_M, null));
   }
 
   
   @Override
-  public void run ()
+  public void runImpl()
   {
     boolean status=false;
     while (true) 
@@ -379,7 +375,8 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
   /**
    * turn on light
    */
-   public void turnLightOn(boolean on){
+  // line 66 "../../../Class_DistributableRMI_WithMethods.ump"
+   public void turnLightOnImpl(boolean on){
     System.out.println("turns the light "+ (on ? "on" : "off"));
     System.out.println("light " + (on ? "on" : "off"));
     setLightOn(on);
@@ -389,13 +386,15 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
   /**
    * energize/deenergize power tube
    */
-   public void energizePowerTube(boolean on){
+  // line 73 "../../../Class_DistributableRMI_WithMethods.ump"
+   public void energizePowerTubeImpl(boolean on){
     System.out.println("energizes/deenergize the power tube");
     System.out.println("power tube " + (on ? "on" : "off"));
     setPowerTubeOn(on);
   }
 
-   public void turnOff(){
+  // line 79 "../../../Class_DistributableRMI_WithMethods.ump"
+   public void turnOffImpl(){
     // turn off light
     turnLightOn(false);
     //release button
@@ -404,6 +403,7 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
     energizePowerTube(false);
   }
 
+  // line 87 "../../../Class_DistributableRMI_WithMethods.ump"
    public static  void someMethod(){
     
   }
@@ -416,5 +416,197 @@ public class MicrowaveImpl implements IMicrowaveImpl, Runnable
             "powerTubeOn" + ":" + getPowerTubeOn()+ "," +
             "isDoorOpened" + ":" + getIsDoorOpened()+ "," +
             "isButtonPressed" + ":" + getIsButtonPressed()+ "]";
+  }
+
+  IMicrowaveImpl realObject=this;
+  public void setRealObject(IMicrowaveImpl aObject)
+  {
+    realObject=aObject;
+  }
+  public IMicrowaveImpl getRealObject()
+  {
+    return realObject;
+  }
+  public Microwave()
+  {
+
+this(UmpleRuntime.getComponent("Microwave"));
+  }
+  public int getHashCode()
+  {
+    while(true)
+      try{
+        return realObject.getHashCodeImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setLightOn(boolean aLightOn)
+  {
+    while(true)
+      try{
+        return realObject.setLightOnImpl(aLightOn);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setPowerTubeOn(boolean aPowerTubeOn)
+  {
+    while(true)
+      try{
+        return realObject.setPowerTubeOnImpl(aPowerTubeOn);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setIsDoorOpened(boolean aIsDoorOpened)
+  {
+    while(true)
+      try{
+        return realObject.setIsDoorOpenedImpl(aIsDoorOpened);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setIsButtonPressed(boolean aIsButtonPressed)
+  {
+    while(true)
+      try{
+        return realObject.setIsButtonPressedImpl(aIsButtonPressed);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean getLightOn()
+  {
+    while(true)
+      try{
+        return realObject.getLightOnImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean getPowerTubeOn()
+  {
+    while(true)
+      try{
+        return realObject.getPowerTubeOnImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean getIsDoorOpened()
+  {
+    while(true)
+      try{
+        return realObject.getIsDoorOpenedImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean getIsButtonPressed()
+  {
+    while(true)
+      try{
+        return realObject.getIsButtonPressedImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean _doorOpened()
+  {
+    while(true)
+      try{
+        return realObject._doorOpenedImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean _buttonPressed()
+  {
+    while(true)
+      try{
+        return realObject._buttonPressedImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean _doorClosed()
+  {
+    while(true)
+      try{
+        return realObject._doorClosedImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void delete()
+  {
+    while(true)
+      try{
+        realObject.deleteImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void doorOpened ()
+  {
+    while(true)
+      try{
+        realObject.doorOpenedImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void buttonPressed ()
+  {
+    while(true)
+      try{
+        realObject.buttonPressedImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void doorClosed ()
+  {
+    while(true)
+      try{
+        realObject.doorClosedImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void run ()
+  {
+    while(true)
+      try{
+        realObject.runImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public void turnLightOn(boolean on)
+  {
+    while(true)
+      try{
+        realObject.turnLightOnImpl(on);
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public void energizePowerTube(boolean on)
+  {
+    while(true)
+      try{
+        realObject.energizePowerTubeImpl(on);
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public void turnOff()
+  {
+    while(true)
+      try{
+        realObject.turnOffImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+
+  public boolean equals(Object obj)
+  {
+    if(obj==null)
+      return false;
+    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((Microwave)obj).getHashCode());
   }
 }

@@ -1,8 +1,9 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi2;
 
+// line 8 "../../Class_DistributableRMI2.ump"
 public class CC
 {
 
@@ -24,6 +25,7 @@ public class CC
   public void delete()
   {}
 
+  // line 11 "../../Class_DistributableRMI2.ump"
    public void someMethod1(){
     
   }

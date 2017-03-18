@@ -1,15 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi.withMethods2;
 import java.util.*;
 import java.lang.Thread;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
-public class MicrowaveImpl extends CCImpl implements IMicrowaveImpl, Runnable
+// line 3 "../../../Class_DistributableRMI_WithMethods2.ump"
+public class MicrowaveImpl extends CCImpl implements java.io.Serializable , IMicrowaveImpl, Runnable
 {
 
   //------------------------
@@ -42,22 +39,8 @@ public class MicrowaveImpl extends CCImpl implements IMicrowaveImpl, Runnable
   // CONSTRUCTOR
   //------------------------
 
-  public MicrowaveImpl(Microwave proxy)
+  public MicrowaveImpl()
   {
-    realSelf=proxy;
-    realSelf.setRealObject(this);
-    while(true)
-    {
-      try
-      {  
-        UnicastRemoteObject.exportObject(this,0);
-        break;
-      } 
-      catch (Exception e)
-      {
-        System.err.println("Server Exception: " + e.toString());
-      }
-    } 
     super();
     lightOn = false;
     powerTubeOn = false;
@@ -72,11 +55,11 @@ public class MicrowaveImpl extends CCImpl implements IMicrowaveImpl, Runnable
   //------------------------
   // Reference to the proxy
   //------------------------
-  Microwave realSelf;
+  Microwave self;
   
-  public void setRealSelf(Microwave self)
+  public void setSelf(Microwave proxy)
   {
-    realSelf=self;
+    self=proxy;
   }
 
   //------------------------
@@ -162,21 +145,25 @@ public class MicrowaveImpl extends CCImpl implements IMicrowaveImpl, Runnable
     switch (aOperatingMicrowaveStateMachine)
     {
       case readyToCook:
+        // line 16 "../../../Class_DistributableRMI_WithMethods2.ump"
         setIsDoorOpened(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.doorOpen);
         wasEventProcessed = true;
         break;
       case cooking:
+        // line 38 "../../../Class_DistributableRMI_WithMethods2.ump"
         setIsDoorOpened(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingInterrupted);
         wasEventProcessed = true;
         break;
       case cookingComplete:
+        // line 49 "../../../Class_DistributableRMI_WithMethods2.ump"
         setIsDoorOpened(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.doorOpen);
         wasEventProcessed = true;
         break;
       case cookingExtended:
+        // line 58 "../../../Class_DistributableRMI_WithMethods2.ump"
         setIsDoorOpened(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingInterrupted);
         wasEventProcessed = true;
@@ -196,21 +183,25 @@ public class MicrowaveImpl extends CCImpl implements IMicrowaveImpl, Runnable
     switch (aOperatingMicrowaveStateMachine)
     {
       case readyToCook:
+        // line 17 "../../../Class_DistributableRMI_WithMethods2.ump"
         setIsButtonPressed(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cooking);
         wasEventProcessed = true;
         break;
       case cooking:
+        // line 39 "../../../Class_DistributableRMI_WithMethods2.ump"
         setIsButtonPressed(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingExtended);
         wasEventProcessed = true;
         break;
       case cookingComplete:
+        // line 50 "../../../Class_DistributableRMI_WithMethods2.ump"
         setIsButtonPressed(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cooking);
         wasEventProcessed = true;
         break;
       case cookingExtended:
+        // line 59 "../../../Class_DistributableRMI_WithMethods2.ump"
         setIsButtonPressed(true);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.cookingExtended);
         wasEventProcessed = true;
@@ -230,11 +221,13 @@ public class MicrowaveImpl extends CCImpl implements IMicrowaveImpl, Runnable
     switch (aOperatingMicrowaveStateMachine)
     {
       case doorOpen:
+        // line 25 "../../../Class_DistributableRMI_WithMethods2.ump"
         setIsDoorOpened(false);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.readyToCook);
         wasEventProcessed = true;
         break;
       case cookingInterrupted:
+        // line 44 "../../../Class_DistributableRMI_WithMethods2.ump"
         setIsDoorOpened(false);
         setOperatingMicrowaveStateMachine(OperatingMicrowaveStateMachine.readyToCook);
         wasEventProcessed = true;
@@ -254,14 +247,17 @@ public class MicrowaveImpl extends CCImpl implements IMicrowaveImpl, Runnable
     switch(operatingMicrowaveStateMachine)
     {
       case readyToCook:
+        // line 12 "../../../Class_DistributableRMI_WithMethods2.ump"
         // turn off light
         turnOff();
         break;
       case doorOpen:
+        // line 21 "../../../Class_DistributableRMI_WithMethods2.ump"
         // turn on light
         turnLightOn(true);
         break;
       case cooking:
+        // line 29 "../../../Class_DistributableRMI_WithMethods2.ump"
         // turn on light
         turnLightOn(true);
         // energize power tube
@@ -270,12 +266,15 @@ public class MicrowaveImpl extends CCImpl implements IMicrowaveImpl, Runnable
         setIsButtonPressed(false);
         break;
       case cookingInterrupted:
+        // line 43 "../../../Class_DistributableRMI_WithMethods2.ump"
         turnOff();
         break;
       case cookingComplete:
+        // line 48 "../../../Class_DistributableRMI_WithMethods2.ump"
         turnOff();
         break;
       case cookingExtended:
+        // line 54 "../../../Class_DistributableRMI_WithMethods2.ump"
         //release a button
         setIsButtonPressed(false);
         break;
@@ -382,12 +381,14 @@ public class MicrowaveImpl extends CCImpl implements IMicrowaveImpl, Runnable
   /**
    * turn on light
    */
+  // line 66 "../../../Class_DistributableRMI_WithMethods2.ump"
    public void turnLightOn(boolean on){
     System.out.println("turns the light "+ (on ? "on" : "off"));
     System.out.println("light " + (on ? "on" : "off"));
     setLightOn(on);
   }
 
+  // line 72 "../../../Class_DistributableRMI_WithMethods2.ump"
    public static  void someMethod(){
     
   }
