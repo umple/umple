@@ -4010,7 +4010,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   		aMethod.setMethodBody(new MethodBody(""));
   		aMethod.setPosition(new Position("", 0, 0, 0));
   		aMethod.setSource(Method.Source.fAutoAPI);
-  		aMethod.addMethodParameter(new MethodParameter("a" + name, attribute.getType(), "", "", false));
+  		aMethod.addMethodParameter(new MethodParameter("a" + StringFormatter.toPascalCase(name), attribute.getType(), "", "", false));
   		aClass.addMethod(aMethod);
     	
   }
