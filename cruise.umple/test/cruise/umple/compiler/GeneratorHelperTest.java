@@ -157,9 +157,9 @@ public class GeneratorHelperTest
 
     Map<String,String> lookups = new HashMap<String,String>();
     lookups.put("entryEventName","eEntry");
-    lookups.put("exitEventName","eExit");
+    lookups.put("setSmToNullExitActionCode", "setBulbOn(BulbOn.Null);");
     lookups.put("parentEntryActionCode","pEntry");
-    lookups.put("parentExitActionCode","pExit");
+    lookups.put("parentExitActionCode","exitBulbOn();");
     
     GeneratorHelper.prepareNestedStateMachine(nestedSm, 0,lookups);
     Assert.assertEquals(2,onState.numberOfActions());
@@ -167,17 +167,21 @@ public class GeneratorHelperTest
     Assert.assertEquals("Null",nestedSm.getState(0).getName());
     Assert.assertEquals("Normal",nestedSm.getStartState().getName());
     
+    // Issue 935
     Assert.assertEquals("exit",onState.getAction(0).getActionType());
-    Assert.assertEquals("pExit",onState.getAction(0).getActionCode());
+    Assert.assertEquals("exitBulbOn();",onState.getAction(0).getActionCode());
     
     Assert.assertEquals("entry",onState.getAction(1).getActionType());
     Assert.assertEquals("pEntry",onState.getAction(1).getActionCode());
     
+    // Issue 935
+    Assert.assertEquals("exit", normalState.getAction(0).getActionType());
+    Assert.assertEquals("setBulbOn(BulbOn.Null);", normalState.getAction(0).getActionCode());
+    
     Assert.assertNotNull(nestedSm.getEvent("eEntry"));
-    Assert.assertNotNull(nestedSm.getEvent("eExit"));
     
     GeneratorHelper.postpare(model);
-    Assert.assertEquals(0,onState.numberOfActions());
+    Assert.assertEquals(1,onState.numberOfActions());
   }
   
 

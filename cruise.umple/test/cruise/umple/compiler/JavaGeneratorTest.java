@@ -1234,13 +1234,13 @@ public class JavaGeneratorTest
     Assert.assertEquals(2,onState.numberOfActions());
 
     Assert.assertEquals("exit",onState.getAction(0).getActionType());
-    Assert.assertEquals("exitOn();",onState.getAction(0).getActionCode());
+    Assert.assertEquals("exitBulbOn();",onState.getAction(0).getActionCode());
     
     Assert.assertEquals("entry",onState.getAction(1).getActionType());
     Assert.assertEquals("if (bulbOn == BulbOn.Null) { setBulbOn(BulbOn.Normal); }",onState.getAction(1).getActionCode());
     
     GeneratorHelper.postpare(model);
-    Assert.assertEquals(0,onState.numberOfActions());
+    Assert.assertEquals(1,onState.numberOfActions());
   }  
 
   @Test
@@ -1273,12 +1273,12 @@ public class JavaGeneratorTest
 
     generator.prepare();
 
-    Assert.assertEquals(3,onState.numberOfActions());
+    Assert.assertEquals(4,onState.numberOfActions());
     Assert.assertEquals(0,onState.numberOfTransitions());
-    Assert.assertEquals(1,normalState.numberOfTransitions());
-    Assert.assertEquals(1,normalState2.numberOfTransitions());
-    Assert.assertEquals(2,nestedSm.getEvents().size());
-    Assert.assertEquals(2,nestedSm2.getEvents().size());
+    Assert.assertEquals(0,normalState.numberOfTransitions());
+    Assert.assertEquals(0,normalState2.numberOfTransitions());
+    Assert.assertEquals(1,nestedSm.getEvents().size());
+    Assert.assertEquals(1,nestedSm2.getEvents().size());
     Assert.assertEquals(2,nestedSm.numberOfStates());
     Assert.assertEquals(2,nestedSm2.numberOfStates());
 
@@ -1286,26 +1286,28 @@ public class JavaGeneratorTest
     Assert.assertEquals("Null",nestedSm.getState(0).getName());
 
     Assert.assertEquals("enterOn",nestedSm.getEvents().get(0).getName());
-    Assert.assertEquals("exitOn",nestedSm.getEvents().get(1).getName());
     Assert.assertEquals(true, nestedSm.getEvents().get(0) == nestedSm2.getEvents().get(0));
-    Assert.assertEquals(true, nestedSm.getEvents().get(1) == nestedSm2.getEvents().get(1));
     
     Assert.assertEquals("Null",nestedSm2.getState(0).getName());
     
     Assert.assertEquals("exit",onState.getAction(0).getActionType());
-    Assert.assertEquals("exitOn();",onState.getAction(0).getActionCode());
+    Assert.assertEquals("exitBulbOnA();",onState.getAction(0).getActionCode());
+    Assert.assertEquals("exit",onState.getAction(1).getActionType());
+    Assert.assertEquals("exitBulbOnB();",onState.getAction(1).getActionCode());
     
-    Assert.assertEquals("entry",onState.getAction(1).getActionType());
-    Assert.assertEquals("if (bulbOnA == BulbOnA.Null) { setBulbOnA(BulbOnA.Normal); }",onState.getAction(1).getActionCode());
-
     Assert.assertEquals("entry",onState.getAction(2).getActionType());
-    Assert.assertEquals("if (bulbOnB == BulbOnB.Null) { setBulbOnB(BulbOnB.Normal2); }",onState.getAction(2).getActionCode());
+    Assert.assertEquals("if (bulbOnA == BulbOnA.Null) { setBulbOnA(BulbOnA.Normal); }",onState.getAction(2).getActionCode());
+
+    Assert.assertEquals("entry",onState.getAction(3).getActionType());
+    Assert.assertEquals("if (bulbOnB == BulbOnB.Null) { setBulbOnB(BulbOnB.Normal2); }",onState.getAction(3).getActionCode());
     
     GeneratorHelper.postpare(model);
-    Assert.assertEquals(0,onState.numberOfActions());
+    Assert.assertEquals(2,onState.numberOfActions());
     Assert.assertEquals(0,onState.numberOfTransitions());
 //    System.out.println("Found" + normalState.getTransition(0).getFromState().getName() + ":" + normalState.getTransition(0).getNextState().getName());
+    Assert.assertEquals(1,normalState.numberOfActions());
     Assert.assertEquals(0,normalState.numberOfTransitions());
+    Assert.assertEquals(1,normalState2.numberOfActions());
     Assert.assertEquals(0,normalState2.numberOfTransitions());
     Assert.assertEquals(0,nestedSm.getEvents().size());
     Assert.assertEquals(0,nestedSm2.getEvents().size());

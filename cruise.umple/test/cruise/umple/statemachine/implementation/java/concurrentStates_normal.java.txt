@@ -103,43 +103,6 @@ public class LightFixture
     return wasEventProcessed;
   }
 
-  private boolean exitOn()
-  {
-    boolean wasEventProcessed = false;
-    
-    StatusOnMotorIdle aStatusOnMotorIdle = statusOnMotorIdle;
-    StatusOnFanIdle aStatusOnFanIdle = statusOnFanIdle;
-    switch (aStatusOnMotorIdle)
-    {
-      case MotorIdle:
-        setStatusOnMotorIdle(StatusOnMotorIdle.Null);
-        wasEventProcessed = true;
-        break;
-      case MotorRunning:
-        setStatusOnMotorIdle(StatusOnMotorIdle.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aStatusOnFanIdle)
-    {
-      case FanIdle:
-        setStatusOnFanIdle(StatusOnFanIdle.Null);
-        wasEventProcessed = true;
-        break;
-      case FanRunning:
-        setStatusOnFanIdle(StatusOnFanIdle.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean flip()
   {
     boolean wasEventProcessed = false;
@@ -148,10 +111,12 @@ public class LightFixture
     switch (aStatusOnMotorIdle)
     {
       case MotorIdle:
+        exitStatusOnMotorIdle();
         setStatusOnMotorIdle(StatusOnMotorIdle.MotorRunning);
         wasEventProcessed = true;
         break;
       case MotorRunning:
+        exitStatusOnMotorIdle();
         setStatusOnMotorIdle(StatusOnMotorIdle.MotorIdle);
         wasEventProcessed = true;
         break;
@@ -170,10 +135,12 @@ public class LightFixture
     switch (aStatusOnFanIdle)
     {
       case FanIdle:
+        exitStatusOnFanIdle();
         setStatusOnFanIdle(StatusOnFanIdle.FanRunning);
         wasEventProcessed = true;
         break;
       case FanRunning:
+        exitStatusOnFanIdle();
         setStatusOnFanIdle(StatusOnFanIdle.FanIdle);
         wasEventProcessed = true;
         break;
@@ -189,7 +156,8 @@ public class LightFixture
     switch(status)
     {
       case On:
-        exitOn();
+        exitStatusOnMotorIdle();
+        exitStatusOnFanIdle();
         break;
     }
   }
@@ -208,10 +176,36 @@ public class LightFixture
     }
   }
 
+  private void exitStatusOnMotorIdle()
+  {
+    switch(statusOnMotorIdle)
+    {
+      case MotorIdle:
+        setStatusOnMotorIdle(StatusOnMotorIdle.Null);
+        break;
+      case MotorRunning:
+        setStatusOnMotorIdle(StatusOnMotorIdle.Null);
+        break;
+    }
+  }
+
   private void setStatusOnMotorIdle(StatusOnMotorIdle aStatusOnMotorIdle)
   {
     statusOnMotorIdle = aStatusOnMotorIdle;
     if (status != Status.On && aStatusOnMotorIdle != StatusOnMotorIdle.Null) { setStatus(Status.On); }
+  }
+
+  private void exitStatusOnFanIdle()
+  {
+    switch(statusOnFanIdle)
+    {
+      case FanIdle:
+        setStatusOnFanIdle(StatusOnFanIdle.Null);
+        break;
+      case FanRunning:
+        setStatusOnFanIdle(StatusOnFanIdle.Null);
+        break;
+    }
   }
 
   private void setStatusOnFanIdle(StatusOnFanIdle aStatusOnFanIdle)

@@ -120,41 +120,13 @@ public class QueuedSMwithConcurrentStates_2 implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean exitState1()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmState1SubState1 aSmState1SubState1 = smState1SubState1;
-    SmState1SubState2 aSmState1SubState2 = smState1SubState2;
-    switch (aSmState1SubState1)
-    {
-      case subState1:
-        setSmState1SubState1(SmState1SubState1.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aSmState1SubState2)
-    {
-      case subState2:
-        setSmState1SubState2(SmState1SubState2.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   private void exitSm()
   {
     switch(sm)
     {
       case state1:
-        exitState1();
+        exitSmState1SubState1();
+        exitSmState1SubState2();
         break;
       case state2:
         if (doActivitySmState2Thread != null) { doActivitySmState2Thread.interrupt(); }
@@ -185,10 +157,30 @@ public class QueuedSMwithConcurrentStates_2 implements Runnable
     }
   }
 
+  private void exitSmState1SubState1()
+  {
+    switch(smState1SubState1)
+    {
+      case subState1:
+        setSmState1SubState1(SmState1SubState1.Null);
+        break;
+    }
+  }
+
   private void setSmState1SubState1(SmState1SubState1 aSmState1SubState1)
   {
     smState1SubState1 = aSmState1SubState1;
     if (sm != Sm.state1 && aSmState1SubState1 != SmState1SubState1.Null) { setSm(Sm.state1); }
+  }
+
+  private void exitSmState1SubState2()
+  {
+    switch(smState1SubState2)
+    {
+      case subState2:
+        setSmState1SubState2(SmState1SubState2.Null);
+        break;
+    }
   }
 
   private void setSmState1SubState2(SmState1SubState2 aSmState1SubState2)

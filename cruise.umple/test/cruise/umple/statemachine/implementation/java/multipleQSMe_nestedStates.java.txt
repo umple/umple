@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 import java.util.*;
@@ -90,6 +90,7 @@ public class X implements Runnable
     switch (aSm)
     {
       case s1:
+        exitSmS1();
         setSmS1(SmS1.s1a);
         wasEventProcessed = true;
         break;
@@ -144,6 +145,7 @@ public class X implements Runnable
     switch (aSm1)
     {
       case s4:
+        exitSm1S4();
         setSm1S4(Sm1S4.s4a);
         wasEventProcessed = true;
         break;
@@ -172,28 +174,6 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean exitS1()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmS1 aSmS1 = smS1;
-    switch (aSmS1)
-    {
-      case s1a:
-        setSmS1(SmS1.Null);
-        wasEventProcessed = true;
-        break;
-      case s1b:
-        setSmS1(SmS1.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean _e5()
   {
     boolean wasEventProcessed = false;
@@ -202,6 +182,7 @@ public class X implements Runnable
     switch (aSmS1)
     {
       case s1a:
+        exitSmS1();
         setSmS1(SmS1.s1b);
         wasEventProcessed = true;
         break;
@@ -249,28 +230,6 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean exitS4()
-  {
-    boolean wasEventProcessed = false;
-    
-    Sm1S4 aSm1S4 = sm1S4;
-    switch (aSm1S4)
-    {
-      case s4a:
-        setSm1S4(Sm1S4.Null);
-        wasEventProcessed = true;
-        break;
-      case s4b:
-        setSm1S4(Sm1S4.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean _e7()
   {
     boolean wasEventProcessed = false;
@@ -279,6 +238,7 @@ public class X implements Runnable
     switch (aSm1S4)
     {
       case s4a:
+        exitSm1S4();
         setSm1S4(Sm1S4.s4b);
         wasEventProcessed = true;
         break;
@@ -313,7 +273,7 @@ public class X implements Runnable
     switch(sm)
     {
       case s1:
-        exitS1();
+        exitSmS1();
         break;
     }
   }
@@ -336,7 +296,7 @@ public class X implements Runnable
     switch(sm1)
     {
       case s4:
-        exitS4();
+        exitSm1S4();
         break;
     }
   }
@@ -354,10 +314,36 @@ public class X implements Runnable
     }
   }
 
+  private void exitSmS1()
+  {
+    switch(smS1)
+    {
+      case s1a:
+        setSmS1(SmS1.Null);
+        break;
+      case s1b:
+        setSmS1(SmS1.Null);
+        break;
+    }
+  }
+
   private void setSmS1(SmS1 aSmS1)
   {
     smS1 = aSmS1;
     if (sm != Sm.s1 && aSmS1 != SmS1.Null) { setSm(Sm.s1); }
+  }
+
+  private void exitSm1S4()
+  {
+    switch(sm1S4)
+    {
+      case s4a:
+        setSm1S4(Sm1S4.Null);
+        break;
+      case s4b:
+        setSm1S4(Sm1S4.Null);
+        break;
+    }
   }
 
   private void setSm1S4(Sm1S4 aSm1S4)

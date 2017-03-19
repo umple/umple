@@ -2079,8 +2079,11 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         parentState = parentState.getStateMachine().getParentState();
       }
       Map<String,String> lookups = new HashMap<String,String>();
+      // Issue 935 - To be added to the parent state in prepareNestedStateMachine
+      lookups.put("parentExitActionCode", StringFormatter.format("{0}();", translate("exitMethod", sm)));
+      // Issue 935 - Exit action to be added to each state in the state machine to set it to null
+      lookups.put("setSmToNullExitActionCode", StringFormatter.format("{0}({1}.{2});", translate("setMethod", sm), translate("type", sm), translate("stateNull", sm)));
       lookups.put("entryEventName",translate("enterMethod",parentState));
-      lookups.put("exitEventName",translate("exitMethod",parentState));
       lookups.put("parentEntryActionCode",StringFormatter.format("if ({0} == {1}.{2}) { {3}({1}.{4}); }"
           ,translate("stateMachineOne",sm)
           ,translate("type",sm)
@@ -2088,7 +2091,6 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           ,translate("setMethod",sm)
           ,translate("stateOne",sm.getStartState()))
       );
-      lookups.put("parentExitActionCode",StringFormatter.format("{0}();",translate("exitMethod",parentState)));
       GeneratorHelper.prepareNestedStateMachine(sm,concurrentIndex,lookups);    
     }
 

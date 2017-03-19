@@ -103,39 +103,6 @@ public class X
     return wasEventProcessed;
   }
 
-  private boolean exitS0()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmS0T1 aSmS0T1 = smS0T1;
-    SmS0T2 aSmS0T2 = smS0T2;
-    switch (aSmS0T1)
-    {
-      case t1:
-        setSmS0T1(SmS0T1.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aSmS0T2)
-    {
-      case t2:
-        setSmS0T2(SmS0T2.Null);
-        wasEventProcessed = true;
-        break;
-      case t3:
-        setSmS0T2(SmS0T2.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean goS1()
   {
     boolean wasEventProcessed = false;
@@ -203,43 +170,6 @@ public class X
     return wasEventProcessed;
   }
 
-  private boolean exitS1()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmS1T4 aSmS1T4 = smS1T4;
-    SmS1T6 aSmS1T6 = smS1T6;
-    switch (aSmS1T4)
-    {
-      case t4:
-        setSmS1T4(SmS1T4.Null);
-        wasEventProcessed = true;
-        break;
-      case t5:
-        setSmS1T4(SmS1T4.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aSmS1T6)
-    {
-      case t6:
-        setSmS1T6(SmS1T6.Null);
-        wasEventProcessed = true;
-        break;
-      case t7:
-        setSmS1T6(SmS1T6.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean goT5()
   {
     boolean wasEventProcessed = false;
@@ -248,6 +178,7 @@ public class X
     switch (aSmS1T4)
     {
       case t4:
+        exitSmS1T4();
         setSmS1T4(SmS1T4.t5);
         wasEventProcessed = true;
         break;
@@ -282,10 +213,12 @@ public class X
     switch(sm)
     {
       case s0:
-        exitS0();
+        exitSmS0T1();
+        exitSmS0T2();
         break;
       case s1:
-        exitS1();
+        exitSmS1T4();
+        exitSmS1T6();
         break;
     }
   }
@@ -308,6 +241,16 @@ public class X
     }
   }
 
+  private void exitSmS0T1()
+  {
+    switch(smS0T1)
+    {
+      case t1:
+        setSmS0T1(SmS0T1.Null);
+        break;
+    }
+  }
+
   private void setSmS0T1(SmS0T1 aSmS0T1)
   {
     smS0T1 = aSmS0T1;
@@ -320,6 +263,10 @@ public class X
     {
       case t2:
         t2_exit_action();
+        setSmS0T2(SmS0T2.Null);
+        break;
+      case t3:
+        setSmS0T2(SmS0T2.Null);
         break;
     }
   }
@@ -338,6 +285,19 @@ public class X
     }
   }
 
+  private void exitSmS1T4()
+  {
+    switch(smS1T4)
+    {
+      case t4:
+        setSmS1T4(SmS1T4.Null);
+        break;
+      case t5:
+        setSmS1T4(SmS1T4.Null);
+        break;
+    }
+  }
+
   private void setSmS1T4(SmS1T4 aSmS1T4)
   {
     smS1T4 = aSmS1T4;
@@ -350,6 +310,10 @@ public class X
     {
       case t6:
         t6_exit_action();
+        setSmS1T6(SmS1T6.Null);
+        break;
+      case t7:
+        setSmS1T6(SmS1T6.Null);
         break;
     }
   }

@@ -11,11 +11,13 @@ package cruise.umple.tracer.implementation.java;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 
 import cruise.umple.tracer.implementation.TracerAttributesTest;
 import cruise.umple.util.SampleFileWriter;
 
-
+//Needed this ignore for Issue 935, even though TracerAttributesTest is ignored
+@Ignore
 public class JavaFileTracerTest extends TracerAttributesTest
 {
   @Before

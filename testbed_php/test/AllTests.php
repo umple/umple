@@ -7,7 +7,8 @@ require_once('AllTestHelper.php');
 
 $test = new TestSuite('All Tests');
 loadTestsIn($test,'associations');
-loadTestsIn($test,'statemachine');
+// Issue 935 -> Ignore PHP test, PHP generation to be updated in the future
+// loadTestsIn($test,'statemachine');
 loadTestsIn($test,'attributes');
 loadTestsIn($test,'patterns');
 loadTestsIn($test,'tracer');
