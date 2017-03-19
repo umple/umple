@@ -1,16 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package distributed.rmi.withMethods;
+package distributed.rmi.withMethods2;
 import java.util.*;
 import java.lang.Thread;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-public interface IMicrowaveImpl extends java.rmi.Remote
+public interface IMicrowaveImpl extends java.rmi.Remote, ICCImpl
 {
-  public void setRealSelf(Microwave self) throws RemoteException;
+  public void setSelf(Microwave proxy) throws RemoteException;
   public int getHashCode() throws RemoteException;
   public boolean setLightOn(boolean aLightOn) throws RemoteException;
   public boolean setPowerTubeOn(boolean aPowerTubeOn) throws RemoteException;
@@ -24,11 +21,9 @@ public interface IMicrowaveImpl extends java.rmi.Remote
   public boolean _buttonPressed() throws RemoteException;
   public boolean _doorClosed() throws RemoteException;
   public void delete() throws RemoteException;
-  public void doorOpened () throws RemoteException;
-  public void buttonPressed () throws RemoteException;
-  public void doorClosed () throws RemoteException;
-  public void run () throws RemoteException;
+  public void doorOpened() throws RemoteException;
+  public void buttonPressed() throws RemoteException;
+  public void doorClosed() throws RemoteException;
+  public void run() throws RemoteException;
    public void turnLightOn(boolean on) throws RemoteException;
-   public void energizePowerTube(boolean on) throws RemoteException;
-   public void turnOff() throws RemoteException;
 }

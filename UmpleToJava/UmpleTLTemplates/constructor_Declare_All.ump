@@ -18,6 +18,23 @@ class UmpleToJava {
       break;
     }
   }
+  String componentSignature="";
+  String distributedConstructorCheckCode="";
+  String lastArgumentComma="";
+  if(uClass.getIsDistributed()&&model.getDistributePattern()==0)
+  {    
+    
+    if (!gClass.getLookup("constructorSignature_caller").equals(""))
+      lastArgumentComma=",";
+    if(!gClass.getLookup("constructorSignature").equals(""))
+    {
+      componentSignature=", UmpleRuntime.UmpleComponent umpleComponent";
+    }
+    else
+    {
+      componentSignature="UmpleRuntime.UmpleComponent umpleComponent";
+    }  
+  } 
   #>><<@ UmpleToJava.constructor_DeclareDefault >><<#
   if (isOneToOne)
   {

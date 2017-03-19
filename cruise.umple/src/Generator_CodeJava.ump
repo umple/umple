@@ -2570,7 +2570,10 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         
         proxyPrecode+=remoteImports+"import java.io.Serializable;"+NL+defaultNamespace+"public class "+proxyName+extendsProxy+proxyImplements+NL+"{";
 
-          proxyContent+=NL+"  "+remoteInterfaceName+" realObject;"+NL;
+          proxyContent+=NL+"  "+remoteInterfaceName+" realObject";
+          if(getModel().getDistributePattern()==0)
+            proxyContent+="=this";
+          proxyContent+=";"+NL;
         proxyContent+="  public void setRealObject("+remoteInterfaceName+" aObject)"+NL+"  {"+NL;
         proxyContent+="    realObject=aObject;"+NL+"  }"+NL;
         proxyContent+="  public "+remoteInterfaceName+" getRealObject()"+NL+"  {"+NL;
@@ -2753,8 +2756,18 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
                 
               }              
              
-             if(getModel().getDistributePattern()==0){
-              proxyContent+="  public "+proxyName+"("+arguments+lastArgument+"UmpleRuntime.UmpleComponent component)"+NL+"  {"+NL+"    this("+callerSignature+");"+NL+"    realObject = UmpleRuntime.getInstance().add"+aClass.getName()+"("+callerSignature+lastArgument+"component);"+NL+"  }"+NL;
+             if(getModel().getDistributePattern()==0&&arguments.contains("UmpleRuntime.UmpleComponent umpleComponent")){
+                callerSignature=callerSignature.substring(0,callerSignature.length()-14);
+                if(arguments.contains(", UmpleRuntime"))
+                {
+                  arguments=arguments.substring(0,arguments.length()-44);
+                }
+                else
+                {
+                  arguments=arguments.substring(0,arguments.length()-42);
+                }  
+                proxyContent+=methodType+methodName+"("+arguments+")"+NL+"  {"+NL;
+                proxyContent+=NL+"this("+callerSignature+"UmpleRuntime.getComponent(\""+aClass.getName()+"\"));"+NL+"  }"+NL+"";
               }
               if(getModel().getDistributePattern()==1){
                 proxyContent+="  public "+proxyName+"("+arguments+lastArgument+"UmpleRuntime.UmpleComponent component)"+NL+"  {"+NL+"    realObject = UmpleRuntime.getInstance().add"+aClass.getName()+"("+callerSignature+lastArgument+"component, this);"+NL+"  }"+NL;
@@ -2793,7 +2806,11 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       proxyContent+=NL+"  public boolean equals(Object obj)"+NL+"  {"+NL+"    if(obj==null)"+NL+"      return false;"+NL+"    if(obj.getClass()!=this.getClass())"+NL+"      return false;"+NL+"    return (getHashCode()==(("+aClass.getName()+")obj).getHashCode());"+NL+"  }";
     remoteContent+=NL+"}";
     if(getModel().getDistributePattern()==0)
+    {
+      if(aClass.getIsSingleton())
+        proxyContent+="  public static "+aClass.getName()+" getInstance(UmpleRuntime.UmpleComponent umpleComponent)"+NL+"{"+NL+"if(theInstance == null)"+NL+"{"+NL+"theInstance = new "+aClass.getName()+"(umpleComponent);"+NL+"}"+NL+"return theInstance;"+NL+"}";
       classContent+=proxyContent+NL+"}";
+    }
     else if (getModel().getDistributePattern()==1)
       proxyContent=proxyPrecode+ proxyContent +NL+"}";
 
@@ -2854,7 +2871,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
   
       //putting the code in the model and writing the file.
-      getModel().getGeneratedCode().put(remoteName+"Remote",remoteContent);
+      getModel().getGeneratedCode().put(remoteName,remoteContent);
   
       try
       {

@@ -1,3 +1,4 @@
+distributable 1 on;
 namespace distributed.rmi.withMethods2;
 class Microwave{
   isA CC;

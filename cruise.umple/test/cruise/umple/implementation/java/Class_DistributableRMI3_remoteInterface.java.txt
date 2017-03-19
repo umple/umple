@@ -1,14 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi3;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
+import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-public interface IClientImpl extends java.rmi.Remote ,ClientI
+public interface IClientImpl extends java.rmi.Remote, ICCImpl
 {
-  public void setRealSelf(Client self) throws RemoteException;
-  public int getHashCode() throws RemoteException;
-  public void delete() throws RemoteException;
+  public int getHashCodeImpl() throws RemoteException;
+  public void deleteImpl() throws RemoteException;
 }

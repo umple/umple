@@ -100,7 +100,7 @@ if(uClass.getNeedsDefaultInterface())
 {
   if (hasParentInterface == false){
         if(model.getDistributePattern()==0)
-          append(realSb," implements java.io.Serializable");
+          append(realSb," implements java.io.Serializable,I"+uClass.getName()+"Impl");
         else if(model.getDistributePattern()==1&&uClass.getIsDistributed())
           append(realSb," implements java.io.Serializable , I"+uClass.getName());
         else if(model.getDistributePattern()==2)
@@ -108,9 +108,8 @@ if(uClass.getNeedsDefaultInterface())
         hasParentInterface=true;
       }
       else{
-        if(uClass.getNeedsDefaultInterface())
-                 if(model.getDistributePattern()==0)
-          append(realSb," ,java.io.Serializable");
+          if(model.getDistributePattern()==0)
+            append(realSb," ,java.io.Serializable,I"+uClass.getName()+"Impl");
         else if(model.getDistributePattern()==1&&uClass.getIsDistributed())
           append(realSb," ,java.io.Serializable , I"+uClass.getName());
         else if(model.getDistributePattern()==2)

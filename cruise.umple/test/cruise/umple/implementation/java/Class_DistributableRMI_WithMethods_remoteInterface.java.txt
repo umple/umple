@@ -1,34 +1,31 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package distributed.rmi.withMethods;
 import java.util.*;
 import java.lang.Thread;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
+import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 public interface IMicrowaveImpl extends java.rmi.Remote
 {
-  public void setRealSelf(Microwave self) throws RemoteException;
-  public int getHashCode() throws RemoteException;
-  public boolean setLightOn(boolean aLightOn) throws RemoteException;
-  public boolean setPowerTubeOn(boolean aPowerTubeOn) throws RemoteException;
-  public boolean setIsDoorOpened(boolean aIsDoorOpened) throws RemoteException;
-  public boolean setIsButtonPressed(boolean aIsButtonPressed) throws RemoteException;
-  public boolean getLightOn() throws RemoteException;
-  public boolean getPowerTubeOn() throws RemoteException;
-  public boolean getIsDoorOpened() throws RemoteException;
-  public boolean getIsButtonPressed() throws RemoteException;
-  public boolean _doorOpened() throws RemoteException;
-  public boolean _buttonPressed() throws RemoteException;
-  public boolean _doorClosed() throws RemoteException;
-  public void delete() throws RemoteException;
-  public void doorOpened () throws RemoteException;
-  public void buttonPressed () throws RemoteException;
-  public void doorClosed () throws RemoteException;
-  public void run () throws RemoteException;
-   public void turnLightOn(boolean on) throws RemoteException;
-   public void energizePowerTube(boolean on) throws RemoteException;
-   public void turnOff() throws RemoteException;
+  public int getHashCodeImpl() throws RemoteException;
+  public boolean setLightOnImpl(boolean aLightOn) throws RemoteException;
+  public boolean setPowerTubeOnImpl(boolean aPowerTubeOn) throws RemoteException;
+  public boolean setIsDoorOpenedImpl(boolean aIsDoorOpened) throws RemoteException;
+  public boolean setIsButtonPressedImpl(boolean aIsButtonPressed) throws RemoteException;
+  public boolean getLightOnImpl() throws RemoteException;
+  public boolean getPowerTubeOnImpl() throws RemoteException;
+  public boolean getIsDoorOpenedImpl() throws RemoteException;
+  public boolean getIsButtonPressedImpl() throws RemoteException;
+  public boolean _doorOpenedImpl() throws RemoteException;
+  public boolean _buttonPressedImpl() throws RemoteException;
+  public boolean _doorClosedImpl() throws RemoteException;
+  public void deleteImpl() throws RemoteException;
+  public void doorOpenedImpl() throws RemoteException;
+  public void buttonPressedImpl() throws RemoteException;
+  public void doorClosedImpl() throws RemoteException;
+  public void runImpl() throws RemoteException;
+   public void turnLightOnImpl(boolean on) throws RemoteException;
+   public void energizePowerTubeImpl(boolean on) throws RemoteException;
+   public void turnOffImpl() throws RemoteException;
 }
