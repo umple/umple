@@ -233,7 +233,6 @@ public class AutomatedTellerMachine implements Runnable
     {
       case active:
         exitSmActive();
-        // line 18 "../queuedWithNestingStatesATM.ump"
         ejectCard();
         break;
     }
@@ -247,7 +246,6 @@ public class AutomatedTellerMachine implements Runnable
     switch(sm)
     {
       case active:
-        // line 17 "../queuedWithNestingStatesATM.ump"
         readCard();
         if (smActive == SmActive.Null) { setSmActive(SmActive.validating); }
         break;

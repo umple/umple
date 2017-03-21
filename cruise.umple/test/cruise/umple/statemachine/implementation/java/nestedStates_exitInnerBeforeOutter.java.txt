@@ -100,7 +100,6 @@ public class LightFixture
     {
       case On:
         exitBulbOn();
-        // line 10 "../nestedStates_exitInnerBeforeOutter.ump"
         print("Show Me Last (Exit)");
         break;
     }
