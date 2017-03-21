@@ -91,35 +91,6 @@ public class Lamp
     return stateMachine2TopLevel;
   }
 
-  private boolean enterTopLevel()
-  {
-    boolean wasEventProcessed = false;
-    
-    StateMachine1TopLevel aStateMachine1TopLevel = stateMachine1TopLevel;
-    StateMachine2TopLevel aStateMachine2TopLevel = stateMachine2TopLevel;
-    switch (aStateMachine1TopLevel)
-    {
-      case Null:
-        setStateMachine1TopLevel(StateMachine1TopLevel.thread1);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aStateMachine2TopLevel)
-    {
-      case Null:
-        setStateMachine2TopLevel(StateMachine2TopLevel.thread1);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   private void exitStateMachine1()
   {
     switch(stateMachine1)

@@ -103,35 +103,6 @@ public class X
     return wasEventProcessed;
   }
 
-  private boolean enterOn()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmOn aSmOn = smOn;
-    SmOnS1 aSmOnS1 = smOnS1;
-    switch (aSmOn)
-    {
-      case Null:
-        setSmOn(SmOn.s1);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aSmOnS1)
-    {
-      case Null:
-        setSmOnS1(SmOnS1.m1);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean e3()
   {
     boolean wasEventProcessed = false;
@@ -313,24 +284,6 @@ public class X
       case m1:
         exitSm();
         setSm(Sm.off);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean enterOff()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmOff aSmOff = smOff;
-    switch (aSmOff)
-    {
-      case Null:
-        setSmOff(SmOff.s3);
         wasEventProcessed = true;
         break;
       default:

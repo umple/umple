@@ -121,24 +121,6 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean enterS1()
-  {
-    boolean wasEventProcessed = false;
-    
-    Sm1S1 aSm1S1 = sm1S1;
-    switch (aSm1S1)
-    {
-      case Null:
-        setSm1S1(Sm1S1.s1a);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean e5()
   {
     boolean wasEventProcessed = false;

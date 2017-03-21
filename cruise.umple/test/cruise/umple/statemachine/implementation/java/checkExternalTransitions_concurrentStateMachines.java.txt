@@ -74,57 +74,6 @@ public class X
     return smS1BB;
   }
 
-  private boolean enterS1()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmS1A aSmS1A = smS1A;
-    SmS1AA aSmS1AA = smS1AA;
-    SmS1B aSmS1B = smS1B;
-    SmS1BB aSmS1BB = smS1BB;
-    switch (aSmS1A)
-    {
-      case Null:
-        setSmS1A(SmS1A.a);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aSmS1AA)
-    {
-      case Null:
-        setSmS1AA(SmS1AA.t1);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aSmS1B)
-    {
-      case Null:
-        setSmS1B(SmS1B.b);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aSmS1BB)
-    {
-      case Null:
-        setSmS1BB(SmS1BB.t3);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean goToT2()
   {
     boolean wasEventProcessed = false;

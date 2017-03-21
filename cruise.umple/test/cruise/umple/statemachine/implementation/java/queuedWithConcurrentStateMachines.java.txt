@@ -86,35 +86,6 @@ public class QueuedWithConcurrentStateMachines implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean enterS2()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmS2S2a aSmS2S2a = smS2S2a;
-    SmS2S2b aSmS2S2b = smS2S2b;
-    switch (aSmS2S2a)
-    {
-      case Null:
-        setSmS2S2a(SmS2S2a.s2a);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aSmS2S2b)
-    {
-      case Null:
-        setSmS2S2b(SmS2S2b.s2b);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean _e2()
   {
     boolean wasEventProcessed = false;

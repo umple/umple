@@ -132,24 +132,6 @@ public class AutomatedTellerMachine implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean enterActive()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmActive aSmActive = smActive;
-    switch (aSmActive)
-    {
-      case Null:
-        setSmActive(SmActive.validating);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean _validated()
   {
     boolean wasEventProcessed = false;
@@ -251,6 +233,7 @@ public class AutomatedTellerMachine implements Runnable
     {
       case active:
         exitSmActive();
+        // line 18 "../queuedWithNestingStatesATM.ump"
         ejectCard();
         break;
     }
@@ -264,6 +247,7 @@ public class AutomatedTellerMachine implements Runnable
     switch(sm)
     {
       case active:
+        // line 17 "../queuedWithNestingStatesATM.ump"
         readCard();
         if (smActive == SmActive.Null) { setSmActive(SmActive.validating); }
         break;

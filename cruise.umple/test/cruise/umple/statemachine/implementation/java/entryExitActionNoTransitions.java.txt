@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.21.0.4771 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
 
@@ -38,18 +38,27 @@ public class LightFixture
     return bulb;
   }
 
-  public boolean setBulb(Bulb aBulb)
+  private void exitBulb()
   {
-    if (bulb == Bulb.On && aBulb != Bulb.On )
+    switch(bulb)
     {
-      doExit();
+      case On:
+        doExit();
+        break;
     }
-    if (bulb != Bulb.On && aBulb == Bulb.On )
-    {
-      doEntry();
-    }
+  }
+
+  private void setBulb(Bulb aBulb)
+  {
     bulb = aBulb;
-    return true;
+
+    // entry actions and do activities
+    switch(bulb)
+    {
+      case On:
+        doEntry();
+        break;
+    }
   }
 
   public void delete()

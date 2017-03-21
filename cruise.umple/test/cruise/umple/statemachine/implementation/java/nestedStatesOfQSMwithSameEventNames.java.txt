@@ -68,24 +68,6 @@ public class NestedStatesWthSameEventNames implements Runnable
     return smNestedState2;
   }
 
-  private boolean enterNestedState1()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmNestedState1 aSmNestedState1 = smNestedState1;
-    switch (aSmNestedState1)
-    {
-      case Null:
-        setSmNestedState1(SmNestedState1.state1);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean _moveTo()
   {
     boolean wasEventProcessed = false;
@@ -139,24 +121,6 @@ public class NestedStatesWthSameEventNames implements Runnable
       case state4:
         exitSm();
         setSm(Sm.state5);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean enterNestedState2()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmNestedState2 aSmNestedState2 = smNestedState2;
-    switch (aSmNestedState2)
-    {
-      case Null:
-        setSmNestedState2(SmNestedState2.state3);
         wasEventProcessed = true;
         break;
       default:
