@@ -114,6 +114,9 @@ document.write('<script type="text/javascript" src="scripts/jjs/joint.js"></scri
 // document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/1.0.1/joint.min.css" />');
 
 // Own plug-in for JointJS to draw the state machines
+document.write('<script type="text/javascript" src="scripts/jjs/joint.shapes.umpleumple.js"></script>');
+// Own plug-in for JointJS to draw the state machines
 document.write('<script type="text/javascript" src="scripts/jjs/joint.shapes.uml-state-machine.js"></script>');
 // Own script to glue Umple to JointJS
 document.write('<script type="text/javascript" src="scripts/jjs/jjs_parse.js"></script>');
+

@@ -1,5 +1,12 @@
-var JJSdiagram = {
+//fix jjspaper size when resize window
+jQuery(window).resize(function(){
+	//Action.updateUmpleDiagram();
+	if( JJSdiagram.paper ) 
+	JJSdiagram.paper.setDimensions(jQuery("#umpleCanvas")[0].clientWidth, jQuery("#umpleCanvas")[0].clientHeight);
+})
 
+var JJSdiagram = {
+	newClassIndex: 0,
 	paper: null,
 	container: null,
 	// model represents the JSON model
@@ -7,7 +14,6 @@ var JJSdiagram = {
 	diagram_type: null,
 
 	initJJSDiagram: function(container, model) {
-
 		this.container = container;
 		this.JSONmodel = model;
 
@@ -27,8 +33,8 @@ var JJSdiagram = {
 		// Start by making the paper an arbitrary size; it will later be re-scaled to fit the model
 		this.paper = new joint.dia.Paper({
 			el: jQuery("#jjsPaper"),
-			width: 100,
-			height: 100,
+			width: container[0].clientWidth,
+			height: container[0].clientHeight,
 			model: graph,
 			gridSize: 1,
 			padding: 15
@@ -38,7 +44,153 @@ var JJSdiagram = {
 
 		JJSdiagram.setPaperListener();
 
+		//JointJS UML
+		var uml = joint.shapes.uml;
+
+		//customized JointJS UML
+		var umpleuml = joint.shapes.umpleuml;
+
+		//click listener for adding class, association, generalization
+		jQuery('#buttonAddClass').off('click.fly').on('click.fly', function (e) {
+			JJSdiagram.newClassIndex++;
+			var x = e.clientX;
+			var y = e.clientY;
+			if (Page.useJointJSClassDiagram) {
+				//JJSdiagram.paper.off('cell:pointerclick');
+				jQuery('body').append('<div id="flyPaper" style="position:fixed;z-index:100;opacity:.5;pointer-event:none;"></div>');
+				var flyGraph = new joint.dia.Graph,
+					flyPaper = new joint.dia.Paper({
+						el: jQuery('#flyPaper'),
+						model: flyGraph,
+						interactive: false,
+						width: 150,
+						height: 80
+					}),
+
+					//create the class template
+					flyShape = new umpleuml.Class({
+						position: { x: 20, y: 190 },
+						size: { width: 150, height: 80 },
+						name: ['NewClass'+JJSdiagram.newClassIndex],
+						attributes: [],
+						methods: []
+					}),
+
+					//?
+					pos = { x: e.clientX, y: e.clientY },
+					offset = {
+						x: x - pos.x,
+						y: y - pos.y
+					};
+
+				flyShape.position(0, 0);
+				flyGraph.addCell(flyShape);
+				jQuery("#flyPaper").offset({
+					left: e.pageX - offset.x,
+					top: e.pageY - offset.y
+				});
+				jQuery('body').on('mousemove.fly', function (e) {
+					jQuery("#flyPaper").offset({
+						left: e.pageX - offset.x,
+						top: e.pageY - offset.y
+					});
+				});
+				jQuery('body').on('mouseup.fly', function (e) {
+					var x = e.pageX,
+						y = e.pageY,
+						target = JJSdiagram.paper.$el.offset();
+					// Dropped over paper
+					if (x > target.left && x < target.left + JJSdiagram.paper.$el.width() && y > target.top && y < target.top + JJSdiagram.paper.$el.height()) {
+						var s = flyShape.clone();
+						s.position(x - target.left - offset.x, y - target.top - offset.y);
+						JJSdiagram.paper.model.addCell(s);
+						JJSdiagram.makeUmpleCodeFromClass('addNewClass', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), s.id));
+					}
+					jQuery('body').off('mousemove.fly').off('mouseup.fly');
+					flyShape.remove();
+					jQuery('#flyPaper').remove();
+				});
+			}
+		})
+		jQuery('#buttonAddAssociation').off('click.fly').on('click.fly', function (e) {
+			if (Page.useJointJSClassDiagram) {
+				var clickcount = 0;
+				var associationId;
+
+				//paper listener
+				JJSdiagram.paper.off('cell:pointerclick').on('cell:pointerclick', function (cellView, evt, x, y) {
+					clickcount++;
+					if (clickcount === 1) {
+						associationId = cellView.model.id
+					}
+					if (clickcount === 2) {
+						JJSdiagram.paper.model.addCell(new uml.Association({
+							source: { id: associationId },
+							target: { id: cellView.model.id },
+							labels: [
+								{ position: .05, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } },
+								{ position: .95, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } }
+							],
+							vertices:JJSdiagram.setAssociationPathVertices(associationId, cellView.model.id)
+						}));
+						JJSdiagram.makeUmpleCodeFromAssociation('addJjsAccociation', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
+						JJSdiagram.paper.off('cell:pointerclick');
+						JJSdiagram.setPaperListener();
+					}
+				});
+			}
+		});
+		jQuery('#buttonAddGeneralization').off('click.fly').on('click.fly', function (e) {
+			if (Page.useJointJSClassDiagram) {
+				var clickcount = 0;
+				var associationId;
+
+				//paper listener
+				JJSdiagram.paper.off('cell:pointerclick').on('cell:pointerclick', function (cellView, evt, x, y) {
+					clickcount++;
+					if (clickcount === 1) {
+						associationId = cellView.model.id
+					}
+					if (clickcount === 2) {
+						JJSdiagram.paper.model.addCell(new uml.Generalization({ source: { id: cellView.model.id }, target: { id: associationId }}));
+						JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
+						JJSdiagram.paper.off('cell:pointerclick');
+						JJSdiagram.setPaperListener();
+					}
+				});
+			}
+		});
+
 		return this.paper;
+	},
+
+	//temp Dup function
+	setAssociationPathVertices: function (source, target) {
+		if (source === target) {
+			var cell = JJSdiagram.paper.model.getCell(source);
+			// example: {x: 255, y: 316, width: 181, height: 74, bbox: function, ...
+			var cellBBox = JJSdiagram.paper.findViewByModel(cell).getBBox();
+			// example: {x: 336, y: 89.5, adhereToRect: function, ...
+			var cellCenter = cellBBox.center();
+
+			var point1 = {
+				x: cellCenter.x - (cellBBox.width / 2) - 25,
+				y: cellCenter.y + 15
+			};
+			var point3 = {
+				x: cellCenter.x - 20,
+				y: cellCenter.y + (cellBBox.height / 2) + 25
+			};
+			var point2 = {
+				x: point1.x,
+				y: point3.y
+			};
+
+			return [point1, point2, point3];
+		}
+		else {
+			return [];
+		}
 	},
 
 	setPaperListener: function() {
@@ -74,6 +226,204 @@ var JJSdiagram = {
 				}
 			}
 		);	
+
+		//connect by dropping
+		this.paper.on('cell:pointerup', function (cellView, evt, x, y) {
+
+			// Find the first element below that is not a link nor the dragged element itself.
+			var elementBelow = JJSdiagram.paper.model.get('cells').find(function (cell) {
+				if (cell instanceof joint.dia.Link) return false; // Not interested in links.
+				if (cell.id === cellView.model.id) return false; // The same element as the dropped one.
+				if (cell.getBBox().containsPoint(g.point(x, y))) {
+					return true;
+				}
+				return false;
+			});
+
+			// If the two elements are connected already, don't
+			// connect them again (this is application specific though).
+			if (elementBelow && !_.contains(JJSdiagram.paper.model.getNeighbors(elementBelow), cellView.model)) {
+
+				JJSdiagram.paper.model.addCell(new joint.shapes.uml.Generalization({source: { id: cellView.model.id }, target: { id: elementBelow.id }}));
+				JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), elementBelow.id), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
+				// Move the element a bit to the side.
+				cellView.model.translate(0, 150);
+			}
+		});
+	},
+
+	//return the object in JJS JSON that has certain id
+	getCurrentObject: function( jjsJson, selectedID ) {
+		for(var i = 0; i < jjsJson.cells.length; i++){
+			if(jjsJson.cells[i]['id'] == selectedID) return jjsJson.cells[i];
+		}
+	},
+
+	//convert the diagram JSON to umple code
+	makeUmpleCodeFromClass: function (actionType, jjsJson) {
+		var actionCode;
+		var tempAttr;
+		jjsJson.position.height = jjsJson.size.height;
+		jjsJson.position.width = jjsJson.size.width;
+		var actionCodeObj = {
+			"displayColor": "transparent",
+			"position": jjsJson.position,
+			"attributes": [
+
+			],
+			"methods": [
+
+			],
+			"interfaces": [
+
+			],
+			"id": jjsJson.name[0],
+			"name": jjsJson.name[0],
+			//"isInterface": "false",
+			//"isAbstract": "false"
+		};
+		switch (actionType) {
+			case 'addNewClass':
+				actionCode = "action=addClass&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
+				break;
+			case 'editClassName':
+				actionCode = "action=editClass&actionCode=";
+				actionCodeObj.oldname = arguments[2];
+				actionCode += JSON.stringify(actionCodeObj);
+				break;
+			case 'addAttribute':
+				var attributeIndex = arguments[2];
+				for (var k = 0; k < jjsJson.attributes.length; k++) {
+					tempAttr = jjsJson.attributes[k].split(":").map(function (item) {
+						return item.trim();
+					});
+					//attribute to add
+					if (k === attributeIndex) {
+						actionCodeObj.attributes.push({
+							"type": tempAttr[1],
+							"name": tempAttr[0],
+							"textColor": "black",
+							"aColor": "black",
+							"newType": tempAttr[1],
+							"newName": tempAttr[0]
+						});
+					}
+					//other unchanged attibutes
+					else {
+						actionCodeObj.attributes.push({
+							"type": tempAttr[1],
+							"name": tempAttr[0],
+							"textColor": "black",
+							"aColor": "black"
+						});
+					}
+				}
+				actionCode = "action=editClass&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
+				break;
+			case 'removeAttribute':
+				var oldAttribute = arguments[2];
+				for (var k = 0; k < jjsJson.attributes.length; k++) {
+					tempAttr = jjsJson.attributes[k].split(":").map(function (item) {
+						return item.trim();
+					});
+					//attribute to add
+					actionCodeObj.attributes.push({
+						"type": tempAttr[1],
+						"name": tempAttr[0],
+						"textColor": "black",
+						"aColor": "black"
+					});
+				}
+				//add deleted attribute
+				tempAttr = oldAttribute.split(":").map(function (item) {
+					return item.trim();
+				});
+				actionCodeObj.attributes.push({
+					"type": tempAttr[1],
+					"name": tempAttr[0],
+					"textColor": "black",
+					"aColor": "black",
+					"deleteType": tempAttr[1],
+					"deleteName": tempAttr[0]
+				});
+
+				actionCode = "action=editClass&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
+				break;
+			case 'removeClass':
+				actionCode = "action=removeClass&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
+				break;
+			default:
+				console.log("Invalid action type in function 'makeUmpleCodeFromClass'");
+		}
+
+		Action.ajax(Action.updateUmpleTextCallback, actionCode);
+	},
+
+	//convert the diagram JSON to umple code
+	makeUmpleCodeFromAssociation: function( actionType, jjsJsonOne, jjsJsonTwo ){
+		jjsJsonOne.position.height = jjsJsonOne.size.height;
+		jjsJsonOne.position.width = jjsJsonOne.size.width;
+		jjsJsonTwo.position.height = jjsJsonTwo.size.height;
+		jjsJsonTwo.position.width = jjsJsonTwo.size.width;
+		var actionCodeObj = {
+			"classOnePosition": jjsJsonOne.position,
+			"classTwoPosition": jjsJsonTwo.position,
+			"offsetOnePosition": {
+				"x": "0",
+				"y": "0",
+				"width": "0",
+				"height": "0"
+			},
+			"offsetTwoPosition": {
+				"x": "0",
+				"y": "0",
+				"width": "0",
+				"height": "0"
+			},
+			"multiplicityOne": "*",
+			"multiplicityTwo": "*",
+			"name": jjsJsonOne.name[0]+"__"+jjsJsonTwo.name[0],
+			"roleOne": "",
+			"roleTwo": "",
+			"isSymmetricReflexive": "false",
+			"isLeftNavigable": "true",
+			"isRightNavigable": "true",
+			"isLeftComposition": "false",
+			"isRightComposition": "false",
+			"color": "black",
+			"id": "umpleAssociation_0",
+			"classOneId": jjsJsonOne.name[0],
+			"classTwoId": jjsJsonTwo.name[0]
+		};
+
+		actionCode = "action=addAssociation&actionCode=";
+		actionCode += JSON.stringify(actionCodeObj);
+
+		Action.ajax(Action.updateUmpleTextCallback,actionCode);
+	},
+
+	//convert the diagram JSON to umple code
+	makeUmpleCodeFromGeneralization: function( actionType, parent, child ){
+		parent.position.height = parent.size.height;
+		parent.position.width = parent.size.width;
+		child.position.height = child.size.height;
+		child.position.width = child.size.width;
+
+		var actionCodeObj = {
+			"parentId": parent.name[0],
+			"childId": child.name[0],
+			"parentPosition": parent.position,
+			"childPosition": child.position
+		};
+
+		actionCode = "action=addGeneralization&actionCode=";
+		actionCode += JSON.stringify(actionCodeObj);
+
+		Action.ajax(Action.updateUmpleTextCallback,actionCode);
 	},
 
 	makeUMLclassDiagram: function() {
@@ -721,3 +1071,4 @@ var JJSdiagram = {
 		}
 	}
 };
+
