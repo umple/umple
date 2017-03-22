@@ -12,6 +12,7 @@ joint.shapes.umpleuml.Class = joint.shapes.basic.Rect.extend({
 
 //a custom view
 joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
+    oldTimeout: null,
     targetInputSize: 10,
     template: [
         '<div class="html-element">',
@@ -65,7 +66,9 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         },this));
 
         //update the box position whenever the underlying model chanegs.
+        //this.model.on('change:position', this.updateBox, this);
         this.model.on('change', this.updateBox, this);
+        this.model.on('change:position', this.updatePosition, this);
         this.model.on('remove', this.removeBox, this);
 
         this.updateBox();
@@ -78,6 +81,15 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         return this;
     },
 
+    updatePosition: function(){
+        if (this.oldTimeout) {
+            clearTimeout(this.oldTimeout);
+        }
+        this.oldTimeout = setTimeout(_.bind(function () {
+            JJSdiagram.makeUmpleCodeFromClass('moveClass', this.model.toJSON());
+        },this), 1000);
+    },
+
     updateBox: function () {
         //set the position and dimension of the box so that it covers the JointJS element.
         var bbox;
@@ -85,6 +97,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         //updating the HTML with a data stored in the cell model.
         this.$box.find('.className').val(this.model.get('name')[0]);
 
+        //update box size
         if (this.model.get('name')[0].length > this.targetInputSize) {
             this.targetInputSize = this.model.get('name')[0].length;
             this.$box.find('.className').prop('size', this.targetInputSize);
@@ -119,10 +132,8 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             top: bbox.y,
             transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
         });
-
     },
     removeBox: function (e) {
-        //JJSdiagram.makeUmpleCodeFromClass('removeClass', this.model.toJSON());
         this.$box.remove();
     },
 
@@ -166,7 +177,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
         }, this));
 
-        this.$box.find('.attributInput i').off('click').on('click', _.bind(function (e) {
+        this.$box.find('.attributInput .deleteAttr').off('click').on('click', _.bind(function (e) {
             var attIndex = jQuery(e.target.parentNode.children[0]).data('attributeIndex');
             var attValue = jQuery(e.target.parentNode.children[0]).val();
             //value is empty, do nothing (might cause bug that needs to be fixed later)
@@ -188,10 +199,10 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
     addAttributeBox: function (tempIndex, inputValue) {
         var updateFlag = false;
         if (inputValue) {
-            this.$box.find('.classAttributes').append('<div class="attributInput"><input size="' + this.targetInputSize + '" data-attribute-index="' + tempIndex + '" type="text" value="' + inputValue + '" placeholder="Click To Add" readonly/> <i class="fa fa-trash deleteAttr" aria-hidden="true"></i></div>');
+            this.$box.find('.classAttributes').append('<div class="attributInput"><input size="' + this.targetInputSize + '" data-attribute-index="' + tempIndex + '" type="text" value="' + inputValue + '" placeholder="Click To Add" readonly/> <img class="deleteAttr" src="scripts/delete.png" alt="Del"></div>');
         }
         else {
-            this.$box.find('.classAttributes').append('<div class="attributInput"><input size="' + this.targetInputSize + '" data-attribute-index="' + tempIndex + '" type="text" value="" placeholder="Click To Add" readonly/> <i class="fa fa-trash deleteAttr" aria-hidden="true"></i></div>');
+            this.$box.find('.classAttributes').append('<div class="attributInput"><input size="' + this.targetInputSize + '" data-attribute-index="' + tempIndex + '" type="text" value="" placeholder="Click To Add" readonly/> <img class="deleteAttr" src="scripts/delete.png" alt="Del"></div>');
         }
 
         //updated box height

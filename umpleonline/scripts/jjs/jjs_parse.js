@@ -263,6 +263,7 @@ var JJSdiagram = {
 	makeUmpleCodeFromClass: function (actionType, jjsJson) {
 		var actionCode;
 		var tempAttr;
+		var codeChange = true;
 		jjsJson.position.height = jjsJson.size.height;
 		jjsJson.position.width = jjsJson.size.width;
 		var actionCodeObj = {
@@ -289,6 +290,18 @@ var JJSdiagram = {
 				break;
 			case 'editClassName':
 				actionCode = "action=editClass&actionCode=";
+				for (var k = 0; k < jjsJson.attributes.length; k++) {
+					tempAttr = jjsJson.attributes[k].split(":").map(function (item) {
+						return item.trim();
+					});
+					//add unchanged attributes
+					actionCodeObj.attributes.push({
+						"type": tempAttr[1],
+						"name": tempAttr[0],
+						"textColor": "black",
+						"aColor": "black"
+					});
+				}
 				actionCodeObj.oldname = arguments[2];
 				actionCode += JSON.stringify(actionCodeObj);
 				break;
@@ -356,11 +369,30 @@ var JJSdiagram = {
 				actionCode = "action=removeClass&actionCode=";
 				actionCode += JSON.stringify(actionCodeObj);
 				break;
+			case 'moveClass':
+				actionCode = "action=editClass&actionCode=";
+				for (var k = 0; k < jjsJson.attributes.length; k++) {
+					tempAttr = jjsJson.attributes[k].split(":").map(function (item) {
+						return item.trim();
+					});
+					//add unchanged attributes
+					actionCodeObj.attributes.push({
+						"type": tempAttr[1],
+						"name": tempAttr[0],
+						"textColor": "black",
+						"aColor": "black"
+					});
+				}
+				actionCode += JSON.stringify(actionCodeObj);
+				codeChange = false;
+				break;
 			default:
 				console.log("Invalid action type in function 'makeUmpleCodeFromClass'");
 		}
-
-		Action.ajax(Action.updateUmpleTextCallback, actionCode);
+		DiagramEdit.updateUmpleText({
+			actionCode: actionCode,
+			codeChange: codeChange
+		});
 	},
 
 	//convert the diagram JSON to umple code
@@ -402,8 +434,10 @@ var JJSdiagram = {
 
 		actionCode = "action=addAssociation&actionCode=";
 		actionCode += JSON.stringify(actionCodeObj);
-
-		Action.ajax(Action.updateUmpleTextCallback,actionCode);
+		DiagramEdit.updateUmpleText({
+			actionCode: actionCode,
+			codeChange: true
+		});
 	},
 
 	//convert the diagram JSON to umple code
@@ -423,7 +457,10 @@ var JJSdiagram = {
 		actionCode = "action=addGeneralization&actionCode=";
 		actionCode += JSON.stringify(actionCodeObj);
 
-		Action.ajax(Action.updateUmpleTextCallback,actionCode);
+		DiagramEdit.updateUmpleText({
+			actionCode: actionCode,
+			codeChange: true
+		});
 	},
 
 	makeUMLclassDiagram: function() {

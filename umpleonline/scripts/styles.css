@@ -321,6 +321,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     display: block;
     margin:0;
     padding:0;
+    padding-top: 3px;
 }
 
 .html-element .className {
@@ -343,4 +344,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     /* Enable interacting with inputs only. */
     pointer-events: auto;
     cursor: pointer;
+    float: right;
+    right: 2px;
+    height: 14px;
 }
