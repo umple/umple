@@ -2560,6 +2560,7 @@ public class UmpleTraitTest {
 		}
 	}
 
+	//explained in my thesis	
 	@Test
 	public void templateInCode01Test() {
 		String code = "class A{isA T<X=B>;} class B{isA T<X=A>;} trait T<X>{void test(){#X# b=new #X#();}}";
@@ -2570,6 +2571,7 @@ public class UmpleTraitTest {
 				model.getUmpleClass("B").getMethod(0).getMethodBody().getCodeblock().getCode());
 	}
 
+	//explained in my thesis
 	@Test
 	public void templateInCode02Test() {
 		String code = "class A{isA T<X=B>;} class B{} trait T<X>{void test(){#x# b=new #x#();}}";
@@ -2579,6 +2581,7 @@ public class UmpleTraitTest {
 
 	}
 
+	//explained in my thesis
 	@Test
 	public void templateInCode03Test() {
 		String code = "class A{isA T<X=B>;} class B{} trait T<X>{status {on{turnOff -> /{#X# b=new #X#();} off;}off{}}}";
