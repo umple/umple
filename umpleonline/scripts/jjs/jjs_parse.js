@@ -6,6 +6,7 @@ jQuery(window).resize(function(){
 })
 
 var JJSdiagram = {
+	associationIndex: 0,
 	newClassIndex: 0,
 	paper: null,
 	container: null,
@@ -131,7 +132,8 @@ var JJSdiagram = {
 								{ position: .05, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } },
 								{ position: .95, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } }
 							],
-							vertices:JJSdiagram.setAssociationPathVertices(associationId, cellView.model.id)
+							vertices:JJSdiagram.setAssociationPathVertices(associationId, cellView.model.id),
+							umplename: "umpleAssociation_"+JJSdiagram.associationIndex
 						}));
 						JJSdiagram.makeUmpleCodeFromAssociation('addJjsAccociation', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
 						JJSdiagram.paper.off('cell:pointerclick');
@@ -160,6 +162,13 @@ var JJSdiagram = {
 				});
 			}
 		});
+
+		//remove listener
+		graph.on('remove', _.bind(function (cell) {
+			if(cell.isLink()){
+				this.makeUmpleCodeFromAssociation('removeAssociation',this.paper.model.getCell(cell.toJSON().source.id).toJSON(),this.paper.model.getCell(cell.toJSON().target.id).toJSON(), cell.toJSON());
+			}
+		}, this));
 
 		return this.paper;
 	},
@@ -228,6 +237,7 @@ var JJSdiagram = {
 		);	
 
 		//connect by dropping
+		/*
 		this.paper.on('cell:pointerup', function (cellView, evt, x, y) {
 
 			// Find the first element below that is not a link nor the dragged element itself.
@@ -250,6 +260,7 @@ var JJSdiagram = {
 				cellView.model.translate(0, 150);
 			}
 		});
+		*/
 	},
 
 	//return the object in JJS JSON that has certain id
@@ -427,13 +438,32 @@ var JJSdiagram = {
 			"isLeftComposition": "false",
 			"isRightComposition": "false",
 			"color": "black",
-			"id": "umpleAssociation_0",
+			"id": "umpleAssociation_"+this.associationIndex,
 			"classOneId": jjsJsonOne.name[0],
 			"classTwoId": jjsJsonTwo.name[0]
 		};
-
-		actionCode = "action=addAssociation&actionCode=";
-		actionCode += JSON.stringify(actionCodeObj);
+	
+		switch (actionType) {
+			case 'addJjsAccociation':
+				actionCode = "action=addAssociation&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
+				this.associationIndex++;
+				break;
+			case 'removeAssociation':
+				actionCode = "action=removeAssociation&actionCode=";
+				if (arguments[3]) {
+					actionCodeObj.id = arguments[3].umplename;
+				}
+				else {
+					console.log('JJSdiagram.makeUmpleCodeFromAssociation: removeAssociation --> missing arguments[3].');
+				}
+				actionCode += JSON.stringify(actionCodeObj);
+				break;
+			default:
+				console.log('JJSdiagram.makeUmpleCodeFromAssociation: action type error.');
+				break;
+		}
+		
 		DiagramEdit.updateUmpleText({
 			actionCode: actionCode,
 			codeChange: true
