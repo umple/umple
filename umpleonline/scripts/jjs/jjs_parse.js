@@ -166,7 +166,18 @@ var JJSdiagram = {
 		//remove listener
 		graph.on('remove', _.bind(function (cell) {
 			if(cell.isLink()){
-				this.makeUmpleCodeFromAssociation('removeAssociation',this.paper.model.getCell(cell.toJSON().source.id).toJSON(),this.paper.model.getCell(cell.toJSON().target.id).toJSON(), cell.toJSON());
+				switch (cell.toJSON().type) {
+					case 'uml.Association':
+						this.makeUmpleCodeFromAssociation('removeAssociation',this.paper.model.getCell(cell.toJSON().source.id).toJSON(),this.paper.model.getCell(cell.toJSON().target.id).toJSON(), cell.toJSON());
+						break;
+					case 'uml.Generalization':
+						this.makeUmpleCodeFromGeneralization('removeGeneralization', this.paper.model.getCell(cell.toJSON().target.id).toJSON(),this.paper.model.getCell(cell.toJSON().source.id).toJSON());
+						
+						break;
+					default:
+						console.log('JJSdiagram -->initJJSDiagram -->graph remove listener--> unknown type');
+						break;
+				}
 			}
 		}, this));
 
@@ -483,9 +494,22 @@ var JJSdiagram = {
 			"parentPosition": parent.position,
 			"childPosition": child.position
 		};
-
-		actionCode = "action=addGeneralization&actionCode=";
-		actionCode += JSON.stringify(actionCodeObj);
+		switch (actionType) {
+			case 'addJjsGeneralization':
+				actionCode = "action=addGeneralization&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
+				break;
+			case 'removeGeneralization':
+				delete actionCodeObj.parentId;
+				delete actionCodeObj.parentPosition;
+				delete actionCodeObj.childPosition;
+				actionCode = "action=removeGeneralization&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
+				break;
+			default:
+				break;
+		}
+		
 
 		DiagramEdit.updateUmpleText({
 			actionCode: actionCode,
