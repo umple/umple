@@ -486,7 +486,7 @@ class UmpleInternalParser
               itsSM=false;
             } else{
               for(StateMachine nSM:tState.getNestedStateMachines()){
-                if(nSM.getName().equals(smTSignature.getSrcState(i))){
+                if(nSM.getName().equals(mapped)){
                   smTemp = nSM;
                   itsSM=true;
                   break;
@@ -497,11 +497,14 @@ class UmpleInternalParser
           if(itsSM){
             smTemp.setName(smTSignature.getAlias());
           } else if (smTemp!=null) {
+            String oldtStateName = tState.getName();
             tState.setName(smTSignature.getAlias());
             if (tState.numberOfNestedStateMachines()==1) {
               tState.getNestedStateMachine(0).setName(smTSignature.getAlias());
             }
             nameMapping.put(track, smTSignature.getAlias());
+            nameMapping.put(track+"."+oldtStateName, smTSignature.getAlias());
+            
           }
         }           
       }

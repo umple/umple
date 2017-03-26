@@ -274,6 +274,7 @@ public class UmpleTraitTest {
 
 	}
 
+	//explained in my thesis
 	@Test
 	public void stateMachineTraits010Test() {
 		String code = "class A {isA T1; status { on { turnOn -> on;}} } trait T1 { status { onb { activate -> onb;}} }";
@@ -289,6 +290,7 @@ public class UmpleTraitTest {
 		}
 	}
 
+	////explained in my thesis
 	@Test
 	public void stateMachineTraits011Test() {
 		String code = "class A {isA T1 <status as mode,status as mood>;} trait T1 { status { on { activate -> on;}} }";
@@ -1666,6 +1668,14 @@ public class UmpleTraitTest {
 		}
 	}
 	
+	//explained in my thesis
+	@Test
+	public void stateMachineTraits108Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0064.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getName(),"state0");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getName(),"state0");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getName(),"state11");
+	}
 	// the last StateTest
 
 	// This is related to issue #656
