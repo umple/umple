@@ -274,6 +274,7 @@ public class UmpleTraitTest {
 
 	}
 
+	//explained in my thesis
 	@Test
 	public void stateMachineTraits010Test() {
 		String code = "class A {isA T1; status { on { turnOn -> on;}} } trait T1 { status { onb { activate -> onb;}} }";
@@ -289,6 +290,7 @@ public class UmpleTraitTest {
 		}
 	}
 
+	////explained in my thesis
 	@Test
 	public void stateMachineTraits011Test() {
 		String code = "class A {isA T1 <status as mode,status as mood>;} trait T1 { status { on { activate -> on;}} }";
@@ -1666,6 +1668,14 @@ public class UmpleTraitTest {
 		}
 	}
 	
+	//explained in my thesis
+	@Test
+	public void stateMachineTraits108Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0064.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getName(),"state0");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getName(),"state0");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getName(),"state11");
+	}
 	// the last StateTest
 
 	// This is related to issue #656
@@ -1751,6 +1761,7 @@ public class UmpleTraitTest {
 
 	}
 
+	//explained in my thesis
 	@Test
 	public void checkDuplicatedMethods1Test() {
 		String code = "class A{isA T1; isA T2;} trait T1 { String test(){}} trait T2 { String test(){}}";
@@ -1766,6 +1777,7 @@ public class UmpleTraitTest {
 		}
 	}
 
+	//explained in my thesis
 	@Test
 	public void checkDuplicatedMethods2Test() {
 		String code = "class A{isA T;}trait T{isA T1;isA T2;}trait T1{void test(){/*T1*/}}trait T2{void test(){/*T2*/}}";
@@ -2558,6 +2570,7 @@ public class UmpleTraitTest {
 		}
 	}
 
+	//explained in my thesis	
 	@Test
 	public void templateInCode01Test() {
 		String code = "class A{isA T<X=B>;} class B{isA T<X=A>;} trait T<X>{void test(){#X# b=new #X#();}}";
@@ -2568,6 +2581,7 @@ public class UmpleTraitTest {
 				model.getUmpleClass("B").getMethod(0).getMethodBody().getCodeblock().getCode());
 	}
 
+	//explained in my thesis
 	@Test
 	public void templateInCode02Test() {
 		String code = "class A{isA T<X=B>;} class B{} trait T<X>{void test(){#x# b=new #x#();}}";
@@ -2577,6 +2591,7 @@ public class UmpleTraitTest {
 
 	}
 
+	//explained in my thesis
 	@Test
 	public void templateInCode03Test() {
 		String code = "class A{isA T<X=B>;} class B{} trait T<X>{status {on{turnOff -> /{#X# b=new #X#();} off;}off{}}}";
