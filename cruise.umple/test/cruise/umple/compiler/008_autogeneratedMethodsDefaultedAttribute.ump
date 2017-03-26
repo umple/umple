@@ -1,0 +1,4 @@
+class X
+{
+  defaulted String p = "robot";
+}

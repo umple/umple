@@ -933,7 +933,7 @@ class UmpleGenerator
     switch(ruleName) {
       case CONCRETE_METHOD_DECLARATION:
           int curMethod = this.getScope().candidateIterators.get("Method");
-          if(curMethod < ((UmpleClass)uContainer).getMethods().size()) {
+          if(curMethod < ((UmpleClass)uContainer).getMethods().size() && ((UmpleClass)uContainer).getMethods().get(curMethod).getSource() != Method.Source.fAutoAPI) {
             this.getParentScope().candidateIterators.put("Method", curMethod+1);
             generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((UmpleClass)uContainer).getMethods().get(curMethod));
           }

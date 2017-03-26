@@ -1,0 +1,4 @@
+class X
+{
+  internal Boolean internalAttr = false;
+}

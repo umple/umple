@@ -103,6 +103,8 @@ class UmpleSelfGenerator
 
       for (Method m : uClass.getMethods())
       {
+      	if (m.getSource() == Method.Source.fAutoAPI)
+      	  continue;
         generateMethod(m, code);
       }
 

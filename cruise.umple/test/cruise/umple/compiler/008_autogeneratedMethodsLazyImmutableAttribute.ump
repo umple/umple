@@ -1,0 +1,4 @@
+class X
+{
+  lazy immutable String str2;
+}
