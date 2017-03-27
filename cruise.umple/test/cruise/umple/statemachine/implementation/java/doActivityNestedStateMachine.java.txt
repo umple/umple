@@ -50,24 +50,6 @@ public class Course
     return statusOpen;
   }
 
-  private boolean enterOpen()
-  {
-    boolean wasEventProcessed = false;
-    
-    StatusOpen aStatusOpen = statusOpen;
-    switch (aStatusOpen)
-    {
-      case Null:
-        setStatusOpen(StatusOpen.statusOpen);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   private void exitStatus()
   {
     switch(status)

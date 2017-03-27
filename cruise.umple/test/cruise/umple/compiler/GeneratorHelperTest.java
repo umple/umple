@@ -156,7 +156,6 @@ public class GeneratorHelperTest
     normalState.setIsStartState(true);
 
     Map<String,String> lookups = new HashMap<String,String>();
-    lookups.put("entryEventName","eEntry");
     lookups.put("setSmToNullExitActionCode", "setBulbOn(BulbOn.Null);");
     lookups.put("parentEntryActionCode","pEntry");
     lookups.put("parentExitActionCode","exitBulbOn();");
@@ -177,8 +176,6 @@ public class GeneratorHelperTest
     // Issue 935
     Assert.assertEquals("exit", normalState.getAction(0).getActionType());
     Assert.assertEquals("setBulbOn(BulbOn.Null);", normalState.getAction(0).getActionCode());
-    
-    Assert.assertNotNull(nestedSm.getEvent("eEntry"));
     
     GeneratorHelper.postpare(model);
     Assert.assertEquals(1,onState.numberOfActions());

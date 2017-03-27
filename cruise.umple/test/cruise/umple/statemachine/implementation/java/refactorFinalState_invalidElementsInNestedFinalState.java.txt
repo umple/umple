@@ -110,35 +110,6 @@ public class X
     return wasEventProcessed;
   }
 
-  private boolean enterFINAL()
-  {
-    boolean wasEventProcessed = false;
-    
-    StatusFINAL aStatusFINAL = statusFINAL;
-    StatusFINALNestedSm aStatusFINALNestedSm = statusFINALNestedSm;
-    switch (aStatusFINAL)
-    {
-      case Null:
-        setStatusFINAL(StatusFINAL.nestedSm);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aStatusFINALNestedSm)
-    {
-      case Null:
-        setStatusFINALNestedSm(StatusFINALNestedSm.nestedFinal);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   private void exitStatus()
   {
     switch(status)

@@ -167,8 +167,18 @@ class UmpleSelfGenerator
     code.append(StringFormatter.format("{1}{0} {\n", name(sm), baseSpace));
     boolean isFirst;
     boolean hasConsumedActivity;
+    
+    // Issue 1019 - Place Null state at the end because the default "enter" methods are no longer generated
+    State nullState = sm.getNullState();
+    
     for (State state : sm.getStates())
     {
+      // Issue 1019
+      if (nullState != null && state.equals(nullState)) 
+      {
+        continue;
+      }
+      
       code.append(StringFormatter.format("{1}  {0} {", state.getName(), baseSpace));
       isFirst = true;
       hasConsumedActivity = false;
@@ -242,7 +252,14 @@ class UmpleSelfGenerator
 
       code.append(StringFormatter.format("{0}  }\n", baseSpace));
     }
-
+    
+    // Issue 1019
+    if (nullState != null)
+    {
+      code.append(StringFormatter.format("{1}  {0} {", nullState.getName(), baseSpace));
+      code.append(StringFormatter.format("{0}  }\n", baseSpace));
+    }
+    
     code.append(StringFormatter.format("{0}}\n", baseSpace));
   }
 

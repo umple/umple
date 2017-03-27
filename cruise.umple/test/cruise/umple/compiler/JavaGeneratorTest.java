@@ -1277,17 +1277,14 @@ public class JavaGeneratorTest
     Assert.assertEquals(0,onState.numberOfTransitions());
     Assert.assertEquals(0,normalState.numberOfTransitions());
     Assert.assertEquals(0,normalState2.numberOfTransitions());
-    Assert.assertEquals(1,nestedSm.getEvents().size());
-    Assert.assertEquals(1,nestedSm2.getEvents().size());
+    Assert.assertEquals(0,nestedSm.getEvents().size());
+    Assert.assertEquals(0,nestedSm2.getEvents().size());
     Assert.assertEquals(2,nestedSm.numberOfStates());
     Assert.assertEquals(2,nestedSm2.numberOfStates());
 
     
     Assert.assertEquals("Null",nestedSm.getState(0).getName());
-
-    Assert.assertEquals("enterOn",nestedSm.getEvents().get(0).getName());
-    Assert.assertEquals(true, nestedSm.getEvents().get(0) == nestedSm2.getEvents().get(0));
-    
+ 
     Assert.assertEquals("Null",nestedSm2.getState(0).getName());
     
     Assert.assertEquals("exit",onState.getAction(0).getActionType());

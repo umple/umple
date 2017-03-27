@@ -817,4 +817,16 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("checkExternalTransitions_concurrentStateMachines_2.ump",languagePath + "/checkExternalTransitions_concurrentStateMachines_2."+ languagePath +".txt","X");
   }
   
+  @Test
+  public void noDefaultEntryMethodGenerated()
+  {
+    assertUmpleTemplateFor("noDefaultEntryMethodGenerated.ump",languagePath + "/noDefaultEntryMethodGenerated."+ languagePath +".txt","X");    
+  }
+  
+  @Test
+  public void noDefaultEntryMethodGenerated_2()
+  {
+    assertUmpleTemplateFor("noDefaultEntryMethodGenerated_2.ump",languagePath + "/noDefaultEntryMethodGenerated_2."+ languagePath +".txt","X");    
+  }
+  
 }

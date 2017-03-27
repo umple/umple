@@ -167,9 +167,6 @@ class X3
       entry / { if (statusOn == StatusOn.Null) { setStatusOn(StatusOn.Play); } }
       off -> Off;
       StatusOn {
-        Null {
-          enterOn -> Play;
-        }
         Play {
           exit / { setStatusOn(StatusOn.Null); }
           p -> Pause;
@@ -178,6 +175,7 @@ class X3
           exit / { setStatusOn(StatusOn.Null); }
           p -> Play;
         }
+        Null {        }
       }
     }
     Off {    }
@@ -204,12 +202,10 @@ class X17
       entry / { if (statusS1 == StatusS1.Null) { setStatusS1(StatusS1.S1A); } }
       e1 -> S1A;
       StatusS1 {
-        Null {
-          enterS1 -> S1A;
-        }
         S1A {
           exit / { setStatusS1(StatusS1.Null); }
         }
+        Null {        }
       }
     }
   }
@@ -227,9 +223,6 @@ class X18
       entry / { if (statusOnMotorIdle == StatusOnMotorIdle.Null) { setStatusOnMotorIdle(StatusOnMotorIdle.MotorIdle); } }
       entry / { if (statusOnFanIdle == StatusOnFanIdle.Null) { setStatusOnFanIdle(StatusOnFanIdle.FanIdle); } }
       StatusOnMotorIdle {
-        Null {
-          enterOn -> MotorIdle;
-        }
         MotorIdle {
           exit / { setStatusOnMotorIdle(StatusOnMotorIdle.Null); }
           flip -> MotorRunning;
@@ -238,11 +231,9 @@ class X18
           exit / { setStatusOnMotorIdle(StatusOnMotorIdle.Null); }
           flip -> MotorIdle;
         }
+        Null {        }
       }
       StatusOnFanIdle {
-        Null {
-          enterOn -> FanIdle;
-        }
         FanIdle {
           exit / { setStatusOnFanIdle(StatusOnFanIdle.Null); }
           flop -> FanRunning;
@@ -251,6 +242,7 @@ class X18
           exit / { setStatusOnFanIdle(StatusOnFanIdle.Null); }
           flop -> FanIdle;
         }
+        Null {        }
       }
     }
   }

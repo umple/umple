@@ -70,24 +70,6 @@ public class LightFixture
     return wasEventProcessed;
   }
 
-  private boolean enterOn()
-  {
-    boolean wasEventProcessed = false;
-    
-    BulbOn aBulbOn = bulbOn;
-    switch (aBulbOn)
-    {
-      case Null:
-        setBulbOn(BulbOn.Normal);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean touch()
   {
     boolean wasEventProcessed = false;

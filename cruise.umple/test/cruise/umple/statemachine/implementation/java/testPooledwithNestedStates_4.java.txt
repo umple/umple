@@ -118,24 +118,6 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean enterS1()
-  {
-    boolean wasEventProcessed = false;
-    
-    Sm1S1 aSm1S1 = sm1S1;
-    switch (aSm1S1)
-    {
-      case Null:
-        setSm1S1(Sm1S1.s1a);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean _f()
   {
     boolean wasEventProcessed = false;
@@ -258,35 +240,6 @@ public class X implements Runnable
       case s2b:
         exitSm1();
         setSm1(Sm1.s1);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean enterS2()
-  {
-    boolean wasEventProcessed = false;
-    
-    Sm1S2 aSm1S2 = sm1S2;
-    Sm1S2S2b aSm1S2S2b = sm1S2S2b;
-    switch (aSm1S2)
-    {
-      case Null:
-        setSm1S2(Sm1S2.s2a);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aSm1S2S2b)
-    {
-      case Null:
-        setSm1S2S2b(Sm1S2S2b.s2b1);
         wasEventProcessed = true;
         break;
       default:

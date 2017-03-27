@@ -72,35 +72,6 @@ public class QueuedSMwithConcurrentStates implements Runnable
     return smState1SubState2;
   }
 
-  private boolean enterState1()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmState1SubState1 aSmState1SubState1 = smState1SubState1;
-    SmState1SubState2 aSmState1SubState2 = smState1SubState2;
-    switch (aSmState1SubState1)
-    {
-      case Null:
-        setSmState1SubState1(SmState1SubState1.subState1);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aSmState1SubState2)
-    {
-      case Null:
-        setSmState1SubState2(SmState1SubState2.subState2);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean _transit()
   {
     boolean wasEventProcessed = false;

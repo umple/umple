@@ -358,4 +358,25 @@ public class PhpStateMachineTemplateTest extends StateMachineTest
   {
     assertUmpleTemplateFor("checkExternalTransitions_concurrentStateMachines_2.ump",languagePath + "/checkExternalTransitions_concurrentStateMachines_2."+ languagePath +".txt","X");
   }
+  
+  @Test
+  @Ignore("Ignoring due to issue 1019 fix, will update PHP generation in the future")
+  public void entryExitActionNoTransitions()
+  {
+    assertUmpleTemplateFor("entryExitActionNoTransitions.ump",languagePath + "/entryExitActionNoTransitions." + languagePath + ".txt", "LightFixture");
+  }
+  
+  @Test
+  @Ignore("Ignoring due to issue 1019 fix, will update PHP generation in the future")
+  public void noDefaultEntryMethodGenerated()
+  {
+    assertUmpleTemplateFor("noDefaultEntryMethodGenerated.ump",languagePath + "/noDefaultEntryMethodGenerated."+ languagePath +".txt","X");    
+  }
+  
+  @Test
+  @Ignore("Ignoring due to issue 1019 fix, will update PHP generation in the future")
+  public void noDefaultEntryMethodGenerated_2()
+  {
+    assertUmpleTemplateFor("noDefaultEntryMethodGenerated_2.ump",languagePath + "/noDefaultEntryMethodGenerated_2."+ languagePath +".txt","X");    
+  }
 }

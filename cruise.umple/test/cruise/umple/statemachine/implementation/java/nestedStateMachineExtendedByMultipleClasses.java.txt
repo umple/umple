@@ -88,24 +88,6 @@ public class Animal
     return wasEventProcessed;
   }
 
-  private boolean enterAlive()
-  {
-    boolean wasEventProcessed = false;
-    
-    StateAlive aStateAlive = stateAlive;
-    switch (aStateAlive)
-    {
-      case Null:
-        setStateAlive(StateAlive.normal);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean zombify()
   {
     boolean wasEventProcessed = false;

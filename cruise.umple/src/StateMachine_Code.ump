@@ -553,7 +553,7 @@ class State
 
   public String getType()
   {
-    return numberOfTransitions() == 0 && numberOfNestedStateMachines() == 0 ? "Simple" : "Complex";
+    return numberOfTransitions() == 0 && numberOfNestedStateMachines() == 0 && numberOfActions() == 0 ? "Simple" : "Complex";
   }
   
   public String newTimedEventName(State toState)

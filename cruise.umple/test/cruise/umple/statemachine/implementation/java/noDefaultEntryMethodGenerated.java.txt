@@ -88,12 +88,12 @@ public class X
   {
     boolean wasEventProcessed = false;
     
-    Sm aSm = sm;
-    switch (aSm)
+    SmOn aSmOn = smOn;
+    switch (aSmOn)
     {
-      case on:
-        exitSm();
-        setSm(Sm.on);
+      case s1:
+        exitSmOn();
+        setSmOn(SmOn.s2);
         wasEventProcessed = true;
         break;
       default:
@@ -111,44 +111,6 @@ public class X
     switch (aSmOn)
     {
       case s1:
-        exitSmOn();
-        setSmOn(SmOn.s2);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean e4()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmOn aSmOn = smOn;
-    switch (aSmOn)
-    {
-      case s1:
-        exitSmOn();
-        setSmOn(SmOn.s1);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean e5()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmOn aSmOn = smOn;
-    switch (aSmOn)
-    {
-      case s1:
         exitSm();
         setSm(Sm.on);
         wasEventProcessed = true;
@@ -160,26 +122,7 @@ public class X
     return wasEventProcessed;
   }
 
-  public boolean e6()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmOn aSmOn = smOn;
-    switch (aSmOn)
-    {
-      case s1:
-        exitSm();
-        setSm(Sm.off);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean e7()
+  public boolean e4()
   {
     boolean wasEventProcessed = false;
     
@@ -198,26 +141,7 @@ public class X
     return wasEventProcessed;
   }
 
-  public boolean e8()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmOnS1 aSmOnS1 = smOnS1;
-    switch (aSmOnS1)
-    {
-      case m1:
-        exitSmOnS1();
-        setSmOnS1(SmOnS1.m1);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean e9()
+  public boolean e5()
   {
     boolean wasEventProcessed = false;
     
@@ -236,64 +160,7 @@ public class X
     return wasEventProcessed;
   }
 
-  public boolean e10()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmOnS1 aSmOnS1 = smOnS1;
-    switch (aSmOnS1)
-    {
-      case m1:
-        exitSmOn();
-        setSmOn(SmOn.s2);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean e11()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmOnS1 aSmOnS1 = smOnS1;
-    switch (aSmOnS1)
-    {
-      case m1:
-        exitSm();
-        setSm(Sm.on);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean e12()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmOnS1 aSmOnS1 = smOnS1;
-    switch (aSmOnS1)
-    {
-      case m1:
-        exitSm();
-        setSm(Sm.off);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean e13()
+  public boolean e6()
   {
     boolean wasEventProcessed = false;
     
@@ -419,17 +286,5 @@ public class X
 
   public void delete()
   {}
-
-  public void on_entry_action(){
-    
-  }
-
-  public void s1_entry_action(){
-    
-  }
-
-  public void m1_entry_action(){
-    
-  }
 
 }

@@ -99,7 +99,6 @@ class GeneratorHelper
   // Add the necessary before / after hooks to support nested state machines
   public static void prepareNestedStateMachine(StateMachine sm, int concurrentIndex, Map<String,String> lookups)
   {
-    String entryEventName = lookups.get("entryEventName");
     String parentEntryActionCode = lookups.get("parentEntryActionCode");
     String parentExitActionCode = lookups.get("parentExitActionCode");
   
@@ -118,12 +117,6 @@ class GeneratorHelper
       Action parentExitAction = new Action(parentExitActionCode);
       parentExitAction.setActionType("exit");
       parentState.addAction(parentExitAction, concurrentIndex);
-
-      Event enterEvent = firstSm.findOrCreateEvent(entryEventName);
-      enterEvent.setIsInternal(true);
-      Transition enterTransition = new Transition(nullState,sm.getStartState());
-      enterTransition.setIsInternal(true);
-      enterTransition.setEvent(enterEvent);
   
   	  // Issue 935 - Add an exit action to each state to set the state machine to its Null state
       String setSmToNullExitActionCode = lookups.get("setSmToNullExitActionCode");

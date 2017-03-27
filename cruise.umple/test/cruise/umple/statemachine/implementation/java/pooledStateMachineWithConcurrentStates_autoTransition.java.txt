@@ -112,46 +112,6 @@ public class CourseAttempt implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean enterStudying()
-  {
-    boolean wasEventProcessed = false;
-    
-    CourseAttemptSMStudyingLab1 aCourseAttemptSMStudyingLab1 = courseAttemptSMStudyingLab1;
-    CourseAttemptSMStudyingTermProject aCourseAttemptSMStudyingTermProject = courseAttemptSMStudyingTermProject;
-    CourseAttemptSMStudyingFinalExam aCourseAttemptSMStudyingFinalExam = courseAttemptSMStudyingFinalExam;
-    switch (aCourseAttemptSMStudyingLab1)
-    {
-      case Null:
-        setCourseAttemptSMStudyingLab1(CourseAttemptSMStudyingLab1.lab1);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aCourseAttemptSMStudyingTermProject)
-    {
-      case Null:
-        setCourseAttemptSMStudyingTermProject(CourseAttemptSMStudyingTermProject.termProject);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aCourseAttemptSMStudyingFinalExam)
-    {
-      case Null:
-        setCourseAttemptSMStudyingFinalExam(CourseAttemptSMStudyingFinalExam.finalExam);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   private void exitCourseAttemptSM()
   {
     switch(courseAttemptSM)

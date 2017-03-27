@@ -74,35 +74,6 @@ public class LightFixture
     return wasEventProcessed;
   }
 
-  private boolean enterOn()
-  {
-    boolean wasEventProcessed = false;
-    
-    StatusOnMotorIdle aStatusOnMotorIdle = statusOnMotorIdle;
-    StatusOnFanIdle aStatusOnFanIdle = statusOnFanIdle;
-    switch (aStatusOnMotorIdle)
-    {
-      case Null:
-        setStatusOnMotorIdle(StatusOnMotorIdle.MotorIdle);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aStatusOnFanIdle)
-    {
-      case Null:
-        setStatusOnFanIdle(StatusOnFanIdle.FanIdle);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean flip()
   {
     boolean wasEventProcessed = false;
