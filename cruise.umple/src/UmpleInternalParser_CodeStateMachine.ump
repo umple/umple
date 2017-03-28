@@ -41,6 +41,7 @@ class UmpleInternalParser
   private static final String NUMBER_LITERAL = "numberLiteral";
   private static final String ASSOCIATION_EXPR = "associationExpr";
   private static final String STATEMACHINE_EXPR = "statemachineExpr";
+  private static final String FINAL_STATE_KEYWORD = "Final";
    
   private static final Integer LHS_POSITION = 0;
   private static final Integer OPERATOR_POSITION = 1;
@@ -996,6 +997,13 @@ class UmpleInternalParser
 
   private void analyzeState(Token stateToken, State fromState)
   {
+    // Issue 140 - States cannot be named Final because it is a reserved keyword
+    if (fromState.getName().equals(FINAL_STATE_KEYWORD))
+    {
+      getParseResult().addErrorMessage(new ErrorMessage(74, fromState.getPosition(), "" + fromState.getPosition().getLineNumber()));
+      return;
+    }
+    
     boolean addNewSm = true;
     boolean isConcurrentState = false;
     boolean isFinalState = false;

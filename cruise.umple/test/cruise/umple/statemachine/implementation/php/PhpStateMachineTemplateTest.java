@@ -379,4 +379,11 @@ public class PhpStateMachineTemplateTest extends StateMachineTest
   {
     assertUmpleTemplateFor("noDefaultEntryMethodGenerated_2.ump",languagePath + "/noDefaultEntryMethodGenerated_2."+ languagePath +".txt","X");    
   }
+  
+  @Test
+  @Ignore("Ignoring due to issue 140 fix, will update PHP generation in the future")
+  public void finalState()
+  {
+    assertUmpleTemplateFor("FinalState.ump",languagePath + "/FinalState."+ languagePath +".txt","Mentor");
+  }
 }

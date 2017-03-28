@@ -942,7 +942,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void finalStateReservedWord()
   {
-    assertParse("211_finalStateReservedWord.ump", "[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:Final][state][stateName:Final]");
+    assertParse("211_finalStateReservedWord.ump", "[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:Final]");
 
     UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
     StateMachine sm = uClass.getStateMachine(0);
@@ -2658,6 +2658,13 @@ public class UmpleParserStateMachineTest
     assertFailedParse("487_parallelStateMachines_sameNsmSameNames.ump", new Position("487_parallelStateMachines_sameNsmSameNames.ump", 3, 4, 20), 73);
     assertFailedParse("487_parallelStateMachines_sameNsmSameNames_2.ump", new Position("487_parallelStateMachines_sameNsmSameNames_2.ump", 4, 6, 30), 73);
     assertNoWarnings("487_parallelStateMachines_sameNsmDiffNames.ump");
+  }
+  
+  @Test
+  public void stateNameIsFinal()
+  {
+    assertFailedParse("488_stateNameIsFinal.ump", new Position("488_stateNameIsFinal.ump", 3, 4, 21), 74);
+    assertFailedParse("488_stateNameIsFinal_2.ump", new Position("488_stateNameIsFinal_2.ump", 4, 6, 32), 74);
   }
 
   public void walkGraphTwiceNested_StateMachineGraph_ClearNodes()

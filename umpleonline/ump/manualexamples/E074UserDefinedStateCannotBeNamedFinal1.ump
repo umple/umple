@@ -1,0 +1,10 @@
+// The following example generates the error
+// "s1" has a state named "Final"
+
+class X {
+  sm {
+    s1 {
+      Final {}
+    }
+  }
+}
