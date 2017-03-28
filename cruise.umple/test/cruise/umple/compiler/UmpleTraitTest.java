@@ -1676,6 +1676,22 @@ public class UmpleTraitTest {
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getName(),"state0");
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getName(),"state11");
 	}
+	
+	@Test
+	public void stateMachineTraits109Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0065.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfNestedStateMachines(),2);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getName(),"w1");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(1).getName(),"t1");
+	}
+	
+	@Test
+	public void stateMachineTraits110Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0066.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfNestedStateMachines(),1);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getName(),"r1");
+	}
+	
 	// the last StateTest
 
 	// This is related to issue #656
