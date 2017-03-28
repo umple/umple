@@ -7,7 +7,11 @@ joint.shapes.umpleuml.Class = joint.shapes.basic.Rect.extend({
         attrs: {
             rect: { stroke: 'none', 'fill-opacity': 0 }
         }
-    }, joint.shapes.basic.Rect.prototype.defaults)
+    }, joint.shapes.basic.Rect.prototype.defaults),
+
+    getClassName: function() {
+        return this.get('name');
+    }
 });
 
 //a custom view
@@ -74,6 +78,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         this.updateBox();
 
     },
+    
     render: function () {
         joint.dia.ElementView.prototype.render.apply(this, arguments);
         this.paper.$el.prepend(this.$box);
@@ -133,6 +138,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
         });
     },
+
     removeBox: function (e) {
         this.$box.remove();
     },
