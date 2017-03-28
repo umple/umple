@@ -386,4 +386,18 @@ public class PhpStateMachineTemplateTest extends StateMachineTest
   {
     assertUmpleTemplateFor("FinalState.ump",languagePath + "/FinalState."+ languagePath +".txt","Mentor");
   }
+  
+  @Test
+  @Ignore("Ignoring due to issue 140 fix, will update PHP generation in the future")
+  public void testFinalKeyword()
+  {
+    assertUmpleTemplateFor("testFinalKeyword.ump",languagePath + "/testFinalKeyword."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  @Ignore("Ignoring due to issue 140 fix, will update PHP generation in the future")
+  public void testFinalKeyword_2()
+  {
+    assertUmpleTemplateFor("testFinalKeyword_2.ump",languagePath + "/testFinalKeyword_2."+ languagePath +".txt","X");
+  }
 }

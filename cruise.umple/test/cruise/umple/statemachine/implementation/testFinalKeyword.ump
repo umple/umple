@@ -1,0 +1,9 @@
+class X {
+  sm {
+    s1 {
+      s2 {
+        goToFinal -> Final;
+      }
+    }
+  }
+}

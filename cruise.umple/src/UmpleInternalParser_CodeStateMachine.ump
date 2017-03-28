@@ -733,19 +733,24 @@ class UmpleInternalParser
     checkStateNameOfToken(transitionToken);
     
     String name = transitionToken.getValue("stateName");
-    State nextState;
+    State nextState = null;
     
-    nextState = sm.findState(name);
-    
-    if ("Final".equals(name))
+    // Issue 140 - Final state keyword defines the final state for the top-level state machine
+    if (FINAL_STATE_KEYWORD.equals(name))
     {
-      nextState = new State(name,sm);
+      StateMachine superStateMachine = sm.getSuperStateMachine();
+      nextState = superStateMachine.findState(name);
+      if (nextState == null) 
+      {
+        nextState = new State(name,superStateMachine);
+      }
+      
       //Issue492
       nextState.setPosition(transitionToken.getSubToken("stateName").getPosition());
- 
     }
     else
     {
+      nextState = sm.findState(name);
       if (nextState == null)
       {
         nextState = placeholderStateMachine.findState(name);

@@ -829,4 +829,16 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("noDefaultEntryMethodGenerated_2.ump",languagePath + "/noDefaultEntryMethodGenerated_2."+ languagePath +".txt","X");    
   }
   
+  @Test
+  public void testFinalKeyword()
+  {
+    assertUmpleTemplateFor("testFinalKeyword.ump",languagePath + "/testFinalKeyword."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testFinalKeyword_2()
+  {
+    assertUmpleTemplateFor("testFinalKeyword_2.ump",languagePath + "/testFinalKeyword_2."+ languagePath +".txt","X");
+  }
+  
 }
