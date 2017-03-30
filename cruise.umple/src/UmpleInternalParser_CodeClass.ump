@@ -3303,7 +3303,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       //Issue #449
 	UmpleClass child = aClass;
 	while(unlinkedExtends.get(child) != null){
-    for(Attribute parentAttribute : model.getUmpleClass(unlinkedExtends.get(child).get(0)).getAttributes())
+    String extedName = unlinkedExtends.get(child).get(0);
+    List<Attribute> listAtt = new ArrayList<Attribute>();
+    if (model.getUmpleClass(unlinkedExtends.get(child).get(0))!=null) listAtt = model.getUmpleClass(extedName).getAttributes(); 
+    else
+    if (model.getUmpleClass(unlinkedExtends.get(child).get(0))!=null) listAtt = model.getUmpleTrait(extedName).getAttributes();
+    for(Attribute parentAttribute : listAtt)	  
     {
     	if(parentAttribute.getName().equals(tokenVal))
         {

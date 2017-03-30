@@ -2793,6 +2793,14 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}
 	}
+	
+	//Extra test
+	@Test
+	public void stateMachineTraitsExtra001Test() {
+		//This tests that model can be built
+		UmpleModel model = getRunModelByFilename("trait_test_data_0066.ump");
+		Assert.assertNotNull(model);
+	}
 
 	// -------------------------------------------------------------------------------------
 	// ----------------------- Functional methods for this test case
