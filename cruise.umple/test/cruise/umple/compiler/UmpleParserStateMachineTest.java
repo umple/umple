@@ -961,13 +961,9 @@ public class UmpleParserStateMachineTest
 
     UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
     StateMachine sm = uClass.getStateMachine(0);
-    State on = sm.findState("On");
-    State motorFinal = on.getNestedStateMachine(0).findState("Final");
-    State fanFinal = on.getNestedStateMachine(1).findState("Final");
+    State finalState = sm.findState("Final");
 
-    Assert.assertNotSame(motorFinal, fanFinal);
-    Assert.assertEquals(true, motorFinal.isFinalState());
-    Assert.assertEquals(true, fanFinal.isFinalState());
+    Assert.assertEquals(true, finalState.isFinalState());
   }
 
   @Test
@@ -977,12 +973,8 @@ public class UmpleParserStateMachineTest
 
     UmpleClass uClass = model.getUmpleClass("Dryer");
 
-    State state = uClass.getStateMachine(0).findState("On").getNestedStateMachine(0).findState("Final");
+    State state = uClass.getStateMachine(0).findState("Final");
     Assert.assertEquals(true, state.isFinalState());
-
-    state = uClass.getStateMachine(0).findState("On").getNestedStateMachine(1).findState("Final");
-    Assert.assertEquals(null, state);
-
   }
 
   @Test
@@ -992,13 +984,8 @@ public class UmpleParserStateMachineTest
 
     UmpleClass uClass = model.getUmpleClass("Dryer");
 
-    State final1 = uClass.getStateMachine(0).findState("On").getNestedStateMachine(0).findState("Final");
+    State final1 = uClass.getStateMachine(0).findState("Final");
     Assert.assertEquals(true, final1.isFinalState());
-
-    State final2 = uClass.getStateMachine(0).findState("On").getNestedStateMachine(1).findState("Final");
-    Assert.assertEquals(true, final2.isFinalState());
-
-    Assert.assertNotSame(final1, final2);
   }
 
   @Test
@@ -1007,7 +994,7 @@ public class UmpleParserStateMachineTest
     assertParse("211_finalState_noAction.ump", "[classDefinition][name:DVDplayer][stateMachine][inlineStateMachine][name:DVDplayerStatus][state][stateName:NormalOperation][state][stateName:On][state][stateName:Playing][transition][event:stop][stateName:Stopped][state][stateName:Stopped][transition][event:play][stateName:Playing][transition][event:pause][stateName:Paused][state][stateName:history][state][stateName:Off][transition][event:turnOn][stateName:Final]");
 
     UmpleClass uClass = model.getUmpleClass("DVDplayer");
-    State final1 = uClass.getStateMachine(0).findState("NormalOperation").getNestedStateMachine(0).findState("Final");
+    State final1 = uClass.getStateMachine(0).findState("Final");
     Assert.assertEquals(true, final1.isFinalState());
   }
 
@@ -1017,7 +1004,7 @@ public class UmpleParserStateMachineTest
     assertParse("211_finalState_withAction.ump", "[classDefinition][name:DVDplayer][stateMachine][inlineStateMachine][name:DVDplayerStatus][state][stateName:NormalOperation][state][stateName:On][state][stateName:Playing][transition][event:stop][stateName:Stopped][state][stateName:Stopped][transition][event:play][stateName:Playing][transition][event:pause][stateName:Paused][state][stateName:history][state][stateName:Off][transition][event:turnOn][action][code:actionCode][stateName:Final]");
 
     UmpleClass uClass = model.getUmpleClass("DVDplayer");
-    State final1 = uClass.getStateMachine(0).findState("NormalOperation").getNestedStateMachine(0).findState("Final");
+    State final1 = uClass.getStateMachine(0).findState("Final");
     Assert.assertEquals(true, final1.isFinalState());
   }
 
