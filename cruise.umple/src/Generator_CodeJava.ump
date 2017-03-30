@@ -2056,20 +2056,78 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     }
   }
   
-  private void prepareFinalStateFor(StateMachine sm, StateMachine parentSm)
-  {
+ /*
+ * Issue 140 - For final states in concurrent state machines, we need to make sure that all
+ *             state machines within a region are in their final states before calling delete()
+ */
+   private String prepareConcurrentFinalStatesFor(State concurrentRegion, StateMachine currentSm) {
+     List<State> finalStatesInRegion = new ArrayList<State>();
+     String deleteActionCode = "";
+     
+     for (StateMachine nested : concurrentRegion.getNestedStateMachines()) {
+       finalStatesInRegion.addAll(nested.getFinalStates());
+     }
+     
+     if (!finalStatesInRegion.isEmpty()) {
+       deleteActionCode = "if (";
+       for (int i = 0; i < finalStatesInRegion.size() - 1; i++) {
+         if (!finalStatesInRegion.get(i).getStateMachine().equals(currentSm)) {
+           StateMachine sameRegionSm = finalStatesInRegion.get(i).getStateMachine();
+           if (i + 1 == finalStatesInRegion.size() - 1 && finalStatesInRegion.get(finalStatesInRegion.size() - 1).getStateMachine().equals(currentSm)) {
+             deleteActionCode += StringFormatter.format("{0} == {1}.{2}) { {3}(); }", 
+                 translate("stateMachineOne", sameRegionSm),
+                 translate("type", sameRegionSm),
+                 translate("stateOne", finalStatesInRegion.get(i)),
+                 translate("deleteMethod",currentSm.getUmpleClass()));
+           } else {
+             deleteActionCode += StringFormatter.format("{0} == {1}.{2} && ", 
+                 translate("stateMachineOne", sameRegionSm),
+                 translate("type", sameRegionSm),
+                 translate("stateOne", finalStatesInRegion.get(i)));
+           }
+         }
+       }
+       
+       if (!finalStatesInRegion.get(finalStatesInRegion.size() - 1).getStateMachine().equals(currentSm)) {
+         StateMachine sameRegionSm = finalStatesInRegion.get(finalStatesInRegion.size() - 1).getStateMachine();
+         deleteActionCode += StringFormatter.format("{0} == {1}.{2}) { {3}(); }", 
+                                                    translate("stateMachineOne", sameRegionSm),
+                                                    translate("type", sameRegionSm),
+                                                    translate("stateOne", finalStatesInRegion.get(finalStatesInRegion.size() - 1)),
+                                                    translate("deleteMethod",currentSm.getUmpleClass()));
+       } else if (deleteActionCode.equals("if (")) {
+         deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",currentSm.getUmpleClass()));
+       }
+     } else {
+       deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",currentSm.getUmpleClass()));
+     }
+     
+     return deleteActionCode;
+  }
+  
+  private void prepareFinalStatesFor(StateMachine sm){
     Map<String,String> lookups = new HashMap<String,String>();
+    String deleteActionCode = "";
     
-    String deleteActionCode;
-    deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass()));
-
+    if (sm.getParentState() != null) {
+      State concurrentRegion = sm.getParentState().getConcurrentParentState();
+      // Issue 140
+      if (concurrentRegion != null) {
+        deleteActionCode = prepareConcurrentFinalStatesFor(concurrentRegion, sm);
+      } else {
+        deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass())); 
+      }
+    } else {
+      deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass())); 
+    }
+    
     lookups.put("deleteActionCode",deleteActionCode);
     GeneratorHelper.prepareFinalState(sm,lookups);
   }
   
   private void prepareNestedStatesFor(StateMachine sm, StateMachine parentSm, int concurrentIndex)
   {
-    prepareFinalStateFor(sm,parentSm); 
+    prepareFinalStatesFor(sm);  
     prepareDoActivityThread(sm); 
     if (sm.getParentState() != null && sm.getStartState() != null)
     {

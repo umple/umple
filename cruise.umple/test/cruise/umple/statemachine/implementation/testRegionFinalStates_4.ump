@@ -1,0 +1,27 @@
+class X {
+  sm {
+    s1 {
+      o1 {
+        goToS2->s2;
+        o1Start {
+          goBigFinal-> Final;
+          completeO1-> o1Final;
+        }
+        final o1Final{}
+      }
+      ||
+      o2 {
+        o2Start {
+          completeO2-> o2Final;
+        }
+        final o2Final{}
+      }
+    }
+    s2 {
+      s2Start {
+        completeS2-> s2Final;
+      }
+      final s2Final{}
+    }
+  }
+}

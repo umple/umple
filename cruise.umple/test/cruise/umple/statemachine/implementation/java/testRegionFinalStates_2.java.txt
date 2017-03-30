@@ -1,0 +1,203 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+public class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  public enum Sm { s1 }
+  public enum SmS1S2 { Null, s2 }
+  public enum SmS1S3 { Null, s3 }
+  public enum SmS1S3S3 { Null, s4, s5 }
+  private Sm sm;
+  private SmS1S2 smS1S2;
+  private SmS1S3 smS1S3;
+  private SmS1S3S3 smS1S3S3;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X()
+  {
+    setSmS1S2(SmS1S2.Null);
+    setSmS1S3(SmS1S3.Null);
+    setSmS1S3S3(SmS1S3S3.Null);
+    setSm(Sm.s1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    if (smS1S2 != SmS1S2.Null) { answer += "." + smS1S2.toString(); }
+    if (smS1S3 != SmS1S3.Null) { answer += "." + smS1S3.toString(); }
+    if (smS1S3S3 != SmS1S3S3.Null) { answer += "." + smS1S3S3.toString(); }
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public SmS1S2 getSmS1S2()
+  {
+    return smS1S2;
+  }
+
+  public SmS1S3 getSmS1S3()
+  {
+    return smS1S3;
+  }
+
+  public SmS1S3S3 getSmS1S3S3()
+  {
+    return smS1S3S3;
+  }
+
+  public boolean goToS3()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1S2 aSmS1S2 = smS1S2;
+    switch (aSmS1S2)
+    {
+      case s2:
+        exitSm();
+        setSmS1S3(SmS1S3.s3);
+        setSmS1S2(SmS1S2.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean goToS5()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1S3S3 aSmS1S3S3 = smS1S3S3;
+    switch (aSmS1S3S3)
+    {
+      case s4:
+        exitSmS1S3S3();
+        setSmS1S3S3(SmS1S3S3.s5);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case s1:
+        exitSmS1S2();
+        exitSmS1S3();
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case s1:
+        if (smS1S2 == SmS1S2.Null) { setSmS1S2(SmS1S2.s2); }
+        if (smS1S3 == SmS1S3.Null) { setSmS1S3(SmS1S3.s3); }
+        break;
+    }
+  }
+
+  private void exitSmS1S2()
+  {
+    switch(smS1S2)
+    {
+      case s2:
+        setSmS1S2(SmS1S2.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S2(SmS1S2 aSmS1S2)
+  {
+    smS1S2 = aSmS1S2;
+    if (sm != Sm.s1 && aSmS1S2 != SmS1S2.Null) { setSm(Sm.s1); }
+  }
+
+  private void exitSmS1S3()
+  {
+    switch(smS1S3)
+    {
+      case s3:
+        exitSmS1S3S3();
+        setSmS1S3(SmS1S3.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S3(SmS1S3 aSmS1S3)
+  {
+    smS1S3 = aSmS1S3;
+    if (sm != Sm.s1 && aSmS1S3 != SmS1S3.Null) { setSm(Sm.s1); }
+
+    // entry actions and do activities
+    switch(smS1S3)
+    {
+      case s3:
+        if (smS1S3S3 == SmS1S3S3.Null) { setSmS1S3S3(SmS1S3S3.s4); }
+        break;
+    }
+  }
+
+  private void exitSmS1S3S3()
+  {
+    switch(smS1S3S3)
+    {
+      case s4:
+        setSmS1S3S3(SmS1S3S3.Null);
+        break;
+      case s5:
+        setSmS1S3S3(SmS1S3S3.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S3S3(SmS1S3S3 aSmS1S3S3)
+  {
+    smS1S3S3 = aSmS1S3S3;
+    if (smS1S3 != SmS1S3.s3 && aSmS1S3S3 != SmS1S3S3.Null) { setSmS1S3(SmS1S3.s3); }
+
+    // entry actions and do activities
+    switch(smS1S3S3)
+    {
+      case s5:
+        delete();
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+}
