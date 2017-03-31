@@ -246,7 +246,6 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
 
 .html-element {
     position: absolute;
-    /* background: #ff8450; */
     /* Make sure events are propagated to the JointJS element so, e.g. dragging works.*/
     pointer-events: none;
     -webkit-user-select: none;
@@ -303,7 +302,6 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     height: 12px;
     font-family: arial, serif;
     font-size:12px;
-    /* background-color: #ff8450; */
     
 }
 .html-element label {
@@ -319,7 +317,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     font-size: 10px;
 }
 
-.attributInput {
+.attributInput, .methodInput  {
     display: block;
     margin:0;
     padding:0;
@@ -341,7 +339,8 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     margin: 0;
 }
 
-.attributInput .deleteAttr {
+.attributInput .deleteAttr,
+.methodInput .deleteMet {
     text-align: "right";
     /* Enable interacting with inputs only. */
     pointer-events: auto;

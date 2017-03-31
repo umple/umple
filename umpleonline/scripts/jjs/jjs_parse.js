@@ -15,6 +15,9 @@ var JJSdiagram = {
 	diagram_type: null,
 
 	initJJSDiagram: function(container, model) {
+		//clear all tools
+		Page.unselectAllToggleTools();
+
 		this.container = container;
 		this.JSONmodel = model;
 
@@ -52,7 +55,7 @@ var JJSdiagram = {
 		var umpleuml = joint.shapes.umpleuml;
 
 		//click listener for adding class, association, generalization
-		jQuery('#buttonAddClass').off('click.fly').on('click.fly', function (e) {
+		jQuery('#buttonAddClass').off('click').on('click.fly', function (e) {
 			JJSdiagram.newClassIndex++;
 			var x = e.clientX;
 			var y = e.clientY;
@@ -113,7 +116,7 @@ var JJSdiagram = {
 				});
 			}
 		})
-		jQuery('#buttonAddAssociation').off('click.fly').on('click.fly', function (e) {
+		jQuery('#buttonAddAssociation').off('click').on('click.fly', function (e) {
 			if (Page.useJointJSClassDiagram) {
 				var clickcount = 0;
 				var associationId;
@@ -142,7 +145,7 @@ var JJSdiagram = {
 				});
 			}
 		});
-		jQuery('#buttonAddGeneralization').off('click.fly').on('click.fly', function (e) {
+		jQuery('#buttonAddGeneralization').off('click').on('click.fly', function (e) {
 			if (Page.useJointJSClassDiagram) {
 				var clickcount = 0;
 				var associationId;
@@ -214,6 +217,13 @@ var JJSdiagram = {
 	},
 
 	setPaperListener: function() {
+		//element click event
+		this.paper.on('cell:pointerclick',
+			function (cellView, evt, x, y) {
+				Action.selectClass(cellView.model.get('name')[0]);
+			}
+		);
+
 		this.paper.on('cell:pointerdown', 
 			function(cellView, evt, x, y) { 
 				if (JJSdiagram.diagram_type === "UMLclass") {
@@ -285,6 +295,7 @@ var JJSdiagram = {
 	makeUmpleCodeFromClass: function (actionType, jjsJson) {
 		var actionCode;
 		var tempAttr;
+		var tempMed;
 		var codeChange = true;
 		jjsJson.position.height = jjsJson.size.height;
 		jjsJson.position.width = jjsJson.size.width;
@@ -312,16 +323,41 @@ var JJSdiagram = {
 				break;
 			case 'editClassName':
 				actionCode = "action=editClass&actionCode=";
+				var attModifier = null;
 				for (var k = 0; k < jjsJson.attributes.length; k++) {
 					tempAttr = jjsJson.attributes[k].split(":").map(function (item) {
 						return item.trim();
 					});
+
+					//split modifier
+					if (tempAttr[0].charAt(0) === '-' || tempAttr[0].charAt(0) === '#' || tempAttr[0].charAt(0) === '~' || tempAttr[0].charAt(0) === '+') {
+						switch (tempAttr[0].charAt(0)) {
+							case "+":
+								attModifier = "public";
+								break;
+							case "~":
+								attModifier = "package";
+								break;
+							case "#":
+								attModifier = "protected";
+								break;
+							case "-":
+								attModifier = "private";
+								break;
+							default:
+								console.log('Invalid modifier in jjs_parser.js -->makeUmpleCodeFromClass');
+						}
+						tempAttr[0] = tempAttr[0].slice(1);
+						tempAttr[0] = tempAttr[0].trim();
+					}
+
 					//add unchanged attributes
 					actionCodeObj.attributes.push({
 						"type": tempAttr[1],
 						"name": tempAttr[0],
 						"textColor": "black",
-						"aColor": "black"
+						"aColor": "black",
+						'modifier': attModifier
 					});
 				}
 				actionCodeObj.oldname = arguments[2];
@@ -329,10 +365,34 @@ var JJSdiagram = {
 				break;
 			case 'addAttribute':
 				var attributeIndex = arguments[2];
+				var attModifier = null;
 				for (var k = 0; k < jjsJson.attributes.length; k++) {
 					tempAttr = jjsJson.attributes[k].split(":").map(function (item) {
 						return item.trim();
 					});
+
+					//split modifier
+					if (tempAttr[0].charAt(0) === '-' || tempAttr[0].charAt(0) === '#' || tempAttr[0].charAt(0) === '~' || tempAttr[0].charAt(0) === '+') {
+						switch (tempAttr[0].charAt(0)) {
+							case "+":
+								attModifier = "public";
+								break;
+							case "~":
+								attModifier = "package";
+								break;
+							case "#":
+								attModifier = "protected";
+								break;
+							case "-":
+								attModifier = "private";
+								break;
+							default:
+								console.log('Invalid modifier in jjs_parser.js -->makeUmpleCodeFromClass');
+						}
+						tempAttr[0] = tempAttr[0].slice(1);
+						tempAttr[0] = tempAttr[0].trim();
+					}
+
 					//attribute to add
 					if (k === attributeIndex) {
 						actionCodeObj.attributes.push({
@@ -341,7 +401,8 @@ var JJSdiagram = {
 							"textColor": "black",
 							"aColor": "black",
 							"newType": tempAttr[1],
-							"newName": tempAttr[0]
+							"newName": tempAttr[0],
+							'modifier': attModifier
 						});
 					}
 					//other unchanged attibutes
@@ -350,7 +411,8 @@ var JJSdiagram = {
 							"type": tempAttr[1],
 							"name": tempAttr[0],
 							"textColor": "black",
-							"aColor": "black"
+							"aColor": "black",
+							'modifier': attModifier
 						});
 					}
 				}
@@ -359,16 +421,41 @@ var JJSdiagram = {
 				break;
 			case 'removeAttribute':
 				var oldAttribute = arguments[2];
+				var attModifier = null;
 				for (var k = 0; k < jjsJson.attributes.length; k++) {
 					tempAttr = jjsJson.attributes[k].split(":").map(function (item) {
 						return item.trim();
 					});
+
+					//split modifier
+					if (tempAttr[0].charAt(0) === '-' || tempAttr[0].charAt(0) === '#' || tempAttr[0].charAt(0) === '~' || tempAttr[0].charAt(0) === '+') {
+						switch (tempAttr[0].charAt(0)) {
+							case "+":
+								attModifier = "public";
+								break;
+							case "~":
+								attModifier = "package";
+								break;
+							case "#":
+								attModifier = "protected";
+								break;
+							case "-":
+								attModifier = "private";
+								break;
+							default:
+								console.log('Invalid modifier in jjs_parser.js -->makeUmpleCodeFromClass');
+						}
+						tempAttr[0] = tempAttr[0].slice(1);
+						tempAttr[0] = tempAttr[0].trim();
+					}
+
 					//attribute to add
 					actionCodeObj.attributes.push({
 						"type": tempAttr[1],
 						"name": tempAttr[0],
 						"textColor": "black",
-						"aColor": "black"
+						"aColor": "black",
+						'modifier': attModifier
 					});
 				}
 				//add deleted attribute
@@ -381,7 +468,8 @@ var JJSdiagram = {
 					"textColor": "black",
 					"aColor": "black",
 					"deleteType": tempAttr[1],
-					"deleteName": tempAttr[0]
+					"deleteName": tempAttr[0],
+					'modifier': attModifier
 				});
 
 				actionCode = "action=editClass&actionCode=";
@@ -393,20 +481,290 @@ var JJSdiagram = {
 				break;
 			case 'moveClass':
 				actionCode = "action=editClass&actionCode=";
+				var attModifier = null;
+
+				//attributes
 				for (var k = 0; k < jjsJson.attributes.length; k++) {
 					tempAttr = jjsJson.attributes[k].split(":").map(function (item) {
 						return item.trim();
 					});
+
+					//split modifier
+					if (tempAttr[0].charAt(0) === '-' || tempAttr[0].charAt(0) === '#' || tempAttr[0].charAt(0) === '~' || tempAttr[0].charAt(0) === '+') {
+						switch (tempAttr[0].charAt(0)) {
+							case "+":
+								attModifier = "public";
+								break;
+							case "~":
+								attModifier = "package";
+								break;
+							case "#":
+								attModifier = "protected";
+								break;
+							case "-":
+								attModifier = "private";
+								break;
+							default:
+								console.log('Invalid modifier in jjs_parser.js -->makeUmpleCodeFromClass');
+						}
+						tempAttr[0] = tempAttr[0].slice(1);
+						tempAttr[0] = tempAttr[0].trim();
+					}
+
 					//add unchanged attributes
 					actionCodeObj.attributes.push({
 						"type": tempAttr[1],
 						"name": tempAttr[0],
 						"textColor": "black",
-						"aColor": "black"
+						"aColor": "black",
+						'modifier': attModifier
 					});
 				}
 				actionCode += JSON.stringify(actionCodeObj);
 				codeChange = false;
+				break;
+			case 'addMethod':
+				var methodIndex = arguments[2];
+				var methodVisibility = null;
+				//attributes
+				var attModifier = null;
+				for (var k = 0; k < jjsJson.attributes.length; k++) {
+					tempAttr = jjsJson.attributes[k].split(":").map(function (item) {
+						return item.trim();
+					});
+
+					//split modifier
+					if (tempAttr[0].charAt(0) === '-' || tempAttr[0].charAt(0) === '#' || tempAttr[0].charAt(0) === '~' || tempAttr[0].charAt(0) === '+') {
+						switch (tempAttr[0].charAt(0)) {
+							case "+":
+								attModifier = "public";
+								break;
+							case "~":
+								attModifier = "package";
+								break;
+							case "#":
+								attModifier = "protected";
+								break;
+							case "-":
+								attModifier = "private";
+								break;
+							default:
+								console.log('Invalid modifier in jjs_parser.js -->makeUmpleCodeFromClass');
+						}
+						tempAttr[0] = tempAttr[0].slice(1);
+						tempAttr[0] = tempAttr[0].trim();
+					}
+
+					//add unchanged attributes
+					actionCodeObj.attributes.push({
+						"type": tempAttr[1],
+						"name": tempAttr[0],
+						"textColor": "black",
+						"aColor": "black",
+						'modifier': attModifier
+					});
+				}
+
+				//methods
+				for (var k = 0; k < jjsJson.methods.length; k++) {
+					tempMed = jjsJson.methods[k].split(":").map(function (item) {
+						return item.trim();
+					});
+
+					//split visibility
+					if (tempMed[0].charAt(0) === '-' || tempMed[0].charAt(0) === '#' || tempMed[0].charAt(0) === '~' || tempMed[0].charAt(0) === '+') {
+						switch (tempMed[0].charAt(0)) {
+							case "+":
+								methodVisibility = "public";
+								break;
+							case "~":
+								methodVisibility = "package";
+								break;
+							case "#":
+								methodVisibility = "protected";
+								break;
+							case "-":
+								methodVisibility = "private";
+								break;
+							default:
+								console.log('Invalid modifier in jjs_parser.js -->makeUmpleCodeFromClass');
+						}
+						tempMed[0] = tempMed[0].slice(1);
+						tempMed[0] = tempMed[0].trim();
+						if(tempMed[0].slice(-2) === '()'){
+							tempMed[0] = tempMed[0].slice(0,-2);
+						}
+					}
+
+					//Add Methods
+					if (k === methodIndex) {
+						actionCodeObj.methods.push({
+							"visibility": methodVisibility,
+							"isAbstract": '',
+							"type": tempMed[1],
+							"name": tempMed[0],
+							"parameters": [{
+
+							}],
+							"newVisibility": methodVisibility,
+							"newType": tempMed[1],
+							"newName": tempMed[0],
+							"newParameters": [{
+
+							}]
+						});
+					}
+					else {
+						actionCodeObj.methods.push({
+							"visibility": methodVisibility,
+							"isAbstract": '',
+							"type": tempMed[1],
+							"name": tempMed[0],
+							"parameters": [{
+
+							}]
+						});
+					}
+
+				}
+
+				actionCode = "action=editClass&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
+				break;
+			case 'removeMethod':
+				var oldMethod = arguments[2];
+				var attModifier = null;
+				//attributes
+				for (var k = 0; k < jjsJson.attributes.length; k++) {
+					tempAttr = jjsJson.attributes[k].split(":").map(function (item) {
+						return item.trim();
+					});
+
+					//split modifier
+					if (tempAttr[0].charAt(0) === '-' || tempAttr[0].charAt(0) === '#' || tempAttr[0].charAt(0) === '~' || tempAttr[0].charAt(0) === '+') {
+						switch (tempAttr[0].charAt(0)) {
+							case "+":
+								attModifier = "public";
+								break;
+							case "~":
+								attModifier = "package";
+								break;
+							case "#":
+								attModifier = "protected";
+								break;
+							case "-":
+								attModifier = "private";
+								break;
+							default:
+								console.log('Invalid modifier in jjs_parser.js -->makeUmpleCodeFromClass');
+						}
+						tempAttr[0] = tempAttr[0].slice(1);
+						tempAttr[0] = tempAttr[0].trim();
+					}
+
+					//attribute to add
+					actionCodeObj.attributes.push({
+						"type": tempAttr[1],
+						"name": tempAttr[0],
+						"textColor": "black",
+						"aColor": "black",
+						'modifier': attModifier
+					});
+				}
+
+				//methods
+				for (var k = 0; k < jjsJson.methods.length; k++) {
+					tempMed = jjsJson.methods[k].split(":").map(function (item) {
+						return item.trim();
+					});
+
+					//split visibility
+					if (tempMed[0].charAt(0) === '-' || tempMed[0].charAt(0) === '#' || tempMed[0].charAt(0) === '~' || tempMed[0].charAt(0) === '+') {
+						switch (tempMed[0].charAt(0)) {
+							case "+":
+								methodVisibility = "public";
+								break;
+							case "~":
+								methodVisibility = "package";
+								break;
+							case "#":
+								methodVisibility = "protected";
+								break;
+							case "-":
+								methodVisibility = "private";
+								break;
+							default:
+								console.log('Invalid modifier in jjs_parser.js -->makeUmpleCodeFromClass');
+						}
+						tempMed[0] = tempMed[0].slice(1);
+						tempMed[0] = tempMed[0].trim();
+						if(tempMed[0].slice(-2) === '()'){
+							tempMed[0] = tempMed[0].slice(0,-2);
+						}
+					}
+
+
+					//Add other methods
+					actionCodeObj.methods.push({
+						"visibility": methodVisibility,
+						"isAbstract": '',
+						"type": tempMed[1],
+						"name": tempMed[0],
+						"parameters": [{
+
+						}]
+					});
+
+				}
+				var oldMethodType;
+				var oldMethodVisibility;
+				var oldMethodName;
+				tempMed = oldMethod.split(":").map(function (item) {
+						return item.trim();
+				});
+
+				if (tempMed[0].charAt(0) === '-' || tempMed[0].charAt(0) === '#' || tempMed[0].charAt(0) === '~' || tempMed[0].charAt(0) === '+') {
+					switch (tempMed[0].charAt(0)) {
+						case "+":
+							oldMethodVisibility = "public";
+							break;
+						case "~":
+							oldMethodVisibility = "package";
+							break;
+						case "#":
+							oldMethodVisibility = "protected";
+							break;
+						case "-":
+							oldMethodVisibility = "private";
+							break;
+						default:
+							console.log('Invalid modifier in jjs_parser.js -->makeUmpleCodeFromClass');
+					}
+					tempMed[0] = tempMed[0].slice(1);
+					tempMed[0] = tempMed[0].trim();
+					if (tempMed[0].slice(-2) === '()') {
+						tempMed[0] = tempMed[0].slice(0, -2);
+					}
+				}
+
+				actionCodeObj.methods.push({
+					"visibility": oldMethodVisibility,
+					"isAbstract": '',
+					"type": tempMed[1],
+					"name": tempMed[0],
+					"parameters": [{
+
+					}],
+					"deleteVisibility": oldMethodVisibility,
+					"deleteType": tempMed[1],
+					"deleteName": tempMed[0],
+					"deleteParameters": [{
+
+					}]
+				});
+
+				actionCode = "action=editClass&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
 				break;
 			default:
 				console.log("Invalid action type in function 'makeUmpleCodeFromClass'");
@@ -692,9 +1050,10 @@ var JJSdiagram = {
 			attrs.forEach(parseAttributes);
 
 			// If there are no attributes, then reveal their absence
-			if (attributes.length == 0 && Page.showAttributes) {
-				attributes.push(" ");
-			}
+			// why ?
+			// if (attributes.length == 0 && Page.showAttributes) {
+			// 	attributes.push(" ");
+			// }
 
 			return attributes;
 		},
@@ -711,9 +1070,12 @@ var JJSdiagram = {
 			meths.forEach(parseMethods);
 
 			// If there are no methods, then reveal their absence
+			// why?
+			/*
 			if (methods.length == 0 && Page.showMethods) {
 				methods.push(" ");
 			}
+			*/
 
 			return methods;
 		},
@@ -780,7 +1142,7 @@ var JJSdiagram = {
 		makeClasses: function (model) {
 
 			var classes = new Array();
-
+			
 			var instantiate = function(UMLclass) {
 				var new_class;
 
@@ -816,13 +1178,14 @@ var JJSdiagram = {
 					if (UMLclass.stateMachines.length > 0) {
 						hasStateMachine = true;
 					}
-					new_class = new joint.shapes.uml.Class({
+					new_class = new joint.shapes.umpleuml.Class({
 						position: UMLclass.position,
 						size: UMLclass.position,
 						name: [UMLclass.name],
-						attributes: Page.showAttributes ? JJSdiagram.JJsParse.addAttributes(UMLclass.attributes) : null,
-						methods: Page.showMethods ? JJSdiagram.JJsParse.addMethods(UMLclass.methods) : null,
-						id: UMLclass.id
+						attributes: Page.showAttributes ? JJSdiagram.JJsParse.addAttributes(UMLclass.attributes) : [],
+						methods: Page.showMethods ? JJSdiagram.JJsParse.addMethods(UMLclass.methods) : [],
+						id: UMLclass.id,
+						backgroundColor:UMLclass.displayColor
 					});
 
 					if (hasStateMachine) {
@@ -834,47 +1197,38 @@ var JJSdiagram = {
 				// Update all class views to properly fit the contained text strings.
 				new_class.attr( {'.uml-class-attrs-text': { 'font-size': '7pt' },
 								'.uml-class-methods-text': { 'font-size': '7pt'} });
-				JJSdiagram.JJsParse.updateRectangles(new_class);
-
+				
+				//JJSdiagram.JJsParse.updateRectangles(new_class);
+				//jQuery('.html-element').css('background-color', UMLclass.displayColor);
+				//set display color
+				/** need to be changed */
 				switch (UMLclass.displayColor) {
 
 					case "lightblue":
-						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#a1e9d9' },
-							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#b1f9e9' },
-							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#b1f9e9' } });
+						jQuery('.html-element').css('background-color', UMLclass.displayColor);
 						break;
 
 					case "lightgreen":
-						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#63f788' },
-							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#73f798' },
-							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#73f798' } });
+						jQuery('.html-element').css('background-color', UMLclass.displayColor);
 						break;
 
 					case "pink":
-						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#ffbac9' },
-							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#ffcad9' },
-							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#ffcad9' } });
+						jQuery('.html-element').css('background-color', UMLclass.displayColor);
 						break;
 
 					case "lightgrey":
-						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#eaeaea' },
-							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#fafafa' },
-							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#fafafa' } });
+						jQuery('.html-element').css('background-color', UMLclass.displayColor);
 						break;
 
 					case "":
-						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#eaeaea' },
-							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#fafafa' },
-							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#fafafa' } });
+						jQuery('.html-element').css('background-color', '#ffffff');
 						break;
 
 					case "assigned":
 						break;
 
 					default:
-						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': UMLclass.displayColor },
-							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': UMLclass.displayColor },
-							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': UMLclass.displayColor } });
+						jQuery('.html-element').css('background-color', UMLclass.displayColor);
 				}
 
 				classes.push(new_class);
