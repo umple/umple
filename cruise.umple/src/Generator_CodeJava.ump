@@ -2110,7 +2110,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     String deleteActionCode = "";
     
     if (sm.getParentState() != null) {
-      State concurrentRegion = sm.getParentState().getConcurrentParentState();
+      State concurrentRegion = sm.getParentState().getConcurrentRegion();
       // Issue 140
       if (concurrentRegion != null) {
         deleteActionCode = prepareConcurrentFinalStatesFor(concurrentRegion, sm);

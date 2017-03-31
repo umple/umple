@@ -689,6 +689,23 @@ class State
     }
     return null;
   }
+  
+  /* Issue 140
+  	 A helper function to obtain the concurrent region
+  */
+  public State getConcurrentRegion() {
+    State concurrentRegion = getConcurrentParentState();
+    if (concurrentRegion != null) {
+      State traverser = concurrentRegion.getStateMachine().getParentState();
+      while (traverser != null) {
+        if (traverser.getIsConcurrent()) {
+          concurrentRegion = traverser;
+        }
+        traverser = traverser.getStateMachine().getParentState();
+      }
+    }
+    return concurrentRegion;
+  }
  
 }
 
