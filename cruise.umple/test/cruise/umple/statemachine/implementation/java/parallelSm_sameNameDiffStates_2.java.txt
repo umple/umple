@@ -169,9 +169,8 @@ public class X
     switch (aSmS1S2T6)
     {
       case t6:
-        exitSmS1();
+        exitSmS1S2T6();
         setSmS1S2T2(SmS1S2T2.t5);
-        setSmS1S2T1(SmS1S2T1.t1);
         setSmS1S2T6(SmS1S2T6.t6);
         wasEventProcessed = true;
         break;

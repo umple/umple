@@ -1,0 +1,114 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+public class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  public enum Sm { s1, Final }
+  public enum SmS1 { Null, s2 }
+  private Sm sm;
+  private SmS1 smS1;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X()
+  {
+    setSmS1(SmS1.Null);
+    setSm(Sm.s1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    if (smS1 != SmS1.Null) { answer += "." + smS1.toString(); }
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public SmS1 getSmS1()
+  {
+    return smS1;
+  }
+
+  public boolean goToFinal()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1 aSmS1 = smS1;
+    switch (aSmS1)
+    {
+      case s2:
+        exitSm();
+        setSm(Sm.Final);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case s1:
+        exitSmS1();
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case s1:
+        if (smS1 == SmS1.Null) { setSmS1(SmS1.s2); }
+        break;
+      case Final:
+        delete();
+        break;
+    }
+  }
+
+  private void exitSmS1()
+  {
+    switch(smS1)
+    {
+      case s2:
+        setSmS1(SmS1.Null);
+        break;
+    }
+  }
+
+  private void setSmS1(SmS1 aSmS1)
+  {
+    smS1 = aSmS1;
+    if (sm != Sm.s1 && aSmS1 != SmS1.Null) { setSm(Sm.s1); }
+  }
+
+  public void delete()
+  {}
+
+}

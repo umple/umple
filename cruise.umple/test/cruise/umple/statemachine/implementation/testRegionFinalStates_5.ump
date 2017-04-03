@@ -1,0 +1,26 @@
+class X {
+  sm {
+    o1 {
+      s1 {
+        s2 {
+          s3 {
+            goToS4Final -> s4;
+          }
+          final s4 { }
+        }
+        ||
+        s5 {
+          final s6 { }
+        }
+      }
+      ||
+      s7 {
+        s8 {
+          goToS9Final -> s9;
+        }
+        final s9 { }
+      }
+    }
+    
+  }
+}

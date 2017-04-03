@@ -1,0 +1,9 @@
+// The following example does not generate the error
+
+class X {
+  sm {
+    s1 {
+      goToFinal-> Final;
+    }
+  }
+}

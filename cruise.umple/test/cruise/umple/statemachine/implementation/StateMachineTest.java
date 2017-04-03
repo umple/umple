@@ -829,4 +829,52 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("noDefaultEntryMethodGenerated_2.ump",languagePath + "/noDefaultEntryMethodGenerated_2."+ languagePath +".txt","X");    
   }
   
+  @Test
+  public void testFinalKeyword()
+  {
+    assertUmpleTemplateFor("testFinalKeyword.ump",languagePath + "/testFinalKeyword."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testFinalKeyword_2()
+  {
+    assertUmpleTemplateFor("testFinalKeyword_2.ump",languagePath + "/testFinalKeyword_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testRegionFinalStates_1()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_1.ump",languagePath + "/testRegionFinalStates_1."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testRegionFinalStates_2()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_2.ump",languagePath + "/testRegionFinalStates_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testRegionFinalStates_3()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_3.ump",languagePath + "/testRegionFinalStates_3."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testRegionFinalStates_4()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_4.ump",languagePath + "/testRegionFinalStates_4."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testRegionFinalStates_5()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_5.ump",languagePath + "/testRegionFinalStates_5."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testRegionFinalStates_6()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_6.ump",languagePath + "/testRegionFinalStates_6."+ languagePath +".txt","X");
+  }
+  
 }
