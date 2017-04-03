@@ -1,0 +1,361 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+public class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  public enum Status { s1, Final, s2, s3 }
+  public enum StatusS1S11 { Null, s11, fState1 }
+  public enum StatusS1S11S11 { Null, s111 }
+  public enum StatusS1S11S11S111 { Null, s111 }
+  public enum StatusS1S12 { Null, s12 }
+  public enum StatusS1S12S12 { Null, s122, fState2 }
+  private Status status;
+  private StatusS1S11 statusS1S11;
+  private StatusS1S11S11 statusS1S11S11;
+  private StatusS1S11S11S111 statusS1S11S11S111;
+  private StatusS1S12 statusS1S12;
+  private StatusS1S12S12 statusS1S12S12;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X()
+  {
+    setStatusS1S11(StatusS1S11.Null);
+    setStatusS1S11S11(StatusS1S11S11.Null);
+    setStatusS1S11S11S111(StatusS1S11S11S111.Null);
+    setStatusS1S12(StatusS1S12.Null);
+    setStatusS1S12S12(StatusS1S12S12.Null);
+    setStatus(Status.s1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getStatusFullName()
+  {
+    String answer = status.toString();
+    if (statusS1S11 != StatusS1S11.Null) { answer += "." + statusS1S11.toString(); }
+    if (statusS1S11S11 != StatusS1S11S11.Null) { answer += "." + statusS1S11S11.toString(); }
+    if (statusS1S11S11S111 != StatusS1S11S11S111.Null) { answer += "." + statusS1S11S11S111.toString(); }
+    if (statusS1S12 != StatusS1S12.Null) { answer += "." + statusS1S12.toString(); }
+    if (statusS1S12S12 != StatusS1S12S12.Null) { answer += "." + statusS1S12S12.toString(); }
+    if (statusS1S11S11S111 != StatusS1S11S11S111.Null) { answer += "." + statusS1S11S11S111.toString(); }
+    return answer;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public StatusS1S11 getStatusS1S11()
+  {
+    return statusS1S11;
+  }
+
+  public StatusS1S11S11 getStatusS1S11S11()
+  {
+    return statusS1S11S11;
+  }
+
+  public StatusS1S11S11S111 getStatusS1S11S11S111()
+  {
+    return statusS1S11S11S111;
+  }
+
+  public StatusS1S12 getStatusS1S12()
+  {
+    return statusS1S12;
+  }
+
+  public StatusS1S12S12 getStatusS1S12S12()
+  {
+    return statusS1S12S12;
+  }
+
+  public boolean e2()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case s1:
+        exitStatus();
+        setStatus(Status.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean e4()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case s2:
+        setStatus(Status.Final);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean e3()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case s2:
+        setStatus(Status.s3);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean e()
+  {
+    boolean wasEventProcessed = false;
+    
+    StatusS1S11S11S111 aStatusS1S11S11S111 = statusS1S11S11S111;
+    switch (aStatusS1S11S11S111)
+    {
+      case s111:
+        exitStatus();
+        setStatus(Status.Final);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean d1()
+  {
+    boolean wasEventProcessed = false;
+    
+    StatusS1S11S11S111 aStatusS1S11S11S111 = statusS1S11S11S111;
+    switch (aStatusS1S11S11S111)
+    {
+      case s111:
+        exitStatusS1S11();
+        setStatusS1S11(StatusS1S11.fState1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean d2()
+  {
+    boolean wasEventProcessed = false;
+    
+    StatusS1S12S12 aStatusS1S12S12 = statusS1S12S12;
+    switch (aStatusS1S12S12)
+    {
+      case s122:
+        exitStatusS1S12S12();
+        setStatusS1S12S12(StatusS1S12S12.fState2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitStatus()
+  {
+    switch(status)
+    {
+      case s1:
+        exitStatusS1S11();
+        exitStatusS1S12();
+        System.out.println("t4");
+        break;
+    }
+  }
+
+  private void setStatus(Status aStatus)
+  {
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case s1:
+        if (statusS1S11 == StatusS1S11.Null) { setStatusS1S11(StatusS1S11.s11); }
+        if (statusS1S12 == StatusS1S12.Null) { setStatusS1S12(StatusS1S12.s12); }
+        break;
+      case Final:
+        delete();
+        break;
+      case s3:
+        delete();
+        break;
+    }
+  }
+
+  private void exitStatusS1S11()
+  {
+    switch(statusS1S11)
+    {
+      case s11:
+        exitStatusS1S11S11();
+        System.out.println("t3");
+        setStatusS1S11(StatusS1S11.Null);
+        break;
+      case fState1:
+        setStatusS1S11(StatusS1S11.Null);
+        break;
+    }
+  }
+
+  private void setStatusS1S11(StatusS1S11 aStatusS1S11)
+  {
+    statusS1S11 = aStatusS1S11;
+    if (status != Status.s1 && aStatusS1S11 != StatusS1S11.Null) { setStatus(Status.s1); }
+
+    // entry actions and do activities
+    switch(statusS1S11)
+    {
+      case s11:
+        if (statusS1S11S11 == StatusS1S11S11.Null) { setStatusS1S11S11(StatusS1S11S11.s111); }
+        break;
+      case fState1:
+        if (statusS1S12S12 == StatusS1S12S12.fState2) { delete(); }
+        break;
+    }
+  }
+
+  private void exitStatusS1S11S11()
+  {
+    switch(statusS1S11S11)
+    {
+      case s111:
+        exitStatusS1S11S11S111();
+        System.out.println("t2");
+        setStatusS1S11S11(StatusS1S11S11.Null);
+        break;
+    }
+  }
+
+  private void setStatusS1S11S11(StatusS1S11S11 aStatusS1S11S11)
+  {
+    statusS1S11S11 = aStatusS1S11S11;
+    if (statusS1S11 != StatusS1S11.s11 && aStatusS1S11S11 != StatusS1S11S11.Null) { setStatusS1S11(StatusS1S11.s11); }
+
+    // entry actions and do activities
+    switch(statusS1S11S11)
+    {
+      case s111:
+        if (statusS1S11S11S111 == StatusS1S11S11S111.Null) { setStatusS1S11S11S111(StatusS1S11S11S111.s111); }
+        break;
+    }
+  }
+
+  private void exitStatusS1S11S11S111()
+  {
+    switch(statusS1S11S11S111)
+    {
+      case s111:
+        System.out.println("t1");
+        setStatusS1S11S11S111(StatusS1S11S11S111.Null);
+        break;
+    }
+  }
+
+  private void setStatusS1S11S11S111(StatusS1S11S11S111 aStatusS1S11S11S111)
+  {
+    statusS1S11S11S111 = aStatusS1S11S11S111;
+    if (statusS1S11S11 != StatusS1S11S11.s111 && aStatusS1S11S11S111 != StatusS1S11S11S111.Null) { setStatusS1S11S11(StatusS1S11S11.s111); }
+  }
+
+  private void exitStatusS1S12()
+  {
+    switch(statusS1S12)
+    {
+      case s12:
+        exitStatusS1S12S12();
+        setStatusS1S12(StatusS1S12.Null);
+        break;
+    }
+  }
+
+  private void setStatusS1S12(StatusS1S12 aStatusS1S12)
+  {
+    statusS1S12 = aStatusS1S12;
+    if (status != Status.s1 && aStatusS1S12 != StatusS1S12.Null) { setStatus(Status.s1); }
+
+    // entry actions and do activities
+    switch(statusS1S12)
+    {
+      case s12:
+        if (statusS1S12S12 == StatusS1S12S12.Null) { setStatusS1S12S12(StatusS1S12S12.s122); }
+        break;
+    }
+  }
+
+  private void exitStatusS1S12S12()
+  {
+    switch(statusS1S12S12)
+    {
+      case s122:
+        setStatusS1S12S12(StatusS1S12S12.Null);
+        break;
+      case fState2:
+        setStatusS1S12S12(StatusS1S12S12.Null);
+        break;
+    }
+  }
+
+  private void setStatusS1S12S12(StatusS1S12S12 aStatusS1S12S12)
+  {
+    statusS1S12S12 = aStatusS1S12S12;
+    if (statusS1S12 != StatusS1S12.s12 && aStatusS1S12S12 != StatusS1S12S12.Null) { setStatusS1S12(StatusS1S12.s12); }
+
+    // entry actions and do activities
+    switch(statusS1S12S12)
+    {
+      case fState2:
+        if (statusS1S11 == StatusS1S11.fState1) { delete(); }
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+}

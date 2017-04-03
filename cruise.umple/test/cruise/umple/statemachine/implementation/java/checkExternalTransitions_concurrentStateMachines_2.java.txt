@@ -150,7 +150,7 @@ public class X
     switch (aSmS1S2BB)
     {
       case t3:
-        exitSm();
+        exitSmS1S2();
         setSmS1S3S3(SmS1S3S3.t5);
         wasEventProcessed = true;
         break;
@@ -207,7 +207,7 @@ public class X
     switch (aSmS1S3S3)
     {
       case t6:
-        exitSm();
+        exitSmS1S2();
         setSmS1S2AA(SmS1S2AA.t2);
         wasEventProcessed = true;
         break;

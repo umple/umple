@@ -127,23 +127,21 @@ class UmpleToJava {
           State fromConcurrentParentState = state.getConcurrentParentState();
           if (fromConcurrentParentState != null) {
             StateMachine concurrentSmToExit = null;
-            
+      
             if (nextState.getStateMachine().equals(superStateMachine)) {
               concurrentSmToExit = superStateMachine;
             } else if (state.getStateMachine().equals(nextState.getStateMachine())) {
               concurrentSmToExit = state.getStateMachine();
             } else {
               State nextConcurrentParentState = nextState.getConcurrentParentState();
+              concurrentSmToExit = t.getSmToExit(superStateMachine);
               if (nextConcurrentParentState != null) {
                 if (fromConcurrentParentState.equals(nextConcurrentParentState)) {
-                  transitionIsAndCross = true;
-                  concurrentParent = fromConcurrentParentState;
-                  concurrentSmToExit = fromConcurrentParentState.getStateMachine();
-                } else {
-                  concurrentSmToExit = superStateMachine;
+                  if (t.isTransitionAndCross(fromConcurrentParentState)) {
+                    concurrentParent = fromConcurrentParentState;
+                    transitionIsAndCross = true;
+                  }
                 }
-              } else {
-                concurrentSmToExit = superStateMachine;
               }
             }
             
@@ -205,22 +203,24 @@ class UmpleToJava {
 
         // Issue 935 - Additional processing for concurrent state machines
         if (transitionIsAndCross) {
-            for (StateMachine smToReset : concurrentParent.getNestedStateMachines()) {
-              boolean reset = true;
-              if(smToReset.indexOfState(nextState) != -1) {
-                reset = false;
-              } else {
-                for(StateMachine nestedStateMachine : smToReset.getNestedStateMachines()) {
-                  if (nestedStateMachine.indexOfState(nextState) != -1) {
-                    reset = false;
-                    break;
-                  }
+          for (StateMachine smToReset : concurrentParent.getNestedStateMachines()) {
+            if (smToReset.indexOfState(state) != -1) {
+              allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod", smToReset),gen.translate("type", smToReset),gen.translate("stateOne", smToReset.getStartState())));
+              break;
+            } else {
+              boolean reset = false;
+              for(StateMachine nestedStateMachine : smToReset.getNestedStateMachines()) {
+                if (nestedStateMachine.indexOfState(state) != -1) {
+                  reset = true;
+                  break;
                 }
               }
               if (reset) {
-                allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod", smToReset),gen.translate("type", smToReset),gen.translate("stateOne", smToReset.getStartState()))); 
+                allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod", smToReset),gen.translate("type", smToReset),gen.translate("stateOne", smToReset.getStartState())));
+                break;
               }
             }
+          }
         }
 //        allCases.append(traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
 

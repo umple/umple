@@ -871,4 +871,10 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("testRegionFinalStates_5.ump",languagePath + "/testRegionFinalStates_5."+ languagePath +".txt","X");
   }
   
+  @Test
+  public void testRegionFinalStates_6()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_6.ump",languagePath + "/testRegionFinalStates_6."+ languagePath +".txt","X");
+  }
+  
 }

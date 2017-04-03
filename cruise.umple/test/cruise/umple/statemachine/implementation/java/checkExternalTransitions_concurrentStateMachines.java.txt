@@ -101,7 +101,7 @@ public class X
     switch (aSmS1AA)
     {
       case t2:
-        exitSm();
+        exitSmS1A();
         setSmS1BB(SmS1BB.t4);
         setSmS1A(SmS1A.a);
         wasEventProcessed = true;

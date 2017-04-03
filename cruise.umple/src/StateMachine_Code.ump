@@ -203,6 +203,7 @@ class StateMachine
   public List<State> getFinalStates()
   {
     List<StateMachine> all = new ArrayList<StateMachine>();
+    all.add(this);
     all.addAll(getNestedStateMachines());
     return getFinalStatesIn(all);
   }
@@ -703,6 +704,8 @@ class State
         }
         traverser = traverser.getStateMachine().getParentState();
       }
+    } else if (this.getIsConcurrent()) {
+      concurrentRegion = this;
     }
     return concurrentRegion;
   }
@@ -785,6 +788,27 @@ class Transition
     
     return smToExit;
   }
+  
+  /*
+    Issue 140/935 - A helper function to determine if a transition is an and-cross transition
+  */
+  public boolean isTransitionAndCross(State commonConcurrentParent) 
+  {
+     // We've already determined that fromState and nextState are in the same concurrent parent state
+     // However, we need to check if fromState and nextState belong to different state machines
+     // within the concurrent parent state
+     StateMachine fromStateSm = fromState.getStateMachine();
+     StateMachine nextStateSm = nextState.getStateMachine();
+     
+     while (!fromStateSm.getParentState().equals(commonConcurrentParent)) {
+       fromStateSm = fromStateSm.getParentState().getStateMachine();
+     }
+     
+     while (!nextStateSm.getParentState().equals(commonConcurrentParent)) {
+       nextStateSm = nextStateSm.getParentState().getStateMachine();
+     }
+     return !fromStateSm.equals(nextStateSm);
+   }
 }
 
 class Event
