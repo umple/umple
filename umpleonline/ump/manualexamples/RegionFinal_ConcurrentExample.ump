@@ -1,0 +1,30 @@
+// "s1" is an orthogonal region, and it is considered to be complete when
+// all of the concurrent state machines are in their final states
+// (i.e. s2 is in state "s4", s5 is in state "s7", and s8 is in state "s10")
+
+class X {
+  sm {
+    s1 {
+      s2 {
+        s3 {
+         goToS4 -> s4;
+        }
+        final s4 { }
+      }
+      ||
+      s5 { 
+        s6 {
+          goToS7 -> s7;
+        }
+        final s7 { }
+      }
+      ||
+      s8 {
+        s9 {
+          goToS10 -> s10;
+        }
+        final s10 { }
+      }
+    }
+  }
+}

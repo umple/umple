@@ -1,0 +1,30 @@
+Final States
+State Machines
+noreferences
+
+@@description
+
+<p>      
+In Umple, there are two ways to define final states.
+</p>
+
+<p>
+The first way is to use the "Final" keyword. This automatically defines a final state for the top-level state machine. Once the state machine is in this state, it is considered to be complete, and it is terminated. The "Final" keyword can be used as shown in the example below. Note, if a user defines a state named "Final", error <a href="E074UserDefinedStateCannotBeNamedFinal.html">E074 User Defined State Cannot be Named Final</a> will be thrown.
+</p>
+
+<p>
+The second way is to use the "final" keyword. Using this keyword allows users to define final states as shown below. In the case of concurrent state machines, all state machines within the same concurrent region must be in their final states before the enclosing region is considered to be complete. In the case of non-concurrent state machines, as soon as a final state is entered, the state machine is considered to be complete.
+<p>
+
+@@example
+@@source manualexamples/FinalStateKeywordExample.ump &diagramtype=state
+@@endexample
+
+@@example
+@@source manualexamples/RegionFinal_ConcurrentExample.ump &diagramtype=state
+@@endexample
+
+
+@@example
+@@source manualexamples/RegionFinal_NonConcurrentExample.ump &diagramtype=state
+@@endexample
