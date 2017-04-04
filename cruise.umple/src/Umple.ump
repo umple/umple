@@ -481,6 +481,15 @@ class Key
 }
 
 /*
+ * Represents an enumeration
+ */
+ class UmpleEnumeration
+ {
+   name;
+   String[] values;
+ }
+
+/*
  * Represents an Umple classifier: a Class or Interface
  */
 class UmpleClassifier
@@ -549,7 +558,9 @@ class UmpleClass
   Boolean isSingleton = false;
 
   Association[] associations;
-
+  
+  UmpleEnumeration[] enums;
+  
   // List of candidate methods that were not added to the class
   Method[] unimplementedMethods;
 
