@@ -7,6 +7,7 @@ use attribute_Set_All.ump;
 use class_MethodDeclaration.ump;
 use constructor_Declare_All.ump;
 use delete_All.ump;
+use enumerations_All.ump;
 use equals.ump;
 use import_packages.ump;
 use members_AllAssociations.ump;
@@ -143,7 +144,9 @@ for (StateMachine smq : uClass.getStateMachines())
   
 #>>
 {
-  <<#getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
+  <<#
+  getEnumerationCode(realSb, uClass, isFirst);
+  getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
   getConstructorCode(realSb, model,uClass,gClass,gen,isFirst, false);
   getProxyReferenceCode(realSb, model,uClass);
   getDistributedMethodsCode(realSb, model,uClass);
@@ -156,7 +159,13 @@ for (StateMachine smq : uClass.getStateMachines())
   getExtraMethodsCode(realSb, model,uClass,gClass,gen,isFirst);
   getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
   return realSb;
-    } 
+    }
+    
+  private void getEnumerationCode(StringBuilder realSb, UmpleClass uClass, boolean isFirst)
+  {
+    #>><<@ UmpleToJava.enumerations_All >><<#
+  }
+   
     private String getDistributedMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
     {if(uClass.getHasProxyPattern()||uClass.getIsDistributed()){#>>
   //------------------------
@@ -183,9 +192,11 @@ for (StateMachine smq : uClass.getStateMachines())
 
     <<#}return realSb.toString();
     }
+  
     private String getMemberCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   { 
     String self="this";
+    
     if(uClass.getIsDistributed()&&model.getDistributePattern()==1)
       self="self";
   #>><<@ UmpleToJava.members_AllStatics >><<@ UmpleToJava.members_AllAttributes >><<@ UmpleToJava.members_AllStateMachines >><<@ UmpleToJava.members_AllDoActivities >><<@ UmpleToJava.members_AllAssociations >><<@ UmpleToJava.members_AllHelpers >>
