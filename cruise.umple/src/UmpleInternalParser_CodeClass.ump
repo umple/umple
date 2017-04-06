@@ -275,6 +275,11 @@ class UmpleInternalParser
         unanalyzedInvariants.put(aClass, new ArrayList<Token>());
       }
       unanalyzedInvariants.get(aClass).add(token);
+    }
+    else if (token.is("enumerationDefinition"))
+    {
+      // Issue 1008
+      analyzeEnumeration(token, aClass);
     }    
     else if (token.is("exception"))
     {
@@ -287,7 +292,22 @@ class UmpleInternalParser
     {
       lastComments.clear();
     }
-  }    
+  }
+  
+  /* Issue 1008
+   * Process "enumerationDefinition" tokens, convert them into UmpleEnumeration objects
+   * and then add them to aClass
+   */
+  private void analyzeEnumeration(Token enumToken, UmpleClass aClass)
+  {
+    UmpleEnumeration umpleEnum = new UmpleEnumeration(enumToken.getSubToken("name").getValue());
+    for (Token subToken : enumToken.getSubTokens()) {
+      if (subToken.is("enumValue")) {
+        umpleEnum.addEnumValue(subToken.getValue());
+      }
+    }     
+    aClass.addEnum(umpleEnum);
+  }  
 
   /**
    * Analyzes a comment to determine if it should be added into the list of currently parsed comments waiting to be added to

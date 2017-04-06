@@ -486,7 +486,7 @@ class Key
  class UmpleEnumeration
  {
    name;
-   String[] values;
+   String[] enumValues;
  }
 
 /*
