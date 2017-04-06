@@ -2749,7 +2749,7 @@ public class UmpleParserTest
 	assertParse("412_association_comment.ump");
   }
 
-  // Ensure error 1007 is returned for unrecogrnized lines
+  // Ensure error 1007 is returned for unrecognized lines
   // Test for issue 516 by M.K
   @Test
   public void assertSetFailedPosition() throws Exception {
@@ -2757,6 +2757,26 @@ public class UmpleParserTest
     assertHasWarningsParse("380_noLineEndingTrait.ump",1007);
     assertHasWarningsParse("380_multipleNoLineEndingsClass.ump",1007);
     assertHasWarningsParse("380_multipleNoLineEndingsTrait.ump",1007);
+  }
+  
+  // Issue 1008
+  @Test
+  public void parseUmpleEnumeration() {
+    assertSimpleParse("050_enumeration.ump");
+    UmpleClass uClass = model.getUmpleClass("Student");
+    Assert.assertEquals(3, uClass.getEnums().length);
+
+    Assert.assertEquals("status", uClass.getEnum(0).getName());
+    Assert.assertEquals("FullTime", uClass.getEnum(0).getEnumValue(0));
+    Assert.assertEquals("PartTime", uClass.getEnum(0).getEnumValue(1));
+
+    Assert.assertEquals("grade", uClass.getEnum(1).getName());
+    Assert.assertEquals("High", uClass.getEnum(1).getEnumValue(0));
+
+    Assert.assertEquals("relationshipStatus", uClass.getEnum(2).getName());
+    Assert.assertEquals("single", uClass.getEnum(2).getEnumValue(0));
+    Assert.assertEquals("married", uClass.getEnum(2).getEnumValue(1));
+    Assert.assertEquals("divorced", uClass.getEnum(2).getEnumValue(2));
   }
 
   public boolean parse(String filename)

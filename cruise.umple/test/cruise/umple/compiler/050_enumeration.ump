@@ -1,0 +1,6 @@
+class Student
+{
+  enum status { FullTime, PartTime }
+  enum grade { High }
+  enum relationshipStatus { single, married, divorced }
+}
