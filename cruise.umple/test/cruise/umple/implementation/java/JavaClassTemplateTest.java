@@ -183,4 +183,18 @@ public class JavaClassTemplateTest extends ClassTemplateTest
 				 			 "java/ClassTemplateTest_StateMachineDoesNotImplementInterface.java.txt",
 				 			 "FileLogger");
   }
+  
+  @Test
+  public void TestUmpleEnumerations(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations.ump",
+        "java/TestUmpleEnumerations.java.txt",
+        "Student");
+  }
+  
+  @Test
+  public void TestUmpleEnumerations_2(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_2.ump",
+        "java/TestUmpleEnumerations_2.java.txt",
+        "X");
+  }
 }

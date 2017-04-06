@@ -1,0 +1,35 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Student
+{
+
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
+  public enum Status { FullTime, PartTime }
+  public enum Grade { High }
+  public enum RelationshipStatus { Single, Married, Divorced }
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+}
