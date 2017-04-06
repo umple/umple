@@ -980,8 +980,18 @@ class CodeBlock
     	codes.put(language, codes.get(language)+keyword) ;
     }
   }
+  /*
+   * @author Vahdat
+   * This function searches for a specific keyword in all langauges in the code blocks.
+   */  
+  public boolean hasKeyword(String keyword){
+    if(keyword==null || keyword=="") return false;
+    for (String language : codes.keySet()) {
+        if (codes.get(language).contains(keyword)) return true;
+      }
+    return false;
+  }
   
-   
   public CodeBlock(String add)
   {
     this();

@@ -853,7 +853,6 @@ public class UmpleTraitTest {
 	 */
 	@Test
 	public void stateMachineTraits051Test() {
-		
 		UmpleModel model = getModelByFilename("trait_test_data_0009.ump");
 		boolean result = false;
 		try {
@@ -1691,6 +1690,26 @@ public class UmpleTraitTest {
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfNestedStateMachines(),1);
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getName(),"r1");
 	}
+	
+	
+	@Test
+	public void stateMachineTraits0111Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0068.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry").get(0).getActionCode().contains("entryA();"));
+	}
+
+	@Test
+	public void stateMachineTraits0112Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0069.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit").get(0).getActionCode().contains("exitA();"));
+	}
+	
+	@Test
+	public void stateMachineTraits0113Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0070.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities().get(0).getActivityCode().contains("doA();"));
+	}
+	
 	
 	// the last StateTest
 
