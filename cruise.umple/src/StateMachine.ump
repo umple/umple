@@ -116,6 +116,7 @@ class Activity
   	  activityCode = lang+code;
   	codeblock.setCode(lang,code);
   }
+
 }
 /* 
  * Specifies, within a state, what happens with a certain event (method call) occurs
@@ -182,6 +183,7 @@ class Action
   }
   
   key { actionType, actionCode, position } 
+
 }
 
 class Event

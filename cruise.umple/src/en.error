@@ -154,8 +154,8 @@
 231: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}' and its state machine '{1}', the event '{2}' does not exist. ;
 232: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}' and its state machines, the event '{1}' does not exist. ;
 233: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', the {1} state {2} cannot be removed.;
-234: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the even '{0}' which comes from '{1}' and '{2}' results in none-determinism so the composition is not allowed.;
-235: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the even '{0}' in state '{1}' which comes from traits '{2}' and '{3}' results in a conflict.;
+234: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the event '{0}' which comes from '{1}' and '{2}' results in none-determinism so the composition is not allowed.;
+235: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the event '{0}' in state '{1}' which comes from traits '{2}' and '{3}' results in a conflict.;
 236: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the '{0}' activity/action in state '{1}', which comes from traits '{2}' and '{3}', results in a conflict.;
 
 # Messages related to MOTL
