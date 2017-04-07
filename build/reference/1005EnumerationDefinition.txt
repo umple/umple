@@ -11,6 +11,12 @@ An enumeration is a user-defined data type that is a set of constants.
 
 <p>
 As shown in the examples below, enumerations require the keyword "enum" followed by the name of the enumeration, and its values.
+If duplicate enumerations are detected, <a href="E095DuplicateEnumerations.html">E095 Duplicate Enumerations</a> will be raised.
+</p>
+
+<p>
+If enumerations outside of class bodies have the same name as the enumerations within class bodies, the enumeration within the class body will be used in 
+the generated code.
 </p>
 
 @@syntax
@@ -27,4 +33,8 @@ As shown in the examples below, enumerations require the keyword "enum" followed
 
 @@example
 @@source manualexamples/EnumerationDefinition3.ump
+@@endexample
+
+@@example
+@@source manualexamples/EnumerationDefinition4.ump
 @@endexample

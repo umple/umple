@@ -49,6 +49,12 @@ class UmpleInternalParser
    */
   private void analyzeEnumeration(Token enumToken, UmpleClass aClass)
   {
+    // Check if the enumeration has already been defined in the class. If it does, raise E095 Duplicate Enumerations
+    if (aClass.hasEnum(enumToken.getSubToken("name").getValue())) {
+      getParseResult().addErrorMessage(new ErrorMessage(95, enumToken.getPosition(), enumToken.getSubToken("name").getValue(), "" + enumToken.getPosition().getLineNumber()));
+      return;
+    }
+    
     UmpleEnumeration umpleEnum = new UmpleEnumeration(enumToken.getSubToken("name").getValue());
     for (Token subToken : enumToken.getSubTokens()) {
       if (subToken.is("enumValue")) {

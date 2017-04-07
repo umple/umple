@@ -2817,6 +2817,12 @@ public class UmpleParserTest
  public void duplicateEnumerationsError() {
    assertFailedParse("050_duplicateEnumerationsError.ump", 95);
  }
+ 
+ //Issue 1008
+ @Test
+ public void duplicateEnumsInClass() {
+  assertFailedParse("050_duplicateEnumsInClass.ump", 95);
+ }
 
   public boolean parse(String filename)
   {
