@@ -1,0 +1,54 @@
+/*
+ * Issue 1008 
+ * This file defines all of the methods required to process enumerations
+ * in Umple
+ */
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+  /*
+   * Issue 1008 - Analyze enumerations defined at the top-level of an Umple Model
+   */
+   private void analyzeEnumerationToken(Token t, int analysisStep) {
+     if (analysisStep != 1)
+     {
+       return;
+     }
+   
+     if (t.is("enumerationDefinition"))
+     {
+       analyzeEnumeration(t);
+     }
+   }
+   
+   /*
+    * Issue 1008 - Add enumerations defined at the top-level of an Umple Model to model
+    */
+   private void analyzeEnumeration(Token enumToken) {
+     UmpleEnumeration umpleEnum = new UmpleEnumeration(enumToken.getSubToken("name").getValue());
+     for (Token subToken : enumToken.getSubTokens()) {
+       if (subToken.is("enumValue")) {
+         umpleEnum.addEnumValue(subToken.getValue());
+       }
+     }     
+     model.addEnum(umpleEnum);
+   }
+   
+  /* 
+   * Issue 1008
+   * Process "enumerationDefinition" tokens, convert them into UmpleEnumeration objects
+   * and then add them to aClass
+   */
+  private void analyzeEnumeration(Token enumToken, UmpleClass aClass)
+  {
+    UmpleEnumeration umpleEnum = new UmpleEnumeration(enumToken.getSubToken("name").getValue());
+    for (Token subToken : enumToken.getSubTokens()) {
+      if (subToken.is("enumValue")) {
+        umpleEnum.addEnumValue(subToken.getValue());
+      }
+    }     
+    aClass.addEnum(umpleEnum);
+  }
+}

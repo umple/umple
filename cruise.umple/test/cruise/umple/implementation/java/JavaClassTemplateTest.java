@@ -197,4 +197,24 @@ public class JavaClassTemplateTest extends ClassTemplateTest
         "java/TestUmpleEnumerations_2.java.txt",
         "X");
   }
+  
+  @Test
+  public void TestUmpleEnumerations_3(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_3.ump",
+        "java/TestUmpleEnumerations_3_c1.java.txt",
+        "C1");
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_3.ump",
+        "java/TestUmpleEnumerations_3_c2.java.txt",
+        "C2");
+  }
+  
+  @Test
+  public void TestUmpleEnumerations_4(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_4.ump",
+        "java/TestUmpleEnumerations_4_c1.java.txt",
+        "C1");
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_4.ump",
+        "java/TestUmpleEnumerations_4_c2.java.txt",
+        "C2");
+  }
 }

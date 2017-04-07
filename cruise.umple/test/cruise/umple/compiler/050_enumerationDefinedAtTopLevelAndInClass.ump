@@ -1,0 +1,13 @@
+namespace example;
+
+enum Status { married, single, divorced }
+
+class C1{
+  Status status;
+}
+
+class C2{
+  enum Gender { male, female }
+  Gender gender;
+  Status status;
+}

@@ -2,6 +2,19 @@ use enumeration.ump;
 
 class UmpleToJava {
   enumerations_All <<!<</*enumerations_All*/>><<#
+  for (UmpleEnumeration umpleEnum : model.getEnums()) {
+     if (isFirst) {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      appendln(realSb, "  //------------------------");
+      appendln(realSb, "  // ENUMERATIONS");
+      append(realSb, "  //------------------------");
+      appendln(realSb, "");
+      isFirst = false;
+    }
+    #>><<@ UmpleToJava.enumeration >><<#
+  }
+  
   for (UmpleEnumeration umpleEnum : uClass.getEnums()) {
     if (isFirst) {
       appendln(realSb, "");
