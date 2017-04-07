@@ -24,7 +24,8 @@ associationDefinition : association [name]? { ([[comment]] | [[association]])* }
 // See user manual page [*AssociationClassDefinition*]
 associationClassDefinition : associationClass [name] { [[associationClassContent]]* }
 
-// Issue 1008
+// Enumerations can be declared outside the body of classes
+// See user manual page [*EnumerationDefinition*]
 enumerationDefinition : enum [name] { [enumValue](, [enumValue])* }
 
 // The following items can be found inside the body of classes or association classes
