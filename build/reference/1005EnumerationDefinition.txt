@@ -1,0 +1,30 @@
+Enumeration Definition
+Enumerations
+noreferences
+
+@@description
+
+<p>
+The Umple language allows developers to define enumerations for either a single class, or to share between classes.
+An enumeration is a user-defined data type that is a set of constants.
+</p>
+
+<p>
+As shown in the examples below, enumerations require the keyword "enum" followed by the name of the enumeration, and its values.
+</p>
+
+@@syntax
+[[enumerationDefinition]]
+
+@@example
+@@source manualexamples/EnumerationDefinition1.ump
+@@endexample
+
+@@example
+@@source manualexamples/EnumerationDefinition2.ump
+@@endexample
+
+
+@@example
+@@source manualexamples/EnumerationDefinition3.ump
+@@endexample
