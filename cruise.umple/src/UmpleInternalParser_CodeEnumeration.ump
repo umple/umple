@@ -26,15 +26,21 @@ class UmpleInternalParser
    /*
     * Issue 1008 - Add enumerations defined at the top-level of an Umple Model to model
     */
-   private void analyzeEnumeration(Token enumToken) {
-     UmpleEnumeration umpleEnum = new UmpleEnumeration(enumToken.getSubToken("name").getValue());
+   private void analyzeEnumeration(Token enumToken){
+    // Check if the enumeration has already been defined in the model. If it does, raise E095 Duplicate Enumerations
+    if (model.hasEnum(enumToken.getSubToken("name").getValue())) {
+      getParseResult().addErrorMessage(new ErrorMessage(95, enumToken.getPosition(), enumToken.getSubToken("name").getValue(), "" + enumToken.getPosition().getLineNumber()));
+      return;
+    }
+    
+    UmpleEnumeration umpleEnum = new UmpleEnumeration(enumToken.getSubToken("name").getValue());
      for (Token subToken : enumToken.getSubTokens()) {
        if (subToken.is("enumValue")) {
          umpleEnum.addEnumValue(subToken.getValue());
        }
      }     
      model.addEnum(umpleEnum);
-   }
+  }
    
   /* 
    * Issue 1008
