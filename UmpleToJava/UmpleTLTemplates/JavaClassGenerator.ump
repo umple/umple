@@ -165,6 +165,45 @@ for (StateMachine smq : uClass.getStateMachines())
   {
     #>><<@ UmpleToJava.enumerations_All >><<#
   }
+  
+  /*
+   * Issue 1008 - A helper function to determine if a class uses an enum defined in the model
+   */
+  private boolean classUsesEnum(String enumName, UmpleClass uClass) 
+  {
+    // Check if the class has any attributes that use the enum
+     for (Attribute a : uClass.getAttributes()) {
+       if (a.getType().equals(enumName)) {
+         return true;
+       }
+     }
+     
+     // Check if the class has any methods that use the enum as their return type, or as parameters
+     for (Method m : uClass.getMethods()) {
+       if (m.getType().equals(enumName)) {
+         return true;
+       } else {
+         for (MethodParameter p : m.getMethodParameters()) {
+           if (p.getType().equals(enumName)) {
+             return true;
+           }
+         }
+       }
+      }
+     
+    // Check if the class has any event methods that use the enum in their parameters
+    for (StateMachine sm : uClass.getStateMachines()) {
+      for (Event e : sm.getEvents()) {
+        for (MethodParameter p : e.getParams()) {
+          if (p.getType().contentEquals(enumName)) {
+            return true;
+          }
+        }
+      }
+    }
+    
+    return false;
+  }
    
     private String getDistributedMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
     {if(uClass.getHasProxyPattern()||uClass.getIsDistributed()){#>>

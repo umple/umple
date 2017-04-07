@@ -3,16 +3,21 @@ use enumeration.ump;
 class UmpleToJava {
   enumerations_All <<!<</*enumerations_All*/>><<#
   for (UmpleEnumeration umpleEnum : model.getEnums()) {
-     if (isFirst) {
-      appendln(realSb, "");
-      appendln(realSb, "");
-      appendln(realSb, "  //------------------------");
-      appendln(realSb, "  // ENUMERATIONS");
-      append(realSb, "  //------------------------");
-      appendln(realSb, "");
-      isFirst = false;
+     String enumName = StringFormatter.toPascalCase(umpleEnum.getName());
+     boolean classUsesEnum = classUsesEnum(enumName, uClass);
+
+     if (classUsesEnum) {
+       if (isFirst) {
+        appendln(realSb, "");
+        appendln(realSb, "");
+        appendln(realSb, "  //------------------------");
+        appendln(realSb, "  // ENUMERATIONS");
+        append(realSb, "  //------------------------");
+        appendln(realSb, "");
+        isFirst = false;
+       }
+       #>><<@ UmpleToJava.enumeration >><<#
     }
-    #>><<@ UmpleToJava.enumeration >><<#
   }
   
   for (UmpleEnumeration umpleEnum : uClass.getEnums()) {
