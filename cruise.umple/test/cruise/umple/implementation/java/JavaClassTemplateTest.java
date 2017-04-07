@@ -250,4 +250,11 @@ public class JavaClassTemplateTest extends ClassTemplateTest
         "java/TestUmpleEnumerations_7_Z.java.txt",
         "Z");
   }
+  
+  @Test
+  public void TestUmpleEnumerations_8(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_8.ump",
+        "java/TestUmpleEnumerations_8.java.txt",
+        "A");
+  }
 }
