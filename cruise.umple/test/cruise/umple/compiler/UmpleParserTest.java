@@ -2811,6 +2811,12 @@ public class UmpleParserTest
    Assert.assertEquals("male", c2.getEnum(0).getEnumValue(0));
    Assert.assertEquals("female", c2.getEnum(0).getEnumValue(1));
  }
+ 
+ // Issue 1008
+ @Test
+ public void duplicateEnumerationsError() {
+   assertFailedParse("050_duplicateEnumerationsError.ump", 95);
+ }
 
   public boolean parse(String filename)
   {
