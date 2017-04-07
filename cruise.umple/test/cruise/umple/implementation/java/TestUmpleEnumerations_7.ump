@@ -1,0 +1,20 @@
+namespace example;
+
+enum Month { Jan, Feb, Mar }
+
+class X {
+  String displayMonth(Month m) { return(m.toString()) }
+}
+
+class Y {
+  sm  {
+    s1 {
+     goToS2(Month m) / {System.out.println(m);} -> s2;
+    }
+    s2 {}
+  }
+}
+
+class Z {
+  Month getBirthMonth() { return Month.Jan; } 
+}

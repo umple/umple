@@ -1,0 +1,57 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class X1
+{
+
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
+  public enum Month { January, February, March }
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X1 Attributes
+  private Month month;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X1(Month aMonth)
+  {
+    month = aMonth;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setMonth(Month aMonth)
+  {
+    boolean wasSet = false;
+    month = aMonth;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public Month getMonth()
+  {
+    return month;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "month" + "=" + (getMonth() != null ? !getMonth().equals(this)  ? getMonth().toString().replaceAll("  ","    ") : "this" : "null");
+  }
+}
