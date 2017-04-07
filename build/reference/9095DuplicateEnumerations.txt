@@ -18,3 +18,7 @@ In Umple, enumerations must have unique names.
 @@example
 @@source manualexamples/E095DuplicateEnumerations2.ump
 @@endexample
+
+@@example
+@@source manualexamples/E095DuplicateEnumerations3.ump
+@@endexample
