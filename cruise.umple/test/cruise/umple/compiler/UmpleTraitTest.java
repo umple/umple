@@ -1304,19 +1304,19 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void stateMachineTraits068Test() {
-//		UmpleModel model = getRunModelByFilename("trait_test_data_0027.ump");
-//		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(1).getNestedStateMachine(0).getState(0).getTransition(0).getAction().getActionCode(),"ww();");
-//		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(1).getNestedStateMachine(0).getState(1).getTransition(0).getAction().getActionCode(),"ww1();");
-		UmpleModel model = getModelByFilename("trait_test_data_0027.ump");
-		boolean result = false;
-		try {
-			model.run();
-		} catch (Exception e) {
-			result = e.getMessage().contains("235");
-		} finally {
-			Assert.assertTrue(result);
-			SampleFileWriter.destroy("traitTest.ump");
-		}
+		UmpleModel model = getRunModelByFilename("trait_test_data_0027.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(1).getNestedStateMachine(0).getState(0).getTransition(0).getAction().getActionCode(),"ww();");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(1).getNestedStateMachine(0).getState(1).getTransition(0).getAction().getActionCode(),"ww1();");
+//		UmpleModel model = getModelByFilename("trait_test_data_0027.ump");
+//		boolean result = false;
+//		try {
+//			model.run();
+//		} catch (Exception e) {
+//			result = e.getMessage().contains("235");
+//		} finally {
+//			Assert.assertTrue(result);
+//			SampleFileWriter.destroy("traitTest.ump");
+//		}
 	}
 	
 	@Test
@@ -1700,6 +1700,33 @@ public class UmpleTraitTest {
 		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities().get(0).getActivityCode().contains("doA();"));
 	}
 	
+	@Test
+	public void stateMachineTraits0114Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0071.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry").get(0).getActionCode().contains("entry3();"));
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry").get(0).getActionCode().contains("entry2();"));
+	}
+	
+	@Test
+	public void stateMachineTraits0115Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0072.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("action3();"));
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("action2();"));
+	}
+	
+	@Test
+	public void stateMachineTraits0116Test() {	
+		UmpleModel model = getModelByFilename("trait_test_data_0073.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("236");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
 	
 	// the last StateTest
 

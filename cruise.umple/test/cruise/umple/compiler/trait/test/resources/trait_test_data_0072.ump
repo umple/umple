@@ -1,0 +1,28 @@
+trait T1{
+  sm{
+    s1{ 
+      entry /{  entry1();}
+      e1 ->s1;
+    }
+  }
+}
+trait T2{
+  sm{
+    
+    s1{ 
+      entry /{entry2();}
+      e1 -> /{action2();} s2;
+    }
+    s2{}
+  }
+}
+class A{
+  isA T1,T2;
+  sm{
+    s1{
+      entry /{  entry3();}
+      e1 -> /{  superCall; action3();} s3;
+    }
+    s3{}
+  }
+}
