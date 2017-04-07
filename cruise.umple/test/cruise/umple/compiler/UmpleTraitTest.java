@@ -1275,21 +1275,11 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void stateMachineTraits065Test() {
-//		UmpleModel model = getRunModelByFilename("trait_test_data_0023.ump");
-//		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getAllTransitions().size(),3);
-//		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(0).getNextState().getName(),"on");
-//		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(1).getNextState().getName(),"on");
-//		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(2).getNextState().getName(),"on");
-		UmpleModel model = getModelByFilename("trait_test_data_0023.ump");
-		boolean result = false;
-		try {
-			model.run();
-		} catch (Exception e) {
-			result = e.getMessage().contains("234");
-		} finally {
-			Assert.assertTrue(result);
-			SampleFileWriter.destroy("traitTest.ump");
-		}
+		UmpleModel model = getRunModelByFilename("trait_test_data_0023.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getAllTransitions().size(),3);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(0).getNextState().getName(),"on");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(1).getNextState().getName(),"on");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(2).getNextState().getName(),"on");
 	}
 	
 	@Test

@@ -1060,7 +1060,7 @@ class UmpleInternalParser
                 return;
                }
               }
-              break;
+           //   break;
           }
           if(findTransition!=null){
             applyCompositionAndSuperKeywordToTransition(inSMachine1, inSMachine2, findTransition, tTransition,inUmpleClassfier);
