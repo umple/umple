@@ -1,0 +1,57 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class C1
+{
+
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
+  public enum Status { Married, Single, Divorced }
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //C1 Attributes
+  private Status status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public C1(Status aStatus)
+  {
+    status = aStatus;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setStatus(Status aStatus)
+  {
+    boolean wasSet = false;
+    status = aStatus;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null");
+  }
+}

@@ -2761,10 +2761,10 @@ public class UmpleParserTest
   
   // Issue 1008
   @Test
-  public void parseUmpleEnumeration() {
-    assertSimpleParse("050_enumeration.ump");
+  public void parseUmpleEnumerationDefinedInClass() {
+    assertSimpleParse("050_enumerationDefinedInClass.ump");
     UmpleClass uClass = model.getUmpleClass("Student");
-    Assert.assertEquals(3, uClass.getEnums().length);
+    Assert.assertEquals(3, uClass.getEnums().size());
 
     Assert.assertEquals("status", uClass.getEnum(0).getName());
     Assert.assertEquals("FullTime", uClass.getEnum(0).getEnumValue(0));
@@ -2778,6 +2778,39 @@ public class UmpleParserTest
     Assert.assertEquals("married", uClass.getEnum(2).getEnumValue(1));
     Assert.assertEquals("divorced", uClass.getEnum(2).getEnumValue(2));
   }
+  
+  // Issue 1008
+  @Test
+  public void parseUmpleEnumerationDefinedAtTopLevel() {
+    assertSimpleParse("050_enumerationDefinedAtTopLevel.ump");
+    UmpleClass c1 = model.getUmpleClass("C1");
+    UmpleClass c2 = model.getUmpleClass("C2");
+    Assert.assertEquals(1, model.getEnums().size());
+    Assert.assertEquals(0, c1.getEnums().size());
+    Assert.assertEquals(0, c2.getEnums().size());
+    Assert.assertEquals("Status", model.getEnum(0).getName());
+    Assert.assertEquals("married", model.getEnum(0).getEnumValue(0));
+    Assert.assertEquals("single", model.getEnum(0).getEnumValue(1));
+    Assert.assertEquals("divorced", model.getEnum(0).getEnumValue(2));
+  }
+  
+//Issue 1008
+ @Test
+ public void parseUmpleEnumerationDefinedAtTopLevelAndInClass() {
+   assertSimpleParse("050_enumerationDefinedAtTopLevelAndInClass.ump");
+   UmpleClass c1 = model.getUmpleClass("C1");
+   UmpleClass c2 = model.getUmpleClass("C2");
+   Assert.assertEquals(1, model.getEnums().size());
+   Assert.assertEquals(0, c1.getEnums().size());
+   Assert.assertEquals(1, c2.getEnums().size());
+   Assert.assertEquals("Status", model.getEnum(0).getName());
+   Assert.assertEquals("married", model.getEnum(0).getEnumValue(0));
+   Assert.assertEquals("single", model.getEnum(0).getEnumValue(1));
+   Assert.assertEquals("divorced", model.getEnum(0).getEnumValue(2));
+   Assert.assertEquals("Gender", c2.getEnum(0).getName());
+   Assert.assertEquals("male", c2.getEnum(0).getEnumValue(0));
+   Assert.assertEquals("female", c2.getEnum(0).getEnumValue(1));
+ }
 
   public boolean parse(String filename)
   {

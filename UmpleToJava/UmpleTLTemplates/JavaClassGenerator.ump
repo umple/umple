@@ -145,7 +145,7 @@ for (StateMachine smq : uClass.getStateMachines())
 #>>
 {
   <<#
-  getEnumerationCode(realSb, uClass, isFirst);
+  getEnumerationCode(realSb, model, uClass, isFirst);
   getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
   getConstructorCode(realSb, model,uClass,gClass,gen,isFirst, false);
   getProxyReferenceCode(realSb, model,uClass);
@@ -161,7 +161,7 @@ for (StateMachine smq : uClass.getStateMachines())
   return realSb;
     }
     
-  private void getEnumerationCode(StringBuilder realSb, UmpleClass uClass, boolean isFirst)
+  private void getEnumerationCode(StringBuilder realSb, UmpleModel model, UmpleClass uClass, boolean isFirst)
   {
     #>><<@ UmpleToJava.enumerations_All >><<#
   }

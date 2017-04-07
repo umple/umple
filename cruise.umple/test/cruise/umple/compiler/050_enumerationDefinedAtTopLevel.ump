@@ -1,0 +1,9 @@
+enum Status { married, single, divorced }
+
+class C1{
+  Status status;
+}
+
+class C2{
+  Status status;
+}

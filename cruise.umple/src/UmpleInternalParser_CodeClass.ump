@@ -292,21 +292,6 @@ class UmpleInternalParser
     {
       lastComments.clear();
     }
-  }
-  
-  /* Issue 1008
-   * Process "enumerationDefinition" tokens, convert them into UmpleEnumeration objects
-   * and then add them to aClass
-   */
-  private void analyzeEnumeration(Token enumToken, UmpleClass aClass)
-  {
-    UmpleEnumeration umpleEnum = new UmpleEnumeration(enumToken.getSubToken("name").getValue());
-    for (Token subToken : enumToken.getSubTokens()) {
-      if (subToken.is("enumValue")) {
-        umpleEnum.addEnumValue(subToken.getValue());
-      }
-    }     
-    aClass.addEnum(umpleEnum);
   }  
 
   /**
