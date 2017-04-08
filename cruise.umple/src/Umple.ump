@@ -488,8 +488,11 @@ class Key
  */
  class UmpleEnumeration
  {
+   depend cruise.umple.parser.Position;
+   
    name;
    String[] enumValues;
+   1 -> 0..1 Position;
  }
 
 /*
@@ -1105,3 +1108,4 @@ use UmpleVersion.ump;
 use UmpleDiagram.ump;
 use StateMachine.ump;
 use Umple_Code.ump;
+use UmpleEnumeration_Code.ump;

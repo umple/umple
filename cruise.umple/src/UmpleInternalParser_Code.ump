@@ -333,6 +333,11 @@ class UmpleInternalParser
     {
       postTokenModelConstraintAnalysis();
     }
+    
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenEnumerationAnalysis();
+    }
   }
   
   //This is used for the cases that will be resolved by traits and we don't need to see those warnings.

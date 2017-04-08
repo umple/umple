@@ -1,0 +1,7 @@
+enum Y { Red, Blue, Green }
+
+class X {
+  Y getMyY(){ return new Y(); }
+}
+
+class Y { }

@@ -2824,6 +2824,52 @@ public class UmpleParserTest
   assertFailedParse("050_duplicateEnumsInClass.ump", 95);
  }
 
+ // Issue 1008
+ @Test
+ public void namingConflictBetweenEnumerationAndClass() {
+   assertFailedParse("051_namingConflictBetweenEnumerationAndClass1.ump", 96);
+   assertFailedParse("051_namingConflictBetweenEnumerationAndClass2.ump", 96);
+   assertFailedParse("051_namingConflictBetweenEnumerationAndClass3.ump", 96);
+ }
+ 
+ // Issue 1008
+ @Test
+ public void enumerationConflictsWithStateMachine() {
+   assertFailedParse("052_enumerationConflictsWithStateMachine1.ump", 97);
+   assertFailedParse("052_enumerationConflictsWithStateMachine2.ump", 97);
+ }
+ 
+ // Issue 1008
+ @Test
+ public void attributeAmbiguityCausedByEnumeration() {
+   assertHasWarningsParse("053_attributeAmbiguityCausedByEnumeration1.ump", 98);
+   assertHasWarningsParse("053_attributeAmbiguityCausedByEnumeration2.ump", 98);
+   assertHasNoWarningsParse("053_attributeAmbiguityCausedByEnumeration3.ump");
+ }
+ 
+ // Issue 1008
+ @Test
+ public void methodReturnTypeAmbiguityCausedByEnumeration() {
+   assertHasWarningsParse("054_methodReturnTypeAmbiguityCausedByEnumeration1.ump", 99);
+   assertHasNoWarningsParse("054_methodReturnTypeAmbiguityCausedByEnumeration2.ump");
+ }
+ 
+ // Issue 1008
+ @Test
+ public void methodParameterAmbiguityCausedByEnumeration() {
+   assertHasWarningsParse("055_methodParameterAmbiguityCausedByEnumeration1.ump", 102);
+   assertHasWarningsParse("055_methodParameterAmbiguityCausedByEnumeration2.ump", 102);
+   assertHasNoWarningsParse("055_methodParameterAmbiguityCausedByEnumeration3.ump");
+ }
+ 
+ // Issue 1008
+ @Test
+ public void eventParameterAmbiguityCausedByEnumeration() {
+   assertHasWarningsParse("056_eventParameterAmbiguityCausedByEnumeration1.ump", 103);
+   assertHasWarningsParse("056_eventParameterAmbiguityCausedByEnumeration2.ump", 103);
+   assertHasNoWarningsParse("056_eventParameterAmbiguityCausedByEnumeration3.ump");
+ }
+ 
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));
