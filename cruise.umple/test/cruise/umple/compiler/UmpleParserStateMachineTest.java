@@ -1082,7 +1082,7 @@ public class UmpleParserStateMachineTest
     for (int i = 0; i < transition.size(); i++)
       System.out.println(transition.get(i).getEvent().getName());
 
-    assertHasWarning("212_standAloneTransition6.ump", 2, 50, new Position("212_standAloneTransition6.ump", 4, 2, 33));
+    assertHasWarning("212_standAloneTransition6.ump", 1, 50, new Position("212_standAloneTransition6.ump", 4, 2, 33));
 
   }
 
@@ -1367,8 +1367,8 @@ public class UmpleParserStateMachineTest
     // Make sure it throws an warning when a state in a transition has not been
     // declared.
     assertHasWarning("105_transitionUsingUndeclaredState.ump", 0, 50, new Position("105_transitionUsingUndeclaredState.ump", 7, 6, 75));
-    assertHasWarning("105_multipleTransitionsUsingUndeclaredState.ump", 1, 50, new Position("105_multipleTransitionsUsingUndeclaredState.ump", 7, 6, 75));
-    assertHasWarning("105_multipleTransitionsUsingUndeclaredState.ump", 2, 50, new Position("105_multipleTransitionsUsingUndeclaredState.ump", 10, 6, 113));
+    assertHasWarning("105_multipleTransitionsUsingUndeclaredState.ump", 0, 50, new Position("105_multipleTransitionsUsingUndeclaredState.ump", 7, 6, 75));
+    assertHasWarning("105_multipleTransitionsUsingUndeclaredState.ump", 1, 50, new Position("105_multipleTransitionsUsingUndeclaredState.ump", 10, 6, 113));
   }
 
   @Test
