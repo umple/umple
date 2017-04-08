@@ -335,11 +335,14 @@ class UmpleInternalParser
   }
   
   //This is used for the cases that will be resolved by traits and we don't need to see those warnings.
-  private void secondPostTokenAnalysis()
-  {
+  private void secondPostTokenAnalysis()  {
     if (getParseResult().getWasSuccess())
     {
       postTokenStateMachineAnalysis();
+    }
+    if (getParseResult().getWasSuccess()){
+      //Issue 492
+      checkNonReachableStates();
     }
   }
   

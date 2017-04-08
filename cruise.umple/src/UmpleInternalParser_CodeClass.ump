@@ -369,8 +369,7 @@ class UmpleInternalParser
       
       //Solution to issue 502
       checkAttributeConflictImmutableAutounique();
-      //Issue 492
-      checkNonReachableStates();
+
       //Issue 610
       checkAssociationClassKeys();
 
