@@ -1,46 +1,58 @@
-// classpath "gradle.plugin.cruise.umple:UmpleGradlePlugin:0.2.0"
+/*
+Preliminary version of "quick build" (i.e. ant -Dmyenv=local -f build.umple.xml codegen umpleParser rtcpp umpleSelf compile packageJars). Produces an umple compiler jar
+called GradleUmpleJar 
+
+execute the build using the following Gradle command: gradle cleanUp generateAndCompileParser generateCoupledSource compileCoupledSourceJava packageSource packageUmpleCompilerJar
+
+These tasks can be combined to make the command shorter
+*/
 
 buildscript {
     repositories {
         maven {
-            url uri('dist')
+            url uri('libs')
         }
         //maven {
           //  url "https://plugins.gradle.org/m2/"
         //}
-        flatDir dirs: "../umple.gradle/build/libs"
+        flatDir dirs: "../umple.gradle/build/libs" //TODO use the plugin portal version once it's finalized
         mavenCentral()
     }
     dependencies {
-        classpath files('dist/umple-1.25.0-963d2bd.jar')
+        classpath files('libs/umple-latest.jar') //TODO replace this hardcoded version number
         classpath "umple.gradle.plugin:UmpleGradlePlugin-0.2.0"
         classpath group: 'com.google.guava', name: 'guava', version: '19.0'
         //classpath "gradle.plugin.cruise.umple:UmpleGradlePlugin:0.1.3"
     }
 }
 
-// The root project uses source sets but it's only in the 
-// subprojets that compileUmple is actually called
+// The root project uses source sets, but it's only in the 
+// subprojects that compileUmple is actually called
 apply plugin: 'java'
 subprojects{ 
     apply plugin: "umple.gradle.plugin"    
-   
 }
 
-task parserStuff << {
-    println("hi from parser stuff")
+task generateAndCompileParser << {
+    println("Finished generating and compiling UmpleParser")
 }
 
 // Meta-task that generates Java files for coupled sub projects
 // TODO decouple as many of these projects as possible
 // TODO further parallelize this task, perhaps using the -parallel flag?
 task generateCoupledSource << {
-    println("hi from gen alll else")
+    println("Finished generating coupled source (all UmpleToTL projects and cruise.umple)")
 }
 
-//generateCoupledSource.dependsOn('cruise.umple:generateSource', ':UmpleToJava:generateSource', ':UmpleToPhp:generateSource', ':UmpleToRTCpp:generateSource', ':UmpleToRuby:generateSource', ':UmpleToSql:generateSource')
+task bleh << {
+    
+}
+bleh.dependsOn(':cruise.umple:compileUmple')
 
-parserStuff.dependsOn(':cleanUp', ':UmpleParser:compileJava')
+generateCoupledSource.dependsOn(':UmpleToJava:compileUmple', ':UmpleToPhp:compileUmple', ':UmpleToRTCpp:compileUmple', 
+                                ':UmpleToRuby:compileUmple', ':UmpleToSql:compileUmple', ':cruise.umple:compileUmple')
+
+generateAndCompileParser.dependsOn(':UmpleParser:compileJava')
 
 task cleanUp << {
     delete "cruise.umple/GradleTest/bin"
@@ -49,70 +61,61 @@ task cleanUp << {
     delete "cruise.umple/GradleTest/parserSource"
 }
 
-
-//, 'cruise.umple:compileGeneratedSourceJava'
-//compileJava.dependsOn('parserStuff', ':UmpleToJava:compileGeneratedSourceJava', )
-//task('UmpleToJava:compileGeneratedSourceJava').dependsOn('cruise.umple:compileGeneratedSourceJava')
-
-//--------------------------------------------------------------------------------------------------------Compile/Jar stuff start
-
 configurations {
-    provided
+    ivy
 }
 
+// See ivy.xml for which third-party libraries are required by the various flavours of Umple build
 dependencies {
-    provided group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '4.4'
-    provided group: 'org.apache.ant', name: 'ant', version: '1.9.6'
-    provided group: 'junit', name: 'junit', version: '4.12' //test classpath ivy
+    ivy group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '4.4' // "core"
+    ivy group: 'org.apache.ant', name: 'ant', version: '1.9.6' // "core"
+    ivy group: 'junit', name: 'junit', version: '4.12' // "test"
 } 
 
 repositories {
     mavenCentral()
 }
 
-// What needs to be generated? All UmpleTo__, UmpleParser, cruise.umple
-// Each gets its own build file. Attempt to generate and compile each project individually. If not possible, group together what needs to be grouped together
+// What needs to be generated to build the Umple compiler jar? UmpleTo__, UmpleParser, cruise.umple
+// Each gets its own build file. Attempt to generate and compile each project individually. If not possible, do together what needs to be grouped together
 // Most likely cruise.umple and all the UmpleTL stuff needs to be grouped together. Parser can be done individually
-// cruise.umple needs all UmpleTo__ 
-// UmpleToJava, UmpleToPhp, TRCpp (a bunch of its stuff goes into cruise.umple) need cruise.umple
 sourceSets {
-    happyJamoreeDays { 
+    coupledSource { 
     }
 }
-// Here are two things that don't need to be included in the jar:
-//"C:/Users/i_am_/workspace/umple/cruise.umple/test", "C:/Users/i_am_/workspace/umple/cruise.umple/src",
+sourceSets.coupledSource.compileClasspath += configurations.ivy // add the ivy dependencies to the classpath before compilation (required by cruise.umple)
+println("FASFASFAFSFASF")
+sourceSets.coupledSource.compileClasspath += project.files('/cruise.umple/GradleTest/bin') //orig was project
+println("FASFASFAFSFASF")
+//The folders that need to be compiled then included in the Umple compiler jar
+sourceSets.coupledSource.java.srcDirs = ['cruise.umple/GradleTest/src-gen-umple', 'cruise.umple/GradleTest/src-gen-umpletl' , 'dist/libs/vendors/jopt-simple/src/main/java/joptsimple']
+//sourceSets.coupledSource.java.srcDirs = ["C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/src-gen-umple", //"C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/src-gen-umpletl",  "C:/Users/i_am_/workspace/umple/dist/libs/vendors/jopt-simple/src/main/java/joptsimple"]
+//sourceSets.coupledSource.output.classesDir = "C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/bin" // output .class files here
+sourceSets.coupledSource.output.classesDir = '/cruise.umple/GradleTest/bin'
 
-sourceSets.happyJamoreeDays.compileClasspath += configurations.provided
-sourceSets.happyJamoreeDays.compileClasspath += project.files('/cruise.umple/GradleTest/bin')
+task packageUmpleCompilerJar(type: Jar) {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+    println("Packaging Umple compiler jar")
+    from '/cruise.umple/GradleTest/bin'
+    baseName = 'GradleUmpleJar'
+    into('lib') {
+		from configurations.ivy
+	}
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.UmpleConsoleMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa'        
+    }
+}
 
-//ladies and gentlemen, the folders that need to be included in the compiler jar
-project.sourceSets.happyJamoreeDays.java.srcDirs = ["C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/src-gen-umple", "C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/src-gen-umpletl",  "C:/Users/i_am_/workspace/umple/dist/libs/vendors/jopt-simple/src/main/java/joptsimple"]
-
-
-sourceSets.happyJamoreeDays.output.classesDir = "C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/bin" // output .class files here
-
-// grammar and error files also need to be included
+// grammar and error files also need to be included in the Umple jar
 task copyDocs(type: Copy) {
+    println("Copying .grammar and .error files required by Umple compiler jar")
     from "C:/Users/i_am_/workspace/umple/cruise.umple/src"
     into 'C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/bin'
     include '**/*.grammar'
     include '**/*.error'
 }
 
-task sourcesJar(type: Jar) {
-    //exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
-    from 'C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/bin'
-    baseName = 'adamslove'
-    into('lib') {
-		from configurations.provided
-	}
-    manifest {
-        attributes 'Main-Class': 'cruise.umple.UmpleConsoleMain',
-                   'Class-Path': configurations.provided,
-                   'Built-By': 'Cruise - University of Ottawa'        
-    }
-}
 
-sourcesJar.dependsOn('copyDocs')
-//compileHappyJamoreeDaysJava.dependsOn('generateCoupledSource')
-//TODO figure out why the up-to-date stuff is giving me problems
+packageUmpleCompilerJar.dependsOn('copyDocs')

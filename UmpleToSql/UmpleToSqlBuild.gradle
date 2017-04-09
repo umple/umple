@@ -1,18 +1,17 @@
-//apply plugin: 'java'
 sourceSets {
-    generatedSource { 
-       ext.languageToGenerate = 'Java' 
-       ext.outputPath = '../cruise.umple/GradleTest/src-gen-umpletl'
-       ext.umpleFilePath = 'UmpleTLTemplates/Master.ump'
+    main { 
+        umple{
+           outputDir = file('../cruise.umple/GradleTest/src-gen-umpletl')
+           master = file('UmpleTLTemplates/Master.ump')
+           compileGenerated = false // turn this off if this project is ever decoupled from cruise.umple and can be compiled independently
+           customMasterPath = true
+        }
+        //output.classesDir = "../cruise.umple/GradleTest/bin" // use to control where the .class files are outputted if this project is compiled independently
     }
 }
 
-// currently we don't compile this project independently 
-//sourceSets.generatedSource.compileClasspath = project.files('../cruise.umple/GradleTest/bin') // compile class dependency
-//sourceSets.generatedSource.output.classesDir = "../cruise.umple/GradleTest/bin" // output .class files here
-//sourceSets.generatedSource.java.srcDirs = ["../cruise.umple/GradleTest/src-gen-umpletl/cruise/umple/compiler/sql"] // workaround that allows for incremental builds
-
-// More incremental build stuff
-generateSource {
-    outputs.dir("../cruise.umple/GradleTest/src-gen-umpletl/cruise/umple/compiler/sql") // generateSource task only runs if the contents of this directory are different
+// Incremental build logic
+compileUmple {
+    inputs.dir("UmpleTLTemplates") // If any of the source .ump files here have changed, recompile them. Otherwise the task is considered up-to-date
+    //outputs.dir("../cruise.umple/GradleTest/src-gen-umpletl") //TODO Gradle views this as changed after every build. Need a better way to monitor outputs
 }

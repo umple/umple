@@ -1,9 +1,17 @@
 sourceSets {
     main { 
         umple{
-           outputDir = file('../cruise.umple/GradleTest/src-gen-umpletl') //TODO Gradle should check "../cruise.umple/GradleTest/src-gen-umpletl/cruise/umple/compiler/java" for incremental compilation
-           dependsFlag = false //TODO disable this if the UmpleToJava sub project can ever be compiled independently
+           outputDir = file('../cruise.umple/GradleTest/src-gen-umpletl')
+           master = file('UmpleTLTemplates/Master.ump')
+           compileGenerated = false // turn this off if UmpleToJava is ever decoupled from cruise.umple and can be compiled independently
+           customMasterPath = true
         }
-        //output.classesDir = "../cruise.umple/GradleTest/bin"
+        //output.classesDir = "../cruise.umple/GradleTest/bin" // use to control where the .class files are outputted if this project is compiled independently
     }
+}
+
+// Incremental build logic
+compileUmple {
+    inputs.dir("UmpleTLTemplates") // If any of the source .ump files here have changed, recompile them. Otherwise the task is considered up-to-date
+    //outputs.dir("../cruise.umple/GradleTest/src-gen-umpletl") //TODO Gradle views this as changed after every build. Need a better way to monitor outputs
 }

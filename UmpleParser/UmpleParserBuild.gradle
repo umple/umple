@@ -3,7 +3,6 @@ sourceSets {
         umple{
            outputDir = file('../cruise.umple/GradleTest/parserSource')
            master = file('src/Master.ump')
-           //compileGenerated = true
            customMasterPath = true
         }
         output.classesDir = "../cruise.umple/GradleTest/bin"

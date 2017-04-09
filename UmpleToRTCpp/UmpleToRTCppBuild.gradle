@@ -1,33 +1,20 @@
-//apply plugin: 'java'
 sourceSets {
-    generatedSource { 
-       ext.languageToGenerate = 'Java' 
-       ext.outputPath = '../cruise.umple/GradleTest/src-gen-umpletl'
-       ext.umpleFilePath = 'UmpleTLTemplates/Master.ump'
+    main { 
+        umple{
+           outputDir = file('../cruise.umple/GradleTest/src-gen-umpletl')
+           master = file('UmpleTLTemplates/Master.ump')
+           compileGenerated = false // turn this off if this project is ever decoupled from cruise.umple and can be compiled independently
+           customMasterPath = true
+        }
+        //output.classesDir = "../cruise.umple/GradleTest/bin" // use to control where the .class files are outputted if this project is compiled independently
     }
 }
 
-//sourceSets.generatedSource.compileClasspath = project.files('../cruise.umple/GradleTest/bin') // compile class dependency
-
-// use these if you're going to try and compile this project independently. srcDir controls incremental builds when compiling java
-//sourceSets.generatedSource.output.classesDir = "../cruise.umple/GradleTest/bin" // output .class files here
-//sourceSets.generatedSource.java.srcDirs = ["../cruise.umple/GradleTest/src-gen-umpletl/cruise/umple/cpp"] // workaround that allows for incremental builds
-
-// More incremental build stuff
-generateSource {
-    outputs.dir("../cruise.umple/GradleTest/src-gen-umpletl/cruise/umple/cpp") // generateSource task only runs if the contents of this directory are different
+// Incremental build logic
+compileUmple {
+    inputs.dir("UmpleTLTemplates") // If any of the source .ump files here have changed, recompile them. Otherwise the task is considered up-to-date
+    //outputs.dir("../cruise.umple/GradleTest/src-gen-umpletl") //TODO Gradle views this as changed after every build. Need a better way to monitor outputs
 }
-
-/*
-target name="rtcpp">
-    <copy todir="cruise.umple/src-gen-umple" overwrite="true">
-      <fileset dir="cruise.umple.nebula/src" excludes=".git*" />
-    </copy>
-    <copy todir="cruise.umple/src-gen-umple" overwrite="true">
-      <fileset dir="UmpleToRTCpp/src" excludes=".git*" />
-    </copy>
-  </target>
-*/
 
 // We only use the umple compiler jar to generate just a couple source files. The rest are precompiled. We must move them over to where we compile.  
 task copyRTCppNonGenSource (type: Copy) {
@@ -38,4 +25,4 @@ task copyRTCppNonGenSource (type: Copy) {
     into '../cruise.umple/GradleTest/src-gen-umple'
 }  
 
-generateSource.dependsOn('copyRTCppNonGenSource')
+compileUmple.dependsOn('copyRTCppNonGenSource')
