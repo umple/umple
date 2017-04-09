@@ -1,0 +1,44 @@
+//apply plugin: 'java'
+
+sourceSets {
+    generatedSource { 
+       ext.languageToGenerate = 'Java' 
+       ext.outputPath = 'GradleTest/src-gen-umple'
+       ext.umpleFilePath = 'src/Master.ump'
+    }
+}
+
+/* not needed. We currently only generate source via this project
+
+configurations {
+    provided
+}
+
+dependencies {
+    provided group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '4.4'
+    provided group: 'org.apache.ant', name: 'ant', version: '1.9.6'
+    provided group: 'junit', name: 'junit', version: '4.12'
+} 
+*/
+//sourceSets.generatedSource.compileClasspath += configurations.provided
+//sourceSets.generatedSource.compileClasspath += project.files('bin') // workaround. Point compile classpath to bin from previous build
+
+//sourceSets.generatedSource.output.classesDir = "../cruise.umple/GradleTest/fthisguy/bin"
+//sourceSets.generatedSource.java.srcDir "GradleTest/src-gen-umple"//TODO remove this workaround. It forces gradle to consider the generated files for cruise.umple up-to-date //(skips regenerating them). Prevents multiple run bug discussed with Vahdat
+
+
+// This supports incremental build. As long as nothing has changed in either of these locations Gradle will skip this task?
+generateSource {
+    inputs.dir("src")
+    outputs.dir("GradleTest/src-gen-umple")
+    outputs.upToDateWhen { true }
+}
+
+/*
+repositories {
+    mavenCentral()
+}
+*/
+
+
+

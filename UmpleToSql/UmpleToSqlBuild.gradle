@@ -1,0 +1,18 @@
+//apply plugin: 'java'
+sourceSets {
+    generatedSource { 
+       ext.languageToGenerate = 'Java' 
+       ext.outputPath = '../cruise.umple/GradleTest/src-gen-umpletl'
+       ext.umpleFilePath = 'UmpleTLTemplates/Master.ump'
+    }
+}
+
+// currently we don't compile this project independently 
+//sourceSets.generatedSource.compileClasspath = project.files('../cruise.umple/GradleTest/bin') // compile class dependency
+//sourceSets.generatedSource.output.classesDir = "../cruise.umple/GradleTest/bin" // output .class files here
+//sourceSets.generatedSource.java.srcDirs = ["../cruise.umple/GradleTest/src-gen-umpletl/cruise/umple/compiler/sql"] // workaround that allows for incremental builds
+
+// More incremental build stuff
+generateSource {
+    outputs.dir("../cruise.umple/GradleTest/src-gen-umpletl/cruise/umple/compiler/sql") // generateSource task only runs if the contents of this directory are different
+}

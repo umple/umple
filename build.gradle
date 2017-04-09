@@ -1,0 +1,118 @@
+// classpath "gradle.plugin.cruise.umple:UmpleGradlePlugin:0.2.0"
+
+buildscript {
+    repositories {
+        maven {
+            url uri('dist')
+        }
+        //maven {
+          //  url "https://plugins.gradle.org/m2/"
+        //}
+        flatDir dirs: "../umple.gradle/build/libs"
+        mavenCentral()
+    }
+    dependencies {
+        classpath files('dist/umple-1.25.0-963d2bd.jar')
+        classpath "umple.gradle.plugin:UmpleGradlePlugin-0.2.0"
+        classpath group: 'com.google.guava', name: 'guava', version: '19.0'
+        //classpath "gradle.plugin.cruise.umple:UmpleGradlePlugin:0.1.3"
+    }
+}
+
+// The root project uses source sets but it's only in the 
+// subprojets that compileUmple is actually called
+apply plugin: 'java'
+subprojects{ 
+    apply plugin: "umple.gradle.plugin"    
+   
+}
+
+task parserStuff << {
+    println("hi from parser stuff")
+}
+
+// Meta-task that generates Java files for coupled sub projects
+// TODO decouple as many of these projects as possible
+// TODO further parallelize this task, perhaps using the -parallel flag?
+task generateCoupledSource << {
+    println("hi from gen alll else")
+}
+
+//generateCoupledSource.dependsOn('cruise.umple:generateSource', ':UmpleToJava:generateSource', ':UmpleToPhp:generateSource', ':UmpleToRTCpp:generateSource', ':UmpleToRuby:generateSource', ':UmpleToSql:generateSource')
+
+parserStuff.dependsOn(':cleanUp', ':UmpleParser:compileJava')
+
+task cleanUp << {
+    delete "cruise.umple/GradleTest/bin"
+    delete "cruise.umple/GradleTest/src-gen-umpletl"
+    delete "cruise.umple/GradleTest/src-gen-umple"
+    delete "cruise.umple/GradleTest/parserSource"
+}
+
+
+//, 'cruise.umple:compileGeneratedSourceJava'
+//compileJava.dependsOn('parserStuff', ':UmpleToJava:compileGeneratedSourceJava', )
+//task('UmpleToJava:compileGeneratedSourceJava').dependsOn('cruise.umple:compileGeneratedSourceJava')
+
+//--------------------------------------------------------------------------------------------------------Compile/Jar stuff start
+
+configurations {
+    provided
+}
+
+dependencies {
+    provided group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '4.4'
+    provided group: 'org.apache.ant', name: 'ant', version: '1.9.6'
+    provided group: 'junit', name: 'junit', version: '4.12' //test classpath ivy
+} 
+
+repositories {
+    mavenCentral()
+}
+
+// What needs to be generated? All UmpleTo__, UmpleParser, cruise.umple
+// Each gets its own build file. Attempt to generate and compile each project individually. If not possible, group together what needs to be grouped together
+// Most likely cruise.umple and all the UmpleTL stuff needs to be grouped together. Parser can be done individually
+// cruise.umple needs all UmpleTo__ 
+// UmpleToJava, UmpleToPhp, TRCpp (a bunch of its stuff goes into cruise.umple) need cruise.umple
+sourceSets {
+    happyJamoreeDays { 
+    }
+}
+// Here are two things that don't need to be included in the jar:
+//"C:/Users/i_am_/workspace/umple/cruise.umple/test", "C:/Users/i_am_/workspace/umple/cruise.umple/src",
+
+sourceSets.happyJamoreeDays.compileClasspath += configurations.provided
+sourceSets.happyJamoreeDays.compileClasspath += project.files('/cruise.umple/GradleTest/bin')
+
+//ladies and gentlemen, the folders that need to be included in the compiler jar
+project.sourceSets.happyJamoreeDays.java.srcDirs = ["C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/src-gen-umple", "C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/src-gen-umpletl",  "C:/Users/i_am_/workspace/umple/dist/libs/vendors/jopt-simple/src/main/java/joptsimple"]
+
+
+sourceSets.happyJamoreeDays.output.classesDir = "C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/bin" // output .class files here
+
+// grammar and error files also need to be included
+task copyDocs(type: Copy) {
+    from "C:/Users/i_am_/workspace/umple/cruise.umple/src"
+    into 'C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/bin'
+    include '**/*.grammar'
+    include '**/*.error'
+}
+
+task sourcesJar(type: Jar) {
+    //exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+    from 'C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/bin'
+    baseName = 'adamslove'
+    into('lib') {
+		from configurations.provided
+	}
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.UmpleConsoleMain',
+                   'Class-Path': configurations.provided,
+                   'Built-By': 'Cruise - University of Ottawa'        
+    }
+}
+
+sourcesJar.dependsOn('copyDocs')
+//compileHappyJamoreeDaysJava.dependsOn('generateCoupledSource')
+//TODO figure out why the up-to-date stuff is giving me problems

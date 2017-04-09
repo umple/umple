@@ -1,0 +1,69 @@
+import java.nio.file.Path
+import java.nio.file.Paths
+
+
+include 'UmpleParser'
+/*include 'UmpleToJava'
+include 'UmpleToPhp'
+include 'UmpleToRTCpp'
+include 'UmpleToRuby'
+include 'UmpleToSql'
+include 'cruise.umple'
+*/
+rootProject.name = 'umple'
+
+/*
+The multi-project Gradle build has the following directory hierarchy:
+umple
+    build <- The root Gradle project
+    ...
+    UmpleParser <- A subproject under control of the root project
+    ...
+    UmpleToJava <- A subproject under control of the root project
+    ...
+
+We use the umple directory as a "pivot point" as we move from project directory to project directory     
+*/
+String umpleDirectoryPath = Paths.get(rootProject.projectDir.toString()).getParent()
+
+// Rename the build files of each subproject so that the names identify the subproject
+rootProject.children.each {project ->
+    switch(project.name) {
+        case "cruise.umple":
+            //project.projectDir = new File(umpleDirectoryPath, "cruise.umple")
+            project.buildFileName = "CruiseUmpleBuild.gradle"
+            break      
+        case "UmpleParser":
+            //project.projectDir = new File(umpleDirectoryPath, "UmpleParser")
+            project.buildFileName = "UmpleParserBuild.gradle"
+            break
+        case "UmpleToJava":
+            //project.projectDir = new File(umpleDirectoryPath, "UmpleToJava")
+            project.buildFileName = "UmpleToJavaBuild.gradle"
+            break
+        case "UmpleToPhp":
+            //project.projectDir = new File(umpleDirectoryPath, "UmpleToPhp")
+            project.buildFileName = "UmpleToPhpBuild.gradle"
+            break
+        case "UmpleToRTCpp":
+            //project.projectDir = new File(umpleDirectoryPath, "UmpleToRTCpp")
+            project.buildFileName = "UmpleToRTCppBuild.gradle"
+            break
+        case "UmpleToRuby":
+            //project.projectDir = new File(umpleDirectoryPath, "UmpleToRuby")
+            project.buildFileName = "UmpleToRubyBuild.gradle"
+            break
+        case "UmpleToSql":
+            //project.projectDir = new File(umpleDirectoryPath, "UmpleToSql")
+            project.buildFileName = "UmpleToSqlBuild.gradle"
+            break
+        default:
+            throw new IllegalArgumentException("Invalid subproject name : " + project.name);
+    }
+    
+    //println("PRoJEcT diR" + project.projectDir)
+    //println("build file" + project.buildFile)
+    
+    assert project.projectDir.isDirectory()
+    assert project.buildFile.isFile()
+}

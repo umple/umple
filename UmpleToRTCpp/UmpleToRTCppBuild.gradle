@@ -1,0 +1,41 @@
+//apply plugin: 'java'
+sourceSets {
+    generatedSource { 
+       ext.languageToGenerate = 'Java' 
+       ext.outputPath = '../cruise.umple/GradleTest/src-gen-umpletl'
+       ext.umpleFilePath = 'UmpleTLTemplates/Master.ump'
+    }
+}
+
+//sourceSets.generatedSource.compileClasspath = project.files('../cruise.umple/GradleTest/bin') // compile class dependency
+
+// use these if you're going to try and compile this project independently. srcDir controls incremental builds when compiling java
+//sourceSets.generatedSource.output.classesDir = "../cruise.umple/GradleTest/bin" // output .class files here
+//sourceSets.generatedSource.java.srcDirs = ["../cruise.umple/GradleTest/src-gen-umpletl/cruise/umple/cpp"] // workaround that allows for incremental builds
+
+// More incremental build stuff
+generateSource {
+    outputs.dir("../cruise.umple/GradleTest/src-gen-umpletl/cruise/umple/cpp") // generateSource task only runs if the contents of this directory are different
+}
+
+/*
+target name="rtcpp">
+    <copy todir="cruise.umple/src-gen-umple" overwrite="true">
+      <fileset dir="cruise.umple.nebula/src" excludes=".git*" />
+    </copy>
+    <copy todir="cruise.umple/src-gen-umple" overwrite="true">
+      <fileset dir="UmpleToRTCpp/src" excludes=".git*" />
+    </copy>
+  </target>
+*/
+
+// We only use the umple compiler jar to generate just a couple source files. The rest are precompiled. We must move them over to where we compile.  
+task copyRTCppNonGenSource (type: Copy) {
+    from('../cruise.umple.nebula/src') {
+    }
+    from('../UmpleToRTCpp/src') {
+    }
+    into '../cruise.umple/GradleTest/src-gen-umple'
+}  
+
+generateSource.dependsOn('copyRTCppNonGenSource')

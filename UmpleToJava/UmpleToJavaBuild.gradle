@@ -1,0 +1,9 @@
+sourceSets {
+    main { 
+        umple{
+           outputDir = file('../cruise.umple/GradleTest/src-gen-umpletl') //TODO Gradle should check "../cruise.umple/GradleTest/src-gen-umpletl/cruise/umple/compiler/java" for incremental compilation
+           dependsFlag = false //TODO disable this if the UmpleToJava sub project can ever be compiled independently
+        }
+        //output.classesDir = "../cruise.umple/GradleTest/bin"
+    }
+}

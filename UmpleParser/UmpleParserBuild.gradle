@@ -1,0 +1,17 @@
+sourceSets {
+    main { 
+        umple{
+           outputDir = file('../cruise.umple/GradleTest/parserSource')
+           master = file('src/Master.ump')
+           //compileGenerated = true
+           customMasterPath = true
+        }
+        output.classesDir = "../cruise.umple/GradleTest/bin"
+    }
+}
+
+// Incremental build logic
+compileUmple {
+    inputs.dir("src") // If any of the source .ump files here have changed, recompile them. Otherwise the task is considered up-to-date
+    //outputs.dir("../cruise.umple/GradleTest/parserSource") //TODO Gradle seems to thing this has changed after every build. Need a better way to monitor outputs
+}
