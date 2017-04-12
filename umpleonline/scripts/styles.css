@@ -256,6 +256,9 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     box-sizing: border-box;
     z-index: 2;
 }
+.html-state {
+    border-radius: 8px;
+}
 .html-element select,
 .html-element input,
 .html-element label,
@@ -280,6 +283,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     margin: 0;
     font-weight: bold;
     cursor: pointer;
+    visibility: hidden;
 }
 .html-element button.delete:hover {
     width: 20px;
@@ -324,7 +328,8 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     padding-top: 3px;
 }
 
-.html-element .className {
+.html-element .className,
+.html-element .stateName {
     text-align: center;
     margin: auto;
 }
@@ -339,6 +344,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     margin: 0;
 }
 
+.eventInput .deleteEvent,
 .attributInput .deleteAttr,
 .methodInput .deleteMet {
     text-align: "right";

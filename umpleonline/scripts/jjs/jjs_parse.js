@@ -165,6 +165,15 @@ var JJSdiagram = {
 				});
 			}
 		});
+		jQuery('#buttonDeleteEntity').off('click').on('click', function(e){
+			//delete function for jointJS
+			if ( Page.useJointJSClassDiagram && jQuery('.html-element button.delete').css('visibility') === 'hidden' ) {
+				jQuery('.html-element button.delete').css('visibility', 'visible');
+			}
+			else if (Page.useJointJSClassDiagram) {
+				jQuery('.html-element button.delete').css('visibility', 'hidden');
+			}
+		});
 
 		//remove listener
 		graph.on('remove', _.bind(function (cell) {
@@ -922,7 +931,17 @@ var JJSdiagram = {
 			cell.doEmbed(JJSdiagram.paper);
 			cell.updateRectangles(JJSdiagram.paper);
 		});
+		
 		JJSdiagram.paper.model.addCells(JJSdiagram.JJsParse.notYetAddedStatesStack);
+
+		// JJSdiagram.JJsParse.notYetAddedStatesStack.forEach(function (cell) {
+	 	// 	for(var i = 0; i<cell.get('nestedStates').length; i++){
+		// 		JJSdiagram.paper.model.getCell(cell.id).embed(JJSdiagram.paper.model.getCell(cell.get('nestedStates')[i]));
+		// 		//cell.updateRectangles(JJSdiagram.paper);
+		// 	 }
+
+		// });
+
 		JJSdiagram.paper.model.addCells(JJSdiagram.JJsParse.notYetAddedTransitionsStack);
 
 		// Reset the stacks, or see these entities show up in other diagrams.
@@ -1444,6 +1463,10 @@ var JJSdiagram = {
 				else if (state.stateMachines.length > 0) {
 					// Pass each nested machine for parsing.
 					state.stateMachines.forEach(JJSdiagram.JJsParse.parseStateMachine);
+
+					//cell = new joint.shapes.uml_state_machine.StateNew(state);
+					//JJSdiagram.paper.model.addCell(cell);
+
 					// Get the names of all nested states (direct children only).
 					var nestedStates = [];
 					state.stateMachines.forEach(function(sm) {
@@ -1453,13 +1476,23 @@ var JJSdiagram = {
 					});
 					state.nestedStates = nestedStates;
 
+					// var parentCell = JJSdiagram.paper.model.getCell(cell.id);
+
+					// state.stateMachines.forEach(function(sm){
+					// 	sm.states.forEach(function(s) {
+					// 		parentCell.embed(JJSdiagram.paper.model.getCell(s.id));
+					// 	});
+					// })
+
+
 					cell = new joint.shapes.uml_state_machine.CompositeState(state);
-					// Then push that state's cell onto the stack
+					//cell = new joint.shapes.uml_state_machine.StateNew(state);
+					//Then push that state's cell onto the stack
 					JJSdiagram.JJsParse.notYetAddedStatesStack.push(cell);
 					composite = true;
 				}
 				else {
-					cell = new joint.shapes.uml_state_machine.State(state);
+					cell = new joint.shapes.uml_state_machine.StateNew(state);
 					JJSdiagram.paper.model.addCell(cell);
 				}
 

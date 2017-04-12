@@ -12,9 +12,6 @@ joint.shapes.umpleuml.Class = joint.shapes.basic.Rect.extend({
     getClassName: function() {
         return this.get('name');
     },
-    getBackgroundColoe: function(){
-        return this.get('getBackgroundColor')
-    }
 });
 
 //a custom view

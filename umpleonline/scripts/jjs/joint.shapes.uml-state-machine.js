@@ -89,6 +89,7 @@ joint.shapes.uml_state_machine.CompositeState = joint.shapes.basic.Generic.exten
     }
 
 });
+
 joint.shapes.uml_state_machine.BackButton = joint.shapes.basic.Generic.extend({
 
     markup: [
@@ -317,6 +318,256 @@ joint.shapes.uml_state_machine.Transition = joint.dia.Link.extend({
     defaults: _.defaultsDeep({
         type: 'uml_state_machine.Transition',
         attrs: { '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' }},
-        smooth: true
+        smooth: false
     }, joint.dia.Link.prototype.defaults)
+});
+
+
+//joint.shapes.uml_state_machine.StateNew = joint.shapes.
+//joint.shapes.uml_state_machine.StateNew = joint.shapes.uml.State.extend({
+joint.shapes.uml_state_machine.StateNew = joint.shapes.basic.Rect.extend({
+
+    defaults: joint.util.deepSupplement({
+        type: 'uml_state_machine.StateNew',
+        attrs: {
+            rect: { stroke: 'none', 'fill-opacity': 0 }
+        }
+    //}, joint.shapes.uml.State.prototype.defaults)
+    }, joint.shapes.basic.Rect.prototype.defaults)
+});
+
+joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
+    oldTimeout: null,
+    targetInputSize: 9,
+    template: [
+        '<div class="html-element html-state">',
+        '<button class="delete">x</button>',
+        '<input size="9" type="text" class="stateName" readonly/>',
+        '<hr>',
+        '<div class="stateEvents">',
+        '</div>',
+        '</div>'
+    ].join(''),
+    initialize: function () {
+        _.bindAll(this, 'updateBox');
+        joint.dia.ElementView.prototype.initialize.apply(this, arguments);
+
+        this.$box = jQuery(_.template(this.template)());
+
+        // Prevent paper from handling pointerdown.
+        this.$box.find('input').on('mousedown click', function (evt) {
+            evt.stopPropagation();
+        });
+
+        //bind enter key
+        this.$box.find('.stateName').keypress(_.bind(function (e) {
+            if (e.which === 13) {
+                e.target.blur();
+            }
+        }, this));
+
+        //this is reacting on the input change and storing the input data in the cell model
+        this.$box.find('.stateName').on('change', _.bind(function (e) {
+            //update name in model
+            this.model.set('name', jQuery(e.target).val());
+            //update box size/input size
+            //always keep the largest one
+            if (jQuery(e.target).val().length > this.targetInputSize) {
+                this.targetInputSize = jQuery(e.target).val().length;
+                this.$box.find('.stateName').prop('size', this.targetInputSize);
+                this.updateBox();
+            }
+
+            //should update umple code here
+        }, this));
+
+        //remove object
+        this.$box.find('.delete').on('click', _.bind(function () {
+            //should update umple code here
+            this.model.remove();
+        }, this));
+
+        // Update the box position whenever the underlying model changes.
+        this.model.on('change', this.updateBox, this);
+
+        // Remove the box when the model gets removed from the graph.
+        this.model.on('remove', this.removeBox, this);
+
+        this.updateBox();
+    },
+
+    render: function () {
+        joint.dia.ElementView.prototype.render.apply(this, arguments);
+        this.paper.$el.prepend(this.$box);
+        this.updateBox();
+        return this;
+    },
+
+    updateBox: function () {
+        // Set the position and dimension of the box so that it covers the JointJS element.
+        var bbox;
+
+        //update name
+        this.$box.find('.stateName').val(this.model.get('name'));
+
+        //update box size
+        if (this.model.get('name').length > this.targetInputSize) {
+            this.targetInputSize = this.model.get('name').length;
+            this.$box.find('.stateName').prop('size', this.targetInputSize);
+        }
+
+        //clear events
+        this.$box.find('.stateEvents').empty();
+
+        //re-render events
+        if (this.model.get('actions')) {
+            var i = 0;
+
+            for (i = 0; i < this.model.get('actions').length; i++) {
+                this.addEventBox(i, this.model.get('actions')[i]);
+            }
+
+            this.addEventBox(i);
+        }
+
+        this.addListeners();
+        //set box size
+        var boxSize = this.model.get('size');
+        boxSize['height'] = this.$box.find('.stateEvents').children().size() * 20 + 50;
+        boxSize['width'] = 40 + 8 * this.targetInputSize;
+        this.model.set('size', boxSize);
+
+        bbox = this.model.getBBox();
+
+        this.$box.css({
+            width: bbox.width,
+            height: bbox.height,
+            left: bbox.x+100,
+            top: bbox.y+50,
+            transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
+        });
+
+    },
+
+    removeBox: function (e) {
+        this.$box.remove();
+    },
+
+    addListeners: function (e) {
+        //enable input box when double click
+        this.$box.find('input').off('dblclick').on('dblclick', _.bind(function (e) {
+            e.target.readOnly = false;
+        }, this));
+
+        //disable when focusout
+        this.$box.find('input').off('focusout').on('focusout', _.bind(function (e) {
+            e.target.readOnly = true;
+        }, this));
+
+        //focusout input when 'Enter' key pressed
+        this.$box.find('.stateEvents input').keypress(_.bind(function (e) {
+            if (e.which === 13) {
+                e.target.blur();
+                setTimeout(_.bind(function () {
+                    this.$box.find('.stateEvents input:last').prop('readonly', false);
+                    this.$box.find('.stateEvents input:last').focus();
+                }, this), 100);
+            }
+        }, this));
+
+
+        /**
+         * focus out event of input box
+         */
+        this.$box.find('.eventInput input').off('focusout').on('focusout', _.bind(function (e) {
+            e.target.readOnly = true;
+
+            //if the last input has value
+            //add an input box at the end.
+            //***there is a bug here-->when last --> val()!=='',
+            if (this.$box.find('.stateEvents input:last').val()) {
+                var tempIndex = this.$box.find('.stateEvents input:last').data('eventIndex') + 1;
+                this.addEventBox(tempIndex);
+                this.addListeners();
+                var temp = this.model.get('actions');
+                temp[jQuery(e.target).data('eventIndex')] = jQuery(e.target).val();
+                this.model.set('actions', temp);
+                //should update umple code here
+            }
+        }, this));
+
+        this.$box.find('.stateEvents .deleteEvent').off('click').on('click', _.bind(function (e) {
+            var eventIndex = jQuery(e.target.parentNode.children[0]).data('eventIndex');
+            var eventValue = jQuery(e.target.parentNode.children[0]).val();
+
+            //value is empty, do nothing (might cause bug that needs to be fixed later)
+            //value is not empty, delete the attribute from model and update box
+            if (eventValue && eventIndex > -1) {
+
+                var modelEvents = this.model.get('actions');
+                modelEvents.splice(eventIndex, 1);
+                this.model.set('actions', modelEvents);
+                this.updateBox();
+
+                //should update umple code here 
+            }
+
+        }, this));
+    },
+
+    addEventBox: function (tempIndex, inputValue) {
+        var updateFlag = false;
+
+        //add input
+        if (inputValue) {
+            this.$box.find('.stateEvents').append('<div class="eventInput"><input size="' + this.targetInputSize + '" data-event-index="' + tempIndex + '" type="text" value="' + inputValue + '" placeholder="Add More" readonly/> <img class="deleteEvent" src="scripts/delete.png" alt="Del"></div>');
+        }
+        else {
+            this.$box.find('.stateEvents').append('<div class="eventInput"><input size="' + this.targetInputSize + '" data-event-index="' + tempIndex + '" type="text" value="" placeholder="Add More" readonly/> <img class="deleteEvent" src="scripts/delete.png" alt="Del"></div>');
+        }
+
+        //updated box height
+        var boxSize = this.model.get('size');
+        boxSize['height'] = this.$box.find('.stateEvents').children().size() * 20 + 35;
+
+
+        //updated box width
+        //the function below is the same as updateBox, need refactor.
+        for (var j = 0; j < this.$box.find('.stateEvents input').size(); j++) {
+            if (this.$box.find('.stateEvents input')[j].value.length > this.targetInputSize) {
+                this.targetInputSize = this.$box.find('.stateEvents input')[j].value.length;
+                updateFlag = true;
+            }
+        }
+        boxSize['width'] = 40 + 8 * this.targetInputSize;
+
+        this.model.set('size', boxSize);
+        var bbox = this.model.getBBox();
+        this.$box.css({
+            width: bbox.width,
+            height: bbox.height,
+            left: bbox.x+100,
+            top: bbox.y+50,
+            transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
+        });
+
+        setTimeout(_.bind(function () {
+            if (updateFlag) {
+                //clear events
+                this.$box.find('.stateEvents').empty();
+
+                //rerender events
+                var i = 0;
+
+                for (i = 0; i < this.model.get('actions').length; i++) {
+                    this.addEventBox(i, this.model.get('actions')[i]);
+                }
+
+                this.addEventBox(i);
+
+                this.addListeners();
+
+            }
+        }, this), 200);
+    }
 });
