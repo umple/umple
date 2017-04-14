@@ -380,7 +380,7 @@ class JsonMixedGenerator
 
         states += StringFormatter.format(
           "{ {0}name{0}: {0}{1}{0}, {0}id{0}: {0}{1}{0}, {0}actions{0}: [{2}], " +
-		    "{0}activities{0}: {7}, "+
+		    "{0}activities{0}: [{7}], "+
             "{0}isstart{0}: {3}, {0}isfinal{0}: {4}, " + 
             "{0}size{0}: { {0}width{0}: 50, {0}height{0}: 50 }, " +
             "{0}internals{0}: [{5}], {0}stateMachines{0}: [{6}] }",
@@ -561,7 +561,7 @@ class JsonMixedGenerator
       activityCode = java.util.regex.Pattern.compile("[\\n]").matcher(activityCode).replaceAll("\",\"");
 
       activities += StringFormatter.format(
-		"{0}{1}{0}",
+		"{0} {1}{0}",
         "\"",
         activityCode
       );
