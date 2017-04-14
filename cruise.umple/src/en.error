@@ -122,7 +122,7 @@
 204: 1, "http://cruise.eecs.uottawa.ca/umple/E204SelfInheritance.html", The trait named '{0}' cannot use itself. Solution: Please check the name of used trait or change your design not to have this use. ;
 #need to be added to manual
 205: 1, "http://cruise.eecs.uottawa.ca/umple/E206CycleinTraits.html", Trait '{0}' cannot cyclically extend '{1}'. ;
-206: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must implement interface '{5}';
+206: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must implement interface '{5}';
 
 # 207 should be explored more.
 207: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Variable '{0}' inside of the constraint in trait '{1}' is not available in class '{2}' or trait '{1}'. ;
@@ -137,7 +137,7 @@
 215: 1, "http://cruise.eecs.uottawa.ca/umple/E215TemplateParameterNotAvailable.html", Parameter '{0}' is not available. ;
 216: 1, "http://cruise.eecs.uottawa.ca/umple/E216TwiceBindingofaParameter.html", Parameter '{0}' cannot be allocated two times. ;
 217: 1, "http://cruise.eecs.uottawa.ca/umple/E217ConflictinTypesofAttributes.html", There is a conflict for attribute '{0}' in traits '{1}' because of assigning two different types '{2}' and '{3}'. ;
-218: 3, "http://cruise.eecs.uottawa.ca/umple/W218ConflictinAttributes.html", Attribute '{0}' which comes from trait '{1}' is available also in {2} '{3}'. ;
+218: 3, "http://cruise.eecs.uottawa.ca/umple/W218ConflictinAttributes.html", The attribute '{0}' which comes from trait '{1}' is also available in {2} '{3}'. ;
 219: 1, "http://cruise.eecs.uottawa.ca/umple/E219NoBindingforParameters.html", Please assign a value for type parameter '{0}' in trait '{1}' ;
 220: 1, "http://cruise.eecs.uottawa.ca/umple/E220TwoMethodsWiththeSameName.html", The new name '{0}' for method '{1}' is already available in the trait. ;
 #need to be added to manual
@@ -146,7 +146,7 @@
 222: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class '{0}' must implement interface '{1}' so as to be able to use trait '{2}'.;
 223: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The type of '{0}' in template parameter '{1}' in trait '{2}' has not been defined.;
 224: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template parameter '{0}' in trait '{1}' has an multiple inheritance restriction, according to classes '{2}' and '{3}', which is not supported. Restrictions must cover single inheritance and multiple interface.;
-225: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must be a subclass of class '{5}';
+225: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must be a subclass of class '{5}';
 226: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' is the native state machine in {2} '{3}'.Therefore, it's disregarded.;
 227: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' in the {2} '{3}' has already been imported from the trait '{4}'.Therefore, it's disregarded.;
 228: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Since there are two state machine with the same name '{0}' and having two initial states is not acceptable. These two state machines are merged as a parallel state machine.;
@@ -158,6 +158,7 @@
 234: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the event '{0}' which comes from '{1}' and '{2}' results in none-determinism so the composition is not allowed.;
 235: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the event '{0}' in state '{1}' which comes from traits '{2}' and '{3}' results in a conflict.;
 236: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the '{0}' activity/action in state '{1}', which comes from traits '{2}' and '{3}', results in a conflict.;
+237: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', state '{1}' has already have another region with the name '{2}'.;
 
 # Messages related to MOTL
 301: 4,  "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Tracing of non-existent model entity  ;
