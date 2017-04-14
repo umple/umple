@@ -78,7 +78,7 @@
 71: 4, "http://cruise.eecs.uottawa.ca/umple/W071DuplicateMethodDifferentType.html", A {6} implementation of Method '{0}' in class '{1}' is already defined at line {2} of '{3}' file, which returns a different type. New definition at line {4} of '{5}' file is being disconsidered;
 72: 4, "http://cruise.eecs.uottawa.ca/umple/W072RefactoredFinalState.html", Removed do activities, exit actions, transitions, and/or nested state machines from final State '{0}' of StateMachine '{1}';
 73: 2, "http://cruise.eecs.uottawa.ca/umple/E073DuplicateParallelStateMachineName.html", Composite state '{0}' contains parallel state machines with the same name '{1}' on lines '{2}' and '{3}'; 
-
+74: 2, "http://cruise.eecs.uottawa.ca/umple/E074UserDefinedStateCannotBeNamedFinal.html", Cannot name user-defined state on line '{0}' Final because it is a reserved keyword;
 80: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", State '{0}' was not found in state machine '{1}'. Processed as if the state exists ;
 
 # Model Constraints' Error messages
@@ -154,8 +154,8 @@
 231: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}' and its state machine '{1}', the event '{2}' does not exist. ;
 232: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}' and its state machines, the event '{1}' does not exist. ;
 233: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', the {1} state {2} cannot be removed.;
-234: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the even '{0}' which comes from '{1}' and '{2}' results in none-determinism so the composition is not allowed.;
-235: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the even '{0}' in state '{1}' which comes from traits '{2}' and '{3}' results in a conflict.;
+234: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the event '{0}' which comes from '{1}' and '{2}' results in none-determinism so the composition is not allowed.;
+235: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the event '{0}' in state '{1}' which comes from traits '{2}' and '{3}' results in a conflict.;
 236: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the composition level of trait, the '{0}' activity/action in state '{1}', which comes from traits '{2}' and '{3}', results in a conflict.;
 
 # Messages related to MOTL

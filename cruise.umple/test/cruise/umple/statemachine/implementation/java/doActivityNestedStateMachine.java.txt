@@ -50,48 +50,12 @@ public class Course
     return statusOpen;
   }
 
-  private boolean enterOpen()
-  {
-    boolean wasEventProcessed = false;
-    
-    StatusOpen aStatusOpen = statusOpen;
-    switch (aStatusOpen)
-    {
-      case Null:
-        setStatusOpen(StatusOpen.statusOpen);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean exitOpen()
-  {
-    boolean wasEventProcessed = false;
-    
-    StatusOpen aStatusOpen = statusOpen;
-    switch (aStatusOpen)
-    {
-      case statusOpen:
-        setStatusOpen(StatusOpen.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   private void exitStatus()
   {
     switch(status)
     {
       case Open:
-        exitOpen();
+        exitStatusOpen();
         break;
     }
   }
@@ -115,6 +79,7 @@ public class Course
     {
       case statusOpen:
         if (doActivityStatusOpenStatusOpenThread != null) { doActivityStatusOpenStatusOpenThread.interrupt(); }
+        setStatusOpen(StatusOpen.Null);
         break;
     }
   }

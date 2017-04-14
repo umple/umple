@@ -3,6 +3,5 @@ class OnOffSwitch
   bulb
   {
     On { push -> Final; }
-    Final { }
   }
 }

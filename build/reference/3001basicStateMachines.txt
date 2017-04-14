@@ -27,6 +27,7 @@ Details of each state can include:
   </ul>
 <li>Entry actions, exit actions and do activities. <a href="StateMachineActionsandDoActivities.html">See the separate manual page</a>.
 <li>Nested states. <a href="NestedStateMachines.html">See the separate manual page.</a> You can nest state machines to arbitrary levels of depth.
+<li>Final states. <a href="FinalStates.html">See the separate manual page</a>.
 </ul>
 </p>
 

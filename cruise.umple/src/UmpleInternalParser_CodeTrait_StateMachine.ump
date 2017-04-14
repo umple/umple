@@ -486,7 +486,7 @@ class UmpleInternalParser
               itsSM=false;
             } else{
               for(StateMachine nSM:tState.getNestedStateMachines()){
-                if(nSM.getName().equals(smTSignature.getSrcState(i))){
+                if(nSM.getName().equals(mapped)){
                   smTemp = nSM;
                   itsSM=true;
                   break;
@@ -497,11 +497,14 @@ class UmpleInternalParser
           if(itsSM){
             smTemp.setName(smTSignature.getAlias());
           } else if (smTemp!=null) {
+            String oldtStateName = tState.getName();
             tState.setName(smTSignature.getAlias());
             if (tState.numberOfNestedStateMachines()==1) {
               tState.getNestedStateMachine(0).setName(smTSignature.getAlias());
             }
             nameMapping.put(track, smTSignature.getAlias());
+            nameMapping.put(track+"."+oldtStateName, smTSignature.getAlias());
+            
           }
         }           
       }
@@ -531,7 +534,11 @@ class UmpleInternalParser
                 removeTransition(modifiedSM,(EventModifier)smModifier);
                 continue;
               } else if (smModifier instanceof StateModifier){
-                removeState2(modifiedSM,(StateModifier)smModifier);
+                if (((StateModifier) smModifier).getSrcStates().length%2==0){
+                  removeRegion2(modifiedSM,(StateModifier)smModifier);
+                } else{
+                  removeState2(modifiedSM,(StateModifier)smModifier);  
+                }
                 continue;
               } else if (smModifier instanceof StateMachineModifier){ 
                 return null;
@@ -541,7 +548,11 @@ class UmpleInternalParser
                 keepTransition(modifiedSM,(EventModifier)smModifier);
                 continue;
               } else if (smModifier instanceof StateModifier){
-                keepState(modifiedSM,(StateModifier)smModifier);
+                if (((StateModifier) smModifier).getSrcStates().length%2==0){
+                  keepRegion(modifiedSM,(StateModifier)smModifier);
+                }else{
+                  keepState(modifiedSM,(StateModifier)smModifier);
+                }
               } else if (smModifier instanceof StateMachineModifier){                 
                 //This part is done later. I need to refactor my algorithm
               }
@@ -662,6 +673,40 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
+  private void removeRegion2(StateMachine inSM, StateModifier sModifier){
+    String srcState[] = new String[sModifier.numberOfSrcStates()-1];
+    System.arraycopy(sModifier.getSrcStates(),0,srcState, 0, sModifier.numberOfSrcStates()-1);
+    State foundState =inSM.findStateBasedOnSequence(srcState);  
+    String regionName= sModifier.getSrcState(sModifier.numberOfSrcStates()-1);
+    if(foundState!=null){
+      StateMachine sm = null;
+      for(int i=0;i<foundState.numberOfNestedStateMachines();i++){
+        if (foundState.getNestedStateMachine(i).getName().equals(regionName)) sm=foundState.getNestedStateMachine(i);
+      }
+      if (sm!=null) foundState.removeNestedStateMachine(sm);
+    }
+  } 
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  private void keepRegion(StateMachine inSM, StateModifier sModifier){
+    String srcState[] = new String[sModifier.numberOfSrcStates()-1];
+    System.arraycopy(sModifier.getSrcStates(),0,srcState, 0, sModifier.numberOfSrcStates()-1);
+    State foundState =inSM.findStateBasedOnSequence(srcState);  
+    String regionName= sModifier.getSrcState(sModifier.numberOfSrcStates()-1);
+    if(foundState!=null){
+      List<StateMachine> smDelete = new ArrayList<StateMachine>();
+      for(int i=0;i<foundState.numberOfNestedStateMachines();i++){
+        if (!foundState.getNestedStateMachine(i).getName().equals(regionName)) smDelete.add(foundState.getNestedStateMachine(i));
+      }
+      for(StateMachine sm : smDelete){
+        foundState.removeNestedStateMachine(sm);
+      }
+    }
+  } 
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
    private void keepStateMachine( Map<UmpleTrait, List<StateMachine>> inStateMachine, GeneralTPApplied inGTPApplied){
      if (inGTPApplied!=null){
        for (StateMachineModifier smModifier : inGTPApplied.getStateMachineModifiers()) {
@@ -686,17 +731,17 @@ class UmpleInternalParser
    */  
   private void keepState(StateMachine inSM, StateModifier sModifier){
     State foundState =inSM.findStateBasedOnSequence(sModifier.getSrcStates());
-  //This is used to find the nest state machine and remove the state just from that region.
-  StateMachine sm = foundState.getStateMachine();
-  List<State> mustBeRemoved = new ArrayList<State>();
-  for (State state : sm.getStates()){
-    if (!state.getName().equals(foundState.getName()) && state.getIsStartState()==false){
-      for(int i=0;i<state.numberOfTransitions();i++)         state.getTransition(i).delete();
-        for(int i=0;i<state.numberOfNextTransition();i++)      state.getNextTransition(i).delete();     
-        mustBeRemoved.add(state);       
+    //This is used to find the nest state machine and remove the state just from that region.
+    StateMachine sm = foundState.getStateMachine();
+    List<State> mustBeRemoved = new ArrayList<State>();
+    for (State state : sm.getStates()){
+      if (!state.getName().equals(foundState.getName()) && state.getIsStartState()==false){
+        for(int i=0;i<state.numberOfTransitions();i++)         state.getTransition(i).delete();
+          for(int i=0;i<state.numberOfNextTransition();i++)      state.getNextTransition(i).delete();     
+          mustBeRemoved.add(state);       
+      }
     }
-  }
-  mustBeRemoved.forEach(state-> state.delete());
+    mustBeRemoved.forEach(state-> state.delete());
   }    
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1010,12 +1055,9 @@ class UmpleInternalParser
           for(Transition mainlTrans : mainState.getTransitions() ){
             if (mainlTrans.isEqualToTransition(tTransition)){ 
               findTransition = mainlTrans;
-              if(inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName()) && inSMachine2.getUmpleTrait()!=null && !inSMachine2.getUmpleTrait().getName().equals(inUmpleClassfier.getName())) {
-                getParseResult().addErrorMessage(new ErrorMessage(235,tTransition.getPosition(),tTransition.getEvent().getName(),state.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
-                return;
-               }
+                if (checkConflictsOfTransitionActions(inSMachine1, inSMachine2, inUmpleClassfier, state, tTransition, findTransition)) return;
               }
-              break;
+           //   break;
           }
           if(findTransition!=null){
             applyCompositionAndSuperKeywordToTransition(inSMachine1, inSMachine2, findTransition, tTransition,inUmpleClassfier);
@@ -1060,6 +1102,45 @@ class UmpleInternalParser
         }        
       }  
     }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+
+  private Boolean checkConflictsOfTransitionActions(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassfier, State state, Transition tTransition, Transition findTransition) {
+    if(inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName()) && inSMachine2.getUmpleTrait()!=null && !inSMachine2.getUmpleTrait().getName().equals(inUmpleClassfier.getName())) {
+      StateMachine originalSM = (inUmpleClassfier instanceof UmpleClass) ? ((UmpleClass)inUmpleClassfier).getStateMachine(inSMachine1.getName()) : ((UmpleTrait)inUmpleClassfier).getStateMachine(inSMachine1.getName());
+      boolean checkConflict = false;  
+      if (originalSM!=null ){
+        State originalState = originalSM.findState(state.getName());                
+        if (originalState!=null){
+          Transition originalTransition = null;
+          for (Transition originalTran : originalState.getTransitions()){
+            if (originalTran.isEqualToTransition(findTransition)){
+              originalTransition = originalTran; 
+            }
+          }
+          if (originalTransition!=null){
+            if (originalTransition.getAction()!=null && originalTransition.getAction().getCodeblock().hasKeyword("superCall;")){
+              checkConflict=true;   
+            }
+          } else{
+            checkConflict = true;
+            }
+        }else{
+          checkConflict = true;
+        }
+      } else {
+        checkConflict=true;
+      }
+      if (checkConflict){
+        if (tTransition.getAction()!=null && findTransition.getAction()!=null){
+          getParseResult().addErrorMessage(new ErrorMessage(235,tTransition.getPosition(),tTransition.getEvent().getName(),state.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
+          return true;
+        }
+      }
+    }
+    return false;
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1128,73 +1209,101 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-	private void applyCompositionAndSuperKeywordToState(StateMachine inSMachine1, StateMachine inSMachine2,	UmpleClassifier inUmpleClassfier, State bState, State cState) {
-		if (inUmpleClassfier instanceof UmpleClass){
-			  if (inSMachine1.getRootStateMachine().getUmpleClass()!=null){
-				  //comes from a class
-				  if (inSMachine1.getRootStateMachine().getUmpleClass().equals( (UmpleClass)inUmpleClassfier )){
-					  applyCompositionAndSuperKeywordToStateAction(inSMachine2, bState, cState,"entry");
-					  applyCompositionAndSuperKeywordToStateAction(inSMachine2, bState, cState,"exit");
-					  applyCompositionAndSuperKeywordToStateActivity(inSMachine2, bState, cState);
-				  } else{
-					  //not implemented.
-				  }
-				  
-			  } else {
-				  //comes from a trait
-				  checkActionActivityConflicts(inSMachine1, inSMachine2, inUmpleClassfier, bState, cState);
+  private void applyCompositionAndSuperKeywordToState(StateMachine inSMachine1, StateMachine inSMachine2,	UmpleClassifier inUmpleClassfier, State bState, State cState) {
+     if (inUmpleClassfier instanceof UmpleClass){
+        if (inSMachine1.getRootStateMachine().getUmpleClass()!=null){
+          //comes from a class
+          if (inSMachine1.getRootStateMachine().getUmpleClass().equals( (UmpleClass)inUmpleClassfier )){
+            applyCompositionAndSuperKeywordToStateAction(inSMachine2, bState, cState,"entry");
+            applyCompositionAndSuperKeywordToStateAction(inSMachine2, bState, cState,"exit");
+            applyCompositionAndSuperKeywordToStateActivity(inSMachine2, bState, cState);
+          } else{
+            //not implemented.
+          }
+      
+        } else {
+          //comes from a trait
+  
+          checkActionActivityConflicts(inSMachine1, inSMachine2, inUmpleClassfier, bState, cState,((UmpleClass)inUmpleClassfier).getStateMachine(inSMachine1.getName()));
+          
           if (getParseResult().hasErrorMessages()) return;
-				  applyCompositionAndSuperKeywordToStateActionE(bState, cState);
-				  applyCompositionAndSuperKeywordToStateActivityE(bState, cState);
-			  }
-		} else {
-			  if (inSMachine1.getRootStateMachine().getUmpleTrait()!=null){
-				  
-				  //comes from a trait
-				    checkActionActivityConflicts(inSMachine1, inSMachine2, inUmpleClassfier, bState, cState);
-            if (getParseResult().hasErrorMessages()) return;
-            if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   !bState.getActionsByType("entry").isEmpty() && !cState.getActionsByType("entry").isEmpty())) {
-              getParseResult().addErrorMessage(new ErrorMessage(236,bState.getPosition(),"entry",bState.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
-                      return;
-            }
-            if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   !bState.getActionsByType("exit").isEmpty() && !cState.getActionsByType("exit").isEmpty())) {
-              getParseResult().addErrorMessage(new ErrorMessage(236,bState.getPosition(),"exit",bState.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
-                      return;
-            }
-            if( (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName())   &&   !bState.getActivities().isEmpty() && !cState.getActivities().isEmpty())) {
-              getParseResult().addErrorMessage(new ErrorMessage(236,bState.getPosition(),"do", bState.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
-                      return;
-            }
-				  if (inSMachine1.getRootStateMachine().getUmpleTrait().equals( (UmpleTrait)inUmpleClassfier )){
-					  applyCompositionAndSuperKeywordToStateAction(inSMachine2, bState, cState,"entry");  
-					  applyCompositionAndSuperKeywordToStateAction(inSMachine2, bState, cState,"exit"); 
-					  applyCompositionAndSuperKeywordToStateActivity(inSMachine2, bState, cState);
-				  } else{
-					  applyCompositionAndSuperKeywordToStateActionE(bState, cState);
-					  applyCompositionAndSuperKeywordToStateActivityE(bState, cState);
-				  }	  
-			  } else {
-				  //comes from a class
-				}
-		}
+          applyCompositionAndSuperKeywordToStateActionE(bState, cState);
+          applyCompositionAndSuperKeywordToStateActivityE(bState, cState);
+        }
+     } else {
+        if (inSMachine1.getRootStateMachine().getUmpleTrait()!=null){
+          //comes from a trait
+          checkActionActivityConflicts(inSMachine1, inSMachine2, inUmpleClassfier, bState, cState,((UmpleTrait)inUmpleClassfier).getStateMachine(inSMachine1.getName()));
+          if (inSMachine1.getRootStateMachine().getUmpleTrait().equals( (UmpleTrait)inUmpleClassfier )){
+            applyCompositionAndSuperKeywordToStateAction(inSMachine2, bState, cState,"entry");  
+            applyCompositionAndSuperKeywordToStateAction(inSMachine2, bState, cState,"exit"); 
+            applyCompositionAndSuperKeywordToStateActivity(inSMachine2, bState, cState);
+          } else{
+            applyCompositionAndSuperKeywordToStateActionE(bState, cState);
+            applyCompositionAndSuperKeywordToStateActivityE(bState, cState);
+          }   
+        } else {
+          //comes from a class
+        }
+    }
 	}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-  private void checkActionActivityConflicts(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassfier, State bState, State cState) {
-    if (inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName()) ){
-        if( ( !bState.getActionsByType("entry").isEmpty() && !cState.getActionsByType("entry").isEmpty())) {
+  private void checkActionActivityConflicts(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassfier, State bState, State cState, StateMachine originalSM ) {
+    if (inSMachine1.getUmpleTrait()!=null && inSMachine2.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName()) && !inSMachine2.getUmpleTrait().getName().equals(inUmpleClassfier.getName())){
+     
+      if (originalSM!=null && originalSM.findState(bState.getName())!=null){
+      State state = originalSM.findState(bState.getName());
+    boolean hasSuperCall = false;
+    for (Action  action : state.getActionsByType("entry") ){
+      if (action.getCodeblock().hasKeyword("superCall;")) {
+        hasSuperCall= true;
+        break;
+      }
+    }
+      if(  (hasSuperCall || state.getActionsByType("entry").isEmpty()) && !bState.getActionsByType("entry").isEmpty() && !cState.getActionsByType("entry").isEmpty() ) {
           getParseResult().addErrorMessage(new ErrorMessage(236,bState.getPosition(),"entry",bState.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
           return;
         }
-        if( (!bState.getActionsByType("exit").isEmpty() && !cState.getActionsByType("exit").isEmpty())) {
+      //---------------------------exit
+    hasSuperCall = false;
+    for (Action  action : state.getActionsByType("exit") ){
+      if (action.getCodeblock().hasKeyword("superCall;")) {
+        hasSuperCall= true;
+        break;
+      }
+    }
+    if(  (hasSuperCall || state.getActionsByType("exit").isEmpty()) && !bState.getActionsByType("exit").isEmpty() && !cState.getActionsByType("exit").isEmpty() ) {
           getParseResult().addErrorMessage(new ErrorMessage(236,bState.getPosition(),"exit",bState.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
                   return;
         }
-        if( (!bState.getActivities().isEmpty() && !cState.getActivities().isEmpty())) {
+    //---------------------------do
+    hasSuperCall = false;
+    for (Activity  action : state.getActivities() ){
+      if (action.getCodeblock().hasKeyword("superCall;")) {
+        hasSuperCall= true;
+        break;
+      }
+    }
+        if( ( hasSuperCall || state.getActivities().isEmpty()) &&!bState.getActivities().isEmpty() && !cState.getActivities().isEmpty() ) {
           getParseResult().addErrorMessage(new ErrorMessage(236,bState.getPosition(),"do", bState.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
                   return;
-        }   
+        }      
+      } else {
+        if( !bState.getActionsByType("entry").isEmpty() && !cState.getActionsByType("entry").isEmpty() ) {
+            getParseResult().addErrorMessage(new ErrorMessage(236,bState.getPosition(),"entry",bState.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
+            return;
+          }
+          if( !bState.getActionsByType("exit").isEmpty() && !cState.getActionsByType("exit").isEmpty() ) {
+            getParseResult().addErrorMessage(new ErrorMessage(236,bState.getPosition(),"exit",bState.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
+                    return;
+          }
+          if( !bState.getActivities().isEmpty() && !cState.getActivities().isEmpty() ) {
+            getParseResult().addErrorMessage(new ErrorMessage(236,bState.getPosition(),"do", bState.getName(),inSMachine1.getUmpleTrait().getName(),inSMachine2.getUmpleTrait().getName()));
+                    return;
+          }           
+      }
     }
   }
 

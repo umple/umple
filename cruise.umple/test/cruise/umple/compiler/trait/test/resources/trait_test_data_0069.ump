@@ -1,0 +1,23 @@
+trait T1{
+  sm{
+    s1{
+      exit /{exitT1();}
+    }
+  }
+}
+
+trait T2{
+  sm{
+    s1{
+      exit /{exitT2();}
+    }
+  }
+}
+class A{
+  isA T1, T2;
+  sm{
+    s1{
+     exit /{exitA();}
+    }
+  } 
+}

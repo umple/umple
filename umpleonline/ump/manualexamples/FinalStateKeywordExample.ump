@@ -1,0 +1,13 @@
+// Using the keyword "Final" automatically defines the 
+// final state for the top-level state machine "sm"
+
+class X {
+  sm {
+    s1 {
+      goToS2 -> s2;
+    }
+    s2 {
+      goToFinal -> Final;
+    }
+  }
+}

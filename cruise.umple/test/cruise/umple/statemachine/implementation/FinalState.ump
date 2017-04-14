@@ -7,6 +7,5 @@ class Mentor
   status
   {
     Ok { flip -> Final; }
-    Final {  } 
   }
 }

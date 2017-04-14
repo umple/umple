@@ -1,13 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi3;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
+import java.io.Serializable;
 
-public class ClientImpl extends CC implements IClientImpl
+// line 5 "../../Class_DistributableRMI3.ump"
+public class Client extends CC implements ClientI ,java.io.Serializable,IClientImpl
 {
 
   //------------------------
@@ -18,38 +16,20 @@ public class ClientImpl extends CC implements IClientImpl
   // CONSTRUCTOR
   //------------------------
 
-  public ClientImpl(Client proxy)
+  public Client(UmpleRuntime.UmpleComponent umpleComponent)
   {
-    realSelf=proxy;
-    realSelf.setRealObject(this);
-    while(true)
-    {
-      try
-      {  
-        UnicastRemoteObject.exportObject(this,0);
-        break;
-      } 
-      catch (Exception e)
-      {
-        System.err.println("Server Exception: " + e.toString());
-      }
-    } 
     super();
-  }
-  //------------------------
-  // Reference to the proxy
-  //------------------------
-  Client realSelf;
-  
-  public void setRealSelf(Client self)
-  {
-    realSelf=self;
-  }
+    if(!umpleComponent.getName().equals("local"))    {
+    if(this instanceof Client)
+        realObject=UmpleRuntime.getInstance().addClient( umpleComponent, this);
 
+      return;    }
+
+  }
   //------------------------
   // Returning the Hashcode
   //------------------------
-  public int getHashCode()
+  public int getHashCodeImpl()
   {
     return hashCode();
   }
@@ -58,9 +38,50 @@ public class ClientImpl extends CC implements IClientImpl
   // INTERFACE
   //------------------------
 
-  public void delete()
+  public void deleteImpl()
   {
     super.delete();
   }
 
+
+  IClientImpl realObject=this;
+  public void setRealObject(IClientImpl aObject)
+  {
+    realObject=aObject;
+  }
+  public IClientImpl getRealObject()
+  {
+    return realObject;
+  }
+  public Client()
+  {
+
+this(UmpleRuntime.getComponent("Client"));
+  }
+  public int getHashCode()
+  {
+    while(true)
+      try{
+        return realObject.getHashCodeImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void delete()
+  {
+    while(true)
+      try{
+        realObject.deleteImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+
+  public boolean equals(Object obj)
+  {
+    if(obj==null)
+      return false;
+    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((Client)obj).getHashCode());
+  }
 }

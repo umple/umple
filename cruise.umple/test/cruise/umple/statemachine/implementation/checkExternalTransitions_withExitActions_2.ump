@@ -1,0 +1,21 @@
+class X {
+  sm {
+    on {
+      exit /{on_exit_action();}
+      e1-> off;
+        m1 {
+          exit/{m1_exit_action();}
+          e2-> m2;
+          t2 {
+            exit /{t2_exit_action();}
+            e3-> t3;
+          }
+          t3{}
+        }
+      m2{}    
+    }  
+    off {
+      exit/{off_exit_action();}      
+    }
+  }
+}

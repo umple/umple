@@ -10,7 +10,7 @@ trait T1 {
   status { 
     on { 
       turnOn[z>0] -> on; 
-        [x] -> on1;
+       [x] -> on1;
     } 
     on1{
     	

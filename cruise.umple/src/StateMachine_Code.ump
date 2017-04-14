@@ -203,6 +203,7 @@ class StateMachine
   public List<State> getFinalStates()
   {
     List<StateMachine> all = new ArrayList<StateMachine>();
+    all.add(this);
     all.addAll(getNestedStateMachines());
     return getFinalStatesIn(all);
   }
@@ -457,6 +458,25 @@ class StateMachine
     return newState;
   }
   
+  /*
+   * Issue 935 - A helper function to retrieve the super state machine (state machine that has no parent state)
+   */
+  public StateMachine getSuperStateMachine() 
+  {
+    if (getParentState() == null) 
+    {
+      return this;
+    } 
+    else 
+    {
+      StateMachine superStateMachine = getParentState().getStateMachine();
+      while(superStateMachine.getParentState() != null) 
+      {
+        superStateMachine = superStateMachine.getParentState().getStateMachine();
+      }
+      return superStateMachine;
+    }
+  }
 }
 
 class State
@@ -534,7 +554,7 @@ class State
 
   public String getType()
   {
-    return numberOfTransitions() == 0 && numberOfNestedStateMachines() == 0 ? "Simple" : "Complex";
+    return numberOfTransitions() == 0 && numberOfNestedStateMachines() == 0 && numberOfActions() == 0 ? "Simple" : "Complex";
   }
   
   public String newTimedEventName(State toState)
@@ -655,6 +675,40 @@ class State
   {
     return this.isVisited;
   }
+  
+  /* Issue 935
+     A helper function to obtain the concurrent parent state
+  */
+  public State getConcurrentParentState(){
+    State concurrentParentState = getStateMachine().getParentState();
+    while (concurrentParentState != null) {
+      if (concurrentParentState.getIsConcurrent()) {
+        return concurrentParentState;
+      } else {
+        concurrentParentState = concurrentParentState.getStateMachine().getParentState();
+      }
+    }
+    return null;
+  }
+  
+  /* Issue 140
+  	 A helper function to obtain the concurrent region
+  */
+  public State getConcurrentRegion() {
+    State concurrentRegion = getConcurrentParentState();
+    if (concurrentRegion != null) {
+      State traverser = concurrentRegion.getStateMachine().getParentState();
+      while (traverser != null) {
+        if (traverser.getIsConcurrent()) {
+          concurrentRegion = traverser;
+        }
+        traverser = traverser.getStateMachine().getParentState();
+      }
+    } else if (this.getIsConcurrent()) {
+      concurrentRegion = this;
+    }
+    return concurrentRegion;
+  }
  
 }
 
@@ -666,6 +720,95 @@ class Transition
     State nullState = new State("null",nullSm);
     return new Transition(nullState, nextState);
   }
+  
+  /*
+   * Issue 935 Helper Function - Determine the state machine to exit in a transition
+   */
+   public StateMachine getSmToExit(StateMachine defaultToExit){
+    StateMachine smToExit = defaultToExit;
+    if (fromState.getStateMachine().getParentState() != null && nextState.getStateMachine().getParentState() != null) {
+      State fromStateSuperParent = fromState.getStateMachine().getParentState();
+      if (nextState.equals(fromStateSuperParent)) {
+        smToExit = fromStateSuperParent.getStateMachine();
+      } else if(nextState.equals(fromState)) {
+        smToExit = fromState.getStateMachine();
+      } else {
+        boolean foundSmToExit = false;
+        
+        // First, traverse up "nextState" and see if it is contained in "fromState"
+        State nextStateTraverser = nextState;
+        while (nextStateTraverser.getStateMachine().getParentState() != null && !foundSmToExit) {
+          State nextStateSuperParent = nextStateTraverser.getStateMachine().getParentState();
+          if (nextStateSuperParent.equals(fromState)) {
+            smToExit = nextStateTraverser.getStateMachine();
+            foundSmToExit = true;
+          } else if (nextStateSuperParent.equals(fromStateSuperParent)) {
+            smToExit = fromState.getStateMachine();
+            foundSmToExit = true;
+          } else {
+            nextStateTraverser = nextStateSuperParent;
+          }
+        }
+        
+        // If we did not find smToExit, traverse up "fromState" and see if it is contained in "nextState"
+        State fromStateTraverser = fromState;
+        while (fromStateTraverser.getStateMachine().getParentState() != null && !foundSmToExit) {
+          if (fromStateTraverser.getStateMachine().getParentState().equals(nextState)) {
+            smToExit = nextState.getStateMachine();
+            foundSmToExit = true;
+          } else {
+            fromStateTraverser = fromStateTraverser.getStateMachine().getParentState();
+          }
+        }
+        
+        if (!foundSmToExit && fromStateTraverser.equals(nextStateTraverser)) {
+          for (StateMachine nsm : fromStateTraverser.getStateMachine().getNestedStateMachines()) {
+            if (nsm.getParentState().equals(fromStateTraverser)) {
+              smToExit = nsm;
+              break;
+            }
+          }
+        }
+      }
+    } else if (nextState.getStateMachine().getParentState() != null) {
+      // Need to see if "nextState" is contained within "fromState"
+      State nextStateTraverser = nextState.getStateMachine().getParentState();
+      while (nextStateTraverser.getStateMachine().getParentState() != null) {
+        nextStateTraverser = nextStateTraverser.getStateMachine().getParentState();
+      }
+      if (nextStateTraverser.equals(fromState)) {
+        for (StateMachine nsm : fromState.getStateMachine().getNestedStateMachines()) {
+          if (nsm.getParentState().equals(fromState)) {
+            smToExit = nsm;
+            break;
+          }
+        }
+      }
+    }
+    
+    return smToExit;
+  }
+  
+  /*
+    Issue 140/935 - A helper function to determine if a transition is an and-cross transition
+  */
+  public boolean isTransitionAndCross(State commonConcurrentParent) 
+  {
+     // We've already determined that fromState and nextState are in the same concurrent parent state
+     // However, we need to check if fromState and nextState belong to different state machines
+     // within the concurrent parent state
+     StateMachine fromStateSm = fromState.getStateMachine();
+     StateMachine nextStateSm = nextState.getStateMachine();
+     
+     while (!fromStateSm.getParentState().equals(commonConcurrentParent)) {
+       fromStateSm = fromStateSm.getParentState().getStateMachine();
+     }
+     
+     while (!nextStateSm.getParentState().equals(commonConcurrentParent)) {
+       nextStateSm = nextStateSm.getParentState().getStateMachine();
+     }
+     return !fromStateSm.equals(nextStateSm);
+   }
 }
 
 class Event

@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 import java.util.*;
@@ -92,6 +92,7 @@ public class X implements Runnable
     switch (aSm1)
     {
       case s1:
+        exitSm1S1();
         setSm1S1(Sm1S1.s1a);
         wasEventProcessed = true;
         break;
@@ -120,46 +121,6 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean enterS1()
-  {
-    boolean wasEventProcessed = false;
-    
-    Sm1S1 aSm1S1 = sm1S1;
-    switch (aSm1S1)
-    {
-      case Null:
-        setSm1S1(Sm1S1.s1a);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean exitS1()
-  {
-    boolean wasEventProcessed = false;
-    
-    Sm1S1 aSm1S1 = sm1S1;
-    switch (aSm1S1)
-    {
-      case s1a:
-        setSm1S1(Sm1S1.Null);
-        wasEventProcessed = true;
-        break;
-      case s1b:
-        setSm1S1(Sm1S1.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean e5()
   {
     boolean wasEventProcessed = false;
@@ -168,6 +129,7 @@ public class X implements Runnable
     switch (aSm1S1)
     {
       case s1a:
+        exitSm1S1();
         setSm1S1(Sm1S1.s1b);
         wasEventProcessed = true;
         break;
@@ -208,7 +170,7 @@ public class X implements Runnable
     switch(sm1)
     {
       case s1:
-        exitS1();
+        exitSm1S1();
         break;
     }
   }
@@ -222,6 +184,19 @@ public class X implements Runnable
     {
       case s1:
         if (sm1S1 == Sm1S1.Null) { setSm1S1(Sm1S1.s1a); }
+        break;
+    }
+  }
+
+  private void exitSm1S1()
+  {
+    switch(sm1S1)
+    {
+      case s1a:
+        setSm1S1(Sm1S1.Null);
+        break;
+      case s1b:
+        setSm1S1(Sm1S1.Null);
         break;
     }
   }

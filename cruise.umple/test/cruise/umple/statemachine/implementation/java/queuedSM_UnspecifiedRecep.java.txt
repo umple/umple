@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.19.0.3287 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
 import java.util.*;
@@ -200,54 +200,6 @@ public class AutomatedTellerMachine implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean enterActive()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmActive aSmActive = smActive;
-    switch (aSmActive)
-    {
-      case Null:
-        setSmActive(SmActive.validating);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean exitActive()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmActive aSmActive = smActive;
-    switch (aSmActive)
-    {
-      case validating:
-        setSmActive(SmActive.Null);
-        wasEventProcessed = true;
-        break;
-      case selecting:
-        setSmActive(SmActive.Null);
-        wasEventProcessed = true;
-        break;
-      case processing:
-        setSmActive(SmActive.Null);
-        wasEventProcessed = true;
-        break;
-      case printing:
-        setSmActive(SmActive.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean _validated()
   {
     boolean wasEventProcessed = false;
@@ -256,6 +208,7 @@ public class AutomatedTellerMachine implements Runnable
     switch (aSmActive)
     {
       case validating:
+        exitSmActive();
         setSmActive(SmActive.selecting);
         wasEventProcessed = true;
         break;
@@ -275,6 +228,7 @@ public class AutomatedTellerMachine implements Runnable
     switch (aSmActive)
     {
       case selecting:
+        exitSmActive();
         setSmActive(SmActive.processing);
         wasEventProcessed = true;
         break;
@@ -293,6 +247,7 @@ public class AutomatedTellerMachine implements Runnable
     switch (aSmActive)
     {
       case processing:
+        exitSmActive();
         setSmActive(SmActive.selecting);
         wasEventProcessed = true;
         break;
@@ -311,6 +266,7 @@ public class AutomatedTellerMachine implements Runnable
     switch (aSmActive)
     {
       case processing:
+        exitSmActive();
         setSmActive(SmActive.printing);
         wasEventProcessed = true;
         break;
@@ -345,7 +301,7 @@ public class AutomatedTellerMachine implements Runnable
     switch(sm)
     {
       case active:
-        exitActive();
+        exitSmActive();
         ejectCard();
         break;
     }
@@ -367,6 +323,25 @@ public class AutomatedTellerMachine implements Runnable
         break;
       case error2:
         __autotransition2__();
+        break;
+    }
+  }
+
+  private void exitSmActive()
+  {
+    switch(smActive)
+    {
+      case validating:
+        setSmActive(SmActive.Null);
+        break;
+      case selecting:
+        setSmActive(SmActive.Null);
+        break;
+      case processing:
+        setSmActive(SmActive.Null);
+        break;
+      case printing:
+        setSmActive(SmActive.Null);
         break;
     }
   }

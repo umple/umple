@@ -1,0 +1,195 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+public class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  public enum Sm { on, off }
+  public enum SmOn { Null, m1, m2 }
+  public enum SmOnM1 { Null, t2, t3 }
+  private Sm sm;
+  private SmOn smOn;
+  private SmOnM1 smOnM1;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X()
+  {
+    setSmOn(SmOn.Null);
+    setSmOnM1(SmOnM1.Null);
+    setSm(Sm.on);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    if (smOn != SmOn.Null) { answer += "." + smOn.toString(); }
+    if (smOnM1 != SmOnM1.Null) { answer += "." + smOnM1.toString(); }
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public SmOn getSmOn()
+  {
+    return smOn;
+  }
+
+  public SmOnM1 getSmOnM1()
+  {
+    return smOnM1;
+  }
+
+  public boolean e1()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case on:
+        exitSm();
+        setSm(Sm.off);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean e2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmOn aSmOn = smOn;
+    switch (aSmOn)
+    {
+      case m1:
+        exitSmOn();
+        setSmOn(SmOn.m2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean e3()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmOnM1 aSmOnM1 = smOnM1;
+    switch (aSmOnM1)
+    {
+      case t2:
+        exitSmOnM1();
+        setSmOnM1(SmOnM1.t3);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case on:
+        exitSmOn();
+        on_exit_action();
+        break;
+      case off:
+        off_exit_action();
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case on:
+        if (smOn == SmOn.Null) { setSmOn(SmOn.m1); }
+        break;
+    }
+  }
+
+  private void exitSmOn()
+  {
+    switch(smOn)
+    {
+      case m1:
+        exitSmOnM1();
+        m1_exit_action();
+        setSmOn(SmOn.Null);
+        break;
+      case m2:
+        setSmOn(SmOn.Null);
+        break;
+    }
+  }
+
+  private void setSmOn(SmOn aSmOn)
+  {
+    smOn = aSmOn;
+    if (sm != Sm.on && aSmOn != SmOn.Null) { setSm(Sm.on); }
+
+    // entry actions and do activities
+    switch(smOn)
+    {
+      case m1:
+        if (smOnM1 == SmOnM1.Null) { setSmOnM1(SmOnM1.t2); }
+        break;
+    }
+  }
+
+  private void exitSmOnM1()
+  {
+    switch(smOnM1)
+    {
+      case t2:
+        t2_exit_action();
+        setSmOnM1(SmOnM1.Null);
+        break;
+      case t3:
+        setSmOnM1(SmOnM1.Null);
+        break;
+    }
+  }
+
+  private void setSmOnM1(SmOnM1 aSmOnM1)
+  {
+    smOnM1 = aSmOnM1;
+    if (smOn != SmOn.m1 && aSmOnM1 != SmOnM1.Null) { setSmOn(SmOn.m1); }
+  }
+
+  public void delete()
+  {}
+
+}

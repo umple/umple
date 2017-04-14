@@ -1,69 +1,39 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi3;
+import java.io.Serializable;
+
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.io.Serializable;
-import distributed.rmi3.UmpleObjectFactory;
-public class Client extends CC implements java.io.Serializable, ClientI
+public class ClientRemote extends CCRemote implements IClientImpl
 {
-  IClientImpl realObject;
-  public void setRealObject(IClientImpl aObject)
+  Client realObject;
+  public void setRealObject(Client aObject)
   {
     realObject=aObject;
   }
-  public IClientImpl getRealObject()
+  public Client getRealObject()
   {
     return realObject;
   }
-  public Client(String component)
-  {
-    realObject = UmpleObjectFactory.getInstance().addClient(component, this);
-  }
-  public Client(int component)
-  {
-    realObject = UmpleObjectFactory.getInstance().addClient(component, this);
-  }
-  public Client()
-  {
-    realObject = UmpleObjectFactory.getInstance().createClient(this);
-  }
-  public void setRealSelf(Client self)
+  public int getHashCodeImpl()
   {
     while(true)
       try{
-        realObject.setRealSelf(self);
-        break;
+        return realObject.getHashCodeImpl();
         }
     catch(Exception e) {System.err.println(e.toString());}
   }
-  public int getHashCode()
+  public void deleteImpl()
   {
     while(true)
       try{
-        return realObject.getHashCode();
-        }
-    catch(Exception e) {System.err.println(e.toString());}
-  }
-  public void delete()
-  {
-    while(true)
-      try{
-        realObject.delete();
+        realObject.deleteImpl();
         break;
         }
     catch(Exception e) {System.err.println(e.toString());}
   }
 
-  public boolean equals(Object obj)
-  {
-    if(obj==null)
-      return false;
-    if(obj.getClass()!=this.getClass())
-      return false;
-    return (getHashCode()==((Client)obj).getHashCode());
-  }
 }

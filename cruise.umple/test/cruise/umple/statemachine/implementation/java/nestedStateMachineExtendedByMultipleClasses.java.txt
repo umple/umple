@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 
@@ -88,46 +88,6 @@ public class Animal
     return wasEventProcessed;
   }
 
-  private boolean enterAlive()
-  {
-    boolean wasEventProcessed = false;
-    
-    StateAlive aStateAlive = stateAlive;
-    switch (aStateAlive)
-    {
-      case Null:
-        setStateAlive(StateAlive.normal);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean exitAlive()
-  {
-    boolean wasEventProcessed = false;
-    
-    StateAlive aStateAlive = stateAlive;
-    switch (aStateAlive)
-    {
-      case normal:
-        setStateAlive(StateAlive.Null);
-        wasEventProcessed = true;
-        break;
-      case zombie:
-        setStateAlive(StateAlive.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean zombify()
   {
     boolean wasEventProcessed = false;
@@ -136,6 +96,7 @@ public class Animal
     switch (aStateAlive)
     {
       case normal:
+        exitStateAlive();
         setStateAlive(StateAlive.zombie);
         wasEventProcessed = true;
         break;
@@ -154,6 +115,7 @@ public class Animal
     switch (aStateAlive)
     {
       case zombie:
+        exitStateAlive();
         setStateAlive(StateAlive.normal);
         wasEventProcessed = true;
         break;
@@ -169,7 +131,7 @@ public class Animal
     switch(state)
     {
       case alive:
-        exitAlive();
+        exitStateAlive();
         break;
     }
   }
@@ -183,6 +145,19 @@ public class Animal
     {
       case alive:
         if (stateAlive == StateAlive.Null) { setStateAlive(StateAlive.normal); }
+        break;
+    }
+  }
+
+  private void exitStateAlive()
+  {
+    switch(stateAlive)
+    {
+      case normal:
+        setStateAlive(StateAlive.Null);
+        break;
+      case zombie:
+        setStateAlive(StateAlive.Null);
         break;
     }
   }

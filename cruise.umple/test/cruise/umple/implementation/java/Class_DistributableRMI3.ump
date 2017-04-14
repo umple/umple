@@ -1,10 +1,10 @@
 namespace distributed.rmi3;
 interface ClientI
 {
-	distributable;
 }
 class Client
 {
+  distributable;
   isA ClientI;
   isA CC;
 }

@@ -1,0 +1,338 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+public class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  public enum Sm { s1 }
+  public enum SmS1S2 { Null, s2 }
+  public enum SmS1S2S2 { Null, s3, s4 }
+  public enum SmS1S5 { Null, s5 }
+  public enum SmS1S5S5 { Null, s6, s7 }
+  public enum SmS1S8 { Null, s8 }
+  public enum SmS1S8S8 { Null, s9, s10 }
+  private Sm sm;
+  private SmS1S2 smS1S2;
+  private SmS1S2S2 smS1S2S2;
+  private SmS1S5 smS1S5;
+  private SmS1S5S5 smS1S5S5;
+  private SmS1S8 smS1S8;
+  private SmS1S8S8 smS1S8S8;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X()
+  {
+    setSmS1S2(SmS1S2.Null);
+    setSmS1S2S2(SmS1S2S2.Null);
+    setSmS1S5(SmS1S5.Null);
+    setSmS1S5S5(SmS1S5S5.Null);
+    setSmS1S8(SmS1S8.Null);
+    setSmS1S8S8(SmS1S8S8.Null);
+    setSm(Sm.s1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    if (smS1S2 != SmS1S2.Null) { answer += "." + smS1S2.toString(); }
+    if (smS1S2S2 != SmS1S2S2.Null) { answer += "." + smS1S2S2.toString(); }
+    if (smS1S5 != SmS1S5.Null) { answer += "." + smS1S5.toString(); }
+    if (smS1S5S5 != SmS1S5S5.Null) { answer += "." + smS1S5S5.toString(); }
+    if (smS1S8 != SmS1S8.Null) { answer += "." + smS1S8.toString(); }
+    if (smS1S8S8 != SmS1S8S8.Null) { answer += "." + smS1S8S8.toString(); }
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public SmS1S2 getSmS1S2()
+  {
+    return smS1S2;
+  }
+
+  public SmS1S2S2 getSmS1S2S2()
+  {
+    return smS1S2S2;
+  }
+
+  public SmS1S5 getSmS1S5()
+  {
+    return smS1S5;
+  }
+
+  public SmS1S5S5 getSmS1S5S5()
+  {
+    return smS1S5S5;
+  }
+
+  public SmS1S8 getSmS1S8()
+  {
+    return smS1S8;
+  }
+
+  public SmS1S8S8 getSmS1S8S8()
+  {
+    return smS1S8S8;
+  }
+
+  public boolean goToS4()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1S2S2 aSmS1S2S2 = smS1S2S2;
+    switch (aSmS1S2S2)
+    {
+      case s3:
+        exitSmS1S2S2();
+        setSmS1S2S2(SmS1S2S2.s4);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean goToS7()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1S5S5 aSmS1S5S5 = smS1S5S5;
+    switch (aSmS1S5S5)
+    {
+      case s6:
+        exitSmS1S5S5();
+        setSmS1S5S5(SmS1S5S5.s7);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean goToS10()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS1S8S8 aSmS1S8S8 = smS1S8S8;
+    switch (aSmS1S8S8)
+    {
+      case s9:
+        exitSmS1S8S8();
+        setSmS1S8S8(SmS1S8S8.s10);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case s1:
+        exitSmS1S2();
+        exitSmS1S5();
+        exitSmS1S8();
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case s1:
+        if (smS1S2 == SmS1S2.Null) { setSmS1S2(SmS1S2.s2); }
+        if (smS1S5 == SmS1S5.Null) { setSmS1S5(SmS1S5.s5); }
+        if (smS1S8 == SmS1S8.Null) { setSmS1S8(SmS1S8.s8); }
+        break;
+    }
+  }
+
+  private void exitSmS1S2()
+  {
+    switch(smS1S2)
+    {
+      case s2:
+        exitSmS1S2S2();
+        setSmS1S2(SmS1S2.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S2(SmS1S2 aSmS1S2)
+  {
+    smS1S2 = aSmS1S2;
+    if (sm != Sm.s1 && aSmS1S2 != SmS1S2.Null) { setSm(Sm.s1); }
+
+    // entry actions and do activities
+    switch(smS1S2)
+    {
+      case s2:
+        if (smS1S2S2 == SmS1S2S2.Null) { setSmS1S2S2(SmS1S2S2.s3); }
+        break;
+    }
+  }
+
+  private void exitSmS1S2S2()
+  {
+    switch(smS1S2S2)
+    {
+      case s3:
+        setSmS1S2S2(SmS1S2S2.Null);
+        break;
+      case s4:
+        setSmS1S2S2(SmS1S2S2.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S2S2(SmS1S2S2 aSmS1S2S2)
+  {
+    smS1S2S2 = aSmS1S2S2;
+    if (smS1S2 != SmS1S2.s2 && aSmS1S2S2 != SmS1S2S2.Null) { setSmS1S2(SmS1S2.s2); }
+
+    // entry actions and do activities
+    switch(smS1S2S2)
+    {
+      case s4:
+        if (smS1S5S5 == SmS1S5S5.s7 && smS1S8S8 == SmS1S8S8.s10) { delete(); }
+        break;
+    }
+  }
+
+  private void exitSmS1S5()
+  {
+    switch(smS1S5)
+    {
+      case s5:
+        exitSmS1S5S5();
+        setSmS1S5(SmS1S5.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S5(SmS1S5 aSmS1S5)
+  {
+    smS1S5 = aSmS1S5;
+    if (sm != Sm.s1 && aSmS1S5 != SmS1S5.Null) { setSm(Sm.s1); }
+
+    // entry actions and do activities
+    switch(smS1S5)
+    {
+      case s5:
+        if (smS1S5S5 == SmS1S5S5.Null) { setSmS1S5S5(SmS1S5S5.s6); }
+        break;
+    }
+  }
+
+  private void exitSmS1S5S5()
+  {
+    switch(smS1S5S5)
+    {
+      case s6:
+        setSmS1S5S5(SmS1S5S5.Null);
+        break;
+      case s7:
+        setSmS1S5S5(SmS1S5S5.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S5S5(SmS1S5S5 aSmS1S5S5)
+  {
+    smS1S5S5 = aSmS1S5S5;
+    if (smS1S5 != SmS1S5.s5 && aSmS1S5S5 != SmS1S5S5.Null) { setSmS1S5(SmS1S5.s5); }
+
+    // entry actions and do activities
+    switch(smS1S5S5)
+    {
+      case s7:
+        if (smS1S2S2 == SmS1S2S2.s4 && smS1S8S8 == SmS1S8S8.s10) { delete(); }
+        break;
+    }
+  }
+
+  private void exitSmS1S8()
+  {
+    switch(smS1S8)
+    {
+      case s8:
+        exitSmS1S8S8();
+        setSmS1S8(SmS1S8.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S8(SmS1S8 aSmS1S8)
+  {
+    smS1S8 = aSmS1S8;
+    if (sm != Sm.s1 && aSmS1S8 != SmS1S8.Null) { setSm(Sm.s1); }
+
+    // entry actions and do activities
+    switch(smS1S8)
+    {
+      case s8:
+        if (smS1S8S8 == SmS1S8S8.Null) { setSmS1S8S8(SmS1S8S8.s9); }
+        break;
+    }
+  }
+
+  private void exitSmS1S8S8()
+  {
+    switch(smS1S8S8)
+    {
+      case s9:
+        setSmS1S8S8(SmS1S8S8.Null);
+        break;
+      case s10:
+        setSmS1S8S8(SmS1S8S8.Null);
+        break;
+    }
+  }
+
+  private void setSmS1S8S8(SmS1S8S8 aSmS1S8S8)
+  {
+    smS1S8S8 = aSmS1S8S8;
+    if (smS1S8 != SmS1S8.s8 && aSmS1S8S8 != SmS1S8S8.Null) { setSmS1S8(SmS1S8.s8); }
+
+    // entry actions and do activities
+    switch(smS1S8S8)
+    {
+      case s10:
+        if (smS1S2S2 == SmS1S2S2.s4 && smS1S5S5 == SmS1S5S5.s7) { delete(); }
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+}

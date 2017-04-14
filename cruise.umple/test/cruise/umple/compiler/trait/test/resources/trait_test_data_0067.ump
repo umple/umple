@@ -1,0 +1,9 @@
+trait API{
+  att1;
+}
+
+class Some{
+isA API;
+id;
+key {id}
+}

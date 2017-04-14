@@ -2056,20 +2056,78 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     }
   }
   
-  private void prepareFinalStateFor(StateMachine sm, StateMachine parentSm)
-  {
+ /*
+ * Issue 140 - For final states in concurrent state machines, we need to make sure that all
+ *             state machines within a region are in their final states before calling delete()
+ */
+   private String prepareConcurrentFinalStatesFor(State concurrentRegion, StateMachine currentSm) {
+     List<State> finalStatesInRegion = new ArrayList<State>();
+     String deleteActionCode = "";
+     
+     for (StateMachine nested : concurrentRegion.getNestedStateMachines()) {
+       finalStatesInRegion.addAll(nested.getFinalStates());
+     }
+     
+     if (!finalStatesInRegion.isEmpty()) {
+       deleteActionCode = "if (";
+       for (int i = 0; i < finalStatesInRegion.size() - 1; i++) {
+         if (!finalStatesInRegion.get(i).getStateMachine().equals(currentSm)) {
+           StateMachine sameRegionSm = finalStatesInRegion.get(i).getStateMachine();
+           if (i + 1 == finalStatesInRegion.size() - 1 && finalStatesInRegion.get(finalStatesInRegion.size() - 1).getStateMachine().equals(currentSm)) {
+             deleteActionCode += StringFormatter.format("{0} == {1}.{2}) { {3}(); }", 
+                 translate("stateMachineOne", sameRegionSm),
+                 translate("type", sameRegionSm),
+                 translate("stateOne", finalStatesInRegion.get(i)),
+                 translate("deleteMethod",currentSm.getUmpleClass()));
+           } else {
+             deleteActionCode += StringFormatter.format("{0} == {1}.{2} && ", 
+                 translate("stateMachineOne", sameRegionSm),
+                 translate("type", sameRegionSm),
+                 translate("stateOne", finalStatesInRegion.get(i)));
+           }
+         }
+       }
+       
+       if (!finalStatesInRegion.get(finalStatesInRegion.size() - 1).getStateMachine().equals(currentSm)) {
+         StateMachine sameRegionSm = finalStatesInRegion.get(finalStatesInRegion.size() - 1).getStateMachine();
+         deleteActionCode += StringFormatter.format("{0} == {1}.{2}) { {3}(); }", 
+                                                    translate("stateMachineOne", sameRegionSm),
+                                                    translate("type", sameRegionSm),
+                                                    translate("stateOne", finalStatesInRegion.get(finalStatesInRegion.size() - 1)),
+                                                    translate("deleteMethod",currentSm.getUmpleClass()));
+       } else if (deleteActionCode.equals("if (")) {
+         deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",currentSm.getUmpleClass()));
+       }
+     } else {
+       deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",currentSm.getUmpleClass()));
+     }
+     
+     return deleteActionCode;
+  }
+  
+  private void prepareFinalStatesFor(StateMachine sm){
     Map<String,String> lookups = new HashMap<String,String>();
+    String deleteActionCode = "";
     
-    String deleteActionCode;
-    deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass()));
-
+    if (sm.getParentState() != null) {
+      State concurrentRegion = sm.getParentState().getConcurrentRegion();
+      // Issue 140
+      if (concurrentRegion != null) {
+        deleteActionCode = prepareConcurrentFinalStatesFor(concurrentRegion, sm);
+      } else {
+        deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass())); 
+      }
+    } else {
+      deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass())); 
+    }
+    
     lookups.put("deleteActionCode",deleteActionCode);
     GeneratorHelper.prepareFinalState(sm,lookups);
   }
   
   private void prepareNestedStatesFor(StateMachine sm, StateMachine parentSm, int concurrentIndex)
   {
-    prepareFinalStateFor(sm,parentSm); 
+    prepareFinalStatesFor(sm);  
     prepareDoActivityThread(sm); 
     if (sm.getParentState() != null && sm.getStartState() != null)
     {
@@ -2079,8 +2137,10 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         parentState = parentState.getStateMachine().getParentState();
       }
       Map<String,String> lookups = new HashMap<String,String>();
-      lookups.put("entryEventName",translate("enterMethod",parentState));
-      lookups.put("exitEventName",translate("exitMethod",parentState));
+      // Issue 935 - To be added to the parent state in prepareNestedStateMachine
+      lookups.put("parentExitActionCode", StringFormatter.format("{0}();", translate("exitMethod", sm)));
+      // Issue 935 - Exit action to be added to each state in the state machine to set it to null
+      lookups.put("setSmToNullExitActionCode", StringFormatter.format("{0}({1}.{2});", translate("setMethod", sm), translate("type", sm), translate("stateNull", sm)));
       lookups.put("parentEntryActionCode",StringFormatter.format("if ({0} == {1}.{2}) { {3}({1}.{4}); }"
           ,translate("stateMachineOne",sm)
           ,translate("type",sm)
@@ -2088,7 +2148,6 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           ,translate("setMethod",sm)
           ,translate("stateOne",sm.getStartState()))
       );
-      lookups.put("parentExitActionCode",StringFormatter.format("{0}();",translate("exitMethod",parentState)));
       GeneratorHelper.prepareNestedStateMachine(sm,concurrentIndex,lookups);    
     }
 
@@ -2568,7 +2627,10 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         
         proxyPrecode+=remoteImports+"import java.io.Serializable;"+NL+defaultNamespace+"public class "+proxyName+extendsProxy+proxyImplements+NL+"{";
 
-          proxyContent+=NL+"  "+remoteInterfaceName+" realObject;"+NL;
+          proxyContent+=NL+"  "+remoteInterfaceName+" realObject";
+          if(getModel().getDistributePattern()==0)
+            proxyContent+="=this";
+          proxyContent+=";"+NL;
         proxyContent+="  public void setRealObject("+remoteInterfaceName+" aObject)"+NL+"  {"+NL;
         proxyContent+="    realObject=aObject;"+NL+"  }"+NL;
         proxyContent+="  public "+remoteInterfaceName+" getRealObject()"+NL+"  {"+NL;
@@ -2751,8 +2813,18 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
                 
               }              
              
-             if(getModel().getDistributePattern()==0){
-              proxyContent+="  public "+proxyName+"("+arguments+lastArgument+"UmpleRuntime.UmpleComponent component)"+NL+"  {"+NL+"    this("+callerSignature+");"+NL+"    realObject = UmpleRuntime.getInstance().add"+aClass.getName()+"("+callerSignature+lastArgument+"component);"+NL+"  }"+NL;
+             if(getModel().getDistributePattern()==0&&arguments.contains("UmpleRuntime.UmpleComponent umpleComponent")){
+                callerSignature=callerSignature.substring(0,callerSignature.length()-14);
+                if(arguments.contains(", UmpleRuntime"))
+                {
+                  arguments=arguments.substring(0,arguments.length()-44);
+                }
+                else
+                {
+                  arguments=arguments.substring(0,arguments.length()-42);
+                }  
+                proxyContent+=methodType+methodName+"("+arguments+")"+NL+"  {"+NL;
+                proxyContent+=NL+"this("+callerSignature+"UmpleRuntime.getComponent(\""+aClass.getName()+"\"));"+NL+"  }"+NL+"";
               }
               if(getModel().getDistributePattern()==1){
                 proxyContent+="  public "+proxyName+"("+arguments+lastArgument+"UmpleRuntime.UmpleComponent component)"+NL+"  {"+NL+"    realObject = UmpleRuntime.getInstance().add"+aClass.getName()+"("+callerSignature+lastArgument+"component, this);"+NL+"  }"+NL;
@@ -2791,7 +2863,11 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       proxyContent+=NL+"  public boolean equals(Object obj)"+NL+"  {"+NL+"    if(obj==null)"+NL+"      return false;"+NL+"    if(obj.getClass()!=this.getClass())"+NL+"      return false;"+NL+"    return (getHashCode()==(("+aClass.getName()+")obj).getHashCode());"+NL+"  }";
     remoteContent+=NL+"}";
     if(getModel().getDistributePattern()==0)
+    {
+      if(aClass.getIsSingleton())
+        proxyContent+="  public static "+aClass.getName()+" getInstance(UmpleRuntime.UmpleComponent umpleComponent)"+NL+"{"+NL+"if(theInstance == null)"+NL+"{"+NL+"theInstance = new "+aClass.getName()+"(umpleComponent);"+NL+"}"+NL+"return theInstance;"+NL+"}";
       classContent+=proxyContent+NL+"}";
+    }
     else if (getModel().getDistributePattern()==1)
       proxyContent=proxyPrecode+ proxyContent +NL+"}";
 
@@ -2852,7 +2928,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
   
       //putting the code in the model and writing the file.
-      getModel().getGeneratedCode().put(remoteName+"Remote",remoteContent);
+      getModel().getGeneratedCode().put(remoteName,remoteContent);
   
       try
       {

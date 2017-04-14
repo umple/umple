@@ -1,13 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi2;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
-public class ClientImpl extends CC implements IClientImpl
+// line 3 "../../Class_DistributableRMI2.ump"
+public class ClientImpl extends CC implements java.io.Serializable , IClientImpl
 {
 
   //------------------------
@@ -18,32 +15,18 @@ public class ClientImpl extends CC implements IClientImpl
   // CONSTRUCTOR
   //------------------------
 
-  public ClientImpl(Client proxy)
+  public ClientImpl()
   {
-    realSelf=proxy;
-    realSelf.setRealObject(this);
-    while(true)
-    {
-      try
-      {  
-        UnicastRemoteObject.exportObject(this,0);
-        break;
-      } 
-      catch (Exception e)
-      {
-        System.err.println("Server Exception: " + e.toString());
-      }
-    } 
     super();
   }
   //------------------------
   // Reference to the proxy
   //------------------------
-  Client realSelf;
+  Client self;
   
-  public void setRealSelf(Client self)
+  public void setSelf(Client proxy)
   {
-    realSelf=self;
+    self=proxy;
   }
 
   //------------------------

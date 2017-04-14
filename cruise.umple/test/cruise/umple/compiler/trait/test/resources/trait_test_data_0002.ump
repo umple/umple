@@ -7,7 +7,7 @@ class A{
 			goOff-> off;
 		}
 		off{
-			
+			-> tt;
 		}
 		tt{
 			

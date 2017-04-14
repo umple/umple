@@ -500,7 +500,7 @@ public class StateMachineTest
     new State("s1",sm);
     Assert.assertEquals(false,sm.hasFinalStates());
     new State("Final",sm);
-    Assert.assertEquals(false,sm.hasFinalStates());
+    Assert.assertEquals(true,sm.hasFinalStates());
   }
   
   @Test
@@ -551,7 +551,7 @@ public class StateMachineTest
     new State("s1",sm);
     Assert.assertEquals(0,sm.getFinalStates().size());
     new State("Final",sm);
-    Assert.assertEquals(0,sm.getFinalStates().size());
+    Assert.assertEquals(1,sm.getFinalStates().size());
   }
   
   @Test

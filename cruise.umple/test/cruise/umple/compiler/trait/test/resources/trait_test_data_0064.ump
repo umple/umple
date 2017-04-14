@@ -1,0 +1,19 @@
+trait T1 {
+  sm{
+    s0{
+      e1-> s1;
+      s11{
+        e12-> s12;
+      }
+      s12{
+         e11-> s11;
+      }   
+    }
+    s1{
+      e0-> s1;  
+    }  
+  }
+}
+class A {
+  isA T1<sm.s0 as state0, sm.s0.s0.s11 as state11>;
+}

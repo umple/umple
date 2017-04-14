@@ -1,9 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi3;
 
-public class CC
+// line 11 "../../Class_DistributableRMI3.ump"
+public class CC implements java.io.Serializable,ICCImpl
 {
 
   //------------------------
@@ -21,11 +22,41 @@ public class CC
   // INTERFACE
   //------------------------
 
-  public void delete()
+  public void deleteImpl()
   {}
 
-   public void someMethod1(){
+  // line 14 "../../Class_DistributableRMI3.ump"
+   public void someMethod1Impl(){
     
+  }
+
+
+  ICCImpl realObject=this;
+  public void setRealObject(ICCImpl aObject)
+  {
+    realObject=aObject;
+  }
+  public ICCImpl getRealObject()
+  {
+    return realObject;
+  }
+  public void delete()
+  {
+    while(true)
+      try{
+        realObject.deleteImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public void someMethod1()
+  {
+    while(true)
+      try{
+        realObject.someMethod1Impl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
   }
 
 }

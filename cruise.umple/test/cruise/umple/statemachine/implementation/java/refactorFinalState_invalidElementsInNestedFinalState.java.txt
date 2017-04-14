@@ -110,70 +110,12 @@ public class X
     return wasEventProcessed;
   }
 
-  private boolean enterFINAL()
-  {
-    boolean wasEventProcessed = false;
-    
-    StatusFINAL aStatusFINAL = statusFINAL;
-    StatusFINALNestedSm aStatusFINALNestedSm = statusFINALNestedSm;
-    switch (aStatusFINAL)
-    {
-      case Null:
-        setStatusFINAL(StatusFINAL.nestedSm);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aStatusFINALNestedSm)
-    {
-      case Null:
-        setStatusFINALNestedSm(StatusFINALNestedSm.nestedFinal);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean exitFINAL()
-  {
-    boolean wasEventProcessed = false;
-    
-    StatusFINAL aStatusFINAL = statusFINAL;
-    StatusFINALNestedSm aStatusFINALNestedSm = statusFINALNestedSm;
-    switch (aStatusFINAL)
-    {
-      case nestedSm:
-        setStatusFINAL(StatusFINAL.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    switch (aStatusFINALNestedSm)
-    {
-      case nestedFinal:
-        setStatusFINALNestedSm(StatusFINALNestedSm.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   private void exitStatus()
   {
     switch(status)
     {
       case FINAL:
-        exitFINAL();
+        exitStatusFINAL();
         break;
     }
   }
@@ -196,7 +138,8 @@ public class X
     switch(statusFINAL)
     {
       case nestedSm:
-        exitFINAL();
+        exitStatusFINALNestedSm();
+        setStatusFINAL(StatusFINAL.Null);
         break;
     }
   }
@@ -211,6 +154,16 @@ public class X
     {
       case nestedSm:
         if (statusFINALNestedSm == StatusFINALNestedSm.Null) { setStatusFINALNestedSm(StatusFINALNestedSm.nestedFinal); }
+        break;
+    }
+  }
+
+  private void exitStatusFINALNestedSm()
+  {
+    switch(statusFINALNestedSm)
+    {
+      case nestedFinal:
+        setStatusFINALNestedSm(StatusFINALNestedSm.Null);
         break;
     }
   }

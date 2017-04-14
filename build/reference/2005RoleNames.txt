@@ -3,11 +3,12 @@ Associations
 noreferences
 
 @@description
-A role name is an additional name attached to an association. In the
-following example, the word 'supervisor' could be omitted, but it
-clarifies that the graduate student's professor is called his or her
-supervisor.
+<p>A role name is an additional name attached to an association. In the
+following example, the word &apos;supervisor&apos; could be omitted, but it
+clarifies that the graduate student&apos;s professor is called his or her
+supervisor.</p>
 
 @@example
 @@source manualexamples/RoleNames1.ump
 @@endexample
+

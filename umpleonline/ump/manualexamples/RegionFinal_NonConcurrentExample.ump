@@ -1,0 +1,18 @@
+// "sm" will be considered as complete when
+// it is in either state "s3" or "s5"
+
+class X {
+  sm {
+    s1 {
+      s2 {
+        goToS3 -> s3;
+        goToS4 -> s4;
+      }
+      final s3 { }
+    }
+    s4 {
+      goToS5 -> s5;
+      final s5 { }
+    }
+  }
+}

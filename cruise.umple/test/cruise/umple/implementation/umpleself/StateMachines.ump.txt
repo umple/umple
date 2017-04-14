@@ -163,21 +163,19 @@ class X3
 {
   Status {
     On {
-      exit / { exitOn(); }
+      exit / { exitStatusOn(); }
       entry / { if (statusOn == StatusOn.Null) { setStatusOn(StatusOn.Play); } }
       off -> Off;
       StatusOn {
-        Null {
-          enterOn -> Play;
-        }
         Play {
-          exitOn -> Null;
+          exit / { setStatusOn(StatusOn.Null); }
           p -> Pause;
         }
         Pause {
-          exitOn -> Null;
+          exit / { setStatusOn(StatusOn.Null); }
           p -> Play;
         }
+        Null {        }
       }
     }
     Off {    }
@@ -200,16 +198,14 @@ class X17
 {
   Status {
     S1 {
-      exit / { exitS1(); }
+      exit / { exitStatusS1(); }
       entry / { if (statusS1 == StatusS1.Null) { setStatusS1(StatusS1.S1A); } }
       e1 -> S1A;
       StatusS1 {
-        Null {
-          enterS1 -> S1A;
-        }
         S1A {
-          exitS1 -> Null;
+          exit / { setStatusS1(StatusS1.Null); }
         }
+        Null {        }
       }
     }
   }
@@ -222,34 +218,31 @@ class X18
       turnOn -> On;
     }
     On {
-      exit / { exitOn(); }
+      exit / { exitStatusOnMotorIdle(); }
+      exit / { exitStatusOnFanIdle(); }
       entry / { if (statusOnMotorIdle == StatusOnMotorIdle.Null) { setStatusOnMotorIdle(StatusOnMotorIdle.MotorIdle); } }
       entry / { if (statusOnFanIdle == StatusOnFanIdle.Null) { setStatusOnFanIdle(StatusOnFanIdle.FanIdle); } }
       StatusOnMotorIdle {
-        Null {
-          enterOn -> MotorIdle;
-        }
         MotorIdle {
-          exitOn -> Null;
+          exit / { setStatusOnMotorIdle(StatusOnMotorIdle.Null); }
           flip -> MotorRunning;
         }
         MotorRunning {
-          exitOn -> Null;
+          exit / { setStatusOnMotorIdle(StatusOnMotorIdle.Null); }
           flip -> MotorIdle;
         }
+        Null {        }
       }
       StatusOnFanIdle {
-        Null {
-          enterOn -> FanIdle;
-        }
         FanIdle {
-          exitOn -> Null;
+          exit / { setStatusOnFanIdle(StatusOnFanIdle.Null); }
           flop -> FanRunning;
         }
         FanRunning {
-          exitOn -> Null;
+          exit / { setStatusOnFanIdle(StatusOnFanIdle.Null); }
           flop -> FanIdle;
         }
+        Null {        }
       }
     }
   }

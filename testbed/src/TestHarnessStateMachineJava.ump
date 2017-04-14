@@ -90,7 +90,6 @@ class CourseK
   status
   {
     On { flip -> Final; }
-    Final { }
   }
 
   after delete {  addLog("deleted"); }

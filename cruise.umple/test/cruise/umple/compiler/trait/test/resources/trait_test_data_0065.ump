@@ -1,0 +1,25 @@
+class A{
+  isA T< -status.on.r1 >;
+}
+trait T{
+  status {
+    on{
+      r1{
+        -> r2;
+      }
+      r2{}
+      ||
+      w1{
+        ->w2;
+      }
+      w2{
+      }
+      ||
+      t1{
+        ->t2;
+      }
+      t2{
+      }
+    }
+  }
+}

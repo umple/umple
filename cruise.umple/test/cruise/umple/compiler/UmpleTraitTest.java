@@ -274,6 +274,7 @@ public class UmpleTraitTest {
 
 	}
 
+	//explained in my thesis
 	@Test
 	public void stateMachineTraits010Test() {
 		String code = "class A {isA T1; status { on { turnOn -> on;}} } trait T1 { status { onb { activate -> onb;}} }";
@@ -289,6 +290,7 @@ public class UmpleTraitTest {
 		}
 	}
 
+	////explained in my thesis
 	@Test
 	public void stateMachineTraits011Test() {
 		String code = "class A {isA T1 <status as mode,status as mood>;} trait T1 { status { on { activate -> on;}} }";
@@ -851,7 +853,6 @@ public class UmpleTraitTest {
 	 */
 	@Test
 	public void stateMachineTraits051Test() {
-		
 		UmpleModel model = getModelByFilename("trait_test_data_0009.ump");
 		boolean result = false;
 		try {
@@ -1274,21 +1275,11 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void stateMachineTraits065Test() {
-//		UmpleModel model = getRunModelByFilename("trait_test_data_0023.ump");
-//		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getAllTransitions().size(),3);
-//		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(0).getNextState().getName(),"on");
-//		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(1).getNextState().getName(),"on");
-//		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(2).getNextState().getName(),"on");
-		UmpleModel model = getModelByFilename("trait_test_data_0023.ump");
-		boolean result = false;
-		try {
-			model.run();
-		} catch (Exception e) {
-			result = e.getMessage().contains("234");
-		} finally {
-			Assert.assertTrue(result);
-			SampleFileWriter.destroy("traitTest.ump");
-		}
+		UmpleModel model = getRunModelByFilename("trait_test_data_0023.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getAllTransitions().size(),3);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(0).getNextState().getName(),"on");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(1).getNextState().getName(),"on");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(2).getNextState().getName(),"on");
 	}
 	
 	@Test
@@ -1313,19 +1304,19 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void stateMachineTraits068Test() {
-//		UmpleModel model = getRunModelByFilename("trait_test_data_0027.ump");
-//		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(1).getNestedStateMachine(0).getState(0).getTransition(0).getAction().getActionCode(),"ww();");
-//		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(1).getNestedStateMachine(0).getState(1).getTransition(0).getAction().getActionCode(),"ww1();");
-		UmpleModel model = getModelByFilename("trait_test_data_0027.ump");
-		boolean result = false;
-		try {
-			model.run();
-		} catch (Exception e) {
-			result = e.getMessage().contains("235");
-		} finally {
-			Assert.assertTrue(result);
-			SampleFileWriter.destroy("traitTest.ump");
-		}
+		UmpleModel model = getRunModelByFilename("trait_test_data_0027.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(1).getNestedStateMachine(0).getState(0).getTransition(0).getAction().getActionCode(),"ww();");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(1).getNestedStateMachine(0).getState(1).getTransition(0).getAction().getActionCode(),"ww1();");
+//		UmpleModel model = getModelByFilename("trait_test_data_0027.ump");
+//		boolean result = false;
+//		try {
+//			model.run();
+//		} catch (Exception e) {
+//			result = e.getMessage().contains("235");
+//		} finally {
+//			Assert.assertTrue(result);
+//			SampleFileWriter.destroy("traitTest.ump");
+//		}
 	}
 	
 	@Test
@@ -1666,6 +1657,91 @@ public class UmpleTraitTest {
 		}
 	}
 	
+	//explained in my thesis
+	@Test
+	public void stateMachineTraits108Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0064.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getName(),"state0");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getName(),"state0");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getName(),"state11");
+	}
+	
+	@Test
+	public void stateMachineTraits109Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0065.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfNestedStateMachines(),2);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getName(),"w1");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(1).getName(),"t1");
+	}
+	
+	@Test
+	public void stateMachineTraits110Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0066.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).numberOfNestedStateMachines(),1);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getNestedStateMachine(0).getName(),"r1");
+	}
+	
+	
+	@Test
+	public void stateMachineTraits0111Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0068.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry").get(0).getActionCode().contains("entryA();"));
+	}
+
+	@Test
+	public void stateMachineTraits0112Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0069.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("exit").get(0).getActionCode().contains("exitA();"));
+	}
+	
+	@Test
+	public void stateMachineTraits0113Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0070.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivities().get(0).getActivityCode().contains("doA();"));
+	}
+	
+	@Test
+	public void stateMachineTraits0114Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0071.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry").get(0).getActionCode().contains("entry3();"));
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getActionsByType("entry").get(0).getActionCode().contains("entry2();"));
+	}
+	
+	@Test
+	public void stateMachineTraits0115Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0072.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("action3();"));
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine("sm").getState(0).getTransition(0).getAction().getCodeblock().getCode().contains("action2();"));
+	}
+	
+	@Test
+	public void stateMachineTraits0116Test() {	
+		UmpleModel model = getModelByFilename("trait_test_data_0073.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("236");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits0117Test() {	
+		UmpleModel model = getModelByFilename("trait_test_data_0074.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("67");
+		} finally {
+			Assert.assertFalse(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
 	// the last StateTest
 
 	// This is related to issue #656
@@ -1751,6 +1827,7 @@ public class UmpleTraitTest {
 
 	}
 
+	//explained in my thesis
 	@Test
 	public void checkDuplicatedMethods1Test() {
 		String code = "class A{isA T1; isA T2;} trait T1 { String test(){}} trait T2 { String test(){}}";
@@ -1766,6 +1843,7 @@ public class UmpleTraitTest {
 		}
 	}
 
+	//explained in my thesis
 	@Test
 	public void checkDuplicatedMethods2Test() {
 		String code = "class A{isA T;}trait T{isA T1;isA T2;}trait T1{void test(){/*T1*/}}trait T2{void test(){/*T2*/}}";
@@ -2558,6 +2636,7 @@ public class UmpleTraitTest {
 		}
 	}
 
+	//explained in my thesis	
 	@Test
 	public void templateInCode01Test() {
 		String code = "class A{isA T<X=B>;} class B{isA T<X=A>;} trait T<X>{void test(){#X# b=new #X#();}}";
@@ -2568,6 +2647,7 @@ public class UmpleTraitTest {
 				model.getUmpleClass("B").getMethod(0).getMethodBody().getCodeblock().getCode());
 	}
 
+	//explained in my thesis
 	@Test
 	public void templateInCode02Test() {
 		String code = "class A{isA T<X=B>;} class B{} trait T<X>{void test(){#x# b=new #x#();}}";
@@ -2577,6 +2657,7 @@ public class UmpleTraitTest {
 
 	}
 
+	//explained in my thesis
 	@Test
 	public void templateInCode03Test() {
 		String code = "class A{isA T<X=B>;} class B{} trait T<X>{status {on{turnOff -> /{#X# b=new #X#();} off;}off{}}}";
@@ -2761,6 +2842,14 @@ public class UmpleTraitTest {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");
 		}
+	}
+	
+	//Extra test
+	@Test
+	public void stateMachineTraitsExtra001Test() {
+		//This tests that model can be built
+		UmpleModel model = getRunModelByFilename("trait_test_data_0066.ump");
+		Assert.assertNotNull(model);
 	}
 
 	// -------------------------------------------------------------------------------------

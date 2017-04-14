@@ -41,6 +41,7 @@ class UmpleInternalParser
   private static final String NUMBER_LITERAL = "numberLiteral";
   private static final String ASSOCIATION_EXPR = "associationExpr";
   private static final String STATEMACHINE_EXPR = "statemachineExpr";
+  private static final String FINAL_STATE_KEYWORD = "Final";
    
   private static final Integer LHS_POSITION = 0;
   private static final Integer OPERATOR_POSITION = 1;
@@ -732,19 +733,24 @@ class UmpleInternalParser
     checkStateNameOfToken(transitionToken);
     
     String name = transitionToken.getValue("stateName");
-    State nextState;
+    State nextState = null;
     
-    nextState = sm.findState(name);
-    
-    if ("Final".equals(name))
+    // Issue 140 - Final state keyword defines the final state for the top-level state machine
+    if (FINAL_STATE_KEYWORD.equals(name))
     {
-      nextState = new State(name,sm);
+      StateMachine superStateMachine = sm.getSuperStateMachine();
+      nextState = superStateMachine.findState(name);
+      if (nextState == null) 
+      {
+        nextState = new State(name,superStateMachine);
+      }
+      
       //Issue492
       nextState.setPosition(transitionToken.getSubToken("stateName").getPosition());
- 
     }
     else
     {
+      nextState = sm.findState(name);
       if (nextState == null)
       {
         nextState = placeholderStateMachine.findState(name);
@@ -996,6 +1002,13 @@ class UmpleInternalParser
 
   private void analyzeState(Token stateToken, State fromState)
   {
+    // Issue 140 - States cannot be named Final because it is a reserved keyword
+    if (fromState.getName().equals(FINAL_STATE_KEYWORD))
+    {
+      getParseResult().addErrorMessage(new ErrorMessage(74, fromState.getPosition(), "" + fromState.getPosition().getLineNumber()));
+      return;
+    }
+    
     boolean addNewSm = true;
     boolean isConcurrentState = false;
     boolean isFinalState = false;

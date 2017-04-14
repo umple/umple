@@ -403,8 +403,6 @@ class TimedEventA
     Closed {
       after(0.000001) -> Final; 
     }
-    
-    Final{}
   }
   trace Closed;
 }

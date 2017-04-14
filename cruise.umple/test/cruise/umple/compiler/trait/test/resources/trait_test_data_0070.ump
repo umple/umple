@@ -1,0 +1,23 @@
+trait T1{
+  sm{
+    s1{
+      do {doT1();}
+    }
+  }
+}
+
+trait T2{
+  sm{
+    s1{
+      do {doT2();}
+    }
+  }
+}
+class A{
+  isA T1, T2;
+  sm{
+    s1{
+     do {doA();}
+    }
+  } 
+}

@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 import java.util.*;
@@ -108,6 +108,7 @@ public class X implements Runnable
     switch (aSm)
     {
       case s1:
+        exitSmS1();
         setSmS1(SmS1.s1a);
         wasEventProcessed = true;
         break;
@@ -172,46 +173,6 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean enterS1()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmS1 aSmS1 = smS1;
-    switch (aSmS1)
-    {
-      case Null:
-        setSmS1(SmS1.s1a);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean exitS1()
-  {
-    boolean wasEventProcessed = false;
-    
-    SmS1 aSmS1 = smS1;
-    switch (aSmS1)
-    {
-      case s1a:
-        setSmS1(SmS1.Null);
-        wasEventProcessed = true;
-        break;
-      case s1b:
-        setSmS1(SmS1.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   public boolean _e5()
   {
     boolean wasEventProcessed = false;
@@ -220,6 +181,7 @@ public class X implements Runnable
     switch (aSmS1)
     {
       case s1a:
+        exitSmS1();
         setSmS1(SmS1.s1b);
         wasEventProcessed = true;
         break;
@@ -254,7 +216,7 @@ public class X implements Runnable
     switch(sm)
     {
       case s1:
-        exitS1();
+        exitSmS1();
         break;
     }
   }
@@ -281,6 +243,19 @@ public class X implements Runnable
   {
     sm2 = aSm2;
     return true;
+  }
+
+  private void exitSmS1()
+  {
+    switch(smS1)
+    {
+      case s1a:
+        setSmS1(SmS1.Null);
+        break;
+      case s1b:
+        setSmS1(SmS1.Null);
+        break;
+    }
   }
 
   private void setSmS1(SmS1 aSmS1)

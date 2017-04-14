@@ -1,0 +1,17 @@
+class X {
+  sm {
+    s1 {
+      goToS3-> s3;
+      s2 {
+        goToFinal -> Final;
+      }
+    }
+    s3 {
+      s4 {
+        s5 {
+          goToFinal -> Final;
+        }
+      }
+    }
+  }
+}

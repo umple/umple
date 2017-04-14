@@ -99,8 +99,6 @@ class GeneratorHelper
   // Add the necessary before / after hooks to support nested state machines
   public static void prepareNestedStateMachine(StateMachine sm, int concurrentIndex, Map<String,String> lookups)
   {
-    String entryEventName = lookups.get("entryEventName");
-    String exitEventName = lookups.get("exitEventName");
     String parentEntryActionCode = lookups.get("parentEntryActionCode");
     String parentExitActionCode = lookups.get("parentExitActionCode");
   
@@ -115,29 +113,19 @@ class GeneratorHelper
     if (sm.getStartState() != null)
     {
   
-      if (concurrentIndex == 0 && parentExitActionCode != null)
-      {
-        Action parentExitAction = new Action(parentExitActionCode);
-        parentExitAction.setIsInternal(true);
-        parentExitAction.setActionType("exit");
-        parentState.addAction(parentExitAction,0);
-      }
-
-      Event enterEvent = firstSm.findOrCreateEvent(entryEventName);
-      enterEvent.setIsInternal(true);
-      Transition enterTransition = new Transition(nullState,sm.getStartState());
-      enterTransition.setIsInternal(true);
-      enterTransition.setEvent(enterEvent);
-
-      Event exitEvent = firstSm.findOrCreateEvent(exitEventName);
-      exitEvent.setIsInternal(true);
+	  // Issue 935 - Have the parent state call the exit method for this state machine
+      Action parentExitAction = new Action(parentExitActionCode);
+      parentExitAction.setActionType("exit");
+      parentState.addAction(parentExitAction, concurrentIndex);
   
+  	  // Issue 935 - Add an exit action to each state to set the state machine to its Null state
+      String setSmToNullExitActionCode = lookups.get("setSmToNullExitActionCode");
       for (State state : sm.getStates())
       {
         if (state == nullState) { continue; }
-        Transition exitTransition = state.addTransition(nullState,0);
-        exitTransition.setIsInternal(true);
-        exitTransition.setEvent(exitEvent);
+        Action setSmToNullExitAction = new Action(setSmToNullExitActionCode);
+        setSmToNullExitAction.setActionType("exit");
+        state.addAction(setSmToNullExitAction);
       }
 
       Action parentEntryAction = new Action(parentEntryActionCode);

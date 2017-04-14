@@ -781,4 +781,100 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("parallelSm_diffNamesDiffStatesEntryExitActions.ump",languagePath + "/parallelSm_diffNamesDiffStatesEntryExitActions."+ languagePath +".txt","X");
   }
   
+  @Test
+  public void checkExternalTransitions_withExitActions_1()
+  {
+    assertUmpleTemplateFor("checkExternalTransitions_withExitActions_1.ump",languagePath + "/checkExternalTransitions_withExitActions_1."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void checkExternalTransitions_withExitActions_2()
+  {
+    assertUmpleTemplateFor("checkExternalTransitions_withExitActions_2.ump",languagePath + "/checkExternalTransitions_withExitActions_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void checkExternalTransitions_noExitActions_1()
+  {
+    assertUmpleTemplateFor("checkExternalTransitions_noExitActions_1.ump",languagePath + "/checkExternalTransitions_noExitActions_1."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void checkExternalTransitions_noNestedStateMachines()
+  {
+    assertUmpleTemplateFor("checkExternalTransitions_noNestedStateMachines.ump",languagePath + "/checkExternalTransitions_noNestedStateMachines."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void checkExternalTransitions_concurrentStateMachines()
+  {
+    assertUmpleTemplateFor("checkExternalTransitions_concurrentStateMachines.ump",languagePath + "/checkExternalTransitions_concurrentStateMachines."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void checkExternalTransitions_concurrentStateMachines_2()
+  {
+    assertUmpleTemplateFor("checkExternalTransitions_concurrentStateMachines_2.ump",languagePath + "/checkExternalTransitions_concurrentStateMachines_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void noDefaultEntryMethodGenerated()
+  {
+    assertUmpleTemplateFor("noDefaultEntryMethodGenerated.ump",languagePath + "/noDefaultEntryMethodGenerated."+ languagePath +".txt","X");    
+  }
+  
+  @Test
+  public void noDefaultEntryMethodGenerated_2()
+  {
+    assertUmpleTemplateFor("noDefaultEntryMethodGenerated_2.ump",languagePath + "/noDefaultEntryMethodGenerated_2."+ languagePath +".txt","X");    
+  }
+  
+  @Test
+  public void testFinalKeyword()
+  {
+    assertUmpleTemplateFor("testFinalKeyword.ump",languagePath + "/testFinalKeyword."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testFinalKeyword_2()
+  {
+    assertUmpleTemplateFor("testFinalKeyword_2.ump",languagePath + "/testFinalKeyword_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testRegionFinalStates_1()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_1.ump",languagePath + "/testRegionFinalStates_1."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testRegionFinalStates_2()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_2.ump",languagePath + "/testRegionFinalStates_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testRegionFinalStates_3()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_3.ump",languagePath + "/testRegionFinalStates_3."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testRegionFinalStates_4()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_4.ump",languagePath + "/testRegionFinalStates_4."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testRegionFinalStates_5()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_5.ump",languagePath + "/testRegionFinalStates_5."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testRegionFinalStates_6()
+  {
+    assertUmpleTemplateFor("testRegionFinalStates_6.ump",languagePath + "/testRegionFinalStates_6."+ languagePath +".txt","X");
+  }
+  
 }

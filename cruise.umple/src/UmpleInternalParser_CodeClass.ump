@@ -369,8 +369,7 @@ class UmpleInternalParser
       
       //Solution to issue 502
       checkAttributeConflictImmutableAutounique();
-      //Issue 492
-      checkNonReachableStates();
+
       //Issue 610
       checkAssociationClassKeys();
 
@@ -432,7 +431,7 @@ private void analyzeDistributedClasses()
   { 
     for (UmpleClass uClass:  model.getUmpleClasses())
     { 
-      if (model.getDistributeForced()&&!(uClass.getIsAbstract())&&!uClass.isImmutable()&&!uClass.getIsSingleton())
+      if (model.getDistributeForced()&&!(uClass.getIsAbstract())&&!uClass.isImmutable())
       { model.setDistributed(true);
         uClass.setDistributeTechnology(model.getDistributeTechnology());
         uClass.setIsDistributed(true);
@@ -469,7 +468,7 @@ private Boolean checkIsDistributed(UmpleClass uClass)
   int distributedParents=0; 
   for (UmpleInterface parentInterface: uClass.getParentInterface())
   { 
-    if(checkIsDistributed(parentInterface)&&!(uClass.getIsAbstract())&&!uClass.isImmutable()&&!uClass.getIsSingleton())
+    if(checkIsDistributed(parentInterface)&&!(uClass.getIsAbstract())&&!uClass.isImmutable())
     {  
       distributedParents+=1;
       uClass.setDistributeTechnology(parentInterface.getDistributeTechnology());
@@ -492,7 +491,7 @@ private Boolean checkIsDistributed(UmpleClass uClass)
 /*
 First it is checked if the class is distributable itself. Then the parent classes
 */
-  if(uClass.getIsDistributable()&&!(uClass.getIsAbstract())&&!uClass.isImmutable()&&!uClass.getIsSingleton())
+  if(uClass.getIsDistributable()&&!(uClass.getIsAbstract())&&!uClass.isImmutable())
   {
     //uClass.setHasProxyPattern(true);
     uClass.setNeedsDefaultInterface(true);
@@ -1644,18 +1643,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     if (methodName.length() >= 3)
     {
       //1. Verify if method to be added is a setter or a getter
-      String accessorName = methodName.substring(0,3);
-      if ((accessorName.equals("get") && aMethod.numberOfMethodParameters()==0) || (accessorName.equals("set")&& aMethod.numberOfMethodParameters()==1))
+      if (uClass.hasMethod(aMethod) && uClass.getMethod(aMethod).getSource() == Method.Source.fAutoAPI
+      	&& !uClass.getMethod(aMethod).getIsConstructor())
       {
-        String possibleAttributeName =   methodName.substring(3,methodName.length()).toLowerCase();
-        Attribute attr = uClass.getAttribute(possibleAttributeName);
-        if (attr != null && !"internal".equals(attr.getModifier()))
-        {
-          if(!checkingInInterface) {
-            getParseResult().addErrorMessage(new ErrorMessage(1009, aMethod.getPosition(), methodName, attr.getName(),uClass.getName()));
-          }
-          return false;
+        String attributeName = methodName.substring(3,methodName.length()).toLowerCase();
+        if(!checkingInInterface) {
+          getParseResult().addErrorMessage(new ErrorMessage(1009, aMethod.getPosition(), methodName, attributeName,uClass.getName()));
         }
+        return false;
       }
       //2. Verify if method to be added is a constructor
       if (aMethod.getType().equals("public"))
@@ -2583,6 +2578,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod, false);
      
       //Issue 559
+      //if(uClass.hasMethod(aMethod) && !uClass.getMethod(aMethod).getIsConstructor())
       if(uClass.hasMethod(aMethod))
       {
     	  Method actualMethod = uClass.getMethod(aMethod);
@@ -2656,7 +2652,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
            
      
-      if (!uClass.hasMethod(aMethod) && shouldAddMethod)
+      if ((!uClass.hasMethod(aMethod) || (uClass.hasMethod(aMethod) && uClass.getMethod(aMethod).getIsConstructor())) && shouldAddMethod)
+      //if (!uClass.hasMethod(aMethod) && shouldAddMethod)
       {
         uClass.addMethod(aMethod); 
       } 
@@ -3305,7 +3302,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       //Issue #449
 	UmpleClass child = aClass;
 	while(unlinkedExtends.get(child) != null){
-    for(Attribute parentAttribute : model.getUmpleClass(unlinkedExtends.get(child).get(0)).getAttributes())
+    String extedName = unlinkedExtends.get(child).get(0);
+    List<Attribute> listAtt = new ArrayList<Attribute>();
+    if (model.getUmpleClass(unlinkedExtends.get(child).get(0))!=null) listAtt = model.getUmpleClass(extedName).getAttributes(); 
+    else
+    if (model.getUmpleClass(unlinkedExtends.get(child).get(0))!=null) listAtt = model.getUmpleTrait(extedName).getAttributes();
+    for(Attribute parentAttribute : listAtt)	  
     {
     	if(parentAttribute.getName().equals(tokenVal))
         {
@@ -3964,6 +3966,83 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     lastattr = attribute;
     lastassoc = null;
     
+    String attModifier = attribute.getModifier();
+    
+  	if (!attModifier.equals("internal") && !attModifier.equals("const"))
+  	{
+    	addAPIMethods(attribute, aClass);
+    }
+    
+    if (attribute.getValue()==null && !attribute.getIsAutounique() && !attribute.getIsLazy() &&
+    	(attModifier.equals("immutable") || attModifier.equals("settable")))
+    {
+    	addAttributeToConstructor(attribute, aClass);
+    }
+  }
+
+  private void addAttributeToConstructor(Attribute attribute, UmpleClass aClass)
+  {
+  	Method constructor = aClass.getAutoGeneratedConstructor();
+  	if (constructor == null)
+  	{
+  		constructor = new Method("public", aClass.getName(), "public", false);
+  		constructor.setIsConstructor(true);
+  		constructor.setMethodBody(new MethodBody(""));
+  		constructor.setPosition(new Position("", 0, 0, 0));
+  		constructor.setSource(Method.Source.fAutoAPI);
+  		aClass.addMethod(constructor);
+  	}
+  	else
+  	{
+  		aClass.removeMethod(constructor);
+  	}
+  	
+  	constructor.addMethodParameter(new MethodParameter(
+  		"a" + StringFormatter.toPascalCase(attribute.getName()), attribute.getType(), "", "", false));
+  	aClass.addMethod(constructor);
+  }
+
+  
+  private void addAPIMethods(Attribute attribute, UmpleClass aClass)
+  {
+  	Glossary g = new Glossary();
+  	Boolean isMany = attribute.getIsList();
+  	String singularName = isMany ? g.getSingular(attribute.getName()) : attribute.getName();
+    String pluralName = isMany ? attribute.getName() : g.getPlural(attribute.getName());
+    String getSetName = isMany ? pluralName : singularName;
+    
+    addGetMethod(getSetName, attribute, aClass);
+    	
+    if (!attribute.getIsAutounique() && (!attribute.getModifier().equals("immutable") || attribute.getIsLazy()))
+    {
+    	addSetMethod(getSetName, attribute, aClass);
+    }
+    	
+  }
+  
+  private void addSetMethod(String name, Attribute attribute, UmpleClass aClass)
+  {
+  		String setName = StringFormatter.format("set{0}", StringFormatter.toPascalCase(name));
+  		
+  		Method aMethod = new Method("public", setName, "Boolean", false);
+  		aMethod.setMethodBody(new MethodBody(""));
+  		aMethod.setPosition(new Position("", 0, 0, 0));
+  		aMethod.setSource(Method.Source.fAutoAPI);
+  		aMethod.addMethodParameter(new MethodParameter("a" + StringFormatter.toPascalCase(name), attribute.getType(), "", "", false));
+  		aClass.addMethod(aMethod);
+    	
+  }
+  
+  private void addGetMethod(String name, Attribute attribute, UmpleClass aClass)
+  {
+  		String getName = StringFormatter.format("get{0}", StringFormatter.toPascalCase(name));
+    	
+  		Method aMethod = new Method("public",getName, attribute.getType(), false);
+  		aMethod.setMethodBody(new MethodBody(""));
+  		aMethod.setPosition(new Position("", 0, 0, 0));
+  		aMethod.setSource(Method.Source.fAutoAPI);
+  		aClass.addMethod(aMethod);
+  
   }
   
 

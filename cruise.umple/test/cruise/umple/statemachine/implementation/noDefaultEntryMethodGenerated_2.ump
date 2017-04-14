@@ -1,0 +1,14 @@
+class X{
+  sm{
+    on{
+      turnOff-> off;
+      goIdle -> idle;
+    }
+    idle{
+      buttonPressed-> on;
+    }
+    off{ 
+      turnOn-> on;
+    }
+  }
+}

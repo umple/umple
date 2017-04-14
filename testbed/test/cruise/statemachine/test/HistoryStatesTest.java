@@ -12,7 +12,7 @@ public class HistoryStatesTest
       course.toSs2Sss2();
       course.toSsss1();
       course.toS2Ss2();
-      Assert.assertEquals(DeepHistoryCourse.SmS1Ss2Sss2.Ssss1, course.getSmS1Ss2Sss2());
+      Assert.assertEquals(DeepHistoryCourse.SmS1Ss2Sss2.Null, course.getSmS1Ss2Sss2());
   }
   
   
@@ -43,8 +43,8 @@ public class HistoryStatesTest
     course.toSsss2();
     course.toS2();
     course.toDeepHistory();
-    Assert.assertEquals(DeepHistoryCourse.SmS1.Ss2, course.getSmS1());
-    Assert.assertEquals(DeepHistoryCourse.SmS1Ss2.Sss2, course.getSmS1Ss2());
-    Assert.assertEquals(DeepHistoryCourse.SmS1Ss2Sss2.Ssss2, course.getSmS1Ss2Sss2());
+    Assert.assertEquals(DeepHistoryCourse.SmS1.Ss1, course.getSmS1());
+    Assert.assertEquals(DeepHistoryCourse.SmS1Ss2.Null, course.getSmS1Ss2());
+    Assert.assertEquals(DeepHistoryCourse.SmS1Ss2Sss2.Null, course.getSmS1Ss2Sss2());
   }
 }
