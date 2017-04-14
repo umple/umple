@@ -228,7 +228,6 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
 /* FOOTER */
 .spacer { height: 50px; } /* Allows the user to always vertically resize */
 
-
 /* JointJS CSS */
 #jjsPaper {
     position: relative;
@@ -237,9 +236,11 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     background: transparent;
     overflow: hidden;
 }
+
 #jjsPaper svg {
     background: transparent;
 }
+
 #jjsPaper svg .link {
     z-index: 2;
 }
@@ -255,10 +256,14 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     padding: 5px;
     box-sizing: border-box;
     z-index: 2;
+    font-family: arial, serif;
+    font-size:12px;
 }
+
 .html-state {
     border-radius: 8px;
 }
+
 .html-element select,
 .html-element input,
 .html-element label,
@@ -266,6 +271,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     /* Enable interacting with inputs only. */
     pointer-events: auto;
 }
+
 .html-element button.delete {
     color: orangered;
     border: none;
@@ -285,16 +291,19 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     cursor: pointer;
     visibility: hidden;
 }
+
 .html-element button.delete:hover {
     width: 20px;
     height: 20px;
     line-height: 20px;
 }
+
 .html-element select {
     position: absolute;
     right: 2px;
     bottom: 28px;
 }
+
 .html-element input {
     position: relative;
     bottom: 0;
@@ -306,13 +315,14 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     height: 12px;
     font-family: arial, serif;
     font-size:12px;
-    
 }
+
 .html-element label {
     color: #333;
     text-shadow: 1px 0 0 lightgray;
     font-weight: bold;
 }
+
 .html-element span {
     position: absolute;
     top: 2px;
