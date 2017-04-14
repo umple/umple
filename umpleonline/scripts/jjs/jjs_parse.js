@@ -1221,34 +1221,34 @@ var JJSdiagram = {
 				//jQuery('.html-element').css('background-color', UMLclass.displayColor);
 				//set display color
 				/** need to be changed */
-				switch (UMLclass.displayColor) {
+				// switch (UMLclass.displayColor) {
 
-					case "lightblue":
-						jQuery('.html-element').css('background-color', UMLclass.displayColor);
-						break;
+				// 	case "lightblue":
+				// 		jQuery('.html-element').css('background-color', UMLclass.displayColor);
+				// 		break;
 
-					case "lightgreen":
-						jQuery('.html-element').css('background-color', UMLclass.displayColor);
-						break;
+				// 	case "lightgreen":
+				// 		jQuery('.html-element').css('background-color', UMLclass.displayColor);
+				// 		break;
 
-					case "pink":
-						jQuery('.html-element').css('background-color', UMLclass.displayColor);
-						break;
+				// 	case "pink":
+				// 		jQuery('.html-element').css('background-color', UMLclass.displayColor);
+				// 		break;
 
-					case "lightgrey":
-						jQuery('.html-element').css('background-color', UMLclass.displayColor);
-						break;
+				// 	case "lightgrey":
+				// 		jQuery('.html-element').css('background-color', UMLclass.displayColor);
+				// 		break;
 
-					case "":
-						jQuery('.html-element').css('background-color', '#ffffff');
-						break;
+				// 	case "":
+				// 		jQuery('.html-element').css('background-color', '#ffffff');
+				// 		break;
 
-					case "assigned":
-						break;
+				// 	case "assigned":
+				// 		break;
 
-					default:
-						jQuery('.html-element').css('background-color', UMLclass.displayColor);
-				}
+				// 	default:
+				// 		jQuery('.html-element').css('background-color', UMLclass.displayColor);
+				// }
 
 				classes.push(new_class);
 			};
