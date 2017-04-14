@@ -829,7 +829,7 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 						}
 					} else if (getModel().getUmpleInterface(str)!=null){ 
 						if (!checkInterfaceImplementationInHeirarchy(uClass,str)) {
-							getParseResult().addErrorMessage( new ErrorMessage( 205, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName(), str ) ); 
+							getParseResult().addErrorMessage( new ErrorMessage( 206, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName(), str ) ); 
 					 		return;
 						}
 					}
@@ -1309,7 +1309,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 //---------------------------------Start--------------------------------------	  
 	 private void checkCyclicTraitInheritance(UmpleTrait base, UmpleTrait root) {
 		 if (base.getExtendsTraits().contains(root)) {
-			 getParseResult().addErrorMessage(new ErrorMessage(206,base.getPosition(0),base.getName(), root.getName()));
+			 getParseResult().addErrorMessage(new ErrorMessage(205,base.getPosition(0),base.getName(), root.getName()));
 			 return;
 		 } else {
 			 for (UmpleTrait uTrait :base.getExtendsTraits()) {
@@ -1748,7 +1748,7 @@ private boolean checkAttComeFromTraitsIsAvaiableInClass(Map<UmpleTrait, List<Att
 					setFailedPosition(internalAttribute.getPosition(), 218, internalAttribute.getName(),uTrait.getName(),"class", inClass.getName());
 					inTraitAttributes.get(uTrait).remove(i);
 				} else{
-					getParseResult().addErrorMessage(new ErrorMessage(205,inClass.getPosition(0),attribute.getName(), uTrait.getName(),inClass.getName() ));	
+					getParseResult().addErrorMessage(new ErrorMessage(206,inClass.getPosition(0),attribute.getName(), uTrait.getName(),inClass.getName() ));	
 					return true;
 				}
 			}			
@@ -1776,7 +1776,7 @@ private boolean CheckAttComeFromTraitsIsAvaialbleInOtherTraits(	Map<UmpleTrait, 
 							if (uTrait.equals(internalTrait)){
 								getParseResult().addErrorMessage(new ErrorMessage(217,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),attribute.getType() ,internalAttribute.getType()));	
 							} else{
-								getParseResult().addErrorMessage(new ErrorMessage(205,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),internalTrait.getName() ));	
+								getParseResult().addErrorMessage(new ErrorMessage(206,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),internalTrait.getName() ));	
 								
 							}
 							return true;
