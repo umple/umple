@@ -733,27 +733,27 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
 
   private void applyTraits(){
-  	   //semantic analysis of traits
-	   //----------------------------------
-	   checkTemplateParametersValidity();
-	   //---------------------------------
-  	if (getParseResult().getWasSuccess()) {
-	    for (UmpleClass uClass : getModel().getUmpleClasses()) {
-			if (uClass.hasExtendsTraits()) {
-				copyAttributesFromTraitsToClass(uClass);
-				copyMethodsFromTraitToClass(uClass);
-				copyAssociationsFromTraitToClass(uClass);
-				copyStateMachinesFromTraiToClass(uClass);
-				for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
-					recursiveApplyTraits(uClass,uTrait);
-					
-					
-					if ( ! getParseResult().getWasSuccess() ) return;
-				}
-			}
-		}
-		checkAllRequiredMethodsAndInterfaces();
-	}	
+    //semantic analysis of traits
+    //----------------------------------
+    checkTemplateParametersValidity();
+    //---------------------------------
+    if (getParseResult().getWasSuccess()) {
+      for (UmpleClass uClass : getModel().getUmpleClasses()) {
+        if (uClass.hasExtendsTraits()) {
+          if (getParseResult().getWasSuccess()) copyAttributesFromTraitsToClass(uClass);
+          if (getParseResult().getWasSuccess()) copyMethodsFromTraitToClass(uClass);
+          if (getParseResult().getWasSuccess()) copyAssociationsFromTraitToClass(uClass);
+          if (getParseResult().getWasSuccess()) copyStateMachinesFromTraiToClass(uClass);
+  				if (getParseResult().getWasSuccess()) {
+  				  for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
+  				    recursiveApplyTraits(uClass,uTrait);
+  				    if ( ! getParseResult().getWasSuccess() ) return;  
+  				  }  
+  				}
+        }
+  		}
+      if (getParseResult().getWasSuccess()) checkAllRequiredMethodsAndInterfaces();
+    }	
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
