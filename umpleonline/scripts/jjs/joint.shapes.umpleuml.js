@@ -92,7 +92,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             className[0] = jQuery(e.target).val();
             this.model.set('name', className);
             if (jQuery(e.target).val().length > this.targetInputSize) {
-                this.targetInputSize = jQuery(e.target).val().length;
+                this.targetInputSize = Math.floor(jQuery(e.target).val().length*0.82);
                 this.$box.find('.className').prop('size', this.targetInputSize);
                 this.updateBox();
             }
@@ -142,7 +142,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
         //update box size
         if (this.model.get('name')[0].length > this.targetInputSize) {
-            this.targetInputSize = this.model.get('name')[0].length;
+            this.targetInputSize = Math.floor(this.model.get('name')[0].length*0.82);
             this.$box.find('.className').prop('size', this.targetInputSize);
         }
 
@@ -318,7 +318,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         //the function below is the same as updateBox, need refactor.
         for (var j = 0; j < this.$box.find('.classAttributes input').size(); j++) {
             if (this.$box.find('.classAttributes input')[j].value.length > this.targetInputSize) {
-                this.targetInputSize = this.$box.find('.classAttributes input')[j].value.length;
+                this.targetInputSize = Math.floor(this.$box.find('.classAttributes input')[j].value.length*0.82);
                 updateFlag = true;
             }
         }
@@ -373,7 +373,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         //the function below is the same as updateBox, need refactor.
         for (var j = 0; j < this.$box.find('.classMethods input').size(); j++) {
             if (this.$box.find('.classMethods input')[j].value.length > this.targetInputSize) {
-                this.targetInputSize = this.$box.find('.classMethods input')[j].value.length;
+                this.targetInputSize = Math.floor(this.$box.find('.classMethods input')[j].value.length*0.82);
                 updateFlag = true;
             }
         }

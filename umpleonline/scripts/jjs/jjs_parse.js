@@ -1573,6 +1573,8 @@ var JJSdiagram = {
 						labels: [{ position: .5, attrs: { text: { text: 'start', 'font-weight': 'bold', 'font-size': 9 } } }],
 						attrs: { '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} }
 					});
+					//jumpover
+					link.set('connector', { name: 'jumpover', args: { type: 'gap' }});
 					if (!composite) {
 						JJSdiagram.paper.model.addCell(link);
 					}
@@ -1589,6 +1591,8 @@ var JJSdiagram = {
 
 				var link = new joint.shapes.uml_state_machine.Transition(transition);
 
+				//jumpover
+				link.set('connector', { name: 'jumpover', args: { type: 'gap' }});
 				// Can get rid of this once the CSS bugs are fixed
 				link.attr({ '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} });
 
