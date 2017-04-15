@@ -144,7 +144,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			result = e.getMessage().contains("206");
+			result = e.getMessage().contains("205");
 		} finally {
 			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -1410,14 +1410,15 @@ public class UmpleTraitTest {
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getName(),"s12");
 	}
 	
+	//TODO: The example here has a dependencies to the order to operators. It must be detected
 	@Test
 	public void stateMachineTraits079Test() {
 		UmpleModel model = getRunModelByFilename("trait_test_data_0038.ump");
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getName(),"state1");
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(0).getName(),"nstate11");
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getName(),"nstate12");
-		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(0).getState(0).getName(),"state11");
-		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getState(0).getName(),"state12");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(0).getState(0).getName(),"nstate11");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getState(0).getName(),"nstate12");
 	}
 	
 	@Test
@@ -1635,7 +1636,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			result = e.getMessage().contains("232");
+			result = e.getMessage().contains("231");
 		} finally {
 			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -1738,6 +1739,20 @@ public class UmpleTraitTest {
 			result = e.getMessage().contains("67");
 		} finally {
 			Assert.assertFalse(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits0118Test() {	
+		UmpleModel model = getModelByFilename("trait_test_data_0075.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("237");
+		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}
 	}
@@ -2166,21 +2181,6 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
 	}
 
-	@Ignore
-	public void includeExcludeRuleAlias1Test() {
-		String code = "class A{isA T1<+test(Integer), -test(String) as t >;}trait T1{void test(String str){/*T1-S*/}void test(Integer inData){/*T1-I*/}void test(String str,Integer inData){/*T1-SI*/}}";
-		UmpleModel model = getModel(code);
-		boolean result = false;
-		try {
-			model.run();
-		} catch (Exception e) {
-			result = e.getMessage().contains("213");
-		} finally {
-			Assert.assertTrue(result);
-			SampleFileWriter.destroy("traitTest.ump");
-		}
-	}
-
 	@Test
 	public void includeExcludeRuleAlias2Test() {
 		String code = "class A{isA T1< test(String) as changedTest >;	}trait T1{void test(String str){/*T1-S*/}}";
@@ -2583,7 +2583,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			happened = e.getMessage().contains("20");
+			happened = e.getMessage().contains("213");
 		} finally {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -2629,7 +2629,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			happened = e.getMessage().contains("20");
+			happened = e.getMessage().contains("213");
 		} finally {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -2686,7 +2686,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			happened = e.getMessage().contains("205");
+			happened = e.getMessage().contains("206");
 		} finally {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -2739,7 +2739,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			happened = e.getMessage().contains("205");
+			happened = e.getMessage().contains("206");
 		} finally {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");

@@ -291,7 +291,7 @@ class UmpleInternalParser
     boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
     boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
     boolean looksLikeAssociation = attributeToken.getValue("name").contains("--") || attributeToken.getValue("name").contains("->");
-    boolean isAGParameter = attributeToken.getValue("gpIdentifier") !=null;
+
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");
     
@@ -315,15 +315,7 @@ class UmpleInternalParser
       
       return;
     }
-    
-    if (isAGParameter) {
-    	if (aTrait.hasDefinedParameter(name,"")){
-    		aTrait.setDefinedParameterType(name,"attribute");
-
-    	} else {
-        	setFailedPosition(attributeToken.getPosition(), 209, name, aTrait.getName());
-        }
-    }    
+      
     
     if(!properName && !isConstant){
       setFailedPosition(attributeToken.getPosition(), 131, name);
@@ -741,27 +733,27 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
 
   private void applyTraits(){
-  	   //semantic analysis of traits
-	   //----------------------------------
-	   checkTemplateParametersValidity();
-	   //---------------------------------
-  	if (getParseResult().getWasSuccess()) {
-	    for (UmpleClass uClass : getModel().getUmpleClasses()) {
-			if (uClass.hasExtendsTraits()) {
-				copyAttributesFromTraitsToClass(uClass);
-				copyMethodsFromTraitToClass(uClass);
-				copyAssociationsFromTraitToClass(uClass);
-				copyStateMachinesFromTraiToClass(uClass);
-				for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
-					recursiveApplyTraits(uClass,uTrait);
-					
-					
-					if ( ! getParseResult().getWasSuccess() ) return;
-				}
-			}
-		}
-		checkAllRequiredMethodsAndInterfaces();
-	}	
+    //semantic analysis of traits
+    //----------------------------------
+    checkTemplateParametersValidity();
+    //---------------------------------
+    if (getParseResult().getWasSuccess()) {
+      for (UmpleClass uClass : getModel().getUmpleClasses()) {
+        if (uClass.hasExtendsTraits()) {
+          if (getParseResult().getWasSuccess()) copyAttributesFromTraitsToClass(uClass);
+          if (getParseResult().getWasSuccess()) copyMethodsFromTraitToClass(uClass);
+          if (getParseResult().getWasSuccess()) copyAssociationsFromTraitToClass(uClass);
+          if (getParseResult().getWasSuccess()) copyStateMachinesFromTraiToClass(uClass);
+  				if (getParseResult().getWasSuccess()) {
+  				  for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
+  				    recursiveApplyTraits(uClass,uTrait);
+  				    if ( ! getParseResult().getWasSuccess() ) return;  
+  				  }  
+  				}
+        }
+  		}
+      if (getParseResult().getWasSuccess()) checkAllRequiredMethodsAndInterfaces();
+    }	
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -829,7 +821,7 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 						}
 					} else if (getModel().getUmpleInterface(str)!=null){ 
 						if (!checkInterfaceImplementationInHeirarchy(uClass,str)) {
-							getParseResult().addErrorMessage( new ErrorMessage( 205, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName(), str ) ); 
+							getParseResult().addErrorMessage( new ErrorMessage( 206, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName(), str ) ); 
 					 		return;
 						}
 					}
@@ -983,7 +975,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 		        }
 				relatedClass = getModel().getUmpleClass(newName);
 				if (bidirectional && relatedClass==null){
-					setFailedPosition(inTrait.getPosition(0), 20, "trait "+inTrait.getName());
+					setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
 					return;
 				}
 		        if (inAssociationVariable.getRelatedAssociation().getName().length()==0){
@@ -1004,7 +996,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
   if (relatedClass==null){
 	relatedInterface = getModel().getUmpleInterface(inAssociationVariable.getType());
 	if (bidirectional){
-		setFailedPosition(inTrait.getPosition(0), 20, "trait "+inTrait.getName());
+		setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
 		return;
 	} else {
 		relatedClass = new UmpleClass(relatedInterface.getName());	
@@ -1309,7 +1301,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 //---------------------------------Start--------------------------------------	  
 	 private void checkCyclicTraitInheritance(UmpleTrait base, UmpleTrait root) {
 		 if (base.getExtendsTraits().contains(root)) {
-			 getParseResult().addErrorMessage(new ErrorMessage(206,base.getPosition(0),base.getName(), root.getName()));
+			 getParseResult().addErrorMessage(new ErrorMessage(205,base.getPosition(0),base.getName(), root.getName()));
 			 return;
 		 } else {
 			 for (UmpleTrait uTrait :base.getExtendsTraits()) {
@@ -1748,7 +1740,7 @@ private boolean checkAttComeFromTraitsIsAvaiableInClass(Map<UmpleTrait, List<Att
 					setFailedPosition(internalAttribute.getPosition(), 218, internalAttribute.getName(),uTrait.getName(),"class", inClass.getName());
 					inTraitAttributes.get(uTrait).remove(i);
 				} else{
-					getParseResult().addErrorMessage(new ErrorMessage(205,inClass.getPosition(0),attribute.getName(), uTrait.getName(),inClass.getName() ));	
+					getParseResult().addErrorMessage(new ErrorMessage(206,inClass.getPosition(0),attribute.getName(), uTrait.getName(),inClass.getName() ));	
 					return true;
 				}
 			}			
@@ -1776,7 +1768,7 @@ private boolean CheckAttComeFromTraitsIsAvaialbleInOtherTraits(	Map<UmpleTrait, 
 							if (uTrait.equals(internalTrait)){
 								getParseResult().addErrorMessage(new ErrorMessage(217,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),attribute.getType() ,internalAttribute.getType()));	
 							} else{
-								getParseResult().addErrorMessage(new ErrorMessage(205,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),internalTrait.getName() ));	
+								getParseResult().addErrorMessage(new ErrorMessage(206,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),internalTrait.getName() ));	
 								
 							}
 							return true;

@@ -398,7 +398,7 @@ class UmpleInternalParser
                  }
                  if (!valid){
                      String gMSG = ((EventModifier)smModifier).getGuard()!=null ? ((EventModifier)smModifier).getGuard().getExpression() : "";  
-                     getParseResult().addErrorMessage(new ErrorMessage(232,inTrait.getPosition(0),inTrait.getName(),method.getSignature()+gMSG ));  
+                     getParseResult().addErrorMessage(new ErrorMessage(231,inTrait.getPosition(0),inTrait.getName(),method.getSignature()+gMSG ));  
                      return false;
                  }
                }
@@ -495,8 +495,16 @@ class UmpleInternalParser
             }
           }
           if(itsSM){
+            for (StateMachine sm : tState.getNestedStateMachines()){
+              if (sm.getName().equals(smTSignature.getAlias()) && sm!=smTemp){
+                  getParseResult().addErrorMessage(new ErrorMessage(237,inGTPApplied.getPositions(), inSMachine.getUmpleTrait().getName(), tState.getName(),smTSignature.getAlias()  ));
+                  return null;
+              }
+            }
             smTemp.setName(smTSignature.getAlias());
-          } else if (smTemp!=null) {
+            smTemp.getStartState().setName(smTSignature.getAlias());
+            nameMapping.put(track+"."+smTemp.getStartState().getName(), smTSignature.getAlias());
+          } else if (smTemp!=null && tState!=null) {
             String oldtStateName = tState.getName();
             tState.setName(smTSignature.getAlias());
             if (tState.numberOfNestedStateMachines()==1) {
