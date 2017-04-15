@@ -65,14 +65,14 @@ symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;
 inlineAssociation : [=modifier:immutable]? [[inlineAssociationEnd]] [=arrow:--|->|<-|><|<@>-|-<@>] [[associationEnd]] ;
 inlineAssociationEnd : [[multiplicity]] [~roleName]? [[isSorted]]?
 singleAssociationEnd : [[multiplicity]] [type] [~roleName]? ;
-// note: gpIdentifier = general parameter identifier
-associationEnd : [[multiplicity]] [=gpIdentifier:%]? [type] [~roleName]? [[isSorted]]?
+
+associationEnd : [[multiplicity]] [type] [~roleName]? [[isSorted]]?
 multiplicity- : [!lowerBound:\d+|[*]] .. [!upperBound:\d+|[*]] | [!bound:\d+|[*]]
 isSorted- : sorted { [priority] }
 
 // Details of attributes. See user manual page [*AttributeDefinition*]
 attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]
-simpleAttribute- : [=gpIdentifier:%]? [~name] ;
+simpleAttribute- : [~name] ;
 autouniqueAttribute- : [=autounique] [~name] ;
 derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] = ( [[moreCode]] )+
 complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] (= [**value])? ;

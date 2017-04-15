@@ -291,7 +291,7 @@ class UmpleInternalParser
     boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
     boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
     boolean looksLikeAssociation = attributeToken.getValue("name").contains("--") || attributeToken.getValue("name").contains("->");
-    boolean isAGParameter = attributeToken.getValue("gpIdentifier") !=null;
+
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");
     
@@ -315,15 +315,7 @@ class UmpleInternalParser
       
       return;
     }
-    
-    if (isAGParameter) {
-    	if (aTrait.hasDefinedParameter(name,"")){
-    		aTrait.setDefinedParameterType(name,"attribute");
-
-    	} else {
-        	setFailedPosition(attributeToken.getPosition(), 209, name, aTrait.getName());
-        }
-    }    
+      
     
     if(!properName && !isConstant){
       setFailedPosition(attributeToken.getPosition(), 131, name);
