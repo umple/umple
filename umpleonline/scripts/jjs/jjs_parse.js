@@ -238,7 +238,7 @@ var JJSdiagram = {
 				if (JJSdiagram.diagram_type === "UMLclass") {
 					var cellPosition = cellView.model.get('position');
 					// Make sure the user has clicked on a cellView (and not a transition)
-					if (cellPosition !== undefined) {
+					if (cellPosition !== undefined && cellView.model.get('hasStateMachine') ) {
 						// Determine if user has clicked on the state-machine icon
 						if (x - cellPosition.x < 18 && y - cellPosition.y < 18) {
 							// We recycle the JJSdiagram.paper by clearing out the current cells 
@@ -576,10 +576,17 @@ var JJSdiagram = {
 
 				//methods
 				for (var k = 0; k < jjsJson.methods.length; k++) {
+					var tempParameters = null;
 					tempMed = jjsJson.methods[k].split(":").map(function (item) {
 						return item.trim();
 					});
 
+					/**
+					 * default type
+					 */
+					if (!(tempMed[0].charAt(0) === '-' || tempMed[0].charAt(0) === '#' || tempMed[0].charAt(0) === '~' || tempMed[0].charAt(0) === '+')) {
+						tempMed[0] = '- ' + tempMed[0];
+					}
 					//split visibility
 					if (tempMed[0].charAt(0) === '-' || tempMed[0].charAt(0) === '#' || tempMed[0].charAt(0) === '~' || tempMed[0].charAt(0) === '+') {
 						switch (tempMed[0].charAt(0)) {
@@ -603,6 +610,23 @@ var JJSdiagram = {
 						if(tempMed[0].slice(-2) === '()'){
 							tempMed[0] = tempMed[0].slice(0,-2);
 						}
+						else {
+							tempParameters = tempMed[0].split("(").map(function (item) {
+								return item.trim();
+							});
+							tempMed[0] = tempParameters[0];
+							tempParameters[1] = tempParameters[1].slice(0, -1);
+							tempParameters[1] = tempParameters[1].split(",").map(function (item) {
+								return item.trim();
+							});
+							for (var ii = 0; ii < tempParameters[1].length; ii++) {
+								var paraArray = tempParameters[1][ii].split('');
+								tempParameters[1][ii] = {};
+								for (kk = 0; kk < paraArray.length; kk++) {
+									tempParameters[1][ii][kk] = paraArray[kk];
+								}
+							}
+						}
 					}
 
 					//Add Methods
@@ -612,15 +636,11 @@ var JJSdiagram = {
 							"isAbstract": '',
 							"type": tempMed[1],
 							"name": tempMed[0],
-							"parameters": [{
-
-							}],
+							"parameters": tempParameters ? tempParameters[1] : [{}],
 							"newVisibility": methodVisibility,
 							"newType": tempMed[1],
 							"newName": tempMed[0],
-							"newParameters": [{
-
-							}]
+							"newParameters": tempParameters ? tempParameters[1] : [{}]
 						});
 					}
 					else {
@@ -629,9 +649,7 @@ var JJSdiagram = {
 							"isAbstract": '',
 							"type": tempMed[1],
 							"name": tempMed[0],
-							"parameters": [{
-
-							}]
+							"parameters": tempParameters ? tempParameters[1] : [{}]
 						});
 					}
 
@@ -683,9 +701,18 @@ var JJSdiagram = {
 
 				//methods
 				for (var k = 0; k < jjsJson.methods.length; k++) {
+					var tempParameters = null;
+
 					tempMed = jjsJson.methods[k].split(":").map(function (item) {
 						return item.trim();
 					});
+					
+					/**
+					 * default type
+					 */
+					if (!(tempMed[0].charAt(0) === '-' || tempMed[0].charAt(0) === '#' || tempMed[0].charAt(0) === '~' || tempMed[0].charAt(0) === '+')) {
+						tempMed[0] = '- ' + tempMed[0];
+					}
 
 					//split visibility
 					if (tempMed[0].charAt(0) === '-' || tempMed[0].charAt(0) === '#' || tempMed[0].charAt(0) === '~' || tempMed[0].charAt(0) === '+') {
@@ -710,6 +737,23 @@ var JJSdiagram = {
 						if(tempMed[0].slice(-2) === '()'){
 							tempMed[0] = tempMed[0].slice(0,-2);
 						}
+						else {
+							tempParameters = tempMed[0].split("(").map(function (item) {
+								return item.trim();
+							});
+							tempMed[0] = tempParameters[0];
+							tempParameters[1] = tempParameters[1].slice(0, -1);
+							tempParameters[1] = tempParameters[1].split(",").map(function (item) {
+								return item.trim();
+							});
+							for (var ii = 0; ii < tempParameters[1].length; ii++) {
+								var paraArray = tempParameters[1][ii].split('');
+								tempParameters[1][ii] = {};
+								for (kk = 0; kk < paraArray.length; kk++) {
+									tempParameters[1][ii][kk] = paraArray[kk];
+								}
+							}
+						}
 					}
 
 
@@ -719,18 +763,21 @@ var JJSdiagram = {
 						"isAbstract": '',
 						"type": tempMed[1],
 						"name": tempMed[0],
-						"parameters": [{
-
-						}]
+						"parameters": tempParameters ? tempParameters[1] : [{}]
 					});
 
 				}
 				var oldMethodType;
 				var oldMethodVisibility;
 				var oldMethodName;
+				var tempParameters = null;
 				tempMed = oldMethod.split(":").map(function (item) {
 						return item.trim();
 				});
+
+				if (!(tempMed[0].charAt(0) === '-' || tempMed[0].charAt(0) === '#' || tempMed[0].charAt(0) === '~' || tempMed[0].charAt(0) === '+')) {
+					tempMed[0] = '- ' + tempMed[0];
+				}
 
 				if (tempMed[0].charAt(0) === '-' || tempMed[0].charAt(0) === '#' || tempMed[0].charAt(0) === '~' || tempMed[0].charAt(0) === '+') {
 					switch (tempMed[0].charAt(0)) {
@@ -754,6 +801,23 @@ var JJSdiagram = {
 					if (tempMed[0].slice(-2) === '()') {
 						tempMed[0] = tempMed[0].slice(0, -2);
 					}
+					else {
+						tempParameters = tempMed[0].split("(").map(function (item) {
+							return item.trim();
+						});
+						tempMed[0] = tempParameters[0];
+						tempParameters[1] = tempParameters[1].slice(0, -1);
+						tempParameters[1] = tempParameters[1].split(",").map(function (item) {
+							return item.trim();
+						});
+						for (var ii = 0; ii < tempParameters[1].length; ii++) {
+							var paraArray = tempParameters[1][ii].split('');
+							tempParameters[1][ii] = {};
+							for (kk = 0; kk < paraArray.length; kk++) {
+								tempParameters[1][ii][kk] = paraArray[kk];
+							}
+						}
+					}
 				}
 
 				actionCodeObj.methods.push({
@@ -761,15 +825,11 @@ var JJSdiagram = {
 					"isAbstract": '',
 					"type": tempMed[1],
 					"name": tempMed[0],
-					"parameters": [{
-
-					}],
+					"parameters": tempParameters ? tempParameters[1] : [{}],
 					"deleteVisibility": oldMethodVisibility,
 					"deleteType": tempMed[1],
 					"deleteName": tempMed[0],
-					"deleteParameters": [{
-
-					}]
+					"deleteParameters": tempParameters ? tempParameters[1] : [{}]
 				});
 
 				actionCode = "action=editClass&actionCode=";
@@ -904,6 +964,9 @@ var JJSdiagram = {
 		JJSdiagram.paper.model.getCells().forEach(function(cell) {
 			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model,cell);
 		});
+
+		// Auto-layout the model.
+		//joint.layout.DirectedGraph.layout(JJSdiagram.paper.model, { setLinkVertices: false });
 	},
 
 	makeUMLstateDiagram: function(UMLclassName) {
@@ -1185,12 +1248,12 @@ var JJSdiagram = {
 						id: UMLclass.id
 					});
 					// Assign default Interface colours if not already assigned
-					if (UMLclass.displayColor === "") {
-						new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#eed3d3' },
-							'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#ffe3e3' },
-							'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#ffe3e3' } });
-						UMLclass.displayColor = "assigned";
-					}
+					// if (UMLclass.displayColor === "") {
+					// 	new_class.attr( {'.uml-class-name-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#eed3d3' },
+					// 		'.uml-class-attrs-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#ffe3e3' },
+					// 		'.uml-class-methods-rect': { 'stroke': 'black', 'stroke-width': 2, 'fill': '#ffe3e3' } });
+					// 	UMLclass.displayColor = "assigned";
+					// }
 				}
 				else {
 					var hasStateMachine = false;
@@ -1204,12 +1267,13 @@ var JJSdiagram = {
 						attributes: Page.showAttributes ? JJSdiagram.JJsParse.addAttributes(UMLclass.attributes) : [],
 						methods: Page.showMethods ? JJSdiagram.JJsParse.addMethods(UMLclass.methods) : [],
 						id: UMLclass.id,
-						backgroundColor:UMLclass.displayColor
+						backgroundColor:UMLclass.displayColor,
+						hasStateMachine: hasStateMachine
 					});
 
-					if (hasStateMachine) {
-						new_class.attr( {'.sm-icon': {'width': 13, 'height': 13	, 'fill': '#ff0000', 'transform': 'translate(3, 3)'}});
-					}
+					// if (hasStateMachine) {
+					// 	new_class.attr( {'.sm-icon': {'width': 13, 'height': 13	, 'fill': '#ff0000', 'transform': 'translate(3, 3)'}});
+					// }
 
 				}
 

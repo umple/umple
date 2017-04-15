@@ -71,6 +71,9 @@ class JsonMixedGenerator
 
       for(Method method : aClass.getMethods())
       {
+		if (method.getSource() == Method.Source.fAutoAPI)
+      	  continue;
+	  
         if(jsonForMethods.length() > 0)
         {
           jsonForMethods += ", ";

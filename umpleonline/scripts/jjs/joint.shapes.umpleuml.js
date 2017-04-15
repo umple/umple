@@ -21,7 +21,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
     template: [
         '<div class="html-element">',
         '<button class="delete">x</button>',
-        '<img src="scripts/class.png" alt="">',
+        '<img id="classIcon" src="scripts/class.png" alt="">',
         '<input size="9" type="text" class="className" readonly/>',
         '<div class="classAttributes">',
         '<hr>',
@@ -66,8 +66,12 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             default:
                 this.$box.find('.html-element').prevObject[0].style.background=this.model.get('backgroundColor');
         }
-        
 
+        //set icon color
+        if(this.model.get('hasStateMachine')) {
+            this.$box.find('#classIcon')[0].style.background="#ff0000";
+        }
+        
         // Prevent paper from handling pointerdown.
         this.$box.find('input').on('mousedown click', function (e) {
             e.stopPropagation();
