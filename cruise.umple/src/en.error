@@ -124,14 +124,15 @@
 205: 1, "http://cruise.eecs.uottawa.ca/umple/E206CycleinTraits.html", Trait '{0}' cannot cyclically extend '{1}'. ;
 206: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must implement interface '{5}';
 
-# 207 should be explored more.
+# 207 has not been used.
 207: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Variable '{0}' inside of the constraint in trait '{1}' is not available in class '{2}' or trait '{1}'. ;
 208: 1, "http://cruise.eecs.uottawa.ca/umple/E208RequiredMethodsNotAvailable.html", Required method '{0}' in trait '{1}' is not available in class '{2}'. ;
-# 209 should be explored more.
+# 209 has not been used.
 209: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Defined name '{0}' in trait '{1}' is not available in the trait's header. ;
 210: 1, "http://cruise.eecs.uottawa.ca/umple/E210ConflictinMethods.html", In {0} '{1}', there is a conflict on method '{2}' which comes from two different traits '{3}' and '{4}'. ;
 211: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', method '{1}' has been defined two times. ;
 212: 1, "http://cruise.eecs.uottawa.ca/umple/E212MethodsNotAvailable.html", Method '{0}' is not available in trait '{1}' for modification. ;
+213: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The bidirectional association inside trait '{0}' must be with a class. ;
 
 214: 1, "http://cruise.eecs.uottawa.ca/umple/E214TwoIdenticalParameterNames.html", It is impossible to have two parameters with the same name '{0}' in trait'{1}'. ;
 215: 1, "http://cruise.eecs.uottawa.ca/umple/E215TemplateParameterNotAvailable.html", Parameter '{0}' is not available. ;
@@ -147,6 +148,7 @@
 223: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The type of '{0}' in template parameter '{1}' in trait '{2}' has not been defined.;
 224: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Template parameter '{0}' in trait '{1}' has an multiple inheritance restriction, according to classes '{2}' and '{3}', which is not supported. Restrictions must cover single inheritance and multiple interface.;
 225: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The binding type '{0}' for template parameter '{1}' of trait '{2}' in {3} '{4}' must be a subclass of class '{5}';
+#226 and 227 must be explored.
 226: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' is the native state machine in {2} '{3}'.Therefore, it's disregarded.;
 227: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' in the {2} '{3}' has already been imported from the trait '{4}'.Therefore, it's disregarded.;
 228: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Since there are two state machine with the same name '{0}' and having two initial states is not acceptable. These two state machines are merged as a parallel state machine.;

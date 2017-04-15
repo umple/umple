@@ -975,7 +975,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 		        }
 				relatedClass = getModel().getUmpleClass(newName);
 				if (bidirectional && relatedClass==null){
-					setFailedPosition(inTrait.getPosition(0), 20, "trait "+inTrait.getName());
+					setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
 					return;
 				}
 		        if (inAssociationVariable.getRelatedAssociation().getName().length()==0){
@@ -996,7 +996,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
   if (relatedClass==null){
 	relatedInterface = getModel().getUmpleInterface(inAssociationVariable.getType());
 	if (bidirectional){
-		setFailedPosition(inTrait.getPosition(0), 20, "trait "+inTrait.getName());
+		setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
 		return;
 	} else {
 		relatedClass = new UmpleClass(relatedInterface.getName());	

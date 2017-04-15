@@ -2583,7 +2583,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			happened = e.getMessage().contains("20");
+			happened = e.getMessage().contains("213");
 		} finally {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -2629,7 +2629,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			happened = e.getMessage().contains("20");
+			happened = e.getMessage().contains("213");
 		} finally {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");
