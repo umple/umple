@@ -132,7 +132,7 @@
 210: 1, "http://cruise.eecs.uottawa.ca/umple/E210ConflictinMethods.html", In {0} '{1}', there is a conflict on method '{2}' which comes from two different traits '{3}' and '{4}'. ;
 211: 1, "http://cruise.eecs.uottawa.ca/umple/E211TwoorMoreModifications.html", In the modification level of trait '{0}', method '{1}' has been defined two times. ;
 212: 1, "http://cruise.eecs.uottawa.ca/umple/E212MethodsNotAvailable.html", Method '{0}' is not available in trait '{1}' for modification. ;
-213: 1, "http://cruise.eecs.uottawa.ca/umple/E213RemovingWhileRenaming.html", It is impossible to remove method '{0}' while changing its name. ;
+
 214: 1, "http://cruise.eecs.uottawa.ca/umple/E214TwoIdenticalParameterNames.html", It is impossible to have two parameters with the same name '{0}' in trait'{1}'. ;
 215: 1, "http://cruise.eecs.uottawa.ca/umple/E215TemplateParameterNotAvailable.html", Parameter '{0}' is not available. ;
 216: 1, "http://cruise.eecs.uottawa.ca/umple/E216TwiceBindingofaParameter.html", Parameter '{0}' cannot be allocated two times. ;

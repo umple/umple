@@ -2181,21 +2181,6 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
 	}
 
-	@Ignore
-	public void includeExcludeRuleAlias1Test() {
-		String code = "class A{isA T1<+test(Integer), -test(String) as t >;}trait T1{void test(String str){/*T1-S*/}void test(Integer inData){/*T1-I*/}void test(String str,Integer inData){/*T1-SI*/}}";
-		UmpleModel model = getModel(code);
-		boolean result = false;
-		try {
-			model.run();
-		} catch (Exception e) {
-			result = e.getMessage().contains("213");
-		} finally {
-			Assert.assertTrue(result);
-			SampleFileWriter.destroy("traitTest.ump");
-		}
-	}
-
 	@Test
 	public void includeExcludeRuleAlias2Test() {
 		String code = "class A{isA T1< test(String) as changedTest >;	}trait T1{void test(String str){/*T1-S*/}}";
