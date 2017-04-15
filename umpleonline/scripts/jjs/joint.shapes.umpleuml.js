@@ -21,7 +21,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
     template: [
         '<div class="html-element">',
         '<button class="delete">x</button>',
-        '<img id="classIcon" src="scripts/class.png" alt="">',
+        '<img id="classIcon" src="scripts/class.png" alt="" width="13">',
         '<input size="9" type="text" class="className" readonly/>',
         '<div class="classAttributes">',
         '<hr>',
@@ -92,7 +92,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             className[0] = jQuery(e.target).val();
             this.model.set('name', className);
             if (jQuery(e.target).val().length > this.targetInputSize) {
-                this.targetInputSize = Math.floor(jQuery(e.target).val().length*0.82);
+                this.targetInputSize = jQuery(e.target).val().length;
                 this.$box.find('.className').prop('size', this.targetInputSize);
                 this.updateBox();
             }
@@ -133,7 +133,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         },this), 1000);
     },
 
-    updateBox: function () {
+    updateBox: function () { 
         //set the position and dimension of the box so that it covers the JointJS element.
         var bbox;
 
@@ -142,7 +142,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
         //update box size
         if (this.model.get('name')[0].length > this.targetInputSize) {
-            this.targetInputSize = Math.floor(this.model.get('name')[0].length*0.82);
+            this.targetInputSize = this.model.get('name')[0].length;
             this.$box.find('.className').prop('size', this.targetInputSize);
         }
 
@@ -175,8 +175,8 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
         //set box size
         var boxSize = this.model.get('size');
-        boxSize['height'] = this.$box.find('.classAttributes').children().size() * 16 + this.$box.find('.classMethods').children().size() * 16 + 35;
-        boxSize['width'] = 40 + 8 * this.targetInputSize;
+        boxSize['height'] = ( this.$box.find('.classAttributes').children().size() + this.$box.find('.classMethods').children().size()) * 12 + 40;
+        boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize*0.79); 
         this.model.set('size', boxSize);
 
         bbox = this.model.getBBox();
@@ -311,18 +311,18 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
         //updated box height
         var boxSize = this.model.get('size');
-        boxSize['height'] = this.$box.find('.classAttributes').children().size() * 16 + this.$box.find('.classMethods').children().size() * 16+ 35;
+        boxSize['height'] = (this.$box.find('.classAttributes').children().size() + this.$box.find('.classMethods').children().size()) * 12+ 40;
 
 
         //updated box width
         //the function below is the same as updateBox, need refactor.
         for (var j = 0; j < this.$box.find('.classAttributes input').size(); j++) {
             if (this.$box.find('.classAttributes input')[j].value.length > this.targetInputSize) {
-                this.targetInputSize = Math.floor(this.$box.find('.classAttributes input')[j].value.length*0.82);
+                this.targetInputSize = this.$box.find('.classAttributes input')[j].value.length;
                 updateFlag = true;
             }
         }
-        boxSize['width'] = 40 + 8 * this.targetInputSize;
+        boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize*0.79);
 
         this.model.set('size', boxSize);
         var bbox = this.model.getBBox();
@@ -366,18 +366,18 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
         //updated box height
         var boxSize = this.model.get('size');
-        boxSize['height'] = this.$box.find('.classAttributes').children().size() * 16 + this.$box.find('.classMethods').children().size() * 16 + 35;
+        boxSize['height'] = ( this.$box.find('.classAttributes').children().size() + this.$box.find('.classMethods').children().size()) * 12 + 40;
 
 
         //updated box width
         //the function below is the same as updateBox, need refactor.
         for (var j = 0; j < this.$box.find('.classMethods input').size(); j++) {
             if (this.$box.find('.classMethods input')[j].value.length > this.targetInputSize) {
-                this.targetInputSize = Math.floor(this.$box.find('.classMethods input')[j].value.length*0.82);
+                this.targetInputSize = this.$box.find('.classMethods input')[j].value.length;
                 updateFlag = true;
             }
         }
-        boxSize['width'] = 40 + 8 * this.targetInputSize;
+        boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize*0.79);
 
         this.model.set('size', boxSize);
         var bbox = this.model.getBBox();

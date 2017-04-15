@@ -448,8 +448,8 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
         this.addListeners();
         //set box size
         var boxSize = this.model.get('size');
-        boxSize['height'] = this.$box.find('.stateActions').children().size() * 16 + this.$box.find('.stateActivities').children().size() * 16+ 50;
-        boxSize['width'] = 40 + 8 * this.targetInputSize;
+        boxSize['height'] = ( this.$box.find('.stateActions').children().size() + this.$box.find('.stateActivities').children().size()) * 12+ 50;
+        boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize*0.79);
         this.model.set('size', boxSize);
 
         bbox = this.model.getBBox();
@@ -574,7 +574,7 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
 
         //updated box height
         var boxSize = this.model.get('size');
-        boxSize['height'] = this.$box.find('.stateActions').children().size() * 16 + this.$box.find('.stateActivities').children().size() * 16 + 35;
+        boxSize['height'] = ( this.$box.find('.stateActions').children().size() + this.$box.find('.stateActivities').children().size()) * 12 + 50;
 
 
         //updated box width
@@ -585,7 +585,7 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
                 updateFlag = true;
             }
         }
-        boxSize['width'] = 40 + 8 * this.targetInputSize;
+        boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize*0.79);
 
         this.model.set('size', boxSize);
         var bbox = this.model.getBBox();
@@ -630,7 +630,7 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
 
         //updated box height
         var boxSize = this.model.get('size');
-        boxSize['height'] = this.$box.find('.stateActions').children().size() * 16 +this.$box.find('.stateActivities').children().size() * 16 + 35;
+        boxSize['height'] = ( this.$box.find('.stateActions').children().size() +this.$box.find('.stateActivities').children().size()) * 12 + 50;
 
 
         //updated box width
@@ -641,7 +641,7 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
                 updateFlag = true;
             }
         }
-        boxSize['width'] = 40 + 8 * this.targetInputSize;
+        boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize*0.79);
 
         this.model.set('size', boxSize);
         var bbox = this.model.getBBox();

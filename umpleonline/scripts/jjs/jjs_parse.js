@@ -128,7 +128,7 @@ var JJSdiagram = {
 						associationId = cellView.model.id
 					}
 					if (clickcount === 2) {
-						JJSdiagram.paper.model.addCell(new uml.Association({
+						var link = new uml.Association({
 							source: { id: associationId },
 							target: { id: cellView.model.id },
 							labels: [
@@ -137,7 +137,9 @@ var JJSdiagram = {
 							],
 							vertices:JJSdiagram.setAssociationPathVertices(associationId, cellView.model.id),
 							umplename: "umpleAssociation_"+JJSdiagram.associationIndex
-						}));
+						});
+						link.set('connector', { name: 'jumpover', args: { type: 'gap' }});
+						JJSdiagram.paper.model.addCell(link);
 						JJSdiagram.makeUmpleCodeFromAssociation('addJjsAccociation', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
 						JJSdiagram.paper.off('cell:pointerclick');
 						JJSdiagram.setPaperListener();
@@ -157,7 +159,9 @@ var JJSdiagram = {
 						associationId = cellView.model.id
 					}
 					if (clickcount === 2) {
-						JJSdiagram.paper.model.addCell(new uml.Generalization({ source: { id: cellView.model.id }, target: { id: associationId }}));
+						var link = new uml.Generalization({ source: { id: cellView.model.id }, target: { id: associationId }});
+						link.set('connector', { name: 'jumpover', args: { type: 'gap' }});
+						JJSdiagram.paper.model.addCell(link);
 						JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
 						JJSdiagram.paper.off('cell:pointerclick');
 						JJSdiagram.setPaperListener();
@@ -1424,6 +1428,8 @@ var JJSdiagram = {
 		                // [{x: 0,y: 100}, {x: -100, y: 0}]
 					});
 
+					new_assoc.set('connector', { name: 'jumpover', args: { type: 'gap' }});
+
 					if (UMLassoc.isLeftNavigable == "true" && UMLassoc.isRightNavigable == "false") {
 						new_assoc.attr('.marker-source', { d: 'M 15 0 L 0 7.5 L 15 15', fill: 'white' });
 					}
@@ -1467,7 +1473,7 @@ var JJSdiagram = {
 			var instantiate = function (UMLgeneralization) {
 				UMLgeneralization.vertices = setPathVertices(UMLgeneralization.source.id, UMLgeneralization.target.id);
 				var new_generalization = new joint.shapes.uml.Generalization(UMLgeneralization)
-
+				new_generalization.set('connector', { name: 'jumpover', args: { type: 'gap' }});
 				new_generalization.attr({ '.connection-wrap': {fill: 'none'},
 										  '.connection': {fill: 'none'},
 										  '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'white' }});
