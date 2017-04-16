@@ -2860,7 +2860,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     }
     */
     if(aClass.getIsDistributed())
-      proxyContent+=NL+"  public boolean equals(Object obj)"+NL+"  {"+NL+"    if(obj==null)"+NL+"      return false;"+NL+"    if(obj.getClass()!=this.getClass())"+NL+"      return false;"+NL+"    return (getHashCode()==(("+aClass.getName()+")obj).getHashCode());"+NL+"  }";
+      proxyContent+=NL+"  public boolean equals(Object obj)"+NL+"  {"+NL+"    if(obj==null)"+NL+"      return false;"+"    if(realObject==null)"+NL+"      realObject=this;"+NL+"    if(obj.getClass()!=this.getClass())"+NL+"      return false;"+NL+"    return (getHashCode()==(("+aClass.getName()+")obj).getHashCode());"+NL+"  }";
     remoteContent+=NL+"}";
     if(getModel().getDistributePattern()==0)
     {
