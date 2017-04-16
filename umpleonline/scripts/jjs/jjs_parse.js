@@ -990,7 +990,7 @@ var JJSdiagram = {
 		JJSdiagram.paper.model.addCell(back);
 
 		// Auto-layout the model.
-		joint.layout.DirectedGraph.layout(JJSdiagram.paper.model, { setLinkVertices: false });
+		joint.layout.DirectedGraph.layout(JJSdiagram.paper.model, { setLinkVertices: true, rankDir:"TB", nodeSep: 50, edgeSep: 80});
 
 		// Add the last states and transitions to the graph, after making the list FILO.
 		JJSdiagram.JJsParse.notYetAddedStatesStack.reverse()
@@ -1616,6 +1616,15 @@ var JJSdiagram = {
 				}
 
 			};
+
+			var clearActionComments = function(state){
+				for(var actionIndex = 0; actionIndex < state.actions.length; actionIndex++) {
+					var commentPos = state.actions[actionIndex].indexOf('//');
+					state.actions[actionIndex] = state.actions[actionIndex].slice(0, commentPos);
+				}
+			}
+
+			sm.states.forEach(clearActionComments);
 
 			sm.states.forEach(instantiateState);
 

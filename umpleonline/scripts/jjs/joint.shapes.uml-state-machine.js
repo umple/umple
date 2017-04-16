@@ -562,6 +562,9 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
     },
 
     addEventBox: function (tempIndex, inputValue) {
+        if(!inputValue || inputValue.trim() === "") {
+            return;
+        }
         var updateFlag = false;
 
         //add input
