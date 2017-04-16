@@ -37,6 +37,7 @@ class UmpleToJava {
     {
       if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
     }
+    type=isTransient+type;
     append(realSb, "  private {0} {1};", type, attribute);
   }
   
@@ -56,7 +57,7 @@ class UmpleToJava {
     }
     appendln(realSb, "");
     if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
-    append(realSb, "  private int {0};", gen.translate("attributeOne",av));
+    append(realSb, "  private{1} int {0};", gen.translate("attributeOne",av),isTransient);
   }
   
   isFirst = true;
@@ -79,7 +80,7 @@ class UmpleToJava {
 					  String attrName = gen.translate("attribute",(Attribute)attr);
 					  attrName = attrName.substring(0,1).toUpperCase()+attrName.substring(1).toLowerCase();
 					  appendln(realSb, "");
-					  append(realSb, "  private boolean {0} = true;", "trace" + attrName + "Until");  
+					  append(realSb, "  private{1} boolean {0} = true;", "trace" + attrName + "Until",isTransient);  
 				  }
 			  }  
 		  }
@@ -92,7 +93,7 @@ class UmpleToJava {
 					  String attrName = gen.translate("attribute",(Attribute)attr);
 					  attrName = attrName.substring(0,1).toUpperCase()+attrName.substring(1).toLowerCase();
 					  appendln(realSb, "");
-					  append(realSb, "  private boolean {0} = false;", "trace" + attrName + "After");  
+					  append(realSb, "  private{1} boolean {0} = false;", "trace" + attrName + "After",isTransient);  
 				  }
 			  }
 		  }
