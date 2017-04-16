@@ -14,25 +14,25 @@ class UmpleToJava {
       isFirst = false;
     }
   
-    append(realSb, "\n  public enum {0} { {1} }", gen.translate("type", sm), gen.translate("listStates", sm));
+    append(realSb, "\n  public{2} enum {0} { {1} }", gen.translate("type", sm), gen.translate("listStates", sm),isTransient);
 
     for (StateMachine nestedSm : allNested)
     {
-      append(realSb, "\n  public enum {0} { {1} }", gen.translate("type", nestedSm), 
-             gen.translate("listStates",nestedSm));
+      append(realSb, "\n  public{2} enum {0} { {1} }", gen.translate("type", nestedSm), 
+             gen.translate("listStates",nestedSm),isTransient);
     }
     
-    append(realSb, "\n  private {0} {1};", gen.translate("type",sm), gen.translate("stateMachineOne", sm));
+    append(realSb, "\n  private{2} {0} {1};", gen.translate("type",sm), gen.translate("stateMachineOne", sm),isTransient);
     for (StateMachine nestedSm : allNested)
     {
-      append(realSb, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+      append(realSb, "\n  private{2} {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm),isTransient);
       if(nestedSm.getContainsHistoryState())
       {
-        append(realSb, "\n  private {0} {1}H;", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+        append(realSb, "\n  private{2} {0} {1}H;", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm),isTransient);
       }
       if(nestedSm.getContainsDeepHistoryState())
       {
-        append(realSb, "\n  private {0} {1}HStar;", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+        append(realSb, "\n  private{2} {0} {1}HStar;", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm),isTransient);
       }
     }  
   }
