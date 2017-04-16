@@ -6,17 +6,17 @@ class UmpleToJava {
   }
   else{
   if(isInterface!=true){
-    append(realSb,"\n  {0} {1}({2}{3} object)",new Object[] {accessibility, "add"+uClass.getName(), arguments+argumentscomma,uClass.getName()});
+    append(realSb,"\n  {0} {1}({2}{3} object)",new Object[] {accessibility, "new"+uClass.getName(), arguments+argumentscomma,uClass.getName()});
 
   #>>
   {
-      return add<<=uClass.getName()>>(<<=caller+argumentscomma>>UmpleRuntime.getComponent("<<=uClass.getName()>>"),object);
+      return new<<=uClass.getName()>>(<<=caller+argumentscomma>>UmpleRuntime.getComponent("<<=uClass.getName()>>"),object);
   
   }  
   <<#
   }
   if(isInterface!=true){
-    append(realSb,"\n  {0} {1}({2}UmpleRuntime.UmpleComponent component,{3} object)",new Object[] {accessibility, "add"+uClass.getName(), arguments+argumentscomma,uClass.getName()});
+    append(realSb,"\n  {0} {1}({2}UmpleRuntime.UmpleComponent component,{3} object)",new Object[] {accessibility, "new"+uClass.getName(), arguments+argumentscomma,uClass.getName()});
   #>>
   {
     if(getNodeId(component)!=getThisNodeId())
@@ -24,7 +24,7 @@ class UmpleToJava {
       while(true){
         try
         {
-          return remoteFactories.get(getNodeId(component)).new<<=uClass.getName()>>(<<=caller>>);
+          return remoteFactories.get(getNodeId(component)).create<<=uClass.getName()>>(<<=caller>>);
         }
         catch(Exception e) 
         {
@@ -60,7 +60,7 @@ class UmpleToJava {
   }
     <<#
     }
-  append(realSb,"\n  {0}{1} {2}({3})",new Object[] {webMethod,accessibility, "new"+uClass.getName(), arguments});
+  append(realSb,"\n  {0}{1} {2}({3})",new Object[] {webMethod,accessibility, "create"+uClass.getName(), arguments});
   if(isInterface==true){
   #>>throws RemoteException;<<#
   }
