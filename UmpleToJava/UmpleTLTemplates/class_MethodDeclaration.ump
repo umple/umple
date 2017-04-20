@@ -8,6 +8,8 @@ class UmpleToJava {
         
         if(!aMethod.getExistsInLanguage("Java") || aMethod.getSource() == Method.Source.fAutoAPI)
           continue;
+        if(aMethod.existsAlreadyInClass(uClass))
+          continue;
         
           
         Position p = aMethod.getCodePosition();

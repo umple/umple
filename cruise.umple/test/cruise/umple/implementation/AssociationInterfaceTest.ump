@@ -1,0 +1,11 @@
+interface Student {
+	boolean addCourse(Course course);
+}
+
+class Person {
+	isA Student;
+    0..1 -> * Course; 
+}
+
+class Course {
+}
