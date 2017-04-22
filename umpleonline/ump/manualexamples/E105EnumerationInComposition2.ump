@@ -1,0 +1,12 @@
+// This example generates the error. Enumeration "Y" is added to class "X" because it has an an attribute of type "Y"
+
+enum Y { Red, Blue, Green }
+
+class X {
+  Y attr;
+  0..1 <@>- * Y;
+}
+
+class Y {
+  name;
+}

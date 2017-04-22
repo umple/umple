@@ -1,0 +1,10 @@
+// This example generates the warning because it is ambiguous if "param"
+// is an object of class "Y" or the enumeration "Y".
+
+enum Y { Red, Blue, Green }
+
+class X {
+  showY(Y param) { System.out.println(param); }
+}
+
+class Y { }

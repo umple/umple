@@ -1,0 +1,26 @@
+E104 Enumeration in Bi-directional Association
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>
+Umple semantic error reported when an enumeration is used in a bi-directional association.
+</h2>
+
+<p>
+In Umple, enumerations cannot be used in bi-directional associations.
+</p>
+
+
+@@example
+@@source manualexamples/E104EnumerationInBidirectionalAssociation1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E104EnumerationInBidirectionalAssociation2.ump
+@@endexample
+
+@@example
+@@source manualexamples/E104EnumerationInBidirectionalAssociation3.ump
+@@endexample

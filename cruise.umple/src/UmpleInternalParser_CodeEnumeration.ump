@@ -297,28 +297,28 @@ class UmpleInternalParser
     for (AssociationEnd ae : a.getEnds()) {
       if (uEnum.hasSameName(ae.getClassName())) {
         if (a.getIsLeftComposition() || a.getIsRightComposition()) {
-          // Enumeration Used In Composition Error
+          // Enumeration Used in Composition Error
           getParseResult().addErrorMessage(new ErrorMessage(105, 
                                                             uEnum.getPosition(), 
                                                             uEnum.getName(), 
                                                             "" + uEnum.getPosition().getLineNumber(),
-                                                            "" + a.getPosition(0).getX(),
+                                                            "" + a.getPosition(0).getY(),
                                                             className));
         } else if (a.getIsLeftNavigable() && a.getIsRightNavigable()) {
-          // Enumeration Used In Bi-Directional Association Error
+          // Enumeration Used in Bi-Directional Association Error
           getParseResult().addErrorMessage(new ErrorMessage(104, 
                                                             uEnum.getPosition(), 
                                                             uEnum.getName(), 
                                                             "" + uEnum.getPosition().getLineNumber(),
-                                                            "" + a.getPosition(0).getX(),
+                                                            "" + a.getPosition(0).getY(),
                                                             className));
         } else {
-          // Enumeration Used In Uni-Directional Association Warning
+          // Enumeration Used in Uni-Directional Association Warning
           getParseResult().addErrorMessage(new ErrorMessage(106, 
                                                             uEnum.getPosition(), 
                                                             uEnum.getName(), 
                                                             "" + uEnum.getPosition().getLineNumber(),
-                                                            "" + a.getPosition(0).getX(),
+                                                            "" + a.getPosition(0).getY(),
                                                             ae.getClassName()));
         }
       }

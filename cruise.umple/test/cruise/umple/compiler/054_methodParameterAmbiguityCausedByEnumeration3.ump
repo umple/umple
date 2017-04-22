@@ -1,12 +1,6 @@
-enum Y { Red, Blue, Green }
-
 class X {
-  sm {
-    s1 {
-      goToS2(Y param) /{ System.out.println(param); } -> s2;
-    }
-    s2 {}
-  }
+  enum Z { Red, Blue, Green }
+  showY(Y param) { System.out.println(param); }
 }
 
-class A { }
+class Y { }

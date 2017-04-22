@@ -1,0 +1,21 @@
+W102 Enumeration Causes Method Parameter Ambiguity
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>
+Umple semantic warning reported when an enumeration makes a method parameter's type ambiguous. This occurs when there is another class that could also be the parameter's type.
+</h2>
+
+@@example
+@@source manualexamples/W102EnumerationCausesMethodParameterAmbiguity1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W102EnumerationCausesMethodParameterAmbiguity2.ump
+@@endexample
+
+@@example
+@@source manualexamples/W102EnumerationCausesMethodParameterAmbiguity3.ump
+@@endexample

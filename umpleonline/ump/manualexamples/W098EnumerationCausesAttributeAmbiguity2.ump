@@ -1,0 +1,8 @@
+// This example does not generate the warning
+
+class X{
+  enum Y{ Red, Blue, Green }
+  Y t;
+}
+
+class Y{ }

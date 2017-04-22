@@ -1,0 +1,15 @@
+// This example generates the warning because "goToS2" has "param" which could be
+// either an object of class "Y" or the enumeration "Y"
+
+enum Y { Red, Blue, Green }
+
+class X {
+  sm {
+    s1 {
+      goToS2(Y param) /{ System.out.println(param); } -> s2;
+    }
+    s2 {}
+  }
+}
+
+class Y { }

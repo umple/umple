@@ -1,0 +1,26 @@
+E105 Enumeration in Composition
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>
+Umple semantic error reported when an enumeration is used in a composition.
+</h2>
+
+<p>
+In Umple, enumerations cannot be used in compositions.
+</p>
+
+
+@@example
+@@source manualexamples/E105EnumerationInComposition1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E105EnumerationInComposition2.ump
+@@endexample
+
+@@example
+@@source manualexamples/E105EnumerationInComposition3.ump
+@@endexample
