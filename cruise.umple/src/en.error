@@ -92,7 +92,7 @@
 95: 2, "http://cruise.eecs.uottawa.ca/umple/E095DuplicateEnumerations.html", Detected duplicate enumeration '{0}' on line '{1}';
 96: 2, "http://cruise.eecs.uottawa.ca/umple/E096EnumerationAndClassNameConflict.html", Enumeration '{0}' on line '{1}' used by class '{2}' conflicts with the class's name;
 97: 2, "http://cruise.eecs.uottawa.ca/umple/E097EnumerationAndStateMachineConflict.html", Enumeration '{0}' on line '{1}' conflicts with state machine '{2}' in class '{3}';
-98: 4, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Assuming enumeration '{0}' on line '{1}' as the type of attribute '{2}' instead of class '{3}';
+98: 4, "http://cruise.eecs.uottawa.ca/umple/W098EnumerationCausesAttributeAmbiguity.html", Assuming enumeration '{0}' on line '{1}' as the type of attribute '{2}' instead of class '{3}';
 102: 4, "http://cruise.eecs.uottawa.ca/umple/W102EnumerationCausesMethodParameterAmbiguity.html", Assuming enumeration '{0}' on line '{1}' as the type of parameter '{2}' for method '{3}' on line '{4}' instead of class '{5}';
 103: 4, "http://cruise.eecs.uottawa.ca/umple/W103EnumerationCausesEventParameterAmbiguity.html", Assuming enumeration '{0}' on line '{1}' as the type of parameter '{2}' for event '{3}' in state machine '{4}' instead of class '{5}';
 104: 2, "http://cruise.eecs.uottawa.ca/umple/E104EnumerationInBidirectionalAssociation.html", Cannot use enumeration '{0}' on line '{1}' in bidirectional association on line '{2}' in class '{3}'; 
