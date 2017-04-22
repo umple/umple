@@ -8,6 +8,7 @@ namespace cruise.umple.compiler;
 
 class UmpleInternalParser
 {
+  final String AUTO_GENERATED_METHOD = "fAutoAPI";
   /*
    * Issue 1008 - Analyze enumerations defined at the top-level of an Umple Model
    */
@@ -109,23 +110,10 @@ class UmpleInternalParser
       
       UmpleClass otherClass = model.getUmpleClass(uEnum.getName());
       
-      // Check if the class uses the enumeration in any of its attributes
-      for (Attribute a : uClass.getAttributes()) {
-        if (uEnum.hasSameName(a.getType()) && otherClass != null) {
-          // Attribute Ambiguity Warning
-          getParseResult().addErrorMessage(new ErrorMessage(98, 
-                                                            uEnum.getPosition(), 
-                                                            uEnum.getName(), 
-                                                            "" + uEnum.getPosition().getLineNumber(),
-                                                            a.getName(),
-                                                            otherClass.getName()));
-        }
-      }
-      
-      // Check if the class uses the enumeration in any of its method parameters
+      // Check if the class uses the enumeration in any of its methods' parameters
       for (Method m : uClass.getMethods()) {
         for (MethodParameter p : m.getMethodParameters()) {
-          if (uEnum.hasSameName(p.getType()) && otherClass != null) {
+          if (!m.getSourceFullName().equals(AUTO_GENERATED_METHOD) && uEnum.hasSameName(p.getType()) && otherClass != null) {
             // Method Parameter Ambiguity Warning
             getParseResult().addErrorMessage(new ErrorMessage(102, 
                                                               uEnum.getPosition(), 
@@ -183,81 +171,57 @@ class UmpleInternalParser
     
     // Check if the class uses the enumeration in any of its attributes
     for (Attribute a : uClass.getAttributes()) {
-      if (uEnum.hasSameName(a.getType())) {
-        if (uEnum.hasSameName(className)) {
-          // Naming Conflict Between Enumeration and Class Error
-          getParseResult().addErrorMessage(new ErrorMessage(96, 
-                                               uEnum.getPosition(), 
-                                               uEnum.getName(), 
-                                               "" + uEnum.getPosition().getLineNumber(),
-                                               uClass.getName()));
-          return;
-        } else {
-          if (otherClass != null) {
-            // Attribute Ambiguity Warning
-            getParseResult().addErrorMessage(new ErrorMessage(98, 
-                                                              uEnum.getPosition(), 
-                                                              uEnum.getName(), 
-                                                              "" + uEnum.getPosition().getLineNumber(),
-                                                              a.getName(),
-                                                              otherClass.getName()));
-          }
-          classUsesEnum = true;
-        }
-      }
+     if (uEnum.hasSameName(a.getType())) {
+       if (!classUsesEnum && uEnum.hasSameName(uClass.getName())) {
+         // Naming Conflict Between Enumeration and Class Error
+         getParseResult().addErrorMessage(new ErrorMessage(96, 
+                                                           uEnum.getPosition(), 
+                                                           uEnum.getName(), 
+                                                           "" + uEnum.getPosition().getLineNumber(),
+                                                           uClass.getName()));
+       } else {
+         if (otherClass != null) {
+           // Attribute Ambiguity Warning
+           getParseResult().addErrorMessage(new ErrorMessage(98, 
+                                                             uEnum.getPosition(), 
+                                                             uEnum.getName(), 
+                                                             "" + uEnum.getPosition().getLineNumber(),
+                                                             a.getName(),
+                                                             otherClass.getName()));
+         }
+         classUsesEnum = true;
+       }
+     }
     }
      
-    // Check if the class uses the enumeration in any of its method's return types or method parameters
+    // Check if the class uses the enumeration in any of its methods' parameters
     for (Method m : uClass.getMethods()) {
-      if (uEnum.hasSameName(m.getType())) {
-         if (uEnum.hasSameName(className)) {
-          // Naming Conflict Between Enumeration and Class Error
-          getParseResult().addErrorMessage(new ErrorMessage(96,
-                                                            uEnum.getPosition(),
-                                                            uEnum.getName(),
-                                                            "" + uEnum.getPosition().getLineNumber(),
-                                                            uClass.getName()));
-           return;
-         } else {
+      for (MethodParameter p : m.getMethodParameters()) {
+        if (!m.getSourceFullName().equals(AUTO_GENERATED_METHOD) && uEnum.hasSameName(p.getType())) {
+          if (!classUsesEnum && uEnum.hasSameName(uClass.getName())) {
+            // Naming Conflict Between Enumeration and Class Error
+            getParseResult().addErrorMessage(new ErrorMessage(96, 
+                                                             uEnum.getPosition(), 
+                                                             uEnum.getName(), 
+                                                             "" + uEnum.getPosition().getLineNumber(),
+                                                             uClass.getName()));
+          } else {
             if (otherClass != null) {
-             // Method Return Type Ambiguity Warning
-             getParseResult().addErrorMessage(new ErrorMessage(99, 
-                                                               uEnum.getPosition(), 
-                                                               uEnum.getName(), 
-                                                               "" + uEnum.getPosition().getLineNumber(),
-                                                               m.getName(),
-                                                               otherClass.getName()));
-           }
-           classUsesEnum = true;
-         }
-       }
-       for (MethodParameter p : m.getMethodParameters()) {
-         if (uEnum.hasSameName(p.getType())) {
-            if (uEnum.hasSameName(className)) {
-             // Naming Conflict Between Enumeration and Class Error
-             getParseResult().addErrorMessage(new ErrorMessage(96, 
-                                                  uEnum.getPosition(), 
-                                                  uEnum.getName(), 
-                                                  "" + uEnum.getPosition().getLineNumber(),
-                                                  uClass.getName()));
-             return;
-           } else {
-             if (otherClass != null) {
-               // Method Parameter Ambiguity Warning
-               getParseResult().addErrorMessage(new ErrorMessage(102, 
-                                                                 uEnum.getPosition(), 
-                                                                 uEnum.getName(), 
-                                                                 "" + uEnum.getPosition().getLineNumber(),
-                                                                 p.getName(),
-                                                                 m.getName(),
-                                                                 "" + m.getPosition().getLineNumber(),
-                                                                 otherClass.getName()));
-             }
-             classUsesEnum = true;
-           }
+              // Method Parameter Ambiguity Warning
+              getParseResult().addErrorMessage(new ErrorMessage(102, 
+                                                                uEnum.getPosition(), 
+                                                                uEnum.getName(), 
+                                                                "" + uEnum.getPosition().getLineNumber(),
+                                                                p.getName(),
+                                                                m.getName(),
+                                                                "" + m.getPosition().getLineNumber(),
+                                                                otherClass.getName()));
+            }
+            classUsesEnum = true;
          }
        }
      }
+    }
        
      // Check if the class's state machines conflict with the enumeration, and if any of its state 
      // machine's events use the enumeration in their parameters
@@ -276,22 +240,24 @@ class UmpleInternalParser
        }
        for (Event e : sm.getAllEvents()) {
          for (MethodParameter p : e.getParams()) {
-           if (uEnum.hasSameName(p.getType())) {
-              if (uEnum.hasSameName(className)) {
-               // Naming Conflict Between Enumeration and Class Error
-               getParseResult().addErrorMessage(new ErrorMessage(96, 
-                                                    uEnum.getPosition(), 
-                                                    uEnum.getName(), 
-                                                    "" + uEnum.getPosition().getLineNumber(),
-                                                    uClass.getName()));
-             } else if (uEnum.hasSameName(sm.getName())) {
+          if (uEnum.hasSameName(p.getType())) {
+            if (!classUsesEnum && uEnum.hasSameName(sm.getName())) {
                // Enumeration Conflicts with State Machine Error
                getParseResult().addErrorMessage(new ErrorMessage(97, 
+                                                                uEnum.getPosition(), 
+                                                                uEnum.getName(), 
+                                                                "" + uEnum.getPosition().getLineNumber(),
+                                                                sm.getName(),
+                                                                uClass.getName()));
+               return;
+             } else if (!classUsesEnum && uEnum.hasSameName(uClass.getName())) {
+               // Naming Conflict Between Enumeration and Class Error
+               getParseResult().addErrorMessage(new ErrorMessage(96, 
                                                                  uEnum.getPosition(), 
                                                                  uEnum.getName(), 
                                                                  "" + uEnum.getPosition().getLineNumber(),
-                                                                 sm.getName(),
                                                                  uClass.getName()));
+               return;
              } else {
                if (otherClass != null) {
                  // Event Parameter Ambiguity Warning
@@ -304,11 +270,11 @@ class UmpleInternalParser
                                                                    sm.getName(),
                                                                    otherClass.getName()));
                }
-             }
-             classUsesEnum = true;
-           }
-         }
-       }
+               classUsesEnum = true;
+            }
+          }
+        }
       }
-    }
+     }
+  }
 }

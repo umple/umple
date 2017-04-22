@@ -1,7 +1,0 @@
-enum Y { Red, Blue, Green }
-
-class X {
-  Y getMyY(){ return Y.Red; }
-}
-
-class Z { }

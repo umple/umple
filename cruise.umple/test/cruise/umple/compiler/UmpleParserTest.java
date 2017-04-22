@@ -2842,32 +2842,25 @@ public class UmpleParserTest
  // Issue 1008
  @Test
  public void attributeAmbiguityCausedByEnumeration() {
-   assertHasWarningsParse("053_attributeAmbiguityCausedByEnumeration1.ump", 98);
+   assertHasNoWarningsParse("053_attributeAmbiguityCausedByEnumeration1.ump");
    assertHasWarningsParse("053_attributeAmbiguityCausedByEnumeration2.ump", 98);
    assertHasNoWarningsParse("053_attributeAmbiguityCausedByEnumeration3.ump");
  }
  
  // Issue 1008
  @Test
- public void methodReturnTypeAmbiguityCausedByEnumeration() {
-   assertHasWarningsParse("054_methodReturnTypeAmbiguityCausedByEnumeration1.ump", 99);
-   assertHasNoWarningsParse("054_methodReturnTypeAmbiguityCausedByEnumeration2.ump");
- }
- 
- // Issue 1008
- @Test
  public void methodParameterAmbiguityCausedByEnumeration() {
-   assertHasWarningsParse("055_methodParameterAmbiguityCausedByEnumeration1.ump", 102);
-   assertHasWarningsParse("055_methodParameterAmbiguityCausedByEnumeration2.ump", 102);
-   assertHasNoWarningsParse("055_methodParameterAmbiguityCausedByEnumeration3.ump");
+   assertHasWarningsParse("054_methodParameterAmbiguityCausedByEnumeration1.ump", 102);
+   assertHasWarningsParse("054_methodParameterAmbiguityCausedByEnumeration2.ump", 102);
+   assertHasNoWarningsParse("054_methodParameterAmbiguityCausedByEnumeration3.ump");
  }
  
  // Issue 1008
  @Test
  public void eventParameterAmbiguityCausedByEnumeration() {
-   assertHasWarningsParse("056_eventParameterAmbiguityCausedByEnumeration1.ump", 103);
-   assertHasWarningsParse("056_eventParameterAmbiguityCausedByEnumeration2.ump", 103);
-   assertHasNoWarningsParse("056_eventParameterAmbiguityCausedByEnumeration3.ump");
+   assertHasWarningsParse("055_eventParameterAmbiguityCausedByEnumeration1.ump", 103);
+   assertHasWarningsParse("055_eventParameterAmbiguityCausedByEnumeration2.ump", 103);
+   assertHasNoWarningsParse("055_eventParameterAmbiguityCausedByEnumeration3.ump");
  }
  
   public boolean parse(String filename)
