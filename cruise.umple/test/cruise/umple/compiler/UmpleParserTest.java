@@ -2863,6 +2863,32 @@ public class UmpleParserTest
    assertHasNoWarningsParse("055_eventParameterAmbiguityCausedByEnumeration3.ump");
  }
  
+ //Issue 1008
+ @Test
+ public void enumerationInBidirectionalAssoc() {
+  assertFailedParse("056_enumerationInBidirectionalAssoc1.ump", 104);
+  assertFailedParse("056_enumerationInBidirectionalAssoc2.ump", 104, 1);
+  assertHasNoWarningsParse("056_enumerationInBidirectionalAssoc3.ump");
+ }
+ 
+ //Issue 1008
+ @Test
+ public void enumerationInComposition() {
+  assertFailedParse("057_enumerationInComposition1.ump", 105);
+  assertFailedParse("057_enumerationInComposition2.ump", 105, 1);
+  assertFailedParse("057_enumerationInComposition3.ump", 105);
+  assertHasNoWarningsParse("057_enumerationInComposition4.ump");
+ }
+
+ //Issue 1008
+ @Test
+ public void enumerationInUnidirectionalAssoc() {
+  assertHasWarningsParse("058_enumerationInUnidirectionalAssoc1.ump", 106);
+  assertHasWarningsParse("058_enumerationInUnidirectionalAssoc2.ump", 106);
+  assertHasWarningsParse("058_enumerationInUnidirectionalAssoc3.ump", 106, 1);
+  assertHasNoWarningsParse("058_enumerationInUnidirectionalAssoc4.ump");
+ }
+ 
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));

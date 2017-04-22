@@ -157,6 +157,12 @@ class UmpleInternalParser
           }
         }
       }
+      
+     // Check if the enumeration is used in any of the class's associations
+     String className = uClass.getName();
+     for (Association a : uClass.getAssociations()) {
+      validateEnumerationInAssociation(uEnum, a, className);
+     }
     }
   }
   
@@ -172,7 +178,7 @@ class UmpleInternalParser
     // Check if the class uses the enumeration in any of its attributes
     for (Attribute a : uClass.getAttributes()) {
      if (uEnum.hasSameName(a.getType())) {
-       if (!classUsesEnum && uEnum.hasSameName(uClass.getName())) {
+       if (!classUsesEnum && uEnum.hasSameName(className)) {
          // Naming Conflict Between Enumeration and Class Error
          getParseResult().addErrorMessage(new ErrorMessage(96, 
                                                            uEnum.getPosition(), 
@@ -198,7 +204,7 @@ class UmpleInternalParser
     for (Method m : uClass.getMethods()) {
       for (MethodParameter p : m.getMethodParameters()) {
         if (!m.getSourceFullName().equals(AUTO_GENERATED_METHOD) && uEnum.hasSameName(p.getType())) {
-          if (!classUsesEnum && uEnum.hasSameName(uClass.getName())) {
+          if (!classUsesEnum && uEnum.hasSameName(className)) {
             // Naming Conflict Between Enumeration and Class Error
             getParseResult().addErrorMessage(new ErrorMessage(96, 
                                                              uEnum.getPosition(), 
@@ -250,7 +256,7 @@ class UmpleInternalParser
                                                                 sm.getName(),
                                                                 uClass.getName()));
                return;
-             } else if (!classUsesEnum && uEnum.hasSameName(uClass.getName())) {
+             } else if (!classUsesEnum && uEnum.hasSameName(className)) {
                // Naming Conflict Between Enumeration and Class Error
                getParseResult().addErrorMessage(new ErrorMessage(96, 
                                                                  uEnum.getPosition(), 
@@ -276,5 +282,46 @@ class UmpleInternalParser
         }
       }
      }
+     
+     if (classUsesEnum) {
+       for (Association a : uClass.getAssociations()) {
+         validateEnumerationInAssociation(uEnum, a, className);
+       }
+     }
+  }
+  
+  /*
+   * Issue 1008 - A helper function that determines if an enumeration is valid in an association
+   */
+  private void validateEnumerationInAssociation(UmpleEnumeration uEnum, Association a, String className){
+    for (AssociationEnd ae : a.getEnds()) {
+      if (uEnum.hasSameName(ae.getClassName())) {
+        if (a.getIsLeftComposition() || a.getIsRightComposition()) {
+          // Enumeration Used In Composition Error
+          getParseResult().addErrorMessage(new ErrorMessage(105, 
+                                                            uEnum.getPosition(), 
+                                                            uEnum.getName(), 
+                                                            "" + uEnum.getPosition().getLineNumber(),
+                                                            "" + a.getPosition(0).getX(),
+                                                            className));
+        } else if (a.getIsLeftNavigable() && a.getIsRightNavigable()) {
+          // Enumeration Used In Bi-Directional Association Error
+          getParseResult().addErrorMessage(new ErrorMessage(104, 
+                                                            uEnum.getPosition(), 
+                                                            uEnum.getName(), 
+                                                            "" + uEnum.getPosition().getLineNumber(),
+                                                            "" + a.getPosition(0).getX(),
+                                                            className));
+        } else {
+          // Enumeration Used In Uni-Directional Association Warning
+          getParseResult().addErrorMessage(new ErrorMessage(106, 
+                                                            uEnum.getPosition(), 
+                                                            uEnum.getName(), 
+                                                            "" + uEnum.getPosition().getLineNumber(),
+                                                            "" + a.getPosition(0).getX(),
+                                                            ae.getClassName()));
+        }
+      }
+    }
   }
 }
