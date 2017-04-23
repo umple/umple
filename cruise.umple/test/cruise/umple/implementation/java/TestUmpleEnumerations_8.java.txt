@@ -1,0 +1,73 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class A
+{
+
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
+  public enum Month { O, P, Q }
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //A Attributes
+  private Month m;
+  private Month p;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public A(Month aM, Month aP)
+  {
+    m = aM;
+    p = aP;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setM(Month aM)
+  {
+    boolean wasSet = false;
+    m = aM;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setP(Month aP)
+  {
+    boolean wasSet = false;
+    p = aP;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public Month getM()
+  {
+    return m;
+  }
+
+  public Month getP()
+  {
+    return p;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "m" + "=" + (getM() != null ? !getM().equals(this)  ? getM().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "p" + "=" + (getP() != null ? !getP().equals(this)  ? getP().toString().replaceAll("  ","    ") : "this" : "null");
+  }
+}

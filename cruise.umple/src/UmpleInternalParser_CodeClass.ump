@@ -275,6 +275,11 @@ class UmpleInternalParser
         unanalyzedInvariants.put(aClass, new ArrayList<Token>());
       }
       unanalyzedInvariants.get(aClass).add(token);
+    }
+    else if (token.is("enumerationDefinition"))
+    {
+      // Issue 1008
+      analyzeEnumeration(token, aClass);
     }    
     else if (token.is("exception"))
     {
@@ -287,7 +292,7 @@ class UmpleInternalParser
     {
       lastComments.clear();
     }
-  }    
+  }  
 
   /**
    * Analyzes a comment to determine if it should be added into the list of currently parsed comments waiting to be added to

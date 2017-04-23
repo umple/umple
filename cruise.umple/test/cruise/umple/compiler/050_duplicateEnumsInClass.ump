@@ -1,0 +1,6 @@
+namespace example;
+
+class A{
+  enum Month {x,y,z}
+  enum Month {o,p,q}
+}

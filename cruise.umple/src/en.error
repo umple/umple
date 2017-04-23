@@ -87,6 +87,7 @@
 92: 2, "http://cruise.eecs.uottawa.ca/umple/Page|| (tempMethod != null && tempMethod.isIsAbstract())BeingDeveloped.html", Class {0} was not found to be a subclass of class {1}, as required in constraint. ;
 93: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class {0} was not found to be a superclass of class {1}, as required in constraint. ;
 94: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class {0} was not found to have an association to class {1}, as required in constraint. ;
+95: 2, "http://cruise.eecs.uottawa.ca/umple/E095DuplicateEnumerations.html", Detected duplicate enumeration '{0}' on line '{1}';
 
 # Messages relating to format of identifiers.
 100: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Class name '{0}' must be alphanumeric and start with an alpha character, or _  ;

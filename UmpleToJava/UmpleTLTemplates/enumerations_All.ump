@@ -1,0 +1,41 @@
+use enumeration.ump;
+
+class UmpleToJava {
+  enumerations_All <<!<</*enumerations_All*/>><<#
+  for (UmpleEnumeration umpleEnum : model.getEnums()) {
+     // Locally defined enumerations have priority over the Umple Model's enumerations
+     if (uClass.hasEnum(umpleEnum.getName())) {
+       continue;
+     }
+     
+     String enumName = StringFormatter.toPascalCase(umpleEnum.getName());
+     boolean classUsesEnum = classUsesEnum(enumName, uClass);
+
+     if (classUsesEnum) {
+       if (isFirst) {
+        appendln(realSb, "");
+        appendln(realSb, "");
+        appendln(realSb, "  //------------------------");
+        appendln(realSb, "  // ENUMERATIONS");
+        append(realSb, "  //------------------------");
+        appendln(realSb, "");
+        isFirst = false;
+       }
+       #>><<@ UmpleToJava.enumeration >><<#
+    }
+  }
+  
+  for (UmpleEnumeration umpleEnum : uClass.getEnums()) {
+    if (isFirst) {
+      appendln(realSb, "");
+      appendln(realSb, "");
+      appendln(realSb, "  //------------------------");
+      appendln(realSb, "  // ENUMERATIONS");
+      append(realSb, "  //------------------------");
+      appendln(realSb, "");
+      isFirst = false;
+    }
+    #>><<@ UmpleToJava.enumeration >><<#
+  }
+#>>!>>
+}

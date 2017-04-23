@@ -7,6 +7,7 @@ use attribute_Set_All.ump;
 use class_MethodDeclaration.ump;
 use constructor_Declare_All.ump;
 use delete_All.ump;
+use enumerations_All.ump;
 use equals.ump;
 use import_packages.ump;
 use members_AllAssociations.ump;
@@ -143,7 +144,9 @@ for (StateMachine smq : uClass.getStateMachines())
   
 #>>
 {
-  <<#getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
+  <<#
+  getEnumerationCode(realSb, model, uClass, isFirst);
+  getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
   getConstructorCode(realSb, model,uClass,gClass,gen,isFirst, false);
   getProxyReferenceCode(realSb, model,uClass);
   getDistributedMethodsCode(realSb, model,uClass);
@@ -156,7 +159,52 @@ for (StateMachine smq : uClass.getStateMachines())
   getExtraMethodsCode(realSb, model,uClass,gClass,gen,isFirst);
   getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
   return realSb;
-    } 
+    }
+    
+  private void getEnumerationCode(StringBuilder realSb, UmpleModel model, UmpleClass uClass, boolean isFirst)
+  {
+    #>><<@ UmpleToJava.enumerations_All >><<#
+  }
+  
+  /*
+   * Issue 1008 - A helper function to determine if a class uses an enum defined in the model
+   */
+  private boolean classUsesEnum(String enumName, UmpleClass uClass) 
+  {
+    // Check if the class has any attributes that use the enum
+     for (Attribute a : uClass.getAttributes()) {
+       if (a.getType().equals(enumName)) {
+         return true;
+       }
+     }
+     
+     // Check if the class has any methods that use the enum as their return type, or as parameters
+     for (Method m : uClass.getMethods()) {
+       if (m.getType().equals(enumName)) {
+         return true;
+       } else {
+         for (MethodParameter p : m.getMethodParameters()) {
+           if (p.getType().equals(enumName)) {
+             return true;
+           }
+         }
+       }
+      }
+     
+    // Check if the class has any event methods that use the enum in their parameters
+    for (StateMachine sm : uClass.getStateMachines()) {
+      for (Event e : sm.getEvents()) {
+        for (MethodParameter p : e.getParams()) {
+          if (p.getType().contentEquals(enumName)) {
+            return true;
+          }
+        }
+      }
+    }
+    
+    return false;
+  }
+   
     private String getDistributedMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
     {if(uClass.getHasProxyPattern()||uClass.getIsDistributed()){#>>
   //------------------------
@@ -183,9 +231,11 @@ for (StateMachine smq : uClass.getStateMachines())
 
     <<#}return realSb.toString();
     }
+  
     private String getMemberCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   { 
     String self="this";
+    
     if(uClass.getIsDistributed()&&model.getDistributePattern()==1)
       self="self";
   #>><<@ UmpleToJava.members_AllStatics >><<@ UmpleToJava.members_AllAttributes >><<@ UmpleToJava.members_AllStateMachines >><<@ UmpleToJava.members_AllDoActivities >><<@ UmpleToJava.members_AllAssociations >><<@ UmpleToJava.members_AllHelpers >>

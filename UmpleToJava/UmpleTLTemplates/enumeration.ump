@@ -1,0 +1,9 @@
+class UmpleToJava {
+  enumeration <<!<</*enumeration*/>><<#
+  append(realSb, "\n  public enum {0} { ", StringFormatter.toPascalCase(umpleEnum.getName()));
+  for (int i = 0; i < umpleEnum.getEnumValues().length - 1; i++) {
+    append(realSb, "{0}, ", StringFormatter.toPascalCase(umpleEnum.getEnumValue(i)));
+  }
+  append(realSb, "{0} }", StringFormatter.toPascalCase(umpleEnum.getEnumValue(umpleEnum.getEnumValues().length - 1)));
+#>>!>>
+}

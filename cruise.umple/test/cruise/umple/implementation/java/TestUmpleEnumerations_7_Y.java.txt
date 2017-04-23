@@ -1,0 +1,74 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Y
+{
+
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
+  public enum Month { Jan, Feb, Mar }
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Y State Machines
+  public enum Sm { s1, s2 }
+  private Sm sm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Y()
+  {
+    setSm(Sm.s1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public boolean goToS2(Month m)
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s1:
+        System.out.println(m);
+        setSm(Sm.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+  }
+
+  public void delete()
+  {}
+
+}

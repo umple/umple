@@ -1,0 +1,6 @@
+// In this example, the "Status" enumeration is defined for the "Student" class
+
+class Student {
+  enum Status { FullTime, PartTime }
+  Status status;
+}
