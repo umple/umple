@@ -380,8 +380,34 @@ class UmpleInternalParser
       // this method sets the isDistributed flag for classes.
         analyzeDistributedClasses();
         setParentClassesDefaultInterface();
+        checkAssociationsForDistributed();
+        //checkStaticVariablesIndistributedSystem();  
     }
   }
+private void checkAssociationsForDistributed()
+{
+  if(model.getDistributed()){
+    for (Association association : model.getAssociations()) 
+    {  
+      if (associationIsBetweenClassAndInterface (association)){continue;} 
+      if (associationIsBetweenClassAndTrait(association)){continue;} 
+      
+      AssociationEnd myEnd = association.getEnd(0);
+      AssociationEnd yourEnd = association.getEnd(1);
+    
+      if(getModel().getUmpleTraitTypeParameter(myEnd.getClassName()) || getModel().getUmpleTrait(myEnd.getClassName())!=null) return ;
+      if(getModel().getUmpleTraitTypeParameter(yourEnd.getClassName()) || getModel().getUmpleTrait(yourEnd.getClassName())!=null) return ;
+    
+      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
+      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
+      if(myClass.getIsDistributed()&& !yourClass.getIsDistributed()&&association.getIsRightNavigable())
+      {
+        getParseResult().addErrorMessage(new ErrorMessage(7002,association.getTokenPosition(),myClass.getName(),yourClass.getName()));
+      }
+
+    }
+}
+}
 
 /*
 * Parent of each class that has default interface must have default interface.
