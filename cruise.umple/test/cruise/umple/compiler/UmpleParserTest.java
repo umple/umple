@@ -2841,16 +2841,8 @@ public class UmpleParserTest
  
  // Issue 1008
  @Test
- public void attributeAmbiguityCausedByEnumeration() {
-   assertHasNoWarningsParse("053_attributeAmbiguityCausedByEnumeration1.ump");
-   assertHasWarningsParse("053_attributeAmbiguityCausedByEnumeration2.ump", 98);
-   assertHasNoWarningsParse("053_attributeAmbiguityCausedByEnumeration3.ump");
- }
- 
- // Issue 1008
- @Test
  public void methodParameterAmbiguityCausedByEnumeration() {
-   assertHasWarningsParse("054_methodParameterAmbiguityCausedByEnumeration1.ump", 102);
+   assertHasNoWarningsParse("054_methodParameterAmbiguityCausedByEnumeration1.ump");
    assertHasWarningsParse("054_methodParameterAmbiguityCausedByEnumeration2.ump", 102);
    assertHasNoWarningsParse("054_methodParameterAmbiguityCausedByEnumeration3.ump");
  }
@@ -2859,7 +2851,7 @@ public class UmpleParserTest
  @Test
  public void eventParameterAmbiguityCausedByEnumeration() {
    assertHasWarningsParse("055_eventParameterAmbiguityCausedByEnumeration1.ump", 103);
-   assertHasWarningsParse("055_eventParameterAmbiguityCausedByEnumeration2.ump", 103);
+   assertHasNoWarningsParse("055_eventParameterAmbiguityCausedByEnumeration2.ump");
    assertHasNoWarningsParse("055_eventParameterAmbiguityCausedByEnumeration3.ump");
  }
  
@@ -2867,17 +2859,15 @@ public class UmpleParserTest
  @Test
  public void enumerationInBidirectionalAssoc() {
   assertFailedParse("056_enumerationInBidirectionalAssoc1.ump", 104);
-  assertFailedParse("056_enumerationInBidirectionalAssoc2.ump", 104, 1);
-  assertHasNoWarningsParse("056_enumerationInBidirectionalAssoc3.ump");
+  assertHasNoWarningsParse("056_enumerationInBidirectionalAssoc2.ump");
  }
  
  //Issue 1008
  @Test
  public void enumerationInComposition() {
   assertFailedParse("057_enumerationInComposition1.ump", 105);
-  assertFailedParse("057_enumerationInComposition2.ump", 105, 1);
-  assertFailedParse("057_enumerationInComposition3.ump", 105);
-  assertHasNoWarningsParse("057_enumerationInComposition4.ump");
+  assertFailedParse("057_enumerationInComposition2.ump", 105);
+  assertHasNoWarningsParse("057_enumerationInComposition3.ump");
  }
 
  //Issue 1008
@@ -2885,8 +2875,7 @@ public class UmpleParserTest
  public void enumerationInUnidirectionalAssoc() {
   assertHasWarningsParse("058_enumerationInUnidirectionalAssoc1.ump", 106);
   assertHasWarningsParse("058_enumerationInUnidirectionalAssoc2.ump", 106);
-  assertHasWarningsParse("058_enumerationInUnidirectionalAssoc3.ump", 106, 1);
-  assertHasNoWarningsParse("058_enumerationInUnidirectionalAssoc4.ump");
+  assertHasNoWarningsParse("058_enumerationInUnidirectionalAssoc3.ump");
  }
  
   public boolean parse(String filename)

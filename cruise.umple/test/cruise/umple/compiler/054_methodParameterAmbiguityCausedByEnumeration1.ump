@@ -4,4 +4,4 @@ class X {
   showY(Y param) { System.out.println(param); }
 }
 
-class Y { }
+class Z { }

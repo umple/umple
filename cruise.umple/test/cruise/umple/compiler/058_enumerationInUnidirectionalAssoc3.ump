@@ -1,8 +1,6 @@
-enum Y{ Red, Blue, Green }
-
 class X {
-  Y attr;
-  0..1 <- * Y;
+  enum Y { Red, Blue, Green }
+  0..1 -> * Z;
 }
 
-class Y { }
+class Z { }
