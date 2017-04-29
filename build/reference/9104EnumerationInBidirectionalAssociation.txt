@@ -20,7 +20,3 @@ In Umple, enumerations cannot be used in bi-directional associations.
 @@example
 @@source manualexamples/E104EnumerationInBidirectionalAssociation2.ump
 @@endexample
-
-@@example
-@@source manualexamples/E104EnumerationInBidirectionalAssociation3.ump
-@@endexample

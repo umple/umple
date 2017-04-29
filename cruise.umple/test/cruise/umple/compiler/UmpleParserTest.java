@@ -2834,6 +2834,18 @@ public class UmpleParserTest
  
  // Issue 1008
  @Test
+ public void namingConflictBetweenEnumerationAndInterface() {
+   assertFailedParse("051_namingConflictBetweenEnumerationAndInterface1.ump", 96);
+ }
+ 
+ // Issue 1008
+ @Test
+ public void namingConflictBetweenEnumerationAndTrait() {
+   assertFailedParse("051_namingConflictBetweenEnumerationAndTrait1.ump", 96);
+ }
+ 
+ // Issue 1008
+ @Test
  public void enumerationConflictsWithStateMachine() {
    assertFailedParse("052_enumerationConflictsWithStateMachine1.ump", 97);
    assertFailedParse("052_enumerationConflictsWithStateMachine2.ump", 97);

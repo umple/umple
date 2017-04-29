@@ -35,10 +35,10 @@ class UmpleInternalParser
     }
     
     UmpleEnumeration umpleEnum = new UmpleEnumeration(enumToken.getSubToken("name").getValue());
+    umpleEnum.setPosition(enumToken.getPosition());
      for (Token subToken : enumToken.getSubTokens()) {
        if (subToken.is("enumValue")) {
          umpleEnum.addEnumValue(subToken.getValue());
-         umpleEnum.setPosition(enumToken.getPosition());
        }
      }     
      model.addEnum(umpleEnum);
@@ -58,10 +58,10 @@ class UmpleInternalParser
     }
     
     UmpleEnumeration umpleEnum = new UmpleEnumeration(enumToken.getSubToken("name").getValue());
+    umpleEnum.setPosition(enumToken.getPosition());
     for (Token subToken : enumToken.getSubTokens()) {
       if (subToken.is("enumValue")) {
         umpleEnum.addEnumValue(subToken.getValue());
-        umpleEnum.setPosition(enumToken.getPosition());
       }
     }     
     aClass.addEnum(umpleEnum);
@@ -83,16 +83,42 @@ class UmpleInternalParser
   /*
    * Issue 1008 - Check for any warnings or errors caused by model enumerations
    */
-  private void postTokenModelEnumerationAnalysis() {
+  private void postTokenModelEnumerationAnalysis(){
     for (UmpleEnumeration uEnum : model.getEnums()) {
+      // Check that the enumeration doesn't conflict with any interfaces
+      for (UmpleInterface uI : model.getUmpleInterfaces()) {
+        if (uEnum.hasSameName(uI.getName())) {
+          // Enumeration Naming Conflict
+          getParseResult().addErrorMessage(new ErrorMessage(96,
+                                                            uEnum.getPosition(), 
+                                                            uEnum.getName(), 
+                                                            "" + uEnum.getPosition().getLineNumber(),
+                                                            "" + uI.getPosition(0).getLineNumber()));
+          return;
+        }
+      }
+      
+      // Check that the enumeration doesn't conflict with any traits
+      for (UmpleTrait uT : model.getUmpleTraits()) {
+        if (uEnum.hasSameName(uT.getName())) {
+          // Enumeration Naming Conflict
+          getParseResult().addErrorMessage(new ErrorMessage(96,
+                                                            uEnum.getPosition(), 
+                                                            uEnum.getName(), 
+                                                            "" + uEnum.getPosition().getLineNumber(),
+                                                            "" + uT.getPosition(0).getLineNumber()));
+          return;
+        }
+      }
+      
       for (UmpleClass uClass : model.getUmpleClasses()) {
         if (uEnum.hasSameName(uClass.getName())) {
-         // Naming Conflict Between Enumeration and Class Error
+         // Enumeration Naming Conflict
          getParseResult().addErrorMessage(new ErrorMessage(96,
                                                            uEnum.getPosition(), 
                                                            uEnum.getName(), 
                                                            "" + uEnum.getPosition().getLineNumber(),
-                                                           uClass.getName()));
+                                                           "" + uClass.getPosition(0).getLineNumber()));
          return;
         }
         if (!uClass.hasEnum(uEnum.getName())) {
@@ -253,7 +279,7 @@ class UmpleInternalParser
                                                             uEnum.getPosition(), 
                                                             uEnum.getName(), 
                                                             "" + uEnum.getPosition().getLineNumber(),
-                                                            "" + a.getPosition(0).getY(),
+                                                            "" + a.getTokenPosition().getLineNumber(),
                                                             className));
         } else if (a.getIsLeftNavigable() && a.getIsRightNavigable()) {
           // Enumeration Used in Bi-Directional Association Error
@@ -261,7 +287,7 @@ class UmpleInternalParser
                                                             uEnum.getPosition(), 
                                                             uEnum.getName(), 
                                                             "" + uEnum.getPosition().getLineNumber(),
-                                                            "" + a.getPosition(0).getY(),
+                                                            "" + a.getTokenPosition().getLineNumber(),
                                                             className));
         } else {
           // Enumeration Used in Uni-Directional Association Warning
@@ -269,7 +295,7 @@ class UmpleInternalParser
                                                             uEnum.getPosition(), 
                                                             uEnum.getName(), 
                                                             "" + uEnum.getPosition().getLineNumber(),
-                                                            "" + a.getPosition(0).getY(),
+                                                            "" + a.getTokenPosition().getLineNumber(),
                                                             ae.getClassName()));
         }
       }

@@ -1,11 +1,8 @@
-// This example generates the warning. Enumeration "Y" is added to class "X" because
-// it has an attribute of type "Y"
-
-enum Y{ Red, Blue, Green }
+// This example does not generate the warning
 
 class X {
-  Y attr;
-  0..1 <- * Y;
+  enum Y { Red, Blue, Green }
+  0..1 -> * Z;
 }
 
-class Y { }
+class Z { }

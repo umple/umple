@@ -20,7 +20,3 @@ In Umple, enumerations cannot be used in compositions.
 @@example
 @@source manualexamples/E105EnumerationInComposition2.ump
 @@endexample
-
-@@example
-@@source manualexamples/E105EnumerationInComposition3.ump
-@@endexample

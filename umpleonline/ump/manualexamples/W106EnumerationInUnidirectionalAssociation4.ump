@@ -1,8 +1,0 @@
-// This example does not generate the warning
-
-class X {
-  enum Y { Red, Blue, Green }
-  0..1 -> * Z;
-}
-
-class Z { }

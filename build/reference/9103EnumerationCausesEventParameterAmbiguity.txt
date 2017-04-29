@@ -15,7 +15,3 @@ Umple semantic warning reported when an enumeration makes an event parameter's t
 @@example
 @@source manualexamples/W103EnumerationCausesEventParameterAmbiguity2.ump
 @@endexample
-
-@@example
-@@source manualexamples/W103EnumerationCausesEventParameterAmbiguity3.ump
-@@endexample

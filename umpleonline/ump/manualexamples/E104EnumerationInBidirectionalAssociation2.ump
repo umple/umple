@@ -1,11 +1,8 @@
-// This example generates the error. Enumeration "Y" is added to class "X" because it has an 
-// attribute of type "Y".
-
-enum Y { Red, Blue, Green }
+// This example does not generate the error
 
 class X {
-  Y attr;
-  0..1 -- * Y;
+  enum Y { Red, Blue, Green }
+  0..1 -- * Z;
 }
 
-class Y { }
+class Z { }

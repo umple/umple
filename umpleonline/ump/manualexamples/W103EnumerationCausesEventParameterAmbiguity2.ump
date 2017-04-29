@@ -1,9 +1,7 @@
-// This example generates the warning because "goToS2" has "param" which could be
-// either an object of class "Y" or the enumeration "Y"
-
-enum Y { Red, Blue, Green }
+// This example does not generate the warning
 
 class X {
+  enum Y { Red, Blue, Green }
   sm {
     s1 {
       goToS2(Y param) /{ System.out.println(param); } -> s2;
@@ -12,4 +10,4 @@ class X {
   }
 }
 
-class Y { }
+class Z { }
