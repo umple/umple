@@ -1,9 +1,9 @@
 //fix jjspaper size when resize window
-jQuery(window).resize(function(){
-	//Action.updateUmpleDiagram();
-	if( JJSdiagram.paper ) 
-	JJSdiagram.paper.setDimensions(jQuery("#umpleCanvas")[0].clientWidth, jQuery("#umpleCanvas")[0].clientHeight);
-})
+// jQuery(window).resize(function(){
+// 	//Action.updateUmpleDiagram();
+// 	if( JJSdiagram.paper ) 
+// 	JJSdiagram.paper.setDimensions(jQuery("#umpleCanvas")[0].clientWidth, jQuery("#umpleCanvas")[0].clientHeight);
+// })
 
 var JJSdiagram = {
 	associationIndex: 0,
