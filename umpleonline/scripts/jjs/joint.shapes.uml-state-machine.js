@@ -322,9 +322,6 @@ joint.shapes.uml_state_machine.Transition = joint.dia.Link.extend({
     }, joint.dia.Link.prototype.defaults)
 });
 
-
-//joint.shapes.uml_state_machine.StateNew = joint.shapes.
-//joint.shapes.uml_state_machine.StateNew = joint.shapes.uml.State.extend({
 joint.shapes.uml_state_machine.StateNew = joint.shapes.basic.Rect.extend({
 
     defaults: joint.util.deepSupplement({
@@ -332,13 +329,14 @@ joint.shapes.uml_state_machine.StateNew = joint.shapes.basic.Rect.extend({
         attrs: {
             rect: { stroke: 'none', 'fill-opacity': 0 }
         }
-    //}, joint.shapes.uml.State.prototype.defaults)
     }, joint.shapes.basic.Rect.prototype.defaults)
 });
 
 joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
     oldTimeout: null,
+
     targetInputSize: 9,
+
     template: [
         '<div class="html-element html-state">',
         '<button class="delete">x</button>',
@@ -350,8 +348,10 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
         '</div>',
         '</div>'
     ].join(''),
+
     initialize: function () {
         _.bindAll(this, 'updateBox');
+
         joint.dia.ElementView.prototype.initialize.apply(this, arguments);
 
         this.$box = jQuery(_.template(this.template)());
@@ -372,13 +372,8 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
         this.$box.find('.stateName').on('change', _.bind(function (e) {
             //update name in model
             this.model.set('name', jQuery(e.target).val());
-            //update box size/input size
-            //always keep the largest one
-            if (jQuery(e.target).val().length > this.targetInputSize) {
-                this.targetInputSize = jQuery(e.target).val().length;
-                this.$box.find('.stateName').prop('size', this.targetInputSize);
-                this.updateBox();
-            }
+
+            this.updateBox();
 
             //should update umple code here
         }, this));
@@ -418,50 +413,13 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
             this.$box.find('.stateName').prop('size', this.targetInputSize);
         }
 
-        //clear events
-        this.$box.find('.stateActions').empty();
+        this.rerenderEvent();
 
-        //re-render events
-        if (this.model.get('actions')) {
-            var i = 0;
-
-            for (i = 0; i < this.model.get('actions').length; i++) {
-                this.addEventBox(i, this.model.get('actions')[i]);
-            }
-            //add empty one
-            this.addEventBox(i);
-        }
-
-        //clear activities
-        this.$box.find('.stateActivities').empty();
-        //re-render events
-        if(this.model.get('activities') && this.model.get('activities').length > 0) {
-            this.$box.find('.stateActivities').append('Activities:');
-            var stateActivities = this.model.get('activities')[0].trim().split(" +");
-            var i = 0;
-            for (; i < stateActivities.length; i++) {
-                this.addActivityBox(i, stateActivities[i]);
-            }
-        }
-
+        this.rerenderActivity();
 
         this.addListeners();
-        //set box size
-        var boxSize = this.model.get('size');
-        boxSize['height'] = ( this.$box.find('.stateActions').children().size() + this.$box.find('.stateActivities').children().size()) * 12+ 50;
-        boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize*0.79);
-        this.model.set('size', boxSize);
 
-        bbox = this.model.getBBox();
-
-        this.$box.css({
-            width: bbox.width,
-            height: bbox.height,
-            left: bbox.x+100,
-            top: bbox.y+50,
-            transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
-        });
-
+        this.resetBoxsize();
     },
 
     removeBox: function (e) {
@@ -502,21 +460,22 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
         }, this));
 
         /**
-         * focus out event of input box
+         * when input focusout and last input box has value do the following
+         *  - increase the index
+         *  - add an extra empty input box
+         *  - add the new data to model.
+         *  - update code
          */
         this.$box.find('.eventInput input').off('focusout').on('focusout', _.bind(function (e) {
             e.target.readOnly = true;
-
-            //if the last input has value
-            //add an input box at the end.
-            //***there is a bug here-->when last --> val()!=='',
             if (this.$box.find('.stateActions input:last').val()) {
                 var tempIndex = this.$box.find('.stateActions input:last').data('eventIndex') + 1;
-                this.addEventBox(tempIndex);
+                this.addEventBox(tempIndex, "addEmptyInputBox_dw830o");
                 this.addListeners();
                 var temp = this.model.get('actions');
                 temp[jQuery(e.target).data('eventIndex')] = jQuery(e.target).val();
                 this.model.set('actions', temp);
+
                 //should update umple code here
             }
         }, this));
@@ -527,9 +486,6 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
         this.$box.find('.activityInput input').off('focusout').on('focusout', _.bind(function (e) {
             e.target.readOnly = true;
 
-            //if the last input has value
-            //add an input box at the end.
-            //***there is a bug here-->when last --> val()!=='',
             if (this.$box.find('.stateActivities input:last').val()) {
                 var tempIndex = this.$box.find('.stateActivities input:last').data('activityIndex') + 1;
                 this.addActivityBox(tempIndex);
@@ -565,6 +521,9 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
         if(!inputValue || inputValue.trim() === "") {
             return;
         }
+        else if(inputValue === "addEmptyInputBox_dw830o"){ 
+            inputValue = '';
+        }
         var updateFlag = false;
 
         //add input
@@ -575,47 +534,21 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
             this.$box.find('.stateActions').append('<div class="eventInput"><input size="' + this.targetInputSize + '" data-event-index="' + tempIndex + '" type="text" value="" placeholder="Add More" readonly/> <img class="deleteEvent" src="scripts/delete.png" alt="Del"></div>');
         }
 
-        //updated box height
-        var boxSize = this.model.get('size');
-        boxSize['height'] = ( this.$box.find('.stateActions').children().size() + this.$box.find('.stateActivities').children().size()) * 12 + 50;
-
-
-        //updated box width
-        //the function below is the same as updateBox, need refactor.
+        //updated box size
         for (var j = 0; j < this.$box.find('.stateActions input').size(); j++) {
             if (this.$box.find('.stateActions input')[j].value.length > this.targetInputSize) {
                 this.targetInputSize = this.$box.find('.stateActions input')[j].value.length;
                 updateFlag = true;
             }
         }
-        boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize*0.79);
 
-        this.model.set('size', boxSize);
-        var bbox = this.model.getBBox();
-        this.$box.css({
-            width: bbox.width,
-            height: bbox.height,
-            left: bbox.x+100,
-            top: bbox.y+50,
-            transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
-        });
+        this.resetBoxsize();
 
         setTimeout(_.bind(function () {
             if (updateFlag) {
-                //clear events
-                this.$box.find('.stateActions').empty();
-
-                //rerender events
-                var i = 0;
-
-                for (i = 0; i < this.model.get('actions').length; i++) {
-                    this.addEventBox(i, this.model.get('actions')[i]);
-                }
-
-                this.addEventBox(i);
+                this.rerenderEvent
 
                 this.addListeners();
-
             }
         }, this), 200);
     },
@@ -631,48 +564,70 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
             this.$box.find('.stateActivities').append('<div class="activityInput"><input size="' + this.targetInputSize + '" data-activity-index="' + tempIndex + '" type="text" value="" placeholder="Add More" readonly/></div>');
         }
 
-        //updated box height
-        var boxSize = this.model.get('size');
-        boxSize['height'] = ( this.$box.find('.stateActions').children().size() +this.$box.find('.stateActivities').children().size()) * 12 + 50;
-
-
-        //updated box width
-        //the function below is the same as updateBox, need refactor.
+        //updated box size
         for (var j = 0; j < this.$box.find('.stateActivities input').size(); j++) {
             if (this.$box.find('.stateActivities input')[j].value.length > this.targetInputSize) {
                 this.targetInputSize = this.$box.find('.stateActivities input')[j].value.length;
                 updateFlag = true;
             }
         }
-        boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize*0.79);
-
-        this.model.set('size', boxSize);
-        var bbox = this.model.getBBox();
-        this.$box.css({
-            width: bbox.width,
-            height: bbox.height,
-            left: bbox.x+100,
-            top: bbox.y+50,
-            transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
-        });
+        
+        this.resetBoxsize();
 
         setTimeout(_.bind(function () {
             if (updateFlag) {
-                //clear events
-                this.$box.find('.stateActivities').empty();
-
-                //rerender activities
-                var i = 0;
-
-                this.$box.find('.stateActivities').append('Activities:');
-                var stateActivities = this.model.get('activities')[0].trim().split(" +");
-                var i = 0;
-                for (; i < stateActivities.length; i++) {
-                    this.addActivityBox(i, stateActivities[i]);
-                }
+                this.rerenderActivity();
 
                 this.addListeners();
             }
         }, this), 200);
+    },
+
+    rerenderEvent: function(){
+        //clear events
+        this.$box.find('.stateActions').empty();
+
+        //re-render events
+        if (this.model.get('actions')) {
+            var i = 0;
+
+            for (i = 0; i < this.model.get('actions').length; i++) {
+                this.addEventBox(i, this.model.get('actions')[i]);
+            }
+            //add empty one
+            this.addEventBox(i, "addEmptyInputBox_dw830o");
+        }
+    },
+
+    rerenderActivity: function(){
+        //clear activities
+        this.$box.find('.stateActivities').empty();
+        //re-render events
+        if(this.model.get('activities') && this.model.get('activities').length > 0) {
+            this.$box.find('.stateActivities').append('Activities:');
+            var stateActivities = this.model.get('activities')[0].trim().split(" +");
+            var i = 0;
+            for (; i < stateActivities.length; i++) {
+                this.addActivityBox(i, stateActivities[i]);
+            }
+        }
+    },
+
+    resetBoxsize: function(){
+        //set box size
+        var boxSize = this.model.get('size');
+        boxSize['height'] = ( this.$box.find('.stateActions').children().size() + this.$box.find('.stateActivities').children().size()) * 12+ 50;
+        boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize*0.79);
+        this.model.set('size', boxSize);
+
+        bbox = this.model.getBBox();
+
+        this.$box.css({
+            width: bbox.width,
+            height: bbox.height,
+            left: bbox.x,
+            top: bbox.y,
+            transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
+        });
     }
 });

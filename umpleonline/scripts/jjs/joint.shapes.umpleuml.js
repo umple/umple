@@ -95,7 +95,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             var className = this.model.get('name');
             className[0] = jQuery(e.target).val();
             this.model.set('name', className);
-            
+
             //update box size
             this.updateBox();
 
@@ -103,14 +103,12 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             JJSdiagram.makeUmpleCodeFromClass('editClassName', this.model.toJSON(), oldName);
         }, this));
 
-        //this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
         this.$box.find('.delete').on('click', _.bind(function () {
             JJSdiagram.makeUmpleCodeFromClass('removeClass', this.model.toJSON());
             this.model.remove();
         }, this));
 
         //update the box position whenever the underlying model chanegs.
-        //this.model.on('change:position', this.updateBox, this);
         this.model.on('change', this.updateBox, this);
         this.model.on('change:position', this.updatePosition, this);
         this.model.on('remove', this.removeBox, this);
@@ -139,7 +137,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         }, this), 1000);
     },
 
-    updateBox: function ( donotupdate ) {
+    updateBox: function (donotupdate) {
         var bbox;
 
         //updating the HTML with a data stored in the cell model.
@@ -336,7 +334,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         }, this), 200);
     },
 
-    rerenderAttributes: function(){
+    rerenderAttributes: function () {
         //clear attributes
         this.$box.find('.classAttributes').empty();
 
@@ -355,7 +353,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         }
     },
 
-    rerenderMethods: function(){
+    rerenderMethods: function () {
         //clear methods
         this.$box.find('.classMethods').empty();
 
@@ -370,10 +368,10 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         }
     },
 
-    resetBoxsize: function(){
+    resetBoxsize: function () {
         //set box size
         var boxSize = this.model.get('size');
-        boxSize['height'] = (this.$box.find('.classAttributes').children().size() + this.$box.find('.classMethods').children().size()) * 12 + 40;
+        boxSize['height'] = (this.$box.find('.classAttributes').children().size() + this.$box.find('.classMethods').children().size()) * 14 + 30;
         boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize * 0.79);
         this.model.set('size', boxSize);
 

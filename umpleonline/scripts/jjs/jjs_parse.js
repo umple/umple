@@ -14,22 +14,14 @@ var JJSdiagram = {
 	JSONmodel: null,
 	diagram_type: null,
 
-	initJJSDiagram: function(container, model) {
+	initJJSDiagram: function (container, model) {
 		//clear all tools
 		Page.unselectAllToggleTools();
 
 		this.container = container;
 		this.JSONmodel = model;
 
-		// Modifying the JointJS uml.Class prototpye to add the icon indicating presence of state machines.
-		joint.shapes.uml.Class.prototype.markup = ['<g class="rotatable">',
-							'<g class="scalable">',
-							'<rect class="uml-class-name-rect"/><rect class="uml-class-attrs-rect"/><rect class="uml-class-methods-rect"/>',
-							'</g>',
-							'<rect class="sm-icon"/><text class="uml-class-name-text"/><text class="uml-class-attrs-text"/><text class="uml-class-methods-text"/>',
-							'</g>'
-							].join('');
-
+		//initialize paper for jjs
 		container.html('<div id="jjsPaper"></div>');
 
 		var graph = new joint.dia.Graph;
@@ -48,6 +40,107 @@ var JJSdiagram = {
 
 		JJSdiagram.setPaperListener();
 
+		JJSdiagram.setButtonsListener();
+
+		return this.paper;
+	},
+
+	//temp Dup function
+	setAssociationPathVertices: function (source, target) {
+		if (source === target) {
+			var cell = JJSdiagram.paper.model.getCell(source);
+			// example: {x: 255, y: 316, width: 181, height: 74, bbox: function, ...
+			var cellBBox = JJSdiagram.paper.findViewByModel(cell).getBBox();
+			// example: {x: 336, y: 89.5, adhereToRect: function, ...
+			var cellCenter = cellBBox.center();
+
+			var point1 = {
+				x: cellCenter.x - (cellBBox.width / 2) - 25,
+				y: cellCenter.y + 15
+			};
+			var point3 = {
+				x: cellCenter.x - 20,
+				y: cellCenter.y + (cellBBox.height / 2) + 25
+			};
+			var point2 = {
+				x: point1.x,
+				y: point3.y
+			};
+
+			return [point1, point2, point3];
+		}
+		else {
+			return [];
+		}
+	},
+
+	setPaperListener: function () {
+		//element click event
+		this.paper.on('cell:pointerclick',
+			function (cellView, evt, x, y) {
+				Action.selectClass(cellView.model.get('name')[0]);
+
+				if (Page.useJointJSClassDiagram && jQuery('.html-element button.delete').css('visibility') === 'hidden') {
+					jQuery('.html-element button.delete').css('visibility', 'visible');
+				}
+				else if (Page.useJointJSClassDiagram) {
+					jQuery('.html-element button.delete').css('visibility', 'hidden');
+				}
+			}
+		);
+
+		this.paper.on('cell:pointerdown',
+			function (cellView, evt, x, y) {
+				if (JJSdiagram.diagram_type === "UMLclass") {
+					var cellPosition = cellView.model.get('position');
+					// Make sure the user has clicked on a cellView (and not a transition)
+					if (cellPosition !== undefined && cellView.model.get('hasStateMachine')) {
+						// Determine if user has clicked on the state-machine icon
+						if (x - cellPosition.x < 18 && y - cellPosition.y < 18) {
+							// We recycle the JJSdiagram.paper by clearing out the current cells 
+							// and re-populating it with the state-machine cells.
+							var cellsToRemove = JJSdiagram.paper.model.getCells();
+							JJSdiagram.paper.model.removeCells(cellsToRemove);
+
+							JJSdiagram.makeUMLstateDiagram(cellView.model.id);
+						}
+					}
+				}
+				else {
+					if (cellView.model.id === "back_button") {
+						// Recycling the paper
+						var cellsToRemove = JJSdiagram.paper.model.getCells();
+						JJSdiagram.paper.model.removeCells(cellsToRemove);
+
+						// Resetting the origin change made in makeUMLstateDiagram
+						JJSdiagram.paper.setOrigin(0, 0);
+
+						JJSdiagram.makeUMLclassDiagram();
+					}
+				}
+			}
+		);
+
+		//remove listener
+		this.paper.model.on('remove', _.bind(function (cell) {
+			if (cell.isLink()) {
+				switch (cell.toJSON().type) {
+					case 'uml.Association':
+						JJSdiagram.makeUmpleCodeFromAssociation('removeAssociation', this.paper.model.getCell(cell.toJSON().source.id).toJSON(), this.paper.model.getCell(cell.toJSON().target.id).toJSON(), cell.toJSON());
+						break;
+					case 'uml.Generalization':
+						JJSdiagram.makeUmpleCodeFromGeneralization('removeGeneralization', this.paper.model.getCell(cell.toJSON().target.id).toJSON(), this.paper.model.getCell(cell.toJSON().source.id).toJSON());
+
+						break;
+					default:
+						console.log('JJSdiagram -->initJJSDiagram -->graph remove listener--> unknown type');
+						break;
+				}
+			}
+		}, this));
+	},
+
+	setButtonsListener: function () {
 		//JointJS UML
 		var uml = joint.shapes.uml;
 
@@ -60,7 +153,6 @@ var JJSdiagram = {
 			var x = e.clientX;
 			var y = e.clientY;
 			if (Page.useJointJSClassDiagram) {
-				//JJSdiagram.paper.off('cell:pointerclick');
 				jQuery('body').append('<div id="flyPaper" style="position:fixed;z-index:100;opacity:.5;pointer-event:none;"></div>');
 				var flyGraph = new joint.dia.Graph,
 					flyPaper = new joint.dia.Paper({
@@ -75,12 +167,11 @@ var JJSdiagram = {
 					flyShape = new umpleuml.Class({
 						position: { x: 20, y: 190 },
 						size: { width: 150, height: 80 },
-						name: ['NewClass'+JJSdiagram.newClassIndex],
+						name: ['NewClass' + JJSdiagram.newClassIndex],
 						attributes: [],
 						methods: []
 					}),
 
-					//?
 					pos = { x: e.clientX, y: e.clientY },
 					offset = {
 						x: x - pos.x,
@@ -115,7 +206,8 @@ var JJSdiagram = {
 					jQuery('#flyPaper').remove();
 				});
 			}
-		})
+		});
+
 		jQuery('#buttonAddAssociation').off('click').on('click.fly', function (e) {
 			if (Page.useJointJSClassDiagram) {
 				var clickcount = 0;
@@ -135,10 +227,10 @@ var JJSdiagram = {
 								{ position: .05, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } },
 								{ position: .95, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } }
 							],
-							vertices:JJSdiagram.setAssociationPathVertices(associationId, cellView.model.id),
-							umplename: "umpleAssociation_"+JJSdiagram.associationIndex
+							vertices: JJSdiagram.setAssociationPathVertices(associationId, cellView.model.id),
+							umplename: "umpleAssociation_" + JJSdiagram.associationIndex
 						});
-						link.set('connector', { name: 'jumpover', args: { type: 'gap' }});
+						link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
 						JJSdiagram.paper.model.addCell(link);
 						JJSdiagram.makeUmpleCodeFromAssociation('addJjsAccociation', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
 						JJSdiagram.paper.off('cell:pointerclick');
@@ -147,6 +239,7 @@ var JJSdiagram = {
 				});
 			}
 		});
+
 		jQuery('#buttonAddGeneralization').off('click').on('click.fly', function (e) {
 			if (Page.useJointJSClassDiagram) {
 				var clickcount = 0;
@@ -159,8 +252,8 @@ var JJSdiagram = {
 						associationId = cellView.model.id
 					}
 					if (clickcount === 2) {
-						var link = new uml.Generalization({ source: { id: cellView.model.id }, target: { id: associationId }});
-						link.set('connector', { name: 'jumpover', args: { type: 'gap' }});
+						var link = new uml.Generalization({ source: { id: cellView.model.id }, target: { id: associationId } });
+						link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
 						JJSdiagram.paper.model.addCell(link);
 						JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
 						JJSdiagram.paper.off('cell:pointerclick');
@@ -169,138 +262,12 @@ var JJSdiagram = {
 				});
 			}
 		});
-		jQuery('#buttonDeleteEntity').off('click').on('click', function(e){
-			//delete function for jointJS
-			if ( Page.useJointJSClassDiagram && jQuery('.html-element button.delete').css('visibility') === 'hidden' ) {
-				jQuery('.html-element button.delete').css('visibility', 'visible');
-			}
-			else if (Page.useJointJSClassDiagram) {
-				jQuery('.html-element button.delete').css('visibility', 'hidden');
-			}
-		});
-
-		//remove listener
-		graph.on('remove', _.bind(function (cell) {
-			if(cell.isLink()){
-				switch (cell.toJSON().type) {
-					case 'uml.Association':
-						this.makeUmpleCodeFromAssociation('removeAssociation',this.paper.model.getCell(cell.toJSON().source.id).toJSON(),this.paper.model.getCell(cell.toJSON().target.id).toJSON(), cell.toJSON());
-						break;
-					case 'uml.Generalization':
-						this.makeUmpleCodeFromGeneralization('removeGeneralization', this.paper.model.getCell(cell.toJSON().target.id).toJSON(),this.paper.model.getCell(cell.toJSON().source.id).toJSON());
-						
-						break;
-					default:
-						console.log('JJSdiagram -->initJJSDiagram -->graph remove listener--> unknown type');
-						break;
-				}
-			}
-		}, this));
-
-		return this.paper;
-	},
-
-	//temp Dup function
-	setAssociationPathVertices: function (source, target) {
-		if (source === target) {
-			var cell = JJSdiagram.paper.model.getCell(source);
-			// example: {x: 255, y: 316, width: 181, height: 74, bbox: function, ...
-			var cellBBox = JJSdiagram.paper.findViewByModel(cell).getBBox();
-			// example: {x: 336, y: 89.5, adhereToRect: function, ...
-			var cellCenter = cellBBox.center();
-
-			var point1 = {
-				x: cellCenter.x - (cellBBox.width / 2) - 25,
-				y: cellCenter.y + 15
-			};
-			var point3 = {
-				x: cellCenter.x - 20,
-				y: cellCenter.y + (cellBBox.height / 2) + 25
-			};
-			var point2 = {
-				x: point1.x,
-				y: point3.y
-			};
-
-			return [point1, point2, point3];
-		}
-		else {
-			return [];
-		}
-	},
-
-	setPaperListener: function() {
-		//element click event
-		this.paper.on('cell:pointerclick',
-			function (cellView, evt, x, y) {
-				Action.selectClass(cellView.model.get('name')[0]);
-			}
-		);
-
-		this.paper.on('cell:pointerdown', 
-			function(cellView, evt, x, y) { 
-				if (JJSdiagram.diagram_type === "UMLclass") {
-					var cellPosition = cellView.model.get('position');
-					// Make sure the user has clicked on a cellView (and not a transition)
-					if (cellPosition !== undefined && cellView.model.get('hasStateMachine') ) {
-						// Determine if user has clicked on the state-machine icon
-						if (x - cellPosition.x < 18 && y - cellPosition.y < 18) {
-							// We recycle the JJSdiagram.paper by clearing out the current cells 
-							// and re-populating it with the state-machine cells.
-							var cellsToRemove = JJSdiagram.paper.model.getCells();
-							JJSdiagram.paper.model.removeCells(cellsToRemove);
-
-							JJSdiagram.makeUMLstateDiagram(cellView.model.id);
-						}
-					}
-				}
-				// else JJSdiagram.diagram_type === "UMLstate"
-				else {
-					if (cellView.model.id === "back_button") {
-						// Recycling the paper
-						var cellsToRemove = JJSdiagram.paper.model.getCells();
-						JJSdiagram.paper.model.removeCells(cellsToRemove);
-
-						// Resetting the origin change made in makeUMLstateDiagram
-						JJSdiagram.paper.setOrigin(0, 0);
-
-						JJSdiagram.makeUMLclassDiagram();
-					}
-				}
-			}
-		);	
-
-		//connect by dropping
-		/*
-		this.paper.on('cell:pointerup', function (cellView, evt, x, y) {
-
-			// Find the first element below that is not a link nor the dragged element itself.
-			var elementBelow = JJSdiagram.paper.model.get('cells').find(function (cell) {
-				if (cell instanceof joint.dia.Link) return false; // Not interested in links.
-				if (cell.id === cellView.model.id) return false; // The same element as the dropped one.
-				if (cell.getBBox().containsPoint(g.point(x, y))) {
-					return true;
-				}
-				return false;
-			});
-
-			// If the two elements are connected already, don't
-			// connect them again (this is application specific though).
-			if (elementBelow && !_.contains(JJSdiagram.paper.model.getNeighbors(elementBelow), cellView.model)) {
-
-				JJSdiagram.paper.model.addCell(new joint.shapes.uml.Generalization({source: { id: cellView.model.id }, target: { id: elementBelow.id }}));
-				JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), elementBelow.id), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
-				// Move the element a bit to the side.
-				cellView.model.translate(0, 150);
-			}
-		});
-		*/
 	},
 
 	//return the object in JJS JSON that has certain id
-	getCurrentObject: function( jjsJson, selectedID ) {
-		for(var i = 0; i < jjsJson.cells.length; i++){
-			if(jjsJson.cells[i]['id'] == selectedID) return jjsJson.cells[i];
+	getCurrentObject: function (jjsJson, selectedID) {
+		for (var i = 0; i < jjsJson.cells.length; i++) {
+			if (jjsJson.cells[i]['id'] == selectedID) return jjsJson.cells[i];
 		}
 	},
 
@@ -611,8 +578,8 @@ var JJSdiagram = {
 						}
 						tempMed[0] = tempMed[0].slice(1);
 						tempMed[0] = tempMed[0].trim();
-						if(tempMed[0].slice(-2) === '()'){
-							tempMed[0] = tempMed[0].slice(0,-2);
+						if (tempMed[0].slice(-2) === '()') {
+							tempMed[0] = tempMed[0].slice(0, -2);
 						}
 						else {
 							tempParameters = tempMed[0].split("(").map(function (item) {
@@ -710,7 +677,7 @@ var JJSdiagram = {
 					tempMed = jjsJson.methods[k].split(":").map(function (item) {
 						return item.trim();
 					});
-					
+
 					/**
 					 * default type
 					 */
@@ -738,8 +705,8 @@ var JJSdiagram = {
 						}
 						tempMed[0] = tempMed[0].slice(1);
 						tempMed[0] = tempMed[0].trim();
-						if(tempMed[0].slice(-2) === '()'){
-							tempMed[0] = tempMed[0].slice(0,-2);
+						if (tempMed[0].slice(-2) === '()') {
+							tempMed[0] = tempMed[0].slice(0, -2);
 						}
 						else {
 							tempParameters = tempMed[0].split("(").map(function (item) {
@@ -776,7 +743,7 @@ var JJSdiagram = {
 				var oldMethodName;
 				var tempParameters = null;
 				tempMed = oldMethod.split(":").map(function (item) {
-						return item.trim();
+					return item.trim();
 				});
 
 				if (!(tempMed[0].charAt(0) === '-' || tempMed[0].charAt(0) === '#' || tempMed[0].charAt(0) === '~' || tempMed[0].charAt(0) === '+')) {
@@ -849,7 +816,7 @@ var JJSdiagram = {
 	},
 
 	//convert the diagram JSON to umple code
-	makeUmpleCodeFromAssociation: function( actionType, jjsJsonOne, jjsJsonTwo ){
+	makeUmpleCodeFromAssociation: function (actionType, jjsJsonOne, jjsJsonTwo) {
 		jjsJsonOne.position.height = jjsJsonOne.size.height;
 		jjsJsonOne.position.width = jjsJsonOne.size.width;
 		jjsJsonTwo.position.height = jjsJsonTwo.size.height;
@@ -871,7 +838,7 @@ var JJSdiagram = {
 			},
 			"multiplicityOne": "*",
 			"multiplicityTwo": "*",
-			"name": jjsJsonOne.name[0]+"__"+jjsJsonTwo.name[0],
+			"name": jjsJsonOne.name[0] + "__" + jjsJsonTwo.name[0],
 			"roleOne": "",
 			"roleTwo": "",
 			"isSymmetricReflexive": "false",
@@ -880,11 +847,11 @@ var JJSdiagram = {
 			"isLeftComposition": "false",
 			"isRightComposition": "false",
 			"color": "black",
-			"id": "umpleAssociation_"+this.associationIndex,
+			"id": "umpleAssociation_" + this.associationIndex,
 			"classOneId": jjsJsonOne.name[0],
 			"classTwoId": jjsJsonTwo.name[0]
 		};
-	
+
 		switch (actionType) {
 			case 'addJjsAccociation':
 				actionCode = "action=addAssociation&actionCode=";
@@ -905,7 +872,7 @@ var JJSdiagram = {
 				console.log('JJSdiagram.makeUmpleCodeFromAssociation: action type error.');
 				break;
 		}
-		
+
 		DiagramEdit.updateUmpleText({
 			actionCode: actionCode,
 			codeChange: true
@@ -913,7 +880,7 @@ var JJSdiagram = {
 	},
 
 	//convert the diagram JSON to umple code
-	makeUmpleCodeFromGeneralization: function( actionType, parent, child ){
+	makeUmpleCodeFromGeneralization: function (actionType, parent, child) {
 		parent.position.height = parent.size.height;
 		parent.position.width = parent.size.width;
 		child.position.height = child.size.height;
@@ -940,7 +907,7 @@ var JJSdiagram = {
 			default:
 				break;
 		}
-		
+
 
 		DiagramEdit.updateUmpleText({
 			actionCode: actionCode,
@@ -948,7 +915,7 @@ var JJSdiagram = {
 		});
 	},
 
-	makeUMLclassDiagram: function() {
+	makeUMLclassDiagram: function () {
 
 		this.diagram_type = "UMLclass";
 
@@ -965,15 +932,15 @@ var JJSdiagram = {
 		}
 
 		// Sort out the overlapping associations
-		JJSdiagram.paper.model.getCells().forEach(function(cell) {
-			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model,cell);
+		JJSdiagram.paper.model.getCells().forEach(function (cell) {
+			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model, cell);
 		});
 
 		// Auto-layout the model.
 		//joint.layout.DirectedGraph.layout(JJSdiagram.paper.model, { setLinkVertices: false });
 	},
 
-	makeUMLstateDiagram: function(UMLclassName) {
+	makeUMLstateDiagram: function (UMLclassName) {
 		this.diagram_type = "UMLstate";
 
 		var class_sms = _.find(JJSdiagram.JSONmodel.umpleClasses, { "name": UMLclassName }).stateMachines;
@@ -983,31 +950,23 @@ var JJSdiagram = {
 
 		// Make the back button and add it to the graph
 		var back = new joint.shapes.uml_state_machine.BackButton({
-			position: { x: 0, y: 0},
-			size: {width: 100, height: 40},
+			position: { x: 0, y: 0 },
+			size: { width: 100, height: 40 },
 			id: "back_button"
 		});
 		JJSdiagram.paper.model.addCell(back);
 
 		// Auto-layout the model.
-		joint.layout.DirectedGraph.layout(JJSdiagram.paper.model, { setLinkVertices: true, rankDir:"TB", nodeSep: 50, edgeSep: 80});
+		joint.layout.DirectedGraph.layout(JJSdiagram.paper.model, { setLinkVertices: true, rankDir: "TB", nodeSep: 50, edgeSep: 80 });
 
 		// Add the last states and transitions to the graph, after making the list FILO.
 		JJSdiagram.JJsParse.notYetAddedStatesStack.reverse()
-		JJSdiagram.JJsParse.notYetAddedStatesStack.forEach(function(cell) {
+		JJSdiagram.JJsParse.notYetAddedStatesStack.forEach(function (cell) {
 			cell.doEmbed(JJSdiagram.paper);
 			cell.updateRectangles(JJSdiagram.paper);
 		});
-		
+
 		JJSdiagram.paper.model.addCells(JJSdiagram.JJsParse.notYetAddedStatesStack);
-
-		// JJSdiagram.JJsParse.notYetAddedStatesStack.forEach(function (cell) {
-	 	// 	for(var i = 0; i<cell.get('nestedStates').length; i++){
-		// 		JJSdiagram.paper.model.getCell(cell.id).embed(JJSdiagram.paper.model.getCell(cell.get('nestedStates')[i]));
-		// 		//cell.updateRectangles(JJSdiagram.paper);
-		// 	 }
-
-		// });
 
 		JJSdiagram.paper.model.addCells(JJSdiagram.JJsParse.notYetAddedTransitionsStack);
 
@@ -1016,12 +975,12 @@ var JJSdiagram = {
 		JJSdiagram.JJsParse.notYetAddedTransitionsStack = [];
 
 		// Sort out overlapping transitions
-		JJSdiagram.paper.model.getCells().forEach(function(cell) {
-			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model,cell);
+		JJSdiagram.paper.model.getCells().forEach(function (cell) {
+			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model, cell);
 		});
 
 		// Because the auto-layout squeezes the diagram towards the left-hand side.
-		JJSdiagram.paper.setOrigin(100, 50);
+		// JJSdiagram.paper.setOrigin(100, 50);
 
 		var bbox = JJSdiagram.paper.model.getBBox(JJSdiagram.paper.model.getElements());
 		// This occurs when no model has been loaded.
@@ -1041,10 +1000,10 @@ var JJSdiagram = {
 
 			if (cell instanceof joint.dia.Element) {
 
-				_.chain(graph.getConnectedLinks(cell)).groupBy(function(link) {
+				_.chain(graph.getConnectedLinks(cell)).groupBy(function (link) {
 					// the key of the group is the model id of the link's source or target, but not our cell id.
 					return _.omit([link.get('source').id, link.get('target').id], cell.id)[0];
-				}).each(function(group, key) {
+				}).each(function (group, key) {
 					// If the member of the group has both source and target model adjust vertices.
 					if (key !== 'undefined') adjustVertices(graph, _.first(group));
 				});
@@ -1059,7 +1018,7 @@ var JJSdiagram = {
 			// If one of the ends is not a model, the link has no siblings.
 			if (!srcId || !trgId) return;
 
-			var siblings = _.filter(graph.getLinks(), function(sibling) {
+			var siblings = _.filter(graph.getLinks(), function (sibling) {
 
 				var _srcId = sibling.get('source').id;
 				var _trgId = sibling.get('target').id;
@@ -1069,55 +1028,55 @@ var JJSdiagram = {
 
 			switch (siblings.length) {
 
-			case 0:
-				// The link was removed and had no siblings.
-				break;
+				case 0:
+					// The link was removed and had no siblings.
+					break;
 
-			case 1:
-				// There is only one link between the source and target. No vertices needed.
+				case 1:
+					// There is only one link between the source and target. No vertices needed.
 
-				// Have commented this out, as the positive benefits are unknown,
-				//   but it certainly breaks the work established to make generalization links and self-referential associations
-				// cell.unset('vertices');
-				break;
+					// Have commented this out, as the positive benefits are unknown,
+					//   but it certainly breaks the work established to make generalization links and self-referential associations
+					// cell.unset('vertices');
+					break;
 
-			default:
+				default:
 
-				// There is more than one siblings. We need to create vertices.
+					// There is more than one siblings. We need to create vertices.
 
-				// First of all we'll find the middle point of the link.
-				var srcCenter = graph.getCell(srcId).getBBox().center();
-				var trgCenter = graph.getCell(trgId).getBBox().center();
-				var midPoint = g.line(srcCenter, trgCenter).midpoint();
+					// First of all we'll find the middle point of the link.
+					var srcCenter = graph.getCell(srcId).getBBox().center();
+					var trgCenter = graph.getCell(trgId).getBBox().center();
+					var midPoint = g.line(srcCenter, trgCenter).midpoint();
 
-				// Then find the angle it forms.
-				var theta = srcCenter.theta(trgCenter);
+					// Then find the angle it forms.
+					var theta = srcCenter.theta(trgCenter);
 
-				// This is the maximum distance between links
-				var gap = 20;
+					// This is the maximum distance between links
+					var gap = 20;
 
-				_.each(siblings, function(sibling, index) {
+					_.each(siblings, function (sibling, index) {
 
-					// We want the offset values to be calculated as follows 0, 20, 20, 40, 40, 60, 60 ..
-					var offset = gap * Math.ceil(index / 2);
+						// We want the offset values to be calculated as follows 0, 20, 20, 40, 40, 60, 60 ..
+						var offset = gap * Math.ceil(index / 2);
 
-					// Now we need the vertices to be placed at points which are 'offset' pixels distant
-					// from the first link and forms a perpendicular angle to it. And as index goes up
-					// alternate left and right.
-					//
-					//  ^  odd indexes 
-					//  |
-					//  |---->  index 0 line (straight line between a source center and a target center.
-					//  |
-					//  v  even indexes
-					var sign = index % 2 ? 1 : -1;
-					var angle = g.toRad(theta + sign * 90);
+						// Now we need the vertices to be placed at points which are 'offset' pixels distant
+						// from the first link and forms a perpendicular angle to it. And as index goes up
+						// alternate left and right.
+						//
+						//  ^  odd indexes 
+						//  |
+						//  |---->  index 0 line (straight line between a source center and a target center.
+						//  |
+						//  v  even indexes
+						var sign = index % 2 ? 1 : -1;
+						var angle = g.toRad(theta + sign * 90);
 
-					// We found the vertex.
-					var vertex = g.point.fromPolar(offset, angle, midPoint);
+						// We found the vertex.
+						var vertex = g.point.fromPolar(offset, angle, midPoint);
 
-					sibling.set('vertices', [{ x: vertex.x, y: vertex.y }]);
-				});
+						sibling.set('vertices', [{ x: vertex.x, y: vertex.y }]);
+					});
 			}
 		}
 	},
@@ -1144,13 +1103,13 @@ var JJSdiagram = {
 			return attributes;
 		},
 
-		addMethods: function(meths) {
+		addMethods: function (meths) {
 			// {type: "void", name: "setDoorTimer", parameters: "Integer", visibility: "public", isAbstract: "false"}
 			var methods = new Array();
 
 			var parseMethods = function (method) {
-				var text =  JJSdiagram.JJsParse.makeModifier(method.visibility) + " " + method.name + "(" + method.parameters + ") : " + method.type;
-				methods.push(text);  
+				var text = JJSdiagram.JJsParse.makeModifier(method.visibility) + " " + method.name + "(" + method.parameters + ") : " + method.type;
+				methods.push(text);
 			};
 
 			meths.forEach(parseMethods);
@@ -1166,7 +1125,7 @@ var JJSdiagram = {
 			return methods;
 		},
 
-		makeModifier: function(modifier) {
+		makeModifier: function (modifier) {
 			var symbol = "";
 			switch (modifier) {
 				case "public":
@@ -1183,53 +1142,53 @@ var JJSdiagram = {
 					break;
 				default:
 					symbol = "-";
-				}
+			}
 			return symbol;
 		},
 
-	    updateRectangles: function(UMLclass) {
+		updateRectangles: function (UMLclass) {
 
-	        var attrs = UMLclass.get('attrs');
+			var attrs = UMLclass.get('attrs');
 
-	        var rects = [
-	            { type: 'name', text: UMLclass.getClassName() },
-	            { type: 'attrs', text: UMLclass.get('attributes') },
-	            { type: 'methods', text: UMLclass.get('methods') }
-	        ];
+			var rects = [
+				{ type: 'name', text: UMLclass.getClassName() },
+				{ type: 'attrs', text: UMLclass.get('attributes') },
+				{ type: 'methods', text: UMLclass.get('methods') }
+			];
 
-	        var offsetY = 0, maxWidth = UMLclass.attributes.size.width;
+			var offsetY = 0, maxWidth = UMLclass.attributes.size.width;
 
-	        _.each(rects, function(rect) {
+			_.each(rects, function (rect) {
 
-	            var lines = _.isArray(rect.text) ? rect.text : [rect.text];
-	            var rectHeight = lines[0] != null ? lines.length * 9 + 10 : 0;
+				var lines = _.isArray(rect.text) ? rect.text : [rect.text];
+				var rectHeight = lines[0] != null ? lines.length * 9 + 10 : 0;
 
-		        // Calculate the longest attribute or method string
-	            lines.forEach(function(line) {
-	            	if (line !== null) {
-		            	if (line.length * 4 > maxWidth) {
-		            		maxWidth = line.length * 4;
-		            	}	            		
-	            	}
-	            });
+				// Calculate the longest attribute or method string
+				lines.forEach(function (line) {
+					if (line !== null) {
+						if (line.length * 4 > maxWidth) {
+							maxWidth = line.length * 4;
+						}
+					}
+				});
 
-	            attrs['.uml-class-' + rect.type + '-text'].text = lines.join('\n');
-	            attrs['.uml-class-' + rect.type + '-rect'].height = rectHeight;
-	            attrs['.uml-class-' + rect.type + '-rect'].transform = 'translate(0,' + offsetY + ')';
+				attrs['.uml-class-' + rect.type + '-text'].text = lines.join('\n');
+				attrs['.uml-class-' + rect.type + '-rect'].height = rectHeight;
+				attrs['.uml-class-' + rect.type + '-rect'].transform = 'translate(0,' + offsetY + ')';
 
-	            offsetY += rectHeight;
-	        });
+				offsetY += rectHeight;
+			});
 
-	        // Now resize the parent SVG to offsetY and the longest string
-	        var current_size = UMLclass.attributes.size;
-	        UMLclass.resize(maxWidth, offsetY);
-	    },
+			// Now resize the parent SVG to offsetY and the longest string
+			var current_size = UMLclass.attributes.size;
+			UMLclass.resize(maxWidth, offsetY);
+		},
 
 		makeClasses: function (model) {
 
 			var classes = new Array();
-			
-			var instantiate = function(UMLclass) {
+
+			var instantiate = function (UMLclass) {
 				var new_class;
 
 				if (UMLclass.isAbstract === "true") {
@@ -1271,7 +1230,7 @@ var JJSdiagram = {
 						attributes: Page.showAttributes ? JJSdiagram.JJsParse.addAttributes(UMLclass.attributes) : [],
 						methods: Page.showMethods ? JJSdiagram.JJsParse.addMethods(UMLclass.methods) : [],
 						id: UMLclass.id,
-						backgroundColor:UMLclass.displayColor,
+						backgroundColor: UMLclass.displayColor,
 						hasStateMachine: hasStateMachine
 					});
 
@@ -1282,9 +1241,11 @@ var JJSdiagram = {
 				}
 
 				// Update all class views to properly fit the contained text strings.
-				new_class.attr( {'.uml-class-attrs-text': { 'font-size': '7pt' },
-								'.uml-class-methods-text': { 'font-size': '7pt'} });
-				
+				new_class.attr({
+					'.uml-class-attrs-text': { 'font-size': '7pt' },
+					'.uml-class-methods-text': { 'font-size': '7pt' }
+				});
+
 				//JJSdiagram.JJsParse.updateRectangles(new_class);
 				//jQuery('.html-element').css('background-color', UMLclass.displayColor);
 				//set display color
@@ -1328,7 +1289,7 @@ var JJSdiagram = {
 							source: { id: UMLclass.id },
 							target: { id: UMLclass.extendsClass }
 						};
-					model.generalizationLinks.push(generalization);
+						model.generalizationLinks.push(generalization);
 					}
 				}
 			};
@@ -1336,7 +1297,7 @@ var JJSdiagram = {
 			var findInterfaces = function (UMLclass) {
 				if (UMLclass.implementedInterfaces !== undefined) {
 					if (UMLclass.implementedInterfaces !== []) {
-						UMLclass.implementedInterfaces.forEach( function (each) {
+						UMLclass.implementedInterfaces.forEach(function (each) {
 							var interfaceLink = {
 								source: { id: UMLclass.id },
 								target: { id: each.interfacesName }
@@ -1364,10 +1325,10 @@ var JJSdiagram = {
 			return classes;
 		},
 
-		makeAssociations: function(model) {
+		makeAssociations: function (model) {
 			var associations = new Array();
 
-			var setPathVertices = function(source, target) {
+			var setPathVertices = function (source, target) {
 				if (source === target) {
 					var cell = JJSdiagram.paper.model.getCell(source);
 					// example: {x: 255, y: 316, width: 181, height: 74, bbox: function, ...
@@ -1389,7 +1350,7 @@ var JJSdiagram = {
 					};
 
 					return [point1, point2, point3];
-				} 
+				}
 				else {
 					return [];
 				}
@@ -1402,33 +1363,33 @@ var JJSdiagram = {
 
 				if (UMLassoc.isRightComposition === "true" || UMLassoc.isLeftComposition === "true") {
 					new_assoc = new joint.shapes.uml.Composition({
-				        source: { id: (UMLassoc.isRightComposition === "true") ? UMLassoc.classOneId : UMLassoc.classTwoId },
-				        target: { id: (UMLassoc.isLeftComposition === "true")  ? UMLassoc.classOneId : UMLassoc.classTwoId },
-				        labels: [
-				        { position: .5, attrs: { text: { text: assoc_name || '', 'font-size': '8pt'} } },
-				        { position: .05, attrs: { text: { text: UMLassoc.multiplicityOne || '', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6'} } },
-				        { position: .95, attrs: { text: { text: UMLassoc.multiplicityTwo || '', 'font-size': '8pt'}, rect: { 'fill-opacity': '0.6'} } }
-				        ],
+						source: { id: (UMLassoc.isRightComposition === "true") ? UMLassoc.classOneId : UMLassoc.classTwoId },
+						target: { id: (UMLassoc.isLeftComposition === "true") ? UMLassoc.classOneId : UMLassoc.classTwoId },
+						labels: [
+							{ position: .5, attrs: { text: { text: assoc_name || '', 'font-size': '8pt' } } },
+							{ position: .05, attrs: { text: { text: UMLassoc.multiplicityOne || '', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } },
+							{ position: .95, attrs: { text: { text: UMLassoc.multiplicityTwo || '', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } }
+						],
 						vertices: setPathVertices(UMLassoc.classOneId, UMLassoc.classTwoId)
-		                // [{x: 0,y: 100}, {x: -100, y: 0}]
+						// [{x: 0,y: 100}, {x: -100, y: 0}]
 					});
 
 					new_assoc.attr('.marker-target', { d: 'M 20 5 L 10 10 L 0 5 L 10 0 z', fill: 'black' });
 				}
 				else {
 					new_assoc = new joint.shapes.uml.Association({
-				        source: { id: UMLassoc.classOneId },
-				        target: { id: UMLassoc.classTwoId },
-				        labels: [
-				        { position: .5, attrs: { text: { text: assoc_name || '', 'font-size': '8pt'} } },
-				        { position: .05, attrs: { text: { text: UMLassoc.multiplicityOne || '', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6'} } },
-				        { position: .95, attrs: { text: { text: UMLassoc.multiplicityTwo || '', 'font-size': '8pt'}, rect: { 'fill-opacity': '0.6'} } }
-				        ],
+						source: { id: UMLassoc.classOneId },
+						target: { id: UMLassoc.classTwoId },
+						labels: [
+							{ position: .5, attrs: { text: { text: assoc_name || '', 'font-size': '8pt' } } },
+							{ position: .05, attrs: { text: { text: UMLassoc.multiplicityOne || '', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } },
+							{ position: .95, attrs: { text: { text: UMLassoc.multiplicityTwo || '', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } }
+						],
 						vertices: setPathVertices(UMLassoc.classOneId, UMLassoc.classTwoId)
-		                // [{x: 0,y: 100}, {x: -100, y: 0}]
+						// [{x: 0,y: 100}, {x: -100, y: 0}]
 					});
 
-					new_assoc.set('connector', { name: 'jumpover', args: { type: 'gap' }});
+					new_assoc.set('connector', { name: 'jumpover', args: { type: 'gap' } });
 
 					if (UMLassoc.isLeftNavigable == "true" && UMLassoc.isRightNavigable == "false") {
 						new_assoc.attr('.marker-source', { d: 'M 15 0 L 0 7.5 L 15 15', fill: 'white' });
@@ -1437,8 +1398,8 @@ var JJSdiagram = {
 						new_assoc.attr('.marker-target', { d: 'M 15 0 L 0 7.5 L 15 15', fill: 'white' });
 					}
 
-			        // Can get rid of this once the CSS bugs are fixed
-					new_assoc.attr({ '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} });
+					// Can get rid of this once the CSS bugs are fixed
+					new_assoc.attr({ '.connection-wrap': { fill: 'none' }, '.connection': { fill: 'none' } });
 				}
 
 				associations.push(new_assoc);
@@ -1473,10 +1434,12 @@ var JJSdiagram = {
 			var instantiate = function (UMLgeneralization) {
 				UMLgeneralization.vertices = setPathVertices(UMLgeneralization.source.id, UMLgeneralization.target.id);
 				var new_generalization = new joint.shapes.uml.Generalization(UMLgeneralization)
-				new_generalization.set('connector', { name: 'jumpover', args: { type: 'gap' }});
-				new_generalization.attr({ '.connection-wrap': {fill: 'none'},
-										  '.connection': {fill: 'none'},
-										  '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'white' }});
+				new_generalization.set('connector', { name: 'jumpover', args: { type: 'gap' } });
+				new_generalization.attr({
+					'.connection-wrap': { fill: 'none' },
+					'.connection': { fill: 'none' },
+					'.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'white' }
+				});
 
 				generalizationLinks.push(new_generalization);
 			}
@@ -1492,8 +1455,10 @@ var JJSdiagram = {
 			var instantiate = function (UMLinterface) {
 				var new_interface = new joint.shapes.uml.Implementation(UMLinterface)
 
-				new_interface.attr({'.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'white' },
-       						        '.connection': { 'stroke-dasharray': '3,3' }});
+				new_interface.attr({
+					'.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'white' },
+					'.connection': { 'stroke-dasharray': '3,3' }
+				});
 
 				interfaceLinks.push(new_interface);
 			}
@@ -1517,15 +1482,15 @@ var JJSdiagram = {
 
 		notYetAddedTransitionsStack: [],
 
-		parseStateMachine: function(sm) {
+		parseStateMachine: function (sm) {
 
-			var instantiateState = function(state) {
+			var instantiateState = function (state) {
 				var cell;
 				var composite = false;
 
 				if (state.isfinal == true) {
-					cell = new joint.shapes.uml_state_machine.FinalState({ 
-						attrs: { text : { text: state.name }},
+					cell = new joint.shapes.uml_state_machine.FinalState({
+						attrs: { text: { text: state.name } },
 						id: state.name
 					});
 					JJSdiagram.paper.model.addCell(cell);
@@ -1539,8 +1504,8 @@ var JJSdiagram = {
 
 					// Get the names of all nested states (direct children only).
 					var nestedStates = [];
-					state.stateMachines.forEach(function(sm) {
-						sm.states.forEach(function(s) {
+					state.stateMachines.forEach(function (sm) {
+						sm.states.forEach(function (s) {
 							nestedStates.push(s.name);
 						});
 					});
@@ -1569,7 +1534,7 @@ var JJSdiagram = {
 				if (state.isstart == true) {
 					// Create a new pseudo-start state
 					var ps_name = "pseudo_start_" + state.name;
-					var ps = new joint.shapes.uml_state_machine.PseudoStart({ id: ps_name});
+					var ps = new joint.shapes.uml_state_machine.PseudoStart({ id: ps_name });
 					JJSdiagram.paper.model.addCell(ps);
 
 					// Create the transistion from pseudo-start to starting state.
@@ -1577,10 +1542,10 @@ var JJSdiagram = {
 						source: { id: ps_name },
 						target: { id: cell.id },
 						labels: [{ position: .5, attrs: { text: { text: 'start', 'font-weight': 'bold', 'font-size': 9 } } }],
-						attrs: { '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} }
+						attrs: { '.connection-wrap': { fill: 'none' }, '.connection': { fill: 'none' } }
 					});
 					//jumpover
-					link.set('connector', { name: 'jumpover', args: { type: 'gap' }});
+					link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
 					if (!composite) {
 						JJSdiagram.paper.model.addCell(link);
 					}
@@ -1590,7 +1555,7 @@ var JJSdiagram = {
 				}
 			};
 
-			var instantiateTransition = function(transition) {
+			var instantiateTransition = function (transition) {
 				// Must check whether both source and target are in the graph already.
 				var sourceCell = _.find(JJSdiagram.paper.model.getCells(), { "id": transition.source.id });
 				var targetCell = _.find(JJSdiagram.paper.model.getCells(), { "id": transition.target.id });
@@ -1598,14 +1563,14 @@ var JJSdiagram = {
 				var link = new joint.shapes.uml_state_machine.Transition(transition);
 
 				//jumpover
-				link.set('connector', { name: 'jumpover', args: { type: 'gap' }});
+				link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
 				// Can get rid of this once the CSS bugs are fixed
-				link.attr({ '.connection-wrap': {fill: 'none'}, '.connection': {fill: 'none'} });
+				link.attr({ '.connection-wrap': { fill: 'none' }, '.connection': { fill: 'none' } });
 
 				// Because the default font-size is 14
 				var labels = link.get('labels');
-				labels.forEach(function(label) {
-					_.extend(label.attrs.text, {'font-size': 9 });
+				labels.forEach(function (label) {
+					_.extend(label.attrs.text, { 'font-size': 9 });
 				});
 
 				if (sourceCell && targetCell) {
@@ -1617,8 +1582,8 @@ var JJSdiagram = {
 
 			};
 
-			var clearActionComments = function(state){
-				for(var actionIndex = 0; actionIndex < state.actions.length; actionIndex++) {
+			var clearActionComments = function (state) {
+				for (var actionIndex = 0; actionIndex < state.actions.length; actionIndex++) {
 					var commentPos = state.actions[actionIndex].indexOf('//');
 					state.actions[actionIndex] = state.actions[actionIndex].slice(0, commentPos);
 				}
@@ -1628,7 +1593,7 @@ var JJSdiagram = {
 
 			sm.states.forEach(instantiateState);
 
-			sm.transitions.forEach(instantiateTransition);			
+			sm.transitions.forEach(instantiateTransition);
 		}
 	}
 };
