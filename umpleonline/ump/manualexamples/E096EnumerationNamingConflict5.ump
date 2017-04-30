@@ -1,0 +1,7 @@
+// This example does not generate the error
+enum Z { Orange, Yellow }
+
+class X {
+ enum Y { Red, Blue, Green }
+ Z attr;
+}

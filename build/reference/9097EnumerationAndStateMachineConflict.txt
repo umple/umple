@@ -1,0 +1,26 @@
+E097 Enumeration and State Machine Conflict
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>
+Umple semantic error reported when an enumeration, and a state machine within the same class have the same name.
+</h2>
+
+<p>
+In Umple, enumerations and state machines within the same class cannot have the same name.
+</p>
+
+
+@@example
+@@source manualexamples/E097EnumerationAndStateMachineConflict1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E097EnumerationAndStateMachineConflict2.ump
+@@endexample
+
+@@example
+@@source manualexamples/E097EnumerationAndStateMachineConflict3.ump
+@@endexample

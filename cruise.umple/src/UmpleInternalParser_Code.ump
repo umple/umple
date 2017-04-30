@@ -235,6 +235,7 @@ class UmpleInternalParser
   {
     analyzeUSE(t, analysisStep);
     analyzeCoreToken(t,analysisStep);
+    analyzeEnumerationToken(t, analysisStep);
     analyzeClassToken(t,analysisStep);
     analyzeTraitToken(t,analysisStep);
     analyzeTemplateToken(t,analysisStep);
@@ -331,6 +332,11 @@ class UmpleInternalParser
     if (getParseResult().getWasSuccess())
     {
       postTokenModelConstraintAnalysis();
+    }
+    
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenEnumerationAnalysis();
     }
   }
   
@@ -481,3 +487,4 @@ use UmpleInternalParser_CodeLayout.ump;
 use UmpleInternalParser_CodeUSE.ump;
 use UmpleInternalParser_CodeFilter.ump;
 use UmpleInternalParser_CodeParserHandlers.ump;
+use UmpleInternalParser_CodeEnumeration.ump;

@@ -1,0 +1,22 @@
+W106 Enumeration in Uni-directional Association
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>
+Umple semantic warning reported when an enumeration is used in a uni-directional association.
+</h2>
+
+
+@@example
+@@source manualexamples/W106EnumerationInUnidirectionalAssociation1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W106EnumerationInUnidirectionalAssociation2.ump
+@@endexample
+
+@@example
+@@source manualexamples/W106EnumerationInUnidirectionalAssociation3.ump
+@@endexample

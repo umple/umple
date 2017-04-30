@@ -72,6 +72,9 @@ class UmpleModel
   internal int reflexiveSegmentLength = 15;
   
   internal List<File> linkedFiles = new ArrayList<File>();
+  
+  // The Umple Enumerations contained within the model
+  1 -> * UmpleEnumeration enums;
 
   // The Associations contained within the model.
   1 -> * Association;
@@ -481,6 +484,18 @@ class Key
 }
 
 /*
+ * Represents an enumeration
+ */
+ class UmpleEnumeration
+ {
+   depend cruise.umple.parser.Position;
+   
+   name;
+   String[] enumValues;
+   1 -> 0..1 Position;
+ }
+
+/*
  * Represents an Umple classifier: a Class or Interface
  */
 class UmpleClassifier
@@ -549,7 +564,7 @@ class UmpleClass
   Boolean isSingleton = false;
 
   Association[] associations;
-
+  
   // List of candidate methods that were not added to the class
   Method[] unimplementedMethods;
 
@@ -561,6 +576,9 @@ class UmpleClass
 
   1 -> * CodeInjection;
 
+  // Enumerations that belong to the Umple Class
+  1 -> * UmpleEnumeration enums;
+  
   //The possible Preconditions related to the Umple Class
   1 -> 0..* Precondition;
 
@@ -1090,3 +1108,4 @@ use UmpleVersion.ump;
 use UmpleDiagram.ump;
 use StateMachine.ump;
 use Umple_Code.ump;
+use UmpleEnumeration_Code.ump;

@@ -1,0 +1,143 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import java.util.*;
+
+public class X
+{
+
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
+  public enum Colour { Red, Blue, Green }
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  public static final int MY_CONST = 100;
+  private static Map<String, X> xsByMyName = new HashMap<String, X>();
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X Attributes
+  private String myName;
+  private String defaultAttr;
+
+  //X State Machines
+  public enum Sm { s1, s2 }
+  private Sm sm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X(String aDefaultAttr)
+  {
+    defaultAttr = aDefaultAttr;
+    if (!setMyName(aMyName))
+    {
+      throw new RuntimeException("Cannot create due to duplicate myName");
+    }
+    setSm(Sm.s1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setMyName(String aMyName)
+  {
+    boolean wasSet = false;
+    String anOldMyName = getMyName();
+    if (hasWithMyName(aMyName)) {
+      return wasSet;
+    }
+    myName = aMyName;
+    wasSet = true;
+    if (anOldMyName != null) {
+      xsByMyName.remove(anOldMyName);
+    }
+    xsByMyName.put(aMyName, this);
+    return wasSet;
+  }
+
+  public boolean setDefaultAttr(String aDefaultAttr)
+  {
+    boolean wasSet = false;
+    defaultAttr = aDefaultAttr;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getMyName()
+  {
+    return myName;
+  }
+
+  public static X getWithMyName(String aMyName)
+  {
+    return xsByMyName.get(aMyName);
+  }
+
+  public static boolean hasWithMyName(String aMyName)
+  {
+    return getWithMyName(aMyName) != null;
+  }
+
+  public String getDefaultAttr()
+  {
+    return defaultAttr;
+  }
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public boolean goToS2()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s1:
+        setSm(Sm.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+  }
+
+  public void delete()
+  {
+    xsByMyName.remove(getMyName());
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "myName" + ":" + getMyName()+ "," +
+            "defaultAttr" + ":" + getDefaultAttr()+ "]";
+  }
+}

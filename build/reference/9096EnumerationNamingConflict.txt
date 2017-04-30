@@ -1,0 +1,34 @@
+E096 Enumeration Naming Conflict
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>
+Umple semantic error reported when an enumeration defined in a class has the same name as the class, or when a model level enumeration has the same name as a class, interface, or trait.
+</h2>
+
+<p>
+In Umple, class enumerations must not have the same name as the class they are defined in. Model level enumerations must have unique names.
+</p>
+
+
+@@example
+@@source manualexamples/E096EnumerationNamingConflict1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E096EnumerationNamingConflict2.ump
+@@endexample
+
+@@example
+@@source manualexamples/E096EnumerationNamingConflict3.ump
+@@endexample
+
+@@example
+@@source manualexamples/E096EnumerationNamingConflict4.ump
+@@endexample
+
+@@example
+@@source manualexamples/E096EnumerationNamingConflict5.ump
+@@endexample

@@ -1,0 +1,17 @@
+W103 Enumeration Causes Event Parameter Ambiguity
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>
+Umple semantic warning reported when an enumeration makes an event parameter's type ambiguous. This occurs when there is another class that could also be the parameter's type.
+</h2>
+
+@@example
+@@source manualexamples/W103EnumerationCausesEventParameterAmbiguity1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W103EnumerationCausesEventParameterAmbiguity2.ump
+@@endexample

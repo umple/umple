@@ -88,6 +88,16 @@
 93: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class {0} was not found to be a superclass of class {1}, as required in constraint. ;
 94: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class {0} was not found to have an association to class {1}, as required in constraint. ;
 
+# Enumeration Errors and Warnings
+95: 2, "http://cruise.eecs.uottawa.ca/umple/E095DuplicateEnumerations.html", Detected duplicate enumeration '{0}' on line '{1}';
+96: 2, "http://cruise.eecs.uottawa.ca/umple/E096EnumerationNameConflict.html", Enumeration name '{0}' on line '{1}' conflicts with model element on line '{2}';
+97: 2, "http://cruise.eecs.uottawa.ca/umple/E097EnumerationAndStateMachineConflict.html", Enumeration '{0}' on line '{1}' conflicts with state machine '{2}' in class '{3}';
+102: 4, "http://cruise.eecs.uottawa.ca/umple/W102EnumerationCausesMethodParameterAmbiguity.html", Assuming enumeration '{0}' on line '{1}' as the type of parameter '{2}' for method '{3}' on line '{4}' instead of class '{5}';
+103: 4, "http://cruise.eecs.uottawa.ca/umple/W103EnumerationCausesEventParameterAmbiguity.html", Assuming enumeration '{0}' on line '{1}' as the type of parameter '{2}' for event '{3}' in state machine '{4}' instead of class '{5}';
+104: 2, "http://cruise.eecs.uottawa.ca/umple/E104EnumerationInBidirectionalAssociation.html", Cannot use enumeration '{0}' on line '{1}' in bidirectional association on line '{2}' in class '{3}'; 
+105: 2, "http://cruise.eecs.uottawa.ca/umple/E105EnumerationInComposition.html", Cannot use enumeration '{0}' on line '{1}' in composition on line '{2}' in class '{3}'; 
+106: 4, "http://cruise.eecs.uottawa.ca/umple/W106EnumerationInUnidirectionalAssociation.html", Assuming enumeration '{0}' on line '{1}' is used in unidirectional association on line '{2}' instead of class '{3}'; 
+
 # Messages relating to format of identifiers.
 100: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Class name '{0}' must be alphanumeric and start with an alpha character, or _  ;
 101: 4, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Class name '{0}' should start with a capital letter ;

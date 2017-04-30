@@ -183,4 +183,78 @@ public class JavaClassTemplateTest extends ClassTemplateTest
 				 			 "java/ClassTemplateTest_StateMachineDoesNotImplementInterface.java.txt",
 				 			 "FileLogger");
   }
+  
+  @Test
+  public void TestUmpleEnumerations(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations.ump",
+        "java/TestUmpleEnumerations.java.txt",
+        "Student");
+  }
+  
+  @Test
+  public void TestUmpleEnumerations_2(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_2.ump",
+        "java/TestUmpleEnumerations_2.java.txt",
+        "X");
+  }
+  
+  @Test
+  public void TestUmpleEnumerations_3(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_3.ump",
+        "java/TestUmpleEnumerations_3_c1.java.txt",
+        "C1");
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_3.ump",
+        "java/TestUmpleEnumerations_3_c2.java.txt",
+        "C2");
+  }
+  
+  @Test
+  public void TestUmpleEnumerations_4(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_4.ump",
+        "java/TestUmpleEnumerations_4_c1.java.txt",
+        "C1");
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_4.ump",
+        "java/TestUmpleEnumerations_4_c2.java.txt",
+        "C2");
+  }
+  
+  @Test
+  public void TestUmpleEnumerations_5(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_5.ump",
+        "java/TestUmpleEnumerations_5_X1.java.txt",
+        "X1");
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_5.ump",
+        "java/TestUmpleEnumerations_5_X2.java.txt",
+        "X2");
+  }
+  
+  @Test
+  public void TestUmpleEnumerations_6(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_6.ump",
+        "java/TestUmpleEnumerations_6_X.java.txt",
+        "X");
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_6.ump",
+        "java/TestUmpleEnumerations_6_X2.java.txt",
+        "X2");
+  }
+  
+  @Test
+  public void TestUmpleEnumerations_7(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_7.ump",
+        "java/TestUmpleEnumerations_7_X.java.txt",
+        "X");
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_7.ump",
+        "java/TestUmpleEnumerations_7_Y.java.txt",
+        "Y");
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_7.ump",
+        "java/TestUmpleEnumerations_7_Z.java.txt",
+        "Z");
+  }
+  
+  @Test
+  public void TestUmpleEnumerations_8(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_8.ump",
+        "java/TestUmpleEnumerations_8.java.txt",
+        "A");
+  }
 }

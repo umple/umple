@@ -1,0 +1,9 @@
+interface Y { 
+  name;
+}
+
+class X{
+  isA Y;
+}
+
+enum Y { Red, Blue, Green }

@@ -2749,7 +2749,7 @@ public class UmpleParserTest
 	assertParse("412_association_comment.ump");
   }
 
-  // Ensure error 1007 is returned for unrecogrnized lines
+  // Ensure error 1007 is returned for unrecognized lines
   // Test for issue 516 by M.K
   @Test
   public void assertSetFailedPosition() throws Exception {
@@ -2758,7 +2758,138 @@ public class UmpleParserTest
     assertHasWarningsParse("380_multipleNoLineEndingsClass.ump",1007);
     assertHasWarningsParse("380_multipleNoLineEndingsTrait.ump",1007);
   }
+  
+  // Issue 1008
+  @Test
+  public void parseUmpleEnumerationDefinedInClass() {
+    assertSimpleParse("050_enumerationDefinedInClass.ump");
+    UmpleClass uClass = model.getUmpleClass("Student");
+    Assert.assertEquals(3, uClass.getEnums().size());
 
+    Assert.assertEquals("status", uClass.getEnum(0).getName());
+    Assert.assertEquals("FullTime", uClass.getEnum(0).getEnumValue(0));
+    Assert.assertEquals("PartTime", uClass.getEnum(0).getEnumValue(1));
+
+    Assert.assertEquals("grade", uClass.getEnum(1).getName());
+    Assert.assertEquals("High", uClass.getEnum(1).getEnumValue(0));
+
+    Assert.assertEquals("relationshipStatus", uClass.getEnum(2).getName());
+    Assert.assertEquals("single", uClass.getEnum(2).getEnumValue(0));
+    Assert.assertEquals("married", uClass.getEnum(2).getEnumValue(1));
+    Assert.assertEquals("divorced", uClass.getEnum(2).getEnumValue(2));
+  }
+  
+  // Issue 1008
+  @Test
+  public void parseUmpleEnumerationDefinedAtTopLevel() {
+    assertSimpleParse("050_enumerationDefinedAtTopLevel.ump");
+    UmpleClass c1 = model.getUmpleClass("C1");
+    UmpleClass c2 = model.getUmpleClass("C2");
+    Assert.assertEquals(1, model.getEnums().size());
+    Assert.assertEquals(0, c1.getEnums().size());
+    Assert.assertEquals(0, c2.getEnums().size());
+    Assert.assertEquals("Status", model.getEnum(0).getName());
+    Assert.assertEquals("married", model.getEnum(0).getEnumValue(0));
+    Assert.assertEquals("single", model.getEnum(0).getEnumValue(1));
+    Assert.assertEquals("divorced", model.getEnum(0).getEnumValue(2));
+  }
+  
+//Issue 1008
+ @Test
+ public void parseUmpleEnumerationDefinedAtTopLevelAndInClass() {
+   assertSimpleParse("050_enumerationDefinedAtTopLevelAndInClass.ump");
+   UmpleClass c1 = model.getUmpleClass("C1");
+   UmpleClass c2 = model.getUmpleClass("C2");
+   Assert.assertEquals(1, model.getEnums().size());
+   Assert.assertEquals(0, c1.getEnums().size());
+   Assert.assertEquals(1, c2.getEnums().size());
+   Assert.assertEquals("Status", model.getEnum(0).getName());
+   Assert.assertEquals("married", model.getEnum(0).getEnumValue(0));
+   Assert.assertEquals("single", model.getEnum(0).getEnumValue(1));
+   Assert.assertEquals("divorced", model.getEnum(0).getEnumValue(2));
+   Assert.assertEquals("Gender", c2.getEnum(0).getName());
+   Assert.assertEquals("male", c2.getEnum(0).getEnumValue(0));
+   Assert.assertEquals("female", c2.getEnum(0).getEnumValue(1));
+ }
+ 
+ // Issue 1008
+ @Test
+ public void duplicateEnumerationsError() {
+   assertFailedParse("050_duplicateEnumerationsError.ump", 95);
+ }
+ 
+ //Issue 1008
+ @Test
+ public void duplicateEnumsInClass() {
+  assertFailedParse("050_duplicateEnumsInClass.ump", 95);
+ }
+
+ // Issue 1008
+ @Test
+ public void namingConflictBetweenEnumerationAndClass() {
+   assertFailedParse("051_namingConflictBetweenEnumerationAndClass1.ump", 96);
+   assertFailedParse("051_namingConflictBetweenEnumerationAndClass2.ump", 96);
+   assertFailedParse("051_namingConflictBetweenEnumerationAndClass3.ump", 96);
+ }
+ 
+ // Issue 1008
+ @Test
+ public void namingConflictBetweenEnumerationAndInterface() {
+   assertFailedParse("051_namingConflictBetweenEnumerationAndInterface1.ump", 96);
+ }
+ 
+ // Issue 1008
+ @Test
+ public void namingConflictBetweenEnumerationAndTrait() {
+   assertFailedParse("051_namingConflictBetweenEnumerationAndTrait1.ump", 96);
+ }
+ 
+ // Issue 1008
+ @Test
+ public void enumerationConflictsWithStateMachine() {
+   assertFailedParse("052_enumerationConflictsWithStateMachine1.ump", 97);
+   assertFailedParse("052_enumerationConflictsWithStateMachine2.ump", 97);
+ }
+ 
+ // Issue 1008
+ @Test
+ public void methodParameterAmbiguityCausedByEnumeration() {
+   assertHasNoWarningsParse("054_methodParameterAmbiguityCausedByEnumeration1.ump");
+   assertHasWarningsParse("054_methodParameterAmbiguityCausedByEnumeration2.ump", 102);
+   assertHasNoWarningsParse("054_methodParameterAmbiguityCausedByEnumeration3.ump");
+ }
+ 
+ // Issue 1008
+ @Test
+ public void eventParameterAmbiguityCausedByEnumeration() {
+   assertHasWarningsParse("055_eventParameterAmbiguityCausedByEnumeration1.ump", 103);
+   assertHasNoWarningsParse("055_eventParameterAmbiguityCausedByEnumeration2.ump");
+   assertHasNoWarningsParse("055_eventParameterAmbiguityCausedByEnumeration3.ump");
+ }
+ 
+ //Issue 1008
+ @Test
+ public void enumerationInBidirectionalAssoc() {
+  assertFailedParse("056_enumerationInBidirectionalAssoc1.ump", 104);
+  assertHasNoWarningsParse("056_enumerationInBidirectionalAssoc2.ump");
+ }
+ 
+ //Issue 1008
+ @Test
+ public void enumerationInComposition() {
+  assertFailedParse("057_enumerationInComposition1.ump", 105);
+  assertFailedParse("057_enumerationInComposition2.ump", 105);
+  assertHasNoWarningsParse("057_enumerationInComposition3.ump");
+ }
+
+ //Issue 1008
+ @Test
+ public void enumerationInUnidirectionalAssoc() {
+  assertHasWarningsParse("058_enumerationInUnidirectionalAssoc1.ump", 106);
+  assertHasWarningsParse("058_enumerationInUnidirectionalAssoc2.ump", 106);
+  assertHasNoWarningsParse("058_enumerationInUnidirectionalAssoc3.ump");
+ }
+ 
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));

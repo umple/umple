@@ -1,0 +1,16 @@
+namespace example;
+
+class X 
+{
+  enum colour {Red, Blue, Green} 
+  const MY_CONST = 100;
+  unique myName = "name";
+  defaultAttr;
+
+  sm {
+    s1 {
+      goToS2 -> s2;
+    }
+    s2 {}
+  }
+}

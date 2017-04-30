@@ -1,0 +1,24 @@
+E095 Duplicate Enumerations
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when duplicate enumerations are detected</h2>
+
+<p>
+In Umple, enumerations must have unique names.
+</p>
+
+
+@@example
+@@source manualexamples/E095DuplicateEnumerations1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E095DuplicateEnumerations2.ump
+@@endexample
+
+@@example
+@@source manualexamples/E095DuplicateEnumerations3.ump
+@@endexample

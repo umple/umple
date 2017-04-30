@@ -1,0 +1,12 @@
+namespace example;
+
+enum Month {january, february, March}
+enum Fruit {apple, orange}
+
+class X1{
+  Month month;
+}
+
+class X2{
+   Fruit t;
+}

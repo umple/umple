@@ -1,0 +1,8 @@
+// This example generates the error since the enumeration "X" will be added
+// to the class "X" because of attribute "t".
+
+enum X{ Red, Blue, Green }
+
+class X{
+  X t;
+}
