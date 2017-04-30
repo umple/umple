@@ -305,16 +305,18 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
 }
 
 .html-element input {
+    background: transparent;
     position: relative;
     bottom: 0;
     left: 0;
     right: 0;
-    border: none;
     color: #333;
     padding: 0px;
     height: 12px;
     font-family: arial, serif;
     font-size:12px;
+    border: none;
+    outline:none;
 }
 
 .html-element label {
@@ -354,6 +356,11 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     margin: 0;
 }
 
+.eventInput,
+.attributInput,
+.methodInput {
+  position: relative;
+}
 .eventInput .deleteEvent,
 .attributInput .deleteAttr,
 .methodInput .deleteMet {
@@ -361,7 +368,8 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     /* Enable interacting with inputs only. */
     pointer-events: auto;
     cursor: pointer;
-    float: right;
-    right: 2px;
+    position: absolute;
+    top:0.2em;
+    right:0;
     height: 12px;
 }

@@ -23,7 +23,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
     template: [
         '<div class="html-element">',
         '<button class="delete">x</button>',
-        '<img id="classIcon" src="scripts/class.png" alt="" width="13">',
+        '<img id="classIcon" style="position: absolute; top:.1em;left:.2em" src="scripts/class.png" alt="" width="13">',
         '<input size="9" type="text" class="className" readonly/>',
         '<div class="classAttributes">',
         '</div>',
@@ -372,7 +372,8 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         //set box size
         var boxSize = this.model.get('size');
         boxSize['height'] = (this.$box.find('.classAttributes').children().size() + this.$box.find('.classMethods').children().size()) * 14 + 30;
-        boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize * 0.79);
+        //boxSize['width'] = 50 + Math.floor(this.targetInputSize * 6.32);
+        boxSize['width'] = 30 + Math.floor(this.targetInputSize * 6);
         this.model.set('size', boxSize);
 
         //set the position and dimension of the box so that it covers the JointJS element.

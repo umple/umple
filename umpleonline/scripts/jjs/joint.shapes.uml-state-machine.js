@@ -617,7 +617,7 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
         //set box size
         var boxSize = this.model.get('size');
         boxSize['height'] = ( this.$box.find('.stateActions').children().size() + this.$box.find('.stateActivities').children().size()) * 12+ 50;
-        boxSize['width'] = 50 + Math.floor(8 * this.targetInputSize*0.79);
+        boxSize['width'] = 25 + Math.floor(this.targetInputSize*6);
         this.model.set('size', boxSize);
 
         bbox = this.model.getBBox();
