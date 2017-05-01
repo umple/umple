@@ -1499,9 +1499,6 @@ var JJSdiagram = {
 					// Pass each nested machine for parsing.
 					state.stateMachines.forEach(JJSdiagram.JJsParse.parseStateMachine);
 
-					//cell = new joint.shapes.uml_state_machine.StateNew(state);
-					//JJSdiagram.paper.model.addCell(cell);
-
 					// Get the names of all nested states (direct children only).
 					var nestedStates = [];
 					state.stateMachines.forEach(function (sm) {
@@ -1509,19 +1506,11 @@ var JJSdiagram = {
 							nestedStates.push(s.name);
 						});
 					});
+
 					state.nestedStates = nestedStates;
 
-					// var parentCell = JJSdiagram.paper.model.getCell(cell.id);
-
-					// state.stateMachines.forEach(function(sm){
-					// 	sm.states.forEach(function(s) {
-					// 		parentCell.embed(JJSdiagram.paper.model.getCell(s.id));
-					// 	});
-					// })
-
-
 					cell = new joint.shapes.uml_state_machine.CompositeState(state);
-					//cell = new joint.shapes.uml_state_machine.StateNew(state);
+					
 					//Then push that state's cell onto the stack
 					JJSdiagram.JJsParse.notYetAddedStatesStack.push(cell);
 					composite = true;
@@ -1541,7 +1530,6 @@ var JJSdiagram = {
 					var link = new joint.shapes.uml_state_machine.Transition({
 						source: { id: ps_name },
 						target: { id: cell.id },
-						labels: [{ position: .5, attrs: { text: { text: 'start', 'font-weight': 'bold', 'font-size': 9 } } }],
 						attrs: { '.connection-wrap': { fill: 'none' }, '.connection': { fill: 'none' } }
 					});
 					//jumpover
@@ -1582,6 +1570,7 @@ var JJSdiagram = {
 
 			};
 
+			//remove all the comments
 			var clearActionComments = function (state) {
 				for (var actionIndex = 0; actionIndex < state.actions.length; actionIndex++) {
 					var commentPos = state.actions[actionIndex].indexOf('//');

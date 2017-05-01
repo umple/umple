@@ -66,6 +66,15 @@ joint.shapes.uml_state_machine.CompositeState = joint.shapes.basic.Generic.exten
         this.get('nestedStates').forEach(function(name) {
             nestedCells.push(paper.model.getCell(name));
         });
+
+        //add start state by name
+        for(var i = 0; i < nestedCells.length; i++) {
+             if (nestedCells[i].get('isstart') === true) {
+                    var ps_name = "pseudo_start_" + nestedCells[i].get('name');
+                    var startcell = paper.model.getCell(ps_name);
+                    nestedCells.push(startcell);
+             }
+        }
         this.set({'nestedStates': nestedCells });
 
         var nestedCells = this.get('nestedStates');
