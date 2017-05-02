@@ -1588,7 +1588,6 @@ Action.updateUmpleDiagramCallback = function(response)
       if (Page.readOnly) 
       {
         jQuery("span.editable").addClass("uneditable");
-        // jQuery("div.umpleClass").addClass("unselectable");
       }
     }
     else if(Page.useJointJSClassDiagram) {
@@ -1608,7 +1607,13 @@ Action.updateUmpleDiagramCallback = function(response)
           var scaleFactor = 1 + (Math.abs(delta) / (delta * 10));
           paper.setDimensions(paperWidth * scaleFactor, paperHeight * scaleFactor)
 
-          paper.scaleContentToFit({padding: 15});
+          //correct paper sizing
+          if( JJSdiagram.paper ) 
+          JJSdiagram.paper.setDimensions(jQuery("#umpleCanvas")[0].clientWidth, jQuery("#umpleCanvas")[0].clientHeight);
+
+          //scale the content
+          //commented it out because the customized object does not scale
+          //paper.scaleContentToFit({padding: 15});
         }
       };
 

@@ -1,10 +1,3 @@
-//fix jjspaper size when resize window
-// jQuery(window).resize(function(){
-// 	//Action.updateUmpleDiagram();
-// 	if( JJSdiagram.paper ) 
-// 	JJSdiagram.paper.setDimensions(jQuery("#umpleCanvas")[0].clientWidth, jQuery("#umpleCanvas")[0].clientHeight);
-// })
-
 var JJSdiagram = {
 	associationIndex: 0,
 	newClassIndex: 0,
@@ -45,7 +38,7 @@ var JJSdiagram = {
 		return this.paper;
 	},
 
-	//temp Dup function
+	//set the paths
 	setAssociationPathVertices: function (source, target) {
 		if (source === target) {
 			var cell = JJSdiagram.paper.model.getCell(source);
@@ -121,7 +114,7 @@ var JJSdiagram = {
 			}
 		);
 
-		//remove listener
+		//remove listeners for association and generalization
 		this.paper.model.on('remove', _.bind(function (cell) {
 			if (cell.isLink()) {
 				switch (cell.toJSON().type) {
@@ -935,9 +928,6 @@ var JJSdiagram = {
 		JJSdiagram.paper.model.getCells().forEach(function (cell) {
 			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model, cell);
 		});
-
-		// Auto-layout the model.
-		//joint.layout.DirectedGraph.layout(JJSdiagram.paper.model, { setLinkVertices: false });
 	},
 
 	makeUMLstateDiagram: function (UMLclassName) {
@@ -1234,10 +1224,6 @@ var JJSdiagram = {
 						hasStateMachine: hasStateMachine
 					});
 
-					// if (hasStateMachine) {
-					// 	new_class.attr( {'.sm-icon': {'width': 13, 'height': 13	, 'fill': '#ff0000', 'transform': 'translate(3, 3)'}});
-					// }
-
 				}
 
 				// Update all class views to properly fit the contained text strings.
@@ -1245,39 +1231,6 @@ var JJSdiagram = {
 					'.uml-class-attrs-text': { 'font-size': '7pt' },
 					'.uml-class-methods-text': { 'font-size': '7pt' }
 				});
-
-				//JJSdiagram.JJsParse.updateRectangles(new_class);
-				//jQuery('.html-element').css('background-color', UMLclass.displayColor);
-				//set display color
-				/** need to be changed */
-				// switch (UMLclass.displayColor) {
-
-				// 	case "lightblue":
-				// 		jQuery('.html-element').css('background-color', UMLclass.displayColor);
-				// 		break;
-
-				// 	case "lightgreen":
-				// 		jQuery('.html-element').css('background-color', UMLclass.displayColor);
-				// 		break;
-
-				// 	case "pink":
-				// 		jQuery('.html-element').css('background-color', UMLclass.displayColor);
-				// 		break;
-
-				// 	case "lightgrey":
-				// 		jQuery('.html-element').css('background-color', UMLclass.displayColor);
-				// 		break;
-
-				// 	case "":
-				// 		jQuery('.html-element').css('background-color', '#ffffff');
-				// 		break;
-
-				// 	case "assigned":
-				// 		break;
-
-				// 	default:
-				// 		jQuery('.html-element').css('background-color', UMLclass.displayColor);
-				// }
 
 				classes.push(new_class);
 			};
@@ -1328,34 +1281,6 @@ var JJSdiagram = {
 		makeAssociations: function (model) {
 			var associations = new Array();
 
-			var setPathVertices = function (source, target) {
-				if (source === target) {
-					var cell = JJSdiagram.paper.model.getCell(source);
-					// example: {x: 255, y: 316, width: 181, height: 74, bbox: function, ...
-					var cellBBox = JJSdiagram.paper.findViewByModel(cell).getBBox();
-					// example: {x: 336, y: 89.5, adhereToRect: function, ...
-					var cellCenter = cellBBox.center();
-
-					var point1 = {
-						x: cellCenter.x - (cellBBox.width / 2) - 25,
-						y: cellCenter.y + 15
-					};
-					var point3 = {
-						x: cellCenter.x - 20,
-						y: cellCenter.y + (cellBBox.height / 2) + 25
-					};
-					var point2 = {
-						x: point1.x,
-						y: point3.y
-					};
-
-					return [point1, point2, point3];
-				}
-				else {
-					return [];
-				}
-			};
-
 			var instantiate = function (UMLassoc) {
 				var new_assoc;
 
@@ -1370,7 +1295,7 @@ var JJSdiagram = {
 							{ position: .05, attrs: { text: { text: UMLassoc.multiplicityOne || '', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } },
 							{ position: .95, attrs: { text: { text: UMLassoc.multiplicityTwo || '', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } }
 						],
-						vertices: setPathVertices(UMLassoc.classOneId, UMLassoc.classTwoId)
+						vertices: JJSdiagram.setAssociationPathVertices(UMLassoc.classOneId, UMLassoc.classTwoId)
 						// [{x: 0,y: 100}, {x: -100, y: 0}]
 					});
 
@@ -1385,7 +1310,7 @@ var JJSdiagram = {
 							{ position: .05, attrs: { text: { text: UMLassoc.multiplicityOne || '', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } },
 							{ position: .95, attrs: { text: { text: UMLassoc.multiplicityTwo || '', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } }
 						],
-						vertices: setPathVertices(UMLassoc.classOneId, UMLassoc.classTwoId)
+						vertices: JJSdiagram.setAssociationPathVertices(UMLassoc.classOneId, UMLassoc.classTwoId)
 						// [{x: 0,y: 100}, {x: -100, y: 0}]
 					});
 

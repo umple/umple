@@ -496,6 +496,7 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
 
         /**
          * focus out activities of input box
+         * same as the event box
          */
         this.$box.find('.activityInput input').off('focusout').on('focusout', _.bind(function (e) {
             e.target.readOnly = true;
