@@ -391,7 +391,7 @@ class JsonMixedGenerator
           s.getName(),
           parseStateActions(s),
           s.getIsStartState(),
-          s.getFinalState(),
+		  s.isFinalState(),
           internals,
           jsonForNestedMachines,
 		  parseStateActivities(s)

@@ -1923,11 +1923,6 @@ Action.ajax = function(callback,post,errors)
 {
   var modelAndPositioning = Page.getUmpleCode();
 
-  //test trim comments for jointjs state
-  // if (Page.useJointJSClassDiagram) {
-  //   modelAndPositioning = Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());
-  // }
-
   var umpleCode = encodeURIComponent(modelAndPositioning);
   var filename = Page.getFilename();
   // var errors = typeof(errors) != 'undefined' ? errors : "false";

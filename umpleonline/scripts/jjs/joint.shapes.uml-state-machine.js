@@ -67,17 +67,22 @@ joint.shapes.uml_state_machine.CompositeState = joint.shapes.basic.Generic.exten
             nestedCells.push(paper.model.getCell(name));
         });
 
+
+        this.set({'nestedStates': nestedCells });
+
+        var nestedCells = this.get('nestedStates');
+
         //add start state by name
-        for(var i = 0; i < nestedCells.length; i++) {
-             if (nestedCells[i].get('isstart') === true) {
-                    var ps_name = "pseudo_start_" + nestedCells[i].get('name');
+        for(var j = 0; j < nestedCells.length; j++) {
+             if (nestedCells[j].get('isstart') === true) {
+                    var ps_name = "pseudo_start_" + nestedCells[j].get('name');
                     var startcell = paper.model.getCell(ps_name);
                     nestedCells.push(startcell);
              }
         }
         this.set({'nestedStates': nestedCells });
-
         var nestedCells = this.get('nestedStates');
+
         for (var i = 0; i < nestedCells.length; i++) {
             this.embed(nestedCells[i]);            
         }
