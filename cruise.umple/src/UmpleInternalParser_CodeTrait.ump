@@ -744,14 +744,14 @@ class UmpleInternalParser
           if (getParseResult().getWasSuccess()) copyMethodsFromTraitToClass(uClass);
           if (getParseResult().getWasSuccess()) copyAssociationsFromTraitToClass(uClass);
           if (getParseResult().getWasSuccess()) copyStateMachinesFromTraiToClass(uClass);
-  				if (getParseResult().getWasSuccess()) {
-  				  for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
-  				    recursiveApplyTraits(uClass,uTrait);
-  				    if ( ! getParseResult().getWasSuccess() ) return;  
-  				  }  
-  				}
+          if (getParseResult().getWasSuccess()) {
+            for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
+              recursiveApplyTraits(uClass,uTrait);
+              if ( ! getParseResult().getWasSuccess() ) return;  
+            }  
+          }
         }
-  		}
+      }
       if (getParseResult().getWasSuccess()) checkAllRequiredMethodsAndInterfaces();
     }	
   }
@@ -801,7 +801,7 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 	for (GeneralTemplateParameter gtParameter : model.getUmpleTrait(inGeneralTPAppliedByName.getInheritanceName()).getGeneralTemplateParameters()){
 		String bindingValue= inGeneralTPAppliedByName.getParameterMapping().get(gtParameter.getName());
 		if (bindingValue==null && gtParameter.getDefaultValue()!=null) continue;
-		if (bindingValue.equals("Integer") | bindingValue.equals("Float") | bindingValue.equals("String")| bindingValue.equals("Double")| bindingValue.equals("Date")| bindingValue.equals("Time")){
+		if (bindingValue.equals("Boolean")| bindingValue.equals("Integer") | bindingValue.equals("Float") | bindingValue.equals("String")| bindingValue.equals("Double")| bindingValue.equals("Date")| bindingValue.equals("Time")){
 			if (gtParameter.numberOfInterfacesAndClass()>0){
 				getParseResult().addErrorMessage( new ErrorMessage( 221, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName()) ); 
 			 	return;	
@@ -886,7 +886,7 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
     	 if (! method.isIsAbstract()){ 
     	 	 Method newMethod = new Method(method);
     	 	 ApplyTypeParametersToMethod(newMethod,inGTPApplied,inTrait);
-    	 	 newMethod.getMethodBody().getCodeblock().ApplyTypeParameters(inGTPApplied);
+    	 	 newMethod.getMethodBody().getCodeblock().ApplyTypeParameters(inGTPApplied,inTrait);
  			 methods.add(newMethod);
 	 	 }
 	 }
@@ -955,58 +955,59 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
-private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationVariable, GeneralTPApplied inGeneralTPApplied,UmpleClass inClass, UmpleTrait inTrait) {  
-  String rawLName = "";
-  String lName="";
-  String rawRName = "";
-  String rName = "";
-  UmpleClass relatedClass=null;
-  UmpleInterface relatedInterface = null; 
-  boolean bidirectional = inAssociationVariable.getRelatedAssociation().getIsNavigable();
-  if (inGeneralTPApplied != null) {
-	 	for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
-			String newName = inGeneralTPApplied.getParameterMapping().get(strType);
-			if (inAssociationVariable.getType().equals(strType)){
-		        //----------------------------------------------------------------
-		        if (inAssociationVariable.getName().length()==0){
-			        rawRName = StringFormatter.toCamelCase(newName);
-			        rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;        	
-		        } else{
-			        rawRName = StringFormatter.toCamelCase(inAssociationVariable.getName());
-			        rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;        		        	
-		        }
-				relatedClass = getModel().getUmpleClass(newName);
-				if (bidirectional && relatedClass==null){
-					setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
-					return;
-				}
-		        if (inAssociationVariable.getRelatedAssociation().getName().length()==0){
-					rawLName = StringFormatter.toCamelCase(inClass.getName());
-			        lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;	
-		        } else {
-		        	rawLName = StringFormatter.toCamelCase(inAssociationVariable.getRelatedAssociation().getName());
-			        lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;
-		        }
-		        addAssociation(lName,rName, inAssociationVariable,inClass,relatedClass);
-		        return;
-		        //----------------------------------------------------------------		    
-			}
-		}	
-	}
-  rName = inAssociationVariable.getName();
-  relatedClass = getModel().getUmpleClass(inAssociationVariable.getType());
-  if (relatedClass==null){
-	relatedInterface = getModel().getUmpleInterface(inAssociationVariable.getType());
-	if (bidirectional){
-		setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
-		return;
-	} else {
-		relatedClass = new UmpleClass(relatedInterface.getName());	
-	}
+  private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationVariable, GeneralTPApplied inGeneralTPApplied,UmpleClass inClass, UmpleTrait inTrait) {  
+    
+    String rawLName = "";
+    String lName="";
+    String rawRName = "";
+    String rName = "";
+    UmpleClass relatedClass=null;
+    UmpleInterface relatedInterface = null; 
+    boolean bidirectional = inAssociationVariable.getRelatedAssociation().getIsNavigable();
+    if (inGeneralTPApplied != null || inTrait.getGeneralTemplateParameters().size()>0) {
+      for (GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()){
+        String newName = (inGeneralTPApplied!=null && inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName())) ? inGeneralTPApplied.getParameterMapping().get(gtp.getName()) : gtp.getDefaultValue();
+        if (inAssociationVariable.getType().equals(gtp.getName())){
+              //----------------------------------------------------------------
+              if (inAssociationVariable.getName().length()==0){
+                rawRName = StringFormatter.toCamelCase(newName);
+                rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;          
+              } else{
+                rawRName = StringFormatter.toCamelCase(inAssociationVariable.getName());
+                rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;                      
+              }
+          relatedClass = getModel().getUmpleClass(newName);
+          if (bidirectional && relatedClass==null){
+            setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
+            return;
+          }
+              if (inAssociationVariable.getRelatedAssociation().getName().length()==0){
+            rawLName = StringFormatter.toCamelCase(inClass.getName());
+                lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;  
+              } else {
+                rawLName = StringFormatter.toCamelCase(inAssociationVariable.getRelatedAssociation().getName());
+                lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;
+              }
+              addAssociation(lName,rName, inAssociationVariable,inClass,relatedClass);
+              return;
+              //----------------------------------------------------------------        
+        }
+      }
+    }
+    rName = inAssociationVariable.getName();
+    relatedClass = getModel().getUmpleClass(inAssociationVariable.getType());
+    if (relatedClass==null){
+  	relatedInterface = getModel().getUmpleInterface(inAssociationVariable.getType());
+  	if (bidirectional){
+  		setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
+  		return;
+  	} else {
+  		relatedClass = new UmpleClass(relatedInterface.getName());	
+  	}
+    }
+    lName=inAssociationVariable.getRelatedAssociation().getName();
+    addAssociation(lName,rName, inAssociationVariable,inClass,relatedClass);
   }
-  lName=inAssociationVariable.getRelatedAssociation().getName();
-  addAssociation(lName,rName, inAssociationVariable,inClass,relatedClass);
-}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
@@ -1243,8 +1244,12 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
   private void checkTypeParametersValid(UmpleClassifier inUmpleClassifier, UmpleTrait uTrait) {
     if (uTrait.numberOfGeneralTemplateParameters()>0){
       boolean requireGTPApplied = false;
+       String requiredTPName = "";
       for (GeneralTemplateParameter gtp :uTrait.getGeneralTemplateParameters()){
-        if (gtp.getDefaultValue().equals("")) requireGTPApplied = true;
+        if (gtp.getDefaultValue().equals("")){
+          requireGTPApplied = true;
+          requiredTPName = gtp.getName();
+        }
       }     
       if (requireGTPApplied){
         boolean find = false;
@@ -1253,7 +1258,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
           if(gTPApplied.getInheritanceName().equals(uTrait.getName()))  find = true; 
         }
         if (!find){
-          getParseResult().addErrorMessage( new ErrorMessage( 219, inUmpleClassifier.getPosition(0), uTrait.getGeneralTemplateParameter(0).getName(), uTrait.getName() ) ); 
+          getParseResult().addErrorMessage( new ErrorMessage( 219, inUmpleClassifier.getPosition(0),requiredTPName , uTrait.getName() ) ); 
           return;
         }
       }
@@ -1792,14 +1797,14 @@ private boolean CheckAttComeFromTraitsIsAvaialbleInOtherTraits(	Map<UmpleTrait, 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-	private GeneralTPApplied getNewGeneralTPAppliedWithP2P(UmpleTrait inTrait, UmpleTrait uTrait,GeneralTPApplied inGTPApplied) {
-	 	GeneralTPApplied newGeneralTPApplied = null;
-	 	if (inTrait.getGeneralTPAppliedByName(uTrait.getName()) !=null) {
-	 		newGeneralTPApplied = new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName()));
+  private GeneralTPApplied getNewGeneralTPAppliedWithP2P(UmpleTrait inTrait, UmpleTrait uTrait,GeneralTPApplied inGTPApplied) {
+    GeneralTPApplied newGeneralTPApplied = null;
+    if (inTrait.getGeneralTPAppliedByName(uTrait.getName()) !=null) {  
+      newGeneralTPApplied = new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName()));
       ApplyTypeParametersToTypeParameters(newGeneralTPApplied,inGTPApplied,inTrait);
     }
-		return newGeneralTPApplied;
-	}
+    return newGeneralTPApplied;
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
