@@ -2754,6 +2754,46 @@ public class UmpleTraitTest {
 
 	}
 
+	
+	@Test
+	public void InterfaceForTemplates007() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0076.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(0).getType(),"String");
+	}
+	
+	@Test
+	public void InterfaceForTemplates008() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0077.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(0).getType(),"Integer");
+	}	
+	
+	@Test
+	public void InterfaceForTemplates009() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0078.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(0).getType(),"Integer");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(1).getType(),"Boolean");
+	}
+	
+	@Test
+	public void InterfaceForTemplates010() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0079.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(0).getType(),"Integer");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(1).getType(),"String");
+	}
+	
+	@Test
+	public void InterfaceForTemplates011() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0080.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(0).getType(),"String");
+	}
+	
+	@Test
+	public void InterfaceForTemplates012() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0081.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(0).getType(),"Integer");
+	}
+	
+	
 	@Test
 	public void RequiredInterfaces001() {
 		String code = "class A{isA T;isA I;} interface I{} interface II{} trait T{isA I;isA II;}";
