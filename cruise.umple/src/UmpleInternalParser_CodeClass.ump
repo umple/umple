@@ -1154,8 +1154,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         String name = extendsToken.getValue("extendsName") != null?extendsToken.getValue("extendsName"):extendsToken.getValue("extendsNames");
         extendsList.add(name);
         extendsTokenList.add(extendsToken); // With this line we really don't need the above, todo: refactor
-        unlinkedExtends.put(aClassifier, extendsList);
-        unlinkedExtendsTokens.put(aClassifier, extendsTokenList);
+        if (unlinkedExtends.containsKey(aClassifier)){
+          if (!unlinkedExtends.get(aClassifier).contains(name)) unlinkedExtends.get(aClassifier).add(name);
+        } else{
+          unlinkedExtends.put(aClassifier, extendsList);
+        }       
+        if (unlinkedExtendsTokens.containsKey(aClassifier)){
+          if (!unlinkedExtendsTokens.get(aClassifier).contains(extendsToken)) unlinkedExtendsTokens.get(aClassifier).add(extendsToken);
+        } else{
+          unlinkedExtendsTokens.put(aClassifier, extendsTokenList);
+        }
         extendName = extendsToken.getValue("extendsName");
       } else if (extendsToken.getValue("gTemplateParameter") !=null ){
     	  processGTemplateParameterAssignment(extendsToken, aClassifier, extendName);

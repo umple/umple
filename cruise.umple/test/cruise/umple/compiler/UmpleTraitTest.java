@@ -2854,6 +2854,13 @@ public class UmpleTraitTest {
 		Assert.assertTrue(model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getAction().getActionCode().contains("Integer a;"));
 	}
 	
+	
+	@Test
+	public void mixin001() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0092.ump");
+		Assert.assertEquals(model.getUmpleClass("A").numberOfMethods(),3);
+	}
+	
 	@Test
 	public void RequiredInterfaces001() {
 		String code = "class A{isA T;isA I;} interface I{} interface II{} trait T{isA I;isA II;}";
