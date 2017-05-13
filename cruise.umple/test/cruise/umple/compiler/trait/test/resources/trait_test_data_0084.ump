@@ -1,0 +1,13 @@
+class A{
+  isA T;
+}
+
+trait T<TP = String, TP2=Integer>{
+  isA T2<TP=TP2>;
+}
+trait T2<TP=String>{
+  void getData(TP d1){
+    //
+  } 
+}
+

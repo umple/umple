@@ -1,0 +1,18 @@
+class A{
+  isA T;
+}
+
+trait T<TP = String>{
+  isA T2<TP=TP>;
+}
+trait T2<TP>{
+    sm{
+    s1{
+      e2(TP p) -> s2;
+    }
+    s2{
+      
+    }
+  }
+}
+

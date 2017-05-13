@@ -83,7 +83,13 @@ class UmpleInternalParser
   	 * Go through the included traits.
   	 */
   	for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-  		tempTraitStateMachine = gatherStateMachinesFromTrait(uTrait,inTrait.getGeneralTPAppliedByName(uTrait.getName()),inClass);	 
+	    GeneralTPApplied newGTParameter = inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null ? new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName())) : null;
+      if (newGTParameter!=null){
+        ApplyTypeParametersToTypeParameters(newGTParameter, inGTPApplied,inTrait);       
+         checkClassSupportTraitsInterfaces(newGTParameter,inTrait);
+       }
+      if ( ! getParseResult().getWasSuccess() ) return traitStateMachine; 
+  		tempTraitStateMachine = gatherStateMachinesFromTrait(uTrait,getNewGeneralTPAppliedWithP2P(inTrait,uTrait,inGTPApplied),inClass);	 
   		if ( ! getParseResult().getWasSuccess() ) return traitStateMachine;
   		if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine,tempTraitStateMachine,inTrait)) return traitStateMachine;
   		AddStateMachineMapToAnother(traitStateMachine,tempTraitStateMachine);
@@ -116,7 +122,7 @@ class UmpleInternalParser
 		for(Map.Entry<UmpleTrait, List<StateMachine>> entry : traitStateMachine2.entrySet()){
 			List<StateMachine> mustBeRemoved =  new ArrayList<StateMachine>();	
 			for (StateMachine sMachine : entry.getValue()) {
-		  	 	StateMachine stTemp = CompeletlyAllyTypeParametersToStateMachines(sMachine,inGTPApplied);
+		  	 	StateMachine stTemp = CompeletlyAllyTypeParametersToStateMachines(sMachine,inGTPApplied,inTrait);
 		  		if (stTemp==null) mustBeRemoved.add(sMachine);
 		  	}
 			for(StateMachine sm : mustBeRemoved)	traitStateMachine2.get(entry.getKey()).remove(sm);
@@ -425,12 +431,12 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-	private StateMachine CompeletlyAllyTypeParametersToStateMachines(StateMachine inSMachine, GeneralTPApplied inGTPApplied) {
+	private StateMachine CompeletlyAllyTypeParametersToStateMachines(StateMachine inSMachine, GeneralTPApplied inGTPApplied, UmpleTrait inTrait) {
 		StateMachine stTemp = ApplyRemoveAndInclude(inSMachine,inGTPApplied);
 		if (stTemp!=null) stTemp = ApplyTypeParametersToStateMachine(inSMachine,inGTPApplied);		
 		if (stTemp!=null)	{
-			ApplyTypeParametersToEventsOfStateMachines(stTemp, inGTPApplied);
-			ApplyTypeParametersToActionCodesOfStateMachines(stTemp, inGTPApplied);
+			ApplyTypeParametersToEventsOfStateMachines(stTemp, inGTPApplied,inTrait);
+			ApplyTypeParametersToActionCodesOfStateMachines(stTemp, inGTPApplied,inTrait);
 		}	
 		return stTemp;
 	}
@@ -754,29 +760,29 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
- private void ApplyTypeParametersToEventsOfStateMachines(StateMachine inStateMachine, GeneralTPApplied inGeneralTPApplied){
-   if (inGeneralTPApplied == null) return;
-   for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
-     String newName = inGeneralTPApplied.getParameterMapping().get(strType);
-     for(Event e : inStateMachine.getAllEvents()){
-       for(MethodParameter p : e.getParams()){
-         if (p.getType().equals(strType)){
-           p.setType(newName);
-         }
-       }
-     }
-   }
- }
+  private void ApplyTypeParametersToEventsOfStateMachines(StateMachine inStateMachine, GeneralTPApplied inGeneralTPApplied, UmpleTrait inTrait){
+    if (inGeneralTPApplied == null && inTrait.getGeneralTemplateParameters().size()==0) return;
+    for (GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()){
+      String newName = (inGeneralTPApplied!=null && inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName())) ? inGeneralTPApplied.getParameterMapping().get(gtp.getName()) : gtp.getDefaultValue();
+      for(Event e : inStateMachine.getAllEvents()){
+         for(MethodParameter p : e.getParams()){
+           if (p.getType().equals(gtp.getName())){
+             p.setType(newName);
+          }
+        }
+      }
+    }
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-  private void ApplyTypeParametersToActionCodesOfStateMachines(StateMachine inStateMachine, GeneralTPApplied inGeneralTPApplied){
-   if (inGeneralTPApplied == null) return;
-   for (Transition transition : inStateMachine.getAllTransitions()){
+  private void ApplyTypeParametersToActionCodesOfStateMachines(StateMachine inStateMachine, GeneralTPApplied inGeneralTPApplied,UmpleTrait inTrait){
+    if (inGeneralTPApplied == null && inTrait.getGeneralTemplateParameters().size()==0) return;
+    for (Transition transition : inStateMachine.getAllTransitions()){
     if (transition.getAction()!=null )
-      transition.getAction().getCodeblock().ApplyTypeParameters(inGeneralTPApplied);
-   }
- }  
+      transition.getAction().getCodeblock().ApplyTypeParameters(inGeneralTPApplied,inTrait);
+    }
+  }  
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  

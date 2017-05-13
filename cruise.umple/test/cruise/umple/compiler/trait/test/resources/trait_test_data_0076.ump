@@ -1,0 +1,6 @@
+class A{
+  isA T;
+}
+trait T<TP = String>{
+  TP att;
+}

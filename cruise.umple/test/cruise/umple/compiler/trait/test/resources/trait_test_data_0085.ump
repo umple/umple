@@ -1,0 +1,12 @@
+class A{
+  isA T;
+}
+
+trait T<TP = C>{
+  0..1 -> * TP; 
+}
+
+class B{}
+class C{}
+
+
