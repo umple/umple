@@ -792,18 +792,13 @@ class UmpleInternalParser
     	for (StateMachine tSMachine : inTempTraitStateMachine.get(uTrait)) {
 				Map<StateMachine,String> listBeRemoved = new HashMap<StateMachine, String>();
 				for(StateMachine cSMachine : inClass.getStateMachines()){
-					if (compareStateMachineName(cSMachine, tSMachine)){
-						getParseResult().addErrorMessage(new ErrorMessage(226,inClass.getPosition(0),tSMachine.getName(),uTrait.getName(),"class",inClass.getName()));
-						return false;
-					}else {
-						if (cSMachine.getName().equals(tSMachine.getName())){
-							if (!cSMachine.getStartState().getName().equals(tSMachine.getStartState().getName())){
-								StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(cSMachine,tSMachine);
-								if (checkSM!=null) listBeRemoved.put(checkSM,cSMachine.getName());
-								tListBeRemoved.add(tSMachine);
-							} else {
-							addExtraStatesAndTransitions(cSMachine, tSMachine,inClass);	
-							}
+					if (cSMachine.getName().equals(tSMachine.getName())){
+						if (!cSMachine.getStartState().getName().equals(tSMachine.getStartState().getName())){
+							StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(cSMachine,tSMachine);
+							if (checkSM!=null) listBeRemoved.put(checkSM,cSMachine.getName());
+							tListBeRemoved.add(tSMachine);
+						} else {
+						addExtraStatesAndTransitions(cSMachine, tSMachine,inClass);	
 						}
 					}
 				}
@@ -836,33 +831,16 @@ class UmpleInternalParser
 				for(UmpleTrait uTrait : inTraitStateMachine.keySet()){
 					Map<StateMachine,StateMachine> listBeRemoved = new HashMap<StateMachine, StateMachine>();
 					for (StateMachine sMachine : inTraitStateMachine.get(uTrait)) {
-						if (compareStateMachineName(sMachine, tSMachine)){
-							if (inUmpleClassifier instanceof UmpleTrait){
-								if (uTrait.equals(((UmpleTrait)inUmpleClassifier)) ){
-									getParseResult().addErrorMessage(new ErrorMessage(226,inUmpleClassifier.getPosition(0),sMachine.getName(),tUTrait.getName(),"trait",inUmpleClassifier.getName()));
-									return false;
-								}	else if(!tUTrait.equals(uTrait)) {
-									getParseResult().addErrorMessage(new ErrorMessage(227,inUmpleClassifier.getPosition(0),sMachine.getName(),tUTrait.getName(),"trait",inUmpleClassifier.getName(),uTrait.getName()));
-									return false;
-								}															
-							} else if(inUmpleClassifier instanceof UmpleClass){
-								if(!tUTrait.equals(uTrait)){
-									getParseResult().addErrorMessage(new ErrorMessage(227,inUmpleClassifier.getPosition(0),sMachine.getName(),tUTrait.getName(),"class",inUmpleClassifier.getName(),uTrait.getName()));
-									return false;
-								}
+						if (sMachine.getName().equals(tSMachine.getName())){
+							if (!sMachine.getStartState().getName().equals(tSMachine.getStartState().getName())){
+								StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(sMachine,tSMachine);
+								if (checkSM!=null)	listBeRemoved.put(checkSM,sMachine);
+								mustBeRemoved.add(tSMachine);
+							} else {
+								addExtraStatesAndTransitions(sMachine, tSMachine,inUmpleClassifier);
+								mustBeRemoved.add(tSMachine);
 							}
-						} else {
-							if (sMachine.getName().equals(tSMachine.getName())){
-								if (!sMachine.getStartState().getName().equals(tSMachine.getStartState().getName())){
-									StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(sMachine,tSMachine);
-									if (checkSM!=null)	listBeRemoved.put(checkSM,sMachine);
-									mustBeRemoved.add(tSMachine);
-								} else {
-									addExtraStatesAndTransitions(sMachine, tSMachine,inUmpleClassifier);
-									mustBeRemoved.add(tSMachine);
-								}
-							}
-						}	
+						}
 					}
 					for(Map.Entry<StateMachine,StateMachine> entry : listBeRemoved.entrySet() ) {
 						inTraitStateMachine.get(uTrait).remove(entry.getValue());
