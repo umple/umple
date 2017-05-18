@@ -4071,25 +4071,12 @@ class GeneralTPApplied {
     if (another == null) return;
     this.parameterMapping = new HashMap<String, String>(another.parameterMapping);
     this.inheritanceName = another.inheritanceName;
+    positions = another.positions; 
     
-    
-    stateMachineModifiers = new ArrayList<StateMachineModifier>();
-    parameters = new ArrayList<String>();
-    for (String str : another.getParameters()){
-      parameters.add(str);
-    }  
-    methodTemplateSignatures = new ArrayList<MethodTemplateSignature>();
-    for (MethodTemplateSignature mtSignature : another.getMethodTemplateSignatures()) {
-      methodTemplateSignatures.add(new MethodTemplateSignature(mtSignature));
-    }
-    methodTemplateSignatures = new ArrayList<MethodTemplateSignature>();
-    for (MethodTemplateSignature mtSignature : another.getMethodTemplateSignatures()){
-      methodTemplateSignatures.add(mtSignature);
-    }
-    stateMachineTemplateSignatures = new ArrayList<StateMachineTemplateSignature>();
-    for (StateMachineTemplateSignature smSignature : another.getStateMachineTemplateSignatures()){
-      stateMachineTemplateSignatures.add(smSignature);
-    }
+    stateMachineModifiers = new ArrayList<>(another.getStateMachineModifiers());
+    parameters = new ArrayList<>( Arrays.asList(another.getParameters()));
+    methodTemplateSignatures = new ArrayList<>(another.getMethodTemplateSignatures());
+    stateMachineTemplateSignatures = new ArrayList<>(another.getStateMachineTemplateSignatures());
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------

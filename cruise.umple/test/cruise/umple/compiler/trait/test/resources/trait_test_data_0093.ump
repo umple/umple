@@ -1,0 +1,73 @@
+trait TPlayer{
+  
+  //StateMachine
+  mode {
+    stopped{
+      play ->playing;
+    }
+    playing{
+      stop ->stopped;
+      pause -> paused;
+    }
+    paused{
+      play -> playing;
+      stop -> stopped;
+    }
+  }
+}
+
+trait TPlayerWithLight{
+  isA TPlayer;
+  
+  //required Methods.
+  void startFlashing();
+  void stopFlashing();
+  
+  //StateMachine
+  mode {
+    stopped{
+      play -> /{startFlashing();} playing;
+    }
+    playing{
+      stop ->  /{stopFlashing();} stopped;
+      pause -> /{stopFlashing();} paused;
+    }
+    paused{
+      play -> /{startFlashing();} playing;
+      stop -> /{stopFlashing();} stopped;
+    }
+  }
+}
+
+trait TPlayWithoutPause{
+  isA TPlayerWithLight<-mode.paused>;
+
+  //required methods
+  Boolean validUser();
+  
+  //StateMachine
+  mode {
+    stopped{
+      play [validUser()] -> playing;
+    }
+    playing{
+      stop [validUser()]->   stopped;
+    }
+  }
+
+}
+
+
+class A{
+  isA TPlayWithoutPause;
+  
+  void startFlashing(){
+    System.out.println("The light is flashing...");
+  }
+  void stopFlashing(){
+    System.out.println("Flashing is stopped.");
+  }
+  Boolean validUser(){
+    return true;
+  }
+}
