@@ -953,13 +953,14 @@ var JJSdiagram = {
 		joint.layout.DirectedGraph.layout(JJSdiagram.paper.model, { setLinkVertices: true, rankDir: "TB", nodeSep: 50, edgeSep: 80 });
 
 		// Add the last states and transitions to the graph, after making the list FILO.
-		JJSdiagram.JJsParse.notYetAddedStatesStack.reverse()
+		//JJSdiagram.JJsParse.notYetAddedStatesStack.reverse()
 		JJSdiagram.JJsParse.notYetAddedStatesStack.forEach(function (cell) {
 			cell.doEmbed(JJSdiagram.paper);
 			cell.updateRectangles(JJSdiagram.paper);
+			JJSdiagram.paper.model.addCell(cell);
 		});
 
-		JJSdiagram.paper.model.addCells(JJSdiagram.JJsParse.notYetAddedStatesStack);
+		//JJSdiagram.paper.model.addCells(JJSdiagram.JJsParse.notYetAddedStatesStack);
 
 		JJSdiagram.paper.model.addCells(JJSdiagram.JJsParse.notYetAddedTransitionsStack);
 
