@@ -924,6 +924,9 @@ var JJSdiagram = {
 			this.paper.setDimensions(Math.max(bbox.width + 100, this.container.width()), Math.max(bbox.height + 100, this.container.height()));
 		}
 
+		// Because the auto-layout squeezes the diagram towards the left-hand side.
+		JJSdiagram.paper.setOrigin(100, 50);
+
 		// Sort out the overlapping associations
 		JJSdiagram.paper.model.getCells().forEach(function (cell) {
 			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model, cell);
@@ -969,8 +972,7 @@ var JJSdiagram = {
 			JJSdiagram.JJsUtils.adjustVertices(JJSdiagram.paper.model, cell);
 		});
 
-		// Because the auto-layout squeezes the diagram towards the left-hand side.
-		// JJSdiagram.paper.setOrigin(100, 50);
+
 
 		var bbox = JJSdiagram.paper.model.getBBox(JJSdiagram.paper.model.getElements());
 		// This occurs when no model has been loaded.
@@ -978,6 +980,8 @@ var JJSdiagram = {
 			// Resize the paper to fit all of the cells, plus some breathing room.
 			this.paper.setDimensions(Math.max(bbox.width + 200, this.container.width()), Math.max(bbox.height + 150, this.container.height()));
 		}
+		// Because the auto-layout squeezes the diagram towards the left-hand side.
+		JJSdiagram.paper.setOrigin(100, 50);
 	},
 
 	JJsUtils: {

@@ -74,7 +74,7 @@ joint.shapes.uml_state_machine.CompositeState = joint.shapes.basic.Generic.exten
 
         //add start state by name
         for(var j = 0; j < nestedCells.length; j++) {
-             if (nestedCells[j].get('isstart') === true) {
+             if (nestedCells[j] && nestedCells[j].get('isstart') === true) {
                     var ps_name = "pseudo_start_" + nestedCells[j].get('name');
                     var startcell = paper.model.getCell(ps_name);
                     nestedCells.push(startcell);
@@ -640,8 +640,8 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
         this.$box.css({
             width: bbox.width,
             height: bbox.height,
-            left: bbox.x,
-            top: bbox.y,
+            left: bbox.x+100,
+            top: bbox.y+50,
             transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
         });
     }

@@ -382,8 +382,8 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         this.$box.css({
             width: bbox.width,
             height: bbox.height,
-            left: bbox.x,
-            top: bbox.y,
+            left: bbox.x+100,
+            top: bbox.y+50,
             transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
         });
     }
