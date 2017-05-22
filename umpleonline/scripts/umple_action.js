@@ -1591,7 +1591,8 @@ Action.updateUmpleDiagramCallback = function(response)
       }
     }
     else if(Page.useJointJSClassDiagram) {
-      var model = JSON.parse(diagramCode);
+
+      var model = JSON.parse(diagramCode.replace( new RegExp('} { "name": "', "gi"), '}, { "name": "' ));
 
       var umpleCanvas = jQuery("#umpleCanvas");
 

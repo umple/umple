@@ -982,7 +982,7 @@ var JJSdiagram = {
 			this.paper.setDimensions(Math.max(bbox.width + 200, this.container.width()), Math.max(bbox.height + 150, this.container.height()));
 		}
 		// Because the auto-layout squeezes the diagram towards the left-hand side.
-		JJSdiagram.paper.setOrigin(100, 50);
+		JJSdiagram.paper.setOrigin(100, 70);
 	},
 
 	JJsUtils: {

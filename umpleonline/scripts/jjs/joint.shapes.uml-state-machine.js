@@ -50,9 +50,11 @@ joint.shapes.uml_state_machine.CompositeState = joint.shapes.basic.Generic.exten
             var bbox = paper.model.getBBox(this.get('nestedStates'));
 
             attrs['.composite-state-rect'].width = bbox.width + 20;
-            attrs['.composite-state-rect'].height = bbox.height + 40;
+            attrs['.composite-state-rect'].height = bbox.height + 50;
+            this.get('size').width = attrs['.composite-state-rect'].width;
+            this.get('size').height = attrs['.composite-state-rect'].height;
             attrs['.composite-state-rect'].x = bbox.x - 10;
-            attrs['.composite-state-rect'].y = bbox.y - 30;
+            attrs['.composite-state-rect'].y = bbox.y - 20;
         }
     },
 
@@ -641,7 +643,7 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
             width: bbox.width,
             height: bbox.height,
             left: bbox.x+100,
-            top: bbox.y+50,
+            top: bbox.y+70,
             transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
         });
     }
