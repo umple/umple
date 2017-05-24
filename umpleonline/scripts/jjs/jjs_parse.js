@@ -27,16 +27,141 @@ var JJSdiagram = {
 		// Start by making the paper an arbitrary size; it will later be re-scaled to fit the model
 		this.paper = new joint.dia.Paper({
 			el: jQuery("#jjsPaper"),
-			width: 100,
-			height: 100,
+			width: 799,
+			height: 675,
 			model: graph,
 			gridSize: 1,
 			padding: 15
 		});
 
 		this.makeUMLclassDiagram();
-
+		
 		JJSdiagram.setPaperListener();
+
+		//JointJS UML
+		var uml = joint.shapes.uml;
+
+		//click listener for adding class and association
+		jQuery('#buttonAddClass').off('click.fly').on('click.fly', function (e) {
+
+			var x = e.clientX;
+			var y = e.clientY;
+			if (Page.useJointJSClassDiagram) {
+				jQuery('body').append('<div id="flyPaper" style="position:fixed;z-index:100;opacity:.5;pointer-event:none;"></div>');
+				var flyGraph = new joint.dia.Graph,
+					flyPaper = new joint.dia.Paper({
+						el: jQuery('#flyPaper'),
+						model: flyGraph,
+						interactive: false,
+						width: 150,
+						height: 60
+					}),
+
+					//create the class template
+					flyShape = new uml.Class({
+						position: { x: 20, y: 190 },
+						size: { width: 150, height: 60 },
+						name: 'myNewClass',
+						attributes: ['myVal: String'],
+						methods: ['Boolean myM(String s)'],
+						attrs: {
+							'.uml-class-name-rect': {
+								'stroke': 'black',
+								'stroke-width': 2,
+								'fill': '#eaeaea'
+							},
+							'.uml-class-attrs-rect': {
+								'stroke': 'black',
+								'stroke-width': 2,
+								'fill': '#fafafa'
+							},
+							'.uml-class-methods-rect': {
+								'stroke': 'black',
+								'stroke-width': 2,
+								'fill': '#fafafa'
+							}
+						}
+						/* another theme
+						attrs: {
+							'.uml-class-name-rect': {
+								fill: '#ff8450',
+								stroke: '#fff',
+								'stroke-width': 0.5,
+							},
+							'.uml-class-attrs-rect, .uml-class-methods-rect': {
+								fill: '#fe976a',
+								stroke: '#fff',
+								'stroke-width': 0.5
+							},
+							'.uml-class-attrs-text': {
+								ref: '.uml-class-attrs-rect',
+								'ref-y': 0.5,
+								'y-alignment': 'middle'
+							},
+							'.uml-class-methods-text': {
+								ref: '.uml-class-methods-rect',
+								'ref-y': 0.5,
+								'y-alignment': 'middle'
+							}
+						}
+						*/
+					}),
+
+					//?
+					pos = { x: e.clientX, y: e.clientY },
+					offset = {
+						x: x - pos.x,
+						y: y - pos.y
+					};
+
+				flyShape.position(0, 0);
+				flyGraph.addCell(flyShape);
+				jQuery("#flyPaper").offset({
+					left: e.pageX - offset.x,
+					top: e.pageY - offset.y
+				});
+				jQuery('body').on('mousemove.fly', function (e) {
+					jQuery("#flyPaper").offset({
+						left: e.pageX - offset.x,
+						top: e.pageY - offset.y
+					});
+				});
+				jQuery('body').on('mouseup.fly', function (e) {
+					var x = e.pageX,
+						y = e.pageY,
+						target = JJSdiagram.paper.$el.offset();
+					// Dropped over paper
+					if (x > target.left && x < target.left + JJSdiagram.paper.$el.width() && y > target.top && y < target.top + JJSdiagram.paper.$el.height()) {
+						var s = flyShape.clone();
+						s.position(x - target.left - offset.x, y - target.top - offset.y);
+						JJSdiagram.paper.model.addCell(s);
+					}
+					jQuery('body').off('mousemove.fly').off('mouseup.fly');
+					flyShape.remove();
+					jQuery('#flyPaper').remove();
+				});
+			}
+		})
+		jQuery('#buttonAddAssociation').off('click.fly').on('click.fly', function (e) {
+			if (Page.useJointJSClassDiagram) {
+				var clickcount = 0;
+				var associationId;
+
+				//paper listener
+				JJSdiagram.paper.on('cell:pointerclick', function (cellView, evt, x, y) {
+					clickcount++;
+					if (clickcount === 1) {
+						associationId = cellView.model.id
+					}
+					if (clickcount === 2) {
+						JJSdiagram.paper.model.addCell(new uml.Generalization({ source: { id: associationId }, target: { id: cellView.model.id }}));
+						JJSdiagram.paper.off('cell:pointerclick');
+					}
+
+					
+				});
+			}
+		})
 
 		return this.paper;
 	},
