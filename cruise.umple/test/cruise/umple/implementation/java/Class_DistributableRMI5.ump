@@ -50,7 +50,7 @@ class Main
   public static void main(String[] args)
   {
     Client c = new Client();
-    Client c2= new Client(0);
+    Client c2= new Client(UmpleRuntime.getComponent("component1"));
     Microwave m1= new Microwave(12,"There");
     Microwave m2= new Microwave(1,"Hi");
     c.addMicrowave(m1);

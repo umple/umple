@@ -30,35 +30,34 @@ class JavaDistributedTemplates {
       public  Integer objectId;
       public  String remotePort;
       <<#}#>>
-      private void readObject(java.io.ObjectInputStream in) throws Exception
-      {
-        try
-        {
-          in.defaultReadObject();
-        }
-        catch(Exception e)
-        {
-          throw e;
-        }
+  private void readObject(java.io.ObjectInputStream in) throws Exception
+  {
+    try
+    {
+      in.defaultReadObject();
+    }
+    catch(Exception e)
+    {
+      throw e;
+    }
       
-      boolean success = false;
-      while (!success) {        
+    boolean success = false;
+    while (!success) {        
       try 
       {
-      URL url = new URL(remoteUrl+":"+remotePort+"/<<=remoteName>>"+String.valueOf(objectId)+"?wsdl");
-      QName qname = new QName("http://<<=packageName>>/","<<=remoteName>>Service");
-      Service service = Service.create(url, qname);
-      realObject=service.getPort(<<=interfaceName>>.class);
-
+        URL url = new URL(remoteUrl+":"+remotePort+"/<<=remoteName>>"+String.valueOf(objectId)+"?wsdl");
+        QName qname = new QName("http://<<=packageName>>/","<<=remoteName>>Service");
+        Service service = Service.create(url, qname);
+        realObject=service.getPort(<<=interfaceName>>.class);
         success = true;
       } 
-        catch (Exception e) 
-        {
-          System.err.println("Client exception: " + e.toString());
-          e.printStackTrace();
-        }
+      catch (Exception e) 
+      {
+        System.err.println("Client exception: " + e.toString());
+        e.printStackTrace();
       }
     }
+  }
  !>>
 
     emit getproxyReadObjectCodeRMI(String remoteName, String packageName,String interfaceName,UmpleClass uClass)(ProxyreadObjectCodeRMI);
@@ -67,29 +66,29 @@ class JavaDistributedTemplates {
     <<#if (uClass.getExtendsClass() == null||(uClass.getExtendsClass() != null && ! uClass.getExtendsClass().getIsDistributed()))
     {
     #>>
-      protected  <<=interfaceName>> remoteObject;
+  protected  <<=interfaceName>> remoteObject;
     <<#}#>>  
-      public void setRemoteObject(<<=interfaceName>> aRemoteObject)
-      {
-        remoteObject=aRemoteObject;
-      }
-      public <<=interfaceName>> getRemoteObject()
-      {
-        return (<<=interfaceName>>)remoteObject;
-      }
-      private void readObject(java.io.ObjectInputStream in) throws Exception
-      {
-        try
-        {
-          in.defaultReadObject();
-          realObject=(<<=interfaceName>>)remoteObject;
-        }
-        catch(Exception e)
-        {
-          throw e;
-        }
-        
-      }
+  public void setRemoteObject(<<=interfaceName>> aRemoteObject)
+  {
+    remoteObject=aRemoteObject;
+  }
+  public <<=interfaceName>> getRemoteObject()
+  {
+    return (<<=interfaceName>>)remoteObject;
+  }
+  private void readObject(java.io.ObjectInputStream in) throws Exception
+  {
+    try
+    {
+      in.defaultReadObject();
+      realObject=(<<=interfaceName>>)remoteObject;
+    }
+    catch(Exception e)
+    {
+      throw e;
+    }
+    
+  }
  !>>
 
      emit getremoteSingletonCode(String remoteName, String packageName,String interfaceName)(remoteSingleton);

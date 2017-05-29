@@ -14,7 +14,7 @@ class UmpleToJava {
       catch(Exception e) 
       {
         e.printStackTrace();
-        Thread.sleep(1000);
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
       }  
     }
   }  

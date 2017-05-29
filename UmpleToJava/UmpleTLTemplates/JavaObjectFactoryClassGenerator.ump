@@ -163,7 +163,7 @@ public class UmpleRuntime implements IUmpleRuntime
   public static UmpleComponent getComponent(String runtimeComponentName)
   { 
     getInstance();
-    UmpleComponent aComponent=components.get(runtimeComponentName);
+    UmpleComponent aComponent=components.get(runtimeComponentName.toLowerCase());
     if (aComponent!=null)
       return aComponent;
     else
