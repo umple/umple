@@ -15,7 +15,7 @@ In the example 1 below, trait T2 uses trait T1 defined in line 10 and class C2 u
 Trait T2 is not a final client, therefore, it could use trait T1 without implementing those required methods, in that case, the required methods of trait T2 would be method1(), method2(), and method 3(). Class C2, which is a final client, uses trait T2 and therefore needs to implement its required method, which is method3(). However, there is no direct implementation for it. Instead, class C2 obtains such an implementation indirectly from its superclass, which is C1. Therefore, it satisfies the required method of trait T2. 
 </p>
 
-<p>
+<p align = "justify">
 When clients use traits, they obtain all provided methods defined in the traits. This includes all other provided methods those traits might obtain from their own used traits. For example, trait T2 gets the provided method method4() from trait T1. This provided method can be called by all other provided methods defined in trait T2. Therefore trait T2 provides three provided methods named method1(), method2(), and method4(). Class C2 uses trait T2 and so it obtains all provided methods.
 </p>
 

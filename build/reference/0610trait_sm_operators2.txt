@@ -9,8 +9,9 @@ As with <a href="MethodOperatorsinTraits.html">operators on methods</a>, certain
 
 <b>Removing/keeping a state machine</b>
 <p align = "justify">
-This operator is used to remove or keep a state machine when a client uses a trait. In the removing mode, specified by the minus symbol '-', the indicated state machine is ignored and is not included in the client. In the keeping mode, specified by '+', only the indicated state machine is kept and the others are ignored. This operator can be used to keep the client free of unneeded detail or conflict. The syntax used for this operator is as follows: <br/> (-|+) stateMachineName
+This operator is used to remove or keep a state machine when a client uses a trait. In the removing mode, specified by the minus symbol '-', the indicated state machine is ignored and is not included in the client. In the keeping mode, specified by '+', only the indicated state machine is kept and the others are ignored. This operator can be used to keep the client free of unneeded detail or conflict. The syntax used for this operator is as follows:
 </p>
+<center>(-|+) stateMachineName</center>
 
 <p align = "justify">
 In example 5, trait T1 has three state machines sm1, sm2, and sm3. Classes C1 requires state machine sm2 and sm3 while class C2 requires just state machine sm2. Class C1 achieves this through removing state machine sm1 from trait T1 (line 16). Class C2 obtains its required state machine through keeping just state machine sm2 (line 19). Classes C2 could also achieve the same result through removing sm1 and sm2. Using the keeping operator is more convenient when there are several state machines and modelers need just one them.
@@ -18,8 +19,9 @@ In example 5, trait T1 has three state machines sm1, sm2, and sm3. Classes C1 re
 
 <b>Removing/keeping a state</b>
 <p align = "justify">
-This operator is used to remove or keep a simple or composite state when using a state machine in a trait. The syntax for this operator is as follows: <br/> (-|+) stateMachineName.stateName.....stateName
+This operator is used to remove or keep a simple or composite state when using a state machine in a trait. The syntax for this operator is as follows: 
 </p>
+<center>(-|+) stateMachineName.stateName.....stateName</center>
 
 <p align = "justify">
 This works much like removing/keeping a state machine, using a minus sign for removing and a plus for keeping. The symbols are followed by the name of the state. In the removing mode, this operation will delete all incoming and outgoing transitions of the state as well. In the keeping mode, the specified state will be kept and the remaining states will be removed. This also includes removing all transitions from other states to the specified state. This mode can be applied to the initial states, but if it is applied to other states, the initial state will not be removed. The operator is helpful for cases in which base state machines do not need the functionality of that specific state, or have the same state and do not want to merge it with the one coming from the reused trait. Another use is when clients use more than one trait and those traits have common state machines and states. These common states might have different functionality and clients might want to keep one version.
@@ -40,8 +42,9 @@ In example 7, two classes C1 and C2 uses trait T1 and manipulate its state machi
 
 <b>Removing/keeping a transition</b>
 <p align = "justify">
-This operator is used to remove or keep a transition from a state machine. The syntax for this operator is as follows: <br/> (-|+) stateMachineName.stateName.....stateName.((eventName(argumentTypes) ([guard])?) | [guard?])
+This operator is used to remove or keep a transition from a state machine. The syntax for this operator is as follows:
 </p>
+<center>(-|+) stateMachineName.stateName.....stateName.((eventName(argumentTypes) ([guard])?) | [guard?])</center>
 
 <p align = "justify">
 A minus symbol is followed by a transition that needs to be removed. A plus symbol is used to pick a transition to keep. A transition is defined by specifying the name of the state machine, states (including regions for nested states), event, and guard. The symbol '?' is not part of the operator and it is there to show which elements are optional. The name of the state machine and states are mandatory. The event name (along with its arguments) depends on the type of transition.
