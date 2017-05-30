@@ -1,0 +1,16 @@
+/*
+	Example 4
+*/
+trait T1 {
+  sm1{
+    s0 {e1(Integer index)-> s1;}
+  s1 {e0-> s0;}
+}
+sm2{
+    t0 {e1(Integer index)-> t1;}
+  t1 {e0-> t0;}
+}
+}
+class C1 {
+  isA T1<sm1.e1(Integer) as event1, *.e0() as event0>;
+}

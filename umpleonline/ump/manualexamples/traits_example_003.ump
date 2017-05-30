@@ -1,0 +1,20 @@
+/*
+ Example 1
+*/
+trait Identifiable {
+  firstName;
+  lastName;
+  address;
+  phoneNumber;
+  fullName = {firstName + " " + lastName}
+  Boolean isLongName() { return lastName.length() > 1;}  
+}
+class Person {
+  isA Identifiable;
+}
+class Organization {
+  Integer registrationNumber;
+}
+class Company {
+  isA Organization, Identifiable;
+}

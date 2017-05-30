@@ -1,0 +1,155 @@
+State Machine Operators 
+Traits
+noreferences
+
+@@description
+<p align = "justify">
+As with operators on methods, certain operators can be applied to traits’ state machines when they are used in clients. These provide mechanisms to improve flexibility, assign state machines to specific states, and resolve conflicts caused by name collisions. These operators follow the same structure defined for operators on methods.
+</P>
+
+<b>Changing the name of a state machine</b>
+<p align = "justify">
+This operator is used to change the name of a state machine when it is to be reused by a client. This operator can also be mixed partially with the keeping operator to provide better flexibility. The syntax for this operator is as follow: <br/> (+) stateMachineName as newName
+</p>
+
+<p align = "justify">
+When a state machine with a given name is specified by the renaming operator, it must be available in the trait being operated on, either directly in the trait or another trait used by the trait. The example 1 shows how names of state machines in trait T1 can be changed to mach1 and mach2. As seen, in example 1 both state machines that are available directly in trait T1 have been renamed. The example 2 shows how class C1 uses the operator to rename the state machine sm1 in trait T1 and also automatically remove other state machines, which are just state machine sm2 in this case.
+</p>
+
+<p align = "justify">
+There are two main scenarios for this operator. The first is merging: when a client already has a state machine and will obtain another state machine coming from the used trait. The two machines might have some of the same states but different functionality. The client wants to have all functionality merged in one state machine (described as we progress). In this case, the operator is used to change the name of the incoming state machine from the trait, to match the name of the existing state machine. The result is that the new functionality will be merged into the existing state machine. The second scenario is for avoiding conflicts. This occurs when a client has an existing state machine and wants to incorporate another one with different functionality, but that happens to have the same name. In this case, the client can change the name of the incoming state machine to be different from the existing state machine. This second scenario can be needed in various conflict-resolution scenarios
+</p>
+
+<b>Changing the Name of a State</b>
+<p align = "justify">
+This operator changes the name of a state inside a specific state machine. The operator covers both simple and composite states. The syntax used for this purpose is as follows: <br/>stateMachineName.stateName.....stateName as newName
+</p>
+
+<p align = "justify">
+The state to be renamed is specified based on a series of names separated by dots, starting with the name of the state machine. If the state is a simple or composite state at the top level of a hierarchical state machine, then it comes directly after the name of the state machine. However, if it is deeper in the hierarchy, the chain of parents must also be specified. The last name in the series is always the name of the state to be renamed. In example 3, trait T1 has a state machine with a composite state named s0 (line 6). Composite state s0 has two internal states s11 and s12.  Class C1 uses trait T1 and changes the name of state s0 to state0 and the name of s11 to state11 (line 15). In order to specify the state s0, it is preceded by the name of a state machine, which is sm. For state s11, the name of the state machine, the composite state, and the region name precede it. In Umple, the name of the single region inside a composite state is set automatically to the name of the composite state. The operator applies also the same rule when it changes a composite state.
+</p>
+
+<p align = "justify">
+The first scenario for this operator is to change the vocabulary used for the names of states. This adds flexibility when a trait is specified in a generalized context and there is a need to adapt names so as to be more domain-specific. E.g. ‘tripEnded’ in a general transportation state machine becomes ‘landed’ in an adaptation to the airline domain, or ‘docked’ in an adaptation to the water transport domain. The second scenario is when two states need to be merged, but they have different names. By changing the name of one so it matches the other, then the algorithm knows to merge them. The third scenario occurs when there are two states in a state machine to be composed, but we want to keep those two states separate and prevent merging.
+</p>
+
+<b>Changing the name of regions</b>
+<p align = "justify">
+This operator allows renaming a specified region. It is just like the operator used for changing the name of states. The difference is that the last name in the sequential series of names (separated by dots) is the name of a region to be changed. Since names of regions are set automatically by the Umple compiler and they are equal to the names of their initial states, renaming the name of a region must also be applied to its initial state. This is performed automatically by the operator. The applications for this operator are like those for changing the name of states. In particular, this operator is used when several regions are supposed to be merged or kept separate.
+</p>
+
+<b>Change the name of events</b>
+<p align = "justify">
+This operator is used to change the name of events that will trigger transitions in state machines. The syntax used for this operator is as follows:
+<br/> (* | stateMachineName).eventName(argumentTypes) as new_Name
+</p>
+
+<p align = "justify">
+Through this operator, it is possible to rename an event related to a specific state machine or all state machines in a trait. For the first case, the modeler specifies the name of the state machine (stateMachineName). For the second case, an asterisk (*) is specified. The event name (eventName) must end with a pair of parentheses including any needed argument types. This operator does not allow changing the argument types because that would break the implementation of the event method. The operator is used mostly to change the event names based on a new domain’s requirements. It can also be used to keep an event from being overwritten by the client’s state machine and vice versa.
+</p>
+
+<p align = "justify">
+In example 4, trait T1 has two state machines sm1 and sm2. These state machines have common events named e1(Integer) and e0(). Class C1 want to use trait T1 with some changes in the name of events. It is required to rename all event names e0() to event0() and just change the event name e1(Integer) to event1() in state machine s1. Line 15 depicts how class C1 achieves it. Since the change on event e0() is going to happen in both the state machines, the symbol * has been used. However, the name of state machine sm1 was used for the event e1(Integer) because we do not want to have it changed in state machine sm2.
+</p>
+
+<b>Removing/keeping a state machine</b>
+<p align = "justify">
+This operator is used to remove or keep a state machine when a client uses a trait. In the removing mode, specified by the minus symbol '-', the indicated state machine is ignored and is not included in the client. In the keeping mode, specified by '+', only the indicated state machine is kept and the others are ignored. This operator can be used to keep the client free of unneeded detail or conflict. The syntax used for this operator is as follows: <br/> (-|+) stateMachineName
+</p>
+
+<p align = "justify">
+In example 5, trait T1 has three state machines sm1, sm2, and sm3. Classes C1 requires state machine sm2 and sm3 while class C2 requires just state machine sm2. Class C1 achieves this through removing state machine sm1 from trait T1 (line 16). Class C2 obtains its required state machine through keeping just state machine sm2 (line 19). Classes C2 could also achieve the same result through removing sm1 and sm2. Using the keeping operator is more convenient when there are several state machines and modelers need just one them.
+</p>
+
+<b>Removing/keeping a state</b>
+<p align = "justify">
+This operator is used to remove or keep a simple or composite state when using a state machine in a trait. The syntax for this operator is as follows: <br/> (-|+) stateMachineName.stateName.....stateName
+</p>
+
+<p align = "justify">
+This works much like removing/keeping a state machine, using a minus sign for removing and a plus for keeping. The symbols are followed by the name of the state. In the removing mode, this operation will delete all incoming and outgoing transitions of the state as well. In the keeping mode, the specified state will be kept and the remaining states will be removed. This also includes removing all transitions from other states to the specified state. This mode can be applied to the initial states, but if it is applied to other states, the initial state will not be removed. The operator is helpful for cases in which base state machines do not need the functionality of that specific state, or have the same state and do not want to merge it with the one coming from the reused trait. Another use is when clients use more than one trait and those traits have common state machines and states. These common states might have different functionality and clients might want to keep one version.
+</p>
+
+<p align = "justify">
+In example 6, trait T1 has state machine sm1 (line5). Class C1 uses trait T1 and removes state s2 from the state machine sm1 (line 25). As seen, in addition to the state s2, all outgoing transitions (named e2()) from states s0, s1, and s3 have been removed. The operator also removed incoming transition e3() from state s2 to state s3. Class C2 uses trait T1 and requires just state s1 of state machine sm1. As seen, all other states except s0 have been removed. The reason is that state s0 is the initial state of state machine sm1 and removing it results in non-reachable states. The Umple compiler does not allow this situation. Furthermore, all transitions coming from other states to s1 have been removed (in this case, there is none) except transitions coming from the initial state s0. The operator also removes the outgoing transitions e2() and e3() of state s1 to other states s2 and s3 except the ones going to the initial state (in this case, there is none).
+</p>
+
+<b>Removing/keeping a region</b>
+<p align = "justify">
+This operator is used to remove or keep a region of a state machine. The syntax used for this operator is exactly like the one defined for removing or keeping a state, except the last name in the dot-separated chain specifies the name of the region. This operator is utilized in cases similar to those explained for removing a state. It can also be used to make a composite state a simple state by reducing the number of regions to zero.
+</p>
+
+<p align = "justify">
+In example 7, two classes C1 and C2 uses trait T1 and manipulate its state machine’s regions. State machine sm has a composite state s1 with three regions r1, r2, and r3. Class C1 removes region r1 from the composite state s1 (line 23) while class C2 keeps region r2 (line 26). As seen in both cases, the region name appears after the name of state machine sm and the state s1. We can see since region r1 has been removed in class C1, the incoming transition e2() has also been removed automatically. In class C2, all outgoing transition from region r2 to other regions, including e2() and e4(), have been removed automatically in addition to region r1 and r3.
+</p>
+
+<b>Removing/keeping a transition</b>
+<p align = "justify">
+This operator is used to remove or keep a transition from a state machine. The syntax for this operator is as follows: <br/> (-|+) stateMachineName.stateName.....stateName.((eventName(argumentTypes) ([guard])?) | [guard?])
+</p>
+
+<p align = "justify">
+A minus symbol is followed by a transition that needs to be removed. A plus symbol is used to pick a transition to keep. A transition is defined by specifying the name of the state machine, states (including regions for nested states), event, and guard. The symbol '?' is not part of the operator and it is there to show which elements are optional. The name of the state machine and states are mandatory. The event name (along with its arguments) depends on the type of transition.
+</p>
+
+<p align = "justify">
+If the transition is 'auto' (immediately taken on entry to the state or upon completion of a do activity) there is no need to specify it, otherwise, it must be specified. If a transition has a guard, it must be specified using the same syntax used when specifying transitions (inside square brackets). However, if a transition is auto and unguarded, it must be defined with an empty guard "[]" and without any event name. Actions and destination states are not part of the definition for this operator because the above definition suffices to uniquely select any transition. The operator is utilized when base state machines do not need a specific transition coming from the used trait. Furthermore, base state machines might want to extend a transition of a state, but it might already have a transition matching the given specification.
+</p>
+
+<p align = "justify">
+In example 8, class C1 uses trait T1 (line 25) and keeps the transition with the event name e2(Integer) from the state machine sm and state s1. Other transitions related to the state s1, which are e3() and e4(), are removed. Since the transition does not have a guard, brackets are not required in the specification of the transition. Class C2 also uses trait T1 (line 28), but it removes the transition with the event name e4() and a guard on the variable cond from the state machine sm and state s1. This case shows how a transition with the event name and guard can be specified. Class C3 uses trait T2, but it removes an auto transition from state s2 with a guard on the variable cond. As seen, no name has been defined in the operator for the event and the guard is just defined inside brackets. Finally, class C4 use the trait T1 (line 34), but it removes an auto transition without a guard. As seen, an empty bracket after the name of the state is used to specify the transition.
+</p>
+
+<b>Extending a state by adding a state machine to it</b>
+<p align = "justify">
+This operator is used to assign a state machine to a specific state inside another state machine, hence turning that state into a composite state. The syntax used for this operator is as follows: <br/>srcStateMachineName as desStateMachineName.stateName.....stateName
+</p>
+
+<p align = "justify">
+This operator involves two state machines. The srcStateMachineName is found in the trait, and the desStateMachineName is found in the client. The state in the client can be sim-le or composite. This operator provides a practical mechanism to incrementally compose a state machine from various parts. For example, simple 'on/off' pairs of states with events to toggle between are fairly common and can be injected easily into destination states using this operator. If a composited state is extended with this operator, it will trigger our composition algorithm which. Furthermore, the operator can be used to bring more than one state machine inside a state.
+</p>
+
+<p align = "justify">
+In example 9, class C1 has state machine sm with two states s1 and s2. Trait T1 has state machine sm1. Class C1 needs to have state machine sm1 activated when it is in state s2. Class C1 achieves this by specifying the source state machine and destination state when it uses trait T1 (line 15).
+</p>
+
+
+
+@@syntax
+[[traitDefinition]] [[traitContent]]
+
+@@example
+@@source manualexamples/traits_example_016.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_017.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_018.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_019.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_020.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_021.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_022.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_023.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_024.ump
+@@endexample

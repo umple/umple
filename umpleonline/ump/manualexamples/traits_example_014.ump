@@ -1,0 +1,18 @@
+/*
+	Example 3
+*/
+trait T1{
+  Boolean m1(String input);
+  Boolean m2();
+  sm1{
+    s1{ e1(String data) -> /{ m1(data); } s2;   }
+    s2{ e2 -> /{ m2(); } s1; }
+  }
+}
+class C1{
+  isA T1;
+  sm2{
+    s1{ m1(String str) -> s2;}
+    s2{ m2 ->  s1;}
+  }
+}

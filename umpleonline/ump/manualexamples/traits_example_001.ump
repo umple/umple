@@ -1,0 +1,6 @@
+trait TEquality{
+  Boolean isEqual(Object object);
+  Boolean isNotEqual(Object object){ 
+    return isEqual(object) ? true : false;
+  }
+} 

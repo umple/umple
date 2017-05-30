@@ -1,0 +1,33 @@
+/*
+	Example 1
+*/
+interface I1{
+  void method1();
+  double method2();
+}
+interface I2 {
+  isA I1;
+  Boolean method3();
+}
+trait T1{
+  isA I1;
+  Float method3(){/*implementation*/ }	
+}
+trait T2{
+  isA I1;
+  Float method4(){/*implementation*/ }	
+}
+trait T3{
+  isA T1,T2;
+}
+class C3{
+  void method1(){/*implementation*/ }
+  Double method2(){/*implementation*/ }
+}
+class C1{
+  isA C3, I1, T1;
+}
+class C2 {
+  isA C3, I2, T3;
+  Boolean method3(){/*implementation*/ }
+}

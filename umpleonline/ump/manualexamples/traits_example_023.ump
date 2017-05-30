@@ -1,0 +1,35 @@
+/*
+	Example 8
+*/
+trait T1{
+  internal Boolean cond;
+  sm {
+    s1{
+      e2(Integer i)-> s2;
+      e3[!cond]-> s3;
+      e4[cond]-> s4;
+    }
+    s2{
+      [cond] -> s3;
+      [!cond]-> s4;
+    }
+    s3{ 
+      -> s1;
+    }
+    s4{
+     -> s1;
+    }
+  }
+}
+class C1{
+  isA T1<+sm.s1.e2(Integer)>;
+}
+class C2{
+  isA T1<-sm.s1.e4()[cond]>;
+}
+class C3{
+  isA T1<-sm.s2.[cond]>;
+}
+class C4{
+  isA T1<-sm.s3.[]>;
+}

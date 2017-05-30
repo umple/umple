@@ -1,0 +1,51 @@
+Method Operators
+Traits
+noreferences
+
+@@description
+<p align = "justify">
+Operators are capabilities that allow resolving the conflicts and also managing the granularity of traits. Operators are applied to traits when traits are used by clients. Clients can apply more than one operator to a specific trait, but those operators need to be compatible with each other. There is no sequence in the way operators are applied. Operators are defined inside angle brackets after the name of traits and can be mixed with binding types to template parameters. The general structure by which a client uses operators is as follows: <br/>
+
+isA TName &lt; Operator1, Operator2, …, Operatorn &gt;
+
+</P>
+
+<p align = "justify">
+TName specifies the name of a trait to which each Operatori,i=1..n is applied. There is no limitation on the number of operations that can be applied to a trait. Two operators with the same functionality can only be applied to different elements. Errors resulting from violations of this are detected and reported to the modeler. Note that all processes related to the flattening and composition algorithm are performed after applying the operators.
+</p>
+
+<p align = "justify">
+If traits have template parameters and those template parameters have been used as types in provided methods (or event of state machines), their types do not affect the signature of provided methods referred to by operators. In other words, types of template parameters are applied to traits after operators are applied. The identification factor for selecting a provided method is its signature. However, the return type of provided methods is not used for identification because the name and list of types of parameters can uniquely differentiate each provided method from others. When parameters of provided methods are specified, there is no need to define the name of parameters
+</p>
+<b> Removing/keeping provided methods</b>
+<p align = "justify">
+This operator allows removing or keeping provided methods of a trait. The syntax for this operator is as follows: <br/>
+(+|-) methodName(argumentTypes)
+</p>
+
+<p align = "justify">
+The symbol – indicates removing while the symbol + indicates keeping. The symbol must precede the signature of the provided method. When the symbol – is applied to a provided method of a trait, it removes the method from the set of provided methods. However, when the symbol + is applied to a provided method of a trait, the provided method is kept and the rest are removed. Please consider that multiple keeping operators can be used together to keep several methods and throw away the rest.
+</p>
+
+<p align = "justify">
+The example 1 below shows how class C1 removes the provided methods method2() and  method3() (line 12) while class C2 keeps the provided method method5(), coming from trait T1 (line 16). As seen, class C1 obtains two provided methods method4() and method5() in addition to the method1() which satisfies the required methods of trait T1. Class C2 just has the provided method method5() in addition to method1().
+</p>
+<b>Renaming (Aliasing)</b>
+<p align = "justify">
+The renaming operator allows changing the name of provided methods and also their visibilities. This operator can also be mixed partially with the keeping operator to provide better flexibility. The operator does not allow changing the types of parameters or number of parameters. The reason is that the provided methods might be used by other provided methods and so any change regarding types and numbers can break traits. The current implementation of the operator does not support renaming recursive methods. The syntax for this operator is as follows:<br/> (+) methodName(argumentTypes) as newName
+</p>
+<p align = "justify">
+The example 2 shows this operator in action. Class C1 uses trait T1 (line 12) and renames its provided method method1() to function2. There is no need to specify parentheses for the new name. Class C2 uses trait T1 (line 16) and while it renames provided method3() to function3, it also changes the visibility of the provided method to be private. Finally, class C3 uses trait T1 and renames the provided method method5(Integer) to function5. However, it also forces other provided methods of trait T1 to be removed. This feature can be really useful if there is a utility trait and we are just interested in a provided method with the name that suits our domain.
+</p>
+
+@@syntax
+[[traitDefinition]] [[traitContent]]
+
+@@example
+@@source manualexamples/traits_example_010.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_011.ump
+@@endexample
+

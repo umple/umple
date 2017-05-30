@@ -1,0 +1,22 @@
+/*
+	Example 1
+*/
+trait T1< TP isA I1 > {
+  abstract TP method2(TP data);
+  String method3(TP data){ /*implementation*/ }
+}	
+interface I1{
+  void method1();
+}
+class C1{
+  isA I1; 
+  isA T1<TP = C1>;
+  void method1(){/*implementation*/}	
+  C1 method2(C1 data){ /*implementation*/ }
+}
+class C2{
+  isA I1;
+  isA T1< TP = C2 >;
+  void method1(){/*implementation*/}
+  C2 method2(C2 data){ /*implementation*/ }
+}

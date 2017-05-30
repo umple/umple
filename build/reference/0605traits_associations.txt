@@ -1,0 +1,29 @@
+Associations
+Traits
+noreferences
+
+@@description
+<p align = "justify">
+An association is a useful mechanism at the modeling level that specifies relationships among instances of classifiers. An association implies the presence of certain variables and provided methods in both associated classifiers.
+</p>
+
+<p align = "justify">
+Associations are defined in the same way they are defined for classes. Traits can make associations with interfaces, classes, and template parameters. If one end of the association is a template parameter, the binding type must be checked to make sure it is compatible with the type of the association. For example, if a trait has a bidirectional association with a template parameter, the binding value cannot be an interface and it must be a class. This is an extra constraint applied to template parameters.
+</p>
+
+<p align = "justify">
+When an association is defined, APIs (set of methods) are generated in the class to allow such actions as adding, deleting and querying links of associations. Traits may use these APIs inside provided methods to achieve their needed implementation. The Example below depicts a simple version of the observer pattern implemented based on traits. As can be seen in line 7, the concept of the subject in the observer pattern has been implemented as trait Subject, which gets its observer as a template parameter. A direct association has been defined in trait Subject (Line 8), which has a multiplicity of zero or one on the Subject side and zero or many on the Observer side. This association lets each subject have many observers and it also applies the case in which observers do not need to know the subject. The trait has encapsulated the association between the subject and observers and then applies it to proper elements when it is used by a client.
+</p>
+
+<p align = "justify">
+As each subject must have a notification mechanism to let observers know about changes, there is a provided method notifyObservers() for this. This method obtains access to all observers through the association. Two classes Dashboard and Sensor play the roles of observer and subject. Class Dashboard has a method named update(Sensor) (line 2) used by the future subject to update it. Class Sensor obtains the feature of being a subject through using trait Subject and binding Dashboard to parameter Observer
+</p>
+
+@@syntax
+[[traitDefinition]] [[traitContent]]
+
+@@example
+@@source manualexamples/traits_example_005.ump
+@@endexample
+
+

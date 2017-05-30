@@ -1,0 +1,34 @@
+Attributes
+Traits
+noreferences
+
+@@description
+<p align = "justify"> 
+Attributes in traits are defined in the same way they are defined for classes. Traits also support all modifiers that can be applied to attributes. The example 1 below shows the way attributes can be defined and used in traits.
+</P>
+
+<p align = "justify">
+As seen, there is a trait named Identifiable that has five attributes: first-Name, lastName, address, phoneNumber, and fullName. It also has a provided method named isLongName(). There are no required methods because the trait offers pure functionality to its clients. Class Person uses trait Identifiable and obtains the provided method and defined attributes from the trait. Class Company also uses the trait Identifiable and extends class Organization. It obtains both attributes coming from its superclass and used trait. All attributes are flattened similar to the way provided methods are flattened.
+</p>
+
+<p align = "justify">
+When clients use traits, a name conflict might happen because a client might have an attribute and obtains a new attribute with the same name from a trait. Modelers are responsible to resolve the conflict. The conflict is detected automatically. Unlike conflicts with other elements in traits, in the current implementation of our work, there is no operator to resolve an attribute name clash conflict. Our current recommendation is to change the name of attributes in the clients of traits and avoid changing names in traits because this could break other clients of those traits.
+</p>
+
+<p align = "justify">
+Another way to avoid conflicts is to use stateless traits. In that case, traits use required methods to have access to states (attributes). The example 2 below shows trait T1 uses two required methods getData() and setData(Integer) to have access and write to the attribute data of type Integer. It also has a provided method that uses the method getData() to obtain the value of the attribute data. Then, it performs some operation on it (in this case adding 2 to the value,) and finally uses the method setData(Integer) to save the new value into the attribute data. The class C1 uses trait T1 and has the attribute data. Since Umple automatically generates accessor and mutators for attributes, they satisfy the required methods defined in trait T1 and so there is no need to implement them manually in class C1.
+
+</p>
+
+
+@@syntax
+[[traitDefinition]] [[traitContent]]
+
+@@example
+@@source manualexamples/traits_example_003.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_004.ump
+@@endexample
+

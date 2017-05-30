@@ -1,0 +1,29 @@
+Required Interfaces
+Traits
+noreferences
+
+@@description
+<p align = "justify">
+Required functionality of classic traits is defined in terms of required methods. However, there are shortcomings with this approach. The first shortcoming is that there is no way to reuse a list of required methods. For example, consider a case in which there are traits that happen to have the same set of required methods but different provided methods. In this case, there is duplication due to repeated listing of the same methods. Furthermore, if there are several traits that must always have the same list of required methods, an inconsistency could be introduced in the design by changing just one of them and not all.
+</P>
+
+<p align = "justify">
+From a different perspective, another shortcoming appears when we know the clients of traits and that they must implement certain interfaces in order to have a correct implementation for the required methods. In fact, there is no way to put dependencies at the semantics level on clients through traits because required methods are simply syntactically captured. This suggests that it might be a good idea to put a restriction on clients that specifies the interfaces they must implement. Such a restriction would ensure that traits are not used in clients that just happen to have methods with the same signature. This is important because having reusable elements which work correctly with minimum errors should be the designers’ responsibility and not the user’s.
+</p>
+
+<p align = "justify">
+In order to address these issues, required interfaces can be used. Using these, traits can either put extra restrictions on clients or just manage their required methods in a more modular and reusable way. Traits may use already-existing interfaces or new interfaces may be written to accomplish the desired modularization. Furthermore, developers will be able to create a hierarchy of interfaces to optimize the reusability. Traits define their required interfaces through the keyword 'isA' followed by the name of interfaces and a semi-colon. When a class use traits, it needs to implement the required interfaces of those traits. If a trait uses other traits with required interfaces, those required interfaces are added to the set of required interfaces of the trait and final clients are required to implement all of those required interfaces.
+</p>
+
+<p align = "justify">
+The example 1 below shows how required interfaces are used and applied. There is a hierarchical design for required methods in terms of interfaces, making it reusable and consistent. Traits T1 and T2  have the same required interface (lines 13 and 17) and if there is a modification in the required interface it will be applied to both. Classes C1 and C2 have to implement interfaces I1 (Line 28) and I2 (line 31) to be able to use trait T1 and T2.
+</p>
+
+@@syntax
+[[traitDefinition]] [[traitContent]]
+
+@@example
+@@source manualexamples/traits_example_009.ump
+@@endexample
+
+

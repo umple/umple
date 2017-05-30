@@ -1,0 +1,19 @@
+/*
+	Example 2
+*/
+trait T1 {
+  sm1{
+  s0 {e1-> s1;}
+  s1 {e0-> s0;}
+  }
+}
+trait T2 {
+  isA T1;
+  sm2{
+  s0 {e1-> s1;}
+  s1 {e0-> s0;}
+  }
+}
+class C1 {
+  isA T2;
+}

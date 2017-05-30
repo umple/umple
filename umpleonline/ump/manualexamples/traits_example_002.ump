@@ -1,0 +1,22 @@
+/*
+	Example 1
+*/
+trait T1{
+  abstract void method1();
+  abstract void method2();
+  void method4(){/*implementation*/ }
+}
+trait T2{
+  isA T1;
+  void method3();
+  void method1(){/*implementation*/ }
+  void method2(){/*implementation*/ }
+}
+class C1{
+  void method3(){/*implementation*/ }
+}
+class C2{
+  isA C1;
+  isA T2;
+  void method2(){/*implementation*/ }
+}

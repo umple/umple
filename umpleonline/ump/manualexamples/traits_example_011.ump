@@ -1,0 +1,22 @@
+/*
+	Example 2
+*/
+trait T1{
+  abstract method1(); 
+  void method2(){/*implementation*/}
+  void method3(){/*implementation*/}
+  void method4(){/*implementation*/}
+  void method5(Integer data){/* implementation*/}
+}
+class C1{
+  isA T1< method2() as function2 >;
+  void method1() {/*implementation related to C1*/}
+}
+class C2{
+  isA T1< method3() as private function3 >;
+  void method1() {/*implementation related to C2*/}
+}
+class C3{
+  isA T1< +method5(Integer) as function5 >;
+  void method1() {/*implementation related to C3*/}
+}

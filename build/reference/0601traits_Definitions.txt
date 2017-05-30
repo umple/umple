@@ -1,0 +1,32 @@
+Basic Definitions
+Traits
+noreferences
+
+@@description
+<p align = "justify"> 
+A trait is a group of functionality that serves as building blocks for classes. A trait implements such functionality through methods, state machines, and other modeling elements used for modeling behavior. Traits require a set of functionality which is defined by required methods. These required methods must be provided by clients of traits, either directly or indirectly. Clients of traits can be classes and other traits.
+</P>
+
+<p align = "justify">
+Umple traits are defined through the keyword '<i>trait</i>' followed by a unique name and a pair of curly brackets. The name must be alphanumeric and start with an alpha character, or the symbol (underscore). We also recommend capitalizing the first letter of traits names, as is the case for classes and interfaces in Umple. All elements of traits are defined inside the curly brackets except template parameters defined between the name and the curly brackets. In the current version, Umple traits can have methods, attributes, state machines, and associations. Furthermore, Umple traits cannot be used as a type.
+</p>
+
+<p align = "justify">
+Required methods are defined similarly to the way abstract methods are defined in classes. They have exactly the same syntax, but it is also possible in traits to define required methods without the keyword <i>abstract</i>. If a method is defined like a normal method without a body (or implementation), the Umple compiler will consider that as a required method. 
+</p>
+
+<p align = "justify">
+Provided methods are defined in the same way as concrete methods are defined in classes. Indeed, they have exactly the same syntax and semantics. Provided methods also support multiple code blocks, for generation of systems in different languages.
+</p>
+
+<p align = "justify"> The example below shows a trait called TEquality. It has a required methods named isEqual and a provided method named isNotEqual. The provided methods uses the required method to satisfy part of its functionality.
+</p> 
+
+@@syntax
+[[traitDefinition]] [[traitContent]]
+
+@@example
+@@source manualexamples/traits_example_001.ump
+@@endexample
+
+

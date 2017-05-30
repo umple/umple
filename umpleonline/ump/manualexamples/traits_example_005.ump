@@ -1,0 +1,10 @@
+class Dashboard{
+  void update (Sensor sensor){ /*implementation*/ }
+}
+class Sensor{
+  isA Subject< Observer = Dashboard >;
+}
+trait Subject <Observer>{
+  0..1  -> * Observer;
+  void notifyObservers() { /*implementation*/ }
+}

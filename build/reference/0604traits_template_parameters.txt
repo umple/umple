@@ -1,0 +1,58 @@
+Template Parameters
+Traits
+noreferences
+
+@@description
+<p align = "justify"> 
+Template parameters at the modeling level are combined with other modeling elements like associations. This combination increases modularity and reusability to an extent that is not achievable at the implementation level. Template parameters can be referred to in required and provided methods and attributes. Traits can have template parameters with generic or primitive data types. The difference in their use is that it is possible to put restrictions on bound types of generically-typed parameters. Such, restrictions might include a declaration that the interfaces or classes must be extended or implemented by other specific classes. These restrictions are only available for generic-type parameters because primitive types cannot implement or extend any other types and so there is no way of imposing such constraints on them.
+</P>
+
+<p align = "justify">
+Template parameters are defined after the name of a trait inside a pair of angle brackets. Each parameter has a name and they are separated by a comma. Restrictions on the templates applied in the same manner Umple allows extending and implementing interfaces and classes respectively. In other words, the keyword '<i>isA</i>' is used after the name of a template parameter followed by the name of interfaces or a class. If there are more than one interface or one interface and one class they are separated by the symbol '&'.
+</p>
+
+<p align = "justify">
+When clients use traits, they must bind types to their parameters and also types must satisfy their restrictions. Values are bound through the symbol '=', in the manner values are generally assigned to attributes. The bindings are performed inside a pair of angle brackets, each one separated by a comma. Therefore, when a client uses a trait with template parameters, they need to extend the normal way of using traits by having angle brackets appearing after the name of traits.
+</p>
+
+<p align = "justify">
+The example 1 below shows how template parameters can be defined and used. It depicts a trait called T1 (line 4) with one template parameter named TP. The template parameter is restricted to implement the interface I1, defined in line 8. The restriction is applied to make sure a correct type will be bound to the template parameter. Trait T1 has a required method named method2() with a return and a parameter of type TP (which is a template parameter). Furthermore, it has a provided method named method3() with a parameter of type TP.
+</p>
+
+<p align = "justify">
+Class C1 defined in line 11 uses trait T1 and assigns class C1 as a binding type to TP. Since class C1 has already implemented interface I1 (line 12), the type is acceptable. Class C1 needs to implement the required method of trait T1, but it must be performed based on the type assigned to the template parameter TP. Therefore, class C1 implements method2() with the correct data type (which is C1) for the parameter and return types. Line 15 shows the exact signature of the implemented method.
+In the same manner, the provided method obtained is also adapted based on the binding value. The same process is adopted for class C2, but it binds C2 to the parameter TP and so the required method method2() needs to be implemented with type C2. The provided method obtained is based on type C2. There is a method called method1() for classes C1 and C2 that implement interface I1. They have the same signature but different implementations.
+</p>
+
+<p align = "justify">
+Since a trait can use other traits, a trait with template parameters can use other traits with template parameters. Therefore, traits can bind a template parameter to another template parameter to achieve better flexibility. This is performed in the same manner a type is bound to a template parameter. Furthermore, template parameters are modulated for each trait so it is possible for a trait with template parameters to use other traits with the same names for their template parameters.
+</p>
+
+<p align = "justify">
+The example 2 below shows how one template parameter is bound to another one. Trait T1 has the template parameter TP used to define the type of parameter for the provided method method2(). Trait T2 has the template parameter TP used to define the type of parameter for the provided method method3(). It also uses trait T1 and binds its own template parameter to traits T1’s template parameter (line 9). Note that trait T2 can also bind any other types to the template parameter TP, if it is required. Finally, class C1 uses trait T2 and binds String to the template parameter TP (line 13)
+</p>
+
+
+<p align = "justify">
+Umple introduces a special syntax to allow having template parameters that can be substituted in code blocks. For template parameters to operate on code in code blocks, they need to be encompassed within a pair of the symbol '#'. This ensures that the dedicated Umple scanner (i.e. not a full code parser) will be able to detect strings matching the template parameters correctly and replace them with binding values.
+</p>
+
+<p align = "justify">
+The example 3 shows how a template parameter is used in the body of a method. As seen, trait T1 has a template parameter named TP (line 4). The provided method method2() needs to return a string which is a combination of calling the required method method1() and a method named process() from the template parameter TP. In the body of the provided method method2(), an instance of the template parameter needs to be created so as to call the method process(). This is achieved by having the name of template parameter encompassed by '#' in places that require types (line 7). The rest needs to follow the syntax of the language used to implement the code blocks, in this case, Java. Class C2 uses trait T1 and binds class C1 to the template parameter TP (line 15). It also implements the required method method1() in order to able to use the trait.
+</p>
+
+
+@@syntax
+[[traitDefinition]] [[traitContent]]
+
+@@example
+@@source manualexamples/traits_example_006.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_007.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_008.ump
+@@endexample

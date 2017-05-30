@@ -1,0 +1,33 @@
+Clients
+Traits
+noreferences
+
+@@description
+<p align = "justify"> 
+Traits are used by clients (classes and traits) by specifying the keyword '<i>isA</i>' followed by their names and a semi-colon. Traits cannot use themselves (even through several uses in a cyclic manner). When clients specify names of traits for use, those traits must exist in the system. If a trait uses more than one trait, it can separate them by comma or use the keyword '<i>isA</i>' for each one.
+</P>
+
+<p align = "justify">
+In the example 1 below, trait T2 uses trait T1 defined in line 10 and class C2 uses trait T2 defined in line 20. Clients can use other traits if they satisfy their required methods. Satisfaction of required methods is performed by having exactly the same methods implemented in clients. For example, trait T2 uses trait T1 and so it is required to have the required methods of trait T1 implemented in trait T2. Trait T2 achieves this through implementing two methods named method1() and method2() defined in lines 12 and 13.
+</p>
+
+<p align = "justify">
+Trait T2 is not a final client, therefore, it could use trait T1 without implementing those required methods, in that case, the required methods of trait T2 would be method1(), method2(), and method 3(). Class C2, which is a final client, uses trait T2 and therefore needs to implement its required method, which is method3(). However, there is no direct implementation for it. Instead, class C2 obtains such an implementation indirectly from its superclass, which is C1. Therefore, it satisfies the required method of trait T2. 
+</p>
+
+<p>
+When clients use traits, they obtain all provided methods defined in the traits. This includes all other provided methods those traits might obtain from their own used traits. For example, trait T2 gets the provided method method4() from trait T1. This provided method can be called by all other provided methods defined in trait T2. Therefore trait T2 provides three provided methods named method1(), method2(), and method4(). Class C2 uses trait T2 and so it obtains all provided methods.
+</p>
+
+<p align = "justify">
+Please consider that it is allowed for abstract classes to use traits without satisfying their required methods. If this is the case, the required methods of traits will be considered as abstract methods for the abstract class. Then, all subclasses of the abstract class are required to implement those abstract methods. This process ensures that required methods will finally be implemented. It is worth noting that interfaces cannot use traits because they cannot have concrete methods in their definitions.
+</p>
+
+@@syntax
+[[traitDefinition]] [[traitContent]]
+
+@@example
+@@source manualexamples/traits_example_002.ump
+@@endexample
+
+

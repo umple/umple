@@ -6,6 +6,7 @@ Attributes;
 Enumerations;
 Associations;
 State Machines;
+Traits;
 Methods;
 Generation Templates;
 Concurrency;
