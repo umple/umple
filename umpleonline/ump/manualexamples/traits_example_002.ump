@@ -1,5 +1,5 @@
 /*
-	Example 1
+  Example 1: showing how traits can be used by their clients.
 */
 trait T1{
   abstract void method1();

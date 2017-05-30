@@ -1,5 +1,5 @@
 /*
-	Example 2
+	Example 2: showing how one template parameter in a trait is bound to another one.
 */
 trait T1<TP>{
   void method1();

@@ -1,5 +1,5 @@
 /*
-	Example 6
+	Example 6: showing how the operator "Removing/keeping a state" works.
 */
 trait T1 {
   sm1{

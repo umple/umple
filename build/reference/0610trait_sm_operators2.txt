@@ -1,0 +1,78 @@
+Selecting Operators
+Traits
+noreferences
+
+@@description
+<p align = "justify">
+As with <a href="MethodOperatorsinTraits.html">operators on methods</a>, certain operators can be applied to traits’ <a href="StateMachinesinTraits.html">state machines</a> when they are used in <a href="ClientsofTraits.html">clients</a>. These provide mechanisms to improve flexibility, assign state machines to specific states, and resolve conflicts caused by name collisions. These operators follow the same structure defined for operators on methods.
+</p>
+
+<b>Removing/keeping a state machine</b>
+<p align = "justify">
+This operator is used to remove or keep a state machine when a client uses a trait. In the removing mode, specified by the minus symbol '-', the indicated state machine is ignored and is not included in the client. In the keeping mode, specified by '+', only the indicated state machine is kept and the others are ignored. This operator can be used to keep the client free of unneeded detail or conflict. The syntax used for this operator is as follows: <br/> (-|+) stateMachineName
+</p>
+
+<p align = "justify">
+In example 5, trait T1 has three state machines sm1, sm2, and sm3. Classes C1 requires state machine sm2 and sm3 while class C2 requires just state machine sm2. Class C1 achieves this through removing state machine sm1 from trait T1 (line 16). Class C2 obtains its required state machine through keeping just state machine sm2 (line 19). Classes C2 could also achieve the same result through removing sm1 and sm2. Using the keeping operator is more convenient when there are several state machines and modelers need just one them.
+</p>
+
+<b>Removing/keeping a state</b>
+<p align = "justify">
+This operator is used to remove or keep a simple or composite state when using a state machine in a trait. The syntax for this operator is as follows: <br/> (-|+) stateMachineName.stateName.....stateName
+</p>
+
+<p align = "justify">
+This works much like removing/keeping a state machine, using a minus sign for removing and a plus for keeping. The symbols are followed by the name of the state. In the removing mode, this operation will delete all incoming and outgoing transitions of the state as well. In the keeping mode, the specified state will be kept and the remaining states will be removed. This also includes removing all transitions from other states to the specified state. This mode can be applied to the initial states, but if it is applied to other states, the initial state will not be removed. The operator is helpful for cases in which base state machines do not need the functionality of that specific state, or have the same state and do not want to merge it with the one coming from the reused trait. Another use is when clients use more than one trait and those traits have common state machines and states. These common states might have different functionality and clients might want to keep one version.
+</p>
+
+<p align = "justify">
+In example 6, trait T1 has state machine sm1 (line5). Class C1 uses trait T1 and removes state s2 from the state machine sm1 (line 25). As seen, in addition to the state s2, all outgoing transitions (named e2()) from states s0, s1, and s3 have been removed. The operator also removed incoming transition e3() from state s2 to state s3. Class C2 uses trait T1 and requires just state s1 of state machine sm1. As seen, all other states except s0 have been removed. The reason is that state s0 is the initial state of state machine sm1 and removing it results in non-reachable states. The Umple compiler does not allow this situation. Furthermore, all transitions coming from other states to s1 have been removed (in this case, there is none) except transitions coming from the initial state s0. The operator also removes the outgoing transitions e2() and e3() of state s1 to other states s2 and s3 except the ones going to the initial state (in this case, there is none).
+</p>
+
+<b>Removing/keeping a region</b>
+<p align = "justify">
+This operator is used to remove or keep a region of a state machine. The syntax used for this operator is exactly like the one defined for removing or keeping a state, except the last name in the dot-separated chain specifies the name of the region. This operator is utilized in cases similar to those explained for removing a state. It can also be used to make a composite state a simple state by reducing the number of regions to zero.
+</p>
+
+<p align = "justify">
+In example 7, two classes C1 and C2 uses trait T1 and manipulate its state machine’s regions. State machine sm has a composite state s1 with three regions r1, r2, and r3. Class C1 removes region r1 from the composite state s1 (line 23) while class C2 keeps region r2 (line 26). As seen in both cases, the region name appears after the name of state machine sm and the state s1. We can see since region r1 has been removed in class C1, the incoming transition e2() has also been removed automatically. In class C2, all outgoing transition from region r2 to other regions, including e2() and e4(), have been removed automatically in addition to region r1 and r3.
+</p>
+
+<b>Removing/keeping a transition</b>
+<p align = "justify">
+This operator is used to remove or keep a transition from a state machine. The syntax for this operator is as follows: <br/> (-|+) stateMachineName.stateName.....stateName.((eventName(argumentTypes) ([guard])?) | [guard?])
+</p>
+
+<p align = "justify">
+A minus symbol is followed by a transition that needs to be removed. A plus symbol is used to pick a transition to keep. A transition is defined by specifying the name of the state machine, states (including regions for nested states), event, and guard. The symbol '?' is not part of the operator and it is there to show which elements are optional. The name of the state machine and states are mandatory. The event name (along with its arguments) depends on the type of transition.
+</p>
+
+<p align = "justify">
+If the transition is 'auto' (immediately taken on entry to the state or upon completion of a do activity) there is no need to specify it, otherwise, it must be specified. If a transition has a guard, it must be specified using the same syntax used when specifying transitions (inside square brackets). However, if a transition is auto and unguarded, it must be defined with an empty guard "[]" and without any event name. Actions and destination states are not part of the definition for this operator because the above definition suffices to uniquely select any transition. The operator is utilized when base state machines do not need a specific transition coming from the used trait. Furthermore, base state machines might want to extend a transition of a state, but it might already have a transition matching the given specification.
+</p>
+
+<p align = "justify">
+In example 8, class C1 uses trait T1 (line 25) and keeps the transition with the event name e2(Integer) from the state machine sm and state s1. Other transitions related to the state s1, which are e3() and e4(), are removed. Since the transition does not have a guard, brackets are not required in the specification of the transition. Class C2 also uses trait T1 (line 28), but it removes the transition with the event name e4() and a guard on the variable cond from the state machine sm and state s1. This case shows how a transition with the event name and guard can be specified. Class C3 uses trait T2, but it removes an auto transition from state s2 with a guard on the variable cond. As seen, no name has been defined in the operator for the event and the guard is just defined inside brackets. Finally, class C4 use the trait T1 (line 34), but it removes an auto transition without a guard. As seen, an empty bracket after the name of the state is used to specify the transition.
+</p>
+
+
+
+@@syntax
+[[traitDefinition]] [[traitContent]]
+
+@@example
+@@source manualexamples/traits_example_020.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_021.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_022.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_023.ump
+@@endexample
+

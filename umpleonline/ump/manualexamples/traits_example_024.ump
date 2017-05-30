@@ -1,5 +1,5 @@
 /*
-	Example 9
+	Example 9: showing how the operator "Extending a state by adding a state machine to it" works.
 */
 trait T1{
   sm1{    

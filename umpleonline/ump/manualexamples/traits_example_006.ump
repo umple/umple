@@ -1,5 +1,5 @@
 /*
-	Example 1
+	Example 1: showing how template parameters in traits are defined and used.
 */
 trait T1< TP isA I1 > {
   abstract TP method2(TP data);

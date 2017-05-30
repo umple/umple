@@ -1,5 +1,5 @@
 /*
-	Example 7
+	Example 7: showing how the operator "Removing/keeping a region" works.
 */
 trait T1{
   sm {

@@ -1,10 +1,10 @@
-State Machines
+State Machines in Traits
 Traits
 noreferences
 
 @@description
 <p align = "justify">
-A trait can have zero or many state machines, each with a unique name. The definition of state machines in traits follows the same rules and constraints that exist for them in classes. The example 1 shows a trait called T1 (lines 4-13) with two state machines sm1 (lines 5-8) and sm2 (lines 9-12). Use of trait T1 in class C1 results in class C1 having those two state machines as native state machines. In general, if a class already has state machines with completely distinct names to those being introduced via traits, the introduced state machines are just ‘flattened’ into the class, i.e. they are treated as though they were coded directly in the class.
+A <a href="Traits.html">trait</a> can have zero or many <a href="BasicStateMachines.html">state machines</a>, each with a unique name. The definition of state machines in traits follows the same rules and constraints that exist for them in classes. The example 1 shows a trait called T1 (lines 4-13) with two state machines sm1 (lines 5-8) and sm2 (lines 9-12). Use of trait T1 in class C1 results in class C1 having those two state machines as native state machines. In general, if a class already has state machines with completely distinct names to those being introduced via traits, the introduced state machines are just ‘flattened’ into the class, i.e. they are treated as though they were coded directly in the class.
 </P>
 
 <p align = "justify">
@@ -12,7 +12,7 @@ Introduced machines that have names duplicating existing state machine names are
 </p>
 
 <p align = "justify">
-State machines in traits are considered as provided functionality. More concretely, any event in a state machine is considered as a provided method, and so can satisfy the required methods of used traits. State machines are supposed to encapsulate their own actions and guards so they can be reused as a piece of functionality. For example, a guard can be defined as a reference to an attribute in the trait or to a parameter of the event, so when the state machine is reused the attribute and parameter are reused as well. The same perspective is true for actions. In real world cases, state machines may need to obtain those conditions and actions from the context (e.g. clients) in which they are reused. State machines hence require those conditions and actions to behave correctly. This requirement is in alignment with the notion of required methods of traits. Therefore, required actions and guards of state machines can be expressed as required methods of traits. Indeed, if events of state machines are considered as provided methods and their guards and actions are considered as required methods, then state machines can define functional behavior and therefore the required behavior of them can again be satisfied by other state machines in the clients. It should be noted that if guards, actions, and activities of state machines are defined as methods (not inline code blocks directly in the state machine), they are not anymore required methods. They will be treated as provided methods, and traits’ rules related to provided methods will be applied to them
+State machines in traits are considered as provided functionality. More concretely, any event in a state machine is considered as a provided method, and so can satisfy the required methods of used traits. State machines are supposed to encapsulate their own actions and guards so they can be reused as a piece of functionality. For example, a guard can be defined as a reference to an attribute in the trait or to a parameter of the event, so when the state machine is reused the attribute and parameter are reused as well. The same perspective is true for actions. In real world cases, state machines may need to obtain those conditions and actions from the context (e.g. <a href="ClientsofTraits.html">clients</a>) in which they are reused. State machines hence require those conditions and actions to behave correctly. This requirement is in alignment with the notion of required methods of traits. Therefore, required actions and guards of state machines can be expressed as required methods of traits. Indeed, if events of state machines are considered as provided methods and their guards and actions are considered as required methods, then state machines can define functional behavior and therefore the required behavior of them can again be satisfied by other state machines in the clients. It should be noted that if guards, actions, and activities of state machines are defined as methods (not inline code blocks directly in the state machine), they are not anymore required methods. They will be treated as provided methods, and traits’ rules related to provided methods will be applied to them
 </p>
 
 <p align = "justify">
@@ -20,7 +20,7 @@ The example 3 shows how required methods are satisfied by events of state machin
 </p>
 
 <p align = "justify">
-Like the way template parameters defined in traits are used for required and provided methods, they can also be used in collaboration with state machines. Template parameters can be used to define the types of parameters for events. They can also be used in code blocks related to actions and activities. The example 4 illustrates how template parameters can be used with events of state machines. State machine sm in trait T1 has two events. Event e1 has a parameter of type TP (line 6) and event e2 has two parameters with types TP and String (line 7). Class C2 uses trait T1 (line 12) and binds class C1 to the template parameters TP.
+Like the way <a href="TraitTemplateParameters.html">template parameters</a> defined in traits are used for required and provided methods, they can also be used in collaboration with state machines. Template parameters can be used to define the types of parameters for events. They can also be used in code blocks related to actions and activities. The example 4 illustrates how template parameters can be used with events of state machines. State machine sm in trait T1 has two events. Event e1 has a parameter of type TP (line 6) and event e2 has two parameters with types TP and String (line 7). Class C2 uses trait T1 (line 12) and binds class C1 to the template parameters TP.
 </p>
 
 
@@ -37,5 +37,9 @@ Like the way template parameters defined in traits are used for required and pro
 
 @@example
 @@source manualexamples/traits_example_014.ump
+@@endexample
+@@example
+
+@@source manualexamples/traits_example_015.ump
 @@endexample
 

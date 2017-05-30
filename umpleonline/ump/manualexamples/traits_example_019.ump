@@ -1,5 +1,5 @@
 /*
-	Example 4
+	Example 4: showing how the operator "Change the name of events" works.
 */
 trait T1 {
   sm1{

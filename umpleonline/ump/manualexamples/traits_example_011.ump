@@ -1,5 +1,5 @@
 /*
-	Example 2
+	Example 2: showing how the operator "Renaming (Aliasing) provided methods" works.
 */
 trait T1{
   abstract method1(); 

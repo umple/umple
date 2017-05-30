@@ -1,5 +1,5 @@
 /*
-	Example 1
+	Example 1: showing how the operator "Removing/keeping provided methods" works.
 */
 trait T1{
   abstract method1(); 

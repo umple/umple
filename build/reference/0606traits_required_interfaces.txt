@@ -1,4 +1,4 @@
-Required Interfaces
+Required Interfaces of Traits
 Traits
 noreferences
 
@@ -8,11 +8,11 @@ Required functionality of classic traits is defined in terms of required methods
 </P>
 
 <p align = "justify">
-From a different perspective, another shortcoming appears when we know the clients of traits and that they must implement certain interfaces in order to have a correct implementation for the required methods. In fact, there is no way to put dependencies at the semantics level on clients through traits because required methods are simply syntactically captured. This suggests that it might be a good idea to put a restriction on clients that specifies the interfaces they must implement. Such a restriction would ensure that traits are not used in clients that just happen to have methods with the same signature. This is important because having reusable elements which work correctly with minimum errors should be the designers’ responsibility and not the user’s.
+From a different perspective, another shortcoming appears when we know the <a href="ClientsofTraits.html">clients</a> of <a href="Traits.html">traits</a> and that they must implement certain <a href="interfaceDefinition.html">interfaces</a> in order to have a correct implementation for the required methods. In fact, there is no way to put dependencies at the semantics level on clients through traits because required methods are simply syntactically captured. This suggests that it might be a good idea to put a restriction on clients that specifies the interfaces they must implement. Such a restriction would ensure that traits are not used in clients that just happen to have methods with the same signature. This is important because having reusable elements which work correctly with minimum errors should be the designers’ responsibility and not the user’s.
 </p>
 
 <p align = "justify">
-In order to address these issues, required interfaces can be used. Using these, traits can either put extra restrictions on clients or just manage their required methods in a more modular and reusable way. Traits may use already-existing interfaces or new interfaces may be written to accomplish the desired modularization. Furthermore, developers will be able to create a hierarchy of interfaces to optimize the reusability. Traits define their required interfaces through the keyword 'isA' followed by the name of interfaces and a semi-colon. When a class use traits, it needs to implement the required interfaces of those traits. If a trait uses other traits with required interfaces, those required interfaces are added to the set of required interfaces of the trait and final clients are required to implement all of those required interfaces.
+In order to address these issues, required interfaces can be used. Using these, traits can either put extra restrictions on clients or just manage their required methods in a more modular and reusable way. Traits may use already-existing interfaces or new interfaces may be written to accomplish the desired modularization. Furthermore, developers will be able to create a hierarchy of interfaces to optimize the reusability. Traits define their required interfaces through the keyword '<i>isA</i>' followed by the name of interfaces and a semi-colon. When a class use traits, it needs to implement the required interfaces of those traits. If a trait uses other traits with required interfaces, those required interfaces are added to the set of required interfaces of the trait and final clients are required to implement all of those required interfaces.
 </p>
 
 <p align = "justify">

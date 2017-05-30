@@ -1,5 +1,5 @@
 /*
-	Example 2
+	Example 2: showing how state machines are defined through different traits.
 */
 trait T1 {
   sm1{

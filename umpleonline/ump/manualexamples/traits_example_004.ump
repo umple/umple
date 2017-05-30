@@ -1,5 +1,5 @@
 /*
- Example 2
+ Example 2: showing how states in traits can be obtained by required methods.
 */
 trait T1{
   Integer getData();

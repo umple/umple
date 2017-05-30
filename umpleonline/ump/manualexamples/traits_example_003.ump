@@ -1,5 +1,5 @@
 /*
- Example 1
+ Example 1: showing how attributes in traits can be used.
 */
 trait Identifiable {
   firstName;

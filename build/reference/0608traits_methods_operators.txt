@@ -1,10 +1,10 @@
-Method Operators
+Method Operators in Traits
 Traits
 noreferences
 
 @@description
 <p align = "justify">
-Operators are capabilities that allow resolving the conflicts and also managing the granularity of traits. Operators are applied to traits when traits are used by clients. Clients can apply more than one operator to a specific trait, but those operators need to be compatible with each other. There is no sequence in the way operators are applied. Operators are defined inside angle brackets after the name of traits and can be mixed with binding types to template parameters. The general structure by which a client uses operators is as follows: <br/>
+Operators are capabilities that allow resolving the conflicts and also managing the granularity of <a href="Traits.html">traits</a>. Operators are applied to traits when traits are used by <a href="ClientsofTraits.html">clients</a>. Clients can apply more than one operator to a specific trait, but those operators need to be compatible with each other. There is no sequence in the way operators are applied. Operators are defined inside angle brackets after the name of traits and can be mixed with binding types to <a href="TraitTemplateParameters.html">template parameters</a>. The general structure by which a client uses operators is as follows: <br/>
 
 isA TName &lt; Operator1, Operator2, …, Operatorn &gt;
 
@@ -15,7 +15,7 @@ TName specifies the name of a trait to which each Operatori,i=1..n is applied. T
 </p>
 
 <p align = "justify">
-If traits have template parameters and those template parameters have been used as types in provided methods (or event of state machines), their types do not affect the signature of provided methods referred to by operators. In other words, types of template parameters are applied to traits after operators are applied. The identification factor for selecting a provided method is its signature. However, the return type of provided methods is not used for identification because the name and list of types of parameters can uniquely differentiate each provided method from others. When parameters of provided methods are specified, there is no need to define the name of parameters
+If traits have <a href="TraitTemplateParameters.html">template parameters</a> and those template parameters have been used as types in provided methods (or event of state machines), their types do not affect the signature of provided methods referred to by operators. In other words, types of template parameters are applied to traits after operators are applied. The identification factor for selecting a provided method is its signature. However, the return type of provided methods is not used for identification because the name and list of types of parameters can uniquely differentiate each provided method from others. When parameters of provided methods are specified, there is no need to define the name of parameters
 </p>
 <b> Removing/keeping provided methods</b>
 <p align = "justify">

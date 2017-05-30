@@ -1,3 +1,6 @@
+/*
+  Example 1: implementing observable pattern with traits and associations.
+*/
 class Dashboard{
   void update (Sensor sensor){ /*implementation*/ }
 }

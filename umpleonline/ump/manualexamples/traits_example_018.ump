@@ -1,5 +1,5 @@
 /*
-	Example 3
+	Example 3: showing how the operator "Changing the name of a state" works.
 */
 trait T1 {
   sm{

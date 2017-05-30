@@ -1,5 +1,5 @@
 /*
-	Example 1
+	Example 1: showing how required interfaces in traits are defined and used.
 */
 interface I1{
   void method1();

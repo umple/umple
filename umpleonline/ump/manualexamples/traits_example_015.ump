@@ -1,5 +1,5 @@
 /*
-	Example 4
+	Example 4: showing how template parameters in traits are used inside state machines.
 */
 trait T1<TP>{
   sm{

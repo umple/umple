@@ -1,5 +1,5 @@
 /*
-	Example 3
+	Example 3: showing how template parameters in traits are used in code blocks.
 */
 trait T1 <TP>{
   String method1();

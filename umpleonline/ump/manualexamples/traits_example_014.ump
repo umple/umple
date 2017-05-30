@@ -1,5 +1,5 @@
 /*
-	Example 3
+	Example 3:showing how required methods of traits are satisfied by events of state machines.
 */
 trait T1{
   Boolean m1(String input);

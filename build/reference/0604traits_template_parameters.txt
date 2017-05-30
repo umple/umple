@@ -1,18 +1,18 @@
-Template Parameters
+Trait Template Parameters
 Traits
 noreferences
 
 @@description
 <p align = "justify"> 
-Template parameters at the modeling level are combined with other modeling elements like associations. This combination increases modularity and reusability to an extent that is not achievable at the implementation level. Template parameters can be referred to in required and provided methods and attributes. Traits can have template parameters with generic or primitive data types. The difference in their use is that it is possible to put restrictions on bound types of generically-typed parameters. Such, restrictions might include a declaration that the interfaces or classes must be extended or implemented by other specific classes. These restrictions are only available for generic-type parameters because primitive types cannot implement or extend any other types and so there is no way of imposing such constraints on them.
+Template parameters at the modeling level are combined with other modeling elements like <a href="AssociationsinTraits.html">associations</a>. This combination increases modularity and reusability to an extent that is not achievable at the implementation level. Template parameters can be referred to in required and provided methods and <a href="AttributesinTraits.html">attributes</a>. Traits can have template parameters with generic or primitive data types. The difference in their use is that it is possible to put restrictions on bound types of generically-typed parameters. Such, restrictions might include a declaration that the <a href="interfaceDefinition.html">interfaces</a> or <a href="ClassDefinition.html">classes</a> must be extended or implemented by other specific classes. These restrictions are only available for generic-type parameters because primitive types cannot implement or extend any other types and so there is no way of imposing such constraints on them.
 </P>
 
 <p align = "justify">
-Template parameters are defined after the name of a trait inside a pair of angle brackets. Each parameter has a name and they are separated by a comma. Restrictions on the templates applied in the same manner Umple allows extending and implementing interfaces and classes respectively. In other words, the keyword '<i>isA</i>' is used after the name of a template parameter followed by the name of interfaces or a class. If there are more than one interface or one interface and one class they are separated by the symbol '&'.
+Template parameters are defined after the name of a <a href="Traits.html">traits</a> inside a pair of angle brackets. Each parameter has a name and they are separated by a comma. Restrictions on the templates applied in the same manner Umple allows extending and implementing interfaces and classes respectively. In other words, the keyword '<i>isA</i>' is used after the name of a template parameter followed by the name of interfaces or a class. If there are more than one interface or one interface and one class they are separated by the symbol '&'.
 </p>
 
 <p align = "justify">
-When clients use traits, they must bind types to their parameters and also types must satisfy their restrictions. Values are bound through the symbol '=', in the manner values are generally assigned to attributes. The bindings are performed inside a pair of angle brackets, each one separated by a comma. Therefore, when a client uses a trait with template parameters, they need to extend the normal way of using traits by having angle brackets appearing after the name of traits.
+When <a href="ClientsofTraits.html">clients</a> use traits, they must bind types to their parameters and also types must satisfy their restrictions. Values are bound through the symbol '=', in the manner values are generally assigned to attributes. The bindings are performed inside a pair of angle brackets, each one separated by a comma. Therefore, when a client uses a trait with template parameters, they need to extend the normal way of using traits by having angle brackets appearing after the name of traits.
 </p>
 
 <p align = "justify">
