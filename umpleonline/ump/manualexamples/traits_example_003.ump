@@ -1,5 +1,8 @@
 /*
- Example 1: showing how attributes in traits can be used.
+ Example 1: use of a trait in Umple
+ The trait has regular attributes, derived attribute  
+ and a method that are copied into Organization  
+ and Company  
 */
 trait Identifiable {
   firstName;

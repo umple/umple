@@ -4,26 +4,38 @@ noreferences
 
 @@description
 <p align = "justify"> 
-A trait is a group of functionality that serves as building blocks for classes. A trait implements such functionality through <a href="MethodDefinition.html">methods</a>, <a href="BasicStateMachines.html">state machines</a>, and other modeling elements used for modeling behavior. Traits require a set of functionality which is defined by required methods. These required methods must be provided by <a href="ClientsofTraits.html">clients</a> of traits, either directly or indirectly. Clients of traits can be <a href="ClassDefinition.html">classes</a> and other traits.
+A trait is a group of functionality that serves as building blocks for classes. A trait implements such functionality through <a href="MethodDefinition.html">methods</a>, <a href="BasicStateMachines.html">state machines</a>, and other modeling elements used for modeling behavior. Traits require a set of functionality which is defined by required methods. These required methods must be provided by <a href="ClientsofTraits.html">clients</a> of traits, either directly or indirectly. Clients of traits can be <a href="ClassDefinition.html">classes</a> and other traits. In other words, a trait is a partial description of a class that can be reused in several different classes. In other words, a trait is a partial description of a class that can be reused in several different classes.
 </P>
 
 <p align = "justify">
-Umple traits are defined through the keyword '<i>trait</i>' followed by a unique name and a pair of curly brackets. The name must be alphanumeric and start with an alpha character, or the symbol (underscore). We also recommend capitalizing the first letter of traits names, as is the case for <a href="ClassDefinition.html">classes</a> and <a href="interfaceDefinition.html">interfaces</a> in Umple. All elements of traits are defined inside the curly brackets except <a href="TraitTemplateParameters.html">template parameters</a> defined between the name and the curly brackets. In the current version, Umple traits can have methods, <a href="AttributesinTraits.html">attributes</a>, <a href="StateMachinesinTraits.html">state machines</a>, <a href="TraitTemplateParameters.html">template parameters</a>, <a href="RequiredInterfacesofTraits.html">required interfaces</a>, and <a href="AssociationsinTraits.html">associations</a>. Furthermore, Umple traits cannot be used as a type.
+Traits can be used in place of standard inheritance where there is already a superclass, since multiple inheritance is not allowed in Umple to be consistent with Java and several other languages. Traits can be used to inject attributes, associations, state machines, constraints, methods and many other elements. They are one of several approaches in Umple to separation of concerns. The others are the mixin ability (ability to specify a class several times and have the elements added together), and the <a href="BeforeandAfterStatements.html">aspect oriented</a> capabilities. Note that traits themselves are subject to being <a href="TraitsandUmpleMixins.htm">mixed</a> in. You can declare two parts of the same trait in two different places in an Umple system.
 </p>
 
 <p align = "justify">
-Required methods are defined similarly to the way abstract <a href="MethodDefinition.html">methods</a> are defined in classes. They have exactly the same syntax, but it is also possible in traits to define required methods without the keyword <i>abstract</i>. If a method is defined like a normal method without a body (or implementation), the Umple compiler will consider that as a required method. 
+Umple traits are defined through the keyword '<i>trait</i>' followed by a unique name and a pair of curly brackets. The name must be alphanumeric and start with an alpha character, or the symbol (underscore). We also recommend capitalizing the first letter of traits names, as is the case for classes and <a href="interfaceDefinition.html">interfaces</a> in Umple. All elements of traits are defined inside the curly brackets except <a href="TraitTemplateParameters.html">template parameters</a> defined between the name and the curly brackets. In the current version, Umple traits can have methods, <a href="AttributesinTraits.html">attributes</a>, <a href="StateMachinesinTraits.html">state machines</a>, <a href="TraitTemplateParameters.html">template parameters</a>, <a href="RequiredInterfacesofTraits.html">required interfaces</a>, and <a href="AssociationsinTraits.html">associations</a>. Furthermore, Umple traits cannot be used as a type.
 </p>
 
 <p align = "justify">
-Provided methods are defined in the same way as concrete <a href="MethodDefinition.html">methods</a> are defined in <a href="ClassDefinition.html">classes</a>. Indeed, they have exactly the same syntax and semantics. Provided methods also support multiple code blocks, for generation of systems in different languages.
+Required methods are defined similarly to the way abstract methods are defined in classes. They have exactly the same syntax, but it is also possible in traits to define required methods without the keyword <i>abstract</i>. If a method is defined like a normal method without a body (or implementation), the Umple compiler will consider that as a required method. 
 </p>
 
-<p align = "justify"> The example below shows a trait called TEquality. It has a required methods named isEqual and a provided method named isNotEqual. The provided methods uses the required method to satisfy part of its functionality.
+<p align = "justify">
+Provided methods are defined in the same way as concrete methods are defined in classes. Indeed, they have exactly the same syntax and semantics. Provided methods also support multiple code blocks, for generation of systems in different languages.
+</p>
+
+<p align = "justify">
+Traits are not part of UML. A UML class diagram drawn from an Umple file containing traits will '<a href = "FlatteningofTraits.html">flatten</a>' the traits. The trait elements will appear in all classes that include that trait. In the first example below, the name and address attribute will appear in the class diagram of both Person and Company
+</p>
+
+<p align = "justify"> The example 2 below shows a trait called TEquality. It has a required methods named isEqual and a provided method named isNotEqual. The provided methods uses the required method to satisfy part of its functionality.
 </p> 
 
 @@syntax
 [[traitDefinition]] [[traitContent]]
+
+@@example
+@@source manualexamples/traits_example_003.ump
+@@endexample
 
 @@example
 @@source manualexamples/traits_example_001.ump
