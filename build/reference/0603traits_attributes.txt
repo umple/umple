@@ -20,10 +20,6 @@ Another way to avoid conflicts is to use stateless traits. In that case, traits 
 
 </p>
 
-
-@@syntax
-[[traitDefinition]] [[traitContent]]
-
 @@example
 @@source manualexamples/traits_example_003.ump
 @@endexample

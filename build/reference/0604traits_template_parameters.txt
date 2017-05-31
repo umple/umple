@@ -43,7 +43,7 @@ The example 3 shows how a template parameter is used in the body of a method. As
 
 
 @@syntax
-[[traitDefinition]] [[traitContent]]
+[[traitParameters]] [[traitFullParameters]] [[traitParametersInterface]]
 
 @@example
 @@source manualexamples/traits_example_006.ump

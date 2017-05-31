@@ -19,9 +19,6 @@ In order to address these issues, required interfaces can be used. Using these, 
 The example 1 below shows how required interfaces are used and applied. There is a hierarchical design for required methods in terms of interfaces, making it reusable and consistent. Traits T1 and T2  have the same required interface (lines 13 and 17) and if there is a modification in the required interface it will be applied to both. Classes C1 and C2 have to implement interfaces I1 (Line 28) and I2 (line 31) to be able to use trait T1 and T2.
 </p>
 
-@@syntax
-[[traitDefinition]] [[traitContent]]
-
 @@example
 @@source manualexamples/traits_example_009.ump
 @@endexample

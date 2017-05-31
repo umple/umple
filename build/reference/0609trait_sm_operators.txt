@@ -54,9 +54,9 @@ Through this operator, it is possible to rename an event related to a specific s
 In example 4, trait T1 has two state machines sm1 and sm2. These state machines have common events named e1(Integer) and e0(). Class C1 want to use trait T1 with some changes in the name of events. It is required to rename all event names e0() to event0() and just change the event name e1(Integer) to event1() in state machine s1. Line 15 depicts how class C1 achieves it. Since the change on event e0() is going to happen in both the state machines, the symbol * has been used. However, the name of state machine sm1 was used for the event e1(Integer) because we do not want to have it changed in state machine sm2.
 </p>
 
-
 @@syntax
-[[traitDefinition]] [[traitContent]]
+[[functionAliasName]]
+
 
 @@example
 @@source manualexamples/traits_example_016.ump

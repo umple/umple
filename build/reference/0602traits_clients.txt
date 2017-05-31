@@ -23,9 +23,6 @@ When clients use traits, they obtain all provided methods defined in the traits.
 Please consider that it is allowed for abstract <a href="ClassDefinition.html">classes</a> to use traits without satisfying their required methods. If this is the case, the required methods of traits will be considered as abstract methods for the abstract class. Then, all subclasses of the abstract class are required to implement those abstract methods. This process ensures that required methods will finally be implemented. It is worth noting that <a href="interfaceDefinition.html">interfaces</a> cannot use traits because they cannot have concrete methods in their definitions.
 </p>
 
-@@syntax
-[[traitDefinition]] [[traitContent]]
-
 @@example
 @@source manualexamples/traits_example_002.ump
 @@endexample

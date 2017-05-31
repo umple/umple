@@ -58,10 +58,8 @@ If the transition is 'auto' (immediately taken on entry to the state or upon com
 In example 8, class C1 uses trait T1 (line 25) and keeps the transition with the event name e2(Integer) from the state machine sm and state s1. Other transitions related to the state s1, which are e3() and e4(), are removed. Since the transition does not have a guard, brackets are not required in the specification of the transition. Class C2 also uses trait T1 (line 28), but it removes the transition with the event name e4() and a guard on the variable cond from the state machine sm and state s1. This case shows how a transition with the event name and guard can be specified. Class C3 uses trait T2, but it removes an auto transition from state s2 with a guard on the variable cond. As seen, no name has been defined in the operator for the event and the guard is just defined inside brackets. Finally, class C4 use the trait T1 (line 34), but it removes an auto transition without a guard. As seen, an empty bracket after the name of the state is used to specify the transition.
 </p>
 
-
-
 @@syntax
-[[traitDefinition]] [[traitContent]]
+[[StateMachineAliasName]] [[iEStateMachine]]
 
 @@example
 @@source manualexamples/traits_example_020.ump

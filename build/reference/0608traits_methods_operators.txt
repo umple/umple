@@ -38,7 +38,7 @@ The example 2 shows this operator in action. Class C1 uses trait T1 (line 12) an
 </p>
 
 @@syntax
-[[traitDefinition]] [[traitContent]]
+[[functionAliasName]] [[iEFunction]]
 
 @@example
 @@source manualexamples/traits_example_010.ump

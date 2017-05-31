@@ -19,8 +19,6 @@ When an association is defined, <a href="APISummary.html">APIs</a>  (set of meth
 As each subject must have a notification mechanism to let observers know about changes, there is a provided method notifyObservers() for this. This method obtains access to all observers through the association. Two classes Dashboard and Sensor play the roles of observer and subject. Class Dashboard has a method named update(Sensor) (line 2) used by the future subject to update it. Class Sensor obtains the feature of being a subject through using trait Subject and binding Dashboard to parameter Observer
 </p>
 
-@@syntax
-[[traitDefinition]] [[traitContent]]
 
 @@example
 @@source manualexamples/traits_example_005.ump

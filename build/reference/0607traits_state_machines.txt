@@ -24,8 +24,6 @@ Like the way <a href="TraitTemplateParameters.html">template parameters</a> defi
 </p>
 
 
-@@syntax
-[[traitDefinition]] [[traitContent]]
 
 @@example
 @@source manualexamples/traits_example_012.ump
