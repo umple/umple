@@ -1,0 +1,29 @@
+/*
+	Example 7: showing how the operator "Removing/keeping a region" works.
+*/
+trait T1{
+  sm {
+    s1{
+      r1{ e1-> r11; }
+      r11{}
+      ||
+      r2{
+        e2-> r11;
+        e3-> r21;
+        e4-> r31;
+      }
+      r21{}
+      ||
+      r3{e5->r31; }
+      r31{}
+    }
+  }
+}
+class C1{
+  isA T1<-sm.s1.r1>;
+}
+class C2{
+  isA T1<+sm.s1.r2>;
+}
+
+

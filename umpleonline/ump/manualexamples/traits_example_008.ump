@@ -1,0 +1,17 @@
+/*
+	Example 3: showing how template parameters in traits are used in code blocks.
+*/
+trait T1 <TP>{
+  String method1();
+  String method2(){
+    #TP# instance = new #TP#();
+    return method1() +":"+instance.process();
+  }
+}
+class C1{
+  String process(){/*implementation*/}
+}
+class C2{
+  isA T1< TP = C1 >;
+  String method1(){/*implementation*/ }
+}

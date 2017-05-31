@@ -1,0 +1,9 @@
+/*
+	Example 2: showing a trait designed for comparison regarding if two objects are equal or not.
+*/
+trait TEquality{
+  Boolean isEqual(Object object);
+  Boolean isNotEqual(Object object){ 
+    return isEqual(object) ? true : false;
+  }
+} 

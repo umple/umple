@@ -1,0 +1,16 @@
+/*
+	Example 1: showing how the operator "Changing the name of a state machine" works.
+*/
+trait T1 {
+  sm1{
+    s0 {e1-> s1;}
+    s1 {e0-> s0;}
+  }
+  sm2{
+    s0 {e1-> s1;}
+    s1 {e0-> s0;}
+  }
+}
+class C1 {
+ isA T1<sm1 as mach1, sm2 as mach2>;
+}

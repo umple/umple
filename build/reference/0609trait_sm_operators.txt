@@ -1,0 +1,75 @@
+State Machine Operators in Traits
+Traits
+noreferences
+
+@@description
+<p align = "justify">
+As with <a href="MethodOperatorsinTraits.html">operators on methods</a>, certain operators can be applied to traits’ <a href="StateMachinesinTraits.html">state machines</a> when they are used in <a href="ClientsofTraits.html">clients</a> . These provide mechanisms to improve flexibility, assign state machines to specific states, and resolve conflicts caused by name collisions. These operators follow the same structure defined for operators on methods.
+</P>
+
+<b>Changing the name of a state machine</b>
+<p align = "justify">
+This operator is used to change the name of a <a href="StateMachinesinTraits.html">state machine</a> when it is to be reused by a client. This operator can also be mixed partially with the keeping operator to provide better flexibility. The syntax for this operator is as follow: 
+</p>
+<center>(+) stateMachineName as newName</center>
+
+<p align = "justify">
+When a state machine with a given name is specified by the renaming operator, it must be available in the trait being operated on, either directly in the trait or another trait used by the trait. The example 1 shows how names of state machines in trait T1 can be changed to mach1 and mach2. As seen, in example 1 both state machines that are available directly in trait T1 have been renamed. The example 2 shows how class C1 uses the operator to rename the state machine sm1 in trait T1 and also automatically remove other state machines, which are just state machine sm2 in this case.
+</p>
+
+<p align = "justify">
+There are two main scenarios for this operator. The first is merging: when a client already has a state machine and will obtain another state machine coming from the used trait. The two machines might have some of the same states but different functionality. The client wants to have all functionality merged in one state machine (described as we progress). In this case, the operator is used to change the name of the incoming state machine from the trait, to match the name of the existing state machine. The result is that the new functionality will be merged into the existing state machine. The second scenario is for avoiding conflicts. This occurs when a client has an existing state machine and wants to incorporate another one with different functionality, but that happens to have the same name. In this case, the client can change the name of the incoming state machine to be different from the existing state machine. This second scenario can be needed in various conflict-resolution scenarios
+</p>
+
+<b>Changing the Name of a State</b>
+<p align = "justify">
+This operator changes the name of a state inside a specific state machine. The operator covers both simple and composite states. The syntax used for this purpose is as follows: 
+</p>
+<center>stateMachineName.stateName.....stateName as newName</center>
+
+<p align = "justify">
+The state to be renamed is specified based on a series of names separated by dots, starting with the name of the state machine. If the state is a simple or composite state at the top level of a hierarchical state machine, then it comes directly after the name of the state machine. However, if it is deeper in the hierarchy, the chain of parents must also be specified. The last name in the series is always the name of the state to be renamed. In example 3, trait T1 has a state machine with a composite state named s0 (line 6). Composite state s0 has two internal states s11 and s12.  Class C1 uses trait T1 and changes the name of state s0 to state0 and the name of s11 to state11 (line 15). In order to specify the state s0, it is preceded by the name of a state machine, which is sm. For state s11, the name of the state machine, the composite state, and the region name precede it. In Umple, the name of the single region inside a composite state is set automatically to the name of the composite state. The operator applies also the same rule when it changes a composite state.
+</p>
+
+<p align = "justify">
+The first scenario for this operator is to change the vocabulary used for the names of states. This adds flexibility when a trait is specified in a generalized context and there is a need to adapt names so as to be more domain-specific. E.g. ‘tripEnded’ in a general transportation state machine becomes ‘landed’ in an adaptation to the airline domain, or ‘docked’ in an adaptation to the water transport domain. The second scenario is when two states need to be merged, but they have different names. By changing the name of one so it matches the other, then the algorithm knows to merge them. The third scenario occurs when there are two states in a state machine to be composed, but we want to keep those two states separate and prevent merging.
+</p>
+
+<b>Changing the name of regions</b>
+<p align = "justify">
+This operator allows renaming a specified region. It is just like the operator used for changing the name of states. The difference is that the last name in the sequential series of names (separated by dots) is the name of a region to be changed. Since names of regions are set automatically by the Umple compiler and they are equal to the names of their initial states, renaming the name of a region must also be applied to its initial state. This is performed automatically by the operator. The applications for this operator are like those for changing the name of states. In particular, this operator is used when several regions are supposed to be merged or kept separate.
+</p>
+
+<b>Change the name of events</b>
+<p align = "justify">
+This operator is used to change the name of events that will trigger transitions in state machines. The syntax used for this operator is as follows:
+</p>
+<center>(* | stateMachineName).eventName(argumentTypes) as new_Name</center>
+
+<p align = "justify">
+Through this operator, it is possible to rename an event related to a specific state machine or all state machines in a trait. For the first case, the modeler specifies the name of the state machine (stateMachineName). For the second case, an asterisk (*) is specified. The event name (eventName) must end with a pair of parentheses including any needed argument types. This operator does not allow changing the argument types because that would break the implementation of the event method. The operator is used mostly to change the event names based on a new domain’s requirements. It can also be used to keep an event from being overwritten by the client’s state machine and vice versa.
+</p>
+
+<p align = "justify">
+In example 4, trait T1 has two state machines sm1 and sm2. These state machines have common events named e1(Integer) and e0(). Class C1 want to use trait T1 with some changes in the name of events. It is required to rename all event names e0() to event0() and just change the event name e1(Integer) to event1() in state machine s1. Line 15 depicts how class C1 achieves it. Since the change on event e0() is going to happen in both the state machines, the symbol * has been used. However, the name of state machine sm1 was used for the event e1(Integer) because we do not want to have it changed in state machine sm2.
+</p>
+
+@@syntax
+[[functionAliasName]]
+
+
+@@example
+@@source manualexamples/traits_example_016.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_017.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_018.ump
+@@endexample
+
+@@example
+@@source manualexamples/traits_example_019.ump
+@@endexample
