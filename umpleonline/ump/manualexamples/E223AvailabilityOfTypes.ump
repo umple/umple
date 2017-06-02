@@ -1,4 +1,4 @@
-// In this example, there is an error because type I used to constraint tenplate parameters TP in trait T does not exist.
+// In this example, there is an error because type I used to constraint template parameters TP in trait T does not exist.
 trait T<TP isA I>{
   /*implementation*/
 }

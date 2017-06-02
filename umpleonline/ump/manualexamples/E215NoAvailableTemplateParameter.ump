@@ -1,4 +1,4 @@
-// In this example, there is an error because class A cannot bind type String to template parameter Y, which is not defined for trait T.
+// In this example, there is an error because class A cannot bind type String to template parameter Y, which is not defined. for trait T.
 class A{
   isA T< X= Integer, Y = String>;
 }
