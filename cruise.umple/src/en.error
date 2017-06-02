@@ -159,7 +159,7 @@
 #226 and 227 must be explored.
 226: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' is the native state machine in {2} '{3}'.Therefore, it's disregarded.;
 227: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The state machine '{0}' that comes from the trait '{1}' in the {2} '{3}' has already been imported from the trait '{4}'.Therefore, it's disregarded.;
-228: 3, "http://cruise.eecs.uottawa.ca/umple/W228DifferentInitialStates.html", Since there are two state machine with the same name '{0}' and having two initial states is not acceptable. These two state machines are merged as a parallel state machine.;
+228: 3, "http://cruise.eecs.uottawa.ca/umple/W228DifferentInitialStates.html", Since there are two state machines/composite states with the same name '{0}' and having two initial states is not acceptable. These two state machines/composite states are merged as a parallel state machine.;
 229: 1, "http://cruise.eecs.uottawa.ca/umple/E229TwoTimesRenaming.html", In the modification level of trait '{0}', the state machine/state/event '{1}' has been defined two times. ;
 230: 1, "http://cruise.eecs.uottawa.ca/umple/E230AvailabilityofStateMachines.html", In the modification level of trait '{0}', the state machine/state '{1}' does not exist. ;
 231: 1, "http://cruise.eecs.uottawa.ca/umple/E231AvailabilityofEvents.html", In the modification level of trait '{0}' and its state machine '{1}', the event '{2}' does not exist. ;

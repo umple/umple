@@ -203,10 +203,12 @@ class UmpleInternalParser
         for (StateMachine nsm :foundState.getNestedStateMachines() ) {
       if (nsm.getName().equals(mustbeAdded.getName())){        
             if (!nsm.getStartState().getName().equals(mustbeAdded.getStartState().getName())){
-              StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(nsm,mustbeAdded);
+              StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(nsm,mustbeAdded);   
+              getParseResult().addErrorMessage(new ErrorMessage(228,inUmpleClassfier.getPosition(0),foundState.getName()));
               if (checkSM!=null)  {
                 foundState.removeNestedStateMachine(nsm);
                 foundState.addNestedStateMachine(checkSM);
+                
               }
             } else {          
               addExtraStatesAndTransitions(nsm, mustbeAdded,inUmpleClassfier);
@@ -795,6 +797,7 @@ class UmpleInternalParser
 					if (cSMachine.getName().equals(tSMachine.getName())){
 						if (!cSMachine.getStartState().getName().equals(tSMachine.getStartState().getName())){
 							StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(cSMachine,tSMachine);
+							getParseResult().addErrorMessage(new ErrorMessage(228,inClass.getPosition(0),cSMachine.getName()));
 							if (checkSM!=null) listBeRemoved.put(checkSM,cSMachine.getName());
 							tListBeRemoved.add(tSMachine);
 						} else {
@@ -928,11 +931,13 @@ class UmpleInternalParser
 	      	if (uClassifier==null) {
 	      		uClassifier = inSMachine1.getUmpleTrait();
 	      		if (uClassifier!=null){
+	      			//This code has been used for sth else. Check plz.
 	      			getParseResult().addErrorMessage(new ErrorMessage(228,uClassifier.getPosition(0),inSMachine1.getName(),"tait", uClassifier.getName()));
 	      		} else {
 	      			//TODO please write a proper action and error description when this happens
 	      		}  
 	      	} else {
+	      	  //This code has been used for sth else. Check plz.
 	      		getParseResult().addErrorMessage(new ErrorMessage(228,uClassifier.getPosition(0),inSMachine1.getName(),"class", uClassifier.getName()));
 	      	}
 	    	}

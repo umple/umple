@@ -275,7 +275,7 @@ public class UmpleTraitTest {
 	}
 
 	//explained in my thesis
-	@Ignore
+	@Test
 	public void stateMachineTraits010Test() {
 		String code = "class A {isA T1; status { on { turnOn -> on;}} } trait T1 { status { onb { activate -> onb;}} }";
 		UmpleModel model = getModel(code);
