@@ -1,20 +1,19 @@
-// In this example, there is an error because of having different ways to compose entries of two states S1 coming from traits T1 and T2.
-trait T1{
-  sm{
-    s1{ entry /{action1();} }
+// In this example, there is an error because class C rename the region name r1 to r2 which is already available in the state machine sm.
+trait T{
+  sm {
+    s1{
+      r1{ e1-> r11; }
+      r11{}
+      ||
+      r2{ e2-> r21; }
+      r21{}
+    }
   }
 }
-trait T2{
-  sm{
-    s1{ entry /{action2();} }
-  }
+class C{
+  isA T<sm.s1.r1 as r2>;
 }
-class C1{
-  isA T1, T2;
-  sm{
-    s1{}
-  } 
-}
+
 
 
 
