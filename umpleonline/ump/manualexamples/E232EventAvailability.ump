@@ -1,0 +1,19 @@
+// In this example, there is an error because event e2() is not available in state machines of trait T.
+trait T {
+  sm{
+    s0{
+      e1-> s1;
+      s11{ e12-> s12; }
+      s12{ e11-> s11; }   
+    }
+    s1{ e0-> s1;  }  
+  }
+}
+class C {
+  isA T<*.e2() as event2>;
+}
+
+
+
+
+

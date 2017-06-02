@@ -6,7 +6,9 @@ noreferences
 
 <h2>Umple semantic error related to binding a template parameter twice</h2>
 
-<p>When using traits, we can bind values for template parameters. In the process of binding, we can bind two values for a template parameters. This bring a case in which there is no clear binding. The Umple compiler detects this case and prevents the system from being complied. </p>
+<p align = "justify">
+When using traits, we can bind values for template parameters. In the process of binding, we can bind two values for a template parameters. This bring a case in which there is no clear binding. The Umple compiler detects this case and prevents the system from being complied.
+</p>
 
 
 @@example

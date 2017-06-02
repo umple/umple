@@ -1,0 +1,16 @@
+W228 Different Initial States
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to composing state machines or regions</h2>
+
+<p aligh = "justify">
+If two state machines or regions are being composed and do not the same initial states.
+</p>
+
+
+@@example
+@@source manualexamples/W228InitialStates.ump
+@@endexample

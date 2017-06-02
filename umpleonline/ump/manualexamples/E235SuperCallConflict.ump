@@ -1,0 +1,25 @@
+// In this example, there is an error because the keyword superCall can be pointed out to two used traits.
+trait T1{
+  sm{
+    s1{ e1 -> /{action1();} s1; }
+  }
+}
+trait T2{
+  sm{
+    s1{ e1 -> /{action2();} s2;}
+    s2{}
+  }
+}
+class C1{
+  isA T1,T2;
+  sm{
+    s1{ e1 -> /{superCall; action3();} s3; }
+    s3{}
+  }
+}
+
+
+
+
+
+

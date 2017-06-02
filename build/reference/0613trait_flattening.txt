@@ -11,5 +11,5 @@ In order to achieve this in UmpleOnline, first the menu <i>OPTIONS</i> must be s
 </p>
 <p align = "justify">
 In order to see the flattened model textually, first the menu <i>TOOLS</i> must be selected. Then, from the drop down named <i>GENERATE</i> select <i>Internal Umple Representation</i>. Finally, click on <i>Generate code</i> to see the result or to download it.
-<p>
+</p>
 

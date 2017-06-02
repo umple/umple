@@ -1,0 +1,18 @@
+// In this example, there is an error because state machine sm3 is not available in trait T.
+trait T {
+  sm1{
+	s0 {e1-> s1;}
+	s1 {e0-> s0;}
+  }
+  sm2{
+	s0 {e1-> s1;}
+	s1 {e0-> s0;}
+  }
+}
+class C3 {
+ isA T<sm3 as mach1>;
+}
+
+
+
+

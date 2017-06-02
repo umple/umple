@@ -1,0 +1,23 @@
+// In this example, there is an error because of having different ways to compose entries of two states S1 coming from traits T1 and T2.
+trait T1{
+  sm{
+    s1{ entry /{action1();} }
+  }
+}
+trait T2{
+  sm{
+    s1{ entry /{action2();} }
+  }
+}
+class C1{
+  isA T1, T2;
+  sm{
+    s1{}
+  } 
+}
+
+
+
+
+
+

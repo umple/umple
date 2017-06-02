@@ -1,0 +1,16 @@
+E229 Two Times Renaming
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to state machine operators</h2>
+
+<p aligh = "justify">
+When a state is to be renamed, it should not be renamed more than one time. If this happens, the Umple compiler detects that and raises this error.
+</p>
+
+
+@@example
+@@source manualexamples/E229RenamingTwoTimesStates.ump
+@@endexample

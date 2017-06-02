@@ -1,0 +1,16 @@
+E232 Availability of Events
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to state machine operators</h2>
+
+<p aligh = "justify">
+When an event name is used with a specific name for its state machine, the state machine and event must be available in the trait. The same restriction is applied when the symbol * is used for the name of state machines. If the event is not available in at least one of state machines existing in the trait, then the Umple compiler raises thi error code.
+</p>
+
+
+@@example
+@@source manualexamples/E232EventAvailability.ump
+@@endexample

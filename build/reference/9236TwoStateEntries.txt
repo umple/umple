@@ -1,0 +1,18 @@
+E236 Two State Entries
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to state machine composition algorithm</h2>
+
+<p aligh = "justify">
+A client can use more than one trait (and obtain more than one state machine) and so it is possible to have more than two states whose entry (or exit) actions (and do activities) need to be composed with the base state’s entry action. In this case, the composition algorithm needs to consider an order among them. Since we do not consider any order when traits are used by clients, this should be respected in the composition of actions. Therefore, the Umple compiler detects this case and raises this error. Note that this conflict happens if more than one state coming from used traits have an entry action.
+</p>
+<p aligh = "justify">
+The example below shows a case in which composition of entry actions is considered as a conflict. The base state s1 in class C1 has no entry action and so it can accept entry actions coming from state machines in T1 and T2. However, there are two entries coming from used traits which cause a conflict. Note that if class C1 did not have state machine sm, it would still be a conflict for composition. However, if state s1 in class C1 had an entry then this would not be a conflict because those entries coming from traits would be disregarded.
+</p>
+
+@@example
+@@source manualexamples/E236TwoStateEntries.ump
+@@endexample

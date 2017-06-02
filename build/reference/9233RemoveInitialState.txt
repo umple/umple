@@ -1,0 +1,16 @@
+E233 Removing Initial State
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to state machine operators</h2>
+
+<p aligh = "justify">
+The removing operator cannot be applied to the initial states of a state machine or a composite state. If the modeler applies it in such cases, the Umple compiler raises this error.
+</p>
+
+
+@@example
+@@source manualexamples/E233RemoveInitialState.ump
+@@endexample
