@@ -290,6 +290,7 @@ public class UmpleTraitTest {
 		}
 	}
 
+
 	////explained in my thesis
 	@Test
 	public void stateMachineTraits011Test() {
@@ -1786,6 +1787,20 @@ public class UmpleTraitTest {
 			result = e.getMessage().contains("234");
 		} finally {
 			Assert.assertFalse(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits0122Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0096.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("228");
+		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}
 	}

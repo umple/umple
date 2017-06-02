@@ -1,0 +1,17 @@
+trait T1{
+  sm{
+    s1{ e1 ->  s2;}
+    s2{ e3 ->  s3;}
+    s3{ e2 ->  s2;}
+  }
+}
+trait T2{
+  sm{
+    t1{ t1 ->  t2;}
+    t2{ t3 ->  s3;}
+    s3{ t2 ->  t2;}
+  }
+}
+class C1{
+  isA T1,T2;
+}
