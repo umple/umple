@@ -1,0 +1,18 @@
+// In this example, there is an error because class C tries two rename states s0 of trait T two times.
+trait T {
+  sm{
+    s0{
+      e1-> s1;
+      s11{ e12-> s12; }
+      s12{ e11-> s11; }   
+    }
+    s1{ e0-> s1;  }  
+  }
+}
+class C {
+  isA T<sm.s0 as state0, sm.s0 as state01>;
+}
+
+
+
+

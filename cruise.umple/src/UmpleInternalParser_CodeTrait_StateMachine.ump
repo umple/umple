@@ -185,7 +185,7 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-	private void addStateMachineToState(Map<UmpleTrait, List<StateMachine>> traitStateMachine,	StateMachineTemplateSignature smTSignature, State foundState, UmpleClassifier inUmpleClassfier,String newSMName) {	
+	private void addStateMachineToState(Map<UmpleTrait, List<StateMachine>> traitStateMachine,	StateMachineTemplateSignature smTSignature, State foundState, UmpleClassifier inUmpleClassifier,String newSMName) {	
     StateMachine mustbeAdded = null;
     UmpleTrait foundTrait=null;
     labelT:
@@ -203,13 +203,15 @@ class UmpleInternalParser
         for (StateMachine nsm :foundState.getNestedStateMachines() ) {
       if (nsm.getName().equals(mustbeAdded.getName())){        
             if (!nsm.getStartState().getName().equals(mustbeAdded.getStartState().getName())){
-              StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(nsm,mustbeAdded);
+              StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(nsm,mustbeAdded);   
+              getParseResult().addErrorMessage(new ErrorMessage(228,inUmpleClassifier.getPosition(0),foundState.getName()));
               if (checkSM!=null)  {
                 foundState.removeNestedStateMachine(nsm);
                 foundState.addNestedStateMachine(checkSM);
+                
               }
             } else {          
-              addExtraStatesAndTransitions(nsm, mustbeAdded,inUmpleClassfier);
+              addExtraStatesAndTransitions(nsm, mustbeAdded,inUmpleClassifier);
             } 
             traitStateMachine.get(foundTrait).remove(mustbeAdded);
             return;
@@ -795,6 +797,7 @@ class UmpleInternalParser
 					if (cSMachine.getName().equals(tSMachine.getName())){
 						if (!cSMachine.getStartState().getName().equals(tSMachine.getStartState().getName())){
 							StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(cSMachine,tSMachine);
+							getParseResult().addErrorMessage(new ErrorMessage(228,inClass.getPosition(0),cSMachine.getName()));
 							if (checkSM!=null) listBeRemoved.put(checkSM,cSMachine.getName());
 							tListBeRemoved.add(tSMachine);
 						} else {
@@ -834,6 +837,7 @@ class UmpleInternalParser
 						if (sMachine.getName().equals(tSMachine.getName())){
 							if (!sMachine.getStartState().getName().equals(tSMachine.getStartState().getName())){
 								StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(sMachine,tSMachine);
+								getParseResult().addErrorMessage(new ErrorMessage(228,inUmpleClassifier.getPosition(0),sMachine.getName()));
 								if (checkSM!=null)	listBeRemoved.put(checkSM,sMachine);
 								mustBeRemoved.add(tSMachine);
 							} else {
@@ -928,11 +932,13 @@ class UmpleInternalParser
 	      	if (uClassifier==null) {
 	      		uClassifier = inSMachine1.getUmpleTrait();
 	      		if (uClassifier!=null){
+	      			//This code has been used for sth else. Check plz.
 	      			getParseResult().addErrorMessage(new ErrorMessage(228,uClassifier.getPosition(0),inSMachine1.getName(),"tait", uClassifier.getName()));
 	      		} else {
 	      			//TODO please write a proper action and error description when this happens
 	      		}  
 	      	} else {
+	      	  //This code has been used for sth else. Check plz.
 	      		getParseResult().addErrorMessage(new ErrorMessage(228,uClassifier.getPosition(0),inSMachine1.getName(),"class", uClassifier.getName()));
 	      	}
 	    	}
@@ -1032,7 +1038,7 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-  private void addExtraStatesAndTransitions(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassfier) {
+  private void addExtraStatesAndTransitions(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassifier) {
     for (State state : inSMachine2.getStates()) {
       State mainState = inSMachine1.findState(state.getName());
       if (mainState==null){
@@ -1040,19 +1046,19 @@ class UmpleInternalParser
         changeTransitionNextState(inSMachine1.findState(state.getName()),inSMachine1);
       } else {
         checkSatifcationOfRequiredStates(state,inSMachine2);
-        applyCompositionAndSuperKeywordToState(inSMachine1, inSMachine2, inUmpleClassfier, mainState, state);
+        applyCompositionAndSuperKeywordToState(inSMachine1, inSMachine2, inUmpleClassifier, mainState, state);
         for (int i = 0; i < state.numberOfTransitions(); i++) {
           Transition tTransition = state.getTransition(i);           
           Transition findTransition= null;
           for(Transition mainlTrans : mainState.getTransitions() ){
             if (mainlTrans.isEqualToTransition(tTransition)){ 
               findTransition = mainlTrans;
-                if (checkConflictsOfTransitionActions(inSMachine1, inSMachine2, inUmpleClassfier, state, tTransition, findTransition)) return;
+                if (checkConflictsOfTransitionActions(inSMachine1, inSMachine2, inUmpleClassifier, state, tTransition, findTransition)) return;
               }
            //   break;
           }
           if(findTransition!=null){
-            applyCompositionAndSuperKeywordToTransition(inSMachine1, inSMachine2, findTransition, tTransition,inUmpleClassfier);
+            applyCompositionAndSuperKeywordToTransition(inSMachine1, inSMachine2, findTransition, tTransition,inUmpleClassifier);
             tTransition.delete();
           } else  {      
             State nextState = inSMachine1.findState(tTransition.getNextState().getName());
@@ -1067,7 +1073,7 @@ class UmpleInternalParser
             i--;
           }
         }
-        if (checkNoneDeterminismAfterComposition(inSMachine1, inSMachine2, inUmpleClassfier, mainState) ) return;
+        if (checkNoneDeterminismAfterComposition(inSMachine1, inSMachine2, inUmpleClassifier, mainState) ) return;
         for (int i=0; i<state.numberOfNestedStateMachines();i++){
         StateMachine comingSM = state.getNestedStateMachine(i);  
           boolean equal = false;
@@ -1083,10 +1089,11 @@ class UmpleInternalParser
             } else {
               if (!mainState.getNestedStateMachine(0).getStartState().getName().equals(state.getNestedStateMachine(0).getStartState().getName())){
                 StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(mainState.getNestedStateMachine(0), state.getNestedStateMachine(0));
+                getParseResult().addErrorMessage(new ErrorMessage(228,inUmpleClassifier.getPosition(0),mainState.getName()));
                 if (checkSM!=null ) mainState.addNestedStateMachine(checkSM); 
                 i--;
               } else {
-                addExtraStatesAndTransitions(mainState.getNestedStateMachine(0),state.getNestedStateMachine(0),inUmpleClassfier);
+                addExtraStatesAndTransitions(mainState.getNestedStateMachine(0),state.getNestedStateMachine(0),inUmpleClassifier);
               }
             }
             ////
@@ -1099,9 +1106,9 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
 
-  private Boolean checkConflictsOfTransitionActions(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassfier, State state, Transition tTransition, Transition findTransition) {
-    if(inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName()) && inSMachine2.getUmpleTrait()!=null && !inSMachine2.getUmpleTrait().getName().equals(inUmpleClassfier.getName())) {
-      StateMachine originalSM = (inUmpleClassfier instanceof UmpleClass) ? ((UmpleClass)inUmpleClassfier).getStateMachine(inSMachine1.getName()) : ((UmpleTrait)inUmpleClassfier).getStateMachine(inSMachine1.getName());
+  private Boolean checkConflictsOfTransitionActions(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassifier, State state, Transition tTransition, Transition findTransition) {
+    if(inSMachine1.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassifier.getName()) && inSMachine2.getUmpleTrait()!=null && !inSMachine2.getUmpleTrait().getName().equals(inUmpleClassifier.getName())) {
+      StateMachine originalSM = (inUmpleClassifier instanceof UmpleClass) ? ((UmpleClass)inUmpleClassifier).getStateMachine(inSMachine1.getName()) : ((UmpleTrait)inUmpleClassifier).getStateMachine(inSMachine1.getName());
       boolean checkConflict = false;  
       if (originalSM!=null ){
         State originalState = originalSM.findState(state.getName());                
@@ -1161,7 +1168,7 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-	private boolean checkNoneDeterminismAfterComposition(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassfier, State mainState) {
+	private boolean checkNoneDeterminismAfterComposition(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassifier, State mainState) {
     String n1 = inSMachine1.getUmpleClass() ==null ? inSMachine1.getUmpleTrait().getName() : inSMachine1.getUmpleClass().getName(); 
     String n2 = inSMachine2.getUmpleClass() ==null ? inSMachine2.getUmpleTrait().getName() : inSMachine2.getUmpleClass().getName();
     for(int  i =0 ; i<mainState.numberOfTransitions()-1;i++){
@@ -1205,11 +1212,11 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-  private void applyCompositionAndSuperKeywordToState(StateMachine inSMachine1, StateMachine inSMachine2,	UmpleClassifier inUmpleClassfier, State bState, State cState) {
-     if (inUmpleClassfier instanceof UmpleClass){
+  private void applyCompositionAndSuperKeywordToState(StateMachine inSMachine1, StateMachine inSMachine2,	UmpleClassifier inUmpleClassifier, State bState, State cState) {
+     if (inUmpleClassifier instanceof UmpleClass){
         if (inSMachine1.getRootStateMachine().getUmpleClass()!=null){
           //comes from a class
-          if (inSMachine1.getRootStateMachine().getUmpleClass().equals( (UmpleClass)inUmpleClassfier )){
+          if (inSMachine1.getRootStateMachine().getUmpleClass().equals( (UmpleClass)inUmpleClassifier )){
             applyCompositionAndSuperKeywordToStateAction(inSMachine2, bState, cState,"entry");
             applyCompositionAndSuperKeywordToStateAction(inSMachine2, bState, cState,"exit");
             applyCompositionAndSuperKeywordToStateActivity(inSMachine2, bState, cState);
@@ -1220,7 +1227,7 @@ class UmpleInternalParser
         } else {
           //comes from a trait
   
-          checkActionActivityConflicts(inSMachine1, inSMachine2, inUmpleClassfier, bState, cState,((UmpleClass)inUmpleClassfier).getStateMachine(inSMachine1.getName()));
+          checkActionActivityConflicts(inSMachine1, inSMachine2, inUmpleClassifier, bState, cState,((UmpleClass)inUmpleClassifier).getStateMachine(inSMachine1.getName()));
           
           if (getParseResult().hasErrorMessages()) return;
           applyCompositionAndSuperKeywordToStateActionE(bState, cState);
@@ -1229,8 +1236,8 @@ class UmpleInternalParser
      } else {
         if (inSMachine1.getRootStateMachine().getUmpleTrait()!=null){
           //comes from a trait
-          checkActionActivityConflicts(inSMachine1, inSMachine2, inUmpleClassfier, bState, cState,((UmpleTrait)inUmpleClassfier).getStateMachine(inSMachine1.getName()));
-          if (inSMachine1.getRootStateMachine().getUmpleTrait().equals( (UmpleTrait)inUmpleClassfier )){
+          checkActionActivityConflicts(inSMachine1, inSMachine2, inUmpleClassifier, bState, cState,((UmpleTrait)inUmpleClassifier).getStateMachine(inSMachine1.getName()));
+          if (inSMachine1.getRootStateMachine().getUmpleTrait().equals( (UmpleTrait)inUmpleClassifier )){
             applyCompositionAndSuperKeywordToStateAction(inSMachine2, bState, cState,"entry");  
             applyCompositionAndSuperKeywordToStateAction(inSMachine2, bState, cState,"exit"); 
             applyCompositionAndSuperKeywordToStateActivity(inSMachine2, bState, cState);
@@ -1246,8 +1253,8 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-  private void checkActionActivityConflicts(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassfier, State bState, State cState, StateMachine originalSM ) {
-    if (inSMachine1.getUmpleTrait()!=null && inSMachine2.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassfier.getName()) && !inSMachine2.getUmpleTrait().getName().equals(inUmpleClassfier.getName())){
+  private void checkActionActivityConflicts(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassifier, State bState, State cState, StateMachine originalSM ) {
+    if (inSMachine1.getUmpleTrait()!=null && inSMachine2.getUmpleTrait()!=null && !inSMachine1.getUmpleTrait().getName().equals(inUmpleClassifier.getName()) && !inSMachine2.getUmpleTrait().getName().equals(inUmpleClassifier.getName())){
      
       if (originalSM!=null && originalSM.findState(bState.getName())!=null){
       State state = originalSM.findState(bState.getName());
@@ -1390,7 +1397,7 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-	private void applyCompositionAndSuperKeywordToTransition(StateMachine inSMachine1, StateMachine inSMachine2, Transition fTransition,Transition rTransition, UmpleClassifier inUmpleClassfier) {
+	private void applyCompositionAndSuperKeywordToTransition(StateMachine inSMachine1, StateMachine inSMachine2, Transition fTransition,Transition rTransition, UmpleClassifier inUmpleClassifier) {
 	  if(fTransition.getGuard()==null && rTransition.getGuard()!=null) fTransition.setGuard(rTransition.getGuard());   
     if (fTransition.getAction()==null && rTransition.getAction()!=null){
       rTransition.getAction().getCodeblock().removeKeyword("superCall;");
@@ -1398,10 +1405,10 @@ class UmpleInternalParser
       return;
     }
     if (rTransition.getAction()==null) return;
-		if (inUmpleClassfier instanceof UmpleClass){
+		if (inUmpleClassifier instanceof UmpleClass){
 			  if (inSMachine1.getRootStateMachine().getUmpleClass()!=null){
 				  //comes from a class
-				  if (inSMachine1.getRootStateMachine().getUmpleClass().equals( (UmpleClass)inUmpleClassfier )){
+				  if (inSMachine1.getRootStateMachine().getUmpleClass().equals( (UmpleClass)inUmpleClassifier )){
 					  if (fTransition.getAction()!=null)	fTransition.getAction().getCodeblock().findKeywordAndReplace("superCall;", rTransition.getAction().getCodeblock(),inSMachine2);  
 				  } else{
 					  //not implemented.
@@ -1420,7 +1427,7 @@ class UmpleInternalParser
 		} else {
 			  if (inSMachine1.getRootStateMachine().getUmpleTrait()!=null){
 				  //comes from a trait
-				  if (inSMachine1.getRootStateMachine().getUmpleTrait().equals( (UmpleTrait)inUmpleClassfier )){
+				  if (inSMachine1.getRootStateMachine().getUmpleTrait().equals( (UmpleTrait)inUmpleClassifier )){
 					  if (fTransition.getAction()!=null)	fTransition.getAction().getCodeblock().findKeywordAndReplace("superCall;", rTransition.getAction().getCodeblock(),inSMachine2);  
 				  } else{
 //					  rTransition.getAction().getCodeblock().removeKeyword("superCall;");

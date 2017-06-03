@@ -6,7 +6,9 @@ noreferences
 
 <h2>Umple semantic error related to changing name of a provided method in traits to one which already exists</h2>
 
-<p>When changing the name of provided methods in traits, it is necessary to be sure that there are no other methods with the same names that come from other traits. If the changed name already exists inside of a class, in this case there is no problem becase methods of classes have priority over ones coming from traits. In this case, the method from traits will be disregarded. Otherwise, there is a conflict on the name of methods. The Umple compiler detects this case and raises the error    </p>
+<p align = "justify">
+When changing the name of provided methods in traits, it is necessary to be sure that there are no other methods with the same names that come from other traits. If the changed name already exists inside of a class, in this case there is no problem becase methods of classes have priority over ones coming from traits. In this case, the method from traits will be disregarded. Otherwise, there is a conflict on the name of methods. The Umple compiler detects this case and raises the error.
+</p>
 
 
 @@example

@@ -1,0 +1,20 @@
+// In this example, there is an error because a bidirectional association is created with interface I, which is not valid.
+interface I {
+  /*implementation*/
+}
+trait T <RelatedClass> {
+  0..1 -- * RelatedClass;
+  /*implementation*/
+}
+class C{
+ isA T<RelatedClass=I>;
+ /*implementation*/
+}
+
+
+
+
+
+
+
+

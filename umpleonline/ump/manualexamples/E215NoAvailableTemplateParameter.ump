@@ -1,15 +1,8 @@
-// In this example, there is an error because class "A" tries to remove method "show(String)" while it tries to change its name. This is a contradiction.
+// In this example, there is an error because class A cannot bind type String to template parameter Y, which is not defined. for trait T.
 class A{
-	isA T1<+show(Integer), -show(String) as t >;
+  isA T< X= Integer, Y = String>;
 }
-trait T1{
-	void show(String str){
-	//Implementation
-	}
-	void show(Integer inData){
-	//Implementation
-	}
-	void show(String str,Integer inData){
-	//Implementation
-	}
+trait T<X>{
+	X variable;
 }
+

@@ -275,7 +275,7 @@ public class UmpleTraitTest {
 	}
 
 	//explained in my thesis
-	@Ignore
+	@Test
 	public void stateMachineTraits010Test() {
 		String code = "class A {isA T1; status { on { turnOn -> on;}} } trait T1 { status { onb { activate -> onb;}} }";
 		UmpleModel model = getModel(code);
@@ -289,6 +289,7 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}
 	}
+
 
 	////explained in my thesis
 	@Test
@@ -1786,6 +1787,20 @@ public class UmpleTraitTest {
 			result = e.getMessage().contains("234");
 		} finally {
 			Assert.assertFalse(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits0122Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0096.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("228");
+		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}
 	}

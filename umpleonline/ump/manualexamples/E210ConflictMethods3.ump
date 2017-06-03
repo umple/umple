@@ -1,4 +1,4 @@
-// In this example, there is a no conflict in class "A"
+// In this example, there is a no conflict in class "A".
 class A{
 	isA T1;
 	isA T2;

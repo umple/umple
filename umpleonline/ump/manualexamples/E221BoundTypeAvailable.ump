@@ -1,0 +1,9 @@
+// In this example, there is an error because class C binds type C1 to the template parameter of trait T, while type C is not available in the system.
+trait T<TP>{
+/*implementation*/
+}
+class C{
+  isA T<TP=C1>;
+  /*implementation*/
+}
+

@@ -1,0 +1,12 @@
+// In this example, there is an error because type I used to constraint template parameters TP in trait T does not exist.
+trait T<TP isA I>{
+  /*implementation*/
+}
+class C1{
+  /*implementation*/
+}
+class C1{
+  isA T< TP = C1 >;
+  /*implementation*/
+}
+

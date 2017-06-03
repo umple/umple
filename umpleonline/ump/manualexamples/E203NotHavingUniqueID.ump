@@ -1,4 +1,4 @@
-//In  this example, Identifier of trait "I" is not unique;. 
+//In  this example, Identifier of trait "I" is not unique. 
 class A{
 	isA I;
 }

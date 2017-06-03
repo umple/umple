@@ -1,4 +1,4 @@
-// In this example, there is a conflict in class "A" on the method "test()"
+// In this example, there is a conflict in class "A" on the method "test()".
 class A{
 	isA T1;
 	isA T2;

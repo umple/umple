@@ -1,0 +1,16 @@
+E231 Availability of Events
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to state machine operators</h2>
+
+<p aligh = "justify">
+When an event name is used with a specific name for its state machine, the state machine and event must be available in the trait, otherwise, the Umple compiler raises this error.
+</p>
+
+
+@@example
+@@source manualexamples/E231EventAvailability.ump
+@@endexample

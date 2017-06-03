@@ -1,0 +1,16 @@
+E230 Availability of State Machines
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to state machine operators</h2>
+
+<p aligh = "justify">
+When a state machine or state with a given name is specified by the renaming operator, it must be available in the trait being operated on, either directly in the trait or another trait used by the trait. Otherwise, the Umple compiler raises  this error.
+</p>
+
+
+@@example
+@@source manualexamples/E230SMAvailability.ump
+@@endexample

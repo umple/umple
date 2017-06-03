@@ -6,7 +6,9 @@ noreferences
 
 <h2>Umple syntactic error related to identifiers of traits </h2>
 
-<p>In Umple, identifiers used for traits must be alphanumeric. It means that must start with an alpha character, or _ .</p>
+<p align = "justify" >
+In Umple, identifiers used for traits must be alphanumeric. It means that must start with an alpha character, or _ .
+</p>
 
 
 @@example

@@ -3,8 +3,6 @@ class A{
 	isA T;
 }
 
-
-
 trait T{
   isA T1;
 }
