@@ -38,14 +38,16 @@ class JavaObjectFactoryClassGenerator {
   GeneratorHelper.generator = gen;
   Boolean isInterface=false;
   Set<String> packageSet = new HashSet<String>();
-  if(model.getDistributeTechnology().equals("RMI")){
+  /*if(model.getDistributeTechnology().equals("RMI"))*/
+  if(true)
+  {
     packageSet.add("java.io.File");
     packageSet.add("java.rmi.registry.Registry");
     packageSet.add("java.rmi.registry.LocateRegistry");
     packageSet.add("java.rmi.RemoteException");
     packageSet.add("java.rmi.server.UnicastRemoteObject");
   }
-  if(model.getDistributeTechnology().equals("WS"))
+  else/*if(model.getDistributeTechnology().equals("WS"))*/
   { 
     packageSet.add("javax.jws.WebService");
     packageSet.add("javax.jws.soap.SOAPBinding");
@@ -132,23 +134,26 @@ public class UmpleRuntime implements IUmpleRuntime
   }  
 
 
-  private static void readConfigFile()
+  private static void readPropertiesFile()
   {
-      String location="ComponentsConfig.xml";
+      String location="configuration.txt";
       Properties prop = new Properties();
       InputStream input = null;
 
     try {
 
-      input = new FileInputStream("config.properties");
+      input = new FileInputStream("node.properties");
       prop.load(input);
-      setThisNodeId(Integer.parseInt(prop.getProperty("name")));
+      if(getThisNodeId()<0)
+        setThisNodeId(Integer.parseInt(prop.getProperty("name")));
       location=prop.getProperty("location");
       setFileAddress(location);
     } catch (IOException e)
     {
       e.printStackTrace();
-      setThisNodeId(0);    
+      if(getThisNodeId()<0)
+        setThisNodeId(0); 
+      setFileAddress(location);   
     } 
     finally {
       if (input != null) {
@@ -206,7 +211,7 @@ public class UmpleRuntime implements IUmpleRuntime
       return umpleComponent.getNode().getId();
     }
 
-    private void readComponentsFile()
+    private void readConfigFile()
     {
       String input="{id=0; port=1099; http://localhost {component1}}{id=1; port=1700; http://localhost {component2}}";
       try (BufferedReader br = new BufferedReader(new FileReader(fileAddress))) {
@@ -317,16 +322,17 @@ public class UmpleRuntime implements IUmpleRuntime
       }
     }
     <<#
-    if(model.getDistributeTechnology().equals("RMI"))
+    /*if(model.getDistributeTechnology().equals("RMI"))*/
+    if(true)
     {
     #>>
     Registry rmiRegistry;
     public void initialize()
     {    
 
-      if(getThisNodeId()<0)
-        readConfigFile();
-      readComponentsFile();
+      if(fileAddress.equals(""))
+        readPropertiesFile();
+      readConfigFile();
       int numberOfNodes= nodes.size();
       System.out.println(getThisNodeId());
       startRMI();
@@ -383,14 +389,15 @@ public class UmpleRuntime implements IUmpleRuntime
       System.out.println("Component stopped");
     }
     <<#}
-    if(model.getDistributeTechnology().equals("WS"))
+    //if(model.getDistributeTechnology().equals("WS"))
+    if(false)
     {
     #>>
     public void initialize()
     {    
       if(getThisNodeId()<0)
-        readConfigFile();
-      readComponentsFile();
+        readPropertiesFile();
+      readConfigFile();
       int numberOfNodes= nodes.size();
       System.out.println(getThisNodeId());
       Endpoint.publish(nodes.get(getThisNodeId()).getUrl()+":"+String.valueOf(nodes.get(getThisNodeId()).getPort())+"/hw",this);
@@ -432,9 +439,12 @@ public class UmpleRuntime implements IUmpleRuntime
     <<@ UmpleToJava.objectFactory_add_Declare_All >>
   public static void main (String [] args)
   {
-    if (args.length>1){
+    if (args.length>0){
       setThisNodeId(Integer.parseInt(args[0]));
-      UmpleRuntime.getInstance().setFileAddress(args[1]);
+      if (args.length>1)
+        UmpleRuntime.getInstance().setFileAddress(args[1]);
+      else
+        UmpleRuntime.getInstance();
     }
     else
       UmpleRuntime.getInstance();

@@ -24,8 +24,8 @@ class UmpleToJava {
       if(model.getDistributePattern()==0)
         accessibility = "public void";  
       String webMethod="";
-      if(model.getDistributeTechnology().equals("WS"))
-        webMethod="@WebMethod"+NL;
+      //if(model.getDistributeTechnology().equals("WS"))
+        //webMethod="@WebMethod"+NL;
       if(uClass.getDistributeTechnology().equals("WS"))
       {  
         if(model.getDistributePattern()==0) 
