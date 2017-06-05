@@ -24,7 +24,7 @@ class UmpleToJava {
           object.remoteUrl=proxyObject.remoteUrl;
           object.remotePort=proxyObject.remotePort;
           object.objectId=proxyObject.objectId;
-          object.realObject=proxyObject.realObject;
+          object.setRealObject(proxyObject.realObject);
           break;
           <<#}
           #>>
@@ -77,8 +77,9 @@ class UmpleToJava {
         #>>
         object.remoteUrl=nodes.get(getThisNodeId()).getUrl();
         object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
-        object.objectId=object.getHashCodeImpl();
-        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/<<=uClass.getName()>>"+String.valueOf(object.objectId),object);
+        object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
+        object.setRealObject(object);
+        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);
         <<#}#>>  
     }
     
@@ -96,26 +97,26 @@ class UmpleToJava {
     <<=uClass.getName()>> object= <<=uClass.getName()>>.getInstance(UmpleRuntime.getComponent("local"));
     <<#
     }
-   else
-   { 
+    else
+    { 
   #>>
-  {
-  <<=uClass.getName()>> object= new <<=uClass.getName()>>(<<=caller>><<=argumentscomma>> UmpleRuntime.getComponent("local"));
-  <<#}
-  if(uClass.getDistributeTechnology().equals("WS"))
-  {
-  #>>
-  return object;
-  }
+    {
+    <<=uClass.getName()>> object= new <<=uClass.getName()>>(<<=caller>><<=argumentscomma>> UmpleRuntime.getComponent("local"));
+    <<#}
+    if(uClass.getDistributeTechnology().equals("WS"))
+    {
+    #>>
+    return object;
+    }
+    <<#
+    }
+    else
+    {
+    #>>
+    return object.getRemoteObject();
+    }
   <<#
-  }
-  else
-  {
-  #>>
-  return object.getRemoteObject();
-  }
-  <<#
-  }
+    }
   }
   }  
     #>>!>>

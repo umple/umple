@@ -94,11 +94,20 @@ class JavaClassGenerator {
 <<# for (Position p : uClass.getPositions()) { #>>
 // line <<= p.getLineNumber() >> "<<= uClass.getRelativePath(p.getFilename(),"Java") >>"
 <<# }
+if(model.getDistributed() && model.getDistributeTechnology().equals("WS")){
 if(model.getDistributePattern()==0 && uClass.getDistributeTechnology().equals("WS")){
 String classPackageName=(uClass.getPackageName().length() == 0 ? "" : uClass.getPackageName() + ".")+"I"+uClass.getName()+"Impl";
 #>>
 @WebService(endpointInterface = "<<#append(realSb,classPackageName);#>>")
-<<#}
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(factoryMethod="umplenewInstance", propOrder={<<#if (uClass.getExtendsClass() == null||(uClass.getExtendsClass() != null && ! uClass.getExtendsClass().getIsDistributed()))
+    {
+    #>>"remoteUrl", "objectId", "remotePort"<<#
+    }#>>})
+<<#}  
+  else
+    appendln(realSb,NL+"@XmlAccessorType(XmlAccessType.FIELD)");
+}
 #>>
 public <<# if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
 boolean hasParentInterface=uClass.hasParentInterface();
@@ -248,6 +257,11 @@ for (StateMachine smq : uClass.getStateMachines())
   
   public void setSelf(<<=uClass.getName().substring(0,uClass.getName().length()-4)>> proxy)
   {
+  <<#if (uClass.getExtendsClass()!=null && uClass.getExtendsClass().getIsDistributed())
+  {
+  #>>
+    super.setSelf(proxy);
+    <<#}#>>
     self=proxy;
   }
 

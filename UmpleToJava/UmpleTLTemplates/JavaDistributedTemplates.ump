@@ -26,10 +26,44 @@ class JavaDistributedTemplates {
     <<#if (uClass.getExtendsClass() == null||(uClass.getExtendsClass() != null && ! uClass.getExtendsClass().getIsDistributed()))
     {
     #>>
-      public  String remoteUrl;
-      public  Integer objectId;
-      public  String remotePort;
-      <<#}#>>
+
+  public  String remoteUrl;
+  public  String objectId;
+  public  String remotePort; 
+    <<#}#>>
+  private static <<=remoteName>> umplenewInstance()
+  {
+    return new <<=remoteName>>((UmpleRuntime.UmpleNode)null);
+  }   
+
+  protected <<=remoteName>> (UmpleRuntime.UmpleNode node)
+  {
+  <<#
+    if ((uClass.getExtendsClass() != null)&&(uClass.getExtendsClass().getIsDistributed()))
+    {
+  #>>
+    super(node);
+  <<#
+    }
+    else if ((uClass.getExtendsClass() != null)&& !(uClass.getExtendsClass().getIsDistributed()))
+    {
+    appendln(realSb,"super();");
+    }
+    #>>
+  }
+
+  public void setRealObject(<<=interfaceName>> aObject)
+  {
+    <<#
+    if (uClass.getExtendsClass() != null && uClass.getExtendsClass().getIsDistributed())
+    {
+    #>>
+    super.setRealObject(aObject);
+    <<#
+    }
+    #>>
+    realObject=aObject;
+  }
   private void readObject(java.io.ObjectInputStream in) throws Exception
   {
     try
@@ -40,21 +74,31 @@ class JavaDistributedTemplates {
     {
       throw e;
     }
-      
-    boolean success = false;
-    while (!success) {        
-      try 
-      {
-        URL url = new URL(remoteUrl+":"+remotePort+"/<<=remoteName>>"+String.valueOf(objectId)+"?wsdl");
-        QName qname = new QName("http://<<=packageName>>/","<<=remoteName>>Service");
-        Service service = Service.create(url, qname);
-        realObject=service.getPort(<<=interfaceName>>.class);
-        success = true;
-      } 
-      catch (Exception e) 
-      {
-        System.err.println("Client exception: " + e.toString());
-        e.printStackTrace();
+    initializeConnection();
+  }
+  void afterUnmarshal(Unmarshaller u, Object parent)
+  {
+    initializeConnection();
+  }
+  private void initializeConnection()
+  {
+    if(objectId.contains(<<=uClass.getName()>>.class.getName()))
+    {  
+      boolean success = false;
+      while (!success) {        
+        try 
+        {
+          URL url = new URL(remoteUrl+":"+remotePort+"/<<=remoteName>>"+objectId+"?wsdl");
+          QName qname = new QName("http://<<=packageName>>/","<<=remoteName>>Service");
+          Service service = Service.create(url, qname);
+          setRealObject(service.getPort(<<=interfaceName>>.class));
+          success = true;
+        } 
+        catch (Exception e) 
+        {
+          System.err.println("Client exception: " + e.toString());
+          e.printStackTrace();
+        }
       }
     }
   }
@@ -96,9 +140,9 @@ class JavaDistributedTemplates {
   protected <<=remoteName>>()
   {
   }
-  public <<=remoteName>>(String url,String port,Integer objectId)
+  public <<=remoteName>>(String url,String port,String objectId)
   {
-    Endpoint.publish(url+":"+port+"/<<=remoteName>>"+String.valueOf(objectId),this);
+    Endpoint.publish(url+":"+port+"/<<=remoteName>>"+objectId,this);
   }
 
  !>>
