@@ -332,7 +332,9 @@ class UmpleConsoleMain
   
   private static void printUsage()
   {
-    System.out.println("Usage: java -jar umple.jar [options] <umple_file>"+System.lineSeparator()+"Example: java -jar umple.jar airline.ump");
+    System.out.println("For more detailed information go to http://manual.umple.org"+System.lineSeparator()
+      +"Usage: java -jar umple.jar [options] <umple_file>"+System.lineSeparator()
+      +"Example: java -jar umple.jar airline.ump");
     try
     {
       optparser.printHelpOn(System.out);
