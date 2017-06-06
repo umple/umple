@@ -1,0 +1,16 @@
+class CruiseControlSystem 
+{
+  const Integer aa = 5;
+  const int bb = 5;
+  const float cc = 5.00;
+  Integer c;
+  input Integer ayo;
+  input Float bayo;
+  input Boolean baro;
+  
+  sm {
+    s1 {
+      a ->/{ b = aa + 2; } s2;
+    }
+  }
+}

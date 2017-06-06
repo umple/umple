@@ -180,6 +180,13 @@ class ColumnEntry {
   	}
 }
 
+class Range {
+	isA Multiplicity;
+	
+	output <<!<<=getMinimum()>>..<<=getMaximum()>>!>>
+  emit toString()(output);
+}
+
 class CounterExampleColumn {
 
     isA MyUtility;
