@@ -1,0 +1,5 @@
+class X
+{
+  input Double iDoub;
+  Double xDoub;
+}

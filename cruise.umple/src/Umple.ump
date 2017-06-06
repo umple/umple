@@ -258,6 +258,9 @@ class MethodParameter
 
   // Specifies whether or not the method parameter is lazy.
   Boolean isLazy = false;
+  
+  // Specifies whether or not the method parameter is input.
+  Boolean isInput = false;
 }
 
 /*
@@ -854,6 +857,9 @@ class Attribute
   // Specifies whether or not the method parameter is lazy.
   Boolean isLazy = false;
   Boolean isRefinement = false;
+  
+  // Specifies whether or not the method parameter is input.
+  Boolean isInput = false;
 
   //This supposed to show from where this method came.
   //fTrait means it comes from traits.

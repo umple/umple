@@ -62,6 +62,22 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/SingleLaneBridge.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/RoomHeatingSystem.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/ConstantTest.smv");
+		SampleFileWriter.destroy(pathToInput + "/nusmv/InputVarTest.smv");
+		SampleFileWriter.destroy(pathToInput + "/nusmv/RangeTypeTest.smv");
+	  }
+	  
+	  @Ignore //@Test   // TEMPORARY IGNORE BY TIM ISSUE 740
+	  public void RangeTypeTest()
+	  {
+	  		assertUmpleTemplateFor("nusmv/RangeTypeTest.ump","nusmv/RangeTypeTest.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/RangeTypeTest.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740
+	  public void InputVariableTest()
+	  {
+	  		assertUmpleTemplateFor("nusmv/InputVarTest.ump","nusmv/InputVarTest.nusmv.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmv/InputVarTest.smv")).exists());
 	  }
 
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM ISSUE 740

@@ -78,7 +78,7 @@ attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]]
 simpleAttribute- : [~name] ;
 autouniqueAttribute- : [=autounique] [~name] ;
 derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] = ( [[moreCode]] )+
-complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] (= [**value])? ;
+complexAttribute- : [=unique]? [=lazy]? [=input]? [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] (= [**value])? ;
 
 
 // Keys are used to define quality and hash codes, plus Sql keys.
