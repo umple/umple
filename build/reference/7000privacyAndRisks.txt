@@ -18,7 +18,7 @@ noreferences
 
 <p><b>Not certified for safety critical or mission critical use:</b> At the current time Umple-generated code <b>should not be used for mission-critical or safety critical uses</b>, including software for any device that may pose a safety risk if it performs incorrectly, or software that would cause economic damage if it failed. We intend that, in time, Umple and tools like it will in fact help improve safety and reliability. But at the current time we have not subjected Umple to the rigorous validation it needs for such uses, and there are many known issues that would preclude such current use.</p>
 
-<p><b>Need to apply best practices:</b> Should you choose to use Umple for production use, it is <b>critical that you follow rigorous software engineering practices</b> including (but not limited to): Requirements analysis, careful design and thorough testing. <a href="http://code.google.com/p/umple/wiki/BestUmpleUsePractices">See here for a list of Umple best practies.</a></p>
+<p><b>Need to apply best practices:</b> Should you choose to use Umple for production use, it is <b>critical that you follow rigorous software engineering practices</b> including (but not limited to): Requirements analysis, careful design and thorough testing. <a href="https://github.com/umple/Umple/wiki/BestUmpleUsePractices">See here for a list of Umple best practies.</a></p>
 
 &nbsp; <br />
 

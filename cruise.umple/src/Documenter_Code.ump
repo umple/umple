@@ -346,8 +346,6 @@ class Documenter
       }
       exampleOutput += nextExample;
     }
-    exampleOutput = exampleOutput.replaceAll("<<", "&lt;&lt;");
-    exampleOutput = exampleOutput.replaceAll(">>", "&gt;&gt;");
     
     htmlOutput = htmlOutput.replace("@@EXAMPLE@@", exampleOutput);
     htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", grammarparser.toGrammar());
@@ -478,6 +476,8 @@ class ContentParser
                   0,spaceLocation);
                 exampleText = new String(Files.readAllBytes(Paths
                   .get("umpleonline/ump/"+exampleName) ));
+                exampleText = exampleText.replaceAll("<", "&lt;");
+                exampleText = exampleText.replaceAll(">", "&gt;");
                 exampleURL="?example="+exampleTextWithArguments;
               }
               catch (IOException e) {

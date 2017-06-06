@@ -5,6 +5,8 @@ noreferences
 @@description
 <p>Umple is a technology for Model-Oriented Programming.</p>
 
+<p>The Umple home page is <a href="http://www.umple.org">http://www.umple.org</a>. To download Umple for the command line or Eclipse, go to <a href="http://dl.umple.org">http://dl.umple.org</a>. To use Umple online as a web app, go to <a href="http://try.umple.org">http://try.umple.org</a></p>
+
 <p>Umple allows you to do the following things: </p>
 
 <ol>
@@ -69,7 +71,7 @@ pages also allows you to instantly load the examples into UmpleOnline.</p>
 <p>To learn more about Umple, read the links on the left of this page, or 
 go to the <a href="http://www.umple.org">Umple Home page</a>. In 
 particular, you should browse the <a 
-href="http://code.google.com/p/umple/wiki/Tutorials">tutorials and videos 
+href="https://github.com/umple/Umple/wiki/Tutorials">tutorials and videos 
 about Umple</a></p>
 
 <hr />
@@ -78,4 +80,4 @@ about Umple</a></p>
 
 <hr />
 
-<i>If you are an ordinary user and notice an error in this manual, <a href="https://code.google.com/p/umple/issues/list">please report it using our issue tracking system here</a> Flag it as a defect in the user documentation. If you still have trouble after reading this manual, please contact our <a href="mailto:umple-help@googlegroups.com"> help mailing list and post a request for help</a>. If you are a contributer, <a href="https://code.google.com/p/umple/wiki/Deploying">instructions on how to edit this manual are here</a>.</i>
+<i>If you are an ordinary user and notice an error in this manual, <a href="https://github.com/umple/Umple/issues">please report it using our issue tracking system here</a> Flag it as a defect in the user documentation. If you still have trouble after reading this manual, please contact our <a href="mailto:umple-help@googlegroups.com"> help mailing list and post a request for help</a>. If you are a contributer, <a href=https://github.com/umple/Umple/wiki/Deploying">instructions on how to edit this manual are here</a>.</i>
