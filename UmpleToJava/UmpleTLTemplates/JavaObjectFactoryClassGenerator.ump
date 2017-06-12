@@ -39,7 +39,7 @@ class JavaObjectFactoryClassGenerator {
   Boolean isInterface=false;
   Set<String> packageSet = new HashSet<String>();
   /*if(model.getDistributeTechnology().equals("RMI"))*/
-  if(true)
+  if(model.getDistributeTechnology().equals("RMI"))
   {
     packageSet.add("java.io.File");
     packageSet.add("java.rmi.registry.Registry");
@@ -47,7 +47,7 @@ class JavaObjectFactoryClassGenerator {
     packageSet.add("java.rmi.RemoteException");
     packageSet.add("java.rmi.server.UnicastRemoteObject");
   }
-  else/*if(model.getDistributeTechnology().equals("WS"))*/
+  else if(model.getDistributeTechnology().equals("WS"))
   { 
     packageSet.add("javax.jws.WebService");
     packageSet.add("javax.jws.soap.SOAPBinding");
@@ -93,12 +93,13 @@ class JavaObjectFactoryClassGenerator {
     }
   }
 String defaultNamespace="";
-String qname="";
+String qname="http://";
   if (model.getDefaultNamespace()!=null){#>>
 package <<=model.getDefaultNamespace()>>;
   <<#
-    defaultNamespace=model.getDefaultNamespace()+".";
-    qname=defaultNamespace+"/";
+    defaultNamespace=model.getDefaultNamespace();
+    qname+=defaultNamespace+"/";
+    defaultNamespace+=".";
   }
   for(String packageName: packageSet)
   {
@@ -177,12 +178,8 @@ public class UmpleRuntime implements IUmpleRuntime
 // ******************************** Factory
     public static UmpleRuntime theInstance = null;
     List<IUmpleRuntime> remoteFactories;
-    
 
-   /* <<@ UmpleToJava.objectFactory_listOfObjects_All >>*/
-   public List<Object> listOfObjects;
-    
-    
+    public List<Object> listOfObjects;
 
     public static UmpleRuntime getInstance()
     {
@@ -194,7 +191,6 @@ public class UmpleRuntime implements IUmpleRuntime
    
     private UmpleRuntime()
     { 
-      /*<<@ UmpleToJava.objectFactory_listOfObjects_instantiation_All >>*/
       listOfObjects=new ArrayList<Object>();
       remoteFactories= new ArrayList<IUmpleRuntime>();
       initialize();
@@ -322,8 +318,7 @@ public class UmpleRuntime implements IUmpleRuntime
       }
     }
     <<#
-    /*if(model.getDistributeTechnology().equals("RMI"))*/
-    if(true)
+    if(model.getDistributeTechnology().equals("RMI"))
     {
     #>>
     Registry rmiRegistry;
@@ -334,7 +329,6 @@ public class UmpleRuntime implements IUmpleRuntime
         readPropertiesFile();
       readConfigFile();
       int numberOfNodes= nodes.size();
-      System.out.println(getThisNodeId());
       startRMI();
       for(int node=0;node<numberOfNodes;node=node+1)
       {
@@ -343,20 +337,23 @@ public class UmpleRuntime implements IUmpleRuntime
           remoteFactories.add(this);
         }
         else
-        {System.out.println(node);
-          while(true)
+        {
+          System.out.println("connecting to node: "+node);
+          Boolean success=false;
+          while(!success)
           {
             try 
             {
               Registry registry = LocateRegistry.getRegistry(nodes.get(node).getIp(),nodes.get(node).getPort());
               IUmpleRuntime stub = (IUmpleRuntime) registry.lookup("UmpleRuntime"+String.valueOf(node));
               remoteFactories.add(stub);
-              break;
+              success=true;
             } 
             catch (Exception e) 
             {
               System.err.println("Client exception: " + e.toString());
               e.printStackTrace();
+              try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
             }
           } 
         } 
@@ -365,42 +362,42 @@ public class UmpleRuntime implements IUmpleRuntime
     public void startRMI() 
     {
       IUmpleRuntime stub;
-      while(true){
-        try
-        {  
-          // Bind the remote object's stub in the registry
-          rmiRegistry= LocateRegistry.createRegistry(nodes.get(getThisNodeId()).getPort());
-          stub = (IUmpleRuntime) UnicastRemoteObject.exportObject(this, 0);
-          rmiRegistry.rebind("UmpleRuntime"+String.valueOf(getThisNodeId()), stub);
-          System.err.println("Server ready");
-          break;
-        } 
-        catch (Exception e)
-        {
-          System.err.println("binding exception: " + e.toString());
-        }
+      try
+      {  
+        // Bind the remote object's stub in the registry
+        rmiRegistry= LocateRegistry.createRegistry(nodes.get(getThisNodeId()).getPort());
+        stub = (IUmpleRuntime) UnicastRemoteObject.exportObject(this, nodes.get(getThisNodeId()).getPort());
+        rmiRegistry.rebind("UmpleRuntime"+String.valueOf(getThisNodeId()), stub);
+        System.err.println("Server ready");
+      } 
+      catch (Exception e)
+      {
+        System.err.println("binding exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
       }
     }
-    public void stopRMI() throws Exception 
+    public void stopRMI() throws Exception
     {
-      rmiRegistry.unbind("UmpleRuntime");
-      //unexportObject(this, true);
-      //unexportObject(rmiRegistry, true);
-      System.out.println("Component stopped");
+      try
+      {
+      UnicastRemoteObject.unexportObject(this, true);
+      }
+      catch(Exception e)
+      {
+      throw e;
+      }
     }
     <<#}
-    //if(model.getDistributeTechnology().equals("WS"))
-    if(false)
+    if(model.getDistributeTechnology().equals("WS"))
     {
     #>>
     public void initialize()
     {    
-      if(getThisNodeId()<0)
+      if(fileAddress.equals(""))
         readPropertiesFile();
       readConfigFile();
       int numberOfNodes= nodes.size();
-      System.out.println(getThisNodeId());
-      Endpoint.publish(nodes.get(getThisNodeId()).getUrl()+":"+String.valueOf(nodes.get(getThisNodeId()).getPort())+"/hw",this);
+      Endpoint.publish(nodes.get(getThisNodeId()).getUrl()+":"+String.valueOf(nodes.get(getThisNodeId()).getPort())+"/UmpleRuntime",this);
 
       for(int node=0;node<numberOfNodes;node=node+1)
       {
@@ -409,12 +406,13 @@ public class UmpleRuntime implements IUmpleRuntime
           remoteFactories.add(this);
         }
         else
-        {System.out.println(node);
+        {
+          System.out.println("connecting to node: "+node);
           while(true)
           {
             try 
             {
-              URL url = new URL(nodes.get(node).getUrl()+String.valueOf(nodes.get(node).getPort())+"/hw?wsdl");
+              URL url = new URL(nodes.get(node).getUrl()+":"+String.valueOf(nodes.get(node).getPort())+"/UmpleRuntime?wsdl");
              
               QName qname = new QName("<<#append(realSb,qname);#>>",
                   "UmpleRuntimeService");
@@ -427,6 +425,7 @@ public class UmpleRuntime implements IUmpleRuntime
             {
               System.err.println("Client exception: " + e.toString());
               e.printStackTrace();
+              try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
             }
           } 
         } 
@@ -442,12 +441,12 @@ public class UmpleRuntime implements IUmpleRuntime
     if (args.length>0){
       setThisNodeId(Integer.parseInt(args[0]));
       if (args.length>1)
-        UmpleRuntime.getInstance().setFileAddress(args[1]);
-      else
-        UmpleRuntime.getInstance();
+        UmpleRuntime.setFileAddress(args[1]);
     }
-    else
-      UmpleRuntime.getInstance();
+     UmpleRuntime.getInstance();
+    while(true){
+      try { Thread.sleep(100000); } catch (InterruptedException interruptedException) {};
+    }
   }
     public class UmpleNode
     {
