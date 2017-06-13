@@ -6,17 +6,7 @@ class UmpleToJava {
 
   #>>
   {
-    while(true){
-      try
-      {
-        return remoteFactories.get(getThisNodeId()).create<<=uClass.getName()>>(<<=caller>><<=argumentscomma>>proxy);
-      }
-      catch(Exception e) 
-      {
-        e.printStackTrace();
-        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
-      }  
-    }
+    return new<<=uClass.getName()>>(<<=caller>><<=argumentscomma>>getComponent("<<=uClass.getName()>>"),proxy);
   }  
   <<#
   }
@@ -56,8 +46,6 @@ class UmpleToJava {
   <<=uClass.getName()>>Impl object = new <<=uClass.getName()>>Impl(<<=caller>>);<<#}#>>
     object.setSelf(proxy);
     proxy.setRealObject(object);
-    while(true)
-    {
       try
       { 
         <<#if(uClass.getDistributeTechnology().equals("RMI")){#>> 
@@ -67,14 +55,12 @@ class UmpleToJava {
         #>>
         Endpoint.publish(nodes.get(getThisNodeId()).getUrl()+":"+String.valueOf(nodes.get(getThisNodeId()).getPort())+"/hw",object);
         <<#}#>>
-        break;
       } 
       catch (Exception e)
       {
         System.err.println("Server Exception: " + e.toString());
         try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
       }
-    } 
 
   listOfObjects.add(object);
   return object; 
