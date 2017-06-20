@@ -10,17 +10,18 @@ import distributed.rmi.withMethods2.UmpleRuntime;
 public class Microwave extends CC implements java.io.Serializable
 {  public void setRealObject(IMicrowaveImpl aObject)
   {
+  super.setRealObject(aObject);
     realObject=aObject;
   }
 
   IMicrowaveImpl realObject;
   public Microwave(UmpleRuntime.UmpleComponent component)
   {
-    realObject = UmpleRuntime.getInstance().newMicrowave(component, this);
+    if(this.getClass()== Microwave.class)    setRealObject(UmpleRuntime.getInstance().newMicrowave(component, this));
   }
   public Microwave()
   {
-if(this.getClass()== Microwave.class)    realObject = UmpleRuntime.getInstance().newMicrowave(this);
+    if(this.getClass()== Microwave.class)    setRealObject(UmpleRuntime.getInstance().newMicrowave(this));
   }
   public void setSelf(Microwave proxy)
   {

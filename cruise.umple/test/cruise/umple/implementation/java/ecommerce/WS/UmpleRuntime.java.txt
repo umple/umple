@@ -1,26 +1,37 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
-package distributed.rmi5;
+package ecommerceWS;
+import ecommerceWS.Warehouse;
+import ecommerceWS.Customer;
+import java.net.URL;
+import ecommerceWS.SystemManager;
+import javax.xml.ws.Service;
+import ecommerceWS.Vendor;
+import java.util.regex.Matcher;
+import javax.jws.soap.SOAPBinding;
+import javax.xml.ws.Endpoint;
+import javax.xml.bind.annotation.*;
+import ecommerceWS.Agent;
+import javax.jws.WebService;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.Unmarshaller;
 import java.util.Properties;
-import java.applet.*;
 import java.io.*;
 import java.io.IOException;
 import java.io.FileInputStream;
-import java.rmi.registry.Registry;
 import java.io.InputStreamReader;
-import java.io.File;
-import distributed.rmi5.Microwave;
-import java.rmi.RemoteException;
 import java.io.Serializable;
-import distributed.rmi5.Client;
-import java.util.regex.Matcher;
-import java.rmi.registry.LocateRegistry;
+import javax.xml.bind.annotation.XmlAccessType;
+import ecommerceWS.Supplier;
+import javax.jws.WebMethod;
 import java.util.*;
-import java.rmi.server.UnicastRemoteObject;
+import javax.jws.soap.SOAPBinding.Style;
+import javax.xml.namespace.QName;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.regex.Pattern;
 import java.io.InputStream;
+@WebService(endpointInterface = "ecommerceWS.IUmpleRuntime")
 public class UmpleRuntime implements IUmpleRuntime
 {
   static int thisNodeId=-1;
@@ -224,15 +235,14 @@ public class UmpleRuntime implements IUmpleRuntime
         }    
       }
     }
-    Registry rmiRegistry;
     public void initialize()
     {    
-
       if(fileAddress.equals(""))
         readPropertiesFile();
       readConfigFile();
       int numberOfNodes= nodes.size();
-      startRMI();
+      Endpoint.publish(nodes.get(getThisNodeId()).getUrl()+":"+String.valueOf(nodes.get(getThisNodeId()).getPort())+"/UmpleRuntime",this);
+
       for(int node=0;node<numberOfNodes;node=node+1)
       {
         if(node==getThisNodeId())
@@ -242,15 +252,18 @@ public class UmpleRuntime implements IUmpleRuntime
         else
         {
           System.out.println("connecting to node: "+node);
-          Boolean success=false;
-          while(!success)
+          while(true)
           {
             try 
             {
-              Registry registry = LocateRegistry.getRegistry(nodes.get(node).getIp(),nodes.get(node).getPort());
-              IUmpleRuntime stub = (IUmpleRuntime) registry.lookup("UmpleRuntime"+String.valueOf(node));
-              remoteFactories.add(stub);
-              success=true;
+              URL url = new URL(nodes.get(node).getUrl()+":"+String.valueOf(nodes.get(node).getPort())+"/UmpleRuntime?wsdl");
+             
+              QName qname = new QName("http://ecommerceWS/",
+                  "UmpleRuntimeService");
+              Service service = Service.create(url, qname);
+              IUmpleRuntime proxy = service.getPort(IUmpleRuntime.class);
+              remoteFactories.add(proxy);
+              break;
             } 
             catch (Exception e) 
             {
@@ -262,43 +275,20 @@ public class UmpleRuntime implements IUmpleRuntime
         } 
       }
     }
-    public void startRMI() 
-    {
-      IUmpleRuntime stub;
-      try
-      {  
-        // Bind the remote object's stub in the registry
-        rmiRegistry= LocateRegistry.createRegistry(nodes.get(getThisNodeId()).getPort());
-        stub = (IUmpleRuntime) UnicastRemoteObject.exportObject(this, nodes.get(getThisNodeId()).getPort());
-        rmiRegistry.rebind("UmpleRuntime"+String.valueOf(getThisNodeId()), stub);
-        System.err.println("Server ready");
-      } 
-      catch (Exception e)
-      {
-        System.err.println("binding exception: " + e.toString());
-        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
-      }
-    }
-    public void stopRMI() throws Exception
-    {
-      try
-      {
-      UnicastRemoteObject.unexportObject(this, true);
-      }
-      catch(Exception e)
-      {
-      throw e;
-      }
-    }
+
     
   
-  public void newClient(UmpleRuntime.UmpleComponent component,Client object)
+  public void newWarehouse(String aName, UmpleRuntime.UmpleComponent component,Warehouse object)
   {
 
       while(true){
         try
-        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createClient());
-          object.setRealObject(object.getRemoteObject());
+        {
+          Warehouse proxyObject = remoteFactories.get(getNodeId(component)).createWarehouse(aName);
+          object.remoteUrl=proxyObject.remoteUrl;
+          object.remotePort=proxyObject.remotePort;
+          object.objectId=proxyObject.objectId;
+          object.setRealObject(proxyObject.realObject);
           break;
         }
         catch(Exception e) 
@@ -309,49 +299,34 @@ public class UmpleRuntime implements IUmpleRuntime
       }
       }
 
-  public void newClient(Client object){ 
-        
-        ClientRemote remoteObject;
-        try{
-        remoteObject = (ClientRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
-        }
-        catch (Exception e)
-        {
-          System.err.println("Class not found " + e.toString());
-          return;
-        }
-        listOfObjects.add(remoteObject); 
-    while(true)
-    {
-      try
-      {  
-        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
-        object.setRemoteObject(remoteObject);
-        break;
-      } 
-      catch (Exception e)
-      {
-        System.err.println("Server Exception: " + e.toString());
-        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
-      }
-    }
-      
+  public void newWarehouse(Warehouse object){
+    listOfObjects.add(object);
+        object.remoteUrl=nodes.get(getThisNodeId()).getUrl();
+        object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
+        object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
+        object.setRealObject(object);
+        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);  
     }
     
-  synchronized public IClientImpl createClient()
+  @WebMethod
+synchronized public Warehouse createWarehouse(String aName)
     {
-    Client object= new Client( UmpleRuntime.getComponent("local"));
-    return object.getRemoteObject();
+    Warehouse object= new Warehouse(aName,  UmpleRuntime.getComponent("local"));
+    return object;
     }
 
   
-  public void newMicrowave(int aX, String aF, UmpleRuntime.UmpleComponent component,Microwave object)
+  public void newAgent(String aName, UmpleRuntime.UmpleComponent component,Agent object)
   {
 
       while(true){
         try
-        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createMicrowave(aX, aF));
-          object.setRealObject(object.getRemoteObject());
+        {
+          Agent proxyObject = remoteFactories.get(getNodeId(component)).createAgent(aName);
+          object.remoteUrl=proxyObject.remoteUrl;
+          object.remotePort=proxyObject.remotePort;
+          object.objectId=proxyObject.objectId;
+          object.setRealObject(proxyObject.realObject);
           break;
         }
         catch(Exception e) 
@@ -362,39 +337,172 @@ public class UmpleRuntime implements IUmpleRuntime
       }
       }
 
-  public void newMicrowave(Microwave object){ 
-        
-        MicrowaveRemote remoteObject;
-        try{
-        remoteObject = (MicrowaveRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
-        }
-        catch (Exception e)
-        {
-          System.err.println("Class not found " + e.toString());
-          return;
-        }
-        listOfObjects.add(remoteObject); 
-    while(true)
-    {
-      try
-      {  
-        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
-        object.setRemoteObject(remoteObject);
-        break;
-      } 
-      catch (Exception e)
-      {
-        System.err.println("Server Exception: " + e.toString());
-        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
-      }
-    }
-      
+  public void newAgent(Agent object){
+    listOfObjects.add(object);
+        object.remoteUrl=nodes.get(getThisNodeId()).getUrl();
+        object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
+        object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
+        object.setRealObject(object);
+        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);  
     }
     
-  synchronized public IMicrowaveImpl createMicrowave(int aX, String aF)
+  @WebMethod
+synchronized public Agent createAgent(String aName)
     {
-    Microwave object= new Microwave(aX, aF,  UmpleRuntime.getComponent("local"));
-    return object.getRemoteObject();
+    Agent object= new Agent(aName,  UmpleRuntime.getComponent("local"));
+    return object;
+    }
+
+  
+  public void newSupplier(String aName, UmpleRuntime.UmpleComponent component,Supplier object)
+  {
+
+      while(true){
+        try
+        {
+          Supplier proxyObject = remoteFactories.get(getNodeId(component)).createSupplier(aName);
+          object.remoteUrl=proxyObject.remoteUrl;
+          object.remotePort=proxyObject.remotePort;
+          object.objectId=proxyObject.objectId;
+          object.setRealObject(proxyObject.realObject);
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newSupplier(Supplier object){
+    listOfObjects.add(object);
+        object.remoteUrl=nodes.get(getThisNodeId()).getUrl();
+        object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
+        object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
+        object.setRealObject(object);
+        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);  
+    }
+    
+  @WebMethod
+synchronized public Supplier createSupplier(String aName)
+    {
+    Supplier object= new Supplier(aName,  UmpleRuntime.getComponent("local"));
+    return object;
+    }
+
+  
+  public void newVendor(String aName, UmpleRuntime.UmpleComponent component,Vendor object)
+  {
+
+      while(true){
+        try
+        {
+          Vendor proxyObject = remoteFactories.get(getNodeId(component)).createVendor(aName);
+          object.remoteUrl=proxyObject.remoteUrl;
+          object.remotePort=proxyObject.remotePort;
+          object.objectId=proxyObject.objectId;
+          object.setRealObject(proxyObject.realObject);
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newVendor(Vendor object){
+    listOfObjects.add(object);
+        object.remoteUrl=nodes.get(getThisNodeId()).getUrl();
+        object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
+        object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
+        object.setRealObject(object);
+        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);  
+    }
+    
+  @WebMethod
+synchronized public Vendor createVendor(String aName)
+    {
+    Vendor object= new Vendor(aName,  UmpleRuntime.getComponent("local"));
+    return object;
+    }
+
+  
+  public void newCustomer(String aName, UmpleRuntime.UmpleComponent component,Customer object)
+  {
+
+      while(true){
+        try
+        {
+          Customer proxyObject = remoteFactories.get(getNodeId(component)).createCustomer(aName);
+          object.remoteUrl=proxyObject.remoteUrl;
+          object.remotePort=proxyObject.remotePort;
+          object.objectId=proxyObject.objectId;
+          object.setRealObject(proxyObject.realObject);
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newCustomer(Customer object){
+    listOfObjects.add(object);
+        object.remoteUrl=nodes.get(getThisNodeId()).getUrl();
+        object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
+        object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
+        object.setRealObject(object);
+        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);  
+    }
+    
+  @WebMethod
+synchronized public Customer createCustomer(String aName)
+    {
+    Customer object= new Customer(aName,  UmpleRuntime.getComponent("local"));
+    return object;
+    }
+
+  
+  public void newSystemManager(UmpleRuntime.UmpleComponent component,SystemManager object)
+  {
+
+      while(true){
+        try
+        {
+          SystemManager proxyObject = remoteFactories.get(getNodeId(component)).createSystemManager();
+          object.remoteUrl=proxyObject.remoteUrl;
+          object.remotePort=proxyObject.remotePort;
+          object.objectId=proxyObject.objectId;
+          object.setRealObject(proxyObject.realObject);
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newSystemManager(SystemManager object){
+    listOfObjects.add(object);
+        object.remoteUrl=nodes.get(getThisNodeId()).getUrl();
+        object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
+        object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
+        object.setRealObject(object);
+        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);  
+    }
+    
+  @WebMethod
+synchronized public SystemManager createSystemManager()
+    {
+    SystemManager object= SystemManager.getInstance(UmpleRuntime.getComponent("local"));
+    return object;
     }
 
   public static void main (String [] args)

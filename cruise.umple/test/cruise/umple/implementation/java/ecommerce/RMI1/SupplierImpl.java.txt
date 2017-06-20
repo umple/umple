@@ -1,0 +1,157 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI1;
+import java.util.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+// line 46 "../ecommerceRMI1.ump"
+public class SupplierImpl extends AgentImpl implements java.io.Serializable , ISupplierImpl
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //SupplierImpl Associations
+  private List<Product> products;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public SupplierImpl(String aName)
+  {
+    super(aName);
+    products = new ArrayList<Product>();
+  }
+  //------------------------
+  // Reference to the proxy
+  //------------------------
+  Supplier self;
+  
+  public void setSelf(Supplier proxy)
+  {
+    super.setSelf(proxy);
+    self=proxy;
+  }
+
+  //------------------------
+  // Returning the Hashcode
+  //------------------------
+  public int getHashCode()
+  {
+    return hashCode();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Product getProduct(int index)
+  {
+    Product aProduct = products.get(index);
+    return aProduct;
+  }
+
+  public List<Product> getProducts()
+  {
+    List<Product> newProducts = Collections.unmodifiableList(products);
+    return newProducts;
+  }
+
+  public int numberOfProducts()
+  {
+    int number = products.size();
+    return number;
+  }
+
+  public boolean hasProducts()
+  {
+    boolean has = products.size() > 0;
+    return has;
+  }
+
+  public int indexOfProduct(Product aProduct)
+  {
+    int index = products.indexOf(aProduct);
+    return index;
+  }
+
+  public static int minimumNumberOfProducts()
+  {
+    return 0;
+  }
+
+  public boolean addProduct(Product aProduct)
+  {
+    boolean wasAdded = false;
+    if (products.contains(aProduct)) { return false; }
+    products.add(aProduct);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeProduct(Product aProduct)
+  {
+    boolean wasRemoved = false;
+    if (products.contains(aProduct))
+    {
+      products.remove(aProduct);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addProductAt(Product aProduct, int index)
+  {  
+    boolean wasAdded = false;
+    if(addProduct(aProduct))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfProducts()) { index = numberOfProducts() - 1; }
+      products.remove(aProduct);
+      products.add(index, aProduct);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveProductAt(Product aProduct, int index)
+  {
+    boolean wasAdded = false;
+    if(products.contains(aProduct))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfProducts()) { index = numberOfProducts() - 1; }
+      products.remove(aProduct);
+      products.add(index, aProduct);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addProductAt(aProduct, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    products.clear();
+    super.delete();
+  }
+
+  // line 52 "../ecommerceRMI1.ump"
+   public Product createProduct(String serialNumber, String productType){
+    Product aProduct=new Product(serialNumber,new ProductType(productType));
+		addProduct(aProduct);
+		return aProduct;
+  }
+
+  // line 58 "../ecommerceRMI1.ump"
+   public void putInWarehouse(Product aProduct, Warehouse warehouse){
+    warehouse.addProduct(aProduct);
+  }
+
+}

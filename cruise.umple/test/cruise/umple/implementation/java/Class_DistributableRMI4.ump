@@ -1,4 +1,5 @@
 namespace distributed.rmi4;
+distributable 1 on;
 class CC
 {
   isA Father;
@@ -11,7 +12,7 @@ class Father
 }
 class Microwave
 {	isA CC;
-	distributable RMI;
+	distributable;
 	public int method1(int f){
 
 	  return f*2;

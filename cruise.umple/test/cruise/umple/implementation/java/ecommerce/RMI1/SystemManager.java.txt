@@ -1,0 +1,394 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI1;
+import java.util.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.RemoteException;
+import java.io.Serializable;
+import ecommerceRMI1.UmpleRuntime;
+public class SystemManager implements java.io.Serializable
+{  public void setRealObject(ISystemManagerImpl aObject)
+  {
+    realObject=aObject;
+  }
+
+  ISystemManagerImpl realObject;
+  private SystemManager(UmpleRuntime.UmpleComponent component)
+  {
+    if(this.getClass()== SystemManager.class)    setRealObject(UmpleRuntime.getInstance().newSystemManager(component, this));
+  }
+  private SystemManager()
+  {
+    if(this.getClass()== SystemManager.class)    setRealObject(UmpleRuntime.getInstance().newSystemManager(this));
+  }
+  public void setSelf(SystemManager proxy)
+  {
+    while(true)
+      try{
+        realObject.setSelf(proxy);
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int getHashCode()
+  {
+    while(true)
+      try{
+        return realObject.getHashCode();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Agent getAgent(int index)
+  {
+    while(true)
+      try{
+        return realObject.getAgent(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Agent> getAgents()
+  {
+    while(true)
+      try{
+        return realObject.getAgents();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfAgents()
+  {
+    while(true)
+      try{
+        return realObject.numberOfAgents();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasAgents()
+  {
+    while(true)
+      try{
+        return realObject.hasAgents();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfAgent(Agent aAgent)
+  {
+    while(true)
+      try{
+        return realObject.indexOfAgent(aAgent);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Warehouse getWarehous(int index)
+  {
+    while(true)
+      try{
+        return realObject.getWarehous(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Warehouse> getWarehouses()
+  {
+    while(true)
+      try{
+        return realObject.getWarehouses();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfWarehouses()
+  {
+    while(true)
+      try{
+        return realObject.numberOfWarehouses();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasWarehouses()
+  {
+    while(true)
+      try{
+        return realObject.hasWarehouses();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfWarehous(Warehouse aWarehous)
+  {
+    while(true)
+      try{
+        return realObject.indexOfWarehous(aWarehous);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Customer getCustomer(int index)
+  {
+    while(true)
+      try{
+        return realObject.getCustomer(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Customer> getCustomers()
+  {
+    while(true)
+      try{
+        return realObject.getCustomers();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfCustomers()
+  {
+    while(true)
+      try{
+        return realObject.numberOfCustomers();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasCustomers()
+  {
+    while(true)
+      try{
+        return realObject.hasCustomers();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfCustomer(Customer aCustomer)
+  {
+    while(true)
+      try{
+        return realObject.indexOfCustomer(aCustomer);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Order getOrder(int index)
+  {
+    while(true)
+      try{
+        return realObject.getOrder(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Order> getOrders()
+  {
+    while(true)
+      try{
+        return realObject.getOrders();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfOrders()
+  {
+    while(true)
+      try{
+        return realObject.numberOfOrders();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasOrders()
+  {
+    while(true)
+      try{
+        return realObject.hasOrders();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.indexOfOrder(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public static int minimumNumberOfAgents()
+  {
+    while(true)
+      try{
+        return SystemManagerImpl.minimumNumberOfAgents();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addAgent(Agent aAgent)
+  {
+    while(true)
+      try{
+        return realObject.addAgent(aAgent);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeAgent(Agent aAgent)
+  {
+    while(true)
+      try{
+        return realObject.removeAgent(aAgent);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addAgentAt(Agent aAgent, int index)
+  {
+    while(true)
+      try{
+        return realObject.addAgentAt(aAgent,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveAgentAt(Agent aAgent, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveAgentAt(aAgent,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public static int minimumNumberOfWarehouses()
+  {
+    while(true)
+      try{
+        return SystemManagerImpl.minimumNumberOfWarehouses();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addWarehous(Warehouse aWarehous)
+  {
+    while(true)
+      try{
+        return realObject.addWarehous(aWarehous);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeWarehous(Warehouse aWarehous)
+  {
+    while(true)
+      try{
+        return realObject.removeWarehous(aWarehous);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addWarehousAt(Warehouse aWarehous, int index)
+  {
+    while(true)
+      try{
+        return realObject.addWarehousAt(aWarehous,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveWarehousAt(Warehouse aWarehous, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveWarehousAt(aWarehous,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public static int minimumNumberOfCustomers()
+  {
+    while(true)
+      try{
+        return SystemManagerImpl.minimumNumberOfCustomers();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addCustomer(Customer aCustomer)
+  {
+    while(true)
+      try{
+        return realObject.addCustomer(aCustomer);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeCustomer(Customer aCustomer)
+  {
+    while(true)
+      try{
+        return realObject.removeCustomer(aCustomer);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addCustomerAt(Customer aCustomer, int index)
+  {
+    while(true)
+      try{
+        return realObject.addCustomerAt(aCustomer,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveCustomerAt(Customer aCustomer, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveCustomerAt(aCustomer,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public static int minimumNumberOfOrders()
+  {
+    while(true)
+      try{
+        return SystemManagerImpl.minimumNumberOfOrders();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.addOrder(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.removeOrder(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrderAt(Order aOrder, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrderAt(aOrder,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveOrderAt(Order aOrder, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveOrderAt(aOrder,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void delete()
+  {
+    while(true)
+      try{
+        realObject.delete();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+
+  public boolean equals(Object obj)
+  {    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((SystemManager)obj).getHashCode());
+  }
+private static SystemManager theInstance=null;
+  public static SystemManager getInstance()
+{
+if(theInstance == null)
+{
+theInstance = new SystemManager();
+}
+return theInstance;
+}  public static SystemManager getInstance(UmpleRuntime.UmpleComponent umpleComponent)
+{
+if(theInstance == null)
+{
+theInstance = new SystemManager(umpleComponent);
+}
+return theInstance;
+}
+}

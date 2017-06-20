@@ -1,22 +1,25 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
-package distributed.rmi5;
+package ecommerceRMI1;
 import java.util.Properties;
-import java.applet.*;
+import ecommerceRMI1.Agent;
 import java.io.*;
+import ecommerceRMI1.Vendor;
+import ecommerceRMI1.Warehouse;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.rmi.registry.Registry;
 import java.io.InputStreamReader;
 import java.io.File;
-import distributed.rmi5.Microwave;
 import java.rmi.RemoteException;
 import java.io.Serializable;
-import distributed.rmi5.Client;
+import ecommerceRMI1.Customer;
 import java.util.regex.Matcher;
 import java.rmi.registry.LocateRegistry;
 import java.util.*;
+import ecommerceRMI1.Supplier;
 import java.rmi.server.UnicastRemoteObject;
+import ecommerceRMI1.SystemManager;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.regex.Pattern;
@@ -292,110 +295,232 @@ public class UmpleRuntime implements IUmpleRuntime
     }
     
   
-  public void newClient(UmpleRuntime.UmpleComponent component,Client object)
+  public IWarehouseImpl newWarehouse(String aName, Warehouse proxy)
   {
-
-      while(true){
-        try
-        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createClient());
-          object.setRealObject(object.getRemoteObject());
-          break;
-        }
-        catch(Exception e) 
-        {
-          e.printStackTrace();
-          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
-        }  
+    return newWarehouse(aName, getComponent("Warehouse"),proxy);
+  }  
+  public IWarehouseImpl newWarehouse(String aName, UmpleRuntime.UmpleComponent component, Warehouse proxy)
+  {
+    while(true){
+      try
+      {
+        return remoteFactories.get(getNodeId(component)).createWarehouse(aName, proxy);
       }
-      }
-
-  public void newClient(Client object){ 
-        
-        ClientRemote remoteObject;
-        try{
-        remoteObject = (ClientRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
-        }
-        catch (Exception e)
-        {
-          System.err.println("Class not found " + e.toString());
-          return;
-        }
-        listOfObjects.add(remoteObject); 
-    while(true)
-    {
+      catch(Exception e) 
+      {
+        e.printStackTrace();
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }  
+    }
+  }
+  public IWarehouseImpl createWarehouse(String aName, Warehouse proxy)
+  {
+  WarehouseImpl object = new WarehouseImpl(aName);
+    object.setSelf(proxy);
+    proxy.setRealObject(object);
       try
       {  
-        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
-        object.setRemoteObject(remoteObject);
-        break;
+        UnicastRemoteObject.exportObject(object,0);
       } 
       catch (Exception e)
       {
         System.err.println("Server Exception: " + e.toString());
         try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
       }
-    }
-      
-    }
-    
-  synchronized public IClientImpl createClient()
-    {
-    Client object= new Client( UmpleRuntime.getComponent("local"));
-    return object.getRemoteObject();
-    }
+
+  listOfObjects.add(object);
+  return object; 
+  }
 
   
-  public void newMicrowave(int aX, String aF, UmpleRuntime.UmpleComponent component,Microwave object)
+  public IAgentImpl newAgent(String aName, Agent proxy)
   {
-
-      while(true){
-        try
-        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createMicrowave(aX, aF));
-          object.setRealObject(object.getRemoteObject());
-          break;
-        }
-        catch(Exception e) 
-        {
-          e.printStackTrace();
-          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
-        }  
+    return newAgent(aName, getComponent("Agent"),proxy);
+  }  
+  public IAgentImpl newAgent(String aName, UmpleRuntime.UmpleComponent component, Agent proxy)
+  {
+    while(true){
+      try
+      {
+        return remoteFactories.get(getNodeId(component)).createAgent(aName, proxy);
       }
-      }
-
-  public void newMicrowave(Microwave object){ 
-        
-        MicrowaveRemote remoteObject;
-        try{
-        remoteObject = (MicrowaveRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
-        }
-        catch (Exception e)
-        {
-          System.err.println("Class not found " + e.toString());
-          return;
-        }
-        listOfObjects.add(remoteObject); 
-    while(true)
-    {
+      catch(Exception e) 
+      {
+        e.printStackTrace();
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }  
+    }
+  }
+  public IAgentImpl createAgent(String aName, Agent proxy)
+  {
+  AgentImpl object = new AgentImpl(aName);
+    object.setSelf(proxy);
+    proxy.setRealObject(object);
       try
       {  
-        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
-        object.setRemoteObject(remoteObject);
-        break;
+        UnicastRemoteObject.exportObject(object,0);
       } 
       catch (Exception e)
       {
         System.err.println("Server Exception: " + e.toString());
         try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
       }
+
+  listOfObjects.add(object);
+  return object; 
+  }
+
+  
+  public ISupplierImpl newSupplier(String aName, Supplier proxy)
+  {
+    return newSupplier(aName, getComponent("Supplier"),proxy);
+  }  
+  public ISupplierImpl newSupplier(String aName, UmpleRuntime.UmpleComponent component, Supplier proxy)
+  {
+    while(true){
+      try
+      {
+        return remoteFactories.get(getNodeId(component)).createSupplier(aName, proxy);
+      }
+      catch(Exception e) 
+      {
+        e.printStackTrace();
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }  
     }
-      
+  }
+  public ISupplierImpl createSupplier(String aName, Supplier proxy)
+  {
+  SupplierImpl object = new SupplierImpl(aName);
+    object.setSelf(proxy);
+    proxy.setRealObject(object);
+      try
+      {  
+        UnicastRemoteObject.exportObject(object,0);
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+
+  listOfObjects.add(object);
+  return object; 
+  }
+
+  
+  public IVendorImpl newVendor(String aName, Vendor proxy)
+  {
+    return newVendor(aName, getComponent("Vendor"),proxy);
+  }  
+  public IVendorImpl newVendor(String aName, UmpleRuntime.UmpleComponent component, Vendor proxy)
+  {
+    while(true){
+      try
+      {
+        return remoteFactories.get(getNodeId(component)).createVendor(aName, proxy);
+      }
+      catch(Exception e) 
+      {
+        e.printStackTrace();
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }  
     }
-    
-  synchronized public IMicrowaveImpl createMicrowave(int aX, String aF)
+  }
+  public IVendorImpl createVendor(String aName, Vendor proxy)
+  {
+  VendorImpl object = new VendorImpl(aName);
+    object.setSelf(proxy);
+    proxy.setRealObject(object);
+      try
+      {  
+        UnicastRemoteObject.exportObject(object,0);
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+
+  listOfObjects.add(object);
+  return object; 
+  }
+
+  
+  public ICustomerImpl newCustomer(String aName, Customer proxy)
+  {
+    return newCustomer(aName, getComponent("Customer"),proxy);
+  }  
+  public ICustomerImpl newCustomer(String aName, UmpleRuntime.UmpleComponent component, Customer proxy)
+  {
+    while(true){
+      try
+      {
+        return remoteFactories.get(getNodeId(component)).createCustomer(aName, proxy);
+      }
+      catch(Exception e) 
+      {
+        e.printStackTrace();
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }  
+    }
+  }
+  public ICustomerImpl createCustomer(String aName, Customer proxy)
+  {
+  CustomerImpl object = new CustomerImpl(aName);
+    object.setSelf(proxy);
+    proxy.setRealObject(object);
+      try
+      {  
+        UnicastRemoteObject.exportObject(object,0);
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+
+  listOfObjects.add(object);
+  return object; 
+  }
+
+  
+  public ISystemManagerImpl newSystemManager(SystemManager proxy)
+  {
+    return newSystemManager(getComponent("SystemManager"),proxy);
+  }  
+  public ISystemManagerImpl newSystemManager(UmpleRuntime.UmpleComponent component, SystemManager proxy)
+  {
+    while(true){
+      try
+      {
+        return remoteFactories.get(getNodeId(component)).createSystemManager(proxy);
+      }
+      catch(Exception e) 
+      {
+        e.printStackTrace();
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }  
+    }
+  }
+  public ISystemManagerImpl createSystemManager(SystemManager proxy)
     {
-    Microwave object= new Microwave(aX, aF,  UmpleRuntime.getComponent("local"));
-    return object.getRemoteObject();
-    }
+    SystemManagerImpl object= SystemManagerImpl.getInstance();
+    object.setSelf(proxy);
+    proxy.setRealObject(object);
+      try
+      {  
+        UnicastRemoteObject.exportObject(object,0);
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+
+  listOfObjects.add(object);
+  return object; 
+  }
 
   public static void main (String [] args)
   {

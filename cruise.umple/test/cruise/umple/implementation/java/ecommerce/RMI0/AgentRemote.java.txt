@@ -1,0 +1,154 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI0;
+import java.util.*;
+import java.io.Serializable;
+
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
+public class AgentRemote implements IAgentImpl
+{
+  Agent realObject;
+  public void setRealObject(Agent aObject)
+  {
+    realObject=aObject;
+  }
+  public AgentRemote()
+  {}
+  public AgentRemote(Agent aObject)
+  {
+      realObject=aObject;
+  }
+  public int getHashCodeImpl()
+  {
+    while(true)
+      try{
+        return realObject.getHashCodeImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setNameImpl(String aName)
+  {
+    while(true)
+      try{
+        return realObject.setNameImpl(aName);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public String getNameImpl()
+  {
+    while(true)
+      try{
+        return realObject.getNameImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Warehouse getWarehousImpl(int index)
+  {
+    while(true)
+      try{
+        return realObject.getWarehousImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Warehouse> getWarehousesImpl()
+  {
+    while(true)
+      try{
+        return realObject.getWarehousesImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfWarehousesImpl()
+  {
+    while(true)
+      try{
+        return realObject.numberOfWarehousesImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasWarehousesImpl()
+  {
+    while(true)
+      try{
+        return realObject.hasWarehousesImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfWarehousImpl(Warehouse aWarehous)
+  {
+    while(true)
+      try{
+        return realObject.indexOfWarehousImpl(aWarehous);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public SystemManager getSystemManagerImpl()
+  {
+    while(true)
+      try{
+        return realObject.getSystemManagerImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasSystemManagerImpl()
+  {
+    while(true)
+      try{
+        return realObject.hasSystemManagerImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addWarehousImpl(Warehouse aWarehous)
+  {
+    while(true)
+      try{
+        return realObject.addWarehousImpl(aWarehous);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeWarehousImpl(Warehouse aWarehous)
+  {
+    while(true)
+      try{
+        return realObject.removeWarehousImpl(aWarehous);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addWarehousAtImpl(Warehouse aWarehous, int index)
+  {
+    while(true)
+      try{
+        return realObject.addWarehousAtImpl(aWarehous,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveWarehousAtImpl(Warehouse aWarehous, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveWarehousAtImpl(aWarehous,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setSystemManagerImpl(SystemManager aSystemManager)
+  {
+    while(true)
+      try{
+        return realObject.setSystemManagerImpl(aSystemManager);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void deleteImpl()
+  {
+    while(true)
+      try{
+        realObject.deleteImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+
+}

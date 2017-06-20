@@ -1,0 +1,50 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI1;
+import java.util.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.RemoteException;
+public interface ISystemManagerImpl extends java.rmi.Remote
+{
+  public void setSelf(SystemManager proxy) throws RemoteException;
+  public int getHashCode() throws RemoteException;
+  public Agent getAgent(int index) throws RemoteException;
+  public List<Agent> getAgents() throws RemoteException;
+  public int numberOfAgents() throws RemoteException;
+  public boolean hasAgents() throws RemoteException;
+  public int indexOfAgent(Agent aAgent) throws RemoteException;
+  public Warehouse getWarehous(int index) throws RemoteException;
+  public List<Warehouse> getWarehouses() throws RemoteException;
+  public int numberOfWarehouses() throws RemoteException;
+  public boolean hasWarehouses() throws RemoteException;
+  public int indexOfWarehous(Warehouse aWarehous) throws RemoteException;
+  public Customer getCustomer(int index) throws RemoteException;
+  public List<Customer> getCustomers() throws RemoteException;
+  public int numberOfCustomers() throws RemoteException;
+  public boolean hasCustomers() throws RemoteException;
+  public int indexOfCustomer(Customer aCustomer) throws RemoteException;
+  public Order getOrder(int index) throws RemoteException;
+  public List<Order> getOrders() throws RemoteException;
+  public int numberOfOrders() throws RemoteException;
+  public boolean hasOrders() throws RemoteException;
+  public int indexOfOrder(Order aOrder) throws RemoteException;
+  public boolean addAgent(Agent aAgent) throws RemoteException;
+  public boolean removeAgent(Agent aAgent) throws RemoteException;
+  public boolean addAgentAt(Agent aAgent, int index) throws RemoteException;
+  public boolean addOrMoveAgentAt(Agent aAgent, int index) throws RemoteException;
+  public boolean addWarehous(Warehouse aWarehous) throws RemoteException;
+  public boolean removeWarehous(Warehouse aWarehous) throws RemoteException;
+  public boolean addWarehousAt(Warehouse aWarehous, int index) throws RemoteException;
+  public boolean addOrMoveWarehousAt(Warehouse aWarehous, int index) throws RemoteException;
+  public boolean addCustomer(Customer aCustomer) throws RemoteException;
+  public boolean removeCustomer(Customer aCustomer) throws RemoteException;
+  public boolean addCustomerAt(Customer aCustomer, int index) throws RemoteException;
+  public boolean addOrMoveCustomerAt(Customer aCustomer, int index) throws RemoteException;
+  public boolean addOrder(Order aOrder) throws RemoteException;
+  public boolean removeOrder(Order aOrder) throws RemoteException;
+  public boolean addOrderAt(Order aOrder, int index) throws RemoteException;
+  public boolean addOrMoveOrderAt(Order aOrder, int index) throws RemoteException;
+  public void delete() throws RemoteException;
+}

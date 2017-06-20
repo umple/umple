@@ -59,6 +59,7 @@ public class MicrowaveImpl extends CCImpl implements java.io.Serializable , IMic
   
   public void setSelf(Microwave proxy)
   {
+    super.setSelf(proxy);
     self=proxy;
   }
 

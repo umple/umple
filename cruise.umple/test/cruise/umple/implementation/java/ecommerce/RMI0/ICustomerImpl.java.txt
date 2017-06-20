@@ -1,0 +1,36 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI0;
+import java.util.*;
+import java.io.Serializable;
+import java.rmi.RemoteException;
+public interface ICustomerImpl extends java.rmi.Remote
+{
+  public int getHashCodeImpl() throws RemoteException;
+  public boolean setNameImpl(String aName) throws RemoteException;
+  public String getNameImpl() throws RemoteException;
+  public Vendor getVendorImpl(int index) throws RemoteException;
+  public List<Vendor> getVendorsImpl() throws RemoteException;
+  public int numberOfVendorsImpl() throws RemoteException;
+  public boolean hasVendorsImpl() throws RemoteException;
+  public int indexOfVendorImpl(Vendor aVendor) throws RemoteException;
+  public Order getOrderImpl(int index) throws RemoteException;
+  public List<Order> getOrdersImpl() throws RemoteException;
+  public int numberOfOrdersImpl() throws RemoteException;
+  public boolean hasOrdersImpl() throws RemoteException;
+  public int indexOfOrderImpl(Order aOrder) throws RemoteException;
+  public SystemManager getSystemManagerImpl() throws RemoteException;
+  public boolean hasSystemManagerImpl() throws RemoteException;
+  public boolean addVendorImpl(Vendor aVendor) throws RemoteException;
+  public boolean removeVendorImpl(Vendor aVendor) throws RemoteException;
+  public boolean addVendorAtImpl(Vendor aVendor, int index) throws RemoteException;
+  public boolean addOrMoveVendorAtImpl(Vendor aVendor, int index) throws RemoteException;
+  public boolean addOrderImpl(Order aOrder) throws RemoteException;
+  public boolean removeOrderImpl(Order aOrder) throws RemoteException;
+  public boolean addOrderAtImpl(Order aOrder, int index) throws RemoteException;
+  public boolean addOrMoveOrderAtImpl(Order aOrder, int index) throws RemoteException;
+  public boolean setSystemManagerImpl(SystemManager aSystemManager) throws RemoteException;
+  public void deleteImpl() throws RemoteException;
+   public Order orderProductImpl(String productType, String vendorName) throws RemoteException;
+}

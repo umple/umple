@@ -6,6 +6,7 @@ import java.util.*;
 import java.lang.Thread;
 import java.io.Serializable;
 
+// line 2 "../../../Class_DistributableRMI_WithMethods.ump"
 public class Microwave implements java.io.Serializable, IMicrowaveImpl, Runnable
 {
 
@@ -626,10 +627,7 @@ this(UmpleRuntime.getComponent("Microwave"));
   }
  
   public boolean equals(Object obj)
-  {
-    if(realObject==null)
-      realObject= this;
-    if(obj.getClass()!=this.getClass())
+  {    if(obj.getClass()!=this.getClass())
       return false;
     return (getHashCode()==((Microwave)obj).getHashCode());
   }
