@@ -1,0 +1,598 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI0;
+import java.util.*;
+import java.io.Serializable;
+
+// line 100 "../ecommerceRMI0.ump"
+public class Customer implements java.io.Serializable, ICustomerImpl
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Customer Attributes
+  private  transient String name;
+
+  //Customer Associations
+  private transient  List<Vendor> vendors;
+  private transient  List<Order> orders;
+  private transient  SystemManager systemManager;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Customer(String aName, UmpleRuntime.UmpleComponent umpleComponent)
+  {
+    if(umpleComponent.getNode().getId()!=UmpleRuntime.getThisNodeId())
+    {
+      if(this.getClass()== Customer.class)
+        UmpleRuntime.getInstance().newCustomer(aName, umpleComponent, this);
+
+      return;
+    }
+    else
+    {
+      UmpleRuntime.getInstance().newCustomer(this);
+    }
+
+    name = aName;
+    vendors = new ArrayList<Vendor>();
+    orders = new ArrayList<Order>();
+  }
+  //------------------------
+  // Returning the Hashcode
+  //------------------------
+  public int getHashCodeImpl()
+  {
+    return hashCode();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setNameImpl(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getNameImpl()
+  {
+    return name;
+  }
+
+  public Vendor getVendorImpl(int index)
+  {
+    Vendor aVendor = vendors.get(index);
+    return aVendor;
+  }
+
+  public List<Vendor> getVendorsImpl()
+  {
+    List<Vendor> newVendors = Collections.unmodifiableList(vendors);
+    return newVendors;
+  }
+
+  public int numberOfVendorsImpl()
+  {
+    int number = vendors.size();
+    return number;
+  }
+
+  public boolean hasVendorsImpl()
+  {
+    boolean has = vendors.size() > 0;
+    return has;
+  }
+
+  public int indexOfVendorImpl(Vendor aVendor)
+  {
+    int index = vendors.indexOf(aVendor);
+    return index;
+  }
+
+  public Order getOrderImpl(int index)
+  {
+    Order aOrder = orders.get(index);
+    return aOrder;
+  }
+
+  public List<Order> getOrdersImpl()
+  {
+    List<Order> newOrders = Collections.unmodifiableList(orders);
+    return newOrders;
+  }
+
+  public int numberOfOrdersImpl()
+  {
+    int number = orders.size();
+    return number;
+  }
+
+  public boolean hasOrdersImpl()
+  {
+    boolean has = orders.size() > 0;
+    return has;
+  }
+
+  public int indexOfOrderImpl(Order aOrder)
+  {
+    int index = orders.indexOf(aOrder);
+    return index;
+  }
+
+  public SystemManager getSystemManagerImpl()
+  {
+    return systemManager;
+  }
+
+  public boolean hasSystemManagerImpl()
+  {
+    boolean has = systemManager != null;
+    return has;
+  }
+
+  public static int minimumNumberOfVendors()
+  {
+    return 0;
+  }
+
+  public boolean addVendorImpl(Vendor aVendor)
+  {
+    boolean wasAdded = false;
+    if (vendors.contains(aVendor)) { return false; }
+    vendors.add(aVendor);
+    if (aVendor.indexOfCustomer(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aVendor.addCustomer(this);
+      if (!wasAdded)
+      {
+        vendors.remove(aVendor);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeVendorImpl(Vendor aVendor)
+  {
+    boolean wasRemoved = false;
+    if (!vendors.contains(aVendor))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = vendors.indexOf(aVendor);
+    vendors.remove(oldIndex);
+    if (aVendor.indexOfCustomer(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aVendor.removeCustomer(this);
+      if (!wasRemoved)
+      {
+        vendors.add(oldIndex,aVendor);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addVendorAtImpl(Vendor aVendor, int index)
+  {  
+    boolean wasAdded = false;
+    if(addVendor(aVendor))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfVendors()) { index = numberOfVendors() - 1; }
+      vendors.remove(aVendor);
+      vendors.add(index, aVendor);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveVendorAtImpl(Vendor aVendor, int index)
+  {
+    boolean wasAdded = false;
+    if(vendors.contains(aVendor))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfVendors()) { index = numberOfVendors() - 1; }
+      vendors.remove(aVendor);
+      vendors.add(index, aVendor);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addVendorAt(aVendor, index);
+    }
+    return wasAdded;
+  }
+
+  public static int minimumNumberOfOrders()
+  {
+    return 0;
+  }
+
+  public boolean addOrderImpl(Order aOrder)
+  {
+    boolean wasAdded = false;
+    if (orders.contains(aOrder)) { return false; }
+    Customer existingCustomer = aOrder.getCustomer();
+    if (existingCustomer == null)
+    {
+      aOrder.setCustomer(this);
+    }
+    else if (!this.equals(existingCustomer))
+    {
+      existingCustomer.removeOrder(aOrder);
+      addOrder(aOrder);
+    }
+    else
+    {
+      orders.add(aOrder);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeOrderImpl(Order aOrder)
+  {
+    boolean wasRemoved = false;
+    if (orders.contains(aOrder))
+    {
+      orders.remove(aOrder);
+      aOrder.setCustomer(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addOrderAtImpl(Order aOrder, int index)
+  {  
+    boolean wasAdded = false;
+    if(addOrder(aOrder))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
+      orders.remove(aOrder);
+      orders.add(index, aOrder);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveOrderAtImpl(Order aOrder, int index)
+  {
+    boolean wasAdded = false;
+    if(orders.contains(aOrder))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
+      orders.remove(aOrder);
+      orders.add(index, aOrder);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addOrderAt(aOrder, index);
+    }
+    return wasAdded;
+  }
+
+  public boolean setSystemManagerImpl(SystemManager aSystemManager)
+  {
+    boolean wasSet = false;
+    SystemManager existingSystemManager = systemManager;
+    systemManager = aSystemManager;
+    if (existingSystemManager != null && !existingSystemManager.equals(aSystemManager))
+    {
+      existingSystemManager.removeCustomer(this);
+    }
+    if (aSystemManager != null)
+    {
+      aSystemManager.addCustomer(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void deleteImpl()
+  {
+    ArrayList<Vendor> copyOfVendors = new ArrayList<Vendor>(vendors);
+    vendors.clear();
+    for(Vendor aVendor : copyOfVendors)
+    {
+      aVendor.removeCustomer(this);
+    }
+    while( !orders.isEmpty() )
+    {
+      orders.get(0).setCustomer(null);
+    }
+    if (systemManager != null)
+    {
+      SystemManager placeholderSystemManager = systemManager;
+      this.systemManager = null;
+      placeholderSystemManager.removeCustomer(this);
+    }
+  }
+
+  // line 106 "../ecommerceRMI0.ump"
+   public Order orderProductImpl(String productType, String vendorName){
+    for(Vendor v: getVendors())
+		{
+			if(v.getName().equals(vendorName))
+				return v.makeOrder(this,v.findProduct(new ProductType(productType)));
+		}
+		return null;
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "systemManager = "+(getSystemManager()!=null?Integer.toHexString(System.identityHashCode(getSystemManager())):"null");
+  }
+  public void setRealObject(ICustomerImpl aObject)
+  {
+    realObject=aObject;
+  }
+
+  transient ICustomerImpl realObject=this;
+  public Customer(String aName)
+  {
+
+this(aName,UmpleRuntime.getComponent("Customer"));
+  }
+  public int getHashCode()
+  {
+    while(true)
+      try{
+        return realObject.getHashCodeImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setName(String aName)
+  {
+    while(true)
+      try{
+        return realObject.setNameImpl(aName);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public String getName()
+  {
+    while(true)
+      try{
+        return realObject.getNameImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Vendor getVendor(int index)
+  {
+    while(true)
+      try{
+        return realObject.getVendorImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Vendor> getVendors()
+  {
+    while(true)
+      try{
+        return realObject.getVendorsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfVendors()
+  {
+    while(true)
+      try{
+        return realObject.numberOfVendorsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasVendors()
+  {
+    while(true)
+      try{
+        return realObject.hasVendorsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfVendor(Vendor aVendor)
+  {
+    while(true)
+      try{
+        return realObject.indexOfVendorImpl(aVendor);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Order getOrder(int index)
+  {
+    while(true)
+      try{
+        return realObject.getOrderImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Order> getOrders()
+  {
+    while(true)
+      try{
+        return realObject.getOrdersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfOrders()
+  {
+    while(true)
+      try{
+        return realObject.numberOfOrdersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasOrders()
+  {
+    while(true)
+      try{
+        return realObject.hasOrdersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.indexOfOrderImpl(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public SystemManager getSystemManager()
+  {
+    while(true)
+      try{
+        return realObject.getSystemManagerImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasSystemManager()
+  {
+    while(true)
+      try{
+        return realObject.hasSystemManagerImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addVendor(Vendor aVendor)
+  {
+    while(true)
+      try{
+        return realObject.addVendorImpl(aVendor);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeVendor(Vendor aVendor)
+  {
+    while(true)
+      try{
+        return realObject.removeVendorImpl(aVendor);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addVendorAt(Vendor aVendor, int index)
+  {
+    while(true)
+      try{
+        return realObject.addVendorAtImpl(aVendor,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveVendorAt(Vendor aVendor, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveVendorAtImpl(aVendor,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.addOrderImpl(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.removeOrderImpl(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrderAt(Order aOrder, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrderAtImpl(aOrder,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveOrderAt(Order aOrder, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveOrderAtImpl(aOrder,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setSystemManager(SystemManager aSystemManager)
+  {
+    while(true)
+      try{
+        return realObject.setSystemManagerImpl(aSystemManager);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void delete()
+  {
+    while(true)
+      try{
+        realObject.deleteImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public Order orderProduct(String productType, String vendorName)
+  {
+    while(true)
+      try{
+        return realObject.orderProductImpl(productType,vendorName);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+
+  protected  ICustomerImpl remoteObject;  
+  public void setRemoteObject(ICustomerImpl aRemoteObject)
+  {
+    remoteObject=aRemoteObject;
+  }
+  public ICustomerImpl getRemoteObject()
+  {
+    return (ICustomerImpl)remoteObject;
+  }
+  private void readObject(java.io.ObjectInputStream in) throws Exception
+  {
+    try
+    {
+      in.defaultReadObject();
+      realObject=(ICustomerImpl)remoteObject;
+    }
+    catch(Exception e)
+    {
+      throw e;
+    }
+    
+  }
+ 
+  public boolean equals(Object obj)
+  {    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((Customer)obj).getHashCode());
+  }
+}

@@ -1,25 +1,28 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
-package distributed.rmi5;
+package ecommerceRMI0;
+import ecommerceRMI0.Agent;
 import java.util.Properties;
-import java.applet.*;
 import java.io.*;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.rmi.registry.Registry;
 import java.io.InputStreamReader;
 import java.io.File;
-import distributed.rmi5.Microwave;
+import ecommerceRMI0.Vendor;
 import java.rmi.RemoteException;
 import java.io.Serializable;
-import distributed.rmi5.Client;
+import ecommerceRMI0.Supplier;
 import java.util.regex.Matcher;
 import java.rmi.registry.LocateRegistry;
 import java.util.*;
+import ecommerceRMI0.Customer;
 import java.rmi.server.UnicastRemoteObject;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.regex.Pattern;
+import ecommerceRMI0.Warehouse;
+import ecommerceRMI0.SystemManager;
 import java.io.InputStream;
 public class UmpleRuntime implements IUmpleRuntime
 {
@@ -292,12 +295,12 @@ public class UmpleRuntime implements IUmpleRuntime
     }
     
   
-  public void newClient(UmpleRuntime.UmpleComponent component,Client object)
+  public void newWarehouse(String aName, UmpleRuntime.UmpleComponent component,Warehouse object)
   {
 
       while(true){
         try
-        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createClient());
+        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createWarehouse(aName));
           object.setRealObject(object.getRemoteObject());
           break;
         }
@@ -309,11 +312,11 @@ public class UmpleRuntime implements IUmpleRuntime
       }
       }
 
-  public void newClient(Client object){ 
+  public void newWarehouse(Warehouse object){ 
         
-        ClientRemote remoteObject;
+        WarehouseRemote remoteObject;
         try{
-        remoteObject = (ClientRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        remoteObject = (WarehouseRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
         }
         catch (Exception e)
         {
@@ -338,19 +341,19 @@ public class UmpleRuntime implements IUmpleRuntime
       
     }
     
-  synchronized public IClientImpl createClient()
+  synchronized public IWarehouseImpl createWarehouse(String aName)
     {
-    Client object= new Client( UmpleRuntime.getComponent("local"));
+    Warehouse object= new Warehouse(aName,  UmpleRuntime.getComponent("local"));
     return object.getRemoteObject();
     }
 
   
-  public void newMicrowave(int aX, String aF, UmpleRuntime.UmpleComponent component,Microwave object)
+  public void newAgent(String aName, UmpleRuntime.UmpleComponent component,Agent object)
   {
 
       while(true){
         try
-        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createMicrowave(aX, aF));
+        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createAgent(aName));
           object.setRealObject(object.getRemoteObject());
           break;
         }
@@ -362,11 +365,11 @@ public class UmpleRuntime implements IUmpleRuntime
       }
       }
 
-  public void newMicrowave(Microwave object){ 
+  public void newAgent(Agent object){ 
         
-        MicrowaveRemote remoteObject;
+        AgentRemote remoteObject;
         try{
-        remoteObject = (MicrowaveRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        remoteObject = (AgentRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
         }
         catch (Exception e)
         {
@@ -391,9 +394,221 @@ public class UmpleRuntime implements IUmpleRuntime
       
     }
     
-  synchronized public IMicrowaveImpl createMicrowave(int aX, String aF)
+  synchronized public IAgentImpl createAgent(String aName)
     {
-    Microwave object= new Microwave(aX, aF,  UmpleRuntime.getComponent("local"));
+    Agent object= new Agent(aName,  UmpleRuntime.getComponent("local"));
+    return object.getRemoteObject();
+    }
+
+  
+  public void newSupplier(String aName, UmpleRuntime.UmpleComponent component,Supplier object)
+  {
+
+      while(true){
+        try
+        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createSupplier(aName));
+          object.setRealObject(object.getRemoteObject());
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newSupplier(Supplier object){ 
+        
+        SupplierRemote remoteObject;
+        try{
+        remoteObject = (SupplierRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        }
+        catch (Exception e)
+        {
+          System.err.println("Class not found " + e.toString());
+          return;
+        }
+        listOfObjects.add(remoteObject); 
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
+        object.setRemoteObject(remoteObject);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+    }
+      
+    }
+    
+  synchronized public ISupplierImpl createSupplier(String aName)
+    {
+    Supplier object= new Supplier(aName,  UmpleRuntime.getComponent("local"));
+    return object.getRemoteObject();
+    }
+
+  
+  public void newVendor(String aName, UmpleRuntime.UmpleComponent component,Vendor object)
+  {
+
+      while(true){
+        try
+        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createVendor(aName));
+          object.setRealObject(object.getRemoteObject());
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newVendor(Vendor object){ 
+        
+        VendorRemote remoteObject;
+        try{
+        remoteObject = (VendorRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        }
+        catch (Exception e)
+        {
+          System.err.println("Class not found " + e.toString());
+          return;
+        }
+        listOfObjects.add(remoteObject); 
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
+        object.setRemoteObject(remoteObject);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+    }
+      
+    }
+    
+  synchronized public IVendorImpl createVendor(String aName)
+    {
+    Vendor object= new Vendor(aName,  UmpleRuntime.getComponent("local"));
+    return object.getRemoteObject();
+    }
+
+  
+  public void newCustomer(String aName, UmpleRuntime.UmpleComponent component,Customer object)
+  {
+
+      while(true){
+        try
+        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createCustomer(aName));
+          object.setRealObject(object.getRemoteObject());
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newCustomer(Customer object){ 
+        
+        CustomerRemote remoteObject;
+        try{
+        remoteObject = (CustomerRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        }
+        catch (Exception e)
+        {
+          System.err.println("Class not found " + e.toString());
+          return;
+        }
+        listOfObjects.add(remoteObject); 
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
+        object.setRemoteObject(remoteObject);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+    }
+      
+    }
+    
+  synchronized public ICustomerImpl createCustomer(String aName)
+    {
+    Customer object= new Customer(aName,  UmpleRuntime.getComponent("local"));
+    return object.getRemoteObject();
+    }
+
+  
+  public void newSystemManager(UmpleRuntime.UmpleComponent component,SystemManager object)
+  {
+
+      while(true){
+        try
+        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createSystemManager());
+          object.setRealObject(object.getRemoteObject());
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newSystemManager(SystemManager object){ 
+        
+        SystemManagerRemote remoteObject;
+        try{
+        remoteObject = (SystemManagerRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        }
+        catch (Exception e)
+        {
+          System.err.println("Class not found " + e.toString());
+          return;
+        }
+        listOfObjects.add(remoteObject); 
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
+        object.setRemoteObject(remoteObject);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+    }
+      
+    }
+    
+  synchronized public ISystemManagerImpl createSystemManager()
+    {
+    SystemManager object= SystemManager.getInstance(UmpleRuntime.getComponent("local"));
     return object.getRemoteObject();
     }
 

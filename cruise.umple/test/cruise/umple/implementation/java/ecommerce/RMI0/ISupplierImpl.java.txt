@@ -1,0 +1,23 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI0;
+import java.util.*;
+import java.io.Serializable;
+import java.rmi.RemoteException;
+public interface ISupplierImpl extends java.rmi.Remote, IAgentImpl
+{
+  public int getHashCodeImpl() throws RemoteException;
+  public Product getProductImpl(int index) throws RemoteException;
+  public List<Product> getProductsImpl() throws RemoteException;
+  public int numberOfProductsImpl() throws RemoteException;
+  public boolean hasProductsImpl() throws RemoteException;
+  public int indexOfProductImpl(Product aProduct) throws RemoteException;
+  public boolean addProductImpl(Product aProduct) throws RemoteException;
+  public boolean removeProductImpl(Product aProduct) throws RemoteException;
+  public boolean addProductAtImpl(Product aProduct, int index) throws RemoteException;
+  public boolean addOrMoveProductAtImpl(Product aProduct, int index) throws RemoteException;
+  public void deleteImpl() throws RemoteException;
+   public Product createProductImpl(String serialNumber, String productType) throws RemoteException;
+   public void putInWarehouseImpl(Product aProduct, Warehouse warehouse) throws RemoteException;
+}

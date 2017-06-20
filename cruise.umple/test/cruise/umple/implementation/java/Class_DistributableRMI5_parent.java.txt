@@ -6,6 +6,8 @@ import java.applet.*;
 import java.util.*;
 import java.io.Serializable;
 
+// line 6 "../../Class_DistributableRMI5.ump"
+// line 28 "../../Class_DistributableRMI5.ump"
 public class Client implements java.io.Serializable, IClientImpl
 {
 
@@ -352,10 +354,7 @@ this(UmpleRuntime.getComponent("Client"));
   }
  
   public boolean equals(Object obj)
-  {
-    if(realObject==null)
-      realObject= this;
-    if(obj.getClass()!=this.getClass())
+  {    if(obj.getClass()!=this.getClass())
       return false;
     return (getHashCode()==((Client)obj).getHashCode());
   }

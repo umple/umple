@@ -4,6 +4,7 @@
 package distributed.rmi3;
 import java.io.Serializable;
 
+// line 5 "../../Class_DistributableRMI3.ump"
 public class Client extends CC implements ClientI ,java.io.Serializable, IClientImpl
 {
 
@@ -50,6 +51,7 @@ public class Client extends CC implements ClientI ,java.io.Serializable, IClient
 
   public void setRealObject(IClientImpl aObject)
   {
+  super.setRealObject(aObject);
     realObject=aObject;
   }
 
@@ -101,10 +103,7 @@ this(UmpleRuntime.getComponent("Client"));
   }
  
   public boolean equals(Object obj)
-  {
-    if(realObject==null)
-      realObject= this;
-    if(obj.getClass()!=this.getClass())
+  {    if(obj.getClass()!=this.getClass())
       return false;
     return (getHashCode()==((Client)obj).getHashCode());
   }
