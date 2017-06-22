@@ -287,7 +287,7 @@ class UmpleInternalParser
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
-	boolean isInput = attributeToken.getValue("input") != null;
+    boolean isIvar = attributeToken.getValue("ivar") != null;
     boolean isConstant = "const".equals(attributeToken.getValue("modifier"));
     boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
     boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
@@ -436,7 +436,7 @@ class UmpleInternalParser
     Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aTrait);
     attribute.setIsUnique(isUnique);
     attribute.setIsLazy(isLazy);
-	attribute.setIsInput(isInput);
+    attribute.setIsIvar(isIvar);
     boolean isList = attributeToken.getValue("list") != null;
 
     if (name == null)

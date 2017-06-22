@@ -1935,7 +1935,7 @@ class MethodParameter{
 		mp.isList = getIsList();
 		mp.isDerived = getIsDerived();
 		mp.isLazy = getIsLazy();
-		mp.isInput = getIsInput();
+		mp.isIvar = getIsIvar();
 		return mp;
   }
 }

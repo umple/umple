@@ -4,9 +4,9 @@ class CruiseControlSystem
   const int bb = 5;
   const float cc = 5.00;
   Integer c;
-  input Integer ayo;
-  input Float bayo;
-  input Boolean baro;
+  ivar Integer ayo;
+  ivar Float bayo;
+  ivar Boolean baro;
   
   sm {
     s1 {
