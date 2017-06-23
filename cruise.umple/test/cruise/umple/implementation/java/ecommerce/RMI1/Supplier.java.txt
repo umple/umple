@@ -1,0 +1,157 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI1;
+import java.util.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.RemoteException;
+import java.io.Serializable;
+import ecommerceRMI1.UmpleRuntime;
+public class Supplier extends Agent implements java.io.Serializable
+{  public void setRealObject(ISupplierImpl aObject)
+  {
+  super.setRealObject(aObject);
+    realObject=aObject;
+  }
+
+  ISupplierImpl realObject;
+  public Supplier(String aName, UmpleRuntime.UmpleComponent component)
+  {
+    if(this.getClass()== Supplier.class)    setRealObject(UmpleRuntime.getInstance().newSupplier(aName, component, this));
+  }
+  public Supplier(String aName)
+  {
+    if(this.getClass()== Supplier.class)    setRealObject(UmpleRuntime.getInstance().newSupplier(aName, this));
+  }
+  public void setSelf(Supplier proxy)
+  {
+    while(true)
+      try{
+        realObject.setSelf(proxy);
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int getHashCode()
+  {
+    while(true)
+      try{
+        return realObject.getHashCode();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Product getProduct(int index)
+  {
+    while(true)
+      try{
+        return realObject.getProduct(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Product> getProducts()
+  {
+    while(true)
+      try{
+        return realObject.getProducts();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfProducts()
+  {
+    while(true)
+      try{
+        return realObject.numberOfProducts();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasProducts()
+  {
+    while(true)
+      try{
+        return realObject.hasProducts();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfProduct(Product aProduct)
+  {
+    while(true)
+      try{
+        return realObject.indexOfProduct(aProduct);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public static int minimumNumberOfProducts()
+  {
+    while(true)
+      try{
+        return SupplierImpl.minimumNumberOfProducts();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addProduct(Product aProduct)
+  {
+    while(true)
+      try{
+        return realObject.addProduct(aProduct);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeProduct(Product aProduct)
+  {
+    while(true)
+      try{
+        return realObject.removeProduct(aProduct);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addProductAt(Product aProduct, int index)
+  {
+    while(true)
+      try{
+        return realObject.addProductAt(aProduct,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveProductAt(Product aProduct, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveProductAt(aProduct,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void delete()
+  {
+    while(true)
+      try{
+        realObject.delete();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public Product createProduct(String serialNumber, String productType)
+  {
+    while(true)
+      try{
+        return realObject.createProduct(serialNumber,productType);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public void putInWarehouse(Product aProduct, Warehouse warehouse)
+  {
+    while(true)
+      try{
+        realObject.putInWarehouse(aProduct,warehouse);
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+
+  public boolean equals(Object obj)
+  {    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((Supplier)obj).getHashCode());
+  }
+protected Supplier(){}
+}

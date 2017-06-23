@@ -1,5 +1,5 @@
 
-use rmi_objectFactory_add_methods.ump;
+use objectFactory_add_methods.ump;
 class UmpleToJava {
     objectFactory_add_DeclareOneToOne <<!<</*objectFactory_add_DeclareOneToOne*/>><<#
   String signature = gClass.getLookup("constructorSignature_mandatory");
@@ -10,6 +10,6 @@ class UmpleToJava {
     argumentscomma+=", ";
   caller=gClass.getLookup("constructorSignature_caller");
   #>>
-  <<@ UmpleToJava.rmi_objectFactory_add_methods >>
+  <<@ UmpleToJava.objectFactory_add_methods >>
 !>>
 }

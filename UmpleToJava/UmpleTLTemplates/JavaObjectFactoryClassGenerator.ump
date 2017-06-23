@@ -38,26 +38,29 @@ class JavaObjectFactoryClassGenerator {
   GeneratorHelper.generator = gen;
   Boolean isInterface=false;
   Set<String> packageSet = new HashSet<String>();
-  if(model.getDistributeTechnology().equals("RMI")){
+  /*if(model.getDistributeTechnology().equals("RMI"))*/
+  if(model.getDistributeTechnology().equals("RMI"))
+  {
     packageSet.add("java.io.File");
     packageSet.add("java.rmi.registry.Registry");
     packageSet.add("java.rmi.registry.LocateRegistry");
     packageSet.add("java.rmi.RemoteException");
     packageSet.add("java.rmi.server.UnicastRemoteObject");
   }
-  if(model.getDistributeTechnology().equals("WS"))
-  {
-    packageSet.add("javax.jws.WebMethod");
+  else if(model.getDistributeTechnology().equals("WS"))
+  { 
     packageSet.add("javax.jws.WebService");
     packageSet.add("javax.jws.soap.SOAPBinding");
     packageSet.add("javax.jws.soap.SOAPBinding.Style");
-    packageSet.add("javax.xml.ws.Endpoint");
     packageSet.add("java.net.URL");
     packageSet.add("javax.xml.namespace.QName");
     packageSet.add("javax.xml.ws.Service");
+    packageSet.add("javax.jws.WebMethod");
+    packageSet.add("javax.xml.ws.Endpoint");
   }  
+  
   packageSet.add("java.io.FileInputStream");
-  packageSet.add("java.io.InputStreamReader;");
+  packageSet.add("java.io.InputStreamReader");
   packageSet.add("java.io.BufferedReader");
   packageSet.add("java.io.FileReader");
   packageSet.add("java.io.IOException");
@@ -90,12 +93,13 @@ class JavaObjectFactoryClassGenerator {
     }
   }
 String defaultNamespace="";
-String qname="";
+String qname="http://";
   if (model.getDefaultNamespace()!=null){#>>
 package <<=model.getDefaultNamespace()>>;
   <<#
-    defaultNamespace=model.getDefaultNamespace()+".";
-    qname=defaultNamespace+"/";
+    defaultNamespace=model.getDefaultNamespace();
+    qname+=defaultNamespace+"/";
+    defaultNamespace+=".";
   }
   for(String packageName: packageSet)
   {
@@ -115,7 +119,7 @@ public class UmpleRuntime implements IUmpleRuntime
   static int thisNodeId=-1;
   private int numberOfNodes=0;
   private static String fileAddress="";
-  static List<UmpleNode> nodes=new ArrayList<UmpleNode>();;
+  static HashMap<Integer, UmpleNode> nodes=new HashMap<Integer, UmpleNode>();
   static HashMap <String, UmpleComponent> components= new HashMap<String, UmpleComponent>();
   public static void setFileAddress(String address)
   {
@@ -131,23 +135,26 @@ public class UmpleRuntime implements IUmpleRuntime
   }  
 
 
-  private static void readConfigFile()
+  private static void readPropertiesFile()
   {
-      String location="ComponentsConfig.xml";
+      String location="configuration.txt";
       Properties prop = new Properties();
       InputStream input = null;
 
     try {
 
-      input = new FileInputStream("config.properties");
+      input = new FileInputStream("node.properties");
       prop.load(input);
-      setThisNodeId(Integer.parseInt(prop.getProperty("component")));
+      if(getThisNodeId()<0)
+        setThisNodeId(Integer.parseInt(prop.getProperty("name")));
       location=prop.getProperty("location");
       setFileAddress(location);
     } catch (IOException e)
     {
       e.printStackTrace();
-      setThisNodeId(0);    
+      if(getThisNodeId()<0)
+        setThisNodeId(0); 
+      setFileAddress(location);   
     } 
     finally {
       if (input != null) {
@@ -159,10 +166,10 @@ public class UmpleRuntime implements IUmpleRuntime
       }
     }
   }
-  public static UmpleComponent getComponent(String RuntimeComponentName)
+  public static UmpleComponent getComponent(String runtimeComponentName)
   { 
     getInstance();
-    UmpleComponent aComponent=components.get(RuntimeComponentName);
+    UmpleComponent aComponent=components.get(runtimeComponentName.toLowerCase());
     if (aComponent!=null)
       return aComponent;
     else
@@ -171,11 +178,8 @@ public class UmpleRuntime implements IUmpleRuntime
 // ******************************** Factory
     public static UmpleRuntime theInstance = null;
     List<IUmpleRuntime> remoteFactories;
-    
 
-    <<@ UmpleToJava.objectFactory_listOfObjects_All >>
-    
-    
+    public List<Object> listOfObjects;
 
     public static UmpleRuntime getInstance()
     {
@@ -187,7 +191,7 @@ public class UmpleRuntime implements IUmpleRuntime
    
     private UmpleRuntime()
     { 
-      <<@ UmpleToJava.objectFactory_listOfObjects_instantiation_All >>
+      listOfObjects=new ArrayList<Object>();
       remoteFactories= new ArrayList<IUmpleRuntime>();
       initialize();
     }
@@ -203,9 +207,9 @@ public class UmpleRuntime implements IUmpleRuntime
       return umpleComponent.getNode().getId();
     }
 
-    private void readComponentsFile()
+    private void readConfigFile()
     {
-      String input="{id=0; port=1099}";
+      String input="{id=0; port=1099; http://localhost {component1}}{id=1; port=1700; http://localhost {component2}}";
       try (BufferedReader br = new BufferedReader(new FileReader(fileAddress))) {
         String line;
         while ((line = br.readLine()) != null) {
@@ -228,7 +232,7 @@ public class UmpleRuntime implements IUmpleRuntime
             Pattern pattern2 = Pattern.compile("([\\}|\\)])([^\\{\\(]+)([\\}|\\)])");
             Pattern pattern3 = Pattern.compile("([\\{|\\(])([^\\{\\(\\}\\)]+)([\\}|\\)])");
             Pattern patternURL = Pattern.compile("(url)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)");
-            Pattern patternName = Pattern.compile("(id|name)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)");
+            Pattern patternName = Pattern.compile("(id)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)");
             Pattern patternPort = Pattern.compile("(port)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)"); 
             Pattern patternIp = Pattern.compile("(ip)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)"); 
             Pattern patternComponent = Pattern.compile("(\\s*)([^;,\\s]*)(\\s*)([,|;|\\r\\n|\\t])");                 
@@ -249,8 +253,8 @@ public class UmpleRuntime implements IUmpleRuntime
             Boolean condition3=matcher3.find();
             while (condition1||condition2||condition3) 
             { 
-              url="";
-              ip="";
+              url="http://localhost";
+              ip="localhost";
               name="";
               port=1111;
               part1="";
@@ -299,7 +303,7 @@ public class UmpleRuntime implements IUmpleRuntime
                 UmpleComponent aComponent=new UmpleComponent(component,aNode);
                 components.put(component,aComponent);
               }
-              if(Integer.parseInt(name)==getThisNodeId())
+              if(aNode.getId()==getThisNodeId())
               {
                 UmpleComponent aComponent=new UmpleComponent("local",aNode);
                 components.put("local",aComponent);
@@ -307,7 +311,7 @@ public class UmpleRuntime implements IUmpleRuntime
               aNode.setPort(port);
               aNode.setUrl(url);
               aNode.setIp(ip);
-              nodes.add(aNode);
+              nodes.put(aNode.getId(),aNode);
             }
           }      
         }    
@@ -321,11 +325,10 @@ public class UmpleRuntime implements IUmpleRuntime
     public void initialize()
     {    
 
-      if(getThisNodeId()<0)
-        readConfigFile();
-      readComponentsFile();
+      if(fileAddress.equals(""))
+        readPropertiesFile();
+      readConfigFile();
       int numberOfNodes= nodes.size();
-      System.out.println(getThisNodeId());
       startRMI();
       for(int node=0;node<numberOfNodes;node=node+1)
       {
@@ -334,20 +337,23 @@ public class UmpleRuntime implements IUmpleRuntime
           remoteFactories.add(this);
         }
         else
-        {System.out.println(node);
-          while(true)
+        {
+          System.out.println("connecting to node: "+node);
+          Boolean success=false;
+          while(!success)
           {
             try 
             {
               Registry registry = LocateRegistry.getRegistry(nodes.get(node).getIp(),nodes.get(node).getPort());
               IUmpleRuntime stub = (IUmpleRuntime) registry.lookup("UmpleRuntime"+String.valueOf(node));
               remoteFactories.add(stub);
-              break;
+              success=true;
             } 
             catch (Exception e) 
             {
               System.err.println("Client exception: " + e.toString());
               e.printStackTrace();
+              try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
             }
           } 
         } 
@@ -356,28 +362,30 @@ public class UmpleRuntime implements IUmpleRuntime
     public void startRMI() 
     {
       IUmpleRuntime stub;
-      while(true){
-        try
-        {  
-          // Bind the remote object's stub in the registry
-          rmiRegistry= LocateRegistry.createRegistry(nodes.get(getThisNodeId()).getPort());
-          stub = (IUmpleRuntime) UnicastRemoteObject.exportObject(this, 0);
-          rmiRegistry.rebind("UmpleRuntime"+String.valueOf(getThisNodeId()), stub);
-          System.err.println("Server ready");
-          break;
-        } 
-        catch (Exception e)
-        {
-          System.err.println("binding exception: " + e.toString());
-        }
+      try
+      {  
+        // Bind the remote object's stub in the registry
+        rmiRegistry= LocateRegistry.createRegistry(nodes.get(getThisNodeId()).getPort());
+        stub = (IUmpleRuntime) UnicastRemoteObject.exportObject(this, nodes.get(getThisNodeId()).getPort());
+        rmiRegistry.rebind("UmpleRuntime"+String.valueOf(getThisNodeId()), stub);
+        System.err.println("Server ready");
+      } 
+      catch (Exception e)
+      {
+        System.err.println("binding exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
       }
     }
-    public void stopRMI() throws Exception 
+    public void stopRMI() throws Exception
     {
-      rmiRegistry.unbind("UmpleRuntime");
-      //unexportObject(this, true);
-      //unexportObject(rmiRegistry, true);
-      System.out.println("Component stopped");
+      try
+      {
+      UnicastRemoteObject.unexportObject(this, true);
+      }
+      catch(Exception e)
+      {
+      throw e;
+      }
     }
     <<#}
     if(model.getDistributeTechnology().equals("WS"))
@@ -385,12 +393,11 @@ public class UmpleRuntime implements IUmpleRuntime
     #>>
     public void initialize()
     {    
-      if(getThisNodeId()<0)
-        readConfigFile();
-      readComponentsFile();
+      if(fileAddress.equals(""))
+        readPropertiesFile();
+      readConfigFile();
       int numberOfNodes= nodes.size();
-      System.out.println(getThisNodeId());
-      Endpoint.publish(nodes.get(getThisNodeId()).getUrl()+":"+String.valueOf(nodes.get(getThisNodeId()).getPort())+"/hw",this);
+      Endpoint.publish(nodes.get(getThisNodeId()).getUrl()+":"+String.valueOf(nodes.get(getThisNodeId()).getPort())+"/UmpleRuntime",this);
 
       for(int node=0;node<numberOfNodes;node=node+1)
       {
@@ -399,12 +406,13 @@ public class UmpleRuntime implements IUmpleRuntime
           remoteFactories.add(this);
         }
         else
-        {System.out.println(node);
+        {
+          System.out.println("connecting to node: "+node);
           while(true)
           {
             try 
             {
-              URL url = new URL(nodes.get(node).getUrl()+String.valueOf(nodes.get(node).getPort())+"/hw?wsdl");
+              URL url = new URL(nodes.get(node).getUrl()+":"+String.valueOf(nodes.get(node).getPort())+"/UmpleRuntime?wsdl");
              
               QName qname = new QName("<<#append(realSb,qname);#>>",
                   "UmpleRuntimeService");
@@ -417,6 +425,7 @@ public class UmpleRuntime implements IUmpleRuntime
             {
               System.err.println("Client exception: " + e.toString());
               e.printStackTrace();
+              try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
             }
           } 
         } 
@@ -429,12 +438,15 @@ public class UmpleRuntime implements IUmpleRuntime
     <<@ UmpleToJava.objectFactory_add_Declare_All >>
   public static void main (String [] args)
   {
-    if (args.length>1){
+    if (args.length>0){
       setThisNodeId(Integer.parseInt(args[0]));
-      UmpleRuntime.getInstance().setFileAddress(args[1]);
+      if (args.length>1)
+        UmpleRuntime.setFileAddress(args[1]);
     }
-    else
-      UmpleRuntime.getInstance();
+     UmpleRuntime.getInstance();
+    while(true){
+      try { Thread.sleep(100000); } catch (InterruptedException interruptedException) {};
+    }
   }
     public class UmpleNode
     {
@@ -443,7 +455,7 @@ public class UmpleRuntime implements IUmpleRuntime
       //------------------------
       private int id;
       private String ip="localhost";
-      private String url="http://127.0.0.1";
+      private String url="http://localhost";
       private int port=1098;
       //------------------------
       // CONSTRUCTOR

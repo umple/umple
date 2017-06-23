@@ -1,0 +1,848 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI0;
+import java.util.*;
+import java.io.Serializable;
+
+// line 114 "../ecommerceRMI0.ump"
+public class SystemManager implements java.io.Serializable, ISystemManagerImpl
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static SystemManager theInstance = null;
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //SystemManager Associations
+  private transient  List<Agent> agents;
+  private transient  List<Warehouse> warehouses;
+  private transient  List<Customer> customers;
+  private transient  List<Order> orders;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  private SystemManager(UmpleRuntime.UmpleComponent umpleComponent)
+  {
+    if(umpleComponent.getNode().getId()!=UmpleRuntime.getThisNodeId())
+    {
+      if(this.getClass()== SystemManager.class)
+        UmpleRuntime.getInstance().newSystemManager( umpleComponent, this);
+
+      return;
+    }
+    else
+    {
+      UmpleRuntime.getInstance().newSystemManager(this);
+    }
+
+    agents = new ArrayList<Agent>();
+    warehouses = new ArrayList<Warehouse>();
+    customers = new ArrayList<Customer>();
+    orders = new ArrayList<Order>();
+  }
+
+  public static SystemManager getInstance()
+  {
+    if(theInstance == null)
+    {
+      theInstance = new SystemManager();
+    }
+    return theInstance;
+  }
+  //------------------------
+  // Returning the Hashcode
+  //------------------------
+  public int getHashCodeImpl()
+  {
+    return hashCode();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Agent getAgentImpl(int index)
+  {
+    Agent aAgent = agents.get(index);
+    return aAgent;
+  }
+
+  public List<Agent> getAgentsImpl()
+  {
+    List<Agent> newAgents = Collections.unmodifiableList(agents);
+    return newAgents;
+  }
+
+  public int numberOfAgentsImpl()
+  {
+    int number = agents.size();
+    return number;
+  }
+
+  public boolean hasAgentsImpl()
+  {
+    boolean has = agents.size() > 0;
+    return has;
+  }
+
+  public int indexOfAgentImpl(Agent aAgent)
+  {
+    int index = agents.indexOf(aAgent);
+    return index;
+  }
+
+  public Warehouse getWarehousImpl(int index)
+  {
+    Warehouse aWarehous = warehouses.get(index);
+    return aWarehous;
+  }
+
+  public List<Warehouse> getWarehousesImpl()
+  {
+    List<Warehouse> newWarehouses = Collections.unmodifiableList(warehouses);
+    return newWarehouses;
+  }
+
+  public int numberOfWarehousesImpl()
+  {
+    int number = warehouses.size();
+    return number;
+  }
+
+  public boolean hasWarehousesImpl()
+  {
+    boolean has = warehouses.size() > 0;
+    return has;
+  }
+
+  public int indexOfWarehousImpl(Warehouse aWarehous)
+  {
+    int index = warehouses.indexOf(aWarehous);
+    return index;
+  }
+
+  public Customer getCustomerImpl(int index)
+  {
+    Customer aCustomer = customers.get(index);
+    return aCustomer;
+  }
+
+  public List<Customer> getCustomersImpl()
+  {
+    List<Customer> newCustomers = Collections.unmodifiableList(customers);
+    return newCustomers;
+  }
+
+  public int numberOfCustomersImpl()
+  {
+    int number = customers.size();
+    return number;
+  }
+
+  public boolean hasCustomersImpl()
+  {
+    boolean has = customers.size() > 0;
+    return has;
+  }
+
+  public int indexOfCustomerImpl(Customer aCustomer)
+  {
+    int index = customers.indexOf(aCustomer);
+    return index;
+  }
+
+  public Order getOrderImpl(int index)
+  {
+    Order aOrder = orders.get(index);
+    return aOrder;
+  }
+
+  public List<Order> getOrdersImpl()
+  {
+    List<Order> newOrders = Collections.unmodifiableList(orders);
+    return newOrders;
+  }
+
+  public int numberOfOrdersImpl()
+  {
+    int number = orders.size();
+    return number;
+  }
+
+  public boolean hasOrdersImpl()
+  {
+    boolean has = orders.size() > 0;
+    return has;
+  }
+
+  public int indexOfOrderImpl(Order aOrder)
+  {
+    int index = orders.indexOf(aOrder);
+    return index;
+  }
+
+  public static int minimumNumberOfAgents()
+  {
+    return 0;
+  }
+
+  public boolean addAgentImpl(Agent aAgent)
+  {
+    boolean wasAdded = false;
+    if (agents.contains(aAgent)) { return false; }
+    SystemManager existingSystemManager = aAgent.getSystemManager();
+    if (existingSystemManager == null)
+    {
+      aAgent.setSystemManager(this);
+    }
+    else if (!this.equals(existingSystemManager))
+    {
+      existingSystemManager.removeAgent(aAgent);
+      addAgent(aAgent);
+    }
+    else
+    {
+      agents.add(aAgent);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeAgentImpl(Agent aAgent)
+  {
+    boolean wasRemoved = false;
+    if (agents.contains(aAgent))
+    {
+      agents.remove(aAgent);
+      aAgent.setSystemManager(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addAgentAtImpl(Agent aAgent, int index)
+  {  
+    boolean wasAdded = false;
+    if(addAgent(aAgent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAgents()) { index = numberOfAgents() - 1; }
+      agents.remove(aAgent);
+      agents.add(index, aAgent);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveAgentAtImpl(Agent aAgent, int index)
+  {
+    boolean wasAdded = false;
+    if(agents.contains(aAgent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAgents()) { index = numberOfAgents() - 1; }
+      agents.remove(aAgent);
+      agents.add(index, aAgent);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addAgentAt(aAgent, index);
+    }
+    return wasAdded;
+  }
+
+  public static int minimumNumberOfWarehouses()
+  {
+    return 0;
+  }
+
+  public boolean addWarehousImpl(Warehouse aWarehous)
+  {
+    boolean wasAdded = false;
+    if (warehouses.contains(aWarehous)) { return false; }
+    SystemManager existingSystemManager = aWarehous.getSystemManager();
+    if (existingSystemManager == null)
+    {
+      aWarehous.setSystemManager(this);
+    }
+    else if (!this.equals(existingSystemManager))
+    {
+      existingSystemManager.removeWarehous(aWarehous);
+      addWarehous(aWarehous);
+    }
+    else
+    {
+      warehouses.add(aWarehous);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeWarehousImpl(Warehouse aWarehous)
+  {
+    boolean wasRemoved = false;
+    if (warehouses.contains(aWarehous))
+    {
+      warehouses.remove(aWarehous);
+      aWarehous.setSystemManager(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addWarehousAtImpl(Warehouse aWarehous, int index)
+  {  
+    boolean wasAdded = false;
+    if(addWarehous(aWarehous))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfWarehouses()) { index = numberOfWarehouses() - 1; }
+      warehouses.remove(aWarehous);
+      warehouses.add(index, aWarehous);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveWarehousAtImpl(Warehouse aWarehous, int index)
+  {
+    boolean wasAdded = false;
+    if(warehouses.contains(aWarehous))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfWarehouses()) { index = numberOfWarehouses() - 1; }
+      warehouses.remove(aWarehous);
+      warehouses.add(index, aWarehous);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addWarehousAt(aWarehous, index);
+    }
+    return wasAdded;
+  }
+
+  public static int minimumNumberOfCustomers()
+  {
+    return 0;
+  }
+
+  public boolean addCustomerImpl(Customer aCustomer)
+  {
+    boolean wasAdded = false;
+    if (customers.contains(aCustomer)) { return false; }
+    SystemManager existingSystemManager = aCustomer.getSystemManager();
+    if (existingSystemManager == null)
+    {
+      aCustomer.setSystemManager(this);
+    }
+    else if (!this.equals(existingSystemManager))
+    {
+      existingSystemManager.removeCustomer(aCustomer);
+      addCustomer(aCustomer);
+    }
+    else
+    {
+      customers.add(aCustomer);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeCustomerImpl(Customer aCustomer)
+  {
+    boolean wasRemoved = false;
+    if (customers.contains(aCustomer))
+    {
+      customers.remove(aCustomer);
+      aCustomer.setSystemManager(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addCustomerAtImpl(Customer aCustomer, int index)
+  {  
+    boolean wasAdded = false;
+    if(addCustomer(aCustomer))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCustomers()) { index = numberOfCustomers() - 1; }
+      customers.remove(aCustomer);
+      customers.add(index, aCustomer);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveCustomerAtImpl(Customer aCustomer, int index)
+  {
+    boolean wasAdded = false;
+    if(customers.contains(aCustomer))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCustomers()) { index = numberOfCustomers() - 1; }
+      customers.remove(aCustomer);
+      customers.add(index, aCustomer);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCustomerAt(aCustomer, index);
+    }
+    return wasAdded;
+  }
+
+  public static int minimumNumberOfOrders()
+  {
+    return 0;
+  }
+
+  public boolean addOrderImpl(Order aOrder)
+  {
+    boolean wasAdded = false;
+    if (orders.contains(aOrder)) { return false; }
+    SystemManager existingSystemManager = aOrder.getSystemManager();
+    if (existingSystemManager == null)
+    {
+      aOrder.setSystemManager(this);
+    }
+    else if (!this.equals(existingSystemManager))
+    {
+      existingSystemManager.removeOrder(aOrder);
+      addOrder(aOrder);
+    }
+    else
+    {
+      orders.add(aOrder);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeOrderImpl(Order aOrder)
+  {
+    boolean wasRemoved = false;
+    if (orders.contains(aOrder))
+    {
+      orders.remove(aOrder);
+      aOrder.setSystemManager(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addOrderAtImpl(Order aOrder, int index)
+  {  
+    boolean wasAdded = false;
+    if(addOrder(aOrder))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
+      orders.remove(aOrder);
+      orders.add(index, aOrder);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveOrderAtImpl(Order aOrder, int index)
+  {
+    boolean wasAdded = false;
+    if(orders.contains(aOrder))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
+      orders.remove(aOrder);
+      orders.add(index, aOrder);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addOrderAt(aOrder, index);
+    }
+    return wasAdded;
+  }
+
+  public void deleteImpl()
+  {
+    while( !agents.isEmpty() )
+    {
+      agents.get(0).setSystemManager(null);
+    }
+    while( !warehouses.isEmpty() )
+    {
+      warehouses.get(0).setSystemManager(null);
+    }
+    while( !customers.isEmpty() )
+    {
+      customers.get(0).setSystemManager(null);
+    }
+    while( !orders.isEmpty() )
+    {
+      orders.get(0).setSystemManager(null);
+    }
+  }
+
+  public void setRealObject(ISystemManagerImpl aObject)
+  {
+    realObject=aObject;
+  }
+
+  transient ISystemManagerImpl realObject=this;
+  private SystemManager()
+  {
+
+this(UmpleRuntime.getComponent("SystemManager"));
+  }
+  public int getHashCode()
+  {
+    while(true)
+      try{
+        return realObject.getHashCodeImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Agent getAgent(int index)
+  {
+    while(true)
+      try{
+        return realObject.getAgentImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Agent> getAgents()
+  {
+    while(true)
+      try{
+        return realObject.getAgentsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfAgents()
+  {
+    while(true)
+      try{
+        return realObject.numberOfAgentsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasAgents()
+  {
+    while(true)
+      try{
+        return realObject.hasAgentsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfAgent(Agent aAgent)
+  {
+    while(true)
+      try{
+        return realObject.indexOfAgentImpl(aAgent);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Warehouse getWarehous(int index)
+  {
+    while(true)
+      try{
+        return realObject.getWarehousImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Warehouse> getWarehouses()
+  {
+    while(true)
+      try{
+        return realObject.getWarehousesImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfWarehouses()
+  {
+    while(true)
+      try{
+        return realObject.numberOfWarehousesImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasWarehouses()
+  {
+    while(true)
+      try{
+        return realObject.hasWarehousesImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfWarehous(Warehouse aWarehous)
+  {
+    while(true)
+      try{
+        return realObject.indexOfWarehousImpl(aWarehous);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Customer getCustomer(int index)
+  {
+    while(true)
+      try{
+        return realObject.getCustomerImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Customer> getCustomers()
+  {
+    while(true)
+      try{
+        return realObject.getCustomersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfCustomers()
+  {
+    while(true)
+      try{
+        return realObject.numberOfCustomersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasCustomers()
+  {
+    while(true)
+      try{
+        return realObject.hasCustomersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfCustomer(Customer aCustomer)
+  {
+    while(true)
+      try{
+        return realObject.indexOfCustomerImpl(aCustomer);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Order getOrder(int index)
+  {
+    while(true)
+      try{
+        return realObject.getOrderImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Order> getOrders()
+  {
+    while(true)
+      try{
+        return realObject.getOrdersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfOrders()
+  {
+    while(true)
+      try{
+        return realObject.numberOfOrdersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasOrders()
+  {
+    while(true)
+      try{
+        return realObject.hasOrdersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.indexOfOrderImpl(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addAgent(Agent aAgent)
+  {
+    while(true)
+      try{
+        return realObject.addAgentImpl(aAgent);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeAgent(Agent aAgent)
+  {
+    while(true)
+      try{
+        return realObject.removeAgentImpl(aAgent);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addAgentAt(Agent aAgent, int index)
+  {
+    while(true)
+      try{
+        return realObject.addAgentAtImpl(aAgent,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveAgentAt(Agent aAgent, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveAgentAtImpl(aAgent,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addWarehous(Warehouse aWarehous)
+  {
+    while(true)
+      try{
+        return realObject.addWarehousImpl(aWarehous);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeWarehous(Warehouse aWarehous)
+  {
+    while(true)
+      try{
+        return realObject.removeWarehousImpl(aWarehous);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addWarehousAt(Warehouse aWarehous, int index)
+  {
+    while(true)
+      try{
+        return realObject.addWarehousAtImpl(aWarehous,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveWarehousAt(Warehouse aWarehous, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveWarehousAtImpl(aWarehous,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addCustomer(Customer aCustomer)
+  {
+    while(true)
+      try{
+        return realObject.addCustomerImpl(aCustomer);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeCustomer(Customer aCustomer)
+  {
+    while(true)
+      try{
+        return realObject.removeCustomerImpl(aCustomer);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addCustomerAt(Customer aCustomer, int index)
+  {
+    while(true)
+      try{
+        return realObject.addCustomerAtImpl(aCustomer,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveCustomerAt(Customer aCustomer, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveCustomerAtImpl(aCustomer,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.addOrderImpl(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.removeOrderImpl(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrderAt(Order aOrder, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrderAtImpl(aOrder,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveOrderAt(Order aOrder, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveOrderAtImpl(aOrder,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void delete()
+  {
+    while(true)
+      try{
+        realObject.deleteImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+
+  protected  ISystemManagerImpl remoteObject;  
+  public void setRemoteObject(ISystemManagerImpl aRemoteObject)
+  {
+    remoteObject=aRemoteObject;
+  }
+  public ISystemManagerImpl getRemoteObject()
+  {
+    return (ISystemManagerImpl)remoteObject;
+  }
+  private void readObject(java.io.ObjectInputStream in) throws Exception
+  {
+    try
+    {
+      in.defaultReadObject();
+      realObject=(ISystemManagerImpl)remoteObject;
+    }
+    catch(Exception e)
+    {
+      throw e;
+    }
+    
+  }
+ 
+  public boolean equals(Object obj)
+  {    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((SystemManager)obj).getHashCode());
+  }  public static SystemManager getInstance(UmpleRuntime.UmpleComponent umpleComponent)
+{
+if(theInstance == null)
+{
+theInstance = new SystemManager(umpleComponent);
+}
+return theInstance;
+}
+}

@@ -1,0 +1,234 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI0;
+import java.util.*;
+import java.io.Serializable;
+
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
+public class CustomerRemote implements ICustomerImpl
+{
+  Customer realObject;
+  public void setRealObject(Customer aObject)
+  {
+    realObject=aObject;
+  }
+  public CustomerRemote()
+  {}
+  public CustomerRemote(Customer aObject)
+  {
+      realObject=aObject;
+  }
+  public int getHashCodeImpl()
+  {
+    while(true)
+      try{
+        return realObject.getHashCodeImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setNameImpl(String aName)
+  {
+    while(true)
+      try{
+        return realObject.setNameImpl(aName);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public String getNameImpl()
+  {
+    while(true)
+      try{
+        return realObject.getNameImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Vendor getVendorImpl(int index)
+  {
+    while(true)
+      try{
+        return realObject.getVendorImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Vendor> getVendorsImpl()
+  {
+    while(true)
+      try{
+        return realObject.getVendorsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfVendorsImpl()
+  {
+    while(true)
+      try{
+        return realObject.numberOfVendorsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasVendorsImpl()
+  {
+    while(true)
+      try{
+        return realObject.hasVendorsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfVendorImpl(Vendor aVendor)
+  {
+    while(true)
+      try{
+        return realObject.indexOfVendorImpl(aVendor);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Order getOrderImpl(int index)
+  {
+    while(true)
+      try{
+        return realObject.getOrderImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Order> getOrdersImpl()
+  {
+    while(true)
+      try{
+        return realObject.getOrdersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfOrdersImpl()
+  {
+    while(true)
+      try{
+        return realObject.numberOfOrdersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasOrdersImpl()
+  {
+    while(true)
+      try{
+        return realObject.hasOrdersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfOrderImpl(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.indexOfOrderImpl(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public SystemManager getSystemManagerImpl()
+  {
+    while(true)
+      try{
+        return realObject.getSystemManagerImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasSystemManagerImpl()
+  {
+    while(true)
+      try{
+        return realObject.hasSystemManagerImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addVendorImpl(Vendor aVendor)
+  {
+    while(true)
+      try{
+        return realObject.addVendorImpl(aVendor);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeVendorImpl(Vendor aVendor)
+  {
+    while(true)
+      try{
+        return realObject.removeVendorImpl(aVendor);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addVendorAtImpl(Vendor aVendor, int index)
+  {
+    while(true)
+      try{
+        return realObject.addVendorAtImpl(aVendor,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveVendorAtImpl(Vendor aVendor, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveVendorAtImpl(aVendor,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrderImpl(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.addOrderImpl(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeOrderImpl(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.removeOrderImpl(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrderAtImpl(Order aOrder, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrderAtImpl(aOrder,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveOrderAtImpl(Order aOrder, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveOrderAtImpl(aOrder,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setSystemManagerImpl(SystemManager aSystemManager)
+  {
+    while(true)
+      try{
+        return realObject.setSystemManagerImpl(aSystemManager);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void deleteImpl()
+  {
+    while(true)
+      try{
+        realObject.deleteImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public Order orderProductImpl(String productType, String vendorName)
+  {
+    while(true)
+      try{
+        return realObject.orderProductImpl(productType,vendorName);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+
+}

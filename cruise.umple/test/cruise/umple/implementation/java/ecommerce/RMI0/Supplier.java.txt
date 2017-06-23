@@ -1,0 +1,299 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI0;
+import java.util.*;
+import java.io.Serializable;
+
+// line 45 "../ecommerceRMI0.ump"
+public class Supplier extends Agent implements java.io.Serializable, ISupplierImpl
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Supplier Associations
+  private transient  List<Product> products;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Supplier(String aName, UmpleRuntime.UmpleComponent umpleComponent)
+  {
+    super(aName,umpleComponent);
+    if(umpleComponent.getNode().getId()!=UmpleRuntime.getThisNodeId())
+    {
+      if(this.getClass()== Supplier.class)
+        UmpleRuntime.getInstance().newSupplier(aName, umpleComponent, this);
+
+      return;
+    }
+
+    products = new ArrayList<Product>();
+  }
+  //------------------------
+  // Returning the Hashcode
+  //------------------------
+  public int getHashCodeImpl()
+  {
+    return hashCode();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Product getProductImpl(int index)
+  {
+    Product aProduct = products.get(index);
+    return aProduct;
+  }
+
+  public List<Product> getProductsImpl()
+  {
+    List<Product> newProducts = Collections.unmodifiableList(products);
+    return newProducts;
+  }
+
+  public int numberOfProductsImpl()
+  {
+    int number = products.size();
+    return number;
+  }
+
+  public boolean hasProductsImpl()
+  {
+    boolean has = products.size() > 0;
+    return has;
+  }
+
+  public int indexOfProductImpl(Product aProduct)
+  {
+    int index = products.indexOf(aProduct);
+    return index;
+  }
+
+  public static int minimumNumberOfProducts()
+  {
+    return 0;
+  }
+
+  public boolean addProductImpl(Product aProduct)
+  {
+    boolean wasAdded = false;
+    if (products.contains(aProduct)) { return false; }
+    products.add(aProduct);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeProductImpl(Product aProduct)
+  {
+    boolean wasRemoved = false;
+    if (products.contains(aProduct))
+    {
+      products.remove(aProduct);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addProductAtImpl(Product aProduct, int index)
+  {  
+    boolean wasAdded = false;
+    if(addProduct(aProduct))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfProducts()) { index = numberOfProducts() - 1; }
+      products.remove(aProduct);
+      products.add(index, aProduct);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveProductAtImpl(Product aProduct, int index)
+  {
+    boolean wasAdded = false;
+    if(products.contains(aProduct))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfProducts()) { index = numberOfProducts() - 1; }
+      products.remove(aProduct);
+      products.add(index, aProduct);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addProductAt(aProduct, index);
+    }
+    return wasAdded;
+  }
+
+  public void deleteImpl()
+  {
+    products.clear();
+    super.delete();
+  }
+
+  // line 51 "../ecommerceRMI0.ump"
+   public Product createProductImpl(String serialNumber, String productType){
+    Product aProduct=new Product(serialNumber,new ProductType(productType));
+		addProduct(aProduct);
+		return aProduct;
+  }
+
+  // line 57 "../ecommerceRMI0.ump"
+   public void putInWarehouseImpl(Product aProduct, Warehouse warehouse){
+    warehouse.addProduct(aProduct);
+  }
+
+  public void setRealObject(ISupplierImpl aObject)
+  {
+  super.setRealObject(aObject);
+    realObject=aObject;
+  }
+
+  transient ISupplierImpl realObject=this;
+  public Supplier(String aName)
+  {
+
+this(aName,UmpleRuntime.getComponent("Supplier"));
+  }
+  public int getHashCode()
+  {
+    while(true)
+      try{
+        return realObject.getHashCodeImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Product getProduct(int index)
+  {
+    while(true)
+      try{
+        return realObject.getProductImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Product> getProducts()
+  {
+    while(true)
+      try{
+        return realObject.getProductsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfProducts()
+  {
+    while(true)
+      try{
+        return realObject.numberOfProductsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasProducts()
+  {
+    while(true)
+      try{
+        return realObject.hasProductsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfProduct(Product aProduct)
+  {
+    while(true)
+      try{
+        return realObject.indexOfProductImpl(aProduct);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addProduct(Product aProduct)
+  {
+    while(true)
+      try{
+        return realObject.addProductImpl(aProduct);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeProduct(Product aProduct)
+  {
+    while(true)
+      try{
+        return realObject.removeProductImpl(aProduct);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addProductAt(Product aProduct, int index)
+  {
+    while(true)
+      try{
+        return realObject.addProductAtImpl(aProduct,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveProductAt(Product aProduct, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveProductAtImpl(aProduct,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void delete()
+  {
+    while(true)
+      try{
+        realObject.deleteImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public Product createProduct(String serialNumber, String productType)
+  {
+    while(true)
+      try{
+        return realObject.createProductImpl(serialNumber,productType);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public void putInWarehouse(Product aProduct, Warehouse warehouse)
+  {
+    while(true)
+      try{
+        realObject.putInWarehouseImpl(aProduct,warehouse);
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  
+  public void setRemoteObject(ISupplierImpl aRemoteObject)
+  {
+    remoteObject=aRemoteObject;
+  }
+  public ISupplierImpl getRemoteObject()
+  {
+    return (ISupplierImpl)remoteObject;
+  }
+  private void readObject(java.io.ObjectInputStream in) throws Exception
+  {
+    try
+    {
+      in.defaultReadObject();
+      realObject=(ISupplierImpl)remoteObject;
+    }
+    catch(Exception e)
+    {
+      throw e;
+    }
+    
+  }
+ 
+  public boolean equals(Object obj)
+  {    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((Supplier)obj).getHashCode());
+  }
+}

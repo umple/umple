@@ -16,7 +16,7 @@ class UmpleToJava {
           append(realSb,"  //{0} Do Activity Threads", uClass.getName());
           isFirst = false;
         }
-        append(realSb, "\n  Thread {0} = null;", gen.translate("doActivityThread",activity));
+        append(realSb, "\n  {1}Thread {0} = null;", gen.translate("doActivityThread",activity),isTransient);
       }
     }
   }

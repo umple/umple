@@ -1,0 +1,39 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+package ecommerceRMI1;
+import java.rmi.Remote;
+import javax.jws.WebMethod;
+import ecommerceRMI1.Agent;
+import java.util.*;
+import ecommerceRMI1.Supplier;
+import java.rmi.server.UnicastRemoteObject;
+import ecommerceRMI1.Vendor;
+import ecommerceRMI1.Warehouse;
+import ecommerceRMI1.SystemManager;
+import java.rmi.RemoteException;
+import java.io.Serializable;
+import ecommerceRMI1.Customer;
+
+public interface IUmpleRuntime extends Remote
+{
+  
+  
+  public IWarehouseImpl createWarehouse(String aName, Warehouse proxy)throws RemoteException;
+
+  
+  public IAgentImpl createAgent(String aName, Agent proxy)throws RemoteException;
+
+  
+  public ISupplierImpl createSupplier(String aName, Supplier proxy)throws RemoteException;
+
+  
+  public IVendorImpl createVendor(String aName, Vendor proxy)throws RemoteException;
+
+  
+  public ICustomerImpl createCustomer(String aName, Customer proxy)throws RemoteException;
+
+  
+  public ISystemManagerImpl createSystemManager(SystemManager proxy)throws RemoteException;
+
+}
+ 

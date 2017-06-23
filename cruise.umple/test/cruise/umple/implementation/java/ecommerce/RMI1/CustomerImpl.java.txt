@@ -1,0 +1,348 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI1;
+import java.util.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+// line 101 "../ecommerceRMI1.ump"
+public class CustomerImpl implements java.io.Serializable , ICustomerImpl
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //CustomerImpl Attributes
+  private String name;
+
+  //CustomerImpl Associations
+  private List<Vendor> vendors;
+  private List<Order> orders;
+  private SystemManager systemManager;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public CustomerImpl(String aName)
+  {
+    name = aName;
+    vendors = new ArrayList<Vendor>();
+    orders = new ArrayList<Order>();
+  }
+  //------------------------
+  // Reference to the proxy
+  //------------------------
+  Customer self;
+  
+  public void setSelf(Customer proxy)
+  {
+    self=proxy;
+  }
+
+  //------------------------
+  // Returning the Hashcode
+  //------------------------
+  public int getHashCode()
+  {
+    return hashCode();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public Vendor getVendor(int index)
+  {
+    Vendor aVendor = vendors.get(index);
+    return aVendor;
+  }
+
+  public List<Vendor> getVendors()
+  {
+    List<Vendor> newVendors = Collections.unmodifiableList(vendors);
+    return newVendors;
+  }
+
+  public int numberOfVendors()
+  {
+    int number = vendors.size();
+    return number;
+  }
+
+  public boolean hasVendors()
+  {
+    boolean has = vendors.size() > 0;
+    return has;
+  }
+
+  public int indexOfVendor(Vendor aVendor)
+  {
+    int index = vendors.indexOf(aVendor);
+    return index;
+  }
+
+  public Order getOrder(int index)
+  {
+    Order aOrder = orders.get(index);
+    return aOrder;
+  }
+
+  public List<Order> getOrders()
+  {
+    List<Order> newOrders = Collections.unmodifiableList(orders);
+    return newOrders;
+  }
+
+  public int numberOfOrders()
+  {
+    int number = orders.size();
+    return number;
+  }
+
+  public boolean hasOrders()
+  {
+    boolean has = orders.size() > 0;
+    return has;
+  }
+
+  public int indexOfOrder(Order aOrder)
+  {
+    int index = orders.indexOf(aOrder);
+    return index;
+  }
+
+  public SystemManager getSystemManager()
+  {
+    return systemManager;
+  }
+
+  public boolean hasSystemManager()
+  {
+    boolean has = systemManager != null;
+    return has;
+  }
+
+  public static int minimumNumberOfVendors()
+  {
+    return 0;
+  }
+
+  public boolean addVendor(Vendor aVendor)
+  {
+    boolean wasAdded = false;
+    if (vendors.contains(aVendor)) { return false; }
+    vendors.add(aVendor);
+    if (aVendor.indexOfCustomer(self) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aVendor.addCustomer(self);
+      if (!wasAdded)
+      {
+        vendors.remove(aVendor);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeVendor(Vendor aVendor)
+  {
+    boolean wasRemoved = false;
+    if (!vendors.contains(aVendor))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = vendors.indexOf(aVendor);
+    vendors.remove(oldIndex);
+    if (aVendor.indexOfCustomer(self) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aVendor.removeCustomer(self);
+      if (!wasRemoved)
+      {
+        vendors.add(oldIndex,aVendor);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addVendorAt(Vendor aVendor, int index)
+  {  
+    boolean wasAdded = false;
+    if(addVendor(aVendor))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfVendors()) { index = numberOfVendors() - 1; }
+      vendors.remove(aVendor);
+      vendors.add(index, aVendor);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveVendorAt(Vendor aVendor, int index)
+  {
+    boolean wasAdded = false;
+    if(vendors.contains(aVendor))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfVendors()) { index = numberOfVendors() - 1; }
+      vendors.remove(aVendor);
+      vendors.add(index, aVendor);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addVendorAt(aVendor, index);
+    }
+    return wasAdded;
+  }
+
+  public static int minimumNumberOfOrders()
+  {
+    return 0;
+  }
+
+  public boolean addOrder(Order aOrder)
+  {
+    boolean wasAdded = false;
+    if (orders.contains(aOrder)) { return false; }
+    Customer existingCustomer = aOrder.getCustomer();
+    if (existingCustomer == null)
+    {
+      aOrder.setCustomer(self);
+    }
+    else if (!self.equals(existingCustomer))
+    {
+      existingCustomer.removeOrder(aOrder);
+      addOrder(aOrder);
+    }
+    else
+    {
+      orders.add(aOrder);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeOrder(Order aOrder)
+  {
+    boolean wasRemoved = false;
+    if (orders.contains(aOrder))
+    {
+      orders.remove(aOrder);
+      aOrder.setCustomer(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addOrderAt(Order aOrder, int index)
+  {  
+    boolean wasAdded = false;
+    if(addOrder(aOrder))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
+      orders.remove(aOrder);
+      orders.add(index, aOrder);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveOrderAt(Order aOrder, int index)
+  {
+    boolean wasAdded = false;
+    if(orders.contains(aOrder))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
+      orders.remove(aOrder);
+      orders.add(index, aOrder);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addOrderAt(aOrder, index);
+    }
+    return wasAdded;
+  }
+
+  public boolean setSystemManager(SystemManager aSystemManager)
+  {
+    boolean wasSet = false;
+    SystemManager existingSystemManager = systemManager;
+    systemManager = aSystemManager;
+    if (existingSystemManager != null && !existingSystemManager.equals(aSystemManager))
+    {
+      existingSystemManager.removeCustomer(self);
+    }
+    if (aSystemManager != null)
+    {
+      aSystemManager.addCustomer(self);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    ArrayList<Vendor> copyOfVendors = new ArrayList<Vendor>(vendors);
+    vendors.clear();
+    for(Vendor aVendor : copyOfVendors)
+    {
+      aVendor.removeCustomer(self);
+    }
+    while( !orders.isEmpty() )
+    {
+      orders.get(0).setCustomer(null);
+    }
+    if (systemManager != null)
+    {
+      SystemManager placeholderSystemManager = systemManager;
+      this.systemManager = null;
+      placeholderSystemManager.removeCustomer(self);
+    }
+  }
+
+  // line 107 "../ecommerceRMI1.ump"
+   public Order orderProduct(String productType, String vendorName){
+    for(Vendor v: getVendors())
+		{
+			if(v.getName().equals(vendorName))
+				return v.makeOrder(self,v.findProduct(new ProductType(productType)));
+		}
+		return null;
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "systemManager = "+(getSystemManager()!=null?Integer.toHexString(System.identityHashCode(getSystemManager())):"null");
+  }
+}

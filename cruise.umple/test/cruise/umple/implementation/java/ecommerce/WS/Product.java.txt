@@ -1,0 +1,84 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceWS;
+import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAccessType;
+
+// line 85 "../ecommerceWS.ump"
+@XmlAccessorType(XmlAccessType.FIELD)
+
+public class Product implements java.io.Serializable
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Product Attributes
+  private String serialNumber;
+
+  //Product Associations
+  private ProductType productType;
+
+  //Helper Variables
+  private boolean canSetProductType;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Product(String aSerialNumber, ProductType aProductType)
+  {
+    serialNumber = aSerialNumber;
+    canSetProductType = true;
+    if (!setProductType(aProductType))
+    {
+      throw new RuntimeException("Unable to create Product due to aProductType");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSerialNumber()
+  {
+    return serialNumber;
+  }
+
+  public ProductType getProductType()
+  {
+    return productType;
+  }
+
+  private boolean setProductType(ProductType aNewProductType)
+  {
+    boolean wasSet = false;
+    if (!canSetProductType) { return false; }
+    canSetProductType = false;
+    if (aNewProductType != null)
+    {
+      productType = aNewProductType;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+
+  public void delete()
+  {}
+
+  // line 90 "../ecommerceWS.ump"
+   public  Product(){
+    
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "serialNumber" + ":" + getSerialNumber()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "productType = "+(getProductType()!=null?Integer.toHexString(System.identityHashCode(getProductType())):"null");
+  }
+}

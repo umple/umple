@@ -1,0 +1,25 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI1;
+import java.util.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.RemoteException;
+public interface ISupplierImpl extends java.rmi.Remote, IAgentImpl
+{
+  public void setSelf(Supplier proxy) throws RemoteException;
+  public int getHashCode() throws RemoteException;
+  public Product getProduct(int index) throws RemoteException;
+  public List<Product> getProducts() throws RemoteException;
+  public int numberOfProducts() throws RemoteException;
+  public boolean hasProducts() throws RemoteException;
+  public int indexOfProduct(Product aProduct) throws RemoteException;
+  public boolean addProduct(Product aProduct) throws RemoteException;
+  public boolean removeProduct(Product aProduct) throws RemoteException;
+  public boolean addProductAt(Product aProduct, int index) throws RemoteException;
+  public boolean addOrMoveProductAt(Product aProduct, int index) throws RemoteException;
+  public void delete() throws RemoteException;
+   public Product createProduct(String serialNumber, String productType) throws RemoteException;
+   public void putInWarehouse(Product aProduct, Warehouse warehouse) throws RemoteException;
+}

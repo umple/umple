@@ -8,23 +8,20 @@ import java.rmi.RemoteException;
 import java.io.Serializable;
 import distributed.rmi.withMethods2.UmpleRuntime;
 public class Microwave extends CC implements java.io.Serializable
-{
-  IMicrowaveImpl realObject;
-  public void setRealObject(IMicrowaveImpl aObject)
+{  public void setRealObject(IMicrowaveImpl aObject)
   {
+  super.setRealObject(aObject);
     realObject=aObject;
   }
-  public IMicrowaveImpl getRealObject()
-  {
-    return realObject;
-  }
+
+  IMicrowaveImpl realObject;
   public Microwave(UmpleRuntime.UmpleComponent component)
   {
-    realObject = UmpleRuntime.getInstance().addMicrowave(component, this);
+    if(this.getClass()== Microwave.class)    setRealObject(UmpleRuntime.getInstance().newMicrowave(component, this));
   }
   public Microwave()
   {
-    realObject = UmpleRuntime.getInstance().addMicrowave(this);
+    if(this.getClass()== Microwave.class)    setRealObject(UmpleRuntime.getInstance().newMicrowave(this));
   }
   public void setSelf(Microwave proxy)
   {
@@ -195,10 +192,7 @@ public class Microwave extends CC implements java.io.Serializable
   }
 
   public boolean equals(Object obj)
-  {
-    if(obj==null)
-      return false;
-    if(obj.getClass()!=this.getClass())
+  {    if(obj.getClass()!=this.getClass())
       return false;
     return (getHashCode()==((Microwave)obj).getHashCode());
   }

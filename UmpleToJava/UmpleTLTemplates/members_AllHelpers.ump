@@ -12,7 +12,7 @@ class UmpleToJava {
     appendln(realSb, "");
     appendln(realSb, "");
     appendln(realSb,"  //Helper Variables");
-    append(realSb, "  private int cachedHashCode;");
+    append(realSb, "  private{0} int cachedHashCode;",isTransient);
   }
 
   for (Attribute av : uClass.getAttributes())
@@ -30,7 +30,7 @@ class UmpleToJava {
       {
         appendln(realSb, "");
       }
-      append(realSb, "  private boolean {0};", gen.translate("attributeCanSet",av));
+      append(realSb, "  private{1} boolean {0};", gen.translate("attributeCanSet",av),isTransient);
     }
   }
   
@@ -55,7 +55,7 @@ class UmpleToJava {
       {
         appendln(realSb, "");
       }
-      append(realSb, "  private boolean {0};", gen.translate("associationCanSet",av));
+      append(realSb, "  private{1} boolean {0};", gen.translate("associationCanSet",av),isTransient);
     }
   }
   
@@ -66,12 +66,12 @@ class UmpleToJava {
     if (av != null  && !av.isImmutable())
     {
       appendln(realSb, "");
-      append(realSb, "  private boolean {0};", gen.translate("attributeCanSet",av));
+      append(realSb, "  private{1} boolean {0};", gen.translate("attributeCanSet",av),isTransient);
     }
     else if (as != null)
     {
       appendln(realSb, "");
-      append(realSb, "  private boolean {0};", gen.translate("associationCanSet",as));
+      append(realSb, "  private{1} boolean {0};", gen.translate("associationCanSet",as),isTransient);
     }
   }
   
@@ -95,7 +95,7 @@ class UmpleToJava {
       {
         appendln(realSb, "");
       }
-      append(realSb, "  private TimedEventHandler {0};", gen.translate("eventHandler",e));
+      append(realSb, "  private{1} TimedEventHandler {0};", gen.translate("eventHandler",e),isTransient);
     }
   }
 
@@ -123,7 +123,7 @@ class UmpleToJava {
           {
             appendln(realSb, "");
           }
-          append(realSb, "  private TimedEventHandler {0};", gen.translate("eventHandler", event));
+          append(realSb, "  private{1} TimedEventHandler {0};", gen.translate("eventHandler", event),isTransient);
         }
       }
     }

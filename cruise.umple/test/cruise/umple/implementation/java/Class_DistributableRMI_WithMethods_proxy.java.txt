@@ -16,9 +16,11 @@ public class MicrowaveRemote implements IMicrowaveImpl
   {
     realObject=aObject;
   }
-  public Microwave getRealObject()
+  public MicrowaveRemote()
+  {}
+  public MicrowaveRemote(Microwave aObject)
   {
-    return realObject;
+      realObject=aObject;
   }
   public int getHashCodeImpl()
   {
@@ -125,7 +127,7 @@ public class MicrowaveRemote implements IMicrowaveImpl
         }
     catch(Exception e) {System.err.println(e.toString());}
   }
-  public void doorOpened ()
+  public void doorOpenedImpl ()
   {
     while(true)
       try{
@@ -134,7 +136,7 @@ public class MicrowaveRemote implements IMicrowaveImpl
         }
     catch(Exception e) {System.err.println(e.toString());}
   }
-  public void buttonPressed ()
+  public void buttonPressedImpl ()
   {
     while(true)
       try{
@@ -143,7 +145,7 @@ public class MicrowaveRemote implements IMicrowaveImpl
         }
     catch(Exception e) {System.err.println(e.toString());}
   }
-  public void doorClosed ()
+  public void doorClosedImpl ()
   {
     while(true)
       try{
@@ -152,7 +154,7 @@ public class MicrowaveRemote implements IMicrowaveImpl
         }
     catch(Exception e) {System.err.println(e.toString());}
   }
-  public void run ()
+  public void runImpl ()
   {
     while(true)
       try{

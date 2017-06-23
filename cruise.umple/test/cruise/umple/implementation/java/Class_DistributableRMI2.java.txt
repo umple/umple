@@ -1,9 +1,9 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package distributed.rmi2;
+import java.io.Serializable;
 
-// line 3 "../../Class_DistributableRMI2.ump"
 public class ClientImpl extends CC implements java.io.Serializable , IClientImpl
 {
 

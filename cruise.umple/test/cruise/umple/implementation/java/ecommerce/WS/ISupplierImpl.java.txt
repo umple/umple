@@ -1,0 +1,63 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceWS;
+import java.util.*;
+import java.io.Serializable;
+import javax.xml.namespace.QName;
+import java.net.URL;
+import javax.xml.ws.Service;
+import javax.xml.ws.Endpoint;
+import javax.jws.WebService;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.*;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.Style;
+import java.rmi.RemoteException;
+@WebService
+@SOAPBinding(style = Style.RPC)
+public interface ISupplierImpl extends IAgentImpl
+{
+@WebMethod
+  public int getHashCodeImpl();
+@WebMethod
+  public Warehouse getWarehousImpl(int index);
+@WebMethod
+  public int numberOfWarehousesImpl();
+@WebMethod
+  public boolean hasWarehousesImpl();
+@WebMethod
+  public int indexOfWarehousImpl(Warehouse aWarehous);
+@WebMethod
+  public Product getProductImpl(int index);
+@WebMethod
+  public int numberOfProductsImpl();
+@WebMethod
+  public boolean hasProductsImpl();
+@WebMethod
+  public int indexOfProductImpl(Product aProduct);
+@WebMethod
+  public boolean addWarehousImpl(Warehouse aWarehous);
+@WebMethod
+  public boolean removeWarehousImpl(Warehouse aWarehous);
+@WebMethod
+  public boolean addWarehousAtImpl(Warehouse aWarehous, int index);
+@WebMethod
+  public boolean addOrMoveWarehousAtImpl(Warehouse aWarehous, int index);
+@WebMethod
+  public boolean addProductImpl(Product aProduct);
+@WebMethod
+  public boolean removeProductImpl(Product aProduct);
+@WebMethod
+  public boolean addProductAtImpl(Product aProduct, int index);
+@WebMethod
+  public boolean addOrMoveProductAtImpl(Product aProduct, int index);
+@WebMethod
+  public void deleteImpl();
+@WebMethod
+   public Product createProductImpl(String serialNumber, String productType);
+@WebMethod
+   public void putInWarehouseImpl(Product aProduct, Warehouse warehouse);
+}

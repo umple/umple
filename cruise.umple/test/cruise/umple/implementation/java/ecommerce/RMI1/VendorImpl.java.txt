@@ -1,0 +1,303 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI1;
+import java.util.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+// line 61 "../ecommerceRMI1.ump"
+public class VendorImpl extends AgentImpl implements java.io.Serializable , IVendorImpl
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //VendorImpl Associations
+  private List<Order> orders;
+  private List<Customer> customers;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public VendorImpl(String aName)
+  {
+    super(aName);
+    orders = new ArrayList<Order>();
+    customers = new ArrayList<Customer>();
+  }
+  //------------------------
+  // Reference to the proxy
+  //------------------------
+  Vendor self;
+  
+  public void setSelf(Vendor proxy)
+  {
+    super.setSelf(proxy);
+    self=proxy;
+  }
+
+  //------------------------
+  // Returning the Hashcode
+  //------------------------
+  public int getHashCode()
+  {
+    return hashCode();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Order getOrder(int index)
+  {
+    Order aOrder = orders.get(index);
+    return aOrder;
+  }
+
+  public List<Order> getOrders()
+  {
+    List<Order> newOrders = Collections.unmodifiableList(orders);
+    return newOrders;
+  }
+
+  public int numberOfOrders()
+  {
+    int number = orders.size();
+    return number;
+  }
+
+  public boolean hasOrders()
+  {
+    boolean has = orders.size() > 0;
+    return has;
+  }
+
+  public int indexOfOrder(Order aOrder)
+  {
+    int index = orders.indexOf(aOrder);
+    return index;
+  }
+
+  public Customer getCustomer(int index)
+  {
+    Customer aCustomer = customers.get(index);
+    return aCustomer;
+  }
+
+  public List<Customer> getCustomers()
+  {
+    List<Customer> newCustomers = Collections.unmodifiableList(customers);
+    return newCustomers;
+  }
+
+  public int numberOfCustomers()
+  {
+    int number = customers.size();
+    return number;
+  }
+
+  public boolean hasCustomers()
+  {
+    boolean has = customers.size() > 0;
+    return has;
+  }
+
+  public int indexOfCustomer(Customer aCustomer)
+  {
+    int index = customers.indexOf(aCustomer);
+    return index;
+  }
+
+  public static int minimumNumberOfOrders()
+  {
+    return 0;
+  }
+
+  public boolean addOrder(Order aOrder)
+  {
+    boolean wasAdded = false;
+    if (orders.contains(aOrder)) { return false; }
+    Vendor existingVendor = aOrder.getVendor();
+    if (existingVendor == null)
+    {
+      aOrder.setVendor(self);
+    }
+    else if (!self.equals(existingVendor))
+    {
+      existingVendor.removeOrder(aOrder);
+      addOrder(aOrder);
+    }
+    else
+    {
+      orders.add(aOrder);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeOrder(Order aOrder)
+  {
+    boolean wasRemoved = false;
+    if (orders.contains(aOrder))
+    {
+      orders.remove(aOrder);
+      aOrder.setVendor(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addOrderAt(Order aOrder, int index)
+  {  
+    boolean wasAdded = false;
+    if(addOrder(aOrder))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
+      orders.remove(aOrder);
+      orders.add(index, aOrder);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveOrderAt(Order aOrder, int index)
+  {
+    boolean wasAdded = false;
+    if(orders.contains(aOrder))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
+      orders.remove(aOrder);
+      orders.add(index, aOrder);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addOrderAt(aOrder, index);
+    }
+    return wasAdded;
+  }
+
+  public static int minimumNumberOfCustomers()
+  {
+    return 0;
+  }
+
+  public boolean addCustomer(Customer aCustomer)
+  {
+    boolean wasAdded = false;
+    if (customers.contains(aCustomer)) { return false; }
+    customers.add(aCustomer);
+    if (aCustomer.indexOfVendor(self) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aCustomer.addVendor(self);
+      if (!wasAdded)
+      {
+        customers.remove(aCustomer);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeCustomer(Customer aCustomer)
+  {
+    boolean wasRemoved = false;
+    if (!customers.contains(aCustomer))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = customers.indexOf(aCustomer);
+    customers.remove(oldIndex);
+    if (aCustomer.indexOfVendor(self) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aCustomer.removeVendor(self);
+      if (!wasRemoved)
+      {
+        customers.add(oldIndex,aCustomer);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addCustomerAt(Customer aCustomer, int index)
+  {  
+    boolean wasAdded = false;
+    if(addCustomer(aCustomer))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCustomers()) { index = numberOfCustomers() - 1; }
+      customers.remove(aCustomer);
+      customers.add(index, aCustomer);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveCustomerAt(Customer aCustomer, int index)
+  {
+    boolean wasAdded = false;
+    if(customers.contains(aCustomer))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCustomers()) { index = numberOfCustomers() - 1; }
+      customers.remove(aCustomer);
+      customers.add(index, aCustomer);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCustomerAt(aCustomer, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    while( !orders.isEmpty() )
+    {
+      orders.get(0).setVendor(null);
+    }
+    ArrayList<Customer> copyOfCustomers = new ArrayList<Customer>(customers);
+    customers.clear();
+    for(Customer aCustomer : copyOfCustomers)
+    {
+      aCustomer.removeVendor(self);
+    }
+    super.delete();
+  }
+
+  // line 65 "../ecommerceRMI1.ump"
+   public Product findProduct(ProductType productType){
+    for(Warehouse w:getWarehouses())
+		{
+			Product p= w.findProduct(productType);
+			if(p!=null)
+				return p;		
+		}
+		return null;
+  }
+
+  // line 74 "../ecommerceRMI1.ump"
+   public Order makeOrder(Customer aCustomer, Product aProduct){
+    if(aProduct==null)
+			return null;
+		Order aOrder= new Order(aProduct);
+		aOrder.setCustomer(aCustomer);
+		aOrder.setVendor(self);
+		return aOrder;
+  }
+
+}
