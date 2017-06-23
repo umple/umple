@@ -1,0 +1,160 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI1;
+import java.io.Serializable;
+
+// line 39 "../ecommerceRMI1.ump"
+public class Order implements java.io.Serializable
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Order Associations
+  private Customer customer;
+  private Vendor vendor;
+  private Product product;
+  private SystemManager systemManager;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Order(Product aProduct)
+  {
+    if (!setProduct(aProduct))
+    {
+      throw new RuntimeException("Unable to create Order due to aProduct");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Customer getCustomer()
+  {
+    return customer;
+  }
+
+  public boolean hasCustomer()
+  {
+    boolean has = customer != null;
+    return has;
+  }
+
+  public Vendor getVendor()
+  {
+    return vendor;
+  }
+
+  public boolean hasVendor()
+  {
+    boolean has = vendor != null;
+    return has;
+  }
+
+  public Product getProduct()
+  {
+    return product;
+  }
+
+  public SystemManager getSystemManager()
+  {
+    return systemManager;
+  }
+
+  public boolean hasSystemManager()
+  {
+    boolean has = systemManager != null;
+    return has;
+  }
+
+  public boolean setCustomer(Customer aCustomer)
+  {
+    boolean wasSet = false;
+    Customer existingCustomer = customer;
+    customer = aCustomer;
+    if (existingCustomer != null && !existingCustomer.equals(aCustomer))
+    {
+      existingCustomer.removeOrder(this);
+    }
+    if (aCustomer != null)
+    {
+      aCustomer.addOrder(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setVendor(Vendor aVendor)
+  {
+    boolean wasSet = false;
+    Vendor existingVendor = vendor;
+    vendor = aVendor;
+    if (existingVendor != null && !existingVendor.equals(aVendor))
+    {
+      existingVendor.removeOrder(this);
+    }
+    if (aVendor != null)
+    {
+      aVendor.addOrder(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setProduct(Product aNewProduct)
+  {
+    boolean wasSet = false;
+    if (aNewProduct != null)
+    {
+      product = aNewProduct;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+
+  public boolean setSystemManager(SystemManager aSystemManager)
+  {
+    boolean wasSet = false;
+    SystemManager existingSystemManager = systemManager;
+    systemManager = aSystemManager;
+    if (existingSystemManager != null && !existingSystemManager.equals(aSystemManager))
+    {
+      existingSystemManager.removeOrder(this);
+    }
+    if (aSystemManager != null)
+    {
+      aSystemManager.addOrder(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    if (customer != null)
+    {
+      Customer placeholderCustomer = customer;
+      this.customer = null;
+      placeholderCustomer.removeOrder(this);
+    }
+    if (vendor != null)
+    {
+      Vendor placeholderVendor = vendor;
+      this.vendor = null;
+      placeholderVendor.removeOrder(this);
+    }
+    product = null;
+    if (systemManager != null)
+    {
+      SystemManager placeholderSystemManager = systemManager;
+      this.systemManager = null;
+      placeholderSystemManager.removeOrder(this);
+    }
+  }
+
+}

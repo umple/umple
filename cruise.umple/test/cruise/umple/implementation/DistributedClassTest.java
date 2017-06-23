@@ -374,7 +374,7 @@ public class DistributedClassTest extends TemplateTest
   {
 	  assertUmpleProxyFor("java/Class_DistributableRMI3.ump", languagePath + "/Class_DistributableRMI3_proxy."+ languagePath +".txt","Client", "ClientRemote",true,true);
   }
-  /*
+  
   @Test
   public void ClassDistributedExtention4()
   {
@@ -401,7 +401,7 @@ public class DistributedClassTest extends TemplateTest
 	  assertUmpleProxyFor("java/Class_DistributableRMI4.ump", languagePath + "/Class_DistributableRMI4_proxy."+ languagePath +".txt","Microwave", "MicrowaveProxy",true,true);
 
   }
-  */
+  
   @Test
   public void ClassDistributedExtention5()
   {
@@ -435,5 +435,338 @@ public class DistributedClassTest extends TemplateTest
   public void ClassDistributedExtention5_objectFactory()
   {
 	  assertObjectFactory("java/Class_DistributableRMI5.ump", languagePath + "/Class_DistributableRMI5_UmpleObjectFactory."+ languagePath +".txt",languagePath + "/Class_DistributableRMI5_IUmpleObjectFactory."+ languagePath +".txt");
-  } 
+  }
+  
+  
+  ///Ecommerce system with RMI and pattern 0
+  @Test
+  public void ecommerceRMI0_Agent()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/Agent."+ languagePath +".txt","Agent", "Agent",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI0_IAgentImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/IAgentImpl."+ languagePath +".txt","Agent", "IAgentImpl",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI0_AgentRemote()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/AgentRemote."+ languagePath +".txt","Agent", "AgentRemote",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI0_Customer()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/Customer."+ languagePath +".txt","Customer", "Customer",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI0_ICustomerImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/ICustomerImpl."+ languagePath +".txt","Customer", "ICustomerImpl",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI0_CustomerRemote()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/CustomerRemote."+ languagePath +".txt","Customer", "CustomerRemote",true,true);
+
+  }
+  @Test
+  public void ecommerceRMI0_Supplier()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/Supplier."+ languagePath +".txt","Supplier", "Supplier",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI0_ISupplierImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/ISupplierImpl."+ languagePath +".txt","Supplier", "ISupplierImpl",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI0_SupplierRemote()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/SupplierRemote."+ languagePath +".txt","Supplier", "SupplierRemote",true,true);
+
+  }
+  @Test
+  public void ecommerceRMI0_Vendor()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/Vendor."+ languagePath +".txt","Vendor", "Vendor",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI0_IVendorImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/IVendorImpl."+ languagePath +".txt","Vendor", "IVendorImpl",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI0_VendorRemote()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/VendorRemote."+ languagePath +".txt","Vendor", "VendorRemote",true,true);
+
+  }
+  @Test
+  public void ecommerceRMI0_SystemManager()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/SystemManager."+ languagePath +".txt","SystemManager", "SystemManager",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI0_ISystemManagerImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/ISystemManagerImpl."+ languagePath +".txt","SystemManager", "ISystemManagerImpl",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI0_SystemManagerRemote()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/SystemManagerRemote."+ languagePath +".txt","SystemManager", "SystemManagerRemote",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI0_UmpleRuntime()
+  {
+	  assertObjectFactory("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/UmpleRuntime."+ languagePath +".txt",languagePath + "/ecommerce/RMI0/IUmpleRuntime."+ languagePath +".txt");
+  }
+  @Test
+  public void ecommerceRMI0_Order()
+  {
+	  assertUmpleTemplateFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/Order."+ languagePath +".txt","Order",true,true);
+
+  }
+  @Test
+  public void ecommerceRMI0_Product()
+  {
+	  assertUmpleTemplateFor("java/ecommerceRMI0.ump", languagePath + "/ecommerce/RMI0/Product."+ languagePath +".txt","Product",true,true);
+
+  }
+  
+///Ecommerce system with WS and pattern 0
+  @Test
+  public void ecommerceWS_Agent()
+  {
+	  assertUmpleProxyFor("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/Agent."+ languagePath +".txt","Agent", "Agent",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceWS_IAgentImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/IAgentImpl."+ languagePath +".txt","Agent", "IAgentImpl",true,true);
+
+  }
+  
+  
+  @Test
+  public void ecommerceWS_Customer()
+  {
+	  assertUmpleProxyFor("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/Customer."+ languagePath +".txt","Customer", "Customer",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceWS_ICustomerImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/ICustomerImpl."+ languagePath +".txt","Customer", "ICustomerImpl",true,true);
+
+  }
+
+  @Test
+  public void ecommerceWS_Supplier()
+  {
+	  assertUmpleProxyFor("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/Supplier."+ languagePath +".txt","Supplier", "Supplier",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceWS_ISupplierImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/ISupplierImpl."+ languagePath +".txt","Supplier", "ISupplierImpl",true,true);
+
+  }
+
+  @Test
+  public void ecommerceWS_Vendor()
+  {
+	  assertUmpleProxyFor("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/Vendor."+ languagePath +".txt","Vendor", "Vendor",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceWS_IVendorImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/IVendorImpl."+ languagePath +".txt","Vendor", "IVendorImpl",true,true);
+
+  }
+  @Test
+  public void ecommerceWS_SystemManager()
+  {
+	  assertUmpleProxyFor("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/SystemManager."+ languagePath +".txt","SystemManager", "SystemManager",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceWS_ISystemManagerImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/ISystemManagerImpl."+ languagePath +".txt","SystemManager", "ISystemManagerImpl",true,true);
+
+  }
+
+  @Test
+  public void ecommerceWS_UmpleRuntime()
+  {
+	  assertObjectFactory("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/UmpleRuntime."+ languagePath +".txt",languagePath + "/ecommerce/WS/IUmpleRuntime."+ languagePath +".txt");
+  }
+  @Test
+  public void ecommerceWS_Order()
+  {
+	  assertUmpleTemplateFor("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/Order."+ languagePath +".txt","Order",true,true);
+
+  }
+  @Test
+  public void ecommerceWS_Product()
+  {
+	  assertUmpleTemplateFor("java/ecommerceWS.ump", languagePath + "/ecommerce/WS/Product."+ languagePath +".txt","Product",true,true);
+
+  }
+
+  
+///Ecommerce system with RMI and pattern 1
+  
+  @Test
+  public void ecommerceRMI1_Agent()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/Agent."+ languagePath +".txt","Agent", "AgentProxy",true,true);
+
+  }
+  @Test
+  public void ecommerceRMI1_AgentImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/AgentImpl."+ languagePath +".txt","Agent", "Agent",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI1_IAgentImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/IAgentImpl."+ languagePath +".txt","Agent", "IAgentImpl",true,true);
+
+  }
+  
+  
+  @Test
+  public void ecommerceRMI1_Customer()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/Customer."+ languagePath +".txt","Customer", "CustomerProxy",true,true);
+
+  }
+  @Test
+  public void ecommerceRMI1_CustomerImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/CustomerImpl."+ languagePath +".txt","Customer", "Customer",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI1_ICustomerImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/ICustomerImpl."+ languagePath +".txt","Customer", "ICustomerImpl",true,true);
+
+  }
+
+  @Test
+  public void ecommerceRMI1_Supplier()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/Supplier."+ languagePath +".txt","Supplier", "SupplierProxy",true,true);
+
+  }
+  @Test
+  public void ecommerceRMI1_SupplierImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/SupplierImpl."+ languagePath +".txt","Supplier", "Supplier",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI1_ISupplierImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/ISupplierImpl."+ languagePath +".txt","Supplier", "ISupplierImpl",true,true);
+
+  }
+
+  @Test
+  public void ecommerceRMI1_Vendor()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/Vendor."+ languagePath +".txt","Vendor", "VendorProxy",true,true);
+
+  }
+  @Test
+  public void ecommerceRMI1_VendorImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/VendorImpl."+ languagePath +".txt","Vendor", "Vendor",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI1_IVendorImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/IVendorImpl."+ languagePath +".txt","Vendor", "IVendorImpl",true,true);
+
+  }
+
+  @Test
+  public void ecommerceRMI1_SystemManager()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/SystemManager."+ languagePath +".txt","SystemManager", "SystemManagerProxy",true,true);
+
+  }
+  @Test
+  public void ecommerceRMI1_SystemManagerImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/SystemManagerImpl."+ languagePath +".txt","SystemManager", "SystemManager",true,true);
+
+  }
+  
+  @Test
+  public void ecommerceRMI1_ISystemManagerImpl()
+  {
+	  assertUmpleProxyFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/ISystemManagerImpl."+ languagePath +".txt","SystemManager", "ISystemManagerImpl",true,true);
+
+  }
+  @Test
+  public void ecommerceRMI1_UmpleRuntime()
+  {
+	  assertObjectFactory("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/UmpleRuntime."+ languagePath +".txt",languagePath + "/ecommerce/RMI1/IUmpleRuntime."+ languagePath +".txt");
+  }
+  @Test
+  public void ecommerceRMI1_Order()
+  {
+	  assertUmpleTemplateFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/Order."+ languagePath +".txt","Order",true,true);
+
+  }
+  @Test
+  public void ecommerceRMI1_Product()
+  {
+	  assertUmpleTemplateFor("java/ecommerceRMI1.ump", languagePath + "/ecommerce/RMI1/Product."+ languagePath +".txt","Product",true,true);
+
+  }
+  
 }

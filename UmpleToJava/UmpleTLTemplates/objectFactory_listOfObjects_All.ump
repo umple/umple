@@ -2,9 +2,17 @@ class UmpleToJava {
     objectFactory_listOfObjects_All <<!<</*objectFactory_listOfObjects_All*/>><<#
   for(UmpleClass uClass : model.getUmpleClasses())
   {if (uClass.getIsDistributed()){
+    if(uClass.getDistributeTechnology().equals("WS"))
+  {
   #>>
-  private List<<<="I"+uClass.getName()+"Impl">>> listOf<<=uClass.getName()>>;
+  	public List<<<="I"+uClass.getName()+"Impl">>> listOf<<=uClass.getName()>>;
   <<#
+  }
+  else{
+  #>>
+    public List<<<="I"+uClass.getName()+"Impl">>> listOf<<=uClass.getName()>>;
+  <<#
+  }
   }}
 #>>!>>
 }

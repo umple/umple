@@ -6,7 +6,7 @@ import java.util.*;
 import java.io.Serializable;
 
 // line 39 "../../Class_DistributableRMI5.ump"
-public class Microwave implements java.io.Serializable,IMicrowaveImpl
+public class Microwave implements java.io.Serializable, IMicrowaveImpl
 {
 
   //------------------------
@@ -14,11 +14,11 @@ public class Microwave implements java.io.Serializable,IMicrowaveImpl
   //------------------------
 
   //Microwave Attributes
-  private int x;
-  private String f;
+  private  transient int x;
+  private  transient String f;
 
   //Microwave Associations
-  private List<Client> clients;
+  private transient  List<Client> clients;
 
   //------------------------
   // CONSTRUCTOR
@@ -26,11 +26,17 @@ public class Microwave implements java.io.Serializable,IMicrowaveImpl
 
   public Microwave(int aX, String aF, UmpleRuntime.UmpleComponent umpleComponent)
   {
-    if(!umpleComponent.getName().equals("local"))    {
-    if(this instanceof Microwave)
-        realObject=UmpleRuntime.getInstance().addMicrowave(aX, aF, umpleComponent, this);
+    if(umpleComponent.getNode().getId()!=UmpleRuntime.getThisNodeId())
+    {
+      if(this.getClass()== Microwave.class)
+        UmpleRuntime.getInstance().newMicrowave(aX, aF, umpleComponent, this);
 
-      return;    }
+      return;
+    }
+    else
+    {
+      UmpleRuntime.getInstance().newMicrowave(this);
+    }
 
     x = aX;
     f = aF;
@@ -206,16 +212,12 @@ public class Microwave implements java.io.Serializable,IMicrowaveImpl
             "x" + ":" + getX()+ "," +
             "f" + ":" + getF()+ "]";
   }
-
-  IMicrowaveImpl realObject=this;
   public void setRealObject(IMicrowaveImpl aObject)
   {
     realObject=aObject;
   }
-  public IMicrowaveImpl getRealObject()
-  {
-    return realObject;
-  }
+
+  transient IMicrowaveImpl realObject=this;
   public Microwave(int aX, String aF)
   {
 
@@ -343,11 +345,31 @@ this(aX,aF,UmpleRuntime.getComponent("Microwave"));
     catch(Exception e) {System.err.println(e.toString());}
   }
 
-  public boolean equals(Object obj)
+  protected  IMicrowaveImpl remoteObject;  
+  public void setRemoteObject(IMicrowaveImpl aRemoteObject)
   {
-    if(obj==null)
-      return false;
-    if(obj.getClass()!=this.getClass())
+    remoteObject=aRemoteObject;
+  }
+  public IMicrowaveImpl getRemoteObject()
+  {
+    return (IMicrowaveImpl)remoteObject;
+  }
+  private void readObject(java.io.ObjectInputStream in) throws Exception
+  {
+    try
+    {
+      in.defaultReadObject();
+      realObject=(IMicrowaveImpl)remoteObject;
+    }
+    catch(Exception e)
+    {
+      throw e;
+    }
+    
+  }
+ 
+  public boolean equals(Object obj)
+  {    if(obj.getClass()!=this.getClass())
       return false;
     return (getHashCode()==((Microwave)obj).getHashCode());
   }

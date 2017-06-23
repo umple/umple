@@ -1,0 +1,267 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI1;
+import java.util.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.RemoteException;
+import java.io.Serializable;
+import ecommerceRMI1.UmpleRuntime;
+public class Customer implements java.io.Serializable
+{  public void setRealObject(ICustomerImpl aObject)
+  {
+    realObject=aObject;
+  }
+
+  ICustomerImpl realObject;
+  public Customer(String aName, UmpleRuntime.UmpleComponent component)
+  {
+    if(this.getClass()== Customer.class)    setRealObject(UmpleRuntime.getInstance().newCustomer(aName, component, this));
+  }
+  public Customer(String aName)
+  {
+    if(this.getClass()== Customer.class)    setRealObject(UmpleRuntime.getInstance().newCustomer(aName, this));
+  }
+  public void setSelf(Customer proxy)
+  {
+    while(true)
+      try{
+        realObject.setSelf(proxy);
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int getHashCode()
+  {
+    while(true)
+      try{
+        return realObject.getHashCode();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setName(String aName)
+  {
+    while(true)
+      try{
+        return realObject.setName(aName);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public String getName()
+  {
+    while(true)
+      try{
+        return realObject.getName();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Vendor getVendor(int index)
+  {
+    while(true)
+      try{
+        return realObject.getVendor(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Vendor> getVendors()
+  {
+    while(true)
+      try{
+        return realObject.getVendors();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfVendors()
+  {
+    while(true)
+      try{
+        return realObject.numberOfVendors();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasVendors()
+  {
+    while(true)
+      try{
+        return realObject.hasVendors();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfVendor(Vendor aVendor)
+  {
+    while(true)
+      try{
+        return realObject.indexOfVendor(aVendor);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Order getOrder(int index)
+  {
+    while(true)
+      try{
+        return realObject.getOrder(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Order> getOrders()
+  {
+    while(true)
+      try{
+        return realObject.getOrders();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfOrders()
+  {
+    while(true)
+      try{
+        return realObject.numberOfOrders();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasOrders()
+  {
+    while(true)
+      try{
+        return realObject.hasOrders();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.indexOfOrder(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public SystemManager getSystemManager()
+  {
+    while(true)
+      try{
+        return realObject.getSystemManager();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasSystemManager()
+  {
+    while(true)
+      try{
+        return realObject.hasSystemManager();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public static int minimumNumberOfVendors()
+  {
+    while(true)
+      try{
+        return CustomerImpl.minimumNumberOfVendors();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addVendor(Vendor aVendor)
+  {
+    while(true)
+      try{
+        return realObject.addVendor(aVendor);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeVendor(Vendor aVendor)
+  {
+    while(true)
+      try{
+        return realObject.removeVendor(aVendor);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addVendorAt(Vendor aVendor, int index)
+  {
+    while(true)
+      try{
+        return realObject.addVendorAt(aVendor,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveVendorAt(Vendor aVendor, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveVendorAt(aVendor,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public static int minimumNumberOfOrders()
+  {
+    while(true)
+      try{
+        return CustomerImpl.minimumNumberOfOrders();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.addOrder(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.removeOrder(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrderAt(Order aOrder, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrderAt(aOrder,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveOrderAt(Order aOrder, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveOrderAt(aOrder,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setSystemManager(SystemManager aSystemManager)
+  {
+    while(true)
+      try{
+        return realObject.setSystemManager(aSystemManager);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void delete()
+  {
+    while(true)
+      try{
+        realObject.delete();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public Order orderProduct(String productType, String vendorName)
+  {
+    while(true)
+      try{
+        return realObject.orderProduct(productType,vendorName);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+
+  public boolean equals(Object obj)
+  {    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((Customer)obj).getHashCode());
+  }
+protected Customer(){}
+}

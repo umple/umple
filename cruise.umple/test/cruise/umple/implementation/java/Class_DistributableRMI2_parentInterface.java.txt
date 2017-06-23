@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi2;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 public interface ICCImpl extends java.rmi.Remote
 {

@@ -15,9 +15,11 @@ public class MicrowaveRemote implements IMicrowaveImpl
   {
     realObject=aObject;
   }
-  public Microwave getRealObject()
+  public MicrowaveRemote()
+  {}
+  public MicrowaveRemote(Microwave aObject)
   {
-    return realObject;
+      realObject=aObject;
   }
   public int getHashCodeImpl()
   {

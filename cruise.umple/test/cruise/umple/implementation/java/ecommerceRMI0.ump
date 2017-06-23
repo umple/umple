@@ -1,0 +1,122 @@
+namespace ecommerceRMI0;
+class Warehouse
+{ 
+	name;
+	distributable;
+	public Product findProduct(ProductType productType)
+	{
+		for(ProductTypeInWarehouse ptiw:getProductTypeInWarehouses())
+			{
+				if(ptiw.getProductType().equals(productType))
+				{
+					for(Product p : ptiw.getProducts())
+						return p;	
+				}
+			}
+		return null;	
+	}
+	public void addProduct(Product p)
+	{
+		for(ProductTypeInWarehouse ptiw : getProductTypeInWarehouses())
+		{
+			if(ptiw.getProductType().equals(p.getProductType()))
+			{
+				ptiw.addProduct(p);
+				return;
+			}
+		}
+		ProductTypeInWarehouse ptiw = new ProductTypeInWarehouse(p.getProductType());
+		ptiw.addProduct(p);
+		addProductTypeInWarehous(ptiw);	
+	}
+}
+class Agent
+{	name;
+	* -- * Warehouse;
+	distributable;
+}
+class Order
+{
+	//distributable;
+	* -- 0..1 Customer;
+	* -- 0..1 Vendor;
+    * -> 1 Product;
+}
+class Supplier
+{
+	isA Agent;
+	0..1 -> * Product;
+	public Product createProduct(String serialNumber, String productType)
+	{
+		Product aProduct=new Product(serialNumber,new ProductType(productType));
+		addProduct(aProduct);
+		return aProduct; 
+	}
+	public void putInWarehouse(Product aProduct,Warehouse warehouse)
+	{
+		warehouse.addProduct(aProduct);
+	}
+}
+class Vendor
+{   isA Agent;
+	public Product findProduct(ProductType productType)
+	{
+		for(Warehouse w:getWarehouses())
+		{
+			Product p= w.findProduct(productType);
+			if(p!=null)
+				return p;		
+		}
+		return null;
+	}
+	public Order makeOrder(Customer aCustomer, Product aProduct)
+	{	if(aProduct==null)
+			return null;
+		Order aOrder= new Order(aProduct);
+		aOrder.setCustomer(aCustomer);
+		aOrder.setVendor(this);
+		return aOrder;
+	}
+}
+class Product
+{	
+	immutable;
+	serialNumber;
+	* -> 1 ProductType;
+}
+class ProductType
+{
+	immutable;
+	name;
+	key {name};
+}
+class ProductTypeInWarehouse
+{
+	* -> 1 ProductType;
+	* <- 0..1 Warehouse;
+	0..1 -> * Product;
+	
+}
+class Customer
+{	distributable;
+	name;
+	* -- * Vendor;
+	public Order orderProduct(String productType,String vendorName)
+	{
+		for(Vendor v: getVendors())
+		{
+			if(v.getName().equals(vendorName))
+				return v.makeOrder(this,v.findProduct(new ProductType(productType)));
+		}
+		return null;
+	}
+}
+class SystemManager
+{
+	singleton;
+	distributable;
+	0..1 -- * Agent;
+	0..1 -- * Warehouse;
+	0..1 -- * Customer;
+	0..1 -- * Order;
+}

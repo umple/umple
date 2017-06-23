@@ -1,6 +1,6 @@
 use objectFactory_add_DeclareDefault.ump;
 use objectFactory_add_DeclareOneToOne.ump;
-use rmi_objectFactory_add_methods.ump;
+use objectFactory_add_methods.ump;
 
 class UmpleToJava {
     objectFactory_add_Declare_All <<!<</*objectFactory_add_Declare_All*/>><<#
@@ -18,16 +18,22 @@ class UmpleToJava {
       String caller;
       String argumentscomma;
       String accessibility = "public I"+uClass.getName()+"Impl";
+      String accessibilityCreate="public I"+uClass.getName()+"Impl";
       if(model.getDistributePattern()==2)
         accessibility = "public "+uClass.getName();
+      if(model.getDistributePattern()==0)
+        accessibility = "public void";  
       String webMethod="";
-      if(model.getDistributeTechnology().equals("WS")){
-        webMethod="@WebMethod"+NL; 
-      /*  accessibility="public "+uClass.getName()+"Impl";
-        if(model.getDistributePattern()==0)
-          accessibility = "public "+uClass.getName();      
-          */  
-        }
+      if(model.getDistributeTechnology().equals("WS"))
+        webMethod="@WebMethod"+NL;
+      if(uClass.getDistributeTechnology().equals("WS"))
+      {  
+        if(model.getDistributePattern()==0) 
+        {
+          accessibilityCreate = "public "+uClass.getName();
+        }         
+      }
+
       for (AssociationVariable av : uClass.getAssociationVariables()) 
       {
         relatedAssociation = av.getRelatedAssociation();
@@ -89,7 +95,7 @@ class UmpleToJava {
             else{
               argumentscomma=""; 
             }
-            #>><<@ UmpleToJava.rmi_objectFactory_add_methods >><<#
+            #>><<@ UmpleToJava.objectFactory_add_methods >><<#
             
           }
         }

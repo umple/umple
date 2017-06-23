@@ -1,0 +1,132 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI0;
+import java.util.*;
+import java.io.Serializable;
+
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
+public class SupplierRemote extends AgentRemote implements ISupplierImpl
+{
+  Supplier realObject;
+  public void setRealObject(Supplier aObject)
+  {
+    realObject=aObject;
+  }
+  public SupplierRemote()
+  {}
+  public SupplierRemote(Supplier aObject)
+  {
+    super(aObject);
+    realObject=aObject;
+  }
+  public int getHashCodeImpl()
+  {
+    while(true)
+      try{
+        return realObject.getHashCodeImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Product getProductImpl(int index)
+  {
+    while(true)
+      try{
+        return realObject.getProductImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Product> getProductsImpl()
+  {
+    while(true)
+      try{
+        return realObject.getProductsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfProductsImpl()
+  {
+    while(true)
+      try{
+        return realObject.numberOfProductsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasProductsImpl()
+  {
+    while(true)
+      try{
+        return realObject.hasProductsImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfProductImpl(Product aProduct)
+  {
+    while(true)
+      try{
+        return realObject.indexOfProductImpl(aProduct);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addProductImpl(Product aProduct)
+  {
+    while(true)
+      try{
+        return realObject.addProductImpl(aProduct);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeProductImpl(Product aProduct)
+  {
+    while(true)
+      try{
+        return realObject.removeProductImpl(aProduct);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addProductAtImpl(Product aProduct, int index)
+  {
+    while(true)
+      try{
+        return realObject.addProductAtImpl(aProduct,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveProductAtImpl(Product aProduct, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveProductAtImpl(aProduct,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void deleteImpl()
+  {
+    while(true)
+      try{
+        realObject.deleteImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public Product createProductImpl(String serialNumber, String productType)
+  {
+    while(true)
+      try{
+        return realObject.createProductImpl(serialNumber,productType);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public void putInWarehouseImpl(Product aProduct, Warehouse warehouse)
+  {
+    while(true)
+      try{
+        realObject.putInWarehouseImpl(aProduct,warehouse);
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+
+}

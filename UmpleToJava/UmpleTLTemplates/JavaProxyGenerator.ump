@@ -1,5 +1,5 @@
 use proxy_AbstractMethodDeclaration.ump;
-
+use JavaDistributedTemplates.ump;
 
 
 namespace cruise.umple.compiler.java;

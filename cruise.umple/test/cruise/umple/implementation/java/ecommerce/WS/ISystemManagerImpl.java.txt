@@ -1,0 +1,91 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceWS;
+import java.util.*;
+import java.io.Serializable;
+import javax.xml.namespace.QName;
+import java.net.URL;
+import javax.xml.ws.Service;
+import javax.xml.ws.Endpoint;
+import javax.jws.WebService;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.*;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.Style;
+import java.rmi.RemoteException;
+@WebService
+@SOAPBinding(style = Style.RPC)
+public interface ISystemManagerImpl
+{
+@WebMethod
+  public int getHashCodeImpl();
+@WebMethod
+  public Agent getAgentImpl(int index);
+@WebMethod
+  public int numberOfAgentsImpl();
+@WebMethod
+  public boolean hasAgentsImpl();
+@WebMethod
+  public int indexOfAgentImpl(Agent aAgent);
+@WebMethod
+  public Warehouse getWarehousImpl(int index);
+@WebMethod
+  public int numberOfWarehousesImpl();
+@WebMethod
+  public boolean hasWarehousesImpl();
+@WebMethod
+  public int indexOfWarehousImpl(Warehouse aWarehous);
+@WebMethod
+  public Customer getCustomerImpl(int index);
+@WebMethod
+  public int numberOfCustomersImpl();
+@WebMethod
+  public boolean hasCustomersImpl();
+@WebMethod
+  public int indexOfCustomerImpl(Customer aCustomer);
+@WebMethod
+  public Order getOrderImpl(int index);
+@WebMethod
+  public int numberOfOrdersImpl();
+@WebMethod
+  public boolean hasOrdersImpl();
+@WebMethod
+  public int indexOfOrderImpl(Order aOrder);
+@WebMethod
+  public boolean addAgentImpl(Agent aAgent);
+@WebMethod
+  public boolean removeAgentImpl(Agent aAgent);
+@WebMethod
+  public boolean addAgentAtImpl(Agent aAgent, int index);
+@WebMethod
+  public boolean addOrMoveAgentAtImpl(Agent aAgent, int index);
+@WebMethod
+  public boolean addWarehousImpl(Warehouse aWarehous);
+@WebMethod
+  public boolean removeWarehousImpl(Warehouse aWarehous);
+@WebMethod
+  public boolean addWarehousAtImpl(Warehouse aWarehous, int index);
+@WebMethod
+  public boolean addOrMoveWarehousAtImpl(Warehouse aWarehous, int index);
+@WebMethod
+  public boolean addCustomerImpl(Customer aCustomer);
+@WebMethod
+  public boolean removeCustomerImpl(Customer aCustomer);
+@WebMethod
+  public boolean addCustomerAtImpl(Customer aCustomer, int index);
+@WebMethod
+  public boolean addOrMoveCustomerAtImpl(Customer aCustomer, int index);
+@WebMethod
+  public boolean addOrderImpl(Order aOrder);
+@WebMethod
+  public boolean removeOrderImpl(Order aOrder);
+@WebMethod
+  public boolean addOrderAtImpl(Order aOrder, int index);
+@WebMethod
+  public boolean addOrMoveOrderAtImpl(Order aOrder, int index);
+@WebMethod
+  public void deleteImpl();
+}

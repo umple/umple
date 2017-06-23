@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi.withMethods;
 import java.util.*;
@@ -7,7 +7,7 @@ import java.lang.Thread;
 import java.io.Serializable;
 
 // line 2 "../../../Class_DistributableRMI_WithMethods.ump"
-public class Microwave implements java.io.Serializable,IMicrowaveImpl, Runnable
+public class Microwave implements java.io.Serializable, IMicrowaveImpl, Runnable
 {
 
   //------------------------
@@ -21,14 +21,14 @@ public class Microwave implements java.io.Serializable,IMicrowaveImpl, Runnable
   //------------------------
 
   //Microwave Attributes
-  private boolean lightOn;
-  private boolean powerTubeOn;
-  private boolean isDoorOpened;
-  private boolean isButtonPressed;
+  private  transient boolean lightOn;
+  private  transient boolean powerTubeOn;
+  private  transient boolean isDoorOpened;
+  private  transient boolean isButtonPressed;
 
   //Microwave State Machines
   public enum OperatingMicrowaveStateMachine { readyToCook, doorOpen, cooking, cookingInterrupted, cookingComplete, cookingExtended }
-  private OperatingMicrowaveStateMachine operatingMicrowaveStateMachine;
+  private transient  OperatingMicrowaveStateMachine operatingMicrowaveStateMachine;
   
   //enumeration type of messages accepted by Microwave
   protected enum MessageType { doorOpened_M, buttonPressed_M, doorClosed_M }
@@ -42,11 +42,17 @@ public class Microwave implements java.io.Serializable,IMicrowaveImpl, Runnable
 
   public Microwave(UmpleRuntime.UmpleComponent umpleComponent)
   {
-    if(!umpleComponent.getName().equals("local"))    {
-    if(this instanceof Microwave)
-        realObject=UmpleRuntime.getInstance().addMicrowave( umpleComponent, this);
+    if(umpleComponent.getNode().getId()!=UmpleRuntime.getThisNodeId())
+    {
+      if(this.getClass()== Microwave.class)
+        UmpleRuntime.getInstance().newMicrowave( umpleComponent, this);
 
-      return;    }
+      return;
+    }
+    else
+    {
+      UmpleRuntime.getInstance().newMicrowave(this);
+    }
 
     lightOn = false;
     powerTubeOn = false;
@@ -417,16 +423,12 @@ public class Microwave implements java.io.Serializable,IMicrowaveImpl, Runnable
             "isDoorOpened" + ":" + getIsDoorOpened()+ "," +
             "isButtonPressed" + ":" + getIsButtonPressed()+ "]";
   }
-
-  IMicrowaveImpl realObject=this;
   public void setRealObject(IMicrowaveImpl aObject)
   {
     realObject=aObject;
   }
-  public IMicrowaveImpl getRealObject()
-  {
-    return realObject;
-  }
+
+  transient IMicrowaveImpl realObject=this;
   public Microwave()
   {
 
@@ -601,11 +603,31 @@ this(UmpleRuntime.getComponent("Microwave"));
     catch(Exception e) {System.err.println(e.toString());}
   }
 
-  public boolean equals(Object obj)
+  protected  IMicrowaveImpl remoteObject;  
+  public void setRemoteObject(IMicrowaveImpl aRemoteObject)
   {
-    if(obj==null)
-      return false;
-    if(obj.getClass()!=this.getClass())
+    remoteObject=aRemoteObject;
+  }
+  public IMicrowaveImpl getRemoteObject()
+  {
+    return (IMicrowaveImpl)remoteObject;
+  }
+  private void readObject(java.io.ObjectInputStream in) throws Exception
+  {
+    try
+    {
+      in.defaultReadObject();
+      realObject=(IMicrowaveImpl)remoteObject;
+    }
+    catch(Exception e)
+    {
+      throw e;
+    }
+    
+  }
+ 
+  public boolean equals(Object obj)
+  {    if(obj.getClass()!=this.getClass())
       return false;
     return (getHashCode()==((Microwave)obj).getHashCode());
   }

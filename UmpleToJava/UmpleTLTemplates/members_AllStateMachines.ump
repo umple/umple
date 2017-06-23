@@ -22,17 +22,17 @@ class UmpleToJava {
              gen.translate("listStates",nestedSm));
     }
     
-    append(realSb, "\n  private {0} {1};", gen.translate("type",sm), gen.translate("stateMachineOne", sm));
+    append(realSb, "\n  private{2} {0} {1};", gen.translate("type",sm), gen.translate("stateMachineOne", sm),isTransient);
     for (StateMachine nestedSm : allNested)
     {
-      append(realSb, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+      append(realSb, "\n  private{2} {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm),isTransient);
       if(nestedSm.getContainsHistoryState())
       {
-        append(realSb, "\n  private {0} {1}H;", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+        append(realSb, "\n  private{2} {0} {1}H;", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm),isTransient);
       }
       if(nestedSm.getContainsDeepHistoryState())
       {
-        append(realSb, "\n  private {0} {1}HStar;", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+        append(realSb, "\n  private{2} {0} {1}HStar;", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm),isTransient);
       }
     }  
   }

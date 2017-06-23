@@ -385,8 +385,8 @@ class UmpleInternalParser
       // this method sets the isDistributed flag for classes.
         analyzeDistributedClasses();
         setParentClassesDefaultInterface();
-        checkAssociationsForDistributed();
-        //checkStaticVariablesIndistributedSystem();  
+        checkAssociationsForDistributed(); 
+        //checkDistributedAssociations();
     }
   }
 private void checkAssociationsForDistributed()
@@ -413,6 +413,18 @@ private void checkAssociationsForDistributed()
     }
 }
 }
+
+private void checkDistributedAssociations()
+{
+  for (UmpleClass uClass:  model.getUmpleClasses())
+  {
+    if(uClass.getIsDistributed())
+    {
+    }
+  }
+}
+
+
 
 /*
 * Parent of each class that has default interface must have default interface.
@@ -1090,7 +1102,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       aClass.setIsSingleton(true);
     }
-    // If the "DistributableRMI" keyword is parsed, make the Umple class Distributable.
+    // If the "Distributable" keyword is parsed, make the Umple class Distributable.
     if (classToken.getValue("distributable") != null)
     {
       aClass.setIsDistributable(true);

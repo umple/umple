@@ -39,20 +39,26 @@ class UmpleToJava {
   if (!uClass.isRoot() && !"interface".equals(uClass.getExtendsClass().getModifier()))
   {
     appendln(realSb, "");
-    append(realSb, "    super({0});", gClass.getParentClass().getLookup("constructorSignature_caller"));
+    append(realSb, "    super({0}{1});", gClass.getParentClass().getLookup("constructorSignature_caller"),componentSignatureCaller);
     hasBody = true;
   }
   if(uClass.getIsDistributed()&&model.getDistributePattern()==0)
   {
     appendln(realSb, "");
-    append(realSb, "    if(!umpleComponent.getName().equals(\"local\"))");
+    appendln(realSb, "    if(umpleComponent.getNode().getId()!=UmpleRuntime.getThisNodeId())");
     appendln(realSb, "    {");
-    appendln(realSb, "    if(this instanceof {0})",uClass.getName());
-    appendln(realSb, "        realObject=UmpleRuntime.getInstance().add{0}({1}{2} umpleComponent, this);",uClass.getName(),gClass.getLookup("constructorSignature_caller"),lastArgumentComma);
+    appendln(realSb, "      if(this.getClass()== {0}.class)",uClass.getName());
+    appendln(realSb, "        UmpleRuntime.getInstance().new{0}({1}{2} umpleComponent, this);",uClass.getName(),gClass.getLookup("constructorSignature_caller"),lastArgumentComma);    
     appendln(realSb, "");
-    append(realSb, "      return;");
+    appendln(realSb, "      return;");
     appendln(realSb, "    }");
-    //appendln(realSb, "    realObject=this;");
+    if(uClass.isRoot()||!uClass.getExtendsClass().getIsDistributed())
+    {
+      appendln(realSb, "    else");
+      appendln(realSb, "    {");
+      appendln(realSb, "      UmpleRuntime.getInstance().new{0}(this);",uClass.getName());
+      appendln(realSb, "    }");
+    }
     hasBody = true;
   }
   

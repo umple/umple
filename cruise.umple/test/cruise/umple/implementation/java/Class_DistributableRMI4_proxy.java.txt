@@ -1,41 +1,34 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi4;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.io.Serializable;
-import distributed.rmi4.UmpleObjectFactory;
+import java.rmi.RemoteException;
+import java.io.Serializable;
+import distributed.rmi4.UmpleRuntime;
 public class Microwave extends CC implements java.io.Serializable
-{
-  IMicrowaveImpl realObject;
-  public void setRealObject(IMicrowaveImpl aObject)
+{  public void setRealObject(IMicrowaveImpl aObject)
   {
+  super.setRealObject(aObject);
     realObject=aObject;
   }
-  public IMicrowaveImpl getRealObject()
+
+  IMicrowaveImpl realObject;
+  public Microwave(UmpleRuntime.UmpleComponent component)
   {
-    return realObject;
-  }
-  public Microwave(String component)
-  {
-    realObject = UmpleObjectFactory.getInstance().addMicrowave(component, this);
-  }
-  public Microwave(int component)
-  {
-    realObject = UmpleObjectFactory.getInstance().addMicrowave(component, this);
+    if(this.getClass()== Microwave.class)    setRealObject(UmpleRuntime.getInstance().newMicrowave(component, this));
   }
   public Microwave()
   {
-    realObject = UmpleObjectFactory.getInstance().createMicrowave(this);
+    if(this.getClass()== Microwave.class)    setRealObject(UmpleRuntime.getInstance().newMicrowave(this));
   }
-  public void setRealSelf(Microwave self)
+  public void setSelf(Microwave proxy)
   {
     while(true)
       try{
-        realObject.setRealSelf(self);
+        realObject.setSelf(proxy);
         break;
         }
     catch(Exception e) {System.err.println(e.toString());}
@@ -67,10 +60,7 @@ public class Microwave extends CC implements java.io.Serializable
   }
 
   public boolean equals(Object obj)
-  {
-    if(obj==null)
-      return false;
-    if(obj.getClass()!=this.getClass())
+  {    if(obj.getClass()!=this.getClass())
       return false;
     return (getHashCode()==((Microwave)obj).getHashCode());
   }

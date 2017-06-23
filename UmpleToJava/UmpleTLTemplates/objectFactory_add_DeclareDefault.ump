@@ -1,4 +1,4 @@
-use rmi_objectFactory_add_methods.ump;
+use objectFactory_add_methods.ump;
 class UmpleToJava {
     objectFactory_add_DeclareDefault <<!<</*objectFactory_add_DeclareDefault*/>>
     <<#
@@ -8,6 +8,6 @@ class UmpleToJava {
     argumentscomma+=", ";
   caller=gClass.getLookup("constructorSignature_caller");
   #>>
-  <<@ UmpleToJava.rmi_objectFactory_add_methods >>
+  <<@ UmpleToJava.objectFactory_add_methods >>
 !>>
 }
