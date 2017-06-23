@@ -15,11 +15,15 @@ echo This should take 2-5 minutes. Do not interrupt.
 echo You should always have done 'git pull' before running this and resolved conflicts
 set logfile="/tmp/umplebuildlog$$.txt"
 ant -Dmyenv=$buildenv | tee $logfile
+
 grep -qi failed $logfile
-if ($status == 0) then
+set failedstatus=$status
+
+grep -qi 'Error ' $logfile
+if ($status == 0 || $failedstatus == 0) then
   echo "************************"
   echo Script bumple ended ABNORMALLY at $UMPLEROOT
-  echo The word FAILED was found in the above. Build was NOT SUCCESSFUL.
+  echo The word FAILED or ERROR was found in the above. Build was NOT SUCCESSFUL.
   echo Build log is at $logfile
   echo Test log can be opened in a web browser at $UMPLEROOT/dist/qa/index.php
 else
