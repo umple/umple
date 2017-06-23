@@ -73,6 +73,18 @@ public class YumlTemplateTest extends TemplateTest
   {
 	  assertUmpleTemplateFor("yuml/RoleNameWithMultiplicity.ump","yuml/RoleNameWithMultiplicity.yuml.txt");  
   }
+
+  @Test
+  public void CompositionEnds()
+  {
+	  assertUmpleTemplateFor("yuml/CompositionEnds.ump","yuml/CompositionEnds.yuml.txt");  
+  }
+
+  @Test
+  public void CompositionEndsLHS()
+  {
+	  assertUmpleTemplateFor("yuml/CompositionEndsLHS.ump","yuml/CompositionEndsLHS.yuml.txt");  
+  }
   
   @Test
   public void InterfaceInheritanceTest()

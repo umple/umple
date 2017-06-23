@@ -1,5 +1,5 @@
 class X
 {
-  input Double iDoub;
+  ivar Double iDoub;
   Double xDoub;
 }

@@ -66,7 +66,7 @@ class NuSMVCoordinator
 				ivdec.addVariableSpecifier( specifiers.get(i) );
 			body.addModuleElement( ivdec );
 			
-			System.out.println("I am here!");
+			//System.out.println("I am here!");
 		}
 		
   		//Adding define declaration to module body
@@ -1049,7 +1049,7 @@ class NuSMVCoordinator
 		List<AssignConstraint> constraints = new ArrayList<AssignConstraint>();
 		
 		for( Attribute attribute : uClass.getAllAttributes() ) {
-			if( !attribute.isConstant() && !attribute.isIsInput() ) {
+			if( !attribute.isConstant() && !attribute.isIsIvar() ) {
 				BasicExpression bexp = new BasicExpression("");
 			
 				if( attribute.getValue() != null ){
@@ -1500,7 +1500,7 @@ class NuSMVCoordinator
 		List<VariableSpecifier> attributes = new ArrayList<VariableSpecifier>();
 		
 		for( Attribute attribute : uClass.getAllAttributes() ){
-			if( attribute.isIsInput() ) { 
+			if( attribute.isIsIvar() ) { 
 				VariableSpecifier vs = new VariableSpecifier( attribute.getName() );
 				String type = attribute.getFullType();
 				generateSpecifier( type, vs, attributes );
@@ -1513,7 +1513,7 @@ class NuSMVCoordinator
 		List<VariableSpecifier> attributes = new ArrayList<VariableSpecifier>();
 		
 		for( Attribute attribute : uClass.getAllAttributes() ){
-			if( !attribute.isConstant() && !attribute.isIsInput() ) { 
+			if( !attribute.isConstant() && !attribute.isIsIvar() ) { 
 				VariableSpecifier vs = new VariableSpecifier( attribute.getName() );
 				String type = attribute.getFullType();
 				generateSpecifier( type, vs, attributes );
