@@ -309,7 +309,7 @@ class GrammarAnalyzer
   File file = null;
 
   //filename of the file to be parsed
-  input = null;
+  String input = null;
   
   //if a balanced rule is created, it needs to know if the current context is nospaces or not
   noSpaces = false;

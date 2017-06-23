@@ -15,11 +15,15 @@ echo This should take 1-2 minutes and does not run tests. Do not interrupt. Then
 echo You should always have done 'git pull' before running this and resolved conflicts
 set logfile="/tmp/umplebuildlog$$.txt"
 ant -Dmyenv=$buildenv first-build | tee $logfile
+
 grep -qi failed $logfile
-if ($status == 0) then
+set failedstatus=$status
+
+grep -qi 'Error ' $logfile
+if ($status == 0 || $failedstatus == 0) then
   echo "************************"
   echo Script fbumple ended ABNORMALLY at $UMPLEROOT
-  echo The word FAILED was found in the above. Build was NOT SUCCESSFUL.
+  echo The word FAILED or Error was found in the above. First Build was NOT SUCCESSFUL.
   echo Build log is at $logfile
 else
   rm $logfile
