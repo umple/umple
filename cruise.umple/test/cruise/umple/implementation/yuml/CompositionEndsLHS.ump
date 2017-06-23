@@ -1,0 +1,4 @@
+class Vehicle {  }
+class Wheel{ 
+  2..4 -<@> * Vehicle;
+}

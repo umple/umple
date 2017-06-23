@@ -436,7 +436,7 @@ class UmpleInternalParser
     Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aTrait);
     attribute.setIsUnique(isUnique);
     attribute.setIsLazy(isLazy);
-    attribute.setIsIvar(isIvar);
+	attribute.setIsIvar(isIvar);
     boolean isList = attributeToken.getValue("list") != null;
 
     if (name == null)

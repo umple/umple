@@ -3976,7 +3976,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aClass);
     attribute.setIsUnique(isUnique);
     attribute.setIsLazy(isLazy);
-    attribute.setIsIvar(isIvar);
+	attribute.setIsIvar(isIvar);
     boolean isList = attributeToken.getValue("list") != null;
 
     if (name == null)
