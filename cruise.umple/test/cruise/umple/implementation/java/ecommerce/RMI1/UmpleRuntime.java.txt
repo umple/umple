@@ -1,6 +1,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 package ecommerceRMI1;
+import java.rmi.Remote;
 import java.util.Properties;
 import ecommerceRMI1.Agent;
 import java.io.*;
@@ -25,7 +26,8 @@ import java.io.FileReader;
 import java.util.regex.Pattern;
 import java.io.InputStream;
 public class UmpleRuntime implements IUmpleRuntime
-{
+{ 
+  private static Boolean isAlive = true;
   static int thisNodeId=-1;
   private int numberOfNodes=0;
   private static String fileAddress="";
@@ -77,7 +79,7 @@ public class UmpleRuntime implements IUmpleRuntime
     }
   }
   public static UmpleComponent getComponent(String runtimeComponentName)
-  { 
+  {
     getInstance();
     UmpleComponent aComponent=components.get(runtimeComponentName.toLowerCase());
     if (aComponent!=null)
@@ -85,12 +87,31 @@ public class UmpleRuntime implements IUmpleRuntime
     else
       return components.get("local");  
   }
+
+  public static void stopAll()
+  {
+    UmpleRuntime.getInstance().stopAllNodes();
+  }
+  public void stopAllNodes()
+  {
+    for(int node=0;node<numberOfNodes;node=node+1)
+    {
+      if(node!=getThisNodeId())
+      {
+        try
+        {
+          remoteFactories.get(node).stopNode();
+        }
+        catch(Exception e) {System.err.println(e.toString());}
+      } 
+    }
+    stopNode(); 
+  }
 // ******************************** Factory
     public static UmpleRuntime theInstance = null;
     List<IUmpleRuntime> remoteFactories;
 
     public List<Object> listOfObjects;
-
     public static UmpleRuntime getInstance()
     {
       if(theInstance==null){
@@ -121,6 +142,7 @@ public class UmpleRuntime implements IUmpleRuntime
     {
       String input="{id=0; port=1099; http://localhost {component1}}{id=1; port=1700; http://localhost {component2}}";
       try (BufferedReader br = new BufferedReader(new FileReader(fileAddress))) {
+        input="";
         String line;
         while ((line = br.readLine()) != null) {
            // Merging the lines
@@ -234,7 +256,7 @@ public class UmpleRuntime implements IUmpleRuntime
       if(fileAddress.equals(""))
         readPropertiesFile();
       readConfigFile();
-      int numberOfNodes= nodes.size();
+      numberOfNodes= nodes.size();
       startRMI();
       for(int node=0;node<numberOfNodes;node=node+1)
       {
@@ -259,7 +281,7 @@ public class UmpleRuntime implements IUmpleRuntime
             {
               System.err.println("Client exception: " + e.toString());
               e.printStackTrace();
-              try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+              try { Thread.sleep(5000); } catch (InterruptedException interruptedException) {};
             }
           } 
         } 
@@ -273,24 +295,47 @@ public class UmpleRuntime implements IUmpleRuntime
         // Bind the remote object's stub in the registry
         rmiRegistry= LocateRegistry.createRegistry(nodes.get(getThisNodeId()).getPort());
         stub = (IUmpleRuntime) UnicastRemoteObject.exportObject(this, nodes.get(getThisNodeId()).getPort());
-        rmiRegistry.rebind("UmpleRuntime"+String.valueOf(getThisNodeId()), stub);
+        rmiRegistry.bind("UmpleRuntime"+String.valueOf(getThisNodeId()), stub);
         System.err.println("Server ready");
       } 
       catch (Exception e)
       {
         System.err.println("binding exception: " + e.toString());
-        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
       }
+    }
+    public void stopNode()
+    {
+      System.out.println("stopping node");
+      try
+      {
+        stopRMI();
+      }
+      catch (Exception e)
+      {
+        System.err.println("Could not stop RMI:  "+ e.toString());
+      }
+      isAlive=false;
     }
     public void stopRMI() throws Exception
     {
+      for(Object object: listOfObjects)
+      {
+        try
+        {
+          UnicastRemoteObject.unexportObject((Remote)object, true);
+        }
+        catch(Exception e)
+        {
+          throw e;
+        }  
+      }
       try
       {
-      UnicastRemoteObject.unexportObject(this, true);
+        UnicastRemoteObject.unexportObject(this, true);
       }
       catch(Exception e)
       {
-      throw e;
+        throw e;
       }
     }
     
@@ -530,8 +575,8 @@ public class UmpleRuntime implements IUmpleRuntime
         UmpleRuntime.setFileAddress(args[1]);
     }
      UmpleRuntime.getInstance();
-    while(true){
-      try { Thread.sleep(100000); } catch (InterruptedException interruptedException) {};
+    while(isAlive){
+      try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
     }
   }
     public class UmpleNode

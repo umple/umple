@@ -28,6 +28,8 @@ import ecommerceWS.Agent;
 
 public interface IUmpleRuntime extends Remote
 {
+  @WebMethod
+  public void stopNode();
   
   
   @WebMethod

@@ -89,6 +89,21 @@ import <<=packageName>>;
 
 public interface IUmpleRuntime extends Remote
 {
+  <<#
+    if(model.getDistributeTechnology().equals("WS"))
+  {
+  #>>
+  @WebMethod
+  public void stopNode();
+  <<#
+  }
+  if(model.getDistributeTechnology().equals("RMI"))
+  {
+  #>>
+  public void stopNode() throws RemoteException;
+  <<#
+  }
+  #>>
   <<@ UmpleToJava.objectFactory_add_Declare_All >>
 }
  !>>

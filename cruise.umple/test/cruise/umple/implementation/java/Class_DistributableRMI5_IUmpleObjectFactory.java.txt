@@ -12,6 +12,7 @@ import java.io.Serializable;
 
 public interface IUmpleRuntime extends Remote
 {
+  public void stopNode() throws RemoteException;
   
   
   public IClientImpl createClient()throws RemoteException;
