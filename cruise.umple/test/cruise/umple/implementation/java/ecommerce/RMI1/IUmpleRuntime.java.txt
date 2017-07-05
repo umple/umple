@@ -16,6 +16,7 @@ import ecommerceRMI1.Customer;
 
 public interface IUmpleRuntime extends Remote
 {
+  public void stopNode() throws RemoteException;
   
   
   public IWarehouseImpl createWarehouse(String aName, Warehouse proxy)throws RemoteException;

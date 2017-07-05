@@ -33,7 +33,8 @@ import java.util.regex.Pattern;
 import java.io.InputStream;
 @WebService(endpointInterface = "ecommerceWS.IUmpleRuntime")
 public class UmpleRuntime implements IUmpleRuntime
-{
+{ 
+  private static Boolean isAlive = true;
   static int thisNodeId=-1;
   private int numberOfNodes=0;
   private static String fileAddress="";
@@ -85,7 +86,7 @@ public class UmpleRuntime implements IUmpleRuntime
     }
   }
   public static UmpleComponent getComponent(String runtimeComponentName)
-  { 
+  {
     getInstance();
     UmpleComponent aComponent=components.get(runtimeComponentName.toLowerCase());
     if (aComponent!=null)
@@ -93,12 +94,33 @@ public class UmpleRuntime implements IUmpleRuntime
     else
       return components.get("local");  
   }
+
+  public static void stopAll()
+  {
+    UmpleRuntime.getInstance().stopAllNodes();
+  }
+  public void stopAllNodes()
+  {
+    for(int node=0;node<numberOfNodes;node=node+1)
+    {
+      if(node!=getThisNodeId())
+      {
+        try
+        {
+          remoteFactories.get(node).stopNode();
+        }
+        catch(Exception e) {System.err.println(e.toString());}
+      } 
+    }
+    stopNode(); 
+  }
 // ******************************** Factory
     public static UmpleRuntime theInstance = null;
     List<IUmpleRuntime> remoteFactories;
 
     public List<Object> listOfObjects;
-
+    public List<Endpoint> listOfEndpoints;
+    private Endpoint thisEndpoint;
     public static UmpleRuntime getInstance()
     {
       if(theInstance==null){
@@ -109,6 +131,7 @@ public class UmpleRuntime implements IUmpleRuntime
    
     private UmpleRuntime()
     { 
+      listOfEndpoints=new ArrayList<Endpoint>();
       listOfObjects=new ArrayList<Object>();
       remoteFactories= new ArrayList<IUmpleRuntime>();
       initialize();
@@ -129,6 +152,7 @@ public class UmpleRuntime implements IUmpleRuntime
     {
       String input="{id=0; port=1099; http://localhost {component1}}{id=1; port=1700; http://localhost {component2}}";
       try (BufferedReader br = new BufferedReader(new FileReader(fileAddress))) {
+        input="";
         String line;
         while ((line = br.readLine()) != null) {
            // Merging the lines
@@ -240,8 +264,9 @@ public class UmpleRuntime implements IUmpleRuntime
       if(fileAddress.equals(""))
         readPropertiesFile();
       readConfigFile();
-      int numberOfNodes= nodes.size();
-      Endpoint.publish(nodes.get(getThisNodeId()).getUrl()+":"+String.valueOf(nodes.get(getThisNodeId()).getPort())+"/UmpleRuntime",this);
+      numberOfNodes= nodes.size();
+      thisEndpoint=Endpoint.create(this);
+      thisEndpoint.publish(nodes.get(getThisNodeId()).getUrl()+":"+String.valueOf(nodes.get(getThisNodeId()).getPort())+"/UmpleRuntime");
 
       for(int node=0;node<numberOfNodes;node=node+1)
       {
@@ -269,13 +294,22 @@ public class UmpleRuntime implements IUmpleRuntime
             {
               System.err.println("Client exception: " + e.toString());
               e.printStackTrace();
-              try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+              try { Thread.sleep(5000); } catch (InterruptedException interruptedException) {};
             }
           } 
         } 
       }
     }
-
+    public void stopNode()
+    {
+      System.out.println("stopping node");
+      for(Endpoint e: listOfEndpoints)
+      {
+        e.stop();
+      }
+      thisEndpoint.stop();
+      isAlive=false;
+    }
     
   
   public void newWarehouse(String aName, UmpleRuntime.UmpleComponent component,Warehouse object)
@@ -305,7 +339,9 @@ public class UmpleRuntime implements IUmpleRuntime
         object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
         object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
         object.setRealObject(object);
-        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);  
+        Endpoint e=Endpoint.create(object);
+        e.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId);
+        listOfEndpoints.add(e);  
     }
     
   @WebMethod
@@ -343,7 +379,9 @@ synchronized public Warehouse createWarehouse(String aName)
         object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
         object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
         object.setRealObject(object);
-        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);  
+        Endpoint e=Endpoint.create(object);
+        e.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId);
+        listOfEndpoints.add(e);  
     }
     
   @WebMethod
@@ -381,7 +419,9 @@ synchronized public Agent createAgent(String aName)
         object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
         object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
         object.setRealObject(object);
-        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);  
+        Endpoint e=Endpoint.create(object);
+        e.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId);
+        listOfEndpoints.add(e);  
     }
     
   @WebMethod
@@ -419,7 +459,9 @@ synchronized public Supplier createSupplier(String aName)
         object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
         object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
         object.setRealObject(object);
-        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);  
+        Endpoint e=Endpoint.create(object);
+        e.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId);
+        listOfEndpoints.add(e);  
     }
     
   @WebMethod
@@ -457,7 +499,9 @@ synchronized public Vendor createVendor(String aName)
         object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
         object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
         object.setRealObject(object);
-        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);  
+        Endpoint e=Endpoint.create(object);
+        e.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId);
+        listOfEndpoints.add(e);  
     }
     
   @WebMethod
@@ -495,7 +539,9 @@ synchronized public Customer createCustomer(String aName)
         object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
         object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
         object.setRealObject(object);
-        Endpoint.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId,object);  
+        Endpoint e=Endpoint.create(object);
+        e.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId);
+        listOfEndpoints.add(e);  
     }
     
   @WebMethod
@@ -513,8 +559,8 @@ synchronized public SystemManager createSystemManager()
         UmpleRuntime.setFileAddress(args[1]);
     }
      UmpleRuntime.getInstance();
-    while(true){
-      try { Thread.sleep(100000); } catch (InterruptedException interruptedException) {};
+    while(isAlive){
+      try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
     }
   }
     public class UmpleNode
