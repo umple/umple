@@ -1,0 +1,23 @@
+#!/bin/csh -fb
+# Minify the Javascript files
+
+cat \
+ prototype.js \
+ dom.js \
+ ajax.js \
+ helper.js \
+ json.js \
+ debugger.js \
+ ws_rotateimg.js \
+ shCore.js \
+ shBrush*.js \
+ inlineeditor.js \
+ CodeMirror/lib/codemirror.js \
+ CodeMirror/mode/clike/clike.js \
+ CodeMirror/lib/util/foldcode.js \
+ CodeMirror/lib/util/searchcursor.js \
+ dropbox/*.js \
+ umple_*.js \
+ structureDiagram.js \
+ statetable/state_table_colourer.js \
+ | yuicompressor --type js --line-break 132 > allumple-min.js
