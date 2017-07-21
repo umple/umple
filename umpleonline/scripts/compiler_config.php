@@ -78,7 +78,7 @@ function generateMenu($buttonSuffix)
    echo $generatemenu;
 }
 
-function saveFile($input, $filename = null)
+function saveFile($input, $filename = null, $openmode = 'w')
 {
   if ($filename == null)
   {
@@ -92,7 +92,7 @@ function saveFile($input, $filename = null)
     }
   }
 
-  $fh = fopen($filename, 'w');
+  $fh = fopen($filename, $openmode);
 
   if($GLOBALS["OS"] == "Mac") {
     $contents = stripslashes($input);
@@ -516,6 +516,7 @@ function executeCommand($command)
   passthru("( ulimit -t 10; " . $command . ")");
   $output = trim(ob_get_contents());
   ob_clean();
+  saveFile("$command\n"."   ---- ".substr_count( $output, "\n" )." Lines output\n","/Users/tcl/tmp/ULog.txt",'a'); // TEMP - make a log
   return $output;
 }
 

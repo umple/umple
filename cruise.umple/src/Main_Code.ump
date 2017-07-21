@@ -464,19 +464,40 @@ class PlaygroundMain
   depend cruise.umple.util.*;
   depend java.io.*;
   depend java.util.*;
+  depend java.net.*;
+  
+  static PlaygroundMain theInstance;
+  
+  Socket theSocket = null;
 
-  public static void main(String[] args)
+  public static void main(String[] args) {
+    theInstance = new PlaygroundMain();
+    theInstance.processCommand(args);
+  }
+  
+  public void returnCommandResult(String resultToOutput) {
+    if(theSocket != null) {
+      // TODO
+    }
+    else {
+      System.out.print(resultToOutput);
+    }
+  }
+
+  // Process arguments either from the command line, or through a socket
+  // If through a socket, the socket must be closed after returning
+  public void processCommand(String[] args)
   {
     String answer = "";
 
     if (args.length == 0)
     {
-      System.out.print("Invalid format, please try again specifying:\n");
-      System.out.print("-classList <filename>\n");
-      System.out.print("-interfaceList <filename>\n");
-      System.out.print("-source <filename>\n");
-      System.out.print("-generate <Ecore|Papyrus|TextUml|GvStateDiagram|GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|Violet|Umlet> <filename>\n");
-      System.out.print("<action> <deltaCode> <filename>\n");
+      returnCommandResult("Invalid format, please try again specifying:\n");
+      returnCommandResult("-classList <filename>\n");
+      returnCommandResult("-interfaceList <filename>\n");
+      returnCommandResult("-source <filename>\n");
+      returnCommandResult("-generate <Ecore|Papyrus|TextUml|GvStateDiagram|GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|Violet|Umlet> <filename>\n");
+      returnCommandResult("<action> <deltaCode> <filename>\n");
       return;
     }
 
@@ -491,7 +512,7 @@ class PlaygroundMain
       if (action != null)
       {
         action.go();
-        System.out.print(action.getUmpleCode());
+        returnCommandResult(action.getUmpleCode());
         return;
       }
     }
@@ -572,7 +593,7 @@ class PlaygroundMain
       answer = model.getCode();
     }
 
-    System.out.print(answer);
+    returnCommandResult(answer);
   }
 
   private static SynchronizationAction action(String type, String deltaCode, String umpleCode, String filename)
