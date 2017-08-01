@@ -1820,6 +1820,13 @@ public class UmpleTraitTest {
 		
 	}
 	
+	@Test
+	public void stateMachineTraits0125Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0099.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(0).numberOfStates(),1);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(1).numberOfStates(),1);		
+	}
+	
 	// the last StateTest
 
 	// This is related to issue #656
