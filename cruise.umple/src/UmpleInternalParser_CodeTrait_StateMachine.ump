@@ -1075,29 +1075,27 @@ class UmpleInternalParser
         }
         if (checkNoneDeterminismAfterComposition(inSMachine1, inSMachine2, inUmpleClassifier, mainState) ) return;
         for (int i=0; i<state.numberOfNestedStateMachines();i++){
-        StateMachine comingSM = state.getNestedStateMachine(i);  
-          boolean equal = false;
+          StateMachine comingSM = state.getNestedStateMachine(i);  
+          StateMachine foundNSM = null;
           for(StateMachine comparingSM:mainState.getNestedStateMachines()){
-            if (compareStateMachineName(comparingSM, comingSM)){
-              equal = true;
+            if (comparingSM.getName().equals(comingSM.getName())){
+              foundNSM = comparingSM;
+               break;
             }
           }
-          if (!equal){
-            //
-            if (mainState.getNestedStateMachines().size()<=0){
-              mainState.addNestedStateMachine(state.getNestedStateMachine(0));
+            if (foundNSM==null){
+              mainState.addNestedStateMachine(comingSM);
+              i--;
             } else {
-              if (!mainState.getNestedStateMachine(0).getStartState().getName().equals(state.getNestedStateMachine(0).getStartState().getName())){
-                StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(mainState.getNestedStateMachine(0), state.getNestedStateMachine(0));
+              if (!foundNSM.getStartState().getName().equals(comingSM.getStartState().getName())){
+                StateMachine checkSM = mergeTwoStateMachineWithTheSameNameDifferentInitialState(foundNSM, comingSM);
                 getParseResult().addErrorMessage(new ErrorMessage(228,inUmpleClassifier.getPosition(0),mainState.getName()));
                 if (checkSM!=null ) mainState.addNestedStateMachine(checkSM); 
                 i--;
               } else {
-                addExtraStatesAndTransitions(mainState.getNestedStateMachine(0),state.getNestedStateMachine(0),inUmpleClassifier);
+                addExtraStatesAndTransitions(foundNSM,comingSM,inUmpleClassifier);
               }
             }
-            ////
-          }
         }        
       }  
     }
@@ -1169,8 +1167,8 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
 	private boolean checkNoneDeterminismAfterComposition(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassifier, State mainState) {
-    String n1 = inSMachine1.getUmpleClass() ==null ? inSMachine1.getUmpleTrait().getName() : inSMachine1.getUmpleClass().getName(); 
-    String n2 = inSMachine2.getUmpleClass() ==null ? inSMachine2.getUmpleTrait().getName() : inSMachine2.getUmpleClass().getName();
+    String n1 = inSMachine1.getRootStateMachine().getUmpleClass() ==null ? inSMachine1.getRootStateMachine().getUmpleTrait().getName() : inSMachine1.getRootStateMachine().getUmpleClass().getName();
+    String n2 = inSMachine2.getRootStateMachine().getUmpleClass() ==null ? inSMachine2.getRootStateMachine().getUmpleTrait().getName() : inSMachine2.getRootStateMachine().getUmpleClass().getName();
     for(int  i =0 ; i<mainState.numberOfTransitions()-1;i++){
       Transition tI= mainState.getTransition(i);
       if (tI.getAutoTransition() && tI.getGuard()== null && mainState.numberOfTransitions()>1) {
