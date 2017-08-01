@@ -102,6 +102,7 @@ class Documenter
         "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
         "<head>" + "\n" +
         "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
+        "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" + "\n" +        
         "  <link rel=\"stylesheet\" type=\"text/css\" href=\"files/layout.css\" />" + "\n" +
         "  <script type=\"text/javascript\" src=\"files/script.js\"></script>" + "\n" +
         "  <title>Umple Combined User Manual</title>" + "\n" +
@@ -558,6 +559,7 @@ class Template
         "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
         "<head>" + "\n" +
         "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
+        "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" + "\n" +
         "  <link rel=\"stylesheet\" type=\"text/css\" href=\"files/layout.css\" />" + "\n" +
         "  <script type=\"text/javascript\" src=\"files/script.js\"></script>" + "\n" +
         "  <title>Umple User Manual: @@TITLE@@</title>" + "\n" +
