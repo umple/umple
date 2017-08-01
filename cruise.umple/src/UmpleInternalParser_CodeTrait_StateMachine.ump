@@ -1039,11 +1039,11 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
   private void addExtraStatesAndTransitions(StateMachine inSMachine1, StateMachine inSMachine2, UmpleClassifier inUmpleClassifier) {
+    List<State> mustBeSet = new ArrayList<State>();
     for (State state : inSMachine2.getStates()) {
       State mainState = inSMachine1.findState(state.getName());
       if (mainState==null){
-        state.setStateMachine(inSMachine1);
-        changeTransitionNextState(inSMachine1.findState(state.getName()),inSMachine1);
+        mustBeSet.add(state);
       } else {
         checkSatifcationOfRequiredStates(state,inSMachine2);
         applyCompositionAndSuperKeywordToState(inSMachine1, inSMachine2, inUmpleClassifier, mainState, state);
@@ -1098,6 +1098,10 @@ class UmpleInternalParser
             }
         }        
       }  
+    }
+    for(State state : mustBeSet){
+        state.setStateMachine(inSMachine1);
+        changeTransitionNextState(inSMachine1.findState(state.getName()),inSMachine1);
     }
   }
 //---------------------------------end----------------------------------------
