@@ -1829,6 +1829,29 @@ public class UmpleTraitTest {
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(2).getState(0).getNestedStateMachine(0).getState(0).getTransition(0).getNextState().getName(),"s7");
 	}
 	
+	@Test
+	public void stateMachineTraits0126Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0100.ump");
+		
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(0).getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("runE();"));
+		Assert.assertTrue(str.contains("runB();"));		
+	}
+	
+	@Test
+	public void stateMachineTraits0127Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0101.ump");
+		
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("runE();"));
+		Assert.assertTrue(str.contains("runC();"));		
+	}
 	// the last StateTest
 
 	// This is related to issue #656

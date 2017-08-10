@@ -967,9 +967,9 @@ class CodeBlock
 	public void findKeywordAndReplace(String keyword, CodeBlock cBlock, StateMachine inStateMachine){
     if(keyword==null || keyword=="") return;
     for (String language : codes.keySet()) {
-    	String replacement=System.lineSeparator()+"\t\t//This part of code comes from the trait '"+inStateMachine.getUmpleTrait().getName()+"' -> begins"+System.lineSeparator()+"\t\t";
+    	String replacement=System.lineSeparator()+"\t\t//This part of code comes from the trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' -> begins"+System.lineSeparator()+"\t\t";
     	replacement = replacement+cBlock.codes.get(language).replace(keyword, "");
-    	replacement=replacement+System.lineSeparator()+"\t\t//The code coming from trait '"+inStateMachine.getUmpleTrait().getName()+"' ends here"+System.lineSeparator()+"\t\t";
+    	replacement=replacement+System.lineSeparator()+"\t\t//The code coming from trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' ends here"+System.lineSeparator()+"\t\t";
     	codes.put(language,codes.get(language).replace(keyword,replacement+keyword)) ;
     }
   } 
