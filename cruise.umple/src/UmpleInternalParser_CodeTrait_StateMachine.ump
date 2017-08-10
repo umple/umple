@@ -1792,19 +1792,13 @@ class StateMachine{
     {
       return null;
     }
-    for (State aState : states)
-    {
-      for (int i=0; i<aState.numberOfTransitions(); i++)
+    for (Transition aTransition  : getAllTransitions()) {
+      Event e = aTransition.getEvent();
+      if (e != null )
       {
-        Transition aTransition = aState.getTransition(i);
-        Event e = aTransition.getEvent();
-        if (e != null )
-        {
-          
-        	Method m = new Method("",e.getName(),e.getType(),false);
-        	m.setMethodParameters(e.getParams());
-        	if (m.compareWithTheMethod(inMethod))  return e;
-        }
+        Method m = new Method("",e.getName(),e.getType(),false);
+        m.setMethodParameters(e.getParams());
+        if (m.compareWithTheMethod(inMethod))  return e;
       }
     }
     return null;

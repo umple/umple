@@ -1,0 +1,19 @@
+trait T{
+  sm{
+    s1{
+      r1{
+        sr1{
+          gosr2 -> sr2;
+        }
+        sr2{
+          gosr1 -> sr1;
+        }
+      }
+    }
+    
+  }
+}
+
+class A{
+  isA T<sm.gosr2() as go2, sm.gosr1() as go1>;
+}
