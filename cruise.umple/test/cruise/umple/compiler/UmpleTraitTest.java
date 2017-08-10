@@ -1852,6 +1852,23 @@ public class UmpleTraitTest {
 		Assert.assertTrue(str.contains("runE();"));
 		Assert.assertTrue(str.contains("runC();"));		
 	}
+	
+	@Test
+	public void stateMachineTraits0128Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0102.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getTransition(0).getEvent().getName(),"go2");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(1).getTransition(0).getEvent().getName(),"go1");
+	}
+	
+	@Test
+	public void stateMachineTraits0129Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0103.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm1").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getTransition(0).getEvent().getName(),"go2");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm1").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(1).getTransition(0).getEvent().getName(),"go1");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm2").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getTransition(0).getEvent().getName(),"go2");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm2").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(1).getTransition(0).getEvent().getName(),"go1");
+
+	}
 	// the last StateTest
 
 	// This is related to issue #656
