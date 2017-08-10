@@ -1,0 +1,27 @@
+trait T{
+  sm{
+    s1{
+      s11{
+        entry /{runE();}
+          e12->s12;
+      }
+      s12{
+        
+        e11-> s11;
+      } 
+    }
+  }
+  
+}
+
+class A{
+  isA T;
+    sm{
+    s1{
+      s11{
+        entry /{ superCall; runB();}
+        }   
+      }
+    }
+  }
+}
