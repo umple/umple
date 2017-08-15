@@ -93,16 +93,30 @@ function saveFile($input, $filename = null, $openmode = 'w')
   }
 
   $fh = fopen($filename, $openmode);
-
-  if($GLOBALS["OS"] == "Mac") {
-    $contents = stripslashes($input);
+  if($fh === false) {
+    if(strpos($filename,"UmpleOnlineLog.txt") === FALSE) {
+      // The following is for DEBUG -- uncomment as needed
+      saveFile("\n* Unable to open file ".$filename." to write output; cwd= ".getcwd()."\n","/tmp/UmpleOnlineLog.txt",'a');
+    }
+    
+    echo "Not able to open file ".$filename." to write output; cwd= ".getcwd();
   }
   else {
-    $contents = $input;
-  }
+    if($GLOBALS["OS"] == "Mac") {
+      $contents = stripslashes($input);
+    }
+    else {
+      $contents = $input;
+    }
 
-  fwrite($fh, $contents);
-  fclose($fh);
+    $fwresult = fwrite($fh, $contents);
+    if($fwresult === false) {
+      echo "Unable to write to file ".filename." to write output; cwd= ".getcwd();
+    }
+    else {
+      fclose($fh);
+    }
+  }
   return $filename;
 }
 
@@ -487,6 +501,12 @@ function handleUmpleTextChange()
 {
   $action = $_REQUEST["action"];
   $input = $_REQUEST["umpleCode"];
+  
+  $rawActionCode = $_REQUEST["actionCode"];
+  if(!is_null($rawActionCode)){
+	  //Escape all the double quotes
+	  $rawActionCode = trim(str_replace("\"","\\\"",$rawActionCode));
+	}
 
   //Windows versus Linux PHP issues
   $actionCode = $GLOBALS["OS"] == "Windows" ? json_encode($_REQUEST["actionCode"]) : "\"" . $_REQUEST["actionCode"] . "\"";
@@ -503,21 +523,117 @@ function handleUmpleTextChange()
   }
 
   $filename = saveFile($input);
-  $umpleOutput = executeCommand("java -jar umplesync.jar -{$action} \"{$actionCode}\" {$filename}");
+  $umpleOutput = executeCommand("java -jar umplesync.jar -{$action} \"{$actionCode}\" {$filename}", "-{$action} \"{$rawActionCode}\" {$filename}");
   saveFile($umpleOutput,$filename);
   echo $umpleOutput;
   return;
 }
 
-function executeCommand($command)
+function executeCommand($command, $rawcommand = null)
 {
+  // The following is for DEBUG - uncomment as needed
+  saveFile("\n* ".$command."\n","/tmp/UmpleOnlineLog.txt",'a');
+
+  // Set the following to false to avoid the server; true means use server
+  // DEBUG - set this to false on order to avoid using the server
+  $useServerIfPossble=false;  // Will make true when feature activated
+  
   ob_start();
-  set_time_limit(0);
-  passthru("( ulimit -t 10; " . $command . ")");
+  if(substr($command,0,23) == "java -jar umplesync.jar" && $useServerIfPossble) {
+    serverRun(substr($command,24),$rawcommand);
+  }
+  else {
+    execRun($command);
+  }
   $output = trim(ob_get_contents());
   ob_clean();
-  saveFile("$command\n"."   ---- ".substr_count( $output, "\n" )." Lines output\n","/Users/tcl/tmp/ULog.txt",'a'); // TEMP - make a log
+
+  // The following is for DEBUG - uncomment as needed
+  saveFile($output,"/tmp/UmpleOnlineLatestOutput.txt",'w');
+  
+  saveFile("---- ".substr_count( $output, "\n" ).
+    " Lines output  characters ".strlen($output)."\n","/tmp/UmpleOnlineLog.txt",'a'); 
+
+
   return $output;
+}
+
+function execRun($command) {
+  set_time_limit(0);
+  passthru("( ulimit -t 10; " . $command . ")");
+}
+
+function serverRun($commandLine,$rawcommand=null) {
+
+  $originalCommandLine = $commandLine; // save in case we have to fall back to it
+  
+  // run on port 5556 if in a directory with 'test' as a substring, otherwise use 5555
+  $portnumber = 5555;
+  if(strpos(getcwd(),"test") !== false) {
+    $portnumber = 5556;
+  }
+  
+  // Some output is error output -- save to a file
+  $errorFile = null;
+  $positionOfErrorRedirect = strpos($commandLine,"2>");
+  if($positionOfErrorRedirect !== false) {
+    $errorfile = trim(substr($commandLine, $positionOfErrorRedirect+2));
+    $commandLine = substr($commandLine,0, $positionOfErrorRedirect);
+  }
+  
+  if($rawcommand == null) {$rawcommand = $commandLine;}
+  
+  // The following is for DEBUG purposes - uncomment as approproate
+  saveFile("serverRun raw [[".$rawcommand."]]\n  errorfile= ".$errorfile.
+    "\n","/tmp/UmpleOnlineLog.txt",'a');   
+
+  $theSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+  if($theSocket === FALSE) {
+    execRun("java -jar umplesync.jar ".$originalCommandLine);
+    return;
+  }
+  
+  $isSuccess= @socket_connect($theSocket, "Localhost",  $portnumber);
+  if($isSuccess === FALSE) {
+    // Do it by exec anyway this time, then start server
+    execRun("java -jar umplesync.jar ".$originalCommandLine);
+    exec("java -jar umplesync.jar -server ".$portnumber." > /dev/null 2>&1 &"); // Start the server for the next time
+    return;
+  }
+  
+  // Actually send to the server
+  $numBytesSent= socket_write($theSocket, $rawcommand);
+  if($numBytesSent === FALSE) {
+    execRun("java -jar umplesync.jar ".$originalCommandLine);
+    return;
+  }
+ 
+  $readMoreLines = TRUE;
+  socket_set_option($theSocket, SOL_SOCKET, SO_RCVTIMEO,array("sec"=>1,"usec"=>500000) );  
+  while ($readMoreLines === TRUE) {
+    $output = @socket_read($theSocket, 65534, PHP_BINARY_READ);
+    if ($output === FALSE) {
+      @socket_close($theSocket);;
+      execRun("java -jar umplesync.jar ".$originalCommandLine);
+      return;
+    }
+    if(strlen($output) == 0) {
+      $readMoreLines = FALSE;
+    }
+    else {
+      if(substr($output,0,7) == "ERROR!!") {
+        // The following one line is for DEBUG, uncomment as appropriate
+        saveFile("\n ERRORLOG* [[".substr($output,7)."]]\n","/tmp/UmpleOnlineLog.txt",'a');
+
+        savefile(substr($output,7),$errorfile);
+      }
+      else {
+        echo $output;
+      }
+    }
+    usleep(50000); // wait a little bit in case the server is sending more
+  }
+  socket_close($theSocket);
 }
 
 
