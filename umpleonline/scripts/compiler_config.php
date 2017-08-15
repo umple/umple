@@ -94,8 +94,9 @@ function saveFile($input, $filename = null, $openmode = 'w')
 
   $fh = fopen($filename, $openmode);
   if($fh === false) {
-    if(strpos($filename,"ULog.txt") === FALSE) {
-        saveFile("\n* Unable to open file ".$filename." to write output; cwd= ".getcwd()."\n","/Users/tcl/tmp/ULog.txt",'a');
+    if(strpos($filename,"UmpleOnlineLog.txt") === FALSE) {
+      // The following is for DEBUG -- uncomment as needed
+      saveFile("\n* Unable to open file ".$filename." to write output; cwd= ".getcwd()."\n","/tmp/UmpleOnlineLog.txt",'a');
     }
     
     echo "Not able to open file ".$filename." to write output; cwd= ".getcwd();
@@ -530,10 +531,11 @@ function handleUmpleTextChange()
 
 function executeCommand($command, $rawcommand = null)
 {
-  // The following is for debugging
-  saveFile("\n* ".$command."\n","/Users/tcl/tmp/ULog.txt",'a');
+  // The following is for DEBUG - uncomment as needed
+  saveFile("\n* ".$command."\n","/tmp/UmpleOnlineLog.txt",'a');
 
   // Set the following to false to avoid the server; true means use server
+  // DEBUG - set this to false on order to avoid using the server
   $useServerIfPossble=false;  // Will make true when feature activated
   
   ob_start();
@@ -546,9 +548,11 @@ function executeCommand($command, $rawcommand = null)
   $output = trim(ob_get_contents());
   ob_clean();
 
-  // The following is for debugging
-  saveFile($output,"/Users/tcl/tmp/LatestOutput.txt",'w');
-  saveFile("---- ".substr_count( $output, "\n" )." Lines output  characters ".strlen($output)."\n","/Users/tcl/tmp/ULog.txt",'a'); // TEMP - make a log
+  // The following is for DEBUG - uncomment as needed
+  saveFile($output,"/tmp/UmpleOnlineLatestOutput.txt",'w');
+  
+  saveFile("---- ".substr_count( $output, "\n" ).
+    " Lines output  characters ".strlen($output)."\n","/tmp/UmpleOnlineLog.txt",'a'); 
 
 
   return $output;
@@ -563,6 +567,12 @@ function serverRun($commandLine,$rawcommand=null) {
 
   $originalCommandLine = $commandLine; // save in case we have to fall back to it
   
+  // run on port 5556 if in a directory with 'test' as a substring, otherwise use 5555
+  $portnumber = 5555;
+  if(strpos(getcwd(),"test") !== false) {
+    $portnumber = 5556;
+  }
+  
   // Some output is error output -- save to a file
   $errorFile = null;
   $positionOfErrorRedirect = strpos($commandLine,"2>");
@@ -573,9 +583,9 @@ function serverRun($commandLine,$rawcommand=null) {
   
   if($rawcommand == null) {$rawcommand = $commandLine;}
   
-  // The following is for debugging
-  saveFile("serverRun raw [[".$rawcommand."]]\n  errorfile= ".$errorfile."\n","/Users/tcl/tmp/ULog.txt",'a'); // TEMP - make a log  
-  
+  // The following is for DEBUG purposes - uncomment as approproate
+  saveFile("serverRun raw [[".$rawcommand."]]\n  errorfile= ".$errorfile.
+    "\n","/tmp/UmpleOnlineLog.txt",'a');   
 
   $theSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
   if($theSocket === FALSE) {
@@ -583,11 +593,11 @@ function serverRun($commandLine,$rawcommand=null) {
     return;
   }
   
-  $isSuccess= @socket_connect($theSocket, "Localhost", 5555);
+  $isSuccess= @socket_connect($theSocket, "Localhost",  $portnumber);
   if($isSuccess === FALSE) {
     // Do it by exec anyway this time, then start server
     execRun("java -jar umplesync.jar ".$originalCommandLine);
-    exec("java -jar umplesync.jar -server 5555 > /dev/null 2>&1 &"); // Start the server for the next time
+    exec("java -jar umplesync.jar -server ".$portnumber." > /dev/null 2>&1 &"); // Start the server for the next time
     return;
   }
   
@@ -612,7 +622,9 @@ function serverRun($commandLine,$rawcommand=null) {
     }
     else {
       if(substr($output,0,7) == "ERROR!!") {
-  saveFile("\n ERRORLOG* [[".substr($output,7)."]]\n","/Users/tcl/tmp/ULog.txt",'a');
+        // The following one line is for DEBUG, uncomment as appropriate
+        saveFile("\n ERRORLOG* [[".substr($output,7)."]]\n","/tmp/UmpleOnlineLog.txt",'a');
+
         savefile(substr($output,7),$errorfile);
       }
       else {

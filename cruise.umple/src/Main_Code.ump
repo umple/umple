@@ -470,6 +470,8 @@ class PlaygroundMain
   depend java.io.*;
   depend java.util.*;
   depend java.net.*;
+  depend com.sun.management.OperatingSystemMXBean;
+  depend java.lang.management.*;
 
   Boolean isServer=false;
   int commandsRun = 0;
@@ -564,7 +566,12 @@ class PlaygroundMain
       if(isServer) {
           returnCommandResult("Number of commands run since start: "+commandsRun+"\n", client);      
           returnCommandResult("Last command: [[\n"+concatForLog(lastCommand)+"\n]]\n", client);      
-          returnCommandResult("Previous command: [[\n"+concatForLog(previousCommand)+"\n]]\n", client);      
+          returnCommandResult("Previous command: [[\n"+concatForLog(previousCommand)+"\n]]\n", client);
+          returnCommandResult("Port: "+getPort()+"\n", client);
+          returnCommandResult("Number of clients working: "+getClientConnections().length+"\n", client);
+          OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);         
+          returnCommandResult("CPU load of this JVM: "+osBean.getProcessCpuLoad()+"\n", client);   
+          returnCommandResult("CPU load overall: "+osBean.getSystemCpuLoad()+"\n", client);  
       }
       else {
         returnCommandResult("Not running as a server\n", client);        
@@ -575,7 +582,15 @@ class PlaygroundMain
     // Start a server to process a series of commands that can be controlled from Php
     if ("-server".equals(args[0])) {
       isServer = true;
+
+      // Start server on port 5556 if in a test environment, otherwise use port 5555
+      // Test environment means that the directory has 'test' in it
       int port = 5555;
+      if(System.getProperty("user.dir").contains("test")) {
+        port = 5556;
+      }
+      
+
       if(args.length >=2) {
         try {
          port = Integer.parseInt(args[1]);

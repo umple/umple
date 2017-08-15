@@ -5,6 +5,12 @@
     echo "Specify exec|server command ...\n";
     exit(0);
   }
+
+  // run on port 5556 if in a directory with 'test' as a substring, otherwise use 5555
+  $portnumber = 5555;
+  if(strpos(getcwd(),"test") !== false) {
+    $portnumber = 5556;
+  }  
   
   $argCount = 1;
   $commandLine = "";
@@ -13,7 +19,7 @@
     if ($argCount > 2) $commandLine = $commandLine . " ";
     $commandLine = $commandLine . $argv[$argCount];
   }
-  echo "Arguments to send to server: ".($argc-2)." <".$commandLine.">\n";
+  echo "Arguments to send to server on port ".$portnumber.": ".($argc-2)." <".$commandLine.">\n";
   
   if($argv[1] == "exec") {
     echo("using exec\n");
@@ -29,7 +35,7 @@
     return;
   }
   
-  $isSuccess= @socket_connect($theSocket, "Localhost", 5555);
+  $isSuccess= @socket_connect($theSocket, "Localhost", $portnumber);
   if($isSuccess === FALSE) {
     if(substr($commandLine,0,5) == "-quit") {
       echo("Server is already quit or will not allow to connect\n");
@@ -38,7 +44,7 @@
     
     // Do it by exec anyway this time, then start server
     exec("java -jar umplesync.jar ".$commandLine);
-    exec("java -jar umplesync.jar -server 5555 > /dev/null 2>&1 &"); // Start the server for the next time
+    exec("java -jar umplesync.jar -server ".$portnumber." > /dev/null 2>&1 &"); // Start the server for the next time
     echo("Executed by Exec and Restarted server for next time\n");
     exit(0);
   }
