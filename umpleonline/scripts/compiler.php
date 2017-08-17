@@ -407,6 +407,7 @@ function getErrorHtml($errorFilename, $offset = 1)
 
   if($errorMessage != "") 
   {
+     savefile("",$errorFilename); // Clean error so it is gone for next time
      $errInfo = jsonDecode($errorMessage);
      $errhtml = "<a href='#' id='errorClick'>Show/Hide errors and warnings</a>";
      $errhtml .= "<div id='errorRow' colspan='3' >";  // style='display:none'
