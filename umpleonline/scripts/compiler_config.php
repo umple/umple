@@ -96,7 +96,7 @@ function saveFile($input, $filename = null, $openmode = 'w')
   if($fh === false) {
     if(strpos($filename,"UmpleOnlineLog.txt") === FALSE) {
       // The following is for DEBUG -- uncomment as needed
-      saveFile("\n* Unable to open file ".$filename." to write output; cwd= ".getcwd()."\n","/tmp/UmpleOnlineLog.txt",'a');
+      // saveFile("\n* Unable to open file ".$filename." to write output; cwd= ".getcwd()."\n","/tmp/UmpleOnlineLog.txt",'a');
     }
     
     echo "Not able to open file ".$filename." to write output; cwd= ".getcwd();
@@ -532,11 +532,11 @@ function handleUmpleTextChange()
 function executeCommand($command, $rawcommand = null)
 {
   // The following is for DEBUG - uncomment as needed
-  saveFile("\n* ".$command."\n","/tmp/UmpleOnlineLog.txt",'a');
+  // saveFile("\n* ".$command."\n","/tmp/UmpleOnlineLog.txt",'a');
 
   // Set the following to false to avoid the server; true means use server
   // DEBUG - set this to false on order to avoid using the server
-  $useServerIfPossble=false;  // Will make true when feature activated
+  $useServerIfPossble=true;  // Set to false to deactivate the server feature
   
   ob_start();
   if(substr($command,0,23) == "java -jar umplesync.jar" && $useServerIfPossble) {
@@ -548,12 +548,9 @@ function executeCommand($command, $rawcommand = null)
   $output = trim(ob_get_contents());
   ob_clean();
 
-  // The following is for DEBUG - uncomment as needed
-  saveFile($output,"/tmp/UmpleOnlineLatestOutput.txt",'w');
-  
-  saveFile("---- ".substr_count( $output, "\n" ).
-    " Lines output  characters ".strlen($output)."\n","/tmp/UmpleOnlineLog.txt",'a'); 
-
+  // The following TWO LINES are for DEBUG - uncomment as needed
+  // saveFile($output,"/tmp/UmpleOnlineLatestOutput.txt",'w');
+  // saveFile("---- ".substr_count( $output, "\n" ). " Lines output  characters ".strlen($output)."\n","/tmp/UmpleOnlineLog.txt",'a'); 
 
   return $output;
 }
@@ -584,8 +581,7 @@ function serverRun($commandLine,$rawcommand=null) {
   if($rawcommand == null) {$rawcommand = $commandLine;}
   
   // The following is for DEBUG purposes - uncomment as approproate
-  saveFile("serverRun raw [[".$rawcommand."]]\n  errorfile= ".$errorfile.
-    "\n","/tmp/UmpleOnlineLog.txt",'a');   
+  // saveFile("serverRun raw [[".$rawcommand."]]\n  errorfile= ".$errorfile. "\n","/tmp/UmpleOnlineLog.txt",'a');   
 
   $theSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
   if($theSocket === FALSE) {
@@ -623,7 +619,7 @@ function serverRun($commandLine,$rawcommand=null) {
     else {
       if(substr($output,0,7) == "ERROR!!") {
         // The following one line is for DEBUG, uncomment as appropriate
-        saveFile("\n ERRORLOG* [[".substr($output,7)."]]\n","/tmp/UmpleOnlineLog.txt",'a');
+        // saveFile("\n ERRORLOG* [[".substr($output,7)."]]\n","/tmp/UmpleOnlineLog.txt",'a');
 
         savefile(substr($output,7),$errorfile);
       }
