@@ -1,0 +1,1728 @@
+/*******************************************************************************
+* Copyright (c) 2017 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
+namespace cruise.umple.cpp.gen;
+
+///////State machine specific///////////////////
+association { 0..1 GenClass timerOwner -- * GenStatemachine timerStatemachines;}
+association { 0..1 GenClass owner -- * GenStatemachine autoStatemachines;}
+association { 0..1 GenClass statemachineOwner -- * GenStatemachine statemachines;}
+association { 0..1 GenStatemachine owner -- * GenState states;}
+association { 0..1 GenState exitableOwner -- * GenState exitableStates;}
+class GenState{
+	state;
+	lazy Integer level;
+	key {state}
+}
+
+class GenStatemachine{
+	type;
+	name;
+	lazy Integer level;
+	key {name}
+}
+///////////////////////////////////////////////
+
+class GenSpecializedDefinition{
+	String content;
+	Integer priority= 0;
+}
+class GenClass{
+	//Cpp-specific
+	0..1 -- * GenSpecializedDefinition specializedDefinitions sorted {priority};
+	depend java.util.stream.Collectors;
+	String specializedDefinitions(){
+		return getSpecializedDefinitions().stream().map(GenSpecializedDefinition::getContent).collect(Collectors.joining(NL));
+	}
+	
+	activeObjectUIDT <<!unsigned int UID::uid = 0;!>>
+	emit activeObjectUID()(activeObjectUIDT);
+	
+	remoteParserDefinitionT <<!JSONParser *JSON::_parser = new JSONInternalParser();!>>
+	emit remoteParserDefinition()(remoteParserDefinitionT);
+	
+	windowsSocketDefinitionT <<!#ifdef WINDOWS_OS
+struct WindowsSocket windowsSocketInit;
+#endif!>>
+	emit windowsSocketDefinition()(windowsSocketDefinitionT);
+}
+class GenPackage{
+	//Cpp-specific
+	Boolean hasTemplate(String template) {
+		for(GenClass genClass: getClasses()){
+			if(genClass.isGeneratable()){
+				for(GenSpecializedDefinition specializedDefinition: genClass.getSpecializedDefinitions()){
+					if(template.equals(specializedDefinition.getContent())){
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	 List<UniqueGenBody> getAllPredefinitions(){
+		List<UniqueGenBody> all = new ArrayList<UniqueGenBody>();
+		GenPackage rootPackage = rootPackage();
+		for (GenPackage genPackage : rootPackage.allPackages()) {
+			for (UniqueGenBody body : genPackage.getPredefinitions()) {
+				if (!all.contains(body)) {
+					all.add(body);
+				}
+			}
+		}
+		return all;
+	}
+}
+
+
+class GenEnumEntry{
+	String name;
+	Integer priority= 0;
+	key {name}
+}
+
+class GenClass{
+	String enumerationString(){
+		String result= getEnumerations().stream().map(GenEnum::declaration).collect(Collectors.joining(NL+NL));
+		if(result.isEmpty()){
+			return result;
+		}
+		
+		return result+ NL;
+	}
+}
+
+association { 0..1 GenClass owner -- * GenEnum enumerations; }  
+class GenEnum{
+	String name;
+	String description= "ENUM";
+	0..1 -- * GenEnumEntry entries sorted {priority};
+	
+	String enclosure(){
+		return getOwner().getName()+ "_ENUM";
+	}
+	
+	//Below is Cpp-specific
+	String namespaceOpening(){
+		return enclosure()+ "_BEGIN";
+	}
+	
+	String namespaceClosing(){
+		return enclosure()+ "_END";
+	}
+	
+	String safeName(Boolean unique) {
+		String normalized= name.substring(0, name.length()-1);
+		if(unique){
+			String enclosure = enclosure();
+			if(!enclosure.isEmpty()){
+				normalized= enclosure+ "_"+ normalized;
+			}
+		}
+		return normalized;
+	}
+
+	String safeName() {
+		GenPackage genPackage = getOwner().getGenPackage();
+		String name= getName();
+		int count= 0;
+		
+		for(GenClass genClass: genPackage.getClasses()){
+			for(GenEnum genEnum: genClass.getEnumerations()){
+				String enumName = genEnum.getName();
+				if(genEnum.equals(this)){
+					return safeName(count>0);
+				}
+				
+				if(enumName.equals(name)){
+					count++;
+				}
+			}
+		}
+		
+		return safeName(count>0);
+	}
+	
+	depend java.util.stream.Collectors;
+	String entries(){
+		List<GenEnumEntry> entries = getEntries();
+		return entries.stream().map(entry->{
+	    	return entry.getName()+ "="+ entries.indexOf(entry);
+	    }).collect(Collectors.joining(", "));
+	}
+	
+	declarationT <<!<<#
+	String namespaceOpening= namespaceOpening();
+	String namespaceClosing= namespaceClosing();
+	String entries= entries();
+	String name= getName();
+	
+	String first= getEntry(0).getName();
+	String last= getEntry(numberOfEntries()-1).getName();
+
+#>><<=namespaceOpening>>
+class <<=name>>{
+
+	public:
+		typedef enum{<<=entries>>} enum_type;
+		
+		<<=name>>(<<#if(last != null && !last.isEmpty()){#>>enum_type val = <<=first>>): _val(val<<#}#>>){
+	    	<<#if(last.isEmpty()){#>>//Empty Enumeration<<#}#>><<#else{#>>assert(val <= <<=last>>);<<#}#>>
+		    }
+		
+		    operator enum_type() const {
+		        return _val;
+		    }
+		    
+		    operator int() { 
+	            return static_cast<int>(_val); 
+			}
+			
+			operator string() { 
+				switch (_val){<<#
+				for(GenEnumEntry entry: getEntries()){
+					String entryName= entry.getName();#>>
+					case <<=entryName>>: return "<<=entryName>>";
+<<#}#>>				
+					default:  return "[Unknown <<=description>> Type]";
+			}
+		}
+		
+	private:
+	    enum_type _val;
+};
+<<=namespaceClosing>>!>>
+		emit declaration()(declarationT);
+	
+	String callPath(){
+		String path= getOwner().getNamespace().replace(".", "::").replace("_", "::");
+		if(!path.isEmpty()){
+			path= "::"+ path;
+		}
+		
+		return path+"::"+ enclosure()+ "::" + getName();
+	}
+	
+	String callPathDefinition(Boolean unique){
+		String path= callPath();
+		String normalized= name.substring(0, name.length()-1);
+		if(unique){
+			String enclosure = enclosure();
+			if(!enclosure.isEmpty()){
+				normalized= enclosure+ "_"+ normalized;
+			}
+		}
+		return "#define "+ normalized+ "   " + path;
+	}
+	
+	String callNamespaceBegin(){
+		String enclosure= enclosure();
+		return "#define "+ enclosure+ "_BEGIN"+ "   namespace "+ enclosure+ "{";
+	}
+	
+	String callNamespaceEnd(){
+		String enclosure= enclosure();
+		return "#define "+ enclosure+ "_END"+ "   }";
+	}
+
+}
+
+class GenerationTemplate {
+  depend cruise.umple.core.GenerationPolicyRegistry;
+  depend java.util.stream.Collectors;
+  depend cruise.umple.cpp.utils.StringUtil;
+  
+  safeSetT <<!<<# if(value == null || value.isEmpty()){return sb;}#>><<=value>>!>> emit safeSet(String value)(safeSetT);
+  safeSetNLT <<!<<# if(value == null || value.isEmpty()){return sb;}#>><<=NL>><<=value>>!>> emit safeSetNL(String value)(safeSetNLT);
+  
+  immutable GenerationPolicyRegistry g;
+  const String BACK_SLASH= "\\";
+  
+  String join(String id, Object... element){
+    return this.getG().getValues(id, element).stream().map(Object::toString).collect(Collectors.joining("\n"));
+  }
+  
+  String string(String id, Object element){
+    return this.getG().getString(element, id);
+  }
+  
+ifConditionT <<!if(<<=condition>>){
+<<=StringUtil.indent(body,1)>>
+}!>>
+
+emit ifCondition(String condition, String body)(ifConditionT);
+
+}
+
+class GenPackage{
+	0..1 -- * GenDepend includes sorted {priority};
+	
+	String definitionString(){
+		List<String> definitions= new ArrayList<String>();
+		List<String> names= new ArrayList<String>();
+		for(GenPackage genPackage: allPackages()){
+			for(GenClass genClass: genPackage.getClasses()){
+				String namespaceOpening = genClass.callNamespaceBegin();
+		    	if(!namespaceOpening.isEmpty() && !definitions.contains(namespaceOpening)){
+		    		definitions.add(namespaceOpening);
+		    	}
+		    	
+		    	String namespaceClosing = genClass.callNamespaceEnd();
+				if(!namespaceClosing.isEmpty() && !definitions.contains(namespaceClosing)){
+		    		definitions.add(namespaceClosing);
+		    	}
+		    	
+		    	if(genClass.hasEnumerations()){
+		    		GenEnum first = genClass.getEnumeration(0);
+		    		definitions.add(first.callNamespaceBegin());
+		    		definitions.add(first.callNamespaceEnd());
+		    		for(GenEnum genEnum: genClass.getEnumerations()){
+		    			String enumName = genEnum.getName();
+		    			definitions.add(genEnum.callPathDefinition(names.contains(enumName)));
+		    			names.add(enumName);
+		    		}
+		    	}
+			}
+		}
+	    
+	    return definitions.stream().collect(Collectors.joining(NL));
+	}
+	
+	String namespaceDefinition(){
+		List<String> definitions= new ArrayList<String>();
+		for(GenPackage genPackage: allPackages()){
+			for(GenClass genClass: genPackage.getClasses()){
+		    	String namespaceOpening = genClass.namespace("_", null, "_BEGIN");
+		    	if(!namespaceOpening.isEmpty() && !definitions.contains(namespaceOpening)){
+		    		definitions.add(namespaceOpening);
+		    	}
+				
+				String namespaceClosing = genClass.namespace("_", null, "_END");
+				if(!namespaceClosing.isEmpty() && !definitions.contains(namespaceClosing)){
+		    		definitions.add(namespaceClosing);
+		    	}
+
+		    	if(genClass.hasEnumerations()){
+		    		GenEnum first = genClass.getEnumeration(0);
+		    		definitions.add(first.namespaceOpening());
+		    		definitions.add(first.namespaceClosing());
+		    	}
+		    }
+		}
+	    
+	    return definitions.stream().collect(Collectors.joining(NL));
+	}
+	
+	namespacesAndPredefinitionT <<!
+//------------------------------
+//NAMESPACES AND PREDEFINITIONS
+//------------------------------
+#ifdef __cplusplus
+<<=namespaceDefinition()>>
+#endif 
+
+!>>	emit namespacesAndPredefinition()(namespacesAndPredefinitionT);
+	
+	List<String> libraries(){
+		List<String> libraries= new ArrayList<String>();
+		for(GenDepend include: getIncludes()){
+			String namesapce= include.namespaceDeclaration();
+			if(namesapce!= null && !namesapce.isEmpty() && !libraries.contains(namesapce)){
+				libraries.add(namesapce);
+			}
+		}
+		
+		return libraries;
+	}
+	
+	List<String> includes(){
+		List<String> declarations= new ArrayList<String>();
+		
+		for(GenDepend include: getIncludes()){
+			declarations.add(include.declaration());
+		}
+		
+		return declarations;
+	}
+	
+	String fullIncludes(){
+		String all= libraryStatements();
+		String include= includeStatements();
+		return Arrays.asList(new String[]{all, include}).stream().collect(Collectors.joining(NL+ NL));
+	}
+	
+	libraryStatementsT <<!<<#
+	List<String> libraries= libraries();
+	if(libraries.isEmpty()){
+		return sb;
+	}
+#>>//------------------------
+//USED LIBRARIES
+//------------------------
+<<=libraries.stream().collect(Collectors.joining(NL))>>!>> emit libraryStatements()(libraryStatementsT);
+	
+	
+	includeStatementsT <<!<<#
+	List<String> includes= includes();
+	if(includes.isEmpty()){
+		return sb;
+	}
+#>>//------------------------
+//USED LIBRARIES
+//------------------------
+<<=includes.stream().collect(Collectors.joining(NL))>>!>> emit includeStatements()(includeStatementsT);
+	
+}
+
+association { 0..1 GenPackage parent -- * GenPackage children;}
+association { 0..1 GenPackage externalPackage -- * UniqueGenBody externalDefinitions sorted {priority};}
+
+class GenPackage{
+	lazy name;
+	lazy language;
+	lazy version;
+	String directory= "";
+	lazy project;
+	Integer priority= 0;
+	0..1 -- * GenClass classes sorted {priority};
+	0..1 -- * UniqueGenBody predefinitions sorted {priority};
+	
+	GenPackage getGenPackage(){
+		return this;
+	}
+	
+	GenClass classByName(String name){
+		return classByName(name, new ArrayList<GenClass>());
+	}
+	
+	GenClass classByName(String name, List<GenClass> visited){
+		if(name== null){
+			return null;
+		}
+		
+		for(GenClass genClass: this.getClasses()){
+			if(name.equals(genClass.getName())){
+				return genClass;
+			}
+		}
+		
+		for(GenPackage genPackage: this.getChildren()){
+			GenClass genClass= genPackage.classByName(name, visited);
+			if(genClass!= null){
+				return genClass;
+			}
+		}
+		
+		return null;
+	}
+	
+	GenPackage packageByName(String name){
+		if(name== null){
+			return null;
+		}
+		
+		return _packageByName(name);
+	}
+	
+	GenPackage _packageByName(String name){
+		if(name.equals(getName())){
+			return this;
+		}
+		
+		for(GenPackage genPackage: this.getChildren()){
+			GenPackage result= genPackage._packageByName(name);
+			if(result!= null){
+				return result;
+			}
+		}
+		
+		return null;
+	}
+	
+	String rootIncludeName(){
+		return rootPackage().getProject()+ "_Model";
+	}
+	
+	//Composite-structure specific
+	lazy Boolean requiresThread;
+	
+	Boolean hasRemoteClass(){
+		for(GenClass genClass: getClasses()){
+			if(genClass.getIsRemote()){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	crT <<!
+	!>> emit cr()(crT);
+	depend java.util.stream.Collectors; 
+	String externalDefinitions(reference){
+		if(reference == null){
+			return "";
+		}
+		
+		List<String> methods= new ArrayList<String>();
+		for(GenClass genClass: getClasses()){
+			if(genClass.isGeneratable()){
+				for(GenMethod genMethod: genClass.getMethods()){
+					if(reference.equals(genMethod.getExternalDefinition())){
+						String declaration = "  "+ genMethod.declaration();
+						if(!methods.contains(declaration)){
+							methods.add(declaration);
+						}
+					}
+				}
+			}
+		}
+		
+		return methods.stream().collect(Collectors.joining(NL));
+	}
+	
+	String externalIncompleteDefinitions(reference){
+		if(reference == null){
+			return "";
+		}
+		
+		List<String> incompletes= new ArrayList<String>();
+		for(GenClass genClass: getClasses()){
+			if(genClass.isGeneratable()){
+				for(GenMethod genMethod: genClass.getMethods()){
+					if(reference.equals(genMethod.getExternalDefinition())){
+						for(GenMethodParameter parameter: genMethod.getParameters()){
+							String incompleteDeclaration = new GenIncompleteDefinition(parameter.getCrudType()).declaration();
+							
+							if(!incompletes.contains(incompleteDeclaration)){
+								incompletes.add(incompleteDeclaration);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return incompletes.stream().collect(Collectors.joining(NL));
+	}
+	
+	nullImplementationT <<!//No Implementation in this context!>>
+	emit nullImplementation()(nullImplementationT);
+	
+	copyrightT <<!//PLEASE DO NOT EDIT THIS CODE
+//This code was generated using the UMPLE <<=getVersion()>> modeling language!>>
+	emit copyright()(copyrightT);
+}
+
+class GenConstructor{
+	0..1 -- * GenMethodParameter parameters;
+	0..1 -- * GenParentMethodParameter parentParameters;
+	* -- 1 GenClass owner;
+}
+
+class GenParentMethodParameter{
+	isA GenMethodParameter;
+}
+
+class GenInterface{
+	isA GenClass;	//TODO: Temp
+	after constructor{
+		setIsAbstract(true);
+	}
+}
+
+class GenClass{
+	lazy name;
+	Boolean generatable= true;
+	Integer priority= 0;
+	
+	Boolean isAbstract= false;
+	0..1 -- * GenMethod methods sorted {priority};
+	0..1 -- * GenField fields sorted {priority};
+	0..1 -- * GenComment comments sorted {priority};
+	0..1 -- * GenDepend dependencies sorted {priority};
+	0..1 -- * GenInterface interfaces sorted {priority};
+	
+	0..1 -- * GenClass children sorted {priority}; 
+	lazy GenClass parent;
+	
+	0..1 -- * GenBody predefinitions sorted {priority};
+	String predefinitions(){
+		return getPredefinitions().stream().map(GenBody::getBody).filter(s->!s.isEmpty()).collect(Collectors.joining(NL));
+	}
+	
+	//Composite-structure specific
+	lazy Boolean isRemote;
+	
+	after addChild {
+		if(aChild== null|| aChild.equals(this)){
+			return false;
+		}
+		aChild.setParentInternally(this);
+	}
+	
+	private void setParentInternally(GenClass parent) {
+		if(parent== null|| parent.equals(getParent())){
+			return;
+		}
+		
+		GenClass current= getParent();
+		if(current != null){
+			current.removeChild(this);
+		}
+		setParent(parent);
+	}
+	
+	GenEnum enumByName(String name){
+		if(name== null){
+			return null;
+		}
+		
+		for(GenEnum enumeration: this.getEnumerations()){
+			if(name.equals(enumeration.getName())){
+				return enumeration;
+			}
+		}
+		
+		return null;
+	}
+	
+	//Use methodByIdentifier in case of polymorphism
+	GenMethod methodByName(String name){
+		if(name== null){
+			return null;
+		}
+		
+		for(GenMethod method: this.getMethods()){
+			if(name.equals(method.getName())){
+				return method;
+			}
+		}
+		
+		return null;
+	}
+	
+	GenField fieldByName(String name){
+		if(name== null){
+			return null;
+		}
+		
+		for(GenField field: this.getFields()){
+			if(name.equals(field.getName())){
+				return field;
+			}
+		}
+		
+		return null;
+	}
+	
+	GenMethod methodByIdentifier(String identifier){
+		if(identifier== null){
+			return null;
+		}
+		
+		for(GenMethod method: this.getMethods()){
+			if(identifier.equals(method.identifier())){
+				return method;
+			}
+		}
+		
+		return null;
+	}
+	
+	String callNamespaceBegin(){
+		String namespace= getNamespace();
+		if(namespace== null || namespace.isEmpty()){
+			return namespace;
+		}
+		String normalized= namespace.replace("/", ".").replace("_", ".");
+		String[] splits = normalized.split("\\.");
+		String root= Arrays.asList(splits).stream().map(string-> "namespace "+ string + " {").collect(Collectors.joining(" "));
+		
+		String enclosure= namespaceEnclosure();
+		return "#define "+ enclosure+ "_BEGIN"+ "   "+ root;
+	}
+	
+	String callNamespaceEnd(){
+		String enclosure= namespaceEnclosure();
+		if(enclosure.isEmpty()){
+			return enclosure;
+		}
+		
+		String namespace= getNamespace();
+		String normalized= namespace.replace("/", ".").replace("_", ".");
+		String[] splits = normalized.split("\\.");
+		
+		return "#define "+ enclosure+ "_END"+ Arrays.asList(splits).stream().map(string-> "   }").collect(Collectors.joining(" "));
+	}
+	
+	List<GenClass> allParents() {
+		Set<GenClass> all= new HashSet<GenClass>();
+		List<GenClass> visited= new ArrayList<GenClass>();
+		return searchParents(this, visited, all);
+	}
+
+	List<GenClass> searchParents(GenClass genClass, List<GenClass> visited, Object all) {
+		if(!visited.contains(genClass)){
+			List<GenInterface> interfaces = genClass.getInterfaces();
+			((Set<GenClass>)all).addAll(interfaces);
+			
+			for(GenInterface _interface: interfaces){
+				searchParents(_interface, visited, all);
+			}
+			
+			GenClass parent = genClass.getParent();
+			if(parent != null){
+				((Set<GenClass>)all).add(parent);
+				searchParents(parent, visited, all);
+			}
+		}
+		
+		return new ArrayList<GenClass>((Set<GenClass>)all);
+	}
+	
+	MemberInitializer initializerByName(String name){
+		if(name== null){
+			return null;
+		}
+		
+		for(MemberInitializer memberInitializer: this.getMemberInitializers()){
+			if(name.equals(memberInitializer.getMember())){
+				return memberInitializer;
+			}
+		}
+		
+		return null;
+	}
+	
+	//TODO: GenHeaderDepend as mixin
+	depend java.util.stream.Collectors;
+	String emitComments(){
+		String results= getComments().stream().map(GenComment::getBody).collect(Collectors.joining(NL));
+		if(!results.isEmpty()){
+			results+= NL;
+		}
+		return results;
+	}
+	
+	0..1 -- * MemberInitializer memberInitializers sorted {priority};
+	0..1 -- * GenHeaderDepend headerDependencies sorted {priority};
+	0..1 -- * GenIncompleteDefinition incompletes sorted {priority};
+	0..1 -- * GenStruct structs sorted {priority};
+	depend cruise.umple.cpp.utils.StringUtil;
+	
+	String classDeclarations(){
+		GenClass parent = this.getParent();
+		List<GenInterface> interfaces =  this.getInterfaces();
+		List<String> declarations= new ArrayList<String>();
+		if(parent!= null){
+			declarations.add("public "+ parent.getName());
+		}
+		interfaces.stream().forEach(_interface-> declarations.add("public "+ _interface.getName()));
+		
+		if(isSingleton()){
+			declarations.add("public Singleton<"+ getName()+">");
+		}
+		
+		return declarations.stream().collect(Collectors.joining(", "));
+	}
+	
+	String memberInitializerString(GenMethod method){
+		if(this.hasMemberInitializers()){
+			return NL+ this.getMemberInitializers().stream().map(memberInitializer-> "\t\t"+ memberInitializer.declaration(method)).collect(Collectors.joining(","+NL));
+		}
+		return "";
+	}
+	
+typeIncludesT <<!
+//------------------------
+//<<=type.toUpperCase()>> INCLUDES
+//------------------------
+<<=includes>>!>>
+emit typeIncludes(String includes, String type)(typeIncludesT);
+	
+	namespaceDeclarationT <<!using namespace <<=_namespace>>;!>>
+	emit namespaceDeclaration(String _namespace)(namespaceDeclarationT);
+
+}
+
+class GenPriorities{
+	const Integer CRTITICAL= -3000;
+	const Integer VERY_HIGH= -2000;
+	const Integer HIGH= -1000;
+	const Integer NORMAL= 0;
+	const Integer LOW= 1000;
+	const Integer VERY_LOW= 2000;
+	const Integer EXTREMLY_LOW= 3000;
+}
+
+//class GenStereotype{
+//	String name;
+//	lazy Integer priority;
+//	key {name}
+//}
+//
+//class GenClass{
+//	
+//	GenMethod methodByStereotype(String name){
+//		if(name== null){
+//			return null;
+//		}
+//		
+//		for(GenMethod method: this.getMethods()){
+//			if(method.indexOfStereotype(new GenStereotype(name))>-1){
+//				return method;
+//			}
+//		}
+//		
+//		return null;
+//	}
+//}
+
+association { 0..1 GenClass owner -- * GenGroup attributeGroups sorted {priority};}
+class GenGroup{
+	name;
+	lazy Integer priority;
+	lazy String description;
+	lazy String implDescription;
+	key {name}
+}
+
+class GenMethod{
+	lazy GenGroup group;
+}
+
+class GenField{
+	lazy GenGroup group;
+	lazy Boolean isIdentifier;
+}
+
+class GenClass{
+	const String ATTRIBUTE_GROUP= "Attributes";
+	const String STATIC_ATTRIBUTE_GROUP= "Static Attribute";
+	const String ASSOCIATION_GROUP= "Associations";
+	const String AUTOUNIQUE_ATTRIBUTE_GROUP= "Autounique Attributes";
+	const String ENUM_GROUP= "State Machines";
+	
+	const String METHOD_GROUP= "Methods";
+	const String PREDEFINED_OPERATOR_GROUP= "Predefined Operators";
+	
+	const String STREAM_HELPER_GROUP= "Stream Helper Group";
+	const String CONSTRUCTOR_GROUP= "Constructor";
+	const String DESTRUCTOR_GROUP= "Destructor";
+	const String HELPER_GROUP= "Helper variables";
+	
+	const String GLOBAL_GROUP= "Global";
+	
+introCommentT <<!//------------------------
+//<<=comment.toUpperCase()>>
+//------------------------!>>
+emit introComment(String comment)(introCommentT);
+
+
+	after constructor{
+		GenGroup globalGroup = new GenGroup(GenClass.GLOBAL_GROUP);
+		globalGroup.setPriority(GenPriorities.HIGH-6);
+		globalGroup.setOwner(this);
+		globalGroup.setImplDescription(introComment(GenClass.GLOBAL_GROUP+ " implementation"));
+		
+		GenGroup constructorGroup = new GenGroup(GenClass.CONSTRUCTOR_GROUP);
+		constructorGroup.setPriority(GenPriorities.HIGH-5);
+		constructorGroup.setOwner(this);
+		constructorGroup.setDescription(introComment(GenClass.CONSTRUCTOR_GROUP));
+		constructorGroup.setImplDescription(introComment(GenClass.CONSTRUCTOR_GROUP+ " implementation"));
+		
+		GenGroup streamHelperGroup = new GenGroup(GenClass.STREAM_HELPER_GROUP);
+		streamHelperGroup.setPriority(GenPriorities.HIGH-4);
+		streamHelperGroup.setOwner(this);
+		streamHelperGroup.setDescription(introComment(GenClass.STREAM_HELPER_GROUP+ "declaration"));
+		streamHelperGroup.setImplDescription(introComment(GenClass.STREAM_HELPER_GROUP+ " implementation"));
+		
+		GenGroup predefinedOperatorGroup = new GenGroup(GenClass.PREDEFINED_OPERATOR_GROUP);
+		predefinedOperatorGroup.setPriority(GenPriorities.HIGH-3);
+		predefinedOperatorGroup.setOwner(this);
+		predefinedOperatorGroup.setDescription(introComment(GenClass.PREDEFINED_OPERATOR_GROUP));
+		predefinedOperatorGroup.setImplDescription(introComment(GenClass.PREDEFINED_OPERATOR_GROUP+ " implementation"));
+		
+		GenGroup helperGroup = new GenGroup(GenClass.HELPER_GROUP);
+		helperGroup.setPriority(GenPriorities.HIGH-3);
+		helperGroup.setOwner(this);
+		
+		GenGroup staticAttributeGroup = new GenGroup(GenClass.STATIC_ATTRIBUTE_GROUP);
+		staticAttributeGroup.setPriority(GenPriorities.HIGH-2);
+		staticAttributeGroup.setOwner(this);
+		staticAttributeGroup.setDescription(introComment(GenClass.STATIC_ATTRIBUTE_GROUP+"s"));
+		staticAttributeGroup.setImplDescription(introComment(GenClass.STATIC_ATTRIBUTE_GROUP+ " implementation"));
+		
+		GenGroup genGroup = new GenGroup(GenClass.ATTRIBUTE_GROUP);
+		genGroup.setPriority(GenPriorities.HIGH-1);
+		genGroup.setOwner(this);
+		
+		GenGroup associationGroup = new GenGroup(GenClass.ASSOCIATION_GROUP);
+		associationGroup.setPriority(GenPriorities.HIGH);
+		associationGroup.setOwner(this);
+		
+		GenGroup enumGroup = new GenGroup(GenClass.ENUM_GROUP);
+		enumGroup.setPriority(GenPriorities.NORMAL);
+		enumGroup.setOwner(this);
+		
+		GenGroup autouniqueGroup = new GenGroup(GenClass.AUTOUNIQUE_ATTRIBUTE_GROUP);
+		autouniqueGroup.setPriority(GenPriorities.NORMAL);
+		autouniqueGroup.setOwner(this);
+		
+		GenGroup methodGroup = new GenGroup(GenClass.METHOD_GROUP);
+		methodGroup.setOwner(this);
+		
+		GenGroup destructorGroup = new GenGroup(GenClass.DESTRUCTOR_GROUP);
+		destructorGroup.setPriority(GenPriorities.LOW+2);
+		destructorGroup.setOwner(this);
+		destructorGroup.setDescription(introComment(GenClass.DESTRUCTOR_GROUP));
+		destructorGroup.setImplDescription(introComment(GenClass.DESTRUCTOR_GROUP+ " implementation"));
+	}
+	
+	after setName{
+		getAttributeGroup(indexOfAttributeGroup(new GenGroup(GenClass.GLOBAL_GROUP))).setDescription("//"+ name+ " "+ GenClass.GLOBAL_GROUP); 
+		getAttributeGroup(indexOfAttributeGroup(new GenGroup(GenClass.ATTRIBUTE_GROUP))).setDescription("//"+ name+ " "+ GenClass.ATTRIBUTE_GROUP);
+		getAttributeGroup(indexOfAttributeGroup(new GenGroup(GenClass.ASSOCIATION_GROUP))).setDescription("//"+ name+ " "+ GenClass.ASSOCIATION_GROUP);
+		getAttributeGroup(indexOfAttributeGroup(new GenGroup(GenClass.ENUM_GROUP))).setDescription("//"+ name+ " "+ GenClass.ENUM_GROUP);
+		getAttributeGroup(indexOfAttributeGroup(new GenGroup(GenClass.AUTOUNIQUE_ATTRIBUTE_GROUP))).setDescription("//"+ name+ " "+ GenClass.AUTOUNIQUE_ATTRIBUTE_GROUP);
+		getAttributeGroup(indexOfAttributeGroup(new GenGroup(GenClass.HELPER_GROUP))).setDescription("//"+ name+ " "+ GenClass.HELPER_GROUP);
+	}
+}
+
+association { 0..1 GenMethod defaultBodyOwner -- * GenBody defaultImplementations;}
+association { 0..1 GenMethod method -- * GenConstraintCondition constraintConditions;}
+class GenMethod{
+	lazy String returnType;
+	lazy String name;
+	lazy Boolean isConstructor;
+	lazy Boolean isCore;
+	lazy Boolean userDefined;
+	Boolean isGeneratable= true;
+	String visibility= "private";
+	lazy Boolean isStatic;
+	lazy Boolean isAbstract;
+	Integer priority= 0;
+	
+	//0..1 -- * GenStereotype stereotypes;
+	* -- * GenMethodParameter parameters;	//A parameter can be owned by multiple methods in order to allow for one update in all places
+	0..1 -- * GenComment comment sorted {priority};
+	* -- * GenField relatedFields;
+	
+	0..1 -- * GenBody body sorted {priority};
+	
+	String identifier(){
+		 return getName()+ "_"+ getParameters().stream().map(GenMethodParameter::getType).collect(Collectors.joining("_"));
+	}
+	
+	//below Cpp-specific
+	depend java.util.stream.Collectors;
+	depend cruise.umple.cpp.utils.StringUtil;
+	
+	lazy String externalDefinition;
+	lazy Boolean isOperator;
+	lazy Boolean isVirtual;
+	lazy Boolean isInline;
+	lazy Boolean isPointer;
+	lazy Boolean isReference;
+	lazy Boolean isPure;
+	lazy Boolean isConstant;
+	lazy Boolean active;
+	lazy Boolean isHeader;
+	lazy Boolean normalize;
+	Boolean disableRemote= false;	//TODO: move
+	lazy Boolean isFriend;
+	
+	before getIsConstant{
+		if(normalize && !getGenClass().getIsRemote()){
+			return getGenClass().getGenPackage().isPrimitive(returnType);
+		}
+	}
+	
+	before getIsPointer{
+		if(normalize){
+			return getGenClass().getGenPackage().isPointer(returnType);
+		}
+	}
+	
+	String getNormalizedReturnType(){
+		String value= getReturnType();
+		if(normalize){
+			return getGenClass().getGenPackage().getNormalizedType(value);
+		}else if(getIsReference()){
+			return value+ "&";
+		}else if(getIsPointer()){
+			return value+ "*";
+		}
+		
+		return value;
+	}
+	
+	String getInitializerCall(){
+		String initializerString= getInitializerString();
+		if(initializerString!= null && !initializerString.isEmpty()){
+			return ":"+ initializerString;
+		}
+		
+		return "";
+	}
+	
+	String getInitializerString(){
+		return null;
+	}
+	
+	String parameters(){
+		return this.getParameters().stream().map(GenMethodParameter::declaration).collect(Collectors.joining(", "));
+	}
+	
+	String commentString(){
+		String string= this.getComment().stream().map(GenComment::getBody).collect(Collectors.joining(NL));
+		if(string.isEmpty()){
+			return string;
+		}
+		
+		return string+ NL;
+	}
+	
+	String bodyString(List<String> bodies){
+		if (numberOfBody() == 1 && !hasConstraintConditions()) {
+			GenBody genBody = this.getBody(0);
+			if (genBody instanceof GenAspectableReturnBody) {
+				return ((GenAspectableReturnBody) genBody).returnBody();
+			}
+			//return genBody.getBody();
+		}
+
+		GenAspectableReturnBody returnBody = getAspectableReturnBody();
+		addBody(GenBody.BEFORE, bodies);
+
+		if (returnBody != null) {
+			bodies.add(returnBody.assignBody());
+		}
+		
+		addBody(GenBody.PRE_BLOCK, bodies);
+		
+		List<String> wrapableBodies= new ArrayList<String>();
+		addBodyExceptFor(Arrays.asList(new String[]{GenBody.PRE_BLOCK, GenBody.BEFORE, GenBody.AFTER, GenBody.POST_BLOCK}), wrapableBodies);
+		dynamicBody(wrapableBodies);
+		addBody(GenBody.AFTER, wrapableBodies);
+		
+		if(hasConstraintConditions()){
+			GenConstraint genConstraint= new GenConstraint();
+			for(GenConstraintCondition condition: getConstraintConditions()){
+				genConstraint.addCondition(condition);
+			}
+			genConstraint.setInvert(false);
+			genConstraint.setBaseContent(wrapableBodies.stream().collect(Collectors.joining(NL)));
+			String constrainedCall= genConstraint.constraintCheckCall();
+			bodies.add(constrainedCall);
+		}else{
+			bodies.addAll(wrapableBodies);
+		}
+		
+		if (returnBody != null) {
+			bodies.add(returnBody.returnVariable());
+		}
+		
+		addBody(GenBody.POST_BLOCK, bodies);
+		
+		if(bodies.isEmpty()){
+			bodies.addAll(this.getDefaultImplementations().stream().map(GenBody::getBody).collect(Collectors.toList()));
+		}
+
+		return bodies.stream().collect(Collectors.joining(NL));
+	}
+	
+	void dynamicBody(List<String> bodies){
+		//For subclasses
+	}
+	
+	void addBody(String aspect, List<String> bodies) {
+		for (GenBody genBody : this.getBody()) {
+			if(genBody instanceof GenAspectableReturnBody == false && aspect.equals(genBody.getType())){
+				String body= genBody.getBody();
+				if(body != null){
+					bodies.add(body);
+				}
+			}
+		}
+	}
+	
+	void addBodyExceptFor(List<String> aspects, List<String> bodies) {
+		for (GenBody genBody : this.getBody()) {
+			if(genBody instanceof GenAspectableReturnBody == false && !aspects.contains(genBody.getType())){
+				String body= genBody.getBody();
+				if(body != null){
+					bodies.add(body);
+				}
+			}
+		}
+	}
+	  
+	GenAspectableReturnBody getAspectableReturnBody(){
+		 for (GenBody genBody : this.getBody()) {
+			if (genBody instanceof GenAspectableReturnBody) {
+				return (GenAspectableReturnBody) genBody;
+			}
+		}
+		return null;
+	}
+	
+	String owningClass(){	//TODO: rename
+		GenClass genClass= this.getGenClass();
+		if(genClass== null){
+			return null;
+		}
+		
+		return genClass.getName();
+	}
+	
+	indentT <<!<<=content>>!>>
+	emit indent(String content)(indentT);
+	
+declarationT <<!<<=commentString()>><<#if(isInline){#>>inline <<#
+	}#>><<#if(isFriend){#>>friend <<#}#>><<#if(isStatic)#>>static <<#if(_isVirtual){#>>virtual <<#}#>><<#if(returnType!= null && !returnType.isEmpty()){#>><<=getNormalizedReturnType()>> <<#}#>><<=name>>(<<=parameters()>>)<<#if(getIsConstant()){#>> const<<#
+	}if(_isPure){#>> = 0;<<#
+	}else if(isHeader){#>>{
+<<=_indent(2, new StringBuilder(), bodyString(new ArrayList<String>()))>>	
+}<<#}else{#>>;<<#}#>>!>>
+implementationT <<!<<=commentString()>><<#if(isInline){#>>inline <<#}#>><<#if(returnType!= null && !returnType.isEmpty()){#>><<=getNormalizedReturnType()>> <<#}#>><<#
+	if(!Visibilities.GLOBAL.equals(getVisibility()) && owner!= null && !owner.isEmpty()){#>><<=owner>>::<<#}#>><<=name>>(<<=parameters()>>)<<#if(getIsConstant()){#>> const<<#}#>><<=getInitializerCall()>>{
+<<=_indent(2, new StringBuilder(), bodyString(new ArrayList<String>()))>>	
+}!>>
+	
+	emit declaration(Boolean _isVirtual, Boolean _isPure)(declarationT);
+	emit implementation(String owner)(implementationT);
+	
+	String declaration(Boolean hasImplementation){
+		return declaration(!hasImplementation, !hasImplementation);
+	}
+	
+	String declaration(){
+		return declaration(isVirtual, isPure);
+	}
+	
+	String implementation(){
+		return implementation(externalDefinition== null?owningClass(): externalDefinition);
+	}
+}
+
+class GenMethodParameter{
+	String type;
+	String name;
+	
+	lazy Boolean normalize;
+	lazy String relatedField;
+	lazy Boolean isInherited;	//Used for constructor parameters, where parameter belongs to a parent
+	lazy String crudType;
+	
+	after constructor{ 
+		setCrudType(type);
+	} 
+	
+declarationT <<!<<#if(getIsConstant()){#>>const <<#}#>><<=getType()>><<#if(name != null && showName){#>> <<=name>><<#}#>>!>>
+	
+	emit declaration(Boolean showName)(declarationT);
+
+	String declaration(){
+		return declaration(true);
+	}
+
+	lazy Boolean isPointer;
+	lazy Boolean normalizedIsPointer;
+	after constructor{ 
+		setNormalizedIsPointer(isPointer);
+	}
+	after setIsPointer{ 
+		setNormalizedIsPointer(isPointer);
+	}
+	after getIsPointer{
+		if(normalize){
+			return getNormalizedIsPointer();
+		}
+	}
+	
+	lazy Boolean isReference;
+	lazy Boolean normalizedIsReference;
+	after constructor{ 
+		setNormalizedIsReference(isReference);
+	}
+	after setIsReference{ 
+		setNormalizedIsReference(isReference);
+	}
+	after getIsReference{
+		if(normalize){
+			return getNormalizedIsReference();
+		}
+	}
+	
+	lazy Boolean isConstant;
+	lazy Boolean normalizedIsConstant;
+	after constructor{ 
+		setNormalizedIsConstant(isConstant);
+	}
+	after setIsConstant{ 
+		setNormalizedIsConstant(isConstant);
+	}
+	after getIsConstant{
+		if(hasGenMethods()) {
+			GenClass genClass = getGenMethod(0).getGenClass();
+			if (genClass.getIsRemote()) {
+				if(genClass.getGenPackage().isPrimitive(type)){
+					return false;
+				}
+			}
+		}
+		
+		if(normalize){
+			return getNormalizedIsConstant();
+		}
+	}
+	
+}
+
+class GenMethodParameter{
+	after getType{
+		GenMethod method = hasGenMethods()?getGenMethod(0): null;
+		if(normalize){
+			if (method != null) {
+				return method.getGenClass().getGenPackage().getNormalizedType(aType);
+			}
+		}else{
+			if(getIsPointer()){
+				aType+= "*";
+			}else if(getIsReference()){
+				aType+= "&";
+			}
+		}
+	} 
+	
+	before getNormalizedIsConstant{
+		switch (type) {
+		case "Integer":
+		case "int":
+		case "String":
+		case "string":
+			return true;
+		default:
+			break;
+		}
+	}
+	
+	before getNormalizedIsReference{
+		switch (type) {
+		case "Integer":
+		case "int":
+		case "String":
+		case "string":
+			return true;
+		default:
+			break;
+		}
+	}
+	
+	before getNormalizedIsPointer{
+		if (type != null) {
+			GenMethod method = hasGenMethods()?getGenMethod(0): null;
+			if (method != null) {
+				return method.getGenClass().getGenPackage().isPointer(type);
+			}
+		}
+	}
+}
+
+class GenFieldGeneric{
+	String type;
+	Integer priority= 0;
+}
+
+class AbstractGenBody{
+	Integer priority= 0;
+	String body;
+	String type= "block";
+	abstract;
+	
+	crT <<!
+!>>	emit cr()(crT);
+	
+	depend java.util.ArrayList;
+	depend java.util.List;
+	depend java.util.stream.Collectors;
+	
+	before getBody{
+		List<GenBody> bodies= new ArrayList<GenBody>();
+		dynamicContent(bodies);
+		if(!bodies.isEmpty()){
+			if(body!= null && !body.isEmpty()){
+				bodies.add(new GenBody(body));
+			}
+			
+			return bodies.stream().map(GenBody::getBody).collect(Collectors.joining(NL));
+		}
+	}
+	
+	void dynamicContent(List<GenBody> bodies){
+		//For sub-classes
+	}
+}
+
+class GenBody{
+	const String PRE_BLOCK= "preBlock";	
+	const String BLOCK= "block";
+	const String BEFORE= "before";
+	const String AFTER= "after";
+	const String POST_BLOCK= "postBlock";
+	isA AbstractGenBody;
+}
+
+class GenAspectableReturnBody{
+	String variable;
+	String returnType;
+	String returnBody(){
+		 return "return "+ getBody()+ ";";
+	}
+	
+	String assignBody(){
+		return getReturnType()+ " "+ getVariable()+ "= "+  getBody()+ ";";
+	}
+	
+	String returnVariable(){
+		return "return "+ getVariable()+ ";";
+	}
+	
+	isA GenBody;
+}
+
+class GenComment{
+	isA AbstractGenBody;
+}
+
+class UniqueGenBody{
+	isA GenBody;
+	id;
+	key {id}
+	
+	after constructor{
+		if(id== null){
+			setId(getBody());
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Composite-structure-specific
+class GenEndpointPropagationBody{
+	isA NameHelper;
+	lazy parameterString;
+	lazy String name;
+	lazy String role;
+	lazy String type;
+	lazy String method;
+	depend cruise.umple.cpp.utils.StringUtil;
+	
+	String propagationBody(Boolean many){
+		return many? propagationBodyMany(): propagationBodySingle();
+	}
+	
+	propagationBodySingleT <<!<<# 
+	#>><<=name>>-><<=method>>(<<=parameterString>>);!>>
+	emit propagationBodySingle()(propagationBodySingleT);
+	
+	propagationBodyManyT <<!<<#
+	String getterCall= getInstance(role);
+	String instance= variableInstance(type);
+#>>for (unsigned int index=0; index<<<=name>>->size(); index++) {
+	<<=type>>* <<=instance>>= (*(<<=name>>))[index];
+	<<=instance>>-><<=method>>(<<=parameterString>>);
+}!>>
+	emit propagationBodyMany()(propagationBodyManyT);
+	
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//CPP-specfific
+class GenFieldInitializer{
+	String value;
+	Integer priority= 0;
+}
+
+class MemberInitializer{
+	depend java.util.stream.Collectors;
+	0..1 -- * GenFieldInitializer initializers;
+	String member;
+	Integer priority= 0;
+	
+	String declaration(GenMethod method){
+		return getMember()+ "("+ getInitializers().stream().map(GenFieldInitializer::getValue).collect(Collectors.joining(", "))+ ")";
+	}
+}
+
+class ActiveMemberInitializer{
+	depend java.util.stream.Collectors;
+	isA MemberInitializer;
+	GenActiveField activeField;
+	
+	String declaration(GenMethod method){
+		GenMethod relatedMethod = getActiveField().getRelatedMethod();
+	  	String name = relatedMethod.getName();
+	  	String baseName= relatedMethod instanceof ActiveGenMethd? ((ActiveGenMethd)relatedMethod).getBaseName(): name; 
+	  	
+	  	String string = getActiveField().getName()+ "(this, &_internalScheduler, &"+ method.getGenClass().getName()+"::_"+ baseName+ ")";
+		return string;
+	}
+}
+
+class SuperMemberInitializer{
+	depend java.util.stream.Collectors;
+	isA MemberInitializer;
+	
+	String declaration(GenMethod method){
+		List<String> collect = new ArrayList<String>();
+		if(method instanceof GenBaseConstructorMethod){
+			collect.addAll(((GenBaseConstructorMethod)method).getPrePolymorphicParameters().stream()
+					 .map(GenMethodParameter::getName).collect(Collectors.toList()));
+		}
+		 
+		collect.addAll(getInitializers().stream().map(GenFieldInitializer::getValue).collect(Collectors.toList()));
+		  
+		String string = getMember()+ "("+ collect.stream().collect(Collectors.joining(", "))+ ")";
+		return string;
+	}
+}
+
+class GenIncompleteDefinition{
+	value;
+	key {value}
+	Integer priority= 0;
+	
+declarationT <<!class <<=value>>;!>>
+
+	emit declaration()(declarationT);
+}
+
+class GenStruct{
+	lazy name;
+	Integer priority= 0;
+	0..1 -- * GenField fields;
+	0..1 -- * GenComment comments sorted {priority};
+	
+	indentT <<!<<=content>>!>>
+	emit indent(String content)(indentT);
+	
+declarationT <<!<<#if(hasComments()){for(GenComment comment: getComments()){#>><<=comment.getBody()>><<=NL>><<#}}#>>struct <<=name>>{
+<<#for(GenField field: getFields()){#>>
+<<=_indent(2, new StringBuilder(), field.declaration())>>
+<<#}#>>
+}
+!>>
+
+	emit declaration()(declarationT);
+
+	depend cruise.umple.cpp.utils.StringUtil;
+}
+
+class GenHeaderDepend{
+	isA GenDepend;
+}
+
+class GenerationTemplate {
+	
+	nullImplementationT <<!//No Implementation in this context!>>
+	emit nullImplementation()(nullImplementationT);
+	
+	returnStatementT <<!return <<=statement>><<#if(!wrapped)#>>;!>>
+	emit returnStatement(String statement, boolean wrapped)(returnStatementT);
+	
+
+ifConditionBlockT <<!if(<<#if(invert){#>>!(<<#}#>><<=condition>><<#if(invert){#>>)<<#}#>>){<<=block>>
+}!>>
+	emit ifConditionBlock(String condition, String block, boolean invert)(ifConditionBlockT);
+
+	assignStatementT <<!<<#if(type != null && !type.isEmpty()){#>><<=type>> <<#}#>><<=left>>= <<=right>>;!>>
+	emit assignStatement(String left, String right, String type)(assignStatementT);
+	
+	depend cruise.umple.modeling.handlers.IModelingConstants;
+	
+	depend cruise.umple.core.Generator;
+	
+	notEqualT <<!<<=left>> != <<=right>>!>>
+	emit notEqual(String left, String right)(notEqualT);
+	
+	attributeUseT <<!<<=left>><<#if(isPointer){#>>-><<#}#>><<#else{#>>.<<#}#>><<=right>><<#if(isStatement){#>>;<<#}#>>!>>
+	emit attributeUse(String left, String right, boolean isPointer, boolean isStatement)(attributeUseT);
+	
+	parameterAssignStatementT <<!<<=type>><<#if(isPointer){#>>*<<#}#>> <<=variable>>!>>
+	emit parameterAssignStatement(String type, String variable, boolean isPointer)(parameterAssignStatementT);
+	
+methodInvocationT <<!<<=methodName>>(<<=parameters>>)<<#if(isStatemenet){#>>;<<#}#>>!>>
+	emit methodInvocation(String methodName, String parameters, boolean isStatemenet)(methodInvocationT);
+
+	methodTodoStatementT <<!//TODO Add code body to <<=name>>!>>
+	emit methodTodoStatement(String name)(methodTodoStatementT);
+
+	
+	
+	definitionDeclarationT <<!//#define <<=definition>> <<=index>>
+!>>
+	emit definitionDeclaration(String definition, int index)(definitionDeclarationT);
+
+	enumValueT <<!<<=enumName>>=<<=enumValue>>!>>
+	emit enumValue(String enumName, int enumValue)(enumValueT);
+	
+	enumCaseStringT <<!case <<=caseValue>>: return "<<#if(caseDescription==null|| caseDescription.isEmpty()){#>><<=caseValue>><<#}#>><<#else{#>><<=caseDescription>><<#}#>>";!>>
+	emit enumCaseString(String caseValue, String caseDescription)(enumCaseStringT);
+
+}
+
+
+//Statemachine-specific
+class GenerationTemplate {
+
+	historyStateCheckT <<!if(<<=qualifiedName>>!= <<=qualifiedType>>::NIL){
+<<=qualifiedName>>H = <<=qualifiedName>>;
+}!>>
+	emit historyStateCheck(String qualifiedName, String qualifiedType)(historyStateCheckT);
+
+	statesSetterNameDefinitionT <<!set<<=StringUtil.firstCharacterToUpperCase(enumName)>>!>>
+	emit statesSetterNameDefinition(String enumName)(statesSetterNameDefinitionT);
+	
+doActivityBodyWrapT <<!<<=body>>
+Thread::sleep(1);
+!>>
+	emit doActivityBodyWrap(String body)(doActivityBodyWrapT);
+
+	statemachineFullPathT <<!get<<=StringUtil.firstCharacterToUpperCase(enumName)>>FullName!>>
+	emit statemachineFullPath(String enumName)(statemachineFullPathT);
+
+statemachineFullPathImplementationT <<!string answer = <<=statemachine>>;<<#if(body!= null && !body.isEmpty()){#>>
+<<=body>>
+<<#}#>>
+return answer;
+!>>
+	emit statemachineFullPathImplementation(String statemachine, String body)(statemachineFullPathImplementationT);
+
+statemachineFullPathSegmentT <<!
+if (<<=nestedTypeInstance>> != <<=nestedType>>::NIL) { 
+answer += "." + <<=nestedTypeInstance>>; 
+}
+!>>
+	emit statemachineFullPathSegment(String nestedType, String nestedTypeInstance)(statemachineFullPathSegmentT);
+
+	invokeStatesSetterDefinitionT <<!<<=setter>>(<<=type>><<#if(targetState!= null && !targetState.isEmpty()){#>>::<<=targetState>><<#}#>>);!>>
+	emit invokeStatesSetterDefinition(String setter, String type, String targetState)(invokeStatesSetterDefinitionT);
+
+	statemachineExitProcedureNameT <<!exit<<=StringUtil.firstCharacterToUpperCase(enumName)>>!>>
+	emit statemachineExitProcedureName(String enumName)(statemachineExitProcedureNameT);
+	
+	statemachineEnterProcedureNameT <<!enter<<=StringUtil.firstCharacterToUpperCase(enumName)>>!>>
+	emit statemachineEnterProcedureName(String enumName)(statemachineEnterProcedureNameT);
+	
+	procedureCallDeclarationT <<!<<=procedureName>>();!>>
+	emit procedureCallDeclaration(String procedureName)(procedureCallDeclarationT);	//TODO: Check generic
+
+	procedureCallAndCheckDeclarationT <<!wasEventProcessed= <<=procedureName>><<#if(isImvocation){#>>()<<#}#>>;!>>
+	emit procedureCallAndCheckDeclaration(String procedureName, boolean isImvocation)(procedureCallAndCheckDeclarationT);
+	
+enumDeclarationT <<!		
+enum <<=enumName>> { <<=values>> };
+!>>
+	emit enumDeclaration(String enumName, String values)(enumDeclarationT);	//TODO: Check generic
+
+	enumUseDeclarationT <<!<<=enumType>>::<<=value>>!>>
+	emit enumUseDeclaration(String enumType, String value)(enumUseDeclarationT);
+
+statemachineMethodImplementationT <<!bool wasEventProcessed = false;
+<<=body>>
+return wasEventProcessed;
+!>>
+	emit statemachineMethodImplementation(String body)(statemachineMethodImplementationT);
+
+statusSetterDefinitionT <<!		
+void <<=setter>>(<<=enumName>> a<<=enumName>>);
+!>>
+	emit statusSetterDefinition(String setter, String enumName)(statusSetterDefinitionT);
+
+statemachineExitProcedureDeclarationT <<!		
+bool <<=exitProcedureName>>();
+!>>
+	emit statemachineExitProcedureDeclaration(String exitProcedureName)(statemachineExitProcedureDeclarationT);
+
+statemachineExitProcedureImplementationT <<!		
+bool <<=owner>><<=exitProcedureName>>(){
+bool wasEventProcessed = false;
+<<=body>>
+return wasEventProcessed;
+}
+!>>
+	emit statemachineExitProcedureImplementation(String exitProcedureName, String owner, String body)(statemachineExitProcedureImplementationT);
+
+statemachineEntryExitProcedureStateImplementationT <<!	
+switch((int)<<=stateName>>){<<=StringUtil.indent(body,1)>>
+
+    default:
+        // Other states do respond to this event
+        break;
+}
+
+!>>
+	emit statemachineEntryExitProcedureStateImplementation(String stateName, String body)(statemachineEntryExitProcedureStateImplementationT);
+
+statemachineNestedStateBodyT <<!if(<<=enumVariable>>== <<=enumName>>::<<=enumState>>){
+<<=setterName>>(<<=enumName>>::<<=enumNextState>>);
+}
+!>>
+	emit statemachineNestedStateBody(String enumVariable, String enumState, String enumName, String setterName, String enumNextState)(statemachineNestedStateBodyT);
+
+	setterSwitchCommentT <<!// entry actions and do activities!>>
+	emit setterSwitchComment()(setterSwitchCommentT);
+	
+	threadInstanceT <<!<<=StringUtil.firstCharacterToLowerCase(name)>>Thread!>>
+	emit threadInstance(String name)(threadInstanceT);
+	
+doActivityMediatorImplementationT <<!<<=name>>* thisPtr = static_cast<<<=name>>*>(thisVoidPtr);
+thisPtr-><<=doActivity>>();!>>
+	emit doActivityMediatorImplementation(String name, String doActivity)(doActivityMediatorImplementationT);
+
+	doActivityMethodInstanceT <<!doActivity<<=StringUtil.firstCharacterToUpperCase(name)>>!>>
+	emit doActivityMethodInstance(String name)(doActivityMethodInstanceT);
+	
+doActivityFunctionPointerImplementationT <<!this-><<=threadInstance>> = new Thread(&<<=owner>>::<<=functionPointer>>, this, "<<=functionPointer>>");
+this-><<=threadInstance>>->start();
+!>>
+	emit doActivityFunctionPointerImplementation(String owner, String functionPointer, String threadInstance)(doActivityFunctionPointerImplementationT);
+
+doActivityFunctionWrapT <<!{
+<<=StringUtil.indent(threadInstance,1)>>
+}!>>
+	emit doActivityFunctionWrap(String threadInstance)(doActivityFunctionWrapT);
+
+statemachineThreadUseDeclarationT <<!<<#if(threadCallback!= null && !threadCallback.isEmpty()){#>>
+if (<<=threadCallback>> != NULL) { 
+<<=threadCallback>>->stop(); 
+}
+<<#}#>>!>>
+	emit statemachineThreadUseDeclaration(String threadCallback)(statemachineThreadUseDeclarationT);
+
+	enumVariablePlaceholderDeclarationT <<!<<=shortenedType>> a<<=enumType>>= <<=name>>;!>>
+	emit enumVariablePlaceholderDeclaration(String shortenedType, String enumType, String name)(enumVariablePlaceholderDeclarationT);
+
+enumVariableAssignmentDefinitionT <<!		
+<<=enumType>> a<<=enumType>>= <<=name>>;
+!>>
+	emit enumVariableAssignmentDefinition(String name, String enumType)(enumVariableAssignmentDefinitionT);
+	
+statemachineSwitchCaseDeclarationT <<!
+case <<=enumType>>::<<=sourceState>>:
+<<=StringUtil.indent(body,1)>>
+    break;
+
+!>>
+	emit statemachineSwitchCaseDeclaration(String enumType, String sourceState, String body)(statemachineSwitchCaseDeclarationT);
+
+	statemachineProcessedCaseT <<!wasEventProcessed = true;!>>
+	emit statemachineProcessedCase()(statemachineProcessedCaseT);
+
+}
+
+class GenerationTemplate{
+	isA NameHelper;
+	depend cruise.umple.cpp.utils.StringUtil;
+	depend cruise.umple.modeling.handlers.IModelingElementDefinitions;
+}
+
+//STL-specific
+class GenerationTemplate{
+	defaultTimeAssignT <<!new time_t(time(NULL))!>> emit defaultTimeAssign()(defaultTimeAssignT);
+	defaultDateAssignT <<!new tm(*localtime(&t))!>> emit defaultDateAssign()(defaultDateAssignT);
+	
+	dateAssignT <<!ParseDate(<<=value>>)!>> emit dateAssign(String value)(dateAssignT);
+	timeAssignT <<!ParseTime(<<=value>>)!>> emit timeAssign(String value)(timeAssignT);
+	
+	currentTimeReferenceT <<!time_t t(time(NULL)); 	//current time!>> emit currentTimeReference()(currentTimeReferenceT);
+	
+}
+
+
+//Test-specifid
+class GenerationTemplate{
+	
+testFileStartT <<!<<=copyRight>>
+#ifndef <<=fullName>>_H
+#define <<=fullName>>_H
+
+#ifdef PRAGMA
+#pragma once
+#ifndef _MSC_VER
+#pragma interface "<<=testFile>>.h"
+#endif
+#endif
+<<=startContents>>
+
+void <<=testMethod>>(){
+
+!>>
+	emit testFileStart(String copyRight, String fullName, String testFile, String startContents, String testMethod)(testFileStartT);
+	String testFileStart(Object element, String startContents, String testFile, testMethod){
+		String copyRight= ""; //this.getG().getString(element, IModelingConstants.COPY_RIGHT);
+		String fullName= testFile.toUpperCase();
+		
+		return this.testFileStart(copyRight, fullName, testFile, startContents, testMethod);
+	}
+	
+testFileEndT <<!
+}
+
+#endif
+!>>
+	emit testFileEnd(String nameAsVariable, String body)(testFileEndT);
+	
+	assertGetterT <<!assert(<<=instance>>-><<=getterMethod>>(<<=parameters>>)<<#if(operator== null || operator.isEmpty()){#>>==<<#}#>><<#else{#>><<=operator>><<#}#>> <<=value>>);!>>
+	emit assertGetter(String instance, String getterMethod, String value, String parameters, String operator)(assertGetterT);
+	
+	methodCallT <<!<<=instance>>-><<=method>>(<<=value>>)<<#if(!notStatement){#>>;<<#}#>>!>>
+	emit methodCall(String instance, String method, String value, boolean notStatement)(methodCallT);
+}
+
+
+//Umple-specific
+class GenerationTemplate{
+	
+	String resetName(String name){
+		return "reset"+ StringUtil.firstCharacterToUpperCase(name, true);
+	}
+	
+	String defaultName(String name){
+		return "getDefault"+ StringUtil.firstCharacterToUpperCase(name, true);
+	}
+	
+	String nextName(String name){
+		return "next"+ StringUtil.firstCharacterToUpperCase(name, true);
+	}
+	
+resetImplementationT <<!this-><<=name>>= <<=defaultGetter>>();
+wasReset = true;!>>
+	emit resetImplementation(String name, String defaultGetter)(resetImplementationT);
+	
+setterCanSetCheckT <<!if(!this-><<=nameAsVariable>>) { 
+	return false; 
+}
+this-><<=nameAsVariable>>= false;!>>
+	emit setterCanSetCheck(String nameAsVariable)(setterCanSetCheckT);
+}

@@ -23,7 +23,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import cruise.umple.compiler.AssociationEnd;
 import cruise.umple.compiler.AssociationVariable;
@@ -54,15 +56,16 @@ import cruise.umple.compiler.UmpleClassifier;
 import cruise.umple.compiler.UmpleElement;
 import cruise.umple.compiler.UmpleInterface;
 import cruise.umple.compiler.UmpleModel;
+import cruise.umple.compiler.UmpleTrait;
 import cruise.umple.compiler.UmpleVariable;
 import cruise.umple.core.CommonConstants;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
 import cruise.umple.core.GenerationValueAnnotation;
+import cruise.umple.cpp.gen.Visibilities;
 import cruise.umple.cpp.util.UmpleCPPGenerationUtil;
 import cruise.umple.cpp.utils.StringUtil;
 import cruise.umple.modeling.handlers.IModelingElementDefinitions;
-import cruise.umple.modeling.handlers.VisibilityConstants;
 import cruise.umple.parser.Position;
 
 public class UmpleModelGenerationPolicy{
@@ -102,6 +105,11 @@ public class UmpleModelGenerationPolicy{
 	public static String getFileName(@GenerationBaseElement UmpleModel model) {
 		String fileName = model.getUmpleFile().getFileName();
 		return fileName.substring(0, fileName.lastIndexOf(CommonConstants.DOT));
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.FILE_NAME)
+	public static String getFile(@GenerationBaseElement UmpleModel model) {
+		return model.getUmpleFile().getFileName();
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.FILE_PATH)
@@ -176,15 +184,15 @@ public class UmpleModelGenerationPolicy{
 				
 				String code = codeInjection.getCode();
 				String languageSpecificCode = codeInjection.getSnippet().getCode(langauge);
-				if(languageSpecificCode!= null){
+				if(languageSpecificCode!= null && !languageSpecificCode.isEmpty()){
 					if(positionsString!= null){
 						languageSpecificCode= positionsString+ CommonConstants.NEW_LINE+ languageSpecificCode;
 					}
 					codes.add(languageSpecificCode);
 				}else{
-					if(code!= null){
+					if(code!= null && !code.isEmpty()){
 						if(positionsString!= null){
-							code= code+ CommonConstants.NEW_LINE+ code;
+							code= positionsString+ CommonConstants.NEW_LINE+ code;
 						}
 						codes.add(code);
 					}
@@ -209,6 +217,11 @@ public class UmpleModelGenerationPolicy{
 	public static List<String> getLineNumbers(@GenerationBaseElement UmpleElement element, @GenerationLoopElement UmpleModel modelPackage,
 			String language) {
 		return UmpleCPPGenerationUtil.getPositions(element.getPositions(), language, element, modelPackage);
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.POSITIONS)
+	public static List<String> getLineNumbers(@GenerationBaseElement UmpleElement element) {
+		return element.getPositions().stream().map(position-> String.valueOf(position.getLineNumber())).collect(Collectors.toList());
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.LINE_NUMBERS)
@@ -274,12 +287,17 @@ public class UmpleModelGenerationPolicy{
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.SINGULAR_NAME)
 	public static String getSingularName(@GenerationLoopElement UmpleModel modelPackage, String name){
-		return modelPackage.getGlossary().getSingular(name);
+		return modelPackage == null? name: modelPackage.getGlossary().getSingular(name);
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.PLURAL_NAME)
 	public static String getPluralName(@GenerationLoopElement UmpleModel modelPackage, String name){
 		return modelPackage.getGlossary().getPlural(name);
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.IS_PLURAL)
+	public static boolean isPlural(@GenerationLoopElement UmpleModel modelPackage, String name){
+		return modelPackage.getGlossary().getPlural(name).equals(name);
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.USE)
@@ -310,28 +328,39 @@ public class UmpleModelGenerationPolicy{
 	private static List<ConstraintAttribute> getConstraintAttributes(UmpleClass element) {
 		List<ConstraintAttribute> constraintAttributes= new ArrayList<ConstraintAttribute>();
 		for(ConstraintTree tree: element.getConstraintTrees()){
-			getConstraintAttributes(tree, null, constraintAttributes, new ArrayList<ConstraintOperator>());
+			getConstraintAttributes(tree, null, constraintAttributes, new ArrayList<ConstraintVariable>());
 		}
 		return constraintAttributes;
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS_FOR_ATTRIBUTE)
-	public static List<ConstraintOperator> constraintsForAttribute(@GenerationBaseElement Attribute attribute){
-		List<ConstraintOperator> constraintTrees= new ArrayList<ConstraintOperator>();
-		for(ConstraintTree tree: attribute.getUmpleClass().getConstraintTrees()){
-			getConstraintAttributes(tree, attribute, new ArrayList<ConstraintAttribute>(), constraintTrees);
+	public static List<ConstraintVariable> constraintsForAttribute(@GenerationBaseElement Attribute attribute){
+		List<ConstraintVariable> constraintTrees= new ArrayList<ConstraintVariable>();
+		
+		UmpleClass umpleClass = attribute.getUmpleClass();
+		if(umpleClass!= null){
+			for(ConstraintTree tree: umpleClass.getConstraintTrees()){
+				getConstraintAttributes(tree, attribute, new ArrayList<ConstraintAttribute>(), constraintTrees);
+			}
+		}
+		
+		UmpleTrait umpleTrait = attribute.getUmpleTrait();
+		if(umpleTrait != null){
+			for(ConstraintTree tree: umpleTrait.getConstraintTrees()){
+				getConstraintAttributes(tree, attribute, new ArrayList<ConstraintAttribute>(), constraintTrees);
+			}
 		}
 		
 		return constraintTrees;
 	}
 
 	private static List<ConstraintAttribute> getConstraintAttributes(ConstraintVariable variable, Attribute attribute,
-			List<ConstraintAttribute> constraintAttributes, List<ConstraintOperator> constraintTrees) {
+			List<ConstraintAttribute> constraintAttributes, List<ConstraintVariable> constraintTrees) {
 		return getConstraintAttributes(variable, attribute, constraintAttributes, constraintTrees, new ArrayList<Object>(), null);
 	}
 
 	private static List<ConstraintAttribute> getConstraintAttributes(ConstraintVariable variable, Attribute attribute, 
-			List<ConstraintAttribute> constraintAttributes, List<ConstraintOperator> constraintTrees, ArrayList<Object> visited, ConstraintOperator carryout) {
+			List<ConstraintAttribute> constraintAttributes, List<ConstraintVariable> constraintTrees, ArrayList<Object> visited, ConstraintOperator carryout) {
 		if(visited.contains(variable)){
 			return constraintAttributes;
 		}
@@ -347,7 +376,7 @@ public class UmpleModelGenerationPolicy{
 			constraintAttributes.add(constraintAttribute);
 			
 			if(attribute== null|| attribute.equals(constraintAttribute.getAttribute())){
-				constraintTrees.add(carryout);
+				constraintTrees.add(carryout== null? constraintAttribute: carryout);
 			}
 		}else if(variable instanceof ConstraintOperator){
 			ConstraintOperator constraintOperator= (ConstraintOperator) variable;
@@ -426,6 +455,22 @@ public class UmpleModelGenerationPolicy{
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS)
 	public static List<ConstraintVariable> constraintExpressions(@GenerationBaseElement ConstraintTree element){
 		return Arrays.asList(new ConstraintVariable[]{((ConstraintTree)element).getRoot()});
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.NAMES)
+	public static List<String> names(@GenerationBaseElement ConstraintTree element){
+		return element.getNames().stream().collect(Collectors.toList());
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.NAMES)
+	public static List<String> names(@GenerationBaseElement ConstraintOperator element){
+		List<String> names= new ArrayList<String>();
+		for(ConstraintVariable constraintVariable: element.getSubConstraints()){
+			if(constraintVariable instanceof ConstraintTree){
+				names.addAll(((ConstraintTree)constraintVariable).getNames());
+			}
+		}
+		return names;
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSION_TYPE)
@@ -555,20 +600,20 @@ public class UmpleModelGenerationPolicy{
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.ELEMENT_VISIBILITY)
 	public static String getElementVisibility(@GenerationBaseElement Object element){
 		if(element instanceof Attribute){
-			return ((Attribute)element).isConstant()? VisibilityConstants.PUBLIC: VisibilityConstants.PRIVATE;
+			return ((Attribute)element).isConstant()? Visibilities.PUBLIC: Visibilities.PRIVATE;
 		}else if(element instanceof Method){
 			String modifier = ((Method) element).getModifier();
-			if(modifier.contains(VisibilityConstants.PUBLIC)){
-				return VisibilityConstants.PUBLIC;
-			}else if(modifier.contains(VisibilityConstants.PRIVATE)){
-				return VisibilityConstants.PRIVATE;
-			}else if(modifier.contains(VisibilityConstants.PROTECTED)){
-				return VisibilityConstants.PROTECTED;
+			if(modifier.contains(Visibilities.PUBLIC)){
+				return Visibilities.PUBLIC;
+			}else if(modifier.contains(Visibilities.PRIVATE)){
+				return Visibilities.PRIVATE;
+			}else if(modifier.contains(Visibilities.PROTECTED)){
+				return Visibilities.PROTECTED;
 			}
-			return VisibilityConstants.PUBLIC;
+			return Visibilities.PUBLIC;
 		}else if(element instanceof UmpleElement){
 			//TODO (Discussion): Return public static for all cases
-			return VisibilityConstants.PUBLIC;
+			return Visibilities.PUBLIC;
 		}
 		return null;
 	}
@@ -677,6 +722,11 @@ public class UmpleModelGenerationPolicy{
 		return associationVariable.getRelatedAssociation().getName();
 	}
 	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.OTHER_END_NAME)
+	public static String getOtherEndName(@GenerationBaseElement Attribute attribute){
+		return attribute.getName();
+	}
+	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.OWNER_NAME)
 	public static String getOwenrName(@GenerationBaseElement Object element){
 		if(element instanceof AssociationVariable){
@@ -693,6 +743,8 @@ public class UmpleModelGenerationPolicy{
 			return UmpleCPPGenerationUtil.getCommentStrings(((AssociationVariable)element).getComments());
 		}else if(element instanceof UmpleClass){
 			return UmpleCPPGenerationUtil.getCommentStrings(((UmpleClass)element).getComments());
+		}else if(element instanceof UmpleInterface){
+			return UmpleCPPGenerationUtil.getCommentStrings(((UmpleInterface)element).getComments());
 		}else if(element instanceof Method){
 			return UmpleCPPGenerationUtil.getCommentStrings(((Method)element).getComments());
 		}else if(element instanceof Attribute){
@@ -718,11 +770,31 @@ public class UmpleModelGenerationPolicy{
 		return element.getExtendsClass();
 	}
 	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.PARENT_CLASS)
+	public static Object getParentClass(@GenerationBaseElement Attribute attribute){
+		return attribute.getUmpleClass();
+	}
+	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.DEFAULT_VALUE)
 	public static String getDefaultValue(@GenerationBaseElement Attribute attribute, String language){
 		String code = attribute.getCodeblock().getCode(language);
 		if(code!= null){
-			return code;
+			code= code.trim();
+			if(!code.isEmpty()){
+				return code;
+			}
+		}
+		return attribute.getValue();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.VALUE)
+	public static String getValue(@GenerationBaseElement Attribute attribute, String language){
+		String code = attribute.getCodeblock().getCode(language);
+		if(code!= null){
+			code= code.trim();
+			if(!code.isEmpty()){
+				return code;
+			}
 		}
 		return attribute.getValue();
 	}
@@ -736,6 +808,11 @@ public class UmpleModelGenerationPolicy{
 	public static boolean isStatic(@GenerationBaseElement Method method){
 		String modifier = method.getModifier();
 		return modifier!= null && modifier.contains("static");  //$NON-NLS-1$
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.IS_ABSTRACT)
+	public static boolean isAbstract(@GenerationBaseElement Method method){
+		return method.getIsAbstract();
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.IS_CONSTANT)
@@ -843,23 +920,28 @@ public class UmpleModelGenerationPolicy{
 		return attribute.isIsAutounique();
 	}
 	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.IS_DISTRIBUTABLE)
+	public static boolean isDistributable(@GenerationBaseElement UmpleClassifier ckassifier){
+		return ckassifier.getIsDistributable();
+	}
+	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_LIST)
-	public static List<String> processConstraintsExpressions(@GenerationBaseElement ConstraintVariable constraint){
-		return expressions(constraint);
+	public static List<String> processConstraintsExpressions(@GenerationBaseElement ConstraintVariable constraint, Boolean check){
+		return expressions(constraint, check);
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS_CONTENTS)
-	public static String processConstraintsExpressionString(@GenerationBaseElement ConstraintVariable constraint){
-		return expressionToString(constraint);
+	public static String processConstraintsExpressionString(@GenerationBaseElement ConstraintVariable constraint, Boolean check){
+		return expressionToString(constraint, check); 
 	}
 	
-	public static String expressionToString(ConstraintVariable element) {
+	public static String expressionToString(ConstraintVariable element, boolean check) {
 		String expressionString = "";
 		if (element == null){
 			return expressionString;
 		}
 		
-		for(String expression: expressions(element)){
+		for(String expression: expressions(element, check)){
 			if (isOperator(expression)){
 				expressionString += " " + expression + " ";
 			}else{
@@ -877,11 +959,11 @@ public class UmpleModelGenerationPolicy{
 		return OPERATORS.contains(operator);
 	}
 
-	public static List<String> expressions(ConstraintVariable element) {				
-		return add(element, new ArrayList<String>()); 
+	public static List<String> expressions(ConstraintVariable element, boolean check) {				
+		return add(element, new ArrayList<String>(), check); 
 	}
 	
-	private static List<String> add(ConstraintVariable element, List<String> expressions) {
+	private static List<String> add(ConstraintVariable element, List<String> expressions, boolean check) {
 		if(element == null){
 			return expressions;
 		}
@@ -894,24 +976,27 @@ public class UmpleModelGenerationPolicy{
 			
 			if( root instanceof ConstraintOperator ){
 				ConstraintOperator constraintRoot = (ConstraintOperator )root;
-				for( String node : searchOperator(constraintRoot) ){
+				for( String node : searchOperator(constraintRoot, check)){
 					expressions.add(node);
 				}
 			} else if(root instanceof ConstraintTree  ) {
 				ConstraintTree rootTree = (ConstraintTree) root;
 				
 				addOpen(expressions, rootTree);
-				expressions.addAll(add(rootTree.getRoot(), new ArrayList<String>()));
+				expressions.addAll(add(rootTree.getRoot(), new ArrayList<String>(), check));
 				addEnd(expressions, rootTree);
 			}else if(constraintTree.getNumberOfElements()== 1){
-				expressions.add(constraintTree.getNames().first());
+				TreeSet<String> names = constraintTree.getNames();
+				if(!names.isEmpty()){
+					expressions.add(names.first());
+				}
 			}
 				
 			addEnd(expressions, constraintTree);
 		}
 		
 		if( element instanceof ConstraintOperator ){
-			expressions.addAll(searchOperator((ConstraintOperator)element));
+			expressions.addAll(searchOperator((ConstraintOperator)element, check));
 		}
 				
 		if( element instanceof ConstraintNamed ){
@@ -941,10 +1026,10 @@ public class UmpleModelGenerationPolicy{
 		}
 	}
 	
-	private static List<String> searchOperator( ConstraintOperator operator) {
+	private static List<String> searchOperator(ConstraintOperator operator, boolean check) {
 		List<String> expressions = new ArrayList<String>();
 		ConstraintVariable left, right= null;
-		if(operator.getRight() instanceof ConstraintTree && ((ConstraintTree)operator.getRight()).getRoot() instanceof ConstraintPort){
+		if(check|| operator.getRight() instanceof ConstraintTree && ((ConstraintTree)operator.getRight()).getRoot() instanceof ConstraintPort){
 			//Temp hack until fixing why the order of constraints come wrong in port constraints
 			left = operator.getRight();
 			right = operator.getLeft();
@@ -953,7 +1038,7 @@ public class UmpleModelGenerationPolicy{
 			right = operator.getRight();
 		}
 		
-		add(left, expressions);
+		add(left, expressions, check);
 		
 		if( operator != null ) {
 			if( operator .getValue().equals("object==") ){
@@ -965,7 +1050,7 @@ public class UmpleModelGenerationPolicy{
 			}
 		}
 		 
-		add(right, expressions);
+		add(right, expressions, check);
 				
 		return expressions;
 	}

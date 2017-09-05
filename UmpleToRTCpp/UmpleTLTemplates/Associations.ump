@@ -1,0 +1,1417 @@
+/*******************************************************************************
+* Copyright (c) 2017 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
+class GenClass{
+	hashCodeImplementationT <<!return reinterpret_cast<size_t>(this);!>>
+	emit hashCodeImplementation()(hashCodeImplementationT);
+}
+
+class GenAssociationEnd{
+	String name;
+	String type;
+	String role;
+	String roles;
+	Boolean navigable;
+	
+	lazy Integer lowerBound;
+	lazy Integer upperBound;
+	
+	lazy GenAssociation association;
+}
+
+class GenAssociationEnd{
+	Boolean useMinimum= {lowerBound>0 && isNavigable()}
+	Boolean useMaximum= {upperBound>1 && upperBound!=-1 && isNavigable()}
+	
+	Boolean many= {upperBound==-1|| upperBound>1}
+	Boolean optional= {upperBound==1&& lowerBound==0}
+	Boolean rangedOptional= {upperBound>1&& upperBound!=-1&& lowerBound==0&& upperBound!=lowerBound}	//0..1 -- 0..4 Relation1;
+	Boolean rangedUnbound= {upperBound==-1&& lowerBound>=1}		//0..1 -- 1..* Relation6;
+	Boolean rangedMandatory= {upperBound>1&& upperBound!=-1&& lowerBound>0&& upperBound!=lowerBound}	//0..1 -- 1..4 Relation5;	0..1 -- 2..4 Relation7;   	Not:	0..1 -- 1..* Relation6; 
+	Boolean one= {upperBound==1&& lowerBound==1}
+	Boolean fixed= {upperBound>1&& lowerBound== upperBound}		//Looking for whatever -- 4; whatever -- 8; not: whatever -- 1; whatever -- *
+	Boolean unbound= {upperBound==-1&& lowerBound==0}
+	Boolean directed= {!navigable}
+}
+
+class GenAssociation{
+	String name= {source.getName()}
+	Boolean useMinimum= {source.isUseMinimum()}
+	Boolean useMaximum= {source.isUseMaximum()}
+	
+	Boolean removeCheckEmpty= {target.isOne() && source.isNavigable()}
+	Boolean _removeCheckExistence(){
+		if(!source.isNavigable()){
+			return false;
+		}
+		
+		if(source.isDirected() || source.isRangedOptional()|| source.isRangedUnbound()|| source.isFixed()|| source.isUnbound()){
+			return target.isRangedOptional()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound();
+		}
+		return false;
+	}
+	Boolean removeCheckExistence= {_removeCheckExistence()}
+	
+	Boolean _removeCheckNullify(){
+		if(source.isDirected()){
+			return false;
+		}
+		
+		if(source.isRangedOptional()|| source.isUnbound()){
+			return target.isOptional();
+		}
+		return false;
+	}
+	Boolean removeCheckNullify= {_removeCheckNullify()}
+
+	Boolean _removeNullifyInternally(){
+		if(source.isDirected()){
+			return false;
+		}
+		
+		if(source.isRangedUnbound()|| source.isRangedMandatory()){
+			return target.isOptional();
+		}
+		
+		return false;
+	}
+	Boolean removeNullifyInternally= {_removeNullifyInternally()}
+	
+	0..1 -- * GenComment comments sorted {priority};
+	depend java.util.stream.Collectors;
+	String emitComments(){
+		return this.getComments().stream().map(GenComment::getBody).collect(Collectors.joining(NL));
+	}
+	
+	lazy String value;
+	lazy Boolean constant;
+	lazy Boolean autounique;
+	lazy Boolean immutable;
+	lazy Boolean derived;
+	lazy Boolean internal;
+	lazy Boolean defaulted;
+	lazy Boolean isStatic;
+	lazy Boolean isSorted;
+	lazy Boolean isLazy;
+	
+	Boolean isKey= {sortKey != null && !sortKey.isEmpty()}
+	
+	String normalizedName(){
+		return source.isMany()?source.getRoles():source.getRole();
+	}
+	
+	Boolean isSettable(){
+		if(isConstant() || isIsStatic() || isInternal() || (isImmutable() && !isIsLazy())){
+			return false;
+		}
+		
+		return true;
+	}
+	
+	Boolean isGettable(){
+		if(getInternal() || getIsStatic() || isConstant()){
+			return false;
+		}
+		
+		return true;
+	}
+	
+	String comparatorId(){
+		return comparatorId(source.getType(), getSortKey());
+	}
+}
+
+class GenClass{
+	lazy Boolean singleton;
+}
+
+association { 0..1 GenClass owner -- * GenAssociation associations; }
+
+class GenClass{
+	GenAssociation associationByName(String name){
+		 if(name== null){
+			 return null;
+		 }
+		 
+		 for(GenAssociation association: getAssociations()){
+	    	if(name.equals(association.getSource().getName()+association.getTarget().getName())){
+	    		return association;
+	    	}
+		 }
+		 
+		 return null;
+	}
+}
+
+class GenAssociation{
+	baseComparatorT <<!<<#
+	String key= getSortKey();
+	String fieldGetter = getInstance(key, getOwner().getIsRemote());
+	String comparatorName= comparatorId();
+	String type= getSource().getType();
+	#>>
+struct <<=comparatorName>> : public std::binary_function<<<=type>>*, <<=type>>*, bool>{
+	bool operator()(<<=type>>* Right, <<=type>>* Left) const{  
+		return Right-><<=fieldGetter>>() < Left-><<=fieldGetter>>();
+	}
+};!>>
+emit baseComparator()(baseComparatorT);
+}
+
+class GenAssociation{
+	isA NameHelper;
+	lazy GenAssociationEnd source;
+	lazy GenAssociationEnd target;
+	
+	Boolean many= {getSource().isMany()}
+	
+	GenClass getTargetClass(){
+		return getOwner().getGenPackage().classByName(getTarget().getType());
+	}
+	
+	GenClass getSourceClass(){
+		return getOwner().getGenPackage().classByName(getSource().getType());
+	}
+	
+	lazy sortKey;
+}
+
+class GenAssociation{
+	lazy binding;
+	lazy bindingParameters;
+	//const String BindingNotificationMany= "bindingNotificationMany";
+	//const String BindingNotificationSingle= "bindingNotificationSingle";
+	
+	String getBindingNotificationBody(){
+		if(source.isMany()){
+			return bindingNotificationMany();
+		}
+		
+		return bindingNotificationSingle();
+	}
+	
+	String normalizedType(){
+		return normalizedType(source.isMany());
+	}
+	
+	String normalizedType(Boolean isMany){
+		//TODO: externalize. Move it to GenPackage and use it by other classes
+		String type= getOwner().getGenPackage().getNormalizedType(source.getType());
+		if(isMany){
+			if(sortKey != null && !sortKey.isEmpty()){
+				return "set<"+ type+ ", "+ getOwner().getGenPackage().comparatorId(source.getType(), sortKey)+">*";
+			}
+			
+			return "vector<"+ type+ ">*";
+		}
+		
+		return type;
+	}
+	
+bindingNotificationManyT <<!<<#
+String name= source.getRoles();
+String instance= copyOfInstance(name);
+String type= source.getType();
+String getMethodName= getInstance(name, getOwner().getIsRemote());
+
+#>>vector<<<=type>>*>* <<=instance>> = this-><<=getMethodName>>();
+for (unsigned int index=0; index<<<=instance>>->size(); index++) {
+	<<=type>>* a<<=type>>= (*(<<=instance>>))[index];
+	a<<=type>>-><<=binding>>(<<=bindingParameters>>);
+}
+!>>	emit bindingNotificationMany()(bindingNotificationManyT);
+
+
+bindingNotificationSingleT <<!<<#
+String name= source.getName();
+String type= source.getType();
+String role= source.getRole();
+String instance= variableInstance(role);
+String getMethodName= getInstance(name, getOwner().getIsRemote());
+
+#>><<=type>>* <<=instance>>= this-><<=getMethodName>>();
+<<=instance>>-><<=binding>>(<<=bindingParameters>>);
+!>>	emit bindingNotificationSingle()(bindingNotificationSingleT);
+
+}
+
+//List handlers (vector vs set); cpp-specific
+class GenAssociation{
+	
+	removeVectorElementT <<!<<=variable>>->erase(<<=variable>>->begin()+<<=indexVariable>>);!>>
+	emit removeVectorElement(String variable, String indexVariable)(removeVectorElementT);
+
+	removeSetElementT <<!<<=variable>>->erase((<<=type>>*)GetAt(<<=variable>>->begin(), <<=indexVariable>>));!>>
+	emit removeSetElement(String variable, String indexVariable, String type)(removeSetElementT);
+	
+	String removeElement(Integer numSpaces, String variable, String indexVariable, String type){
+		if(sortKey != null && !sortKey.isEmpty()){
+			return this._removeSetElement(numSpaces, new StringBuilder(), variable, indexVariable, type).toString();
+		}
+		
+		return this._removeVectorElement(numSpaces, new StringBuilder(), variable, indexVariable).toString();
+	}
+	
+	
+	addVectorCallT <<!<<#if(indexParameter== null){#>><<=fullName>>->push_back(<<=parameter>>);<<#
+		}#>><<#else{#>><<=fullName>>->insert(<<=fullName>>->begin()+ <<=indexParameter>>, <<=parameter>>);<<#}#>>!>>
+	emit addVectorCall(String fullName, String parameter, String indexParameter)(addVectorCallT);
+	
+	addSetCallT <<!<<=fullName>>->insert(<<=parameter>>);!>>
+	emit addSetCall(String fullName, String parameter)(addSetCallT);
+	
+	String addCall(Integer numSpaces, String fullName, String parameter, String indexParameter){
+		if(sortKey != null && !sortKey.isEmpty()){
+			return this._addSetCall(numSpaces, new StringBuilder(), fullName, parameter).toString();
+		}
+		
+		return this._addVectorCall(numSpaces, new StringBuilder(), fullName, parameter, indexParameter).toString();
+	}
+	
+	removeAllVectorElementsT <<!for(vector<<<=type>>*>::iterator _<<=type>>iterator = <<=removeList>>->begin();
+	_<<=type>>iterator != <<=removeList>>->end();_<<=type>>iterator++) {
+	<<=fullName>>->erase(std::remove(<<=fullName>>->begin(), <<=fullName>>->end(), *_<<=type>>iterator), <<=fullName>>->end());
+}!>>
+	emit removeAllVectorElements(String type, String fullName, String removeList)(removeAllVectorElementsT);
+		
+	removeAllSetElementsT <<!<<#
+	String comparatorId= comparatorId(type, getSortKey());
+
+#>>set<<<=type>>*, <<=comparatorId>>>::iterator _<<=type>>iterator;
+<<=fullName>>->erase(<<=removeList>>->begin());!>>
+	emit removeAllSetElements(String type, String fullName, String removeList)(removeAllSetElementsT);
+	
+	String removeAllElements(Integer numSpaces, String type, String fullName, String removeList){
+		if(sortKey != null && !sortKey.isEmpty()){
+			return this._removeAllSetElements(numSpaces, new StringBuilder(), type, fullName, removeList).toString();
+		}
+		
+		return this._removeAllVectorElements(numSpaces, new StringBuilder(), type, fullName, removeList).toString();
+	}
+}
+
+class GenAssociation{
+
+	deleteSafelyClearAndRemoveT <<!<<#
+	String name= source.getName();
+	String copyCall= copyCall();
+	String otherRole= target.getRole();
+	String removeMethodName= removeInstance(otherRole, getOwner().getIsRemote());
+	
+	String type= source.getType();
+	String instance= variableInstance(type);
+	
+	String role= source.isMany()?source.getRoles():source.getRole();
+	String getterCall= getterCall(2, "0", instance, copyOfInstance(role));
+
+#>><<=copyCall>>
+this-><<=name>>->clear();
+
+while(this-><<=name>>->size()>0){
+<<=getterCall>>
+	<<=instance>>-><<=removeMethodName>>(this);
+}!>>
+		emit deleteSafelyClearAndRemove()(deleteSafelyClearAndRemoveT);
+	
+	deleteNullifyAllBySettersT <<!<<#
+	String name= source.getName();
+	String type= source.getType();
+	String instance= variableInstance(type);
+	String getterCall= getterCall(2, "0", instance, null);
+	String setterMethodName= setInstance(target.getRole(), getOwner().getIsRemote());
+#>>while(this-><<=name>>->size()>0){
+<<=getterCall>>
+	<<=instance>>-><<=setterMethodName>>(NULL);
+}!>>
+	emit deleteNullifyAllBySetters()(deleteNullifyAllBySettersT);
+	
+	String friendMethodName(){
+		return "set"+ source.getType()+ "_"+ target.getType();
+	}
+	
+	deleteUseInternalSetterT <<!<<#
+	String name= source.getName();
+	String type= source.getType();
+	String instance= variableInstance(type);
+	String getterCall= getterCall(2, "0", instance, null);
+	String friendDeleteMethod= friendMethodName();
+#>>for(unsigned int index=0; index<this-><<=name>>->size();index++){
+<<=getterCall>>
+	<<=friendDeleteMethod>>(<<=instance>>, NULL);
+}
+this-><<=name>>->clear();!>>
+	emit deleteUseInternalSetter()(deleteUseInternalSetterT);
+			
+	
+deleteNullifyUseDeleteT <<!<<#
+	String name= source.getName();
+	String type= source.getType();
+	String variableInstance= variableInstance(type);
+	String getterCall= getterCall(2, "index-1", variableInstance, null);
+	
+#>>for(unsigned int index = <<=name>>->size(); index > 0 ; index--){
+<<=getterCall>>
+	<<=variableInstance>>->deleteAssociatedObjects();
+}!>>
+	emit deleteNullifyUseDelete()(deleteNullifyUseDeleteT);
+	
+	deleteCheckUseDeleteT <<!<<#
+	String name= source.getName();
+#>>if(this-><<=name>>!= NULL){
+	this-><<=name>>->deleteAssociatedObjects();
+}!>>
+		emit deleteCheckUseDelete()(deleteCheckUseDeleteT);
+	
+	deleteRemoveOrNullifyT <<!<<#
+	String name= source.getName();
+	String type= source.getType();
+	String otherRole= target.getRole();
+	String otherRoles= target.getRoles();
+	
+	String placeHolder= placeholderInstance(name);
+	String removeMethodName= removeInstance(otherRole, getOwner().getIsRemote());
+	String numberOfOtherEndMethodName= numberOfInstance(otherRoles, getOwner().getIsRemote());
+	String minimumNumberOtherEndMethodName= minimumNumberOfInstance(otherRoles, getOwner().getIsRemote());
+	
+#>>if(this-><<=name>>!= NULL){
+	if(this-><<=name>>-><<=numberOfOtherEndMethodName>>()<= this-><<=name>>-><<=minimumNumberOtherEndMethodName>>()){
+		this-><<=name>>->deleteAssociatedObjects();
+	}else{
+		<<=type>>* <<=placeHolder>>= this-><<=name>>;
+		this-><<=name>>= NULL;
+		<<=placeHolder>>-><<=removeMethodName>>(this);
+	}
+}!>>
+	emit deleteRemoveOrNullify()(deleteRemoveOrNullifyT);
+		
+	
+	deleteUseDeleteT <<!<<#
+	String name= source.getName();
+	String type= source.getType();
+	String existingVariableName= existingInstance(name);
+	
+#>>if(this-><<=name>>!= NULL){
+	<<=type>>* <<=existingVariableName>>= this-><<=name>>;
+	this-><<=name>>= NULL;
+	<<=existingVariableName>>->deleteAssociatedObjects();
+}!>>
+		emit deleteUseDelete()(deleteUseDeleteT);
+	
+	deleteDirectlyT <<!<<#
+	String name= source.getName();
+		
+#>><<#if(source.isMany()){#>>this-><<=name>>->clear();<<#}else{#>>this-><<=name>>= NULL;<<#}#>>!>>
+	emit deleteDirectly()(deleteDirectlyT);
+	
+	deleteAssignRemoveCheckT <<!<<#
+	String name= source.getName();
+		
+#>>if(this-><<=name>> != NULL){
+<<=this._deleteAssignRemove(2, new StringBuilder()).toString()>>
+}!>>
+		emit deleteAssignRemoveCheck()(deleteAssignRemoveCheckT);
+	
+	deleteAssignRemoveT <<!<<#
+	String name= source.getName();
+	String type= source.getType();
+	String placeHolder= placeholderInstance(name);
+	String removeMethodName= removeInstance(target.getRole(), getOwner().getIsRemote());
+	
+#>><<=type>>* <<=placeHolder>> = this-><<=name>>;
+this-><<=name>> = NULL;
+<<=placeHolder>>-><<=removeMethodName>>(this);!>>
+	emit deleteAssignRemove()(deleteAssignRemoveT);
+	
+	
+	deleteCheckBySetterT <<!<<#
+	String name= source.getName();
+	String setterMethodName= setInstance(source.isMany()?target.getRoles():target.getRole(), getOwner().getIsRemote());
+	
+#>>if(this-><<=name>>!= NULL){
+	this-><<=name>>-><<=setterMethodName>>(NULL);<<#if(nullify){#>>	
+	this-><<=name>>= NULL;<<#}#>>
+}!>>
+	emit deleteCheckBySetter(boolean nullify)(deleteCheckBySetterT);
+	
+	vectorTypeDeclarationT <<!<<#if(!initialized){#>>vector<<<=type>>*>* <<#}#>><<=name>>= new vector<<<=type>>*>();!>>
+	emit vectorTypeDeclaration(String type, String name, Boolean initialized)(vectorTypeDeclarationT);
+	
+	setTypeDeclarationT <<!<<#
+	String comparatorId= comparatorId(type, getSortKey());
+	
+#>><<#if(!initialized){#>>set<<<=type>>*, <<=comparatorId>>>* <<#}#>><<=name>>= new set<<<=type>>*, <<=comparatorId>>>();!>>
+	emit setTypeDeclaration(String type, String name, Boolean initialized)(setTypeDeclarationT);
+	
+	String listTypeDeclaration(Integer numSpaces, String type, String name, Boolean initialized){
+		if(sortKey != null && !sortKey.isEmpty()){
+			return this._setTypeDeclaration(numSpaces, new StringBuilder(), type, name, initialized).toString();
+		}
+		
+		return this._vectorTypeDeclaration(numSpaces, new StringBuilder(), type, name, initialized).toString();
+	}
+
+	vectorGetterCallT <<!<<#
+	String type= source.getType();
+	String name= source.getName();
+	#>><<=type>>* <<=variable>>= (*(<<#if(assignee== null){#>>this-><<=name>><<#}else{#>><<=assignee>><<#}#>>))[<<=index>>];!>>
+	emit vectorGetterCall(String index, String variable, String assignee)(vectorGetterCallT);
+	
+	setGetterCallT <<!<<#
+	String type= source.getType();
+	String name= source.getName();
+	String comparatorId= comparatorId(type, getSortKey());
+#>>set<<<=type>>*, <<=comparatorId>>>::iterator <<#if(assignee== null){#>><<=name>><<#}else{#>><<=assignee>><<#}#>>BeginIterator(<<#if(assignee== null){#>><<=name>><<#}else{#>><<=assignee>><<#}#>>->begin());
+<<=type>>* <<=variable>>= (<<=type>>*)GetAt(<<#if(assignee== null){#>><<=name>><<#}else{#>><<=assignee>><<#}#>>BeginIterator, <<=index>>);!>>
+	emit setGetterCall(String index, String variable, String assignee)(setGetterCallT);
+	
+	String getterCall(Integer numSpaces, String index, String variable, String assignee){
+		if(sortKey != null && !sortKey.isEmpty()){
+			return this._setGetterCall(numSpaces, new StringBuilder(), index, variable, assignee).toString();
+		}
+		
+		return this._vectorGetterCall(numSpaces, new StringBuilder(), index, variable, assignee).toString();
+	}
+	
+	copyDirectlyCallT <<!<<#
+	
+#>>this-><<=variable>> = new <<=callType>><<<=type>>>();
+<<=callType>><<<=type>>>::iterator <<=variable>>BeginIterator(<<=copyFrom>>->begin());
+<<=callType>><<<=type>>>::iterator <<=variable>>EndIterator(<<=copyFrom>>->end());
+<<=function>>(<<=variable>>BeginIterator, <<=variable>>EndIterator, this-><<=variable>>);!>>
+	emit copyDirectlyCall(String callType, String function, String type, String variable, String copyFrom)(copyDirectlyCallT);
+	
+	String copyDirectly(Integer numSpaces, String variable, String type, String copyFrom){
+		if(sortKey != null && !sortKey.isEmpty()){
+			String comparatorId= comparatorId(type, getSortKey());
+			return this._copyDirectlyCall(numSpaces, new StringBuilder(), "set", "copySet", type+ "*, "+ comparatorId, variable, copyFrom).toString();
+		}
+		return this._copyDirectlyCall(numSpaces, new StringBuilder(), "vector", "copyVector", type+"*", variable, copyFrom).toString();
+	}
+	
+	copyCallT <<!<<#
+	String name= source.getName();
+	String role= source.isMany()?source.getRoles():source.getRole();
+	String copyOf= copyTo== null? copyOfInstance(role): copyTo;
+	String _target= target== null? "this->"+ name: target;
+#>><<#if(target== null){#>><<=callType>><<<=type>>>* <<=copyOf>> = new <<=callType>><<<=type>>>();
+
+
+<<#}#>><<=callType>><<<=type>>>::iterator <<=name>>BeginIterator(<<=_target>>->begin());
+<<=callType>><<<=type>>>::iterator <<=name>>EndIterator(<<=_target>>->end());
+<<=function>>(<<=name>>BeginIterator, <<=name>>EndIterator, <<=copyOf>>);!>>
+	emit copyCall(String type, String callType, String function, String target, String copyTo)(copyCallT);
+	
+	depend cruise.umple.core.Generator;
+	String copySet(Integer numSpaces, String target, String copyTo){
+		String type= source.getType();
+		type= type+ "*, "+comparatorId();
+		
+		return this._copyCall(numSpaces, new StringBuilder(), type, "set", "copySet", target, copyTo).toString();
+	}
+	
+	String copyVector(Integer numSpaces, String target, String copyTo){
+		return this._copyCall(numSpaces, new StringBuilder(), source.getType()+ "*", "vector", "copyVector", target, copyTo).toString();
+	}
+	
+	String copyCall(){
+		return copyCall(0);
+	}
+	
+	String copyCall(Integer numSpaces){
+		return copyCall(numSpaces, null, null);
+	}
+	
+	String copyCall(Integer numSpaces, String target, String copyTo){
+		if(sortKey != null && !sortKey.isEmpty()){
+			return this.copySet(numSpaces, target, copyTo);
+		}
+		
+		return this.copyVector(numSpaces, target, copyTo);
+	}
+
+copySetElementTemplateImplementationT <<!
+//A template function to copy set
+template<typename InputIterator, typename T>
+void copySet(InputIterator& it, InputIterator& end ,T* setObj) {	
+	for (; it != end; ++it) {
+		setObj->insert(*it);
+	}
+};
+!>>
+	emit copySetElementTemplateImplementation()(copySetElementTemplateImplementationT);
+
+copyVectorElementTemplateImplementationT <<!
+//A template function to copy vector
+template<typename InputIterator, typename T>
+void copyVector(InputIterator& it, InputIterator& end ,T* vectorObj) {	
+	for (; it != end; ++it) {
+		vectorObj->push_back(*it);
+	}
+};
+!>>
+	emit copyVectorElementTemplateImplementation()(copyVectorElementTemplateImplementationT);
+
+	getElementAtTemplateImplementationT <<!
+//A template function to get an item in a set by index
+template < typename InputIterator> 
+void* GetAt(InputIterator& it, int index) {
+	std::advance(it, index);
+	return *it;
+};
+
+!>>
+	emit getElementAtTemplateImplementation()(getElementAtTemplateImplementationT);
+
+	deleteClearThenDeleteOrRemoveT <<!<<#
+	String copyCall= copyCall();
+	String name= source.getName();
+	String role= source.isMany()?source.getRoles():source.getRole();
+	String instance= variableInstance(role);
+	String getterCall= getterCall(2, "index", instance, null);
+	
+	String otherRole= target.getRole();
+	String otherRoles= target.getRoles();
+	
+	String copyOf= copyOfInstance(role);
+	
+	String removeMethodName= removeInstance(otherRole, getOwner().getIsRemote());
+	String numberOfOtherEndMethodName= numberOfInstance(otherRoles, getOwner().getIsRemote());
+	String minimumNumberOtherEndMethodName= minimumNumberOfInstance(otherRoles, getOwner().getIsRemote());
+#>><<=copyCall>>
+this-><<=name>>->clear();
+for(unsigned int index=0; index<<<=copyOf>>->size();index++){
+<<=getterCall>>
+	if(<<=instance>>-><<=numberOfOtherEndMethodName>>()<= <<=instance>>-><<=minimumNumberOtherEndMethodName>>()){
+		<<=instance>>->deleteAssociatedObjects();
+	}else{
+		<<=instance>>-><<=removeMethodName>>(this);
+	}
+}!>>
+	emit deleteClearThenDeleteOrRemove()(deleteClearThenDeleteOrRemoveT);
+	
+	
+	removeImplementationT <<!<<#
+	String name= source.getName();
+	String otherType= target.getType();
+	String otherRole= target.getRole();
+	String otherName= target.getName();
+	String role= source.getRole();
+	String roles= source.getRoles();
+	String instance= variableInstance(role);
+	int lowerBound= source.getLowerBound();
+	String numberOfMethodName= numberOfInstance(roles, getOwner().getIsRemote());
+	String minimumNumberMethodName= minimumNumberOfInstance(roles, getOwner().getIsRemote());
+	String removeAtMethodName= removeAtInstance(role, getOwner().getIsRemote());
+	String removeMethodName= removeInstance(otherRole, getOwner().getIsRemote());
+	String otherGetterMethodName= getInstance(otherRole, getOwner().getIsRemote());
+	String otherSetterMethodName= setInstance(otherRole, getOwner().getIsRemote());
+	String otherIndexOfInstance= indexOfInstance(otherRole, getOwner().getIsRemote());
+	String friendSetterMethod= friendMethodName();
+	String addCall= addCall(4, "this->"+ name, instance, "index");
+	
+#>>int index= IndexOf(this-><<=name>>->begin(), this-><<=name>>->end(), <<=instance>>);
+if(index<0){ 
+	return wasRemoved;
+}
+
+<<#if(source.isUseMinimum()){#>>
+//<<=otherName>> already at minimum (<<=lowerBound>>)
+if (<<=numberOfMethodName>>() <= <<=minimumNumberMethodName>>()){
+	return false;
+}
+<<#}#>><<#if(isRemoveCheckEmpty()){#>>
+//Unable to remove <<= instance >>, as it must always have a <<=otherType>>
+if (this== <<=instance>>-><<=otherGetterMethodName>>()){
+    return wasRemoved;
+}
+<<#}#>>
+wasRemoved= this-><<=removeAtMethodName>>(index);
+
+<<#if(isRemoveCheckNullify()){#>><<=instance>>-><<=otherSetterMethodName>>(NULL);<<#}#>><<#if(isRemoveNullifyInternally()){
+#>><<=friendSetterMethod>>(<<=instance>>, NULL);<<#}#>><<#if(isRemoveCheckExistence()){#>>
+if (<<=instance>>-><<=otherIndexOfInstance>>(this) == -1){
+	wasRemoved = true;
+}else{
+	wasRemoved = <<=instance>>-><<=removeMethodName>>(this);
+	if (!wasRemoved){
+<<=addCall>>
+	}
+}
+<<#}#>>!>>
+		emit removeImplementation()(removeImplementationT);
+		
+removeAtImplementationT <<!<<#
+	String numberOfMethodName= numberOfInstance(source.getRoles(), getOwner().getIsRemote());
+	String removeCall= removeElement(0, "this->"+ source.getName(), "index", source.getType());
+#>>if(index<0){
+    return wasRemoved;
+}
+
+int size= this-><<=numberOfMethodName>>();
+if(index> size){
+    return false;
+}
+<<=removeCall>>
+wasRemoved= size== this-><<=numberOfMethodName>>()+1;!>>
+	emit removeAtImplementation()(removeAtImplementationT);
+
+}
+
+class GenAssociation{
+	
+	String setterParamInstance(){
+		return setterParamInstance(source.isMany());
+	}
+	
+	String setterParamInstance(Boolean isMany){
+		return newInstanceInstance(isMany?source.getRoles(): source.getRole(), isMany);
+	}
+	
+	attributeSetterAssignDirectlyT <<!<<#
+	String name= source.getName();
+	String newInstance = setterParamInstance();
+	
+#>>this-><<=name>> = <<=newInstance>>;
+wasSet= true;!>>
+	emit attributeSetterAssignDirectly()(attributeSetterAssignDirectlyT);
+	
+	attributeSetterCheckAssignT <<!<<#
+	String name= source.getName();
+	String newInstance = setterParamInstance();
+	
+#>>if(<<=newInstance>> != NULL){
+	this-><<=name>> = <<=newInstance>>;
+}
+wasSet= true;!>>
+	emit attributeSetterCheckAssign()(attributeSetterCheckAssignT);
+	
+	
+	attributeSetterOptionalT <<!<<#
+	String name= source.getName();
+	String newInstance = setterParamInstance();
+	String setterMethodName= setInstance(target.getRole(), getOwner().getIsRemote());
+	String type= source.getType();
+	String otherType= target.getType();
+	String existingVariableName= existingInstance(name);
+	String currentInstance= currentInstance(name);
+	String existingOtherVariableName= existingInstance(target.getRole());
+	String otherGetterMethodName= getInstance(target.getRole(), getOwner().getIsRemote());
+	String getterMethodName= getInstance(source.getRole(), getOwner().getIsRemote());
+	
+#>>if (<<=newInstance>> == NULL){
+	<<=type>>* <<=existingVariableName>> = this-><<=name>>;
+	this-><<=name>> = NULL;
+	
+	if (<<=existingVariableName>> != NULL && <<=existingVariableName>>-><<=otherGetterMethodName>>() != NULL){
+		<<=existingVariableName>>-><<=setterMethodName>>(NULL);
+	}
+	wasSet = true;
+	return wasSet;
+}
+
+<<=type>>* <<=currentInstance>> = <<=getterMethodName>>();
+if (<<=currentInstance>> != NULL && <<=currentInstance>>!= <<=newInstance>>){
+	<<=currentInstance>>-><<=setterMethodName>>(NULL);
+}
+
+this-><<=name>> = <<=newInstance>>;
+<<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
+
+if (this!=<<=existingOtherVariableName>>){
+	<<=newInstance>>-><<=setterMethodName>>(this);
+}
+wasSet= true;!>>
+	emit attributeSetterOptional()(attributeSetterOptionalT);
+	
+	
+	attributeSetterUnboundT <<!<<#
+	String name= source.getName();
+	String newInstance = setterParamInstance();
+	String otherRoles= target.getRoles();
+	String otherRole= target.getRole();
+	String numberOfOtherEndMethodName= numberOfInstance(otherRoles, getOwner().getIsRemote());
+	String otherEndmaximumNumberMethodName=  maximumNumberOfInstance(otherRoles, getOwner().getIsRemote());
+	String existingVariableName= existingInstance(name);
+	String removeMethodName= removeInstance(otherRole, getOwner().getIsRemote());
+	String addMethodName= addInstance(otherRole, getOwner().getIsRemote());
+	String type= source.getType();
+#>><<#if(check){
+#>>if(<<=newInstance>> != NULL && <<=newInstance>>-><<=numberOfOtherEndMethodName>>() >= <<=newInstance>>-><<=otherEndmaximumNumberMethodName>>()){
+		return wasSet;
+	}
+	
+<<#}#>><<=type>>* <<=existingVariableName>> = this-><<=name>>;
+this-><<=name>> = <<=newInstance>>;
+if (<<=existingVariableName>> != NULL && <<=existingVariableName>> !=<<=newInstance>>){
+	<<=existingVariableName>>-><<=removeMethodName>>(this);
+}
+
+if (<<=newInstance>> != NULL){
+	<<=newInstance>>-><<=addMethodName>>(this);
+}
+wasSet= true;!>>
+	emit attributeSetterUnbound(Boolean check)(attributeSetterUnboundT);
+	
+	attributeSetterOneT <<!<<#
+	String name= source.getName();
+	String newInstance = setterParamInstance();
+	String otherGetterMethodName= getInstance(target.getRole(), getOwner().getIsRemote());
+	String type= source.getType();
+	String otherType= target.getType();
+	String setterMethodName= setInstance(target.getRole(), getOwner().getIsRemote());
+	String oldInstance= oldInstance(target.getRole(), true);
+	
+#>>if (this-><<=name>> != NULL && this-><<=name>> != <<=newInstance>> && this== this-><<=name>>-><<=otherGetterMethodName>>()){
+	//Unable to set <<=type>>, as existing <<=name>> would become an orphan
+	return wasSet;
+}
+	
+this-><<=name>> = <<=newInstance>>;
+<<=otherType>>* <<=oldInstance>> = <<=newInstance>> != NULL ? <<=newInstance>>-><<=otherGetterMethodName>>() : NULL;
+
+if (this != <<=oldInstance>>){
+	if (<<=oldInstance>> != NULL){
+ 	 	<<=oldInstance>>-><<=name>> = NULL;
+ 	}
+ 	
+	if (this-><<=name>> != NULL){
+		this-><<=name>>-><<=setterMethodName>>(this);
+	}
+}
+wasSet= true;!>>
+	emit attributeSetterOne()(attributeSetterOneT);
+	
+	attributeSetterRangedT <<!<<#
+	String type= source.getType();
+	String name= source.getName();
+	String existingVariableName= existingInstance(name);
+	String newInstance = setterParamInstance();
+	String otherRole= target.getRole();
+	String otherRoles= target.getRoles();
+	String addMethodName= addInstance(otherRole, getOwner().getIsRemote());
+	String numberOfOtherEndMethodName= numberOfInstance(otherRoles, getOwner().getIsRemote());
+	String minimumNumberOtherEndMethodName= minimumNumberOfInstance(otherRoles, getOwner().getIsRemote());
+	String removeMethodName= removeInstance(otherRole, getOwner().getIsRemote());
+	
+#>><<=type>>* <<=existingVariableName>> = this-><<=name>>;
+if (<<=existingVariableName>> == NULL) {
+	if (<<=newInstance>> != NULL && <<=newInstance>>-><<=addMethodName>>(this)) {
+		<<=existingVariableName>> = <<=newInstance>>;
+		wasSet = true;
+	}
+
+}else if (<<=existingVariableName>>-><<=minimumNumberOtherEndMethodName>>() < <<=existingVariableName>>-><<=numberOfOtherEndMethodName>>()) {
+	<<=existingVariableName>>-><<=removeMethodName>>(this);
+	if (<<=newInstance>> != NULL) {
+		<<=newInstance>>-><<=addMethodName>>(this);
+	}
+
+	<<=existingVariableName>> = <<=newInstance>>;
+	wasSet = true;
+}
+
+if (wasSet) {
+	this-><<=name>> = <<=existingVariableName>>;
+}
+!>>
+	emit attributeSetterRanged()(attributeSetterRangedT);
+	
+	attributeSetterListT <<!<<#
+	String type= source.getType();
+	String name= source.getName();
+	String otherRole= target.getRole();
+	String role= source.getRole();
+	String roles= source.getRoles();
+	String removeMethodName= removeInstance(otherRole, getOwner().getIsRemote());
+	
+	String newInstance = setterParamInstance();
+	String subInstance= newInstanceInstance(role);
+	String verifiedList= verifiedInstance(name);
+	String oldVariable= oldInstance(name, true);
+	String oldSubVariable= oldInstance(role);
+	
+	String instanceGetterCall= getterCall(2, "index", subInstance, verifiedList);
+	String getterCall= getterCall(2, "index", "temp", newInstance);
+	String removeVariableGetterCall= getterCall(2, "index", oldSubVariable, oldVariable);
+	
+	String copyCall= copyCall(0, verifiedList, "this->"+ name);
+	String addMethodName= addInstance(role, getOwner().getIsRemote());
+	String addOtherMethodName= addInstance(otherRole, getOwner().getIsRemote());
+	String oldVariableCopyCall= copyCall(0, "this->"+ name, oldVariable);
+	
+	String verifiedListInit= listTypeDeclaration(0, type, verifiedList, false);
+	String oldVariableInit= listTypeDeclaration(0, type, oldVariable, false);
+	String nameInit= listTypeDeclaration(0, type, "this->"+ name, true);
+	String removeCall= removeElement(4, oldVariable, "indexOf", type);
+	
+	String addCall= addCall(2, verifiedList, "temp", null);
+	
+	String minimumNumberMethodName= minimumNumberOfInstance(roles, getOwner().getIsRemote());
+	String maximumNumberMethodName= maximumNumberOfInstance(roles, getOwner().getIsRemote());
+	
+#>><<=verifiedListInit>>
+for (unsigned int index=0; index<<<=newInstance>>->size(); index++) {
+<<=getterCall>>
+	if (IndexOf(<<=verifiedList>>->begin(), <<=verifiedList>>->end(), temp)> -1) {
+		continue;
+	}
+<<=addCall>>
+}
+if (<<=verifiedList>>->size() != <<=newInstance>>->size()<<#if(source.isUseMinimum()){#>> || <<=verifiedList>>->size() < <<=minimumNumberMethodName>>()<<#}
+if(source.isUseMaximum()){#>> || <<=verifiedList>>->size() > <<=maximumNumberMethodName>>()<<#}#>>){
+	return wasSet;
+}
+
+<<#if(copyDirectly){#>>
+<<=nameInit>>
+<<=copyCall>>
+<<#}#>><<#else{#>> 
+<<=oldVariableInit>>
+<<=oldVariableCopyCall>>
+this-><<=name>>->clear();
+for (unsigned int index=0; index<<<=verifiedList>>->size(); index++) {
+<<=instanceGetterCall>>
+	this-><<=addMethodName>>(<<=subInstance>>);
+	unsigned int indexOf= IndexOf(<<=oldVariable>>->begin(), <<=oldVariable>>->end(), <<=subInstance>>);
+	if (index> -1) {
+<<=removeCall>>
+	}else{
+		<<=subInstance>>-><<=addOtherMethodName>>(this);
+	}
+}
+	
+for (unsigned int index=0; index<<<=oldVariable>>->size(); index++) {
+<<=removeVariableGetterCall>>
+	<<=oldSubVariable>>-><<=removeMethodName>>(this);
+}
+<<#}#>>
+wasSet = true;!>>
+	emit attributeSetterList(Boolean copyDirectly)(attributeSetterListT);
+	
+	
+	attributeSetterUseExistingRemoveT <<!<<#
+	String name= source.getName();
+	String newInstance = setterParamInstance();
+	String type= source.getType();
+	String existingVariableName= existingInstance(name);
+	
+	String otherRole= target.getRole();
+	String addMethodName= addInstance(otherRole, getOwner().getIsRemote());
+	String removeMethodName= removeInstance(otherRole, getOwner().getIsRemote());
+	
+#>>if (<<=newInstance>> == NULL){
+	return wasSet;
+}
+
+<<=type>>* <<=existingVariableName>> = this-><<=name>>;
+this-><<=name>> = <<=newInstance>>;
+
+if (<<=existingVariableName>> != NULL && <<=existingVariableName>> != <<=newInstance>>){
+  	<<=existingVariableName>>-><<=removeMethodName>>(this);
+}
+this-><<=name>>-><<=addMethodName>>(this);
+wasSet = true;!>>
+	emit attributeSetterUseExistingRemove()(attributeSetterUseExistingRemoveT);
+	
+	
+	attributeSetterMaximumManyT <<!<<#
+	String name= source.getName();
+	String newInstance = setterParamInstance();
+	String type= source.getType();
+	String otherType= target.getType();
+	String existingVariableName= existingInstance(name);
+	
+	String otherRole= target.getRole();
+	String addMethodName= addInstance(otherRole, getOwner().getIsRemote());
+	String removeMethodName= removeInstance(otherRole, getOwner().getIsRemote());
+	String otherRoles= target.getRoles();
+	String otherEndMinimumNumberMethodName= minimumNumberOfInstance(otherRoles, getOwner().getIsRemote());
+	String otherEndmaximumNumberMethodName= maximumNumberOfInstance(otherRoles, getOwner().getIsRemote());
+	String numberOfOtherEndMethodName= numberOfInstance(otherRoles, getOwner().getIsRemote()); 
+	
+#>>if(<<=newInstance>> == NULL){
+	//Must provide <<=name>> to <<=otherType>>
+	return wasSet;
+}<<#
+boolean isUseMinimum= target.isUseMinimum();
+boolean isUseMaximum= target.isUseMaximum();
+if(isUseMinimum|| isUseMaximum){
+	#>>
+
+if(<<#
+		if(isUseMinimum){#>>this-><<=name>>!= NULL&& this-><<=name>>-><<=numberOfOtherEndMethodName>>() <= <<=newInstance>>-><<=otherEndMinimumNumberMethodName>>()<<#}
+		if(isUseMaximum){#>><<#if(isUseMinimum){#>> || <<#}#>><<=newInstance>>-><<=numberOfOtherEndMethodName>>() >= <<=newInstance>>-><<=otherEndmaximumNumberMethodName>>()<<#}
+		#>>){
+	return wasSet;
+}
+
+
+<<#}#>>
+<<=type>>* <<=existingVariableName>> = this-><<=name>>;
+this-><<=name>> = <<=newInstance>>;
+if (<<=existingVariableName>> != NULL && <<=existingVariableName>>!= <<=newInstance>>){
+	bool didRemove = <<=existingVariableName>>-><<=removeMethodName>>(this);
+	if(!didRemove){
+		this-><<=name>> = <<=existingVariableName>>;
+		return wasSet;
+	}
+}
+this-><<=name>>-><<=addMethodName>>(this);
+wasSet = true;
+!>>
+	emit attributeSetterMaximumMany()(attributeSetterMaximumManyT);
+	
+	
+	attributeSetterMinimumFixedT <<!<<#
+	String name= source.getName();
+	String newInstance = setterParamInstance();
+	String type= source.getType();
+	String role= source.getRole();
+	String roles= source.getRoles();
+	String otherRole= target.getRole();
+	String subInstance= newInstanceInstance(role);
+	String checkNewInstance= checkNewInstance(roles);
+	String checkListInit= listTypeDeclaration(0, type, checkNewInstance, false);
+	String instanceGetterCall= getterCall(2, "index", subInstance, newInstance);
+	String assignGetterCall= getterCall(2, "index", subInstance, checkNewInstance);
+	String orphanGetterCall= getterCall(2, "index", "orphan", newInstance);
+	String otherGetterMethodName= getInstance(otherRole, getOwner().getIsRemote());
+	String addCall= addCall(2, checkNewInstance, subInstance, null);
+	String nameAddCall= addCall(2, name, subInstance, null);
+	
+	String friendSetterMethod= friendMethodName();
+	String removeAllCall= removeAllElements(0, type, name, checkNewInstance);
+	
+#>><<=checkListInit>>
+for (unsigned int index=0; index<<<=newInstance>>->size(); index++){
+<<=instanceGetterCall>>
+	unsigned int indexOf= IndexOf(<<=checkNewInstance>>->begin(), <<=checkNewInstance>>->end(), <<=subInstance>>);
+	if(indexOf>-1|| (<<=subInstance>>-><<=otherGetterMethodName>>() != NULL && this !=<<=subInstance>>-><<=otherGetterMethodName>>())){
+		return wasSet;
+	}
+	<<=addCall>>
+}
+
+
+if (<<=checkNewInstance>>->size() != <<=newInstance>>->size()) {
+	return wasSet;
+}
+	
+//Remove all <<=checkNewInstance>> from <<=newInstance>>
+<<=removeAllCall>>
+	
+for (unsigned int index=0 ;index<<<=newInstance>>->size(); index++){
+<<=orphanGetterCall>>
+	<<=friendSetterMethod>>(orphan, NULL);
+}
+	
+<<=name>>->clear();
+for (unsigned int index=0; index<<<=newInstance>>->size(); index++){
+<<=assignGetterCall>>
+	<<=friendSetterMethod>>(<<=subInstance>>, this);
+<<=nameAddCall>>
+}
+wasSet = true;
+!>>
+	emit attributeSetterMinimumFixed()(attributeSetterMinimumFixedT);
+	
+	attributeSetterUseExistingSetterT <<!<<#
+	String name= source.getName();
+	String newInstance = setterParamInstance();
+	String type= source.getType();
+	String otherType= target.getType();
+	String role= source.getRole();
+	String otherRole= target.getRole();
+	String oldInstance= oldInstance(role, true);
+	String setterMethodName= setInstance(otherRole, getOwner().getIsRemote());
+	String getterMethodName= getInstance(otherRole, getOwner().getIsRemote());
+	String existingOtherEndVariableName= existingInstance(otherRole);
+	
+#>>if(<<=newInstance>> == NULL){
+	//Unable to set <<=type>> to NULL, as <<=type>> must always be associated to a <<=otherType>>
+	return wasSet;
+}
+
+<<=otherType>>* <<=existingOtherEndVariableName>> = <<=newInstance>>-><<=getterMethodName>>();
+if (<<=existingOtherEndVariableName>> != NULL && this!= <<=existingOtherEndVariableName>>){
+	//Unable to set <<=type>>, the current <<=name>> already has a <<=type>>, which would be orphaned if it were re-assigned
+	return wasSet;
+}
+
+<<=type>>* <<=oldInstance>> = this-><<=name>>;
+this-><<=name>> = <<=newInstance>>;
+this-><<=name>>-><<=setterMethodName>>(this);
+
+if (<<=oldInstance>> != NULL) {
+	<<=oldInstance>>-><<=setterMethodName>>(NULL);
+}
+wasSet = true;
+!>>
+	emit attributeSetterUseExistingSetter()(attributeSetterUseExistingSetterT);
+	
+	attributeSetterHashmapT <<!<<#
+	String name= source.getName();
+	String type= source.getType();
+	String otherType= target.getType();
+	String newInstance = setterParamInstance();
+	String roles= source.getRoles();
+	String role= source.getRole();
+	String otherRole= target.getRole();
+	String checkNewInstance= checkNewInstance(roles);
+	String checkListInit= listTypeDeclaration(0, type, checkNewInstance, false);
+	String subInstance= newInstanceInstance(role);
+	String instanceGetterCall= getterCall(2, "index", subInstance, newInstance);
+	String existingOtherEndVariableName= existingInstance(otherRole);
+	String newMapInstance= newMapInstance(otherRole, roles);
+	String getterMethodName= getInstance(otherRole, getOwner().getIsRemote());
+	String numberOfMethodName= numberOfInstance(roles, getOwner().getIsRemote());
+	String maximumNumberMethodName=  maximumNumberOfInstance(roles, getOwner().getIsRemote());
+	String minimumNumberMethodName= minimumNumberOfInstance(roles, getOwner().getIsRemote());
+	String addCall= addCall(2, checkNewInstance, subInstance, null);
+	String assignGetterCall= getterCall(2, "index", subInstance, newInstance);
+	String friendSetterMethod= friendMethodName();
+	String nameAddCall= addCall(2, name, subInstance, null);
+	String removeMethodName= removeInstance(role, getOwner().getIsRemote());
+	
+#>><<#
+boolean isUseMinimum= source.isUseMinimum();
+boolean isUseMaximum= source.isUseMaximum();
+if(isUseMinimum|| isUseMaximum){
+	#>>if(<<#
+		if(isUseMinimum){#>><<=newInstance>>->size() <= <<=minimumNumberMethodName>>()<<#}
+		if(isUseMaximum){#>><<#if(isUseMinimum){#>> || <<#}#>><<=newInstance>>->size() >= <<=maximumNumberMethodName>>()<<#}
+		#>>){
+	return wasSet;
+}
+
+
+<<#}#>><<=checkListInit>>
+hash_map<<<=otherType>>*, int>* <<=newMapInstance>>= new hash_map<<<=otherType>>*, int>();
+
+for (unsigned int index=0; index<<<=newInstance>>->size(); index++){
+<<=instanceGetterCall>>
+	unsigned int indexOf= IndexOf(<<=checkNewInstance>>->begin(), <<=checkNewInstance>>->end(), <<=subInstance>>);
+	if(indexOf>-1){
+		return wasSet;
+	}
+
+	if (<<=subInstance>>-><<=getterMethodName>>() != NULL && this !=<<=subInstance>>-><<=getterMethodName>>()){
+		<<=otherType>>* <<=existingOtherEndVariableName>> = <<=subInstance>>-><<=getterMethodName>>();
+		if ((*<<=newMapInstance>>)[<<=existingOtherEndVariableName>>]== NULL){
+			<<=newMapInstance>>->insert(std::pair<<<=otherType>>*, int>(<<=existingOtherEndVariableName>>,<<=existingOtherEndVariableName>>-><<=numberOfMethodName>>()));
+		}
+		int currentCount = (*<<=newMapInstance>>)[<<=existingOtherEndVariableName>>];
+		int nextCount = currentCount - 1;
+		if (nextCount < 1){
+		  return wasSet;
+		}
+		
+		<<=newMapInstance>>->insert(std::pair<<<=otherType>>*, int>(<<=existingOtherEndVariableName>>,nextCount));
+	}
+	<<=addCall>>
+}
+
+//Remove all <<=checkNewInstance>> from <<=newInstance>>
+<<=name>>->clear();
+
+for (unsigned int index=0; index<<<=newInstance>>->size(); index++){
+<<=assignGetterCall>>
+	<<=friendSetterMethod>>(<<=subInstance>>, NULL);
+}
+
+this-><<=name>>->clear();
+for (unsigned int index=0; index<<<=newInstance>>->size(); index++){
+<<=instanceGetterCall>>
+	if (<<=subInstance>>-><<=getterMethodName>>() != NULL){
+		<<=subInstance>>-><<=getterMethodName>>()-><<=removeMethodName>>(<<=subInstance>>);
+	}
+	<<=friendSetterMethod>>(<<=subInstance>>, this);
+<<=nameAddCall>>
+}
+
+wasSet = true;!>>
+	
+	emit attributeSetterHashmap()(attributeSetterHashmapT);
+	
+}
+
+class GenAssociation{
+	
+	lazy Boolean checkUnique;
+	
+	String attributeAddCall(Integer numSpaces){
+		return attributeAddCall(numSpaces, null);
+	}
+	
+	String attributeAddCall(Integer numSpaces, String indexVariable){
+		return addCall(numSpaces, "this->"+ source.getName(), setterParamInstance(false), indexVariable);
+	}
+	
+	attributeAddExistsT <<!<<#
+	if(!checkUnique){
+		return sb;
+	}
+	
+	String name= source.getName();
+	String newInstance = setterParamInstance(false);
+	
+#>>if (IndexOf(this-><<=name>>->begin(), this-><<=name>>->end(), <<=newInstance>>)> -1) {
+	return wasAdded;
+}
+!>>
+	emit attributeAddExists()(attributeAddExistsT);
+	
+	attributeAddMaximumCheckT <<!<<#
+	if(!getSource().getUseMaximum()){
+		return sb;
+	}
+	String roles= source.getRoles();
+	String numberOfMethodName= numberOfInstance(roles, getOwner().getIsRemote());
+	String maximumNumberMethodName=  maximumNumberOfInstance(roles, getOwner().getIsRemote());
+#>>if (this-><<=numberOfMethodName>>() >= this-><<=maximumNumberMethodName>>()){
+	return <<=returnVariable>>;
+}
+!>>
+	emit attributeAddMaximumCheck(String returnVariable)(attributeAddMaximumCheckT);
+	String attributeAddMaximumCheck(){
+		return attributeAddMaximumCheck("wasAdded").toString();
+	}
+	
+	attributeAddDirectlyT <<!<<#
+#>><<=attributeAddExists()>><<=attributeAddMaximumCheck()>><<=attributeAddCall(0)>>
+wasAdded = true;!>>
+	emit attributeAddDirectly()(attributeAddDirectlyT);
+	
+	attributeAddAndCheckT <<!<<#
+	String name= source.getName();
+	String type= source.getType();
+	String newInstance = setterParamInstance(false);
+	String role= source.getRole();
+	String otherRole= target.getRole();
+	String otherIndexOfInstance= indexOfInstance(otherRole, getOwner().getIsRemote());
+	String indexOfInstance= indexOfInstance(role, getOwner().getIsRemote());
+	String addMethodName= addInstance(otherRole, getOwner().getIsRemote());
+	String removeCall= removeElement(4, "this->"+ name, "currentIndex", type);
+	
+#>><<=attributeAddExists()>><<=attributeAddMaximumCheck()>><<=attributeAddCall(0)>>
+if (<<=newInstance>>-><<=otherIndexOfInstance>>(this)!= -1) {
+	wasAdded = true;
+}else{
+	wasAdded = <<=newInstance>>-><<=addMethodName>>(this);
+	if(!wasAdded){
+		int currentIndex= this-><<=indexOfInstance>>(<<=newInstance>>);
+<<=removeCall>>
+	}
+}!>>
+	emit attributeAddAndCheck()(attributeAddAndCheckT);
+	
+	attributeAddRemoveExistingOrThisT <<!<<#
+	String role= source.getRole();
+	String otherRole= target.getRole();
+	String newInstance = setterParamInstance(false);
+	String otherType= target.getType();
+	String existingOtherVariableName= existingInstance(target.getRole());
+	String addMethodName= addInstance(role, getOwner().getIsRemote());
+	String removeMethodName= removeInstance(role, getOwner().getIsRemote());
+	
+	String otherGetterMethodName= getInstance(otherRole, getOwner().getIsRemote());
+	String otherSetterMethodName= setInstance(target.isMany()?target.getRoles():otherRole, getOwner().getIsRemote());
+	
+#>><<=attributeAddExists()>><<=attributeAddMaximumCheck()>><<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
+if (<<=existingOtherVariableName>> == NULL){
+	<<=newInstance>>-><<=otherSetterMethodName>>(this);
+}else if(this!= <<=existingOtherVariableName>>){
+	<<=existingOtherVariableName>>-><<=removeMethodName>>(<<=newInstance>>);
+	this-><<=addMethodName>>(<<=newInstance>>);
+}else{
+<<=attributeAddCall(2)>>
+}
+wasAdded = true;!>>
+	emit attributeAddRemoveExistingOrThis()(attributeAddRemoveExistingOrThisT);
+	
+	attributeAddCheckNewOtherExistingT <<!<<#
+	String newInstance = setterParamInstance(false);
+	String otherType= target.getType();
+	String otherRole= target.getRole();
+	String existingOtherVariableName= existingInstance(otherRole);
+	String otherGetterMethodName= getInstance(otherRole, getOwner().getIsRemote());
+	String otherSetterMethodName= setInstance(target.isMany()?target.getRoles():otherRole, getOwner().getIsRemote());
+	String isNewInstance= isNewInstance(otherRole);
+	
+#>><<=attributeAddExists()>><<=attributeAddMaximumCheck()>><<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
+bool <<=isNewInstance>>= <<=existingOtherVariableName>> != NULL && this!=<<=existingOtherVariableName>>;
+if(<<=isNewInstance>>){
+	<<=newInstance>>-><<=otherSetterMethodName>>(this);
+}else{
+<<=attributeAddCall(2)>>
+}
+wasAdded= true;!>>
+	emit attributeAddCheckNewOtherExisting()(attributeAddCheckNewOtherExistingT);
+	
+	
+	attributeAddRemoveExistingT <<!<<#
+	String newInstance = setterParamInstance(false);
+	String otherType= target.getType();
+	String existingOtherVariableName= existingInstance(target.getRole());
+	String role= source.getRole();
+	String roles= source.getRoles();
+	String removeMethodName= removeInstance(role, getOwner().getIsRemote());
+	String numberOfMethodName= numberOfInstance(roles, getOwner().getIsRemote());
+	String minimumNumberMethodName= minimumNumberOfInstance(roles, getOwner().getIsRemote());
+	String friendMethodName= friendMethodName();
+	String otherGetterMethodName= getInstance(target.getRole(), getOwner().getIsRemote());
+	
+#>><<=attributeAddExists()>><<=attributeAddMaximumCheck()>><<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
+if (<<=existingOtherVariableName>> != NULL){
+	if(<<=existingOtherVariableName>>-><<=numberOfMethodName>>() <= <<=minimumNumberMethodName>>()){
+          return wasAdded;
+	}else{
+  		<<=existingOtherVariableName>>-><<=removeMethodName>>(<<=newInstance>>);
+	}
+}
+<<=attributeAddCall(0)>>
+<<=friendMethodName>>(<<=newInstance>>,this);
+wasAdded = true;!>>
+	emit attributeAddRemoveExisting()(attributeAddRemoveExistingT);
+	
+	
+attributeAddSetIfNewT <<!<<#
+	String newInstance = setterParamInstance(false);
+	String otherType= target.getType();
+	String existingOtherVariableName= existingInstance(target.getRole());
+	String otherGetterMethodName= getInstance(target.getRole(), getOwner().getIsRemote());
+	String otherRole= target.getRole();
+	String isNewInstance= isNewInstance(otherRole);
+	String roles= source.getRoles();
+	String numberOfMethodName= numberOfInstance(roles, getOwner().getIsRemote());
+	String minimumNumberMethodName= minimumNumberOfInstance(roles, getOwner().getIsRemote());
+	String setterMethodName= setInstance(otherRole, getOwner().getIsRemote());
+	
+#>><<=attributeAddExists()>><<=attributeAddMaximumCheck()>><<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
+bool <<=isNewInstance>>= <<=existingOtherVariableName>> != NULL && this!=<<=existingOtherVariableName>>;
+if(<<=isNewInstance>>){
+	if(<<=existingOtherVariableName>>-><<=numberOfMethodName>>() <= <<=minimumNumberMethodName>>()){
+		return wasAdded;
+	}
+	<<=newInstance>>-><<=setterMethodName>>(this);
+}else{
+<<=attributeAddCall(2)>>
+}
+wasAdded= true;!>>
+	emit attributeAddSetIfNew()(attributeAddSetIfNewT);
+	
+	attributeConstructAndAddT <<!<<#
+	String type = source.getType();
+	
+#>><<=attributeAddMaximumCheck("NULL")>>return new <<=type>>(<<=parameterString>>);!>>
+	emit attributeConstructAndAdd(String parameterString)(attributeConstructAndAddT);
+	
+
+	indexOfElementT <<!<<#
+	String newInstance = setterParamInstance(false);
+	String name= source.getName();
+#>>IndexOf(this-><<=name>>->begin(), this-><<=name>>->end(),<<=newInstance>>)!>>
+	emit indexOfElement()(indexOfElementT);
+	
+	addAtImplementationT <<!<<#
+	String newInstance = setterParamInstance(false);
+	String roles= source.getRoles();
+	String role= source.getRole();
+	String numberOfMethodName= numberOfInstance(roles, getOwner().getIsRemote());
+	String addMethodName= addInstance(role, getOwner().getIsRemote());
+	String removeCall= removeElement(2, "this->"+ source.getName(), indexOfElement(), source.getType());
+	
+#>>if(<<=addMethodName>>(<<=newInstance>>)){
+    int newIndex= index;
+    if(index < 0 ) { 
+        newIndex = 0; 
+    }
+	
+    int size= this-><<=numberOfMethodName>>();
+    if(size>0){
+    	<<=removeCall>>		
+    }
+	
+    size= this-><<=numberOfMethodName>>();
+    if(newIndex > size) { 
+        newIndex = size; 
+    }
+	
+ <<=attributeAddCall(2, "newIndex")>>
+    wasAdded = true;
+}!>>
+	emit addAtImplementation()(addAtImplementationT);
+
+	addOrMoveImplementationT <<!<<#
+	String newInstance = setterParamInstance(false);
+	String name= source.getName();
+	String roles= source.getRoles();
+	String role= source.getRole();
+	String numberOfMethodName= numberOfInstance(roles, getOwner().getIsRemote());
+	String removeMethodName= removeInstance(role, getOwner().getIsRemote());
+	String addAtMethod= addAtInstance(role, getOwner().getIsRemote());
+	
+#>>if(IndexOf(this-><<=name>>->begin(), this-><<=name>>->end(), <<=newInstance>>) > -1) {
+	if (index < 0) {
+		index = 0;
+	}
+
+	int size= this-><<=numberOfMethodName>>();
+	if (index > size) {
+		index = size - 1;
+	}
+	
+	wasAdded= this-><<=removeMethodName>>(<<=newInstance>>)| this-><<=addAtMethod>>(<<=newInstance>>, index);
+}else{
+	wasAdded= this-><<=addAtMethod>>(<<=newInstance>>, index);
+}
+!>>
+	emit addOrMoveImplementation()(addOrMoveImplementationT);
+}
+
+//Helper methods for many relations
+class GenAssociation{
+	
+numberOfImplementationT <<!<<#
+String name= source.getName();
+
+#>>int number=this-><<=name>>->size();!>>
+	emit numberOfImplementation()(numberOfImplementationT);
+	
+containsImplementationT <<!<<#
+	String roles= source.getRoles();
+	String numberOfMethodName= numberOfInstance(roles, getOwner().getIsRemote());
+#>>this-><<=numberOfMethodName>>()>0!>>
+	emit containsImplementation()(containsImplementationT);
+	
+indexOfImplementationT <<!<<#
+	String name= source.getName();
+	String role= source.getRole();
+	String instance= variableInstance(role);
+
+#>>IndexOf(this-><<=name>>->begin(), this-><<=name>>->end(), <<=instance>>)!>>
+	emit indexOfImplementation()(indexOfImplementationT);
+	
+getterByIndexImplementationT <<!<<#
+	String variableInstance= variableInstance(source.getRole());
+	String getterCall= getterCall(0, "index", variableInstance, null);
+#>><<=getterCall>>!>>
+	emit getterByIndexImplementation()(getterByIndexImplementationT);
+
+		
+}

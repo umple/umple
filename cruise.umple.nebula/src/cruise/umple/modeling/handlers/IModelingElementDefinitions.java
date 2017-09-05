@@ -33,6 +33,7 @@ public interface IModelingElementDefinitions {
 	public static final String MODIFIER= "modifier"; //$NON-NLS-1$
 	public static final String DEFAULTED_MODIFIER= "defaulted"; //$NON-NLS-1$
 	public static final String INTERNAL= "internal"; //$NON-NLS-1$
+	public static final String SETTABLE= "settable"; //$NON-NLS-1$
 	public static final String HAS_KEY_MEMBERS= "key"; //$NON-NLS-1$
 	public static final String IS_KEY_MEMBER= "isKeyMemeber"; //$NON-NLS-1$
 	public static final String CONSTRAINTS= "constraints"; //$NON-NLS-1$
@@ -48,7 +49,6 @@ public interface IModelingElementDefinitions {
 	public static final String CONSTRAINT_EXPRESSION_IS_PRIMITIVE= "constraintExrpessionIsPrimitive"; //$NON-NLS-1$
 	public static final String CONSTRAINTS_EXPRESSIONS_CONTENTS= "constraintsExpressionsContents"; //$NON-NLS-1$
 	public static final String CONSTRAINT_EXPRESSIONS_CONTENTS= "constraintExpressionsContents"; //$NON-NLS-1$
-	public static final String CONSTRAINT_CHECK_THROW= "constraintCheckThrow"; //$NON-NLS-1$
 	
 	public static final String CODE= "code"; //$NON-NLS-1$
 	public static final String CODE_INJECTION= "codeInjection"; //$NON-NLS-1$
@@ -56,29 +56,29 @@ public interface IModelingElementDefinitions {
 	public static final String GENERATES= "generates"; //$NON-NLS-1$
 	public static final String VERSION_NUMBER= "versionNumber"; //$NON-NLS-1$
 	public static final String LINE_NUMBERS= "lineNumbers"; //$NON-NLS-1$
+	public static final String POSITIONS= "positions"; //$NON-NLS-1$
 	
 	public static final String TYPE_NAME= "typeName"; //$NON-NLS-1$
 	public static final String IS_ABSTRACT= "isAbstract"; //$NON-NLS-1$
-	public static final String MANY_TYPE_NAME= "manyTypeName"; //$NON-NLS-1$
 	
 	public static final String DEFAULT_VALUE= "defaultValue"; //$NON-NLS-1$
+	public static final String VALUE= "value"; //$NON-NLS-1$
 	public static final String NAME= "name"; //$NON-NLS-1$
+	public static final String NAMES= "names"; //$NON-NLS-1$
 	public static final String SINGULAR_NAME= "singularName"; //$NON-NLS-1$
 	public static final String PLURAL_NAME= "pluralName"; //$NON-NLS-1$
+	public static final String IS_PLURAL= "isPlural"; //$NON-NLS-1$
 	public static final String USE= "use"; //$NON-NLS-1$
 	public static final String OWNER_NAME= "ownerName"; //$NON-NLS-1$
 	public static final String RETURN_TYPE= "returnType"; //$NON-NLS-1$
 	public static final String OPERATION_PARAMETERS= "operationParameters"; //$NON-NLS-1$
 	public static final String OPERATION_BODY= "operationBody"; //$NON-NLS-1$
-	public static final String CONSTRAINT_BODY= "constraintBody"; //$NON-NLS-1$
 	public static final String PARENT_INTERFACES= "parentInterfaces"; //$NON-NLS-1$
 	public static final String PARENT_CLASS= "parentClass"; //$NON-NLS-1$
 	
 	public static final String NAMESPACE= "namespace"; //$NON-NLS-1$
 	public static final String FILE= "file"; //$NON-NLS-1$
 	public static final String FILE_PATH= "filePath"; //$NON-NLS-1$
-	
-	public static final String TYPE_PARAMETER_NAME= "type.parameter.name.normalizedTypeName"; //$NON-NLS-1$
 	
 	public static final String OTHER_END_UPPER_BOUND= "otherEndUpperBound"; //$NON-NLS-1$
 	public static final String OTHER_END_LOWER_BOUND= "otherEndLowerBound"; //$NON-NLS-1$
@@ -120,5 +120,11 @@ public interface IModelingElementDefinitions {
 	public static final String ATTRIBUTES_PROCESSOR= "attributesProcessor"; //$NON-NLS-1$
 	public static final String OPERATIONS_PROCESSOR= "operationsProcessor"; //$NON-NLS-1$
 	public static final String OPERATIONS_PARAMETERS_PROCESSOR= "operationsParametersProcessor"; //$NON-NLS-1$
+	
+	
+	public static final String FILE_NAME = "fileName";
+	public static final String IS_DISTRIBUTABLE = "isDistributable";
+	
+	public static final String CPP_GENERATION_ID= "RTCpp"; //$NON-NLS-1$
 	
 }

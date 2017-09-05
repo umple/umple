@@ -1,0 +1,509 @@
+/*******************************************************************************
+* Copyright (c) 2017 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
+class GenPackage{
+	String includeNamespace(){
+	    return getName();
+	}
+	namespace= {includeNamespace()};
+}
+
+class GenClass{
+	String includeNamespace(){
+	    return getGenPackage().getName();
+	}
+	namespace= {includeNamespace()};
+}
+
+//class GenDepend{
+//	String includeNamespace(){
+//		GenClass genClass= getGenClass();
+//		if(genClass!= null){
+//			return genClass.includeNamespace();
+//		}
+//		
+//	    return getNamespace();
+//	}
+//	namespace= {includeNamespace()};
+//}
+
+class GenDepend{
+	String name;
+	
+	lazy String id;
+	Integer priority= 0;
+	lazy Boolean addSuffix;
+	lazy Boolean prioritized;
+	lazy Boolean isLibrary;
+	lazy String namespace;
+	
+	after constructor { 
+		setId(name); //id has the value of name by default
+	}
+	
+	//key {id}	Until having complex key support
+	
+	Boolean isObject(){
+		GenClass owner = getGenClass();
+		if (owner == null) {
+			return false;
+		}
+
+		GenPackage genPackage = owner.getGenPackage();
+		if(genPackage == null){
+			return false;
+		}
+		
+		String namespace= getNamespace();
+		
+		GenPackage packageByName = namespace== null || namespace.isEmpty()?genPackage: genPackage.packageByName(namespace);
+		if (packageByName != null) {
+			return packageByName.classByName(getName()) != null;
+		}
+
+		return false;
+	}
+	
+	String full(){
+		String _value= this.getName();
+		if(!getIsLibrary()){
+			String _namespace= getNamespace();
+			if(_namespace!= null && !_namespace.isEmpty()){
+				_value= toPath(_namespace)+"/"+_value;
+			}
+		}
+		
+		if(addSuffix){
+			_value= _value+ ".h";
+		}
+		
+		if(prioritized){
+			_value= enclose(_value, "\"", "\"");
+		}else{
+			_value= enclose(_value, "<", ">");
+		}
+		
+		return _value;
+	}
+	
+	String enclose(String value, String first, String last){
+		if(!value.startsWith(first)){
+			value= first+ value;
+		}
+		
+		if(!value.endsWith(last)){
+			value= value+ last;
+		}
+		
+		return value;
+	}
+	
+declarationT <<!#include <<=full()>>!>>
+
+	emit declaration()(declarationT);
+
+namespaceDeclarationT <<!<<#
+String _namespace= getNamespace();
+if(_namespace != null && !_namespace.isEmpty()){#>>using namespace <<=_namespace>>;<<#}#>>!>>
+emit namespaceDeclaration()(namespaceDeclarationT);
+
+}
+
+//Depend mixins
+class GenClass{
+	boolean addDependency(String use) {
+		if (use.endsWith(".*")) {
+			String path = use.substring(0, use.length() - 2);
+			GenPackage packageByName = getGenPackage().rootPackage().packageByName(path);
+			for (GenClass genClass : packageByName.getClasses()) {
+				GenDepend genDepend = new GenDepend(genClass.getName());
+				String namespace = genClass.getNamespace();
+				genDepend.setNamespace(namespace);
+				genDepend.setAddSuffix(true);
+				addDependency(genDepend);
+			}
+
+			return true;
+		}
+		return addAsType(use) || addAsLibrary(use) || addAsBuiltin(use);
+	}
+
+	boolean addAsBuiltin(String use) {
+		GenDepend genDepend = new GenDepend(unquotedType(use));
+		genDepend.setPrioritized(use.indexOf("\"")> -1);
+		genDepend.setIsLibrary(true /*isHeaderType(use)*/);
+		addDependency(genDepend);
+		return true;
+	}
+
+	boolean addAsLibrary(String use) {
+		String process = unquotedType(use);
+		int libIndex = process.indexOf("::");
+		if(libIndex>-1){
+			String lib = process.substring(0, libIndex);
+			String include = process.substring(libIndex+2);
+			
+			GenDepend genDepend = new GenDepend(include);
+			genDepend.setIsLibrary(true);
+			genDepend.setPrioritized(use.indexOf("\"")>-1);
+			genDepend.setNamespace(lib);
+			addDependency(genDepend);
+			return true;
+		}
+		return false;
+	}
+
+	Boolean addAsType(String use) {
+		int indexOf = use.lastIndexOf(".");
+		String includeType;
+		GenPackage packageByName;
+		if(indexOf>-1){
+			packageByName = getGenPackage().rootPackage().packageByName(use.substring(0, indexOf));
+			includeType = use.substring(indexOf+1);
+		}else{
+			packageByName= getGenPackage().rootPackage();
+			includeType = use;
+		}
+		
+		if(packageByName!= null){
+			GenClass dependClass = packageByName.classByName(includeType);
+			if(dependClass != null){
+				GenDepend genDepend = new GenDepend(includeType);
+				genDepend.setAddSuffix(true);
+				genDepend.setNamespace(dependClass.getNamespace());
+				addDependency(genDepend);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	String unquotedType(String type) {
+		String process = type;
+		if (process.startsWith("\"") || process.startsWith("<")) {
+			process = process.substring(1);
+		}
+
+		if (process.endsWith("\"") || process.endsWith(">")) {
+			process = process.substring(0, process.length() - 1);
+		}
+		return process;
+	}
+	
+	Boolean isHeaderType(String type){
+		return _isHeaderType(unquotedType(type));
+	}
+	
+	Boolean _isHeaderType(String type){
+		return type.endsWith(".h") || type.endsWith(".hpp");
+	}
+	
+	String typeIncludes(){
+		List<String> declarations = baseDeclarations();
+
+		Map<String, List<String>> map = (Map<String, List<String>>) searchDependencies();
+		for (String namespace : map.keySet()) {
+			List<String> list = map.get(namespace);
+			for (String type : list) {
+				addToDeclarations(declarations, addDeclaration(type,namespace));
+			}
+		}
+
+		for (GenDepend depend : getDependencies()) {
+			// Make sure to consider user's types; include SomeClass;
+			if (!depend.getIsLibrary()) { // prevent include "stdio"; those are handled later as libraries
+				declarations.add(depend.declaration());
+			}
+		}
+
+		return typeIncludes(declarations.stream().collect(Collectors.joining(NL)), "file") + NL;
+	}
+	
+	String headerIncludes(){
+		List<String> declarations = baseDeclarations();
+		return typeIncludes(declarations.stream().collect(Collectors.joining(NL)), "file") + NL;
+	}
+	
+	String libraryIncludes(){
+		List<String> declarations = new ArrayList<String>();
+		List<String> includes = new ArrayList<String>();
+		for (GenDepend depend : getDependencies()) {
+			// ignore examples below. They are already were added as file includes earlier
+			// depend Some; While is belong to some namespace; i.e. org.simple
+			// depend org.simple.Some
+			if (depend.getIsLibrary()) {
+				// depend "std.string"
+				// Will be using namespace std;
+				// #include <istream>
+				// Hence, it will be added as a library
+				String declaration = depend.declaration();
+				if(!includes.contains(declaration)){
+					includes.add(declaration);
+				}
+				
+				String dependNamespace = depend.getNamespace();
+				if (dependNamespace != null) {
+					String namespaceDeclaration = namespaceDeclaration(dependNamespace);
+					if(!declarations.contains(namespaceDeclaration)){
+						declarations.add(namespaceDeclaration);
+					}
+				}
+			}
+		}
+		
+		if (declarations.isEmpty()) {
+			return "";
+		}
+		declarations.addAll(includes);
+		return typeIncludes(declarations.stream().collect(Collectors.joining(NL)), "library") + NL;
+	}
+	
+	void handleLibrary(Set<String> declarations, List<String> includes, GenDepend depend, String namespace) {
+		String declaration = namespaceDeclaration(namespace);
+		if (!declarations.contains(declaration)) {
+			declarations.add(declaration);
+		}
+
+		String dependDeclaration = depend.declaration();
+		if (!includes.contains(dependDeclaration)) {
+			includes.add(dependDeclaration);
+		}
+	}
+	
+	List<String> baseDeclarations(){
+		List<String> declarations = new ArrayList<String>();
+		addToDeclarations(declarations, addDeclaration(rootIncludeName(), null));
+		addToDeclarations(declarations, addDeclaration(getName(), getNamespace()));
+
+		GenClass parentClass = getParent();
+		if (parentClass != null) {
+			addToDeclarations(declarations, addDeclaration(parentClass.getName(), parentClass.getNamespace()));
+		}
+
+		for (GenInterface _interface : getInterfaces()) {
+			addToDeclarations(declarations, addDeclaration(_interface.getName(), _interface.getNamespace()));
+		}
+		return declarations;
+	}
+	
+	GenDepend addDeclaration(String type, String namespace){
+		GenDepend depend = new GenDepend(type);
+		depend.setAddSuffix(true);
+		depend.setNamespace(namespace);
+		return depend;
+	}
+	
+	void addToDeclarations(List<String> declarations, GenDepend depend) {
+		String declaration = depend.declaration();
+		if (!declarations.contains(declaration)) {
+			declarations.add(declaration);
+		}
+	}
+	
+	String incompleteDeclarations(){
+		List<String> declarations = new ArrayList<String>();
+		Map<String, List<String>> map = (Map<String, List<String>>) searchDependencies();
+		
+		String _namespace = getNamespace();
+		if(!map.isEmpty()){
+			for(String namespace: map.keySet()){
+				if(!namespace.equals(_namespace)){
+					List<String> list = map.get(namespace);
+					declarations.add(namespaceOpening(namespace));
+					declarations.addAll(list.stream().map(type->"  "+ incompleteDeclaration(type)).collect(Collectors.toList()));
+					declarations.add(namespaceClosing(namespace));
+					declarations.add(namespaceDeclaration("::"+namespaceCallPath(namespace)));
+				}
+			}
+		}
+		
+		if(declarations.isEmpty()){
+			return "";
+		}
+		
+		return declarations.stream().collect(Collectors.joining(NL))+ NL+ NL;
+	}
+	
+	String selfIncompleteDeclarations(){
+		List<String> declarations = new ArrayList<String>();
+		Map<String, List<String>> map = (Map<String, List<String>>)searchDependencies();
+		
+		String _namespace = getNamespace();
+		if(map.containsKey(_namespace)){
+			declarations.addAll(map.get(_namespace).stream().map(type->incompleteDeclaration(type)).collect(Collectors.toList()));
+		}
+		
+		for(GenAssociation association: getAssociations()){
+			if(association.isMany()){
+				 String sortKey = association.getSortKey();
+				 if(sortKey!= null && !sortKey.isEmpty()){
+					 String comparatorId = association.comparatorId();
+					 String incompleteStructDeclaration = incompleteStructDeclaration(comparatorId);
+					 if(!declarations.contains(incompleteStructDeclaration)){
+						 declarations.add(incompleteStructDeclaration);
+					 }
+				 }
+			}
+		}
+		
+		return declarations.stream().collect(Collectors.joining(NL))+ NL;
+	}
+	
+	String rootIncludeName(){
+		return getGenPackage().rootIncludeName();
+	}
+	
+	Object searchDependencies(){
+		Map<String, List<String>> map = new HashMap<String, List<String>>();
+		GenPackage rootPackage = getGenPackage().rootPackage();
+
+		GenClass parentClass = getParent();
+		if (parentClass != null) {
+			searchDependencies(map, rootPackage, parentClass.getName());
+		}
+
+		for (GenMethod method : getMethods()) {
+			searchDependencies(map, rootPackage, method.getReturnType());
+
+			for (GenMethodParameter parameter : method.getParameters()) {
+				searchDependencies(map, rootPackage, parameter.getCrudType());
+			}
+		}
+
+		return map;
+	}
+	
+	void searchDependencies(Map<String, List<String>> map, GenPackage rootPackage, String type) {
+		if (name.equals(type)) {
+			return;
+		}
+		
+		GenClass classByName = rootPackage.rootPackage().classByName(type);
+		if(classByName!= null){
+			String _namespace = classByName.getNamespace();
+			List<String> declarations = map.get(_namespace);
+			if(declarations== null){
+				declarations= new ArrayList<String>();
+				map.put(_namespace, declarations);
+			}
+			
+			if (!declarations.contains(type)) {
+				declarations.add(type);
+			}
+		}
+	}
+	 
+}
+
+class GenPackage{
+	
+	String mainFunctionName(){
+		return rootPackage().getProject()+ "_Main.cpp";
+	}
+	
+	String includeAllTypes() {
+		List<String> includes= new ArrayList<String>();
+		for(GenClass genClass: allClasses()){
+			if(genClass.isGeneratable()){
+				GenDepend addDeclaration = genClass.addDeclaration(genClass.getName(), genClass.getNamespace());
+				includes.add(addDeclaration.declaration());
+			}
+		}
+		
+		return includes.stream().collect(Collectors.joining("\n"));
+	}
+	
+	String listAllFiles() {
+		List<String> includes= new ArrayList<String>();
+		String rootIncludeName= rootIncludeName();
+		includes.add(rootIncludeName+ ".h");
+		includes.add(mainFunctionName());
+		
+		for(GenClass genClass: allClasses()){
+			if(genClass.isGeneratable()){
+				String qName= genClass.qualifiedName();
+				includes.add(qName+ ".h");
+				includes.add(qName+ ".cpp");
+			}
+		}
+		
+		return includes.stream().collect(Collectors.joining("\n"));
+	}
+	
+	String listAllMakeNamespaces() {
+		List<String> namespaces= new ArrayList<String>();
+		for(GenPackage genPackage: allPackages()){
+			String includeNamespace = genPackage.getNamespace();
+			if(includeNamespace!= null && !includeNamespace.isEmpty()){
+				String call= cMakeFolders(toPath(includeNamespace));
+				if(!namespaces.contains(call)){
+					namespaces.add(call);
+				}
+			}
+		}
+		
+		return namespaces.stream().collect(Collectors.joining("\n"));
+	}
+	
+	mainFunctionT <<!<<#
+	String copyRight=  rootPackage().copyright();
+	String includes = includeAllTypes();
+	
+	List<String> mainCalls= new ArrayList<String>();
+	for(GenClass genClass: allClasses()){
+		GenMethod methodByName = genClass.methodByName("main");
+		if(methodByName!= null){
+			mainCalls.add("::"+ genClass.fullQualifiedName()+ "::main(argc, argv);");
+		}
+	}
+	
+	String contents = mainCalls.stream().collect(Collectors.joining(NL));
+
+#>><<=copyRight>>
+<<=includes>>
+int main(int argc, char *argv[]){
+<<=StringUtil.indent(contents, 1)>>
+	return 0;
+}
+!>>	
+	emit mainFunction()(mainFunctionT);
+	
+	cMakeFoldersT <<!include_directories(<<=directory>>)!>>
+	emit cMakeFolders(String directory)(cMakeFoldersT);
+	
+cMakeT <<!<<#
+String projectName = getProject();
+String includes= listAllFiles();
+String namespaces= listAllMakeNamespaces();
+
+#>>cmake_minimum_required(VERSION 3.0)
+project(<<=projectName>>)
+
+set(CMAKE_CXX_STANDARD 11)
+include_directories(${CMAKE_SOURCE_DIR})
+<<=namespaces>>
+
+set(SOURCE_FILES
+<<=includes>>)
+
+add_executable(<<=projectName>> ${SOURCE_FILES})!>>
+
+emit cMake()(cMakeT);
+
+	
+}

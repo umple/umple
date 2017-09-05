@@ -1,15 +1,28 @@
-/*
-
-Copyright: All contributers to the Umple Project
-
-This file is made available subject to the open source license found at:
-http://umple.org/license
-
-This is the Umple php template master files that calls all major php template files.
-By compiling this file, Umple will regenerate all Php generator files
-
-*/
-
+/*******************************************************************************
+* Copyright (c) 2017 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
 generate Java "../src-gen-UmpleTL";
 
-use CMake.ump;
+use Core.ump;
+use CompositeStructure.ump;
+use Associations.ump;
+use Attributes.ump;
+use Association_roles.ump;
+use Depend.ump;
+use Content.ump;
+use RTLib.ump;

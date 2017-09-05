@@ -1,0 +1,2641 @@
+/*******************************************************************************
+* Copyright (c) 2017 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
+class GenPackage{
+
+	
+	jsonArrayT <<!
+template<class ArrayType>
+void createArrayType(std::vector<ArrayType> list) {
+	for (int i = 0; i < list.size(); i++) {
+		ArrayType type = list[i];
+		this->push(new JSON(type));
+	}
+}!>>
+emit jsonArray()(jsonArrayT);
+	
+	jsonArrayEntryT <<!
+JSON(std::vector<<<=type>>*> list) {
+	createArrayType<<<=type>>*>(list);
+}
+
+operator std::vector<<<=type>>*>*&() {
+	std::vector<<<=type>>*> *v;
+	cout << "done";
+	return v;
+}!>>
+emit jsonArrayEntry(String type)(jsonArrayEntryT);	
+	
+predefinedTemplatesDefinitionsT <<!<<#
+	String predefinedPackageContents= getAllPredefinitions().stream().map(GenBody::getBody).collect(Collectors.joining(NL));
+	String templateDefinitions= threadImplementation();
+//	if(hasRemoteClass()){
+//		templateDefinitions= this.threadImplementation()+ templateDefinitions;
+//	}
+	String definitionFullPath= preprocessingDefinitionName();
+	
+#>>//is_pointer
+template <typename T> struct remove_const_type { typedef T type; };
+template <typename T> struct remove_const_type<const T> { typedef T type; };
+template <typename T> struct remove_volatile_type { typedef T type; };
+template <typename T> struct remove_volatile_type<volatile T> { typedef T type; };
+template <typename T> struct removeType : remove_const_type<typename remove_volatile_type<T>::type> {};
+template <typename T> struct is_ptr_type { enum { value = false }; };
+template <typename T> struct is_ptr_type<T*> { enum { value = true }; };
+template <typename T> struct is_ptr : is_ptr_type<typename removeType<T>::type> {};
+
+<<=templateDefinitions>>
+<<=predefinedPackageContents>>!>>
+	emit predefinedTemplatesDefinitions()(predefinedTemplatesDefinitionsT);
+	
+	
+threadImplementationT <<!<<#boolean isRemote= hasRemoteClass();#>>
+#define PLACE_HOLDER			int
+#define USECS_PER_MSEC			1000
+#define MUSECS_PER_SEC			1000
+#define USECS_PER_SEC			1000000
+
+#define INSTANCEOF(object, clazz)	!dynamic_cast<clazz*>(object)
+#define ARGUMENT_UPPER_LIMIT      10
+#define EMPTY()  
+#define COMMA() ,
+#define SEMICOLON() ;
+#define TYPENAME_ARGS(i, value) typename ArgumentType##i
+#define TYPENAME_VALUE_ARGS(i, value) typename ArgumentType##i=value
+#define INIT_VALUE_ARG(i, name) this->_##name##i=name##i
+#define SER_ARG(i, name) _##name##i=transport[i - 1]
+#define DES_ARG(i, name) transport[i - 1]=_##name##i
+#define NAMED_ARG(i, name) name##i 
+#define MEMBER_ARG(i, name) ArgumentType##i name##i
+#define INIT_MEMBER_ARG(i, name) _##name##i(name##i)
+#define VOID_ARG(i, value) void
+#define CAT(a, ...) a ## __VA_ARGS__
+#define REPEAT_DEC(count ,macro, split, ...) CAT(REPEAT_DEC_,count)(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_1(macro, split, ...) 
+#define REPEAT_DEC_2(macro, split, ...)  macro(1, __VA_ARGS__)
+#define REPEAT_DEC_3(macro, split, ...)  macro(2, __VA_ARGS__) split() REPEAT_DEC_2(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_4(macro, split, ...)  macro(3, __VA_ARGS__) split() REPEAT_DEC_3(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_5(macro, split, ...)  macro(4, __VA_ARGS__) split() REPEAT_DEC_4(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_6(macro, split, ...)  macro(5, __VA_ARGS__) split() REPEAT_DEC_5(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_7(macro, split, ...)  macro(6, __VA_ARGS__) split() REPEAT_DEC_6(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_8(macro, split, ...)  macro(7, __VA_ARGS__) split() REPEAT_DEC_7(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_9(macro, split, ...)  macro(8, __VA_ARGS__) split() REPEAT_DEC_8(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_10(macro, split, ...) macro(9, __VA_ARGS__) split() REPEAT_DEC_9(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_11(macro, split, ...) macro(10, __VA_ARGS__) split() REPEAT_DEC_10(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_12(macro, split, ...) macro(11, __VA_ARGS__) split() REPEAT_DEC_11(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_13(macro, split, ...) macro(12, __VA_ARGS__) split() REPEAT_DEC_12(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_14(macro, split, ...) macro(13, __VA_ARGS__) split() REPEAT_DEC_13(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_15(macro, split, ...) macro(14, __VA_ARGS__) split() REPEAT_DEC_14(macro, split, __VA_ARGS__)
+#define REPEAT_DEC_16(macro, split, ...) macro(15, __VA_ARGS__) split() REPEAT_DEC_15(macro, split, __VA_ARGS__)
+
+#define REPEAT_INC(count, macro, split, ...) CAT(REPEAT_INC_,count)(macro, split, __VA_ARGS__)
+#define REPEAT_INC_1(macro, split, ...)  macro(1, __VA_ARGS__)
+#define REPEAT_INC_2(macro, split, ...)  REPEAT_INC_1(macro, split, __VA_ARGS__) split() macro(2, __VA_ARGS__)
+#define REPEAT_INC_3(macro, split, ...)  REPEAT_INC_2(macro, split, __VA_ARGS__) split() macro(3, __VA_ARGS__)
+#define REPEAT_INC_4(macro, split, ...)  REPEAT_INC_3(macro, split, __VA_ARGS__) split() macro(4, __VA_ARGS__)
+#define REPEAT_INC_5(macro, split, ...)  REPEAT_INC_4(macro, split, __VA_ARGS__) split() macro(5, __VA_ARGS__)
+#define REPEAT_INC_6(macro, split, ...)  REPEAT_INC_5(macro, split, __VA_ARGS__) split() macro(6, __VA_ARGS__)
+#define REPEAT_INC_7(macro, split, ...)  REPEAT_INC_6(macro, split, __VA_ARGS__) split() macro(7, __VA_ARGS__)
+#define REPEAT_INC_8(macro, split, ...)  REPEAT_INC_7(macro, split, __VA_ARGS__) split() macro(8, __VA_ARGS__)
+#define REPEAT_INC_9(macro, split, ...)  REPEAT_INC_8(macro, split, __VA_ARGS__) split() macro(9, __VA_ARGS__)
+#define REPEAT_INC_10(macro, split, ...)  REPEAT_INC_9(macro, split, __VA_ARGS__) split() macro(10, __VA_ARGS__)
+#define REPEAT_INC_11(macro, split, ...) REPEAT_INC_10(macro, split, __VA_ARGS__) split() macro(11, __VA_ARGS__)
+#define REPEAT_INC_12(macro, split, ...) REPEAT_INC_11(macro, split, __VA_ARGS__) split() macro(12, __VA_ARGS__)
+#define REPEAT_INC_13(macro, split, ...) REPEAT_INC_12(macro, split, __VA_ARGS__) split() macro(13, __VA_ARGS__)
+#define REPEAT_INC_14(macro, split, ...) REPEAT_INC_13(macro, split, __VA_ARGS__) split() macro(14, __VA_ARGS__)
+#define REPEAT_INC_15(macro, split, ...) REPEAT_INC_14(macro, split, __VA_ARGS__) split() macro(15, __VA_ARGS__)
+#define REPEAT_INC_16(macro, split, ...) REPEAT_INC_15(macro, split, __VA_ARGS__) split() macro(16, __VA_ARGS__)
+
+#define VAR_TYPES(N) REPEAT_INC(N, TYPENAME_ARGS, COMMA)
+#define VAR_TYPES_DEFAULT(N,VALUE) REPEAT_INC(N, TYPENAME_VALUE_ARGS, COMMA, VALUE)
+#define VAR_ARGS(N) REPEAT_INC(N, NAMED_ARG, COMMA, ArgumentType)
+#define VAR_NAMED_ARGS(N, name) REPEAT_INC(N, NAMED_ARG, COMMA, name)
+#define VOID_ARGS(N) REPEAT_INC(N, VOID_ARG, COMMA)
+
+#define VAR_ARGS_MEMBERS(N, name, delim) REPEAT_INC(N, MEMBER_ARG, delim, name)
+#define INIT_VAR_ARGS_MEMBERS(N, name) REPEAT_INC(N, INIT_MEMBER_ARG, COMMA, name)
+#define INIT_VALUE_ARGS(N, name) REPEAT_INC(N, INIT_VALUE_ARG, SEMICOLON, name)
+
+#define SERIALIZE_ARGS(N, name) REPEAT_INC(N, SER_ARG, SEMICOLON, name)
+#define DESERIALIZE_ARGS(N, name) REPEAT_INC(N, DES_ARG, SEMICOLON, name)
+
+#define GENERATE_METHOD_CALLBACK_SIGNATURES_ARGUMENTS(N, value)			\
+template<typename Caller, typename ReturnType, VAR_TYPES(N)>   			\
+	struct MethodCallbackSignature<Caller,ReturnType, VAR_ARGS(N)> {	\
+	typedef ReturnType(Caller::*Method)(VAR_ARGS(N)); };				\
+template<typename Caller, VAR_TYPES(N)>									\
+	struct MethodCallbackSignature<Caller, void, VAR_ARGS(N)> { 		\
+	typedef void (Caller::*Method)(VAR_ARGS(N)); };
+
+#define GENERATE_METHOD_CALLBACK_INVOKE_ARGUMENTS(N, value)																			\
+template <class BASE, class Caller, class FutureResultType, class ReturnType, VAR_TYPES(N)>										\
+class MethodCallbackInvoke<BASE,Caller,FutureResultType,ReturnType, VAR_ARGS(N)>												\
+		: public BaseMethodCallbackInvoke<BASE, Caller, FutureResultType, ReturnType> {public:									\
+	typedef typename MethodCallbackSignature<Caller, ReturnType, VAR_ARGS(N)>::Method Callback;									\
+	MethodCallbackInvoke(Caller* caller, Callback method, VAR_ARGS_MEMBERS(N, arg, COMMA), const FutureResultType& result) :	\
+		BaseMethodCallbackInvoke(caller, result), _method(method), INIT_VAR_ARGS_MEMBERS(N, arg) {}								\
+protected: VAR_ARGS_MEMBERS(N, _arg, SEMICOLON); Callback _method; };
+
+#define GENERATE_DELEGATE_INVOKE_ARGUMENTS(N, value)																	\
+template <class BASE, class Caller, class FutureType, class ReturnType, VAR_TYPES(N)>								\
+class DelegateInvoke<BASE, Caller, FutureType, ReturnType, VAR_ARGS(N)> :										\
+public MethodCallbackInvoke<BASE, Caller, FutureType, ReturnType, VAR_ARGS(N)> {public:								\
+	DelegateInvoke(Caller* caller, Callback method, VAR_ARGS_MEMBERS(N, arg, COMMA), const FutureType& result)	\
+		: MethodCallbackInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}									\
+	void invokeMethod() { _result.resolveData(new ReturnType((_context->*_method)(VAR_NAMED_ARGS(N, _arg))));}};	\
+template <class BASE, class Caller, class FutureType, VAR_TYPES(N)>													\
+class DelegateInvoke<BASE, Caller, FutureType, void, VAR_ARGS(N)> :												\
+public MethodCallbackInvoke<BASE, Caller, FutureType, void, VAR_ARGS(N)>{public:									\
+	DelegateInvoke(Caller* caller, Callback method, VAR_ARGS_MEMBERS(N, arg, COMMA), const FutureType& result)	\
+		: MethodCallbackInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}									\
+	void invokeMethod() { (_context->*_method)(VAR_NAMED_ARGS(N, _arg));}};
+
+#define GENERATE_DELEGATE_ARGUMENTS(N, value)																							\
+template <class Caller, class ReturnType, VAR_TYPES(N)> class Delegate<Caller, ReturnType, VAR_ARGS(N)> :						\
+	public DelegateInvoke < DelegateBase, Caller, FutureResult<ReturnType>, ReturnType, VAR_ARGS(N) > {							\
+	public:	Delegate(Caller* caller, Callback method, VAR_ARGS_MEMBERS(N, arg, COMMA), const FutureResult<ReturnType>& result)	\
+		: DelegateInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {} };											\
+template <class Caller, VAR_TYPES(N)> class Delegate<Caller, void, VAR_TYPES(N)> :												\
+	public DelegateInvoke < DelegateBase, Caller, FutureResult<void>, void, VAR_ARGS(N) >{										\
+	public:	Delegate(Caller* caller, Callback method, VAR_ARGS_MEMBERS(N, arg, COMMA), const FutureResult<void>& result)			\
+			: DelegateInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}};
+
+#define GENERATE_MULTICAST_ARGUMENTS(N, value)																														\
+template<class ReturnType, VAR_TYPES(N)>																													\
+class IDelegatePublisher<ReturnType, VAR_ARGS(N)> {public:																									\
+	virtual FutureResult<ReturnType> publish(VAR_ARGS_MEMBERS(N, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) = 0;						\
+};																																							\
+template <class ReturnType, VAR_TYPES(N)>																													\
+class MulticastDelegate<ReturnType, VAR_ARGS(N)> : public IDelegatePublisher<ReturnType, VAR_ARGS(N)>{private:												\
+	typedef std::vector< IDelegatePublisher<ReturnType, VAR_ARGS(N)>* > SubscribersList;																	\
+	SubscribersList subscribers;																															\
+public:																																						\
+	MulticastDelegate() {}                                                                  \
+	MulticastDelegate& operator += (IDelegatePublisher<ReturnType, VAR_ARGS(N)>* method) {                                  \
+	  subscribers.push_back(method);                                                            \
+	  return *this;}                                                                    \
+		void notify(VAR_ARGS_MEMBERS(N, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {				\
+			typename SubscribersList::iterator it = subscribers.begin();                                            \
+			for (; it != subscribers.end(); it++) { (*it)->publish(VAR_NAMED_ARGS(N, arg), priority, delay, timeout); }	}		\
+	FutureResult<ReturnType> operator () (VAR_ARGS_MEMBERS(N, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {              \
+	  FutureResult<ReturnType> result = publish(VAR_NAMED_ARGS(N, arg), priority, delay, timeout);                            \
+	  notify(VAR_NAMED_ARGS(N, arg), priority, delay, timeout);                      \
+	  return result;}};
+
+#define GENERATE_ACTIVE_ARGUMENTS(N, value)																																							\
+template <class Caller, class ReturnType, VAR_TYPES(N)> class Active<Caller, ReturnType, VAR_ARGS(N)> : public ActiveConstraintUID, public MulticastDelegate<ReturnType, VAR_ARGS(N)> { public:  \
+	  typedef Delegate<Caller, ReturnType, VAR_ARGS(N)> DelegateType;                                                                \
+	  typedef typename MethodCallbackSignature<Caller, ReturnType, VAR_ARGS(N)>::Method Callback;                                                  \
+	  Active(Caller* caller, Scheduler<Caller>* sch, Callback method) :_context(caller), _sch(sch), _method(method) {}                                      \
+	  FutureResult<ReturnType> operator () (VAR_ARGS_MEMBERS(N, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {              \
+		FutureResult<ReturnType> result = publish(VAR_NAMED_ARGS(N, arg), priority, delay, timeout); return result;};                            \
+	  FutureResult<ReturnType> publish(VAR_ARGS_MEMBERS(N, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {                                    \
+	    FutureResult<ReturnType> result(new FutureObject<ReturnType>());                                                            \
+	    DelegateBase::Ptr pDelegate(new DelegateType(_context, _method, VAR_NAMED_ARGS(N, arg), result));                                            \
+	    _sch->schedule(pDelegate,priority,delay, timeout, _guardId, _conditionId);                                                        \
+		this->notify(VAR_NAMED_ARGS(N, arg), priority, delay, timeout);								\
+	    return result;} private: Caller* _context; Scheduler<Caller>* _sch; Callback _method; };
+
+#define GENERATE_METHOD_CALLBACK_SIGNATURES(N)	REPEAT_DEC(N, GENERATE_METHOD_CALLBACK_SIGNATURES_ARGUMENTS, EMPTY)
+#define GENERATE_METHOD_CALLBACK_INVOKE(N)	REPEAT_DEC(N, GENERATE_METHOD_CALLBACK_INVOKE_ARGUMENTS, EMPTY)
+#define GENERATE_DELEGATE_INVOKE(N)	REPEAT_DEC(N, GENERATE_DELEGATE_INVOKE_ARGUMENTS, EMPTY)
+#define GENERATE_DELEGATE(N)	REPEAT_DEC(N, GENERATE_DELEGATE_ARGUMENTS, EMPTY)
+#define GENERATE_MULTICAST_METHOD(N)	REPEAT_DEC(N, GENERATE_MULTICAST_ARGUMENTS, EMPTY)
+#define GENERATE_ACTIVE_METHOD(N)	REPEAT_DEC(N, GENERATE_ACTIVE_ARGUMENTS, EMPTY)
+
+#ifdef WINDOWS_OS
+#define isnan(x) _isnan(x)
+#define isinf(x) (!_finite(x))
+
+#define SOCKET_TYPE						SOCKET
+#define CLOSE_SOCKET(arg) \
+	closesocket(arg)
+
+#define EVENT_TYPE						HANDLE
+#define CONDITION_TYPE					PLACE_HOLDER
+#define THREAD_TYPE			 			HANDLE
+#define THREAD_RETURN_TYPE				unsigned WINAPI
+#define THREAD_ERROR_INSTANCE(returnValue)	((returnValue) == NULL)
+#define THREAD_ERROR_CODE(value)			GetLastError()
+
+#define MUTEX_CRITICAL_SECTION			CRITICAL_SECTION
+#define START_MUTEX_FUNCTION(arg) \
+	InitializeCriticalSection((arg))
+
+#define TERMINATE_MUTEX_FUNCTION(arg) \
+	DeleteCriticalSection((arg))
+
+#define LOCK_MUTEX_FUNCTION(arg) \
+	EnterCriticalSection((arg))
+
+#define UNLOCK_MUTEX_FUNCTION(arg) \
+	LeaveCriticalSection((arg))
+
+#define START_EVENT_TYPE_FUNCTION(mutex, cond, reset) \
+	mutex = CreateEvent(NULL, reset, FALSE, NULL);	  \
+	if (!mutex)										  \
+		throw ThreadException("mutex signal failed")
+
+#define TERMINATE_EVENT_FUNCTION(mutex, cond) \
+	CloseHandle(mutex)
+
+#define WAIT_EVENT_FUNCTION(mutex, cond, wakeup)		\
+	switch(WaitForSingleObject(mutex, INFINITE)) {		\
+	case WAIT_OBJECT_0:									\
+		return;											\
+	default:											\
+		throw ThreadException("wait event failed");		\
+	}
+
+#define WAIT_TIME_EVENT_FUNCTION(mutex, cond, time, wakeup, reset, status)			\
+	switch (WaitForSingleObject(mutex, time + 1))									\
+	{																				\
+	case WAIT_OBJECT_0:																\
+		status = true;																\
+		break;																        \
+	case WAIT_TIMEOUT:																\
+		status = false;																\
+		break;																        \
+	default:																		\
+		throw ThreadException("wait failed");									    \
+	}
+
+#define WAKEUP_EVENT_FUNCTION(mutex, cond, wakeup) \
+	SetEvent(mutex)
+
+#define THREAD_JOIN_FUNCTION(hdl)				WaitForSingleObject(hdl, INFINITE)
+#define THREAD_SLEEP_FUNCTION(ms)				Sleep((ms))
+
+#define THREAD_CREATE_FUNCTION(id, funPtr, callPtr)	id =(HANDLE)CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)funPtr,callPtr,0L,NULL)
+
+#define THREAD_TERMINATE_FUNCTION(hdl)	TerminateThread(hdl, 0)
+
+#define THREAD_CANCEL_FUNCTION(hdl)	TerminateThread(hdl, 0)
+
+#define IS_THREAD_ALIVE_FUNCTION(hdl, isRunning)	\
+	DWORD exitCode = 0;								\
+	if(GetExitCodeThread(hdl, &exitCode)) 			\
+		isRunning = (exitCode == STILL_ACTIVE)
+
+#define BROADCAST_FUNCTION(arg) 0
+
+#define SET_EVENT_FUNCTION(arg) \
+	SetEvent((arg))
+
+#define RESET_EVENT_FUNCTION(arg) \
+	ResetEvent((arg))
+
+#define LOCK_MUTEX_EVENT_FUNCTION(arg) 0
+#define UNLOCK_MUTEX_EVENT_FUNCTION(arg) 0
+	
+#else
+typedef int                 BOOL;
+
+#ifndef FALSE
+#define FALSE               0
+#endif
+
+#ifndef TRUE
+#define TRUE                1
+#endif
+#define SOCKET_TYPE						int
+#define CLOSE_SOCKET(arg) \
+	close(arg)
+
+#define EVENT_TYPE							pthread_mutex_t
+#define CONDITION_TYPE						pthread_cond_t
+
+#define THREAD_TYPE							pthread_t
+#define THREAD_RETURN_TYPE					void *
+
+#define THREAD_ERROR_INSTANCE(returnValue)	((returnValue) == NULL)
+#define THREAD_ERROR_CODE(value)			errno
+
+#define MUTEX_CRITICAL_SECTION					pthread_mutex_t
+#define START_MUTEX_FUNCTION(arg)	\
+	pthread_mutex_init ((arg), NULL)
+
+#define TERMINATE_MUTEX_FUNCTION(arg) \
+	pthread_mutex_destroy((arg))
+
+#define LOCK_MUTEX_FUNCTION(arg)	\
+	pthread_mutex_lock((arg))
+
+#define UNLOCK_MUTEX_FUNCTION(arg) \
+	pthread_mutex_unlock((arg))
+
+#define START_EVENT_TYPE_FUNCTION(mutex, cond, reset) \
+	 if (pthread_mutex_init(&mutex, NULL))			  \
+		throw ThreadException("mutex signal failed");  \
+	 pthread_cond_init(&cond, NULL)
+
+#define TERMINATE_EVENT_FUNCTION(mutex, cond) \
+	pthread_cond_destroy(&cond); \
+	pthread_mutex_destroy(&mutex)
+
+#define WAIT_EVENT_FUNCTION(mutex, cond, wakeup)	  \
+	pthread_mutex_lock(&mutex);						  \
+	int err = 0;									  \
+	while (!wakeup) {					              \
+		err = pthread_cond_wait(&cond, &mutex);		  \
+		if (err) {									  \
+		  pthread_mutex_unlock(&mutex);				  \
+		  throw ThreadException("wait event failed"); \
+		}											  \
+	}												  \
+	wakeup = FALSE;									  \
+	pthread_mutex_unlock(&mutex)
+
+#define WAIT_TIME_EVENT_FUNCTION(mutex, cond, ms, wakeup, reset, status)			\
+	struct timeval tv																\
+	struct timespec tdif															\
+	gettimeofday(&tv, NULL)															\
+	tdif.tv_sec  = tv.tv_sec + ms / MUSECS_PER_SEC									\
+	tdif.tv_nsec = tv.tv_usec*MUSECS_PER_SEC + (ms % MUSECS_PER_SEC)*USECS_PER_SEC	\
+	if (tdif.tv_nsec >= NSECS_PER_SEC) {											\
+		tdif.tv_nsec -= NSECS_PER_SEC												\
+		tdif.tv_sec++																\
+			}																		\
+	pthread_mutex_lock(&mutex)														\
+			while (!wakeup)															\
+						{															\
+		status = pthread_cond_timedwait(&cond, &mutex, &tdif)						\
+		if(status) {																\
+			if (status == ETIMEDOUT) break;											\
+			pthread_mutex_unlock(&mutex)											\
+			throw ThreadException(get_error(status))								\
+						}															\
+						}															\
+	wakeup =  status == 0 && reset ? false : wakeup									\
+	pthread_mutex_unlock(&mutex)
+
+#define WAKEUP_EVENT_FUNCTION(mutex, cond, wakeup)  \
+	pthread_mutex_lock(&mutex);						\
+	wakeup = TRUE;									\
+	pthread_cond_signal(&cond);						\
+	pthread_mutex_unlock(&mutex)
+
+#define THREAD_JOIN_FUNCTION(id)	pthread_join(id, NULL)
+#define THREAD_SLEEP_FUNCTION(ms) \
+	struct timeval tv; \
+    tv.tv_usec = (ms % MUSECS_PER_SEC) * USECS_PER_MSEC; \
+    tv.tv_sec = ms / MUSECS_PER_SEC; \
+    select(0, NULL, NULL, NULL, &tv)
+
+#define THREAD_CREATE_FUNCTION(id, funPtr, callPtr)				\
+	pthread_attr_t attr;										\
+	pthread_attr_init(&attr);									\
+	pthread_attr_setdetachstate(&attr,PTHREAD_CREATE_DETACHED);	\
+	pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED);	\
+	pthread_create(&id, &attr, funPtr, callPtr);				\
+	pthread_attr_destroy(&attr)
+
+#define THREAD_TERMINATE_FUNCTION(arg)	pthread_exit(arg)
+#define THREAD_CANCEL_FUNCTION(Id)					\
+	if (pthread_cancel(Id) == 0)					\
+		pthread_detach(Id);
+
+#define IS_THREAD_ALIVE_FUNCTION(hdl, isRunning)	\
+	isRunning = (pthread_kill(hdl, 0) == 0)
+
+#define BROADCAST_FUNCTION(arg) \
+	pthread_cond_broadcast((arg))
+
+#define SET_EVENT_FUNCTION(arg) 1
+
+#define RESET_EVENT_FUNCTION(arg) 1
+
+#define LOCK_MUTEX_EVENT_FUNCTION(arg)	\
+	pthread_mutex_lock((arg))
+
+#define UNLOCK_MUTEX_EVENT_FUNCTION(arg) \
+	pthread_mutex_unlock((arg))
+
+#endif
+
+#define CREATE_THREAD(id, funPtr, callPtr)								\
+	THREAD_CREATE_FUNCTION(id, funPtr, callPtr);						\
+	if(THREAD_ERROR_INSTANCE(id))										\
+		throw ThreadException(ErrorMessage(THREAD_ERROR_CODE(id)))
+
+static std::string ErrorMessage(int errorCode){
+	string str = "";
+	if (errorCode == 0) {
+		return str;
+	}
+
+	char const* what = "Error Numer";
+	int whlen = strlen(what);
+	int ncode = errorCode, dlen = 1;
+	while (ncode !=0) {dlen++; ncode/=10;}
+	char *buffer = (char *) malloc(sizeof(char) * (whlen + dlen + 1));
+    sprintf(buffer, "%s = %d", what, errorCode);
+	str = buffer;
+	return str;
+}
+
+class Exception : public std::exception {
+	friend ostream& operator<<(ostream& output, const Exception& ex) {
+		output << "Exception: " << ex.error;
+		return output;
+	}
+public:
+	Exception() throw() : error(std::string("Exception")) {}
+	Exception(std::string err) throw() : error(err) {}
+	Exception(const Exception& source) throw() : std::exception(source) { error = source.error; }
+	virtual ~Exception() throw () {}
+	Exception& operator=(const Exception& source) throw() {
+		if (&source != this) {
+			error = source.error;
+		}
+		std::exception::operator= (source);
+		return *this;
+	}
+	void setError(std::string exce) { error = exce; }
+	virtual const char* what() const throw() { return error.c_str(); }
+protected:
+	std::string error;
+};
+
+struct ThreadException : public Exception{
+public:
+	ThreadException() : Exception() {}
+	ThreadException(char* errorMessage) : Exception(errorMessage) {}
+	ThreadException(std::string errorMessage) : Exception(errorMessage) {}
+};
+
+template <typename T>
+void* ConvertToFunctionPointer(T x) {
+  return *reinterpret_cast<void**>(&x);
+}
+
+struct Runnable {
+	virtual void run() = 0;
+};
+
+class AtomicMutex{
+  public:
+	AtomicMutex() { START_MUTEX_FUNCTION(&section); }
+	~AtomicMutex() { TERMINATE_MUTEX_FUNCTION(&section); }
+    void lock() { LOCK_MUTEX_FUNCTION(&section); }
+    void unlock() { UNLOCK_MUTEX_FUNCTION(&section); }
+
+  private:
+	MUTEX_CRITICAL_SECTION section;
+};
+
+static AtomicMutex atomicMutex;
+
+class MutexLock{
+public:
+
+	MutexLock() : m_value(0){
+		wakeup = FALSE;
+		START_EVENT_TYPE_FUNCTION(mutex, cond, FALSE);
+	}
+
+	MutexLock(const MutexLock& m) {
+		this->m_value = m.m_value;
+		this->wakeup = m.wakeup;
+		this->mutex = m.mutex;
+		this->cond = m.cond;
+	}
+
+	~MutexLock(){
+		TERMINATE_EVENT_FUNCTION(mutex, cond);
+	}
+
+	void wait() {
+		WAIT_EVENT_FUNCTION(mutex, cond, wakeup);
+	}
+
+	void wakeUp() {
+		WAKEUP_EVENT_FUNCTION(mutex, cond, wakeup);
+	}
+
+	void lock() {
+		bool canBeAccessed = this->verifyLock();
+		if (canBeAccessed){
+			return;
+		}
+
+		atomicMutex.lock();
+		canBeAccessed = m_value == 0;
+		m_value += 1;
+		atomicMutex.unlock();
+
+		if (!canBeAccessed){
+			wait();
+			atomicMutex.lock();
+			m_value -= 1;
+			atomicMutex.unlock();
+		}
+
+	}
+
+	bool isLocked() {
+		atomicMutex.lock();
+		bool canBeAccessed = m_value == 0;
+		atomicMutex.unlock();
+		return !canBeAccessed;
+	}
+
+	bool verifyLock(int set = 0) {
+		atomicMutex.lock();
+		bool canBeAccessed = m_value == 0;
+		if (m_value == set) {
+			m_value = !set;
+			canBeAccessed = true;
+		}
+		atomicMutex.unlock();
+		return canBeAccessed;
+	}
+
+	void unlock() {
+		if (!verifyLock(1)){
+			wakeUp();
+		}
+	}
+
+private:
+	volatile int m_value;
+	volatile bool wakeup;
+
+	EVENT_TYPE mutex;
+	CONDITION_TYPE  cond;
+};
+
+#define synchronized(L)                                               \
+        for(L.lock();L.isLocked();									  \
+			L.unlock() )
+
+struct ThreadParameters
+{
+    void* runCall;
+    void* context;
+    ThreadParameters(void* ctx, void* callPtr) : context(ctx), runCall(callPtr) {}
+};
+
+class Thread: public Runnable {
+
+	public:
+		Thread(string threadName = "") : runnableObject(NULL), name(threadName), thrParams(this,ConvertToFunctionPointer(&Thread::run))
+			, _threadHdl(0),_isRunning(false),_isTerminated(false) {}
+		Thread(Runnable *target, string threadName = "") :  name(threadName),thrParams(this,ConvertToFunctionPointer(&Thread::run)) , runnableObject(target) {}
+		Thread(void* funcPtr, void* ctx = 0 ,string threadName = "") : runnableObject(NULL), name(threadName), thrParams(ctx,funcPtr) {}
+		Thread(void (*funcPtr)(void*), void* ctx = 0, string threadName = "") : runnableObject(NULL),name(threadName), thrParams(ctx,ConvertToFunctionPointer(funcPtr)) {}
+		Thread(void (*funcPtr)(), string threadName = "") : runnableObject(NULL),name(threadName), thrParams(this,ConvertToFunctionPointer(funcPtr)) {}
+		template<class T>
+		Thread(void (T::*RunnableCall)(), string threadName = "") : runnableObject(NULL), name(threadName), thrParams(this,ConvertToFunctionPointer(RunnableCall)) {}
+		template<class T>
+		Thread(void (T::*RunnableCall)(void*), void* ctx = 0, string threadName = "") : runnableObject(NULL), name(threadName), thrParams(ctx,ConvertToFunctionPointer(RunnableCall)) {}
+		virtual ~Thread() {
+			THREAD_TERMINATE_FUNCTION(0);
+		}
+
+		static void sleep(long ms) throw(ThreadException) {
+			THREAD_SLEEP_FUNCTION(ms);
+		}
+
+		THREAD_TYPE getId() const {
+			return this->_threadHdl;
+		}
+
+		static THREAD_RETURN_TYPE threadFunctionPointer(void* ptr) {
+			ThreadParameters* threadParameters = (ThreadParameters*)ptr;
+			if(threadParameters->context != NULL) {
+				Runnable* run = (Thread*) threadParameters->context;
+				run->run();
+				//((void (*)(void*)) threadParameters->runCall)(threadParameters->context);
+			} else {
+			    ((void (*)(void)) threadParameters->runCall)();
+			}
+
+			return 0;
+		}
+
+		bool isFinished() {
+			return !this->isRunning();
+		}
+
+		bool isTerminated() {
+			synchronized(lock) {
+				return this->_isTerminated;
+			}
+			return 0;
+		}
+
+		bool isRunning() {
+			synchronized(lock) {
+				if(this->_isRunning) {
+					IS_THREAD_ALIVE_FUNCTION(_threadHdl,_isRunning);
+				}
+				return this->_isRunning;
+			}
+			
+			return 0;
+		}
+
+		virtual void run() {
+			if(this->runnableObject != NULL) {
+				runnableObject->run();
+			}
+		}
+
+		virtual void stop() {
+			synchronized(lock) {
+				THREAD_CANCEL_FUNCTION(_threadHdl);
+				_isTerminated = true;
+				_isRunning = false;
+			}
+		}
+
+		string getName() const {
+			return name;
+		}
+
+		void setName(string name) {
+			this->name = name;
+		}
+
+		virtual void start(Runnable *target) throw(ThreadException) {
+			runnableObject = target;
+			start();
+		}
+		
+		virtual void start() throw(ThreadException) {
+			synchronized(lock) {
+				reset();
+				CREATE_THREAD(_threadHdl,Thread::threadFunctionPointer, &thrParams);
+				_isRunning = true;
+			}
+		}
+
+		void join() throw(ThreadException) {
+			THREAD_JOIN_FUNCTION(_threadHdl);
+		}
+		
+		void wait() throw(ThreadException) {
+			lock.wait();
+		}
+
+		void wakeUp() throw(ThreadException) {
+			lock.wakeUp();
+		}
+
+	private:
+		mutable MutexLock lock;
+		THREAD_TYPE _threadHdl;
+		string name;
+
+		ThreadParameters thrParams;
+		Runnable* runnableObject;
+
+		bool _isRunning;
+		bool _isTerminated;
+
+		void reset() {
+			_threadHdl = 0;
+			_isRunning = false;
+			_isTerminated = false;
+		}
+};
+
+template <class PT>
+class AutoPtr {
+public:
+	AutoPtr(PT* p = NULL, bool shared = false) : _ptr(NULL) { _ptr=p; if (shared && _ptr) _ptr->reference(); }
+	AutoPtr(const AutoPtr& ptr) : _ptr(NULL) { _ptr=ptr._ptr; if (_ptr) _ptr->reference(); }
+	~AutoPtr() { if (_ptr) _ptr->release(); }
+	AutoPtr& operator = (const AutoPtr& ptr) {
+		if (&ptr != this) {
+			if (_ptr) _ptr->release();
+			_ptr = ptr._ptr;
+			if (_ptr) _ptr->reference();
+		}
+		return *this;
+	}
+	PT* operator -> () {
+		if (_ptr)
+			return _ptr;
+		else
+			throw std::exception("Null Pointer Exception");
+	}
+	PT* reference() { if (_ptr) _ptr->reference(); return _ptr; }
+	PT* value() { return _ptr; }
+	operator const PT* () const { return _ptr; }
+	bool operator == (const AutoPtr& ptr) const { return _ptr == ptr._ptr; }
+	bool operator != (const AutoPtr& ptr) const { return _ptr != ptr._ptr; }
+private:
+	PT* _ptr;
+};
+
+class ReferenceObject {
+private:
+	mutable MutexLock mutex;
+	mutable volatile int referenceNumber;
+public:
+	ReferenceObject() {
+		synchronized(mutex) {
+			referenceNumber = 1;
+		}
+	}
+	void reference() const {
+		synchronized(mutex) {
+			++referenceNumber;
+		}
+	}
+	void release() const {
+		synchronized(mutex) {
+			--referenceNumber;
+		}
+		if (referenceNumber == 0) {
+			delete this;
+		}
+	}
+	size_t size() const {
+		int val = 0;
+		synchronized(mutex) {
+			val = referenceNumber;
+		}
+	}
+protected:
+	virtual ~ReferenceObject() {}
+};
+template <typename Object> struct RefPointer : public ReferenceObject { typedef AutoPtr<Object> Ptr; };
+
+class AutoLock {
+public:
+	explicit AutoLock(MutexLock& mutex) : _mutex(mutex) { _mutex.lock(); }
+	~AutoLock() { try{ _mutex.unlock(); } catch (...) {} }
+private:
+	MutexLock& _mutex;
+};
+
+class Signal {
+public:
+	Signal(bool manualReset = true) {
+		START_EVENT_TYPE_FUNCTION(_mutex, _cond, manualReset ? FALSE : TRUE);
+	}
+
+	~Signal() {
+		TERMINATE_EVENT_FUNCTION(_mutex, _cond);
+	}
+
+	void notify() {
+		if (LOCK_MUTEX_EVENT_FUNCTION(&_mutex))
+			throw ThreadException("cannot notify lock");
+		if (BROADCAST_FUNCTION(&_cond))
+		{
+			UNLOCK_MUTEX_EVENT_FUNCTION(&_mutex);
+			throw ThreadException("cannot notify lock");
+		}
+		if (!SET_EVENT_FUNCTION(_mutex))
+		{
+			throw ThreadException("cannot notify lock");
+		}
+		UNLOCK_MUTEX_EVENT_FUNCTION(&_mutex);
+	}
+
+	void wait() {
+		WAIT_EVENT_FUNCTION(_mutex, _cond, _state);
+	}
+
+	bool wait(long ms, bool timeout = false) {
+		int status = false;
+		WAIT_TIME_EVENT_FUNCTION(_mutex, _cond, ms, _state, _auto, status)
+			if (timeout && !status)
+				throw ThreadException("Timeout Exception");
+		return status;
+	}
+
+	void reset()
+	{
+		if (LOCK_MUTEX_EVENT_FUNCTION(&_mutex)) {
+			throw ThreadException("reset signal lock");
+		}
+		if (!RESET_EVENT_FUNCTION(_mutex)) {
+			throw ThreadException("reset signal lock");
+		}
+		UNLOCK_MUTEX_EVENT_FUNCTION(&_mutex);
+	}
+
+private:
+	EVENT_TYPE _mutex;
+	CONDITION_TYPE  _cond;
+};
+
+class UID {
+public:
+	unsigned int _uid;
+	UID() { _uid = ++uid; }
+	UID(const UID& uid) { _uid = uid._uid; }
+	UID& operator=(const UID& uid)  { _uid = uid._uid; return(*this); }
+	operator int() { return _uid; }
+	bool operator == (const UID& uid) const { return _uid == uid._uid; }
+	bool operator != (const UID& uid) const { return _uid != uid._uid; }
+	bool operator == (const unsigned int& uid) const { return _uid == uid; }
+	bool operator != (const unsigned int& uid) const { return _uid != uid; }
+protected:
+	static unsigned int uid;
+};
+
+template <class DataType>
+class DataResolver {
+public:
+	DataResolver() : _data(0) { }
+	DataType& data() {
+		return *_data;
+	}
+	void resolveData(DataType* data) {
+		delete _data;
+		_data = data;
+	}
+private:
+	DataType* _data;
+};
+
+class ErrorResolver {
+public:
+	ErrorResolver() :_error(0) {}
+	std::string getErrorMessage() const {
+		return (_error) ? _error->what() : std::string();
+	}
+	std::exception* getError() const {
+		return _error;
+	}
+	void resolveError(const std::string& msg) {
+		delete _error;
+		_error = new std::exception(msg.c_str());
+	}
+	bool hasError() const {
+		return _error != 0;
+	}
+private:
+	std::exception*  _error;
+};
+
+class SharedObject : public ReferenceObject {
+public:
+	SharedObject() : _signal(false) {}
+	void wait() {
+		_signal.wait();
+	}
+	bool wait(long ms, bool timeout = false) {
+		return _signal.wait(ms, timeout);
+	}
+	void notify() {
+		_signal.notify();
+	}
+private:
+	Signal       _signal;
+};
+
+template <typename T>
+struct SharedObjectProxy
+{
+	typedef T* DataTypePtr;
+public:
+	SharedObjectProxy(DataTypePtr data) : _data(data) {}
+	SharedObjectProxy(const SharedObjectProxy& proxy) {
+		_data = proxy._data;
+		_data->reference();
+	}
+	~SharedObjectProxy() {
+		_data->release();
+	}
+	void snooze() {
+		_data->wait(0); //for (; data->wait(10); );
+	}
+	void wait() {
+		_data->wait();
+	}
+	bool wait(long ms, bool timeout = false) {
+		return _data->wait(ms, timeout);
+	}
+	bool ready() const {
+		return _data->wait(0);
+	}
+	void notify() {
+		_data->notify();
+	}
+protected:
+	SharedObjectProxy();
+	DataTypePtr  _data;
+};
+
+template <typename BASE, typename T = typename BASE::DataTypePtr>
+struct ErrorProxy : public BASE {
+public:
+	ErrorProxy(T data) : BASE(data) {}
+	ErrorProxy(const ErrorProxy& proxy) : BASE(proxy) {}
+	std::string getErrorMessage() const {
+		return _data->getErrorMessage();
+	}
+	std::exception* getError() const {
+		return _data->getError();
+	}
+	void resolveError(const std::string& msg) {
+		_data->resolveError(msg);
+	}
+	bool hasError() const {
+		return _data->hasError();
+	}
+};
+
+template <typename BASE, class Type, typename T = typename BASE::DataTypePtr>
+struct DataProxy : public BASE {
+public:
+	DataProxy(T data) : BASE(data) {}
+	DataProxy(const DataProxy& proxy) : BASE(proxy) {}
+	Type& data() const {
+		return _data->data();
+	}
+	void resolveData(Type* data) {
+		_data->resolveData(data);
+	}
+};
+
+template<typename Caller, typename ReturnType = void, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> struct MethodCallbackSignature;
+template<typename Caller, typename ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> struct MethodCallbackSignature { typedef ReturnType(Caller::*Method)(VAR_ARGS(ARGUMENT_UPPER_LIMIT)); };
+template<typename Caller, typename ReturnType> struct MethodCallbackSignature<Caller, ReturnType, VOID_ARGS(ARGUMENT_UPPER_LIMIT)> { typedef ReturnType(Caller::*Method)(); };
+template<typename Caller, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> struct MethodCallbackSignature<Caller, void, VAR_ARGS(ARGUMENT_UPPER_LIMIT)> { typedef void (Caller::*Method)(VAR_ARGS(ARGUMENT_UPPER_LIMIT)); };
+template<typename Caller> struct MethodCallbackSignature<Caller, void, VOID_ARGS(ARGUMENT_UPPER_LIMIT)> { typedef void (Caller::*Method)(); };
+
+GENERATE_METHOD_CALLBACK_SIGNATURES(ARGUMENT_UPPER_LIMIT)
+
+template <class BASE, class Caller, class FutureType, class ReturnType>
+class BaseMethodCallbackInvoke : public BASE {
+public:
+	BaseMethodCallbackInvoke(Caller* caller, const FutureType& result) :
+		_result(result), _context(caller) {}
+	~BaseMethodCallbackInvoke() { this->release(); }
+	void run(){
+		try {
+			invokeMethod();
+		}
+		catch (std::exception& e) {
+			_result.resolveError(e.what());
+		}
+		catch (...) {
+			_result.resolveError("Invoke Error");
+		}
+		_result.notify();
+	}
+	void resolveError(const std::string& msg) {
+		_result.resolveError(msg);
+	}
+protected:
+	virtual void invokeMethod() = 0;
+	Caller* _context;
+	FutureType _result;
+};
+
+template<class BASE, class Caller, class FutureType, class ReturnType, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class MethodCallbackInvoke;
+
+template <class BASE, class Caller, class FutureType, class ReturnType = void, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
+class MethodCallbackInvoke : public BaseMethodCallbackInvoke<BASE, Caller, FutureType, ReturnType> {
+public:
+	typedef typename MethodCallbackSignature<Caller, ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)>::Method Callback;
+	MethodCallbackInvoke(Caller* caller, Callback method, VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), const FutureType& result) :
+		BaseMethodCallbackInvoke(caller, result), _method(method), INIT_VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg) {}
+protected:
+	VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, _arg, SEMICOLON);
+	Callback		_method;
+};
+
+GENERATE_METHOD_CALLBACK_INVOKE(ARGUMENT_UPPER_LIMIT)
+
+template <class BASE, class Caller, class FutureType, class ReturnType>
+class MethodCallbackInvoke<BASE, Caller, FutureType, ReturnType> : public BaseMethodCallbackInvoke<BASE, Caller, FutureType, ReturnType>{
+public:
+	typedef typename MethodCallbackSignature<Caller, ReturnType>::Method Callback;
+	MethodCallbackInvoke(Caller* caller, Callback method, const FutureType& result) :
+		BaseMethodCallbackInvoke(caller, result), _method(method) {}
+protected:
+	Callback		_method;
+};
+
+template<class BASE, class Caller, class FutureType, class ReturnType = void, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class DelegateInvoke;
+
+template <class BASE, class Caller, class FutureType, class ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
+class DelegateInvoke : public MethodCallbackInvoke<BASE, Caller, FutureType, ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)> {
+public:
+	DelegateInvoke(Caller* caller, Callback method, VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), const FutureType& result)
+		: MethodCallbackInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}
+	void invokeMethod() {
+		_result.resolveData(new ReturnType((_context->*_method)(VAR_ARGS(ARGUMENT_UPPER_LIMIT))));
+	}
+};
+
+template <class BASE, class Caller, class FutureType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
+class DelegateInvoke<BASE, Caller, FutureType, void, VAR_ARGS(ARGUMENT_UPPER_LIMIT)> : public MethodCallbackInvoke<BASE, Caller, FutureType, void, VAR_ARGS(ARGUMENT_UPPER_LIMIT)>{
+public:
+	DelegateInvoke(Caller* caller, Callback method, VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), const FutureType& result)
+		: MethodCallbackInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}
+	void invokeMethod() {
+		(_context->*_method)(VAR_ARGS(ARGUMENT_UPPER_LIMIT));
+	}
+};
+
+GENERATE_DELEGATE_INVOKE(ARGUMENT_UPPER_LIMIT)
+
+template <class BASE, class Caller, class FutureType, class ReturnType>
+class DelegateInvoke<BASE, Caller, FutureType, ReturnType> : public MethodCallbackInvoke<BASE, Caller, FutureType, ReturnType, void>{
+public:
+	DelegateInvoke(Caller* caller, Callback method, const FutureType& result) : MethodCallbackInvoke(caller, method, result) {}
+	void invokeMethod() {
+		_result.resolveData(new ReturnType((_context->*_method)()));
+	}
+};
+
+template <class BASE, class Caller, class FutureType>
+class DelegateInvoke<BASE, Caller, FutureType> : public MethodCallbackInvoke<BASE, Caller, FutureType, void, void>{
+public:
+	DelegateInvoke(Caller* caller, Callback method, const FutureType& result) : MethodCallbackInvoke(caller, method, result) {}
+	void invokeMethod() {
+		(_context->*_method)();
+	}
+};
+
+class DelegateBase : public Runnable, public RefPointer<DelegateBase> {
+public:
+	virtual void resolveError(const std::string& msg) = 0;
+};
+
+template <class FutureType> class FutureObject : public SharedObject, public DataResolver<FutureType>, public ErrorResolver {};
+template <> class FutureObject<void> : public SharedObject, public ErrorResolver{};
+template <class FutureType> class FutureResult : public DataProxy< ErrorProxy< SharedObjectProxy<FutureObject<FutureType>>>, FutureType>{
+public: FutureResult(SharedObjectProxy::DataTypePtr ptr) :DataProxy(ptr){}
+};
+template <> class FutureResult<void> : public ErrorProxy< SharedObjectProxy<FutureObject<void>>>{
+public:	FutureResult(SharedObjectProxy::DataTypePtr ptr) :ErrorProxy(ptr){}
+};
+
+template<class Caller, class ReturnType = void, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class Delegate;
+template <class Caller, class ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> class Delegate : public DelegateInvoke < DelegateBase, Caller, FutureResult<ReturnType>, ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT) > {
+public:	Delegate(Caller* caller, Callback method, VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), const FutureResult<ReturnType>& result) : DelegateInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}
+};
+template <class Caller, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> class Delegate<Caller, void, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> : public DelegateInvoke < DelegateBase, Caller, FutureResult<void>, void, VAR_ARGS(ARGUMENT_UPPER_LIMIT) >{
+public:	Delegate(Caller* caller, Callback method, VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), const FutureResult<void>& result) : DelegateInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}
+};
+template <class Caller, class ReturnType> class Delegate<Caller, ReturnType, void> : public DelegateInvoke< DelegateBase, Caller, FutureResult<ReturnType>, ReturnType, void >{
+public:	Delegate(Caller* caller, Callback method, const FutureResult<ReturnType>& result) : DelegateInvoke(caller, method, result) {}
+};
+template <class Caller> class Delegate<Caller, void, void> : public DelegateInvoke< DelegateBase, Caller, FutureResult<void>, void, void >{
+public:	Delegate(Caller* caller, Callback method, const FutureResult<void>& result) : DelegateInvoke(caller, method, result) {}
+};
+
+GENERATE_DELEGATE(ARGUMENT_UPPER_LIMIT)
+
+template <class Caller>
+struct Request : public RefPointer<Request<Caller>> {
+public:
+	typedef std::deque<Ptr> RequestsQueue;
+	typedef typename MethodCallbackSignature<Caller, bool, int>::Method RequestGuard;
+	Request(int priority = 0, long delay = 0, long timeout = 0, Caller* caller = 0, RequestGuard guard = 0, int guardId = 0, int conditionId = 0) : _priority(priority), _delay(delay), _timeout(timeout), _context(caller), _guard(guard), _guardId(guardId), _conditionId(conditionId) {}
+	int getPriority() const { return _priority; }
+	int getDelay() const { return _delay; }
+	int getTimeout() const { return _timeout; }
+	bool filtered() {
+		if (_guard){
+			return !((_context->*_guard)(_guardId));
+		}
+		return false;
+	}
+	bool deferred() {
+		if (_guard){
+			return !((_context->*_guard)(_conditionId));
+		}
+		return false;
+	}
+private:
+	Caller*		_context;
+	RequestGuard _guard;
+	int _guardId;
+	int _conditionId;
+	int _priority;
+	long _delay;
+	long _timeout;
+};
+
+template <class Caller>
+struct MethodAccessRequest {
+	typename Request<Caller>::Ptr request;
+	Signal ready;
+	typedef std::deque<MethodAccessRequest<Caller>*> MethodAccessRequestQueue;
+};
+
+template <class Caller> struct MethodInvokeRequest : public Request<Caller> {
+public:
+	MethodInvokeRequest(DelegateBase::Ptr requestRunnable, int priority = 0, long delay = 0, long timeout = 0, Caller* caller = 0, RequestGuard guard = 0, int guardId = 0, int conditionId = 0)
+		: _requestRunnable(requestRunnable), Request(priority, delay, timeout, caller, guard, guardId, conditionId){}
+	DelegateBase::Ptr getRequest() const { return _requestRunnable; }
+private:
+	DelegateBase::Ptr _requestRunnable;
+};
+
+template <class Caller>
+class ScheduleQueue : protected Runnable {
+public:
+	ScheduleQueue() : deferringRunning(false)  {}
+	~ScheduleQueue() { try { clear(); } catch (...) {} }
+	void request(typename Request<Caller>::Ptr request, bool urgent = false) {
+		synchronized(_lock) {
+			deferringRunning = false;
+			if (request->deferred()) {
+				_deferred.push_back(request);
+			}
+			else {
+				addRequest(request, urgent);
+			}
+		}
+	}
+
+	typename Request<Caller>* processPendingRequests(){
+		//::Sleep(1);    // DEBUG
+		Request<Caller>::Ptr request = NULL;
+	    MethodAccessRequest<Caller>* mq = NULL;
+	    processDeferred();
+	    synchronized(_lock){
+		  // ::Sleep(1);  // DEBUG
+	      request = getNextRequest();
+		  
+	    }
+	    if (request.value() != NULL) {
+	      return request.reference();
+	    }
+	    else if (_pending.empty() && !_deferred.empty() && !deferringRunning) {
+	      _thread.start(this);
+	      deferringRunning = true;
+	    }
+	    mq = new MethodAccessRequest<Caller>();
+	    _pending.push_back(mq);
+	    mq->ready.wait();
+	    request = mq->request;
+	    delete mq;
+	    return request.reference();
+	}
+	void done() {
+		synchronized(_lock) {
+			for (MethodAccessRequest<Caller>::MethodAccessRequestQueue::iterator it = _pending.begin(); it != _pending.end(); ++it) {
+				(*it)->ready.notify();
+			}
+			_pending.clear();
+		}
+	}
+	bool empty() const {
+		synchronized(_lock) {
+			return _requests.empty() && _deferred.empty();
+		}
+	}
+	int size() const {
+		synchronized(_lock) {
+			return static_cast<int>(_requests.size() + _deferred.size());
+		}
+	}
+	void clear() {
+		synchronized(_lock) {
+			_requests.clear();
+			_deferred.clear();
+		}
+		_thread.join();
+	}
+protected:
+	void run() {
+		while (deferringRunning) { try { processDeferred(); } catch (...) {} }
+	}
+
+private:
+	void addRequest(typename Request<Caller>::Ptr request, bool urgent = false) {
+		if (_pending.empty()) {
+			if (urgent) {
+				_requests.push_front(request);
+			}
+			else if (request.value() &&  request->getPriority() <= 0) {
+				_requests.push_back(request);
+			}
+			else {
+				typename Request<Caller>::RequestsQueue::iterator it;
+				for (it = _requests.begin(); it != _requests.end(); ++it) {
+					if (request->getPriority() > (*it)->getPriority())
+						break;
+				}
+				_requests.insert(it, request);
+			}
+		}
+		else {
+			MethodAccessRequest<Caller>* mq = _pending.front();
+			_pending.pop_front();
+			mq->request = request;
+			mq->ready.notify();
+		}
+	}
+	void processDeferred() {
+		if (!_deferred.empty()) {
+			Request<Caller>::Ptr deferred = _deferred.front();
+		  	if (deferred.value() && !deferred->deferred()) {
+				_deferred.pop_front();
+				addRequest(deferred);
+			}
+		}
+		else {
+			deferringRunning = false;
+			return;
+		}
+	}
+	typename Request<Caller>::Ptr getNextRequest() {
+		Request<Caller>::Ptr request;
+		if (!_requests.empty()) {
+			request = _requests.front();
+			_requests.pop_front();
+		}
+		return request;
+	}
+private:
+	mutable MutexLock	_lock;
+	Thread				_thread;
+	bool				deferringRunning;
+	typename Request<Caller>::RequestsQueue	_requests;
+	typename Request<Caller>::RequestsQueue	_deferred;
+	typename MethodAccessRequest<Caller>::MethodAccessRequestQueue	_pending;
+};
+
+class TimedEvent : protected Runnable {
+public:
+	TimedEvent() { }
+	virtual ~TimedEvent() { }
+	void timeout(DelegateBase::Ptr	method, long ms) {
+		_method = method;
+		_thread.start(this);
+		try{
+			_timeoutEvent.wait(ms, true);
+		}
+		catch (...) {
+			_thread.stop();
+			_method->resolveError("Timeout Exception");
+			_method = NULL;
+			_timeoutEvent.notify();
+		}
+	}
+protected:
+	void run() {
+		_method->reference();
+		_method->run();
+		_timeoutEvent.notify();
+	}
+private:
+	Thread				_thread;
+	DelegateBase::Ptr	_method;
+	Signal				_timeoutEvent;
+};
+
+template <class Caller>
+class Scheduler : protected Runnable {
+public:
+	typedef typename Request<Caller>::RequestGuard GuardList;
+	Scheduler(Caller* caller = 0, GuardList guardList = 0) : _context(caller), _guardList(guardList) {
+		_run = true;
+		_thread.start(this);
+	}
+	virtual ~Scheduler() { try { stop(); } catch (...) {} }
+	void schedule(DelegateBase::Ptr pDelegate, int priority, long delay, long timeout, UID guard, UID condition) {
+		_queue.request(new MethodInvokeRequest<Caller>(pDelegate, priority, delay, timeout, _context, _guardList, guard, condition));
+	}
+	void cancel() {
+		_queue.clear();
+	}
+protected:
+	void run() {
+    	AutoPtr<Request<Caller>> pendingRequest = _queue.processPendingRequests();
+    	while (pendingRequest) {
+      		MethodInvokeRequest<Caller>* mth = dynamic_cast<MethodInvokeRequest<Caller>*>(pendingRequest.value());
+	  		if (mth != NULL && !mth->filtered()) {
+        		long delay = mth->getDelay();
+        		if (delay > 0) {
+          			Thread::sleep(delay);
+        		}
+        		if (mth->getTimeout() > 0) {
+          			_timeEvent.timeout(mth->getRequest(), mth->getTimeout());
+        		}
+        		else {
+          			DelegateBase::Ptr pDelegate = mth->getRequest();
+			  		if (pDelegate.value()) {
+				  		pDelegate->reference();
+				  		pDelegate->run();
+			  			pDelegate = NULL;
+		  		}
+        	}
+      	}
+      	pendingRequest = NULL;
+      	if (_run)
+        	pendingRequest = _queue.processPendingRequests();
+    	}
+  	}
+	void stop() {
+		_queue.clear();
+		_queue.done();
+		_run = false;
+		_thread.join();
+	}
+private:
+	Caller*					_context;
+	Thread					_thread;
+	ScheduleQueue<Caller>	_queue;
+	GuardList				_guardList;
+	bool					_run;
+	TimedEvent				_timeEvent;
+};
+
+struct ActiveConstraintUID {
+public:
+	UID getGuardUID() { return _guardId; }
+	UID getConditionUID() { return _conditionId; }
+protected:
+	UID _guardId;
+	UID _conditionId;
+};
+
+template<class ReturnType, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class IDelegatePublisher;
+template<class ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
+class IDelegatePublisher {
+public:
+	virtual FutureResult<ReturnType> publish(VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) = 0;
+};
+template<class ReturnType>
+class IDelegatePublisher<ReturnType> {
+public:
+	virtual FutureResult<ReturnType> publish(int priority = 0, long delay = 0, long timeout = 0) = 0;
+};
+
+template<class ReturnType, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class MulticastDelegate;
+template <class ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
+class MulticastDelegate : public IDelegatePublisher<ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)> {
+private:
+	typedef std::vector< IDelegatePublisher<ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> * > SubscribersList;
+	SubscribersList subscribers;
+public:
+	MulticastDelegate() {}
+	MulticastDelegate& operator += (const IDelegatePublisher<ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>* method) {
+	  subscribers.push_back(method);
+	  return *this;
+	}
+	void notify(VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {
+		typename SubscribersList::iterator it = subscribers.begin();
+		for (; it != subscribers.end(); it++) { it->publish(VAR_NAMED_ARGS(ARGUMENT_UPPER_LIMIT, arg), priority, delay, timeout); }
+	}
+	FutureResult<ReturnType> operator () (VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {
+	FutureResult<ReturnType> result = publish(VAR_NAMED_ARGS(ARGUMENT_UPPER_LIMIT, arg), priority, delay, timeout);
+	  notify(VAR_NAMED_ARGS(ARGUMENT_UPPER_LIMIT, arg), priority, delay, timeout);
+	  return result;
+	}
+};
+template <class ReturnType>
+class MulticastDelegate<ReturnType> : public IDelegatePublisher<ReturnType>{
+private:
+	typedef std::vector< IDelegatePublisher<ReturnType> * > SubscribersList;
+	SubscribersList subscribers;
+public:
+	MulticastDelegate() {}
+	MulticastDelegate& operator += (const IDelegatePublisher<ReturnType>* method) {
+	subscribers.push_back(method);
+	  return *this;
+	}
+	void notify(int priority = 0, long delay = 0, long timeout = 0) {
+		typename SubscribersList::iterator it = subscribers.begin();
+		for (; it != subscribers.end(); it++) { (*it)->publish(priority, delay, timeout); }
+	}
+	FutureResult<ReturnType> operator () (int priority = 0, long delay = 0, long timeout = 0) {
+	  FutureResult<ReturnType> result = publish(priority, delay, timeout);
+		notify(priority, delay, timeout);
+		return result;
+	}
+};
+
+GENERATE_MULTICAST_METHOD(ARGUMENT_UPPER_LIMIT)
+
+template<class Caller, class ReturnType, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class Active;
+template <class Caller, class ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
+class Active : public ActiveConstraintUID, public MulticastDelegate<ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)>{
+public:
+  typedef Delegate<Caller, ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)> DelegateType;
+  typedef typename MethodCallbackSignature<Caller, ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)>::Method Callback;
+  Active(Caller* caller, Scheduler<Caller>* sch, Callback method) :_context(caller), _sch(sch), _method(method) {}
+  FutureResult<ReturnType> operator () (VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {
+	  FutureResult<ReturnType> result = publish(priority, delay, timeout);
+	  return result;
+  }
+  FutureResult<ReturnType> publish(VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {
+    FutureResult<ReturnType> result(new FutureObject<ReturnType>());
+    DelegateBase::Ptr pDelegate(new DelegateType(_context, _method, VAR_NAMED_ARGS(ARGUMENT_UPPER_LIMIT, arg), result));
+    _sch->schedule(pDelegate, priority, delay, timeout, _guardId, _conditionId);
+	this->notify(VAR_NAMED_ARGS(ARGUMENT_UPPER_LIMIT, arg), priority, delay, timeout);
+    return result;
+  }
+private:
+  Caller* _context;
+  Scheduler<Caller>* _sch;
+  Callback   _method;
+};
+
+template <class Caller, class ReturnType>
+class Active <Caller, ReturnType, void> : public ActiveConstraintUID, public MulticastDelegate<ReturnType> {
+public:
+	typedef Delegate<Caller, ReturnType, void> DelegateType;
+	typedef typename MethodCallbackSignature<Caller, ReturnType>::Method Callback;
+	Active(Caller* caller, Scheduler<Caller>* sch, Callback method) :_context(caller), _sch(sch), _method(method) {}
+	FutureResult<ReturnType> publish(int priority = 0, long delay = 0, long timeout = 0) {
+		FutureResult<ReturnType>  result(new FutureObject<ReturnType>());
+		DelegateBase::Ptr pDelegate(new DelegateType(_context, _method, result));
+		_sch->schedule(pDelegate, priority, delay, timeout, _guardId, _conditionId);
+		this->notify(priority, delay, timeout);
+		return result;
+	}
+private:
+	Caller* _context;
+	Scheduler<Caller>* _sch;
+	Callback   _method;
+};
+GENERATE_ACTIVE_METHOD(ARGUMENT_UPPER_LIMIT)
+
+template <class Caller>
+class AsyncMethod : protected Runnable, public ActiveConstraintUID {
+public:
+	typedef Delegate<Caller, void, void> DelegateType;
+	typedef Active<Caller, void> ActiveType;
+	typedef typename MethodCallbackSignature<Caller>::Method Callback;
+	AsyncMethod(Caller* caller, Callback method, long interval = 0, long delay = 0, long timeout = 0) :_context(caller), _delegate(new DelegateType(_context, method, new FutureObject<void>())), _delay(delay), _timeout(timeout), _interval(interval), _active(false){}
+	AsyncMethod(Caller* caller, Scheduler<Caller>* sch, Callback method, long interval = 0, long delay = 0, long timeout = 0) :_context(caller), _delegate(new DelegateType(_context, method, new FutureObject<void>())), _delay(delay), _timeout(timeout), _interval(interval), _sch(sch), _active(true) {}
+	virtual ~AsyncMethod() { try { stop();  _thread.join(); } catch (...) {} }
+	void start() {
+		_run = true;
+		_thread.start(this);
+	}
+	void stop() {
+		_run = false;
+	}
+protected:
+	void run() {
+		while (_run) {
+			if (!_active && _delay > 0) {
+				Thread::sleep(_delay);
+			}
+			if (_interval > 0) {
+				if (_active) {
+					_sch->schedule(_delegate, -1, _delay, _timeout, _guardId, _conditionId);
+				}
+				else {
+					_delegate->run();
+					if (_timeout > 0)
+						_timeoutEvent.wait(_timeout, true);
+				}
+				Thread::sleep(_interval);
+			}
+		}
+	}
+private:
+	bool				_run;
+	long				_interval;
+	long				_delay;
+	long				_timeout;
+	bool				_active;
+	Thread				_thread;
+	Caller*				_context;
+	DelegateBase::Ptr	_delegate;
+	Scheduler<Caller>*	_sch;
+	Signal				_timeoutEvent;
+};
+
+<<#if(isRemote){#>>
+#ifdef WINDOWS_OS
+typedef int socklen_t;
+#pragma comment(lib, "ws2_32.lib")
+struct WindowsSocket {
+  WindowsSocket() {
+    WSADATA init;
+    if (WSAStartup(MAKEWORD(2, 2), &init) != 0) {
+      throw Exception("WSAStartup Init Error");
+    }
+  }
+  ~WindowsSocket() {
+    if (WSACleanup() != 0) {
+      std::cerr << "WSACleanup Error" << std::endl;
+    }
+  }
+};
+extern struct WindowsSocket windowsSocketInit;
+#endif
+
+class Endpoint {
+public:
+	Endpoint() {}
+	Endpoint(string host, string port) : host(host), port(atoi(port.c_str())) {}
+	Endpoint(string host, int port) : host(host), port(port) {}
+	~Endpoint() {}
+	std::string getHost(){ return host; }
+	int getPort() { return port; }
+private:
+	std::string host;
+	int port;
+};
+
+<<=externalIncompleteDefinitions("JSON")>>
+class JSON;
+struct JSONParser {
+ virtual JSON Parse(const string &json) = 0;
+};
+enum JSONType { JSON_Undefined, JSON_String, JSON_Bool, JSON_Number, JSON_Array, JSON_Object };
+class JSON {
+private:
+	static JSONParser *_parser;
+public:
+	JSON(JSONType type = JSON_Undefined) {
+		setType(type);
+	}
+
+<<=externalDefinitions("JSON")>><<=getExternalDefinitions().stream().map(GenBody::getBody).collect(Collectors.joining(NL))>>
+	JSON(const char *m_char_value) {
+		_type = JSON_String;
+		_string = new string(m_char_value);
+	}
+	JSON(const std::string &m_string_value) {
+		_type = JSON_String;
+		_string = new string(m_string_value.c_str());
+	}
+	JSON(bool m_bool_value) {
+		_type = JSON_Bool;
+		_boolean = m_bool_value;
+	}	
+	JSON(float m_number_value) {
+		_type = JSON_Number;
+		_number = m_number_value;
+	}
+	JSON(double m_number_value) {
+		_type = JSON_Number;
+		_number = m_number_value;
+	}
+	JSON(long m_number_value) {
+		_type = JSON_Number;
+		_number = m_number_value;
+	}
+	JSON(int m_integer_value) {
+		_type = JSON_Number;
+		_number = (double)m_integer_value;
+	}
+	JSON(unsigned int m_integer_value) {
+		_type = JSON_Number;
+		_number = (unsigned int)m_integer_value;
+	}
+	JSON(Endpoint m_ep) {
+		(*this)["host"] = m_ep.getHost();
+		(*this)["port"] = m_ep.getPort();
+	}
+	JSON(const JSON &src) {
+		swap(src);		
+	}
+	~JSON() {
+		if (_type == JSON_Array) {
+			vector<JSON*>::iterator iter;
+			for (iter = _array->begin(); iter != _array->end(); iter++)
+				delete *iter;
+			delete _array;
+		} else if (_type == JSON_Object) {
+			map<string, JSON*>::iterator iter;
+			for (iter = _object->begin(); iter != _object->end(); iter++)
+				delete (*iter).second;
+			delete _object;
+		}
+		else if (_type == JSON_String) { delete _string; }
+	}
+
+	static JSON Parse(const string &json) {
+		return _parser->Parse(json);
+	}
+	bool IsUndefined() const { return _type == JSON_Undefined; }
+	bool IsString() const { return _type == JSON_String; }
+	bool IsBoolean() const { return _type == JSON_Bool; }
+	bool IsNumber() const { return _type == JSON_Number; }
+	bool IsArray() const { return _type == JSON_Array; }
+	bool IsObject() const { return _type == JSON_Object; }
+	operator string() const { return (*_string); }
+	operator bool() { return _boolean; }
+	operator double() { return _number; }
+	operator float() { return _number; }
+	operator int() { return _number; }
+	operator long() { return _number; }
+	operator unsigned() { return _number; }
+	
+	#ifdef _WIN64
+		JSON(size_t m_size_t) {
+			_type = JSONType::JSON_Number;
+			_number = m_size_t;
+		}
+		operator size_t() { return _number; }
+	#endif
+	
+	operator Endpoint() { 
+		string host = (*this)["host"];int port = (*this)["port"];
+		Endpoint p(host, port);
+		return p; 
+	}
+	operator const JSON&() const { return *this; }
+
+	void push(JSON* item) {
+		setType(JSON_Array);
+		_array->push_back(item);
+	}
+	size_t length() const {
+		switch (_type) {
+			case JSON_Array:
+				return _array->size();
+			case JSON_Object:
+				return _object->size();
+			default:
+				return 0;
+		}
+	}
+
+	bool hasIndex(std::size_t index) const {
+		if (_type == JSON_Array) {
+			return index < _array->size();
+		}
+		else {
+			return false;
+		}
+	}
+	JSON *at(std::size_t index) {
+		if (index < _array->size()) {
+			return (*_array)[index];
+		} else {
+			return NULL;
+		}
+	}
+	bool contains(const char* name) const {
+		if (_type == JSON_Object) { 
+			return _object->find(name) != _object->end();
+		}else { 
+			return false;
+		}
+	}
+	JSON *at(const char* name) {
+		map<string, JSON*>::const_iterator it = _object->find(name);
+		if (it != _object->end()) { 
+			return it->second;
+		} else { 
+			return NULL;
+		}
+	}
+	std::vector<string> Keys() const {
+		std::vector<string> keys;
+		if (_type == JSON_Object) {
+			map<string, JSON*>::const_iterator iter = _object->begin();
+			while (iter != _object->end()) {
+				keys.push_back(iter->first);
+				iter++;
+			}
+		}
+		return keys;
+	}
+
+	string toString() {
+		return jsonize();
+	}
+
+	string toString(const JSON *value) {
+		string json = "";
+		if (value != NULL)
+			json = value->jsonize();
+		return json;
+	}
+
+	JSON& operator=(const JSON& val) {
+		swap(val);
+		return *this;
+	}
+	JSON& operator=(JSON *src) {
+		swap(*src);
+		return *this;
+	}
+	
+	// Add string(key)
+	JSON& operator[](const char *key) {
+		return this->operator[](string(key));
+		//return this->operator[](key);
+	}
+
+	JSON& operator[](const string &key) {
+		setType(JSON_Object);
+		JSON* ret = _object->operator[](key);
+		if (ret == NULL) {
+			ret = new JSON();
+			_object->operator[](key) = ret;
+		}
+		return *ret;
+	}
+
+	JSON& operator[](unsigned index) {
+		setType(JSON_Array);
+		if (index >= _array->size())
+			_array->resize(index + 1);
+		JSON* ret = _array->operator[](index);
+		if (ret == NULL) {
+			ret = new JSON();
+			_array->operator[](index) = ret;
+		}
+		return *ret;
+	}
+	
+protected:
+	void swap(const JSON &src) {
+		_type = src._type;
+		switch (_type) {
+			case JSON_String:
+				_string = new string(*src._string);
+				break;
+			case JSON_Bool:
+				_boolean = src._boolean;
+				break;
+			case JSON_Number:
+				_number = src._number;
+				break;
+			case JSON_Array: {
+				vector<JSON*> source_array = *src._array;
+				vector<JSON*>::iterator iter;
+				_array = new vector<JSON*>();
+				for (iter = source_array.begin(); iter != source_array.end(); iter++)
+					_array->push_back(new JSON(**iter));
+				break; }
+			case JSON_Object: {
+				map<string, JSON*> source_object = *src._object;
+				_object = new map<string, JSON*>();
+				map<string, JSON*>::iterator iter;
+				for (iter = source_object.begin(); iter != source_object.end(); iter++)
+				{
+					string name = (*iter).first;
+					(*_object)[name] = new JSON(*((*iter).second));
+				}
+				break; }
+			case JSON_Undefined:
+				break;
+		}
+	}
+	void setType(JSONType type) {
+		if (this->_type == type)
+			return;
+		switch (type) {
+		case JSON_Undefined:
+			break;
+		case JSON_Object:
+			_object = new map<string, JSON*>();
+			break;
+		case JSON_Array:
+			_array = new vector<JSON*>();
+			break;
+		case JSON_String:
+			_string = new string();
+			break;
+		case JSON_Number:
+			_number = 0;
+			break;
+		case JSON_Bool:
+			_boolean = false;
+			break;
+		}
+		this->_type = type;
+	}
+
+	string escapeString(const string &json) const {
+		string escaped = "\"";
+		for (unsigned i = 0; i < json.length(); ++i) {
+			if (json[i] == '\"')		escaped += "\\\"";
+			else if (json[i] == '\\')	escaped += "\\\\";
+			else if (json[i] == '\b')	escaped += "\\b";
+			else if (json[i] == '\f')	escaped += "\\f";
+			else if (json[i] == '\n')	escaped += "\\n";
+			else if (json[i] == '\r')	escaped += "\\r";
+			else if (json[i] == '\t')	escaped += "\\t";
+			else						escaped += json[i];
+		}
+		escaped += "\"";
+		return escaped;
+	}
+
+	string jsonize() const {
+		string out;		
+		switch (_type)
+		{
+		case JSON_Undefined:
+			out = "null";
+			break;
+		case JSON_String:
+			out = escapeString(*_string);
+			break;
+		case JSON_Bool:
+			out = _boolean ? "true" : "false";
+			break;
+		case JSON_Number:
+		{
+			if (isinf(_number) || isnan(_number))
+				out = "null";
+			else {
+				stringstream ss;
+				ss.precision(15);
+				ss << _number;
+				out = ss.str();
+			}
+			break;
+		}
+
+		case JSON_Array:
+		{
+			out = "[";
+			vector<JSON*>::const_iterator iter = _array->begin();
+			while (iter != _array->end()) {
+				out += (*iter)->jsonize();
+				if (++iter != _array->end())
+					out += ",";
+			}
+			out += "]";
+			break;
+		}
+
+		case JSON_Object: {
+			out = "{";
+			map<string, JSON*>::const_iterator iter = _object->begin();
+			while (iter != _object->end()) {
+				out += escapeString((*iter).first);
+				out += ":";
+				out += (*iter).second->jsonize();
+				if (++iter != _object->end())
+					out += ",";
+			}
+			out += "}";
+			break;
+		}
+		}
+		return out;
+	}
+
+private:
+	JSONType _type;
+	union{
+		bool _boolean;
+		double _number;
+		string *_string;
+		vector<JSON*> *_array;
+		map<string, JSON*> *_object;
+	};
+
+};
+
+class JSONInternalParser : public JSONParser {
+public:
+	JSONInternalParser() {}
+	JSON Parse(const string &json) {
+		size_t offset = 0;
+		JSON value = internal_parse(json, offset);
+		return value;
+	}
+protected:
+	void skipWhitespace(const string &json, size_t &index) { while (isspace(json[index])) ++index; }
+	string getString(const string &json, size_t &index) {
+		string str;
+		for (char c = json[++index]; c != '\"' && index < json.size(); c = json[++index]) {
+			if (c == '\\') {
+				c = json[++index];
+				if (c == '\"')		str += '\"';
+				else if (c == '\\') str += '\\';
+				else if (c == '/')	str += '/';
+				else if (c == 'b')	str += '\b';
+				else if (c == 'f')	str += '\f';
+				else if (c == 'n')	str += '\n';
+				else if (c == 'r')	str += '\r';
+				else if (c == 't')	str += '\t';
+				else if (c == 'u') {
+					str += "\\u";
+					for (unsigned i = 1; i <= 4; ++i) {
+						c = json[index + i];
+						if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) str += c;
+						else return NULL;
+					}
+					index += 4;
+				}
+				else				str += '\\';
+			}
+			else str += c;
+		}
+		++index;
+		return str;
+	}
+
+	JSON internal_parse(const string &json, size_t &index) {
+		skipWhitespace(json, index);
+		char c = json[index];		
+		if (c == '[' ) {			
+			JSON Array(JSON_Array);
+			skipWhitespace(json, index);
+			if (json[++index] == ']') { ++index; return Array; }
+			for (unsigned array_index = 0;; ++index, array_index++) {
+				Array[array_index] = new JSON(internal_parse(json, index));
+				skipWhitespace(json, index);
+				if (json[index] == ']') { ++index; break; }
+				else if (json[index] != ',') { return JSON(); }
+			}			
+			return Array;
+		}
+		else if (c == '{') {
+			JSON jObj(JSON_Object);
+			skipWhitespace(json, index);
+			if (json[++index] == '}') { ++index; return JSON_Object; }
+			for (string objectKey;; ++index) {
+				objectKey = getString(json, index);
+				skipWhitespace(json, index);
+				if (json[index] != ':') { std::cerr << "Missing colon, Error char is'" << json[index] << "'\n";break;}
+				skipWhitespace(json, ++index);
+				JSON *parsedObject = new JSON(internal_parse(json, index));
+				jObj[objectKey] = parsedObject;
+				skipWhitespace(json, index);
+				if (json[index] == '}') {++index; break;}
+				else if (json[index] != ',') {std::cerr << "Missing comma, Error char is '" << json[index] << "'\n";break;}
+			}			
+			return jObj;
+		}
+		else if (c == '\"') {
+			string val = getString(json, index);
+			return JSON(val);
+		}
+		else if (c == 't' || c == 'f') {
+			bool value;
+			if (json.substr(index, 4) == "true") {value = true; index += 4;}
+			else if (json.substr(index, 5) == "false") {value = false; index += 5;}
+			else { return JSON();}
+			return JSON(value);
+		}
+		else if (c == 'n') {
+			if (json.substr(index, 4) != "null") {return JSON(); index += 4; }
+			else { std::cerr << "Missing Null\n";}			
+			return JSON();
+		}
+		else if ((c <= '9' && c >= '0') || c == '-') {
+			double num;
+			string parsedNumber;
+			char n = json[index++];
+			bool isDbl = false;
+			long exponential = 0;
+			for (; n == '-' || (n >= '0' && n <= '9') || n == '.'; parsedNumber += n, n = json[index++], isDbl = isDbl ? true : n == '.');
+			if (n == 'E' || n == 'e') {
+				string e;
+				n = json[index++];
+				if (n == '-'){ ++index; e += '-'; }
+				for (; n >= '0' && n <= '9'; n = json[index++], e += n);
+				if (!isspace(n) && n != ',' && n != ']' && n != '}') return JSON();
+				exponential = std::stol(e);
+			}
+			--index;
+			if (isDbl) num = std::stod(parsedNumber) * std::pow(10.0, exponential);
+			else {
+				if (exponential > 0) num = std::stol(parsedNumber) * std::pow(10.0, exponential);
+				else num = std::stol(parsedNumber);
+			}
+			return JSON(num);
+		}
+	}
+};
+
+class ConnectionException : public Exception {
+public:
+	ConnectionException() : Exception() {}
+	ConnectionException(std::string exMessage) : Exception(exMessage) {}
+};
+class SocketException : public  Exception {
+public:
+	SocketException() : Exception() {}
+	SocketException(std::string exMessage) : Exception(exMessage) {}
+};
+class IConnector {
+public:
+	virtual ~IConnector(){}
+	virtual string Send(const std::string& message) throw(ConnectionException) = 0;
+};
+class IReceiver {
+public:
+	virtual ~IReceiver(){}
+	virtual unsigned int Listen() throw(ConnectionException) = 0;
+};
+
+class TCPConnector : public IConnector {
+public:
+	TCPConnector() {}
+	TCPConnector(const string& ip, const unsigned int &port) :endpoint(ip,port) {}
+	TCPConnector(const Endpoint& endpoint) :endpoint(endpoint) {}
+	virtual ~TCPConnector() {}
+	virtual string Send(const string& message) throw (ConnectionException) {		
+		SOCKET_TYPE socket_fd = openSocketPort();
+		string result = transport(socket_fd, message);
+		CLOSE_SOCKET(socket_fd);
+		return result;
+	}
+	
+private:
+	string transport(SOCKET_TYPE socket_fd, string message) throw (ConnectionException) {
+		char buffer[NETWORK_BUFFER_SIZE];
+		string msg = message;
+		unsigned int bytes;
+		bool receive = false;
+		do {
+			bytes = !receive ? send(socket_fd, msg.c_str(), msg.size(), 0) : 
+						recv(socket_fd, buffer, NETWORK_BUFFER_SIZE, 0);
+			if (bytes == -1) {
+				CLOSE_SOCKET(socket_fd);
+				string error = recv ? "Can not receive data" : "Can not send data";				
+				throw SocketException(error);
+			}
+			if (!receive) {
+				if (bytes =  bytes - msg.size()) { msg = msg.substr(bytes + sizeof(char), msg.size() - bytes); }
+			} else { 
+				msg.append(buffer, bytes); 
+			}
+			if (bytes == 0) {
+				if (!receive) {
+					msg = ""; receive = true; shutdown(socket_fd, 1);
+				}
+				else {
+					break;
+				}				
+			}
+		} while (receive && msg.find(DELIMITER) == string::npos);
+		
+		return msg;
+	}
+
+	SOCKET_TYPE openSocketPort() throw (ConnectionException) {
+		SOCKET_TYPE sd, rc;
+		struct sockaddr_in localAddr, servAddr;
+		struct hostent *host;
+		string host_str = endpoint.getHost();
+		const char *hostStr = host_str.c_str();
+		host = gethostbyname(hostStr);
+		if (host == NULL) {
+			throw SocketException("Unknown Host");
+		}
+		servAddr.sin_family = host->h_addrtype;
+		memcpy((char *)&servAddr.sin_addr.s_addr, host->h_addr_list[0], host->h_length);
+		servAddr.sin_port = htons(endpoint.getPort());
+		sd = socket(AF_INET, SOCK_STREAM, 0);
+		if (sd<0) {
+			throw SocketException("Cannot open socket for communication");
+		}
+		localAddr.sin_family = AF_INET;
+		localAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+		localAddr.sin_port = htons(0);
+		rc = bind(sd, (struct sockaddr *) &localAddr, sizeof(localAddr));
+		if (rc<0) {
+			throw SocketException("Cannot bind to the port");
+		}
+		rc = connect(sd, (struct sockaddr *) &servAddr, sizeof(servAddr));
+		if (rc<0) {
+			throw SocketException("Cannot connect to the server");
+		}		
+		return sd;
+	}
+	Endpoint endpoint;
+};
+
+template<class Caller>
+class TCPReceiver : public IReceiver, protected Runnable{
+public:
+	typedef typename MethodCallbackSignature<Caller, string, string>::Method onReceive;
+	TCPReceiver(Caller* caller, onReceive method, unsigned int port = 0) :_port(port), _context(caller), _onReceive(method), _running(false) {}
+	virtual ~TCPReceiver() { Stop(); }
+	virtual unsigned int Listen() throw(ConnectionException) {
+		Stop();
+		unsigned int bindPort = _port;
+		struct sockaddr_in servAddr;
+		socketPort = socket(AF_INET, SOCK_STREAM, 0);
+		if (socketPort<0) {
+			cerr << "cannot open socket " << endl;
+		}
+		servAddr.sin_family = AF_INET;
+		servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+		servAddr.sin_port = htons(_port);
+		if (bind(socketPort, (struct sockaddr *) &servAddr, sizeof(servAddr))<0) {
+			cerr << "cannot bind port " << endl;
+		}
+		if (_port == 0) {
+			struct sockaddr_in bindAddr;
+			socklen_t bindSize = sizeof(bindAddr);
+			if (getsockname(socketPort, (struct sockaddr *)&bindAddr, &bindSize) == -1)
+			{
+				cerr << "getsockname error" << endl;
+			}
+			cerr << "Server instance running on port : " << bindAddr.sin_port << endl;
+			bindPort = bindAddr.sin_port;
+		}
+		else {
+			cerr << "Server instance running on port : " << _port << endl;
+		}		
+		listen(socketPort, 5);
+		_thread.start(this);
+		_running = true;
+		return bindPort;
+	}
+	void Stop(){
+		if (_running) {
+			_running = false;
+			Thread::sleep(1);
+		}
+	}
+
+protected:	
+	void run(){
+		SOCKET_TYPE newSd;
+		socklen_t cliLen;
+		struct sockaddr cliAddr;
+		while (1) {
+			cliLen = sizeof(cliAddr);
+			newSd = accept(socketPort, &cliAddr, &cliLen);
+			if (newSd<0) {
+				fprintf(stderr, "cannot accept connection\n");
+				break;
+			}
+			processRequest(newSd);
+		}
+		CLOSE_SOCKET(socketPort);
+	}
+
+	void processRequest(SOCKET_TYPE sockfd) {
+		int n = 0;
+		char *line = new char[80];
+		string recvMsg;
+		do {
+			memset(line, 0x00, sizeof(line));
+			n = recv(sockfd, line, sizeof(line), 0); /* wait for data */
+			if (n<0) {
+				cerr << "cannot receive data" << endl;
+				break;
+			}
+			else if (n == 0) {
+				break;
+			}
+			recvMsg.append(line, n);
+		} while (1);
+		string sendMsg = (_context->*_onReceive)(recvMsg);
+		n = send(sockfd, sendMsg.c_str(), sendMsg.size(), 0);
+		if (n<0) {
+			cerr << "Cannot send data" << endl;
+		}
+		CLOSE_SOCKET(sockfd);
+	}
+private:
+	Thread    _thread;
+	Caller*	  _context;
+	onReceive _onReceive;
+	unsigned int _port;
+	SOCKET_TYPE socketPort;
+	bool _running;
+};
+
+class Buffer {
+public:
+	std::string buffer;
+};
+
+class RemoteException : public Exception {
+public:
+	RemoteException() : Exception() {}
+	RemoteException(std::string exMessage) : Exception(exMessage) {}
+};
+
+enum RemoteMethodType { Local, Client, Server};
+
+class IResponseHandler {
+public:
+	virtual ~IResponseHandler(){}
+	virtual string handleResponse(string response) const throw (RemoteException) = 0;
+};
+
+class IRequestHandler {
+public:
+	virtual ~IRequestHandler(){}
+	virtual string handleRequest(string request) const throw (RemoteException) = 0;
+};
+
+class IMessageRouter {
+public:
+	virtual ~IMessageRouter(){}
+	virtual void registerMethod(string methodName, const IResponseHandler* entry) = 0;
+	virtual RemoteMethodType getType() = 0;
+	virtual IConnector* getConnecter() = 0;
+	virtual const IResponseHandler* getResponseHandler(string methodName) const = 0;
+};
+
+class RemoteMethodRequestHandler : public IRequestHandler {
+public:
+	RemoteMethodRequestHandler(IMessageRouter* messageRouter) : _router(messageRouter){}
+	virtual ~RemoteMethodRequestHandler(){}
+protected:
+	IMessageRouter* _router;
+};
+
+template<class Caller, class ReturnType>
+class Transport : public IResponseHandler {
+public:
+	typedef typename MethodCallbackSignature<Caller, bool>::Method onReceive;
+	typedef typename MethodCallbackSignature<Caller, ReturnType>::Method Invoke;
+
+	Transport(Caller* caller, onReceive method, Invoke invoke, string methodName, IMessageRouter* messageRouter) : _methodName(methodName), _router(messageRouter), _context(caller), _onReceive(method), _invoke(invoke){
+		_router->registerMethod(methodName, this);
+	}
+	virtual ~Transport(){}
+	virtual size_t length() const = 0;
+
+	virtual ReturnType remote() throw (RemoteException) = 0;
+	IMessageRouter* getRouter() {
+		return _router;
+	}
+protected:
+	IMessageRouter* _router;
+	string _methodName;
+	Caller*	  _context;
+	onReceive _onReceive;
+	Invoke _invoke;
+};
+
+class JSONMethodRequestHandler : public RemoteMethodRequestHandler {
+public:
+	JSONMethodRequestHandler(IMessageRouter* messageRouter) : RemoteMethodRequestHandler(messageRouter){}
+	virtual ~JSONMethodRequestHandler(){}	
+	string handleRequest(string request) const throw (RemoteException) {
+		string result;
+		const IResponseHandler* handler = NULL;
+		JSON delegateMethod = JSON::Parse(request);
+		if (delegateMethod.IsObject() == true) {
+			string methodName = "";
+			if (delegateMethod.contains("method") && delegateMethod["method"].IsString()) {
+				methodName = delegateMethod["method"];
+			}
+			handler = _router->getResponseHandler(methodName);
+			if (handler == NULL) {
+				JSON ex; ex["exception"] = "Unknown method";
+				return ex.toString();
+			}
+			else {
+				if (delegateMethod.contains("values") && delegateMethod["values"].IsArray()) {
+					JSON values = delegateMethod["values"];
+					result = handler->handleResponse(values.toString());
+				}
+			}
+		}
+		return result;
+	}
+};
+
+class TCPMessageRouter : public IMessageRouter {
+public:
+	typedef map<string, const IResponseHandler* > HandlerMap;
+	TCPMessageRouter() : _port(0), _receiver(this, &TCPMessageRouter::processResponseHandler), _type(RemoteMethodType::Local), _handler(new JSONMethodRequestHandler(this)) {}
+	TCPMessageRouter(Endpoint endpoint) : _ep(endpoint), _tcpConnector(_ep), _port(0), _receiver(this, &TCPMessageRouter::processResponseHandler), _type(RemoteMethodType::Client), _handler(new JSONMethodRequestHandler(this)) {}
+	TCPMessageRouter(unsigned int port) : _port(port), _receiver(this, &TCPMessageRouter::processResponseHandler, port), _type(RemoteMethodType::Server), _handler(new JSONMethodRequestHandler(this)) {
+		_port = _receiver.Listen();
+	}
+	virtual ~TCPMessageRouter() { _entries.clear();  }
+	void registerMethod(string methodName, const IResponseHandler* entry) {
+		_entries.insert(HandlerMap::value_type(methodName, entry));
+	}
+	unsigned int getPort() { return _port; }
+	Endpoint getEndPoint() { return _ep; }
+	RemoteMethodType getType() { return _type; }
+protected:
+	virtual IConnector* getConnecter() {
+		return &_tcpConnector;
+	}
+	string processResponseHandler(string response) throw (RemoteException) {
+		return _handler->handleRequest(response);
+	}
+	const IResponseHandler* getResponseHandler(string methodName) const {
+		HandlerMap::const_iterator it = _entries.begin();
+		it = _entries.find(methodName);
+		if (it != _entries.end())
+			return it->second;
+		return NULL;
+	}	
+private:
+	unsigned int _port;
+	Endpoint _ep;
+	TCPConnector _tcpConnector;
+	HandlerMap _entries;
+	TCPReceiver<TCPMessageRouter> _receiver;
+	RemoteMethodType _type;
+	RemoteMethodRequestHandler* _handler;
+};
+
+template<class ReturnType>
+class IPort {
+public:
+	virtual ~IPort(){}
+	virtual ReturnType send() = 0;
+	virtual bool receive() = 0; 
+};
+
+template<class Caller, class ReturnType>
+class JSONTransport : public Transport<Caller, ReturnType> {
+public:
+	JSONTransport(Caller* caller, onReceive method, Invoke invoke, string methodName, IMessageRouter* messageRouter) : Transport(caller, method, invoke, methodName, messageRouter), _arguments(JSON_Array) {
+	}
+	JSON& operator[](unsigned index) {
+		return _arguments[index];
+	}
+	size_t length() const {
+		return _arguments.length();
+	}
+
+	template<class T> T& at(unsigned index) {
+		return _arguments[index];
+	}
+
+	ReturnType remote() throw (RemoteException) {
+		string args_json = _arguments.toString();
+		RemoteMethodRequestHandler* requester = dynamic_cast<RemoteMethodRequestHandler *>(getRouter());
+		string returnJson = invokeRemoteMethod(_methodName, args_json);
+		JSON returnObject = JSON::Parse(returnJson);
+		return returnObject;
+	}
+
+	string invokeRemoteMethod(string methodName, string arguments) throw (RemoteException) {
+		IConnector* connector = _router->getConnecter();
+		string result;
+		if (connector == NULL)
+			throw RemoteException("Connector can not be initialized");
+		JSON method;
+		method["method"] = methodName;
+		JSON jsonValues = JSON::Parse(arguments);
+		if (jsonValues.IsArray() == true) {
+			method["values"] = jsonValues;
+		}
+		else { method["values"] = new JSON(JSON_Array); }
+		string methodCall = method.toString();
+		string methodReturn = connector->Send(methodCall);
+		assert(methodReturn.size() > 0);
+		JSON delegateMethod = JSON::Parse(methodReturn);
+		if (delegateMethod.IsObject() == true) {
+			string methodName = "";
+			if (delegateMethod.contains("exception") && delegateMethod["exception"].IsString()) {
+				string error = delegateMethod["exception"];
+				throw RemoteException(error);
+			}
+			if (delegateMethod.contains("method") && delegateMethod["method"].IsString()) {
+				methodName = delegateMethod["method"];
+			}
+			if (methodName == methodName) {
+				if (delegateMethod.contains("return")) {
+					result = delegateMethod["return"].toString();
+				}
+			}
+		}
+		return result;
+	}
+
+	virtual string handleResponse(string response) const throw (RemoteException) {
+		string result;
+		JSON methodArgs = JSON::Parse(response);
+		JSON delegateMethod;
+		if (methodArgs.IsArray() == true) {
+			_arguments = methodArgs;
+			if (!(_context->*_onReceive)()) { return throwException("Invalid Values"); }
+			JSON method;
+			method["method"] = _methodName;
+			method["return"] = (_context->*_invoke)();
+			JSON value = method;
+			result = value.toString();
+		}
+		else {
+			JSON ex;
+			ex["exception"] = "Unknown method";
+			JSON value = ex;
+			result = value.toString();
+			return result;
+		}
+		return result;
+	}
+
+protected:
+	mutable JSON _arguments;
+private:
+	string throwException(string msg) const throw (RemoteException) {
+		JSON ex;
+		ex["exception"] = msg;
+		JSON value = ex;
+		return value.toString();
+	}
+};
+
+#define GENERATE_REMOTE_METHODS_ARGUMENTS(N, value)																						\
+template<class Caller, class ReturnType, VAR_TYPES(N)>																					\
+class RemoteMethod<Caller, ReturnType, VAR_ARGS(N)> : public IPort<ReturnType>, public ActiveConstraintUID{public:						\
+	typedef typename MethodCallbackSignature<Caller, ReturnType, VAR_ARGS(N)>::Method Callback;											\
+	typedef typename Active<Caller, ReturnType, VAR_ARGS(N)> ActiveRemoteMethod;														\
+	RemoteMethod(Caller* caller, Callback method, Scheduler<Caller>* sch, string methodName, IMessageRouter* messageRouter)				\
+		:_method(caller, sch, method), transport(this, &RemoteMethod::receive, &RemoteMethod::invoke, methodName, messageRouter) { }	\
+	RemoteMethod(ActiveRemoteMethod method, string methodName, IMessageRouter* messageRouter)											\
+		:_method(method), transport(this, &RemoteMethod::receive, &RemoteMethod::invoke, methodName, messageRouter) { }					\
+		MulticastDelegate<ReturnType, VAR_ARGS(N)>* getPort() { return &_method; }																							\
+		operator MulticastDelegate<ReturnType, VAR_ARGS(N)>*() { return getPort(); }												\
+		RemoteMethod& operator += (IDelegatePublisher<ReturnType, VAR_ARGS(N)>* method) { _method += method;return *this; }		    	\
+	ReturnType operator () (VAR_ARGS_MEMBERS(N, arg, COMMA)) {																			\
+		INIT_VALUE_ARGS(N, arg);																										\
+		if (transport.getRouter()->getType() == RemoteMethodType::Client) { return send();getPort()->notify(VAR_NAMED_ARGS(N, arg)); }                      \
+		else { return invoke(); }																										\
+	}																																	\
+private:																																\
+	JSONTransport<RemoteMethod, ReturnType> transport;																					\
+	ActiveRemoteMethod _method;																											\
+	VAR_ARGS_MEMBERS(N, _arg, SEMICOLON);																								\
+	virtual bool receive() {																											\
+		if (transport.length() == N) {																									\
+			try{ SERIALIZE_ARGS(N, arg); }																								\
+			catch (...) { return false; }																								\
+		}																																\
+		else { return false; }																											\
+		return true;																													\
+	}																																	\
+	ReturnType invoke() {																												\
+		FutureResult<ReturnType> result = _method(VAR_NAMED_ARGS(N, _arg));																\
+		result.snooze();																													\
+		return result.data();																											\
+	}																																	\
+	virtual ReturnType send() {																											\
+		DESERIALIZE_ARGS(N, arg);																										\
+		return transport.remote();																										\
+	}																																	\
+};																																		\
+template<class Caller, VAR_TYPES(N)>																									\
+class RemoteMethod<Caller, void, VAR_ARGS(N)> : public IPort<void>, public ActiveConstraintUID{public:									\
+	typedef typename MethodCallbackSignature<Caller, void, VAR_ARGS(N)>::Method Callback;												\
+	typedef typename Active<Caller, void, VAR_ARGS(N)> ActiveRemoteMethod;																\
+	RemoteMethod(Caller* caller, Callback method, Scheduler<Caller>* sch, string methodName, IMessageRouter* messageRouter)				\
+		:_method(caller, sch, method), transport(this, &RemoteMethod::receive, &RemoteMethod::invoke, methodName, messageRouter) { }	\
+	RemoteMethod(ActiveRemoteMethod method, string methodName, IMessageRouter* messageRouter)											\
+		:_method(method), transport(this, &RemoteMethod::receive, &RemoteMethod::invoke, methodName, messageRouter) { }					\
+		MulticastDelegate<void, VAR_ARGS(N)>* getPort() { return &_method; }																							\
+		operator MulticastDelegate<void, VAR_ARGS(N)>*() { return getPort(); }												\
+		RemoteMethod& operator += (IDelegatePublisher<void, VAR_ARGS(N)>* method) { _method += method;return *this; }		    	\
+	void operator () (VAR_ARGS_MEMBERS(N, arg, COMMA)) {																				\
+		INIT_VALUE_ARGS(N, arg);																										\
+		if (transport.getRouter()->getType() == RemoteMethodType::Client) { send(); getPort()->notify(VAR_NAMED_ARGS(N, arg)); }                          \
+		else { invoke(); }																												\
+	}																																	\
+private:																																\
+	JSONTransport<RemoteMethod, string> transport;																						\
+	ActiveRemoteMethod _method;																											\
+	VAR_ARGS_MEMBERS(N, _arg, SEMICOLON);																								\
+	virtual bool receive() {																											\
+		if (transport.length() == N) {																									\
+			try{ SERIALIZE_ARGS(N, arg); }																								\
+			catch (...) { return false; }																								\
+		}																																\
+		else { return false; }																											\
+		return true;																													\
+	}																																	\
+	string invoke() {																													\
+		FutureResult<void> result = _method(VAR_NAMED_ARGS(N, _arg));																	\
+		result.snooze();																													\
+		return "";																														\
+	}																																	\
+	virtual void send() {																												\
+		DESERIALIZE_ARGS(N, arg);																										\
+		transport.remote();																												\
+	}};
+
+#define GENERATE_REMOTE_METHODS(N)	REPEAT_DEC(N, GENERATE_REMOTE_METHODS_ARGUMENTS, EMPTY)
+
+template<class Caller, class ReturnType, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class RemoteMethod;
+template<class Caller, class ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
+class RemoteMethod : public IPort<ReturnType>, public ActiveConstraintUID{
+public:
+	typedef typename MethodCallbackSignature<Caller, ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)>::Method Callback;
+	typedef typename Active<Caller, ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)> ActiveRemoteMethod;
+	RemoteMethod(Caller* caller, Callback method, Scheduler<Caller>* sch, string methodName, IMessageRouter* messageRouter)
+		:_method(caller, sch, method), transport(this, &RemoteMethod::receive, &RemoteMethod::invoke, methodName, messageRouter) { }
+	RemoteMethod(ActiveRemoteMethod method, string methodName, IMessageRouter* messageRouter)
+		:_method(method), transport(this, &RemoteMethod::receive, &RemoteMethod::invoke, methodName, messageRouter) { }
+	ReturnType operator () (VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA)) {
+		INIT_VALUE_ARGS(ARGUMENT_UPPER_LIMIT, arg);
+		if (transport.getRouter()->getType() == RemoteMethodType::Client) { return send(); getPort()->notify(VAR_NAMED_ARGS(ARGUMENT_UPPER_LIMIT, arg)); }
+		else { return invoke(); }
+	}
+	MulticastDelegate<ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)>*  getPort() { return &_method; }
+	operator MulticastDelegate<ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)>*() { return getPort(); }
+	RemoteMethod& operator += (IDelegatePublisher<ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)>* method) { _method += method; return *this; }
+private:
+	JSONTransport<RemoteMethod, ReturnType> transport;
+	ActiveRemoteMethod _method;
+	VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, _arg, SEMICOLON);
+	virtual bool receive() {
+		if (transport.length() == ARGUMENT_UPPER_LIMIT) {
+			try{ SERIALIZE_ARGS(ARGUMENT_UPPER_LIMIT, arg); }
+			catch (...) { return false; }
+		}
+		else { return false; }
+		return true;
+	}
+	ReturnType invoke() {
+		FutureResult<ReturnType> result = _method(VAR_NAMED_ARGS(ARGUMENT_UPPER_LIMIT, _arg));
+		result.snooze();
+		return result.data();
+	}
+	virtual ReturnType send() {
+		DESERIALIZE_ARGS(ARGUMENT_UPPER_LIMIT, arg);
+		return transport.remote();
+	}
+};
+
+template<class Caller, class ReturnType>
+class RemoteMethod<Caller, ReturnType> : public IPort<ReturnType>, public ActiveConstraintUID{
+public:
+	typedef typename MethodCallbackSignature<Caller, ReturnType>::Method Callback;
+	typedef typename Active<Caller, ReturnType> ActiveRemoteMethod;
+	RemoteMethod(Caller* caller, Callback method, Scheduler<Caller>* sch, string methodName, IMessageRouter* messageRouter)
+		:_method(caller, sch, method), transport(this, &RemoteMethod::receive, &RemoteMethod::invoke, methodName, messageRouter) { }
+	RemoteMethod(ActiveRemoteMethod method, string methodName, IMessageRouter* messageRouter)
+		:_method(method), transport(this, &RemoteMethod::receive, &RemoteMethod::invoke, methodName, messageRouter) { }
+	ReturnType operator () () {
+		if (transport.getRouter()->getType() == RemoteMethodType::Client) { return send(); getPort()->notify(); }
+		else { return invoke(); }
+	}
+	MulticastDelegate<ReturnType>* getPort() { return &_method; }
+	operator MulticastDelegate<ReturnType>*() { return getPort(); }
+	RemoteMethod& operator += (IDelegatePublisher<ReturnType>* method) { _method += method; return *this; }
+private:
+	ActiveRemoteMethod _method;
+	JSONTransport<RemoteMethod, ReturnType> transport;
+	virtual bool receive() {
+		if (transport.length() == 0) {
+		}
+		else { return false; }
+		return true;
+	}
+	ReturnType invoke() {
+		FutureResult<ReturnType> result = _method();
+		result.snooze();
+		return result.data();
+	}
+	virtual ReturnType send() {
+		return transport.remote();
+	}
+};
+
+template<class Caller>
+class RemoteMethod<Caller, void> : public IPort<void>, public ActiveConstraintUID{
+public:
+	typedef typename MethodCallbackSignature<Caller, void>::Method Callback;
+	typedef typename Active<Caller, void> ActiveRemoteMethod;
+	RemoteMethod(Caller* caller, Callback method, Scheduler<Caller>* sch, string methodName, IMessageRouter* messageRouter)
+		:_method(caller, sch, method), transport(this, &RemoteMethod::receive, &RemoteMethod::invoke, methodName, messageRouter) { }
+	RemoteMethod(ActiveRemoteMethod method, string methodName, IMessageRouter* messageRouter)
+		:_method(method), transport(this, &RemoteMethod::receive, &RemoteMethod::invoke, methodName, messageRouter) { }
+	void operator () () {
+		if (transport.getRouter()->getType() == RemoteMethodType::Client) { send(); getPort()->notify(); }
+		else { invoke(); }
+	}
+	operator MulticastDelegate<void>*() { return getPort(); }
+	MulticastDelegate<void>* getPort() { return &_method; }
+	RemoteMethod& operator += (IDelegatePublisher<void>* method) { _method += method; return *this; }
+private:
+	ActiveRemoteMethod _method;
+	JSONTransport<RemoteMethod, string> transport;	
+	virtual bool receive() {
+		if (transport.length() == 0) {
+		}
+		else { return false; }
+		return true;
+	}
+	string invoke() {
+		FutureResult<void> result = _method();
+		result.snooze();
+		return "";
+	}
+	virtual void send() {
+		transport.remote();
+	}
+};
+
+GENERATE_REMOTE_METHODS(ARGUMENT_UPPER_LIMIT)
+<<#}#>>
+!>>
+	emit threadImplementation()(threadImplementationT);
+}

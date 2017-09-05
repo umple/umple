@@ -28,8 +28,6 @@ import cruise.umple.core.GenerationPolicyRegistry;
 
 public class GenerationUtil {
 
-	public static boolean SEPARATE_TEMPLATES_DEFINITIONS= false;
-	
 	private GenerationUtil() {
 		// prevent external construction
 	}
@@ -75,31 +73,6 @@ public class GenerationUtil {
 		}
 		commentString= commentString+ CommonConstants.NEW_LINE+ CommonConstants.SPACE+ CommonConstants.ASTERISK+ CommonConstants.FORWARD_SLASH;
 		return commentString;
-	}
-
-	public static String safeSpcae(List<String> strings){
-		String result= CommonConstants.BLANK;
-		Iterator<String> iterator = strings.iterator();
-		while(iterator.hasNext()){
-			String string= iterator.next();
-			if(string== null|| string.isEmpty()){
-				continue;
-			}
-			result= result+ string.trim();
-			
-			if(iterator.hasNext()){
-				result= result+ CommonConstants.SPACE;
-			}
-		}
-		return result;
-	}
-	
-	public static String getImplementationDetails(GenerationPolicyRegistry generationValueGetter, String id, Object... element) {
-		return getImplementationAndIndentDetails(generationValueGetter, id, 0, 0, element);
-	}
-	
-	public static String getImplementationAndSeparateDetails(GenerationPolicyRegistry generationValueGetter, String id, int seaprate, Object... element) {
-		return getImplementationAndIndentDetails(generationValueGetter, id, seaprate, 0, element);
 	}
 
 	public static String getImplementationAndIndentDetails(GenerationPolicyRegistry generationValueGetter, String id, int seaprate, int indent, Object... element) {

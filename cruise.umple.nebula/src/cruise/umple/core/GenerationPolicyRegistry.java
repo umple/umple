@@ -47,8 +47,8 @@ import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.core.GenerationCallback.GenerationStringSegment;
 import cruise.umple.core.GenerationCallback.WatchedObjectValue;
-import cruise.umple.core.GenerationPoint.InterceptorResponse;
 import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
+import cruise.umple.cpp.gen.GenPackage;
 import cruise.umple.templates.GenerationTemplateDelegator;
 import cruise.umple.templates.IGenerationTemplateRegistry;
 import cruise.umple.values.GenerationValueGetterDelegator;
@@ -62,7 +62,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	
 	private static List<Class<?>> parsedClasses= new ArrayList<Class<?>>();
 	private static Map<String, List<GenerationPointObject>> _pointsInvocations= new HashMap<String, List<GenerationPointObject>>();
-	private static Map<String, List<Object>> _parsedDecisionClasses= new HashMap<String, List<Object>>();
 	private static Map<String, Map<String, List<LoopObject>>> _loopInvocations= new HashMap<String, Map<String, List<LoopObject>>>();
 	protected static Map<String, GenerationGroupDefinition> groupDefnitions= new HashMap<String, GenerationGroupDefinition>();
 	private static Map<String, List<Object>> _parsedClasses= new WeakHashMap<String, List<Object>>();
@@ -95,7 +94,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	});
 	
 	private static Map<String, List<GenerationPointObject>> _watchingPointsInvocations= new HashMap<String, List<GenerationPointObject>>();
-	private static Map<String, List<DecisionObject>> _decisionInvocations= new HashMap<String, List<DecisionObject>>();
 	private static boolean processed= false;
 
 	private Map<Object, TreeMap<String, Object>> objectsPathMap= new HashMap<Object, TreeMap<String, Object>>();
@@ -103,10 +101,14 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	protected ArgumentsRetrieval decisionObjectsRetriever= new ArgumentsRetrieval();
 	private ArgumentsRetrieval interceptedObjectsRetriever= new ArgumentsRetrieval();
 	
-	protected GenerationLogger generationLogger;
+	public GenerationLogger generationLogger;
+	public GenPackage rootModel;
 	
 	public GenerationPolicyRegistry() {
 		super();
+		
+		this.rootModel= new GenPackage();
+		this.rootModel.setLanguage("Cpp");
 		
 		this.generationLogger= new GenerationLogger();
 		
@@ -117,14 +119,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	
 	public void registerGenerationPolicy(Object policy){
 		this.generationValueGetter.register(policy);
-	}
-	
-	public boolean decisionPoint(Object obj, GenerationPolicyRegistry registry, String decisionPoint, Object... arguments){
-		return this.processDecisionPointsMethods(obj, registry, decisionPoint, arguments);
-	}
-	
-	public boolean decisionPoint(Object obj, String decisionPoint, Object... arguments){
-		return this.processDecisionPointsMethods(obj, this, decisionPoint, arguments);
 	}
 	
 	public void addRelatedObject(Object object, Object relatedTo){
@@ -237,10 +231,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	private void process(Object obj, List<LoopProcessorObject> pre)
 			throws IllegalAccessException, InvocationTargetException {
 		for(LoopProcessorObject loopProcessorObject: pre){
-			if(!checkConditions(obj, loopProcessorObject)){
-				continue;
-			}
-			
 			loopProcessorObject.fMethod.invoke(loopProcessorObject.fInstance,
 					getParameters(obj, this, loopProcessorObject.fMethod));
 			
@@ -249,36 +239,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		}
 	}
 
-	private boolean checkConditions(Object element, LoopProcessorObject loopProcessorObject) {
-		LoopProcessorAnnotation loopProcessorAnnotation = loopProcessorObject.fLoopProcessorAnnotation;
-		LoopProcessorAnnotations loopProcessorAnnotations= loopProcessorObject.fLoopProcessorAnnotations;
-		
-		if(loopProcessorAnnotations!= null){
-			if(!checkConditions(element, loopProcessorAnnotations.ifConditionIds(), 
-					loopProcessorAnnotations.ifNotConditionIds())){
-				return false;
-			}
-		}
-		
-		return checkConditions(element, loopProcessorAnnotation.ifConditionIds(), loopProcessorAnnotation.ifNotConditionIds());
-	}
-
-	private boolean checkConditions(Object element, String[] ifConditionIds,
-			String[] ifNotConditionIds) {
-		for(int index=0; index<ifConditionIds.length; index++){
-			if (!decisionPoint(element, this, ifConditionIds[index])) {
-				return false;
-			}
-		}
-		
-		for(int index=0; index<ifNotConditionIds.length; index++){
-			if (processDecisionPointsMethods(element, this, ifNotConditionIds[index])) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
 	public List<?> generationPoint(Object element, String generationPoint, Object... arguments){
 		if(element instanceof Map){
 			Object object = ((Map<?, ?>)element).get(generationPoint);
@@ -639,7 +599,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			if(annotation== null){
 				GenerationPoints annotations = method.getAnnotation(GenerationPoints.class);
 				if(annotations== null){
-					locateDecisionPoints(clazz, method);
 					continue;
 				}
 				
@@ -649,7 +608,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			}
 			
 			processAnnotationDetails(annotation, method, clazz, toBeSorted);
-			locateDecisionPoints(handler, method);
 		}
 		
 		for(String generationPoint: toBeSorted){
@@ -678,28 +636,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	private synchronized static void postRegister(){
 		if(processed){
 			return;
-		}
-		for(String key: _decisionInvocations.keySet()){
-			List<DecisionObject> list = _decisionInvocations.get(key);
-			for(DecisionObject decisionObject: list){
-				for(String condition: decisionObject.fDecisionPoint.watchIf()){
-					List<GenerationPointObject> generationsList = _pointsInvocations.get(condition);
-					if(generationsList!= null){
-						for(GenerationPointObject object: generationsList){
-							object.whenDecisions.add(decisionObject);
-						}
-					}
-				}
-				
-				for(String condition: decisionObject.fDecisionPoint.watchIfNot()){
-					List<GenerationPointObject> generationsList = _pointsInvocations.get(condition);
-					if(generationsList!= null){
-						for(GenerationPointObject object: generationsList){
-							object.whenNotDecisions.add(decisionObject);
-						}
-					}
-				}
-			}
 		}
 		
 		for(Object key: _loopProcessorsInocations.keySet()){
@@ -758,12 +694,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		}
 	}
 
-	private DecisionPoint locateDecisionPoints(Object instance, Method method) {
-		DecisionPoint decisionPoint = method.getAnnotation(DecisionPoint.class);
-		processDecisionAnnotationDetails(decisionPoint, method, instance);
-		return decisionPoint;
-	}
-	
 	private void processAnnotationDetails(GenerationPoint annotation, Method method, Object instance, Set<String> toBeSorted){
 		if(annotation== null){
 			return;
@@ -791,113 +721,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			toBeSorted.add(generationPoint);
 			GenerationPointObject generationPointObject = new GenerationPointObject(method, annotation, instance);
 			pointInvocations.add(generationPointObject);
-			
-			String[] watches= annotation.intercept();
-			for(String watch: watches){
-				List<GenerationPointObject> watchList = _watchingPointsInvocations.get(watch);
-				if(watchList== null){
-					watchList= new ArrayList<GenerationPointObject>();
-					_watchingPointsInvocations.put(watch, watchList);
-				}
-				watchList.add(generationPointObject);
-			}
 		}
-	}
-	
-	private void processDecisionAnnotationDetails(DecisionPoint annotation, Method method, Object instance){
-		if(annotation== null){
-			return;
-		}
-		
-		String decisionPoint = annotation.decisionPoint();
-		
-		List<Object> list = _parsedDecisionClasses.get(decisionPoint);
-		if(list== null){
-			list= new ArrayList<Object>();
-		}
-				
-		List<DecisionObject> pointInvocations = _decisionInvocations.get(decisionPoint);
-		if(pointInvocations== null){
-			pointInvocations= new ArrayList<DecisionObject>();
-			_decisionInvocations.put(decisionPoint, pointInvocations);
-		}
-		pointInvocations.add(new DecisionObject(method, annotation, instance));
-	}
-	
-	protected boolean processDecisionPointsMethods(Object element, GenerationPolicyRegistry registry, String generationPoint, Object... arguments) {
-		List<Object> values = registry.generationObjectsRetriever.getValue(generationPoint, element, arguments);
-		if(!values.isEmpty()){
-			Object object = values.get(0);
-			if(object instanceof Boolean){
-				return ((Boolean) object).booleanValue();
-			}
-			return false;
-		}
-			
-		List<DecisionObject> list = _decisionInvocations.get(generationPoint);
-		
-		if(list== null){
-			Object object = registry.getObject(element, generationPoint, arguments);
-			if(object== null){
-				registry.generationObjectsRetriever.setValue(generationPoint, (Object)Boolean.FALSE, true, element, arguments);
-				return false;
-			}
-			//Try on the attribute only in that case
-			return registry.getBoolean(element, generationPoint, arguments);
-		}
-		
-		boolean decision= true;
-		for(DecisionObject decisionObject: list){
-			
-			deceision:{
-				String[] ifConditionIds = decisionObject.fDecisionPoint.ifConditionIds();
-				for(int index=0; index<ifConditionIds.length; index++){
-					if (!decisionPoint(element, this, ifConditionIds[index], arguments)) {
-						decision= /*decision&&*/false;
-						break deceision;
-					}
-				}
-				
-				String[] ifNotConditionIds = decisionObject.fDecisionPoint.ifNotConditionIds();
-				for(int index=0; index<ifNotConditionIds.length; index++){
-					if (processDecisionPointsMethods(element, this, ifNotConditionIds[index], arguments)) {
-						decision= /*decision&&*/false;
-						break deceision;
-					}
-				}
-				
-				Method method= decisionObject.fMethod;
-				try {
-					Object[] parameters = getParameters(element,registry, method, arguments);
-					Object result = method.invoke(decisionObject.fInstance, parameters);
-					
-					if(result instanceof Boolean){
-						Boolean invoke = (Boolean) result;
-						decision= decision&&invoke.booleanValue();
-						if(decisionObject.fDecisionPoint.optimistic()){
-							if(invoke.booleanValue()){
-								registry.generationObjectsRetriever.setValue(generationPoint, 
-										(Object)Boolean.TRUE, true, element, arguments);
-								return true;
-							}
-						}else{
-							if(!decision){
-								registry.generationObjectsRetriever.setValue(generationPoint, 
-										(Object)Boolean.valueOf(decision), true, element, arguments);
-								return decision;
-							}
-						}
-					}
-				} catch (Exception e) {
-					this.generationLogger.addError(e);
-				}
-			}
-			
-		}
-		registry.generationObjectsRetriever.setValue(generationPoint, 
-				(Object)Boolean.valueOf(decision), true, element, arguments);
-		
-		return decision;
 	}
 	
 	public void setFieldsParameters(Object instance, Object element, Field[] fields, Object... args){
@@ -1022,7 +846,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			
 			Class<?> classType = parameterTypes[index];
 			
-			if(annotation==null){
+			if(annotation==null && !arguments.isEmpty()){
 				Object object = arguments.get(argsIndex);
 				
 				if(typeCheck){
@@ -1064,9 +888,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				parameters[index]= watchingObject;
 			}else if(annotation instanceof GenerationProcedureParameter){
 				String canonicalName = classType.getCanonicalName();
-				if("boolean".equals(canonicalName)|| Boolean.class.getCanonicalName().equals(canonicalName)){
-					parameters[index]= Boolean.valueOf(this.decisionPoint(element, this, ((GenerationProcedureParameter)annotation).id(), args));
-				}else if("int".equals(canonicalName)||Integer.class.getCanonicalName().equals(canonicalName)){
+				if("int".equals(canonicalName)||Integer.class.getCanonicalName().equals(canonicalName)){
 					parameters[index]= this.generationPointInteger(element, ((GenerationProcedureParameter)annotation).id(), args);
 				}else if(List.class.getCanonicalName().equals(canonicalName)){
 					parameters[index]= this.generationPointList(element, ((GenerationProcedureParameter)annotation).id(), args);
@@ -1121,8 +943,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				String id = generationArgument.id();
 				if(!id.isEmpty()){
 					Object object = generationArgument.wrapped()? descriptors.get(id): descriptorMap.get(id);
-					Object intercepted = processWatchPoints(element, id, object, arguments);
-					Object reply = intercepted!=null? intercepted: object;
+					Object reply = object;
 					
 					String canonicalName = classType.getCanonicalName();
 					if("boolean".equals(canonicalName)|| Boolean.class.getClass().equals(canonicalName)){
@@ -1143,8 +964,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 								isTheSamePrimitiveType(objectType, "float", Float.class.getCanonicalName())||
 								isTheSamePrimitiveType(objectType, "double", Double.class.getCanonicalName())){
 							
-							Object intercepted = processWatchPoints(element, id, object, arguments);
-							parameters[index]= intercepted!=null? intercepted: object;
+							parameters[index]= object;
 							objectsSetArguments++;
 						}
 					}
@@ -1189,24 +1009,24 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		
 		return this.objectsPathMap.get(object);
 	}
+	
+	public Object loopElement(Object element, String[] ids){
+		TreeMap<String, Object> values = getPathMap(element);
+		for(String id:ids){
+			Object object = values.get(id);
+			if(object!= null){
+				return object;
+			}
+		}
+		
+		return null;
+	}
 
 	private static boolean isTheSamePrimitiveType(Class<?> classType, String type, String perspectiveCanonicalName) {
 		return classType.getCanonicalName().equals(type)|| classType.getCanonicalName().equals(perspectiveCanonicalName);
 	}
 	
 	
-	
-	private class DecisionObject{
-		protected Method fMethod;
-		protected DecisionPoint fDecisionPoint;
-		protected Object fInstance;
-		
-		public DecisionObject(Method method, DecisionPoint decisionPoint, Object instance) {
-			this.fMethod= method;
-			this.fInstance= instance;
-			this.fDecisionPoint= decisionPoint;
-		}
-	}
 	
 	private class LoopObject{
 		protected Method fMethod;
@@ -1240,6 +1060,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	
 	private ArgumentsRetrieval argumentRetriever= new ArgumentsRetrieval();
 	public Generator generator;
+	public Object rootElement;
 	
 	public void addList(String id, Object values, boolean unique, Object... element){
 		if(values instanceof Collection<?> == false){
@@ -1283,38 +1104,13 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	}
 	
 	/******************Delegations****************************************/
-	
-	@Override
-	public void define(IGenerationTemplateRegistry generationTemplateRegistry, String id, GenerationCallback callback){
-		this.generationTemplateDelegator.define(generationTemplateRegistry, id, callback);
-	}
-	
-	@Override
-	public void define(String id, GenerationCallback callback){
-		this.generationTemplateDelegator.define(this, id, callback);
-	}
-	
-	@Override
-	public void define(String id, IGenerationProcdure... callback) {
-		this.generationTemplateDelegator.define(id, callback);
-	}
-
 	@Override
 	public String generate(String id, Object element, Object... arguments) {
 		return this.generationTemplateDelegator.generate(id, element, arguments);
 	}
 	
 	@Override
-	public String use(String id, Object... arguments) {
-		return this.generationTemplateDelegator.use(id, arguments);
-	}
-	
-	@Override
 	public boolean getBoolean(Object classObject, String fieldName, Object... arguments) {
-		if(_decisionInvocations.get(fieldName)!= null){
-			return this.decisionPoint(classObject, this, fieldName, arguments);
-		}
-		
 		if(classObject instanceof Map){
 			Object object = this.relatedObjects.get(classObject);
 			if(object!= null){
@@ -1331,11 +1127,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		}
 		
 		boolean value = this.generationValueGetter.getBoolean(classObject, fieldName, arguments);
-		Object processWatchPoints = processWatchPoints(classObject, fieldName, Boolean.valueOf(value), arguments);
-		if(processWatchPoints instanceof Boolean){
-			return ((Boolean) processWatchPoints).booleanValue();
-		}
-		
 		return value;
 	}
 
@@ -1348,11 +1139,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		
 		Object object = this.generationValueGetter.getObject(classObject, fieldName, arguments);
 		
-		Object processWatchPoints = processWatchPoints(classObject, fieldName,object, arguments);
-		if(processWatchPoints != null){
-			this.interceptedObjectsRetriever.setValue(fieldName, processWatchPoints, true, classObject, arguments);
-			return processWatchPoints;
-		}
 		this.interceptedObjectsRetriever.setValue(fieldName, object, true, classObject, arguments);
 		return object;
 	}
@@ -1384,12 +1170,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		}
 		
 		int intValue = this.generationValueGetter.getInt(classObject, fieldName, arguments);
-		
-		Object processWatchPoints = processWatchPoints(classObject, fieldName, new Integer(intValue), arguments);
-		if(processWatchPoints instanceof Integer){
-			this.interceptedObjectsRetriever.setValue(fieldName, processWatchPoints, true, classObject, arguments);
-			return ((Integer) processWatchPoints).intValue();
-		}
 		
 		this.interceptedObjectsRetriever.setValue(fieldName, Integer.valueOf(intValue), true, classObject, arguments);
 		return intValue;
@@ -1426,36 +1206,12 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		
 		String stringValue = this.generationValueGetter.getString(classObject, fieldName, arguments);
 		
-		if(!ignoreInterception){
-			Object processWatchPoints = processWatchPoints(classObject, fieldName, stringValue,  arguments);
-			if(processWatchPoints instanceof String){
-				this.interceptedObjectsRetriever.setValue(fieldName, processWatchPoints, true, classObject, Boolean.valueOf(ignoreInterception), arguments);
-				return (String) processWatchPoints;
-			}
-		}
-		
 		if(stringValue== null&& relatedObject!= null){
 			stringValue= getString(relatedObject, fieldName, arguments);
 		}
 		
 		this.interceptedObjectsRetriever.setValue(fieldName, stringValue, true, classObject, Boolean.valueOf(ignoreInterception), arguments);
 		return stringValue;
-	}
-
-	private Object processWatchPoints(Object classObject, String interceptId, Object watchingValue, Object... arguments) {
-		List<GenerationPointObject> list = _watchingPointsInvocations.get(interceptId);
-		if(list== null){
-			return null;
-		}
-		
-		for(GenerationPointObject generationPointObject: list){
-			Object invoke = generationPointObject.invoke(classObject, this, interceptId, watchingValue, arguments);
-			if(invoke instanceof InterceptorResponse){
-				return ((InterceptorResponse)invoke).getValue();
-			}
-		}
-		
-		return null;
 	}
 
 	@Override
@@ -1467,8 +1223,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	private class GenerationPointObject{
 		protected Method fMethod;
 		protected GenerationPoint fGenerationPoint;
-		protected Set<DecisionObject> whenDecisions= new HashSet<DecisionObject>();
-		protected Set<DecisionObject> whenNotDecisions= new HashSet<DecisionObject>();
 		protected Object fInstance;
 		
 		public GenerationPointObject(Method method, GenerationPoint generationPoint, Object instance) {
@@ -1489,51 +1243,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 					if(!value.isEmpty()){
 						return value.get(0);
 					}
-					for(int index=0; index<this.fGenerationPoint.ifConditionIds().length; index++){
-						if (!processDecisionPointsMethods(element, registry, this.fGenerationPoint.ifConditionIds()[index], arguments)) {
-							registry.generationObjectsRetriever.setValue(generationPoint, null, true, element, arguments, this.fMethod, arguments, watchingObject);
-							return null;
-						}
-					}
-					
-					for(int index=0; index<this.fGenerationPoint.ifNotConditionIds().length; index++){
-						if (processDecisionPointsMethods(element, registry, this.fGenerationPoint.ifNotConditionIds()[index], arguments)) {
-							registry.generationObjectsRetriever.setValue(generationPoint, null, true, element, arguments, this.fMethod, arguments, watchingObject);
-							return null;
-						}
-					}
-					
-					for(DecisionObject decisionObject: this.whenDecisions){
-						if(!processDecisionObject(element, registry, decisionObject, arguments)){
-							registry.generationObjectsRetriever.setValue(generationPoint, null, true, element, arguments, this.fMethod, arguments, watchingObject);
-							return null;
-						}
-						
-						Object[] parameters = getParametersValues(element, registry, currentString, decisionObject.fMethod, false, watchingObject, arguments);
-						Object invoke = decisionObject.fMethod.invoke(decisionObject.fInstance, parameters);
-						if(invoke instanceof Boolean){
-							if(!((Boolean)invoke).booleanValue()){
-								registry.generationObjectsRetriever.setValue(generationPoint, null, true, element, arguments, this.fMethod, arguments, watchingObject);
-								return null;
-							}
-						}
-					}
-					
-					for(DecisionObject decisionObject: this.whenNotDecisions){
-						if(processDecisionObject(element, registry, decisionObject, arguments)){
-							registry.generationObjectsRetriever.setValue(generationPoint, null, true, element, arguments, this.fMethod, arguments, watchingObject);
-							return null;
-						}
-						
-						Object[] parameters = GenerationPolicyRegistry.getParametersValues(element, registry, currentString, decisionObject.fMethod, false, watchingObject, arguments);
-						Object invoke = decisionObject.fMethod.invoke(decisionObject.fInstance, parameters);
-						if(invoke instanceof Boolean){
-							if(((Boolean)invoke).booleanValue()){
-								registry.generationObjectsRetriever.setValue(generationPoint, null, true, element, this.fMethod, arguments, watchingObject);
-								return null;
-							}
-						}
-					}
 					
 					//TODO: caching
 					Object[] parameters = GenerationPolicyRegistry.getParametersValues(element, registry, currentString, this.fMethod, false, watchingObject, arguments);
@@ -1550,21 +1259,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			}
 		}
 
-		private boolean processDecisionObject(Object element, GenerationPolicyRegistry registry, DecisionObject decisionObject, Object... arguments) {
-			for(String condition: decisionObject.fDecisionPoint.ifConditionIds()){
-				if (!decisionPoint(element, registry, condition, arguments)) {
-					return false;
-				}
-			}
-			
-			for(String condition: decisionObject.fDecisionPoint.ifNotConditionIds()){
-				if (processDecisionPointsMethods(element, registry, condition, arguments)) {
-					return false;
-				}
-			}
-			return true;
-		}
-		
 		public boolean unique(){
 			return this.fGenerationPoint.unique();
 		}
