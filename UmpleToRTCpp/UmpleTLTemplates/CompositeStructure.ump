@@ -1,0 +1,735 @@
+/*******************************************************************************
+* Copyright (c) 2017 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
+namespace cruise.umple.cpp.gen;
+
+class GenConnectEntry{
+	isA GenBody;
+	String from;
+	String fromOwner;
+	
+	String to;
+	String toOwner;
+	
+	lazy Boolean inverse;
+	
+	depend java.util.List;
+	
+	String getBody(){
+		boolean _inverse = getInverse();
+		boolean diff = false;
+		String _fromOwner = getFromOwner();
+		GenClass fromOwner = fieldOwner(_fromOwner);
+
+		String _toOwner = getToOwner();
+		GenClass toOwner = fieldOwner(_toOwner);
+
+		GenActiveField relatedFromField = getRelatedField(fromOwner, getFrom());
+		if (relatedFromField == null) {
+			relatedFromField = getRelatedField(fromOwner, getTo());
+			diff = true;
+			if (relatedFromField == null) {
+				return null;
+			}
+		}
+
+		GenActiveField relatedToField = getRelatedField(toOwner, getTo());
+		if (relatedToField == null) {
+			relatedToField = getRelatedField(toOwner, getFrom());
+			diff = true;
+			if (relatedToField == null) {
+				return null;
+			}
+		}
+
+		if (diff) {
+			_inverse = !_inverse;
+		}
+
+		boolean isReference = !getGenMethod().getGenClass().getIsRemote();
+
+		String fromSegment = _fromOwner == null ? "this" : _fromOwner;
+		String toSegment = _toOwner == null ? "this" : _toOwner;
+
+		GenActiveField expectedRelatedFromField = relatedFromField, expectedRelatedToField = relatedToField;
+		String expectedFromSegment, expectedToSegment;
+		if (_inverse) {
+			expectedFromSegment = fromSegment;
+			expectedToSegment = toSegment;
+		} else {
+			expectedFromSegment = toSegment;
+			expectedToSegment = fromSegment;
+		}
+
+		if (diff) {
+			expectedRelatedFromField = relatedToField;
+			expectedRelatedToField = relatedFromField;
+		}
+
+		return expectedFromSegment + "->" + expectedRelatedFromField.getName() + "+= " + (isReference ? "&" : "")
+				+ expectedToSegment + "->" + expectedRelatedToField.getName() + ";";
+	}
+	
+	GenClass fieldOwner(String field){
+	  	GenClass base = getGenMethod().getGenClass();
+		if(field == null){
+		  	return base;
+	  	}
+	  
+	  	GenField ownerField = base.fieldByName(field);
+	  	if(ownerField == null){
+	  		return base;
+	  	}
+	  	
+	  	GenClass classByName = base.getGenPackage().classByName(ownerField.getType());
+	  	if(classByName == null){
+	  		return base;
+	  	}
+	  	
+  		return classByName;
+	  
+	}
+	
+	GenActiveField getRelatedField(GenClass owner, String name){
+	  	if(name == null){
+			return null;
+		}
+	  	
+	  	if(owner == null){
+	  		owner= getGenMethod().getGenClass();
+	  	}
+		  
+		List<GenActiveField> activeFields = owner.activeFields();
+		for(GenActiveField field: activeFields){
+			GenMethod relatedMethod = field.getRelatedMethod();
+			if(relatedMethod instanceof ActiveGenMethd){
+				ActiveGenMethd active= ((ActiveGenMethd)relatedMethod);
+				if(name.equals(active.getBaseName())){
+					return field;
+				}
+			}else{
+				if(name.equals(field.getName())){
+					return field;
+				}
+			}
+		}
+		return null;
+	}
+}
+
+class GenPackage{
+	
+	initObjectConnectionT <<!
+if (<<=instance>><<=point>>getMessageRouter().getType() == RemoteMethodType::Server) {
+	Endpoint ep(getLocalhost(), <<=instance>><<=point>>getMessageRouter().getPort());
+	object["endpoint"] = ep;
+}else {
+   object["port"] = <<=instance>><<=point>>getMessageRouter().getEndPoint().getPort();
+}!>>
+emit initObjectConnection(String instance, String point)(initObjectConnectionT);
+
+
+
+getLocalHostInvokeT <<!
+string getLocalhost();
+!>>
+	emit getLocalHostInvoke()(getLocalHostInvokeT);
+
+getLocalHostT <<!
+string getLocalhost() {
+	char hostName[255];
+	gethostname(hostName, 255);
+	struct hostent *he = gethostbyname(hostName);
+	return string(inet_ntoa(*(struct in_addr *)*he->h_addr_list));
+};!>>
+	emit getLocalHost()(getLocalHostT);
+	
+publishSubscribeAPIT <<!
+typedef char samllInt;
+typedef unsigned char unsignedSamllInt;
+typedef short int shortInt;
+typedef unsigned short int unsignedShortInt;
+
+#define MSG_MAX 80
+#define MSG_SIZE 128
+
+typedef int SlotHandle;
+
+template <typename T,typename P>
+class IPublisher
+{
+public:
+	virtual T publish(P param) = 0;
+};
+
+template <typename L,typename R,typename P>
+class Publisher : public IPublisher<R,P>
+{
+private:
+	typedef R (L::*FuncPtr)(P);
+	L* _object;
+	FuncPtr _functionPointer;
+	
+public:
+	Publisher(L* object, FuncPtr funcPtr)
+		: _object(object), _functionPointer(funcPtr)
+	{}
+
+	R publish(P arg)
+	{
+		return (_object->*_functionPointer)(arg);		
+	}
+};
+
+template <typename R,typename P1>
+class Event
+{
+private:
+	typedef std::map<int,IPublisher<R,P1> *> SubscribersMap;
+	SubscribersMap subscribers;
+	int subscribersCount;
+
+public:
+	Event()
+		: subscribersCount(0) {}
+
+	template <typename L>
+	SlotHandle subscribe(L* component,R (L::*func)(P1))
+	{
+		typedef R (L::*FuncPtr)(P1);	
+		subscribers[subscribersCount] = (new Publisher<L,R,P1>(component,func));
+		subscribersCount++;	
+		return subscribersCount-1;
+	}
+
+	bool disconnect(SlotHandle id)
+	{
+		typename SubscribersMap::iterator it = subscribers.find(id);
+		if(it == subscribers.end())
+			return false;
+		delete it->second;
+		subscribers.erase(it);				
+		return true;
+	}
+
+	R publish(P1 arg)
+	{
+		typename SubscribersMap::iterator it = subscribers.begin();
+		for(; it != subscribers.end(); it++)
+		{
+			it->second->publish(arg);
+		}
+	}
+};
+
+typedef struct MessageHeader{
+	shortInt portId;
+	shortInt eventId;
+	void* data;
+} MessageHeader;
+
+
+
+class MessageService {
+	private:
+		mutable MutexLock lock;
+
+		queue<MessageHeader*>* msgQueue;
+		queue<MessageHeader*>* msgPool;
+		//Thread* executeThread;
+
+		SlotHandle dispatcherHandleId;
+		Event<void,const MessageHeader*> msgDispatcher;
+
+		unsignedSamllInt buffer[MSG_MAX*MSG_SIZE];
+	public:
+		template <typename L,typename R,typename P1>
+		MessageService(L* component,R (L::*func)(P1))
+		{
+			dispatcherHandleId = msgDispatcher.subscribe(component,func);
+			msgQueue = new queue<MessageHeader*>();
+			msgPool = new queue<MessageHeader*>();
+			for (int i=0; i< MSG_MAX; i++){
+				MessageHeader* block = (MessageHeader*) &buffer[i* MSG_SIZE];
+				msgPool->push(block);
+			}
+			//executeThread = new Thread(&MessageService::execute,this);
+			//executeThread->start();
+		}
+		
+		virtual ~MessageService() {
+			msgDispatcher.disconnect(dispatcherHandleId);
+			while(!msgQueue->empty()) {
+				MessageHeader* msg = msgQueue->front();
+				msgQueue->pop();
+				delete msg;
+			}
+			delete msgQueue;
+	
+			while(!msgPool->empty()) {
+				MessageHeader* msg = msgPool->front();
+				msgPool->pop();
+				delete msg->data;
+				delete msg;
+			}
+			//delete executeThread;
+			delete msgPool;
+		}
+		
+		void push(MessageHeader* msg) {
+			//synchronized(lock) 
+			{
+				msgQueue->push(msg);
+				//executeThread->wakeUp();
+				execute();
+			}
+		}
+		MessageHeader* pop() {
+			MessageHeader* msg = msgQueue->front();
+			msgQueue->pop();
+			return msg;
+		}
+
+		MessageHeader* getBufferedMessage(){
+			//synchronized(lock) 
+			{
+				if (msgPool->size()>0){
+					MessageHeader* msg = msgPool->front();
+					msgPool->pop();
+					return msg;
+				}
+			}
+			return NULL;
+		}
+
+		void poolMessage(MessageHeader* buffer){
+			msgPool->push(buffer);
+		}
+
+		void execute() {
+				while(!msgQueue->empty()) {
+					MessageHeader* msg = msgQueue->front();
+					msgQueue->pop();
+					msgDispatcher.publish(msg);
+					poolMessage(msg);
+				}
+		}
+		/*
+		void execute(void* thisVoidPtr) {
+			MessageService* thisPtr = static_cast<MessageService*>(thisVoidPtr);
+			while(true) {
+				while(!msgQueue->empty()) {
+					MessageHeader* msg = thisPtr->msgQueue->front();
+					thisPtr->msgQueue->pop();
+					thisPtr->msgDispatcher.publish(msg);
+					thisPtr->poolMessage(msg);
+				}
+				thisPtr->executeThread->wait();
+			}
+		}*/
+};
+
+!>>
+	emit publishSubscribeAPI()(publishSubscribeAPIT);
+}
+
+class GenerationTemplate{
+	serializeInitAsPointerT <<!<<=type>>* <<=name>>;
+if((*this).contains("port")) {
+	<<=name>>= new <<=type>>((unsigned int)(*this)["port"]<<#if(params!= null && !params.isEmpty()){#>>, <<=params>><<#}#>>);
+}else if ( (*this).contains("endpoint")) {
+	<<=name>>= new <<=type>>((Endpoint)(*this)["endpoint"]<<#if(params!= null && !params.isEmpty()){#>>, <<=params>><<#}#>>);
+}else {
+	<<=name>>= new <<=type>>(<<=params>>);
+}
+<<=other>>
+return <<=name>>;
+!>>
+	emit serializeInitAsPointer(String type, String name, String params, String other)(serializeInitAsPointerT);
+	
+	serializeInitAsReferenceT <<!if((*this).contains("port")){
+	<<=type>> <<=name>>((unsigned int)(*this)["port"]<<#if(params!= null && !params.isEmpty()){#>>, <<=params>><<#}#>>);
+	<<=other>>
+	return <<=name>>;
+}else if ((*this).contains("endpoint")){
+	<<=type>> <<=name>>((Endpoint)(*this)["endpoint"]<<#if(params!= null && !params.isEmpty()){#>>, <<=params>><<#}#>>);
+	<<=other>>
+	return <<=name>>;
+}else {
+	<<=type>> <<=name>><<#if(params!= null && !params.isEmpty()){#>>(<<=params>>)<<#}#>>;
+	<<=other>>
+	return <<=name>>;
+}!>>
+	emit serializeInitAsReference(String type, String name, String params, String other)(serializeInitAsReferenceT);
+}
+
+class CompositeStructure {
+  isA GenerationTemplate;
+  depend cruise.umple.core.GenerationPolicyRegistry;
+  
+  depend cruise.umple.modeling.handlers.IModelingConstants;
+  depend cruise.umple.modeling.handlers.cpp.ICppDefinitions;
+  depend cruise.umple.core.Generator;
+  depend cruise.umple.cpp.utils.StringUtil;
+	  
+  serializeT <<!		<<=descirptorStructName>>* serialize(<<=normalizedType>> <<=normalizedTypeName>>);!>>
+  deserializeT <<!		void deserialize(<<=normalizedType>>* <<=normalizedTypeName>>, <<=normalizedType>>_Message_Descriptor* <<=normalizedTypeName>>_Message_Descriptor);!>>
+
+  serializeImplementationT <<!<<=descirptorStructName>>* msg = new <<=descirptorStructName>>();
+<<=serializeContents>>
+return msg;
+!>>
+
+  deserializeImplementationT <<!
+void <<=className>>::deserialize(<<=typeName>> <<=typeInstance>>, <<=descirptorStructName>>* msg) {
+<<=StringUtil.indent(deserializeContents,1)>>
+}!>>
+  
+  publicMessageContentT <<!
+	public:
+			
+		//------------------------
+		// CONSTRUCTOR
+		//------------------------
+		<<=name>>_Message();
+	
+		//------------------------
+		// DESTRUCTOR
+		//------------------------
+		virtual ~<<=name>>_Message();
+<<=serializes>>
+<<=deserializes>>
+!>>
+  
+callThenResolveT <<!
+<<# if(resolve == null || resolve.isEmpty()){#>><<=call>><<=safeSet(then)>>
+<<#}else{#>>try {
+<<=StringUtil.indent(call,1)>><<=safeSetNL(StringUtil.indent(then,1))>>
+}catch (...){
+<<=StringUtil.indent(resolve,1)>>
+}
+<<#}#>>
+!>>
+  
+  emit serialize(String descirptorStructName, String normalizedType, String normalizedTypeName)(serializeT);
+  emit deserialize(String normalizedType, String normalizedTypeName)(deserializeT);
+  emit publicMessageContent(String name, String serializes, String deserializes)(publicMessageContentT);
+  emit serializeImplementation(String descirptorStructName, serializeContents)(serializeImplementationT);
+  emit deserializeImplementation(String descirptorStructName, String className, String typeName, String typeInstance, deserializeContents)(deserializeImplementationT);
+  emit callThenResolve(String call, String then, String resolve)(callThenResolveT);
+  
+}
+
+
+class GenerationTemplate {
+	depend cruise.umple.modeling.handlers.IStructureConstants;
+
+portEventEnumDescriptionT <<!<<=directionString>> event <<=directionToOrFrom>>!>>
+	emit _portEventEnumDescription(String directionString, String directionToOrFrom)(portEventEnumDescriptionT);
+	String portEventEnumDescription(String direction, String portName){
+		String directionString= "OUT".equals(direction)? "Output": "In";
+		String directionToOrFrom= ("OUT".equals(direction)? "from": "to")+ " "+ portName;
+		return this._portEventEnumDescription(directionString, directionToOrFrom);
+	}
+	
+portProtocolImplementationEventCaseT <<!case <<=portEventType>>::<<=direction>>_<<=portName>>:
+	if(sizeof(msg->data) >= sizeof(<<=type>>)) {
+		
+	<<=type>> data = *((<<=type>>*) msg->data);
+		<<=portName>>_event.publish(data);
+	} else {
+		throw "Bad port data";
+	}
+	break;
+!>>
+	emit portProtocolImplementationEventCase(String portEventType, String direction, String portName, String type)(portProtocolImplementationEventCaseT);
+	String portProtocolImplementationEventCase(Object element, String portName, String direction, String type){
+		String portEventType= this.getG().generate(Generator.PORT_EVENT_TYPE, element);
+		
+		return this.portProtocolImplementationEventCase(portEventType, direction, portName, type);
+	}
+	
+portProtocolHeaderContentsT <<!
+	public:
+		<<=StringUtil.indent(portEventAttributes,2)>>
+		
+		//------------------------
+		// CONSTRUCTOR
+		//------------------------
+		<<=name>>_PortProtocol();
+	
+		//------------------------
+		// DESTRUCTOR
+		//------------------------
+		virtual ~<<=name>>_PortProtocol();
+
+		string get<<=name>>EventFullName(void);
+		
+<<=StringUtil.indent(portEventDeclarations,2)>>
+
+	private:
+			
+		<<=this.getG().generate(Generator.PORT_EVENT_TYPE, element)>> <<=this.getG().generate(Generator.PORT_EVENT_NAME, element)>>;
+		<<=this.getG().generate(Generator.PORT_TYPE, element)>> <<=this.getG().generate(Generator.PORT_NAME, element)>>;
+		MessageService* service;
+			
+		void sendMessage(short int portId,short int evtId, int size, void* data);
+		void receive_<<=name>>_PortProtocol_Message(const MessageHeader* msg);
+
+!>>
+	emit portProtocolHeaderContents(Object element, String name, String portEventAttributes, String portEventDeclarations)(portProtocolHeaderContentsT);
+	String portProtocolHeaderContents(Object element){
+		String name= this.getG().getString(element, IModelingElementDefinitions.NAME);
+		
+		String portEventAttributes= this.getG().generationPointString(element, IStructureConstants.PORT_EVENT_IMPLEMENTATIONS_ATTRIBUTES);
+		String portEventDeclarations= this.getG().generationPointString(element, IStructureConstants.PORT_EVENT_DECLARATIONS);
+		
+		return this.portProtocolHeaderContents(element, name, portEventAttributes, portEventDeclarations);
+	}
+	
+	portProtocolBodyContentsT <<!<<#
+		String name= this.getG().getString(element, IModelingElementDefinitions.NAME);
+		String portEventImplementations= ""; //this.getG().generationPointString(element, IStructureConstants.PORT_EVENT_IMPLEMENTATIONS);
+		String portEventCases= ""; //this.getG().generationPointString(element, IStructureConstants.PORT_PROTOCOL_IMPLEMENTATION_EVENT_CASES);
+		String fullPath= ""; //this.getG().generationPointString(element, IModelingConstants.FULL_PATH);
+		String copyRight= ""; //this.getG().generationPointString(element, IModelingConstants.COPY_RIGHT);
+		String fullName= getG().rootModel.preprocessingDefinitionName();
+		String namespaceOpening= ""; //this.getG().generationPointString(protocol, ICppDefinitions.NAMESPACE_OPENING, Boolean.TRUE);
+		String namespaceClosing= ""; //this.getG().generationPointString(protocol, ICppDefinitions.NAMESPACE_CLOSING, Boolean.TRUE);
+
+#>><<=copyRight>>
+	#define <<=fullName>>_BODY
+
+	#if defined( PRAGMA ) && ! defined( PRAGMA_IMPLEMENTED )
+	#pragma implementation <<<=fullPath>>.h>
+	#endif
+	<<#if(bodyIncludes!= null && !bodyIncludes.isEmpty()){#>>
+	<<=bodyIncludes>>
+
+<<#}#>><<=namespaceOpening>>
+	//------------------------
+	// CONSTRUCTOR IMPLEMENTATION
+	//------------------------
+	<<=name>>_PortProtocol::<<=name>>_PortProtocol() {
+		service = new MessageService(this, &<<=name>>_PortProtocol::receive_<<=name>>_PortProtocol_Message);
+	}
+			
+	<<=name>>_PortProtocol::~<<=name>>_PortProtocol() {
+		delete service;
+	}
+
+	string <<=name>>_PortProtocol::get<<=name>>EventFullName(void){
+		string answer = <<=StringUtil.firstCharacterToLowerCase(name)>>_Event;
+		return answer;
+	}
+			
+	<<=portEventImplementations>>
+
+	void <<=name>>_PortProtocol::sendMessage(short int portId,short int evtId, int size, void* data) {
+		MessageHeader* msg = service->getBufferedMessage();
+		if (msg!=NULL) {
+			msg->portId = portId;
+			msg->eventId = evtId;
+			if (size>0 && data!=NULL) {
+				msg->data = malloc(size);
+	     		memcpy(msg->data, data, size);
+			}
+			service->push(msg);
+		}
+	}
+			
+	void <<=name>>_PortProtocol::receive_<<=name>>_PortProtocol_Message(const MessageHeader* msg){
+		switch(msg->eventId){
+	<<=StringUtil.indent(portEventCases,2)>>
+
+			default:
+				break;
+		}
+	}
+	;	
+	<<=namespaceClosing>>
+!>>
+emit portProtocolBodyContents(Object element, Object protocol, String bodyIncludes)(portProtocolBodyContentsT);
+	
+	
+	String portEventType(String name){
+		return name+ "_Event";
+	}
+	
+	String portEventType(Object port){
+		return this.portEventType(this.getG().getString(port, IModelingElementDefinitions.NAME));
+	}
+	
+	String portEventName(String name){
+		return StringUtil.firstCharacterToLowerCase(name)+ "_Event";
+	}
+	
+	String portEventName(Object port){
+		return this.portEventName(this.getG().getString(port, IModelingElementDefinitions.NAME));
+	}
+	
+	String portType(Object port){
+		return this.portType(this.getG().getString(port, IModelingElementDefinitions.NAME));
+	}
+	
+	String portType(String name){
+		return name+ "_Port";
+	}
+	
+	String portName(Object port){
+		return this.portName(this.getG().getString(port, IModelingElementDefinitions.NAME));
+	}
+	
+	String portName(String name){
+		return StringUtil.firstCharacterToLowerCase(name)+ "_Port";
+	}
+	
+	String portProtocolHandleDefaultName(String portName){
+		return portName+ "_Handle";
+	}
+	
+	String portProtocolHandleBindingDefaultName(String portName){
+		return portName+ "_BindingHandle";
+	}
+	
+	String portProtocolEventDefaultName(String portName){
+		return portName+ "_event";
+	}
+	
+	String portProtocolEventReceiveDataMethodName(String portName){
+		return "receive_"+ portName + "_Data";
+	}
+	
+	String portProtocolDefaultVariableName(Object element){
+		return StringUtil.firstCharacterToLowerCase(this.getG().generate(Generator.PORT_CLASS_NAME, element));
+	}
+	
+	String portClassName(Object element){
+		return this.getG().getString(element, IModelingElementDefinitions.NAME)+ "_PortProtocol";
+	}
+	
+	String portProtocolMessageDescriptorName(String name){
+		return name+ "_Message_Descriptor";
+	}
+	
+	String portProtocolMessageDescriptorName(Object element){
+		return this.portProtocolMessageDescriptorName(this.getG().getString(element, IModelingElementDefinitions.NAME));
+	}
+	
+	String portProtocolMessageName(String name){
+		return name+ "_Message";
+	}
+	
+	String portProtocolMessageName(Object element){
+		return this.portProtocolMessageName(this.getG().getString(element, IModelingElementDefinitions.NAME));
+	}
+	
+portEventEntryAssignT <<!	<<=this.getG().generate(Generator.PORT_NAME, element)>> = <<=this.getG().generate(Generator.PORT_TYPE, element)>>::<<=portName>>;
+!>>
+	emit portEventEntryAssign(Object element, String portName)(portEventEntryAssignT);
+
+portEventEntryInvocationT <<!	<<=this.getG().generate(Generator.PORT_EVENT_NAME, element)>> = <<=this.getG().generate(Generator.PORT_EVENT_TYPE, element)>>::<<=direction>>_<<=portName>>;
+sendMessage(<<=this.getG().generate(Generator.PORT_TYPE, element)>>::<<=portName>>,<<=this.getG().generate(Generator.PORT_EVENT_TYPE, element)>>::<<=direction>>_<<=portName>>, sizeof(<<=type>>), &data);!>>
+	emit portEventEntryInvocation(Object element, String portName, String direction, String type)(portEventEntryInvocationT);
+
+portProtocolHandlerEventBindingConnectT <<!<<#
+	String portName= fromPortName+ "_"+ toPortName;
+	String handle= this.getG().generate(Generator.PORT_PROTOCOL_HANDLE_BINDING_DEFAULT_NAME, portName);
+	String protocolClassName= StringUtil.firstCharacterToLowerCase(fromSubComponentType)+ "_PortProtocol";
+	String event= this.getG().generate(Generator.PORT_PROTOCOL_EVENT_DEFAULT_NAME, fromPortName);
+
+#>><<=handle>> = <<=fromSubComponentName>>-><<=protocolClassName>>.<<=event>>.subscribe(<<=toSubComponentName>>, &<<=owingClass>>::<<=toPortName>>);!>>
+emit portProtocolHandlerEventBindingConnect(String fromPortName, String toPortName, String fromSubComponentName, String toSubComponentName,
+		String fromSubComponentType, String owingClass)(portProtocolHandlerEventBindingConnectT);
+
+portProtocolHandlerEventBindingDisconnectT <<!<<#String protocolClassName= this.getG().generate(Generator.PORT_PROTOCOL_DEFAULT_VARIABLE_NAME, element);
+String handle= this.getG().generate(Generator.PORT_PROTOCOL_HANDLE_DEFAULT_NAME, portName);
+String event= this.getG().generate(Generator.PORT_PROTOCOL_EVENT_DEFAULT_NAME, portName);
+
+#>><<=protocolClassName>>.<<=event>>.disconnect(<<=handle>>);!>>
+	emit portProtocolHandlerEventBindingDisconnect(Object element, String portName)(portProtocolHandlerEventBindingDisconnectT);
+
+	portProtocolSendToContentsT <<!<<=this.getG().generate(Generator.PORT_PROTOCOL_DEFAULT_VARIABLE_NAME, element)>>.<<=portName>>(data);!>>
+	emit portProtocolSendToContents(Object element, String portName)(portProtocolSendToContentsT);
+	
+	portProtocolHandlerEventConstructorT <<!this->initPortConnections();!>> emit portProtocolHandlerEventConstructor()(portProtocolHandlerEventConstructorT);
+	portProtocolHandlerEventDestructorT <<!this->disconnectPortConnections();!>> emit portProtocolHandlerEventDestructor()(portProtocolHandlerEventDestructorT);
+
+	portProtocolHandlerEventConnectT <<!<<#String protocolClassName= this.getG().generate(Generator.PORT_PROTOCOL_DEFAULT_VARIABLE_NAME, element);
+	String parentName= this.getG().getString(element, IModelingElementDefinitions.NAME);
+	String receiveMethodName= this.getG().generate(Generator.PORT_PROTOCOL_EVENT_RECEIVE_DATA_METHOD_NAME, portName);
+	String handle= this.getG().generate(handleVariableGetter== null|| handleVariableGetter.isEmpty()?Generator.PORT_PROTOCOL_HANDLE_DEFAULT_NAME: handleVariableGetter, portName);
+	String event= this.getG().generate(Generator.PORT_PROTOCOL_EVENT_DEFAULT_NAME, portName);
+
+	#>><<=handle>> = <<=protocolClassName>>.<<=event>>.subscribe(this, &<<=parentName>>::<<=receiveMethodName>>);!>>
+	emit portProtocolHandlerEventConnect(Object element, String portName, String handleVariableGetter)(portProtocolHandlerEventConnectT);
+	
+	portProtocolImplementationPortAttributeT <<!Event<void, <<=typeName>>> <<=this.getG().generate(Generator.PORT_PROTOCOL_EVENT_DEFAULT_NAME, portName)>>;!>>
+	emit portProtocolImplementationPortAttribute(String portName, String typeName)(portProtocolImplementationPortAttributeT);
+	
+	portProtocolDescriptionCommentT <<!//Composite structure variables!>>
+	emit portProtocolDescriptionComment()(portProtocolDescriptionCommentT);
+	
+protocolClassHeaderT <<!<<#
+	String includes= ""; //this.getG().generationPointString(protocol, ICppDefinitions.INCLUDES);
+	String copyRight= ""; //this.getG().generationPointString(protocol, IModelingConstants.COPY_RIGHT);
+	String incompleteTypes= "";
+	
+	String namespaceOpening= ""; //this.getG().generationPointString(element, ICppDefinitions.NAMESPACE_OPENING, Boolean.TRUE);
+	String namespaceClosing= ""; //this.getG().generationPointString(element, ICppDefinitions.NAMESPACE_CLOSING, Boolean.TRUE);
+	String fullPath= ""; //this.getG().generationPointString(element, IModelingConstants.FULL_PATH)+ "_"+ className;
+	String classDeclarations= ""; //this.getG().generationPointString(element, IModelingConstants.CLASS_DECLARATIONS)+ "_"+ className;
+
+#>><<=copyRight>>
+#ifndef <<=definitionFullPath>>_H
+#define <<=definitionFullPath>>_H
+
+#ifdef PRAGMA
+#pragma once
+#ifndef _MSC_VER
+#pragma interface "<<=fullPath>>.h"
+#endif
+#endif
+
+<<=safeSet(includes)>><<=safeSet(namespaceOpening)>><<=safeSet(incompleteTypes)>><<=safeSet(internalDefinedTypes)>>
+<<=safeSet(classDeclarations)>> {
+<<=contents>>
+};
+<<=namespaceClosing>>
+
+#endif
+!>>
+	emit protocolClassHeader(Object element, Object protocol, String contents, String definitionFullPath, String className, List<?> protocols, String internalDefinedTypes)(protocolClassHeaderT);
+	depend java.util.List;
+	
+	portProtocolMessageDescriptorCommentT <<!<<#
+		String name= this.getG().getString(element, IModelingElementDefinitions.NAME);
+			#>>//Message descriptor for <<=name>>!>>
+	emit portProtocolMessageDescriptorComment(Object element)(portProtocolMessageDescriptorCommentT);
+
+	portProtocolMessageGetterAssignT <<!<<#
+		String variableName= StringUtil.firstCharacterToLowerCase(name);
+			#>>msg-><<=attributeName>> = <<=variableName>>-><<=getterMethod>>();!>>
+	emit portProtocolMessageGetterAssign(String name, String attributeName, String getterMethod)(portProtocolMessageGetterAssignT);
+	
+	portProtocolMessageSetterAssignT <<!<<#
+		String variableName= StringUtil.firstCharacterToLowerCase(name);
+			#>><<=variableName>>-><<=setterMethod>>(msg-><<=attributeName>>);!>>
+	emit portProtocolMessageSetterAssign(String name, String attributeName, String setterMethod)(portProtocolMessageSetterAssignT);
+
+}

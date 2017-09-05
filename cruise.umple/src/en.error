@@ -231,5 +231,14 @@
 3507: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Class '{0}' has duplicate method name {1} ;
 3508: 2, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Emit name '{0}' must be alphanumeric and start with an alpha character, or _  ;
 
+# Messages related to structure
+3601: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Port name '{0}' must be alphanumeric and start with a letter.;
+3602: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Invalid Port direction '{0}' must be in, out, or port.;
+3603: 1, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Port binding from component '{0}' can not be resolved.;
+3604: 1, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Port binding to component '{0}' can not be resolved.;
+3605: 1, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Port binding from port can not be resolved.;
+3606: 1, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Port binding to port can not be resolved.;
+3607: 1, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Port name '{0}' from class '{1}' can not be resolved.;
+
 # Messages related to fixml
 4500: 1,  "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", The tag '{0}' is not closed correctly.  ;

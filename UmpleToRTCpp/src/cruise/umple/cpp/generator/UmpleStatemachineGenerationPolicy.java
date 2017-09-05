@@ -49,6 +49,11 @@ public class UmpleStatemachineGenerationPolicy{
 	private static final String EXIT = "exit"; //$NON-NLS-1$
 	private static final String ENTRY = "entry"; //$NON-NLS-1$
 	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.PARENT_CLASS)
+	public static Object getParentClass(@GenerationBaseElement StateMachine sm){
+		return sm.getUmpleClass();
+	}
+	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATEMACHINES)
 	public static List<?> getStatemachines(@GenerationBaseElement UmpleClass umpleClass){
 		return umpleClass.getStateMachines();
@@ -349,7 +354,7 @@ public class UmpleStatemachineGenerationPolicy{
 		return element.getStates();
 	}
 	
-	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.OWING_STATEMACHINE)
+	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.PARENT_STATEMACHINE)
 	public static StateMachine getOwingStateMachine(@GenerationBaseElement StateMachine element){
 		State parentState = element.getParentState();
 		if(parentState== null){
@@ -358,7 +363,7 @@ public class UmpleStatemachineGenerationPolicy{
 		return parentState.getStateMachine();
 	}
 	
-	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.OWING_STATE)
+	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.PARENT_STATE)
 	public static State getOwingState(@GenerationBaseElement StateMachine element){
 		return element.getParentState();
 	}
@@ -391,7 +396,7 @@ public class UmpleStatemachineGenerationPolicy{
 		if(args== null|| args.isEmpty()){
 			return Collections.emptyList();
 		}
-		return Arrays.asList(args.split(CommonConstants.COMMA_SEPARATOR));
+		return Arrays.asList(args.split(","));
 	}
 	
 }

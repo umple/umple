@@ -18,16 +18,8 @@
 *******************************************************************************/
 package cruise.umple.templates;
 
-import cruise.umple.core.GenerationCallback;
-import cruise.umple.core.IGenerationProcdure;
-
 public interface IGenerationTemplateRegistry {
 	
-	public void define(String id, GenerationCallback callback);
-	public void define(IGenerationTemplateRegistry generationTemplateRegistry, String id, GenerationCallback callback);
-	
-	public void define(String id, IGenerationProcdure... callback);
 	public String generate(String id, Object element, Object... arguments);
-	public String use(String id, Object... arguments);
 	
 }

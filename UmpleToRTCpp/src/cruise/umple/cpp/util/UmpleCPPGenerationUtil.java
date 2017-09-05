@@ -49,7 +49,7 @@ public class UmpleCPPGenerationUtil {
 				CommonConstants.UNDERSCORE+ name.toUpperCase();
 	}
 	
-	//FIXME: Hack!. The method "getRelativePath" is designed for UmpleClass instances only which means that it won't be usable for UmpleElement even if they do have
+	//The method "getRelativePath" is designed for UmpleClass instances only which means that it won't be usable for UmpleElement even if they do have
 	//Line numbers
 	public static List<String> getPositions(List<Position> elementPositions,
 			String language, UmpleElement umpleElement, UmpleModel modelPackage) {
