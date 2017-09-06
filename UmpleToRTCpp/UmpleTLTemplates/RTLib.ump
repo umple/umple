@@ -18,7 +18,6 @@
 *******************************************************************************/
 class GenPackage{
 
-	
 	jsonArrayT <<!
 template<class ArrayType>
 void createArrayType(std::vector<ArrayType> list) {
@@ -133,7 +132,7 @@ threadImplementationT <<!<<#boolean isRemote= hasRemoteClass();#>>
 
 #define SERIALIZE_ARGS(N, name) REPEAT_INC(N, SER_ARG, SEMICOLON, name)
 #define DESERIALIZE_ARGS(N, name) REPEAT_INC(N, DES_ARG, SEMICOLON, name)
-
+<<=NL>>
 #define GENERATE_METHOD_CALLBACK_SIGNATURES_ARGUMENTS(N, value)			\
 template<typename Caller, typename ReturnType, VAR_TYPES(N)>   			\
 	struct MethodCallbackSignature<Caller,ReturnType, VAR_ARGS(N)> {	\
@@ -210,7 +209,7 @@ template <class Caller, class ReturnType, VAR_TYPES(N)> class Active<Caller, Ret
 	    _sch->schedule(pDelegate,priority,delay, timeout, _guardId, _conditionId);                                                        \
 		this->notify(VAR_NAMED_ARGS(N, arg), priority, delay, timeout);								\
 	    return result;} private: Caller* _context; Scheduler<Caller>* _sch; Callback _method; };
-
+<<=NL>>
 #define GENERATE_METHOD_CALLBACK_SIGNATURES(N)	REPEAT_DEC(N, GENERATE_METHOD_CALLBACK_SIGNATURES_ARGUMENTS, EMPTY)
 #define GENERATE_METHOD_CALLBACK_INVOKE(N)	REPEAT_DEC(N, GENERATE_METHOD_CALLBACK_INVOKE_ARGUMENTS, EMPTY)
 #define GENERATE_DELEGATE_INVOKE(N)	REPEAT_DEC(N, GENERATE_DELEGATE_INVOKE_ARGUMENTS, EMPTY)
@@ -360,7 +359,7 @@ typedef int                 BOOL;
 	}												  \
 	wakeup = FALSE;									  \
 	pthread_mutex_unlock(&mutex)
-
+<<=NL>>
 #define WAIT_TIME_EVENT_FUNCTION(mutex, cond, ms, wakeup, reset, status)			\
 	struct timeval tv																\
 	struct timespec tdif															\
@@ -471,7 +470,7 @@ public:
 protected:
 	std::string error;
 };
-
+<<=NL>>
 struct ThreadException : public Exception{
 public:
 	ThreadException() : Exception() {}
@@ -590,7 +589,7 @@ struct ThreadParameters
     void* context;
     ThreadParameters(void* ctx, void* callPtr) : context(ctx), runCall(callPtr) {}
 };
-
+<<=NL>>
 class Thread: public Runnable {
 
 	public:
@@ -839,7 +838,7 @@ private:
 	EVENT_TYPE _mutex;
 	CONDITION_TYPE  _cond;
 };
-
+<<=NL>>
 class UID {
 public:
 	unsigned int _uid;
@@ -978,7 +977,7 @@ template<typename Caller, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> struct MethodCallback
 template<typename Caller> struct MethodCallbackSignature<Caller, void, VOID_ARGS(ARGUMENT_UPPER_LIMIT)> { typedef void (Caller::*Method)(); };
 
 GENERATE_METHOD_CALLBACK_SIGNATURES(ARGUMENT_UPPER_LIMIT)
-
+<<=NL>>
 template <class BASE, class Caller, class FutureType, class ReturnType>
 class BaseMethodCallbackInvoke : public BASE {
 public:
@@ -1149,7 +1148,7 @@ public:
 private:
 	DelegateBase::Ptr _requestRunnable;
 };
-
+<<=NL>>
 template <class Caller>
 class ScheduleQueue : protected Runnable {
 public:
@@ -1361,7 +1360,7 @@ private:
 	bool					_run;
 	TimedEvent				_timeEvent;
 };
-
+<<=NL>>
 struct ActiveConstraintUID {
 public:
 	UID getGuardUID() { return _guardId; }
@@ -1426,7 +1425,7 @@ public:
 		return result;
 	}
 };
-
+<<=NL>>
 GENERATE_MULTICAST_METHOD(ARGUMENT_UPPER_LIMIT)
 
 template<class Caller, class ReturnType, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class Active;
@@ -1540,7 +1539,7 @@ struct WindowsSocket {
 };
 extern struct WindowsSocket windowsSocketInit;
 #endif
-
+<<=NL>>
 class Endpoint {
 public:
 	Endpoint() {}
@@ -1759,7 +1758,7 @@ public:
 		}
 		return *ret;
 	}
-	
+<<=NL>>	
 protected:
 	void swap(const JSON &src) {
 		_type = src._type;
@@ -1902,7 +1901,7 @@ private:
 	};
 
 };
-
+<<=NL>>
 class JSONInternalParser : public JSONParser {
 public:
 	JSONInternalParser() {}
@@ -2037,7 +2036,7 @@ public:
 	virtual ~IReceiver(){}
 	virtual unsigned int Listen() throw(ConnectionException) = 0;
 };
-
+<<=NL>>
 class TCPConnector : public IConnector {
 public:
 	TCPConnector() {}
@@ -2209,7 +2208,7 @@ private:
 	SOCKET_TYPE socketPort;
 	bool _running;
 };
-
+<<=NL>>
 class Buffer {
 public:
 	std::string buffer;
@@ -2351,7 +2350,7 @@ public:
 	virtual ReturnType send() = 0;
 	virtual bool receive() = 0; 
 };
-
+<<=NL>>
 template<class Caller, class ReturnType>
 class JSONTransport : public Transport<Caller, ReturnType> {
 public:
@@ -2443,7 +2442,7 @@ private:
 		return value.toString();
 	}
 };
-
+<<=NL>>
 #define GENERATE_REMOTE_METHODS_ARGUMENTS(N, value)																						\
 template<class Caller, class ReturnType, VAR_TYPES(N)>																					\
 class RemoteMethod<Caller, ReturnType, VAR_ARGS(N)> : public IPort<ReturnType>, public ActiveConstraintUID{public:						\
@@ -2522,7 +2521,7 @@ private:																																\
 	}};
 
 #define GENERATE_REMOTE_METHODS(N)	REPEAT_DEC(N, GENERATE_REMOTE_METHODS_ARGUMENTS, EMPTY)
-
+<<=NL>>
 template<class Caller, class ReturnType, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class RemoteMethod;
 template<class Caller, class ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
 class RemoteMethod : public IPort<ReturnType>, public ActiveConstraintUID{
@@ -2563,7 +2562,7 @@ private:
 		return transport.remote();
 	}
 };
-
+<<=NL>>
 template<class Caller, class ReturnType>
 class RemoteMethod<Caller, ReturnType> : public IPort<ReturnType>, public ActiveConstraintUID{
 public:
