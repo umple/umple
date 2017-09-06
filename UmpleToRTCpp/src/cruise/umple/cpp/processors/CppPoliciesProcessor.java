@@ -26,32 +26,10 @@ import cruise.umple.core.Generator;
 import cruise.umple.core.IPoliciesProcessor;
 import cruise.umple.cpp.core.ContentsDescriptor;
 import cruise.umple.cpp.core.IGenerationCommonConstants;
-import cruise.umple.cpp.jet.CppHeader;
-import cruise.umple.cpp.jet.CppStatemachine;
-import cruise.umple.cpp.jet.CppStructure;
-import cruise.umple.cpp.jet.util.CppAddHandler;
-import cruise.umple.cpp.jet.util.CppAttributeGetterImpl;
-import cruise.umple.cpp.jet.util.CppAttributeSetterImpl;
-import cruise.umple.cpp.jet.util.CppConstructor;
-import cruise.umple.cpp.jet.util.CppNameHelper;
-import cruise.umple.cpp.jet.util.CppStlTemplateHelper;
-import cruise.umple.cpp.jet.util.CppTemplateHelper;
-import cruise.umple.cpp.jet.util.CppTestsHelper;
-import cruise.umple.cpp.utils.CPPCommonConstants;
-import cruise.umple.modeling.handlers.IModelingConstants;
-import cruise.umple.modeling.handlers.IModelingPriorityHandler;
-import cruise.umple.modeling.handlers.IModelingStatemachinePriorityHandler;
 import cruise.umple.modeling.handlers.ModelingAssociationsGenerationPointsHandler;
-import cruise.umple.modeling.handlers.ModelingBaseDecisionPointsHandler;
 import cruise.umple.modeling.handlers.ModelingBaseGenerationPointsHandler;
-import cruise.umple.modeling.handlers.ModelingConstructorPointsHandler;
-import cruise.umple.modeling.handlers.cpp.CPPBaseGenerationPointsHandler;
 import cruise.umple.modeling.handlers.cpp.CPPContentsPointsHandler;
-import cruise.umple.modeling.handlers.cpp.CPPDependsPointsHandler;
-import cruise.umple.modeling.handlers.cpp.CppCustomGetterFunctionsPointsHandler;
 import cruise.umple.modeling.handlers.cpp.CppStatemachinePointsHandler;
-import cruise.umple.modeling.handlers.cpp.ICppModelingPriorityHandler;
-import cruise.umple.modeling.handlers.cpp.StlGenerationPointsHandler;
 import cruise.umple.modeling.handlers.cpp.StructurePointsHandler;
 
 abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
@@ -61,6 +39,7 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 	private Generator generator;
 	
 	public void generateRootElement(Object rootElement) {
+		this.getGenerationPolicyRegistry().rootElement= rootElement;
 		this.getGenerationPolicyRegistry().process(rootElement);
 		this.handleGeneratedContents(getContentDescriptors());
 		//this.generationPolicyRegistry.getGenerationLogger().showLogDetails();
@@ -72,48 +51,15 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 		generator= new Generator(generationPolicyRegistry);
 		generationPolicyRegistry.generator= generator;
 		
-		registerGenerationLanguages();
 		registerTypesPolicies();
 		registerGenerationPoints();
-		registerHelperTemplates();
-	}
-	
-	@Override
-	public void registerGenerationLanguages() {
-		this.generationPolicyRegistry.addUniqueValue(IModelingConstants.GENERATION_LANGUAGE, CPPCommonConstants.CPP_LANGUAGE);
-	}
-	
-	@Override
-	public void registerHelperTemplates(){
-		new CppTemplateHelper().init(this.getGenerationPolicyRegistry());
-		new CppAttributeGetterImpl().init(this.getGenerationPolicyRegistry());
-		new CppNameHelper().init(this.getGenerationPolicyRegistry());
-		new CppAddHandler().init(this.getGenerationPolicyRegistry());
-		new CppAttributeSetterImpl().init(this.getGenerationPolicyRegistry());
-		new CppHeader().init(this.getGenerationPolicyRegistry());
-		new CppStatemachine().init(this.getGenerationPolicyRegistry());
-		new CppStructure().init(this.getGenerationPolicyRegistry());
-		new CppConstructor().init(this.getGenerationPolicyRegistry());
-		new CppStlTemplateHelper().init(this.getGenerationPolicyRegistry());
-		
-		new CppTestsHelper().init(this.getGenerationPolicyRegistry());
 	}
 	
 	@Override
 	public void registerGenerationPoints(){
-		this.getGenerationPolicyRegistry().register(IModelingPriorityHandler.class);
-		this.getGenerationPolicyRegistry().register(ICppModelingPriorityHandler.class);
-		this.getGenerationPolicyRegistry().register(IModelingStatemachinePriorityHandler.class);
-		
-		this.getGenerationPolicyRegistry().register(new ModelingConstructorPointsHandler());
 		this.getGenerationPolicyRegistry().register(new ModelingAssociationsGenerationPointsHandler());
-		this.getGenerationPolicyRegistry().register(new ModelingBaseDecisionPointsHandler());
 		this.getGenerationPolicyRegistry().register(new ModelingBaseGenerationPointsHandler());
 		
-		this.getGenerationPolicyRegistry().register(new CPPBaseGenerationPointsHandler());
-		this.getGenerationPolicyRegistry().register(new StlGenerationPointsHandler());
-		this.getGenerationPolicyRegistry().register(new CppCustomGetterFunctionsPointsHandler());
-		this.getGenerationPolicyRegistry().register(new CPPDependsPointsHandler());
 		this.getGenerationPolicyRegistry().register(new CPPContentsPointsHandler());
 		
 		this.getGenerationPolicyRegistry().register(new CppStatemachinePointsHandler());

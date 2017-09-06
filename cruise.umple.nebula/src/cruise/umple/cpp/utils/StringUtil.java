@@ -73,6 +73,9 @@ public class StringUtil {
 	}
 	
 	public static String indent(String source, String indentStr) {
+		if(source== null){
+			return CommonConstants.BLANK;
+		}
 		String result = CommonConstants.BLANK;
 		String[] lines = source.split(CommonConstants.NEW_LINE);
 		for (int i=0; i<lines.length; i++) {

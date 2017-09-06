@@ -34,7 +34,6 @@ public interface CPPCommonConstants {
 	public static final String BODY= "body"; //$NON-NLS-1$
 	public static final String HEADER= "header"; //$NON-NLS-1$
 	public static final String NAME= "name"; //$NON-NLS-1$
-	public static final String PACKAGE_SUFFIX= "_Model"; //$NON-NLS-1$
 	public static final String VISIBILITY= "visibility"; //$NON-NLS-1$
 	public static final String QUALIFIED_NAME= "qualified_name"; //$NON-NLS-1$
 	
@@ -43,22 +42,12 @@ public interface CPPCommonConstants {
 	public static final String C_CPP_LANGUAGES= CPPCommonConstants.C_LANGUAGE+ 
 			CommonConstants.FORWARD_SLASH+CPPCommonConstants.CPP_LANGUAGE;
 	
-	public static final String MAIN_FUNCTION= "main"; //$NON-NLS-1$
 	public static final String FUNCTION_INITAILISATION= "initialisation"; //$NON-NLS-1$
-	
-	public static final String STATIC_MODIFIER= "static"; //$NON-NLS-1$
-	public static final String CONST_MODIFIER= "const"; //$NON-NLS-1$
-	public static final String FRIEND_MODIFIER= "friend"; //$NON-NLS-1$
-	public static final String INLINE_MODIFIER= "inline"; //$NON-NLS-1$
-	public static final String VIRTUAL_MODIFIER= "virtual"; //$NON-NLS-1$
-	
-	public static final String REFERENCE_OPERATOR= "&"; //$NON-NLS-1$
 	
 	public static final String NIL= "NIL"; //$NON-NLS-1$
 	public static final String NULL= "NULL"; //$NON-NLS-1$
 	public static final String THIS= "this"; //$NON-NLS-1$
 	public static final String AND= "&&"; 	//$NON-NLS-1$
-	public static final String INDEX_VARIABLE= "index"; //$NON-NLS-1$
 	
 	public static final String BEGIN= "begin"; //$NON-NLS-1$
 	public static final String END= "end"; //$NON-NLS-1$

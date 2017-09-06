@@ -68,6 +68,13 @@ class CompositeStructureTokenAnalyzer {
 
 	  return cmtList;
   }
+  
+  public void analyzePortClassDefinition(Token token){
+    if(token!=null) {
+		componentClass.setPortClass(true);
+	   }
+  }
+  
 
    public void analyzePortBindingDefinition(Token token){
     if(token!=null) {
@@ -90,12 +97,26 @@ class CompositeStructureTokenAnalyzer {
 		   }
 		   if(from != null && to != null ) {
 			   PortBindingInformation pbi = new PortBindingInformation(fromPortClass, from,toPortClass, to, code);
+			   pbi.setPosition(token.getPosition());
+			   pbi.setEndPosition(token.getEndPosition());
 			   componentClass.addPortBindingInformation(pbi);
 		   }
 	   }
   }
+  
+  public void analyzePortDefinition(Token token){
+	   if(token!=null) {
+		   for(Token portParamToken: token.getSubTokens()) {
+			   if(portParamToken.is("port")) {
+				   analyzePortClassDefinition(portParamToken);
+			   } else if(portParamToken.is("portDeclaration")) {
+				   analyzePortDeclaration(portParamToken);
+			   }
+		   }
+	   }
+   }
 
-   public void analyzePortDefinition(Token token){
+   public void analyzePortDeclaration(Token token){
     if(token!=null) {
     	String name = null, type = "String";
     	Direction direction = null;
@@ -110,7 +131,7 @@ class CompositeStructureTokenAnalyzer {
     			if(portNameToken != null) {
         			name = portNameToken.getValue("portName");
         			if(!Token.isValidIdentifier(name)){
-        				logError(token.getPosition(), 150, portParamToken.getValue("portName"));
+        				logError(token.getPosition(), 3601, portParamToken.getValue("portName"));
         			}
         		}
     			if(portTypeToken != null) {
@@ -142,13 +163,14 @@ class CompositeStructureTokenAnalyzer {
     				direction = Direction.BOTH;
     			}
     			if(direction == null){
-    				logError(token.getPosition(), 9999, portParamToken.getValue("direction")); // Error msg
+    				logError(token.getPosition(), 3602, portParamToken.getValue("direction")); // Error msg
     			}
     		} else if(portParamToken.is("inverse")) {
     			isConjugated = true;
     		}
     	}
     	Port portDef = new Port(name,modifier ,isConjugated, multiplicity, isReplicated, type);
+    	portDef.setDirection(direction);
     	componentClass.addPort(portDef);
       }
   }
@@ -192,42 +214,44 @@ class CompositeStructureTokenAnalyzer {
 	   }
   }
 
-   private void analyzeTriggerConstraintTree(Trigger trig, Token constraintToken, ActiveMethod aMethod){
-    if(constraintToken.getSubToken("messageConstraint") != null) {
-		   Token msgToken = constraintToken.getSubToken("messageConstraint");
-		   Token priorityToken = msgToken.getSubToken("priorityValue");
-		   if(priorityToken != null) {
-			   MessageConstraint msgConstraint = new MessageConstraint(priorityToken.getValue());
-			   trig.setMessageConstraint(msgConstraint);
-		   }
-
-	   } else if(constraintToken.getSubToken("timeConstraint") != null) {
-		   Token timeToken = constraintToken.getSubToken("timeConstraint");
-		   Token clauseToken = timeToken.getSubToken("clause");
-		   Token timerToken = timeToken.getSubToken("timer");
-		   if(clauseToken != null && timerToken != null ) {
-			   String clause = clauseToken.getValue();
-			   String timer = timerToken.getValue();
-			   TimerConstraint tc = new TimerConstraint();
-			   tc.setPosition(constraintToken.getPosition());
-			   tc.setEndPosition(constraintToken.getEndPosition());
-			   if(clause.equalsIgnoreCase("latency")) {
-				   tc.setTimeConstraintType(TimeConstraintType.LTENCY);
-			   } else if(clause.equalsIgnoreCase("period")) {
-				   tc.setTimeConstraintType(TimeConstraintType.PERIOD);
-			   } else if(clause.equalsIgnoreCase("timeout")) {
-				   tc.setTimeConstraintType(TimeConstraintType.TIMEOUT);
+   private void analyzeTriggerConstraintTree(Trigger trig, Token ConstraintTreeToken, ActiveMethod aMethod){
+    for(Token constraintToken : ConstraintTreeToken.getSubTokens()) {
+		   if(constraintToken.getSubToken("messageConstraint") != null) {
+			   Token msgToken = constraintToken.getSubToken("messageConstraint");
+			   Token priorityToken = msgToken.getSubToken("priorityValue");
+			   if(priorityToken != null) {
+				   MessageConstraint msgConstraint = new MessageConstraint(priorityToken.getValue());
+				   trig.setMessageConstraint(msgConstraint);
 			   }
-			   tc.setTimer(timer);
-			   trig.addTimerConstraint(tc);
+
+		   } else if(constraintToken.getSubToken("timeConstraint") != null) {
+			   Token timeToken = constraintToken.getSubToken("timeConstraint");
+			   Token clauseToken = timeToken.getSubToken("clause");
+			   Token timerToken = timeToken.getSubToken("timer");
+			   if(clauseToken != null && timerToken != null ) {
+				   String clause = clauseToken.getValue();
+				   String timer = timerToken.getValue();
+				   TimerConstraint tc = new TimerConstraint();
+				   tc.setPosition(constraintToken.getPosition());
+				   tc.setEndPosition(constraintToken.getEndPosition());
+				   if(clause.equalsIgnoreCase("latency")) {
+					   tc.setTimeConstraintType(TimeConstraintType.LTENCY);
+				   } else if(clause.equalsIgnoreCase("period")) {
+					   tc.setTimeConstraintType(TimeConstraintType.PERIOD);
+				   } else if(clause.equalsIgnoreCase("timeout")) {
+					   tc.setTimeConstraintType(TimeConstraintType.TIMEOUT);
+				   }
+				   tc.setTimer(timer);
+				   trig.addTimerConstraint(tc);
+			   }
+		   } else if(constraintToken.getValue() != "STATIC") {
+			   ConstraintTree cvs = analyzeInvariantConstraint(constraintToken);
+			   BasicConstraint constraint = new BasicConstraint();
+			   constraint.setPosition(constraintToken.getPosition());
+			   constraint.setEndPosition(constraintToken.getEndPosition());
+			   constraint.addElementAll(cvs);
+			   trig.addConstraint(constraint);
 		   }
-	   } else {
-		   ConstraintTree cvs = analyzeInvariantConstraint(constraintToken);
-		   BasicConstraint constraint = new BasicConstraint();
-		   constraint.setPosition(constraintToken.getPosition());
-		   constraint.setEndPosition(constraintToken.getEndPosition());
-		   cvs.addElementAll(cvs);
-		   trig.addConstraint(constraint);
 	   }
   }
 
@@ -294,10 +318,10 @@ class CompositeStructureTokenAnalyzer {
   }
 
    private void analyzeActiveTrigger(boolean normalHandler, Token activeTriggerToken, ActiveMethod aMethod){
+	Trigger trig = new Trigger();
+	trig.setTimeType(TimeType.NONE);
+	DeferredFunction thenDef = null , resolveDef = null;
     for(Token activeToken : activeTriggerToken.getSubTokens()) {
-		   Trigger trig = new Trigger();
-		   trig.setTimeType(TimeType.NONE);
-		   DeferredFunction thenDef = null , resolveDef = null;
 		   if(activeToken.is("anonymousTriggerBody")) {
 			   analyzeAnonymousBody(trig, activeToken, aMethod);
 		   } else if(activeToken.is("hitchConstraint")) {
@@ -317,21 +341,17 @@ class CompositeStructureTokenAnalyzer {
 				   resolveDef = createAnonymousBody(annoyToken, aMethod);
 			   }
 		   }
-		   if(trig != null) {
+	   }
+	   if(trig != null) {
 			   if(trig.getDeferredCall() != null ) {
 				   trig.getDeferredCall().setThen(thenDef);
-				   trig.getDeferredCall().setThen(resolveDef);
+				   trig.getDeferredCall().setResolve(resolveDef);
 			   }
 			   ActiveDirectionHandlerBody abh = new ActiveDirectionHandlerBody();
 			   abh.setBodyType(BodyType.TRIGGER);
 			   abh.setTrigger(trig);
-			   if(normalHandler) {
-				   aMethod.getMethodBody().get(0).addActiveDirectionHandlerBody(abh);
-			   } else {
-				   aMethod.getMethodBody().get(1).addActiveDirectionHandlerBody(abh);
-			   }
-		   }
-	   }
+			   aMethod.getMethodBody().addActiveDirectionHandlerBody(abh);
+		}
   }
 
    private void analyzeMethodBody(Token activeMethodBody, ActiveMethod aMethod){
@@ -344,13 +364,11 @@ class CompositeStructureTokenAnalyzer {
 				  String methodDirection = methodDirectionToken.getValue();
 				  if(methodDirection.equalsIgnoreCase("forward")) {
 					  normalHandler = true;
-					  aMethod.getMethodBody().get(0).setPosition(activeMethodBody.getPosition());
-					  aMethod.getMethodBody().get(0).setEndPosition(activeMethodBody.getEndPosition());
 				  } else if(methodDirection.equalsIgnoreCase("inverse")) {
 					  normalHandler = false;
-					  aMethod.getMethodBody().get(1).setPosition(activeMethodBody.getPosition());
-					  aMethod.getMethodBody().get(1).setEndPosition(activeMethodBody.getEndPosition());
 				  }
+				  aMethod.getMethodBody().setPosition(activeMethodBody.getPosition());
+				  aMethod.getMethodBody().setEndPosition(activeMethodBody.getEndPosition());
 			  }
 		  }
 		  else if (methodToken.is("inlineComment"))
@@ -360,11 +378,7 @@ class CompositeStructureTokenAnalyzer {
 				  ActiveDirectionHandlerBody abh = new ActiveDirectionHandlerBody();
 				  abh.setBodyType(BodyType.COMMENT);
 				  abh.setComment(new Comment(txt));
-				  if(normalHandler) {
-					  aMethod.getMethodBody().get(0).addActiveDirectionHandlerBody(abh);
-				  } else {
-					  aMethod.getMethodBody().get(1).addActiveDirectionHandlerBody(abh);
-				  }
+				  aMethod.getMethodBody().addActiveDirectionHandlerBody(abh);
 			  }
 		  }
 		  else if (methodToken.is("multilineComment"))
@@ -375,11 +389,7 @@ class CompositeStructureTokenAnalyzer {
 					  ActiveDirectionHandlerBody abh = new ActiveDirectionHandlerBody();
 					  abh.setBodyType(BodyType.COMMENT);
 					  abh.setComment(cmt);
-					  if(normalHandler) {
-						  aMethod.getMethodBody().get(0).addActiveDirectionHandlerBody(abh);
-					  } else {
-						  aMethod.getMethodBody().get(1).addActiveDirectionHandlerBody(abh);
-					  }
+					  aMethod.getMethodBody().addActiveDirectionHandlerBody(abh);
 				  }
 			  }
 		  }
@@ -388,11 +398,7 @@ class CompositeStructureTokenAnalyzer {
 			  ActiveDirectionHandlerBody abh = new ActiveDirectionHandlerBody();
 			  CodeBlock cb = new CodeBlock(methodToken.getValue());
 			  abh.setCodeblock(cb);
-			  if(normalHandler) {
-				 aMethod.getMethodBody().get(0).addActiveDirectionHandlerBody(abh);
-			  } else {
-				 aMethod.getMethodBody().get(1).addActiveDirectionHandlerBody(abh);
-			  }
+			  aMethod.getMethodBody().addActiveDirectionHandlerBody(abh);
 		  } else if (methodToken.is("activeTrigger")){
 			  analyzeActiveTrigger(normalHandler, methodToken, aMethod);
 		  }
@@ -438,8 +444,8 @@ class CompositeStructureTokenAnalyzer {
     	ActiveDirectionHandler forwardBody = new ActiveDirectionHandler();
     	ActiveDirectionHandler inverseBody = new ActiveDirectionHandler();
     	inverseBody.setDirectionHandler(DirectionHandler.INVERSE);
-    	ActiveMethod aMethod = new ActiveMethod("", "", "", new ActiveDirectionHandler [] { forwardBody, inverseBody });
-
+    	ActiveMethod inverseMethod = new ActiveMethod("", "", "", inverseBody, null);
+    	ActiveMethod aMethod = new ActiveMethod("", "", "",forwardBody,inverseMethod);
     	// TODO
     	Protocol protocol = new Protocol();
     	// Set method position
@@ -453,6 +459,7 @@ class CompositeStructureTokenAnalyzer {
     		if (token.is("modifier"))
     		{
     			aMethod.setModifier(token.getValue());
+    			inverseMethod.setModifier(token.getValue());
     		}
     		if (token.is("ConstraintTree") || token.is("constraintList"))
     		{
@@ -462,19 +469,24 @@ class CompositeStructureTokenAnalyzer {
     		}
     		else if (token.is("type"))
     		{
-    			aMethod.setType(token.getValue());
+    			aMethod.setType(token.getValue()); 
+    			inverseMethod.setType(token.getValue());
     		}
     		else if (token.is("activeType"))
     		{
     			String activeType = token.getValue("activeType");
     			if(activeType.equalsIgnoreCase("atomic")) {
     				aMethod.setActiveType(ActiveType.ATOMIC);
+    				inverseMethod.setActiveType(ActiveType.ATOMIC);
     			} else if(activeType.equalsIgnoreCase("synchronous")) {
     				aMethod.setActiveType(ActiveType.SYNCH);
+    				inverseMethod.setActiveType(ActiveType.SYNCH);
     			} else if(activeType.equalsIgnoreCase("intercept")) {
     				aMethod.setActiveType(ActiveType.INTERCEPTOR);
+    				inverseMethod.setActiveType(ActiveType.INTERCEPTOR);
     			} else {
     				aMethod.setActiveType(ActiveType.ASYNCH);
+    				inverseMethod.setActiveType(ActiveType.ASYNCH);
     			}
     		}
     		else if (token.is("activeMethodDeclarator"))
@@ -483,21 +495,39 @@ class CompositeStructureTokenAnalyzer {
     		}
     		else if (token.is("activeMethodBody"))
     		{
-    			analyzeMethodBody(token, aMethod);
+    			int len = token.getSubTokens().size();
+    			if( len > 0 && token.getSubToken(0).is("activeMethodBodyContent")) {
+    				analyzeMethodBody(token.getSubToken(0), aMethod);
+    			}
+    			if( len > 1 && token.getSubToken(1).is("inverseDirectionHandler")) {
+    				for(Token subToken : token.getSubToken(1).getSubTokens()) {    							
+    					if (subToken.is("ConstraintTree") || subToken.is("constraintList")) {
+    						Monitor pw= new Monitor(inverseMethod);
+    						analyzeConstraintTree(pw, subToken, inverseMethod);
+    						inverseMethod.addWatchList(pw);
+    					} else if (subToken.is("activeMethodDeclarator")) {
+    						analyzeMethodDeclarator(subToken, inverseMethod);
+    					} else if (subToken.is("activeMethodBodyContent")) {
+    						analyzeMethodBody(subToken, inverseMethod);
+    					}
+    				}
+    			}
     		}
     	}
     	componentClass.addActiveMethod(aMethod);
-
     }
   }
 
-    public Attribute getSubcomponentVariable(UmpleClass cmpClass, String cls, String varName){
-       Attribute att = null;
+    public UmpleVariable getSubcomponentVariable(UmpleClass cmpClass, String cls, String varName){
+	   UmpleVariable att = null;
 	   if(varName != null && varName.length() > 0 && cls != null) {
 		   if(cls.equalsIgnoreCase("this")) {
 			   att = null; // No var, it is in the same class
 		   } else {
 			   att = cmpClass.getAttribute(cls);
+			   if(att == null) {
+				   att = cmpClass.getAssociationVariable(cls);
+			   }
 		   }
 	   }
 	   return att;
@@ -514,8 +544,8 @@ class CompositeStructureTokenAnalyzer {
 				  boolean bindfromSubcomponent = pbi.getFromPortClass() != null && pbi.getFromPortClass().length() > 0;
 				  boolean bindtoSubcomopnent = pbi.getToPortClass() != null && pbi.getToPortClass().length() > 0;
 
-				  Attribute fromVar = getSubcomponentVariable(cmpClass, pbi.getFromPortClass(), pbi.getFromPort());
-				  Attribute toVar = getSubcomponentVariable(cmpClass, pbi.getToPortClass(), pbi.getToPort());
+				  UmpleVariable fromVar = getSubcomponentVariable(cmpClass, pbi.getFromPortClass(), pbi.getFromPort());
+				  UmpleVariable toVar = getSubcomponentVariable(cmpClass, pbi.getToPortClass(), pbi.getToPort());
 
 				  if(bindfromSubcomponent) {
 					  if(fromVar == null) {
@@ -525,6 +555,7 @@ class CompositeStructureTokenAnalyzer {
 						  fromClass = parser.getModel().getUmpleClass(type);
 						  if(fromClass == null) {
 							  // log error comp doesn't exist
+							  logError(pbi.getPosition(), 3603, type); // Error msg
 						  }
 					  }
 				  }
@@ -536,6 +567,7 @@ class CompositeStructureTokenAnalyzer {
 						  toClass = parser.getModel().getUmpleClass(type);
 						  if(toClass == null) {
 							  // log error comp doesn't exist
+							  logError(pbi.getPosition(), 3604, type); // Error msg
 						  }
 					  }
 				  }
@@ -553,11 +585,13 @@ class CompositeStructureTokenAnalyzer {
 				  if(pbi.getFromPort() == null || pbi.getFromPort().length() == 0 ) {
 					  // Log Error
 					  errorFound = true;
+					  logError(pbi.getPosition(), 3605, pbi.getFromPort()); // Error msg
 				  }
 
 				  if(pbi.getToPort() == null || pbi.getToPort().length() == 0 ) {
 					  // Log Error
 					  errorFound = true;
+					  logError(pbi.getPosition(), 3606, pbi.getToPort()); // Error msg
 				  }
 
 				  if(!errorFound) {
@@ -583,6 +617,10 @@ class CompositeStructureTokenAnalyzer {
 					  if(from == null || to == null) {
 						  // Log Error
 						  errorFound = true;
+						  if(from == null)
+						  	logError(pbi.getPosition(), 3607, pbi.getFromPort(), pbi.getFromPortClass()); // Error msg
+						  if(to == null)
+						  	logError(pbi.getPosition(), 3607, pbi.getToPort(), pbi.getToPortClass()); // Error msg
 					  } else {
 						  PortBinding pb = new PortBinding(from, to);
 						  pb.setFromSubcomponent(fromVar);
@@ -650,7 +688,8 @@ class CompositeStructureTokenAnalyzer {
    private void buildIncomingProtocolData(Protocol pr, Port portName){
     for(UmpleClass cmpClass : getComponents()) {
 		   for(ActiveMethod am : cmpClass.getActiveMethods()) {
-			   for(ActiveDirectionHandler hdl : am.getMethodBody()) {
+			   ActiveDirectionHandler hdl = am.getMethodBody(); 
+			   {
 				   for(ActiveDirectionHandlerBody bdy : hdl.getActiveDirectionHandlerBodies()) {
 					   if( bdy.getBodyType() == BodyType.TRIGGER ) {
 						   Trigger trg = bdy.getTrigger();
@@ -678,7 +717,8 @@ class CompositeStructureTokenAnalyzer {
    private void buildOutgoingProtocolData(Protocol pr, Port portName){
     for(Monitor mt : pr.getWatchList()) {
 		   ActiveMethod am  = mt.getActiveMethod();
-		   for(ActiveDirectionHandler hdl : am.getMethodBody()) {
+		   ActiveDirectionHandler hdl = am.getMethodBody(); 
+		   {
 			   for(ActiveDirectionHandlerBody bdy : hdl.getActiveDirectionHandlerBodies()) {
 				   if( bdy.getBodyType() == BodyType.TRIGGER ) {
 					   Trigger trg = bdy.getTrigger();
@@ -788,7 +828,8 @@ class CompositeStructureTokenAnalyzer {
     for(UmpleClass cmpClass : getComponents()) {
 		   for(ActiveMethod am : cmpClass.getActiveMethods()) {
 
-			   for(ActiveDirectionHandler hdl : am.getMethodBody()) {
+			   ActiveDirectionHandler hdl = am.getMethodBody(); 
+			   {
 
 				   for(ActiveDirectionHandlerBody bdy : hdl.getActiveDirectionHandlerBodies()) {
 
@@ -1520,7 +1561,7 @@ class CompositeStructureDefinitionWalker {
     		analyzer.analyzePortDefinition(aToken);
     	} else if (aToken.is("activeMethodDefinition")) {
     		analyzer.analyzeActiveMethodDefinition(aToken);
-    	}  else if (aToken.is("portBindingDefinition")) {
+    	} else if (aToken.is("portBindingDefinition")) {
     		analyzer.analyzePortBindingDefinition(aToken);
     	}
     }

@@ -1,0 +1,747 @@
+/*******************************************************************************
+* Copyright (c) 2017 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
+class GenPackage{
+	
+singletonTemplateDefinitionT <<!
+//Helper template to be extended by the classes that need to be used as singelton design pattern
+template<class T> class Singleton {
+	Singleton(const Singleton&);
+	Singleton& operator=(const Singleton&);
+	protected:
+		Singleton() {}
+		virtual ~Singleton() {}
+	public:
+		static T& instance() {
+			static MutexLock lock;
+			synchronized(lock) {
+				static T theInstance;
+				return theInstance;
+			}
+		}
+};
+!>>
+	emit singletonTemplateDefinition()(singletonTemplateDefinitionT);
+	
+getSetElementTemplateImplementationT <<!
+//A template function to get an item in a set by index
+template < typename InputIterator> 
+void* GetAt(InputIterator& it, int index) {
+	std::advance(it, index);
+	return *it;
+};
+!>>
+	emit getSetElementTemplateImplementation()(getSetElementTemplateImplementationT);
+
+copySetElementTemplateImplementationT <<!
+//A template function to copy set
+template<typename InputIterator, typename T>
+void copySet(InputIterator& it, InputIterator& end ,T* setObj) {	
+	for (; it != end; ++it) {
+		setObj->insert(*it);
+	}
+};
+!>>
+	emit copySetElementTemplateImplementation()(copySetElementTemplateImplementationT);
+
+copyVectorElementTemplateImplementationT <<!
+//A template function to copy vector
+template<typename InputIterator, typename T>
+void copyVector(InputIterator& it, InputIterator& end ,T* vectorObj) {	
+	for (; it != end; ++it) {
+		vectorObj->push_back(*it);
+	}
+};
+!>>
+	emit copyVectorElementTemplateImplementation()(copyVectorElementTemplateImplementationT);
+
+getVectorElementTemplateImplementationT <<!
+//A template function to get the index of an item for a given vector. It returns -1 if the
+//item was not found
+template <typename InputIterator, typename EqualityComparable>
+	int IndexOf(const InputIterator& begin,
+	const InputIterator& end, const EqualityComparable& item) {
+		if(begin == end )
+			return -1;
+
+		InputIterator fnd = std::find(begin, end, item);
+		unsigned int index = std::distance(begin, fnd);
+		return fnd != end ? index : -1;
+};
+
+//Used as a function pointer to safely destroy elements or collections of elements
+//Example: 
+//	std::for_each( arr->begin(), arr->end(), delete_pointer_element());
+//	delete arr;
+struct deleteElement{
+template< typename T >
+void operator()( T element ) const{
+	delete element;
+	}
+};
+
+template<typename T>
+unsigned int compare(T c1, T c2, unsigned int sz ) {
+	if(!is_ptr<T>::value) {
+		return std::memcmp(&c1,&c2, sz);
+	}
+	return std::memcmp((void*)c1, (void*)c2, sz);
+};
+
+template<typename T>
+void copyObject(T* object1, T* object2, unsigned int sz ) {
+	if(!is_ptr<T>::value) {
+		std::memcpy(&object2,&object1, sz);
+	}
+	std::memcpy((void*)object2, (void*)object1, sz);
+};
+!>>
+	emit getVectorElementTemplateImplementation()(getVectorElementTemplateImplementationT);
+
+timeHelpCodeT <<!
+#ifndef TIME_AND_DATE_DEFINITION
+#define TIME_AND_DATE_DEFINITION
+namespace { 
+// Ported strptime from BSD
+#ifdef WINDOWS_OS
+
+const char* Days[] = {
+        "Sunday", "Monday", "Tuesday", "Wednesday",
+        "Thursday", "Friday", "Saturday"
+};
+
+const char* DaySymbols[] = {"Sun", "Mon", "Tue", "Wed","Thu", "Fri", "Sat"};
+
+const char* Monthes[] = {"January", "February", "March", "April", "May", "June",
+					"July", "August", "September", "October", "November", "December" };
+
+const char* MonthSymbols[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+								   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
+const char* parseNumber(const char* s, int low, int high, int* value) {
+        const char* p = s;
+        for (*value = 0; *p != NULL && isdigit(*p); ++p) {
+                *value = (*value) * 10 + static_cast<int>(*p) - static_cast<int>('0');
+        }
+        if (p == s || *value < low || *value > high) return NULL;
+        return p;
+}
+
+char* strptime(const char *s, const char *format, struct tm *tm) {
+        while (*format != NULL && *s != NULL) {
+                if (*format != '%') {
+                        if (*s != *format) return NULL;
+                        ++format;
+                        ++s;
+                        continue;
+                }
+                ++format;
+                int len = 0;
+                switch (*format) {
+          case 'a':
+          case 'A':
+                  tm->tm_wday = -1;
+                  for (int i = 0; i < 7; ++i) {
+                          len = static_cast<int>(strlen(DaySymbols[i]));
+                          if (_strnicmp(DaySymbols[i], s, len) == 0) {
+                                  tm->tm_wday = i;
+                                  break;
+                          }
+                          len = static_cast<int>(strlen(Days[i]));
+                          if (_strnicmp(Days[i], s, len) == 0) {
+                                  tm->tm_wday = i;
+                                  break;
+                          }
+                  }
+                  if (tm->tm_wday == -1) return NULL;
+                  s += len;
+                  break;
+          case 'b':
+          case 'B':
+          case 'h':
+                  tm->tm_mon = -1;
+                  for (int i = 0; i < 12; ++i) {
+                          len = static_cast<int>(strlen(MonthSymbols[i]));
+                          if (_strnicmp(MonthSymbols[i], s, len) == 0) {
+                                  tm->tm_mon = i;
+                                  break;
+                          }
+                          len = static_cast<int>(strlen(Monthes[i]));
+                          if (_strnicmp(Monthes[i], s, len) == 0) {
+                                  tm->tm_mon = i;
+                                  break;
+                          }
+                  }
+                  if (tm->tm_mon == -1) return NULL;
+                  s += len;
+                  break;
+          case 'm':
+                  s = parseNumber(s, 1, 12, &tm->tm_mon);
+                  if (s == NULL) return NULL;
+                  --tm->tm_mon;
+                  break;
+          case 'd':
+          case 'e':
+                  s = parseNumber(s, 1, 31, &tm->tm_mday);
+                  if (s == NULL) return NULL;
+                  break;
+          case 'H':
+                  s = parseNumber(s, 0, 23, &tm->tm_hour);
+                  if (s == NULL) return NULL;
+                  break;
+          case 'M':
+                  s = parseNumber(s, 0, 59, &tm->tm_min);
+                  if (s == NULL) return NULL;
+                  break;
+          case 'S':
+                  s = parseNumber(s, 0, 60, &tm->tm_sec);
+                  if (s == NULL) return NULL;
+                  break;
+          case 'Y':
+                  s = parseNumber(s, 1900, 9999, &tm->tm_year);
+                  if (s == NULL) return NULL;
+                  tm->tm_year -= 1900;
+                  break;
+          case 'y':
+                  s = parseNumber(s, 0, 99, &tm->tm_year);
+                  if (s == NULL) return NULL;
+                  if (tm->tm_year <= 68) {
+                          tm->tm_year += 100;
+                  }
+                  break;
+          case 't':
+          case 'n':
+                  while (isspace(*s)) ++s;
+                  break;
+          case '%':
+                  if (*s != '%') return NULL;
+                  ++s;
+                  break;
+          default:
+                  return NULL;
+                }
+                ++format;
+        }
+
+        if (*format != NULL) {return NULL;} 
+		else {return const_cast<char*>(s);}
+}
+#endif
+
+tm* ParseDate(string buf) {
+	time_t t(time(NULL)); 	
+	tm* pDate = new tm(*localtime(&t));
+	char* ret = strptime(buf.c_str(), "%d-%m-%Y", pDate);
+	assert(ret != NULL);
+	return pDate;
+};
+
+time_t* ParseTime(string buf) {
+	tm tm;
+	time_t* pTime;
+	char* ret = strptime(buf.c_str(), "%H:%M:%S", &tm);
+	assert(ret != NULL);	
+	pTime = new time_t(mktime(&tm));
+	return pTime;
+};
+}
+#endif
+
+!>>
+	emit timeHelpCode()(timeHelpCodeT);
+}
+
+//Constructor roles
+class GenAssociation{
+	
+	const String CONSTRUCT_DEFAULT_ASSIGN= "constructorDefaultAssign";
+	const String CONSTRUCT_VALUE_ASSIGN= "constructorValueAssign";
+	const String CONSTRUCT_CHECK_NULL_ASSIGN= "constructorCheckNullAssign";
+	const String CONSTRUCT_SET_AND_CHECK= "constructSetAndCheck";
+	const String CONSTRUCT_SET_VALIDATE_BOUND= "constructSetValidateBounds";
+	
+	String constructDecision(){
+		if(getIsAttribute()){
+			if(isDerived() || isConstant() || getIsStatic() || isDefaulted() || getIsKey() || getIsSorted()){
+				return null;
+			}
+		
+			if(getIsLazy() || getValue()!= null){
+				 return GenAssociation.CONSTRUCT_DEFAULT_ASSIGN;
+			 }
+			
+			return isMany()?GenAssociation.CONSTRUCT_DEFAULT_ASSIGN: GenAssociation.CONSTRUCT_VALUE_ASSIGN;
+		} 
+	    
+	    if(source.isOptional()){
+			if(target.isOptional()|| target.isRangedOptional()|| target.isOne()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+				return GenAssociation.CONSTRUCT_DEFAULT_ASSIGN;
+			}
+		}else if(source.isRangedOptional()){
+			if(target.isOptional()|| target.isRangedOptional()|| target.isOne()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+				return GenAssociation.CONSTRUCT_DEFAULT_ASSIGN;
+			}
+		}else if(source.isOne()){
+			if(target.isOptional()|| target.isRangedOptional()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+				return GenAssociation.CONSTRUCT_SET_AND_CHECK;
+			}else if(target.isOne()){
+				if(source.isDirected()){
+					return GenAssociation.CONSTRUCT_SET_AND_CHECK;
+				}else{
+					return GenAssociation.CONSTRUCT_CHECK_NULL_ASSIGN;
+				}
+			}
+		}else if(source.isRangedUnbound()){
+			if(target.isOptional()){
+				return GenAssociation.CONSTRUCT_SET_VALIDATE_BOUND;
+			}else if(target.isRangedOptional()|| target.isOne()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+				if(source.isDirected()){
+					return GenAssociation.CONSTRUCT_SET_VALIDATE_BOUND;
+				}else{
+					return GenAssociation.CONSTRUCT_DEFAULT_ASSIGN;
+				}
+			}
+		}else if(source.isRangedMandatory()){
+			if(target.isOptional()|| target.isUnbound()){
+				return GenAssociation.CONSTRUCT_SET_VALIDATE_BOUND;
+			}else if(target.isRangedOptional()|| target.isOne()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()){
+				if(source.isDirected()){
+					return GenAssociation.CONSTRUCT_SET_VALIDATE_BOUND;
+				}else{
+					return GenAssociation.CONSTRUCT_DEFAULT_ASSIGN;
+				}
+			}
+		}else if(source.isFixed()){
+			if(target.isOptional()|| target.isUnbound()){
+				return GenAssociation.CONSTRUCT_SET_VALIDATE_BOUND;
+			}else if(target.isOptional()|| target.isOne()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()){
+				if(source.isDirected()){
+					return GenAssociation.CONSTRUCT_SET_VALIDATE_BOUND;
+				}else{
+					return GenAssociation.CONSTRUCT_DEFAULT_ASSIGN;
+				}
+			}
+		}else if(source.isUnbound()){
+			if(target.isOptional()|| target.isRangedOptional()|| target.isOne()|| source.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+				return GenAssociation.CONSTRUCT_DEFAULT_ASSIGN;
+			}
+		}
+	    
+	    return null;
+	}
+}
+
+//Setter roles
+class GenAssociation{
+	
+	const String SETTER_ASSIGN_DIRECTLY= "attributeSetterAssignDirectly";
+	const String SETTER_OPTIONAL= "attributeSetterOptional";
+	const String SETTER_UNBOUND_CHECK= "attributeSetterUnboundCheck";
+	const String SETTER_UNBOUND= "attributeSetterUnbound";
+	const String SETTER_ONE= "attributeSetterOne";
+	const String SETTER_RANGED= "attributeSetterRanged";
+	const String SETTER_LIST_COPY= "attributeSetterListCopy";
+	const String SETTER_LIST= "attributeSetterList";
+	const String SETTER_CHECK_ASSIGN= "attributeSetterCheckAssign";
+	const String SETTER_USE_EXISTING_SETTER= "attributeSetterUseExistingSetter";
+	const String SETTER_MAXIMUM_MANY= "attributeSetterMaximumMany";
+	const String SETTER_USE_EXISTING_REMOVE= "attributeSetterUseExistingRemove";
+	const String SETTER_HASHMAP= "attributeSetterHashmap";
+	const String SETTER_MINIMUM_FIXED= "attributeSetterMinimumFixed"; 
+	
+	String setterDecision(){
+		GenAssociationEnd source = getSource();
+		GenAssociationEnd target = getTarget();
+		
+		if(getIsAttribute()){
+			if(isDerived() || isConstant() || getIsStatic()){
+				return null;
+			}
+		
+			return GenAssociation.SETTER_ASSIGN_DIRECTLY;
+		}
+		
+		if(source.isOptional()){
+			if(source.isDirected()){
+				if(target.isOptional()|| target.isRangedOptional()|| target.isOne()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+					return GenAssociation.SETTER_ASSIGN_DIRECTLY;
+				}
+			}else{
+				if(target.isOptional()){
+					return GenAssociation.SETTER_OPTIONAL;
+				}else if(target.isRangedOptional()){
+					return GenAssociation.SETTER_UNBOUND_CHECK;
+				}else if(target.isOne()){
+					return GenAssociation.SETTER_ONE;
+				}else if(target.isRangedUnbound()|| target.isRangedMandatory()){
+					return GenAssociation.SETTER_RANGED;
+				}else if(target.isFixed()){
+					/*Do Nothing */
+				}else if(target.isUnbound()){
+					return GenAssociation.SETTER_UNBOUND;
+				}
+			}
+		}else if(source.isRangedOptional()){
+			if(source.isDirected()){
+				if(target.isOptional()|| target.isRangedOptional()|| target.isOne()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+					return GenAssociation.SETTER_LIST_COPY;
+				}
+			}else{
+				if(target.isUnbound()){
+					return GenAssociation.SETTER_LIST;
+				}
+			}
+		}else if(source.isOne()){
+			if(source.isDirected()){
+				if(target.isOptional()|| target.isRangedOptional()|| target.isOne()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+					return GenAssociation.SETTER_CHECK_ASSIGN;
+				}
+			}else{
+				if(target.isOptional()){
+					return GenAssociation.SETTER_USE_EXISTING_SETTER;
+				}else if(target.isOne()){
+					/*Do Nothing */
+				}else if(target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isRangedOptional()){
+					return GenAssociation.SETTER_MAXIMUM_MANY;
+				}else if(target.isUnbound()){
+					return GenAssociation.SETTER_USE_EXISTING_REMOVE;
+				}
+			}
+		}else if(source.isRangedUnbound()|| source.isRangedMandatory()){
+			if(source.isDirected()){
+				if(target.isOptional()|| target.isRangedOptional()|| target.isOne()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+					return GenAssociation.SETTER_LIST_COPY;
+				}
+			}else{
+				if(target.isOptional()){
+					return GenAssociation.SETTER_HASHMAP;
+				}else if(target.isOne()){
+					/*Do Nothing */
+				}else if(target.isRangedOptional()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+					return GenAssociation.SETTER_LIST;
+				}
+			}
+		}else if(source.isFixed()){
+			if(source.isDirected()){
+				if(target.isOptional()|| target.isRangedOptional()|| target.isOne()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+					return GenAssociation.SETTER_LIST_COPY;
+				}
+			}else{
+				if(target.isOptional()){
+					return GenAssociation.SETTER_MINIMUM_FIXED;
+				}else if(target.isRangedOptional()){
+					/*Do Nothing */
+				}else if(target.isOne()){
+					/*Do Nothing */
+				}else if(target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+					return GenAssociation.SETTER_LIST;
+				}
+			}
+		}else if(source.isUnbound()){
+			/*Empty Block */
+		}
+		
+		return null;
+	}
+	
+	String getSetterBody(){
+		String setterType= setterDecision();
+		if(setterDecision()!= null){
+			switch (setterType) {
+			case SETTER_ASSIGN_DIRECTLY:
+				return attributeSetterAssignDirectly();
+			case SETTER_OPTIONAL:
+				return attributeSetterOptional();
+			case SETTER_UNBOUND_CHECK:
+				return attributeSetterUnbound(true);
+			case SETTER_UNBOUND:
+				return attributeSetterUnbound(false);
+			case SETTER_ONE:
+				return attributeSetterOne();
+			case SETTER_RANGED:
+				return attributeSetterRanged();
+			case SETTER_LIST_COPY:
+				return attributeSetterList(true);
+			case SETTER_LIST:
+				return attributeSetterList(false);
+			case SETTER_CHECK_ASSIGN:
+				return attributeSetterCheckAssign();
+			case SETTER_USE_EXISTING_SETTER:
+				return attributeSetterUseExistingSetter();
+			case SETTER_MAXIMUM_MANY:
+				return attributeSetterMaximumMany();
+			case SETTER_USE_EXISTING_REMOVE:
+				return attributeSetterUseExistingRemove();
+			case SETTER_HASHMAP:
+				return attributeSetterHashmap();
+			case SETTER_MINIMUM_FIXED:
+				return attributeSetterMinimumFixed();
+			default:
+				break;
+			}
+		}
+		
+		return null;
+	}
+}
+
+//Delete roles
+class GenAssociation{
+	
+	const String DELETE_DIRECTLY= "deleteDirectly";
+	const String DELETE_CHECK_BY_SETTER= "deleteCheckBySetter(FALSE)";
+	const String DELETE_CHECK_NULLIFY_BY_SETTER= "deleteCheckBySetter(TRUE)";
+	const String DELETE_ASSIGN_REMOVE_CHECK= "deleteAssignRemoveCheck";
+	const String DELETE_USE_DELETE= "deleteUseDelete";
+	const String DELETE_REMOVE_OR_NULLIFY= "deleteRemoveOrNullify";
+	const String DELETE_CHECK_USE_DELETE= "deleteCheckUseDelete";
+	const String DELETE_NULLIFY_ALL_BY_SETTERS= "deleteNullifyAllBySetters";
+	const String DELETE_USE_INTERNAL_SETTER= "deleteUseInternalSetter";
+	const String DELETE_SAFELY_CLEAR_AND_REMOVE= "deleteSafelyClearAndRemove";
+	const String DELETE_NULLIFY_USE_DELETE= "deleteNullifyUseDelete";
+	const String DELETE_CLEAR_THEN_DELETE_OR_REMOVE= "deleteClearThenDeleteOrRemove";
+	const String DELETE_ASSIGN_REMOVE= "deleteAssignRemove";
+	
+	String deleteDecision(){
+		if(getIsAttribute()){
+			if(isMany() && !isDerived() && !getIsKey()){
+				return GenAssociation.DELETE_DIRECTLY;
+			}
+			
+			return null;
+		}
+		
+		GenAssociationEnd source = getSource();
+		GenAssociationEnd target = getTarget();
+		if(source.isDirected()){ 
+			return GenAssociation.DELETE_DIRECTLY;
+		}
+		
+		if(source.isOptional()){
+			if(target.isOptional()){
+				return GenAssociation.DELETE_CHECK_BY_SETTER;
+			}else if(target.isRangedOptional()|| target.isUnbound()){
+				return GenAssociation.DELETE_ASSIGN_REMOVE_CHECK;
+			}else if(target.isOne()){
+				return GenAssociation.DELETE_USE_DELETE;
+			}else if(target.isRangedUnbound()|| target.isRangedMandatory()){
+				return GenAssociation.DELETE_REMOVE_OR_NULLIFY;
+			}else if(target.isFixed()){
+				return GenAssociation.DELETE_CHECK_USE_DELETE;
+			}
+		}else if(source.isRangedOptional()){
+			if(target.isOptional()){
+				return GenAssociation.DELETE_NULLIFY_ALL_BY_SETTERS;
+			}else if(target.isRangedOptional()|| target.isUnbound()){
+				return GenAssociation.DELETE_SAFELY_CLEAR_AND_REMOVE;
+			}else if(target.isOne()){
+				return GenAssociation.DELETE_NULLIFY_USE_DELETE;
+			}else if(target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()){
+				return GenAssociation.DELETE_CLEAR_THEN_DELETE_OR_REMOVE;
+			}
+		}else if(source.isOne()){
+			if(target.isOptional()){
+				return GenAssociation.DELETE_CHECK_NULLIFY_BY_SETTER;
+			}else if(target.isRangedOptional()|| target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+				return GenAssociation.DELETE_ASSIGN_REMOVE;
+			}else if(target.isOne()){
+				return GenAssociation.DELETE_USE_DELETE;
+			}
+		}else if(source.isRangedUnbound()|| source.isRangedMandatory()|| source.isFixed()){
+			if(target.isOptional()){
+				return GenAssociation.DELETE_USE_INTERNAL_SETTER;
+			}else if(target.isRangedOptional()|| target.isUnbound()){
+				return GenAssociation.DELETE_SAFELY_CLEAR_AND_REMOVE;
+			}else if(target.isOne()){
+				return GenAssociation.DELETE_NULLIFY_USE_DELETE;
+			}else if(target.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed()){
+				return GenAssociation.DELETE_CLEAR_THEN_DELETE_OR_REMOVE;
+			}
+		}else if(source.isUnbound()){
+			if(target.isOptional()){
+				return GenAssociation.DELETE_NULLIFY_ALL_BY_SETTERS;
+			}else if(target.isRangedOptional()|| target.isUnbound()){
+				return GenAssociation.DELETE_SAFELY_CLEAR_AND_REMOVE;
+			}else if(target.isOne()){
+				return GenAssociation.DELETE_NULLIFY_USE_DELETE;
+			}else if(source.isRangedUnbound()|| target.isRangedMandatory()|| target.isFixed() || target.isRangedUnbound()){
+				return GenAssociation.DELETE_CLEAR_THEN_DELETE_OR_REMOVE;
+			}
+		}
+		
+		return null;
+	}
+	
+	String getDeleteBody(){
+		String deleteType= deleteDecision();
+		if(deleteType!= null){
+			switch (deleteType) {
+			case SETTER_ASSIGN_DIRECTLY:
+				return attributeSetterAssignDirectly();
+			case DELETE_DIRECTLY:
+				return deleteDirectly();
+			case DELETE_CHECK_BY_SETTER:
+				return deleteCheckBySetter(false);
+			case DELETE_CHECK_NULLIFY_BY_SETTER:
+				return deleteCheckBySetter(true);
+			case DELETE_ASSIGN_REMOVE_CHECK:
+				return deleteAssignRemoveCheck();
+			case DELETE_ASSIGN_REMOVE:
+				return deleteAssignRemove();
+			case DELETE_USE_DELETE:
+				return deleteUseDelete();
+			case DELETE_REMOVE_OR_NULLIFY:
+				return deleteRemoveOrNullify();
+			case DELETE_CHECK_USE_DELETE:
+				return deleteCheckUseDelete();
+			case DELETE_NULLIFY_ALL_BY_SETTERS:
+				return deleteNullifyAllBySetters();
+			case DELETE_USE_INTERNAL_SETTER:
+				return deleteUseInternalSetter();
+			case DELETE_SAFELY_CLEAR_AND_REMOVE:
+				return deleteSafelyClearAndRemove();
+			case DELETE_NULLIFY_USE_DELETE:
+				return deleteNullifyUseDelete();
+			case DELETE_CLEAR_THEN_DELETE_OR_REMOVE:
+				return deleteClearThenDeleteOrRemove();
+			default:
+				break;
+			}
+		}
+		
+		return null;
+	}
+}
+
+//Add roles
+class GenAssociation{
+	
+	//Only accepted if from many to one or more.
+	//Examples:   1 -- 2 M; 1 -- 2..4 H; 1 -- 1..3 Y;  1 -- 2..* X;  1 -- 0..* U;  1 -- 1..* W; 1 -- 5..5 F; 1 -- 2..4 H;
+	//  		 1 -- 1..3 Y; 1 -- 2..* X; 1 -- 1..* W; 1 -- 5 Q;1 -- * T;
+	Boolean hasAdditionalAdd= {getTarget().getLowerBound()==1 && getTarget().getUpperBound()>=1 && getSource().isMany()};
+		
+	const String ADD_DIRECTLY= "attributeAddDirectly";
+	const String ADD_REMOVE_EXISTING_OR_THIS= "attributeAddRemoveExistingOrThis";
+	const String ADD_REMOVE_EXISTING= "attributeAddRemoveExisting";
+	const String ADD_CHECK_NEW_OTHER_EXISTING= "attributeAddCheckNewOtherExisting";
+	const String ADD_SET_IF_NEW= "attributeAddSetIfNew";
+	const String ADD_AND_AND_CHECK= "attributeAddAndCheck";
+	
+	String addDecision(){
+		if(getIsAttribute()){
+			if(isMany() && !isDerived() && !getIsKey()){
+				return GenAssociation.ADD_DIRECTLY;
+			}
+			
+			return null;
+		}
+		
+		GenAssociationEnd source = getSource();
+		GenAssociationEnd target = getTarget();
+		
+		if(source.isRangedOptional()){
+			if(source.isDirected()){
+				return GenAssociation.ADD_DIRECTLY;
+			}else{
+				if(target.isOptional()){
+					return GenAssociation.ADD_REMOVE_EXISTING_OR_THIS;
+				}else if(target.isOne()){
+					return GenAssociation.ADD_CHECK_NEW_OTHER_EXISTING;
+				}else if(target.isRangedUnbound()|| target.isRangedOptional()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+					return GenAssociation.ADD_DIRECTLY;
+				}
+			}
+			
+		}else if(source.isRangedUnbound()){
+			if(source.isDirected()){
+				return GenAssociation.ADD_DIRECTLY;
+			}else{
+				if(target.isOptional()){
+					return GenAssociation.ADD_REMOVE_EXISTING;
+				}else if(target.isOne()){
+					return GenAssociation.ADD_SET_IF_NEW;
+				}else if(target.isRangedUnbound()|| target.isRangedOptional()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+					return GenAssociation.ADD_AND_AND_CHECK;
+				}
+			}
+		}else if(source.isRangedMandatory()){
+			if(source.isDirected()){
+				return GenAssociation.ADD_DIRECTLY;
+			}else{
+				if(target.isOptional()){
+					return GenAssociation.ADD_REMOVE_EXISTING;
+				}else if(target.isOne()){
+					return GenAssociation.ADD_SET_IF_NEW;
+				}else if(target.isRangedUnbound()|| target.isRangedOptional()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+					return GenAssociation.ADD_AND_AND_CHECK;
+				}
+			}
+		}else if(source.isFixed()){
+			if(source.isDirected()){
+				//None 
+			}else{
+				if(target.isOptional()){
+					//None
+				}else if(target.isOne()){
+					return GenAssociation.ADD_SET_IF_NEW;
+				}else if(target.isRangedUnbound()|| target.isRangedOptional()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+					return GenAssociation.ADD_AND_AND_CHECK;
+				}
+			}
+		}else if(source.isUnbound()){
+			if(source.isDirected()){
+				return GenAssociation.ADD_DIRECTLY;
+			}else{
+				if(target.isOptional()){
+					return GenAssociation.ADD_REMOVE_EXISTING_OR_THIS;
+				}else if(target.isOne()){
+					return GenAssociation.ADD_CHECK_NEW_OTHER_EXISTING;
+				}else if(target.isRangedUnbound()|| target.isRangedOptional()|| target.isRangedMandatory()|| target.isFixed()|| target.isUnbound()){
+					return GenAssociation.ADD_AND_AND_CHECK;
+				}
+			}
+		} 
+		return null;
+	}
+	
+	String getAddBody(){
+		String addType= addDecision();
+		if(addType!= null){
+			switch (addType) {
+			case ADD_DIRECTLY:
+				return attributeAddDirectly();
+			case ADD_REMOVE_EXISTING_OR_THIS:
+				return attributeAddRemoveExistingOrThis();
+			case ADD_REMOVE_EXISTING:
+				return attributeAddRemoveExisting();
+			case ADD_CHECK_NEW_OTHER_EXISTING:
+				return attributeAddCheckNewOtherExisting();
+			case ADD_SET_IF_NEW:
+				return attributeAddSetIfNew();
+			case ADD_AND_AND_CHECK:
+				return attributeAddAndCheck();
+			default:
+				break;
+			}
+		}
+		
+		return addType;
+	}
+	
+}

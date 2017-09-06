@@ -1,0 +1,495 @@
+/*******************************************************************************
+* Copyright (c) 2017 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
+class GenPackage{
+	emitHeaderT <<!<<#
+	
+	String copyRight= rootPackage().copyright();
+	String fullName= preprocessingDefinitionName();
+	String rootName= rootIncludeName();
+	String aliases= listAliases();
+	boolean isRemote= hasRemoteClass();
+	String definedMacros= definitionString();
+	String namespacesAndPredefinition= namespacesAndPredefinition();
+	String predefinedTemplatesDefinitions= predefinedTemplatesDefinitions();
+	
+	#>><<=copyRight>>
+#ifndef <<=fullName>>
+#define <<=fullName>>
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__) || defined(_WIN64)
+#define WINDOWS_OS
+// NO PREPROCESSOR DEFINITION FOR PRAGMA
+#if _MSC_VER
+#define PRAGMA
+#pragma warning( disable : 4290 )
+#endif
+#elif defined(hpux) || defined(__hpux) || defined(__hpux__)
+#define HPUX_OS
+#elif defined(__APPLE__) || defined(macintosh)
+#define MAC_OS
+#elif defined(bsdi) || defined(__bsdi__)
+#define BSD_OS
+#endif
+
+#ifdef PRAGMA
+#pragma once
+#ifdef _MSC_VER
+<<=aliases>>
+#else
+#pragma interface "<<=rootName>>.h"
+#endif
+#endif
+
+//------------------------
+// PACKAGE FILES DECLARATION
+//------------------------
+#include <sstream>
+#include <cmath>
+<<#if(isRemote){#>>
+#define NETWORK_BUFFER_SIZE 512 
+#ifndef DELIMITER
+#define DELIMITER char(0x0A)
+#endif	
+<<#}#>>
+	
+#ifdef WINDOWS_OS
+#include <windows.h>
+#include <process.h>
+#else
+#include <errno.h>
+#include <pthread.h>
+#include <unistd.h>
+#include <cstring>
+#include <signal.h>
+#endif
+
+#ifdef HPUX_OS
+#include <sys/pstat.h>
+#elif defined MAC_OS
+#undef DEBUG
+#include <CoreServices/CoreServices.h>
+#elif defined BSD_OS
+#include <mach/mach_types.h>
+#include <sys/systm.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#endif
+<<=fullIncludes()>>
+<<=definedMacros>><<=namespacesAndPredefinition>>
+<<=predefinedTemplatesDefinitions>>
+#endif
+!>>
+	emit emitHeader()(emitHeaderT);
+}
+
+class GenClass{
+	emitHeaderT <<!<<#
+	String copyRight= getGenPackage().rootPackage().copyright();
+	String definitionFullPath= preprocessingDefinitionName();
+	String qualifiedName= qualifiedName();
+	String classDeclarations= classDeclarations();
+	String fullQualifiedName= fullQualifiedName();
+	String selfIncompleteDeclarations= selfIncompleteDeclarations();
+	String incompleteDeclarations= incompleteDeclarations();
+	String enumerations= enumerationString();
+	String headerIncludes= headerIncludes();
+	String libraryIncludes= libraryIncludes();
+	String visibilityBasedContents= declarations(); 
+	
+	String predefinitions= predefinitions();
+	if(!predefinitions.isEmpty()){
+		predefinitions+= NL;
+	}
+
+#>><<=copyRight>>
+#ifndef <<=definitionFullPath>>_H
+#define <<=definitionFullPath>>_H
+
+#ifdef PRAGMA
+#pragma once
+#ifndef _MSC_VER
+#pragma interface "<<=qualifiedName>>.h"
+#endif
+#endif
+<<=headerIncludes>><<=libraryIncludes
+>><<=incompleteDeclarations>><<=namespaceOpening()
+>><<=enumerations>><<=selfIncompleteDeclarations
+>><<=emitComments()>>class <<=getName()>><<#if(!classDeclarations.isEmpty())#>> : <<=classDeclarations>>{
+<<=StringUtil.indent(visibilityBasedContents, 1)>>
+};
+<<=predefinitions>><<=namespaceClosing()>>
+//------------------------
+//GNU HASH FUNCTION USE
+//------------------------
+#ifdef __GNUC__
+using namespace __gnu_cxx;
+namespace __gnu_cxx{
+	template<> struct hash<<<=fullQualifiedName>>*>{
+		size_t operator()(<<=fullQualifiedName>>* ptr ) const {
+		    return ptr->hashCode();
+		}
+	};
+}
+#include <ext/hash_map>
+#else
+#include <hash_map>
+#endif
+#endif!>>
+	emit emitHeader()(emitHeaderT);
+
+	emitBodyT <<!<<#
+	String copyRight= getGenPackage().rootPackage().copyright();
+	String namespaceOpening = namespaceOpening();
+	String namespaceClosing= namespaceClosing();
+	String qualifiedName= qualifiedName();
+	String typeIncludes= typeIncludes();
+	String libraryIncludes= libraryIncludes();
+	
+	String publicImplementation= implementations();
+	String fullName= preprocessingDefinitionName();
+	
+	String specializedDefinitions= specializedDefinitions();
+	if(specializedDefinitions!= null){
+		specializedDefinitions+= NL;
+	}
+
+#>><<=copyRight>>
+#define <<=fullName>>_BODY
+
+#if defined( PRAGMA ) && ! defined( PRAGMA_IMPLEMENTED )
+#pragma implementation <<<=qualifiedName>>.h>
+#endif
+<<=typeIncludes>><<=libraryIncludes>><<=specializedDefinitions>><<=namespaceOpening>>
+<<=publicImplementation>>
+;
+<<=namespaceClosing>>!>>
+		
+		emit emitBody()(emitBodyT);
+}
+
+class GenClass{
+	incompleteDeclarationT <<!class <<=value>>;!>>
+	emit incompleteDeclaration(String value)(incompleteDeclarationT);
+	
+	incompleteStructDeclarationT <<!struct <<=value>>;!>>
+	emit incompleteStructDeclaration(String value)(incompleteStructDeclarationT);
+	
+	String implementations(){
+		for(GenMethod method: getMethods()){
+			if(method.getGroup()== null){
+				method.setGroup(getAttributeGroup(indexOfAttributeGroup(new GenGroup(GenClass.METHOD_GROUP))));
+			}
+		}
+		
+		List<String> implementations= new ArrayList<String>();
+		
+		List<GenGroup> attributeGroups = getAttributeGroups();
+		for(GenGroup attributeGroup: attributeGroups){
+			List<String> strings= new ArrayList<String>();
+			for(GenField field: getFields()){
+				if(field.isGeneratable() && attributeGroup.equals(field.getGroup())&& field.hasImplementation()){
+					strings.add(field.implementation());
+				}
+			}
+			
+			if(!strings.isEmpty()){
+				String implDescription = attributeGroup.getImplDescription();
+				if(!implementations.isEmpty()){
+					implementations.add("\n\n");
+				}
+				
+				if(implDescription!= null && !implDescription.isEmpty()){
+					implementations.add(implDescription+ "\n");
+				}
+				
+				implementations.add(strings.stream().collect(Collectors.joining("\n")));
+			}
+		}
+		
+		List<GenMethod> implementableMethods= implementableMethods();
+		for(GenGroup attributeGroup: getAttributeGroups()){
+			List<GenMethod> methods = new ArrayList<GenMethod>();
+			for(GenMethod genMethod: implementableMethods){
+				if(attributeGroup.equals(genMethod.getGroup()) && checkMethod(genMethod.getName())){
+					methods.add(genMethod);
+				}
+			}
+			
+			if(!methods.isEmpty()){
+				Collections.sort(methods, getMethodsPriority());
+				
+				if(!implementations.isEmpty()){
+					implementations.add("\n\n");
+				}
+				
+				String implDescription = attributeGroup.getImplDescription();
+				
+				if(implDescription!= null && !implDescription.isEmpty()){
+					implementations.add(implDescription+ "\n");
+				}
+				
+				implementations.add(methods.stream().map(genMethod->{
+					return genMethod.getExternalDefinition()== null?genMethod.implementation(name): genMethod.implementation();
+				}).collect(Collectors.joining("\n"+ "\n")));
+			}
+		}
+		
+		return implementations.stream().collect(Collectors.joining());
+	}
+	
+	Boolean checkMethod(String originalName){
+		GenField inernal = fieldByName("internal_"+originalName);
+		if(inernal!= null){
+			return false;
+		}
+		
+		GenMethod current = methodByName(originalName);
+		if(current != null && !current.getIsGeneratable()){
+			return false;
+		}
+		
+		return true;
+	}
+	
+	String declarations() {
+		String allContent = visibilityContent("global");
+		for (String visibility : Arrays.asList(new String[] { "private", "public", "protected"})) {
+			String visibilityContents = visibilityContent(visibility);
+			if (!visibilityContents.isEmpty()) {
+				if(!allContent.isEmpty()){
+					allContent+= NL;
+				}
+				allContent+= NL+ visibilityPart(visibility, StringUtil.indent(NL+ visibilityContents, 1));
+			}
+		}
+
+		return allContent + NL;
+	}
+	
+	String visibilityContent(String visibility) {
+		String visibilityContents= "";
+		List<GenMethod> methods = getMethods();
+
+		List<GenGroup> attributeGroups = getAttributeGroups();
+		for (GenGroup attributeGroup : attributeGroups) {
+			List<GenField> fields= new ArrayList<GenField>();
+			
+			List<String> strings = new ArrayList<String>();
+			for (GenField field : getFields()) {
+				if (field.isGeneratable() && visibility.equals(field.getVisibility()) && attributeGroup.equals(field.getGroup())) {
+					fields.add(field);
+				}
+			}
+			
+			Collections.sort(fields, getFieldsPriority());
+			
+			for (GenField field : fields) {
+				strings.add(field.declaration());
+			}
+
+			if (!strings.isEmpty()) {
+				if(!visibilityContents.isEmpty()){
+					visibilityContents+= NL;
+				}
+				
+				String description = attributeGroup.getDescription();
+				if (description != null) {
+					strings.add(0, description);
+				}
+				visibilityContents += strings.stream().collect(Collectors.joining(NL));
+			}
+		}
+		
+		List<GenMethod> visited = new ArrayList<GenMethod>();
+
+		for (GenGroup attributeGroup : attributeGroups) {
+			List<GenMethod> methodsTo= new ArrayList<GenMethod>();
+			List<String> strings = new ArrayList<String>();
+			for (GenMethod method : getMethods()) {
+				if (visibility.equals(method.getVisibility()) && attributeGroup.equals(method.getGroup())) {
+					visited.add(method);
+					String externalDefinition = method.getExternalDefinition();
+					if ((externalDefinition == null || externalDefinition.isEmpty())) {
+						methodsTo.add(method);
+					}
+				}
+			}
+			
+			Collections.sort(methodsTo, getMethodsPriority());
+			for(GenMethod method: methodsTo){
+				if(checkMethod(method.getName())){	//FIXME: TEMP
+					strings.add(method.declaration());
+				}
+			}
+
+			if (!strings.isEmpty()) {
+				if(!visibilityContents.isEmpty()){
+					visibilityContents += NL+ NL;
+				}
+				
+				String description = attributeGroup.getDescription();
+				if (description != null) {
+					strings.add(0, description);
+				}
+
+				visibilityContents += strings.stream().collect(Collectors.joining(NL));
+			}
+		}
+
+		List<GenMethod> methodsTo= new ArrayList<GenMethod>();
+		for (GenMethod method : methods) {
+			if (!visited.contains(method)) {
+				String externalDefinition = method.getExternalDefinition();
+				if ((externalDefinition == null || externalDefinition.isEmpty()) && visibility.equals(method.getVisibility())) {
+					methodsTo.add(method);
+				}
+			}
+		}
+		
+		Collections.sort(methodsTo, getMethodsPriority());
+		for(GenMethod method: methodsTo){
+			visibilityContents += NL + method.declaration().trim();
+		}
+		
+		methodsTo= new ArrayList<GenMethod>();
+
+		// If the class is not abstract, make sure to search for all unimplemented methods from parent classes and interfaces implemented.
+		if (!getIsAbstract() && genClass instanceof GenInterface == false) {
+			List<String> identifiers = methods.stream().map(GenMethod::identifier).collect(Collectors.toList());
+			for (GenMethod method : allMethods()) {
+				if (method.getExternalDefinition() == null && !identifiers.contains(method.identifier())
+						&& visibility.equals(method.getVisibility()) && !method.getIsConstructor()&& !method.getIsOperator()) {
+					methodsTo.add(method);
+				}
+			}
+		}
+		
+		Collections.sort(methodsTo, getMethodsPriority());
+		for(GenMethod method: methodsTo){
+			if(checkMethod(method.getName())){	//FIXME: TEMP
+				visibilityContents += NL + method.declaration(true).trim();
+			}
+		}
+
+		return visibilityContents;
+	}
+	
+visibilityPartT <<!<<#if(contents.isEmpty()){return sb;}#>><<=visibility>>:
+<<=contents>>!>>
+	emit visibilityPart(String visibility, String contents)(visibilityPartT);
+}
+
+class GenClass{
+	
+	List<GenMethod> allMethods() {
+		List<GenMethod> all= new ArrayList<GenMethod>();
+	    List<GenMethod> nullImplementations= new ArrayList<GenMethod>();
+		all.addAll(getMethods());
+		
+		List<String> identifiers= all.stream().map(GenMethod::identifier).collect(Collectors.toList());
+		
+		searchAllMethods(this, nullImplementations, identifiers);
+		
+		for(int index1=nullImplementations.size()-1; index1>=0; index1--){
+			GenMethod method1 = nullImplementations.get(index1);
+			String identifier1= method1.identifier();
+			
+			int index2=index1-1;
+			boolean shallContinue= true;
+			while(index2>=0 && shallContinue){
+				GenMethod method2 = nullImplementations.get(index2--);
+				String identifier2= method2.identifier();
+				if(identifier1.equals(identifier2) && !identifiers.contains(identifier2)){
+					shallContinue= false;
+				}
+			}
+			
+			if(shallContinue && !all.contains(method1) && !method1.getIsOperator() && !method1.getIsHeader()){
+				all.add(method1);
+			}
+		}
+		return all;
+	}
+
+	List<String> searchAllMethods(GenClass genClass, List<GenMethod> all, List<String> identifiers) {
+		List<String> abstracts = new ArrayList<String>();
+		searchAllMethods(genClass, all, identifiers, abstracts, new ArrayList<GenClass>());
+		return identifiers;
+	}
+	
+	void searchAllMethods(GenClass genClass, List<GenMethod> all, List<String> identifiers, List<String> abstracts, List<GenClass> visited) {
+		if (visited.contains(genClass)) {
+			return;
+		}
+		visited.add(genClass);
+		GenClass parent = genClass.getParent();
+		  
+		if(parent != null && parent.getIsAbstract()){
+			for(GenMethod method: parent.getMethods()){
+				String identifier = method.identifier();
+				if(!method.getIsAbstract()){
+					if(!identifiers.contains(identifier) && !abstracts.contains(identifier)){
+						all.add(method);
+						identifiers.add(identifier);
+					}
+				}else{
+					abstracts.add(identifier);
+				}
+			}
+			searchAllMethods(parent, all, identifiers, abstracts, visited);
+		}
+		
+		for(GenClass genInterface: getInterfaces()){
+			for(GenMethod method: genInterface.getMethods()){
+				String identifier = method.identifier();
+				if(!identifiers.contains(identifier) && !abstracts.contains(identifier)){
+					all.add(method);
+					identifiers.add(identifier);
+				}
+				abstracts.add(identifier);
+			}
+			searchAllMethods(genInterface, all, identifiers, abstracts, visited);
+		}
+	}
+	
+	List<GenMethod> implementableMethods(){
+		  return implementableMethods(true, this instanceof GenInterface== false && !getIsAbstract());
+	}
+	 
+	List<GenMethod> implementableMethods(boolean checkAbstract, boolean all) {
+		List<GenMethod> genMethods = new ArrayList<GenMethod>();
+		for (GenGroup attributeGroup : getAttributeGroups()) {
+			for (GenMethod method : all ? allMethods() : getMethods()) {
+				if (!method.getIsHeader() && attributeGroup.equals(method.getGroup())){
+					if(all) {
+						if(method.getGenClass().equals(this)|| (!method.hasBody() && !method.getIsConstructor() && !method.getIsOperator())){
+							genMethods.add(method);
+						}
+					}else{
+						if(method.hasBody() || method.getIsConstructor() || method.getIsOperator() || method.getIsCore()){
+							genMethods.add(method);
+						}
+					}
+				}
+			}
+		}
+
+		return genMethods;
+	}
+}
