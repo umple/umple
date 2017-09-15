@@ -14,7 +14,7 @@
   
   $argCount = 1;
   $commandLine = "";
-  while ($argCount < $argc) {
+  while ($argCount < ($argc -1)) {
     $argCount = $argCount +1;
     if ($argCount > 2) $commandLine = $commandLine . " ";
     $commandLine = $commandLine . $argv[$argCount];

@@ -478,6 +478,15 @@ class PlaygroundMain
   static String[] previousCommand = new String[1];
   static String[] lastCommand = new String[1];
   static String[] currentCommand = new String[1];
+  static InetAddress previousIP = null;
+  static InetAddress lastIP = null;
+  static InetAddress currentIP = null;
+  static long lastCommandStartTime = 0;  
+  static long lastCommandEndTime = 0;
+  static long lastCommandElapsed = 0;
+  static long previousCommandElapsed = 0;
+  static long previousCommandEndTime = 0;
+  static long maxElapsed = 0;
 
   static PlaygroundMain theInstance;
 
@@ -503,7 +512,16 @@ class PlaygroundMain
   //   System.err.println("Received client command <"+msg+">");
     // Split the message from the client into tokens and process as a command
     List<String> ls = ArgumentTokenizer.tokenize(msg,false);
+    lastCommandStartTime = System.currentTimeMillis();
     processCommand(ls.toArray(new String[ls.size()]), client);
+    previousCommandElapsed=lastCommandElapsed;
+    previousCommandEndTime=lastCommandEndTime;    
+    lastCommandEndTime = System.currentTimeMillis();
+    lastCommandElapsed = lastCommandEndTime-lastCommandStartTime;
+    if (lastCommandElapsed > maxElapsed) {
+      maxElapsed = lastCommandElapsed;
+    }
+    
     try {
       client.close();
     }
@@ -534,8 +552,13 @@ class PlaygroundMain
     String answer = "";
     commandsRun++;
     previousCommand = lastCommand;
+    previousIP = lastIP;
     lastCommand = currentCommand;
+    lastIP = currentIP;
     currentCommand = args;
+    if(client != null) {
+      currentIP = client.getInetAddress();
+    }
 
     if (args.length == 0 || ("-help".equals(args[0])) )
     {
@@ -558,20 +581,50 @@ class PlaygroundMain
     }
     
     if ("-version".equals(args[0])) {
-      returnCommandResult("Version: " + UmpleModel.VERSION_NUMBER, client);
+      returnCommandResult("Version: " + UmpleModel.VERSION_NUMBER+"\n", client);
       return;
     }    
 
     if ("-log".equals(args[0])) {
       if(isServer) {
-          returnCommandResult("Number of commands run since start: "+commandsRun+"\n", client);      
-          returnCommandResult("Last command: [[\n"+concatForLog(lastCommand)+"\n]]\n", client);      
-          returnCommandResult("Previous command: [[\n"+concatForLog(previousCommand)+"\n]]\n", client);
-          returnCommandResult("Port: "+getPort()+"\n", client);
-          returnCommandResult("Number of clients working: "+getClientConnections().length+"\n", client);
+          returnCommandResult("Number of commands run since start: "+commandsRun+"\n\n", client);
+               
+          returnCommandResult("JVM uptime seconds: "
+            +ManagementFactory.getRuntimeMXBean().getUptime()/1000+"\n\n", client);
+
+          returnCommandResult("Number of clients working: "
+            +getClientConnections().length+"\n\n", client);
+
           OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);         
-          returnCommandResult("CPU load of this JVM: "+osBean.getProcessCpuLoad()+"\n", client);   
-          returnCommandResult("CPU load overall: "+osBean.getSystemCpuLoad()+"\n", client);  
+          returnCommandResult("CPU load % of this JVM: "
+            +(String.format("%.3f",100.0*osBean.getProcessCpuLoad()))
+            +"\n\n", client);   
+          returnCommandResult("CPU load % overall: "
+            +(String.format("%.3f",100.0*osBean.getSystemCpuLoad()))
+            +"\n\n", client);  
+
+          returnCommandResult("Max elapsed ms of any command: "+maxElapsed+"\n\n", client);
+
+          returnCommandResult("Port: "+getPort()+"\n\n", client);
+          
+          returnCommandResult("Version: " + UmpleModel.VERSION_NUMBER+"\n\n", client);
+
+          if(lastIP != null) {
+            returnCommandResult("Last command      from "
+              +lastIP+" ("+lastIP.getCanonicalHostName()+")\n"
+              +" Elapsed "+lastCommandElapsed+"ms  Ended "
+              +(System.currentTimeMillis()-lastCommandEndTime)/1000+"s ago :\n"
+              +concatForLog(lastCommand)+"\n", client);
+          }
+
+          if(previousIP != null) {            
+            returnCommandResult("Previous command  from "
+              +previousIP+" ("+previousIP.getCanonicalHostName()+")\n"
+              +" Elapsed "+previousCommandElapsed+"ms  Ended "
+              +(System.currentTimeMillis()-previousCommandEndTime)/1000+"s ago :\n"
+              +concatForLog(previousCommand), client);
+          }
+
       }
       else {
         returnCommandResult("Not running as a server\n", client);        
