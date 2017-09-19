@@ -11,18 +11,19 @@ class UmpleToJava {
     AssociationVariable as = uClass.getAssociationVariable(memberId);
     if (av != null)
     {
-      String avString = av.getIsDerived()?(gen.translate("getMethod",av)+"()"):gen.translate("attributeOne",av);
+      String avString = gen.translate("getMethod",av)+"()";
       if (!av.isImmutable() || av.getIsLazy()) canSet.append(StringFormatter.format("    {0} = false;\n",gen.translate("attributeCanSet",av)));
       if (av.getIsList())
       {
-        checks.append(StringFormatter.format("    if ({0}.size() != compareTo.{0}.size())\n",gen.translate("attributeMany",av)));
+        String avStringMany = gen.translate("getManyMethod",av) + "()";
+        checks.append(StringFormatter.format("    if ({0}.size() != compareTo.{0}.size())\n",avStringMany));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
         checks.append(StringFormatter.format("    }\n\n"));
-        checks.append(StringFormatter.format("    for (int i=0; i<{0}.size(); i++)\n",gen.translate("attributeMany",av)));
+        checks.append(StringFormatter.format("    for (int i=0; i<{0}.size(); i++)\n",avStringMany));
         checks.append(StringFormatter.format("    {\n"));
-        checks.append(StringFormatter.format("      {0} me = {1}.get(i);\n",gen.translate("type",av),gen.translate("attributeMany",av)));
-        checks.append(StringFormatter.format("      {0} them = compareTo.{1}.get(i);\n",gen.translate("type",av),gen.translate("attributeMany",av)));
+        checks.append(StringFormatter.format("      {0} me = {1}.get(i);\n",gen.translate("type",av),avStringMany));
+        checks.append(StringFormatter.format("      {0} them = compareTo.{1}.get(i);\n",gen.translate("type",av),avStringMany));
         checks.append(StringFormatter.format("      if (me == null && them != null)\n"));
         checks.append(StringFormatter.format("      {\n"));
         checks.append(StringFormatter.format("       return false;\n"));
@@ -55,18 +56,18 @@ class UmpleToJava {
     }
     else if (as != null)
     {
-      String asString = gen.translate("attributeOne",as);
       canSet.append(StringFormatter.format("    {0} = false;\n",gen.translate("associationCanSet",as)));
       if (as.isMany())
       {
-        checks.append(StringFormatter.format("    if ({0}.size() != compareTo.{0}.size())\n",gen.translate("associationMany",as)));
+        String asString = gen.translate("getManyMethod",as) + "()";
+        checks.append(StringFormatter.format("    if ({0}.size() != compareTo.{0}.size())\n",asString));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
         checks.append(StringFormatter.format("    }\n\n"));
-        checks.append(StringFormatter.format("    for (int i=0; i<{0}.size(); i++)\n",gen.translate("attributeMany",as)));
+        checks.append(StringFormatter.format("    for (int i=0; i<{0}.size(); i++)\n",asString));
         checks.append(StringFormatter.format("    {\n"));
-        checks.append(StringFormatter.format("      {0} me = {1}.get(i);\n",gen.translate("type",as),gen.translate("associationMany",as)));
-        checks.append(StringFormatter.format("      {0} them = compareTo.{1}.get(i);\n",gen.translate("type",as),gen.translate("associationMany",as)));
+        checks.append(StringFormatter.format("      {0} me = {1}.get(i);\n",gen.translate("type",as),asString));
+        checks.append(StringFormatter.format("      {0} them = compareTo.{1}.get(i);\n",gen.translate("type",as),asString));
         checks.append(StringFormatter.format("      if (me == null && them != null)\n"));
         checks.append(StringFormatter.format("      {\n"));
         checks.append(StringFormatter.format("       return false;\n"));
@@ -79,6 +80,7 @@ class UmpleToJava {
       }
       else
       {
+        String asString = gen.translate("getMethod",as) + "()";
         checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",asString));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
@@ -93,7 +95,7 @@ class UmpleToJava {
     
     if (av != null)
     {
-      String avString = av.getIsDerived()?(gen.translate("getMethod",av)+"()"):gen.translate("attributeOne",av);
+      String avString = gen.translate("getMethod",av)+"()";
       if ("Integer".equals(av.getType()) && !av.getIsList())
       {
         hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + {0};\n",avString));
@@ -108,8 +110,8 @@ class UmpleToJava {
       }
       else
       {
-        String attributeType = av.getIsList() ? "attributeMany" : av.getIsDerived()?"getMethod":"attributeOne";
-        String typeString = gen.translate(attributeType,av)+(av.getIsDerived()?"()":"");
+        String attributeType = av.getIsList() ? "getManyMethod" : "getMethod";
+        String typeString = gen.translate(attributeType,av) + "()";
         hash.append(StringFormatter.format("    if ({0} != null)\n",typeString));
         hash.append(StringFormatter.format("    {\n"));
         hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23 + {0}.hashCode();\n",typeString));
@@ -123,10 +125,11 @@ class UmpleToJava {
     }
     else if (as != null)
     {
-      String attributeType = as.isOne() ? "attributeOne" : "attributeMany";
-      hash.append(StringFormatter.format("    if ({0} != null)\n",gen.translate(attributeType,as)));
+      String attributeType = as.isOne() ? "getMethod" : "getManyMethod";
+      String typeString = gen.translate(attributeType, as) + "()";
+      hash.append(StringFormatter.format("    if ({0} != null)\n",typeString));
       hash.append(StringFormatter.format("    {\n"));
-      hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23 + {0}.hashCode();\n",gen.translate(attributeType,as)));
+      hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23 + {0}.hashCode();\n",typeString));
       hash.append(StringFormatter.format("    }\n"));
       hash.append(StringFormatter.format("    else\n"));
       hash.append(StringFormatter.format("    {\n"));
