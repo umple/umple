@@ -618,12 +618,17 @@ function serverRun($commandLine,$rawcommand=null) {
     }
     else {
       if(substr($output,0,7) == "ERROR!!") {
-        // The following one line is for DEBUG, uncomment as appropriate
-        // saveFile("\n ERRORLOG* [[".substr($output,7)."]]\n","/tmp/UmpleOnlineLog.txt",'a');
+        $errorEnd = strpos($output, "!!ERROR");
+        $errorLength=$errorEnd-7;
+        $errorString = substr($output,7,$errorLength);
+        $output = substr($output,$errorLength+14); // cut out the error message.
 
-        savefile(substr($output,7),$errorfile);
+        // The following one line is for DEBUG, uncomment as appropriate
+        // saveFile("\n ERRORLOG* [[".$errorString."]] - other output [[".$output."]] ErrorEnd=".$errorEnd."\n","/tmp/UmpleOnlineLog.txt",'a');
+
+        savefile($errorString,$errorfile);
       }
-      else {
+      if(strlen($output)>0) {
         echo $output;
       }
     }

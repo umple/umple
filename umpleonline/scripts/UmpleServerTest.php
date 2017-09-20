@@ -77,7 +77,7 @@
       $readMoreLines = FALSE;
     }
     else {
-      echo $output;
+      echo "[[[".$output."]]]\n";
     }
   }
   socket_close($theSocket);
