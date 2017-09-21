@@ -734,7 +734,7 @@ class PlaygroundMain
       }
       else {
         try {
-          client.sendToClient("ERROR!!"+errorToReport);
+          client.sendToClient("ERROR!!"+errorToReport+"!!ERROR");
         }
           catch (IOException e2) {
         }
