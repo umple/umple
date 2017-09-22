@@ -697,4 +697,17 @@ class Seating {
   lazy seat;
 }
 
+class SomeAssociatedClassWithKey {
+  Integer id;
+  key {id};
+}
 
+class SomeAssociationClass {
+  1 -- 1 SomeAssociatedClassWithKey;
+  key {SomeAssociatedClassWithKey};
+}
+
+class SomeAssociationClassMany {
+  * -- * SomeAssociatedClassWithKey;
+  key {SomeAssociatedClassWithKey};
+}

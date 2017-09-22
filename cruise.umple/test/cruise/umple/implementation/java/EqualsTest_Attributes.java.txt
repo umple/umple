@@ -187,15 +187,15 @@ public class Student
       return false;
     }
 
-    if (getStringListIds().size() != compareTo.getStringListIds().size())
+    if (getStringListIds().length != compareTo.getStringListIds().length)
     {
       return false;
     }
 
-    for (int i=0; i<getStringListIds().size(); i++)
+    for (int i=0; i<getStringListIds().length; i++)
     {
-      String me = getStringListIds().get(i);
-      String them = compareTo.getStringListIds().get(i);
+      String me = getStringListIds()[i];
+      String them = compareTo.getStringListIds()[i];
       if (me == null && them != null)
       {
        return false;
