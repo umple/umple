@@ -22,7 +22,7 @@
 16: 1, "http://cruise.eecs.uottawa.ca/umple/E016NonImmutab|| (tempMethod != null && tempMethod.isIsAbstract())leSuperclass.html", Immutability rules prevent class '{0}' from subclassing '{1}' ;
 17: 2, "http://cruise.eecs.uottawa.ca/umple/E017NonImmutableBidirectionality.html", Two-way associations may not be immutable ;
 18: 2, "http://cruise.eecs.uottawa.ca/umple/E018ReflexiveImmutable.html", Reflexive immutable associations may not be mandatory ;
-19: 2, "http://cruise.eecs.uottawa.ca/umple/E019DuplicateAssociation.html", Class '{0}' may not have multiple associations with the same name '{1}' ;
+19: 2, "http://cruise.eecs.uottawa.ca/umple/E019DuplicateAssociation.html", There are multiple associations between class '{0}' and class '{1}'. Role names need to be added at '{0}' side to distinguish the different association ends in that class ;
 20: 1, "http://cruise.eecs.uottawa.ca/umple/E020InterfaceAssociationNotOneWay.html", The class-interface association declared in '{0}' must have the '->' arrow ;
 
 21: 2, "http://cruise.eecs.uottawa.ca/umple/E021InvalidReflexiveAssociation.html", Reflexive association to class '{0}' must use a role name or else self ;

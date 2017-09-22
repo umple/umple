@@ -2286,6 +2286,8 @@ public class UmpleParserTest
     assertFailedParse("024_multiAssocToSameClassNeedRoleName.ump", 19);
 
     assertParse("024_multipleUnnamedOneWayAssociationsToSameClass.ump");
+    assertParse("024_multiAssocToSameClassWithOneRoleName.ump");
+    assertParse("024_multiAssocToSameClassWithMultiRoleName.ump");
   }
   
   @Test
