@@ -1,0 +1,36 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceWS;
+import java.io.Serializable;
+import javax.xml.namespace.QName;
+import java.net.URL;
+import javax.xml.ws.Service;
+import javax.xml.ws.Endpoint;
+import javax.jws.WebService;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.*;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.Style;
+import java.rmi.RemoteException;
+@WebService
+@SOAPBinding(style = Style.RPC)
+public interface IAgentImpl
+{
+@WebMethod
+  public int getHashCodeImpl();
+@WebMethod
+  public boolean setNameImpl(String aName);
+@WebMethod
+  public String getNameImpl();
+@WebMethod
+  public SystemManager getSystemManagerImpl();
+@WebMethod
+  public boolean hasSystemManagerImpl();
+@WebMethod
+  public boolean setSystemManagerImpl(SystemManager aSystemManager);
+@WebMethod
+  public void deleteImpl();
+}

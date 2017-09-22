@@ -1,0 +1,13 @@
+// In this example, there is an error because class C1 does not implement interface I. Any bound value to template parameter TP must implement interface I.
+trait T1<TP isA I>{
+  /*implementation*/
+}
+interface I{/*implementation*/}
+class C1{/*implementation*/}
+class C{
+  isA T1< TP = C1 >;
+  /*implementation*/
+}
+
+
+

@@ -1,0 +1,7 @@
+enum Y { Orange, Yellow }
+
+class X{
+  X t;
+}
+
+enum X { Red, Blue, Green }

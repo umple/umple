@@ -2,9 +2,9 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi3;
+import java.io.Serializable;
 
-// line 11 "../../Class_DistributableRMI3.ump"
-public class CC implements java.io.Serializable,ICCImpl
+public class CC implements java.io.Serializable, ICCImpl
 {
 
   //------------------------
@@ -30,16 +30,12 @@ public class CC implements java.io.Serializable,ICCImpl
     
   }
 
-
-  ICCImpl realObject=this;
   public void setRealObject(ICCImpl aObject)
   {
     realObject=aObject;
   }
-  public ICCImpl getRealObject()
-  {
-    return realObject;
-  }
+
+  transient ICCImpl realObject=this;
   public void delete()
   {
     while(true)
@@ -59,4 +55,27 @@ public class CC implements java.io.Serializable,ICCImpl
     catch(Exception e) {System.err.println(e.toString());}
   }
 
+  protected  ICCImpl remoteObject;  
+  public void setRemoteObject(ICCImpl aRemoteObject)
+  {
+    remoteObject=aRemoteObject;
+  }
+  public ICCImpl getRemoteObject()
+  {
+    return (ICCImpl)remoteObject;
+  }
+  private void readObject(java.io.ObjectInputStream in) throws Exception
+  {
+    try
+    {
+      in.defaultReadObject();
+      realObject=(ICCImpl)remoteObject;
+    }
+    catch(Exception e)
+    {
+      throw e;
+    }
+    
+  }
+ 
 }

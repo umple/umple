@@ -1,0 +1,16 @@
+E213 Bidirectional Association in Traits
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to having bidirectional association with interfaces </h2>
+
+<p aligh = "justify">
+Traits can make associations with interfaces, classes, and template parameters. If one end of the association is a template parameter, the binding type must be checked to make sure it is compatible with the type of the association. For example, if a trait has a bidirectional association with a template parameter, the binding value cannot be an interface and it must be a class. Breaking this constraint is reported to modelers using this error code.
+</p>
+
+
+@@example
+@@source manualexamples/E213BidirectionalTraitAssociation.ump
+@@endexample

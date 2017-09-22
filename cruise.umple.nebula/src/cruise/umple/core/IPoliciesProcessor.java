@@ -20,8 +20,6 @@ package cruise.umple.core;
 
 public interface IPoliciesProcessor {
 	
-	public void registerHelperTemplates();
-	public void registerGenerationLanguages();
 	public void registerTypesPolicies();
 	public void registerGenerationPoints();
 	

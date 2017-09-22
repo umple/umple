@@ -1,0 +1,9 @@
+class X {
+ enum Y { Red, Blue, Green }
+ Y {
+  s1 { 
+    goToS2 -> s2;
+  }
+  s2 { }
+ }
+}

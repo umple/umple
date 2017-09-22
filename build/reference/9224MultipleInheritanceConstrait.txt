@@ -1,0 +1,16 @@
+E224 Multiple Inheritance Constraint
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to putting multiple inheritance constraint on template parameters</h2>
+
+<p aligh = "justify">
+If a multiple inheritance is applied as a constraint to a template parameter, it is detected and this error is raised. Umple does not support multiple inheritance.
+</p>
+
+
+@@example
+@@source manualexamples/E224MultipleInheritanceConstraint.ump
+@@endexample

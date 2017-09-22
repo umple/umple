@@ -144,7 +144,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			result = e.getMessage().contains("206");
+			result = e.getMessage().contains("205");
 		} finally {
 			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -173,7 +173,7 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, model.getUmpleClass("B").numberOfStateMachines());
 	}
 
-	@Test
+	@Ignore
 	public void stateMachineTraits001Test() {
 		String code = "class A {isA T1; status { on { turnOn -> on;}}} trait T1 { status { on { turnOn -> on;}} }";
 		UmpleModel model = getModel(code);
@@ -188,7 +188,7 @@ public class UmpleTraitTest {
 		}
 	}
 
-	@Test
+	@Ignore
 	public void stateMachineTraits002Test() {
 		String code = "class A{ isA T1;} trait T1 {isA T2; status { on { turnOn -> on;}}} trait T2 { status { on { turnOn -> on;}} }";
 		UmpleModel model = getModel(code);
@@ -203,7 +203,7 @@ public class UmpleTraitTest {
 		}
 	}
 
-	@Test
+	@Ignore
 	public void stateMachineTraits003Test() {
 		String code = "class A{isA T1,T2;} trait T1 {status { on { turnOn -> on;}}} trait T2 { status { on { turnOn -> on;}} }";
 		UmpleModel model = getModel(code);
@@ -218,7 +218,7 @@ public class UmpleTraitTest {
 		}
 	}
 
-	@Test
+	@Ignore
 	public void stateMachineTraits004Test() {
 		String code = "class A{isA T1;} trait T1 {isA T2, T3;} trait T2 {status { on { turnOn -> on;}}} trait T3 { status { on { turnOn -> on;}} }";
 		UmpleModel model = getModel(code);
@@ -289,6 +289,7 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}
 	}
+
 
 	////explained in my thesis
 	@Test
@@ -574,8 +575,7 @@ public class UmpleTraitTest {
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(1, model.getUmpleClass("A").getStateMachine("sm").getState(0).numberOfActivities());
 		Assert.assertEquals(2, model.getUmpleClass("A").getStateMachine("sm").getState(0).numberOfActions());
-		Assert.assertEquals("test2();",
-				model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivity(0).getActivityCode());
+		Assert.assertEquals("test2();",	model.getUmpleClass("A").getStateMachine("sm").getState(0).getActivity(0).getActivityCode());
 		Assert.assertEquals("test1();",
 				model.getUmpleClass("A").getStateMachine("sm").getState(0).getAction(0).getCodeblock().getCode("Java"));
 		Assert.assertEquals("test3();",
@@ -1282,7 +1282,7 @@ public class UmpleTraitTest {
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(2).getNextState().getName(),"on");
 	}
 	
-	@Test
+	@Ignore
 	public void stateMachineTraits066Test() {
 		UmpleModel model = getModelByFilename("trait_test_data_0024.ump");
 		boolean result = false;
@@ -1410,14 +1410,15 @@ public class UmpleTraitTest {
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getName(),"s12");
 	}
 	
+	//TODO: The example here has a dependencies to the order to operators. It must be detected
 	@Test
 	public void stateMachineTraits079Test() {
 		UmpleModel model = getRunModelByFilename("trait_test_data_0038.ump");
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getName(),"state1");
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(0).getName(),"nstate11");
 		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getName(),"nstate12");
-		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(0).getState(0).getName(),"state11");
-		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getState(0).getName(),"state12");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(0).getState(0).getName(),"nstate11");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getNestedStateMachine(1).getState(0).getName(),"nstate12");
 	}
 	
 	@Test
@@ -1635,7 +1636,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			result = e.getMessage().contains("232");
+			result = e.getMessage().contains("231");
 		} finally {
 			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -1742,6 +1743,132 @@ public class UmpleTraitTest {
 		}
 	}
 	
+	@Test
+	public void stateMachineTraits0118Test() {	
+		UmpleModel model = getModelByFilename("trait_test_data_0075.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("237");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits0119Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0093.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("mode").numberOfStates(),2);
+	}
+	
+	@Test
+	public void stateMachineTraits0120Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0094.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("234");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits0121Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0095.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("234");
+		} finally {
+			Assert.assertFalse(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits0122Test() {
+		UmpleModel model = getModelByFilename("trait_test_data_0096.ump");
+		boolean result = false;
+		try {
+			model.run();
+		} catch (Exception e) {
+			result = e.getMessage().contains("228");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void stateMachineTraits0123Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0097.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).numberOfTransitions(),1);
+	}
+	
+	@Test
+	public void stateMachineTraits0124Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0098.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).numberOfTransitions(),1);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(0).getEvent().getName(),"e2");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("status").getState(0).getTransition(0).getGuard().getExpression(),"!x");
+		
+	}
+	
+	@Test
+	public void stateMachineTraits0125Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0099.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(0).numberOfStates(),1);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(1).numberOfStates(),1);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(2).numberOfStates(),1);
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(2).getState(0).getNestedStateMachine(0).getState(0).getTransition(0).getNextState().getName(),"s7");
+	}
+	
+	@Test
+	public void stateMachineTraits0126Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0100.ump");
+		
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(0).getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("runE();"));
+		Assert.assertTrue(str.contains("runB();"));		
+	}
+	
+	@Test
+	public void stateMachineTraits0127Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0101.ump");
+		
+		String str= "";
+		for(Action action : model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getActionsByType("entry")){
+			str = str+ action.getActionCode();			
+		}
+		Assert.assertTrue(str.contains("runE();"));
+		Assert.assertTrue(str.contains("runC();"));		
+	}
+	
+	@Test
+	public void stateMachineTraits0128Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0102.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getTransition(0).getEvent().getName(),"go2");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(1).getTransition(0).getEvent().getName(),"go1");
+	}
+	
+	@Test
+	public void stateMachineTraits0129Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0103.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm1").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getTransition(0).getEvent().getName(),"go2");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm1").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(1).getTransition(0).getEvent().getName(),"go1");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm2").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(0).getTransition(0).getEvent().getName(),"go2");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine("sm2").getState(0).getNestedStateMachine(0).getState(0).getNestedStateMachine(0).getState(1).getTransition(0).getEvent().getName(),"go1");
+
+	}
 	// the last StateTest
 
 	// This is related to issue #656
@@ -2166,21 +2293,6 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
 	}
 
-	@Ignore
-	public void includeExcludeRuleAlias1Test() {
-		String code = "class A{isA T1<+test(Integer), -test(String) as t >;}trait T1{void test(String str){/*T1-S*/}void test(Integer inData){/*T1-I*/}void test(String str,Integer inData){/*T1-SI*/}}";
-		UmpleModel model = getModel(code);
-		boolean result = false;
-		try {
-			model.run();
-		} catch (Exception e) {
-			result = e.getMessage().contains("213");
-		} finally {
-			Assert.assertTrue(result);
-			SampleFileWriter.destroy("traitTest.ump");
-		}
-	}
-
 	@Test
 	public void includeExcludeRuleAlias2Test() {
 		String code = "class A{isA T1< test(String) as changedTest >;	}trait T1{void test(String str){/*T1-S*/}}";
@@ -2583,7 +2695,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			happened = e.getMessage().contains("20");
+			happened = e.getMessage().contains("213");
 		} finally {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -2629,7 +2741,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			happened = e.getMessage().contains("20");
+			happened = e.getMessage().contains("213");
 		} finally {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -2686,7 +2798,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			happened = e.getMessage().contains("205");
+			happened = e.getMessage().contains("206");
 		} finally {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -2739,7 +2851,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();
 		} catch (Exception e) {
-			happened = e.getMessage().contains("205");
+			happened = e.getMessage().contains("206");
 		} finally {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");
@@ -2754,6 +2866,113 @@ public class UmpleTraitTest {
 
 	}
 
+	
+	@Test
+	public void InterfaceForTemplates007() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0076.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(0).getType(),"String");
+	}
+	
+	@Test
+	public void InterfaceForTemplates008() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0077.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(0).getType(),"Integer");
+	}	
+	
+	@Test
+	public void InterfaceForTemplates009() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0078.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(0).getType(),"Integer");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(1).getType(),"Boolean");
+	}
+	
+	@Test
+	public void InterfaceForTemplates010() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0079.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(0).getType(),"Integer");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(1).getType(),"String");
+	}
+	
+	@Test
+	public void InterfaceForTemplates011() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0080.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(0).getType(),"String");
+	}
+	
+	@Test
+	public void InterfaceForTemplates012() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0081.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAttribute(0).getType(),"Integer");
+	}
+	
+	@Test
+	public void InterfaceForTemplates013() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0082.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getMethod(0).getMethodParameter(0).getType(),"String");
+		Assert.assertEquals(model.getUmpleClass("A").getMethod(0).getMethodParameter(1).getType(),"Integer");
+	}
+	
+	@Test
+	public void InterfaceForTemplates014() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0083.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getMethod(0).getMethodParameter(0).getType(),"String");
+	}
+	
+	@Test
+	public void InterfaceForTemplates015() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0084.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getMethod(0).getMethodParameter(0).getType(),"Integer");
+	}
+	
+	@Test
+	public void InterfaceForTemplates016() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0085.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAssociation(0).getEnd(1).getClassName(),"C");
+	}	
+	
+	@Test
+	public void InterfaceForTemplates017() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0086.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAssociation(0).getEnd(1).getClassName(),"C");
+	}	
+
+	@Test
+	public void InterfaceForTemplates018() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0087.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getEvent().getParam(0).getType(),"String");
+	}	
+	
+	@Test
+	public void InterfaceForTemplates019() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0088.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getEvent().getParam(0).getType(),"String");
+	}
+	
+	@Test
+	public void InterfaceForTemplates020() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0089.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getAction().getActionCode().contains("String a;"));
+	}
+	
+	@Test
+	public void InterfaceForTemplates021() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0090.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getAction().getActionCode().contains("String a;"));
+	}
+	
+	@Test
+	public void InterfaceForTemplates022() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0091.ump");
+		Assert.assertTrue(model.getUmpleClass("A").getStateMachine(0).getState(0).getTransition(0).getAction().getActionCode().contains("Integer a;"));
+	}
+	
+	
+	@Test
+	public void mixin001() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0092.ump");
+		Assert.assertEquals(model.getUmpleClass("A").numberOfMethods(),3);
+	}
+	
 	@Test
 	public void RequiredInterfaces001() {
 		String code = "class A{isA T;isA I;} interface I{} interface II{} trait T{isA I;isA II;}";
@@ -2761,7 +2980,7 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, model.getUmpleTrait(0).numberOfRequiredInterfaces());
 
 	}
-
+	
 	@Test
 	public void RequiredInterfaces002() {
 		String code = "class A{isA T;} interface I{} trait T{isA I;}";

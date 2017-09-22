@@ -1,0 +1,23 @@
+Extending a State
+Traits
+noreferences
+
+@@description
+<p align = "justify">
+This operator is used to assign a <a href="StateMachinesinTraits.html">state machine</a> to a specific state inside another state machine, hence turning that state into a composite state. The syntax used for this operator is as follows:
+</p>
+
+<center>srcStateMachineName as desStateMachineName.stateName.....stateName</center>
+
+<p align = "justify">
+This operator involves two state machines. The srcStateMachineName is found in the <a href="Traits.html">trait</a>, and the desStateMachineName is found in the <a href="ClientsofTraits.html">client</a>. The state in the client can be simle or composite. This operator provides a practical mechanism to incrementally compose a state machine from various parts. For example, simple 'on/off' pairs of states with events to toggle between are fairly common and can be injected easily into destination states using this operator. If a composited state is extended with this operator, it will trigger our composition algorithm which. Furthermore, the operator can be used to bring more than one state machine inside a state.
+</p>
+
+<p align = "justify">
+In example 9, class C1 has state machine sm with two states s1 and s2. Trait T1 has state machine sm1. Class C1 needs to have state machine sm1 activated when it is in state s2. Class C1 achieves this by specifying the source state machine and destination state when it uses trait T1 (line 15).
+</p>
+
+
+@@example
+@@source manualexamples/traits_example_024.ump
+@@endexample

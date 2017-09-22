@@ -1,0 +1,27 @@
+trait T1{
+    status{
+    on{
+      turnOff-> off;
+      t1{
+        e2-> t2;
+      }
+      t2{
+        e1-> t1;
+      }
+      ||
+      t3{
+        e4-> t4;
+      }
+      t4{
+        e3-> t3;
+      }
+    }
+    off{
+      turnOn-> on;
+    }
+  }
+}
+
+class A{
+  isA T1<status.on.t1 as t3>;
+}

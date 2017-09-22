@@ -1,0 +1,15 @@
+Flattening of Traits
+Traits
+noreferences
+
+@@description
+<p align = "justify">
+A system modeled with <a href="Traits.html">traits</a> can be transformed to a compatible model without traits. This process is called flattening. Traits are flattened to <a href="ClientsofTraits.html">clients</a> when they are used by clients, so it would also be beneficial to be able to instantly switch between a view with traits and a flattened view. This could help modelers to understand how traits are represented in any object-oriented target languages, as well as the implications of the traits to the generated system. Furthermore, flattened model is useful when it is required to understand what provided methods are available in each final client.
+</p>
+<p align = "justify">
+In order to achieve this in UmpleOnline, first the menu <i>OPTIONS</i> must be selected. Then, sub menus <i>Graphviz Class</i> and <i>Traits</i> must be selected for <i>DIAGRAM TYPE</i> and <i>SHOW VIEW</i> respectively. In order to switch to the flattened model, modelers simply need to deselect Traits in <i>SHOW VIEW</i>. These two views can also be generated through the Umple command line interface and the Umple Eclipse Plugin.
+</p>
+<p align = "justify">
+In order to see the flattened model textually, first the menu <i>TOOLS</i> must be selected. Then, from the drop down named <i>GENERATE</i> select <i>Internal Umple Representation</i>. Finally, click on <i>Generate code</i> to see the result or to download it.
+</p>
+

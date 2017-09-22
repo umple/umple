@@ -1,0 +1,19 @@
+E234 Compositing Non-Deterministic Transitions
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to state machine composition algorithm</h2>
+
+<p aligh = "justify">
+Umple does not support non-deterministic state machines and so composed state machines must be deterministic as well. Our composition algorithm automatically detects transitions that cause the composed state to be non-deterministic and raises this error code. 
+</p>
+<p aligh = "justify">
+The example below shows how a transition in a base state could be cause to have non-determinism. As seen, both state machines in class C1 and trait T1 have state s1 and they need to be composed. The state s1 in trait T1 has transition e1[x>0] and the transition’s destination is s2. The base state s1 has transition e1 without a guard and its destination state is state s3. This transition does not exist in the state s1 coming from the trait, so it can be added to the composed state s1. However, this causes a situation in which the composite state machine can be in two states s2 and s3 simultaneously. Therefore, the composition is not allowed.
+</p>
+
+
+@@example
+@@source manualexamples/E234NonDeteministicComposition.ump
+@@endexample

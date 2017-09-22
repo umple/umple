@@ -1,4 +1,4 @@
-// In this example, there is a conflict in class "A" because method "test" is overridden in trait "T2"
+// In this example, there is a conflict in class "A" because method "test" is overridden in trait "T2".
 class A{
 	isA T1;
 	isA T2;

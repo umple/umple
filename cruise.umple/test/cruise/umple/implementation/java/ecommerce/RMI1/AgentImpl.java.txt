@@ -1,0 +1,231 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI1;
+import java.util.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+// line 34 "../ecommerceRMI1.ump"
+public class AgentImpl implements java.io.Serializable , IAgentImpl
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //AgentImpl Attributes
+  private String name;
+
+  //AgentImpl Associations
+  private List<Warehouse> warehouses;
+  private SystemManager systemManager;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public AgentImpl(String aName)
+  {
+    name = aName;
+    warehouses = new ArrayList<Warehouse>();
+  }
+  //------------------------
+  // Reference to the proxy
+  //------------------------
+  Agent self;
+  
+  public void setSelf(Agent proxy)
+  {
+    self=proxy;
+  }
+
+  //------------------------
+  // Returning the Hashcode
+  //------------------------
+  public int getHashCode()
+  {
+    return hashCode();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public Warehouse getWarehous(int index)
+  {
+    Warehouse aWarehous = warehouses.get(index);
+    return aWarehous;
+  }
+
+  public List<Warehouse> getWarehouses()
+  {
+    List<Warehouse> newWarehouses = Collections.unmodifiableList(warehouses);
+    return newWarehouses;
+  }
+
+  public int numberOfWarehouses()
+  {
+    int number = warehouses.size();
+    return number;
+  }
+
+  public boolean hasWarehouses()
+  {
+    boolean has = warehouses.size() > 0;
+    return has;
+  }
+
+  public int indexOfWarehous(Warehouse aWarehous)
+  {
+    int index = warehouses.indexOf(aWarehous);
+    return index;
+  }
+
+  public SystemManager getSystemManager()
+  {
+    return systemManager;
+  }
+
+  public boolean hasSystemManager()
+  {
+    boolean has = systemManager != null;
+    return has;
+  }
+
+  public static int minimumNumberOfWarehouses()
+  {
+    return 0;
+  }
+
+  public boolean addWarehous(Warehouse aWarehous)
+  {
+    boolean wasAdded = false;
+    if (warehouses.contains(aWarehous)) { return false; }
+    warehouses.add(aWarehous);
+    if (aWarehous.indexOfAgent(self) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aWarehous.addAgent(self);
+      if (!wasAdded)
+      {
+        warehouses.remove(aWarehous);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeWarehous(Warehouse aWarehous)
+  {
+    boolean wasRemoved = false;
+    if (!warehouses.contains(aWarehous))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = warehouses.indexOf(aWarehous);
+    warehouses.remove(oldIndex);
+    if (aWarehous.indexOfAgent(self) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aWarehous.removeAgent(self);
+      if (!wasRemoved)
+      {
+        warehouses.add(oldIndex,aWarehous);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addWarehousAt(Warehouse aWarehous, int index)
+  {  
+    boolean wasAdded = false;
+    if(addWarehous(aWarehous))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfWarehouses()) { index = numberOfWarehouses() - 1; }
+      warehouses.remove(aWarehous);
+      warehouses.add(index, aWarehous);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveWarehousAt(Warehouse aWarehous, int index)
+  {
+    boolean wasAdded = false;
+    if(warehouses.contains(aWarehous))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfWarehouses()) { index = numberOfWarehouses() - 1; }
+      warehouses.remove(aWarehous);
+      warehouses.add(index, aWarehous);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addWarehousAt(aWarehous, index);
+    }
+    return wasAdded;
+  }
+
+  public boolean setSystemManager(SystemManager aSystemManager)
+  {
+    boolean wasSet = false;
+    SystemManager existingSystemManager = systemManager;
+    systemManager = aSystemManager;
+    if (existingSystemManager != null && !existingSystemManager.equals(aSystemManager))
+    {
+      existingSystemManager.removeAgent(self);
+    }
+    if (aSystemManager != null)
+    {
+      aSystemManager.addAgent(self);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    ArrayList<Warehouse> copyOfWarehouses = new ArrayList<Warehouse>(warehouses);
+    warehouses.clear();
+    for(Warehouse aWarehous : copyOfWarehouses)
+    {
+      aWarehous.removeAgent(self);
+    }
+    if (systemManager != null)
+    {
+      SystemManager placeholderSystemManager = systemManager;
+      this.systemManager = null;
+      placeholderSystemManager.removeAgent(self);
+    }
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "systemManager = "+(getSystemManager()!=null?Integer.toHexString(System.identityHashCode(getSystemManager())):"null");
+  }
+}

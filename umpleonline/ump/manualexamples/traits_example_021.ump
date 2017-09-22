@@ -1,0 +1,30 @@
+/*
+	Example 6: showing how the operator "Removing/keeping a state" works.
+*/
+trait T1 {
+  sm1{
+    s0 { 
+      e1-> s1;
+      e2-> s2;
+    }
+    s1 { 
+      e2-> s2;
+      e3-> s3;
+    }
+    s2 { 
+      e3-> s3;
+      e2-> s2;
+    }
+    s3 { 
+      e0-> s0;
+      e2-> s2;
+    }  
+  }
+}
+class C1 {
+  isA T1<-sm1.s2>;
+}
+class C2 {
+  isA T1<+sm1.s1>;
+}
+

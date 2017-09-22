@@ -209,15 +209,18 @@ else if (isset($_REQUEST["umpleCode"]))
   
   // The following is a hack. The arguments to umplesync need fixing
   if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram) {  
-    $command = "java -jar umplesync.jar -source {$filename} 1> {$outputFilename} 2> {$errorFilename}";
+    $command = "java -jar umplesync.jar -source {$filename} 2> {$errorFilename}";
   }
   else {
       // The following is used for outputting diagrams only
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/modelcd.gv " . $thedir . "/model.gv " . $thedir . "modelcdt.gv " . $thedir . "/modelerd.gv");
-      $command = "java -jar umplesync.jar -generate " . $language . " {$filename} " . $suboptions . " 1> {$outputFilename} 2> {$errorFilename}";
+      $command = "java -jar umplesync.jar -generate " . $language . " {$filename} " . $suboptions . " 2> {$errorFilename}";
   }
-  exec("( ulimit -t 10; " . $command . ")");
+  // Took off 1> {$outputFilename}  in two commands above
+  $resultFromCommand = executeCommand($command);
+  saveFile($resultFromCommand,$outputFilename);
+  //exec("( ulimit -t 10; " . $command . ")");
   
   // Restore file so it doesn't have the 'generate' command in front
   saveFile($input);
@@ -404,6 +407,7 @@ function getErrorHtml($errorFilename, $offset = 1)
 
   if($errorMessage != "") 
   {
+     savefile("",$errorFilename); // Clean error so it is gone for next time
      $errInfo = jsonDecode($errorMessage);
      $errhtml = "<a href='#' id='errorClick'>Show/Hide errors and warnings</a>";
      $errhtml .= "<div id='errorRow' colspan='3' >";  // style='display:none'

@@ -1,0 +1,16 @@
+E221 Availability of Bound Type 
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to binding types to template parameters</h2>
+
+<p align = "justify">
+When using a trait with a template parameter, a type must be bound to that template parameter. If the bound type is not available in the system, the Umple compiler raises this error.
+</p>
+
+
+@@example
+@@source manualexamples/E221BoundTypeAvailable.ump
+@@endexample

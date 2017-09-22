@@ -1,0 +1,817 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+package ecommerceRMI0;
+import ecommerceRMI0.Agent;
+import java.rmi.Remote;
+import java.util.Properties;
+import java.io.*;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.rmi.registry.Registry;
+import java.io.InputStreamReader;
+import java.io.File;
+import ecommerceRMI0.Vendor;
+import java.rmi.RemoteException;
+import java.io.Serializable;
+import ecommerceRMI0.Supplier;
+import java.util.regex.Matcher;
+import java.rmi.registry.LocateRegistry;
+import java.util.*;
+import ecommerceRMI0.Customer;
+import java.rmi.server.UnicastRemoteObject;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.regex.Pattern;
+import ecommerceRMI0.Warehouse;
+import ecommerceRMI0.SystemManager;
+import java.io.InputStream;
+public class UmpleRuntime implements IUmpleRuntime
+{ 
+  private static Boolean isAlive = true;
+  static int thisNodeId=-1;
+  private int numberOfNodes=0;
+  private static String fileAddress="";
+  static HashMap<Integer, UmpleNode> nodes=new HashMap<Integer, UmpleNode>();
+  static HashMap <String, UmpleComponent> components= new HashMap<String, UmpleComponent>();
+  public static void setFileAddress(String address)
+  {
+    fileAddress=address;
+  }
+  public static int getThisNodeId()
+  {
+    return thisNodeId;
+  }
+    private static void setThisNodeId(int id)
+  {
+    thisNodeId=id;
+  }  
+
+
+  private static void readPropertiesFile()
+  {
+      String location="configuration.txt";
+      Properties prop = new Properties();
+      InputStream input = null;
+
+    try {
+
+      input = new FileInputStream("node.properties");
+      prop.load(input);
+      if(getThisNodeId()<0)
+        setThisNodeId(Integer.parseInt(prop.getProperty("name")));
+      location=prop.getProperty("location");
+      setFileAddress(location);
+    } catch (IOException e)
+    {
+      e.printStackTrace();
+      if(getThisNodeId()<0)
+        setThisNodeId(0); 
+      setFileAddress(location);   
+    } 
+    finally {
+      if (input != null) {
+        try {
+          input.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+  public static UmpleComponent getComponent(String runtimeComponentName)
+  {
+    getInstance();
+    UmpleComponent aComponent=components.get(runtimeComponentName.toLowerCase());
+    if (aComponent!=null)
+      return aComponent;
+    else
+      return components.get("local");  
+  }
+
+  public static void stopAll()
+  {
+    UmpleRuntime.getInstance().stopAllNodes();
+  }
+  public void stopAllNodes()
+  {
+    for(int node=0;node<numberOfNodes;node=node+1)
+    {
+      if(node!=getThisNodeId())
+      {
+        try
+        {
+          remoteFactories.get(node).stopNode();
+        }
+        catch(Exception e) {System.err.println(e.toString());}
+      } 
+    }
+    stopNode(); 
+  }
+// ******************************** Factory
+    public static UmpleRuntime theInstance = null;
+    List<IUmpleRuntime> remoteFactories;
+
+    public List<Object> listOfObjects;
+    public static UmpleRuntime getInstance()
+    {
+      if(theInstance==null){
+        theInstance = new UmpleRuntime();
+        }
+      return theInstance;
+    }
+   
+    private UmpleRuntime()
+    { 
+      listOfObjects=new ArrayList<Object>();
+      remoteFactories= new ArrayList<IUmpleRuntime>();
+      initialize();
+    }
+    public int getNodeId(int umpleNodeId)
+    {
+      int nodeId=umpleNodeId;
+      if(nodeId>=numberOfNodes)
+        nodeId=numberOfNodes-1;
+      return nodeId;
+    }
+    public int getNodeId(UmpleComponent umpleComponent)
+    {
+      return umpleComponent.getNode().getId();
+    }
+
+    private void readConfigFile()
+    {
+      String input="{id=0; port=1099; http://localhost {component1}}{id=1; port=1700; http://localhost {component2}}";
+      try (BufferedReader br = new BufferedReader(new FileReader(fileAddress))) {
+        input="";
+        String line;
+        while ((line = br.readLine()) != null) {
+           // Merging the lines
+          input+=line+";";
+        }
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();   
+      }
+      finally {
+        if (input != null)
+        {
+          int startIndex=input.indexOf("{");
+          if(startIndex>=0)
+          //while(startIndex>=0)
+          { 
+            Pattern pattern1 = Pattern.compile("([\\{|\\(])([^\\}\\)]+)([\\{|\\(])");
+            Pattern pattern2 = Pattern.compile("([\\}|\\)])([^\\{\\(]+)([\\}|\\)])");
+            Pattern pattern3 = Pattern.compile("([\\{|\\(])([^\\{\\(\\}\\)]+)([\\}|\\)])");
+            Pattern patternURL = Pattern.compile("(url)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)");
+            Pattern patternName = Pattern.compile("(id)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)");
+            Pattern patternPort = Pattern.compile("(port)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)"); 
+            Pattern patternIp = Pattern.compile("(ip)(\\s*[=|:]\\s*)([^;\\s]*)(,|;|\\r\\n|\\t)"); 
+            Pattern patternComponent = Pattern.compile("(\\s*)([^;,\\s]*)(\\s*)([,|;|\\r\\n|\\t])");                 
+            Matcher matcher1 = pattern1.matcher(input); 
+            Matcher matcher2 = pattern2.matcher(input);
+            Matcher matcher3 = pattern3.matcher(input);
+            String url="";
+            String ip="";
+            String name="";
+            int port=1111;
+            String part1="";
+            String part2="";
+            String part3="";
+            String runtimeComponents="";
+            String machine="";
+            Boolean condition1=matcher1.find();
+            Boolean condition2=matcher2.find();
+            Boolean condition3=matcher3.find();
+            while (condition1||condition2||condition3) 
+            { 
+              url="http://localhost";
+              ip="localhost";
+              name="";
+              port=1111;
+              part1="";
+              part2="";
+              part3="";
+              runtimeComponents="";
+              machine="";
+              if(condition1)
+                part1=matcher1.group(2);
+              if(condition2)
+                part2=matcher2.group(2);
+              if(condition3)
+                part3=matcher3.group(2);
+              
+              if(condition1&&matcher3.end()>matcher1.end())
+              {
+                machine=part1.toLowerCase()+part2.toLowerCase();
+                runtimeComponents=part3.toLowerCase()+";";
+                condition1=matcher1.find();
+                condition2=matcher2.find();
+                condition3=matcher3.find();
+              }else
+              {
+                machine=part3.toLowerCase();
+                condition3=matcher3.find();
+              }
+              Matcher matcherURL = patternURL.matcher(machine);
+              if(matcherURL.find())
+                url=matcherURL.group(3);
+
+              Matcher matcherName = patternName.matcher(machine);
+              if(matcherName.find())
+                name=matcherName.group(3);
+
+              Matcher matcherIp = patternIp.matcher(machine);
+              if(matcherIp.find())
+                ip=matcherIp.group(3);
+
+              Matcher matcherPort = patternPort.matcher(machine);
+              if(matcherPort.find())
+                port=Integer.parseInt(matcherPort.group(3));
+              UmpleNode aNode= new UmpleNode(Integer.parseInt(name));
+              Matcher matcherComponent = patternComponent.matcher(runtimeComponents);
+              while(matcherComponent.find())
+              { String component=matcherComponent.group(2);
+                UmpleComponent aComponent=new UmpleComponent(component,aNode);
+                components.put(component,aComponent);
+              }
+              if(aNode.getId()==getThisNodeId())
+              {
+                UmpleComponent aComponent=new UmpleComponent("local",aNode);
+                components.put("local",aComponent);
+              }
+              aNode.setPort(port);
+              aNode.setUrl(url);
+              aNode.setIp(ip);
+              nodes.put(aNode.getId(),aNode);
+            }
+          }      
+        }    
+      }
+    }
+    Registry rmiRegistry;
+    public void initialize()
+    {    
+
+      if(fileAddress.equals(""))
+        readPropertiesFile();
+      readConfigFile();
+      numberOfNodes= nodes.size();
+      startRMI();
+      for(int node=0;node<numberOfNodes;node=node+1)
+      {
+        if(node==getThisNodeId())
+        {
+          remoteFactories.add(this);
+        }
+        else
+        {
+          System.out.println("connecting to node: "+node);
+          Boolean success=false;
+          while(!success)
+          {
+            try 
+            {
+              Registry registry = LocateRegistry.getRegistry(nodes.get(node).getIp(),nodes.get(node).getPort());
+              IUmpleRuntime stub = (IUmpleRuntime) registry.lookup("UmpleRuntime"+String.valueOf(node));
+              remoteFactories.add(stub);
+              success=true;
+            } 
+            catch (Exception e) 
+            {
+              System.err.println("Client exception: " + e.toString());
+              e.printStackTrace();
+              try { Thread.sleep(5000); } catch (InterruptedException interruptedException) {};
+            }
+          } 
+        } 
+      }
+    }
+    public void startRMI() 
+    {
+      IUmpleRuntime stub;
+      try
+      {  
+        // Bind the remote object's stub in the registry
+        rmiRegistry= LocateRegistry.createRegistry(nodes.get(getThisNodeId()).getPort());
+        stub = (IUmpleRuntime) UnicastRemoteObject.exportObject(this, nodes.get(getThisNodeId()).getPort());
+        rmiRegistry.bind("UmpleRuntime"+String.valueOf(getThisNodeId()), stub);
+        System.err.println("Server ready");
+      } 
+      catch (Exception e)
+      {
+        System.err.println("binding exception: " + e.toString());
+      }
+    }
+    public void stopNode()
+    {
+      System.out.println("stopping node");
+      try
+      {
+        stopRMI();
+      }
+      catch (Exception e)
+      {
+        System.err.println("Could not stop RMI:  "+ e.toString());
+      }
+      isAlive=false;
+    }
+    public void stopRMI() throws Exception
+    {
+      for(Object object: listOfObjects)
+      {
+        try
+        {
+          UnicastRemoteObject.unexportObject((Remote)object, true);
+        }
+        catch(Exception e)
+        {
+          throw e;
+        }  
+      }
+      try
+      {
+        UnicastRemoteObject.unexportObject(this, true);
+      }
+      catch(Exception e)
+      {
+        throw e;
+      }
+    }
+    
+  
+  public void newWarehouse(String aName, UmpleRuntime.UmpleComponent component,Warehouse object)
+  {
+
+      while(true){
+        try
+        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createWarehouse(aName));
+          object.setRealObject(object.getRemoteObject());
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newWarehouse(Warehouse object){ 
+        
+        WarehouseRemote remoteObject;
+        try{
+        remoteObject = (WarehouseRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        }
+        catch (Exception e)
+        {
+          System.err.println("Class not found " + e.toString());
+          return;
+        }
+        listOfObjects.add(remoteObject); 
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
+        object.setRemoteObject(remoteObject);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+    }
+      
+    }
+    
+  synchronized public IWarehouseImpl createWarehouse(String aName)
+    {
+    Warehouse object= new Warehouse(aName,  UmpleRuntime.getComponent("local"));
+    return object.getRemoteObject();
+    }
+
+  
+  public void newAgent(String aName, UmpleRuntime.UmpleComponent component,Agent object)
+  {
+
+      while(true){
+        try
+        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createAgent(aName));
+          object.setRealObject(object.getRemoteObject());
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newAgent(Agent object){ 
+        
+        AgentRemote remoteObject;
+        try{
+        remoteObject = (AgentRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        }
+        catch (Exception e)
+        {
+          System.err.println("Class not found " + e.toString());
+          return;
+        }
+        listOfObjects.add(remoteObject); 
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
+        object.setRemoteObject(remoteObject);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+    }
+      
+    }
+    
+  synchronized public IAgentImpl createAgent(String aName)
+    {
+    Agent object= new Agent(aName,  UmpleRuntime.getComponent("local"));
+    return object.getRemoteObject();
+    }
+
+  
+  public void newSupplier(String aName, UmpleRuntime.UmpleComponent component,Supplier object)
+  {
+
+      while(true){
+        try
+        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createSupplier(aName));
+          object.setRealObject(object.getRemoteObject());
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newSupplier(Supplier object){ 
+        
+        SupplierRemote remoteObject;
+        try{
+        remoteObject = (SupplierRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        }
+        catch (Exception e)
+        {
+          System.err.println("Class not found " + e.toString());
+          return;
+        }
+        listOfObjects.add(remoteObject); 
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
+        object.setRemoteObject(remoteObject);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+    }
+      
+    }
+    
+  synchronized public ISupplierImpl createSupplier(String aName)
+    {
+    Supplier object= new Supplier(aName,  UmpleRuntime.getComponent("local"));
+    return object.getRemoteObject();
+    }
+
+  
+  public void newVendor(String aName, UmpleRuntime.UmpleComponent component,Vendor object)
+  {
+
+      while(true){
+        try
+        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createVendor(aName));
+          object.setRealObject(object.getRemoteObject());
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newVendor(Vendor object){ 
+        
+        VendorRemote remoteObject;
+        try{
+        remoteObject = (VendorRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        }
+        catch (Exception e)
+        {
+          System.err.println("Class not found " + e.toString());
+          return;
+        }
+        listOfObjects.add(remoteObject); 
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
+        object.setRemoteObject(remoteObject);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+    }
+      
+    }
+    
+  synchronized public IVendorImpl createVendor(String aName)
+    {
+    Vendor object= new Vendor(aName,  UmpleRuntime.getComponent("local"));
+    return object.getRemoteObject();
+    }
+
+  
+  public void newCustomer(String aName, UmpleRuntime.UmpleComponent component,Customer object)
+  {
+
+      while(true){
+        try
+        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createCustomer(aName));
+          object.setRealObject(object.getRemoteObject());
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newCustomer(Customer object){ 
+        
+        CustomerRemote remoteObject;
+        try{
+        remoteObject = (CustomerRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        }
+        catch (Exception e)
+        {
+          System.err.println("Class not found " + e.toString());
+          return;
+        }
+        listOfObjects.add(remoteObject); 
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
+        object.setRemoteObject(remoteObject);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+    }
+      
+    }
+    
+  synchronized public ICustomerImpl createCustomer(String aName)
+    {
+    Customer object= new Customer(aName,  UmpleRuntime.getComponent("local"));
+    return object.getRemoteObject();
+    }
+
+  
+  public void newSystemManager(UmpleRuntime.UmpleComponent component,SystemManager object)
+  {
+
+      while(true){
+        try
+        {object.setRemoteObject(remoteFactories.get(getNodeId(component)).createSystemManager());
+          object.setRealObject(object.getRemoteObject());
+          break;
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+  public void newSystemManager(SystemManager object){ 
+        
+        SystemManagerRemote remoteObject;
+        try{
+        remoteObject = (SystemManagerRemote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        }
+        catch (Exception e)
+        {
+          System.err.println("Class not found " + e.toString());
+          return;
+        }
+        listOfObjects.add(remoteObject); 
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
+        object.setRemoteObject(remoteObject);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+    }
+      
+    }
+    
+  synchronized public ISystemManagerImpl createSystemManager()
+    {
+    SystemManager object= SystemManager.getInstance(UmpleRuntime.getComponent("local"));
+    return object.getRemoteObject();
+    }
+
+  public static void main (String [] args)
+  {
+    if (args.length>0){
+      setThisNodeId(Integer.parseInt(args[0]));
+      if (args.length>1)
+        UmpleRuntime.setFileAddress(args[1]);
+    }
+     UmpleRuntime.getInstance();
+    while(isAlive){
+      try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+    }
+  }
+    public class UmpleNode
+    {
+      //------------------------
+      // MEMBER VARIABLES
+      //------------------------
+      private int id;
+      private String ip="localhost";
+      private String url="http://localhost";
+      private int port=1098;
+      //------------------------
+      // CONSTRUCTOR
+      //------------------------
+
+      public UmpleNode(int aId)
+      {
+        id= aId;
+      }
+
+      //------------------------
+      // INTERFACE
+      //------------------------
+      public boolean setId(int aId)
+      {
+        boolean wasSet = false;
+        id = aId;
+        wasSet = true;
+        return wasSet;
+      }
+
+      public boolean setIp(String aIp)
+      {
+        boolean wasSet = false;
+        ip = aIp;
+        wasSet = true;
+        return wasSet;
+      }
+
+      public boolean setUrl(String aUrl)
+      {
+        boolean wasSet = false;
+        url = aUrl;
+        wasSet = true;
+        return wasSet;
+      }
+
+      public boolean setPort(int aPort)
+      {
+        boolean wasSet = false;
+        port = aPort;
+        wasSet = true;
+        return wasSet;
+      }
+      public int getId()
+      {
+        return id;
+      }
+      public String getIp()
+      {
+        return ip;
+      }
+
+      public String getUrl()
+      {
+        return url;
+      }
+
+      public int getPort()
+      {
+        return port;
+      }
+      public String toString()
+      {
+        return super.toString() + "["+"id" + ":" + getId()+ "]";
+      }
+    }
+
+    public class UmpleComponent
+    {
+
+      //------------------------
+      // MEMBER VARIABLES
+      //------------------------
+
+      //UmpleComponent Attributes
+      private int number=0;
+      private String name;
+      private UmpleNode node;
+      //------------------------
+      // CONSTRUCTOR
+      //------------------------
+
+      public UmpleComponent(String aName,UmpleNode aNode)
+      {
+        name=aName;
+        node=aNode;
+      }
+      //------------------------
+      // INTERFACE
+      //------------------------
+
+      public boolean setNumber(int aNumber)
+      {
+        boolean wasSet = false;
+        number = aNumber;
+        wasSet = true;
+        return wasSet;
+      }
+
+      public boolean setName(String aName)
+      {
+        boolean wasSet = false;
+        name = aName;
+        wasSet = true;
+        return wasSet;
+      }
+      public boolean setNode(UmpleNode aNode)
+      {
+        boolean wasSet = false;
+        node = aNode;
+        wasSet = true;
+        return wasSet;
+      }
+      public UmpleNode getNode()
+      {
+        return node;
+      }
+
+      public int getNumber()
+      {
+        return number;
+      }
+
+      public String getName()
+      {
+        return name;
+      }
+      public boolean equals(Object object) {
+          if(object instanceof UmpleComponent && ((UmpleComponent)object).getName() == this.name) {
+              return true;
+          } else {
+              return false;
+          }
+      }      
+    }  
+}
+ 

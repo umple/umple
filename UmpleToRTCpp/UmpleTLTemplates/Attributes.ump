@@ -1,0 +1,1477 @@
+/*******************************************************************************
+* Copyright (c) 2017 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
+namespace cruise.umple.cpp.gen;
+
+association { 0..1 GenMethod method -- * AbstractGenConstraint constraints;}
+association { 0..1 AbstractGenConstraint constraint -- * GenConstraintVariable variables;}
+association { 0..1 AbstractGenConstraint constraint -- * GenConstraintCondition conditions;}
+association { 0..1 AbstractGenConstraint listenerOwner -- * GenConstraintVariable listeners;}
+
+class GenMethod{
+	Boolean hasBodyConstraints() {
+		for(GenBody _body: getBody()){
+			if(_body instanceof AbstractGenConstraint){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+}
+
+class AbstractGenConstraint{
+	depend java.util.stream.Collectors;
+	isA GenBody;
+	abstract;
+	String baseContent= "";
+	String constraintCheckCall(){
+		return null;
+	}
+
+	Boolean invert = true;
+	Boolean isMany(){
+		boolean isMany= false;
+		int number= numberOfVariables();
+		if(number>1){
+			isMany= true;
+		}else if(number == 1){
+			isMany= getVariable(0).isPlural();
+		}
+		
+		return isMany;
+	}
+	
+	String variableString(){
+		String string = "";
+		int numberOfVariables = numberOfVariables();
+		if(numberOfVariables== 2){	//s1 and s2; not s1, and s2
+			GenConstraintVariable var1 = getVariable(0);
+			GenConstraintVariable var2 = getVariable(1);
+			string += var1.getName()+ " and " + var2.getName();
+		}else{
+			for (int index = 0; index < numberOfVariables; index++) {
+				GenConstraintVariable variable = getVariable(index);
+				if (!string.isEmpty()) {
+					if (index == numberOfVariables - 1) {
+						string += ", and ";
+					} else {
+						string += ", ";
+					}
+				}
+				string += variable.getName();
+			}
+		}
+		
+		return string;
+	}
+	
+	String conditionString(){
+		String string = "";
+		for (GenConstraintCondition condition : conditions) {
+			String conditionString = condition.getString();
+			String operator = condition.getOperator();
+			String prefix = "";
+
+			if (!string.isEmpty()) {
+				switch (operator) {
+				case GenConstraintOperators.AND:
+					prefix = " && ";
+					break;
+				case GenConstraintOperators.OR:
+					prefix = " || ";
+					break;
+				default:
+					break;
+				}
+			}
+
+			string += prefix + conditionString;
+		}
+		return string;
+	}
+	
+	void dynamicContent(List<GenBody> bodies){
+		GenBody genBody = new GenBody(constraintCheckCall());
+	    genBody.setPriority(getPriority());
+		bodies.add(genBody);
+	}
+	
+	indentT <<!<<=content>>!>>
+	emit indent(String content)(indentT);
+}
+
+class GenConstraint{
+	// TODO: Make body lazy instead
+	public GenConstraint() {
+		this(null);
+	}
+	depend java.util.stream.Collectors;
+	isA AbstractGenConstraint;
+	
+	String constraintCheckCall(){
+		if(isInvert()){
+			return constraintHardCheckCall();
+		}
+		
+		return constraintSimpleCheckCall();
+	}
+	
+	constraintSimpleCheckCallT <<!<<#
+	
+	String _conditions= conditionString();
+
+#>>if(<<=_conditions>>){	
+<<=_indent(2, new StringBuilder(), getBaseContent())>>
+}!>>
+	emit constraintSimpleCheckCall()(constraintSimpleCheckCallT);
+
+constraintHardCheckCallT <<!<<#
+	
+	String varaibles= variableString();
+	boolean isMany= isMany();
+	String _conditions= conditionString();
+
+#>>if(!(<<=_conditions>>)){	
+	throw "Please provide <<#if(!isMany){#>>a <<#}#>>valid <<=varaibles>>";
+}!>>
+	emit constraintHardCheckCall()(constraintHardCheckCallT);
+}
+
+class GenConstraintVariable{
+	lazy name;
+	key {name};
+	lazy Boolean plural;
+	Integer priority= 0;
+}
+
+class GenConstraintCondition{
+	lazy string;
+	String operator= GenConstraintOperators.AND;
+	Integer priority= 0;
+}
+
+class GenConstraintOperators{
+	const String AND= "and";
+	const String OR= "or";
+}
+
+association { 0..1 GenClass owner -- * GenComplexPort complexPorts;}
+association { 0..1 GenClass definitionClass -- * ActiveGenMethd relatedActiveMethod;}
+association { 0..1 GenClass owner -- * GenPort ports;}
+class GenComplexPort{
+	isA GenField;
+	after constructor{
+		setGeneratable(false);
+		setIsComparable(false);
+	}
+}
+
+class GenPort{
+	const String DIRECTION_IN= "in";
+	const String DIRECTION_OUT= "out";
+	const String DIRECTION_BOTH= "both";
+	
+	lazy String name;
+	lazy String type;
+	lazy String direction;
+	
+	Boolean complex= {getOwner().getGenPackage().isObject(type)};
+}
+
+class ActiveGenMethd{
+	isA GenMethod;
+	
+	lazy String baseName;
+	lazy String inverseMethod;
+	
+	after constructor{
+		setBaseName(getName());
+	}
+}
+
+class GenClass{
+	List<String> portNames(){
+		return getPorts().stream().map(GenPort::getName).collect(Collectors.toList());
+	}
+	
+	List<ActiveGenMethd> activeMethods(){
+		return getMethods().stream().filter(genMethod-> genMethod instanceof ActiveGenMethd).map(ActiveGenMethd.class::cast).collect(Collectors.toList());
+	}
+	
+	List<GenActiveField> activeFields(){
+		return getFields().stream().filter(genField-> genField instanceof GenActiveField).map(GenActiveField.class::cast).collect(Collectors.toList());
+	}
+	
+	GenComplexPort complexPortByName(String name){
+		if(name== null){
+			return null;
+		}
+		
+		for(GenComplexPort port: getComplexPorts()){
+			if(name.equals(port.getName())){
+				return port;
+			}
+		}
+		
+		return null;
+	}
+}
+
+class GenActiveField{
+	isA GenField;
+	lazy conjugatedField;
+}
+
+class Visibilities{
+	const String PUBLIC= "public";
+	const String PROTECTED= "protected";
+	const String PRIVATE= "private";
+}
+
+class Visibilities{
+	//cpp-specific
+	const String GLOBAL= "global";
+}
+
+association { 0..1 GenClass owner -- * GenBody constructorContents;}
+association { 0..1 GenClass owner -- * UniqueGenBody uniqueConstructorContents;}
+
+association { 0..1 GenAssociation relatedAssociation -- * GenField relatedFields;}
+class GenPackage{
+	assignCallT <<!<<=name>>= <<=value>>;!>>
+	emit assignCall(String name, String value)(assignCallT);
+}
+
+association { 0..1 GenBaseConstructorMethod owner -- * GenMethodParameter prePolymorphicParameters;}
+
+class GenConstructorMethod{
+	isA GenBaseConstructorMethod;
+	depend java.util.stream.Collectors;
+	
+	//@Override
+	String parameters() {
+		List<String> all= getPrePolymorphicParameters().stream().map(GenMethodParameter::declaration).collect(Collectors.toList());
+		all.addAll(asParameters().stream().map(GenMethodParameter::declaration).collect(Collectors.toList()));
+		return all.stream().collect(Collectors.joining(", "));
+	}
+	
+	String parentParameters(){
+		return asParameters(getGenClass().getParent()).stream().map(GenMethodParameter::getName).collect(Collectors.joining(", "));
+	}
+	
+	void dynamicBody(List<String> bodies){
+		GenClass genClass= getGenClass();
+		GenPackage genPackage= genClass.getGenPackage();
+		
+		for (GenField field : genClass.getFields()) {
+			GenAssociation association = field.getRelatedAssociation();
+			if (association != null) {
+				String constructDecision = association.constructDecision();
+				if(constructDecision != null){
+					String type = field.getType();
+					String name= field.getName();
+					if (GenAssociation.CONSTRUCT_DEFAULT_ASSIGN.equals(constructDecision)) {
+						String defaultValue= genPackage.interceptValueForType(type, association.getValue());
+						//The nonpointer types, such strings, do not require null assignment. So ignore them unless they have default values
+						if(field.getIsPointer() || defaultValue != null){
+							if(association.isMany()){
+								bodies.add(association.listTypeDeclaration(0, type, "this->"+ name, true));
+							}else{
+								bodies.add(genPackage.assignCall("this->"+ name, defaultValue== null?genPackage.getDefaultValue(type): defaultValue));
+							}
+						}
+					}else if(GenAssociation.CONSTRUCT_VALUE_ASSIGN.equals(constructDecision)){
+						GenAssociationEnd source= association.getSource();
+						bodies.add(genPackage.assignCall("this->"+ name, association.variableParameterInstance(name, source.isMany())));
+					}else if(GenAssociation.CONSTRUCT_CHECK_NULL_ASSIGN.equals(constructDecision)){
+						bodies.add(association.constructCheckNullAssign());
+					}else if(GenAssociation.CONSTRUCT_SET_AND_CHECK.equals(constructDecision)){
+						bodies.add(association.constructSetAndCheck());
+					}else if(GenAssociation.CONSTRUCT_SET_VALIDATE_BOUND.equals(constructDecision)){
+						bodies.add(association.constructSetValidateBounds());
+					}
+				}
+			}else{
+				String autounique = field.getAutounique();
+				if(autounique!= null){
+					bodies.add(field.autoAssign());
+				}else if(field.isParameterized()){
+					bodies.add(field.assignValueCall());
+				}
+			}
+		}
+		
+		for(GenBody content: genClass.getConstructorContents()){
+			bodies.add(content.getBody());
+		}
+		
+		for(UniqueGenBody content: genClass.getUniqueConstructorContents()){
+			bodies.add(content.getBody());
+		}
+	}
+}
+
+class GenBaseConstructorMethod{
+	isA GenMethod;
+	
+	String getInitializerString(){
+		return constructorCalls();
+	}
+	
+	indentT <<!<<=content>>!>>
+	emit indent(String content)(indentT);
+	
+	String constructorCalls(){
+		GenClass genClass= getGenClass();
+		String calls= genClass.memberInitializerString(this);
+		 
+		GenClass parent= genClass.getParent();
+		if(parent != null){
+			String parentsParameters= parentParameters();
+			
+			String parentString= parent.getName()+ "("+ parentsParameters+ ")";
+			if(!calls.isEmpty()){
+				calls+= "," + NL+ _indent(4, new StringBuilder(), parentString);
+			}else{
+				calls= parentString;
+			}
+		}
+		
+		return calls;
+	}
+	
+	//By default, assume that the parent parameters are the same unless in some other constrcutors, parameters can be different.
+	String parentParameters(){
+		return getParameters().stream().map(GenMethodParameter::getName).collect(Collectors.joining(", "));
+	}
+	
+	depend java.util.stream.Collectors;
+	
+	String identifier(){
+		 return super.identifier()+ getPrePolymorphicParameters().stream().map(GenMethodParameter::declaration).collect(Collectors.joining());
+	}
+	
+	List<GenMethodParameter> asParameters(){
+		return asParameters(getGenClass());
+	}
+	
+	List<GenMethodParameter> asParameters(GenClass genClass){
+		return asParameters(searchParameters(genClass));
+	}
+	
+	List<GenMethodParameter> asParameters(List<GenAssociation> searchParameters){
+		GenPackage genPackage= getGenClass().getGenPackage();
+		List<GenMethodParameter> params= new ArrayList<GenMethodParameter>();
+		
+		for(GenAssociation association: searchParameters){ 
+			if(association.hasRelatedFields()){
+				GenAssociationEnd source = association.getSource();
+				String instance = association.variableParameterInstance(association.getName(), source.isMany());
+				GenField relatedField = association.getRelatedField(0);
+				GenMethodParameter param = new GenMethodParameter(relatedField.getNormalizedType(), instance);
+				param.setIsConstant(genPackage.isPrimitive(source.getType()));
+				param.setIsReference(genPackage.isPrimitive(source.getType()));
+				param.setCrudType(relatedField.getType());
+				param.setRelatedField(source.getName());
+				param.setNormalize(true);
+				params.add(param);
+			}
+		}
+		return params;
+	}
+	
+	List<GenAssociation> listParameters() {
+		return searchParameters(getGenClass(), new ArrayList<List<GenAssociation>>());
+	}
+	
+	List<GenAssociation> searchParameters(GenClass genClass) {
+		return searchParameters(genClass, new ArrayList<List<GenAssociation>>());
+	}
+	
+	List<GenAssociation> searchParameters(GenClass genClass, List<List<GenAssociation>> all) {
+		searchParameters(genClass, new ArrayList<GenAssociation>(), all);
+		
+		List<GenAssociation> results= new ArrayList<GenAssociation>();
+		all.stream().forEach(list->results.addAll(list));
+		
+		return results;
+	}
+	
+	List<GenAssociation> searchParameters(GenClass genClass, List<GenAssociation> current, List<List<GenAssociation>> all) {
+		searchClassParameters(genClass, current, all);
+		all.add(0, current);
+		GenClass parent = genClass.getParent();
+		if(parent != null){
+			searchParameters(parent, new ArrayList<GenAssociation>(), all);
+		}
+		return current;
+	}
+
+	void searchClassParameters(GenClass genClass, List<GenAssociation> current, List<List<GenAssociation>> all) {
+		List<GenAssociation> fields= new ArrayList<GenAssociation>();
+		List<GenAssociation> associations= new ArrayList<GenAssociation>();
+		for(GenAssociation association: genClass.getAssociations()){
+			String constructDecision = association.constructDecision();
+			if(constructDecision != null && !GenAssociation.CONSTRUCT_DEFAULT_ASSIGN.equals(constructDecision)){
+				if(association.getIsAttribute()){
+					fields.add(association);
+				}else{
+					associations.add(association);
+				}
+			}
+		}
+		current.addAll(fields);
+		current.addAll(associations);
+	}
+}
+
+
+class GenDeleteMethod{
+	isA GenMethod;
+	
+	void dynamicBody(List<String> bodies){
+		for(GenAssociation assocciation: getGenClass().getAssociations()) {
+			String deleteBody= assocciation.getDeleteBody();
+			if(deleteBody != null){
+				bodies.add(deleteBody);
+			}
+		}
+	}
+}
+
+class GenAssociation{
+	
+	constructCheckNullAssignT <<!<<#
+	String role= source.getRole();
+	String roles= source.getRoles();
+	String instance= variableParameterInstance(source.isMany()?roles:role, source.isMany());
+	String otherGetterMethodName= getInstance(target.getRole());
+	String otherType= target.getType();
+	
+#>>if (<<=instance>> == NULL || <<=instance>>-><<=otherGetterMethodName>>() != NULL){
+  throw "Unable to create <<=otherType>> due to <<=instance>>";
+}
+this-><<=role>> = <<=instance>>;!>>
+	
+		emit constructCheckNullAssign()(constructCheckNullAssignT);
+		
+	constructSetAndCheckT <<!<<#
+	String role= source.getRole();
+	String setterMethodName= setInstance(role);
+	String instance= variableParameterInstance(source.isMany()?source.getRoles():role, source.isMany());
+	String otherType= target.getType();
+	
+#>>if (!<<=setterMethodName>>(<<=instance>>)){
+	throw "Unable to create <<=otherType>> due to <<=instance>>";
+}!>>
+	emit constructSetAndCheck()(constructSetAndCheckT);
+			
+constructSetValidateBoundsT <<!<<#
+	String name= source.getName();
+	String otherType= target.getType();
+	String role= source.isMany()?source.getRoles():source.getRole();
+	String instance= variableParameterInstance(role, source.isMany());
+	int lowerBound= source.getLowerBound();
+	int upperBound= source.getUpperBound();
+	String setterMethodName= setInstance(role);
+	
+#>>if (!<<=setterMethodName>>(<<=instance>>)){
+<<#if(upperBound==-1|| upperBound==1|| lowerBound== upperBound){
+#>>
+	throw "Unable to create <<=otherType>>, must have at least <<=lowerBound>> <<=name>>";<<#}
+#>><<#else{#>>
+	throw "Unable to create <<=otherType>>, must have <<=lowerBound>> to <<=upperBound>> <<=name>>";<<#}#>>
+}!>>
+	emit constructSetValidateBounds()(constructSetValidateBoundsT);
+
+	lazy Boolean isAttribute;
+}
+
+class GenField{
+	lazy type;
+	lazy name;
+	lazy Boolean destructible;
+	lazy Boolean isStatic;
+	lazy Boolean isConstant;
+	lazy Boolean isMany;
+	lazy Boolean isEnum;
+	lazy String autounique;
+	lazy String value;
+	Boolean parameterized= false;
+	Boolean generatable= true;
+	0..1 -- * GenComment comments sorted {priority};
+	
+	assignValueCallT <<!this-><<=name>>= <<=_value>>;!>>
+	emit assignValueCall(String _value)(assignValueCallT);
+	
+	String assignValueCall(){
+		return assignValueCall(value);
+	}
+	
+	autoAssignT <<!<<#
+	String name = getName();
+    #>>this-><<=autounique>>= <<=name>>++;!>>
+    
+	emit autoAssign()(autoAssignT);
+	
+	//TODO: Duplicated code from GenMethod
+	lazy Boolean normalize;
+	before getIsConstant{
+		if(normalize){
+			return getGenClass().getGenPackage().isPrimitive(type);
+		}
+	}
+	
+	before getIsPointer{
+		if(normalize){
+			return getGenClass().getGenPackage().isPointer(type);
+		}
+	}
+	
+	sortKey= {getRelatedAssociation()== null? null: getRelatedAssociation().getSortKey()}
+	
+	//TODO: Move to a trait and integrate with GenAssociation and GenField
+	String getNormalizedType(){
+		return getNormalizedType(isMany);
+	}
+	
+	String getNormalizedType(Boolean isMany){
+		GenPackage genPackage= getGenClass().getGenPackage();
+		String value= normalize? genPackage.getNormalizedType(getType()): getType();
+		String generic= genericString();
+		if(!generic.isEmpty()){
+			value+= generic;
+		}
+		
+		if(normalize){
+			boolean isPointer= genPackage.isPointer(getType());
+			if(isMany && generic.isEmpty()){
+				String sortKey= getSortKey();
+				if(sortKey != null && !sortKey.isEmpty()){
+					value= "set<"+ value+ ", "+ genPackage.comparatorId(getType(), sortKey)+">";
+				}else{
+					value= "vector<"+ value+ ">";
+				}
+				
+				if(isPointer){
+					value+= "*";
+				}
+			} 
+			
+			return value;
+		}else if(getIsReference()){
+			return value+ "&";
+		}else if(getIsPointer()){
+			return value+ "*";
+		}
+		
+		return value;
+	}
+	
+	
+	lazy GenMethod relatedMethod;	//Use association instead
+	String visibility= "private";
+	Integer priority= 0; 
+	0..1 -- * GenFieldGeneric generics;
+	
+	before getVisibility{
+		if(visibility== null){
+			return "private";
+		}
+	}
+	
+	initializeCallT <<!
+	!>>
+	emit initializeCall()(initializeCallT);
+	
+declarationT <<!<<#for(GenComment comment: getComments()){
+	String body= comment.getBody();
+	if(!body.isEmpty()){
+	#>><<=body>><<=NL>><<#}
+	}#>><<#if(isStatic){#>>static <<#}#>><<#if(isConstant){#>>const <<#}#>><<=getNormalizedType()>> <<=name>><<=initializerString()>>;!>>
+
+	emit declaration()(declarationT);
+
+implementationT <<!<<#for(GenComment comment: getComments()){
+	String body= comment.getBody();
+	if(!body.isEmpty()){
+	#>><<=body>><<=NL>><<#}
+	}#>><<#if(isConstant){#>>const <<#}#>><<=getNormalizedType()>> <<=getGenClass().getName()>>::<<=name>>= <<=value>>;!>>
+
+	emit implementation()(implementationT);
+
+	Boolean hasImplementation(){
+		return isStatic;
+	}
+ 
+	//CPP-specfific
+	lazy Boolean remote;
+	0..1 -- * GenFieldInitializer initializers;
+	lazy Boolean isPointer;
+	lazy Boolean isReference;
+	
+	depend java.util.stream.Collectors;
+	depend java.util.stream.Stream;
+	String genericString(){
+		if(!hasGenerics()){
+			return "";
+		}
+		Stream<String> map = getGenerics().stream().map(GenFieldGeneric::getType);
+		if(normalize){
+			GenPackage genPackage= getGenClass().getGenPackage();
+			map= map.map(type->genPackage.getNormalizedType(type));
+		}
+		return "<"+ map.collect(Collectors.joining(", "))+ ">";
+	}
+	
+	String initializerString(){
+		if(!hasInitializers()){
+			return "";
+		}
+		return "("+ getInitializers().stream().map(GenFieldInitializer::getValue).collect(Collectors.joining(", "))+ ")";
+	}
+}
+
+class GenStreamMethod{
+	isA GenMethod;
+	
+	depend java.util.stream.Collectors;
+	void dynamicBody(List<String> bodies){
+		String parentStreamMethodCall = parentStreamMethodCall();
+		if(!parentStreamMethodCall.isEmpty()){
+			bodies.add(parentStreamMethodCall);
+		}
+
+		GenClass genClass = getGenClass();
+		GenPackage genPackage = genClass.getGenPackage();
+		List<GenAssociation> associations = genClass.getAssociations();
+		List<GenAssociation> filtered= new ArrayList<GenAssociation>();
+		for (GenAssociation association : associations) {
+			if(!association.isConstant() && !association.isInternal()){
+				filtered.add(association);
+			}
+		}
+
+		List<String> simples= new ArrayList<String>();
+		List<String> complexes= new ArrayList<String>();
+		for (GenAssociation association : filtered) {
+			GenAssociationEnd source = association.getSource();
+			String type = source.getType();
+			String name = source.getName();
+			String instance = association.getInstance(association.normalizedName());
+			
+			if(association.isDerived() || genPackage.isPrimitive(type)){
+				simples.add(streamCall(name, instance));
+			}else{
+				complexes.add(streamComplexCall(name, instance));
+			}
+		}
+
+		String allSimple= simples.stream().collect(Collectors.joining(streamSeparator()));
+		
+		if(!allSimple.isEmpty() || !complexes.isEmpty()){
+			bodies.add(constCastInit());
+		}
+		
+		if(!allSimple.isEmpty()){
+			bodies.add(streamAlltogether(allSimple, !complexes.isEmpty()));
+		}
+
+		if(!complexes.isEmpty()){
+			bodies.add(complexes.stream().collect(Collectors.joining(streamEndSeparator()))+ ";");
+		}
+	}
+	
+	
+	const String OUT_OPERATOR= "<<";
+	
+	parentStreamMethodCallT <<!<<#
+	GenClass parent = getGenClass().getParent();
+    if(parent!= null){
+    	#>><<=parent.getName()>>::toOstream(os);<<#
+    }#>>!>>
+    
+	emit parentStreamMethodCall()(parentStreamMethodCallT);
+	
+	constCastInitT <<!<<#
+	String name = getGenClass().getName();
+    #>><<=name>>* thisptr = const_cast<<<=name>>*>(this);!>>
+    
+	emit constCastInit()(constCastInitT);
+	
+	streamCallT <<!"<<=name>>:" << thisptr-><<=getter>>()!>>
+	emit streamCall(String name, String getter)(streamCallT);
+	
+	streamSeparatorT <<!<<=OUT_OPERATOR>> ", " <<=OUT_OPERATOR>>
+		!>>
+	emit streamSeparator()(streamSeparatorT);
+	
+	streamAlltogetherT <<!os <<=OUT_OPERATOR>> "[" << <<=streams>> << "]"<<#if(next){#>> <<=OUT_OPERATOR>> endl<<#}#>>;!>>
+	emit streamAlltogether(String streams, boolean next)(streamAlltogetherT);
+	
+	streamComplexCallT <<!(thisptr-><<=getter>>()!= NULL ?  os <<=OUT_OPERATOR>> "<<=name>>:" << thisptr-><<=getter>>() : os <<=OUT_OPERATOR>> "<<=name>>:" << "NULL")!>>
+	emit streamComplexCall(String name, String getter)(streamComplexCallT);
+	
+	streamEndSeparatorT <<!<<=OUT_OPERATOR>> endl;
+		!>>
+	emit streamEndSeparator()(streamEndSeparatorT);
+}
+
+class GenInternalCopyMethod{
+	isA GenMethod;
+	void dynamicBody(List<String> bodies){
+		GenClass genClass = getGenClass();
+		if(!genClass.isSingleton()){
+			GenPackage genPackage = genClass.getGenPackage();
+			List<GenAssociation> associations = genClass.getAssociations();
+			for (GenAssociation association : associations) {
+				if(!association.isConstant() && !association.isDerived()){
+					String type = association.getSource().getType();
+					if (genPackage.isString(type)) {
+						bodies.add(association.copyStringAttribute());
+					}else if(genPackage.isPrimitive(type)){
+						bodies.add(association.copyPrimitiveAttribute());
+					}else if(association.isMany()){
+						String copyCall= association.copyDirectly(0, association.getSource().getName(), type, "other."+association.getSource().getName());
+						bodies.add(copyCall);
+					}else{
+						bodies.add(association.copyAttribute());
+					}
+				}
+			}
+		}
+	}
+}
+
+class GenDestructorMethod{
+	isA GenMethod;
+	
+	//TODO: Does not work; in parent
+	//after setGenClass{
+	//	setName("~"+ genClass.getName());
+	//}
+	
+	void dynamicBody(List<String> bodies){
+		GenClass genClass = getGenClass();
+		if(genClass instanceof GenInterface == false){
+			bodies.add(destructInitialCall());
+			GenPackage genPackage = genClass.getGenPackage();
+			
+			List<GenAssociation> associations = genClass.getAssociations();
+			List<GenAssociation> filtered= new ArrayList<GenAssociation>();
+			for (GenAssociation association : associations) {
+				if(!association.isConstant() && !association.isInternal() && !association.isDerived()){
+					filtered.add(association);
+				}
+			}
+			
+			for (GenAssociation association : filtered) {
+				GenAssociationEnd source = association.getSource();
+				String type = source.getType();
+				String name = source.getName();
+				
+				if(association.isMany()){
+					bodies.add(destructMany(name, type));
+				}else if(!genPackage.isPrimitive(type)){
+					bodies.add(destructAttribute(name));
+				}
+			}
+			
+			for(GenField field: genClass.getFields()){
+				if(field.isDestructible()){
+					bodies.add(destructAttribute(field.getName()));
+				}
+			}
+		}
+	}
+	
+	destructAttributeT <<!delete <<=name>>;!>>
+	emit destructAttribute(String name)(destructAttributeT);
+	
+	destructManyT <<!
+std::for_each(<<=name>>->begin(), <<=name>>->end(), /*std::default_delete<<<=type>>>*/ deleteElement());
+<<=name>>->clear();
+delete <<=name>>;!>>
+		emit destructMany(String name, String type)(destructManyT);
+	
+	destructInitialCallT <<!<<#
+	GenClass parent = getGenClass().getParent();
+    if(parent!= null){
+    	String parentName= parent.getName();
+    	#>>//<<=parentName>>::~<<=parentName>>();
+
+
+<<#}#>>this->deleteAssociatedObjects();!>>
+		emit destructInitialCall()(destructInitialCallT);
+	
+}
+
+class GenAssociation{
+	copyStringAttributeT <<!<<#
+	String name= source.getName();
+	#>>this-><<=name>>.assign(other.<<=name>>);!>>
+	emit copyStringAttribute()(copyStringAttributeT);
+	
+	copyPrimitiveAttributeT <<!<<#
+	String name= source.getName();
+	#>>this-><<=name>>= other.<<=name>>;!>>
+	emit copyPrimitiveAttribute()(copyPrimitiveAttributeT);
+	
+	copyAttributeT <<!<<#
+	String name= source.getName();
+	#>>copyObject(other.<<=name>>, this-><<=name>>, sizeof other.<<=name>>);!>>
+	emit copyAttribute()(copyAttributeT);
+}
+
+
+
+class GenField{
+	lazy Boolean settable;
+	Boolean isComparable= true;
+}
+
+class GenEqualityMethod{
+	depend cruise.umple.cpp.gen.GenMethod;
+	isA GenMethod;
+	
+defaultEqualityCheckT <<!//if (typeid(Right) != typeid(Left)) {
+//  return false;
+//}
+
+if(Right.hashCode() != Left.hashCode()) {
+	return false;
+}!>>
+	emit defaultEqualityCheck()(defaultEqualityCheckT);
+
+attributeEqualitySingleT <<!if(!compare(Right.<<=name>>, Left.<<=name>>, sizeof Right.<<=name>>)){
+	return false;
+}!>>
+	emit attributeEqualitySingle(String name)(attributeEqualitySingleT);
+
+
+attributeEqualityManyT <<!if(!std::equal(Right.<<=name>>->begin(), Right.<<=name>>->end(), Left.<<=name>>->begin())){
+	 return false;
+}!>>
+	emit attributeEqualityMany(String name)(attributeEqualityManyT);
+	
+attributeEqualityPrimitiveT <<!if(Right.<<=name>>!= Left.<<=name>>){
+	 return false;
+}!>>
+	emit attributeEqualityPrimitive(String name)(attributeEqualityPrimitiveT);
+
+attributeEqualityStringT <<!if(Right.<<=name>>.compare(Left.<<=name>>) != 0){
+	 return false;
+}!>>
+emit attributeEqualityString(String name)(attributeEqualityStringT);
+	
+	void dynamicBody(List<String> bodies){
+		bodies.add(defaultEqualityCheck());
+		
+//		boolean hasKey = generationValueGetter.getBoolean(parent, IModelingElementDefinitions.HAS_KEY_MEMBERS, element);
+//		if(!hasKey){
+//			return false;
+//		}
+//		
+//		boolean isKeyMemeber = generationValueGetter.getBoolean(parent,IModelingElementDefinitions.IS_KEY_MEMBER, element);
+//		if(!isKeyMemeber){
+//			//Do not add the members to the equality implementation; however, also prevent it from being added to the default implementation as we need to only rely on
+//			//the key members in case there are
+//			return true;
+//		}
+		
+		for(GenField field: getGenClass().getFields()){
+			if(!field.getIsEnum() && field.getIsComparable() && !field.isRemote()){
+				String name= field.getName();
+		    	
+				if(field.getIsMany()){
+		    		bodies.add(attributeEqualityMany(name));
+		    	}else{
+		    		String type = field.getType();
+		    		if(getGenClass().getGenPackage().isString(type)){
+		        		bodies.add(attributeEqualityString(name));
+		        	}else if(getGenClass().getGenPackage().isPrimitive(type)){
+		        		bodies.add(attributeEqualityPrimitive(name));
+		        		attributeEqualityPrimitive(name);
+		        	}else{
+		        		bodies.add(attributeEqualitySingle(name));
+		        	}
+		    	}
+			}
+	    }
+	}
+}
+
+//TODO: move to a different file
+trait TypeHelper{
+	
+	Boolean isString(String type){
+		switch (type) {
+		case "String":
+		case "string":
+			return true;
+		default:
+			return false;
+		}
+	}
+	
+	Boolean isBoolean(String type){
+		switch (type) {
+		case "Boolean":
+		case "boolean":
+		case "bool":
+			return true;
+		default:
+			return false;
+		}
+	}
+	
+	Boolean isPrimitive(String type){
+		switch (type) {
+		case "Integer":
+		case "int":
+		case "String":
+		case "string":
+		case "Double":
+		case "double":
+		case "Float":
+		case "float":
+		case "Long":
+		case "long":
+		case "Boolean":
+		case "bool":
+		case "Character":
+		case "char":
+			return true;
+		default:
+			return false;
+		}
+	}
+	
+	Boolean isPointer(String type){
+		if(type== null || type.isEmpty()){
+			return false;
+		}
+		
+		switch (type) {
+		case "time_t":
+		case "tm":
+			return true;
+		default:
+			if(isObject(type)){
+				return true;
+			}
+		}
+	    return false;
+	}
+	
+	Boolean isObject(String type){
+		if(type == null){
+			return false;
+		}
+		
+		return rootPackage().classByName(type) != null;
+	}
+	
+	String getNormalizedType(String type){
+		String value= interceptType(type);
+		if(isPointer(value)){
+			value+= "*";
+		}
+		
+		return value;
+	}
+	
+	String interceptType(String type){
+		if(type== null){
+			return "void";
+		}
+		
+		switch (type) {
+		case "null":
+		case "NULL":
+			return "void";
+		case "Time":
+			return "time_t";
+		case "Date":
+			return "tm";
+		case "String":
+		case "StringBuilder":
+			return "string";
+		case "Character":
+			return "char";
+		case "Double":
+			return "double";
+		case "Float":
+			return "float";
+		case "integer":
+		case "Integer":
+			return "int";
+		case "Boolean":
+		case "boolean":
+			return "bool";
+		default:
+			return type;
+		}
+	}
+	
+	String getDefaultValue(String type){
+		switch (type) {
+		case "Integer":
+		case "int":
+		case "Double":
+		case "double":
+		case "Float":
+		case "float":
+		case "Long":
+		case "long":
+			return "0";
+		case "String":
+		case "string":
+		case "Character":
+		case "char":
+			return "\"\"";
+		default:
+			return "NULL";
+		}
+	}
+	
+	String interceptValueForType(String type, String value){
+		switch (type) {
+		case "time_t":
+		case "Time":
+		case "time":
+			return value== null? "NULL" : "ParseTime("+value+")";	//TODO: regex to check for value format
+		case "tm":
+		case "Date":
+		case "date":
+			return value== null? "NULL" : "ParseDate("+value+")";
+			
+		default:
+			return value;
+		}
+	}
+}
+
+
+
+class GenPackage{
+	
+	const String BACK_SLASH= "\\";
+	
+	aliasStatementT <<!<<#
+	String root= namespace.replace(".", BACK_SLASH);
+	String target= namespace.replace(".", "/");
+	
+	#>>#pragma include_alias(".<<=BACK_SLASH>><<=root>><<=BACK_SLASH>><<=type>>.h", "<<=target>>/<<=type>>.h")!>>
+	emit aliasStatement(String type, String namespace)(aliasStatementT);
+	
+	rootAliasStatementT <<!#pragma include_alias("..<<=BACK_SLASH>><<=base>><<=BACK_SLASH>><<=name>>.h", "<<=name>>.h")!>>
+	emit rootAliasStatement(String base, String name)(rootAliasStatementT);
+	
+	String listAliases(){
+		List<String> all= new ArrayList<String>();
+		GenPackage rootPackage = rootPackage();
+		all.add(rootPackage.rootAliasStatement(rootPackage.getName(), rootPackage.rootIncludeName()));
+		
+		for(GenPackage genPackage: rootPackage.allPackages()){
+			for(GenClass genClass: genPackage.getClasses()){
+				if(genClass.isGeneratable()){
+					String type= genClass.getName();
+					String namespace= genClass.getNamespace();
+					String aliasStatement = aliasStatement(type.toString(), namespace);
+					all.add(aliasStatement);
+				}
+			}
+		}
+		
+		return all.stream().collect(Collectors.joining(NL));
+	}
+}
+
+class GenPackage{
+	GenPackage rootPackage(){
+		GenPackage root= this;
+		while(root.getParent()!= null){
+			root= root.getParent();
+		}
+		return root;
+	}
+	
+	List<GenClass> allClasses(){
+		List<GenClass> all= new ArrayList<GenClass>();
+		for(GenPackage genPackage: allPackages()){
+			for(GenClass genClass: genPackage.getClasses()){
+				if(!all.contains(genClass)){
+					all.add(genClass);
+				}
+			}
+		}
+		
+		return all;
+	}
+	
+	List<GenPackage> allPackages(){
+		List<GenPackage> all= new ArrayList<GenPackage>();
+		_allPackages(rootPackage(), all);
+		return all;
+	}
+	
+	List<GenPackage> _allPackages(GenPackage current, List<GenPackage> all){
+		if(!all.contains(current)){
+			all.add(current);
+		}
+		
+		List<GenPackage> results= current.getChildren();
+		for(GenPackage child: results){
+			_allPackages(child, all);
+		}
+		
+		return all;
+	}
+}
+
+//Name helpers
+trait NameHelper{
+	depend cruise.umple.cpp.utils.StringUtil;
+	String removeInstance(String name){
+		return removeInstance(name, false);
+	}
+	
+	String removeInstance(String name, Boolean isRemote){
+		String instance= "remove"+ StringUtil.firstCharacterToUpperCase(name);
+		return isRemote?"_"+instance: instance;
+	}
+	
+	String canSetInstance(String name){
+		return "canSet"+ StringUtil.firstCharacterToUpperCase(name);
+	}
+	
+	String currentInstance(String name){
+		return "current"+ StringUtil.firstCharacterToUpperCase(name);
+	}
+	
+	String delegatedParameter(String parameter, String type){
+		return parameter + "For"+ StringUtil.firstCharacterToUpperCase(type);
+	}
+	
+	String verifiedInstance(String name){
+		return "verified"+ StringUtil.firstCharacterToUpperCase(name);
+	}
+	
+	String removeAtInstance(String name){
+		return removeAtInstance(name, false);
+	}
+	
+	String removeAtInstance(String name, Boolean isRemote){
+		String instance= "remove"+ StringUtil.firstCharacterToUpperCase(name)+ "At";
+		return isRemote?"_"+instance: instance;
+	}
+	
+	String addAtInstance(String name){
+		return addAtInstance(name, false);
+	}
+	
+	String addAtInstance(String name, Boolean isRemote){
+		String instance= "add"+ StringUtil.firstCharacterToUpperCase(name)+ "At";
+		return isRemote?"_"+instance: instance;
+	}
+	
+	String addOrMoveAtInstance(String name){
+		return "addOrMove"+ StringUtil.firstCharacterToUpperCase(name)+ "At";
+	}
+	
+	String indexOfInstance(String name){
+		return indexOfInstance(name, false);
+	}
+	
+	String indexOfInstance(String name, Boolean isRemote){
+		String instance= "indexOf"+ StringUtil.firstCharacterToUpperCase(name);
+		return isRemote?"_"+instance: instance;
+	}
+	
+	String placeholderInstance(String name){
+		return "placeholder"+ StringUtil.firstCharacterToUpperCase(name);
+	}
+	
+	String setInstance(String name){
+		return setInstance(name, false);
+	}
+	
+	String setInstance(String name, Boolean isRemote){
+		String instance= "set"+ StringUtil.firstCharacterToUpperCase(name);
+		return isRemote?"_"+instance: instance;
+	}
+	
+	String isNewInstance(String name){
+		return "isNew"+ StringUtil.firstCharacterToUpperCase(name);
+	}
+	
+	String existingInstance(String name){
+		return "existing"+ StringUtil.firstCharacterToUpperCase(name);
+	}
+	
+	String newMapInstance(String role, String roles){
+		return role+ "ToNew"+ StringUtil.firstCharacterToUpperCase(roles);
+	}
+	
+	String oldInstance(String name){
+		return oldInstance(name, false);
+	}
+	
+	String oldInstance(String name, Boolean isMany){
+		String base= "old"+ StringUtil.firstCharacterToUpperCase(name);
+		if(isMany){
+			return base;
+		}
+		return "an"+ StringUtil.firstCharacterToUpperCase(base);
+	}
+	
+	String newInstanceInstance(String name){
+		return newInstanceInstance(name, false);
+	}
+	
+	String newInstanceInstance(String name, Boolean isMany){
+		String base= "new"+ StringUtil.firstCharacterToUpperCase(name);
+		if(isMany){
+			return base;
+		}
+		return "a"+ StringUtil.firstCharacterToUpperCase(base);
+	}
+	
+	String checkNewInstance(String name){
+		return "checkNew"+ StringUtil.firstCharacterToUpperCase(name);
+	}
+	
+	String variableParameterInstance(String name, boolean isMany){
+		return (isMany?"all":"a")+ StringUtil.firstCharacterToUpperCase(name);
+	}
+	
+	String getInstance(String name){
+		return getInstance(name, false);
+	}
+	
+	String getInstance(String name, Boolean isRemote){
+		String instance= "get"+ StringUtil.firstCharacterToUpperCase(name);
+		return isRemote?"_"+instance: instance;
+	}
+	
+	String isAInstance(String name){
+		return "is"+ StringUtil.firstCharacterToUpperCase(name);
+	}
+	
+	String variableInstance(String name){
+		return this.variableInstance(name, false);
+	}
+	
+	String variableInstance(String name, boolean isMany){
+		String value= StringUtil.firstCharacterToUpperCase(name);
+		if(!isMany){
+			value= "a"+ value;
+		}
+		return value;
+	}
+	
+	String numberOfInstance(String name){
+		return numberOfInstance(name, false);
+	}
+	
+	String numberOfInstance(String name, Boolean isRemote){
+		String instance= "numberOf"+ StringUtil.firstCharacterToUpperCase(name);
+		return isRemote?"_"+instance: instance;
+	}
+	
+	String minimumNumberOfInstance(String name){
+		return minimumNumberOfInstance(name, false);
+	}
+	
+	String minimumNumberOfInstance(String name, Boolean isRemote){
+		String instance= "minimumNumberOf"+ StringUtil.firstCharacterToUpperCase(name);
+		return isRemote?"_"+instance: instance;
+	}
+	
+	String hasInstance(String name){
+		return hasInstance(name, false);
+	}
+	
+	String hasInstance(String name, Boolean isRemote){
+		String instance= "has"+ StringUtil.firstCharacterToUpperCase(name);
+		return isRemote?"_"+instance: instance;
+	}
+	
+	String maximumNumberOfInstance(String name){
+		return maximumNumberOfInstance(name, false);
+	}
+	
+	String maximumNumberOfInstance(String name, Boolean isRemote){
+		String instance= "maximumNumberOf"+ StringUtil.firstCharacterToUpperCase(name);
+		return isRemote?"_"+instance: instance;
+	}
+	
+	String addInstance(String name){
+		return "add"+ StringUtil.firstCharacterToUpperCase(name);
+	}
+	
+	String addInstance(String name, Boolean isRemote){
+		String instance= "add"+ StringUtil.firstCharacterToUpperCase(name);
+		return isRemote?"_"+instance: instance;
+	}
+	
+	String copyOfInstance(String name){
+		return "copyOf"+ StringUtil.firstCharacterToUpperCase(name);
+	}
+	
+	String friendSetterInstance(String typeName, String otherEndTypeName){
+		return "set"+ StringUtil.firstCharacterToUpperCase(typeName)+ "_"+ StringUtil.firstCharacterToUpperCase(otherEndTypeName);
+	}
+	
+	String comparatorId(String type, String key){
+		return type+ "_"+key+ "_Comparator";
+	}
+}
+
+trait Processable{
+	
+	depend java.util.Arrays;
+	depend java.util.stream.Collectors;
+	
+	String preprocessingDefinition(String suffix){
+		String namespace= this.getNamespace();
+		String name= this.getName();
+		
+		if(namespace.isEmpty()){
+			return (name+"_"+suffix).toUpperCase();
+		}else{
+			return (namespace.replace("/", "_")+"_"+name+"_"+suffix).toUpperCase();
+		}
+	}
+	
+	String namespaceOpening(){
+		return namespaceOpening(getNamespace())+ NL;
+	}
+	
+	String namespaceClosing(){
+		return namespaceClosing(getNamespace())+ NL;
+	}
+	
+	String namespaceOpening(String namespace){
+		return namespace("_", null, "_BEGIN", namespace);
+	}
+	
+	String namespaceClosing(String namespace){
+		return namespace("_", null, "_END", namespace);
+	}
+	
+	String namespace(String join, String prepend, String append){
+		 return namespace(join, prepend, append, getNamespace());
+	}
+	
+	String namespace(String join, String prepend, String append, String namespace){
+		String _namespace= namespaceEnclosure(join, namespace);
+		if(_namespace.isEmpty()){
+			return _namespace;
+		}
+		
+		if(prepend != null){
+			_namespace= prepend+ _namespace;
+		}
+		
+		if(append != null){
+			_namespace= _namespace+ append;
+		}
+		
+		return _namespace;
+	}
+	
+	String preprocessingDefinitionName(){
+		String _namespace= namespaceEnclosure();
+		if(_namespace.isEmpty()){
+			_namespace= getGenPackage().getName();
+		}
+		_namespace= "DEF_"+ _namespace;	//A protection against package names that start with numbers; otherwise, this definition will be invalid
+		_namespace+= "_"+ getName();
+		return _namespace.toUpperCase();
+	}
+	
+	String qualifiedName(){
+		String fullPath= fullPath();
+		if(fullPath== null || fullPath.isEmpty()){
+			return getName();
+		}
+		
+		return fullPath+ "/"+ getName();
+	}
+	
+	String fullPath() {
+		String _namespace= getNamespace();
+		if(_namespace.isEmpty()){
+			_namespace= getGenPackage().getName();
+		}else{
+			_namespace= toPath(_namespace);
+		}
+		return _namespace;
+	}
+	
+	String toPath(value){
+		return value.replace(".", "/");
+	}
+	
+	String namespaceEnclosure(){
+		return namespaceEnclosure("_");
+	}
+	
+	String namespaceEnclosure(String join){
+		return namespaceEnclosure(join, getNamespace());
+	}
+	
+	String namespaceEnclosure(String join, String _namespace){
+		if(_namespace== null || _namespace.isEmpty()){
+			return "";
+		}
+		
+		String normalized= _namespace.replace("/", ".").replace("_", ".");
+		String[] splits = normalized.split("\\.");
+		_namespace= Arrays.asList(splits).stream().collect(Collectors.joining(join));
+		
+		return _namespace;
+	}
+	
+	String fullQualifiedName(){
+		return fullQualifiedName(getNamespace());
+	}
+	
+	String fullQualifiedName(String _namespace){
+		String name= this.getName();
+		
+		String normalizedNamespace= "";
+		if(!_namespace.isEmpty()){
+			normalizedNamespace= namespaceCallPath(_namespace)+ "::"+ name;
+		}else{
+			normalizedNamespace= name;
+		}
+		return normalizedNamespace;
+	}
+	
+	String namespaceCallPath(String _namespace){
+		return _namespace.replace(".", "::").replace("_", "::");
+	}
+}
+
+class GenDepend{isA Processable;}
+class GenClass{isA Processable;}
+class GenPackage{isA Processable, TypeHelper, NameHelper;}

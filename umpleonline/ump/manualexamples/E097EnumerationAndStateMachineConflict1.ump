@@ -1,0 +1,11 @@
+// This example generates the error because enumeration "Y" has the same name as state machine "Y"
+
+class X {
+ enum Y { Red, Blue, Green }
+ Y {
+  s1 { 
+    goToS2 -> s2;
+  }
+  s2 { }
+ }
+}

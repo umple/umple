@@ -1,0 +1,16 @@
+E225 Satisfaction of Bound Type
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to binding a type to a template parameter</h2>
+
+<p aligh = "justify">
+If clients bind types to the template parameters of used traits and the types exist but they do not satisfy the constraints of the template parameters, this error is raised. The constraint is related to inheritance.
+</p>
+
+
+@@example
+@@source manualexamples/E225SatisfactionOfConstraints.ump
+@@endexample

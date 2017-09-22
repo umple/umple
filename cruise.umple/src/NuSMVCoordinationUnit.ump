@@ -51,22 +51,35 @@ class NuSMVCoordinator
   	  	
   	private NuSMVModule generateParentModule( StateMachine sm, UmpleClass uClass ) {
   		  		
-			VarDeclaration vdec = new VarDeclaration( getStateList( sm ) );
-			vdec.addVariableSpecifier( getEventList( sm ) );
-			for( VariableSpecifier vs : generateSpecifiersForAttributesOf( uClass ) )
-				vdec.addVariableSpecifier(vs);
-			ModuleBody body = new ModuleBody( vdec );
+		VarDeclaration vdec = new VarDeclaration( getStateList( sm ) );
+		vdec.addVariableSpecifier( getEventList( sm ) );
+		for( VariableSpecifier vs : generateSpecifiersForAttributesOf( uClass ) )
+			vdec.addVariableSpecifier(vs);
+		
+		ModuleBody body = new ModuleBody( vdec );
   		body.addModuleElement( vdec );
+		
+		List<VariableSpecifier> specifiers = generateSpecifiersForInputAttributesOf( uClass );
+		if( specifiers.size() > 0) {
+			IVarDeclaration ivdec = new IVarDeclaration( specifiers.get(0) );
+			for( int i = 1; i < specifiers.size(); i++ )
+				ivdec.addVariableSpecifier( specifiers.get(i) );
+			body.addModuleElement( ivdec );
+			
+			//System.out.println("I am here!");
+		}
 		
   		//Adding define declaration to module body
   		body.addModuleElement( getDefineDeclaration( sm, uClass ) );
   		body.addModuleElement( getAssignConstraint( sm, sm) );
-			body.addModuleElement( getEventAssignConstraint( sm ) );
+		body.addModuleElement( getEventAssignConstraint( sm ) );
 		
-			//Adding assign constraints for all the attributes
-			for( AssignConstraint constraint : getAssignConstraint( uClass ))
-				body.addModuleElement( constraint );
-			//generateSpecForTransitionDeterminism( sm, body );
+		//Adding assign constraints for all the attributes
+		for( AssignConstraint constraint : getAssignConstraint( uClass ))
+			body.addModuleElement( constraint );
+		
+		
+		//generateSpecForTransitionDeterminism( sm, body );
   		NuSMVModule module = new NuSMVModule( changeNameCase( getAbsoluteName( sm, sm ), 1 ), body );
   		generateParameters( module, sm, sm ); 
   		return module;
@@ -1036,7 +1049,7 @@ class NuSMVCoordinator
 		List<AssignConstraint> constraints = new ArrayList<AssignConstraint>();
 		
 		for( Attribute attribute : uClass.getAllAttributes() ) {
-			if( !attribute.isConstant() ) {
+			if( !attribute.isConstant() && !attribute.isIsIvar() ) {
 				BasicExpression bexp = new BasicExpression("");
 			
 				if( attribute.getValue() != null ){
@@ -1463,30 +1476,48 @@ class NuSMVCoordinator
   		return vs;
   	}
 	
+	private void generateSpecifier( String type, VariableSpecifier vs, List<VariableSpecifier> attributes ) {
+		
+		switch( type ) {
+			case "Float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
+			case "Boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
+			case "Integer" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+			case "Long" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+			case "long" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+			case "Short" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+			case "short" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+			case "Double" : vs.addTypeSpecifier("real"); attributes.add( vs ); break;
+			case "double" : vs.addTypeSpecifier("real"); attributes.add( vs ); break;
+			case "float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
+			case "boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
+			case "int" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
+			default : vs.addTypeSpecifier(type); attributes.add( vs );
+		}
+	}
+	
+	//Generates the input variable section
+	private List<VariableSpecifier> generateSpecifiersForInputAttributesOf( UmpleClass uClass ){
+		List<VariableSpecifier> attributes = new ArrayList<VariableSpecifier>();
+		
+		for( Attribute attribute : uClass.getAllAttributes() ){
+			if( attribute.isIsIvar() ) { 
+				VariableSpecifier vs = new VariableSpecifier( attribute.getName() );
+				String type = attribute.getFullType();
+				generateSpecifier( type, vs, attributes );
+			}
+		}
+		return attributes;
+	}
+	
 	private List<VariableSpecifier> generateSpecifiersForAttributesOf( UmpleClass uClass ){
 		List<VariableSpecifier> attributes = new ArrayList<VariableSpecifier>();
 		
 		for( Attribute attribute : uClass.getAllAttributes() ){
-			if( !attribute.isConstant() ) { 
+			if( !attribute.isConstant() && !attribute.isIsIvar() ) { 
 				VariableSpecifier vs = new VariableSpecifier( attribute.getName() );
 				String type = attribute.getFullType();
-	
-				switch( type ) {
-					case "Float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
-					case "Boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
-					case "Integer" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
-					case "Long" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
-					case "long" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
-					case "Short" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
-					case "short" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
-					case "Double" : vs.addTypeSpecifier("real"); attributes.add( vs ); break;
-					case "double" : vs.addTypeSpecifier("real"); attributes.add( vs ); break;
-					case "float" : vs.addTypeSpecifier("real"); attributes.add( vs ); break; 
-					case "boolean" : vs.addTypeSpecifier("boolean"); attributes.add( vs ); break;
-					case "int" : vs.addTypeSpecifier("integer"); attributes.add( vs ); break;
-					default : ;
-				}
-      }
+				generateSpecifier( type, vs, attributes );
+			}
 		}
 		return attributes;
 	}

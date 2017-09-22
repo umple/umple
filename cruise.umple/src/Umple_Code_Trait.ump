@@ -325,6 +325,15 @@ class UmpleTrait {
 		}
 		return -1;
 	}
+	
+	public GeneralTemplateParameter getGeneralTemplateParameterByName(String name) {
+    for (int i = 0; i<numberOfGeneralTemplateParameters();i++) {
+      if(getGeneralTemplateParameter(i).getName().equals(name)) {
+        return getGeneralTemplateParameter(i);
+      }
+    }
+    return null;
+  }
 //--------------------------------------------------------------------------------------
 //------------------------------------end-----------------------------------------------
   

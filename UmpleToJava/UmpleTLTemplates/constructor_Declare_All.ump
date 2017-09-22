@@ -19,16 +19,22 @@ class UmpleToJava {
     }
   }
   String componentSignature="";
+  String componentSignatureCaller="";
   String distributedConstructorCheckCode="";
   String lastArgumentComma="";
   if(uClass.getIsDistributed()&&model.getDistributePattern()==0)
   {    
-    
-    if (!gClass.getLookup("constructorSignature_caller").equals(""))
-      lastArgumentComma=",";
+    if(!uClass.isRoot()&& uClass.getExtendsClass().getIsDistributed())
+    {
+      if (!gClass.getParentClass().getLookup("constructorSignature_caller").equals(""))
+        componentSignatureCaller=",umpleComponent";
+      else
+        componentSignatureCaller="umpleComponent";  
+    }
     if(!gClass.getLookup("constructorSignature").equals(""))
     {
-      componentSignature=", UmpleRuntime.UmpleComponent umpleComponent";
+      lastArgumentComma=",";
+      componentSignature=", UmpleRuntime.UmpleComponent umpleComponent";      
     }
     else
     {

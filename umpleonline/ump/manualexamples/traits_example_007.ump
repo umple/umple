@@ -1,0 +1,15 @@
+/*
+	Example 2: showing how one template parameter in a trait is bound to another one.
+*/
+trait T1<TP>{
+  void method1();
+  void method2(TP data) {/*implementation*/}
+}
+trait T2<TP>{
+  isA T1< TP = TP >;
+  void method3(TP Data) {/*implementation*/}
+}
+class C1{
+  isA T2< TP = String >;
+  void method1(){/*implementation*/}
+}

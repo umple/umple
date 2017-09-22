@@ -1,0 +1,11 @@
+// This example generates the error since enumeration "Y" conflicts with trait "Y"
+
+class X {
+ isA Y;
+}
+
+trait Y { 
+  name;
+}
+
+enum Y { Red, Blue, Green }

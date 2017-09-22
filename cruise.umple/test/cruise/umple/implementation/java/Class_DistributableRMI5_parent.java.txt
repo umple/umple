@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 // line 6 "../../Class_DistributableRMI5.ump"
 // line 28 "../../Class_DistributableRMI5.ump"
-public class Client implements java.io.Serializable,IClientImpl
+public class Client implements java.io.Serializable, IClientImpl
 {
 
   //------------------------
@@ -16,10 +16,10 @@ public class Client implements java.io.Serializable,IClientImpl
   //------------------------
 
   //Client Attributes
-  private String id;
+  private  transient String id;
 
   //Client Associations
-  private List<Microwave> microwaves;
+  private transient  List<Microwave> microwaves;
 
   //------------------------
   // CONSTRUCTOR
@@ -27,11 +27,17 @@ public class Client implements java.io.Serializable,IClientImpl
 
   public Client(UmpleRuntime.UmpleComponent umpleComponent)
   {
-    if(!umpleComponent.getName().equals("local"))    {
-    if(this instanceof Client)
-        realObject=UmpleRuntime.getInstance().addClient( umpleComponent, this);
+    if(umpleComponent.getNode().getId()!=UmpleRuntime.getThisNodeId())
+    {
+      if(this.getClass()== Client.class)
+        UmpleRuntime.getInstance().newClient( umpleComponent, this);
 
-      return;    }
+      return;
+    }
+    else
+    {
+      UmpleRuntime.getInstance().newClient(this);
+    }
 
     id = "s";
     microwaves = new ArrayList<Microwave>();
@@ -207,16 +213,12 @@ public class Client implements java.io.Serializable,IClientImpl
     return super.toString() + "["+
             "id" + ":" + getId()+ "]";
   }
-
-  IClientImpl realObject=this;
   public void setRealObject(IClientImpl aObject)
   {
     realObject=aObject;
   }
-  public IClientImpl getRealObject()
-  {
-    return realObject;
-  }
+
+  transient IClientImpl realObject=this;
   public Client()
   {
 
@@ -328,11 +330,31 @@ this(UmpleRuntime.getComponent("Client"));
     catch(Exception e) {System.err.println(e.toString());}
   }
 
-  public boolean equals(Object obj)
+  protected  IClientImpl remoteObject;  
+  public void setRemoteObject(IClientImpl aRemoteObject)
   {
-    if(obj==null)
-      return false;
-    if(obj.getClass()!=this.getClass())
+    remoteObject=aRemoteObject;
+  }
+  public IClientImpl getRemoteObject()
+  {
+    return (IClientImpl)remoteObject;
+  }
+  private void readObject(java.io.ObjectInputStream in) throws Exception
+  {
+    try
+    {
+      in.defaultReadObject();
+      realObject=(IClientImpl)remoteObject;
+    }
+    catch(Exception e)
+    {
+      throw e;
+    }
+    
+  }
+ 
+  public boolean equals(Object obj)
+  {    if(obj.getClass()!=this.getClass())
       return false;
     return (getHashCode()==((Client)obj).getHashCode());
   }

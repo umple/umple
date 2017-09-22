@@ -1,13 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.24.0-dab6b48 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package distributed.rmi4;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.io.Serializable;
 
-public class MicrowaveImpl extends CC implements IMicrowaveImpl
+// line 13 "../../Class_DistributableRMI4.ump"
+public class MicrowaveImpl extends CC implements java.io.Serializable , IMicrowaveImpl
 {
 
   //------------------------
@@ -18,32 +18,18 @@ public class MicrowaveImpl extends CC implements IMicrowaveImpl
   // CONSTRUCTOR
   //------------------------
 
-  public MicrowaveImpl(Microwave proxy)
+  public MicrowaveImpl()
   {
-    realSelf=proxy;
-    realSelf.setRealObject(this);
-    while(true)
-    {
-      try
-      {  
-        UnicastRemoteObject.exportObject(this,0);
-        break;
-      } 
-      catch (Exception e)
-      {
-        System.err.println("Server Exception: " + e.toString());
-      }
-    } 
     super();
   }
   //------------------------
   // Reference to the proxy
   //------------------------
-  Microwave realSelf;
+  Microwave self;
   
-  public void setRealSelf(Microwave self)
+  public void setSelf(Microwave proxy)
   {
-    realSelf=self;
+    self=proxy;
   }
 
   //------------------------
@@ -63,6 +49,7 @@ public class MicrowaveImpl extends CC implements IMicrowaveImpl
     super.delete();
   }
 
+  // line 18 "../../Class_DistributableRMI4.ump"
    public int method1(int f){
     return f*2;
   }

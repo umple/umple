@@ -1,0 +1,59 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+package ecommerceWS;
+import javax.jws.WebService;
+import ecommerceWS.Warehouse;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.Unmarshaller;
+import java.rmi.Remote;
+import ecommerceWS.Customer;
+import java.net.URL;
+import ecommerceWS.SystemManager;
+import javax.xml.ws.Service;
+import ecommerceWS.Vendor;
+import java.rmi.RemoteException;
+import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAccessType;
+import ecommerceWS.Supplier;
+import javax.jws.WebMethod;
+import javax.jws.soap.SOAPBinding;
+import java.util.*;
+import javax.jws.soap.SOAPBinding.Style;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Endpoint;
+import javax.xml.bind.annotation.*;
+import ecommerceWS.Agent;
+  @WebService
+  @SOAPBinding(style = Style.RPC)
+
+public interface IUmpleRuntime extends Remote
+{
+  @WebMethod
+  public void stopNode();
+  
+  
+  @WebMethod
+public Warehouse createWarehouse(String aName)throws RemoteException;
+
+  
+  @WebMethod
+public Agent createAgent(String aName)throws RemoteException;
+
+  
+  @WebMethod
+public Supplier createSupplier(String aName)throws RemoteException;
+
+  
+  @WebMethod
+public Vendor createVendor(String aName)throws RemoteException;
+
+  
+  @WebMethod
+public Customer createCustomer(String aName)throws RemoteException;
+
+  
+  @WebMethod
+public SystemManager createSystemManager()throws RemoteException;
+
+}
+ 

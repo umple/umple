@@ -17,11 +17,12 @@ namespace cruise.umple.compiler;
 //----------------------------------------------------------
 class UmpleClass {	
 	depend java.util.*;
-
+	
 	0..1 -- * Port;
   	0..1 -- * ActiveMethod;
   	0..1 -- * PortBinding;
   	PortBindingInformation [] portBindingInformation;
+  	Boolean portClass = false;
   	
   	public Port getPort(String name){
     	for (Port aPort : getPorts())
@@ -66,11 +67,14 @@ class Port {
 }
 
 class PortBindingInformation {
+	depend cruise.umple.parser.Position;
 	fromPortClass;
 	fromPort;
 	toPortClass;
 	toPort;
 	code;
+  	lazy Position position;
+  	lazy Position endPosition;
 }
 
 class PortBinding
@@ -78,8 +82,8 @@ class PortBinding
   * -- 1 Port fromPort;  
   * connector -- 1 Port toPort;
   
-  lazy Attribute fromSubcomponent;
-  lazy Attribute toSubcomponent; 
+  lazy UmpleVariable fromSubcomponent;
+  lazy UmpleVariable toSubcomponent; 
   
   * -> 0..1 AnonymousFunction specialHandler; // Incompatible Types Handling
 }
@@ -157,7 +161,8 @@ class ActiveMethod
 	0..1 -> * Monitor watchList;
   	1 -> 0..* MethodParameter;
   	1 -> * Comment;
-  	1 -> 1..2 ActiveDirectionHandler methodBody;
+  	ActiveDirectionHandler methodBody;
+  	ActiveMethod inverseMethodBody;
 }
 
 class ActiveDirectionHandler

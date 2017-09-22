@@ -1,0 +1,304 @@
+/*
+ * Issue 1008 
+ * This file defines all of the methods required to process enumerations
+ * in Umple
+ */
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+  final String AUTO_GENERATED_METHOD = "fAutoAPI";
+  /*
+   * Issue 1008 - Analyze enumerations defined at the top-level of an Umple Model
+   */
+   private void analyzeEnumerationToken(Token t, int analysisStep) {
+     if (analysisStep != 1)
+     {
+       return;
+     }
+   
+     if (t.is("enumerationDefinition"))
+     {
+       analyzeEnumeration(t);
+     }
+   }
+   
+   /*
+    * Issue 1008 - Add enumerations defined at the top-level of an Umple Model to model
+    */
+   private void analyzeEnumeration(Token enumToken){
+    // Check if the enumeration has already been defined in the model. If it does, raise E095 Duplicate Enumerations
+    if (model.hasEnum(enumToken.getSubToken("name").getValue())) {
+      getParseResult().addErrorMessage(new ErrorMessage(95, enumToken.getPosition(), enumToken.getSubToken("name").getValue(), "" + enumToken.getPosition().getLineNumber()));
+      return;
+    }
+    
+    UmpleEnumeration umpleEnum = new UmpleEnumeration(enumToken.getSubToken("name").getValue());
+    umpleEnum.setPosition(enumToken.getPosition());
+     for (Token subToken : enumToken.getSubTokens()) {
+       if (subToken.is("enumValue")) {
+         umpleEnum.addEnumValue(subToken.getValue());
+       }
+     }     
+     model.addEnum(umpleEnum);
+  }
+   
+  /* 
+   * Issue 1008
+   * Process "enumerationDefinition" tokens, convert them into UmpleEnumeration objects
+   * and then add them to aClass
+   */
+  private void analyzeEnumeration(Token enumToken, UmpleClass aClass)
+  {
+    // Check if the enumeration has already been defined in the class. If it does, raise E095 Duplicate Enumerations
+    if (aClass.hasEnum(enumToken.getSubToken("name").getValue())) {
+      getParseResult().addErrorMessage(new ErrorMessage(95, enumToken.getPosition(), enumToken.getSubToken("name").getValue(), "" + enumToken.getPosition().getLineNumber()));
+      return;
+    }
+    
+    UmpleEnumeration umpleEnum = new UmpleEnumeration(enumToken.getSubToken("name").getValue());
+    umpleEnum.setPosition(enumToken.getPosition());
+    for (Token subToken : enumToken.getSubTokens()) {
+      if (subToken.is("enumValue")) {
+        umpleEnum.addEnumValue(subToken.getValue());
+      }
+    }     
+    aClass.addEnum(umpleEnum);
+  }
+  
+  /*
+   * Issue 1008 - Check for any warnings or errors caused by enumerations
+   */
+  private void postTokenEnumerationAnalysis() {
+    if (model.hasEnums()) {
+      postTokenModelEnumerationAnalysis();
+    }
+   
+    for (UmpleClass uClass : model.getUmpleClasses()) {
+      postTokenClassEnumerationAnalysis(uClass);
+    }
+  }
+  
+  /*
+   * Issue 1008 - Check for any warnings or errors caused by model enumerations
+   */
+  private void postTokenModelEnumerationAnalysis(){
+    for (UmpleEnumeration uEnum : model.getEnums()) {
+      // Check that the enumeration doesn't conflict with any interfaces
+      for (UmpleInterface uI : model.getUmpleInterfaces()) {
+        if (uEnum.hasSameName(uI.getName())) {
+          // Enumeration Naming Conflict
+          getParseResult().addErrorMessage(new ErrorMessage(96,
+                                                            uEnum.getPosition(), 
+                                                            uEnum.getName(), 
+                                                            "" + uEnum.getPosition().getLineNumber(),
+                                                            "" + uI.getPosition(0).getLineNumber()));
+          return;
+        }
+      }
+      
+      // Check that the enumeration doesn't conflict with any traits
+      for (UmpleTrait uT : model.getUmpleTraits()) {
+        if (uEnum.hasSameName(uT.getName())) {
+          // Enumeration Naming Conflict
+          getParseResult().addErrorMessage(new ErrorMessage(96,
+                                                            uEnum.getPosition(), 
+                                                            uEnum.getName(), 
+                                                            "" + uEnum.getPosition().getLineNumber(),
+                                                            "" + uT.getPosition(0).getLineNumber()));
+          return;
+        }
+      }
+      
+      for (UmpleClass uClass : model.getUmpleClasses()) {
+        if (uEnum.hasSameName(uClass.getName())) {
+         // Enumeration Naming Conflict
+         getParseResult().addErrorMessage(new ErrorMessage(96,
+                                                           uEnum.getPosition(), 
+                                                           uEnum.getName(), 
+                                                           "" + uEnum.getPosition().getLineNumber(),
+                                                           "" + uClass.getPosition(0).getLineNumber()));
+         return;
+        }
+        if (!uClass.hasEnum(uEnum.getName())) {
+          analyzeModelEnumInClass(uClass, uEnum);
+        }
+      }
+    }
+  }
+  
+  /*
+   * Issue 1008 - Check for any warnings or errors caused by class enumerations
+   */
+  private void postTokenClassEnumerationAnalysis(UmpleClass uClass) {
+    for (UmpleEnumeration uEnum : uClass.getEnums()) {
+      if (uEnum.hasSameName(uClass.getName())) {
+        // Naming Conflict Between Enumeration and Class Error
+         getParseResult().addErrorMessage(new ErrorMessage(96,
+                                                           uEnum.getPosition(), 
+                                                           uEnum.getName(), 
+                                                           "" + uEnum.getPosition().getLineNumber(),
+                                                           uClass.getName()));
+         return;
+      }
+      
+      UmpleClass otherClass = model.getUmpleClass(uEnum.getName());
+      
+      // Check if the class uses the enumeration in any of its methods' parameters
+      for (Method m : uClass.getMethods()) {
+        for (MethodParameter p : m.getMethodParameters()) {
+          if (!m.getSourceFullName().equals(AUTO_GENERATED_METHOD) && uEnum.hasSameName(p.getType()) && otherClass != null) {
+            // Method Parameter Ambiguity Warning
+            getParseResult().addErrorMessage(new ErrorMessage(102, 
+                                                              uEnum.getPosition(), 
+                                                              uEnum.getName(), 
+                                                              "" + uEnum.getPosition().getLineNumber(),
+                                                              p.getName(),
+                                                              m.getName(),
+                                                              "" + m.getPosition().getLineNumber(),
+                                                              otherClass.getName()));
+            
+          }
+        }
+      }
+      
+      // Check if the enumeration conflicts with any state machines, and if the enumeration is used as
+      // event parameters
+      for (StateMachine sm : uClass.getStateMachines()) {
+        if (uEnum.hasSameName(sm.getName())) {
+          // Enumeration Conflicts with State Machine Error
+          getParseResult().addErrorMessage(new ErrorMessage(97, 
+                                                            uEnum.getPosition(), 
+                                                            uEnum.getName(), 
+                                                            "" + uEnum.getPosition().getLineNumber(),
+                                                            sm.getName(),
+                                                            uClass.getName()));
+          return;
+        }
+        for (Event e : sm.getAllEvents()) {
+          for (MethodParameter p : e.getParams()) {
+            if (uEnum.hasSameName(p.getType()) && otherClass != null) {
+              // Event Parameter Ambiguity Warning
+              getParseResult().addErrorMessage(new ErrorMessage(103, 
+                                                                uEnum.getPosition(), 
+                                                                uEnum.getName(), 
+                                                                "" + uEnum.getPosition().getLineNumber(),
+                                                                p.getName(),
+                                                                e.getName(),
+                                                                sm.getName(),
+                                                                otherClass.getName()));
+            }
+          }
+        }
+      }
+      
+     // Check if the enumeration is used in any of the class's associations
+     String className = uClass.getName();
+     for (Association a : uClass.getAssociations()) {
+      validateEnumerationInAssociation(uEnum, a, className);
+     }
+    }
+  }
+  
+  /*
+   * Issue 1008 - A helper function used to detect if a model enumeration raises any warnings or errors
+   * in a class
+   */
+   private void analyzeModelEnumInClass(UmpleClass uClass, UmpleEnumeration uEnum){
+    String className = uClass.getName();
+    boolean classUsesEnum = false;
+    
+    // Check if the class uses the enumeration in any of its attributes
+    for (Attribute a : uClass.getAttributes()) {
+      if (uEnum.hasSameName(a.getType())) {
+         classUsesEnum = true;
+      }
+    }
+     
+    // Check if the class uses the enumeration in any of its methods' parameters
+    for (Method m : uClass.getMethods()) {
+      for (MethodParameter p : m.getMethodParameters()) {
+        if (!m.getSourceFullName().equals(AUTO_GENERATED_METHOD) && uEnum.hasSameName(p.getType())) {
+           classUsesEnum = true;
+        }
+      }
+    }
+       
+     // Check if the class's state machines conflict with the enumeration, and if any of its state 
+     // machine's events use the enumeration in their parameters
+     for (StateMachine sm : uClass.getStateMachines()) {
+       if (classUsesEnum) {
+         if (uEnum.hasSameName(sm.getName())) {
+           // Enumeration Conflicts with State Machine Error
+           getParseResult().addErrorMessage(new ErrorMessage(97, 
+                                                             uEnum.getPosition(), 
+                                                             uEnum.getName(), 
+                                                             "" + uEnum.getPosition().getLineNumber(),
+                                                             sm.getName(),
+                                                             uClass.getName()));
+           return;
+         }
+       }
+       for (Event e : sm.getAllEvents()) {
+         for (MethodParameter p : e.getParams()) {
+           if (uEnum.hasSameName(p.getType())) {
+             if (!classUsesEnum && uEnum.hasSameName(sm.getName())) {
+               // Enumeration Conflicts with State Machine Error
+               getParseResult().addErrorMessage(new ErrorMessage(97, 
+                                                                uEnum.getPosition(), 
+                                                                uEnum.getName(), 
+                                                                "" + uEnum.getPosition().getLineNumber(),
+                                                                sm.getName(),
+                                                                uClass.getName()));
+               return;
+             } else {
+               classUsesEnum = true;
+           }
+         }
+       }
+      }
+     }
+     
+     if (classUsesEnum) {
+       for (Association a : uClass.getAssociations()) {
+         validateEnumerationInAssociation(uEnum, a, className);
+       }
+     }
+  }
+  
+  /*
+   * Issue 1008 - A helper function that determines if an enumeration is valid in an association
+   */
+  private void validateEnumerationInAssociation(UmpleEnumeration uEnum, Association a, String className){
+    for (AssociationEnd ae : a.getEnds()) {
+      if (uEnum.hasSameName(ae.getClassName())) {
+        if (a.getIsLeftComposition() || a.getIsRightComposition()) {
+          // Enumeration Used in Composition Error
+          getParseResult().addErrorMessage(new ErrorMessage(105, 
+                                                            uEnum.getPosition(), 
+                                                            uEnum.getName(), 
+                                                            "" + uEnum.getPosition().getLineNumber(),
+                                                            "" + a.getTokenPosition().getLineNumber(),
+                                                            className));
+        } else if (a.getIsLeftNavigable() && a.getIsRightNavigable()) {
+          // Enumeration Used in Bi-Directional Association Error
+          getParseResult().addErrorMessage(new ErrorMessage(104, 
+                                                            uEnum.getPosition(), 
+                                                            uEnum.getName(), 
+                                                            "" + uEnum.getPosition().getLineNumber(),
+                                                            "" + a.getTokenPosition().getLineNumber(),
+                                                            className));
+        } else {
+          // Enumeration Used in Uni-Directional Association Warning
+          getParseResult().addErrorMessage(new ErrorMessage(106, 
+                                                            uEnum.getPosition(), 
+                                                            uEnum.getName(), 
+                                                            "" + uEnum.getPosition().getLineNumber(),
+                                                            "" + a.getTokenPosition().getLineNumber(),
+                                                            ae.getClassName()));
+        }
+      }
+    }
+  }
+}

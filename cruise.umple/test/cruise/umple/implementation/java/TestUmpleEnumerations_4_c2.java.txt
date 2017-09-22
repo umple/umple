@@ -1,0 +1,74 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class C2
+{
+
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
+  public enum Status { Married, Single, Divorced }
+  public enum Gender { Male, Female }
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //C2 Attributes
+  private Gender gender;
+  private Status status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public C2(Gender aGender, Status aStatus)
+  {
+    gender = aGender;
+    status = aStatus;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setGender(Gender aGender)
+  {
+    boolean wasSet = false;
+    gender = aGender;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setStatus(Status aStatus)
+  {
+    boolean wasSet = false;
+    status = aStatus;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public Gender getGender()
+  {
+    return gender;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "gender" + "=" + (getGender() != null ? !getGender().equals(this)  ? getGender().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null");
+  }
+}

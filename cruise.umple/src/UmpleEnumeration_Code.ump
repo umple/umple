@@ -1,0 +1,7 @@
+class UmpleEnumeration {
+  depend cruise.umple.util.*;
+  
+  public boolean hasSameName(String comparison) {
+    return this.name.equals(comparison) || StringFormatter.toPascalCase(this.name).equals(StringFormatter.toPascalCase(comparison));
+  }
+}

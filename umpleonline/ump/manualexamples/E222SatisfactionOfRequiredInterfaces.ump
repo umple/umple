@@ -1,0 +1,13 @@
+// In this example, there is an error because class C must implement required interface of trait T, which is interface I.
+trait T{
+  /*implementation*/
+  isA I;
+}
+interface I{
+  /*implementation*/
+}
+class C{
+  isA T;
+  /*implementation*/
+}
+

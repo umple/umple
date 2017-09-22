@@ -275,6 +275,11 @@ class UmpleInternalParser
         unanalyzedInvariants.put(aClass, new ArrayList<Token>());
       }
       unanalyzedInvariants.get(aClass).add(token);
+    }
+    else if (token.is("enumerationDefinition"))
+    {
+      // Issue 1008
+      analyzeEnumeration(token, aClass);
     }    
     else if (token.is("exception"))
     {
@@ -287,7 +292,7 @@ class UmpleInternalParser
     {
       lastComments.clear();
     }
-  }    
+  }  
 
   /**
    * Analyzes a comment to determine if it should be added into the list of currently parsed comments waiting to be added to
@@ -380,8 +385,46 @@ class UmpleInternalParser
       // this method sets the isDistributed flag for classes.
         analyzeDistributedClasses();
         setParentClassesDefaultInterface();
+        checkAssociationsForDistributed(); 
+        //checkDistributedAssociations();
     }
   }
+private void checkAssociationsForDistributed()
+{
+  if(model.getDistributed()){
+    for (Association association : model.getAssociations()) 
+    {  
+      if (associationIsBetweenClassAndInterface (association)){continue;} 
+      if (associationIsBetweenClassAndTrait(association)){continue;} 
+      
+      AssociationEnd myEnd = association.getEnd(0);
+      AssociationEnd yourEnd = association.getEnd(1);
+    
+      if(getModel().getUmpleTraitTypeParameter(myEnd.getClassName()) || getModel().getUmpleTrait(myEnd.getClassName())!=null) return ;
+      if(getModel().getUmpleTraitTypeParameter(yourEnd.getClassName()) || getModel().getUmpleTrait(yourEnd.getClassName())!=null) return ;
+    
+      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
+      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
+      if(myClass.getIsDistributed()&& !yourClass.getIsDistributed()&&association.getIsRightNavigable())
+      {
+        getParseResult().addErrorMessage(new ErrorMessage(7002,association.getTokenPosition(),myClass.getName(),yourClass.getName()));
+      }
+
+    }
+}
+}
+
+private void checkDistributedAssociations()
+{
+  for (UmpleClass uClass:  model.getUmpleClasses())
+  {
+    if(uClass.getIsDistributed())
+    {
+    }
+  }
+}
+
+
 
 /*
 * Parent of each class that has default interface must have default interface.
@@ -1059,7 +1102,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       aClass.setIsSingleton(true);
     }
-    // If the "DistributableRMI" keyword is parsed, make the Umple class Distributable.
+    // If the "Distributable" keyword is parsed, make the Umple class Distributable.
     if (classToken.getValue("distributable") != null)
     {
       aClass.setIsDistributable(true);
@@ -1123,8 +1166,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         String name = extendsToken.getValue("extendsName") != null?extendsToken.getValue("extendsName"):extendsToken.getValue("extendsNames");
         extendsList.add(name);
         extendsTokenList.add(extendsToken); // With this line we really don't need the above, todo: refactor
-        unlinkedExtends.put(aClassifier, extendsList);
-        unlinkedExtendsTokens.put(aClassifier, extendsTokenList);
+        if (unlinkedExtends.containsKey(aClassifier)){
+          if (!unlinkedExtends.get(aClassifier).contains(name)) unlinkedExtends.get(aClassifier).add(name);
+        } else{
+          unlinkedExtends.put(aClassifier, extendsList);
+        }       
+        if (unlinkedExtendsTokens.containsKey(aClassifier)){
+          if (!unlinkedExtendsTokens.get(aClassifier).contains(extendsToken)) unlinkedExtendsTokens.get(aClassifier).add(extendsToken);
+        } else{
+          unlinkedExtendsTokens.put(aClassifier, extendsTokenList);
+        }
         extendName = extendsToken.getValue("extendsName");
       } else if (extendsToken.getValue("gTemplateParameter") !=null ){
     	  processGTemplateParameterAssignment(extendsToken, aClassifier, extendName);
@@ -3785,6 +3836,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
+    boolean isIvar = attributeToken.getValue("ivar") != null;
     boolean isConstant = "const".equals(attributeToken.getValue("modifier"));
     boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
     boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
@@ -3936,6 +3988,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aClass);
     attribute.setIsUnique(isUnique);
     attribute.setIsLazy(isLazy);
+	attribute.setIsIvar(isIvar);
     boolean isList = attributeToken.getValue("list") != null;
 
     if (name == null)

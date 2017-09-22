@@ -7,6 +7,7 @@ use attribute_Set_All.ump;
 use class_MethodDeclaration.ump;
 use constructor_Declare_All.ump;
 use delete_All.ump;
+use enumerations_All.ump;
 use equals.ump;
 use import_packages.ump;
 use members_AllAssociations.ump;
@@ -92,15 +93,32 @@ class JavaClassGenerator {
 <<# if (uClass.numberOfComments() > 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } #>>
 <<# for (Position p : uClass.getPositions()) { #>>
 // line <<= p.getLineNumber() >> "<<= uClass.getRelativePath(p.getFilename(),"Java") >>"
-<<# } #>>
+<<# }
+if(model.getDistributed() && model.getDistributeTechnology().equals("WS")){
+if(model.getDistributePattern()==0 && uClass.getDistributeTechnology().equals("WS")){
+String classPackageName=(uClass.getPackageName().length() == 0 ? "" : uClass.getPackageName() + ".")+"I"+uClass.getName()+"Impl";
+#>>
+@WebService(endpointInterface = "<<#append(realSb,classPackageName);#>>")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(factoryMethod="umplenewInstance", propOrder={<<#if (uClass.getExtendsClass() == null||(uClass.getExtendsClass() != null && ! uClass.getExtendsClass().getIsDistributed()))
+    {
+    #>>"remoteUrl", "objectId", "remotePort"<<#
+    }#>>})
+<<#}  
+  else
+    appendln(realSb,NL+"@XmlAccessorType(XmlAccessType.FIELD)");
+}
+#>>
 public <<# if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
 boolean hasParentInterface=uClass.hasParentInterface();
 
 if(uClass.getNeedsDefaultInterface())
 {
   if (hasParentInterface == false){
-        if(model.getDistributePattern()==0)
-          append(realSb," implements java.io.Serializable,I"+uClass.getName()+"Impl");
+        if(model.getDistributePattern()==0){
+          append(realSb," implements java.io.Serializable");
+          append(realSb,", I"+uClass.getName()+"Impl");
+        }
         else if(model.getDistributePattern()==1&&uClass.getIsDistributed())
           append(realSb," implements java.io.Serializable , I"+uClass.getName());
         else if(model.getDistributePattern()==2)
@@ -109,11 +127,25 @@ if(uClass.getNeedsDefaultInterface())
       }
       else{
           if(model.getDistributePattern()==0)
-            append(realSb," ,java.io.Serializable,I"+uClass.getName()+"Impl");
+          {
+            append(realSb," ,java.io.Serializable");
+            append(realSb,", I"+uClass.getName()+"Impl");            
+          }
         else if(model.getDistributePattern()==1&&uClass.getIsDistributed())
           append(realSb," ,java.io.Serializable , I"+uClass.getName());
         else if(model.getDistributePattern()==2)
            append(realSb," ,java.io.Serializable ,I"+uClass.getName().substring(0,uClass.getName().length()-4));
+      } 
+}
+else if(model.getDistributed())
+{
+  if (hasParentInterface == false){
+        if(!uClass.getIsDistributed())
+          append(realSb," implements java.io.Serializable");
+      }
+      else{
+          if(!uClass.getIsDistributed())
+            append(realSb," ,java.io.Serializable");
       } 
 }
 
@@ -143,7 +175,9 @@ for (StateMachine smq : uClass.getStateMachines())
   
 #>>
 {
-  <<#getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
+  <<#
+  getEnumerationCode(realSb, model, uClass, isFirst);
+  getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
   getConstructorCode(realSb, model,uClass,gClass,gen,isFirst, false);
   getProxyReferenceCode(realSb, model,uClass);
   getDistributedMethodsCode(realSb, model,uClass);
@@ -156,7 +190,52 @@ for (StateMachine smq : uClass.getStateMachines())
   getExtraMethodsCode(realSb, model,uClass,gClass,gen,isFirst);
   getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
   return realSb;
-    } 
+    }
+    
+  private void getEnumerationCode(StringBuilder realSb, UmpleModel model, UmpleClass uClass, boolean isFirst)
+  {
+    #>><<@ UmpleToJava.enumerations_All >><<#
+  }
+  
+  /*
+   * Issue 1008 - A helper function to determine if a class uses an enum defined in the model
+   */
+  private boolean classUsesEnum(String enumName, UmpleClass uClass) 
+  {
+    // Check if the class has any attributes that use the enum
+     for (Attribute a : uClass.getAttributes()) {
+       if (a.getType().equals(enumName)) {
+         return true;
+       }
+     }
+     
+     // Check if the class has any methods that use the enum as their return type, or as parameters
+     for (Method m : uClass.getMethods()) {
+       if (m.getType().equals(enumName)) {
+         return true;
+       } else {
+         for (MethodParameter p : m.getMethodParameters()) {
+           if (p.getType().equals(enumName)) {
+             return true;
+           }
+         }
+       }
+      }
+     
+    // Check if the class has any event methods that use the enum in their parameters
+    for (StateMachine sm : uClass.getStateMachines()) {
+      for (Event e : sm.getEvents()) {
+        for (MethodParameter p : e.getParams()) {
+          if (p.getType().contentEquals(enumName)) {
+            return true;
+          }
+        }
+      }
+    }
+    
+    return false;
+  }
+   
     private String getDistributedMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
     {if(uClass.getHasProxyPattern()||uClass.getIsDistributed()){#>>
   //------------------------
@@ -178,16 +257,27 @@ for (StateMachine smq : uClass.getStateMachines())
   
   public void setSelf(<<=uClass.getName().substring(0,uClass.getName().length()-4)>> proxy)
   {
+  <<#if (uClass.getExtendsClass()!=null && uClass.getExtendsClass().getIsDistributed())
+  {
+  #>>
+    super.setSelf(proxy);
+    <<#}#>>
     self=proxy;
   }
 
     <<#}return realSb.toString();
     }
+  
     private String getMemberCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   { 
     String self="this";
+    
     if(uClass.getIsDistributed()&&model.getDistributePattern()==1)
       self="self";
+    String isTransient="";
+    if (uClass.getIsDistributed() && model.getDistributePattern()==0)
+      isTransient=" transient ";
+
   #>><<@ UmpleToJava.members_AllStatics >><<@ UmpleToJava.members_AllAttributes >><<@ UmpleToJava.members_AllStateMachines >><<@ UmpleToJava.members_AllDoActivities >><<@ UmpleToJava.members_AllAssociations >><<@ UmpleToJava.members_AllHelpers >>
   <<#return realSb.toString();
     }

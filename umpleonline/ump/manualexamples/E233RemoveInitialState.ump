@@ -1,0 +1,19 @@
+// In this example, there is an error because the initial state of a state machine cannot be removed.
+trait T {
+  sm{
+    s0{
+      e1-> s1;
+      s11{ e12-> s12; }
+      s12{ e11-> s11; }   
+    }
+    s1{ e0-> s1;  }  
+  }
+}
+class C {
+  isA T<-sm.s0>;
+}
+
+
+
+
+

@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package distributed.rmi3;
 import java.io.Serializable;
@@ -14,9 +14,12 @@ public class ClientRemote extends CCRemote implements IClientImpl
   {
     realObject=aObject;
   }
-  public Client getRealObject()
+  public ClientRemote()
+  {}
+  public ClientRemote(Client aObject)
   {
-    return realObject;
+    super(aObject);
+    realObject=aObject;
   }
   public int getHashCodeImpl()
   {

@@ -332,7 +332,9 @@ class UmpleConsoleMain
   
   private static void printUsage()
   {
-    System.out.println("Usage: java -jar umple.jar [options] <umple_file>"+System.lineSeparator()+"Example: java -jar umple.jar airline.ump");
+    System.out.println("For more detailed information go to http://manual.umple.org"+System.lineSeparator()
+      +"Usage: java -jar umple.jar [options] <umple_file>"+System.lineSeparator()
+      +"Example: java -jar umple.jar airline.ump");
     try
     {
       optparser.printHelpOn(System.out);
@@ -454,30 +456,225 @@ class UmpleRunMain
  *
  * TODO: Code smell - rename?
  */
-class PlaygroundMain 
+use AbstractServer.ump; 
+use ConnectionToClient.ump;
+ 
+class PlaygroundMain
 {
+  isA AbstractServer;
+  
   depend cruise.umple.sync.*;
   depend cruise.umple.compiler.*;
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.util.*;
   depend java.io.*;
   depend java.util.*;
+  depend java.net.*;
+  depend com.sun.management.OperatingSystemMXBean;
+  depend java.lang.management.*;
 
-  public static void main(String[] args)
+  Boolean isServer=false;
+  int commandsRun = 0;
+  static String[] previousCommand = new String[1];
+  static String[] lastCommand = new String[1];
+  static String[] currentCommand = new String[1];
+  static InetAddress previousIP = null;
+  static InetAddress lastIP = null;
+  static InetAddress currentIP = null;
+  static long lastCommandStartTime = 0;  
+  static long lastCommandEndTime = 0;
+  static long lastCommandElapsed = 0;
+  static long previousCommandElapsed = 0;
+  static long previousCommandEndTime = 0;
+  static long maxElapsed = 0;
+
+  static PlaygroundMain theInstance;
+
+  public PlaygroundMain(int port) 
+  {
+    super(port);
+    previousCommand[0]="";    
+    lastCommand[0]="";    
+    currentCommand[0]="";
+  }
+  
+  // The main method when started from the command line
+  public static void main(String[] args) {
+    theInstance = new PlaygroundMain(0);
+    theInstance.processCommand(args, null);
+  }
+    
+  // A command arriving when this is a server
+  public void handleMessageFromClient
+    (String msg, ConnectionToClient client)
+  {
+     // DEBUG Uncomment the following line to debug
+  //   System.err.println("Received client command <"+msg+">");
+    // Split the message from the client into tokens and process as a command
+    List<String> ls = ArgumentTokenizer.tokenize(msg,false);
+    lastCommandStartTime = System.currentTimeMillis();
+    processCommand(ls.toArray(new String[ls.size()]), client);
+    previousCommandElapsed=lastCommandElapsed;
+    previousCommandEndTime=lastCommandEndTime;    
+    lastCommandEndTime = System.currentTimeMillis();
+    lastCommandElapsed = lastCommandEndTime-lastCommandStartTime;
+    if (lastCommandElapsed > maxElapsed) {
+      maxElapsed = lastCommandElapsed;
+    }
+    
+    try {
+      client.close();
+    }
+    catch (IOException e) {
+    }    
+  } 
+  
+  public void returnCommandResult(String resultToOutput, ConnectionToClient client) {
+    if(isServer) {
+      // Client must not be null
+      try {
+        client.sendToClient(resultToOutput);
+      }
+      catch (IOException e) {
+        System.err.print("Unable to send to client "+resultToOutput);
+        // TO DO this is serious; should shut down?
+      }
+    }
+    else {
+      System.out.print(resultToOutput);
+    }
+  }
+
+  // Process arguments either from the command line, or through a socket
+  // If through a socket, the socket must be closed after returning
+  public void processCommand(String[] args, ConnectionToClient client)
   {
     String answer = "";
-
-    if (args.length == 0)
-    {
-      System.out.print("Invalid format, please try again specifying:\n");
-      System.out.print("-classList <filename>\n");
-      System.out.print("-interfaceList <filename>\n");
-      System.out.print("-source <filename>\n");
-      System.out.print("-generate <Ecore|Papyrus|TextUml|GvStateDiagram|GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|Violet|Umlet> <filename>\n");
-      System.out.print("<action> <deltaCode> <filename>\n");
-      return;
+    commandsRun++;
+    previousCommand = lastCommand;
+    previousIP = lastIP;
+    lastCommand = currentCommand;
+    lastIP = currentIP;
+    currentCommand = args;
+    if(client != null) {
+      currentIP = client.getInetAddress();
     }
 
+    if (args.length == 0 || ("-help".equals(args[0])) )
+    {
+      returnCommandResult("Syntax:\n", client);
+      returnCommandResult("-version  : give umple version running\n", client);
+      returnCommandResult("-help  : give command line syntax\n", client);
+      returnCommandResult("-classList <filename>\n", client);
+      returnCommandResult("-interfaceList <filename>\n", client);
+      returnCommandResult("-source <filename>  : generate code using an embedded generate directive\n", client);
+      returnCommandResult("-server <port>  : start this as a server to take commends\n", client);
+      returnCommandResult("-quit  : quit if running as a server\n", client);
+
+      
+      returnCommandResult("-generate "+
+        "<Java|Cpp|Ruby|Ecore|Papyrus|TextUml|GvStateDiagram|"+
+        "GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|"+
+        "Alloy|NuSMV|Violet|Umlet> <filename>\n", client); // Compile filename and generate output
+      returnCommandResult("<action> <deltaCode> <filename>\n", client);  
+      return;
+    }
+    
+    if ("-version".equals(args[0])) {
+      returnCommandResult("Version: " + UmpleModel.VERSION_NUMBER+"\n", client);
+      return;
+    }    
+
+    if ("-log".equals(args[0])) {
+      if(isServer) {
+          returnCommandResult("Number of commands run since start: "+commandsRun+"\n\n", client);
+               
+          returnCommandResult("JVM uptime seconds: "
+            +ManagementFactory.getRuntimeMXBean().getUptime()/1000+"\n\n", client);
+
+          returnCommandResult("Number of clients working: "
+            +getClientConnections().length+"\n\n", client);
+
+          OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);         
+          returnCommandResult("CPU load % of this JVM: "
+            +(String.format("%.3f",100.0*osBean.getProcessCpuLoad()))
+            +"\n\n", client);   
+          returnCommandResult("CPU load % overall: "
+            +(String.format("%.3f",100.0*osBean.getSystemCpuLoad()))
+            +"\n\n", client);  
+
+          returnCommandResult("Max elapsed ms of any command: "+maxElapsed+"\n\n", client);
+
+          returnCommandResult("Port: "+getPort()+"\n\n", client);
+          
+          returnCommandResult("Version: " + UmpleModel.VERSION_NUMBER+"\n\n", client);
+
+          if(lastIP != null) {
+            returnCommandResult("Last command      from "
+              +lastIP+" ("+lastIP.getCanonicalHostName()+")\n"
+              +" Elapsed "+lastCommandElapsed+"ms  Ended "
+              +(System.currentTimeMillis()-lastCommandEndTime)/1000+"s ago :\n"
+              +concatForLog(lastCommand)+"\n", client);
+          }
+
+          if(previousIP != null) {            
+            returnCommandResult("Previous command  from "
+              +previousIP+" ("+previousIP.getCanonicalHostName()+")\n"
+              +" Elapsed "+previousCommandElapsed+"ms  Ended "
+              +(System.currentTimeMillis()-previousCommandEndTime)/1000+"s ago :\n"
+              +concatForLog(previousCommand), client);
+          }
+
+      }
+      else {
+        returnCommandResult("Not running as a server\n", client);        
+      }
+      return;
+    }  
+
+    // Start a server to process a series of commands that can be controlled from Php
+    if ("-server".equals(args[0])) {
+      isServer = true;
+
+      // Start server on port 5556 if in a test environment, otherwise use port 5555
+      // Test environment means that the directory has 'test' in it
+      int port = 5555;
+      if(System.getProperty("user.dir").contains("test")) {
+        port = 5556;
+      }
+      
+
+      if(args.length >=2) {
+        try {
+         port = Integer.parseInt(args[1]);
+        }
+        catch (NumberFormatException e)
+        {}
+      }
+      setPort(port);
+      try 
+      {
+        this.listen(); //Start listening for connections
+      } 
+      catch (Exception ex) 
+      {
+        System.out.println("ERROR - Could not listen for clients!");
+      }
+      return;
+    }
+    
+    if ("-quit".equals(args[0])) {
+      if(isServer) {
+        try {
+          this.close();
+        }
+        catch (IOException e) {
+        }
+      }
+      System.exit(0);
+    }
+
+    // Anything other than -generate, and must have 3+ args
     if (args.length >= 3 && !"-generate".equals(args[0]))
     {
       String actionType = args[0];
@@ -489,7 +686,7 @@ class PlaygroundMain
       if (action != null)
       {
         action.go();
-        System.out.print(action.getUmpleCode());
+        returnCommandResult(action.getUmpleCode(), client);
         return;
       }
     }
@@ -497,7 +694,7 @@ class PlaygroundMain
     UmpleFile umpleFile = null;
     UmpleModel model = null;
 
-    // Valid values include Json, Yuml, Xmi, Ecore, Papyrus, TextUml,
+    // Valid values include Java, Cpp, PhP, Ruby, Json, Yuml, Xmi, Ecore, Papyrus, TextUml,
     // GvStateDiagram, GvStructureDiagram, GvClassDiagram,GvClassTraitDiagram, GvEntityRelationshipDiagram, Alloy, NuSMV
     if ("-generate".equals(args[0]) && args.length >= 2)
     {
@@ -519,6 +716,7 @@ class PlaygroundMain
     }
     else
     {
+      // All other commands have filename at second argument
       String filename = args[1];
       umpleFile = new UmpleFile(filename);
       model = new UmpleModel(umpleFile);
@@ -530,7 +728,17 @@ class PlaygroundMain
     }
     catch(UmpleCompilerException e)
     {
-      System.err.print(model.getLastResult().toJSON());
+      String errorToReport = model.getLastResult().toJSON();
+      if(client == null) {
+        System.err.print(errorToReport);
+      }
+      else {
+        try {
+          client.sendToClient("ERROR!!"+errorToReport+"!!ERROR");
+        }
+          catch (IOException e2) {
+        }
+      }
     }
 
     if ("-classList".equals(args[0]))
@@ -570,9 +778,33 @@ class PlaygroundMain
       answer = model.getCode();
     }
 
-    System.out.print(answer);
+    returnCommandResult(answer, client);
   }
-
+  
+  protected void serverStarted() {
+    // Uncomment the following to debug
+    // System.err.println("Umple server started on port "+getPort());
+    // System.err.println("Working directory "+System.getProperty("user.dir"));
+  }
+  
+  protected void serverStopped() {
+    // Uncomment the following to debug
+    // System.err.println("Umple server stopped accepting connections "+getPort());
+  }
+  
+  protected void serverClosed() {
+    // Uncomment the following to debug  
+    //  System.err.println("Umple server closed on port "+getPort());
+  }
+  
+  String concatForLog(String[] theCommand) {
+    String result = "";
+    for (String aString : theCommand) {
+      result = result+"  ["+aString+"]\n"; // not used often so OK to be inefficient
+    }
+    return result;
+  }
+    
   private static SynchronizationAction action(String type, String deltaCode, String umpleCode, String filename)
   {
     if ("-addClass".equals(type))
@@ -631,3 +863,5 @@ class PlaygroundMain
 }
 
 use Compiler.ump;
+use ArgumentTokenizer.ump;
+

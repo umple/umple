@@ -1,0 +1,15 @@
+class A{
+  isA T;
+}
+
+trait T<TP = String>{
+  sm{
+    s1{
+      e2(TP p) -> /{#TP# a;} s2;
+    }
+    s2{
+      
+    }
+  }
+}
+

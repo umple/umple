@@ -1,0 +1,11 @@
+// In this example, the "Status" enumeration is shared by the "GradStudent" and "UndergradStudent" class
+
+enum Status { FullTime, PartTime }
+
+class GradStudent {
+  Status status;
+}
+
+class UndergradStudent {
+  Status status;
+}

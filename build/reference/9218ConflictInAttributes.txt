@@ -6,7 +6,9 @@ noreferences
 
 <h2>Umple semantic error related to having an attribute with the same name in a traits and a class</h2>
 
-<p>When classes uses traits, all attributes in traits are flattened in classes. Therefore, if there are attributes with the same name, they might create a conflict. The Umple compiler considers this as a warning because it is the developers responsibilty to decide about the nature of the conflict. Sometimes, developers indicate exactly the same attributes and therefore there is no need to consider the conflict as an error. However,  generally, if there are some attributes in host classes which traits need to use them, traits define them as required methods (needed accessors). In this case, host classes need to have accessors for those attributes. In the case of this warning, the Umple compiler just removes one of those attributes and proceeds.     </p>
+<p align = "justify">
+When classes uses traits, all attributes in traits are flattened in classes. Therefore, if there are attributes with the same name, they might create a conflict. The Umple compiler considers this as a warning because it is the developers responsibilty to decide about the nature of the conflict. Sometimes, developers indicate exactly the same attributes and therefore there is no need to consider the conflict as an error. However,  generally, if there are some attributes in host classes which traits need to use them, traits define them as required methods (needed accessors). In this case, host classes need to have accessors for those attributes. In the case of this warning, the Umple compiler just removes one of those attributes and proceeds.
+</p>
 
 @@example
 @@source manualexamples/W218ConflictInAttributes1.ump

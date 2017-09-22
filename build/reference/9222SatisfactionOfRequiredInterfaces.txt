@@ -1,0 +1,16 @@
+E222 Satisfaction of Required Interfaces
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to satisfaction of required interfaces of traits</h2>
+
+<p align = "justify">
+When a class use traits, it needs to implement the required interfaces of those traits, otherwise, the Umple compiler detects missing interfaces and raises this error code. If a trait uses other traits with required interfaces, those required interfaces are added to the set of required interfaces of the trait and final clients are required to implement all of those required interfaces as well.
+</p>
+
+
+@@example
+@@source manualexamples/E222SatisfactionOfRequiredInterfaces.ump
+@@endexample

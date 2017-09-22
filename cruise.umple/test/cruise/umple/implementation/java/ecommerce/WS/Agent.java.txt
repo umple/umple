@@ -1,0 +1,236 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceWS;
+import java.io.Serializable;
+import javax.xml.namespace.QName;
+import java.net.URL;
+import javax.xml.ws.Service;
+import javax.xml.ws.Endpoint;
+import javax.jws.WebService;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.*;
+
+// line 34 "../ecommerceWS.ump"
+@WebService(endpointInterface = "ecommerceWS.IAgentImpl")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(factoryMethod="umplenewInstance", propOrder={"remoteUrl", "objectId", "remotePort"})
+public class Agent implements java.io.Serializable, IAgentImpl
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Agent Attributes
+  private  transient String name;
+
+  //Agent Associations
+  private transient  SystemManager systemManager;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Agent(String aName, UmpleRuntime.UmpleComponent umpleComponent)
+  {
+    if(umpleComponent.getNode().getId()!=UmpleRuntime.getThisNodeId())
+    {
+      if(this.getClass()== Agent.class)
+        UmpleRuntime.getInstance().newAgent(aName, umpleComponent, this);
+
+      return;
+    }
+    else
+    {
+      UmpleRuntime.getInstance().newAgent(this);
+    }
+
+    name = aName;
+  }
+  //------------------------
+  // Returning the Hashcode
+  //------------------------
+  public int getHashCodeImpl()
+  {
+    return hashCode();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setNameImpl(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getNameImpl()
+  {
+    return name;
+  }
+
+  public SystemManager getSystemManagerImpl()
+  {
+    return systemManager;
+  }
+
+  public boolean hasSystemManagerImpl()
+  {
+    boolean has = systemManager != null;
+    return has;
+  }
+
+  public boolean setSystemManagerImpl(SystemManager aSystemManager)
+  {
+    boolean wasSet = false;
+    SystemManager existingSystemManager = systemManager;
+    systemManager = aSystemManager;
+    if (existingSystemManager != null && !existingSystemManager.equals(aSystemManager))
+    {
+      existingSystemManager.removeAgent(this);
+    }
+    if (aSystemManager != null)
+    {
+      aSystemManager.addAgent(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void deleteImpl()
+  {
+    if (systemManager != null)
+    {
+      SystemManager placeholderSystemManager = systemManager;
+      this.systemManager = null;
+      placeholderSystemManager.removeAgent(this);
+    }
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "systemManager = "+(getSystemManager()!=null?Integer.toHexString(System.identityHashCode(getSystemManager())):"null");
+  }
+
+  transient IAgentImpl realObject=this;
+  public Agent(String aName)
+  {
+
+this(aName,UmpleRuntime.getComponent("Agent"));
+  }
+  public int getHashCode()
+  {
+    while(true)
+      try{
+        return realObject.getHashCodeImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setName(String aName)
+  {
+    while(true)
+      try{
+        return realObject.setNameImpl(aName);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public String getName()
+  {
+    while(true)
+      try{
+        return realObject.getNameImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public SystemManager getSystemManager()
+  {
+    while(true)
+      try{
+        return realObject.getSystemManagerImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasSystemManager()
+  {
+    while(true)
+      try{
+        return realObject.hasSystemManagerImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean setSystemManager(SystemManager aSystemManager)
+  {
+    while(true)
+      try{
+        return realObject.setSystemManagerImpl(aSystemManager);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void delete()
+  {
+    while(true)
+      try{
+        realObject.deleteImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+
+
+  public  String remoteUrl;
+  public  String objectId;
+  public  String remotePort; 
+  private static Agent umplenewInstance()
+  {
+    return new Agent((UmpleRuntime.UmpleNode)null);
+  }   
+
+  protected Agent (UmpleRuntime.UmpleNode node)
+  {
+  }
+
+  public void setRealObject(IAgentImpl aObject)
+  {
+    realObject=aObject;
+  }
+  void afterUnmarshal(Unmarshaller u, Object parent)
+  {
+    initializeConnection();
+  }
+  private void initializeConnection()
+  {
+    if(objectId.contains(Agent.class.getName()))
+    {  
+      boolean success = false;
+      while (!success) {        
+        try 
+        {
+          URL url = new URL(remoteUrl+":"+remotePort+"/Agent"+objectId+"?wsdl");
+          QName qname = new QName("http://ecommerceWS/","AgentService");
+          Service service = Service.create(url, qname);
+          setRealObject(service.getPort(IAgentImpl.class));
+          success = true;
+        } 
+        catch (Exception e) 
+        {
+          System.err.println("Client exception: " + e.toString());
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }
+      }
+    }
+  }
+ 
+  public boolean equals(Object obj)
+  {    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((Agent)obj).getHashCode());
+  }
+}

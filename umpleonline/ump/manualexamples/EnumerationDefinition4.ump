@@ -1,0 +1,11 @@
+// In this case, the "Month" enumeration defined in class A will be used in the generated code
+
+namespace example;
+
+enum Month {x,y,z}
+
+class A{
+  enum Month {o,p,q}
+  Month m;
+  Month p;
+}

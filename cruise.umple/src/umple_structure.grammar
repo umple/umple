@@ -11,7 +11,10 @@ portName : ( [~classname] . )? [name]
 portMultiplicity : [!portMultiplicity:\[[0-9]+\]]
 
 typedPortName : [~type]? [~portName] [[portMultiplicity]]?
-portDefinition : [=modifier:public|protected|private]? [=inverse:conjugated]? [=direction:in|out|port] [[typedPortName]] ;
+
+portDefinition : [[portClass]] | [[portDeclaration]]
+portClass- : [=port] ;
+portDeclaration : [=modifier:public|protected|private]? [=inverse:conjugated]? [=direction:in|out|port] [[typedPortName]] ;
 
 // Port Connectors
 portBindingDefinition :  ( [~fromClassname] . )? [fromPort] -> ( [~toClassname] . )? [toPort] [[bindinHandler]]
@@ -25,8 +28,9 @@ activeMethodDefinition :  [[portWatch]]? [=modifier:public|protected|private]? [
 activeMethodDeclarator : [~methodName] [[parameterList]]?
 
 //activeMethodBody : [[activeDirectionHandler]] { ( [[activeTrigger]] )* [**code] }
-activeMethodBody : [[activeDirectionHandler]]? { ( [[comment]] | [[activeTrigger]] | [**code] )* }
-activeDirectionHandler : [=direction:forward|inverse] ( , [=direction:forward|inverse] )*
+activeMethodBody : [[activeMethodBodyContent]] [[inverseDirectionHandler]]?
+inverseDirectionHandler : -> [[portWatch]]? [[activeMethodDeclarator]] [[activeMethodBodyContent]]
+activeMethodBodyContent : { ( [[comment]] | [[activeTrigger]] | [**code] )* }
 
 activeTrigger : [[hitchConstraint]]? [[constraintList]]? [=trigger:/] [[activeTriggerBody]] [[thenDefinition]]? [[resolveDefinition]]?
 activeTriggerBody- : ( [[deferredList]] | [[activeTriggerDefinition]] )

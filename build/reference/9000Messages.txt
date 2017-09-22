@@ -22,12 +22,12 @@ inconsistency, redundancy or assumption that may not be correct.</p>
 <hr>
 
 <p><i>For developers of Umple itself: The file defining the messages in English is called
-<a href="http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/en.error">
+<a href="https://github.com/umple/umple/blob/master/cruise.umple/src/en.error">
 en.error</a> and is  located in cruise.umple/src. Errors have severity 1 or 2, and warnings have severity 3, 4 and 5. When adding a message, a user manual 
 page should be added describing it.<br />
 
 All 
-messages should be detected in the <a href="http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/UmpleInternalParser_CodeClass.ump">parsing phase by calling setFailedPosition</a>.
+messages should be detected in the <a href="https://github.com/umple/umple/blob/master/cruise.umple/src/UmpleInternalParser_CodeClass.ump">parsing phase by calling setFailedPosition</a>.
 
 <br />
 It is intended in the future that 

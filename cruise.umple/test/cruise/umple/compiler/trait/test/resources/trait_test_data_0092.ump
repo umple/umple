@@ -1,0 +1,26 @@
+trait Mix1{
+void test1(){
+}
+}
+
+trait Mix2{
+void test2(){
+}
+}
+
+trait Mix3{
+void test3(){
+}
+}
+
+class A{
+isA Mix1;
+}
+
+class A{
+isA Mix2;
+}
+
+class A{
+isA Mix3;
+}

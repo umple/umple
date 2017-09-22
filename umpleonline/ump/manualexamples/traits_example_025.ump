@@ -1,0 +1,14 @@
+/*
+	Example 1: showing how traits are combined with Umple mixins.
+*/
+trait T1{
+  void method1();
+  void method2(){/*impl… */ }
+}
+trait T1{
+  void method3(){/*impl… */ }
+}
+class C1{
+  isA T1;
+  void method1(){/*impl… */ }    
+}

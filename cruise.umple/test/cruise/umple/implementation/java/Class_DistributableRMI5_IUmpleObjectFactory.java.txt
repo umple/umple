@@ -3,6 +3,7 @@
 package distributed.rmi5;
 import distributed.rmi5.Client;
 import java.rmi.Remote;
+import javax.jws.WebMethod;
 import java.applet.*;
 import java.util.*;
 import distributed.rmi5.Microwave;
@@ -11,12 +12,13 @@ import java.io.Serializable;
 
 public interface IUmpleRuntime extends Remote
 {
+  public void stopNode() throws RemoteException;
   
   
-  public IClientImpl newClient()throws RemoteException;
+  public IClientImpl createClient()throws RemoteException;
 
   
-  public IMicrowaveImpl newMicrowave(int aX, String aF)throws RemoteException;
+  public IMicrowaveImpl createMicrowave(int aX, String aF)throws RemoteException;
 
 }
  

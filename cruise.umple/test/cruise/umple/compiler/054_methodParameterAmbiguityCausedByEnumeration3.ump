@@ -1,0 +1,6 @@
+class X {
+  enum Z { Red, Blue, Green }
+  showY(Y param) { System.out.println(param); }
+}
+
+class Y { }

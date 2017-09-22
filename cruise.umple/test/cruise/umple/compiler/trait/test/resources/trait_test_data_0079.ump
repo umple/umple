@@ -1,0 +1,7 @@
+class A{
+  isA T<TP = Integer,TP2=String>;
+}
+trait T<TP = String,TP2 = Boolean>{
+  TP att;
+  TP2 att2;
+}

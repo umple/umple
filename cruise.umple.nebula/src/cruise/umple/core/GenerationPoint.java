@@ -31,20 +31,7 @@ public @interface GenerationPoint {
 	String group() default GenerationGroupDefinition.DEFAULT_GROUP;
 	boolean unique() default false;
 	boolean defaulted() default false;
-	String[] intercept() default {}; 
 	String[] ifConditionIds() default {};
 	String[] ifNotConditionIds() default {};
 	
-	public class InterceptorResponse{
-		private Object fValue;
-		
-		public InterceptorResponse(Object value) {
-			this.fValue = value;
-		}
-		
-		public Object getValue() {
-			return this.fValue;
-		}
-		
-	}
 }

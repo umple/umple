@@ -1,0 +1,18 @@
+trait T{
+  Boolean x = false;
+  status{
+    on{
+      e1-> on;
+      e2[x]->on;
+      e2[!x]-> off; 
+    }
+    off{
+      
+    }
+  }
+  
+}
+
+class A{
+  isA T< -status.on.e2()[x], +status.on.e2()[!x]>;
+}

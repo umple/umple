@@ -1,0 +1,15 @@
+E223 Availability of Types
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to availability of types used to constraint template parameters</h2>
+
+<p align = "justify">
+If traits define template parameters and put constraints on them, the classes and interfaces involved in the constraints must exist in the system under design, otherwise, this error is raised.
+</p>
+
+@@example
+@@source manualexamples/E223AvailabilityOfTypes.ump
+@@endexample

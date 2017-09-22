@@ -5,7 +5,7 @@ package distributed.rmi3;
 import java.io.Serializable;
 
 // line 5 "../../Class_DistributableRMI3.ump"
-public class Client extends CC implements ClientI ,java.io.Serializable,IClientImpl
+public class Client extends CC implements ClientI ,java.io.Serializable, IClientImpl
 {
 
   //------------------------
@@ -19,11 +19,17 @@ public class Client extends CC implements ClientI ,java.io.Serializable,IClientI
   public Client(UmpleRuntime.UmpleComponent umpleComponent)
   {
     super();
-    if(!umpleComponent.getName().equals("local"))    {
-    if(this instanceof Client)
-        realObject=UmpleRuntime.getInstance().addClient( umpleComponent, this);
+    if(umpleComponent.getNode().getId()!=UmpleRuntime.getThisNodeId())
+    {
+      if(this.getClass()== Client.class)
+        UmpleRuntime.getInstance().newClient( umpleComponent, this);
 
-      return;    }
+      return;
+    }
+    else
+    {
+      UmpleRuntime.getInstance().newClient(this);
+    }
 
   }
   //------------------------
@@ -43,16 +49,13 @@ public class Client extends CC implements ClientI ,java.io.Serializable,IClientI
     super.delete();
   }
 
-
-  IClientImpl realObject=this;
   public void setRealObject(IClientImpl aObject)
   {
+  super.setRealObject(aObject);
     realObject=aObject;
   }
-  public IClientImpl getRealObject()
-  {
-    return realObject;
-  }
+
+  transient IClientImpl realObject=this;
   public Client()
   {
 
@@ -76,11 +79,31 @@ this(UmpleRuntime.getComponent("Client"));
     catch(Exception e) {System.err.println(e.toString());}
   }
 
-  public boolean equals(Object obj)
+  protected  IClientImpl remoteObject;  
+  public void setRemoteObject(IClientImpl aRemoteObject)
   {
-    if(obj==null)
-      return false;
-    if(obj.getClass()!=this.getClass())
+    remoteObject=aRemoteObject;
+  }
+  public IClientImpl getRemoteObject()
+  {
+    return (IClientImpl)remoteObject;
+  }
+  private void readObject(java.io.ObjectInputStream in) throws Exception
+  {
+    try
+    {
+      in.defaultReadObject();
+      realObject=(IClientImpl)remoteObject;
+    }
+    catch(Exception e)
+    {
+      throw e;
+    }
+    
+  }
+ 
+  public boolean equals(Object obj)
+  {    if(obj.getClass()!=this.getClass())
       return false;
     return (getHashCode()==((Client)obj).getHashCode());
   }

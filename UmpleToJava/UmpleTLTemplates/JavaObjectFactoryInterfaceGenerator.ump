@@ -46,6 +46,7 @@ class JavaObjectFactoryInterfaceGenerator {
     packageSet.add("javax.jws.soap.SOAPBinding");
     packageSet.add("javax.jws.soap.SOAPBinding.Style");
   }
+  packageSet.add("javax.jws.WebMethod");
   for(UmpleClass uClass: model.getUmpleClasses())
   { GeneratedClass gClass = uClass.getGeneratedClass();
     for (Depend depend : uClass.getDepends())
@@ -88,6 +89,21 @@ import <<=packageName>>;
 
 public interface IUmpleRuntime extends Remote
 {
+  <<#
+    if(model.getDistributeTechnology().equals("WS"))
+  {
+  #>>
+  @WebMethod
+  public void stopNode();
+  <<#
+  }
+  if(model.getDistributeTechnology().equals("RMI"))
+  {
+  #>>
+  public void stopNode() throws RemoteException;
+  <<#
+  }
+  #>>
   <<@ UmpleToJava.objectFactory_add_Declare_All >>
 }
  !>>

@@ -1,0 +1,14 @@
+// In this example, the "Status" enumeration is shared by the "GradStudent" and "UndergradStudent" class
+// The "Semester" enumeration is only defined for the "UndergradStudent" class
+
+enum Status { FullTime, PartTime }
+
+class GradStudent {
+  Status status;
+}
+
+class UndergradStudent {
+  enum Semester { Spring, Summer, Fall, Winter }
+  Status status;
+  Semester semester;
+}

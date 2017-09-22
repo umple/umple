@@ -1,0 +1,516 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI0;
+import java.util.*;
+import java.io.Serializable;
+
+// line 60 "../ecommerceRMI0.ump"
+public class Vendor extends Agent implements java.io.Serializable, IVendorImpl
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Vendor Associations
+  private transient  List<Order> orders;
+  private transient  List<Customer> customers;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Vendor(String aName, UmpleRuntime.UmpleComponent umpleComponent)
+  {
+    super(aName,umpleComponent);
+    if(umpleComponent.getNode().getId()!=UmpleRuntime.getThisNodeId())
+    {
+      if(this.getClass()== Vendor.class)
+        UmpleRuntime.getInstance().newVendor(aName, umpleComponent, this);
+
+      return;
+    }
+
+    orders = new ArrayList<Order>();
+    customers = new ArrayList<Customer>();
+  }
+  //------------------------
+  // Returning the Hashcode
+  //------------------------
+  public int getHashCodeImpl()
+  {
+    return hashCode();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Order getOrderImpl(int index)
+  {
+    Order aOrder = orders.get(index);
+    return aOrder;
+  }
+
+  public List<Order> getOrdersImpl()
+  {
+    List<Order> newOrders = Collections.unmodifiableList(orders);
+    return newOrders;
+  }
+
+  public int numberOfOrdersImpl()
+  {
+    int number = orders.size();
+    return number;
+  }
+
+  public boolean hasOrdersImpl()
+  {
+    boolean has = orders.size() > 0;
+    return has;
+  }
+
+  public int indexOfOrderImpl(Order aOrder)
+  {
+    int index = orders.indexOf(aOrder);
+    return index;
+  }
+
+  public Customer getCustomerImpl(int index)
+  {
+    Customer aCustomer = customers.get(index);
+    return aCustomer;
+  }
+
+  public List<Customer> getCustomersImpl()
+  {
+    List<Customer> newCustomers = Collections.unmodifiableList(customers);
+    return newCustomers;
+  }
+
+  public int numberOfCustomersImpl()
+  {
+    int number = customers.size();
+    return number;
+  }
+
+  public boolean hasCustomersImpl()
+  {
+    boolean has = customers.size() > 0;
+    return has;
+  }
+
+  public int indexOfCustomerImpl(Customer aCustomer)
+  {
+    int index = customers.indexOf(aCustomer);
+    return index;
+  }
+
+  public static int minimumNumberOfOrders()
+  {
+    return 0;
+  }
+
+  public boolean addOrderImpl(Order aOrder)
+  {
+    boolean wasAdded = false;
+    if (orders.contains(aOrder)) { return false; }
+    Vendor existingVendor = aOrder.getVendor();
+    if (existingVendor == null)
+    {
+      aOrder.setVendor(this);
+    }
+    else if (!this.equals(existingVendor))
+    {
+      existingVendor.removeOrder(aOrder);
+      addOrder(aOrder);
+    }
+    else
+    {
+      orders.add(aOrder);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeOrderImpl(Order aOrder)
+  {
+    boolean wasRemoved = false;
+    if (orders.contains(aOrder))
+    {
+      orders.remove(aOrder);
+      aOrder.setVendor(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addOrderAtImpl(Order aOrder, int index)
+  {  
+    boolean wasAdded = false;
+    if(addOrder(aOrder))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
+      orders.remove(aOrder);
+      orders.add(index, aOrder);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveOrderAtImpl(Order aOrder, int index)
+  {
+    boolean wasAdded = false;
+    if(orders.contains(aOrder))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
+      orders.remove(aOrder);
+      orders.add(index, aOrder);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addOrderAt(aOrder, index);
+    }
+    return wasAdded;
+  }
+
+  public static int minimumNumberOfCustomers()
+  {
+    return 0;
+  }
+
+  public boolean addCustomerImpl(Customer aCustomer)
+  {
+    boolean wasAdded = false;
+    if (customers.contains(aCustomer)) { return false; }
+    customers.add(aCustomer);
+    if (aCustomer.indexOfVendor(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aCustomer.addVendor(this);
+      if (!wasAdded)
+      {
+        customers.remove(aCustomer);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeCustomerImpl(Customer aCustomer)
+  {
+    boolean wasRemoved = false;
+    if (!customers.contains(aCustomer))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = customers.indexOf(aCustomer);
+    customers.remove(oldIndex);
+    if (aCustomer.indexOfVendor(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aCustomer.removeVendor(this);
+      if (!wasRemoved)
+      {
+        customers.add(oldIndex,aCustomer);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addCustomerAtImpl(Customer aCustomer, int index)
+  {  
+    boolean wasAdded = false;
+    if(addCustomer(aCustomer))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCustomers()) { index = numberOfCustomers() - 1; }
+      customers.remove(aCustomer);
+      customers.add(index, aCustomer);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveCustomerAtImpl(Customer aCustomer, int index)
+  {
+    boolean wasAdded = false;
+    if(customers.contains(aCustomer))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCustomers()) { index = numberOfCustomers() - 1; }
+      customers.remove(aCustomer);
+      customers.add(index, aCustomer);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCustomerAt(aCustomer, index);
+    }
+    return wasAdded;
+  }
+
+  public void deleteImpl()
+  {
+    while( !orders.isEmpty() )
+    {
+      orders.get(0).setVendor(null);
+    }
+    ArrayList<Customer> copyOfCustomers = new ArrayList<Customer>(customers);
+    customers.clear();
+    for(Customer aCustomer : copyOfCustomers)
+    {
+      aCustomer.removeVendor(this);
+    }
+    super.delete();
+  }
+
+  // line 64 "../ecommerceRMI0.ump"
+   public Product findProductImpl(ProductType productType){
+    for(Warehouse w:getWarehouses())
+		{
+			Product p= w.findProduct(productType);
+			if(p!=null)
+				return p;		
+		}
+		return null;
+  }
+
+  // line 73 "../ecommerceRMI0.ump"
+   public Order makeOrderImpl(Customer aCustomer, Product aProduct){
+    if(aProduct==null)
+			return null;
+		Order aOrder= new Order(aProduct);
+		aOrder.setCustomer(aCustomer);
+		aOrder.setVendor(this);
+		return aOrder;
+  }
+
+  public void setRealObject(IVendorImpl aObject)
+  {
+  super.setRealObject(aObject);
+    realObject=aObject;
+  }
+
+  transient IVendorImpl realObject=this;
+  public Vendor(String aName)
+  {
+
+this(aName,UmpleRuntime.getComponent("Vendor"));
+  }
+  public int getHashCode()
+  {
+    while(true)
+      try{
+        return realObject.getHashCodeImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Order getOrder(int index)
+  {
+    while(true)
+      try{
+        return realObject.getOrderImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Order> getOrders()
+  {
+    while(true)
+      try{
+        return realObject.getOrdersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfOrders()
+  {
+    while(true)
+      try{
+        return realObject.numberOfOrdersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasOrders()
+  {
+    while(true)
+      try{
+        return realObject.hasOrdersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.indexOfOrderImpl(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public Customer getCustomer(int index)
+  {
+    while(true)
+      try{
+        return realObject.getCustomerImpl(index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public List<Customer> getCustomers()
+  {
+    while(true)
+      try{
+        return realObject.getCustomersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int numberOfCustomers()
+  {
+    while(true)
+      try{
+        return realObject.numberOfCustomersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean hasCustomers()
+  {
+    while(true)
+      try{
+        return realObject.hasCustomersImpl();
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public int indexOfCustomer(Customer aCustomer)
+  {
+    while(true)
+      try{
+        return realObject.indexOfCustomerImpl(aCustomer);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.addOrderImpl(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeOrder(Order aOrder)
+  {
+    while(true)
+      try{
+        return realObject.removeOrderImpl(aOrder);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrderAt(Order aOrder, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrderAtImpl(aOrder,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveOrderAt(Order aOrder, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveOrderAtImpl(aOrder,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addCustomer(Customer aCustomer)
+  {
+    while(true)
+      try{
+        return realObject.addCustomerImpl(aCustomer);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean removeCustomer(Customer aCustomer)
+  {
+    while(true)
+      try{
+        return realObject.removeCustomerImpl(aCustomer);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addCustomerAt(Customer aCustomer, int index)
+  {
+    while(true)
+      try{
+        return realObject.addCustomerAtImpl(aCustomer,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public boolean addOrMoveCustomerAt(Customer aCustomer, int index)
+  {
+    while(true)
+      try{
+        return realObject.addOrMoveCustomerAtImpl(aCustomer,index);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  public void delete()
+  {
+    while(true)
+      try{
+        realObject.deleteImpl();
+        break;
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public Product findProduct(ProductType productType)
+  {
+    while(true)
+      try{
+        return realObject.findProductImpl(productType);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+   public Order makeOrder(Customer aCustomer, Product aProduct)
+  {
+    while(true)
+      try{
+        return realObject.makeOrderImpl(aCustomer,aProduct);
+        }
+    catch(Exception e) {System.err.println(e.toString());}
+  }
+  
+  public void setRemoteObject(IVendorImpl aRemoteObject)
+  {
+    remoteObject=aRemoteObject;
+  }
+  public IVendorImpl getRemoteObject()
+  {
+    return (IVendorImpl)remoteObject;
+  }
+  private void readObject(java.io.ObjectInputStream in) throws Exception
+  {
+    try
+    {
+      in.defaultReadObject();
+      realObject=(IVendorImpl)remoteObject;
+    }
+    catch(Exception e)
+    {
+      throw e;
+    }
+    
+  }
+ 
+  public boolean equals(Object obj)
+  {    if(obj.getClass()!=this.getClass())
+      return false;
+    return (getHashCode()==((Vendor)obj).getHashCode());
+  }
+}

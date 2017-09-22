@@ -1,4 +1,4 @@
-// In this example, there are two modifications ("add" and "remove") for the method "show()" when trait "T2" is used inside of trait "T1"
+// In this example, there are two modifications ("add" and "remove") for the method "show()" when trait "T2" is used inside of trait "T1".
 class A{
 	isA T1;
 }

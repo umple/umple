@@ -1,0 +1,18 @@
+E235 SuperCall Conflict
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to state machine composition algorithm</h2>
+
+<p aligh = "justify">
+When clients use more than one trait, using the keyword superCall can cause a conflict. This happens because an order of execution is required.
+</p>
+<p aligh = "justify">
+As seen in the example below, class C1 uses two traits T1 and T2 and there is matching state s1 and matching transition e1 needed to be composed. Since the keyword has been used in the base transition e1, it indicates that the actions of matching transitions to be executed, but are more than one action to be executed. Therefore, the Umple compiler prevents these models from being composed.
+</p>
+
+@@example
+@@source manualexamples/E235SuperCallConflict.ump
+@@endexample

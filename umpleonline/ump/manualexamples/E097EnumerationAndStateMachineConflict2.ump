@@ -1,0 +1,11 @@
+// This example generates the error because enumeration "Y" will be 
+// added to class "X" since the "attr" parameter of "showY" is "Y".
+
+enum Y { Red, Blue, Green }
+
+class X {
+  showY(Y attr) { System.out.println(attr); }
+  Y {
+   s1 {}
+  }
+}

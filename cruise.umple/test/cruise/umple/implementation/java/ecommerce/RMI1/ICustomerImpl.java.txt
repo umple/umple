@@ -1,0 +1,38 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI1;
+import java.util.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.RemoteException;
+public interface ICustomerImpl extends java.rmi.Remote
+{
+  public void setSelf(Customer proxy) throws RemoteException;
+  public int getHashCode() throws RemoteException;
+  public boolean setName(String aName) throws RemoteException;
+  public String getName() throws RemoteException;
+  public Vendor getVendor(int index) throws RemoteException;
+  public List<Vendor> getVendors() throws RemoteException;
+  public int numberOfVendors() throws RemoteException;
+  public boolean hasVendors() throws RemoteException;
+  public int indexOfVendor(Vendor aVendor) throws RemoteException;
+  public Order getOrder(int index) throws RemoteException;
+  public List<Order> getOrders() throws RemoteException;
+  public int numberOfOrders() throws RemoteException;
+  public boolean hasOrders() throws RemoteException;
+  public int indexOfOrder(Order aOrder) throws RemoteException;
+  public SystemManager getSystemManager() throws RemoteException;
+  public boolean hasSystemManager() throws RemoteException;
+  public boolean addVendor(Vendor aVendor) throws RemoteException;
+  public boolean removeVendor(Vendor aVendor) throws RemoteException;
+  public boolean addVendorAt(Vendor aVendor, int index) throws RemoteException;
+  public boolean addOrMoveVendorAt(Vendor aVendor, int index) throws RemoteException;
+  public boolean addOrder(Order aOrder) throws RemoteException;
+  public boolean removeOrder(Order aOrder) throws RemoteException;
+  public boolean addOrderAt(Order aOrder, int index) throws RemoteException;
+  public boolean addOrMoveOrderAt(Order aOrder, int index) throws RemoteException;
+  public boolean setSystemManager(SystemManager aSystemManager) throws RemoteException;
+  public void delete() throws RemoteException;
+   public Order orderProduct(String productType, String vendorName) throws RemoteException;
+}

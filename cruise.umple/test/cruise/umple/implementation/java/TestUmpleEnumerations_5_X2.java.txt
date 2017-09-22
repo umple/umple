@@ -1,0 +1,58 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.25.0-963d2bd modeling language!*/
+
+package example;
+
+// line 10 "../TestUmpleEnumerations_5.ump"
+public class X2
+{
+
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
+  public enum Fruit { Apple, Orange }
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X2 Attributes
+  private Fruit t;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X2(Fruit aT)
+  {
+    t = aT;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setT(Fruit aT)
+  {
+    boolean wasSet = false;
+    t = aT;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public Fruit getT()
+  {
+    return t;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "t" + "=" + (getT() != null ? !getT().equals(this)  ? getT().toString().replaceAll("  ","    ") : "this" : "null");
+  }
+}

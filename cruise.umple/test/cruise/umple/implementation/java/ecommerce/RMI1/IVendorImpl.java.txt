@@ -1,0 +1,34 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package ecommerceRMI1;
+import java.util.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.RemoteException;
+public interface IVendorImpl extends java.rmi.Remote, IAgentImpl
+{
+  public void setSelf(Vendor proxy) throws RemoteException;
+  public int getHashCode() throws RemoteException;
+  public Order getOrder(int index) throws RemoteException;
+  public List<Order> getOrders() throws RemoteException;
+  public int numberOfOrders() throws RemoteException;
+  public boolean hasOrders() throws RemoteException;
+  public int indexOfOrder(Order aOrder) throws RemoteException;
+  public Customer getCustomer(int index) throws RemoteException;
+  public List<Customer> getCustomers() throws RemoteException;
+  public int numberOfCustomers() throws RemoteException;
+  public boolean hasCustomers() throws RemoteException;
+  public int indexOfCustomer(Customer aCustomer) throws RemoteException;
+  public boolean addOrder(Order aOrder) throws RemoteException;
+  public boolean removeOrder(Order aOrder) throws RemoteException;
+  public boolean addOrderAt(Order aOrder, int index) throws RemoteException;
+  public boolean addOrMoveOrderAt(Order aOrder, int index) throws RemoteException;
+  public boolean addCustomer(Customer aCustomer) throws RemoteException;
+  public boolean removeCustomer(Customer aCustomer) throws RemoteException;
+  public boolean addCustomerAt(Customer aCustomer, int index) throws RemoteException;
+  public boolean addOrMoveCustomerAt(Customer aCustomer, int index) throws RemoteException;
+  public void delete() throws RemoteException;
+   public Product findProduct(ProductType productType) throws RemoteException;
+   public Order makeOrder(Customer aCustomer, Product aProduct) throws RemoteException;
+}

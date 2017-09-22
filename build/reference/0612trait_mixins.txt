@@ -1,0 +1,17 @@
+Traits and Umple Mixins
+Traits
+noreferences
+
+@@description
+<p align = "justify">
+In the same way Umple supports mixins to compose <a href="ClassDefinition.html">classes</a>, <a href="Traits.html">traits</a> can also be composed in this way. This means that a trait can be defined in several places or files and when they are used by <a href="ClientsofTraits.html">clients</a>, all elements defined in those separate places will be applied to clients.
+</p>
+<p>
+The example 1 depicts two definitions for trait T1 (lines 4 and 8). Class C1 uses trait T1 and implement the required method method1() and also obtains two provided methods method2() and method3().
+</p>
+
+
+
+@@example
+@@source manualexamples/traits_example_025.ump
+@@endexample

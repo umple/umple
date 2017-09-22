@@ -1,0 +1,13 @@
+/*
+	Example 4: showing how template parameters in traits are used inside state machines.
+*/
+trait T1<TP>{
+  sm{
+  s1{ e1(TP p1)-> s2; }
+    s2{ e2(String p1, TP p2) -> s1; }
+  }
+}  
+class C1{/*implementation*/}
+class C2{
+  isA T1<TP=C1>;
+}

@@ -1,0 +1,18 @@
+/*
+	Example 1: showing how the operator "Removing/keeping provided methods" works.
+*/
+trait T1{
+  abstract method1(); 
+  void method2(){/*implementation*/}
+  void method3(){/*implementation*/}
+  void method4(){/*implementation*/}
+  void method5(){/*implementation*/}
+}
+class C1{
+  isA T1<-method2() , -method3()>;
+  void method1() {/*implementation related to C1*/}
+}
+class C2{
+  isA T1<+method5()>;
+  void method1() {/*implementation related to C2*/}
+}

@@ -1,0 +1,16 @@
+/*
+ Example 2: showing how states in traits can be obtained by required methods.
+*/
+trait T1{
+  Integer getData();
+  void setData(Integer);
+  Integer processData(){
+    int data = getData();
+    data=data+2;
+    setData(data);
+  }
+}
+class C1{
+  Integer data;
+  isA T1;
+}

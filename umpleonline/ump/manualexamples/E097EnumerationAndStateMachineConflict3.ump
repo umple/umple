@@ -1,0 +1,11 @@
+// This example does not generate the error
+
+class X {
+ enum Y { Red, Blue, Green }
+ Z {
+  s1 { 
+    goToS2 -> s2;
+  }
+  s2 { }
+ }
+}

@@ -1,0 +1,20 @@
+/*
+	Example 5: showing how the operator "Removing/keeping a state machine" works.
+*/
+trait T1 {
+  sm1{
+    s0 { e0-> s0;}
+  }
+sm2{
+    t0 { e0-> t0;}
+  }
+sm3{
+    w0 { e0-> w0;}
+  }
+}
+class C1 {
+  isA T1<-sm1>;
+}
+class C2 {
+  isA T1<+sm2>;
+}

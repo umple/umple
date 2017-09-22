@@ -264,6 +264,9 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/java/IUmpleObjectFactory.java");
     
     SampleFileWriter.destroy(pathToInput + "/java/distributed/");
+    SampleFileWriter.destroy(pathToInput + "/java/ecommerceWS/");
+    SampleFileWriter.destroy(pathToInput + "/java/ecommerceRMI0/");
+    SampleFileWriter.destroy(pathToInput + "/java/ecommerceRMI1/");
     SampleFileWriter.destroy(pathToInput + "/java/proxyPattern/");
 
     

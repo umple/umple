@@ -101,6 +101,9 @@ class YumlGenerator
       {
         direction = "->";
       }
+      else if (aAssoc.getIsLeftComposition() || aAssoc.getIsRightComposition()){
+	direction = "<>";
+      }
       yuml.append(StringFormatter.format("[{0}]{5}{2}{4}{6}{3}[{1}],",c1.getName(),c2.getName(),mult1,mult2,direction,roleName1.getRoleName()+" ",roleName2.getRoleName()+" "));
     }
 
