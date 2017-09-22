@@ -2284,10 +2284,13 @@ public class UmpleParserTest
     assertFailedParse("024_multipleAssociationsWithSameName.ump", new Position("024_multipleAssociationsWithSameName.ump",7,2,79), 19);
     assertFailedParse("024_roleNameSameAsClassWithMultiAssocToSameClass.ump", 19);
     assertFailedParse("024_multiAssocToSameClassNeedRoleName.ump", 19);
+    assertFailedParse("024_multiAssocToAnotherClassNeedRoleName.ump", 19);
+
 
     assertParse("024_multipleUnnamedOneWayAssociationsToSameClass.ump");
     assertParse("024_multiAssocToSameClassWithOneRoleName.ump");
     assertParse("024_multiAssocToSameClassWithMultiRoleName.ump");
+    assertParse("024_multiAssocToAnotherClassWithOneRuleName.ump");
   }
   
   @Test
