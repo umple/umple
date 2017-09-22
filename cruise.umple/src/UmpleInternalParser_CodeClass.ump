@@ -2183,7 +2183,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         { 
           if (existingNames.contains(firstEnd.getRoleName()) || hasMultipleAssocToSameClass)
           {
-            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
+            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),firstEnd.getClassName()));
           }
           else if (existingAttributeNames.contains(firstEnd.getRoleName()))
           {  // Check if the association name is the same as an attribute name
@@ -2198,7 +2198,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         {
           if (existingNames.contains(secondEnd.getRoleName()) || hasMultipleAssocToSameClass)
           {
-            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
+            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),firstEnd.getClassName()));
           }
           else if (existingAttributeNames.contains(secondEnd.getRoleName()))
           {  // Check if the association name is the same as an attribute name
