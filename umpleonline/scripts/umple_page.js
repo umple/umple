@@ -49,7 +49,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
 
   // Set diagram type - anything else means use the default editable class diagram
   if(diagramType == "GvState")   
-  {
+  { 
     Page.useGvStateDiagram = true;
     Page.useEditableClassDiagram = false; 
   }
@@ -809,7 +809,7 @@ Page.getSelectedExample = function()
     if(theExampleType == "smModels") {
       inputExample = jQuery("#inputExample2 option:selected").val();
       // if diagram type is not a state machine, set to state machine
-      if( !Page.useGvStateDiagram) {
+      if( !Page.useGvStateDiagram && Page.useJointJSClassDiagram === false) {
          jQuery("#buttonShowGvStateDiagram").attr('checked', true); 
          Action.changeDiagramType({type: "GVState"});
       }

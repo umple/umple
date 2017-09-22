@@ -283,10 +283,10 @@ function UmpleClass()
         else
           if ( method.isAbstract == "true")
           {
-            methodsInnerHtml += format('<div class="umpleMethod"><span id="{4}_method_{5}" name="methodEdit" class="editable editableDoubleClick">{3}<span style="font-style:italic">{1}({2})</span> : {0} </span> <img src="scripts/delete2.jpg" onclick="Action.methodDelete({6}{4}{6},{6}{5}{6})" /></div>',methodtype,method.name,method.parameters,visibility,this.id,i,"'");
+            methodsInnerHtml += format('<div class="umpleMethod"><span id="{4}_method_{5}" name="methodEdit" class="editable editableDoubleClick">{3}<span style="font-style:italic">{1}({2})</span> : {0} </span> <img src="scripts/delete2.jpg" onclick="DiagramEdit.methodDelete({6}{4}{6},{6}{5}{6})" /></div>',methodtype,method.name,method.parameters,visibility,this.id,i,"'");
           }
           else {
-            methodsInnerHtml += format('<div class="umpleMethod"><span id="{4}_method_{5}" name="methodEdit" class="editable editableDoubleClick">{3}{1}({2}) : {0} </span> <img src="scripts/delete2.jpg" onclick="Action.methodDelete({6}{4}{6},{6}{5}{6})" /></div>',methodtype,method.name,method.parameters,visibility,this.id,i,"'");
+            methodsInnerHtml += format('<div class="umpleMethod"><span id="{4}_method_{5}" name="methodEdit" class="editable editableDoubleClick">{3}{1}({2}) : {0} </span> <img src="scripts/delete2.jpg" onclick="DiagramEdit.methodDelete({6}{4}{6},{6}{5}{6})" /></div>',methodtype,method.name,method.parameters,visibility,this.id,i,"'");
           }
       }
     }

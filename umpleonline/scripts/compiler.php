@@ -73,7 +73,8 @@ else if (isset($_REQUEST["umpleCode"]))
     $suboptions = $suboptions . " -s " . $langparts[$i];
   }
   
-  $languageStyle = $_REQUEST["languageStyle"];
+  $languageStyle = isset($_REQUEST["languageStyle"])?
+    $_REQUEST["languageStyle"] : false;
   $outputErr = isset($_REQUEST["error"])?$_REQUEST["error"]:false;
   $uigu = False;
 

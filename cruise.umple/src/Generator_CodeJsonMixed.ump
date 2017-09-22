@@ -71,6 +71,9 @@ class JsonMixedGenerator
 
       for(Method method : aClass.getMethods())
       {
+		if (method.getSource() == Method.Source.fAutoAPI)
+      	  continue;
+	  
         if(jsonForMethods.length() > 0)
         {
           jsonForMethods += ", ";
@@ -380,6 +383,7 @@ class JsonMixedGenerator
 
         states += StringFormatter.format(
           "{ {0}name{0}: {0}{1}{0}, {0}id{0}: {0}{1}{0}, {0}actions{0}: [{2}], " +
+		    "{0}activities{0}: [{7}], "+
             "{0}isstart{0}: {3}, {0}isfinal{0}: {4}, " + 
             "{0}size{0}: { {0}width{0}: 50, {0}height{0}: 50 }, " +
             "{0}internals{0}: [{5}], {0}stateMachines{0}: [{6}] }",
@@ -387,9 +391,10 @@ class JsonMixedGenerator
           s.getName(),
           parseStateActions(s),
           s.getIsStartState(),
-          s.getFinalState(),
+		  s.isFinalState(),
           internals,
-          jsonForNestedMachines
+          jsonForNestedMachines,
+		  parseStateActivities(s)
         );
       }
 
@@ -541,7 +546,32 @@ class JsonMixedGenerator
     return actions;
   }
 
+  private String parseStateActivities (State s) {
+    String activities = "";
+    int index = 0;
+    for (Activity activity : s.getActivities()) {
+      if (index > 0) {
+        activities += ", ";
+      }
+      index += 1;
 
+      String activityCode = activity.getActivityCode();
+      // Activity Code can include a print statement, 
+      // which includes double quotes to screw up the JSON parsing in the client.
+      activityCode = java.util.regex.Pattern.compile("[\"]").matcher(activityCode).replaceAll("'");
+      // Some Activity Code is comprised of multiple lines, so requires being split
+      // into separate items for display.
+      activityCode = java.util.regex.Pattern.compile("[\\n]").matcher(activityCode).replaceAll("\",\"");
+
+      activities += StringFormatter.format(
+		"{0} {1}{0}",
+        "\"",
+        activityCode
+      );
+    }
+    return activities;
+  }
+  
   //Method to deal with association ends being different entities 
   //(eg. class or interface)
   private String extractClassName(AssociationEnd aAssocEnd)

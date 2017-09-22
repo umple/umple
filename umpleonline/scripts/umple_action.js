@@ -1588,11 +1588,11 @@ Action.updateUmpleDiagramCallback = function(response)
       if (Page.readOnly) 
       {
         jQuery("span.editable").addClass("uneditable");
-        // jQuery("div.umpleClass").addClass("unselectable");
       }
     }
     else if(Page.useJointJSClassDiagram) {
-      var model = JSON.parse(diagramCode);
+
+      var model = JSON.parse(diagramCode.replace( new RegExp('} { "name": "', "gi"), '}, { "name": "' ));
 
       var umpleCanvas = jQuery("#umpleCanvas");
 
@@ -1608,7 +1608,13 @@ Action.updateUmpleDiagramCallback = function(response)
           var scaleFactor = 1 + (Math.abs(delta) / (delta * 10));
           paper.setDimensions(paperWidth * scaleFactor, paperHeight * scaleFactor)
 
-          paper.scaleContentToFit({padding: 15});
+          //correct paper sizing
+          if( JJSdiagram.paper ) 
+          JJSdiagram.paper.setDimensions(jQuery("#umpleCanvas")[0].clientWidth, jQuery("#umpleCanvas")[0].clientHeight);
+
+          //scale the content
+          //commented it out because the customized object does not scale
+          //paper.scaleContentToFit({padding: 15});
         }
       };
 
@@ -1922,10 +1928,12 @@ Action.generateStructureDiagramFileCallback = function(response)
 Action.ajax = function(callback,post,errors)
 {
   var modelAndPositioning = Page.getUmpleCode();
+
   var umpleCode = encodeURIComponent(modelAndPositioning);
   var filename = Page.getFilename();
   // var errors = typeof(errors) != 'undefined' ? errors : "false";
   var errors = "true";
+  
   Ajax.sendRequest("scripts/compiler.php",callback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
 }
 
