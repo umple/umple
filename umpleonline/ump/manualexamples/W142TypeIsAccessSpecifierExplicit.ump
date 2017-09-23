@@ -1,0 +1,7 @@
+// If you want to bypass Umple and directly include the attribute in the generated code, write the full declaration.
+// The generated code will include the attribute verbatim.
+class X {
+  public String x;
+}
+
+//$?[End_of_model]$?

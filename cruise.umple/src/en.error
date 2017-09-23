@@ -115,6 +115,7 @@
 
 140: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Attribute type name '{0}' must be alphanumeric, starting with a letter ;
 141: 4, "http://cruise.eecs.uottawa.ca/umple/W141ValueTypeMismatch.html", Mismatch between type '{0}' and value {1} ;
+142: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Attribute '{0}' has a type of {public|private|protected}. This looks like an access specifier and is likely an error. In Umple attributes are private by default, and are Strings if no type is specified. ;
 
 150: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", State machine name '{0}' must be alphanumeric and start with a letter ;
 152: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", State name '{0}' must be alphanumeric and start with a letter ;
