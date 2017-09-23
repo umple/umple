@@ -14,6 +14,7 @@ import java.util.*;
 
 import org.junit.*;
 
+import cruise.umple.parser.ErrorMessage;
 import cruise.umple.parser.ErrorTypeSingleton;
 import cruise.umple.parser.ParseResult;
 import cruise.umple.parser.Position;
@@ -2283,9 +2284,19 @@ public class UmpleParserTest
     assertFailedParse("024_multipleUnnamedAssociationsToSameClass.ump", new Position("024_multipleUnnamedAssociationsToSameClass.ump",5,2,74), 19);
     assertFailedParse("024_multipleAssociationsWithSameName.ump", new Position("024_multipleAssociationsWithSameName.ump",7,2,79), 19);
     assertFailedParse("024_roleNameSameAsClassWithMultiAssocToSameClass.ump", 19);
-    assertFailedParse("024_multiAssocToSameClassNeedRoleName.ump", 19);
-
+    assertFailedParse("024_multiAssocToAnotherClassNeedRoleName.ump", 19);
+    
+    List<ErrorMessage> errorMessage = parseErrorMessage("024_multiAssocToSameClassNeedRoleName.ump");
+    Assert.assertEquals("There are multiple associations between class 'B' and class 'A'. Unique role names need to be added at 'B' side to distinguish the different association ends in that class.",errorMessage.get(0).getFormattedMessage());
+    errorMessage = parseErrorMessage("024_multiAssocToAnotherClassNeedRoleName.ump");
+    Assert.assertEquals("There are multiple associations between class 'A' and class 'B'. Unique role names need to be added at 'A' side to distinguish the different association ends in that class.",errorMessage.get(0).getFormattedMessage());
+    errorMessage = parseErrorMessage("024_multiAssocToSameClassWithNoRoleName.ump");
+    Assert.assertEquals(1, errorMessage.size());
+    
     assertParse("024_multipleUnnamedOneWayAssociationsToSameClass.ump");
+    assertParse("024_multiAssocToSameClassWithOneRoleName.ump");
+    assertParse("024_multiAssocToSameClassWithMultiRoleName.ump");
+    assertParse("024_multiAssocToAnotherClassWithOneRuleName.ump");
   }
   
   @Test
@@ -2966,6 +2977,27 @@ public class UmpleParserTest
       answer = parser.analyze(false).getWasSuccess();
     }
     return answer;
+  }
+  
+  public List<ErrorMessage> parseErrorMessage(String filename)
+  {
+    //String input = SampleFileWriter.readContent(new File(pathToInput, filename));
+    File file = new File(pathToInput,filename);
+    ErrorTypeSingleton.getInstance().reset();
+    model = new UmpleModel(new UmpleFile(pathToInput,filename));
+    model.setShouldGenerate(false);
+    RuleBasedParser rbp = new RuleBasedParser();
+    parser = new UmpleInternalParser(umpleParserName,model,rbp);
+    ParseResult result = rbp.parse(file);
+    model.extractAnalyzersFromParser(rbp);
+    model.setLastResult(result);
+    System.out.println(rbp.getRootToken());
+    boolean answer = result.getWasSuccess();
+    if (answer)
+    {
+      answer = parser.analyze(false).getWasSuccess();
+    }
+    return result.getErrorMessages();
   }
 
   // Assertion case where we expect the parse to succeed - may be overridden

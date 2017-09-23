@@ -2183,11 +2183,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         { 
           if (existingNames.contains(firstEnd.getRoleName()) || hasMultipleAssocToSameClass)
           {
-            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
+            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),firstEnd.getClassName(), C.getName()));
+            return;
           }
           else if (existingAttributeNames.contains(firstEnd.getRoleName()))
           {  // Check if the association name is the same as an attribute name
              getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
+             return;
           }
           else
           {
@@ -2198,11 +2200,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         {
           if (existingNames.contains(secondEnd.getRoleName()) || hasMultipleAssocToSameClass)
           {
-            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
+            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(), secondEnd.getClassName(), C.getName()));
+            return;
           }
           else if (existingAttributeNames.contains(secondEnd.getRoleName()))
           {  // Check if the association name is the same as an attribute name
              getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
+             return;
           }
           else
           {
@@ -2224,10 +2228,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           if(existingNames.contains(roleNameToCheck))
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),roleNameToCheck));
+            return;
           }
           else if(existingAttributeNames.contains(roleNameToCheck))
           {
             getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),roleNameToCheck));
+            return;
           }
           else
           {

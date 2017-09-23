@@ -1,7 +1,5 @@
-class Person{
+class A{
+  0..1  a1-- * B;
+  0..1  a2-- * B;
 }
-
-class Course{
-  * -- 1 Person prof;
-  * -- 1..* Person students;
-}
+class B{}
