@@ -7,29 +7,35 @@ public class InheritedTest
 {
  @Test 
   public void InheritedAssociationKey() {
-	  SomeAssociationClass someclass = new SomeAssociationClass(1);
-	  SomeAssociationClass someclass2 = new SomeAssociationClass(1);
+	  AssociationClass someclass = new AssociationClass(1);
+	  AssociationClass someclass2 = new AssociationClass(1);
 	  
 	  Assert.assertEquals(true, someclass.equals(someclass2));
   }
  
  @Test
  public void InheritedAssociationManyKeys() {
-	 SomeAssociatedClassWithKey someAssociatedClass = new SomeAssociatedClassWithKey(1);
-	 SomeAssociatedClassWithKey someAssociatedClass2 = new SomeAssociatedClassWithKey(2);
-	 SomeAssociatedClassWithKey someAssociatedClass3 = new SomeAssociatedClassWithKey(3);
+	 AssociatedClassWithKey someAssociatedClass = new AssociatedClassWithKey(1);
+	 AssociatedClassWithKey someAssociatedClass2 = new AssociatedClassWithKey(2);
+	 AssociatedClassWithKey someAssociatedClass3 = new AssociatedClassWithKey(3);
+	 AssociatedClassWithKey someAssociatedClass4 = new AssociatedClassWithKey(4);
 	 
-	 SomeAssociationClassMany someclass = new SomeAssociationClassMany();
-	 SomeAssociationClassMany someclass2 = new SomeAssociationClassMany();
+	 AssociationClassManyKeys someclass = new AssociationClassManyKeys();
+	 AssociationClassManyKeys someclass2 = new AssociationClassManyKeys();
 	 
-	 someclass.addSomeAssociatedClassWithKey(someAssociatedClass);
-	 someclass.addSomeAssociatedClassWithKey(someAssociatedClass2);
-	 someclass.addSomeAssociatedClassWithKey(someAssociatedClass3);
+	 someclass.addAssociatedClass(someAssociatedClass);
+	 someclass.addAssociatedClass(someAssociatedClass2);
+	 someclass.addAssociatedClass(someAssociatedClass3);
 	 
-	 someclass2.addSomeAssociatedClassWithKey(someAssociatedClass);
-	 someclass2.addSomeAssociatedClassWithKey(someAssociatedClass2);
-	 someclass2.addSomeAssociatedClassWithKey(someAssociatedClass3);
+	 someclass2.addAssociatedClass(someAssociatedClass);
+	 someclass2.addAssociatedClass(someAssociatedClass2);
+	 someclass2.addAssociatedClass(someAssociatedClass3);
 	 
 	 Assert.assertEquals(true, someclass.equals(someclass2));
+	 
+	 someclass.addAssociatedClass(someAssociatedClass4);
+	 
+	 Assert.assertEquals(false, someclass.equals(someclass2));
+	 Assert.assertEquals(false, someclass2.equals(someclass));
  }
 }

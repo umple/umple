@@ -74,10 +74,22 @@ class ManyAttribute
   Integer[] works;
 }
 
+class ManyStringAttributes
+{
+  String[] worksString;
+}
+
 class ManyKeys
 {
   isA ManyAttribute;
   key {works};
+}
+
+class ManKeysStringAndInt
+{
+  isA ManyStringAttributes;
+  Integer id;
+  key {worksString, id}
 }
 
 class TypeInference

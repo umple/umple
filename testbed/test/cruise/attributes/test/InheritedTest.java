@@ -28,4 +28,23 @@ public class InheritedTest
 	  
 	  Assert.assertEquals(true, manykeys.equals(manykeys2));
   }
+  
+  @Test
+  public void MultipleKeysTest() {
+	  ManKeysStringAndInt class1 = new ManKeysStringAndInt(1);
+	  ManKeysStringAndInt class2 = new ManKeysStringAndInt(1);
+	  
+	  class1.addWorksString("1");
+	  class1.addWorksString("2");
+	  
+	  class2.addWorksString("1");
+	  class2.addWorksString("2");
+	  
+	  Assert.assertEquals(true, class1.equals(class2));
+	  	  
+	  class2.addWorksString("3");
+	  
+	  Assert.assertEquals(false, class1.equals(class2));
+	  Assert.assertEquals(false, class2.equals(class1));
+  }
 }
