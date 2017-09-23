@@ -3959,6 +3959,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         return;
       }
     }
+
+    if(type != null)
+    {
+      if("public".equals(type) || "private".equals(type) || "protected".equals(type))
+      {
+	setFailedPosition(attributeToken.getPosition(), 142, type);
+      }
+    }
         
     if(type != null && value != null)
     {
