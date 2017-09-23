@@ -1,0 +1,7 @@
+// This case is probably an error - Umple will consider "x" to have type "public"
+class X {
+  public x;
+}
+
+//$?[End_of_model]$?
+// @@@skipcompile - the resulting code will not compile

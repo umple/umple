@@ -2930,6 +2930,14 @@ public class UmpleParserTest
   assertHasWarningsParse("058_enumerationInUnidirectionalAssoc2.ump", 106);
   assertHasNoWarningsParse("058_enumerationInUnidirectionalAssoc3.ump");
  }
+
+  //Issue 211
+  @Test
+  public void typeIsAccessSpecifier() {
+    assertHasWarningsParse("142_typeIsAccessSpecifierPublic.ump", 142);
+    assertHasWarningsParse("142_typeIsAccessSpecifierProtected.ump", 142);
+    assertHasWarningsParse("142_typeIsAccessSpecifierPrivate.ump", 142);
+  }
  
   public boolean parse(String filename)
   {
