@@ -2286,11 +2286,13 @@ public class UmpleParserTest
     assertFailedParse("024_roleNameSameAsClassWithMultiAssocToSameClass.ump", 19);
     assertFailedParse("024_multiAssocToAnotherClassNeedRoleName.ump", 19);
     
-    List<ErrorMessage> errorMessage1 = parseErrorMessage("024_multiAssocToSameClassNeedRoleName.ump");
-    Assert.assertEquals("There are multiple associations between class 'B' and class 'A'. Unique role names need to be added at 'B' side to distinguish the different association ends in that class.",errorMessage1.get(0).getFormattedMessage());
-    List<ErrorMessage> errorMessage2 = parseErrorMessage("024_multiAssocToAnotherClassNeedRoleName.ump");
-    Assert.assertEquals("There are multiple associations between class 'A' and class 'B'. Unique role names need to be added at 'A' side to distinguish the different association ends in that class.",errorMessage2.get(0).getFormattedMessage());
-
+    List<ErrorMessage> errorMessage = parseErrorMessage("024_multiAssocToSameClassNeedRoleName.ump");
+    Assert.assertEquals("There are multiple associations between class 'B' and class 'A'. Unique role names need to be added at 'B' side to distinguish the different association ends in that class.",errorMessage.get(0).getFormattedMessage());
+    errorMessage = parseErrorMessage("024_multiAssocToAnotherClassNeedRoleName.ump");
+    Assert.assertEquals("There are multiple associations between class 'A' and class 'B'. Unique role names need to be added at 'A' side to distinguish the different association ends in that class.",errorMessage.get(0).getFormattedMessage());
+    errorMessage = parseErrorMessage("024_multiAssocToSameClassWithNoRoleName.ump");
+    Assert.assertEquals(1, errorMessage.size());
+    
     assertParse("024_multipleUnnamedOneWayAssociationsToSameClass.ump");
     assertParse("024_multiAssocToSameClassWithOneRoleName.ump");
     assertParse("024_multiAssocToSameClassWithMultiRoleName.ump");
