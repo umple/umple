@@ -282,7 +282,7 @@ public class AssociationEndTest
     Assert.assertEquals(true,end.equals(end));
   }   
   
-  @Test
+  @Test @Ignore
   public void equals_checkAllData_nullNowSameAsEmpty()
   {
     AssociationEnd end,compareTo;
