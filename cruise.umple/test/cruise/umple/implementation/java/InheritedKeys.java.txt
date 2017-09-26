@@ -5,12 +5,12 @@
 
     Bar compareTo = (Bar)obj;
   
-    if (a != compareTo.a)
+    if (getA() != compareTo.getA())
     {
       return false;
     }
 
-    if (b != compareTo.b)
+    if (getB() != compareTo.getB())
     {
       return false;
     }
@@ -25,9 +25,9 @@
       return cachedHashCode;
     }
     cachedHashCode = 17;
-    cachedHashCode = cachedHashCode * 23 + a;
+    cachedHashCode = cachedHashCode * 23 + getA();
 
-    cachedHashCode = cachedHashCode * 23 + b;
+    cachedHashCode = cachedHashCode * 23 + getB();
 
     canSetA = false;
     canSetB = false;
