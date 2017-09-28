@@ -472,6 +472,7 @@ class PlaygroundMain
   depend java.net.*;
   depend com.sun.management.OperatingSystemMXBean;
   depend java.lang.management.*;
+  depend java.text.SimpleDateFormat;
 
   Boolean isServer=false;
   int commandsRun = 0;
@@ -587,10 +588,16 @@ class PlaygroundMain
 
     if ("-log".equals(args[0])) {
       if(isServer) {
-          returnCommandResult("Number of commands run since start: "+commandsRun+"\n\n", client);
-               
-          returnCommandResult("JVM uptime seconds: "
-            +ManagementFactory.getRuntimeMXBean().getUptime()/1000+"\n\n", client);
+          long uptime = ManagementFactory.getRuntimeMXBean().getUptime();
+          SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
+          Date startDate = new Date(System.currentTimeMillis()-uptime);
+          
+          returnCommandResult("Number of commands run since start: "
+            +commandsRun+"  (pace "+String.format("%.1f", 3600000.0*commandsRun/uptime)+"/h)\n\n", client);          
+          
+          returnCommandResult("JVM uptime: "
+            +uptime/1000+"s  "+String.format("%.3f",uptime/60000/1440.0)+"days  restarted "+
+            sdf.format(startDate)+"\n\n", client);
 
           returnCommandResult("Number of clients working: "
             +getClientConnections().length+"\n\n", client);
