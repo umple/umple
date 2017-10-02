@@ -597,6 +597,27 @@ function serverRun($commandLine,$rawcommand=null) {
     return;
   }
   
+  // The following code can be switched off if the server performs reliablly
+  // To turn off comment out all blocks preceded by FAILURECHECK
+  // It is to log the last command before a failure
+  // 1. Locate the model file in the command
+  $modelFileInCommand = "";
+  $startOfModelFile = strpos($originalCommandLine, "../ump/");
+  if($startOfModelFile !== FALSE) {
+    $endOfModelFile = strpos($originalCommandLine,"/model.ump");
+    if($endOfModelFile !== FALSE) {
+      $modelFileInCommand =
+        substr($originalCommandLine,$startOfModelFile,$endOfModelFile+10-$startOfModelFile);
+    }
+  }
+  // Create a temporary file
+  $crashLogFile = "../ump/ATempCrashCheck-".uniqid().".ump";
+  if($modelFileInCommand != "") {
+    copy($modelFileInCommand, $crashLogFile);
+  }
+  saveFile("\n// ".date("Y-m-d H:i:s ").$originalCommandLine."\n",$crashLogFile,'a');
+  // End of FAILURECHECK first block  
+   
   // Actually send to the server
   $numBytesSent= socket_write($theSocket, $rawcommand);
   if($numBytesSent === FALSE) {
@@ -635,6 +656,9 @@ function serverRun($commandLine,$rawcommand=null) {
     usleep(50000); // wait a little bit in case the server is sending more
   }
   socket_close($theSocket);
+  
+  // Final FAILURECHECK code line (deletes the file ... if does not occur it means failure)
+  unlink($crashLogFile);
 }
 
 
