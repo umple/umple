@@ -60,7 +60,7 @@ class JavaClassGenerator {
     JavaClassGenerator <<!<</*JavaClassGenerator*/>><<@ UmpleToJava.UmpleNotice >>
 <<#
   UmpleClass uClass = (UmpleClass) uElement;
-  globalUmpleClass = uClass;  
+  globalUmpleClass = uClass;
   GeneratedClass gClass = uClass.getGeneratedClass();
   JavaGenerator gen = new JavaGenerator();
   gen.setModel(model);
@@ -104,7 +104,7 @@ String classPackageName=(uClass.getPackageName().length() == 0 ? "" : uClass.get
     {
     #>>"remoteUrl", "objectId", "remotePort"<<#
     }#>>})
-<<#}  
+<<#}
   else
     appendln(realSb,NL+"@XmlAccessorType(XmlAccessType.FIELD)");
 }
@@ -122,20 +122,20 @@ if(uClass.getNeedsDefaultInterface())
         else if(model.getDistributePattern()==1&&uClass.getIsDistributed())
           append(realSb," implements java.io.Serializable , I"+uClass.getName());
         else if(model.getDistributePattern()==2)
-           append(realSb," implements java.io.Serializable ,I"+uClass.getName().substring(0,uClass.getName().length()-4)); 
+           append(realSb," implements java.io.Serializable ,I"+uClass.getName().substring(0,uClass.getName().length()-4));
         hasParentInterface=true;
       }
       else{
           if(model.getDistributePattern()==0)
           {
             append(realSb," ,java.io.Serializable");
-            append(realSb,", I"+uClass.getName()+"Impl");            
+            append(realSb,", I"+uClass.getName()+"Impl");
           }
         else if(model.getDistributePattern()==1&&uClass.getIsDistributed())
           append(realSb," ,java.io.Serializable , I"+uClass.getName());
         else if(model.getDistributePattern()==2)
            append(realSb," ,java.io.Serializable ,I"+uClass.getName().substring(0,uClass.getName().length()-4));
-      } 
+      }
 }
 else if(model.getDistributed())
 {
@@ -146,19 +146,19 @@ else if(model.getDistributed())
       else{
           if(!uClass.getIsDistributed())
             append(realSb," ,java.io.Serializable");
-      } 
+      }
 }
 
 for (StateMachine smq : uClass.getStateMachines())
   {
     if (smq.isQueued())
-    { 
+    {
       if (hasParentInterface == false){
         append(realSb," implements Runnable");
       }
       else{
         append(realSb,", Runnable");
-      } 
+      }
       break;
     }
     else if(smq.isPooled())
@@ -168,11 +168,11 @@ for (StateMachine smq : uClass.getStateMachines())
       }
       else{
         append(realSb,", Runnable");
-      } 
+      }
       break;
     }
   }
-  
+
 #>>
 {
   <<#
@@ -191,16 +191,16 @@ for (StateMachine smq : uClass.getStateMachines())
   getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
   return realSb;
     }
-    
+
   private void getEnumerationCode(StringBuilder realSb, UmpleModel model, UmpleClass uClass, boolean isFirst)
   {
     #>><<@ UmpleToJava.enumerations_All >><<#
   }
-  
+
   /*
    * Issue 1008 - A helper function to determine if a class uses an enum defined in the model
    */
-  private boolean classUsesEnum(String enumName, UmpleClass uClass) 
+  private boolean classUsesEnum(String enumName, UmpleClass uClass)
   {
     // Check if the class has any attributes that use the enum
      for (Attribute a : uClass.getAttributes()) {
@@ -208,7 +208,7 @@ for (StateMachine smq : uClass.getStateMachines())
          return true;
        }
      }
-     
+
      // Check if the class has any methods that use the enum as their return type, or as parameters
      for (Method m : uClass.getMethods()) {
        if (m.getType().equals(enumName)) {
@@ -221,7 +221,7 @@ for (StateMachine smq : uClass.getStateMachines())
          }
        }
       }
-     
+
     // Check if the class has any event methods that use the enum in their parameters
     for (StateMachine sm : uClass.getStateMachines()) {
       for (Event e : sm.getEvents()) {
@@ -232,10 +232,10 @@ for (StateMachine smq : uClass.getStateMachines())
         }
       }
     }
-    
+
     return false;
   }
-   
+
     private String getDistributedMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
     {if(uClass.getHasProxyPattern()||uClass.getIsDistributed()){#>>
   //------------------------
@@ -254,7 +254,7 @@ for (StateMachine smq : uClass.getStateMachines())
   // Reference to the proxy
   //------------------------
   <<=uClass.getName().substring(0,uClass.getName().length()-4)>> self;
-  
+
   public void setSelf(<<=uClass.getName().substring(0,uClass.getName().length()-4)>> proxy)
   {
   <<#if (uClass.getExtendsClass()!=null && uClass.getExtendsClass().getIsDistributed())
@@ -267,11 +267,11 @@ for (StateMachine smq : uClass.getStateMachines())
 
     <<#}return realSb.toString();
     }
-  
+
     private String getMemberCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
-  { 
+  {
     String self="this";
-    
+
     if(uClass.getIsDistributed()&&model.getDistributePattern()==1)
       self="self";
     String isTransient="";
@@ -283,7 +283,7 @@ for (StateMachine smq : uClass.getStateMachines())
     }
   private UmpleClass globalUmpleClass = null;
   public Map<String,UncaughtException> uncaughtExceptions = new HashMap<String,UncaughtException>();
-  
+
     private String getConstructorCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   {
     Integer baseJavaLine = realSb.toString().split("\\n").length;
@@ -296,9 +296,9 @@ for (StateMachine smq : uClass.getStateMachines())
   //------------------------
 <<@ UmpleToJava.constructor_Declare_All >>
   <<#return realSb.toString();
-    } 
+    }
     private String getAttributeCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
-  { 
+  {
     String umpleSourceFile = "";
     Integer baseJavaLine = realSb.toString().split("\\n").length;#>>
 
@@ -307,59 +307,59 @@ for (StateMachine smq : uClass.getStateMachines())
   //------------------------
 <<@ UmpleToJava.attribute_Set_All >><<@ UmpleToJava.attribute_Get_All >><<@ UmpleToJava.attribute_IsBoolean_All >>
   <<#return realSb.toString();
-    } 
+    }
     private String getStateMachine1Code(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   {
     Integer baseJavaLine = realSb.toString().split("\\n").length;#>><<@ UmpleToJava.state_machine_Get_All >><<@ UmpleToJava.state_machine_Events_All >><<@ UmpleToJava.state_machine_Set_All >><<#
-    return realSb.toString(); 
-  } 
+    return realSb.toString();
+  }
   private String getAssociationCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   { String self="this";
-    
+
     if(uClass.getIsDistributed()&&model.getDistributePattern()==1)
       self="self";
-      
+
     String umpleSourceFile = "";
     Integer baseJavaLine = realSb.toString().split("\\n").length+3;#>><<@ UmpleToJava.association_Get_All >><<@ UmpleToJava.association_Set_All >>
   <<#return realSb.toString();
-    } 
-    
+    }
+
     private String getEqualsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   {#>>
 <<# if (uClass.getKey().isProvided()) { #>><<@ UmpleToJava.equals >>
 <<# } #>>
   <<#return realSb.toString();
-    } 
+    }
     private String getStateMachine2Code(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   {#>><<@ UmpleToJava.state_machine_doActivity_All >><<@ UmpleToJava.state_machine_timedEvent_All >>
   <<#return realSb.toString();
-    } 
+    }
     private String getDeleteCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   {
     String self="this";
     if(uClass.getIsDistributed()&&model.getDistributePattern()==1)
       self="self";
-      
+
     Integer baseJavaLine = realSb.toString().split("\\n").length+1; #>><<@ UmpleToJava.delete_All >>
     <<# for (StateMachine smq : uClass.getStateMachines())
      {
        if (smq.isPooled())
        {#>><<@ UmpleToJava.queued_state_machine_inner_class >><<@ UmpleToJava.queued_state_machine_queuedEvent >><<@ UmpleToJava.queued_state_machine_removalThread_run >>
        <<# break;
-       }       
+       }
        if (smq.isQueued())
        {#>><<@ UmpleToJava.queued_state_machine_inner_class >><<@ UmpleToJava.queued_state_machine_queuedEvent >><<@ UmpleToJava.queued_state_machine_removalThread_run >>
        <<# break;
        }
      }#>>
   <<#return realSb.toString();
-    } 
+    }
     private String getExtraMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   {#>>
 <<# if (uClass.hasMethods()) { #>><<@ UmpleToJava.class_MethodDeclaration >>
-<<# } #>><<# 
+<<# } #>><<#
    boolean matchFound = false;
-   UmpleClass parent = uClass.getExtendsClass(); 
+   UmpleClass parent = uClass.getExtendsClass();
    if(uClass.getExtraCode() != null)
    {
      matchFound = java.util.regex.Pattern.compile(".*((public)|(protected)|(private))\\s+(String)\\s+(toString)\\s*\\(\\s*\\).*", java.util.regex.Pattern.DOTALL).matcher(uClass.getExtraCode()).matches();
@@ -389,19 +389,17 @@ for (StateMachine smq : uClass.getStateMachines())
    if (uClass.getAttributes().size()>0 && !matchFound){ #>><<@ UmpleToJava.toString_declare >>
 <<# } #>>
   <<#return realSb.toString();
-    } 
+    }
     private String getAllExtraCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   {#>>
-<<# 
+<<#
   boolean isMainClass = false;
-  if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { #>>  
+  if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { #>>
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
-  <<=uClass.getExtraCode()>>
-  
 
+  <<=uClass.getExtraCode()>>
 <<# } #>><<@ UmpleToJava.trace >><<#if(uClass!=mainMainClass){#>>
 }<<#}
   return realSb.toString();

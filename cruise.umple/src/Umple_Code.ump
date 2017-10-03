@@ -24,19 +24,19 @@ class UmpleModel
     Double parsingTime = 0.0;
     internal Double gTime1 = 0.0;
     internal Double gTime2 = 0.0;
-    
+
     Map<String, String> hashMap = new HashMap<String, String>();
-    
+
   public static String[] findValidLanguages()
   {
     final String NONTERMINAL = "generate";
     final String START_TOKEN = "[=language:";
     final String END_TOKEN   = "]";
     final String DELIMITER   = "\\|";
-    
-    
+
+
     String[] result = new String[0];
-    
+
     boolean lineFound = false;
     try
     {
@@ -47,7 +47,7 @@ class UmpleModel
         in     = UmpleModel.class.getResourceAsStream("/umple_core.grammar");
         reader = new BufferedReader(new InputStreamReader(in));
         String line;
-        while (((line = reader.readLine()) != null) && !lineFound ) 
+        while (((line = reader.readLine()) != null) && !lineFound )
         {
            if( line.startsWith(NONTERMINAL) && line.contains(START_TOKEN))
            {
@@ -69,11 +69,11 @@ class UmpleModel
     Arrays.sort(result);
     return result;
   }
-  
+
   after constructor{
     if(aUmpleFile!=null){
       String[] linkedFilenames = aUmpleFile.getLinkedFiles().split("use");
-      
+
       for( String filename : linkedFilenames ){
         // Remove blankspace and newlines
         filename = filename.trim();
@@ -84,7 +84,7 @@ class UmpleModel
       }
     }
   }
-  
+
   public UmpleModel(UmpleFile umpleFile, List<File> linkedFiles ){
     this(umpleFile);
     this.linkedFiles = linkedFiles;
@@ -238,7 +238,7 @@ class UmpleModel
     boolean failed = false;
     String input;
     RuleBasedParser parser = new RuleBasedParser();
-    
+
     UmpleParser analyzer = new UmpleInternalParser("UmpleInternalParser",this,parser);
     ParseResult result = parser.parse( new File(umpleFile.getPath() + File.separator + umpleFile.getFileName()), this.linkedFiles.toArray(new File[0]) );
     this.extractAnalyzersFromParser(parser);
@@ -261,7 +261,7 @@ class UmpleModel
   public CodeGenerator newGenerator(String language)
   {
     String realLanguage = language;
-    
+
     // Ensure the target is specified in the proper case.
     VALIDATE_GENERATE:
     for( String lang : UmpleModel.validLanguages ){
@@ -271,10 +271,10 @@ class UmpleModel
       }
     }
 
-		
+
     if (language.equals("Cpp")) realLanguage="RTCpp";
     else if (language.equals("SimpleCpp")) realLanguage="RTCpp";
-    
+
     String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",realLanguage);
     Class<?> classDefinition = null;
     try {
@@ -561,7 +561,7 @@ class UmpleModel
 
   private void markIncludedClasses(Filter f)
   {
-    if (f == null || f.isEmpty()) 
+    if (f == null || f.isEmpty())
     {
       return;
     }
@@ -579,7 +579,7 @@ class UmpleModel
         {
           addSuperClasses(f.getSuperCount(), clazz);
         }
-      }  
+      }
     }
 
     if(f.hasAssociation())
@@ -610,7 +610,7 @@ class UmpleModel
         for(Association a : clazz.getAssociations())
         {
           associations.remove(a);
-        }  
+        }
         removeUmpleClass(clazz);
       }
     }
@@ -627,7 +627,7 @@ class UmpleModel
         {
           addRelatedClassName(clazz,names);
         }
-      } 
+      }
       markClassByName(names);
       names = new ArrayList<String>();
     }
@@ -638,7 +638,7 @@ class UmpleModel
     for(AssociationVariable a : c.getAssociationVariables())
     {
       names.add(a.getType());
-    }  
+    }
   }
 
   private void markClassByName(ArrayList<String> names)
@@ -664,7 +664,7 @@ class UmpleModel
       addSuperClasses(sup-1, c.getExtendsClass());
     }
   }
-   
+
   private void addSuperClasses(UmpleClass c)
   {
     if(c.getExtendsClass()==null)
@@ -690,7 +690,7 @@ class UmpleModel
       {
         s.setFilteredin(true);
         addSubClasses(sub-1,s);
-      } 
+      }
     }
   }
 
@@ -706,11 +706,11 @@ class UmpleModel
       else if(name==null)
       {
         return aFilter;
-      } 
+      }
     }
     return null;
   }
-  
+
   /*
    * Extracts Analyzers from a <code>RuleBasedParser</code>, assigning the
    * analyzers to this model
@@ -720,7 +720,7 @@ class UmpleModel
   public void extractAnalyzersFromParser( RuleBasedParser parser ){
     setAnalyzers(parser.getAnalyzer().getAnalyzerMap());
   }
-  
+
   // Issue 1008 - Helper function to determine if the Umple Model has a particular enumeration
   public boolean hasEnum(String enumName) {
     for (UmpleEnumeration uEnum : getEnums()) {
@@ -894,24 +894,24 @@ class MethodParameter
 }
 
 /*
- * 
+ *
  */
 class CodeBlock
 {
-	
+
   /*
    * @author Vahdat
    * @param another a CodeBlock that we would like to make a clone of.
    * Please maintain this method if you're going to add new attributes to the class CodeBlock.
    * This code manually creates a clone of a state machine.
-   * 
-   */	
+   *
+   */
   public CodeBlock(CodeBlock another){
   	this.name = another.getName();
   	this.codes = new HashMap<String,String>();
   	this.codes.putAll(another.codes);
   }
-  
+
   /*
    * @author Vahdat
    */
@@ -958,7 +958,7 @@ class CodeBlock
     codes.put(language, internalCode);
    }
   }
-  
+
   /*
    * @author Vahdat
    * The following part of code may not generate proper code-style code generation.
@@ -972,8 +972,8 @@ class CodeBlock
     	replacement=replacement+System.lineSeparator()+"\t\t//The code coming from trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' ends here"+System.lineSeparator()+"\t\t";
     	codes.put(language,codes.get(language).replace(keyword,replacement+keyword)) ;
     }
-  } 
-  
+  }
+
   /*
    * @author Vahdat
    */
@@ -982,8 +982,8 @@ class CodeBlock
     for (String language : codes.keySet()) {
     	codes.put(language, codes.get(language).replace(keyword,"")) ;
     }
-  }  
-  
+  }
+
   /*
    * @author Vahdat
    */
@@ -1000,7 +1000,7 @@ class CodeBlock
   /*
    * @author Vahdat
    * This function searches for a specific keyword in all langauges in the code blocks.
-   */  
+   */
   public boolean hasKeyword(String keyword){
     if(keyword==null || keyword=="") return false;
     for (String language : codes.keySet()) {
@@ -1008,7 +1008,7 @@ class CodeBlock
       }
     return false;
   }
-  
+
   public CodeBlock(String add)
   {
     this();
@@ -1203,14 +1203,14 @@ class AssociationClass
 }
 
 class UmpleClassifier{
-  
+
   depend java.nio.file.*;
   depend cruise.umple.compiler.*;
-	
+
 	/*
-  Counts the number of occurrences of the character <code>needle</code> in the 
+  Counts the number of occurrences of the character <code>needle</code> in the
   supplied string <code>haystack</code>.
-  
+
   @param haystack the string to search for
   @param needle the character to find
   @return the number of occurrences of that character
@@ -1227,11 +1227,11 @@ class UmpleClassifier{
     }
     return count;
   }
-  
-  
+
+
   /*
   Replaces all instances of '\' with '/' in path strings
-  
+
   @param str a string path to change
   @return the new string
   */
@@ -1239,32 +1239,32 @@ class UmpleClassifier{
   {
     return str.replace('\\','/');
   }
-  
-  
+
+
   /*
-  Obtains the relative path between the source file for the UmpleClassifier and 
+  Obtains the relative path between the source file for the UmpleClassifier and
   and the package name given the target language
-  
+
   @param filename the file name to get the relative path from
   @param language The language target to compare
-  
+
   @return The string relative path between the parent and position
   */
   public String getRelativePath(String filename, String language)
-  {    
+  {
     String p = getPackageName();
- 	
+
     if (filename == null)
     {
       return "";
     }
-    
+
     //Find path relative to namespace folders
     String packageName = getPackageName();
     if (packageName == null || packageName.equals(""))
     { //No package, file is output in current directory
       return Paths.get(filename).getFileName().toString();
-    } 
+    }
     else
     { //Has a package, add appropriate number of ..
       int pathCount = countOccurrences(packageName, '.') + 1;
@@ -1273,7 +1273,7 @@ class UmpleClassifier{
       {
         build.append("../");
       }
-      
+
       //Add on relative path from generator location
       if (getSourceModel() == null)
       {
@@ -1299,12 +1299,12 @@ class UmpleClassifier{
       	  build.append(result.toString() + '/');
       	}
       }
-      
+
       build.append(Paths.get(filename).getFileName());
       return deWindowsify(build.toString());
     }
-  }  
-  
+  }
+
   public boolean hasMethod(Method comparedMethod){
     String methodName = comparedMethod.getName();
     String methodType = comparedMethod.getType();
@@ -1604,7 +1604,7 @@ class UmpleClass
         else if(parameters.size() != currentParameters.split(",").length)
         {
           isParameterMatch = false;
-        } 
+        }
         else {
           int indx = 0;
           for(String parameterType : currentParameters.split(",")) {
@@ -1613,7 +1613,7 @@ class UmpleClass
             }
             indx++;
           }
-        } 
+        }
 
         isCurrentMatch &= isParameterMatch;
 
@@ -1751,7 +1751,7 @@ class UmpleClass
     }
     return false;
   }
-  
+
   //Issue 771
   public boolean hasSameType(Method comparedMethod){
     String methodType = comparedMethod.getType();
@@ -1762,7 +1762,7 @@ class UmpleClass
     }
     return false;
   }
-  
+
 
   public Method getMethod(Method comparedMethod){
     String methodName = comparedMethod.getName();
@@ -2005,8 +2005,8 @@ class UmpleClass
     }
     return wasRemoved;
   }
-  
-  
+
+
   public void removeAllAutoGeneratedMethods()
   {
     List<Method> methodsCopy = new ArrayList<Method>(this.getMethods());
@@ -2028,9 +2028,9 @@ class UmpleClass
   	}
   	String getName = "get" + firstLetter + rest;
   	String setName = "set" + firstLetter + rest;
-  	
+
   	List<Method> methodsCopy = new ArrayList<Method>(this.getMethods());
-    
+
     for (Method m : methodsCopy)
     {
     	if (m.getName().equals(getName) && m.getMethodParameters().size() == 0)
@@ -2040,7 +2040,7 @@ class UmpleClass
     		removeMethod(m);
     }
   }
-  
+
   public void removeAttributeFromAutogeneratedConstructor(Attribute aAttribute)
   {
   	Method constructor = this.getAutoGeneratedConstructor();
@@ -2052,9 +2052,9 @@ class UmpleClass
   		{
   			parameterName += attributeName.substring(1);
   		}
-  	
+
   		MethodParameter toRemove = null;
-  	
+
   		for (MethodParameter mp : constructor.getMethodParameters())
   		{
   			if (mp.getName().equals(parameterName) && mp.getFullType().equals(aAttribute.getType()))
@@ -2063,21 +2063,21 @@ class UmpleClass
   				break;
   			}
   		}
-  		
+
   		if (toRemove != null)
   		{
   			constructor.removeMethodParameter(toRemove);
   		}
-  	}  	
+  	}
   }
-  
+
   after removeAttribute {
   	if (wasRemoved)
   	{
   		this.removeAttributeFromAutogeneratedConstructor(aAttribute);
   	}
   }
-  
+
   // Issue 1008 - Helper function to determine if the Umple Class has a particular enumeration
   public boolean hasEnum(String enumName) {
     for (UmpleEnumeration uEnum : getEnums()) {
@@ -2212,7 +2212,7 @@ class Attribute
 
   public ArrayList<String> getMethodNames()
   {
-    ArrayList<String> methodNames = new ArrayList<String>();      
+    ArrayList<String> methodNames = new ArrayList<String>();
     String attributeCapitalizedName = this.getUpperCaseName();
     if (!this.isIsList())
     {
@@ -2224,7 +2224,7 @@ class Attribute
       {
         methodNames.add("set" + attributeCapitalizedName);
       }
-      if(this.isDefaulted()) 
+      if(this.isDefaulted())
       {
         methodNames.add("reset" + attributeCapitalizedName);
         methodNames.add("getDefault" + attributeCapitalizedName);
@@ -2234,7 +2234,7 @@ class Attribute
         methodNames.add("is" + attributeCapitalizedName);
       }
     }
-    else 
+    else
     {
       String singularName = getUmpleClass().getSourceModel().getGlossary().getSingular(this.getName());
       String singularCapitalizedName = singularName.substring(0, 1).toUpperCase() + singularName.substring(1);
@@ -2453,7 +2453,7 @@ class ConstraintTree
           if(wasOperationNegatable)
           {
            left = negateVariable(((ConstraintOperator)variable).getLeft());
-           right = negateVariable(((ConstraintOperator)variable).getRight());            
+           right = negateVariable(((ConstraintOperator)variable).getRight());
           }
           else
           {
@@ -3522,7 +3522,7 @@ class AssociationVariable
       return new ArrayList<String>();
     }
 
-    ArrayList<String> methodNames = new ArrayList<String>();      
+    ArrayList<String> methodNames = new ArrayList<String>();
     String attributeCapitalizedName = this.getUpperCaseName();
 
     String singularName = getUmpleClass().getSourceModel().getGlossary().getSingular(this.getName());
@@ -3546,7 +3546,7 @@ class AssociationVariable
       methodNames.add("get" + attributeCapitalizedName);
       methodNames.add("set" + attributeCapitalizedName);
     }
-    
+
     return methodNames;
   }
 }
@@ -4009,7 +4009,7 @@ class Comment
     else if (type == "RubyMultiline")
     {
       // initialize sb at least as large as the output with 1 comment
-      StringBuilder sb = new StringBuilder( output.length() + 2 ); 
+      StringBuilder sb = new StringBuilder( output.length() + 2 );
       sb.append("#");
       char c;
       for( int i=0; i < output.length(); ++i ){
@@ -4024,7 +4024,7 @@ class Comment
     else if (type == "RubyMultiline Internal")
     {
       // initialize sb at least as large as the output with 1 comment
-      StringBuilder sb = new StringBuilder( output.length() + 2 ); 
+      StringBuilder sb = new StringBuilder( output.length() + 2 );
       sb.append("#");
       char c;
       for( int i=0; i < output.length(); ++i ){
@@ -4071,8 +4071,8 @@ class GeneralTPApplied {
     if (another == null) return;
     this.parameterMapping = new HashMap<String, String>(another.parameterMapping);
     this.inheritanceName = another.inheritanceName;
-    positions = another.positions; 
-    
+    positions = another.positions;
+
     stateMachineModifiers = new ArrayList<>(another.getStateMachineModifiers());
     parameters = new ArrayList<>( Arrays.asList(another.getParameters()));
     methodTemplateSignatures = new ArrayList<>(another.getMethodTemplateSignatures());
@@ -4113,8 +4113,8 @@ class GeneralTPApplied {
               return true;
             }
           }
-          if (!smTSignature.getAlias().equals(inSMTSignature.getAlias()) && !smTSignature.getAlias().equals("") && !inSMTSignature.getAlias().equals("")) return true; 
-          if (smTSignature.getDesStateMachine().equals(inSMTSignature.getDesStateMachine())) return true;     
+          if (!smTSignature.getAlias().equals(inSMTSignature.getAlias()) && !smTSignature.getAlias().equals("") && !inSMTSignature.getAlias().equals("")) return true;
+          if (smTSignature.getDesStateMachine().equals(inSMTSignature.getDesStateMachine())) return true;
         }
         if (smTSignature.getMethodTemplateSignature()!=null && inSMTSignature.getMethodTemplateSignature()!=null){
           if (smTSignature.getMethodTemplateSignature().getMethod().compareWithTheMethod(inSMTSignature.getMethodTemplateSignature().getMethod())){
@@ -4123,8 +4123,8 @@ class GeneralTPApplied {
                 return true;
               }
             } else return true;
-          }        
-      }     
+          }
+      }
       }
     }
     return false;
@@ -4133,7 +4133,7 @@ class GeneralTPApplied {
 //----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------
 	Boolean hasStateMachineModifier(StateMachineModifier inSMModifier) {
-	  for (StateMachineModifier smModifier : getStateMachineModifiers()) {  
+	  for (StateMachineModifier smModifier : getStateMachineModifiers()) {
       if(inSMModifier instanceof EventModifier && smModifier instanceof EventModifier) {
         if (inSMModifier.getModifier().equals(smModifier.getModifier())){
           if( inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine()) && Arrays.equals(  ((EventModifier)inSMModifier).getSrcStates(), ((EventModifier)smModifier).getSrcStates() ) && ((EventModifier)inSMModifier).getMethod().compareWithTheMethod(((EventModifier)smModifier).getMethod())  ) {
@@ -4145,10 +4145,10 @@ class GeneralTPApplied {
         } else if( inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine()) && Arrays.equals(  ((EventModifier)inSMModifier).getSrcStates(), ((EventModifier)smModifier).getSrcStates() ) && ((EventModifier)inSMModifier).getMethod().compareWithTheMethod(((EventModifier)smModifier).getMethod())  ) {
           if (((EventModifier)inSMModifier).getGuard().isEqualTo(((EventModifier)smModifier).getGuard())){
             //raise a error that they two operations cannot be applied to one state.
-            return true;         
+            return true;
           }
-        }  
-      //---------------------------------------------------------------------------------------     
+        }
+      //---------------------------------------------------------------------------------------
       } else if(inSMModifier instanceof StateModifier && smModifier instanceof StateModifier) {
         if (inSMModifier.getModifier().equals(smModifier.getModifier())){
           if( inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine()) && Arrays.equals(  ((StateModifier)inSMModifier).getSrcStates(), ((StateModifier)smModifier).getSrcStates()  )  ) {
@@ -4170,7 +4170,7 @@ class GeneralTPApplied {
           //raise a error that they two operations cannot be applied to one state.
           return true;
         }
-      //---------------------------------------------------------------------------------------  
+      //---------------------------------------------------------------------------------------
       } else if(inSMModifier instanceof ExtendStateByStateMachine && smModifier instanceof ExtendStateByStateMachine) {
         //TODO: Explore this case more.
       }
@@ -4725,7 +4725,7 @@ class Filter
   {
     return getSubCount() > 0;
   }
-  
+
   public boolean hasSuper()
   {
     return getSuperCount() >= 0;
@@ -4733,7 +4733,7 @@ class Filter
 
   public boolean isEmpty()
   {
-    
+
     return getValues().length == 0 || "*".equals(getValue(0));
   }
 
