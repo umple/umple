@@ -133,7 +133,8 @@ class ExceptionDumper {
         catch (FileNotFoundException fne) {
           sc = null;
         }
-      }      
+      }
+      
       if(sc == null) {
         // Try opening using just the plain file name
         int classNameStart = javaStack.getClassName().lastIndexOf('.')+1;
@@ -143,10 +144,21 @@ class ExceptionDumper {
           sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
         }
         catch (FileNotFoundException fne) {
+            sc = null;
+        }
+      }
+      
+      if(sc == null) {
+        // The above doesn't work for relative paths in the className, 
+        //  so use the actual fileNmae attribute of javaStack
+        pathToJavaFile = Paths.get(generatedSourcePath + javaStack.getFileName());
+        try {
+          sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
+        }
+        catch (FileNotFoundException fne) {
           sc = null;
           System.err.println("  !! Could not open "
-             +javaStack.getClassName().substring(classNameStart)+".java to debug\n"
-             +"Try setting environment variable GeneratedSourcePath to path containing file");
+             + pathToJavaFile + "\nTry setting environment variable GeneratedSourcePath to path containing file");
           return null;          
         }
       }
