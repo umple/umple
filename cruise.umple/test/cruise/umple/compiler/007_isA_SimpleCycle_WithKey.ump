@@ -4,4 +4,3 @@ class Student
   key {id};
   isA Student;
 }
-
