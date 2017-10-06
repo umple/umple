@@ -1,0 +1,17 @@
+class Inherited2
+{
+  Integer id;
+  isA Loop;
+}
+
+class Inherited1
+{
+  isA Inherited2;
+  Integer id;
+}
+
+class Loop
+{
+  isA Inherited1;
+  key{id}
+}
