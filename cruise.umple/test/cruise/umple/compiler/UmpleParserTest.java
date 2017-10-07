@@ -1011,11 +1011,23 @@ public class UmpleParserTest
   {
     assertFailedParse("007_isA_SimpleCycle.ump", new Position("007_isA_SimpleCycle.ump",3,6,22));
   }
+  
+  @Test
+  public void isA_SimpleCycle_WithKey()
+  {
+	  assertFailedParse("007_isA_SimpleCycle_WithKey.ump", new Position("007_isA_SimpleCycle_WithKey.ump",5,6,48));
+  }
 
   @Test
   public void isA_ComplexCycle()
   {
     assertFailedParse("007_isA_ComplexCycle.ump", new Position("007_isA_ComplexCycle.ump",3,6,22));
+  }
+  
+  @Test
+  public void isA_ComplexCycle_WithKey()
+  {
+    assertFailedParse("007_isA_ComplexCycle_WithKey.ump", new Position("007_isA_ComplexCycle_WithKey.ump",4,6,39));
   }
 
   @Test
