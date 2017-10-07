@@ -281,7 +281,7 @@ class UmpleInternalParser
     }
     else if (t.is("key") || t.is("defaultKey"))
     {
-      analyzeKey(t,aClass);
+      addKey(t, aClass, unlinkedKeysTokens);
     }
     analyzeTraceToken(t,aClass);
     analyzeLayoutToken(t,aClass,analysisStep);
