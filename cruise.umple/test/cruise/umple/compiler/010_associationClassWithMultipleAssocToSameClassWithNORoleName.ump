@@ -1,0 +1,6 @@
+class A{}
+
+associationClass B{
+  * A;
+  * A;
+}

@@ -3554,6 +3554,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     String associationModifier = null;
     String name = null;
 
+
     //Issue 213/131: associations can be inside AssociationClasses, but
     //inline associations inside associationClasses are treated just like in regular classes
     if(isAssociationClass && !isInlineAssociation){
@@ -3590,6 +3591,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         setFailedPosition(associationToken.getPosition(), 8, name);
         return null;
     }
+    
+    if(isAssociationClass && isSingleAssociationEnd){
+    		String roleName = associationToken.getValue("otherEndroleName");
+    		if(roleName != null){
+    			firstEnd.setRoleName(roleName);
+    		}	
+    	}
+    	
     String myType = firstEnd.getClassName();
     String myRoleName = firstEnd.getRoleName();
     String yourType = secondEnd.getClassName();

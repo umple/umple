@@ -1740,6 +1740,13 @@ public class UmpleParserTest
 
     List<Association> iter = model.getAssociations();
     Assert.assertEquals(2,iter.size());
+    
+    assertParse("010_associationClassWithMultipleAssocToSameClassOneSetRoleName.ump");
+    assertParse("010_associationClassWithMultipleAssocToSameClassWithRoleName.ump");
+    
+    assertFailedParse("010_associationClassWithMultipleAssocToSameClassWithNOOtherRoleName.ump",19);
+    assertFailedParse("010_associationClassWithMultipleAssocToSameClassWithNORoleName.ump",19);
+    assertFailedParse("010_associationClassWithMultipleAssocToSameClassWithSingleRoleName.ump",19);
   }
 
   @Test
