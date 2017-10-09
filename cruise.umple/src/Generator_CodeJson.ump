@@ -215,6 +215,12 @@ class JsonGenerator
       String c1Name = extractClassName(aAssoc.getEnd(0));
       String c2Name = extractClassName(aAssoc.getEnd(1));
       
+      // Skip rendering associations containing a trait
+      // Issue 1101
+      if (c1Name == null || c2Name == null) {
+        continue;
+      }
+      
       if (index > 0)
       {
         jsonForAssociations += ", ";
@@ -317,18 +323,21 @@ class JsonGenerator
   //(eg. class or interface)
   private String extractClassName(AssociationEnd aAssocEnd)
   {
-    UmpleClass umpClass = model.getUmpleClass(aAssocEnd.getClassName());
+       String assocEndName = aAssocEnd.getClassName();
+       
+       UmpleClass umpClass = model.getUmpleClass(assocEndName);
+       if(umpClass != null) 
+       {
+           return umpClass.getName();
+       }
 
-    if(umpClass != null) 
-    {
-      return umpClass.getName();
-    }
-      
-    //Must be an interface at this end of the association
-    UmpleInterface umpInterface = 
-      model.getUmpleInterface(aAssocEnd.getClassName());
+       UmpleInterface umpInterface = model.getUmpleInterface(assocEndName);
+       if (umpInterface != null) {
+           return umpInterface.getName();
+       }
 
-    return umpInterface.getName();
+       // The associationEnd is a Trait and we don't want to draw a line
+       return null;
   }
 }
 
