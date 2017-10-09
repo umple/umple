@@ -237,6 +237,9 @@ class Constant
   // The value of the constant.
   value;
 
+  //Issue 322 - by default set internal to false
+  Boolean isInternal = false;
+  
   class UniqueIdentifier { }
 }
 

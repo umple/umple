@@ -2969,6 +2969,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       setFailedPosition(constantToken.getPosition(), 161, constantToken.getValue("name"));
     }
 
+    boolean isInternal = constantToken.getValue("internal") != null;
+    if(isInternal){
+        aConstant.setIsInternal(true);
+    }
+    else{
+        aConstant.setIsInternal(false);
+    }
+
     // Create the Constant Object
     for(Token token : constantToken.getSubTokens())
     {
