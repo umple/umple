@@ -1,10 +1,32 @@
 class UmpleToJava {
     members_AllStatics <<!<</*members_AllStatics*/>><<#
 {
+
+// Issue 322
+  if(uClass.hasConstants()){
+    appendln(realSb, " ");
+    appendln(realSb, " ");
+    appendln(realSb, "  //------------------------");
+    appendln(realSb, "  // CONSTANT STATIC VARIABLES");
+    appendln(realSb, "  //------------------------");
+    appendln(realSb, " ");
+
+    for (Constant aConstant : uClass.getConstants())
+    {
+      if(aConstant.getIsInternal()){
+        appendln(realSb, "private static final {0} {1} = {2};",aConstant.getType(), aConstant.getName(),aConstant.getValue());
+      }
+      else
+      {
+        appendln(realSb, "public static final {0} {1} = {2};",aConstant.getType(), aConstant.getName(),aConstant.getValue());
+      }
+    }
+  }
+
   isFirst = true;
   for(Attribute av : uClass.getAttributes())
   {
-  
+
     if (!av.isConstant() && !av.getIsAutounique() && !av.getIsUnique())
     {
       continue;
@@ -19,7 +41,7 @@ class UmpleToJava {
       appendln(realSb, "  //------------------------");
       isFirst = false;
     }
-  
+
     if (av.isConstant())
     {
       appendln(realSb, "");
@@ -41,7 +63,7 @@ class UmpleToJava {
         gen.translate("uniqueMap", av));
     }
   }
-  
+
   if (uClass.getIsSingleton())
   {
     if (isFirst)
