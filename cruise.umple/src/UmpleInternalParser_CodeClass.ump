@@ -17,7 +17,7 @@ namespace cruise.umple.compiler;
 class UmpleInternalParser
 {
   depend java.util.regex.*;
-  
+
   internal AssociationVariable[] unlinkedAssociationVariables;
   internal Association[] unlinkedAssociations;
   internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
@@ -32,7 +32,7 @@ class UmpleInternalParser
 
   // List of comments populated by the parser to be added to the next class, attribute, association, method, etc.
   internal Comment[] lastComments;
-  
+
   // last attribute made.
   internal Attribute lastattr = null;
 
@@ -40,10 +40,10 @@ class UmpleInternalParser
   internal AssociationVariable lastassoc = null;
   Position lastassocPosition = null;
   internal Map<Token, UmpleClass> attributeAutouniqueImmutable = null;
-   
+
   /*
    * Analyze class definitions and related tokens.
-   * 
+   *
    * @param t The current token that will be analyzed to determine how to further make use of it (is it a comment, class, etc?)
    * @param analysisStep Used to determine whether or not things should be analyzed more than once (multi-pass).
    */
@@ -90,20 +90,20 @@ class UmpleInternalParser
       {
         expectMessage(Integer.parseInt(t.getValue("messageNumber")));
       }
-    }      
+    }
     else if (t.is("namespace"))
     {
       currentPackageName = t.getValue();
       if (model.getDefaultNamespace() == null)
       {
-        model.setDefaultNamespace(currentPackageName);  
+        model.setDefaultNamespace(currentPackageName);
       }
     }
     else if (t.is("inlineComment"))
     {
       analyzeComment(t);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
-    } 
+    }
     else if (t.is("multilineComment"))
     {
       analyzeMultilineComment(t);
@@ -144,11 +144,11 @@ class UmpleInternalParser
       lastComments.clear();
     }
 
-  }  
+  }
 
   /*
    * If the last attribute/association made matches the line number of the comment, add the comment to the attribute/association.
-   * 
+   *
    * @param t the comment token that is used to see the position of the comment
    */
   private boolean addToLastAttributeOrAssociation(Token t)
@@ -169,7 +169,7 @@ class UmpleInternalParser
       {
         lastattr = null;
       }
-    }  
+    }
     else if (lastassoc != null && lastassocPosition != null)
     {
       if (lastassocPosition.getLineNum() == t.getPosition().getLineNum())
@@ -185,14 +185,14 @@ class UmpleInternalParser
       {
         lastassoc = null;
       }
-    }                
+    }
     return false;
   }
 
   /*
    * Analyze class content tokens.
-   * 
-   * @param token The current token that will be analyzed to determine how to further make use of it (is it a method, comment, 
+   *
+   * @param token The current token that will be analyzed to determine how to further make use of it (is it a method, comment,
    * attribute, etc?)
    * @param aClass The Umple class used such that parsed content such as methods, attributes, comments, etc may be added to
    * it.
@@ -207,7 +207,7 @@ class UmpleInternalParser
 
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
-    
+
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
     {
@@ -224,7 +224,7 @@ class UmpleInternalParser
       shouldConsumeComment = false;
     }
     // TODO Under development
-    
+
     else if (token.is("classDefinition"))
     {
       UmpleClass childClass = analyzeClass(token);
@@ -281,7 +281,7 @@ class UmpleInternalParser
     {
       // Issue 1008
       analyzeEnumeration(token, aClass);
-    }    
+    }
     else if (token.is("exception"))
     {
       analyzeException(token,aClass);
@@ -293,14 +293,14 @@ class UmpleInternalParser
     {
       lastComments.clear();
     }
-  }  
+  }
 
   /**
    * Analyzes a comment to determine if it should be added into the list of currently parsed comments waiting to be added to
    * a class, attribute, association, method or otherwise.
-   * 
+   *
    * Note that this is for an inline comment rather than a multiline comment.
-   * 
+   *
    * @param token The current token which has been flagged to be a comment to analyze, containing its value.
    */
   private void analyzeComment(Token token)
@@ -308,11 +308,11 @@ class UmpleInternalParser
     String theValue = "";
     // Special comment directive to force umpleoutput directives to be added
     // In every class
-    if (token.getValue().startsWith("@outputumplesource")) { 
+    if (token.getValue().startsWith("@outputumplesource")) {
       outputUmpleSource = true;
       return;
     }
-    if (!token.getValue().equals("$?[End_of_model]$?")) 
+    if (!token.getValue().equals("$?[End_of_model]$?"))
     {
       theValue = token.getValue();
       lastComments.add(new Comment(theValue));
@@ -322,10 +322,10 @@ class UmpleInternalParser
   /**
    * Analyzes a comment to determine if it should be added into the list of currently parsed comments waiting to be added to
    * a class, attribute, association, method or otherwise.
-   * 
+   *
    * Note that this is for a multiline comment, which essentially means the possibility of multiple inline comments (1 per line)
    * that will be concatenated together.
-   * 
+   *
    * @param token The current token which has been flagged to be a comment to analyze, containing its value.
    */
   private void analyzeMultilineComment(Token token)
@@ -334,7 +334,7 @@ class UmpleInternalParser
 
     // Go through the inline comments and add them to the list of comments waiting to be applied
     String theComment = "";
-    for (int i = 0; i < inlineComments.length; i++) 
+    for (int i = 0; i < inlineComments.length; i++)
     {
       theComment = inlineComments[i];
       if(theComment.startsWith("@outputumplesource")) {
@@ -349,7 +349,7 @@ class UmpleInternalParser
   }
 
   // Link associations, association variables and extends that were "defined" after their use
-  
+
   private void postTokenClassAnalysis()
   {
     if (verifyClassesInUse())
@@ -358,7 +358,7 @@ class UmpleInternalParser
       addUnlinkedAssociationVariables();
       addUnlinkedAssociations();
       addUnlinkedExtends();
-      
+
       //required for parsing specializedAssociations
       createSpecializedLinks();
       checkDuplicateAssociationNames();
@@ -366,16 +366,16 @@ class UmpleInternalParser
       checkExtendsForCycles();
       checkSortedAssociations();
       checkClassInterfaceAssocations();
-      
+
       //Issue 1084
       addUnlinkedKeys();
-      
+
       //Solution to issue 543
       //checkExtendsClass();
       checkAbstractClass();
-      
+
       analyzeInvariants();
-      
+
       //Solution to issue 502
       checkAttributeConflictImmutableAutounique();
 
@@ -389,24 +389,24 @@ class UmpleInternalParser
       // this method sets the isDistributed flag for classes.
         analyzeDistributedClasses();
         setParentClassesDefaultInterface();
-        checkAssociationsForDistributed(); 
+        checkAssociationsForDistributed();
         //checkDistributedAssociations();
     }
   }
 private void checkAssociationsForDistributed()
 {
   if(model.getDistributed()){
-    for (Association association : model.getAssociations()) 
-    {  
-      if (associationIsBetweenClassAndInterface (association)){continue;} 
-      if (associationIsBetweenClassAndTrait(association)){continue;} 
-      
+    for (Association association : model.getAssociations())
+    {
+      if (associationIsBetweenClassAndInterface (association)){continue;}
+      if (associationIsBetweenClassAndTrait(association)){continue;}
+
       AssociationEnd myEnd = association.getEnd(0);
       AssociationEnd yourEnd = association.getEnd(1);
-    
+
       if(getModel().getUmpleTraitTypeParameter(myEnd.getClassName()) || getModel().getUmpleTrait(myEnd.getClassName())!=null) return ;
       if(getModel().getUmpleTraitTypeParameter(yourEnd.getClassName()) || getModel().getUmpleTrait(yourEnd.getClassName())!=null) return ;
-    
+
       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
       UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
       if(myClass.getIsDistributed()&& !yourClass.getIsDistributed()&&association.getIsRightNavigable())
@@ -440,7 +440,7 @@ private void setParentClassesDefaultInterface()
   {
     if ((uClass.getNeedsDefaultInterface())&&((uClass.getIsDistributed())||(uClass.getHasProxyPattern())))
     {
-      if(uClass.getExtendsClass()!=null) 
+      if(uClass.getExtendsClass()!=null)
       {
         if(!uClass.getExtendsClass().getNeedsDefaultInterface()&&!uClass.getExtendsClass().getIsDistributed())
         {
@@ -459,7 +459,7 @@ private void setParentDefaultInterfaceRecursive(UmpleClass uClass,Boolean isDist
 
     uClass.setIsDefaultInterfaceRemoteRMI(isDistributed);
     uClass.setNeedsDefaultInterface(true);
-    if(uClass.getExtendsClass()!=null) 
+    if(uClass.getExtendsClass()!=null)
     {
       if(!uClass.getExtendsClass().getNeedsDefaultInterface())
       {
@@ -473,11 +473,11 @@ private void setParentDefaultInterfaceRecursive(UmpleClass uClass,Boolean isDist
 * Checking each class for distributabilty and chekning parent classes and interfaces as well as the system.
 */
 private void analyzeDistributedClasses()
-{ 
+{
   if(model.getDistributeOn())
-  { 
+  {
     for (UmpleClass uClass:  model.getUmpleClasses())
-    { 
+    {
       if (model.getDistributeForced()&&!(uClass.getIsAbstract())&&!uClass.isImmutable())
       { model.setDistributed(true);
         uClass.setDistributeTechnology(model.getDistributeTechnology());
@@ -487,23 +487,23 @@ private void analyzeDistributedClasses()
       }
 	    if (!uClass.getIsDistributed())
       { if(checkIsDistributed(uClass))
-        { 
+        {
         	uClass.setNeedsDefaultInterface(true);
         }
-      }    
+      }
   	  for(UmpleInterface parentInterface :uClass.getParentInterface())
-  	  { 
+  	  {
   	    if (parentInterface.getIsDistributable())
-  	    { 
+  	    {
 		      uClass.setNeedsDefaultInterface(false);
         }
-  	  }      
+  	  }
     }
 
 
 
-  }    
-}  
+  }
+}
 
 private Boolean checkIsDistributed(UmpleClass uClass)
 {
@@ -512,11 +512,11 @@ private Boolean checkIsDistributed(UmpleClass uClass)
   if the class implements d distributable interface it is also distributed. Here it has to be checked whether the class has more than one immediate distributable interfaces
  First check the parent interfaces, then check the class itself, if none are distributable, check for parent classes
  ******/
-  int distributedParents=0; 
+  int distributedParents=0;
   for (UmpleInterface parentInterface: uClass.getParentInterface())
-  { 
+  {
     if(checkIsDistributed(parentInterface)&&!(uClass.getIsAbstract())&&!uClass.isImmutable())
-    {  
+    {
       distributedParents+=1;
       uClass.setDistributeTechnology(parentInterface.getDistributeTechnology());
       uClass.setIsDistributed(true);
@@ -524,9 +524,9 @@ private Boolean checkIsDistributed(UmpleClass uClass)
       //uClass.setHasProxyPattern(true);
       uClass.setNeedsDefaultInterface(false);
       if (parentInterface.getIsDistributable())
-      { 
+      {
         uClass.setNeedsDefaultInterface(false);
-      }     
+      }
     }
   }
   if(distributedParents==1)
@@ -547,10 +547,10 @@ First it is checked if the class is distributable itself. Then the parent classe
     return true;
   }
 
-  if(uClass.getExtendsClass()!=null) 
+  if(uClass.getExtendsClass()!=null)
   {
     if(checkIsDistributed(uClass.getExtendsClass())&&!(uClass.getIsAbstract()))
-    { 
+    {
       uClass.setIsDistributed(true);
       model.setDistributed(true);
       //uClass.setHasProxyPattern(true);
@@ -558,7 +558,7 @@ First it is checked if the class is distributable itself. Then the parent classe
       uClass.setDistributeTechnology(uClass.getExtendsClass().getDistributeTechnology());
       return true;
     }
-  }  
+  }
 
   return false;
 }
@@ -590,14 +590,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       aInterface.setIsDistributable(true);
       if(distributableToken.getValue("distributeTech")!=null)
       	aInterface.setDistributeTechnology(distributableToken.getValue("distributeTech"));
-    } 
+    }
   }
 
   //Issue 841
   private void checkSingletonParent()
   {
     for (UmpleClass uClass:  model.getUmpleClasses())
-    { 
+    {
       if(uClass.getExtendsClass()!=null) {
         if(uClass.getExtendsClass().getIsSingleton()) {
           getParseResult().addErrorMessage(new ErrorMessage(40,uClass.getPosition(0),uClass.getName(),uClass.getExtendsClass().getName()));
@@ -618,7 +618,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         {
           checkCodeInjectionValidityAll(injectToken, (UmpleClass) entry.getKey());
         }
-        else if("custom".equals(operationSource)) 
+        else if("custom".equals(operationSource))
         {
           checkCodeInjectionValidityCustom(injectToken, (UmpleClass) entry.getKey());
         }
@@ -627,7 +627,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           checkCodeInjectionValidity(injectToken, (UmpleClass) entry.getKey());
         }
       }
-    } 
+    }
   }
 
   public void analyzeInvariants()
@@ -640,12 +640,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
     }
   }
-  
+
   //Issue 610
   private void checkAssociationClassKeys()
   {
     for (UmpleClass uClass:  model.getUmpleClasses())
-    { 
+    {
       if(uClass instanceof AssociationClass) {
         AssociationClass assocClass = (AssociationClass)uClass;
         assocClass.addMissingKeyIfNeeded();
@@ -658,20 +658,20 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   {
     List<State> lStates = new ArrayList<State>();
     List<State> lParentStates = new ArrayList<State>();
-    
+
     for (UmpleClass uClass:  model.getUmpleClasses())
-    { 
+    {
       for (StateMachine sm: uClass.getStateMachines())
       {
         //Enum check
         if(((sm.getAllEvents().size() > 0) && (sm.getAllTransitions().size() > 0)) || (sm.getNestedStateMachines().size() >0))
         {
           lStates = new ArrayList<State>();
-          
+
           State state  = sm.getStartState();
-          
+
           checkReachableStates(state, lStates, lParentStates);
-          
+
           for(State sp : lParentStates)
           {
             if(!lStates.contains(sp))
@@ -679,79 +679,79 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
               lStates.add(sp);
             }
           }
-          
+
           raiseWarningUnreachable(sm, lStates);
         }
       }
     }
   }
-   
+
    //Issue 492
   private void checkReachableStates(State s, List<State> ls, List<State> lp)
   {
     if(s == null)
       return;
-    
+
     if(!ls.contains(s))
         ls.add(s);
-    
+
     for ( Transition transition: s.getTransitions())
     {
       if(!ls.contains(transition.getNextState()))
         checkReachableStates(transition.getNextState(), ls, lp);
     }
-    
+
     if(s.hasNestedStateMachines())
     {
       for(StateMachine nestedSm: s.getNestedStateMachines())
       {
         checkReachableStates(nestedSm.getStartState(), ls, lp);
-      } 
+      }
     }
-    
+
     StateMachine aux = s.getStateMachine();
     State fatherState = null;
-    
+
     while(aux.getParentState() != null)
     {
       fatherState = aux.getParentState();
       if(!lp.contains(fatherState))
       {
           lp.add(fatherState);
-          
+
           for ( Transition transition: fatherState.getTransitions())
           {
             if(!ls.contains(transition.getNextState()))
               checkReachableStates(transition.getNextState(), ls, lp);
           }
       }
-      
+
       if (fatherState.getStateMachine() == null)
         return;
-      
+
       aux = fatherState.getStateMachine();
     }
   }
-  
+
   private void raiseWarningUnreachable(StateMachine sm, List<State> lStates)
   {
     boolean error = false;
-    
+
     if(!sm.hasStates())
       return;
-    
+
     for(State s : sm.getStates())
     {
-      
+
       if(!lStates.contains(s))
       {
           if(s.getPosition() != null)
         {
-          getParseResult().addErrorMessage(new ErrorMessage(67,s.getPosition(),s.getName(), sm.getName()));      
+          getParseResult().addErrorMessage(new ErrorMessage(67,s.getPosition(),s.getName(), sm.getName()));
             error = true;
           }
       }
-      
+
       if (s.hasNestedStateMachines() && !error)
       {
         for(StateMachine sm2 : s.getNestedStateMachines())
@@ -759,7 +759,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
     }
   }
-  
+
   private void checkAttributeConflictImmutableAutounique(){
     if(attributeAutouniqueImmutable != null && attributeAutouniqueImmutable.size() > 0)
     {
@@ -795,22 +795,22 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     addUnlinkedInterfaceExtends();
     checkExtendsForCyclesInterface();
   }
-  
+
   private List <UmpleInterface> recursiveCycleCheckInterface(List <UmpleInterface> extend,UmpleInterface parent, HashMap<UmpleInterface, Boolean> map)
   {
-    
+
     List <UmpleInterface> temp = new ArrayList <UmpleInterface>();
-    
+
     if(extend == null|| extend.isEmpty())
       return temp;
-    
+
     for (UmpleInterface I: extend){
       if(map.containsKey(I)){
         temp.add(I);
         return temp;
       }
       map.put(I, true);
-      
+
       for (UmpleInterface EI: I.getExtendsInterface()){
         if(parent.equals(EI)){
           temp.add(EI);
@@ -820,7 +820,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       List <UmpleInterface> temptemp = recursiveCycleCheckInterface(I.getExtendsInterface(), parent, map);
       temp.addAll(temptemp);
     }
-    
+
     return temp;
   }
 
@@ -846,22 +846,22 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private UmpleClass recursiveCycleCheck(UmpleClass extend, UmpleClass parent, HashMap<UmpleClass, Boolean> map)
   {
     UmpleClass temp = null;
-    
+
     if(extend == null)
       return null;
-    
+
     if(map.containsKey(extend))
       return extend;
-    
+
     map.put(extend, true);
-    
+
     if(parent.equals(extend.getExtendsClass()))
       return extend.getExtendsClass();
-    
+
     temp = recursiveCycleCheck(extend.getExtendsClass(), parent, map);
     return temp;
   }
-  
+
   private void checkExtendsForCycles()
   {
     for(UmpleClass C : model.getUmpleClasses())
@@ -869,7 +869,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       HashMap<UmpleClass, Boolean> vistedMap = new HashMap<UmpleClass, Boolean>();
       if(C.getExtendsClass() != null)
       {
-        if(C.equals(recursiveCycleCheck(C.getExtendsClass(), C, vistedMap))) 
+        if(C.equals(recursiveCycleCheck(C.getExtendsClass(), C, vistedMap)))
         { model.setDistributeOn(false);
           Token t = C.getExtendsToken();
           if(t.getValue().equals(C.getName()))
@@ -880,23 +880,23 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
     }
   }
-  
+
   // Check for classes that should be abstract
   private void checkAbstractClass(){
-    for(UmpleClass uClass : model.getUmpleClasses()) 
-    { 
-      if(uClass.getIsAbstract()) 
+    for(UmpleClass uClass : model.getUmpleClasses())
+    {
+      if(uClass.getIsAbstract())
       {
         // no work needs to be done on this class.
         continue;
       }
-      
-      if(uClass.getUnimplementedMethods().length > 0) 
+
+      if(uClass.getUnimplementedMethods().length > 0)
       {
         uClass.setIsAbstract(true);
         continue;
       }
-      
+
       // Check if class should be abstract based on properties of ancestors
       HashMap<String, Integer> uChildren = new HashMap<String, Integer>();
       checkAbstractClassRecursive(uClass, uChildren);
@@ -910,22 +910,22 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    * aClass must be abstract.
    */
   private Method[] checkAbstractClassRecursive(UmpleClass aClass, HashMap<String, Integer> aChildren){
-    if(aClass.getExtendsToken() == null || aClass.getExtendsClass() == null || aChildren.get(aClass.getName()) != null) 
+    if(aClass.getExtendsToken() == null || aClass.getExtendsClass() == null || aChildren.get(aClass.getName()) != null)
     {
       return aClass.getUnimplementedMethods();
     }
 
     aChildren.put(aClass.getName(), 1);
     Method[] ancestorUnimplementedMethods = checkAbstractClassRecursive(aClass.getExtendsClass(), aChildren);
-    for(Method unimplementedMethod : ancestorUnimplementedMethods) 
+    for(Method unimplementedMethod : ancestorUnimplementedMethods)
     {
-      if(!aClass.hasMethod(unimplementedMethod)) 
+      if(!aClass.hasMethod(unimplementedMethod))
       {
         aClass.addUnimplementedMethod(unimplementedMethod);
       }
     }
 
-    if(aClass.getUnimplementedMethods().length > 0) 
+    if(aClass.getUnimplementedMethods().length > 0)
     {
       aClass.setIsAbstract(true);
     }
@@ -935,29 +935,29 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   // Check for the existence of a a parent class
    private void checkExtendsClass(){
-    for(UmpleClass child : model.getUmpleClasses()) 
+    for(UmpleClass child : model.getUmpleClasses())
     {
-      if(child.getExtendsToken() != null) 
+      if(child.getExtendsToken() != null)
       {
-        if (child.getExtendsClass() != null ) 
+        if (child.getExtendsClass() != null )
         {
           // check to make sure attribute doesn't share a name with inherited attribute - F.K.
 
           //Issue 578
-        	
+
           List<Attribute> attRepetition = new ArrayList<Attribute>();
-          
+
           for(Attribute aAttribute : child.getAttributes())
           {
 
             UmpleClass extend = child.getExtendsClass();
-            while(extend!=null && child != extend) 
+            while(extend!=null && child != extend)
             {
-              for(Attribute extendAttr : extend.getAttributes()) 
+              for(Attribute extendAttr : extend.getAttributes())
               {
-            	  
+
                 String currentName = aAttribute.getName();
-                if (extendAttr.getName().equals(currentName)) 
+                if (extendAttr.getName().equals(currentName))
                 {
                   if(extendAttr.getType().equals(aAttribute.getType()))
                   {
@@ -970,22 +970,22 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
                   {
                 	attRepetition.add(aAttribute);
                     setFailedPosition(aAttribute.getPosition(), 44, child.getName(), currentName, extend.getName());
-                
+
                   }
                 }
               }
               extend = extend.getExtendsClass();
-            }  
+            }
           }
-          
+
           for(Attribute att : attRepetition)
         	  child.deleteAttribute(att);
-        	  
+
           continue;
         }
         else{
           Token t = child.getExtendsToken();
-          getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),child.getName()));      
+          getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),child.getName()));
         }
       }
     }
@@ -993,7 +993,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   /*
    * Analyzes all associations that are part of the given token indicated to be related to an association.
-   * 
+   *
    * @param associationToken The token indicated to be an association or association Class where sub tokens will be analyzed from to further
    * analyze the individual associations.
    */
@@ -1024,18 +1024,18 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   /*
    * Analyzes a class token to populate an Umple class.
-   * 
+   *
    * This is also where the list of currently parsed comments will be added to the Umple class.
-   * 
+   *
    * @param classToken The token which contains the data to be analyzed to populate an Umple class.
-   * 
+   *
    * @return An Umple class populated with data based on the analysis of the class token.
    */
   private UmpleClass analyzeClass(Token classToken)
   {
     //Reset number of activeObjects with each class definition
     this.numberOfActiveObjects = 1;
-    
+
     String className = classToken.getValue("name").split(" ")[classToken.getValue("name").split(" ").length-1];
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
     if (Token.isValidIdentifier(className, "[A-Za-z]") != true) {
@@ -1074,10 +1074,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       aClass.addCommentAt(c,regularCommentCountEnd);
       regularCommentCountEnd++;
     }
-    
-    // Add special position comment at the end if @outputumplesource had been 
+
+    // Add special position comment at the end if @outputumplesource had been
     // detected earlier in a comment
-    if(outputUmpleSource == true) {  
+    if(outputUmpleSource == true) {
       String path = null;
       if( thePosition.getFilename() == null ){
         path = "";
@@ -1091,7 +1091,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     if (classToken.getValue("abstract") != null)
     {
       boolean wasSet = aClass.setIsAbstract(true);
-      
+
       // Ensure the value was set.
       if (wasSet == false)
       {
@@ -1100,7 +1100,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
 
     addExtendsTo(classToken, aClass, unlinkedExtends, unlinkedExtendsTokens);
-    
+
     // If the "singleton" keyword is parsed, make the Umple class a singleton.
     if (classToken.getValue("singleton") != null)
     {
@@ -1121,14 +1121,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
     if(!"".equals(aClass.getPackageName()) && !currentPackageName.equals(aClass.getPackageName())){
       setFailedPosition(classToken.getPosition(), 30, aClass.getName(), currentPackageName);
-    }    
+    }
     if("".equals(aClass.getPackageName())){
       String pkgName = getCurrentNameSpace(classToken);
       aClass.setPackageName( pkgName!="" ? pkgName : currentPackageName);
   }
-    if (aClass.getIsSingleton()) 
+    if (aClass.getIsSingleton())
     {
-      classToken.setName(classToken.getName());  
+      classToken.setName(classToken.getName());
     }
 
     if (classToken.getValue("immutable") != null)
@@ -1151,7 +1151,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   /*
    * Takes an Umple classifier and analyzes a classifier token to add classifiers which extend it.
-   * 
+   *
    * @param classifierToken The token to be analyzed to add subclasses to the specified Umple classifier.
    * @param aClassifier The Umple classifier for which subclasses will be added.
    */
@@ -1166,7 +1166,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     for (Token extendsToken : classifierToken.getSubTokens())
     {
       if (extendsToken.getValue("extendsName") != null||extendsToken.getValue("extendsNames")!=null)
-      { 
+      {
         String name = extendsToken.getValue("extendsName") != null?extendsToken.getValue("extendsName"):extendsToken.getValue("extendsNames");
         extendsList.add(name);
         extendsTokenList.add(extendsToken); // With this line we really don't need the above, todo: refactor
@@ -1174,7 +1174,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           if (!unlinkedExtends.get(aClassifier).contains(name)) unlinkedExtends.get(aClassifier).add(name);
         } else{
           unlinkedExtends.put(aClassifier, extendsList);
-        }       
+        }
         if (unlinkedExtendsTokens.containsKey(aClassifier)){
           if (!unlinkedExtendsTokens.get(aClassifier).contains(extendsToken)) unlinkedExtendsTokens.get(aClassifier).add(extendsToken);
         } else{
@@ -1188,17 +1188,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   	//Checks list of extends tokens to prevent multiple class inheritance
     if(numberOfExtendsClass(extendsTokenList) > 1)
 	{
-	  Token t = extendsTokenList.get(0);    	
+	  Token t = extendsTokenList.get(0);
 	  getParseResult().addErrorMessage(new ErrorMessage(34,t.getPosition(),aClassifier.getName(),t.getValue()));
 	}
   }
-	
+
 	//Returns the number of umple class in extends list (extList)
   private int numberOfExtendsClass(List<Token> extList)
   {
 	int counter = 0;
 	for(Token t : extList)
-	{	
+	{
 	  if(isAnUmpleClass(t.getValue("extendsName")))
     counter++;
 	}
@@ -1239,7 +1239,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   private UmpleInterface analyzeInterface(Token interfaceToken)
   {
-    String interfaceName = interfaceToken.getValue("name");   
+    String interfaceName = interfaceToken.getValue("name");
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
     if (Token.isValidIdentifier(interfaceName, "[A-Za-z|@]") != true) {
       if(!interfaceName.matches("[A-Za-z|@]+<.+>"))
@@ -1250,7 +1250,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     else if ( interfaceName.matches("[a-z].*") ){ // Warn when interface name doesn't start with a capital letter.
       setFailedPosition(interfaceToken.getPosition(), 111, interfaceName);
     }
-    
+
     UmpleInterface anInterface = new UmpleInterface(interfaceToken.getValue("name"),model);
     model.addUmpleInterface(anInterface);
     Position thePosition = interfaceToken.getPosition();
@@ -1273,10 +1273,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       anInterface.addCommentAt(c,regularCommentCountEnd);
       regularCommentCountEnd++;
     }
-    
-    // Add special position comment at the end if @outputumplesource had been 
+
+    // Add special position comment at the end if @outputumplesource had been
     // detected earlier in a comment
-    if(outputUmpleSource == true) {  
+    if(outputUmpleSource == true) {
       String path = null;
       if( thePosition.getFilename() == null ){
         path = "";
@@ -1285,10 +1285,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       anInterface.addComment(new Comment("@umplesource " + path +" "+thePosition.getLineNumber()));
     }
-  
+
     if(!"".equals(anInterface.getPackageName()) && !currentPackageName.equals(anInterface.getPackageName())){
       setFailedPosition(interfaceToken.getPosition(), 30, anInterface.getName(), currentPackageName);
-    }    
+    }
     if("".equals(anInterface.getPackageName())){
       String pkgName = getCurrentNameSpace(interfaceToken);
       anInterface.setPackageName( pkgName!="" ? pkgName : currentPackageName);
@@ -1300,7 +1300,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private void analyzeInterface(Token interfaceToken, UmpleInterface aInterface)
   {
     for(Token token : interfaceToken.getSubTokens())
-    {   
+    {
       if (token.is("depend"))
       {
         Depend d = new Depend(token.getValue());
@@ -1326,19 +1326,19 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       List<String> extendsNames = unlinkedInterfaceExtends.get(child);
       List<Token>  extendsToken = unlinkedExtendsTokensInterface.get(child);
-      
+
 
       if (extendsNames == null)
       {
         continue;
       }
-      
+
 
       for (int i=0; i < extendsNames.size();i++)
       {
         String extendName= extendsNames.get(i);
         UmpleInterface uInterface=  model.getUmpleInterface(extendName);
-        
+
         //Issue 595
         if(uInterface == null)
         {
@@ -1346,9 +1346,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         }
         else
         {
-	        
+
 	        boolean wasSet = child.addExtendsInterface(uInterface);
-	        
+
 	        if (!wasSet)
 	        {
 	          Position pos;
@@ -1367,7 +1367,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 	        {
 	          child.setExtendsToken(extendsToken.get(i));
 	        }
-	        
+
 	        catch(Exception e){}
 	      }
       }
@@ -1375,35 +1375,35 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   }
 
   private void analyzeInterfaceMembers(Token interfaceMemberToken, UmpleInterface aInterface)
-  { 
-    
+  {
+
     for(Token childToken : interfaceMemberToken.getSubTokens())
-    { 
+    {
       addExtendsTo(interfaceMemberToken, aInterface, unlinkedInterfaceExtends, unlinkedExtendsTokensInterface);
-      
+
       if(childToken.is("abstractMethodDeclaration"))
       {
-        analyzeMethod(childToken, aInterface);   
+        analyzeMethod(childToken, aInterface);
       }
       else if (childToken.is("distributableInterface"))
       {
-        analyzeDistributableInterface(childToken, aInterface);   
+        analyzeDistributableInterface(childToken, aInterface);
       }
       else if (childToken.is("constantDeclaration"))
       {
-        analyzeConstant(childToken, aInterface);    
+        analyzeConstant(childToken, aInterface);
       }
       else if (childToken.is("constantDeclarationDeprecated"))
       {
         setFailedPosition(childToken.getPosition(), 901);
-        analyzeConstant(childToken, aInterface);    
+        analyzeConstant(childToken, aInterface);
       }
       else if (childToken.is("displayColor"))
       {  // Note: See near clone in UmpleInternalParser_CodeLayout.ump
         String theColor = childToken.getValue("colorValue");
         if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
         if(!theColor.startsWith("\"")) theColor= "\""+theColor;
-        if(!theColor.endsWith("\"")) theColor= theColor+"\"";         
+        if(!theColor.endsWith("\"")) theColor= theColor+"\"";
         aInterface.setDisplayColor(theColor);
       }
       else if (childToken.is("extraCode") || childToken.is("exception"))
@@ -1449,7 +1449,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       boolean isAInterface = model.getUmpleInterface(e.getValue()) != null;
       boolean isATrait = model.getUmpleTrait(e.getValue()) != null;
       boolean isTraitTypeParameter = model.getUmpleTraitTypeParameter(e.getValue());
-	  
+
       if (!isATrait && !isAClass && !isAInterface && !isTraitTypeParameter) //item referenced not a class or interface or a trait or a type parameter
       {
       	//TODO traits' error
@@ -1459,36 +1459,36 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         return false;
       }
     }
-    
+
     return true;
   }
-  
+
     private boolean associationIsBetweenClassAndInterface (Association a){
      AssociationEnd myEnd = a.getEnd(0);
        AssociationEnd yourEnd = a.getEnd(1);
-       
+
        UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
        UmpleInterface yourClass = model.getUmpleInterface(yourEnd.getClassName());
-       
+
        if (myClass != null && yourClass != null ){ //association is between class and interface
          return true;
        }
-       
+
        return false;
-      
+
    }
-  
+
   private boolean associationIsBetweenClassAndTrait(Association a){
 	    AssociationEnd myEnd = a.getEnd(0);
 	       AssociationEnd yourEnd = a.getEnd(1);
-	       
+
 	       UmpleTrait myClass = model.getUmpleTrait(myEnd.getClassName());
 	        UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
-	       
+
 	       if (myClass != null && yourClass != null ){ //association is between class and interface
 	         return true;
 	       }
-	       
+
 	       return false;
 	  }
 
@@ -1498,11 +1498,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
 
       UmpleClass aClass = model.getUmpleClass(av.getType());
-      UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType());   
+      UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType());
 
       if (aClass == null || bClass == null){ //Association is between Class and Interface
         continue;
-      }   
+      }
 
       Association assoc = bClass.getAssociation(bClass.indexOfAssociationVariable(av));
 
@@ -1510,8 +1510,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
       if (!added)
       {
-        if ((!aClass.isImmutable() && !av.getRelatedAssociation().getIsNavigable()) || (!bClass.isImmutable() && !av.getIsNavigable())) 
-        { 
+        if ((!aClass.isImmutable() && !av.getRelatedAssociation().getIsNavigable()) || (!bClass.isImmutable() && !av.getIsNavigable()))
+        {
           setFailedPosition(assoc.getTokenPosition(),13);
         }
         else { setFailedPosition(assoc.getTokenPosition(),18); }
@@ -1539,15 +1539,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   }
 
   private void addUnlinkedExtends()
-  {  
+  {
     for (UmpleClassifier c : unlinkedExtends.keySet())
     {
       UmpleClass child = null; // unlinkedExtends guaranteed to contain only UmpleClasses
       if (c instanceof UmpleClass){
         child = (UmpleClass) c;
-      }  
-    
-      List<String> extendsNames = unlinkedExtends.get(child);    
+      }
+
+      List<String> extendsNames = unlinkedExtends.get(child);
       List<Token>  extendsToken = unlinkedExtendsTokens.get(child);
 
       if (extendsNames == null)
@@ -1562,7 +1562,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         {
           if (isUmpleTrait(extendName) )
           {
-            UmpleTrait parent = model.getUmpleTrait(extendName);     
+            UmpleTrait parent = model.getUmpleTrait(extendName);
             boolean wasSet = child.addExtendsTrait(parent);
             if (!wasSet)
             {
@@ -1575,7 +1575,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 	      {
 	        pos = new Position("",0,0,0);
 	      }
-	      // TODO 1: the error code should be chnaged.            
+	      // TODO 1: the error code should be chnaged.
 	      setFailedPosition(pos, 16, child.getName(), parent.getName());
 	      return;
 	    }
@@ -1585,12 +1585,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 	    {
 	      child.setExtendsToken(extendsToken.get(i));
 	    }
-	    catch(Exception e){}   
-	    */          
+	    catch(Exception e){}
+	    */
           }
           else
           {
-            UmpleClass parent = model.getUmpleClass(extendName);     
+            UmpleClass parent = model.getUmpleClass(extendName);
 	    boolean wasSet = child.setExtendsClass(parent);
 	    if (!wasSet)
 	    {
@@ -1625,7 +1625,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     for(UmpleClass uClass: getModel().getUmpleClasses()) {
         addImplementedMethodsFromInterface(getAllParentInterface(uClass), uClass);
     }
-  }  
+  }
 
    private void addUnlinkedKeys() {
    	// If a dependency cycle exists, then we can't add keys
@@ -1637,10 +1637,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    	    {
             return;
         }
-    }	
+    }
 
     for (UmpleClass c : unlinkedKeysTokens.keySet())
-    {   
+    {
         List<Token>  keyTokens = unlinkedKeysTokens.get(c);
         List<String> tokensAdded = new ArrayList<String>();
         if (keyTokens == null || keyTokens.isEmpty())
@@ -1674,13 +1674,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
                 String secondEndName;
 
                 for(Association aAssociation : c.getAssociations())
-                { 
+                {
                     secondEnd = aAssociation.getEnd(1);
-                    secondEndName = secondEnd.getRoleName();        
+                    secondEndName = secondEnd.getRoleName();
 
                     // tokenVal with a lower-case first letter.
                     String firstLower = Character.toLowerCase(tokenVal.charAt(0)) + (tokenVal.length() > 1 ? tokenVal.substring(1) : "");
-          
+
                     if(secondEndName.equals(firstLower))
                     {
                         finalTokenVal = firstLower;
@@ -1689,8 +1689,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
                     }
                 }
             }
-	      	
-            if(c.hasStateMachines())  
+
+            if(c.hasStateMachines())
             {
                 for(StateMachine aStateMachine : c.getStateMachines())
                 {
@@ -1701,13 +1701,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
                     }
                 }
             }
-	        
-	        if(c instanceof AssociationClass) 
+
+	        if(c instanceof AssociationClass)
 	        {
                 AssociationClass assocClass = (AssociationClass) c;
                 String endName;
 
-                for(Association associatedTo: assocClass.getAssociatedTo()) 
+                for(Association associatedTo: assocClass.getAssociatedTo())
                 {
                     endName = associatedTo.getEnd(1).getRoleName();
 
@@ -1737,11 +1737,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             AssociationClass assocClass = (AssociationClass) c;
             String endName;
 
-            for(Association associatedTo : assocClass.getAssociatedTo()) 
+            for(Association associatedTo : assocClass.getAssociatedTo())
             {
                 endName = associatedTo.getEnd(1).getRoleName();
 
-                if(!tokensAdded.contains(endName)) 
+                if(!tokensAdded.contains(endName))
                 {
                     Token parent = keyTokens.get(0).getParentToken();
                     setFailedPosition(parent.getPosition(), 1011, c.getName(), endName, tokensAdded.toString());
@@ -1779,14 +1779,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     Stack<UmpleInterface> toProcess = new Stack<UmpleInterface>();
     toProcess.addAll(parentInterfaces);
     ancestorInterfaces.addAll(parentInterfaces);
-    
+
     while(!toProcess.isEmpty())
     {
     	parentInterfaces  = toProcess.pop().getExtendsInterface();
     	toProcess.addAll(parentInterfaces);
     	ancestorInterfaces.addAll(parentInterfaces);
     }
-    
+
     for (UmpleInterface pi : ancestorInterfaces)
     {
       if (pi.hasMethods())
@@ -1808,10 +1808,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   /*
    * Used to determine if a method is a contructor or a getter/setter.
-   * 
+   *
    * @param uClass The Umple class for which the method is contained.
    * @param aMethod The method which is contained within the Umple class.
-   * 
+   *
    * @return True if the method is a constructor, getter/setter, false otherwise.
    */
   private boolean verifyIfMethodIsConstructorOrGetSet(UmpleClass uClass, Method aMethod, boolean checkingInInterface)
@@ -1836,9 +1836,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
         uClass.appendExtraCode(aMethod.toString());
         return false;
-      }  
+      }
       //3. Verify if method from interface is already part of the Class extracode
-      String match = "public " + aMethod.getType() + " " + aMethod.getName();    
+      String match = "public " + aMethod.getType() + " " + aMethod.getName();
       if (uClass.getExtraCode().contains(match))
       {
         return false;
@@ -1862,75 +1862,75 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     AssociationEnd bLeftEnd, bRightEnd, aLeftEnd, aRightEnd;
     for (Association A : model.getAssociations())
     {
-      
+
       if (A.getIsSpecialization())
       {
         continue;
       }
-      
+
       aLeftEnd = A.getEnd(0);
       aRightEnd = A.getEnd(1);
-      
+
       // symmetric reflexive? no thanks -- not a specializable case (see below -- A -- A twice)
       if (aLeftEnd.getClassName().equals(aRightEnd.getClassName()))
       {
         continue;
       }
-      
+
       aLLB = aLeftEnd.getMultiplicity().getLowerBound();
       aLUB = aLeftEnd.getMultiplicity().getUpperBound();
       aRLB = aRightEnd.getMultiplicity().getLowerBound();
       aRUB = aRightEnd.getMultiplicity().getUpperBound();
-      
+
       aLName = aLeftEnd.getRoleName();
       aRName = aRightEnd.getRoleName();
-      
+
       // If one of the ends of the association are to a trait or an interface, the logic currently falls apart.
       // Given that, we will skip these two situations.
       if (model.getUmpleInterface(aLeftEnd.getClassName()) != null || model.getUmpleInterface(aRightEnd.getClassName()) != null)
       {
         continue;
       }
-      
+
       if (model.getUmpleTrait(aLeftEnd.getClassName()) != null || model.getUmpleTrait(aRightEnd.getClassName()) != null)
       {
         continue;
       }
 
       for (Association B : visited)
-      {  
-      
+      {
+
         if (B.getIsSpecialization())
         {
           continue;
         }
-      
+
         leftHierarchy = new ArrayList<String>();
         rightHierarchy = new ArrayList<String>();
-      
+
         bLeftEnd = B.getEnd(0);
         bRightEnd = B.getEnd(1);
         bLName = bLeftEnd.getRoleName();
         bRName = bRightEnd.getRoleName();
-        
+
         // if either end is an interface or a trait, continue (see above)
         if (model.getUmpleInterface(bLeftEnd.getClassName()) != null || model.getUmpleInterface(bRightEnd.getClassName()) != null)
 	{
           continue;
         }
-       
+
         if (model.getUmpleTrait(bLeftEnd.getClassName()) != null || model.getUmpleTrait(bRightEnd.getClassName()) != null)
         {
           continue;
         }
 
- 
+
         // if A -- B twice, we don't want that.
         if (aLeftEnd.getClassName().equals(bLeftEnd.getClassName()) && aRightEnd.getClassName().equals(bRightEnd.getClassName()))
         {
           continue;
         }
-        
+
         // reset the appropriate booleans
         namesOK = false;
         boundsOK = false;
@@ -1941,66 +1941,66 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         lMulChToN = false;
         rMulChToN = false;
       	lNeedsSetCode = false;
-      	rNeedsSetCode = false; 
-        
+      	rNeedsSetCode = false;
+
         // determine appropriate boolean value of the bounds
         bLLB = bLeftEnd.getMultiplicity().getLowerBound();
         bLUB = bLeftEnd.getMultiplicity().getUpperBound();
         bRLB = bRightEnd.getMultiplicity().getLowerBound();
         bRUB = bRightEnd.getMultiplicity().getUpperBound();
-        
+
         lLowerBoundOK = (bLLB <= aLLB);
       	rLowerBoundOK = (bRLB <= aRLB);
       	lUpperBoundOK = (bLUB >= aLUB);
       	rUpperBoundOK = (bRUB >= aRUB);
-            
+
       	if (bLUB != 1 && aLUB == 1)
           lMulChToOne = true;
-          
+
         if (bRUB != 1 && aRUB == 1)
           rMulChToOne = true;
-          
+
         if (aLUB == aLLB && bLLB == 0 && bLUB > 1) //  && aLUB > 1
           lMulChToN = true;
-          
+
         if (aRUB == aRLB && bRLB == 0 && bRUB > 1) //  && aRUB > 1
           rMulChToN = true;
-            
-      	// changed to MN (or M*) -- this may need to change when set method generation is fixed	  
+
+      	// changed to MN (or M*) -- this may need to change when set method generation is fixed
         if (aLUB >= aLLB && aLLB != 0 && aLUB > 1 && ((bLLB == 0 && bLUB > 1) || bLUB == -1))
           lMulChToN = true;
-        
+
         // changed to MN (or M*)
         if (aRUB >= aRLB && aRLB != 0 && aRUB > 1 && ((bRLB == 0 && bRUB > 1) || bRUB == -1))
-          rMulChToN = true;	  
-           
+          rMulChToN = true;
+
         // special case for * multiplicity
-      	if ( bLUB == -1 ) 
-      	{ 
+      	if ( bLUB == -1 )
+      	{
       	  lUpperBoundOK = true;
       	}
-      	
-      	if ( bRUB == -1 ) 
-      	{ 
+
+      	if ( bRUB == -1 )
+      	{
       	  rUpperBoundOK = true;
         }
-      	
+
       	if ( bLUB == -1 || (bLLB == 0 && bLUB != 1))
-      	{ 
+      	{
       	  rNeedsSetCode = true;
-      	} 
-      	
+      	}
+
       	if ( bRUB == -1 || (bRLB == 0 && bRUB != 1))
       	{
       	  lNeedsSetCode = true;
       	}
-      	        	
+
       	// if all bounds OK, set boolean to true
       	if (lLowerBoundOK && rLowerBoundOK && lUpperBoundOK && rUpperBoundOK)
       	{
       	  boundsOK = true;
       	}
-        
+
         // now we need to see if the names match
         if (aLName.equals(bLName) && aRName.equals(bRName))
         {
@@ -2012,50 +2012,50 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           reverseNames = true;
           namesOK = true;
         }
-        
+
         // build class hierarchy lists
         currentLeftClass = model.getUmpleClass(aLeftEnd.getClassName());
       	parentLeftClass = currentLeftClass.getExtendsClass();
       	currentRightClass = model.getUmpleClass(aRightEnd.getClassName());
       	parentRightClass = currentRightClass.getExtendsClass();
-      	
+
       	leftHierarchy.add(currentLeftClass.getName());
       	rightHierarchy.add(currentRightClass.getName());
-      	
+
       	while (parentLeftClass != null)
       	{
       	  leftHierarchy.add(parentLeftClass.getName());
       	  parentLeftClass = parentLeftClass.getExtendsClass();
       	}
-      	
+
       	while (parentRightClass != null)
       	{
           rightHierarchy.add(parentRightClass.getName());
       	  parentRightClass = parentRightClass.getExtendsClass();
       	}
-      	
+
       	parentRightClass = model.getUmpleClass(bRightEnd.getClassName());
       	parentLeftClass = model.getUmpleClass(bLeftEnd.getClassName());
-      	
+
       	if ( leftHierarchy.contains(parentLeftClass.getName()) && rightHierarchy.contains(parentRightClass.getName()))
       	{
       	  subclassOK = true;
-      	} 
+      	}
       	else if (rightHierarchy.contains(parentLeftClass.getName()) && leftHierarchy.contains(parentRightClass.getName()))
       	{
       	  subclassOK = true;
       	}
-      	
+
       	if ( subclassOK && namesOK && boundsOK )
       	{
       	  // then it's a redefinition
       	  // so B is a parent
-      	  
+
       	  if (!reverseNames)
       	  {
       	    aLeftEnd.setSuperClassName(bLeftEnd.getClassName());
       	    aRightEnd.setSuperClassName(bRightEnd.getClassName());
-      	  	
+
       	  	// Refer to the Association Specialization manual page --
       	  	// There are 2 cases for specialized code:
       	  	// 1- either the class will need code from it's superclass
@@ -2063,7 +2063,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       	  	// 1- the case of A -- B and Aa -- B where Aa isA A, Aa will need super code
       	  	// 2- in the same case, B will need common code.
       	  	// *- int he A -- B, Aa -- Bb case, where Bb isA B, they both need super code.
-      	  	
+
       	  	// Checks class names for information relevant to the above.
       	  	if (aLeftEnd.getClassName().equals(bLeftEnd.getClassName()))
       	  	{
@@ -2074,7 +2074,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       	  	{
       	  	  aRightEnd.setNeedsSuperCode(true);
       	  	}
-      	  	
+
       	  	// need to check both ends...
       	  	if (aRightEnd.getClassName().equals(bRightEnd.getClassName()))
       	  	{
@@ -2089,7 +2089,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       	  {
       	    aLeftEnd.setSuperClassName(bRightEnd.getClassName());
       	    aRightEnd.setSuperClassName(bLeftEnd.getClassName());
-      	    
+
       	    // check class names for information relevant to above (paragraph)
       	    if (aLeftEnd.getClassName().equals(bRightEnd.getClassName()))
       	    {
@@ -2102,7 +2102,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       	    {
       	      aRightEnd.setNeedsSuperCode(true);
       	    }
-      	    
+
       	    if (aRightEnd.getClassName().equals(bLeftEnd.getClassName()))
       	    {
       	      // need to check both.
@@ -2113,7 +2113,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       	      aLeftEnd.setNeedsSuperCode(true);
       	    }
       	  }
-      	  
+
       	  // -- probably legacy, comment out and see if it breaks.
       	  if (bLeftEnd.getClassName().equals(aLeftEnd.getClassName()))
           {
@@ -2123,30 +2123,30 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           {
             A.setCommonClassName(bRightEnd.getClassName());
           }
-          
+
       	  A.getEnd(0).setMulChangedToOne(lMulChToOne);
       	  A.getEnd(1).setMulChangedToOne(rMulChToOne);
-      	  
+
       	  A.getEnd(0).setMulChangedToN(lMulChToN);
       	  A.getEnd(1).setMulChangedToN(rMulChToN);
-      	  
+
       	  A.getEnd(0).setReqSetCode(lNeedsSetCode);
       	  A.getEnd(1).setReqSetCode(rNeedsSetCode);
-      	  
+
       	  B.setIsSpecialized(true);
       	  B.addSpecializedAssociation(A);
-      	  
+
       	  A.setIsSpecialization(true);
       	  A.setSpecializedFrom(B);
-      	  
+
       	}
-        
+
       }
-      
+
       visited.add(A);
     }
   }
-  
+
   // Issue #961. Ensure that all superclasses and subclasses do not have associations to two different
   // classes that use the same role name, and is not a specialization.
   private void checkDuplicateAssociationNamesClassHierarchy()
@@ -2164,17 +2164,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           break;
         }
         visitedSupers.add(superClass.getName());
-        
+
         ArrayList<String> duplicateNames = new ArrayList<String>();
 
         for(Association assoc : uClass.getAssociations())
         {
           AssociationEnd assocEnd = getDifferingEnd(assoc, uClass.getName());
-          
+
           ArrayList<String> existingNames = new ArrayList<String>();
-          
+
           String roleName = assocEnd.getRoleName();
-          
+
           // Check only associations that have a user-defined role name, and is not a specialization.
           if (!assocEnd.getIsDefaultRoleName() && !assoc.getIsSpecialization() && !duplicateNames.contains(roleName))
           {
@@ -2182,7 +2182,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             {
               AssociationEnd superAssocEnd = getDifferingEnd(superAssoc, superClass.getName());
               String superAssocRoleName = superAssocEnd.getRoleName();
-              
+
               if (superAssocEnd != null && superAssocRoleName.equals(roleName) &&
               		!existingNames.contains(superAssocRoleName) && !superAssocEnd.getClassName().equals(assocEnd.getClassName()))
               {
@@ -2198,17 +2198,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
     }
   }
-  
+
   // Get the end of an association opposite to the given class. If the association is reflexive,
   // return the end with a user defined role name.
   private AssociationEnd getDifferingEnd(Association assoc, String className)
   {
   	AssociationEnd firstEnd = assoc.getEnd(0);
     AssociationEnd secondEnd = assoc.getEnd(1);
-     
+
   	Boolean checkFirstEnd = !firstEnd.getClassName().equals(className);
     Boolean checkSecondEnd = !secondEnd.getClassName().equals(className);
-    
+
     if (!checkFirstEnd && !checkSecondEnd)
     {
     	// Association is reflexive. Both ends are the same, but we want the one with a user defined role name.
@@ -2218,13 +2218,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     	}
     	return secondEnd;
     }
-    
+
     if (checkFirstEnd)
     {
     	return firstEnd;
     }
     return secondEnd;
-  	
+
   }
 
   private void checkDuplicateAssociationNames()
@@ -2237,14 +2237,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
               existingAttributeNames.add(attr.getName());
       }
-      
+
       Boolean roleMatchesClassName, hasMultipleAssocToSameClass, isSymmetricReflexive;
       List<String> classesWithAssociationsToCurrClass = new ArrayList<String>();
       List<String> roleNameSameAsClassName = new ArrayList<String>();
       List<String> existingNames = new ArrayList<String>();
       List<Association> visitedAssociations = new ArrayList<Association>();
       for(Association assoc : C.getAssociations())
-      {  
+      {
         roleMatchesClassName = false;
         hasMultipleAssocToSameClass = false;
 
@@ -2254,26 +2254,26 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         }
 
         AssociationEnd firstEnd = assoc.getEnd(0);
-        AssociationEnd secondEnd = assoc.getEnd(1); 
+        AssociationEnd secondEnd = assoc.getEnd(1);
 
 	    if ( assoc.getIsSpecialization() )
         {
 	      //getParseResult().addErrorMessage(new ErrorMessage(400,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
           continue;
-        }         
-                
+        }
+
         isSymmetricReflexive = firstEnd.getModifier().equals("symmetricreflexive") || secondEnd.getModifier().equals("symmetricreflexive");
 
         Boolean checkFirstEnd = !firstEnd.getClassName().equals(C.getName());
         Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
         Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
-        
+
         //issue 288: firstEnd of association does not indicate current (this) class being analyzed.
         //If association is NOT reflexive, must check the differing class.  Check if role name
         //matches class name, but only if it is a user entered role name.  Current class must
-        //also have multiple associations to the same class to cause java compile errors.  
+        //also have multiple associations to the same class to cause java compile errors.
         if(!associationIsReflexive && C.numberOfAssociations() > 1)
-        { 
+        {
           //check the differing class
           if(checkFirstEnd)
           {
@@ -2283,10 +2283,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             }
             //is a user-defined role name and rolename matches class name
             else if(firstEnd.getRoleName().toLowerCase().equals(firstEnd.getClassName().toLowerCase()) && !firstEnd.getIsDefaultRoleName())
-            {    
+            {
               roleNameSameAsClassName.add(firstEnd.getRoleName().toLowerCase());
             }
-            
+
             classesWithAssociationsToCurrClass.add(firstEnd.getClassName());
           }
           //check the differing class
@@ -2298,17 +2298,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             }
             //is a user-defined role name and rolename matches class name
             else if(secondEnd.getRoleName().toLowerCase().equals(secondEnd.getClassName().toLowerCase()) && !secondEnd.getIsDefaultRoleName())
-            {    
+            {
               roleNameSameAsClassName.add(secondEnd.getRoleName().toLowerCase());
             }
-            
-            classesWithAssociationsToCurrClass.add(secondEnd.getClassName());          
+
+            classesWithAssociationsToCurrClass.add(secondEnd.getClassName());
           }
         }
 
         // check names on other-class end of associations to other classes
         if (!isSymmetricReflexive && (checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
-        { 
+        {
           if (existingNames.contains(firstEnd.getRoleName()) || hasMultipleAssocToSameClass)
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),firstEnd.getClassName(), C.getName()));
@@ -2341,7 +2341,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             existingNames.add(secondEnd.getRoleName());
           }
         }
-        
+
         // Special case for symmetric reflexive associations. Since only one end of the association is given
         // a name, that one only needs to be checked, and the other needs to be ignored.
         if(isSymmetricReflexive)
@@ -2370,7 +2370,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         }
 
         if (associationIsReflexive)
-        { 
+        {
           // The UmpleClass is only expected to have duplicate references to reflexive associations
           visitedAssociations.add(assoc);
         }
@@ -2378,42 +2378,42 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
   }
 
-  private void checkSingletonAssociations() 
+  private void checkSingletonAssociations()
   {
-    for (Association association : model.getAssociations()) 
-    {  
-      if (associationIsBetweenClassAndInterface (association)){continue;} 
-      if (associationIsBetweenClassAndTrait(association)){continue;} 
-      
+    for (Association association : model.getAssociations())
+    {
+      if (associationIsBetweenClassAndInterface (association)){continue;}
+      if (associationIsBetweenClassAndTrait(association)){continue;}
+
       AssociationEnd myEnd = association.getEnd(0);
       AssociationEnd yourEnd = association.getEnd(1);
-	  
+
 	  if(getModel().getUmpleTraitTypeParameter(myEnd.getClassName()) || getModel().getUmpleTrait(myEnd.getClassName())!=null) return ;
 	  if(getModel().getUmpleTraitTypeParameter(yourEnd.getClassName()) || getModel().getUmpleTrait(yourEnd.getClassName())!=null) return ;
-	  
+
       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
       UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
 
-      if (myClass.getIsSingleton() && (yourEnd.getMultiplicity().getRangeParts()[0].equals("1") && yourEnd.getMultiplicity().getRangeParts()[1].equals("1"))) 
+      if (myClass.getIsSingleton() && (yourEnd.getMultiplicity().getRangeParts()[0].equals("1") && yourEnd.getMultiplicity().getRangeParts()[1].equals("1")))
       {
         yourEnd.getMultiplicity().setRange("0", "1");
         yourEnd.getMultiplicity().setBound(null);
-        setFailedPosition(association.getTokenPosition(), 2, association.getName());  
+        setFailedPosition(association.getTokenPosition(), 2, association.getName());
       }
 
-      if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1"))) 
+      if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1")))
       {
         myEnd.getMultiplicity().setRange("0", "1");
         myEnd.getMultiplicity().setBound(null);
         setFailedPosition(association.getTokenPosition(), 2, association.getName());
       }
 
-      if(myClass.getIsSingleton() && (myEnd.getMultiplicity().getUpperBound() < 0 || myEnd.getMultiplicity().getUpperBound() > 1)) 
+      if(myClass.getIsSingleton() && (myEnd.getMultiplicity().getUpperBound() < 0 || myEnd.getMultiplicity().getUpperBound() > 1))
       {
         setFailedPosition(association.getTokenPosition(), 10, myEnd.getClassName());
       }
 
-      if(yourClass.getIsSingleton() && (yourEnd.getMultiplicity().getUpperBound() < 0 || yourEnd.getMultiplicity().getUpperBound() > 1)) 
+      if(yourClass.getIsSingleton() && (yourEnd.getMultiplicity().getUpperBound() < 0 || yourEnd.getMultiplicity().getUpperBound() > 1))
       {
         setFailedPosition(association.getTokenPosition(), 10, yourEnd.getClassName());
       }
@@ -2423,16 +2423,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private void addUnlinkedAssociations()
   {
     for (Association association : unlinkedAssociations)
-    {         
-      if (associationIsBetweenClassAndInterface (association)){continue;}  
+    {
+      if (associationIsBetweenClassAndInterface (association)){continue;}
       if (associationIsBetweenClassAndTrait(association)){continue;}
-      
+
       AssociationEnd myEnd = association.getEnd(0);
       AssociationEnd yourEnd = association.getEnd(1);
 
       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
       UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
-      
+
       AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
       myAs.setIsComposition(association.getIsLeftComposition());
       AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
@@ -2445,7 +2445,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 	  yourAs.setIsSpecialized(association.getIsSpecialized());
 	  myAs.setIsSpecialization(association.getIsSpecialization());
 	  yourAs.setIsSpecialization(association.getIsSpecialization());
-	  
+
 	  myAs.setSuperClassName(myEnd.getSuperClassName());
 	  yourAs.setSuperClassName(yourEnd.getSuperClassName());
 
@@ -2453,12 +2453,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 	  myAs.setNeedsSuperCode(myEnd.getNeedsSuperCode());
 	  yourAs.setNeedsCommonCode(yourEnd.getNeedsCommonCode());
 	  yourAs.setNeedsSuperCode(yourEnd.getNeedsSuperCode());
-	  	  
+
       myAs.setRelatedAssociation(yourAs);
-      
+
       if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
       if(!"".equals(yourEnd.getPriority())) { yourAs.setPriority(yourEnd.getPriority()); }
-      
+
       if (association.isImmutable())
       {
         boolean set = myAs.setImmutable();
@@ -2468,7 +2468,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           setFailedPosition(association.getTokenPosition(),17);
         }
       }
-      
+
       boolean added = myClass.addAssociationVariable(yourAs);
       if (!added)
       {
@@ -2485,7 +2485,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         else { setFailedPosition(association.getTokenPosition(),13); }
         return;
       }
-      
+
       yourClass.addAssociation(association);
 
       if (myAs.getIsNavigable())
@@ -2496,14 +2496,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if (yourAs.getIsNavigable())
       {
         myClass.addReferencedPackage(yourClass.getPackageName());
-      }      
+      }
 
     }
   }
 
   private void checkSortedAssociations()
   {
-    for (Association association : model.getAssociations()) 
+    for (Association association : model.getAssociations())
     {
       if (associationIsBetweenClassAndInterface (association)){continue;}
       AssociationEnd myEnd = association.getEnd(0);
@@ -2518,36 +2518,36 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         Attribute temp = yourClass.getAttribute(yourEnd.getPriority());
         if(temp != null)
         {
-          if(Pattern.matches("Integer|Short|Long|Float|Double|String", temp.getType())) 
+          if(Pattern.matches("Integer|Short|Long|Float|Double|String", temp.getType()))
           {
             String attributeType = yourClass.getName();
             String priorityType = temp.getType();
             String sortedName = yourEnd.getPriority().substring(0,1).toUpperCase() + yourEnd.getPriority().substring(1);
-            String php_codeblock = 
+            String php_codeblock =
                 "\n      function($x, $y)\n"+
                     "      {\n"+
-                    "        return $x->get"+ sortedName +"() -\n"+ 
+                    "        return $x->get"+ sortedName +"() -\n"+
                     "               $y->get"+ sortedName +"();\n"+
-                    "      }";  
-            String java_codeblock = 
+                    "      }";
+            String java_codeblock =
                 "\n      new Comparator<" + attributeType +">(){\n"+
                     "        @Override\n"+
-                    "        public int compare("+attributeType+" arg0, "+attributeType+" arg1)\n"+ 
+                    "        public int compare("+attributeType+" arg0, "+attributeType+" arg1)\n"+
                     "        {\n"+
                     "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
-                    "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
+                    "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+
                     "        }\n"+
-                    "      }";    
+                    "      }";
 
             Attribute priority = new Attribute(yourEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, yourClass);
             CodeBlock cb = new CodeBlock();
             cb.setCode("Php", php_codeblock);
             cb.setCode("Java", java_codeblock);
             cb.setCode("Ruby", "\"\"");
-            priority.setCodeblock(cb); 
+            priority.setCodeblock(cb);
             myClass.addAttribute(priority);
 
-          } 
+          }
           else
             setFailedPosition(association.getTokenPosition(), 24, yourEnd.getPriority(), myClass.getName());
         }
@@ -2564,30 +2564,30 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             String attributeType = myClass.getName() ;
             String priorityType = temp.getType();
             String sortedName = myEnd.getPriority().substring(0,1).toUpperCase() + myEnd.getPriority().substring(1);
-            String php_codeblock = 
+            String php_codeblock =
                 "\n      function($x, $y)\n"+
                     "      {\n"+
-                    "        return $x->get"+ sortedName +"() -\n"+ 
+                    "        return $x->get"+ sortedName +"() -\n"+
                     "               $y->get"+ sortedName +"();\n"+
-                    "      }";  
-            String java_codeblock = 
+                    "      }";
+            String java_codeblock =
                 "\n      new Comparator<" + attributeType +">(){\n"+
                     "        @Override\n"+
-                    "        public int compare("+attributeType+" arg0, "+attributeType +" arg1)\n"+ 
+                    "        public int compare("+attributeType+" arg0, "+attributeType +" arg1)\n"+
                     "        {\n"+
                     "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
-                    "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
+                    "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+
                     "        }\n"+
-                    "      }";    
+                    "      }";
 
             Attribute priority = new Attribute(myEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, myClass);
             CodeBlock cb = new CodeBlock();
             cb.setCode("Php", php_codeblock);
             cb.setCode("Java", java_codeblock);
             cb.setCode("Ruby", "\"\"");
-            priority.setCodeblock(cb); 
+            priority.setCodeblock(cb);
             yourClass.addAttribute(priority);
-          }  
+          }
           else
             setFailedPosition(association.getTokenPosition(), 24, myEnd.getPriority(), yourClass.getName());
         }
@@ -2596,7 +2596,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
     }
   }
-  
+
    private void checkClassInterfaceAssocations(){
     for (Association a : model.getAssociations()){
       if (associationIsBetweenClassAndInterface(a)){
@@ -2607,11 +2607,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
     }
   }
-  
+
   /*
    * Analyzes a token flagged to be a method in which case the data that makes up the method will be populated into a
    * method instance and added to an Umple element (which could be an Umple class).
-   * 
+   *
    * @param method The token flagged to be the method.
    * @param uElement The Umple element for which the method will be added.
    */
@@ -2622,7 +2622,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     // Set method position
     aMethod.setPosition(method.getPosition());
     aMethod.setEndPosition(method.getEndPosition());
-  
+
     // Add comments above the method to the method.
     for (Comment c : lastComments)
     {
@@ -2634,11 +2634,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     CodeBlock cb = new CodeBlock("");
     String iValue = null;
     Position iPosition = null;
-    
+
     //559b
     Map<String,Position> implementationPositions = new HashMap<String,Position>();
     List<String> langsImplementation = new ArrayList<String>();
-    
+
     boolean canClear = false;
     for(Token token : method.getSubTokens())
     {
@@ -2684,10 +2684,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         analyzeMethodDeclarator(token, uElement, aMethod);
       }
       else if (token.is("code"))
-      {        
+      {
         if(langs.isEmpty())
         {
-        	if( (cb.getCode("") != null) && (!cb.getCode("").equals("")) && (!cb.getCode("").equals("\n")))	  
+        	if( (cb.getCode("") != null) && (!cb.getCode("").equals("")) && (!cb.getCode("").equals("\n")))
         	getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
 	          	  aMethod.getName(),aMethod.getClass().getName(), implementationPositions.get("").getLineNumber()+"", implementationPositions.get("").getFilename(),
 	          	  token.getPosition().getLineNumber()+"", token.getPosition().getFilename(), ""));
@@ -2695,7 +2695,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           {
 	          cb.setCode(token.getValue());
 	          aMethod.setCodePosition(token.getPosition());
-	          
+
 	          //559b
 	          implementationPositions.put("", token.getPosition());
 	          langsImplementation.add("");
@@ -2705,7 +2705,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         {
           for(String str: langs)
           {
-        	  if( (cb.getCode(str) != null) && (!cb.getCode(str).equals("")) && (!cb.getCode(str).equals("\n")))	  
+        	  if( (cb.getCode(str) != null) && (!cb.getCode(str).equals("")) && (!cb.getCode(str).equals("\n")))
 	        	  getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
 	    	          	  aMethod.getName(),aMethod.getClass().getName(), implementationPositions.get(str).getLineNumber()+"", implementationPositions.get(str).getFilename(),
 	    	          	  token.getPosition().getLineNumber()+"", token.getPosition().getFilename(), str));
@@ -2732,22 +2732,22 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           canClear = false;
         }
         langs.add(token.getValue());
-        
+
         //559b
         langsImplementation.add(token.getValue());
         iPosition = token.getPosition();
         iValue = token.getValue();
         //implementationPositions.put(token.getValue(), token.getPosition());
       }
-      else if (token.is("precondition")){ 
+      else if (token.is("precondition")){
         if (uElement instanceof UmpleClass){
           analyzePrecondition(token, (UmpleClass) uElement, aMethod);
-        }  
+        }
       }
-      else if (token.is("postcondition")){ 
+      else if (token.is("postcondition")){
         if (uElement instanceof UmpleClass){
           analyzePostcondition(token, (UmpleClass) uElement, aMethod);
-        }  
+        }
       }
     }
     MethodBody meth = new MethodBody(cb);
@@ -2758,18 +2758,18 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     if (uElement instanceof UmpleClass)
     {
       UmpleClass uClass = (UmpleClass) uElement;
-      
+
       // Add Getter/Setter/Constructor to Class
       boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod, false);
-     
+
       //Issue 559
       //if(uClass.hasMethod(aMethod) && !uClass.getMethod(aMethod).getIsConstructor())
       if(uClass.hasMethod(aMethod))
       {
     	  Method actualMethod = uClass.getMethod(aMethod);
-    	  
+
     	  List<String> implementations = new ArrayList<String>();
-    	  
+
     	  for(String l : langsImplementation)
           if(actualMethod.getExistsInLanguage(l))
         	  implementations.add(l);
@@ -2779,15 +2779,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         	    actualMethod.getMethodBody().setExtraCode(l, aMethod.getMethodBody().getExtraCode(l));
         	  else
             actualMethod.getMethodBody().setExtraCode("", aMethod.getMethodBody().getExtraCode(l));
-          
+
         	  actualMethod.getMethodBody().getImplementationPositions().put(l, aMethod.getMethodBody().getImplementationPositions().get(l));
           }
-          
+
     	  if(!implementations.isEmpty())
     	  {
           for(String l : implementations)
           {
-        	  if((actualMethod.getMethodBody().getExtraCode(l).equals("") || 
+        	  if((actualMethod.getMethodBody().getExtraCode(l).equals("") ||
               actualMethod.getMethodBody().getExtraCode(l).equals("\n"))&&
              (!aMethod.getMethodBody().getExtraCode(l).equals("") ||
         	      !aMethod.getMethodBody().getExtraCode(l).equals("\n")) &&
@@ -2799,7 +2799,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         	  else
         	  {
         	  //Issue 771
-        	  if(uClass.hasSameType(aMethod)) 
+        	  if(uClass.hasSameType(aMethod))
         	  {
               getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
                   	  aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
@@ -2812,12 +2812,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
                   	  aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
               }
         	  }
-        	  
+
           }
     	  }
-    	  
+
     	  /*
-    	  
+
     	  if ((actualMethod.getMethodBody().getExtraCode().isEmpty()) &&
     	      (!aMethod.getMethodBody().getExtraCode().isEmpty()))
     	  {
@@ -2829,22 +2829,22 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     	    getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
           	  aMethod.getName(),uClass.getName(), actualMethod.getPosition().getLineNumber()+"", actualMethod.getPosition().getFilename(),
         	  aMethod.getPosition().getLineNumber()+"", aMethod.getPosition().getFilename()));
-    	  }    
-    	  
+    	  }
+
     	  */
-    	  
+
       }
 
-           
-     
+
+
       if ((!uClass.hasMethod(aMethod) || (uClass.hasMethod(aMethod) && uClass.getMethod(aMethod).getIsConstructor())) && shouldAddMethod)
       //if (!uClass.hasMethod(aMethod) && shouldAddMethod)
       {
-        uClass.addMethod(aMethod); 
-      } 
+        uClass.addMethod(aMethod);
+      }
 
       // Make class abstract if an abstract method was added
-      if(uClass.hasMethod(aMethod) && aMethod.getIsAbstract()) 
+      if(uClass.hasMethod(aMethod) && aMethod.getIsAbstract())
       {
         uClass.setIsAbstract(true);
         uClass.addUnimplementedMethod(aMethod);
@@ -2852,7 +2852,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
       // If method not added to class, add it to list of
       // unimplemented methods
-      if(!uClass.hasMethod(aMethod)) 
+      if(!uClass.hasMethod(aMethod))
       {
         //Issue 567
     	if(shouldAddMethod)
@@ -2863,7 +2863,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
         UmpleTrait uTrait = (UmpleTrait) uElement;
         if (method.is("abstractMethodDeclaration")) aMethod.setIsAbstract(true);
-        
+
         // Add Getter/Setter/Constructor to Class
      //   boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
         if (!uTrait.hasMethod(aMethod)) // && shouldAddMethod)
@@ -2874,11 +2874,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     	aMethod.addCommentAt(new Comment(msg),1);
     	msg = "Trait "+uTrait.getName()+" has been used in classes: ";
     	aMethod.addCommentAt(new Comment(msg),2);
-        	uTrait.addMethod(aMethod); 
-        } 
+        	uTrait.addMethod(aMethod);
+        }
 
         // Make class abstract if an abstract method was added
-        if(uTrait.hasMethod(aMethod) && aMethod.getIsAbstract()) 
+        if(uTrait.hasMethod(aMethod) && aMethod.getIsAbstract())
         {
         	uTrait.setIsAbstract(true);
         	uTrait.addUnimplementedMethod(aMethod);
@@ -2886,17 +2886,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
         // If method not added to class, add it to list of
         // unimplemented methods
-        if(!uTrait.hasMethod(aMethod)) 
+        if(!uTrait.hasMethod(aMethod))
         {
         	uTrait.addUnimplementedMethod(aMethod);
-        }    	
-    } 
+        }
+    }
     else if (uElement instanceof UmpleInterface)
     {
       UmpleInterface uInterface = (UmpleInterface) uElement;
       if (!uInterface.hasMethod(aMethod))
       {
-        uInterface.addMethod(aMethod); 
+        uInterface.addMethod(aMethod);
       }
     }
   }
@@ -2905,7 +2905,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   /*
    * Analyzes a method header, from a token flagged to be one, to populate a method instance for things such as the
    * method name, type and parameters.
-   * 
+   *
    * @param token The token flagged to be a method header.
    * @param aMethod The method to be populated from the analysis of the token.
    */
@@ -2932,7 +2932,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             }
             if (parameterToken.getSubToken("list") != null)
             {
-              isList = parameterToken.getSubToken("list").getValue() != null;        
+              isList = parameterToken.getSubToken("list").getValue() != null;
             }
 
             String paramName = parameterToken.getSubToken("name").getValue();
@@ -2947,7 +2947,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   /*
    * Analyzes a constant, from a token flagged to be one, to add a constant instance to an Umple element.
-   * 
+   *
    * @param constantToken The token flagged to be a constant.
    * @param uElement The Umple element for which a new constant will be added (populated from analysis of the token).
    */
@@ -2969,6 +2969,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       setFailedPosition(constantToken.getPosition(), 161, constantToken.getValue("name"));
     }
 
+
+     boolean isInternal = constantToken.getValue("internal") != null;
+     if(isInternal){
+       aConstant.setIsInternal(true);
+     }
+     else {
+       aConstant.setIsInternal(false);
+     }
     // Create the Constant Object
     for(Token token : constantToken.getSubTokens())
     {
@@ -2989,7 +2997,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
         aConstant.setValue(token.getValue());
       }
-    }  
+    }
 
     Boolean typeIsNull = ((constantToken.getValue("type") == null) || (constantToken.getValue("type").equals("")));
     Boolean valueIsNull = ((constantToken.getValue("value") == null) || (constantToken.getValue("value").equals("")));
@@ -2997,7 +3005,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       if(!compareTypeToValue(constantToken.getValue("type"), constantToken.getValue("value")))
       {
-        setFailedPosition(constantToken.getPosition(),141,constantToken.getValue("type"),constantToken.getValue("value"));  
+        setFailedPosition(constantToken.getPosition(),141,constantToken.getValue("type"),constantToken.getValue("value"));
       }
     }
     else if ((typeIsNull == true) && (valueIsNull != true))
@@ -3027,11 +3035,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           setFailedPosition(constantToken.getPosition(), 22, uElement.getName(), aConstant.getName());
         }
         else if (uElement instanceof UmpleInterface)
-        { 
+        {
           setFailedPosition(constantToken.getPosition(), 112, uElement.getName(), aConstant.getName());
         }
       }
-    }  
+    }
 
     // Add constant to Class or Interface
     if (uElement instanceof UmpleClass)
@@ -3043,7 +3051,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       UmpleInterface uInterface = (UmpleInterface) uElement;
       uInterface.addConstant(aConstant);
-    }  
+    }
   }
 
   private String defaultConstantValue(String type, Token attributeToken)
@@ -3109,7 +3117,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   private String getOperationParameters(Token aToken)
   {
-    StringBuilder operationParameters = new StringBuilder();  
+    StringBuilder operationParameters = new StringBuilder();
     String delimeter = "";
     for(Token subToken : aToken.getSubTokens())
     {
@@ -3117,8 +3125,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
         operationParameters.append(delimeter+subToken.getValue());
         delimeter = ",";
-      } 
-      else if(subToken.is("parameterTypes")) 
+      }
+      else if(subToken.is("parameterTypes"))
       {
         return getOperationParameters(subToken);
       }
@@ -3126,7 +3134,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         return getOperationParameters(subToken);
       }
     }
-    
+
     if(aToken.is("injectionOperation")) {
       return "...";
     }
@@ -3171,8 +3179,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
         operationName.append(comma+subToken.getValue());
         comma = ",";
-      } 
-      else if(subToken.is("injectionOperation")) 
+      }
+      else if(subToken.is("injectionOperation"))
       {
         operationName.append(comma+getOperationName(subToken));
         comma = ",";
@@ -3198,7 +3206,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
     List<String> operationsParameters = getOperationsParameters(injectToken);
     for(String operationParameters : operationsParameters) {
-      injection.addParameter(operationParameters);      
+      injection.addParameter(operationParameters);
     }
 
     makeCodeInject(injectToken,injection,cb,uClassifier);
@@ -3208,7 +3216,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
       if(!unanalyzedInjectionTokens.containsKey(uClassifier))
       {
-        unanalyzedInjectionTokens.put(uClassifier, new ArrayList<Token>()); 
+        unanalyzedInjectionTokens.put(uClassifier, new ArrayList<Token>());
       }
 
       List<Token> currentTokens = unanalyzedInjectionTokens.get(uClassifier);
@@ -3267,13 +3275,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         todoExtendedClasses.addAll(unlinkedExtends.get(eClass));
       }
 
-      methodNames.addAll(eClass.getMethodNames()); 
+      methodNames.addAll(eClass.getMethodNames());
     }
 
     while(!todoInheritedInterfaces.isEmpty())
     {
       String interfaceName = todoInheritedInterfaces.get(0);
-      todoInheritedInterfaces.remove(interfaceName); 
+      todoInheritedInterfaces.remove(interfaceName);
 
       UmpleInterface eInterface = model.getUmpleInterface(interfaceName);
 
@@ -3296,7 +3304,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     return methodNames;
   }
 
-  
+
   private void checkCodeInjectionValidityCustom(Token injectToken, UmpleClass uClass) {
     List<Method> methods = uClass.getMethods();
     String[] allOperations = getOperationName(injectToken).split(",");
@@ -3314,8 +3322,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
       Boolean matches = false;
 
-      for(Method method : methods) 
-      { 
+      for(Method method : methods)
+      {
         boolean tmpMatches = uClass.matchOperationMethod(operation, method.getName()) && checkParameterMatch(method.getMethodParameters(), currentParameters);
         matches = matches || tmpMatches;
       }
@@ -3324,7 +3332,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
       }
     }
-  } 
+  }
 
   private void checkCodeInjectionValidityAll(Token injectToken, UmpleClass uClass) {
     List<Method> methods = uClass.getMethods();
@@ -3345,16 +3353,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       Boolean matches = false;
 
       // check against generated methods
-      for(String methodName : methodNames) 
-      { 
+      for(String methodName : methodNames)
+      {
         if (uClass.matchOperationMethod(operation, methodName)) {
           matches = true;
         }
       }
 
       // check against custom methods
-      for(Method method : methods) 
-      { 
+      for(Method method : methods)
+      {
         boolean tmpMatches = uClass.matchOperationMethod(operation, method.getName()) && checkParameterMatch(method.getMethodParameters(), currentParameters);
         matches = matches || tmpMatches;
       }
@@ -3371,9 +3379,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   private void checkCodeInjectionValidity(Token injectToken, UmpleClass uClass) {
     ArrayList<String> methodNames = getAllMethodNames(uClass);
-    
+
     String[] allOperations = getOperationName(injectToken).split(",");
-    
+
     List<String> allParameters = getOperationsParameters(injectToken);
 
     String operationSource = getOperationSource(injectToken);
@@ -3393,12 +3401,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
       Boolean matches = false;
 
-      for(String methodName : methodNames) 
-      { 
+      for(String methodName : methodNames)
+      {
         if (uClass.matchOperationMethod(operation, methodName)) {
           matches = true;
         }
-        
+
       }
 
       if(!matches) {
@@ -3413,10 +3421,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if(!"...".equals(currentParameters)) {
         getParseResult().addErrorMessage(new ErrorMessage(1013, injectToken.getPosition(), operationSource));
       }
-       
+
     }
   }
-  
+
   //TODO I changed the parameter's type. please remove this comment;
   private void makeCodeInject(Token injectToken,CodeInjection injection, CodeBlock cb, UmpleClassifier uClassifier)
   {
@@ -3428,7 +3436,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         langs.add(sub.getValue());
       }
       if(sub.is("code"))
-      {          
+      {
         if(langs.size()==0)
         {
           cb.setCode(sub.getValue());
@@ -3440,17 +3448,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             cb.setCode(lang,sub.getValue());
             }
         }
-        langs.clear();      
+        langs.clear();
       }
       if(sub.is("codeInject"))
       {
         makeCodeInject(sub,injection, cb , uClassifier);
       }
-    }    
+    }
     injection.setPosition(injectToken.getPosition());
-    
+
   }
-  
+
   private void addKey (Token keysToken, UmpleClass aClass, Map <UmpleClass, List<Token>> unlinkedKeysTokens)
   {
     // If the class already has a key defined, set fail position
@@ -3465,13 +3473,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       setFailedPosition(keysToken.getPosition(), 47, aClass.getName());
       return;
     }
-    
+
     List<Token> keyTokenList = new ArrayList<Token>();
     List<String> tokensAdded = new ArrayList<String>();
     // Go through all sub-tokens of the key to add them to the list of keys for this class
     for (Token token : keysToken.getSubTokens())
     {
-        if (token.is("keyId")) 
+        if (token.is("keyId"))
         {
             //Checks for duplicate keys
             if(tokensAdded.contains(token.getValue()))
@@ -3513,7 +3521,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
     myAs.setRelatedAssociation(yourAs);
     aClass.addAssociationVariable(yourAs);
-    
+
     AssociationEnd leftEnd = new AssociationEnd(null,myType,myModifier,myType,myMult);
     AssociationEnd rightEnd = new AssociationEnd(myName,myType,myModifier,myType,myMult);
     Association assoc = new Association(true, true, false, false, leftEnd, rightEnd);
@@ -3591,14 +3599,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         setFailedPosition(associationToken.getPosition(), 8, name);
         return null;
     }
-    
+
     if(isAssociationClass && isSingleAssociationEnd){
     		String roleName = associationToken.getValue("otherEndroleName");
     		if(roleName != null){
     			firstEnd.setRoleName(roleName);
-    		}	
+    		}
     	}
-    	
+
     String myType = firstEnd.getClassName();
     String myRoleName = firstEnd.getRoleName();
     String yourType = secondEnd.getClassName();
@@ -3619,18 +3627,18 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
     updateAssociationEnds(firstEnd,secondEnd);
 
-    // Trap cases where both ends are the same class (reflexive) and 
+    // Trap cases where both ends are the same class (reflexive) and
     // there is no or same role name and same multiplicity. Fixes issue 295
     if(myType.equals(yourType) && ((myRoleName == null && yourRoleName == null) || (myRoleName != null && yourRoleName != null && myRoleName.equals(yourRoleName))) && myMult.toString().equals(yourMult.toString())) {
       setFailedPosition(associationToken.getPosition(), 21, myType);
       return null;
     }
-  
+
     if (firstEnd.getRoleName().equals(secondEnd.getRoleName()) && firstEnd.getClassName().equals(secondEnd.getClassName())){
       setFailedPosition(associationToken.getPosition(), 32, firstEnd.getRoleName());
       return null;
-    }  
-  
+    }
+
     Association association = createAssociation(navigation,firstEnd,secondEnd);
     if (isAssociationClass)
     {
@@ -3639,13 +3647,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if (assocClass == null) { assocClass = (AssociationClass) model.getUmpleClass(parentToken.getValue("name")); }
       if (assocClass != null) { assocClass.addAssociatedTo(association); }
     }
-    
+
     if (associationModifier != null && "immutable".equals(associationModifier)){
       association.setImmutable();
     }
     association.setTokenPosition(associationToken.getPosition());
     association.setTokenEndPosition(associationToken.getEndPosition());
-    
+
     if (!association.isValid()){
       Token atFaultToken = association.whoIsInvalid() == 0 ? myEndToken : yourEndToken;
       String invalidBound = atFaultToken.getValue("bound") == null ? invalidBound = atFaultToken.getValue("lowerBound") + ".." + atFaultToken.getValue("upperBound") : atFaultToken.getValue("bound");
@@ -3654,7 +3662,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
     model.addAssociation(association);
     if(!isInlineAssociation){ unlinkedAssociations.add(association); }
-    
+
     //check for non-constraint side warning per issue347
     if(isInlineAssociation || !isAssociationClass){
       analyzeNonconstraintAssociationEndForWarning(associationToken, firstEnd, secondEnd);
@@ -3663,7 +3671,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   }
 
   /*
-   * Given a [[associationEnd]], [[singleAssociationEnd]], [[inlineAssociationEnd]] or 
+   * Given a [[associationEnd]], [[singleAssociationEnd]], [[inlineAssociationEnd]] or
    * a [[associationClassDefinition]] token, creates a
    * preliminary AssociationEnd object to help in the creation of an Association object.
    * The resulting object will have to be completed with setReferenceToClassName()depending on the type of association.
@@ -3676,7 +3684,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       Multiplicity mult = new Multiplicity();
       String typeIndex;
 
-      //special case when [[singleAssociationEnd]] is used in one end: the 
+      //special case when [[singleAssociationEnd]] is used in one end: the
       //parent associationClassDefinition is used as the other
       if(associationEndToken.is("associationClassDefinition")){
         name = null;
@@ -3721,7 +3729,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   {
 
     if (firstEnd.getRoleName().length() == 0)
-    { 
+    {
       String rawName = StringFormatter.toCamelCase(firstEnd.getClassName());
       String name = firstEnd.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
       firstEnd.setRoleName(name);
@@ -3739,7 +3747,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   /*
    * Analyzes a token flagged to be an association within an Umple class to create an instance of one and add it to the class.
-   * 
+   *
    * @param inlineAssociationToken The token flagged to be an inline association.
    * @param aClass The Umple class for which an association instance will be added (populated from analysis of the token).
    */
@@ -3761,10 +3769,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     yourAs.setIsComposition(association.getIsRightComposition());
 
     myAs.setRelatedAssociation(yourAs);
-    
+
     if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
     if(!"".equals(yourEnd.getPriority())) { yourAs.setPriority(yourEnd.getPriority()); }
-    
+
     if (association.isImmutable())
     {
       boolean set = myAs.setImmutable();
@@ -3783,12 +3791,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       yourAs.addComment(c);
     }
-    
+
     // set last association made to be yourAs. clear lastattr.
     lastassoc = yourAs;
     lastassocPosition = inlineAssociationToken.getPosition();
     lastattr = null;
-    
+
 
     boolean added = aClass.addAssociationVariable(yourAs);
     if (added)
@@ -3799,14 +3807,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     else
     {
       if (aClass.isImmutable()) { setFailedPosition(inlineAssociationToken.getPosition(),17); }
-      
+
       else { setFailedPosition(inlineAssociationToken.getPosition(),13); }
     }
   }
 
   /*
    * Set warning if non-constraint side of association is not many(*) or optional(0..1) association type per issue 347
-   * 
+   *
    * @param Token The token is either inlineAssociationToken or associationDefinationToken.
    * @param AssociationEnd the first associationEnd.
    * @param AssociationEnd the second associationEnd.
@@ -3815,12 +3823,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   {
     AssociationEnd nonConstraintEnd = null;
     boolean isUnidirection = true;
-    
+
     //manual check as getIsLeftNavigatable() applies for "--" as well
     Token arrowToken = associationToken.getSubToken("arrow");
     boolean isLeftArrow = arrowToken.getValue().equals("<-"); // || arrowToken.getValue().equals("<@>-");
     boolean isRightArrow = arrowToken.getValue().equals("->"); // || arrowToken.getValue().equals("-<@>");
-    
+
     //determine the non-arrow side
     if(isLeftArrow)
     {
@@ -3834,32 +3842,32 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       isUnidirection = false;
     }
-    
+
     if(isUnidirection)
     {
       String nonConstraintEndLower = nonConstraintEnd.getLowerBoundString();
       String nonConstraintEndUpper = nonConstraintEnd.getUpperBoundString();
-        
+
       //only allow optional and many constraint on non-arrow side
       boolean isMany = (nonConstraintEndLower.equals("0")) && (nonConstraintEndUpper.equals("*"));
       boolean isOptional = (nonConstraintEndLower.equals("0")) && (nonConstraintEndUpper.equals("1"));
-        
+
       if(!isMany && !isOptional)
       {
         String bound = "";
         //case of mandatory constraint
     	if(nonConstraintEndLower.equals(nonConstraintEndUpper))
         bound = nonConstraintEndLower;
-    	else	
+    	else
         bound = "[" +nonConstraintEndLower+", "+nonConstraintEndUpper+"]";
         setFailedPosition(associationToken.getPosition(), 36, bound);
       }
     }
   }
-  
+
   /*
    * Analyzes a token flagged to be an attribute within an Umple class to create an instance of one and add it to the class.
-   * 
+   *
    * @param attributeToken The token flagged to be an attribute.
    * @param aClass The Umple class for which an attribute instance will be added (populated from analysis of the token).
    */
@@ -3876,49 +3884,49 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<@>-") || attributeToken.getValue("name").contains("-<@>");
-    
-    
+
+
     String modifier = attributeToken.getValue("modifier");
     String type = attributeToken.getValue("type");
     String name = attributeToken.getValue("name");
     String value = attributeToken.getValue("value");
     String derivedValue = attributeToken.getValue("code");
-    
+
     if(isAutounique || attributeToken.getValue("modifier") != null){
     	if(attributeAutouniqueImmutable == null)
         attributeAutouniqueImmutable = new HashMap<Token, UmpleClass>();
     	attributeAutouniqueImmutable.put(attributeToken, aClass);
     }
-    
+
     if(!validName)
     {
       if(looksLikeAssociation){
         setFailedPosition(attributeToken.getPosition(), 132, name);
-      } 
+      }
       else if(isConstant){
         setFailedPosition(attributeToken.getPosition(), 160, name);
       }
       else {
         setFailedPosition(attributeToken.getPosition(), 130, name);
       }
-      
+
       return;
     }
-    
+
     if(!properName && !isConstant){
       setFailedPosition(attributeToken.getPosition(), 131, name);
     }
     else if(properName && isConstant){
       setFailedPosition(attributeToken.getPosition(), 161, name);
     }
-    
+
     //allow singleton with constant and predefined variables
-    if (aClass.getIsSingleton() && !isConstant && !isLazy && (value == null)) 
+    if (aClass.getIsSingleton() && !isConstant && !isLazy && (value == null))
     {
       isLazy = true;
       setFailedPosition(attributeToken.getPosition(), 1, name);
     }
-    
+
     // check to see if type has angle brackets <>
     if (type != null)
     {
@@ -3929,7 +3937,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         setFailedPosition(attributeToken.getPosition(), 46, name, aClass.getName(), type);
       }
     }
-    
+
     if (isLazyRedundant(isLazy, value))
     {
       setFailedPosition(attributeToken.getPosition(), 3, aClass.getName(), name);
@@ -3983,9 +3991,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
 
     if(type != null)
-    { 
+    {
       Matcher m = Pattern.compile("([a-zA-Z_][0-9a-zA-Z_]*(<(.*)>)?)").matcher(type);
-      if(!m.matches()) 
+      if(!m.matches())
       {
         setFailedPosition(attributeToken.getPosition(), 140, type);
         return;
@@ -3999,12 +4007,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 	setFailedPosition(attributeToken.getPosition(), 142, type);
       }
     }
-        
+
     if(type != null && value != null)
     {
       if(!compareTypeToValue(type,value))
       {
-        setFailedPosition(attributeToken.getPosition(),141,type,value);  
+        setFailedPosition(attributeToken.getPosition(),141,type,value);
       }
     }
     else if (type == null && value != null)
@@ -4033,7 +4041,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
     if (name == null)
     {
-      String rawName = StringFormatter.toCamelCase(type); 
+      String rawName = StringFormatter.toCamelCase(type);
       name = isList ? model.getGlossary().getPlural(rawName) : rawName;
     }
 
@@ -4044,7 +4052,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       attribute.setCodeblock(languageSpecificCode);
     }
 
-    // set position regardless of derivedValue    
+    // set position regardless of derivedValue
     attribute.setPosition(attributeToken.getPosition());
 
     attribute.setIsList(isList);
@@ -4054,18 +4062,18 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       attribute.addComment(c);
     }
-    
+
     // set the last attribute made to be attribute, clear lastassoc
     lastattr = attribute;
     lastassoc = null;
-    
+
     String attModifier = attribute.getModifier();
-    
+
   	if (!attModifier.equals("internal") && !attModifier.equals("const"))
   	{
     	addAPIMethods(attribute, aClass);
     }
-    
+
     if (attribute.getValue()==null && !attribute.getIsAutounique() && !attribute.getIsLazy() &&
     	(attModifier.equals("immutable") || attModifier.equals("settable")))
     {
@@ -4089,13 +4097,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   	{
   		aClass.removeMethod(constructor);
   	}
-  	
+
   	constructor.addMethodParameter(new MethodParameter(
   		"a" + StringFormatter.toPascalCase(attribute.getName()), attribute.getType(), "", "", false));
   	aClass.addMethod(constructor);
   }
 
-  
+
   private void addAPIMethods(Attribute attribute, UmpleClass aClass)
   {
   	Glossary g = new Glossary();
@@ -4103,41 +4111,41 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   	String singularName = isMany ? g.getSingular(attribute.getName()) : attribute.getName();
     String pluralName = isMany ? attribute.getName() : g.getPlural(attribute.getName());
     String getSetName = isMany ? pluralName : singularName;
-    
+
     addGetMethod(getSetName, attribute, aClass);
-    	
+
     if (!attribute.getIsAutounique() && (!attribute.getModifier().equals("immutable") || attribute.getIsLazy()))
     {
     	addSetMethod(getSetName, attribute, aClass);
     }
-    	
+
   }
-  
+
   private void addSetMethod(String name, Attribute attribute, UmpleClass aClass)
   {
   		String setName = StringFormatter.format("set{0}", StringFormatter.toPascalCase(name));
-  		
+
   		Method aMethod = new Method("public", setName, "Boolean", false);
   		aMethod.setMethodBody(new MethodBody(""));
   		aMethod.setPosition(new Position("", 0, 0, 0));
   		aMethod.setSource(Method.Source.fAutoAPI);
   		aMethod.addMethodParameter(new MethodParameter("a" + StringFormatter.toPascalCase(name), attribute.getType(), "", "", false));
   		aClass.addMethod(aMethod);
-    	
+
   }
-  
+
   private void addGetMethod(String name, Attribute attribute, UmpleClass aClass)
   {
   		String getName = StringFormatter.format("get{0}", StringFormatter.toPascalCase(name));
-    	
+
   		Method aMethod = new Method("public",getName, attribute.getType(), false);
   		aMethod.setMethodBody(new MethodBody(""));
   		aMethod.setPosition(new Position("", 0, 0, 0));
   		aMethod.setSource(Method.Source.fAutoAPI);
   		aClass.addMethod(aMethod);
-  
+
   }
-  
+
 
   private String inferType(String value, String type)
   {
@@ -4169,21 +4177,21 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     else if(type == null)
     {
       Matcher m = Pattern.compile("(new\\s+)([a-zA-Z_][0-9a-zA-Z_]*(\\s*<(.*)>)?)(\\s*\\(\\))").matcher(value);
-      if(m.matches())        
-      {  
+      if(m.matches())
+      {
         inferredType = m.group(2);
       }
       else
-      { 
+      {
         //if anything other than the default new X(); one cannot infer the type
         inferredType = "String";
       }
     }
     //worst case scenarios when we can't anticipate what a user will use as value.
-    //and to ignore inheritance/polymorphism 
+    //and to ignore inheritance/polymorphism
     else if(type != null)
     {
-      inferredType = type; 
+      inferredType = type;
     }
     else
     {
@@ -4191,16 +4199,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
     return inferredType;
   }
-  
+
   private boolean compareTypeToValue(String type, String value)
-  { 
+  {
     //cannot infer null
     if(value.equals("null"))
     {
       return true;
     }
 
-    String inferredType = inferType(value,type);   
+    String inferredType = inferType(value,type);
     if(type.equals("String") && (inferredType.equals("Date") || inferredType.equals("Time")))
     {
       return true;
@@ -4216,18 +4224,18 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     else if(type.equals("boolean") && inferredType.equals("Boolean"))
     {
       return true;
-    } 
+    }
     else
     {
       return inferredType.equals(type);
     }
-  } 
+  }
 
   private Boolean isLazyRedundant(Boolean isLazy, String value)
   {
     return (isLazy && value != null);
   }
-  
+
   private void analyzeException(Token exception, UmpleClass aClass)
   {
     Token sub = exception.getSubToken(0);
@@ -4244,12 +4252,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<-") || sub.getValue("name").contains("..");
         looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("*");
         looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<@>-") || sub.getValue("name").contains("-<@>");
-        
+
         if(looksLikeAssociation)
         {
           setFailedPosition(sub.getPosition(), 132, sub.getValue("name"));
         }
-        else 
+        else
         {
           setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
         }
@@ -4334,7 +4342,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
     }
   }
-  
+
   private void analyzeException(Token exception, UmpleInterface aInterface)
   {
     Token sub = exception.getSubToken(0);
@@ -4351,12 +4359,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<-") || sub.getValue("name").contains("..");
         looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("*");
         looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<@>-") || sub.getValue("name").contains("-<@>");
-        
+
         if(looksLikeAssociation)
         {
           setFailedPosition(sub.getPosition(), 132, sub.getValue("name"));
         }
-        else 
+        else
         {
           setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
         }
@@ -4442,7 +4450,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
     }
   }
-  
+
   private void analyzeExtraCode(Token token, UmpleClass aClass)
   {
     //This is a catch all and will be used less often as the grammar gets updated.
@@ -4500,7 +4508,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         break;
       }
     }
-    
+
     if(isNotProperIdentifier)
     {
       int bestScore = -100;
@@ -4536,12 +4544,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       setFailedPosition(position,1503,identifier,bestMatch);
     }
-    else 
+    else
     {
       setFailedPosition(position,1502,identifier);
     }
   }
-  
+
   private String getCurrentNameSpace(Token inToken) {
     String currentNameSpace="";
     boolean twice = false;
@@ -4588,11 +4596,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 //    	}
 //    }
 //    if (finalCheck) return currentNameSpace;
-//    if (counter<0) return  currentNameSpace; 
+//    if (counter<0) return  currentNameSpace;
 //    else if(counter==0 ) {
 //    	if (currentNameSpace!=""){
 //        setFailedPosition(forReport.getPosition(),31,currentPackageName,forReport.getValue());
-//        return  currentNameSpace; 
+//        return  currentNameSpace;
 //    	} else{
 //        return extraNamespace;
 //    	}
@@ -4601,5 +4609,5 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 //    	return extraNamespace;
 //    }
 	}
-  
-} 
+
+}
