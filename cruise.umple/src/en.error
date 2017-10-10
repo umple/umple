@@ -22,7 +22,7 @@
 16: 1, "http://cruise.eecs.uottawa.ca/umple/E016NonImmutab|| (tempMethod != null && tempMethod.isIsAbstract())leSuperclass.html", Immutability rules prevent class '{0}' from subclassing '{1}' ;
 17: 2, "http://cruise.eecs.uottawa.ca/umple/E017NonImmutableBidirectionality.html", Two-way associations may not be immutable ;
 18: 2, "http://cruise.eecs.uottawa.ca/umple/E018ReflexiveImmutable.html", Reflexive immutable associations may not be mandatory ;
-19: 2, "http://cruise.eecs.uottawa.ca/umple/E019DuplicateAssociation.html", There are multiple associations between class '{0}' and class '{1}'. Role names need to be added at '{0}' side to distinguish the different association ends in that class ;
+19: 2, "http://cruise.eecs.uottawa.ca/umple/E019DuplicateAssociation.html", There are multiple associations between class '{0}' and class '{1}'. Unique role names need to be added at '{0}' side to distinguish the different association ends in that class. ;
 20: 1, "http://cruise.eecs.uottawa.ca/umple/E020InterfaceAssociationNotOneWay.html", The class-interface association declared in '{0}' must have the '->' arrow ;
 
 21: 2, "http://cruise.eecs.uottawa.ca/umple/E021InvalidReflexiveAssociation.html", Reflexive association to class '{0}' must use a role name or else self ;
@@ -115,6 +115,7 @@
 
 140: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", Attribute type name '{0}' must be alphanumeric, starting with a letter ;
 141: 4, "http://cruise.eecs.uottawa.ca/umple/W141ValueTypeMismatch.html", Mismatch between type '{0}' and value {1} ;
+142: 3, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Attribute '{0}' has a type of {public|private|protected}. This looks like an access specifier and is likely an error. In Umple attributes are private by default, and are Strings if no type is specified. ;
 
 150: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", State machine name '{0}' must be alphanumeric and start with a letter ;
 152: 2, "http://cruise.eecs.uottawa.ca/umple/WE1xxIdentifierInvalid.html", State name '{0}' must be alphanumeric and start with a letter ;

@@ -14,6 +14,7 @@ import java.util.*;
 
 import org.junit.*;
 
+import cruise.umple.parser.ErrorMessage;
 import cruise.umple.parser.ErrorTypeSingleton;
 import cruise.umple.parser.ParseResult;
 import cruise.umple.parser.Position;
@@ -1010,11 +1011,23 @@ public class UmpleParserTest
   {
     assertFailedParse("007_isA_SimpleCycle.ump", new Position("007_isA_SimpleCycle.ump",3,6,22));
   }
+  
+  @Test
+  public void isA_SimpleCycle_WithKey()
+  {
+	  assertFailedParse("007_isA_SimpleCycle_WithKey.ump", new Position("007_isA_SimpleCycle_WithKey.ump",5,6,48));
+  }
 
   @Test
   public void isA_ComplexCycle()
   {
     assertFailedParse("007_isA_ComplexCycle.ump", new Position("007_isA_ComplexCycle.ump",3,6,22));
+  }
+  
+  @Test
+  public void isA_ComplexCycle_WithKey()
+  {
+    assertFailedParse("007_isA_ComplexCycle_WithKey.ump", new Position("007_isA_ComplexCycle_WithKey.ump",4,6,39));
   }
 
   @Test
@@ -1727,6 +1740,13 @@ public class UmpleParserTest
 
     List<Association> iter = model.getAssociations();
     Assert.assertEquals(2,iter.size());
+    
+    assertParse("010_associationClassWithMultipleAssocToSameClassOneSetRoleName.ump");
+    assertParse("010_associationClassWithMultipleAssocToSameClassWithRoleName.ump");
+    
+    assertFailedParse("010_associationClassWithMultipleAssocToSameClassWithNOOtherRoleName.ump",19);
+    assertFailedParse("010_associationClassWithMultipleAssocToSameClassWithNORoleName.ump",19);
+    assertFailedParse("010_associationClassWithMultipleAssocToSameClassWithSingleRoleName.ump",19);
   }
 
   @Test
@@ -2283,11 +2303,19 @@ public class UmpleParserTest
     assertFailedParse("024_multipleUnnamedAssociationsToSameClass.ump", new Position("024_multipleUnnamedAssociationsToSameClass.ump",5,2,74), 19);
     assertFailedParse("024_multipleAssociationsWithSameName.ump", new Position("024_multipleAssociationsWithSameName.ump",7,2,79), 19);
     assertFailedParse("024_roleNameSameAsClassWithMultiAssocToSameClass.ump", 19);
-    assertFailedParse("024_multiAssocToSameClassNeedRoleName.ump", 19);
-
+    assertFailedParse("024_multiAssocToAnotherClassNeedRoleName.ump", 19);
+    
+    List<ErrorMessage> errorMessage = parseErrorMessage("024_multiAssocToSameClassNeedRoleName.ump");
+    Assert.assertEquals("There are multiple associations between class 'B' and class 'A'. Unique role names need to be added at 'B' side to distinguish the different association ends in that class.",errorMessage.get(0).getFormattedMessage());
+    errorMessage = parseErrorMessage("024_multiAssocToAnotherClassNeedRoleName.ump");
+    Assert.assertEquals("There are multiple associations between class 'A' and class 'B'. Unique role names need to be added at 'A' side to distinguish the different association ends in that class.",errorMessage.get(0).getFormattedMessage());
+    errorMessage = parseErrorMessage("024_multiAssocToSameClassWithNoRoleName.ump");
+    Assert.assertEquals(1, errorMessage.size());
+    
     assertParse("024_multipleUnnamedOneWayAssociationsToSameClass.ump");
     assertParse("024_multiAssocToSameClassWithOneRoleName.ump");
     assertParse("024_multiAssocToSameClassWithMultiRoleName.ump");
+    assertParse("024_multiAssocToAnotherClassWithOneRuleName.ump");
   }
   
   @Test
@@ -2921,6 +2949,14 @@ public class UmpleParserTest
   assertHasWarningsParse("058_enumerationInUnidirectionalAssoc2.ump", 106);
   assertHasNoWarningsParse("058_enumerationInUnidirectionalAssoc3.ump");
  }
+
+  //Issue 211
+  @Test
+  public void typeIsAccessSpecifier() {
+    assertHasWarningsParse("142_typeIsAccessSpecifierPublic.ump", 142);
+    assertHasWarningsParse("142_typeIsAccessSpecifierProtected.ump", 142);
+    assertHasWarningsParse("142_typeIsAccessSpecifierPrivate.ump", 142);
+  }
  
   public boolean parse(String filename)
   {
@@ -2960,6 +2996,27 @@ public class UmpleParserTest
       answer = parser.analyze(false).getWasSuccess();
     }
     return answer;
+  }
+  
+  public List<ErrorMessage> parseErrorMessage(String filename)
+  {
+    //String input = SampleFileWriter.readContent(new File(pathToInput, filename));
+    File file = new File(pathToInput,filename);
+    ErrorTypeSingleton.getInstance().reset();
+    model = new UmpleModel(new UmpleFile(pathToInput,filename));
+    model.setShouldGenerate(false);
+    RuleBasedParser rbp = new RuleBasedParser();
+    parser = new UmpleInternalParser(umpleParserName,model,rbp);
+    ParseResult result = rbp.parse(file);
+    model.extractAnalyzersFromParser(rbp);
+    model.setLastResult(result);
+    System.out.println(rbp.getRootToken());
+    boolean answer = result.getWasSuccess();
+    if (answer)
+    {
+      answer = parser.analyze(false).getWasSuccess();
+    }
+    return result.getErrorMessages();
   }
 
   // Assertion case where we expect the parse to succeed - may be overridden

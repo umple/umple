@@ -126,6 +126,8 @@ document.write('<script type="text/javascript" src="scripts/jjs/dagre.min.js"></
 document.write('<script type="text/javascript" src="scripts/jjs/joint.js"></script>');
 
 // Own plug-in for JointJS to draw the state machines
+document.write('<script type="text/javascript" src="scripts/jjs/joint.shapes.umpleuml.js"></script>');
+// Own plug-in for JointJS to draw the state machines
 document.write('<script type="text/javascript" src="scripts/jjs/joint.shapes.uml-state-machine.js"></script>');
 // Own script to glue Umple to JointJS
 document.write('<script type="text/javascript" src="scripts/jjs/jjs_parse.js"></script>');
@@ -136,7 +138,6 @@ document.write('<script type="text/javascript" src="scripts/jjs/jjs_parse.js"></
 // document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone-min.js"></script>');
 // document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/1.0.1/joint.js"></script>');
 // document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/1.0.1/joint.min.css" />');
-
 
 // GREYBOX OBSOLETE
 //document.write('<script type="text/javascript">var GB_ROOT_DIR = "./scripts/";</script>');

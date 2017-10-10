@@ -26,6 +26,7 @@ class UmpleInternalParser
   internal Map<UmpleClassifier,List<Token>> unlinkedExtendsTokens = new HashMap<UmpleClassifier,List<Token>>();
   internal Map<UmpleClassifier,List<Token>> unlinkedExtendsTokensInterface = new HashMap <UmpleClassifier, List<Token>>();
   internal Map<UmpleClassifier,List<String>> unlinkedInterfaceExtends = new HashMap<UmpleClassifier,List<String>>();
+  internal Map<UmpleClass,List<Token>> unlinkedKeysTokens = new HashMap<UmpleClass,List<Token>>();
 
   internal Map<UmpleClassifier,List<Token>> unanalyzedInjectionTokens = new HashMap<UmpleClassifier,List<Token>>();
 
@@ -365,6 +366,9 @@ class UmpleInternalParser
       checkExtendsForCycles();
       checkSortedAssociations();
       checkClassInterfaceAssocations();
+      
+      //Issue 1084
+      addUnlinkedKeys();
       
       //Solution to issue 543
       //checkExtendsClass();
@@ -1623,6 +1627,130 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
   }  
 
+   private void addUnlinkedKeys() {
+   	// If a dependency cycle exists, then we can't add keys
+   	List<ErrorMessage> errors = getParseResult().getErrorMessages();
+   	for (ErrorMessage err: errors)
+   	{
+   	    int code = err.getErrorType().getErrorCode();
+   	    if (code == 11 || code == 12)
+   	    {
+            return;
+        }
+    }	
+
+    for (UmpleClass c : unlinkedKeysTokens.keySet())
+    {   
+        List<Token>  keyTokens = unlinkedKeysTokens.get(c);
+        List<String> tokensAdded = new ArrayList<String>();
+        if (keyTokens == null || keyTokens.isEmpty())
+        {
+            continue;
+        }
+
+        Boolean tokenMatch;
+        for (Token token: keyTokens)
+        {
+            tokenMatch = false;
+            String tokenVal = token.getValue();
+            String finalTokenVal = token.getValue();
+
+            // Check the current class and it's inherited classes for the Attribute
+            UmpleClass classSearch = c;
+            Attribute att = classSearch.getAttribute(tokenVal);
+            if (att != null)
+            {
+                tokenMatch = true;
+                // throw warning if attribute is initialized
+                if (att.getValue() != null && !("null".equals(att.getValue()) || att.getIsDerived()))
+                {
+                    setFailedPosition(token.getPosition(), 45, att.getName(), c.getName());
+                }
+            }
+
+            if (c.hasAssociations())
+            {
+                AssociationEnd secondEnd;
+                String secondEndName;
+
+                for(Association aAssociation : c.getAssociations())
+                { 
+                    secondEnd = aAssociation.getEnd(1);
+                    secondEndName = secondEnd.getRoleName();        
+
+                    // tokenVal with a lower-case first letter.
+                    String firstLower = Character.toLowerCase(tokenVal.charAt(0)) + (tokenVal.length() > 1 ? tokenVal.substring(1) : "");
+          
+                    if(secondEndName.equals(firstLower))
+                    {
+                        finalTokenVal = firstLower;
+                        tokenMatch = true;
+                        break;
+                    }
+                }
+            }
+	      	
+            if(c.hasStateMachines())  
+            {
+                for(StateMachine aStateMachine : c.getStateMachines())
+                {
+                    if(aStateMachine.getName().equals(tokenVal))
+                    {
+                        tokenMatch = true;
+                        break;
+                    }
+                }
+            }
+	        
+	        if(c instanceof AssociationClass) 
+	        {
+                AssociationClass assocClass = (AssociationClass) c;
+                String endName;
+
+                for(Association associatedTo: assocClass.getAssociatedTo()) 
+                {
+                    endName = associatedTo.getEnd(1).getRoleName();
+
+                    // tokenVal with a lower-case first letter.
+                    String firstLower = Character.toLowerCase(tokenVal.charAt(0)) + (tokenVal.length() > 1 ? tokenVal.substring(1) : "");
+
+                    if(endName.equals(firstLower))
+                    {
+                        finalTokenVal = firstLower;
+                        tokenMatch = true;
+                        break;
+                    }
+                }
+            }
+
+            if(!tokenMatch)
+            {
+                setFailedPosition(token.getPosition(), 27, tokenVal, c.getName());
+            }
+            c.getKey().addMember(finalTokenVal);
+            tokensAdded.add(finalTokenVal);
+        }
+
+        //Issue 610: Associaton Classes with incomplete keys must issue warning 1011
+        if(c instanceof AssociationClass)
+        {
+            AssociationClass assocClass = (AssociationClass) c;
+            String endName;
+
+            for(Association associatedTo : assocClass.getAssociatedTo()) 
+            {
+                endName = associatedTo.getEnd(1).getRoleName();
+
+                if(!tokensAdded.contains(endName)) 
+                {
+                    Token parent = keyTokens.get(0).getParentToken();
+                    setFailedPosition(parent.getPosition(), 1011, c.getName(), endName, tokensAdded.toString());
+                }
+            }
+        }
+    }
+  }
+
   private java.util.List<UmpleInterface> getAllParentInterface(UmpleClass uClass){
 
     java.util.ArrayList<UmpleInterface> temp = new java.util.ArrayList<UmpleInterface>(uClass.getParentInterface());
@@ -2183,11 +2311,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         { 
           if (existingNames.contains(firstEnd.getRoleName()) || hasMultipleAssocToSameClass)
           {
-            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
+            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),firstEnd.getClassName(), C.getName()));
+            return;
           }
           else if (existingAttributeNames.contains(firstEnd.getRoleName()))
           {  // Check if the association name is the same as an attribute name
              getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
+             return;
           }
           else
           {
@@ -2198,11 +2328,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         {
           if (existingNames.contains(secondEnd.getRoleName()) || hasMultipleAssocToSameClass)
           {
-            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
+            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(), secondEnd.getClassName(), C.getName()));
+            return;
           }
           else if (existingAttributeNames.contains(secondEnd.getRoleName()))
           {  // Check if the association name is the same as an attribute name
              getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
+             return;
           }
           else
           {
@@ -2224,10 +2356,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           if(existingNames.contains(roleNameToCheck))
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),roleNameToCheck));
+            return;
           }
           else if(existingAttributeNames.contains(roleNameToCheck))
           {
             getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),roleNameToCheck));
+            return;
           }
           else
           {
@@ -3316,153 +3450,42 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     injection.setPosition(injectToken.getPosition());
     
   }
-
-  private void analyzeKey(Token keyToken, UmpleClass aClass)
+  
+  private void addKey (Token keysToken, UmpleClass aClass, Map <UmpleClass, List<Token>> unlinkedKeysTokens)
   {
-
-    if (aClass.getKey().isProvided())
+    // If the class already has a key defined, set fail position
+    if (unlinkedKeysTokens.containsKey(aClass))
     {
-      setFailedPosition(keyToken.getPosition(), 7, keyToken.getParentToken().getValue("name"));
+        setFailedPosition(keysToken.getPosition(), 7, keysToken.getParentToken().getValue("name"));
     }
 
-    if (keyToken.is("defaultKey"))
+  	if (keysToken.is("defaultKey"))
     {
       aClass.getKey().setIsDefault(true);
-      setFailedPosition(keyToken.getPosition(), 47, aClass.getName());
+      setFailedPosition(keysToken.getPosition(), 47, aClass.getName());
       return;
     }
-
-    List<String> tokensAdded = new ArrayList<String>();
-    Boolean tokenMatch;
-    for(Token token : keyToken.getSubTokens())
-    {
-      tokenMatch = false;
-      String finalTokenVal = token.getValue();
-      String tokenVal = token.getValue();      
-      if (!token.is("keyId"))
-      {
-        continue;
-      }
- 
-      //Checks for duplicate attributes/associations/stateMachines
-      if(tokensAdded.contains(tokenVal))
-      {
-        setFailedPosition(keyToken.getPosition(), 26, tokenVal, keyToken.getParentToken().getValue("name"));
-      }
-      
-      //Issue #449
-	UmpleClass child = aClass;
-	while(unlinkedExtends.get(child) != null){
-    String extedName = unlinkedExtends.get(child).get(0);
-    List<Attribute> listAtt = new ArrayList<Attribute>();
-    if (model.getUmpleClass(unlinkedExtends.get(child).get(0))!=null) listAtt = model.getUmpleClass(extedName).getAttributes(); 
-    else
-    if (model.getUmpleClass(unlinkedExtends.get(child).get(0))!=null) listAtt = model.getUmpleTrait(extedName).getAttributes();
-    for(Attribute parentAttribute : listAtt)	  
-    {
-    	if(parentAttribute.getName().equals(tokenVal))
-        {
-    	tokenMatch = true;
-    	break;
-    	}
-    }
-    child = model.getUmpleClass(unlinkedExtends.get(child).get(0));  
-	}
-   
-    if(!aClass.hasAttributes() && !aClass.hasAssociations() && !aClass.hasStateMachines() && !tokenMatch)
-      {
-        setFailedPosition(keyToken.getPosition(), 27, tokenVal, keyToken.getParentToken().getValue("name"));
-      }
-      else{
-        if(aClass.hasAttributes())
-        {
-          for(Attribute aAttribute : aClass.getAttributes())
-          {
-            if(aAttribute.getName().equals(tokenVal))
-            {
-              tokenMatch = true;
-              // throw warning if attribute is initialized
-              if(aAttribute.getValue() != null&&!("null".equals(aAttribute.getValue())||aAttribute.getIsDerived()))
-              {
-                setFailedPosition(keyToken.getPosition(), 45, aAttribute.getName(), aClass.getName());
-              }
-            }
-          }
-        }
-      
-        if(aClass.hasAssociations())
-        {
-          AssociationEnd firstEnd, secondEnd;
-          String firstEndName, secondEndName;
     
-          for(Association aAssociation : aClass.getAssociations())
-          { 
-            secondEnd = aAssociation.getEnd(1);
-            secondEndName = secondEnd.getRoleName();        
-            
-            // tokenVal with a lower-case first letter.
-            String firstLower = Character.toLowerCase(tokenVal.charAt(0)) + (tokenVal.length() > 1 ? tokenVal.substring(1) : "");
-                      
-            if(secondEndName.equals(firstLower))
+    List<Token> keyTokenList = new ArrayList<Token>();
+    List<String> tokensAdded = new ArrayList<String>();
+    // Go through all sub-tokens of the key to add them to the list of keys for this class
+    for (Token token : keysToken.getSubTokens())
+    {
+        if (token.is("keyId")) 
+        {
+            //Checks for duplicate keys
+            if(tokensAdded.contains(token.getValue()))
             {
-              finalTokenVal = firstLower;
-              tokenMatch = true;
+                setFailedPosition(keysToken.getPosition(), 26, token.getValue(), aClass.getName());
             }
-          }
-        }  
-
-        if(aClass.hasStateMachines())  
-        {
-          for(StateMachine aStateMachine : aClass.getStateMachines())
-          {
-            if(aStateMachine.getName().equals(tokenVal))
+            else
             {
-              tokenMatch = true;
-            }      
-          }
-        }
-
-        if(aClass instanceof AssociationClass) 
-        {
-          AssociationClass assocClass = (AssociationClass) aClass;
-          String endName;
-          
-          for(Association associatedTo: assocClass.getAssociatedTo()) {
-            endName = associatedTo.getEnd(1).getRoleName();
-            
-            // tokenVal with a lower-case first letter.
-            String firstLower = Character.toLowerCase(tokenVal.charAt(0)) + (tokenVal.length() > 1 ? tokenVal.substring(1) : "");
-            
-            if(endName.equals(firstLower))
-            {
-              finalTokenVal = firstLower;
-              tokenMatch = true;
+                keyTokenList.add(token);
+                tokensAdded.add(token.getValue());
             }
-          }
         }
-
-        if(!tokenMatch)
-        {
-          setFailedPosition(keyToken.getPosition(), 27, tokenVal, keyToken.getParentToken().getValue("name"));
-        }
-      }
-      aClass.getKey().addMember(finalTokenVal);
-      tokensAdded.add(finalTokenVal); 
     }
-
-    //Issue 610: Associaton Classes with incomplete keys must issue warning 1011
-    if(aClass instanceof AssociationClass) {
-      AssociationClass assocClass = (AssociationClass) aClass;
-      String endName;
-      
-      for(Association associatedTo : assocClass.getAssociatedTo()) {
-        endName = associatedTo.getEnd(1).getRoleName();
-        
-        if(!tokensAdded.contains(endName)) {
-          setFailedPosition(keyToken.getPosition(), 1011, keyToken.getParentToken().getValue("name"), endName, tokensAdded.toString());
-        }
-      }
-    }
+    unlinkedKeysTokens.put(aClass, keyTokenList);
   }
 
   private void analyzeSymmetricReflexiveAssociation(Token symmetricReflexiveAssociationToken, UmpleClass aClass)
@@ -3531,6 +3554,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     String associationModifier = null;
     String name = null;
 
+
     //Issue 213/131: associations can be inside AssociationClasses, but
     //inline associations inside associationClasses are treated just like in regular classes
     if(isAssociationClass && !isInlineAssociation){
@@ -3567,6 +3591,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         setFailedPosition(associationToken.getPosition(), 8, name);
         return null;
     }
+    
+    if(isAssociationClass && isSingleAssociationEnd){
+    		String roleName = associationToken.getValue("otherEndroleName");
+    		if(roleName != null){
+    			firstEnd.setRoleName(roleName);
+    		}	
+    	}
+    	
     String myType = firstEnd.getClassName();
     String myRoleName = firstEnd.getRoleName();
     String yourType = secondEnd.getClassName();
@@ -3957,6 +3989,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
         setFailedPosition(attributeToken.getPosition(), 140, type);
         return;
+      }
+    }
+
+    if(type != null)
+    {
+      if("public".equals(type) || "private".equals(type) || "protected".equals(type))
+      {
+	setFailedPosition(attributeToken.getPosition(), 142, type);
       }
     }
         

@@ -1255,17 +1255,18 @@ var errorMessage="";diagramCode=Action.getDiagramCode(response.responseText);err
 if(diagramCode==null||diagramCode==""||diagramCode=="null"){Page.enableDiagram(false);Action.diagramInSync=false;Page.setFeedbackMessage('The Umple model/code cannot be compiled; <a href="#errorClick">see explanation at the bottom.</a> To fix: edit the text or click undo')
 }else{if(!Action.diagramInSync){Page.enableDiagram(true);Action.diagramInSync=true}Page.setFeedbackMessage("");Page.hideGeneratedCode();
 if(Page.useEditableClassDiagram){var newSystem=Json.toObject(diagramCode);UmpleSystem.merge(newSystem);if(Page.showMethods||!Page.showAttributes){UmpleSystem.update()
-}if(Page.readOnly){jQuery("span.editable").addClass("uneditable")}}else{if(Page.useJointJSClassDiagram){var model=JSON.parse(diagramCode);
+}if(Page.readOnly){jQuery("span.editable").addClass("uneditable")}}else{if(Page.useJointJSClassDiagram){var model=JSON.parse(diagramCode.replace(new RegExp('} { "name": "',"gi"),'}, { "name": "'));
 var umpleCanvas=jQuery("#umpleCanvas");var paper=JJSdiagram.initJJSDiagram(umpleCanvas,model);var MouseWheelHandler=function(event){var delta=Math.max(-1,Math.min(1,(event.wheelDelta||-event.detail)));
 if(event.altKey===true){var paperHeight=paper.options.height;var paperWidth=paper.options.width;var scaleFactor=1+(Math.abs(delta)/(delta*10));
-paper.setDimensions(paperWidth*scaleFactor,paperHeight*scaleFactor);paper.scaleContentToFit({padding:15})}};var paperHolder=document.getElementById("umpleCanvas");
-if(paperHolder.addEventListener){paperHolder.addEventListener("mousewheel",MouseWheelHandler,false);paperHolder.addEventListener("DOMMouseScroll",MouseWheelHandler,false)
-}else{paperHolder.attachEvent("onmousewheel",MouseWheelHandler)}jQuery("#jjsPaper").click(function(){Action.focusOn(Page.umpleCanvasId(),true)
-})}else{if(Page.useGvClassDiagram||Page.useGvStateDiagram){jQuery("#umpleCanvas").html(format("{0}",diagramCode))}else{if(Page.useStructureDiagram){jQuery("#umpleCanvas").html('<svg id="svgCanvas"></svg>');
-eval(diagramCode)}}}}}if(errorMessage!=""){Page.showGeneratedCode(errorMessage,"diagramUpdate")}Page.hideLoading()};Action.getDiagramCode=function(c){var a="";
-if(Page.useEditableClassDiagram||Page.useJointJSClassDiagram){a=c.split("URL_SPLIT")[1];if(a=="null"){a=""}}else{if(Page.useGvClassDiagram||Page.useGvStateDiagram){var b=c.split("<svg width=");
-if(b.length>1&&b[1].length>100){a="<svg width="+b[1];a=a.replace(/<\/svg>$/,"")}}else{if(Page.useStructureDiagram){a=c.split("<p>URL_SPLIT")[1];
-a=a.replace(/##CANVAS_ID##/g,"svgCanvas");a=jQuery("<div/>").html(a).text()}}}return a};Action.getErrorCode=function(c){var a="";if(Page.useEditableClassDiagram||Page.useStructureDiagram){a=c.split("URL_SPLIT")[0];
+paper.setDimensions(paperWidth*scaleFactor,paperHeight*scaleFactor);if(JJSdiagram.paper){JJSdiagram.paper.setDimensions(jQuery("#umpleCanvas")[0].clientWidth,jQuery("#umpleCanvas")[0].clientHeight)
+}}};var paperHolder=document.getElementById("umpleCanvas");if(paperHolder.addEventListener){paperHolder.addEventListener("mousewheel",MouseWheelHandler,false);
+paperHolder.addEventListener("DOMMouseScroll",MouseWheelHandler,false)}else{paperHolder.attachEvent("onmousewheel",MouseWheelHandler)
+}jQuery("#jjsPaper").click(function(){Action.focusOn(Page.umpleCanvasId(),true)})}else{if(Page.useGvClassDiagram||Page.useGvStateDiagram){jQuery("#umpleCanvas").html(format("{0}",diagramCode))
+}else{if(Page.useStructureDiagram){jQuery("#umpleCanvas").html('<svg id="svgCanvas"></svg>');eval(diagramCode)}}}}}if(errorMessage!=""){Page.showGeneratedCode(errorMessage,"diagramUpdate")
+}Page.hideLoading()};Action.getDiagramCode=function(c){var a="";if(Page.useEditableClassDiagram||Page.useJointJSClassDiagram){a=c.split("URL_SPLIT")[1];
+if(a=="null"){a=""}}else{if(Page.useGvClassDiagram||Page.useGvStateDiagram){var b=c.split("<svg width=");if(b.length>1&&b[1].length>100){a="<svg width="+b[1];
+a=a.replace(/<\/svg>$/,"")}}else{if(Page.useStructureDiagram){a=c.split("<p>URL_SPLIT")[1];a=a.replace(/##CANVAS_ID##/g,"svgCanvas");
+a=jQuery("<div/>").html(a).text()}}}return a};Action.getErrorCode=function(c){var a="";if(Page.useEditableClassDiagram||Page.useStructureDiagram){a=c.split("URL_SPLIT")[0];
 if(a=="<p>"){a=""}}else{if(Page.useGvClassDiagram||Page.useGvStateDiagram){var d=c.split("<svg width=")[0];var b=d.split("errorRow");
 if(b.length>1){a=d.split("<\/script>&nbsp;")[0]}}}return a};Action.classResizing=function(e,g){var f=e.target.id;var a=UmpleSystem.find(f);
 var c="#"+f;var d=Math.round(jQuery(c).width());var b=Math.round(jQuery(c).height());UmpleSystem.updatingSize(a,d,b)};Action.associationSnap=function(h,g,a){var b=jQuery(a).prop("id");
@@ -1555,8 +1556,8 @@ j<this.attributes.length;j++){var l=this.attributes[j];var g="";if(l.textColor!=
 }else{e+=format('<div class="umpleAttribute" {5}><span id="{2}_attribute_{3}" name="attributeEdit" class="editable editableDoubleClick">{0} : {1}</span> <img src="scripts/delete2.jpg" onclick="DiagramEdit.attributeDelete({4}{2}{4},{4}{3}{4})" /></div>',l.name,l.type,this.id,j,"'",g)
 }}}if(this.methods.length>0){for(var j=0;j<this.methods.length;j++){var a=this.methods[j];var c="";if(a.visibility=="public"){c="+ "}else{if(a.visibility=="private"){c="- "
 }else{if(a.visibility=="protected"){c="# "}else{c="+ "}}}var b=(a.type==""?"void":a.type);if(Page.isPhotoReady()){if(a.isAbstract=="true"){o+=format('<div class="umpleMethod">{3}<span style="font-style:italic">{1}({2}) </span> : {0} </div>',b,a.name,a.parameters,c)
-}else{o+=format('<div class="umpleMethod">{3}{1}({2}) : {0} </div>',b,a.name,a.parameters,c)}}else{if(a.isAbstract=="true"){o+=format('<div class="umpleMethod"><span id="{4}_method_{5}" name="methodEdit" class="editable editableDoubleClick">{3}<span style="font-style:italic">{1}({2})</span> : {0} </span> <img src="scripts/delete2.jpg" onclick="Action.methodDelete({6}{4}{6},{6}{5}{6})" /></div>',b,a.name,a.parameters,c,this.id,j,"'")
-}else{o+=format('<div class="umpleMethod"><span id="{4}_method_{5}" name="methodEdit" class="editable editableDoubleClick">{3}{1}({2}) : {0} </span> <img src="scripts/delete2.jpg" onclick="Action.methodDelete({6}{4}{6},{6}{5}{6})" /></div>',b,a.name,a.parameters,c,this.id,j,"'")
+}else{o+=format('<div class="umpleMethod">{3}{1}({2}) : {0} </div>',b,a.name,a.parameters,c)}}else{if(a.isAbstract=="true"){o+=format('<div class="umpleMethod"><span id="{4}_method_{5}" name="methodEdit" class="editable editableDoubleClick">{3}<span style="font-style:italic">{1}({2})</span> : {0} </span> <img src="scripts/delete2.jpg" onclick="DiagramEdit.methodDelete({6}{4}{6},{6}{5}{6})" /></div>',b,a.name,a.parameters,c,this.id,j,"'")
+}else{o+=format('<div class="umpleMethod"><span id="{4}_method_{5}" name="methodEdit" class="editable editableDoubleClick">{3}{1}({2}) : {0} </span> <img src="scripts/delete2.jpg" onclick="DiagramEdit.methodDelete({6}{4}{6},{6}{5}{6})" /></div>',b,a.name,a.parameters,c,this.id,j,"'")
 }}}}e+=format('<div class="umpleAttributeNew"><span id="{0}_newAttribute" name="attributeNew" class="editable editableSingleClick">{1}</span></div>',this.id,Page.isPhotoReady()?"&nbsp;":"-- Add More --");
 o+=format('<div class="umpleMethodNew"><span id="{0}_newMethod" name="methodNew" class="editable editableSingleClick">{1}</span></div>',this.id,Page.isPhotoReady()?"&nbsp;":"-- Add More --");
 if(!Page.isPhotoReady()){}rowspan=3;if(Page.showAttributes){rowspan+=1}if(Page.showMethods){rowspan+=1}k+=format('<table bgcolor="'+this.displayColor+'" class="classTable" border="0">',this.id)+format('  <tr class="height">    <td rowspan="{2}"> <img id="{0}_height" src="scripts/_.gif" style="width:0px;height:{1}px;display:block;"  />    </td>  </tr>',this.id,this.position.height,rowspan)+'  <tr class="classArea">    <td > <img src="scripts/class.png" title="Class" /> ';
@@ -1858,7 +1859,7 @@ if(a.is(":visible")){a.showLoading()}}Page.canvasLoadingCount++};Page.resetCanva
 };Page.getSelectedExample=function(){var b="";var c=Page.getExampleType();if(c=="cdModels"){var a=false;b=jQuery("#inputExample option:selected").val();
 if(b=="GeometricSystem.ump"){a=true}if(a){if(!Page.useGvClassDiagram){jQuery("#buttonShowGvClassDiagram").attr("checked",true);Action.changeDiagramType({type:"GVClass"})
 }else{if(!(Page.useEditableClassDiagram||Page.useGvClassDiagram)){jQuery("#buttonShowEditableClassDiagram").attr("checked",true);Action.changeDiagramType({type:"editableClass"})
-}}}}else{if(c=="smModels"){b=jQuery("#inputExample2 option:selected").val();if(!Page.useGvStateDiagram){jQuery("#buttonShowGvStateDiagram").attr("checked",true);
+}}}}else{if(c=="smModels"){b=jQuery("#inputExample2 option:selected").val();if(!Page.useGvStateDiagram&&Page.useJointJSClassDiagram===false){jQuery("#buttonShowGvStateDiagram").attr("checked",true);
 Action.changeDiagramType({type:"GVState"})}}else{b=jQuery("#inputExample3 option:selected").val();if(!Page.useStructureDiagram){jQuery("#buttonShowStructureDiagram").attr("checked",true);
 Action.changeDiagramType({type:"structure"})}}}return b};Page.getExampleType=function(){var a=jQuery("#exampleType option:selected").val();
 return a};Page.showCodeDone=function(){var a="#genstatus";jQuery(a).show();setTimeout(function(){jQuery(a).hide()},2000)};Page.showViewDone=function(){var a="#buttonViewComplete";

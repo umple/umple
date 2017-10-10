@@ -8,8 +8,7 @@ An association class defines an object-oriented pattern to manage * -- * (many t
 </p>
 
 <p>An association class is a class and can have most of the items found in an ordinary class. However it
-always has two or more 1..many associations to other classes. These are syntactically shown as just a multiplicity (usually *, but 1..* and similar cases are allowed) followed by the name of the participating class (and an optional role name). </p>
-
+always has two or more 1..many associations to other classes. These are syntactically shown as just a multiplicity (usually *, but 1..* and similar cases are allowed) and the role name of association class followed by the name of participating class and participating class role name. Another syntactical format of showing these associations is multiplicity followed by the name of the participating class (and an optional role name).
 </p>
 
 @@syntax

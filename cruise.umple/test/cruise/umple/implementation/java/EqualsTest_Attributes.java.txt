@@ -163,39 +163,39 @@ public class Student
 
     Student compareTo = (Student)obj;
   
-    if (intId != compareTo.intId)
+    if (getIntId() != compareTo.getIntId())
     {
       return false;
     }
 
-    if (doubleId != compareTo.doubleId)
+    if (getDoubleId() != compareTo.getDoubleId())
     {
       return false;
     }
 
-    if (booleanId != compareTo.booleanId)
+    if (getBooleanId() != compareTo.getBooleanId())
     {
       return false;
     }
 
-    if (stringId == null && compareTo.stringId != null)
+    if (getStringId() == null && compareTo.getStringId() != null)
     {
       return false;
     }
-    else if (stringId != null && !stringId.equals(compareTo.stringId))
-    {
-      return false;
-    }
-
-    if (stringListIds.size() != compareTo.stringListIds.size())
+    else if (getStringId() != null && !getStringId().equals(compareTo.getStringId()))
     {
       return false;
     }
 
-    for (int i=0; i<stringListIds.size(); i++)
+    if (getStringListIds().length != compareTo.getStringListIds().length)
     {
-      String me = stringListIds.get(i);
-      String them = compareTo.stringListIds.get(i);
+      return false;
+    }
+
+    for (int i=0; i<getStringListIds().length; i++)
+    {
+      String me = getStringListIds()[i];
+      String them = compareTo.getStringListIds()[i];
       if (me == null && them != null)
       {
        return false;
@@ -216,24 +216,24 @@ public class Student
       return cachedHashCode;
     }
     cachedHashCode = 17;
-    cachedHashCode = cachedHashCode * 23 + intId;
+    cachedHashCode = cachedHashCode * 23 + getIntId();
 
-    cachedHashCode = cachedHashCode * 23 + (new Double(doubleId)).hashCode();
+    cachedHashCode = cachedHashCode * 23 + (new Double(getDoubleId())).hashCode();
 
-    cachedHashCode = cachedHashCode * 23 + (booleanId ? 1 : 0);
+    cachedHashCode = cachedHashCode * 23 + (getBooleanId() ? 1 : 0);
 
-    if (stringId != null)
+    if (getStringId() != null)
     {
-      cachedHashCode = cachedHashCode * 23 + stringId.hashCode();
+      cachedHashCode = cachedHashCode * 23 + getStringId().hashCode();
     }
     else
     {
       cachedHashCode = cachedHashCode * 23;
     }
 
-    if (stringListIds != null)
+    if (getStringListIds() != null)
     {
-      cachedHashCode = cachedHashCode * 23 + stringListIds.hashCode();
+      cachedHashCode = cachedHashCode * 23 + getStringListIds().hashCode();
     }
     else
     {
