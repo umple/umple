@@ -1,0 +1,55 @@
+// The following shows a 'quaternary' association, where the association
+// class represents data in an association that links four classes.
+class SportsPlayer {
+  name;
+}
+
+class Season {
+  year;
+}
+
+// e.g. goalie, forward etc.
+class PlayingPosition {
+  description;
+}
+
+class Team {
+  name;
+}
+
+// This gathers the number of points a player gained on a particular team
+// in a particular position while playing in a particular position
+// To get the total points in any one category, you would have to add the points several instances
+associationClass PlayerInPosition {
+  Integer points;
+  * SportsPlayer player;
+  * Season;
+  * Team;
+  * PlayingPosition position;
+}//$?[End_of_model]$?
+
+class PlayerInPosition
+{
+  position 135 161 109 58;
+  position.association PlayerInPosition__Season 72,0 37,61;
+  position.association PlayerInPosition__SportsPlayer:player 30,0 63,61;
+  position.association PlayerInPosition__PlayingPosition 118,40 0,37;
+  position.association PlayerInPosition__Team 109,0 0,26;
+}
+
+class Season
+{
+  position 221 50 109 58;
+}
+
+class PlayingPosition
+{
+  position 335 158 120 58;
+}
+
+class Team
+{
+  position 397 70 109 58;
+}
+
+// @@@skipphpcompile - remove when issue 697 is fixed
