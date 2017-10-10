@@ -2747,6 +2747,25 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}
 	}
+	
+	@Test
+	public void associations006Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0104.ump");
+		Assert.assertEquals(model.getUmpleClass("A").getAssociationVariable(0).getType(),"B");
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());
+		
+	}
+	
+	@Test
+	public void associations007Test() {
+		UmpleModel model = getRunModelByFilename("trait_test_data_0105.ump");
+		Assert.assertEquals("bs", model.getUmpleClass("A").getAssociationVariable(0).getName());
+		Assert.assertEquals("b2", model.getUmpleClass("A").getAssociationVariable(1).getName());
+		Assert.assertEquals("a", model.getUmpleClass("B").getAssociationVariable(0).getName());
+		Assert.assertEquals("a1", model.getUmpleClass("B").getAssociationVariable(1).getName());
+	}
+	
+	
 
 	//explained in my thesis	
 	@Test
@@ -2927,13 +2946,14 @@ public class UmpleTraitTest {
 	@Test
 	public void InterfaceForTemplates016() {
 		UmpleModel model = getRunModelByFilename("trait_test_data_0085.ump");
-		Assert.assertEquals(model.getUmpleClass("A").getAssociation(0).getEnd(1).getClassName(),"C");
+//		Assert.assertEquals(model.getUmpleClass("A").getAssociation(0).getEnd(1).getClassName(),"C");
+		Assert.assertEquals(model.getUmpleClass("A").getAssociationVariable(0).getType(),"C");
 	}	
 	
 	@Test
 	public void InterfaceForTemplates017() {
 		UmpleModel model = getRunModelByFilename("trait_test_data_0086.ump");
-		Assert.assertEquals(model.getUmpleClass("A").getAssociation(0).getEnd(1).getClassName(),"C");
+		Assert.assertEquals(model.getUmpleClass("A").getAssociationVariable(0).getType(),"C");
 	}	
 
 	@Test
