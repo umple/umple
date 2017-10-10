@@ -1,0 +1,9 @@
+class A{
+  isA T;
+}
+
+trait T<TP = B>{
+  0..1 -> * TP; 
+  0..1 a1-> * TP b2;
+}
+class B{}
