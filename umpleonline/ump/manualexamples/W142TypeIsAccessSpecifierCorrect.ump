@@ -1,0 +1,6 @@
+// This is equivalent, attributes have public access by default
+class X {
+  x;
+}
+
+//$?[End_of_model]$?

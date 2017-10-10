@@ -191,24 +191,24 @@ public class Mentor
 
     Mentor compareTo = (Mentor)obj;
   
-    if (main == null && compareTo.main != null)
+    if (getMain() == null && compareTo.getMain() != null)
     {
       return false;
     }
-    else if (main != null && !main.equals(compareTo.main))
-    {
-      return false;
-    }
-
-    if (secondaries.size() != compareTo.secondaries.size())
+    else if (getMain() != null && !getMain().equals(compareTo.getMain()))
     {
       return false;
     }
 
-    for (int i=0; i<secondaries.size(); i++)
+    if (getSecondaries().size() != compareTo.getSecondaries().size())
     {
-      Course me = secondaries.get(i);
-      Course them = compareTo.secondaries.get(i);
+      return false;
+    }
+
+    for (int i=0; i<getSecondaries().size(); i++)
+    {
+      Course me = getSecondaries().get(i);
+      Course them = compareTo.getSecondaries().get(i);
       if (me == null && them != null)
       {
        return false;
@@ -229,17 +229,17 @@ public class Mentor
       return cachedHashCode;
     }
     cachedHashCode = 17;
-    if (main != null)
+    if (getMain() != null)
     {
-      cachedHashCode = cachedHashCode * 23 + main.hashCode();
+      cachedHashCode = cachedHashCode * 23 + getMain().hashCode();
     }
     else
     {
       cachedHashCode = cachedHashCode * 23;
     }
-    if (secondaries != null)
+    if (getSecondaries() != null)
     {
-      cachedHashCode = cachedHashCode * 23 + secondaries.hashCode();
+      cachedHashCode = cachedHashCode * 23 + getSecondaries().hashCode();
     }
     else
     {

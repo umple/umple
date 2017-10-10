@@ -1,0 +1,7 @@
+class Person{
+}
+
+class Course{
+  * courseProf -- 1 Person prof;
+  * courseStudent -- 1..* Person students;
+}

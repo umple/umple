@@ -1,0 +1,26 @@
+W142 Type is access specifier
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple warning when a type looks like it was meant as a Java access specifier</h2>
+
+<p>
+Umple does not directly support Java-style access specifiers.
+All attributes are public by default, and other Umple constructs can be used to control how attributes can be used.
+</p>
+
+
+@@example
+@@source manualexamples/W142TypeIsAccessSpecifierAmbiguous.ump
+@@endexample
+
+@@example
+@@source manualexamples/W142TypeIsAccessSpecifierCorrect.ump
+@endexample
+
+@@example
+@@source manualexamples/W142TypeIsAccessSpecifierExplicit.ump
+@endexample
+

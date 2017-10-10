@@ -283,14 +283,14 @@ public class AssociationEndTest
   }   
   
   @Test
-  public void equals_checkAllData_nullNoLongerSameAsEmpty()
+  public void equals_checkAllData_nullNowSameAsEmpty()
   {
     AssociationEnd end,compareTo;
 
     end = new AssociationEnd(null,null,null,null,createMultiplicity(1,2));
     compareTo = new AssociationEnd("","","","",createMultiplicity(1,2));
-    Assert.assertEquals(false,end.equals(compareTo));
-    Assert.assertEquals(false,compareTo.equals(end));
+    Assert.assertEquals(true,end.equals(compareTo));
+    Assert.assertEquals(true,compareTo.equals(end));
     Assert.assertEquals(true,end.equals(end));
   }   
   

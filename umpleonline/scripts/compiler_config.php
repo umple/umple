@@ -18,6 +18,25 @@ $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
 
+// For compatibility with systems that do not have UmpleOnline's shell
+// dependencies in their $PATH, add /usr/bin and /usr/local/bin to $PATH
+// in the hopes that the programs will be at those locations.
+// We gracefully do nothing if the paths are already present.
+// If the executables are not in fact at those locations but elsewhere
+// and already accessible via $PATH search, adding these redundant
+// paths to $PATH will have no effect.
+// Note: we append to PATH so that the original system paths still take
+// precedence, or we might unwittingly override system administrators'
+// settings to prefer different executables than the ones at these paths.
+$PATH = getenv("PATH");
+if(strpos($PATH, "/usr/bin") == FALSE){
+    $PATH .= ":/usr/bin";
+}
+if(strpos($PATH, "/usr/local/bin") == FALSE){
+    $PATH .= ":/usr/local/bin";
+}
+putenv("PATH=$PATH");
+
 $uiguDir="";
 
 function getUIGUDir() {
@@ -597,6 +616,27 @@ function serverRun($commandLine,$rawcommand=null) {
     return;
   }
   
+  // The following code can be switched off if the server performs reliablly
+  // To turn off comment out all blocks preceded by FAILURECHECK
+  // It is to log the last command before a failure
+  // 1. Locate the model file in the command
+  $modelFileInCommand = "";
+  $startOfModelFile = strpos($originalCommandLine, "../ump/");
+  if($startOfModelFile !== FALSE) {
+    $endOfModelFile = strpos($originalCommandLine,"/model.ump");
+    if($endOfModelFile !== FALSE) {
+      $modelFileInCommand =
+        substr($originalCommandLine,$startOfModelFile,$endOfModelFile+10-$startOfModelFile);
+    }
+  }
+  // Create a temporary file
+  $crashLogFile = "../ump/ATempCrashCheck-".uniqid().".ump";
+  if($modelFileInCommand != "") {
+    copy($modelFileInCommand, $crashLogFile);
+  }
+  saveFile("\n// ".date("Y-m-d H:i:s ").$originalCommandLine."\n",$crashLogFile,'a');
+  // End of FAILURECHECK first block  
+   
   // Actually send to the server
   $numBytesSent= socket_write($theSocket, $rawcommand);
   if($numBytesSent === FALSE) {
@@ -635,6 +675,9 @@ function serverRun($commandLine,$rawcommand=null) {
     usleep(50000); // wait a little bit in case the server is sending more
   }
   socket_close($theSocket);
+  
+  // Final FAILURECHECK code line (deletes the file ... if does not occur it means failure)
+  unlink($crashLogFile);
 }
 
 
