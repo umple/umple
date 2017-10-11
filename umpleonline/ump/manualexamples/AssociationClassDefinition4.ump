@@ -1,0 +1,17 @@
+// The following example is a simple class that
+// shows the association class
+// grammar [[multiplicity]] ( ( [otherEndroleName] [type] [roleName] )
+class A{
+    f;
+}
+
+
+associationClass B{
+    * A a1;
+    * b2 C a2;
+}
+
+
+class C {
+    d;
+}

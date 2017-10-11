@@ -26,3 +26,8 @@ always has two or more 1..many associations to other classes. These are syntacti
 @@example
 @@source manualexamples/AssociationClassDefinition3.ump
 @@endexample
+
+@@example
+@@source manualexamples/AssociationClassDefinition4.ump
+@@endexample
+
