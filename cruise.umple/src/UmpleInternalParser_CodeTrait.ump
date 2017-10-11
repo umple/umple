@@ -958,57 +958,44 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
   private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationVariable, GeneralTPApplied inGeneralTPApplied,UmpleClass inClass, UmpleTrait inTrait) {  
-    
-    String rawLName = "";
-    String lName="";
     String rawRName = "";
     String rName = "";
-    UmpleClass relatedClass=null;
-    UmpleInterface relatedInterface = null; 
     boolean bidirectional = inAssociationVariable.getRelatedAssociation().getIsNavigable();
     if (inGeneralTPApplied != null || inTrait.getGeneralTemplateParameters().size()>0) {
       for (GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()){
         String newName = (inGeneralTPApplied!=null && inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName())) ? inGeneralTPApplied.getParameterMapping().get(gtp.getName()) : gtp.getDefaultValue();
         if (inAssociationVariable.getType().equals(gtp.getName())){
               //----------------------------------------------------------------
-              if (inAssociationVariable.getName().length()==0){
+             String tempOldName = StringFormatter.toCamelCase(gtp.getName());
+             String oldName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(tempOldName) : tempOldName;
+              if (inAssociationVariable.getName().equals(oldName)){
                 rawRName = StringFormatter.toCamelCase(newName);
-                rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;          
+                rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;  
+                inAssociationVariable.setName(rName);
               } else{
                 rawRName = StringFormatter.toCamelCase(inAssociationVariable.getName());
                 rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;                      
               }
-          relatedClass = getModel().getUmpleClass(newName);
-          if (bidirectional && relatedClass==null){
-            setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
-            return;
-          }
-              if (inAssociationVariable.getRelatedAssociation().getName().length()==0){
-            rawLName = StringFormatter.toCamelCase(inClass.getName());
-                lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;  
-              } else {
-                rawLName = StringFormatter.toCamelCase(inAssociationVariable.getRelatedAssociation().getName());
-                lName = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawLName) : rawLName;
+              
+              inAssociationVariable.setType(newName);
+              if (getModel().getUmpleClass(newName)==null){
+                  if (getModel().getUmpleInterface(newName)!=null){
+                      if (bidirectional){
+                        setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
+                        return;
+                      }
+                  } 
               }
-              addAssociation(lName,rName, inAssociationVariable,inClass,relatedClass);
-              return;
-              //----------------------------------------------------------------        
+              return;     
         }
       }
     }
-    rName = inAssociationVariable.getName();
-    relatedClass = getModel().getUmpleClass(inAssociationVariable.getType());
-    if (relatedClass==null){
-  	relatedInterface = getModel().getUmpleInterface(inAssociationVariable.getType());
-  	if (bidirectional){
-  		setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
-  		return;
-  	} else {
-  		relatedClass = new UmpleClass(relatedInterface.getName());	
-  	}
+    if (getModel().getUmpleClass(inAssociationVariable.getType())==null){
+        if (getModel().getUmpleInterface(inAssociationVariable.getType())!=null && bidirectional){
+            setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
+            return;
+        }
     }
-    lName=inAssociationVariable.getRelatedAssociation().getName();
-    addAssociation(lName,rName, inAssociationVariable,inClass,relatedClass);
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1630,7 +1617,7 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-private void copyAssociationsFromTraitToClass(UmpleClass inClass) {
+  private void copyAssociationsFromTraitToClass(UmpleClass inClass) {
     Map<UmpleTrait, List<AssociationVariable>> traiAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
 	Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
 	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
@@ -1643,19 +1630,37 @@ private void copyAssociationsFromTraitToClass(UmpleClass inClass) {
 	for (UmpleTrait t1 : traiAssociationVariables.keySet()) {
 		for (AssociationVariable associationVariable : traiAssociationVariables.get(t1)) {
 			//association.getComment(2).setText(association.getComment(2).getText()+"'"+inClass.getName()+"' ");
-			inClass.addAssociationVariable(associationVariable); 
-			model.getUmpleClass(associationVariable.getType()).addAssociationVariable(associationVariable.getRelatedAssociation());
-			if (associationVariable.getIsNavigable())
-	      	{
-	    		model.getUmpleClass(associationVariable.getType()).addReferencedPackage(inClass.getPackageName());
-	      	}
-	      	if (associationVariable.getRelatedAssociation().getIsNavigable())
-	      	{
-	        	inClass.addReferencedPackage(model.getUmpleClass(associationVariable.getType()).getPackageName());
-	      	}			
+            inClass.addAssociationVariable(associationVariable);
+            
+            
+            AssociationVariable relAsso = associationVariable.getRelatedAssociation();
+            String tempOldName = StringFormatter.toCamelCase(relAsso.getType());
+            String oldName = relAsso.getMultiplicity().isMany() ? model.getGlossary().getPlural(tempOldName) : tempOldName;
+             if (relAsso.getName().equals(oldName)){
+                 String rawRName = StringFormatter.toCamelCase(inClass.getName());
+                 relAsso.setName(relAsso.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName);
+             }
+            relAsso.setType(inClass.getName());
+			
+            if (model.getUmpleClass(associationVariable.getType())!=null){
+                model.getUmpleClass(associationVariable.getType()).addAssociationVariable(relAsso);
+                if (associationVariable.getIsNavigable())
+                {
+                    model.getUmpleClass(associationVariable.getType()).addReferencedPackage(inClass.getPackageName());
+                }
+                if (associationVariable.getRelatedAssociation().getIsNavigable())
+                {
+                    inClass.addReferencedPackage(model.getUmpleClass(associationVariable.getType()).getPackageName());
+                }           
+            } else if (model.getUmpleInterface(associationVariable.getType())!=null){
+                if (associationVariable.getRelatedAssociation().getIsNavigable())
+                {
+                    inClass.addReferencedPackage(model.getUmpleInterface(associationVariable.getType()).getPackageName());
+                }       
+            }			
 		}
 	}	
-}
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -1694,11 +1699,11 @@ private Map<UmpleTrait, List<AssociationVariable>> gatherAssociations(UmpleTrait
  	 //----------------------------------------------------------------------------------------
  	 List<AssociationVariable> associationVariables = new ArrayList<AssociationVariable>();	  
  	 for (AssociationVariable associationVariable : inTrait.getAssociationVariables()) {
-// 		 	AssociationVariable newAssociationVariable = new AssociationVariable(associationVariable);
-// 		 	AssociationVariable tempAssociationVariable = new AssociationVariable(newAssociationVariable.getRelatedAssociation());
-// 		 	newAssociationVariable.setRelatedAssociation(tempAssociationVariable);
-    	 	ApplyTypeParametersToAssociation(associationVariable,inGTPApplied,inClass, inTrait);
-//    	 	associationVariables.add(newAssociationVariable);
+ 		 	AssociationVariable newAssociationVariable = new AssociationVariable(associationVariable);
+ 		 	AssociationVariable tempAssociationVariable = new AssociationVariable(associationVariable.getRelatedAssociation());
+ 		 	newAssociationVariable.setRelatedAssociation(tempAssociationVariable);
+    	 	ApplyTypeParametersToAssociation(newAssociationVariable,inGTPApplied,inClass, inTrait);
+    	 	associationVariables.add(newAssociationVariable);
 	 }
  	traitAssociationVariables.put(inTrait,associationVariables);
      //----------------------------------------------------------------------------------------

@@ -3336,7 +3336,7 @@ class AssociationVariable
 	  this.priority  = another.getPriority();
 
 	  //AssociationVariable Associations
-	  this.relatedAssociation = another.getRelatedAssociation();
+	  this.relatedAssociation = null;
 	  this.comments = new ArrayList<Comment>();
 	  for (Comment comment : another.getComments()) {
 		  this.comments.add(comment);

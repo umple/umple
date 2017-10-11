@@ -1,0 +1,10 @@
+trait T{
+ 0..1 -> * B;
+}
+class A{
+    isA T;
+}
+
+interface B{
+
+}
