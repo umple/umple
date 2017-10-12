@@ -18,9 +18,9 @@ All attributes are public by default, and other Umple constructs can be used to 
 
 @@example
 @@source manualexamples/W142TypeIsAccessSpecifierCorrect.ump
-@endexample
+@@endexample
 
 @@example
 @@source manualexamples/W142TypeIsAccessSpecifierExplicit.ump
-@endexample
+@@endexample
 
