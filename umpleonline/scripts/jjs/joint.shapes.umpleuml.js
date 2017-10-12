@@ -24,7 +24,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         '<div class="html-element">',
         '<button class="delete">x</button>',
         '<img id="classIcon" style="position: absolute; top:.1em;left:.2em" src="scripts/class.png" alt="" width="13">',
-        '<input size="9" type="text" class="className" readonly/>',
+        '<input size="9" style="padding:0px 0px 0px 0px; margin-top:0px; margin-left:11px;" type="text" class="className" placeholder="className" readonly/>',
         '<div class="classAttributes">',
         '</div>',
         '<div class="classMethods">',
@@ -69,7 +69,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
                 this.$box.find('.html-element').prevObject[0].style.background = this.model.get('backgroundColor');
         }
 
-        //set state machien icon color
+        //set state machine icon color
         if (this.model.get('hasStateMachine')) {
             this.$box.find('#classIcon')[0].style.background = "#ff0000";
         }
@@ -186,7 +186,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             }
         }, this));
 
-        //enter key pressted action
+        //enter key pressed action
         this.$box.find('.classMethods input').keypress(_.bind(function (e) {
             if (e.which === 13) {
                 e.target.blur();
@@ -240,7 +240,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         }, this));
 
         /**
-         * delete attributes iron clicked
+         * delete attributes icon clicked
          */
         this.$box.find('.attributInput .deleteAttr').off('click').on('click', _.bind(function (e) {
             var attIndex = jQuery(e.target.parentNode.children[0]).data('attributeIndex');
@@ -340,7 +340,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
         //rerender attributes if showAttributes is checked
         if (this.model.get('attributes') && Page.showAttributes) {
-            this.$box.find('.classAttributes').append('<hr>');
+            this.$box.find('.classAttributes').append('<hr style="height: 1px">');
 
             var i = 0;
 
@@ -371,9 +371,9 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
     resetBoxsize: function () {
         //set box size
         var boxSize = this.model.get('size');
-        boxSize['height'] = (this.$box.find('.classAttributes').children().size() + this.$box.find('.classMethods').children().size()) * 14 + 30;
+        boxSize['height'] = (this.$box.find('.classAttributes').children().size()*1.2 + this.$box.find('.classMethods').children().size()) * 14 + 14;
         //boxSize['width'] = 50 + Math.floor(this.targetInputSize * 6.32);
-        boxSize['width'] = 30 + Math.floor(this.targetInputSize * 6);
+        boxSize['width'] = 35 + Math.floor(this.targetInputSize * 6);
         this.model.set('size', boxSize);
 
         //set the position and dimension of the box so that it covers the JointJS element.
