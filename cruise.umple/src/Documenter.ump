@@ -24,6 +24,7 @@ class Documenter
   inputPath;
   outputPath;
   String[] messages;
+  Boolean seriousProblem = false;
   
   1 -> 0..1 ContentParser parser;
 }

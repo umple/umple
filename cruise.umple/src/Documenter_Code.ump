@@ -38,6 +38,7 @@ class DocumenterMain
     {
       println(message);
     }
+    System.exit(doc.isSeriousProblem() ? -1 : 0);
   }
    
   private static void println(String output)
@@ -57,6 +58,7 @@ class Documenter
     if (!inputDirectory.exists())
     {
       addMessage("Unknown directory: " + getInputPath());
+      setSeriousProblem(true);
       return false;
     }
 
@@ -79,6 +81,7 @@ class Documenter
     else
     {
       addMessage("Unable to analyze files in " + getInputPath());
+      setSeriousProblem(true);
       return false;
     }
   }
@@ -158,6 +161,7 @@ class Documenter
         if (htmlOutput.length() == 0)
         {
           addMessage("Failed on: " + content.getTitle());
+          setSeriousProblem(true);
           return false;
         }
         
@@ -247,7 +251,8 @@ class Documenter
       {
         if (!getParser().parse("content", SampleFileWriter.readContent(aFile)+" @@Filename "+aFile.getName()).getWasSuccess())
         {
-          addMessage("Unable to parse "+ getParser().getParseResult().getPosition() +": " + aFile.getName() );
+          addMessage("Unable to parse manual source page at line "+ getParser().getParseResult().getPosition() +": " + aFile.getName() );
+          setSeriousProblem(true);
         }
       }
     }
