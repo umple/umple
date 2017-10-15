@@ -340,7 +340,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
         //rerender attributes if showAttributes is checked
         if (this.model.get('attributes') && Page.showAttributes) {
-            this.$box.find('.classAttributes').append('<hr style="height: 1px">');
+            this.$box.find('.classAttributes').append('<hr>');
 
             var i = 0;
 
