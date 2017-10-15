@@ -1629,10 +1629,6 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 	}
 	for (UmpleTrait t1 : traiAssociationVariables.keySet()) {
 		for (AssociationVariable associationVariable : traiAssociationVariables.get(t1)) {
-			//association.getComment(2).setText(association.getComment(2).getText()+"'"+inClass.getName()+"' ");
-            inClass.addAssociationVariable(associationVariable);
-            
-            
             AssociationVariable relAsso = associationVariable.getRelatedAssociation();
             String tempOldName = StringFormatter.toCamelCase(relAsso.getType());
             String oldName = relAsso.getMultiplicity().isMany() ? model.getGlossary().getPlural(tempOldName) : tempOldName;
@@ -1640,24 +1636,25 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
                  String rawRName = StringFormatter.toCamelCase(inClass.getName());
                  relAsso.setName(relAsso.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName);
              }
-            relAsso.setType(inClass.getName());
-			
-            if (model.getUmpleClass(associationVariable.getType())!=null){
-                model.getUmpleClass(associationVariable.getType()).addAssociationVariable(relAsso);
-                if (associationVariable.getIsNavigable())
-                {
-                    model.getUmpleClass(associationVariable.getType()).addReferencedPackage(inClass.getPackageName());
-                }
-                if (associationVariable.getRelatedAssociation().getIsNavigable())
-                {
-                    inClass.addReferencedPackage(model.getUmpleClass(associationVariable.getType()).getPackageName());
-                }           
-            } else if (model.getUmpleInterface(associationVariable.getType())!=null){
-                if (associationVariable.getRelatedAssociation().getIsNavigable())
-                {
-                    inClass.addReferencedPackage(model.getUmpleInterface(associationVariable.getType()).getPackageName());
-                }       
-            }			
+  
+             if (model.getUmpleClass(associationVariable.getType())!=null){
+                 addAssociation(relAsso.getName(), associationVariable.getName(), associationVariable,inClass, model.getUmpleClass(associationVariable.getType()));
+                 if (associationVariable.getIsNavigable())
+                   {                  
+                       inClass.addReferencedPackage(model.getUmpleClass(associationVariable.getType()).getPackageName());
+                   }
+                   if (associationVariable.getRelatedAssociation().getIsNavigable())
+                   {
+                       model.getUmpleClass(associationVariable.getType()).addReferencedPackage(inClass.getPackageName());
+                   }        
+             } else if (model.getUmpleInterface(associationVariable.getType())!=null){
+                 
+                 addAssociation(relAsso.getName(), associationVariable.getName(), associationVariable,inClass, new UmpleClass(associationVariable.getType()));
+                 if (associationVariable.getRelatedAssociation().getIsNavigable())
+                   {
+                       inClass.addReferencedPackage(model.getUmpleInterface(associationVariable.getType()).getPackageName());
+                   }     
+             }  		
 		}
 	}	
   }
