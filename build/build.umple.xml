@@ -311,6 +311,15 @@
     <copy file="${dist.dir}/${dist.umple.vml.jar}" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
   </target>
 
+  <target name="buildDockerImage">
+    <exec executable="docker" dir="umpleonline" searchpath="true" failonerror="true">
+	<arg value="build" />
+	<arg value="--tag" />
+	<arg value="umpleonline" />
+	<arg value="." />
+    </exec>
+  </target>
+
 <!-- The Umplificator jar-->
 <target name="packageUmplificator">
 

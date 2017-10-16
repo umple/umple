@@ -52,8 +52,33 @@ script:
   - $ANT_TESTBED test 
   - $ANT_TESTBED template.resetVersion 
 
+  # Set up UmpleOnline to be packaged into its Docker image, then build the image.
+  - if [ "$HAVE_DOCKER" ]; then
+        $ANT_BUILD -DshouldPackageUmpleOnline=true packageUmpleonline;
+        docker build -t "umple/umpleonline:$TRAVIS_COMMIT" ../umpleonline;
+    fi
+
+after_success:
+    if ( [ "$HAVE_DOCKER" ] && [ "$TRAVIS_SECURE_ENV_VARS" ] ); then
+        docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+        DOCKER_IMAGE_NAME="umple/umpleonline:$TRAVIS_COMMIT";
+        docker push "$DOCKER_IMAGE_NAME";
+        if [ "$TRAVIS_TAG" ]; then
+            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:$TRAVIS_TAG";
+            docker push "umple/umpleonline:$TRAVIS_TAG";
+        elif ( [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ] ); then
+            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:master";
+            docker push "umple/umpleonline:master";
+        fi
+    fi
+
 matrix:
   include:
     - os: linux
       jdk: oraclejdk8
+      # only Linux supports Docker right now
+      env:
+        - HAVE_DOCKER=1
+      services:
+        - docker
     - os: osx
