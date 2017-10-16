@@ -24,7 +24,9 @@ public class UmpleTraitTest {
 	public void tearDown() {
 		SampleFileWriter.destroy("traitTest.ump");
 		SampleFileWriter.destroy("A.java");
+		SampleFileWriter.destroy("p1/A.java");
 		SampleFileWriter.destroy("B.java");
+		SampleFileWriter.destroy("p2/B.java");
 		SampleFileWriter.destroy("C.java");
 		SampleFileWriter.destroy("I.java");
 		SampleFileWriter.destroy("II.java");
@@ -2763,8 +2765,8 @@ public class UmpleTraitTest {
 		Assert.assertEquals("b2", model.getUmpleClass("A").getAssociationVariable(1).getName());
 		Assert.assertEquals("a", model.getUmpleClass("B").getAssociationVariable(0).getName());
 		Assert.assertEquals("a1", model.getUmpleClass("B").getAssociationVariable(1).getName());
+		Assert.assertEquals("p2",model.getUmpleClass("A").getNamespace(0));
 	}
-	
 	
 
 	//explained in my thesis	
