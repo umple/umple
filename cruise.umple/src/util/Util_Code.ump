@@ -80,7 +80,9 @@ class ExceptionDumper {
   depend java.util.regex.*;
   depend java.util.List;
   depend java.util.ArrayList;
-  depend java.io.*;  
+  depend java.io.*;
+  depend java.nio.file.Path;
+  depend java.nio.file.Paths;
 
   public static void dumpCompilerError(Exception ex) {
      String generatedSourcePath = System.getenv("GeneratedSourcePath");
@@ -115,18 +117,13 @@ class ExceptionDumper {
   
     // Translate the java stack trace line information into the corresponding Umple line
     public static StackTraceElement javaToUmpleStackTrace(StackTraceElement javaStack, String generatedSourcePath) {
-      StackTraceElement newSt;
-
-      String umpleFileName="Did not find line = information in Java code";
       int javaLineNumber = javaStack.getLineNumber();
-      int umpleLineNumber=javaStack.getLineNumber(); // Dummy so errors can be noticed
-      String fullClassPath = javaStack.getClassName();
+      Path pathToJavaFile = Paths.get(generatedSourcePath + 
+                                     javaStack.getClassName().replace('.',File.separatorChar) + ".java");
 
-      String javaFileName = generatedSourcePath
-        +(javaStack.getClassName().replace('.',File.separatorChar))+".java";
       Scanner sc = null;
       try {
-        sc = new Scanner(new BufferedReader(new FileReader(javaFileName)));
+        sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
       }
       catch (FileNotFoundException fne) {
         sc = null;
@@ -134,9 +131,9 @@ class ExceptionDumper {
       
       if(sc == null) {
         // Try opening using just the natural hierarchy from package names
-        javaFileName=(javaStack.getClassName().replace('.',File.separatorChar))+".java";
+        pathToJavaFile = Paths.get(javaStack.getClassName().replace('.',File.separatorChar) + ".java");
         try {
-          sc = new Scanner(new BufferedReader(new FileReader(javaFileName)));
+          sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
         }
         catch (FileNotFoundException fne) {
           sc = null;
@@ -145,10 +142,10 @@ class ExceptionDumper {
       if(sc == null) {
         // Try opening using just the plain file name
         int classNameStart = javaStack.getClassName().lastIndexOf('.')+1;
-        javaFileName= generatedSourcePath
-          +javaStack.getClassName().substring(classNameStart)+".java";
+        pathToJavaFile = Paths.get(generatedSourcePath + 
+                                   javaStack.getClassName().substring(classNameStart)+".java");
         try {
-          sc = new Scanner(new BufferedReader(new FileReader(javaFileName)));
+          sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
         }
         catch (FileNotFoundException fne) {
           sc = null;
@@ -160,32 +157,41 @@ class ExceptionDumper {
       }
       
       int lineNumber = 1;
-      // TO DEBUG The following needs updating to match current line info
-      // THE REST OF THIS CODE DOES NOT WORK AT ALL!!
+      // Look for the comment referencing an umple file
+      //    In the format of: // line ## "REL_PATH_TO_FILE"
       Pattern umpleSourceFileFormat = Pattern.compile(
-        ".*@umplesource[(].*\\{(.*)\\}.*\\{(.*)\\}.*\\{(.*)\\}.*\\{(.*)\\}[)].*");
-      List<String> umpleSourceFiles = new ArrayList<String>();
-      List<String> umpleSourceLines = new ArrayList<String>();
-      List<String> umpleSourceJavaLines = new ArrayList<String>();
-      List<String> umpleSourceLengths = new ArrayList<String>();
+        "^\\s*\\/\\/[ ]line[ ](\\d+)[ ]\"(.*)\"$");
+      String umpleSourceFile = null;
+      Integer umpleSourceLine = null;
+      Integer umpleSourceJavaLine = null;
       
       boolean isInMain = false;
       boolean firstBraceFound = false;
       int braces = 0;
+      boolean isInFunction = false;
       
       while(lineNumber<=javaLineNumber)
       {
         String line = sc.nextLine();
         Matcher umpleSourceFileMatcher = umpleSourceFileFormat.matcher(line);
-          //System.out.println(line);
-        if(umpleSourceFileMatcher.matches())
+        while(umpleSourceFileMatcher.matches())
         {
-          umpleSourceLines.add(umpleSourceFileMatcher.group(1));
-          umpleSourceFiles.add(umpleSourceFileMatcher.group(2));
-          umpleSourceJavaLines.add(umpleSourceFileMatcher.group(3));
-          umpleSourceLengths.add(umpleSourceFileMatcher.group(4));
+          umpleSourceLine = Integer.parseInt(umpleSourceFileMatcher.group(1));
+          umpleSourceFile = umpleSourceFileMatcher.group(2);
+          umpleSourceJavaLine = lineNumber;
+          
+          isInFunction = false;
+          line = sc.nextLine();
+          lineNumber++;
+          // If we are entering a function declaration we need to account for that in the umple line number
+          // Regex to match function declaration from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
+          if (line.matches("\\s*(public|protected|private|static|\\s)+ +[\\w\\<\\>\\[\\]]+\\s+(\\w+) *\\([^\\)]*\\) *(\\{?|[^;]).*"))
+          {
+              isInFunction = true;
+          }
+          umpleSourceFileMatcher = umpleSourceFileFormat.matcher(line);
         }
-        else if(line.matches(".*(public)[ |\\t]+(static)[ |\\t]+(void)[ |\\t]+(main)[ |\\t]*[(][ |\\t]*(String)[ |\\t]*\\[\\].*"))
+        if(line.matches(".*(public)[ |\\t]+(static)[ |\\t]+(void)[ |\\t]+(main)[ |\\t]*[(][ |\\t]*(String)[ |\\t]*\\[\\].*"))
         {
           isInMain=true;
         }
@@ -195,12 +201,14 @@ class ExceptionDumper {
         }
         if(isInMain)
         {
-          braces += (line.length()-line.replace("{", "").length()) - (line.length()-line.replace("}", "").length());
-          if(!firstBraceFound && (line.length()-line.replace("{", "").length())>0)
+          int openBraces = line.length() - line.replace("{", "").length();
+          int closedBraces = line.length() - line.replace("}", "").length();
+          braces += openBraces - closedBraces;
+          if(!firstBraceFound && openBraces > 0)
           {
             firstBraceFound = true;
           }
-          if(braces<=0 && firstBraceFound)
+          if(braces <= 0 && firstBraceFound)
           {
             firstBraceFound=false;
             isInMain=false;
@@ -210,30 +218,16 @@ class ExceptionDumper {
         lineNumber++;
       }
       
+      sc.close();
       
-      Integer javaLine;
-        Integer length;
-      for(int j = 0; j < umpleSourceJavaLines.size();j++)
+      if (umpleSourceFile != null)
       {
-        String[] umpleSourceJavaLinesSplit = umpleSourceJavaLines.get(j).split(",");
-        String[] umpleSourceLengthsSplit = umpleSourceLengths.get(j).split(",");
-         
-        for(int i = 0; i < umpleSourceJavaLinesSplit.length; i++)
-        {
-          if(umpleSourceJavaLines.equals(""))
-          {
-            break;
-          }
-            javaLine = Integer.parseInt(umpleSourceJavaLinesSplit[i]);
-            length = Integer.parseInt(umpleSourceLengthsSplit[i]);
-    
-            if(javaLineNumber-javaLine<length)
-            {
-              umpleFileName = umpleSourceFiles.get(j).split(",")[i].replace(" ","");
-              umpleLineNumber = Integer.parseInt(umpleSourceLines.get(j).split(",")[i])+javaLineNumber-javaLine-(isInMain?2:0);
-              return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFileName.replace("\\","/").replaceAll(".*/", "").replace("\"",""), umpleLineNumber);
-            }
-        }       
+        Path umpleFilePath = pathToJavaFile.resolveSibling(umpleSourceFile);
+        // Umple injects two lines of code into each main function, so we need to account for that offset
+        Integer umpleLineNumber = umpleSourceLine + javaLineNumber - umpleSourceJavaLine - (isInMain?2:0);
+        // We must also subtract two for the distance between the umpleSource declaration and the first line of the function declaration
+        umpleLineNumber = umpleLineNumber - (isInFunction?2:1);
+        return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFilePath.getFileName().toString(), umpleLineNumber);
       }
       return null;
     }
