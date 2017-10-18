@@ -24,7 +24,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         '<div class="html-element">',
         '<button class="delete">x</button>',
         '<img id="classIcon" style="position: absolute; top:.1em;left:.2em" src="scripts/class.png" alt="" width="13">',
-        '<input size="9" style="padding:0px 0px 0px 0px; margin-top:0px; margin-left:11px;" type="text" class="className" placeholder="className" readonly/>',
+        '<input size="9" type="text" class="className" placeholder="className" readonly/>',
         '<div class="classAttributes">',
         '</div>',
         '<div class="classMethods">',
