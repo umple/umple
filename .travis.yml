@@ -63,12 +63,19 @@ after_success:
         docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
         DOCKER_IMAGE_NAME="umple/umpleonline:$TRAVIS_COMMIT";
         docker push "$DOCKER_IMAGE_NAME";
-        if [ "$TRAVIS_TAG" ]; then
-            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:$TRAVIS_TAG";
-            docker push "umple/umpleonline:$TRAVIS_TAG";
-        elif ( [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ] ); then
-            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:master";
-            docker push "umple/umpleonline:master";
+        if [ "$TRAVIS_PULL_REQUEST" != 'false' ]; then
+            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST";
+            docker push "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST";
+        elif [ "$TRAVIS_BRANCH" = 'master' ]; then
+            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:latest";
+            docker push "umple/umpleonline:latest";
+        elif [ "$TRAVIS_BRANCH" = 'latest' ]; then
+            echo 'The branch name is "latest", not pushing branch tag';
+        elif ( echo "$TRAVIS_BRANCH" | grep -Eq '^pr\-[0-9]*$' ); then
+            echo 'The branch name looks like a pull request tag, not pushing branch tag';
+        else
+            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:$TRAVIS_BRANCH";
+            docker push "umple/umpleonline:$TRAVIS_BRANCH";
         fi
     fi
 
