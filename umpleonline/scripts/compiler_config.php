@@ -645,12 +645,13 @@ function serverRun($commandLine,$rawcommand=null) {
   }
  
   $readMoreLines = TRUE;
-  socket_set_option($theSocket, SOL_SOCKET, SO_RCVTIMEO,array("sec"=>1,"usec"=>500000) );  
+  socket_set_option($theSocket, SOL_SOCKET, SO_RCVTIMEO,array("sec"=>1,"usec"=>500000) ); // Wait 5 secs  
   while ($readMoreLines === TRUE) {
     $output = @socket_read($theSocket, 65534, PHP_BINARY_READ);
     if ($output === FALSE) {
       @socket_close($theSocket);;
-      execRun("java -jar umplesync.jar ".$originalCommandLine);
+      // This usually happens at moments of overload; run as exec but give server much higher priority
+      execRun("nice -10 java -jar umplesync.jar ".$originalCommandLine);
       return;
     }
     if(strlen($output) == 0) {

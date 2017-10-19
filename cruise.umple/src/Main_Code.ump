@@ -476,25 +476,42 @@ class PlaygroundMain
 
   Boolean isServer=false;
   int commandsRun = 0;
+  int checkpointCommandsRun = 0;
+  int checkpoint2CommandsRun = 0;
+  int cpDiffCmds = 0;
+  long cpDiffTime = 0L;
+    
   int logCommandsRun = 0;
-  int sourceCommandsRun = 0;
+  int addClassCommandsRun = 0;
   int editClassCommandsRun = 0;
+  int addPositioningCommandsRun = 0;
+  int sourceCommandsRun = 0;
+  
   int generateJsonCommandsRun = 0;
   int generateJsonMixedCommandsRun = 0;
-  int addClassCommandsRun = 0;
+  int generateGvClassDiagramCommandsRun = 0;
+  int generateGvStateDiagramCommandsRun = 0;
   
   static String[] previousCommand = new String[1];
   static String[] lastCommand = new String[1];
   static String[] currentCommand = new String[1];
+
   static InetAddress previousIP = null;
   static InetAddress lastIP = null;
   static InetAddress currentIP = null;
-  static long lastCommandStartTime = 0;  
-  static long lastCommandEndTime = 0;
-  static long lastCommandElapsed = 0;
-  static long previousCommandElapsed = 0;
-  static long previousCommandEndTime = 0;
-  static long maxElapsed = 0;
+
+  long lastCommandStartTime = 0L;  
+  long lastCommandEndTime = 0L;
+  long lastCommandElapsed = 0L;
+  long previousCommandElapsed = 0L;
+  long previousCommandEndTime = 0L;
+
+  long checkpointTime = 0L;
+  long checkpoint2Time = 0L;
+  
+  long maxElapsed = 0L;
+  long checkpointMaxElapsed = 0L;
+  long checkpoint2MaxElapsed = 0L;
 
   static PlaygroundMain theInstance;
 
@@ -529,6 +546,12 @@ class PlaygroundMain
     if (lastCommandElapsed > maxElapsed) {
       maxElapsed = lastCommandElapsed;
     }
+    if (lastCommandElapsed > checkpointMaxElapsed) {
+      checkpointMaxElapsed = lastCommandElapsed;
+    }
+    if (lastCommandElapsed > checkpoint2MaxElapsed) {
+      checkpoint2MaxElapsed = lastCommandElapsed;
+    }
     
     try {
       client.close();
@@ -559,6 +582,16 @@ class PlaygroundMain
   {
     String answer = "";
     commandsRun++;
+    
+    if(commandsRun%100==0) { // We have hit a checkpoint
+      checkpoint2CommandsRun = checkpointCommandsRun;
+      checkpoint2Time = checkpointTime;
+      checkpointCommandsRun = commandsRun;
+      checkpointTime = System.currentTimeMillis();
+      checkpoint2MaxElapsed = checkpointMaxElapsed;
+      checkpointMaxElapsed = 0; // start counting max again
+    }
+    
     previousCommand = lastCommand;
     previousIP = lastIP;
     lastCommand = currentCommand;
@@ -566,13 +599,17 @@ class PlaygroundMain
     currentCommand = args;
     
     if(currentCommand[0].equals("-log")) logCommandsRun++;
-    else if(currentCommand[0].equals("-source"))  sourceCommandsRun++;
-    else if(currentCommand[0].equals("-editClass"))  editClassCommandsRun++;
-    else if(currentCommand[0].equals("-generate")
-      && currentCommand[1].equals("Json") )  generateJsonCommandsRun++;
-    else if(currentCommand[0].equals("-generate")
-      && currentCommand[1].equals("JsonMized"))  generateJsonMixedCommandsRun++;
     else if(currentCommand[0].equals("-addClass"))  addClassCommandsRun++;
+    else if(currentCommand[0].equals("-editClass"))  editClassCommandsRun++;
+    else if(currentCommand[0].equals("-addPositioning"))  addPositioningCommandsRun++;
+    else if(currentCommand[0].equals("-source"))  sourceCommandsRun++;
+
+    else if(currentCommand[0].equals("-generate")) {
+      if (currentCommand[1].equals("Json"))  generateJsonCommandsRun++;
+      else if (currentCommand[1].equals("GvClassDiagram"))  generateGvClassDiagramCommandsRun++;
+      else if (currentCommand[1].equals("GvStateDiagram"))  generateGvStateDiagramCommandsRun++;
+      else if (currentCommand[1].equals("JsonMixed"))  generateJsonMixedCommandsRun++;
+    }
     
     if(client != null) {
       currentIP = client.getInetAddress();
@@ -614,22 +651,33 @@ class PlaygroundMain
           returnCommandResult("UmpleOnline Log recorded: "
             +sdf.format(System.currentTimeMillis()) +"\n\n", client);
           
+          cpDiffCmds = commandsRun - checkpoint2CommandsRun;
+          cpDiffTime = System.currentTimeMillis()-checkpoint2Time;
+          
           returnCommandResult("Number of commands run since start: "
-            +commandsRun+"  (pace "+String.format("%.1f", 3600000.0*commandsRun/uptime)+"/h)\n", client);          
+            +commandsRun+"  (pace "+String.format("%.1f", 3600000.0*commandsRun/uptime)+"/h"
+               + ((checkpoint2Time > 0) ? 
+                  " recent "+String.format("%.1f", 3600000.0*cpDiffCmds/cpDiffTime)+"/h"
+                  : "")
+               +"\n", client);          
           returnCommandResult(
               "  log: " +logCommandsRun
-              +"  source: " +sourceCommandsRun
-              +"  editClass: " +editClassCommandsRun
               +"  addClass: " +addClassCommandsRun
-              +"  g Json: " +generateJsonCommandsRun
-              +"  g JsonMixed: " +generateJsonMixedCommandsRun
+              +"  editClass: " +editClassCommandsRun
+              +"  addPositioning: " +addPositioningCommandsRun
+              +"  source: " +sourceCommandsRun
+              +"\n"
+              +"   gen: Json: " +generateJsonCommandsRun
+              +"  GvClass: " +generateGvClassDiagramCommandsRun
+              +"  GvState: " +generateGvStateDiagramCommandsRun
+              +"  JsonMixed: " +generateJsonMixedCommandsRun
               +"\n\n", client);          
           
           returnCommandResult("JVM uptime: "
             +uptime/1000+"s  "+String.format("%.3f",uptime/60000/1440.0)+"days  restarted "+
             sdf.format(startDate)+"\n\n", client);
 
-          returnCommandResult("Number of clients working: "
+          returnCommandResult("Number of clients queued: "
             +getClientConnections().length+"\n\n", client);
 
           OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);         
@@ -640,9 +688,13 @@ class PlaygroundMain
             +(String.format("%.3f",100.0*osBean.getSystemCpuLoad()))
             +"\n\n", client);  
 
-          returnCommandResult("Max elapsed ms of any command: "+maxElapsed+"\n\n", client);
+          returnCommandResult("Max elapsed ms of any command: "+maxElapsed
+            + "  recent: "+checkpoint2MaxElapsed
+            +"\n\n", client);
 
-          returnCommandResult("Port: "+getPort()+"\n\n", client);
+          returnCommandResult("Port: "+getPort()+"  Process:"
+              +ManagementFactory.getRuntimeMXBean().getName().split("@")[0]
+              +"\n\n", client);
           
           returnCommandResult("Version: " + UmpleModel.VERSION_NUMBER
             + " Jar file date updated: "+sdf.format(CompileDate.getClassBuildTime())
