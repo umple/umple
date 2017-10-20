@@ -4,14 +4,25 @@
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 
     <property prefix="base" file="build/umpleversion.txt"/>
+    
+    <condition property="gitrevtoget" value="origin/master" else="master">
+      <equals arg1="${myenv}" arg2="cc" />
+    </condition>    
 
     <!-- Use Git to get the most recent commit -->
     <exec executable="git" outputproperty="git.revision">
-    	<arg value="describe" />
-    	<arg value="--always" />
+    	<arg value="rev-parse" />
+    	<arg value="--short" />
+    	<arg value="${gitrevtoget}" />
     </exec>
 
-    <property name="umple.version" value="${base.version}-${git.revision}" />
+    <exec executable="git" outputproperty="git.commitnum">
+    	<arg value="rev-list" />
+    	<arg value="--count" />
+    	<arg value="${gitrevtoget}" />
+    </exec>
+
+    <property name="umple.version" value="${base.version}-${git.revision}-${git.commitnum}" />
     <echo message="Current Version: ${umple.version}" />
   
 </project>
