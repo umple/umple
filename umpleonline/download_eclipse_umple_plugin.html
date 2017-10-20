@@ -124,50 +124,63 @@
 
 <p><b>Requirement</b>: <a href="https://www.docker.com/get-docker">Docker</a> installed on your computer.
 
-<p>Umple provides a Docker image of Umpleonline that allows you to explore all the features of Umple through a web browser, with the server running locally on your computer. To use this, do the following after installing Docker. Detailed instructions can be found on <a href="https://hub.docker.com/r/umple/umpleonline/">Umple's Docker Hub page</a></p>
+<p>Umple provides a Docker image of Umpleonline that allows you to explore all the features of Umple through a web browser, with the server running locally on your computer. To use this, do the following after installing Docker. Further information can be found on <a href="https://hub.docker.com/r/umple/umpleonline/">Umple's Docker Hub page</a></p>
 
 <ul>
 
 <li>Pull the latest image (do this every time, so you get any changes):
 
 <pre>
-docker pull umple/umpleonline
+  docker pull umple/umpleonline
 </pre>
 
 <li>In a terminal (console), invoke the image (you can change the 8000 to be another port both here and in the next instruction if you prefer):
 
 <pre>
-docker run --rm -ti -p 8000:80 umple/umpleonline >/dev/null
+  docker run --rm -ti -p 8000:80 umple/umpleonline >/dev/null
 </pre>
 
 <li>In a web browser, go to the following link: <a href="http://localhost:8000/umple.php">http://localhost:8000/umple.php</a><br/>&nbsp;<br/>
 
-<li>IMPORTANT: Before quitting the image, download any Umple code you have written, as it is currently not persisted. You can do this from the running website by copy-and-paste, or by saving to Dropbox. Alternatively you can directly access the code in the running image, as beloe
+<li>If you want your model to persist beyond the current Docker session, either follow the instructions below or else before quitting the image, download any Umple code you have written. You can do this from the running website by copy-and-paste.<br/>&nbsp;<br/>
 
 <li>To quit the image: a) If started as above in Linux or Mac, hit control-c; or b) run 'docker ps' to find the name of the running image and kill it using 'docker kill image'.
 
 </ul>
 
-<p>To directly copy code in a running image to your host machine, do the following:</p>
+<p>To mount one of your directories as a working directory that the Docker Umpleonline can access, you can do the following, where {dir} is the full pathname of the directory on your local machine and {dir:t} is the directory name without any path.
+
+<ul>
+
+  <li> Run docker as:
+  docker run --rm -ti -p 8000:80 umple/umpleonline >/dev/null
+  <pre>
+    docker run --rm -ti -p 8000:80 -v {dir}:{dir:t} umple/umpleonline >/dev/null
+  </pre>
+  
+  <li> and open your browser to href="http://localhost:8000/umple.php">http://localhost:8000/umple.php?model={dir:t}
+
+</ul>
+
+<p>You can also accomplish the above and guarantee persistence of your data by downloading and installing our script called <a href="https://raw.githubusercontent.com/umple/umple/master/dev-tools/udock">udock</a> and passing it the optional argument -d {dir}<p>
+
+<p>If you didn't do the above, and want to  copy code from a running image to your host machine, do the following:</p>
 
 <ul>
 
 <li>Find out the name of your running image container:
-
 <pre>
-docker ps
+  docker ps
 </pre>
 
 <li>Using this, find out the name of the directory where data is being stored:
-
 <pre>
-docker exec {container} ls -t var/www/ump/ | head -1
+  docker exec {container} ls -t var/www/ump/ | head -1
 </pre>
 
 <li>Now copy the data to somewhere, e.g. a directory called tmp
-
 <pre>
-docker cp {container}:/var/www/ump/{dirname} ~/tmp/fromDocker
+  docker cp {container}:/var/www/ump/{dirname} ~/tmp/fromDocker
 </pre>
 
 </ul>
