@@ -1,0 +1,52 @@
+#!/bin/csh -fb
+echo Command to run UmpleOnline in docker
+echo 'syntax: udoc {image} {-d storagedirectory}'
+set dir="umpleonline-tmp$$"
+set volcommand =""
+set image=""
+if("$1" != "") then
+  if("$1" == "-d") then 
+    set dir=$2
+  else 
+    set image=$1
+    echo here a $2
+    if("$2" == "-d") then 
+      set dir=$3
+    endif
+  endif
+endif
+
+set modelarg =""
+if($dir != "") then
+  if(! -d $dir) then
+    echo "Directory $dir to be mounted does not exist"
+    if($dir == $dir:t) then
+      set dir = /tmp/$dir
+      if (-d $dir) then
+        echo will use $dir
+      else
+        echo "will create" $dir
+        mkdir $dir
+      endif
+    else
+      exit -1
+    endif
+  endif
+  echo Will mount $dir as storage. $dir/model.ump will be the main file
+  echo "After docker running open as http://localhost:8000/scripts/log.php?model="$dir:t
+  set modelarg="?model="$dir:t
+  set volcommand=" -v $dir"':'/var/www/ump/$dir:t
+  touch $dir/model.ump
+endif
+
+if($image != "") set image=":"$image
+
+docker pull umple/umpleonline$image
+echo Will run docker image ... use control-c to cancel
+echo "To see: open http://localhost:8000/umple.php$modelarg"
+echo "For log: open http://localhost:8000/scripts/log.php"
+if (`uname` == "Darwin") then
+  ( sleep 2 ; open "http://localhost:8000/umple.php$modelarg" ) &
+endif
+docker run --rm -ti -p 8000:80 $volcommand umple/umpleonline$image >/dev/null
+echo Docker image quit
