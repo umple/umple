@@ -360,6 +360,7 @@ class UmpleInternalParser
       addUnlinkedExtends();
       
       //required for parsing specializedAssociations
+      checkExtendsForCycles();
       createSpecializedLinks();
       checkDuplicateAssociationNames();
       checkDuplicateAssociationNamesClassHierarchy();
@@ -949,10 +950,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           
           for(Attribute aAttribute : child.getAttributes())
           {
-
+            int limit = 100; // prevent infinite loops
             UmpleClass extend = child.getExtendsClass();
-            while(extend!=null && child != extend) 
+            while(extend!=null && child != extend && limit > 0) 
             {
+              limit--;
               for(Attribute extendAttr : extend.getAttributes()) 
               {
             	  
@@ -1628,16 +1630,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   }  
 
    private void addUnlinkedKeys() {
-   	// If a dependency cycle exists, then we can't add keys
-   	List<ErrorMessage> errors = getParseResult().getErrorMessages();
-   	for (ErrorMessage err: errors)
-   	{
-   	    int code = err.getErrorType().getErrorCode();
-   	    if (code == 11 || code == 12)
-   	    {
+     // If a dependency cycle exists, then we can't add keys
+     List<ErrorMessage> errors = getParseResult().getErrorMessages();
+     for (ErrorMessage err: errors)
+     {
+        int code = err.getErrorType().getErrorCode();
+        if (code == 11 || code == 12)
+        {
             return;
         }
-    }	
+    }
 
     for (UmpleClass c : unlinkedKeysTokens.keySet())
     {   
@@ -1852,6 +1854,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   private void createSpecializedLinks()
   {
+    // Don't do it if we have already detected cycles
+     List<ErrorMessage> errors = getParseResult().getErrorMessages();
+     for (ErrorMessage err: errors)
+     {
+        int code = err.getErrorType().getErrorCode();
+        if (code == 11 || code == 12)
+        {
+            return;
+        }
+    }  
+  
     ArrayList<Association> visited = new ArrayList<Association>();
     int aLLB, aLUB, aRLB, aRUB, bLLB, bLUB, bRLB, bRUB;
     Boolean lLowerBoundOK, rLowerBoundOK, lUpperBoundOK, rUpperBoundOK, boundsOK, subclassOK, namesOK, reverseNames,

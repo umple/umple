@@ -52,8 +52,40 @@ script:
   - $ANT_TESTBED test 
   - $ANT_TESTBED template.resetVersion 
 
+  # Set up UmpleOnline to be packaged into its Docker image, then build the image.
+  - if [ "$HAVE_DOCKER" ]; then
+        $ANT_BUILD -DshouldPackageUmpleOnline=true packageUmpleonline;
+        docker build -t "umple/umpleonline:$TRAVIS_COMMIT" ../umpleonline;
+    fi
+
+after_success:
+    if ( [ "$HAVE_DOCKER" ] && [ "$TRAVIS_SECURE_ENV_VARS" ] ); then
+        docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+        DOCKER_IMAGE_NAME="umple/umpleonline:$TRAVIS_COMMIT";
+        docker push "$DOCKER_IMAGE_NAME";
+        if [ "$TRAVIS_PULL_REQUEST" != 'false' ]; then
+            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST";
+            docker push "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST";
+        elif [ "$TRAVIS_BRANCH" = 'master' ]; then
+            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:latest";
+            docker push "umple/umpleonline:latest";
+        elif [ "$TRAVIS_BRANCH" = 'latest' ]; then
+            echo 'The branch name is "latest", not pushing branch tag';
+        elif ( echo "$TRAVIS_BRANCH" | grep -Eq '^pr\-[0-9]*$' ); then
+            echo 'The branch name looks like a pull request tag, not pushing branch tag';
+        else
+            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:$TRAVIS_BRANCH";
+            docker push "umple/umpleonline:$TRAVIS_BRANCH";
+        fi
+    fi
+
 matrix:
   include:
     - os: linux
       jdk: oraclejdk8
+      # only Linux supports Docker right now
+      env:
+        - HAVE_DOCKER=1
+      services:
+        - docker
     - os: osx
