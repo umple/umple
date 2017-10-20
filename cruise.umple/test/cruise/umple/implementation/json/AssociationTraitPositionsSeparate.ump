@@ -1,0 +1,13 @@
+class B {
+position 5 6 7 8;
+}
+
+trait AscTrait {
+  0..1 -> * B asc;
+  position 1 2 3 4;
+}
+
+class A {
+  isA AscTrait;
+  position 1 2 3 4;
+}

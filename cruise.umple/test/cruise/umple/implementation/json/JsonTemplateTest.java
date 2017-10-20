@@ -84,7 +84,7 @@ public class JsonTemplateTest extends TemplateTest
   {
     assertEitherUmpleTemplateFor("json/UnidirectionalAssociationTemplateTest_Json.ump", "json/UnidirectionalAssociationTemplateTest_Jsonb.json.txt", "json/UnidirectionalAssociationTemplateTest_Json.json.txt");
   }
-
+  
   @Test
   public void Generalization()
   {
@@ -101,6 +101,18 @@ public class JsonTemplateTest extends TemplateTest
   public void AssociationClassPositionsSeparate()
   {
     assertUmpleTemplateFor("json/AssociationClassPositionsSeparate.ump", "json/AssociationClassPositionsSeparate.json.txt");
+  }
+  
+  @Test
+  public void AssociationTrait()
+  {
+	assertUmpleTemplateFor("json/AssociationTrait.ump", "json/AssociationTrait.json.txt");
+  }
+  
+  @Test
+  public void AssociationTraitPositionsSeparate()
+  {
+	assertUmpleTemplateFor("json/AssociationTraitPositionsSeparate.ump", "json/AssociationTraitPositionsSeparate.json.txt");
   }
   
   @Test

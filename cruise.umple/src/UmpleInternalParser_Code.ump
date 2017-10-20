@@ -102,9 +102,8 @@ class UmpleInternalParser
   {
     setParseResult(parser.getParseResult());
     setRootToken(parser.getRootToken());
-    analyzeAllTokens(getRootToken());
+    analyzeAllTokens(getRootToken());    
     postTokenAnalysis();
-    applyTraits();
     secondPostTokenAnalysis();
     //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
     checkDefaultedNameConflict();
@@ -313,6 +312,16 @@ class UmpleInternalParser
 
     if (getParseResult().getWasSuccess())
     {
+      postTokenTraitAnalysis();
+    }
+
+    if (getParseResult().getWasSuccess())
+    {
+      applyTraits();
+    }    
+    
+    if (getParseResult().getWasSuccess())
+    {
       postTokenLayoutAnalysis();
     }
 
@@ -322,11 +331,6 @@ class UmpleInternalParser
 
     if (getParseResult().getWasSuccess()) {
       postTokenComponentAnalysis();
-    }
-
-    if (getParseResult().getWasSuccess())
-    {
-      postTokenTraitAnalysis();
     }
 
     if (getParseResult().getWasSuccess())
