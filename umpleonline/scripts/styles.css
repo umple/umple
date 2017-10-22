@@ -340,12 +340,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     padding-top: 3px;
 }
 
-.html-element .className {
-    text-align: left;
-    padding: 0px;
-    margin-top:0px;
-    margin-left:11px;
-}
+.html-element .className,
 .html-element .stateName {
     text-align: center;
     margin: auto;
