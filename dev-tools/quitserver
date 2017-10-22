@@ -1,0 +1,4 @@
+#!/bin/csh -fb
+echo Quitting any umpleonline server that is running
+cd ~/umple/umpleonline/scripts
+php UmpleServerTest.php server -quit 

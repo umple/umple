@@ -375,6 +375,7 @@ class UmpleRunMain
   depend cruise.umple.util.*;
   depend java.net.*;
   depend java.io.*;
+  depend java.net.InetAddress;
 
   public static void main(String[] args)
   {
@@ -635,7 +636,7 @@ class PlaygroundMain
       return;
     }
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");    
+    SimpleDateFormat sdf = new SimpleDateFormat("EEE yyyy MMM dd HH:mm:ss z");    
     if ("-version".equals(args[0])) {
       returnCommandResult("Version: " + UmpleModel.VERSION_NUMBER
         + " Compiled: "+sdf.format(CompileDate.getClassBuildTime())
@@ -648,8 +649,15 @@ class PlaygroundMain
           long uptime = ManagementFactory.getRuntimeMXBean().getUptime();
           Date startDate = new Date(System.currentTimeMillis()-uptime);
           
+          String hn="unknown";
+          try {
+            hn=java.net.InetAddress.getLocalHost().getCanonicalHostName();
+          }
+          catch (Exception e) {}
+          
           returnCommandResult("UmpleOnline Log recorded: "
-            +sdf.format(System.currentTimeMillis()) +"\n\n", client);
+            +sdf.format(System.currentTimeMillis()) 
+            +"  at "+hn+"\n\n", client);
           
           cpDiffCmds = commandsRun - checkpoint2CommandsRun;
           cpDiffTime = System.currentTimeMillis()-checkpoint2Time;
