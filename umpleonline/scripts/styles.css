@@ -312,7 +312,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     right: 0;
     color: #333;
     padding: 0px;
-    height: 12px;
+    height: 14px;
     font-family: arial, serif;
     font-size:12px;
     border: none;
@@ -348,7 +348,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
 
 .html-element hr {
     border: none;
-    height: 2px;
+    height: 1px;
     /* Set the hr color */
     color: #000; /* old IE */
     background-color: #000; /* Modern Browsers */
