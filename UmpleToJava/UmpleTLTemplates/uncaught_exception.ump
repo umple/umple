@@ -13,7 +13,7 @@ private void addUncaughtExceptionVariables(int javaline, String code, String met
       uncaughtExceptions.put(methodname,new UncaughtException(globalUmpleClass.getName(), methodname));
     }
     uncaughtExceptions.get(methodname).addUncaughtFileName(matcher.group(2));
-    uncaughtExceptions.get(methodname).addUncaughtUmpleLine(Integer.parseInt(matcher.group(1))-1);
+    uncaughtExceptions.get(methodname).addUncaughtUmpleLine(Integer.parseInt(matcher.group(1))+1);
     uncaughtExceptions.get(methodname).addUncaughtJavaLine(javaline+1);
     uncaughtExceptions.get(methodname).addUncaughtLength(lines.length);
   }  
@@ -60,7 +60,7 @@ public String getExceptionHandler(String exceptions) {
             UmpleSourceData sourceInformation = (UmpleSourceData)query.invoke(this,new Object[]{});
             for(int i=0;i<sourceInformation.size();++i)
             {
-              int distanceFromStart = element.getLineNumber()-sourceInformation.getJavaLine(i)-(("main".equals(methodName))?2:0);
+              int distanceFromStart = element.getLineNumber()-sourceInformation.getJavaLine(i)-(("main".equals(methodName))?3:1);
               if(distanceFromStart>=0&&distanceFromStart<=sourceInformation.getLength(i))
               {
                 result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),sourceInformation.getFileName(i),sourceInformation.getUmpleLine(i)+distanceFromStart));
