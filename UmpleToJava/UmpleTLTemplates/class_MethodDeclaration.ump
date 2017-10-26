@@ -183,7 +183,6 @@ class UmpleToJava {
           if (customPreconditionCode != null) { append(realSb, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
           if (customBeforeInjectionCode != null) { append(realSb, "{0}\n",GeneratorHelper.doIndent(customBeforeInjectionCode, "    "));}
           
-          addUncaughtExceptionVariables(methodName,p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline,realSb.toString().split("\\n").length+1-javaline);
           String traceCode = "";
           if(properMethodBody.contains("return"))
           {
@@ -308,6 +307,7 @@ class UmpleToJava {
             if (customAfterInjectionCode != null) { append(realSb, "{0}\n",GeneratorHelper.doIndent(customAfterInjectionCode, "    "));}
           }
           appendln(realSb, "  }");
+          addUncaughtExceptionVariables(methodName,p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline,methodBody.split("\\n").length);
         }
       }
     }
