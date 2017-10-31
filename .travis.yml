@@ -54,20 +54,22 @@ script:
 
   # Set up UmpleOnline to be packaged into its Docker image, then build the image.
   - if [ "$HAVE_DOCKER" ]; then
-        $ANT_BUILD -DshouldPackageUmpleOnline=true packageUmpleonline;
+        $ANT_BUILD -DshouldPackageUmpleOnline=true packageUmpleonline &&
+        docker build -t "umple/umpleonline-base:local"
+                     -f ../umpleonline/Dockerfile-base ../umpleonline &&
         docker build -t "umple/umpleonline:$TRAVIS_COMMIT" ../umpleonline;
     fi
 
 after_success:
     if ( [ "$HAVE_DOCKER" ] && [ "$TRAVIS_SECURE_ENV_VARS" ] ); then
-        docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-        DOCKER_IMAGE_NAME="umple/umpleonline:$TRAVIS_COMMIT";
-        docker push "$DOCKER_IMAGE_NAME";
+        docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
+        DOCKER_IMAGE_NAME="umple/umpleonline:$TRAVIS_COMMIT" &&
+        docker push "$DOCKER_IMAGE_NAME" &&
         if [ "$TRAVIS_PULL_REQUEST" != 'false' ]; then
-            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST";
+            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST" &&
             docker push "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST";
         elif [ "$TRAVIS_BRANCH" = 'master' ]; then
-            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:latest";
+            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:latest" &&
             docker push "umple/umpleonline:latest";
         elif [ "$TRAVIS_BRANCH" = 'latest' ]; then
             echo 'The branch name is "latest", not pushing branch tag';
@@ -76,6 +78,10 @@ after_success:
         else
             docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:$TRAVIS_BRANCH";
             docker push "umple/umpleonline:$TRAVIS_BRANCH";
+        fi &&
+        if [ "$TRAVIS_TAG" ]; then
+            docker tag "umple/umpleonline-base:local" "umple/umpleonline-base:latest" &&
+            docker push "umple/umpleonline-base:latest";
         fi
     fi
 

@@ -1,12 +1,6 @@
-FROM nginx:1.13.5-alpine
-
-MAINTAINER Umple umple-help@googlegroups.com
-
-# give php its own user and install UmpleOnline's dependencies
-RUN adduser -D -H -h /var/cache/php -s /sbin/nologin -G nginx php && \
-    apk add --no-cache openjdk8 python py-pip graphviz zip \
-		       php7 php7-fpm php7-sockets && \
-    pip install supervisor==3.3.3
+FROM umple/umpleonline-base:latest
+# To save 200MB on image size, all our dependencies are in a separate
+# slow-changing base image
 
 # make sure supervisord, nginx and php-fpm are configured
 COPY docker_config/supervisord.conf /etc/supervisord.conf
