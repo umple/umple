@@ -814,6 +814,16 @@ var JJSdiagram = {
 		jjsJsonOne.position.width = jjsJsonOne.size.width;
 		jjsJsonTwo.position.height = jjsJsonTwo.size.height;
 		jjsJsonTwo.position.width = jjsJsonTwo.size.width;
+		var nameOne = "";
+		var nameTwo = "";
+
+		if (jjsJsonOne.name[0] <= jjsJsonTwo.name[0]){
+			nameOne = jjsJsonOne.name[0];
+			nameTwo = jjsJsonTwo.name[0];
+		}else {
+			nameOne = jjsJsonTwo.name[0];
+			nameTwo = jjsJsonOne.name[0];
+		}
 		var actionCodeObj = {
 			"classOnePosition": jjsJsonOne.position,
 			"classTwoPosition": jjsJsonTwo.position,
@@ -831,7 +841,7 @@ var JJSdiagram = {
 			},
 			"multiplicityOne": "*",
 			"multiplicityTwo": "*",
-			"name": jjsJsonOne.name[0] + "__" + jjsJsonTwo.name[0],
+			"name": nameOne + "__" + nameTwo,
 			"roleOne": "",
 			"roleTwo": "",
 			"isSymmetricReflexive": "false",
@@ -865,7 +875,7 @@ var JJSdiagram = {
 				console.log('JJSdiagram.makeUmpleCodeFromAssociation: action type error.');
 				break;
 		}
-
+		
 		DiagramEdit.updateUmpleText({
 			actionCode: actionCode,
 			codeChange: true
