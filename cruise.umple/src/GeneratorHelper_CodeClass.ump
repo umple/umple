@@ -61,17 +61,17 @@ class GeneratorHelper
     {
       for (CodeInjection inject : allCodeInjections)
       {
+        String positionString = "";
+        Position p = inject.getPosition();
+        Position codeP = inject.getCodePosition();
+        if (codeP != null) {
+            positionString =  "// line " + codeP.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
+        }
+        else if (p != null) {
+            positionString =  "// line " + p.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
+        }
         if (asCode == null)
         {
-          String positionString = "";
-          Position p = inject.getPosition();
-          Position codeP = inject.getCodePosition();
-          if (codeP != null) {
-              positionString =  "// line " + codeP.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
-          }
-          else if (p != null) {
-              positionString =  "// line " + p.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
-          }
           if(inject.getConstraintTree()!=null&&generator!=null)
           {
             asCode = positionString + inject.getConstraintCode(generator);
@@ -80,15 +80,6 @@ class GeneratorHelper
         }
         else
         {
-          String positionString = "";
-          Position p = inject.getPosition();
-          Position codeP = inject.getCodePosition();
-          if (codeP != null) {
-              positionString =  "// line " + codeP.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
-          }
-          else if (p != null) {
-              positionString =  "// line " + p.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
-          }
           if(inject.getConstraintTree()!=null&&generator!=null)
           {
             asCode = StringFormatter.format("{0}\n{1}{2}",asCode,positionString,inject.getConstraintCode(generator));
