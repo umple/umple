@@ -3,7 +3,7 @@
 
 
 
-// line 1 "ClassTemplateTest_CodeInjectionsBasic.ump"
+// line 1 "ClassTemplateTest_CodeInjectionsBasicOnOneLine.ump"
 public class Student
 {
 
@@ -25,24 +25,24 @@ public class Student
   public void delete()
   {}
 
-  // line 3 "ClassTemplateTest_CodeInjectionsBasic.ump"
+  // line 3 "ClassTemplateTest_CodeInjectionsBasicOnOneLine.ump"
   public String foo(int a){
-    // line 17 "ClassTemplateTest_CodeInjectionsBasic.ump"
+    // line 16 "ClassTemplateTest_CodeInjectionsBasicOnOneLine.ump"
     System.out.println("Starting foo with argument: " + a);
     if(a < 0) {      
-      // line 21 "ClassTemplateTest_CodeInjectionsBasic.ump"
+      // line 18 "ClassTemplateTest_CodeInjectionsBasicOnOneLine.ump"
       System.out.println("Returning from foo!");
       return 0;
     }
 
     for(int i = 0; i < a; i++) {
       if(i == a/4) {        
-        // line 21 "ClassTemplateTest_CodeInjectionsBasic.ump"
+        // line 18 "ClassTemplateTest_CodeInjectionsBasicOnOneLine.ump"
         System.out.println("Returning from foo!");
         return a;
       }
     }    
-    // line 21 "ClassTemplateTest_CodeInjectionsBasic.ump"
+    // line 18 "ClassTemplateTest_CodeInjectionsBasicOnOneLine.ump"
     System.out.println("Returning from foo!");
     return 4;
 

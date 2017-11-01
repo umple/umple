@@ -57,31 +57,34 @@ class GeneratorHelper
   public static String toCode(List<CodeInjection> allCodeInjections)
   {
     String asCode = null;
-    String positionString = "";
     if (allCodeInjections != null)
     {
       for (CodeInjection inject : allCodeInjections)
       {
+        String positionString = "";
+        Position p = inject.getPosition();
+        Position codeP = inject.getCodePosition();
+        if (codeP != null) {
+            positionString =  "// line " + codeP.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
+        }
+        else if (p != null) {
+            positionString =  "// line " + p.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
+        }
         if (asCode == null)
         {
           if(inject.getConstraintTree()!=null&&generator!=null)
           {
-            asCode = inject.getConstraintCode(generator);
+            asCode = positionString + inject.getConstraintCode(generator);
           }
-          else asCode = inject.getCode();
-           
-          Position p = inject.getPosition();
-	      if (p != null) {
-	          positionString =  "// line " + p.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
-	      }
+          else asCode = positionString + inject.getCode();
         }
         else
         {
           if(inject.getConstraintTree()!=null&&generator!=null)
           {
-            asCode = StringFormatter.format("{0}\n{1}",asCode,inject.getConstraintCode(generator));
+            asCode = StringFormatter.format("{0}\n{1}{2}",asCode,positionString,inject.getConstraintCode(generator));
           }
-          else asCode = StringFormatter.format("{0}\n{1}",asCode,inject.getCode());
+          else asCode = StringFormatter.format("{0}\n{1}{2}",asCode,positionString,inject.getCode());
         }
       }
     }
@@ -89,7 +92,7 @@ class GeneratorHelper
     {
       return null;
     }
-    return positionString + asCode;
+    return asCode;
   }  
 
   public static String doIndent(String code, String indents)

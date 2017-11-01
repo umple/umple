@@ -3,6 +3,7 @@
 
 
 
+// line 1 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
 public class Student
 {
 
@@ -24,8 +25,11 @@ public class Student
   public void delete()
   {}
 
+  // line 3 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
   public String foo(int a){
+    // line 26 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
     System.out.println("Starting foo...");
+    // line 38 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
     System.out.println("Starting execution...");
     if(a < 0) {
       return 4;
@@ -34,18 +38,25 @@ public class Student
     return 3;
   }
 
+  // line 11 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
   public String foo(int a, String b){
+    // line 26 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
     System.out.println("Starting foo...");
     if(a > 0 && "".equals(b)) {      
+      // line 30 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
       System.out.println("Returning from foo, a: " + a ", b: " + b);
       return 3;
     }    
+    // line 30 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
     System.out.println("Returning from foo, a: " + a ", b: " + b);
     return 1;
   }
 
+  // line 18 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
   public String bar(){
+    // line 34 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
     // TODO: fix asap
+    // line 38 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
     System.out.println("Starting execution...");
     int a = 4;
 

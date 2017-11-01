@@ -467,6 +467,7 @@ class CodeInjection
   * -> 1 UmpleClassifier;
   1 -> 0..1 ConstraintTree;
   lazy Position position;
+  lazy Position codePosition;
   Boolean isInternal = false;
 }
 

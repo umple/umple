@@ -76,7 +76,13 @@ public class JavaClassTemplateTest extends ClassTemplateTest
   @Test
   public void ClassCodeInjections_Basic()
   {
-    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsBasic.ump", languagePath + "/ClassTemplateTest_CodeInjectionsBasic." + languagePath + ".txt", "Student");
+    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsBasic.ump", languagePath + "/ClassTemplateTest_CodeInjectionsBasic." + languagePath + ".txt", "Student", true, false);
+  }
+  
+  @Test
+  public void ClassCodeInjections_BasicOnOneLine()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsBasicOnOneLine.ump", languagePath + "/ClassTemplateTest_CodeInjectionsBasicOnOneLine." + languagePath + ".txt", "Student", true, false);
   }
 
   @Test
@@ -111,7 +117,7 @@ public class JavaClassTemplateTest extends ClassTemplateTest
   @Test
   public void ClassCodeInjections_ParametersMulti()
   {
-    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsParametersMulti.ump", languagePath + "/ClassTemplateTest_CodeInjectionsParametersMulti." + languagePath + ".txt", "Student");
+    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsParametersMulti.ump", languagePath + "/ClassTemplateTest_CodeInjectionsParametersMulti." + languagePath + ".txt", "Student", true, false);
   }
 
   @Test
