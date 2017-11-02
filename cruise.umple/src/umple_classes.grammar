@@ -41,7 +41,7 @@ distributableInterface : [[distributable]]
 // Constants in interfaces (e.g. const String ACONSTANT="aValue";)
 // Note: in Classes const is a modifier
 constantDeclarationDeprecated : constant [[typedName]] (= [**value])? ;
-constantDeclaration : const [[typedName]] (= [**value])? ;
+constantDeclaration : [=internal]? const [[typedName]] (= [**value])? ;
 
 //TODO Should we use modifier for concrete methods [=modifier:public|protected|private]?
 //TODO Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?

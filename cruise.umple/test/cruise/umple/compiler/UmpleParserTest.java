@@ -1285,6 +1285,12 @@ public class UmpleParserTest
 	  assertHasWarningsParse("008_attributeUpperFirstChar.ump", 131);
           assertSimpleParse("008_constAttributeUpperFirstChar.ump");
   }
+  
+  //Issue-322
+  @Test
+  public void internalConst(){
+    assertSimpleParse("008_internalConst.ump");
+  }
 
   @Test
   public void TypeValueMismatchWarning()

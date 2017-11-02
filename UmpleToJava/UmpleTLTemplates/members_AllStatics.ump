@@ -1,6 +1,27 @@
 class UmpleToJava {
     members_AllStatics <<!<</*members_AllStatics*/>><<#
 {
+  
+  // Issue 322
+  if(uClass.hasConstants()){
+    appendln(realSb, " ");
+    appendln(realSb, "  //------------------------");
+    appendln(realSb, "  // STATIC VARIABLES");
+    appendln(realSb, "  //------------------------");
+    appendln(realSb, " ");
+
+    for (Constant aConstant : uClass.getConstants())
+    {
+      if(aConstant.getIsInternal()){
+        appendln(realSb, "private static final {0} {1} = {2};",aConstant.getType(), aConstant.getName(),aConstant.getValue());
+      }
+      else
+      {
+        appendln(realSb, "public static final {0} {1} = {2};",aConstant.getType(), aConstant.getName(),aConstant.getValue());
+      }
+    }
+  }
+  
   isFirst = true;
   for(Attribute av : uClass.getAttributes())
   {
