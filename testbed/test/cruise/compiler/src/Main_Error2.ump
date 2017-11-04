@@ -1,0 +1,11 @@
+namespace compiler;
+
+class MainError2
+{
+    public static void main(String [] argv){
+        int a = "not an int";
+        int b = 10;
+        b++;
+        a += b;
+    }
+}
