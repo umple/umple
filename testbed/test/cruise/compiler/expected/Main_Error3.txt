@@ -1,0 +1,6 @@
+Main_Error3.ump:7: error: cannot find symbol
+        b = a;
+        ^
+  symbol:   variable b
+  location: class MainError3
+1 error
