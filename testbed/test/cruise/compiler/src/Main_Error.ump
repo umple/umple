@@ -1,0 +1,8 @@
+namespace compiler;
+
+class MainError
+{
+    public static void main(String [] argv){
+        int a = "not an int";
+    }
+}
