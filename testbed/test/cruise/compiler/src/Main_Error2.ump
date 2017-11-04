@@ -1,4 +1,4 @@
-namespace compiler;
+namespace src-gen-umple;
 
 class MainError2
 {
