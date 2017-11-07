@@ -114,12 +114,46 @@ var JJSdiagram = {
 			}
 		);
 
+		//The following disconnect and connect event is intended to implement modifying association end, at the moment
+		//the workflow is remove then add, please refer to issue #1127 for detail
+		this.paper.off('link:disconnect').on('link:disconnect',
+			function(linkView, evt, elmentViewDisconnected, magnet, arrowhead){
+				if (JJSdiagram.diagram_type === "UMLclass"){
+					if (linkView.model.get('type') === 'uml.Association') {
+						if (arrowhead === 'source') {
+							JJSdiagram.makeUmpleCodeFromAssociation('removeAssociation',JJSdiagram.paper.model.getCell(elmentViewDisconnected.model.toJSON().id).toJSON(), JJSdiagram.paper.model.getCell(linkView.model.toJSON().target.id).toJSON(), '');
+						}
+						else if (arrowhead === 'target'){
+							JJSdiagram.makeUmpleCodeFromAssociation('removeAssociation',JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON(), JJSdiagram.paper.model.getCell(elmentViewDisconnected.model.toJSON().id).toJSON(),  '');
+						}
+					}
+				}
+			}
+		);
+
+		this.paper.off('link:connect').on('link:connect',
+			function (linkView, evt, elementViewConnected, magnet, arrowhead) {
+				if (JJSdiagram.diagram_type === "UMLclass"){
+					if (linkView.model.get('type') === 'uml.Association') {
+						if(arrowhead === 'source'){
+							JJSdiagram.makeUmpleCodeFromAssociation('addJjsAssociation',JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON(), JJSdiagram.paper.model.getCell(linkView.model.toJSON().target.id).toJSON());
+						} else if(arrowhead === 'target'){
+							JJSdiagram.makeUmpleCodeFromAssociation('addJjsAssociation', JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON(), JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON());
+						}
+					}
+				}
+			}
+		);
+
 		//remove listeners for association and generalization
+		//Because of the removing on disconnect, the removing button is now only used for full connected association
 		this.paper.model.on('remove', _.bind(function (cell) {
 			if (cell.isLink()) {
 				switch (cell.toJSON().type) {
 					case 'uml.Association':
-						JJSdiagram.makeUmpleCodeFromAssociation('removeAssociation', this.paper.model.getCell(cell.toJSON().source.id).toJSON(), this.paper.model.getCell(cell.toJSON().target.id).toJSON(), cell.toJSON());
+						if (cell.toJSON().source.id !== undefined && cell.toJSON().target.id !== undefined){
+							JJSdiagram.makeUmpleCodeFromAssociation('removeAssociation', this.paper.model.getCell(cell.toJSON().source.id).toJSON(), this.paper.model.getCell(cell.toJSON().target.id).toJSON(), cell.toJSON());
+						}
 						break;
 					case 'uml.Generalization':
 						JJSdiagram.makeUmpleCodeFromGeneralization('removeGeneralization', this.paper.model.getCell(cell.toJSON().target.id).toJSON(), this.paper.model.getCell(cell.toJSON().source.id).toJSON());
@@ -225,7 +259,7 @@ var JJSdiagram = {
 						});
 						link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
 						JJSdiagram.paper.model.addCell(link);
-						JJSdiagram.makeUmpleCodeFromAssociation('addJjsAccociation', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
+						JJSdiagram.makeUmpleCodeFromAssociation('addJjsAssociation', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
 						JJSdiagram.paper.off('cell:pointerclick');
 						JJSdiagram.setPaperListener();
 					}
@@ -856,7 +890,7 @@ var JJSdiagram = {
 		};
 
 		switch (actionType) {
-			case 'addJjsAccociation':
+			case 'addJjsAssociation':
 				actionCode = "action=addAssociation&actionCode=";
 				actionCode += JSON.stringify(actionCodeObj);
 				this.associationIndex++;
