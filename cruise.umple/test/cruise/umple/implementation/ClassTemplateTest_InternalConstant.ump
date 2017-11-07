@@ -1,0 +1,3 @@
+class Student{
+    internal const String Name = "XYZ";
+}

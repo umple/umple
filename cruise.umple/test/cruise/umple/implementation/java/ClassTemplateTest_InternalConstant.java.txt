@@ -1,0 +1,34 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.26.0-b05b57321 modeling language!*/
+
+
+
+// line 1 "test.ump"
+public class Student
+{ 
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+ 
+private static final String Name = "XYZ";
+
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+}

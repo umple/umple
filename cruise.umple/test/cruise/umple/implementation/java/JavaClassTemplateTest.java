@@ -126,6 +126,10 @@ public class JavaClassTemplateTest extends ClassTemplateTest
         assertUmpleTemplateFor("ClassTemplateTest_AttributeComments.ump",languagePath+"/ClassTemplateTest_AttributeComments." + languagePath + ".txt","Student");
   }
 
+  @Test
+  public void InternalConstant(){
+        assertUmpleTemplateFor("ClassTemplateTest_InternalConstant.ump",languagePath+"/ClassTemplateTest_InternalConstant."+ languagePath + ".txt","Student");
+  }
   
   @Test
   public void Java()
