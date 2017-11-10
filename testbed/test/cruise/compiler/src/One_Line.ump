@@ -1,0 +1,8 @@
+generate Java "../src-gen-umple";
+
+class OneLine
+{
+    someString;
+
+    public void foo() { someString = "Hello World"; someString = 1.0; return; }
+}

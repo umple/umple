@@ -1,0 +1,26 @@
+generate Java "../src-gen-umple";
+
+class Class2 {
+ Integer id;
+ attr;
+ public void Foo() {
+   b = 6;
+ }
+ public int Bar() {
+    return 0;
+ }
+}
+
+class Class1
+{
+    0..1 -- * Class2 c2;
+    public static void main(String [] argv){
+	   Class1 x = new Class1();
+	   Class2 c21 = new Class2(1, "1");
+	   Class2 c22 = new Class2(2, "2");
+	   x.addClass2(c21); x.addClass2(c22);
+	   x.getClass2(1).Foo();
+	   
+	   String someVal = x.getClass2(0).Bar();
+    }
+}

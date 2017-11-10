@@ -1,9 +1,0 @@
-namespace src-gen-umple;
-
-class MainError3
-{
-    public static void main(String [] argv){
-        int a = 1;
-        b = a;
-    }
-}

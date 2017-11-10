@@ -1,0 +1,4 @@
+One_Line.ump:7: error: incompatible types: double cannot be converted to String
+    someString = "Hello World"; someString = 1.0; return;
+                                             ^
+1 error

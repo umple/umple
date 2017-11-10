@@ -1,0 +1,13 @@
+generate Java "../src-gen-umple";
+
+class Before
+{
+    someString;
+
+    before setSomeString {
+        int a = "";
+    }
+    
+    public void foo() {
+    }
+}
