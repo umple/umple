@@ -1,0 +1,14 @@
+generate Java "../src-gen-umple";
+
+class AfterCustom
+{
+    after custom foo {
+        a = 1;
+        b = a;
+    }
+    
+    public void foo() {
+        int a = 0;
+        a++;
+    }
+}

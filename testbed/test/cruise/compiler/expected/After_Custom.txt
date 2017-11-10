@@ -1,0 +1,6 @@
+After_Custom.ump:7: error: cannot find symbol
+            b = a;
+            ^
+  symbol:   variable b
+  location: class AfterCustom
+1 error
