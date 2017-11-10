@@ -1,6 +1,6 @@
-namespace src-gen-umple;
+generate Java "../src-gen-umple";
 
-class MainError2
+class Main2
 {
     public static void main(String [] argv){
         int a = "not an int";

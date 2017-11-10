@@ -1,0 +1,4 @@
+No_Modifier_Method.ump:6: error: incompatible types: double cannot be converted to String
+    String s = 1.0;
+               ^
+1 error

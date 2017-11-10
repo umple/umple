@@ -1,0 +1,11 @@
+State_Machine.ump:11: error: cannot find symbol
+      doThisContinuouslyWhileOn(); a++;
+                                   ^
+  symbol:   variable a
+  location: class LightFixture
+State_Machine.ump:16: error: cannot find symbol
+    a=1;
+    ^
+  symbol:   variable a
+  location: class LightFixture
+2 errors

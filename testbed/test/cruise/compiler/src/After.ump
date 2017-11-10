@@ -1,0 +1,15 @@
+generate Java "../src-gen-umple";
+
+class After
+{
+    someString;
+
+    after setSomeString { 
+        int b = 1;
+        int a = "";
+    }
+    
+    public void foo() {
+        return;
+    }
+}
