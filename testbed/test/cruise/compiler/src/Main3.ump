@@ -1,0 +1,9 @@
+generate Java "../src-gen-umple";
+
+class Main3
+{
+    void main(String [] argv){
+        int a = 1;
+        b = a;
+    }
+}

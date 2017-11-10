@@ -1,0 +1,4 @@
+Constructor.ump:13: error: incompatible types: String cannot be converted to int
+        a = s;
+            ^
+1 error

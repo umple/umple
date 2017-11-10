@@ -1,0 +1,9 @@
+Multiple_Classes.ump:7: error: cannot find symbol
+    b = 6;
+    ^
+  symbol:   variable b
+  location: class Class2
+Multiple_Classes.ump:24: error: incompatible types: int cannot be converted to String
+       String someVal = x.getY(0).Bar();
+                                     ^
+2 errors
