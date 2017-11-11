@@ -1,0 +1,17 @@
+generate Java "../src-gen-umple";
+
+class Class4 {
+ Integer id;
+
+}
+
+class Class3
+{
+    Class4 c4;
+    public int foo() {
+        if (c4 != null) {
+            return c4.id;
+        }
+        return -1; 
+    }
+}

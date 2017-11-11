@@ -79,4 +79,19 @@ public class CompilerErrorOutputTests
 	public void StateMachineTest() {
 		CompilerErrorUtil.AssertCompileError("State_Machine.ump", "State_Machine.txt");
 	}
+	
+	@Test
+	public void TraitTest() {
+		CompilerErrorUtil.AssertCompileError("Trait.ump", "Trait.txt");
+	}
+	
+	@Test
+	public void PrivateMemberClasses() {
+		CompilerErrorUtil.AssertCompileError("Private_Member_Classes.ump", "Private_Member_Classes.txt");
+	}
+	
+	@Test
+	public void MismatchedBracketsTest() {
+		CompilerErrorUtil.AssertCompileError("Mismatched_Brackets_Method.ump", "Mismatched_Brackets_Method.txt");
+	}
 }
