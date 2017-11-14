@@ -198,19 +198,19 @@ public class StateMachineTest extends StateMachineTemplateTest
   @Test
   public void doActivity()
   {
-    assertUmpleTemplateFor("doActivity.ump",languagePath + "/doActivity."+ languagePath +".txt","Switch", true, false);
+    assertUmpleTemplateFor("doActivity.ump",languagePath + "/doActivity."+ languagePath +".txt","Switch");
   }
   
   @Test
   public void doActivity_Multiple()
   {
-    assertUmpleTemplateFor("doActivity.ump",languagePath + "/doActivityMultiple."+ languagePath +".txt","Lamp", true, false);
+    assertUmpleTemplateFor("doActivity.ump",languagePath + "/doActivityMultiple."+ languagePath +".txt","Lamp");
   }
   
   @Test
   public void doActivityMultipleInSameState()
   {
-    assertUmpleTemplateFor("doActivityMulti.ump",languagePath + "/doActivityMulti."+ languagePath +".txt","X");
+    assertUmpleTemplateFor("doActivityMulti.ump",languagePath + "/doActivityMulti."+ languagePath +".txt","X", true, false);
   }
 
   @Test

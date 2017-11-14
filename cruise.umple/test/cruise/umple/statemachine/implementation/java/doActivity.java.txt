@@ -3,7 +3,6 @@
 
 package example;
 
-// line 3 "../doActivity.ump"
 public class Switch
 {
 
@@ -87,7 +86,6 @@ public class Switch
   {
     try
     {
-      // line 14 "../doActivity.ump"
       keepDoing();
       Thread.sleep(1);
     }
