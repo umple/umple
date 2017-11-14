@@ -127,6 +127,14 @@ var JJSdiagram = {
 							JJSdiagram.makeUmpleCodeFromAssociation('removeAssociation',JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON(), JJSdiagram.paper.model.getCell(elmentViewDisconnected.model.toJSON().id).toJSON(),  '');
 						}
 					}
+					else if (linkView.model.get('type') === 'uml.Generalization') {
+						if (arrowhead === 'source') {
+							JJSdiagram.makeUmpleCodeFromGeneralization('removeGeneralization',JJSdiagram.paper.model.getCell(linkView.model.toJSON().target.id).toJSON(), JJSdiagram.paper.model.getCell(elmentViewDisconnected.model.toJSON().id).toJSON());
+						}
+						else if (arrowhead === 'target'){
+							JJSdiagram.makeUmpleCodeFromGeneralization('removeGeneralization',JJSdiagram.paper.model.getCell(elmentViewDisconnected.model.toJSON().id).toJSON(), JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON());
+						}
+					}
 				}
 			}
 		);
@@ -139,6 +147,14 @@ var JJSdiagram = {
 							JJSdiagram.makeUmpleCodeFromAssociation('addJjsAssociation',JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON(), JJSdiagram.paper.model.getCell(linkView.model.toJSON().target.id).toJSON());
 						} else if(arrowhead === 'target'){
 							JJSdiagram.makeUmpleCodeFromAssociation('addJjsAssociation', JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON(), JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON());
+						}
+					}
+					else if (linkView.model.get('type') === 'uml.Generalization') {
+						if (arrowhead === 'source') {
+							JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization',JJSdiagram.paper.model.getCell(linkView.model.toJSON().target.id).toJSON(), JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON());
+						}
+						else if (arrowhead === 'target'){
+							JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization',JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON(), JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON());
 						}
 					}
 				}
@@ -156,8 +172,9 @@ var JJSdiagram = {
 						}
 						break;
 					case 'uml.Generalization':
-						JJSdiagram.makeUmpleCodeFromGeneralization('removeGeneralization', this.paper.model.getCell(cell.toJSON().target.id).toJSON(), this.paper.model.getCell(cell.toJSON().source.id).toJSON());
-
+						if (cell.toJSON().source.id !== undefined && cell.toJSON().target.id !== undefined) {
+							JJSdiagram.makeUmpleCodeFromGeneralization('removeGeneralization', this.paper.model.getCell(cell.toJSON().target.id).toJSON(), this.paper.model.getCell(cell.toJSON().source.id).toJSON());
+						}
 						break;
 					default:
 						console.log('JJSdiagram -->initJJSDiagram -->graph remove listener--> unknown type');

@@ -12,6 +12,9 @@ if (p != null) {
   {
     try
     {
+      <<#if (p != null) {
+      realSb.append("\n      // line " + p.getLineNumber() + " \"" + uClass.getRelativePath(p.getFilename(),"Java") + "\"");
+    } #>>
       <<= activity.getActivityCode() >>
       Thread.sleep(1);
       <<# if (postTransition != null)

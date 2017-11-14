@@ -3,6 +3,7 @@
 
 
 
+// line 1 "doActivityMulti.ump"
 public class X
 {
 
@@ -90,6 +91,7 @@ public class X
   {
     try
     {
+      // line 4 "doActivityMulti.ump"
       blah1();
       Thread.sleep(1);
     }
@@ -103,6 +105,7 @@ public class X
   {
     try
     {
+      // line 5 "doActivityMulti.ump"
       blah2();
       Thread.sleep(1);
     }

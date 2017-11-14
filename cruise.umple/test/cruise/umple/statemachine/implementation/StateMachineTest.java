@@ -210,7 +210,7 @@ public class StateMachineTest extends StateMachineTemplateTest
   @Test
   public void doActivityMultipleInSameState()
   {
-    assertUmpleTemplateFor("doActivityMulti.ump",languagePath + "/doActivityMulti."+ languagePath +".txt","X");
+    assertUmpleTemplateFor("doActivityMulti.ump",languagePath + "/doActivityMulti."+ languagePath +".txt","X", true, false);
   }
 
   @Test
