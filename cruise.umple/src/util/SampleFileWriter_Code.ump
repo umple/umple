@@ -186,13 +186,15 @@ class SampleFileWriter
         expectedLine = expectedReader.readLine();
         if (ignoreLineComments)
         {
-          // HACK: To deal with // line # comments
-          while (actualLine != null && actualLine.indexOf("// line") != -1)
+          // HACK: To deal with // line # comments and footer of inject statements
+          while (actualLine != null && (actualLine.indexOf("// line") != -1 || 
+                    actualLine.matches("\\s*\\/\\/ END OF UMPLE (BEFORE|AFTER) INJECTION")))
           { //Ignore the line, go to next
             actualLine = actualReader.readLine();
           }
           
-          while (expectedLine != null && expectedLine.indexOf("// line") != -1)
+          while (expectedLine != null && (expectedLine.indexOf("// line") != -1 ||
+                    expectedLine.matches("\\s*\\/\\/ END OF UMPLE (BEFORE|AFTER) INJECTION")))
           { 
         	  expectedLine = expectedReader.readLine();
           }
