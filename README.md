@@ -1,4 +1,4 @@
-#Umple Modelling Language
+# Umple Modelling Language
 
 ### Build Status
 
@@ -7,15 +7,15 @@ OS         | Linux  | OSX    | Windows
 **Status** | [![Travis-CI Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple) | [![Travis-CI Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple) | [![Windows Build status](https://ci.appveyor.com/api/projects/status/gf9oqwtwgy4c45q6/branch/master?svg=true)](https://ci.appveyor.com/project/umple/umple/branch/master) 
 
 
-##Introduction
+## Introduction
 
 This is the main project for various Umple subprojects and components.
 
-Umple is a model-oriented programming technology, allowing developers to embed modelling concepts (e.g. UML associations, state machines), patterns, generation templates, and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP, as well as diagrams, metrics and many other artifacts. It can be embeded in as well as embed the above mentioned.
+Umple is a model-oriented programming technology, allowing developers to embed modelling concepts (e.g. UML associations, state machines), patterns, generation templates, and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP, as well as diagrams, metrics and many other artifacts. It can be embeded in the above languages as well as embed them.
 
 The project homepage is located at http://umple.org/
 
-##Development
+## Development
 Umple is developed in itself, guaranteeing robustness; the most recent version of the compiler must be used to compile itself. See the wiki for development setup.
 
 Development follows a model-driven, test-driven, agile, continuous-integration process. Umple is hosted currently on Github at http://code.umple.org. It was first released in 2007, and the master was on Google Code from 2011 to mid 2015.
@@ -26,13 +26,14 @@ More details can be found as follows
 
   * Umple home page: http://www.umple.org  - The master Umple page with a more comprehensive set of links
   * Umple user manual: http://manual.umple.org  - Full documentation of all Umple features
-  * Download page: http://dl.umple.org    - Links to the latest official release and continuous builds
+  * UmpleOnline: http://try.umple.org - Website for the GUI version of Umple (can also be run on your local machine using Docker)
+  * Download page: http://dl.umple.org    - Links to the latest official release and continuous builds (command-line, Eclipse, Docker)
   * Live diagram of the metamodel: http://metamodel.umple.org
   * Architecture: http://architecture.umple.org
 
-Umple is continuously tested and built at the University of Ottawa using CruiseControl; see http://cc.umple.org . It is also built on Travis CI (https://travis-ci.org/) and Appveyor (https://appveyor.com/).
+Umple is continuously tested and built at the University of Ottawa using CruiseControl; see http://cc.umple.org . It is also built on Travis CI (http://travis.umple.org/) and Appveyor (https://appveyor.com/).
  
-###Project setup
+### Project setup
 
 The umple project is split into many smaller subprojects; the folder hierarchy is explained below to better describe the structure.
 
