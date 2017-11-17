@@ -367,7 +367,7 @@ class DynamicClassPathLoader
   depend java.net.*;
   depend java.net.*;
   
-  internal const Class<?>[] parameters = new Class[]{URL.class};
+  private static final Class<?>[] parameters = new Class[]{URL.class};
 
   public static void addJar(String baseDirectory, String jarname) throws IOException
   {

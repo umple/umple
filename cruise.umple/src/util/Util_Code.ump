@@ -28,7 +28,7 @@ class Language
   
   before constructor { init(); }
   
-  internal const boolean default_strictness = false;
+  private static final boolean default_strictness = false;
   private Hashtable<String, String> _allEnglish;
 
   private void init()

@@ -52,10 +52,10 @@ class ArgumentTokenizer
   depend java.util.LinkedList;
   depend java.util.List;
 
-    internal const int NO_TOKEN_STATE = 0;
-    internal const int NORMAL_TOKEN_STATE = 1;
-    internal const int SINGLE_QUOTE_STATE = 2;
-    internal const int DOUBLE_QUOTE_STATE = 3;
+    private static final int NO_TOKEN_STATE = 0;
+    private static final int NORMAL_TOKEN_STATE = 1;
+    private static final int SINGLE_QUOTE_STATE = 2;
+    private static final int DOUBLE_QUOTE_STATE = 3;
 
     /**
      * Tokenizes the given String into String tokens
