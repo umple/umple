@@ -2,7 +2,7 @@
 <project basedir=".." name="VersionNew" >
 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
-
+    <echo message="running _versionNew to set version based on git"/>
     <property prefix="base" file="build/umpleversion.txt"/>
     
     <condition property="gitrevtoget" value="origin/master" else="master">
@@ -10,17 +10,31 @@
     </condition>    
 
     <!-- Use Git to get the most recent commit -->
-    <exec executable="git" outputproperty="git.revision">
+    <exec executable="git" outputproperty="gr" resultproperty="parseres">
     	<arg value="rev-parse" />
     	<arg value="--short" />
     	<arg value="${gitrevtoget}" />
     </exec>
 
-    <exec executable="git" outputproperty="git.commitnum">
+    <!-- If exec failed; hence not in a git repo then set to dev -->
+    <condition property="git.revision" value="dev" else="${gr}">
+      <not>
+        <equals arg1="${parseres}" arg2="0"/>
+      </not>
+    </condition>  
+
+    <exec executable="git" outputproperty="gc" resultproperty="listres">
     	<arg value="rev-list" />
     	<arg value="--count" />
     	<arg value="${gitrevtoget}" />
     </exec>
+
+    <!-- If exec failed; hence not in a git repo then set to x -->
+    <condition property="git.commitnum" value="x" else="${gc}">
+      <not>
+        <equals arg1="${listres}" arg2="0" />
+      </not>
+    </condition>  
 
     <property name="umple.version" value="${base.version}-${git.revision}-${git.commitnum}" />
     <echo message="Current Version: ${umple.version}" />
