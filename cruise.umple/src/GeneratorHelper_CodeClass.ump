@@ -64,27 +64,35 @@ class GeneratorHelper
         String positionString = "";
         Position p = inject.getPosition();
         Position codeP = inject.getCodePosition();
+        String injectFooter = "";
+        String injectType = inject.getType();
         if (codeP != null) {
             positionString =  "// line " + codeP.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
+            if (injectType != null) {
+                injectFooter = "\n// END OF UMPLE " + injectType.toUpperCase() + " INJECTION";
+            }
         }
         else if (p != null) {
             positionString =  "// line " + p.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
+            if (injectType != null) {
+                injectFooter = "\n// END OF UMPLE " + injectType.toUpperCase() + " INJECTION";
+            }
         }
         if (asCode == null)
         {
           if(inject.getConstraintTree()!=null&&generator!=null)
           {
-            asCode = positionString + inject.getConstraintCode(generator);
+            asCode = positionString + inject.getConstraintCode(generator) + injectFooter;
           }
-          else asCode = positionString + inject.getCode();
+          else asCode = positionString + inject.getCode() + injectFooter;
         }
         else
         {
           if(inject.getConstraintTree()!=null&&generator!=null)
           {
-            asCode = StringFormatter.format("{0}\n{1}{2}",asCode,positionString,inject.getConstraintCode(generator));
+            asCode = StringFormatter.format("{0}\n{1}{2}{3}",asCode,positionString,inject.getConstraintCode(generator), injectFooter);
           }
-          else asCode = StringFormatter.format("{0}\n{1}{2}",asCode,positionString,inject.getCode());
+          else asCode = StringFormatter.format("{0}\n{1}{2}{3}",asCode,positionString,inject.getCode(), injectFooter);
         }
       }
     }

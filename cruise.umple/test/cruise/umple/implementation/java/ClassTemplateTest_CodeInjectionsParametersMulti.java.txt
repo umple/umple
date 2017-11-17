@@ -29,8 +29,10 @@ public class Student
   public String foo(int a){
     // line 26 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
     System.out.println("Starting foo...");
+    // END OF UMPLE BEFORE INJECTION
     // line 38 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
     System.out.println("Starting execution...");
+    // END OF UMPLE BEFORE INJECTION
     if(a < 0) {
       return 4;
     }
@@ -42,13 +44,16 @@ public class Student
   public String foo(int a, String b){
     // line 26 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
     System.out.println("Starting foo...");
+    // END OF UMPLE BEFORE INJECTION
     if(a > 0 && "".equals(b)) {      
       // line 30 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
       System.out.println("Returning from foo, a: " + a ", b: " + b);
+      // END OF UMPLE AFTER INJECTION
       return 3;
     }    
     // line 30 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
     System.out.println("Returning from foo, a: " + a ", b: " + b);
+    // END OF UMPLE AFTER INJECTION
     return 1;
   }
 
@@ -56,8 +61,10 @@ public class Student
   public String bar(){
     // line 34 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
     // TODO: fix asap
+    // END OF UMPLE BEFORE INJECTION
     // line 38 "ClassTemplateTest_CodeInjectionsParametersMulti.ump"
     System.out.println("Starting execution...");
+    // END OF UMPLE BEFORE INJECTION
     int a = 4;
 
     if(a == 3) return 2;
