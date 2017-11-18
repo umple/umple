@@ -265,7 +265,9 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
 }
 
 .html-element select,
-.html-element input,
+.html-element input {
+    pointer-events: none;
+}
 .html-element label,
 .html-element button {
     /* Enable interacting with inputs only. */
@@ -340,7 +342,18 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     padding-top: 3px;
 }
 
-.html-element .className,
+.html-element .className {
+    pointer-events: none;
+}
+
+.html-element .editClassName{
+    position: absolute;
+    right: 1em;
+    cursor: pointer;
+    pointer-events: auto;
+    height: 10px;
+}
+
 .html-element .stateName {
     text-align: center;
     margin: auto;
@@ -361,6 +374,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
 .methodInput {
   position: relative;
 }
+
 .eventInput .deleteEvent,
 .attributInput .deleteAttr,
 .methodInput .deleteMet {
@@ -372,4 +386,21 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     top:0.2em;
     right:0;
     height: 12px;
+}
+
+.eventInput .editEvent,
+.attributInput .editAttr,
+.methodInput .editMet {
+    text-align: "right";
+    /* Enable interacting with inputs only. */
+    pointer-events: auto;
+    cursor: pointer;
+    position: absolute;
+    top:0.2em;
+    right:12px;
+    height: 12px;
+}
+.selected {
+    z-index: 4; border: DarkGray solid 1px; color: Black; background-color:rgb(85,85,85);
+    -moz-border-radius: 3px; -webkit-border-radius: 3px;
 }
