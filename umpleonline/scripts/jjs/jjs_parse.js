@@ -35,6 +35,9 @@ var JJSdiagram = {
 
 		JJSdiagram.setButtonsListener();
 
+		var deleteButton = jQuery("#buttonDeleteEntity");
+		deleteButton.addClass("disabled");
+
 		return this.paper;
 	},
 
@@ -196,7 +199,17 @@ var JJSdiagram = {
 			JJSdiagram.newClassIndex++;
 			var x = e.clientX;
 			var y = e.clientY;
+			var canvas = jQuery("#jjsPaper");
+			var selectedItem = format("div.palette li.selected");
+			jQuery(selectedItem).removeClass("selected");
+
+			canvas.find("div.html-element").fadeTo(1,1);
+
 			if (Page.useJointJSClassDiagram) {
+
+				var EvenTarget = jQuery(e.target);
+				$(EvenTarget).addClass("selected");
+
 				jQuery('body').append('<div id="flyPaper" style="position:fixed;z-index:100;opacity:.5;pointer-event:none;"></div>');
 				var flyGraph = new joint.dia.Graph,
 					flyPaper = new joint.dia.Paper({
@@ -244,7 +257,9 @@ var JJSdiagram = {
 						s.position(x - target.left - offset.x, y - target.top - offset.y);
 						JJSdiagram.paper.model.addCell(s);
 						JJSdiagram.makeUmpleCodeFromClass('addNewClass', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), s.id));
+
 					}
+					$(EvenTarget).removeClass("selected");
 					jQuery('body').off('mousemove.fly').off('mouseup.fly');
 					flyShape.remove();
 					jQuery('#flyPaper').remove();
@@ -254,56 +269,103 @@ var JJSdiagram = {
 
 		jQuery('#buttonAddAssociation').off('click').on('click.fly', function (e) {
 			if (Page.useJointJSClassDiagram) {
+				var EvenTarget = jQuery(e.target);
 				var clickcount = 0;
-				var associationId;
+				var canvas = jQuery("#jjsPaper");
 
-				//paper listener
-				JJSdiagram.paper.off('cell:pointerclick').on('cell:pointerclick', function (cellView, evt, x, y) {
-					clickcount++;
-					if (clickcount === 1) {
-						associationId = cellView.model.id
-					}
-					if (clickcount === 2) {
-						var link = new uml.Association({
-							source: { id: associationId },
-							target: { id: cellView.model.id },
-							labels: [
-								{ position: .05, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } },
-								{ position: .95, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } }
-							],
-							vertices: JJSdiagram.setAssociationPathVertices(associationId, cellView.model.id),
-							umplename: "umpleAssociation_" + JJSdiagram.associationIndex
-						});
-						link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
-						JJSdiagram.paper.model.addCell(link);
-						JJSdiagram.makeUmpleCodeFromAssociation('addJjsAssociation', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
-						JJSdiagram.paper.off('cell:pointerclick');
-						JJSdiagram.setPaperListener();
-					}
-				});
+				if (EvenTarget.hasClass("selected")){
+					$(EvenTarget).removeClass("selected");
+					clickcount = 0;
+					canvas.find("div.html-element").fadeTo("fast",1);
+				}else {
+					var associationId;
+					var selectedItem = format("div.palette li.selected");
+					jQuery(selectedItem).removeClass("selected");
+
+					canvas.find("div.html-element").fadeTo(1,1);
+
+					$(EvenTarget).addClass("selected");
+					canvas.find("div.html-element").fadeTo("fast",0.4);
+					//paper listener
+					JJSdiagram.paper.on('cell:pointerclick', function (cellView, evt, x, y) {
+						if(EvenTarget.hasClass("selected")){
+							clickcount++;
+						}
+						if (clickcount === 1) {
+							associationId = cellView.model.id;
+							cellView.$box.fadeTo("fast",1);
+						}
+						if (clickcount === 2) {
+							cellView.$box.fadeTo("fast",1);
+							var link = new uml.Association({
+								source: { id: associationId },
+								target: { id: cellView.model.id },
+								labels: [
+									{ position: .05, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } },
+									{ position: .95, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } }
+								],
+								vertices: JJSdiagram.setAssociationPathVertices(associationId, cellView.model.id),
+								umplename: "umpleAssociation_" + JJSdiagram.associationIndex
+							});
+							link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
+							JJSdiagram.paper.model.addCell(link);
+							JJSdiagram.makeUmpleCodeFromAssociation('addJjsAssociation', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
+							JJSdiagram.paper.off('cell:pointerclick');
+							JJSdiagram.setPaperListener();
+							$(EvenTarget).removeClass("selected");
+							canvas.find("div.html-element").fadeTo("fast",1);
+						}
+					});
+				}
 			}
 		});
 
 		jQuery('#buttonAddGeneralization').off('click').on('click.fly', function (e) {
 			if (Page.useJointJSClassDiagram) {
+				var EvenTarget = jQuery(e.target);
 				var clickcount = 0;
-				var associationId;
+				var canvas = jQuery("#jjsPaper");
+				var selectedItem = format("div.palette li.selected");
+				jQuery(selectedItem).removeClass("selected");
 
-				//paper listener
-				JJSdiagram.paper.off('cell:pointerclick').on('cell:pointerclick', function (cellView, evt, x, y) {
-					clickcount++;
-					if (clickcount === 1) {
-						associationId = cellView.model.id
-					}
-					if (clickcount === 2) {
-						var link = new uml.Generalization({ source: { id: cellView.model.id }, target: { id: associationId } });
-						link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
-						JJSdiagram.paper.model.addCell(link);
-						JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
-						JJSdiagram.paper.off('cell:pointerclick');
-						JJSdiagram.setPaperListener();
-					}
-				});
+				canvas.find("div.html-element").fadeTo(1,1);
+				jQuery(selectedItem).removeClass("selected");
+
+				if (EvenTarget.hasClass("selected")){
+					$(EvenTarget).removeClass("selected");
+					clickcount = 0;
+					canvas.find("div.html-element").fadeTo("fast",1);
+				}else {
+					var associationId;
+					var selectedItem = format("div.palette li.selected");
+					jQuery(selectedItem).removeClass("selected");
+
+					canvas.find("div.html-element").fadeTo("fast",1);
+
+					$(EvenTarget).addClass("selected");
+					canvas.find("div.html-element").fadeTo("fast",0.4);
+					//paper listener
+					JJSdiagram.paper.on('cell:pointerclick', function (cellView, evt, x, y) {
+						if(EvenTarget.hasClass("selected")){
+							clickcount++;
+						}
+						if (clickcount === 1) {
+							associationId = cellView.model.id;
+							cellView.$box.fadeTo("fast",1);
+						}
+						if (clickcount === 2) {
+							cellView.$box.fadeTo("fast",1);
+							var link = new uml.Generalization({ source: { id: cellView.model.id }, target: { id: associationId } });
+							link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
+							JJSdiagram.paper.model.addCell(link);
+							JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
+							JJSdiagram.paper.off('cell:pointerclick');
+							JJSdiagram.setPaperListener();
+							$(EvenTarget).removeClass("selected");
+							canvas.find("div.html-element").fadeTo("fast",1);
+						}
+					});
+				}
 			}
 		});
 	},
