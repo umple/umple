@@ -1,0 +1,13 @@
+generate Java "../src-gen-umple";
+
+class MismatchedBrackets
+{
+    public double foo() { 
+        for (int i = 0; i < 10; i++) {
+            if (i % 2)) {
+                return i / 2.0;
+            }
+        }
+        return 0.0;
+    }
+}

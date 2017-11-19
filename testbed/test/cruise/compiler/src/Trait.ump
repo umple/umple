@@ -1,0 +1,17 @@
+generate Java "../src-gen-umple";
+
+class Color {}
+
+trait TDrawable {
+  Color color;
+  public void foo() {
+    if (color != null) {
+        color = null;
+    }
+    return color;
+  }
+}
+
+class Z {
+  isA TDrawable;
+}
