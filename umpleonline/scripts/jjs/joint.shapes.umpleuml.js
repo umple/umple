@@ -187,6 +187,8 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
                 setTimeout(_.bind(function () {
                     this.$box.find('.classAttributes input:last').prop('readonly', false);
                     this.$box.find('.classAttributes input:last').focus();
+					var editButton = jQuery(this.$box.find('.classAttributes input:last').parent().children()[2]);
+					$(editButton).addClass('iconSelected');
                 }, this), 100);
             }
         }, this));
@@ -198,6 +200,8 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
                 setTimeout(_.bind(function () {
                     this.$box.find('.classMethods input:last').prop('readonly', false);
                     this.$box.find('.classMethods input:last').focus();
+					var editButton = jQuery(this.$box.find('.classAttributes input:last').parent().children()[2]);
+					$(editButton).addClass('iconSelected');
                 }, this), 100);
             }
         }, this));
@@ -224,7 +228,6 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 				$(editButton).removeClass('iconSelected');
 				$(inputField).css("pointer-events", "none");
 
-				this.render();
 
                 JJSdiagram.makeUmpleCodeFromClass('addAttribute', this.model.toJSON(), jQuery(e.target).data('attributeIndex'));
             }
@@ -251,7 +254,6 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 				$(editButton).removeClass('iconSelected');
 				$(inputField).css("pointer-events", "none");
 
-				this.render();
 
                 JJSdiagram.makeUmpleCodeFromClass('addMethod', this.model.toJSON(), jQuery(e.target).data('methodIndex'));
             }
@@ -285,7 +287,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
 			var pointerEventStatus = $(inputField).css("pointer-events");
 
-			if (pointerEventStatus === 'none'){
+			if (!$(editButton).hasClass('iconSelected')){
 				$(editButton).addClass('iconSelected');
 				$(inputField).css("pointer-events", "auto");
             }
@@ -303,7 +305,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
 			var pointerEventStatus = $(inputField).css("pointer-events");
 
-			if (pointerEventStatus === 'none'){
+			if (!$(editButton).hasClass('iconSelected')){
 				$(editButton).addClass('iconSelected');
 				$(inputField).css("pointer-events", "auto");
 			}
@@ -311,6 +313,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 				$(editButton).removeClass('iconSelected');
 				$(inputField).css("pointer-events", "none");
 			}
+
 
 
 		}, this));
@@ -478,5 +481,15 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             top: bbox.y+50,
             transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
         });
+
+        var widthScale = bbox.width/100;
+        var heightScale = bbox.height/60;
+
+        var jointShape = jQuery("#" + this.id);
+        if (jointShape.children().size() > 0){
+			var rectScale = jQuery(jointShape.children().children());
+			rectScale.attr({"transform": "scale("+ widthScale + "," + heightScale +")"})
+        }
+
     }
 });
