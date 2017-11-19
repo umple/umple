@@ -170,23 +170,41 @@ class ExceptionDumper {
       List<String> umpleSourceJavaLines = new ArrayList<String>();
       List<String> umpleSourceLengths = new ArrayList<String>();
       
+      // A function with an error in it after an inject statement cannot be easily distinguished
+      // We need to keep track of the old line numbers in case an inject finishes and we haven't found the error
+      String umpleSourceFileFunction = null;
+      Integer umpleSourceLineFunction = null;
+      Integer umpleSourceJavaLineFunction = null;
+      
       boolean isInMain = false;
       boolean firstBraceFound = false;
       int braces = 0;
       
       while(lineNumber<=javaLineNumber)
       {
-    	String line = sc.nextLine();
-    	Matcher umpleSourceFileMatcher = umpleSourceFileFormat.matcher(line);
-    	//System.out.println(line);
-    	if(umpleSourceFileMatcher.matches())
-    	{
-    	  umpleSourceLines.add(umpleSourceFileMatcher.group(1));
-          umpleSourceFiles.add(umpleSourceFileMatcher.group(2));
-    	  umpleSourceJavaLines.add(umpleSourceFileMatcher.group(3));
-    	  umpleSourceLengths.add(umpleSourceFileMatcher.group(4));
-    	}
-    	else if(line.matches(".*(public)[ |\\t]+(static)[ |\\t]+(void)[ |\\t]+(main)[ |\\t]*[(][ |\\t]*(String)[ |\\t]*\\[\\].*"))
+        String line = sc.nextLine();
+        Matcher umpleSourceFileMatcher = umpleSourceFileFormat.matcher(line);
+        while(umpleSourceFileMatcher.matches())
+        {
+          umpleSourceLine = Integer.parseInt(umpleSourceFileMatcher.group(1));
+          umpleSourceFile = umpleSourceFileMatcher.group(2);
+          umpleSourceJavaLine = lineNumber;
+          
+          isInFunction = false;
+          line = sc.nextLine();
+          lineNumber++;
+          // If we are entering a function declaration we need to account for that in the umple line number
+          // Regex to match function declaration from: https://stackoverflow.com/questions/68633/regex-that-will-match-a-java-method-declaration
+          if (line.matches("\\s*(public|protected|private|static|\\s)+ +[\\w\\<\\>\\[\\]]+\\s+(\\w+) *\\([^\\)]*\\) *(\\{?|[^;]).*"))
+          {
+              isInFunction = true;
+              umpleSourceFileFunction = umpleSourceFile;
+              umpleSourceLineFunction = umpleSourceLine;
+              umpleSourceJavaLineFunction = umpleSourceJavaLine;
+          }
+          umpleSourceFileMatcher = umpleSourceFileFormat.matcher(line);
+        }
+        if(line.matches(".*(public)[ |\\t]+(static)[ |\\t]+(void)[ |\\t]+(main)[ |\\t]*[(][ |\\t]*(String)[ |\\t]*\\[\\].*"))
         {
           isInMain=true;
         }
@@ -194,21 +212,33 @@ class ExceptionDumper {
         {
           isInMain=true;        
         }
-    	if(isInMain)
-    	{
-    	  braces += (line.length()-line.replace("{", "").length()) - (line.length()-line.replace("}", "").length());
-    	  if(!firstBraceFound && (line.length()-line.replace("{", "").length())>0)
-    	  {
-    	    firstBraceFound = true;
-    	  }
-    	  if(braces<=0 && firstBraceFound)
-    	  {
-    	    firstBraceFound=false;
-    		isInMain=false;
-    		braces=0;
-    	  }    	  
-    	}
-    	lineNumber++;
+        // If you are exiting injected code and returning to a fucntion
+        else if(line.matches("\\s*\\/\\/ END OF UMPLE (BEFORE|AFTER) INJECTION")) {
+            isInFunction = true;
+            umpleSourceFile = umpleSourceFileFunction;
+            umpleSourceLine = umpleSourceLineFunction;
+            // "Remove" the injected code from the offset calculation
+            umpleSourceJavaLine = umpleSourceJavaLineFunction + (lineNumber - umpleSourceJavaLine + 1);
+            // Need to keep this line number as the new starting index in the case of multiple inject statements
+            umpleSourceJavaLineFunction = umpleSourceJavaLine;
+        }
+        if(isInMain)
+        {
+          int openBraces = line.length() - line.replace("{", "").length();
+          int closedBraces = line.length() - line.replace("}", "").length();
+          braces += openBraces - closedBraces;
+          if(!firstBraceFound && openBraces > 0)
+          {
+            firstBraceFound = true;
+          }
+          if(braces <= 0 && firstBraceFound)
+          {
+            firstBraceFound=false;
+            isInMain=false;
+            braces=0;
+          }
+        }
+        lineNumber++;
       }
       
       

@@ -41,6 +41,11 @@ public class CompilerErrorOutputTests
 	}
 	
 	@Test
+	public void BeforeAfterCustomTest() {
+		CompilerErrorUtil.AssertCompileError("Before_After_Custom.ump", "Before_After_Custom.txt");
+	}
+	
+	@Test
 	public void MultipleClassesTest() {
 		CompilerErrorUtil.AssertCompileError("Multiple_Classes.ump", "Multiple_Classes.txt");
 	}
