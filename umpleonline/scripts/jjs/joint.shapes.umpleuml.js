@@ -24,7 +24,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         '<div class="html-element" style="text-align: center">',
         '<button class="delete">x</button>',
         '<img id="classIcon" style="position: absolute; top:.1em;left:.2em" src="scripts/class.png" alt="" width="13">',
-        '<input size="9" type="text" class="className" placeholder="className" readonly/>',
+        '<div><input size="9" type="text" class="className" placeholder="className" readonly/><img class="editClassName" src="scripts/pencil.png" alt="Edt"></div>',
         '<div class="classAttributes" style="text-align: left">',
         '</div>',
         '<div class="classMethods" style="text-align: left">',
@@ -74,11 +74,10 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             this.$box.find('#classIcon')[0].style.background = "#ff0000";
         }
 
-        // Prevent paper from handling pointerdown.
-        this.$box.find('input').on('mousedown click', function (e) {
-            e.stopPropagation();
-        });
-
+        //Prevent paper from handling pointerdown.
+		this.$box.find('input').on('mousedown click', function (e) {
+			e.stopPropagation();
+		});
         //bind enter key
         this.$box.find('.className').keypress(_.bind(function (e) {
             if (e.which === 13) {
@@ -173,6 +172,12 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         //disable input box when focusout
         this.$box.find('input').off('focusout').on('focusout', _.bind(function (e) {
             e.target.readOnly = true;
+
+			var editButton = jQuery(e.target.parentNode.children[1]);
+			var inputField = jQuery(e.target.parentNode.children[0]);
+
+			$(editButton).removeClass('iconSelected');
+			$(inputField).css("pointer-events", "none");
         }, this));
 
         //enter key pressed action
@@ -182,6 +187,8 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
                 setTimeout(_.bind(function () {
                     this.$box.find('.classAttributes input:last').prop('readonly', false);
                     this.$box.find('.classAttributes input:last').focus();
+					var editButton = jQuery(this.$box.find('.classAttributes input:last').parent().children()[2]);
+					$(editButton).addClass('iconSelected');
                 }, this), 100);
             }
         }, this));
@@ -193,6 +200,8 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
                 setTimeout(_.bind(function () {
                     this.$box.find('.classMethods input:last').prop('readonly', false);
                     this.$box.find('.classMethods input:last').focus();
+					var editButton = jQuery(this.$box.find('.classAttributes input:last').parent().children()[2]);
+					$(editButton).addClass('iconSelected');
                 }, this), 100);
             }
         }, this));
@@ -214,6 +223,12 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
                 temp[jQuery(e.target).data('attributeIndex')] = jQuery(e.target).val();
                 this.model.set('attributes', temp);
 
+				var editButton = jQuery(e.target.parentNode.children[2]);
+				var inputField = jQuery(e.target.parentNode.children[0]);
+				$(editButton).removeClass('iconSelected');
+				$(inputField).css("pointer-events", "none");
+
+
                 JJSdiagram.makeUmpleCodeFromClass('addAttribute', this.model.toJSON(), jQuery(e.target).data('attributeIndex'));
             }
 
@@ -233,6 +248,12 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
                 var temp = this.model.get('methods');
                 temp[jQuery(e.target).data('methodIndex')] = jQuery(e.target).val();
                 this.model.set('methods', temp);
+
+				var editButton = jQuery(e.target.parentNode.children[2]);
+				var inputField = jQuery(e.target.parentNode.children[0]);
+				$(editButton).removeClass('iconSelected');
+				$(inputField).css("pointer-events", "none");
+
 
                 JJSdiagram.makeUmpleCodeFromClass('addMethod', this.model.toJSON(), jQuery(e.target).data('methodIndex'));
             }
@@ -260,7 +281,81 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
         }, this));
 
-        //methods delete icon clicked
+		this.$box.find('.attributInput .editAttr').off('click').on('click', _.bind(function (e) {
+			var editButton = jQuery(e.target.parentNode.children[2]);
+			var inputField = jQuery(e.target.parentNode.children[0]);
+
+			var pointerEventStatus = $(inputField).css("pointer-events");
+
+			if (!$(editButton).hasClass('iconSelected')){
+				$(editButton).addClass('iconSelected');
+				$(inputField).css("pointer-events", "auto");
+            }
+            else {
+				$(editButton).removeClass('iconSelected');
+				$(inputField).css("pointer-events", "none");
+            }
+
+
+		}, this));
+
+		this.$box.find('.methodInput .editMet').off('click').on('click', _.bind(function (e) {
+			var editButton = jQuery(e.target.parentNode.children[2]);
+			var inputField = jQuery(e.target.parentNode.children[0]);
+
+			var pointerEventStatus = $(inputField).css("pointer-events");
+
+			if (!$(editButton).hasClass('iconSelected')){
+				$(editButton).addClass('iconSelected');
+				$(inputField).css("pointer-events", "auto");
+			}
+			else {
+				$(editButton).removeClass('iconSelected');
+				$(inputField).css("pointer-events", "none");
+			}
+
+
+
+		}, this));
+
+		this.$box.find('.methodInput .editMet').off('click').on('click', _.bind(function (e) {
+			var editButton = jQuery(e.target.parentNode.children[2]);
+			var inputField = jQuery(e.target.parentNode.children[0]);
+
+			var pointerEventStatus = $(inputField).css("pointer-events");
+
+			if (pointerEventStatus === 'none'){
+				$(editButton).addClass('iconSelected');
+				$(inputField).css("pointer-events", "auto");
+			}
+			else {
+				$(editButton).removeClass('iconSelected');
+				$(inputField).css("pointer-events", "none");
+			}
+
+
+		}, this));
+
+		this.$box.find('.editClassName').off('click').on('click', _.bind(function (e) {
+			var editButton = jQuery(e.target.parentNode.children[1]);
+			var inputField = jQuery(e.target.parentNode.children[0]);
+
+			var pointerEventStatus = $(inputField).css("pointer-events");
+
+			if (pointerEventStatus === 'none'){
+				$(editButton).addClass('iconSelected');
+				$(inputField).css("pointer-events", "auto");
+			}
+			else {
+				$(editButton).removeClass('iconSelected');
+				$(inputField).css("pointer-events", "none");
+			}
+
+		}, this));
+
+
+
+		//methods delete icon clicked
         this.$box.find('.methodInput .deleteMet').off('click').on('click', _.bind(function (e) {
             var metIndex = jQuery(e.target.parentNode.children[0]).data('methodIndex');
             var metValue = jQuery(e.target.parentNode.children[0]).val();
@@ -283,10 +378,10 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
     addAttributeBox: function (tempIndex, inputValue) {
         var updateFlag = false;
         if (inputValue) {
-            this.$box.find('.classAttributes').append('<div class="attributInput"><input size="' + this.targetInputSize + '" data-attribute-index="' + tempIndex + '" type="text" value="' + inputValue + '" placeholder="Add More" readonly/> <img class="deleteAttr" src="scripts/delete.png" alt="Del"></div>');
+            this.$box.find('.classAttributes').append('<div class="attributInput"><input size="' + this.targetInputSize + '" data-attribute-index="' + tempIndex + '" type="text" value="' + inputValue + '" placeholder="Add More" readonly/> <img class="deleteAttr" src="scripts/delete.png" alt="Del"><img class="editAttr" src="scripts/pencil.png" alt="Edt"></div>');
         }
         else {
-            this.$box.find('.classAttributes').append('<div class="attributInput"><input size="' + this.targetInputSize + '" data-attribute-index="' + tempIndex + '" type="text" value="" placeholder="Add More" readonly/> <img class="deleteAttr" src="scripts/delete.png" alt="Del"></div>');
+            this.$box.find('.classAttributes').append('<div class="attributInput"><input size="' + this.targetInputSize + '" data-attribute-index="' + tempIndex + '" type="text" value="" placeholder="Add More" readonly/> <img class="deleteAttr" src="scripts/delete.png" alt="Del"><img class="editAttr" src="scripts/pencil.png" alt="Edt"></div>');
         }
 
         for (var j = 0; j < this.$box.find('.classAttributes input').size(); j++) {
@@ -304,16 +399,16 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
                 this.addListeners();
             }
-        }, this), 200);
+        }, this), 100);
     },
 
     addMethodBox: function (tempIndex, inputValue) {
         var updateFlag = false;
         if (inputValue) {
-            this.$box.find('.classMethods').append('<div class="methodInput"><input size="' + this.targetInputSize + '" data-method-index="' + tempIndex + '" type="text" value="' + inputValue + '" placeholder="Add More" readonly/> <img class="deleteMet" src="scripts/delete.png" alt="Del"></div>');
+            this.$box.find('.classMethods').append('<div class="methodInput"><input size="' + this.targetInputSize + '" data-method-index="' + tempIndex + '" type="text" value="' + inputValue + '" placeholder="Add More" readonly/> <img class="deleteMet" src="scripts/delete.png" alt="Del"><img class="editMet" src="scripts/pencil.png" alt="Edt"></div>');
         }
         else {
-            this.$box.find('.classMethods').append('<div class="methodInput"><input size="' + this.targetInputSize + '" data-method-index="' + tempIndex + '" type="text" value="" placeholder="Add More" readonly/> <img class="deleteMet" src="scripts/delete.png" alt="Del"></div>');
+            this.$box.find('.classMethods').append('<div class="methodInput"><input size="' + this.targetInputSize + '" data-method-index="' + tempIndex + '" type="text" value="" placeholder="Add More" readonly/> <img class="deleteMet" src="scripts/delete.png" alt="Del"><img class="editMet" src="scripts/pencil.png" alt="Edt"></div>');
         }
 
         for (var j = 0; j < this.$box.find('.classMethods input').size(); j++) {
@@ -371,9 +466,9 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
     resetBoxsize: function () {
         //set box size
         var boxSize = this.model.get('size');
-        boxSize['height'] = (this.$box.find('.classAttributes').children().size()*1.2 + this.$box.find('.classMethods').children().size()) * 14 + 14;
+        boxSize['height'] = (this.$box.find('.classAttributes').children().size() + this.$box.find('.classMethods').children().size()) * 15 + 24;
         //boxSize['width'] = 50 + Math.floor(this.targetInputSize * 6.32);
-        boxSize['width'] = 35 + Math.floor(this.targetInputSize * 6);
+        boxSize['width'] = 70 + Math.floor(this.targetInputSize * 6);
         this.model.set('size', boxSize);
 
         //set the position and dimension of the box so that it covers the JointJS element.
@@ -386,5 +481,15 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             top: bbox.y+50,
             transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
         });
+
+        var widthScale = bbox.width/100;
+        var heightScale = bbox.height/60;
+
+        var jointShape = jQuery("#" + this.id);
+        if (jointShape.children().size() > 0){
+			var rectScale = jQuery(jointShape.children().children());
+			rectScale.attr({"transform": "scale("+ widthScale + "," + heightScale +")"})
+        }
+
     }
 });
