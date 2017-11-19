@@ -177,6 +177,12 @@ class ExceptionDumper {
       Integer umpleSourceLine = null;
       Integer umpleSourceJavaLine = null;
       
+      // A function with an error in it after an inject statement cannot be easily distinguished
+      // We need to keep track of the old line numbers in case an inject finishes and we haven't found the error
+      String umpleSourceFileFunction = null;
+      Integer umpleSourceLineFunction = null;
+      Integer umpleSourceJavaLineFunction = null;
+      
       boolean isInMain = false;
       boolean firstBraceFound = false;
       int braces = 0;
@@ -200,6 +206,9 @@ class ExceptionDumper {
           if (line.matches("\\s*(public|protected|private|static|\\s)+ +[\\w\\<\\>\\[\\]]+\\s+(\\w+) *\\([^\\)]*\\) *(\\{?|[^;]).*"))
           {
               isInFunction = true;
+              umpleSourceFileFunction = umpleSourceFile;
+              umpleSourceLineFunction = umpleSourceLine;
+              umpleSourceJavaLineFunction = umpleSourceJavaLine;
           }
           umpleSourceFileMatcher = umpleSourceFileFormat.matcher(line);
         }
@@ -210,6 +219,16 @@ class ExceptionDumper {
         else if(line.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String[ |\\t]+[a-z|A-Z|0-9|_]+[ |\\t]*\\[[ |\\t]*\\][ |\\t]*[)](.*)"))
         {
           isInMain=true;        
+        }
+        // If you are exiting injected code and returning to a fucntion
+        else if(line.matches("\\s*\\/\\/ END OF UMPLE (BEFORE|AFTER) INJECTION")) {
+            isInFunction = true;
+            umpleSourceFile = umpleSourceFileFunction;
+            umpleSourceLine = umpleSourceLineFunction;
+            // "Remove" the injected code from the offset calculation
+            umpleSourceJavaLine = umpleSourceJavaLineFunction + (lineNumber - umpleSourceJavaLine + 1);
+            // Need to keep this line number as the new starting index in the case of multiple inject statements
+            umpleSourceJavaLineFunction = umpleSourceJavaLine;
         }
         if(isInMain)
         {

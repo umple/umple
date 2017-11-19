@@ -1,0 +1,39 @@
+generate Java "../src-gen-umple";
+
+class BeforeAfterCustom
+{
+  String foo(int a) {
+
+    if(a == 3) {
+        return "3";
+    }
+    
+    a = a*2;
+    
+    while (a > 0) {
+        a--;
+        if (a % 10 == 0) {
+            a = a / 10;
+            return a;
+        }
+    }
+    
+    System.out.println("About to exit");
+    return "";
+  }
+
+  before custom foo(int) {
+    System.out.println("Starting foo...");
+  }
+
+  after custom foo(int) {
+    String b = "1";
+    System.out.println("Returning from foo, a: " + String.valueOf(a) + ", b: " + b);
+  }
+
+  before custom foo(int) {
+    // This is a comment
+    int x = 1;
+    a += x;
+  }
+}
