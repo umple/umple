@@ -36,11 +36,11 @@ install:
 
 - ps: popd
 
-- ps: php.exe --version
-- ps: ruby.exe -v
-- cmd: java.exe -version # using ps causes it to fail because it prints to sterr
-- ps: ant -version
-- ps: rake.bat -V
+- cmd: php --version
+- cmd: ruby -v
+- cmd: java -version # using ps causes it to fail because it prints to sterr
+- cmd: ant -version
+- cmd: rake -V
 
 build_script:
 
