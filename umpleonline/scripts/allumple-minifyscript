@@ -8,7 +8,6 @@ cat \
  helper.js \
  json.js \
  debugger.js \
- ws_rotateimg.js \
  shCore.js \
  shBrush*.js \
  inlineeditor.js \
