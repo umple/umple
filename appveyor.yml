@@ -2,6 +2,9 @@ version: 1.26.0-{build}-{branch}
 
 clone_depth: 5
 
+platform:
+  - x64
+
 cache:
 
 - C:\Users\appveyor\.ant -> appveyor.yml
@@ -16,7 +19,7 @@ init:
 - ps: cinst ant 2>&1 | Out-Null
 
 # install the latest php (dependencies kb2919442 kb3035131 kb2999226 were failing )
-- ps: choco install php --ignore-depdendencies
+- ps: choco install php --ignore-dependencies
 
 install:
 
