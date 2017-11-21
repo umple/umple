@@ -1,4 +1,4 @@
-version: 1.26.0-build-{build}
+version: 1.26.0-{build}-{branch}
 
 clone_depth: 5
 
@@ -14,6 +14,12 @@ init:
 
 - cmd: gem update --system
 - ps: cinst ant 2>&1 | Out-Null
+# These next three are being installed separately as they are php dependents
+# and were failing to install along with php
+- ps: choco install kb3035131
+- ps: choco install kb2919442
+- os: choco install kb2999226
+# install the latest php
 - ps: choco install php
 
 install:
