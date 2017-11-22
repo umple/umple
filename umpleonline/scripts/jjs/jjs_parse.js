@@ -325,11 +325,6 @@ var JJSdiagram = {
 				var EvenTarget = jQuery(e.target);
 				var clickcount = 0;
 				var canvas = jQuery("#jjsPaper");
-				var selectedItem = format("div.palette li.selected");
-				jQuery(selectedItem).removeClass("selected");
-
-				canvas.find("div.html-element").fadeTo(1,1);
-				jQuery(selectedItem).removeClass("selected");
 
 				if (EvenTarget.hasClass("selected")){
 					$(EvenTarget).removeClass("selected");
@@ -340,7 +335,7 @@ var JJSdiagram = {
 					var selectedItem = format("div.palette li.selected");
 					jQuery(selectedItem).removeClass("selected");
 
-					canvas.find("div.html-element").fadeTo("fast",1);
+					canvas.find("div.html-element").fadeTo(1,1);
 
 					$(EvenTarget).addClass("selected");
 					canvas.find("div.html-element").fadeTo("fast",0.4);
