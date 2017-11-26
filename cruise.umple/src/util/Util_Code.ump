@@ -215,12 +215,14 @@ class ExceptionDumper {
         // If you are exiting injected code and returning to a fucntion
         else if(line.matches("\\s*\\/\\/ END OF UMPLE (BEFORE|AFTER) INJECTION")) {
             isInFunction = true;
-            umpleSourceFile = umpleSourceFileFunction;
-            umpleSourceLine = umpleSourceLineFunction;
-            // "Remove" the injected code from the offset calculation
-            umpleSourceJavaLine = umpleSourceJavaLineFunction + (lineNumber - umpleSourceJavaLine + 1);
-            // Need to keep this line number as the new starting index in the case of multiple inject statements
-            umpleSourceJavaLineFunction = umpleSourceJavaLine;
+            if (umpleSourceFileFunction != null) {
+	            umpleSourceFile = umpleSourceFileFunction;
+	            umpleSourceLine = umpleSourceLineFunction;
+	            // "Remove" the injected code from the offset calculation
+	            umpleSourceJavaLine = umpleSourceJavaLineFunction + (lineNumber - umpleSourceJavaLine + 1);
+	            // Need to keep this line number as the new starting index in the case of multiple inject statements
+	            umpleSourceJavaLineFunction = umpleSourceJavaLine;
+            }
         }
         if(isInMain)
         {

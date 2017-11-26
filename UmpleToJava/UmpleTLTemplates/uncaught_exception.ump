@@ -1,6 +1,6 @@
 class UmpleToJava {
     uncaught_exception <<!<</*uncaught_exception*/>><<#
-java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) (.*)");
+java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) \"(.*)\"");
 public static UmpleClass mainMainClass = null;
 private void addUncaughtExceptionVariables(int javaline, String code, String methodname)
 {
@@ -12,10 +12,12 @@ private void addUncaughtExceptionVariables(int javaline, String code, String met
     {
       uncaughtExceptions.put(methodname,new UncaughtException(globalUmpleClass.getName(), methodname));
     }
-    uncaughtExceptions.get(methodname).addUncaughtFileName(matcher.group(2));
-    uncaughtExceptions.get(methodname).addUncaughtUmpleLine(Integer.parseInt(matcher.group(1))+1);
+    int fileIndex = matcher.group(2).lastIndexOf('/') + 1;
+    uncaughtExceptions.get(methodname).addUncaughtFileName(matcher.group(2).substring(fileIndex));
+    uncaughtExceptions.get(methodname).addUncaughtUmpleLine(Integer.parseInt(matcher.group(1)));
     uncaughtExceptions.get(methodname).addUncaughtJavaLine(javaline+1);
-    uncaughtExceptions.get(methodname).addUncaughtLength(lines.length);
+    // Subtract two to compensate for the comments at the top and bottom of each inject statement 
+    uncaughtExceptions.get(methodname).addUncaughtLength(lines.length-2);
   }  
 }
 private void addUncaughtExceptionVariables(String methodname, String filename, int umpleline, int javaline, int length)
