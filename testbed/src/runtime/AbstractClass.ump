@@ -1,0 +1,12 @@
+generate Java "../../src-gen-umple";
+namespace cruise.runtime;
+
+class AbstractClass
+{
+    abstract;
+    public abstract void foo();
+    
+    public void DivideByZero(int a) {
+        a = a / 0;
+    }
+}

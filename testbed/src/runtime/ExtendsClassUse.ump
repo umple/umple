@@ -1,0 +1,18 @@
+generate Java "../../src-gen-umple";
+namespace cruise.runtime;
+
+use AbstractClass.ump;
+
+class ExtendsClassUse
+{
+    isA AbstractClass;
+    public void foo() {
+        // Do Nothing
+    }
+    
+    public static void main(String[] argv) {
+        ExtendsClassUse x = new ExtendsClassUse();
+        x.foo();
+        x.DivideByZero(1);
+    }
+}

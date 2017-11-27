@@ -1,0 +1,19 @@
+generate Java "../../src-gen-umple";
+namespace cruise.runtime;
+
+trait Trait {
+    public void Foo() {
+        String[] bar = new String[1];
+        bar[1] = "";
+    }
+} 
+
+class IsATrait
+{
+    isA Trait;
+    
+    public static void main(String[] argv) {
+        IsATrait x = new IsATrait();
+        x.Foo();
+    }
+}

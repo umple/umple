@@ -1,0 +1,5 @@
+java.lang.ArithmeticException: / by zero
+    at cruise.runtime.StateMachineEntry.doEntry(StateMachineEntry.ump:17)
+    at cruise.runtime.StateMachineEntry.setBulb(StateMachineEntry.java:87)
+    at cruise.runtime.StateMachineEntry.<init>(StateMachineEntry.java:27)
+    at cruise.runtime.StateMachineEntry.main(StateMachineEntry.ump:31)
