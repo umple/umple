@@ -1,0 +1,19 @@
+generate Java "../../src-gen-umple";
+namespace cruise.runtime;
+
+class InAfterCustom
+{
+    after custom foo {
+    	int b = 0 / 0;
+    }
+    
+    public static void main(String [] argv){
+       InAfterCustom x = new InAfterCustom();
+       x.foo();
+    }
+
+    public void foo() {
+        int a = 0;
+        a++;
+    }
+}

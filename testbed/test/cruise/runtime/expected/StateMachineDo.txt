@@ -1,0 +1,4 @@
+java.lang.ArithmeticException: / by zero
+    at test.LightFixture.doActivityBulbOn(StateMachineDo.ump:11)
+    at test.LightFixture.access$000(LightFixture.java:7)
+    at test.LightFixture$DoActivityThread.run(LightFixture.java:123)

@@ -1,0 +1,3 @@
+java.lang.ArrayIndexOutOfBoundsException: 1
+    at cruise.runtime.BeforeAfter.setFoo(BeforeAfter.ump:14)
+    at cruise.runtime.BeforeAfter.main(BeforeAfter.ump:19)

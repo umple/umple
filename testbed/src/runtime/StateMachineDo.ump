@@ -1,0 +1,33 @@
+generate Java "../../src-gen-umple";
+namespace cruise.runtime;
+
+class StateMachineDo
+{  
+  bulb  
+  {  
+    On {  
+      entry / { doEntry(); }  
+      exit / { doExit(); }  
+      push -> /{ doTransition(); } Off;  
+      do { int a = 1; a = a / 0; doThisContinuouslyWhileOn(); }  
+    }  
+    Off {}  
+  }  
+  
+  void doEntry() {}  
+  void doExit() {}  
+  void doTransition() {}  
+  void doThisContinuouslyWhileOn() {  
+    while (true) {  
+      System.out.println("Still on");  
+      try {  
+        Thread.sleep(1000);  
+      }  
+      catch (InterruptedException e) {}  
+    }  
+  }
+  
+  public static void main(String[] argv) {
+    StateMachineDo x = new StateMachineDo();
+  }
+}
