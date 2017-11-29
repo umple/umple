@@ -24,7 +24,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         '<div class="html-element" style="text-align: center">',
         '<button class="delete">x</button>',
         '<img id="classIcon" style="position: absolute; top:.1em;left:.2em" src="scripts/class.png" alt="" width="13">',
-        '<div class="className"><input size="9" type="text" class="className" placeholder="className" readonly/><img class="edit" src="scripts/pencil.png" alt="Edt"></div>',
+        '<div class="className"><input size="9" type="text" class="className" placeholder="className" style="text-align: center" readonly/><img class="edit" src="scripts/pencil.png" alt="Edt"></div>',
         '<div class="classAttributes" style="text-align: left">',
         '</div>',
         '<div class="classMethods" style="text-align: left">',
@@ -182,12 +182,14 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             if (e.which === 13) {
                 e.target.blur();
                 setTimeout(_.bind(function () {
-                    this.$box.find('.classAttributes input:last').prop('readonly', false);
-                    this.$box.find('.classAttributes input:last').focus();
-					var editButton = jQuery(this.$box.find('.classAttributes input:last').parent().children()[2]);
-					var inputField = jQuery(this.$box.find('.classAttributes input:last').parent().children()[0]);
-					$(editButton).addClass('iconSelected');
-					$(inputField).css("pointer-events", "auto");
+					if (e.target.value) {
+						this.$box.find('.classAttributes input:last').prop('readonly', false);
+						this.$box.find('.classAttributes input:last').focus();
+						var editButton = jQuery(this.$box.find('.classAttributes input:last').parent().children()[2]);
+						var inputField = jQuery(this.$box.find('.classAttributes input:last').parent().children()[0]);
+						$(editButton).addClass('iconSelected');
+						$(inputField).css("pointer-events", "auto");
+					}
                 }, this), 100);
             }
         }, this));
@@ -197,12 +199,14 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             if (e.which === 13) {
                 e.target.blur();
                 setTimeout(_.bind(function () {
-                    this.$box.find('.classMethods input:last').prop('readonly', false);
-                    this.$box.find('.classMethods input:last').focus();
-					var editButton = jQuery(this.$box.find('.classMethods input:last').parent().children()[2]);
-					var inputField = jQuery(this.$box.find('.classMethods input:last').parent().children()[0]);
-					$(editButton).addClass('iconSelected');
-					$(inputField).css("pointer-events", "auto");
+					if (e.target.value) {
+						this.$box.find('.classMethods input:last').prop('readonly', false);
+						this.$box.find('.classMethods input:last').focus();
+						var editButton = jQuery(this.$box.find('.classMethods input:last').parent().children()[2]);
+						var inputField = jQuery(this.$box.find('.classMethods input:last').parent().children()[0]);
+						$(editButton).addClass('iconSelected');
+						$(inputField).css("pointer-events", "auto");
+					}
                 }, this), 100);
             }
         }, this));
@@ -221,13 +225,28 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
                 var tempIndex = this.$box.find('.classAttributes input:last').data('attributeIndex') + 1;
                 this.addAttributeBox(tempIndex);
                 this.addListeners();
+                var attrName = e.target.value;
 
+				if (attrName.split(':').length < 2) {
+					e.target.value = attrName + ': String';
+					this.targetInputSize = e.target.value.length;
+					this.resetBoxsize();
+				}
                 var temp = this.model.get('attributes');
                 temp[jQuery(e.target).data('attributeIndex')] = jQuery(e.target).val();
                 this.model.set('attributes', temp);
 
                 JJSdiagram.makeUmpleCodeFromClass('addAttribute', this.model.toJSON(), jQuery(e.target).data('attributeIndex'));
-            }
+            }else if (e.target.value !== ""){
+            	var attributeIndex = jQuery('div.attributInput').index(jQuery(e.target).parent());
+            	var oldName = this.model.get('attributes')[attributeIndex];
+				oldName = oldName.split(":")[0];
+
+				var attrs = this.model.get('attributes');
+				attrs[attributeIndex] = e.target.value;
+
+				JJSdiagram.makeUmpleCodeFromClass('editAttribute', this.model.toJSON(), attributeIndex, oldName);
+			}
 
 			setTimeout(_.bind(function () {
 				var editButton = jQuery(e.target.parentNode.children[2]);
