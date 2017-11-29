@@ -4,7 +4,7 @@ echo 'syntax: udock {image} {-d storagedirectory} {-p port}'
 set dir="umpleonline-tmp$$"
 set port=8000
 set volcommand=""
-set moelarg=""
+set modelarg=""
 set image=""
 if("$1" != "") then
   if("$1" == "-d") then 
@@ -13,7 +13,6 @@ if("$1" != "") then
       set port=$4    
     endif
   else 
-    echo x
     if("$1" == "-p") then
       set port=$2
     else
@@ -30,8 +29,7 @@ if("$1" != "") then
     endif
   endif
 endif
-echo y
-set modelarg =""
+
 if($dir != "") then
   if(! -d $dir) then
     if ($dir != "umpleonline-tmp$$") then
