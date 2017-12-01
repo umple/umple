@@ -249,9 +249,6 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 					attrs[attributeIndex] = e.target.value + ": String";
 				}
 
-
-
-
 				JJSdiagram.makeUmpleCodeFromClass('editAttribute', this.model.toJSON(), attributeIndex, oldName);
 			}
 
@@ -295,7 +292,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
          * delete attributes icon clicked
          */
         this.$box.find('.attributInput .deleteAttr').off('click').on('click', _.bind(function (e) {
-            var attIndex = jQuery(e.target.parentNode.children[0]).data('attributeIndex');
+            var attIndex = jQuery('div.attributInput').index(jQuery(e.target).parent());
             var attValue = jQuery(e.target.parentNode.children[0]).val();
             //value is empty, do nothing 
             //value is not empty, delete the attribute from model and update box
