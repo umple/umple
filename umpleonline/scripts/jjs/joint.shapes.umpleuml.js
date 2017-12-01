@@ -225,13 +225,12 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
                 var tempIndex = this.$box.find('.classAttributes input:last').data('attributeIndex') + 1;
                 this.addAttributeBox(tempIndex);
                 this.addListeners();
-                var attrName = e.target.value;
+                var attrName = e.target.value.trim();
 
-				if (attrName.split(':').length < 2) {
-					e.target.value = attrName + ': String';
-					this.targetInputSize = e.target.value.length;
-					this.resetBoxsize();
+                if (attrName.split(":").length >= 2){
+                	e.target.value = attrName.split(":")[0].trim() + ": " + attrName.split(":")[1].trim();
 				}
+
                 var temp = this.model.get('attributes');
                 temp[jQuery(e.target).data('attributeIndex')] = jQuery(e.target).val();
                 this.model.set('attributes', temp);
@@ -241,9 +240,17 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             	var attributeIndex = jQuery('div.attributInput').index(jQuery(e.target).parent());
             	var oldName = this.model.get('attributes')[attributeIndex];
 				oldName = oldName.split(":")[0];
-
 				var attrs = this.model.get('attributes');
-				attrs[attributeIndex] = e.target.value;
+
+				if (e.target.value.split(":").length >= 2){
+					e.target.value = e.target.value.split(":")[0].trim() + ": " + e.target.value.split(":")[1].trim();
+					attrs[attributeIndex] = e.target.value;
+				}else{
+					attrs[attributeIndex] = e.target.value + ": String";
+				}
+
+
+
 
 				JJSdiagram.makeUmpleCodeFromClass('editAttribute', this.model.toJSON(), attributeIndex, oldName);
 			}
