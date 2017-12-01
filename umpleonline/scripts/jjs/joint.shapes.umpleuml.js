@@ -226,27 +226,31 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
                 this.addAttributeBox(tempIndex);
                 this.addListeners();
                 var attrName = e.target.value.trim();
+                var newAttrName = "";
 
                 if (attrName.split(":").length >= 2){
                 	e.target.value = attrName.split(":")[0].trim() + ": " + attrName.split(":")[1].trim();
+                	newAttrName = "- "+attrName.split(":")[0].trim() + ": " + attrName.split(":")[1].trim();
+				}else {
+					newAttrName = "- "+attrName.split(":")[0].trim() + ": " + "String";
 				}
 
                 var temp = this.model.get('attributes');
-                temp[jQuery(e.target).data('attributeIndex')] = jQuery(e.target).val();
+                temp[jQuery(e.target).data('attributeIndex')] = newAttrName;
                 this.model.set('attributes', temp);
 
                 JJSdiagram.makeUmpleCodeFromClass('addAttribute', this.model.toJSON(), jQuery(e.target).data('attributeIndex'));
             }else if (e.target.value !== ""){
             	var attributeIndex = jQuery('div.attributInput').index(jQuery(e.target).parent());
             	var oldName = this.model.get('attributes')[attributeIndex];
-				oldName = oldName.split(":")[0];
+            	oldName = oldName.split(":")[0].substr(2);
 				var attrs = this.model.get('attributes');
 
 				if (e.target.value.split(":").length >= 2){
 					e.target.value = e.target.value.split(":")[0].trim() + ": " + e.target.value.split(":")[1].trim();
-					attrs[attributeIndex] = e.target.value;
+					attrs[attributeIndex] = "- " +  e.target.value;
 				}else{
-					attrs[attributeIndex] = e.target.value + ": String";
+					attrs[attributeIndex] = "- " +  e.target.value + ": String";
 				}
 
 				JJSdiagram.makeUmpleCodeFromClass('editAttribute', this.model.toJSON(), attributeIndex, oldName);
@@ -297,8 +301,8 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             //value is empty, do nothing 
             //value is not empty, delete the attribute from model and update box
             if (attValue && attIndex > -1) {
-                var oldAttribute = this.model.get('attributes')[attIndex];
-
+                var oldAttribute = this.model.get('attributes')[attIndex].substr(2);
+				//oldAttribute = oldAttribute.split(":");
                 var modelAttributes = this.model.get('attributes');
                 modelAttributes.splice(attIndex, 1);
                 this.model.set('attributes', modelAttributes);
@@ -457,7 +461,14 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             var i = 0;
 
             for (i = 0; i < this.model.get('attributes').length; i++) {
-                this.addAttributeBox(i, this.model.get('attributes')[i]);
+                //this.addAttributeBox(i, this.model.get('attributes')[i]);
+				var attrName = this.model.get('attributes')[i];
+				var attrNameSlice = attrName.split(":");
+				if (attrNameSlice[1].trim() === "String"){
+					this.addAttributeBox(i, attrNameSlice[0].substr(2));
+				}else{
+					this.addAttributeBox(i, attrName.substr(2));
+				}
             }
 
             //add an extra empty one
