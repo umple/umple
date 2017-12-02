@@ -80,45 +80,50 @@ class ExceptionDumper {
   depend java.util.regex.*;
   depend java.util.List;
   depend java.util.ArrayList;
-  depend java.io.*;  
+  depend java.io.*;
+  depend java.nio.file.Path;
+  depend java.nio.file.Paths;
 
   public static void dumpCompilerError(Exception ex) {
      String generatedSourcePath = System.getenv("GeneratedSourcePath");
     if (generatedSourcePath == null) {
-      System.err.println("To locate the error in the original Umple source, set GeneratedSourcePath to where the generated Java is located:\ne.g. setenv GeneratedSourcePath ~/umple/cruise.umple/src-gen-umple");
+      System.err.println("To locate the error in the original Umple source, set GeneratedSourcePath to root directory where the generated Java is located:\ne.g. setenv GeneratedSourcePath ~/umple/cruise.umple/src-gen-umple/");
     }
     else {
       System.err.println("Using GeneratedSourcePath="+generatedSourcePath);
     }
     System.err.println("Exception "+ex.getClass().getName()+" in");
-    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(),ex);
-    /*StackTraceElement [] st = ex.getStackTrace();
+
+    // Uncomment the following line to use Java stack tracing without the debug
+    //Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(),ex);
+
+    // Comment out until the end of Block to avoid Umple line tracing
+    StackTraceElement [] st = ex.getStackTrace();
     StackTraceElement ust = null;
     for (int i=0;i<st.length;i++) {
-      System.err.println(st[i].toString());
+      System.err.println(" at "+st[i].toString());
       if(generatedSourcePath != null) {
          ust = javaToUmpleStackTrace(st[i], generatedSourcePath);
         if(ust != null) {
           System.err.println("   => "+ust.getFileName()+":"+ust.getLineNumber());
          }
+        else {
+          System.err.println("   => Unknown umple file - please ask developers to debug Util_code.ump javaToUmpleStackTrace");        
+        }
       }
-    }*/
+    }
+    // End of block to translate a stack trace to Umple
   }
   
     // Translate the java stack trace line information into the corresponding Umple line
     public static StackTraceElement javaToUmpleStackTrace(StackTraceElement javaStack, String generatedSourcePath) {
-      StackTraceElement newSt;
-      String javaFileName = javaStack.getFileName();
-      String umpleFileName="Did not find line = information in Java code";
       int javaLineNumber = javaStack.getLineNumber();
-      int umpleLineNumber=javaStack.getLineNumber(); // Dummy so errors can be noticed
-      String fullClassPath = javaStack.getClassName();
-      
-      // TODO -- need to test on Windows
-      // We have hopefully found the file, now open it
-      Scanner sc;
+      Path pathToJavaFile = Paths.get(generatedSourcePath + 
+                                     javaStack.getClassName().replace('.',File.separatorChar) + ".java");
+
+      Scanner sc = null;
       try {
-        sc = new Scanner(new BufferedReader(new FileReader(javaFileName)));
+        sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
       }
       catch (FileNotFoundException fne) {
         sc = null;
@@ -164,11 +169,19 @@ class ExceptionDumper {
       }
       
       int lineNumber = 1;
-      Pattern umpleSourceFileFormat = Pattern.compile(".*@umplesourcefile[(].*\\{(.*)\\}.*\\{(.*)\\}.*\\{(.*)\\}.*\\{(.*)\\}[)].*");
-      List<String> umpleSourceFiles = new ArrayList<String>();
-      List<String> umpleSourceLines = new ArrayList<String>();
-      List<String> umpleSourceJavaLines = new ArrayList<String>();
-      List<String> umpleSourceLengths = new ArrayList<String>();
+      // Look for the comment referencing an umple file
+      //    In the format of: // line ## "REL_PATH_TO_FILE"
+      Pattern umpleSourceFileFormat = Pattern.compile(
+        "^\\s*\\/\\/[ ]line[ ](\\d+)[ ]\"(.*)\"$");
+      String umpleSourceFile = null;
+      Integer umpleSourceLine = null;
+      Integer umpleSourceJavaLine = null;
+      
+      // A function with an error in it after an inject statement cannot be easily distinguished
+      // We need to keep track of the old line numbers in case an inject finishes and we haven't found the error
+      String umpleSourceFileFunction = null;
+      Integer umpleSourceLineFunction = null;
+      Integer umpleSourceJavaLineFunction = null;
       
       // A function with an error in it after an inject statement cannot be easily distinguished
       // We need to keep track of the old line numbers in case an inject finishes and we haven't found the error
@@ -179,6 +192,7 @@ class ExceptionDumper {
       boolean isInMain = false;
       boolean firstBraceFound = false;
       int braces = 0;
+      boolean isInFunction = false;
       
       while(lineNumber<=javaLineNumber)
       {
@@ -243,34 +257,19 @@ class ExceptionDumper {
         lineNumber++;
       }
       
+      sc.close();
       
-      Integer javaLine;
-        Integer length;
-      for(int j = 0; j < umpleSourceJavaLines.size();j++)
+      if (umpleSourceFile != null)
       {
-        String[] umpleSourceJavaLinesSplit = umpleSourceJavaLines.get(j).split(",");
-        String[] umpleSourceLengthsSplit = umpleSourceLengths.get(j).split(",");
-         
-        for(int i = 0; i < umpleSourceJavaLinesSplit.length; i++)
-        {
-          if(umpleSourceJavaLines.equals(""))
-          {
-            break;
-          }
-    	    javaLine = Integer.parseInt(umpleSourceJavaLinesSplit[i]);
-    	    length = Integer.parseInt(umpleSourceLengthsSplit[i]);
-    	
-    	    if(javaLineNumber-javaLine<length)
-    	    {
-    	      umpleFileName = umpleSourceFiles.get(j).split(",")[i].replace(" ","");
-    	      umpleLineNumber = Integer.parseInt(umpleSourceLines.get(j).split(",")[i])+javaLineNumber-javaLine-(isInMain?2:0);
-    	      return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFileName.replace("\\","/").replaceAll(".*/", "").replace("\"",""), umpleLineNumber);
-    	    }
-        }       
+        Path umpleFilePath = pathToJavaFile.resolveSibling(umpleSourceFile);
+        // Umple injects two lines of code into each main function, so we need to account for that offset
+        Integer umpleLineNumber = umpleSourceLine + javaLineNumber - umpleSourceJavaLine - (isInMain?2:0);
+        // We must also subtract two for the distance between the umpleSource declaration and the first line of the function declaration
+        umpleLineNumber = umpleLineNumber - (isInFunction?2:1);
+        return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFilePath.getFileName().toString(), umpleLineNumber);
       }
-      return javaStack;
+      return null;
     }
-    
 }
 
 use util/Glossary_Code.ump;

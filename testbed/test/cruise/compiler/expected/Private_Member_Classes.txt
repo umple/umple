@@ -1,0 +1,4 @@
+Private_Member_Classes.ump:13: error: id has private access in Class4
+            return c4.id;
+                     ^
+1 error
