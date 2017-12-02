@@ -20,6 +20,11 @@ public class RuntimeErrorOutputTests
 		RuntimeErrorUtil.AssertRuntimeError("BeforeAfter", "BeforeAfter.txt");
 	}
 	
+	@Ignore @Test
+	public void BeforeAfterCustomInOriginal() throws Exception {
+		RuntimeErrorUtil.AssertRuntimeError("BeforeAfterCustomInOriginal", "BeforeAfterCustomInOriginal.txt");
+	}
+	
 	@Test
 	public void BeforeCustomInOriginal() throws Exception {
 		RuntimeErrorUtil.AssertRuntimeError("BeforeCustomInOriginal", "BeforeCustomInOriginal.txt");
@@ -28,6 +33,11 @@ public class RuntimeErrorOutputTests
 	@Test
 	public void InAfterCustom() throws Exception {
 		RuntimeErrorUtil.AssertRuntimeError("InAfterCustom", "InAfterCustom.txt");
+	}
+	
+	@Test
+	public void InAfterCustomMultipleReturns() throws Exception {
+		RuntimeErrorUtil.AssertRuntimeError("InAfterCustomMultipleReturns", "InAfterCustomMultipleReturns.txt");
 	}
 	
 	@Test
@@ -45,7 +55,7 @@ public class RuntimeErrorOutputTests
 		RuntimeErrorUtil.AssertRuntimeError("FunctionWithException", "FunctionWithException.txt");
 	}
 	
-	@Test
+	@Ignore @Test
 	public void ExtendsClassExternal() throws Exception {
 		RuntimeErrorUtil.AssertRuntimeError("ExtendsClassExternal", "ExtendsClassExternal.txt");
 	}
