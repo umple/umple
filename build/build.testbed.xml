@@ -173,6 +173,7 @@
         <fileset dir="${project.path}/test">
           <include name="**/*Test*.java"/>
           <exclude name="**/AllTests.java"/>
+          <exclude name="**/*ErrorOutputTests.java" if="excludeCompilerErrorOutput"/>
         </fileset>
       </batchtest>
       <classpath refid="project.classpath"/>
