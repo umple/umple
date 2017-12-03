@@ -346,9 +346,9 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
     pointer-events: none;
 }
 
-.html-element .editClassName{
+.className .edit{
     position: absolute;
-    right: 1em;
+    right: 0.2em;
     cursor: pointer;
     pointer-events: auto;
     height: 10px;
@@ -389,8 +389,8 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
 }
 
 .eventInput .editEvent,
-.attributInput .editAttr,
-.methodInput .editMet {
+.attributInput .edit,
+.methodInput .edit {
     text-align: "right";
     /* Enable interacting with inputs only. */
     pointer-events: auto;

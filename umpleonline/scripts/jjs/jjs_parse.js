@@ -35,9 +35,6 @@ var JJSdiagram = {
 
 		JJSdiagram.setButtonsListener();
 
-		var deleteButton = jQuery("#buttonDeleteEntity");
-		deleteButton.addClass("disabled");
-
 		return this.paper;
 	},
 
@@ -71,22 +68,16 @@ var JJSdiagram = {
 	},
 
 	setPaperListener: function () {
-		//element click event
+
 		this.paper.on('cell:pointerclick',
 			function (cellView, evt, x, y) {
 				Action.selectClass(cellView.model.get('name')[0]);
-
-				if (Page.useJointJSClassDiagram && jQuery('.html-element button.delete').css('visibility') === 'hidden') {
-					jQuery('.html-element button.delete').css('visibility', 'visible');
-				}
-				else if (Page.useJointJSClassDiagram) {
-					jQuery('.html-element button.delete').css('visibility', 'hidden');
-				}
 			}
 		);
 
 		this.paper.on('cell:pointerdown',
 			function (cellView, evt, x, y) {
+
 				if (JJSdiagram.diagram_type === "UMLclass") {
 					var cellPosition = cellView.model.get('position');
 					// Make sure the user has clicked on a cellView (and not a transition)
@@ -200,17 +191,22 @@ var JJSdiagram = {
 			var x = e.clientX;
 			var y = e.clientY;
 			var canvas = jQuery("#jjsPaper");
+
+			//remove all other selected item, hidden delete button
 			var selectedItem = format("div.palette li.selected");
 			jQuery(selectedItem).removeClass("selected");
 
+			jQuery('.html-element button.delete').css('visibility', 'hidden');
+
 			canvas.find("div.html-element").fadeTo(1,1);
+
 
 			if (Page.useJointJSClassDiagram) {
 
 				var EvenTarget = jQuery(e.target);
 				$(EvenTarget).addClass("selected");
 
-				jQuery('body').append('<div id="flyPaper" style="position:fixed;z-index:100;opacity:.5;pointer-event:none;"></div>');
+				jQuery('body').append('<div id="flyPaper" style="position:fixed;z-index:100;opacity:.5;pointer-events:none;"></div>');
 				var flyGraph = new joint.dia.Graph,
 					flyPaper = new joint.dia.Paper({
 						el: jQuery('#flyPaper'),
@@ -279,8 +275,11 @@ var JJSdiagram = {
 					canvas.find("div.html-element").fadeTo("fast",1);
 				}else {
 					var associationId;
+					//remove all other selected editing option as well as hidden delete button
 					var selectedItem = format("div.palette li.selected");
 					jQuery(selectedItem).removeClass("selected");
+
+					jQuery('.html-element button.delete').css('visibility', 'hidden')
 
 					canvas.find("div.html-element").fadeTo(1,1);
 
@@ -325,11 +324,6 @@ var JJSdiagram = {
 				var EvenTarget = jQuery(e.target);
 				var clickcount = 0;
 				var canvas = jQuery("#jjsPaper");
-				var selectedItem = format("div.palette li.selected");
-				jQuery(selectedItem).removeClass("selected");
-
-				canvas.find("div.html-element").fadeTo(1,1);
-				jQuery(selectedItem).removeClass("selected");
 
 				if (EvenTarget.hasClass("selected")){
 					$(EvenTarget).removeClass("selected");
@@ -337,11 +331,15 @@ var JJSdiagram = {
 					canvas.find("div.html-element").fadeTo("fast",1);
 				}else {
 					var associationId;
+					//remove all other selected editing option as well as hidden delete button
 					var selectedItem = format("div.palette li.selected");
 					jQuery(selectedItem).removeClass("selected");
 
-					canvas.find("div.html-element").fadeTo("fast",1);
+					jQuery('.html-element button.delete').css('visibility', 'hidden');
 
+					canvas.find("div.html-element").fadeTo(1,1);
+
+					//fade the class boxes
 					$(EvenTarget).addClass("selected");
 					canvas.find("div.html-element").fadeTo("fast",0.4);
 					//paper listener
@@ -368,6 +366,26 @@ var JJSdiagram = {
 				}
 			}
 		});
+
+		jQuery('#buttonDeleteEntity').off('click').on('click.fly', function (e) {
+			var EvenTarget = jQuery(e.target);
+
+			var canvas = jQuery("#jjsPaper");
+			canvas.find("div.html-element").fadeTo(1,1);
+
+			if (EvenTarget.hasClass("selected")) {
+				$(EvenTarget).removeClass("selected");
+				jQuery('.html-element button.delete').css('visibility', 'hidden');
+			}else {
+				var selectedItem = format("div.palette li.selected");
+				jQuery(selectedItem).removeClass("selected");
+				$(EvenTarget).addClass("selected");
+				jQuery('.html-element button.delete').css('visibility', 'visible');
+
+			}
+		});
+
+
 	},
 
 	//return the object in JJS JSON that has certain id
@@ -558,6 +576,61 @@ var JJSdiagram = {
 					'modifier': attModifier
 				});
 
+				actionCode = "action=editClass&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
+				break;
+			case 'editAttribute':
+				var oldName = arguments[3];
+				var modifyIndex = arguments[2];
+				for (var k = 0; k < jjsJson.attributes.length; k++) {
+					tempAttr = jjsJson.attributes[k].split(":").map(function (item) {
+						return item.trim();
+					});
+
+					//split modifier
+					if (tempAttr[0].charAt(0) === '-' || tempAttr[0].charAt(0) === '#' || tempAttr[0].charAt(0) === '~' || tempAttr[0].charAt(0) === '+') {
+						switch (tempAttr[0].charAt(0)) {
+							case "+":
+								attModifier = "public";
+								break;
+							case "~":
+								attModifier = "package";
+								break;
+							case "#":
+								attModifier = "protected";
+								break;
+							case "-":
+								attModifier = "private";
+								break;
+							default:
+								console.log('Invalid modifier in jjs_parser.js -->makeUmpleCodeFromClass');
+						}
+						tempAttr[0] = tempAttr[0].slice(1);
+						tempAttr[0] = tempAttr[0].trim();
+					}
+
+					//attribute to modify
+					if (k === modifyIndex) {
+						actionCodeObj.attributes.push({
+							"type": tempAttr[1],
+							"name": tempAttr[0],
+							"textColor": "black",
+							"aColor": "black",
+							"oldName": oldName,
+							'modifier': attModifier
+						});
+					}
+					//other unchanged attibutes
+					else {
+						actionCodeObj.attributes.push({
+							"type": tempAttr[1],
+							"name": tempAttr[0],
+							"textColor": "black",
+							"aColor": "black",
+							'modifier': attModifier
+						});
+					}
+				}
 				actionCode = "action=editClass&actionCode=";
 				actionCode += JSON.stringify(actionCodeObj);
 				break;
