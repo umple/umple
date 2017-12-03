@@ -1,0 +1,28 @@
+generate Java "../src-gen-umple";
+
+class LightFixture  
+{  
+  bulb  
+  {  
+    On {  
+      entry / { doEntry(); }  
+      exit / { doExit(); }  
+      push -> /{ doTransition(); } Off;  
+      do { doThisContinuouslyWhileOn(); a++; }  
+    }  
+    Off {}  
+  }  
+  
+  void doEntry() {a=1;}  
+  void doExit() {System.out.println("Exit");}  
+  void doTransition() {System.out.println("Transition");}  
+  void doThisContinuouslyWhileOn() {  
+    while (true) {  
+      System.out.println("Still on");  
+      try {  
+        Thread.sleep(1000);  
+      }  
+      catch (InterruptedException e) {}  
+    }  
+  }  
+}

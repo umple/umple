@@ -1,0 +1,19 @@
+generate Java "../../src-gen-umple";
+namespace cruise.runtime;
+
+class FunctionWithException
+{
+    public static void main(String [] argv){
+       try {
+        throwsException();
+        }
+        catch(IndexOutOfBoundsException e) {
+
+        }
+    }
+    
+    public static void throwsException() throws IndexOutOfBoundsException {
+        int a = 1 / 0;
+        throw new IndexOutOfBoundsException();
+    }
+}

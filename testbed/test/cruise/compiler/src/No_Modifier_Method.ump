@@ -1,0 +1,8 @@
+generate Java "../src-gen-umple";
+
+class NoModifierMethod
+{
+    void foo() { 
+        String s = 1.0;
+    }
+}

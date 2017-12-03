@@ -156,6 +156,7 @@ class UmpleToJava {
           {
             append(realSb, "    {0}_Original({1});\n", methodName, finalParamsWithoutTypes);
           }
+          addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customPostconditionCode,methodName);
           appendln(realSb, GeneratorHelper.doIndent(customPostconditionCode, "    "));
           if(!"".equals(methodType)&&!"void".equals(methodType))
           {
@@ -174,16 +175,21 @@ class UmpleToJava {
         }
         if(aMethod.getIsAbstract())
         {
-          append(realSb, ";");
+          append(realSb, ";\n");
         }
         else
         {
           appendln(realSb, "{");
           for( TraceItem traceItem : traceItems )append(realSb, (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, aMethod,"me_e", uClass):""));
-          if (customPreconditionCode != null) { append(realSb, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-          if (customBeforeInjectionCode != null) { append(realSb, "{0}\n",GeneratorHelper.doIndent(customBeforeInjectionCode, "    "));}
+          if (customPreconditionCode != null) {
+            addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customPreconditionCode,methodName);
+            append(realSb, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));
+          }
+          if (customBeforeInjectionCode != null) {
+            addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customBeforeInjectionCode,methodName);
+            append(realSb, "{0}\n",GeneratorHelper.doIndent(customBeforeInjectionCode, "    "));
+        }
           
-          addUncaughtExceptionVariables(methodName,p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline,realSb.toString().split("\\n").length+1-javaline);
           String traceCode = "";
           if(properMethodBody.contains("return"))
           {
@@ -228,6 +234,7 @@ class UmpleToJava {
               }
 
               // inject the after injection code after every return, while appropriate indentation
+              List<Integer> injectedLineNumbers = new ArrayList<Integer>();
               for(int i = -1; (i = properMethodBody.indexOf("return", i + 1)) != -1; ) {
                 // determine the indentation of the return
                 String indent = "";
@@ -290,6 +297,7 @@ class UmpleToJava {
 
                 i += indent.length() + 1;
                 String[] returnAndRest = properMethodBody.substring(i).split(";", 2);
+                injectedLineNumbers.add(properMethodBody.substring(0, i).trim().split("\\n").length);
                 properMethodBody = properMethodIndent + properMethodBody.substring(0, i).trim() + indentedCustomAfterInjectionCode + "\n" + indent + returnAndRest[0].trim() + ";" + braceNewLine + braceIndent + brace + returnAndRest[1]; 
                 i += indentedCustomAfterInjectionCode.length() + braceIndent.length() + 7;
               }
@@ -297,7 +305,13 @@ class UmpleToJava {
               // if the last line isn't a return, insert the injection at the very end
               String[] lines = properMethodBody.split("\\n");
               if(!lines[lines.length-1].contains("return")) {
+                injectedLineNumbers.add(lines.length);
                 properMethodBody += GeneratorHelper.doIndent("\n" + customAfterInjectionCode, "    ");
+              }
+              
+              int javaLength = realSb.toString().split("\\n").length;
+              for (Integer line : injectedLineNumbers) {
+                addUncaughtExceptionVariables(javaLength + line,customAfterInjectionCode,methodName);
               }
             }
           }
@@ -305,9 +319,13 @@ class UmpleToJava {
           if(!properMethodBody.contains("return"))
           {
             for( TraceItem traceItem : traceItems )append(realSb, (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):""));
-            if (customAfterInjectionCode != null) { append(realSb, "{0}\n",GeneratorHelper.doIndent(customAfterInjectionCode, "    "));}
+            if (customAfterInjectionCode != null) {
+                addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAfterInjectionCode,methodName);
+                append(realSb, "{0}\n",GeneratorHelper.doIndent(customAfterInjectionCode, "    "));
+            }
           }
           appendln(realSb, "  }");
+          addUncaughtExceptionVariables(methodName,p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline,methodBody.split("\\n").length);
         }
       }
     }

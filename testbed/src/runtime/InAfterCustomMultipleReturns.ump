@@ -1,0 +1,25 @@
+generate Java "../../src-gen-umple";
+namespace cruise.runtime;
+
+class InAfterCustomMultipleReturns
+{
+    after custom foo {
+        int b = 0 / 0;
+    }
+    
+    public static void main(String [] argv){
+       InAfterCustomMultipleReturns x = new InAfterCustomMultipleReturns();
+       x.foo();
+    }
+
+    public int foo() {
+        int a = 0;
+        a++;
+        // This is a comment
+        if (a > 0) {
+            return 0;
+        }
+        a++;
+        return a;
+    }
+}

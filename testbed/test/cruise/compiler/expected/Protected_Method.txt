@@ -1,0 +1,4 @@
+Protected_Method.ump:7: error: incompatible types: String cannot be converted to double
+        return s;
+               ^
+1 error

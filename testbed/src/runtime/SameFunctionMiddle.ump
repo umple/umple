@@ -1,0 +1,27 @@
+generate Java "../../src-gen-umple";
+namespace cruise.runtime;
+
+class SameFunctionMiddle
+{
+    someString;
+    
+    public static void main(String [] argv){
+       SameFunctionMiddle x = new SameFunctionMiddle("");
+       x.divideByZero(1, 2); // The middle function
+    }
+    
+    public static int divideByZero(int x) {
+        int a = 1;
+        int b = 2;
+        a += b;
+        b += a;
+        a = a / 0;
+        b = a - x;
+        return x / 0;
+    }
+    
+    public static int divideByZero(int x, int y) { int a = x + y; return a / 0; }
+    
+    public static int divideByZero(int x, int y, int z) {
+        return x + y + z / 0; }
+}

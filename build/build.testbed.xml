@@ -49,6 +49,7 @@
   ``````````````````````````` -->
   <target name="clean">
 	  <delete dir="${project.path}/src-gen-umple" failonerror="false"/>
+    <delete dir="${project.path}/test/cruise/compiler/src-gen-umple" failonerror="false"/>
   </target>
 
 
@@ -77,6 +78,14 @@
     <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="testbed/src/TestHarness.ump"/>
     </java>
+
+    <apply executable="java" failonerror="true">
+      <arg value="-jar" />
+      <arg value="${dist.dir}/${dist.umple.jar}" />
+      <fileset dir="testbed/src/runtime">
+        <include name="*.ump" />
+      </fileset>
+    </apply>
 
     <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.8" target="1.8">
       <src path="${project.path}/src"/>

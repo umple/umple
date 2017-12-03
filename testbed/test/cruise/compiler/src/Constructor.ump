@@ -1,0 +1,15 @@
+generate Java "../src-gen-umple";
+
+class Constructor
+{
+    Integer a;
+    someString;
+    
+    public Constructor(Integer x, String s) {
+        someString = "";
+        for (int i = 0; i < x; i ++) {
+            someString += s;
+        }
+        a = s;
+    }
+}
