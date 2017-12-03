@@ -94,10 +94,6 @@ class ExceptionDumper {
     }
     System.err.println("Exception "+ex.getClass().getName()+" in");
 
-    // Uncomment the following line to use Java stack tracing without the debug
-    //Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(),ex);
-
-    // Comment out until the end of Block to avoid Umple line tracing
     StackTraceElement [] st = ex.getStackTrace();
     StackTraceElement ust = null;
     for (int i=0;i<st.length;i++) {
@@ -112,7 +108,6 @@ class ExceptionDumper {
         }
       }
     }
-    // End of block to translate a stack trace to Umple
   }
   
     // Translate the java stack trace line information into the corresponding Umple line
