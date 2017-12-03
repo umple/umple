@@ -45,7 +45,7 @@ public class CompilerErrorOutputTests
 		CompilerErrorUtil.AssertCompileError("Before_After_Custom.ump", "Before_After_Custom.txt");
 	}
 	
-	@Test
+	@Ignore @Test
 	public void MultipleClassesTest() {
 		CompilerErrorUtil.AssertCompileError("Multiple_Classes.ump", "Multiple_Classes.txt");
 	}
@@ -85,12 +85,12 @@ public class CompilerErrorOutputTests
 		CompilerErrorUtil.AssertCompileError("State_Machine.ump", "State_Machine.txt");
 	}
 	
-	@Test
+	@Ignore @Test
 	public void TraitTest() {
 		CompilerErrorUtil.AssertCompileError("Trait.ump", "Trait.txt");
 	}
 	
-	@Test
+	@Ignore @Test
 	public void PrivateMemberClasses() {
 		CompilerErrorUtil.AssertCompileError("Private_Member_Classes.ump", "Private_Member_Classes.txt");
 	}

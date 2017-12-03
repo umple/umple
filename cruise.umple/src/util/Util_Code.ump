@@ -183,12 +183,6 @@ class ExceptionDumper {
       Integer umpleSourceLineFunction = null;
       Integer umpleSourceJavaLineFunction = null;
       
-      // A function with an error in it after an inject statement cannot be easily distinguished
-      // We need to keep track of the old line numbers in case an inject finishes and we haven't found the error
-      String umpleSourceFileFunction = null;
-      Integer umpleSourceLineFunction = null;
-      Integer umpleSourceJavaLineFunction = null;
-      
       boolean isInMain = false;
       boolean firstBraceFound = false;
       int braces = 0;
