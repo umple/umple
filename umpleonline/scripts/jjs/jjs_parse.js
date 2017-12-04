@@ -385,6 +385,25 @@ var JJSdiagram = {
 			}
 		});
 
+		jQuery('#buttonPhotoReady').change(function () {
+			if (this.checked){
+				jQuery('.html-element button.delete').css('visibility', 'hidden');
+				jQuery('img#classIcon').css('visibility', 'hidden');
+				jQuery('img.edit').css('visibility', 'hidden');
+				jQuery('img.deleteAttr').css('visibility', 'hidden');
+				jQuery('img.deleteMet').css('visibility', 'hidden');
+				jQuery('.attributInput input').prop('placeholder', '');
+				jQuery('.methodInput input').prop('placeholder', '');
+			}else{
+				jQuery('img#classIcon').css('visibility', 'visible');
+				jQuery('img.edit').css('visibility', 'visible');
+				jQuery('img.deleteAttr').css('visibility', 'visible');
+				jQuery('img.deleteMet').css('visibility', 'visible');
+				jQuery('.attributInput input').prop('placeholder', 'Add More');
+				jQuery('.methodInput input').prop('placeholder', 'Add More');
+			}
+		});
+
 
 	},
 

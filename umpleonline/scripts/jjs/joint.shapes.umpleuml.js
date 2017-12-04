@@ -74,6 +74,11 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             this.$box.find('#classIcon')[0].style.background = "#ff0000";
         }
 
+        //hidden class Icon when photo ready checked
+        if (jQuery('#buttonPhotoReady').prop('checked')){
+			jQuery('img#classIcon').css('visibility', 'hidden');
+		}
+
         //Prevent paper from handling pointerdown.
 		this.$box.find('input').on('mousedown click', function (e) {
 			e.stopPropagation();
@@ -473,6 +478,13 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
             //add an extra empty one
             this.addAttributeBox(i);
+
+            if (jQuery('#buttonPhotoReady').prop('checked')){
+				jQuery('img#classIcon').css('visibility', 'hidden');
+				jQuery('img.edit').css('visibility', 'hidden');
+				jQuery('img.deleteAttr').css('visibility', 'hidden');
+				jQuery('.attributInput input').prop('placeholder', '');
+			}
         }
     },
 
@@ -489,6 +501,13 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             }
             this.addMethodBox(i);
         }
+
+        if (jQuery('#buttonPhotoReady').prop('checked')){
+			jQuery('img#classIcon').css('visibility', 'hidden');
+			jQuery('img.edit').css('visibility', 'hidden');
+			jQuery('img.deleteMet').css('visibility', 'hidden');
+			jQuery('.methodInput input').prop('placeholder', '');
+		}
     },
 
     resetBoxsize: function () {
