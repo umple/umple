@@ -12,9 +12,9 @@ import java.io.BufferedReader;
 public class CompilerErrorUtil
 {
 	static String UMPLE_ROOT = "../";
-	static String SOURCE_FOLDER = UMPLE_ROOT + "testbed/test/cruise/compiler/src/";
-	static String EXPECTED_FOLDER = UMPLE_ROOT + "testbed/test/cruise/compiler/expected/";
-	static String UMPLE_JAR = UMPLE_ROOT + "dist/umple.jar";
+	static String SOURCE_FOLDER = (UMPLE_ROOT + "testbed/test/cruise/compiler/src/").replaceAll("/", File.separator);
+	static String EXPECTED_FOLDER = (UMPLE_ROOT + "testbed/test/cruise/compiler/expected/").replaceAll("/", File.separator);
+	static String UMPLE_JAR = (UMPLE_ROOT + "dist/umple.jar").replaceAll("/", File.separator);
 	
 	public static void AssertCompileError(String umpleFile, String expectedOutputFile) {
 		// Construct a sub-process to build the umple file and compile the resulting Java

@@ -20,6 +20,7 @@
   <property name="showJunitOutput" value="false"/>
   <property name="junit" value="*Test"/>
   <property name="rake_cmd" value="rake"/>
+  <property name="excludeCompilerErrorOutput" value="true"/>
 
   <import file="_versionNew.xml" />
 
