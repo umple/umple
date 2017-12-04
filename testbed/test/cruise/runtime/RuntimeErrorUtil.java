@@ -14,8 +14,8 @@ import java.io.BufferedReader;
 public class RuntimeErrorUtil
 {
 	static String UMPLE_ROOT = "../";
-	static String SOURCE_FOLDER = UMPLE_ROOT + "testbed/bin/";
-	static String EXPECTED_FOLDER = UMPLE_ROOT + "testbed/test/cruise/runtime/expected/";
+	static String SOURCE_FOLDER = (UMPLE_ROOT + "testbed/bin/").replaceAll("/", File.separator);
+	static String EXPECTED_FOLDER = (UMPLE_ROOT + "testbed/test/cruise/runtime/expected/").replaceAll("/", File.separator);
 	static String PACKAGE_NAME = "cruise.runtime.";
 
 	public static void AssertRuntimeError(String javaClass, String expectedOutputFile) {
