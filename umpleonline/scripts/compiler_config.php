@@ -37,12 +37,20 @@ if(strpos($PATH, "/usr/local/bin") == FALSE){
 }
 putenv("PATH=$PATH");
 
+// If we don't set the default timezone we get E_NOTICEs
+date_default_timezone_set('UTC');
+
 // Trick to find the root directory of this copy of UmpleOnline
 // Assumes this script lives in /scripts; if you move this file it
 // will need to change.
-$rootDir = dirname(__DIR__);
+$rootDirGlobal = dirname(__DIR__);
+function rootDir(){
+    global $rootDirGlobal;
+    return $rootDirGlobal;
+}
 
 class ReadOnlyDataHandle{
+    protected $root;
     function __construct($root){
         $this->root = $root;
     }
@@ -94,14 +102,14 @@ class WorkDir{
     function makePermalink($path){
         // assumes the server root is umpleonline/
         $localpath = $this->root.'/'.$path;
-        $serverpath = substr($localpath, strrpos($localpath, 'umpleonline'));
+        $serverpath = substr($localpath, strlen(rootDir()));
         return $serverpath;
     }
 }
 
 class DataStore{
-    function __contruct($root){
-        $this->root = $rootDir.'/'.$root;
+    function __construct($root){
+        $this->root = rootDir().'/'.$root;
     }
     function createData($prefix = 'tmp'){
         while(true)
@@ -131,11 +139,15 @@ class DataStore{
     }
 }
 
-$dataStore = new DataStore('ump');
+$globalDataStore = new DataStore('ump');
+function dataStore(){
+    global $globalDataStore;
+    return $globalDataStore;
+}
 
 // converts an example filename to a full path
 function getExamplePath($example){
-    return $rootDir.'/ump/'.$example;
+    return rootDir().'/ump/'.$example;
 }
 
 $uiguDir="";
@@ -289,14 +301,14 @@ function getOrCreateDataHandle(){
     if(isset($_REQUEST['filename'])){
         $modelId = dirname($_REQUEST['filename']);
         $filename= basename($_REQUEST['filename']);
-        $dataHandle = $dataStore->readData($modelId);
+        $dataHandle = dataStore()->openData($modelId);
         if($dataHandle){
             return array($filename, $dataHandle);
         }
     }else{
         $filename = 'model.ump';
     }
-    $dataHandle = $dataStore->createData();
+    $dataHandle = dataStore()->createData();
     return array($filename, $dataHandle);
 }
 
@@ -305,10 +317,10 @@ function extractFilename()
     // If the argument is model=X, then load that saved tmp or bookmarked model
     if (isset($_REQUEST["model"]))
     {
-        $dataHandle = $dataStore->openData($_REQUEST['model']);
+        $dataHandle = dataStore()->openData($_REQUEST['model']);
         // if the model does not exist, create one containing an error message
         if(!$dataHandle){
-            $dataHandle = $dataStore->createData();
+            $dataHandle = dataStore()->createData();
             $dataHandle->writeData('model.ump', "// Saved URL ending in " . $_REQUEST["model"] . " cannot be found");
         }else{
             if($dataHandle->hasData('readonlylock.txt')){
@@ -318,7 +330,7 @@ function extractFilename()
                 // be overwritten if the argument &overwrite=yes is supplied
                 if (!$_REQUEST["overwrite"] == "yes") {
                     $readOnly = true;
-                    $dataHandleCopy = $dataStore->createData();
+                    $dataHandleCopy = dataStore()->createData();
                     $dataHandleCopy->cloneFrom($dataHandle);
                     $dataHandle = $dataHandleCopy;
                 }
@@ -332,26 +344,28 @@ function extractFilename()
         if(!file_exists($fileToCopy)){
             $fileToCopy = getExamplePath('NullExample.ump');
         }
-        $dataHandle = $dataStore->createData();
+        $dataHandle = dataStore()->createData();
         $workDir = $dataHandle->getWorkDir();
         copy($fileToCopy, $workDir->getPath().'/model.ump');
         $workDir->saveModel();
     }
     elseif (isset($_REQUEST['text']) && $_REQUEST["text"] != "")
     {
-        $dataHandle = $dataStore->createData();
-        $dataHandle->writeData('model.ump', urldecode(urldecode($_REQUEST["text"]));
+        $dataHandle = dataStore()->createData();
+        $dataHandle->writeData('model.ump', urldecode(urldecode($_REQUEST["text"])));
     }
     // Starting from scratch; so simply create a blank model
     elseif (!isset($_REQUEST['filename']) || $_REQUEST["filename"] == "")
     {
-        $dataHandle = $dataStore->createData();
+        $dataHandle = dataStore()->createData();
+        $dataHandle->writeData('model.ump', '');
     }
 
     // The only other option is that there is a filename option
     else
     {
-        $dataHandle = $dataStore->createData();
+        $dataHandle = dataStore()->createData();
+        $dataToWrite = '';
         if(!substr($_REQUEST["filename"],-4)==".ump") {
             $dataToWrite = "// URL in filename argument must end in .ump and the initial http:// must be omitted";
         }
@@ -435,7 +449,7 @@ function showUserInterface($dataname, $dataHandle)
 
     chdir($tempDir);
 
-    $output = executeCommand("ant -DxmlFile={$rootDir}/scripts/JSFProvider/UmpleProject.xml -DumpleFile=model.ump -DoutputFolder=TempApp -DprojectName=umpleUIGU");
+    $output = executeCommand("ant -DxmlFile={rootDir()}/scripts/JSFProvider/UmpleProject.xml -DumpleFile=model.ump -DoutputFolder=TempApp -DprojectName=umpleUIGU");
 
     $didCompile = strpos($output,"BUILD SUCCESSFUL") > 0;
     if ($didCompile){
@@ -448,12 +462,12 @@ function showUserInterface($dataname, $dataHandle)
         //echo getcwd();
         $umpDir=dirname($tempDir);
         $tmp=basename($tempDir);
-        chdir($rootDir."/uigu");
+        chdir(rootDir()."/uigu");
         $uiguDir=getAvailableUIGUDirectory();
         //echo $uiguDir;
         emptyDir($uiguDir);
         //echo "$tempDir/TempProj";
-        chdir($rootDir);
+        chdir(rootDir());
         rcopy($tmp."/TempProj", $umpDir."/uigu/".$uiguDir);
 
         chdir($tmp);
@@ -606,7 +620,7 @@ function handleUmpleTextChange()
   $filename = $workDir->getPath().'/'.$dataname;
 
   $umpleOutput = executeCommand("java -jar umplesync.jar -{$action} \"{$actionCode}\" {$filename}", "-{$action} \"{$rawActionCode}\" {$filename}");
-  $handleData->writeData($dataname, $umpleOutput);
+  $dataHandle->writeData($dataname, $umpleOutput);
   echo $umpleOutput;
   return;
 }

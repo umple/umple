@@ -13,8 +13,8 @@ $tempModelId = $_REQUEST["model"];
 // The following creates a random numbered directory in ump
 // the result is ump/{dir}/model.ump
 date_default_timezone_set('UTC');
-$savedModelData = $dataStore->createData(date("ymd"));
-$tempModelData = $dataStore->readData($tempModelId);
+$savedModelData = dataStore()->createData(date("ymd"));
+$tempModelData = dataStore()->openData($tempModelId);
 
 $saveModelId = $savedModelData->getName();
 
@@ -22,25 +22,25 @@ $saveModelId = $savedModelData->getName();
 // and has just created a model.ump file, then this is an error.
 // It is also an error if an attempt is made to later on bookmark some
 // file that has long since been deleted
-if (!$saveModel->hasData('model.ump'))
+if (!$tempModelData || !$tempModelData->hasData('model.ump'))
 {
   header('HTTP/1.0 404 Not Found');
-  readfile('../404.shtml');
-  if(substr($tempModelId,0,3) == "tmp") {
-    $saveModelData->delete();
+  readfile(rootDir().'/404.shtml');
+  if(substr($tempModelId,0,3) == "tmp" && $tempModelData) {
+    $tempModelData->delete();
   }
-  $tempModelData->delete();
+  $savedModelData->delete();
   exit();
 }
 
-if (!is_file("ump/{$tempModelId}/model.ump.erroroutput"))
+if (!$tempModelData->hasData('model.ump.erroroutput'))
 {
   header('HTTP/1.0 412 Precondition Failed');
   echo "<html><head><title>Javascript Off</title></head><body><p>You cannot make a bookmarked page when JavaScript is turned off. Please turn it on.</p></body></html>";
   if(substr($tempModelId,0,3) == "tmp") {
     $tempModelData->delete();
   }
-  $saveModelData->delete();
+  $savedModelData->delete();
   exit();
 }
 

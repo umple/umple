@@ -8,7 +8,7 @@ require_once ("scripts/compiler_config.php");
 cleanupOldFiles();
 
 if (isset($_REQUEST["model"])) {
-  $dataHandle = $dataStore->readData($_REQUEST['model']);
+  $dataHandle = dataStore()->openData($_REQUEST['model']);
   if (!dataHandle) {
     header('HTTP/1.0 404 Not Found');
     readfile('../404.shtml');
@@ -140,9 +140,9 @@ $output = $dataHandle->readData('model.ump');
     <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span> 
   
     <?php if (isBookmark($dataHandle)) { ?>
-      <a id="topBookmarkable" href="umple.php?model=<?php echo dataHandle->getName() ?>">Changes at this URL are saved</a>
+      <a id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
     <?php } else { ?>
-      <a id="topBookmarkable" href="bookmark.php?model=<?php echo dataHandle->getName() ?>">Create Bookmarkable URL</a>
+      <a id="topBookmarkable" href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Create Bookmarkable URL</a>
     <?php } ?>
     
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>

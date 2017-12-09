@@ -81,7 +81,7 @@ else if (isset($_REQUEST["vmlCode"]))
 }
 else if (isset($_REQUEST["exampleCode"]))
 {
-  $filename = $rootDir."/ump/" . $_REQUEST["exampleCode"];
+  $filename = rootDir()."/ump/" . $_REQUEST["exampleCode"];
   $outputUmple = readTemporaryFile($filename);
   echo $outputUmple;
 }

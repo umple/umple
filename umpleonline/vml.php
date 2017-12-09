@@ -1,7 +1,7 @@
 <?php
 require_once ("scripts/compiler_config.php");
 cleanupOldFiles();
-$dataHandle = $dataStore->createData();
+$dataHandle = dataStore()->createData();
 $output = $dataHandle->readData('model.ump');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

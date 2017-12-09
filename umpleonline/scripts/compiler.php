@@ -36,14 +36,14 @@ if (isset($_REQUEST["save"]))
     {
       $filename = basename($_REQUEST['filename']);
       $modelId = dirname($_REQUEST['filename']);
-      $dataHandle = $dataStore->readData($modelId);
+      $dataHandle = dataStore()->openData($modelId);
       $dataHandle->writeData($filename, $input);
     }
     else
     {
       // this makes no sense, but mimic old behaviour for now
       $filename = 'model.ump';
-      $dataHandle = $dataStore->createData();
+      $dataHandle = dataStore()->createData();
       $dataHandle->writeData($filename, $input);
     }
     $workDir = $handleData->getWorkDir();
@@ -66,10 +66,9 @@ else if (isset($_REQUEST["load"]))
 {
   // extract the model ID and filename from the old-style path
   $filename = basename($_REQUEST["filename"]);
-  $modelId = dirname($_REQUEST["filename"]);
-  $dataHandle = $dataStore->readData($modelId);
+  $modelId = basename(dirname($_REQUEST["filename"]));
+  $dataHandle = dataStore()->openData($modelId);
   $outputUmple = $dataHandle->readData($filename);
-  $outputUmple = readTemporaryFile($filename);
   echo $outputUmple;
 }
 else if (isset($_REQUEST["action"]))
@@ -426,7 +425,7 @@ else if (isset($_REQUEST["umpleCode"]))
 }  // end request has umpleCode
 else if (isset($_REQUEST["exampleCode"]))
 {
-  $filename = $rootDir."/ump/" . $_REQUEST["exampleCode"];
+  $filename = rootDir()."/ump/" . $_REQUEST["exampleCode"];
   $outputUmple = readTemporaryFile($filename);
   echo $outputUmple;
 }
