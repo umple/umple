@@ -37,6 +37,83 @@ if(strpos($PATH, "/usr/local/bin") == FALSE){
 }
 putenv("PATH=$PATH");
 
+// Trick to find the root directory of this copy of UmpleOnline
+// Assumes this script lives in /scripts; if you move this file it
+// will need to change.
+$rootDir = dirname(__DIR__);
+
+class ReadOnlyDataHandle{
+	function __construct($root){
+		$this->root = $root;
+	}
+	function hasData($name){
+		return file_exists($this->root.'/'.$name);
+	}
+	function acquireWrite(){
+		$result = new DataHandle($this->root);
+		$this->root = NULL;
+		return $result;
+	}
+}
+
+class DataHandle extends ReadOnlyDataHandle{
+	function __construct($root){
+		$this->root = $root;
+	}
+	function delete(){
+		recursiveDelete($this->root);
+		$this->root = NULL;
+	}
+	function getWorkDir(){
+		return new WorkDir($this->root);
+	}
+	function cloneFrom($other){
+		copy($other->root.'/model.ump', $this->root.'/model.ump');
+	}
+}
+
+class WorkDir{
+	function __construct($root){
+		$this->root = $root;
+	}
+	function getPath(){
+		return $this->root;
+	}
+	function makePermalink($path){
+    	// assumes the server root is umpleonline/
+    	$localpath = $this->root.'/'.$path;
+    	$serverpath = substr($localpath, strrpos($localpath, 'umpleonline'));
+    	return $serverpath;
+	}
+}
+
+class DataStore{
+	function __contruct($root){
+		$this->root = $rootDir.'/'.$root;
+	}
+	function createData($prefix = NULL){		
+        while(true)
+        {
+            $id = rand(0,999999);
+            $dirname = "{$this->root}/{$prefix}{$id}";
+            if (!file_exists($dirname))
+            {
+                mkdir($dirname);
+                return new DataHandle($dirname);
+            }
+        }
+	}
+	function openData($name){
+		if(file_exists($this->root.'/'.$name)){
+			return new DataHandle($this->root.'/'.$name);
+		}else{
+			return NULL;
+		}
+	}
+}
+
+$dataStore = new DataStore('ump');
+
 $uiguDir="";
 
 function getUIGUDir() {
