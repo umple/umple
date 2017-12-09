@@ -34,24 +34,41 @@ if (isset($_REQUEST["save"]))
 
     if(isset($_REQUEST["filename"]))
     {
-      $filename = saveFile($input, ensureFullPath($_REQUEST["filename"]));
+      $filename = basename($_REQUEST['filename']);
+      $modelId = dirname($_REQUEST['filename']);
+      $dataHandle = $dataStore->readData($modelId);
+      $dataHandle->writeData($filename, $input);
     }
     else
     {
-      $filename = saveFile($input);
+      // this makes no sense, but mimic old behaviour for now
+      $filename = 'model.ump';
+      $dataHandle = $dataStore->createData();
+      $dataHandle->writeData($filename, $input);
     }
+    $workDir = $handleData->getWorkDir();
+    // it will inserted into an href, so we should actually permalink
+    // the resulting file
+    echo $workDir->makePermalink($filename);
   }
   else
   {
     $input = $_REQUEST["umpleCode"];
-    $filename = saveFile($input);
+    list($dataname, $dataHandle) = getOrCreateDataHandle();
+    $dataHandle->writeData($dataname, $input);
+    // pretend this is still the old system and mimic the kind of path
+    // the JavaScript expects
+    echo '../ump/'.$dataHandle->getName().'/'.$dataname;
   }
   
-  echo $filename;
 }
 else if (isset($_REQUEST["load"]))
 {
-  $filename = $_REQUEST["filename"];
+  // extract the model ID and filename from the old-style path
+  $filename = basename($_REQUEST["filename"]);
+  $modelId = dirname($_REQUEST["filename"]);
+  $dataHandle = $dataStore->readData($modelId);
+  $outputUmple = $dataHandle->readData($filename);
   $outputUmple = readTemporaryFile($filename);
   echo $outputUmple;
 }
@@ -133,41 +150,57 @@ else if (isset($_REQUEST["umpleCode"]))
   }
   if ($language == "Simulate")
   {
-    $filename = saveFile("generate Php \"./\" --override-all;\n" . $input);
+    list($dataname, $dataHandle) = getOrCreateDataHandle();
+    $dataHandle->writeData($dataname, "generate Php \"./\" --override-all;\n" . $input);
+    $workDir = $dataHandle->getWorkDir();
+    $filename = $workDir->getPath().'/'.$dataname;
     executeCommand("java -jar umple.jar {$filename}");
-    $filename = saveFile("generate Simulate \"./\" --override-all;\n" . $input);
+    $workDir->saveModel();
+    
+    $dataHandle->writeData($dataname, "generate Simulate \"./\" --override-all;\n" . $input);
+    $workDir = $dataHandle->getWorkDir();
+    $filename = $workDir->getPath().'/'.$dataname;
     executeCommand("java -jar umple.jar {$filename}");
+    $workDir->saveModel();
     // Restore file so it doesn't have the 'generate' command in front
-    saveFile($input);
-    $modelId = getFilenameId($filename);
-    echo $modelId;
+    $dataHandle->writeData($dataname, $input);
+    echo $dataHandle->getName();
     return;
   }
   elseif ($uigu)
   {
-  $filename = saveFile($input);
-  showUserInterface($filename);
-/*	chdir("JSFProvider");
-	if (file_exists("JSFProvider/model.ump"))
-	  unlink("JSFProvider/model.ump");
+    list($dataname, $dataHandle) = getOrCreateDataHandle();
+    $dataHandle->writeData($dataname, $input);
+    $workDir = showUserInterface($dataname, $dataHandle);
+/*  chdir("JSFProvider");
+    if (file_exists("JSFProvider/model.ump"))
+      unlink("JSFProvider/model.ump");
     copy("$filename", "JSFProvider/model.ump");
-	executeCommand("java -cp GUIModel.jar;JSFProvider.jar;GUIGenerator.jar cruise.generator.UIGU UmpleProject.xml model.ump TempDir TempApp");*/
+    executeCommand("java -cp GUIModel.jar;JSFProvider.jar;GUIGenerator.jar cruise.generator.UIGU UmpleProject.xml model.ump TempDir TempApp");*/
   }
 
   else if ($htmlContents) {
-    $filename = saveFile($input);
+    list($dataname, $dataHandle) = getOrCreateDataHandle();
+    $dataHandle->writeData($dataname, $input);
+    $workDir = $dataHandle->getWorkDir();
+    $filename = $workDir->getPath().'/'.$dataname;
+    // note: this does not create the error output in the working directory, and likely never did
     $errorFilename = "{$filename}.erroroutput";
     $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
-    $errors = getErrorHtml($errorFilename, 0);    
+    $errors = getErrorHtml($errorFilename, 0);
     if($outputErr == "true")
- 	  echo $errors . "<p>URL_SPLIT";
+      echo $errors . "<p>URL_SPLIT";
+    $workDir->saveModel();
     echo $sourceCode;
     return;      
   } // end html content      
 
   elseif (!in_array($language,array("Php","Java","Ruby","RTCpp","Cpp","Sql","GvStateDiagram","GvClassDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
-    $filename = saveFile($input);
+    list($dataname, $dataHandle) = getOrCreateDataHandle();
+    $dataHandle->writeData($dataname, $input);
+    $workDir = $dataHandle->getWorkDir();
+    $filename = $workDir->getPath().'/'.$dataname;
     $errorFilename = "{$filename}.erroroutput";
     
     if ($language == "Experimental-Cpp" || $language == "Experimental-Sql") {
@@ -184,8 +217,9 @@ else if (isset($_REQUEST["umpleCode"]))
     }
     
     if($outputErr == "true")
-    	echo $errors ."<p>URL_SPLIT";
-    	
+        echo $errors ."<p>URL_SPLIT";
+
+    $workDir->saveModel();
     echo $sourceCode;
     return;
   }
@@ -193,7 +227,10 @@ else if (isset($_REQUEST["umpleCode"]))
   if (!$uigu)
   { // NOTuigu
   // Generate the Java, PHP, RTCpp, Ruby, Cpp or Sql and put it into the right directory
-  $filename = saveFile("generate {$language} \"./{$language}/\" --override-all;\n" . $input);
+  list($dataname, $dataHandle) = getOrCreateDataHandle();
+  $dataHandle->writeData($dataname, "generate {$language} \"./{$language}/\" --override-all;\n" . $input);
+  $workDir = $dataHandle->getWorkDir();
+  $filename = $workDir->getPath().'/'.$dataname;
   
   $outputFilename = "{$filename}.output";
   $errorFilename = "{$filename}.erroroutput";
@@ -220,13 +257,14 @@ else if (isset($_REQUEST["umpleCode"]))
   }
   // Took off 1> {$outputFilename}  in two commands above
   $resultFromCommand = executeCommand($command);
-  saveFile($resultFromCommand,$outputFilename);
+
+  $dataHandle->writeData(basename($outputFilename), $resultFromCommand);
   //exec("( ulimit -t 10; " . $command . ")");
   
   // Restore file so it doesn't have the 'generate' command in front
-  saveFile($input);
+  $dataHandle->writeData($dataname, $input);
   
-  $sourceCode = readTemporaryFile($outputFilename);
+  $sourceCode = $resultFromCommand;
   
   $sourceCode = str_replace("<?php","",$sourceCode);
   $sourceCode = str_replace("?>","",$sourceCode);
@@ -257,9 +295,8 @@ else if (isset($_REQUEST["umpleCode"]))
     if ($javadoc)
     {
        $thedir = dirname($outputFilename);
-       $theurldir = "ump/" . basename($thedir);
        exec("rm -rf " . $thedir . "/javadoc");
-       
+
         $command = "javadoc -d " . $thedir . "/javadoc -footer \"Generated by Umple\" " ;
               
       foreach (glob("$thedir/{$language}/*/*/*/*.java") as $afile) {
@@ -281,8 +318,10 @@ else if (isset($_REQUEST["umpleCode"]))
        exec($command);
        exec("cd $thedir; rm javadocFromUmple.zip; zip -r javadocFromUmple javadoc");
        
-       $html = "<a href=\"umpleonline/$thedir/javadocFromUmple.zip\">Download the following as a zip file</a>&nbsp;{$errhtml}
-      <iframe width=100% height=1000 src=\"" . $theurldir . "/javadoc/\">This browser does not
+       $javadocdir = $workDir->makePermalink('javadoc/');
+       $javadoczip = $workDir->makePermalink('javadocFromUmple.zip');
+       $html = "<a href=\"{$javadoczip}\">Download the following as a zip file</a>&nbsp;{$errhtml}
+      <iframe width=100% height=1000 src=\"" . $javadocdir . "/javadoc/\">This browser does not
       support iframes, so the javadoc cannot be displayed</iframe> 
      ";
        echo $html;
@@ -293,14 +332,15 @@ else if (isset($_REQUEST["umpleCode"]))
       exec("rm -rf " . $thedir . "/stateDiagram.svg");
       $command = "dot -Tsvg -Gdpi=63 " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg"; 
       exec($command);
-			if (!file_exists($thedir . "/stateDiagram.svg") && file_exists("doterr.svg"))
-			{
-				exec("cp " . "./doterr.svg " . $thedir . "/stateDiagram.svg");
-			}
-      $svgcode= readTemporaryFile("{$thedir}/stateDiagram.svg");      
-      $html = "<a href=\"umpleonline/$thedir/model.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/stateDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+            if (!file_exists($thedir . "/stateDiagram.svg") && file_exists("doterr.svg"))
+            {
+                exec("cp " . "./doterr.svg " . $thedir . "/stateDiagram.svg");
+            }
+      $svgcode = readTemporaryFile("{$thedir}/stateDiagram.svg");
+      $svglink = $workDir->makePermalink('stateDiagram.svg');
+      $html = "<a href=\"umpleonline/$thedir/model.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
-      echo $html;      
+      echo $html;
       echo $svgcode;
       echo "</svg>"; 
     } // end state diagram
@@ -310,12 +350,14 @@ else if (isset($_REQUEST["umpleCode"]))
       exec("rm -rf " . $thedir . "/classDiagram.svg");
       $command = "dot -Tsvg -Gdpi=63 " . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/classDiagram.svg";
       exec($command);
-			if (!file_exists($thedir . "/classDiagram.svg") && file_exists("doterr.svg"))
-			{
-				exec("cp " . "./doterr.svg " . $thedir . "/classDiagram.svg");
-			}
-      $svgcode= readTemporaryFile("{$thedir}/classDiagram.svg");
-      $html = "<a href=\"umpleonline/$thedir/model" . $generatorType . ".gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/classDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+            if (!file_exists($thedir . "/classDiagram.svg") && file_exists("doterr.svg"))
+            {
+                exec("cp " . "./doterr.svg " . $thedir . "/classDiagram.svg");
+            }
+      $svgcode = readTemporaryFile("{$thedir}/classDiagram.svg");
+      $gvlink = $workDir->makePermalink('model'.$generatorType.'.gv');
+      $svglink = $workDir->makePermalink('classDiagram.svg');
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       echo $svgcode;
@@ -331,8 +373,10 @@ else if (isset($_REQUEST["umpleCode"]))
       {
         exec("cp " . "./doterr.svg " . $thedir . "/entityRelationshipDiagram.svg");
       }
-      $svgcode= readTemporaryFile("{$thedir}/entityRelationshipDiagram.svg");
-      $html = "<a href=\"umpleonline/$thedir/modelerd.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/entityRelationshipDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      $svgcode = readTemporaryFile("{$thedir}/entityRelationshipDiagram.svg");
+      $gvlink = $workDir->makePermalink('modelerd.gv');
+      $erdiagramlink = $workDir->makePermalink('entityRelationshipDiagram.svg');
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$erdiagramlink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       echo $svgcode;
@@ -344,7 +388,8 @@ else if (isset($_REQUEST["umpleCode"]))
       exec("rm -rf " . $thedir . "/yuml.txt");
       $command = "cp " . $thedir . "/model.ump.output " . $thedir .  "/yuml.txt";
       exec($command);
-      $html = "<a href=\"umpleonline/$thedir/yuml.txt\">Download the Yuml text for the following</a>&nbsp;{$errhtml}";
+      $yumllink = $workDir->makePermalink('yuml.txt');
+      $html = "<a href=\"$yumllink\">Download the Yuml text for the following</a>&nbsp;{$errhtml}";
       if ($sourceCode != "null") {
         $html = $html . "
           <iframe width=100% height=500 src=\"http://yuml.me/diagram/class/" . $sourceCode . "\">This browser does not
@@ -355,29 +400,33 @@ else if (isset($_REQUEST["umpleCode"]))
 
     else // This is where the Java, PHP and other output is placed on the screen
     {
-	   exec("cd $thedir; rm {$language}FromUmple.zip; zip -r {$language}FromUmple {$language}");
-	   echo "<a href=\"umpleonline/$thedir/{$language}FromUmple.zip\" class=\"zipDownloadLink\">Download the following as a zip file</a>&nbsp;{$errhtml}<p>URL_SPLIT";
+       exec("cd $thedir; rm {$language}FromUmple.zip; zip -r {$language}FromUmple {$language}");
+       $archivelink = $workDir->makePermalink($language.'FromUmple.zip');
+       echo "<a href=\"$archivelink\" class=\"zipDownloadLink\">Download the following as a zip file</a>&nbsp;{$errhtml}<p>URL_SPLIT";
        echo $sourceCode;
     }
   }
   } // end not UIGU
   else
   {  // is UIGU
-	$thedir = dirname($filename);
-	$theurldir = "ump/" . basename($thedir);
-	$errorFilename = "{$filename}.erroroutput";
-	$errhtml = getErrorHtml($errorFilename);
-	$rnd=substr(basename($thedir), 3);
-	$uiguDir=file_get_contents("uigudir.txt");
-	$html = "<a href=\"$theurldir/umpleUIGU.war\">Download the generated application as web archive (WAR) file.</a>&nbsp;{$errhtml}
-	  <iframe width=100% height=300 src='$theurldir/'></iframe>
-	 ";
-	 echo $html;
+    // variables here come from the uigu clause in the previous if statement
+    // for all relative paths we assume we are chdir'd into a specific directory by showUserInterface
+    $theurldir = $workDir->getPath();
+    $filename = $theurldir.'/'.$dataname;
+    $errorFilename = "{$filename}.erroroutput";
+    $errhtml = getErrorHtml($errorFilename);
+    $uiguDir=file_get_contents("uigudir.txt");
+    $uiguIframe = $workDir->makePermalink('');
+    $warlink = $workDir->makePermalink('umpleUIGU.war');
+    $html = "<a href=\"$warlink\">Download the generated application as web archive (WAR) file.</a>&nbsp;{$errhtml}
+      <iframe width=100% height=300 src='$uiguIframe/'></iframe>
+     ";
+     echo $html;
   }
 }  // end request has umpleCode
 else if (isset($_REQUEST["exampleCode"]))
 {
-  $filename = "../ump/" . $_REQUEST["exampleCode"];
+  $filename = $rootDir."/ump/" . $_REQUEST["exampleCode"];
   $outputUmple = readTemporaryFile($filename);
   echo $outputUmple;
 }
@@ -403,7 +452,7 @@ else
 
 function getErrorHtml($errorFilename, $offset = 1) 
 {
-	
+    
   $errorMessage = readTemporaryFile($errorFilename);
 
   if($errorMessage != "") 
@@ -415,34 +464,34 @@ function getErrorHtml($errorFilename, $offset = 1)
      
      if($errInfo == null)
      {
-     	$errhtml .= "Couldn't read results from the Umple compiler!";
+        $errhtml .= "Couldn't read results from the Umple compiler!";
      }
      else
      {
-     	$results = $errInfo["results"];
-     	
-     	
-     	foreach($results as $result)
-     	{
-     		$url = $result["url"];
-     		$line = intval($result["line"]) - $offset; 
-     		$errorCode = $result["errorCode"];
-     		$severityInt = intval($result["severity"]);
-     		if($severityInt > 2) {
-     		  $severity = "Warning";
-     		  $textcolor = "<font color=\"black\">";
-     		}
-     		else
-     		{
-     		  $severity = "Error";
-     		  $textcolor = "<font color=\"red\">";
-     		}
-     		$msg = htmlspecialchars($result["message"]);
-     		     		
-     		$errhtml .= $textcolor." {$severity} on <a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a> : {$msg}.</font> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
-     	}
+        $results = $errInfo["results"];
+        
+        
+        foreach($results as $result)
+        {
+            $url = $result["url"];
+            $line = intval($result["line"]) - $offset; 
+            $errorCode = $result["errorCode"];
+            $severityInt = intval($result["severity"]);
+            if($severityInt > 2) {
+              $severity = "Warning";
+              $textcolor = "<font color=\"black\">";
+            }
+            else
+            {
+              $severity = "Error";
+              $textcolor = "<font color=\"red\">";
+            }
+            $msg = htmlspecialchars($result["message"]);
+                        
+            $errhtml .= $textcolor." {$severity} on <a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a> : {$msg}.</font> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
+        }
      }
- 	
+    
      $errhtml .= "</div>";
         
      $errhtml .= "<script type=\"text/javascript\">jQuery(\"#errorClick\").click(function(a){a.preventDefault();jQuery(\"#errorRow\").toggle();});</script>";
