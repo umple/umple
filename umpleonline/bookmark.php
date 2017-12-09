@@ -13,24 +13,23 @@ $tempModelId = $_REQUEST["model"];
 // The following creates a random numbered directory in ump
 // the result is ump/{dir}/model.ump
 date_default_timezone_set('UTC');
-$savedModel = nextFilename("ump",date("ymd"));
+$savedModelData = $dataStore->createData(date("ymd"));
+$tempModelData = $dataStore->readData($tempModelId);
 
-$saveModelId = extractModelId($savedModel);
-
-$filename = "ump/{$tempModelId}/model.ump";
+$saveModelId = $savedModelData->getName();
 
 // If boomkarking is being attempted by a crawler that has no javascript
 // and has just created a model.ump file, then this is an error.
 // It is also an error if an attempt is made to later on bookmark some
 // file that has long since been deleted
-if (!is_file($filename))
+if (!$saveModel->hasData('model.ump'))
 {
   header('HTTP/1.0 404 Not Found');
   readfile('../404.shtml');
   if(substr($tempModelId,0,3) == "tmp") {
-    recursiveDelete("ump/{$tempModelId}");
+    $saveModelData->delete();
   }
-  recursiveDelete("ump/{$saveModelId}");
+  $tempModelData->delete();
   exit();
 }
 
@@ -39,15 +38,16 @@ if (!is_file("ump/{$tempModelId}/model.ump.erroroutput"))
   header('HTTP/1.0 412 Precondition Failed');
   echo "<html><head><title>Javascript Off</title></head><body><p>You cannot make a bookmarked page when JavaScript is turned off. Please turn it on.</p></body></html>";
   if(substr($tempModelId,0,3) == "tmp") {
-    recursiveDelete("ump/{$tempModelId}");
+    $tempModelData->delete();
   }
-  recursiveDelete("ump/{$saveModelId}");
+  $saveModelData->delete();
   exit();
 }
 
-rename("ump/{$tempModelId}/model.ump","{$savedModel}");
+$savedModelData->cloneFrom($tempModelData);
 
 // Empty anything else in directory and remove it
-recursiveDelete("ump/{$tempModelId}");
+$tempModelData->delete();
 
 header("Location: umple.php?model={$saveModelId}");
+
