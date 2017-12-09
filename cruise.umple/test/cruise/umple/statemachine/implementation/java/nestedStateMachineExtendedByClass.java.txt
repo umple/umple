@@ -382,7 +382,10 @@ public class Animal extends ThingInWorld
     }
     World placeholderWorld = world;
     this.world = null;
-    placeholderWorld.removeAnimal(this);
+    if(placeholderWorld != null)
+    {
+      placeholderWorld.removeAnimal(this);
+    }
     super.delete();
   }
 

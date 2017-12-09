@@ -1,0 +1,54 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.26.1-33ee578d5-3609 modeling language!*/
+
+package example;
+
+// line 1 "../1161.ump"
+public class D
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //D Associations
+  private C c;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public D(C aC)
+  {
+    if (aC == null || aC.getMyD() != null)
+    {
+      throw new RuntimeException("Unable to create D due to aC");
+    }
+    c = aC;
+  }
+
+  public D(B aBForC)
+  {
+    c = new C(this, aBForC);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public C getC()
+  {
+    return c;
+  }
+
+  public void delete()
+  {
+    C existingC = c;
+    c = null;
+    if (existingC != null)
+    {
+      existingC.delete();
+    }
+  }
+
+}

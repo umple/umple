@@ -263,4 +263,13 @@ public class JavaClassTemplateTest extends ClassTemplateTest
         "java/TestUmpleEnumerations_8.java.txt",
         "A");
   }
+  
+  @Test
+  public void CascadeDelete()
+  {
+    assertUmpleTemplateFor("CascadeDelete.ump","java/CascadeDeleteB.java.txt","B");
+    assertUmpleTemplateFor("CascadeDelete.ump","java/CascadeDeleteC.java.txt","C");
+    assertUmpleTemplateFor("CascadeDelete.ump","java/CascadeDeleteD.java.txt","D");    
+  }
+  
 }
