@@ -68,22 +68,16 @@ var JJSdiagram = {
 	},
 
 	setPaperListener: function () {
-		//element click event
+
 		this.paper.on('cell:pointerclick',
 			function (cellView, evt, x, y) {
 				Action.selectClass(cellView.model.get('name')[0]);
-
-				if (Page.useJointJSClassDiagram && jQuery('.html-element button.delete').css('visibility') === 'hidden') {
-					jQuery('.html-element button.delete').css('visibility', 'visible');
-				}
-				else if (Page.useJointJSClassDiagram) {
-					jQuery('.html-element button.delete').css('visibility', 'hidden');
-				}
 			}
 		);
 
 		this.paper.on('cell:pointerdown',
 			function (cellView, evt, x, y) {
+
 				if (JJSdiagram.diagram_type === "UMLclass") {
 					var cellPosition = cellView.model.get('position');
 					// Make sure the user has clicked on a cellView (and not a transition)
@@ -196,8 +190,23 @@ var JJSdiagram = {
 			JJSdiagram.newClassIndex++;
 			var x = e.clientX;
 			var y = e.clientY;
+			var canvas = jQuery("#jjsPaper");
+
+			//remove all other selected item, hidden delete button
+			var selectedItem = format("div.palette li.selected");
+			jQuery(selectedItem).removeClass("selected");
+
+			jQuery('.html-element button.delete').css('visibility', 'hidden');
+
+			canvas.find("div.html-element").fadeTo(1,1);
+
+
 			if (Page.useJointJSClassDiagram) {
-				jQuery('body').append('<div id="flyPaper" style="position:fixed;z-index:100;opacity:.5;pointer-event:none;"></div>');
+
+				var EvenTarget = jQuery(e.target);
+				$(EvenTarget).addClass("selected");
+
+				jQuery('body').append('<div id="flyPaper" style="position:fixed;z-index:100;opacity:.5;pointer-events:none;"></div>');
 				var flyGraph = new joint.dia.Graph,
 					flyPaper = new joint.dia.Paper({
 						el: jQuery('#flyPaper'),
@@ -244,7 +253,9 @@ var JJSdiagram = {
 						s.position(x - target.left - offset.x, y - target.top - offset.y);
 						JJSdiagram.paper.model.addCell(s);
 						JJSdiagram.makeUmpleCodeFromClass('addNewClass', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), s.id));
+
 					}
+					$(EvenTarget).removeClass("selected");
 					jQuery('body').off('mousemove.fly').off('mouseup.fly');
 					flyShape.remove();
 					jQuery('#flyPaper').remove();
@@ -254,58 +265,146 @@ var JJSdiagram = {
 
 		jQuery('#buttonAddAssociation').off('click').on('click.fly', function (e) {
 			if (Page.useJointJSClassDiagram) {
+				var EvenTarget = jQuery(e.target);
 				var clickcount = 0;
-				var associationId;
+				var canvas = jQuery("#jjsPaper");
 
-				//paper listener
-				JJSdiagram.paper.off('cell:pointerclick').on('cell:pointerclick', function (cellView, evt, x, y) {
-					clickcount++;
-					if (clickcount === 1) {
-						associationId = cellView.model.id
-					}
-					if (clickcount === 2) {
-						var link = new uml.Association({
-							source: { id: associationId },
-							target: { id: cellView.model.id },
-							labels: [
-								{ position: .05, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } },
-								{ position: .95, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } }
-							],
-							vertices: JJSdiagram.setAssociationPathVertices(associationId, cellView.model.id),
-							umplename: "umpleAssociation_" + JJSdiagram.associationIndex
-						});
-						link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
-						JJSdiagram.paper.model.addCell(link);
-						JJSdiagram.makeUmpleCodeFromAssociation('addJjsAssociation', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
-						JJSdiagram.paper.off('cell:pointerclick');
-						JJSdiagram.setPaperListener();
-					}
-				});
+				if (EvenTarget.hasClass("selected")){
+					$(EvenTarget).removeClass("selected");
+					clickcount = 0;
+					canvas.find("div.html-element").fadeTo("fast",1);
+				}else {
+					var associationId;
+					//remove all other selected editing option as well as hidden delete button
+					var selectedItem = format("div.palette li.selected");
+					jQuery(selectedItem).removeClass("selected");
+
+					jQuery('.html-element button.delete').css('visibility', 'hidden')
+
+					canvas.find("div.html-element").fadeTo(1,1);
+
+					$(EvenTarget).addClass("selected");
+					canvas.find("div.html-element").fadeTo("fast",0.4);
+					//paper listener
+					JJSdiagram.paper.on('cell:pointerclick', function (cellView, evt, x, y) {
+						if(EvenTarget.hasClass("selected")){
+							clickcount++;
+						}
+						if (clickcount === 1) {
+							associationId = cellView.model.id;
+							cellView.$box.fadeTo("fast",1);
+						}
+						if (clickcount === 2) {
+							cellView.$box.fadeTo("fast",1);
+							var link = new uml.Association({
+								source: { id: associationId },
+								target: { id: cellView.model.id },
+								labels: [
+									{ position: .05, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } },
+									{ position: .95, attrs: { text: { text: '*', 'font-size': '8pt' }, rect: { 'fill-opacity': '0.6' } } }
+								],
+								vertices: JJSdiagram.setAssociationPathVertices(associationId, cellView.model.id),
+								umplename: "umpleAssociation_" + JJSdiagram.associationIndex
+							});
+							link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
+							JJSdiagram.paper.model.addCell(link);
+							JJSdiagram.makeUmpleCodeFromAssociation('addJjsAssociation', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
+							JJSdiagram.paper.off('cell:pointerclick');
+							JJSdiagram.setPaperListener();
+							$(EvenTarget).removeClass("selected");
+							canvas.find("div.html-element").fadeTo("fast",1);
+						}
+					});
+				}
 			}
 		});
 
 		jQuery('#buttonAddGeneralization').off('click').on('click.fly', function (e) {
 			if (Page.useJointJSClassDiagram) {
+				var EvenTarget = jQuery(e.target);
 				var clickcount = 0;
-				var associationId;
+				var canvas = jQuery("#jjsPaper");
 
-				//paper listener
-				JJSdiagram.paper.off('cell:pointerclick').on('cell:pointerclick', function (cellView, evt, x, y) {
-					clickcount++;
-					if (clickcount === 1) {
-						associationId = cellView.model.id
-					}
-					if (clickcount === 2) {
-						var link = new uml.Generalization({ source: { id: cellView.model.id }, target: { id: associationId } });
-						link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
-						JJSdiagram.paper.model.addCell(link);
-						JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
-						JJSdiagram.paper.off('cell:pointerclick');
-						JJSdiagram.setPaperListener();
-					}
-				});
+				if (EvenTarget.hasClass("selected")){
+					$(EvenTarget).removeClass("selected");
+					clickcount = 0;
+					canvas.find("div.html-element").fadeTo("fast",1);
+				}else {
+					var associationId;
+					//remove all other selected editing option as well as hidden delete button
+					var selectedItem = format("div.palette li.selected");
+					jQuery(selectedItem).removeClass("selected");
+
+					jQuery('.html-element button.delete').css('visibility', 'hidden');
+
+					canvas.find("div.html-element").fadeTo(1,1);
+
+					//fade the class boxes
+					$(EvenTarget).addClass("selected");
+					canvas.find("div.html-element").fadeTo("fast",0.4);
+					//paper listener
+					JJSdiagram.paper.on('cell:pointerclick', function (cellView, evt, x, y) {
+						if(EvenTarget.hasClass("selected")){
+							clickcount++;
+						}
+						if (clickcount === 1) {
+							associationId = cellView.model.id;
+							cellView.$box.fadeTo("fast",1);
+						}
+						if (clickcount === 2) {
+							cellView.$box.fadeTo("fast",1);
+							var link = new uml.Generalization({ source: { id: cellView.model.id }, target: { id: associationId } });
+							link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
+							JJSdiagram.paper.model.addCell(link);
+							JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), associationId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
+							JJSdiagram.paper.off('cell:pointerclick');
+							JJSdiagram.setPaperListener();
+							$(EvenTarget).removeClass("selected");
+							canvas.find("div.html-element").fadeTo("fast",1);
+						}
+					});
+				}
 			}
 		});
+
+		jQuery('#buttonDeleteEntity').off('click').on('click.fly', function (e) {
+			var EvenTarget = jQuery(e.target);
+
+			var canvas = jQuery("#jjsPaper");
+			canvas.find("div.html-element").fadeTo(1,1);
+
+			if (EvenTarget.hasClass("selected")) {
+				$(EvenTarget).removeClass("selected");
+				jQuery('.html-element button.delete').css('visibility', 'hidden');
+			}else {
+				var selectedItem = format("div.palette li.selected");
+				jQuery(selectedItem).removeClass("selected");
+				$(EvenTarget).addClass("selected");
+				jQuery('.html-element button.delete').css('visibility', 'visible');
+
+			}
+		});
+
+		jQuery('#buttonPhotoReady').change(function () {
+			if (this.checked){
+				jQuery('.html-element button.delete').css('visibility', 'hidden');
+				jQuery('img#classIcon').css('visibility', 'hidden');
+				jQuery('img.edit').css('visibility', 'hidden');
+				jQuery('img.deleteAttr').css('visibility', 'hidden');
+				jQuery('img.deleteMet').css('visibility', 'hidden');
+				jQuery('.attributInput input').prop('placeholder', '');
+				jQuery('.methodInput input').prop('placeholder', '');
+			}else{
+				jQuery('img#classIcon').css('visibility', 'visible');
+				jQuery('img.edit').css('visibility', 'visible');
+				jQuery('img.deleteAttr').css('visibility', 'visible');
+				jQuery('img.deleteMet').css('visibility', 'visible');
+				jQuery('.attributInput input').prop('placeholder', 'Add More');
+				jQuery('.methodInput input').prop('placeholder', 'Add More');
+			}
+		});
+
+
 	},
 
 	//return the object in JJS JSON that has certain id
@@ -496,6 +595,61 @@ var JJSdiagram = {
 					'modifier': attModifier
 				});
 
+				actionCode = "action=editClass&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
+				break;
+			case 'editAttribute':
+				var oldName = arguments[3];
+				var modifyIndex = arguments[2];
+				for (var k = 0; k < jjsJson.attributes.length; k++) {
+					tempAttr = jjsJson.attributes[k].split(":").map(function (item) {
+						return item.trim();
+					});
+
+					//split modifier
+					if (tempAttr[0].charAt(0) === '-' || tempAttr[0].charAt(0) === '#' || tempAttr[0].charAt(0) === '~' || tempAttr[0].charAt(0) === '+') {
+						switch (tempAttr[0].charAt(0)) {
+							case "+":
+								attModifier = "public";
+								break;
+							case "~":
+								attModifier = "package";
+								break;
+							case "#":
+								attModifier = "protected";
+								break;
+							case "-":
+								attModifier = "private";
+								break;
+							default:
+								console.log('Invalid modifier in jjs_parser.js -->makeUmpleCodeFromClass');
+						}
+						tempAttr[0] = tempAttr[0].slice(1);
+						tempAttr[0] = tempAttr[0].trim();
+					}
+
+					//attribute to modify
+					if (k === modifyIndex) {
+						actionCodeObj.attributes.push({
+							"type": tempAttr[1],
+							"name": tempAttr[0],
+							"textColor": "black",
+							"aColor": "black",
+							"oldName": oldName,
+							'modifier': attModifier
+						});
+					}
+					//other unchanged attibutes
+					else {
+						actionCodeObj.attributes.push({
+							"type": tempAttr[1],
+							"name": tempAttr[0],
+							"textColor": "black",
+							"aColor": "black",
+							'modifier': attModifier
+						});
+					}
+				}
 				actionCode = "action=editClass&actionCode=";
 				actionCode += JSON.stringify(actionCodeObj);
 				break;

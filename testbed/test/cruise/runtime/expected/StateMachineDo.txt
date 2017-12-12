@@ -1,0 +1,4 @@
+java.lang.ArithmeticException: / by zero
+    at cruise.runtime.StateMachineDo.doActivityBulbOn(StateMachineDo.ump:12)
+    at cruise.runtime.StateMachineDo.access$000(StateMachineDo.java:7)
+    at cruise.runtime.StateMachineDo$DoActivityThread.run(StateMachineDo.java:123)

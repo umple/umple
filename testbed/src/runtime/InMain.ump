@@ -1,0 +1,12 @@
+generate Java "../../src-gen-umple";
+namespace cruise.runtime;
+
+class InMain
+{
+    public static void main(String [] argv){
+       String a = "";
+       boolean eq;
+       String[] emptyArray = new String[1];
+       eq = emptyArray[1].equals(a);
+    }
+}

@@ -1,0 +1,9 @@
+generate Java "../src-gen-umple";
+
+class StaticMethod
+{
+    public static double foo() { 
+        String s = "Hello World!";
+        return s;
+    }
+}

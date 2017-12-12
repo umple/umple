@@ -1,6 +1,6 @@
 class UmpleToJava {
     uncaught_exception <<!<</*uncaught_exception*/>><<#
-java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) (.*)");
+java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) \"(.*)\"");
 public static UmpleClass mainMainClass = null;
 private void addUncaughtExceptionVariables(int javaline, String code, String methodname)
 {
@@ -12,10 +12,12 @@ private void addUncaughtExceptionVariables(int javaline, String code, String met
     {
       uncaughtExceptions.put(methodname,new UncaughtException(globalUmpleClass.getName(), methodname));
     }
-    uncaughtExceptions.get(methodname).addUncaughtFileName(matcher.group(2));
-    uncaughtExceptions.get(methodname).addUncaughtUmpleLine(Integer.parseInt(matcher.group(1))-1);
+    int fileIndex = matcher.group(2).lastIndexOf('/') + 1;
+    uncaughtExceptions.get(methodname).addUncaughtFileName(matcher.group(2).substring(fileIndex));
+    uncaughtExceptions.get(methodname).addUncaughtUmpleLine(Integer.parseInt(matcher.group(1)));
     uncaughtExceptions.get(methodname).addUncaughtJavaLine(javaline+1);
-    uncaughtExceptions.get(methodname).addUncaughtLength(lines.length);
+    // Subtract two to compensate for the comments at the top and bottom of each inject statement 
+    uncaughtExceptions.get(methodname).addUncaughtLength(lines.length-2);
   }  
 }
 private void addUncaughtExceptionVariables(String methodname, String filename, int umpleline, int javaline, int length)
@@ -60,7 +62,29 @@ public String getExceptionHandler(String exceptions) {
             UmpleSourceData sourceInformation = (UmpleSourceData)query.invoke(this,new Object[]{});
             for(int i=0;i<sourceInformation.size();++i)
             {
-              int distanceFromStart = element.getLineNumber()-sourceInformation.getJavaLine(i)-(("main".equals(methodName))?2:0);
+              // To compensate for any offsets caused by injected code we need to loop through the other references to this function
+              //  and adjust the start / length of the function.
+              int functionStart = sourceInformation.getJavaLine(i) + (("main".equals(methodName))?3:1);
+              int functionEnd = functionStart + sourceInformation.getLength(i);
+              int afterInjectionLines = 0;
+              //  We can leverage the fact that all inject statements are added to the uncaught exception list 
+              //   before the functions that they are within
+              for (int j = 0; j < i; j++) {
+                if (sourceInformation.getJavaLine(j) - 1 >= functionStart &&
+                    sourceInformation.getJavaLine(j) - 1 <= functionEnd &&
+                    sourceInformation.getJavaLine(j) - 1 <= element.getLineNumber()) {
+                    // A before injection, +2 for the comments surrounding the injected code
+                    if (sourceInformation.getJavaLine(j) - 1 == functionStart) {
+                        functionStart += sourceInformation.getLength(j) + 2;
+                        functionEnd += sourceInformation.getLength(j) + 2;
+                    } else {
+                        // An after injection
+                        afterInjectionLines += sourceInformation.getLength(j) + 2;
+                        functionEnd += sourceInformation.getLength(j) + 2;
+                    }
+                }
+              }
+              int distanceFromStart = element.getLineNumber() - functionStart - afterInjectionLines;
               if(distanceFromStart>=0&&distanceFromStart<=sourceInformation.getLength(i))
               {
                 result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),sourceInformation.getFileName(i),sourceInformation.getUmpleLine(i)+distanceFromStart));

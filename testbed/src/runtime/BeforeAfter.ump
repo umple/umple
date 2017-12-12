@@ -1,0 +1,22 @@
+generate Java "../../src-gen-umple";
+namespace cruise.runtime;
+
+class BeforeAfter
+{
+    foo;
+    
+    before setFoo {
+        // This is a before statement
+    }
+    
+    after setFoo {
+        String[] bar = new String[1];
+        foo = bar[1];
+    }
+    
+    public static void main(String [] argv){
+       BeforeAfter x = new BeforeAfter("");
+       x.setFoo("");
+    }
+
+}

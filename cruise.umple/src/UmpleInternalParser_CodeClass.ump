@@ -4314,8 +4314,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
 
       CodeBlock cb = new CodeBlock();
-      String rubyComment = ("# line " + exception.getPosition().getLineNumber() + " " + aClass.getRelativePath( exception.getPosition().getFilename(), "Java"));
-      String otherComment = ("// line " + exception.getPosition().getLineNumber() + " " + aClass.getRelativePath( exception.getPosition().getFilename(), "Java"));
+      String rubyComment = ("# line " + exception.getPosition().getLineNumber() + " \"" + aClass.getRelativePath( exception.getPosition().getFilename(), "Java") + "\"");
+      String otherComment = ("// line " + exception.getPosition().getLineNumber() + " \"" + aClass.getRelativePath( exception.getPosition().getFilename(), "Java") + "\"");
 
       cb.setCode(otherComment);
       cb.setCode("Ruby", rubyComment);
@@ -4340,7 +4340,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         }
       }
       extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
-      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + aClass.getRelativePath( exception.getPosition().getFilename(), "Java"));
+      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " \"" + aClass.getRelativePath( exception.getPosition().getFilename(), "Java") + "\"");
       aClass.appendExtraCode("  "+extraCode+"\n");
       setFailedPosition(sub.getPosition(), 1006, sub.getValue("name"));
     }
@@ -4355,7 +4355,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         }
       }
       extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
-      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + aClass.getRelativePath( exception.getPosition().getFilename(), "Java"));
+      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " \"" + aClass.getRelativePath( exception.getPosition().getFilename(), "Java") + "\"");
       aClass.appendExtraCode("  "+extraCode+"\n");
       setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
     }

@@ -1,0 +1,144 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.26.1-33ee578d5-3609 modeling language!*/
+
+package example;
+import java.util.*;
+
+// line 3 "../1161.ump"
+public class B
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //B Associations
+  private List<C> myC;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public B()
+  {
+    myC = new ArrayList<C>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public C getMyC(int index)
+  {
+    C aMyC = myC.get(index);
+    return aMyC;
+  }
+
+  public List<C> getMyC()
+  {
+    List<C> newMyC = Collections.unmodifiableList(myC);
+    return newMyC;
+  }
+
+  public int numberOfMyC()
+  {
+    int number = myC.size();
+    return number;
+  }
+
+  public boolean hasMyC()
+  {
+    boolean has = myC.size() > 0;
+    return has;
+  }
+
+  public int indexOfMyC(C aMyC)
+  {
+    int index = myC.indexOf(aMyC);
+    return index;
+  }
+
+  public static int minimumNumberOfMyC()
+  {
+    return 0;
+  }
+
+  public C addMyC(D aMyD)
+  {
+    return new C(aMyD, this);
+  }
+
+  public boolean addMyC(C aMyC)
+  {
+    boolean wasAdded = false;
+    if (myC.contains(aMyC)) { return false; }
+    B existingB = aMyC.getB();
+    boolean isNewB = existingB != null && !this.equals(existingB);
+    if (isNewB)
+    {
+      aMyC.setB(this);
+    }
+    else
+    {
+      myC.add(aMyC);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeMyC(C aMyC)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aMyC, as it must always have a b
+    if (!this.equals(aMyC.getB()))
+    {
+      myC.remove(aMyC);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addMyCAt(C aMyC, int index)
+  {  
+    boolean wasAdded = false;
+    if(addMyC(aMyC))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMyC()) { index = numberOfMyC() - 1; }
+      myC.remove(aMyC);
+      myC.add(index, aMyC);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveMyCAt(C aMyC, int index)
+  {
+    boolean wasAdded = false;
+    if(myC.contains(aMyC))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMyC()) { index = numberOfMyC() - 1; }
+      myC.remove(aMyC);
+      myC.add(index, aMyC);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addMyCAt(aMyC, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    while (myC.size() > 0)
+    {
+      C aMyC = myC.get(myC.size() - 1);
+      aMyC.delete();
+      myC.remove(aMyC);
+    }
+    
+  }
+
+}

@@ -1,6 +1,9 @@
-version: 1.23.0-build-{build}
+version: 1.26.0-{build}-{branch}
 
 clone_depth: 5
+
+platform:
+  - x64
 
 cache:
 
@@ -12,13 +15,18 @@ cache:
 
 init:
 
-- ps: gem update --system
+- cmd: gem update --system
 - ps: cinst ant 2>&1 | Out-Null
-- ps: cinst php --version=5.6.29 2>&1 | Out-Null
+
+# install some dependencies needed by php
+- ps: choco install chocolatey-core.extension --ignore-dependencies
+
+# install the latest php (dependencies kb2919442 kb3035131 kb2999226 were failing )
+- ps: choco install php --ignore-dependencies
 
 install:
 
-- ps: $env:Path="C:\Ruby21\bin;C:/tools/ruby22/bin;C:\Program Files (x86)\Java\jdk1.8.0\bin;$($env:Path);C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
+- ps: $env:Path="C:\Ruby21\bin;C:/tools/ruby22/bin;C:\Program Files (x86)\Java\jdk1.8.0\bin;$($env:Path);C:\tools\php72;C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
 
 - ps: ant -version
 - ps: pushd build
@@ -28,11 +36,11 @@ install:
 
 - ps: popd
 
-- ps: php.exe --version
-- ps: ruby.exe -v
-- cmd: java.exe -version # using ps causes it to fail because it prints to sterr
-- ps: ant -version
-- ps: rake.bat -V
+- cmd: php --version
+- cmd: ruby -v
+- cmd: java -version # using ps causes it to fail because it prints to sterr
+- cmd: ant -version
+- cmd: rake -V
 
 build_script:
 

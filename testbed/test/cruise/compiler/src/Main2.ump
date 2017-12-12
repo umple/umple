@@ -1,0 +1,11 @@
+generate Java "../src-gen-umple";
+
+class Main2
+{
+    public static void main(String [] argv){
+        int a = "not an int";
+        int b = 10;
+        b++;
+        a += b;
+    }
+}

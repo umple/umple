@@ -1,0 +1,17 @@
+generate Java "../../src-gen-umple";
+namespace cruise.runtime;
+
+class Before
+{
+    foo;
+    
+    before setFoo {
+        int a = 1 / 0;
+    }
+    
+    public static void main(String [] argv){
+       Before x = new Before("");
+       x.setFoo("");
+    }
+
+}

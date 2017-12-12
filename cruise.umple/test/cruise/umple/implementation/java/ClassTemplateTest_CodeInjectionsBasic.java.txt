@@ -29,9 +29,11 @@ public class Student
   public String foo(int a){
     // line 17 "ClassTemplateTest_CodeInjectionsBasic.ump"
     System.out.println("Starting foo with argument: " + a);
+    // END OF UMPLE BEFORE INJECTION
     if(a < 0) {      
       // line 21 "ClassTemplateTest_CodeInjectionsBasic.ump"
       System.out.println("Returning from foo!");
+      // END OF UMPLE AFTER INJECTION
       return 0;
     }
 
@@ -39,11 +41,13 @@ public class Student
       if(i == a/4) {        
         // line 21 "ClassTemplateTest_CodeInjectionsBasic.ump"
         System.out.println("Returning from foo!");
+        // END OF UMPLE AFTER INJECTION
         return a;
       }
     }    
     // line 21 "ClassTemplateTest_CodeInjectionsBasic.ump"
     System.out.println("Returning from foo!");
+    // END OF UMPLE AFTER INJECTION
     return 4;
 
   }

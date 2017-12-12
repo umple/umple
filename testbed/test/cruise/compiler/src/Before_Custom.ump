@@ -1,0 +1,13 @@
+generate Java "../src-gen-umple";
+
+class BeforeCustom
+{
+    before custom foo {
+        int a = 1;
+    }
+    
+    public void foo() {
+        b = 0;
+        a++;
+    }
+}

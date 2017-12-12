@@ -58,7 +58,29 @@ public class Mentor
             UmpleSourceData sourceInformation = (UmpleSourceData)query.invoke(this,new Object[]{});
             for(int i=0;i<sourceInformation.size();++i)
             {
-              int distanceFromStart = element.getLineNumber()-sourceInformation.getJavaLine(i)-(("main".equals(methodName))?2:0);
+              // To compensate for any offsets caused by injected code we need to loop through the other references to this function
+              //  and adjust the start / length of the function.
+              int functionStart = sourceInformation.getJavaLine(i) + (("main".equals(methodName))?3:1);
+              int functionEnd = functionStart + sourceInformation.getLength(i);
+              int afterInjectionLines = 0;
+              //  We can leverage the fact that all inject statements are added to the uncaught exception list 
+              //   before the functions that they are within
+              for (int j = 0; j < i; j++) {
+                if (sourceInformation.getJavaLine(j) - 1 >= functionStart &&
+                    sourceInformation.getJavaLine(j) - 1 <= functionEnd &&
+                    sourceInformation.getJavaLine(j) - 1 <= element.getLineNumber()) {
+                    // A before injection, +2 for the comments surrounding the injected code
+                    if (sourceInformation.getJavaLine(j) - 1 == functionStart) {
+                        functionStart += sourceInformation.getLength(j) + 2;
+                        functionEnd += sourceInformation.getLength(j) + 2;
+                    } else {
+                        // An after injection
+                        afterInjectionLines += sourceInformation.getLength(j) + 2;
+                        functionEnd += sourceInformation.getLength(j) + 2;
+                    }
+                }
+              }
+              int distanceFromStart = element.getLineNumber() - functionStart - afterInjectionLines;
               if(distanceFromStart>=0&&distanceFromStart<=sourceInformation.getLength(i))
               {
                 result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),sourceInformation.getFileName(i),sourceInformation.getUmpleLine(i)+distanceFromStart));
@@ -81,7 +103,7 @@ public class Mentor
       e.setStackTrace(result.toArray(new StackTraceElement[0]));
     }
   //The following methods Map Java lines back to their original Umple file / line    
-    public UmpleSourceData Mentor_main(){ return new UmpleSourceData().setFileNames("ClassTemplateTest_Generated.ump").setUmpleLines(5).setJavaLines(28).setLengths(3);}
+    public UmpleSourceData Mentor_main(){ return new UmpleSourceData().setFileNames("ClassTemplateTest_Generated.ump").setUmpleLines(5).setJavaLines(28).setLengths(1);}
 
   }
   public static class UmpleSourceData

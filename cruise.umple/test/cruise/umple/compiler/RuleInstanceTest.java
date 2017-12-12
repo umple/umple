@@ -140,7 +140,7 @@ public class RuleInstanceTest
     Assert.assertEquals(RulePart.Type.Variable,part.getType());
   }
   
-  @Test(expected=ArrayIndexOutOfBoundsException.class)
+  @Test(expected=IndexOutOfBoundsException.class)
   public void getRulePart_invalid_tooLow()
   {
     RuleInstance instance = new RuleInstance(parser);

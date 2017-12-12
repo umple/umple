@@ -1,0 +1,26 @@
+generate Java "../../src-gen-umple";
+namespace cruise.runtime;
+
+class AbstractClassOneFile
+{
+    abstract;
+    public abstract void foo();
+    
+    public void DivideByZero(int a) {
+        a = a / 0;
+    }
+}
+
+class ExtendsClassOneFile
+{
+    isA AbstractClassOneFile;
+    public void foo() {
+        // Do Nothing
+    }
+    
+    public static void main(String[] argv) {
+        ExtendsClassOneFile x = new ExtendsClassOneFile();
+        x.foo();
+        x.DivideByZero(1);
+    }
+}

@@ -1,0 +1,4 @@
+Mismatched_Brackets_Method.ump:7: error: illegal start of expression
+            if (i % 2)) {
+                      ^
+1 error
