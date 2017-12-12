@@ -36,7 +36,7 @@
       </not>
     </condition>  
 
-    <property name="umple.version" value="${base.version}-${git.revision}-${git.commitnum}" />
+    <property name="umple.version" value="${base.version}.${git.commitnum}.${git.revision}" />
     <echo message="Current Version: ${umple.version}" />
   
 </project>
