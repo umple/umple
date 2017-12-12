@@ -49,20 +49,39 @@ function rootDir(){
     return $rootDirGlobal;
 }
 
+/**
+A handle to read-only data. As long as it exists it should
+hold at least a read lock. When it is destroyed or the request
+ends this lock will be released.
+*/
 class ReadOnlyDataHandle{
-    protected $root;
     function __construct($root){
         $this->root = $root;
     }
+    /**
+    Return the unique identifier that this data handle
+    points to.
+    */
     function getName(){
         return basename($this->root);
     }
+    /**
+    Returns true if a property with the given name exists.
+    */
     function hasData($name){
         return file_exists($this->root.'/'.$name);
     }
+    /**
+    Reads a property of the data as a string.
+    What happens if there is no such data is currently unspecified.
+    */
     function readData($name){
         return file_get_contents($this->root.'/'.$name);
     }
+    /**
+    Upgrades this read-only handle to a read/write handle.
+    Returns the new handle, invalidating $this
+    */
     function acquireWrite(){
         $result = new DataHandle($this->root);
         $this->root = NULL;
@@ -70,35 +89,76 @@ class ReadOnlyDataHandle{
     }
 }
 
+/**
+Provides access to a data object, allowing exclusive read/write
+access.
+The data is released on destruction.
+*/
 class DataHandle extends ReadOnlyDataHandle{
     function __construct($root){
         $this->root = $root;
     }
+    /**
+    Delete the data object this handle points to.
+    Invalidates the handle.
+    */
     function delete(){
         recursiveDelete($this->root);
         $this->root = NULL;
     }
+    /**
+    Set a named property on the data object, creating it if
+    it does not exist.
+    */
     function writeData($name, $data){
         return file_put_contents($this->root.'/'.$name, $data);
     }
+    /**
+    Set up a working directory with all the properties of the given
+    data object as files.
+    Returns a WorkDir object that can further manipulate the
+    directory.
+    */
     function getWorkDir(){
         return new WorkDir($this->root);
     }
+    /**
+    Copy all information from another readable data object.
+    */
     function cloneFrom($other){
         copy($other->root.'/model.ump', $this->root.'/model.ump');
     }
 }
 
+/**
+Represents a working directory based on a data object. The directory
+is guaranteed to exist for the lifetime of this object and no
+longer. Implies the existence of a corresponding DataHandle.
+*/
 class WorkDir{
     function __construct($root){
         $this->root = $root;
     }
+    /**
+    Returns the path of the root of the temporary directory tree.
+    */
     function getPath(){
         return $this->root;
     }
+    /**
+    Saves any changes to the files representing properties of
+    the data object.
+    */
     function saveModel(){
         // no-op when using the file system
     }
+    /**
+    Given a path to a file or directory, return a URL that can be shown
+    to users and will persist for some time, allowing them to view
+    or download content.
+
+    Could be used to upload to a dedicated fileserver.
+    */
     function makePermalink($path){
         // assumes the server root is umpleonline/
         $localpath = $this->root.'/'.$path;
@@ -111,6 +171,14 @@ class DataStore{
     function __construct($root){
         $this->root = rootDir().'/'.$root;
     }
+    /**
+    Atomically creates a data storage area with a name of the
+    format tmp*, with the option of replacing "tmp" with a
+    different prefix.
+
+    Should return a handle to the data such that there is exclusive
+    read/write access to the data.
+    */
     function createData($prefix = 'tmp'){
         while(true)
         {
@@ -123,6 +191,12 @@ class DataStore{
             }
         }
     }
+    /**
+    Acquires read/write exclusive access to data given a unique name.
+
+    Returns a read/write handle to the data, or NULL if there is no
+    such data.
+    */
     function openData($name){
         if(file_exists($this->root.'/'.$name)){
             return new DataHandle($this->root.'/'.$name);
@@ -130,6 +204,10 @@ class DataStore{
             return NULL;
         }
     }
+    /**
+    The same as openData, but allowing for shared read-only
+    access.
+    */
     function openDataReadOnly($name){
         if(file_exists($this->root.'/'.$name)){
             return new ReadOnlyDataHandle($this->root.'/'.$name);
