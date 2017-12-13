@@ -444,7 +444,21 @@ public class UmpleParserTest
     Assert.assertEquals(true,model.getUmpleClass("Student").isImmutable());
     Assert.assertEquals(false,model.getUmpleClass("Mentor").isImmutable());
   }
-
+  
+  
+  //Issue 1152
+  @Test
+  public void propagateImmutabilityToAllRelationships(){
+    assertSimpleParse("022_propagateImmutabilityToAllRelationships.ump");
+    Assert.assertEquals(false,model.getUmpleClass("URLMS").isImmutable());
+    Assert.assertEquals(false,model.getUmpleClass("Staff").isImmutable());
+    Assert.assertEquals(false,model.getUmpleClass("FundingAccount").isImmutable());
+    Assert.assertEquals(false,model.getUmpleClass("Report").isImmutable());
+    Assert.assertEquals(false,model.getUmpleClass("LabExpense").isImmutable());
+    Assert.assertEquals(false,model.getUmpleClass("Equipment").isImmutable());
+    Assert.assertEquals(false,model.getUmpleClass("Supply").isImmutable());
+  }
+  
   //Issue 559
   @Test
   public void mixin_redefiningAMethod()
