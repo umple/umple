@@ -1880,8 +1880,14 @@ class UmpleClass
     return wasSet;
   }
 
+
+  Integer propagateCounter = 25;
+
   private boolean propagateImmutabilityToAllRelationships(boolean isImmutable)
   {
+    System.out.println("propagateImmutabilityToAllRelationships Called");
+    setPropagateCounter(getPropagateCounter() - 1);
+    
     if (isImmutable)
     {
       if (this.hasStateMachines()) { return false; }
@@ -1891,12 +1897,19 @@ class UmpleClass
         if (!immutabilityAssociationRulesSatisfied(av, true)) { return false; }
       }
     }
-
-    return notifySubclassesAncestorImmutable(isImmutable);
+    
+    if( getPropagateCounter() == 0 ) {
+        setPropagateCounter(25);
+        return true;
+    }
+    else{
+      return notifySubclassesAncestorImmutable(isImmutable);
+    }
   }
 
   private boolean notifySubclassesAncestorImmutable(boolean isImmutable)
   {
+    System.out.println("notifySubclassesAncestorImmutable called");
     boolean notified = true;
     List<UmpleClass> wereSet = new ArrayList<UmpleClass>();
     for (UmpleClass subclass : getSubclasses())
@@ -1916,6 +1929,7 @@ class UmpleClass
 
   protected boolean setAncestorIsImmutable(boolean isImmutable)
   {
+    System.out.println("setAncestorIsImmutable called here");
     if (iAmImmutable)
     {
       ancestorIsImmutable = isImmutable;
