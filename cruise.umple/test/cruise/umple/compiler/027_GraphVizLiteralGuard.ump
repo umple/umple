@@ -1,0 +1,25 @@
+generate GvStateDiagram "./GvStateDiagram/" --override-all;
+// Simple UML state machine of a tic-tac-toe or noughts and crosses game
+class TicTacToe {
+ state {
+   Start{}
+   Start {
+     xPlays [o()] -> xWin;
+     xPlays [i()] -> oTurn;
+   }
+   oTurn {
+     oPlays [i()] -> oWin;
+     oPlays [false] -> xTurn;
+     
+   }
+   xWin {
+   }
+   oWin {
+   }
+   xTurn {
+   }
+ }
+
+ Boolean o() {return false;}
+ Boolean i() {return true;}
+}
