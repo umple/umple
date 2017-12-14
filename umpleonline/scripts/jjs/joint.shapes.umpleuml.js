@@ -524,18 +524,22 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         this.$box.css({
             width: bbox.width,
             height: bbox.height,
-            left: bbox.x+100,
-            top: bbox.y+50,
+            left: bbox.x,
+            top: bbox.y,
             transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
         });
 
         var widthScale = bbox.width/100;
         var heightScale = bbox.height/60;
 
+        //Dynamically set scale and translate of joint.js shape
         var jointShape = jQuery("#" + this.id);
+        var xTranslate = bbox.x - 100;
+        var yTranslate = bbox.y - 50;
         if (jointShape.children().size() > 0){
 			var rectScale = jQuery(jointShape.children().children());
 			rectScale.attr({"transform": "scale("+ widthScale + "," + heightScale +")"})
+			jointShape.attr({"transform": "translate("+ xTranslate + "," + yTranslate +")"})
         }
 
     }
