@@ -1880,8 +1880,13 @@ class UmpleClass
     return wasSet;
   }
 
+ internal const Integer CounterLimit = 25; //Arbitary Limit
+ Integer propagateCounter = CounterLimit; 
+ 
   private boolean propagateImmutabilityToAllRelationships(boolean isImmutable)
   {
+    setPropagateCounter(getPropagateCounter() - 1); //Reduce by 1 for each call
+    
     if (isImmutable)
     {
       if (this.hasStateMachines()) { return false; }
@@ -1892,7 +1897,13 @@ class UmpleClass
       }
     }
 
-    return notifySubclassesAncestorImmutable(isImmutable);
+    if( getPropagateCounter() == 0 ) {
+        setPropagateCounter(CounterLimit);
+        return true;
+    }
+    else{
+      return notifySubclassesAncestorImmutable(isImmutable);
+    }
   }
 
   private boolean notifySubclassesAncestorImmutable(boolean isImmutable)
