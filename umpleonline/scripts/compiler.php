@@ -320,7 +320,7 @@ else if (isset($_REQUEST["umpleCode"]))
        $javadocdir = $workDir->makePermalink('javadoc/');
        $javadoczip = $workDir->makePermalink('javadocFromUmple.zip');
        $html = "<a href=\"{$javadoczip}\">Download the following as a zip file</a>&nbsp;{$errhtml}
-      <iframe width=100% height=1000 src=\"" . $javadocdir . "/javadoc/\">This browser does not
+      <iframe width=100% height=1000 src=\"" . $javadocdir . "\">This browser does not
       support iframes, so the javadoc cannot be displayed</iframe> 
      ";
        echo $html;
