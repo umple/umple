@@ -5,7 +5,9 @@ require_once("compiler_config.php");
 if (isset($_REQUEST["save"]))
 {
   $input = $_REQUEST["vmlCode"];
-  $filename = saveFile($input);
+  list($dataname, $dataHandle) = getOrCreateDataHandle();
+  $dataHandle->writeData($dataname, $input);
+  $filename = '../ump/'.$dataHandle->getName().'/'.$dataname;
   echo $filename;
 }
 else if (isset($_REQUEST["vmlCode"]))
@@ -13,7 +15,12 @@ else if (isset($_REQUEST["vmlCode"]))
   $input = $_REQUEST["vmlCode"];
   $language = $_REQUEST["language"];
   
-  $filename = saveFile($input);
+  list($dataname, $dataHandle) = getOrCreateDataHandle();
+  $dataHandle->writeData($dataname, $input);
+  $workDir = $dataHandle->getWorkDir();
+  
+  $filename = $workDir->getPath().'/'.$dataname;
+  
   $outputFilename = "{$filename}.output";
   
   $command = "java -jar vml.jar $outputFilename $filename";
@@ -74,7 +81,7 @@ else if (isset($_REQUEST["vmlCode"]))
 }
 else if (isset($_REQUEST["exampleCode"]))
 {
-  $filename = "../ump/" . $_REQUEST["exampleCode"];
+  $filename = rootDir()."/ump/" . $_REQUEST["exampleCode"];
   $outputUmple = readTemporaryFile($filename);
   echo $outputUmple;
 }

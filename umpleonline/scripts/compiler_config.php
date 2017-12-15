@@ -37,10 +37,201 @@ if(strpos($PATH, "/usr/local/bin") == FALSE){
 }
 putenv("PATH=$PATH");
 
+// If we don't set the default timezone we get E_NOTICEs
+date_default_timezone_set('UTC');
+
+// Trick to find the root directory of this copy of UmpleOnline
+// Assumes this script lives in /scripts; if you move this file it
+// will need to change.
+$rootDirGlobal = dirname(__DIR__);
+function rootDir(){
+    global $rootDirGlobal;
+    return $rootDirGlobal;
+}
+
+/**
+A handle to read-only data. As long as it exists it should
+hold at least a read lock. When it is destroyed or the request
+ends this lock will be released.
+*/
+class ReadOnlyDataHandle{
+    function __construct($root){
+        $this->root = $root;
+    }
+    /**
+    Return the unique identifier that this data handle
+    points to.
+    */
+    function getName(){
+        return basename($this->root);
+    }
+    /**
+    Returns true if a property with the given name exists.
+    */
+    function hasData($name){
+        return file_exists($this->root.'/'.$name);
+    }
+    /**
+    Reads a property of the data as a string.
+    What happens if there is no such data is currently unspecified.
+    */
+    function readData($name){
+        return file_get_contents($this->root.'/'.$name);
+    }
+    /**
+    Upgrades this read-only handle to a read/write handle.
+    Returns the new handle, invalidating $this
+    */
+    function acquireWrite(){
+        $result = new DataHandle($this->root);
+        $this->root = NULL;
+        return $result;
+    }
+}
+
+/**
+Provides access to a data object, allowing exclusive read/write
+access.
+The data is released on destruction.
+*/
+class DataHandle extends ReadOnlyDataHandle{
+    function __construct($root){
+        $this->root = $root;
+    }
+    /**
+    Delete the data object this handle points to.
+    Invalidates the handle.
+    */
+    function delete(){
+        recursiveDelete($this->root);
+        $this->root = NULL;
+    }
+    /**
+    Set a named property on the data object, creating it if
+    it does not exist.
+    */
+    function writeData($name, $data){
+        return file_put_contents($this->root.'/'.$name, $data);
+    }
+    /**
+    Set up a working directory with all the properties of the given
+    data object as files.
+    Returns a WorkDir object that can further manipulate the
+    directory.
+    */
+    function getWorkDir(){
+        return new WorkDir($this->root);
+    }
+    /**
+    Copy all information from another readable data object.
+    */
+    function cloneFrom($other){
+        copy($other->root.'/model.ump', $this->root.'/model.ump');
+    }
+}
+
+/**
+Represents a working directory based on a data object. The directory
+is guaranteed to exist for the lifetime of this object and no
+longer. Implies the existence of a corresponding DataHandle.
+*/
+class WorkDir{
+    function __construct($root){
+        $this->root = $root;
+    }
+    /**
+    Returns the path of the root of the temporary directory tree.
+    */
+    function getPath(){
+        return $this->root;
+    }
+    /**
+    Saves any changes to the files representing properties of
+    the data object.
+    */
+    function saveModel(){
+        // no-op when using the file system
+    }
+    /**
+    Given a path to a file or directory, return a URL that can be shown
+    to users and will persist for some time, allowing them to view
+    or download content.
+
+    Could be used to upload to a dedicated fileserver.
+    */
+    function makePermalink($path){
+        // assumes the server root is umpleonline/
+        $localpath = $this->root.'/'.$path;
+        $serverpath = substr($localpath, strlen(rootDir()));
+        return $serverpath;
+    }
+}
+
+class DataStore{
+    function __construct($root){
+        $this->root = rootDir().'/'.$root;
+    }
+    /**
+    Atomically creates a data storage area with a name of the
+    format tmp*, with the option of replacing "tmp" with a
+    different prefix.
+
+    Should return a handle to the data such that there is exclusive
+    read/write access to the data.
+    */
+    function createData($prefix = 'tmp'){
+        while(true)
+        {
+            $id = rand(0,999999);
+            $dirname = "{$this->root}/{$prefix}{$id}";
+            if (!file_exists($dirname))
+            {
+                mkdir($dirname);
+                return new DataHandle($dirname);
+            }
+        }
+    }
+    /**
+    Acquires read/write exclusive access to data given a unique name.
+
+    Returns a read/write handle to the data, or NULL if there is no
+    such data.
+    */
+    function openData($name){
+        if(file_exists($this->root.'/'.$name)){
+            return new DataHandle($this->root.'/'.$name);
+        }else{
+            return NULL;
+        }
+    }
+    /**
+    The same as openData, but allowing for shared read-only
+    access.
+    */
+    function openDataReadOnly($name){
+        if(file_exists($this->root.'/'.$name)){
+            return new ReadOnlyDataHandle($this->root.'/'.$name);
+        }else{
+            return NULL;
+        }
+    }
+}
+
+$globalDataStore = new DataStore('ump');
+function dataStore(){
+    global $globalDataStore;
+    return $globalDataStore;
+}
+
+// converts an example filename to a full path
+function getExamplePath($example){
+    return rootDir().'/ump/'.$example;
+}
+
 $uiguDir="";
 
 function getUIGUDir() {
-	return $uiguDir;
+    return $uiguDir;
 }
 
 if (php_uname('s') == "Darwin") {
@@ -68,7 +259,7 @@ function generateMenu($buttonSuffix)
             <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code</option>
             <option id=\"genruby\" value=\"ruby:Ruby\">Ruby Code</option>
             <option id=\"genalloy\" value=\"alloy:Alloy\">Alloy Model</option>
-	    <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
+        <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
             <option value=\"xml:Ecore\">Ecore</option>
             <option value=\"java:TextUml\">TextUml</option>
             <option value=\"xml:Scxml\">Scxml (Experimental)</option>
@@ -97,20 +288,8 @@ function generateMenu($buttonSuffix)
    echo $generatemenu;
 }
 
-function saveFile($input, $filename = null, $openmode = 'w')
+function saveFile($input, $filename, $openmode = 'w')
 {
-  if ($filename == null)
-  {
-    if (!isset($_REQUEST["filename"]))
-    {
-      $filename = nextFilename();
-    }
-    else
-    {
-      $filename = $_REQUEST["filename"];
-    }
-  }
-
   $fh = fopen($filename, $openmode);
   if($fh === false) {
     if(strpos($filename,"UmpleOnlineLog.txt") === FALSE) {
@@ -152,25 +331,10 @@ function readTemporaryFile($filename)
   return $contents;
 }
 
-function isBookmark($filename)
+function isBookmark($dataHandle)
 {
-  $modelId = extractModelId($filename);
-  return substr($modelId,0,3) != "tmp";
-}
-
-function extractModelId($filename)
-{
-  if ($filename == null)
-  {
-    return "";
-  }
-  else
-  {
-    $index = strpos($filename,"/model.ump");
-    $prefix = substr($filename,0,$index);
-    if(!strpos($prefix,"/")) return $prefix;
-    return substr(strrchr($prefix,"/"),1);
-  }
+    $modelId = $dataHandle->getName();
+    return substr($modelId,0,3) != "tmp";
 }
 
 // delete everything stored in a directory
@@ -211,115 +375,101 @@ function ensureFullPath($relativeFilename)
   return $filename;
 }
 
+function getOrCreateDataHandle(){
+    if(isset($_REQUEST['filename'])){
+        $modelId = dirname($_REQUEST['filename']);
+        $filename= basename($_REQUEST['filename']);
+        $dataHandle = dataStore()->openData($modelId);
+        if($dataHandle){
+            return array($filename, $dataHandle);
+        }
+    }else{
+        $filename = 'model.ump';
+    }
+    $dataHandle = dataStore()->createData();
+    return array($filename, $dataHandle);
+}
+
 function extractFilename()
 {
-  // If the argument is model=X, then load that saved tmp or bookmarked model
-  if (isset($_REQUEST["model"]))
-  {
-    $filename = "../ump/". $_REQUEST["model"] ."/model.ump";
-    if (!file_exists("ump/" . $filename)) {
-      $destfile = nextFilename("ump");
-      $filename = "../" . $destfile;
-
-      file_put_contents($destfile, "// Saved URL ending in " . $_REQUEST["model"] . " cannot be found");
-    }
-    else  // file does exist
+    // If the argument is model=X, then load that saved tmp or bookmarked model
+    if (isset($_REQUEST["model"]))
     {
-      // Check if there is a password lock on the model
-      if (file_exists("ump/" . $_REQUEST["model"] ."/readonlylock.txt"))
-      {
-        // TODO: Open the read only file and check if the
-        // There is an argument with a matching overwrite key
-        // For now, just ensure that the saved URL can only
-        // be overwritten if the argument &overwrite=yes is supplied
-        if (!$_REQUEST["overwrite"] == "yes") {
-          $readOnly = true;
-          $fileToCopy = "ump/" . $filename;
-          $destfile = nextFilename("ump");
-          $filename = "../" . $destfile;
-          copy($fileToCopy, $destfile);
+        $dataHandle = dataStore()->openData($_REQUEST['model']);
+        // if the model does not exist, create one containing an error message
+        if(!$dataHandle){
+            $dataHandle = dataStore()->createData();
+            $dataHandle->writeData('model.ump', "// Saved URL ending in " . $_REQUEST["model"] . " cannot be found");
+        }else{
+            if($dataHandle->hasData('readonlylock.txt')){
+                // TODO: Open the read only file and check if the
+                // There is an argument with a matching overwrite key
+                // For now, just ensure that the saved URL can only
+                // be overwritten if the argument &overwrite=yes is supplied
+                if (!$_REQUEST["overwrite"] == "yes") {
+                    $readOnly = true;
+                    $dataHandleCopy = dataStore()->createData();
+                    $dataHandleCopy->cloneFrom($dataHandle);
+                    $dataHandle = $dataHandleCopy;
+                }
+            }
         }
-      }
     }
-  }
-  // If the argument is example=X then copy the example and open it
-  elseif (isset($_REQUEST['example']) && $_REQUEST["example"] != "")
-  {
-    $fileToCopy = "ump/".htmlspecialchars($_REQUEST['example']).".ump";
-    if (!file_exists($fileToCopy))
+    // If the argument is example=X then copy the example and open it
+    elseif (isset($_REQUEST['example']) && $_REQUEST["example"] != "")
     {
-       $fileToCopy = "ump/NullExample.ump";
+        $fileToCopy = getExamplePath(htmlspecialchars($_REQUEST['example']).'.ump');
+        if(!file_exists($fileToCopy)){
+            $fileToCopy = getExamplePath('NullExample.ump');
+        }
+        $dataHandle = dataStore()->createData();
+        $workDir = $dataHandle->getWorkDir();
+        copy($fileToCopy, $workDir->getPath().'/model.ump');
+        $workDir->saveModel();
     }
-    $destfile = nextFilename("ump");
-    $filename = "../" . $destfile;
-
-    copy($fileToCopy, $destfile);
-  }
-  elseif (isset($_REQUEST['text']) && $_REQUEST["text"] != "")
-  {
-    $destfile = nextFilename("ump");
-    $filename = "../" . $destfile;
-
-    file_put_contents($destfile, urldecode($_REQUEST["text"]));
-  }
-  // Starting from scratch; so simply create a blank model
-  elseif (!isset($_REQUEST['filename']) || $_REQUEST["filename"] == "")
-  {
-    $filename = "../" . nextFilename("ump");
-  }
-
-  // The only other option is that there is a filename option
-  else
-  {
-    $destfile = nextFilename("ump");
-    $filename = "../" . $destfile;
-
-    if(!substr($_REQUEST["filename"],-4)==".ump") {
-       file_put_contents($destfile, "// URL in filename argument must end in .ump and the initial http:// must be omitted");
+    elseif (isset($_REQUEST['text']) && $_REQUEST["text"] != "")
+    {
+        $dataHandle = dataStore()->createData();
+        $dataHandle->writeData('model.ump', urldecode(urldecode($_REQUEST["text"])));
     }
+    // Starting from scratch; so simply create a blank model
+    elseif (!isset($_REQUEST['filename']) || $_REQUEST["filename"] == "")
+    {
+        $dataHandle = dataStore()->createData();
+        $dataHandle->writeData('model.ump', '');
+    }
+
+    // The only other option is that there is a filename option
     else
     {
-      file_put_contents($destfile, file_get_contents("http://" . $_REQUEST["filename"]));
-      if(substr($http_response_header[0],-2)!="OK") {
-         // try https
-        file_put_contents($destfile, file_get_contents("https://" . $_REQUEST["filename"]));
-        if(substr($http_response_header[0],-2)!="OK") {         
-          file_put_contents($destfile, "// URL of the Umple file to be loaded in the URL after ?filename= must omit the initial http:// and end with .ump.\n// The file must be accessible from our server.\n// Could not load http://" . $_REQUEST["filename"]);
+        $dataHandle = dataStore()->createData();
+        $dataToWrite = '';
+        if(!substr($_REQUEST["filename"],-4)==".ump") {
+            $dataToWrite = "// URL in filename argument must end in .ump and the initial http:// must be omitted";
         }
-      }
+        else
+        {
+            $dataToWrite = file_get_contents("http://" . $_REQUEST["filename"]);
+            if(substr($http_response_header[0],-2)!="OK") {
+                // try https
+                $dataToWrite = file_get_contents("https://" . $_REQUEST["filename"]);
+                if(substr($http_response_header[0],-2)!="OK") {         
+                    $dataToWrite = "// URL of the Umple file to be loaded in the URL after ?filename= must omit the initial http:// and end with .ump.\n// The file must be accessible from our server.\n// Could not load http://" . $_REQUEST["filename"];
+                }
+            }
+        }
+        $dataHandle->writeData('model.ump', $dataToWrite);
     }
-  }
-  return $filename;
+    return $dataHandle;
 }
 
-function getFilenameId($filename)
+function showYumlImage($dataHandle)
 {
-  return substr($filename,7,strlen($filename) - strlen("../ump/") - strlen("/model.ump"));
-}
-
-// This will create your umple file, as well as the directory used for the uigu
-function nextFilename($basedir = "../ump", $prefix = "tmp")
-{
-  while(true)
-  {
-    $id = rand(0,999999);
-    $dirname = "{$basedir}/{$prefix}{$id}";
-    $filename = "{$dirname}/model.ump";
-
-    if (!file_exists($dirname))
-    {
-
-      mkdir($dirname);
-      return $filename;
-    }
-  }
-}
-
-function showYumlImage($filename)
-{
+  $workDir = $dataHandle->getWorkDir();
+  $filename = $workDir->getPath().'/model.ump';
   $yuml = executeCommand("java -jar umplesync.jar -generate Yuml {$filename}");
 
-	$title = "View As YUML Image";
+    $title = "View As YUML Image";
   $icon = "yuml.png";
   ?>
   <head>
@@ -329,24 +479,24 @@ function showYumlImage($filename)
 
   <body>
   <img id="diagram" />
-	<textarea id="source" style="display:none">
-	<?php echo $yuml; ?>
-	</textarea>
+    <textarea id="source" style="display:none">
+    <?php echo $yuml; ?>
+    </textarea>
 
         <!-- empty or /scruffy -->
-	<input id="diagramType" type="hidden" value="" />
+    <input id="diagramType" type="hidden" value="" />
 
-	<script type="text/javascript" charset="utf-8">
-	  var source = document.getElementById("source");
-	  var diagramType = document.getElementById("diagramType").value;
-	  var diagram = document.getElementById("diagram");
-	  diagram.src = "http://yuml.me/diagram"+ diagramType +"/class/" + source.value;
-	</script>
+    <script type="text/javascript" charset="utf-8">
+      var source = document.getElementById("source");
+      var diagramType = document.getElementById("diagramType").value;
+      var diagram = document.getElementById("diagram");
+      diagram.src = "http://yuml.me/diagram"+ diagramType +"/class/" + source.value;
+    </script>
   </body>
   <?php
 }
 
-function showUserInterface($filename)
+function showUserInterface($dataname, $dataHandle)
 {
   $title = "Generate User Interface";
   $icon = "uigu.png";
@@ -360,53 +510,53 @@ function showUserInterface($filename)
   </html>
   <?php
     // adding a default namespace if namespace doesn't exist
-	$content = file_get_contents($filename);
-	$namespace_location=strpos($content, 'namespace');
-	if ($namespace_location===false) {
-		file_put_contents($filename,"namespace uigu;\n" . $content);
-	}
-
-	$tempDir=dirname($filename);
-	$umpDir=dirname($tempDir);
-	if (file_exists("$tempDir/files"))
+    $content = $dataHandle->readData($dataname);
+    $namespace_location=strpos($content, 'namespace');
+    if ($namespace_location===false) {
+        $dataHandle->writeData($dataname, "namespace uigu;\n" . $content);
+    }
+    $dataWorkDir = $dataHandle->workDir();
+    $tempDir=$dataWorkDir->getPath();
+    $umpDir=dirname($tempDir);
+    if (file_exists("$tempDir/files"))
       emptyDir("$tempDir/files");
-	else
-	  mkdir("$tempDir/files");
-	rcopy("JSFProvider/files", "$tempDir/files");
-	copy("JSFProvider/build.xml", "$tempDir/build.xml");
+    else
+      mkdir("$tempDir/files");
+    rcopy("JSFProvider/files", "$tempDir/files");
+    copy("JSFProvider/build.xml", "$tempDir/build.xml");
 
     chdir($tempDir);
 
-	$output = executeCommand("ant -DxmlFile=../../scripts/JSFProvider/UmpleProject.xml -DumpleFile=model.ump -DoutputFolder=TempApp -DprojectName=umpleUIGU");
+    $output = executeCommand("ant -DxmlFile={rootDir()}/scripts/JSFProvider/UmpleProject.xml -DumpleFile=model.ump -DoutputFolder=TempApp -DprojectName=umpleUIGU");
 
-	$didCompile = strpos($output,"BUILD SUCCESSFUL") > 0;
+    $didCompile = strpos($output,"BUILD SUCCESSFUL") > 0;
     if ($didCompile){
-		if (!file_exists("TempProj"))
-			mkdir("TempProj");
-		copy("umpleUIGU.war", "TempProj/umpleUIGU.war");
-		chdir("TempProj");
-		executeCommand("jar xf umpleUIGU.war");
-		unlink('umpleUIGU.war');
-		//echo getcwd();
-		$umpDir=dirname($tempDir);
-		$tmp=basename($tempDir);
-		chdir("../../uigu");
-		$uiguDir=getAvailableUIGUDirectory();
-		//echo $uiguDir;
-		emptyDir($uiguDir);
-		//echo "$tempDir/TempProj";
-		chdir("..");
-		rcopy($tmp."/TempProj", $umpDir."/uigu/".$uiguDir);
+        if (!file_exists("TempProj"))
+            mkdir("TempProj");
+        copy("umpleUIGU.war", "TempProj/umpleUIGU.war");
+        chdir("TempProj");
+        executeCommand("jar xf umpleUIGU.war");
+        unlink('umpleUIGU.war');
+        //echo getcwd();
+        $umpDir=dirname($tempDir);
+        $tmp=basename($tempDir);
+        chdir(rootDir()."/uigu");
+        $uiguDir=getAvailableUIGUDirectory();
+        //echo $uiguDir;
+        emptyDir($uiguDir);
+        //echo "$tempDir/TempProj";
+        chdir(rootDir());
+        rcopy($tmp."/TempProj", $umpDir."/uigu/".$uiguDir);
 
-		chdir($tmp);
+        chdir($tmp);
 
-		$gh=fopen("uigudir.txt", 'w');
-		fwrite($gh, $uiguDir);
-		fclose($gh);
+        $gh=fopen("uigudir.txt", 'w');
+        fwrite($gh, $uiguDir);
+        fclose($gh);
 
-		$fh=fopen("index.html", 'w') or die("Failed to create/open file!");
+        $fh=fopen("index.html", 'w') or die("Failed to create/open file!");
 
-		$before = <<< _BEFORE
+        $before = <<< _BEFORE
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -422,38 +572,39 @@ $after = <<< _AFTER
 </body>
 </html>
 _AFTER;
-		fwrite($fh, $after);
-		fclose($fh);
+        fwrite($fh, $after);
+        fclose($fh);
     }
     else{
-	  $errorFilename = "{$filename}.erroroutput";
-	  $fh = fopen($errorFilename, 'w') or die("can't open file");
+      $errorFilename = "{$filename}.erroroutput";
+      $fh = fopen($errorFilename, 'w') or die("can't open file");
       $stringData = "<h2> An error occurred while interpreting your Umple code. Please review it and try again. </h2>";
       fwrite($fh, $stringData);
       $stringData = "<pre>{$output}</pre>";
       fwrite($fh, $stringData);
       fclose($fh);
     }
+    return $dataWorkDir;
 }
 
 function getAvailableUIGUDirectory()
 {
-	$files = array();
-	if ($handle = opendir(".")) {
-		while (false !== ($file = readdir($handle))) {
-			if (strstr($file, "uigu")) {
-				$files[filemtime($file)] = $file;
-			}
-		}
-		closedir($handle);
+    $files = array();
+    if ($handle = opendir(".")) {
+        while (false !== ($file = readdir($handle))) {
+            if (strstr($file, "uigu")) {
+                $files[filemtime($file)] = $file;
+            }
+        }
+        closedir($handle);
 
-		// sort
-		ksort($files);
-		// find the oldest modification
-		$reallyOldModified = reset($files);
-	 	return $reallyOldModified;
-	}
-	return '';
+        // sort
+        ksort($files);
+        // find the oldest modification
+        $reallyOldModified = reset($files);
+        return $reallyOldModified;
+    }
+    return '';
 }
 
 function showUmlImage($json)
@@ -523,9 +674,9 @@ function handleUmpleTextChange()
   
   $rawActionCode = $_REQUEST["actionCode"];
   if(!is_null($rawActionCode)){
-	  //Escape all the double quotes
-	  $rawActionCode = trim(str_replace("\"","\\\"",$rawActionCode));
-	}
+      //Escape all the double quotes
+      $rawActionCode = trim(str_replace("\"","\\\"",$rawActionCode));
+    }
 
   //Windows versus Linux PHP issues
   $actionCode = $GLOBALS["OS"] == "Windows" ? json_encode($_REQUEST["actionCode"]) : "\"" . $_REQUEST["actionCode"] . "\"";
@@ -533,17 +684,21 @@ function handleUmpleTextChange()
   $actionCode = str_replace(">","\>",$actionCode);
 
   if(!is_null($actionCode)){
-	  //Escape all the double quotes
-	  $actionCode = str_replace("\"","\\\"",$actionCode);
-	  //Trim for any un-standard characters
-	  $actionCode = trim($actionCode);
-	  //Trim for escaped doubles quotes in the beginning and end of the actionCode string
-	  $actionCode = trim($actionCode, "\\\"");
+      //Escape all the double quotes
+      $actionCode = str_replace("\"","\\\"",$actionCode);
+      //Trim for any un-standard characters
+      $actionCode = trim($actionCode);
+      //Trim for escaped doubles quotes in the beginning and end of the actionCode string
+      $actionCode = trim($actionCode, "\\\"");
   }
 
-  $filename = saveFile($input);
+  list($dataname, $dataHandle) = getOrCreateDataHandle();
+  $dataHandle->writeData($dataname, $input);
+  $workDir = $dataHandle->getWorkDir();
+  $filename = $workDir->getPath().'/'.$dataname;
+
   $umpleOutput = executeCommand("java -jar umplesync.jar -{$action} \"{$actionCode}\" {$filename}", "-{$action} \"{$rawActionCode}\" {$filename}");
-  saveFile($umpleOutput,$filename);
+  $dataHandle->writeData($dataname, $umpleOutput);
   echo $umpleOutput;
   return;
 }
@@ -698,7 +853,7 @@ function cleanupOldFiles()
 function rrmdir($dir) {
     foreach(glob($dir . '/*') as $file) {
         if(is_dir($file))
-			rrmdir($file);
+            rrmdir($file);
         else
             unlink($file);
     }
@@ -708,8 +863,8 @@ function rrmdir($dir) {
 function rcopy($src, $dst) {
   //if (file_exists($dst)) rrmdir($dst);
   if (is_dir($src)) {
-	if (!file_exists($dst))
-    	mkdir($dst);
+    if (!file_exists($dst))
+        mkdir($dst);
     $files = scandir($src);
     foreach ($files as $file)
     if ($file != "." && $file != "..") rcopy("$src/$file", "$dst/$file");
@@ -718,24 +873,24 @@ function rcopy($src, $dst) {
 }
 
 function emptyDir($dir) {
-	$handle=opendir($dir);
+    $handle=opendir($dir);
 
-	while (($fl = readdir($handle))!==false) {
-		$file="$dir/$fl";
-		if (!is_dir($file))
-			unlink($file);
-		else {
-			if ($fl != "." && $fl != "..") {
-				$files = scandir($file);
-				if (count($files) <= 2)
-					rmdir($file);
-				else {
-					emptyDir($file);
-					rmdir($file);
-				}
-			}
-		}
-	}
+    while (($fl = readdir($handle))!==false) {
+        $file="$dir/$fl";
+        if (!is_dir($file))
+            unlink($file);
+        else {
+            if ($fl != "." && $fl != "..") {
+                $files = scandir($file);
+                if (count($files) <= 2)
+                    rmdir($file);
+                else {
+                    emptyDir($file);
+                    rmdir($file);
+                }
+            }
+        }
+    }
 
-	closedir($handle);
+    closedir($handle);
 }

@@ -8,9 +8,8 @@ require_once ("scripts/compiler_config.php");
 cleanupOldFiles();
 
 if (isset($_REQUEST["model"])) {
-  if (!is_file("ump/".$_REQUEST["model"]."/model.ump")) {
-  
-  
+  $dataHandle = dataStore()->openData($_REQUEST['model']);
+  if (!dataHandle) {
     header('HTTP/1.0 404 Not Found');
     readfile('../404.shtml');
     exit();
@@ -51,7 +50,7 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
   }
 }
 
-$filename = extractFilename();
+$dataHandle = extractFilename();
 
 // Core options after ? and between &. One of the first four is allowed
 
@@ -99,7 +98,7 @@ if (isset($_REQUEST['generateDefault']) && $_REQUEST["generateDefault"] != "") {
   $generateDefault="#gen".$_REQUEST['generateDefault'];
 }
 
-$output = readTemporaryFile("ump/" . $filename);
+$output = $dataHandle->readData('model.ump');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -134,16 +133,16 @@ $output = readTemporaryFile("ump/" . $filename);
     </pre>
   </noscript> 
           
-  <input id="filename" type="hidden" value="<?php echo $filename ?>" />
+  <input id="filename" type="hidden" value="<?php echo '../ump/'.$dataHandle->getName().'/model.ump' ?>" />
   <input id="advancedMode" type="hidden" value="0" />
 
   <div id="topLine" class="bookmarkableUrl">
     <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span> 
   
-    <?php if (isBookmark($filename)) { ?>
-      <a id="topBookmarkable" href="umple.php?model=<?php echo extractModelId($filename) ?>">Changes at this URL are saved</a>
+    <?php if (isBookmark($dataHandle)) { ?>
+      <a id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
     <?php } else { ?>
-      <a id="topBookmarkable" href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Create Bookmarkable URL</a>
+      <a id="topBookmarkable" href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Create Bookmarkable URL</a>
     <?php } ?>
     
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
@@ -170,16 +169,16 @@ $output = readTemporaryFile("ump/" . $filename);
         <div class="section">
           <ul class="first">
             <li class="subtitle">SAVE</li>
-            <?php if (isBookmark($filename)) { ?>
+            <?php if (isBookmark($dataHandle)) { ?>
             <li id="ttSaveBookmark">
               <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmark Model</a>
+                <a href="umple.php?model=<?php echo $dataHandle->getName() ?>">Bookmark Model</a>
               </div>
             </li>
             <?php } else { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model</a>
+                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save Model</a>
               </div>
             </li>
             <?php } ?>
