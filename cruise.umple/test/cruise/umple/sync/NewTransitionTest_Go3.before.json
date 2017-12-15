@@ -1,0 +1,1 @@
+{"classId": "CourseSection", "fromStateId": "NotEnoughStudents", "toStateId": "Open","eventName": "requestToRegister", "name": "NotEnoughStudents_requestToRegister_Open" }

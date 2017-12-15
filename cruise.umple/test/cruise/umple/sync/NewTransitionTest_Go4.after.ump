@@ -1,0 +1,11 @@
+class CarTransmission{
+    state {
+        neutral {
+         selectDrive -> drive;
+        }
+        drive {
+            }
+        reverse {
+        }
+     }       
+}
