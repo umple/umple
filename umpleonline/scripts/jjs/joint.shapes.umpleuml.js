@@ -246,7 +246,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
                 JJSdiagram.makeUmpleCodeFromClass('addAttribute', this.model.toJSON(), jQuery(e.target).data('attributeIndex'));
             }else if (e.target.value !== ""){
-            	var attributeIndex = jQuery('div.attributInput').index(jQuery(e.target).parent());
+            	var attributeIndex = this.$box.find('div.attributInput').index(jQuery(e.target).parent());
             	var oldName = this.model.get('attributes')[attributeIndex];
             	oldName = oldName.split(":")[0].substr(2);
 				var attrs = this.model.get('attributes');
@@ -278,7 +278,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             e.target.readOnly = true;
 
             if (this.$box.find('.classMethods input:last').val()) {
-                var tempIndex = this.$box.find('.classMethods input:last').data('methodIndex') + 1;
+                var tempIndex = this.$box.find('div.methodInput').index(jQuery(e.target).parent());
                 this.addMethodBox(tempIndex);
                 this.addListeners();
 
@@ -301,7 +301,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
          * delete attributes icon clicked
          */
         this.$box.find('.attributInput .deleteAttr').off('click').on('click', _.bind(function (e) {
-            var attIndex = jQuery('div.attributInput').index(jQuery(e.target).parent());
+            var attIndex = this.$box.find('div.attributInput').index(jQuery(e.target).parent());
             var attValue = jQuery(e.target.parentNode.children[0]).val();
             //value is empty, do nothing 
             //value is not empty, delete the attribute from model and update box
@@ -383,7 +383,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
 
 		//methods delete icon clicked
         this.$box.find('.methodInput .deleteMet').off('click').on('click', _.bind(function (e) {
-            var metIndex = jQuery(e.target.parentNode.children[0]).data('methodIndex');
+            var metIndex = this.$box.find('div.methodInput').index(jQuery(e.target).parent());
             var metValue = jQuery(e.target.parentNode.children[0]).val();
             //value is empty, do nothing 
             //value is not empty, delete the attribute from model and update box
@@ -524,18 +524,22 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         this.$box.css({
             width: bbox.width,
             height: bbox.height,
-            left: bbox.x+100,
-            top: bbox.y+50,
+            left: bbox.x,
+            top: bbox.y,
             transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
         });
 
         var widthScale = bbox.width/100;
         var heightScale = bbox.height/60;
 
+        //Dynamically set scale and translate of joint.js shape
         var jointShape = jQuery("#" + this.id);
+        var xTranslate = bbox.x - 100;
+        var yTranslate = bbox.y - 50;
         if (jointShape.children().size() > 0){
 			var rectScale = jQuery(jointShape.children().children());
 			rectScale.attr({"transform": "scale("+ widthScale + "," + heightScale +")"})
+			jointShape.attr({"transform": "translate("+ xTranslate + "," + yTranslate +")"})
         }
 
     }

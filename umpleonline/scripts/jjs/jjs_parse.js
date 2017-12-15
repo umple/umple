@@ -212,8 +212,8 @@ var JJSdiagram = {
 						el: jQuery('#flyPaper'),
 						model: flyGraph,
 						interactive: false,
-						width: 150,
-						height: 80
+						width: 89,
+						height: 54
 					}),
 
 					//create the class template
@@ -223,24 +223,18 @@ var JJSdiagram = {
 						name: ['NewClass' + JJSdiagram.newClassIndex],
 						attributes: [],
 						methods: []
-					}),
-
-					pos = { x: e.clientX, y: e.clientY },
-					offset = {
-						x: x - pos.x,
-						y: y - pos.y
-					};
+					});
 
 				flyShape.position(0, 0);
 				flyGraph.addCell(flyShape);
 				jQuery("#flyPaper").offset({
-					left: e.pageX - offset.x,
-					top: e.pageY - offset.y
+					left: e.pageX,
+					top: e.pageY
 				});
 				jQuery('body').on('mousemove.fly', function (e) {
 					jQuery("#flyPaper").offset({
-						left: e.pageX - offset.x,
-						top: e.pageY - offset.y
+						left: e.pageX,
+						top: e.pageY
 					});
 				});
 				jQuery('body').on('mouseup.fly', function (e) {
@@ -250,10 +244,10 @@ var JJSdiagram = {
 					// Dropped over paper
 					if (x > target.left && x < target.left + JJSdiagram.paper.$el.width() && y > target.top && y < target.top + JJSdiagram.paper.$el.height()) {
 						var s = flyShape.clone();
-						s.position(x - target.left - offset.x, y - target.top - offset.y);
+						s.position(x - target.left, y - target.top );
 						JJSdiagram.paper.model.addCell(s);
+						var cell = JJSdiagram.paper.model.getCell(s.id);
 						JJSdiagram.makeUmpleCodeFromClass('addNewClass', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), s.id));
-
 					}
 					$(EvenTarget).removeClass("selected");
 					jQuery('body').off('mousemove.fly').off('mouseup.fly');
