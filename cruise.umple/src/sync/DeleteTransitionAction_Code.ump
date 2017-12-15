@@ -1,0 +1,154 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Code for methods mixed into the UmpleSync.ump model
+
+*/
+
+namespace cruise.umple.sync;
+
+class DeleteTransitionAction
+{
+  
+  public void go()
+  {
+    try
+    {
+      TextParser textParser = new TextParser(getUmpleCode());
+      File umpleFile = new File(getFilename());    
+      UmpleModel umpleModel = new UmpleModel(new UmpleFile(umpleFile));
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
+      ParseResult result = parser.parse(umpleFile);
+      
+      if (!result.getWasSuccess())
+      {
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+        setUmpleCode(textParser.getText());
+        return;
+      }
+      
+      result = umpleParser.analyze(false);
+      
+      JsonParser jsonParser = new JsonParser("json");
+      ParseResult jsonResult = jsonParser.parse("json", getDeltaCode());
+      
+      if (!jsonResult.getWasSuccess())
+      {
+        setUmpleCode("//Failed at: " + jsonResult.getPosition() + "\n\n//" + getDeltaCode() + "\n\n" + getUmpleCode());
+        return;
+      }
+      Json json = jsonParser.analyze();
+      
+      String transitionName = json.getValue("name");
+      String stateOfTransitionDefinition = json.getValue("fromStateId");
+      /*String classOfTransitionDefinttion;*/
+      
+      boolean didDeleteDefinition = false;
+      
+      for (Token t: umpleParser.getRootToken().getSubTokens())
+      {
+	      	if(!t.is("classDefinition"))
+	      	{
+	      		continue;
+	      	}
+	      	/*This check is needed when JointJs support multiple class state machine*/
+	      	/*if (!t.getValue("name").equals(classOfAssociationDefinition)) { continue }*/
+	      	
+	      	for (Token subT: t.getSubTokens())
+	      	{
+	      		if (!subT.is("stateMachine"))
+	      		{
+	      		  continue;
+	      		}
+	      		
+	      		for (Token ssubT: subT.getSubTokens())
+	      		{
+	      			if (!ssubT.is("inlineStateMachine"))
+	      			{
+	      				continue;
+	      			}
+	      			
+	      			
+	      			for (Token stateSubT: ssubT.getSubTokens())
+	      			{
+	      			
+	      			  if (!stateSubT.is("state"))
+	      			  {
+	      			      continue;
+	      			  }
+	      			  
+	      			  nestedState(stateSubT,textParser, transitionName, stateOfTransitionDefinition, didDeleteDefinition);
+	      			  
+	      		   }
+	      		}  		
+	      	}
+	      	if (didDeleteDefinition)
+	      	{
+	      	  break;
+	      	}   	
+      }
+      
+      setUmpleCode(textParser.getText());  
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      String output = "FATAL ERROR PARSING UMPLE DIAGRAM\n\n";
+      
+      output += e.toString() + "\n";
+      for (StackTraceElement trace : e.getStackTrace())
+      {
+        output += trace.toString() + "\n";
+      }
+      setUmpleCode(output);
+    }
+  }
+  
+  private void nestedState(Token stateToken, TextParser parser, String transitionName, String stateOfTransitionDefinition, boolean didDeleteDefinition)
+  {
+  
+    String currentName = "";
+    String fromState = stateToken.getValue("stateName");
+    
+    if(didDeleteDefinition)
+    {
+      return;
+    }
+    
+    for (Token stateSubT: stateToken.getSubTokens())
+    {
+      if (stateSubT.is("state") && !fromState.equals(stateOfTransitionDefinition))
+      {
+        nestedState(stateSubT, parser, transitionName, stateOfTransitionDefinition, didDeleteDefinition);
+        return;
+      }
+      
+      if (!fromState.equals(stateOfTransitionDefinition))
+      {
+        continue;
+      }
+      
+      if (!stateSubT.is("transition") && !stateSubT.is("standAloneTransition"))
+      {
+        continue;
+      }
+    
+      String toState = stateSubT.getValue("stateName");
+      String event = stateSubT.getValue("event");
+    
+      currentName = fromState + "_" + event + "_" + toState;
+    
+      if(currentName.equals(transitionName))
+       {
+       parser.replace(stateSubT, "");
+       didDeleteDefinition = true;
+       break;
+       }
+     }
+   }
+}

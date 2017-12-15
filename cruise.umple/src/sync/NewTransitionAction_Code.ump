@@ -1,0 +1,144 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Code for methods mixed into the UmpleSync.ump model
+
+*/
+
+namespace cruise.umple.sync;
+
+class NewTransitionAction
+{
+	  public void go()
+	  {
+	    boolean shouldContinue = true;
+	    
+	    if (shouldContinue)
+	    {
+	      shouldContinue = addTransitionDescription();  
+	    }
+	  }
+	  
+	     private boolean addTransitionDescription()
+      {
+            try
+            {
+              TextParser textParser = new TextParser(getUmpleCode());
+              File umpleFile = new File(getFilename());    
+              UmpleModel umpleModel = new UmpleModel( new UmpleFile(umpleFile) );
+              cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+              UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
+              ParseResult result = parser.parse(umpleFile);
+              
+              if (!result.getWasSuccess())
+              {
+                //Uncomment for debug
+                textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+                setUmpleCode(textParser.getText());
+                return false;
+              }
+              
+              result = umpleParser.analyze(false);
+              
+              if (!result.getWasSuccess())
+              {
+                //Uncomment for debug
+                //textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+                //setUmpleCode(textParser.getText());
+                return false;
+              }
+              
+              JsonParser jsonParser = new JsonParser("json");
+              jsonParser.parse("json", getDeltaCode());
+              
+              Json json = jsonParser.analyze();
+              
+              String fromStateId = json.getValue("fromStateId");
+              String event = json.getValue("eventName");
+              String toStateId = json.getValue("toStateId");
+              Token addAfterLastTransition = null;
+              boolean didFindPostion = false;
+              
+              for(Token t : umpleParser.getRootToken().getSubTokens())
+              {
+                if (!t.is("classDefinition"))
+                {
+                  continue;
+                }
+                
+                for (Token subT: t.getSubTokens())
+                {
+                    if(subT.is("stateMachine"))
+                    {
+                    		for (Token stateMSubT: subT.getSubTokens()) 
+                    		{
+                    			if (stateMSubT.is("inlineStateMachine")) 
+                    			{
+                    				
+                    				for (Token stateSubT: stateMSubT.getSubTokens()) {
+                    					if(stateSubT.is("state")&&!didFindPostion) {
+                    						didFindPostion = nestedState(stateSubT, fromStateId, textParser, event, toStateId);
+                    					}	
+                    				}
+                    			}	
+                    		} 
+                    }
+                }
+              }
+              
+              setUmpleCode(textParser.getText());
+              return true;
+            }
+            catch (Exception e)
+            {
+              return handleException(e);
+            }
+      }
+	  
+	  private boolean nestedState(Token stateToken, String fromStateId, TextParser parser, String event, String toStateId){
+    		int i = 0;
+   		Token addAfterLastTransition = null;
+   		boolean didFindPosition = false;
+        for(Token subT : stateToken.getSubTokens())
+        {
+          if (subT.is("state") && !fromStateId.equals(stateToken.getValue("stateName")))
+          {
+            didFindPosition = didFindPosition ||  nestedState(subT, fromStateId, parser, event, toStateId);
+          }
+            
+          if (subT.is("extendsName"))
+          {
+            addAfterLastTransition = subT.getSubToken(i+1); // ";" is not included in the "extendsName" token
+          }
+                  
+          if (addAfterLastTransition == null || subT.isStatic("{") || subT.is("transition")) // TODO }
+          {
+           addAfterLastTransition = subT;
+          }
+          ++i;
+        }
+        
+        if(fromStateId.equals(stateToken.getValue("stateName"))) {
+        		String newTransition = StringFormatter.format(" {0} -> {1};\n", event, toStateId);
+            parser.insertAfter(addAfterLastTransition, newTransition);
+            return true;
+        }
+        return didFindPosition;
+  }
+      
+      private boolean handleException(Exception e)
+      {
+            String output = "FATAL ERROR PARSING UMPLE DIAGRAM\n\n";
+            
+            for (StackTraceElement trace : e.getStackTrace())
+            {
+              output += trace.toString() + "\n";
+            }
+            setUmpleCode(output);
+            return false;
+      }
+}
