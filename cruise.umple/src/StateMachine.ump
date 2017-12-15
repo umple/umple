@@ -274,8 +274,13 @@ class Guard
 					nodes.offer(")");
 			}
 			
-			else if( exprTree.getNumberOfElements() == 1 )
-				nodes.offer(exprTree.getNames().first());
+			else if( exprTree.getNumberOfElements() == 1 ){
+        //Issue 1151 : Literal is added as root element
+        if(exprTree.getRoot() instanceof ConstraintLiteral )
+           nodes.offer(((ConstraintLiteral)exprTree.getRoot()).getValue());
+        else 
+				   nodes.offer(exprTree.getNames().first());
+      }
 			
 			if( exprTree.getShouldDisplayBrackets() )
 				nodes.add(")");

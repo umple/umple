@@ -2601,6 +2601,11 @@ public class UmpleParserTest
 	  Assert.assertEquals("blah/blah/blah", model.getDefaultGeneratePath());
 	  Assert.assertEquals("hideattributes", model.getGenerate(0).getSuboption(0));
   }
+  
+  @Test
+  public void graphVizLiteralGuards(){
+    assertParse("027_generateSuboptionOverride.ump");
+  }
 
   @Test
   public void methodNameConflictUsingDefaulted()
