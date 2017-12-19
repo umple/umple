@@ -115,6 +115,12 @@ class SampleFileWriter
         { //Ignore the line, go to next
           actualLine = readLine(actualReader);
         }
+
+        // Deal with Code from template
+        while (actualLine != null && actualLine.indexOf("/* Code from template") != -1)
+        { //Ignore the line, go to next
+          actualLine = readLine(actualReader);
+        }        
         
         line++;
         
@@ -174,6 +180,7 @@ class SampleFileWriter
   
   public static void assertFileContent(BufferedReader expectedReader, BufferedReader actualReader, boolean ignoreLineComments)
   {
+    Boolean skippedActualLineDifference;
     try
     {
       String expectedLine = null;
@@ -184,20 +191,27 @@ class SampleFileWriter
       {
         actualLine = actualReader.readLine();
         expectedLine = expectedReader.readLine();
+        skippedActualLineDifference = false;
         if (ignoreLineComments)
         {
-          // HACK: To deal with // line # comments and footer of inject statements
-          while (actualLine != null && (actualLine.indexOf("// line") != -1 || 
+          // Skip past elements that may change in updated code but are not important differences
+          while (actualLine != null && (actualLine.indexOf("// line") != -1 ||
+                    actualLine.indexOf("/* Code from template") != -1 ||
                     actualLine.matches("\\s*\\/\\/ END OF UMPLE (BEFORE|AFTER) INJECTION")))
-          { //Ignore the line, go to next
+          { //Ignore the line, go to next - line found has unimportant difference
             actualLine = actualReader.readLine();
+            skippedActualLineDifference = true;
           }
           
           while (expectedLine != null && (expectedLine.indexOf("// line") != -1 ||
+                    expectedLine.indexOf("/* Code from template") != -1 ||  
+                    (skippedActualLineDifference == true && expectedLine.trim().isEmpty()) ||      
                     expectedLine.matches("\\s*\\/\\/ END OF UMPLE (BEFORE|AFTER) INJECTION")))
           { 
         	  expectedLine = expectedReader.readLine();
+        	  skippedActualLineDifference = false; // Only skip one blank
           }
+             
         } 
         
         line++;

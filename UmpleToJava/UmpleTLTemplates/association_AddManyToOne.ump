@@ -1,9 +1,10 @@
 class UmpleToJava {
-    association_AddManyToOne <<!<</*association_AddManyToOne*/>>
-  public <<=gen.translate("type",av)>> <<=gen.translate("addMethod",av)>>(<<=gen.translate("methodArgumentsExcept",relatedAssociation)>>)
+  association_AddManyToOne <<!  /* Code from template association_AddManyToOne */
+<</*association_AddManyToOne*/>>
+<<# if(!(av.getRelatedAssociation().getUmpleClass().getIsAbstract())) {#>>  public <<=gen.translate("type",av)>> <<=gen.translate("addMethod",av)>>(<<=gen.translate("methodArgumentsExcept",relatedAssociation)>>)
   {
     return new <<=gen.translate("type",av)>>(<<=gen.translate("callerArgumentsExcept",relatedAssociation)>>);
-  }
+  }<<#}#>>
 
   public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {

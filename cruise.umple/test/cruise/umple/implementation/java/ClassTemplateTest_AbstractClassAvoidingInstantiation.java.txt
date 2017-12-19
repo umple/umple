@@ -1,0 +1,139 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+import java.util.*;
+
+// line 2 "model.ump"
+public class Teacher
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Teacher Associations
+  private List<Person> myStudents;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Teacher()
+  {
+    myStudents = new ArrayList<Person>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Person getMyStudent(int index)
+  {
+    Person aMyStudent = myStudents.get(index);
+    return aMyStudent;
+  }
+
+  public List<Person> getMyStudents()
+  {
+    List<Person> newMyStudents = Collections.unmodifiableList(myStudents);
+    return newMyStudents;
+  }
+
+  public int numberOfMyStudents()
+  {
+    int number = myStudents.size();
+    return number;
+  }
+
+  public boolean hasMyStudents()
+  {
+    boolean has = myStudents.size() > 0;
+    return has;
+  }
+
+  public int indexOfMyStudent(Person aMyStudent)
+  {
+    int index = myStudents.indexOf(aMyStudent);
+    return index;
+  }
+
+  public static int minimumNumberOfMyStudents()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOne */
+
+
+  public boolean addMyStudent(Person aMyStudent)
+  {
+    boolean wasAdded = false;
+    if (myStudents.contains(aMyStudent)) { return false; }
+    Teacher existingTeacher = aMyStudent.getTeacher();
+    boolean isNewTeacher = existingTeacher != null && !this.equals(existingTeacher);
+    if (isNewTeacher)
+    {
+      aMyStudent.setTeacher(this);
+    }
+    else
+    {
+      myStudents.add(aMyStudent);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeMyStudent(Person aMyStudent)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aMyStudent, as it must always have a teacher
+    if (!this.equals(aMyStudent.getTeacher()))
+    {
+      myStudents.remove(aMyStudent);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addMyStudentAt(Person aMyStudent, int index)
+  {  
+    boolean wasAdded = false;
+    if(addMyStudent(aMyStudent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMyStudents()) { index = numberOfMyStudents() - 1; }
+      myStudents.remove(aMyStudent);
+      myStudents.add(index, aMyStudent);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveMyStudentAt(Person aMyStudent, int index)
+  {
+    boolean wasAdded = false;
+    if(myStudents.contains(aMyStudent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMyStudents()) { index = numberOfMyStudents() - 1; }
+      myStudents.remove(aMyStudent);
+      myStudents.add(index, aMyStudent);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addMyStudentAt(aMyStudent, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    for(int i=myStudents.size(); i > 0; i--)
+    {
+      Person aMyStudent = myStudents.get(i - 1);
+      aMyStudent.delete();
+    }
+  }
+
+}
