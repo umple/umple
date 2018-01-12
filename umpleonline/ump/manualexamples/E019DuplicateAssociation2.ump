@@ -1,0 +1,9 @@
+// Using role names rn1 and rn2 to avoid error 19
+class X {
+}
+
+class Y {
+  1 -- * X;
+  1 rn2 -- * X rn1;
+}
+

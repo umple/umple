@@ -1,0 +1,12 @@
+// Example of an association class definition that generates error 19
+// The solution is to add a role name such as menteeAssignments between the first * and Member
+
+class Member {
+  name;
+}
+
+associationClass Assignment {
+  Date dateEstablished;
+  * Member mentor;
+  * Member mentee;
+}

@@ -1,4 +1,6 @@
-// The following example shows how to generate this error.
+// The following example shows how to generate error 19.
+// The solution is to at least one role name one or both of the Y ends
+// and at least one role name on one of both of the X ends.
 class X {
 }
 

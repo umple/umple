@@ -1,12 +1,15 @@
-// The following shows the same example as using a regular class
-// Instead of an association class
+// The following shows how we might model sales of Ticket for
+// Seminars to Persons without using an association class.
+// Note, however, that in this model, it would be possible to sell
+// more than one ticket to a Person for the same Seminar.
+// Using an association class would hence be better than this.
 class Ticket
 {
   Integer ticketNumber;
   Double price = 0.0;
   
-  1 -- * Person attendee;
-  1 -- * Seminar;
+  * -- 1 Person attendee;
+  * -- 1 Seminar;
 }
 
 class Person
