@@ -1,0 +1,8 @@
+class ImportJavaUtilDefault {
+    String[] someStrings;
+}
+
+class ImportJavaUtilDeduplicate {
+    depend java.util.*;
+    String[] someStrings;
+}
