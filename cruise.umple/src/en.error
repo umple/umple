@@ -19,7 +19,7 @@
 13: 2, "http://cruise.eecs.uottawa.ca/umple/E013NonImmutableAssociation.html", Class at directed end of immutable association must be an immutable class ;
 14: 3, "http://cruise.eecs.uottawa.ca/umple/E014ImmutableSubclassofMutable.html", Existing associations, state machines, or superclass for class '{0}' prevents class-level immutability ;
 15: 3, "http://cruise.eecs.uottawa.ca/umple/W015ImmutableClassStateMachine.html", Immutable class '{0}' may not contain state machines ;
-16: 1, "http://cruise.eecs.uottawa.ca/umple/E016NonImmutab|| (tempMethod != null && tempMethod.isIsAbstract())leSuperclass.html", Immutability rules prevent class '{0}' from subclassing '{1}' ;
+16: 1, "http://cruise.eecs.uottawa.ca/umple/E016NonImmutableSuperclass.html", Immutability rules prevent class '{0}' from subclassing '{1}' ;
 17: 2, "http://cruise.eecs.uottawa.ca/umple/E017NonImmutableBidirectionality.html", Two-way associations may not be immutable ;
 18: 2, "http://cruise.eecs.uottawa.ca/umple/E018ReflexiveImmutable.html", Reflexive immutable associations may not be mandatory ;
 19: 2, "http://cruise.eecs.uottawa.ca/umple/E019DuplicateAssociation.html", There are multiple associations between class '{0}' and class '{1}'. Unique role names need to be added at '{0}' side to distinguish the different association ends in that class. ;
