@@ -35,6 +35,9 @@ public class ImportTest {
 		SampleFileWriter.destroy(pathToInput + "/Player.java");
 		SampleFileWriter.destroy(pathToInput + "/Goalie.java");
 		SampleFileWriter.destroy(pathToInput + "/SadGoalie.java");
+
+		SampleFileWriter.destroy(pathToInput + "/ImportJavaUtilDefault.java");
+		SampleFileWriter.destroy(pathToInput + "/ImportJavaUtilDeduplicate.java");
 	}
 
 	@Test
@@ -90,6 +93,22 @@ public class ImportTest {
 		code = getJavaCodeByClassName(model, generator, "SadGoalie");
 		assertIfCodeOnlyContainsStatement(true, code, "import java.sql.Date;");
 		assertIfCodeOnlyContainsStatement(true, code, "import java.sql.Time;");
+	}
+
+	@Test
+	public void ImportJavaUtil() {
+		UmpleModel model = runAndGenerateModelByUmpleFile(pathToInput
+			+ "/ImportJavaUtil.ump");
+		JavaClassGenerator generator = new JavaClassGenerator();
+
+		String codeDefault = getJavaCodeByClassName(model, generator,
+			"ImportJavaUtilDefault");
+		assertIfCodeContainsStatement(true, codeDefault, "import java.util.*;");
+
+		String codeDeduplicate = getJavaCodeByClassName(model, generator,
+			"ImportJavaUtilDeduplicate");
+		assertIfCodeOnlyContainsStatement(true, codeDeduplicate,
+			"import java.util.*;");
 	}
 
 	private static void assertIfCodeOnlyContainsStatement(boolean expected,
