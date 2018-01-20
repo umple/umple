@@ -20,6 +20,9 @@
         <!-- Build: -->
         <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="build->default"/>
 
+        <!-- JavaScript compression for UmpleOnline scripts -->
+        <dependency org="com.yahoo.platform.yui" name="yuicompressor" rev="2.4.8" conf="build->default"/>
+
         <!-- Testing -->
         <dependency org="junit" name="junit" rev="4.12" conf="test, build->default" />
 
