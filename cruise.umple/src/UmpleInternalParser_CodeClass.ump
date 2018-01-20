@@ -228,10 +228,29 @@ class UmpleInternalParser
     else if (token.is("classDefinition"))
     {
       UmpleClass childClass = analyzeClass(token);
-      boolean wasSet = childClass.setExtendsClass(aClass);
-      if (!wasSet)
-      {
-        setFailedPosition(token.getPosition(), 16, childClass.getName(), aClass.getName());
+      Token p = token.getParentToken();
+      for (Token t: p.getSubTokens()) {
+        if (t.getValue() == aClass.getName()) {
+          if (aClass.getName() == childClass.getName()) {
+            setFailedPosition(token.getPosition(),11,"Class",childClass.getName());
+          }
+          if (unlinkedExtends.get(childClass) == null) {
+            List<String> extend = new ArrayList<>();
+            extend.add(aClass.getName());
+            unlinkedExtends.put(childClass, extend);
+          } else {
+            setFailedPosition(token.getPosition(),34,childClass.getName(),aClass.getName());
+            break;
+          }
+          if (unlinkedExtendsTokens.get(childClass) == null) {
+            List<Token> extendToken = new ArrayList<>();
+            extendToken.add(t);
+            unlinkedExtendsTokens.put(childClass, extendToken);
+          } else {
+            setFailedPosition(token.getPosition(),34,childClass.getName(),aClass.getName());
+            break;
+          }
+        }
       }
     }
     else if (token.is("constantDeclaration"))
@@ -1100,7 +1119,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         setFailedPosition(classToken.getPosition(), 0, "Unable to make class abstract!");
       }
     }
-
     addExtendsTo(classToken, aClass, unlinkedExtends, unlinkedExtendsTokens);
     
     // If the "singleton" keyword is parsed, make the Umple class a singleton.

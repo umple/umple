@@ -9,10 +9,7 @@ class Airplane
   singleton;
 }
 
-class Fighters 
+class F16
 {
-  class F16
-  {
-    isA Airplane;
-  }
+  isA Airplane;
 }

@@ -32,14 +32,11 @@ class URLMS
   {
     int quantity;
       
-    class Equipment
-    {
     String type;
-    }
 
     class Supply
     {
-    String type;
+    String supplyType;
     }
   }
 

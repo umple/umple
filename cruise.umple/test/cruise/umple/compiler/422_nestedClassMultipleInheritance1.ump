@@ -1,0 +1,10 @@
+class TopHat{
+  class Question{
+    boolean status;
+  }
+
+  class HomeworkQuestion{
+    isA Question;
+    Date dueDate;
+  }
+}
