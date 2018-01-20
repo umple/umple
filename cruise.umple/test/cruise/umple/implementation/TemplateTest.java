@@ -230,6 +230,7 @@ public class TemplateTest
     
     SampleFileWriter.destroy(pathToInput + "/A.java");
     SampleFileWriter.destroy(pathToInput + "/A.php");
+    SampleFileWriter.destroy(pathToInput + "/a.rb");
     
     SampleFileWriter.destroy(pathToInput + "/stateMachineWithNegativeNumberGuard.java");
     SampleFileWriter.destroy(pathToInput + "/stateMachineWithNegativeNumberGuard.php");
