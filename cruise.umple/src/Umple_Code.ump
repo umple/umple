@@ -863,10 +863,6 @@ class MethodBody
   {
   return codeblock.getCode(lang);
   }
-  public void setExtraCode(String code)
-  {
-    codeblock.setCode(code);
-  }
   public void setExtraCode(String lang, String code)
   {
     codeblock.setCode(lang,code);
