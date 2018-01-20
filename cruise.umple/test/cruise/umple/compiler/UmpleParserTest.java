@@ -422,6 +422,25 @@ public class UmpleParserTest
     Assert.assertEquals(false,model.getUmpleClass("E").getIsAbstract());
   }
 
+  //Issue 1159
+  @Test
+  public void nestedClassCyclicInheritance() {
+    assertFailedParse("422_nestedClassCyclicInheritance1.ump",11);
+    assertFailedParse("422_nestedClassCyclicInheritance2.ump",12);
+    assertFailedParse("422_nestedClassCyclicInheritance3.ump",12);
+    assertFailedParse("422_nestedClassCyclicInheritance4.ump",12);
+    assertFailedParse("422_nestedClassCyclicInheritance5.ump",11);
+    assertFailedParse("422_nestedClassCyclicInheritance6.ump",12);
+  }
+
+  //Issue 1159
+  @Test
+  public void nestedClassMultipleInheritance() {
+    assertFailedParse("422_nestedClassMultipleInheritance1.ump",34);
+    assertFailedParse("422_nestedClassMultipleInheritance2.ump",34);
+    assertFailedParse("422_nestedClassMultipleInheritance3.ump",34);
+  }
+ 
   @Test
   public void abstractInterfaceExtends()
   {
@@ -2981,7 +3000,7 @@ public class UmpleParserTest
     assertHasWarningsParse("142_typeIsAccessSpecifierProtected.ump", 142);
     assertHasWarningsParse("142_typeIsAccessSpecifierPrivate.ump", 142);
   }
- 
+  
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));

@@ -1,0 +1,8 @@
+class Y {
+    class X {
+        class Y {
+            class X {
+            }
+        }
+    }
+}

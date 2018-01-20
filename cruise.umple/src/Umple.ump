@@ -240,7 +240,9 @@ class Constant
   //Issue 322 - by default set internal to false
   Boolean isInternal = false;
   
-  class UniqueIdentifier { }
+  // Commented out to prevent conflict with extending UmpleVariable
+  // Previously, this extends would be overwritten, but Issue 1159 changes it to cause error 34
+  // class UniqueIdentifier { }
 }
 
 /*
