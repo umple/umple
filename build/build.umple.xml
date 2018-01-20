@@ -288,6 +288,40 @@
     <delete file="cruise.umple/bin/rules.grammar"/>
   </target>
 
+  <!-- Minify all JS scripts -->
+  <target name="compressAllScripts">
+    <property name="scriptPath" value="${basedir}/umpleonline/scripts"/>
+    <property name="tmpScript" value="${scriptPath}/tmpAllUmple.js"/>
+    <concat destfile="${tmpScript}" fixlastline="yes">
+      <fileset file="${scriptPath}/prototype.js"/>
+      <fileset file="${scriptPath}/dom.js"/>
+      <fileset file="${scriptPath}/ajax.js"/>
+      <fileset file="${scriptPath}/helper.js"/>
+      <fileset file="${scriptPath}/json.js"/>
+      <fileset file="${scriptPath}/debugger.js"/>
+      <fileset file="${scriptPath}/shCore.js"/>
+      <fileset dir="${scriptPath}" includes="shBrush*.js"/>
+      <fileset file="${scriptPath}/inlineeditor.js"/>
+      <fileset file="${scriptPath}/CodeMirror/lib/codemirror.js"/>
+      <fileset file="${scriptPath}/CodeMirror/mode/clike/clike.js"/>
+      <fileset file="${scriptPath}/CodeMirror/lib/util/foldcode.js"/>
+      <fileset file="${scriptPath}/CodeMirror/lib/util/searchcursor.js"/>
+      <fileset dir="${scriptPath}/dropbox" includes="*.js"/>
+      <fileset dir="${scriptPath}" includes="umple_*.js"/>
+      <fileset file="${scriptPath}/structureDiagram.js"/>
+      <fileset file="${scriptPath}/statetable/state_table_colourer.js"/>
+    </concat>
+    <java jar="${dist.dir}/libs/build/yuicompressor.jar"
+          fork="true"
+          failonerror="true">
+      <arg value="${tmpScript}"/>
+      <arg line="-o ${scriptPath}/allumple-min.js"/>
+    </java>
+    <delete>
+      <fileset file="${tmpScript}"/>
+    </delete>
+  </target>
+
   <!-- ```````````````````````````
     Package the application
   ``````````````````````````` -->
@@ -309,6 +343,7 @@
     <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="${dist.dir}/${dist.umple.jar}" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
     <copy file="${dist.dir}/${dist.umple.vml.jar}" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
+    <antcall target="compressAllScripts"/>
   </target>
 
   <target name="buildDockerImage">
