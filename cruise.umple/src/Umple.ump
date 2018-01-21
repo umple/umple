@@ -528,6 +528,11 @@ class UmpleClassifier
   1 -> 0..* Constant;
   1 -> 0..* ModelConstraint;
   * -> 0..1 Token extendsToken;
+  
+  // Methods to distinguishe the subclass types
+  boolean isUmpleClass() {return false;}
+  boolean isUmpleInterface() {return false;}
+  boolean isUmpleTrait() {return false;}
 }
 
 /*
@@ -545,6 +550,8 @@ class UmpleInterface
 
   before setPackageName { if (aPackageName == null) { return false; } }
   before addDepend { if (depends.contains(aDepend)) { return false; } }
+
+  boolean isUmpleInterface() {return true;}
 }
 
 /*
@@ -629,6 +636,8 @@ class UmpleClass
   before setExtendsClass { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
 
   before addStateMachine { if (isImmutable()) { return false; } }
+
+  boolean isUmpleClass() {return true;}
 }
 
 
@@ -706,6 +715,7 @@ class UmpleTrait {
 
   before addStateMachine { if (isImmutable()) { return false; } }
 
+  boolean isUmpleTrait() {return true;}
 }
 
 //This class is used to specify parameters for traits.
