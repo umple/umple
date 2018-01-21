@@ -3,6 +3,7 @@ dist/
 nohup.out
 
 # Temporary
+/ump
 
 # umple specific
 umpleonline/ump/tmp*
