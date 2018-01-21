@@ -27,36 +27,36 @@ class UmpleInternalParser
   //------------------------
   // CONSTANTS
   //------------------------
-  private static final String GUARD = "guard";
-  private static final String LONE_BOOLEAN = "loneBoolean";
-  private static final String CONSTRAINT_BODY = "constraintBody";
-  private static final String LINKING_OP_BODY = "linkingOpBody";
-  private static final String NEGATIVE_CONSTRAINT = "negativeConstraint";
-  private static final String NEGATIVE_CONSTRAINT_APPLIED = "negativeConstraintApplied";
-  private static final String NUMBER = "number";
-  private static final String QUOTE = "quote";
-  private static final String CONCAT = "concat";
-  private static final String BOOL_LITERAL = "boolLiteral";
-  private static final String CONSTRAINT_NAME = "constraintName";
-  private static final String NUMBER_LITERAL = "numberLiteral";
-  private static final String ASSOCIATION_EXPR = "associationExpr";
-  private static final String STATEMACHINE_EXPR = "statemachineExpr";
-  private static final String FINAL_STATE_KEYWORD = "Final";
+  internal const String GUARD = "guard";
+  internal const String LONE_BOOLEAN = "loneBoolean";
+  internal const String CONSTRAINT_BODY = "constraintBody";
+  internal const String LINKING_OP_BODY = "linkingOpBody";
+  internal const String NEGATIVE_CONSTRAINT = "negativeConstraint";
+  internal const String NEGATIVE_CONSTRAINT_APPLIED = "negativeConstraintApplied";
+  internal const String NUMBER = "number";
+  internal const String QUOTE = "quote";
+  internal const String CONCAT = "concat";
+  internal const String BOOL_LITERAL = "boolLiteral";
+  internal const String CONSTRAINT_NAME = "constraintName";
+  internal const String NUMBER_LITERAL = "numberLiteral";
+  internal const String ASSOCIATION_EXPR = "associationExpr";
+  internal const String STATEMACHINE_EXPR = "statemachineExpr";
+  internal const String FINAL_STATE_KEYWORD = "Final";
    
-  private static final Integer LHS_POSITION = 0;
-  private static final Integer OPERATOR_POSITION = 1;
-  private static final Integer RHS_POSITION = 2;
-  private static final String EQUALS_OP = "equalsOp";
-  private static final String NOT_EQUALS_OP = "notequalsOp";
-  private static final String AND_OP = "andOp";
-  private static final String OR_OP = "orOp";
-  private static final String GREATER_THAN_OR_EQUAL = "greaterOp";
-  private static final String GREATER_THAN = "moreOp";
-  private static final String LESS_THAN_OR_EQUAL = "lessOp";
-  private static final String LESS_THAN = "smallerOp";
-  private static final String OP = "Op";
-  private static final String OPERATOR = "operator";
-  private static final String STATIC = "STATIC";
+  internal const Integer LHS_POSITION = 0;
+  internal const Integer OPERATOR_POSITION = 1;
+  internal const Integer RHS_POSITION = 2;
+  internal const String EQUALS_OP = "equalsOp";
+  internal const String NOT_EQUALS_OP = "notequalsOp";
+  internal const String AND_OP = "andOp";
+  internal const String OR_OP = "orOp";
+  internal const String GREATER_THAN_OR_EQUAL = "greaterOp";
+  internal const String GREATER_THAN = "moreOp";
+  internal const String LESS_THAN_OR_EQUAL = "lessOp";
+  internal const String LESS_THAN = "smallerOp";
+  internal const String OP = "Op";
+  internal const String OPERATOR = "operator";
+  private static final  String STATIC = "STATIC";
   
   // Allow to declare several active objects within the same class, the name of the generated state-machine
   // will be "stateMachine<numberOfActiveObjects>"

@@ -173,6 +173,7 @@ class Token
     return getSubToken(tokenName,0);
   }
 
+  // Get the value of the named subtoken
   public String getValue(String tokenName)
   {
     Token t = getSubToken(tokenName);
