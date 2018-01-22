@@ -440,6 +440,13 @@ public class UmpleParserTest
     assertFailedParse("422_nestedClassMultipleInheritance2.ump",34);
     assertFailedParse("422_nestedClassMultipleInheritance3.ump",34);
   }
+  
+  //Issue 1181
+  @Test
+  public void multipleClassBlockInheritance() {
+    assertFailedParse("422_multipleClassBlockInheritance1.ump",34);
+    assertSimpleParse("422_multipleClassBlockInheritance2.ump");
+  }
  
   @Test
   public void abstractInterfaceExtends()

@@ -1206,7 +1206,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
     }
   	//Checks list of extends tokens to prevent multiple class inheritance
-    if(numberOfExtendsClass(extendsTokenList) > 1)
+    if(numberOfExtendsClass(unlinkedExtendsTokens.get(aClassifier)) > 1)
 	{
 	  Token t = extendsTokenList.get(0);    	
 	  getParseResult().addErrorMessage(new ErrorMessage(34,t.getPosition(),aClassifier.getName(),t.getValue()));
@@ -1216,13 +1216,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 	//Returns the number of umple class in extends list (extList)
   private int numberOfExtendsClass(List<Token> extList)
   {
-	int counter = 0;
-	for(Token t : extList)
-	{	
-	  if(isAnUmpleClass(t.getValue("extendsName")))
-    counter++;
-	}
-	return counter;
+    if (extList == null) {
+      return 0;
+    }
+    Set<String> tokenSet = new HashSet<>();
+    for(Token t : extList)
+    {	
+      if(isAnUmpleClass(t.getValue("extendsName"))) {
+        tokenSet.add(t.getValue("extendsName"));
+      }
+    }
+	return tokenSet.size();
   }
 
   //This method checks if an umple element with name "name" is an umple class

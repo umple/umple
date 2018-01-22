@@ -1,0 +1,11 @@
+class A {}
+class B {}
+
+class C {
+  isA A;
+}
+
+class C {
+  isA B;
+}
+
