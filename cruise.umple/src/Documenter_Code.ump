@@ -608,6 +608,20 @@ class Template
         
 // Code from Google
 
+"<script>" + "\n" +
+"  (function() {" + "\n" +
+"    var cx = '014719661006816508785:azyvserhylq';" + "\n" +
+"    var gcse = document.createElement('script');" + "\n" +
+"    gcse.type = 'text/javascript';" + "\n" +
+"    gcse.async = true;" + "\n" +
+"    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;" + "\n" +
+"    var s = document.getElementsByTagName('script')[0];" + "\n" +
+"    s.parentNode.insertBefore(gcse, s);" + "\n" +
+"  })();" + "\n" +
+"</script>" + "\n" +
+"<gcse:search></gcse:search>" + "\n" +
+
+/*
 "<div style=\"border:1px solid black\" id=\"cse\" style=\"width: 100%;\">Loading</div>" + "\n" +
 "<script src=\"http://www.google.com/jsapi\" type=\"text/javascript\"></script>" + "\n" +
 "<script type=\"text/javascript\"> " + "\n" +
@@ -621,7 +635,7 @@ class Template
 "    customSearchControl.draw('cse', options);" + "\n" +
 "  }, true);" + "\n" +
 "</script>" + "\n" +
-        
+*/
         
 /// End code from Google
         Template.HtmlCoreTemplate +
