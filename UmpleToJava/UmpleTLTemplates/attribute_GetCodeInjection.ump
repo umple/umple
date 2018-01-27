@@ -1,6 +1,6 @@
 class UmpleToJava {
-    attribute_GetCodeInjection <<!<</*attribute_GetCodeInjection*/>>
-  public <<=gen.translate("type",av)>> <<= gen.translate("getMethod",av) >>()
+  attribute_GetCodeInjection <<!  /* Code from template attribute_GetCodeInjection */
+<</*attribute_GetCodeInjection*/>>  public <<=gen.translate("type",av)>> <<= gen.translate("getMethod",av) >>()
   {
     <<# if (customGetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPrefixCode,gen.translate("getMethod",av)); 
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>

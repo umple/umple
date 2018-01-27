@@ -1,6 +1,6 @@
 class UmpleToJava {
-    attribute_SetMany_subclass <<!<</*attribute_SetMany_subclass*/>>
-  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("typeMany",av)>> <<=gen.translate("parameterOne",av)>>)
+  attribute_SetMany_subclass <<!  /* Code from template attribute_SetMany_subclass */
+<</*attribute_SetMany_subclass*/>>  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("typeMany",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasAdded = false;
     <<# if (customAddPrefixCode != null) {

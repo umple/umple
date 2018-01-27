@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_SetOneToMany_specialization <<!<</*association_SetOneToMany_specialization*/>>
-  public boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  association_SetOneToMany_specialization <<!  /* Code from template association_SetOneToMany_specialization */
+<</*association_SetOneToMany_specialization*/>>  public boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasSet = false;
     <<=gen.translate("type",av)>> <<=gen.translate("associationOne",av)>> = <<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>();

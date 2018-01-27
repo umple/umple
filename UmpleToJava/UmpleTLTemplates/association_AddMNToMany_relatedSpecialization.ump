@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_AddMNToMany_relatedSpecialization <<!<</*association_AddMNToMany_relatedSpecialization*/>>
-  public boolean <<=gen.translate("removeMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  association_AddMNToMany_relatedSpecialization <<!  /* Code from template association_AddMNToMany_relatedSpecialization */
+<</*association_AddMNToMany_relatedSpecialization*/>>  public boolean <<=gen.translate("removeMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasRemoved = false;
     <<# if (customRemovePrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customRemovePrefixCode,gen.translate("removeMethod",av)); 

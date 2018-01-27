@@ -1,6 +1,6 @@
 class UmpleToJava {
-    attribute_GetMany <<!<</*attribute_GetMany*/>>
-  public <<=gen.translate("typeMany",av)>> <<=gen.translate("getMethod",av)>>(int index)
+  attribute_GetMany <<!  /* Code from template attribute_GetMany */
+<</*attribute_GetMany*/>>  public <<=gen.translate("typeMany",av)>> <<=gen.translate("getMethod",av)>>(int index)
   {
     <<# if (customGetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPrefixCode,gen.translate("getMethod",av));
      append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>

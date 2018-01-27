@@ -1,6 +1,6 @@
 class UmpleToJava {
-    attribute_HasUnique <<!<</*attribute_HasUnique*/>>
-  public static boolean <<=gen.translate("hasUniqueMethod",av)>>(<<=gen.translate("type", av)>> <<=gen.translate("parameterOne", av)>>)
+  attribute_HasUnique <<!  /* Code from template attribute_HasUnique */
+<</*attribute_HasUnique*/>>  public static boolean <<=gen.translate("hasUniqueMethod",av)>>(<<=gen.translate("type", av)>> <<=gen.translate("parameterOne", av)>>)
   {
     <<# if (customHasUniquePrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customHasUniquePrefixCode,gen.translate("hasUniqueMethod",av));
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customHasUniquePrefixCode, "    ")); } #>>

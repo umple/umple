@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_AddManyToOne_relatedSpecialization <<!<</*association_AddManyToOne_relatedSpecialization*/>>
-  public <<=gen.translate("type",av)>> <<=gen.translate("addMethod",av)>>(<<=gen.translate("methodArgumentsExcept",relatedAssociation)>>)
+  association_AddManyToOne_relatedSpecialization <<!  /* Code from template association_AddManyToOne_relatedSpecialization */
+<</*association_AddManyToOne_relatedSpecialization*/>>  public <<=gen.translate("type",av)>> <<=gen.translate("addMethod",av)>>(<<=gen.translate("methodArgumentsExcept",relatedAssociation)>>)
   {
     return new <<=gen.translate("type",av)>>(<<=gen.translate("callerArgumentsExcept",relatedAssociation)>>);
   }
