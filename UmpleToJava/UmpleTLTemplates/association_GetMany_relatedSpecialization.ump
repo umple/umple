@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_GetMany_relatedSpecialization <<!<</*association_GetMany_relatedSpecialization*/>>
-  public <<=gen.translate("type",av)>> <<=gen.translate("getMethod",av)>>_<<=gen.translate("type",av)>>(int index)
+  association_GetMany_relatedSpecialization <<!  /* Code from template association_GetMany_relatedSpecialization */
+<</*association_GetMany_relatedSpecialization*/>>  public <<=gen.translate("type",av)>> <<=gen.translate("getMethod",av)>>_<<=gen.translate("type",av)>>(int index)
   {
     <<# if (customGetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPrefixCode,gen.translate("getMethod",av)); 
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>><<# for( TraceItem traceItem : traceItems ) #>><<= 

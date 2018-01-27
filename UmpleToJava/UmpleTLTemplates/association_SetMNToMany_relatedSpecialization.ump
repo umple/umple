@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_SetMNToMany_relatedSpecialization <<!<</*association_SetMNToMany_relatedSpecialization*/>>
-  public boolean <<=gen.translate("setManyMethod",av)>>_<<=gen.translate("type",av)>>(<<=gen.translate("type",av)>>... <<=gen.translate("parameterMany",av)>>)
+  association_SetMNToMany_relatedSpecialization <<!  /* Code from template association_SetMNToMany_relatedSpecialization */
+<</*association_SetMNToMany_relatedSpecialization*/>>  public boolean <<=gen.translate("setManyMethod",av)>>_<<=gen.translate("type",av)>>(<<=gen.translate("type",av)>>... <<=gen.translate("parameterMany",av)>>)
   {
     boolean wasSet = false;
     <<# if (customSetManyPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetManyPrefixCode,gen.translate("setManyMethod",av)); 

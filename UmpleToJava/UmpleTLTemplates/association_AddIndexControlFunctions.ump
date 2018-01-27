@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_AddIndexControlFunctions <<!<</*association_AddIndexControlFunctions*/>>
-  public boolean <<=gen.translate("addAtMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>, int index)
+  association_AddIndexControlFunctions <<!  /* Code from template association_AddIndexControlFunctions */
+<</*association_AddIndexControlFunctions*/>>  public boolean <<=gen.translate("addAtMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>, int index)
   {  
     boolean wasAdded = false;
     if(<<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>))

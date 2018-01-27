@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_AddOptionalNToOne_relatedSpecialization <<!<</*association_AddOptionalNToOne_relatedSpecialization*/>>
-  public <<=gen.translate("type",av)>> <<=gen.translate("addMethod",av)>>(<<=gen.translate("methodArgumentsExcept",relatedAssociation)>>)
+  association_AddOptionalNToOne_relatedSpecialization <<!  /* Code from template association_AddOptionalNToOne_relatedSpecialization */
+<</*association_AddOptionalNToOne_relatedSpecialization*/>>  public <<=gen.translate("type",av)>> <<=gen.translate("addMethod",av)>>(<<=gen.translate("methodArgumentsExcept",relatedAssociation)>>)
   {
     if (<<=gen.translate("numberOfMethod",av)>>() >= <<=gen.translate("maximumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>())
     {

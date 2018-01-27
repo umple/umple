@@ -1,6 +1,6 @@
 class UmpleToJava {
-    attribute_IsBooleanCodeInjectionDerived <<!<</*attribute_IsBooleanCodeInjectionDerived*/>>
-  public <<=gen.translate("type",av)>> <<= gen.translate("isMethod",av) >>()
+  attribute_IsBooleanCodeInjectionDerived <<!  /* Code from template attribute_IsBooleanCodeInjectionDerived */
+<</*attribute_IsBooleanCodeInjectionDerived*/>>  public <<=gen.translate("type",av)>> <<= gen.translate("isMethod",av) >>()
   {
     <<# if (customGetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPrefixCode,gen.translate("isMethod",av)); 
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>

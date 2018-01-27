@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_AddMandatoryManyToOne_relatedSpecialization <<!<</*association_AddMandatoryManyToOne_relatedSpecialization*/>>
-  public <<=gen.translate("type",av)>> <<=gen.translate("addMethod",av)>>(<<=gen.translate("methodArgumentsExcept",relatedAssociation)>>)
+  association_AddMandatoryManyToOne_relatedSpecialization <<!  /* Code from template association_AddMandatoryManyToOne_relatedSpecialization */
+<</*association_AddMandatoryManyToOne_relatedSpecialization*/>>  public <<=gen.translate("type",av)>> <<=gen.translate("addMethod",av)>>(<<=gen.translate("methodArgumentsExcept",relatedAssociation)>>)
   {
     <<=gen.translate("type",av)>> <<=gen.translate("parameterNew",av)>> = new <<=gen.translate("type",av)>>(<<=gen.translate("callerArgumentsExcept",relatedAssociation)>>);<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
 (traceItemAssocAdd!=null?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")

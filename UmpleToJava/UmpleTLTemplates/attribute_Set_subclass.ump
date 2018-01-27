@@ -1,6 +1,6 @@
 class UmpleToJava {
-    attribute_Set_subclass <<!<</*attribute_Set_subclass*/>>
-  public boolean <<= gen.translate("setMethod",av) >>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  attribute_Set_subclass <<!  /* Code from template attribute_Set_subclass */
+<</*attribute_Set_subclass*/>>  public boolean <<= gen.translate("setMethod",av) >>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasSet = false;
     <<# if (customSetPrefixCode != null) {

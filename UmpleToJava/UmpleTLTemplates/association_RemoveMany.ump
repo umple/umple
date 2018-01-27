@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_RemoveMany <<!<</*association_RemoveMany*/>>
-  public boolean <<=gen.translate("removeMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  association_RemoveMany <<!  /* Code from template association_RemoveMany */
+<</*association_RemoveMany*/>>  public boolean <<=gen.translate("removeMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasRemoved = false;<<#for( TraceItem traceItemAssocRemove : traceItemAssocRemoves )#>><<=
     (traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")

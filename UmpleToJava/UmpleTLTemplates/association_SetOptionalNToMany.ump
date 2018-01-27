@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_SetOptionalNToMany <<!<</*association_SetOptionalNToMany*/>>
-  public boolean <<=gen.translate("setManyMethod",av)>>(<<=gen.translate("type",av)>>... <<=gen.translate("parameterMany",av)>>)
+  association_SetOptionalNToMany <<!  /* Code from template association_SetOptionalNToMany */
+<</*association_SetOptionalNToMany*/>>  public boolean <<=gen.translate("setManyMethod",av)>>(<<=gen.translate("type",av)>>... <<=gen.translate("parameterMany",av)>>)
   {
     boolean wasSet = false;
     <<# if (customSetManyPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetManyPrefixCode,gen.translate("setManyMethod",av)); 

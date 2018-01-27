@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_SetOptionalOneToOptionalN_relatedSpecialization <<!<</*association_SetOptionalOneToOptionalN_relatedSpecialization*/>>
-  public boolean <<=gen.translate("setMethod",av)>>_<<=gen.translate("type",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  association_SetOptionalOneToOptionalN_relatedSpecialization <<!  /* Code from template association_SetOptionalOneToOptionalN_relatedSpecialization */
+<</*association_SetOptionalOneToOptionalN_relatedSpecialization*/>>  public boolean <<=gen.translate("setMethod",av)>>_<<=gen.translate("type",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasSet = false;
     <<# if (customSetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 

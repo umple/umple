@@ -2,8 +2,8 @@ use association_GetPrivate.ump;
 
 
 class UmpleToJava {
-    association_SetOptionalOneToOptionalOne_relatedSpecialization <<!<</*association_SetOptionalOneToOptionalOne_relatedSpecialization*/>>
-  public boolean <<=gen.translate("setMethod",av)>>_<<=gen.translate("type",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterNew",av)>>)
+  association_SetOptionalOneToOptionalOne_relatedSpecialization <<!  /* Code from template association_SetOptionalOneToOptionalOne_relatedSpecialization */
+<</*association_SetOptionalOneToOptionalOne_relatedSpecialization*/>>  public boolean <<=gen.translate("setMethod",av)>>_<<=gen.translate("type",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterNew",av)>>)
   {
     boolean wasSet = false;
     <<# if (customSetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 

@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_AddMNToOptionalOne_specialization <<!<</*association_AddMNToOptionalOne_specialization*/>>
-  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  association_AddMNToOptionalOne_specialization <<!  /* Code from template association_AddMNToOptionalOne_specialization */
+<</*association_AddMNToOptionalOne_specialization*/>>  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasAdded = false;
     <<# if (customAddPrefixCode != null) { #>>

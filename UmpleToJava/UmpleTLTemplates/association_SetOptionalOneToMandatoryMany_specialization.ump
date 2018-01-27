@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_SetOptionalOneToMandatoryMany_specialization <<!<</*association_SetOptionalOneToMandatoryMany_specialization*/>>
-  public boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  association_SetOptionalOneToMandatoryMany_specialization <<!  /* Code from template association_SetOptionalOneToMandatoryMany_specialization */
+<</*association_SetOptionalOneToMandatoryMany_specialization*/>>  public boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     //
     // This source of this source generation is association_SetOptionalOneToMandatoryMany.jet
