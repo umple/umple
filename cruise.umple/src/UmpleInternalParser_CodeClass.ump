@@ -1840,8 +1840,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    */
   private boolean isConstructorOrGetSet(UmpleClass uClass, Method aMethod, boolean checkingInInterface)
   {
-    String methodName = aMethod.getName();
-
     //1. Check if method is a getter or setter
     if (uClass.hasMethod(aMethod) && isGetterSetter(uClass.getMethod(aMethod)))
       return true;
@@ -1854,16 +1852,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     //3. Verify if method from interface is already part of the Class extracode
     String match = "public " + aMethod.getType() + " " + aMethod.getName();    
     if (uClass.getExtraCode().contains(match))
-    {
       return true;
-    }
 
     return false;
   }
   
   private boolean isGetterSetter(Method method){
     String accessorName = method.getName().substring(0,3);
-  	return if ((accessorName.equals("get")) || (accessorName.equals("set"))) && method.getSource() == Method.Source.fAutoAPI && !method.getIsConstructor();
+  	return ((accessorName.equals("get")) || (accessorName.equals("set"))) && method.getSource() == Method.Source.fAutoAPI && !method.getIsConstructor();
   }
 
 
