@@ -2,7 +2,7 @@ use association_GetPrivate.ump;
 
 
 class UmpleToJava {
-    association_SetMNToOptionalOne_relatedSpecialization <<!<</*association_SetMNToOptionalOne_relatedSpecialization*/>><<#
+  association_SetMNToOptionalOne_relatedSpecialization <<!  /* Code from template association_SetMNToOptionalOne_relatedSpecialization */<</*association_SetMNToOptionalOne_relatedSpecialization*/>><<#
   String existingToNewMap = StringFormatter.format("{0}ToNew{1}", relatedAssociation.getName(), av.getUpperCaseName());
   String orCheckMaxBound = av.isStar() ? "" : StringFormatter.format(" || {0}.length > {1}{2}{3}()", gen.translate("parameterMany",av), gen.translate("maximumNumberOfMethod",av), "_", gen.translate("type",av));
 #>>
