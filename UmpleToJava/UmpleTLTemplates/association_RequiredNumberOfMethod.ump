@@ -1,5 +1,5 @@
 class UmpleToJava {
-    association_RequiredNumberOfMethod <<!<</*association_RequiredNumberOfMethod*/>><<#
+  association_RequiredNumberOfMethod <<!  /* Code from template association_RequiredNumberOfMethod */<</*association_RequiredNumberOfMethod*/>><<#
     String customRequiredNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("requiredNumberOfMethod",av)));
     String customRequiredNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("requiredNumberOfMethod",av)));
 #>>

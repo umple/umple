@@ -1,5 +1,5 @@
 class UmpleToJava {
-    association_SetUnidirectionalMN_specialization <<!<</*association_SetUnidirectionalMN_specialization*/>><<# String accessModifier = (av.isImmutable()) ? "private" : "public"; #>>
+  association_SetUnidirectionalMN_specialization <<!  /* Code from template association_SetUnidirectionalMN_specialization */<</*association_SetUnidirectionalMN_specialization*/>><<# String accessModifier = (av.isImmutable()) ? "private" : "public"; #>>
   <<= accessModifier >> boolean <<=gen.translate("setManyMethod",av)>>(<<=gen.translate("type",av)>>... <<=gen.translate("parameterMany",av)>>)
   {
     boolean wasSet = false;
