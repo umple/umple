@@ -63,9 +63,9 @@ public class Driver
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public DriverSchedule addDriverSchedule(DriverSchedule.Shift aShift)
+  public DriverSchedule addDriverSchedule(DriverSchedule.Shift aShift, DriverSchedule.Status aStatus)
   {
-    return new DriverSchedule(aShift, this);
+    return new DriverSchedule(aShift, aStatus, this);
   }
 
   public boolean addDriverSchedule(DriverSchedule aDriverSchedule)
