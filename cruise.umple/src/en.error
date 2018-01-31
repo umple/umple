@@ -208,6 +208,7 @@
 2001: 5, "http://cruise.eecs.uottawa.ca/umple/W20xxErrorinEmbeddedCode.html", Error in Java embedded in Umple: '{0}' ;
 2002: 5, "http://cruise.eecs.uottawa.ca/umple/W20xxErrorinEmbeddedCode.html", Error in C++ embedded in Umple: '{0}' ;
 
+
 # Warning messages related to distributed systems
 
 7002: 4, "http://cruise.eecs.uottawa.ca/umple/AssociationDistToNonDistributed.html", Distributed class '{0}' has an association with non-distributed class '{1}'. ;
@@ -217,6 +218,11 @@
 # Special testing messages for debugging
 8001: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Debug error : '{0}' ;
 8005: 5, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Debug warning : '{0}' ;
+
+# Messages related to code generator
+9000: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Compiler Error (Parsing). {0} ;
+9100: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Compiler Error (Analysis). {0} ;
+9200: 1, "http://cruise.eecs.uottawa.ca/umple/PageBeingDeveloped.html", Compiler Error (Generation). {0} ;
 
 # Message to emit when you are parsing a construct but are not yet processing it in a sensible way/
 9999: 5, "http://cruise.eecs.uottawa.ca/umple/W9999FeatureUnderDevelopment.html", Feature under development. '{0}' found and ignored. processed as: '{1}' ;
