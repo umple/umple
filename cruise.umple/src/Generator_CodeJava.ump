@@ -1480,7 +1480,24 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         UmpleClass classToRemove = getModel().getUmpleClass(getType(assVar.getRelatedAssociation()));
         GeneratedClass generatedClassToRemove = classToRemove.getGeneratedClass();
         String parameterNameToRemove = StringFormatter.format("{0} {1}", translate("type",assVar), translate("parameterOne",assVar));
-        return StringFormatter.replaceParameter(generatedClassToRemove.getLookup("constructorSignature"), parameterNameToRemove, ""); 
+
+        String classToRemoveConstructorString = StringFormatter.replaceParameter(generatedClassToRemove.getLookup("constructorSignature"), parameterNameToRemove, "");
+        String [] arrayOfConstructorParameters = classToRemoveConstructorString.split(",");
+        for(String constructorParameter : arrayOfConstructorParameters)
+        {
+          String tempConstructorParameter = constructorParameter.trim();
+             if (tempConstructorParameter.length() < 1)
+              continue;
+            String parameterType = tempConstructorParameter.substring(0,tempConstructorParameter.indexOf(" "));
+
+            if (classToRemove.hasEnum(parameterType))
+            {
+              classToRemoveConstructorString = classToRemoveConstructorString.replaceAll("\\b"+parameterType+"\\b", classToRemove.getName()+"."+parameterType);
+            }
+          
+        }
+        return classToRemoveConstructorString;
+
       }
       else if ("callerArgumentsForMandatory".equals(keyName))
       {

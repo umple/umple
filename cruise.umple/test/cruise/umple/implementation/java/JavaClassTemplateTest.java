@@ -267,7 +267,14 @@ public class JavaClassTemplateTest extends ClassTemplateTest
         "java/TestUmpleEnumerations_8.java.txt",
         "A");
   }
-  
+  @Test
+  public void TestUmpleEnumerations_innerQualified(){
+    assertUmpleTemplateFor("java/TestUmpleEnumerations_innerQualified_1.ump",
+        "java/TestUmpleEnumerations_innerQualified_1.java.txt",
+        "Driver");
+  }
+
+
   @Test
   public void CascadeDelete()
   {
