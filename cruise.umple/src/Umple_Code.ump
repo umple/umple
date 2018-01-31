@@ -231,7 +231,7 @@ class UmpleModel
     return analyzers.get(name);
   }
 /*
- * Creates a new parser, loads the input, parses, then analyses
+ * Creates a new parser, loads the input, parses, then analyses; analyser generates
  */
   public void run()
   {
@@ -239,11 +239,36 @@ class UmpleModel
     String input;
     RuleBasedParser parser = new RuleBasedParser();
     
-    UmpleParser analyzer = new UmpleInternalParser("UmpleInternalParser",this,parser);
-    ParseResult result = parser.parse( new File(umpleFile.getPath() + File.separator + umpleFile.getFileName()), this.linkedFiles.toArray(new File[0]) );
+    UmpleInternalParser analyzer = new UmpleInternalParser("UmpleInternalParser",this,parser);
+    ParseResult result = null;
+    
+    try {   
+      result = parser.parse(
+        new File(umpleFile.getPath() + File.separator + umpleFile.getFileName()),
+        this.linkedFiles.toArray(new File[0]));
+    }
+    catch (Exception ex)
+    {
+      result = parser.parse("classDefinition",""); // Fake to ensure can proceed
+      lastResult = result;
+      result.addErrorMessage(new ErrorMessage(9000,new Position("",0,0,0),
+        "Could not parse Umple model. Please report an issue with this entire message and your input code to Umple developers. \nStack dump follows\n"+cruise.umple.util.ExceptionDumper.dumpCompilerError(ex)
+        ));
+      throw new UmpleCompilerException(result.toString(),null);
+    }
+    catch (StackOverflowError ex)
+    {
+      result = parser.parse("classDefinition",""); // Fake to ensure can proceed
+      lastResult = result;
+      result.addErrorMessage(new ErrorMessage(9000,new Position("",0,0,0),
+        "Could not parse Umple model. Please report an issue with this entire message and your input code to Umple developers. \nStack Overflow in Parsing.\n"+cruise.umple.util.ExceptionDumper.dumpCompilerError(ex)
+        ));
+      throw new UmpleCompilerException(result.toString(),null);
+    }       
+    
     this.extractAnalyzersFromParser(parser);
 
-    failed = !result.getWasSuccess();
+    failed = failed || !result.getWasSuccess();
     lastResult = result;
 
     if(!failed)
@@ -300,8 +325,9 @@ class UmpleModel
 /*
  * Generates the actual code for each generation target
  */
-  public void generate()
+  public String generate()
   {
+    String lang="Unknown";
     applyFilter(null);
     boolean foundGenerator;
     parsingTime = System.currentTimeMillis()/1000.0;
@@ -309,9 +335,10 @@ class UmpleModel
     {
       for (GenerateTarget target : getGenerates())
       {
-        CodeGenerator generator = newGenerator(target.getLanguage());
+        lang=target.getLanguage();
+        CodeGenerator generator = newGenerator(lang);
         generator.setOutput(target.getPath());
-        CodeBlock.languageUsed = target.getLanguage();
+        CodeBlock.languageUsed = lang;
         for (String subopt : target.getSuboptions()) {
         	 generator.setSuboption(subopt);
         }
@@ -319,14 +346,14 @@ class UmpleModel
         generator.generate();
         gTime2 = System.currentTimeMillis()/1000.0;
         Double gTime = gTime2 - gTime1;
-        hashMap.put(target.getLanguage(),(String.valueOf(gTime)));
+        hashMap.put(lang,(String.valueOf(gTime)));
       }
+      return null; // generators all worked
     }
     catch (Exception ex)
     {
-      System.err.println("Code Generator error. Unable to generate code: Stack Trace Follows.");
-      cruise.umple.util.ExceptionDumper.dumpCompilerError(ex);
-      System.exit(-1);
+      return("Could not generate "+lang+"\nPlease report an issue with this entire message and your input code to Umple developers.\nStack Trace Follows.\n"+
+        cruise.umple.util.ExceptionDumper.dumpCompilerError(ex));
     }
    }
 

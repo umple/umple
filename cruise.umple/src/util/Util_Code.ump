@@ -84,30 +84,41 @@ class ExceptionDumper {
   depend java.nio.file.Path;
   depend java.nio.file.Paths;
 
-  public static void dumpCompilerError(Exception ex) {
-     String generatedSourcePath = System.getenv("GeneratedSourcePath");
+  public static String dumpCompilerError(Throwable ex) {
+    String generatedMessage = "";
+    String generatedSourcePath = System.getenv("GeneratedSourcePath");
+    String sourcePathType="GeneratedSourcePath that has been set to ";
     if (generatedSourcePath == null) {
-      System.err.println("To locate the error in the original Umple source, set GeneratedSourcePath to root directory where the generated Java is located:\ne.g. setenv GeneratedSourcePath ~/umple/cruise.umple/src-gen-umple/");
+      String homedir = System.getenv("HOME");
+      if(homedir != null &&
+        (new File(homedir+"/umple/cruise.umple/src-gen-umple/cruise/umple/core/")).exists()) {
+        // Use default generated source path
+        generatedSourcePath = homedir+"/umple/cruise.umple/src-gen-umple/";
+        sourcePathType="default GeneratedSourcePath ";
+      }
+      else {
+        generatedMessage += "To locate the error in the Umple source, set GeneratedSourcePath to root directory where the generated Java is located:\ne.g. setenv GeneratedSourcePath ~/umple/cruise.umple/src-gen-umple/\n";
+      }
     }
-    else {
-      System.err.println("Using GeneratedSourcePath="+generatedSourcePath);
+    if (generatedSourcePath != null) {
+      generatedMessage +="Using "+sourcePathType+generatedSourcePath+"\n";
     }
-    System.err.println("Exception "+ex.getClass().getName()+" in");
+    generatedMessage +="Exception "+ex.getClass().getName()+" in\n";
 
     StackTraceElement [] st = ex.getStackTrace();
     StackTraceElement ust = null;
-    for (int i=0;i<st.length;i++) {
-      System.err.println(" at "+st[i].toString());
+    int dumpLimit = st.length;
+    if (dumpLimit > 30) dumpLimit = 30;
+    for (int i=0;i<dumpLimit;i++) {
+      generatedMessage +=" at "+st[i].toString()+"\n";
       if(generatedSourcePath != null) {
          ust = javaToUmpleStackTrace(st[i], generatedSourcePath);
         if(ust != null) {
-          System.err.println("   => "+ust.getFileName()+":"+ust.getLineNumber());
+          generatedMessage +="   => "+ust.getFileName()+":"+ust.getLineNumber()+"\n";
          }
-        else {
-          System.err.println("   => Unknown umple file - please ask developers to debug Util_code.ump javaToUmpleStackTrace");        
-        }
       }
     }
+    return generatedMessage;
   }
   
     // Translate the java stack trace line information into the corresponding Umple line
@@ -156,9 +167,6 @@ class ExceptionDumper {
           sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
         }
         catch (FileNotFoundException fne) {
-          sc = null;
-          System.err.println("  !! Could not open "
-             + pathToJavaFile + "\nTry setting environment variable GeneratedSourcePath to path containing file");
           return null;          
         }
       }
