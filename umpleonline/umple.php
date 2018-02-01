@@ -107,6 +107,57 @@ $output = $dataHandle->readData('model.ump');
   <script src="scripts/_load.js" type="text/javascript"></script>
   <title>UmpleOnline: Generate Java, C++, PHP, Alloy, NuSMV or Ruby code from Umple</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
+  <style>
+  .button2 {
+   border-top: 1px solid #d3bc8f;
+   line-height: 2;
+   background: #d8a695;
+   background: -webkit-gradient(linear, left top, left bottom, from(#e5bcae), to(#d8a695));
+   background: -webkit-linear-gradient(top, #e5bcae, #d8a695);
+   background: -moz-linear-gradient(top, #e5bcae, #d8a695);
+   background: -ms-linear-gradient(top, #e5bcae, #d8a695);
+   background: -o-linear-gradient(top, #e5bcae, #d8a695);
+   padding: 2px 5px;
+   -webkit-border-radius: 6px;
+   -moz-border-radius: 6px;
+   border-radius: 6px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 14px;
+   font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+.button2:hover {
+   border-top-color: #810b09;
+   background: #810b09;
+   color: #ccc;
+   }
+.button2:active {
+   border-top-color: #810b09;
+   background: #810b09;
+   }
+</style>  
+<link rel="apple-touch-icon" sizes="57x57" href="https://cruise.eecs.uottawa.ca/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="https://cruise.eecs.uottawa.ca/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="https://cruise.eecs.uottawa.ca/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="https://cruise.eecs.uottawa.ca/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="https://cruise.eecs.uottawa.ca/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="https://cruise.eecs.uottawa.ca/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="https://cruise.eecs.uottawa.ca/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="https://cruise.eecs.uottawa.ca/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://cruise.eecs.uottawa.ca/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="https://cruise.eecs.uottawa.ca/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://cruise.eecs.uottawa.ca/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="https://cruise.eecs.uottawa.ca/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://cruise.eecs.uottawa.ca/favicon-16x16.png">
+<link rel="manifest" href="https://cruise.eecs.uottawa.ca/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="https://cruise.eecs.uottawa.ca/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
 </head>
 <body>
   <?php if($showChrome) { ?> 
@@ -137,6 +188,30 @@ $output = $dataHandle->readData('model.ump');
   <input id="advancedMode" type="hidden" value="0" />
 
   <div id="topLine" class="bookmarkableUrl">
+    <span style="font-size: 30%">
+    <a class="button2" href="javascript:Page.clickShowEditableClassDiagram()"
+      title="Editable class diagram - ctrl-E">E</a>&nbsp;
+    <a class="button2" href="javascript:Page.clickShowGvClassDiagram()"
+      title="Graphviz class diagram - ctrl-G">G</a>&nbsp;
+    <a class="button2" href="javascript:Page.clickShowGvStateDiagram()"
+      title="State diagram - ctrl-S">S</a>&nbsp;
+    </span>
+    
+    &nbsp; 
+    <span style="font-size: 30%">
+    <a class="button2" href="javascript:Page.clickShowHideText()"
+      title="Show/hide text pane on left - ctrl-T">T</a>&nbsp;
+    <a class="button2" href="javascript:Page.clickShowHideCanvas()"
+      title="Show/hide diagram pane on right - ctrl-D">D</a>&nbsp;
+    </span>
+    
+    &nbsp; 
+    <span style="font-size: 30%">
+    <a class="button2" href="javascript:Page.clickToggleAttributes()"
+      title="Show/hide attributes in class diagrams - ctrl-A">A</a>&nbsp;
+    <a class="button2" href="javascript:Page.clickToggleMethods()"
+      title="Show/hide methods in class diagrams - ctrl-M">M</a>&nbsp;
+    </span>
     <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span> 
   
     <?php if (isBookmark($dataHandle)) { ?>
@@ -432,16 +507,7 @@ $output = $dataHandle->readData('model.ump');
               <a id="labelManualSync" class="buttonExtend">Manual Sync</a> 
             </li>          
           </ul>
-          <ul class="second">
-            <li class="subtitle"> Other Views </li>
-            <!--<li id="buttonPngImage" class="png"><img src="scripts/png.png" title="Generate PNG Image" /> PNG View</li> //DISABLED -->
-            <li id="ttYumlImage">
-              <img id="buttonYumlImage" src="scripts/yuml.png"/> 
-              <a id="labelYumlImage" class="buttonExtend">Yuml View</a>
-            </li>
-            <!--<li id="buttonSimulateCode" class="simulate"><img src="scripts/simulate.png" title="Simulate Code" /> Simulate</li> //DISABLED -->
-          </ul>
-        </div>
+         </div>
       </div> 
     </div>
    

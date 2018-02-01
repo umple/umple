@@ -387,13 +387,12 @@ else if (isset($_REQUEST["umpleCode"]))
       exec("rm -rf " . $thedir . "/yuml.txt");
       $command = "cp " . $thedir . "/model.ump.output " . $thedir .  "/yuml.txt";
       exec($command);
+      $command = "python yuml.py -i " . $thedir . "/yuml.txt -o " . $thedir .  "/yuml.png -s plain ";   
+      $res = shell_exec($command . " 2>&1");           
       $yumllink = $workDir->makePermalink('yuml.txt');
-      $html = "<a href=\"$yumllink\">Download the Yuml text for the following</a>&nbsp;{$errhtml}";
-      if ($sourceCode != "null") {
-        $html = $html . "
-          <iframe width=100% height=500 src=\"http://yuml.me/diagram/class/" . $sourceCode . "\">This browser does not
-          support iframes, so the diagram cannot be displayed</iframe> ";
-      }
+      $imglink = $workDir->makePermalink('yuml.png');
+      $html = "<a href=\"$yumllink\">Download the Yuml text for the following</a>&nbsp;<br/>
+      <img src=\"$imglink\"\>";
       echo $html;
     } // end yuml diagram  
 
