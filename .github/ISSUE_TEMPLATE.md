@@ -1,10 +1,12 @@
-This is a *guide*, please remove this preamble and other irrelevant sections. Use [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) for formatting. *Before writing*, please search to ensure the issue doesn't exist, and verify you are using the latest `master` branch and using Java 8.
+This is a *guide*, please remove this preamble and other irrelevant sections.
 
-## Brief Description
+*Before writing*, a) please search to ensure the issue doesn't exist. b) If you are using Eclipse, the command line or Docker please ensure you are using the latest version of the relevant Umple tools and dependencies: such as Java 8 or 9, Eclipse Oxygen with modeling tools, or the latest Docker image from docker.umple.org.
+
+## Specify a Brief Description
 
 Brief, one or two sentences explaining the problem. 
 
-## Minimum Steps to Reproduce
+## Give the minimum Steps to Reproduce
 
 This is a **minimum** test case to validate the problem. 
 
@@ -13,7 +15,7 @@ This is a **minimum** test case to validate the problem.
 
 If using a large code sample, feel free to use a [gist](https://gist.github.com/) or [UmpleOnline](http://cruise.eecs.uottawa.ca/umpleonline/).
 
-## Expected Result
+## Describe the expected result that didn't happen
 
 Expected results.
 
@@ -21,10 +23,12 @@ Expected results.
 
 Actual results
 
-Please include your build log output. If long, please paste it into a [gist](https://gist.github.com/) and link to it here. 
+Please include any build log output. If long, please paste it into a [gist](https://gist.github.com/) and link to it here. 
 
 ## Labelling and Assigning
 
-Add any relevant label's for this issue, such as 'associations', 'Component-UmpleOnline', etc. as well as Priority- and Diffic- label.
+If possible, please try to add any relevant label's for this issue, such as 'associations', 'Component-UmpleOnline', etc. as well as Priority- and Diffic- label.
 
-If you are planning on fixing this issue, or know who will, please assign it. Do **not** blindly assign an issue unless you are confident who will be fixing the issue.
+If you are planning on fixing this issue, or know who will, please assign it to yourself.
+
+In the above use [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) for formatting. 

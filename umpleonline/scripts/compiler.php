@@ -391,8 +391,21 @@ else if (isset($_REQUEST["umpleCode"]))
       $res = shell_exec($command . " 2>&1");           
       $yumllink = $workDir->makePermalink('yuml.txt');
       $imglink = $workDir->makePermalink('yuml.png');
-      $html = "<a href=\"$yumllink\">Download the Yuml text for the following</a>&nbsp;<br/>
+      
+      if (file_exists($thedir . "/yuml.png"))
+      {
+        $dltext = "&nbsp;<a href=\"$imglink\">Download the PNG file for the image</a>&nbsp;<br/>
       <img src=\"$imglink\"\>";
+      }
+      else
+      {
+        // could not generate either because of Python problem
+        // or the yuml server not delivering because it doesn't like automated systems
+        $yumltxt = file_get_contents($thedir."/yuml.txt");        
+        $dltext = "&nbsp;<a target=\"yumlimg\" href=\"http://yuml.me/diagram/plain/class/".urlencode($yumltxt).".php\"> Click on this link to display the png in a different Tab (yuml.me doesn't like automated systems generating their images)</a>&nbsp;";
+      }  
+
+      $html = "<a href=\"$yumllink\">Download the Yuml text for the yuml image</a>. You can then use this text to generate various image formats at <a target=\"yumlimg\" href=\"https://yuml.me/diagram/plain/class/draw\">yuml.me</a>&nbsp;<br/>$dltext";
       echo $html;
     } // end yuml diagram  
 
