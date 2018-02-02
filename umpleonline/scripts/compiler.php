@@ -385,8 +385,7 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($yumlDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/yuml.txt");
-      $command = "cp " . $thedir . "/model.ump.output " . $thedir .  "/yuml.txt";
-      exec($command);
+      copy($thedir . "/model.ump.output", $thedir .  "/yuml.txt");
       $command = "python yuml.py -i " . $thedir . "/yuml.txt -o " . $thedir .  "/yuml.png -s plain ";   
       $res = shell_exec($command . " 2>&1");           
       $yumllink = $workDir->makePermalink('yuml.txt');
