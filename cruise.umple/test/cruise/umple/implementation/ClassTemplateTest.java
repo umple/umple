@@ -388,6 +388,15 @@ public class ClassTemplateTest extends TemplateTest
 	  }
   }
 
+@Test
+  public void AbstractClassAvoidingInstantiationMN()
+  {
+	  if (languagePath.equals("java"))
+	  {
+		  assertUmpleTemplateFor("ClassTemplateTest_AbstractClassAvoidingInstantiation2.ump",languagePath + "/ClassTemplateTest_AbstractClassAvoidingInstantiation2."+languagePath+".txt","Teacher");
+	  }
+  }
+
   
 @Ignore @Test
   public void LazyAttributeOnImmutableClass()

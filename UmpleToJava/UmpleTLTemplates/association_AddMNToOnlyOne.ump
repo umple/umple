@@ -1,6 +1,6 @@
 class UmpleToJava {
   association_AddMNToOnlyOne <<!  /* Code from template association_AddMNToOnlyOne */
-<</*association_AddMNToOnlyOne*/>>  public <<=gen.translate("type",av)>> <<=gen.translate("addMethod",av)>>(<<=gen.translate("methodArgumentsExcept",relatedAssociation)>>)
+<</*association_AddMNToOnlyOne*/>><<# if(!(av.getRelatedAssociation().getUmpleClass().getIsAbstract())) {#>>  public <<=gen.translate("type",av)>> <<=gen.translate("addMethod",av)>>(<<=gen.translate("methodArgumentsExcept",relatedAssociation)>>)
   {
     if (<<=gen.translate("numberOfMethod",av)>>() >= <<=gen.translate("maximumNumberOfMethod",av)>>())
     {
@@ -10,7 +10,7 @@ class UmpleToJava {
     {
       return new <<=gen.translate("type",av)>>(<<=gen.translate("callerArgumentsExcept",relatedAssociation)>>);
     }
-  }
+  }<<#}#>>
 
   public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {

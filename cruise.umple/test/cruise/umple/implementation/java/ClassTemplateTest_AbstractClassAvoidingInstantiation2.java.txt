@@ -1,0 +1,284 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+import java.util.*;
+
+// line 2 "model.ump"
+public class Teacher
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Teacher Associations
+  private List<Foo> myFooss;
+  private List<Student> myStudentss;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Teacher()
+  {
+    myFooss = new ArrayList<Foo>();
+    myStudentss = new ArrayList<Student>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  public Foo getMyFooss(int index)
+  {
+    Foo aMyFooss = myFooss.get(index);
+    return aMyFooss;
+  }
+
+  public List<Foo> getMyFooss()
+  {
+    List<Foo> newMyFooss = Collections.unmodifiableList(myFooss);
+    return newMyFooss;
+  }
+
+  public int numberOfMyFooss()
+  {
+    int number = myFooss.size();
+    return number;
+  }
+
+  public boolean hasMyFooss()
+  {
+    boolean has = myFooss.size() > 0;
+    return has;
+  }
+
+  public int indexOfMyFooss(Foo aMyFooss)
+  {
+    int index = myFooss.indexOf(aMyFooss);
+    return index;
+  }
+  /* Code from template association_GetMany */
+  public Student getMyStudentss(int index)
+  {
+    Student aMyStudentss = myStudentss.get(index);
+    return aMyStudentss;
+  }
+
+  public List<Student> getMyStudentss()
+  {
+    List<Student> newMyStudentss = Collections.unmodifiableList(myStudentss);
+    return newMyStudentss;
+  }
+
+  public int numberOfMyStudentss()
+  {
+    int number = myStudentss.size();
+    return number;
+  }
+
+  public boolean hasMyStudentss()
+  {
+    boolean has = myStudentss.size() > 0;
+    return has;
+  }
+
+  public int indexOfMyStudentss(Student aMyStudentss)
+  {
+    int index = myStudentss.indexOf(aMyStudentss);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfMyFooss()
+  {
+    return 0;
+  }
+  /* Code from template association_MaximumNumberOfMethod */
+  public static int maximumNumberOfMyFooss()
+  {
+    return 2;
+  }
+  /* Code from template association_AddOptionalNToOne */
+
+
+  public boolean addMyFooss(Foo aMyFooss)
+  {
+    boolean wasAdded = false;
+    if (myFooss.contains(aMyFooss)) { return false; }
+    if (numberOfMyFooss() >= maximumNumberOfMyFooss())
+    {
+      return wasAdded;
+    }
+
+    Teacher existingTeacher = aMyFooss.getTeacher();
+    boolean isNewTeacher = existingTeacher != null && !this.equals(existingTeacher);
+    if (isNewTeacher)
+    {
+      aMyFooss.setTeacher(this);
+    }
+    else
+    {
+      myFooss.add(aMyFooss);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeMyFooss(Foo aMyFooss)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aMyFooss, as it must always have a teacher
+    if (!this.equals(aMyFooss.getTeacher()))
+    {
+      myFooss.remove(aMyFooss);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addMyFoossAt(Foo aMyFooss, int index)
+  {  
+    boolean wasAdded = false;
+    if(addMyFooss(aMyFooss))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMyFooss()) { index = numberOfMyFooss() - 1; }
+      myFooss.remove(aMyFooss);
+      myFooss.add(index, aMyFooss);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveMyFoossAt(Foo aMyFooss, int index)
+  {
+    boolean wasAdded = false;
+    if(myFooss.contains(aMyFooss))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMyFooss()) { index = numberOfMyFooss() - 1; }
+      myFooss.remove(aMyFooss);
+      myFooss.add(index, aMyFooss);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addMyFoossAt(aMyFooss, index);
+    }
+    return wasAdded;
+  }
+  /* Code from template association_IsNumberOfValidMethod */
+  public boolean isNumberOfMyStudentssValid()
+  {
+    boolean isValid = numberOfMyStudentss() >= minimumNumberOfMyStudentss() && numberOfMyStudentss() <= maximumNumberOfMyStudentss();
+    return isValid;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfMyStudentss()
+  {
+    return 1;
+  }
+  /* Code from template association_MaximumNumberOfMethod */
+  public static int maximumNumberOfMyStudentss()
+  {
+    return 2;
+  }
+  /* Code from template association_AddMNToOnlyOne */
+
+
+  public boolean addMyStudentss(Student aMyStudentss)
+  {
+    boolean wasAdded = false;
+    if (myStudentss.contains(aMyStudentss)) { return false; }
+    if (numberOfMyStudentss() >= maximumNumberOfMyStudentss())
+    {
+      return wasAdded;
+    }
+
+    Teacher existingTeacher = aMyStudentss.getTeacher();
+    boolean isNewTeacher = existingTeacher != null && !this.equals(existingTeacher);
+
+    if (isNewTeacher && existingTeacher.numberOfMyStudentss() <= minimumNumberOfMyStudentss())
+    {
+      return wasAdded;
+    }
+
+    if (isNewTeacher)
+    {
+      aMyStudentss.setTeacher(this);
+    }
+    else
+    {
+      myStudentss.add(aMyStudentss);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeMyStudentss(Student aMyStudentss)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aMyStudentss, as it must always have a teacher
+    if (this.equals(aMyStudentss.getTeacher()))
+    {
+      return wasRemoved;
+    }
+
+    //teacher already at minimum (1)
+    if (numberOfMyStudentss() <= minimumNumberOfMyStudentss())
+    {
+      return wasRemoved;
+    }
+    myStudentss.remove(aMyStudentss);
+    wasRemoved = true;
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addMyStudentssAt(Student aMyStudentss, int index)
+  {  
+    boolean wasAdded = false;
+    if(addMyStudentss(aMyStudentss))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMyStudentss()) { index = numberOfMyStudentss() - 1; }
+      myStudentss.remove(aMyStudentss);
+      myStudentss.add(index, aMyStudentss);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveMyStudentssAt(Student aMyStudentss, int index)
+  {
+    boolean wasAdded = false;
+    if(myStudentss.contains(aMyStudentss))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMyStudentss()) { index = numberOfMyStudentss() - 1; }
+      myStudentss.remove(aMyStudentss);
+      myStudentss.add(index, aMyStudentss);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addMyStudentssAt(aMyStudentss, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    for(int i=myFooss.size(); i > 0; i--)
+    {
+      Foo aMyFooss = myFooss.get(i - 1);
+      aMyFooss.delete();
+    }
+    for(int i=myStudentss.size(); i > 0; i--)
+    {
+      Student aMyStudentss = myStudentss.get(i - 1);
+      aMyStudentss.delete();
+    }
+  }
+
+}
