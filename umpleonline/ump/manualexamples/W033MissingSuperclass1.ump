@@ -1,4 +1,5 @@
-// This example generates the warning since T is not defined
+// This example generates the warning
+// since T is not defined
 class S {
   isA T;
 }

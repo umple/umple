@@ -1,5 +1,6 @@
 // This example generates the message
-// Namespace b, encountered later, will be the namespace of the class
+// Namespace b, encountered later, will
+// be the namespace of the class
 namespace a;
 
 class X30redefnamespace {

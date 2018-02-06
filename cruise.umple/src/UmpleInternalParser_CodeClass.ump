@@ -4042,7 +4042,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       if("public".equals(type) || "private".equals(type) || "protected".equals(type))
       {
-	setFailedPosition(attributeToken.getPosition(), 142, type);
+	setFailedPosition(attributeToken.getPosition(), 142, name, type);
       }
     }
         

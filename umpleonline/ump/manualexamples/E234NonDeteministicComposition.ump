@@ -1,4 +1,6 @@
-// In this example, there is an error because the composed state machine will be nondeterministic.
+// In this example, there is an error
+// because the composed state machine
+// will be nondeterministic.
 trait T1{
   sm{
     s1{ e1[x>0] -> s2;  }

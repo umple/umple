@@ -1,4 +1,5 @@
-// The following shows how to avoid the message using a multivalued attribute
+// The following shows how to avoid
+// the message using a multivalued attribute
 class A {
   OtherClass[] otherClassGroup;
 }

@@ -1,4 +1,7 @@
-// In this example, there is an error because class C rename the region name r1 to r2 which is already available in the state machine sm.
+// In this example, there is an error
+// because class C rename the region
+// name r1 to r2 which is already
+// available in the state machine sm.
 trait T{
   sm {
     s1{

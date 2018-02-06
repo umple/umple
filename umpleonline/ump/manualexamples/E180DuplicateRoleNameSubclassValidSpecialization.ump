@@ -1,0 +1,21 @@
+// This example shows a valid specialization
+// of the friends association in which the
+// multiplicity 0..3 is refined to *, so a
+// student may have any number of dogs but
+// Persons in general are limited to 3.
+// This conforms to the Liskov substitution
+// principle: The preconditions on Person
+// operations such as addDog limiting to 3
+// are being relaxed in the subclass Student.
+
+class Person {
+	* -> 0..3 Dog friends;
+}
+
+class Student {
+	isA Person;
+	* -> * Dog friends;
+}
+
+class Dog {
+}

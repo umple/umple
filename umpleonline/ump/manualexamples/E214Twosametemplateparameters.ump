@@ -1,4 +1,6 @@
-// In this example, there is an error because trait T has two template parameters with the same name.
+// In this example, there is an error
+// because trait T has two template
+// parameters with the same name.
 trait T<TP,TP>{  
   TP name;
 }

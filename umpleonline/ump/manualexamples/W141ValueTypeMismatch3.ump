@@ -1,4 +1,5 @@
-// The following shows how to solve the above problem not even showing the type at all
+// The following shows how to solve
+// the above problem not even showing the type at all
 class X {
   d = "2013-07-08";
   i = 7;

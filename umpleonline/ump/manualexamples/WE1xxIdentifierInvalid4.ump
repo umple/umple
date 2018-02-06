@@ -1,5 +1,7 @@
-// Attribute name with special characters that looks like an association (132)
-// If this is supposed to be an association, put spaces before and after the -- and *
+// Attribute name with special characters
+// that looks like an association (132)
+// If this is supposed to be an association,
+// put spaces before and after the -- and *
 class X {
   1--*Y;
 }

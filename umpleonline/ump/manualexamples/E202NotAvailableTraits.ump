@@ -1,4 +1,5 @@
-//In  this example, trait "T" uses trait "T1" which is not available. 
+//In  this example, trait "T"
+// uses trait "T1" which is not available. 
 interface I{
 	//elements
 }

@@ -1,4 +1,5 @@
-// The following will generate this warning on every line of the class
+// The following will generate
+// this warning on every line of the class
 class X {
   Date d = "20130708";
   Integer i = "abc";

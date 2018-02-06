@@ -1,4 +1,6 @@
-// This case is probably an error - Umple will consider "x" to have type "public"
+// This case raises the warning
+// because it is probably an error
+// Umple will consider "x" to have type "public"
 class X {
   public x;
 }

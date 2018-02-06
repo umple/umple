@@ -1,5 +1,5 @@
-
-//I this example the singleton class does not have a subclass and is correct
+//I this example the singleton class
+// does not have a subclass and is correct
 class Airplane
 {
   

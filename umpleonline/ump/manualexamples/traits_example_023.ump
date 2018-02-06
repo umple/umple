@@ -1,5 +1,6 @@
 /*
-	Example 8: showing how the operator "Removing/keeping a transition" works.
+	Example 8: showing how the operator
+	"Removing/keeping a transition" works.
 */
 trait T1{
   internal Boolean cond;

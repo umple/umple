@@ -1,4 +1,5 @@
-// In this example, there is a cycle created in a hierarchy.
+// In this example, there is a cycle
+// created in a hierarchy.
 class A{
 	isA T;
 }

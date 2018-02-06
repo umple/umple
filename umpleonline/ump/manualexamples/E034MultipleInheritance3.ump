@@ -1,4 +1,5 @@
-// If all but one of the parents is declared as an Interface, the problem is solved
+// If all but one of the parents is
+// declared as an Interface, the problem is solved
 
 interface P1 {}
 class P2 {}

@@ -1,5 +1,6 @@
 /*
-	Example 5: showing how the operator "Removing/keeping a state machine" works.
+	Example 5: showing how the operator
+	"Removing/keeping a state machine" works.
 */
 trait T1 {
   sm1{
