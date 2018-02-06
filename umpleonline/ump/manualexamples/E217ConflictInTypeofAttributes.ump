@@ -1,4 +1,9 @@
-// In this example, there is a conflict because in trait "T" there will be two attributes with the same name "data" but with different types which are "B" and "C".
+// In this example, there is a
+// conflict because in trait "T"
+// there will be two attributes
+// with the same name "data" but
+// with different types
+// which are "B" and "C".
 class A{
 	isA T;
 }

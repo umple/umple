@@ -1,4 +1,6 @@
-//In  this example, the error has been resolved just by defining trait T1. 
+//In  this example, the error
+// has been resolved just by
+// defining trait T1. 
 interface I{
 	//elements
 }

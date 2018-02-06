@@ -1,4 +1,6 @@
-// This example generates the error since enumeration "Y" conflicts with interface "Y"
+// This example generates the error
+// since enumeration "Y"
+// conflicts with interface "Y"
 
 interface Y { 
   name;

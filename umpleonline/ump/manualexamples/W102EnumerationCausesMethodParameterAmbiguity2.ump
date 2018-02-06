@@ -2,7 +2,8 @@
 
 class X {
   enum Y { Red, Blue, Green }
-  showY(Y param) { System.out.println(param); }
+  showY(Y param) {
+    System.out.println(param); }
 }
 
 class Z { }

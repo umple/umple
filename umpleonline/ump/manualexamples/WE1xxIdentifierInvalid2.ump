@@ -1,4 +1,5 @@
-// Warnings from attribute starting with upper case letter (131)
+// Warnings from attribute starting with
+// upper case letter (131)
 class X {
   Attrib;
 }

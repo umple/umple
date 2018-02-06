@@ -1,4 +1,5 @@
-// This example generates the error since enumeration "Y" conflicts with trait "Y"
+// This example generates the error
+// since enumeration "Y" conflicts with trait "Y"
 
 class X {
  isA Y;

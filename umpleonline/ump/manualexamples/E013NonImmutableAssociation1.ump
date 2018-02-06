@@ -1,4 +1,5 @@
-// The following example generates the error message
+// The following example generates
+// the error message
 class X {
    Integer x;
 }

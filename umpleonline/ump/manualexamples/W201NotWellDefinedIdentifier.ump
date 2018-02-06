@@ -1,4 +1,6 @@
-//This example shows a warning in the name of traits because they start with lower cases.
+// This example shows a warning
+// in the name of traits because
+// they start with lower case.
 trait color {
 	//traits elements
 }

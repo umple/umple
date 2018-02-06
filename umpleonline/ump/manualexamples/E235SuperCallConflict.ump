@@ -1,4 +1,6 @@
-// In this example, there is an error because the keyword superCall can be pointed out to two used traits.
+// In this example, there is an error
+// because the keyword superCall can be
+// pointed out to two used traits.
 trait T1{
   sm{
     s1{ e1 -> /{action1();} s1; }

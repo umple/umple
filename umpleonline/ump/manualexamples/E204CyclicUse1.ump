@@ -1,4 +1,5 @@
-// In this example, there is a explicit use of a trait inside of itself.
+// In this example, there is an explicit
+// use of a trait inside of itself.
 class A{
 	isA T;
 }

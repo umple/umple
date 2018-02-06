@@ -1,4 +1,8 @@
-// This is equivalent, attributes have public access by default
+// This is probably what was intended,
+// attributes have private access by default
+// but the programmer would call
+// public String getX() to read it
+// and public boolean setX(String) to set it
 class X {
   x;
 }

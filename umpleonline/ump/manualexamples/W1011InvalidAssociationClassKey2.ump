@@ -1,4 +1,5 @@
-// This example shows how to remove the warning by completing the key
+// This example shows how to remove
+// the warning by completing the key
 class Passenger {}
 
 class Flight {}

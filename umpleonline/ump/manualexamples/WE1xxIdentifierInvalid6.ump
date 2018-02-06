@@ -1,4 +1,5 @@
-// State machine name with special characters (150)
+// State machine name with special
+// characters (150)
 class X {
   ed%4 {
     s1 {}

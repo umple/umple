@@ -1,4 +1,6 @@
-// In this example, there is an error because in class "A" there will be two methods with the name "ShowInConsole".
+// In this example, there is an error
+// because in class "A" there will be
+// two methods with the name "ShowInConsole".
 class A{
 	isA T<show() as ShowInConsole>;
 }

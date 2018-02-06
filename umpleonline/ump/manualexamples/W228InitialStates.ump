@@ -1,4 +1,7 @@
-// In this example, there is an warning because two traits T1 and T2 have state machines with the same name but with different initial states.
+// In this example, there is an warning
+// because two traits T1 and T2 have
+// state machines with the same name but
+// with different initial states.
 trait T1{
   sm{
     s1{ e1 ->  s2;}

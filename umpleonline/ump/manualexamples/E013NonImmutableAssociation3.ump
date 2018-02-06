@@ -1,5 +1,7 @@
-// Another solution is to not require the association to be immutable,
-// just the attributes. But this may not match the intended semantics.
+// Another solution is to not require
+// the association to be immutable,
+// just the attributes. But this may
+// not match the intended semantics.
 class X {
    immutable Integer x;
 }

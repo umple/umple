@@ -1,4 +1,6 @@
-// In this example, there is an error because state machine sm3 is not available in trait T.
+// In this example, there is an error
+// because state machine sm3 is
+// not available in trait T.
 trait T {
   sm1{
 	s0 {e1-> s1;}

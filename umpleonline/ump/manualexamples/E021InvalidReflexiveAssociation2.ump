@@ -1,4 +1,6 @@
-// The following example shows how to fix the error if this is an asymmetric association.
+// The following example shows how
+// to fix the error if this is an
+// asymmetric association.
 class X {
     0..1 -- 0..1 X right;
 }

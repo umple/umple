@@ -1,4 +1,7 @@
-// In this example, there is an error because a bidirectional association is created with interface I, which is not valid.
+// In this example, there is an error
+// because a bidirectional association
+// is created with interface I,
+// which is not valid.
 interface I {
   /*implementation*/
 }

@@ -1,6 +1,8 @@
-// One way to solve this is to make the association point to
+// One way to solve this is to make
+// the association point to
 // another immutable class
-// But note that this only works for one-way associations
+// But note that this only works for
+// one-way associations
 class X {
    Integer x;
    immutable;
