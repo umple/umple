@@ -3,7 +3,9 @@ class X {
     topstate {
       thread1 {
         do {
-          System.out.println("Doing the activity - Normally this would last a long time");
+          System.out.println(
+            "Doing the activity - Normally "+
+            "this would last a long time");
           Thread.sleep(1000);
           System.out.println("Done thread 1");
         }
@@ -11,7 +13,9 @@ class X {
       ||
       thread2 {
         do {
-          System.out.println("Doing the other activity - Again normally this would last a long time");
+          System.out.println(
+            "Doing the other activity - Again "+
+            "this would last a long time");
           Thread.sleep(3000);
           System.out.println("Done thread 2");
         }

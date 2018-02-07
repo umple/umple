@@ -4,9 +4,11 @@ class Student
   lazy Integer id;
   lazy name;
   
-  // It is possible to specify multiple UML entities to trace as follows
-  // It is also possible to indicate interesting information to record
-  // in addition to the value of the element being traced
+  // It is possible to specify multiple 
+  // UML entities to trace as follows
+  // It is also possible to indicate interesting
+  // information to record in addition to the
+  // value of the element being traced
   trace id, name record "interesting behavior";
   trace id record "Even more interesting";
 

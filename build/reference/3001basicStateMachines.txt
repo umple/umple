@@ -35,8 +35,7 @@ Details of each state can include:
 
 <p>The following diagram shows a garage door state machine as a UML diagram. The Umple code for this is at the bottom of this page. Note that UmpleOnline currently cannot draw state machines.
 
-<img src="examples/GarageStateMachine.png" alt="state machne for garage door"/>
-
+<img  width=480 src="examples/GarageStateMachine.png" alt="state machne for garage door"/>
 
 &nbsp;<br/>
 

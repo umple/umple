@@ -1,9 +1,11 @@
 // A method body may work for several languages.
-// If no language is specified it is taken as the default.
+// If no language is specified it is taken as the
+// default.
 class LanguageSpecific {
   int m1()
   Java,Php {
-    // Return 0 if the model is compiled into Java or Php
+    // Return 0 if the model is compiled into
+    // Java or Php
     return 0;
   }
   {

@@ -1,4 +1,5 @@
-// UML state machine diagram for a canal lock, represented in UML 
+// UML state machine diagram for a canal lock,
+// represented in UML 
 
 class Lock
 {
@@ -9,8 +10,10 @@ class Lock
   lockState {
     BothDoorsClosedLockFull {
       // Waiting for boat
-      boatRequestsToEnterAndGoDown -> OpeningUpperGate;
-      boatRequestsToEnterAndGoUp -> LoweringWater;
+      boatRequestsToEnterAndGoDown
+        -> OpeningUpperGate;
+      boatRequestsToEnterAndGoUp
+        -> LoweringWater;
     }
 
     OpeningUpperGate {
@@ -19,24 +22,32 @@ class Lock
 
     UpperGateOpen {
       entry / {setBoatGoingUp(false);}
-      boatInLockRequestingToGoDown -> / {setBoatGoingDown(true);} ClosingUpperGate;
-      after3minutes [!boatBlockingGate] -> ClosingUpperGate;
+      boatInLockRequestingToGoDown
+        -> / {setBoatGoingDown(true);}
+        ClosingUpperGate;
+      after3minutes [!boatBlockingGate]
+        -> ClosingUpperGate;
     }
 
     ClosingUpperGate {
-      upperGateFullyClosed [boatGoingDown]-> LoweringWater;
-      upperGateFullyClosed [!boatGoingDown]-> BothDoorsClosedLockFull;   
+      upperGateFullyClosed [boatGoingDown]
+        -> LoweringWater;
+      upperGateFullyClosed [!boatGoingDown]
+        -> BothDoorsClosedLockFull;   
     }
     
     LoweringWater {
-      waterLevelMatchesDownStream -> OpeningLowerGate;
+      waterLevelMatchesDownStream
+        -> OpeningLowerGate;
     } 
     
     
     BothDoorsClosedLockEmpty {
       // Waiting for boat
-      boatRequestsToEnterAndGoUp -> OpeningLowerGate;
-      boatRequestsToEnterAndGoDown -> RaisingWater;
+      boatRequestsToEnterAndGoUp
+        -> OpeningLowerGate;
+      boatRequestsToEnterAndGoDown
+        -> RaisingWater;
     }
 
     OpeningLowerGate {
@@ -45,17 +56,23 @@ class Lock
 
     LowerGateOpen {
       entry / {setBoatGoingDown(false);}
-      boatInLockRequestingToGoUp -> / {setBoatGoingUp(true);} ClosingLowerGate;
-      after3minutes [!boatBlockingGate] -> ClosingLowerGate;
+      boatInLockRequestingToGoUp
+        -> / {setBoatGoingUp(true);}
+          ClosingLowerGate;
+      after3minutes [!boatBlockingGate]
+        -> ClosingLowerGate;
     }
 
     ClosingLowerGate {
-      lowerGateFullyClosed [boatGoingUp]-> RaisingWater;
-      lowerGateFullyClosed [!boatGoingUp]-> BothDoorsClosedLockEmpty;   
+      lowerGateFullyClosed [boatGoingUp]
+        -> RaisingWater;
+      lowerGateFullyClosed [!boatGoingUp]
+        -> BothDoorsClosedLockEmpty;   
     }
     
     RaisingWater {
-      waterLevelMatchesUpStream -> OpeningUpperGate;
+      waterLevelMatchesUpStream
+        -> OpeningUpperGate;
     } 
   }
 }
