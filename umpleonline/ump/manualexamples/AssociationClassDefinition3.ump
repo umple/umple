@@ -1,5 +1,6 @@
-// The following shows a 'quaternary' association, where the association
-// class represents data in an association that links four classes.
+// The following shows a 'quaternary' association,
+// where the association class represents data in
+// an association that links four classes.
 class SportsPlayer {
   name;
 }
@@ -17,9 +18,12 @@ class Team {
   name;
 }
 
-// This gathers the number of points a player gained on a particular team
-// in a particular position while playing in a particular position
-// To get the total points in any one category, you would have to add the points several instances
+// This gathers the number of points a player
+// gained on a particular team in a particular
+// position while playing in a particular position
+// To get the total points in any one category,
+// you would have to add the points several
+// instances
 associationClass PlayerInPosition {
   Integer points;
   * SportsPlayer player;

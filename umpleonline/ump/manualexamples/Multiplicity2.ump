@@ -1,6 +1,7 @@
-// When the mutiplicity is shown as two integers separated by ..
-// then the first integer is the lower bound, and the second integer
-// is the upper bound.
+// When the mutiplicity is shown as two integers
+// separated by .. then the first integer is the
+// lower bound, and the second integer is the
+// upper bound.
 //
 // Here, at one end of the association
 // the lower bound is 0..1 (which means 'optional'

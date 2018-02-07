@@ -1,14 +1,16 @@
 // A person can attend many seminars,
 // and a seminar can be attended by many people
-// The relationship between Person and Seminar is thus
-// many-to-many.
+// The relationship between Person and Seminar is
+// thus many-to-many.
 //
-// There is, however, data to record about each ticket.
-// This can be  recorded as an association class
+// There is, however, data to record about each
+// ticket. This can be  recorded as an
+// association class
 //
 // Note the following doesn't currently render
-// in UmpleOnline using Correct UML association class
-// notation. There are plans to fix this.
+// in UmpleOnline using Correct UML
+// association class notation.
+// There are plans to fix this.
 associationClass Ticket
 {
   Integer ticketNumber;

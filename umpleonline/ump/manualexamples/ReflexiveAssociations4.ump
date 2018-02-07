@@ -1,4 +1,5 @@
-// Example symmetric association. Note the use of the keyword self
+// Example symmetric association. Note the use of
+// the keyword self
 class Course {
    * self  isMutuallyExclusiveWith;
 }

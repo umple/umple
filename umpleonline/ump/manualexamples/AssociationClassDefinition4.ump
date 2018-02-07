@@ -1,6 +1,8 @@
 // The following example is a simple class that
-// shows the association class
-// grammar [[multiplicity]] ( ( [otherEndroleName] [type] [roleName] )
+// shows an association class using both a
+// single role name for one associated class (a1)
+// and two role names to make links to the
+// other associated class.
 class A{
     f;
 }
@@ -8,7 +10,7 @@ class A{
 
 associationClass B{
     * A a1;
-    * b2 C a2;
+    * b2 C c1;
 }
 
 
