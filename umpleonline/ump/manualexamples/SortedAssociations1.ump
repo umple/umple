@@ -1,6 +1,7 @@
-// This example demonstrates two cases of sorted associations
-// The main program adds items out of order
-// But when they are printed the output will be sorted
+// This example demonstrates two cases of sorted
+// associations. The main program adds items out
+// of order. But when they are printed the output
+// will be sorted
 class Academy {
   1 -- * Course;
   1 -- * Student registrants sorted {id};
@@ -21,15 +22,18 @@ class Registration {
   // In each course, sort registrations by name
   * sorted {name} -- 1 Course;
 
-  // Derived delegated attribute used for sorting printing
+  // Derived delegated attribute used for sorting
+  // printing
   name = {getStudent().getName()}
 
-  // Derived delegated attribute used for sorting printing
+  // Derived delegated attribute used for sorting
+  // printing
   code = {getCourse().getCode()}
 
   
   public String toString() {
-    return "Registration: " + getName() + ":" + getCode();
+    return "Registration: " + getName()
+      + ":" + getCode();
   }
 }
 
@@ -67,7 +71,8 @@ class Academy {
 
 class Student {
   public String toString() {
-    String result="Student=" + id + "[" + name + "\n";
+    String result="Student=" + id + "["
+      + name + "\n";
     for (Registration r: getRegistrations()) {
       result +="  In: " + r + "\n";
     }

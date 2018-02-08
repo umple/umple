@@ -1,4 +1,5 @@
-// This demonstrates that actions can be different in different target languages
+// This demonstrates that actions can be different
+// in different target languages
 class DemoSM
 {
   Integer id;

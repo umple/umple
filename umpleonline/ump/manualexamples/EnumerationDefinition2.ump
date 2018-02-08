@@ -1,4 +1,6 @@
-// In this example, the "Status" enumeration is shared by the "GradStudent" and "UndergradStudent" class
+// In this example, the "Status" enumeration
+// is shared by the "GradStudent"
+// and "UndergradStudent" class
 
 enum Status { FullTime, PartTime }
 

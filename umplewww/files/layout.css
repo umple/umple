@@ -15,7 +15,7 @@ span.header img.uOttawaAbbr {border:0;height:2px}
 span.header img.uOttawa {border:1;height:2px;width:100%;}
 
 /* BODY STYLE */
-table.body {width:100%; border-collapse:collapse; }
+table.body {border-collapse:collapse; }
 td.indicatorBlocks {vertical-align:top;}
 td.indicatorBlocks img {border:0;height:30px;width:30;padding:15px 1px 0 0;}
 td.dotSeparator { vertical-align:top;padding:0 10px 0 1px;}

@@ -1,5 +1,5 @@
-// Example with an opportunity to nest states, to avoid repeating
-// transitions
+// Example with an opportunity to nest states, to
+// avoid repeating transitions
 
 class Course {
   code;
@@ -9,8 +9,9 @@ class Course {
 
 class CourseSection
 {
-  // Example from Lethbridge and Laganiere: Object Oriented Software
-  // Engineering: Practical Software Development using UML and Java
+  // Example from Lethbridge and Laganiere: Object
+  // Oriented Software Engineering: Practical
+  // Software Development using UML and Java
   // McGraw Hill, 2005  www.lloseng.com
 
   sectionId;
@@ -27,12 +28,16 @@ class CourseSection
     OpenNotEnoughStudents {
       closeRegistration -> Cancelled;
       cancel -> Cancelled;
-      register [getClassSize() > getMinimumClassSize()] -> OpenEnoughStudents;
+      register
+        [getClassSize() > getMinimumClassSize()]
+        -> OpenEnoughStudents;
     }
     OpenEnoughStudents {
       closeRegistration -> Closed;
       cancel -> Cancelled;
-      register [getClassSize() > getMaximumClassSize()] -> Closed;
+      register
+        [getClassSize() > getMaximumClassSize()]
+        -> Closed;
     }
     Cancelled {}
     Closed {}

@@ -6,7 +6,8 @@ class Student
   Integer number;  // attribute with type Integer
   * -- * Address;  // Many-to-many association
   
-  public String fullName()  // Method, whose content is not processed by Umple
+  // Method, whose content is not processed by Umple
+  public String fullName()  
   {
     return getFirstName() + " " + getLastName();
   } 

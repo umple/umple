@@ -8,8 +8,9 @@ class Course {
 
 class CourseSection
 {
-  // Example from Lethbridge and Laganiere: Object Oriented Software
-  // Engineering: Practical Software Development using UML and Java
+  // Example from Lethbridge and Laganiere: Object
+  // Oriented Software Engineering: Practical
+  // Software Development using UML and Java
   // McGraw Hill, 2005  www.lloseng.com
 
   sectionId;
@@ -27,11 +28,15 @@ class CourseSection
       cancel -> Cancelled;
       NotEnoughStudents {
         closeRegistration -> Cancelled;
-        register [getClassSize() > getMinimumClassSize()] -> EnoughStudents;
+        register
+          [getClassSize() > getMinimumClassSize()]
+          -> EnoughStudents;
       }
       EnoughStudents {
         closeRegistration -> Closed;
-        register [getClassSize() > getMaximumClassSize()] -> Closed;
+        register
+          [getClassSize() > getMaximumClassSize()]
+          -> Closed;
       }
     }
     Cancelled {}

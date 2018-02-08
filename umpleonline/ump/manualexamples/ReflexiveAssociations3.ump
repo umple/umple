@@ -1,4 +1,5 @@
-// Example asymmetric association with role name on the other end
+// Example asymmetric association with role name
+// on the other end
 class Person {
    0..2 parents -- * Person;
 }

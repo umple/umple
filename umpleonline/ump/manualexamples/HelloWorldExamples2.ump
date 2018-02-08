@@ -34,8 +34,10 @@ class Person {
     Mentor m = new Mentor("Nick The Mentor");
     Student s = new Student("Tom The Student");
     s.setMentor(m);
-    System.out.println("The mentor of "  + s  + " is " +  s.getMentor());
-    System.out.println("The students of " +  m  + " are " +  m.getStudents());
+    System.out.println("The mentor of "
+      + s  + " is " +  s.getMentor());
+    System.out.println("The students of "
+      +  m  + " are " +  m.getStudents());
   }
 }//$?[End_of_model]$?
 
