@@ -395,8 +395,12 @@ class SuperCodeGenerator {
       if(constructor.getNumberOfElements()>0)
       {
         constraintWithinConstructor = true;
+        String expr = constructor.getRoot().getValue(this);
         constructor.negate();
-        String inject = StringFormatter.format(ConstraintLookupMap.get("exception"),constructor.getNamedNames());
+        for (String name: constructor.getNames()) {
+            expr = expr.replaceAll("\\ba" + name.substring(0,1).toUpperCase() + name.substring(1) + "\\b", name);
+        }
+        String inject = StringFormatter.format(ConstraintLookupMap.get("exception"),constructor.getNamedNames() + " [" + expr + "]");
         String ifstatement = translate("Closed",constructor);
         String complete = StringFormatter.format(ifstatement,inject);
         CodeInjection cons = new CodeInjection("after",  "constructor", complete, aClass);  
