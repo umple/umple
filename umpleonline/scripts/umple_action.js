@@ -755,6 +755,7 @@ Action.generateCodeCallback = function(response, language, optionalCallback)
   var generateCodeSelector = "#buttonGenerateCode";
   jQuery(generateCodeSelector).hideLoading();
   Page.showCodeDone();
+  window.location.href='#genArea';
 }
 
 Action.classMouseDown = function(event)
@@ -1563,7 +1564,7 @@ Action.updateUmpleDiagramCallback = function(response)
   {
     Page.enableDiagram(false);
     Action.diagramInSync = false;
-    Page.setFeedbackMessage("The Umple model/code cannot be compiled; <a href=\"\#errorClick\">see explanation at the bottom.</a> To fix: edit the text or click undo");
+    Page.setFeedbackMessage("<a href=\"\#errorClick\">See message.</a> To fix: edit model or click undo");
   }
   else 
   {

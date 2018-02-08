@@ -32,7 +32,7 @@ if (!$tempModelData || !$tempModelData->hasData('model.ump'))
   $savedModelData->delete();
   exit();
 }
-
+/*
 if (!$tempModelData->hasData('model.ump.erroroutput'))
 {
   header('HTTP/1.0 412 Precondition Failed');
@@ -42,7 +42,7 @@ if (!$tempModelData->hasData('model.ump.erroroutput'))
   }
   $savedModelData->delete();
   exit();
-}
+} */
 
 $savedModelData->cloneFrom($tempModelData);
 
