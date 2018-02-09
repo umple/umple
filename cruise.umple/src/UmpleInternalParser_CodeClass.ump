@@ -1205,12 +1205,20 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     	  processGTemplateParameterAssignment(extendsToken, aClassifier, extendName);
       }
     }
+    
   	//Checks list of extends tokens to prevent multiple class inheritance
     if(numberOfExtendsClass(unlinkedExtendsTokens.get(aClassifier)) > 1)
-	{
-	  Token t = extendsTokenList.get(0);    	
-	  getParseResult().addErrorMessage(new ErrorMessage(34,t.getPosition(),aClassifier.getName(),t.getValue()));
-	}
+	  {
+      Token t = classifierToken;
+	    String otherClass = "indicated here";
+      Position thePosition = new Position("",0,0,0);
+	    if(extendsTokenList.size()>0) {
+	      t = extendsTokenList.get(0);
+	      otherClass = t.getValue();
+	      thePosition = t.getPosition();
+	    }
+	    setFailedPosition(thePosition, 34, aClassifier.getName(), otherClass);
+	  }
   }
 	
 	//Returns the number of umple class in extends list (extList)
