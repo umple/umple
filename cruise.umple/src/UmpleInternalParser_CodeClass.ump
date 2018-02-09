@@ -2822,18 +2822,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     	  {
           for(String l : implementations)
           {
-        	  if((actualMethod.getMethodBody().getExtraCode(l).equals("") || 
-              actualMethod.getMethodBody().getExtraCode(l).equals("\n"))&&
-             (!aMethod.getMethodBody().getExtraCode(l).equals("") ||
-        	      !aMethod.getMethodBody().getExtraCode(l).equals("\n")) &&
-        	     (!actualMethod.getMethodBody().getExtraCode(l).equals(aMethod.getMethodBody().getExtraCode(l))))
-        	  {
-              actualMethod.getMethodBody().setExtraCode(l, aMethod.getMethodBody().getExtraCode(l));
-              actualMethod.getMethodBody().getImplementationPositions().put(l, aMethod.getMethodBody().getImplementationPositions().get(l));
-        	  }
-        	  else
-        	  {
-        	  
     	      if (isGetterSetter(actualMethod)) {
               String methodName = aMethod.getName();
               String attributeName = methodName.substring(3,methodName.length()).toLowerCase();
@@ -2852,7 +2840,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
                   	  aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
                   	  aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
               }
-        	  }
         	  
           }
     	  }
