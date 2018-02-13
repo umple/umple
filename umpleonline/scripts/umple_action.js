@@ -114,6 +114,21 @@ Action.clicked = function(event)
   {
     Action.showEncodedURLCodeInSeparateWindow();
   }
+  else if (action == "CopyLocalBrowser")
+  {
+    if (typeof(Storage) !== "undefined") {
+      localStorage.setItem("umpleLocalStorage1",Page.getUmpleCode());
+    }
+  }
+  else if (action == "LoadLocalBrowser")
+  {
+    if (typeof(Storage) !== "undefined") {
+      var textToLoad = localStorage.getItem("umpleLocalStorage1");
+      if(textToLoad != null) {
+        Page.setUmpleCode(textToLoad);
+      }
+    }
+  }    
   else if (action == "Undo")
   {
     Action.undo();

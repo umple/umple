@@ -260,7 +260,7 @@ $output = $dataHandle->readData('model.ump');
       <div id="palette" class="palette">
 
         <!-- GROUP 1 OF OPTIONS -->
-        <h3><a href="#">SAVE & RESET</a></h3>
+        <h3><a href="#">SAVE & LOAD</a></h3>
         
         <div class="section">
           <ul class="first">
@@ -268,25 +268,35 @@ $output = $dataHandle->readData('model.ump');
             <?php if (isBookmark($dataHandle)) { ?>
             <li id="ttSaveBookmark">
               <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="umple.php?model=<?php echo $dataHandle->getName() ?>">Bookmark Model</a>
+                <a href="umple.php?model=<?php echo $dataHandle->getName() ?>">Resave URL</a>
               </div>
             </li>
             <?php } else { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save Model</a>
+                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save as URL</a>
               </div>
             </li>
             <?php } ?>
             <li id="buttonCopy" class="copy">
               <img src="scripts/copy.png"/> 
-              Source
+               Source to Copy
             </li>
             <li id="buttonCopyEncodedURL" class="copyEncoded">
               <img src="scripts/copy.png"/> 
               Encoded URL
             </li>
+            <li id="buttonCopyLocalBrowser" class="copyLocalBrowser">
+              <img src="scripts/copy.png"/> 
+              Store in Browser
+            </li>            
             <li class="dropbox-add-saver"></li>
+            
+            <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
+              <img src="scripts/copy.png"/> 
+              Load from Browser
+            </li>   
+            
           </ul>
         
           <ul class="second center-children">
@@ -302,7 +312,7 @@ $output = $dataHandle->readData('model.ump');
         
         <div class="section">
           <ul id="mainLoadMenu" class="first center-children">
-            <li class="subtitle"> Load </li>
+            <li class="subtitle"> Examples </li>
             <li id="exampleType">
               <select id="inputExampleType" name="inputExampleType" class="button" size = "1">
                 <option name = "optionExampleType" id = "cdModels" value="cdModels">Class Diagrams</option>
