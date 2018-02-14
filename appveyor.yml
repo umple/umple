@@ -52,4 +52,4 @@ build_script:
 test_script:
 
 - cmd: ant -f build.testbed.xml -Dfirst.build=false
-
+- cmd: ant -f build.exampletests.xml allUserManualAndExampleTests
