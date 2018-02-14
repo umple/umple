@@ -3,4 +3,4 @@ class A{
   void test2(){}
   Integer test1(){}
 }
-
+// @@@skipcompile no return from test1

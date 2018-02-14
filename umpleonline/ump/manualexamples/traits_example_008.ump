@@ -16,3 +16,5 @@ class C2{
   isA T1< TP = C1 >;
   String method1(){/*implementation*/ }
 }
+// @@@skipcompile issue needs raising as Java
+// compile fails missing return statement
