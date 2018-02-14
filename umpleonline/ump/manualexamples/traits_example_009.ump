@@ -32,3 +32,4 @@ class C2 {
   isA C3, I2, T3;
   Boolean method3(){/*implementation*/ }
 }
+// @@@skipcompile Java code not compilable

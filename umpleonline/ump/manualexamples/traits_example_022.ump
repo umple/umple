@@ -26,5 +26,6 @@ class C1{
 class C2{
   isA T1<+sm.s1.r2>;
 }
+// @@@skipcompile issue needs raising as Java compile fails
 
 

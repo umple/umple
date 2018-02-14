@@ -28,7 +28,9 @@
         <echo>Building Java Testbed (Testing that Umple Generated Code Works)</echo>
         <ant antfile="build/build.testbed.xml" target="build" inheritAll="false" />
 
-      </try>
+       <echo>Testing UmpleOnline Examples and Manual Examples</echo>
+       <ant antfile="build/build.exampletests.xml" target="allUserManualAndExampleTests" inheritAll="false" />
+     </try>
 
       <finally>
         <antcall target="qaLandingPage" />

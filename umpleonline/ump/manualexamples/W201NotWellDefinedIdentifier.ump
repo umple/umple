@@ -8,3 +8,4 @@ trait color {
 trait equality{
 	//traits elements
 }
+// @@@skipcompile no code

@@ -102,8 +102,4 @@ class RoleFacilityAccessRight{
   position.association Facility__RoleFacilityAccessRight 27,0 163,130;
 }
 
-/*
-@@@testlanguage=java,cpp,php
-*/
-
 // @@@skipphpcompile - remove when issue 697 is fixed

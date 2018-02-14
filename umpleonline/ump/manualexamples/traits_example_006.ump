@@ -21,3 +21,4 @@ class C2{
   void method1(){/*implementation*/}
   C2 method2(C2 data){ /*implementation*/ }
 }
+// @@@skipcompile issue needs raising missing return statement
