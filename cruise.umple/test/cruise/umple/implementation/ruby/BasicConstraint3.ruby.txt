@@ -26,7 +26,7 @@ class Client
     @minAge = a_minAge
     @age = a_age
     if a_age<=a_minAge then
-      raise RuntimeError, 'Please provide a valid age and minAge'
+      raise RuntimeError, 'Please provide a valid age and minAge [age>minAge]'
     end
     @initialized = true
   end

@@ -361,6 +361,20 @@ class SuperCodeGenerator {
       prepareConstraint(((ConstraintOperator)cur).getRight(),ac,head,setters,uClassifiers,constraintNum);
     }
   }
+  
+  private String getExpr(ConstraintVariable cur) {
+    if (cur instanceof ConstraintOperator) {
+      return getExpr(((ConstraintOperator)cur).getLeft()) + ((ConstraintOperator)cur).getValue() + getExpr(((ConstraintOperator)cur).getRight());
+    } else if (cur instanceof ConstraintLiteral) {
+      return ((ConstraintLiteral)cur).getValue();
+    } else if (cur instanceof ConstraintAttribute) {
+      return ((ConstraintAttribute)cur).getName();
+    } else if (cur instanceof ConstraintTree) {
+      return getExpr(((ConstraintTree)cur).getRoot());
+    } else {
+      return "";
+    }
+  }
 
   public void prepareConstraints(UmpleClass aClass)
   {
@@ -395,11 +409,8 @@ class SuperCodeGenerator {
       if(constructor.getNumberOfElements()>0)
       {
         constraintWithinConstructor = true;
-        String expr = constructor.getRoot().getValue(this);
+        String expr = getExpr(constructor);
         constructor.negate();
-        for (String name: constructor.getNames()) {
-            expr = expr.replaceAll("\\ba" + name.substring(0,1).toUpperCase() + name.substring(1) + "\\b", name);
-        }
         String inject = StringFormatter.format(ConstraintLookupMap.get("exception"),constructor.getNamedNames() + " [" + expr + "]");
         String ifstatement = translate("Closed",constructor);
         String complete = StringFormatter.format(ifstatement,inject);

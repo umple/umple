@@ -1,0 +1,92 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+// line 1 "test.ump"
+public class MultipleConstraints
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //MultipleConstraints Attributes
+  private int i;
+  private int j;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public MultipleConstraints(int aI, int aJ)
+  {
+    i = aI;
+    j = aJ;
+    if (aI<0)
+    {
+      throw new RuntimeException("Please provide a valid i [i>=0]");
+    }
+    if (aJ<0)
+    {
+      throw new RuntimeException("Please provide a valid j [j>=0]");
+    }
+    if (aI<aJ)
+    {
+      throw new RuntimeException("Please provide a valid i and j [i>=j]");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setI(int aI)
+  {
+    boolean wasSet = false;
+    if (aI>=getJ())
+    {
+    if (aI>=0)
+    {
+    i = aI;
+    wasSet = true;
+    }
+    }
+    return wasSet;
+  }
+
+  public boolean setJ(int aJ)
+  {
+    boolean wasSet = false;
+    if (aJ>=0)
+    {
+    if (getI()>=aJ)
+    {
+    j = aJ;
+    wasSet = true;
+    }
+    }
+    return wasSet;
+  }
+
+  public int getI()
+  {
+    return i;
+  }
+
+  public int getJ()
+  {
+    return j;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "i" + ":" + getI()+ "," +
+            "j" + ":" + getJ()+ "]";
+  }
+}

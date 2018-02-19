@@ -1,0 +1,77 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class MultipleConstraints
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #MultipleConstraints Attributes - for documentation purposes
+  #attr_reader :i, :j
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_i, a_j)
+    @initialized = false
+    @deleted = false
+    @i = a_i
+    @j = a_j
+    if a_i<0 then
+      raise RuntimeError, 'Please provide a valid i [i>=0]'
+    end
+    if a_j<0 then
+      raise RuntimeError, 'Please provide a valid j [j>=0]'
+    end
+    if a_i<a_j then
+      raise RuntimeError, 'Please provide a valid i and j [i>=j]'
+    end
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_i(a_i)
+    was_set = false
+    if a_i>=get_j() then
+    if a_i>=0 then
+    @i = a_i
+    was_set = true
+    end
+    end
+    was_set
+  end
+
+  def set_j(a_j)
+    was_set = false
+    if get_i()>=a_j then
+    if a_j>=0 then
+    @j = a_j
+    was_set = true
+    end
+    end
+    was_set
+  end
+
+  def get_i
+    @i
+  end
+
+  def get_j
+    @j
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end

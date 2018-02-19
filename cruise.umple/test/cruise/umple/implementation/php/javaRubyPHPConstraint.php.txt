@@ -23,7 +23,7 @@ class Range
     $this->end = $aEnd;
     if ($aStart>=$aEnd)
     {
-      throw new RuntimeException("Please provide a valid end and start");
+      throw new RuntimeException("Please provide a valid end and start [start<end]");
     }
   }
 

@@ -25,7 +25,7 @@ public class X
     e = aE;
     if (aD.getTime()<=aE.getTime())
     {
-      throw new RuntimeException("Please provide a valid d and e");
+      throw new RuntimeException("Please provide a valid d and e [d>e]");
     }
   }
 
