@@ -1,5 +1,6 @@
 /*
-	Example 3: showing how template parameters in traits are used in code blocks.
+	Example 3: showing how template parameters in
+	traits are used in code blocks.
 */
 trait T1 <TP>{
   String method1();
@@ -15,3 +16,5 @@ class C2{
   isA T1< TP = C1 >;
   String method1(){/*implementation*/ }
 }
+// @@@skipcompile issue needs raising as Java
+// compile fails missing return statement

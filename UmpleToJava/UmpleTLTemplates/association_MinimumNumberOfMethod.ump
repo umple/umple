@@ -1,5 +1,5 @@
 class UmpleToJava {
-    association_MinimumNumberOfMethod <<!<</*association_MinimumNumberOfMethod*/>><<#
+  association_MinimumNumberOfMethod <<!  /* Code from template association_MinimumNumberOfMethod */<</*association_MinimumNumberOfMethod*/>><<#
     String customMinimumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("minimumNumberOfMethod",av)));
     String customMinimumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("minimumNumberOfMethod",av)));
     #>>

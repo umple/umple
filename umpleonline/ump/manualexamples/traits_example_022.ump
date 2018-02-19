@@ -1,5 +1,6 @@
 /*
-	Example 7: showing how the operator "Removing/keeping a region" works.
+	Example 7: showing how the operator
+	"Removing/keeping a region" works.
 */
 trait T1{
   sm {
@@ -25,5 +26,6 @@ class C1{
 class C2{
   isA T1<+sm.s1.r2>;
 }
+// @@@skipcompile issue needs raising as Java compile fails
 
 

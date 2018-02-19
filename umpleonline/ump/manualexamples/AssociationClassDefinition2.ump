@@ -1,8 +1,10 @@
-// The following shows how we might model sales of Ticket for
-// Seminars to Persons without using an association class.
-// Note, however, that in this model, it would be possible to sell
-// more than one ticket to a Person for the same Seminar.
-// Using an association class would hence be better than this.
+// The following shows how we might model sales of
+// Ticket for Seminars to Persons without using an
+// association class. Note, however, that in this
+// model, it would be possible to sell more than
+// one ticket to a Person for the same Seminar.
+// Using an association class would hence be
+// better than this.
 class Ticket
 {
   Integer ticketNumber;

@@ -2,12 +2,13 @@
 class Group 
 {
   // a many-to-many association
-  // An item has zero or more groups and a group has zero or more items
+  // An item has zero or more groups and a group
+  // has zero or more items
   * -- * Item item;
   
   // An item has an optional description
-  // The association is directed, so descriptions do not know
-  // which groups link to them
+  // The association is directed, so descriptions
+  // do not know which groups link to them
   1 -> 0..1 Description;
 }
 

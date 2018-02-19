@@ -4,7 +4,8 @@ class X {
   enum Y { Red, Blue, Green }
   sm {
     s1 {
-      goToS2(Y param) /{ System.out.println(param); } -> s2;
+      goToS2(Y param) /
+        { System.out.println(param); } -> s2;
     }
     s2 {}
   }

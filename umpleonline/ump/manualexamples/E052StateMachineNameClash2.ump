@@ -1,4 +1,5 @@
-// The sample generates the message because the state machine a
+// The sample generates the message
+// because the state machine a
 // clashes with the association role name a
 class X52assattnamestatemachine2 {
   1 - 0.1 B a;

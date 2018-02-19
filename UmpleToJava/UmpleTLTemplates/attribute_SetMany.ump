@@ -1,6 +1,6 @@
 class UmpleToJava {
-    attribute_SetMany <<!<</*attribute_SetMany*/>>
-  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("typeMany",av)>> <<=gen.translate("parameterOne",av)>>)
+  attribute_SetMany <<!  /* Code from template attribute_SetMany */
+<</*attribute_SetMany*/>>  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("typeMany",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasAdded = false;
     <<# if (customAddPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPrefixCode,gen.translate("addMethod",av)); 

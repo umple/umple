@@ -1,8 +1,10 @@
-// this example will trace all states of State machine GarageDoor 
+// this example will trace all states of
+// State machine GarageDoor 
 
 class GarageDoor
 {
-    // UML state machine digram for a Garage door, written in Umple
+    // UML state machine digram for a Garage door,
+    // written in Umple
     status { 	
       	Open { buttonOrObstacle -> Closing;  }  	
       	Closing {

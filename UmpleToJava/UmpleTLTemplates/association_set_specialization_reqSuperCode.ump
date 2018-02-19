@@ -36,7 +36,7 @@ use specializationSkip.ump;
 
 
 class UmpleToJava {
-    association_set_specialization_reqSuperCode <<!<</*association_set_specialization_reqSuperCode*/>><<#
+  association_set_specialization_reqSuperCode <<!  /* Code from template association_set_specialization_reqSuperCode */<</*association_set_specialization_reqSuperCode*/>><<#
 	String customIsNumberOfValidPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isNumberOfValidMethod",av)));
     String customIsNumberOfValidPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("isNumberOfValidMethod",av)));
     

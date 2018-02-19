@@ -1,4 +1,7 @@
-// In this example, there is a warning because in trait "T" there will be two attributes with the name called "name".
+// In this example, there is a
+// warning because in trait "T"
+// there will be two attributes
+// with the name called "name".
 class A{
 	isA T;
 }

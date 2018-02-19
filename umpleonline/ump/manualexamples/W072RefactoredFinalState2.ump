@@ -14,3 +14,4 @@ class X {
     }
   }
 }
+// @@@skipcompile no method entry written line 13

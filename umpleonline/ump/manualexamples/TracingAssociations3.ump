@@ -1,4 +1,5 @@
-// This example will record any removal of any supervisor assoc link 
+// This example will record any removal of any
+// supervisor assoc link 
 
 class Student {
   Integer id;

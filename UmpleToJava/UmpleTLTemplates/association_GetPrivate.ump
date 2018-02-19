@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_GetPrivate <<!<</*association_GetPrivate*/>>
-  private void <<=gen.relatedTranslate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>, <<=gen.relatedTranslate("type",av)>> <<=gen.relatedTranslate("parameterOne",av)>>)
+  association_GetPrivate <<!  /* Code from template association_GetPrivate */
+<</*association_GetPrivate*/>>  private void <<=gen.relatedTranslate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>, <<=gen.relatedTranslate("type",av)>> <<=gen.relatedTranslate("parameterOne",av)>>)
   {
     try
     {

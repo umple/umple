@@ -100,17 +100,28 @@ class UmpleInternalParser
 
   public ParseResult analyze(boolean shouldGenerate)
   {
-    setParseResult(parser.getParseResult());
-    setRootToken(parser.getRootToken());
-    analyzeAllTokens(getRootToken());    
-    postTokenAnalysis();
-    secondPostTokenAnalysis();
-    //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
-    checkDefaultedNameConflict();
+    try {
+      setParseResult(parser.getParseResult());
+      setRootToken(parser.getRootToken());
+      analyzeAllTokens(getRootToken());    
+      postTokenAnalysis();
+      secondPostTokenAnalysis();
+      //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
+      checkDefaultedNameConflict();
+    }
+    catch (Exception ex)
+    {
+      setFailedPosition(new Position("",0,0,0),9100,
+        "Could not analyze Umple model. Please report an issue with this entire message and your input code to Umple developers.\nStack Trace Follows.\n"+
+        cruise.umple.util.ExceptionDumper.dumpCompilerError(ex));
+    }
 
     if (shouldGenerate && getParseResult().getWasSuccess())
     {
-      model.generate();
+      String generatorError = model.generate();
+      if(generatorError != null) {
+        setFailedPosition(new Position("",0,0,0),9200,generatorError);
+      }
     }
     return getParseResult();
   }
@@ -163,7 +174,7 @@ class UmpleInternalParser
   //------------------------
 
   // When an error occurs, set the failed position and mark the compile as NOT successful
-  private void setFailedPosition(Position position, int errorCode, String... messages)
+  public void setFailedPosition(Position position, int errorCode, String... messages)
   {
     //getParseResult().setWasSuccess(false);
 

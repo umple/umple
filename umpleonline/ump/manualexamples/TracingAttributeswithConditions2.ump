@@ -1,5 +1,6 @@
 
-// this example injects trace code in attribute setter with specified postcondition
+// this example injects trace code in attribute
+// setter with specified postcondition
 
 class Student
 {

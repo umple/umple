@@ -1,6 +1,7 @@
 
 // Test of queued state machines.
-// The word queued results in a thread being created to process events.
+// The word queued results in a thread being
+// created to process events.
 
 class TestSM {
   queued sm{
@@ -26,11 +27,20 @@ class TestSM {
     test.e4(); // processed s1
 
     test.e1(); // processed s2
-    test.e3(); // queued: ignored  pooled: left in queue, until we are next in s3
-    test.e4(); //      pooled: left in queue, until next in s4
-    test.e2(); //      pooled: processed goes to s3
-               //      pooled: process e3 from queue goes to s4
-               //      pooled: process s4 from queue goes to s1
+    
+               // queued: ignored 
+               // pooled: left in queue, until we
+    test.e3(); //   are next in s3
+
+               // pooled: left in queue, until
+    test.e4(); //   next in s4
+    
+               // pooled: processed goes to s3
+               // pooled: process e3 from queue
+               //   goes to s4
+               // pooled: process s4 from queue
+    test.e2(); //   goes to s1
+             
     test.e1(); 
     test.e3(); 
     test.e2(); 

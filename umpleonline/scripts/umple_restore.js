@@ -4,9 +4,9 @@
 jQuery(document).ready(function(){
     
   var name = "filecode=";
-  var view = "view=";
-  var diagram = "diagram=";
-  var preferences = "pref=";
+  var view = "VIEW=";
+  var diagram = "DIAGRAM=";
+  var preferences = "PREF=";
   
   //Split the cookie to different values
   var ca = document.cookie.split(';');  
@@ -32,7 +32,7 @@ jQuery(document).ready(function(){
       {
         diagram = c.substring(diagram.length,c.length);
       }
-      else if (c.indexOf(preferences)==0)
+      else if (c.indexOf(preferences)!=-1)
       {
         preferences = c.substring(preferences.length,c.length);
       }
@@ -42,7 +42,6 @@ jQuery(document).ready(function(){
   {
     //Display the link for a minute
     jQuery('#restorecode').show();
-
     setTimeout(function() {
   jQuery('#restorecode').hide();
 },30000);
@@ -57,80 +56,134 @@ jQuery(document).ready(function(){
       //Set the user preference by finding letters in the values
       
       //View Attributes
-      if(view.indexOf("d") != -1)
+      if(view.indexOf("d") != -1)  // found d so show diagram if needed
       {
-        if(!jQuery("#buttonShowHideTextEditor").attr("checked"))
+        if(!jQuery("#buttonShowHideCanvas").prop("checked"))
         {
-          jQuery("#buttonShowHideTextEditor").trigger('click');
+          jQuery("#buttonShowHideCanvas").trigger('click');
         }
-      }      
-      if(view.indexOf("t") != -1)
+      }
+      else // did NOT find d so hide diagram if needed
       {
-        if(!jQuery("#buttonShowHideTextEditor").attr("checked"))
+        if(jQuery("#buttonShowHideCanvas").prop("checked"))
+        {
+          jQuery("#buttonShowHideCanvas").trigger('click');
+        }      
+      }
+      
+      if(view.indexOf("t") != -1) // found t so show text if needed
+      {
+        if(!jQuery("#buttonShowHideTextEditor").prop("checked"))
         {
           jQuery('#buttonShowHideTextEditor').trigger('click');
         }
       }
-      if(view.indexOf("l") != -1)
+      else // did NOT find t so hide text if needed
       {
-        if(!jQuery("#buttonShowHideLayoutEditor").attr("checked"))
+        if(jQuery("#buttonShowHideTextEditor").prop("checked"))
+        {
+          jQuery('#buttonShowHideTextEditor').trigger('click');
+        }      
+      }
+      
+      if(view.indexOf("l") != -1) // found l so show layout editor if needed
+      {
+        if(!jQuery("#buttonShowHideLayoutEditor").prop("checked"))
         {
           jQuery('#buttonShowHideLayoutEditor').trigger('click');
         }
       }
-      if(view.indexOf("a") != -1)
+      else // did NOT find l so hide layout editor if needed
       {
-        if(!jQuery("#buttonToggleAttributes").attr("checked"))
+        if(jQuery("#buttonShowHideLayoutEditor").prop("checked"))
+        {
+          jQuery('#buttonShowHideLayoutEditor').trigger('click');
+        }      
+      }
+      
+      if(view.indexOf("a") != -1) // found a so show layout editor if needed
+      {
+        if(!jQuery("#buttonToggleAttributes").prop("checked"))
         {
           jQuery('#buttonToggleAttributes').trigger('click');
         }
-      }        
-      if(view.indexOf("m") != -1)
+      }
+      else // did NOT find a so hide attributes if needed
       {
-        if(!jQuery("#buttonToggleMethods").attr("checked"))
+        if(jQuery("#buttonToggleAttributes").prop("checked"))
+        {
+          jQuery('#buttonToggleAttributes').trigger('click');
+        }
+      }
+      
+      if(view.indexOf("m") != -1) // found m so show methods if needed
+      {
+        if(!jQuery("#buttonToggleMethods").prop("checked"))
         {
           jQuery('#buttonToggleMethods').trigger('click');
         }
-      }      
+      }
+      else // did NOT find m so hide methods if needed
+      {
+        if(jQuery("#buttonToggleMethods").prop("checked"))
+        {
+          jQuery('#buttonToggleMethods').trigger('click');
+        }      
+      }
       
       //Diagram Type
       if(diagram.indexOf("e") != -1)
       {
-        if(!jQuery("#buttonShowEditableClassDiagram").attr("checked"))
+        if(!jQuery("#buttonShowEditableClassDiagram").prop("checked"))
         {
           jQuery("#buttonShowEditableClassDiagram").trigger('click');
         }
       }      
       else if(diagram.indexOf("c") != -1)
       {
-        if(!jQuery("#buttonShowGvClassDiagram").attr("checked"))
+        if(!jQuery("#buttonShowGvClassDiagram").prop("checked"))
         {
           jQuery('#buttonShowGvClassDiagram').trigger('click');
         }
       }
       else if(diagram.indexOf("s") != -1)
       {
-        if(!jQuery("#buttonShowGvStateDiagram").attr("checked"))
+        if(!jQuery("#buttonShowGvStateDiagram").prop("checked"))
         {
           jQuery('#buttonShowGvStateDiagram').trigger('click');
         }
       }
       
       //Preferences
-      if(preferences.indexOf("p") != -1)
+      if(preferences.indexOf("p") != -1) // Found p so make photo ready if needed
       {
-        if(!jQuery("#buttonPhotoReady").attr("checked"))
+        if(!jQuery("#buttonPhotoReady").prop("checked"))
         {
           jQuery('#buttonPhotoReady').trigger('click');
         }
-      }        
-      if(preferences.indexOf("s") != -1)
+      }
+      else // did NOT find p so make non-photo ready if needed
       {
-        if(!jQuery("#buttonManualSync").attr("checked"))
+        if(jQuery("#buttonPhotoReady").prop("checked"))
+        {
+          jQuery('#buttonPhotoReady').trigger('click');
+        }      
+      }
+      
+      if(preferences.indexOf("s") != -1) // Found s so make manual sync if needed
+      {
+        if(!jQuery("#buttonManualSync").prop("checked"))
         {
           jQuery('#buttonManualSync').trigger('click');
         }
-      }  
+      }
+      else // did NOT find s so get rid of manual sync if needed
+      {
+        if(jQuery("#buttonManualSync").prop("checked"))
+        {
+          jQuery('#buttonManualSync').trigger('click');
+        } 
+      }      
     });
   }
 });
@@ -151,40 +204,40 @@ window.onbeforeunload = function(event) {
     //These were settings the user set
     //Used single letter to save space
     //Show View
-    cookie_view = "view=";
-    if(jQuery("#buttonShowHideCanvas").attr("checked"))
+    cookie_view = "VIEW=";
+    if(jQuery("#buttonShowHideCanvas").prop("checked"))
       cookie_view += "d";
-    if(jQuery("#buttonShowHideTextEditor").attr("checked"))
+    if(jQuery("#buttonShowHideTextEditor").prop("checked"))
       cookie_view += "t";
-    if(jQuery("#buttonShowHideLayoutEditor").attr("checked"))
+    if(jQuery("#buttonShowHideLayoutEditor").prop("checked"))
       cookie_view += "l";
-    if(jQuery("#buttonToggleAttributes").attr("checked"))
+    if(jQuery("#buttonToggleAttributes").prop("checked"))
       cookie_view += "a";
-    if(jQuery("#buttonToggleMethods").attr("checked"))
+    if(jQuery("#buttonToggleMethods").prop("checked"))
       cookie_view += "m"
-    if(jQuery("#buttonToggleTransitionLabel").attr("checked"))
+    if(jQuery("#buttonToggleTransitionLabel").prop("checked"))
       cookie_view += "r";
-    if(jQuery("#buttonToggleGuardLabel").attr("checked"))
+    if(jQuery("#buttonToggleGuardLabel").prop("checked"))
       cookie_view += "g";
     cookie_view += ";" + "expires="+date.toGMTString() + ";";    
     document.cookie = cookie_view;
       
     //Diagram Type
-    cookie_diagram = "diagram=";
-    if(jQuery("#buttonShowEditableClassDiagram").attr("checked"))
+    cookie_diagram = "DIAGRAM=";
+    if(jQuery("#buttonShowEditableClassDiagram").prop("checked"))
       cookie_diagram += "e";
-    else if(jQuery("#buttonShowGvClassDiagram").attr("checked"))
+    else if(jQuery("#buttonShowGvClassDiagram").prop("checked"))
       cookie_diagram += "c";
-    else if(jQuery("#buttonShowGvStateDiagram").attr("checked"))
+    else if(jQuery("#buttonShowGvStateDiagram").prop("checked"))
       cookie_diagram += "s";      
     cookie_diagram += ";" + "expires="+date.toGMTString() + ";";  
     document.cookie = cookie_diagram;
               
     //Preferences
-    cookie_pref = "pref=";
-    if(jQuery("#buttonPhotoReady").attr("checked"))
+    cookie_pref = "PREF=";
+    if(jQuery("#buttonPhotoReady").prop("checked"))
       cookie_pref += "p";
-    if(jQuery("#buttonManualSync").attr("checked"))
+    if(jQuery("#buttonManualSync").prop("checked"))
       cookie_pref += "s";
     cookie_pref += ";" + "expires="+date.toGMTString() + ";";    
     document.cookie = cookie_pref;

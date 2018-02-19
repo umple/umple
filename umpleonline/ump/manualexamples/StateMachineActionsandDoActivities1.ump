@@ -16,7 +16,8 @@ class LightFixture
 
   void doEntry() {System.out.println("Entry");}
   void doExit() {System.out.println("Exit");}
-  void doTransition() {System.out.println("Transition");}
+  void doTransition() {
+    System.out.println("Transition");}
   void doThisContinuouslyWhileOn() {
     while (true) {
       System.out.println("Still on");

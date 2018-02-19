@@ -1,5 +1,6 @@
 /*
-	Example 1: showing how the operator "Removing/keeping provided methods" works.
+	Example 1: showing how the operator
+	"Removing/keeping provided methods" works.
 */
 trait T1{
   abstract method1(); 
@@ -10,9 +11,9 @@ trait T1{
 }
 class C1{
   isA T1<-method2() , -method3()>;
-  void method1() {/*implementation related to C1*/}
+  void method1() {/*implementation for C1*/}
 }
 class C2{
   isA T1<+method5()>;
-  void method1() {/*implementation related to C2*/}
+  void method1() {/*implementation for C2*/}
 }

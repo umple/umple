@@ -1,4 +1,5 @@
-// The following example shows how to generate this error.
+// The following example shows
+// how to generate this error.
 class X {
     0..1 -- 0..1 X;
 }

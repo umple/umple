@@ -45,7 +45,7 @@ use association_Sort.ump;
 
 
 class UmpleToJava {
-    association_set_specialization_reqCommonCode <<!<</*association_set_specialization_reqCommonCode*/>><<#
+  association_set_specialization_reqCommonCode <<!  /* Code from template association_set_specialization_reqCommonCode */<</*association_set_specialization_reqCommonCode*/>><<#
 
     String customIsNumberOfValidPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isNumberOfValidMethod",av)));
     String customIsNumberOfValidPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("isNumberOfValidMethod",av)));

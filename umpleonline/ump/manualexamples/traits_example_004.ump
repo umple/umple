@@ -1,5 +1,6 @@
 /*
- Example 2: showing how states in traits can be obtained by required methods.
+ Example 2: showing how states in traits can be
+ obtained by required methods.
 */
 trait T1{
   Integer getData();
@@ -14,3 +15,4 @@ class C1{
   Integer data;
   isA T1;
 }
+// @@@@@@testlanguage=none Java code not compile

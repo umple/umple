@@ -27,6 +27,7 @@ env:
     - ANT_FIRST='ant -f build.umple.xml'
     - ANT_BUILD='ant -f build.umple.xml -Dfirst.build=false'
     - ANT_TESTBED='ant -f build.testbed.xml -Dfirst.build=false'
+    - ANT_EXAMPLES='ant -f build.exampletests.xml'
 
 script:
   - php --version ; ruby -v
@@ -50,6 +51,7 @@ script:
   - $ANT_TESTBED clean template.clean init
   - $ANT_TESTBED compile 
   - $ANT_TESTBED test 
+  - $ANT_EXAMPLES allUserManualAndExampleTests   
   - $ANT_TESTBED template.resetVersion 
 
   # Set up UmpleOnline to be packaged into its Docker image, then build the image.

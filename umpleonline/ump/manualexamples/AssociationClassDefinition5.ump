@@ -1,6 +1,8 @@
-// This shows a reflexive association class, where the associated classes are
-// the same (Member). In this case we must use role names at both ends to ensure
-// navigation to the correct sets (mentors, mentees)
+// This shows a reflexive association class, where
+// the associated classes are the same (Member).
+// In this case we must use role names at both
+// ends to ensure navigation to the correct sets
+// (mentors, mentees)
 class Member {
   name;
 }

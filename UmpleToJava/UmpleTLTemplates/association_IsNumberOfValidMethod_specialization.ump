@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_IsNumberOfValidMethod_specialization <<!<</*association_IsNumberOfValidMethod_specialization*/>>
-  public boolean <<=gen.translate("isNumberOfValidMethod",av)>>_<<=gen.translate("type",av)>>()
+  association_IsNumberOfValidMethod_specialization <<!  /* Code from template association_IsNumberOfValidMethod_specialization */
+<</*association_IsNumberOfValidMethod_specialization*/>>  public boolean <<=gen.translate("isNumberOfValidMethod",av)>>_<<=gen.translate("type",av)>>()
   {
     <<# if (customIsNumberOfValidPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customIsNumberOfValidPrefixCode,gen.translate("isNumberOfValidMethod",av)); 
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPrefixCode, "    ")); } #>>

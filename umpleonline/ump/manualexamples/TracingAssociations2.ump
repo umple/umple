@@ -1,4 +1,5 @@
-// This example will record any addition to assoc link 'supervisor'
+// This example will record any addition to
+// assoc link 'supervisor'
 
 class Student {
   Integer id;

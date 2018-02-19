@@ -51,6 +51,7 @@ public class TemplateTest
 
     SampleFileWriter.destroy(pathToInput + "/example");
     SampleFileWriter.destroy(pathToInput + "/java/example");
+    SampleFileWriter.destroy(pathToInput + "/java/enumerations");
     SampleFileWriter.destroy(pathToInput + "/IX.php");
     SampleFileWriter.destroy(pathToInput + "/ISomething.java");
     SampleFileWriter.destroy(pathToInput + "/Token.java");

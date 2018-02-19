@@ -1,7 +1,12 @@
-// If you want to bypass Umple and directly include the attribute in the generated code, write the full declaration.
-// The generated code will include the attribute verbatim.
+// Although not recommended, the programmer
+// can also bypass Umple and directly specify
+// both the visibility directive and the type.
+// Umple will not see that as an attribute
+// and will inject the line of code into the
+// output directly.
 class X {
   public String x;
 }
 
 //$?[End_of_model]$?
+// @@@testlanguage=none because msg says likely error

@@ -3,12 +3,14 @@ class X53conctoplevel {
   sm {
     s0 {
       s1 {
-        do {System.out.println("Reached s1");}
+        do {System.out.println(
+          "Reached s1");}
       }
       ||
       s2
       {
-        do {System.out.println("Reached s1");}
+        do {System.out.println(
+          "Reached s1");}
       }
     }
   }

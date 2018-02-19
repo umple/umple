@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_AddUnidirectionalMany_specialization <<!<</*association_AddUnidirectionalMany_specialization*/>>
-  public boolean <<=gen.translate("removeMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  association_AddUnidirectionalMany_specialization <<!  /* Code from template association_AddUnidirectionalMany_specialization */
+<</*association_AddUnidirectionalMany_specialization*/>>  public boolean <<=gen.translate("removeMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasRemoved = false;
     <<# if (customAddPrefixCode != null) { #>>

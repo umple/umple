@@ -1,6 +1,6 @@
 class UmpleToJava {
-    attribute_GetUnique <<!<</*attribute_GetUnique*/>>
-  public static <<=av.getUmpleClass().getName()>> <<=gen.translate("getUniqueMethod",av)>>(<<=gen.translate("type", av)>> <<=gen.translate("parameterOne", av)>>)
+  attribute_GetUnique <<!  /* Code from template attribute_GetUnique */
+<</*attribute_GetUnique*/>>  public static <<=av.getUmpleClass().getName()>> <<=gen.translate("getUniqueMethod",av)>>(<<=gen.translate("type", av)>> <<=gen.translate("parameterOne", av)>>)
   {
     <<# if (customGetUniquePrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetUniquePrefixCode,gen.translate("getUniqueMethod",av));
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetUniquePrefixCode, "    ")); } #>>

@@ -5,9 +5,11 @@ class X {
      do {
         System.out.println("In S1");
         Thread.sleep(1000);
-        System.out.println("Still in S1 after sleep");
+        System.out.println(
+          "Still in S1 after sleep");
         Thread.sleep(2000);
-        System.out.println("About to leave S1");
+        System.out.println(
+          "About to leave S1");
       }
       -> s2;
     }
@@ -15,17 +17,21 @@ class X {
      do {
         System.out.println("In S2");
         Thread.sleep(1000);
-        System.out.println("Still in S2 after sleep");
+        System.out.println(
+          "Still in S2 after sleep");
         Thread.sleep(2000);
-        System.out.println("About to leave S2");
+        System.out.println(
+          "About to leave S2");
       }
       nesteds2a {
         do {
           System.out.println("In S2a");
           Thread.sleep(1000);
-          System.out.println("Still in S2a after sleep");
+          System.out.println(
+            "Still in S2a after sleep");
           Thread.sleep(2000);
-          System.out.println("About to leave S2a");
+          System.out.println(
+            "About to leave S2a");
         }
       }
       ||
@@ -33,9 +39,11 @@ class X {
        do {
           System.out.println("In S2b");
           Thread.sleep(1000);
-          System.out.println("Still in S2b after sleep");
+          System.out.println(
+            "Still in S2b after sleep");
           Thread.sleep(2000);
-          System.out.println("About to leave S2b");
+          System.out.println(
+            "About to leave S2b");
         }
       }
     }

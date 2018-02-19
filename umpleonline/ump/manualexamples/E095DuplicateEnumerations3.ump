@@ -1,5 +1,7 @@
-// This example does not cause the error. The enumeration within the class is prioritized over
-// the enumeration defined outside of the class
+// This example does not cause the error.
+// The enumeration within the class
+// is prioritized over the enumeration
+// defined outside of the class
 
 enum Month {x,y,z}
 

@@ -1,4 +1,5 @@
-// This generates error 23 because attribute b clashes with
+// This generates error 23 because
+// attribute b clashes with
 // class name B in the association
 class X23atdupassoc2 {
    b;

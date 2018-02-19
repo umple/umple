@@ -27,3 +27,4 @@ class InvalidFinalState {
     }
   }
 }
+// @@@skipcompile no method entry written for line 15

@@ -4,13 +4,15 @@ noreferences
 
 @@description
 
-<h2>Umple warning when a type looks like it was meant as a Java access specifier</h2>
+<h2>Umple warning when a type looks like it was meant as a visibility specifier</h2>
 
 <p>
-Umple does not directly support Java-style access specifiers.
-All attributes are public by default, and other Umple constructs can be used to control how attributes can be used.
+Umple attributes do not support visibility specifiers such as public, private and protected.
+An attribute is private by default, and programmers are supposed to use the corresponding generated get
+method to read it, or the set method to modify it.
 </p>
 
+<p>This warning appears when one of the visibility keywords precedes an attribute.
 
 @@example
 @@source manualexamples/W142TypeIsAccessSpecifierAmbiguous.ump

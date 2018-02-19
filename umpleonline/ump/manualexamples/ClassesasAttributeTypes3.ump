@@ -1,9 +1,10 @@
-// In this example, we have made the address optional. Now, 
-// it does not appear on the constructor. However when you
-// add an address it still cannot be null.
+// In this example, we have made the address
+// optional. Now, it does not appear on the
+// constructor. However when you add an address it
+// still cannot be null.
 //
-// Note also that in this example, the role name 'address'
-// is left off to show  it is optional.
+// Note also that in this example, the role name
+// 'address' is left off to show  it is optional.
 
 class Person {
   name;

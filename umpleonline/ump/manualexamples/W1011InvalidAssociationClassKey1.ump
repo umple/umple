@@ -1,4 +1,6 @@
-// This example generates the warning because one participating class is missing from the key
+// This example generates the warning
+// because one participating class is
+// missing from the key
 class Passenger {}
 
 class Flight {}

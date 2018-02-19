@@ -106,6 +106,8 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonUigu");
   Page.initHighlighter("buttonCopy");
   Page.initHighlighter("buttonCopyEncodedURL");
+  Page.initHighlighter("buttonCopyLocalBrowser");
+  Page.initHighlighter("buttonLoadLocalBrowser");  
   Page.initHighlighter("buttonSmaller");
   Page.initHighlighter("buttonLarger");
   Page.initHighlighter("buttonSyncCode");
@@ -147,6 +149,8 @@ Page.initPaletteArea = function()
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopy");
   Page.initAction("buttonCopyEncodedURL");
+  Page.initAction("buttonCopyLocalBrowser");
+  Page.initAction("buttonLoadLocalBrowser");
   Page.initAction("buttonUndo");
   Page.initAction("buttonRedo");
   Page.initAction("buttonUigu");

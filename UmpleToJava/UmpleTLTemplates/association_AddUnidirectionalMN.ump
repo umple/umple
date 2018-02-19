@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_AddUnidirectionalMN <<!<</*association_AddUnidirectionalMN*/>>
-  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  association_AddUnidirectionalMN <<!  /* Code from template association_AddUnidirectionalMN */
+<</*association_AddUnidirectionalMN*/>>  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasAdded = false;
     <<# if (customAddPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } #>>

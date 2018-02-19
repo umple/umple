@@ -1,6 +1,7 @@
-// this example shows how to trace non api method exit
-// incase of methods with return statement, trace code is 
-// injected before the return
+// this example shows how to trace generated
+// method exit. In case of methods with a return
+// statement, trace code is injected before
+// the return
 
 class JavaMethod
 {

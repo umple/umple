@@ -654,10 +654,18 @@ class PlaygroundMain
             hn=java.net.InetAddress.getLocalHost().getCanonicalHostName();
           }
           catch (Exception e) {}
-          
-          returnCommandResult("UmpleOnline Log recorded: "
+         
+          returnCommandResult("UmpleOnline Log         recorded "
             +sdf.format(System.currentTimeMillis()) 
             +"  at "+hn+"\n\n", client);
+          
+          returnCommandResult("JVM up: "
+            +uptime/1000+"s  "+String.format("%.3f",uptime/60000/1440.0)+"d   restart "+
+            sdf.format(startDate)+"\n\n", client);
+
+          returnCommandResult("Version: " + UmpleModel.VERSION_NUMBER
+            + " Jar "+sdf.format(CompileDate.getClassBuildTime())
+            +"\n\n", client);
           
           cpDiffCmds = commandsRun - checkpoint2CommandsRun;
           cpDiffTime = System.currentTimeMillis()-checkpoint2Time;
@@ -680,10 +688,6 @@ class PlaygroundMain
               +"  GvState: " +generateGvStateDiagramCommandsRun
               +"  JsonMixed: " +generateJsonMixedCommandsRun
               +"\n\n", client);          
-          
-          returnCommandResult("JVM uptime: "
-            +uptime/1000+"s  "+String.format("%.3f",uptime/60000/1440.0)+"days  restarted "+
-            sdf.format(startDate)+"\n\n", client);
 
           returnCommandResult("Number of clients queued: "
             +getClientConnections().length+"\n\n", client);
@@ -703,10 +707,6 @@ class PlaygroundMain
           returnCommandResult("Port: "+getPort()+"  Process:"
               +ManagementFactory.getRuntimeMXBean().getName().split("@")[0]
               +"\n\n", client);
-          
-          returnCommandResult("Version: " + UmpleModel.VERSION_NUMBER
-            + " Jar file date updated: "+sdf.format(CompileDate.getClassBuildTime())
-            +"\n\n", client);
 
           if(lastIP != null) {
             returnCommandResult("Last command      from "

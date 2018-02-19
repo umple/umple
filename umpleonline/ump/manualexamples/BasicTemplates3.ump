@@ -1,5 +1,6 @@
-// Example of creating a lengthy output in Umple from a template
-// Note this is plain text. See the next page for html generation.
+// Example of creating a lengthy output in Umple
+// from a template. Note this is plain text.
+// See the next page for html generation.
 // The company is, of course, fictitious.
 class RefLetterRequest {
   // Attributes used to construct the instance

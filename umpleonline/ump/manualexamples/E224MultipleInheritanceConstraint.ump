@@ -1,4 +1,7 @@
-// In this example, there is an error because trait T puts multiple inheritance constraint on its template parameter TP.
+// In this example, there is an error
+// because trait T puts multiple
+// inheritance constraint on its
+// template parameter TP.
 trait T<TP isA C1&C2>{
   /*implementation*/
 }

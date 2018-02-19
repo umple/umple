@@ -1,4 +1,5 @@
-// This example generates the message because the state machine a
+// This example generates the message
+// because the state machine a
 // clashes with the attribute a
 class X52assattnamestatemachine1 {
   a;

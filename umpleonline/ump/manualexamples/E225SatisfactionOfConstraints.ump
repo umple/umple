@@ -1,4 +1,8 @@
-// In this example, there is an error because class C1 is not subclass of class C2. Any bound value to template parameter TP must be a subclass of class C2.
+// In this example, there is an error
+// because class C1 is not subclass
+// of class C2.
+// Any bound value to template parameter
+// TP must be a subclass of class C2.
 trait T<TP isA C2>{
   /*implementation*/
 }

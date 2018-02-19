@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_GetOne_specialization <<!<</*association_GetOne_specialization*/>>
-  public <<=gen.translate("type",av)>> <<=gen.translate("getMethod",av)>>_One<<=gen.translate("type",av)>>()
+  association_GetOne_specialization <<!  /* Code from template association_GetOne_specialization */
+<</*association_GetOne_specialization*/>>  public <<=gen.translate("type",av)>> <<=gen.translate("getMethod",av)>>_One<<=gen.translate("type",av)>>()
   {
     <<# if (customGetPrefixCode != null && mulChangedToOne) { #>>
     <<=gen.translate("type",av)>> <<=gen.translate("associationOne",av)>> = <<#if (relReqSuperCode) { #>>(<<=gen.translate("type",av)>>)<<# } #>>super.<<=gen.translate("getMethod",av)>>(0);%>

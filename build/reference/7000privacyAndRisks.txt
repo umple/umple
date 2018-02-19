@@ -8,9 +8,9 @@ noreferences
 
 <h2>Risks in using Umple and UmpleOnline</h2>
 
-<p><b>License:</b> All use of Umple and UmpleOnline is subject to the <a href="http://cruise.eecs.uottawa.ca/UmpleMITLicense.html">Umple MIT license</a>. Please read it carefully, since it disclaims liability. This is not because we don't want to be 'good engineers' and take responsibility for work, rather it is because we are following the open source model, which allows a wide variety of people to modify Umple.</p>
+<p><b>License:</b> All use of Umple and UmpleOnline is subject to the <a href="http://cruise.eecs.uottawa.ca/UmpleMITLicense.html">Umple MIT license</a>. Please read it carefully, since it disclaims liability. This is not because we don&apos;t want to be &apos;good engineers&apos; and take responsibility for work, rather it is because we are following the open source model, which allows a wide variety of people to modify Umple.</p>
 
-<p><b>Risk due to support by hosting organizations:</b> UmpleOnline is hosted at the University with funds from research grants. Should these research grants cease, support for Umple may cease unless others take over responsibility for hosting. Similarly, the code is hosted on Google Code. If Google decides to cease hosting projects for free, Umple would need to be hosted somewhere else.</p>
+<p><b>Risk due to support by hosting organizations:</b> UmpleOnline is hosted at the University with funds from research grants. Should these research grants cease, support for Umple may cease unless others take over responsibility for hosting. Similarly, the code is hosted on Github. If Github decides to cease hosting projects for free, Umple would need to be hosted somewhere else.</p>
 
 <p><b>Risk of deprecation, missing features and defects:</b> It is possible that code which works today may cease working in the future. Development is performed by students and in the context of research. You will therefore find incomplete features and bugs. We encourage you to report new ones (and fix them) and to realize that you may need to work around the existing ones. That said, we do use test-driven development to maintain what we believe is a high level of quality.</p>
 
@@ -28,11 +28,11 @@ noreferences
 
 <p>Data saved automatically in this way remains stored at the University of Ottawa for up to two days. This is so you can continue an editing session, even if you walk away from your computer for an extended period. We have an automated process that will normally delete such data after two days. However we reserve the right to record general statistics about the size of models and other uses of Umple tools before we delete such data.</p>
 
-<p>If you choose 'Create a Bookmarkable URL' then your model is stored, indefinitely, subject to deletion rules described below. Such a file can be edited and deleted by anyone to whom you give the URL, or by anyone who guesses the URL.</p>
+<p>If you choose &apos;Create a Bookmarkable URL&apos; then your model is stored, indefinitely, subject to deletion rules described below. Such a file can be edited and deleted by anyone to whom you give the URL, or by anyone who guesses the URL.</p>
 
 <p>If we detect abuse of UmpleOnline, we reserve the right to attempt to track the user using such tools as the originating IP address, and to block access from such an address or address range.<p>
 
-<p>We do intend to install tools to survey users about their experiences with Umple. We will likely use external tools such as SurveyMoney for such surveys; people who complete such surveys would then be subject to the privacy rules of such external tools. Users would be requested to give informed consent prior to taking such a survey, and such informed consent would first be approved by the University of Ottawa's Research Ethics Board.</p>
+<p>We do intend to install tools to survey users about their experiences with Umple. We will likely use external tools such as SurveyMoney for such surveys; people who complete such surveys would then be subject to the privacy rules of such external tools. Users would be requested to give informed consent prior to taking such a survey, and such informed consent would first be approved by the University of Ottawa&apos;s Research Ethics Board.</p>
 
 
 &nbsp; <br />
@@ -43,7 +43,7 @@ noreferences
 
 <p>You may, however, embed (at your choice) confidential information in the code or models you write in UmpleOnline. It is important for you to realize that this information is accessible to others.</p>
 
-<p>Since no userid is currently associated with UmpleOnline models, we have no way of determining who has saved which models at the current time. We cannot guarantee to be able to recover any file you may have 'lost'. Nor can we determine whether anyone else has looked at or modified your files.</p>
+<p>Since no userid is currently associated with UmpleOnline models, we have no way of determining who has saved which models at the current time. We cannot guarantee to be able to recover any file you may have &apos;lost&apos;. Nor can we determine whether anyone else has looked at or modified your files.</p>
 
 
 &nbsp; <br />

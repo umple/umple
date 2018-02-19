@@ -4,9 +4,9 @@ noreferences
 
 @@description
 
-<h2>Umple semantic warning reported when a state machine could not be fully parsed and is treated as 'extra code'.</h2>
+<h2>Umple semantic warning reported when a state machine could not be fully parsed and is treated as &#39;extra code&#39;.</h2>
 
-<p>In Umple, elements of a class not recognized as valid Umple are assumed to be elements of the target programming language that are embedded in the Umple. However, this warning is raised when the Umple compiler has reason to believe that the developer might have been trying to specify a state machine, because the segment of code starts with something like sm {.
+<p>In Umple, elements of a class not recognized as valid Umple are assumed to be elements of the target programming language that are embedded in the Umple. However, this warning is raised when the Umple compiler has reason to believe that the developer might have been trying to specify a state machine, because the segment of code starts with something like sm &#123;.
 </p>
 
 <p>

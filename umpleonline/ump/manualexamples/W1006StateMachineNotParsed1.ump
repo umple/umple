@@ -1,4 +1,5 @@
-// This example generates the warning because there is a missing semicolon
+// This example generates the warning
+// because there is a missing semicolon
 class X {
   sm {
     a -> b

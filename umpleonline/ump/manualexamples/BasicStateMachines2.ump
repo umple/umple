@@ -1,5 +1,6 @@
 // This is a more fully-featured state machine for
-// a garage door corresponding to the diagram above
+// a garage door corresponding to the diagram
+// above
 class Garage {
   lazy Boolean entranceClear=true;
   GarageDoor { 
@@ -26,7 +27,8 @@ class Garage {
   }
   
   boolean runMotorInReverse() {
-     System.out.println("Running motor in reverse");
+     System.out.println(
+       "Running motor in reverse");
     return true;
   }
   
@@ -41,17 +43,20 @@ class Garage {
   }
   
    boolean turnLightOff() {
-     System.out.println("Turning light off");
+     System.out.println(
+       "Turning light off");
     return true;
   }
   
   boolean runMotorForward() {
-     System.out.println("Running motor forwards");
+     System.out.println(
+       "Running motor forwards");
     return true;
   }
 
   boolean triggerEnergySaveMode() {
-     System.out.println("Triggering Energy Saving Mode");
+     System.out.println(
+       "Triggering Energy Saving Mode");
     return true;
   }
 
@@ -61,7 +66,8 @@ class Garage {
   }
 
   boolean triggerNormalEnergyMode() {
-     System.out.println("Triggering Normal Energy Mode");
+     System.out.println(
+       "Triggering Normal Energy Mode");
          return true;
   }
   

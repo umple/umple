@@ -1,5 +1,7 @@
 /*
-	Example 2: showing a trait designed for comparison regarding if two objects are equal or not.
+	Example 2: showing a trait designed for
+	comparison regarding if two objects are equal
+	or not.
 */
 trait TEquality{
   Boolean isEqual(Object object);
@@ -7,3 +9,4 @@ trait TEquality{
     return isEqual(object) ? true : false;
   }
 } 
+// @@@skipcompile Java code not compilable no class

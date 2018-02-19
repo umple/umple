@@ -1,5 +1,6 @@
 /*
-	Example 1: showing how template parameters in traits are defined and used.
+	Example 1: showing how template parameters in
+	traits are defined and used.
 */
 trait T1< TP isA I1 > {
   abstract TP method2(TP data);
@@ -20,3 +21,4 @@ class C2{
   void method1(){/*implementation*/}
   C2 method2(C2 data){ /*implementation*/ }
 }
+// @@@skipcompile issue needs raising missing return statement

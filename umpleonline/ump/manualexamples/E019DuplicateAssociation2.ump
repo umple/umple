@@ -1,4 +1,5 @@
-// Using role names rn1 and rn2 to avoid error 19
+// Using role names rn1 and rn2 to
+// avoid error 19
 class X {
 }
 

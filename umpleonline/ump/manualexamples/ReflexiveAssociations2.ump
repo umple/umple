@@ -1,4 +1,5 @@
-// Example asymmetric association with role name on one end
+// Example asymmetric association with role name
+// on one end
 class Course {
    * -- * Course prerequisite;
 }

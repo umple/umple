@@ -107,19 +107,80 @@ $output = $dataHandle->readData('model.ump');
   <script src="scripts/_load.js" type="text/javascript"></script>
   <title>UmpleOnline: Generate Java, C++, PHP, Alloy, NuSMV or Ruby code from Umple</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
+  <style>
+  .button2 {
+   border-top: 1px solid #d3bc8f;
+   line-height: 1.6;
+   background: #d8a695;
+   background: -webkit-gradient(linear, left top, left bottom, from(#e5bcae), to(#d8a695));
+   background: -webkit-linear-gradient(top, #e5bcae, #d8a695);
+   background: -moz-linear-gradient(top, #e5bcae, #d8a695);
+   background: -ms-linear-gradient(top, #e5bcae, #d8a695);
+   background: -o-linear-gradient(top, #e5bcae, #d8a695);
+   padding: 2px 5px;
+   -webkit-border-radius: 6px;
+   -moz-border-radius: 6px;
+   border-radius: 6px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 14px;
+   font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+.button2:hover {
+   border-top-color: #810b09;
+   background: #810b09;
+   color: #ccc;
+   }
+.button2:active {
+   border-top-color: #810b09;
+   background: #810b09;
+   }
+</style>  
+<link rel="apple-touch-icon" sizes="57x57" href="https://cruise.eecs.uottawa.ca/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="https://cruise.eecs.uottawa.ca/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="https://cruise.eecs.uottawa.ca/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="https://cruise.eecs.uottawa.ca/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="https://cruise.eecs.uottawa.ca/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="https://cruise.eecs.uottawa.ca/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="https://cruise.eecs.uottawa.ca/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="https://cruise.eecs.uottawa.ca/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://cruise.eecs.uottawa.ca/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="https://cruise.eecs.uottawa.ca/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://cruise.eecs.uottawa.ca/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="https://cruise.eecs.uottawa.ca/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://cruise.eecs.uottawa.ca/favicon-16x16.png">
+<link rel="manifest" href="https://cruise.eecs.uottawa.ca/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="https://cruise.eecs.uottawa.ca/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
 </head>
 <body>
   <?php if($showChrome) { ?> 
     <div id="header" class="row">
       <div class="inRow logo">
-        <img src="scripts/umpleonline_title.jpg" title="UmpleOnline - Draw and Type your next model" />
+        <a href="http://www.umple.org"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>
       </div>
       <div class="inRow">
         <p class="pagedescription">
-          Draw on the right, write (Umple) model code on the left. Generate Java, C++, PHP, Alloy, NuSMV or Ruby code from your models. <br/>
-          Visit <a href="http://manual.umple.org" target="helppage">the User Manual</a> or <a href="http://www.umple.org">the Umple Home Page</a> for help.
-          &nbsp;&nbsp;&nbsp;<a href="download_eclipse_umple_plugin.html">Download Umple or run this in Docker for speed</a>
-          &nbsp;&nbsp;&nbsp;<a href="https://github.com/umple/umple/issues/new" target="newissue">Report an Issue</a>
+          Draw on the right, write (Umple) model code on the left, analyse and generate code from models.<br/>
+
+    <span style="font-size: 30%; white-space:nowrap;">
+    <a class="button2" href="http://dl.umple.org" target="dlpage">Run in Docker for speed, or download</a>&nbsp;
+    </span>&nbsp; &nbsp;
+          For help:
+                    
+    <span style="font-size: 30%; white-space:nowrap;">
+    <a class="button2" style="line-height: 1" href="http://manual.umple.org" target="helppage">User manual</a>&nbsp;
+    <a class="button2" style="line-height: 1" href="http://questions.umple.org"
+       target="questionpage">Ask questions</a>&nbsp;
+    <a class="button2" style="line-height: 1" href="https://github.com/umple/umple/issues/new" target="issuepage">Report issue</a>&nbsp;
+    </span>
+
         </p>
       </div>
     </div>
@@ -137,13 +198,48 @@ $output = $dataHandle->readData('model.ump');
   <input id="advancedMode" type="hidden" value="0" />
 
   <div id="topLine" class="bookmarkableUrl">
-    <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span> 
+
+    <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
   
+    <span style="font-size: 30%">
+    <a class="button2" href="javascript:Page.clickShowEditableClassDiagram()"
+      title="Editable class diagram - ctrl-E">E</a>&nbsp;
+    <a class="button2" href="javascript:Page.clickShowGvClassDiagram()"
+      title="Graphviz class diagram - ctrl-G">G</a>&nbsp;
+    <a class="button2" href="javascript:Page.clickShowGvStateDiagram()"
+      title="State diagram - ctrl-S">S</a>&nbsp;
+    </span>
+    
+    &nbsp; 
+    <span style="font-size: 30%">
+    <a class="button2" href="javascript:Page.clickShowHideText()"
+      title="Show/hide text pane on left - ctrl-T">T</a>&nbsp;
+    <a class="button2" href="javascript:Page.clickShowHideCanvas()"
+      title="Show/hide diagram pane on right - ctrl-D">D</a>&nbsp;
+    </span>
+    
+    &nbsp; 
+    <span style="font-size: 30%">
+    <a class="button2" href="javascript:Page.clickToggleAttributes()"
+      title="Show/hide attributes in class diagrams - ctrl-A">A</a>&nbsp;
+    <a class="button2" href="javascript:Page.clickToggleMethods()"
+      title="Show/hide methods in class diagrams - ctrl-M">M</a>&nbsp;
+    </span>
+
+
+    &nbsp; 
+    <span style="font-size: 30%; white-space:nowrap;">
+    <a class="button2" href="javascript:Action.generateCode('java','Java');"
+      title="Generate Java from this Umple model ... To generate other outputs such as C++, PhP, ER Diagrams and Formal Methods, use the Generate menu in Tools">Generate Java</a>&nbsp;
+    </span>    
+  
+    <span style="font-size: 30%; white-space:nowrap;">  
     <?php if (isBookmark($dataHandle)) { ?>
-      <a id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
+      <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
     <?php } else { ?>
-      <a id="topBookmarkable" href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Create Bookmarkable URL</a>
+      <a class="button2" id="topBookmarkable" href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Create Bookmarkable URL</a>
     <?php } ?>
+    </span>
     
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
     
@@ -164,7 +260,7 @@ $output = $dataHandle->readData('model.ump');
       <div id="palette" class="palette">
 
         <!-- GROUP 1 OF OPTIONS -->
-        <h3><a href="#">SAVE & RESET</a></h3>
+        <h3><a href="#">SAVE & LOAD</a></h3>
         
         <div class="section">
           <ul class="first">
@@ -172,25 +268,35 @@ $output = $dataHandle->readData('model.ump');
             <?php if (isBookmark($dataHandle)) { ?>
             <li id="ttSaveBookmark">
               <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="umple.php?model=<?php echo $dataHandle->getName() ?>">Bookmark Model</a>
+                <a href="umple.php?model=<?php echo $dataHandle->getName() ?>">Resave URL</a>
               </div>
             </li>
             <?php } else { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save Model</a>
+                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save as URL</a>
               </div>
             </li>
             <?php } ?>
             <li id="buttonCopy" class="copy">
               <img src="scripts/copy.png"/> 
-              Source
+               Source to Copy
             </li>
             <li id="buttonCopyEncodedURL" class="copyEncoded">
               <img src="scripts/copy.png"/> 
               Encoded URL
             </li>
+            <li id="buttonCopyLocalBrowser" class="copyLocalBrowser">
+              <img src="scripts/copy.png"/> 
+              Store in Browser
+            </li>            
             <li class="dropbox-add-saver"></li>
+            
+            <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
+              <img src="scripts/copy.png"/> 
+              Load from Browser
+            </li>   
+            
           </ul>
         
           <ul class="second center-children">
@@ -206,7 +312,7 @@ $output = $dataHandle->readData('model.ump');
         
         <div class="section">
           <ul id="mainLoadMenu" class="first center-children">
-            <li class="subtitle"> Load </li>
+            <li class="subtitle"> Examples </li>
             <li id="exampleType">
               <select id="inputExampleType" name="inputExampleType" class="button" size = "1">
                 <option name = "optionExampleType" id = "cdModels" value="cdModels">Class Diagrams</option>
@@ -313,7 +419,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
-            <li class="dropbox-add-chooser"></li>       
+            <!-- <li class="dropbox-add-chooser"></li> --> 
           </ul>
       
           <ul id="mainDrawMenu" class="second toggle">
@@ -432,16 +538,7 @@ $output = $dataHandle->readData('model.ump');
               <a id="labelManualSync" class="buttonExtend">Manual Sync</a> 
             </li>          
           </ul>
-          <ul class="second">
-            <li class="subtitle"> Other Views </li>
-            <!--<li id="buttonPngImage" class="png"><img src="scripts/png.png" title="Generate PNG Image" /> PNG View</li> //DISABLED -->
-            <li id="ttYumlImage">
-              <img id="buttonYumlImage" src="scripts/yuml.png"/> 
-              <a id="labelYumlImage" class="buttonExtend">Yuml View</a>
-            </li>
-            <!--<li id="buttonSimulateCode" class="simulate"><img src="scripts/simulate.png" title="Simulate Code" /> Simulate</li> //DISABLED -->
-          </ul>
-        </div>
+         </div>
       </div> 
     </div>
    
@@ -449,7 +546,7 @@ $output = $dataHandle->readData('model.ump');
       <div id="umpleCanvas"  tabIndex="1" class="surface"></div>
     </div>
   </div>
-  
+ <a name="genArea"/>  
   <div id="generatedCodeRow" class="row">
 		<li id="ttTabsCheckbox">
 			<input id="buttonTabsCheckbox" type="checkbox" class="checkbox" name="buttonTabsCheckbox" value="buttonTabsCheckbox"/>

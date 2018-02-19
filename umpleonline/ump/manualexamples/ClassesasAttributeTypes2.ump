@@ -1,12 +1,14 @@
 
 // Contrast this example with the previous one
-// Here we use a directed association instead of an attribute.
-// Note that the multiplicity on the left is of no relevance.
-// It is conventional to show it as * to indicate that the
-//  value could be attached to several objects.
+// Here we use a directed association instead of 
+// an attribute.
+// Note that the multiplicity on the left is of no
+// relevance. It is conventional to show it as *
+// to indicate that the value could be attached to
+// several objects.
 //
-// Here when you construct a Person, the address cannot be
-// null. 
+// Here when you construct a Person, the address
+// cannot be null. 
 class Person {
   name;
   

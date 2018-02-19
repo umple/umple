@@ -1,4 +1,6 @@
-// In this example, there is an error because event e2() is not available in state machine sm.
+// In this example, there is an error
+// because event e2() is not available
+// in state machine sm.
 trait T {
   sm{
     s0{

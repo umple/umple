@@ -1,4 +1,5 @@
-// The following solves the problem by either making the association unndirected
+// The following solves the problem
+// by either making the association unndirected
 // or making the bounds have soft constraints
 
 class X {

@@ -1,6 +1,6 @@
 class UmpleToJava {
-    association_AddUnidirectionalOptionalN_relatedSpecialization <<!<</*association_AddUnidirectionalOptionalN_relatedSpecialization*/>>
-  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
+  association_AddUnidirectionalOptionalN_relatedSpecialization <<!  /* Code from template association_AddUnidirectionalOptionalN_relatedSpecialization */
+<</*association_AddUnidirectionalOptionalN_relatedSpecialization*/>>  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasAdded = false;
     <<# if (customAddPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPrefixCode,gen.translate("addMethod",av)); 

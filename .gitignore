@@ -7,6 +7,7 @@ nohup.out
 
 # umple specific
 umpleonline/ump/tmp*
+build/UserManualAndExampleTests_output.txt
 
 # generated Umple code that is not saved
 src-gen-umple/

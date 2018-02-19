@@ -1,0 +1,12 @@
+namespace enumerations;
+
+class Driver {
+}
+
+class DriverSchedule {
+  enum Shift { Morning, Afternoon, Night }
+  enum Status {ACTIVE, INACTIVE}
+  Shift shift;
+  Status status;
+  * -- 1 Driver driver;
+}

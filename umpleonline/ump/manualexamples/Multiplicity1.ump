@@ -1,13 +1,16 @@
-// When multiplicity is given as *, which is the same as 0..*
-// there can be any number of links from an instance at the other end
-// of the association to instances at this end 
+// When multiplicity is given as *, which is the
+// same as 0..* there can be any number of links
+// from an instance at the other end of the
+// association to instances at this end 
 //
-// The lower bound is zero and the upper bound is 'many'
-// When multiplicity is given as *, which is the same as 0..*
-// there can be any number of links from an instance at the other end
-// of the association to instances at this end 
+// The lower bound is zero and the upper bound is
+// 'many' When multiplicity is given as *, which
+// is the same as 0..* there can be any number of
+// links from an instance at the other end of the
+// association to instances at this end 
 //
-// The lower bound is zero and the upper bound is 'many'
+// The lower bound is zero and the upper bound is
+// 'many'
 class A
 {
   // an instance of A has many B's
