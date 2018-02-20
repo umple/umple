@@ -670,10 +670,10 @@ class ConstraintParameterListCommaAnalyzer
   depend cruise.umple.compiler.*;
   depend java.util.*;
 
-  lazy ConstraintTree rawLine;
+  lazy ConstraintTree cv;
   public void analyze(Token token)
   {
-    rawLine.addElement(new ConstraintOperator(","));
+    cv.addElement(new ConstraintOperator(","));
   }
 }
 

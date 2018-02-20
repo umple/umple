@@ -1,0 +1,25 @@
+namespace example;
+
+class A_Guard {
+  Status {
+    S1 {
+      // one parameter for the guard works
+      e1(B myB) [checkGuard(myB)] -> S2;
+    }
+    S2 {
+      // one parameter for the guard works
+      e2(B myB, B mySecondB) [checkGuard(myB)] -> S3;
+    }
+    S3 {
+      // two parameters for the guard do not compile
+      e2(B myB, B mySecondB) [checkGuard(myB, mySecondB)] -> S1;
+    }
+  }
+  private boolean checkGuard(B myB) {
+    return true;
+  } 
+  private boolean checkGuard(B myB, B mySecondB) {
+    return true;
+  }
+}
+class B {}

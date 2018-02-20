@@ -76,6 +76,12 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("oneGuard.ump",languagePath + "/oneGuard."+ languagePath +".txt","LightFixture");
   }
 
+ @Test
+  public void testTwoParameterGuard_1()
+  {
+    assertUmpleTemplateFor("testTwoParameterGuard.ump",languagePath + "/testTwoParameterGuard."+ languagePath +".txt","A_Guard");
+  }
+
   @Test
   public void multipleGuardsSameEvent()
   {
@@ -113,6 +119,8 @@ public class StateMachineTest extends StateMachineTemplateTest
     Event.setNextAutoTransitionId(1);
   }
   
+
+
   // SPACING
   
   // Spacing of state transaction actions
@@ -876,5 +884,7 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
     assertUmpleTemplateFor("testRegionFinalStates_6.ump",languagePath + "/testRegionFinalStates_6."+ languagePath +".txt","X");
   }
+
+
   
 }
