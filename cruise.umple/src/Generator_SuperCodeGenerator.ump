@@ -204,8 +204,13 @@ class SuperCodeGenerator {
         prefix = "";
         dontDisplayNextAccessor = false;
       }
-      String name = translate(methodName,attribute.getAttribute());
-      return umpleCVarToLanguagePrimitive(prefix+name+suffix,cv);
+      String name = "";
+      if (!"const".equals(attribute.getAttribute().getModifier())) {
+        name = translate(methodName,attribute.getAttribute()) + suffix;
+      } else {
+        name = attribute.getName();
+      }
+      return umpleCVarToLanguagePrimitive(prefix+name,cv);
     }
     else if("associationGet".equals(id))
     {
@@ -375,6 +380,47 @@ class SuperCodeGenerator {
       return "";
     }
   }
+  
+  private void findConstants(ConstraintVariable cur, Set<String> constants) {
+    if (cur instanceof ConstraintOperator) {
+      findConstants(((ConstraintOperator)cur).getLeft(), constants);
+      findConstants(((ConstraintOperator)cur).getRight(), constants);
+    } else if (cur instanceof ConstraintTree) {
+      findConstants(((ConstraintTree)cur).getRoot(), constants);
+    } else if (cur instanceof ConstraintAttribute) {
+      if ("const".equals(((ConstraintAttribute)cur).getAttribute().getModifier())) {
+        constants.add(((ConstraintAttribute)cur).getName());
+      }
+    }
+  }
+  
+  private String getNamedNames(ConstraintTree constructor) {
+    Set<String> constants = new HashSet<>();
+    findConstants(constructor, constants);
+    Set<String> names = constructor.getNames();
+    names.removeAll(constants);
+    StringBuilder builder = new StringBuilder();
+    int i=0;
+    String last = "";
+    for(String name:names)
+    {
+      if(i>=names.size()-1)
+      {
+        last = name;
+        break;
+      }
+      builder.append(name);
+      if(names.size()>2)
+      {
+        builder.append(", ");
+      }
+      else builder.append(" ");
+      ++i;
+    }
+    if(names.size()>1)builder.append("and ");
+    builder.append(last);
+    return builder.toString();
+  }
 
   public void prepareConstraints(UmpleClass aClass)
   {
@@ -411,7 +457,7 @@ class SuperCodeGenerator {
         constraintWithinConstructor = true;
         String expr = getExpr(constructor);
         constructor.negate();
-        String inject = StringFormatter.format(ConstraintLookupMap.get("exception"),constructor.getNamedNames() + " [" + expr + "]");
+        String inject = StringFormatter.format(ConstraintLookupMap.get("exception"),getNamedNames(constructor) + " [" + expr + "]");
         String ifstatement = translate("Closed",constructor);
         String complete = StringFormatter.format(ifstatement,inject);
         CodeInjection cons = new CodeInjection("after",  "constructor", complete, aClass);  
