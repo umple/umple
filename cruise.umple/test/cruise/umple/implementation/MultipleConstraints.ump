@@ -1,0 +1,7 @@
+class MultipleConstraints {
+  Integer i;
+  [i >= 0]
+  Integer j;
+  [j >= 0]
+  [i >= j]
+}

@@ -24,7 +24,7 @@ class Client
     $this->age = $aAge;
     if ($aAge<=$aMinAge)
     {
-      throw new RuntimeException("Please provide a valid age and minAge");
+      throw new RuntimeException("Please provide a valid age and minAge [age>minAge]");
     }
   }
 

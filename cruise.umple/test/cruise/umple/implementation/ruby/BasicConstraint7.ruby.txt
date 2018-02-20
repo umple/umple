@@ -25,7 +25,7 @@ class student
     @age = a_age
     @weight = a_weight
     if (a_age>18) then
-      raise RuntimeError, 'Please provide a valid age'
+      raise RuntimeError, 'Please provide a valid age [age<=18]'
     end
     @initialized = true
   end

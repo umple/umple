@@ -23,7 +23,7 @@ class X
     $this->e = $aE;
     if (strtotime($aD)<=strtotime($aE))
     {
-      throw new RuntimeException("Please provide a valid d and e");
+      throw new RuntimeException("Please provide a valid d and e [d>e]");
     }
   }
 

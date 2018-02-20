@@ -204,8 +204,13 @@ class SuperCodeGenerator {
         prefix = "";
         dontDisplayNextAccessor = false;
       }
-      String name = translate(methodName,attribute.getAttribute());
-      return umpleCVarToLanguagePrimitive(prefix+name+suffix,cv);
+      String name = "";
+      if (!"const".equals(attribute.getAttribute().getModifier())) {
+        name = translate(methodName,attribute.getAttribute()) + suffix;
+      } else {
+        name = attribute.getName();
+      }
+      return umpleCVarToLanguagePrimitive(prefix+name,cv);
     }
     else if("associationGet".equals(id))
     {
@@ -311,7 +316,7 @@ class SuperCodeGenerator {
     return StringFormatter.format(ConstraintLookupMap.get("ifstatement")+"\n  {1}\n"+ConstraintLookupMap.get("end"),expression, "{0}");
   }
   
-  public void prepareConstraint(ConstraintVariable cur, ConstraintTree ac, ConstraintTree head, Map<String, ConstraintTree> setters, Map<String, UmpleClassifier> uClassifiers)
+  public void prepareConstraint(ConstraintVariable cur, ConstraintTree ac, ConstraintTree head, Map<String, ConstraintTree> setters, Map<String, UmpleClassifier> uClassifiers, int constraintNum)
   {
     if(cur == null)return;
     if(cur instanceof ConstraintAssociation)
@@ -321,65 +326,123 @@ class SuperCodeGenerator {
       String methodName = translate("setMethod", association.getAssociation());
       String addName = translate("addMethod", association.getAssociation());
 
-      if(!setters.containsKey(association.getAssociation().getName()+":"+methodName))
+      if(!setters.containsKey(association.getAssociation().getName()+":"+methodName+":"+String.valueOf(constraintNum)))
       {
         ConstraintTree tempConstraint = new ConstraintTree();
-        setters.put(association.getName()+":"+methodName,tempConstraint);
-        setters.put(association.getName()+":"+addName, tempConstraint);
+        setters.put(association.getName()+":"+methodName+":"+String.valueOf(constraintNum),tempConstraint);
+        setters.put(association.getName()+":"+addName+":"+String.valueOf(constraintNum), tempConstraint);
         UmpleClassifier uClassifier = association.retrieveClassifier();
         if(uClassifier!=null)
         {
           uClassifiers.put(association.getName(),uClassifier);
         }
       }
-      setters.get(association.getName()+":"+methodName).addElementAll(head);
-      setters.get(association.getName()+":"+addName).addElementAll(head);
+      setters.get(association.getName()+":"+methodName+":"+String.valueOf(constraintNum)).addElementAll(head);
+      setters.get(association.getName()+":"+addName+":"+String.valueOf(constraintNum)).addElementAll(head);
     }
     else if(cur instanceof ConstraintAttribute)
     {
       ConstraintAttribute attribute = (ConstraintAttribute)cur;
       String methodName = translate("setMethod", attribute.getAttribute());
-      if(!setters.containsKey(attribute.getName()+":"+methodName))
+      if(!setters.containsKey(attribute.getName()+":"+methodName+":"+String.valueOf(constraintNum)))
       {
         ConstraintTree tempConstraint = new ConstraintTree();
-        setters.put(attribute.getName()+":"+methodName,tempConstraint);
+        setters.put(attribute.getName()+":"+methodName+":"+String.valueOf(constraintNum),tempConstraint);
         UmpleClassifier uClassifier = attribute.retrieveClassifier();
         if(uClassifier!=null)
         {
           uClassifiers.put(attribute.getName(),uClassifier);
         }
       }
-      setters.get(attribute.getName()+":"+methodName).addElementAll(head);
+      setters.get(attribute.getName()+":"+methodName+":"+String.valueOf(constraintNum)).addElementAll(head);
     }
     else if(cur instanceof ConstraintTree)
     {
-      prepareConstraint(((ConstraintTree)cur).getRoot(),(ConstraintTree)cur,head,setters,uClassifiers);
+      prepareConstraint(((ConstraintTree)cur).getRoot(),(ConstraintTree)cur,head,setters,uClassifiers,constraintNum);
     }
     else if(cur instanceof ConstraintOperator)
     {
-      prepareConstraint(((ConstraintOperator)cur).getLeft(),ac,head,setters,uClassifiers);
-      prepareConstraint(((ConstraintOperator)cur).getRight(),ac,head,setters,uClassifiers);
+      prepareConstraint(((ConstraintOperator)cur).getLeft(),ac,head,setters,uClassifiers,constraintNum);
+      prepareConstraint(((ConstraintOperator)cur).getRight(),ac,head,setters,uClassifiers,constraintNum);
     }
+  }
+  
+  private String getExpr(ConstraintVariable cur) {
+    if (cur instanceof ConstraintOperator) {
+      return getExpr(((ConstraintOperator)cur).getLeft()) + ((ConstraintOperator)cur).getValue() + getExpr(((ConstraintOperator)cur).getRight());
+    } else if (cur instanceof ConstraintLiteral) {
+      return ((ConstraintLiteral)cur).getValue();
+    } else if (cur instanceof ConstraintAttribute) {
+      return ((ConstraintAttribute)cur).getName();
+    } else if (cur instanceof ConstraintTree) {
+      return getExpr(((ConstraintTree)cur).getRoot());
+    } else {
+      return "";
+    }
+  }
+  
+  private void findConstants(ConstraintVariable cur, Set<String> constants) {
+    if (cur instanceof ConstraintOperator) {
+      findConstants(((ConstraintOperator)cur).getLeft(), constants);
+      findConstants(((ConstraintOperator)cur).getRight(), constants);
+    } else if (cur instanceof ConstraintTree) {
+      findConstants(((ConstraintTree)cur).getRoot(), constants);
+    } else if (cur instanceof ConstraintAttribute) {
+      if ("const".equals(((ConstraintAttribute)cur).getAttribute().getModifier())) {
+        constants.add(((ConstraintAttribute)cur).getName());
+      }
+    }
+  }
+  
+  private String getNamedNames(ConstraintTree constructor) {
+    Set<String> constants = new HashSet<>();
+    findConstants(constructor, constants);
+    Set<String> names = constructor.getNames();
+    names.removeAll(constants);
+    StringBuilder builder = new StringBuilder();
+    int i=0;
+    String last = "";
+    for(String name:names)
+    {
+      if(i>=names.size()-1)
+      {
+        last = name;
+        break;
+      }
+      builder.append(name);
+      if(names.size()>2)
+      {
+        builder.append(", ");
+      }
+      else builder.append(" ");
+      ++i;
+    }
+    if(names.size()>1)builder.append("and ");
+    builder.append(last);
+    return builder.toString();
   }
 
   public void prepareConstraints(UmpleClass aClass)
   {
-    ConstraintTree constructor = new ConstraintTree();
+    List<ConstraintTree> constructors = new ArrayList<>();
     constraintWithinConstructor = false;
     Map<String,ConstraintTree> setters = new HashMap<String,ConstraintTree>();
     Map<String,UmpleClassifier> uClassifiers = new HashMap<String, UmpleClassifier>();
+    int constraintNum = 0;
     for (ConstraintTree ac : aClass.getConstraintTrees())
     {
       CodeInjection before;
-      prepareConstraint(ac.getRoot(),ac,ac,setters,uClassifiers);
+      prepareConstraint(ac.getRoot(),ac,ac,setters,uClassifiers,constraintNum++);
+      ConstraintTree constructor = new ConstraintTree();
       constructor.addElementAll(ac);
+      constructors.add(constructor);
     }
-
     for(String name:setters.keySet())
     {
       int index = name.indexOf(':');
+      int secondIndex = name.indexOf(':', index+1);
       parameterConstraintName = name.substring(0,index);
-      String methodName = name.substring(index+1);
+      String methodName = name.substring(index+1,secondIndex);
       CodeInjection before = new CodeInjection("before", methodName, translate("Open",setters.get(name)), aClass);
       CodeInjection after = new CodeInjection("after", methodName, ConstraintLookupMap.get("end"), aClass);
       before.setIsInternal(true);
@@ -388,16 +451,19 @@ class SuperCodeGenerator {
       aClass.addCodeInjection(before);
       aClass.addCodeInjection(after);
     }
-    if(constructor.getNumberOfElements()>0)
-    {
-      constraintWithinConstructor = true;
-      constructor.negate();
-      String inject = StringFormatter.format(ConstraintLookupMap.get("exception"),constructor.getNamedNames());
-      String ifstatement = translate("Closed",constructor);
-      String complete = StringFormatter.format(ifstatement,inject);
-      CodeInjection cons = new CodeInjection("after",  "constructor", complete, aClass);  
-      cons.setIsInternal(true);
-      aClass.addCodeInjection(cons);
+    for (ConstraintTree constructor: constructors) {
+      if(constructor.getNumberOfElements()>0)
+      {
+        constraintWithinConstructor = true;
+        String expr = getExpr(constructor);
+        constructor.negate();
+        String inject = StringFormatter.format(ConstraintLookupMap.get("exception"),getNamedNames(constructor) + " [" + expr + "]");
+        String ifstatement = translate("Closed",constructor);
+        String complete = StringFormatter.format(ifstatement,inject);
+        CodeInjection cons = new CodeInjection("after",  "constructor", complete, aClass);  
+        cons.setIsInternal(true);
+        aClass.addCodeInjection(cons);
+      }
     }
 
     for (Precondition pc : aClass.getPreconditions())

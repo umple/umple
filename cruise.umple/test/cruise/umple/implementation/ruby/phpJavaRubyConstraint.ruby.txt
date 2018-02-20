@@ -25,7 +25,7 @@ class Range
     @start = a_start
     @end = a_end
     if a_start>=a_end then
-      raise RuntimeError, 'Please provide a valid end and start'
+      raise RuntimeError, 'Please provide a valid end and start [start<end]'
     end
     @initialized = true
   end

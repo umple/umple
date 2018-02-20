@@ -1,0 +1,89 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
+
+class MultipleConstraints
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //MultipleConstraints Attributes
+  private $i;
+  private $j;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aI, $aJ)
+  {
+    $this->i = $aI;
+    $this->j = $aJ;
+    if ($aI<0)
+    {
+      throw new RuntimeException("Please provide a valid i [i>=0]");
+    }
+    if ($aJ<0)
+    {
+      throw new RuntimeException("Please provide a valid j [j>=0]");
+    }
+    if ($aI<$aJ)
+    {
+      throw new RuntimeException("Please provide a valid i and j [i>=j]");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setI($aI)
+  {
+    $wasSet = false;
+    if ($aI>=$this->getJ())
+    {
+    if ($aI>=0)
+    {
+    $this->i = $aI;
+    $wasSet = true;
+    }
+    }
+    return $wasSet;
+  }
+
+  public function setJ($aJ)
+  {
+    $wasSet = false;
+    if ($aJ>=0)
+    {
+    if ($this->getI()>=$aJ)
+    {
+    $this->j = $aJ;
+    $wasSet = true;
+    }
+    }
+    return $wasSet;
+  }
+
+  public function getI()
+  {
+    return $this->i;
+  }
+
+  public function getJ()
+  {
+    return $this->j;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

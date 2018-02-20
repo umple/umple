@@ -26,7 +26,7 @@ class X
     @d = a_d
     @e = a_e
     if a_d.to_time.to_i<=a_e.to_time.to_i then
-      raise RuntimeError, 'Please provide a valid d and e'
+      raise RuntimeError, 'Please provide a valid d and e [d>e]'
     end
     @initialized = true
   end

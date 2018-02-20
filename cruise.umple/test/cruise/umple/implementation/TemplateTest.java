@@ -281,6 +281,11 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/php/NetworkNode.php");
     SampleFileWriter.destroy(pathToInput + "/php/Router.php");
     
+    // Tear down issue 1164 tests
+    SampleFileWriter.destroy(pathToInput + "/MultipleConstraints.java");
+    SampleFileWriter.destroy(pathToInput + "/MultipleConstraints.php");
+    SampleFileWriter.destroy(pathToInput + "/multiple_constraints.rb");
+    
    // destroying the object factory
   }
 
