@@ -2822,9 +2822,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     	  {
           for(String l : implementations)
           {
-        	  if((actualMethod.getMethodBody().getExtraCode(l).equals("") || 
+        	  if(!isGetterSetter(actualMethod) && (actualMethod.getMethodBody().getExtraCode(l).equals("") || 
               actualMethod.getMethodBody().getExtraCode(l).equals("\n"))&&
-             (!aMethod.getMethodBody().getExtraCode(l).equals("") ||
+             (!aMethod.getMethodBody().getExtraCode(l).equals("") &&
         	      !aMethod.getMethodBody().getExtraCode(l).equals("\n")) &&
         	     (!actualMethod.getMethodBody().getExtraCode(l).equals(aMethod.getMethodBody().getExtraCode(l))))
         	  {
