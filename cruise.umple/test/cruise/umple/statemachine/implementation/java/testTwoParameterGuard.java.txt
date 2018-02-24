@@ -1,0 +1,111 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class A_Guard
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //A_Guard State Machines
+  public enum Status { S1, S2, S3 }
+  private Status status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public A_Guard()
+  {
+    setStatus(Status.S1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getStatusFullName()
+  {
+    String answer = status.toString();
+    return answer;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public boolean e1(B myB)
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case S1:
+        if (checkGuard(myB))
+        {
+          setStatus(Status.S2);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean e2(B myB,B mySecondB)
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case S2:
+        if (checkGuard(myB))
+        {
+          setStatus(Status.S3);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+      case S3:
+        if (checkGuard(myB,mySecondB))
+        {
+          setStatus(Status.S1);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setStatus(Status aStatus)
+  {
+    status = aStatus;
+  }
+
+  public void delete()
+  {}
+
+  // line 18 "../twoParameterGuard.ump"
+   private boolean checkGuard(B myB){
+    return true;
+  }
+
+  // line 21 "../twoParameterGuard.ump"
+   private boolean checkGuard(B myB, B mySecondB){
+    return true;
+  }
+
+}

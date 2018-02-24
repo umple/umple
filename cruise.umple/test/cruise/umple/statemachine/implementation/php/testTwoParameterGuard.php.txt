@@ -1,0 +1,109 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
+
+class A_Guard
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //A_Guard State Machines
+  private static $StatusS1 = 1;
+  private static $StatusS2 = 2;
+  private static $StatusS3 = 3;
+  private $Status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setStatus(self::$StatusS1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
+  public function getStatus()
+  {
+    if ($this->Status == self::$StatusS1) { return "StatusS1"; }
+    elseif ($this->Status == self::$StatusS2) { return "StatusS2"; }
+    elseif ($this->Status == self::$StatusS3) { return "StatusS3"; }
+    return null;
+  }
+
+  public function e1($myB)
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->Status;
+    if ($aStatus == self::$StatusS1)
+    {
+      if ($this->checkGuard($this->myB))
+      {
+        $this->setStatus(self::$StatusS2);
+        $wasEventProcessed = true;
+      }
+    }
+    return $wasEventProcessed;
+  }
+
+  public function e2($myB, $mySecondB)
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->Status;
+    if ($aStatus == self::$StatusS2)
+    {
+      if ($this->checkGuard($this->myB))
+      {
+        $this->setStatus(self::$StatusS3);
+        $wasEventProcessed = true;
+      }
+    }
+    elseif ($aStatus == self::$StatusS3)
+    {
+      if ($this->checkGuard($this->myB,$this->mySecondB))
+      {
+        $this->setStatus(self::$StatusS1);
+        $wasEventProcessed = true;
+      }
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->Status = $aStatus;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+   private function checkGuard(B $myB)
+  {
+    return true;
+  }
+
+   private function checkGuard(B $myB, B $mySecondB)
+  {
+    return true;
+  }
+
+}
+?>
