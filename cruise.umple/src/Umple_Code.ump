@@ -1469,12 +1469,26 @@ class UmpleClass
         methodNames.add(ev.getName());
       }
     }
+    
+    for (Method m: this.getMethods()) {
+      if (!isGetterSetter(m) && !m.isIsConstructor()) {
+        methodNames.add(m.getName());
+      }
+    }
 
     methodNames.add("constructor");
     methodNames.add("delete");
     methodNames.add("toString");
 
     return methodNames;
+  }
+  
+    // line 1869 "../../../../src/UmpleInternalParser_CodeClass.ump"
+   private boolean isGetterSetter(Method method){
+    if (method.getName().length() <= 2)
+  		return false;
+    String accessorName = method.getName().substring(0,3);
+  	return ((accessorName.equals("get")) || (accessorName.equals("set"))) && method.getSource() == Method.Source.fAutoAPI && !method.getIsConstructor();
   }
 
   public Boolean matchOperationMethod(String fullOperation, String method) {
