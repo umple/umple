@@ -1,0 +1,30 @@
+namespace example;
+
+class SuperClass {
+
+}
+class Class_A {
+  isA SuperClass;
+ 
+}
+class Class_B {
+  isA SuperClass;
+  isA TEquality<TP1 = Class_A >;
+  Boolean isEqual(Class_A object){}
+  Boolean isEqual(Class_B object){}
+}
+
+
+trait HasManyClassB
+{
+
+  1 --> * ClassB classB;
+}
+
+
+trait TEquality<TP1>{
+  abstract Boolean isEqual(TP1 object);
+  Boolean isNotEqual(TP1 object){
+    return isEqual(object) ? true : false;
+  }
+}

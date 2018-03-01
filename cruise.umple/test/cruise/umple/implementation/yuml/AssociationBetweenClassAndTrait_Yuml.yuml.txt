@@ -1,0 +1,1 @@
+[SuperClass],[Class_A],[SuperClass]^-[Class_A],[Class_B|+isEqual();+isEqual();+isNotEqual();],[SuperClass]^-[Class_B],

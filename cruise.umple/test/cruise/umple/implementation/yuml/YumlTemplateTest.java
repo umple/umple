@@ -61,6 +61,11 @@ public class YumlTemplateTest extends TemplateTest
   {
     assertEitherUmpleTemplateFor("yuml/AssociationTemplateTest3_Yuml.ump","yuml/AssociationTemplateTest3_Yuml.yuml.txt","yuml/AssociationTemplateTest3b_Yuml.yuml.txt");
   }
+  @Test
+  public void Association_BetweenTraitAndClass()
+  {
+    assertUmpleTemplateFor("yuml/AssociationBetweenClassAndTrait_Yuml.ump","yuml/AssociationBetweenClassAndTrait_Yuml.yuml.txt");
+  }
   
   @Test
   public void Inheritance()

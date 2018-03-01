@@ -80,6 +80,12 @@ class YumlGenerator
     {
       UmpleClass c1 = model.getUmpleClass(aAssoc.getEnd(0).getClassName());
       UmpleClass c2 = model.getUmpleClass(aAssoc.getEnd(1).getClassName());
+      
+      if(c1 == null || c2 == null) // to ignore associations invloving traits.  
+      	{ 
+      		continue;
+      	}
+      
       String mult1 = aAssoc.getEnd(0).toSimpleString();
       String mult2 = aAssoc.getEnd(1).toSimpleString();
       List<AssociationEnd> assocEnds= aAssoc.getEnds();
