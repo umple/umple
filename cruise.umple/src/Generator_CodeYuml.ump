@@ -26,7 +26,6 @@ class YumlGenerator
     {
       yuml.append("[");
       yuml.append(aClass.getName());
-      //System.out.println("aClass.getName() : "+aClass.getName()+"  : ");
       if (aClass.numberOfAttributes() > 0)
       {
         yuml.append("|");
@@ -117,7 +116,6 @@ class YumlGenerator
 
     model.setCode(yuml.toString());
     
-    //System.out.println("Model Code ::: "+model.getCode());
     
   }
 }
