@@ -1,0 +1,14 @@
+class GeometricObject {
+  isA TDrawable;
+}
+
+class Color{}
+
+
+
+trait TDrawable {
+  0..1 -> * Color color;
+  void applyTransparency(Integer percentage){/*implementation */}
+}
+
+

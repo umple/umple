@@ -1,0 +1,1 @@
+[GeometricObject|+applyTransparency();],[Color],[GeometricObject]geometricObject 0..1->color *[Color],

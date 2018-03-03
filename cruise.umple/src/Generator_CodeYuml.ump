@@ -61,6 +61,7 @@ class YumlGenerator
           String methodModifier = method.getModifier();
     	  String methodName = method.getName();
     	  methodName = methodModifier.contains("private")?"-"+methodName:"+"+methodName;
+    	  
     	  yuml.append(StringFormatter.format("{0}();", methodName));
     	}
       }
@@ -78,8 +79,14 @@ class YumlGenerator
 
     for (Association aAssoc : model.getAssociations())
     {
+      if(model.getUmpleTrait(aAssoc.getEnd(0).getClassName()) != null || model.getUmpleTrait(aAssoc.getEnd(1).getClassName())  != null) // to ignore associations involving traits.  
+      	{ 
+      		continue;
+      	}
+      
       UmpleClass c1 = model.getUmpleClass(aAssoc.getEnd(0).getClassName());
       UmpleClass c2 = model.getUmpleClass(aAssoc.getEnd(1).getClassName());
+      
       String mult1 = aAssoc.getEnd(0).toSimpleString();
       String mult2 = aAssoc.getEnd(1).toSimpleString();
       List<AssociationEnd> assocEnds= aAssoc.getEnds();
@@ -108,5 +115,7 @@ class YumlGenerator
     }
 
     model.setCode(yuml.toString());
+    
+    
   }
 }
