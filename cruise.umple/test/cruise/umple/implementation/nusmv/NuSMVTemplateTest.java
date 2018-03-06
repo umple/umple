@@ -65,7 +65,14 @@ public class NuSMVTemplateTest extends TemplateTest{
 		SampleFileWriter.destroy(pathToInput + "/nusmv/InputVarTest.smv");
 		SampleFileWriter.destroy(pathToInput + "/nusmv/RangeTypeTest.smv");
 	  }
-	  
+
+	  @Test
+	  public void EmptyStateMachineTest()
+	  {
+	  		
+			Assert.assertNotNull(createUmpleSystem(pathToInput,"/nusmv/EmptyStateTest.ump")); //umple file with empty state machines should not make system fail. 
+
+	  }
 	  @Ignore //@Test   // TEMPORARY IGNORE BY TIM ISSUE 740
 	  public void RangeTypeTest()
 	  {

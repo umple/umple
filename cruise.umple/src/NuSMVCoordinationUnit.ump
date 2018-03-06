@@ -282,15 +282,21 @@ class NuSMVCoordinator
 		}
 		
 		//creating main module for the model
-		ModuleBody body = new ModuleBody( genMainVariableFor( capsules ) );
-		NuSMVModule mainmodule = new NuSMVModule( "main" , body );	
-		temp.add( mainmodule );
+		if(capsules.size() < 1)
+		{
+			output.append("/* To generate NuSMV model, your umple file should contain some state machines. */");
+		}
+		else
+		{
+			ModuleBody body = new ModuleBody( genMainVariableFor( capsules ) );
+			NuSMVModule mainmodule = new NuSMVModule( "main" , body );	
+			temp.add( mainmodule );
+			
+			for( NuSMVModule module : temp )
+				output.append( module.toString() +"\n" );
 		
-		for( NuSMVModule module : temp )
-			output.append( module.toString() +"\n" );
-	
 		//output.append( "--Elapsed Memory to discover non-determinism (ms): "+elapsedMemory);		
-				
+		}		
 		return output;
 	}
 	
