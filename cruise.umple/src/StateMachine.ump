@@ -93,7 +93,7 @@ class Activity
   
   CodeBlock codeblock = null;
   after constructor {codeblock = aActivityCode!=null ? new CodeBlock(aActivityCode) : new CodeBlock();}
-  before setActivityCode {codeblock.setCode(aActivityCode);}
+  before generated setActivityCode {codeblock.setCode(aActivityCode);}
   after getActivityCode{
   	if (codeblock.getCode()!=null)
   	  return codeblock.getCode();
@@ -158,7 +158,7 @@ class Action
   
   CodeBlock codeblock = null;
   after constructor {codeblock = aActionCode!=null ? new CodeBlock(aActionCode) : new CodeBlock();}
-  before setActionCode {codeblock.setCode(aActionCode);}
+  before generated setActionCode {codeblock.setCode(aActionCode);}
   after getActionCode{
   	if (codeblock.getCode()!=null)
   	  return codeblock.getCode();

@@ -634,7 +634,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       for(Token injectToken : entry.getValue())
       {
         String operationSource = getOperationSource(injectToken);
-        checkCodeInjectionValidity(injectToken, (UmpleClass) entry.getKey());
+        if ("".equals(operationSource))
+          operationSource = "generated";
+        checkCodeInjectionValidity(injectToken, (UmpleClass) entry.getKey(), operationSource);
       }
     } 
   }
@@ -3334,23 +3336,18 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     return methodNames;
   }
 
-  private void checkCodeInjectionValidity(Token injectToken, UmpleClass uClass) {
+  private void checkCodeInjectionValidity(Token injectToken, UmpleClass uClass, String operationSource) {
     List<Method> methods = uClass.getMethods();
     ArrayList<String> methodNames = getAllMethodNames(uClass);
     String[] allOperations = getOperationName(injectToken).split(",");
     List<String> allParameters = getOperationsParameters(injectToken);
-
-    String operationSource = getOperationSource(injectToken);
-    if("".equals(operationSource)) {
-      operationSource = "generated";
-    }
 
     for(int opInd = 0; opInd < allOperations.length; opInd++)
     {
       String operation = allOperations[opInd];
       String currentParameters = allParameters.get(opInd);
       Boolean hasExclusion = false;
-      if(operation.charAt(0) == '!') {
+      if(operation.charAt(0) == '!' && "generated".equals(operationSource)) {
         hasExclusion = true;
         operation = operation.substring(1);
       }
