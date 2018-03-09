@@ -634,18 +634,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       for(Token injectToken : entry.getValue())
       {
         String operationSource = getOperationSource(injectToken);
-        if("all".equals(operationSource))
-        {
-          checkCodeInjectionValidityAll(injectToken, (UmpleClass) entry.getKey());
-        }
-        else if("custom".equals(operationSource)) 
-        {
-          checkCodeInjectionValidityCustom(injectToken, (UmpleClass) entry.getKey());
-        }
-        else
-        {
-          checkCodeInjectionValidity(injectToken, (UmpleClass) entry.getKey());
-        }
+        checkCodeInjectionValidity(injectToken, (UmpleClass) entry.getKey());
       }
     } 
   }
@@ -3239,7 +3228,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     String operationSource = getOperationSource(injectToken).toLowerCase();
 
     if(operationSource.equals("")) {
-      operationSource = "generated";
+      operationSource = "all";
     }
 
     CodeInjection injection = new CodeInjection(type,operationName,"",uClassifier);
@@ -3345,84 +3334,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     return methodNames;
   }
 
-  
-  private void checkCodeInjectionValidityCustom(Token injectToken, UmpleClass uClass) {
-    List<Method> methods = uClass.getMethods();
-    String[] allOperations = getOperationName(injectToken).split(",");
-    List<String> allParameters = getOperationsParameters(injectToken);
-
-    String operationSource = getOperationSource(injectToken);
-    if("".equals(operationSource)) {
-      operationSource = "generated";
-    }
-
-    for(int opInd = 0; opInd < allOperations.length; opInd++)
-    {
-      String operation = allOperations[opInd];
-      String currentParameters = allParameters.get(opInd);
-
-      Boolean matches = false;
-
-      for(Method method : methods) 
-      { 
-        boolean tmpMatches = uClass.matchOperationMethod(operation, method.getName()) && checkParameterMatch(method.getMethodParameters(), currentParameters);
-        matches = matches || tmpMatches;
-      }
-
-      if(!matches) {
-        getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
-      }
-    }
-  } 
-
-  private void checkCodeInjectionValidityAll(Token injectToken, UmpleClass uClass) {
-    List<Method> methods = uClass.getMethods();
-    ArrayList<String> methodNames = getAllMethodNames(uClass);
-    String[] allOperations = getOperationName(injectToken).split(",");
-    List<String> allParameters = getOperationsParameters(injectToken);
-
-    String operationSource = getOperationSource(injectToken);
-    if("".equals(operationSource)) {
-      operationSource = "generated";
-    }
-
-    for(int opInd = 0; opInd < allOperations.length; opInd++)
-    {
-      String operation = allOperations[opInd];
-      String currentParameters = allParameters.get(opInd);
-
-      Boolean matches = false;
-
-      // check against generated methods
-      for(String methodName : methodNames) 
-      { 
-        if (uClass.matchOperationMethod(operation, methodName)) {
-          matches = true;
-        }
-      }
-
-      // check against custom methods
-      for(Method method : methods) 
-      { 
-        boolean tmpMatches = uClass.matchOperationMethod(operation, method.getName()) && checkParameterMatch(method.getMethodParameters(), currentParameters);
-        matches = matches || tmpMatches;
-      }
-
-      if(!matches) {
-        getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
-      }
-
-      if(!"...".equals(currentParameters)) {
-        getParseResult().addErrorMessage(new ErrorMessage(1013, injectToken.getPosition(), operationSource));
-      }
-    }
-  }
-
   private void checkCodeInjectionValidity(Token injectToken, UmpleClass uClass) {
+    List<Method> methods = uClass.getMethods();
     ArrayList<String> methodNames = getAllMethodNames(uClass);
-    
     String[] allOperations = getOperationName(injectToken).split(",");
-    
     List<String> allParameters = getOperationsParameters(injectToken);
 
     String operationSource = getOperationSource(injectToken);
@@ -3437,32 +3352,42 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       Boolean hasExclusion = false;
       if(operation.charAt(0) == '!') {
         hasExclusion = true;
-      	operation = operation.substring(1);
+        operation = operation.substring(1);
       }
 
       Boolean matches = false;
 
-      for(String methodName : methodNames) 
-      { 
-        if (uClass.matchOperationMethod(operation, methodName)) {
-          matches = true;
+      // check against generated methods
+      if ("all".equals(operationSource) || "generated".equals(operationSource)) {
+        for(String methodName : methodNames) 
+        { 
+          if (uClass.matchOperationMethod(operation, methodName)) {
+            matches = true;
+          }
         }
-        
+      }
+
+      // check against custom methods
+      if("all".equals(operationSource) || "custom".equals(operationSource)){
+        for(Method method : methods) 
+        { 
+          boolean tmpMatches = uClass.matchOperationMethod(operation, method.getName()) && checkParameterMatch(method.getMethodParameters(), currentParameters);
+          matches = matches || tmpMatches;
+        }
       }
 
       if(!matches) {
-        if(hasExclusion) {
+        if(hasExclusion && "generated".equals(operationSource)) {
           getParseResult().addErrorMessage(new ErrorMessage(1014, injectToken.getPosition(), operation));
         }
         else {
           getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operation));
-      	}
+        }
       }
 
-      if(!"...".equals(currentParameters)) {
+      if(!"...".equals(currentParameters) && !"custom".equals(operationSource)) {
         getParseResult().addErrorMessage(new ErrorMessage(1013, injectToken.getPosition(), operationSource));
       }
-       
     }
   }
   

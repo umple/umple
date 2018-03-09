@@ -1538,7 +1538,7 @@ class UmpleClass
 
     for (CodeInjection code : getCodeInjections())
     {
-      if (code.getOperation() == null || !type.equals(code.getType()) || (!"all".equals(code.getOperationSource()) && !"generated".equals(code.getOperationSource())))
+      if (code.getOperation() == null || !type.equals(code.getType()) || !("all".equals(code.getOperationSource()) || "generated".equals(code.getOperationSource())))
       {
         continue;
       }
@@ -1600,7 +1600,7 @@ class UmpleClass
     String formattedMethod = method;
     for (CodeInjection code : getCodeInjections())
     {
-      if (code.getOperation() == null || !type.equals(code.getType()) || (!"all".equals(code.getOperationSource()) && !"custom".equals(code.getOperationSource())))
+      if (code.getOperation() == null || !type.equals(code.getType()) || !("all".equals(code.getOperationSource()) || "custom".equals(code.getOperationSource())))
       {
         continue;
       }
