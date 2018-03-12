@@ -807,6 +807,94 @@ public class UmpleClassTest
     }
   }
 
+
+  @Test
+  public void testCheckIgnoredAssociations_DefaultRoleName()
+  {
+    String code = "class A{1 -- * C;} class B{isA A; 1 -- * C;} class C{}";
+
+    UmpleModel model = getModel(code);
+    model.run();
+    UmpleClass A = model.getUmpleClass("A");
+    Assert.assertNotNull(A.getAssociationVariable("cs"));
+    ArrayList<String> methodNameListA = A.getMethodNames();
+    Assert.assertTrue(methodNameListA.contains("getC"));
+    Assert.assertTrue(methodNameListA.contains("getCs"));
+    Assert.assertTrue(methodNameListA.contains("numberOfCs"));
+    Assert.assertTrue(methodNameListA.contains("hasCs"));
+    Assert.assertTrue(methodNameListA.contains("indexOfC"));
+    Assert.assertTrue(methodNameListA.contains("minimumNumberOfCs"));
+    Assert.assertTrue(methodNameListA.contains("addC"));
+    Assert.assertTrue(methodNameListA.contains("removeC"));
+    Assert.assertTrue(methodNameListA.contains("addCAt"));
+    Assert.assertTrue(methodNameListA.contains("addOrMoveCAt"));
+
+    UmpleClass B = model.getUmpleClass("B");
+    Assert.assertNull(B.getAssociationVariable("cs"));
+    ArrayList<String> methodNameListB = B.getMethodNames();
+    Assert.assertFalse(methodNameListB.contains("getC"));
+    Assert.assertFalse(methodNameListB.contains("getCs"));
+    Assert.assertFalse(methodNameListB.contains("numberOfCs"));
+    Assert.assertFalse(methodNameListB.contains("hasCs"));
+    Assert.assertFalse(methodNameListB.contains("indexOfC"));
+    Assert.assertFalse(methodNameListB.contains("minimumNumberOfCs"));
+    Assert.assertFalse(methodNameListB.contains("addC"));
+    Assert.assertFalse(methodNameListB.contains("removeC"));
+    Assert.assertFalse(methodNameListB.contains("addCAt"));
+    Assert.assertFalse(methodNameListB.contains("addOrMoveCAt"));
+
+    UmpleClass C = model.getUmpleClass("C");
+    Assert.assertNotNull(C.getAssociationVariable("a"));
+    Assert.assertNull(C.getAssociationVariable("b"));
+    ArrayList<String> methodNameListC = C.getMethodNames();
+    Assert.assertTrue(methodNameListC.contains("getA"));
+    Assert.assertTrue(methodNameListC.contains("setA"));
+    Assert.assertFalse(methodNameListC.contains("getB"));
+    Assert.assertFalse(methodNameListC.contains("setB"));
+  }
+  @Test
+  public void testCheckIgnoredAssociations_withRoleName()
+  {
+    String code = "class A{1 sth -- * C;} class B{isA A; 1 sth -- * C;} class C{}";
+
+    UmpleModel model = getModel(code);
+    model.run();
+    UmpleClass A = model.getUmpleClass("A");
+    Assert.assertNotNull(A.getAssociationVariable("cs"));
+    ArrayList<String> methodNameListA = A.getMethodNames();
+    Assert.assertTrue(methodNameListA.contains("getC"));
+    Assert.assertTrue(methodNameListA.contains("getCs"));
+    Assert.assertTrue(methodNameListA.contains("numberOfCs"));
+    Assert.assertTrue(methodNameListA.contains("hasCs"));
+    Assert.assertTrue(methodNameListA.contains("indexOfC"));
+    Assert.assertTrue(methodNameListA.contains("minimumNumberOfCs"));
+    Assert.assertTrue(methodNameListA.contains("addC"));
+    Assert.assertTrue(methodNameListA.contains("removeC"));
+    Assert.assertTrue(methodNameListA.contains("addCAt"));
+    Assert.assertTrue(methodNameListA.contains("addOrMoveCAt"));
+
+    UmpleClass B = model.getUmpleClass("B");
+    Assert.assertNull(B.getAssociationVariable("cs"));
+    ArrayList<String> methodNameListB = B.getMethodNames();
+    Assert.assertFalse(methodNameListB.contains("getC"));
+    Assert.assertFalse(methodNameListB.contains("getCs"));
+    Assert.assertFalse(methodNameListB.contains("numberOfCs"));
+    Assert.assertFalse(methodNameListB.contains("hasCs"));
+    Assert.assertFalse(methodNameListB.contains("indexOfC"));
+    Assert.assertFalse(methodNameListB.contains("minimumNumberOfCs"));
+    Assert.assertFalse(methodNameListB.contains("addC"));
+    Assert.assertFalse(methodNameListB.contains("removeC"));
+    Assert.assertFalse(methodNameListB.contains("addCAt"));
+    Assert.assertFalse(methodNameListB.contains("addOrMoveCAt"));
+
+    UmpleClass C = model.getUmpleClass("C");
+    Assert.assertNotNull(C.getAssociationVariable("sth"));
+    Assert.assertTrue(C.getAssociationVariable("sth").getType().equals("A"));
+    ArrayList<String> methodNameListC = C.getMethodNames();
+    Assert.assertTrue(methodNameListC.contains("getSth"));
+    Assert.assertTrue(methodNameListC.contains("setSth"));
+  }
+
   @Test
   public void getCodeInjectionParametersIgnoredError()
   {
@@ -971,4 +1059,5 @@ public class UmpleClassTest
     UmpleFile uFile = new UmpleFile("umpleClassTest.ump"); 
     return new UmpleModel(uFile);
   }
+
 }
