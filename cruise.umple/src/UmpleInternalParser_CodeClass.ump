@@ -2954,7 +2954,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         	UmpleClass uClass = (UmpleClass)uElement;
         	if(uClass.getName().equals(methodToken.getValue()))
         	{
-        		//System.out.println("//Constructor is detected ... : "+methodToken.getValue());
         		setFailedPosition(token.getPosition(), 170, "");
         	}
         	
