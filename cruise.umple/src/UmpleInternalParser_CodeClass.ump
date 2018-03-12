@@ -1976,10 +1976,18 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
           // find the associated class
           UmpleClass associatedClass = model.getUmpleClass(curOtherEnd.getClassName());
-          AssociationVariable associatedAV = associatedClass.getAssociationVariable(curMyEnd.getRoleName());
-          Association associatedAssociation = associatedClass.getAssociation(associatedClass.indexOfAssociationVariable(associatedAV));
-          if (associatedAV == null) continue;
 
+          int associatedAvIndex = 0;
+          for (AssociationVariable aAV : associatedClass.getAssociationVariables()) {
+            if(aAV.getName().equals(curMyEnd.getRoleName()) && aAV.getType().equals(curMyEnd.getClassName())) {
+              break;
+            }
+            associatedAvIndex ++;
+          }
+          AssociationVariable associatedAV = associatedClass.getAssociationVariable(associatedAvIndex);
+          Association associatedAssociation = associatedClass.getAssociation(associatedAvIndex);
+          if (associatedAV == null) continue;
+          
           uClass.removeAssociation(curAssoc);
           uClass.removeAssociationVariable(curAssocVar);
           associatedClass.removeAssociation(associatedAssociation);
