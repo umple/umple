@@ -386,6 +386,7 @@ class UmpleInternalParser
       checkExtendsForCycles();
       checkSortedAssociations();
       checkClassInterfaceAssocations();
+      checkSubclassSameAssociationDifferentRoleNames();
       
       //Issue 1084
       addUnlinkedKeys();
@@ -1862,8 +1863,106 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     String accessorName = method.getName().substring(0,3);
   	return ((accessorName.equals("get")) || (accessorName.equals("set"))) && method.getSource() == Method.Source.fAutoAPI && !method.getIsConstructor();
   }
+  // Same association in subclass with a different role name should emit
+  // error 19.
+  // class A {
+  //   1 sth1 -- * C;
+  // }
+  // class B {
+  //  isA A;
+  //  1 sth2 -- * C;
+  // }
+  // class C {
+  // }
+  private void checkSubclassSameAssociationDifferentRoleNames() {
+   	for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      List<String> visitedSupers = new ArrayList<String>();
+      UmpleClass superClass = uClass.getExtendsClass();
 
+      while (superClass != null)
+      {
+      	// Prevent cycles.
+        if (visitedSupers.contains(superClass.getName()))
+        {
+          break;
+        }
+        if (superClass.getIsAbstract()) {
+          break;
+        }
 
+        visitedSupers.add(superClass.getName());
+
+        for (AssociationVariable assocVar : uClass.getAssociationVariables()) {
+          // Test whether the super class has the 
+          AssociationVariable supAssocVar = superClass.getAssociationVariable(assocVar.getType(), assocVar.getName());
+          if (supAssocVar == null) continue;
+        
+          // The modifiable reference to the current association variable
+          AssociationVariable curAssocVar = uClass.getAssociationVariable(assocVar.getType(), assocVar.getName());
+
+          Association curAssoc = uClass.getAssociation(uClass.indexOfAssociationVariable(curAssocVar));
+          Association supAssoc = superClass.getAssociation(superClass.indexOfAssociationVariable(supAssocVar));
+
+          AssociationEnd curLeftEnd = curAssoc.getEnd(0);
+          AssociationEnd curRightEnd = curAssoc.getEnd(1);
+          AssociationEnd supLeftEnd = supAssoc.getEnd(0);
+          AssociationEnd supRightEnd = supAssoc.getEnd(1);
+
+          AssociationEnd curMyEnd, curOtherEnd;
+          AssociationEnd supMyEnd, supOtherEnd;
+
+          // Find out "MyEnd" and "OtherEnd"
+          if (curLeftEnd.getRoleName().equals(curAssocVar.getName())
+            && curLeftEnd.getClassName().equals(curAssocVar.getType())) {
+              curMyEnd = curRightEnd;
+              curOtherEnd = curLeftEnd;
+          } else {
+            curMyEnd = curLeftEnd;
+            curOtherEnd = curRightEnd;
+          }
+
+          if (supLeftEnd.getRoleName().equals(supAssocVar.getName())
+            && supLeftEnd.getClassName().equals(supAssocVar.getType())) {
+              supMyEnd = supRightEnd;
+              supOtherEnd = supLeftEnd;
+          } else {
+            supMyEnd = supLeftEnd;
+            supOtherEnd = supRightEnd;
+          }
+
+          // test the type of "MyEnd"
+          if (!curMyEnd.getClassName().equals(uClass.getName())
+            || !supMyEnd.getClassName().equals(superClass.getName())) {
+            continue;
+          }
+
+          // test the name of "MyEnd"
+          if (curMyEnd.getRoleName().equals(supMyEnd.getRoleName())) {
+            continue;
+          }
+
+          // test multiplicity of both associations
+          Multiplicity curMyMultiplicity = curMyEnd.getMultiplicity();
+          Multiplicity curOtherMultiplicity = curOtherEnd.getMultiplicity();
+          Multiplicity supMyMultiplicity = supMyEnd.getMultiplicity();
+          Multiplicity supOtherMultiplicity = supOtherEnd.getMultiplicity();
+
+          if (curMyMultiplicity.getLowerBound() != supMyMultiplicity.getLowerBound()
+            || curMyMultiplicity.getUpperBound() != supMyMultiplicity.getUpperBound()
+            || curOtherMultiplicity.getLowerBound() != supOtherMultiplicity.getLowerBound()
+            || curOtherMultiplicity.getUpperBound() != supOtherMultiplicity.getUpperBound()) {
+            continue;
+          }
+
+          // The association has same multiplicity at both end, both with different Role Names,
+          // emit error 19.
+          getParseResult().addErrorMessage(new ErrorMessage(19, curAssoc.getTokenPosition(), curMyEnd.getClassName(), curOtherEnd.getClassName()));
+        }
+        superClass = superClass.getExtendsClass();
+      }
+    }
+  }
 
   private void createSpecializedLinks()
   {

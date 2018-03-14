@@ -1747,6 +1747,19 @@ class UmpleClass
     }
   }
 
+  // It can happen that one class has multiple association variables with the same name
+  public AssociationVariable getAssociationVariable(String className, String roleName)
+  {
+    for (AssociationVariable av : associationVariables)
+    {
+      if (av.getName().equals(roleName) && av.getType().equals(className))
+      {
+        return av;
+      }
+    }
+    return null;
+  }
+
   public AssociationVariable getAssociationVariable(String name)
   {
     for (AssociationVariable av : associationVariables)
