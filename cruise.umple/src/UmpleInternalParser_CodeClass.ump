@@ -1952,10 +1952,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             continue;
           }
 
-          // The association has same multiplicity at both end, both with different Role Names,
-          // emit error 19.
-          System.out.println("Error 19:" + curMyEnd.getRoleName() + "|" + curMyEnd.getClassName() + "---" + curOtherEnd.getRoleName() + "|" + curOtherEnd.getClassName()
-          + "\n" + supMyEnd.getRoleName() + "|" + supMyEnd.getClassName() + "---" + supOtherEnd.getRoleName() + "|" + supOtherEnd.getClassName());
           getParseResult().addErrorMessage(new ErrorMessage(19, curAssoc.getTokenPosition(), curMyEnd.getClassName(), curOtherEnd.getClassName()));
         }
         superClass = superClass.getExtendsClass();
@@ -1982,10 +1978,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       UmpleClass superClass = uClass.getExtendsClass();
 
       String[] uClassAssocVarNames = new String[uClass.numberOfAssociationVariables()];
-      int index = 0;
+      String[] uClassAssocVarClassNames = new String[uClass.numberOfAssociationVariables()];
+      int numCurAssocVar = 0;
       for (AssociationVariable curAssocVar : uClass.getAssociationVariables()) {
-        uClassAssocVarNames[index] = curAssocVar.getName();
-        index = index + 1;
+        uClassAssocVarNames[numCurAssocVar] = curAssocVar.getName();
+        uClassAssocVarClassNames[numCurAssocVar] = curAssocVar.getType();
+        numCurAssocVar = numCurAssocVar + 1;
       }
 
       while (superClass != null)
@@ -2001,10 +1999,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
         visitedSupers.add(superClass.getName());
 
-        for (String curAssocVarName : uClassAssocVarNames) {
-          AssociationVariable curAssocVar = uClass.getAssociationVariable(curAssocVarName);
+        for (int i=0; i < numCurAssocVar; i++) {
+          AssociationVariable curAssocVar = uClass.getAssociationVariable(uClassAssocVarClassNames[i], uClassAssocVarNames[i]);
 
-          AssociationVariable supAssocVar = superClass.getAssociationVariable(curAssocVarName);
+          AssociationVariable supAssocVar = superClass.getAssociationVariable(curAssocVar.getType(), curAssocVar.getName());
           if (supAssocVar == null) continue;
 
           Association curAssoc = uClass.getAssociation(uClass.indexOfAssociationVariable(curAssocVar));
@@ -2074,17 +2072,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
           // find the associated class
           UmpleClass associatedClass = model.getUmpleClass(curOtherEnd.getClassName());
-
-          int associatedAvIndex = 0;
-          for (AssociationVariable aAV : associatedClass.getAssociationVariables()) {
-            if(aAV.getName().equals(curMyEnd.getRoleName()) && aAV.getType().equals(curMyEnd.getClassName())) {
-              break;
-            }
-            associatedAvIndex ++;
+          AssociationVariable associatedAV = associatedClass.getAssociationVariable(curMyEnd.getClassName(), curMyEnd.getRoleName());
+          if (associatedAV == null) {
+            continue;
           }
-          AssociationVariable associatedAV = associatedClass.getAssociationVariable(associatedAvIndex);
-          Association associatedAssociation = associatedClass.getAssociation(associatedAvIndex);
-          if (associatedAV == null) continue;
+          Association associatedAssociation = associatedClass.getAssociation(associatedClass.indexOfAssociationVariable(associatedAV));
           
           uClass.removeAssociation(curAssoc);
           uClass.removeAssociationVariable(curAssocVar);
