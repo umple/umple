@@ -466,7 +466,7 @@ class SuperCodeGenerator {
       }
     }
 
-    for (Precondition pc : aClass.getPreconditions())
+    for (Precondition pc : aClass.getPreConds())
     { 
       String methodName = pc.getMethod().getName();
       pc.negate();
@@ -478,7 +478,7 @@ class SuperCodeGenerator {
       aClass.addCodeInjection(before);    
     }
 
-    for (Postcondition pc : aClass.getPostconditions())
+    for (Postcondition pc : aClass.getPostConds())
     { 
       String methodName = pc.getMethod().getName();
       pc.negate();
