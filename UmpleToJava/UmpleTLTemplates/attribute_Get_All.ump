@@ -56,7 +56,7 @@ class UmpleToJava {
     else 
     {
 
-      if (av.getIsDerived() && customGetPostfixCode != null)
+      if (av.getIsDerived() && (customGetPostfixCode != null || customGetPrefixCode != null))
       {
         #>><<@ UmpleToJava.attribute_GetDerivedCodeInjection >><<#
       }
