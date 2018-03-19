@@ -38,6 +38,7 @@ class JavaClassGenerator {
     depend cruise.umple.util.*;
     depend java.util.*;
     depend cruise.umple.parser.Position;
+    depend cruise.umple.parser.ErrorMessage;
 
     isA ILang;
 
@@ -179,6 +180,7 @@ for (StateMachine smq : uClass.getStateMachines())
   getEnumerationCode(realSb, model, uClass, isFirst);
   getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
   getConstructorCode(realSb, model,uClass,gClass,gen,isFirst, false);
+  checkConflictBetweenGeneratedAndManualConstructors(realSb, model, uClass); 
   getProxyReferenceCode(realSb, model,uClass);
   getDistributedMethodsCode(realSb, model,uClass);
   getAttributeCode(realSb, model,uClass,gClass,gen,isFirst,false);
@@ -406,6 +408,52 @@ for (StateMachine smq : uClass.getStateMachines())
 }<<#}
   return realSb.toString();
 }
+
+ /*
+	Method name: checkConflictBetweenGeneratedAndManualConstructors
+	This method check conflicts between generated and constructors added by the user. 
+	This check is better to be done after umple compiler generates class constructors. 
+
+ */
+	private void checkConflictBetweenGeneratedAndManualConstructors(StringBuilder realSb, UmpleModel model, UmpleClass uClass) {
+
+		// generated constructors will be in one line string, to be prepared for ReqularExpression
+		String generatedConstructorsNocomments = realSb.toString().replaceAll("//.*.\\n", " ").replaceAll("/.*./", " "); // strip out all
+																									// comments
+		String generatedConstructorsNospace = generatedConstructorsNocomments.replaceAll("\\s+", " "); // strip out all spaces
+
+		List<Method> manualConstructorList = uClass.getMethods().stream()
+				.filter(aMethod -> (!aMethod.getIsConstructor() && aMethod.getName().equals(uClass.getName())))
+				.collect(java.util.stream.Collectors.toList());
+
+		for (Method manualConstructor : manualConstructorList) {
+			List<String> constructorParameterTypes = manualConstructor.getMethodParameters().stream().map(p -> p.getType())
+					.collect(java.util.stream.Collectors.toList());
+			//Position p = manualConstructor.getPosition();
+			String reqExpParameterString = "";
+			if (constructorParameterTypes.size() > 0)
+				{
+					reqExpParameterString = constructorParameterTypes.get(0) + "\\s+\\w+";
+					for (int i = 1; i < constructorParameterTypes.size(); i++) {
+						reqExpParameterString = reqExpParameterString + "\\s*,\\s*" + constructorParameterTypes.get(i) + "\\s+\\w+";
+						}
+				}
+
+			String manualConstructorReqExpression = ".*" + uClass.getName() + "\\s*" + "[(]\\s*" + reqExpParameterString + "[)].*";
+
+			if(generatedConstructorsNospace.matches(manualConstructorReqExpression))
+			{
+				//model.getLastResult().
+				model.getLastResult().setPosition(manualConstructor.getPosition());
+				model.getLastResult().addErrorMessage(new ErrorMessage(171,manualConstructor.getPosition(),""));
+				
+			
+			}
+			//System.out.println("search string : " + manualConstructorReqExpression + " ... found: " + generatedConstructorsNospace.matches(manualConstructorReqExpression));
+		}
+		
+	}
+
 #>><<@ UmpleToJava.uncaught_exception >><<#
 
 

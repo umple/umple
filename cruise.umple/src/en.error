@@ -127,6 +127,7 @@
 
 
 170: 3, "http://manual.umple.org/build/reference/09170CustomConstructor.txt", Custom constructors should normally not be provided in Umple. Consider using before or after keywords to adjust what the constructor does, or adjusting constructor parameters using keywords like lazy.;
+171: 1, "http://manual.umple.org/build/reference/09170CustomConstructor.txt", A custom constructor should not conflict with an auto-generated constructor.;
 180: 2, "http://manual.umple.org/?E180DuplicateAssociationNameClassHierarchy", Class '{0}' is a subclass of class '{1}' and may not have multiple associations with the same name '{2}' ;
 
 # Messages related to traits starting with 200
