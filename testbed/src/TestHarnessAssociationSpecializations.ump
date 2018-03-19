@@ -419,12 +419,14 @@ association { * Zw zw -- * Ws ws; }
 association { 1 Zww zw -- 3..* Ws ws; }
 
 //                                				  [42]
-class Sx {}
-class Xe {}
-class Sxx { isA Sx; }
+// Issue988 - this associations are no longer considered specialization
+// but ignored
+//class Sx {}
+//class Xe {}
+//class Sxx { isA Sx; }
 
-association { * Sx sx -- * Xe xe; }
-association { * Sxx sx -- * Xe xe; }
+//association { * Sx sx -- * Xe xe; }
+//association { * Sxx sx -- * Xe xe; }
 
 //                                                                [43]
 class Ed {}
@@ -566,9 +568,10 @@ association { 4..5 Frr fr -> 1 Rbb rb; }
 //
 // Case: Optional 1 down to optional 1
 //                                                                [59]
-class Supervisor {}
-class Employee {}
-class Janitor { isA Employee; }
+// Issue 988 - these associations are no longer considered specializations but ignored
+//class Supervisor {}
+//class Employee {}
+//class Janitor { isA Employee; }
 
-association { 0..1 Employee emp -- 0..1 Supervisor supervisor; }
-association { 0..1 Janitor emp -- 0..1 Supervisor supervisor; }
+//association { 0..1 Employee emp -- 0..1 Supervisor supervisor; }
+//association { 0..1 Janitor emp -- 0..1 Supervisor supervisor; }

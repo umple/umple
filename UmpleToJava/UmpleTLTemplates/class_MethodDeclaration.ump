@@ -126,7 +126,7 @@ class UmpleToJava {
           if(p!=null)
           {
             int previousConditionsFound = 0;
-            for(Postcondition condition:uClass.getPostconditions())
+            for(Postcondition condition:uClass.getPostConds())
             {
               if(condition.getMethod().equals(aMethod)&&condition.getPosition()!=null)
               {

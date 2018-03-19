@@ -596,10 +596,10 @@ class UmpleClass
   1 -> * UmpleEnumeration enums;
   
   //The possible Preconditions related to the Umple Class
-  1 -> 0..* Precondition;
+  1 -> 0..* Precondition preConds;
 
   //The possible Preconditions related to the Umple Class
-  1 -> 0..* Postcondition;
+  1 -> 0..* Postcondition postConds;
 
   // The possible Constraints related to the Umple Class
   1 -> 0..* ConstraintTree;
@@ -674,10 +674,10 @@ class UmpleTrait {
   1 -> * CodeInjection;
 
   //The possible Preconditions related to the Umple Trait
-  1 -> 0..* Precondition;
+  1 -> 0..* Precondition preConds;
 
   //The possible Preconditions related to the Umple Trait
-  1 -> 0..* Postcondition;
+  1 -> 0..* Postcondition postConds;
 
   // The possible Constraints related to the Umple Trait
   1 -> 0..* ConstraintTree;

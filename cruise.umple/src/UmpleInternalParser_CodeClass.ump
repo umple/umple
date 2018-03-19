@@ -383,6 +383,8 @@ class UmpleInternalParser
       createSpecializedLinks();
       checkDuplicateAssociationNames();
       checkDuplicateAssociationNamesClassHierarchy();
+      checkIgnoredAssociations();
+
       checkExtendsForCycles();
       checkSortedAssociations();
       checkClassInterfaceAssocations();
@@ -1863,7 +1865,138 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   	return ((accessorName.equals("get")) || (accessorName.equals("set"))) && method.getSource() == Method.Source.fAutoAPI && !method.getIsConstructor();
   }
 
+  // Some associations should be ingnored
+  // Example: 
+  // class A {
+  //  1 -- * C;
+  // }
+  // class B {
+  //  isA A;
+  //  1 -- * C;
+  //}
+  //class C {
+  //}
+  // Then the association in B should be ignored.
+  private void checkIgnoredAssociations() {
+  	for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      List<String> visitedSupers = new ArrayList<String>();
+      UmpleClass superClass = uClass.getExtendsClass();
 
+      String[] uClassAssocVarNames = new String[uClass.numberOfAssociationVariables()];
+      int index = 0;
+      for (AssociationVariable curAssocVar : uClass.getAssociationVariables()) {
+        uClassAssocVarNames[index] = curAssocVar.getName();
+        index = index + 1;
+      }
+
+      while (superClass != null)
+      {
+      	// Prevent cycles.
+        if (visitedSupers.contains(superClass.getName()))
+        {
+          break;
+        }
+        if (superClass.getIsAbstract()) {
+          break;
+        }
+
+        visitedSupers.add(superClass.getName());
+
+        for (String curAssocVarName : uClassAssocVarNames) {
+          AssociationVariable curAssocVar = uClass.getAssociationVariable(curAssocVarName);
+
+          AssociationVariable supAssocVar = superClass.getAssociationVariable(curAssocVarName);
+          if (supAssocVar == null) continue;
+
+          Association curAssoc = uClass.getAssociation(uClass.indexOfAssociationVariable(curAssocVar));
+          Association supAssoc = superClass.getAssociation(superClass.indexOfAssociationVariable(supAssocVar));
+
+          AssociationEnd curLeftEnd = curAssoc.getEnd(0);
+          AssociationEnd curRightEnd = curAssoc.getEnd(1);
+          AssociationEnd supLeftEnd = supAssoc.getEnd(0);
+          AssociationEnd supRightEnd = supAssoc.getEnd(1);
+
+          AssociationEnd curMyEnd, curOtherEnd;
+          AssociationEnd supMyEnd, supOtherEnd;
+
+          // Find out "MyEnd" and "OtherEnd"
+          if (curRightEnd.getRoleName().equals(supRightEnd.getRoleName())
+            && curRightEnd.getClassName().equals(supRightEnd.getClassName())) {
+              curMyEnd = curLeftEnd;
+              curOtherEnd = curRightEnd;
+              supMyEnd = supLeftEnd;
+              supOtherEnd = supRightEnd;
+          } else if (curLeftEnd.getRoleName().equals(supRightEnd.getRoleName())
+            && curLeftEnd.getClassName().equals(supRightEnd.getClassName())) {
+              curMyEnd = curRightEnd;
+              curOtherEnd = curLeftEnd;
+              supMyEnd = supLeftEnd;
+              supOtherEnd = supRightEnd;
+          } else if (curRightEnd.getRoleName().equals(supLeftEnd.getRoleName())
+            && curRightEnd.getClassName().equals(supLeftEnd.getClassName())) {
+              curMyEnd = curLeftEnd;
+              curOtherEnd = curRightEnd;
+              supMyEnd = supRightEnd;
+              supOtherEnd = supLeftEnd;
+          } else if (curLeftEnd.getRoleName().equals(supLeftEnd.getRoleName())
+            && curLeftEnd.getClassName().equals(supLeftEnd.getClassName())) {
+              curMyEnd = curRightEnd;
+              curOtherEnd = curLeftEnd;
+              supMyEnd = supRightEnd;
+              supOtherEnd = supLeftEnd;
+          } else {
+            continue;
+          }
+
+          // test the type of "MyEnd"
+          if (!curMyEnd.getClassName().equals(uClass.getName())
+            || !supMyEnd.getClassName().equals(superClass.getName())) {
+            continue;
+          }
+
+          // test the role name of "MyEnd"
+          if (!(curMyEnd.getIsDefaultRoleName() && supMyEnd.getIsDefaultRoleName())
+            && !curMyEnd.getRoleName().equals(supMyEnd.getRoleName())) {
+            continue;
+          }
+
+          // test multiplicity of both associations
+          Multiplicity curMyMultiplicity = curMyEnd.getMultiplicity();
+          Multiplicity curOtherMultiplicity = curOtherEnd.getMultiplicity();
+          Multiplicity supMyMultiplicity = supMyEnd.getMultiplicity();
+          Multiplicity supOtherMultiplicity = supOtherEnd.getMultiplicity();
+
+          if (curMyMultiplicity.getLowerBound() != supMyMultiplicity.getLowerBound()
+            || curMyMultiplicity.getUpperBound() != supMyMultiplicity.getUpperBound()
+            || curOtherMultiplicity.getLowerBound() != supOtherMultiplicity.getLowerBound()
+            || curOtherMultiplicity.getUpperBound() != supOtherMultiplicity.getUpperBound()) {
+            continue;
+          }
+
+          // find the associated class
+          UmpleClass associatedClass = model.getUmpleClass(curOtherEnd.getClassName());
+
+          int associatedAvIndex = 0;
+          for (AssociationVariable aAV : associatedClass.getAssociationVariables()) {
+            if(aAV.getName().equals(curMyEnd.getRoleName()) && aAV.getType().equals(curMyEnd.getClassName())) {
+              break;
+            }
+            associatedAvIndex ++;
+          }
+          AssociationVariable associatedAV = associatedClass.getAssociationVariable(associatedAvIndex);
+          Association associatedAssociation = associatedClass.getAssociation(associatedAvIndex);
+          if (associatedAV == null) continue;
+          
+          uClass.removeAssociation(curAssoc);
+          uClass.removeAssociationVariable(curAssocVar);
+          associatedClass.removeAssociation(associatedAssociation);
+          associatedClass.removeAssociationVariable(associatedAV);
+        }
+        superClass = superClass.getExtendsClass();
+      }
+    }
+  }
 
   private void createSpecializedLinks()
   {

@@ -1071,13 +1071,13 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 		}		
 							
 		// copy Precondition
-		for(Precondition aPrecondition : inTrait.getPreconditions()) {
-			inClass.addPrecondition(aPrecondition);
+		for(Precondition aPrecondition : inTrait.getPreConds()) {
+			inClass.addPreCond(aPrecondition);
 		}	
 		
 		// copy Postcondition
-		for(Postcondition aPostcondition : inTrait.getPostconditions()) {
-			inClass.addPostcondition(aPostcondition);
+		for(Postcondition aPostcondition : inTrait.getPostConds()) {
+			inClass.addPostCond(aPostcondition);
 		}						
 
 		//copy attributes
