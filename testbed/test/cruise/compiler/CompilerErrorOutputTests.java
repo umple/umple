@@ -56,6 +56,10 @@ public class CompilerErrorOutputTests
 	}
 	
 	@Test
+	public void ConflictConstructorTest() {
+		CompilerErrorUtil.AssertCompileError("ConflictConstructor.ump", "ConflictConstructor.txt");
+	}
+	@Test
 	public void OneLineTest() {
 		CompilerErrorUtil.AssertCompileError("One_Line.ump", "One_Line.txt");
 	}
