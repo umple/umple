@@ -596,13 +596,13 @@ class UmpleClass
   1 -> * UmpleEnumeration enums;
   
   //The possible Preconditions related to the Umple Class
-  1 -> 0..* Precondition;
+  1 -> 0..* Precondition preConds;
 
   //The possible Preconditions related to the Umple Class
-  1 -> 0..* Postcondition;
+  1 -> 0..* Postcondition postConds;
 
   // The possible Constraints related to the Umple Class
-  1 -> 0..* ConstraintTree;
+  1 uClass -> 0..* ConstraintTree;
 
   // The Umple Class's super class (if there is one).
   * subclasses -- 0..1 UmpleClass extendsClass;
@@ -674,13 +674,13 @@ class UmpleTrait {
   1 -> * CodeInjection;
 
   //The possible Preconditions related to the Umple Trait
-  1 -> 0..* Precondition;
+  1 -> 0..* Precondition preConds;
 
   //The possible Preconditions related to the Umple Trait
-  1 -> 0..* Postcondition;
+  1 -> 0..* Postcondition postConds;
 
   // The possible Constraints related to the Umple Trait
-  1 -> 0..* ConstraintTree;
+  1 uTrait -> 0..* ConstraintTree;
 
   // The Umple Trait's super Traits (if there are ones).
   * subTraits -- 0..* UmpleTrait extendsTraits;

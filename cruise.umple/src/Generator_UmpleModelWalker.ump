@@ -245,7 +245,7 @@ class UmpleModelWalker {
 						}
 					}
 					
-					for(Precondition pr : clazz.getPreconditions()) {
+					for(Precondition pr : clazz.getPreConds()) {
 						visitor.visit(pr);
 					}
 					

@@ -64,6 +64,10 @@ public class NuSMVTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmv/ConstantTest.smv");
 		SampleFileWriter.destroy(pathToInput + "/nusmv/InputVarTest.smv");
 		SampleFileWriter.destroy(pathToInput + "/nusmv/RangeTypeTest.smv");
+		SampleFileWriter.destroy(pathToInput + "/nusmv/EmptyStateTest.smv");
+		
+
+
 	  }
 
 	  @Test

@@ -137,6 +137,22 @@
     <ant antfile="build/build.testbed.xml" target="testRuby" inheritAll="true" />
   </target>
 
+  <target name="sandbox">
+    <deps-declare-taskdef />
+
+    <trycatch property="foo" reference="bar">
+      <try>
+        <antcall target="qaBuildingPage" />
+
+        <echo>Building ONLY Sandbox for Testing Infrastructure</echo>
+        <ant antfile="build/build.sandbox.xml" target="build" inheritAll="false" />
+     </try>
+
+      <finally>
+        <antcall target="qaLandingPage" />
+      </finally>
+    </trycatch>
+  </target>
 
 </project>
 

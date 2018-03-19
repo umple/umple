@@ -394,7 +394,7 @@ public class UmpleModelGenerationPolicy{
 		if(parent== null){
 			return constraints;
 		}
-		for(Precondition preCondition: parent.getPreconditions()){
+		for(Precondition preCondition: parent.getPreConds()){
 			if(element.equals(preCondition.getMethod())){
 				constraints.add(preCondition);
 			}

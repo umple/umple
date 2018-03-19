@@ -1,0 +1,10 @@
+Custom Constructor 
+Classes and Interfaces
+noreferences
+
+@@description
+
+<p>Custom constructors should normally not be provided in Umple. Consider using  <a href="BeforeandAfterStatements.html">before and after</a> keywords to adjust what the constructor does, or adjusting constructor parameters using keywords like lazy. 
+</p>
+
+

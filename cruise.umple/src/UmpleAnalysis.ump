@@ -54,11 +54,11 @@ class PreconditionAnalyzer
   {
     if (uClassifier instanceof UmpleClass)
     {
-      ((UmpleClass)(uClassifier)).addPrecondition((Precondition)rawLine);
+      ((UmpleClass)(uClassifier)).addPreCond((Precondition)rawLine);
     }
     else if (uClassifier instanceof UmpleTrait)
     {
-      ((UmpleTrait)(uClassifier)).addPrecondition((Precondition)rawLine);  
+      ((UmpleTrait)(uClassifier)).addPreCond((Precondition)rawLine);  
     }
     rawLine = new ConstraintTree();
   }
@@ -85,11 +85,11 @@ class PostconditionAnalyzer
     ((Postcondition)rawLine).setPosition(token.getPosition());
     if (uClassifier instanceof UmpleClass)
     {
-      ((UmpleClass)(uClassifier)).addPostcondition((Postcondition)rawLine);
+      ((UmpleClass)(uClassifier)).addPostCond((Postcondition)rawLine);
     } 
     else if (uClassifier instanceof UmpleTrait)
     {
-      ((UmpleTrait)(uClassifier)).addPostcondition((Postcondition)rawLine);  
+      ((UmpleTrait)(uClassifier)).addPostCond((Postcondition)rawLine);  
     }
     rawLine = new ConstraintTree();
   }
