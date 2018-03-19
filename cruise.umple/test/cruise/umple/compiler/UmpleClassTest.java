@@ -852,6 +852,7 @@ public class UmpleClassTest
     Assert.assertFalse(methodNameListC.contains("getB"));
     Assert.assertFalse(methodNameListC.contains("setB"));
   }
+
   @Test
   public void testCheckIgnoredAssociations_withRoleName()
   {
@@ -893,6 +894,20 @@ public class UmpleClassTest
     ArrayList<String> methodNameListC = C.getMethodNames();
     Assert.assertTrue(methodNameListC.contains("getSth"));
     Assert.assertTrue(methodNameListC.contains("setSth"));
+  }
+
+  @Test
+  public void testCheckSubclassSameAssociationDifferentNames()
+  {
+    String code = "class A{1 sth1 -- * C;} class B{isA A; 1 sth2 -- * C;} class C{}";
+    try {
+      UmpleModel model = getModel(code);
+      model.run();
+      ParseResult parseResult = model.getLastResult();
+      List<ErrorMessage> errorMessages = parseResult.getErrorMessages();
+    } catch (Exception e) {
+      Assert.assertTrue(e.getMessage().contains("Error 19") && e.getMessage().contains("between class 'B' and class 'C'"));
+    }
   }
 
   @Test

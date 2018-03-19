@@ -384,6 +384,7 @@ class UmpleInternalParser
       checkDuplicateAssociationNames();
       checkDuplicateAssociationNamesClassHierarchy();
       checkIgnoredAssociations();
+      checkSubclassSameAssociationDifferentRoleNames();
 
       checkExtendsForCycles();
       checkSortedAssociations();
@@ -1865,6 +1866,99 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   	return ((accessorName.equals("get")) || (accessorName.equals("set"))) && method.getSource() == Method.Source.fAutoAPI && !method.getIsConstructor();
   }
 
+  // Same association in subclass with a different role name should emit
+  // error 19.
+  // class A {
+  //   1 sth1 -- * C;
+  // }
+  // class B {
+  //  isA A;
+  //  1 sth2 -- * C;
+  // }
+  // class C {
+  // }
+  private void checkSubclassSameAssociationDifferentRoleNames() {
+   	for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      List<String> visitedSupers = new ArrayList<String>();
+      UmpleClass superClass = uClass.getExtendsClass();
+
+      while (superClass != null)
+      {
+      	// Prevent cycles.
+        if (visitedSupers.contains(superClass.getName()))
+        {
+          break;
+        }
+        if (superClass.getIsAbstract()) {
+          break;
+        }
+
+        visitedSupers.add(superClass.getName());
+
+        for (AssociationVariable assocVar : uClass.getAssociationVariables()) {
+          // Test whether the super class has the 
+          AssociationVariable supAssocVar = superClass.getAssociationVariable(assocVar.getType(), assocVar.getName());
+          if (supAssocVar == null) continue;
+        
+          // The modifiable reference to the current association variable
+          AssociationVariable curAssocVar = uClass.getAssociationVariable(assocVar.getType(), assocVar.getName());
+
+          Association curAssoc = uClass.getAssociation(uClass.indexOfAssociationVariable(curAssocVar));
+          Association supAssoc = superClass.getAssociation(superClass.indexOfAssociationVariable(supAssocVar));
+
+          AssociationEnd curLeftEnd = curAssoc.getEnd(0);
+          AssociationEnd curRightEnd = curAssoc.getEnd(1);
+          AssociationEnd supLeftEnd = supAssoc.getEnd(0);
+          AssociationEnd supRightEnd = supAssoc.getEnd(1);
+
+          AssociationEnd curMyEnd, curOtherEnd;
+          AssociationEnd supMyEnd, supOtherEnd;
+
+          // Find out "MyEnd" and "OtherEnd"
+          if (curLeftEnd.getRoleName().equals(curAssocVar.getName())
+            && curLeftEnd.getClassName().equals(curAssocVar.getType())) {
+              curMyEnd = curRightEnd;
+              curOtherEnd = curLeftEnd;
+          } else {
+            curMyEnd = curLeftEnd;
+            curOtherEnd = curRightEnd;
+          }
+
+          if (supLeftEnd.getRoleName().equals(supAssocVar.getName())
+            && supLeftEnd.getClassName().equals(supAssocVar.getType())) {
+              supMyEnd = supRightEnd;
+              supOtherEnd = supLeftEnd;
+          } else {
+            supMyEnd = supLeftEnd;
+            supOtherEnd = supRightEnd;
+          }
+
+          // test the name of "MyEnd"
+          if (curMyEnd.getRoleName().equals(supMyEnd.getRoleName())) {
+            continue;
+          }
+
+          // test multiplicity of both associations
+          Multiplicity curMyMultiplicity = curMyEnd.getMultiplicity();
+          Multiplicity curOtherMultiplicity = curOtherEnd.getMultiplicity();
+          Multiplicity supMyMultiplicity = supMyEnd.getMultiplicity();
+          Multiplicity supOtherMultiplicity = supOtherEnd.getMultiplicity();
+
+          if (curMyMultiplicity.getLowerBound() != supMyMultiplicity.getLowerBound()
+            || curMyMultiplicity.getUpperBound() != supMyMultiplicity.getUpperBound()
+            || curOtherMultiplicity.getLowerBound() != supOtherMultiplicity.getLowerBound()
+            || curOtherMultiplicity.getUpperBound() != supOtherMultiplicity.getUpperBound()) {
+            continue;
+          }
+
+          getParseResult().addErrorMessage(new ErrorMessage(19, curAssoc.getTokenPosition(), curMyEnd.getClassName(), curOtherEnd.getClassName()));
+        }
+        superClass = superClass.getExtendsClass();
+      }
+    }
+  }
+
   // Some associations should be ingnored
   // Example: 
   // class A {
@@ -1884,10 +1978,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       UmpleClass superClass = uClass.getExtendsClass();
 
       String[] uClassAssocVarNames = new String[uClass.numberOfAssociationVariables()];
-      int index = 0;
+      String[] uClassAssocVarClassNames = new String[uClass.numberOfAssociationVariables()];
+      int numCurAssocVar = 0;
       for (AssociationVariable curAssocVar : uClass.getAssociationVariables()) {
-        uClassAssocVarNames[index] = curAssocVar.getName();
-        index = index + 1;
+        uClassAssocVarNames[numCurAssocVar] = curAssocVar.getName();
+        uClassAssocVarClassNames[numCurAssocVar] = curAssocVar.getType();
+        numCurAssocVar = numCurAssocVar + 1;
       }
 
       while (superClass != null)
@@ -1903,10 +1999,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
         visitedSupers.add(superClass.getName());
 
-        for (String curAssocVarName : uClassAssocVarNames) {
-          AssociationVariable curAssocVar = uClass.getAssociationVariable(curAssocVarName);
+        for (int i=0; i < numCurAssocVar; i++) {
+          AssociationVariable curAssocVar = uClass.getAssociationVariable(uClassAssocVarClassNames[i], uClassAssocVarNames[i]);
 
-          AssociationVariable supAssocVar = superClass.getAssociationVariable(curAssocVarName);
+          AssociationVariable supAssocVar = superClass.getAssociationVariable(curAssocVar.getType(), curAssocVar.getName());
           if (supAssocVar == null) continue;
 
           Association curAssoc = uClass.getAssociation(uClass.indexOfAssociationVariable(curAssocVar));
@@ -1976,17 +2072,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
           // find the associated class
           UmpleClass associatedClass = model.getUmpleClass(curOtherEnd.getClassName());
-
-          int associatedAvIndex = 0;
-          for (AssociationVariable aAV : associatedClass.getAssociationVariables()) {
-            if(aAV.getName().equals(curMyEnd.getRoleName()) && aAV.getType().equals(curMyEnd.getClassName())) {
-              break;
-            }
-            associatedAvIndex ++;
+          AssociationVariable associatedAV = associatedClass.getAssociationVariable(curMyEnd.getClassName(), curMyEnd.getRoleName());
+          if (associatedAV == null) {
+            continue;
           }
-          AssociationVariable associatedAV = associatedClass.getAssociationVariable(associatedAvIndex);
-          Association associatedAssociation = associatedClass.getAssociation(associatedAvIndex);
-          if (associatedAV == null) continue;
+          Association associatedAssociation = associatedClass.getAssociation(associatedClass.indexOfAssociationVariable(associatedAV));
           
           uClass.removeAssociation(curAssoc);
           uClass.removeAssociationVariable(curAssocVar);
