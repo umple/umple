@@ -1,8 +1,4 @@
 Warning 170 on line 4 of file "ConflictConstructor.ump":
 Custom constructors should normally not be provided in Umple. Consider using before or after keywords to adjust what the constructor does, or adjusting constructor parameters using keywords like lazy.
-Error 171 on line 4 of file "extraCode.ump":
+Error 171 on line 4 of file "ConflictConstructor.ump":
 A custom constructor should not conflict with an auto-generated constructor.
-A.java:69: error: constructor A(D) is already defined in class A
-       public  A(D d){
-               ^
-
