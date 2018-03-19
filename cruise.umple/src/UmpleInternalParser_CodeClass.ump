@@ -2949,6 +2949,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if (methodToken.is("methodName"))
       {
         aMethod.setName(methodToken.getValue());
+        if(uElement instanceof UmpleClass)         // to detect if user manually added a constructor
+        {
+        	UmpleClass uClass = (UmpleClass)uElement;
+        	if(uClass.getName().equals(methodToken.getValue()))
+        	{
+        		setFailedPosition(token.getPosition(), 170, "");
+        	}
+        	
+        }
       }
       if (methodToken.is("parameterList"))
       {

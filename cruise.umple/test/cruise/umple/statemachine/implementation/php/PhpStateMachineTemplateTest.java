@@ -42,6 +42,10 @@ public class PhpStateMachineTemplateTest extends StateMachineTest
     SampleFileWriter.destroy(pathToInput + "statemachine/php/Light.php");
     SampleFileWriter.destroy(pathToInput + "/Duplicate.php");
     SampleFileWriter.destroy(pathToInput + "/LightFixture.php");
+    SampleFileWriter.destroy(pathToInput + "statemachine/implementation/A_Guard.php");
+    SampleFileWriter.destroy(pathToInput + "statemachine/implementation/B.php");
+
+
   }
   
   

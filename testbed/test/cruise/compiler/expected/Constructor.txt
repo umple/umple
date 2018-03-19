@@ -1,3 +1,5 @@
+Warning 170 on line 8 of file "Constructor.ump":
+Custom constructors should normally not be provided in Umple. Consider using before or after keywords to adjust what the constructor does, or adjusting constructor parameters using keywords like lazy.
 Constructor.ump:13: error: incompatible types: String cannot be converted to int
         a = s;
             ^
