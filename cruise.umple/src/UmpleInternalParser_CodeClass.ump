@@ -384,7 +384,7 @@ class UmpleInternalParser
       checkDuplicateAssociationNames();
       checkDuplicateAssociationNamesClassHierarchy();
       checkIgnoredAssociations();
-      checkSubclassSameAssociationDifferentRoleNames();
+   //   checkSubclassSameAssociationDifferentRoleNames();
 
       checkExtendsForCycles();
       checkSortedAssociations();
