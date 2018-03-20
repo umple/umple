@@ -4,8 +4,9 @@ class A
 	A (D d) {} 
 }
 
-class D{
+class D
+{
 
 	1 -- * A a;
-	}
 }
+
