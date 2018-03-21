@@ -49,7 +49,7 @@ script:
   # Repeat creation of the compiler in case last build made a bad compiler
   - $ANT_BUILD codegen umpleParser rtcpp template.setVersion resetUmpleSelf
   - $ANT_BUILD compile
-  - $ANT_BUILD package  - 
+  - $ANT_BUILD package
   
   # Run the unit tests
   - $ANT_BUILD template.test template.resetVersion
