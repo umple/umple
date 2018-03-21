@@ -36,21 +36,30 @@ script:
   # We resolve all of the dependencies before, this way the command will be unlikely to time out
   - ant deps-resolve-all
 
-  # Do a modified version of `first-build`
+  # Do a modified version of `first-build` (build using last successful build)
   - $ANT_FIRST clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf
   - $ANT_FIRST compile compileValidator compileUmplificator
   - $ANT_FIRST package template.resetVersion
 
-  # Do a modified version of `build`
+  # Do a modified version of `build`to create new jars
   - $ANT_BUILD clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf
   - $ANT_BUILD compile compileValidator compileUmplificator
   - $ANT_BUILD package 
+  
+  # Repeat creation of the compiler in case last build made a bad compiler
+  - $ANT_BUILD codegen umpleParser rtcpp template.setVersion resetUmpleSelf
+  - $ANT_BUILD compile
+  - $ANT_BUILD package  - 
+  
+  # Run the unit tests
   - $ANT_BUILD template.test template.resetVersion
 
-  # Build the testbed
+  # Build and run the testbed (tests that test generated code)
   - $ANT_TESTBED clean template.clean init
   - $ANT_TESTBED compile 
   - $ANT_TESTBED test 
+  
+  # Compile all known Umple examples and verify they compile in Java
   - $ANT_EXAMPLES allUserManualAndExampleTests   
   - $ANT_TESTBED template.resetVersion 
 
