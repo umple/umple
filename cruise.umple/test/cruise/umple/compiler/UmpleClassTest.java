@@ -897,6 +897,180 @@ public class UmpleClassTest
   }
 
   @Test
+  public void testSpecializationWithDefaultRoleNames_BothSideDefaultSameMultiplicity()
+  {
+    String code = "class A{1 -- * C;} class B{isA A; 1 -- * C;} class C{}";
+
+    UmpleModel model = getModel(code);
+    model.run();
+    UmpleClass A = model.getUmpleClass("A");
+    ArrayList<String> methodNameListA = A.getMethodNames();
+    Assert.assertTrue(methodNameListA.contains("getC"));
+    Assert.assertTrue(methodNameListA.contains("getCs"));
+    Assert.assertTrue(methodNameListA.contains("numberOfCs"));
+    Assert.assertTrue(methodNameListA.contains("hasCs"));
+    Assert.assertTrue(methodNameListA.contains("indexOfC"));
+    Assert.assertTrue(methodNameListA.contains("minimumNumberOfCs"));
+    Assert.assertTrue(methodNameListA.contains("clear_cs"));
+    Assert.assertTrue(methodNameListA.contains("addC"));
+    Assert.assertTrue(methodNameListA.contains("removeC"));
+    Assert.assertTrue(methodNameListA.contains("addCAt"));
+    Assert.assertTrue(methodNameListA.contains("addOrMoveCAt"));
+
+    UmpleClass B = model.getUmpleClass("B");
+    ArrayList<String> methodNameListB = B.getMethodNames();
+    Assert.assertFalse(methodNameListB.contains("getC"));
+    Assert.assertFalse(methodNameListB.contains("getCs"));
+    Assert.assertFalse(methodNameListB.contains("numberOfCs"));
+    Assert.assertFalse(methodNameListB.contains("hasCs"));
+    Assert.assertFalse(methodNameListB.contains("indexOfC"));
+    Assert.assertFalse(methodNameListB.contains("minimumNumberOfCs"));
+    Assert.assertFalse(methodNameListB.contains("addC"));
+    Assert.assertFalse(methodNameListB.contains("removeC"));
+    Assert.assertFalse(methodNameListB.contains("addCAt"));
+    Assert.assertFalse(methodNameListB.contains("addOrMoveCAt"));
+
+    UmpleClass C = model.getUmpleClass("C");
+    ArrayList<String> methodNameListC = C.getMethodNames();
+    Assert.assertTrue(methodNameListC.contains("getA"));
+    Assert.assertTrue(methodNameListC.contains("clear_a"));
+    Assert.assertTrue(methodNameListC.contains("setA"));
+    Assert.assertFalse(methodNameListC.contains("getB"));
+    Assert.assertFalse(methodNameListC.contains("setB"));
+    Assert.assertFalse(methodNameListC.contains("clear_b"));
+  }
+
+  @Test
+  public void testSpecializationWithDefaultRoleNames_BothSideDefaultDifferentMultiplicity()
+  {
+    String code = "class A{1 -- * C;} class B{isA A; 1 -- 1 C;} class C{}";
+
+    UmpleModel model = getModel(code);
+    model.run();
+    UmpleClass A = model.getUmpleClass("A");
+    ArrayList<String> methodNameListA = A.getMethodNames();
+    Assert.assertTrue(methodNameListA.contains("getC"));
+    Assert.assertTrue(methodNameListA.contains("getCs"));
+    Assert.assertTrue(methodNameListA.contains("numberOfCs"));
+    Assert.assertTrue(methodNameListA.contains("hasCs"));
+    Assert.assertTrue(methodNameListA.contains("indexOfC"));
+    Assert.assertTrue(methodNameListA.contains("minimumNumberOfCs"));
+    Assert.assertTrue(methodNameListA.contains("clear_cs"));
+    Assert.assertTrue(methodNameListA.contains("addC"));
+    Assert.assertTrue(methodNameListA.contains("removeC"));
+    Assert.assertTrue(methodNameListA.contains("addCAt"));
+    Assert.assertTrue(methodNameListA.contains("addOrMoveCAt"));
+
+    UmpleClass B = model.getUmpleClass("B");
+    ArrayList<String> methodNameListB = B.getMethodNames();
+    Assert.assertFalse(methodNameListB.contains("getC"));
+    Assert.assertFalse(methodNameListB.contains("getCs"));
+    Assert.assertFalse(methodNameListB.contains("numberOfCs"));
+    Assert.assertFalse(methodNameListB.contains("hasCs"));
+    Assert.assertFalse(methodNameListB.contains("indexOfC"));
+    Assert.assertFalse(methodNameListB.contains("minimumNumberOfCs"));
+    Assert.assertFalse(methodNameListB.contains("addC"));
+    Assert.assertFalse(methodNameListB.contains("removeC"));
+    Assert.assertFalse(methodNameListB.contains("addCAt"));
+    Assert.assertFalse(methodNameListB.contains("addOrMoveCAt"));
+    Assert.assertTrue(methodNameListB.contains("getC_OneC"));
+
+    UmpleClass C = model.getUmpleClass("C");
+    ArrayList<String> methodNameListC = C.getMethodNames();
+    Assert.assertTrue(methodNameListC.contains("getA"));
+    Assert.assertTrue(methodNameListC.contains("clear_a"));
+    Assert.assertTrue(methodNameListC.contains("setA"));
+    Assert.assertFalse(methodNameListC.contains("getB"));
+    Assert.assertFalse(methodNameListC.contains("setB"));
+    Assert.assertFalse(methodNameListC.contains("clear_b"));
+    Assert.assertTrue(methodNameListC.contains("getB_OneB"));
+  }
+
+  @Test
+  public void testSpecializationWithDefaultRoleNames_OneSideNamedSameMultiplicity()
+  {
+    String code = "class A{1 sth -- * C;} class B{isA A; 1 sth -- * C;} class C{}";
+
+    UmpleModel model = getModel(code);
+    model.run();
+    UmpleClass A = model.getUmpleClass("A");
+    ArrayList<String> methodNameListA = A.getMethodNames();
+    Assert.assertTrue(methodNameListA.contains("getC"));
+    Assert.assertTrue(methodNameListA.contains("getCs"));
+    Assert.assertTrue(methodNameListA.contains("numberOfCs"));
+    Assert.assertTrue(methodNameListA.contains("hasCs"));
+    Assert.assertTrue(methodNameListA.contains("indexOfC"));
+    Assert.assertTrue(methodNameListA.contains("minimumNumberOfCs"));
+    Assert.assertTrue(methodNameListA.contains("clear_cs"));
+    Assert.assertTrue(methodNameListA.contains("addC"));
+    Assert.assertTrue(methodNameListA.contains("removeC"));
+    Assert.assertTrue(methodNameListA.contains("addCAt"));
+    Assert.assertTrue(methodNameListA.contains("addOrMoveCAt"));
+
+    UmpleClass B = model.getUmpleClass("B");
+    ArrayList<String> methodNameListB = B.getMethodNames();
+    Assert.assertFalse(methodNameListB.contains("getC"));
+    Assert.assertFalse(methodNameListB.contains("getCs"));
+    Assert.assertFalse(methodNameListB.contains("numberOfCs"));
+    Assert.assertFalse(methodNameListB.contains("hasCs"));
+    Assert.assertFalse(methodNameListB.contains("indexOfC"));
+    Assert.assertFalse(methodNameListB.contains("minimumNumberOfCs"));
+    Assert.assertFalse(methodNameListB.contains("addC"));
+    Assert.assertFalse(methodNameListB.contains("removeC"));
+    Assert.assertFalse(methodNameListB.contains("addCAt"));
+    Assert.assertFalse(methodNameListB.contains("addOrMoveCAt"));
+
+    UmpleClass C = model.getUmpleClass("C");
+    ArrayList<String> methodNameListC = C.getMethodNames();
+    Assert.assertTrue(methodNameListC.contains("getSth"));
+    Assert.assertTrue(methodNameListC.contains("clear_sth"));
+    Assert.assertTrue(methodNameListC.contains("setSth"));
+  }
+
+  @Test
+  public void testSpecializationWithDefaultRoleNames_OneSideNamedDifferentMultiplicity()
+  {
+    String code = "class A{1 sth -- * C;} class B{isA A; 1 sth -- 1 C;} class C{}";
+
+    UmpleModel model = getModel(code);
+    model.run();
+    UmpleClass A = model.getUmpleClass("A");
+    ArrayList<String> methodNameListA = A.getMethodNames();
+    Assert.assertTrue(methodNameListA.contains("getC"));
+    Assert.assertTrue(methodNameListA.contains("getCs"));
+    Assert.assertTrue(methodNameListA.contains("numberOfCs"));
+    Assert.assertTrue(methodNameListA.contains("hasCs"));
+    Assert.assertTrue(methodNameListA.contains("indexOfC"));
+    Assert.assertTrue(methodNameListA.contains("minimumNumberOfCs"));
+    Assert.assertTrue(methodNameListA.contains("clear_cs"));
+    Assert.assertTrue(methodNameListA.contains("addC"));
+    Assert.assertTrue(methodNameListA.contains("removeC"));
+    Assert.assertTrue(methodNameListA.contains("addCAt"));
+    Assert.assertTrue(methodNameListA.contains("addOrMoveCAt"));
+
+    UmpleClass B = model.getUmpleClass("B");
+    ArrayList<String> methodNameListB = B.getMethodNames();
+    Assert.assertFalse(methodNameListB.contains("getC"));
+    Assert.assertFalse(methodNameListB.contains("getCs"));
+    Assert.assertFalse(methodNameListB.contains("numberOfCs"));
+    Assert.assertFalse(methodNameListB.contains("hasCs"));
+    Assert.assertFalse(methodNameListB.contains("indexOfC"));
+    Assert.assertFalse(methodNameListB.contains("minimumNumberOfCs"));
+    Assert.assertFalse(methodNameListB.contains("addC"));
+    Assert.assertFalse(methodNameListB.contains("removeC"));
+    Assert.assertFalse(methodNameListB.contains("addCAt"));
+    Assert.assertFalse(methodNameListB.contains("addOrMoveCAt"));
+    Assert.assertTrue(methodNameListB.contains("getC_OneC"));
+
+    UmpleClass C = model.getUmpleClass("C");
+    ArrayList<String> methodNameListC = C.getMethodNames();
+    Assert.assertTrue(methodNameListC.contains("getSth"));
+    Assert.assertTrue(methodNameListC.contains("clear_sth"));
+    Assert.assertTrue(methodNameListC.contains("setSth"));
+    Assert.assertTrue(methodNameListC.contains("getSth_OneB"));
+  }
+
+  @Test
   public void testCheckSubclassSameAssociationDifferentNames()
   {
     String code = "class A{1 sth1 -- * C;} class B{isA A; 1 sth2 -- * C;} class C{}";

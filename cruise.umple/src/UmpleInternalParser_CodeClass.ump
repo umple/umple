@@ -2153,7 +2153,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         bRightEnd = B.getEnd(1);
         bLName = bLeftEnd.getRoleName();
         bRName = bRightEnd.getRoleName();
- 
+
         // if either end is an interface or a trait, continue (see above)
         if (model.getUmpleInterface(bLeftEnd.getClassName()) != null || model.getUmpleInterface(bRightEnd.getClassName()) != null)
 	{
@@ -2187,13 +2187,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       	leftHierarchy.add(currentLeftClass.getName());
       	rightHierarchy.add(currentRightClass.getName());
       	
-      	while (parentLeftClass != null)
+      	while (parentLeftClass != null && !parentLeftClass.getIsAbstract())
       	{
       	  leftHierarchy.add(parentLeftClass.getName());
       	  parentLeftClass = parentLeftClass.getExtendsClass();
       	}
       	
-      	while (parentRightClass != null)
+      	while (parentRightClass != null && !parentRightClass.getIsAbstract())
       	{
           rightHierarchy.add(parentRightClass.getName());
       	  parentRightClass = parentRightClass.getExtendsClass();
@@ -2217,14 +2217,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         }
 
         // now we need to see if the names match
-        if (!reverseEnds && aLName.equals(bLName) && aRName.equals(bRName))
-        {
-          // both names match, so
-          namesOK = true;
-        }
-        else if (reverseEnds && aRName.equals(bLName) && aLName.equals(bRName))
-        {
-          namesOK = true;
+        if (!reverseEnds) {
+          if ((aLName.equals(bLName) || (aLeftEnd.getIsDefaultRoleName() && bLeftEnd.getIsDefaultRoleName()))
+            && (aRName.equals(bRName) || (aRightEnd.getIsDefaultRoleName() && bRightEnd.getIsDefaultRoleName()))) {
+            namesOK = true;
+          }
+        } else {
+          if ((aLName.equals(bRName) || (aLeftEnd.getIsDefaultRoleName() && bRightEnd.getIsDefaultRoleName()))
+            && (aRName.equals(bLName) || (aRightEnd.getIsDefaultRoleName() && bLeftEnd.getIsDefaultRoleName()))) {
+            namesOK = true;
+          }
         }
 
         if (!namesOK) {
@@ -2255,7 +2257,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         b1UB = bFirstEnd.getMultiplicity().getUpperBound();
         b2LB = bSecondEnd.getMultiplicity().getLowerBound();
         b2UB = bSecondEnd.getMultiplicity().getUpperBound();
-
 
         Boolean firstLowerBoundOK, firstUpperBoundOK, secondLowerBoundOK, secondUpperBoundOK;
         firstLowerBoundOK = false;
@@ -2321,7 +2322,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       	{
       	  boundsOK = true;
       	}
-      	
+
       	if ( subclassOK && namesOK && boundsOK )
       	{
       	  // then it's a redefinition
