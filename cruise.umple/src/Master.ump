@@ -14,11 +14,11 @@ The following instructs the system to inject comments on every class point to th
 
 generate Java "../src-gen-umple";
 
-strictness allow 1006;
+strictness allow 1006; // Don't worry about extra code that is not pure Umple
 strictness allow 1007;
 strictness allow 1008;
-strictness allow 46;
-strictness allow 36;
+strictness allow 46; // For now don't worry about special attribute types
+strictness allow 36; // don't worry about multiplicity of directed associations
 strictness allow 170; // allow custom constructors
 
 use Documenter.ump;
