@@ -24,7 +24,7 @@ before_install:
 
 env:
   global:
-    - ANT_FIRST='ant -f build.umple.xml'
+    - ANT_FIRST='ant -f build.umple.xml -Dfirst.build=true'
     - ANT_BUILD='ant -f build.umple.xml -Dfirst.build=false'
     - ANT_TESTBED='ant -f build.testbed.xml -Dfirst.build=false'
     - ANT_EXAMPLES='ant -f build.exampletests.xml'
