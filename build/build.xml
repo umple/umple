@@ -72,6 +72,15 @@
     <ant antfile="build/build.umple.xml" target="first-build" inheritAll="true" />
   </target>
 
+  <!-- Turn *.ump code in the parser project into *.java -->  
+  <target name="umpleParser" >
+    <ant antfile="build/build.umple.xml" target="umpleParser" inheritAll="true" />
+  </target>
+
+  <!-- Turn *.ump code in the generators into *.java -->  
+  <target name="codegen" >
+    <ant antfile="build/build.umple.xml" target="codegen" inheritAll="true" />
+  </target>
 
   <!-- Turn *.ump code from Umple into *.java -->
   <target name="umpleSelf" >
