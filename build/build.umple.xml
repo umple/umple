@@ -126,7 +126,17 @@
   
   <!-- Generate UmpleParser code and move to cruise.umple -->
   <target name="umpleParser">
-    <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+
+    <!-- On cruiseControl the jar built here IS the stable one -->
+    <condition property="umplejar.built.here" value="${umple.stable.jar}" else="${dist.dir}/${dist.umple.jar}">
+      <equals arg1="${myenv}" arg2="cc" />
+    </condition>  
+
+    <condition property="umplejar.touse" value="${umple.stable.jar}" else="${umplejar.built.here}">
+      <equals arg1="${first.build}" arg2="true" />
+    </condition>  
+  
+    <java jar="${umplejar.touse}" fork="true" failonerror="true">
       <arg value="UmpleParser/src/Master.ump"/>
     </java>
     
@@ -137,23 +147,31 @@
 
   <!-- Move the generated code from UmpleTo* to cruise.umple -->
   <target name="codegen">
+  
+    <!-- On cruiseControl the jar built here IS the stable one -->
+    <condition property="umplejar.built.here" value="${umple.stable.jar}" else="${dist.dir}/${dist.umple.jar}">
+      <equals arg1="${myenv}" arg2="cc" />
+    </condition>  
+  
+    <condition property="umplejar.touse" value="${umple.stable.jar}" else="${umplejar.built.here}">
+      <equals arg1="${first.build}" arg2="true" />
+    </condition>
 
     <!-- First compile the Umple templates -->
-    <!-- Default to using the stable version of umple since it should always be available -->
     <parallel>
-      <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+      <java jar="${umplejar.touse}" fork="true" failonerror="true">
         <arg value="UmpleToJava/UmpleTLTemplates/Master.ump"/>
       </java>
-      <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+      <java jar="${umplejar.touse}" fork="true" failonerror="true">
         <arg value="UmpleToRTCpp/UmpleTLTemplates/Master.ump"/>
       </java>
-      <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+      <java jar="${umplejar.touse}" fork="true" failonerror="true">
         <arg value="UmpleToPhp/UmpleTLTemplates/Master.ump"/>
       </java>
-      <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+      <java jar="${umplejar.touse}" fork="true" failonerror="true">
         <arg value="UmpleToRuby/UmpleTLTemplates/Master.ump"/>
       </java>
-      <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+      <java jar="${umplejar.touse}" fork="true" failonerror="true">
         <arg value="UmpleToSql/UmpleTLTemplates/Master.ump"/>
       </java>
     </parallel>

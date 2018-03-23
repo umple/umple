@@ -2102,16 +2102,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }  
   
     ArrayList<Association> visited = new ArrayList<Association>();
-    int aLLB, aLUB, aRLB, aRUB, bLLB, bLUB, bRLB, bRUB;
-    Boolean lLowerBoundOK, rLowerBoundOK, lUpperBoundOK, rUpperBoundOK, boundsOK, subclassOK, namesOK, reverseNames,
-        lMulChToOne, rMulChToOne, lMulChToN, rMulChToN, lNeedsSetCode, rNeedsSetCode;
+    Boolean boundsOK, subclassOK, namesOK, reverseEnds;
     String aLName, aRName, bLName, bRName;
     ArrayList<String> leftHierarchy, rightHierarchy;
     UmpleClass currentLeftClass, currentRightClass, parentLeftClass, parentRightClass;
     AssociationEnd bLeftEnd, bRightEnd, aLeftEnd, aRightEnd;
     for (Association A : model.getAssociations())
     {
-      
       if (A.getIsSpecialization())
       {
         continue;
@@ -2125,12 +2122,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
         continue;
       }
-      
-      aLLB = aLeftEnd.getMultiplicity().getLowerBound();
-      aLUB = aLeftEnd.getMultiplicity().getUpperBound();
-      aRLB = aRightEnd.getMultiplicity().getLowerBound();
-      aRUB = aRightEnd.getMultiplicity().getUpperBound();
-      
+     
       aLName = aLeftEnd.getRoleName();
       aRName = aRightEnd.getRoleName();
       
@@ -2161,7 +2153,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         bRightEnd = B.getEnd(1);
         bLName = bLeftEnd.getRoleName();
         bRName = bRightEnd.getRoleName();
-        
+
         // if either end is an interface or a trait, continue (see above)
         if (model.getUmpleInterface(bLeftEnd.getClassName()) != null || model.getUmpleInterface(bRightEnd.getClassName()) != null)
 	{
@@ -2184,83 +2176,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         namesOK = false;
         boundsOK = false;
         subclassOK = false;
-        reverseNames = false;
-        lMulChToOne = false;
-        rMulChToOne = false;
-        lMulChToN = false;
-        rMulChToN = false;
-      	lNeedsSetCode = false;
-      	rNeedsSetCode = false; 
-        
-        // determine appropriate boolean value of the bounds
-        bLLB = bLeftEnd.getMultiplicity().getLowerBound();
-        bLUB = bLeftEnd.getMultiplicity().getUpperBound();
-        bRLB = bRightEnd.getMultiplicity().getLowerBound();
-        bRUB = bRightEnd.getMultiplicity().getUpperBound();
-        
-        lLowerBoundOK = (bLLB <= aLLB);
-      	rLowerBoundOK = (bRLB <= aRLB);
-      	lUpperBoundOK = (bLUB >= aLUB);
-      	rUpperBoundOK = (bRUB >= aRUB);
-            
-      	if (bLUB != 1 && aLUB == 1)
-          lMulChToOne = true;
-          
-        if (bRUB != 1 && aRUB == 1)
-          rMulChToOne = true;
-          
-        if (aLUB == aLLB && bLLB == 0 && bLUB > 1) //  && aLUB > 1
-          lMulChToN = true;
-          
-        if (aRUB == aRLB && bRLB == 0 && bRUB > 1) //  && aRUB > 1
-          rMulChToN = true;
-            
-      	// changed to MN (or M*) -- this may need to change when set method generation is fixed	  
-        if (aLUB >= aLLB && aLLB != 0 && aLUB > 1 && ((bLLB == 0 && bLUB > 1) || bLUB == -1))
-          lMulChToN = true;
-        
-        // changed to MN (or M*)
-        if (aRUB >= aRLB && aRLB != 0 && aRUB > 1 && ((bRLB == 0 && bRUB > 1) || bRUB == -1))
-          rMulChToN = true;	  
-           
-        // special case for * multiplicity
-      	if ( bLUB == -1 ) 
-      	{ 
-      	  lUpperBoundOK = true;
-      	}
-      	
-      	if ( bRUB == -1 ) 
-      	{ 
-      	  rUpperBoundOK = true;
-        }
-      	
-      	if ( bLUB == -1 || (bLLB == 0 && bLUB != 1))
-      	{ 
-      	  rNeedsSetCode = true;
-      	} 
-      	
-      	if ( bRUB == -1 || (bRLB == 0 && bRUB != 1))
-      	{
-      	  lNeedsSetCode = true;
-      	}
-      	        	
-      	// if all bounds OK, set boolean to true
-      	if (lLowerBoundOK && rLowerBoundOK && lUpperBoundOK && rUpperBoundOK)
-      	{
-      	  boundsOK = true;
-      	}
-        
-        // now we need to see if the names match
-        if (aLName.equals(bLName) && aRName.equals(bRName))
-        {
-          // both names match, so
-          namesOK = true;
-        }
-        else if (aRName.equals(bLName) && aLName.equals(bRName))
-        {
-          reverseNames = true;
-          namesOK = true;
-        }
+        reverseEnds = false;
         
         // build class hierarchy lists
         currentLeftClass = model.getUmpleClass(aLeftEnd.getClassName());
@@ -2271,13 +2187,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       	leftHierarchy.add(currentLeftClass.getName());
       	rightHierarchy.add(currentRightClass.getName());
       	
-      	while (parentLeftClass != null)
+      	while (parentLeftClass != null && !parentLeftClass.getIsAbstract())
       	{
       	  leftHierarchy.add(parentLeftClass.getName());
       	  parentLeftClass = parentLeftClass.getExtendsClass();
       	}
       	
-      	while (parentRightClass != null)
+      	while (parentRightClass != null && !parentRightClass.getIsAbstract())
       	{
           rightHierarchy.add(parentRightClass.getName());
       	  parentRightClass = parentRightClass.getExtendsClass();
@@ -2292,102 +2208,181 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       	} 
       	else if (rightHierarchy.contains(parentLeftClass.getName()) && leftHierarchy.contains(parentRightClass.getName()))
       	{
+          reverseEnds = true;
       	  subclassOK = true;
+      	}       
+
+        if (!subclassOK) {
+          continue;
+        }
+
+        // now we need to see if the names match
+        if (!reverseEnds) {
+          if ((aLName.equals(bLName) || (aLeftEnd.getIsDefaultRoleName() && bLeftEnd.getIsDefaultRoleName()))
+            && (aRName.equals(bRName) || (aRightEnd.getIsDefaultRoleName() && bRightEnd.getIsDefaultRoleName()))) {
+            namesOK = true;
+          }
+        } else {
+          if ((aLName.equals(bRName) || (aLeftEnd.getIsDefaultRoleName() && bRightEnd.getIsDefaultRoleName()))
+            && (aRName.equals(bLName) || (aRightEnd.getIsDefaultRoleName() && bLeftEnd.getIsDefaultRoleName()))) {
+            namesOK = true;
+          }
+        }
+
+        if (!namesOK) {
+          continue;
+        }
+
+        // Align the left and right ends before doing bound check
+        AssociationEnd aFirstEnd, aSecondEnd, bFirstEnd, bSecondEnd;
+        if (!reverseEnds) {
+          aFirstEnd = aLeftEnd;
+          aSecondEnd = aRightEnd;
+          bFirstEnd = bLeftEnd;
+          bSecondEnd = bRightEnd;
+        } else {
+          aFirstEnd = aLeftEnd;
+          aSecondEnd = aRightEnd;
+          bFirstEnd = bRightEnd;
+          bSecondEnd = bLeftEnd;
+        }
+
+        int a1LB, a1UB, a2LB, a2UB, b1LB, b1UB, b2LB, b2UB;
+        a1LB = aFirstEnd.getMultiplicity().getLowerBound();
+        a1UB = aFirstEnd.getMultiplicity().getUpperBound();
+        a2LB = aSecondEnd.getMultiplicity().getLowerBound();
+        a2UB = aSecondEnd.getMultiplicity().getUpperBound();
+
+        b1LB = bFirstEnd.getMultiplicity().getLowerBound();
+        b1UB = bFirstEnd.getMultiplicity().getUpperBound();
+        b2LB = bSecondEnd.getMultiplicity().getLowerBound();
+        b2UB = bSecondEnd.getMultiplicity().getUpperBound();
+
+        Boolean firstLowerBoundOK, firstUpperBoundOK, secondLowerBoundOK, secondUpperBoundOK;
+        firstLowerBoundOK = false;
+        firstUpperBoundOK = false;
+        secondLowerBoundOK = false;
+        secondUpperBoundOK = false;
+        
+        firstLowerBoundOK = (b1LB <= a1LB);
+        firstUpperBoundOK = (b1UB >= a1UB);
+        secondLowerBoundOK = (b2LB <= a2LB);
+        secondUpperBoundOK = (b2UB >= a2UB);
+
+        Boolean firstMulChToOne = false;
+        Boolean secondMulChToOne = false;
+        Boolean firstMulChToN = false;
+        Boolean secondMulChToN = false;
+        Boolean firstNeedsSetCode = false;
+        Boolean secondNeedsSetCode = false;
+
+      	if (b1UB != 1 && a1UB == 1)
+          firstMulChToOne = true;
+          
+        if (b2UB != 1 && a2UB == 1)
+          secondMulChToOne = true;
+          
+        if (a1UB == a1LB && b1LB == 0 && b1UB > 1) //  && aLUB > 1
+          firstMulChToN = true;
+          
+        if (a2UB == a2LB && b2LB == 0 && b2UB > 1) //  && aRUB > 1
+          secondMulChToN = true;
+            
+      	// changed to MN (or M*) -- this may need to change when set method generation is fixed	  
+        if (a1UB >= a1LB && a1LB != 0 && a1UB > 1 && ((b1LB == 0 && b1UB > 1) || b1UB == -1))
+          firstMulChToN = true;
+        
+        // changed to MN (or M*)
+        if (a2UB >= a2LB && a2LB != 0 && a2UB > 1 && ((b2LB == 0 && b2UB > 1) || b2UB == -1))
+          secondMulChToN = true;	  
+           
+        // special case for * multiplicity
+      	if ( b1UB == -1 ) 
+      	{ 
+      	  firstUpperBoundOK = true;
       	}
       	
+      	if ( b2UB == -1 ) 
+      	{ 
+      	  secondUpperBoundOK = true;
+        }
+      	
+      	if ( b1UB == -1 || (b1LB == 0 && b1UB != 1))
+      	{ 
+      	  secondNeedsSetCode = true;
+      	} 
+      	
+      	if ( b2UB == -1 || (b2LB == 0 && b2UB != 1))
+      	{
+      	  firstNeedsSetCode = true;
+      	}
+      	        	
+      	// if all bounds OK, set boolean to true
+      	if (firstLowerBoundOK && secondLowerBoundOK && firstUpperBoundOK && secondUpperBoundOK)
+      	{
+      	  boundsOK = true;
+      	}
+
       	if ( subclassOK && namesOK && boundsOK )
       	{
       	  // then it's a redefinition
       	  // so B is a parent
-      	  
-      	  if (!reverseNames)
-      	  {
-      	    aLeftEnd.setSuperClassName(bLeftEnd.getClassName());
-      	    aRightEnd.setSuperClassName(bRightEnd.getClassName());
-      	  	
-      	  	// Refer to the Association Specialization manual page --
-      	  	// There are 2 cases for specialized code:
-      	  	// 1- either the class will need code from it's superclass
-      	  	// 2- or it will need code from it's own class
-      	  	// 1- the case of A -- B and Aa -- B where Aa isA A, Aa will need super code
-      	  	// 2- in the same case, B will need common code.
-      	  	// *- int he A -- B, Aa -- Bb case, where Bb isA B, they both need super code.
-      	  	
-      	  	// Checks class names for information relevant to the above.
-      	  	if (aLeftEnd.getClassName().equals(bLeftEnd.getClassName()))
-      	  	{
-      	  	  // i.e. same name as parent, so common code is required.
-      	  	  aRightEnd.setNeedsCommonCode(true);
-      	  	}
-      	  	else
-      	  	{
-      	  	  aRightEnd.setNeedsSuperCode(true);
-      	  	}
-      	  	
-      	  	// need to check both ends...
-      	  	if (aRightEnd.getClassName().equals(bRightEnd.getClassName()))
-      	  	{
-      	  	  aLeftEnd.setNeedsCommonCode(true);
-      	  	}
-      	  	else
-      	  	{
-      	  	  aLeftEnd.setNeedsSuperCode(true);
-      	  	}
-      	  }
-      	  else
-      	  {
-      	    aLeftEnd.setSuperClassName(bRightEnd.getClassName());
-      	    aRightEnd.setSuperClassName(bLeftEnd.getClassName());
-      	    
-      	    // check class names for information relevant to above (paragraph)
-      	    if (aLeftEnd.getClassName().equals(bRightEnd.getClassName()))
-      	    {
-      	      // i.e. same class as parent, so common code is required.
-      	      // why set right when I check left? Because of the way
-      	      // associationVariables are handled.
-      	      aRightEnd.setNeedsCommonCode(true);
-      	    }
-      	    else
-      	    {
-      	      aRightEnd.setNeedsSuperCode(true);
-      	    }
-      	    
-      	    if (aRightEnd.getClassName().equals(bLeftEnd.getClassName()))
-      	    {
-      	      // need to check both.
-      	      aLeftEnd.setNeedsCommonCode(true);
-      	    }
-      	    else
-      	    {
-      	      aLeftEnd.setNeedsSuperCode(true);
-      	    }
-      	  }
-      	  
-      	  // -- probably legacy, comment out and see if it breaks.
-      	  if (bLeftEnd.getClassName().equals(aLeftEnd.getClassName()))
+          aFirstEnd.setSuperClassName(bFirstEnd.getClassName());
+          aSecondEnd.setSuperClassName(bSecondEnd.getClassName());
+          
+          // Refer to the Association Specialization manual page --
+          // There are 2 cases for specialized code:
+          // 1- either the class will need code from it's superclass
+          // 2- or it will need code from it's own class
+          // 1- the case of A -- B and Aa -- B where Aa isA A, Aa will need super code
+          // 2- in the same case, B will need common code.
+          // *- int he A -- B, Aa -- Bb case, where Bb isA B, they both need super code.
+
+          // Checks class names for information relevant to the above.
+          if (aFirstEnd.getClassName().equals(bFirstEnd.getClassName()))
           {
-            A.setCommonClassName(bLeftEnd.getClassName());
+            // i.e. same name as parent, so common code is required.
+            aSecondEnd.setNeedsCommonCode(true);
           }
-          else if (bRightEnd.getClassName().equals(aRightEnd.getClassName()))
+          else
           {
-            A.setCommonClassName(bRightEnd.getClassName());
+            aSecondEnd.setNeedsSuperCode(true);
           }
           
-      	  A.getEnd(0).setMulChangedToOne(lMulChToOne);
-      	  A.getEnd(1).setMulChangedToOne(rMulChToOne);
+          // need to check both ends...
+          if (aSecondEnd.getClassName().equals(bSecondEnd.getClassName()))
+          {
+            aFirstEnd.setNeedsCommonCode(true);
+          }
+          else
+          {
+            aFirstEnd.setNeedsSuperCode(true);
+          }
       	  
-      	  A.getEnd(0).setMulChangedToN(lMulChToN);
-      	  A.getEnd(1).setMulChangedToN(rMulChToN);
+      	  // -- probably legacy, comment out and see if it breaks.
+      	  if (bFirstEnd.getClassName().equals(aFirstEnd.getClassName()))
+          {
+            A.setCommonClassName(bFirstEnd.getClassName());
+          }
+          else if (bSecondEnd.getClassName().equals(aSecondEnd.getClassName()))
+          {
+            A.setCommonClassName(bSecondEnd.getClassName());
+          }
+          
+      	  aFirstEnd.setMulChangedToOne(firstMulChToOne);
+      	  aSecondEnd.setMulChangedToOne(secondMulChToOne);
       	  
-      	  A.getEnd(0).setReqSetCode(lNeedsSetCode);
-      	  A.getEnd(1).setReqSetCode(rNeedsSetCode);
+      	  aFirstEnd.setMulChangedToN(firstMulChToN);
+      	  aSecondEnd.setMulChangedToN(secondMulChToN);
+      	  
+      	  aFirstEnd.setReqSetCode(firstNeedsSetCode);
+      	  aSecondEnd.setReqSetCode(secondNeedsSetCode);
       	  
       	  B.setIsSpecialized(true);
       	  B.addSpecializedAssociation(A);
       	  
       	  A.setIsSpecialization(true);
       	  A.setSpecializedFrom(B);
-      	  
       	}
         
       }

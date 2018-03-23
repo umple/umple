@@ -572,6 +572,35 @@ association { 4..5 Frr fr -> 1 Rbb rb; }
 //class Supervisor {}
 //class Employee {}
 //class Janitor { isA Employee; }
-
 //association { 0..1 Employee emp -- 0..1 Supervisor supervisor; }
 //association { 0..1 Janitor emp -- 0..1 Supervisor supervisor; }
+
+//
+// Case: issue 1238 parent and childrent class are not on the same side with names [60]
+// 
+class  Issue1238aA {
+}
+class Issue1238aB {
+    isA Issue1238aA;
+}
+class Issue1238aC {
+}
+association {
+    1 Issue1238aA sth -- 0..3 Issue1238aC csth;
+    1..2 Issue1238aC csth -- 1 Issue1238aB sth;
+}
+
+//
+// Case: issue 1238 parent and childrent class are not on the same side with only one side named [60]
+// 
+class  Issue1238bA {
+}
+class Issue1238bB {
+    isA Issue1238bA;
+}
+class Issue1238bC {
+}
+association {
+    1 Issue1238bA sth -- 0..3 Issue1238bC;
+    1..2 Issue1238bC -- 1 Issue1238bB sth;
+}
