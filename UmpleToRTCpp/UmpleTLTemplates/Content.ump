@@ -370,7 +370,7 @@ class GenClass{
 		methodsTo= new ArrayList<GenMethod>();
 
 		// If the class is not abstract, make sure to search for all unimplemented methods from parent classes and interfaces implemented.
-		if (!getIsAbstract() && genClass instanceof GenInterface == false) {
+		if (!getIsAbstract() && genClassClass instanceof GenInterface == false) {
 			List<String> identifiers = methods.stream().map(GenMethod::identifier).collect(Collectors.toList());
 			for (GenMethod method : allMethods()) {
 				if (method.getExternalDefinition() == null && !identifiers.contains(method.identifier())
