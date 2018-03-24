@@ -532,8 +532,8 @@ class GenPackage{
 }
 
 class GenConstructor{
-	0..1 -- * GenMethodParameter parameters;
-	0..1 -- * GenParentMethodParameter parentParameters;
+	0..1 genMethodContr -- * GenMethodParameter parameters;
+	0..1 genParentMethodContr -- * GenParentMethodParameter parentParameters;
 	* -- 1 GenClass owner;
 }
 
@@ -557,10 +557,10 @@ class GenClass{
 	0..1 -- * GenMethod methods sorted {priority};
 	0..1 -- * GenField fields sorted {priority};
 	0..1 -- * GenComment comments sorted {priority};
-	0..1 -- * GenDepend dependencies sorted {priority};
-	0..1 -- * GenInterface interfaces sorted {priority};
+	0..1 genDependClass -- * GenDepend dependencies sorted {priority};
+	0..1 genClassInterface -- * GenInterface interfaces sorted {priority};
 	
-	0..1 -- * GenClass children sorted {priority}; 
+	0..1 genClassClass -- * GenClass children sorted {priority}; 
 	lazy GenClass parent;
 	
 	0..1 -- * GenBody predefinitions sorted {priority};
@@ -723,7 +723,7 @@ class GenClass{
 	}
 	
 	0..1 -- * MemberInitializer memberInitializers sorted {priority};
-	0..1 -- * GenHeaderDepend headerDependencies sorted {priority};
+	0..1 genHeaderDependClass -- * GenHeaderDepend headerDependencies sorted {priority};
 	0..1 -- * GenIncompleteDefinition incompletes sorted {priority};
 	0..1 -- * GenStruct structs sorted {priority};
 	depend cruise.umple.cpp.utils.StringUtil;

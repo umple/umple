@@ -59,7 +59,7 @@ class GenDepend{
 	//key {id}	Until having complex key support
 	
 	Boolean isObject(){
-		GenClass owner = getGenClass();
+		GenClass owner = getGenDependClass();
 		if (owner == null) {
 			return false;
 		}
