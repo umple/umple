@@ -16,8 +16,8 @@ cache:
 init:
 
 - cmd: gem update --system
-#- ps: cinst ant 2>&1 | Out-Null
-- ps: cinst ant
+#- ps: cinst ant 2>&1 | Out-Null  ## used to work
+- ps: choco install ant --ignore-dependencies
 
 # install some dependencies needed by php
 - ps: choco install chocolatey-core.extension --ignore-dependencies
