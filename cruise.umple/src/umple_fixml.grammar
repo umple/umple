@@ -1,4 +1,11 @@
-//This is Umple's grammar for parsing fixml documents
+// The master of this part of the Umple grammar is available at
+// [*https://github.com/umple/umple/blob/master/cruise.umple/src/umple_fixml.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+//This is Umple's grammar for parsing fixml documents (add add-on feature)
 fixml : [[fixmlDefinition]] | [[fixmComment]] | [[fixmlDoc]] 
 fixmlDoc : <! [**value] >
 fixmComment :  <?xml [[tagDefinition]]* ?>

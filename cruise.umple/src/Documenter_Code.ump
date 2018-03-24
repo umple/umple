@@ -312,7 +312,9 @@ class Documenter
     else
     {
       String syntaxHtml = Template.SyntaxTemplate.replace("@@SYNTAX_CODE@@",grammarparser.toGrammarParts(selectedContent.getSyntax()));
-      htmlOutput = htmlOutput.replace("@@SYNTAX@@", syntaxHtml);
+      htmlOutput = htmlOutput.replace("@@SYNTAX@@", 
+        "<span class=\"notranslate\" translate=\"no\">" +
+        syntaxHtml+ "</span>");
     }
     
     String exampleOutput = "";
@@ -354,7 +356,9 @@ class Documenter
     }
     
     htmlOutput = htmlOutput.replace("@@EXAMPLE@@", exampleOutput);
-    htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", grammarparser.toGrammar());
+    htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", 
+      "<span class=\"notranslate\" translate=\"no\">" +
+      grammarparser.toGrammar()) + "</spsn>";
     return htmlOutput;
   }
   
@@ -536,9 +540,11 @@ class Template
   {
     String template = "" + 
       "      <h3>@@EXAMPLE_NUMBER@@</h3>" + "\n" +
+      "<span class=\"notranslate\" translate=\"no\">" +
       "      <pre name=\"code\" class=\"c-sharp\">" + "\n" +
       "@@EXAMPLE_CODE@@" + "\n" +
       "      </pre>" + "\n" +
+      "</span>" +
       "<p class=\"description\">" +
       "<a target=\"uol\" href=\"http://cruise.eecs.uottawa.ca/umpleonline@@EXAMPLE_CODE_URL@@\">" +
         "Load the above code into UmpleOnline</a></p>" + "\n" +
@@ -585,15 +591,25 @@ class Template
         "" + "\n" +
         "<body>" + "\n" +
         "" + "\n" +
-        "  <span class=\"header\" summary=\"University of Ottawa banner\"><a href=\"http://www.uottawa.ca/welcome.html\" target=\"_blank\"><img src=\"files/left_generic.jpg\" alt=\"uOttawa\" class=\"uOttawaAbbr\" /></a><img src=\"files/bg_header_title.jpg\" class=\"uOttawa\" alt=\"University of Ottawa - Canadas University\" /></span>" + "\n" +
         "  " + "\n" +
         "  <table class=\"body\" >" + "\n" +
         "  <tbody>" + "\n" +
         "  <tr>" + "\n" +
-        "    <td class=\"indicatorBlocks\"><img src=\"files/indicator_blocks.gif\" /></td>" + "\n" +
-        "" + "\n" +
         "    <td class=\"menu\">" + "\n" +
-        "      <div class=\"title\"><a href=\"http://cruise.site.uottawa.ca/umple\">Umple Home<br/>Page</a></div>" + "\n" +
+        "      <div class=\"title\"><a href=\"http://cruise.site.uottawa.ca/umple\">" +
+        "<img height=\"25\" src=\"files/indicator_blocks.gif\" alt=\"Umple Logo\" />&nbsp;" +
+        "Umple </a></div>" + "\n" +
+        
+// Code from Google for translation
+
+"<div id=\"google_translate_element\"></div><script type=\"text/javascript\">" +
+"function googleTranslateElementInit() {" +
+"  new google.translate.TranslateElement({pageLanguage: 'en', layout:" +
+"google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');" +
+"}" +
+"</script><script type=\"text/javascript\"" +
+"src=\"//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit\"></script>" +
+
         "@@NAVIGATION@@" + "\n" +
         "<div class=\"level1\"><a href=\"UmpleUserManualCombined.html\">Combined Version</a></div>\n" +  
         "<div class=\"level1\"><a href=\"https://github.com/umple/umple/tree/master/build/reference/@@SRCFILENAME@@\">Edit on Github</a></div>\n" +                
@@ -604,9 +620,9 @@ class Template
         "" + "\n" +
         "      <td class=\"content\">" + "\n" +
         "" + "\n" +
-        "      <h2><i>Umple User Manual @@PREVNEXT@@</i></h2>"  + "\n" +
+        "      <h2><i>User Manual @@PREVNEXT@@</i></h2>"  + "\n" +
         
-// Code from Google
+// Code from Google for custom search
 
 "<script>" + "\n" +
 "  (function() {" + "\n" +
