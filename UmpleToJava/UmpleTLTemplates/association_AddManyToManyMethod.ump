@@ -35,5 +35,11 @@ class UmpleToJava {
     <<# if (customAddPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } #>>
     return wasAdded;
-  }!>>
+  }
+  
+  public boolean <<=gen.translate("addManyMethodExistenceCheck",av)>>(<<=gen.translate("type", av)>> <<=gen.translate("parameterOne", av)>>)
+  {
+    return <<=gen.translate("associationMany", av)>>.contains(<<=gen.translate("parameterOne", av)>>);
+  }
+  !>>
 }

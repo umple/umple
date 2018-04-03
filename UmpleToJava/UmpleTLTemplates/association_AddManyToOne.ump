@@ -6,12 +6,16 @@ class UmpleToJava {
     return new <<=gen.translate("type",av)>>(<<=gen.translate("callerArgumentsExcept",relatedAssociation)>>);
   }<<#}#>>
 
+  public boolean <<=gen.translate("addManyMethodExistenceCheck",av)>>(<<=gen.translate("type", av)>> <<=gen.translate("parameterOne", av)>>)
+  {
+    return <<=gen.translate("associationMany", av)>>.contains(<<=gen.translate("parameterOne", av)>>);
+  }
+
   public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasAdded = false;
-    <<# if (customAddPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPrefixCode,gen.translate("addMethod",av)); 
-    append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } #>>
-    <<=gen.relatedTranslate("type",av)>> <<=gen.relatedTranslate("parameterExisting",av)>> = <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("getMethod",av)>>();
+    if (<<=gen.translate("addManyMethodExistenceCheck", av)>>(<<=gen.translate("parameterOne", av)>>)) {return false;}
+   <<=gen.relatedTranslate("type",av)>> <<=gen.relatedTranslate("parameterExisting",av)>> = <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("getMethod",av)>>();
     boolean <<=gen.relatedTranslate("parameterIsNew",av)>> = <<=gen.relatedTranslate("parameterExisting",av)>> != null && !<<=self>>.equals(<<=gen.relatedTranslate("parameterExisting",av)>>);<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 >>

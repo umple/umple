@@ -3,8 +3,7 @@ class UmpleToJava {
 <</*association_AddManyToManyMethod_relatedSpecialization*/>>  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {
     boolean wasAdded = false;
-    <<# if (customAddPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPrefixCode,gen.translate("addMethod",av)); 
-    append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } #>>
+    if (super.<=gen.translate("addManyMethodExistenceCheck", av)>>(<<=gen.translate("parameterOne", av)>>)) {return false;}
 <<# if (!av.getMultiplicity().isUpperBoundMany()) { #>>
     if (<<=gen.translate("numberOfMethod",av)>>() >= <<=gen.translate("maximumNumberOfMethod",av)>>_<<=gen.translate("type",av)>>())
     {
@@ -17,7 +16,8 @@ class UmpleToJava {
 <<# } #>><<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 >>
-    <<=gen.translate("associationMany",av)>>.add(<<=gen.translate("parameterOne",av)>>);<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
+    super.<<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+    <<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 >>
     if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("indexOfMethod",av)>>(this) != -1)
@@ -29,7 +29,7 @@ class UmpleToJava {
       wasAdded = <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this);
       if (!wasAdded)
       {
-        <<=gen.translate("associationMany",av)>>.remove(<<=gen.translate("parameterOne",av)>>);
+        super.<<=gen.translate("removeMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
       }
     }
     <<# if (customAddPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 

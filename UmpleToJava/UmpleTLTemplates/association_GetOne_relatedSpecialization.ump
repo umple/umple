@@ -7,7 +7,7 @@ class UmpleToJava {
 <<# if (customGetPostfixCode == null) { #>><<# for( TraceItem traceItem : traceItems ) #>><<= 
 (traceItem!=null?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("associationOne",av)):"")
 >>
-    return (<<=gen.translate("type",av)>>)<<=gen.translate("associationOne",av)>><<# if (mulChangedToOne) { #>>.get(0)<<# } #>>;
+    return super.<<=gen.translate("getMethod",av)>>(); <<# if (mulChangedToOne) { #>>.get(0)<<# } #>>;
 <<# } else { #>><<# for( TraceItem traceItem : traceItems ) #>><<= 
 (traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("associationOne",av)):"")
 >>

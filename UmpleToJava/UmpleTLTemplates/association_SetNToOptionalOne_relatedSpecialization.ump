@@ -33,17 +33,20 @@ class UmpleToJava {
       return wasSet;
     }
 
-    <<=gen.translate("associationMany",av)>>.removeAll(<<=gen.translate("parameterCheckNewMany",av)>>);
+    for (<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>> : <<=gen.translate("parameterCheckNewMany",av)>>)
+    {
+      super.<<=gen.translate("removeMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+    }
     
     for (<<=gen.translate("type",av)>> orphan : <<=gen.translate("getMethod",av)>>_<<=gen.translate("type",av)>>())
     {
       <<=gen.relatedTranslate("setMethod",av)>><<# if (relReqCommonCode) { #>>_<<=gen.relatedTranslate("type",av)>><<# } #>>(orphan, null);
     }
-    <<=gen.translate("associationMany",av)>>.clear();
+    super.clear_<<=gen.translate("associationMany", av)>>();
     for (<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>> : <<=gen.translate("parameterMany",av)>>)
     {
       <<=gen.relatedTranslate("setMethod",av)>><<# if (relReqCommonCode) { #>>_<<=gen.relatedTranslate("type",av)>><<# } #>>(<<=gen.translate("parameterOne",av)>>, this);
-      <<=gen.translate("associationMany",av)>>.add(<<=gen.translate("parameterOne",av)>>);
+      super.<<=gen.translate("addMethod", av)>>(<<=gen.translate("parameterOne",av)>>);
     }
     wasSet = true;
     <<# if (customSetManyPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetManyPostfixCode,gen.translate("setManyMethod",av)); 
