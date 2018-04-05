@@ -117,6 +117,29 @@ class GeneratorHelper
     }
     return builder.toString();
   }
+  
+  public static boolean isValidReturnStatement(String statement) {
+    int returnInd = statement.indexOf("return");
+  	if (returnInd == -1) {
+  	  return false;
+  	}
+  	if (statement.trim().substring(0,2).equals("//")) { // Can't be in a comment
+  	  return false;
+  	}
+  	if (!(statement.charAt(returnInd + 6) == ';' || statement.charAt(returnInd + 6) == ' ')){
+  	  return false;
+  	}
+  	//Check if it's in a quote
+	int openQuote = statement.indexOf("\"");
+	while (openQuote != -1 && openQuote < returnInd){
+	  int closeQuote = statement.indexOf("\"",openQuote + 1);
+	  if (closeQuote > returnInd){
+	  	return false;
+	  }
+	  openQuote = statement.indexOf("\"",closeQuote + 1);
+	}
+	return true;
+  }
 
 }
 
