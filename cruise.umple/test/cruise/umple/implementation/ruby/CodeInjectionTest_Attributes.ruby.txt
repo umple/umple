@@ -168,6 +168,11 @@ class Student
     a_funName
   end
 
+  def get_otherFunName
+    print "This was so much fun";
+    name + "Other Fun"
+  end
+
   def get_injBool
     @injBool
   end

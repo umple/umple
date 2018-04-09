@@ -186,6 +186,13 @@ public class Student
     print "end funName";
     return aFunName;
   }
+  
+  public String getOtherFunName()
+  {
+    print "This was so much fun";
+    String aOtherFunName = name + "Other Fun";
+    return aOtherFunName;
+  }
 
   public boolean getInjBool()
   {
@@ -227,6 +234,7 @@ public class Student
             "name" + ":" + getName()+ "," +
             "type" + ":" + getType()+ "," +
             "funName" + ":" + getFunName()+ "," +
+            "otherFunName" + ":" + getOtherFunName()+ "," +
             "injBool" + ":" + getInjBool()+ "," +
             "dInjBool" + ":" + getDInjBool()+ "]";
   }
