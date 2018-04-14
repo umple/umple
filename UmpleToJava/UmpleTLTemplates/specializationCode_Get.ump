@@ -11,6 +11,5 @@ class UmpleToJava {
     boolean reqCommonCode = av.getNeedsCommonCode();
     boolean mulChangedToOne = av.getMulChangedToOne();
     boolean relReqSuperCode = relatedAssociation.getNeedsSuperCode();
-
 #>>!>>
 }

@@ -1522,9 +1522,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   {
     for (AssociationVariable av : unlinkedAssociationVariables)
     {
+      AssociationVariable relatedAv = av.getRelatedAssociation();
 
       UmpleClass aClass = model.getUmpleClass(av.getType());
-      UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType());   
+      UmpleClass bClass = model.getUmpleClass(relatedAv.getType());   
 
       if (aClass == null || bClass == null){ //Association is between Class and Interface
         continue;
@@ -1532,7 +1533,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
       Association assoc = bClass.getAssociation(bClass.indexOfAssociationVariable(av));
 
-      boolean added = aClass.addAssociationVariable(av.getRelatedAssociation());
+      boolean added = aClass.addAssociationVariable(relatedAv);
 
       if (!added)
       {
@@ -1545,6 +1546,18 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
 
       aClass.addAssociation(assoc);
+
+      // Set the proper end number for both association variable
+      AssociationEnd end0 = assoc.getEnd(0);
+      AssociationEnd end1 = assoc.getEnd(1);
+      if (end0.getClassName().equals(aClass.getName()) && end1.getClassName().equals(bClass.getName()))
+      {
+        av.setRelevantEnd(0);
+        relatedAv.setRelevantEnd(1);
+      } else {
+        av.setRelevantEnd(1);
+        relatedAv.setRelevantEnd(0);
+      }
 
       if (av.getIsNavigable())
       {
@@ -2342,21 +2355,21 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           if (aFirstEnd.getClassName().equals(bFirstEnd.getClassName()))
           {
             // i.e. same name as parent, so common code is required.
-            aSecondEnd.setNeedsCommonCode(true);
+            aSecondEnd.setNeedsSuperCode(true);
           }
           else
           {
-            aSecondEnd.setNeedsSuperCode(true);
+            aSecondEnd.setNeedsCommonCode(true);
           }
           
           // need to check both ends...
           if (aSecondEnd.getClassName().equals(bSecondEnd.getClassName()))
           {
-            aFirstEnd.setNeedsCommonCode(true);
+            aFirstEnd.setNeedsSuperCode(true);
           }
           else
           {
-            aFirstEnd.setNeedsSuperCode(true);
+            aFirstEnd.setNeedsCommonCode(true);
           }
       	  
       	  // -- probably legacy, comment out and see if it breaks.
