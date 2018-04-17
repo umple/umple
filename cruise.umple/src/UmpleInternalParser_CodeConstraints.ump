@@ -46,6 +46,15 @@ class UmpleInternalParser
     if(((InvariantAnalyzer)model.getAnalyzer("invariant"))!=null){
       ((InvariantAnalyzer)model.getAnalyzer("invariant")).setUClassifier(uClassifier);
       model.getAnalyzer("invariant").analyzeToken(invariantToken);
+      if (uClassifier instanceof UmpleClass) {
+        List<String> variableNames = new ArrayList<>();
+        for (Attribute attr: ((UmpleClass)uClassifier).getAttributes()) {
+          variableNames.add(attr.getName());
+        }
+        List<ConstraintTree> constraintTrees = ((UmpleClass)uClassifier).getConstraintTrees();
+        String className = ((UmpleClass)uClassifier).getName();
+        checkVariableNames(variableNames, constraintTrees.get(constraintTrees.size() - 1), invariantToken, className);
+      }
     }
   }
      
@@ -60,6 +69,19 @@ class UmpleInternalParser
       model.getAnalyzer("modelConstraintBody").analyzeToken(modelConstraintToken);
       uClassifier.addModelConstraint(((ModelConstraintBodyAnalyzer)model.getAnalyzer("modelConstraintBody")).getModelConstraint());
       ((ModelConstraintBodyAnalyzer)model.getAnalyzer("modelConstraintBody")).reset();
+    }
+  }
+  
+  private void checkVariableNames(List<String> variableNames, ConstraintVariable cur, Token token, String className) {
+    if (cur instanceof ConstraintOperator) {
+      checkVariableNames(variableNames, ((ConstraintOperator)cur).getLeft(), token, className);
+      checkVariableNames(variableNames, ((ConstraintOperator)cur).getRight(), token, className);
+    } else if (cur instanceof ConstraintTree) {
+      checkVariableNames(variableNames, ((ConstraintTree)cur).getRoot(), token, className);
+    } else if (cur instanceof ConstraintNamed) {
+      if (!variableNames.contains(((ConstraintNamed)cur).getName())) {
+        setFailedPosition(token.getPosition(), 28, ((ConstraintNamed)cur).getName(), className);
+      }
     }
   }
 }
