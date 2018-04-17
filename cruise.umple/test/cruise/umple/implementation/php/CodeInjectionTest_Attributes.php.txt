@@ -189,6 +189,12 @@ class Student
     return $aFunName;
   }
 
+  public function getOtherFunName()
+  {
+    print "This was so much fun";
+    return name + "Other Fun";
+  }
+
   public function getInjBool()
   {
     return $this->injBool;
