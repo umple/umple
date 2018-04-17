@@ -59,5 +59,17 @@ class Student
   before delete { print "start delete"; }
   after delete { print "after delete"; }
   
+  after custom foo(int) { print "Such fun!" }
+  
+  String foo(int a) {
+    	System.out.println("This is great " + " I will return to this");
+    if(a == 3) return "4"; //Testing inline return
+    
+    // inject before return
+    return "";
+  }
+  
+  }
+  
  
 }

@@ -219,6 +219,19 @@ public class Student
     print "after delete";
   }
 
+  public String foo(int a){
+    System.out.println("This is great " + " I will return to this");
+    if(a == 3) {      
+      print "Such fun!"
+      return "4";
+    }
+    //Testing inline return
+    
+    // inject before return    
+    print "Such fun!"
+    return "";
+  }
+
 
   public String toString()
   {
