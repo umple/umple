@@ -2342,7 +2342,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       	  // so B is a parent
           aFirstEnd.setSuperClassName(bFirstEnd.getClassName());
           aSecondEnd.setSuperClassName(bSecondEnd.getClassName());
-          
+
           // Refer to the Association Specialization manual page --
           // There are 2 cases for specialized code:
           // 1- either the class will need code from it's superclass
@@ -2355,21 +2355,21 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           if (aFirstEnd.getClassName().equals(bFirstEnd.getClassName()))
           {
             // i.e. same name as parent, so common code is required.
-            aSecondEnd.setNeedsSuperCode(true);
+            aSecondEnd.setNeedsCommonCode(true);
           }
           else
           {
-            aSecondEnd.setNeedsCommonCode(true);
+            aSecondEnd.setNeedsSuperCode(true);
           }
           
           // need to check both ends...
           if (aSecondEnd.getClassName().equals(bSecondEnd.getClassName()))
           {
-            aFirstEnd.setNeedsSuperCode(true);
+            aFirstEnd.setNeedsCommonCode(true);
           }
           else
           {
-            aFirstEnd.setNeedsCommonCode(true);
+            aFirstEnd.setNeedsSuperCode(true);
           }
       	  
       	  // -- probably legacy, comment out and see if it breaks.
