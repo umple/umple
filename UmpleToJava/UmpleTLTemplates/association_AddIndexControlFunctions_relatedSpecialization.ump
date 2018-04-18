@@ -9,8 +9,9 @@ class UmpleToJava {
       if(index > <<=gen.translate("numberOfMethod",av)>>()) { index = <<=gen.translate("numberOfMethod",av)>>() - 1; }<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 >>
-      <<=gen.translate("associationMany",av)>>.remove(<<=gen.translate("parameterOne",av)>>);
-      <<=gen.translate("associationMany",av)>>.add(index, <<=gen.translate("parameterOne",av)>>);<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
+      super.<<=gen.translate("removeMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+      super.<<=gen.translate("addAtMethod",av)>>(<<=gen.translate("parameterOne",av)>>,index);
+      <<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 >>
       wasAdded = true;
@@ -21,14 +22,15 @@ class UmpleToJava {
   public boolean <<=gen.translate("addOrMoveAtMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>, int index)
   {
     boolean wasAdded = false;
-    if(<<=gen.translate("associationMany",av)>>.contains(<<=gen.translate("parameterOne",av)>>))
+    if(super.<<=gen.translate("addManyMethodExistenceCheck",av)>>(<<=gen.translate("parameterOne",av)>>))
     {
       if(index < 0 ) { index = 0; }
       if(index > <<=gen.translate("numberOfMethod",av)>>()) { index = <<=gen.translate("numberOfMethod",av)>>() - 1; }<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 >>
-      <<=gen.translate("associationMany",av)>>.remove(<<=gen.translate("parameterOne",av)>>);
-      <<=gen.translate("associationMany",av)>>.add(index, <<=gen.translate("parameterOne",av)>>);<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
+      super.<<=gen.translate("removeMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+      super.<<=gen.translate("addAtMethod",av)>>(<<=gen.translate("parameterOne",av)>>,index);
+      <<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 >>
       wasAdded = true;

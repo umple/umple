@@ -16,7 +16,7 @@ class UmpleToJava {
       return wasSet;
     }
     
-    <<=gen.relatedTranslate("type",av)>> <<=gen.relatedTranslate("parameterExisting",av)>> = <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>>()<<# } else if (relMulChangedToOne) { #>>(0)<<# } #>>;
+    <<=gen.relatedTranslate("type",av)>> <<=gen.relatedTranslate("parameterExisting",av)>> = <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("getMethod",av)>>();<<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>>()<<# } else if (relMulChangedToOne) { #>>(0)<<# } #>>;
     if (<<=gen.relatedTranslate("parameterExisting",av)>> != null && !equals(<<=gen.relatedTranslate("parameterExisting",av)>>))
     {
       //Unable to <<=gen.translate("setMethod",av)>>, the current <<=gen.translate("associationOne",av)>> already has a <<=gen.relatedTranslate("associationOne",av)>>, which would be orphaned if it were re-assigned
@@ -25,10 +25,10 @@ class UmpleToJava {
       return wasSet;
     }
     
-    <<=gen.translate("type",av)>> <<=gen.translate("parameterOld",av)>> = <<=gen.translate("associationOne",av)>>;
-    <<=gen.translate("associationOne",av)>> = <<# if (!mulChangedToOne) { #>><<=gen.translate("parameterNew",av)>><<# } else { #>>new ArrayList<<<=scName>>>()<<# } #>>;
+    <<=gen.translate("type",av)>> <<=gen.translate("parameterOld",av)>> = super.<<=gen.translate("getMethod",av)>>();
+    super.<<=gen.translate("setMethod",av)>>(<<# if (!mulChangedToOne) { #>><<=gen.translate("parameterNew",av)>><<# } else { #>>new ArrayList<<<=scName>>>()<<# } #>>);
     <<# if (mulChangedToOne) { #>><<=gen.translate("associationOne",av)>>.add(<<=gen.translate("parameterNew",av)>>);<<# } #>>
-    <<=gen.translate("associationOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>><<# if (relReqCommonCode) { #>>_<<=gen.relatedTranslate("type",av)>><<# } #>>(this);
+    super.<<=gen.translate("getMethod",av)>>().<<=gen.relatedTranslate("setMethod",av)>><<# if (relReqCommonCode) { #>>_<<=gen.relatedTranslate("type",av)>><<# } #>>(this);
 
     if (<<=gen.translate("parameterOld",av)>> != null)
     {
