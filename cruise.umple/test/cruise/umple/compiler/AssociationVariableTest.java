@@ -11,6 +11,8 @@ package cruise.umple.compiler;
 
 import org.junit.*;
 
+import cruise.umple.util.SampleFileWriter;
+
 public class AssociationVariableTest
 {
 
@@ -461,6 +463,26 @@ public class AssociationVariableTest
     Assert.assertTrue(a.setRelatedAssociation(b));
   }
 
+  @Test
+  public void testAssociationVariableEnds()
+  {
+    String code = "class A{1 -- * C;} class B{isA A; 1 -- 4 C;} class C{}";
+
+    UmpleModel model = getModel(code);
+    model.run();
+    for (UmpleClass uClass : model.getUmpleClasses()) {
+      int numAv = uClass.numberOfAssociationVariables();
+      for (int i = 0; i < numAv; i ++) {
+        AssociationVariable av = uClass.getAssociationVariable(i);
+        Association assoc = uClass.getAssociation(i);
+        AssociationEnd aEnd = assoc.getEnd(av.getRelevantEnd());
+
+        Assert.assertEquals(av.getType(), aEnd.getClassName());
+        Assert.assertEquals(av.getName(), aEnd.getRoleName());
+      }
+    }
+  }
+
   private Multiplicity createMultiplicity(int lower, int upper)
   {
     Multiplicity m = new Multiplicity();
@@ -468,4 +490,9 @@ public class AssociationVariableTest
     return m;
   }
 
+  private UmpleModel getModel(String inCode) {
+    SampleFileWriter.createFile("umpleAssociationVariableTest.ump",inCode);  
+    UmpleFile uFile = new UmpleFile("umpleAssociationVariableTest.ump"); 
+    return new UmpleModel(uFile);
+  }
 }
