@@ -226,5 +226,23 @@ class Student
     print "after delete";
   }
 
+  public function foo(int $a)
+  {
+    System.out.println("This is great " + " I will return to this");
+    if(a == 3) {      
+      // line 60 "TestingTest.ump"
+      print "Such fun!"
+      // END OF UMPLE AFTER INJECTION
+      return "4";
+    }
+    //Testing inline return
+    
+    // inject before return    
+    // line 60 "TestingTest.ump"
+    print "Such fun!"
+    // END OF UMPLE AFTER INJECTION
+    return "";
+  }
+
 }
 ?>

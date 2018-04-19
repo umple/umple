@@ -96,7 +96,7 @@ class UmpleToPhp {
               String[] properMethodLines = properMethodBody.split("\\n");
               String fixedProperMethodBody = "";
               for(int i = 0; i < properMethodLines.length; i++) {
-                if(properMethodLines[i].contains("return") && !properMethodLines[i].trim().substring(0, 6).equals("return")) {
+                if(GeneratorHelper.isValidReturnStatement(properMethodLines[i]) && !properMethodLines[i].trim().substring(0, 6).equals("return")) {
                   String[] splitLines = properMethodLines[i].split("return", 2);
                   // Determine indentation of return by adding indentation amount to previous line
                   String returnIndent = "";
@@ -131,6 +131,12 @@ class UmpleToPhp {
 
               // inject the after injection code after every return, while appropriate indentation
               for(int i = -1; (i = properMethodBody.indexOf("return", i + 1)) != -1; ) {
+                //Check if return statement is on its own line
+                int lastChar = i - 1;
+                while (properMethodBody.charAt(lastChar) == ' ')
+                lastChar--;
+                if (properMethodBody.charAt(lastChar) != '\n') // If it has any non-space characters before it, it's invalid
+                  continue;
                 // determine the indentation of the return
                 String indent = "";
                 while(i >= 1 && properMethodBody.charAt(--i) == ' ') {
