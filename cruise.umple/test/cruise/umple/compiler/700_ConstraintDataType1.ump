@@ -1,0 +1,35 @@
+class A {
+  String s1;
+  String s2;
+  s3;
+  Boolean b1;
+  Boolean b2;
+  Integer i;
+  Double d;
+  Float f;
+  Date da;
+  Time t;
+  Foo bar;
+  [s1 == s2]
+  [s1 != s3]
+  [s2 == "test"]
+  [s3 != "test"]
+  [b1]
+  [!b2]
+  [b1 != b2]
+  [b1 || b2]
+  [b1 && !b2]
+  [b1 && (s1 == s2)]
+  [i > 0]
+  [i == 1]
+  [(d > i) && (d < 10)]
+  [(f > d) || (f < 5)]
+  [da == t]
+  [da > t]
+  [bar]
+  [bar > i]
+  [!bar]
+  [bar == s1]
+  [bar || !bar]
+  [(!(d > f) && !(s1 == s3)) && !b2]
+}
