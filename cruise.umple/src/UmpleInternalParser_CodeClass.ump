@@ -2356,6 +2356,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           {
             // i.e. same name as parent, so common code is required.
             aSecondEnd.setNeedsCommonCode(true);
+            UmpleClass commonClass = model.getUmpleClass(aFirstEnd.getClassName());
+            AssociationVariable specializedAv = commonClass.getAssociationVariable(aSecondEnd.getClassName(), aSecondEnd.getRoleName());
+            AssociationVariable fromAv = commonClass.getAssociationVariable(bSecondEnd.getClassName(), bSecondEnd.getRoleName());
+            specializedAv.setSpecializedFromVariable(fromAv);
           }
           else
           {
@@ -2366,6 +2370,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           if (aSecondEnd.getClassName().equals(bSecondEnd.getClassName()))
           {
             aFirstEnd.setNeedsCommonCode(true);
+            UmpleClass commonClass = model.getUmpleClass(aSecondEnd.getClassName());
+            AssociationVariable specializedAv = commonClass.getAssociationVariable(aFirstEnd.getClassName(), aFirstEnd.getRoleName());
+            AssociationVariable fromAv = commonClass.getAssociationVariable(bFirstEnd.getClassName(), bFirstEnd.getRoleName());
+            specializedAv.setSpecializedFromVariable(fromAv);
           }
           else
           {

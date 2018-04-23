@@ -422,6 +422,18 @@ public class AssociationVariableTest
     Assert.assertTrue(c.setImmutable());
     Assert.assertTrue(assoc1.setImmutable());
   }
+
+  @Test
+  public void testAssociationVariable()
+  {
+    AssociationVariable av1 = new AssociationVariable("x","Mentor","","",createMultiplicity(1,1),true);
+    AssociationVariable av2 = new AssociationVariable("y","Student","","",createMultiplicity(1,1),true);
+    Assert.assertNull(av1.getSpecializedFromVariable());
+    Assert.assertNull(av2.getSpecializedFromVariable());
+
+    av1.setSpecializedFromVariable(av2);
+    Assert.assertEquals(av1.getSpecializedFromVariable(), av2);
+  }
   
   @Test
   public void canOnlySetRelatedAssociationToCreateValidAssociationsWithImmutableClass()

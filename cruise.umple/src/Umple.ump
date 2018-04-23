@@ -985,6 +985,9 @@ class AssociationVariable
 
   0..1 self relatedAssociation;
 
+  // specialized from this association variable
+  AssociationVariable specializedFromVariable = null;
+
   // code relevant to specialization of associations
   Boolean isSpecialized = false;		// is it ever specialized?
   Boolean isSpecialization = false;		// is it a specialization of another?
