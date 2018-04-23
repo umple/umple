@@ -1,0 +1,4 @@
+class A {
+  Integer i;
+  [!i > 0]
+}
