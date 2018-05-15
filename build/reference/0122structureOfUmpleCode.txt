@@ -6,19 +6,33 @@ noreferences
 
 <p><b>Organizing the contents of an Umple (.ump) file</b></p>
 
-<p>An Umple file will contain a number of <a href="TypesofDirectives.html">directives</a>. These can be:
+<p>An Umple file will contain a number of <a href="TypesofDirectives.html">top level items we call directives</a>. These can be:
 
 <ul>
 
-<li><b>Entitles</b> such as <a href="ClassDefinition.html">classes</a> or 
-<a href="interfaceDefinition.html">interfaces</a>. These look very similar to 
+<li><b>Entities</b> such as <a href="ClassDefinition.html">classes</a> or 
+<a href="interfaceDefinition.html">interfaces</a>. These first two kinds of entities look very similar to 
 the definitions of classes or interfaces in Java. Indeed they can be 
 identical to what you would find in a Java (or PHP or Ruby) file. However, 
 the key difference is that they can also contain Umple code for UML 
 constructs such as <a href="AssociationDefinition.html">associations</a>, <a href="AttributeDefinition.html">attributes</a> and <a href="BasicStateMachines.html">state machines</a>. Another 
 difference is that in Umple, you can have multiple definitions of the same 
-class; the contents of the second and subsequent definition are 
-<i>added</i> to the overall definition of the class.</li>
+entity; the contents of the second and subsequent definition are 
+<i>added</i> to the overall definition of the class.
+<p>
+The specific entities you can create include the following</p>
+  <ul>
+    <li><a href="ClassDefinition.html">Classes</a></li>  
+    <li><a href="interfaceDefinition.html">Interfaces</a></li>
+    <li><a href="Traits.html">Traits: Re-usable building blocks of classes</a></li>
+    <li><a href="InterfacingtoExternalCode.html">External definitions of classes</a></li>
+    <li><a href="IndependentlyDefinedAssociations.html">Standalone associations</a></li>
+    <li><a href=""AssociationClassDefinition.html">Association classes</a></li>
+    <li>Standalone <a href="BasicStateMachines.html">state machines</a></li>
+    <li><a href="EnumerationDefinition.html">Global enumerations</a></li>    
+  </ul>
+
+</li>
 
 <br />
 
