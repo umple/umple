@@ -27,7 +27,7 @@ The specific entities you can create include the following</p>
     <li><a href="Traits.html">Traits: Re-usable building blocks of classes</a></li>
     <li><a href="InterfacingtoExternalCode.html">External definitions of classes</a></li>
     <li><a href="IndependentlyDefinedAssociations.html">Standalone associations</a></li>
-    <li><a href=""AssociationClassDefinition.html">Association classes</a></li>
+    <li><a href="AssociationClassDefinition.html">Association classes</a></li>
     <li>Standalone <a href="BasicStateMachines.html">state machines</a></li>
     <li><a href="EnumerationDefinition.html">Global enumerations</a></li>    
   </ul>
