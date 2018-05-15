@@ -11,10 +11,10 @@ noreferences
 
 <ol>
 
-<li><b>Create UML models textually</b>. It can often be faster to create UML 
+<li><b>Create UML models textually</b>. Rather than drawing diagrams, it can often be faster to create UML 
 <a href="ClassDefinition.html">class</a> diagrams and <a href="BasicStateMachines.html">state machines</a> using Umple's textual format that looks 
 just like programming-language code. Editing, comparing and many other 
-tasks can often be faster using this textual form. Umple has <a href="UmpleTools.html">tools</a> that 
+tasks can often be done faster using this textual form. Umple has <a href="UmpleTools.html">tools</a> that 
 allow you to edit the model textually (and see changes appear in a UML 
 diagram) or to edit a UML diagram (and see changes appear in the textual 
 code)</li>
@@ -35,11 +35,9 @@ into an executable program.</li>
 compiler creates code in languages like Java, C++ and PHP that is of top 
 quality. It is a goal of the Umple team to create the best open-source 
 code-generation tool available. The generated code never needs to be 
-edited and never should be edited, since if the generator doesn't create 
-code of the type you would like, you can always embed native (i.e. 
-Java, Php, etc.) methods in the Umple, or else use Umple's <a href="BeforeandAfterStatements.html">aspect oriented</a> 
-capabilities to achieve what you need. As a last resort, you can edit the 
-code generator, since it is open source. As a result the concept of 'round 
+edited and never should be edited, since You can always embed native methods  (i.e. 
+Java, Php, etc.) in the Umple, or else use Umple's <a href="BeforeandAfterStatements.html">aspect oriented</a> 
+capabilities to alter the effects of generated code. As a result the concept of 'round 
 tripping' is obsolete in Umple. You should treat Umple-generated code just 
 lke you would treat bytecode-or machine code, i.e. as a development 
 artifact that can be thrown away and recreated. Nevertheless, we have 
@@ -51,7 +49,7 @@ so you can verify its correctness and learn how it works.</li>
 <li><b>Incrementally Umplify a program.</b> A program in a base 
 language like Java should pass through the Umple compiler unchanged. As a 
 result you can incrementally refactor such a program, stripping off 
-complex code for such things as associations, state machines and patterns, 
+complex code for such things as associations, state machines and certain patterns, 
 and replacing it by simple Umple code. This can be done bit-by-bit, while 
 testing thoroughly at each step. When you are done, you will have a 
 program that should not only be more compact, but also more reliable and 
@@ -65,7 +63,7 @@ and "Ample".</p>
 
 <p>The quickest way to get started with Umple is to go to <a 
 href="http://try.umple.org/">UmpleOnline</a>, and 
-select an example listed under 'Select Example'. Each of these user manual
+select an example listed under 'EXAMPLES'. Each of the user manual
 pages also allows you to instantly load the examples into UmpleOnline.</p>
 
 <p>To learn more about Umple, read the links on the left of this page, or 
