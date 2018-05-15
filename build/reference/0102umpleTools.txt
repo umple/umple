@@ -27,7 +27,7 @@ can be run locally on your machine by using a Docker image. <a href="https://hub
 
 <li><b>Command-line based compiler</b> You can always use Umple from the 
 command line, typically from an ant script. Simply <a
-href="https://github.com/umple/Umple/releases/tag/v.1.22.0.5146">download the latest 
+href="https://github.com/umple/umple/releases/latest">download the latest 
 officially released version of the umple jar</a>, and run it as "java -jar umple.jar *.ump".</li>
 
 <br />
