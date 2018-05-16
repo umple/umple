@@ -15,7 +15,7 @@ carefully controlled or avoided. We may in future add a capability
 to Umple to ensure this cannot happen.</p>
 
 <p>In the examples below, we show how using attribute notation
-is very simular to using a directed association, except that
+is very similar to using a directed association, except that
 with attribute notation, you can set the value to null.</p>
 
 

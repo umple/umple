@@ -85,7 +85,7 @@ code (just the pure UML elements such as classes with their attributes,
 associations and state machines) and separate files for the methods; you 
 can in fact have some files for Java methods, and other files for PHP or 
 Ruby methods. The same model can then be used to develop systems that are 
-deplpyed in multiple base languages.</p>
+deployed in multiple base languages.</p>
 
 <p>The fact that Umple allows for multiple definitions to be added to 
 create a complete definition, also means that you can create 

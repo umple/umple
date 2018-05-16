@@ -15,7 +15,7 @@ Directives appear as the 'main' entries in an Umple file.</p>
 
 <br />
 
-<li><b><a href="NamespaceDirectives.html">Namespace directives</a></b> gather entitles in logical groups. Within a namespace, entitles must have different names. Namespaces affect code generation; for example they correspond to packages in Java.</li>
+<li><b><a href="NamespaceDirectives.html">Namespace directives</a></b> gather entities in logical groups. Within a namespace, entities must have different names. Namespaces affect code generation; for example they correspond to packages in Java.</li>
 <br />
 
 <li><b><a href="StrictnessDirective.html">Strictness Directives</a></b> tell the compiler to issue extra warnings or errors in certain situations, or to turn certain errors into warnings.</li>
