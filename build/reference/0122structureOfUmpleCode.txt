@@ -84,7 +84,7 @@ class. Another common approach is to have one or more files for the model
 code (just the pure UML elements such as classes with their attributes, 
 associations and state machines) and separate files for the methods; you 
 can in fact have some files for Java methods, and other files for PHP or 
-Ruby methods. The same model can then be used to deveop systems that are 
+Ruby methods. The same model can then be used to develop systems that are 
 deplpyed in multiple base languages.</p>
 
 <p>The fact that Umple allows for multiple definitions to be added to 
@@ -95,11 +95,9 @@ system, in whole or in part, by <i>feature</i>. The various pieces of code
 needed to implement a feature (including entire new classes, or bits such 
 as associations and methods to add to existing classes), can be therefore 
 be grouped together. There are limits to this, however: At the current 
-time, this mechanism does not allow you to override existing elememts, 
+time, this mechanism does not allow you to override existing elements, 
 which you might need to do to add a feature. Taken together, these 
-mechanisms allow for a form of product-line development. Umple does, 
-however, have an extra feature, called <a 
-href="http://cruise.site.uottawa.ca/umpleonline/vml.php">VML</a> that should assist with this when complete.</p>
+mechanisms allow for a form of product-line development.</p>
 
 @@syntax
 
