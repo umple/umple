@@ -8,7 +8,7 @@ noreferences
 
 <p>When you declare a superclass of a class, that class must exist. If the class does not exist, then this warning is issued.</p>
 
-<p>It might be the case that the class is in fact declared in some code that is defined externally. In that case the existence of the external class should be made known to Umple using the external keyword;
+<p>It might be the case that the class is in fact declared in some code that is defined externally. In that case, the existence of the external class should be made known to Umple using the external keyword, such as in the second example.
 </p>
 
 @@example
