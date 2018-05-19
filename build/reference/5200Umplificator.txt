@@ -3,7 +3,7 @@ Umplification
 noreferences
 
 @@description
-<p>Umplification involves transforming step by step a base language program to an Umple program; each step is a refactoring. The starting point and the ending point of each transformations will be a system
+<p>Umplification involves transforming step by step a base language program to an Umple program; each step is a refactoring. The starting point and the ending point of each transformation will be a system
 rendered in a textual form combining model elements in the Umple syntax and base language code. </p>
 
 <p>Umplification involves increasing the proportion of modeling

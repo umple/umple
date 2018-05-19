@@ -21,7 +21,7 @@ in a list which would be preceded by a question mark.</p>
 
 <li>?nomenu: Hide the middle menu. Either ?notext or ?nodiagram must also be present.<p>
 
-<li>?readonly: Turn off editing capability - use for display only.<p>
+<li>?readOnly: Turn off editing capability - use for display only.<p>
 
 <li>?filename=xxxxx: Load the model xxxxx. xxxxx is a URL with the leading http:// left off.<p>
 
