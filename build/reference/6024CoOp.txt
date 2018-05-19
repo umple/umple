@@ -12,7 +12,7 @@ noreferences
 
 <p>Students in various programs apply for jobs. Students choose a set of jobs they are interested in. The system shows the list of interested students to employers, and employers pick a set of students to interview. The system sets interview times that match the employee’s and student’s availability (set of available time slots).</p>
 
-<p>At the end of the process, the system arranges for the employer to offer each job to a student. If the first student does not accept, the system arranges for other students (the employer’s second, third choices, etc. ) to be offered the job</p>
+<p>At the end of the process, the system arranges for the employer to offer each job to a student. If the first student does not accept, the system arranges for other students (the employer’s second, third choices, etc. ) to be offered the job.</p>
 
 
 @@example

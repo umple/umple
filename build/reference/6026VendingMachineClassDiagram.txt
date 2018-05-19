@@ -4,11 +4,15 @@ noreferences
 
 @@description
 
-<p>The following are basic requirements for a vending machine</p>
+<p>The following are basic requirements for a vending machine.</p>
 
 <p>A vending machine dispenses a variety of products. Each product is held in one or more dispensers, identified by slot and row in the machine. The system keeps track of the number of each product type in each dispenser, so it knows when a dispenser becomes empty.</p>
 
-<p>The vending machine has several coin holders. Each coin holder can contain a specific type of coin worth a particular number of cents, and with a certain weight and diameter. The system tracks the number of coins in each holder, so it can determine whether it can give change, and what coins it should give as change when somebody buys a product. Each holder also has a maximum capacity The system keeps an electronic record of each successful purchase (transaction); it records the product dispensed from a dispenser and the number of coins added (i.e. paid by the customer) or deleted (i.e. given as change) from coin holders.</p>
+<p>The vending machine has several coin holders. Each coin holder can contain a specific type of coin worth a particular number of cents, and with a certain weight and diameter. The system tracks the number of coins in each holder, so it can determine whether it can give change, and what coins it should give as change when somebody buys a product. Each holder also has a maximum capacity. The system keeps an electronic record of each successful purchase (transaction); it records the product dispensed from a dispenser and the number of coins added (i.e. paid by the customer) or deleted (i.e. given as change) from coin holders.</p>
+
+@@example
+@@source VendingMachineClassDiagram.ump
+@@endexample
 
 @@example
 @@source VendingMachine.ump

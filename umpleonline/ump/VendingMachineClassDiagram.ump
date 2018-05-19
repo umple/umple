@@ -47,7 +47,9 @@ class ProductTransaction {
 class CoinHolderTransaction {
    Integer numCoinsInOrOut; // negative if used to provide change
    * -- 1 CoinHolder sourceOrDestination;
-}  
+}
+
+//Positions used for diagram display
 class VendingMachine
 {
   position 50 29 119 45;
