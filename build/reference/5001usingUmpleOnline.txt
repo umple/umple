@@ -26,7 +26,7 @@ here to jump to the 2DShapes example: http://try.umple.org/?example=2DShapes</a>
 <br />
 
 <li><b>To restart UmpleOnline</b> (you will lose any work you have not 
-saved), click 'Start Over' under the 'SAVE &amp; RESET' menu.</li>
+saved), click 'Start Over' under the 'SAVE &amp; LOAD' menu.</li>
 
 <br />
 
@@ -35,7 +35,7 @@ saved), click 'Start Over' under the 'SAVE &amp; RESET' menu.</li>
 <ol>
 <li><b>Create a bookmarkable URL</b>. To do this, click 'Create Bookmarkable URL'
 above 
-the left pane or 'Save Model For Future Editing' in the centre pane under 'SAVE &amp; RESET'. Then copy or bookmark the URL that 
+the left pane or 'Save Model For Future Editing' in the centre pane under 'SAVE &amp; LOAD'. Then copy or bookmark the URL that 
 appears in your browser's URL bar. <br/>&nbsp;<br/>
 
 Note that from this point on you can 
@@ -52,7 +52,7 @@ suggested that if this is a concern, you use saving mehods 2 or 3.<br/>&nbsp;<br
 work for small diagrams, since some browsers such as older versions
 of Internet Explorer limit the number of characters in a URL. <br/>&nbsp;<br/>
 
-To do this, click on "Encoded URL" in the 'SAVE &amp; RESET' menu, and copy the URL that appears in a separate window. You might want to
+To do this, click on "Encoded URL" in the 'SAVE &amp; LOAD' menu, and copy the URL that appears in a separate window. You might want to
 use a URL shortening service such as bit.ly to shorten the URL before 
 posting it or embedding it in another document. You also need to be aware that you are limited by certain browsers and URL shortening services to files with about 2000 characters or less, so test your URL once you have created it.<br/>&nbsp;<br/></li>
 
@@ -63,7 +63,7 @@ left hand pane, you will <u>not</u> be saving the <i>layout of the
 diagram</i>. If you want to save the layout too, you have to do one of the 
 following:
   <ul>
-     <li>Click on 'Source' in the 'SAVE &amp; RESET' menu. This will generate a popup 
+     <li>Click on 'Source' in the 'SAVE &amp; LOAD' menu. This will generate a popup 
 that contains Umple code with the layout information. Copy and paste the contents
 of this window, and then close the window.
      <li>Check the box 'Layout Editor' in the 'OPTIONS' menu to view a 
@@ -244,7 +244,7 @@ from the 'OPTIONS' menu.</li>
 <li><b>Messages:</b> As you edit your text or diagram, warnings or errors may appear at the bottom of the page. Each warning or error message has a line number pointing you to the line in the code where the error originated. Each message also has a link to the user manual page describing the problem and how to fix it.</li>
 
 <br />
-<li><b>Generated code:</b> You can generate many types of output from your Umple model/code. Pick an output format from the pulldown menu under 'GENERATE' in the 'SAVE &amp; RESET' menu, then click 'Generate Code'.
+<li><b>Generated code:</b> You can generate many types of output from your Umple model/code. Pick an output format from the pulldown menu under 'GENERATE' in the 'SAVE &amp; LOAD' menu, then click 'Generate Code'.
 
 <br />
 Multiple files of generated code are concatenated when they appear on the web page. A link is also provided to download a zip file with the code so you can easily compile and execute it.</li>

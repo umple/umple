@@ -62,7 +62,7 @@ noreferences
 
 <li>Our servers become full or over-taxed. In this case we will make an effort to delete large models that are also old, before removing recently updated and smaller models. Ultimately, we cannot guarantee permanent storage of any model; we just intend to maintain models for as long as we can.</li>
 
-<li>Failure of the system in any way</li>
+<li>Failure of the system in any way.</li>
 
 </ul>
 
@@ -71,12 +71,12 @@ noreferences
 
 <h2>Access and use by others</h2>
 
-If somebody is able to guess the URL of your model, or you give it to them, then they can modify and delete your model. Important models should therefore be saved using other means. <a href="UsingUmpleOnline.html">Instructions for how to do that are here.</a></p>
+<p>If somebody is able to guess the URL of your model, or you give it to them, then they can modify and delete your model. Important models should therefore be saved using other means. <a href="UsingUmpleOnline.html">Instructions for how to do that are here.</a></p>
 
 
 &nbsp; <br />
 
 <h2>Anonymity</h2>
 
-</p>There is currently no login mechanism to UmpleOnline so there is no way to trace users, as stated earlier. This may change in the future</p>
+<p>There is currently no login mechanism to UmpleOnline so there is no way to trace users, as stated earlier. This may change in the future.</p>
 

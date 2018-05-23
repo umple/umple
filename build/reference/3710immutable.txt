@@ -5,7 +5,7 @@ noreferences
 @@description
 <p>Mark a class as immutable to force all its contents to be immutable. The code ensures all attributes and associations can only be set in the constructor, and cannot be modified again subsequently.</p>
 
-<p>The only associations allowed to be immutable are directed associations to other immutable classes</p>
+<p>The only associations allowed to be immutable are directed associations to other immutable classes.</p>
 
 <p>A class can only be immutable if all its superclasses are also immutable. Declaring a superclass immutable forces its subclasses to be immutable; in other words, immutability is inherited. If the subclasses break immutability constraints (such as the type of attributes allowed), then errors will be raised.</p>
 

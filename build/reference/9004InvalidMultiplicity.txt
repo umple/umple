@@ -6,24 +6,23 @@ noreferences
 
 <h2>Umple syntactic error reported when an invalid multiplicity is specified</h2>
 
-<p>Valid multiplicities in Umple include
+<p>Valid multiplicities in Umple include the following, where n and m are positive integers and where n <= m:
 <ul>
 <li>0..1 (either zero or one object)</li>
 <li>1 (exactly one object)</li>
 <li>0..* (any number of objects)</li>
 <li>* (any number of objects -- a shortcut for 0..*)</li>
 <li>1..* (one or more objects)</li>
-<li>0..5 (up to 5 objects)</li>
-<li>1..5 (between 1 and 5 objects)</li>
-<li>2..5 (between 2 and 5 objects)</li>
-<li>2..* (at least 2 objects)</li>
-<li>5 (exactly 5 objects)</li>
-<li>Any other similar pattern where other integers appear instead of 2 and 5 in the above. </li>
+<li>0..m (up to m objects)</li>
+<li>1..m (between 1 and m objects)</li>
+<li>n..m (between n and m objects)</li>
+<li>n..* (at least n objects)</li>
+<li>m (exactly m objects)</li>
 </ul>
 
 </p>
 
-<p>When this error message appears, the multiplicity doesn&#39;t fit any of the above patterns. A common error, for example, is to use the notation &#39;n&#39;, as found in Entity-Relationship Diagrams. This is not valid in Umple; only integers, and * may appear.
+<p>When this error message appears, the multiplicity doesn&#39;t fit any of the above patterns. A common error, for example, is to use the notation &#39;n&#39; as found in Entity-Relationship Diagrams, instead of *. This is not valid in Umple; only integers, and * may appear.
 </p>
 
 

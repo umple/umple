@@ -7,7 +7,7 @@ noreferences
 <h2>Umple semantic error related to binding a template parameter of a trait which is not available</h2>
 
 <p align = "justify">
-When using traits, we can bind types to template parameters. In the process of binding, we can just refer to parameters which are available. The Umple compiler detects cases in which there are template parameters not defined a trait.
+When using traits, we can bind types to template parameters. In the process of binding, we can just refer to the name of the parameters which are available. The Umple compiler detects cases in which there are template parameters that are not defined in a trait.
 </p>
 
 

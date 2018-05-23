@@ -84,6 +84,7 @@ class Game {
    * gameLed -- 0..1 Player currentLead; // the player next to lay down a card
 }
 
+//Position information of the display on a diagram of all classes and of their associations
 class Card
 {
   position 125 15 135 100;

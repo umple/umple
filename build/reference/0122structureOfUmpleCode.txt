@@ -56,11 +56,13 @@ compiler, and used to generate code in a &apos;base&apos; or &apos;native&apos; 
 system. However <a href="MethodDefinition.html">methods</a> are treated differently: They are passed 
 through essentially unchanged to the resulting system.</p>
 
-<p>If you include methods in Umple code, you therefore have to ensure that 
+<p>If you include methods in Umple code, you generally have to ensure that 
 any given Umple file has methods of just one chosen target language (Java, 
-PHP, Ruby. etc.).</p>
+PHP, Ruby. etc.). <a href="AlternativeLanguages.html">A special syntax is, however, available</a> if you  want to generate
+code in more than one target language.
+</p>
 
-<p>Anything that Umple can&apos;t parse itself may be interpreted to be a method; this can result in unintended results: What you intend to be some Umple code such as an attribute or association may end up being treated as &apos;extra code&apos;, i.e. a method, and passed through unchanged without warning, with the result that expected functionality in the generated system is missing. You can use the <a href="StrictnessDirective.html">strictness</a> directive to force Umple to warn when this occurs; this can be particularly useful in early development, when the Umple is intended to be only a model</p>
+<p>Anything that Umple can&apos;t parse itself may be interpreted to be a method; this can result in unintended results: What you intend to be some Umple code such as an attribute or association may end up being treated as &apos;extra code&apos;, i.e. a method, and passed through unchanged (normally with a warning).</p>
 
 <p>The resulting system will contain many more methods than those that you 
 explicitly include. This is because one of the key points about Umple is 
@@ -82,8 +84,8 @@ class. Another common approach is to have one or more files for the model
 code (just the pure UML elements such as classes with their attributes, 
 associations and state machines) and separate files for the methods; you 
 can in fact have some files for Java methods, and other files for PHP or 
-Ruby methods. The same model can then be used to deveop systems that are 
-deplpyed in multiple base languages.</p>
+Ruby methods. The same model can then be used to develop systems that are 
+deployed in multiple base languages.</p>
 
 <p>The fact that Umple allows for multiple definitions to be added to 
 create a complete definition, also means that you can create 
@@ -93,11 +95,9 @@ system, in whole or in part, by <i>feature</i>. The various pieces of code
 needed to implement a feature (including entire new classes, or bits such 
 as associations and methods to add to existing classes), can be therefore 
 be grouped together. There are limits to this, however: At the current 
-time, this mechanism does not allow you to override existing elememts, 
+time, this mechanism does not allow you to override existing elements, 
 which you might need to do to add a feature. Taken together, these 
-mechanisms allow for a form of product-line development. Umple does, 
-however, have an extra feature, called <a 
-href="http://cruise.site.uottawa.ca/umpleonline/vml.php">VML</a> that should assist with this when complete.</p>
+mechanisms allow for a form of product-line development.</p>
 
 @@syntax
 

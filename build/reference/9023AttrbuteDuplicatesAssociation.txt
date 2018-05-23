@@ -4,9 +4,9 @@ noreferences
 
 @@description
 
-<h2>Umple semantic error reported when an association has the same name as an attribute or vice versa,</h2>
+<h2>Umple semantic error reported when an association has the same name as an attribute or vice versa.</h2>
 
-<p>An association generates a variable and methods that would clash with an attributes of the same name. If a role name is used, then it must be distinct from all attributes. If no role name is used then the class name (with first character converted to lower case) at the 'other end' of the association must be distinct from all attributes. </p>
+<p>An association generates a variable and methods that would clash with an attribute of the same name. If a role name is used, then it must be distinct from all attributes. If no role name is used then the class name (with first character converted to lower case) at the 'other end' of the association must be distinct from all attributes. </p>
 
 <p>Ths problem can sometimes be hard to notice if an association is declared 'backwards' in the 'other' class, or independently of either class. It is especially tricky if the clashing association or attribute is in a separate mixin.
 

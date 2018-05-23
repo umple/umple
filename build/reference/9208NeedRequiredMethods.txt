@@ -7,7 +7,7 @@ noreferences
 <h2>Umple semantic error related to not having required methods of traits in classes </h2>
 
 <p align = "justify">
-Traits need to have required methods in order to provide the functionality they have designed to provide. These required methods can provide special functionality or be way of accessing states (attributes) in host classes. This error is raised when a required method is not available.
+Traits need to have required methods in order to provide the functionality they have designed to provide. These required methods can provide special functionality or be a way of accessing states (attributes) in host classes. This error is raised when a required method is not available.
 </p>
 
 

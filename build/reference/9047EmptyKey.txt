@@ -6,7 +6,7 @@ noreferences
 
 <h2>Umple semantic warning reported when a key statement has no elements inside of it</h2>
 
-<p>An empty key statement has no meaning, but Umple will detect the key statement and generate methods associated with having a key. This might lead the developer to think that they have defined a key when in fact the generated methods cannot differentiate between instances of the class in question. The warning is shown to notify the developer of the potential mistake.
+<p>An empty key statement has no meaning, but Umple will detect the key statement and generate methods associated with having a key. This might lead the developer to think that they have defined a key, when in fact the generated methods cannot differentiate between instances of the class in question. The warning is shown to notify the developer of the potential mistake.
 
 </p>
 

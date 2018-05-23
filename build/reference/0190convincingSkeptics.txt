@@ -41,7 +41,7 @@ noreferences
 
 <h1>Countering the counterarguments</h1>
 
-<p>Here are some common arguments against adopting a new software development technology, and how they dont apply in model-oriented programming:</p>
+<p>Here are some common arguments against adopting a new software development technology, and how they don&#39;t apply in model-oriented programming:</p>
 
 <ol>
 

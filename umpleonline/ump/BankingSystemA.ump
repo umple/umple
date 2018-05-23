@@ -64,7 +64,7 @@ class MortgageAccount {
  collateral;
 }
 
-//Anything physicaly tangable
+//Anything physically tangable
 namespace BankingSystem.core.tangableResources;
 class Card
 {

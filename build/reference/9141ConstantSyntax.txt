@@ -11,7 +11,7 @@ with a value that does not match the type of the attribute</h2>
 </p>
 
 <p>
-Note that for an initialization value with no type specified will result in the attribute having its type inferred from the vbalue. This is demonstrated in the third example.
+Note that for an initialization value with no type specified will result in the attribute having its type inferred from the value. This is demonstrated in the third example.
 </p>
 
 

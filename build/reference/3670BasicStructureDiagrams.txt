@@ -12,11 +12,11 @@ noreferences
 
 <li><b>Classes</b>: Ordinary Umple classes, enhanced to have the items below.
 
-<li><b><a href="Ports.html">Ports</a></b>: (required for a composite structure diagram to be generated) These are special attributes used as the origin and/or destination of data to be transferred among the parts. .
+<li><b>Ports</b>: (required for a composite structure diagram to be generated) These are special attributes used as the origin and/or destination of data to be transferred among the parts.
 
 <li><b>Port bindings (Connectors)</b>: These specify how data is to be transferred among the various parts of the system. They connect ports using the -&gt; syntax. Output of one port is transferred to the input of another port.
 
-<li><b><a href="ActiveMethods.html"></b>Active method declarations</a>: These run in their own thread when constructed and are needed to ensure that data is sent and received on the ports without delay.
+<li><b>Active method declarations</b>: These run in their own thread when constructed and are needed to ensure that data is sent and received on the ports without delay.
 
 </ul>
 

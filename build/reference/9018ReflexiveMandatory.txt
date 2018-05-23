@@ -6,7 +6,7 @@ noreferences
 
 <h2>Umple semantic error reported when an immutable reflexive association is declared as having 1 at the other end</h2>
 
-<p>This is a special case of the general rule that reflexive associations must have upper bounds greater than zero.
+<p>This is a special case of the general rule that <a href="E009ReflexiveLowerBound.html"> reflexive associations must have upper bounds greater than zero. </a>
 
 </p>
 

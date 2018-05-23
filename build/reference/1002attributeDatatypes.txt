@@ -5,7 +5,7 @@ noreferences
 @@description
 <p>The following examples illustrate the data types available
 for Umple attributes. Except as specified, they will generate
-primitive datatypes in Java</p>
+primitive datatypes in Java.</p>
 
 
 @@example

@@ -6,7 +6,7 @@ noreferences
 
 <h2>Umple semantic error reported when events with the same name have different parameters</h2>
 
-<p>When <a href="EventsWithParameters.html">parameters are specified on a state machine event</a>, all transitions with the same event name must have identical parameters. The reason for this is that there is only one event method generated.
+<p>When <a href="EventsWithParameters.html">parameters are specified on a state machine event</a>, all transitions with the same event name must have identical parameters, both in name and type. The reason for this is that there is only one event method generated.
 </p>
 
 
