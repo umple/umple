@@ -1,4 +1,4 @@
-// In this example, there is an error
+// In this example, there is no error
 // because in class "A"
 // method "ShowInConslole" has high priority.
 class A{

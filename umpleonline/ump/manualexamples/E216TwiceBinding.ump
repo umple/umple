@@ -1,5 +1,5 @@
 // In this example, there is an error
-// because there is two bindings for
+// because there are two bindings for
 // template parameter "X" in class "A".
 class A{
 	isA T< X = B , X = C >;

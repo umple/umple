@@ -1,5 +1,5 @@
 // In this example, there is an error
-// because class C tries two
+// because class C tries to
 // rename states s0 of trait T two times.
 trait T {
   sm{
