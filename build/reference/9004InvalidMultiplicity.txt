@@ -6,7 +6,7 @@ noreferences
 
 <h2>Umple syntactic error reported when an invalid multiplicity is specified</h2>
 
-<p>Valid multiplicities in Umple include, n, m being integers as n <= m:
+<p>Valid multiplicities in Umple include the following, where n and m are positive integers and where n <= m:
 <ul>
 <li>0..1 (either zero or one object)</li>
 <li>1 (exactly one object)</li>
