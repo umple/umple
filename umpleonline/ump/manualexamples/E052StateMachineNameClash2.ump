@@ -2,7 +2,7 @@
 // because the state machine a
 // clashes with the association role name a
 class X52assattnamestatemachine2 {
-  1 - 0.1 B a;
+  1 -- 0..1 B a;
   a {
     s1 {}
     s2 {}
