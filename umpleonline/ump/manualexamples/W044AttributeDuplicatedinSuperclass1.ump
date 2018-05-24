@@ -5,7 +5,7 @@ class A {
 
 class B {
   isA A;
-  attr;
+  Integer attr;
 }
 
 //$?[End_of_model]$?

@@ -6,7 +6,7 @@ noreferences
 
 <h2>Umple semantic warning reported when an attribute in a class is a duplicate of an attribute in a superclass.</h2>
 
-<p>The purpose of this warning is to alert the developer that they have to resolve the issue by changing the name of the duplicated attribute in either the superclass or subclass, or else remove one of them entirely. This warning will soon be changed to an
+<p>The purpose of this warning is to alert the developer that they have to resolve the issue by changing the name of the duplicated attribute in either the superclass or subclass, or else remove one of them entirely, as you should not define an attribute twice with a different type. This warning will soon be changed to an
 error.
 </p>
 

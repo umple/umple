@@ -5,7 +5,8 @@ noreferences
 @@description
 <p>      
 When an transition is taken, an action can occur. This is indicated
-using a slash "/" followed by arbitrary code in braces.
+using a slash "/" followed by arbitrary code in braces. The arbitrary code
+may be placed after the event name or before the destination state name.
 </p>
 
 <p>
