@@ -8,6 +8,7 @@ noreferences
 
 <p>To specify composite structure, the following are the elements that need to be present in an Umple system:</p>
 
+<p>
 <ul>
 
 <li><b>Classes</b>: Ordinary Umple classes, enhanced to have the items below. </li>
@@ -19,6 +20,7 @@ noreferences
 <li><b>Active method declarations</b>: These run in their own thread when constructed and are needed to ensure that data is sent and received on the ports without delay.</li>
 
 </ul>
+</p>
 
 <p>The example below first defines two classes with ports; a third class contains instances of the first two.</p>
 

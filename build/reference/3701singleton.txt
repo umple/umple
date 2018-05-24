@@ -7,8 +7,6 @@ noreferences
 
 <p><a href="http://en.wikipedia.org/wiki/Singleton_pattern" target="wikipedia">For more details on the Singleton pattern, see this Wikipedia page.</a></p>
 
-<br />
-
 @@syntax
 [[singleton]] [[softwarePattern]]
 
