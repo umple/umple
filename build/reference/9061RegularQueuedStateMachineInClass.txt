@@ -8,7 +8,7 @@ noreferences
 
 <p>
 An Umple class cannot contain both a queued state machine and a regular state machine. < /br>
-The state machines must be distributed in more than one class.
+The state machines must be of the same type (e.g. both queued), or else distributed in more than one class.
 </p>
 
 
