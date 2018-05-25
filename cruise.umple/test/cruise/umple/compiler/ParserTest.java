@@ -2344,13 +2344,7 @@ public class ParserTest
 
   }
   
-  @Test
-  public void mixsetDefinition()
-  {
-	  assertNoWarningsParse("mixsetDefinition.ump");
-	  
-
-  }
+ 
   
 
 }

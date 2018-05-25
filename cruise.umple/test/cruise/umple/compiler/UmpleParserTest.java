@@ -3016,6 +3016,15 @@ public class UmpleParserTest
     assertHasWarningsParse("142_typeIsAccessSpecifierPrivate.ump", 142);
   }
   
+  
+  @Test
+  public void mixsetDefinition()
+  {
+	  assertNoWarningsParse("mixsetDefinition.ump");
+	  
+
+  }
+  
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));
