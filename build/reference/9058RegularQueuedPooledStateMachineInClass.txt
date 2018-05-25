@@ -8,8 +8,8 @@ noreferences
 regular state machine</h2>
 
 <p>
-An Umple class cannot contain at once a queued state machine, a pooled state machine and a regular state machine. < /br>
-The state machines must be distributed in more than one class.
+An Umple class cannot contain in the same class a queued state machine, a pooled state machine and/or a regular state machine. < /br>
+All the state machines in a given class must be of the same type (pooled, queued, regular), or could be distributed in different classes.
 </p>
 
 
