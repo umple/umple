@@ -2343,6 +2343,15 @@ public class ParserTest
     Assert.assertEquals(expected, result.getWasSuccess());
 
   }
+  
+  @Test
+  public void mixsetDefinition()
+  {
+	  assertNoWarningsParse("mixsetDefinition.ump");
+	  
+
+  }
+  
 
 }
 
