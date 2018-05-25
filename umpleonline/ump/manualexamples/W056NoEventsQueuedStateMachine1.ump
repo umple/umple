@@ -1,0 +1,11 @@
+//The warning will be generated
+//as there are no events to be
+//queued in the state machine sm
+class A {
+  queued sm {
+    s0 {
+    }
+    s1 {
+    }
+  }
+}

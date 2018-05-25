@@ -1,0 +1,20 @@
+W057 No Events in Pooled State Machine
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when a pooled state machine does not have events to be pooled</h2>
+
+<p>
+A pooled state machine must have events to be pooled, or this warning will be issued.
+</p>
+
+
+@@example
+@@source manualexamples/W057NoEventsPooledStateMachine1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W057NoEventsPooledStateMachine2.ump
+@@endexample

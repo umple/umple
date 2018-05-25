@@ -1,0 +1,22 @@
+E048 Attribute Generates Duplicate Method
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error issued when an attribute generates a duplicate method</h2>
+
+<p>
+An attribute may autogenerate multiple methods, which can lead to duplicates
+if the methods have already been generated. Changing the name of
+the attribute causing the duplicate can fix the error.
+</p>
+
+
+@@example
+@@source manualexamples/E048DuplicateGeneratedMethod1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E048DuplicateGeneratedMethod2.ump
+@@endexample

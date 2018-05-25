@@ -1,0 +1,10 @@
+//The error can be fixed by
+//modifying the names of the
+//attributes
+class A {
+  immutable attr;
+  otherAttr;
+  
+  autounique attr2;
+  otherAttr2;
+}

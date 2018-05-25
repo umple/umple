@@ -1,0 +1,20 @@
+W056 No Events in Queued State Machine
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when a queued state machine does not have events to be queued</h2>
+
+<p>
+A queued state machine must have events to be queued, or this warning will be issued.
+</p>
+
+
+@@example
+@@source manualexamples/W056NoEventsQueuedStateMachine1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W056NoEventsQueuedStateMachine2.ump
+@@endexample

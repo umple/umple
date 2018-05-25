@@ -1,0 +1,21 @@
+W039 Missing Interface
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when a referenced interface is not found</h2>
+
+<p>
+If an interface extends a second interface, that second interface must exist in the system. It can also be declared
+as external to the class, if it has been defined externally to the code.
+</p>
+
+
+@@example
+@@source manualexamples/W039MissingInterface1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W039MissingInterface2.ump
+@@endexample

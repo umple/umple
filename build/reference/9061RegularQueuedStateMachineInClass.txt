@@ -1,0 +1,21 @@
+E061 Queued and Regular State Machines in Class
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when a class contains one or more queued state machine and regular state machine</h2>
+
+<p>
+An Umple class cannot contain both a queued state machine and a regular state machine. < /br>
+The state machines must be of the same type (e.g. both queued), or else distributed in more than one class.
+</p>
+
+
+@@example
+@@source manualexamples/E061RegularQueuedStateMachineInClass1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E061RegularQueuedStateMachineInClass2.ump
+@@endexample
