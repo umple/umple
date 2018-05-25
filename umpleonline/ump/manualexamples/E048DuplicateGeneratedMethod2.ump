@@ -2,5 +2,5 @@
 //way to fix the error
 class A {
   attr;
-  ATTR;
+  attr2;
 }
