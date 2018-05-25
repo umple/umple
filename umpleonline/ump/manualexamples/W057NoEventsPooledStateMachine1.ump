@@ -1,0 +1,11 @@
+//The warning will be generated
+//as there are no events to be
+//pooled in the state machine sm
+class A {
+  pooled sm {
+    s0 {
+    }
+    s1 {
+    }
+  }
+}

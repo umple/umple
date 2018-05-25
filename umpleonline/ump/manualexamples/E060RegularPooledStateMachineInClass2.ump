@@ -1,0 +1,21 @@
+//The error can be fixed by having each
+//state machine in a different class
+class A {
+  pooled sm1 {
+    s0 {
+      e -> s1;
+    }
+    s1 {
+    }
+  }
+}
+
+class B {
+  sm2 {
+    s0 {
+      e -> s1;
+    }
+    s1 {
+    }
+  }
+}

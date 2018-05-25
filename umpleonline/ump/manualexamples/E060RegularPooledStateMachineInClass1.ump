@@ -1,0 +1,20 @@
+//The error will be generated as 
+//class A contains both a regular 
+//and a pooled state machine
+class A {
+  pooled sm1 {
+    s0 {
+      e -> s1;
+    }
+    s1 {
+    }
+  }
+  
+  sm2 {
+    s0 {
+      e -> s1;
+    }
+    s1 {
+    }
+  }
+}

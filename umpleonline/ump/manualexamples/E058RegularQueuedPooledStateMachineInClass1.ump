@@ -1,0 +1,23 @@
+//The error will be generated as A
+//contains a queued, pooled and
+//regular state machine at once
+class A {
+  pooled sm1 {
+    s0 {
+      e -> s1;
+    }
+    s1 {
+    }
+  }
+  
+  queued sm2 {
+    s0 {
+      e -> s1;
+    }
+    s1 {
+    }
+  }
+  
+  sm3 {
+  }
+}

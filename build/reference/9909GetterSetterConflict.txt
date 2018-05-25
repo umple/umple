@@ -1,0 +1,22 @@
+W1009 Getter Setter Method Name Conflict
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when a class redefines a getter or setter method on a
+declared attribute</h2>
+
+<p>
+Umple generates a setter and getter for most attributes, and will issue a warning if
+these methods are redefined.
+</p>
+
+
+@@example
+@@source manualexamples/W1009GetterSetterConflict1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W1009GetterSetterConflict2.ump
+@@endexample

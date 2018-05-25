@@ -1,0 +1,6 @@
+//Modifying the name of the
+//method can fix the warning
+class A {
+  attr;
+  returnAttr() {/* Implementation */};
+}

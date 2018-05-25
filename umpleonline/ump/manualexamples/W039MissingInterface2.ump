@@ -1,0 +1,7 @@
+//The problem can be solved by
+//defining B
+interface A {
+  isA B;
+}
+
+interface B {}
