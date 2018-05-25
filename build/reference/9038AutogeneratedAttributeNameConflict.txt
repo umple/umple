@@ -9,7 +9,7 @@ an automatically generated variable in the same class</h2>
 
 <p>
 Some attribute generate two variables, one representing the attribute itself, and one
-representing associated information. In particular an autunique attribute will generate
+representing associated information. In particular an autounique attribute will generate
 a static variable prefixed with 'next' and an immutable attribute will generate a variable
 prefixed with 'canSet'. This error message occurs when conflicts with these occurs.
 </p>
