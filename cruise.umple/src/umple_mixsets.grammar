@@ -1,0 +1,19 @@
+// The master of this part of the Umple grammar is available at
+// [*https://github.com/umple/umple/blob/master/cruise.umple/src/umple_mixsets.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+//mixsets allow creation of mixins composed from multiple locations plus some constraints regarding usage of these mixins.
+// See user manual page [*MixsetDefinition*]
+
+mixsetBasicDeclaration : mixset [mixsetName] { [**mixsetContent] +}
+
+//  using { [**mixsetContent] } 
+// only does work; as it does not allow nested elements having 
+
+//mixsetInnerContent : { [**mixsetContent] } ( [[mixsetInnerContent]] )* 
+// //mixsetInnerContent : { [**mixsetContent] ( [[mixsetInnerContent]] )* } //This what is should be 
+
+
