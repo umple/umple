@@ -1,0 +1,16 @@
+//The warning is avoided here
+//by keeping only one auto-
+//transition
+class A {
+  sm {
+    s1 {
+      entry /{doSomething();}
+      do {doSomethingElse();}
+      -> s2;
+    }
+    s2 {
+    }
+  }
+  void doSomething() {}
+  void doSomethingElse() {}
+}

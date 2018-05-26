@@ -1,0 +1,18 @@
+//The following does not generate
+//the error as s2 contains substates
+//and can keep the last substate in
+//memory
+class A {
+  sm {
+    s1 {
+      e -> s2.H;
+    }
+    s2 {
+      s2a {
+      }
+      s2b {
+      }
+      /* ... more substates */
+    }
+  }
+}

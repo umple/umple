@@ -1,0 +1,22 @@
+W062 Unspecified Event in Pooled State Machine
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when the event &#34;unspecified&#34; is used in a pooled state machine </h2>
+
+<p>
+A pooled state machine cannot use the &#34;unspecified&#34; event in a transition. This is because the unspecified functionality is designed to handle events that occur unexpectedly, which only makes sense in a regular and pooled state machine. Pooled state machines instead just leave such events on the queue, and process events further back in the queue.
+In a pooled state machine, an event with the &#34;unspecified&#34; label is treated as a regular event and will be pooled. <br/>
+To catch and immediately process unspecified events, a queued or regular state machine could be used instead.
+</p>
+
+
+@@example
+@@source manualexamples/W062UnspecifiedEventPooledStateMachine1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W062UnspecifiedEventPooledStateMachine2.ump
+@@endexample

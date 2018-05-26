@@ -1,0 +1,12 @@
+//The warning can be avoided by using
+//a queued state machine to be able
+//to use the unspecified event
+class A {
+  queued sm {
+    s0 {
+      unspecified -> s1;
+    }
+    s1 {
+    }
+  }
+}

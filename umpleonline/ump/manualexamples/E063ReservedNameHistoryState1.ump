@@ -1,0 +1,9 @@
+//The error occurs as state machine
+//sm uses the reserved name H as a
+//state name
+class A {
+  sm {
+    H {
+    }
+  }
+}

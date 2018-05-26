@@ -1,0 +1,21 @@
+//The warning is generated due
+//to the auto-transition to s2
+//conflicting with the auto-
+//transition to s3
+class A {
+  sm {
+    s1 {
+      entry /{doSomething();}
+      -> s2;
+      
+      do {doSomethingElse();}
+      -> s3;
+    }
+    s2 {
+    }
+    s3 {
+    }
+  }
+  void doSomething() {}
+  void doSomethingElse() {}
+}

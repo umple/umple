@@ -1,0 +1,12 @@
+//The warning is generated for
+//sm due to the use of the unspecified
+//event
+class A {
+  pooled sm {
+    s0 {
+      unspecified -> s1;
+    }
+    s1 {
+    }
+  }
+}

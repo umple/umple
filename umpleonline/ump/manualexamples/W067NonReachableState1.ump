@@ -1,0 +1,13 @@
+//The warning is generated for
+//s3, as no transition leads to it
+class A {
+  sm {
+    s1 {
+      e -> s2;
+    }
+    s2 {
+    }
+    s3 {
+    }
+  }
+}
