@@ -7,8 +7,8 @@ noreferences
 <h2>Umple semantic warning issued when the destination state of a transition cannot be found</h2>
 
 <p>
-The destination state of a transition should be defined in the state machine, otherwise the transition 
-will be ignored. The warning is most likely caused by a typographical error.
+When using dot notation to define the destination state of a transition in a nested state machine (e.g. sm1.s2), then the destination state must exist, otherwise the transition 
+will be ignored. The warning is most likely caused by a typographical error. (Note that when not using dot notation, behaviour is a bit different, and a <a href="W050TargetStateNotFound.html">new end state will be created by default with warning 50</a>).
 <br/>
 The warning can be resolved by correcting the destination state name or by creating the state.
 </p>
