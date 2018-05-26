@@ -7,7 +7,7 @@ noreferences
 <h2>Umple semantic error reported when a history state is declared at a state with no substates</h2>
 
 <p>
-A history state must be declared on a state with substates, as a state with no substates
+A transition to a history state can only be declared on a state with substates, as a state with no substates
 has no history to be managed. <br/>
 </p>
 
