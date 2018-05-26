@@ -19,8 +19,10 @@
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
 </head>
 <body>
+<h2>Log of UmpleOnline internal server</h2>
+<p>The following line should indicate java and the process number running the server</p>
 <?php
-  
+  passthru('lsof -i :'.$portnumber.' | grep LISTEN ');
   $theSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
   if($theSocket === FALSE) {
     echo "<p>Cannot create socket\n";
