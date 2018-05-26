@@ -7,8 +7,8 @@ noreferences
 <h2>Umple semantic error reported when a history state is declared in a non existent state</h2>
 
 <p>
-A history state must be declared on an existing state for Umple to be able to complete the
-transition to the stored history state. <br/>
+A transition to the history of a state must be declared on an existing state for Umple to be able to complete the
+transition to its stored history state. <br/>
 The error will be raised if the state is not found in the state machine.
 </p>
 
