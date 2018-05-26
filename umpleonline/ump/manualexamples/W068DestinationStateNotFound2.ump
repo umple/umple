@@ -1,0 +1,14 @@
+//The following example does
+//not generate the warning
+//as s2.s2a is found in sm
+class A {
+  sm {
+    s1 {
+      e -> s2.s2a;
+    }
+    s2 {
+      s2a {
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+W066 Transition Multiple Possible Destinations
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when a transition has multiple possible destinations</h2>
+
+<p>
+If a transition&#39;s destination state name has multiple occurrences in the state machine,
+this warning will be issued, as it is possible the developer means to reference a specific
+substate of the same name. The dot notation should be used to clarify which substate is 
+intended to be the destination state.
+<br/>
+The transition destination is by default the highest level state in the state machine.
+In the case of multiple states at the same level using the same state name, 
+Umple currently assumes the state that has been defined first is being referenced.
+</p>
+
+
+@@example
+@@source manualexamples/W066TransitionMultiplePossibleDestinations1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W066TransitionMultiplePossibleDestinations2.ump
+@@endexample

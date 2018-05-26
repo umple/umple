@@ -7,7 +7,7 @@ noreferences
 <h2>Umple semantic error reported when a class contains one or more queued state machine and regular state machine</h2>
 
 <p>
-An Umple class cannot contain both a queued state machine and a regular state machine. < /br>
+An Umple class cannot contain both a queued state machine and a regular state machine. <br/>
 The state machines must be of the same type (e.g. both queued), or else distributed in more than one class.
 </p>
 

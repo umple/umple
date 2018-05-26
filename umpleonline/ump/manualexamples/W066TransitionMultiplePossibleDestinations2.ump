@@ -1,0 +1,14 @@
+//The warning does not occur
+//by removing the ambiguity
+class A {
+  sm {
+    s1 {
+      e -> s2.s1;
+    }
+    
+    s2 {
+      s1 {
+      }
+    }
+  }
+}

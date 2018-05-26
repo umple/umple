@@ -1,0 +1,14 @@
+//The warning is generated due
+//to the transition destination
+//of e -> s3.s2a not being defined in sm
+class A {
+  sm {
+    s1 {
+      e -> s3.s2a;
+    }
+    s2 {
+      s2a {
+      }
+    }
+  }
+}

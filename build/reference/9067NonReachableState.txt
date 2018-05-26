@@ -1,0 +1,25 @@
+W067 Non Reachable State
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when a state is non-reachable</h2>
+
+<p>
+A state that is never the destination state of a transition in the state machine or is not 
+the initial state of the state machine is considered non-reachable by the Umple compiler.
+The generated methods will not assign this state to the machine.
+<br/>
+The warning can be avoided by removing the non-reachable state or by adding an 
+appropriate transition to the state machine.
+</p>
+
+
+@@example
+@@source manualexamples/W067NonReachableState1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W067NonReachableState2.ump
+@@endexample

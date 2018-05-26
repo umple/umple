@@ -1,0 +1,14 @@
+//The error can be resolved by
+//declaring OtherState in sm
+class A {
+  sm {
+    s1 {
+      e -> OtherState.H;
+    }
+    OtherState {
+      OtherStateA {
+      }
+      /* ... other substates */
+    }
+  }
+}

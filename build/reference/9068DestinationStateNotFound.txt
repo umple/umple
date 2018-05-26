@@ -1,0 +1,23 @@
+W068 Destination State Not Found
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when the destination state of a transition cannot be found</h2>
+
+<p>
+The destination state of a transition should be defined in the state machine, otherwise the transition 
+will be ignored. The warning is most likely caused by a typographical error.
+<br/>
+The warning can be resolved by correcting the destination state name or by creating the state.
+</p>
+
+
+@@example
+@@source manualexamples/W068DestinationStateNotFound1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W068DestinationStateNotFound2.ump
+@@endexample
