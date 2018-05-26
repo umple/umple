@@ -241,10 +241,10 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
        "do double Double during else entry enum execute exit " +
        "extends external final finally float Float for generate " +
        "goto if immutable implements import " +
-       "instanceof int Integer interface internal isA key lazy long " +
+       "instanceof int Integer interface internal isA key lazy long mixset " +
        "namespace native new onThisObject package period position " +
        "private protected public " +
-       "return self settable short singleton statemachine " +
+       "require return self settable short singleton statemachine " +
        "static strictfp String super switch synchronized "+
        "this throw throws Time trace tracecase tracer trait transient " +
        "try unique until use where void volatile while"),
