@@ -1,0 +1,21 @@
+W1013 Parameter Specification Does Not Apply
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when parameters are specified on a code injection that does
+not permit it</h2>
+
+<p>Parameter specification on code injection does not apply to certain generated methods.<br/>
+The code injection will be applied to all generated methods.
+</p>
+
+
+@@example
+@@source manualexamples/W1013ParameterSpecificationInjection1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W1013ParameterSpecificationInjection2.ump
+@@endexample

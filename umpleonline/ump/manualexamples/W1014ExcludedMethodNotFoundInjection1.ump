@@ -1,0 +1,11 @@
+//The warning is generated as the code 
+//injection excludes getAttr3, which
+//is not a method in class A
+//The exclusion is ignored
+class A {
+  attr;
+  attr2;
+  
+  before getAttr*, !getAttr3 {
+  }
+}

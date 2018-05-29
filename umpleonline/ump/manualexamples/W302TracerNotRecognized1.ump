@@ -1,0 +1,9 @@
+//The tracer used is not recognized,
+//the Console tracer will be used
+tracer OtherTracer;
+
+class A {
+  Integer id;
+  
+  trace id;
+}

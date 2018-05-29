@@ -1,0 +1,21 @@
+W1010 Constraint Syntax Could Not Be Processed
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when the syntax of a constraint cannot be processed</h2>
+
+<p>When a constraint-like syntax is found but it cannot be processed by Umple, it is treated
+as extra code and left as-is. The constraint might not be constructed properly. <br/>
+The issue might come from unmatched parentheses or from an incorrect usage of operators.
+</p>
+
+
+@@example
+@@source manualexamples/W1010ConstraintSyntaxNotProcessed1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W1010ConstraintSyntaxNotProcessed2.ump
+@@endexample

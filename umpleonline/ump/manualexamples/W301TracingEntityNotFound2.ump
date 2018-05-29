@@ -1,0 +1,8 @@
+//The warning is resolved
+//by correcting the name of the
+//attribute to be traced
+class A {
+  Integer identifier;
+  
+  trace identifier;
+}

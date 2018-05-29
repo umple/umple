@@ -1,0 +1,5 @@
+//The name of the template
+//is valid in the following
+class A {
+  template <<!output!>>
+}

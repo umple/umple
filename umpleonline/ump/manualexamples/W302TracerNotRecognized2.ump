@@ -1,0 +1,9 @@
+//Using a supported tracer avoids
+//the warning
+tracer File;
+
+class A {
+  Integer id;
+  
+  trace id;
+}

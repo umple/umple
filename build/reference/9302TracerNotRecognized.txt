@@ -1,0 +1,21 @@
+W302 Tracer Not Recognized
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when a tracer is specified but not recognized</h2>
+
+<p><a href ="Tracers.html"> A certain set of MOTL tracers</a> can be specified for use 
+in Umple. Indicating a tracer that is not supported will cause the tracer directive
+to be ignored, and the Console tracer will be used. <br/>
+</p>
+
+
+@@example
+@@source manualexamples/W302TracerNotRecognized1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W302TracerNotRecognized2.ump
+@@endexample
