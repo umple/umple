@@ -3,7 +3,6 @@ class UmpleModel {
   // This mixin adds the complete set of Mixsets and files to the
   // model.
      0..1 -- * MixsetOrFile;
- //  1 -- 1..* MixsetOrFile; // not working  
 }
 
 // A MixsetOrFile is an umple entity that is subject to require logic
