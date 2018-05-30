@@ -1,0 +1,9 @@
+//The method is referred to without
+//parameters in the following, avoiding
+//the warning
+class A {
+  attr;
+  
+  before getAttr {
+  }
+}

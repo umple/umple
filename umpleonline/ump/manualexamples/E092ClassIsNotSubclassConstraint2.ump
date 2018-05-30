@@ -1,0 +1,10 @@
+//A respects the constraint
+//and avoids the error
+
+class A {
+  isA B;
+  [model: A isA B]
+}
+
+class B {
+}

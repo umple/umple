@@ -81,12 +81,11 @@
 72: 4, "http://manual.umple.org/?W072RefactoredFinalState.html", Removed do activities, exit actions, transitions, and/or nested state machines from final State '{0}' of StateMachine '{1}' ;
 73: 2, "http://manual.umple.org/?E073DuplicateParallelStateMachineName.html", Composite state '{0}' contains parallel state machines with the same name '{1}' on lines '{2}' and '{3}' ; 
 74: 2, "http://manual.umple.org/?E074UserDefinedStateCannotBeNamedFinal.html", Cannot name user-defined state on line '{0}' as Final because it is a reserved keyword ;
-80: 4, "http://manual.umple.org/?PageBeingDeveloped.html", State '{0}' was not found in state machine '{1}'. Processed as if the state exists ;
 
 # Model Constraints' Error messages
-90: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Attribute named {0} was not found in class {1}, as required in constraint ;
-91: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Attribute with type {0} was not found in class {1}, as required in constraint ;
-92: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Class {0} was not found to be a subclass of class {1}, as required in constraint ;
+90: 2, "http://manual.umple.org/?E090AttributeNameNotFoundConstraint.html", Attribute named {0} was not found in class {1}, as required in constraint ;
+91: 2, "http://manual.umple.org/?E091AttributeOfTypeNotFoundConstraint.html", Attribute with type {0} was not found in class {1}, as required in constraint ;
+92: 2, "http://manual.umple.org/?E092ClassIsNotSubclassConstraint.html", Class {0} was not found to be a subclass of class {1}, as required in constraint ;
 93: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Class {0} was not found to be a superclass of class {1}, as required in constraint ;
 94: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Class {0} was not found to have an association to class {1}, as required in constraint ;
 
@@ -176,8 +175,8 @@
 237: 1, "http://manual.umple.org/?E237ComposingTwoStateEntries.html", In the modification level of trait '{0}', state '{1}' has already have another region with the name '{2}'.;
 
 # Messages related to MOTL starting with 300
-301: 4,  "http://manual.umple.org/?PageBeingDeveloped.html", Tracing of non-existent model entity ;
-302: 4,  "http://manual.umple.org/?PageBeingDeveloped.html", Tracer not recognized - Console tracer is defaulted ;
+301: 4,  "http://manual.umple.org/?W301TracingEntityNotFound.html", Tracing of non-existent model entity ;
+302: 4,  "http://manual.umple.org/?W302TracerNotRecognized.html", Tracer not recognized - Console tracer is defaulted ;
 303: 1,  "http://manual.umple.org/?PageBeingDeveloped.html", Parsing error: Incorrect attribute trace prefix '{0}' (Prefix can be set/get/both) ;
 
 # Messages relating to deprecated features starting with 901
@@ -192,11 +191,11 @@
 1007: 3, "http://manual.umple.org/?W1007ElementNotParsed.html", Attribute or Association syntax could not be processed. It has been considered as Extra Code ;
 1008: 3, "http://manual.umple.org/?W1008MethodNotParsed.html", Method syntax could not be processed. It has been considered as Extra Code ;
 1009: 4, "http://manual.umple.org/?W1009GetterSetterMethodNameConflict.html", Method '{0}' has a name conflict with automatic generated getter/setter methods for attribute '{1}' in class '{2}'. Please use a different method name ;
-1010: 3, "http://manual.umple.org/?PageBeingDeveloped.html", Constraint syntax, {0}, could not be processed. It has been considered as Extra Code ;
+1010: 3, "http://manual.umple.org/?W1010ConstraintSyntaxCouldNotBeProcessed.html", Constraint syntax, {0}, could not be processed. It has been considered as Extra Code ;
 1011: 3, "http://manual.umple.org/?W1011InvalidAssociationClassKey.html", AssociationClass '{0}' missing needed '{1}' key, provided {2} ;
-1012: 3, "http://manual.umple.org/?PageBeingDeveloped.html", Method '{0}' cannot be found. Injection was ignored. ;
-1013: 3, "http://manual.umple.org/?PageBeingDeveloped.html", Parameter specification does not apply to code injections with the '{0}' keyword. The injection was applied to all generated methods. ;
-1014: 3, "http://manual.umple.org/?PageBeingDeveloped.html", Excluded method '{0}' cannot be found. The exclusion was ignored. ;
+1012: 3, "http://manual.umple.org/?W1012MethodNotFoundInjection.html", Method '{0}' cannot be found. Injection was ignored. ;
+1013: 3, "http://manual.umple.org/?W1013ParameterSpecificationDoesNotApply.html", Parameter specification does not apply to code injections with the '{0}' keyword. The injection was applied to all generated methods. ;
+1014: 3, "http://manual.umple.org/?W1014ExcludedMethodNotFoundInjection.html", Excluded method '{0}' cannot be found. The exclusion was ignored. ;
 
 1500 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: '{0}' not understood ; 
 1501 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 
@@ -212,7 +211,7 @@
 
 
 # Messages related to templates
-3500: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;
+3500: 2, "http://manual.umple.org/?E3500InvalidTemplateName.html", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;
 3501: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Template emit method can not be a main.;
 3502: 1, "http://manual.umple.org/?PageBeingDeveloped.html", Template name '{0}' can not be resolved.;
 3503: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Template reference '{0}' cannot refer to itself.;

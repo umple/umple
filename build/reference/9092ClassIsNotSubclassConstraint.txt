@@ -1,0 +1,21 @@
+E092 Class Is Not Subclass Constraint
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when a class is not the subclass of a given class as defined by a constraint</h2>
+
+<p>
+Model constraints can be applied to Umple classes to ensure they respect certain properties, as defined in their constraints.
+This error is raised if a class is not the subclass of a given class as expected from the constraint.
+</p>
+
+
+@@example
+@@source manualexamples/E092ClassIsNotSubclassConstraint1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E092ClassIsNotSubclassConstraint2.ump
+@@endexample

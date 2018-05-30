@@ -1,0 +1,13 @@
+//The warning is raised twice in
+//the following as both constraints
+//are not properly constructed
+class A {
+  Integer a;
+  Integer b;
+  Integer c;
+  
+  [(a > b)) && a < c]
+  [c < a | b > a]
+}
+//$?[End_of_model]$?
+// @@@skipcompile - This will not compile because the constraints are not properly constructed

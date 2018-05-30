@@ -1,0 +1,21 @@
+W1014 Excluded Method Not Found Injection
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when an excluded method is not found in a code injection</h2>
+
+<p>When excluding methods in a <a href="CodeInjectionPatternMatching.html">code injection with pattern matching</a>, 
+a warning will be raised if a method is not found. The exclusion will be ignored.<br/>
+Verifying which method was meant to be excluded will generally resolve the issue.
+</p>
+
+
+@@example
+@@source manualexamples/W1014ExcludedMethodNotFoundInjection1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W1014ExcludedMethodNotFoundInjection2.ump
+@@endexample

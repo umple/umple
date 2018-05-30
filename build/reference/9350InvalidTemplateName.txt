@@ -1,0 +1,20 @@
+E3500 Invalid Template Name
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when a template name is not valid</h2>
+
+<p>In Umple, a template name must be alphanumeric and 
+start with a letter or the symbol &#39;_&#39;.<br/>
+</p>
+
+
+@@example
+@@source manualexamples/E3500InvalidTemplateName1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E3500InvalidTemplateName2.ump
+@@endexample

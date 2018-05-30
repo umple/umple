@@ -1,0 +1,9 @@
+//The error is raised, A does
+//not contain an attribute of
+//type B
+class A {
+  [model: A has attribute of B]
+}
+
+class B {
+}

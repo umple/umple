@@ -1,0 +1,11 @@
+//By declaring the attribute attr
+//the getAttr method can now be used
+class A {
+  attr;
+  
+  before getAttr {
+    doSomething();
+  }
+  
+  doSomething(){/* Implementation */}
+}
