@@ -9,7 +9,7 @@
 // See user manual page [*MixsetDefinition*]
 
 mixsetDeclaration- : mixset [mixsetName] ( [[mixsetInnerContent]] | [[mixsetInlineDeclaration]] )
-mixsetInnerContent- : [[extraCode]]
+mixsetInnerContent- : { [[extraCode]] }
  
 
 mixsetInlineDeclaration- : ( [entityType] [entityName] ( [[mixsetInnerContent]] | [entityOneElement] ) | [oneElement])
