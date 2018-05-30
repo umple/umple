@@ -8,7 +8,7 @@ noreferences
 
 <p>When a constraint-like syntax is found but it cannot be processed by Umple, it is treated
 as extra code and left as-is. The constraint might not be constructed properly. <br/>
-The issue might come from unmatched parentheses or from an incorrect usage of operators.
+The issue could come from unmatched parentheses or from an incorrect usage of operators.
 </p>
 
 

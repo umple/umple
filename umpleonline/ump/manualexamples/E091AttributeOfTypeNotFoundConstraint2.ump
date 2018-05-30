@@ -1,0 +1,9 @@
+//A now contains an
+//attribute of type B
+class A {
+  B attr;
+  [model: A has attribute of B]
+}
+
+class B {
+}
