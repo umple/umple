@@ -106,6 +106,7 @@
       <exclude name="E0*.ump" />
       <exclude name="E1*.ump" />
       <exclude name="E2*.ump" />
+      <exclude name="E3*.ump" />      
       <exclude name="WE1xxIdentifierInvalid1.ump" />
       <exclude name="WE1xxIdentifierInvalid3.ump" />
       <exclude name="WE1xxIdentifierInvalid5.ump" />
