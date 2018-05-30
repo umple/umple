@@ -1,0 +1,7 @@
+//The emit method name
+//cannot be main, the error
+//is produced
+class A {
+  template <<!output!>>
+  emit main()(template);
+}
