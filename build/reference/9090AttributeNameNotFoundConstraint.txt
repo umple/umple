@@ -14,9 +14,9 @@ The attribute might have been defined in a separate file previously, but no long
 
 
 @@example
-@@source manualexamples/E90AttributeNameNotFoundConstraint1.ump
+@@source manualexamples/E090AttributeNameNotFoundConstraint1.ump
 @@endexample
 
 @@example
-@@source manualexamples/E90AttributeNameNotFoundConstraint2.ump
+@@source manualexamples/E090AttributeNameNotFoundConstraint2.ump
 @@endexample

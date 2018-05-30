@@ -4,3 +4,4 @@
 class A {
   [model: A has attribute named attr]
 }
+// @@@skipcompile
