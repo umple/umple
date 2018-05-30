@@ -1134,3 +1134,4 @@ use UmpleDiagram.ump;
 use StateMachine.ump;
 use Umple_Code.ump;
 use UmpleEnumeration_Code.ump;
+use Mixset.ump;
