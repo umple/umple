@@ -1,0 +1,9 @@
+//The class A generates the error
+//by not containing the required
+//association
+class A {
+  [model: A -- B]
+}
+
+class B {
+}

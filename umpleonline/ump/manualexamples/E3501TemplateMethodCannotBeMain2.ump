@@ -1,0 +1,6 @@
+//Using another method name
+//solves the error
+class A {
+  template <<!output!>>
+  emit method()(template);
+}
