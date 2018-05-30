@@ -22,7 +22,7 @@ class MixsetOrFile {
 // instance would have to be populated for every file
 // not just the main file.
 class UmpleFile {
-  isAMixsetOrFile;
+  isA MixsetOrFile;
   String getName() {
     return getSimpleFileName();
   }
