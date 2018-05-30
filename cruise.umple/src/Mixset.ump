@@ -70,6 +70,3 @@ class MixsetFragment {
   // if class X { mixset Y a; then just there are no curly brackets, and a is wrapped in class X {}
   body;
 }
-
-Umple_Mixsets.ump
-Displaying Umple_Mixsets.ump.
