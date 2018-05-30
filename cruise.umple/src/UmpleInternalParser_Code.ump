@@ -72,6 +72,9 @@ class UmpleInternalParser
     
     // Set up needed parser actions
     parser.addParserAction("useStatement", new UseStatementParserAction() );
+    parser.addParserAction("mixsetDeclaration", new MixsetStatementParserAction() );
+    
+    
     parser.setLinkedFileHandler( new UmpleLinkedFileHandler() );
     parser.setAnalyzerGenerator( new UmpleAnalyzerGeneratorHandler() );
     

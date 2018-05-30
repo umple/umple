@@ -66,6 +66,28 @@ class UseStatementParserAction{
   }
 }
 
+class MixsetStatementParserAction{
+ 
+  depend cruise.umple.parser.analysis.ParserAction;
+  depend cruise.umple.parser.analysis.ParserDataPackage;
+
+  depend cruise.umple.parser.Token;
+  
+  isA ParserAction;
+  
+  public void onSuccess(Token token, ParserDataPackage data)
+  {
+   
+   System.out.println("  ---- ----  Start Mixset Parsing ---- ----");
+   System.out.println(""+token);
+   System.out.println("  ---- ----  End Mixset Parsing ---- ----");
+  
+  
+  }
+
+
+}
+
 /* This is the LinkedFileHandler for the Umple language. 
  *
  * This handler takes all linked files and appends a series of 'use' statements
