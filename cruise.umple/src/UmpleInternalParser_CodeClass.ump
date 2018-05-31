@@ -17,6 +17,7 @@ namespace cruise.umple.compiler;
 class UmpleInternalParser
 {
   depend java.util.regex.*;
+  depend cruise.umple.parser.Token;
   
   internal AssociationVariable[] unlinkedAssociationVariables;
   internal Association[] unlinkedAssociations;
@@ -146,6 +147,14 @@ class UmpleInternalParser
 
   }  
 
+
+	private void analyzeMixsetDefinition(Token aToken , String className)
+	{
+		aToken.addSubToken(new Token("enitiyName",className) );
+		aToken.addSubToken(new Token("enitiyType","class") );
+	//	System.out.println("print the body: "+t.getValue("extraCode"));
+	
+	}
   /*
    * If the last attribute/association made matches the line number of the comment, add the comment to the attribute/association.
    * 
@@ -1048,6 +1057,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    */
   private UmpleClass analyzeClass(Token classToken)
   {
+  
+  	
     //Reset number of activeObjects with each class definition
     this.numberOfActiveObjects = 1;
     
@@ -1157,6 +1168,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
     if(classToken.is("associationClassDefinition")) {
       analyzeAllAssociations(classToken);
+    }
+    
+     if(classToken.is("mixsetName")) {
+      analyzeMixsetDefinition(classToken, className);
     }
 
     analyzeAllTokens(classToken,aClass);

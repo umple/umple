@@ -66,23 +66,83 @@ class UseStatementParserAction{
   }
 }
 
+class UmpleModel{
+
+	Mixset getMixset(String name) {
+		Mixset mixset = null;
+		for(MixsetOrFile mOrF : getMixsetOrFiles())
+		{
+			if (mOrF.getName().equals(name) && (mOrF instanceof Mixset))
+				mixset = (Mixset)mOrF;
+		}
+		return mixset;
+	}
+	
+	
+
+}
+
+
+
 class MixsetStatementParserAction{
- 
+  depend cruise.umple.compiler.UmpleModel;
+  depend cruise.umple.parser.Position;
   depend cruise.umple.parser.analysis.ParserAction;
   depend cruise.umple.parser.analysis.ParserDataPackage;
-
   depend cruise.umple.parser.Token;
+  depend java.util.stream.Stream;
   
+  
+  UmpleModel model;
   isA ParserAction;
   
   public void onSuccess(Token token, ParserDataPackage data)
   {
    
-   /*
+   String mixsetName = token.getValue("mixsetName");
+
+
+    Mixset m = model.getMixset(mixsetName);
+    
+    // check if the mixset is was not added
+    
+    if( m == null)
+	{
+		//long count  = model.getMixsetOrFiles().stream().filter(m-> m.getName().equals(mixsetName)).count(); 
+		m = new Mixset(mixsetName);
+		model.addMixsetOrFile(m);
+	}
+	
+	String mixsetBody = token.getValue("extraCode");	
+	
+	//inline mixset def.
+	String entityType = token.getValue("entityType");
+	String entityName = token.getValue("entityName");
+	if(entityType != null) mixsetBody = entityType + " "+entityName + " { "+ mixsetBody + " }";	
+	
+	// mixset has one element
+	String oneElementMixset = token.getValue("oneElement");
+	if (oneElementMixset != null) mixsetBody = oneElementMixset;
+	
+	// mixset as inner enitity
+	// getParentToken()
+	// when mixset is inside a class or .... 
+	//System.out.println(" getParentToken() : "+token.getParentToken());
+	
+	MixsetFragment mixsetFragment = new MixsetFragment(null, 99999, mixsetBody);
+	m.addWaitingFragment(mixsetFragment);
+
+
+   
+ //  System.out.println("FullFileAddress: "+ data.getFullFileAddress()+", file Name: "+data.getFilename()+", Position : "+data.getPosition());  
    System.out.println("  ---- ----  Start Mixset Parsing ---- ----");
    System.out.println(""+token);
+   System.out.println("MIXSET ::: "+ m + " Mixset Body  :"+mixsetBody);
+   
    System.out.println("  ---- ----  End Mixset Parsing ---- ----");
-  */
+  
+  
+  	System.out.println("\n\n\n\n");
   
   }
 
