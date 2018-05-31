@@ -17,6 +17,7 @@ namespace cruise.umple.compiler;
 class UmpleInternalParser
 {
   depend java.util.regex.*;
+  depend cruise.umple.parser.Token;
   
   internal AssociationVariable[] unlinkedAssociationVariables;
   internal Association[] unlinkedAssociations;
@@ -146,6 +147,8 @@ class UmpleInternalParser
 
   }  
 
+
+	
   /*
    * If the last attribute/association made matches the line number of the comment, add the comment to the attribute/association.
    * 
@@ -1048,6 +1051,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    */
   private UmpleClass analyzeClass(Token classToken)
   {
+  
+  	
     //Reset number of activeObjects with each class definition
     this.numberOfActiveObjects = 1;
     
@@ -1158,10 +1163,26 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     if(classToken.is("associationClassDefinition")) {
       analyzeAllAssociations(classToken);
     }
-
+    
+     if(classToken.getValue("mixsetName") != null) {
+      analyzeMixsetDefinition(classToken, className);
+    }
+    
     analyzeAllTokens(classToken,aClass);
     return aClass;
   }
+  
+  private void analyzeMixsetDefinition(Token aToken , String className)
+	{
+		aToken.addSubToken(new Token("mixsetDefinition","") );
+		aToken.addSubToken(new Token("entityName",className) );
+		aToken.addSubToken(new Token("entityType","class") );
+		System.out.println("print the token: "+ aToken );
+		
+		analyzeMixset(aToken);
+		
+	
+	}
 
   /*
    * Takes an Umple classifier and analyzes a classifier token to add classifiers which extend it.
