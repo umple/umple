@@ -98,7 +98,7 @@ class MixsetStatementParserAction{
   
   public void onSuccess(Token token, ParserDataPackage data)
   {
-   
+   /* Moved to UmpleInternal_CodeMixset
    String mixsetName = token.getValue("mixsetName");
 
 
@@ -143,7 +143,7 @@ class MixsetStatementParserAction{
   
   
   	System.out.println("\n\n\n\n");
-  
+  */
   }
 
 

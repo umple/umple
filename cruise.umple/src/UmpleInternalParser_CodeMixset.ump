@@ -1,0 +1,111 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file analyze core umple meta model tokens such as which language to generate,
+the current namespace, etc and populates the umple meta model.
+
+Please refer to UmpleInternalParser.ump for more details.
+
+*/
+
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+
+ // prepare mixsets that are inside an Umple class
+  private void analyzeMixsetDefinition(Token aToken , String className)
+	{
+		aToken.addSubToken(new Token("mixsetDefinition","") );
+		aToken.addSubToken(new Token("entityName",className) );
+		aToken.addSubToken(new Token("entityType","class") );
+		System.out.println("print the token: "+ aToken );
+		
+		analyzeMixset(aToken);
+		
+	
+	}
+
+ private void analyzeMixsetToken(Token t, int analysisStep)
+  {
+   /*if (analysisStep != 2)
+    {
+      shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
+      return;
+    }
+    */
+        
+    if (t.is("mixsetDefinition"))
+    {
+      analyzeMixset(t);
+    }
+    
+  }
+  
+  
+  private Mixset analyzeMixset(Token token)
+  {
+  	String mixsetName = token.getValue("mixsetName");
+  	
+    // check if the mixset is was not added before
+    Mixset mixset = model.getMixset(mixsetName);
+    if(mixset  == null)
+	{
+		//long count  = model.getMixsetOrFiles().stream().filter(m-> m.getName().equals(mixsetName)).count(); 
+		mixset  = new Mixset(mixsetName);
+		model.addMixsetOrFile(mixset);
+	}
+	
+	String mixsetBody = token.getValue("extraCode");	
+	
+	//inline mixset def.
+	String entityType = token.getValue("entityType");
+	String entityName = token.getValue("entityName");
+	
+	// mixset with one element
+	String oneElementMixset = token.getValue("oneElement");
+	
+	if(entityType != null) {
+		if (oneElementMixset != null)
+		{
+			mixsetBody = entityType + " "+entityName + " { "+ oneElementMixset + " }";
+		}
+		else
+			mixsetBody = entityType + " "+entityName + " { "+ mixsetBody + " }";	
+		}
+	else 
+		if (oneElementMixset != null) mixsetBody = oneElementMixset;
+	
+	/*
+		START UNDER DEVELOPMENT
+	*/	
+	MixsetFragment mixsetFragment = new MixsetFragment(null, 99999, mixsetBody);
+	mixset.addWaitingFragment(mixsetFragment);
+	
+	
+	
+ //  System.out.println("FullFileAddress: "+ data.getFullFileAddress()+", file Name: "+data.getFilename()+", Position : "+data.getPosition());  
+   System.out.println("  ---- ----  Start Mixset Parsing ---- ----");
+   System.out.println("MIXSET ::: "+  mixset  + " Mixset Body  :"+mixsetBody);
+   System.out.println("  ---- ----  End Mixset Parsing ---- ----");
+   System.out.println("\n\n\n\n");
+   
+   /*
+		END UNDER DEVELOPMENT
+		
+		
+	*/	
+   return  mixset ;
+  
+  }
+  
+  
+  
+
+  
+}
