@@ -21,11 +21,12 @@ class UmpleInternalParser
  // prepare mixsets that are inside an Umple class
   private void analyzeMixsetDefinition(Token aToken , String className)
 	{
+	/*
 		aToken.addSubToken(new Token("mixsetDefinition","") );
 		aToken.addSubToken(new Token("entityName",className) );
 		aToken.addSubToken(new Token("entityType","class") );
 		System.out.println("print the token: "+ aToken );
-		
+*/		
 		analyzeMixset(aToken);
 		
 	
@@ -83,18 +84,18 @@ class UmpleInternalParser
 	
 	/*
 		START UNDER DEVELOPMENT
-	*/	
+		
 	MixsetFragment mixsetFragment = new MixsetFragment(null, 99999, mixsetBody);
-	mixset.addWaitingFragment(mixsetFragment);
+//	mixset.addWaitingFragment(mixsetFragment);
+	*/
 	
 	
-	
- //  System.out.println("FullFileAddress: "+ data.getFullFileAddress()+", file Name: "+data.getFilename()+", Position : "+data.getPosition());  
+ /*  System.out.println("FullFileAddress: "+ data.getFullFileAddress()+", file Name: "+data.getFilename()+", Position : "+data.getPosition());  
    System.out.println("  ---- ----  Start Mixset Parsing ---- ----");
    System.out.println("MIXSET ::: "+  mixset  + " Mixset Body  :"+mixsetBody);
    System.out.println("  ---- ----  End Mixset Parsing ---- ----");
    System.out.println("\n\n\n\n");
-   
+   */
    /*
 		END UNDER DEVELOPMENT
 		
