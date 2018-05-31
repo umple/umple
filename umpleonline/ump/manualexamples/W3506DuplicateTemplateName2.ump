@@ -1,0 +1,7 @@
+//The warning is resolved by
+//giving the second template
+//a distinct name
+class A {
+  temp <<! output !>>
+  secondTemp <<! otherOutput !>>
+}

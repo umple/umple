@@ -1,0 +1,10 @@
+//Changing the name of the
+//second emit method resolves
+//the issue
+class A {
+  temp <<! output !>>
+  otherTemp <<! output !>>
+  
+  emit aMethod()(temp);
+  emit aMethod2()(otherTemp);
+}

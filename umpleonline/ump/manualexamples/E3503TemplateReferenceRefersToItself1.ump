@@ -1,0 +1,6 @@
+//Template otherTemp refers to
+//itself causing the error
+class A {
+  temp <<! output !>>
+  otherTemp <<! <<@otherTemp>> !>>
+}

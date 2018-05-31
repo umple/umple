@@ -1,0 +1,9 @@
+//The constraint is now respected
+//and the error does not occur
+class A {
+  [model: A superclass B]
+}
+
+class B {
+  isA A;
+}

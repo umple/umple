@@ -1,0 +1,9 @@
+//Class A contains two emit
+//methods of the same name
+class A {
+  temp <<! output !>>
+  otherTemp <<! output !>>
+  
+  emit aMethod()(temp);
+  emit aMethod()(otherTemp);
+}
