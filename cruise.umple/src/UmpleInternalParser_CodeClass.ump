@@ -148,13 +148,7 @@ class UmpleInternalParser
   }  
 
 
-	private void analyzeMixsetDefinition(Token aToken , String className)
-	{
-		aToken.addSubToken(new Token("enitiyName",className) );
-		aToken.addSubToken(new Token("enitiyType","class") );
-	//	System.out.println("print the body: "+t.getValue("extraCode"));
 	
-	}
   /*
    * If the last attribute/association made matches the line number of the comment, add the comment to the attribute/association.
    * 
@@ -1170,13 +1164,25 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       analyzeAllAssociations(classToken);
     }
     
-     if(classToken.is("mixsetName")) {
+     if(classToken.getValue("mixsetName") != null) {
       analyzeMixsetDefinition(classToken, className);
     }
-
+    
     analyzeAllTokens(classToken,aClass);
     return aClass;
   }
+  
+  private void analyzeMixsetDefinition(Token aToken , String className)
+	{
+		aToken.addSubToken(new Token("mixsetDefinition","") );
+		aToken.addSubToken(new Token("entityName",className) );
+		aToken.addSubToken(new Token("entityType","class") );
+		System.out.println("print the token: "+ aToken );
+		
+		analyzeMixset(aToken);
+		
+	
+	}
 
   /*
    * Takes an Umple classifier and analyzes a classifier token to add classifiers which extend it.
