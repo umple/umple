@@ -1,0 +1,8 @@
+//inB has not been defined
+//in class A, causing the error
+class A {
+  public in Integer inA;
+  public out Integer outA;
+  
+  inB -> outA;
+}
