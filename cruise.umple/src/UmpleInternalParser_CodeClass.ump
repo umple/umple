@@ -269,6 +269,11 @@ class UmpleInternalParser
     {
       analyzeAttribute(token,aClass);
     }
+    else if ( (token.getValue("mixsetName") != null) ||  (token.getValue("mixsetDefinition") != null) ) {
+        System.out.println("#############  " +token + "#################################");
+     	analyzeMixsetDefinition(token, aClass.getName());
+    
+    }
     else if (token.is("extraCode"))
     {
       analyzeExtraCode(token,aClass);
@@ -1052,7 +1057,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private UmpleClass analyzeClass(Token classToken)
   {
   
-  System.out.println("#############  " +classToken + "#################################");
   	
     //Reset number of activeObjects with each class definition
     this.numberOfActiveObjects = 1;
@@ -1165,9 +1169,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       analyzeAllAssociations(classToken);
     }
     
-     if(classToken.getValue("mixsetName") != null) {
-     	analyzeMixsetDefinition(classToken, className);
-    }
+
     
     analyzeAllTokens(classToken,aClass);
     return aClass;

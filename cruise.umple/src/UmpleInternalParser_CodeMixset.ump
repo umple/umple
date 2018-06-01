@@ -75,6 +75,7 @@ class UmpleInternalParser
   	aToken.addSubToken(new Token("entityName",className) );
 	aToken.addSubToken(new Token("entityType","class") );
 	System.out.println("print the token: "+ aToken );
+	
 	analyzeMixset(aToken);
 		
 	
