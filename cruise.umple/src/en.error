@@ -215,7 +215,7 @@
 3501: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Template emit method can not be a main.;
 3502: 1, "http://manual.umple.org/?PageBeingDeveloped.html", Template name '{0}' can not be resolved.;
 3503: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Template reference '{0}' cannot refer to itself.;
-3504: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Template reference '{0}' can not be resolved.;
+3504: 2, "http://manual.umple.org/?E3504TemplateReferenceCannotBeResolved.html", Template reference '{0}' can not be resolved.;
 3505: 1, "http://manual.umple.org/?PageBeingDeveloped.html", Template reference '{0}' can not cyclically refer to '{1}'.;
 3506: 4, "http://manual.umple.org/?PageBeingDeveloped.html", Class '{0}' has duplicate template name {1} ;
 3507: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Class '{0}' has duplicate method name {1} ;

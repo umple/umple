@@ -1,0 +1,7 @@
+//The template otherTemplate
+//is not found, generating the
+//error
+class A {
+  temp <<! <<@otherTemplate>> !>>
+  emit method()(temp);
+}
