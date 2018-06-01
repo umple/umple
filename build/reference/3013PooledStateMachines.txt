@@ -12,7 +12,7 @@ In a pooled state machine there is a queue in a separate thread, just like in a 
 </p>
 
 <p>      
-A queued state machine will therefore often process events in a different order from a regular state machine.
+A pooled state machine will therefore often process events in a different order from a regular or queued state machine.
 </p>
 
 @@syntax
