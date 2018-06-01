@@ -1,0 +1,5 @@
+//The template name cannot be
+//found as it does not exist
+class A {
+  emit method()(template);
+}

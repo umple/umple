@@ -1,0 +1,20 @@
+E3503 Template Reference Refers To Itself
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when a template reference refers to itself</h2>
+
+<p>
+A template reference cannot refer to itself. The logic of the template might be flawed.<br/>
+</p>
+
+
+@@example
+@@source manualexamples/E3503TemplateReferenceRefersToItself1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E3503TemplateReferenceRefersToItself2.ump
+@@endexample

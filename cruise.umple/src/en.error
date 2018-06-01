@@ -86,8 +86,8 @@
 90: 2, "http://manual.umple.org/?E090AttributeNameNotFoundConstraint.html", Attribute named {0} was not found in class {1}, as required in constraint ;
 91: 2, "http://manual.umple.org/?E091AttributeOfTypeNotFoundConstraint.html", Attribute with type {0} was not found in class {1}, as required in constraint ;
 92: 2, "http://manual.umple.org/?E092ClassIsNotSubclassConstraint.html", Class {0} was not found to be a subclass of class {1}, as required in constraint ;
-93: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Class {0} was not found to be a superclass of class {1}, as required in constraint ;
-94: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Class {0} was not found to have an association to class {1}, as required in constraint ;
+93: 2, "http://manual.umple.org/?E093ClassIsNotSuperclassConstraint.html", Class {0} was not found to be a superclass of class {1}, as required in constraint ;
+94: 2, "http://manual.umple.org/?E094NoAssociationFoundConstraint.html", Class {0} was not found to have an association to class {1}, as required in constraint ;
 
 # Enumeration Errors and Warnings
 95: 2, "http://manual.umple.org/?E095DuplicateEnumerations.html", Detected duplicate enumeration '{0}' on line '{1}' ;
@@ -212,13 +212,13 @@
 
 # Messages related to templates
 3500: 2, "http://manual.umple.org/?E3500InvalidTemplateName.html", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;
-3501: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Template emit method can not be a main.;
-3502: 1, "http://manual.umple.org/?PageBeingDeveloped.html", Template name '{0}' can not be resolved.;
-3503: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Template reference '{0}' cannot refer to itself.;
+3501: 2, "http://manual.umple.org/?E3501TemplateMethodCannotBeMain.html", Template emit method can not be a main.;
+3502: 1, "http://manual.umple.org/?E3502TemplateNameCannotBeResolved.html", Template name '{0}' can not be resolved.;
+3503: 2, "http://manual.umple.org/?E3503TemplateReferenceRefersToItself.html", Template reference '{0}' cannot refer to itself.;
 3504: 2, "http://manual.umple.org/?E3504TemplateReferenceCannotBeResolved.html", Template reference '{0}' can not be resolved.;
-3505: 1, "http://manual.umple.org/?PageBeingDeveloped.html", Template reference '{0}' can not cyclically refer to '{1}'.;
-3506: 4, "http://manual.umple.org/?PageBeingDeveloped.html", Class '{0}' has duplicate template name {1} ;
-3507: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Class '{0}' has duplicate method name {1} ;
+3505: 1, "http://manual.umple.org/?E3505TemplateReferenceCycle.html", Template reference '{0}' can not cyclically refer to '{1}'.;
+3506: 4, "http://manual.umple.org/?W3506DuplicateTemplateName.html", Class '{0}' has duplicate template name {1} ;
+3507: 2, "http://manual.umple.org/?E3507DuplicateEmitMethodName.html", Class '{0}' has duplicate method name {1} ;
 3508: 2, "http://manual.umple.org/?PageBeingDeveloped.html", Emit name '{0}' must be alphanumeric and start with an alpha character, or _  ;
 
 # Messages related to structure
@@ -228,7 +228,7 @@
 3604: 1, "http://manual.umple.org/?PageBeingDeveloped.html", Port binding to component '{0}' can not be resolved.;
 3605: 1, "http://manual.umple.org/?PageBeingDeveloped.html", Port binding from port can not be resolved.;
 3606: 1, "http://manual.umple.org/?PageBeingDeveloped.html", Port binding to port can not be resolved.;
-3607: 1, "http://manual.umple.org/?PageBeingDeveloped.html", Port name '{0}' from class '{1}' can not be resolved.;
+3607: 1, "http://manual.umple.org/?E3607PortNameCannotBeResolved.html", Port name '{0}' from class '{1}' can not be resolved.;
 
 # Messages related to fixml
 4500: 1,  "http://manual.umple.org/?PageBeingDeveloped.html", The tag '{0}' is not closed correctly.  ;

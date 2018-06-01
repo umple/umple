@@ -1,0 +1,9 @@
+//Both inA and outA are
+//defined; the error does
+//not occur
+class A {
+  public in Integer inA;
+  public out Integer outA;
+  
+  inA -> outA;
+}

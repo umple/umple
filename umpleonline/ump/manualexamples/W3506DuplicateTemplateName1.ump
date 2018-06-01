@@ -1,0 +1,7 @@
+//Class A contains two templates
+//of the same name, causing
+//the warning
+class A {
+  temp <<! output !>>
+  temp <<! otherOutput !>>
+}

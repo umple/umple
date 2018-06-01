@@ -1,0 +1,9 @@
+//There is no longer a cycle,
+//the error is resolved
+class A {
+  temp <<! <<@temp3>> !>>
+  temp2 <<! <<@temp>> !>>
+  temp3 <<! output !>>
+    
+  emit method()(temp);
+}
