@@ -1052,6 +1052,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private UmpleClass analyzeClass(Token classToken)
   {
   
+  System.out.println("#############  " +classToken + "#################################");
   	
     //Reset number of activeObjects with each class definition
     this.numberOfActiveObjects = 1;
@@ -1165,24 +1166,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
     
      if(classToken.getValue("mixsetName") != null) {
-      analyzeMixsetDefinition(classToken, className);
+     	analyzeMixsetDefinition(classToken, className);
     }
     
     analyzeAllTokens(classToken,aClass);
     return aClass;
   }
   
-  private void analyzeMixsetDefinition(Token aToken , String className)
-	{
-		aToken.addSubToken(new Token("mixsetDefinition","") );
-		aToken.addSubToken(new Token("entityName",className) );
-		aToken.addSubToken(new Token("entityType","class") );
-		System.out.println("print the token: "+ aToken );
-		
-		analyzeMixset(aToken);
-		
-	
-	}
 
   /*
    * Takes an Umple classifier and analyzes a classifier token to add classifiers which extend it.
