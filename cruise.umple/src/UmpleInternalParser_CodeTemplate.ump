@@ -687,11 +687,8 @@ class TemplateTokenAnalyzer {
 							HashMap<String, Boolean> map = new HashMap<String,Boolean>();
 							map.put(key, true);
 							
-							if (refValue == null) {
-								parser.getParseResult().setPosition(incElm.getPosition());
-								parser.getParseResult().addErrorMessage(new ErrorMessage(3504, incElm.getPosition(),key));
-							}
-							else {
+							if (refValue != null)
+							{
 								boolean check = recursiveIncludeTemplateElementCycleCheck(referenceTemplate, refValue, map);
 								
 								if(!check) {
