@@ -66,21 +66,7 @@ class UseStatementParserAction{
   }
 }
 
-class UmpleModel{
 
-	Mixset getMixset(String name) {
-		Mixset mixset = null;
-		for(MixsetOrFile mOrF : getMixsetOrFiles())
-		{
-			if (mOrF.getName().equals(name) && (mOrF instanceof Mixset))
-				mixset = (Mixset)mOrF;
-		}
-		return mixset;
-	}
-	
-	
-
-}
 
 
 
