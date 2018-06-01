@@ -231,7 +231,7 @@
 3607: 1, "http://manual.umple.org/?E3607PortNameCannotBeResolved.html", Port name '{0}' from class '{1}' can not be resolved.;
 
 # Messages related to fixml
-4500: 1,  "http://manual.umple.org/?PageBeingDeveloped.html", The tag '{0}' is not closed correctly.  ;
+4500: 1,  "http://manual.umple.org/?E4500TagNotClosedCorrectly.html", The tag '{0}' is not closed correctly.  ;
 
 # Warning messages related to distributed systems
 
@@ -244,9 +244,9 @@
 8005: 5, "http://manual.umple.org/?PageBeingDeveloped.html", Debug warning : '{0}' ;
 
 # Messages related to code generator
-9000: 1, "http://manual.umple.org/?PageBeingDeveloped.html", Compiler Error (Parsing). {0} ;
-9100: 1, "http://manual.umple.org/?PageBeingDeveloped.html", Compiler Error (Analysis). {0} ;
-9200: 1, "http://manual.umple.org/?PageBeingDeveloped.html", Compiler Error (Generation). {0} ;
+9000: 1, "http://manual.umple.org/?E9x00CompilerError.html", Compiler Error (Parsing). {0} ;
+9100: 1, "http://manual.umple.org/?E9x00CompilerError.html", Compiler Error (Analysis). {0} ;
+9200: 1, "http://manual.umple.org/?E9x00CompilerError.html", Compiler Error (Generation). {0} ;
 
 # Message to emit when you are parsing a construct but are not yet processing it in a sensible way/
 9999: 5, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Feature under development. '{0}' found and ignored. processed as: '{1}' ;
