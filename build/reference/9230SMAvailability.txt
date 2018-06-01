@@ -1,5 +1,5 @@
 E230 Availability of State Machines
-Errors and Warnings
+Errors and Warnings 100-999
 noreferences
 
 @@description

@@ -1,5 +1,5 @@
 E024 Sort Key Not of Umple Type
-Errors and Warnings
+Errors and Warnings 1-50
 noreferences
 
 @@description

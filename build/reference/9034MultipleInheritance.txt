@@ -1,5 +1,5 @@
 E034 Multiple Inheritance
-Errors and Warnings
+Errors and Warnings 1-50
 noreferences
 
 @@description

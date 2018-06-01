@@ -1,5 +1,5 @@
 E112 Duplicate Constants in Interface
-Errors and Warnings
+Errors and Warnings 100-999
 noreferences
 
 @@description

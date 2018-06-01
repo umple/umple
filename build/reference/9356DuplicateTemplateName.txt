@@ -1,5 +1,5 @@
 W3506 Duplicate Template Name
-Errors and Warnings
+Errors and Warnings 1000+
 noreferences
 
 @@description

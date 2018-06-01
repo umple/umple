@@ -1,5 +1,5 @@
 E012 Class Indirectly Subclass of Self
-Errors and Warnings
+Errors and Warnings 1-50
 noreferences
 
 @@description

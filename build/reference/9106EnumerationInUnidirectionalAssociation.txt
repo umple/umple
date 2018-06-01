@@ -1,5 +1,5 @@
 W106 Enumeration in Uni-directional Association
-Errors and Warnings
+Errors and Warnings 100-999
 noreferences
 
 @@description

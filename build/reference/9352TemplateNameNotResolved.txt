@@ -1,5 +1,5 @@
 E3502 Template Name Cannot Be Resolved
-Errors and Warnings
+Errors and Warnings 1000+
 noreferences
 
 @@description

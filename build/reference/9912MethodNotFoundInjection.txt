@@ -1,5 +1,5 @@
 W1012 Method Not Found Injection
-Errors and Warnings
+Errors and Warnings 1000+
 noreferences
 
 @@description
