@@ -1,5 +1,5 @@
 E073 Duplicate Parallel State Machine Name
-Errors and Warnings
+Errors and Warnings 51-99
 noreferences
 
 @@description

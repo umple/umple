@@ -1,5 +1,5 @@
 E097 Enumeration and State Machine Conflict
-Errors and Warnings
+Errors and Warnings 51-99
 noreferences
 
 @@description

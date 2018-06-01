@@ -1,5 +1,5 @@
 W050 Target State Not Found
-Errors and Warnings
+Errors and Warnings 1-50
 noreferences
 
 @@description

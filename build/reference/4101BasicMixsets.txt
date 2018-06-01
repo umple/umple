@@ -1,0 +1,26 @@
+Basic Mixsets
+Mixsets and Filters
+noreferences
+
+@@description
+<p>This mixsets feature will be fully released soon.</p>
+
+<p>Mixsets can be used to create different members of the same <em>product line</em> from a given Umple model, or to help divide the system into features for <em>feature-oriented development</em>. They can also be seen as providing conditional compilation capabilities such as those commonly found in C++ or C.</p>
+
+<p>Mixsets are one of several separation-of-concerns capabilities available in Umple. The others being <a href="StructureofUmpleCode.html">mixins</a>, <a href="Traits.html">traits</a>, <a href="BeforeandAfterStatements.html">aspect orientation</a> and <a href="Basic Filters.html">filters</a>.</p>
+
+<p>A mixset is a named set of fragments of Umple code that may or may not be
+included in the system. A mixset is included using a <i>use</i> statement or a command line argument, in the same manner that a .ump file is included. So, taken together the fragments can be seen as a virtual file.</p>
+
+<p>When a use statement (or command line argument) matching the mixset&apos;s name is encountered, then the fragments comprising the mixset are mixed in to the Umple code using Umple&apos;s mixin mechanism, which allows multiple definitions of an entity such as a class to be combined.</p>
+
+<p>A mixset fragment can be defined in the following ways:</p>
+
+<ul>
+  <li>At the top level of any Umple file, simply by the notation mixset name followed by a block in curly brackets. The block in curly brackets can be any Umple code.
+  <li>Within a class, trait or other top-level entity. In this case the contents of the block are included in that entity (if a matching use statement is encountered).
+</ul>
+
+
+
+

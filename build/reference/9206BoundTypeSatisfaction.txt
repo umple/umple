@@ -1,5 +1,5 @@
 E206 Satisfaction of Bound Type
-Errors and Warnings
+Errors and Warnings 100-999
 noreferences
 
 @@description

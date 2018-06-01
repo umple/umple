@@ -1,5 +1,5 @@
 E3507 Duplicate Emit Method Name
-Errors and Warnings
+Errors and Warnings 1000+
 noreferences
 
 @@description

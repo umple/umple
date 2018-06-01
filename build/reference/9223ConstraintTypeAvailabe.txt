@@ -1,5 +1,5 @@
 E223 Availability of Types
-Errors and Warnings
+Errors and Warnings 100-999
 noreferences
 
 @@description

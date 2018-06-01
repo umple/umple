@@ -1,5 +1,5 @@
 W1010 Constraint Syntax Could Not Be Processed
-Errors and Warnings
+Errors and Warnings 1000+
 noreferences
 
 @@description

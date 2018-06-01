@@ -1,5 +1,5 @@
 E4500 Tag Not Closed Correctly
-Errors and Warnings
+Errors and Warnings 1000+
 noreferences
 
 @@description
