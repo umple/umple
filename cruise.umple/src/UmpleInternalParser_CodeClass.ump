@@ -388,7 +388,7 @@ class UmpleInternalParser
 
       checkExtendsForCycles();
       checkSortedAssociations();
-      checkClassInterfaceAssocations();
+      checkAssociationsValidity();
       
       //Issue 1084
       addUnlinkedKeys();
@@ -1503,6 +1503,22 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
        return false;
       
    }
+   
+  private boolean associationIsBetweenClassAndAbstractClass (Association a) {
+  	AssociationEnd endA = a.getEnd(0);
+  	AssociationEnd endB = a.getEnd(1);
+  	
+  	UmpleClass classA = model.getUmpleClass(endA.getClassName());
+  	UmpleClass classB = model.getUmpleClass(endB.getClassName());
+  	
+  	if (classA != null && classB != null) {
+  	  if (classB.getIsAbstract() && !classA.getIsAbstract()) {
+  	    return true;
+  	  }
+  	}
+  	
+  	return false;
+  } 
   
   private boolean associationIsBetweenClassAndTrait(Association a){
 	    AssociationEnd myEnd = a.getEnd(0);
@@ -2862,15 +2878,32 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
   }
   
-   private void checkClassInterfaceAssocations(){
-    for (Association a : model.getAssociations()){
-      if (associationIsBetweenClassAndInterface(a)){
-        boolean hasCorrectArrow = !a.getIsLeftNavigable()&&a.getIsRightNavigable(); // Assocation has "->" arrow
-        if (!hasCorrectArrow){
+   private void checkClassInterfaceAssocations(Association a){
+     if (associationIsBetweenClassAndInterface(a)){
+       boolean hasCorrectArrow = !a.getIsLeftNavigable()&&a.getIsRightNavigable(); // Assocation has "->" arrow
+       if (!hasCorrectArrow){
           setFailedPosition(a.getTokenPosition(), 20, a.getEnd(0).getClassName());
         }
       }
+  }
+  
+  private void checkAbstractClassAssociations(Association a) {
+    if(associationIsBetweenClassAndAbstractClass(a)) {
+      boolean hasCorrectArrow = !a.getIsLeftNavigable()&&a.getIsRightNavigable(); //association has "->" arrow
+      
+      Multiplicity multipl = a.getEnd(1).getMultiplicity();
+      boolean hasManyMultiplicityEnd = "*".equals(multipl.getBound()) || (multipl.getLowerBound() == 0); //association has * end
+      if (!hasCorrectArrow && !hasManyMultiplicityEnd) {
+        setFailedPosition(a.getTokenPosition(), 80, a.getEnd(0).getClassName());
+      }
     }
+  }
+  
+  private void checkAssociationsValidity() {
+  	for (Association a : model.getAssociations()){
+  	  checkClassInterfaceAssocations(a);
+  	  checkAbstractClassAssociations(a);
+  	}
   }
   
   /*
