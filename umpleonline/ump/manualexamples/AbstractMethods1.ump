@@ -1,0 +1,25 @@
+//The class Person contains abstract 
+//methods, which are inherited and 
+//implemented by its subclass Student
+
+//Person is abstract, but Student is a
+//concrete class as it has no methods
+//that are unimplemented.
+class Person {
+  abstract void method1();
+  abstract void method2();
+  void method3() {
+    /* Implementation */
+  }
+}
+
+class Student {
+  isA Person;
+  
+  void method1() {
+    /* Implementation */
+  }
+  void method2() {
+    /* Implementation */
+  }
+}
