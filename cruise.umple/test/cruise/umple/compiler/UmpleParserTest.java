@@ -3025,6 +3025,14 @@ public class UmpleParserTest
 
   }
   
+  //Issue 1277
+  @Test
+  public void templateInexistentReference()
+  {
+    assertFailedParse("028_templateInexistentReference.ump",3504);
+    assertFailedParse("028_multipleTemplateInexistentReferences.ump",3504);
+  }
+  
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));

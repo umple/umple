@@ -1,0 +1,5 @@
+class InexistentTemplateReference {
+	template1 <<! <<@aTemplate>> !>>
+	
+	emit method()(template1);
+}

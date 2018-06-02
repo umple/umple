@@ -686,11 +686,16 @@ class TemplateTokenAnalyzer {
 
 							HashMap<String, Boolean> map = new HashMap<String,Boolean>();
 							map.put(key, true);
-							boolean check = recursiveIncludeTemplateElementCycleCheck(referenceTemplate, refValue, map);
-							if(!check) {
-								parser.getParseResult().setPosition(incElm.getPosition());
-								parser.getParseResult().addErrorMessage(new ErrorMessage(3505,incElm.getPosition(),name,refKey));
-								ret = false;
+							
+							if (refValue != null)
+							{
+								boolean check = recursiveIncludeTemplateElementCycleCheck(referenceTemplate, refValue, map);
+								
+								if(!check) {
+									parser.getParseResult().setPosition(incElm.getPosition());
+									parser.getParseResult().addErrorMessage(new ErrorMessage(3505,incElm.getPosition(),name,refKey));
+									ret = false;
+								}
 							}
 						}
 					}	
