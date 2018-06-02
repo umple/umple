@@ -1,0 +1,20 @@
+E080 Invalid Abstract Class Association
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when an association with an abstract class forces instantiation of an object</h2>
+
+<p>An association with an abstract class must either be a directed association or must have a multiplicity with lower bound
+of zero. <br/>
+</p>
+
+
+@@example
+@@source manualexamples/E080InvalidAbstractClassAssociation1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E080InvalidAbstractClassAssociation2.ump
+@@endexample

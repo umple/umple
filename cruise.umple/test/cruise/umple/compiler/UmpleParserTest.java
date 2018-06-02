@@ -421,6 +421,15 @@ public class UmpleParserTest
     Assert.assertEquals(false,model.getUmpleClass("D").getIsAbstract());
     Assert.assertEquals(false,model.getUmpleClass("E").getIsAbstract());
   }
+  
+  @Test
+  public void abstractClassAssociation()
+  {
+    assertFailedParse("422_abstractClassAssociation1.ump",80);
+    assertFailedParse("422_abstractClassAssociation2.ump",80);
+    assertFailedParse("422_abstractClassAssociation3.ump",80);
+    assertFailedParse("422_abstractClassAssociation4.ump",80);
+  }
 
   //Issue 1159
   @Test

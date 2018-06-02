@@ -4,7 +4,7 @@
 
 import java.util.*;
 
-// line 2 "model.ump"
+// line 1 "A.ump"
 public class Teacher
 {
 
@@ -14,7 +14,6 @@ public class Teacher
 
   //Teacher Associations
   private List<Foo> myFooss;
-  private List<Student> myStudentss;
 
   //------------------------
   // CONSTRUCTOR
@@ -23,7 +22,6 @@ public class Teacher
   public Teacher()
   {
     myFooss = new ArrayList<Foo>();
-    myStudentss = new ArrayList<Student>();
   }
 
   //------------------------
@@ -57,36 +55,6 @@ public class Teacher
   public int indexOfMyFooss(Foo aMyFooss)
   {
     int index = myFooss.indexOf(aMyFooss);
-    return index;
-  }
-  /* Code from template association_GetMany */
-  public Student getMyStudentss(int index)
-  {
-    Student aMyStudentss = myStudentss.get(index);
-    return aMyStudentss;
-  }
-
-  public List<Student> getMyStudentss()
-  {
-    List<Student> newMyStudentss = Collections.unmodifiableList(myStudentss);
-    return newMyStudentss;
-  }
-
-  public int numberOfMyStudentss()
-  {
-    int number = myStudentss.size();
-    return number;
-  }
-
-  public boolean hasMyStudentss()
-  {
-    boolean has = myStudentss.size() > 0;
-    return has;
-  }
-
-  public int indexOfMyStudentss(Student aMyStudentss)
-  {
-    int index = myStudentss.indexOf(aMyStudentss);
     return index;
   }
   /* Code from template association_MinimumNumberOfMethod */
@@ -168,104 +136,6 @@ public class Teacher
     }
     return wasAdded;
   }
-  /* Code from template association_IsNumberOfValidMethod */
-  public boolean isNumberOfMyStudentssValid()
-  {
-    boolean isValid = numberOfMyStudentss() >= minimumNumberOfMyStudentss() && numberOfMyStudentss() <= maximumNumberOfMyStudentss();
-    return isValid;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfMyStudentss()
-  {
-    return 1;
-  }
-  /* Code from template association_MaximumNumberOfMethod */
-  public static int maximumNumberOfMyStudentss()
-  {
-    return 2;
-  }
-  /* Code from template association_AddMNToOnlyOne */
-
-
-  public boolean addMyStudentss(Student aMyStudentss)
-  {
-    boolean wasAdded = false;
-    if (myStudentss.contains(aMyStudentss)) { return false; }
-    if (numberOfMyStudentss() >= maximumNumberOfMyStudentss())
-    {
-      return wasAdded;
-    }
-
-    Teacher existingTeacher = aMyStudentss.getTeacher();
-    boolean isNewTeacher = existingTeacher != null && !this.equals(existingTeacher);
-
-    if (isNewTeacher && existingTeacher.numberOfMyStudentss() <= minimumNumberOfMyStudentss())
-    {
-      return wasAdded;
-    }
-
-    if (isNewTeacher)
-    {
-      aMyStudentss.setTeacher(this);
-    }
-    else
-    {
-      myStudentss.add(aMyStudentss);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeMyStudentss(Student aMyStudentss)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aMyStudentss, as it must always have a teacher
-    if (this.equals(aMyStudentss.getTeacher()))
-    {
-      return wasRemoved;
-    }
-
-    //teacher already at minimum (1)
-    if (numberOfMyStudentss() <= minimumNumberOfMyStudentss())
-    {
-      return wasRemoved;
-    }
-    myStudentss.remove(aMyStudentss);
-    wasRemoved = true;
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addMyStudentssAt(Student aMyStudentss, int index)
-  {  
-    boolean wasAdded = false;
-    if(addMyStudentss(aMyStudentss))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfMyStudentss()) { index = numberOfMyStudentss() - 1; }
-      myStudentss.remove(aMyStudentss);
-      myStudentss.add(index, aMyStudentss);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveMyStudentssAt(Student aMyStudentss, int index)
-  {
-    boolean wasAdded = false;
-    if(myStudentss.contains(aMyStudentss))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfMyStudentss()) { index = numberOfMyStudentss() - 1; }
-      myStudentss.remove(aMyStudentss);
-      myStudentss.add(index, aMyStudentss);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addMyStudentssAt(aMyStudentss, index);
-    }
-    return wasAdded;
-  }
 
   public void delete()
   {
@@ -273,11 +143,6 @@ public class Teacher
     {
       Foo aMyFooss = myFooss.get(i - 1);
       aMyFooss.delete();
-    }
-    for(int i=myStudentss.size(); i > 0; i--)
-    {
-      Student aMyStudentss = myStudentss.get(i - 1);
-      aMyStudentss.delete();
     }
   }
 

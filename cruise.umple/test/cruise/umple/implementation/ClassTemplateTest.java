@@ -396,7 +396,6 @@ public class ClassTemplateTest extends TemplateTest
 		  assertUmpleTemplateFor("ClassTemplateTest_AbstractClassAvoidingInstantiation2.ump",languagePath + "/ClassTemplateTest_AbstractClassAvoidingInstantiation2."+languagePath+".txt","Teacher");
 	  }
   }
-
   
 @Ignore @Test
   public void LazyAttributeOnImmutableClass()

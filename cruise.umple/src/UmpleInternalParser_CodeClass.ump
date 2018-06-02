@@ -1518,7 +1518,23 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   	}
   	
   	return false;
-  } 
+  }
+  
+  private boolean associationIsBetweenAbstractClassAndClass (Association a) {
+  	AssociationEnd endA = a.getEnd(0);
+  	AssociationEnd endB = a.getEnd(1);
+  	
+  	UmpleClass classA = model.getUmpleClass(endA.getClassName());
+  	UmpleClass classB = model.getUmpleClass(endB.getClassName());
+  	
+  	if (classA != null && classB != null) {
+  	  if (!classB.getIsAbstract() && classA.getIsAbstract()) {
+  	    return true;
+  	  }
+  	}
+  	
+  	return false;
+  }
   
   private boolean associationIsBetweenClassAndTrait(Association a){
 	    AssociationEnd myEnd = a.getEnd(0);
@@ -2888,12 +2904,23 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   }
   
   private void checkAbstractClassAssociations(Association a) {
-    if(associationIsBetweenClassAndAbstractClass(a)) {
-      boolean hasCorrectArrow = !a.getIsLeftNavigable()&&a.getIsRightNavigable(); //association has "->" arrow
+    boolean isBetweenClassAndAbstractClass = associationIsBetweenClassAndAbstractClass(a);
+    boolean isBetweenAbstractClassAndClass = associationIsBetweenAbstractClassAndClass(a);
+    
+    if(isBetweenClassAndAbstractClass || isBetweenAbstractClassAndClass) {
+      boolean hasCorrectArrow = false;
+    
+      if(isBetweenClassAndAbstractClass)
+        hasCorrectArrow = !a.getIsLeftNavigable()&&a.getIsRightNavigable(); //association has "->" arrow
+        
+      if(isBetweenAbstractClassAndClass)
+        hasCorrectArrow = a.getIsLeftNavigable()&&!a.getIsRightNavigable(); //association has "<-" arrow
       
-      Multiplicity multipl = a.getEnd(1).getMultiplicity();
-      boolean hasManyMultiplicityEnd = "*".equals(multipl.getBound()) || (multipl.getLowerBound() == 0); //association has * end
-      if (!hasCorrectArrow && !hasManyMultiplicityEnd) {
+      Multiplicity endAMultiplicity = a.getEnd(0).getMultiplicity();
+      Multiplicity endBMultiplicity = a.getEnd(1).getMultiplicity();
+      
+      boolean lowerBoundGreaterThanZero = endAMultiplicity.getLowerBound() > 0 && endBMultiplicity.getLowerBound() > 0;
+      if (!hasCorrectArrow && lowerBoundGreaterThanZero) {
         setFailedPosition(a.getTokenPosition(), 80, a.getEnd(0).getClassName());
       }
     }

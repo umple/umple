@@ -1,0 +1,7 @@
+class AbstractClass {
+  abstract;
+  1..* -- 1 AbstractClassAssociationOneOrMany;
+}
+
+class AbstractClassAssociationOneOrMany {
+}
