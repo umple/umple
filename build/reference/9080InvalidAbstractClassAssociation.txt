@@ -7,7 +7,8 @@ noreferences
 <h2>Umple semantic error raised when an association with an abstract class forces instantiation of an object</h2>
 
 <p>An association with an abstract class must either be a directed association or must have a multiplicity with lower bound
-of zero. <br/>
+of zero at both ends. This is necessary to prevent situations where it would be needed to instantiate the abstract class (which
+is never allowed).<br/>
 </p>
 
 
