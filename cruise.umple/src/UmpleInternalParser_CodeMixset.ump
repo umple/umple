@@ -23,14 +23,6 @@ class UmpleModel{
  * @Abdulaziz   
  */
 	Mixset getMixset(String name) {
-		/*Mixset mixset = null;
-		for(MixsetOrFile mOrF : getMixsetOrFiles())
-		{
-			if (mOrF.getName().equals(name) && (mOrF instanceof Mixset))
-				mixset = (Mixset)mOrF;
-		}
-		return mixset;*/
-		
 		Mixset mixset = null;
 		for(MixsetOrFile mOrF : getMixsetsOrFiles(name))
 		{
@@ -56,9 +48,8 @@ class UmpleModel{
 	}
 	
 	 List<MixsetOrFile> getMixsetsOrFiles(String name) {
-	 
+	 	
 	 	return mixsetOrFiles.stream().filter(mOrF -> mOrF.getName().equals(name)).collect(Collectors.toList());
-		 		
 	}
 	
 }
@@ -66,19 +57,16 @@ class UmpleModel{
 class UmpleInternalParser
 {
 	depend cruise.umple.compiler.UmpleFile;
-	depend java.lang.StackTraceElement;
-	depend java.lang.Thread;
+//	depend java.lang.StackTraceElement;
+//	depend java.lang.Thread;
 	 
  // prepare mixsets that are inside an Umple class
   private void analyzeMixsetDefinition(Token aToken , String className)
   {
   	aToken.addSubToken(new Token("entityName",className) );
 	aToken.addSubToken(new Token("entityType","class") );
-	System.out.println("print the token: "+ aToken );
-	
 	analyzeMixset(aToken);
 		
-	
 	}
 
  private void analyzeMixsetToken(Token t, int analysisStep)
@@ -87,9 +75,7 @@ class UmpleInternalParser
     {
       shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
       return;
-    }
-    
-        
+    }      
     if (t.is("mixsetDefinition"))
     {
       analyzeMixset(t);
@@ -141,18 +127,12 @@ class UmpleInternalParser
 /*	
 		START -- UNDER DEVELOPMENT
 		
-		 public  UmpleFile(String aPath, String aFilename){
-    this(new File(aPath,aFilename));
-  }
-
-  // line 22 "../../../../src/UmpleHelper_Code.ump"
-   public  UmpleFile(String aFullFilename){
 		
 */	
 
 	Position thePosition = token.getPosition();
     Position endPosition = token.getEndPosition();
-    
+/*    
     String path = null;
      if( thePosition.getFilename() == null ){
         path = "";
@@ -160,32 +140,24 @@ class UmpleInternalParser
      else{
         path = Paths.get(thePosition.getFilename()).getFileName().toString();
       }
-      
-    System.out.println("path : "+path  
-    + ", Start #: "+ thePosition.getLineNumber()
-    +", End# "+endPosition.getLineNumber()
-    
-    );
 	String fileName = token.getPosition().getFilename();
 
-	UmpleFile uFile = null; // new UmpleFile(File);	
-	System.out.println(" Token Position: "+token.getPosition() +
-	" end "+token.getEndPosition() + ", "+ token.getEndPosition().getFilename() + ","+
-	 " FILE NAME >>  " + token.getPosition().getFilename());
-	
+
+*/
 	int lineNumber = thePosition.getLineNumber();
-	MixsetFragment mixsetFragment = new MixsetFragment(uFile, lineNumber, mixsetBody);
+	UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
+	MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, lineNumber, mixsetBody);
 	mixset.addWaitingFragment(mixsetFragment);
 	
-	
-	
-   //System.out.println("FullFileAddress: "+ data.getFullFileAddress()+", file Name: "+data.getFilename()+", Position : "+data.getPosition());  
+ 
+  /*  
    System.out.println("  ---- ----  Start Mixset Parsing ---- ----");
-   System.out.println("MIXSET ::: "+  mixset  + " \n Mixset Body  :"+mixsetBody);
+   System.out.println("MIXSET ::: "+  mixset  + " \n Mixset Body  :"+mixsetFragment);
    System.out.println("  ---- ----  End Mixset Parsing ---- ----");
    System.out.println("\n\n");
    
-   /*
+   
+  
 		END -- UNDER DEVELOPMENT
 		
 		
