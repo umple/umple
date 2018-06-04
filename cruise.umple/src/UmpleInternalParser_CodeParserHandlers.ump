@@ -21,6 +21,14 @@ external interface AnalyzerGeneratorHandler{}
  * dispatches a `RuleBasedParserThread` on the discovered token, which
  * effectively reads the new file into the token location
  */
+ 
+ 
+ class UmpleModel{
+   
+   lazy ArrayList<Mixset> possibleMixsetList = new ArrayList<Mixset>();
+ 
+ }
+ 
 class UseStatementParserAction{
   depend java.io.File;
   depend cruise.umple.parser.analysis.ParserAction;
@@ -29,12 +37,23 @@ class UseStatementParserAction{
   depend cruise.umple.parser.Token;
   
   isA ParserAction;
-  
+  UmpleModel umpleModel;
+ 
   public void onSuccess(Token token, ParserDataPackage data)
   {
+  /*
+  we can filter the use statement by checking if ends with .ump 
+  this is simpler and needs few modification
+  
+  the solution 2: if no file, save the mixset name for later use .
+  this can be done by do some changes to the file .ump directly. Or, we can make the file throw a null pointer exception and hendel it in UseStatementAction
+  in .ump
+  
+  */
+ 
     String value = token.getValue("use");
     String fileName="";
-		String path = "";    
+	String path = "";    
     int index =-1;
     if (data!=null && data.getFullFileAddress()!=null)    index = data.getFullFileAddress().lastIndexOf("/") ;
     if (index==-1) index = data.getFullFileAddress().lastIndexOf("\\");  
@@ -42,7 +61,7 @@ class UseStatementParserAction{
     	path = data.getFullFileAddress().substring(0,index+1 );
     }
     
-    synchronized(data.getHasParsed())
+synchronized(data.getHasParsed())
     {
       fileName = data.getAnalyzer().getFile().getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value;
       //I used this technique because I noticed this function is used to several purposes.
@@ -50,89 +69,39 @@ class UseStatementParserAction{
       //TODO: this issue must be investigated more. Currently it is working with the following solution. 
       File f = new File(fileName);
       if (!f.exists()) fileName = path +value;
-      if(!data.getHasParsed().contains(f.getAbsolutePath()))
+     
+     /*  
+      *	when a file is not exist, consider it as a possible mixset. 
+      */
+      if (! (new File(fileName)).exists())
       {
-        data.getHasParsed().add(f.getAbsolutePath());
-        RuleBasedParserThread thread = new RuleBasedParserThread(
-          data.getAnalyzer().getRules().get("$ROOT$"),
-          token,
-          fileName,
-          data
-        );
-        data.getAnalyzer().addThread(thread);
-        thread.start();
+      	String mixsetName = value;
+      	int useLineNumber = token.getPosition().getLineNumber();
+      	UmpleFile mixsetUseFile = umpleModel.getUmpleFile(); // the file in which "use" is mentioned. 
+      	Mixset tempMixset = new Mixset(mixsetName);
+      	tempMixset.setUseUmpleFile(mixsetUseFile);
+      	tempMixset.setUseUmpleLine(useLineNumber);
+      	umpleModel.getPossibleMixsetList().add(tempMixset);
+      	
       }
+      else   {  
+	      if(!data.getHasParsed().contains(f.getAbsolutePath()))
+	      {
+	      
+	        data.getHasParsed().add(f.getAbsolutePath());
+	        RuleBasedParserThread thread = new RuleBasedParserThread(
+	          data.getAnalyzer().getRules().get("$ROOT$"),
+	          token,
+	          fileName,
+	          data
+	        );
+	        data.getAnalyzer().addThread(thread);
+	        thread.start();
+	        
+	      }
+	     }
     }
   }
-}
-
-
-
-
-
-class MixsetStatementParserAction{
-  depend cruise.umple.compiler.UmpleModel;
-  depend cruise.umple.parser.Position;
-  depend cruise.umple.parser.analysis.ParserAction;
-  depend cruise.umple.parser.analysis.ParserDataPackage;
-  depend cruise.umple.parser.Token;
-  depend java.util.stream.Stream;
-  
-  
-  UmpleModel model;
-  isA ParserAction;
-  
-  public void onSuccess(Token token, ParserDataPackage data)
-  {
-   /* Moved to UmpleInternal_CodeMixset
-   String mixsetName = token.getValue("mixsetName");
-
-
-    Mixset m = model.getMixset(mixsetName);
-    
-    // check if the mixset is was not added
-    
-    if( m == null)
-	{
-		//long count  = model.getMixsetOrFiles().stream().filter(m-> m.getName().equals(mixsetName)).count(); 
-		m = new Mixset(mixsetName);
-		model.addMixsetOrFile(m);
-	}
-	
-	String mixsetBody = token.getValue("extraCode");	
-	
-	//inline mixset def.
-	String entityType = token.getValue("entityType");
-	String entityName = token.getValue("entityName");
-	if(entityType != null) mixsetBody = entityType + " "+entityName + " { "+ mixsetBody + " }";	
-	
-	// mixset has one element
-	String oneElementMixset = token.getValue("oneElement");
-	if (oneElementMixset != null) mixsetBody = oneElementMixset;
-	
-	// mixset as inner enitity
-	// getParentToken()
-	// when mixset is inside a class or .... 
-	//System.out.println(" getParentToken() : "+token.getParentToken());
-	
-	MixsetFragment mixsetFragment = new MixsetFragment(null, 99999, mixsetBody);
-	m.addWaitingFragment(mixsetFragment);
-
-
-   
- //  System.out.println("FullFileAddress: "+ data.getFullFileAddress()+", file Name: "+data.getFilename()+", Position : "+data.getPosition());  
-   System.out.println("  ---- ----  Start Mixset Parsing ---- ----");
-   System.out.println(""+token);
-   System.out.println("MIXSET ::: "+ m + " Mixset Body  :"+mixsetBody);
-   
-   System.out.println("  ---- ----  End Mixset Parsing ---- ----");
-  
-  
-  	System.out.println("\n\n\n\n");
-  */
-  }
-
-
 }
 
 /* This is the LinkedFileHandler for the Umple language. 

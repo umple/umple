@@ -269,10 +269,8 @@ class UmpleInternalParser
     {
       analyzeAttribute(token,aClass);
     }
-    else if ( (token.getValue("mixsetName") != null) ||  (token.getValue("mixsetDefinition") != null) ) {
-        System.out.println("#############  " +token + "#################################");
+    else if (token.getValue("mixsetDefinition") != null)  {
      	analyzeMixsetDefinition(token, aClass.getName());
-    
     }
     else if (token.is("extraCode"))
     {
