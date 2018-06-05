@@ -22,35 +22,34 @@ class UmpleModel{
  * returns a mixset from UmpleModel based on its name.
  * @Abdulaziz   
  */
-	Mixset getMixset(String name) {
-		Mixset mixset = null;
-		for(MixsetOrFile mOrF : getMixsetsOrFiles(name))
-		{
-			if (mOrF instanceof Mixset)
-				mixset = (Mixset)mOrF;
-		}
-		return mixset;
+ Mixset getMixset(String name) {
+	Mixset mixset = null;
+	for(MixsetOrFile mOrF : getMixsetsOrFiles(name))
+	{
+		if (mOrF instanceof Mixset)
+		mixset = (Mixset)mOrF;
 	}
+	return mixset;
+ }
 /*
  * returns UmpleFile from UmpleModel based on its name. 
  * usage: to know if the file in which a mixset is mentioned was already used before. 
  * @Abdulaziz   
  */	
-	UmpleFile getUmpleFile(String name) {
-		
-		UmpleFile uFile = null;
-		for(MixsetOrFile mOrF : getMixsetsOrFiles(name))
-		{
-			if (mOrF instanceof UmpleFile)
-				uFile = (UmpleFile)mOrF;
-		}
-		return uFile;
+ 
+ UmpleFile getUmpleFile(String name) {		
+ 	UmpleFile uFile = null;
+	for(MixsetOrFile mOrF : getMixsetsOrFiles(name))
+	{
+		if (mOrF instanceof UmpleFile)
+			uFile = (UmpleFile)mOrF;
 	}
-	
-	 List<MixsetOrFile> getMixsetsOrFiles(String name) {
-	 	
-	 	return mixsetOrFiles.stream().filter(mOrF -> mOrF.getName().equals(name)).collect(Collectors.toList());
-	}
+	return uFile;
+ }
+ 
+ List<MixsetOrFile> getMixsetsOrFiles(String name) {	 	
+ 	return mixsetOrFiles.stream().filter(mOrF -> mOrF.getName().equals(name)).collect(Collectors.toList());
+ }
 	
 }
 
@@ -65,9 +64,23 @@ class UmpleInternalParser
   {
   	aToken.addSubToken(new Token("entityName",className) );
 	aToken.addSubToken(new Token("entityType","class") );
-	analyzeMixset(aToken);
-		
+	analyzeMixset(aToken);		
 	}
+
+/*
+ * last action in the parse.	
+ */	
+ private void parseMixset(){
+ 	for (Mixset mixsetUse : model.getPossibleMixsetList())
+	{
+		Mixset m = model.getMixset(mixsetUse.getName());
+		if ( m != null)
+		{
+		//TO DO
+		//parse mixset body. 
+		}
+	}
+}
 
  private void analyzeMixsetToken(Token t, int analysisStep)
   {
@@ -132,21 +145,12 @@ class UmpleInternalParser
 
 	Position thePosition = token.getPosition();
     Position endPosition = token.getEndPosition();
-/*    
-    String path = null;
-     if( thePosition.getFilename() == null ){
-        path = "";
-     }
-     else{
-        path = Paths.get(thePosition.getFilename()).getFileName().toString();
-      }
-	String fileName = token.getPosition().getFilename();
-
-
-*/
 	int lineNumber = thePosition.getLineNumber();
 	UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
+	
 	MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, lineNumber, mixsetBody);
+	
+	// if no use statement 
 	mixset.addWaitingFragment(mixsetFragment);
 	
  

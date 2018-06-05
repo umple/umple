@@ -241,6 +241,9 @@ class UmpleInternalParser
       }
     }
     while (shouldProcessClassAgain);
+    
+    //last thing after analyzing all elements
+    parseMixset();
   }
 
   // Delegate function to analyze a token and send it to the write
@@ -259,6 +262,7 @@ class UmpleInternalParser
     analyzeFilterToken(t,analysisStep);
     analyzeFIXML(t, analysisStep);
     analyzeMixsetToken(t, analysisStep);
+    
   }
 
   // Analyze an individual token, delegates to the various components in Umple

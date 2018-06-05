@@ -3024,7 +3024,16 @@ public class UmpleParserTest
 	  
 
   }
-  
+
+  @Test
+  public void mixsetUseStatement()
+  {
+	  assertNoWarningsParse("/mixset/mixsetUse.ump");
+	  
+
+  }
+    
+
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));
