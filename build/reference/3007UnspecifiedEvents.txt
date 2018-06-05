@@ -1,0 +1,21 @@
+Unspecified Events
+State Machines
+noreferences
+
+@@description
+<p>
+In Umple, &#39;unspecified&#39; events can be used to handle events that have no handlers in
+the current state (and would normally be ignored) in a queued or regular state machine. If the 
+event is used in a pooled state machine, it will simply be ignored and treated as a regular event.
+The event can be placed at any level of nesting. </br>
+
+If the occurence of a non-handled event may cause a problem in a state machine, unspecified 
+events can be used to transition to error states.
+</p>
+
+@@syntax
+[[transition]]
+ 
+@@example
+@@source manualexamples/UnspecifiedEvents1.ump &diagramtype=state
+@@endexample
