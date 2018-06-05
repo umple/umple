@@ -1,0 +1,24 @@
+History states
+State Machines
+noreferences
+
+@@description
+<p>
+A history state is used to keep the last state of a state machine in memory, in order to access
+it again when needed.
+</p>
+<p>
+There are two types of history states: Deep history states and regular history states. The former 
+stores the specific substate the state machine was previously in, while the latter will restart from
+the general state it was called to.
+</p>
+<p>
+History states are called using dot notation, by referring to the state to go back to, and using
+either the symbol H for regular history states or HStar for deep history states.
+</p>
+@@syntax
+
+ 
+@@example
+@@source manualexamples/HistoryStates1.ump &diagramtype=state
+@@endexample
