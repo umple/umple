@@ -4,18 +4,23 @@ noreferences
 
 @@description
 <p>
-A history state is used to keep the last state of a state machine in memory, in order to access
-it again when needed.
+The history state of any state is its last-visited substate. This is recorded in order to be able to transition to
+that substate again when needed.
 </p>
 <p>
-There are two types of history states: Deep history states and regular history states. The former 
-stores the specific substate the state machine was previously in, while the latter will restart from
-the general state it was called to.
+There are two types of history states: Deep history states and regular history states. Deep history
+stores the specific substate at the deepest level of nesting, while the regular history stores only the first-level substate.
 </p>
 <p>
-History states are called using dot notation, by referring to the state to go back to, and using
-either the symbol H for regular history states or HStar for deep history states.
+A transition to a history states is indicated using dot notation, by referring to the state to go back to, followed by a dot and
+either the symbol H to transition to the regular (first-level) history state, or HStar to transition to deep history. When Umple draws
+a state machine diagram, the deep history appears as H*.
 </p>
+
+<p>Transitions to history are most commonly used when the system has had to leave normal operation temporarily and needs
+to later return to exactly what it was doing. Deep history is often appropriate when returning to normal operation, but sometimes
+regular history is needed in order to allow some form of reinitialization of a substate. When transitioning to history, if there is more than one level of nesting (i.e. the history state has substates), the state machine will enter the start substate of the history state.</p>
+
 @@syntax
 
  
