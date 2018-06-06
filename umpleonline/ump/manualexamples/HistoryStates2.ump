@@ -1,0 +1,27 @@
+//The class DrawingTool uses a history
+//state to get back to the state it was
+//previously in after a selection
+
+class DrawingTool {
+  sm {
+    drawing {
+      idle {
+        penPress -> drawingStroke;
+        colorChange -> changingColor;
+      }
+      drawingStroke {
+        entry / {
+          /*deal with the stroke*/
+        }
+        endStroke -> idle;
+      }
+      changingColor {
+        colorSelected -> idle;
+      }
+      changeMode -> selecting;
+    }
+    selecting {
+      selectionCompleted -> drawing.H;
+    }
+  }
+}
