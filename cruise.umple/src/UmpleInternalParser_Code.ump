@@ -112,7 +112,6 @@ class UmpleInternalParser
       //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
       checkDefaultedNameConflict();
       
-       
     //last thing after analyzing all elements
     parseMixset();
     

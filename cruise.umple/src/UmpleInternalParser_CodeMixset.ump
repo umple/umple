@@ -16,8 +16,6 @@ Please refer to UmpleInternalParser.ump for more details.
 namespace cruise.umple.compiler;
 
 class UmpleModel{
-  depend java.util.stream.*;
-
 /*
  * This method returns a mixset from UmpleModel based on its name.
  * return null if the mixset is not found.
@@ -25,9 +23,9 @@ class UmpleModel{
  */
   Mixset getMixset(String name) {
     Mixset mixset = null;
-    for(MixsetOrFile mOrF : getMixsetsOrFiles(name))
+    for(MixsetOrFile mOrF : getMixsetOrFiles())
       { 
-      if (mOrF.isMixset())
+      if (mOrF.getIsMixset() && mOrF.getName().equals(name))
         mixset = (Mixset)mOrF;
       }
     return mixset;
@@ -41,25 +39,21 @@ class UmpleModel{
  */	
   UmpleFile getUmpleFile(String name){
     UmpleFile uFile = null;
-    for(MixsetOrFile mOrF : getMixsetsOrFiles(name))
+    for(MixsetOrFile mOrF : getMixsetOrFiles())
 	  {
-	    if (! mOrF.isMixset())
+	    if (! mOrF.getIsMixset() && mOrF.getName().equals(name))
 	      uFile = (UmpleFile)mOrF;
 	  }
 	return uFile;
   }
  
- List<MixsetOrFile> getMixsetsOrFiles(String name) {	 	
- 	return mixsetOrFiles.stream().filter(mOrF -> mOrF.getName().equals(name)).collect(Collectors.toList());
- }
 	
 }
 
 class UmpleInternalParser
 {
 	depend cruise.umple.compiler.UmpleFile;
-//	depend java.lang.StackTraceElement;
-//	depend java.lang.Thread;
+	depend  java.util.stream.*;
 	 
  // prepare mixsets that are inside an Umple class
   private void analyzeMixsetDefinition(Token aToken , String className)
@@ -70,18 +64,24 @@ class UmpleInternalParser
 	}
 
 /*
- * last action in the parse.	
+ * This method parses all waiting fragments of a mixset, if there is a mixset-use-statment specified in some of the files.  
  */	
  private void parseMixset(){
- 	for (Mixset mixsetUse : model.getPossibleMixsetList())
-	{
-		Mixset m = model.getMixset(mixsetUse.getName());
-		if ( m != null)
-		{
-		//TO DO
-		//parse mixset body. 
-		}
-	}
+ 
+   for (MixsetOrFile mOrF : model.getMixsetOrFiles())
+   {
+     if(mOrF.getIsMixset() &&  (mOrF.getUseUmpleFile() != null) ) // the second condition is to check if there is a use statement.
+     {
+       Mixset mixset =(Mixset) mOrF;
+       for(MixsetFragment mixsetWaitingFrag: mixset.getWaitingFragments())
+       {  
+         //String allMixsetBody = modelMixset.getWaitingFragments().stream().map(mixsetFrag -> mixsetFrag.getBody()).collect(Collectors.joining(" "));
+         ParseResult pResult= parse("MixsetFragmentParsing",  mixsetWaitingFrag.getBody()); 
+         Token answer = parser.getRootToken(); // result of parsing the body of a mixset waitingFragments
+         analyzeAllTokens(answer); 
+       }
+     }
+   }
 }
 
  private void analyzeMixsetToken(Token t, int analysisStep)
@@ -101,22 +101,14 @@ class UmpleInternalParser
   
   private Mixset analyzeMixset(Token token)
   {
-/*
- * print java call stack.
-   
-  for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-    System.out.println(ste);
-}
-*/
-  	String mixsetName = token.getValue("mixsetName");
+    String mixsetName = token.getValue("mixsetName");
   	
     // check if the mixset is was not added before
     Mixset mixset = model.getMixset(mixsetName);
     if(mixset  == null)
 	{
-		//long count  = model.getMixsetOrFiles().stream().filter(m-> m.getName().equals(mixsetName)).count(); 
-		mixset  = new Mixset(mixsetName);
-		model.addMixsetOrFile(mixset);
+	  mixset  = new Mixset(mixsetName);
+	  model.addMixsetOrFile(mixset);
 	}
 	
 	String mixsetBody = token.getValue("extraCode");	
@@ -129,51 +121,29 @@ class UmpleInternalParser
 	String oneElementMixset = token.getValue("oneElement");
 	
 	if(entityType != null) {
-		if (oneElementMixset != null)
-		{
-			mixsetBody = entityType + " "+entityName + " { "+ oneElementMixset + " }";
-		}
-		else
-			mixsetBody = entityType + " "+entityName + " { "+ mixsetBody + " }";	
-		}
+	  if (oneElementMixset != null)
+	  {
+	    mixsetBody = entityType + " "+entityName + " { "+ oneElementMixset + " }";
+	  }
+	  else
+	    mixsetBody = entityType + " "+entityName + " { "+ mixsetBody + " }";	
+	  }
 	else 
-		if (oneElementMixset != null) mixsetBody = oneElementMixset;
 	
-/*	
-		START -- UNDER DEVELOPMENT
-		
-		
-*/	
-
-	Position thePosition = token.getPosition();
-    Position endPosition = token.getEndPosition();
-	int lineNumber = thePosition.getLineNumber();
-	UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
-	
-	MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, lineNumber, mixsetBody);
-	
-	// if no use statement 
-	mixset.addWaitingFragment(mixsetFragment);
-	
- 
-  /*  
-   System.out.println("  ---- ----  Start Mixset Parsing ---- ----");
-   System.out.println("MIXSET ::: "+  mixset  + " \n Mixset Body  :"+mixsetFragment);
-   System.out.println("  ---- ----  End Mixset Parsing ---- ----");
-   System.out.println("\n\n");
-   
-   
-  
-		END -- UNDER DEVELOPMENT
-		
-		
-	*/	
-   return  mixset ;
-  
+	  if (oneElementMixset != null) mixsetBody = oneElementMixset;
+	  
+	  Position thePosition = token.getPosition();
+	  Position endPosition = token.getEndPosition();
+	  int lineNumber = thePosition.getLineNumber();
+	  UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
+	  MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, lineNumber, mixsetBody);
+	  
+	  // Here all mixset fragmets are considered as waitingFragment 
+	  mixset.addWaitingFragment(mixsetFragment);
+	  
+	return  mixset ;
   }
-  
-  
-  
+    
 
   
 }

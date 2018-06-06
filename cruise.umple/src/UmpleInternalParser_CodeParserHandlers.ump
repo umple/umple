@@ -34,46 +34,31 @@ class UseStatementParserAction{
  
   public void onSuccess(Token token, ParserDataPackage data)
   {
-  
-  /*
-  we can filter the use statement by checking if ends with .ump 
-  this is simpler and needs few modification
-  
-  the solution 2: if no file, save the mixset name for later use .
-  this can be done by do some changes to the file .ump directly. Or, we can make the file throw a null pointer exception and hendel it in UseStatementAction
-  in .ump
-  
-  
-        
-  if (! value.containts(".ump")) // TO DO : use statement with mixed files and mixsets
-  {
-    String mixsetName = value;
-    int useLineNumber = token.getPosition().getLineNumber();
-    UmpleFile mixsetUseFile = umpleModel.getUmpleFile(); 
-      	
-      	// check if it was added before 
-      	
-    Mixset mixset = umpleModel.getMixset(mixsetName);
-    if(mixset  == null)
-	{
-	  Mixset tempMixset = new Mixset(mixsetName);
-	  mixset.setUseUmpleFile(mixsetUseFile);
-	  mixset.setUseUmpleLine(useLineNumber);
-	  umpleModel.addMixsetOrFile(mixset);
-	}
-	else if ( mixset.getUseUmpleFile() == null)
-	{
-	  mixset.setUseUmpleFile(mixsetUseFile);
-	  mixset.setUseUmpleLine(useLineNumber);
-	}
-	      	
-       
-      	
-  }
-  
- */
- 
     String value = token.getValue("use");
+  
+    if (! value.endsWith(".ump")) // TO DO : use statement with mixed files and mixsets such as: use a.ump, MixsetA; 
+    {
+      String mixsetName = value;
+      int useLineNumber = token.getPosition().getLineNumber();
+      UmpleFile mixsetUseFile = umpleModel.getUmpleFile(); 
+      // check if the mixset was added before 
+      	
+      Mixset mixset = umpleModel.getMixset(mixsetName);
+      if(mixset  == null)
+	  {
+	    mixset  = new Mixset(mixsetName);
+	    mixset.setUseUmpleFile(mixsetUseFile);
+	    mixset.setUseUmpleLine(useLineNumber);
+	    umpleModel.addMixsetOrFile(mixset);
+	  }
+	  else if ( mixset.getUseUmpleFile() == null)
+	  {
+	    mixset.setUseUmpleFile(mixsetUseFile);
+	    mixset.setUseUmpleLine(useLineNumber);
+	  }
+	}
+  else  // This is the case for the umple file, which ends with .ump
+  {
     String fileName="";
 	String path = "";    
     int index =-1;
@@ -101,9 +86,8 @@ class UseStatementParserAction{
 	        );
 	    data.getAnalyzer().addThread(thread);
 	    thread.start();
-	        
 	  }
-	     
+	  }
     }
   }
 }
