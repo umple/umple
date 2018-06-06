@@ -22,3 +22,7 @@ either the symbol H for regular history states or HStar for deep history states.
 @@example
 @@source manualexamples/HistoryStates1.ump &diagramtype=state
 @@endexample
+
+@@example
+@@source manualexamples/HistoryStates2.ump &diagramtype=state
+@@endexample
