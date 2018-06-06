@@ -4,4 +4,4 @@ mixset X2 class Y2 {y2a;}
 
 class Y3 {mixset X3 {y3a;}}
 
-class Y4 {mixset X4 y4a;}
+use X1;
