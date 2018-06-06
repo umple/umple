@@ -19,3 +19,7 @@ events can be used to transition to error states.
 @@example
 @@source manualexamples/UnspecifiedEvents1.ump &diagramtype=state
 @@endexample
+
+@@example
+@@source manualexamples/UnspecifiedEvents2.ump &diagramtype=state
+@@endexample
