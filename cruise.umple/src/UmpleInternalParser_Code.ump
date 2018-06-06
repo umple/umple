@@ -111,6 +111,11 @@ class UmpleInternalParser
       secondPostTokenAnalysis();
       //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
       checkDefaultedNameConflict();
+      
+       
+    //last thing after analyzing all elements
+    parseMixset();
+    
     }
     catch (Exception ex)
     {
@@ -241,9 +246,7 @@ class UmpleInternalParser
       }
     }
     while (shouldProcessClassAgain);
-    
-    //last thing after analyzing all elements
-    parseMixset();
+   
   }
 
   // Delegate function to analyze a token and send it to the write

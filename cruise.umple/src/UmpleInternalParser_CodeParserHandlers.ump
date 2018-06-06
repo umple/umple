@@ -21,14 +21,7 @@ external interface AnalyzerGeneratorHandler{}
  * dispatches a `RuleBasedParserThread` on the discovered token, which
  * effectively reads the new file into the token location
  */
- 
- 
- class UmpleModel{
-   
-   lazy ArrayList<Mixset> possibleMixsetList = new ArrayList<Mixset>();
- 
- }
- 
+  
 class UseStatementParserAction{
   depend java.io.File;
   depend cruise.umple.parser.analysis.ParserAction;
@@ -41,6 +34,7 @@ class UseStatementParserAction{
  
   public void onSuccess(Token token, ParserDataPackage data)
   {
+  
   /*
   we can filter the use statement by checking if ends with .ump 
   this is simpler and needs few modification
@@ -49,7 +43,35 @@ class UseStatementParserAction{
   this can be done by do some changes to the file .ump directly. Or, we can make the file throw a null pointer exception and hendel it in UseStatementAction
   in .ump
   
-  */
+  
+        
+  if (! value.containts(".ump")) // TO DO : use statement with mixed files and mixsets
+  {
+    String mixsetName = value;
+    int useLineNumber = token.getPosition().getLineNumber();
+    UmpleFile mixsetUseFile = umpleModel.getUmpleFile(); 
+      	
+      	// check if it was added before 
+      	
+    Mixset mixset = umpleModel.getMixset(mixsetName);
+    if(mixset  == null)
+	{
+	  Mixset tempMixset = new Mixset(mixsetName);
+	  mixset.setUseUmpleFile(mixsetUseFile);
+	  mixset.setUseUmpleLine(useLineNumber);
+	  umpleModel.addMixsetOrFile(mixset);
+	}
+	else if ( mixset.getUseUmpleFile() == null)
+	{
+	  mixset.setUseUmpleFile(mixsetUseFile);
+	  mixset.setUseUmpleLine(useLineNumber);
+	}
+	      	
+       
+      	
+  }
+  
+ */
  
     String value = token.getValue("use");
     String fileName="";
@@ -60,8 +82,7 @@ class UseStatementParserAction{
     if (index!=-1){
     	path = data.getFullFileAddress().substring(0,index+1 );
     }
-    
-synchronized(data.getHasParsed())
+    synchronized(data.getHasParsed())
     {
       fileName = data.getAnalyzer().getFile().getAbsoluteFile().getParentFile().getAbsolutePath() + File.separator + value;
       //I used this technique because I noticed this function is used to several purposes.
@@ -69,37 +90,20 @@ synchronized(data.getHasParsed())
       //TODO: this issue must be investigated more. Currently it is working with the following solution. 
       File f = new File(fileName);
       if (!f.exists()) fileName = path +value;
-     
-     /*  
-      *	when a file is not exist, consider it as a possible mixset. 
-      */
-      if (! (new File(fileName)).exists())
-      {
-      	String mixsetName = value;
-      	int useLineNumber = token.getPosition().getLineNumber();
-      	UmpleFile mixsetUseFile = umpleModel.getUmpleFile(); // the file in which "use" is mentioned. 
-      	Mixset tempMixset = new Mixset(mixsetName);
-      	tempMixset.setUseUmpleFile(mixsetUseFile);
-      	tempMixset.setUseUmpleLine(useLineNumber);
-      	umpleModel.getPossibleMixsetList().add(tempMixset);
-      	
-      }
-      else   {  
-	      if(!data.getHasParsed().contains(f.getAbsolutePath()))
-	      {
-	      
-	        data.getHasParsed().add(f.getAbsolutePath());
-	        RuleBasedParserThread thread = new RuleBasedParserThread(
+      if(!data.getHasParsed().contains(f.getAbsolutePath()))
+	  {
+	    data.getHasParsed().add(f.getAbsolutePath());
+	    RuleBasedParserThread thread = new RuleBasedParserThread(
 	          data.getAnalyzer().getRules().get("$ROOT$"),
 	          token,
 	          fileName,
 	          data
 	        );
-	        data.getAnalyzer().addThread(thread);
-	        thread.start();
+	    data.getAnalyzer().addThread(thread);
+	    thread.start();
 	        
-	      }
-	     }
+	  }
+	     
     }
   }
 }

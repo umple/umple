@@ -5,8 +5,8 @@ Copyright: All contributers to the Umple Project
 This file is made available subject to the open source license found at:
 http://umple.org/license
 
-This file analyze core umple meta model tokens such as which language to generate,
-the current namespace, etc and populates the umple meta model.
+This file analyzses mixset related tokens to populate the Umple meta model for
+mixsets.
 
 Please refer to UmpleInternalParser.ump for more details.
 
@@ -19,33 +19,35 @@ class UmpleModel{
   depend java.util.stream.*;
 
 /*
- * returns a mixset from UmpleModel based on its name.
+ * This method returns a mixset from UmpleModel based on its name.
+ * return null if the mixset is not found.
  * @Abdulaziz   
  */
- Mixset getMixset(String name) {
-	Mixset mixset = null;
-	for(MixsetOrFile mOrF : getMixsetsOrFiles(name))
-	{
-		if (mOrF instanceof Mixset)
-		mixset = (Mixset)mOrF;
-	}
-	return mixset;
- }
+  Mixset getMixset(String name) {
+    Mixset mixset = null;
+    for(MixsetOrFile mOrF : getMixsetsOrFiles(name))
+      { 
+      if (mOrF.isMixset())
+        mixset = (Mixset)mOrF;
+      }
+    return mixset;
+  }
+    
 /*
- * returns UmpleFile from UmpleModel based on its name. 
+ * This method returns UmpleFile from UmpleModel based on its name. 
+ * return null if the mixset is not found.
  * usage: to know if the file in which a mixset is mentioned was already used before. 
  * @Abdulaziz   
  */	
- 
- UmpleFile getUmpleFile(String name) {		
- 	UmpleFile uFile = null;
-	for(MixsetOrFile mOrF : getMixsetsOrFiles(name))
-	{
-		if (mOrF instanceof UmpleFile)
-			uFile = (UmpleFile)mOrF;
-	}
+  UmpleFile getUmpleFile(String name){
+    UmpleFile uFile = null;
+    for(MixsetOrFile mOrF : getMixsetsOrFiles(name))
+	  {
+	    if (! mOrF.isMixset())
+	      uFile = (UmpleFile)mOrF;
+	  }
 	return uFile;
- }
+  }
  
  List<MixsetOrFile> getMixsetsOrFiles(String name) {	 	
  	return mixsetOrFiles.stream().filter(mOrF -> mOrF.getName().equals(name)).collect(Collectors.toList());

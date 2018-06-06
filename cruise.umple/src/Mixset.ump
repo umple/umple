@@ -9,7 +9,7 @@ class UmpleModel {
 class MixsetOrFile {
   UmpleFile useUmpleFile = null; // File where the use statement was encountered
   Integer useUmpleLine = 0; 
-  
+  Boolean isMixset = false;
   abstract String getName();
 
 }
@@ -35,6 +35,10 @@ class UmpleFile {
 class Mixset {
   mixsetName; // THe name of the mixset
   isA MixsetOrFile;
+  
+  after constructor {  
+    setIsMixset(true);
+  }
   
   // Used fragments are those that have been parsed because a use statement was previously 
   // encountered.
