@@ -55,4 +55,7 @@ class AutomatedTellerMachine{
     }
     
   }
+  void readCard() {/*Code would be written here*/}
+  void ejectCard() {/*Code would be written here*/}
+
 }
