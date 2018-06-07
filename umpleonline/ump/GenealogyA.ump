@@ -28,7 +28,7 @@ association {
  * Person child -- 0..1 Union parents;
 }
 
-
+//$?[End_of_model]$?
 //Positioning
 
 class Person

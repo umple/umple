@@ -66,7 +66,7 @@ associationClass RoleFacilityAccessRight
   CRUD_Value { R, RW }
 }
 
-
+//$?[End_of_model]$?
 // Positioning
 
 class FacilityType

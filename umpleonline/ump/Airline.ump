@@ -50,9 +50,8 @@ class Booking{
   * Booking -- 1 SpecificFlight;
 }
 
+//$?[End_of_model]$?
 // LAYOUT INFORMATION
-
-
 
 class Airline
 {

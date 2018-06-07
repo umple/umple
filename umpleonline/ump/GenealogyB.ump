@@ -31,6 +31,7 @@ association {
  0..2 Person adoptiveParents -- * Person adoptedChild;
 }
 
+//$?[End_of_model]$?
 //Positioning
 
 class Union
