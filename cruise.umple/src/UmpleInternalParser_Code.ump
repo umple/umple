@@ -71,7 +71,8 @@ class UmpleInternalParser
     addCouple(braces);
     
     // Set up needed parser actions
-    parser.addParserAction("useStatement", new UseStatementParserAction() );
+    parser.addParserAction("useStatement", new UseStatementParserAction(model) );
+        
     parser.setLinkedFileHandler( new UmpleLinkedFileHandler() );
     parser.setAnalyzerGenerator( new UmpleAnalyzerGeneratorHandler() );
     
@@ -110,6 +111,10 @@ class UmpleInternalParser
       secondPostTokenAnalysis();
       //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
       checkDefaultedNameConflict();
+      
+    //last thing after analyzing all elements
+    parseMixset();
+    
     }
     catch (Exception ex)
     {
@@ -240,6 +245,7 @@ class UmpleInternalParser
       }
     }
     while (shouldProcessClassAgain);
+   
   }
 
   // Delegate function to analyze a token and send it to the write
@@ -257,6 +263,8 @@ class UmpleInternalParser
     analyzeLayoutToken(t,analysisStep);
     analyzeFilterToken(t,analysisStep);
     analyzeFIXML(t, analysisStep);
+    analyzeMixsetToken(t, analysisStep);
+    
   }
 
   // Analyze an individual token, delegates to the various components in Umple
@@ -505,3 +513,4 @@ use UmpleInternalParser_CodeUSE.ump;
 use UmpleInternalParser_CodeFilter.ump;
 use UmpleInternalParser_CodeParserHandlers.ump;
 use UmpleInternalParser_CodeEnumeration.ump;
+use UmpleInternalParser_CodeMixset.ump;

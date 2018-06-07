@@ -1,0 +1,150 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file analyzses mixset related tokens to populate the Umple meta model for
+mixsets.
+
+Please refer to UmpleInternalParser.ump for more details.
+
+*/
+
+
+namespace cruise.umple.compiler;
+
+class UmpleModel{
+/*
+ * This method returns a mixset from UmpleModel based on its name.
+ * return null if the mixset is not found.
+ * @Abdulaziz   
+ */
+  Mixset getMixset(String name) {
+    Mixset mixset = null;
+    for(MixsetOrFile mOrF : getMixsetOrFiles())
+      { 
+      if (mOrF.getIsMixset() && mOrF.getName().equals(name))
+        mixset = (Mixset)mOrF;
+      }
+    return mixset;
+  }
+    
+/*
+ * This method returns UmpleFile from UmpleModel based on its name. 
+ * return null if the mixset is not found.
+ * usage: to know if the file in which a mixset is mentioned was already used before. 
+ * @Abdulaziz   
+ */	
+  UmpleFile getUmpleFile(String name){
+    UmpleFile uFile = null;
+    for(MixsetOrFile mOrF : getMixsetOrFiles())
+	  {
+	    if (! mOrF.getIsMixset() && mOrF.getName().equals(name))
+	      uFile = (UmpleFile)mOrF;
+	  }
+	return uFile;
+  }
+ 
+	
+}
+
+class UmpleInternalParser
+{
+	depend cruise.umple.compiler.UmpleFile;
+	depend  java.util.stream.*;
+	 
+ // prepare mixsets that are inside an Umple class
+  private void analyzeMixsetDefinition(Token aToken , String className)
+  {
+  	aToken.addSubToken(new Token("entityName",className) );
+	aToken.addSubToken(new Token("entityType","class") );
+	analyzeMixset(aToken);		
+	}
+
+/*
+ * This method parses all waiting fragments of a mixset, if there is a mixset-use-statment specified in some of the files.  
+ */	
+ private void parseMixset(){
+ 
+   for (MixsetOrFile mOrF : model.getMixsetOrFiles())
+   {
+     if(mOrF.getIsMixset() &&  (mOrF.getUseUmpleFile() != null) ) // the second condition is to check if there is a use statement.
+     {
+       Mixset mixset =(Mixset) mOrF;
+       for(MixsetFragment mixsetWaitingFrag: mixset.getWaitingFragments())
+       {  
+         //String allMixsetBody = modelMixset.getWaitingFragments().stream().map(mixsetFrag -> mixsetFrag.getBody()).collect(Collectors.joining(" "));
+         ParseResult pResult= parse("MixsetFragmentParsing",  mixsetWaitingFrag.getBody()); 
+         Token answer = parser.getRootToken(); // result of parsing the body of a mixset waitingFragments
+         analyzeAllTokens(answer); 
+       }
+     }
+   }
+}
+
+ private void analyzeMixsetToken(Token t, int analysisStep)
+  {
+   if (analysisStep != 2)
+    {
+      shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
+      return;
+    }      
+    if (t.is("mixsetDefinition"))
+    {
+      analyzeMixset(t);
+    }
+    
+  }
+  
+  
+  private Mixset analyzeMixset(Token token)
+  {
+    String mixsetName = token.getValue("mixsetName");
+  	
+    // check if the mixset is was not added before
+    Mixset mixset = model.getMixset(mixsetName);
+    if(mixset  == null)
+	{
+	  mixset  = new Mixset(mixsetName);
+	  model.addMixsetOrFile(mixset);
+	}
+	
+	String mixsetBody = token.getValue("extraCode");	
+	
+	//inline mixset def.
+	String entityType = token.getValue("entityType");
+	String entityName = token.getValue("entityName");
+	
+	// mixset with one element
+	String oneElementMixset = token.getValue("oneElement");
+	
+	if(entityType != null) {
+	  if (oneElementMixset != null)
+	  {
+	    mixsetBody = entityType + " "+entityName + " { "+ oneElementMixset + " }";
+	  }
+	  else
+	    mixsetBody = entityType + " "+entityName + " { "+ mixsetBody + " }";	
+	  }
+	else 
+	
+	  if (oneElementMixset != null) mixsetBody = oneElementMixset;
+	  
+	  Position thePosition = token.getPosition();
+	  Position endPosition = token.getEndPosition();
+	  int lineNumber = thePosition.getLineNumber();
+	  UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
+	  MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, lineNumber, mixsetBody);
+	  
+	  // Here all mixset fragmets are considered as waitingFragment 
+	  mixset.addWaitingFragment(mixsetFragment);
+	  
+	return  mixset ;
+  }
+    
+
+  
+}
+
