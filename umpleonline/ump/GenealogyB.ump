@@ -30,15 +30,16 @@ association {
 association {
  0..2 Person adoptiveParents -- * Person adoptedChild;
 }
-//$?[End_of_model]$?
+
 //Positioning
-class Person
-{
-  position 128 48 166 154;
-}
 
 class Union
 {
-  position 128 265 183 93;
-  position.association Person:partner__Union 150,0 150,154;
+  position 391 113 183 93;
+  position.association Person:partner__Union 0,60 165,95;
+}
+
+class Person
+{
+  position 87 78 165 143;
 }

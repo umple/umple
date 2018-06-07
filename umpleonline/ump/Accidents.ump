@@ -42,25 +42,27 @@ class Accident
 }
 //$?[End_of_model]$?
 //Positioning
-class Accident
-{
-  position 11 24 163 145;
-  position.association Accident__Employee 164,144 50,0;
-  position.association Accident__AccidentType 74,145 74,0;
-  position.association Accident__SeriousnessLevel 164,116 0,7;
-}
 
-class Employee
+
+class AccidentType
 {
-  position 184 260 233 128;
+  position 57 247 148 75;
 }
 
 class SeriousnessLevel
 {
-  position 266 133 149 79;
+  position 305 55 148 75;
 }
 
-class AccidentType
+class Employee
 {
-  position 11 230 149 74;
+  position 242 207 236 126;
+}
+
+class Accident
+{
+  position 39 29 163 126;
+  position.association Accident__Employee 163,126 56,0;
+  position.association Accident__SeriousnessLevel 163,46 0,20;
+  position.association Accident__AccidentType 49,126 31,0;
 }

@@ -62,20 +62,14 @@ class Patient
 {
      String name;
      * -- * Doctor;
-}//$?[End_of_model]$?
+}
+//$?[End_of_model]$?
 
 class Hospital
 {
   position 231 11 109 45;
   position.association Employee__Hospital 49,46 55,0;
   position.association Hospital__Ward 110,37 74,0;
-}
-
-class Employee
-{
-  position 227 93 125 93;
-  position.association Employee__Shift 0,64 150,39;
-  position.association Employee__Privilege 9,97 30,0;
 }
 
 class Doctor
@@ -85,7 +79,7 @@ class Doctor
 
 class Surgeon
 {
-  position 287 355 109 45;
+  position 272 355 109 45;
 }
 
 class Janitor
@@ -99,13 +93,6 @@ class Patient
   position.association Doctor__Patient 0,0 110,44;
   }
 
-class Ward
-{
-  position 447 105 139 76;
-  position.association Doctor__Ward 0,69 109,19;
-  position.association Employee__Ward 0,30 126,41;
-  position.association Patient__Ward 100,80 60,0;
-}
 
 class Shift
 {
@@ -115,4 +102,18 @@ class Shift
 class Privilege
 {
   position 42 222 126 60;
+}
+
+class Employee
+{
+  position 213 80 124 92;
+  position.association Employee__Shift 0,9 149,57;
+  position.association Employee__Privilege 0,65 30,0;
+}
+
+class Ward
+{
+  position 421 87 139 75;
+  position.association Employee__Ward 0,8 124,13;
+  position.association Patient__Ward 79,75 61,0;
 }

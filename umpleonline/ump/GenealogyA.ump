@@ -27,15 +27,17 @@ class Union{
 association {
  * Person child -- 0..1 Union parents;
 }
-//$?[End_of_model]$?
+
+
 //Positioning
+
 class Person
 {
-  position 126 44 167 148;
+  position 72 26 165 143;
 }
 
 class Union
 {
-  position 124 267 183 91;
-  position.association Person:partner__Union 140,0 138,148;
+  position.association Person:partner__Union 30,0 8,143;
+  position 63 282 184 92;
 }

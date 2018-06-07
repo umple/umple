@@ -64,12 +64,6 @@ class Copy
   position 12 198 180 58;
 }
 
-class PartOfPublication
-{
-  position 85 310 158 100;
-  position.association PPartOfPublication__PartOfPublication:subparts 0,82 15,100;
-}
-
 class IssueOfPeriodical
 {
   position 275 328 123 62;
@@ -81,12 +75,6 @@ class Publication
   position.association EditionOrIssue__Publication 0,58 169,0;
 }
 
-class Author
-{
-  position 53 54 112 58;
-  position.association Author__EditionOrIssue 112,58 0,0;
-}
-
 class Publisher
 {
   position 300 52 112 58;
@@ -96,4 +84,16 @@ class Publisher
 class Book
 {
   position 498 196 109 41;
+}
+
+class Author
+{
+  position 69 53 109 45;
+  position.association Author__EditionOrIssue 102,38 0,10;
+}
+
+class PartOfPublication
+{
+  position 52 298 161 75;
+  position.association PartOfPublication__PartOfPublication:subparts 0,45 19,75;
 }

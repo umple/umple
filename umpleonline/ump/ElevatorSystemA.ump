@@ -43,28 +43,29 @@ class Elevator{
 //$?[End_of_model]$?
 
 //Positioning
-class Elevator
-{
-  position 189 139 193 96;
-  position.association Elevator__Floor:hasAccess 60,96 44,0;
-}
-
-class Floor
-{
-  position 205 289 157 93;
-  position.association Floor__Floor:onSameLevelAs 0,74 12,93;
-  position.association Elevator:onFloor__Floor 99,0 115,96;
-}
-
-class Bank
-{
-  position 233 25 109 62;
-  position.association Bank__Elevator 56,62 100,0;
-}
 
 class Building
 {
   position 27 158 112 57;
   position.association Building__Floor 112,57 0,0;
   position.association Bank__Building 112,0 0,57;
+}
+
+class Floor
+{
+  position 205 291 157 75;
+  position.association Floor__Floor:onSamelevelAs 26,75 0,59;
+  position.association Elevator:onFloor__Floor 127,0 129,92;
+}
+
+class Elevator
+{
+  position 203 148 196 92;
+  position.association Elevator__Floor:hasAccess 47,92 45,0;
+}
+
+class Bank
+{
+  position 218 30 109 58;
+  position.association Bank__Elevator 66,58 81,0;
 }

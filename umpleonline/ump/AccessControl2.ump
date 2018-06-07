@@ -172,53 +172,57 @@ class Code{
 
 
 
-//$?[End_of_model]$?
 
-class Code
-{
-  position 565 182 109 60;
-}
 
-class Card
-{
-  position.association Card__Code:cardId 49,63 30,0;
-  position 510 35 109 60;
-}
+
 
 class User
 {
-  position.association Card__User:owns 111,11 0,10;
-  position.association AccessPoint__User:mayEnterThrough 104,40 30,0;
-  position.association AccessZone:mayAccept__User:mayEnter 32,63 30,0;
-}
-
-class ACSystem
-{
-  position 381 181 136 60;
-  position.association ACSystem:mayAcceptAndValidate__User:mayUse 29,0 111,10;
-  position.association ACSystem:exitControls__AccessZone:exiting 0,10 110,9;
-  position.association ACSystem:entryControls__AccessZone:enteriing 0,30 110,29;
-}
-
-class Authorizer
-{
-  position.association AccessPoint__Authorizer:controls 129,56 0,28;
+  position 21 21 112 58;
+  position.association Card__User:owns 112,10 0,10;
+  position.association AccessPoint__User:mayEnterThrough 112,44 30,0;
+  position.association AccessZone:mayAccept__User:mayEnter 49,58 30,0;
 }
 
 class AccessPoint
 {
-  position 434 369 181 60;
-  position.association AccessPoint:controls__Door 0,51 112,8;
-}
-
-class Door
-{
-  position 243 305 109 60;
+  position 425 294 192 58;
+  position.association AccessPoint:controls__Door 0,46 114,25;
 }
 
 class AccessZone
 {
-  position.association AccessZone:accessedThrough__Door 36,46 30,0;
-  position 83 230 109 45;
+  position 40 205 109 40;
+  position.association AccessZone:accessedThrough__Door 65,45 0,4;
+}
+
+class Authorizer
+{
+  position 24 364 131 58;
+  position.association AccessPoint__Authorizer:controls 131,4 0,44;
+  position.association AccessZone__Authorizer:hasKnowledge 46,0 30,40;
+}
+
+class Door
+{
+  position 176 290 114 58;
+}
+
+class ACSystem
+{
+  position 307 164 147 58;
+  position.association ACSystem:mayAcceptAndValidate__User:mayUse 59,0 112,22;
+  position.association ACSystem:entryControls__AccessZone:enteriing 0,42 109,30;
+}
+
+class Card
+{
+  position 318 44 116 58;
+  position.association Card__Code:cardId 116,32 0,34;
+}
+
+class Code
+{
+  position 515 41 120 58;
 }
 // @@@skipcompile - issue relating to more than one 1..* creating problem constructor

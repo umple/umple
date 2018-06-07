@@ -148,6 +148,8 @@ Committees have members. Each member has a start and end date on the committee. 
 */
 //$?[End_of_model]$?
 
+
+
 class ChangeRequest
 {
   position 368 523 109 45;
@@ -160,7 +162,8 @@ class DecisionByBody
   position.association DecisionByBody__DecisionSummaryVersion 55,80 16,0;
   position.association DecisionByBody:usedInDecision__DocumentVersion:documentsForDecision 119,0 0,10;
   position.association DecisionByBody__DecisionMakingBody:decider 30,0 12,60;
-  position 203 444 159 77;
+    position.association Decision:onlyApprovedConditionalOnDecision__DecisionByBody 0,0 143,75;
+position 203 444 159 77;
 }
 
 class Comment
@@ -172,6 +175,7 @@ class Annotation
 {
   position 572 401 123 77;
   position.association Annotation__Person:madeByUser 97,0 64,63;
+  position.association Annotation__DecisionMakingBody:madeByBody 0,10 147,39;
 }
 
 class Person
@@ -183,12 +187,13 @@ class Organization
 {
   position.association Organization__Person:users 113,13 0,10;
   position.association DecisionMakingBody__Organization 75,63 30,0;
+  position.association Decision__Organization 52,58 34,0;
 }
 
 class Membership
 {
-  position.association Membership__Person 129,14 0,10;
-  position 93 130 121 77;
+  position.association Membership__Person 112,0 60,60;
+  position 113 170 129 77;
 }
 
 class DecisionSummaryVersion
@@ -208,11 +213,6 @@ class DecisionType
   position.association ApprovalLevel:highestApprovalLevelRequired__DecisionType 102,0 1,63;
 }
 
-class Decision
-{
-  position.association Decision__DecisionType 211,48 0,10;
-  position.association Decision__DecisionByBody:currentStatus 35,80 30,0;
-}
 
 class Document
 {
@@ -222,12 +222,20 @@ class Document
 
 class DecisionMakingBody
 {
-  position 300 175 130 60;
-  position.association ApprovalLevel__DecisionMakingBody 131,40 0,10;
-  position.association DecisionMakingBody__Membership 0,46 122,29;
+  position 289 190 147 60;
+  position.association ApprovalLevel__DecisionMakingBody 147,47 0,10;
+  position.association DecisionMakingBody__Membership 0,46 129,35;
 }
 
 class ApprovalLevel
 {
   position 581 259 141 60;
+}
+
+class Decision
+{
+  position 68 298 211 75;
+  position.association Decision__DecisionType 211,54 0,10;
+  position.association Decision__DecisionByBody:currentStatus 109,75 0,0;
+  position.association Decision:predecessors__Decision:successors 14,0 0,22;
 }
