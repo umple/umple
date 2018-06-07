@@ -82,7 +82,6 @@ class ElectoralDistrict{
  0..1 -- * ElectoralDistrict subDistrict;
 }    
 //$?[End_of_model]$?
-//Positioning
 
 //Positioning
 class Candidate
@@ -117,7 +116,7 @@ class PollInElection
 class VotesInPoll{
   position 518 327 151 62;
   position.association PollInElection__VotesInPoll 40,0 32,62;
-  position.association Candidature__VotesInPoll 12,62 170,19;
+  position.association Candidature__VotesInPoll 0,55 170,19;
 }
 
 class Position
@@ -147,10 +146,9 @@ class ElectionForPosition
 
 class ElectoralDistrict
 {
-  position 104 74 115 59;
-  position.association ElectoralDistrict__Voter 109,15 0,30;
-  position.association ElectoralDistrict__Position 50,59 112,0;
-  position.association ElectoralDistrict__ElectoralDistrict:subDistrict 0,38 15,59;
+  position 67 57 115 45;
+  position.association ElectoralDistrict__Voter 115,17 0,15;
+  position.association ElectoralDistrict__Position 70,45 95,0;
 }
 
 // @@@skipcppcompile - Contains Java Code

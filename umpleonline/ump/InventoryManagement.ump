@@ -50,20 +50,6 @@ class Product
   position.association Product__ProductSource 100,145 107,0;
 }
 
-class ProductSource
-{
-  position 395 215 223 76;
-  position.association ProductSource__SupplierOrderLineItem 107,76 79,0;
-}
-
-class Supplier
-{
-  position 121 45 128 96;
-  position.association ProductSource__Supplier 129,94 0,0;
-  position.association OrderToSupplier__Supplier 80,96 32,0;
-  position.association ReceivedDelivery__Supplier 24,93 15,0;
-}
-
 class ReceivedLineItem
 {
   position 289 484 195 76;
@@ -85,4 +71,18 @@ class OrderToSupplier
 {
   position 169 215 159 76;
   position.association OrderToSupplier__SupplierOrderLineItem 160,69 0,4;
+}
+
+class ProductSource
+{
+  position 395 230 223 58;
+  position.association ProductSource__SupplierOrderLineItem 107,58 79,0;
+}
+
+class Supplier
+{
+  position 117 39 127 92;
+  position.association ProductSource__Supplier 120,85 0,0;
+  position.association OrderToSupplier__Supplier 84,92 32,0;
+  position.association ReceivedDelivery__Supplier 32,92 19,0;
 }

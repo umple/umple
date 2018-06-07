@@ -52,23 +52,11 @@ class MeetingRoom
   position 358 444 211 76;
 }
 
-class Booking
-{
-  position 101 254 196 170;
-  position.association Booking__ItemOnBill 50,0 126,81;
-  position.association Booking__Booking:subsidiaryBooking 0,140 30,170;
-}
-
 class Event
 {
-  position 124 472 149 62;
+  position 136 471 149 62;
 }
 
-class Person
-{
-  position 209 104 128 79;
-  position.association Booking__Person 47,79 155,0;
-}
 
 class HotelBedroom
 {
@@ -84,13 +72,9 @@ class Suite
 class RentableSpace
 {
   position 477 286 152 79;
-  position.association Booking__RentableSpace 0,15 197,47;
+  position.association Booking__RentableSpace 0,15 201,46;
 }
 
-class ItemOnBill
-{
-  position 25 105 150 81;
-}
 
 class Hotel
 {
@@ -102,4 +86,22 @@ class HotelCompany
 {
   position 393 28 112 58;
   position.association Hotel:owns__HotelCompany 50,62 52,0;
+}
+
+class ItemOnBill
+{
+  position 55 133 148 75;
+}
+
+class Person
+{
+  position 235 133 127 75;
+  position.association Booking__Person 11,75 136,0;
+}
+
+class Booking
+{
+  position 110 255 201 143;
+  position.association Booking__Booking:subsidiaryBooking 20,143 0,118;
+  position.association Booking__ItemOnBill 30,0 85,75;
 }

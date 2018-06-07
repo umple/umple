@@ -50,6 +50,6 @@ class Country
 
 class Territory
 {
-  position 280 140 109 70;
-  position.association Territory__Territory:borders 0,57 9,70;
+  position 305 139 109 45;
+  position.association Territory__Territory:borders 102,0 109,13;
 }

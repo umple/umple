@@ -21,6 +21,7 @@ class Level{
 }
 
 class LoadingGate{
+  
  Integer number;
  isA MovementLocation;
 }
@@ -108,15 +109,6 @@ class Truck
   position.association DeliverOrShipmentBom__Truck 82,0 121,79;
 }
 
-class RwbmMovement
-{
-  position 39 145 145 98;
-  position.association MovementLocation:to__RwbmMovement:toMovement 112,0 0,21;
-  position.association MovementLocation:from__RwbmMovement:fromMovement 146,20 22,45;
-  position.association BoxOrPallet:movedBox__RwbmMovement 20,98 46,0;
-  position.association Rwbm__RwbmMovement 80,98 45,0;
-}
-
 class Row
 {
   position 552 30 134 76;
@@ -141,7 +133,7 @@ class Slot
 
 class Rwbm
 {
-  position 74 297 109 62;
+  position 87 297 109 62;
 }
 
 class SlotSet
@@ -153,5 +145,14 @@ class SlotSet
 
 class MovementLocation
 {
-  position 323 42 131 45;
+  position 322 32 135 45;
+}
+
+class RwbmMovement
+{
+  position 65 155 145 75;
+  position.association BoxOrPallet:movedBox__RwbmMovement 8,75 60,0;
+  position.association Rwbm__RwbmMovement 66,75 44,0;
+  position.association MovementLocation:from__RwbmMovement:fromMovement 145,17 60,45;
+  position.association MovementLocation:to__RwbmMovement:toMovement 53,0 30,45;
 }

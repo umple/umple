@@ -132,78 +132,80 @@ class Village
 }
 //$?[End_of_model]$?
 //Positioning
-class SurveyObservation
-{
-  position 42 20 248 128;
-  position.association SurveyObservation__VillageSurvey 118,130 91,0;
-}
 
-class Bulletin
-{
-  position 665 32 223 113;
-  position.association AgriculturalResearchStation__Bulletin 98,113 81,0;
-}
 
-class Worker
+class Watershed
 {
-  position 366 188 203 124;
-  position.association Office__Worker 203,108 0,0;
-  position.association Worker__WorkerRole 160,124 40,0;
-}
-
-class VillageSurvey
-{
-  position 69 198 178 110;
-  position.association Village__VillageSurvey 80,110 124,0;
-}
-
-class Village
-{
-  position 25 355 212 93;
-  position.association AgriculturalZone__Village 190,93 57,0;
-  position.association Village__Watershed 60,93 59,0;
-}
-
-class WorkersOnSurvey
-{
-  position 364 36 201 96;
-  position.association VillageSurvey__WorkersOnSurvey 0,93 178,0;
-  position.association Worker__WorkersOnSurvey 108,96 108,0;
-}
-
-class Office
-{
-  position 677 344 208 93;
-}
-
-class AgriculturalResearchStation
-{
-  position 682 198 189 54;
-}
-
-class Farm
-{
-  position 299 357 157 76;
-  position.association Farm__Village 0,8 212,10;
-}
-
-class WorkerRole
-{
-  position 486 359 149 79;
-}
-
-class AgriculturalZone
-{
-  position 158 510 120 76;
-  position.association AgriculturalZone__Disctrict 120,12 0,12;
+  position 1 502 119 75;
 }
 
 class District
 {
-  position 350 510 112 76;
+  position 301 502 112 75;
 }
 
-class Watershed
+class Office
 {
-  position 26 510 120 76;
+  position 667 324 207 92;
+}
+
+class WorkerRole
+{
+  position 452 408 148 75;
+}
+
+class Worker
+{
+  position 423 265 204 109;
+  position.association Worker__WorkerRole 64,109 35,0;
+  position.association Office__Worker 204,67 0,21;
+}
+
+class WorkersOnSurvey
+{
+  position 382 43 203 92;
+  position.association Worker__WorkersOnSurvey 106,92 65,0;
+  position.association VillageSurvey__WorkersOnSurvey 0,85 177,27;
+}
+
+class VillageSurvey
+{
+  position 44 190 177 92;
+  position.association Village__VillageSurvey 88,92 131,0;
+}
+
+class SurveyObservation
+{
+  position 11 24 249 126;
+  position.association SurveyObservation__VillageSurvey 123,126 90,0;
+}
+
+class Farm
+{
+  position 250 348 159 75;
+  position.association Farm__Village 0,38 214,41;
+}
+
+class Bulletin
+{
+  position 682 34 165 125;
+  position.association AgriculturalResearchStation__Bulletin 81,125 83,0;
+}
+
+class AgriculturalResearchStation
+{
+  position 680 199 169 73;
+}
+
+class AgriculturalZone
+{
+  position 132 502 119 75;
+  position.association AgriculturalZone__District 119,40 0,40;
+}
+
+class Village
+{
+  position 1 345 214 92;
+  position.association Village__Watershed 63,92 63,0;
+  position.association AgriculturalZone__Village 174,92 43,0;
 }
