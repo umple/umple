@@ -117,38 +117,35 @@ UmpleSystem.addClass = function(umpleClass)
   
   var classObj = jQuery("#" + umpleClass.id);
   
-  if (!Page.isPhotoReady())
-  {
-    classObj.click(Action.classClicked);
-    classObj.mouseover(function(event) { Action.classHover(event,true);} );
-    classObj.mouseout(function(event) { Action.classHover(event,false);} );
-    classObj.mousedown(function(event) { setTimeout(function(){Action.classMouseDown(event);}, 400);} );
-   // classObj.touchstart(function(event) { setTimeout(function(){Action.classMouseDown(event);}, 400);} );
-    classObj.mouseup(function(event){ Action.classMouseUp(event); });
-   // classObj.touchend(function(event){ Action.classMouseUp(event); });
-     if (!Page.readOnly) 
-     {
-      classObj.draggable
-      ({
-       containment:'parent', 
-       stop:function(event,ui){DiagramEdit.classMoved(event.target
-      )}
-     });
- /*     classObj.resizable
-      ({
-          minHeight:UmpleClassFactory.defaultSize.height, 
-          minWidth:UmpleClassFactory.defaultSize.width, 
-          autoHide:true,
-          containment:'parent',
-          resize:function(event,ui){DiagramEditclassResizing(event,ui);},
-          stop:function(event,ui){DiagramEditclassResized(event,ui);}
-      }); */
-    }
-    
-    // remove the jquery resizable handle
-    jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");
-    jQuery(".ui-icon").removeClass("ui-icon");
-  }
+  classObj.click(Action.classClicked);
+  classObj.mouseover(function(event) { Action.classHover(event,true);} );
+  classObj.mouseout(function(event) { Action.classHover(event,false);} );
+  classObj.mousedown(function(event) { setTimeout(function(){Action.classMouseDown(event);}, 400);} );
+  // classObj.touchstart(function(event) { setTimeout(function(){Action.classMouseDown(event);}, 400);} );
+  classObj.mouseup(function(event){ Action.classMouseUp(event); });
+  // classObj.touchend(function(event){ Action.classMouseUp(event); });
+   if (!Page.readOnly) 
+   {
+    classObj.draggable
+    ({
+     containment:'parent', 
+     stop:function(event,ui){DiagramEdit.classMoved(event.target
+    )}
+   });
+  /*     classObj.resizable
+  ({
+	  minHeight:UmpleClassFactory.defaultSize.height, 
+	  minWidth:UmpleClassFactory.defaultSize.width, 
+	  autoHide:true,
+	  containment:'parent',
+	  resize:function(event,ui){DiagramEditclassResizing(event,ui);},
+	  stop:function(event,ui){DiagramEditclassResized(event,ui);}
+  }); */
+}
+
+// remove the jquery resizable handle
+jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");
+jQuery(".ui-icon").removeClass("ui-icon");
   //UmpleSystem.redrawGeneralizationsTo(umpleClass);
   return umpleClass;   
 }
