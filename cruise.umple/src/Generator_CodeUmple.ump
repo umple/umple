@@ -286,7 +286,8 @@ class UmpleGenerator
     INTERFACE(655, "interface"),
     ATTRIBUTE(700, "attribute"),
     SIMPLE_ATTRIBUTE(701, "simpleAttribute"),
-    COMPLEX_ATTRIBUTE(702, "complexAttribute");
+    COMPLEX_ATTRIBUTE(702, "complexAttribute"),
+    MULTIVALUED_ATTRIBUTE(703, "multivaluedAttribute");
 
     private int id;
     private String value;
@@ -1029,6 +1030,7 @@ class UmpleGenerator
 
       case SIMPLE_ATTRIBUTE:
       case COMPLEX_ATTRIBUTE:
+      case MULTIVALUED_ATTRIBUTE:
       case SOFTWARE_PATTERN:
       case IS_A:
       case IS_A_SINGLE:
@@ -1544,6 +1546,7 @@ class UmpleGenerator
       case INLINE_ASSOCIATION:
       case SIMPLE_ATTRIBUTE:
       case COMPLEX_ATTRIBUTE:
+      case MULTIVALUED_ATTRIBUTE:
         buffer.append(Whitespace.NL.toString());
         break;
       default:
