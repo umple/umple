@@ -628,18 +628,74 @@ class UmpleModel
 
   private void filterOutClasses()
   {
+    List<UmpleInterface> interfacesToKeep = new ArrayList<UmpleInterface>();
+  
     int maxIndex = umpleClasses.size() - 1;
     for(int i=maxIndex; i>=0; i--)
     {
       UmpleClass clazz = umpleClasses.get(i);
       if (!clazz.getFilteredin())
       {
+        // Chop out it and its associations
         for(Association a : clazz.getAssociations())
+        {      
+          clazz.removeAssociation(a); // Remove from this end
+          
+          // Find the other end(s) and remove references too
+          for (AssociationEnd ae : a.getEnds())
+          {
+            String endClassName = ae.getClassName();
+            if(!endClassName.equals(clazz.getName()))
+            {
+              UmpleClass otherClass = getUmpleClass(endClassName);
+              if(otherClass != null) {
+                otherClass.removeAssociation(a);
+              }
+            }
+          }
+          
+          removeAssociation(a); // from model
+          a.delete();
+        }
+        Object[] avs = clazz.getAssociationVariables().toArray();
+        for(Object avo:  avs)
         {
-          associations.remove(a);
-        }  
+          AssociationVariable av = (AssociationVariable)avo;
+          AssociationVariable otherAv = av.getRelatedAssociation();
+          if(otherAv != null) {
+            otherAv.delete();
+          }
+          av.delete();
+        }
         removeUmpleClass(clazz);
+        clazz.delete();
       }
+      else {
+        // Flag its interfaces to keep
+        List<UmpleInterface> interfacesOfClass;
+        interfacesOfClass=clazz.getParentInterface();
+        for(UmpleInterface ui : interfacesOfClass)
+        {
+          addInterfacesRecursively(interfacesToKeep, ui);
+        }
+      }
+    }
+    
+    // Delete all other Umple interfaces
+    maxIndex = umpleInterfaces.size() - 1;
+    for(int i=maxIndex; i>=0; i--)
+    {
+      UmpleInterface theInterface = umpleInterfaces.get(i);
+      removeUmpleInterface(theInterface);
+      theInterface.delete();
+    }    
+    
+  }
+  private void addInterfacesRecursively(List interfacesToKeep, UmpleInterface anInterface) {
+    interfacesToKeep.add(anInterface);
+    for(UmpleInterface pi : anInterface.getExtendsInterface())
+    {
+      addInterfacesRecursively(interfacesToKeep, pi);
     }
   }
 

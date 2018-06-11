@@ -1,0 +1,189 @@
+// Example to demonstrate filters. Uncomment one of
+// the filters shown below to display a different
+// diagram, or generate a different subset of the
+// code
+
+// This model describes abstract art consisting of
+// various shapes connected in 3-D space, some
+// of which can contain others.
+
+// Filter 1. Show only Shape3D
+// filter {include Shape3D;}
+
+// Filter 2: Show classes connected to Model3D with
+// one hop
+//  filter {include Model3D; hops {association 1;}}
+
+// Filter 3: Show classes related to qualities
+// filter {namespace qualities ;}
+
+// Filter 4: Show Shape3D, its subclasses and all
+// their connections
+// filter {include Shape3D; hops {sub 1;}}
+
+// Filter 5: Including also includes parents
+// filter { include Cube;}
+
+// Filter 6: Show two classes and their neighbours
+//  filter {include Surface, Model3D; hops {association 1;}}
+
+// Filters 7: Named filters and use of the named filter
+ filter 7 {include Connector; hops {association 1;}}
+ filter 7a {include Cube;} // includes its parents
+//  filter {includeFilter 7,7a;}
+
+// Filters 8: Including classes that are associated
+// will always show the associations
+//  filter { include Colour, SurfaceQuality;}
+
+
+class Point3D {
+  Double x;
+  Double y;
+  Double z;
+}
+
+class Model3D {
+  depend Qualities.*;
+  depend Shapes.*;
+  name;
+  1 -- * Shape3D;
+  1 -- * Connector;
+}
+
+namespace Qualities;
+
+class Colour {
+  Integer red;
+  Integer green;
+  Integer blue;
+}
+
+class SurfaceQuality {
+  * -> 1 Colour;
+  Float reflectance;
+  Float transparency;
+}
+
+namespace Shapes;
+
+// Shape3Ds are nodes, they can also contain other
+// Models inside themselves.
+class Shape3D {
+  // All surfaces, points, connections
+  // are relative to the centre which acts
+  // as the Shapes origin.
+  // The centre also positions the shape in 3-space.
+  * -> 1 Point3D centre;
+  
+  // An Internal 3D model appears inside a Shape3D
+  // All points are relative to the shape's centre
+  0..1 containingShape -<@> 0..1 Model3D internalModel;
+}
+
+// A surface is used to describe the shape
+// of one of the sides of a polyhedron
+// points are relative to the centre of the
+// polyhedron. The points must fall on some
+// 3D plane.
+class Surface {
+  * -> * Point3D;
+  * -> 1 SurfaceQuality;
+}
+
+// Connectors are sticks connecting 3D Shapes
+class Connector {
+  * -> 2 Point3D ends;
+  * -- 2 Shape3D connectedShapes;
+  Double radius;
+  * -- 1 SurfaceQuality;
+}
+
+class Sphere {
+  isA Shape3D;
+  Double radius;
+  * -> 1 SurfaceQuality;
+}
+
+class Polyhedron {
+  depend Qualities.*;
+  isA Shape3D;
+  1 -- * Surface;
+}
+
+class RegularPolyhedron {
+  isA Polyhedron;
+}
+
+class Cube {
+  isA RegularPolyhedron;
+}
+
+strictness ignore 30; // hide namespace warnings//$?[End_of_model]$?
+
+class Colour
+{
+  position 24 20 109 87;
+}
+
+class SurfaceQuality
+{
+  position 193 38 144 71;
+  position.association Colour__SurfaceQuality 0,15 112,46;
+}
+
+class Surface
+{
+  position 9 178 109 45;
+  position.association Point3D__Surface 111,39 0,26;
+  position.association Surface__SurfaceQuality 25,0 5,73;
+}
+
+class Connector
+{
+  position 244 154 112 54;
+  position.association Connector__Point3D:ends 3,56 25,0;
+  position.association Connector__SurfaceQuality 10,0 86,73;
+  position.association Connector__Shape3D:connectedShapes 77,54 0,0;
+}
+
+class Sphere
+{
+  position 51 438 112 54;
+  position.association Sphere__SurfaceQuality 4,0 26,71;
+}
+
+class Polyhedron
+{
+  position 193 437 109 45;
+  position.association Polyhedron__Surface 37,0 57,45;
+}
+
+class Cube
+{
+  position 228 632 109 45;
+}
+
+class Shape3D
+{
+  position 379 326 109 45;
+  position.association Point3D:centre__Shape3D 0,30 111,76;
+  position.association Model3D:internalModel__Shape3D:containingShape 91,0 66,54;
+}
+
+class Model3D
+{
+  position 396 170 109 54;
+  position.association Model3D__Shape3D 35,54 30,0;
+  position.association Connector__Model3D 0,5 120,46;
+}
+
+class Point3D
+{
+  position 184 233 109 87;
+}
+
+class RegularPolyhedron
+{
+  position 206 538 119 45;
+}

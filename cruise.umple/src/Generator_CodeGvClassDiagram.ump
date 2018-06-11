@@ -198,10 +198,11 @@ class GvClassDiagramGenerator
       String intColor = uInterface.getDisplayColor();
       // TO DO needs fixing - interface colour does not appear
       if (!intColor.equals("")) {
-        code.append("  \""+uInterface.getName()
+        code.append("  \""+(uInterface.getName().replace("<","&lt;").replace(">","&gt;"))
           +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
       } 
-      code.append("  \""+uClass.getName()+"\" -> \""+uInterface.getName());
+      code.append("  \""+uClass.getName()+
+        "\" -> \""+(uInterface.getName().replace("<","&lt;").replace(">","&gt;")));
       code.append("\" [  arrowhead=\"empty\"; samehead=\"gen\"; style=dashed];\n\n");
     }
   }
