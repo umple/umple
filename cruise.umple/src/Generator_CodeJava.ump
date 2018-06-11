@@ -106,6 +106,7 @@ class JavaGenerator
       {
         if ("external".equals(currentElement.getModifier()))
         {
+          // It is external, so won't be generated
           continue;
         }
         writeFile(currentElement);
