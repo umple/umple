@@ -1597,7 +1597,6 @@ Action.updateUmpleDiagramCallback = function(response)
     if(Page.useEditableClassDiagram) {
       var newSystem = Json.toObject(diagramCode);
       UmpleSystem.merge(newSystem);
-      if(Page.showMethods || !Page.showAttributes)
       UmpleSystem.update(); 
       
       //Apply readonly styles
@@ -1805,14 +1804,12 @@ Action.toggleAttributes = function()
 {
   Page.showAttributes = !Page.showAttributes;
   Action.redrawDiagram()
-  // UmpleSystem.update();
 }
   
 Action.toggleMethods = function()
 {
   Page.showMethods = !Page.showMethods;
-  Action.redrawDiagram()
-  // UmpleSystem.update();
+  Action.redrawDiagram();
 }
 
 Action.toggleActions = function()

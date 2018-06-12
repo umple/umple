@@ -366,13 +366,12 @@ UmpleSystem.update = function()
   for(var i = 0; i<this.umpleClasses.length;++i)
   {
     var umpleClass = this.umpleClasses[i];
-    umpleClass.position.height = 28;
-    if(UmpleSystem.showAttributes)
+    umpleClass.position.height = 20;
+    if(Page.showAttributes)
       umpleClass.position.height += 17*(umpleClass.attributes.size());
-    if(UmpleSystem.showMethods)
+    if(Page.showMethods)
       umpleClass.position.height += 17*(umpleClass.methods.size());
     UmpleSystem.updateClass(umpleClass);
-
   }
 
   for(var i = 0; i<this.umpleAssociations.length;++i)
