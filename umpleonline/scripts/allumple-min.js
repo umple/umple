@@ -1379,26 +1379,26 @@ setTimeout(function(){Page.setFeedbackMessage("UML Attributes must be alphanumer
 },2000);setTimeout(function(){if(true){Page.setFeedbackMessage("")}},10000)}else{var a=UmpleSystem.find(c);a.attributes[e].set(b);UmpleSystem.redraw(a);
 var d=Json.toString(a);Page.showModelLoading();DiagramEdit.updateUmpleText({actionCode:format("action=editClass&actionCode={0}",d),codeChange:true});
 a.resetAttribute(e)}};DiagramEdit.attributeNew=function(d,b){if(!Action.validateAttributeName(b)){Action.updateUmpleDiagram();setTimeout(function(){Page.setFeedbackMessage("UML Attributes must be alphanumeric with an optional type after a colon. &lt;"+(b.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;"))+"&gt is not valid.")
-},2000);setTimeout(function(){if(true){Page.setFeedbackMessage("")}},10000)}else{var a=UmpleSystem.find(d);var c=a.addAttribute(b);DiagramEdit.updateHeightClass(a);
-var e=Json.toString(a);Page.showModelLoading();DiagramEdit.updateUmpleText({actionCode:format("action=editClass&actionCode={0}",e),codeChange:true});
-a.resetAttribute(c);UmpleSystem.updateClass(a);UmpleSystem.redrawGeneralizationsTo(a);UmpleSystem.trimOverlappingAssociations(a);UmpleSystem.update()
-}};DiagramEdit.classDeleted=function(d){var a=true;var g=UmpleSystem.find(d);var j=[];var b=[];for(var e=0;e<UmpleSystem.umpleAssociations.length;
-e++){var f=UmpleSystem.umpleAssociations[e];if(f.contains(g)){j.push(f.id)}}for(var e=0;e<UmpleSystem.umpleClasses.length;e++){var c=UmpleSystem.umpleClasses[e];
-if(c.extendsClass==g.id){b.push(c.id+"_generalization")}}for(var e=0;e<j.length;e++){DiagramEdit.associationDeleted(j[e],a)}for(var e=0;
-e<b.length;e++){DiagramEdit.generalizationDeleted(b[e],a)}var k=UmpleSystem.removeClass(d);var h=Json.toString(k);if(!Page.repeatToolItem){Page.unselectAllToggleTools()
-}Page.showModelLoading();Page.showLayoutLoading();DiagramEdit.updateUmpleText({actionCode:format("action=removeClass&actionCode={0}",h),codeChange:true})
-};DiagramEdit.methodNew=function(d,b){if(!Action.validateMethodName(b)){Action.updateUmpleDiagram();setTimeout(function(){Page.setFeedbackMessage("Invalid UML Method. &lt;"+(b.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;"))+"&gt is not valid.")
+},2000);setTimeout(function(){if(true){Page.setFeedbackMessage("")}},10000)}else{var a=UmpleSystem.find(d);var c=a.addAttribute(b);var e=Json.toString(a);
+Page.showModelLoading();DiagramEdit.updateUmpleText({actionCode:format("action=editClass&actionCode={0}",e),codeChange:true});a.resetAttribute(c);
+UmpleSystem.updateClass(a);UmpleSystem.redrawGeneralizationsTo(a);UmpleSystem.trimOverlappingAssociations(a);UmpleSystem.update()}};DiagramEdit.classDeleted=function(d){var a=true;
+var g=UmpleSystem.find(d);var j=[];var b=[];for(var e=0;e<UmpleSystem.umpleAssociations.length;e++){var f=UmpleSystem.umpleAssociations[e];
+if(f.contains(g)){j.push(f.id)}}for(var e=0;e<UmpleSystem.umpleClasses.length;e++){var c=UmpleSystem.umpleClasses[e];if(c.extendsClass==g.id){b.push(c.id+"_generalization")
+}}for(var e=0;e<j.length;e++){DiagramEdit.associationDeleted(j[e],a)}for(var e=0;e<b.length;e++){DiagramEdit.generalizationDeleted(b[e],a)
+}var k=UmpleSystem.removeClass(d);var h=Json.toString(k);if(!Page.repeatToolItem){Page.unselectAllToggleTools()}Page.showModelLoading();
+Page.showLayoutLoading();DiagramEdit.updateUmpleText({actionCode:format("action=removeClass&actionCode={0}",h),codeChange:true})};DiagramEdit.methodNew=function(d,b){if(!Action.validateMethodName(b)){Action.updateUmpleDiagram();
+setTimeout(function(){Page.setFeedbackMessage("Invalid UML Method. &lt;"+(b.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;"))+"&gt is not valid.")
 },2000);setTimeout(function(){if(true){Page.setFeedbackMessage("")}},10000)}else{var a=UmpleSystem.find(d);var c=a.addMethod(b);var e=Json.toString(a);
-Page.showModelLoading();DiagramEdit.updateUmpleText({actionCode:format("action=editClass&actionCode={0}",e),codeChange:true});DiagramEdit.updateHeightClass(a);
-a.resetMethod(c);UmpleSystem.updateClass(a);UmpleSystem.redrawGeneralizationsTo(a);UmpleSystem.trimOverlappingAssociations(a);UmpleSystem.update()
-}};DiagramEdit.methodChanged=function(c,e,f,b){if(!Action.validateMethodName(b)){Action.updateUmpleDiagram();setTimeout(function(){Page.setFeedbackMessage("Invalid UML Method. &lt;"+(b.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;"))+"&gt is not valid.")
+Page.showModelLoading();DiagramEdit.updateUmpleText({actionCode:format("action=editClass&actionCode={0}",e),codeChange:true});a.resetMethod(c);
+UmpleSystem.updateClass(a);UmpleSystem.redrawGeneralizationsTo(a);UmpleSystem.trimOverlappingAssociations(a);UmpleSystem.update()}};DiagramEdit.methodChanged=function(c,e,f,b){if(!Action.validateMethodName(b)){Action.updateUmpleDiagram();
+setTimeout(function(){Page.setFeedbackMessage("Invalid UML Method. &lt;"+(b.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;"))+"&gt is not valid.")
 },2000);setTimeout(function(){if(true){Page.setFeedbackMessage("")}},10000)}else{var a=UmpleSystem.find(c);a.methods[e].set(b);UmpleSystem.redraw(a);
 var d=Json.toString(a);Page.showModelLoading();DiagramEdit.updateUmpleText({actionCode:format("action=editClass&actionCode={0}",d),codeChange:true});
 a.resetMethod(e)}};DiagramEdit.methodDelete=function(b,d){var a=UmpleSystem.find(b);a.removeMethod(d);var e=jQuery("#"+a.id);a.position.width=UmpleClassFactory.defaultSize.width;
-DiagramEdit.updateHeightClass(a);var c=Json.toString(a);Page.showModelLoading();DiagramEdit.updateUmpleText({actionCode:format("action=editClass&actionCode={0}",c),codeChange:true});
+var c=Json.toString(a);Page.showModelLoading();DiagramEdit.updateUmpleText({actionCode:format("action=editClass&actionCode={0}",c),codeChange:true});
 a.resetMethod(d);UmpleSystem.updateClass(a);UmpleSystem.redrawGeneralizationsTo(a);UmpleSystem.trimOverlappingAssociations(a);UmpleSystem.update()
-};DiagramEdit.attributeDelete=function(b,d){var a=UmpleSystem.find(b);a.removeAttribute(d);var e=jQuery("#"+a.id);DiagramEdit.updateHeightClass(a);
-a.position.width=UmpleClassFactory.defaultSize.width;var c=Json.toString(a);Page.showModelLoading();DiagramEdit.updateUmpleText({actionCode:format("action=editClass&actionCode={0}",c),codeChange:true});
+};DiagramEdit.attributeDelete=function(b,d){var a=UmpleSystem.find(b);a.removeAttribute(d);var e=jQuery("#"+a.id);a.position.width=UmpleClassFactory.defaultSize.width;
+var c=Json.toString(a);Page.showModelLoading();DiagramEdit.updateUmpleText({actionCode:format("action=editClass&actionCode={0}",c),codeChange:true});
 a.resetAttribute(d);UmpleSystem.updateClass(a);UmpleSystem.redrawGeneralizationsTo(a);UmpleSystem.trimOverlappingAssociations(a);UmpleSystem.update()
 };DiagramEdit.associationDeleted=function(a,d){if(d==undefined){d=false}var c=UmpleSystem.removeAssociation(a);var b=Json.toString(c);
 if(!Page.repeatToolItem){Page.unselectAllToggleTools()}Page.showModelLoading();Page.showLayoutLoading();DiagramEdit.updateUmpleText({actionCode:format("action=removeAssociation&actionCode={0}",b),codeChange:true})
@@ -1407,10 +1407,8 @@ if(!Page.repeatToolItem){Page.unselectAllToggleTools()}Page.showModelLoading();P
 };DiagramEdit.removeNewClass=function(){if(DiagramEdit.newClass!=null){var a="#"+DiagramEdit.newClass.id;DiagramEdit.newClass=null;jQuery(a).remove();
 return true}return false};DiagramEdit.removeNewAssociation=function(){if(DiagramEdit.newAssociation!=null){var a="#"+DiagramEdit.newAssociation.getElementId();
 jQuery(a).remove();DiagramEdit.newAssociation=null;return true}return false};DiagramEdit.removeNewGeneralization=function(){if(DiagramEdit.newGeneralization!=null){var a="#"+DiagramEdit.newGeneralization.getElementId();
-jQuery(a).remove();DiagramEdit.newGeneralization=null;return true}return false};DiagramEdit.updateHeightClass=function(a){a.position.height=20;
-if(Page.showAttributes){a.position.height+=17*(a.attributes.size())}if(Page.showMethods){a.position.height+=17*(a.methods.size())}};UmpleAssociationFactory=new Object();
-UmpleAssociationFactory.create=function(b){var a=new UmpleAssociation();a.id=b.id;a.classOneId=b.classOneId;a.classTwoId=b.classTwoId;
-a.offsetOnePosition=UmplePositionFactory.copy(b.offsetOnePosition);a.offsetTwoPosition=UmplePositionFactory.copy(b.offsetTwoPosition);
+jQuery(a).remove();DiagramEdit.newGeneralization=null;return true}return false};UmpleAssociationFactory=new Object();UmpleAssociationFactory.create=function(b){var a=new UmpleAssociation();
+a.id=b.id;a.classOneId=b.classOneId;a.classTwoId=b.classTwoId;a.offsetOnePosition=UmplePositionFactory.copy(b.offsetOnePosition);a.offsetTwoPosition=UmplePositionFactory.copy(b.offsetTwoPosition);
 a.multiplicityOne=b.multiplicityOne;a.multiplicityTwo=b.multiplicityTwo;a.name=b.name;a.roleOne=b.roleOne;a.roleTwo=b.roleTwo;a.isSymmetricReflexive=(b.isSymmetricReflexive=="true"||b.isSymmetricReflexive==true)?true:false;
 a.isLeftNavigable=(b.isLeftNavigable=="true"||b.isLeftNavigable==true)?true:false;a.isRightNavigable=(b.isRightNavigable=="true"||b.isRightNavigable==true)?true:false;
 a.isLeftComposition=(b.isLeftComposition=="true"||b.isLeftComposition==true)?true:false;a.isRightComposition=(b.isRightComposition=="true"||b.isRightComposition==true)?true:false;

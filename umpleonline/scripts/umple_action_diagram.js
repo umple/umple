@@ -388,7 +388,7 @@ DiagramEdit.attributeNew = function(diagramId,attributeInput)
     var umpleClass = UmpleSystem.find(diagramId);
     var attributeIndex = umpleClass.addAttribute(attributeInput);
 
-    DiagramEdit.updateHeightClass(umpleClass);
+    
     
     var editClass = Json.toString(umpleClass);
     Page.showModelLoading();
@@ -467,7 +467,7 @@ DiagramEdit.methodNew = function(diagramId, methodInput)
       actionCode: format("action=editClass&actionCode={0}",editClass),
       codeChange: true
     });
-    DiagramEdit.updateHeightClass(umpleClass);
+    
     
     umpleClass.resetMethod(methodIndex);
     UmpleSystem.updateClass(umpleClass);
@@ -515,7 +515,7 @@ DiagramEdit.methodDelete = function(diagramId,index)
 
 //  umpleClass.position.height = UmpleClassFactory.defaultSize.height;
 //  umpleClass.position.width = UmpleClassFactory.defaultSize.width;
-  DiagramEdit.updateHeightClass(umpleClass);
+  
 
   var editClass = Json.toString(umpleClass);
   Page.showModelLoading();
@@ -539,7 +539,7 @@ DiagramEdit.attributeDelete = function(diagramId,index)
   var classObj = jQuery("#" + umpleClass.id);
 //  umpleClass.position.height = Math.round(classObj.height());
 //  umpleClass.position.width = Math.round(classObj.width());
-  DiagramEdit.updateHeightClass(umpleClass);
+  
 // This needs fixing so it picks up the correct width
 // Look trimOverlap, which seems to know the correct width
   umpleClass.position.width = UmpleClassFactory.defaultSize.width;
@@ -632,14 +632,4 @@ DiagramEdit.removeNewGeneralization = function()
     return true;
   }
   return false;
-}
-
-DiagramEdit.updateHeightClass = function(umpleClass) {
-  umpleClass.position.height = 20;
-  if (Page.showAttributes) {
-    umpleClass.position.height += 17*(umpleClass.attributes.size());
-  }
-  if (Page.showMethods) {
-    umpleClass.position.height += 17*(umpleClass.methods.size());
-  }
 }
