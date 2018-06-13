@@ -397,6 +397,15 @@ public class ClassTemplateTest extends TemplateTest
 	  }
   }
   
+@Test
+  public void MultivaluedAttributeAssignment() 
+  {
+    if (languagePath.equals("java"))
+    {
+      assertUmpleTemplateFor("MultivaluedAttributesAssignment.ump", languagePath + "/MultivaluedAttributesAssignment."+languagePath+".txt", "MultivaluedAttributesAssignment");
+    }
+  }
+  
 @Ignore @Test
   public void LazyAttributeOnImmutableClass()
   {

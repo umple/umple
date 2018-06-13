@@ -4322,7 +4322,7 @@ class ModelConstraint
   lazy String target;
   String linkNext = "";
   lazy String link;
-  ModelConstraint mostRecent = { getModelConstraint(numberOfModelConstraints()-1) } ;
+  ModelConstraint mostRecent = { getModelConstraint(numberOfModelConstraints()-1) }
 
   const ModelConstraintResult SUCCESS = new ModelConstraintResult(null,-1,null,null);
   const ModelConstraintResult AND = new ModelConstraintResult(null,-1,null,null);

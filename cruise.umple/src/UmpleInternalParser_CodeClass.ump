@@ -4332,6 +4332,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     attribute.setPosition(attributeToken.getPosition());
 
     attribute.setIsList(isList);
+    
+    if(isList && value != null) {
+      String valueToTest = value.split(",")[0];
+      if(!value.contains(",") && (valueToTest.contains(" ") || valueToTest.matches("^.*[^a-zA-Z0-9 ].*$")) && !value.contains("new")) {
+        setFailedPosition(attributeToken.getPosition(), 81, aClass.getName(), name);
+      }
+    }
 
     // Add comments above the attribute to the attribute.
     for (Comment c : lastComments)
