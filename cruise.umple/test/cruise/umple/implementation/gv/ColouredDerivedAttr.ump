@@ -5,6 +5,6 @@ class X {
   displayColor "#FFCCCC";
   Float x;
   Float y;
-  Float sum = {x + y};
+  Float sum = {x + y}
 }
 
