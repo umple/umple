@@ -1352,6 +1352,7 @@ public class UmpleParserTest
   public void TypeValueMismatchWarning()
   {
     assertHasWarningsParse("008_attributeTypeValueMismatch.ump",141);
+    assertHasWarningsParse("008_attributeTypeValueMismatch2.ump",141);
   }
 
   @Test
