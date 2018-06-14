@@ -1,9 +1,0 @@
-class MultivaluedAttributesAssignment {
-  String[] someStrings = {"a","b","c"};
-  Integer[] numbers = {1,2,3,10};
-  Type[] objects = {new Type("first"),new Type("second")};
-}
-
-class Type {
-  attr;
-}

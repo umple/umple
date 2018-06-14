@@ -4,24 +4,24 @@
 
 import java.util.*;
 
-// line 1 "MultivaluedAttributesAssignment.ump"
-public class MultivaluedAttributesAssignment
+// line 1 "Foo.ump"
+public class Foo
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //MultivaluedAttributesAssignment Attributes
+  //Foo Attributes
   private List<String> someStrings;
   private List<Integer> numbers;
-  private List<Type> objects;
+  private List<Token> objects;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public MultivaluedAttributesAssignment()
+  public Foo()
   {
     someStrings = new ArrayList<String>(); 
     someStrings.add("a"); 
@@ -32,9 +32,9 @@ public class MultivaluedAttributesAssignment
     numbers.add(2); 
     numbers.add(3); 
     numbers.add(10);
-    objects = new ArrayList<Type>(); 
-    objects.add(new Type("first")); 
-    objects.add(new Type("second"));
+    objects = new ArrayList<Token>(); 
+    objects.add(new Token("first")); 
+    objects.add(new Token("second"));
   }
 
   //------------------------
@@ -69,14 +69,14 @@ public class MultivaluedAttributesAssignment
     return wasRemoved;
   }
   /* Code from template attribute_SetMany */
-  public boolean addObject(Type aObject)
+  public boolean addObject(Token aObject)
   {
     boolean wasAdded = false;
     wasAdded = objects.add(aObject);
     return wasAdded;
   }
 
-  public boolean removeObject(Type aObject)
+  public boolean removeObject(Token aObject)
   {
     boolean wasRemoved = false;
     wasRemoved = objects.remove(aObject);
@@ -143,15 +143,15 @@ public class MultivaluedAttributesAssignment
     return index;
   }
   /* Code from template attribute_GetMany */
-  public Type getObject(int index)
+  public Token getObject(int index)
   {
-    Type aObject = objects.get(index);
+    Token aObject = objects.get(index);
     return aObject;
   }
 
-  public Type[] getObjects()
+  public Token[] getObjects()
   {
-    Type[] newObjects = objects.toArray(new Type[objects.size()]);
+    Token[] newObjects = objects.toArray(new Token[objects.size()]);
     return newObjects;
   }
 
@@ -167,7 +167,7 @@ public class MultivaluedAttributesAssignment
     return has;
   }
 
-  public int indexOfObject(Type aObject)
+  public int indexOfObject(Token aObject)
   {
     int index = objects.indexOf(aObject);
     return index;

@@ -4344,6 +4344,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
     attribute.setIsList(isList);
     
+    // If the list has values to be assigned, verify if it is valid
     if(isList && value != null) {
       String[] values = value.split(",");
       if(!value.contains(",") && (values[0].contains(" ") || values[0].matches("^.*[^a-zA-Z0-9 ].*$")) && !value.contains("new")) {
@@ -4531,6 +4532,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   {
     for (String value : values) 
     {
+      value = value.replaceAll("(?<!new)\\s+","");
       if (!compareTypeToValue(type, value)) 
       {
         return false;
