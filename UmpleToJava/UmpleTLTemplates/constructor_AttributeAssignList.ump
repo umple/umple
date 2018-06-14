@@ -5,7 +5,7 @@ class UmpleToJava {
       String[] values = av.getValue().split(",");
       if (values[0] != av.getValue()) {
         for (String value : values) { 
-          value = value.replaceAll("\\s+","");#>> 
+          value = value.replaceAll("(?<!new)\\s+","");#>> 
     <<=gen.translate("attributeMany",av)>>.add(<<=value>>);
 <<#}}}#>>!>>
 }

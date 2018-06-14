@@ -1,4 +1,10 @@
 class UmpleToPhp {
     constructor_AttributeAssignList <<!<</*constructor_AttributeAssignList*/>>
-    $<<=instanceIdentifier>>-><<=gen.translate("attributeMany",av)>> = array();!>>
+    $<<=instanceIdentifier>>-><<=gen.translate("attributeMany",av)>> = array(<<#
+    if (av.getValue() != null && av.getValue() != "") { 
+      String[] values = av.getValue().split(",");
+      if (values[0] != av.getValue()) {
+        for (int i = 0; i < values.length; i++) { 
+          String addingComma = (i == values.length-1) ? "" : ",";
+          String value = values[i].replaceAll("(?<!new)\\s+","");#>><<=value>><<=addingComma>><<#}}}#>>);!>>
 }

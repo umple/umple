@@ -400,7 +400,7 @@ public class ClassTemplateTest extends TemplateTest
 @Test
   public void MultivaluedAttributeAssignment() 
   {
-    if (languagePath.equals("java"))
+    if (languagePath.equals("java") || languagePath.equals("php"))
     {
       assertUmpleTemplateFor("MultivaluedAttributesAssignment.ump", languagePath + "/MultivaluedAttributesAssignment."+languagePath+".txt", "MultivaluedAttributesAssignment");
     }

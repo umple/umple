@@ -1,0 +1,21 @@
+E081 Invalid Multivalued Attribute Assignment
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when initializing multivalued attributes with invalid values</h2>
+
+<p>When indicating initial values for a multivalued attribute, an error is raised if the values to
+assign cannot be parsed properly. <br/>
+The error might be caused by a typographical mistake.
+</p>
+
+
+@@example
+@@source manualexamples/E081InvalidMultivaluedAttributeAssignment1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E081InvalidMultivaluedAttributeAssignment2.ump
+@@endexample

@@ -77,7 +77,7 @@ isSorted- : sorted { [priority] }
 attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[multivaluedAttribute]] | [[derivedAttribute]] | [[complexAttribute]]
 simpleAttribute- : [~name] ;
 autouniqueAttribute- : [=autounique] [~name] ;
-multivaluedAttribute- : [=unique]? [=lazy]? [=ivar]? [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] (= { [**value] })? ;
+multivaluedAttribute- : [=unique]? [=lazy]? [=ivar]? [=modifier:immutable|settable|internal|defaulted|const|fixml]? [type]? [[list]] [~name] (= { [**value] })? ;
 derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] = ( [[moreCode]] )+
 complexAttribute- : [=unique]? [=lazy]? [=ivar]? [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] (= [**value])? ;
 
