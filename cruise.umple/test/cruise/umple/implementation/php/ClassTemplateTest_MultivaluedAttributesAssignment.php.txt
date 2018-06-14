@@ -2,14 +2,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-class MultivaluedAttributesAssignment
+class Foo
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //MultivaluedAttributesAssignment Attributes
+  //Foo Attributes
   private $someStrings;
   private $numbers;
   private $objects;
@@ -22,7 +22,7 @@ class MultivaluedAttributesAssignment
   {
     $this->someStrings = array("a","b","c");
     $this->numbers = array(1,2,3,10);
-    $this->objects = array(new Type("first"),new Type("second"));
+    $this->objects = array(new Token("first"),new Token("second"));
   }
 
   //------------------------
