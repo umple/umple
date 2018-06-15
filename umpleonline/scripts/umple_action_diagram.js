@@ -13,7 +13,7 @@ DiagramEdit.newGeneralization = null;
 
 //Queues and initiates updates to the text editor after the diagram is edited
 DiagramEdit.updateUmpleText = function(update)
-{  
+{
   if(DiagramEdit.textChangeQueue.length == 0 && !DiagramEdit.pendingChanges)
   {
     DiagramEdit.pendingChanges = true;
@@ -24,6 +24,9 @@ DiagramEdit.updateUmpleText = function(update)
   {
     DiagramEdit.textChangeQueue.push(update);
   }
+  
+  if (update.codeChange)
+    Action.umpleTypingActivity("diagramEdit");
 }
 
 DiagramEdit.doTextUpdate = function()

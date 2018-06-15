@@ -1328,11 +1328,11 @@ jQuery("#tabButton"+i).click({code:b[i],tabnumber:i},showTab)}};function showTab
 jQuery("#innerGeneratedCodeRow"+a.data.tabnumber).show();Page.showGeneratedCode(a.data.code,$("inputGenerateCode").value.split(":")[0],a.data.tabnumber);
 jQuery(".line").last().hide();jQuery(".line").last().hide();jQuery("#innerGeneratedCodeRow").hide()}DiagramEdit=new Object();DiagramEdit.textChangeQueue=[];
 DiagramEdit.pendingChanges=false;DiagramEdit.newClass=null;DiagramEdit.newAssociation=null;DiagramEdit.newGeneralization=null;DiagramEdit.updateUmpleText=function(a){if(DiagramEdit.textChangeQueue.length==0&&!DiagramEdit.pendingChanges){DiagramEdit.pendingChanges=true;
-DiagramEdit.textChangeQueue.push(a);DiagramEdit.doTextUpdate()}else{DiagramEdit.textChangeQueue.push(a)}};DiagramEdit.doTextUpdate=function(){update=DiagramEdit.textChangeQueue.shift();
-if(update.codeChange){Page.hideGeneratedCode()}Action.ajax(Action.updateUmpleTextCallback,update.actionCode)};DiagramEdit.addClass=function(b){DiagramEdit.removeNewClass();
-var a=UmpleSystem.createClass(b);var c=Json.toString(a);if(!Page.repeatToolItem){Page.unselectAllToggleTools()}Page.showModelLoading();
-Page.showLayoutLoading();DiagramEdit.updateUmpleText({actionCode:format("action=addClass&actionCode={0}",c),codeChange:true})};DiagramEdit.addAssociation=function(a){DiagramEdit.removeNewAssociation();
-var c=UmpleSystem.createAssociation(a.classOneId,a.classTwoId,a.classOnePosition.add(UmpleSystem.position()),a.classTwoPosition.add(UmpleSystem.position()));
+DiagramEdit.textChangeQueue.push(a);DiagramEdit.doTextUpdate()}else{DiagramEdit.textChangeQueue.push(a)}if(a.codeChange){Action.umpleTypingActivity("diagramEdit")
+}};DiagramEdit.doTextUpdate=function(){update=DiagramEdit.textChangeQueue.shift();if(update.codeChange){Page.hideGeneratedCode()}Action.ajax(Action.updateUmpleTextCallback,update.actionCode)
+};DiagramEdit.addClass=function(b){DiagramEdit.removeNewClass();var a=UmpleSystem.createClass(b);var c=Json.toString(a);if(!Page.repeatToolItem){Page.unselectAllToggleTools()
+}Page.showModelLoading();Page.showLayoutLoading();DiagramEdit.updateUmpleText({actionCode:format("action=addClass&actionCode={0}",c),codeChange:true})
+};DiagramEdit.addAssociation=function(a){DiagramEdit.removeNewAssociation();var c=UmpleSystem.createAssociation(a.classOneId,a.classTwoId,a.classOnePosition.add(UmpleSystem.position()),a.classTwoPosition.add(UmpleSystem.position()));
 var b=Json.toString(c);if(!Page.repeatToolItem){Page.unselectAllToggleTools()}Page.showModelLoading();Page.showLayoutLoading();DiagramEdit.updateUmpleText({actionCode:format("action=addAssociation&actionCode={0}",b),codeChange:true})
 };DiagramEdit.addGeneralization=function(a){DiagramEdit.removeNewGeneralization();UmpleSystem.createGeneralization(a.childId,a.parentId);
 var b=Json.toString(a);if(!Page.repeatToolItem){Page.unselectAllToggleTools()}Page.showModelLoading();Page.showLayoutLoading();DiagramEdit.updateUmpleText({actionCode:format("action=addGeneralization&actionCode={0}",b),codeChange:true})
