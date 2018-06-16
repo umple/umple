@@ -82,7 +82,8 @@
 73: 2, "http://manual.umple.org/?E073DuplicateParallelStateMachineName.html", Composite state '{0}' contains parallel state machines with the same name '{1}' on lines '{2}' and '{3}' ; 
 74: 2, "http://manual.umple.org/?E074UserDefinedStateCannotBeNamedFinal.html", Cannot name user-defined state on line '{0}' as Final because it is a reserved keyword ;
 
-80: 2, "http://manual.umple.org/?E080InvalidAbstractClassAssociation.html", The association bettween a class and an abstract class declared in '{0}' must be a directed association or have one end whose multiplicity lower bound is 0 ;
+80: 2, "http://manual.umple.org/?E080InvalidAbstractClassAssociation.html", The association between a class and an abstract class declared in '{0}' must be a directed association or have one end whose multiplicity lower bound is 0 ;
+81: 2, "http://manual.umple.org/?E081InvalidMultivaluedAttributeAssignment.html", Invalid multivalued attribute assignment of attribute '{1}' in class '{0}' ;
 
 # Model Constraints' Error messages
 90: 2, "http://manual.umple.org/?E090AttributeNameNotFoundConstraint.html", Attribute named {0} was not found in class {1}, as required in constraint ;

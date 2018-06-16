@@ -1,0 +1,4 @@
+//attr can now be initialized
+class A {
+  String[] attr = {"valid", "values"};
+}

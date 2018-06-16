@@ -45,7 +45,14 @@ class UmpleToJava {
     {
       appendln(realSb, "");
       if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
-      append(realSb, "  public static final {0} {1} = {2};", gen.getType(av), av.getName(), gen.translate("parameterValue",av));
+      if (av.getIsList())
+      {
+        append(realSb, "  public static final {0}[] {1} = {{2}};", gen.getType(av), av.getName(), gen.translate("parameterValue",av));
+      }
+      else 
+      {
+        append(realSb, "  public static final {0} {1} = {2};", gen.getType(av), av.getName(), gen.translate("parameterValue",av));
+      }
     }
     else if (av.getIsAutounique())
     {

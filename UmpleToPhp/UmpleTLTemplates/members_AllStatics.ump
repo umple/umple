@@ -23,7 +23,15 @@ class UmpleToPhp {
     if (av.isConstant())
     {
       appendln(realSb, "");
-      append(realSb, "  public static ${0} = {1};", av.getName(), gen.translate("parameterValue",av));
+      if(av.getIsList())
+      {
+        append(realSb, "  public static ${0} = array({1});", av.getName(), gen.translate("parameterValue",av));
+      }
+      else
+      {
+        append(realSb, "  public static ${0} = {1};", av.getName(), gen.translate("parameterValue",av));
+      }
+      
     }
     else if (av.getIsAutounique())
     {

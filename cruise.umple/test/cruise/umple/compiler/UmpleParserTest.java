@@ -1352,6 +1352,7 @@ public class UmpleParserTest
   public void TypeValueMismatchWarning()
   {
     assertHasWarningsParse("008_attributeTypeValueMismatch.ump",141);
+    assertHasWarningsParse("008_attributeTypeValueMismatch2.ump",141);
   }
 
   @Test
@@ -3023,6 +3024,13 @@ public class UmpleParserTest
     assertHasWarningsParse("142_typeIsAccessSpecifierPublic.ump", 142);
     assertHasWarningsParse("142_typeIsAccessSpecifierProtected.ump", 142);
     assertHasWarningsParse("142_typeIsAccessSpecifierPrivate.ump", 142);
+  }
+  
+  @Test
+  public void multivaluedAttributeAssignment()
+  {
+    assertFailedParse("008_multivaluedAttributeAssignment1.ump", 81);
+    assertFailedParse("008_multivaluedAttributeAssignment2.ump", 81);
   }
   
   

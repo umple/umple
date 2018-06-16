@@ -1,0 +1,3 @@
+class A {
+  String[] attr = {"str", 20, "str2"};
+}

@@ -8,5 +8,5 @@ class X {
   
   Float x;
   Float y;
-  Float sum = {x + y};
+  Float sum = {x + y}
 }

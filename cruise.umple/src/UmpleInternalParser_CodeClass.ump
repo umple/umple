@@ -4343,6 +4343,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     attribute.setPosition(attributeToken.getPosition());
 
     attribute.setIsList(isList);
+    
+    // If the list has values to be assigned, verify if it is valid
+    if(isList && value != null) {
+      String[] values = value.split(",");
+      if(!value.contains(",") && (values[0].contains(" ") || values[0].matches("^.*[^a-zA-Z0-9 ].*$")) && !value.contains("new")) {
+        setFailedPosition(attributeToken.getPosition(), 81, aClass.getName(), name);
+      }
+      else if(!compareTypeToValueList(type, values)) {
+        setFailedPosition(attributeToken.getPosition(),141,type,value);
+      }
+    }
 
     // Add comments above the attribute to the attribute.
     for (Comment c : lastComments)
@@ -4516,7 +4527,19 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       return inferredType.equals(type);
     }
-  } 
+  }
+  private boolean compareTypeToValueList(String type, String[] values) 
+  {
+    for (String value : values) 
+    {
+      value = value.replaceAll("(?<!new)\\s+","");
+      if (!compareTypeToValue(type, value)) 
+      {
+        return false;
+      }
+    }
+    return true;
+  }
 
   private Boolean isLazyRedundant(Boolean isLazy, String value)
   {

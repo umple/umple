@@ -1,0 +1,184 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+import java.util.*;
+
+// line 1 "Foo.ump"
+public class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Attributes
+  private List<String> someStrings;
+  private List<Integer> numbers;
+  private List<Token> objects;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Foo()
+  {
+    someStrings = new ArrayList<String>(); 
+    someStrings.add("a"); 
+    someStrings.add("b"); 
+    someStrings.add("c");
+    numbers = new ArrayList<Integer>(); 
+    numbers.add(1); 
+    numbers.add(2); 
+    numbers.add(3); 
+    numbers.add(10);
+    objects = new ArrayList<Token>(); 
+    objects.add(new Token("first")); 
+    objects.add(new Token("second"));
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template attribute_SetMany */
+  public boolean addSomeString(String aSomeString)
+  {
+    boolean wasAdded = false;
+    wasAdded = someStrings.add(aSomeString);
+    return wasAdded;
+  }
+
+  public boolean removeSomeString(String aSomeString)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = someStrings.remove(aSomeString);
+    return wasRemoved;
+  }
+  /* Code from template attribute_SetMany */
+  public boolean addNumber(Integer aNumber)
+  {
+    boolean wasAdded = false;
+    wasAdded = numbers.add(aNumber);
+    return wasAdded;
+  }
+
+  public boolean removeNumber(Integer aNumber)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = numbers.remove(aNumber);
+    return wasRemoved;
+  }
+  /* Code from template attribute_SetMany */
+  public boolean addObject(Token aObject)
+  {
+    boolean wasAdded = false;
+    wasAdded = objects.add(aObject);
+    return wasAdded;
+  }
+
+  public boolean removeObject(Token aObject)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = objects.remove(aObject);
+    return wasRemoved;
+  }
+  /* Code from template attribute_GetMany */
+  public String getSomeString(int index)
+  {
+    String aSomeString = someStrings.get(index);
+    return aSomeString;
+  }
+
+  public String[] getSomeStrings()
+  {
+    String[] newSomeStrings = someStrings.toArray(new String[someStrings.size()]);
+    return newSomeStrings;
+  }
+
+  public int numberOfSomeStrings()
+  {
+    int number = someStrings.size();
+    return number;
+  }
+
+  public boolean hasSomeStrings()
+  {
+    boolean has = someStrings.size() > 0;
+    return has;
+  }
+
+  public int indexOfSomeString(String aSomeString)
+  {
+    int index = someStrings.indexOf(aSomeString);
+    return index;
+  }
+  /* Code from template attribute_GetMany */
+  public Integer getNumber(int index)
+  {
+    Integer aNumber = numbers.get(index);
+    return aNumber;
+  }
+
+  public Integer[] getNumbers()
+  {
+    Integer[] newNumbers = numbers.toArray(new Integer[numbers.size()]);
+    return newNumbers;
+  }
+
+  public int numberOfNumbers()
+  {
+    int number = numbers.size();
+    return number;
+  }
+
+  public boolean hasNumbers()
+  {
+    boolean has = numbers.size() > 0;
+    return has;
+  }
+
+  public int indexOfNumber(Integer aNumber)
+  {
+    int index = numbers.indexOf(aNumber);
+    return index;
+  }
+  /* Code from template attribute_GetMany */
+  public Token getObject(int index)
+  {
+    Token aObject = objects.get(index);
+    return aObject;
+  }
+
+  public Token[] getObjects()
+  {
+    Token[] newObjects = objects.toArray(new Token[objects.size()]);
+    return newObjects;
+  }
+
+  public int numberOfObjects()
+  {
+    int number = objects.size();
+    return number;
+  }
+
+  public boolean hasObjects()
+  {
+    boolean has = objects.size() > 0;
+    return has;
+  }
+
+  public int indexOfObject(Token aObject)
+  {
+    int index = objects.indexOf(aObject);
+    return index;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+ "]";
+  }
+}

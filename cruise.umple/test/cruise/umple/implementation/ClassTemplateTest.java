@@ -397,6 +397,15 @@ public class ClassTemplateTest extends TemplateTest
 	  }
   }
   
+@Test
+  public void MultivaluedAttributeAssignment() 
+  {
+    if (languagePath.equals("java") || languagePath.equals("php"))
+    {
+      assertUmpleTemplateFor("ClassTemplateTest_MultivaluedAttributesAssignment.ump", languagePath + "/ClassTemplateTest_MultivaluedAttributesAssignment."+languagePath+".txt", "Foo");
+    }
+  }
+  
 @Ignore @Test
   public void LazyAttributeOnImmutableClass()
   {
