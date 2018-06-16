@@ -25,8 +25,7 @@ DiagramEdit.updateUmpleText = function(update)
     DiagramEdit.textChangeQueue.push(update);
   }
   
-  if (update.codeChange)
-    Action.umpleTypingActivity("diagramEdit");
+  Action.umpleTypingActivity("diagramEdit");
 }
 
 DiagramEdit.doTextUpdate = function()

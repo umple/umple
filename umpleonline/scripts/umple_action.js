@@ -14,6 +14,7 @@ Action.elementClicked = false;
 Action.canCreateByDrag = true;
 Action.manualSync = false;
 Action.diagramInSync = true;
+Action.diagramEdited = false;
 Action.freshLoad = false;
 Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
@@ -1466,7 +1467,15 @@ Action.umpleTypingActivity = function(target) {
   {
     clearTimeout(Action.oldTimeout);
   }
-  Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
+  
+  if (target == "diagramEdit")
+  {
+    Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', 750);
+  }
+  else
+  {
+    Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
+  }
 }
 
 Action.processTyping = function(target, manuallySynchronized)
@@ -1478,11 +1487,18 @@ Action.processTyping = function(target, manuallySynchronized)
   {
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
       Action.updateLayoutEditorAndDiagram();
+      Action.diagramInSync = true;
+      
+      Page.enablePaletteItem("buttonSyncDiagram", false);
+      Page.enableDiagram(true);
     }
-    else Action.updateUmpleDiagramForce(false);
-    Action.diagramInSync = true;
-    Page.enablePaletteItem("buttonSyncDiagram", false);
-    Page.enableDiagram(true);
+    else if (target == "diagramEdit")
+    {
+      Action.setDiagramEdited(true);
+      Action.updateUmpleDiagramForce(false);
+      
+      Action.diagramInSync = true;
+    }
   }
 }
 
@@ -1537,7 +1553,10 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
     }
   }
   Action.savedCanonical=canonical;
-  Page.showCanvasLoading();
+  if (!Action.diagramEdited)
+  {
+    Page.showCanvasLoading();
+  }
   if(Page.useEditableClassDiagram) {language="language=Json";}
   // JointJS receives the full model (class and state machine) in JSON
   else if(Page.useJointJSClassDiagram) {language="language=JsonMixed";}
@@ -1564,7 +1583,11 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
     if(Page.showMethods) language=language+".showmethods";
     if(!Page.showAttributes) language=language+".hideattributes";
   }
+  
   Action.ajax(Action.updateUmpleDiagramCallback,language);
+  
+  Action.setDiagramEdited(false);
+    
 }
 
 Action.updateUmpleDiagramCallback = function(response)
@@ -1581,7 +1604,7 @@ Action.updateUmpleDiagramCallback = function(response)
     Action.diagramInSync = false;
     Page.setFeedbackMessage("<a href=\"\#errorClick\">See message.</a> To fix: edit model or click undo");
   }
-  else 
+  else if(!Action.diagramEdited)
   {
     // reset error message
     if(!Action.diagramInSync)
@@ -1660,6 +1683,7 @@ Action.updateUmpleDiagramCallback = function(response)
       jQuery("#umpleCanvas").html('<svg id="svgCanvas"></svg>');
       eval(diagramCode);
     }
+    
   }
 
   //Show the error message
@@ -1668,7 +1692,9 @@ Action.updateUmpleDiagramCallback = function(response)
     Page.showGeneratedCode(errorMessage, "diagramUpdate");
   }
   
-  Page.hideLoading();
+  if(!Action.diagramEdited)
+    Page.hideLoading();
+  Action.setDiagramEdited(false);
 }
 
 // Gets the code to display from the AJAX response
@@ -2253,6 +2279,18 @@ Action.generateTabsCode = function(theCode)
   }
 }
 
+Action.hasErrors = function(response) 
+{
+  var errorMessage = "";
+  errorMessage = Action.getErrorCode(response.responseText);
+  
+  return (errorMessage == "");
+}
+
+Action.setDiagramEdited = function(value)
+{
+  this.diagramEdited = value;
+}
 function showTab(event)
 {
   // Hide all file codeblocks

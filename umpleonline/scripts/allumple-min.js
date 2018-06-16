@@ -1091,11 +1091,11 @@ DropboxChooser.init();DropboxSaver.init()};DropboxMaster={resetTimeout:2000};Dro
 DropboxSaver.createSaverIn(b)},DropboxMaster.resetTimeout)},error:function(d){console.log(d);Page.setFeedbackMessage("Cannot save to the chosen Dropbox location.")
 }});jQuery(b).append(a)};DropboxSaver.getAbsoluteLink=function(b){var c=document.createElement("a");c.href=b.replace(/^\.\.\//,"");return c.href
 };var Action=new Object();Action.waiting_time=1500;Action.oldTimeout=null;Action.elementClicked=false;Action.canCreateByDrag=true;Action.manualSync=false;
-Action.diagramInSync=true;Action.freshLoad=false;Action.gentime=new Date().getTime();Action.savedCanonical="";Action.clicked=function(c){Page.clickCount+=1;
-var e=c.currentTarget;var d=e.id.substring(6);if(d=="PhpCode"){Action.generateCode("php","Php")}else{if(d=="RubyCode"){Action.generateCode("ruby","Ruby")
-}else{if(d=="JavaCode"){Action.generateCode("java","Java")}else{if(d=="RTCppCode"){Action.generateCode("rtcpp","RTCpp")}else{if(d=="AlloyCode"){Action.generateCode("alloy","Alloy")
-}else{if(d=="NuSMVCode"){Action.generateCode("nusmv","NuSMV")}else{if(d=="CppCode"){Action.generateCode("cpp","Cpp")}else{if(d=="SQLCode"){Action.generateCode("sql","Sql")
-}else{if(d=="JavaAPIDoc"){Action.generateCode("javadoc","javadoc")}else{if(d=="StateDiagram"){Action.generateCode("stateDiagram","stateDiagram")
+Action.diagramInSync=true;Action.diagramEdited=false;Action.freshLoad=false;Action.gentime=new Date().getTime();Action.savedCanonical="";
+Action.clicked=function(c){Page.clickCount+=1;var e=c.currentTarget;var d=e.id.substring(6);if(d=="PhpCode"){Action.generateCode("php","Php")
+}else{if(d=="RubyCode"){Action.generateCode("ruby","Ruby")}else{if(d=="JavaCode"){Action.generateCode("java","Java")}else{if(d=="RTCppCode"){Action.generateCode("rtcpp","RTCpp")
+}else{if(d=="AlloyCode"){Action.generateCode("alloy","Alloy")}else{if(d=="NuSMVCode"){Action.generateCode("nusmv","NuSMV")}else{if(d=="CppCode"){Action.generateCode("cpp","Cpp")
+}else{if(d=="SQLCode"){Action.generateCode("sql","Sql")}else{if(d=="JavaAPIDoc"){Action.generateCode("javadoc","javadoc")}else{if(d=="StateDiagram"){Action.generateCode("stateDiagram","stateDiagram")
 }else{if(d=="StructureDiagram"){Action.generateCode("structureDiagram","structureDiagram")}else{if(d=="classDiagram"){Action.generateCode("classDiagram","classDiagram")
 }else{if(d=="entityRelationshipDiagram"){Action.generateCode("entityRelationshipDiagram","entityRelationshipDiagram")}else{if(d=="EcoreCode"){Action.generateCode("xml","Ecore")
 }else{if(d=="GenerateCode"){var b=$("inputGenerateCode").value.split(":");Action.generateCode(b[0],b[1])}else{if(d=="SimulateCode"){Action.simulateCode()
@@ -1238,33 +1238,34 @@ jQuery("#linenum").val(a)};Action.umpleCodeMirrorTypingActivity=function(){if(Ac
 a=a.replace(/^\s+|\s+$/g,"");return a};Action.removeComments=function(d){var b="_"+ +new Date(),c=[],a=0;return(d.replace(/(['"])(\\\1|.)+?\1/g,function(e){c[a]=e;
 return(b+"")+a++}).replace(/([^\/])(\/(?!\*|\/)(\\\/|.)+?\/[gim]{0,3})/g,function(f,e,g){c[a]=g;return e+(b+"")+a++}).replace(/\/\/.*?\/?\*.+?(?=\n|\r|$)|\/\*[\s\S]*?\/\/[\s\S]*?\*\//g," ").replace(/\/\/.+?(?=\n|\r|$)|\/\*[\s\S]+?\*\//g," ").replace(RegExp("\\/\\*[\\s\\S]+"+b+"\\d+","g")," ").replace(RegExp(b+"(\\d+)","g"),function(e,f){return c[f]
 }))};Action.umpleTypingActivity=function(a){if(Action.manualSync&&Action.diagramInSync){if(jQuery("#umpleCanvasColumn").is(":visible")){Page.enablePaletteItem("buttonSyncDiagram",true)
-}Action.diagramInSync=false;Page.enableDiagram(false)}if(Action.oldTimeout!=null){clearTimeout(Action.oldTimeout)}Action.oldTimeout=setTimeout('Action.processTyping("'+a+'",'+false+")",Action.waiting_time)
-};Action.processTyping=function(b,a){History.save(Page.getUmpleCode(),"processTyping");Page.setExampleMessage("");if(!Action.manualSync||a){if(b=="umpleModelEditorText"||b=="codeMirrorEditor"){Action.updateLayoutEditorAndDiagram()
-}else{Action.updateUmpleDiagramForce(false)}Action.diagramInSync=true;Page.enablePaletteItem("buttonSyncDiagram",false);Page.enableDiagram(true)
-}};Action.updateLayoutEditorAndDiagram=function(){Action.ajax(Action.updateUmpleLayoutEditor,"language=Json")};Action.updateUmpleLayoutEditor=function(a){var d=a.responseText.split("URL_SPLIT");
-var c=d[0];var b=d[1];if(b==null||b==undefined){b=a.responseText}Page.showLayoutLoading();Action.ajax(Action.updateUmpleLayoutEditorCallback,format("action=addPositioning&actionCode={0}",b))
-};Action.updateUmpleLayoutEditorCallback=function(a){var b=a.responseText;var c=Page.splitUmpleCode(b)[1];Page.setUmplePositioningCode(c);
-Page.hideLoading();Action.updateUmpleDiagramForce(false)};Action.updateUmpleDiagram=function(){return Action.updateUmpleDiagramForce(true)
+}Action.diagramInSync=false;Page.enableDiagram(false)}if(Action.oldTimeout!=null){clearTimeout(Action.oldTimeout)}if(a=="diagramEdit"){Action.oldTimeout=setTimeout('Action.processTyping("'+a+'",'+false+")",200)
+}else{Action.oldTimeout=setTimeout('Action.processTyping("'+a+'",'+false+")",Action.waiting_time)}};Action.processTyping=function(b,a){History.save(Page.getUmpleCode(),"processTyping");
+Page.setExampleMessage("");if(!Action.manualSync||a){if(b=="umpleModelEditorText"||b=="codeMirrorEditor"){Action.updateLayoutEditorAndDiagram();
+Action.diagramInSync=true;Page.enablePaletteItem("buttonSyncDiagram",false);Page.enableDiagram(true)}else{if(b=="diagramEdit"){Action.setDiagramEdited(true);
+Action.updateUmpleDiagramForce(false);Action.diagramInSync=true}}}};Action.updateLayoutEditorAndDiagram=function(){Action.ajax(Action.updateUmpleLayoutEditor,"language=Json")
+};Action.updateUmpleLayoutEditor=function(a){var d=a.responseText.split("URL_SPLIT");var c=d[0];var b=d[1];if(b==null||b==undefined){b=a.responseText
+}Page.showLayoutLoading();Action.ajax(Action.updateUmpleLayoutEditorCallback,format("action=addPositioning&actionCode={0}",b))};Action.updateUmpleLayoutEditorCallback=function(a){var b=a.responseText;
+var c=Page.splitUmpleCode(b)[1];Page.setUmplePositioningCode(c);Page.hideLoading();Action.updateUmpleDiagramForce(false)};Action.updateUmpleDiagram=function(){return Action.updateUmpleDiagramForce(true)
 };Action.updateUmpleDiagramForce=function(b){var a=Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());if(!b){if(a==Action.savedCanonical){return
-}}Action.savedCanonical=a;Page.showCanvasLoading();if(Page.useEditableClassDiagram){language="language=Json"}else{if(Page.useJointJSClassDiagram){language="language=JsonMixed"
-}else{if(Page.useGvClassDiagram){if(Page.showTraits){language="language=traitDiagram"}else{language="language=classDiagram"}}else{if(Page.useGvStateDiagram){language="language=stateDiagram"
-}else{if(Page.useStructureDiagram){language="language=StructureDiagram"}}}}}if(Page.useGvStateDiagram){if(!Page.showActions){language=language+".hideactions"
-}if(Page.showTransitionLabels){language=language+".showtransitionlabels"}if(Page.showGuardLabels){language=language+".showguardlabels"
-}language=language+"."+$("inputGenerateCode").value.split(":")[1]}if(Page.useGvClassDiagram){if(Page.showMethods){language=language+".showmethods"
-}if(!Page.showAttributes){language=language+".hideattributes"}}Action.ajax(Action.updateUmpleDiagramCallback,language)};Action.updateUmpleDiagramCallback=function(response){var diagramCode="";
-var errorMessage="";diagramCode=Action.getDiagramCode(response.responseText);errorMessage=Action.getErrorCode(response.responseText);
-if(diagramCode==null||diagramCode==""||diagramCode=="null"){Page.enableDiagram(false);Action.diagramInSync=false;Page.setFeedbackMessage('<a href="#errorClick">See message.</a> To fix: edit model or click undo')
-}else{if(!Action.diagramInSync){Page.enableDiagram(true);Action.diagramInSync=true}Page.setFeedbackMessage("");Page.hideGeneratedCode();
-if(Page.useEditableClassDiagram){var newSystem=Json.toObject(diagramCode);UmpleSystem.merge(newSystem);UmpleSystem.update();if(Page.readOnly){jQuery("span.editable").addClass("uneditable")
-}}else{if(Page.useJointJSClassDiagram){var model=JSON.parse(diagramCode.replace(new RegExp('} { "name": "',"gi"),'}, { "name": "'));var umpleCanvas=jQuery("#umpleCanvas");
-var paper=JJSdiagram.initJJSDiagram(umpleCanvas,model);var MouseWheelHandler=function(event){var delta=Math.max(-1,Math.min(1,(event.wheelDelta||-event.detail)));
+}}Action.savedCanonical=a;if(!Action.diagramEdited){Page.showCanvasLoading()}if(Page.useEditableClassDiagram){language="language=Json"
+}else{if(Page.useJointJSClassDiagram){language="language=JsonMixed"}else{if(Page.useGvClassDiagram){if(Page.showTraits){language="language=traitDiagram"
+}else{language="language=classDiagram"}}else{if(Page.useGvStateDiagram){language="language=stateDiagram"}else{if(Page.useStructureDiagram){language="language=StructureDiagram"
+}}}}}if(Page.useGvStateDiagram){if(!Page.showActions){language=language+".hideactions"}if(Page.showTransitionLabels){language=language+".showtransitionlabels"
+}if(Page.showGuardLabels){language=language+".showguardlabels"}language=language+"."+$("inputGenerateCode").value.split(":")[1]}if(Page.useGvClassDiagram){if(Page.showMethods){language=language+".showmethods"
+}if(!Page.showAttributes){language=language+".hideattributes"}}Action.ajax(Action.updateUmpleDiagramCallback,language);Action.setDiagramEdited(false)
+};Action.updateUmpleDiagramCallback=function(response){var diagramCode="";var errorMessage="";diagramCode=Action.getDiagramCode(response.responseText);
+errorMessage=Action.getErrorCode(response.responseText);if(diagramCode==null||diagramCode==""||diagramCode=="null"){Page.enableDiagram(false);
+Action.diagramInSync=false;Page.setFeedbackMessage('<a href="#errorClick">See message.</a> To fix: edit model or click undo')}else{if(!Action.diagramEdited){if(!Action.diagramInSync){Page.enableDiagram(true);
+Action.diagramInSync=true}Page.setFeedbackMessage("");Page.hideGeneratedCode();if(Page.useEditableClassDiagram){var newSystem=Json.toObject(diagramCode);
+UmpleSystem.merge(newSystem);UmpleSystem.update();if(Page.readOnly){jQuery("span.editable").addClass("uneditable")}}else{if(Page.useJointJSClassDiagram){var model=JSON.parse(diagramCode.replace(new RegExp('} { "name": "',"gi"),'}, { "name": "'));
+var umpleCanvas=jQuery("#umpleCanvas");var paper=JJSdiagram.initJJSDiagram(umpleCanvas,model);var MouseWheelHandler=function(event){var delta=Math.max(-1,Math.min(1,(event.wheelDelta||-event.detail)));
 if(event.altKey===true){var paperHeight=paper.options.height;var paperWidth=paper.options.width;var scaleFactor=1+(Math.abs(delta)/(delta*10));
 paper.setDimensions(paperWidth*scaleFactor,paperHeight*scaleFactor);if(JJSdiagram.paper){JJSdiagram.paper.setDimensions(jQuery("#umpleCanvas")[0].clientWidth,jQuery("#umpleCanvas")[0].clientHeight)
 }}};var paperHolder=document.getElementById("umpleCanvas");if(paperHolder.addEventListener){paperHolder.addEventListener("mousewheel",MouseWheelHandler,false);
 paperHolder.addEventListener("DOMMouseScroll",MouseWheelHandler,false)}else{paperHolder.attachEvent("onmousewheel",MouseWheelHandler)
 }jQuery("#jjsPaper").click(function(){Action.focusOn(Page.umpleCanvasId(),true)})}else{if(Page.useGvClassDiagram||Page.useGvStateDiagram){jQuery("#umpleCanvas").html(format("{0}",diagramCode))
-}else{if(Page.useStructureDiagram){jQuery("#umpleCanvas").html('<svg id="svgCanvas"></svg>');eval(diagramCode)}}}}}if(errorMessage!=""){Page.showGeneratedCode(errorMessage,"diagramUpdate")
-}Page.hideLoading()};Action.getDiagramCode=function(c){var a="";if(Page.useEditableClassDiagram||Page.useJointJSClassDiagram){a=c.split("URL_SPLIT")[1];
+}else{if(Page.useStructureDiagram){jQuery("#umpleCanvas").html('<svg id="svgCanvas"></svg>');eval(diagramCode)}}}}}}if(errorMessage!=""){Page.showGeneratedCode(errorMessage,"diagramUpdate")
+}if(!Action.diagramEdited){Page.hideLoading()}Action.setDiagramEdited(false)};Action.getDiagramCode=function(c){var a="";if(Page.useEditableClassDiagram||Page.useJointJSClassDiagram){a=c.split("URL_SPLIT")[1];
 if(a=="null"){a=""}}else{if(Page.useGvClassDiagram||Page.useGvStateDiagram){var b=c.split("<svg width=");if(b.length>1&&b[1].length>100){a="<svg width="+b[1];
 a=a.replace(/<\/svg>$/,"")}}else{if(Page.useStructureDiagram){a=c.split("<p>URL_SPLIT")[1];a=a.replace(/##CANVAS_ID##/g,"svgCanvas");
 a=jQuery("<div/>").html(a).text()}}}return a};Action.getErrorCode=function(c){var a="";if(Page.useEditableClassDiagram||Page.useStructureDiagram){a=c.split("URL_SPLIT")[0];
@@ -1324,12 +1325,13 @@ jQuery("#tabButton1").click()}else{jQuery("#tabRow").hide();jQuery("#innerGenera
 }};Action.generateTabsCode=function(g){var b=[];var f=0;var e="";var d=[];var a="";var c=false;g.split("URL_SPLIT")[1].split("\n").forEach(function(h){if(h.indexOf("//%%")>=0){f++;
 if(f>1){b[f]+="</p>"}strFileName=h.slice(14);strFileName=strFileName.substr(0,strFileName.indexOf(" "));d[f]=strFileName;jQuery("#generatedCodeRow").append("<div id='innerGeneratedCodeRow"+f+"'></div>");
 b[f]="<p>URL_SPLIT";c=true}else{if(!c){b[f]+=h+"\n"}else{c=false}}});b[f]+="</p>";for(i=1;i<=f;i++){jQuery("#tabRow").append("<button type='button' id='tabButton"+i+"'>"+d[i]+"</button>");
-jQuery("#tabButton"+i).click({code:b[i],tabnumber:i},showTab)}};function showTab(a){jQuery("#innerGeneratedCodeRow").nextAll().hide();
+jQuery("#tabButton"+i).click({code:b[i],tabnumber:i},showTab)}};Action.hasErrors=function(a){var b="";b=Action.getErrorCode(a.responseText);
+return(b=="")};Action.setDiagramEdited=function(a){this.diagramEdited=a};function showTab(a){jQuery("#innerGeneratedCodeRow").nextAll().hide();
 jQuery("#innerGeneratedCodeRow"+a.data.tabnumber).show();Page.showGeneratedCode(a.data.code,$("inputGenerateCode").value.split(":")[0],a.data.tabnumber);
 jQuery(".line").last().hide();jQuery(".line").last().hide();jQuery("#innerGeneratedCodeRow").hide()}DiagramEdit=new Object();DiagramEdit.textChangeQueue=[];
 DiagramEdit.pendingChanges=false;DiagramEdit.newClass=null;DiagramEdit.newAssociation=null;DiagramEdit.newGeneralization=null;DiagramEdit.updateUmpleText=function(a){if(DiagramEdit.textChangeQueue.length==0&&!DiagramEdit.pendingChanges){DiagramEdit.pendingChanges=true;
-DiagramEdit.textChangeQueue.push(a);DiagramEdit.doTextUpdate()}else{DiagramEdit.textChangeQueue.push(a)}if(a.codeChange){Action.umpleTypingActivity("diagramEdit")
-}};DiagramEdit.doTextUpdate=function(){update=DiagramEdit.textChangeQueue.shift();if(update.codeChange){Page.hideGeneratedCode()}Action.ajax(Action.updateUmpleTextCallback,update.actionCode)
+DiagramEdit.textChangeQueue.push(a);DiagramEdit.doTextUpdate()}else{DiagramEdit.textChangeQueue.push(a)}Action.umpleTypingActivity("diagramEdit")
+};DiagramEdit.doTextUpdate=function(){update=DiagramEdit.textChangeQueue.shift();if(update.codeChange){Page.hideGeneratedCode()}Action.ajax(Action.updateUmpleTextCallback,update.actionCode)
 };DiagramEdit.addClass=function(b){DiagramEdit.removeNewClass();var a=UmpleSystem.createClass(b);var c=Json.toString(a);if(!Page.repeatToolItem){Page.unselectAllToggleTools()
 }Page.showModelLoading();Page.showLayoutLoading();DiagramEdit.updateUmpleText({actionCode:format("action=addClass&actionCode={0}",c),codeChange:true})
 };DiagramEdit.addAssociation=function(a){DiagramEdit.removeNewAssociation();var c=UmpleSystem.createAssociation(a.classOneId,a.classTwoId,a.classOnePosition.add(UmpleSystem.position()),a.classTwoPosition.add(UmpleSystem.position()));
