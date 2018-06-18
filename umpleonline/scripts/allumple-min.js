@@ -1241,8 +1241,8 @@ return(b+"")+a++}).replace(/([^\/])(\/(?!\*|\/)(\\\/|.)+?\/[gim]{0,3})/g,functio
 }Action.diagramInSync=false;Page.enableDiagram(false)}if(Action.oldTimeout!=null){clearTimeout(Action.oldTimeout)}if(a=="diagramEdit"){Action.oldTimeout=setTimeout('Action.processTyping("'+a+'",'+false+")",500)
 }else{Action.oldTimeout=setTimeout('Action.processTyping("'+a+'",'+false+")",Action.waiting_time)}};Action.processTyping=function(b,a){if(b!="diagramEdit"){History.save(Page.getUmpleCode(),"processTyping")
 }Page.setExampleMessage("");if(!Action.manualSync||a){Action.diagramInSync=true;if(b=="umpleModelEditorText"||b=="codeMirrorEditor"){Action.updateLayoutEditorAndDiagram();
-Page.enablePaletteItem("buttonSyncDiagram",false);console.log("text edited -- diagram updated")}else{if(b=="diagramEdit"){Action.ajax(Action.updateFromDiagramCallback,Action.getLanguage());
-console.log("diagram edited")}}Page.enableDiagram(true)}};Action.updateLayoutEditorAndDiagram=function(){Action.ajax(Action.updateUmpleLayoutEditor,"language=Json")
+Page.enablePaletteItem("buttonSyncDiagram",false)}else{if(b=="diagramEdit"){Action.ajax(Action.updateFromDiagramCallback,Action.getLanguage())
+}}Page.enableDiagram(true)}};Action.updateLayoutEditorAndDiagram=function(){Action.ajax(Action.updateUmpleLayoutEditor,"language=Json")
 };Action.updateUmpleLayoutEditor=function(a){var d=a.responseText.split("URL_SPLIT");var c=d[0];var b=d[1];if(b==null||b==undefined){b=a.responseText
 }Page.showLayoutLoading();Action.ajax(Action.updateUmpleLayoutEditorCallback,format("action=addPositioning&actionCode={0}",b))};Action.updateUmpleLayoutEditorCallback=function(a){var b=a.responseText;
 var c=Page.splitUmpleCode(b)[1];Page.setUmplePositioningCode(c);Page.hideLoading();Action.updateUmpleDiagramForce(false)};Action.updateUmpleDiagram=function(){return Action.updateUmpleDiagramForce(true)

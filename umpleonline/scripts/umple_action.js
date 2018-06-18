@@ -1488,12 +1488,10 @@ Action.processTyping = function(target, manuallySynchronized)
       Action.updateLayoutEditorAndDiagram();
       
       Page.enablePaletteItem("buttonSyncDiagram", false);
-      console.log("text edited -- diagram updated");
     }
     else if(target == "diagramEdit")
     {
       Action.ajax(Action.updateFromDiagramCallback,Action.getLanguage());
-      console.log("diagram edited");
     }
     
     Page.enableDiagram(true);

@@ -32,9 +32,10 @@ DiagramEdit.doTextUpdate = function()
 {
   update = DiagramEdit.textChangeQueue.shift();
 
-  if(update.codeChange)
+  if(update.codeChange) {
     Page.hideGeneratedCode();
-
+  }
+  
   Action.ajax(Action.updateUmpleTextCallback,update.actionCode);
 }
 
