@@ -62,6 +62,9 @@ script:
   # Compile all known Umple examples and verify they compile in Java
   - $ANT_EXAMPLES allUserManualAndExampleTests   
   - $ANT_TESTBED template.resetVersion 
+  
+  # Build the user manual and copy it to a subfolder of UmpleOnline
+  - $ANT_BUILD packageDocs travisCopyManual  
 
   # Set up UmpleOnline to be packaged into its Docker image, then build the image.
   - if [ "$HAVE_DOCKER" ]; then
@@ -75,9 +78,7 @@ after_success:
     if ( [ "$HAVE_DOCKER" ] && [ "$TRAVIS_SECURE_ENV_VARS" ] ); then
         docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
         DOCKER_IMAGE_NAME="umple/umpleonline:$TRAVIS_COMMIT" &&
-       # docker push "$DOCKER_IMAGE_NAME" &&
         if [ "$TRAVIS_PULL_REQUEST" != 'false' ]; then
-       #     docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST" &&
             docker push "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST";
         elif [ "$TRAVIS_BRANCH" = 'master' ]; then
             docker push "$DOCKER_IMAGE_NAME" &&
@@ -88,7 +89,6 @@ after_success:
         elif ( echo "$TRAVIS_BRANCH" | grep -Eq '^pr\-[0-9]*$' ); then
             echo 'The branch name looks like a pull request tag, not pushing branch tag';
         else
-        #    docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:$TRAVIS_BRANCH";
             docker push "umple/umpleonline:$TRAVIS_BRANCH";
         fi &&
         if [ "$TRAVIS_TAG" ]; then
