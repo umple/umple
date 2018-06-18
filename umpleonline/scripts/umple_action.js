@@ -14,7 +14,6 @@ Action.elementClicked = false;
 Action.canCreateByDrag = true;
 Action.manualSync = false;
 Action.diagramInSync = true;
-Action.diagramEdited = false;
 Action.freshLoad = false;
 Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
@@ -1468,37 +1467,36 @@ Action.umpleTypingActivity = function(target) {
     clearTimeout(Action.oldTimeout);
   }
   
-  if (target == "diagramEdit")
-  {
-    Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', 750);
-  }
-  else
-  {
-    Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
-  }
+  if(target == "diagramEdit") Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', 500);
+  else Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
 }
 
 Action.processTyping = function(target, manuallySynchronized)
 {
   // Save in history after a pause in typing
-  History.save(Page.getUmpleCode(), "processTyping");
+  if (target != "diagramEdit") 
+  {
+    History.save(Page.getUmpleCode(), "processTyping");
+  }
   Page.setExampleMessage("");
+  
   if (!Action.manualSync || manuallySynchronized)
   {
+    Action.diagramInSync = true;
+    
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
       Action.updateLayoutEditorAndDiagram();
-      Action.diagramInSync = true;
       
       Page.enablePaletteItem("buttonSyncDiagram", false);
-      Page.enableDiagram(true);
+      console.log("text edited -- diagram updated");
     }
-    else if (target == "diagramEdit")
+    else if(target == "diagramEdit")
     {
-      Action.setDiagramEdited(true);
-      Action.updateUmpleDiagramForce(false);
-      
-      Action.diagramInSync = true;
+      Action.ajax(Action.updateFromDiagramCallback,Action.getLanguage());
+      console.log("diagram edited");
     }
+    
+    Page.enableDiagram(true);
   }
 }
 
@@ -1553,41 +1551,9 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
     }
   }
   Action.savedCanonical=canonical;
-  if (!Action.diagramEdited)
-  {
-    Page.showCanvasLoading();
-  }
-  if(Page.useEditableClassDiagram) {language="language=Json";}
-  // JointJS receives the full model (class and state machine) in JSON
-  else if(Page.useJointJSClassDiagram) {language="language=JsonMixed";}
-  else if(Page.useGvClassDiagram) {
-    if(Page.showTraits) {
-      language="language=traitDiagram";
-    }
-    else {
-      language="language=classDiagram";
-    }
-  }
-  else if(Page.useGvStateDiagram) {language="language=stateDiagram"}
-  else if(Page.useStructureDiagram) {language="language=StructureDiagram"}
+  Page.showCanvasLoading();
   
-  // append any suboptions needed for GvStateDiagram
-  if(Page.useGvStateDiagram) { 
-    if(!Page.showActions) language=language+".hideactions";
-    if(Page.showTransitionLabels) language=language+".showtransitionlabels";
-    if(Page.showGuardLabels) language=language+".showguardlabels";
-    language=language+"."+$("inputGenerateCode").value.split(":")[1];
-  }
-  // append any suboptions needed for GvClassDiagram
-  if(Page.useGvClassDiagram) { 
-    if(Page.showMethods) language=language+".showmethods";
-    if(!Page.showAttributes) language=language+".hideattributes";
-  }
-  
-  Action.ajax(Action.updateUmpleDiagramCallback,language);
-  
-  Action.setDiagramEdited(false);
-    
+  Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
 }
 
 Action.updateUmpleDiagramCallback = function(response)
@@ -1604,7 +1570,7 @@ Action.updateUmpleDiagramCallback = function(response)
     Action.diagramInSync = false;
     Page.setFeedbackMessage("<a href=\"\#errorClick\">See message.</a> To fix: edit model or click undo");
   }
-  else if(!Action.diagramEdited)
+  else
   {
     // reset error message
     if(!Action.diagramInSync)
@@ -1692,9 +1658,35 @@ Action.updateUmpleDiagramCallback = function(response)
     Page.showGeneratedCode(errorMessage, "diagramUpdate");
   }
   
-  if(!Action.diagramEdited)
-    Page.hideLoading();
-  Action.setDiagramEdited(false);
+  Page.hideLoading();
+}
+
+Action.updateFromDiagramCallback = function(response)
+{
+  var diagramCode = "";
+  var errorMessage = "";
+  
+  diagramCode = Action.getDiagramCode(response.responseText);
+  errorMessage = Action.getErrorCode(response.responseText);
+  
+  if((diagramCode == null || diagramCode == "" || diagramCode == "null") && Action.diagramInSync) 
+  {
+    Page.enableDiagram(false);
+    Action.diagramInSync = false;
+    Page.setFeedbackMessage("<a href=\"\#errorClick\">See message.</a> To fix: edit model or click undo");
+  }
+  else if(!Action.diagramInSync)
+    {
+      Page.enableDiagram(true);
+      Action.diagramInSync = true;
+    }
+  
+  //Show the error message
+  if(errorMessage != "")
+  {
+    Page.showGeneratedCode(errorMessage, "diagramUpdate");
+  }
+  
 }
 
 // Gets the code to display from the AJAX response
@@ -2279,18 +2271,38 @@ Action.generateTabsCode = function(theCode)
   }
 }
 
-Action.hasErrors = function(response) 
+Action.getLanguage = function() 
 {
-  var errorMessage = "";
-  errorMessage = Action.getErrorCode(response.responseText);
+  var language = "";
+  if(Page.useEditableClassDiagram) {language="language=Json";}
+    // JointJS receives the full model (class and state machine) in JSON
+  else if(Page.useJointJSClassDiagram) {language="language=JsonMixed";}
+  else if(Page.useGvClassDiagram) {
+    if(Page.showTraits) {
+      language="language=traitDiagram";
+    }
+    else {
+      language="language=classDiagram";
+    }
+  }
+  else if(Page.useGvStateDiagram) {language="language=stateDiagram"}
+  else if(Page.useStructureDiagram) {language="language=StructureDiagram"}
   
-  return (errorMessage == "");
+  // append any suboptions needed for GvStateDiagram
+  if(Page.useGvStateDiagram) { 
+    if(!Page.showActions) language=language+".hideactions";
+    if(Page.showTransitionLabels) language=language+".showtransitionlabels";
+    if(Page.showGuardLabels) language=language+".showguardlabels";
+    language=language+"."+$("inputGenerateCode").value.split(":")[1];
+  }
+  // append any suboptions needed for GvClassDiagram
+  if(Page.useGvClassDiagram) { 
+    if(Page.showMethods) language=language+".showmethods";
+    if(!Page.showAttributes) language=language+".hideattributes";
+  }
+  return language;
 }
 
-Action.setDiagramEdited = function(value)
-{
-  this.diagramEdited = value;
-}
 function showTab(event)
 {
   // Hide all file codeblocks
