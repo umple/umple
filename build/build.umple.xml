@@ -357,6 +357,22 @@
     </copy>
   </target>
 
+  <target name="travisCopyManual">
+    <copy todir="umpleonline/manual">
+      <fileset dir="${dist.path}/reference"/>
+    </copy>    
+    <copy todir="umpleonline/manual/files">
+      <fileset dir="build/reference/files"/>
+    </copy>
+    <copy todir="umpleonline/manual/examples">
+      <fileset dir="umplewww/examples"/>
+    </copy>     
+    <copy todir="umpleonline/manual/syntaxhighlighter">
+      <fileset dir="umplewww/syntaxhighlighter"/>
+    </copy>     
+    
+  </target>
+
   <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">
     <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="${dist.dir}/${dist.umple.jar}" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
