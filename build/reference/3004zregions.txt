@@ -1,0 +1,21 @@
+State Machine Regions
+State Machines
+noreferences
+
+@@description
+<p>      
+It is possible for a system to be in two states at once. This can be accomplished by dividing any state (we will call it the parent state) into regions separated by || symbols. Each region is like a small state machine, and the system is in one state of each of the regions until it exits the parent state.
+</p>
+
+<p>
+In the example below the TrackShuttler starts off initializing then transferringLoad. But after that it starts shuttling (going to the other end of some kind of track). During shuttling, it independently controls its moving in one region, and the lights in the other region. Here shuttling is the parent state.
+While shuttling the system can be in lightsOn+accelerating, lightsOn+coasting, lightsOff+coasting, lightsOff+braking or in any of the 2*3=6 total configurations of substates of the two regions.
+When an exit from shuttling occurs due to the reachEnd event, the state machine  exits both controllingLights and moving.
+</p>
+
+<p>In general there can be any number of regions, and regions can be nested in arbitrary ways.</p>
+
+
+@@example
+@@source manualexamples/Regions1.ump &diagramtype=state
+@@endexample
