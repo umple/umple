@@ -93,7 +93,7 @@ after_success:
         elif ( echo "$TRAVIS_BRANCH" | grep -Eq '^pr\-[0-9]*$' ); then
             echo 'The branch name looks like a pull request tag, not pushing branch tag';
         else
-            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:$TRAVIS_BRANCH";
+            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:$TRAVIS_BRANCH" &&
             docker push "umple/umpleonline:$TRAVIS_BRANCH";
         fi &&
         if [ "$TRAVIS_TAG" ]; then
