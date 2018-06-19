@@ -16,6 +16,12 @@ import cruise.umple.util.SampleFileWriter;
 public class AssociationVariableTest
 {
 
+  @After
+  public void tearDown()
+  {
+    SampleFileWriter.destroy("umpleAssociationVariableTest.ump");
+  }
+
   @Test
   public void isSymmetricReflexive()
   {

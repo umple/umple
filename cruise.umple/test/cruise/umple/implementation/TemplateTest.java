@@ -86,6 +86,9 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Light.php");
     SampleFileWriter.destroy(pathToInput + "/LightFixture.php");
     SampleFileWriter.destroy(pathToInput + "/LightFixture.java");
+    SampleFileWriter.destroy(pathToInput + "/A_Guard.php");
+    SampleFileWriter.destroy(pathToInput + "/B.php");
+    
     SampleFileWriter.destroy(pathToInput + "/Tracer.java");
     SampleFileWriter.destroy(pathToInput + "/ConsoleTracer.php");
     SampleFileWriter.destroy(pathToInput + "/Company.php");
