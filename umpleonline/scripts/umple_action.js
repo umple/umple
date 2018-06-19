@@ -1570,10 +1570,10 @@ Action.updateUmpleDiagramCallback = function(response)
   }
   else
   {
+    Page.enableDiagram(true);
     // reset error message
     if(!Action.diagramInSync)
     {
-      Page.enableDiagram(true);
       Action.diagramInSync = true;
     }
 
@@ -1673,11 +1673,11 @@ Action.updateFromDiagramCallback = function(response)
     Action.diagramInSync = false;
     Page.setFeedbackMessage("<a href=\"\#errorClick\">See message.</a> To fix: edit model or click undo");
   }
-  else if(!Action.diagramInSync)
-    {
+  else
+  {
       Page.enableDiagram(true);
       Action.diagramInSync = true;
-    }
+  }
   
   //Show the error message
   if(errorMessage != "")

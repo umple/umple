@@ -560,6 +560,8 @@ Page.enableEditDragAndResize = function(doEnable)
     jQuery("span.editable").addClass("uneditable");
     jQuery("div.umpleClass").addClass("unselectable");
     jQuery("div.umpleClass.ui-draggable").draggable({disabled: true});
+    jQuery(':text').blur()
+
   }
 }
 
@@ -696,11 +698,11 @@ Page.showDiagramSyncNeeded = function(doShow)
 {
   var canvas = jQuery("#umpleCanvas");
   var messageDiv =  '<div id="syncNeededMessage" class="syncNeededMessage unselectable">' +
-              'Diagram is out of synchronization with the text due to selecting Manual Sync or an error in the text that has caused the to compiler produce no output. ' +
+              'Diagram is out of synchronization with the text due to selecting Manual Sync or an error in the text that has caused the compiler to produce no output. ' +
             '</div>';
-  if (doShow)
+  if (doShow && !Action.diagramInSync)
   {
-    canvas.html(messageDiv + canvas.html());
+    canvas.append(messageDiv);
   }
   else
   {

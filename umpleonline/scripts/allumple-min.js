@@ -1250,7 +1250,7 @@ var c=Page.splitUmpleCode(b)[1];Page.setUmplePositioningCode(c);Page.hideLoading
 }}Action.savedCanonical=a;Page.showCanvasLoading();Action.ajax(Action.updateUmpleDiagramCallback,Action.getLanguage())};Action.updateUmpleDiagramCallback=function(response){var diagramCode="";
 var errorMessage="";diagramCode=Action.getDiagramCode(response.responseText);errorMessage=Action.getErrorCode(response.responseText);
 if(diagramCode==null||diagramCode==""||diagramCode=="null"){Page.enableDiagram(false);Action.diagramInSync=false;Page.setFeedbackMessage('<a href="#errorClick">See message.</a> To fix: edit model or click undo')
-}else{if(!Action.diagramInSync){Page.enableDiagram(true);Action.diagramInSync=true}Page.setFeedbackMessage("");Page.hideGeneratedCode();
+}else{Page.enableDiagram(true);if(!Action.diagramInSync){Action.diagramInSync=true}Page.setFeedbackMessage("");Page.hideGeneratedCode();
 if(Page.useEditableClassDiagram){var newSystem=Json.toObject(diagramCode);UmpleSystem.merge(newSystem);UmpleSystem.update();if(Page.readOnly){jQuery("span.editable").addClass("uneditable")
 }}else{if(Page.useJointJSClassDiagram){var model=JSON.parse(diagramCode.replace(new RegExp('} { "name": "',"gi"),'}, { "name": "'));var umpleCanvas=jQuery("#umpleCanvas");
 var paper=JJSdiagram.initJJSDiagram(umpleCanvas,model);var MouseWheelHandler=function(event){var delta=Math.max(-1,Math.min(1,(event.wheelDelta||-event.detail)));
@@ -1262,11 +1262,10 @@ paperHolder.addEventListener("DOMMouseScroll",MouseWheelHandler,false)}else{pape
 }else{if(Page.useStructureDiagram){jQuery("#umpleCanvas").html('<svg id="svgCanvas"></svg>');eval(diagramCode)}}}}}if(errorMessage!=""){Page.showGeneratedCode(errorMessage,"diagramUpdate")
 }Page.hideLoading()};Action.updateFromDiagramCallback=function(a){var c="";var b="";c=Action.getDiagramCode(a.responseText);b=Action.getErrorCode(a.responseText);
 if((c==null||c==""||c=="null")&&Action.diagramInSync){Page.enableDiagram(false);Action.diagramInSync=false;Page.setFeedbackMessage('<a href="#errorClick">See message.</a> To fix: edit model or click undo')
-}else{if(!Action.diagramInSync){Page.enableDiagram(true);Action.diagramInSync=true}}if(b!=""){Page.showGeneratedCode(b,"diagramUpdate")
-}};Action.getDiagramCode=function(c){var a="";if(Page.useEditableClassDiagram||Page.useJointJSClassDiagram){a=c.split("URL_SPLIT")[1];
-if(a=="null"){a=""}}else{if(Page.useGvClassDiagram||Page.useGvStateDiagram){var b=c.split("<svg width=");if(b.length>1&&b[1].length>100){a="<svg width="+b[1];
-a=a.replace(/<\/svg>$/,"")}}else{if(Page.useStructureDiagram){a=c.split("<p>URL_SPLIT")[1];a=a.replace(/##CANVAS_ID##/g,"svgCanvas");
-a=jQuery("<div/>").html(a).text()}}}return a};Action.getErrorCode=function(c){var a="";if(Page.useEditableClassDiagram||Page.useStructureDiagram){a=c.split("URL_SPLIT")[0];
+}else{Page.enableDiagram(true);Action.diagramInSync=true}if(b!=""){Page.showGeneratedCode(b,"diagramUpdate")}};Action.getDiagramCode=function(c){var a="";
+if(Page.useEditableClassDiagram||Page.useJointJSClassDiagram){a=c.split("URL_SPLIT")[1];if(a=="null"){a=""}}else{if(Page.useGvClassDiagram||Page.useGvStateDiagram){var b=c.split("<svg width=");
+if(b.length>1&&b[1].length>100){a="<svg width="+b[1];a=a.replace(/<\/svg>$/,"")}}else{if(Page.useStructureDiagram){a=c.split("<p>URL_SPLIT")[1];
+a=a.replace(/##CANVAS_ID##/g,"svgCanvas");a=jQuery("<div/>").html(a).text()}}}return a};Action.getErrorCode=function(c){var a="";if(Page.useEditableClassDiagram||Page.useStructureDiagram){a=c.split("URL_SPLIT")[0];
 if(a=="<p>"){a=""}}else{if(Page.useGvClassDiagram||Page.useGvStateDiagram){var d=c.split("<svg width=")[0];var b=d.split("errorRow");
 if(b.length>1){a=d.split("<\/script>&nbsp;")[0]}}}return a};Action.classResizing=function(e,g){var f=e.target.id;var a=UmpleSystem.find(f);
 var c="#"+f;var d=Math.round(jQuery(c).width());var b=Math.round(jQuery(c).height());UmpleSystem.updatingSize(a,d,b)};Action.associationSnap=function(h,g,a){var b=jQuery(a).prop("id");
@@ -1839,11 +1838,11 @@ jQuery(a).removeClass("highlight")};Page.enableDiagram=function(a){Page.enableEd
 Page.enablePaletteItem("buttonAddAssociation",a);Page.enablePaletteItem("buttonAddGeneralization",a);Page.enablePaletteItem("buttonDeleteEntity",a);
 Page.showDiagramSyncNeeded(!a)};Page.enableEditDragAndResize=function(a){if(a){jQuery("span.editable").removeClass("uneditable");jQuery("div.umpleClass").removeClass("unselectable");
 jQuery("div.umpleClass.ui-draggable").draggable({disabled:false})}else{jQuery("span.editable").addClass("uneditable");jQuery("div.umpleClass").addClass("unselectable");
-jQuery("div.umpleClass.ui-draggable").draggable({disabled:true})}};Page.toggleToolItem=function(d,b){if(b==undefined){b=false}Page.repeatToolItem=b;
-var a=d.substring(6);var c=(a!=Page.selectedItem);if(c){Page.selectToggleTool(a)}else{Page.unselectAllToggleTools()}};Page.unselectAllToggleTools=function(){var b=false;
-var a=false;a=DiagramEdit.removeNewClass();if(a){b=true}a=DiagramEdit.removeNewAssociation();if(a){b=true}a=DiagramEdit.removeNewGeneralization();
-if(a){b=true}var c="ul.toggle li.selected";jQuery(c).removeClass("selected highlight");setTimeout("Page.enableEditDragAndResize(true);",500);
-Page.selectedItem=null;Page.repeatToolItem=false;return b};Page.selectToggleTool=function(b){if(Page.selectedItem!=null){DiagramEdit.removeNewClass();
+jQuery("div.umpleClass.ui-draggable").draggable({disabled:true});jQuery(":text").blur()}};Page.toggleToolItem=function(d,b){if(b==undefined){b=false
+}Page.repeatToolItem=b;var a=d.substring(6);var c=(a!=Page.selectedItem);if(c){Page.selectToggleTool(a)}else{Page.unselectAllToggleTools()
+}};Page.unselectAllToggleTools=function(){var b=false;var a=false;a=DiagramEdit.removeNewClass();if(a){b=true}a=DiagramEdit.removeNewAssociation();
+if(a){b=true}a=DiagramEdit.removeNewGeneralization();if(a){b=true}var c="ul.toggle li.selected";jQuery(c).removeClass("selected highlight");
+setTimeout("Page.enableEditDragAndResize(true);",500);Page.selectedItem=null;Page.repeatToolItem=false;return b};Page.selectToggleTool=function(b){if(Page.selectedItem!=null){DiagramEdit.removeNewClass();
 DiagramEdit.removeNewAssociation();DiagramEdit.removeNewGeneralization()}Page.enableEditDragAndResize(false);Page.selectedItem=b;Action.unselectAll();
 var c=format("ul.toggle li.selected");var a="#button"+b;jQuery(c).removeClass("selected highlight");jQuery(a).addClass("selected")};Page.canShowHovers=function(){return Page.selectedItem==null||Page.selectedItem=="DeleteEntity"
 };Page.getRawUmpleCode=function(){return document.getElementById("umpleModelEditorText").value};Page.getUmpleCode=function(){var a=Page.getRawUmpleCode().replace(Page.modelDelimiter,"");
@@ -1852,9 +1851,9 @@ if(a.substr(0,42)=="http://cruise.site.uottawa.ca/umpleonline/"){a="http://try.u
 };Page.splitUmpleCode=function(d){var c=d.indexOf(Page.modelDelimiter);if(c==-1){b=d;e=""}else{d=d.replace(Page.modelDelimiter,"");var b=d.substr(0,c);
 var e=d.substr(c,d.length)}var a=[b,e];return a};Page.setUmpleCode=function(b,c){var a=Page.splitUmpleCode(b);jQuery("#umpleLayoutEditorText").val(a[1]);
 if(Page.codeMirrorOn){Page.codeMirrorEditor.setValue(a[0])}jQuery("#umpleModelEditorText").val(a[0])};Page.setUmplePositioningCode=function(a){jQuery("#umpleLayoutEditorText").val(a)
-};Page.umpleCanvasId=function(){return"umpleCanvas"};Page.showDiagramSyncNeeded=function(c){var b=jQuery("#umpleCanvas");var a='<div id="syncNeededMessage" class="syncNeededMessage unselectable">Diagram is out of synchronization with the text due to selecting Manual Sync or an error in the text that has caused the to compiler produce no output. </div>';
-if(c){b.html(a+b.html())}else{jQuery("#syncNeededMessage").remove()}};Page.hideLoading=function(){var b="#topTextEditor";var c="#bottomTextEditor";
-var a="#"+Page.umpleCanvasId();if(Page.modelLoadingCount>0){Page.modelLoadingCount--}if(Page.layoutLoadingCount>0){Page.layoutLoadingCount--
+};Page.umpleCanvasId=function(){return"umpleCanvas"};Page.showDiagramSyncNeeded=function(c){var b=jQuery("#umpleCanvas");var a='<div id="syncNeededMessage" class="syncNeededMessage unselectable">Diagram is out of synchronization with the text due to selecting Manual Sync or an error in the text that has caused the compiler to produce no output. </div>';
+if(c&&!Action.diagramInSync){b.append(a)}else{jQuery("#syncNeededMessage").remove()}};Page.hideLoading=function(){var b="#topTextEditor";
+var c="#bottomTextEditor";var a="#"+Page.umpleCanvasId();if(Page.modelLoadingCount>0){Page.modelLoadingCount--}if(Page.layoutLoadingCount>0){Page.layoutLoadingCount--
 }if(Page.canvasLoadingCount>0){Page.canvasLoadingCount--}if(Page.modelLoadingCount===0){jQuery(b).hideLoading()}if(Page.layoutLoadingCount===0){jQuery(c).hideLoading()
 }if(Page.canvasLoadingCount===0){jQuery(a).hideLoading()}if(Page.modelLoadingCount===0&&Page.layoutLoadingCount===0&&Page.canvasLoadingCount===0){jQuery(".bookmarkableUrl").removeClass("disabled")
 }};Page.showModelLoading=function(){var a=jQuery("#topTextEditor");if(Page.modelLoadingCount==0){if(jQuery("#textEditorColumn").is(":visible")){a.showLoading()
