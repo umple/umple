@@ -12,6 +12,8 @@ same code.</p>
 <p>Another example of pattern matching for code injection can be found
 on the <a href="PooledStateMachines.html">page on pooled state machines, where the same code is injected into all the event methods matching a certain pattern</a></p>
 
+<p>You can specify that code should be injected only into generated methods by specifying the word &apos;generated&apos; after before or after. Similarly you can specify only custom methods using the keyword &apos;custom&apos;. The keyword &apos;all&apos; indicates to inject the code into all matching methods.</p>
+
 @@example
 @@source manualexamples/CodeInjectionPatternMatching1.ump
 @@endexample

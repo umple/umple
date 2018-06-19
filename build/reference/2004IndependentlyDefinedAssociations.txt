@@ -6,6 +6,8 @@ noreferences
 <p>An association can be defined separately from any class. Contrast
 this with the <a href="InlineAssociations.html">Umple code showing the same model with inline associations.</a></p>
 
+<p>Specifying an association independently of the two associated classes, as in the example below, can sometimes make code clearer. Specifying the association inline in one of the two classes can be clearer in other cases, particularly when it is defined in the more important class. But the decision regarding which alternative to use is left to the designer.</p>
+
 @@syntax
 [[associationDefinition]] [[association]] [[associationEnd]]
 

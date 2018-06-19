@@ -1,6 +1,6 @@
 // This example generates the warning message
 class A {
-  attr;
+  Integer attr;
 }
 
 class B {
