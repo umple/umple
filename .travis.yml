@@ -85,7 +85,7 @@ after_success:
             docker push "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST";
         elif [ "$TRAVIS_BRANCH" = 'master' ]; then
             docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:latest" &&
-            docker push "umple/umpleonline:latest"; &&
+            docker push "umple/umpleonline:latest" &&
             docker tag "$DOCKER_IMAGE_NAME" "$DOCKER_HASH_NAME" &&
             docker push "$DOCKER_HASH_NAME";
         elif [ "$TRAVIS_BRANCH" = 'latest' ]; then
