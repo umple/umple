@@ -366,7 +366,7 @@ UmpleSystem.update = function()
   for(var i = 0; i<this.umpleClasses.length;++i)
   {
     var umpleClass = this.umpleClasses[i];
-    umpleClass.position.height = 20;
+    umpleClass.position.height = 28;
     if(Page.showAttributes)
       umpleClass.position.height += 17*(umpleClass.attributes.size());
     if(Page.showMethods)

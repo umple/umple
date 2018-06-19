@@ -14,6 +14,7 @@ Page.codeEffect = null;
 Page.clickCount = 0;
 Page.repeatToolItem = false;
 Page.shortcutsEnabled = true;
+Page.diagramSyncNeededAppend = false;
 Page.modelDelimiter = "//$?[End_of_model]$?";
 
 Page.codeMirrorOn = false;
@@ -700,13 +701,17 @@ Page.showDiagramSyncNeeded = function(doShow)
   var messageDiv =  '<div id="syncNeededMessage" class="syncNeededMessage unselectable">' +
               'Diagram is out of synchronization with the text due to selecting Manual Sync or an error in the text that has caused the compiler to produce no output. ' +
             '</div>';
-  if (doShow && !Action.diagramInSync)
+  if (doShow && !Page.diagramSyncNeededAppend)
   {
     canvas.append(messageDiv);
+    diagramSyncNeededAppend = true;
+    //Page.readOnly = true;
   }
-  else
+  else if(!doShow)
   {
     jQuery("#syncNeededMessage").remove();
+    diagramSyncNeededAppend = false;
+    //Page.readOnly = false;
   }
   
 }

@@ -1747,12 +1747,12 @@ this.name=j.substring(0,j.indexOf("(")).trim();this.parameters=j.match("\\((.*)\
 this.type=k[1].trim();this.name=f.substring(0,f.indexOf("(")).trim();this.parameters=f.match("\\((.*)\\)")[1].replace(/\s+/g,"").split(",")
 }if(!h){this.newVisibility=this.visibility;this.newType=this.type;this.newName=this.name;this.newParameters=this.parameters}};this.copy=function(){return new UmpleMethod(this.visibility,this.type,this.name,this.parameters)
 }}Page=new Object();Page.selectedItem=null;Page.selectedClass=null;Page.selectedAssociation=null;Page.selectedGeneralization=null;Page.codeEffect=null;
-Page.clickCount=0;Page.repeatToolItem=false;Page.shortcutsEnabled=true;Page.modelDelimiter="//$?[End_of_model]$?";Page.codeMirrorOn=false;
-Page.codeMirrorEditor=null;Page.hLine=null;Page.modelLoadingCount=0;Page.layoutLoadingCount=0;Page.canvasLoadingCount=0;Page.readOnly=false;
-Page.useEditableClassDiagram=true;Page.useGvClassDiagram=false;Page.useGvStateDiagram=false;Page.useStructureDiagram=false;Page.showAttributes=true;
-Page.showMethods=false;Page.showActions=true;Page.showTraits=false;Page.showTransitionLabels=false;Page.showGuardLabels=false;Page.modifiedDiagrams=false;
-Page.init=function(e,b,a,d,g,f,c){Layout.isDiagramVisible=e;Layout.isTextVisible=b;Layout.isPaletteVisible=a;Layout.isLayoutVisible=g;
-Page.readOnly=d;if(f=="GvState"){Page.useGvStateDiagram=true;Page.useEditableClassDiagram=false}else{if(f=="GvClass"){Page.useGvClassDiagram=true;
+Page.clickCount=0;Page.repeatToolItem=false;Page.shortcutsEnabled=true;Page.diagramSyncNeededAppend=false;Page.modelDelimiter="//$?[End_of_model]$?";
+Page.codeMirrorOn=false;Page.codeMirrorEditor=null;Page.hLine=null;Page.modelLoadingCount=0;Page.layoutLoadingCount=0;Page.canvasLoadingCount=0;
+Page.readOnly=false;Page.useEditableClassDiagram=true;Page.useGvClassDiagram=false;Page.useGvStateDiagram=false;Page.useStructureDiagram=false;
+Page.showAttributes=true;Page.showMethods=false;Page.showActions=true;Page.showTraits=false;Page.showTransitionLabels=false;Page.showGuardLabels=false;
+Page.modifiedDiagrams=false;Page.init=function(e,b,a,d,g,f,c){Layout.isDiagramVisible=e;Layout.isTextVisible=b;Layout.isPaletteVisible=a;
+Layout.isLayoutVisible=g;Page.readOnly=d;if(f=="GvState"){Page.useGvStateDiagram=true;Page.useEditableClassDiagram=false}else{if(f=="GvClass"){Page.useGvClassDiagram=true;
 Page.useEditableClassDiagram=false}else{if(f=="structureDiagram"){Page.useStructureDiagram=true;Page.useEditableClassDiagram=false}}}jQuery.noConflict();
 jQuery(document).keydown(function(h){Action.keyboardShortcut(h)});Layout.init();Page.initPaletteArea();Page.initCanvasArea();Page.initUmpleTextArea();
 Page.initSourceCodeArea();jQuery(document).ready(function(){DropboxInitializer.initializeDropbox();ToolTips.initTooltips()});if(Page.readOnly){jQuery("#"+Page.umpleCanvasId()).addClass("photoReady")
@@ -1852,10 +1852,10 @@ if(a.substr(0,42)=="http://cruise.site.uottawa.ca/umpleonline/"){a="http://try.u
 var e=d.substr(c,d.length)}var a=[b,e];return a};Page.setUmpleCode=function(b,c){var a=Page.splitUmpleCode(b);jQuery("#umpleLayoutEditorText").val(a[1]);
 if(Page.codeMirrorOn){Page.codeMirrorEditor.setValue(a[0])}jQuery("#umpleModelEditorText").val(a[0])};Page.setUmplePositioningCode=function(a){jQuery("#umpleLayoutEditorText").val(a)
 };Page.umpleCanvasId=function(){return"umpleCanvas"};Page.showDiagramSyncNeeded=function(c){var b=jQuery("#umpleCanvas");var a='<div id="syncNeededMessage" class="syncNeededMessage unselectable">Diagram is out of synchronization with the text due to selecting Manual Sync or an error in the text that has caused the compiler to produce no output. </div>';
-if(c&&!Action.diagramInSync){b.append(a)}else{jQuery("#syncNeededMessage").remove()}};Page.hideLoading=function(){var b="#topTextEditor";
-var c="#bottomTextEditor";var a="#"+Page.umpleCanvasId();if(Page.modelLoadingCount>0){Page.modelLoadingCount--}if(Page.layoutLoadingCount>0){Page.layoutLoadingCount--
-}if(Page.canvasLoadingCount>0){Page.canvasLoadingCount--}if(Page.modelLoadingCount===0){jQuery(b).hideLoading()}if(Page.layoutLoadingCount===0){jQuery(c).hideLoading()
-}if(Page.canvasLoadingCount===0){jQuery(a).hideLoading()}if(Page.modelLoadingCount===0&&Page.layoutLoadingCount===0&&Page.canvasLoadingCount===0){jQuery(".bookmarkableUrl").removeClass("disabled")
+if(c&&!Page.diagramSyncNeededAppend){b.append(a);diagramSyncNeededAppend=true}else{if(!c){jQuery("#syncNeededMessage").remove();diagramSyncNeededAppend=false
+}}};Page.hideLoading=function(){var b="#topTextEditor";var c="#bottomTextEditor";var a="#"+Page.umpleCanvasId();if(Page.modelLoadingCount>0){Page.modelLoadingCount--
+}if(Page.layoutLoadingCount>0){Page.layoutLoadingCount--}if(Page.canvasLoadingCount>0){Page.canvasLoadingCount--}if(Page.modelLoadingCount===0){jQuery(b).hideLoading()
+}if(Page.layoutLoadingCount===0){jQuery(c).hideLoading()}if(Page.canvasLoadingCount===0){jQuery(a).hideLoading()}if(Page.modelLoadingCount===0&&Page.layoutLoadingCount===0&&Page.canvasLoadingCount===0){jQuery(".bookmarkableUrl").removeClass("disabled")
 }};Page.showModelLoading=function(){var a=jQuery("#topTextEditor");if(Page.modelLoadingCount==0){if(jQuery("#textEditorColumn").is(":visible")){a.showLoading()
 }jQuery(".bookmarkableUrl").addClass("disabled")}Page.modelLoadingCount++};Page.showLayoutLoading=function(){var a=jQuery("#bottomTextEditor");
 if(Page.layoutLoadingCount==0){jQuery(".bookmarkableUrl").addClass("disabled");if(a.is(":visible")){a.showLoading()}}Page.layoutLoadingCount++
@@ -1958,7 +1958,7 @@ jQuery(c).mouseover(function(e){Action.associationHover(e,true)});jQuery(c).mous
 UmpleSystem.setDragableAssociationAnchor(b,1)}return d};UmpleSystem.redrawGeneralizationsTo=function(d){for(var c=0;c<this.umpleClasses.length;
 c++){var a=this.umpleClasses[c];if(a.extendsClass==d.id){this.updateClass(a)}else{if(a.interfaces.length>0){for(var b=0;b<a.interfaces.length;
 b++){if(a.interfaces[b]==d.id){this.updateClass(a)}}}}}};UmpleSystem.update=function(){for(var a=0;a<this.umpleClasses.length;++a){var g=this.umpleClasses[a];
-g.position.height=20;if(Page.showAttributes){g.position.height+=17*(g.attributes.size())}if(Page.showMethods){g.position.height+=17*(g.methods.size())
+g.position.height=28;if(Page.showAttributes){g.position.height+=17*(g.attributes.size())}if(Page.showMethods){g.position.height+=17*(g.methods.size())
 }UmpleSystem.updateClass(g)}for(var a=0;a<this.umpleAssociations.length;++a){var f=UmpleSystem.find(this.umpleAssociations[a].classOneId);
 var h=this.umpleAssociations[a].offsetOnePosition.x+f.position.x+UmpleSystem.position().x;var d=this.umpleAssociations[a].offsetOnePosition.y+f.position.y+UmpleSystem.position().y;
 var k=Action.associationSnapClassReady(h,d,f);var e=UmpleSystem.find(this.umpleAssociations[a].classTwoId);h=this.umpleAssociations[a].offsetTwoPosition.x+e.position.x+UmpleSystem.position().x;

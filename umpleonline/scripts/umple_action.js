@@ -1675,8 +1675,8 @@ Action.updateFromDiagramCallback = function(response)
   }
   else
   {
-      Page.enableDiagram(true);
-      Action.diagramInSync = true;
+    Page.enableDiagram(true);
+    Action.diagramInSync = true;
   }
   
   //Show the error message
