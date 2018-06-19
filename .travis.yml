@@ -64,32 +64,39 @@ script:
   - $ANT_TESTBED template.resetVersion 
   
   # Build the user manual and copy it to a subfolder of UmpleOnline
-  - $ANT_BUILD packageDocs travisCopyManual  
+  - $ANT_BUILD packageDocs travisCopyManual
 
+  # Figure out the Docker image to build
+  - if [ "$HAVE_DOCKER" ]; then  
+        DOCKER_IMAGE_NAME="umple/umpleonline:$TRAVIS_COMMIT" &&
+        if [ "$TRAVIS_PULL_REQUEST" != 'false' ]; then
+            DOCKER_IMAGE_NAME="umple/umpleonline:pr-$TRAVIS_PULL_REQUEST";
+        elif [ "$TRAVIS_BRANCH" = 'master' ]; then
+            DOCKER_IMAGE_NAME="umple/umpleonline:$TRAVIS_COMMIT;
+        elif [ "$TRAVIS_BRANCH" = 'latest' ]; then
+            echo 'The branch name is "latest", not using branch tag';
+        elif ( echo "$TRAVIS_BRANCH" | grep -Eq '^pr\-[0-9]*$' ); then
+            echo 'The branch name looks like a pull request tag, not using branch tag';
+        else
+             DOCKER_IMAGE_NAME="umple/umpleonline:$TRAVIS_BRANCH";
+        fi
+    fi
+ 
   # Set up UmpleOnline to be packaged into its Docker image, then build the image.
   - if [ "$HAVE_DOCKER" ]; then
         $ANT_BUILD -DshouldPackageUmpleOnline=true packageUmpleonline &&
         docker build -t "umple/umpleonline-base:local"
                      -f ../umpleonline/Dockerfile-base ../umpleonline &&
-        docker build -t "umple/umpleonline:$TRAVIS_COMMIT" ../umpleonline;
+        docker build -t "$DOCKER_IMAGE_NAME" ../umpleonline;
     fi
 
 after_success:
     if ( [ "$HAVE_DOCKER" ] && [ "$TRAVIS_SECURE_ENV_VARS" ] ); then
         docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
-        DOCKER_IMAGE_NAME="umple/umpleonline:$TRAVIS_COMMIT" &&
-        if [ "$TRAVIS_PULL_REQUEST" != 'false' ]; then
-            docker push "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST";
-        elif [ "$TRAVIS_BRANCH" = 'master' ]; then
-            docker push "$DOCKER_IMAGE_NAME" &&
+        docker push "$DOCKER_IMAGE_NAME" &&        
+        if [ "$TRAVIS_BRANCH" = 'master' ]; then
             docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:latest" &&
             docker push "umple/umpleonline:latest";
-        elif [ "$TRAVIS_BRANCH" = 'latest' ]; then
-            echo 'The branch name is "latest", not pushing branch tag';
-        elif ( echo "$TRAVIS_BRANCH" | grep -Eq '^pr\-[0-9]*$' ); then
-            echo 'The branch name looks like a pull request tag, not pushing branch tag';
-        else
-            docker push "umple/umpleonline:$TRAVIS_BRANCH";
         fi &&
         if [ "$TRAVIS_TAG" ]; then
             docker tag "umple/umpleonline-base:local" "umple/umpleonline-base:latest" &&
