@@ -4,9 +4,9 @@ noreferences
 
 @@description
 <p><b>Transition actions:</b>      
-When an transition is taken, an action can occur. This is indicated
+When n transition is taken, an action can occur. This is indicated
 using a slash "/" followed by arbitrary code in braces. The arbitrary code
-may be placed after the event name or before the destination state name.
+may be placed after the event name or before the destination state name. In other words the arrow -&gt; can be placed either directly after the event (before the action), or directly before the destination state (after the action)
 
 <p><b>Entry and exit actions:</b>
 Similarly,
@@ -14,9 +14,7 @@ when entering or exiting a state, an action can occur. This is indicated
 using the keywords entry or exit, followed by a slash, followed by code.
 </p>
 
-<p>The actions described above should take negligible time to execute.</p>
-
-<p>The arrow -&gt; can be placed either directly after the event (before the action), or directly before the destination state (after the action)</p>
+<p>The actions described above should be programmed such that they take negligible time to execute; in other words they shouldn't contain significant loops..</p>
 
 <p><b>Do activities:</b>
 If a longer-running computation (activity) needs to be while in a state,
