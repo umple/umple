@@ -1,6 +1,6 @@
 //This example solves the problem
 class A {
-  attr;
+  Integer attr;
 }
 
 class B {

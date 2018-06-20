@@ -16,7 +16,11 @@ its value. An attribute may also automatically be added to the argument list
 of the constructor and constructed in the constructor. In
 addition to representing attributes, Java fields also represent the ends of 
 <a href="AssociationDefinition.html">associations</a>. Both attributes and associations should be considered more abstract
-than fields</p>
+than fields.</p>
+
+<p>
+A summary of the generated methods for each attribute can be found on the <a href="APISummary.html">API summary</a> page.
+</p>
 
 <p><a href="BasicStateMachines.html">Umple state machines</a> are a special kind of attribute, and Umple also allows you to <a href="BeforeandAfterStatements.html">inject
 code that will constrain or alter the values of attributes using aspect-oriented

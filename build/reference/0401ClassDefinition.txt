@@ -4,10 +4,12 @@ noreferences
 
 @@description
 <p>      
-A class definition defines an object-oriented  class available for use as a type in your system.  
+A class definition defines an object-oriented class available for use as a type in your system.  
 </p>
 
-<p>To define a class, specify the keyword 'class', followed by the name of the class (starting in a capital letter) and then the body of the class within curly brackets. The body can contain <a href="ClassContent.html">various elements that are listed in the Class Content page</a>.</p>
+<p>To define a class, specify the keyword 'class', followed by the name of the class (starting in a capital letter in order to avoid a 
+<a href="WE1xxIdentifierInvalid.html">warning</a>, to respect naming conventions) and then the body of the class within curly brackets. 
+The body can contain <a href="ClassContent.html">various elements that are listed in the Class Content page</a>.</p>
 
 <p>The following UML diagram shows two classes: a Student class and an Address class, linked by an association. The corresponding Umple is below.</p>
 
