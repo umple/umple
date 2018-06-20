@@ -1494,7 +1494,7 @@ Action.processTyping = function(target, manuallySynchronized)
       Action.ajax(Action.updateFromDiagramCallback,Action.getLanguage());
     }
     
-    Page.enableDiagram(true);
+    //Page.enableDiagram(true);
   }
 }
 
@@ -1862,7 +1862,7 @@ Action.redrawDiagram = function()
     {
       Action.updateUmpleDiagram();
       Action.diagramInSync = true;
-      Page.enableDiagram(true);
+      //Page.enableDiagram(true);
     }
     if (Action.manualSync && !Action.diagramInSync) Page.enablePaletteItem('buttonSyncDiagram', true);
     if (!Action.manualSync || Action.diagramInSync)

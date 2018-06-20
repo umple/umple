@@ -704,14 +704,16 @@ Page.showDiagramSyncNeeded = function(doShow)
   if (doShow && !Page.diagramSyncNeededAppend)
   {
     canvas.append(messageDiv);
-    diagramSyncNeededAppend = true;
-    //Page.readOnly = true;
+    Page.diagramSyncNeededAppend = true;
+    Page.readOnly = true;
+    UmpleSystem.redrawCanvas();
   }
-  else if(!doShow)
+  else if(!doShow && Page.diagramSyncNeededAppend)
   {
     jQuery("#syncNeededMessage").remove();
-    diagramSyncNeededAppend = false;
-    //Page.readOnly = false;
+    Page.diagramSyncNeededAppend = false;
+    Page.readOnly = false;
+    UmpleSystem.redrawCanvas();
   }
   
 }
