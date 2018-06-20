@@ -1863,8 +1863,8 @@ if(Page.layoutLoadingCount==0){jQuery(".bookmarkableUrl").addClass("disabled");i
 if(a.is(":visible")){a.showLoading()}}Page.canvasLoadingCount++};Page.resetCanvasSize=function(){Page.setUmpleCanvasSize(Layout.minCanvasSize.width,Layout.minCanvasSize.height)
 };Page.getSelectedExample=function(){var b="";var c=Page.getExampleType();if(c=="cdModels"){var a=false;b=jQuery("#inputExample option:selected").val();
 if(b=="GeometricSystem.ump"){a=true}if(a){if(!Page.useGvClassDiagram){jQuery("#buttonShowGvClassDiagram").attr("checked",true);Action.changeDiagramType({type:"GVClass"})
-}else{if(!(Page.useEditableClassDiagram||Page.useGvClassDiagram)){jQuery("#buttonShowEditableClassDiagram").attr("checked",true);Action.changeDiagramType({type:"editableClass"})
-}}}}else{if(c=="smModels"){b=jQuery("#inputExample2 option:selected").val();if(!Page.useGvStateDiagram&&Page.useJointJSClassDiagram===false){jQuery("#buttonShowGvStateDiagram").attr("checked",true);
+}}else{if(!(Page.useEditableClassDiagram||Page.useGvClassDiagram)){jQuery("#buttonShowEditableClassDiagram").attr("checked",true);Action.changeDiagramType({type:"editableClass"})
+}}}else{if(c=="smModels"){b=jQuery("#inputExample2 option:selected").val();if(!Page.useGvStateDiagram&&!Page.useJointJSClassDiagram){jQuery("#buttonShowGvStateDiagram").attr("checked",true);
 Action.changeDiagramType({type:"GVState"})}}else{b=jQuery("#inputExample3 option:selected").val();if(!Page.useStructureDiagram){jQuery("#buttonShowStructureDiagram").attr("checked",true);
 Action.changeDiagramType({type:"structure"})}}}return b};Page.getExampleType=function(){var a=jQuery("#exampleType option:selected").val();
 return a};Page.showCodeDone=function(){var a="#genstatus";jQuery(a).show();setTimeout(function(){jQuery(a).hide()},2000)};Page.showViewDone=function(){var a="#buttonViewComplete";

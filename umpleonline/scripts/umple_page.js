@@ -807,12 +807,12 @@ Page.getSelectedExample = function()
         jQuery("#buttonShowGvClassDiagram").attr('checked', true); 
         Action.changeDiagramType({type: "GVClass"});
       }
-      else {
-        // if diagram type not a class diagram, set it to a class diagram
-        if(!(Page.useEditableClassDiagram || Page.useGvClassDiagram)) {
-          jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
-          Action.changeDiagramType({type: "editableClass"});
-        }
+    }
+    else {
+      // if diagram type not a class diagram, set it to a class diagram
+      if(!(Page.useEditableClassDiagram || Page.useGvClassDiagram)) {
+        jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
+        Action.changeDiagramType({type: "editableClass"});
       }
     }
   }
@@ -820,7 +820,7 @@ Page.getSelectedExample = function()
     if(theExampleType == "smModels") {
       inputExample = jQuery("#inputExample2 option:selected").val();
       // if diagram type is not a state machine, set to state machine
-      if( !Page.useGvStateDiagram && Page.useJointJSClassDiagram === false) {
+      if( !Page.useGvStateDiagram && !Page.useJointJSClassDiagram) {
          jQuery("#buttonShowGvStateDiagram").attr('checked', true); 
          Action.changeDiagramType({type: "GVState"});
       }
