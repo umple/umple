@@ -1,0 +1,3 @@
+class MultivaluedAttributeAssignment {
+  String[] attr = {arbitraryCode();};
+}

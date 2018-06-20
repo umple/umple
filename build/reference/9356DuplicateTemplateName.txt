@@ -1,0 +1,22 @@
+W3506 Duplicate Template Name
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when a class has a duplicate template name</h2>
+
+<p>
+A class should have unique template names for each distinct template. If duplicate templates
+are found, the last definition of the template is kept. <br/>
+The warning might be caused by a template of the same name being defined in a separate file.
+</p>
+
+
+@@example
+@@source manualexamples/W3506DuplicateTemplateName1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W3506DuplicateTemplateName2.ump
+@@endexample

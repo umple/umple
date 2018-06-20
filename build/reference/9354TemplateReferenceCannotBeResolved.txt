@@ -1,0 +1,21 @@
+E3504 Template Reference Cannot Be Resolved
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when a template reference cannot be resolved</h2>
+
+<p>
+When referencing a template, an error is thrown if the template cannot be found. The
+template name might be misspelled. <br/>
+</p>
+
+
+@@example
+@@source manualexamples/E3504TemplateReferenceCannotBeResolved1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E3504TemplateReferenceCannotBeResolved2.ump
+@@endexample

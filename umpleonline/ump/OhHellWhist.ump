@@ -84,16 +84,13 @@ class Game {
    * gameLed -- 0..1 Player currentLead; // the player next to lay down a card
 }
 
+//$?[End_of_model]$?
 //Position information of the display on a diagram of all classes and of their associations
-class Card
-{
-  position 125 15 135 100;
-}
 
 class CardSet
 {
   position 186 153 109 45;
-  position.association Card__CardSet 30,0 31,100;
+  position.association Card__CardSet 30,0 87,92;
 }
 
 class NotDealtCardSet
@@ -122,15 +119,19 @@ class Match
 {
   position 532 48 159 82;
   position.association Match__ScoringTeam 120,82 60,0;
-  position.association Game:games__Match 30,82 72,0;
+  position.association Game:games__Match 29,84 116,0;
+}
+
+
+
+class Card
+{
+  position 75 22 134 92;
 }
 
 class Game
 {
-  position 442 280 123 64;
-  position.association Game__Player:currentLead 11,64 192,11;
-  position.association Card:currentTrickBeingBuilt__Game 0,10 135,50;
-  position.association Game:gameLed__Player:currentLead 24,64 192,30;
-  position.association Game__Player:dealer 0,38 192,10;
+  position 431 258 123 58;
+  position.association Game__Player:dealer 0,33 193,9;
+  position.association Game:gameLed__Player:currentLead 20,58 193,29;
 }
-

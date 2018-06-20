@@ -1,0 +1,21 @@
+E091 Attribute Of Type Not Found Constraint
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when a class does not contain the required attribute of a given type</h2>
+
+<p>
+Model constraints can be applied to Umple classes to ensure they respect certain properties, as defined in their constraints.
+This error is raised if a class does not contain an attribute of a specified type in the constraint.
+</p>
+
+
+@@example
+@@source manualexamples/E091AttributeOfTypeNotFoundConstraint1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E091AttributeOfTypeNotFoundConstraint2.ump
+@@endexample

@@ -1,0 +1,20 @@
+E3502 Template Name Cannot Be Resolved
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when a template name cannot be found</h2>
+
+<p>
+A template used in an emit method must exist within the context of the emit directive. <br/>
+</p>
+
+
+@@example
+@@source manualexamples/E3502TemplateNameNotResolved1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E3502TemplateNameNotResolved2.ump
+@@endexample

@@ -1,0 +1,28 @@
+Abstract Methods
+Methods
+noreferences
+
+@@description
+
+<p>An abstract method is a method declaration with no implementation. These methods are to be implemented in classes 
+with the specific behaviour intended. </p> 
+
+<p>Abstract methods can be defined in classes using the keyword &#34;abstract&#34;, followed by
+the method&#39;s signature. By declaring a method abstract, the class containing it is abstract as well, meaning no instances
+of it can be created (the new keyword cannot be used to create an object of the class). The abstract class
+must have one or more subclasses that have concrete implementations of the abstract method.</p>
+
+<p>An interface can only contain abstract methods, and the keyword is not needed. The usage
+of the abstract keyword in a trait <a href="ClientsofTraits.html"> declares a required method. </a> </p>
+
+
+@@syntax
+[[abstract]]
+
+@@example
+@@source manualexamples/AbstractMethods1.ump
+@@endexample
+
+@@example
+@@source manualexamples/AbstractMethods2.ump
+@@endexample

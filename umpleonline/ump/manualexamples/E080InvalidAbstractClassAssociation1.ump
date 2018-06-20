@@ -1,0 +1,11 @@
+//Class A contains an association
+//with abstract class B, causing
+//the error by using mandatory
+//multiplicity
+class A {
+  1 -- 1 B;
+}
+
+abstract class B{
+  abstract; 
+}

@@ -1,0 +1,21 @@
+E4500 Tag Not Closed Correctly
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when a FIXML tag is not closed properly</h2>
+
+<p>
+In FIXML, a start tag must be closed properly with its respective end tag. Elements must also
+be correctly nested within each other.<br/>
+</p>
+
+
+@@example
+@@source manualexamples/E4500TagNotClosedCorrectly1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E4500TagNotClosedCorrectly2.ump
+@@endexample

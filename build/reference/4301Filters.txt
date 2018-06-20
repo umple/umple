@@ -1,0 +1,30 @@
+Filters
+Mixsets and Filters
+noreferences
+
+@@description
+<p>Documentation of the filters feature is being developed</p>
+
+<p>A filter directive in Umple can be used to select only a certain part of a model and ignore the rest. It is particularly designed to allow creation of different diagrams from the same model. However it could also be as a way of building a particular version of the system that only has certain features. It is one of Umple&apos;s separation of concerns mechanisms.</p>
+
+<p>There are two types of filter statements, <i>named</i> and <i>unnamed</i>. An unnamed filter statement is active by default, and tells the system to include only certain indicated classes (seven such filters are shown in the example below). A named filter statement is ignored until activated with an includeFilter statement (the example below shows two named filters appearing after the Filter 7 comment).</p>
+
+<p> Filters can be used to describe a particular diagram (or system version). There can be any number of named filters.<p>
+
+<p>Within a filter directive, one can specify:/p>
+
+<ul>
+  <li><i>include</i> statements. These list the main classes to be included. There can be any number of include statements, and multiple comma-separated classes can follow each include keyword. Several include statements can be seen in the example below. Any associations between included classes are shown (see Filter 8)<br/>&nbsp;
+  <li>Optionally <i>includeFilter</i> statements. These include other named filters. To activate a named filter, it is necessary to use an includeFilter statement in an unnamed filter. See Filter 7 in the example.<br/>&nbsp;
+  <li>Optionally <i>namespace</i> statements. These include all classes in the given namespace.<br/>&nbsp;
+  <li>Optionally <i>hops</i> statements. These indicate that additional classes should be included that are connected to included classes by associations or generalizations. See examples 2 and 6 for association hops, and example 4 for a subclass hop. Note that including any class will always include its superclasses, so the complete picture of what is inherited is presented.
+</ul> 
+
+<p>Load the example below into UmpleOnline and uncomment any of the 8 filter statements, one at at a time, to see the effect of filtering. The comment just before each filter statement describes the effect. Note that the named filters described as Filter 7 have been left uncommented as they are ignored until the un-named filter following them is activated.</p>
+
+@@syntax
+[[filter]] [[filterStatement]] [[filterCombinedValue]] [[filterNamespace]] [[filterValue]] [[hops]] [[super]] [[sub]] [[association]]
+
+@@example
+@@source manualexamples/Filters-Shape3D-1.ump
+@@endexample

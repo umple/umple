@@ -68,12 +68,6 @@ class Driver
 
 //$?[End_of_model]$?
 
-class Account
-{
-  position 38 46 219 172;
-  position.association Account__Order 37,172 50,0;
-}
-
 class Order
 {
   position 22 271 219 154;
@@ -85,13 +79,6 @@ class OrderItem
   position 429 208 139 82;
 }
 
-class PizzaOrder
-{
-  position 240 465 139 118;
-  position.association PizzaOrder__ToppingType 66,82 40,0;
-  position.association PizzaOrder__ToppingType:toppings 109,20 0,0;
-  position.association PizzaOrder__StandardPizzaSize 0,11 135,7;
-}
 
 class ToppingType
 {
@@ -108,14 +95,27 @@ class DrinkOrder
   position 494 349 109 46;
 }
 
-class Delivery
-{
-  position 270 47 166 82;
-  position.association Delivery__Driver 166,42 0,40;
-  position.association Delivery__Order 133,82 219,11;
-}
-
 class Driver
 {
   position 506 49 109 46;
+}
+
+class Account
+{
+  position 20 46 218 160;
+  position.association Account__Order 32,160 30,0;
+}
+
+class Delivery
+{
+  position 260 47 160 75;
+  position.association Delivery__Driver 160,12 0,10;
+  position.association Delivery__Order 67,75 219,10;
+}
+
+class PizzaOrder
+{
+  position 267 437 109 58;
+  position.association PizzaOrder__StandardPizzaSize 0,43 136,9;
+  position.association PizzaOrder__ToppingType:toppings 109,39 0,10;
 }

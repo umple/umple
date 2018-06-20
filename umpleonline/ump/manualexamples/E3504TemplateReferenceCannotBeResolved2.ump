@@ -1,0 +1,7 @@
+//otherTemplate exists and can
+//be referenced
+class A {
+  otherTemplate <<! output !>>
+  temp <<! <<@otherTemplate>> !>>
+  emit method()(temp);
+}

@@ -1,0 +1,34 @@
+class TrackShuttler {
+  sm {
+    initializing {
+      readyToGo -> transferringLoad;
+    }
+    transferringLoad {
+      loaded -> shuttling;
+    }
+    shuttling {
+      reachEnd -> transferringLoad;
+      moving {
+        nearEnd -> braking;
+         accelerating {
+           reachedMaxSpeed -> coasting;
+         }
+         coasting {
+           tooSlow -> accelerating;
+         }
+         braking {
+           tooSlow -> coasting;
+         }           
+      }
+      ||
+       controllingLights {
+         lightsOn {
+           daylightDetected -> lightsOff;
+         }
+         lightsOff {
+           darknessDetected -> lightsOn;
+         }
+      }
+    }
+  } 
+}

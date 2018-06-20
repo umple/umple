@@ -1,0 +1,8 @@
+//The trace directive causes the
+//warning to be issued as the attribute
+//id is not found
+class A {
+  Integer identifier;
+  
+  trace id;
+}

@@ -1,0 +1,11 @@
+//The error arises as temp refers
+//to temp3, referring to temp2, which
+//causes a cycle due to temp2 referring
+//to temp
+class A {
+  temp <<! <<@temp3>> !>>
+  temp2 <<! <<@temp>> !>>
+  temp3 <<! <<@temp2>> !>>
+    
+  emit method()(temp);
+}

@@ -1,0 +1,21 @@
+E060 Pooled and Regular State Machines in Class
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when a class contains one or more pooled state machine and regular state machine</h2>
+
+<p>
+An Umple class cannot contain both a pooled state machine and a regular state machine. <br/>
+The state machines must be of the same type (e.g. both pooled), or else distributed in more than one class.
+</p>
+
+
+@@example
+@@source manualexamples/E060RegularPooledStateMachineInClass1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E060RegularPooledStateMachineInClass2.ump
+@@endexample

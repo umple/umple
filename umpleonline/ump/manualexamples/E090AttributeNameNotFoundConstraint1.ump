@@ -1,0 +1,7 @@
+//Class A does not contain
+//the appropriate attribute,
+//the constraint causes the error
+class A {
+  [model: A has attribute named attr]
+}
+// @@@skipcompile

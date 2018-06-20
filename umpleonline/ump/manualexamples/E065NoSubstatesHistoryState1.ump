@@ -1,0 +1,14 @@
+//The error is generated because
+//s2 does not contain a substate
+//and therefore no history to
+//be managed
+class A {
+  sm {
+    s1 {
+      e -> s2.H;
+    }
+    s2 {
+      
+    }
+  }
+}

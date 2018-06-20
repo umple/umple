@@ -1,14 +1,7 @@
 class Teacher {
  1 -- 0..2 Foo myFooss;
-
- 1 -- 1..2 Student myStudentss;
-
 }
 
 class Foo {
-  abstract;
-}
-
-class Student {
   abstract;
 }

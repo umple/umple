@@ -13,7 +13,7 @@ DiagramEdit.newGeneralization = null;
 
 //Queues and initiates updates to the text editor after the diagram is edited
 DiagramEdit.updateUmpleText = function(update)
-{  
+{
   if(DiagramEdit.textChangeQueue.length == 0 && !DiagramEdit.pendingChanges)
   {
     DiagramEdit.pendingChanges = true;
@@ -24,15 +24,18 @@ DiagramEdit.updateUmpleText = function(update)
   {
     DiagramEdit.textChangeQueue.push(update);
   }
+  
+  Action.umpleTypingActivity("diagramEdit");
 }
 
 DiagramEdit.doTextUpdate = function()
 {
   update = DiagramEdit.textChangeQueue.shift();
 
-  if(update.codeChange)
+  if(update.codeChange) {
     Page.hideGeneratedCode();
-
+  }
+  
   Action.ajax(Action.updateUmpleTextCallback,update.actionCode);
 }
 
@@ -388,17 +391,19 @@ DiagramEdit.attributeNew = function(diagramId,attributeInput)
     var umpleClass = UmpleSystem.find(diagramId);
     var attributeIndex = umpleClass.addAttribute(attributeInput);
 
+    
+    
     var editClass = Json.toString(umpleClass);
     Page.showModelLoading();
     DiagramEdit.updateUmpleText({
       actionCode: format("action=editClass&actionCode={0}",editClass),
       codeChange: true
     });
-
     umpleClass.resetAttribute(attributeIndex);
     UmpleSystem.updateClass(umpleClass);
     UmpleSystem.redrawGeneralizationsTo(umpleClass);
     UmpleSystem.trimOverlappingAssociations(umpleClass);
+    UmpleSystem.update();
   }
 }
 
@@ -465,10 +470,13 @@ DiagramEdit.methodNew = function(diagramId, methodInput)
       actionCode: format("action=editClass&actionCode={0}",editClass),
       codeChange: true
     });
+    
+    
     umpleClass.resetMethod(methodIndex);
     UmpleSystem.updateClass(umpleClass);
     UmpleSystem.redrawGeneralizationsTo(umpleClass);
     UmpleSystem.trimOverlappingAssociations(umpleClass); 
+    UmpleSystem.update();
   }
 }
 
@@ -504,13 +512,13 @@ DiagramEdit.methodDelete = function(diagramId,index)
   //  umpleClass.position.height = Math.round(classObj.height());
   //  umpleClass.position.width = Math.round(classObj.width());
 
-  umpleClass.position.height = 28+17*(umpleClass.attributes.size()+umpleClass.methods.size());
 // This needs fixing so it picks up the correct width
 // Look trimOverlap, which seems to know the correct width
   umpleClass.position.width = UmpleClassFactory.defaultSize.width;
 
 //  umpleClass.position.height = UmpleClassFactory.defaultSize.height;
 //  umpleClass.position.width = UmpleClassFactory.defaultSize.width;
+  
 
   var editClass = Json.toString(umpleClass);
   Page.showModelLoading();
@@ -523,6 +531,7 @@ DiagramEdit.methodDelete = function(diagramId,index)
   UmpleSystem.updateClass(umpleClass);
   UmpleSystem.redrawGeneralizationsTo(umpleClass);
   UmpleSystem.trimOverlappingAssociations(umpleClass);
+  UmpleSystem.update();
 }
 
 DiagramEdit.attributeDelete = function(diagramId,index)
@@ -533,8 +542,7 @@ DiagramEdit.attributeDelete = function(diagramId,index)
   var classObj = jQuery("#" + umpleClass.id);
 //  umpleClass.position.height = Math.round(classObj.height());
 //  umpleClass.position.width = Math.round(classObj.width());
-
-  umpleClass.position.height = 28+17*(umpleClass.attributes.size()+umpleClass.methods.size());
+  
 // This needs fixing so it picks up the correct width
 // Look trimOverlap, which seems to know the correct width
   umpleClass.position.width = UmpleClassFactory.defaultSize.width;
@@ -553,6 +561,7 @@ DiagramEdit.attributeDelete = function(diagramId,index)
   UmpleSystem.updateClass(umpleClass);
   UmpleSystem.redrawGeneralizationsTo(umpleClass);    
   UmpleSystem.trimOverlappingAssociations(umpleClass);
+  UmpleSystem.update();
 }
 
 DiagramEdit.associationDeleted = function(diagramId, addToQueue)

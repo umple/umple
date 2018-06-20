@@ -1,0 +1,5 @@
+//The attribute attr cannot be initialized
+//as the values are not correct
+class A {
+  String[] attr = {invalid.values};
+}

@@ -1,0 +1,21 @@
+E063 Reserved Name History State
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when a state uses a name reserved for history or deep history states </h2>
+
+<p>
+Certain state names in Umple are reserved for the implementation of history and deep history states. <br/>
+An error is raised when using a reserved name such as H or HStar as a state name.
+</p>
+
+
+@@example
+@@source manualexamples/E063ReservedNameHistoryState1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E063ReservedNameHistoryState2.ump
+@@endexample

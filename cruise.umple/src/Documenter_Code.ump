@@ -140,7 +140,7 @@ class Documenter
         if(ci>0) {
           prevNextOutput +="<a href=\"" + group.getContent(ci-1).getTitleFilename() + "\">[Previous]</a>&nbsp &nbsp;";
         }
-        else if(gi > 0&&getParser().getGroup(gi-1).numberOfContents()>1) {
+        else if(gi > 0&&getParser().getGroup(gi-1).numberOfContents()>=1) {
           prevNextOutput +="<a href=\"" + getParser().getGroup(gi-1).getContent(getParser().getGroup(gi-1).numberOfContents()-1).getTitleFilename() + "\">[Previous]</a>&nbsp &nbsp;";
         }
 

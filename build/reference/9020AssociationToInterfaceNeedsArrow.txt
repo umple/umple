@@ -1,5 +1,5 @@
 E020 Interface Association Not One Way
-Errors and Warnings
+Errors and Warnings 1-50
 noreferences
 
 @@description

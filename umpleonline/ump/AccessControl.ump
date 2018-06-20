@@ -65,41 +65,42 @@ associationClass RoleFacilityAccessRight
   * Role;
   CRUD_Value { R, RW }
 }
-//$?[End_of_model]$?
 
+//$?[End_of_model]$?
 // Positioning
+
+class FacilityType
+{
+  position 74 358 109 57;
+}
+
 class FunctionalArea
 {
-  position 21 28 109 62;
-  position.association FunctionalArea:parent__FunctionalArea:child 109,48 95,62;
+  position 48 23 112 57;
 }
 
 class Facility
 {
-  position 21 134 178 130;
-  position.association Facility__FacilityType 70,130 50,0;
-}
-
-class FacilityType
-{
-  position 41 314 109 62;
-}
-
-class User
-{
-  position 247 25 146 113;
-  position.association Role__User 72,113 45,0;
+  position 48 159 173 127;
+  position.association Facility__FacilityType 50,127 24,0;
 }
 
 class Role
 {
-  position 274 194 110 61;
+  position 372 235 109 57;
 }
 
-class RoleFacilityAccessRight{
-  position 225 315 165 57;
-  position.association Role__RoleFacilityAccessRight 77,0 28,62;
-  position.association Facility__RoleFacilityAccessRight 27,0 163,130;
+class User
+{
+  position 332 46 162 127;
+  position.association Role__User 102,127 62,0;
+}
+
+class RoleFacilityAccessRight
+{
+  position 270 362 166 45;
+  position.association Facility__RoleFacilityAccessRight 24,0 173,115;
+  position.association Role__RoleFacilityAccessRight 145,0 43,57;
 }
 
 // @@@skipphpcompile - remove when issue 697 is fixed

@@ -1,0 +1,23 @@
+W069 Auto Transition Conflict
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when an auto-transition has a conflict with a previously defined transition</h2>
+
+<p>
+An auto-transition in a state that is declared after another auto-transition will be ignored, and only the 
+first auto-transition will be executed. No warning is issued if the destination state
+of both auto-transitions is the same.
+<br/>
+</p>
+
+
+@@example
+@@source manualexamples/W069AutoTransitionConflict1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W069AutoTransitionConflict2.ump
+@@endexample

@@ -1,0 +1,20 @@
+W1012 Method Not Found Injection
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when an injection is called on a method that cannot be found</h2>
+
+<p>Injecting code before or after a method must be done on an existing method. The injection
+will otherwise be ignored. <br/>
+</p>
+
+
+@@example
+@@source manualexamples/W1012MethodNotFoundInjection1.ump
+@@endexample
+
+@@example
+@@source manualexamples/W1012MethodNotFoundInjection2.ump
+@@endexample

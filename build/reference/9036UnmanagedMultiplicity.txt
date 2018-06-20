@@ -1,5 +1,5 @@
 W036 Unmanaged Multiplicity
-Errors and Warnings
+Errors and Warnings 1-50
 noreferences
 
 @@description

@@ -1,0 +1,22 @@
+E058 Regular Queued and Pooled State Machines in Class
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when a class contains one or more queued state machine, pooled state machine and
+regular state machine</h2>
+
+<p>
+An Umple class cannot contain in the same class a queued state machine, a pooled state machine and/or a regular state machine. <br/>
+All the state machines in a given class must be of the same type (pooled, queued, regular), or could be distributed in different classes.
+</p>
+
+
+@@example
+@@source manualexamples/E058RegularQueuedPooledStateMachineInClass1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E058RegularQueuedPooledStateMachineInClass2.ump
+@@endexample

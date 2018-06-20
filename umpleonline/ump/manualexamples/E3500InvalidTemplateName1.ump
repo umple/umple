@@ -1,0 +1,8 @@
+//The name of the template is
+//not valid and generates
+//an error
+class A {
+  !template <<!output!>>
+}
+//$?[End_of_model]$?
+// @@@skipcompile

@@ -1,0 +1,10 @@
+//The warning is not generated
+//by fixing the constraint syntax
+class A {
+  Integer a;
+  Integer b;
+  Integer c;
+  
+  [(a > b) && a < c]
+  [c < a || b > a]
+}

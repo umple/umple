@@ -1,0 +1,15 @@
+//The error is generated because of
+//the name conflict between attr
+//and the attribute canSetAttr,
+//which is automatically generated
+//for an immutable attribute
+
+//The same occurs for the attr2
+//and nextAttr2
+class A {
+  immutable attr;
+  canSetAttr;
+  
+  autounique attr2;
+  nextAttr2;
+}

@@ -70,26 +70,23 @@ class Offer
 
 //$?[End_of_model]$?
 
+
+
 class Program
 {
   position 40 459 113 64;
-  position.association Program__Student 113,22 0,34;
+  position.association Program__Student 113,22 0,42;
 }
 
 class Application
 {
   position 128 355 109 46;
   position.association Application__Student 109,35 0,8;
-  position.association Application__Job 0,0 95,118;
+  position.association Application__Job 0,0 90,109;
   position.association Application__Interview 109,3 0,43;
   position.association Application__Offer 68,0 0,70;
 }
 
-class Job
-{
-  position 33 115 149 118;
-  position.association Job__Program 17,118 21,0;
-}
 
 class Employer
 {
@@ -109,13 +106,6 @@ class TimeSlot
   position 543 212 140 108;
 }
 
-class Student
-{
-  position 344 444 128 82;
-  position.association Student__Transcript 128,67 0,10;
-  position.association Student__TimeSlot 100,-3 11,108;
-}
-
 class Resume
 {
   position 563 414 109 46;
@@ -130,4 +120,17 @@ class Transcript
 class Offer
 {
   position 265 170 148 82;
+}
+
+class Job
+{
+  position 38 130 148 109;
+  position.association Job__Program 32,109 30,0;
+}
+
+class Student
+{
+  position 289 439 127 58;
+  position.association Student__Transcript 127,32 0,10;
+  position.association Student__TimeSlot 116,0 0,10;
 }

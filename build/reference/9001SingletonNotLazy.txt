@@ -1,5 +1,5 @@
 W001 Singleton With Non-Lazy Attribute
-Errors and Warnings
+Errors and Warnings 1-50
 noreferences
 
 @@description

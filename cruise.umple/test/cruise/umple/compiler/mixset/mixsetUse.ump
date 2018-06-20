@@ -1,0 +1,5 @@
+mixset X1 {class Y1{}}
+
+mixset X2 class Y2 {y2a;}
+
+use X1;

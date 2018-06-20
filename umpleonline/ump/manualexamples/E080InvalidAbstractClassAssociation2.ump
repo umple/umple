@@ -1,0 +1,9 @@
+//The following association does not
+//cause the error
+class A {
+  0..1 -- 0..1 B;
+}
+
+abstract class B{
+  abstract; 
+}

@@ -1,0 +1,6 @@
+//The class A now contains an
+//attribute with the appropriate name
+class A {
+  attr;
+  [model: A has attribute named attr]
+}

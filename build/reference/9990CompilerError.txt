@@ -1,0 +1,19 @@
+E9x00 Compiler Error
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Umple compiler error raised when an internal crash occurs</h2>
+
+<p>
+Occasionally the Umple compiler may crash with certain code input,
+causing an error in the parsing phase (E9000), analysis phase (E9100)
+or generation phase (E9200). As soon as the Umple development team
+becomes aware of such a situation, we try to deal with it with
+a high level of priority.</p>
+
+<p>In order to ensure the Umple development team is aware of the problem, please 
+<a href="https://github.com/umple/umple/issues/new">report the issue</a>, including
+the code that generated the error and the stack trace that accompanied the message.<br/>
+</p>

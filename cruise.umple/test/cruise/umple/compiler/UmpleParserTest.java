@@ -421,6 +421,15 @@ public class UmpleParserTest
     Assert.assertEquals(false,model.getUmpleClass("D").getIsAbstract());
     Assert.assertEquals(false,model.getUmpleClass("E").getIsAbstract());
   }
+  
+  @Test
+  public void abstractClassAssociation()
+  {
+    assertFailedParse("422_abstractClassAssociation1.ump",80);
+    assertFailedParse("422_abstractClassAssociation2.ump",80);
+    assertFailedParse("422_abstractClassAssociation3.ump",80);
+    assertFailedParse("422_abstractClassAssociation4.ump",80);
+  }
 
   //Issue 1159
   @Test
@@ -1343,6 +1352,7 @@ public class UmpleParserTest
   public void TypeValueMismatchWarning()
   {
     assertHasWarningsParse("008_attributeTypeValueMismatch.ump",141);
+    assertHasWarningsParse("008_attributeTypeValueMismatch2.ump",141);
   }
 
   @Test
@@ -3016,6 +3026,41 @@ public class UmpleParserTest
     assertHasWarningsParse("142_typeIsAccessSpecifierPrivate.ump", 142);
   }
   
+  @Test
+  public void multivaluedAttributeAssignment()
+  {
+    assertFailedParse("008_multivaluedAttributeAssignment1.ump", 81);
+    assertFailedParse("008_multivaluedAttributeAssignment2.ump", 81);
+  }
+  
+  
+  @Test
+  public void mixsetDefinition()
+  {
+	  assertNoWarningsParse("mixsetDefinition.ump");
+	  
+
+  }
+
+  
+  //Issue 1277
+  @Test
+  public void templateInexistentReference()
+  {
+    assertFailedParse("028_templateInexistentReference.ump",3504);
+    assertFailedParse("028_multipleTemplateInexistentReferences.ump",3504);
+  }
+  
+  @Test
+  public void mixsetUseStatement()
+  {
+	  assertNoWarningsParse("/mixset/mixsetUse.ump");
+	  
+
+  }
+    
+
+
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));

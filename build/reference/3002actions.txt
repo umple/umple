@@ -3,13 +3,12 @@ State Machines
 noreferences
 
 @@description
-<p>      
+<p><b>Transition actions:</b>      
 When an transition is taken, an action can occur. This is indicated
 using a slash "/" followed by arbitrary code in braces. The arbitrary code
 may be placed after the event name or before the destination state name.
-</p>
 
-<p>
+<p><b>Entry and exit actions:</b>
 Similarly,
 when entering or exiting a state, an action can occur. This is indicated
 using the keywords entry or exit, followed by a slash, followed by code.
@@ -17,14 +16,18 @@ using the keywords entry or exit, followed by a slash, followed by code.
 
 <p>The actions described above should take negligible time to execute.</p>
 
-<p>If a longer-running computation or activity should run while in a state,
-encode this using the keyword do, followed by code. In languages such as Java
+<p>The arrow -&gt; can be placed either directly after the event (before the action), or directly before the destination state (after the action)</p>
+
+<p><b>Do activities:</b>
+If a longer-running computation (activity) needs to be while in a state,
+encode this using the keyword do, followed by a block of code
+in curly brackets. In languages such as Java
 that support it, a thread will be started
-to invoke the thread. This allows the state machine to 'stay live'
+to invoke the code. This allows the state machine to 'stay live'
 and be able to respond to other events, even while the do activity is
-running. Note that at the current time, the do activity thread must
-terminate itself; as an enhancement, the do activity thread should be
-interrupted and cancelled when a transition is taken out of the state.</p>
+running. A do activity thread can be
+interrupted and cancelled when a transition is taken out of the state. To enable this
+in Java, the code it needs to catch InterruptedException as shown in the first example.</p>
 
 @@syntax
 

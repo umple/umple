@@ -1,0 +1,23 @@
+// The master of this part of the Umple grammar is available at
+// [*https://github.com/umple/umple/blob/master/cruise.umple/src/umple_mixsets.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+//mixsets allow creation of mixins composed from multiple locations plus some constraints regarding usage of these mixins.
+// See user manual page [*MixsetDefinition*]
+
+mixsetDefinition : mixset [mixsetName] ( [[mixsetInnerContent]] | [[mixsetInlineDefinition]] )
+mixsetInnerContent- : { [[extraCode]] }
+ 
+
+mixsetInlineDefinition- : ( [entityType] [entityName] ( [[mixsetInnerContent]] | [entityOneElement] ) | [oneElement] )
+
+
+//mixsetDeclaration- : [[mixsetBasicDeclaration]] | [[mixsetInlineDeclaration]]
+//mixsetBasicDeclaration- : mixset [mixsetName]  [[mixsetInnerContent]] 
+
+
+
+

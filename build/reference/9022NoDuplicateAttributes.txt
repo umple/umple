@@ -1,5 +1,5 @@
 E022 Duplicate Attribute
-Errors and Warnings
+Errors and Warnings 1-50
 noreferences
 
 @@description

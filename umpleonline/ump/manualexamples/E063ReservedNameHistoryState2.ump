@@ -1,0 +1,9 @@
+//The error can be avoided by
+//using a non reserved state 
+//name
+class A {
+  sm {
+    s1 {
+    }
+  }
+}

@@ -1,0 +1,15 @@
+//The following generates the warning
+//as s1 could designate both s1 and s2.s1
+//By default, it is s1
+class A {
+  sm {
+    s1 {
+      e -> s1;
+    }
+    
+    s2 {
+      s1 {
+      }
+    }
+  }
+}

@@ -73,13 +73,8 @@ class Loan{
  isA BankAccount;
 }
 //$?[End_of_model]$?
+
 //Positioning
-class BankAccount
-{
-  position 46 334 216 96;
-  position.association BankAccount__DebitCard 217,93 0,17;
-  position.association BankAccount__Cheque 217,10 0,8;
-}
 
 class Cheque
 {
@@ -102,22 +97,11 @@ class CreditCard
   position 669 467 145 76;
 }
 
-class Branch
-{
-  position 103 195 128 79;
-  position.association 0 1,76 81,0;
-  position.association BankAccount__Branch 26,79 30,0;
-}
 
-class FinancialInstitution
-{
-  position 379 12 131 62;
-  position.association FinancialInstitution__ReusableFinancialInstrument 92,62 0,0;
-}
 
 class Loan
 {
-  position 99 473 109 41;
+  position 125 473 109 41;
 }
 
 class DebitCard
@@ -133,10 +117,29 @@ class FinancialInstrument
 class Bank
 {
   position 242 119 109 45;
-  position.association Bank__Branch 0,41 100,0;
+  position.association Bank__Branch 0,25 100,0;
 }
 
 class CreditCardCompany
 {
   position 520 119 139 45;
+}
+
+class BankAccount
+{
+  position 71 328 218 92;
+  position.association BankAccount__DebitCard 200,92 0,21;
+  position.association BankAccount__Cheque 218,20 0,12;
+}
+
+class Branch
+{
+  position 75 178 127 75;
+  position.association BankAccount__Branch 39,75 43,0;
+}
+
+class FinancialInstitution
+{
+  position 359 15 133 58;
+  position.association FinancialInstitution__ReusableFinancialInstrument 114,58 0,10;
 }

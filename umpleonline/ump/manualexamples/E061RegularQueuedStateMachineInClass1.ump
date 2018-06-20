@@ -1,0 +1,20 @@
+//The error will be generated as 
+//class A contains both a regular 
+//and a queued state machine
+class A {
+  queued sm1 {
+    s0 {
+      e -> s1;
+    }
+    s1 {
+    }
+  }
+  
+  sm2 {
+    s0 {
+      e -> s1;
+    }
+    s1 {
+    }
+  }
+}

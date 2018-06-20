@@ -1,0 +1,7 @@
+//The error will be issued, attr
+//and Attr both generating setAttr
+//and getAttr causing a name conflict
+class A {
+  attr;
+  Attr;
+}

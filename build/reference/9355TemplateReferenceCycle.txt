@@ -1,0 +1,21 @@
+E3505 Template Reference Cycle
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when a template reference causes a cycle</h2>
+
+<p>
+A template reference cannot be used in a cyclically referring way, creating an indirect
+reference to itself. The issue might come from a flaw in the templates&#39; design.<br/>
+</p>
+
+
+@@example
+@@source manualexamples/E3505TemplateReferenceCycle1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E3505TemplateReferenceCycle2.ump
+@@endexample

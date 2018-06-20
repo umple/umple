@@ -1,0 +1,6 @@
+//No template refers to itself,
+//the error does not occur
+class A {
+  temp <<! output !>>
+  otherTemp <<! <<@temp>> !>>
+}

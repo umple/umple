@@ -1,0 +1,38 @@
+Unspecified Events
+State Machines
+noreferences
+
+@@description
+<p>
+In Umple, the keyword &#39;unspecified&#39; can be used to handle events that have no handlers in
+the current state (and would normally be ignored) in a queued or regular state machine.
+If an &#39;unspecified&#39; transition is present, no event in that state will be ignored.
+The keyword can be placed at any level of nesting of the state machine, and specifies
+a transition, using the same syntax as a regular event name (hence it can have a guard, and and action)
+as well as a destination state.</p>
+
+<p>For example,
+in the first example below, if finishedClosing occurs while in the closed state, this event would 
+be ignored if  &#39;unspecified&#39; were not present. But the &#39;unspecified&#39; keyword causes a transition
+to be taken for any unexpected event while in closed, opening, open or closing states.</p>
+
+<p>Note that tf the &#39;unspecified&#39;
+keyword is used in a pooled state machine, it will simply be  treated as a regular event since
+pooled state machines do not ignore events without handlers, but leave them at the head of
+the queue.</p>
+
+<p>Unspecified transitions are particilarly useful to transition to error-handling states.
+In the examples below, the system transitions back to normal functioning after handing the error. The
+use of transitions to <a href="historyStates.html">history</a> can also be useful in this situation.
+</p>
+
+@@syntax
+[[transition]]
+ 
+@@example
+@@source manualexamples/UnspecifiedEvents1.ump &diagramtype=state
+@@endexample
+
+@@example
+@@source manualexamples/UnspecifiedEvents2.ump &diagramtype=state
+@@endexample

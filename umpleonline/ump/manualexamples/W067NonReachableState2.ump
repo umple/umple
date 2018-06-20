@@ -1,0 +1,15 @@
+//The warning can be avoided
+//by adding a transition with s3
+//as destination state
+class A {
+  sm {
+    s1 {
+      e -> s2;
+    }
+    s2 {
+      e2 -> s3;
+    }
+    s3 {
+    }
+  }
+}

@@ -17,6 +17,7 @@ namespace cruise.umple.compiler;
 class UmpleInternalParser
 {
   depend java.util.regex.*;
+  depend cruise.umple.parser.Token;
   
   internal AssociationVariable[] unlinkedAssociationVariables;
   internal Association[] unlinkedAssociations;
@@ -146,6 +147,8 @@ class UmpleInternalParser
 
   }  
 
+
+	
   /*
    * If the last attribute/association made matches the line number of the comment, add the comment to the attribute/association.
    * 
@@ -265,6 +268,9 @@ class UmpleInternalParser
     else if (token.is("attribute"))
     {
       analyzeAttribute(token,aClass);
+    }
+    else if (token.getValue("mixsetDefinition") != null)  {
+     	analyzeMixsetDefinition(token, aClass.getName());
     }
     else if (token.is("extraCode"))
     {
@@ -388,7 +394,7 @@ class UmpleInternalParser
 
       checkExtendsForCycles();
       checkSortedAssociations();
-      checkClassInterfaceAssocations();
+      checkAssociationsValidity();
       
       //Issue 1084
       addUnlinkedKeys();
@@ -1048,6 +1054,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    */
   private UmpleClass analyzeClass(Token classToken)
   {
+  
+  	
     //Reset number of activeObjects with each class definition
     this.numberOfActiveObjects = 1;
     
@@ -1158,10 +1166,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     if(classToken.is("associationClassDefinition")) {
       analyzeAllAssociations(classToken);
     }
+    
 
+    
     analyzeAllTokens(classToken,aClass);
     return aClass;
   }
+  
 
   /*
    * Takes an Umple classifier and analyzes a classifier token to add classifiers which extend it.
@@ -1503,6 +1514,38 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
        return false;
       
    }
+   
+  private boolean associationIsBetweenClassAndAbstractClass (Association a) {
+  	AssociationEnd endA = a.getEnd(0);
+  	AssociationEnd endB = a.getEnd(1);
+  	
+  	UmpleClass classA = model.getUmpleClass(endA.getClassName());
+  	UmpleClass classB = model.getUmpleClass(endB.getClassName());
+  	
+  	if (classA != null && classB != null) {
+  	  if (classB.getIsAbstract() && !classA.getIsAbstract()) {
+  	    return true;
+  	  }
+  	}
+  	
+  	return false;
+  }
+  
+  private boolean associationIsBetweenAbstractClassAndClass (Association a) {
+  	AssociationEnd endA = a.getEnd(0);
+  	AssociationEnd endB = a.getEnd(1);
+  	
+  	UmpleClass classA = model.getUmpleClass(endA.getClassName());
+  	UmpleClass classB = model.getUmpleClass(endB.getClassName());
+  	
+  	if (classA != null && classB != null) {
+  	  if (!classB.getIsAbstract() && classA.getIsAbstract()) {
+  	    return true;
+  	  }
+  	}
+  	
+  	return false;
+  }
   
   private boolean associationIsBetweenClassAndTrait(Association a){
 	    AssociationEnd myEnd = a.getEnd(0);
@@ -2862,15 +2905,43 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
   }
   
-   private void checkClassInterfaceAssocations(){
-    for (Association a : model.getAssociations()){
-      if (associationIsBetweenClassAndInterface(a)){
-        boolean hasCorrectArrow = !a.getIsLeftNavigable()&&a.getIsRightNavigable(); // Assocation has "->" arrow
-        if (!hasCorrectArrow){
+   private void checkClassInterfaceAssocations(Association a){
+     if (associationIsBetweenClassAndInterface(a)){
+       boolean hasCorrectArrow = !a.getIsLeftNavigable()&&a.getIsRightNavigable(); // Assocation has "->" arrow
+       if (!hasCorrectArrow){
           setFailedPosition(a.getTokenPosition(), 20, a.getEnd(0).getClassName());
         }
       }
+  }
+  
+  private void checkAbstractClassAssociations(Association a) {
+    boolean isBetweenClassAndAbstractClass = associationIsBetweenClassAndAbstractClass(a);
+    boolean isBetweenAbstractClassAndClass = associationIsBetweenAbstractClassAndClass(a);
+    
+    if(isBetweenClassAndAbstractClass || isBetweenAbstractClassAndClass) {
+      boolean hasCorrectArrow = false;
+    
+      if(isBetweenClassAndAbstractClass)
+        hasCorrectArrow = !a.getIsLeftNavigable()&&a.getIsRightNavigable(); //association has "->" arrow
+        
+      if(isBetweenAbstractClassAndClass)
+        hasCorrectArrow = a.getIsLeftNavigable()&&!a.getIsRightNavigable(); //association has "<-" arrow
+      
+      Multiplicity endAMultiplicity = a.getEnd(0).getMultiplicity();
+      Multiplicity endBMultiplicity = a.getEnd(1).getMultiplicity();
+      
+      boolean lowerBoundGreaterThanZero = endAMultiplicity.getLowerBound() > 0 && endBMultiplicity.getLowerBound() > 0;
+      if (!hasCorrectArrow && lowerBoundGreaterThanZero) {
+        setFailedPosition(a.getTokenPosition(), 80, a.getEnd(0).getClassName());
+      }
     }
+  }
+  
+  private void checkAssociationsValidity() {
+  	for (Association a : model.getAssociations()){
+  	  checkClassInterfaceAssocations(a);
+  	  checkAbstractClassAssociations(a);
+  	}
   }
   
   /*
@@ -4272,6 +4343,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     attribute.setPosition(attributeToken.getPosition());
 
     attribute.setIsList(isList);
+    
+    // If the list has values to be assigned, verify if it is valid
+    if(isList && value != null) {
+      String[] values = value.split(",");
+      if(!value.contains(",") && (values[0].contains(" ") || values[0].matches("^.*[^a-zA-Z0-9 ].*$")) && !value.contains("new")) {
+        setFailedPosition(attributeToken.getPosition(), 81, aClass.getName(), name);
+      }
+      else if(!compareTypeToValueList(type, values)) {
+        setFailedPosition(attributeToken.getPosition(),141,type,value);
+      }
+    }
 
     // Add comments above the attribute to the attribute.
     for (Comment c : lastComments)
@@ -4445,7 +4527,19 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       return inferredType.equals(type);
     }
-  } 
+  }
+  private boolean compareTypeToValueList(String type, String[] values) 
+  {
+    for (String value : values) 
+    {
+      value = value.replaceAll("(?<!new)\\s+","");
+      if (!compareTypeToValue(type, value)) 
+      {
+        return false;
+      }
+    }
+    return true;
+  }
 
   private Boolean isLazyRedundant(Boolean isLazy, String value)
   {

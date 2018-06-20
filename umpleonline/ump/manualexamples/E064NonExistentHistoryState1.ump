@@ -1,0 +1,9 @@
+//The following generates the error,
+//OtherState not existing within sm
+class A {
+  sm {
+    s1 {
+      e -> OtherState.H;
+    }
+  }
+}

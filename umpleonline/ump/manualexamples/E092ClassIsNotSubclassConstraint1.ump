@@ -1,0 +1,13 @@
+//The error occurs as A
+//does not respect the constraint
+//Alternative syntax is indicated
+//in comments
+
+class A {
+  //[model: A child of B]
+  //[model: A inherits from B]
+  [model: A isA B]
+}
+
+class B {
+}

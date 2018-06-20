@@ -1,0 +1,9 @@
+//The before statement refers to
+//the getAttr method specifying no
+//parameters, causing the warning
+class A {
+  attr;
+  
+  before getAttr() {
+  }
+}

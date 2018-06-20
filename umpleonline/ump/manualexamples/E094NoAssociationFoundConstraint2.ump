@@ -1,0 +1,11 @@
+//The error is not generated
+//A contains an association
+//fulfilling the requirements
+//of the constraint
+class A {
+  0..1 -- *B;
+  [model: A -- B]
+}
+
+class B {
+}

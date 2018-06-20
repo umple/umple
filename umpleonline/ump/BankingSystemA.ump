@@ -87,6 +87,8 @@ class Division{
 }
 //$?[End_of_model]$?
 // Positioning
+
+// Positioning
 namespace BankingSystem.core.intangableResources;
 class Account
 {
@@ -152,8 +154,8 @@ class Card
 
 class Division
 {
-  position 86 185 112 77;
-  position.association Division__Employee 112,0 0,31;
-  position.association Division__Division:subDivision 0,63 10,77;
+  position 78 204 112 58;
+  position.association Division__Employee 40,0 0,37;
+  position.association Division__Division:subDivision 15,58 0,30;
 }
 

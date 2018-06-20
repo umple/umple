@@ -1,0 +1,11 @@
+//The following avoids the warning
+//by adding an event to the state machine
+class A {
+  pooled sm {
+    s0 {
+      e -> s1;
+    }
+    s1 {
+    }
+  }
+}

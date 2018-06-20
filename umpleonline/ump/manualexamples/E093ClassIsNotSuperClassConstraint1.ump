@@ -1,0 +1,11 @@
+//The error is produced, the
+//constraint is not respected because
+//A is not a superclass of B
+//Alternative syntax in comment
+class A {
+  //[model: A parent of B]
+  [model: A superclass B]
+}
+
+class B {
+}

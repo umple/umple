@@ -1,0 +1,22 @@
+E090 Attribute Name Not Found Constraint
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when a class does not contain an attribute of a given name specified in a constraint</h2>
+
+<p>
+Model constraints can be applied to Umple classes to ensure they respect certain properties, as defined in their constraints.
+This error is raised if a class does not contain an attribute with a name specified in the constraint.<br/>
+The attribute might have been defined in a separate file previously, but no longer exists, causing the error.
+</p>
+
+
+@@example
+@@source manualexamples/E090AttributeNameNotFoundConstraint1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E090AttributeNameNotFoundConstraint2.ump
+@@endexample

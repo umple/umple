@@ -1,0 +1,7 @@
+class AbstractClassAssociationHasOne
+{
+   1 -- 1 AbstractClass hasOne;
+}
+class AbstractClass{
+  abstract;
+}

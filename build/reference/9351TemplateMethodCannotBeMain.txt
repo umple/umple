@@ -1,0 +1,21 @@
+E3501 Template Method Cannot Be Main
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when a template emit method uses the method name &#34;main&#34;</h2>
+
+<p>
+A template emit method cannot be called &#34;main&#34;, as it would cause a conflict with the main
+method.
+</p>
+
+
+@@example
+@@source manualexamples/E3501TemplateMethodCannotBeMain1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E3501TemplateMethodCannotBeMain2.ump
+@@endexample

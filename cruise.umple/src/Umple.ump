@@ -153,6 +153,11 @@ class UmpleElement
   String displayColor = "";
 
   before setPackageName { if (aPackageName == null) { return false; } }
+  
+  // Methods to distinguish the subclass types
+  boolean isUmpleClass() {return false;}
+  boolean isUmpleInterface() {return false;}
+  boolean isUmpleTrait() {return false;}
 }
 
 /*
@@ -528,11 +533,6 @@ class UmpleClassifier
   1 -> 0..* Constant;
   1 -> 0..* ModelConstraint;
   * -> 0..1 Token extendsToken;
-  
-  // Methods to distinguishe the subclass types
-  boolean isUmpleClass() {return false;}
-  boolean isUmpleInterface() {return false;}
-  boolean isUmpleTrait() {return false;}
 }
 
 /*
@@ -1134,3 +1134,4 @@ use UmpleDiagram.ump;
 use StateMachine.ump;
 use Umple_Code.ump;
 use UmpleEnumeration_Code.ump;
+use Mixset.ump;

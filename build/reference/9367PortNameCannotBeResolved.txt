@@ -1,0 +1,22 @@
+E3607 Port Name Cannot Be Resolved
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Umple semantic error raised when a port name cannot be resolved</h2>
+
+<p>
+A port used in a class must be defined before usage by port bindings and
+active methods. <br/>
+The cause of the error is possibly a typographical mistake.
+</p>
+
+
+@@example
+@@source manualexamples/E3607PortNameCannotBeResolved1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E3607PortNameCannotBeResolved2.ump
+@@endexample
