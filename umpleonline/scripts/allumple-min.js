@@ -1242,10 +1242,10 @@ return(b+"")+a++}).replace(/([^\/])(\/(?!\*|\/)(\\\/|.)+?\/[gim]{0,3})/g,functio
 }else{Action.oldTimeout=setTimeout('Action.processTyping("'+a+'",'+false+")",Action.waiting_time)}};Action.processTyping=function(b,a){if(b!="diagramEdit"){History.save(Page.getUmpleCode(),"processTyping")
 }Page.setExampleMessage("");if(!Action.manualSync||a){Action.diagramInSync=true;if(b=="umpleModelEditorText"||b=="codeMirrorEditor"){Action.updateLayoutEditorAndDiagram();
 Page.enablePaletteItem("buttonSyncDiagram",false)}else{if(b=="diagramEdit"){Action.ajax(Action.updateFromDiagramCallback,Action.getLanguage())
-}}Page.enableDiagram(true)}};Action.updateLayoutEditorAndDiagram=function(){Action.ajax(Action.updateUmpleLayoutEditor,"language=Json")
-};Action.updateUmpleLayoutEditor=function(a){var d=a.responseText.split("URL_SPLIT");var c=d[0];var b=d[1];if(b==null||b==undefined){b=a.responseText
-}Page.showLayoutLoading();Action.ajax(Action.updateUmpleLayoutEditorCallback,format("action=addPositioning&actionCode={0}",b))};Action.updateUmpleLayoutEditorCallback=function(a){var b=a.responseText;
-var c=Page.splitUmpleCode(b)[1];Page.setUmplePositioningCode(c);Page.hideLoading();Action.updateUmpleDiagramForce(false)};Action.updateUmpleDiagram=function(){return Action.updateUmpleDiagramForce(true)
+}}}};Action.updateLayoutEditorAndDiagram=function(){Action.ajax(Action.updateUmpleLayoutEditor,"language=Json")};Action.updateUmpleLayoutEditor=function(a){var d=a.responseText.split("URL_SPLIT");
+var c=d[0];var b=d[1];if(b==null||b==undefined){b=a.responseText}Page.showLayoutLoading();Action.ajax(Action.updateUmpleLayoutEditorCallback,format("action=addPositioning&actionCode={0}",b))
+};Action.updateUmpleLayoutEditorCallback=function(a){var b=a.responseText;var c=Page.splitUmpleCode(b)[1];Page.setUmplePositioningCode(c);
+Page.hideLoading();Action.updateUmpleDiagramForce(false)};Action.updateUmpleDiagram=function(){return Action.updateUmpleDiagramForce(true)
 };Action.updateUmpleDiagramForce=function(b){var a=Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());if(!b){if(a==Action.savedCanonical){return
 }}Action.savedCanonical=a;Page.showCanvasLoading();Action.ajax(Action.updateUmpleDiagramCallback,Action.getLanguage())};Action.updateUmpleDiagramCallback=function(response){var diagramCode="";
 var errorMessage="";diagramCode=Action.getDiagramCode(response.responseText);errorMessage=Action.getErrorCode(response.responseText);
@@ -1279,11 +1279,11 @@ var f=Math.round(c.left);var e=Math.round(c.top);var g=Action.associationSnap(f,
 Action.redrawDiagram()};Action.toggleActions=function(){Page.showActions=!Page.showActions;Action.redrawDiagram()};Action.toggleTransitionLabels=function(){Page.showTransitionLabels=!Page.showTransitionLabels;
 Action.redrawDiagram()};Action.toggleGuardLabels=function(){Page.showGuardLabels=!Page.showGuardLabels;Action.redrawDiagram()};Action.toggleTraits=function(){Page.showTraits=!Page.showTraits;
 Action.redrawDiagram()};Action.redrawDiagram=function(){UmpleSystem.merge(null);var a=jQuery("#umpleCanvas");a.html("");if(!Action.manualSync){Action.updateUmpleDiagram();
-Action.diagramInSync=true;Page.enableDiagram(true)}if(Action.manualSync&&!Action.diagramInSync){Page.enablePaletteItem("buttonSyncDiagram",true)
-}if(!Action.manualSync||Action.diagramInSync){Page.enableCheckBoxItem("buttonPhotoReady","ttPhotoReady",true);Page.enableCheckBoxItem("buttonManualSync","ttManualSync",true);
-Page.enablePaletteItem("buttonAddClass",true);Page.enablePaletteItem("buttonAddAssociation",true);Page.enablePaletteItem("buttonAddGeneralization",true);
-Page.enablePaletteItem("buttonDeleteEntity",true);Page.initToggleTool("buttonAddClass");Page.initToggleTool("buttonAddAssociation");Page.initToggleTool("buttonAddGeneralization");
-Page.initToggleTool("buttonDeleteEntity")}};InlineEditor.elementChanged=function(f,a,d){var c=f.attr("name");var e=f.attr("id");if(c=="className"){var g=e.substr(0,e.length-"_name".length);
+Action.diagramInSync=true}if(Action.manualSync&&!Action.diagramInSync){Page.enablePaletteItem("buttonSyncDiagram",true)}if(!Action.manualSync||Action.diagramInSync){Page.enableCheckBoxItem("buttonPhotoReady","ttPhotoReady",true);
+Page.enableCheckBoxItem("buttonManualSync","ttManualSync",true);Page.enablePaletteItem("buttonAddClass",true);Page.enablePaletteItem("buttonAddAssociation",true);
+Page.enablePaletteItem("buttonAddGeneralization",true);Page.enablePaletteItem("buttonDeleteEntity",true);Page.initToggleTool("buttonAddClass");
+Page.initToggleTool("buttonAddAssociation");Page.initToggleTool("buttonAddGeneralization");Page.initToggleTool("buttonDeleteEntity")}};
+InlineEditor.elementChanged=function(f,a,d){var c=f.attr("name");var e=f.attr("id");if(c=="className"){var g=e.substr(0,e.length-"_name".length);
 DiagramEdit.classNameChanged(g,a,d)}else{if(c=="attributeEdit"){var b=e.substr(e.lastIndexOf("_")+1);var g=e.substr(0,e.length-"_attribute_".length-b.length);
 DiagramEdit.attributeNameChanged(g,b,a,d)}else{if(c=="methodEdit"){var b=e.substr(e.lastIndexOf("_")+1);var g=e.substr(0,e.length-"_method_".length-b.length);
 DiagramEdit.methodChanged(g,b,a,d)}else{if(c=="attributeNew"){var g=e.substr(0,e.length-"_newAttribute".length);DiagramEdit.attributeNew(g,d)
@@ -1852,10 +1852,11 @@ if(a.substr(0,42)=="http://cruise.site.uottawa.ca/umpleonline/"){a="http://try.u
 var e=d.substr(c,d.length)}var a=[b,e];return a};Page.setUmpleCode=function(b,c){var a=Page.splitUmpleCode(b);jQuery("#umpleLayoutEditorText").val(a[1]);
 if(Page.codeMirrorOn){Page.codeMirrorEditor.setValue(a[0])}jQuery("#umpleModelEditorText").val(a[0])};Page.setUmplePositioningCode=function(a){jQuery("#umpleLayoutEditorText").val(a)
 };Page.umpleCanvasId=function(){return"umpleCanvas"};Page.showDiagramSyncNeeded=function(c){var b=jQuery("#umpleCanvas");var a='<div id="syncNeededMessage" class="syncNeededMessage unselectable">Diagram is out of synchronization with the text due to selecting Manual Sync or an error in the text that has caused the compiler to produce no output. </div>';
-if(c&&!Page.diagramSyncNeededAppend){b.append(a);diagramSyncNeededAppend=true}else{if(!c){jQuery("#syncNeededMessage").remove();diagramSyncNeededAppend=false
-}}};Page.hideLoading=function(){var b="#topTextEditor";var c="#bottomTextEditor";var a="#"+Page.umpleCanvasId();if(Page.modelLoadingCount>0){Page.modelLoadingCount--
-}if(Page.layoutLoadingCount>0){Page.layoutLoadingCount--}if(Page.canvasLoadingCount>0){Page.canvasLoadingCount--}if(Page.modelLoadingCount===0){jQuery(b).hideLoading()
-}if(Page.layoutLoadingCount===0){jQuery(c).hideLoading()}if(Page.canvasLoadingCount===0){jQuery(a).hideLoading()}if(Page.modelLoadingCount===0&&Page.layoutLoadingCount===0&&Page.canvasLoadingCount===0){jQuery(".bookmarkableUrl").removeClass("disabled")
+if(c&&!Page.diagramSyncNeededAppend){b.append(a);Page.diagramSyncNeededAppend=true;Page.readOnly=true;UmpleSystem.redrawCanvas()}else{if(!c&&Page.diagramSyncNeededAppend){jQuery("#syncNeededMessage").remove();
+Page.diagramSyncNeededAppend=false;Page.readOnly=false;UmpleSystem.redrawCanvas()}}};Page.hideLoading=function(){var b="#topTextEditor";
+var c="#bottomTextEditor";var a="#"+Page.umpleCanvasId();if(Page.modelLoadingCount>0){Page.modelLoadingCount--}if(Page.layoutLoadingCount>0){Page.layoutLoadingCount--
+}if(Page.canvasLoadingCount>0){Page.canvasLoadingCount--}if(Page.modelLoadingCount===0){jQuery(b).hideLoading()}if(Page.layoutLoadingCount===0){jQuery(c).hideLoading()
+}if(Page.canvasLoadingCount===0){jQuery(a).hideLoading()}if(Page.modelLoadingCount===0&&Page.layoutLoadingCount===0&&Page.canvasLoadingCount===0){jQuery(".bookmarkableUrl").removeClass("disabled")
 }};Page.showModelLoading=function(){var a=jQuery("#topTextEditor");if(Page.modelLoadingCount==0){if(jQuery("#textEditorColumn").is(":visible")){a.showLoading()
 }jQuery(".bookmarkableUrl").addClass("disabled")}Page.modelLoadingCount++};Page.showLayoutLoading=function(){var a=jQuery("#bottomTextEditor");
 if(Page.layoutLoadingCount==0){jQuery(".bookmarkableUrl").addClass("disabled");if(a.is(":visible")){a.showLoading()}}Page.layoutLoadingCount++
