@@ -102,9 +102,14 @@ class UmpleInternalParser
     }
     else if (t.is("inlineComment"))
     {
-      analyzeComment(t);
+      analyzeComment(t, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
-    } 
+    }
+    else if (t.is("annotationComment"))
+    {
+      analyzeComment(t, true);
+      shouldConsumeComment = addToLastAttributeOrAssociation(t);
+    }     
     else if (t.is("multilineComment"))
     {
       analyzeMultilineComment(t);
@@ -218,7 +223,12 @@ class UmpleInternalParser
     }
     else if (token.is("inlineComment"))
     {
-      analyzeComment(token);
+      analyzeComment(token, false);
+      shouldConsumeComment = addToLastAttributeOrAssociation(token);
+    }
+    else if (token.is("annotationComment"))
+    {
+      analyzeComment(token, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
     }
     else if (token.is("multilineComment"))
@@ -328,7 +338,7 @@ class UmpleInternalParser
    * 
    * @param token The current token which has been flagged to be a comment to analyze, containing its value.
    */
-  private void analyzeComment(Token token)
+  private void analyzeComment(Token token, boolean isAnnotation)
   {
     String theValue = "";
     // Special comment directive to force umpleoutput directives to be added
@@ -340,10 +350,14 @@ class UmpleInternalParser
     if (!token.getValue().equals("$?[End_of_model]$?")) 
     {
       theValue = token.getValue();
-      lastComments.add(new Comment(theValue));
+      Comment theComment = new Comment(theValue);
+      if(isAnnotation) {
+        theComment.setAnnotation(true);
+      }
+      lastComments.add(theComment);
     }
   }
-
+  
   /**
    * Analyzes a comment to determine if it should be added into the list of currently parsed comments waiting to be added to
    * a class, attribute, association, method or otherwise.

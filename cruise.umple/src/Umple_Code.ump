@@ -4027,6 +4027,7 @@ class Comment
     //String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";
 
     String commentDelimiter;
+    List<String> deferredAnnotations = new ArrayList<String>();
 
     // Set the comment delimiter based on the type of the comment. (ex. For Javadoc prepend "*" before every comment line)
     if (type == "Hash")
@@ -4072,9 +4073,16 @@ class Comment
     }
 
     String output = "";
+    Boolean foundComment = false;
 
     for (Comment c : allComments)
     {
+      boolean couldTreatAsAnnotation = true;
+      
+      if (type == "RubyMultiline" || type == "RubyMultiline Internal") {
+        couldTreatAsAnnotation = false;
+      }
+      
       if (type == "Javadoc" || type == "Attribute Javadoc" || type == "Association Javadoc" || type == "Method Javadoc" || type == "RubyMultiline" || type == "RubyMultiline Internal")
       {
         int startIndex = 0;
@@ -4103,59 +4111,80 @@ class Comment
           c.setText(c.getText().substring(startIndex));
         }
       }
-      output += commentDelimiter + c.getText() + "\n";
+      
+      // If it is an annotation, add at end
+      if(c.isAnnotation() && couldTreatAsAnnotation) {
+        deferredAnnotations.add(c.getText());
+      }
+      else
+      {
+        foundComment = true;
+        output += commentDelimiter + c.getText() + "\n";
+      }
     }
 
     // Finalize the comment based on what type it was. (ex. For Javadoc place the "/**" and "*/" around the comment)
-    if (type == "Javadoc")
-    {
-      output = "/**\n" + output + " */";
-    }
-    else if (type == "Attribute Javadoc")
-    {
-      output = "  /**\n" + output + "   */";
-    }
-    else if (type == "Association Javadoc")
-    {
-      output = "  /**\n" + output + "   */";
-    }
-    else if (type == "Method Javadoc")
-    {
-      output = "  /**\n" + output + "   */";
-    }
-    else if (type == "RubyMultiline")
-    {
-      // initialize sb at least as large as the output with 1 comment
-      StringBuilder sb = new StringBuilder( output.length() + 2 ); 
-      sb.append("#");
-      char c;
-      for( int i=0; i < output.length(); ++i ){
-        c = output.charAt(i);
-        sb.append(c);
-        if( (c == '\n') && (i != output.length()-1) ){
-          sb.append("#");
-        }
+    if(foundComment) {
+      if (type == "Javadoc")
+      {
+        output = "/**\n" + output + " */";
       }
-      output = sb.toString();
-    }
-    else if (type == "RubyMultiline Internal")
-    {
-      // initialize sb at least as large as the output with 1 comment
-      StringBuilder sb = new StringBuilder( output.length() + 2 ); 
-      sb.append("#");
-      char c;
-      for( int i=0; i < output.length(); ++i ){
-        c = output.charAt(i);
-        sb.append(c);
-        if( (c == '\n') && (i != output.length()-1) ){
-          sb.append("  #");
-        }
+      else if (type == "Attribute Javadoc")
+      {
+        output = "  /**\n" + output + "   */";
       }
-      output = sb.toString();
+      else if (type == "Association Javadoc")
+      {
+        output = "  /**\n" + output + "   */";
+      }
+      else if (type == "Method Javadoc")
+      {
+        output = "  /**\n" + output + "   */";
+      }
+      else if (type == "RubyMultiline")
+      {
+        // initialize sb at least as large as the output with 1 comment
+        StringBuilder sb = new StringBuilder( output.length() + 2 ); 
+        sb.append("#");
+        char c;
+        for( int i=0; i < output.length(); ++i ){
+          c = output.charAt(i);
+          sb.append(c);
+          if( (c == '\n') && (i != output.length()-1) ){
+            sb.append("#");
+          }
+        }
+        output = sb.toString();
+      }
+      else if (type == "RubyMultiline Internal")
+      {
+        // initialize sb at least as large as the output with 1 comment
+        StringBuilder sb = new StringBuilder( output.length() + 2 ); 
+        sb.append("#");
+        char c;
+        for( int i=0; i < output.length(); ++i ){
+          c = output.charAt(i);
+          sb.append(c);
+          if( (c == '\n') && (i != output.length()-1) ){
+            sb.append("  #");
+          }
+        }
+        output = sb.toString();
+      }
+      else if (type == "Multiline")
+      {
+        output = "/*\n" + output + "*/";
+      }
     }
-    else if (type == "Multiline")
-    {
-      output = "/*\n" + output + "*/";
+    
+    // Process all deferred annotations if any
+    boolean firstAnnotation = true;
+    for (String d: deferredAnnotations) {
+      if(firstAnnotation) {
+        output = output + "\n";
+        firstAnnotation = false;
+      }
+      output = output + "  "+ d + "\n";
     }
 
     return output.trim();
