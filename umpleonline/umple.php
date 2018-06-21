@@ -170,15 +170,15 @@ $output = $dataHandle->readData('model.ump');
           Draw on the right, write (Umple) model code on the left, analyse and generate code from models.<br/>
 
     <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2" href="http://dl.umple.org" target="dlpage">Run in Docker for speed, or download</a>&nbsp;
+    <a class="button2" href="http://dl.umple.org" target="dlpage" title="Go to the page that gives instructions on how to download Umple for use in Docker, or Eclipse or on the command line">Run in Docker for speed, or download</a>&nbsp;
     </span>&nbsp; &nbsp;
           For help:
-                    
+    <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="http://manual.umple.org";} ?>                
     <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2" style="line-height: 1" href="http://manual.umple.org" target="helppage">User manual</a>&nbsp;
+    <a class="button2" style="line-height: 1" href="<?php echo $manpage ?>" target="helppage" title="Open the Umple user manual in a seprate tab" >User manual</a>&nbsp;
     <a class="button2" style="line-height: 1" href="http://questions.umple.org"
-       target="questionpage">Ask questions</a>&nbsp;
-    <a class="button2" style="line-height: 1" href="https://github.com/umple/umple/issues/new" target="issuepage">Report issue</a>&nbsp;
+       target="questionpage" title="Open a separate tab on the StackOverflow page where you can ask Umple community members questions">Ask questions</a>&nbsp;
+    <a class="button2" style="line-height: 1" href="https://github.com/umple/umple/issues/new" target="issuepage" title="Open a separate tab on the page where you can report an Umple bug or request an improvement">Report issue</a>&nbsp;
     </span>
 
         </p>
@@ -237,7 +237,7 @@ $output = $dataHandle->readData('model.ump');
     <?php if (isBookmark($dataHandle)) { ?>
       <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
     <?php } else { ?>
-      <a class="button2" id="topBookmarkable" href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Create Bookmarkable URL</a>
+      <a class="button2" id="topBookmarkable" href="bookmark.php?model=<?php echo $dataHandle->getName() ?>" title="Create a URL fpr this model that will allow you to come back and edit again. The URL will persist for a year after its last edit.">Create Bookmarkable URL</a>
     <?php } ?>
     </span>
     
