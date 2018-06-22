@@ -1,0 +1,168 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+/**
+ * Class comment 1
+ * Class comment 2
+ */
+  @dddddr
+// line 5 "model.ump"
+// line 27 "model.ump"
+public class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X Attributes
+  private String a;
+  private String b;
+  private String c;
+
+  /**
+   * rrrr
+   */
+  @ssss
+  @iiiii
+  private String i;
+  private String g;
+  private String q;
+  private String r;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X(String aA, String aB, String aC, String aI, String aG, String aQ, String aR)
+  {
+    a = aA;
+    b = aB;
+    c = aC;
+    i = aI;
+    g = aG;
+    q = aQ;
+    r = aR;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setA(String aA)
+  {
+    boolean wasSet = false;
+    a = aA;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setB(String aB)
+  {
+    boolean wasSet = false;
+    b = aB;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setC(String aC)
+  {
+    boolean wasSet = false;
+    c = aC;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setG(String aG)
+  {
+    boolean wasSet = false;
+    g = aG;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setQ(String aQ)
+  {
+    boolean wasSet = false;
+    q = aQ;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setR(String aR)
+  {
+    boolean wasSet = false;
+    r = aR;
+    wasSet = true;
+    return wasSet;
+  }
+
+  @wwwww
+  @xxxxx
+  public String getA()
+  {
+    return a;
+  }
+
+  /**
+   * zzzzz
+   */
+  public String getB()
+  {
+    return b;
+  }
+
+  public String getC()
+  {
+    return c;
+  }
+
+  public String getG()
+  {
+    return g;
+  }
+
+  public String getQ()
+  {
+    return q;
+  }
+
+  public String getR()
+  {
+    return r;
+  }
+
+  public void delete()
+  {}
+
+
+  @mmmm
+  // line 16 "model.ump"
+  public void m1(){
+    
+  }
+
+
+  /**
+   * This is a method comment
+   */
+  @nnnn
+  // line 21 "model.ump"
+   public void m2(int x){
+    return;
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "a" + ":" + getA()+ "," +
+            "b" + ":" + getB()+ "," +
+            "c" + ":" + getC()+ "," +
+            "g" + ":" + getG()+ "," +
+            "q" + ":" + getQ()+ "," +
+            "r" + ":" + getR()+ "]";
+  }
+}

@@ -1104,6 +1104,7 @@ class Comment
 
   // The text associated with the comment.
   text;
+  Boolean annotation = false;
 }
 
 class UmpleTemplate {

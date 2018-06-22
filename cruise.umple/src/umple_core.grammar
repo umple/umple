@@ -47,9 +47,12 @@ namespace- : namespace [namespace] ;
 entity- : [[mixsetDefinition]] | [[classDefinition]] | [[traitDefinition]] | [[fixml]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]] | [[templateDefinition]] | [[enumerationDefinition]]
 
 // Comments follow the same conventions as C-family languages. [*UmpleComments*]
-comment- : [[inlineComment]] | [[multilineComment]]
+comment- : [[inlineComment]] | [[multilineComment]] | [[annotationComment]]
 inlineComment- : // [*inlineComment]
 multilineComment- : /* [**multilineComment] */
+
+//Matches all forms of Java annotations including those with parentheses and values in quotes
+annotationComment- : [!annotationComment:@[a-zA-Z_][a-zA-Z0-9_-]*(\((("(\w|\s|-)*")|\w|\s|=|,|\.)*\))?]
 
 // The Debug statement turns on debugging in code generation. For developer use only
 debug- : [=debug] ;

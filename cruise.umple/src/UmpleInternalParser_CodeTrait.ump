@@ -208,7 +208,12 @@ class UmpleInternalParser
     }
     else if (token.is("inlineComment"))
     {
-      analyzeComment(token);
+      analyzeComment(token, false);
+      shouldConsumeComment = addToLastAttributeOrAssociation(token);
+    }
+    else if (token.is("annotationComment"))
+    {
+      analyzeComment(token, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
     }
     else if (token.is("multilineComment"))
