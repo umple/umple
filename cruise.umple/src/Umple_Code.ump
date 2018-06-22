@@ -4024,6 +4024,11 @@ class Comment
    */
   public static String format(String type,List<Comment> allComments)
   {
+    return format(type, allComments, true);
+  }
+
+  public static String format(String type,List<Comment> allComments, boolean allowAnnotations)
+  {
     //String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";
 
     String commentDelimiter;
@@ -4077,7 +4082,7 @@ class Comment
 
     for (Comment c : allComments)
     {
-      boolean couldTreatAsAnnotation = true;
+      boolean couldTreatAsAnnotation = allowAnnotations;
       
       if (type == "RubyMultiline" || type == "RubyMultiline Internal") {
         couldTreatAsAnnotation = false;

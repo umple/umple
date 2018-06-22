@@ -1,0 +1,162 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+// Class comment 1
+// @dddddr
+// Class comment 2
+class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X Attributes
+
+  /**
+   * @wwwww
+   * @xxxxx
+   */
+  private $a;
+
+  /**
+   * zzzzz
+   */
+  private $b;
+  private $c;
+
+  /**
+   * rrrr
+   * @ssss
+   * @iiiii
+   */
+  private $i;
+  private $g;
+  private $q;
+  private $r;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aA, $aB, $aC, $aI, $aG, $aQ, $aR)
+  {
+    $this->a = $aA;
+    $this->b = $aB;
+    $this->c = $aC;
+    $this->i = $aI;
+    $this->g = $aG;
+    $this->q = $aQ;
+    $this->r = $aR;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setA($aA)
+  {
+    $wasSet = false;
+    $this->a = $aA;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setB($aB)
+  {
+    $wasSet = false;
+    $this->b = $aB;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setC($aC)
+  {
+    $wasSet = false;
+    $this->c = $aC;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setG($aG)
+  {
+    $wasSet = false;
+    $this->g = $aG;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setQ($aQ)
+  {
+    $wasSet = false;
+    $this->q = $aQ;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setR($aR)
+  {
+    $wasSet = false;
+    $this->r = $aR;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getA()
+  {
+    return $this->a;
+  }
+
+  public function getB()
+  {
+    return $this->b;
+  }
+
+  public function getC()
+  {
+    return $this->c;
+  }
+
+  public function getG()
+  {
+    return $this->g;
+  }
+
+  public function getQ()
+  {
+    return $this->q;
+  }
+
+  public function getR()
+  {
+    return $this->r;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+
+  /**
+   * @mmmm
+   */
+  public function m1()
+  {
+    
+  }
+
+
+  /**
+   * @nnnn
+   * This is a method comment
+   */
+   public function m2(int $x)
+  {
+    return;
+  }
+
+}

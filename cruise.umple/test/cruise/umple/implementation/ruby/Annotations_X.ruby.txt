@@ -1,0 +1,131 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+# Class comment 1
+# Class comment 2
+
+  @dddddr
+class X
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #X Attributes - for documentation purposes
+
+  # @wwwww
+  # @xxxxx
+  #attr_reader :a, :b, :c, :i, :g, :q, :r
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_a, a_b, a_c, a_i, a_g, a_q, a_r)
+    @initialized = false
+    @deleted = false
+    @a = a_a
+    @b = a_b
+    @c = a_c
+    @i = a_i
+    @g = a_g
+    @q = a_q
+    @r = a_r
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_a(a_a)
+    was_set = false
+    @a = a_a
+    was_set = true
+    was_set
+  end
+
+  def set_b(a_b)
+    was_set = false
+    @b = a_b
+    was_set = true
+    was_set
+  end
+
+  def set_c(a_c)
+    was_set = false
+    @c = a_c
+    was_set = true
+    was_set
+  end
+
+  def set_g(a_g)
+    was_set = false
+    @g = a_g
+    was_set = true
+    was_set
+  end
+
+  def set_q(a_q)
+    was_set = false
+    @q = a_q
+    was_set = true
+    was_set
+  end
+
+  def set_r(a_r)
+    was_set = false
+    @r = a_r
+    was_set = true
+    was_set
+  end
+
+  def get_a
+    @a
+  end
+
+  def get_b
+    @b
+  end
+
+  def get_c
+    @c
+  end
+
+  def get_g
+    @g
+  end
+
+  def get_q
+    @q
+  end
+
+  def get_r
+    @r
+  end
+
+  def delete
+    @deleted = true
+  end
+
+
+  # @mmmm
+  def m1 ()
+    
+  end
+
+
+  # @nnnn
+  # This is a method comment
+  def m2 (x)
+    return;
+  end
+
+
+
+end

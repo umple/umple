@@ -340,6 +340,7 @@ class UmpleInternalParser
    */
   private void analyzeComment(Token token, boolean isAnnotation)
   {
+  
     String theValue = "";
     // Special comment directive to force umpleoutput directives to be added
     // In every class

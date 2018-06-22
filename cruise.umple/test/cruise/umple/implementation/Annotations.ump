@@ -1,0 +1,24 @@
+// Class comment 1
+@dddddr
+// Class comment 2
+class X {
+  @wwwww
+  a; @xxxxx
+  b; // zzzzz
+  c;
+  // rrrr
+  @ssss
+  internal String i; @iiiii
+  g;
+
+  @mmmm
+  m1() {}
+  
+  @nnnn
+  // This is a method comment
+  public void m2 (int x) {
+      return;
+  }
+  q;
+  r;
+}
