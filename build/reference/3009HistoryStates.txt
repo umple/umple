@@ -21,9 +21,6 @@ a state machine diagram, the deep history appears as H*.
 to later return to exactly what it was doing. Deep history is often appropriate when returning to normal operation, but sometimes
 regular history is needed in order to allow some form of reinitialization of a substate. When transitioning to history, if there is more than one level of nesting (i.e. the history state has substates), the state machine will enter the start substate of the history state.</p>
 
-@@syntax
-
- 
 @@example
 @@source manualexamples/HistoryStates1.ump &diagramtype=state
 @@endexample
