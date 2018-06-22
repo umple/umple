@@ -6,12 +6,18 @@ class UmpleToJava {
     <<# if (customSetPrefixCode != null) {
       addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 
       append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+      <<# if (customGetPrefixCode != null) {
+      addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPrefixCode,gen.translate("getMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
       <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"at_s", uClass,gen.translate("parameterOne",av)):"")>>
       wasSet = super.<<= gen.translate("setMethod",av) >>(<<=gen.translate("parameterOne",av)>>);
       <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"at_s", uClass):"")>>
     <<# if (customSetPostfixCode != null) {
       addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
       append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+      <<# if (customGetPostfixCode != null) {
+      addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPostfixCode,gen.translate("getMethod",av)); 
+      append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } #>>
     return wasSet;
   }
 !>>
