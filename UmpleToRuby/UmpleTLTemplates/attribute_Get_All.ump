@@ -5,10 +5,12 @@ use attribute_GetDefaultedCodeInjection.ump;
 use attribute_GetDerived.ump;
 use attribute_GetDerivedCodeInjection.ump;
 use attribute_GetMany.ump;
+use attribute_GetManySubclass.ump;
 use attribute_GetUnique.ump;
 use attribute_GetUniqueCodeInjection.ump;
 use attribute_HasUnique.ump;
 use attribute_HasUniqueCodeInjection.ump;
+use attribute_GetSubclass.ump;
 
 
 class UmpleToRuby {
@@ -125,6 +127,37 @@ class UmpleToRuby {
         #>><<@ UmpleToRuby.attribute_Get >><<#
       }
       appendln(realSb, "");
+    }
+  }
+  
+  if(uClass.getExtendsClass()!=null)
+  {
+    for(Attribute av:uClass.getExtendsClass().getAttributes())
+    {
+      if (av.isConstant())
+      {
+        continue;
+      }
+
+      List<TraceItem> traceItems = av.getTraced("getMethod", uClass.getExtendsClass());
+
+      gen.setParameterConstraintName(av.getName());
+
+	  String customGetPrefixCode = GeneratorHelper.toCode(gen.getApplicableCodeInjections(uClass, "before", "getMethod", av));
+      String customGetPostfixCode = GeneratorHelper.toCode(gen.getApplicableCodeInjections(uClass, "after", "getMethod", av));
+	  
+	  String customGetManyPrefixCode = GeneratorHelper.toCode(gen.getApplicableCodeInjections(uClass, "before", "getManyMethod", av));
+      String customGetManyPostfixCode = GeneratorHelper.toCode(gen.getApplicableCodeInjections(uClass, "after", "getManyMethod", av));
+	  
+	  if (customGetManyPrefixCode!=null || customGetManyPostfixCode!=null)
+      {
+        #>><<@ UmpleToRuby.attribute_GetManySubclass >><<#
+      }
+      else if(customGetPrefixCode!=null||customGetPostfixCode!=null)
+      {
+        #>><<@ UmpleToRuby.attribute_GetSubclass >><<#
+      }
+              
     }
   }
   gen.setParameterConstraintName("");

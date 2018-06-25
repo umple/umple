@@ -1,0 +1,84 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Example extends Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aAttr)
+  {
+    parent::__construct($aAttr);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getAttr()
+  {
+    // line 13 "CodeInjectionTestSubclass.ump"
+    /*before getAttr*/
+    // END OF UMPLE BEFORE INJECTION
+    $aAttr = parent::getAttr();
+    // line 18 "CodeInjectionTestSubclass.ump"
+    /*after getAttr*/
+    // END OF UMPLE AFTER INJECTION
+    return $aAttr;
+  }
+  
+  public function getDerivedAttr()
+  {
+    // line 14 "CodeInjectionTestSubclass.ump"
+    /*before getDerivedAttr*/
+    // END OF UMPLE BEFORE INJECTION
+    $aDerivedAttr = parent::getDerivedAttr();
+    // line 19 "CodeInjectionTestSubclass.ump"
+    /*after getDerivedAttr*/
+    // END OF UMPLE AFTER INJECTION
+    return $aDerivedAttr;
+  }
+  
+  public function getListAttr($index)
+  {
+    // line 15 "CodeInjectionTestSubclass.ump"
+    /*before getListAttr*/
+    // END OF UMPLE BEFORE INJECTION
+    $aListAttr = parent::getListAttr($index);
+    // line 20 "CodeInjectionTestSubclass.ump"
+    /*after getListAttr*/
+    // END OF UMPLE AFTER INJECTION
+    return $aListAttr;
+  }
+
+  public function getDefaultedAttr()
+  {
+    // line 16 "CodeInjectionTestSubclass.ump"
+    /*before getDefaultedAttr*/
+    // END OF UMPLE BEFORE INJECTION
+    $aDefaultedAttr = parent::getDefaultedAttr();
+    // line 21 "CodeInjectionTestSubclass.ump"
+    /*after getDefaultedAttr*/
+    // END OF UMPLE AFTER INJECTION
+    return $aDefaultedAttr;
+  }
+  
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    parent::delete();
+  }
+
+}
+?>

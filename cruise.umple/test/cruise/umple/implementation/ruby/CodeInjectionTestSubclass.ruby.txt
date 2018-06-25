@@ -1,0 +1,75 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.27.1.3860.40605acef modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class Example < Mentor
+
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_attr)
+    super(a_attr)
+    @initialized = false
+    @deleted = false
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_attr
+    // line 13 "A.ump"
+    #before getAttr
+    // END OF UMPLE BEFORE INJECTION
+    a_attr = super
+    // line 18 "A.ump"
+    #after getAttr
+    // END OF UMPLE AFTER INJECTION
+    a_attr
+  end
+  
+  def get_derivedAttr
+    // line 14 "A.ump"
+    #before getDerivedAttr
+    // END OF UMPLE BEFORE INJECTION
+    a_derivedAttr = super
+    // line 19 "A.ump"
+    #after getDerivedAttr
+    // END OF UMPLE AFTER INJECTION
+    a_derivedAttr
+  end
+  
+  def get_listAttr(index)
+    // line 15 "A.ump"
+    #before getListAttr
+    // END OF UMPLE BEFORE INJECTION
+    a_listAttr = super(index)
+    // line 20 "A.ump"
+    #after getListAttr
+    // END OF UMPLE AFTER INJECTION
+    a_listAttr
+  end
+
+  def get_defaultedAttr
+    // line 16 "A.ump"
+    #before getDefaultedAttr
+    // END OF UMPLE BEFORE INJECTION
+    a_defaultedAttr = super
+    // line 21 "A.ump"
+    #after getDefaultedAttr
+    // END OF UMPLE AFTER INJECTION
+    a_defaultedAttr
+  end
+  
+  def delete
+    @deleted = true
+    super
+  end
+
+end

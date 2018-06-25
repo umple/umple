@@ -1,0 +1,10 @@
+class UmpleToRuby {
+    attribute_GetManySubclass <<!
+  def <<=gen.translate("getMethod",av)>>(index)
+    <<# if (customGetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    <<=gen.translate("parameterOne",av)>> = super(index)
+    <<# if (customGetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } #>>
+    <<=gen.translate("parameterOne",av)>>
+  end
+!>>
+}

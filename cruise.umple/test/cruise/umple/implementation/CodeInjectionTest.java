@@ -38,4 +38,17 @@ public class CodeInjectionTest extends TemplateTest
 	  assertUmpleTemplateFor("CodeInjectionStateMachineTest.ump",languagePath + "/CodeInjectionStateMachineTest."+ languagePath +".txt","Example");
   }
   
+  @Test
+  public void SubclassInjection()
+  {
+    if (languagePath == "ruby")
+    {
+      assertUmpleTemplateFor("RubyCodeInjectionTestSubclass.ump",languagePath + "/CodeInjectionTestSubclass."+ languagePath +".txt","Example");
+    }
+    else
+    {
+      assertUmpleTemplateFor("CodeInjectionTestSubclass.ump",languagePath + "/CodeInjectionTestSubclass."+ languagePath +".txt","Example");
+    }
+  }
+  
 }

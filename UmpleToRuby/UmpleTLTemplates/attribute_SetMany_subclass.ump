@@ -5,11 +5,12 @@ class UmpleToRuby {
     <<# if (customAddPrefixCode != null) { 
       append(realSb, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } #>>
       <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"at_a", uClass,gen.translate("parameterOne",av)):"")>>
-      was_added = super
+    was_added = super
       <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"at_a", uClass):"")>>
     <<# if (customAddPostfixCode != null) { 
       append(realSb, "{0}\n",GeneratorHelper.doIndent(customAddPostfixCode, "    "));
     } #>>
     was_added
-  end!>>
+  end
+  !>>
 }
