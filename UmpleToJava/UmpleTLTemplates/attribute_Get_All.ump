@@ -2,14 +2,18 @@ use attribute_Get.ump;
 use attribute_GetCodeInjection.ump;
 use attribute_GetDefaulted.ump;
 use attribute_GetDefaultedCodeInjection.ump;
+use attribute_GetDefaultedSubclass.ump;
 use attribute_GetDerived.ump;
 use attribute_GetDerivedCodeInjection.ump;
+use attribute_GetDerivedSubclass.ump;
 use attribute_GetMany.ump;
+use attribute_GetManySubclass.ump;
 use attribute_GetUnique.ump;
 use attribute_GetUniqueCodeInjection.ump;
+use attribute_GetUniqueSubclass.ump;
+use attribute_GetSubclass.ump;
 use attribute_HasUnique.ump;
 use attribute_HasUniqueCodeInjection.ump;
-
 
 class UmpleToJava {
     attribute_Get_All <<!<</*attribute_Get_All*/>><<#
@@ -125,6 +129,59 @@ class UmpleToJava {
         #>><<@ UmpleToJava.attribute_Get >><<#
       }
       appendln(realSb, "");
+    }
+  }
+  
+  if(uClass.getExtendsClass()!=null)
+  {
+    for(Attribute av:uClass.getExtendsClass().getAttributes())
+    {
+      if (av.isConstant())
+      {
+        continue;
+      }
+
+      List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
+
+      gen.setParameterConstraintName(av.getName());
+
+	  String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
+	  String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
+
+	  String customGetDefaultPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getDefaultMethod",av)));
+	  String customGetDefaultPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getDefaultMethod",av)));
+
+	  String customGetManyPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getManyMethod",av)));
+	  String customGetManyPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getManyMethod",av)));
+	  
+	  String customGetUniquePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getUniqueMethod",av)));
+	  String customGetUniquePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getUniqueMethod",av)));
+
+      
+      if (customGetDefaultPrefixCode!=null || customGetDefaultPostfixCode!=null)
+      {
+        #>><<@ UmpleToJava.attribute_GetDefaultedSubclass >><<#
+      }
+      else if (customGetManyPrefixCode!=null || customGetManyPostfixCode!=null)
+      {
+        #>><<@ UmpleToJava.attribute_GetManySubclass >><<#
+      }
+      else if (customGetUniquePrefixCode!=null || customGetUniquePostfixCode!=null)
+      {
+        #>><<@ UmpleToJava.attribute_GetUniqueSubclass >><<#
+      }
+      else if(customGetPrefixCode!=null||customGetPostfixCode!=null)
+      {
+        if (av.getIsDerived())
+        {
+          #>><<@ UmpleToJava.attribute_GetDerivedSubclass >><<#
+        }
+        else
+        {
+          #>><<@ UmpleToJava.attribute_GetSubclass >><<#
+        }
+      }
+              
     }
   }
   gen.setParameterConstraintName("");

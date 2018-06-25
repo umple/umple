@@ -1,0 +1,11 @@
+class UmpleToPhp {
+    attribute_GetManySubclass <<!<</*attribute_GetManySubclass*/>>
+  public function <<=gen.translate("getMethod",av)>>($index)
+  {
+    <<# if (customGetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    $<<=gen.translate("parameterOne",av)>> = parent::<<=gen.translate("getMethod",av)>>($index);
+    <<# if (customGetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } #>>
+    return $<<=gen.translate("parameterOne",av)>>;
+  }
+!>>
+}

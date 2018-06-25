@@ -1,0 +1,79 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+import java.util.*;
+
+// line 9 "A.ump"
+public class Example extends Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Example(String aAttr)
+  {
+    super(aAttr);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getAttr()
+  {
+    // line 12 "A.ump"
+    /*before getAttr*/
+    // END OF UMPLE BEFORE INJECTION
+    String aAttr =  super.getAttr();    // line 17 "A.ump"
+    /*after getAttr*/
+    // END OF UMPLE AFTER INJECTION
+
+    return aAttr;
+  }  /* Code from template attribute_GetDerivedSubclass */
+  public int getDerivedAttr()
+  {
+    // line 13 "A.ump"
+    /*before getDerivedAttr*/
+    // END OF UMPLE BEFORE INJECTION
+    int aDerivedAttr = super.getDerivedAttr();
+    // line 18 "A.ump"
+    /*after getDerivedAttr*/
+    // END OF UMPLE AFTER INJECTION
+    return aDerivedAttr;
+  }
+  /* Code from template attribute_GetManySubclass */
+  public String getListAttr(int index)
+  {
+    // line 14 "A.ump"
+    /*before getListAttr*/
+    // END OF UMPLE BEFORE INJECTION
+    String aListAttr = super.getListAttr(index);
+    // line 19 "A.ump"
+    /*after getListAttr*/
+    // END OF UMPLE AFTER INJECTION
+    return aListAttr;
+  }
+
+  public String getDefaultedAttr()
+  {
+    // line 15 "A.ump"
+    /*before getDefaultedAttr*/
+    // END OF UMPLE BEFORE INJECTION
+    String aDefaultedAttr =  super.getDefaultedAttr();    // line 20 "A.ump"
+    /*after getDefaultedAttr*/
+    // END OF UMPLE AFTER INJECTION
+
+    return aDefaultedAttr;
+  }
+  public void delete()
+  {
+    super.delete();
+  }
+
+}
