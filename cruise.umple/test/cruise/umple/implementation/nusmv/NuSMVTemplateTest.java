@@ -11,7 +11,6 @@ import org.junit.Test;
 import cruise.umple.implementation.TemplateTest;
 import cruise.umple.util.SampleFileWriter;
 
-@SuppressWarnings("deprecation")
 public class NuSMVTemplateTest extends TemplateTest{
 	  @Before
 	  public void setUp()

@@ -1,6 +1,7 @@
 namespace cruise.umple.nusmv;
 
 use NuSMVMetamodel.ump;
+use ModelOptimizationEngine.ump;
 
 class NuSMVCoordinator
 {
@@ -57,7 +58,7 @@ class NuSMVCoordinator
 			vdec.addVariableSpecifier(vs);
 		
 		ModuleBody body = new ModuleBody( vdec );
-  		body.addModuleElement( vdec );
+			body.addModuleElement( vdec );
 		
 		List<VariableSpecifier> specifiers = generateSpecifiersForInputAttributesOf( uClass );
 		if( specifiers.size() > 0) {
@@ -65,31 +66,28 @@ class NuSMVCoordinator
 			for( int i = 1; i < specifiers.size(); i++ )
 				ivdec.addVariableSpecifier( specifiers.get(i) );
 			body.addModuleElement( ivdec );
-			
-			//System.out.println("I am here!");
 		}
 		
-  		//Adding define declaration to module body
-  		body.addModuleElement( getDefineDeclaration( sm, uClass ) );
-  		body.addModuleElement( getAssignConstraint( sm, sm) );
+		//Adding define declaration to module body
+		body.addModuleElement( getDefineDeclaration( sm, uClass ) );
+		body.addModuleElement( getAssignConstraint( sm, sm) );
 		body.addModuleElement( getEventAssignConstraint( sm ) );
 		
 		//Adding assign constraints for all the attributes
 		for( AssignConstraint constraint : getAssignConstraint( uClass ))
 			body.addModuleElement( constraint );
-		
-		
+			
 		//generateSpecForTransitionDeterminism( sm, body );
-  		NuSMVModule module = new NuSMVModule( changeNameCase( getAbsoluteName( sm, sm ), 1 ), body );
-  		generateParameters( module, sm, sm ); 
-  		return module;
+		NuSMVModule module = new NuSMVModule( changeNameCase( getAbsoluteName( sm, sm ), 1 ), body );
+		generateParameters( module, sm, sm ); 
+		return module;
   	}
 	
 	private String getAbsoluteName( StateMachine root, StateMachine sm ) {
 		return root.getUmpleClass().getName() + changeNameCase(sm.getFullName(),1);
 	}
   	
-	private <E> boolean has( Collection<E> objectList, E whatToFind ) {
+	public <E> boolean has( Collection<E> objectList, E whatToFind ) {
   		boolean yes = false;
   		for(E st : objectList) {
   			if( st.equals(whatToFind) ) {
@@ -120,17 +118,17 @@ class NuSMVCoordinator
 	
 	private State getParentState( StateMachine sm ) {
 		State bioParent = sm.getParentState();
-		State gParent = sm.getParentState().getStateMachine().getParentState();
+		State gParent = bioParent.getStateMachine().getParentState();
 		if( gParent != null && gParent.isIsConcurrent() )
 			bioParent = gParent;
 		return bioParent;	
 	}
   	
-  	private void generateParameters( NuSMVModule module, StateMachine parent, StateMachine sm ) {
+  private void generateParameters( NuSMVModule module, StateMachine parent, StateMachine sm ) {
 		List<String> dependencySet = getDependencySet( parent, sm);
 		for(String stm : dependencySet) 
 			module.addParameter( "_"+changeNameCase(stm,0) );
-  	}
+  }
   	
 	private VariableSpecifier generateVariableSpecifierForMain( StateMachine sm, StateMachine root ) {
 		String identifier = changeNameCase( getAbsoluteName( root, sm ), 0);
@@ -144,7 +142,7 @@ class NuSMVCoordinator
 	}
 	
 	//Created to generate the list of state machine
-	private List<StateMachine> generateStateMachineList( StateMachine root ) {
+	public List<StateMachine> generateStateMachineList( StateMachine root ) {
 		List<StateMachine> nestedMachines = new ArrayList<StateMachine>();
 		if( root.getParentState() == null )
 			nestedMachines.add(root);
@@ -155,7 +153,7 @@ class NuSMVCoordinator
 	}
 	
 	//Computes the list of embeddedStateMachines of a composite state
-	private List<StateMachine> getEmbeddedStateMachines( State state ) {
+	public List<StateMachine> getEmbeddedStateMachines( State state ) {
 		List<StateMachine> nestedMachines = new ArrayList<StateMachine>();
  
 		for( StateMachine stm : state.getNestedStateMachines() ) {
@@ -202,7 +200,7 @@ class NuSMVCoordinator
 		return source.getImmediateNestedStateMachines().get(0);
 	}
 	
-	private List<State> getCompositeStates(StateMachine sm) {
+	public List<State> getCompositeStates(StateMachine sm) {
 		List<State> temp = new ArrayList<State>();
 		for(State st : sm.getStates())
 			if(st.hasNestedStateMachines())
@@ -239,7 +237,7 @@ class NuSMVCoordinator
 	
 	
 	//Generates a String builder for the modeling elements
-	public StringBuilder generateModel( UmpleModel uModel, List<NuSMVModule> capsules, List<CTLSpecification> reachability, List<ModuleElement> properties, List<InvarConstraint> nonDeterminism ) { 
+	public StringBuilder generateModel( UmpleModel uModel, List<NuSMVModule> capsules, List<CTLSpecification> reachability, List<ModuleElement> properties, List<InvarConstraint> nonDeterminism, int option ) { 
 		
 		List<NuSMVModule> temp = new ArrayList<NuSMVModule>();
 		StringBuilder output = new StringBuilder();
@@ -250,6 +248,13 @@ class NuSMVCoordinator
 			//Generating the capsule module for the statemachine
 			for( StateMachine sMachine : uClass.getStateMachines() ) {
 		
+				if( option == 1 ) {
+
+					//optimization begins here whenever necessary
+					ModelOptimizer mop = new ModelOptimizer();
+					sMachine = mop.optimize( sMachine );
+				}
+
 				//Generates the parent state machine  		
 				NuSMVModule module = generateParentModule( sMachine, uClass );
 				temp.add(module);
@@ -420,6 +425,7 @@ class NuSMVCoordinator
 		}
 	}
 	
+	//work on this later for option argument - (currently being set - 0)
 	public void analyzeModel( UmpleModel model ){
 		
 		List<NuSMVModule> capsules = new ArrayList<NuSMVModule>();
@@ -429,9 +435,9 @@ class NuSMVCoordinator
 		String npath = model.getUmpleFile().getPath() + File.separator;
 		String fileName = "sh " + npath + model.getUmpleFile().getSimpleFileName()+".sh";
 
-		StringBuilder output = generateModel( model, capsules, reachability, properties, nonDeterminism );
+		StringBuilder output = generateModel( model, capsules, reachability, properties, nonDeterminism, 0 );
 		for( ModuleElement element : properties ) {
-			StringBuilder myOutput = generateModules( model, true );
+			StringBuilder myOutput = generateModules( model, true, 0 );
 			appendConstraint( myOutput, element );
 			prepareAnalysisFiles( model, myOutput, element );
     	
@@ -473,27 +479,27 @@ class NuSMVCoordinator
 	}
 	
 	//Generates modules from an Umple model
-	public StringBuilder generateModules( UmpleModel uModel, boolean temp ) {
+	public StringBuilder generateModules( UmpleModel uModel, boolean temp, int option ) {
 	
   		List<NuSMVModule> capsules = new ArrayList<NuSMVModule>();
 		List<CTLSpecification> reachability = new ArrayList<CTLSpecification>();
 		List<InvarConstraint> nonDeterminism = new ArrayList<InvarConstraint>();
 		List<ModuleElement> properties = new ArrayList< ModuleElement >();
 
-		StringBuilder output = generateModel( uModel, capsules, reachability, properties, nonDeterminism );		
+		StringBuilder output = generateModel( uModel, capsules, reachability, properties, nonDeterminism, option );		
   		return output;
   	}
   	
 	
 	//Generates modules from an Umple model
-	public StringBuilder generateModules( UmpleModel uModel ) {
+	public StringBuilder generateModules( UmpleModel uModel, int option ) {
 	
-  		List<NuSMVModule> capsules = new ArrayList<NuSMVModule>();
+  	List<NuSMVModule> capsules = new ArrayList<NuSMVModule>();
 		List<CTLSpecification> reachability = new ArrayList<CTLSpecification>();
 		List<InvarConstraint> nonDeterminism = new ArrayList<InvarConstraint>();
 		List<ModuleElement> properties = new ArrayList<ModuleElement>();
 
-		StringBuilder output = generateModel( uModel, capsules, reachability, properties, nonDeterminism );
+		StringBuilder output = generateModel( uModel, capsules, reachability, properties, nonDeterminism, option );
 		if( nonDeterminism.size() > 0 ) {
 			output.append("\n   -- The following properties are specified to certify that this model is free of non-determinism. \n");	
 			for( InvarConstraint element : nonDeterminism )
@@ -550,7 +556,7 @@ class NuSMVCoordinator
   		return module;
   	}
   	
-  	private int getObjectIdentity( StateMachine sm, Object obj) {
+  	public int getObjectIdentity( StateMachine sm, Object obj) {
   		int pos = 1;
 		if( obj instanceof Transition ){
 			for(Transition trans : sm.getAllTransitions() ) {
@@ -1539,16 +1545,16 @@ class NuSMVCoordinator
   			ddec.addDefineBody(dBody);
   		}
 
-			for( Guard gr : sm.getAllGuards() ) {
+		for( Guard gr : sm.getAllGuards() ) {
   			DefineBody dBody = new DefineBody("g"+getObjectIdentity( sm, gr) , generateRHS( gr ));
   			ddec.addDefineBody(dBody);
   		}
 
-			for( Attribute attr : uClass.getAllAttributes() )
-				if( attr.isConstant() ) {
-					DefineBody dBody = new DefineBody( attr.getName() , new BasicExpression( attr.getValue() ) );
+		for( Attribute attr : uClass.getAllAttributes() )
+			if( attr.isConstant() ) {
+				DefineBody dBody = new DefineBody( attr.getName() , new BasicExpression( attr.getValue() ) );
   				ddec.addDefineBody(dBody);
-				}
+			}
       
   		//ddec.removeDefineBody(dnull);
   		return ddec;

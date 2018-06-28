@@ -1,0 +1,102 @@
+-- This file is generated from GrantApplication.ump --
+
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language! --
+
+
+-- This defines a NuSMV module for GrantApplicationStatus --
+MODULE GrantApplicationStatus
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Status_Planned , Status_InProgress , Status_EvaluationByInstitution , Status_VerifiedByInstitution , Status_SubmittedByInstitution , Status_UnderAdministrativeReview , Status_UnderExpertReview , Status_AwaitingFinalDecision , Status_Accepted , Status_Rejected , Status_Withdrawn };
+     event : { ev_reOpen , ev_returnToInstitition , ev_expertReviewsReturned , ev_submit , ev_verified , ev_tryAgain , ev_acceptForReview , ev_returnToResearcher , ev_acceptForExpertReview , ev_bypassExpertReviewDueToMinorChanges , ev_editByResearcher , ev_createApplication , ev_minorRevisionsNeeded , ev_reject , ev_researcherDeclaresComplete , ev_editByInstitution , ev_submissionCheck , ev_finalAccept , ev_withdraw , ev_null };
+     adminCheckOk : boolean;
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     status_stable :=  !( event = ev_returnToInstitition | event = ev_submit | event = ev_tryAgain | event = ev_returnToResearcher | event = ev_bypassExpertReviewDueToMinorChanges | event = ev_createApplication | event = ev_reject | event = ev_editByInstitution | event = ev_finalAccept | event = ev_reOpen | event = ev_expertReviewsReturned | event = ev_verified | event = ev_acceptForReview | event = ev_acceptForExpertReview | event = ev_editByResearcher | event = ev_minorRevisionsNeeded | event = ev_researcherDeclaresComplete | event = ev_submissionCheck | event = ev_withdraw );
+     t1 := event = ev_createApplication & state = Status_Planned;
+     t2 := event = ev_editByResearcher & state = Status_InProgress;
+     t3 := event = ev_researcherDeclaresComplete & state = Status_InProgress;
+     t4 := event = ev_returnToResearcher & state = Status_EvaluationByInstitution;
+     t5 := event = ev_editByInstitution & state = Status_EvaluationByInstitution;
+     t6 := event = ev_verified & state = Status_EvaluationByInstitution;
+     t7 := event = ev_reOpen & state = Status_VerifiedByInstitution;
+     t8 := event = ev_submit & state = Status_VerifiedByInstitution;
+     t9 := event = ev_submissionCheck & state = Status_SubmittedByInstitution & g1;
+     t10 := event = ev_submissionCheck & state = Status_SubmittedByInstitution & g2;
+     t11 := event = ev_withdraw & state = Status_SubmittedByInstitution;
+     t12 := event = ev_acceptForReview & state = Status_SubmittedByInstitution;
+     t13 := event = ev_returnToInstitition & state = Status_UnderAdministrativeReview;
+     t14 := event = ev_acceptForExpertReview & state = Status_UnderAdministrativeReview;
+     t15 := event = ev_bypassExpertReviewDueToMinorChanges & state = Status_UnderAdministrativeReview;
+     t16 := event = ev_withdraw & state = Status_UnderAdministrativeReview;
+     t17 := event = ev_expertReviewsReturned & state = Status_UnderExpertReview;
+     t18 := event = ev_withdraw & state = Status_UnderExpertReview;
+     t19 := event = ev_minorRevisionsNeeded & state = Status_AwaitingFinalDecision;
+     t20 := event = ev_finalAccept & state = Status_AwaitingFinalDecision;
+     t21 := event = ev_reject & state = Status_AwaitingFinalDecision;
+     t22 := event = ev_tryAgain & state = Status_Rejected;
+     t23 := event = ev_tryAgain & state = Status_Withdrawn;
+     g1 := (adminCheckOk & (!adminCheckOk));
+     g2 := !adminCheckOk;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := Status_Planned;
+     next( state ) := case
+       t2 | t22 | t1 | t4 | t23 : Status_InProgress;
+       t3 | t7 | t13 | t5 | t10 | t19 : Status_EvaluationByInstitution;
+       t6 : Status_VerifiedByInstitution;
+       t8 | t9 : Status_SubmittedByInstitution;
+       t12 : Status_UnderAdministrativeReview;
+       t14 : Status_UnderExpertReview;
+       t15 | t17 : Status_AwaitingFinalDecision;
+       t20 : Status_Accepted;
+       t21 : Status_Rejected;
+       t16 | t11 | t18 : Status_Withdrawn;
+       TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       status_stable : { ev_reOpen , ev_returnToInstitition , ev_expertReviewsReturned , ev_submit , ev_verified , ev_tryAgain , ev_acceptForReview , ev_returnToResearcher , ev_acceptForExpertReview , ev_bypassExpertReviewDueToMinorChanges , ev_editByResearcher , ev_createApplication , ev_minorRevisionsNeeded , ev_reject , ev_researcherDeclaresComplete , ev_editByInstitution , ev_submissionCheck , ev_finalAccept , ev_withdraw };
+       TRUE : ev_null;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "adminCheckOk" of this NuSMV module --
+   ASSIGN
+     init( adminCheckOk ) := FALSE;
+
+-- This defines a NuSMV module for GrantApplicationStatus_Machine --
+MODULE GrantApplicationStatus_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     grantApplicationStatus : GrantApplicationStatus;
+
+-- This defines a NuSMV module for main --
+MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     grantApplicationStatus_Machine : GrantApplicationStatus_Machine;
+
+   -- The following properties are specified to certify that this model is free of non-determinism. 
+   INVARSPEC   ( grantApplicationStatus_Machine.grantApplicationStatus.t9 & grantApplicationStatus_Machine.grantApplicationStatus.t10 -> next( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_SubmittedByInstitution & grantApplicationStatus_Machine.grantApplicationStatus.state = Status_EvaluationByInstitution ) )
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_Planned )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_InProgress )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_EvaluationByInstitution )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_VerifiedByInstitution )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_SubmittedByInstitution )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_UnderAdministrativeReview )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_UnderExpertReview )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_AwaitingFinalDecision )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_Accepted )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_Rejected )
+   CTLSPEC   EF( grantApplicationStatus_Machine.grantApplicationStatus.state = Status_Withdrawn )

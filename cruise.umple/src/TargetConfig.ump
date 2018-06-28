@@ -1,0 +1,30 @@
+namespace cruise.umple.nusmv;
+
+class TargetConfiguration {
+
+	depend cruise.umple.compiler.*;
+	depend java.util.*;
+
+	1 -> 1 State greatest_default_state;
+	1 -> 1..* State greatest_descendant_states;
+
+	public String toString() {
+	
+		String descendants = "";
+
+		for( State state : getGreatest_descendant_states() )
+			descendants += " " + state;
+
+		return "("+greatest_default_state+ " , <" + descendants +" >)";
+	}
+}
+
+
+class ExplorationResult {
+
+	depend cruise.umple.compiler.*;
+	depend java.util.*;
+
+	HashMap<State, TargetConfiguration> map = new HashMap<State, TargetConfiguration>();
+	1 -> 1 StateMachine;
+}
