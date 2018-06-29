@@ -251,6 +251,7 @@ class UmpleInternalParser
   // Delegate function to analyze a token and send it to the write
   private void analyzeToken(Token t, int analysisStep)
   {
+    analyzeMixsetUseStatement(t, analysisStep);
     analyzeUSE(t, analysisStep);
     analyzeCoreToken(t,analysisStep);
     analyzeEnumerationToken(t, analysisStep);

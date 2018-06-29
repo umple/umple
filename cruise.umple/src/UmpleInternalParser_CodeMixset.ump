@@ -62,7 +62,57 @@ class UmpleInternalParser
 	aToken.addSubToken(new Token("entityType","class") );
 	analyzeMixset(aToken);		
 	}
-
+/*
+ * This method handels mixset use statements appearing in both code and in console. It adds the mixset use statements to umple model in the first round on analysis, 
+ * before other umple elements are added to umple model.  
+ */
+  private void analyzeMixsetUseStatement(Token t, int analysisStep){
+    if (analysisStep != 1) // just for analysisStep == 1. 
+    {
+      return;
+    } 
+    //else
+    
+    if (t.is("useStatement"))
+    {
+       String value = t.getValue("use");
+       
+       // ignore .ump files since they are proccessed in UseStatementParserAction class (UmpleInternalParser_CodeParserHandlers.ump).
+       if (value.endsWith(".ump"))
+       {
+         return;   
+       } 
+       //Otherwise
+       
+       String mixsetName = value;
+       int useLineNumber = t.getPosition().getLineNumber();
+       //UmpleFile mixsetUseFile = model.getUmpleFile(); 
+       String fileName = t.getPosition().getFilename();
+       UmpleFile mixsetUseFile = new UmpleFile(fileName);
+       // check if the mixset was added before 
+       Mixset mixset = model.getMixset(mixsetName);
+       if(mixset == null)
+       {
+         mixset = new Mixset(mixsetName);
+	     mixset.setUseUmpleFile(mixsetUseFile);
+	     mixset.setUseUmpleLine(useLineNumber);
+	     model.addMixsetOrFile(mixset);
+	   }
+	   else if (mixset.getUseUmpleFile() == null)
+	   {
+	     mixset.setUseUmpleFile(mixsetUseFile);
+	     mixset.setUseUmpleLine(useLineNumber);
+	   }
+       
+       
+       
+       
+       
+      
+      
+    }
+  }
+  
 /*
  * This method parses all waiting fragments of a mixset, if there is a mixset-use-statment specified in some of the files.  
  */	
