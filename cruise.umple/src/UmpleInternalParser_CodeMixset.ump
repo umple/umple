@@ -63,11 +63,11 @@ class UmpleInternalParser
 	analyzeMixset(aToken);		
 	}
 /*
- * This method handels mixset use statements appearing in both code and in console. It adds the mixset use statements to umple model in the first round on analysis, 
- * before other umple elements are added to umple model.  
+ * This method handles mixset use statements appearing in both code and in the console. The method adds mixset use statements to umple model in the first round on analysis, before
+ * other umple elements are added to umple model. So, there is no issue regarding which line the mixset use statements are mentioned in.   
  */
   private void analyzeMixsetUseStatement(Token t, int analysisStep){
-    if (analysisStep != 1) // just for analysisStep == 1. 
+    if (analysisStep != 1) // the analyze occurs just for analysisStep == 1. 
     {
       return;
     } 
@@ -104,11 +104,6 @@ class UmpleInternalParser
 	     mixset.setUseUmpleLine(useLineNumber);
 	   }
        
-       
-       
-       
-       
-      
       
     }
   }

@@ -1,95 +1,82 @@
 package cruise.umple.compiler.mixset;
 
 import org.junit.*;
-import cruise.umple.compiler.*;
-import cruise.umple.*;
-import cruise.umple.compiler.Method.Source;
+import cruise.umple.UmpleConsoleMain;
 import cruise.umple.util.SampleFileWriter;
 
 public class UmpleMixsetTest {
-		String pathToInput;
-    UmpleModel uModel;
-    String defaultPath;
-
-/*
-  @Before
-  public void setup() {
-
-    defaultPath = SampleFileWriter.rationalize("test/cruise/umple/compiler/mixset/");
-    String code = "class Outer_1{ } mixset M1 { class Inner_M1 {name;} } Outer_2{ }"
-			+ " use M1;"
-			+ " ";
-    uModel = getRunModel(code);
-  }
-  @Test
-  public void mixsetDetectionTest() {
-		Assert.assertEquals(1, uModel.hasMixsetOrFiles());
-	}
-*/
 	
+	@Test
+	public void mixsetUseInCodeTest() {
+		String[] args = new String[] {"mixsetUseInCodeTest.ump"};
+    
+		SampleFileWriter.createFile("mixsetUseInCodeTest.ump", " class Outer_Mix_1{ } mixset Mix { class Inner_Mix {name;} } class Outer_Mix_2{ }"
+				+ "\n"
+				+ " use Mix; "
+				+ "\n");
 
-  @After
-  public void tearDown() {
-    SampleFileWriter.destroy("mixsetTest.ump");
-  }
+		try 
+		{
+			UmpleConsoleMain.main(args);
+			SampleFileWriter.assertFileExists("Inner_Mix.java");
+			SampleFileWriter.assertFileExists("Outer_Mix_1.java");
+			SampleFileWriter.assertFileExists("Outer_Mix_2.java");
 
+		}	
+		finally 
+		{
+			SampleFileWriter.destroy("mixsetUseInCodeTest.ump");
+			SampleFileWriter.destroy("Inner_Mix.java");
+			SampleFileWriter.destroy("Outer_Mix_2.java");
+			SampleFileWriter.destroy("Outer_Mix_2.java");
+		}
+	}
+	
 	@Test
 	public void mixsetUseInConsoleTest() {
-		String[] args = new String[] {"mixsetTest1.ump", "Mx"};
-		
-		SampleFileWriter.createFile("mixsetTest1.ump", " class Outer_1{ } mixset Mx { class Inner_M1 {name;} } class Outer_2{ }");
+		String[] args = new String[] {"mixsetUseInConsoleTest.ump", "Mx"};
 
-		try {
+		SampleFileWriter.createFile("mixsetUseInConsoleTest.ump", " class Outer_1{ } mixset Mx { class Inner_M1 {name;} } class Outer_2{ }");
+
+		try 
+		{
 			UmpleConsoleMain.main(args);
 			SampleFileWriter.assertFileExists("Inner_M1.java");
+			SampleFileWriter.assertFileExists("Outer_1.java");
+			SampleFileWriter.assertFileExists("Outer_2.java");
+
 		}	
-		catch (Exception e) {
-		} 
-		finally {
-		//	SampleFileWriter.destroy("mixsetTest.ump");
+		finally 
+		{
+			SampleFileWriter.destroy("mixsetUseInConsoleTest.ump");
+			SampleFileWriter.destroy("Inner_M1.java");
+			SampleFileWriter.destroy("Outer_2.java");
+			SampleFileWriter.destroy("Outer_2.java");
 		}
-/*
-
-
-		try {
-		//	UmpleModel m = new UmpleModel(null); m.run();
-			UmpleInternalParser i;
-			RuleBasedParser l;
-			UmpleConsoleMain.main(args);
-			//SampleFileWriter.assertFileExists("mixset/B.java");
-		
-
-		}
-		finally {}
-		
-		//finally {
-			//SampleFileWriter.assertFileExists("CCCInnerClass.java");
-
-			//SampleFileWriter.destroy("mixsetTest.ump.ump");
-			//SampleFileWriter.destroy();
-			SampleFileWriter.destroy("mixset/B.java");
-		//	System.exit(210618);
-
-		//}
-*/
 	}
+		
+		
+		@Test
+		public void multipleMixsetUseInConsoleTest() {
+			String[] args = new String[] {"mixset_1.ump", "M2", "mixset_2.ump", "M1"};
 
+			SampleFileWriter.createFile("mixset_1.ump", "mixset M1 { class Inner_1 { } }" );
+			SampleFileWriter.createFile("mixset_2.ump", "mixset M2 { class Inner_2 { } }");
 
-	// -------------------------------------------------------------------------------------
-	// ----------------------- Functional methods for this test case
-	// -----------------------
-	private UmpleModel getRunModel(String inCode) {
-		SampleFileWriter.createFile("mixsetTest.ump", inCode);
-		UmpleFile uFile = new UmpleFile("mixsetTest.ump");
-		uModel = new UmpleModel(uFile);
-		uModel.setShouldGenerate(true);
-		try {
-			uModel.run();
-		} catch (Exception e) {
-		} finally {
-			SampleFileWriter.destroy("mixsetTest.ump");
+			try 
+			{
+				UmpleConsoleMain.main(args);
+				SampleFileWriter.assertFileExists("Inner_1.java");
+				SampleFileWriter.assertFileExists("Inner_2.java");
+
+			}	
+			finally 
+			{
+				SampleFileWriter.destroy("mixset_1.ump");
+				SampleFileWriter.destroy("mixset_2.ump");
+				SampleFileWriter.destroy("Inner_1.java");
+				SampleFileWriter.destroy("Inner_2.java");
+			}
 		}
-		return uModel;
-	}
-
 }
+
