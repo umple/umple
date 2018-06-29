@@ -71,7 +71,7 @@ class UmpleInternalParser
     addCouple(braces);
     
     // Set up needed parser actions
-    parser.addParserAction("useStatement", new UseStatementParserAction(model) );
+    parser.addParserAction("useStatement", new UseStatementParserAction() );
         
     parser.setLinkedFileHandler( new UmpleLinkedFileHandler() );
     parser.setAnalyzerGenerator( new UmpleAnalyzerGeneratorHandler() );
