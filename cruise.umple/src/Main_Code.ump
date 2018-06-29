@@ -60,6 +60,10 @@ class UmpleConsoleConfig {
     return this.linkedFiles.stream().map(p -> new File(p)).collect(Collectors.toList());
   }
 
+ // this method returns mixset names that appear as arguments  
+ public List<String> getLinkedMixsetAsString() {
+    return this.linkedFiles.stream().filter(m-> ! m.endsWith(".ump")).collect(Collectors.toList());
+  }
   public Optional<String> getGenerate() {
     return this.generate;
   }
@@ -164,6 +168,9 @@ class UmpleConsoleMain
     cfg.getLinkedFilesAsFile().stream()
         .filter(File::exists)
         .map(File::getPath)
+        .forEach(umpleFile::addLinkedFiles);
+    //this loop is used to add mixset names as liked umple files.
+    cfg.getLinkedMixsetAsString().stream()
         .forEach(umpleFile::addLinkedFiles);
        
     final UmpleModel model = new UmpleModel(umpleFile);
