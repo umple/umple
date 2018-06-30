@@ -71,7 +71,7 @@ class UmpleInternalParser
     addCouple(braces);
     
     // Set up needed parser actions
-    parser.addParserAction("useStatement", new UseStatementParserAction(model) );
+    parser.addParserAction("useStatement", new UseStatementParserAction() );
         
     parser.setLinkedFileHandler( new UmpleLinkedFileHandler() );
     parser.setAnalyzerGenerator( new UmpleAnalyzerGeneratorHandler() );
@@ -251,6 +251,7 @@ class UmpleInternalParser
   // Delegate function to analyze a token and send it to the write
   private void analyzeToken(Token t, int analysisStep)
   {
+    analyzeMixsetUseStatement(t, analysisStep);
     analyzeUSE(t, analysisStep);
     analyzeCoreToken(t,analysisStep);
     analyzeEnumerationToken(t, analysisStep);
