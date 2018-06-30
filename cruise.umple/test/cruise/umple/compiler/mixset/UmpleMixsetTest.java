@@ -27,7 +27,7 @@ public class UmpleMixsetTest {
 		{
 			SampleFileWriter.destroy("mixsetUseInCodeTest.ump");
 			SampleFileWriter.destroy("Inner_Mix.java");
-			SampleFileWriter.destroy("Outer_Mix_2.java");
+			SampleFileWriter.destroy("Outer_Mix_1.java");
 			SampleFileWriter.destroy("Outer_Mix_2.java");
 		}
 	}
@@ -50,7 +50,7 @@ public class UmpleMixsetTest {
 		{
 			SampleFileWriter.destroy("mixsetUseInConsoleTest.ump");
 			SampleFileWriter.destroy("Inner_M1.java");
-			SampleFileWriter.destroy("Outer_2.java");
+			SampleFileWriter.destroy("Outer_1.java");
 			SampleFileWriter.destroy("Outer_2.java");
 		}
 	}
