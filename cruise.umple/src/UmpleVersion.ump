@@ -12,5 +12,5 @@ namespace cruise.umple.compiler;
 
 class UmpleModel
 {
-  const String VERSION_NUMBER = "1.27.0.3728.d139ed893";
+  const String VERSION_NUMBER = "@UMPLE_VERSION@";
 }
