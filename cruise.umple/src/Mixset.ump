@@ -44,12 +44,17 @@ class Mixset {
   // encountered.
   // If a use statement had been previously encountered, the fragment is parsed and put here
   // directly
-  0..1 usedAsPartOf -- * MixsetFragment usedFragments;
+  // 0..1 usedAsPartOf -- * MixsetFragment usedFragments;
 
   // Waiting ragments are those not yet parsed since no use statement was found yet
   // All new fragments are added here
   // Upon a use statement, all waiting fragments are parsed and put in usedFragments
-  0..1 -- * MixsetFragment waitingFragments;
+  // 0..1 -- * MixsetFragment waitingFragments;
+  
+  // use (parsed) fragments and waiting (unparsed) fragments will be stored as MixsetFragments.
+  // The isParsed filed of MixsetFragment is used to differentiate between them.
+  // The aim is to easly change from waiting fragments to used fragments. Instead of copying and deleteing.  
+  0..1 -- * MixsetFragment mixsetFragments;
   
   String getName() {
     return mixsetName;
@@ -65,6 +70,7 @@ class MixsetFragment {
   UmpleFile originalUmpFile; // where the fragment came from
   Integer originalUmpLine; // line in originaUmpFile
 
+  boolean isParsed = false; // by default a fragment is not parsed, then this will be changed after parsing.
   // This is the text of the fragment
   // Note that it might be prefixed contextually thus:
   // if top level, the body is whatever is found in the curly brackets
