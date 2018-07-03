@@ -348,7 +348,20 @@ class RuleBasedParser
     {
       setupRules();
     }
-    analyzer.init(ruleName, input);
+    analyzer.init(ruleName, input,"temp",null);
+    analyzer.execute();
+    setRootToken(analyzer.getRootToken());
+    setParseResult(analyzer.getParseResult());
+    return getParseResult();
+  }
+  
+  public ParseResult parse(String ruleName, String input,String fileName, Position usePosition)
+  {
+    if(analyzer==null)
+    {
+      setupRules();
+    }
+    analyzer.init(ruleName, input,fileName,usePosition);
     analyzer.execute();
     setRootToken(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
@@ -615,11 +628,9 @@ class ParserDataPackage
     }
   }
   
-  public void init(String rawinput, Position usePosition){
-    String file = "temp";
-    int offset = 0;
-    int linenumber = 0;
-    linenumbers = new LinkedHashMap<Integer,Integer>();
+  public void init(String rawinput, Position usePosition, int lineNumber, int offset){
+   
+   linenumbers = new LinkedHashMap<Integer,Integer>();
     try {
       for(String line:rawinput.split("\\n"))
       {
@@ -639,7 +650,10 @@ class ParserDataPackage
     }
     couples = new HashMap<String,ParsingCouple>();    
     BalancedRule.initialize(input,this);
+    }
   }
+  public void init(String rawinput, Position usePosition){
+   init(rawinput,usePosition,0,0);
 }
 
 interface RuleBasedParserAction {
@@ -725,12 +739,15 @@ class GrammarAnalyzer {
   }
     
   public void init(String ruleName, String input) {
-    this.input = input;
-    setData(new ParserDataPackage("temp",this));
-    getData().setKeys(keys);
-    getData().init(input,null);  
+    init(ruleName,input,"temp",null);
   }
-
+  
+  public void init(String ruleName, String input, String fileName, Position usePosition) {
+    this.input = input;
+    setData(new ParserDataPackage(fileName,this));
+    getData().setKeys(keys);
+    getData().init(input,usePosition);  
+  }
   /*
     Performs the parsing on the umple file.
   */
