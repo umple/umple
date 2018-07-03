@@ -160,7 +160,7 @@ private void parseMixsetWaitingFragment(MixsetFragment mixsetFragment){
   
   if(! mixsetFragment.getIsParsed()) // a fragment that is not parsed before. 
   {
-    ParseResult pResult= parse("MixsetFragmentParsing",  mixsetFragment.getBody()); 
+    ParseResult pResult= parse("MixsetFragmentParsing",  mixsetFragment.getBody(), mixsetFragment.getOriginalUmpFile().getName(),null); 
     Token answer = parser.getRootToken(); // result of parsing the body of a mixset waitingFragments
     analyzeAllTokens(answer);
     mixsetFragment.setIsParsed(true);

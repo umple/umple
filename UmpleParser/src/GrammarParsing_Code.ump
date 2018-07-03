@@ -357,6 +357,7 @@ class RuleBasedParser
   
   public ParseResult parse(String ruleName, String input,String fileName, Position usePosition)
   {
+  
     if(analyzer==null)
     {
       setupRules();
@@ -628,7 +629,7 @@ class ParserDataPackage
     }
   }
   
-  public void init(String rawinput, Position usePosition, int lineNumber, int offset){
+  public void init(String rawinput, Position usePosition, int linenumber, int offset){
    
    linenumbers = new LinkedHashMap<Integer,Integer>();
     try {
@@ -651,11 +652,12 @@ class ParserDataPackage
     couples = new HashMap<String,ParsingCouple>();    
     BalancedRule.initialize(input,this);
     }
-  }
+  
   public void init(String rawinput, Position usePosition){
-   init(rawinput,usePosition,0,0);
+    this.init(rawinput,usePosition,0,0);
 }
 
+}
 interface RuleBasedParserAction {
   public void onSuccess(cruise.umple.parser.Token token);
 }
