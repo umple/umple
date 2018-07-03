@@ -103,6 +103,9 @@ class UmpleInternalParser
 	     mixset.setUseUmpleFile(mixsetUseFile);
 	     mixset.setUseUmpleLine(useLineNumber);
 	   }
+	   
+	   // this handles the case when a mixset definition is in a file and the mixset use exists in a subsequent file.
+	   parseMixset(mixset);
        
       
     }
@@ -111,6 +114,7 @@ class UmpleInternalParser
 /*
  * This method parses all waiting fragments of a mixset, if there is a mixset-use-statment specified in some of the files.  
  */	
+ /*
  private void parseMixset(){
  
    for (MixsetOrFile mOrF : model.getMixsetOrFiles())
@@ -118,7 +122,7 @@ class UmpleInternalParser
      if(mOrF.getIsMixset() &&  (mOrF.getUseUmpleFile() != null) ) // the second condition is to check if there is a use statement.
      {
        Mixset mixset =(Mixset) mOrF;
-       for(MixsetFragment mixsetWaitingFrag: mixset.getWaitingFragments())
+       for(MixsetFragment mixsetWaitingFrag: mixset.getFragments())
        {  
          //String allMixsetBody = modelMixset.getWaitingFragments().stream().map(mixsetFrag -> mixsetFrag.getBody()).collect(Collectors.joining(" "));
          ParseResult pResult= parse("MixsetFragmentParsing",  mixsetWaitingFrag.getBody()); 
@@ -127,7 +131,42 @@ class UmpleInternalParser
        }
      }
    }
+   
 }
+*/
+
+/*
+ * This method loops through a mixset to parse its waiting fragments.
+ * It should be used after checking existing of a mixset-use-statment.  
+ */	
+
+ private void parseMixset(Mixset mixset){
+   
+   for(MixsetFragment mixsetFragment: mixset.getMixsetFragments())
+   {
+    if(mixsetFragment.getIsParsed())
+    continue;
+    //Otherwise
+    parseMixsetWaitingFragment(mixsetFragment);
+    
+   }
+ }
+
+/*
+ * This method parses a waiting fragment of a mixset.
+ * It should be used after checking existing of a mixset-use-statment.  
+ */	
+private void parseMixsetWaitingFragment(MixsetFragment mixsetFragment){
+  
+  if(! mixsetFragment.getIsParsed()) // a fragment that is not parsed before. 
+  {
+    ParseResult pResult= parse("MixsetFragmentParsing",  mixsetFragment.getBody()); 
+    Token answer = parser.getRootToken(); // result of parsing the body of a mixset waitingFragments
+    analyzeAllTokens(answer);
+    mixsetFragment.setIsParsed(true);
+    }
+   
+ }
 
  private void analyzeMixsetToken(Token t, int analysisStep)
   {
@@ -183,8 +222,14 @@ class UmpleInternalParser
 	  UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
 	  MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, lineNumber, mixsetBody);
 	  
-	  // Here all mixset fragmets are considered as waitingFragment 
-	  mixset.addWaitingFragment(mixsetFragment);
+	  // Here the mixset fragmet is considered as waitingFragment (mixsetFragment.isParsed==flase). 
+	  mixset.addMixsetFragment(mixsetFragment);
+	  
+	  // parse mixset fragments right away if there is a use statment.
+	  // 
+	  if(mixset.getUseUmpleFile() != null)
+	  parseMixsetWaitingFragment(mixsetFragment);
+	  
 	  
 	return  mixset ;
   }

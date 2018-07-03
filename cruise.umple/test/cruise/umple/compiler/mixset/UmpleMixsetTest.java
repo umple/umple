@@ -7,9 +7,27 @@ import cruise.umple.util.SampleFileWriter;
 public class UmpleMixsetTest {
 	
 	@Test
+	public void mixsetUseInSubsequentFile()
+	{
+		String[] args = new String[] {"first.ump"};
+		SampleFileWriter.createFile("first.ump", " mixset MyMixset { class MyClass {} } use activateMixset.ump; ");
+		SampleFileWriter.createFile	("activateMixset.ump"," use MyMixset; ");
+		try 
+		{
+			UmpleConsoleMain.main(args);
+			SampleFileWriter.assertFileExists("MyClass.java");
+		}	
+		finally 
+		{
+			SampleFileWriter.destroy("first.ump");
+			SampleFileWriter.destroy("MyClass.java");
+			SampleFileWriter.destroy("activateMixset.ump");
+		}
+	}
+	
+	@Test
 	public void mixsetUseInCodeTest() {
-		String[] args = new String[] {"mixsetUseInCodeTest.ump"};
-    
+    String[] args = new String[] {"mixsetUseInCodeTest.ump"};
 		SampleFileWriter.createFile("mixsetUseInCodeTest.ump", " class Outer_Mix_1{ } mixset Mix { class Inner_Mix {name;} } class Outer_Mix_2{ }"
 				+ "\n"
 				+ " use Mix; "
