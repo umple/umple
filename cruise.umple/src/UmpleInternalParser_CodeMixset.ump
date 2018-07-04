@@ -223,7 +223,7 @@ private void parseMixsetWaitingFragment(MixsetFragment mixsetFragment){
 	  }
 	  else
 	    mixsetBody = entityType + " "+entityName + " { "+ mixsetBody + " }";
-	    mixsetFragmentPosition = token.getSubToken("mixsetBody").getPosition();	
+	    mixsetFragmentPosition = token.getSubToken("extraCode").getPosition();	
 	  }
 	else if (oneElementMixset != null) 
 	  {
