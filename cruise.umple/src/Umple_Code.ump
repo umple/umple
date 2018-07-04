@@ -4695,12 +4695,15 @@ class ModelConstraintSuperClass
       }
       else
       {
-        for(UmpleInterface i:child.getParentInterface())
+        if (child != null)
         {
-          if(i.getName().equals(getSource()))
-          {
-             return ModelConstraint.SUCCESS;
-          }
+		  for(UmpleInterface i:child.getParentInterface())
+		  {
+			if(i.getName().equals(getSource()))
+			{
+			   return ModelConstraint.SUCCESS;
+			}
+		  }
         }
       }
       return new ModelConstraintResult(getPosition(),93,getTarget(),getSource());
