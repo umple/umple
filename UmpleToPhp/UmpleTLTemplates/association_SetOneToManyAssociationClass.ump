@@ -4,7 +4,7 @@ class UmpleToPhp {
   {
     $wasSet = false;
     <<# if (customSetPrefixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
-    if ($<<=gen.translate("parameterOne",av)>>.nil?)
+    if ($<<=gen.translate("parameterOne",av)>> === NULL)
     {
       <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } #>>
       return wasSet;
@@ -16,7 +16,7 @@ class UmpleToPhp {
     {
       $<<=gen.translate("parameterExisting",av)>>-><<=gen.relatedTranslate("removeMethod",av)>>($this);
     }
-    if !$this-><<=gen.translate("associationOne",av)>>-><<=gen.relatedTranslate("addMethod",av)>>($this)
+    if (!$this-><<=gen.translate("associationOne",av)>>-><<=gen.relatedTranslate("addMethod",av)>>($this))
     {
       $this-><<=gen.translate("associationOne",av)>> = $<<=gen.translate("parameterExisting",av)>>;
       $wasSet = false;
@@ -27,6 +27,6 @@ class UmpleToPhp {
     }
     <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
     return $wasSet;
-  end
+  }
 !>>
 }

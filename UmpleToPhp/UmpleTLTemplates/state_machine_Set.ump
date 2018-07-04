@@ -95,7 +95,14 @@ class UmpleToPhp {
         hasExit = true;
         hasThisExit = true;
         isFirstExit = false;
-        exitActions.append("\n      " + action.getActionCode());
+        if(action.getActionCode() == null) //verify why it returns null
+        {
+          exitActions.append("\n      " + StringFormatter.format("$this->{0}(self::{1});", gen.translate("setMethod",sm), gen.translate("stateNull",sm)));
+        }
+        else
+        {
+          exitActions.append("\n      " + action.getActionCode());
+        }
       }
     }
   

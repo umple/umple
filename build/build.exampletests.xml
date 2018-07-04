@@ -45,7 +45,7 @@
       <try>
         <antcall target="doJava" />
         <!-- <antcall target="doCpp" />-->
-        <!--<antcall target="doPhp" />-->
+        <antcall target="doPhp" />
         <!--<antcall target="doRuby" />-->
       </try>
       
