@@ -95,11 +95,14 @@ class UmpleInternalParser
   }
 
   public ParseResult parse(String ruleName, String input){
-    return parse(ruleName,input,"temp.ump",null);
+    setParseResult(parser.parse(ruleName,input,"temp.ump",null));
+    setRootToken(parser.getRootToken());
+    SampleFileWriter.destroy("temp.ump");
+    return getParseResult();
   }
   
-    public ParseResult parse(String ruleName, String input, String fileName, Position position){
-	setParseResult(parser.parse(ruleName,input,fileName, position));
+    public ParseResult parse(String ruleName, String input, String fileName, Position position, int lineNumber, int offset){
+	setParseResult(parser.parse(ruleName,input,fileName, position,lineNumber,offset));
     setRootToken(parser.getRootToken());
     SampleFileWriter.destroy(fileName);
     return getParseResult();

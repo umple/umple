@@ -344,15 +344,7 @@ class RuleBasedParser
 
   public ParseResult parse(String ruleName, String input)
   {
-    if(analyzer==null)
-    {
-      setupRules();
-    }
-    analyzer.init(ruleName, input,"temp",null);
-    analyzer.execute();
-    setRootToken(analyzer.getRootToken());
-    setParseResult(analyzer.getParseResult());
-    return getParseResult();
+    return parse(ruleName,input,"temp",null);
   }
   
   public ParseResult parse(String ruleName, String input,String fileName, Position usePosition)
@@ -362,12 +354,27 @@ class RuleBasedParser
     {
       setupRules();
     }
-    analyzer.init(ruleName, input,fileName,usePosition);
+    analyzer.init(ruleName, input,fileName,usePosition,0,0);
     analyzer.execute();
     setRootToken(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
   }
+  
+  public ParseResult parse(String ruleName, String input,String fileName,Position position ,int lineNumber, int offset)
+  {
+    if(analyzer==null)
+    {
+      setupRules();
+    }
+    analyzer.init(ruleName, input,fileName,position ,lineNumber, offset) ;   
+    
+    analyzer.execute();
+    setRootToken(analyzer.getRootToken());
+    setParseResult(analyzer.getParseResult());
+    return getParseResult();
+  }
+  
 
   public static boolean evaluate(String hash)
   {
@@ -741,14 +748,14 @@ class GrammarAnalyzer {
   }
     
   public void init(String ruleName, String input) {
-    init(ruleName,input,"temp",null);
+    init(ruleName,input,"temp",null,0,0);
   }
   
-  public void init(String ruleName, String input, String fileName, Position usePosition) {
+  public void init(String ruleName, String input, String fileName, Position usePosition, int lineNumber, int offset) {
     this.input = input;
     setData(new ParserDataPackage(fileName,this));
     getData().setKeys(keys);
-    getData().init(input,usePosition);  
+    getData().init(input,usePosition,lineNumber,offset);  
   }
   /*
     Performs the parsing on the umple file.
