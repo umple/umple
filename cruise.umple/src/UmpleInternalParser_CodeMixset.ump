@@ -161,7 +161,7 @@ private void parseMixsetWaitingFragment(MixsetFragment mixsetFragment){
   if(! mixsetFragment.getIsParsed()) // a fragment that is not parsed before. 
   {
     String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getPath()+"/"+mixsetFragment.getOriginalUmpFile().getName();
-    int mixsetFragmentLine = mixsetFragment.getOriginalUmpLine();
+    int mixsetFragmentLine = mixsetFragment.getOriginalUmpLine() - 1;
     ParseResult pResult= parse("MixsetFragmentParsing",  mixsetFragment.getBody(), mixsetFragmentFile, null, mixsetFragmentLine,0); 
     Token answer = parser.getRootToken(); // result of parsing the body of a mixset waitingFragments
     analyzeAllTokens(answer);
@@ -197,7 +197,15 @@ private void parseMixsetWaitingFragment(MixsetFragment mixsetFragment){
 	  model.addMixsetOrFile(mixset);
 	}
 	
-	String mixsetBody = token.getValue("extraCode");	
+	
+	Position mixsetFragmentPosition = null;
+	int mixsetFragmentLineNumber = 0;
+	
+	String mixsetBody = token.getValue("extraCode");
+	if(mixsetBody != null)
+	{
+	  mixsetFragmentPosition = token.getSubToken("extraCode").getPosition();
+	}		
 	
 	//inline mixset def.
 	String entityType = token.getValue("entityType");
@@ -210,19 +218,24 @@ private void parseMixsetWaitingFragment(MixsetFragment mixsetFragment){
 	  if (oneElementMixset != null)
 	  {
 	    mixsetBody = entityType + " "+entityName + " { "+ oneElementMixset + " }";
+	    mixsetFragmentPosition = token.getSubToken("oneElementMixset").getPosition();
+	    
 	  }
 	  else
-	    mixsetBody = entityType + " "+entityName + " { "+ mixsetBody + " }";	
+	    mixsetBody = entityType + " "+entityName + " { "+ mixsetBody + " }";
+	    mixsetFragmentPosition = token.getSubToken("mixsetBody").getPosition();	
 	  }
-	else 
-	
-	  if (oneElementMixset != null) mixsetBody = oneElementMixset;
+	else if (oneElementMixset != null) 
+	  {
+	    mixsetBody = oneElementMixset;
+	    mixsetFragmentPosition = token.getSubToken("oneElementMixset").getPosition();	  
+	  }
 	  
-	  Position thePosition = token.getPosition();
-	  Position endPosition = token.getEndPosition();
-	  int lineNumber = thePosition.getLineNumber();
+	  
+	  
+	  mixsetFragmentLineNumber = mixsetFragmentPosition.getLineNumber();
 	  UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
-	  MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, lineNumber, mixsetBody);
+	  MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, mixsetFragmentLineNumber, mixsetBody);
 	  
 	  // Here the mixset fragmet is considered as waitingFragment (mixsetFragment.isParsed==flase). 
 	  mixset.addMixsetFragment(mixsetFragment);
