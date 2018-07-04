@@ -34,6 +34,7 @@ public class ModelConstraintTest {
 		assertFailedParse("150_badMultiLayerSubClassConstrained.ump", 92);
 		assertFailedParse("150_badSuperClassConstrained.ump", 93);
 		assertFailedParse("150_badMultiLayerSuperClassConstrained.ump", 93);
+		assertFailedParse("150_inexistentSuperClassConstrainted.ump", 93);
 		assertFailedParse("150_badAssociationToConstrained.ump", 94);
 		assertFailedParse("150_badAssociationInvalidMultiplicityConstrained.ump", 94);
 	}
