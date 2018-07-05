@@ -156,17 +156,30 @@ class UmpleInternalParser
  * This method parses a waiting fragment of a mixset.
  * It should be used after checking existing of a mixset-use-statment.  
  */	
-private void parseMixsetWaitingFragment(MixsetFragment mixsetFragment){
+  depend cruise.umple.compiler.exceptions.*;
+  
+  private void parseMixsetWaitingFragment(MixsetFragment mixsetFragment){
   
   if(! mixsetFragment.getIsParsed()) // a fragment that is not parsed before. 
   {
     String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getPath()+"/"+mixsetFragment.getOriginalUmpFile().getName();
     int mixsetFragmentLine = mixsetFragment.getOriginalUmpLine() - 1;
-    ParseResult pResult= parse("MixsetFragmentParsing",  mixsetFragment.getBody(), mixsetFragmentFile, null, mixsetFragmentLine,0); 
+    ParseResult result= parse("MixsetFragmentParsing",  mixsetFragment.getBody(), mixsetFragmentFile, null, mixsetFragmentLine,0); 
+    setParseResult(result);
     Token answer = parser.getRootToken(); // result of parsing the body of a mixset waitingFragments
+    setRootToken(answer);
+    
     analyzeAllTokens(answer);
     mixsetFragment.setIsParsed(true);
-    }
+    
+    if( !result.getWasSuccess() || result.getHasWarnings())
+      {
+      	model.setLastResult(result);
+        throw new UmpleCompilerException(result.toString(),null);
+     
+        
+      }
+   }
    
  }
 

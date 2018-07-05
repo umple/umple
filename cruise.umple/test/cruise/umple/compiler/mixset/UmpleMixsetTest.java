@@ -1,8 +1,11 @@
 package cruise.umple.compiler.mixset;
 
 import org.junit.*;
+
 import cruise.umple.UmpleConsoleMain;
+import cruise.umple.compiler.UmpleParserTest;
 import cruise.umple.util.SampleFileWriter;
+import cruise.umple.parser.Position;
 
 public class UmpleMixsetTest {
 	
@@ -96,5 +99,56 @@ public class UmpleMixsetTest {
 				SampleFileWriter.destroy("Inner_2.java");
 			}
 		}
+  
+	@Test
+	public void errorInMixsetBody_Location_1() {
+	
+		//try {
+				UmpleParserTest umpleParserTest = new UmpleParserTest();
+			
+			  umpleParserTest.pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/mixset");
+			  umpleParserTest.assertFailedParse("mixsetInnerBodyError.ump", 1503);
+
+			//}
+			//finally {
+		//	SampleFileWriter.destroy("mixsetTestA.ump");
+			// all other java classes
+		//	SampleFileWriter.destroy("mixsetTestA.ump");
+
+	//}
+		}
+	@Test
+	public void errorInMixsetBody_Location_2() {
+		
+		//try {
+		UmpleParserTest umpleParserTest = new UmpleParserTest();
+		
+	  umpleParserTest.pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/mixset");
+	  //Position(String aFilename, int aLineNumber, int aCharacterOffset, int aOffset)
+	  
+	  umpleParserTest.assertFailedParse("mixsetInnerBodyError.ump", new Position("mixsetInnerBodyError.ump",12,1,0),1503);
+
+
+
+		}
+	
+	@Test
+	public void errorInMixsetBody_Location_3() {
+		
+		//try {
+		UmpleParserTest umpleParserTest = new UmpleParserTest();
+		
+	  umpleParserTest.pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/mixset");
+	  //Position(String aFilename, int aLineNumber, int aCharacterOffset, int aOffset)
+	  
+	  umpleParserTest.assertFailedParse("mixsetInnerBodyError.ump", new Position("mixsetInnerBodyError.ump",12,0,1),1503);
+
+
+
+		}
+	
+
+		
+		
 }
 
