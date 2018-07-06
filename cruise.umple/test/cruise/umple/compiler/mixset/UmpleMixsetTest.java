@@ -19,6 +19,25 @@ public class UmpleMixsetTest {
     umpleParserTest.pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/mixset");
 
   }
+
+  @Test
+  public void mixsetDefinition()
+  {
+    assertNoWarningsParse("mixsetDefinition.ump");
+  }
+
+  @Test
+  public void emptyMixsetBody() {
+   
+    umpleParserTest.assertNoWarningsParse("emptyMixsetBody.ump");		
+  }
+  
+  @Test
+  public void mixsetUseStatement()
+  {
+	  umpleParserTest.assertNoWarningsParse("mixsetUse.ump");
+  }
+   
 	
   @Test
   public void mixsetUseInSubsequentFile()
@@ -129,7 +148,9 @@ public class UmpleMixsetTest {
 		int charOff = 12;
     umpleParserTest.assertHasWarningsParse(file.getFileName(), new Position(file.getPath()+"/"+file.getFileName(),line,offset,charOff),errorCode);			
 		
-}
+  }
+
+   
 		
 }
 
