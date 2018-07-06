@@ -344,21 +344,7 @@ class RuleBasedParser
 
   public ParseResult parse(String ruleName, String input)
   {
-    return parse(ruleName,input,"temp",null);
-  }
-  
-  public ParseResult parse(String ruleName, String input,String fileName, Position usePosition)
-  {
-  
-    if(analyzer==null)
-    {
-      setupRules();
-    }
-    analyzer.init(ruleName, input,fileName,usePosition,0,0);
-    analyzer.execute();
-    setRootToken(analyzer.getRootToken());
-    setParseResult(analyzer.getParseResult());
-    return getParseResult();
+    return parse(ruleName,input,"temp",null,0,0);
   }
   
   public ParseResult parse(String ruleName, String input,String fileName,Position position ,int lineNumber, int offset)
@@ -660,9 +646,6 @@ class ParserDataPackage
     BalancedRule.initialize(input,this);
     }
   
-  public void init(String rawinput, Position usePosition){
-    this.init(rawinput,usePosition,0,0);
-}
 
 }
 interface RuleBasedParserAction {

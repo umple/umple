@@ -171,17 +171,6 @@ class UmpleInternalParser
     model.setLastResult(result);
     analyzeAllTokens(answer);
     mixsetFragment.setIsParsed(true);
-    
-    
-    /*
-    if( !result.getWasSuccess() || result.getHasWarnings())
-      {
-      	
-        throw new UmpleCompilerException(result.toString(),null);
-     
-        
-      }
-      */
    }
    
  }
