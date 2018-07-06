@@ -162,23 +162,26 @@ class UmpleInternalParser
   
   if(! mixsetFragment.getIsParsed()) // a fragment that is not parsed before. 
   {
-    String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getPath()+"/"+mixsetFragment.getOriginalUmpFile().getName();
+    String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getPath()+"/"+mixsetFragment.getOriginalUmpFile().getName()+".ump";
     int mixsetFragmentLine = mixsetFragment.getOriginalUmpLine() - 1;
     ParseResult result= parse("MixsetFragmentParsing",  mixsetFragment.getBody(), mixsetFragmentFile, null, mixsetFragmentLine,0); 
     setParseResult(result);
     Token answer = parser.getRootToken(); // result of parsing the body of a mixset waitingFragments
     setRootToken(answer);
-    
+    model.setLastResult(result);
     analyzeAllTokens(answer);
     mixsetFragment.setIsParsed(true);
     
+    
+    /*
     if( !result.getWasSuccess() || result.getHasWarnings())
       {
-      	model.setLastResult(result);
+      	
         throw new UmpleCompilerException(result.toString(),null);
      
         
       }
+      */
    }
    
  }

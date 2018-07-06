@@ -5,7 +5,7 @@ class Y1{}
 
 
 
- mixset M1 {
+mixset M1 {
 
 class A{
 }

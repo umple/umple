@@ -6,10 +6,12 @@ import cruise.umple.UmpleConsoleMain;
 import cruise.umple.compiler.UmpleParserTest;
 import cruise.umple.util.SampleFileWriter;
 import cruise.umple.parser.Position;
+import cruise.umple.compiler.UmpleFile;
+
 
 public class UmpleMixsetTest {
 	
-	@Test
+  @Test
 	public void mixsetUseInSubsequentFile()
 	{
 		String[] args = new String[] {"first.ump"};
@@ -77,78 +79,38 @@ public class UmpleMixsetTest {
 	}
 		
 		
-		@Test
-		public void multipleMixsetUseInConsoleTest() {
-			String[] args = new String[] {"mixset_1.ump", "M2", "mixset_2.ump", "M1"};
-
-			SampleFileWriter.createFile("mixset_1.ump", "mixset M1 { class Inner_1 { } }" );
-			SampleFileWriter.createFile("mixset_2.ump", "mixset M2 { class Inner_2 { } }");
-
-			try 
-			{
-				UmpleConsoleMain.main(args);
-				SampleFileWriter.assertFileExists("Inner_1.java");
-				SampleFileWriter.assertFileExists("Inner_2.java");
-
-			}	
-			finally 
-			{
-				SampleFileWriter.destroy("mixset_1.ump");
-				SampleFileWriter.destroy("mixset_2.ump");
-				SampleFileWriter.destroy("Inner_1.java");
-				SampleFileWriter.destroy("Inner_2.java");
-			}
-		}
-  
 	@Test
-	public void errorInMixsetBody_Location_1() {
+  public void multipleMixsetUseInConsoleTest() {
+	  String[] args = new String[] {"mixset_1.ump", "M2", "mixset_2.ump", "M1"};
+		SampleFileWriter.createFile("mixset_1.ump", "mixset M1 { class Inner_1 { } }" );
+		SampleFileWriter.createFile("mixset_2.ump", "mixset M2 { class Inner_2 { } }");
+
+		try 
+		{
+			UmpleConsoleMain.main(args);
+			SampleFileWriter.assertFileExists("Inner_1.java");
+			SampleFileWriter.assertFileExists("Inner_2.java");
+
+		}	
+		finally 
+		{
+			SampleFileWriter.destroy("mixset_1.ump");
+			SampleFileWriter.destroy("mixset_2.ump");
+			SampleFileWriter.destroy("Inner_1.java");
+			SampleFileWriter.destroy("Inner_2.java");
+		}
+  }
 	
-		//try {
-				UmpleParserTest umpleParserTest = new UmpleParserTest();
-			
-			  umpleParserTest.pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/mixset");
-			  umpleParserTest.assertFailedParse("mixsetInnerBodyError.ump", 1503);
-
-			//}
-			//finally {
-		//	SampleFileWriter.destroy("mixsetTestA.ump");
-			// all other java classes
-		//	SampleFileWriter.destroy("mixsetTestA.ump");
-
-	//}
-		}
-	@Test
-	public void errorInMixsetBody_Location_2() {
-		
-		//try {
-		UmpleParserTest umpleParserTest = new UmpleParserTest();
-		
-	  umpleParserTest.pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/mixset");
-	  //Position(String aFilename, int aLineNumber, int aCharacterOffset, int aOffset)
-	  
-	  umpleParserTest.assertFailedParse("mixsetInnerBodyError.ump", new Position("mixsetInnerBodyError.ump",12,1,0),1503);
-
-
-
-		}
 	
 	@Test
-	public void errorInMixsetBody_Location_3() {
+	public void errorInMixsetBody_Location() {
+   
+	  UmpleParserTest umpleParserTest = new UmpleParserTest();
+    umpleParserTest.pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/mixset");
+    UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"mixsetInnerBodyError.ump");
+    umpleParserTest.assertFailedParse("mixsetInnerBodyError.ump", new Position(file.getPath()+"/"+file.getFileName(),12,1,12),1503);
 		
-		//try {
-		UmpleParserTest umpleParserTest = new UmpleParserTest();
-		
-	  umpleParserTest.pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/mixset");
-	  //Position(String aFilename, int aLineNumber, int aCharacterOffset, int aOffset)
-	  
-	  umpleParserTest.assertFailedParse("mixsetInnerBodyError.ump", new Position("mixsetInnerBodyError.ump",12,0,1),1503);
-
-
-
-		}
-	
-
-		
+	}
 		
 }
 
