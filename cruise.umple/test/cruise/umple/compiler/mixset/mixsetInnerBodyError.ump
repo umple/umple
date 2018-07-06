@@ -1,0 +1,16 @@
+
+
+
+class Y1{}
+
+
+
+mixset M1 {
+
+class A{
+}
+ Error_at_line_12
+
+class B{}
+}
+use M1;

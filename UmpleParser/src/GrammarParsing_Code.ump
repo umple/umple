@@ -344,16 +344,23 @@ class RuleBasedParser
 
   public ParseResult parse(String ruleName, String input)
   {
+    return parse(ruleName,input,"temp",null,0,0);
+  }
+  
+  public ParseResult parse(String ruleName, String input,String fileName,Position position ,int lineNumber, int offset)
+  {
     if(analyzer==null)
     {
       setupRules();
     }
-    analyzer.init(ruleName, input);
+    analyzer.init(ruleName, input,fileName,position ,lineNumber, offset) ;   
+    
     analyzer.execute();
     setRootToken(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
   }
+  
 
   public static boolean evaluate(String hash)
   {
@@ -615,11 +622,9 @@ class ParserDataPackage
     }
   }
   
-  public void init(String rawinput, Position usePosition){
-    String file = "temp";
-    int offset = 0;
-    int linenumber = 0;
-    linenumbers = new LinkedHashMap<Integer,Integer>();
+  public void init(String rawinput, Position usePosition, int linenumber, int offset){
+   
+   linenumbers = new LinkedHashMap<Integer,Integer>();
     try {
       for(String line:rawinput.split("\\n"))
       {
@@ -639,9 +644,10 @@ class ParserDataPackage
     }
     couples = new HashMap<String,ParsingCouple>();    
     BalancedRule.initialize(input,this);
-  }
-}
+    }
+  
 
+}
 interface RuleBasedParserAction {
   public void onSuccess(cruise.umple.parser.Token token);
 }
@@ -725,12 +731,15 @@ class GrammarAnalyzer {
   }
     
   public void init(String ruleName, String input) {
-    this.input = input;
-    setData(new ParserDataPackage("temp",this));
-    getData().setKeys(keys);
-    getData().init(input,null);  
+    init(ruleName,input,"temp",null,0,0);
   }
-
+  
+  public void init(String ruleName, String input, String fileName, Position usePosition, int lineNumber, int offset) {
+    this.input = input;
+    setData(new ParserDataPackage(fileName,this));
+    getData().setKeys(keys);
+    getData().init(input,usePosition,lineNumber,offset);  
+  }
   /*
     Performs the parsing on the umple file.
   */

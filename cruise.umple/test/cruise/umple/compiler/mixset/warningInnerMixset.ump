@@ -1,0 +1,27 @@
+class A{}
+
+mixset M1 {
+
+
+
+mixset InnerMixset{
+
+class B{  
+
+class //Line 11 
+
+}
+
+
+
+}
+
+
+class C{}
+
+
+}
+
+
+use M1;
+use InnerMixset;
