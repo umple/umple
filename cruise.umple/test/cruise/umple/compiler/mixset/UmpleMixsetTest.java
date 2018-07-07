@@ -6,7 +6,9 @@ import cruise.umple.compiler.UmpleParserTest;
 import cruise.umple.util.SampleFileWriter;
 import cruise.umple.parser.Position;
 import cruise.umple.compiler.UmpleFile;
-
+import cruise.umple.compiler.UmpleModel;
+import cruise.umple.compiler.UmpleClass;
+import java.util.List;
 
 public class UmpleMixsetTest {
   
@@ -23,7 +25,7 @@ public class UmpleMixsetTest {
   @Test
   public void mixsetDefinition()
   {
-    assertNoWarningsParse("mixsetDefinition.ump");
+    umpleParserTest.assertNoWarningsParse("mixsetDefinition.ump");
   }
 
   @Test
@@ -128,7 +130,7 @@ public class UmpleMixsetTest {
 	
 	
 	@Test
-  public void errorInMixsetBody() {
+  public void middleOfMixsetBodyError() {
 
     UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"mixsetInnerBodyError.ump");
     int line = 12;
@@ -139,7 +141,7 @@ public class UmpleMixsetTest {
 		}
 
   @Test
-  public void warningInNestedMixsetBody() {
+  public void nestedMixsetBodyWarning() {
 
     UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"warningInnerMixset.ump");
     int line = 11;
@@ -150,6 +152,61 @@ public class UmpleMixsetTest {
 		
   }
 
+	@Test
+  public void oneElementMixsetBodyError() {
+    
+    UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"oneElementMixsetBodyError.ump");
+    int line = 5;
+    int errorCode = 1502;
+    int offset= 0;
+		int charOff = 0;
+		umpleParserTest.assertFailedParse(file.getFileName(), new Position(file.getPath()+"/"+file.getFileName(),line,offset,charOff),errorCode);
+		
+ }
+  
+  @Test
+  public void lastElementMixsetBodyError() {
+    
+    UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"lastElementError.ump");
+    int line = 3;
+    int errorCode = 1502;
+    int offset= 0;
+		int charOff = 14;
+		umpleParserTest.assertFailedParse(file.getFileName(), new Position(file.getPath()+"/"+file.getFileName(),line,offset,charOff),errorCode);
+
+		
+ }
+
+ @Test
+  public void fileMaintainItsOrderWithMixset() {
+    
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"mixsetUseUmpleFileOrder.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+		List<UmpleClass> umpleClasses = model.getUmpleClasses();
+    Assert.assertEquals(umpleClasses.get(0).getAttribute(0).getName(),"one");
+    Assert.assertEquals(umpleClasses.get(0).getAttribute(1).getName(),"two");
+    Assert.assertEquals(umpleClasses.get(0).getAttribute(2).getName(),"three");
+    Assert.assertEquals(umpleClasses.get(0).getAttribute(3).getName(),"four");
+    Assert.assertEquals(umpleClasses.get(0).getAttribute(4).getName(),"five");
+	
+
+		
+ }
+
+@Test
+  public void mixsetWithNoUseStatementHasNoEffect() {
+    
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"mixsetDefinition.ump"); //mixsetDefinition.ump is reused for a different purpose.
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+		List<UmpleClass> umpleClasses = model.getUmpleClasses();
+    Assert.assertEquals(umpleClasses.size(), 1);
+    Assert.assertEquals(umpleClasses.get(0).getAttributes().size(), 0);
+  	
+ }
    
 		
 }

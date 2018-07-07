@@ -1,0 +1,41 @@
+class A {one;}
+
+use M1_Inner;
+
+mixset M1 
+{
+
+  class A {two;}
+
+     mixset M1_Inner 
+			{
+       class A {three;}
+			}
+
+	class A {four;}
+
+}
+
+class A {five;}
+
+use M1;
+
+/*
+
+Expected output: Class A should have its attributes ordered as:
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //A Attributes
+  private String one;
+  private String two;
+  private String three;
+  private String four;
+  private String five;
+
+
+*/
+
+
