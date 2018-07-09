@@ -353,6 +353,15 @@ class UmpleToJava {
   	hasSomethingToDelete = true;
   }
   
+  for (StateMachine sm : uClass.getStateMachines())
+  {
+    if (sm.isQueued() || sm.isPooled())
+    {
+      append(realSb, "\n   removal.interrupt();");
+      hasSomethingToDelete = true;
+    }
+  }
+  
   if (!uClass.isRoot() && !"external".equals(uClass.getExtendsClass().getModifier()))
   {
     hasSomethingToDelete = true;

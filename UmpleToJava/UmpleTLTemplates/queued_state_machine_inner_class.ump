@@ -39,7 +39,10 @@ class UmpleToJava {
     appendln(realSb,"        {");
     appendln(realSb,"          wait();");
     appendln(realSb,"        }");
-    appendln(realSb,"      } catch (InterruptedException e) { e.printStackTrace(); } "); 
+    appendln(realSb,"      } catch (InterruptedException e) {");
+    appendln(realSb,"        Thread.currentThread().interrupt();");
+    appendln(realSb,"        return null;");
+    appendln(realSb,"      }");
     appendln(realSb,"");
     appendln(realSb,"      //The element to be removed");
     appendln(realSb,"      Message m = messages.remove(); "); 
@@ -69,7 +72,10 @@ class UmpleToJava {
     appendln(realSb,"          wait();");
     appendln(realSb,"          message=getNextProcessableMessage();");
     appendln(realSb,"        }");
-    appendln(realSb,"      } catch (InterruptedException e) { e.printStackTrace(); }");
+    appendln(realSb,"      } catch (InterruptedException e) {");
+    appendln(realSb,"        Thread.currentThread().interrupt();");
+    appendln(realSb,"        return null;");
+    appendln(realSb,"      }");
     appendln(realSb,"");
     appendln(realSb,"      // return the message");
     appendln(realSb,"      return (message);");
