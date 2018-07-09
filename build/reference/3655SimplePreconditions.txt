@@ -4,7 +4,7 @@ noreferences
 
 @@description
 
-<p>You can specify basic preconditions in methods as shown below. This is still under development.</p>
+<p>You can specify basic preconditions in methods as shown below. Like other constraints, they are specified in square brackets. Precondition appears as the first lines of a method and must start with &apos;pre:&apos;. A precondition can refer to one or more attributes or method arguments. If a precondition is not satisfied when the method is run an exception will be thrown; in Java a RuntimeException is used.</p>
 
 @@syntax
 [[methodBody]] [[precondition]] 

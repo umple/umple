@@ -1,0 +1,18 @@
+// Example constraints with a few more operations
+// parentheses and negations
+class X {
+  Boolean aBool;
+  Integer aa;
+  Integer bb;
+  Integer cc;
+  Integer dd;
+  Integer ee;
+  Integer ff;
+  Integer s1;
+  [aa < bb] // Simple attribute comparison
+  [cc > bb && aa < cc] // Conjunction
+  [(dd > ee) || (ee < ff)] // Disjunction and parens
+  [s1 != 0 || aa == 3] // Constant comparisons
+  [!(cc == 4 && dd == 5)] // negated parenthetic
+  [aBool || !(aa == 3)]  // direct Boolean reference
+}

@@ -31,7 +31,7 @@ public class CompilerErrorUtil
 			expectedReader.close();
 		}
 		catch(Exception e) {
-			Assert.fail(e.getMessage()+
+			Assert.fail(""+e.getMessage()+
 			  " Current Dir . =" +Paths.get(".").toAbsolutePath().normalize().toString()+
 			  " Parent Dir .. =" + Paths.get("..").toAbsolutePath().normalize().toString());
 		}

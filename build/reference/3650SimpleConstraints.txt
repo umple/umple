@@ -4,9 +4,11 @@ noreferences
 
 @@description
 
-<p>Umple supports basoc OCL-type constraints that limit what umple-generated mutator methods (set, add, etc.) and constructors can do.</p>
+<p>Umple supports basic OCL-type Boolean constraints that limit what umple-generated mutator methods (set, add, etc.) and constructors can do. If a constraint is violated set methods will return false, and constructors will throw an exception.</p>
 
-<p>Constraints are specified within square brackets, in the same manner as guards on state machines.</p>
+<p>Constraints are specified within square brackets. Simple constraints can refer to attributes and literals (numbers, strings). These can be compared using standard comparison operators such as &lt; and &gt;. Expressions can be conjoined by the and operator &amp;&amp; or the or operator ||. An exclamation mark is the not operator. Parentheses can be used to adjust the standard order of operations.</p>
+
+<p><a href="">Guards on state machines are also Boolean expressions and, like simple constraints, are also enclosed within square brackets.</a></p>
 
 <p>Additional capabilities are being developed in Umple to allow other types of constraints.</p>
 

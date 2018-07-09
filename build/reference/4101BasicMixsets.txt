@@ -3,8 +3,6 @@ Mixsets and Filters
 noreferences
 
 @@description
-<p>This mixsets feature will be fully released soon.</p>
-
 <p>Mixsets can be used to create different members of the same <em>product line</em> from a given Umple model, or to help divide the system into features for <em>feature-oriented development</em>. They can also be seen as providing conditional compilation capabilities such as those commonly found in C++ or C.</p>
 
 <p>Mixsets are one of several separation-of-concerns capabilities available in Umple. The others being <a href="StructureofUmpleCode.html">mixins</a>, <a href="Traits.html">traits</a>, <a href="BeforeandAfterStatements.html">aspect orientation</a> and <a href="Filters.html">filters</a>.</p>
@@ -21,6 +19,12 @@ included in the system. A mixset is included using a <i>use</i> statement or a c
   <li>Within a class, trait or other top-level entity. In this case the contents of the block are included in that entity (if a matching use statement is encountered).
 </ul>
 
+@@syntax
+[[mixsetDefinition]] [[mixsetInnerContent]] [[mixsetInlineDefinition]] [[extraCode]]
+
+@@example
+@@source manualexamples/SimpleMixsets1.ump
+@@endexample
 
 
 
