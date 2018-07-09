@@ -234,8 +234,14 @@ public class UmpleMixsetTest {
     Assert.assertEquals(umpleClasses.get(0).getName(),"Target");
 
   }   
-   
+  
+  @Test
+  public void mixsetRequireStatementNoWarnings()
+  {
+    umpleParserTest.assertNoWarningsParse("mixsetRequireStatementNoWarnings.ump");
+  }
 
+ 
   		
 }
 

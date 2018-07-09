@@ -18,6 +18,10 @@ mixsetInlineDefinition- : ( [entityType] [entityName] ( [[mixsetInnerContent]] |
 //mixsetDeclaration- : [[mixsetBasicDeclaration]] | [[mixsetInlineDeclaration]]
 //mixsetBasicDeclaration- : mixset [mixsetName]  [[mixsetInnerContent]] 
 
+// require statement allows adding dependencies on mixsets.
 
+mixsetRequireStatement : require [[requireBody]]  // inline require 
+mixsetRequireStatement : mixset [mixsetName] require [[requireBody]]
 
+requireBody : [mixsetName] //basic case of mixset body 
 
