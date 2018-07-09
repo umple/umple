@@ -7,6 +7,6 @@ mixset A { class} use A;
 
 /*
 Expected Error message:
-Error 1502 on line 4 of file "mixsetTTTT.ump":
+Error 1502 on line 4 of file "oneLineMixsetError.ump":
 Parsing error: Structure of 'class' invalid
 */

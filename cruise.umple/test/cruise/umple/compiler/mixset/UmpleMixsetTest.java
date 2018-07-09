@@ -147,7 +147,7 @@ public class UmpleMixsetTest {
     int line = 11;
     int errorCode = 1007;
     int offset= 0;
-		int charOff = 12;
+    int charOff = 12;
     umpleParserTest.assertHasWarningsParse(file.getFileName(), new Position(file.getPath()+"/"+file.getFileName(),line,offset,charOff),errorCode);			
 		
   }
