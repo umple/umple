@@ -1,0 +1,19 @@
+class OuterClass {}
+
+mixset OuterMixset {
+  
+  mixset InnerMixset {
+  class InnerClass {}
+  class OuterClass {a;}
+  }
+
+  class OuterClass{b;}
+
+}
+
+
+use InnerMixset;
+// no use statement for parent mixset 'OuterMixset'.
+
+// InnerClass should not added to umple model.
+// should have 0 attributes.
