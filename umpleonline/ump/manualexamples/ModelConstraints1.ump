@@ -1,0 +1,34 @@
+class X {
+  // Checks that this class has an assciation
+  // with class Z.
+  [model: -- Z]
+}
+
+class Y {
+  isA X;
+  // Verifies that this is a subclass of X
+  [model: isA X]
+}
+
+class Z {
+ a;
+ 1 -- * X;
+ // Verifies that there is an association a
+ [model: has a] 
+}//$?[End_of_model]$?
+
+class X
+{
+  position 50 30 109 45;
+}
+
+class Y
+{
+  position 50 130 109 45;
+}
+
+class Z
+{
+  position 259 30 109 56;
+  position.association X__Z 0,6 110,24;
+}

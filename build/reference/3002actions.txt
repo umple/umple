@@ -5,7 +5,7 @@ noreferences
 @@description
 <p><b>Transition actions:</b>      
 When n transition is taken, an action can occur. This is indicated
-using a slash "/" followed by arbitrary code in braces. The arbitrary code
+using a slash &quot;/&quot; followed by arbitrary code in braces. The arbitrary code
 may be placed after the event name or before the destination state name. In other words the arrow -&gt; can be placed either directly after the event (before the action), or directly before the destination state (after the action)
 
 <p><b>Entry and exit actions:</b>
@@ -14,14 +14,14 @@ when entering or exiting a state, an action can occur. This is indicated
 using the keywords entry or exit, followed by a slash, followed by code.
 </p>
 
-<p>The actions described above should be programmed such that they take negligible time to execute; in other words they shouldn't contain significant loops..</p>
+<p>The actions described above should be programmed such that they take negligible time to execute; in other words they shouldn&apos;t contain significant loops..</p>
 
 <p><b>Do activities:</b>
 If a longer-running computation (activity) needs to be while in a state,
 encode this using the keyword do, followed by a block of code
 in curly brackets. In languages such as Java
 that support it, a thread will be started
-to invoke the code. This allows the state machine to 'stay live'
+to invoke the code. This allows the state machine to &apos;stay live&apos;
 and be able to respond to other events, even while the do activity is
 running. A do activity thread can be
 interrupted and cancelled when a transition is taken out of the state. To enable this
