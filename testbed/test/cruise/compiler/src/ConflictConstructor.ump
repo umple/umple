@@ -1,0 +1,12 @@
+generate Java "../src-gen-umple";
+class A
+{
+	A (D d) {} 
+}
+
+class D
+{
+
+	1 -- * A a;
+}
+

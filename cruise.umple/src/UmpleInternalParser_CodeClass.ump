@@ -3280,6 +3280,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         	if(uClass.getName().equals(methodToken.getValue()))
         	{
         		setFailedPosition(token.getPosition(), 170, "");
+        	// Manual constructors should not be flagged wih setIsConstructor(true) of aMethod.
+        	// Otherwise, they will be mixed with umple generated constructors.
+        	
         	}
         	
         }
