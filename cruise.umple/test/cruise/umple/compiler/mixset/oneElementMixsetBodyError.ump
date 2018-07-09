@@ -1,0 +1,15 @@
+mixset OneElementMixset { 
+
+
+
+class
+
+}
+
+use OneElementMixset;
+
+/*
+Expected Error message:
+Error 1502 on line 5 of file "oneElementMixsetBodyError.ump":
+Parsing error: Structure of 'class' invalid
+*/

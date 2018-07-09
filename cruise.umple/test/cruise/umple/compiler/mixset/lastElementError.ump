@@ -1,0 +1,11 @@
+mixset A { class One {}
+
+statemachine } use A;
+
+
+
+/*
+Expected Error message:
+Error 1502 on line 3 of file "lastElementError.ump":
+Parsing error: Structure of 'class' invalid
+*/

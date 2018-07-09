@@ -3032,17 +3032,7 @@ public class UmpleParserTest
     assertFailedParse("008_multivaluedAttributeAssignment1.ump", 81);
     assertFailedParse("008_multivaluedAttributeAssignment2.ump", 81);
   }
-  
-  
-  @Test
-  public void mixsetDefinition()
-  {
-	  assertNoWarningsParse("mixsetDefinition.ump");
-	  
 
-  }
-
-  
   //Issue 1277
   @Test
   public void templateInexistentReference()
@@ -3050,16 +3040,6 @@ public class UmpleParserTest
     assertFailedParse("028_templateInexistentReference.ump",3504);
     assertFailedParse("028_multipleTemplateInexistentReferences.ump",3504);
   }
-  
-  @Test
-  public void mixsetUseStatement()
-  {
-	  assertNoWarningsParse("/mixset/mixsetUse.ump");
-	  
-
-  }
-    
-
 
   public boolean parse(String filename)
   {
