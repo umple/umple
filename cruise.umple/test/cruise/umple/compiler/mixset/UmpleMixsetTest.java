@@ -220,7 +220,21 @@ public class UmpleMixsetTest {
     Assert.assertEquals(umpleClasses.get(0).getAttributes().size(), 0);
     Assert.assertEquals(umpleClasses.get(0).getName(),"OuterClass");
 
+  }
+
+ @Test
+  public void useStatementsDependency()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"UseStatementsDependency.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+		List<UmpleClass> umpleClasses = model.getUmpleClasses();
+    Assert.assertEquals(umpleClasses.size(), 1);
+    Assert.assertEquals(umpleClasses.get(0).getName(),"Target");
+
   }   
+   
 
   		
 }

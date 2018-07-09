@@ -1,0 +1,31 @@
+mixset OuterMixset_1 {
+
+	use InnerMixset_2;
+  mixset InnerMixset_1 {	
+  class Target {}
+  }
+
+
+}
+
+
+mixset OuterMixset_2 {
+
+	use OuterMixset_1;  
+  mixset InnerMixset_2 {	
+  use InnerMixset_1;
+  }
+
+
+}
+
+use OuterMixset_2;  
+
+
+
+//   use statements activation : OuterMixset_2 
+//																						--> OuterMixset_1 
+//																															--> InnerMixset_2 
+//																																							 --> InnerMixset_1 
+
+// The class Target should be added to umple Model. 
