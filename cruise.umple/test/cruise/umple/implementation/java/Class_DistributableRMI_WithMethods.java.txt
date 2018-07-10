@@ -285,7 +285,7 @@ public class Microwave implements java.io.Serializable, IMicrowaveImpl, Runnable
 
   public void deleteImpl()
   {
-   removal.interrupt();
+    removal.interrupt();
   }
 
   protected class Message

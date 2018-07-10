@@ -164,7 +164,9 @@ public class QSMwithUnspecifiedRecep implements Runnable
   }
 
   public void delete()
-  {}
+  {
+    removal.interrupt();
+  }
 
   protected class Message
   {
@@ -202,7 +204,10 @@ public class QSMwithUnspecifiedRecep implements Runnable
         {
           wait();
         }
-      } catch (InterruptedException e) { e.printStackTrace(); } 
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        return null;
+      }
 
       //The element to be removed
       Message m = messages.remove(); 
@@ -232,6 +237,7 @@ public class QSMwithUnspecifiedRecep implements Runnable
     while (true) 
     {
       Message m = queue.getNext();
+      if(m == null)  return;
       
       switch (m.type)
       {

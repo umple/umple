@@ -284,6 +284,7 @@ public class MicrowaveImpl extends CCImpl implements java.io.Serializable , IMic
 
   public void delete()
   {
+    removal.interrupt();
     super.delete();
   }
 
@@ -323,7 +324,10 @@ public class MicrowaveImpl extends CCImpl implements java.io.Serializable , IMic
         {
           wait();
         }
-      } catch (InterruptedException e) { e.printStackTrace(); } 
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        return null;
+      }
 
       //The element to be removed
       Message m = messages.remove(); 
@@ -358,6 +362,7 @@ public class MicrowaveImpl extends CCImpl implements java.io.Serializable , IMic
     while (true) 
     {
       Message m = queue.getNext();
+      if(m == null)  return;
       
       switch (m.type)
       {

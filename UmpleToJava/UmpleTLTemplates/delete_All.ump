@@ -357,8 +357,9 @@ class UmpleToJava {
   {
     if (sm.isQueued() || sm.isPooled())
     {
-      append(realSb, "\n   removal.interrupt();");
+      append(realSb, "\n    removal.interrupt();");
       hasSomethingToDelete = true;
+      break;
     }
   }
   
