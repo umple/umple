@@ -12,10 +12,12 @@ class UmpleToJava {
       if(smq.isPooled())
       {
         append(realSb,"      Message m = pool.getNext();");
+        append(realSb,"\n      if(m == null)  return;");
       }
       if(smq.isQueued())
       {
         append(realSb,"      Message m = queue.getNext();");
+        append(realSb,"\n      if(m == null)  return;");
       }
       #>>
       

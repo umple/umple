@@ -206,7 +206,9 @@ public class X implements Runnable
   }
 
   public void delete()
-  {}
+  {
+    removal.interrupt();
+  }
 
   protected class Message
   {
@@ -248,7 +250,10 @@ public class X implements Runnable
           wait();
           message=getNextProcessableMessage();
         }
-      } catch (InterruptedException e) { e.printStackTrace(); }
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        return null;
+      }
 
       // return the message
       return (message);
@@ -314,6 +319,7 @@ public class X implements Runnable
     while (true) 
     {
       Message m = pool.getNext();
+      if(m == null)  return;
       
       switch (m.type)
       {
