@@ -20,23 +20,11 @@ mixsetInlineDefinition- : ( [entityType] [entityName] ( [[mixsetInnerContent]] |
 
 // require statement allows adding dependencies between mixsets.
 
+requireStatement : require [[requireBody]] 
 
-requireStatement : ( mixsetX [mixsetName] )? require ( ( [ [[requireBody]] ] ) | ( [[multiplicity]] of { [[requireBody]] } ) ) 
+requireBody- : [targetMixsetName] 
 
-//| ( [[multiplicity]] of {[[requireList]]} ) )
+//basic case of mixset body 
 
-requireBody- : ( ( [[requireLinkingOptNot]] )? [[requireTerminal]] ) [[requireList]] 
-
-requireList- : ( [[requireLinkingOp]] [[requireTerminal]] )*
-
-
-requireLinkingOp : ( [[requireLinkingOptNot]] | [=and:&|&&|and|,] | [!or:([|][|]?|or|;)] )
-
-requireLinkingOptNot : ( opt | not ) 
-
-requireTerminal : [targetMixsetName] 
-
-
-
-
-//requireBody- : [targetMixsetName] ( [[reqLinkingOp]] [[requireBody]] )*
+//End
+//requireStatement : ( mixset [mixsetName] )? require [[requireBody]] 
