@@ -28,7 +28,7 @@ requireLinkingOp : ([[requireLinkingOptNot]] | [=and:&|&&|and|,] | [!or:([|][|]?
 
 requireLinkingOptNot : (opt | not) 
 
-requireTerminal :  [targetMixsetName]
+requireTerminal :  [~targetMixsetName]
 
 
 
