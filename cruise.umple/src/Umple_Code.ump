@@ -929,7 +929,43 @@ class Method
     methodBuffer.append("  }");
     return methodBuffer.toString();
   }
+  
+  
+  public boolean equals(Object o) 
+  {
+    if (o == this) return true;
+    if (!(o instanceof Method)) return false;
+    
+    Method comparedMethod = (Method) o;
+    
+    String methodName = comparedMethod.getName();
+    String methodType = comparedMethod.getType();
+    int numberOfParams = comparedMethod.getMethodParameters().size();
+    
+    if (comparedMethod.isIsConstructor()) return comparedMethod == this;
+    
+    if (this.getName().equals(methodName))
+    {
+	  if (numberOfParams == this.getMethodParameters().size())
+	  {
+	    boolean allSame = true;
+	    for (int i = 0; i < numberOfParams; i++)
+	    {
+	      if(!this.getMethodParameter(i).getType().equals(comparedMethod.getMethodParameter(i).getType()))
+	      {
+	        allSame = false;
+	        //break;
+	      }
+	    }
+	    if(allSame) return true;
+      }
+    }
+    
+    return false;
+  }
+  
 }
+
 
 /*
  */
