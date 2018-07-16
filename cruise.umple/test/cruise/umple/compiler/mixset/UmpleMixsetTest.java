@@ -241,6 +241,20 @@ public class UmpleMixsetTest {
     umpleParserTest.assertNoWarningsParse("mixsetRequireStatementNoWarnings.ump");
   }
 
+ @Test
+  public void stateMachineStateHasMixset()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"stateMachineStateHasMixset.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+		List<UmpleClass> umpleClasses = model.getUmpleClasses();
+    Assert.assertEquals(umpleClasses.get(0).getName(),"Booking");
+    Assert.assertEquals(umpleClasses.get(0).getStateMachine("state").getStates().size(),5);
+    Assert.assertEquals(umpleClasses.get(0).getStateMachine("state").getAllTransitions().size(), 6);
+
+  }   
+
  
   		
 }

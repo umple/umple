@@ -12,7 +12,7 @@ stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] | 
 activeDefinition : [=active] [[codeLangs]] [name]? [[moreCode]]+
 
 //Issue 148
-inlineStateMachine : [=queued]? [=pooled]? [~name] { ( [[comment]] | [[state]] | [[trace]] | [=-||] | [[standAloneTransition]])* }
+inlineStateMachine : [=queued]? [=pooled]? [~name] { ( [[comment]] | [[state]] | [[trace]] | [[mixsetDefinition]] | [=-||] | [[standAloneTransition]])* }
 referencedStateMachine : [name] as [definitionName] ( { [[extendedStateMachine]] } | ; )
 
 //Issue 547 and 148

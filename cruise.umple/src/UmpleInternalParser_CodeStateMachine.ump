@@ -725,6 +725,12 @@ class UmpleInternalParser
       }
     }
     
+    Token mixsetToken = stateMachineToken.getSubToken("mixsetDefinition");
+    if(mixsetToken != null)
+    {
+      analyzeMixsetDefinition(mixsetToken, sm);
+    }
+
     return sm;
   }
 
