@@ -535,6 +535,8 @@ public class TemplateTest
     
     for(String methodString : generatedMethods)
     {
+      if(isUserAddedMethod(methodString))  continue;
+      
       String[] parts;
       String name = new String();
       String type = new String();
@@ -586,6 +588,13 @@ public class TemplateTest
       case "double" :  return "Double";
       default:         return javaType;
     }
+  }
+  
+  private boolean isUserAddedMethod(String m)
+  {
+    //needs to be improved
+    return !(m.contains("get") || m.contains("set") || m.contains("add") || m.contains("is") || m.contains("minimum")
+    || m.contains("numberOf") || m.contains("indexOf") ||  m.contains("has") || m.contains("remove"));
   }
   
 }
