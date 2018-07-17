@@ -22,6 +22,7 @@ class UmpleInternalParser
   internal List<Token> stateNames = null;
   internal List<Token> transitionNames = null;
   internal List<Token> ignoredTransitions = new ArrayList<Token>();
+  internal List<Token> innerMixsetTokens = null;
   
   
   //------------------------
@@ -490,8 +491,14 @@ class UmpleInternalParser
                stateNames.add(subToken);
            if((subToken.is("transition")||subToken.is("autoTransition")) && subToken.getValue("stateName") != null)
                transitionNames.add(subToken);
+           if(subToken.is("mixsetDefinition"))
+           {
+             innerMixsetTokens.add(subToken); 
+             
+           }  
            if(subToken.hasSubTokens())
                checkUnclearTransition(subToken);
+               
        }       
    }
 
@@ -506,7 +513,9 @@ class UmpleInternalParser
     
     //Issue 531
     stateNames = new ArrayList<Token>();
-    transitionNames = new ArrayList<Token>();   
+    transitionNames = new ArrayList<Token>();
+    innerMixsetTokens = new ArrayList<Token>();   
+    
     checkUnclearTransition(stateMachineToken);
     for(Token transition : transitionNames){
         numberOfOcurrences = 0;
@@ -725,12 +734,9 @@ class UmpleInternalParser
       }
     }
     
-    Token mixsetToken = stateMachineToken.getSubToken("mixsetDefinition");
-    if(mixsetToken != null)
-    {
-      analyzeMixsetDefinition(mixsetToken, sm);
-    }
-
+    
+    analyzeMixsetDefinition(innerMixsetTokens, sm);
+ 
     return sm;
   }
 
