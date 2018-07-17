@@ -54,13 +54,25 @@ class UmpleInternalParser
 {
 	depend cruise.umple.compiler.UmpleFile;
 	depend  java.util.stream.*;
+	
+	// prepare mixsets that are inside a state machine. 
+  private void analyzeMixsetDefinition(Token aToken , StateMachine stateMachine)
+  {
+  	aToken.addSubToken(new Token("entityName",stateMachine.getUmpleClass().getName()) ); 
+    aToken.addSubToken(new Token("entityType","class") );
+ 
+    Token mixsetBodyToken = aToken.getSubToken("extraCode");
+    mixsetBodyToken.setValue(" "+stateMachine.getName()+" { "+mixsetBodyToken.getValue() +" } ");
+    
+    analyzeMixset(aToken);		
+	}
 	 
  // prepare mixsets that are inside an Umple class
   private void analyzeMixsetDefinition(Token aToken , String className)
   {
   	aToken.addSubToken(new Token("entityName",className) );
-	aToken.addSubToken(new Token("entityType","class") );
-	analyzeMixset(aToken);		
+    aToken.addSubToken(new Token("entityType","class") );
+    analyzeMixset(aToken);		
 	}
 /*
  * This method handles mixset use statements appearing in both code and in the console. The method adds mixset use statements to umple model in the first round on analysis, before
