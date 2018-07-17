@@ -4431,15 +4431,29 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   {
     Glossary g = model.getGlossary();
     Boolean isMany = attribute.getIsList();
-    String singularName = isMany ? g.getSingular(attribute.getName()) : attribute.getName();
-    String pluralName = isMany ? attribute.getName() : g.getPlural(attribute.getName());
-    String getSetName = isMany ? pluralName : singularName;
+    //String singularName = isMany ? g.getSingular(attribute.getName()) : attribute.getName();
+    //String pluralName = isMany ? attribute.getName() : g.getPlural(attribute.getName());
     
-    addGetMethod(getSetName, attribute.getType(), aClass, false);
+    if(isMany)
+    {
+      addGetMethod(g.getSingular(attribute.getName()), attribute.getType(), aClass, true);
+    }
+    else
+    {
+      addGetMethod(attribute.getName(), attribute.getType(), aClass, false);
+    }
+    
       
     if (!attribute.getIsAutounique() && (!attribute.getModifier().equals("immutable") || attribute.getIsLazy()) && !attribute.getIsDerived())
     {
-      addSetMethod(getSetName, attribute, aClass);
+      if (isMany)
+      {
+        //addSetMethod(g.getSingular(attribute.getName()), attribute, aClass);
+      }
+      else
+      {
+        addSetMethod(attribute.getName(), attribute, aClass);
+      }
     }
       
   }
@@ -4510,7 +4524,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       
       if(!end.isIsDefaultRoleName())
       {
-        singularName = end.getClassName().toLowerCase();
+        singularName = end.getClassName();
         hasRoleName = true;
       }
       
@@ -4619,7 +4633,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     aMethod.setMethodBody(new MethodBody(""));
     aMethod.setPosition(new Position("", 0, 0, 0));
     aMethod.setSource(Method.Source.fAutoAPI);
-    aMethod.addMethodParameter(new MethodParameter("a" + StringFormatter.toPascalCase(name), attribute.getType(), "", "", false));
+    aMethod.addMethodParameter(new MethodParameter("a" + StringFormatter.toPascalCase(name), toUmpleType(attribute.getType()), "", "", false));
     aClass.addMethod(aMethod);  
   }
   
@@ -4717,6 +4731,18 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     aMethod.addMethodParameter(mp2);
     
     aClass.addMethod(aMethod);
+  }
+  
+  private String toUmpleType(String javaType)
+  {
+    switch (javaType)
+    {
+      case "int":      return "Integer";
+      case "boolean" : return "Boolean";
+      case "float" :   return "Float";
+      case "double" :  return "Double";
+      default:         return javaType;
+    }
   }
 
   private String inferType(String value, String type)
