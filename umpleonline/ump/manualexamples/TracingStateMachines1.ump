@@ -18,3 +18,5 @@ class LightBulb
   // report value of attribute v 
   trace exit Off record v;
 }
+
+// @@@skipphpcompile See issue 596 (PHP tracing causes issues)
