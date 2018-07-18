@@ -80,15 +80,35 @@ class UmpleInternalParser
 	// This method takes a mixset fragment and adds its context. 
 	private String getMixsetFragmentWithEnclosingElement(Token token, String mixsetBody)
 	{
+	  String tokenKey ="";
+	  String prefix ="";
+	  
 	  if (token.is("state"))
-	  mixsetBody = " "+ token.getValue("stateName") + " { " + mixsetBody + " } ";
+	  tokenKey = "stateName";
 	  else if (token.is("inlineStateMachine"))
-	  mixsetBody = " "+ token.getValue("name") + " { " + mixsetBody + " } ";
+	  tokenKey =  "name";
 	  else if (token.is("classDefinition"))
-	  mixsetBody = " class "+ token.getValue("name") + " { " + mixsetBody + " } ";
+	  {
+	    tokenKey = "name"; 
+	    prefix =" class ";
+	  }
 	  else if (token.is("traitDefinition"))
-	  mixsetBody = " trait "+ token.getValue("name") + " { " + mixsetBody + " } ";
-	  else if (token.is("ROOT") || token == null)
+	  {
+	    tokenKey = "name"; 
+	    prefix =" trait ";
+	  }
+	   else if (token.is("associationDefinition"))
+	  {
+	    tokenKey = "name"; 
+	    prefix =" association ";
+	  }
+	  
+	  //associationDefinition name
+	  
+	 if(! tokenKey.equals(""))
+	 mixsetBody = prefix + token.getValue(tokenKey) + " { " + mixsetBody + " } ";
+	   
+	  if (token.is("ROOT") || token == null)
 	  return mixsetBody ;
 	 
 	 return getMixsetFragmentWithEnclosingElement(token.getParentToken(), mixsetBody) ;

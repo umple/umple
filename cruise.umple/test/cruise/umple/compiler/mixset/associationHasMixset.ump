@@ -1,0 +1,14 @@
+
+class A {}
+
+class B {}
+
+class C {}
+
+// Independently defined and directed association
+association {
+  0..1 A -> * B;
+  mixset M1 { 0..1 A -> * C;}
+}
+
+use M1;

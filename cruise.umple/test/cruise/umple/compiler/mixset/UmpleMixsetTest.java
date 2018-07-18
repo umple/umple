@@ -278,10 +278,17 @@ public class UmpleMixsetTest {
 		List<UmpleClass> umpleClasses = model.getUmpleClasses();
     Assert.assertEquals(umpleClasses.get(0).getName(),"ClassA");
     Assert.assertEquals(umpleClasses.get(0).getAttributes().size(), 2);
-
-
-
-  }            
+  }
+ @Test
+  public void associationHasMixset()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"associationHasMixset.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+		List<UmpleClass> umpleClasses = model.getUmpleClasses();
+    Assert.assertEquals(umpleClasses.get(0).getAssociations().length, 2);
+  }              
 
  
   		
