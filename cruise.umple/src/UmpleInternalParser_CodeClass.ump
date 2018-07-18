@@ -280,7 +280,7 @@ class UmpleInternalParser
       analyzeAttribute(token,aClass);
     }
     else if (token.getValue("mixsetDefinition") != null)  {
-     	analyzeMixsetDefinition(token, aClass.getName());
+     	analyzeMixsetBodyToken(token);
     }
     else if (token.is("extraCode"))
     {

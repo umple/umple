@@ -1,14 +1,16 @@
 
-class A {}
+class ClassA {}
 
-class B {}
+class ClassB {}
 
-class C {}
+class ClassC {}
 
-// Independently defined and directed association
+
 association {
-  0..1 A -> * B;
-  mixset M1 { 0..1 A -> * C;}
+  0..1 ClassA -> * ClassB;
+  mixset M1 { 0..1 ClassA -> * ClassC;}
 }
 
 use M1;
+
+// ClassA should have two associations; one association with classB and one, which comes from mixset M1, with ClassC. 

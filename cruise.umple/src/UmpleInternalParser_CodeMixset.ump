@@ -90,23 +90,23 @@ class UmpleInternalParser
 	  else if (token.is("classDefinition"))
 	  {
 	    tokenKey = "name"; 
-	    prefix =" class ";
+	    prefix ="class";
 	  }
 	  else if (token.is("traitDefinition"))
 	  {
 	    tokenKey = "name"; 
-	    prefix =" trait ";
+	    prefix ="trait";
 	  }
 	   else if (token.is("associationDefinition"))
 	  {
 	    tokenKey = "name"; 
-	    prefix =" association ";
+	    prefix ="association";
 	  }
 	  
 	  //associationDefinition name
 	  
 	 if(! tokenKey.equals(""))
-	 mixsetBody = prefix + token.getValue(tokenKey) + " { " + mixsetBody + " } ";
+	 mixsetBody = " "+prefix +" "+ token.getValue(tokenKey) + " { " + mixsetBody + " } ";
 	   
 	  if (token.is("ROOT") || token == null)
 	  return mixsetBody ;
@@ -116,13 +116,6 @@ class UmpleInternalParser
 	
 	}
 	 
- // prepare mixsets that are inside an Umple class
-  private void analyzeMixsetDefinition(Token aToken , String className)
-  {
-  	aToken.addSubToken(new Token("entityName",className) );
-    aToken.addSubToken(new Token("entityType","class") );
-    analyzeMixset(aToken);		
-	}
 /*
  * This method handles mixset use statements appearing in both code and in the console. The method adds mixset use statements to umple model in the first round on analysis, before
  * other umple elements are added to umple model. So, there is no issue regarding which line the mixset use statements are mentioned in.   
