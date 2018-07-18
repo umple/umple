@@ -1,0 +1,25 @@
+class Booking {
+  state {
+    newBooking { 
+      assignSeat -> seatAssigned;
+      cancel -> cancelled;
+    }
+    seatAssigned {
+      cancel -> cancelled;
+      checkIn -> checkedIn;
+    }
+
+     
+      checkedIn {
+       mixset InnerMixset {  
+         cancel -> cancelled;
+         complete -> completed;
+       }
+  }
+    cancelled {}
+    completed {}
+  }
+}
+
+
+use InnerMixset;

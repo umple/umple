@@ -242,7 +242,7 @@ public class UmpleMixsetTest {
   }
 
  @Test
-  public void stateMachineStateHasMixset()
+  public void stateMachine_State_HasMixset()
   {
     UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"stateMachineStateHasMixset.ump");
     UmpleModel model = new UmpleModel(umpleFile);
@@ -253,7 +253,21 @@ public class UmpleMixsetTest {
     Assert.assertEquals(umpleClasses.get(0).getStateMachine("state").getStates().size(),5);
     Assert.assertEquals(umpleClasses.get(0).getStateMachine("state").getAllTransitions().size(), 6);
 
-  }   
+  }
+
+  @Test
+  public void stateMachine_StateEntity_HasMixset()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"stateMachineTransitionHasMixset.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+		List<UmpleClass> umpleClasses = model.getUmpleClasses();
+    Assert.assertEquals(umpleClasses.get(0).getName(),"Booking");
+    Assert.assertEquals(umpleClasses.get(0).getStateMachine("state").getStates().size(),5);
+    Assert.assertEquals(umpleClasses.get(0).getStateMachine("state").getAllTransitions().size(), 6);
+
+  }      
 
  
   		

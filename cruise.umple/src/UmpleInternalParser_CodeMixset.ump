@@ -56,15 +56,42 @@ class UmpleInternalParser
 	depend  java.util.stream.*;
 	
 	// prepare mixsets that are inside a state machine. 
-  private void analyzeMixsetDefinition(Token aToken , StateMachine stateMachine)
-  {
-  	aToken.addSubToken(new Token("entityName",stateMachine.getUmpleClass().getName()) ); 
-    aToken.addSubToken(new Token("entityType","class") );
- 
-    Token mixsetBodyToken = aToken.getSubToken("extraCode");
-    mixsetBodyToken.setValue(" "+stateMachine.getName()+" { "+mixsetBodyToken.getValue() +" } ");
+  private void analyzeMixsetDefinition(List<Token> tokenList , StateMachine stateMachine)
+  {  
+    if (tokenList.size() < 1)
+    return;
     
-    analyzeMixset(aToken);		
+    for(Token aToken : tokenList)
+    {
+      if(stateMachine.getUmpleClass().getName() == null)
+      return;
+      //otherwise
+     	analyzeMixsetBodyToken(aToken);
+    }  
+	}
+
+  private void analyzeMixsetBodyToken(Token token)
+	{
+	  Token mixsetBodyToken = token.getSubToken("extraCode");      
+    mixsetBodyToken.setValue(getMixsetFragmentWithEnclosingElement(token,mixsetBodyToken.getValue()));
+    analyzeMixset(token);
+	}
+	
+	// This method takes a mixset fragment and adds its context. 
+	private String getMixsetFragmentWithEnclosingElement(Token token, String mixsetBody)
+	{
+	  if (token.is("state"))
+	  mixsetBody = " "+ token.getValue("stateName") + " { " + mixsetBody + " } ";
+	  else if (token.is("inlineStateMachine"))
+	  mixsetBody = " "+ token.getValue("name") + " { " + mixsetBody + " } ";
+	  else if (token.is("classDefinition"))
+	  mixsetBody = " class "+ token.getValue("name") + " { " + mixsetBody + " } ";
+	  else if (token.is("ROOT") || token == null)
+	  return mixsetBody ;
+	 
+	 return getMixsetFragmentWithEnclosingElement(token.getParentToken(), mixsetBody) ;
+	  
+	
 	}
 	 
  // prepare mixsets that are inside an Umple class
