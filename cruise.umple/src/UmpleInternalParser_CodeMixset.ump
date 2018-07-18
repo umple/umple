@@ -86,6 +86,8 @@ class UmpleInternalParser
 	  mixsetBody = " "+ token.getValue("name") + " { " + mixsetBody + " } ";
 	  else if (token.is("classDefinition"))
 	  mixsetBody = " class "+ token.getValue("name") + " { " + mixsetBody + " } ";
+	  else if (token.is("traitDefinition"))
+	  mixsetBody = " trait "+ token.getValue("name") + " { " + mixsetBody + " } ";
 	  else if (token.is("ROOT") || token == null)
 	  return mixsetBody ;
 	 

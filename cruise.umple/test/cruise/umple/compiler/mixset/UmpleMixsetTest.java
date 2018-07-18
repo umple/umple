@@ -267,7 +267,21 @@ public class UmpleMixsetTest {
     Assert.assertEquals(umpleClasses.get(0).getStateMachine("state").getStates().size(),5);
     Assert.assertEquals(umpleClasses.get(0).getStateMachine("state").getAllTransitions().size(), 6);
 
-  }      
+  }
+ @Test
+  public void TraitHasMixset()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"TraitHasMixet.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+		List<UmpleClass> umpleClasses = model.getUmpleClasses();
+    Assert.assertEquals(umpleClasses.get(0).getName(),"ClassA");
+    Assert.assertEquals(umpleClasses.get(0).getAttributes().size(), 2);
+
+
+
+  }            
 
  
   		

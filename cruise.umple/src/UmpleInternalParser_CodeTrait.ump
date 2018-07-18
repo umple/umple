@@ -206,6 +206,11 @@ class UmpleInternalParser
     {
       shouldConsumeComment = false;
     }
+    else if (token.is("mixsetDefinition"))
+    {
+      analyzeMixsetBodyToken(token);
+   
+    }
     else if (token.is("inlineComment"))
     {
       analyzeComment(token, false);
