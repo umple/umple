@@ -28,3 +28,6 @@ class Machine {
     }
   }
 }
+
+// @@@skipphpcompile Php does not generate proper
+// history state code (see issue 1338)

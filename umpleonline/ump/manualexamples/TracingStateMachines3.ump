@@ -21,3 +21,5 @@ class GarageDoor
     // trace whole state machine
     trace status;
 }
+
+// @@@skipphpcompile See issue 596 (PHP tracing causes issues)
