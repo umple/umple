@@ -815,6 +815,7 @@ public class UmpleClassTest
 
     UmpleModel model = getModel(code);
     model.run();
+    
     UmpleClass A = model.getUmpleClass("A");
     Assert.assertNotNull(A.getAssociationVariable("cs"));
     ArrayList<String> methodNameListA = A.getMethodNames();
@@ -828,10 +829,21 @@ public class UmpleClassTest
     Assert.assertTrue(methodNameListA.contains("removeC"));
     Assert.assertTrue(methodNameListA.contains("addCAt"));
     Assert.assertTrue(methodNameListA.contains("addOrMoveCAt"));
+    
 
+    
     UmpleClass B = model.getUmpleClass("B");
     Assert.assertNull(B.getAssociationVariable("cs"));
-    ArrayList<String> methodNameListB = B.getMethodNames();
+    List<Method> methodListB = B.getMethods();
+    ArrayList<String> methodNameListB = new ArrayList<String>();
+    
+    for(Method m : methodListB)
+    {
+      if(m.getSource() != Method.Source.fAutoAPI)
+      {
+        methodNameListB.add(m.getName());
+      }
+    }
     Assert.assertFalse(methodNameListB.contains("getC"));
     Assert.assertFalse(methodNameListB.contains("getCs"));
     Assert.assertFalse(methodNameListB.contains("numberOfCs"));
@@ -843,6 +855,7 @@ public class UmpleClassTest
     Assert.assertFalse(methodNameListB.contains("addCAt"));
     Assert.assertFalse(methodNameListB.contains("addOrMoveCAt"));
 
+    
     UmpleClass C = model.getUmpleClass("C");
     Assert.assertNotNull(C.getAssociationVariable("a"));
     Assert.assertNull(C.getAssociationVariable("b"));
@@ -851,6 +864,7 @@ public class UmpleClassTest
     Assert.assertTrue(methodNameListC.contains("setA"));
     Assert.assertFalse(methodNameListC.contains("getB"));
     Assert.assertFalse(methodNameListC.contains("setB"));
+    
   }
 
   @Test
@@ -876,7 +890,16 @@ public class UmpleClassTest
 
     UmpleClass B = model.getUmpleClass("B");
     Assert.assertNull(B.getAssociationVariable("cs"));
-    ArrayList<String> methodNameListB = B.getMethodNames();
+    List<Method> methodListB = B.getMethods();
+    ArrayList<String> methodNameListB = new ArrayList<String>();
+    
+    for(Method m : methodListB)
+    {
+      if(m.getSource() != Method.Source.fAutoAPI)
+      {
+        methodNameListB.add(m.getName());
+      }
+    }
     Assert.assertFalse(methodNameListB.contains("getC"));
     Assert.assertFalse(methodNameListB.contains("getCs"));
     Assert.assertFalse(methodNameListB.contains("numberOfCs"));
@@ -917,7 +940,16 @@ public class UmpleClassTest
     Assert.assertTrue(methodNameListA.contains("addOrMoveCAt"));
 
     UmpleClass B = model.getUmpleClass("B");
-    ArrayList<String> methodNameListB = B.getMethodNames();
+    List<Method> methodListB = B.getMethods();
+    ArrayList<String> methodNameListB = new ArrayList<String>();
+    
+    for(Method m : methodListB)
+    {
+      if(m.getSource() != Method.Source.fAutoAPI)
+      {
+        methodNameListB.add(m.getName());
+      }
+    }
     Assert.assertFalse(methodNameListB.contains("getC"));
     Assert.assertFalse(methodNameListB.contains("getCs"));
     Assert.assertFalse(methodNameListB.contains("numberOfCs"));
@@ -1000,7 +1032,16 @@ public class UmpleClassTest
     Assert.assertTrue(methodNameListA.contains("addOrMoveCAt"));
 
     UmpleClass B = model.getUmpleClass("B");
-    ArrayList<String> methodNameListB = B.getMethodNames();
+    List<Method> methodListB = B.getMethods();
+    ArrayList<String> methodNameListB = new ArrayList<String>();
+    
+    for(Method m : methodListB)
+    {
+      if(m.getSource() != Method.Source.fAutoAPI)
+      {
+        methodNameListB.add(m.getName());
+      }
+    }
     Assert.assertFalse(methodNameListB.contains("getC"));
     Assert.assertFalse(methodNameListB.contains("getCs"));
     Assert.assertFalse(methodNameListB.contains("numberOfCs"));

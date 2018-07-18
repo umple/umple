@@ -207,6 +207,9 @@ class Method
 
   // The comments associated with the method (such as the Javadoc above it).
   1 -> * Comment;
+  
+  // Specifies, for fAutoAPI methods, if the method was generated
+  Boolean wasGenerated = false;
 
 }
 
