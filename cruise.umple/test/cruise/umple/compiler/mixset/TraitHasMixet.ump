@@ -1,0 +1,19 @@
+trait TraitA {
+
+  a;
+
+    mixset M1 {
+      b;
+    }
+
+}
+
+class ClassA {
+
+  isA TraitA;
+
+}
+
+use M1;
+
+// ClassA should have two string attributes: "a" and "b".
