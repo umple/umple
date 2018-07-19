@@ -280,7 +280,7 @@ class UmpleInternalParser
       analyzeAttribute(token,aClass);
     }
     else if (token.getValue("mixsetDefinition") != null)  {
-     	analyzeMixsetDefinition(token, aClass.getName());
+     	analyzeMixsetBodyToken(token);
     }
     else if (token.is("extraCode"))
     {
@@ -1041,7 +1041,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     // Go through every token that is a child of the current token (all associations part of this association).
     for(Token token : associationToken.getSubTokens()){
       boolean isAssociationToken = token.is("association");
-
+      if (token.is("mixsetDefinition"))
+      {
+        analyzeMixsetBodyToken(token);
+      } 
       //Issue 213/131: [association] elements inside associationClasses generate 2 associations instead of one
       if (isAssociationToken && associationToken.is("associationClassDefinition")) {
         for (Token t : token.getSubTokens()) {
