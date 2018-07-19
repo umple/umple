@@ -60,7 +60,6 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
 	  boolean successfulCompilation;
 	    UmpleModel model;
 	    String pjName ;
-	    JavaClassGenerator.mainMainClass = null;
     try
     {
     	MessageConsole umpleConsole = findConsole("Umple Compile");

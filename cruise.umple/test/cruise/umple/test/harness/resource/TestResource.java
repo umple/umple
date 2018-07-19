@@ -89,8 +89,6 @@ public class TestResource {
 			}
 		}
 		
-		// Nullify mainMainClass
-		JavaClassGenerator.mainMainClass = null;
 		UmpleFile umpFile = new UmpleFile(getPath(), getModelFilename());
 		umpleModel = new UmpleModel(umpFile);
 		umpleModel.setShouldGenerate(false);
@@ -236,8 +234,6 @@ public class TestResource {
 				SampleFileWriter.destroy(filePath);
 			}
 		}
-		// Nullify mainMainClass
-		JavaClassGenerator.mainMainClass = null;
 	}
 
 	public void setPath(String aPath) {

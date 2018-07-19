@@ -402,7 +402,7 @@ for (StateMachine smq : uClass.getStateMachines())
   <<=uClass.getExtraCode()>>
   
 
-<<# } #>><<@ UmpleToJava.trace >><<#if(uClass!=mainMainClass){#>>
+<<# } #>><<@ UmpleToJava.trace >><<#if(model.getMainClassName() != uClass.getName()){#>>
 }<<#}
   return realSb.toString();
 }

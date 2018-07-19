@@ -52,8 +52,6 @@ public class TestParseValidation {
 		if (!(new File(checkFile).exists())) { 
 			Assert.fail("Unable to locate umple file: " + checkFile);
 		}
-		// Nullify mainMainClass
-		JavaClassGenerator.mainMainClass = null;
 		UmpleFile umpFile = new UmpleFile(getPath());
 		umpleModel = new UmpleModel(umpFile);
 	}

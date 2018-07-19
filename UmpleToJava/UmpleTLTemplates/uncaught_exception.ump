@@ -1,7 +1,6 @@
 class UmpleToJava {
     uncaught_exception <<!<</*uncaught_exception*/>><<#
 java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) \"(.*)\"");
-public static UmpleClass mainMainClass = null;
 private void addUncaughtExceptionVariables(int javaline, String code, String methodname)
 {
   String[] lines = code.split("\\n");

@@ -81,17 +81,16 @@ class UmpleToJava {
           &&paramType.equals("String")&&isList.equals(" [] "))
         {
           String exceptionHandlerPackage = "";
-          if(mainMainClass!=null)
+          if(model.getMainClassName() != null)
           {
-            exceptionHandlerPackage = mainMainClass.getPackageName()+"."+mainMainClass.getName()+".";
+            exceptionHandlerPackage = model.getMainClassName()+".";
           }
           else
           {
-            mainMainClass = uClass;
+            model.setMainClassName(uClass.getName());
           }
           properMethodBody = "    Thread.currentThread().setUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+
                              "    Thread.setDefaultUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+properMethodBody;
-          uClass.setHasMainMethod(true);
         }
     
         if (aMethod.numberOfComments() > 0) { append(realSb, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
