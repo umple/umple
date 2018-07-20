@@ -1,0 +1,210 @@
+Basic Distributed Systems
+Distribution
+noreferences
+
+@@description
+
+<p>By default, compiling an Umple system will result in set of classes that execute as a single application operating on objects that exist in a single Java virtual machine (VM) on a single computer (node). In this default mode of operation all method calls are made locally to methods in the same running VM.
+</p>
+
+<p>However, by using the &apos;distributed&apos; keyword, modelers can instruct the Umple compiler to allow objects to be distributed to multiple running VMs most likely running on different computers (although they can be on the same computer if desired). In this mode, some method calls result in remote invocation of methods in a different VM using either Remote Method Invocation, or Web Services.
+</p>
+
+<p>To make an Umple model into a distributable one that runs on multiple VMs, the developer needs to perform the following. Each of these steps is described in more detail later.
+</p>
+
+<ol>
+<li>Identify the distributable classes by adding <i>distributable;</i> to such classes.
+<li>Decide on groups of objects that are to exist together on  a given VM by grouping them into different runtime components 
+<li>Identifying the VMs and the groups of objects that must run on each VM using a configuration file.
+<li>Run each VM.
+</ol>
+
+<h2>Distributable classes</h2>
+
+<p>The developer must first identify which classes are allowed to have objects on multiple machines using the &apos;distributable&apos; keyword. For example:
+</p>
+
+<pre>
+class Customer{<br/>
+&nbsp;  distributable;<br/>
+}
+</pre>
+
+<p>The above need not require modifying the original code as it could be introduced using a mixin. Indeed it is possible in Umple to turn a non-distributed system into a distributed system with a minimum of code change.
+</p>
+
+<p>The distributable feature is inherited by  subclasses. One can also put distributable in an interface (It makes the classes that use this interface distributable). Human and Customer are both distributable in the example below.
+</p>
+
+<pre>
+class Human{<br/>
+&nbsp; distributable;<br/>
+}<br/>
+class Customer{<br/>
+&nbsp;  isA Human;<br/>
+}
+</pre>
+
+&nbsp;<br/>
+
+
+<h2>Runtime components</h2>
+
+<p>Objects can be grouped to run on the same machine. These groups are called runtime components. By default, all instances of the same class are grouped together in a runtime component named after the class name. For example all of the objects of the Customer class above would be in the Customer runtime component.
+</p>
+
+<p>The runtime components are managed by a special class that Umple creates called UmpleRuntime. An instance of UmpleRuntime will exist on each running VM. It is mostly invisible to the program; it is only called by the program in a few special circumstances.
+</p>
+
+<p>
+To put a specific instance of a class in a different group, one can name the runtime component of the object as the last parameter of the constructor when creating the instance of the distributable class.
+</p>
+
+<p>
+In the example below, &quot;customer1&quot; goes into the runtime component &quot;Customer&quot; by default.
+</p>
+
+<pre>
+Customer customer1= new Customer (&quot;customer 1&quot;);
+</pre>
+
+<p>
+In the example below, we put &quot;v&quot; in the runtime component &quot;Customer&quot;.
+</p>
+
+<pre>
+Vendor v= new Vendor (&quot;Vendor 1&quot;, UmpleRuntime.getComponent(&quot;Customer&quot;));
+</pre>
+
+<p>
+The names of the runtime components can be any alphanumeric word and there is no need to declare them at compile time or in the configuration file. In the example below, we put &quot;v&quot; in the runtime component &quot;Component1&quot; which is not named after any class.
+</p>
+
+<pre>
+Vendor v= new Vendor (&quot;Vendor 1&quot;, UmpleRuntime.getComponent(&quot;Component1&quot;));
+</pre>
+
+<p>An Umple program using distributed objects can call methods on an object that happens to exist in another VM. Arguments can also be passed containing objects that are on another VM. Behind the scenes proxy objects are used to make this happen, and method calls use Remote Method Invocation (RMI) by default, or else web services if specified as discussed below.
+</p>
+
+&nbsp;<br/>
+
+
+<h2>Configuration file</h2>
+
+<p>As mentioned above, the UmpleRuntime class is generated for every distributed system. The instance of UmpleRuntime on each VM is responsible for distributing the objects. It reads a file (by default configuration.txt) to know which VM is where, and which VM and runs which runtime components.
+</p>
+
+<p>In the configuration file, one declares a machine using curly brackets ({}) and can define specifications of the machine in the brackets (id, ip, url,..) as shown in the example below. One also names the runtime components that the machine runs.
+</p>
+
+<p>The first example shows a configuration file with four nodes and five runtime components.</p>
+
+<pre>
+{id=0 ip=192.168.2.1 port=10541 {rc1}}<br/>
+{id=1 ip=192.168.2.2 {rc2, rc3}}<br/>
+{{Vendor} ip=192.168.2.3 id=2 }<br/>
+{id=3 ip=192.168.2.4 {Warehouse}}
+</pre>
+
+<p>The next example is a configuration file with two nodes on the same physical machine with different ports to distinguish them.</p>
+
+<pre>
+{id=0 ip=192.168.2.1 port=10541 {rc1}}<br/>
+{id=1 ip=192.168.2.1 port=10540 {rc2, rc3}}<br/>
+</pre>
+
+<p>Finally, the following shows configuration file with all runtime components on the same node</p>
+
+<pre>
+{id=0 url=http:&sol;&sol;localhost  port=10541 {rc1, Vendor, rc2, rc3}}
+</pre>
+
+&nbsp;<br/>
+
+
+<h2>Running the system</h2>
+
+<p>To run the system, the operator starts Java VMs for as many copies of the system as he or she desired by invoking a main class (a class with a main method). At least one of the started machines must be started using such a main class; other machines can be started by running UmpleRuntime on those machines.
+</p>
+
+<p>The id of the machine must be communicated to the UmpleRuntime as an argument.
+The example below shows two different machines being started where the Java code generated by umple is in the ecommerce directory. One VM is started by running a class called Main; this starts the whole system. The other one runs Umpleruntime on machine 1.
+</p>
+
+<p>
+On machine 0:
+</p>
+
+<pre>
+java ecommerce.Main
+</pre>
+
+<p>
+On machine 1:
+</p>
+
+<pre>
+java ecommerce.UmpleRuntime 1
+</pre>
+
+<p>
+It is also possible to change the configuration file&apos;s default address:
+</p>
+
+<pre>
+java ecommerce.UmpleRuntime 1 c:\configFile.txt
+</pre>
+
+<p>
+The system will not do anything until all of the VMs in the system have started and connected.
+</p>
+
+<p>
+The user can change the defaults by calling certain UmpleRuntime static methods from the main method.
+</p>
+
+<pre>
+UmpleRuntime.setThisNodeId(1); <br/>
+UmpleRuntime.setFileAddress(&quot;otherconfigFile.txt&quot;);<br/>
+UmpleRuntime.getInstance();
+</pre>
+
+
+
+
+
+
+&nbsp;<br/>
+
+<h2>More options</h2>
+
+<p>
+One can set all classes to be distributable by using the following directive:
+</p>
+
+<pre>
+distributable forced;
+</pre>
+
+<p>
+One can forbid all classes to be distributable by using the following directive:
+</p>
+
+<pre>
+distributable off;
+</pre>
+
+<p>
+One can use Web services instead of RMI by adding ws after distributable keyword in the class:
+</p>
+
+<pre>
+distributable ws;
+</pre>
+
+<p>More examples and details about the distributable feature will be provided shortly.</p>
+
+@@syntax
+[[distribute]] [[distributable]]
