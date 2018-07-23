@@ -146,6 +146,7 @@ public class JavaClassTemplateTest extends ClassTemplateTest
 	 * and that the correct threading code is generated when "public static void main(String[] args)" is specified
 	 */
     assertUmpleTemplateFor("java/ClassTemplateTest_Generated.ump","java/ClassTemplateTest_Generated.java.txt","Mentor");
+    assertUmpleTemplateFor("java/ClassTemplateTest_Generated5.ump", "java/ClassTemplateTest_Generated5.java.txt", "Mentor");
     /*
      *  Check that a "main" function (in the Java sense) is only detected (and accompanying threading code generated)
      *  when a function matches the "public static void main(String[] args)" format exactly.
@@ -155,8 +156,6 @@ public class JavaClassTemplateTest extends ClassTemplateTest
     
     // Check that void is not added twice if the user explicitly includes it in the .ump file
     assertUmpleTemplateFor("java/ClassTemplateTest_Generated3.ump","java/ClassTemplateTest_Generated3.java.txt","Mentor");
-
-    
   }
   
   @Test

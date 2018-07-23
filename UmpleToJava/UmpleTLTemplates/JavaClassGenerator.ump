@@ -402,11 +402,11 @@ for (StateMachine smq : uClass.getStateMachines())
   <<=uClass.getExtraCode()>>
   
 
-<<# } #>><<@ UmpleToJava.trace >><<#if(model.getMainClassName() != uClass.getName()){#>>
+<<# } #>><<@ UmpleToJava.trace >><<#if(model.getMainClass() == null || model.getMainClass().getName() != uClass.getName()){#>>
 }<<#}
   return realSb.toString();
 }
-#>><<@ UmpleToJava.uncaught_exception >><<#
+#>><<@ UmpleToJava.uncaught_exception >><<#}
 
 
 

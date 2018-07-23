@@ -125,7 +125,10 @@ class JavaGenerator
     
     if(mainClasses.size()>0)
     {
-      writeUncaughtExceptionFile(mainClasses.get(0));
+      for(UmpleClass uClass : mainClasses)
+      {
+        writeUncaughtExceptionFile(uClass);
+      }
     }
 	  if(getModel().getDistributed())
     {
@@ -3198,7 +3201,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     file.mkdirs();
 
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename,true));
-    String contents = new JavaClassGenerator().getExceptionHandler(uncaughtExceptions.toString());
+    String contents = new JavaClassGenerator().getExceptionHandler(uncaughtExceptions.toString(), aClass, getModel());
     getModel().getGeneratedCode().put(aClass.getName(),getModel().getGeneratedCode().get(aClass.getName())+contents);
     try
     {
