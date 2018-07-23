@@ -27,8 +27,8 @@ public class Mentor
 
   // line 13 "ClassTemplateTest_Generated5.ump"
    public static  void main(String [] args){
-    Thread.currentThread().setUncaughtExceptionHandler(new Student.UmpleExceptionHandler());
-    Thread.setDefaultUncaughtExceptionHandler(new Student.UmpleExceptionHandler());
+    Thread.currentThread().setUncaughtExceptionHandler(new example.Student.UmpleExceptionHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new example.Student.UmpleExceptionHandler());
     /* Class Teacher main */
   }
 
