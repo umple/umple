@@ -1,0 +1,17 @@
+namespace example;
+
+class Student
+{
+  public static void main(String[] args)
+  {
+    /* Class Student main */
+  }
+}
+
+class Mentor
+{
+  public static void main(String[] args)
+  {
+    /* Class Teacher main */
+  }
+}

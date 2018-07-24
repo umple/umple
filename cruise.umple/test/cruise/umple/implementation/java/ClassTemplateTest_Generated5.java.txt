@@ -1,0 +1,35 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+// line 9 "ClassTemplateTest_Generated5.ump"
+public class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+  // line 13 "ClassTemplateTest_Generated5.ump"
+   public static  void main(String [] args){
+    Thread.currentThread().setUncaughtExceptionHandler(new example.Student.UmpleExceptionHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new example.Student.UmpleExceptionHandler());
+    /* Class Teacher main */
+  }
+
+}

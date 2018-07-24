@@ -1,7 +1,6 @@
 class UmpleToJava {
     uncaught_exception <<!<</*uncaught_exception*/>><<#
 java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) \"(.*)\"");
-public static UmpleClass mainMainClass = null;
 private void addUncaughtExceptionVariables(int javaline, String code, String methodname)
 {
   String[] lines = code.split("\\n");
@@ -32,8 +31,9 @@ private void addUncaughtExceptionVariables(String methodname, String filename, i
   uncaughtExceptions.get(methodname).addUncaughtJavaLine(javaline+1);
   uncaughtExceptions.get(methodname).addUncaughtLength(length);
 }
-public String getExceptionHandler(String exceptions) { 
-  StringBuilder realSb = new StringBuilder();#>>
+public String getExceptionHandler(String exceptions, UmpleClass uClass, UmpleModel model) { 
+  StringBuilder realSb = new StringBuilder();
+  if(model.getMainClass() != null && model.getMainClass().getName() == uClass.getName()){#>>
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {
     public void uncaughtException(Thread t, Throwable e)
@@ -149,8 +149,10 @@ public String getExceptionHandler(String exceptions) {
     public int size(){
       return umpleFileNames.length;
     }
-  } 
-}<<#
+  }
+}
+<<#
+  }
   return realSb.toString();
-}#>>!>>
+#>>!>>
 }

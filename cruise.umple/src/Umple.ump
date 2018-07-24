@@ -50,6 +50,7 @@ class UmpleModel
   Glossary glossary = new Glossary();
   String defaultNamespace = null;
   String code = null;
+  UmpleClass mainClass = null;
   Boolean debugMode = false;
   ParseResult lastResult = null;
   public static final String[] validLanguages = findValidLanguages();

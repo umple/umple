@@ -173,11 +173,7 @@ public class DistributedClassTest extends TemplateTest
 
   @After
   public void tearDown() {
-	/* Nullify mainMainClass. It's a static variable, if we don't do this the state will
-	 * affect the next set of JUnit tests that use mainMainClass.
-	 */
 	super.tearDown();
-	JavaClassGenerator.mainMainClass = null;
   }	
 	
   @Test
