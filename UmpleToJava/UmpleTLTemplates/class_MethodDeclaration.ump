@@ -93,8 +93,8 @@ class UmpleToJava {
           }
           properMethodBody = "    Thread.currentThread().setUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+
                              "    Thread.setDefaultUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+properMethodBody;
+          uClass.setHasMainMethod(true);
         }
-        uClass.setHasMainMethod(true);
         
         if (aMethod.numberOfComments() > 0) { append(realSb, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
         
