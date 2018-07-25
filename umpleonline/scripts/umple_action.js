@@ -1819,7 +1819,7 @@ Action.validateMethodName = function(newMethod)
 Action.toggleAttributes = function()
 {
   Page.showAttributes = !Page.showAttributes;
-  Action.redrawDiagram()
+  Action.redrawDiagram();
 }
   
 Action.toggleMethods = function()
@@ -1831,25 +1831,25 @@ Action.toggleMethods = function()
 Action.toggleActions = function()
 {
   Page.showActions = !Page.showActions;
-  Action.redrawDiagram()
+  Action.redrawDiagram();
 }
 
 Action.toggleTransitionLabels = function()
 {
   Page.showTransitionLabels = !Page.showTransitionLabels;
-  Action.redrawDiagram()
+  Action.redrawDiagram();
 }
 
 Action.toggleGuardLabels = function()
 {
   Page.showGuardLabels = !Page.showGuardLabels;
-  Action.redrawDiagram()
+  Action.redrawDiagram();
 }
 
 Action.toggleTraits = function()
 {
   Page.showTraits = !Page.showTraits;
-  Action.redrawDiagram()
+  Action.redrawDiagram();
 }
 
 

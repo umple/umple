@@ -299,7 +299,7 @@ Page.enablePaletteItem = function(id, doEnable)
 Page.initToggleTool = function(id)
 {
   var item = jQuery("#" + id);
-  item.click(function() {Page.toggleToolItem(id, false);});
+  item.unbind().click(function() {Page.toggleToolItem(id, false);});
   item.dblclick(function() {Page.toggleToolItem(id, true);});
 }
 
