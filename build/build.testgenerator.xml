@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="build" name="testparser" >
+
+  <import file="_template.xml" />
+
+  <!-- ```````````````````````````
+    Environment Variables
+  ``````````````````````````` -->
+		
+			  
+
+  <!-- ``````````````````````
+		Compile UmpleTToXUnit
+	  ```````````````````````-->
+		      <!-- First compile the Umple Test templates -->
+		      
+		    <target name="CompileXUnitTemplates">  
+			  <echo message="Compiling Umple UmpleTo*Unit Templates !"/>
+		      <parallel>
+		        <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+		          <arg value="UmpleTToJunit/UmpleTLTemplates/Master.ump"/>
+		        </java>
+		  		<java jar="${umple.stable.jar}" fork="true" failonerror="true">
+		  		  <arg value="UmpleTToPhpUnit/UmpleTLTemplates/Master.ump"/>
+		  		</java>
+		  		<java jar="${umple.stable.jar}" fork="true" failonerror="true">
+		  		  <arg value="UmpleTToRubyUnit/UmpleTLTemplates/Master.ump"/>
+		  		</java>
+      
+		      </parallel>
+		  </target>
+			  
+		  <target name="CopyingXUnitGenerators">
+			  <echo message="Copying *UnitGenerator Files to Directory !"/>
+							  
+			 <copy todir="cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/jUnit/" overwrite="true">
+			  <fileset dir="UmpleTToJunit/src-gen-UmpleTL/cruise/umple/unitGen/jUnit/" excludes=".git* UmpleTToJunit.java" />
+	         </copy>
+			 <copy todir="cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/phpUnit/" overwrite="true">
+			  <fileset dir="UmpleTToPhpUnit/src-gen-UmpleTL/cruise/umple/unitGen/phpUnit/" excludes=".git* UmpleTToPhpUnit.java" />
+			 </copy>
+		     <copy todir="cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/rubyUnit/" overwrite="true">
+ 			  <fileset dir="UmpleTToRubyUnit/src-gen-UmpleTL/cruise/umple/unitGen/rubyUnit/" excludes=".git* UmpleTToRubyUnit.java" />
+			 </copy>
+		 </target>
+		 
+		 
+		 
+	    <target name="GeneratingTestParser">  
+		  <echo message="Generating Umple Test Parser !"/>
+	      <parallel>
+	        <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+	          <arg value="cruise.umple.test-parser/src/ump/Master.ump"/>
+	        </java>
+	  		
+	      </parallel>
+	  </target>
+		  
+	  <target name="CompilingUmpleTestParser">
+		  <echo message="Compiling Umple Test Parser !"/>
+	 
+	 </target>
+		
+		
+	 
+     <target name="CopyingTestParserFiles">
+   	  <echo message="Copying Test Parser Files to Directory !"/>
+     <copy todir="cruise.umple.test-parser/src-gen/cruise/umple/testgenerator/" overwrite="true">
+	  <fileset dir="cruise.umple.test-parser/src/src-gen/cruise/umple/testgenerator/" excludes=".git* UmpleTToRubyUnit.java" />
+	 </copy>
+     <copy todir="cruise.umple.test-parser/src-gen/cruise/umple/testparser/" overwrite="true">
+	  <fileset dir="cruise.umple.test-parser/src/src-gen/cruise/umple/testparser/" excludes=".git* UmpleTToRubyUnit.java" />
+	 </copy>
+	 				  
+    </target>
+	
+	
+    <target name="testXUnitTemplateTest">
+      <echo message="Running JUnitTemplate Test"/>
+	    
+		
+	  
+  </target>
+			 
+		     <!-- 
+		       Build
+		       run by the build machine, should work as-is on your machine, but be careful
+		       as your code will be run against the "latest" Umpled Umple.
+		      -->
+		     <target name="build" >
+		       <echo> Building Test *Unit Generators and Umple Test Parser</echo>
+			       <antcall target="CompileXUnitTemplates" />
+				   <antcall target="CopyingXUnitGenerators" />
+			       <antcall target="GeneratingTestParser" />
+				   <antcall target="CompilingUmpleTestParser" />
+   				   <antcall target="CopyingTestParserFiles" />
+				   <antcall target="testXUnitTemplateTest" />
+				   
+     </target>
+	 
+     
+  
+
+
+  
+  
+  
+  
+</project>
+

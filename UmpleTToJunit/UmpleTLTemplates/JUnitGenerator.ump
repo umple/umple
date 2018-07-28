@@ -1,0 +1,82 @@
+use UmpleNotice.ump;
+use members_Setup.ump;
+use members_TearDown.ump;
+use where_init.ump;
+use members_AllTestCases.ump;
+
+
+
+
+namespace cruise.umple.unitGen.jUnit;
+
+external interface ILang{}
+
+class JUnitGenerator {
+    depend cruise.umple.compiler.*;
+    depend cruise.umple.util.*;
+    depend java.util.*;
+	depend cruise.umple.testgenerator.*;
+	depend cruise.umple.testgenerator.Action;
+
+    isA ILang;
+
+    // Add a newline to the end of the input
+    private void appendln(StringBuilder buffer, String input, Object... variables)
+    {
+        append(buffer, input + "\n", variables);
+    }
+    
+    @Override
+	public String getCode(UmpleModel model, UmpleElement uElement) {
+	// TODO Auto-generated method stub
+	return null;
+	}
+
+    // This method will be used to append formatted strings
+    // i.e. format("Hello {0} {1}", "andrew","forward");
+    private void append(StringBuilder buffer, String input, Object... variables)
+    {
+        buffer.append(StringFormatter.format(input,variables));
+    }
+
+    emit getCode(TestModel model)(JUnitGenerator);
+
+    JUnitGenerator <<!<</*JUnitGenerator*/>><<@ UmpleTToJUnit.UmpleNotice >>
+<<#
+  //UmpleClass uClass = (UmpleClass) uElement;
+  //GeneratedClass gClass = uClass.getGeneratedClass();
+  TestCaseJUnitGenerator gen = new TestCaseJUnitGenerator(null, null, null, realSb, null);
+  gen.setTestModel(model);
+  
+  //appendln(realSb, gen.translate("beforeCode", uClass));
+
+  HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
+  
+  boolean isFirst = true;
+#>>
+
+
+
+<<#// if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).getIsInline()) {append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } #>>
+
+import org.junit.*;
+
+////---- Tests for  <<=model.getFile()>>----/////
+
+
+
+public class <<=model.getFile().subSequence(0, model.getFile().length()-4)>>Test {
+ 
+ <<@UmpleTToJUnit.where_init >>
+ <<@UmpleTToJUnit.members_Setup>>
+ <<@UmpleTToJUnit.members_TearDown>>
+ <<@UmpleTToJUnit.members_AllTestCases>>
+ 
+
+ 
+<<# //appendln(realSb, gen.translate("afterCode", uClass));#>> 
+
+}
+!>>
+}
+

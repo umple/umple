@@ -1,0 +1,50 @@
+test Airline {
+
+	generate JUnit;
+	
+	depend Airline, Passenger ;
+	
+	GIVEN:
+	 Airline.ump;
+	WHEN:
+	 Person p1 ("John", 123) ;
+	THEN:
+	
+	test someTest {	
+	 Person p1 ("John", "123","someAddrss" );
+	 Person p2("Jane", "321", "street4"); 
+	 assertTrue (p1.setId ("1234") ) ;
+	 p2.setName("Roger");
+	 assertTrue(p1.getId() == null);
+	 assertFalse ( p1.getId() == 1324 ) ;
+	 assertEqual(p1.getId(),p2.resetId());	 
+	 }
+	 
+	test test2 {
+	 	Person p2 ("Jane", 456, "anotherstreet");
+		Person p1 ("Jane", 456, "anotherstreet");
+		p2.setId("anId");
+		assertTrue ( p2.resetAddress() != null);
+		assertTrue ( p2.setAddress("321 another st")) ;
+		assertEqual( p2,p1.setId());	 
+	}
+	
+	test sometest3 {
+		Person p4 ("Joiana", 123, "bleekerst");
+		assertTrue(p4.getId() == 123);	
+	}
+	
+	test tesNO10{		
+		Person p7 ("Aida", 321, "Mannst");
+		Person p6 ("Mark", 123, "bleekerst");
+		assertEqual (p7.getId(), p6.getId());
+	}
+	
+	test testNO20 {	
+		Person p7 ("Mat" , 345 , "bleekerst");
+		p7.setAddress("regularStreet");	
+		assertTrue (p7.getId()==345);
+		p7.setAddress("someStreet");	
+	}
+
+}

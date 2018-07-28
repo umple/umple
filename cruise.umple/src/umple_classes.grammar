@@ -29,7 +29,7 @@ associationClassDefinition : associationClass [name] { [[associationClassContent
 enumerationDefinition : enum [name] { [enumValue](, [enumValue])* }
 
 // The following items can be found inside the body of classes or association classes
-classContent- : [[comment]] | [[mixsetDefinition]] | [[distributable]] | [[proxyPattern]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[enumerationDefinition]] | [[exception]] | [[extraCode]]
+classContent- : [[comment]] | [[mixsetDefinition]] | [[distributable]] | [[proxyPattern]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[testCase]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[enumerationDefinition]] | [[exception]] | [[extraCode]]
 associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[association]] | [[inlineAssociation]] | [[singleAssociationEnd]] | [[attribute]] | [[stateMachine]] | ; | [[extraCode]]
 
 // Interfaces: Note that if the format of an abstractMethodDeclaration is not
@@ -55,11 +55,16 @@ codeLangs- : ([=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|Alloy|UmpleSelf] ( , 
 // See user manual page [*MethodDefinition*]
 concreteMethodDeclaration : [=modifier:public|protected|private]? [=static]? [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? [[methodBody]] | [=modifier:public|protected]? [=abstract] [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? ;
 abstractMethodDeclaration :  [type] [[methodDeclarator]] ; 
-methodBody- : ( [[codeLangs]] { ( [[precondition]] | [[postcondition]] )* [**code] } )+ 
+methodBody- : ( [[codeLangs]] { ( [[precondition]] | [[postcondition]] | [[assertion]] )* [**code] } )+ 
 methodDeclarator : [methodName] [[parameterList]]
 methodThrowsExceptions : throws [~exception] ( , [~exception] )*
 parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_ROUND_BRACKET
 parameter : [[typedName]]
+
+//
+
+testCase : test [~testCaseName] { [[assertion]]* }
+assertion : [=assertType:assertTrue|assertFalse|assertEqual|assertNull|assertMethod] OPEN_ROUND_BRACKET [**code] CLOSE_ROUND_BRACKET ;
 
 // Details of associations: See manual page [*AssociationDefinition*]
 

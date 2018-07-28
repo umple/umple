@@ -1,0 +1,8 @@
+class UmpleTToRubyUnit {
+    where_init <<!<</*where_init*/>><<#
+/*
+This file generates initializations for classes in RubyUnit class
+*/
+  isFirst = true; 
+#>>!>>
+}

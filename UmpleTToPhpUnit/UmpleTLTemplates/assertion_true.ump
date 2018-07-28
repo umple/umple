@@ -1,0 +1,10 @@
+
+class UmpleTestToPhpUnit {
+
+assertion_true <<!<</*assertion_true*/>>
+AssertTrue...
+!>>
+
+
+
+}

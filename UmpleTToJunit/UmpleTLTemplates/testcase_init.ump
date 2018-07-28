@@ -1,0 +1,9 @@
+class UmpleTToJunit{
+testcase_init <<!<</*testcase_init*/>><<#
+for (Initialization init : tc.getInits())
+{#>>
+	init for testcase 
+
+<<#}
+#>>!>>
+}

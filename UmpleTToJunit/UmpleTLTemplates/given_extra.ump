@@ -1,0 +1,17 @@
+class UmpleToTest {
+    depends <<!<</*depends*/>><<#
+/*
+This file generates depends classes for test model
+*/
+
+  isFirst = true;
+  for(Attribute av : uClass.getAttributes())
+  {
+  
+    appendln(realSb, "");
+  }
+  
+  
+  
+#>>!>>
+}

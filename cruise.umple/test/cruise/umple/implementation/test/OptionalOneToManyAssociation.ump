@@ -1,0 +1,10 @@
+class A {
+att1;
+
+}
+
+class B{
+att2;
+0..1 -- * A;
+
+}

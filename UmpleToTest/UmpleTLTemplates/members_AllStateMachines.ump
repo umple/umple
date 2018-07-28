@@ -1,0 +1,13 @@
+class UmpleToTest {
+    members_AllStateMachines <<!<</*members_AllStateMachines*/>><<#
+  //This file declares the state machines of the class as Sql ENUM types.
+
+  isFirst = true;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    
+      appendln(realSb, " state machines ");
+    
+  }
+#>>!>>
+}

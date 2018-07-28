@@ -1,0 +1,94 @@
+class UmpleTToJUnit {
+
+members_AllTestCases <<!<</*members_AllTestCases*/>><<#
+
+for (TestCase tc : model.getTestSuite(0).getTestcases())
+{#>>
+	@Test
+	public void <<=tc.getName() >>()
+  {
+  <<#
+	  for (int i = 0; i<tc.getLocOrder();i++)
+		  {
+			if (tc.getInits().size()>0)
+			{
+			  for (TestInitialization init : tc.getInits())
+			  {
+				  if (init.getLocOrder() == i )
+				  {
+				  	
+			  		String par = "";
+			  		for (Parameter pa : init.getParameters()){
+			  		par += pa.getValue()+",";
+			  		}
+			  		 par = (String) par.subSequence(0, par.length()-1);
+		
+			  		#>>			  		
+			  		<<=init.getIdentifier()>> <<=init.getObjectName()>> = new <<=init.getIdentifier()>> (<<=par>>);<<#
+					
+				  }
+				
+				
+			  }
+		  }//initEnd
+		  
+		  if (tc.hasActions())
+		  {
+	  		for ( Action act : tc.getActions())
+	  		{
+				if (act.getLocOrder() == i)
+				{
+					#>>
+					  <<=act.getCode()>><<#
+				}
+				
+			}
+		  	
+		  }//ActionsEND
+		  
+		  
+		  if (tc.hasAssertions())
+		  {
+			  for (Assertion as: tc.getAssertions())
+			  {
+				  if (as.getLocOrder() ==i)
+				  {
+			  		if(as.getType().equals("AssertTrue"))
+			  		{#>>
+			  		Assert.assertTrue (<<=as.getAssertCode()>>);<<#}
+		
+			  		if(as.getType().equals("AssertFalse"))
+			  		{#>>
+			  		Assert.assertFalse (<<=as.getAssertCode()>>);<<#}
+		
+			  		if(as.getType().equals("AssertEqual"))
+			  		{#>>
+			  		Assert.assertEquals (<<=as.getAssertCode()>>);<<#}
+		
+			  		if(as.getType().equals("AssertNull"))
+			  		{#>>
+			  		Assert.assertNull(<<=as.getAssertCode()>>);<<#}
+		
+			  		if(as.getType().equals("AssertMethod"))
+			  		{#>>
+			  		assertMethod (<<=as.getAssertCode()>>);<<#}
+					
+				  }
+				
+			  }
+			
+		  }// AssertionsEnd
+			  
+			  
+			
+		  }//locEnd	
+	  
+	  #>>
+	}
+	
+	<<#
+}
+
+
+#>>!>>
+}

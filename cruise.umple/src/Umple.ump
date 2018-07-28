@@ -210,6 +210,9 @@ class Method
 
 }
 
+
+
+
  /*
  * The contents of a method, such as the code within it.
  */
@@ -223,7 +226,34 @@ class MethodBody
   extraCode = {codeblock.getCode() != null ? codeblock.getCode() : ""}
   CodeBlock codeblock;
   Map<String,Position> implementationPositions = new HashMap<String,Position>();
+  
+  
+  //the method assertions
+  1 -> * UmpleAssertion;
 }
+
+/*
+* The assertion within the method or class.
+*/
+
+class UmpleAssertion {
+	name;
+	type;
+	level;
+	action;
+	assertCode;
+}
+
+/*
+* Test Case  at the  Class level .
+*/
+
+class UmpleTestCase {
+	name;
+	
+	1 -- * UmpleAssertion;		
+}
+
 
 /*
  * Represents a constant.
@@ -600,6 +630,9 @@ class UmpleClass
 
   //The possible Preconditions related to the Umple Class
   1 -> 0..* Postcondition postConds;
+  
+  //Umple Test Case at the cass level
+  1 -- 0..* UmpleTestCase;
 
   // The possible Constraints related to the Umple Class
   1 uClass -> 0..* ConstraintTree;

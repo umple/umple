@@ -1,0 +1,56 @@
+namespace cruise.umple.testgenerator;
+
+class Util{
+
+depend java.util.Random;
+depend java.lang.reflect.Method;
+
+		
+
+Random random = new Random ();
+
+//------------------------
+// Random String Generator 
+//------------------------ 
+public String randomGenerator (Random random, String characters, int length)
+{
+	
+	char[] text = new char[length];
+    for (int i = 0; i < length; i++)
+    {
+        text[i] = characters.charAt(random.nextInt(characters.length()));
+    }
+    return new String(text);
+}
+
+//------------------------
+// Random Int Generator 
+//------------------------
+public int randomGenerator (int range)
+{
+	int text = random.nextInt(range);
+	  	
+	return text;
+}
+
+
+//------------------------
+// AssertMethod // check if a method is present in a class using reflection, example: assertMethod(foo.class, "methodName") 
+//------------------------
+
+public Boolean assertMethod (Class cls, String methodName)
+    {
+    	Boolean hasMethod = false;
+    	Method[] methods = cls.getMethods();
+    	for (Method m : methods )
+    	{
+    		if ( m.getName() == methodName)
+    		{ hasMethod = true; }
+    	}
+    	return hasMethod;    	
+    }
+
+
+
+
+}

@@ -1,0 +1,11 @@
+class UmpleTToJUnit {
+    where_init <<!<</*where_init*/>><<#
+/*
+This file generates initializations for classes in JUnit class
+*/
+  isFirst = true;
+  
+ 
+  
+#>>!>>
+}

@@ -1,0 +1,18 @@
+namespace cruise.umple.testgenerator;
+class A{
+
+name;
+
+id;
+
+}
+
+
+
+class B {
+
+int dateOfBirth;
+
+0..1 -- * A;
+
+}

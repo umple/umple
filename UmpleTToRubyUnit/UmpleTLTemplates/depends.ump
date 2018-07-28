@@ -1,0 +1,17 @@
+class UmpleToTest {
+    depends <<!<</*depends*/>><<#
+/*
+This file generates depends classes for test model
+*/
+  StringBuilder dependClasses = new StringBuilder();
+  String depend;
+  isFirst = true;
+  
+  for (String dep : aTestModel.getDepends())
+    {
+    	appendln(realSb, "import {0};",dep)) ;
+    }
+  appendln(realSb,"");
+
+#>>!>>
+}

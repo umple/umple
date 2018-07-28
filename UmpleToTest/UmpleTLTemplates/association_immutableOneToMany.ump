@@ -1,0 +1,52 @@
+
+class UmpleToTest {
+    association_optionalOneToMany <<!<</*association_optionalOneToMany*/>><<#
+/*
+This file creates the necessary for Optional One To Many Association 
+*/
+
+  
+  				  String buffName = "some" +uClass.getName();
+  				  String buffName2 = "some"+theirEnd.getClassName();#>>
+        		  /////// Association: -- <<=theirEnd.getMultiplicity().getRange()>> <<=theirEnd.getClassName()>> /////// 
+        		  //create ... without ...
+        		  Test Create<<=uClass.getName()>>Without<<=theirEnd.getClassName()>> {
+        		  <<=uClass.getName()>> <<=buffName>> = new <<=uClass.getName()>>();
+        		  AssertTrue (some<<=theirEnd.getClassName()>>.get<<=theirEnd.getRoleName().toUpperCase()>>()!= null);
+        		  }
+        		  //replace
+        		  <<#buffName = "some"+theirEnd.getClassName();#>>
+        		  Test Replace<<=theirEnd.getClassName()>>In<<=uClass.getName()>> { 
+        		  
+        		  <<=theirEnd.getClassName()>> <<=buffName2>> = new <<=theirEnd.getClassName()>>(); 
+        		  <<=theirEnd.getClassName()>> <<=buffName2>>2 = new <<=theirEnd.getClassName()>>();
+        		  <<=buffName>>.add<<=theirEnd.getClassName()>>(some<<=myEnd.getClassName()>>);
+        		  AssertEqual (1, <<=buffName>>.getNumberOf<<=myEnd.getClassName()>>s());
+        		  AssertEqual (1, <<=buffName>>.getNumberOf<<=myEnd.getClassName()>>s());
+        		  some<<=myEnd.getClassName()>>.set<<=theirEnd.getClassName()>>(<<=buffName>>2);
+        		  AssertEqual (some<<=myEnd.getClassName()>>, <<=buffName>>2.get<<=myEnd.getClassName()>>(0));
+        		  }
+        		  //delete
+        		  Test Delete<<=theirEnd.getClassName()>> {
+        		  // delete <<=theirEnd.getClassName()>> in <<=uClass.getName()>>
+        		  <<=buffName>>2.delete(); 
+        		  AssertEqual (null, <<=buffName>>2.get<<=myEnd.getClassName()>>(0));
+        		  }
+        		  //add to new B
+        		  
+        		  Test Add<<=theirEnd.getClassName()>>ToNew<<=uClass.getName()>> { 
+        		  <<=theirEnd.getClassName()>> <<=buffName2>> = new <<=theirEnd.getClassName()>>();
+        		  <<=theirEnd.getClassName()>> <<=buffName2>>2 = new <<=theirEnd.getClassName()>>();
+      
+        		  <<=myEnd.getClassName()>> some<<=myEnd.getClassName()>> = new <<=myEnd.getClassName()>>();
+        		  <<=buffName>>.add<<=theirEnd.getClassName()>>(some<<=theirEnd.getClassName()>>);
+        		  <<=buffName>>.add<<=theirEnd.getClassName()>>(some<<=theirEnd.getClassName()>>2);  
+        
+        		  AssertEqual(some<<=theirEnd.getClassName()>>2, <<=buffName>>.get<<=theirEnd.getClassName()>>(); 
+        		  AssertEqual (<<=buffName>>, some<<=theirEnd.getClassName()>>2.get<<=myEnd.getClassName()>>(0));
+        		  AssertEqual (<<=buffName>>, some<<=theirEnd.getClassName()>>.getNumberOf<<=myEnd.getClassName()>>s());
+        		  }<<#
+  
+  
+#>>!>>
+}

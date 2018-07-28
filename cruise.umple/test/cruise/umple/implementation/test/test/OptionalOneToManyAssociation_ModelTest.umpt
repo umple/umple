@@ -1,0 +1,120 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  OptionalOneToManyAssociation ----/////
+
+Test OptionalOneToManyAssociation.ump {
+depend  A,B ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class A       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,1] B /////// 
+              //create ... without ...
+              Test CreateAWithoutB {
+              A someA = new A();
+              AssertTrue (someB.getB()!= null);
+              }
+              //replace
+              
+              Test ReplaceBInA { 
+              
+              B someB = new B(); 
+              B someB2 = new B();
+              someB.addB(someA);
+              AssertEqual (1, someB.getNumberOfAs());
+              AssertEqual (1, someB.getNumberOfAs());
+              someA.setB(someB2);
+              AssertEqual (someA, someB2.getA(0));
+              }
+              //delete
+              Test DeleteB {
+              // delete B in A
+              someB2.delete(); 
+              AssertEqual (null, someB2.getA(0));
+              }
+              //add to new B
+              
+              Test AddBToNewA { 
+              B someB = new B();
+              B someB2 = new B();
+      
+              A someA = new A();
+              someB.addB(someB);
+              someB.addB(someB2);  
+        
+              AssertEqual(someB2, someB.getB(); 
+              AssertEqual (someB, someB2.getA(0));
+              AssertEqual (someB, someB.getNumberOfAs());
+              }
+              /////// Association: -- [0,1] B /////// 
+              //create ... without ...
+              Test CreateAWithoutB {
+              A someA = new A(); \n",,));
+              AssertF (someB.getB()!= null);
+              }
+              //replace
+              
+              Test ReplaceBInA { 
+              
+              B someB = new B(); 
+              B someB2 = new B();
+              someB.addB(someA);
+              AssertEqual (1, someB.getNumberOfAs());
+              AssertEqual (1, someB.getNumberOfAs());
+              someA.setB(someB2);
+              AssertEqual (someA, someB2.getA(0));
+              }
+              //delete
+              Test DeleteB {
+              // delete B in A
+              someB2.delete(); 
+              AssertEqual (null, someB2.getA(0));
+              }
+              //boundary test
+              
+              Test BoundaryTest {
+              private int size = B.getNumberOfAs(); 
+              AssertTrue ( size > 0 &&  size < -1) 
+              
+              }
+              
+              Test BoundaryAtMax {
+              
+              
+                
+                
+                
+              
+              //Maximum A allowed : 1
+              int size = B.getNumberOfAs();
+              
+              
+              
+              B someB = new B();
+
+              
+              A obj0 (someB);
+              A obj1 (someB);
+              
+              AssertEqual(size, someB.getNumberOfAs());
+              AssertEqual(someB, obj1.getSomeA(0));
+              
+              
+              }
+  /*-------------------------*/
+  /*  Class B       */
+  /*-------------------------*/
+ 
+ 
+
+ }

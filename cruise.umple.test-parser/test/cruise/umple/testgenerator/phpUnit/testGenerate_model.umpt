@@ -1,0 +1,20 @@
+test TestGeneratemodel {
+
+depend Airline, Passenger ;
+
+GIVEN:
+ Airline.ump;
+WHEN:
+ Person p1 ("John", 123) ;
+ RegularFlight flight1 ("TK",5467) ;
+THEN:
+
+test someTest {
+
+ Person p1 ("John", 123);
+ assertTrue ( p1.id = 123 ) ;
+ assertTrue ( p1.name = "John" ) ;
+ assertFalse ( flight1.id = 1324 ) ;
+ }
+
+}

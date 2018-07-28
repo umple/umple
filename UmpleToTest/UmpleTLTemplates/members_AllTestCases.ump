@@ -1,0 +1,26 @@
+class UmpleToTest {
+
+members_AllTestCases <<!<</*members_AllTestCases*/>><<#
+
+	if ( uClass.hasUmpleTestCases())
+		{
+		
+		for (UmpleTestCase uTestCase :uClass.getUmpleTestCases())
+		{#>>
+			
+			test <<=uTestCase.getName()>> {
+			<<#
+			
+			for (UmpleAssertion uAssertion : uTestCase.getUmpleAssertions())
+			{
+				#>>AssertTrue ( <<=uAssertion.getAssertCode()>> ) ;
+				<<#
+			
+			}
+						
+			#>>}
+				
+		<<#}
+	}
+#>>!>>
+}

@@ -1,0 +1,87 @@
+
+class TestCaseRubyUnitGenerator {
+
+depend java.io.BufferedWriter;
+depend cruise.umple.testparser.TestParser;
+depend java.io.File;
+depend java.io.FileWriter;
+depend java.io.IOException;
+
+depend cruise.umple.compiler.*;
+depend cruise.umple.unitGen.rubyUnit.RubyUnitGenerator;
+RubyUnitGenerator ruG = new RubyUnitGenerator();
+	TestParser parser = new TestParser(null, null, null, 0);
+	TestModel testModel ;
+	String grammarFile;
+	File testModelFile;
+	StringBuilder code;
+	String path;
+
+@Override
+public boolean setModel(UmpleModel model) {
+  // TODO Auto-generated method stub
+  return false;
+}
+
+@Override
+public void setCredential() {
+  // TODO Auto-generated method stub
+
+}
+
+@Override
+public void prepare() {
+  		grammarFile= "src/mbt_parsing.grammar";
+		testModelFile = new File( "src/model1.umpt");
+		
+		parser.setGrammarFile(grammarFile);
+		parser.setTestModelFile(testModelFile);
+		parser.prepare();
+
+}
+
+@Override
+public void generate() {
+  //System.out.println("test");
+		prepare();
+		setTestModel(parser.getATestModel());
+	
+		//testModel.getTestSuite(0).getTestcases().forEach(action);
+		//code.append(juG.getCode(testModel));
+		System.out.println(ruG.getCode(testModel));
+		writeFile();
+
+}
+public void writeFile () 
+  {
+	  File file = new File(path);
+		String filename = (testModel.getFile().substring(0,testModel.getFile().length()-4))+"Test.rb";
+			
+		System.out.print(file.getAbsolutePath());
+		System.out.print("\n");
+		file.mkdirs();
+
+					try {
+					BufferedWriter bw = new BufferedWriter(new FileWriter(new File(file.getAbsolutePath(),filename)));
+					bw.write(ruG.getCode(testModel));
+					System.out.println(ruG.getCode(testModel));
+					bw.flush();
+					bw.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+  }
+
+
+@Override
+public void writeFile(TestSuite ts) {
+  // TODO Auto-generated method stub
+
+}
+
+
+
+
+
+}

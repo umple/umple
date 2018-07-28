@@ -1,0 +1,11 @@
+class UmpleTToPhpUnit{
+
+members_Setup <<!<</*members_Setup*/>>
+
+
+  public function setup(){
+
+  }
+
+!>>
+}

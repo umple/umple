@@ -1,0 +1,68 @@
+namespace cruise.umple.testgenerator;
+
+interface TestCaseGenerator {
+
+depend java.io.*;
+depend java.util.*;
+depend cruise.umple.util.*;
+depend cruise.umple.compiler.exceptions.*;
+depend cruise.umple.compiler.UmpleModel;
+
+
+
+UmpleModel model;
+
+
+
+boolean setModel(UmpleModel model);
+
+void setCredential ();
+void prepare();
+void generate();
+void writeFile(TestSuite ts);
+
+}
+
+class TestCaseJUnitGenerator {
+
+
+  isA TestCaseGenerator;
+
+  depend java.io.BufferedWriter;
+  depend java.io.File;
+  depend java.io.FileWriter;
+  depend java.io.IOException;
+  depend cruise.umple.compiler.*;
+
+
+
+}
+
+
+class TestCasePhpUnitGenerator {
+
+  isA TestCaseGenerator;
+
+  depend java.io.BufferedWriter;
+  depend java.io.File;
+  depend java.io.FileWriter;
+  depend java.io.IOException;
+  depend cruise.umple.compiler.*;
+
+
+
+}
+
+class TestCaseRubyUnitGenerator {
+
+  isA TestCaseGenerator;
+
+  depend java.io.BufferedWriter;
+  depend java.io.File;
+  depend java.io.FileWriter;
+  depend java.io.IOException;
+  depend cruise.umple.compiler.*;
+
+
+
+}

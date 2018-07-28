@@ -1,0 +1,43 @@
+
+// The main top level elements to be found in an Umple file
+entity- : [[modelDefinition]]
+
+
+// Classes are the most common elements in Umple.
+// See user manual page [*ClassDefinition*]
+modelDefinition- : test [modelName] { [[modelContent]] }
+
+// The following items can be found inside the body of classes or association classes
+modelContent- : [[generate]]? [[depend]]* [[givenCont]] [[whenCont]] [[thenCont]] 
+
+generate: generate [=codeLang:JUnit|PhpUnit|RubyUnit] ( [=subOptionIndicator:-s|-suboption] " [**subOption] " )* ;
+
+depend: depend [pValue] (, [pValue])* ;
+
+ 
+givenCont: GIVEN: [[givenUmpleModel]]* 
+whenCont: WHEN: [[initialization]]*
+thenCont: THEN: [[testCase]]*
+
+
+
+testCase: test [~testCaseName] {( [[initialization]] | [[methodCall]] | [[assertions]])* }
+givenUmpleModel: [~modelName].ump;
+initialization: [~identifier] [~name] [[parameter]]*;
+construct: OPEN_ROUND_BRACKET ([**value] | "[**value]") (,([**value] | "[**value]"))* CLOSE_ROUND_BRACKET
+parameter: OPEN_ROUND_BRACKET ([pValue] | "[pValue]") (,([pValue] | "[pValue]"))* CLOSE_ROUND_BRACKET
+pValue: [**name]
+
+
+assertions: ([[assertionTrue]]|[[assertionFalse]]|[[assertionEqual]])*
+
+//Assertions Rules:
+
+assertionTrue: assertTrue OPEN_ROUND_BRACKET [[assertCode]] CLOSE_ROUND_BRACKET ;
+assertionFalse: assertFalse OPEN_ROUND_BRACKET [[assertCode]] CLOSE_ROUND_BRACKET ;
+assertionEqual: assertEqual OPEN_ROUND_BRACKET [[assertEqualCode]] CLOSE_ROUND_BRACKET ;
+assertEqualCode:[~objectName1](.)?[[assertEqualMethodCall]]? (,) [~objectName2](.)?[[assertEqualMethodCall]]?
+assertEqualMethodCall: [~methodName]  OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET 
+assertCode : [[methodCall]] (== | != )? ( [**compValue] | ( "[**compValue]" )? | [[methodCall]] )?
+methodCall: [~objectName](.)[~methodName]  OPEN_ROUND_BRACKET [[assertParameter]]* CLOSE_ROUND_BRACKET(;)?
+assertParameter:  ([pValue] | "[pValue]") (,([pValue] | "[pValue]"))*

@@ -279,6 +279,12 @@ class UmpleInternalParser
     {
       analyzeAttribute(token,aClass);
     }
+    
+    else if (token.is("testCase"))
+    {
+      analyzeClassTestCase(token,aClass);
+    }
+    
     else if (token.getValue("mixsetDefinition") != null)  {
      	analyzeMixsetDefinition(token, aClass.getName());
     }
@@ -321,6 +327,8 @@ class UmpleInternalParser
     {
       analyzeException(token,aClass);
     }
+    
+    
 
     // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
     // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
@@ -328,7 +336,29 @@ class UmpleInternalParser
     {
       lastComments.clear();
     }
-  }  
+  }
+  
+  private void analyzeClassTestCase(Token token, UmpleClass aClass) {
+	UmpleTestCase uTestCase = new UmpleTestCase ("", aClass);
+	UmpleAssertion assertion = new UmpleAssertion("","","","","",uTestCase);
+	
+	uTestCase.setName(token.getValue("testCaseName"));
+	
+	for (Token subToken : token.getSubTokens())
+	{
+		if (subToken.getName().equals("assertion"))
+		{
+			assertion.setAssertCode(token.getValue("code"));
+		    //assertion.setType("true");
+		    assertion.setLevel("method");
+			uTestCase.addUmpleAssertion(assertion);
+		}
+	}
+  }
+  
+  
+  
+    
 
   /**
    * Analyzes a comment to determine if it should be added into the list of currently parsed comments waiting to be added to
@@ -2969,6 +2999,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private void analyzeMethod(Token method, UmpleElement uElement){
     String modifier = "";
     Method aMethod = new Method("","","",false);
+	
 
     // Set method position
     aMethod.setPosition(method.getPosition());
@@ -2985,6 +3016,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     CodeBlock cb = new CodeBlock("");
     String iValue = null;
     Position iPosition = null;
+	MethodBody meth = new MethodBody(cb);
     
     //559b
     Map<String,Position> implementationPositions = new HashMap<String,Position>();
@@ -3100,8 +3132,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           analyzePostcondition(token, (UmpleClass) uElement, aMethod);
         }  
       }
+	  
+      else if (token.is("assertion")){ 
+        if (uElement instanceof UmpleClass){
+          analyzeMethodAssertion(token, (UmpleClass) uElement,meth, aMethod);
+        }  
+      }
     }
-    MethodBody meth = new MethodBody(cb);
+    meth.setCodeblock(cb);
     meth.setImplementationPositions(implementationPositions);
     aMethod.setMethodBody(meth);
 
@@ -3258,6 +3296,40 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
   }
 
+
+
+
+  private void analyzeMethodAssertion (Token token, UmpleElement uElement,MethodBody meth, Method aMethod)
+  {
+  	  UmpleTestCase uTestCase = new UmpleTestCase(aMethod.getName(),(UmpleClass)uElement); 	
+	  UmpleAssertion assertion = new UmpleAssertion("","","","","",uTestCase); 
+
+	  if (token.getValue("assertType").equals("assertTrue"))
+	  {
+		  assertion.setAssertCode(token.getValue("code"));
+		  assertion.setType("true");
+		  assertion.setLevel("method");
+		  meth.addUmpleAssertion(assertion);
+	  }
+	  
+	  if (token.getValue("assertType").equals("assertFalse"))
+	  {
+		  assertion.setAssertCode(token.getValue("code"));
+		  assertion.setType("false");
+		  assertion.setLevel("method");
+		  meth.addUmpleAssertion(assertion);
+	  }
+	  
+	  if (token.getValue("assertType").equals("assertEqual"))
+	  {
+		  assertion.setAssertCode(token.getValue("code"));
+		  assertion.setType("equal");
+		  assertion.setLevel("method");
+		  meth.addUmpleAssertion(assertion);
+	  }
+  	
+	
+  }
 
   /*
    * Analyzes a method header, from a token flagged to be one, to populate a method instance for things such as the

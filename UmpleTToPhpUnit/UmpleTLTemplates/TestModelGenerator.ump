@@ -1,0 +1,84 @@
+use UmpleNotice.ump;
+use members_AllAssociations.ump;
+use members_AllStateMachines.ump;
+use depends.ump;
+
+
+
+namespace cruise.umple.compiler.test;
+
+external interface ILang{}
+
+class TestModelGenerator {
+    depend cruise.umple.compiler.*;
+    depend cruise.umple.util.*;
+    depend java.util.*;
+
+    isA ILang;
+
+    // Add a newline to the end of the input
+    private void appendln(StringBuilder buffer, String input, Object... variables)
+    {
+        append(buffer, input + "\n", variables);
+    }
+    
+    @Override
+    public String getCode(UmpleModel model ,UmpleElement uElement )
+    {
+        return null;
+    }
+
+    // This method will be used to append formatted strings
+    // i.e. format("Hello {0} {1}", "andrew","forward");
+    private void append(StringBuilder buffer, String input, Object... variables)
+    {
+        buffer.append(StringFormatter.format(input,variables));
+    }
+
+    emit getCode(UmpleModel model)(TestModelGenerator);
+
+    TestModelGenerator <<!<</*TestModelGenerator*/>><<@ UmpleToTest.UmpleNotice >>
+<<#
+  //UmpleClass uClass = (UmpleClass) uElement;
+  //GeneratedClass gClass = uClass.getGeneratedClass();
+  TestGenerator gen = new TestGenerator();
+  gen.setModel(model);
+  
+  //appendln(realSb, gen.translate("beforeCode", uClass));
+
+  HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
+  /*for (CodeInjection inject : uClass.getCodeInjections())
+  {
+    String operation = StringFormatter.toUnderscore(inject.getOperation());
+    String key = inject.getType() + ":" + operation;
+    String newCodeToInject = "";
+    if (codeInjectionMap.containsKey(key))
+    {
+      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),inject.getCode());
+    }
+    else
+    {
+      newCodeToInject = inject.getCode();
+    }
+    codeInjectionMap.put(key,newCodeToInject);
+  }*/
+  boolean isFirst = true;
+#>>
+
+
+
+<<#// if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).getIsInline()) {append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } #>>
+
+////---- Tests for  <<=model.getUmpleFile().getFileName().subSequence(0, model.getUmpleFile().getFileName().length()-4)>> ----/////
+
+Test <<=model.getUmpleFile().getFileName() >> {
+<<@ UmpleToTest.depends >> <<@ UmpleToTest.members_AllAssociations >> 
+
+
+<<#// appendln(realSb, gen.translate("afterCode", uClass));
+	  
+#>> 
+
+ }<<#//gen.writeModelFile(realSb);#>>!>>
+}
+

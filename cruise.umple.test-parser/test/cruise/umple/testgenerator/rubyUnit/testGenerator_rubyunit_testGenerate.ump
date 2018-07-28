@@ -1,0 +1,9 @@
+generate Java;
+
+namespace cruise.umple.testgenerator.jUnit;
+
+class Person {
+id;
+name;
+address;
+}

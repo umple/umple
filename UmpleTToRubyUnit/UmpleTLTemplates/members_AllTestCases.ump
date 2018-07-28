@@ -1,0 +1,92 @@
+class UmpleTToRubyUnit {
+
+members_AllTestCases <<!<</*members_AllTestCases*/>><<#
+
+for (TestCase tc : model.getTestSuite(0).getTestcases())
+{#>>
+	def <<=tc.getName() >> < Test::Unitt::TestCase
+  <<#
+	  for (int i = 0; i<tc.getLocOrder();i++)
+		  {
+			if (tc.getInits().size()>0)
+			{
+			  for (TestInitialization init : tc.getInits())
+			  {
+				  if (init.getLocOrder() == i )
+				  {
+				  	
+			  		String par = "";
+			  		for (Parameter pa : init.getParameters()){
+			  		par += pa.getValue()+",";
+			  		}
+			  		 par = (String) par.subSequence(0, par.length()-1);
+		
+			  		#>>			  		
+			  		<<=init.getObjectName()>> = <<=init.getIdentifier()>>.new(<<=par>>)<<#
+					
+				  }
+				
+				
+			  }
+		  }//initEnd
+		  
+		  if (tc.hasActions())
+		  {
+	  		for ( Action act : tc.getActions())
+	  		{
+				if (act.getLocOrder() == i)
+				{
+					#>>
+					  <<=act.getCode()>><<#
+				}
+				
+			}
+		  	
+		  }//ActionsEND
+		  
+		  
+		  if (tc.hasAssertions())
+		  {
+		  
+			  for (Assertion as: tc.getAssertions())
+			  {
+			  	String assertCode =  as.getAssertCode().replace(".","->");
+				  if (as.getLocOrder() ==i)
+				  {
+			  		if(as.getType().equals("AssertTrue"))
+			  		{#>>
+		 			 assert(<<=as.getAssertCode()>>)<<#}
+		
+			  		if(as.getType().equals("AssertFalse"))
+			  		{#>>
+			  		assert(!<<=as.getAssertCode()>>)<<#}
+		
+			  		if(as.getType().equals("AssertEqual"))
+			  		{#>>
+			  		assert_equal (<<=as.getAssertCode()>>)<<#}
+		
+			  		if(as.getType().equals("AssertNull"))
+			  		{#>>
+			  		assert_nil(<<=as.getAssertCode()>>)<<#}
+		
+			  		if(as.getType().equals("AssertMethod"))
+			  		{#>>
+			  		assert_method (<<=as.getAssertCode()>>)<<#}
+					
+				  }
+				
+			  }
+			
+		  }// AssertionsEnd
+			  
+			  
+			
+		  }//locEnd	
+	  
+	  #>>
+	<<#
+}
+
+
+#>>!>>
+}

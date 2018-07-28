@@ -1,0 +1,111 @@
+
+//generate Java "cruise.umple.testgenerator";
+//namespace cruise.umple.testgenerator;
+namespace cruise.umple.testgenerator;
+
+use TestCaseTemplate_JUnitGenerator.ump;
+use TestCaseTemplate_PhpUnitGenerator.ump;
+use TestCaseTemplate_RubyUnitGenerator.ump;
+use TestCaseTemplate_Generator.ump;
+
+
+class TestModel{ 
+
+depend cruise.umple.parser.ParseResult;
+
+file;
+code;
+givenCode;
+whereCode;
+thenCode;
+coverageType;
+ParseResult parseingResult;
+codeLang;
+
+1 -- * TestSuite;
+1 -- * Depend depends;
+
+}
+
+class Depend{
+	name;
+	type;
+
+}
+
+class TestSuite {
+
+	0..1 -- * TestCase testcases;
+
+}
+
+
+class Parameter {
+	String value;
+	String type;
+	String name;
+}
+
+
+class TestCase {
+	
+	name;
+	int locOrder;
+	
+	
+	0..1 testcase -- * TestInitialization inits;
+	0..1 testcase -- * Assertion assertions;
+	0..1 -- * Action;
+	
+
+
+
+}
+
+
+class ClassUnderTest{
+	String name;
+	String element;
+
+	0..1 -- * TestSuite;
+	0..1 -- * TestCase;
+	0..1 -- * Parameter;
+
+
+} //
+
+
+class TestInitialization {
+	* -- 0..1 ClassUnderTest;
+	0..1 -- * Parameter parameters;
+	position;
+	type; //construction or assignment initialization
+	identifier;
+	objectName;
+	int locOrder;
+}
+
+class Action{
+
+	 String name;
+	 String code;
+     int locOrder;
+
+}
+
+class Assertion {
+
+  String type;
+  String assertMethod;
+  String action;
+  String expected;
+  String assertCode;
+  String assertCodeObjectLeft;
+  String assertCodeObjectRight;
+  int locOrder;
+  
+	
+
+	0..1 -- * Parameter parameters;
+
+}

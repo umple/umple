@@ -1,0 +1,75 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This class defines a node used to manage dependency between classes in order to to initialize classes with data.
+
+
+ */
+
+namespace cruise.umple.compiler;
+
+
+
+
+class ClassDependencyNode {
+
+	depend java.util.*;	
+	int level;
+	Boolean isFirstLevel; 
+	Boolean isInitialized;
+	String uClassName;
+	private List<String> dependents;
+	
+	
+	public ClassDependencyNode getNodeByName ( String name)
+  {
+	  if ( name.equals(this.getUClassName()))
+	  {
+		  return this;
+	  }
+	  
+	  return null;
+  }	
+
+}
+
+
+class ClassDependencyTree {
+
+	depend java.util.*;
+	boolean isLevelled;
+	boolean isProcessed;
+	0..1 -- * ClassDependencyNode;
+	List<String> cdN;
+	
+	 public boolean containsNode (ClassDependencyNode node)
+  {
+	  if ( this.containsNode(node))
+	  {
+		  return true;
+	  }
+	  
+	  return false;
+	  
+  }
+  
+  public boolean containsNode (String name)
+  {
+	  for (ClassDependencyNode node : getClassDependencyNodes())
+	  {
+		  if (node.getUClassName().equals(name))
+		  {
+			  return true;
+		  }
+	  }
+	  
+	  return false;
+	  
+  }
+	
+
+}

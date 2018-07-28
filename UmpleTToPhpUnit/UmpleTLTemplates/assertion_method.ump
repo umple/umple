@@ -1,0 +1,30 @@
+
+class UmpleTestToPhpUnit {
+
+members_AllAssertions <<!<</*members_AllAssertions*/>><<#
+
+For (TestCase tc : aTestModel.getTestSuite(0).getTestCases())
+	{
+		if(tc.getType().equals("true")
+		{
+		
+		}
+		
+		if(tc.getType().equals("false")
+		{
+		
+		}
+		
+		if(tc.getType().equals("equal")
+		{
+		
+		}
+
+	}
+
+#>>
+!>>
+
+
+
+}

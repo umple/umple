@@ -1,0 +1,8 @@
+generate Test -s "attribute";
+
+
+class LazyA {
+
+lazy id;
+
+}
