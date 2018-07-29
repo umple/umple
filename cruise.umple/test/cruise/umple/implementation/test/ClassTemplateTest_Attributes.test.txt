@@ -1,0 +1,256 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  ClassTemplateTest_Attributes ----/////
+Test Mentor {
+  //tests for :MAX
+
+      test attribute_MAX {
+    
+      AssertTrue( mentor.setMAX(123)));
+      AssertTrue( mentor.getMAX() == 123));
+          
+	}
+
+ //tests for :MIN
+
+      test attribute_MIN {
+    
+      AssertTrue( mentor.setMIN(123)));
+      AssertTrue( mentor.getMIN() == 123));
+          
+	}
+
+ //tests for :HELLO
+
+      test attribute_HELLO {
+    
+    AssertTrue( mentor.setHELLO("RandomString1"));
+    AssertTrue( mentor.getHELLO() =="RandomString1");
+    AssertTrue( mentor.setHELLO("RandomString1"));
+    AssertTrue( mentor.getHELLO("RandomString1"));
+    AssertTrue( mentor.getHELLO() =="RandomString1");
+             
+	}
+
+ //tests for :str
+
+      test attribute_str {
+    
+          
+
+    AssertMethodFalse( mentor.setStr());
+    AssertTrue( mentor.getStr() == null);
+
+
+        	}
+
+ //tests for :str2
+
+      test attribute_str2 {
+    
+          
+
+AssertNotNull (str2);
+
+        
+          
+
+    AssertMethodFalse( mentor.setStr2());
+    AssertTrue( mentor.getStr2() == null);
+
+
+        	}
+
+ //tests for :someName
+
+      test attribute_someName {
+    
+    AssertTrue( mentor.setSomeName("RandomString1"));
+    AssertTrue( mentor.getSomeName() =="RandomString1");
+    AssertTrue( mentor.setSomeName("RandomString1"));
+    AssertTrue( mentor.getSomeName("RandomString1"));
+    AssertTrue( mentor.getSomeName() =="RandomString1");
+             
+
+          
+
+AssertNotNull (someName);
+    AssertNotNull (Mentor.getSomeName != null)
+          
+
+        	}
+
+ //tests for :lDoub
+
+      test attribute_lDoub {
+    
+      AssertTrue( mentor.setLDoub(123)));
+      AssertTrue( mentor.getLDoub() == 123));
+          
+
+          
+
+AssertNotNull (lDoub);
+
+        	}
+
+ //tests for :lBool
+
+      test attribute_lBool {
+    
+
+          
+
+AssertNotNull (lBool);
+
+        	}
+
+ //tests for :name
+
+      test attribute_name {
+    
+    AssertTrue( mentor.setName("RandomString1"));
+    AssertTrue( mentor.getName() =="RandomString1");
+    AssertTrue( mentor.setName("RandomString1"));
+    AssertTrue( mentor.getName("RandomString1"));
+    AssertTrue( mentor.getName() =="RandomString1");
+             
+
+          
+
+AssertNotNull (name);
+
+        	}
+
+ //tests for :d
+
+      test attribute_d {
+    
+	}
+
+ //tests for :t
+
+      test attribute_t {
+    
+	}
+
+ //tests for :i
+
+      test attribute_i {
+    
+      AssertTrue( mentor.setI(123)));
+      AssertTrue( mentor.getI() == 123));
+          
+	}
+
+ //tests for :derivedTwiceI
+
+      test attribute_derivedTwiceI {
+    
+      AssertTrue( mentor.setDerivedTwiceI(123)));
+      AssertTrue( mentor.getDerivedTwiceI() == 123));
+          
+	}
+
+ //tests for :x
+
+      test attribute_x {
+    
+      AssertTrue( mentor.setX(123)));
+      AssertTrue( mentor.getX() == 123));
+          
+	}
+
+ //tests for :id
+
+      test attribute_id {
+    
+    AssertTrue( mentor.setId("RandomString1"));
+    AssertTrue( mentor.getId() =="RandomString1");
+    AssertTrue( mentor.setId("RandomString1"));
+    AssertTrue( mentor.getId("RandomString1"));
+    AssertTrue( mentor.getId() =="RandomString1");
+             
+	}
+
+ //tests for :p
+
+      test attribute_p {
+    
+    AssertTrue( mentor.setP("RandomString1"));
+    AssertTrue( mentor.getP() =="RandomString1");
+    AssertTrue( mentor.setP("RandomString1"));
+    AssertTrue( mentor.getP("RandomString1"));
+    AssertTrue( mentor.getP() =="RandomString1");
+             
+	}
+
+ //tests for :q
+
+      test attribute_q {
+    
+    AssertTrue( mentor.setQ("RandomString1"));
+    AssertTrue( mentor.getQ() =="RandomString1");
+    AssertTrue( mentor.setQ("RandomString1"));
+    AssertTrue( mentor.getQ("RandomString1"));
+    AssertTrue( mentor.getQ() =="RandomString1");
+             
+	}
+
+ //tests for :r
+
+      test attribute_r {
+    
+    AssertTrue( mentor.setR("RandomString1"));
+    AssertTrue( mentor.getR() =="RandomString1");
+    AssertTrue( mentor.setR("RandomString1"));
+    AssertTrue( mentor.getR("RandomString1"));
+    AssertTrue( mentor.getR() =="RandomString1");
+             
+	}
+
+ //tests for :s
+
+      test attribute_s {
+    
+          
+
+    AssertMethodFalse( mentor.setS());
+    AssertTrue( mentor.getS() == "123");
+
+
+        	}
+
+ //tests for :tt
+
+      test attribute_tt {
+    
+	}
+
+ //tests for :u
+
+      test attribute_u {
+    
+	}
+
+ //tests for :v
+
+      test attribute_v {
+    
+	}
+
+ //tests for :w
+
+      test attribute_w {
+    
+	}
+
+
+  
+   
+
+}

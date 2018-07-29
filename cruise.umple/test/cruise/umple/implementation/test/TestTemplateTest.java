@@ -8,12 +8,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cruise.umple.implementation.ClassTemplateTest;
 import cruise.umple.implementation.TemplateTest;
 import cruise.umple.util.SampleFileWriter;
 
 
 
-public class TestTemplateTest extends TemplateTest{
+public class TestTemplateTest extends ClassTemplateTest{
 
 	  @Before
 	  public void setUp()

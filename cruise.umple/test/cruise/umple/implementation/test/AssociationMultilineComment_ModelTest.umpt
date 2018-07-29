@@ -1,0 +1,121 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  AssociationMultilineComment ----/////
+
+Test AssociationMultilineComment.ump {
+depend  Foo,Bar ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Foo       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Bar       */
+  /*-------------------------*/
+
+              /////// Association: -- [1,1] Foo /////// 
+              //create .....
+              Test CreateBarWithoutFoo {
+              Bar someBar = new Bar(); \n",,));
+              AssertTrue (someFoo.getFOO()!= null);
+              }
+              //replace
+              
+              Test ReplaceFooInBar { 
+              
+              Foo someFoo = new Foo(); 
+              Foo someFoo2 = new Foo();
+              someFoo.addFoo(someBar);
+              AssertEqual (1, someFoo.getNumberOfBars());
+              AssertEqual (1, someFoo.getNumberOfBars());
+              someBar.setFoo(someFoo2);
+              AssertEqual (someBar, someFoo2.getBar(0));
+              }
+              //delete
+              Test DeleteFoo {
+              // delete Foo in Bar
+              someFoo2.delete(); 
+              AssertEqual (null, someFoo2.getBar(0));
+              }
+              //add to new B
+              
+              Test AddFooToNewBar { 
+              Foo someBar = new Foo();
+              Foo someBar2 = new Foo();
+      
+              Bar someBar = new Bar();
+              someBar.addFoo(someFoo);
+              someBar.addFoo(someFoo2);  
+        
+              AssertEqual(someFoo2, someBar.getFoo(); 
+              AssertEqual (someBar, someFoo2.getBar(0));
+              AssertEqual (someBar, someFoo.getNumberOfBars());
+              }
+
+              /////// Association: -- [1,1] Foo /////// 
+              //create ... without ...
+              Test CreateBarWithoutFoo {
+              Bar someBar = new Bar(); \n",,));
+              AssertF (someFoo.getFOO()!= null);
+              }
+              //replace
+              
+              Test ReplaceFooInBar { 
+              
+              Foo someFoo = new Foo(); 
+              Foo someFoo2 = new Foo();
+              someFoo.addFoo(someBar);
+              AssertEqual (1, someFoo.getNumberOfBars());
+              AssertEqual (1, someFoo.getNumberOfBars());
+              someBar.setFoo(someFoo2);
+              AssertEqual (someBar, someFoo2.getBar(0));
+              }
+              //delete
+              Test DeleteFoo {
+              // delete Foo in Bar
+              someFoo2.delete(); 
+              AssertEqual (null, someFoo2.getBar(0));
+              }
+              //boundary test
+              
+              Test BoundaryTest {
+              private int size = Foo.getNumberOfBars(); 
+              AssertTrue ( size > 0 &&  size < -1) 
+              
+              }
+              
+              Test BoundaryAtMax {
+              
+              
+                
+                
+                
+              
+              //Maximum Bar allowed : 1
+              int size = Foo.getNumberOfBars();
+              
+              
+              Bar obj1 ();
+              
+              Foo someFoo = new Foo(obj1,);
+
+              
+              Bar obj1 (someFoo);
+              
+              AssertEqual(size, someFoo.getNumberOfBars());
+              AssertEqual(someFoo, obj1.getSomeBar(0));
+              
+              
+              }
+ 
+ 
+
+ }
