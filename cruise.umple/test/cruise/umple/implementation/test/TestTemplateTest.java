@@ -75,13 +75,13 @@ public class TestTemplateTest extends TemplateTest{
 	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/OneToManyAssociation_ModelTest.umpt")).exists());
 	  }
 	  
-	  @Test @Ignore
+	  /*@Test @Ignore
 	  public void AirlineExample()
 	  {
 	    language = "Test";
 	    assertUmpleTemplateFor("test/AirlineExample.ump","test/AirlineExample.test.txt");
 	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/AirlineExample_ModelTest.umpt")).exists());
-	  }
+	  }*/
 	  
 	  @Test 
 	  public void NNToManyAssociation()
