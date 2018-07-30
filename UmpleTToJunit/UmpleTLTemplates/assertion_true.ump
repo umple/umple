@@ -1,10 +1,9 @@
 
-class UmpleTestToJUnit {
+class UmpleTToJUnit{
 
-assertion_true <<!<</*assertion_true*/>>
-AssertTrue...
-!>>
+assertion_true <<!<</*assertion_true*/>><<#
 
-
+	#>>assertTrueSomeCode <<="HELLO">> <<#
+#>>!>>
 
 }

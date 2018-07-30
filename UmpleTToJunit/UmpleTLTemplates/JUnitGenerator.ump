@@ -3,6 +3,8 @@ use members_Setup.ump;
 use members_TearDown.ump;
 use where_init.ump;
 use members_AllTestCases.ump;
+use members_AllAssertions.ump;
+use assertion_true.ump;
 
 
 
@@ -68,9 +70,9 @@ import org.junit.*;
 public class <<=model.getFile().subSequence(0, model.getFile().length()-4)>>Test {
  
  <<@UmpleTToJUnit.where_init >>
- <<@UmpleTToJUnit.members_Setup>>
- <<@UmpleTToJUnit.members_TearDown>>
- <<@UmpleTToJUnit.members_AllTestCases>>
+ <<@UmpleTToJUnit.members_Setup >>
+ <<@UmpleTToJUnit.members_TearDown >>
+ <<@UmpleTToJUnit.members_AllTestCases >>
  
 
  

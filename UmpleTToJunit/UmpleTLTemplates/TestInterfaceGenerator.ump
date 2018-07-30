@@ -8,7 +8,7 @@ external interface ILang{}
 class SqlInterfaceGenerator {
     depend cruise.umple.compiler.*;
     depend cruise.umple.util.*;
-    depend java.util.*;
+    depend java.util.*;	
 
     isA ILang;
 

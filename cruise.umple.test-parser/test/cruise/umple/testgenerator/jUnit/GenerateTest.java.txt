@@ -34,10 +34,10 @@ public class GenerateTest {
   @Test
   public void someTest()
   {            
-            Person p1 = new Person ("John","123","someAddrss");
+            Person p1 = new Person ("John","123","someAddrss");     
             Assert.assertTrue (p1.getId()!=null);
-  }
-  
+    
+  }  
   
  
  
