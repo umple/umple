@@ -92,8 +92,8 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
 	    createUmpleSystem(pathToInput, "test/NNToManyAssociation.ump");
 	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
-	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/ATest.umpt")).exists());
-	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/BTest.umpt")).exists());
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/ATest.umpt")).exists());
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/BTest.umpt")).exists());
 	    
 	  }
 	  @Test

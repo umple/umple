@@ -1,7 +1,7 @@
 generate Test;
 
 
-class immutableA {
+class ImmutableA {
 
 immutable id = "someId";
 

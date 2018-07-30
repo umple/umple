@@ -5,7 +5,7 @@
 
 
 ////---- Tests for  immutableAttribute ----/////
-Test immutableA {
+Test ImmutableA {
   //tests for :id
 
       test attribute_id {

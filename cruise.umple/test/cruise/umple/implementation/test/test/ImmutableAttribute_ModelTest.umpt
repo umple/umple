@@ -7,7 +7,7 @@
 ////---- Tests for  immutableAttribute ----/////
 
 Test immutableAttribute.ump {
-depend  immutableA ; 
+depend  ImmutableA ; 
 
 
  
@@ -15,7 +15,7 @@ depend  immutableA ;
   /*  Association Test       */
   /*-------------------------*/
   /*-------------------------*/
-  /*  Class immutableA       */
+  /*  Class ImmutableA       */
   /*-------------------------*/
 
  
