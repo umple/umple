@@ -23,8 +23,9 @@ module AssertionModule
     end
      
   def someTest < Test::Unitt::TestCase            
-            p1 = Person.new("John","123","someAddrss")
+            p1 = Person.new("John","123","someAddrss")      
             assert(p1.get_id!=nil)
+
   
   end
 end 

@@ -45,8 +45,8 @@ public class RubyUnitTemplateTest extends UnitTemplateTest{
 	  @Test 
 	  public void TestGenerate()
 	  {
-		language = "Java";
-		createUmpleSystem(languagePath, "/testGenerator_rubyunit_testGenerate.ump");
+		//language = "Java";
+		//createUmpleSystem(languagePath, "/testGenerator_rubyunit_testGenerate.ump");
 		
 		language = "RubyUnit";
 	    System.out.println(pathToInput);    	    

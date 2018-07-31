@@ -3,6 +3,8 @@ use members_Setup.ump;
 use members_TearDown.ump;
 use where_init.ump;
 use members_AllTestCases.ump;
+use members_AllAssertions.ump;
+use testcase_init.ump;
 
 
 
