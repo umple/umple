@@ -31,7 +31,34 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    super.tearDown();
 	    
 	    //SampleFileWriter.destroy(pathToInput + "/test/Test.umpt");
-	    //SampleFileWriter.destroy(pathToInput + "/test/test");
+	    SampleFileWriter.destroy(pathToInput + "/test/test");
+	    SampleFileWriter.destroy(pathToInput + "/test/Bar1Test.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/Bar2Test.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/Bar3Test.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/Bar4Test.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/BarTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/AttributeInlineComment_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/ClassCommentWithEmptyLines_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/AttributeMultilineComment_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/AssociationMultilineComment_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/AssociationInlineComment_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/ClassTemplateTest_CodeInjectionsBasic_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/ClassTemplateTest_CodeInjectionsComments_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/ClassTemplateTest_CodeInjectionsNoBraces_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/ClassTemplateTest_CodeInjectionsParametersMulti_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/ClassTemplateTest_CodeInjectionsParametersUnspecified_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/ClassTemplateTest_CodeInjectionsSingleLine_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/ClassTemplateTest_NoNamespace_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/MethodCommentWithEmptyLines_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/MethodInlineComment_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/MethodMultilineComment_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/MultipleAssociationComments_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/MultipleAttributeComments_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/MultipleMethodComments_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/StudentTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/TokenTest.umpt");
+	    
+	    
 	    
 	  }
 	  

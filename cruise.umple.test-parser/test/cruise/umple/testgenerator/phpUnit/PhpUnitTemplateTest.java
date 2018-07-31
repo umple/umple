@@ -33,7 +33,11 @@ public class PhpUnitTemplateTest extends UnitTemplateTest{
 	  public void tearDown()
 	  {
 	    super.tearDown();
-	    
+	    SampleFileWriter.destroy(pathToInput + "/phpunit/DependTest.php");
+	    SampleFileWriter.destroy(pathToInput + "/phpunit/GenerateTest.php");
+	    SampleFileWriter.destroy(pathToInput + "/phpunit/TestcaseTest.php");
+	    SampleFileWriter.destroy(pathToInput + "/phpunit/SubOptionTest.php");
+	    SampleFileWriter.destroy(pathToInput + "/phpunit/AssertionTest.php");
 	    //SampleFileWriter.destroy(pathToInput + "/test/Test.umpt");
 	    //SampleFileWriter.destroy(pathToInput + "/test/test");
 	    //SampleFileWriter.destroy(pathToInput + "/phpunit/DependTest.java");

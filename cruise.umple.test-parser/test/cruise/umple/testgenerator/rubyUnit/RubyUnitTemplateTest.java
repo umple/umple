@@ -33,7 +33,11 @@ public class RubyUnitTemplateTest extends UnitTemplateTest{
 	  public void tearDown()
 	  {
 	    super.tearDown();
-	    
+	    SampleFileWriter.destroy(pathToInput + "/rubyunit/DependTest.rb");
+	    SampleFileWriter.destroy(pathToInput + "/rubyunit/GenerateTest.rb");
+	    SampleFileWriter.destroy(pathToInput + "/rubyunit/TestcaseTest.rb");
+	    SampleFileWriter.destroy(pathToInput + "/rubyunit/SubOptionTest.rb");
+	    SampleFileWriter.destroy(pathToInput + "/rubyunit/AssertionTest.rb");
 	    //SampleFileWriter.destroy(pathToInput + "/test/Test.umpt");
 	    //SampleFileWriter.destroy(pathToInput + "/test/test");
 	    //SampleFileWriter.destroy(pathToInput + "/junit/DependTest.java");
@@ -65,7 +69,7 @@ public class RubyUnitTemplateTest extends UnitTemplateTest{
 	    //System.out.println(languagePath);
 	    createUmpleTestSystem(languagePath, "/testGenerator_RubyUnit_depend.umpt");
 	    //assertUmpleTemplateFor("RubyUnit/testGenerate_model.umpt","RubyUnit/Testgenerate_model.rb");
-	    assertGeneratedCodeEquals(pathToInput, "/rubyunit/GenerateTest.rb");
+	    assertGeneratedCodeEquals(pathToInput, "/rubyunit/DependTest.rb");
 	    Assert.assertEquals(true, (new File(pathToInput + "/RubyUnit/DependTest.rb")).exists());
 	  }
 	  
@@ -76,7 +80,7 @@ public class RubyUnitTemplateTest extends UnitTemplateTest{
 	    //System.out.println(languagePath);
 	    createUmpleTestSystem(languagePath, "/testGenerator_RubyUnit_subOption.umpt");
 	    //assertUmpleTemplateFor("RubyUnit/testGenerate_model.umpt","RubyUnit/Testgenerate_model.rb");
-	    assertGeneratedCodeEquals(pathToInput, "/rubyunit/GenerateTest.rb");
+	    assertGeneratedCodeEquals(pathToInput, "/rubyunit/SubOptionTest.rb");
 	    Assert.assertEquals(true, (new File(pathToInput + "/RubyUnit/SubOptionTest.rb")).exists());
 	  }
 	  

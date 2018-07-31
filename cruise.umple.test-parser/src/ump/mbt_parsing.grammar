@@ -21,7 +21,7 @@ thenCont: THEN: [[testCase]]*
 
 
 
-testCase: test [~testCaseName] {( [[initialization]] | [[methodCall]] | [[assertions]])* }
+testCase: test [~testCaseName] {( [[initialization]] | [[methodCall]] | [[assertions]] | [[comment]])* }
 givenUmpleModel: [~modelName].ump;
 initialization: [~identifier] [~name] [[parameter]]*;
 construct: OPEN_ROUND_BRACKET ([**value] | "[**value]") (,([**value] | "[**value]"))* CLOSE_ROUND_BRACKET
@@ -41,3 +41,8 @@ assertEqualMethodCall: [~methodName]  OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET
 assertCode : [[methodCall]] (== | != )? ( [**compValue] | ( "[**compValue]" )? | [[methodCall]] )?
 methodCall: [~objectName](.)[~methodName]  OPEN_ROUND_BRACKET [[assertParameter]]* CLOSE_ROUND_BRACKET(;)?
 assertParameter:  ([pValue] | "[pValue]") (,([pValue] | "[pValue]"))*
+
+// Comments follow the same conventions as C-family languages. [*UmpleComments*]
+comment- : [[inlineComment]] | [[multilineComment]] | [[annotationComment]]
+inlineComment- : // [*inlineComment]
+multilineComment- : /* [**multilineComment] */
