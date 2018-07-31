@@ -1,10 +1,9 @@
 
-class UmpleTestToPhpUnit {
+class UmpleTToPhpUnit{
 
-assertion_true <<!<</*assertion_true*/>>
-AssertTrue...
-!>>
+assertion_true <<!<</*assertion_true*/>><<#
 
-
+	#>>assertTrueSomeCode  <<#
+#>>!>>
 
 }

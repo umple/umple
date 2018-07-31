@@ -33,8 +33,10 @@ class AssertionTest extends UnitTestCase{
  
   public function someTest()
   {            
-            $p1 = new Person ("John","123","someAddrss");
-            $this->assertTrue ($p1->getId()!=null);
+            $p1 = new Person ("John","123","someAddrss");     
+            $this->assertTrue($p1->getId()!=null);
+    
+
   }
   
   

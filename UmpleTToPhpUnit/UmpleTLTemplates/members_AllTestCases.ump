@@ -1,3 +1,7 @@
+//use assertion_true.ump;
+use members_AllAssertions.ump;
+use testcase_init.ump;
+
 class UmpleTToPhpUnit {
 
 members_AllTestCases <<!<</*members_AllTestCases*/>><<#
@@ -15,16 +19,7 @@ for (TestCase tc : model.getTestSuite(0).getTestcases())
 			  {
 				  if (init.getLocOrder() == i )
 				  {
-				  	
-			  		String par = "";
-			  		for (Parameter pa : init.getParameters()){
-			  		par += pa.getValue()+",";
-			  		}
-			  		 par = (String) par.subSequence(0, par.length()-1);
-		
-			  		#>>			  		
-			  		$<<=init.getObjectName()>> = new <<=init.getIdentifier()>> (<<=par>>);<<#
-					
+				  	#>><<@UmpleTToPhpUnit.testcase_init>><<#
 				  }
 				
 				
@@ -37,7 +32,7 @@ for (TestCase tc : model.getTestSuite(0).getTestcases())
 	  		{
 				if (act.getLocOrder() == i)
 				{
-					#>>
+					#>> //include Action Code if there is actions in a TestCAse 
 					  <<=act.getCode()>><<#
 				}
 				
@@ -48,31 +43,11 @@ for (TestCase tc : model.getTestSuite(0).getTestcases())
 		  
 		  if (tc.hasAssertions())
 		  {
-		  
 			  for (Assertion as: tc.getAssertions())
 			  {
-			  	String assertCode =  as.getAssertCode().replace(".","->");
 				  if (as.getLocOrder() ==i)
 				  {
-			  		if(as.getType().equals("AssertTrue"))
-			  		{#>>
-		 			 $this->assertTrue (<<=assertCode>>);<<#}
-		
-			  		if(as.getType().equals("AssertFalse"))
-			  		{#>>
-			  		$this->assertFalse (<<=assertCode>>);<<#}
-		
-			  		if(as.getType().equals("AssertEqual"))
-			  		{#>>
-			  		$this->assertEqual (<<=assertCode>>);<<#}
-		
-			  		if(as.getType().equals("AssertNull"))
-			  		{#>>
-			  		$this->assertNull(<<=assertCode>>);<<#}
-		
-			  		if(as.getType().equals("AssertMethod"))
-			  		{#>>
-			  		$this->assertMethod (<<=assertCode>>);<<#}
+			  		#>><<@ UmpleTToPhpUnit.members_AllAssertions >><<#
 					
 				  }
 				
@@ -82,7 +57,7 @@ for (TestCase tc : model.getTestSuite(0).getTestcases())
 			  
 			  
 			
-		  }//locEnd	
+		  }//locEnd		
 	  
 	  #>>
 	}
