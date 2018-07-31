@@ -64,7 +64,7 @@ class TestClassGenerator {
 
 
 
-<<#// if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).getIsInline()) {append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } #>>
+<<# if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).getIsInline()) {append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } #>>
 
 ////---- Tests for  <<=model.getUmpleFile().getFileName().subSequence(0, model.getUmpleFile().getFileName().length()-4)>> ----/////
 <<#
