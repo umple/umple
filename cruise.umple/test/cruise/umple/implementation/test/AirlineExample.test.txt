@@ -1,0 +1,46 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+ ////---- Tests for  attribute.ump ----/////
+
+Test  attribute { 
+
+depend  A,B ; 
+
+GIVEN:  
+	attribute.ump;
+WHERE:  
+THEN:  
+///////// Assertions for class A
+// tests for attribute: id
+	AssertTrue( a.setId("id123test"));
+	AssertTrue( a.getId() =="id123test");
+	AssertTrue( a.setId("RandomString1"));
+	AssertTrue( a.getId("RandomString1"));
+	AssertFalse( a.getId() =="id123test");
+// tests for attribute: number
+	AssertTrue( a.setNumber(123));
+	AssertTrue( a.getNumber() == 123);
+// tests for attribute: number2
+	AssertTrue( a.setNumber2(1.2));
+	AssertTrue( a.getNumber2() ==1.2);
+// tests for attribute: number3
+	AssertTrue( a.setNumber3(123));
+	AssertTrue( a.getNumber3() == 123);
+///////// Assertions for class B
+// tests for attribute: name
+	AssertTrue( b.setName("id123test"));
+	AssertTrue( b.getName() =="id123test");
+	AssertTrue( b.setName("RandomString1"));
+	AssertTrue( b.getName("RandomString1"));
+	AssertFalse( b.getName() =="id123test");
+// tests for attribute: address
+	AssertTrue( b.setAddress("id123test"));
+	AssertTrue( b.getAddress() =="id123test");
+	AssertTrue( b.setAddress("RandomString1"));
+	AssertTrue( b.getAddress("RandomString1"));
+	AssertFalse( b.getAddress() =="id123test");
+
+}
+

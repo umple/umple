@@ -1,0 +1,9 @@
+
+class UmpleTToJUnit{
+
+assertion_true <<!<</*assertion_true*/>><<#
+
+	#>>assertTrueSomeCode  <<#
+#>>!>>
+
+}

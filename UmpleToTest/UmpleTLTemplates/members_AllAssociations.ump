@@ -1,0 +1,74 @@
+use association_optionlOneToMany.ump;
+use association_OneToMany.ump;
+use association_NNToMany.ump;
+
+class UmpleToTest {
+    members_AllAssociations <<!<</*members_AllAssociations*/>><<#
+/*
+This file creates the necessary attributes that the class will need for a successful foreign key to another class (association)
+It creates local copies of the foreign class' private key attributes. 
+Note: The foreign key constraint is not defined here, as the associated class may not be defined yet. See the members_AllForeignKeys.jet file for those.
+*/
+
+  appendln(realSb, "");
+  appendln(realSb, "  /*-------------------------*/");
+  appendln(realSb, "  /*  Association Test       */");
+  appendln(realSb, "  /*-------------------------*/");
+  
+  for (UmpleClass uClass : model.getUmpleClasses())
+  {
+  
+  appendln(realSb, "  /*-------------------------*/");
+  appendln(realSb, "  /*  Class {0}       */",uClass.getName());
+  appendln(realSb, "  /*-------------------------*/");
+  
+  if (!uClass.hasAssociations())
+  { appendln(realSb, ""); }
+  
+  
+  else{	
+  
+  
+  isFirst = true;
+  
+  for (Association as : uClass.getAssociations())
+  {
+   		AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
+        AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
+        boolean isBidirectional = as.getIsLeftNavigable()&&as.getIsRightNavigable();
+        boolean isTheirEndClass = theirEnd.getClassName().equals(uClass.getName());
+        
+        if (isTheirEndClass && isBidirectional)
+          {
+            myEnd = as.getEnd(1);
+            theirEnd = as.getEnd(0);
+          }
+        
+        if(isBidirectional)
+        {
+        	if (theirEnd.getMultiplicity().getLowerBound() == 0 && theirEnd.getMultiplicity().getUpperBound() ==1 &&   myEnd.getMultiplicity().isMany())
+        	{
+        		#>><<@UmpleToTest.association_optionalOneToMany>><<#
+        	}
+        	
+        	if (theirEnd.getMultiplicity().getLowerBound() == 1 && myEnd.getMultiplicity().isMany())
+        {
+        #>><<@UmpleToTest.association_OneToMany>><<#
+        appendln(realSb,"");
+        }
+        if ((theirEnd.getMultiplicity().isLowerBoundNumeric() && theirEnd.getMultiplicity().isUpperBoundNumeric() )&& myEnd.getMultiplicity().isMany())
+        {
+        #>><<@UmpleToTest.association_NNToMany>><<#
+        appendln(realSb,"");
+        }
+        	
+        }
+        
+        
+        
+        
+   } 
+  }
+  }
+#>>!>>
+}

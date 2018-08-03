@@ -1,0 +1,38 @@
+class UmpleToTest{
+
+attribute_Lazy <<!<</*attribute_Lazy*/>>
+
+AssertNotNull (<<=at.getName()>>);<<#
+	    	  //TODO: testGenerator,  add assertion for lazy, we want to see if the object has the lazy-specific LOC in the constructor, Note this is still abstrac ( not language oriented) 
+	    	  //  AssertLOC : student={ method=Student(), LOC="name = null;"}
+	    	  
+	    	  if(at.getType() == "String" || at.getType() == null)
+	    	  {#>>
+		AssertNotNull (<<=uClass.getName()>>.get<<=attrName>> != null)
+	    	  <<#}
+	    	  if(at.getType() == "Double" || at.getType() == "Integer")
+	    	  {#>>
+		AssertNotNull (<<=uClass.getName()>>.get<<=attrName>> != null)
+	    	  <<#}	    	  
+	    	  if(at.getType() == "Float")
+	    	  {#>>
+		AssertNotNull (<<=uClass.getName()>>.get<<=attrName>> != null)	
+	    	  <<#}
+	    	  if(at.getType() == "Boolean") 
+	    	  {#>>
+		AssertNotNull (<<=uClass.getName()>>.get<<=attrName>> != null)
+	    	  <<#}
+	    	  
+	    	  if (at.getType() == "")
+	    	  {#>>
+	    		  appendln("");
+	    	  <<#}
+	    	  
+	    	  else{
+	    		  
+	    	  }
+#>>
+!>>
+
+
+}

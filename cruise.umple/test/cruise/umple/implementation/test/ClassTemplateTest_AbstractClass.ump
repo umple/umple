@@ -1,0 +1,7 @@
+generate Php;
+namespace example;
+
+class Student
+{
+	abstract;
+}

@@ -1,0 +1,69 @@
+use assertion_true.ump;
+use members_AllAssertions.ump;
+use testcase_init.ump;
+
+class UmpleTToJUnit {
+
+members_AllTestCases <<!<</*members_AllTestCases*/>><<#
+
+for (TestCase tc : model.getTestSuite(0).getTestcases())
+{#>>
+	@Test
+	public void <<=tc.getName() >>()
+  {
+  <<#
+	  for (int i = 0; i<tc.getLocOrder();i++)
+		  {
+			if (tc.getInits().size()>0)
+			{
+			  for (TestInitialization init : tc.getInits())
+			  {
+				  if (init.getLocOrder() == i )
+				  {
+				  	#>><<@UmpleTToJUnit.testcase_init>><<#
+				  }
+				
+				
+			  }
+		  }//initEnd
+		  
+		  if (tc.hasActions())
+		  {
+	  		for ( Action act : tc.getActions())
+	  		{
+				if (act.getLocOrder() == i)
+				{
+					#>> //include Action Code if there is actions in a TestCAse 
+					  <<=act.getCode()>><<#
+				}
+				
+			}
+		  	
+		  }//ActionsEND
+		  
+		  
+		  if (tc.hasAssertions())
+		  {
+			  for (Assertion as: tc.getAssertions())
+			  {
+				  if (as.getLocOrder() ==i)
+				  {
+			  		#>><<@ UmpleTToJUnit.members_AllAssertions >><<#
+					
+				  }
+				
+			  }
+			
+		  }// AssertionsEnd
+			  
+			  
+			
+		  }//locEnd	
+	  
+	  #>>  }	
+	<<#
+}
+
+
+#>>!>>
+}

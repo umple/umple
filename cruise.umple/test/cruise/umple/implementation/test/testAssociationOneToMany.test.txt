@@ -1,0 +1,39 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+////---- Tests for  OneToManyAssociation ----/////
+Test A {
+  //tests for :id
+
+      test attribute_id {
+    
+    AssertTrue( a.setId("RandomString1"));
+    AssertTrue( a.getId() =="RandomString1");
+    AssertTrue( a.setId("RandomString1"));
+    AssertTrue( a.getId("RandomString1"));
+    AssertTrue( a.getId() =="RandomString1");
+             
+	}
+
+
+  
+   
+
+}
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+////---- Tests for  OneToManyAssociation ----/////
+Test B {
+ 
+
+  
+   
+
+}

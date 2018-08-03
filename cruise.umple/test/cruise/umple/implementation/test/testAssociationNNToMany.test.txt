@@ -1,0 +1,96 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+////---- Tests for  NNToManyAssociation ----/////
+
+Test NNToManyAssociation.ump {
+depend  A,B ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class A       */
+  /*-------------------------*/
+
+              /////// Association: -- [2,4] B /////// 
+              //create ... without ...
+              Test CreateAWithoutB {
+              A someA = new A(); \n",,));
+              AssertF (someB.getBS()!= null);
+              }
+              //replace
+              
+              Test ReplaceBInA { 
+              
+              B someB = new B(); 
+              B someB2 = new B();
+              someB.addB(someA);
+              AssertEqual (1, someB.getNumberOfAs());
+              AssertEqual (1, someB.getNumberOfAs());
+              someA.setB(someB2);
+              AssertEqual (someA, someB2.getA(0));
+              }
+              //delete
+              Test DeleteB {
+              // delete B in A
+              someB2.delete(); 
+              AssertEqual (null, someB2.getA(0));
+              }
+              //boundary test
+              
+              Test BoundaryTest {
+              private int size = B.getNumberOfas(); 
+              AssertTrue ( size > 0 &&  size < -1) 
+              
+              }
+              
+              
+              }
+  /*-------------------------*/
+  /*  Class B       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,*] A /////// 
+              //create ... without ...
+              Test CreateBWithoutA {
+              B someB = new B(); \n",,));
+              AssertF (someA.getAS()!= null);
+              }
+              //replace
+              
+              Test ReplaceAInB { 
+              
+              A someA = new A(); 
+              A someA2 = new A();
+              someA.addA(someB);
+              AssertEqual (1, someA.getNumberOfBs());
+              AssertEqual (1, someA.getNumberOfBs());
+              someB.setA(someA2);
+              AssertEqual (someB, someA2.getB(0));
+              }
+              //delete
+              Test DeleteA {
+              // delete A in B
+              someA2.delete(); 
+              AssertEqual (null, someA2.getB(0));
+              }
+              //boundary test
+              
+              Test BoundaryTest {
+              private int size = A.getNumberOfbs(); 
+              AssertTrue ( size > 2 &&  size < 4) 
+              
+              }
+              
+              
+              }
+ 
+ 
+
+ }

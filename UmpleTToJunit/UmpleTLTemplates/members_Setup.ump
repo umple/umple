@@ -1,0 +1,11 @@
+class UmpleTToJUnit{
+
+members_Setup <<!<</*members_Setup*/>>
+
+  @Before
+  public void setup(){
+
+  }
+
+!>>
+}

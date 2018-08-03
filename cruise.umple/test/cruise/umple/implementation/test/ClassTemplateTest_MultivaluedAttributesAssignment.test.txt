@@ -1,0 +1,185 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Attributes
+  private $someStrings;
+  private $numbers;
+  private $objects;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->someStrings = array("a","b","c");
+    $this->numbers = array(1,2,3,10);
+    $this->objects = array(new Token("first"),new Token("second"));
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function addSomeString($aSomeString)
+  {
+    $wasAdded = false;
+    $this->someStrings[] = $aSomeString;
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeSomeString($aSomeString)
+  {
+    $wasRemoved = false;
+    unset($this->someStrings[$this->indexOfSomeString($aSomeString)]);
+    $this->someStrings = array_values($this->someStrings);
+    $wasRemoved = true;
+    return $wasRemoved;
+  }
+
+  public function addNumber($aNumber)
+  {
+    $wasAdded = false;
+    $this->numbers[] = $aNumber;
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeNumber($aNumber)
+  {
+    $wasRemoved = false;
+    unset($this->numbers[$this->indexOfNumber($aNumber)]);
+    $this->numbers = array_values($this->numbers);
+    $wasRemoved = true;
+    return $wasRemoved;
+  }
+
+  public function addObject($aObject)
+  {
+    $wasAdded = false;
+    $this->objects[] = $aObject;
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeObject($aObject)
+  {
+    $wasRemoved = false;
+    unset($this->objects[$this->indexOfObject($aObject)]);
+    $this->objects = array_values($this->objects);
+    $wasRemoved = true;
+    return $wasRemoved;
+  }
+
+  public function getSomeString($index)
+  {
+    $aSomeString = $this->someStrings[$index];
+    return $aSomeString;
+  }
+
+  public function getSomeStrings()
+  {
+    $newSomeStrings = $this->someStrings;
+    return $newSomeStrings;
+  }
+
+  public function numberOfSomeStrings()
+  {
+    $number = count($this->someStrings);
+    return $number;
+  }
+
+  public function hasSomeStrings()
+  {
+    $has = someStrings.size() > 0;
+    return $has;
+  }
+
+  public function indexOfSomeString($aSomeString)
+  {
+    $rawAnswer = array_search($aSomeString,$this->someStrings);
+    $index = $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer;
+    return $index;
+  }
+
+  public function getNumber($index)
+  {
+    $aNumber = $this->numbers[$index];
+    return $aNumber;
+  }
+
+  public function getNumbers()
+  {
+    $newNumbers = $this->numbers;
+    return $newNumbers;
+  }
+
+  public function numberOfNumbers()
+  {
+    $number = count($this->numbers);
+    return $number;
+  }
+
+  public function hasNumbers()
+  {
+    $has = numbers.size() > 0;
+    return $has;
+  }
+
+  public function indexOfNumber($aNumber)
+  {
+    $rawAnswer = array_search($aNumber,$this->numbers);
+    $index = $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer;
+    return $index;
+  }
+
+  public function getObject($index)
+  {
+    $aObject = $this->objects[$index];
+    return $aObject;
+  }
+
+  public function getObjects()
+  {
+    $newObjects = $this->objects;
+    return $newObjects;
+  }
+
+  public function numberOfObjects()
+  {
+    $number = count($this->objects);
+    return $number;
+  }
+
+  public function hasObjects()
+  {
+    $has = objects.size() > 0;
+    return $has;
+  }
+
+  public function indexOfObject($aObject)
+  {
+    $rawAnswer = array_search($aObject,$this->objects);
+    $index = $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer;
+    return $index;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

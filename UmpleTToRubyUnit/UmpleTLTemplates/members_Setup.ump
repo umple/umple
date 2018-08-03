@@ -1,0 +1,8 @@
+class UmpleTToRubyUnit{
+
+members_Setup <<!<</*members_Setup*/>>
+		def setup
+  			#Setup Method
+		end  
+!>>
+}

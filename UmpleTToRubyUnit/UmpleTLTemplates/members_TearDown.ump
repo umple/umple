@@ -1,0 +1,7 @@
+class UmpleTToRubyUnit{
+
+members_TearDown <<!<</*members_tearDown*/>>
+  	def teardown
+  		#Tear Down
+  	end!>>
+}

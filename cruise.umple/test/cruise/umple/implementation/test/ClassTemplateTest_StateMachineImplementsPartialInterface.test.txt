@@ -1,0 +1,92 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.25.0-963d2bd modeling language!*/
+
+class Router implements NetworkNode
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Router Attributes
+  private $ipAddress;
+
+  //Router State Machines
+  private static $StatusDisconnected = 1;
+  private static $StatusConnected = 2;
+  private $status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aIpAddress)
+  {
+    $this->ipAddress = $aIpAddress;
+    $this->setStatus(self::$StatusDisconnected);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusDisconnected) { return "StatusDisconnected"; }
+    elseif ($this->status == self::$StatusConnected) { return "StatusConnected"; }
+    return null;
+  }
+
+  public function connect()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusDisconnected)
+    {
+      $this->setStatus(self::$StatusConnected);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function disconnect()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusConnected)
+    {
+      $this->setStatus(self::$StatusDisconnected);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->status = $aStatus;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+  public function errorDetected()
+  {
+          return "";
+  }
+
+}
+?>

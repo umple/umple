@@ -1,0 +1,8 @@
+generate Test;
+
+
+class ImmutableA {
+
+immutable id = "someId";
+
+}

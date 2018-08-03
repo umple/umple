@@ -1,0 +1,15 @@
+class UmpleToTest{
+
+attribute_Autounique <<!<</*attribute_Autounique*/>>
+
+	<<=uClass.getName()>> autouniqueTest1 = new <<=uClass.getName()>>();
+	AssertTrue( autouniqueTest1.get<<=attrName>>() == 1 >>);
+	<<=uClass.getName()>> autouniqueTest2 = new <<=uClass.getName()>>();
+	AssertTrue( autouniqueTest2.get<<=attrName>>() == 2 >>);
+	<<=uClass.getName()>> autouniqueTest3 = new <<=uClass.getName()>>();
+	AssertTrue( autouniqueTest3.get<<=attrName>>() == 3 >>);
+
+!>>
+
+
+}

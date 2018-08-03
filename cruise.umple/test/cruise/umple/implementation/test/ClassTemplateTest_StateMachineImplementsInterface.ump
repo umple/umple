@@ -1,0 +1,21 @@
+generate Php;
+
+interface NetworkNode {
+	boolean connect();
+	boolean disconnect();
+	boolean errorDetected();
+}
+
+class Router {
+	isA NetworkNode;
+	internal ipAddress;
+	status{
+		disconnected{
+			connect -> connected;
+		}
+		connected{
+			disconnect -> disconnected;
+			errorDetected -> disconnected;
+		}	
+	}
+}

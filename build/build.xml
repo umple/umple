@@ -21,6 +21,9 @@
 
         <echo>Building Umplificator Eclipse Plugin</echo>
         <ant antfile="build/build.umplificatorplugin.xml" target="build" inheritAll="false" />
+			
+	    <echo>Building Test Unit Generator And Parser</echo>
+	    <ant antfile="build/build.testgenerator.xml" target="build" inheritAll="false" />	
 
         <!-- <echo>Building Eclipse Plugin with XText Code Editor</echo>
         <ant antfile="build/build.eclipsextextplugin.xml" target="build" inheritAll="false" /> -->

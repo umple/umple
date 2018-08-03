@@ -1,0 +1,12 @@
+class UmpleTToRubyUnit{
+testcase_init <<!<</*testcase_init*/>><<#
+String par = "";
+			  		for (Parameter pa : init.getParameters()){
+			  		par += pa.getValue()+",";
+			  		}
+			  		 par = (String) par.subSequence(0, par.length()-1);
+		
+			  		#>>			  		
+			  		<<=init.getObjectName()>> = <<=init.getIdentifier()>>.new(<<=par>>)<<#
+#>>!>>
+}

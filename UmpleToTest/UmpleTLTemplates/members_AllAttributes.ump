@@ -1,0 +1,59 @@
+use attribute_typed.ump;
+use attribute_Lazy.ump;
+use attribute_Immutable.ump;
+//use attribute_Defaulted.ump;
+//use attribute_Autonique.ump;
+
+
+class UmpleToTest {
+    members_AllAttributes <<!<</*members_AllAttributes*/>><<#
+/*
+This file generates Tests for attributes for a given class. Once all the attributes have been defined
+*/
+
+  isFirst = true;
+
+  if (!uClass.hasAttributes())
+  { appendln(realSb, ""); }
+
+  else {
+  for(Attribute at : uClass.getAttributes())
+  {
+  String typeName = at.getType() == null ? "String" : at.getType();
+  String upperBound = at.getIsList() ? " upperBound=\"-1\"" : "";
+  String attrName = StringFormatter.toPascalCase(at.getName());
+  	#>> //tests for :<<=at.getName()>>
+
+  		test attribute_<<=at.getName()>> {
+  	<<#
+
+
+  	if (!at.isImmutable())
+	      {
+	    	  	#>><<@UmpleToTest.attribute_typed>><<#
+		    }
+	    	  //appendln(realSb("\t}\n", attrName));
+	      if (at.isIsLazy())
+	      {#>>
+	    	  <<@UmpleToTest.attribute_Lazy>>
+	      <<#}
+	      if ( at.isImmutable() == true)
+	      {#>>
+	    	  <<@UmpleToTest.attribute_Immutable>>
+	      <<#}
+        
+
+
+
+
+
+  	appendln(realSb, "\t}\n");
+  }
+  }
+
+
+
+
+
+#>>!>>
+}
