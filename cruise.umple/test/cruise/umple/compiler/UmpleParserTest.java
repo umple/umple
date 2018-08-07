@@ -2869,6 +2869,12 @@ public class UmpleParserTest
 	  uClass.removeAutoGenerateMethodsForAttribute(uClass.getAttribute("str"));
 	  Assert.assertEquals(3, uClass.getMethods().size());
   }
+  
+  @Test
+  public void queuedMethods()
+  {
+    assertHasNoWarningsParse("008_queuedMethodDefinition.ump");
+  }
 
   // Test for issue 412 by F.K
   @Test
