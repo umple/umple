@@ -2874,6 +2874,7 @@ public class UmpleParserTest
   public void queuedMethods()
   {
     assertHasNoWarningsParse("008_queuedMethodDefinition.ump");
+    assertFailedParse("008_nonVoidQueuedMethod.ump", 41);
   }
 
   // Test for issue 412 by F.K
