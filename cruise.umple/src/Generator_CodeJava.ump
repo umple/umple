@@ -1288,6 +1288,28 @@ class JavaGenerator
         }
       }
       return allEnums;
+    }
+    else if ("listQueuedMethods".equals(keyName))
+    {
+      String allMethodsEnum = "";
+      Boolean foundQueuedMethod = false;
+      
+      for(Method m : aClass.getMethods())
+      {
+        if(m.getIsQueued())
+        {
+          if(!foundQueuedMethod)
+          {
+            allMethodsEnum += m.getName() + "_M";
+            foundQueuedMethod = true;
+          }
+          else
+          {
+            allMethodsEnum += ", " + m.getName() + "_M";
+          }
+        }
+      }
+      return allMethodsEnum;
     } 
     
     return "UNKNOWN ID: " + keyName;
@@ -2494,6 +2516,17 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       {
         genClass.addMultiLookup("import", "java.util.*");
         genClass.addMultiLookup("import", "java.lang.Thread");
+        break;
+      }
+    }
+    
+    for (Method m : aClass.getMethods())
+    {
+      if(m.getIsQueued())
+      {
+        genClass.addMultiLookup("import", "java.util.*");
+        genClass.addMultiLookup("import", "java.lang.Thread");
+        break;
       }
     }
     if(getModel().getDistributed()==true)

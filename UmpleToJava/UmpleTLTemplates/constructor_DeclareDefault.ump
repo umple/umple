@@ -275,6 +275,7 @@ class UmpleToJava {
   
   boolean foundQueued=false;
   boolean foundPooled=false;
+  boolean foundQueuedMethod=false;
   for(StateMachine sm : uClass.getStateMachines())
   {
     State state = sm.getStartState();
@@ -297,6 +298,14 @@ class UmpleToJava {
       foundPooled = true;
     }
   }
+  for(Method m : uClass.getMethods())
+  {
+    if(m.getIsQueued())
+    {
+      foundQueuedMethod = true;
+      break;
+    }
+  }
   if(foundQueued == true)
   {
     append(realSb,"\n    queue = new MessageQueue();");
@@ -310,6 +319,13 @@ class UmpleToJava {
     append(realSb,"\n    removal=new Thread(this);");
     append(realSb,"\n    //start the thread of {0}", uClass.getName());
     append(realSb,"\n    removal.start();");
+  }
+  if(foundQueuedMethod == true)
+  {
+    append(realSb,"\n    methodQueue = new QueuedMethodMessageQueue();");
+    append(realSb,"\n    methodRemoval = new Thread(this);");
+    append(realSb,"\n    //start the thread for queued methods of {0}", uClass.getName());
+    append(realSb,"\n    methodRemoval.start(); \n  ");
   }
   
   if (customConstructorPostfixCode != null)
