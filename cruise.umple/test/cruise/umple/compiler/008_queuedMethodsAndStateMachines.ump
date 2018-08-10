@@ -1,0 +1,13 @@
+class A
+{
+  queued method1() 
+  {
+    //implementation
+  }
+  
+  queued sm
+  {
+    s1 {e->s2;}
+    s2 {}
+  }
+}

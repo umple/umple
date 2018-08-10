@@ -346,6 +346,15 @@ class UmpleToJava {
       }
       if(hasQueued)
       {
+        boolean hasRunFunction = false;
+        for(StateMachine sm : uClass.getStateMachines())
+        {
+          if(sm.isQueued() || sm.isPooled())
+          {
+            hasRunFunction = true;
+            break;
+          }
+        }
         ArrayList<Method> methodList = new ArrayList<Method>();
         for (Method m : uClass.getMethods())
         {
@@ -443,8 +452,48 @@ class UmpleToJava {
 		appendln(realSb,"      QueuedMethodMessage m = messages.remove(); "); 
 		appendln(realSb,"      return (m);");
 		appendln(realSb,"    }");
-		append(realSb,"  }");  
+		appendln(realSb,"  }");
 		
+		if(!hasRunFunction)
+		{
+		  appendln(realSb,"\n  @Override");
+		  appendln(realSb,"  public void run ()");
+		  appendln(realSb,"  {");
+		  appendln(realSb,"    boolean status=false;");
+		  appendln(realSb,"    while (true) ");
+		  appendln(realSb,"    {");
+		
+		  append(realSb,"      QueuedMethodMessage qmm = methodQueue.getNext();");
+		  append(realSb,"\n      if(qmm == null)  return;");
+		
+		  append(realSb,"\n      switch(qmm.type)");
+		  append(realSb,"\n      {");
+		  for(Method m : methodList)
+		  {
+			append(realSb,"\n        case {0}", m.getName());
+			append(realSb,"_M:");
+			append(realSb,"\n          _{0}(", m.getName());
+		  
+			//parameters to relay to the function
+			boolean firstParameter = true;
+			int i = 0;
+			for(MethodParameter mp : m.getMethodParameters())
+			{
+			  if(!firstParameter)  append(realSb, ", ");
+			  append(realSb,"({0}) qmm.param.elementAt({1})", mp.getFullType(), i);
+			  firstParameter = false;
+			  i++;
+			}
+		  
+			append(realSb,");");
+			append(realSb,"\n          break;");
+		  }
+		  append(realSb,"\n        default:");
+		  append(realSb,"\n      }");
+		  append(realSb,"\n    }");
+		  append(realSb,"\n  }");
+	  
+        }
       }
     }
 #>>!>>

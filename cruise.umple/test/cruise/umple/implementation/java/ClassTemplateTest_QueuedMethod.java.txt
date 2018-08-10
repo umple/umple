@@ -1,0 +1,116 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+import java.util.*;
+import java.lang.Thread;
+
+// line 1 "ClassTemplateTest_QueuedMethod.ump"
+public class Foo implements Runnable
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  QueuedMethodMessageQueue methodQueue;
+  Thread methodRemoval;
+  
+  protected enum QueuedMethod { method1_M }
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Foo()
+  {
+    methodQueue = new QueuedMethodMessageQueue();
+    methodRemoval = new Thread(this);
+    //start the thread for queued methods of Foo
+    methodRemoval.start(); 
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {
+    methodRemoval.interrupt();
+  }
+
+  // line 5 "ClassTemplateTest_QueuedMethod.ump"
+  public void _method1(){
+    //implementation
+  }
+
+  public void method1 ()
+  {
+    methodQueue.put(new QueuedMethodMessage(QueuedMethod.method1_M, null));
+  }
+
+  protected class QueuedMethodMessage
+  {
+    QueuedMethod type;
+    
+    //QueuedMethodMessage parameters
+    Vector<Object> param;
+    
+    public QueuedMethodMessage(QueuedMethod t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+
+    @Override
+    public String toString()
+    {
+      return type + "," + param;
+    }
+  }
+  
+  protected class QueuedMethodMessageQueue {
+    Queue<QueuedMethodMessage> messages = new LinkedList<QueuedMethodMessage>();
+    
+    public synchronized void put(QueuedMethodMessage m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized QueuedMethodMessage getNext()
+    {
+      try {
+        while (messages.isEmpty()) 
+        {
+          wait();
+        }
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        return null;
+      }
+
+      //The element to be removed
+      QueuedMethodMessage m = messages.remove(); 
+      return (m);
+    }
+  }
+
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      QueuedMethodMessage qmm = methodQueue.getNext();
+      if(qmm == null)  return;
+      switch(qmm.type)
+      {
+        case method1_M:
+          _method1();
+          break;
+        default:
+      }
+    }
+  }
+}
