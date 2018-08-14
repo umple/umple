@@ -1,0 +1,20 @@
+E041 Non Void Method Declared as Queued
+Errors and Warnings 1-50
+noreferences
+
+@@description
+
+<h2>Umple semantic error generated when a class contains a non-void method declared as queued</h2>
+
+<p>The queued keyword cannot be used on methods with a non-void return type. Declare the method
+as &#39;queued void&#39; or &#39;void&#39;.</p>
+
+
+@@example
+@@source manualexamples/E041NonVoidQueuedMethod1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E041NonVoidQueuedMethod2.ump
+@@endexample
+

@@ -1,0 +1,7 @@
+//No error is raised, as both methods
+//have a void return type
+class A
+{
+  queued method1() { /* implementation */ }
+  queued void method2() { /* implementation */ }
+}
