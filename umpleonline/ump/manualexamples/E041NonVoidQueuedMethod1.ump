@@ -1,0 +1,6 @@
+//Causes the error due to the return type of
+//method1 being Integer
+class A
+{
+  queued Integer method1() { /* implementation */ }
+}

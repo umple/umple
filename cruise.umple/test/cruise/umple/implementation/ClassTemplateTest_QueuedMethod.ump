@@ -1,0 +1,7 @@
+class Foo
+{
+  queued method1()
+  {
+    //implementation
+  }
+}

@@ -363,6 +363,16 @@ class UmpleToJava {
     }
   }
   
+  for (Method m : uClass.getMethods())
+  {
+    if(m.getIsQueued())
+    {
+      append(realSb, "\n    methodRemoval.interrupt();");
+      hasSomethingToDelete = true;
+      break;
+    }
+  }
+  
   if (!uClass.isRoot() && !"external".equals(uClass.getExtendsClass().getModifier()))
   {
     hasSomethingToDelete = true;

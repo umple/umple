@@ -3068,7 +3068,18 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       else if (token.is("type"))
       {
-        aMethod.setType(token.getValue());
+        if (aMethod.getIsQueued() && !token.getValue().equals("void"))
+        {
+          getParseResult().addErrorMessage(new ErrorMessage(41,token.getPosition()));
+        }
+        else
+        { 
+          aMethod.setType(token.getValue());
+        }
+      }
+      else if (token.is("queued"))
+      {
+        aMethod.setIsQueued(true);
       }
       else if (token.is("list"))
       {

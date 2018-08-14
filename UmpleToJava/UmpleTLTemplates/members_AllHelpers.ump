@@ -128,6 +128,18 @@ class UmpleToJava {
       }
     }
   }
+  for (Method m : uClass.getMethods())
+  {
+    if(m.getIsQueued())
+    {
+      appendln(realSb, "");
+      append(realSb,"\n  QueuedMethodMessageQueue methodQueue;");
+      append(realSb,"\n  Thread methodRemoval;");
+      append(realSb,"\n  ");
+      append(realSb, "\n  protected enum QueuedMethod { {0} }", gen.translate("listQueuedMethods",uClass));
+      break;
+    }
+  }
 }
 #>>!>>
 }

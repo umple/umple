@@ -406,6 +406,15 @@ public class ClassTemplateTest extends TemplateTest
     }
   }
   
+@Test
+  public void QueuedMethod()
+  {
+    if (languagePath.equals("java"))
+    {
+      assertUmpleTemplateFor("ClassTemplateTest_QueuedMethod.ump", languagePath + "/ClassTemplateTest_QueuedMethod."+languagePath+".txt", "Foo");
+    }
+  }
+  
 @Ignore @Test
   public void LazyAttributeOnImmutableClass()
   {

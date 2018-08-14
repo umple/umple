@@ -9,15 +9,71 @@ class UmpleToJava {
     {
 
       <<#
-      if(smq.isPooled())
+      boolean hasQueuedMethod = false;
+      ArrayList<Method> methodList = new ArrayList<Method>();
+      for(Method m: uClass.getMethods())
       {
-        append(realSb,"      Message m = pool.getNext();");
-        append(realSb,"\n      if(m == null)  return;");
+        if (m.getIsQueued())
+        {
+          hasQueuedMethod = true;
+          methodList.add(m);
+        }
       }
-      if(smq.isQueued())
+      if(hasQueuedMethod)
       {
-        append(realSb,"      Message m = queue.getNext();");
-        append(realSb,"\n      if(m == null)  return;");
+        append(realSb,"      QueuedMethodMessage qmm = methodQueue.getNext();");
+        if(smq.isPooled())
+		{
+		  append(realSb,"\n      Message m = pool.getNext();");
+		}
+		if(smq.isQueued())
+		{
+		  append(realSb,"\n      Message m = queue.getNext();");
+		}
+		append(realSb,"\n      if(m == null && qmm == null)  return;");
+		
+		append(realSb,"\n      if (qmm != null)");
+		append(realSb,"\n      {");
+		append(realSb,"\n        switch(qmm.type)");
+		append(realSb,"\n        {");
+		for(Method m : methodList)
+		{
+		  append(realSb,"\n          case {0}", m.getName());
+          append(realSb,"_M:");
+          append(realSb,"\n            _{0}(", m.getName());
+          
+          //parameters to relay to the function
+          boolean firstParameter = true;
+          int i = 0;
+          for(MethodParameter mp : m.getMethodParameters())
+          {
+            if(!firstParameter)  append(realSb, ", ");
+            append(realSb,"({0}) qmm.param.elementAt({1})", mp.getFullType(), i);
+            firstParameter = false;
+            i++;
+          }
+          
+          append(realSb,");");
+          append(realSb,"\n            break;");
+		}
+		append(realSb,"\n          default:");
+		append(realSb,"\n        }");
+		append(realSb,"\n      }");
+		append(realSb,"\n      if(m != null)");
+		append(realSb,"\n      {");
+      }
+      else
+      {
+		if(smq.isPooled())
+		{
+		  append(realSb,"      Message m = pool.getNext();");
+		  append(realSb,"\n      if(m == null)  return;");
+		}
+		if(smq.isQueued())
+		{
+		  append(realSb,"      Message m = queue.getNext();");
+		  append(realSb,"\n      if(m == null)  return;");
+		}
       }
       #>>
       
@@ -137,7 +193,7 @@ class UmpleToJava {
          }
            #>> 
         default:
-      }
+      }<<# if(hasQueuedMethod) append(realSb,"\n      }"); #>>
       if(!status)
       {
         // Error message is written or  exception is raised

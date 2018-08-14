@@ -53,8 +53,9 @@ codeLangs- : ([=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|Alloy|UmpleSelf] ( , 
 
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]
-concreteMethodDeclaration : [=modifier:public|protected|private]? [=static]? [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? [[methodBody]] | [=modifier:public|protected]? [=abstract] [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? ;
+concreteMethodDeclaration : [=modifier:public|protected|private]? [=static]? [=queued]? [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? [[methodBody]] | [=modifier:public|protected]? [=abstract] [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? ;
 abstractMethodDeclaration :  [type] [[methodDeclarator]] ; 
+//queuedMethodDeclaration- : queued [[methodDeclarator]] [[methodThrowsExceptions]]? [[methodBody]]
 methodBody- : ( [[codeLangs]] { ( [[precondition]] | [[postcondition]] | [[assertion]] )* [**code] } )+ 
 methodDeclarator : [methodName] [[parameterList]]
 methodThrowsExceptions : throws [~exception] ( , [~exception] )*

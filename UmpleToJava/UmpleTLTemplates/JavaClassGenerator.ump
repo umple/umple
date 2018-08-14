@@ -149,6 +149,8 @@ else if(model.getDistributed())
       } 
 }
 
+boolean implementsRunnable = false;
+
 for (StateMachine smq : uClass.getStateMachines())
   {
     if (smq.isQueued())
@@ -158,7 +160,8 @@ for (StateMachine smq : uClass.getStateMachines())
       }
       else{
         append(realSb,", Runnable");
-      } 
+      }
+      implementsRunnable = true;
       break;
     }
     else if(smq.isPooled())
@@ -168,7 +171,23 @@ for (StateMachine smq : uClass.getStateMachines())
       }
       else{
         append(realSb,", Runnable");
-      } 
+      }
+      implementsRunnable = true; 
+      break;
+    }
+  }
+  
+  for (Method m : uClass.getMethods())
+  {
+    if(m.getIsQueued() && implementsRunnable == false)
+    {
+      if (hasParentInterface == false){
+        append(realSb," implements Runnable");
+      }
+      else{
+        append(realSb,", Runnable");
+      }
+      implementsRunnable = true;
       break;
     }
   }
@@ -351,7 +370,8 @@ for (StateMachine smq : uClass.getStateMachines())
        {#>><<@ UmpleToJava.queued_state_machine_inner_class >><<@ UmpleToJava.queued_state_machine_queuedEvent >><<@ UmpleToJava.queued_state_machine_removalThread_run >>
        <<# break;
        }
-     }#>>
+     }
+     #>>
   <<#return realSb.toString();
     } 
     private String getExtraMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
