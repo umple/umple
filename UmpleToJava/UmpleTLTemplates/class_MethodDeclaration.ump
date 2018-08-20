@@ -29,11 +29,51 @@ class UmpleToJava {
         String methodName = aMethod.getName();
         String methodType = aMethod.getType();
         
-        if (aMethod.getIsQueued())
+        if(aMethod.getIsQueued())
         {
-          methodName = "_" + aMethod.getName();
-          hasQueued = true;
-        }
+		  String isList="";
+		  Boolean isFirstParameter = true;
+		  if (aMethod.hasMethodParameters())
+		  {
+			append(realSb,"\n");
+			append(realSb,"  public void {0} (",aMethod.getName());
+			for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
+			{
+			  isList = aMethodParam.getIsList() ? " [] " : " ";
+			  if (!isFirstParameter)
+			  {
+				append(realSb, ", ");
+			  }
+			  append(realSb, aMethodParam.getType() + isList + aMethodParam.getName());
+			  isFirstParameter = false;
+			}
+			append(realSb, ");");
+		
+			append(realSb,"\n  {");
+		
+			append(realSb,"\n    Vector v = new Vector({0});", aMethod.numberOfMethodParameters());
+			for ( int i=0; i < aMethod.numberOfMethodParameters(); i++)
+			{
+			  append(realSb,"\n    v.add({0}, {1});",i, aMethod.getMethodParameter(i).getName());
+			}
+		
+			append(realSb,"\n    queuedMethodThread.putCallTo(queuedMethodThread.new QueuedMethodMessage(QueuedMethod.{0}", aMethod.getName());
+			append(realSb,"_M, v));");
+		  }
+		  else
+		  {
+			append(realSb,"\n");
+			append(realSb,"  public void ");
+			append(realSb,"{0} ()",aMethod.getName());
+			append(realSb,"\n  {");
+			append(realSb,"\n    queuedMethodThread.putCallTo(queuedMethodThread.new QueuedMethodMessage(QueuedMethod.{0}",aMethod.getName());
+			append(realSb,"_M, null));");
+		  }
+		  append(realSb,"\n  }");
+		  append(realSb,"\n");
+		  methodName = "_" + methodName;
+		}
+	  
     // Fix issue 969
     if (!methodName.equals(uClass.getName()))
     {
@@ -342,157 +382,6 @@ class UmpleToJava {
           }
           appendln(realSb, "  }");
           addUncaughtExceptionVariables(methodName,p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline,methodBody.split("\\n").length);
-        }
-      }
-      if(hasQueued)
-      {
-        boolean hasRunFunction = false;
-        for(StateMachine sm : uClass.getStateMachines())
-        {
-          if(sm.isQueued() || sm.isPooled())
-          {
-            hasRunFunction = true;
-            break;
-          }
-        }
-        ArrayList<Method> methodList = new ArrayList<Method>();
-        for (Method m : uClass.getMethods())
-        {
-          if(m.getIsQueued())
-          {
-			methodList.add(m);
-			
-			String isList="";
-			String finalParams = "";        
-			String finalParamsWithoutTypes = "";
-			StringBuilder parameters = new StringBuilder();
-			StringBuilder parametersWithoutTypes = new StringBuilder();
-			if (m.hasMethodParameters())
-			{
-			  for (MethodParameter aMethodParam : m.getMethodParameters()) 
-			  {
-				isList = aMethodParam.getIsList() ? " [] " : " ";
-				parameters.append(aMethodParam.getType() + isList + aMethodParam.getName() + ", ");
-				parametersWithoutTypes.append(aMethodParam.getName() + ", ");
-			  }
-		  
-			  finalParams = parameters.toString().substring(0, parameters.toString().length()-2);
-			  finalParamsWithoutTypes = parametersWithoutTypes.toString().substring(0, parametersWithoutTypes.toString().length()-2);
-			  
-			  append(realSb,"\n");
-			  append(realSb,"  public void ");
-			  append(realSb,"{0} ({1})",m.getName(), finalParams);
-			  append(realSb,"\n  {");
-			  
-			  append(realSb,"\n    Vector v = new Vector({0});", m.numberOfMethodParameters());
-			  for ( int i=0; i < m.numberOfMethodParameters(); i++)
-			  {
-				append(realSb,"\n    v.add({0}, {1});",i, m.getMethodParameter(i).getName());
-			  }
-			  
-			  append(realSb,"\n    methodQueue.put(new QueuedMethodMessage(QueuedMethod.{0}", m.getName());
-			  append(realSb,"_M, v));");
-			}
-			else
-			{
-			  append(realSb,"\n");
-			  append(realSb,"  public void ");
-			  append(realSb,"{0} ()",m.getName());
-			  append(realSb,"\n  {");
-			  append(realSb,"\n    methodQueue.put(new QueuedMethodMessage(QueuedMethod.{0}",m.getName());
-			  append(realSb,"_M, null));");
-			}
-			append(realSb,"\n  }");
-			append(realSb,"\n");
-          }
-        }
-		appendln(realSb,"\n  protected class QueuedMethodMessage");
-		appendln(realSb,"  {");
-		appendln(realSb,"    QueuedMethod type;"); 
-		appendln(realSb,"    ");  
-		appendln(realSb,"    //QueuedMethodMessage parameters");
-		appendln(realSb,"    Vector<Object> param;"); 
-		appendln(realSb,"    ");   
-		appendln(realSb,"    public QueuedMethodMessage(QueuedMethod t, Vector<Object> p)");
-		appendln(realSb,"    {");
-		appendln(realSb,"      type = t; "); 
-		appendln(realSb,"      param = p;");
-		appendln(realSb,"    }");
-		appendln(realSb,"");
-		appendln(realSb,"    @Override");
-		appendln(realSb,"    public String toString()");
-		appendln(realSb,"    {");
-		appendln(realSb,"      return type + \",\" + param;");
-		appendln(realSb,"    }");
-		appendln(realSb,"  }");
-		appendln(realSb,"  ");  
-
-		appendln(realSb,"  protected class QueuedMethodMessageQueue {");
-		appendln(realSb,"    Queue<QueuedMethodMessage> messages = new LinkedList<QueuedMethodMessage>();");
-		appendln(realSb,"    ");   
-		appendln(realSb,"    public synchronized void put(QueuedMethodMessage m)");
-		appendln(realSb,"    {");
-		appendln(realSb,"      messages.add(m); "); 
-		appendln(realSb,"      notify();");
-		appendln(realSb,"    }");
-		appendln(realSb,"");  
-		appendln(realSb,"    public synchronized QueuedMethodMessage getNext()");
-		appendln(realSb,"    {");
-		appendln(realSb,"      try {");
-		appendln(realSb,"        while (messages.isEmpty()) "); 
-		appendln(realSb,"        {");
-		appendln(realSb,"          wait();");
-		appendln(realSb,"        }");
-		appendln(realSb,"      } catch (InterruptedException e) {");
-		appendln(realSb,"        Thread.currentThread().interrupt();");
-		appendln(realSb,"        return null;");
-		appendln(realSb,"      }");
-		appendln(realSb,"");
-		appendln(realSb,"      //The element to be removed");
-		appendln(realSb,"      QueuedMethodMessage m = messages.remove(); "); 
-		appendln(realSb,"      return (m);");
-		appendln(realSb,"    }");
-		appendln(realSb,"  }");
-		
-		if(!hasRunFunction)
-		{
-		  appendln(realSb,"\n  @Override");
-		  appendln(realSb,"  public void run ()");
-		  appendln(realSb,"  {");
-		  appendln(realSb,"    boolean status=false;");
-		  appendln(realSb,"    while (true) ");
-		  appendln(realSb,"    {");
-		
-		  append(realSb,"      QueuedMethodMessage qmm = methodQueue.getNext();");
-		  append(realSb,"\n      if(qmm == null)  return;");
-		
-		  append(realSb,"\n      switch(qmm.type)");
-		  append(realSb,"\n      {");
-		  for(Method m : methodList)
-		  {
-			append(realSb,"\n        case {0}", m.getName());
-			append(realSb,"_M:");
-			append(realSb,"\n          _{0}(", m.getName());
-		  
-			//parameters to relay to the function
-			boolean firstParameter = true;
-			int i = 0;
-			for(MethodParameter mp : m.getMethodParameters())
-			{
-			  if(!firstParameter)  append(realSb, ", ");
-			  append(realSb,"({0}) qmm.param.elementAt({1})", mp.getFullType(), i);
-			  firstParameter = false;
-			  i++;
-			}
-		  
-			append(realSb,");");
-			append(realSb,"\n          break;");
-		  }
-		  append(realSb,"\n        default:");
-		  append(realSb,"\n      }");
-		  append(realSb,"\n    }");
-		  append(realSb,"\n  }");
-	  
         }
       }
     }

@@ -323,17 +323,8 @@ class UmpleInternalParser
       Boolean foundPooled = false;
       Boolean foundRegularSM = false;
       Boolean foundEventlessRegularSM = false;
-      Boolean foundQueuedMethod = false;
       Token stateMachineToken=null;
-    
-      for (Method m : C.getMethods())
-      {
-        if(m.getIsQueued())
-        {
-          foundQueuedMethod = true;
-          break;
-        }
-      }
+      
       for (StateMachine sm : C.getStateMachines())
       {
         if(sm.getQueued())
@@ -363,10 +354,6 @@ class UmpleInternalParser
         }  
       }
       
-      if((foundQueued || foundPooled) && foundQueuedMethod)
-      {
-        setFailedPosition(stateMachineToken.getPosition(), 42, C.getName());
-      }
       if (foundQueued == true && foundPooled == true && foundRegularSM == true)
       {
         //raise an error if QSM, PooledSM and RegularSM are used in the same class
