@@ -6,17 +6,17 @@ import java.util.*;
 import java.lang.Thread;
 
 // line 1 "ClassTemplateTest_QueuedMethod.ump"
-public class Foo implements Runnable
+public class Foo
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  QueuedMethodMessageQueue methodQueue;
-  Thread methodRemoval;
-  
-  protected enum QueuedMethod { method1_M }
+  //Helper Variables
+
+  protected enum QueuedMethod { method1_M }  QueuedMethodThread queuedMethodThread;
+
 
   //------------------------
   // CONSTRUCTOR
@@ -24,10 +24,7 @@ public class Foo implements Runnable
 
   public Foo()
   {
-    methodQueue = new QueuedMethodMessageQueue();
-    methodRemoval = new Thread(this);
-    //start the thread for queued methods of Foo
-    methodRemoval.start(); 
+    queuedMethodThread = new QueuedMethodThread();
   }
 
   //------------------------
@@ -36,7 +33,12 @@ public class Foo implements Runnable
 
   public void delete()
   {
-    methodRemoval.interrupt();
+    queuedMethodThread.delete();
+  }
+
+  public void method1 ()
+  {
+    queuedMethodThread.putCallTo(queuedMethodThread.new QueuedMethodMessage(QueuedMethod.method1_M, null));
   }
 
   // line 5 "ClassTemplateTest_QueuedMethod.ump"
@@ -44,73 +46,66 @@ public class Foo implements Runnable
     //implementation
   }
 
-  public void method1 ()
+}
+  private class QueuedMethodThread implements Runnable
   {
-    methodQueue.put(new QueuedMethodMessage(QueuedMethod.method1_M, null));
-  }
 
-  protected class QueuedMethodMessage
-  {
-    QueuedMethod type;
+    QueuedMethodMessageQueue methodQueue;
+    Thread methodRemoval;
     
-    //QueuedMethodMessage parameters
-    Vector<Object> param;
-    
-    public QueuedMethodMessage(QueuedMethod t, Vector<Object> p)
+    public QueuedMethodThread()
     {
-      type = t; 
-      param = p;
+      methodQueue = new QueuedMethodMessageQueue();
+      methodRemoval = new Thread(this);
+      //start the thread for queued methods of Foo
+      methodRemoval.start();   
+    }
+
+    protected class QueuedMethodMessage
+    {
+      QueuedMethod type;
+      
+      //QueuedMethodMessage parameters
+      Vector<Object> param;
+      
+      public QueuedMethodMessage(QueuedMethod t, Vector<Object> p)
+      {
+        type = t; 
+        param = p;
+      }
+
+      @Override
+      public String toString()
+      {
+        return type + "," + param;
+      }
+    }
+  
+    protected class QueuedMethodMessageQueue {
+      Queue<QueuedMethodMessage> messages = new LinkedList<QueuedMethodMessage>();
+      
+      public synchronized void put(QueuedMethodMessage m)
+      {
+        messages.add(m); 
+        notify();
+      }
+
+      public synchronized QueuedMethodMessage getNext()
+      {
+        try {
+          while (messages.isEmpty()) 
+          {
+            wait();
+          }
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+          return null;
+        }
+
+        //The element to be removed
+        QueuedMethodMessage m = messages.remove(); 
+        return (m);
+      }
     }
 
     @Override
-    public String toString()
-    {
-      return type + "," + param;
-    }
-  }
-  
-  protected class QueuedMethodMessageQueue {
-    Queue<QueuedMethodMessage> messages = new LinkedList<QueuedMethodMessage>();
-    
-    public synchronized void put(QueuedMethodMessage m)
-    {
-      messages.add(m); 
-      notify();
-    }
-
-    public synchronized QueuedMethodMessage getNext()
-    {
-      try {
-        while (messages.isEmpty()) 
-        {
-          wait();
-        }
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        return null;
-      }
-
-      //The element to be removed
-      QueuedMethodMessage m = messages.remove(); 
-      return (m);
-    }
-  }
-
-  @Override
-  public void run ()
-  {
-    boolean status=false;
-    while (true) 
-    {
-      QueuedMethodMessage qmm = methodQueue.getNext();
-      if(qmm == null)  return;
-      switch(qmm.type)
-      {
-        case method1_M:
-          _method1();
-          break;
-        default:
-      }
-    }
-  }
-}
