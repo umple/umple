@@ -367,7 +367,7 @@ class UmpleToJava {
   {
     if(m.getIsQueued())
     {
-      append(realSb, "\n    methodRemoval.interrupt();");
+      append(realSb, "\n    queuedMethodThread.delete();");
       hasSomethingToDelete = true;
       break;
     }

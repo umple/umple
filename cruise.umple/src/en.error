@@ -48,7 +48,6 @@
 
 40: 2, "http://manual.umple.org/?E040SingletonHasSubclasses.html", Singleton classes have a private constructor and cannot be extended. So class {0} cannot be a subclass of singleton class {1} ;
 41: 2, "http://manual.umple.org/?E041NonVoidMethodDeclaredasQueued.html", A non-void method cannot be declared as queued;
-42: 2, "http://manual.umple.org/?E042QueuedMethodsandQueuedorPooledStateMachineinClass.html", Class '{0}' cannot have both queued/pooled state machines and queued methods;
 44: 3, "http://manual.umple.org/?W044AttributeDuplicatedinSuperclass.html", Class '{0}' has attribute name {1} that duplicates an attribute inherited from a superclass '{2}'. New definition is being disregarded ;
 45: 4, "http://manual.umple.org/?W045InitializedValueinKey.html", Attribute '{0}' in class '{1}' is in the key. Initializing it will result in all instances having this same value and being treated as equal ;
 46: 4, "http://manual.umple.org/?W046AttributeHasTemplateType.html", Attribute {0} in class {1} is declared using a collection template type {2}. Use a directed association (->) or multi-valued attribute([]) to follow proper modelling conventions ;

@@ -303,17 +303,13 @@ class UmpleToJava {
     if(m.getIsQueued())
     {
       foundQueuedMethod = true;
+      hasBody = true;
       break;
     }
   }
   if(foundQueued == true)
   {
     append(realSb,"\n    queue = new MessageQueue();");
-    if(foundQueuedMethod)
-    {
-      append(realSb,"\n    methodQueue = new QueuedMethodMessageQueue();");
-      append(realSb,"\n    methodRemoval = new Thread(this);");
-    }
     append(realSb,"\n    removal=new Thread(this);");
     append(realSb,"\n    //start the thread of {0}", uClass.getName());
     append(realSb,"\n    removal.start();");
@@ -322,23 +318,12 @@ class UmpleToJava {
   {
     append(realSb,"\n    pool = new MessagePool();");
     append(realSb,"\n    removal=new Thread(this);");
-    if(foundQueuedMethod)
-    {
-      append(realSb,"\n    methodQueue = new QueuedMethodMessageQueue();");
-      append(realSb,"\n    methodRemoval = new Thread(this);");
-    }
     append(realSb,"\n    //start the thread of {0}", uClass.getName());
     append(realSb,"\n    removal.start();");
   }
-  else if(foundQueuedMethod)
+  if(foundQueuedMethod)
   {
-    append(realSb,"\n    methodQueue = new QueuedMethodMessageQueue();");
-    append(realSb,"\n    methodRemoval = new Thread(this);");
-  }
-  if(foundQueuedMethod == true)
-  {
-    append(realSb,"\n    //start the thread for queued methods of {0}", uClass.getName());
-    append(realSb,"\n    methodRemoval.start(); \n  ");
+    append(realSb,"\n    queuedMethodThread = new QueuedMethodThread();");
   }
   
   if (customConstructorPostfixCode != null)

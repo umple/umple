@@ -132,11 +132,15 @@ class UmpleToJava {
   {
     if(m.getIsQueued())
     {
-      appendln(realSb, "");
-      append(realSb,"\n  QueuedMethodMessageQueue methodQueue;");
-      append(realSb,"\n  Thread methodRemoval;");
-      append(realSb,"\n  ");
+      if (isFirst)
+      {
+        isFirst = false;
+        appendln(realSb, "");
+        appendln(realSb, "");
+        appendln(realSb,"  //Helper Variables");
+      }
       append(realSb, "\n  protected enum QueuedMethod { {0} }", gen.translate("listQueuedMethods",uClass));
+      appendln(realSb, "  QueuedMethodThread queuedMethodThread;");
       break;
     }
   }

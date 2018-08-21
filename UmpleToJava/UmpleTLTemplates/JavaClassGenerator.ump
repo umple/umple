@@ -27,6 +27,7 @@ use state_machine_timedEvent_All.ump;
 use toString_declare.ump;
 use trace.ump;
 use uncaught_exception.ump;
+use queued_method.ump;
 
 
 namespace cruise.umple.compiler.java;
@@ -177,21 +178,6 @@ for (StateMachine smq : uClass.getStateMachines())
     }
   }
   
-  for (Method m : uClass.getMethods())
-  {
-    if(m.getIsQueued() && implementsRunnable == false)
-    {
-      if (hasParentInterface == false){
-        append(realSb," implements Runnable");
-      }
-      else{
-        append(realSb,", Runnable");
-      }
-      implementsRunnable = true;
-      break;
-    }
-  }
-  
 #>>
 {
   <<#
@@ -208,6 +194,7 @@ for (StateMachine smq : uClass.getStateMachines())
   getDeleteCode(realSb, model,uClass,gClass,gen,isFirst,false);
   getExtraMethodsCode(realSb, model,uClass,gClass,gen,isFirst);
   getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
+  getQueuedMethodClass(realSb, model, uClass, gen);
   return realSb;
     }
     
@@ -426,8 +413,8 @@ for (StateMachine smq : uClass.getStateMachines())
 }<<#}
   return realSb.toString();
 }
-#>><<@ UmpleToJava.uncaught_exception >><<#}
-
+#>><<@ UmpleToJava.uncaught_exception>><<#}
+#>><<@ UmpleToJava.queued_method >><<#
 
 
 /* This function is meant purely to properly end the emit code in Umple
