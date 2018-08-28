@@ -567,7 +567,19 @@ public class TemplateTest
 		  if(!parameter.equals(""))
 		  {
 			parameter = parameter.trim();
-			MethodParameter mp = new MethodParameter(parameter.split(" ")[1], getUmpleType(parameter.split(" ")[0]), "", "", false);
+			String paramName = parameter.split(" ")[1];
+			String paramType = parameter.split(" ")[0];
+			
+			if(paramType.contains("."))
+			{
+			  paramType = getUmpleType(paramType.split(".")[1]);
+			}
+			else
+			{
+			  paramType = getUmpleType(paramType);
+			}
+			
+			MethodParameter mp = new MethodParameter(paramName, paramType, "", "", false);
 			method.addMethodParameter(mp);
 		  }
 		}
