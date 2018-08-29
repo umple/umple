@@ -12,6 +12,7 @@ umpleonline/manual
 
 # generated Umple code that is not saved
 src-gen-umple/
+src-gen/
 
 # generated umpleTL code that is not saved
 src-gen-umpleTL/
