@@ -86,6 +86,7 @@ class ExceptionDumper {
 
   public static String dumpCompilerError(Throwable ex) {
     String generatedMessage = "";
+    String exceptionMessage = "";
     String generatedSourcePath = System.getenv("GeneratedSourcePath");
     String sourcePathType="GeneratedSourcePath that has been set to ";
     if (generatedSourcePath == null) {
@@ -103,7 +104,14 @@ class ExceptionDumper {
     if (generatedSourcePath != null) {
       generatedMessage +="Using "+sourcePathType+generatedSourcePath+"\n";
     }
-    generatedMessage +="Exception "+ex.getClass().getName()+" in\n";
+    exceptionMessage = ex.getMessage();
+    if (exceptionMessage == null) {
+      exceptionMessage = "";
+    }
+    else {
+      exceptionMessage = " ("+exceptionMessage+")";
+    }  
+    generatedMessage +="Exception "+ex.getClass().getName()+exceptionMessage+" in\n";
 
     StackTraceElement [] st = ex.getStackTrace();
     StackTraceElement ust = null;
