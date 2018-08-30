@@ -9,3 +9,4 @@ RewriteRule   ^(.*)$ $1.php                   [S=1]
 #   else reverse the previous basename cutout
 RewriteCond   %{ENV:WasHTML}            ^yes$
 RewriteRule   ^(.*)$ $1.html
+php_flag display_errors 1

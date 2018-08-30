@@ -100,6 +100,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $entityRelationshipDiagram = false;
   $yumlDiagram = false;
   $uigu = false;
+  $Uigu2 = false;
   $htmlContents = false;
   $generatorType = "";
   
@@ -143,10 +144,17 @@ else if (isset($_REQUEST["umpleCode"]))
      $language = "Uigu";
      $uigu = True;
   }
+  else if ($language == "Uigu2")
+  {
+    $Uigu2 = True;
+    $htmlContents = True;
+  }
+  
   if ($languageStyle == "html")
   {
      $htmlContents = true;
   }
+  
   if ($language == "Simulate")
   {
     list($dataname, $dataHandle) = getOrCreateDataHandle();
@@ -190,7 +198,19 @@ else if (isset($_REQUEST["umpleCode"]))
     if($outputErr == "true")
       echo $errors . "<p>URL_SPLIT";
     $workDir->saveModel();
-    echo $sourceCode;
+    if($Uigu2) {
+       $uigu2dir = $workDir->getPath();
+       exec("cd $uigu2dir; ln -s ../../scripts/uigu2/app .");    
+       $uigu2file = $workDir->makePermalink('index.php');
+       $html = "{$errhtml}
+      <iframe width=100% height=1000 src=\"" . $uigu2file . "\">This browser does not
+      support iframes, so the uigu cannot be displayed</iframe> 
+     ";
+       echo $html;
+    }
+    else {
+      echo $sourceCode;
+    }
     return;      
   } // end html content      
 

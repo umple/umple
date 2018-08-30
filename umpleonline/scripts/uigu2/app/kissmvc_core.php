@@ -39,6 +39,7 @@ abstract class KISS_Controller {
   function __construct($default_controller,$default_action)  {
     $this->controller=$default_controller;
     $this->action=$default_action;
+   // echo "DEBUG1 ".$this->controller."<br>";        
     $this->explode_http_request()->parse_http_request()->route_request();
   }
 
@@ -54,12 +55,15 @@ abstract class KISS_Controller {
   function parse_http_request() {
     $this->params = array();
     $p = $this->request_uri_parts;
-    if (isset($p[0]) && $p[0] && $p[0][0]!='?')
+    if (isset($p[0]) && $p[0] && $p[0][0]!='?' && strcmp($p[0],"index.php") !=0)
       $this->controller=$p[0];
-    if (isset($p[1]) && $p[1] && $p[1][0]!='?')
+    if (isset($p[1]) && $p[1] && $p[1][0]!='?' && strcmp($p[0],"index.php") !=0)
       $this->action=$p[1];
     if (isset($p[2]))
       $this->params=array_slice($p,2);
+  //  echo "Debug Controller: ".$this->controller."<br>\n"; // DEBUG
+  //  echo "Debug Action: ".$this->action."<br>\n"; // DEBUG
+  //  echo "Debug this->web_folder: ".$this->web_folder."<br>\n"; // DEBUG
     return $this;
   }
 

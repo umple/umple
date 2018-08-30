@@ -23,6 +23,6 @@
     <?php echo $objects_table; ?>
   </table>
 </div>
-<p>//Here: Instructions for this page</p>
+<p>The above is a list of instances already created. You may also create additional instances above.</p>
   
 
