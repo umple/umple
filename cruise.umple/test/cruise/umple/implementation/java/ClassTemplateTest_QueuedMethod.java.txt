@@ -46,7 +46,6 @@ public class Foo
     //implementation
   }
 
-}
   private class QueuedMethodThread implements Runnable
   {
 
@@ -109,3 +108,30 @@ public class Foo
     }
 
     @Override
+    public void run ()
+    {
+      boolean status=false;
+      while (true) 
+      {
+        QueuedMethodMessage qmm = methodQueue.getNext();
+        if(qmm == null)  return;
+        switch(qmm.type)
+        {
+          case method1_M:
+            _method1();
+            break;
+          default:
+        }
+      }
+    }
+    public void putCallTo(QueuedMethodMessage message)
+    {
+      methodQueue.put(message);
+    }
+
+    public void delete()
+    {
+       methodRemoval.interrupt();
+    }
+  }
+}

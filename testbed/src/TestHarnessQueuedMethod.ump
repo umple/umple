@@ -1,0 +1,25 @@
+namespace cruise.queued.method.test;
+
+class QueuedAndNonQueuedMethods
+{
+  String[] log;
+  queued queuedMethod() 
+  {
+    try
+    {
+      Thread.sleep(500);
+      addLog("queuedMethod executed");
+    }
+    catch(Exception e) {addLog("queuedMethod interrupted");}
+  }
+  
+  void nonqueuedMethod()
+  {
+    try
+    {
+      Thread.sleep(100);
+      addLog("nonqueuedMethod executed");
+    }
+    catch(Exception e) {addLog("nonqueuedMethod interrupted");}
+  }
+}
