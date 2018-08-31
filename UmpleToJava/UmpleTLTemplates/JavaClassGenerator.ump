@@ -193,8 +193,8 @@ for (StateMachine smq : uClass.getStateMachines())
   getStateMachine2Code(realSb, model,uClass,gClass,gen,isFirst);
   getDeleteCode(realSb, model,uClass,gClass,gen,isFirst,false);
   getExtraMethodsCode(realSb, model,uClass,gClass,gen,isFirst);
-  getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
   getQueuedMethodClass(realSb, model, uClass, gen);
+  getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
   return realSb;
     }
     
