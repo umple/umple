@@ -16,4 +16,5 @@ use TestHarnessAssociation0_1_mMultiplicity.ump;
 use TestHarnessCompositionsLeft.ump;
 use TestHarnessCompositionsRight.ump;
 use TestHarnessAssociationSpecializations.ump;
+use TestHarnessQueuedMethod.ump;
 
