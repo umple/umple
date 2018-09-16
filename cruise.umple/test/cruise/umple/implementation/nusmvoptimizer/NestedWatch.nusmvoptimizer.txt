@@ -9,7 +9,7 @@ MODULE DigitalWatchSm
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { Sm_time , Sm_date , Sm_second , Sm_minute , Sm_hour , Sm_month , Sm_day , Sm_year , Sm_paused , Sm_running , Sm_lapRunning , Sm_lapPaused , Sm_bothOff , Sm_chimeOn , Sm_bothOn , Sm_alarmOn , Sm_alarmTime , Sm_alarmHour , Sm_alarmMinute };
+     state : { Sm_regulartime , Sm_regulardate , Sm_updatesecond , Sm_updateminute , Sm_updatehour , Sm_updatemonth , Sm_updateday , Sm_updateyear , Sm_chronoNormalpaused , Sm_chronoNormalrunning , Sm_chronometerlapRunning , Sm_chronometerlapPaused , Sm_alarmStatusbothOff , Sm_alarmStatuschimeOn , Sm_alarmStatusbothOn , Sm_alarmStatusalarmOn , Sm_alarmUpdatealarmTime , Sm_hourMinuteUpdatealarmHour , Sm_hourMinuteUpdatealarmMinute };
      event : { ev_s3 , ev_s3during2Secs , ev_notS2 , ev_notS1 , ev_s1 , ev_s2 , ev_null };
      day : integer;
      month : integer;
@@ -25,82 +25,82 @@ MODULE DigitalWatchSm
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
      sm_stable :=  !( event = ev_s3 | event = ev_notS2 | event = ev_s1 | event = ev_s3during2Secs | event = ev_notS1 | event = ev_s2 );
-     t1 := event = ev_s1 & state = Sm_time;
-     t2 := event = ev_s2 & state = Sm_time;
-     t3 := event = ev_s3 & state = Sm_time;
-     t4 := event = ev_s3during2Secs & state = Sm_time;
-     t5 := event = ev_notS1 & state = Sm_date;
-     t6 := event = ev_s3 & state = Sm_second;
-     t7 := event = ev_s2 & state = Sm_second;
-     t8 := event = ev_s1 & state = Sm_second;
-     t9 := event = ev_s3 & state = Sm_minute;
-     t10 := event = ev_s2 & state = Sm_minute;
-     t11 := event = ev_s1 & state = Sm_minute;
-     t12 := event = ev_s3 & state = Sm_hour;
-     t13 := event = ev_s2 & state = Sm_hour;
-     t14 := event = ev_s1 & state = Sm_hour;
-     t15 := event = ev_s3 & state = Sm_month;
-     t16 := event = ev_s2 & state = Sm_month;
-     t17 := event = ev_s1 & state = Sm_month;
-     t18 := event = ev_s3 & state = Sm_day;
-     t19 := event = ev_s2 & state = Sm_day;
-     t20 := event = ev_s1 & state = Sm_day;
-     t21 := event = ev_s3 & state = Sm_year;
-     t22 := event = ev_s1 & state = Sm_year;
-     t23 := event = ev_s2 & state = Sm_year;
-     t24 := event = ev_s3 & state = Sm_paused;
-     t25 := event = ev_s2 & state = Sm_paused;
-     t26 := event = ev_s1 & state = Sm_paused;
-     t27 := event = ev_s3 & state = Sm_running;
-     t28 := event = ev_s1 & state = Sm_running;
-     t29 := event = ev_s2 & state = Sm_running;
-     t30 := event = ev_s3 & state = Sm_lapRunning;
-     t31 := event = ev_s2 & state = Sm_lapRunning;
-     t32 := event = ev_s1 & state = Sm_lapRunning;
-     t33 := event = ev_s3 & state = Sm_lapPaused;
-     t34 := event = ev_s1 & state = Sm_lapPaused;
-     t35 := event = ev_s2 & state = Sm_lapPaused;
-     t36 := event = ev_notS2 & state = Sm_bothOff;
-     t37 := event = ev_s1 & state = Sm_bothOff;
-     t38 := event = ev_notS2 & state = Sm_chimeOn;
-     t39 := event = ev_s1 & state = Sm_chimeOn;
-     t40 := event = ev_notS2 & state = Sm_bothOn;
-     t41 := event = ev_s1 & state = Sm_bothOn;
-     t42 := event = ev_notS2 & state = Sm_alarmOn;
-     t43 := event = ev_s1 & state = Sm_alarmOn;
-     t44 := event = ev_s3 & state = Sm_alarmTime;
-     t45 := event = ev_s1 & state = Sm_alarmTime;
-     t46 := event = ev_s2 & state = Sm_alarmTime;
-     t47 := event = ev_s3 & state = Sm_alarmHour;
-     t48 := event = ev_s2 & state = Sm_alarmHour;
-     t49 := event = ev_s1 & state = Sm_alarmHour;
-     t50 := event = ev_s3 & state = Sm_alarmMinute;
-     t51 := event = ev_s1 & state = Sm_alarmMinute;
-     t52 := event = ev_s2 & state = Sm_alarmMinute;
+     t1 := event = ev_s1 & state = Sm_regulartime;
+     t2 := event = ev_s2 & state = Sm_regulartime;
+     t3 := event = ev_s3 & state = Sm_regulartime;
+     t4 := event = ev_s3during2Secs & state = Sm_regulartime;
+     t5 := event = ev_notS1 & state = Sm_regulardate;
+     t6 := event = ev_s3 & state = Sm_updatesecond;
+     t7 := event = ev_s2 & state = Sm_updatesecond;
+     t8 := event = ev_s1 & state = Sm_updatesecond;
+     t9 := event = ev_s3 & state = Sm_updateminute;
+     t10 := event = ev_s2 & state = Sm_updateminute;
+     t11 := event = ev_s1 & state = Sm_updateminute;
+     t12 := event = ev_s3 & state = Sm_updatehour;
+     t13 := event = ev_s2 & state = Sm_updatehour;
+     t14 := event = ev_s1 & state = Sm_updatehour;
+     t15 := event = ev_s3 & state = Sm_updatemonth;
+     t16 := event = ev_s2 & state = Sm_updatemonth;
+     t17 := event = ev_s1 & state = Sm_updatemonth;
+     t18 := event = ev_s3 & state = Sm_updateday;
+     t19 := event = ev_s2 & state = Sm_updateday;
+     t20 := event = ev_s1 & state = Sm_updateday;
+     t21 := event = ev_s3 & state = Sm_updateyear;
+     t22 := event = ev_s1 & state = Sm_updateyear;
+     t23 := event = ev_s2 & state = Sm_updateyear;
+     t24 := event = ev_s3 & state = Sm_chronoNormalpaused;
+     t25 := event = ev_s2 & state = Sm_chronoNormalpaused;
+     t26 := event = ev_s1 & state = Sm_chronoNormalpaused;
+     t27 := event = ev_s3 & state = Sm_chronoNormalrunning;
+     t28 := event = ev_s1 & state = Sm_chronoNormalrunning;
+     t29 := event = ev_s2 & state = Sm_chronoNormalrunning;
+     t30 := event = ev_s3 & state = Sm_chronometerlapRunning;
+     t31 := event = ev_s2 & state = Sm_chronometerlapRunning;
+     t32 := event = ev_s1 & state = Sm_chronometerlapRunning;
+     t33 := event = ev_s3 & state = Sm_chronometerlapPaused;
+     t34 := event = ev_s1 & state = Sm_chronometerlapPaused;
+     t35 := event = ev_s2 & state = Sm_chronometerlapPaused;
+     t36 := event = ev_notS2 & state = Sm_alarmStatusbothOff;
+     t37 := event = ev_s1 & state = Sm_alarmStatusbothOff;
+     t38 := event = ev_notS2 & state = Sm_alarmStatuschimeOn;
+     t39 := event = ev_s1 & state = Sm_alarmStatuschimeOn;
+     t40 := event = ev_notS2 & state = Sm_alarmStatusbothOn;
+     t41 := event = ev_s1 & state = Sm_alarmStatusbothOn;
+     t42 := event = ev_notS2 & state = Sm_alarmStatusalarmOn;
+     t43 := event = ev_s1 & state = Sm_alarmStatusalarmOn;
+     t44 := event = ev_s3 & state = Sm_alarmUpdatealarmTime;
+     t45 := event = ev_s1 & state = Sm_alarmUpdatealarmTime;
+     t46 := event = ev_s2 & state = Sm_alarmUpdatealarmTime;
+     t47 := event = ev_s3 & state = Sm_hourMinuteUpdatealarmHour;
+     t48 := event = ev_s2 & state = Sm_hourMinuteUpdatealarmHour;
+     t49 := event = ev_s1 & state = Sm_hourMinuteUpdatealarmHour;
+     t50 := event = ev_s3 & state = Sm_hourMinuteUpdatealarmMinute;
+     t51 := event = ev_s1 & state = Sm_hourMinuteUpdatealarmMinute;
+     t52 := event = ev_s2 & state = Sm_hourMinuteUpdatealarmMinute;
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
-     init( state ) := Sm_time;
+     init( state ) := Sm_regulartime;
      next( state ) := case
-       t27 | t33 | t38 | t42 | t6 | t12 | t18 | t24 | t30 | t36 | t40 | t5 | t9 | t15 | t21 : Sm_time;
-       t1 : Sm_date;
-       t47 | t7 | t44 | t50 | t22 : Sm_second;
-       t8 | t10 : Sm_minute;
-       t11 | t13 : Sm_hour;
-       t14 | t16 : Sm_month;
-       t17 | t19 : Sm_day;
-       t20 | t23 : Sm_year;
-       t3 | t25 | t35 | t28 : Sm_paused;
-       t31 | t26 : Sm_running;
-       t34 | t29 : Sm_lapRunning;
-       t32 : Sm_lapPaused;
-       t2 | t43 : Sm_bothOff;
-       t37 : Sm_chimeOn;
-       t39 : Sm_bothOn;
-       t41 : Sm_alarmOn;
-       t4 : Sm_alarmTime;
-       t48 | t46 | t51 : Sm_alarmHour;
-       t49 | t45 | t52 : Sm_alarmMinute;
+       t27 | t33 | t38 | t42 | t6 | t12 | t18 | t24 | t30 | t36 | t40 | t5 | t9 | t15 | t21 : Sm_regulartime;
+       t1 : Sm_regulardate;
+       t47 | t7 | t44 | t50 | t22 : Sm_updatesecond;
+       t8 | t10 : Sm_updateminute;
+       t11 | t13 : Sm_updatehour;
+       t14 | t16 : Sm_updatemonth;
+       t17 | t19 : Sm_updateday;
+       t20 | t23 : Sm_updateyear;
+       t3 | t25 | t35 | t28 : Sm_chronoNormalpaused;
+       t31 | t26 : Sm_chronoNormalrunning;
+       t34 | t29 : Sm_chronometerlapRunning;
+       t32 : Sm_chronometerlapPaused;
+       t2 | t43 : Sm_alarmStatusbothOff;
+       t37 : Sm_alarmStatuschimeOn;
+       t39 : Sm_alarmStatusbothOn;
+       t41 : Sm_alarmStatusalarmOn;
+       t4 : Sm_alarmUpdatealarmTime;
+       t48 | t46 | t51 : Sm_hourMinuteUpdatealarmHour;
+       t49 | t45 | t52 : Sm_hourMinuteUpdatealarmMinute;
        TRUE : state;
      esac;
 
@@ -167,22 +167,22 @@ MODULE main
      digitalWatchSm_Machine : DigitalWatchSm_Machine;
 
    -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_time )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_date )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_second )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_minute )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_hour )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_month )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_day )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_year )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_paused )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_running )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_lapRunning )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_lapPaused )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_bothOff )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_chimeOn )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_bothOn )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmOn )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmTime )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmHour )
-   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmMinute )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_regulartime )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_regulardate )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_updatesecond )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_updateminute )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_updatehour )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_updatemonth )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_updateday )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_updateyear )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_chronoNormalpaused )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_chronoNormalrunning )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_chronometerlapRunning )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_chronometerlapPaused )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmStatusbothOff )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmStatuschimeOn )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmStatusbothOn )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmStatusalarmOn )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmUpdatealarmTime )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_hourMinuteUpdatealarmHour )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_hourMinuteUpdatealarmMinute )

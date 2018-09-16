@@ -61,11 +61,11 @@ class System {
     	  	}
     	  	oneRed {
     	    	outRed / { numRed = numRed - 1; } -> empty;
-						inRed / { numRed = numRed + 1; } -> twoRed;
+				inRed / { numRed = numRed + 1; } -> twoRed;
     	  	}
     	  	oneBlue {
     	    	outBlue / { numBlue = numBlue - 1; } -> empty;
-						inBlue / { numBlue = numBlue + 1; } -> twoBlue;
+				inBlue / { numBlue = numBlue + 1; } -> twoBlue;
     	  	}
 					twoRed {
 						outRed / { numRed = numRed - 1; } -> oneRed;

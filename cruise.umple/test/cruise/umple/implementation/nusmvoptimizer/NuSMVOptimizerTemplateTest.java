@@ -64,6 +64,8 @@ public class NuSMVOptimizerTemplateTest extends TemplateTest{
 		SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/InputVarTest.smv");
 		SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/RangeTypeTest.smv");
 		SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/EmptyStateTest.smv");
+		SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/SpecificFlight.smv");
+		SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/paper_example.smv");
 	  }
 
 	  @Test
@@ -71,7 +73,20 @@ public class NuSMVOptimizerTemplateTest extends TemplateTest{
 		Assert.assertNotNull(createUmpleSystem(pathToInput,"/nusmvoptimizer/EmptyStateTest.ump")); //umple file with empty state machines should not make system fail. 
 
 	  }
-	  @Ignore //@Test   // TEMPORARY IGNORE BY TIM ISSUE 740
+	  
+	  @Test   // TEMPORARY IGNORE BY TIM ISSUE 740
+	  public void SpecificFlight() {
+	  		assertUmpleTemplateFor("nusmvoptimizer/SpecificFlight.ump","nusmvoptimizer/SpecificFlight.nusmvoptimizer.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmvoptimizer/SpecificFlight.smv")).exists());
+	  }
+	  
+	  @Test   // TEMPORARY IGNORE BY TIM ISSUE 740
+	  public void FlatSpecificFlight() {
+	  		assertUmpleTemplateFor("nusmvoptimizer/FlatSpecificFlight.ump","nusmvoptimizer/FlatSpecificFlight.nusmvoptimizer.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmvoptimizer/FlatSpecificFlight.smv")).exists());
+	  }
+	  
+	  @Ignore //@Test    // TEMPORARY IGNORE BY TIM ISSUE 740
 	  public void RangeTypeTest() {
 	  		assertUmpleTemplateFor("nusmvoptimizer/RangeTypeTest.ump","nusmvoptimizer/RangeTypeTest.nusmvoptimizer.txt");
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmvoptimizer/RangeTypeTest.smv")).exists());
@@ -203,7 +218,7 @@ public class NuSMVOptimizerTemplateTest extends TemplateTest{
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmvoptimizer/ExampleFile1.smv")).exists());
 	  }
 	  
-	  @Test @Ignore  // TEMPORARY IGNORE BY TIM
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM
 	  public void AdaptiveCruiseControlWithTerminalState()
 	  {
 	  		assertUmpleTemplateFor("nusmvoptimizer/AdaptiveCruiseControlWithTerminalState.ump","nusmvoptimizer/AdaptiveCruiseControlWithTerminalState.nusmvoptimizer.txt");
@@ -267,6 +282,13 @@ public class NuSMVOptimizerTemplateTest extends TemplateTest{
 	  }
 	  
 	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM
+	  public void FlatElevator()
+	  {
+	  		assertUmpleTemplateFor("nusmvoptimizer/FlatElevator.ump","nusmvoptimizer/FlatElevator.nusmvoptimizer.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmvoptimizer/FlatElevator.smv")).exists());
+	  }
+	  
+	  @Test //@Ignore  // TEMPORARY IGNORE BY TIM
 	  public void FurnaceControlSystem()
 	  {
 	  		assertUmpleTemplateFor("nusmvoptimizer/FurnaceControlSystem.ump","nusmvoptimizer/FurnaceControlSystem.nusmvoptimizer.txt");
@@ -299,6 +321,13 @@ public class NuSMVOptimizerTemplateTest extends TemplateTest{
 	  {
 	  		assertUmpleTemplateFor("nusmvoptimizer/BigStateMachineTest.ump","nusmvoptimizer/BigStateMachineTest.nusmvoptimizer.txt");
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmvoptimizer/BigStateMachineTest.smv")).exists());
+	  }
+	  
+	  @Test  //@Ignore  // TEMPORARY IGNORE BY TIM
+	  public void PaperExample()
+	  {
+	  		assertUmpleTemplateFor("nusmvoptimizer/PaperExample.ump","nusmvoptimizer/PaperExample.nusmvoptimizer.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmvoptimizer/PaperExample.smv")).exists());
 	  }
 	  
 	  @Test  //@Ignore  // TEMPORARY IGNORE BY TIM

@@ -64,9 +64,14 @@ public class NuSMVTemplateTest extends TemplateTest{
 		SampleFileWriter.destroy(pathToInput + "/nusmv/InputVarTest.smv");
 		SampleFileWriter.destroy(pathToInput + "/nusmv/RangeTypeTest.smv");
 		SampleFileWriter.destroy(pathToInput + "/nusmv/EmptyStateTest.smv");
-		
-
-
+		SampleFileWriter.destroy(pathToInput + "/nusmv/PaperExample.smv");
+	  }
+	  
+	  @Test  //@Ignore  // TEMPORARY IGNORE BY TIM
+	  public void PaperExample()
+	  {
+	  		assertUmpleTemplateFor("nusmvoptimizer/PaperExample.ump","nusmvoptimizer/PaperExample.nusmvoptimizer.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmvoptimizer/PaperExample.smv")).exists());
 	  }
 
 	  @Test

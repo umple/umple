@@ -39,7 +39,7 @@ class Elevator {
         doorClosingRequest -> DoorClosing;
       }
       DoorClosing {
-        doorCLosed -> CheckingNextDestination;
+        doorClosed -> CheckingNextDestination;
         obstruction -> DoorOpening;
         doorOpeningRequest -> DoorOpening;
       }
@@ -54,8 +54,7 @@ class Elevator {
   void goUp(){}
   void goDown(){}
   void stop(){}
-  void openDoor(){}  
-  //Boolean floorRequested() {return false;}
+  void openDoor(){}
   Boolean floorRequested = false;
-  Boolean obstruction;
+  Boolean obstruction = false;
 }

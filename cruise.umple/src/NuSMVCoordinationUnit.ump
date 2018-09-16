@@ -147,7 +147,7 @@ class NuSMVCoordinator
 		if( root.getParentState() == null )
 			nestedMachines.add(root);
   		for( State st :  getCompositeStates(root) )
-			for( StateMachine stm : getEmbeddedStateMachines(st) )
+				for( StateMachine stm : getEmbeddedStateMachines( st ) )
 					nestedMachines.add( stm );
 		return nestedMachines;
 	}
@@ -1038,7 +1038,7 @@ class NuSMVCoordinator
 			eventset.addTypeSpecifier( "ev_"+ event );
 			
 		BasicExpression lhs = new BasicExpression( sm.getFullName()+"_stable" );
-    	BasicExpression rhs = new BasicExpression( "{ "+eventset.printArray( Arrays.asList( eventset.getTypeSpecifier() ) )+" }" );
+    BasicExpression rhs = new BasicExpression( "{ "+eventset.printArray( Arrays.asList( eventset.getTypeSpecifier() ) )+" }" );
 		CaseStatement stable = new CaseStatement(lhs, rhs);
 			
 		//defining otherwise case

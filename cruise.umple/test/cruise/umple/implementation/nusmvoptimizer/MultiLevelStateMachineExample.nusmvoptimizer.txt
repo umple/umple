@@ -9,7 +9,7 @@ MODULE ASm
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { Sm_s1 , Sm_s211 , Sm_s22 };
+     state : { Sm_s1 , Sm_s21s211 , Sm_s2s22 };
      event : { ev_e1 , ev_e2 , ev_e3 , ev_null };
 
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
@@ -17,18 +17,18 @@ MODULE ASm
      sm_stable :=  !( event = ev_e2 | event = ev_e1 | event = ev_e3 );
      t1 := event = ev_e1 & state = Sm_s1;
      t2 := event = ev_e2 & state = Sm_s1;
-     t3 := event = ev_e2 & state = Sm_s211;
-     t4 := event = ev_e3 & state = Sm_s211;
-     t5 := event = ev_e1 & state = Sm_s211;
-     t6 := event = ev_e2 & state = Sm_s22;
+     t3 := event = ev_e2 & state = Sm_s21s211;
+     t4 := event = ev_e3 & state = Sm_s21s211;
+     t5 := event = ev_e1 & state = Sm_s21s211;
+     t6 := event = ev_e2 & state = Sm_s2s22;
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := Sm_s1;
      next( state ) := case
        t1 | t6 | t3 | t5 : Sm_s1;
-       t2 : Sm_s211;
-       t4 : Sm_s22;
+       t2 : Sm_s21s211;
+       t4 : Sm_s2s22;
        TRUE : state;
      esac;
 
@@ -56,5 +56,5 @@ MODULE main
 
    -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
    CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s1 )
-   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s211 )
-   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s22 )
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s21s211 )
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s2s22 )

@@ -1,0 +1,350 @@
+class Test {
+mainState{
+initialState{ start -> s1;}
+s1{
+stop -> finalState;
+  initialState0{ start0 -> s1id0;}
+  s1id0{
+    stop0 -> finalState0;
+    initialState1{ start1 -> s1id1;}
+    s1id1{
+      stop1 -> finalState1;
+      initialState2{ start2 -> s1id2;}
+      s1id2{
+        stop2 -> finalState2;
+        initialState3{ start3 -> s1id3;}
+        s1id3{
+          stop3 -> finalState3;
+          initialState4{ start4 -> s1id4;}
+          s1id4{
+            stop4 -> finalState4;
+          }
+          finalState4{}
+          ||
+          initialState5{ start5 -> s1id5;}
+          s1id5{
+            stop5 -> finalState5;
+          }
+          finalState5{}
+        }
+        finalState3{}
+        ||
+        initialState6{ start6 -> s1id6;}
+        s1id6{
+          stop6 -> finalState6;
+          initialState7{ start7 -> s1id7;}
+          s1id7{
+            stop7 -> finalState7;
+          }
+          finalState7{}
+          ||
+          initialState8{ start8 -> s1id8;}
+          s1id8{
+            stop8 -> finalState8;
+          }
+          finalState8{}
+        }
+        finalState6{}
+      }
+      finalState2{}
+      ||
+      initialState9{ start9 -> s1id9;}
+      s1id9{
+        stop9 -> finalState9;
+        initialState10{ start10 -> s1id10;}
+        s1id10{
+          stop10 -> finalState10;
+          initialState11{ start11 -> s1id11;}
+          s1id11{
+            stop11 -> finalState11;
+          }
+          finalState11{}
+          ||
+          initialState12{ start12 -> s1id12;}
+          s1id12{
+            stop12 -> finalState12;
+          }
+          finalState12{}
+        }
+        finalState10{}
+        ||
+        initialState13{ start13 -> s1id13;}
+        s1id13{
+          stop13 -> finalState13;
+          initialState14{ start14 -> s1id14;}
+          s1id14{
+            stop14 -> finalState14;
+          }
+          finalState14{}
+          ||
+          initialState15{ start15 -> s1id15;}
+          s1id15{
+            stop15 -> finalState15;
+          }
+          finalState15{}
+        }
+        finalState13{}
+      }
+      finalState9{}
+    }
+    finalState1{}
+    ||
+    initialState16{ start16 -> s1id16;}
+    s1id16{
+      stop16 -> finalState16;
+      initialState17{ start17 -> s1id17;}
+      s1id17{
+        stop17 -> finalState17;
+        initialState18{ start18 -> s1id18;}
+        s1id18{
+          stop18 -> finalState18;
+          initialState19{ start19 -> s1id19;}
+          s1id19{
+            stop19 -> finalState19;
+          }
+          finalState19{}
+          ||
+          initialState20{ start20 -> s1id20;}
+          s1id20{
+            stop20 -> finalState20;
+          }
+          finalState20{}
+        }
+        finalState18{}
+        ||
+        initialState21{ start21 -> s1id21;}
+        s1id21{
+          stop21 -> finalState21;
+          initialState22{ start22 -> s1id22;}
+          s1id22{
+            stop22 -> finalState22;
+          }
+          finalState22{}
+          ||
+          initialState23{ start23 -> s1id23;}
+          s1id23{
+            stop23 -> finalState23;
+          }
+          finalState23{}
+        }
+        finalState21{}
+      }
+      finalState17{}
+      ||
+      initialState24{ start24 -> s1id24;}
+      s1id24{
+        stop24 -> finalState24;
+        initialState25{ start25 -> s1id25;}
+        s1id25{
+          stop25 -> finalState25;
+          initialState26{ start26 -> s1id26;}
+          s1id26{
+            stop26 -> finalState26;
+          }
+          finalState26{}
+          ||
+          initialState27{ start27 -> s1id27;}
+          s1id27{
+            stop27 -> finalState27;
+          }
+          finalState27{}
+        }
+        finalState25{}
+        ||
+        initialState28{ start28 -> s1id28;}
+        s1id28{
+          stop28 -> finalState28;
+          initialState29{ start29 -> s1id29;}
+          s1id29{
+            stop29 -> finalState29;
+          }
+          finalState29{}
+          ||
+          initialState30{ start30 -> s1id30;}
+          s1id30{
+            stop30 -> finalState30;
+          }
+          finalState30{}
+        }
+        finalState28{}
+      }
+      finalState24{}
+    }
+    finalState16{}
+  }
+  finalState0{}
+  ||
+  initialState31{ start31 -> s1id31;}
+  s1id31{
+    stop31 -> finalState31;
+    initialState32{ start32 -> s1id32;}
+    s1id32{
+      stop32 -> finalState32;
+      initialState33{ start33 -> s1id33;}
+      s1id33{
+        stop33 -> finalState33;
+        initialState34{ start34 -> s1id34;}
+        s1id34{
+          stop34 -> finalState34;
+          initialState35{ start35 -> s1id35;}
+          s1id35{
+            stop35 -> finalState35;
+          }
+          finalState35{}
+          ||
+          initialState36{ start36 -> s1id36;}
+          s1id36{
+            stop36 -> finalState36;
+          }
+          finalState36{}
+        }
+        finalState34{}
+        ||
+        initialState37{ start37 -> s1id37;}
+        s1id37{
+          stop37 -> finalState37;
+          initialState38{ start38 -> s1id38;}
+          s1id38{
+            stop38 -> finalState38;
+          }
+          finalState38{}
+          ||
+          initialState39{ start39 -> s1id39;}
+          s1id39{
+            stop39 -> finalState39;
+          }
+          finalState39{}
+        }
+        finalState37{}
+      }
+      finalState33{}
+      ||
+      initialState40{ start40 -> s1id40;}
+      s1id40{
+        stop40 -> finalState40;
+        initialState41{ start41 -> s1id41;}
+        s1id41{
+          stop41 -> finalState41;
+          initialState42{ start42 -> s1id42;}
+          s1id42{
+            stop42 -> finalState42;
+          }
+          finalState42{}
+          ||
+          initialState43{ start43 -> s1id43;}
+          s1id43{
+            stop43 -> finalState43;
+          }
+          finalState43{}
+        }
+        finalState41{}
+        ||
+        initialState44{ start44 -> s1id44;}
+        s1id44{
+          stop44 -> finalState44;
+          initialState45{ start45 -> s1id45;}
+          s1id45{
+            stop45 -> finalState45;
+          }
+          finalState45{}
+          ||
+          initialState46{ start46 -> s1id46;}
+          s1id46{
+            stop46 -> finalState46;
+          }
+          finalState46{}
+        }
+        finalState44{}
+      }
+      finalState40{}
+    }
+    finalState32{}
+    ||
+    initialState47{ start47 -> s1id47;}
+    s1id47{
+      stop47 -> finalState47;
+      initialState48{ start48 -> s1id48;}
+      s1id48{
+        stop48 -> finalState48;
+        initialState49{ start49 -> s1id49;}
+        s1id49{
+          stop49 -> finalState49;
+          initialState50{ start50 -> s1id50;}
+          s1id50{
+            stop50 -> finalState50;
+          }
+          finalState50{}
+          ||
+          initialState51{ start51 -> s1id51;}
+          s1id51{
+            stop51 -> finalState51;
+          }
+          finalState51{}
+        }
+        finalState49{}
+        ||
+        initialState52{ start52 -> s1id52;}
+        s1id52{
+          stop52 -> finalState52;
+          initialState53{ start53 -> s1id53;}
+          s1id53{
+            stop53 -> finalState53;
+          }
+          finalState53{}
+          ||
+          initialState54{ start54 -> s1id54;}
+          s1id54{
+            stop54 -> finalState54;
+          }
+          finalState54{}
+        }
+        finalState52{}
+      }
+      finalState48{}
+      ||
+      initialState55{ start55 -> s1id55;}
+      s1id55{
+        stop55 -> finalState55;
+        initialState56{ start56 -> s1id56;}
+        s1id56{
+          stop56 -> finalState56;
+          initialState57{ start57 -> s1id57;}
+          s1id57{
+            stop57 -> finalState57;
+          }
+          finalState57{}
+          ||
+          initialState58{ start58 -> s1id58;}
+          s1id58{
+            stop58 -> finalState58;
+          }
+          finalState58{}
+        }
+        finalState56{}
+        ||
+        initialState59{ start59 -> s1id59;}
+        s1id59{
+          stop59 -> finalState59;
+          initialState60{ start60 -> s1id60;}
+          s1id60{
+            stop60 -> finalState60;
+          }
+          finalState60{}
+          ||
+          initialState61{ start61 -> s1id61;}
+          s1id61{
+            stop61 -> finalState61;
+          }
+          finalState61{}
+        }
+        finalState59{}
+      }
+      finalState55{}
+    }
+    finalState47{}
+  }
+  finalState31{}
+}
+finalState{}
+}
+}

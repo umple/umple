@@ -25,38 +25,38 @@ MODULE HeatingSystemHeatSystem ( _heatSystemHeatSysRoomRoom , _heatSystemHeatSys
    -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
    DEFINE
      heatSystem_stable :=  !( event = ev_t5 | event = ev_furnaceReset | event = ev_furnaceRunning | event = ev_t21 | event = ev_t23 | event = ev_t22 | event = ev_activate | event = ev_t18 | event = ev_t17 | event = ev_heatSwitchOn | event = ev_furnaceFault | event = ev_deactivate | event = ev_t20 | event = ev_heatSwitchOff | event = ev_t24 | event = ev_t15 | event = ev_userReset | event = ev_t19 );
-     t1 := event = ev_t15 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_idleNoHeat & g1;
-     t2 := event = ev_t17 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_waitForHeat & g2;
-     t3 := event = ev_t18 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_waitForHeat & g3;
-     t4 := event = ev_t15 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_waitForHeat & g4;
-     t5 := event = ev_t20 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_waitForHeat & g5;
-     t6 := event = ev_t21 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_idleHeat & g6;
-     t7 := event = ev_t19 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_waitForCool & g7;
-     t8 := event = ev_t22 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_waitForCool & g8;
-     t9 := event = ev_t24 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_waitForCool & g9;
-     t10 := event = ev_t23 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_waitForCool & g10;
-     t11 := event = ev_heatSwitchOn & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_off;
-     t12 := event = ev_heatSwitchOff & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_idle;
-     t13 := event = ev_furnaceFault & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_idle;
-     t14 := event = ev_activate & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_idle & g11;
-     t15 := event = ev_heatSwitchOff & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_actHeater;
-     t16 := event = ev_furnaceFault & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_actHeater;
-     t17 := event = ev_deactivate & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_actHeater & g12;
-     t18 := event = ev_furnaceRunning & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_actHeater;
-     t19 := event = ev_heatSwitchOff & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterRun;
-     t20 := event = ev_furnaceFault & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterRun;
-     t21 := event = ev_deactivate & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterRun & g12;
-     t22 := event = ev_furnaceReset & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_error;
-     t23 := event = ev_userReset & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_error;
-     t24 := event = ev_furnaceFault & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceOff;
-     t25 := event = ev_activate & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceOff;
-     t26 := event = ev_furnaceFault & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceRun;
-     t27 := event = ev_deactivate & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceRun;
-     t28 := event = ev_furnaceFault & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceAct;
-     t29 := event = ev_deactivate & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceAct;
-     t30 := event = ev_t5 & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceAct & g13;
-     t31 := event = ev_furnaceRunning & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceAct & g14;
-     t32 := event = ev_furnaceReset & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceErr;
+     t1 := event = ev_t15 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_noHeatReqidleNoHeat & g1;
+     t2 := event = ev_t17 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_noHeatReqwaitForHeat & g2;
+     t3 := event = ev_t18 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_noHeatReqwaitForHeat & g3;
+     t4 := event = ev_t15 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_noHeatReqwaitForHeat & g4;
+     t5 := event = ev_t20 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_noHeatReqwaitForHeat & g5;
+     t6 := event = ev_t21 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_heatReqidleHeat & g6;
+     t7 := event = ev_t19 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_heatReqwaitForCool & g7;
+     t8 := event = ev_t22 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_heatReqwaitForCool & g8;
+     t9 := event = ev_t24 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_heatReqwaitForCool & g9;
+     t10 := event = ev_t23 & _heatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_heatReqwaitForCool & g10;
+     t11 := event = ev_heatSwitchOn & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_Controlleroff;
+     t12 := event = ev_heatSwitchOff & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_ControllerOnidle;
+     t13 := event = ev_furnaceFault & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_ControllerOnidle;
+     t14 := event = ev_activate & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_ControllerOnidle & g11;
+     t15 := event = ev_heatSwitchOff & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterActiveactHeater;
+     t16 := event = ev_furnaceFault & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterActiveactHeater;
+     t17 := event = ev_deactivate & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterActiveactHeater & g12;
+     t18 := event = ev_furnaceRunning & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterActiveactHeater;
+     t19 := event = ev_heatSwitchOff & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterActiveheaterRun;
+     t20 := event = ev_furnaceFault & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterActiveheaterRun;
+     t21 := event = ev_deactivate & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterActiveheaterRun & g12;
+     t22 := event = ev_furnaceReset & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_Controllererror;
+     t23 := event = ev_userReset & _heatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_Controllererror;
+     t24 := event = ev_furnaceFault & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceOff;
+     t25 := event = ev_activate & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceOff;
+     t26 := event = ev_furnaceFault & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceRun;
+     t27 := event = ev_deactivate & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceRun;
+     t28 := event = ev_furnaceFault & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceAct;
+     t29 := event = ev_deactivate & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceAct;
+     t30 := event = ev_t5 & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceAct & g13;
+     t31 := event = ev_furnaceRunning & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceAct & g14;
+     t32 := event = ev_furnaceReset & _heatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnacefurnaceErr;
      g1 := tooCold;
      g2 := waitedForWarm < warmUpTimer;
      g3 := valvePos != 2 & warmUpTimer = waitedForWarm;
@@ -133,17 +133,17 @@ MODULE HeatingSystemHeatSystemHeatSysRoomRoom ( _heatSystem )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { HeatSystemHeatSysRoomRoom_idleNoHeat , HeatSystemHeatSysRoomRoom_waitForHeat , HeatSystemHeatSysRoomRoom_idleHeat , HeatSystemHeatSysRoomRoom_waitForCool , null };
+     state : { HeatSystemHeatSysRoomRoom_noHeatReqidleNoHeat , HeatSystemHeatSysRoomRoom_noHeatReqwaitForHeat , HeatSystemHeatSysRoomRoom_heatReqidleHeat , HeatSystemHeatSysRoomRoom_heatReqwaitForCool , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t4 | _heatSystem.t7 : HeatSystemHeatSysRoomRoom_idleNoHeat;
-       _heatSystem.t2 | _heatSystem.t1 | _heatSystem.t3 : HeatSystemHeatSysRoomRoom_waitForHeat;
-       _heatSystem.t5 | _heatSystem.t8 : HeatSystemHeatSysRoomRoom_idleHeat;
-       _heatSystem.t9 | _heatSystem.t6 | _heatSystem.t10 : HeatSystemHeatSysRoomRoom_waitForCool;
-       _heatSystem.state = HeatSystem_heatSys & state = null : HeatSystemHeatSysRoomRoom_idleNoHeat;
+       _heatSystem.t4 | _heatSystem.t7 : HeatSystemHeatSysRoomRoom_noHeatReqidleNoHeat;
+       _heatSystem.t2 | _heatSystem.t1 | _heatSystem.t3 : HeatSystemHeatSysRoomRoom_noHeatReqwaitForHeat;
+       _heatSystem.t5 | _heatSystem.t8 : HeatSystemHeatSysRoomRoom_heatReqidleHeat;
+       _heatSystem.t9 | _heatSystem.t6 | _heatSystem.t10 : HeatSystemHeatSysRoomRoom_heatReqwaitForCool;
+       _heatSystem.state = HeatSystem_heatSys & state = null : HeatSystemHeatSysRoomRoom_noHeatReqidleNoHeat;
        TRUE : state;
      esac;
 
@@ -152,18 +152,18 @@ MODULE HeatingSystemHeatSystemHeatSysControllerController ( _heatSystem )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { HeatSystemHeatSysControllerController_off , HeatSystemHeatSysControllerController_idle , HeatSystemHeatSysControllerController_actHeater , HeatSystemHeatSysControllerController_heaterRun , HeatSystemHeatSysControllerController_error , null };
+     state : { HeatSystemHeatSysControllerController_Controlleroff , HeatSystemHeatSysControllerController_ControllerOnidle , HeatSystemHeatSysControllerController_heaterActiveactHeater , HeatSystemHeatSysControllerController_heaterActiveheaterRun , HeatSystemHeatSysControllerController_Controllererror , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t15 | _heatSystem.t22 | _heatSystem.t12 | _heatSystem.t19 | _heatSystem.t23 : HeatSystemHeatSysControllerController_off;
-       _heatSystem.t17 | _heatSystem.t11 | _heatSystem.t21 : HeatSystemHeatSysControllerController_idle;
-       _heatSystem.t14 : HeatSystemHeatSysControllerController_actHeater;
-       _heatSystem.t18 : HeatSystemHeatSysControllerController_heaterRun;
-       _heatSystem.t16 | _heatSystem.t13 | _heatSystem.t20 : HeatSystemHeatSysControllerController_error;
-       _heatSystem.state = HeatSystem_heatSys & state = null : HeatSystemHeatSysControllerController_off;
+       _heatSystem.t15 | _heatSystem.t22 | _heatSystem.t12 | _heatSystem.t19 | _heatSystem.t23 : HeatSystemHeatSysControllerController_Controlleroff;
+       _heatSystem.t17 | _heatSystem.t11 | _heatSystem.t21 : HeatSystemHeatSysControllerController_ControllerOnidle;
+       _heatSystem.t14 : HeatSystemHeatSysControllerController_heaterActiveactHeater;
+       _heatSystem.t18 : HeatSystemHeatSysControllerController_heaterActiveheaterRun;
+       _heatSystem.t16 | _heatSystem.t13 | _heatSystem.t20 : HeatSystemHeatSysControllerController_Controllererror;
+       _heatSystem.state = HeatSystem_heatSys & state = null : HeatSystemHeatSysControllerController_Controlleroff;
        TRUE : state;
      esac;
 
@@ -172,17 +172,17 @@ MODULE HeatingSystemHeatSystemHeatSysFurnaceFurnace ( _heatSystem )
 
    -- This part declares state variables for the given NuSMV module --
    VAR
-     state : { HeatSystemHeatSysFurnaceFurnace_furnaceOff , HeatSystemHeatSysFurnaceFurnace_furnaceRun , HeatSystemHeatSysFurnaceFurnace_furnaceAct , HeatSystemHeatSysFurnaceFurnace_furnaceErr , null };
+     state : { HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceOff , HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceRun , HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceAct , HeatSystemHeatSysFurnaceFurnace_furnacefurnaceErr , null };
 
    -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
    ASSIGN
      init( state ) := null;
      next( state ) := case
-       _heatSystem.t27 | _heatSystem.t32 | _heatSystem.t29 : HeatSystemHeatSysFurnaceFurnace_furnaceOff;
-       _heatSystem.t31 : HeatSystemHeatSysFurnaceFurnace_furnaceRun;
-       _heatSystem.t25 | _heatSystem.t30 : HeatSystemHeatSysFurnaceFurnace_furnaceAct;
-       _heatSystem.t26 | _heatSystem.t24 | _heatSystem.t28 : HeatSystemHeatSysFurnaceFurnace_furnaceErr;
-       _heatSystem.state = HeatSystem_heatSys & state = null : HeatSystemHeatSysFurnaceFurnace_furnaceOff;
+       _heatSystem.t27 | _heatSystem.t32 | _heatSystem.t29 : HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceOff;
+       _heatSystem.t31 : HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceRun;
+       _heatSystem.t25 | _heatSystem.t30 : HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceAct;
+       _heatSystem.t26 | _heatSystem.t24 | _heatSystem.t28 : HeatSystemHeatSysFurnaceFurnace_furnacefurnaceErr;
+       _heatSystem.state = HeatSystem_heatSys & state = null : HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceOff;
        TRUE : state;
      esac;
 
@@ -205,16 +205,16 @@ MODULE main
 
    -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
    CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystem.state = HeatSystem_heatSys )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_idleNoHeat )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_waitForHeat )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_idleHeat )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_waitForCool )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_off )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_idle )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_actHeater )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterRun )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_error )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceOff )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceRun )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceAct )
-   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceErr )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_noHeatReqidleNoHeat )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_noHeatReqwaitForHeat )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_heatReqidleHeat )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysRoomRoom.state = HeatSystemHeatSysRoomRoom_heatReqwaitForCool )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_Controlleroff )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_ControllerOnidle )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterActiveactHeater )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_heaterActiveheaterRun )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysControllerController.state = HeatSystemHeatSysControllerController_Controllererror )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceOff )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceRun )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnaceNormalfurnaceAct )
+   CTLSPEC   EF( heatingSystemHeatSystem_Machine.heatingSystemHeatSystemHeatSysFurnaceFurnace.state = HeatSystemHeatSysFurnaceFurnace_furnacefurnaceErr )

@@ -1,0 +1,101 @@
+-- This file is generated from FlatSpecificFlight.ump --
+
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language! --
+
+
+-- This defines a NuSMV module for SpecificFlightState --
+MODULE SpecificFlightState
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { State_planned , State_planeAssigned , State_waitingForNextLeg , State_boarding , State_closedAtGate , State_underway , State_disembarking , State_completed , State_cancelled };
+     event : { ev_cancel , ev_boardingComplete , ev_passengersOut , ev_assignPlane , ev_permissionToDepart , ev_evacuate , ev_readyForPassengers , ev_changePlane , ev_arriveAtGate , ev_null };
+     finished : boolean;
+     empty : boolean;
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     state_stable :=  !( event = ev_boardingComplete | event = ev_assignPlane | event = ev_evacuate | event = ev_changePlane | event = ev_cancel | event = ev_passengersOut | event = ev_permissionToDepart | event = ev_readyForPassengers | event = ev_arriveAtGate );
+     t1 := event = ev_assignPlane & state = State_planned;
+     t2 := event = ev_cancel & state = State_planned;
+     t3 := event = ev_changePlane & state = State_planeAssigned;
+     t4 := event = ev_readyForPassengers & state = State_planeAssigned;
+     t5 := event = ev_cancel & state = State_planeAssigned;
+     t6 := event = ev_readyForPassengers & state = State_waitingForNextLeg;
+     t7 := event = ev_evacuate & state = State_waitingForNextLeg;
+     t8 := event = ev_evacuate & state = State_boarding;
+     t9 := event = ev_boardingComplete & state = State_boarding;
+     t10 := event = ev_evacuate & state = State_closedAtGate;
+     t11 := event = ev_permissionToDepart & state = State_closedAtGate;
+     t12 := event = ev_evacuate & state = State_underway;
+     t13 := event = ev_arriveAtGate & state = State_underway;
+     t14 := event = ev_evacuate & state = State_disembarking;
+     t15 := event = ev_passengersOut & state = State_disembarking & g1;
+     t16 := event = ev_passengersOut & state = State_disembarking & g2;
+     t17 := event = ev_passengersOut & state = State_disembarking & g3;
+     g1 := !empty;
+     g2 := !finished & empty;
+     g3 := finished & empty;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := State_planned;
+     next( state ) := case
+       t3 : State_planned;
+       t1 | t16 : State_planeAssigned;
+       t15 : State_waitingForNextLeg;
+       t4 | t6 : State_boarding;
+       t9 : State_closedAtGate;
+       t11 : State_underway;
+       t7 | t10 | t13 | t8 | t12 | t14 : State_disembarking;
+       t17 : State_completed;
+       t2 | t5 : State_cancelled;
+       TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       state_stable : { ev_cancel , ev_boardingComplete , ev_passengersOut , ev_assignPlane , ev_permissionToDepart , ev_evacuate , ev_readyForPassengers , ev_changePlane , ev_arriveAtGate };
+       TRUE : ev_null;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "finished" of this NuSMV module --
+   ASSIGN
+     init( finished ) := FALSE;
+
+   -- This part defines logic for the assignment of values to state variable "empty" of this NuSMV module --
+   ASSIGN
+     init( empty ) := FALSE;
+
+-- This defines a NuSMV module for SpecificFlightState_Machine --
+MODULE SpecificFlightState_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     specificFlightState : SpecificFlightState;
+
+-- This defines a NuSMV module for main --
+MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     specificFlightState_Machine : SpecificFlightState_Machine;
+
+   -- The following properties are specified to certify that this model is free of non-determinism. 
+   INVARSPEC   ( specificFlightState_Machine.specificFlightState.t15 & specificFlightState_Machine.specificFlightState.t16 -> next( specificFlightState_Machine.specificFlightState.state = State_waitingForNextLeg & specificFlightState_Machine.specificFlightState.state = State_planeAssigned ) )
+   INVARSPEC   ( specificFlightState_Machine.specificFlightState.t15 & specificFlightState_Machine.specificFlightState.t17 -> next( specificFlightState_Machine.specificFlightState.state = State_waitingForNextLeg & specificFlightState_Machine.specificFlightState.state = State_completed ) )
+   INVARSPEC   ( specificFlightState_Machine.specificFlightState.t16 & specificFlightState_Machine.specificFlightState.t17 -> next( specificFlightState_Machine.specificFlightState.state = State_planeAssigned & specificFlightState_Machine.specificFlightState.state = State_completed ) )
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( specificFlightState_Machine.specificFlightState.state = State_planned )
+   CTLSPEC   EF( specificFlightState_Machine.specificFlightState.state = State_planeAssigned )
+   CTLSPEC   EF( specificFlightState_Machine.specificFlightState.state = State_waitingForNextLeg )
+   CTLSPEC   EF( specificFlightState_Machine.specificFlightState.state = State_boarding )
+   CTLSPEC   EF( specificFlightState_Machine.specificFlightState.state = State_closedAtGate )
+   CTLSPEC   EF( specificFlightState_Machine.specificFlightState.state = State_underway )
+   CTLSPEC   EF( specificFlightState_Machine.specificFlightState.state = State_disembarking )
+   CTLSPEC   EF( specificFlightState_Machine.specificFlightState.state = State_completed )
+   CTLSPEC   EF( specificFlightState_Machine.specificFlightState.state = State_cancelled )

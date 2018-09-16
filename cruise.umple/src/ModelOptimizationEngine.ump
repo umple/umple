@@ -12,12 +12,70 @@ class ModelOptimizer {
 	
 		StateMachine sm = smn.clone();
 		List<Transition> transitions = sm.getAllTransitions();
+		System.out.println( transitions.size() );
+
 		HashMap<State, TargetConfiguration> map = new HashMap<State, TargetConfiguration>();
 		ExplorationResult result = optimize( sm, createCopy( sm ), map );
 		StateMachine machine = result.getStateMachine();
+		System.out.println( map.size() );
+		//printTable( map );
+
+
+		NuSMVCoordinator coord = new NuSMVCoordinator();
+		List<StateMachine> machines = coord.generateStateMachineList( result.getStateMachine() );
+		//System.out.println(machines.size());
+		//for( State st : machine.getStates() )
+		for( StateMachine smm : getStateMachines( machine ) )
+			printStatesOf( smm );
 		setTransition( machine, transitions, map );
 		return machine;
 	}
+
+	private List<StateMachine> getStateMachines( StateMachine machine ) {
+
+		List<StateMachine> machines = new ArrayList<StateMachine>();
+		if( machine.getParentState() == null )
+			machines.add( machine );
+
+		for( State state : machine.getStates() )
+			for( StateMachine nMachine : getRegions( state ) ) {
+				machines.add( nMachine );
+				for( StateMachine ourMachine : getStateMachines( nMachine ) )
+					machines.add( ourMachine );
+			}
+			return machines;
+	}
+
+
+	///////////////////////////////////////////////////////// Utilities
+	private void printStatesOf( StateMachine sm ) {
+	
+		String states = "";
+		
+		for( State state : sm.getStates() ) 
+			states += " " + state +" : "+ state.getNestedStateMachines().size()+"\n";
+		System.out.println( sm.getName() +" : "+ states );
+	}
+
+	private void printTransition( Transition transition, int dex ) {
+		System.out.println( transition.getEvent().getName()+"["+transition.getFromState()+"__"+ transition.getNextState()+"]: "+dex );
+	}
+
+	private void printTable( HashMap<State, TargetConfiguration> map ) {
+	
+		String str = "";
+		for( Map.Entry<State, TargetConfiguration> entry : map.entrySet() ) {
+			
+			State key = ( State ) entry.getKey();
+			TargetConfiguration config = map.get( entry.getKey() );
+				
+			str += "["+ key + " , " + config +"] \n";
+		}
+		
+		System.out.println( str );
+	}
+	///////////////////////////////////////////////////////// Utilities
+
 	
 	//assigns transitions to corresponding sources and destinations
 	private void setTransition( StateMachine sm, List<Transition> transitions, HashMap<State, TargetConfiguration> map ) {
@@ -27,7 +85,7 @@ class ModelOptimizer {
 		for( Transition transition : transitions ) {
 			nextEntry = map.get( transition.getNextState() ); 
 			fromEntry = map.get( transition.getFromState() );
-			
+			//printTransition( transition, 0);
 			if( kind( transition.getFromState() ) == 1 )
 				for( State state : fromEntry.getGreatest_descendant_states() )
 					transition.clone( state, nextEntry.getGreatest_default_state() );
@@ -43,10 +101,13 @@ class ModelOptimizer {
 		State newState = null;
 		for( State state : sm.getStates() ) {
 		
-			if( kind( state ) == 0 )
+			if( kind( state ) == 0 ) {
 				map.put( state, buildEntry( createCopy( state, parentStateMachine ), null, map ) );
+				//System.out.println( state.getName() + ":0 - " + state.getStateMachine().getParentState() + ", " + parentStateMachine.getParentState());
+			}
 			
 			if( kind( state ) == 1 ) {
+				
 				List<State> beforeList = new ArrayList<State>();
 				boolean flag = false;
 				for( State myState : parentStateMachine.getStates() ) {
@@ -69,7 +130,8 @@ class ModelOptimizer {
 			}
 			
 			if( kind( state ) == 2 ) {
-			
+				
+				//System.out.println( state.getName() + ":1 - " + state.getStateMachine().getParentState() + ", " + parentStateMachine.getParentState() );
 				//we create a copy of the state
 				newState = createCopy( state, parentStateMachine );
 				map.put( state, buildEntry( newState, null, map ) );
@@ -90,6 +152,9 @@ class ModelOptimizer {
 					result = optimize( machine, createCopy( machine ), map );
 					wrapperState.addNestedStateMachine( result.getStateMachine() );
 					newState.addNestedStateMachine( nestedStateMachine );
+
+					//System.out.println( state.getName() +"---"+machine.getName() +" : "+ newState.getName() +"---"+result.getStateMachine().getName() +":::"+ newState.getNestedStateMachines().size());
+					//System.out.println( newState.getName() +"---"+machine.getName() +" : "+ newState.getName() +"---"+result.getStateMachine().getName() );
 				}
 				
 			}
@@ -124,7 +189,6 @@ class ModelOptimizer {
 		
 		//Case 3 - Concurrent state
 		for( StateMachine stm : state.getNestedStateMachines() ) {
-			
 			State wrapperState = stm.getStates().get(0);
 			if( wrapperState.getNestedStateMachines().size() == 0 )
 				regions.add( stm );
@@ -143,10 +207,9 @@ class ModelOptimizer {
 			State initialState = newState.getNestedStateMachine(0).getStartState();
 			TargetConfiguration nextEntry = map.get( initialState );
 			initialState = nextEntry.getGreatest_default_state();
-			while( kind( initialState ) == 1 ) {
-				nextEntry = map.get( initialState );
-				initialState = nextEntry.getGreatest_default_state();
-			}
+			if( kind( initialState ) == 1 )
+				initialState = map.get( initialState ).getGreatest_default_state();
+				
 			return new TargetConfiguration( initialState, states.toArray( arr ) );
 		}
 		
@@ -164,7 +227,12 @@ class ModelOptimizer {
 		UmpleClass uClass = sm.getUmpleClass();
 		//System.out.println( uClass.toString() );
 		smm.setUmpleClass( uClass );
-		smm.setParentState( sm.getParentState() );
+		
+		/*State parent = sm.getParentState();
+		if( parent == null )
+				smm.setParentState( parent );
+		else
+				smm.setParentState( map.get( parent ).getGreatest_default_state() );*/
 		smm.setRecentSearchDepth( sm.getRecentSearchDepth() );
 		smm.setContainsHistoryState( sm.getContainsHistoryState() );
 		smm.setContainsDeepHistoryState( sm.getContainsDeepHistoryState() );
@@ -177,8 +245,13 @@ class ModelOptimizer {
 	//This method creates a copy of the input State
 	private State createCopy( State state, StateMachine sm ) {
 	
-		State newState = new State( state.getName(), sm );
+		String sName = state.getName();
 		State parent = state.getStateMachine().getParentState();
+		if( parent != null && kind( parent ) == 1 )
+			sName = state.getStateMachine().getName() + sName;
+		
+		
+		State newState = new State( sName, sm );
 		if( parent != null && parent.isIsStartState() == false )
 			newState.setIsStartState( false );
 		else 
