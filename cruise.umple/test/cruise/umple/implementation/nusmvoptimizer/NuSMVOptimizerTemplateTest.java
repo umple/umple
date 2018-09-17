@@ -323,7 +323,7 @@ public class NuSMVOptimizerTemplateTest extends TemplateTest{
 	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmvoptimizer/BigStateMachineTest.smv")).exists());
 	  }
 	  
-	  @Test  //@Ignore  // TEMPORARY IGNORE BY TIM
+	  @Ignore  //@Test TEMPORARY IGNORE BY TIM
 	  public void PaperExample()
 	  {
 	  		assertUmpleTemplateFor("nusmvoptimizer/PaperExample.ump","nusmvoptimizer/PaperExample.nusmvoptimizer.txt");
