@@ -1,0 +1,66 @@
+-- This file is generated from RangeTypeTest.ump --
+
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language! --
+
+
+-- This defines a NuSMV module for CruiseControlSystemSm --
+MODULE CruiseControlSystemSm
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm_s1 , Sm_s2 };
+     event : { ev_a , ev_null };
+     c : integer;
+
+   -- This part declares input variables for the given NuSMV module --
+   IVAR
+     ayo : aa..bb;
+     bayo : real;
+     baro : boolean;
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     sm_stable :=  !( event = ev_a );
+     t1 := event = ev_a & state = Sm_s1;
+     aa := 5;
+     bb := 10;
+     cc := 5.00;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := Sm_s1;
+     next( state ) := case
+       t1 : Sm_s2;
+       TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       sm_stable : { ev_a };
+       TRUE : ev_null;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "c" of this NuSMV module --
+   ASSIGN
+     init( c ) := 0;
+
+-- This defines a NuSMV module for CruiseControlSystemSm_Machine --
+MODULE CruiseControlSystemSm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     cruiseControlSystemSm : CruiseControlSystemSm;
+
+-- This defines a NuSMV module for main --
+MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     cruiseControlSystemSm_Machine : CruiseControlSystemSm_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( cruiseControlSystemSm_Machine.cruiseControlSystemSm.state = Sm_s1 )
+   CTLSPEC   EF( cruiseControlSystemSm_Machine.cruiseControlSystemSm.state = Sm_s2 )

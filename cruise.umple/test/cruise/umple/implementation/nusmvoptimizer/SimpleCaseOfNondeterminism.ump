@@ -1,0 +1,12 @@
+class X {
+  Integer a = 4;
+  Integer b = 5;
+  sm {
+    s1 {
+      e [a > 1] -> s2;
+      e [ b < 1] -> s3;
+    }
+    s2 { }
+    s3{}
+  }
+}

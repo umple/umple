@@ -1,0 +1,84 @@
+class BigStateMachineTest {
+  depend java.lang.reflect.InvocationTargetException;
+  depend java.lang.reflect.Method;
+
+  trace Zx,Z,B,G,X,D;
+  sm{
+    Zxab{
+     		Zx{
+       			Za{
+         			e3 -> Xa;
+         			e2 -> Aa;
+					e5 -> Ga;
+					e1 -> Ea;
+    				e4 -> Ge;
+       			}
+       			Xa{ 
+					e5 -> Ga;
+					e1 -> Ea;
+    				e4 -> Ge;
+				}
+     		}
+     		Aa{
+       			e5 -> Da;
+       			e3 -> Ba;
+				e1 -> Ea;
+    			e4 -> Ge;
+     		}
+     		Ba{
+       			e3 -> Ge;
+				e1 -> Ea;
+    			e4 -> Ge;
+     		}
+    		
+    }
+    Da {
+      e5 -> Xa;
+      e2 -> Ea;
+    }
+    Ge {
+     Ga {
+       e1 -> Ba;
+     }
+     Ea {
+       e1 -> Ga;
+       e2 -> Ga;
+     }
+    }
+  }
+  
+   public static void main(String [ ] args) {
+     if(args.length == 0 || args[0].length()==0) {
+       System.out.println("The first argument must be a string with events, one per character");
+      }
+      else {
+        BigStateMachineTest b = new BigStateMachineTest();
+        Class c = b.getClass();
+        java.lang.reflect.Method m;
+        String ev;
+        for (int i=0; i<args[0].length(); i++) {
+          ev="e"+args[0].charAt(i);
+          try {
+            m = c.getMethod(ev);
+          } catch (SecurityException e) {
+             return;
+          } catch (NoSuchMethodException e) {
+             System.out.println("No event "+ev);
+             return;
+          } 
+          try {
+            m.invoke(b);
+          } catch (IllegalArgumentException e) {
+          } catch (IllegalAccessException e) {
+          } catch (InvocationTargetException e) {
+          }
+        }
+        System.out.println("Ending in State "+b.getSmFullName());
+      }
+   }
+}
+
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code

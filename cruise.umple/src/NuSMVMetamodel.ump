@@ -134,13 +134,13 @@ trait MyUtility {
   				temp += input.get(i) + " , ";
   			temp += input.get(size-1);
   		} 
-  		else 
+  	else if( size == 1 ) 
   			temp = input.get(0);
 		return temp;
 	}
 	
 	public List<ColumnEntry> buildColumnEntries( List<String> stateValues ) {
-	    List<ColumnEntry> entries = new ArrayList<ColumnEntry>();
+	  List<ColumnEntry> entries = new ArrayList<ColumnEntry>();
 		for( int i = 0; i < stateValues.size(); i++ ) {
 			ColumnEntry entry = new ColumnEntry( stateValues.get(i) );
 			entry.setIsDerived( true );

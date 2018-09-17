@@ -1,0 +1,19 @@
+class Booking {
+  state {
+    newBooking { 
+      assignSeat -> seatAssigned;
+      cancel -> cancelled;
+    }
+    seatAssigned {
+      cancel -> cancelled;
+      checkIn -> checkedIn;
+      cance -> cancelled;
+    }
+    checkedIn {
+      cancel -> cancelled;
+      complete -> completed;
+    }
+    cancelled {}
+    completed {}
+  }
+}

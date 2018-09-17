@@ -1,0 +1,29 @@
+class CourseSection
+{
+  status
+  {
+    Planned 
+    {
+      cancel -> Cancelled;
+      openRegistration -> OpenNotEnoughStudents;
+    }
+    OpenNotEnoughStudents
+    {
+      requestToRegister -> OpenNotEnoughStudents;
+      closeRegistration -> Cancelled;
+      cancel -> Cancelled;
+      classSizeExceedsMinimum -> OpenEnoughStudents;
+    }
+    OpenEnoughStudents
+    {
+      cancel -> Cancelled;
+      requestToRegister -> OpenEnoughStudents;
+      closeRegistration -> Closed;
+      classSizeExceedsMaximum -> Closed;
+    }
+    Cancelled { }
+    Closed { 
+      cancel -> Cancelled;
+    }
+  }
+}

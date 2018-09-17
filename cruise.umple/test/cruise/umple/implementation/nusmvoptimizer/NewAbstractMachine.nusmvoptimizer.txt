@@ -1,0 +1,41 @@
+-- This file is generated from NewAbstractMachine.ump --
+
+MODULE Sm_Handle
+
+  VAR
+  	event : { e1, e2, e3 };
+
+MODULE Sm( s2 , handle )
+
+  VAR
+  	state : { sm_s1, sm_s2 };
+  ASSIGN
+  	init(state) := sm_s1; 
+  TRANS
+  	( (state = sm_s1) -> (
+  		(handle.event = e1 & next(state) = sm_s2) |
+  		(handle.event = e2 & next(state) = sm_s2 & next(s2.state) = s2_s2b)		) ) &  
+  	( (state = sm_s2) -> ( next(s2.state) = s2_s2a	) )
+
+
+MODULE S2( sm , handle )
+
+  VAR
+  	state : { s2_s2a, s2_s2b, null };
+  ASSIGN
+  	init(state) := null;
+  TRANS
+  	( (state = s2_s2a) -> (
+  		(handle.event = e1 & next(state) = null & next(sm.state) = sm_s1) |
+  		(handle.event = e3 & next(state) = s2_s2b )		) ) &  
+  	( (state = s2_s2b) -> ( 
+  		(handle.event = e1 & next(state) = null & next(sm.state) = sm_s1) |
+  		(handle.event = e3 & next(state) = s2_s2a )		) )	
+
+MODULE main
+
+  VAR
+  	handle : Sm_Handle;
+  	sm : Sm( s2, handle );
+  	s2 : S2( sm, handle ); 
+  	JUSTICE TRUE;

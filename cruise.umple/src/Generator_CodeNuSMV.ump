@@ -29,20 +29,7 @@ class NuSMVGenerator
     code.append(coord.commentModel(model));
     code.append("-- PLEASE DO NOT EDIT THIS CODE --\n");
     code.append("-- This code was generated using the UMPLE "+UmpleModel.VERSION_NUMBER+" modeling language! --\n\n");
-    
-   
-    /*for(UmpleClass uClass : model.getUmpleClasses()) {
-  		for(StateMachine sm : uClass.getStateMachines()) {  			
-  			if( !coord.isNested(sm) ) {	
-  				code.append( coord.generateSystem(coord.generateModuleForSimpleStateMachine( sm, uClass )) );
-  			}
-  			else {
-  				code.append( coord.generateSystem( coord.generateModuleForNestedStateMachine( sm, uClass )) );				
-  			}
-  		}
-  		 
-  	}*/
-    code.append( coord.generateModules( model ) );
+    code.append( coord.generateModules( model, 0 ) );
     terminateCode( code );
     
     //coord.analyzeModel( model );

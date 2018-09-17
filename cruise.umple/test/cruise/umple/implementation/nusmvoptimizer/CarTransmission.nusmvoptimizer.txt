@@ -1,0 +1,189 @@
+-- This file is generated from CarTransmission.ump --
+
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language! --
+
+
+-- This defines a NuSMV module for CarTransmissionState --
+MODULE CarTransmissionState ( _stateFirstfirst_twoFirst_two_oneFirst_two_one , _stateFirstfirst_twoFirst_two_twoFirst_two_two )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { State_neutral , State_reverse , State_firstfirst_one , State_firstfirst_two , State_drivesecond , State_drivethird };
+     event : { ev_e11 , ev_e10 , ev_selectFirst , ev_selectNeutral , ev_dropBelowSecondSpeed , ev_selectReverse , ev_e1 , ev_e2 , ev_e3 , ev_e5 , ev_e7 , ev_selectDrive , ev_e9 , ev_reachSecondSpeed , ev_selectSecond , ev_reachThirdSpeed , ev_dropBelowThirdSpeed , ev_null };
+     driveSelected : boolean;
+     notdriveSelected : boolean;
+     a : integer;
+     b : integer;
+     c : integer;
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     state_stable :=  !( event = ev_e10 | event = ev_selectNeutral | event = ev_selectReverse | event = ev_e2 | event = ev_e5 | event = ev_selectDrive | event = ev_reachSecondSpeed | event = ev_reachThirdSpeed | event = ev_e11 | event = ev_selectFirst | event = ev_dropBelowSecondSpeed | event = ev_e1 | event = ev_e3 | event = ev_e7 | event = ev_e9 | event = ev_selectSecond | event = ev_dropBelowThirdSpeed );
+     t1 := event = ev_selectReverse & state = State_neutral;
+     t2 := event = ev_selectDrive & state = State_neutral;
+     t3 := event = ev_selectFirst & state = State_neutral;
+     t4 := event = ev_selectSecond & state = State_neutral;
+     t5 := event = ev_selectNeutral & state = State_reverse;
+     t6 := event = ev_selectNeutral & state = State_firstfirst_one;
+     t7 := event = ev_selectFirst & state = State_firstfirst_one;
+     t8 := event = ev_selectSecond & state = State_firstfirst_one;
+     t9 := event = ev_reachSecondSpeed & state = State_firstfirst_one & g1;
+     t10 := event = ev_e1 & state = State_firstfirst_one;
+     t11 := event = ev_selectNeutral & state = State_firstfirst_two;
+     t12 := event = ev_selectFirst & state = State_firstfirst_two;
+     t13 := event = ev_selectSecond & state = State_firstfirst_two;
+     t14 := event = ev_reachSecondSpeed & state = State_firstfirst_two & g1;
+     t15 := event = ev_selectNeutral & state = State_drivesecond;
+     t16 := event = ev_selectFirst & state = State_drivesecond;
+     t17 := event = ev_selectSecond & state = State_drivesecond;
+     t18 := event = ev_dropBelowSecondSpeed & state = State_drivesecond & g2;
+     t19 := event = ev_dropBelowSecondSpeed & state = State_drivesecond & g3;
+     t20 := event = ev_dropBelowSecondSpeed & state = State_drivesecond & g4;
+     t21 := event = ev_dropBelowSecondSpeed & state = State_drivesecond & g5;
+     t22 := event = ev_dropBelowSecondSpeed & state = State_drivesecond & g6;
+     t23 := event = ev_dropBelowSecondSpeed & state = State_drivesecond & g7;
+     t24 := event = ev_dropBelowSecondSpeed & state = State_drivesecond & g8;
+     t25 := event = ev_dropBelowSecondSpeed & state = State_drivesecond & g9;
+     t26 := event = ev_dropBelowSecondSpeed & state = State_drivesecond & g10;
+     t27 := event = ev_dropBelowSecondSpeed & state = State_drivesecond & g11;
+     t28 := event = ev_dropBelowSecondSpeed & state = State_drivesecond & g12;
+     t29 := event = ev_reachThirdSpeed & state = State_drivesecond & g13;
+     t30 := event = ev_selectNeutral & state = State_drivethird;
+     t31 := event = ev_selectFirst & state = State_drivethird;
+     t32 := event = ev_selectSecond & state = State_drivethird;
+     t33 := event = ev_dropBelowThirdSpeed & state = State_drivethird & g12;
+     t34 := event = ev_dropBelowThirdSpeed & state = State_drivethird;
+     t35 := event = ev_e1 & _stateFirstfirst_twoFirst_two_oneFirst_two_one.state != null;
+     t36 := event = ev_e2 & _stateFirstfirst_twoFirst_two_oneFirst_two_one.state != null;
+     t37 := event = ev_e1 & _stateFirstfirst_twoFirst_two_twoFirst_two_two.state != null;
+     t38 := event = ev_e2 & _stateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twofirst_two_two_one;
+     t39 := event = ev_e5 & _stateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twos21;
+     t40 := event = ev_e7 & _stateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twos22;
+     t41 := event = ev_e11 & _stateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twos22;
+     t42 := event = ev_e2 & _stateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_s24s31;
+     t43 := event = ev_e3 & _stateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_s24s31;
+     t44 := event = ev_e9 & _stateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_s24s31;
+     t45 := event = ev_e10 & _stateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_s24s31;
+     t46 := event = ev_e2 & _stateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_s24s32;
+     t47 := event = ev_e3 & _stateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_s24s32;
+     g1 := driveSelected;
+     g2 := ((a > b) | (driveSelected & ((b < a) | (c >= b))));
+     g3 := ((a + c) > b);
+     g4 := (a - c) > b;
+     g5 := (a - c) > (b + 2);
+     g6 := (a - c) > (b * 2);
+     g7 := ((a - c) > (b * 2)) & driveSelected;
+     g8 := ((a - c) > (b * 2)) | ((a - c) > (b * 2));
+     g9 := ((a - c) > (b * 2)) | ((a - c) > (b^2));
+     g10 := ((a - c) > (b * 2)) | driveSelected;
+     g11 := ((a - c) > (b * 2)) != ((a - c) > (b^2));
+     g12 := ((a - c) > (b * 2)) = ((a - c) > (b^2));
+     g13 := !driveSelected;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := State_neutral;
+     next( state ) := case
+       t6 | t15 | t5 | t11 | t30 : State_neutral;
+       t1 : State_reverse;
+       t3 | t12 | t31 | t19 | t21 | t23 | t25 | t27 | t2 | t7 | t16 | t18 | t20 | t22 | t24 | t26 | t28 : State_firstfirst_one;
+       t10 | t37 | t38 | t43 | t39 | t44 | t46 | t35 | t36 | t40 | t47 | t41 | t42 | t45 : State_firstfirst_two;
+       t8 | t17 | t9 | t33 | t4 | t13 | t32 | t14 | t34 : State_drivesecond;
+       t29 : State_drivethird;
+       TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       state_stable : { ev_e11 , ev_e10 , ev_selectFirst , ev_selectNeutral , ev_dropBelowSecondSpeed , ev_selectReverse , ev_e1 , ev_e2 , ev_e3 , ev_e5 , ev_e7 , ev_selectDrive , ev_e9 , ev_reachSecondSpeed , ev_selectSecond , ev_reachThirdSpeed , ev_dropBelowThirdSpeed };
+       TRUE : ev_null;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "driveSelected" of this NuSMV module --
+   ASSIGN
+     init( driveSelected ) := FALSE;
+
+   -- This part defines logic for the assignment of values to state variable "notdriveSelected" of this NuSMV module --
+   ASSIGN
+     init( notdriveSelected ) := FALSE;
+
+   -- This part defines logic for the assignment of values to state variable "a" of this NuSMV module --
+   ASSIGN
+     init( a ) := 5;
+
+   -- This part defines logic for the assignment of values to state variable "b" of this NuSMV module --
+   ASSIGN
+     init( b ) := 3;
+
+   -- This part defines logic for the assignment of values to state variable "c" of this NuSMV module --
+   ASSIGN
+     init( c ) := 2;
+
+-- This defines a NuSMV module for CarTransmissionStateFirstfirst_twoFirst_two_oneFirst_two_one --
+MODULE CarTransmissionStateFirstfirst_twoFirst_two_oneFirst_two_one ( _state )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { StateFirstfirst_twoFirst_two_oneFirst_two_one_first_two_onefirst_two_one_one , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _state.t1 | _state.t3 | _state.t5 | _state.t7 | _state.t9 | _state.t11 | _state.t13 | _state.t15 | _state.t17 | _state.t19 | _state.t21 | _state.t23 | _state.t25 | _state.t27 | _state.t29 | _state.t31 | _state.t33 | _state.t35 | _state.t2 | _state.t4 | _state.t6 | _state.t8 | _state.t10 | _state.t12 | _state.t14 | _state.t16 | _state.t18 | _state.t20 | _state.t22 | _state.t24 | _state.t26 | _state.t28 | _state.t30 | _state.t32 | _state.t34 | _state.t37 : null;
+       _state.state = State_firstfirst_two & state = null : StateFirstfirst_twoFirst_two_oneFirst_two_one_first_two_onefirst_two_one_one;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for CarTransmissionStateFirstfirst_twoFirst_two_twoFirst_two_two --
+MODULE CarTransmissionStateFirstfirst_twoFirst_two_twoFirst_two_two ( _state )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twofirst_two_two_one , StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twos21 , StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twos22 , StateFirstfirst_twoFirst_two_twoFirst_two_two_s24s31 , StateFirstfirst_twoFirst_two_twoFirst_two_two_s24s32 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _state.t1 | _state.t3 | _state.t5 | _state.t7 | _state.t9 | _state.t11 | _state.t13 | _state.t15 | _state.t17 | _state.t19 | _state.t21 | _state.t23 | _state.t25 | _state.t27 | _state.t29 | _state.t31 | _state.t33 | _state.t35 | _state.t2 | _state.t4 | _state.t6 | _state.t8 | _state.t10 | _state.t12 | _state.t14 | _state.t16 | _state.t18 | _state.t20 | _state.t22 | _state.t24 | _state.t26 | _state.t28 | _state.t30 | _state.t32 | _state.t34 | _state.t37 : null;
+       _state.t38 | _state.t43 | _state.t40 | _state.t47 : StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twos21;
+       _state.t39 : StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twos22;
+       _state.t41 | _state.t44 : StateFirstfirst_twoFirst_two_twoFirst_two_two_s24s31;
+       _state.t46 | _state.t42 | _state.t45 : StateFirstfirst_twoFirst_two_twoFirst_two_two_s24s32;
+       _state.state = State_firstfirst_two & state = null : StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twofirst_two_two_one;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for CarTransmissionState_Machine --
+MODULE CarTransmissionState_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     carTransmissionState : CarTransmissionState( carTransmissionStateFirstfirst_twoFirst_two_oneFirst_two_one , carTransmissionStateFirstfirst_twoFirst_two_twoFirst_two_two );
+     carTransmissionStateFirstfirst_twoFirst_two_oneFirst_two_one : CarTransmissionStateFirstfirst_twoFirst_two_oneFirst_two_one( carTransmissionState );
+     carTransmissionStateFirstfirst_twoFirst_two_twoFirst_two_two : CarTransmissionStateFirstfirst_twoFirst_two_twoFirst_two_two( carTransmissionState );
+
+-- This defines a NuSMV module for main --
+MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     carTransmissionState_Machine : CarTransmissionState_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionState.state = State_neutral )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionState.state = State_reverse )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionState.state = State_firstfirst_one )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionState.state = State_firstfirst_two )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionState.state = State_drivesecond )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionState.state = State_drivethird )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionStateFirstfirst_twoFirst_two_oneFirst_two_one.state = StateFirstfirst_twoFirst_two_oneFirst_two_one_first_two_onefirst_two_one_one )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionStateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twofirst_two_two_one )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionStateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twos21 )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionStateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_first_two_twos22 )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionStateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_s24s31 )
+   CTLSPEC   EF( carTransmissionState_Machine.carTransmissionStateFirstfirst_twoFirst_two_twoFirst_two_two.state = StateFirstfirst_twoFirst_two_twoFirst_two_two_s24s32 )

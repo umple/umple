@@ -1,0 +1,65 @@
+-- This file is generated from ExampleFile.ump --
+
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language! --
+
+
+-- This defines a NuSMV module for GarageDoorStatus --
+MODULE GarageDoorStatus
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Status_Open , Status_Closing , Status_Closed , Status_Opening , Status_HalfOpen };
+     event : { ev_reachBottom , ev_reachTop , ev_buttonOrObstacle , ev_null };
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     status_stable :=  !( event = ev_reachTop | event = ev_reachBottom | event = ev_buttonOrObstacle );
+     t1 := event = ev_buttonOrObstacle & state = Status_Open;
+     t2 := event = ev_buttonOrObstacle & state = Status_Closing;
+     t3 := event = ev_reachBottom & state = Status_Closing;
+     t4 := event = ev_buttonOrObstacle & state = Status_Closed;
+     t5 := event = ev_reachTop & state = Status_Opening;
+     t6 := event = ev_buttonOrObstacle & state = Status_Opening;
+     t7 := event = ev_buttonOrObstacle & state = Status_HalfOpen;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := Status_Open;
+     next( state ) := case
+       t5 : Status_Open;
+       t1 : Status_Closing;
+       t3 : Status_Closed;
+       t4 | t2 | t7 : Status_Opening;
+       t6 : Status_HalfOpen;
+       TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       status_stable : { ev_reachBottom , ev_reachTop , ev_buttonOrObstacle };
+       TRUE : ev_null;
+     esac;
+
+-- This defines a NuSMV module for GarageDoorStatus_Machine --
+MODULE GarageDoorStatus_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     garageDoorStatus : GarageDoorStatus;
+
+-- This defines a NuSMV module for main --
+MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     garageDoorStatus_Machine : GarageDoorStatus_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( garageDoorStatus_Machine.garageDoorStatus.state = Status_Open )
+   CTLSPEC   EF( garageDoorStatus_Machine.garageDoorStatus.state = Status_Closing )
+   CTLSPEC   EF( garageDoorStatus_Machine.garageDoorStatus.state = Status_Closed )
+   CTLSPEC   EF( garageDoorStatus_Machine.garageDoorStatus.state = Status_Opening )
+   CTLSPEC   EF( garageDoorStatus_Machine.garageDoorStatus.state = Status_HalfOpen )

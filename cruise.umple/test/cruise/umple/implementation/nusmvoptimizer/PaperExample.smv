@@ -1,0 +1,254 @@
+-- This file is generated from PaperExample.ump --
+
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language! --
+
+
+-- This defines a NuSMV module for TestMainState --
+MODULE TestMainState ( _mainStateMainState , _mainStateMainStateInitialState0 , _mainStateMainStateInitialState0InitialState0 , _mainStateMainStateInitialState0InitialState0InitialState1 , _mainStateMainStateInitialState0InitialState0InitialState1InitialState1 , _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2 , _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2 , _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3 , _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3 , _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { MainState_initialState , MainState_s1 , MainState_finalState };
+     event : { ev_start1 , ev_start0 , ev_start , ev_stop4 , ev_start3 , ev_start2 , ev_start4 , ev_null };
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     mainState_stable :=  !( event = ev_start0 | event = ev_stop4 | event = ev_start2 | event = ev_start1 | event = ev_start | event = ev_start3 | event = ev_start4 );
+     t1 := event = ev_start & state = MainState_initialState;
+     t2 := event = ev_start0 & _mainStateMainStateInitialState0.state = MainStateMainStateInitialState0_initialState0;
+     t3 := event = ev_start1 & _mainStateMainStateInitialState0InitialState0InitialState1.state = MainStateMainStateInitialState0InitialState0InitialState1_initialState1;
+     t4 := event = ev_start2 & _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2_initialState2;
+     t5 := event = ev_start3 & _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3_initialState3;
+     t6 := event = ev_start4 & _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4_initialState4;
+     t7 := event = ev_stop4 & _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4_s1id4;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := MainState_initialState;
+     next( state ) := case
+       t6 | t-1 | t-1 | t7 | t-1 | t-1 : MainState_s1;
+       t-1 : MainState_finalState;
+       TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       mainState_stable : { ev_start1 , ev_start0 , ev_start , ev_stop4 , ev_start3 , ev_start2 , ev_start4 };
+       TRUE : ev_null;
+     esac;
+
+-- This defines a NuSMV module for TestMainStateMainState --
+MODULE TestMainStateMainState ( _mainState )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { MainStateMainState_s1 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _mainState.t2 | _mainState.t4 | _mainState.t1 | _mainState.t3 | _mainState.t5 : null;
+       _mainState.t6 | _mainState.t-1 | _mainState.t-1 | _mainState.t7 | _mainState.t-1 | _mainState.t-1 : MainStateMainState_s1;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for TestMainStateMainStateInitialState0 --
+MODULE TestMainStateMainStateInitialState0 ( _mainState , _mainStateMainState )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { MainStateMainStateInitialState0_initialState0 , MainStateMainStateInitialState0_s1id0 , MainStateMainStateInitialState0_finalState0 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _mainState.t2 | _mainState.t4 | _mainState.t3 | _mainState.t5 : null;
+       _mainState.t7 | _mainState.t-1 | _mainState.t6 | _mainState.t-1 | _mainState.t-1 : MainStateMainStateInitialState0_s1id0;
+       _mainState.t-1 : MainStateMainStateInitialState0_finalState0;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for TestMainStateMainStateInitialState0InitialState0 --
+MODULE TestMainStateMainStateInitialState0InitialState0 ( _mainState , _mainStateMainStateInitialState0 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { MainStateMainStateInitialState0InitialState0_s1id0 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _mainState.t2 | _mainState.t4 | _mainState.t3 | _mainState.t5 : null;
+       _mainState.t7 | _mainState.t-1 | _mainState.t6 | _mainState.t-1 | _mainState.t-1 : MainStateMainStateInitialState0InitialState0_s1id0;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for TestMainStateMainStateInitialState0InitialState0InitialState1 --
+MODULE TestMainStateMainStateInitialState0InitialState0InitialState1 ( _mainState , _mainStateMainStateInitialState0InitialState0 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { MainStateMainStateInitialState0InitialState0InitialState1_initialState1 , MainStateMainStateInitialState0InitialState0InitialState1_s1id1 , MainStateMainStateInitialState0InitialState0InitialState1_finalState1 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _mainState.t4 | _mainState.t3 | _mainState.t5 : null;
+       _mainState.t6 | _mainState.t-1 | _mainState.t7 | _mainState.t-1 : MainStateMainStateInitialState0InitialState0InitialState1_s1id1;
+       _mainState.t-1 : MainStateMainStateInitialState0InitialState0InitialState1_finalState1;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1 --
+MODULE TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1 ( _mainState , _mainStateMainStateInitialState0InitialState0InitialState1 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { MainStateMainStateInitialState0InitialState0InitialState1InitialState1_s1id1 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _mainState.t4 | _mainState.t3 | _mainState.t5 : null;
+       _mainState.t6 | _mainState.t-1 | _mainState.t7 | _mainState.t-1 : MainStateMainStateInitialState0InitialState0InitialState1InitialState1_s1id1;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2 --
+MODULE TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2 ( _mainState , _mainStateMainStateInitialState0InitialState0InitialState1InitialState1 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2_initialState2 , MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2_s1id2 , MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2_finalState2 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _mainState.t4 | _mainState.t5 : null;
+       _mainState.t7 | _mainState.t6 | _mainState.t-1 : MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2_s1id2;
+       _mainState.t-1 : MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2_finalState2;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2 --
+MODULE TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2 ( _mainState , _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2_s1id2 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _mainState.t4 | _mainState.t5 : null;
+       _mainState.t7 | _mainState.t6 | _mainState.t-1 : MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2_s1id2;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3 --
+MODULE TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3 ( _mainState , _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3_initialState3 , MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3_s1id3 , MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3_finalState3 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _mainState.t5 : null;
+       _mainState.t6 | _mainState.t7 : MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3_s1id3;
+       _mainState.t-1 : MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3_finalState3;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3 --
+MODULE TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3 ( _mainState , _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3_s1id3 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _mainState.t5 : null;
+       _mainState.t6 | _mainState.t7 : MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3_s1id3;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4 --
+MODULE TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4 ( _mainState , _mainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4_initialState4 , MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4_s1id4 , MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4_finalState4 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _mainState.t6 : MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4_s1id4;
+       _mainState.t7 : MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4_finalState4;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for TestMainState_Machine --
+MODULE TestMainState_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     testMainState : TestMainState( testMainStateMainState , testMainStateMainStateInitialState0 , testMainStateMainStateInitialState0InitialState0 , testMainStateMainStateInitialState0InitialState0InitialState1 , testMainStateMainStateInitialState0InitialState0InitialState1InitialState1 , testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2 , testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2 , testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3 , testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3 , testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4 );
+     testMainStateMainState : TestMainStateMainState( testMainState );
+     testMainStateMainStateInitialState0 : TestMainStateMainStateInitialState0( testMainState , testMainStateMainState );
+     testMainStateMainStateInitialState0InitialState0 : TestMainStateMainStateInitialState0InitialState0( testMainState , testMainStateMainStateInitialState0 );
+     testMainStateMainStateInitialState0InitialState0InitialState1 : TestMainStateMainStateInitialState0InitialState0InitialState1( testMainState , testMainStateMainStateInitialState0InitialState0 );
+     testMainStateMainStateInitialState0InitialState0InitialState1InitialState1 : TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1( testMainState , testMainStateMainStateInitialState0InitialState0InitialState1 );
+     testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2 : TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2( testMainState , testMainStateMainStateInitialState0InitialState0InitialState1InitialState1 );
+     testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2 : TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2( testMainState , testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2 );
+     testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3 : TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3( testMainState , testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2 );
+     testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3 : TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3( testMainState , testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3 );
+     testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4 : TestMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4( testMainState , testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3 );
+
+-- This defines a NuSMV module for main --
+MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     testMainState_Machine : TestMainState_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( testMainState_Machine.testMainState.state = MainState_initialState )
+   CTLSPEC   EF( testMainState_Machine.testMainState.state = MainState_s1 )
+   CTLSPEC   EF( testMainState_Machine.testMainState.state = MainState_finalState )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainState.state = MainStateMainState_s1 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0.state = MainStateMainStateInitialState0_initialState0 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0.state = MainStateMainStateInitialState0_s1id0 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0.state = MainStateMainStateInitialState0_finalState0 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0.state = MainStateMainStateInitialState0InitialState0_s1id0 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1.state = MainStateMainStateInitialState0InitialState0InitialState1_initialState1 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1.state = MainStateMainStateInitialState0InitialState0InitialState1_s1id1 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1.state = MainStateMainStateInitialState0InitialState0InitialState1_finalState1 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1InitialState1.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1_s1id1 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2_initialState2 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2_s1id2 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2_finalState2 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2_s1id2 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3_initialState3 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3_s1id3 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3_finalState3 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3_s1id3 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4_initialState4 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4_s1id4 )
+   CTLSPEC   EF( testMainState_Machine.testMainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4.state = MainStateMainStateInitialState0InitialState0InitialState1InitialState1InitialState2InitialState2InitialState3InitialState3InitialState4_finalState4 )
