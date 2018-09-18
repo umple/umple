@@ -1,0 +1,188 @@
+-- This file is generated from NestedWatch.ump --
+
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language! --
+
+
+-- This defines a NuSMV module for DigitalWatchSm --
+MODULE DigitalWatchSm
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm_regulartime , Sm_regulardate , Sm_updatesecond , Sm_updateminute , Sm_updatehour , Sm_updatemonth , Sm_updateday , Sm_updateyear , Sm_chronoNormalpaused , Sm_chronoNormalrunning , Sm_chronometerlapRunning , Sm_chronometerlapPaused , Sm_alarmStatusbothOff , Sm_alarmStatuschimeOn , Sm_alarmStatusbothOn , Sm_alarmStatusalarmOn , Sm_alarmUpdatealarmTime , Sm_hourMinuteUpdatealarmHour , Sm_hourMinuteUpdatealarmMinute };
+     event : { ev_s3 , ev_s3during2Secs , ev_notS2 , ev_notS1 , ev_s1 , ev_s2 , ev_null };
+     day : integer;
+     month : integer;
+     year : integer;
+     hour : integer;
+     minute : integer;
+     second : integer;
+     alarmHour : integer;
+     alarmMinute : integer;
+     alarmSecond : integer;
+     timer : integer;
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     sm_stable :=  !( event = ev_s3 | event = ev_notS2 | event = ev_s1 | event = ev_s3during2Secs | event = ev_notS1 | event = ev_s2 );
+     t1 := event = ev_s1 & state = Sm_regulartime;
+     t2 := event = ev_s2 & state = Sm_regulartime;
+     t3 := event = ev_s3 & state = Sm_regulartime;
+     t4 := event = ev_s3during2Secs & state = Sm_regulartime;
+     t5 := event = ev_notS1 & state = Sm_regulardate;
+     t6 := event = ev_s3 & state = Sm_updatesecond;
+     t7 := event = ev_s2 & state = Sm_updatesecond;
+     t8 := event = ev_s1 & state = Sm_updatesecond;
+     t9 := event = ev_s3 & state = Sm_updateminute;
+     t10 := event = ev_s2 & state = Sm_updateminute;
+     t11 := event = ev_s1 & state = Sm_updateminute;
+     t12 := event = ev_s3 & state = Sm_updatehour;
+     t13 := event = ev_s2 & state = Sm_updatehour;
+     t14 := event = ev_s1 & state = Sm_updatehour;
+     t15 := event = ev_s3 & state = Sm_updatemonth;
+     t16 := event = ev_s2 & state = Sm_updatemonth;
+     t17 := event = ev_s1 & state = Sm_updatemonth;
+     t18 := event = ev_s3 & state = Sm_updateday;
+     t19 := event = ev_s2 & state = Sm_updateday;
+     t20 := event = ev_s1 & state = Sm_updateday;
+     t21 := event = ev_s3 & state = Sm_updateyear;
+     t22 := event = ev_s1 & state = Sm_updateyear;
+     t23 := event = ev_s2 & state = Sm_updateyear;
+     t24 := event = ev_s3 & state = Sm_chronoNormalpaused;
+     t25 := event = ev_s2 & state = Sm_chronoNormalpaused;
+     t26 := event = ev_s1 & state = Sm_chronoNormalpaused;
+     t27 := event = ev_s3 & state = Sm_chronoNormalrunning;
+     t28 := event = ev_s1 & state = Sm_chronoNormalrunning;
+     t29 := event = ev_s2 & state = Sm_chronoNormalrunning;
+     t30 := event = ev_s3 & state = Sm_chronometerlapRunning;
+     t31 := event = ev_s2 & state = Sm_chronometerlapRunning;
+     t32 := event = ev_s1 & state = Sm_chronometerlapRunning;
+     t33 := event = ev_s3 & state = Sm_chronometerlapPaused;
+     t34 := event = ev_s1 & state = Sm_chronometerlapPaused;
+     t35 := event = ev_s2 & state = Sm_chronometerlapPaused;
+     t36 := event = ev_notS2 & state = Sm_alarmStatusbothOff;
+     t37 := event = ev_s1 & state = Sm_alarmStatusbothOff;
+     t38 := event = ev_notS2 & state = Sm_alarmStatuschimeOn;
+     t39 := event = ev_s1 & state = Sm_alarmStatuschimeOn;
+     t40 := event = ev_notS2 & state = Sm_alarmStatusbothOn;
+     t41 := event = ev_s1 & state = Sm_alarmStatusbothOn;
+     t42 := event = ev_notS2 & state = Sm_alarmStatusalarmOn;
+     t43 := event = ev_s1 & state = Sm_alarmStatusalarmOn;
+     t44 := event = ev_s3 & state = Sm_alarmUpdatealarmTime;
+     t45 := event = ev_s1 & state = Sm_alarmUpdatealarmTime;
+     t46 := event = ev_s2 & state = Sm_alarmUpdatealarmTime;
+     t47 := event = ev_s3 & state = Sm_hourMinuteUpdatealarmHour;
+     t48 := event = ev_s2 & state = Sm_hourMinuteUpdatealarmHour;
+     t49 := event = ev_s1 & state = Sm_hourMinuteUpdatealarmHour;
+     t50 := event = ev_s3 & state = Sm_hourMinuteUpdatealarmMinute;
+     t51 := event = ev_s1 & state = Sm_hourMinuteUpdatealarmMinute;
+     t52 := event = ev_s2 & state = Sm_hourMinuteUpdatealarmMinute;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := Sm_regulartime;
+     next( state ) := case
+       t27 | t33 | t38 | t42 | t6 | t12 | t18 | t24 | t30 | t36 | t40 | t5 | t9 | t15 | t21 : Sm_regulartime;
+       t1 : Sm_regulardate;
+       t47 | t7 | t44 | t50 | t22 : Sm_updatesecond;
+       t8 | t10 : Sm_updateminute;
+       t11 | t13 : Sm_updatehour;
+       t14 | t16 : Sm_updatemonth;
+       t17 | t19 : Sm_updateday;
+       t20 | t23 : Sm_updateyear;
+       t3 | t25 | t35 | t28 : Sm_chronoNormalpaused;
+       t31 | t26 : Sm_chronoNormalrunning;
+       t34 | t29 : Sm_chronometerlapRunning;
+       t32 : Sm_chronometerlapPaused;
+       t2 | t43 : Sm_alarmStatusbothOff;
+       t37 : Sm_alarmStatuschimeOn;
+       t39 : Sm_alarmStatusbothOn;
+       t41 : Sm_alarmStatusalarmOn;
+       t4 : Sm_alarmUpdatealarmTime;
+       t48 | t46 | t51 : Sm_hourMinuteUpdatealarmHour;
+       t49 | t45 | t52 : Sm_hourMinuteUpdatealarmMinute;
+       TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       sm_stable : { ev_s3 , ev_s3during2Secs , ev_notS2 , ev_notS1 , ev_s1 , ev_s2 };
+       TRUE : ev_null;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "day" of this NuSMV module --
+   ASSIGN
+     init( day ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "month" of this NuSMV module --
+   ASSIGN
+     init( month ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "year" of this NuSMV module --
+   ASSIGN
+     init( year ) := 2014;
+
+   -- This part defines logic for the assignment of values to state variable "hour" of this NuSMV module --
+   ASSIGN
+     init( hour ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "minute" of this NuSMV module --
+   ASSIGN
+     init( minute ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "second" of this NuSMV module --
+   ASSIGN
+     init( second ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "alarmHour" of this NuSMV module --
+   ASSIGN
+     init( alarmHour ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "alarmMinute" of this NuSMV module --
+   ASSIGN
+     init( alarmMinute ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "alarmSecond" of this NuSMV module --
+   ASSIGN
+     init( alarmSecond ) := 0;
+
+   -- This part defines logic for the assignment of values to state variable "timer" of this NuSMV module --
+   ASSIGN
+     init( timer ) := 0;
+
+-- This defines a NuSMV module for DigitalWatchSm_Machine --
+MODULE DigitalWatchSm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     digitalWatchSm : DigitalWatchSm;
+
+-- This defines a NuSMV module for main --
+MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     digitalWatchSm_Machine : DigitalWatchSm_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_regulartime )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_regulardate )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_updatesecond )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_updateminute )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_updatehour )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_updatemonth )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_updateday )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_updateyear )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_chronoNormalpaused )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_chronoNormalrunning )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_chronometerlapRunning )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_chronometerlapPaused )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmStatusbothOff )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmStatuschimeOn )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmStatusbothOn )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmStatusalarmOn )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_alarmUpdatealarmTime )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_hourMinuteUpdatealarmHour )
+   CTLSPEC   EF( digitalWatchSm_Machine.digitalWatchSm.state = Sm_hourMinuteUpdatealarmMinute )

@@ -1,0 +1,54 @@
+// UML State machine of an elevator moving among floors
+
+class Elevator {
+  
+  elevator_state_machine {
+    Idle {
+      upRequest -> DoorClosingMovingUp;
+      downRequest -> DoorClosingMovingDown;
+    }
+    
+    DoorClosingMovingUp {
+        doorClosed -> / {goUp();} Moving;
+        started -> Moving;
+    }
+    DoorClosingMovingDown {
+        doorClosed  -> / {goDown();} Moving;
+         started -> Moving;
+    }
+    
+    Moving {
+        approachingFloor [!floorRequested] -> Moving;
+        approachedFloor  [floorRequested] -> / {stop();} Stopping;
+    }
+    Stopping {
+        stopped -> / {openDoor();} DoorOpening;
+    }
+
+    DoorOpening {
+        doorOpened  -> AtFloor;
+    }
+    AtFloor {
+        after(timer) [!obstruction] -> DoorClosing;
+        doorClosingRequest -> DoorClosing;
+    }
+    DoorClosing {
+        doorClosed -> CheckingNextDestination;
+        obstruction -> DoorOpening;
+        doorOpeningRequest -> DoorOpening;
+    }
+    CheckingNextDestination {
+        upRequest -> DoorClosingMovingUp;
+        downRequest -> DoorClosingMovingDown;
+        noRequest -> Idle;
+    } 
+  }
+  Integer timer = 100;
+  Boolean floorRequested = false;
+  Boolean obstruction = false;
+  void goUp(){}
+  void goDown(){}
+  void stop(){}
+  void openDoor(){}  
+  Boolean floorRequested() {return false;}
+}

@@ -1,0 +1,114 @@
+-- This file is generated from OutgoingTransitionOfConcurrentState.ump --
+
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language! --
+
+
+-- This defines a NuSMV module for ASm --
+MODULE ASm ( _smS2S21S21 , _smS2S22S22 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm_s1 , Sm_s2 };
+     event : { ev_e1 , ev_e2 , ev_e3 , ev_e4 , ev_null };
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     sm_stable :=  !( event = ev_e1 | event = ev_e3 | event = ev_e2 | event = ev_e4 );
+     t1 := event = ev_e1 & state = Sm_s1;
+     t2 := event = ev_e4 & state = Sm_s2;
+     t3 := event = ev_e1 & _smS2S21S21.state = SmS2S21S21_s21a;
+     t4 := event = ev_e2 & _smS2S21S21.state = SmS2S21S21_s21b;
+     t5 := event = ev_e1 & _smS2S21S21.state = SmS2S21S21_s21b;
+     t6 := event = ev_e1 & _smS2S21S21.state = SmS2S21S21_s21c;
+     t7 := event = ev_e2 & _smS2S21S21.state = SmS2S21S21_s21c;
+     t8 := event = ev_e1 & _smS2S22S22.state = SmS2S22S22_s22d;
+     t9 := event = ev_e2 & _smS2S22S22.state = SmS2S22S22_s22d;
+     t10 := event = ev_e3 & _smS2S22S22.state = SmS2S22S22_s22d;
+     t11 := event = ev_e1 & _smS2S22S22.state = SmS2S22S22_s22e;
+     t12 := event = ev_e1 & _smS2S22S22.state = SmS2S22S22_s22f;
+     t13 := event = ev_e2 & _smS2S22S22.state = SmS2S22S22_s22f;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := Sm_s1;
+     next( state ) := case
+       t7 | t2 | t13 : Sm_s1;
+       t1 | t3 | t5 | t12 | t10 | t4 | t6 | t9 | t8 | t11 : Sm_s2;
+       TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       sm_stable : { ev_e1 , ev_e2 , ev_e3 , ev_e4 };
+       TRUE : ev_null;
+     esac;
+
+-- This defines a NuSMV module for ASmS2S21S21 --
+MODULE ASmS2S21S21 ( _sm )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmS2S21S21_s21a , SmS2S21S21_s21b , SmS2S21S21_s21c , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t1 | _sm.t7 | _sm.t2 | _sm.t13 : null;
+       _sm.t4 : SmS2S21S21_s21a;
+       _sm.t3 | _sm.t6 : SmS2S21S21_s21b;
+       _sm.t5 : SmS2S21S21_s21c;
+       _sm.state = Sm_s2 & state = null : SmS2S21S21_s21a;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for ASmS2S22S22 --
+MODULE ASmS2S22S22 ( _sm )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmS2S22S22_s22d , SmS2S22S22_s22e , SmS2S22S22_s22f , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t1 | _sm.t7 | _sm.t2 | _sm.t13 : null;
+       _sm.t9 | _sm.t12 : SmS2S22S22_s22e;
+       _sm.t10 | _sm.t8 | _sm.t11 : SmS2S22S22_s22f;
+       _sm.state = Sm_s2 & state = null : SmS2S22S22_s22d;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for ASm_Machine --
+MODULE ASm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     aSm : ASm( aSmS2S21S21 , aSmS2S22S22 );
+     aSmS2S21S21 : ASmS2S21S21( aSm );
+     aSmS2S22S22 : ASmS2S22S22( aSm );
+
+-- This defines a NuSMV module for main --
+MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     aSm_Machine : ASm_Machine;
+
+   -- The following properties are specified to certify that this model is free of non-determinism. 
+   INVARSPEC   ( aSm_Machine.aSm.t7 & aSm_Machine.aSm.t9 -> next( aSm_Machine.aSm.state = Sm_s1 & aSm_Machine.aSmS2S22S22.state = SmS2S22S22_s22e ) )
+   INVARSPEC   ( aSm_Machine.aSm.t13 & aSm_Machine.aSm.t4 -> next( aSm_Machine.aSm.state = Sm_s1 & aSm_Machine.aSmS2S21S21.state = SmS2S21S21_s21a ) )
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s1 )
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_s2 )
+   CTLSPEC   EF( aSm_Machine.aSmS2S21S21.state = SmS2S21S21_s21a )
+   CTLSPEC   EF( aSm_Machine.aSmS2S21S21.state = SmS2S21S21_s21b )
+   CTLSPEC   EF( aSm_Machine.aSmS2S21S21.state = SmS2S21S21_s21c )
+   CTLSPEC   EF( aSm_Machine.aSmS2S22S22.state = SmS2S22S22_s22d )
+   CTLSPEC   EF( aSm_Machine.aSmS2S22S22.state = SmS2S22S22_s22e )
+   CTLSPEC   EF( aSm_Machine.aSmS2S22S22.state = SmS2S22S22_s22f )

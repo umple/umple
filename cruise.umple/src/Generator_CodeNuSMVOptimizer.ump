@@ -5,10 +5,10 @@ Copyright: All contributers to the Umple Project
 This file is made available subject to the open source license found at:
 http://umple.org/license
 
-This file generates NuSMV code
-  generate NuSMV;
+This file generates optimized NuSMV code
+  generate NuSMVOptimizer;
 in your umple file, or the command line option
-  -g NuSMV
+  -g NuSMVOptimizer
 
  */
 
@@ -16,20 +16,20 @@ use NuSMVMetamodel.ump;
 use NuSMVCoordinationUnit.ump;
 namespace cruise.umple.compiler;
 
-class NuSMVGenerator
+class NuSMVOptimizerGenerator
 {
   depend cruise.umple.nusmv.*;
     
   public void generate() {
   	
-  	NuSMVCoordinator coord = new NuSMVCoordinator();
+    NuSMVCoordinator coord = new NuSMVCoordinator();
     StringBuilder code = new StringBuilder();
  
- 	//This appends comment to the model
+    //This appends comment to the model
     code.append(coord.commentModel(model));
     code.append("-- PLEASE DO NOT EDIT THIS CODE --\n");
     code.append("-- This code was generated using the UMPLE "+UmpleModel.VERSION_NUMBER+" modeling language! --\n\n");
-    code.append( coord.generateModules( model, 0 ) );
+    code.append( coord.generateModules( model, 1 ) );
     terminateCode( code );
     
     //coord.analyzeModel( model );
@@ -40,7 +40,7 @@ class NuSMVGenerator
     writeModel();
   }
   
-  // Output the NuSMV file to a file with the .als suffix
+  // Output the NuSMV file to a file with the .smv suffix
   private void writeModel()
   {
     try
@@ -56,7 +56,7 @@ class NuSMVGenerator
     }
     catch (Exception e)
     {
-      throw new UmpleCompilerException("There was a problem with generating NuSMV code." + e, e);
+      throw new UmpleCompilerException("There was a problem with generating optimized NuSMV code." + e, e);
     }
   } 
 }

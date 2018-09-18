@@ -1,0 +1,81 @@
+-- This file is generated from BigStateMachineTest.ump --
+
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language! --
+
+
+-- This defines a NuSMV module for BigStateMachineTestSm --
+MODULE BigStateMachineTestSm
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm_ZxZa , Sm_ZxXa , Sm_ZxabAa , Sm_ZxabBa , Sm_Da , Sm_GeGa , Sm_GeEa };
+     event : { ev_e5 , ev_e1 , ev_e2 , ev_e3 , ev_e4 , ev_null };
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     sm_stable :=  !( event = ev_e1 | event = ev_e3 | event = ev_e5 | event = ev_e2 | event = ev_e4 );
+     t1 := event = ev_e3 & state = Sm_ZxZa;
+     t2 := event = ev_e2 & state = Sm_ZxZa;
+     t3 := event = ev_e5 & state = Sm_ZxZa;
+     t4 := event = ev_e1 & state = Sm_ZxZa;
+     t5 := event = ev_e4 & state = Sm_ZxZa;
+     t6 := event = ev_e5 & state = Sm_ZxXa;
+     t7 := event = ev_e1 & state = Sm_ZxXa;
+     t8 := event = ev_e4 & state = Sm_ZxXa;
+     t9 := event = ev_e5 & state = Sm_ZxabAa;
+     t10 := event = ev_e3 & state = Sm_ZxabAa;
+     t11 := event = ev_e1 & state = Sm_ZxabAa;
+     t12 := event = ev_e4 & state = Sm_ZxabAa;
+     t13 := event = ev_e3 & state = Sm_ZxabBa;
+     t14 := event = ev_e1 & state = Sm_ZxabBa;
+     t15 := event = ev_e4 & state = Sm_ZxabBa;
+     t16 := event = ev_e5 & state = Sm_Da;
+     t17 := event = ev_e2 & state = Sm_Da;
+     t18 := event = ev_e1 & state = Sm_GeGa;
+     t19 := event = ev_e1 & state = Sm_GeEa;
+     t20 := event = ev_e2 & state = Sm_GeEa;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := Sm_ZxZa;
+     next( state ) := case
+       t16 | t1 : Sm_ZxXa;
+       t2 : Sm_ZxabAa;
+       t10 | t18 : Sm_ZxabBa;
+       t9 : Sm_Da;
+       t13 | t3 | t6 | t19 | t12 | t15 | t5 | t8 | t20 : Sm_GeGa;
+       t11 | t4 | t17 | t14 | t7 : Sm_GeEa;
+       TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       sm_stable : { ev_e5 , ev_e1 , ev_e2 , ev_e3 , ev_e4 };
+       TRUE : ev_null;
+     esac;
+
+-- This defines a NuSMV module for BigStateMachineTestSm_Machine --
+MODULE BigStateMachineTestSm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     bigStateMachineTestSm : BigStateMachineTestSm;
+
+-- This defines a NuSMV module for main --
+MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     bigStateMachineTestSm_Machine : BigStateMachineTestSm_Machine;
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSm.state = Sm_ZxZa )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSm.state = Sm_ZxXa )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSm.state = Sm_ZxabAa )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSm.state = Sm_ZxabBa )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSm.state = Sm_Da )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSm.state = Sm_GeGa )
+   CTLSPEC   EF( bigStateMachineTestSm_Machine.bigStateMachineTestSm.state = Sm_GeEa )

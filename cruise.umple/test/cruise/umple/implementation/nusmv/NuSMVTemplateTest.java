@@ -11,7 +11,6 @@ import org.junit.Test;
 import cruise.umple.implementation.TemplateTest;
 import cruise.umple.util.SampleFileWriter;
 
-@SuppressWarnings("deprecation")
 public class NuSMVTemplateTest extends TemplateTest{
 	  @Before
 	  public void setUp()
@@ -65,9 +64,14 @@ public class NuSMVTemplateTest extends TemplateTest{
 		SampleFileWriter.destroy(pathToInput + "/nusmv/InputVarTest.smv");
 		SampleFileWriter.destroy(pathToInput + "/nusmv/RangeTypeTest.smv");
 		SampleFileWriter.destroy(pathToInput + "/nusmv/EmptyStateTest.smv");
-		
-
-
+		SampleFileWriter.destroy(pathToInput + "/nusmv/PaperExample.smv");
+	  }
+	  
+	  @Ignore //@Test  // TEMPORARY IGNORE BY TIM
+	  public void PaperExample()
+	  {
+	  		assertUmpleTemplateFor("nusmvoptimizer/PaperExample.ump","nusmvoptimizer/PaperExample.nusmvoptimizer.txt");
+	  		Assert.assertEquals(true, (new File(pathToInput + "/nusmvoptimizer/PaperExample.smv")).exists());
 	  }
 
 	  @Test

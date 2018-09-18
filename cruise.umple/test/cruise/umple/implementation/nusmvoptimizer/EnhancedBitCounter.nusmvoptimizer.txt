@@ -1,0 +1,163 @@
+-- This file is generated from EnhancedBitCounter.ump --
+
+-- PLEASE DO NOT EDIT THIS CODE --
+-- This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language! --
+
+
+-- This defines a NuSMV module for ASm --
+MODULE ASm ( _smCounterBit1Bit1 , _smCounterBit2Bit2 , _smCounterStatusStatus , _smCounterStatusStatusStatusCountingBit3Bit3 , _smCounterStatusStatusStatusCountingBit4Bit4 )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { Sm_stable , Sm_Counter };
+     event : { ev_reset , ev_e0 , ev_e1 , ev_e2 , ev_null };
+
+   -- This part defines macros that summarize the transitions and guards (if any) of the given NuSMV module --
+   DEFINE
+     sm_stable :=  !( event = ev_reset | event = ev_e1 | event = ev_e0 | event = ev_e2 );
+     t1 := event = ev_e0 & state = Sm_stable;
+     t2 := event = ev_e1 & _smCounterBit1Bit1.state = SmCounterBit1Bit1_Bit1Bit11;
+     t3 := event = ev_e2 & _smCounterBit1Bit1.state = SmCounterBit1Bit1_Bit1Bit12;
+     t4 := event = ev_e1 & _smCounterBit2Bit2.state = SmCounterBit2Bit2_Bit2Bit21;
+     t5 := event = ev_e2 & _smCounterBit2Bit2.state = SmCounterBit2Bit2_Bit2Bit22;
+     t6 := event = ev_reset & _smCounterStatusStatus.state = SmCounterStatusStatus_StatusMax;
+     t7 := event = ev_e1 & _smCounterStatusStatusStatusCountingBit3Bit3.state = SmCounterStatusStatusStatusCountingBit3Bit3_Bit3Bit31;
+     t8 := event = ev_e2 & _smCounterStatusStatusStatusCountingBit4Bit4.state = SmCounterStatusStatusStatusCountingBit4Bit4_Bit4Bit41;
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := Sm_stable;
+     next( state ) := case
+       t1 | t2 | t6 | t7 | t3 | t4 | t8 | t5 : Sm_Counter;
+       TRUE : state;
+     esac;
+
+   -- This part defines logic for the assignment of values to state variable "event" of this NuSMV module --
+   ASSIGN
+     init( event ) := ev_null;
+     next( event ) := case
+       sm_stable : { ev_reset , ev_e0 , ev_e1 , ev_e2 };
+       TRUE : ev_null;
+     esac;
+
+-- This defines a NuSMV module for ASmCounterBit1Bit1 --
+MODULE ASmCounterBit1Bit1 ( _sm )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmCounterBit1Bit1_Bit1Bit11 , SmCounterBit1Bit1_Bit1Bit12 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t1 | _sm.t5 : null;
+       _sm.t3 : SmCounterBit1Bit1_Bit1Bit11;
+       _sm.t2 : SmCounterBit1Bit1_Bit1Bit12;
+       _sm.state = Sm_Counter & state = null : SmCounterBit1Bit1_Bit1Bit11;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for ASmCounterBit2Bit2 --
+MODULE ASmCounterBit2Bit2 ( _sm )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmCounterBit2Bit2_Bit2Bit21 , SmCounterBit2Bit2_Bit2Bit22 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t1 | _sm.t5 : null;
+       _sm.t4 : SmCounterBit2Bit2_Bit2Bit22;
+       _sm.state = Sm_Counter & state = null : SmCounterBit2Bit2_Bit2Bit21;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for ASmCounterStatusStatus --
+MODULE ASmCounterStatusStatus ( _sm )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmCounterStatusStatus_StatusCounting , SmCounterStatusStatus_StatusMax , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t1 : null;
+       _sm.t8 | _sm.t6 | _sm.t7 : SmCounterStatusStatus_StatusCounting;
+       _sm.t5 : SmCounterStatusStatus_StatusMax;
+       _sm.state = Sm_Counter & state = null : SmCounterStatusStatus_StatusCounting;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for ASmCounterStatusStatusStatusCountingBit3Bit3 --
+MODULE ASmCounterStatusStatusStatusCountingBit3Bit3 ( _sm , _smCounterStatusStatus )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmCounterStatusStatusStatusCountingBit3Bit3_Bit3Bit31 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t6 | _sm.t7 : null;
+       _sm.t8 : SmCounterStatusStatusStatusCountingBit3Bit3_Bit3Bit31;
+       _smCounterStatusStatus.state = SmCounterStatusStatus_StatusCounting & state = null : SmCounterStatusStatusStatusCountingBit3Bit3_Bit3Bit31;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for ASmCounterStatusStatusStatusCountingBit4Bit4 --
+MODULE ASmCounterStatusStatusStatusCountingBit4Bit4 ( _sm , _smCounterStatusStatus )
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     state : { SmCounterStatusStatusStatusCountingBit4Bit4_Bit4Bit41 , null };
+
+   -- This part defines logic for the assignment of values to state variable "state" of this NuSMV module --
+   ASSIGN
+     init( state ) := null;
+     next( state ) := case
+       _sm.t6 | _sm.t8 : null;
+       _sm.t7 : SmCounterStatusStatusStatusCountingBit4Bit4_Bit4Bit41;
+       _smCounterStatusStatus.state = SmCounterStatusStatus_StatusCounting & state = null : SmCounterStatusStatusStatusCountingBit4Bit4_Bit4Bit41;
+       TRUE : state;
+     esac;
+
+-- This defines a NuSMV module for ASm_Machine --
+MODULE ASm_Machine
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     aSm : ASm( aSmCounterBit1Bit1 , aSmCounterBit2Bit2 , aSmCounterStatusStatus , aSmCounterStatusStatusStatusCountingBit3Bit3 , aSmCounterStatusStatusStatusCountingBit4Bit4 );
+     aSmCounterBit1Bit1 : ASmCounterBit1Bit1( aSm );
+     aSmCounterBit2Bit2 : ASmCounterBit2Bit2( aSm );
+     aSmCounterStatusStatus : ASmCounterStatusStatus( aSm );
+     aSmCounterStatusStatusStatusCountingBit3Bit3 : ASmCounterStatusStatusStatusCountingBit3Bit3( aSm , aSmCounterStatusStatus );
+     aSmCounterStatusStatusStatusCountingBit4Bit4 : ASmCounterStatusStatusStatusCountingBit4Bit4( aSm , aSmCounterStatusStatus );
+
+-- This defines a NuSMV module for main --
+MODULE main
+
+   -- This part declares state variables for the given NuSMV module --
+   VAR
+     aSm_Machine : ASm_Machine;
+
+   -- The following properties are specified to certify that this model is free of non-determinism. 
+   INVARSPEC   ( aSm_Machine.aSm.t5 & aSm_Machine.aSm.t3 -> next( aSm_Machine.aSmCounterStatusStatus.state = SmCounterStatusStatus_StatusMax & aSm_Machine.aSmCounterBit1Bit1.state = SmCounterBit1Bit1_Bit1Bit11 ) )
+   INVARSPEC   ( aSm_Machine.aSm.t5 & aSm_Machine.aSm.t8 -> next( aSm_Machine.aSmCounterStatusStatus.state = SmCounterStatusStatus_StatusMax & aSm_Machine.aSmCounterStatusStatusStatusCountingBit3Bit3.state = SmCounterStatusStatusStatusCountingBit3Bit3_Bit3Bit31 ) )
+
+   -- The following properties are specified to certify that non-symbolic state(s) of this model is (or are) reachable. 
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_stable )
+   CTLSPEC   EF( aSm_Machine.aSm.state = Sm_Counter )
+   CTLSPEC   EF( aSm_Machine.aSmCounterBit1Bit1.state = SmCounterBit1Bit1_Bit1Bit11 )
+   CTLSPEC   EF( aSm_Machine.aSmCounterBit1Bit1.state = SmCounterBit1Bit1_Bit1Bit12 )
+   CTLSPEC   EF( aSm_Machine.aSmCounterBit2Bit2.state = SmCounterBit2Bit2_Bit2Bit21 )
+   CTLSPEC   EF( aSm_Machine.aSmCounterBit2Bit2.state = SmCounterBit2Bit2_Bit2Bit22 )
+   CTLSPEC   EF( aSm_Machine.aSmCounterStatusStatus.state = SmCounterStatusStatus_StatusCounting )
+   CTLSPEC   EF( aSm_Machine.aSmCounterStatusStatus.state = SmCounterStatusStatus_StatusMax )
+   CTLSPEC   EF( aSm_Machine.aSmCounterStatusStatusStatusCountingBit3Bit3.state = SmCounterStatusStatusStatusCountingBit3Bit3_Bit3Bit31 )
+   CTLSPEC   EF( aSm_Machine.aSmCounterStatusStatusStatusCountingBit4Bit4.state = SmCounterStatusStatusStatusCountingBit4Bit4_Bit4Bit41 )
