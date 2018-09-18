@@ -27,6 +27,8 @@ public class NuSMVOptimizerTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/ExampleFile.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/ExampleFile1.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/ExampleFile2.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/FlatElevator.smv");
+	    SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/FlatSpecificFlight.smv");	    
 	    SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/Test.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/CarTransmission.smv");
 	    SampleFileWriter.destroy(pathToInput + "/nusmvoptimizer/CourseSection.smv");
