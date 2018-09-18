@@ -3047,6 +3047,14 @@ public class UmpleParserTest
     assertFailedParse("028_templateInexistentReference.ump",3504);
     assertFailedParse("028_multipleTemplateInexistentReferences.ump",3504);
   }
+  
+  //Issue 460
+  @Test
+  public void nestedGenericTypes()
+  {
+	assertHasWarningsParse("424_nestedGenerics1.ump", 46);
+	assertHasWarningsParse("424_nestedGenerics2.ump", 1007);
+  }
 
   public boolean parse(String filename)
   {

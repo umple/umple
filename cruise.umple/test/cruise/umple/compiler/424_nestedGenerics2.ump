@@ -1,0 +1,6 @@
+class C {
+	depend java.util.*;
+	Map<String, String a1;
+	Map<String, String> a2; // make sure that the end brace here doesn't create a match
+}
+

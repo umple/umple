@@ -101,4 +101,5 @@ depend- : depend [depend] ;
 extraCode- : [**extraCode]
 
 list- : [!list:\[\s*\]]
-typedName- : [type]? [[list]]? [~name]
+genericType- : [!type:[^\s;]+<[^;]+>]
+typedName- : ([[genericType]] | [!type:[^\s;]+])? [[list]]? [~name]
