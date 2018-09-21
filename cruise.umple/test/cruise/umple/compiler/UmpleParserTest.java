@@ -3047,6 +3047,13 @@ public class UmpleParserTest
     assertFailedParse("028_templateInexistentReference.ump",3504);
     assertFailedParse("028_multipleTemplateInexistentReferences.ump",3504);
   }
+  
+  //Issue 546
+  @Test
+  public void portPrefixAttributeNameAssignment()
+  {
+	  assertHasNoWarningsParse("701_validAttributeName.ump");
+  }
 
   public boolean parse(String filename)
   {
@@ -3276,5 +3283,7 @@ public class UmpleParserTest
 	Assert.assertEquals(true, answer);
 	Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
   }
+  
+
 }
 
