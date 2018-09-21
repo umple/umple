@@ -101,6 +101,6 @@ depend- : depend [depend] ;
 extraCode- : [**extraCode]
 
 list- : [!list:\[\s*\]]
-genericType- : [!type:[^\s;]+<[^=\.;\\(\\)\\{\\}]+?>]
+genericType- : [!type:[^\s;]+[^=\.;\\(\\)\\{\\}<>]+]
 typedName- : ([[genericType]]|[!type:[^\s\[\],;\\(\\)\\{\\}]+])? [[list]]? [~name]
 
