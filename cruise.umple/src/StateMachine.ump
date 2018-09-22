@@ -219,12 +219,12 @@ class Guard
   isA ConstraintTree;
   
   lazy Position position;
-  lazy Position endPosition;  
+  lazy Position endPosition; 
   
   private ArrayDeque<String> expressionQueue( ConstraintOperator operator ) {
 		ArrayDeque<String> tempNodes = new ArrayDeque<String>();
 		ConstraintVariable left = operator.getLeft(), right = operator.getRight();
-		
+
 		if( left != null ) 
 			add( left, tempNodes);
 		
@@ -295,7 +295,7 @@ class Guard
 		
 		if( element instanceof ConstraintLiteral ) 
 			nodes.offer( ((ConstraintLiteral) element).getValue() );
-	
+			
 		return true;
 	}
 	
@@ -351,6 +351,7 @@ class Guard
 			//lastVariable = variable;
 		}
 		temp += nodes.poll();
+		
 		return temp;	
 	}
 }

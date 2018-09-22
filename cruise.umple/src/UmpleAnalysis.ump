@@ -21,12 +21,14 @@ class GuardAnalyzer
   ConstraintTree rawLine = new ConstraintTree();
   lazy UmpleClassifier uClassifier;
   lazy Transition t;
+  
   void analyze(Token token)
   {
     Guard constraint = new Guard();
     constraint.addElementAll(rawLine.getRoot());
     constraint.setPosition(token.getPosition());
     constraint.setEndPosition(token.getEndPosition());
+
     t.setGuard(constraint);
     rawLine = new ConstraintTree();
   }

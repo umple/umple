@@ -46,19 +46,24 @@ class SuperCodeGenerator {
 
   private boolean testForPrimitiveInConstraint(ConstraintVariable variable)
   {
-    if((variable instanceof ConstraintAttribute)&&(UmpleToPrimitiveMap.containsValue(((ConstraintAttribute)variable).getAttribute().getType())))
+  	if((variable instanceof ConstraintLiteral) && ( ((ConstraintLiteral)variable).getValue().toString().startsWith("\"")  )) 
+  	{
+  		return false;
+  	}
+    if((variable instanceof ConstraintAttribute)&&(UmpleToPrimitiveMap.containsValue(((ConstraintAttribute)variable).getAttribute().getType()) || UmpleToPrimitiveMap.containsKey(((ConstraintAttribute)variable).getAttribute().getType())))
     {
         return !"String".equals(((ConstraintAttribute)variable).getAttribute().getType());
     }
     else if(variable instanceof ConstraintOperator)
     {
-      return testForPrimitiveInConstraint(((ConstraintOperator)variable).getLeft())||testForPrimitiveInConstraint(((ConstraintOperator)variable).getRight());
+      	return testForPrimitiveInConstraint(((ConstraintOperator)variable).getLeft())||testForPrimitiveInConstraint(((ConstraintOperator)variable).getRight());
     }
     else if(variable instanceof ConstraintTree)
     {
-      return testForPrimitiveInConstraint(((ConstraintTree)variable).getRoot());
+      	return testForPrimitiveInConstraint(((ConstraintTree)variable).getRoot());
     }
-    return false;
+
+    return true;
   }
   
    private String getBooleanResultIfExists(ConstraintVariable left, ConstraintVariable right, String leftString, String rightString, String operator)
@@ -158,10 +163,48 @@ class SuperCodeGenerator {
     {
       ConstraintVariable left = ((ConstraintOperator)cv).getLeft();
       ConstraintVariable right = ((ConstraintOperator)cv).getRight();
-      if(testForPrimitiveInConstraint(left)||testForPrimitiveInConstraint(right))
+      
+      if(testForPrimitiveInConstraint(left) )
       {
-        ((ConstraintOperator)cv).correctForPrimitive();
+      	if( testForPrimitiveInConstraint(right) ) 
+      	{
+        	((ConstraintOperator)cv).correctForPrimitive();
+        }
       }
+      
+      else if(testForPrimitiveInConstraint(left)||testForPrimitiveInConstraint(right))
+      {
+      	if( left instanceof ConstraintTree || right instanceof ConstraintTree) 
+      	{
+      		ConstraintVariable tempLeft = left;
+      		while(tempLeft instanceof ConstraintTree)
+      		{
+      			tempLeft =  ((ConstraintTree)tempLeft).getRoot();
+      		}
+
+			ConstraintVariable tempRight = right;
+      		while(tempRight instanceof ConstraintTree)
+      		{
+      			tempRight =  ((ConstraintTree)tempRight).getRoot();
+      		}
+      		
+      		if((tempLeft instanceof ConstraintAttribute)&&(UmpleToPrimitiveMap.containsValue(((ConstraintAttribute)tempLeft).getAttribute().getType()) || UmpleToPrimitiveMap.containsKey(((ConstraintAttribute)tempLeft).getAttribute().getType()))
+      		&& (tempRight instanceof ConstraintAttribute)&&(UmpleToPrimitiveMap.containsValue(((ConstraintAttribute)tempRight).getAttribute().getType()) || UmpleToPrimitiveMap.containsKey(((ConstraintAttribute)tempRight).getAttribute().getType())))
+    		{
+        		if( !"String".equals(((ConstraintAttribute)tempLeft).getAttribute().getType()) && !"String".equals(((ConstraintAttribute)tempRight).getAttribute().getType()) )
+        		{
+        			System.out.println("!!!");
+        			((ConstraintOperator)cv).correctForPrimitive();
+        		}
+    		}
+      	}
+
+      	if(!((left instanceof ConstraintLiteral) && ( ((ConstraintLiteral)left).getValue().toString().startsWith("\"")  )) && !((right instanceof ConstraintLiteral) && ( ((ConstraintLiteral)right).getValue().toString().startsWith("\"")  ))) 
+  		{
+  			((ConstraintOperator)cv).correctForPrimitive();
+  		}
+      }
+      
       String leftString = (left instanceof ConstraintOperator)?translate(left.getType(),left):translate(left.getType(),left,true);
       String rightString = (right instanceof ConstraintOperator)?translate(right.getType(),right):translate(right.getType(),right,true);
       
