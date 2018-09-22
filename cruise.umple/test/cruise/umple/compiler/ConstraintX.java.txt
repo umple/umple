@@ -26,7 +26,7 @@ public class X
     s1 = aS1;
     if ("cat".equals(aS1))
     {
-      throw new RuntimeException("Please provide a valid s1 [cat!=s1]");
+      throw new RuntimeException("Please provide a valid s1 [\"cat\"!=s1]");
     }
   }
 
