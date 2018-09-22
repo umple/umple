@@ -3283,7 +3283,5 @@ public class UmpleParserTest
 	Assert.assertEquals(true, answer);
 	Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
   }
-  
-
 }
 
