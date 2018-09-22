@@ -250,45 +250,45 @@ class Token
   // Set name to flattened string of all child sub-tokens and remove them
   public void flatten()
   {
-	  StringBuffer answer = new StringBuffer();
-	  flattenValues(answer);
-	  setValue(answer.toString());
-	  subTokens.clear();
+    StringBuffer answer = new StringBuffer();
+    flattenValues(answer);
+    setValue(answer.toString());
+    subTokens.clear();
   }
 
   // Return string buffer with flattened value of tokens
   public StringBuffer flattenValues(StringBuffer stringSoFar)
   {
-	  if ("START_TOKEN".equals(getValue()))
-	  {
-	    //ignore
-	  }
-	  else if ("STATIC".equals(getValue()))
-	  {
-		  stringSoFar.append(getName());
-	  }
-	  else
-	  {
-	    stringSoFar.append(getValue());
-	  }
-	  for(Token subToken : getSubTokens())
-	  {
-	    subToken.flattenValues(stringSoFar);
-	  }
-	  return stringSoFar;
+    if ("START_TOKEN".equals(getValue()))
+    {
+      //ignore
+    }
+    else if ("STATIC".equals(getValue()))
+    {
+      stringSoFar.append(getName());
+    }
+    else
+    {
+      stringSoFar.append(getValue());
+    }
+    for(Token subToken : getSubTokens())
+    {
+      subToken.flattenValues(stringSoFar);
+    }
+    return stringSoFar;
   }
 
   // Recursively flattens a particular token name from bottom up
   public void flattenNameRecursive(String tokenName)
   {
-	  for (Token t : subTokens)
-	  {
-		  t.flattenNameRecursive(tokenName);
-	  }
+    for (Token t : subTokens)
+    {
+      t.flattenNameRecursive(tokenName);
+    }
 
-	  if (is(tokenName)) {
-		  flatten();
-	  }
+    if (is(tokenName)) {
+      flatten();
+    }
   }
   
   // Return a copy of the current token with all its SubTokens
