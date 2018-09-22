@@ -1314,7 +1314,8 @@ public class JavaGeneratorTest
   
   @Test
   /*
-  PAIN
+  Checks that if constraint contains string constant, double quotes are escaped in error messages. Otherwise, generated code does not compile.
+  Bug #1327
   */
   public void constraintComparisonWithConstant()
   {	
@@ -1323,7 +1324,7 @@ public class JavaGeneratorTest
     model.run();
     String actual = model.getGeneratedCode().get("X");
     File generatedFile = new File(pathToInput+"X.java");
-    //generatedFile.delete();
+    generatedFile.delete();
     File expected = new File(pathToInput + "ConstraintX.java.txt");
     SampleFileWriter.assertFileContent(expected, actual,false);
   }
