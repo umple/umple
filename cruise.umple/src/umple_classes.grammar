@@ -102,6 +102,7 @@ extraCode- : [**extraCode]
 
 list- : [!list:\[\s*\]]
 baseType- : [!baseType:[a-zA-Z0-9_$]+]
-type : [[baseType]] ( < [[argType]] > )? [[list]]?
-argType- : [[type]] ( , [[argType]] )?
-typedName- : [[type]]? ( ... )? [~name]
+nestedType- : [[baseType]] ( < [[argType]] > )? [[list]]?
+argType- : ( ? | [[nestedType]] ) ( , [[argType]] )?
+type : [[nestedType]] ( ... )?
+typedName- : [[type]]? [~name]
