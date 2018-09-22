@@ -14,4 +14,8 @@ class A {
 	Map<List<Map<String, String>>, List<String>> b3;
 	List<List<List<String>>> b4;
 	TestVector<A,B,C> c1;
+	
+	private void testVariadic(String test, Object... test2)
+	{
+	}
 }

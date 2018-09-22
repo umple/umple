@@ -104,4 +104,5 @@ list- : [!list:\[\s*\]]
 baseType- : [!baseType:[a-zA-Z0-9_$]+]
 type# : [[baseType]] ( < [[argType]] > )? [[list]]?
 argType- : [[type]] ( , [[argType]] )?
-typedName- : [[type]]? [~name]
+variadic- : [!variadic:[\.\.\.]]
+typedName- : [[type]]? [[variadic]]? [~name]
