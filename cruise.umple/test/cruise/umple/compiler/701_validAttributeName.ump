@@ -1,0 +1,6 @@
+class X
+{
+	int portTest;
+	int inTest;
+	int outTest;
+}	

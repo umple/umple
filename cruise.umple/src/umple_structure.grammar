@@ -14,7 +14,7 @@ typedPortName : [~type]? [~portName] [[portMultiplicity]]?
 
 portDefinition : [[portClass]] | [[portDeclaration]]
 portClass- : [=port] ;
-portDeclaration : [=modifier:public|protected|private]? [=inverse:conjugated]? [=direction:in|out|port] [[typedPortName]] ;
+portDeclaration : [=modifier:public|protected|private]? [=inverse:conjugated]? [!direction:(in|out|port)\s] ( [[typedPortName]] ) ;
 
 // Port Connectors
 portBindingDefinition :  ( [~fromClassname] . )? [fromPort] -> ( [~toClassname] . )? [toPort] [[bindinHandler]]
