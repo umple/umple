@@ -251,7 +251,7 @@ class Token
   public void flatten()
   {
 	  StringBuffer answer = new StringBuffer();
-	  flattenValues(answer, null);
+	  flattenValues(answer);
 	  setValue(answer.toString());
 	  subTokens.clear();
   }
