@@ -255,6 +255,8 @@ class UmpleInternalParser
   // Delegate function to analyze a token and send it to the write
   private void analyzeToken(Token t, int analysisStep)
   {
+    // See #460 - types are now nested
+    t.flattenNameRecursive("type");
     analyzeMixsetUseStatement(t, analysisStep);
     analyzeUSE(t, analysisStep);
     analyzeCoreToken(t,analysisStep);
@@ -275,6 +277,8 @@ class UmpleInternalParser
   // Analyze an individual token, delegates to the various components in Umple
   private void analyzeToken(Token t, UmpleClass aClass, int analysisStep)
   {
+    // See #460 - types are now nested
+    t.flattenNameRecursive("type");
     analyzeCoreToken(t,aClass,analysisStep);
     analyzeClassToken(t,aClass,analysisStep);
     analyzeStateMachineToken(t,aClass,analysisStep);
