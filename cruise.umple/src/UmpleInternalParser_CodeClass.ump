@@ -4402,7 +4402,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
     if(type != null)
     { 
-      Matcher m = Pattern.compile("([a-zA-Z_][0-9a-zA-Z_]*(<(.*)>)?(\s*\[\s*\]\s*)?)").matcher(type);
+      Matcher m = Pattern.compile("([a-zA-Z_][0-9a-zA-Z_]*(<(.*)>)?(\\s*\\[\\s*\\]\\s*)?)").matcher(type);
       if(!m.matches()) 
       {
         setFailedPosition(attributeToken.getPosition(), 140, type);
