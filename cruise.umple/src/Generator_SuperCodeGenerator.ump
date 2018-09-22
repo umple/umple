@@ -455,7 +455,10 @@ class SuperCodeGenerator {
       if(constructor.getNumberOfElements()>0)
       {
         constraintWithinConstructor = true;
-        String expr = getExpr(constructor);
+        String expr_generated = getExpr(constructor);	
+		//expr and expr_no_quotes are needed to adjust the format of the Error message we generated(expr_generated)
+		String expr_no_quotes = expr_generated.replace("\"","\\\"");
+		String expr = expr_no_quotes.replace("object","");
         constructor.negate();
         String inject = StringFormatter.format(ConstraintLookupMap.get("exception"),getNamedNames(constructor) + " [" + expr + "]");
         String ifstatement = translate("Closed",constructor);

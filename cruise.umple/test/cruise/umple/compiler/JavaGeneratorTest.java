@@ -1312,6 +1312,24 @@ public class JavaGeneratorTest
     Assert.assertEquals(1,nestedSm2.numberOfStates());
   }  
   
+  @Test
+  /*
+  Checks that if constraint contains string constant, double quotes are escaped in error messages. Otherwise, generated code does not compile.
+  Bug #1327
+  */
+  public void constraintComparisonWithConstant()
+  {	
+	String pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/");
+    model = createModelFromFile(pathToInput, "701_ConstraintComparisonWithConstant.ump");
+    model.run();
+    String actual = model.getGeneratedCode().get("X");
+    File generatedFile = new File(pathToInput+"X.java");
+    generatedFile.delete();
+    File expected = new File(pathToInput + "ConstraintX.java.txt");
+    SampleFileWriter.assertFileContent(expected, actual,false);
+  }
+  
+  
   private void assertOtherTranslate(UmpleClass c, AssociationVariable av)
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.relatedTranslate("blah", av));

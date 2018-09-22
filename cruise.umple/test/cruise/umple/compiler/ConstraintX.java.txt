@@ -1,0 +1,62 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+/**
+ * expect this to throw an error
+ */
+// line 2 "701_ConstraintComparisonWithConstant.ump"
+public class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X Attributes
+  private String s1;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X(String aS1)
+  {
+    s1 = aS1;
+    if ("cat".equals(aS1))
+    {
+      throw new RuntimeException("Please provide a valid s1 [\"cat\"!=s1]");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setS1(String aS1)
+  {
+    boolean wasSet = false;
+    if (!"cat".equals(aS1))
+    {
+    s1 = aS1;
+    wasSet = true;
+    }
+    return wasSet;
+  }
+
+  public String getS1()
+  {
+    return s1;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "s1" + ":" + getS1()+ "]";
+  }
+}
