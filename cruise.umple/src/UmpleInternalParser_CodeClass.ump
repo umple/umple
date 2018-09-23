@@ -4417,12 +4417,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 	setFailedPosition(attributeToken.getPosition(), 142, name, type);
       }
     }
+
+    boolean isList = attributeToken.getValue("list") != null;
         
     if(type != null && value != null)
     {
-      if(!compareTypeToValue(type,value))
-      {
-        setFailedPosition(attributeToken.getPosition(),141,type,value);  
+      if (!isList) { // will check list initializer later
+        if(!compareTypeToValue(type,value))
+        {
+          setFailedPosition(attributeToken.getPosition(),141,type,value);  
+        }
       }
     }
     else if (type == null && value != null)
@@ -4447,7 +4451,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     attribute.setIsUnique(isUnique);
     attribute.setIsLazy(isLazy);
 	attribute.setIsIvar(isIvar);
-    boolean isList = attributeToken.getValue("list") != null;
 
     if (name == null)
     {
@@ -5005,7 +5008,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       inferredType = "Boolean";
     }
-    else if(value.matches("\"\\d{4}-[0-3][0-9]-[0-1][0-9]\""))
+    else if(value.matches("\"\\d{4}-[0-1][0-9]-[0-3][0-9]\""))
     {
       inferredType="Date";
     }
