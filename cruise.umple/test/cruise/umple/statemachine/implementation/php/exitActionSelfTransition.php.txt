@@ -64,12 +64,12 @@ class A
     $aSm = $this->sm;
     if ($aSm == self::$SmCreated)
     {
-      if ($this->b==$this->false)
+      if ($this->getResult()==$this->false)
       {
         $this->setSm(self::$SmCreated);
         $wasEventProcessed = true;
       }
-      if ($this->b==$this->true)
+      if ($this->getResult()==$this->true)
       {
         $this->exitSm();
         $this->setSm(self::$SmInitialized);

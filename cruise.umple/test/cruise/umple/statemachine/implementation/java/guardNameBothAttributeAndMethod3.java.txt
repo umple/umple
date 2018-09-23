@@ -69,7 +69,7 @@ public class A
     switch (aStatus)
     {
       case s1:
-        if (!getRepeatCheck().equals(repeatCheck()))
+        if (getRepeatCheck()!=repeatCheck())
         {
           setStatus(Status.s2);
           wasEventProcessed = true;

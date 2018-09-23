@@ -92,7 +92,7 @@ class A
         $this->setStatus(self::$StatusS2);
         $wasEventProcessed = true;
       }
-      if (!((($this->a-$this->c)>($this->b*2))==(($this->a-$this->c)>($this->b^2))))
+      if ((($this->a-$this->c)>($this->b*2))!=(($this->a-$this->c)>($this->b^2)))
       {
         $this->setStatus(self::$StatusS2);
         $wasEventProcessed = true;
