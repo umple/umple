@@ -69,7 +69,7 @@ class A
     $aStatus = $this->status;
     if ($aStatus == self::$StatusS1)
     {
-      if (!($this->getRepeatCheck()==$this->repeatCheck()))
+      if ($this->getRepeatCheck()!=$this->repeatCheck())
       {
         $this->setStatus(self::$StatusS2);
         $wasEventProcessed = true;

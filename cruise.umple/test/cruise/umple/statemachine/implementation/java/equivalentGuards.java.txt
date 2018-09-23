@@ -100,7 +100,7 @@ public class A
           wasEventProcessed = true;
           break;
         }
-        if (!((a-c)>(b*2)).equals(((a-c)>(b^2))))
+        if (((a-c)>(b*2))!=((a-c)>(b^2)))
         {
           setStatus(Status.s2);
           wasEventProcessed = true;

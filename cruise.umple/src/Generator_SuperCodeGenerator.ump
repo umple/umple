@@ -46,6 +46,7 @@ class SuperCodeGenerator {
 
   private boolean testForPrimitiveInConstraint(ConstraintVariable variable)
   {
+  	//System.out.println(variable.toString() + "###");
   	if((variable instanceof ConstraintLiteral) && ( ((ConstraintLiteral)variable).getValue().toString().startsWith("\"")  )) 
   	{
   		return false;
@@ -64,6 +65,29 @@ class SuperCodeGenerator {
     }
 
     return true;
+  }
+  
+  private boolean testForUnassignedPrimitivesInConstraint(ConstraintVariable var1, ConstraintVariable var2)
+  {
+  	if(var1 instanceof ConstraintTree)
+  	{
+  		return testForUnassignedPrimitivesInConstraint(((ConstraintTree)var1).getRoot(), var2);
+  	}
+  	if(var2 instanceof ConstraintTree)
+  	{
+  		return testForUnassignedPrimitivesInConstraint(var1, ((ConstraintTree)var2).getRoot());
+  	}
+  	
+  	if(var1 instanceof ConstraintUnassignedName && var2 instanceof ConstraintUnassignedName)
+  	{
+  		String name1 = ((ConstraintUnassignedName) var1).getValue();
+  		String name2 = ((ConstraintUnassignedName) var2).getValue();
+  		if(!name1.equals("true") && !name1.equals("false") && !name2.equals("true") && !name2.equals("false")) {
+  			return false;
+  		}
+  	}
+  	
+  	return true;
   }
   
    private String getBooleanResultIfExists(ConstraintVariable left, ConstraintVariable right, String leftString, String rightString, String operator)
@@ -161,15 +185,17 @@ class SuperCodeGenerator {
     }
     else if("operatorTwo".equals(id))
     {
+    	//System.out.println("@@@");
       ConstraintVariable left = ((ConstraintOperator)cv).getLeft();
       ConstraintVariable right = ((ConstraintOperator)cv).getRight();
       
-      if(testForPrimitiveInConstraint(left) )
+      if(testForPrimitiveInConstraint(left) && testForPrimitiveInConstraint(right))
       {
-      	if( testForPrimitiveInConstraint(right) ) 
-      	{
-        	((ConstraintOperator)cv).correctForPrimitive();
-        }
+      		if(testForUnassignedPrimitivesInConstraint(left, right))
+      		{
+      			//System.out.println("$$$");
+        		((ConstraintOperator)cv).correctForPrimitive();
+        	}
       }
       
       else if(testForPrimitiveInConstraint(left)||testForPrimitiveInConstraint(right))
@@ -193,14 +219,16 @@ class SuperCodeGenerator {
     		{
         		if( !"String".equals(((ConstraintAttribute)tempLeft).getAttribute().getType()) && !"String".equals(((ConstraintAttribute)tempRight).getAttribute().getType()) )
         		{
-        			System.out.println("!!!");
+        			//System.out.println("!!!");
         			((ConstraintOperator)cv).correctForPrimitive();
         		}
     		}
       	}
 
-      	if(!((left instanceof ConstraintLiteral) && ( ((ConstraintLiteral)left).getValue().toString().startsWith("\"")  )) && !((right instanceof ConstraintLiteral) && ( ((ConstraintLiteral)right).getValue().toString().startsWith("\"")  ))) 
+      	else if(!((left instanceof ConstraintLiteral) && ( ((ConstraintLiteral)left).getValue().toString().startsWith("\"")  )) && !((right instanceof ConstraintLiteral) && ( ((ConstraintLiteral)right).getValue().toString().startsWith("\"")  ))) 
   		{
+  			//System.out.println("Left: " + left.toString() + "***");
+  			//System.out.println("Right: " + right.toString() + "***");
   			((ConstraintOperator)cv).correctForPrimitive();
   		}
       }

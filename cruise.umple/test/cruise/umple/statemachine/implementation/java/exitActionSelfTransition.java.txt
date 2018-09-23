@@ -1,8 +1,9 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4179.f58ce0d5e modeling language!*/
 
 
 
+// line 1 "A.ump"
 public class A
 {
 
@@ -63,14 +64,14 @@ public class A
     switch (aSm)
     {
       case created:
-        if (b.equals(false))
+        if (getResult()==false)
         {
           exitSm();
           setSm(Sm.created);
           wasEventProcessed = true;
           break;
         }
-        if (b.equals(true))
+        if (getResult()==true)
         {
           exitSm();
           setSm(Sm.initialized);
@@ -108,6 +109,7 @@ public class A
     switch(sm)
     {
       case created:
+        // line 5 "A.ump"
         execute_exit_code();
         break;
     }
@@ -121,6 +123,7 @@ public class A
     switch(sm)
     {
       case created:
+        // line 6 "A.ump"
         execute_entry_code();
         break;
     }
