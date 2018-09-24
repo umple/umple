@@ -394,7 +394,7 @@ class ParseResult
       ret += "\"url\" : \"" + url + "\", ";
       ret += "\"line\" : \"" + line + "\", ";
       ret += "\"filename\" : \"" + file + "\", ";
-      ret += "\"message\" : \"" + message + "\"},";
+      ret += "\"message\" : \"" + message.replace("\"", "\'") + "\"},";
       hasOne = true;
     }
 
@@ -433,7 +433,8 @@ class ErrorMessage
     String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
     String err = sev + " " + errorType.getErrorCode() + " on line " + this.position.getLineNumber();
     err += " of file \"" + stripLeadingPath(this.position.getFilename()) + "\":\n";
-    return  err + errorType.format(this.parameters);
+    err += errorType.format(this.parameters);
+    return err.replace("\"", "\'");    
   }
 
 }

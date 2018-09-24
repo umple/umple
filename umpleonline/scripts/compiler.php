@@ -494,7 +494,7 @@ function getErrorHtml($errorFilename, $offset = 1)
      
      if($errInfo == null)
      {
-        $errhtml .= "Couldn't read results from the Umple compiler!";
+        $errhtml .= "Couldn't read results from the Umple compiler!<br><pre>".$errorMessage."</pre>";
      }
      else
      {

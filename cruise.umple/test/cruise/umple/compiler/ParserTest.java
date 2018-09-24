@@ -2090,12 +2090,12 @@ public class ParserTest
 
 	  ErrorMessage em = new ErrorMessage(1002, new Position("filename",0,0,0), "zero", "one");
 
-	  Assert.assertEquals("Warning 1002 on line 0 of file \"filename\":\nThis is a test error zero, one", em.toString());
+	  Assert.assertEquals("Warning 1002 on line 0 of file \'filename\':\nThis is a test error zero, one", em.toString());
 	  
 
 	  ets.addErrorType(new ErrorType(1003, 2, "This is a test error {0}, {1}", "url"));	  
 	  em = new ErrorMessage(1003, new Position("filename",0,0,0), "zero", "one");
-  	  Assert.assertEquals("Error 1003 on line 0 of file \"filename\":\nThis is a test error zero, one",em.toString());
+  	  Assert.assertEquals("Error 1003 on line 0 of file \'filename\':\nThis is a test error zero, one",em.toString());
 
   }
   @Test 
@@ -2112,7 +2112,7 @@ public class ParserTest
 	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file1",0,0,0), " \\' "));
 	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file2",0,0,0), " \" "));
 	  
-	  Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file1\", \"message\" : \"Test \\\" \\\\' \\\"\"},{ \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file2\", \"message\" : \"Test \\\" \\\" \\\"\"}]}",pr.toJSON());
+	  Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file1\", \"message\" : \"Test \\\' \\\\' \\\'\"},{ \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file2\", \"message\" : \"Test \\\' \\\' \\\'\"}]}",pr.toJSON());
   }
   
   @Test

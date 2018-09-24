@@ -1,4 +1,4 @@
-Warning 1008 on line 6 of file "Abstract_Method.ump":
+Warning 1008 on line 6 of file 'Abstract_Method.ump':
 Method syntax could not be processed. It has been considered as Extra Code
 Abstract_Method.ump:6: error: abstract methods cannot have a body
   abstract void foo () 
