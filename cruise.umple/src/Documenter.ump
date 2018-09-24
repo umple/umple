@@ -54,11 +54,15 @@ class Content
 
   // Short samples of Umple code
   0..1 -> * ManualExample examples;
+  
+  // URL of Youtube Video (if any)
+  videoURL = null;
 }
 
 class ManualExample {
   text;
   url = "";
+  caption = ""; // If empty, then default caption will be used Example, Another Example
 }
 
 /*
@@ -96,6 +100,7 @@ class Template
   const HtmlTemplate = htmlTemplate();
   const ExampleTemplate = exampleTemplate();
   const SyntaxTemplate = syntaxTemplate();
+  const VideoURLTemplate = videoURLTemplate();  
   const NavigationHeaderTemplate = navigationHeaderTemplate();
   const NavigationItemTemplate = navigationItemTemplate();
   const NavigationItemTemplateNoAnchor = navigationItemTemplateNoAnchor();

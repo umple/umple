@@ -323,6 +323,18 @@ class Documenter
         "<span class=\"notranslate\" translate=\"no\">" +
         syntaxHtml+ "</span>");
     }
+
+    if (selectedContent.getVideoURL() == null)
+    {
+      htmlOutput = htmlOutput.replace("@@VIDEOURL@@", "");
+    }
+    else
+    {
+      String videoURLHtml = Template.VideoURLTemplate.replace("@@VIDEO_URL@@",selectedContent.getVideoURL());
+      htmlOutput = htmlOutput.replace("@@VIDEOURL@@", 
+        "<span class=\"notranslate\" translate=\"no\">" +
+        videoURLHtml+ "</span>");
+    }
     
     String exampleOutput = "";
     for (ManualExample manualExample : selectedContent.getExamples())
@@ -330,7 +342,14 @@ class Documenter
       String example = manualExample.getText();
       String url = manualExample.getUrl();
       String nextExample = Template.ExampleTemplate;
-      String exampleHeader = exampleOutput.length() == 0 ? "Example" : "Another Example";
+      String caption = manualExample.getCaption();
+      String exampleHeader = "";
+      if(caption != null && !caption.equals("")) {
+        exampleHeader = caption;
+      }
+      else {
+        exampleHeader = exampleOutput.length() == 0 ? "Example" : "Another Example";
+      }
       nextExample = nextExample.replace("@@EXAMPLE_NUMBER@@",exampleHeader);
       
       endOfExampleBeforePosition = example.indexOf("//$?[End_of_model]$?");
@@ -443,8 +462,8 @@ class ContentParser
   private int init()
   {
     addRule("groupOrder : ( [**group] ; )*");
-    addRule("content : [*title] [*group] [=noreferences]? @@description [**description] (@@syntax [**syntax])? [[example]]* @@Filename [*filename]");
-    addRule("example- : @@example [**example] @@endexample");
+    addRule("content : [*title] [*group] [=noreferences]? @@description [**description] (@@videoURL [**videoURL])? (@@syntax [**syntax])? [[example]]* @@Filename [*filename]");
+    addRule("example- : @@example ( @@caption [**caption] @@endcaption )? [**example] @@endexample");
     init += 1;
     return init;
   }
@@ -472,11 +491,15 @@ class ContentParser
         Group g = getGroup(t.getValue("group"));
         Content content = new Content(t.getValue("title"), t.getValue("description"), t.getValue("syntax"), t.getValue("filename"));
         
+        if(t.getValue("videoURL") != null) {
+          content.setVideoURL(t.getValue("videoURL"));
+        }
+        
         if (t.getValue("noreferences") != null)
         {
           content.setShouldIncludeReferences(false);
         }
-        
+        ManualExample newEx = null;
         for (Token exampleToken : t.getSubTokens())
         {
           if (exampleToken.is("example"))
@@ -502,9 +525,20 @@ class ContentParser
                   +exampleText.substring(9).trim();
               }
             }
-            ManualExample newEx = new ManualExample(exampleText);
+            // If we have an example without finding a caption first, then create a plain example
+            if(newEx == null) {
+              newEx = new ManualExample(exampleText);
+            }
+            else {
+              newEx.setText(exampleText);
+            }
             newEx.setUrl(exampleURL);
             content.addExample(newEx);
+            newEx = null; // any subsequent caption or example starts a new example
+          }
+          else if (exampleToken.is("caption")) {
+            newEx = new ManualExample(""); // Empty for now pending finding example token
+            newEx.setCaption(exampleToken.getValue());
           }
         }
         g.addContent(content);
@@ -569,6 +603,18 @@ class Template
         "" + "\n";
     return template;
   }
+  
+  private static String videoURLTemplate()
+  {
+    String template = "" +
+ "      <h3>YouTube Video with Additional Explanation</h3>" + "\n" +     
+      "  <iframe width=\"560\" height=\"315\"\n"+
+      "     src=\"@@VIDEO_URL@@?rel=0\" frameborder=\"0\"\n"+
+      "     allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>\n" +
+      "&nbsp; <br/> &nbsp; <br/>" + "\n";
+    return template;
+  }  
+  
 
   private static String htmlTemplate()
   {
@@ -696,6 +742,7 @@ class Template
         "      <p class=\"description\">@@DESCRIPTION@@</p>" + "\n" +
         "" + "\n" +
         "@@EXAMPLE@@" + "\n" +
+        "@@VIDEOURL@@" + "\n" +
         "@@SYNTAX@@" + "\n";
     return template;
   }
