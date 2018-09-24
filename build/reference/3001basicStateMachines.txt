@@ -33,22 +33,24 @@ Details of each state can include:
 
 <p>Note that, in addition, you can specify code to be executed whenever an event is processed by using <a href="CodeInjectioninEventMethods.html">before or after directives.</a></p>
 
-<p>The following diagram shows a garage door state machine as a UML diagram. The Umple code for this is at the bottom of this page. Note that UmpleOnline currently cannot draw state machines.
+<p>The following diagram shows a garage door state machine as a UML diagram. The Umple code for this is in the second example shown, and is further explained in the video below. <br/> &nbsp; <br/>
 
 <img  width=480 src="examples/GarageStateMachine.png" alt="state machne for garage door"/>
 
 &nbsp;<br/>
+
+@@videoURL https://www.youtube.com/embed/mFczzVkTZ9g
 
 @@syntax
 
 [[stateMachine]] [[enum]] [[inlineStateMachine]] [[state]] [[stateInternal]] [[stateEntity]] [[transition]] [[entryOrExitAction]] [[autoTransition]] [[autoTransitionBlock]] [[activity]] [[guard]] [[eventDefinition]] [[eventWithArgs]] [[action]] [[afterEveryEvent]] [[afterEvent]]
 
 
-@@example
+@@example @@caption Basic Garage Door Example @@endcaption
 @@source manualexamples/BasicStateMachines1.ump &diagramtype=state
 @@endexample
 
 
-@@example
+@@example @@caption Garage Door Example with Actions @@endcaption
 @@source manualexamples/BasicStateMachines2.ump &diagramtype=state
 @@endexample
