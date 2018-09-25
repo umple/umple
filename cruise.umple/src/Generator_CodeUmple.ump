@@ -1040,6 +1040,9 @@ class UmpleGenerator
       case MULTIPLICITY:
       case PARAMETERS:
       case TYPED_NAME:
+      case TYPE:
+        generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, uContainer);
+        break;
       case PARAMETER_LIST:
       case EXTRA_CODE:
       case METHOD_NAME:
@@ -1126,14 +1129,13 @@ class UmpleGenerator
       case VALUE:
       case VALUE_COLON:
       case RULE_NAME:
-      default:
-        // #460 - now that type is aggregated, the rule needs to be treated as a token
-        if (elementRootRuleToken.getValue().equals(TYPE) &&
-            uContainer instanceof Attribute)
+        // #460 - now that type is aggregated, the rule needs to be treated similar to a named token
+        if (elementRootRuleToken.getValue().equals(RuleName.TYPE.value))
         {
           buffer.append(getElementProperty(elementRootRuleToken.getValue(), elementRootRuleToken, uContainer));
           break;
         }
+      default:
         for(Token subToken : elementRootRuleToken.getSubTokens()) {
           generateRuleTokenOutput(subToken, model, uContainer);
         }
