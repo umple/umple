@@ -3048,11 +3048,19 @@ public class UmpleParserTest
     assertFailedParse("028_multipleTemplateInexistentReferences.ump",3504);
   }
   
+  //Issue 460
+  @Test
+  public void nestedGenericTypes()
+  {
+    assertHasWarningsParse("424_nestedGenerics1.ump", 46);
+    assertHasWarningsParse("424_nestedGenerics2.ump", 1007);
+  }
+
   //Issue 546
   @Test
   public void portPrefixAttributeNameAssignment()
   {
-	  assertHasNoWarningsParse("701_validAttributeName.ump");
+    assertHasNoWarningsParse("701_validAttributeName.ump");
   }
 
   public boolean parse(String filename)

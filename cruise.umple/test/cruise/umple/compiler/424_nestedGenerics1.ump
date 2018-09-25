@@ -1,0 +1,21 @@
+class A {
+	depend java.util.*;
+	Map<String, String> a1;
+	List<String> a2;
+	Map<List<String>,String>a3;
+	List<String> a4;
+	List<List<String>> a5;
+	Map<List<String>, String> a6;
+	Map<String, List<String>> a7;
+	Map<List<String>, List<String>> a8;
+	List<List<String>> a9;
+	Map<List<Map<String, String>>, String> b1;
+	Map<String, List<Map<String, String>>> b2;
+	Map<List<Map<String, String>>, List<String>> b3;
+	List<List<List<String>>> b4;
+	TestVector<A,B,C> c1;
+	
+	private void testVariadic(String test, Object... test2)
+	{
+	}
+}

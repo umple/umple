@@ -101,4 +101,8 @@ depend- : depend [depend] ;
 extraCode- : [**extraCode]
 
 list- : [!list:\[\s*\]]
-typedName- : [type]? [[list]]? [~name]
+baseType- : [!baseType:[a-zA-Z0-9_$]+]
+nestedType- : [[baseType]] ( < [[argType]] > )?
+argType- : ( ? | [[nestedType]] [[list]]? ) ( , [[argType]] )?
+type : [[nestedType]] ( ... )?
+typedName- : [[type]]? [[list]]? [~name]

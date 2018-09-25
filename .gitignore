@@ -15,8 +15,7 @@ src-gen-umple/
 src-gen/
 
 # generated umpleTL code that is not saved
-src-gen-umpleTL/
-src-gen-umpletl/
+src-gen-[Uu]mple[Tt][Ll]/
 
 # os specific:
 .DS_Store
