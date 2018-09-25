@@ -1127,6 +1127,13 @@ class UmpleGenerator
       case VALUE_COLON:
       case RULE_NAME:
       default:
+        // #460 - now that type is aggregated, the rule needs to be treated as a token
+        if (elementRootRuleToken.getValue().equals(TYPE) &&
+            uContainer instanceof Attribute)
+        {
+          buffer.append(getElementProperty(elementRootRuleToken.getValue(), elementRootRuleToken, uContainer));
+          break;
+        }
         for(Token subToken : elementRootRuleToken.getSubTokens()) {
           generateRuleTokenOutput(subToken, model, uContainer);
         }
