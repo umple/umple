@@ -872,9 +872,7 @@ Page.showGeneratedCode = function(code,language,tabnumber)
   var generatedMarkup = Page.getGeneratedMarkup(code, language);
 
   //Set any error or warning messages
-	if(errorMarkup != ""){
- 		jQuery("#messageArea").html(errorMarkup);
-	}
+	jQuery("#messageArea").html(errorMarkup);
 
   //Set the generated content
   if(language == "java" || language == "php" || language == "cpp" 
