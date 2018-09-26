@@ -33,7 +33,7 @@ A class can contain any of the following items. <a href="interfaceDefinition.htm
 
 <br />
 
-<li><b><a href="BasicStateMachines.html">State machine definitions</a></b> that describe declaratively attributes that change value in certain behaviour patterns in response to actions such as method calls.
+<li><b><a href="BasicStateMachines.html">State machine definitions</a></b> that describe declaratively attributes that change value in certain behaviour patterns in response to actions such as method calls.</li>
 
 <br />
 

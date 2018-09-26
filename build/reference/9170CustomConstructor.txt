@@ -4,7 +4,9 @@ noreferences
 
 @@description
 
-<p>Custom constructors should normally not be provided in Umple. Consider using  <a href="BeforeandAfterStatements.html">before and after</a> keywords to adjust what the constructor does, or adjusting constructor parameters using keywords like lazy. 
+<p>Custom constructors should normally not be provided in Umple. Consider using  <a href="BeforeandAfterStatements.html">before and after</a> keywords to adjust what the automatically-generated constructor does, or adjusting constructor parameters using keywords like lazy. 
 </p>
+
+<p>Umple generates its own constructors: The arguments are composed from the list of <a href="AttributeDefinition.html">attributes</a> in the class (in the order provided), as well as any associations with a 1 <a href="Multiplicity.html">multiplicity</a> at the other end. To avoid having an argument in the generated constructor, designate an attribute as 'lazy' or specify association multiplicity to be 0..1 instead of 1. Umple also generates code to constrain the value of what appears in each constructor if a <a href="SimpleConstraints.html">constraint</a> is specified.</p>
 
 

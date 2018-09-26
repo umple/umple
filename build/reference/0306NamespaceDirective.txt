@@ -3,8 +3,10 @@ Directives
 noreferences
 
 @@description
-Namespaces allow you to group similar entities to promote cohesion, 
-as well as reduce the possibility of name collision.
+<p>Namespaces allow you to group similar entities to promote cohesion, 
+as well as reduce the possibility of name collision. Sub-namespaces are separated using a period (.).</p>
+
+<p> In the following example, the classes Faculty and Student will be in namespace school.admin. In Java they will be generated into the admin package (directory) within the school package. Similarly, class Building will be in the elevator.structure namespace.</p>
 
 @@syntax
 [[namespace]]

@@ -2,10 +2,23 @@
 class Demo 
 {
   Integer i;
+  Integer i2 = 5;
+
+  String str;  // the default if no type is specified
+  str2;
+  str3 = "";
+  
   Float flt;
-  String str;  // the default of no type is specified
+
   Double dbl;
+  Double dbl2 = 8.0;
+
   Boolean bln;
+  Boolean bln2 = false;
+
   Date dte; // In Java. uses the java.sql.Date class
+  Date dte2 = "2018-09-25";
+
   Time tme; // In Java. uses the java.sql.Time class
+  Time tme2 = "14:56:50";
 }

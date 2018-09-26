@@ -6,13 +6,16 @@ noreferences
 <p>You can declare a class as a data type of an attribute. This allows for
 declaration of a 'containment' relationship.</p>
 
+<p>If the data type you are using for an attribute is an Umple class, users should also consider using an association, and particularly a <a href="Compositions.html">composition</a> instead. This allows drawing of diagrams and more consistency checks by the Umple compiler.</p>
+
 <p>If you use the methods in the <a href="APISummary.html">Umple-generated API</a> to access
 the object stored in such an attribute, and pass this contained object
 to some remote subsystem, then that remote subsystem will be able to affect the 
 containing object in a backhanded sort of way. This is considered
 <i>content coupling</i> in software engineering, and should be 
-carefully controlled or avoided. We may in future add a capability
-to Umple to ensure this cannot happen.</p>
+carefully controlled or avoided.</p>
+
+
 
 <p>In the examples below, we show how using attribute notation
 is very similar to using a directed association, except that
@@ -23,10 +26,10 @@ with attribute notation, you can set the value to null.</p>
 @@source manualexamples/ClassesasAttributeTypes1.ump
 @@endexample
 
-@@example
+@@example @@caption Alternative to the Above that Uses an Association @@endcaption
 @@source manualexamples/ClassesasAttributeTypes2.ump
 @@endexample
 
-@@example
+@@example @@caption Another Alternative with an Association Having Multiplicity Indicating Optional @@endcaption
 @@source manualexamples/ClassesasAttributeTypes3.ump
 @@endexample

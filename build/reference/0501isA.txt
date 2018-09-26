@@ -18,10 +18,10 @@ noreferences
 @@syntax
 [[isA]] [[singleIsA]] [[multipleIsA]]
 
-@@example
+@@example @@caption Example Showing Student as a Subclass of Person @@endcaption
 @@source manualexamples/isAclause1.ump
 @@endexample
 
-@@example
+@@example @@caption The Same Model as Above but Using Nesting Instead of IsA @@endcaption
 @@source manualexamples/isAclause2.ump
 @@endexample

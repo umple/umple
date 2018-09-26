@@ -4,7 +4,7 @@ noreferences
 
 @@description
 <p>      
-An interface defines a list of <a href="MethodDefinition.html">methods</a> that are to be implemented in one or more classes.  An interface can be composed of the following elements: 
+An interface defines a list of abstract <a href="MethodDefinition.html">methods</a> that are to be implemented in one or more classes.  An interface can be composed of the following elements: 
 </p>
 
 <ul>
@@ -12,9 +12,11 @@ An interface defines a list of <a href="MethodDefinition.html">methods</a> that 
 <li><a href="MethodDefinition.html">Method declarations</a></li>
 </ul>
 
-<p class="description">Umple currently supports Java, PHP and Ruby as native languages.</p>
+<p>To implement an interface in a class, or to create subinterfaces, use an <a href="isAclause.html">isA clause</a>.</p>
 
-<p>To implement an interface in a class, or to create subinterfaces, use an <a href="isAclause.html">isA clause</a>.</p<
+<p>Umple also supports a feature called <a href="Traits.html">traits</a>, that has some similarities to interfaces. However, traits concrete methods, attributes and state machines to also be contained in them.</p>
+
+<p>In the following example, RegisterCapable is an interface that defines a single abstract method registerForCourse(). This is implemented concretely by CorporateClient and IndividualStudent.</p>
 
 @@syntax
 [[interfaceDefinition]] [[interfaceBody]] [[interfaceMemberDeclaration]]
