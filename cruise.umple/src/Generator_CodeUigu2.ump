@@ -74,6 +74,10 @@ class Uigu2Generator
   */
   private void generateIndexFile() throws IOException{
     String indexFile = "<?php" + NL + NL
+        + "if(!function_exists('session_start')) {" + NL
+        + "  echo('This php server does not support session_start and hence not the CRUD interface.');" + NL
+        + "  exit(0);" + NL
+        + "}" + NL
         + "ini_set('display_errors','On');" + NL
         + "error_reporting(E_ALL);" + NL
         + "require_once('" + SETUP_RELATIVE_PATHNAME + "');" + NL
