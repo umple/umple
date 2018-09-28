@@ -18,6 +18,7 @@ addons:
     packages:
     - php5-common
     - php5-cli
+    - php5-mod-session
 
 before_install:
   - ./travis/deps.sh # run linux or osx depending on environment
