@@ -200,7 +200,10 @@ else if (isset($_REQUEST["umpleCode"]))
     $workDir->saveModel();
     if($Uigu2) {
        $uigu2dir = $workDir->getPath();
-       exec("cd $uigu2dir; ln -s ../../scripts/uigu2/app .");    
+       if (!file_exists($uigu2dir."/app")) {
+         symlink("../../scripts/uigu2/app",$uigu2dir."/app");
+       }
+       // exec("cd $uigu2dir; ln -s ../../scripts/uigu2/app .");    
        $uigu2file = $workDir->makePermalink('index.php');
        $html = "{$errhtml}
       <iframe width=100% height=1000 src=\"" . $uigu2file . "\">This browser does not
