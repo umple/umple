@@ -872,9 +872,7 @@ Page.showGeneratedCode = function(code,language,tabnumber)
   var generatedMarkup = Page.getGeneratedMarkup(code, language);
 
   //Set any error or warning messages
-	if(errorMarkup != ""){
- 		jQuery("#messageArea").html(errorMarkup);
-	}
+	jQuery("#messageArea").html(errorMarkup);
 
   //Set the generated content
   if(language == "java" || language == "php" || language == "cpp" 
@@ -968,8 +966,13 @@ Page.getErrorMarkup = function(code, language)
     output = code.replace(/<p>$/, "");
   }
   else
-  { //Covers the rest of the generated languages
-    output = code.split("<p>URL_SPLIT")[0];
+  {
+    // Covers the rest of the generated languages
+    // Don't assign error markup unless there was a split - see #1362
+    var split = code.split("<p>URL_SPLIT");
+    if (split.length > 1){
+      output = split[0];
+    }
   }
 
   return output;
@@ -1003,8 +1006,11 @@ Page.getGeneratedMarkup = function(code, language)
     output = jQuery("<div/>").html(output).text();
   }
   else
-  { //Covers the rest of the generated languages
-    output = code.split("<p>URL_SPLIT")[1];
+  {
+    // Covers the rest of the generated languages
+    // Assign to entire code block if non-splitting - see #1362
+    var split = code.split("<p>URL_SPLIT");
+    output = (split.length > 1) ? split[1] : code;
   }
   return output;
 }
