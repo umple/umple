@@ -14,8 +14,3 @@ trait T {
 class C {
   isA T<sm.e2() as event2>;
 }
-
-
-
-
-

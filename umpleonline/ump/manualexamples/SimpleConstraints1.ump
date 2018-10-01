@@ -21,7 +21,6 @@ class Client {
     }
   }
 }
-
 //$?[End_of_model]$?
 // @@@skipphpcompile - Has java code
 // @@@skipcppcompile - Has java code

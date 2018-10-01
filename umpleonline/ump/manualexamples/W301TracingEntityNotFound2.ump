@@ -6,5 +6,4 @@ class A {
   
   trace identifier;
 }
-
 // @@@skipphpcompile See issue 596 (PHP tracing causes issues)

@@ -2,7 +2,7 @@ class Vehicle {}
 
 class Wheel {}
 
- // vehicle composed with wheels
+// vehicle composed with wheels
 association {
     0..1 Vehicle v <@>- 2..4 Wheel w;
 }

@@ -19,7 +19,3 @@ trait T2{
 class C1{
   isA T1,T2;
 }
-
-
-
-

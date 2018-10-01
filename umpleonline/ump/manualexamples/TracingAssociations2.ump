@@ -10,5 +10,4 @@ class Professor {
   
   trace add supervisor;
 }
-
 // @@@skipphpcompile See issue 596 (PHP tracing causes issues)

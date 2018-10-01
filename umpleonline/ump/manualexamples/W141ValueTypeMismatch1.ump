@@ -7,6 +7,5 @@ class X {
   Boolean b = 1;
   Time t = "120000";
 }
-
 //$?[End_of_model]$?
 // @@@skipcompile - the resulting code will not compile

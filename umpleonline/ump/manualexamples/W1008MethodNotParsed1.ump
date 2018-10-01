@@ -3,6 +3,5 @@
 class X {
   m() {}
 }
-
 //$?[End_of_model]$?
 // @@@skipcompile - the resulting code cannot be compiled

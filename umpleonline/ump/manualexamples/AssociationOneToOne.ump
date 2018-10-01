@@ -72,7 +72,6 @@ class Company {
     
   }
 }//$?[End_of_model]$?
-
 class Company
 {
   position 50 30 109 45;

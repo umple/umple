@@ -4,4 +4,3 @@
 class X {
   const String A = "Something Interesting";
 }
-

@@ -13,11 +13,3 @@ class C{
  isA T<RelatedClass=I>;
  /*implementation*/
 }
-
-
-
-
-
-
-
-

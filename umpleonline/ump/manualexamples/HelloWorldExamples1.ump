@@ -13,7 +13,6 @@ class HelloWorld {
     System.out.println("Hello World");
   }
 }
-
 //$?[End_of_model]$?
 // @@@skipcppcompile - Contains Java Code
 // @@@skipphpcompile - Contains Java Code

@@ -2,5 +2,4 @@
 
 class Course {  
   * -- * Course course_s ;  
-}  
-
+}

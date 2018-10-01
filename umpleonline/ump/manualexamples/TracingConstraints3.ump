@@ -11,6 +11,5 @@ class Student
   // becomes true and then always continue tracing 
   trace id after [id == 234];
 }
-
 //$?[End_of_model]$?
 // @@@skipphpcompile - Skipped due to issue 699

@@ -12,4 +12,3 @@ class C1{
   isA T< TP = C1 >;
   /*implementation*/
 }
-

@@ -28,7 +28,6 @@ class Student
   position.association Address__Student 30,100 30,0;
   position 47 23 141 100;
 }
-
 //$?[End_of_model]$?
 // @@@skipcppcompile - Contains Java code
 // @@@skipphpcompile - Contains Java code also, issue 700 (line 17)

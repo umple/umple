@@ -7,4 +7,3 @@ class B {
   isA A;
   differentAttr;
 }
-

@@ -80,5 +80,4 @@ class Garage {
           System.out.println("Testing");
          return true;
   }
-  
 }

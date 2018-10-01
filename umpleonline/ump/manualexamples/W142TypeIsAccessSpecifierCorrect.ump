@@ -6,5 +6,4 @@
 class X {
   x;
 }
-
 //$?[End_of_model]$?

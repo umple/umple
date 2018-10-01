@@ -61,10 +61,8 @@ class TimesTable {
     System.out.println(h.wholefile()); 
   }
 }
-
 //$?[End_of_model]$?
 
 /*
 @@@testlanguage=none
 */
-
