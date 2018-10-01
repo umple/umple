@@ -15,6 +15,6 @@ A template reference cannot refer to itself. The logic of the template might be 
 @@source manualexamples/E3503TemplateReferenceRefersToItself1.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E3503TemplateReferenceRefersToItself2.ump
 @@endexample

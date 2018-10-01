@@ -17,6 +17,6 @@ The name of the entity might be misspelled.
 @@source manualexamples/W301TracingEntityNotFound1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W301TracingEntityNotFound2.ump
 @@endexample

@@ -15,6 +15,6 @@ A template used in an emit method must exist within the context of the emit dire
 @@source manualexamples/E3502TemplateNameNotResolved1.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E3502TemplateNameNotResolved2.ump
 @@endexample

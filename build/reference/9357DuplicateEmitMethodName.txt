@@ -16,6 +16,6 @@ Attributing a different name to the duplicate method will solve the error.
 @@source manualexamples/E3507DuplicateEmitMethodName1.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E3507DuplicateEmitMethodName2.ump
 @@endexample

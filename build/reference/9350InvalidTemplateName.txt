@@ -15,6 +15,6 @@ start with a letter or the symbol &#39;_&#39;.<br/>
 @@source manualexamples/E3500InvalidTemplateName1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E3500InvalidTemplateName2.ump
 @@endexample

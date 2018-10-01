@@ -16,6 +16,6 @@ The issue could come from unmatched parentheses or from an incorrect usage of op
 @@source manualexamples/W1010ConstraintSyntaxNotProcessed1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W1010ConstraintSyntaxNotProcessed2.ump
 @@endexample

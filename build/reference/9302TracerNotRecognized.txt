@@ -16,6 +16,6 @@ to be ignored, and the Console tracer will be used. <br/>
 @@source manualexamples/W302TracerNotRecognized1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W302TracerNotRecognized2.ump
 @@endexample

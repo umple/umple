@@ -19,7 +19,7 @@ Traits can be used in several hierarchies without any priority. It means that cl
 @@source manualexamples/E210ConflictMethods2.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E210ConflictMethods3.ump
 @@endexample
 

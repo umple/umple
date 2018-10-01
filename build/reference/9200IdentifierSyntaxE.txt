@@ -19,10 +19,10 @@ In Umple, identifiers used for traits must be alphanumeric. It means that must s
 @@source manualexamples/E200InvalidTraitIdentifierE2.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E200ValidTraitIdentifier1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E200ValidTraitIdentifier2.ump
 @@endexample

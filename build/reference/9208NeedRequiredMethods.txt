@@ -15,7 +15,7 @@ Traits need to have required methods in order to provide the functionality they 
 @@source manualexamples/E208NotRequiredMethod.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E208ValidRequiredMethod.ump
 @@endexample
 

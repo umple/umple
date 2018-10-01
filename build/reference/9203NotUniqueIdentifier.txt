@@ -15,6 +15,6 @@ In Umple, all elements which are capable of being reused should have unique iden
 @@source manualexamples/E203NotHavingUniqueID.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E203HavingUniqueID.ump
 @@endexample

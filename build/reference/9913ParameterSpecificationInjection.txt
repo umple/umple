@@ -16,6 +16,6 @@ The code injection will be applied to all generated methods.
 @@source manualexamples/W1013ParameterSpecificationInjection1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W1013ParameterSpecificationInjection2.ump
 @@endexample
