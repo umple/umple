@@ -16,6 +16,6 @@ as external to the class, if it has been defined externally to the code.
 @@source manualexamples/W039MissingInterface1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W039MissingInterface2.ump
 @@endexample

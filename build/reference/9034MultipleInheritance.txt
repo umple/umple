@@ -19,6 +19,6 @@ noreferences
 @@source manualexamples/E034MultipleInheritance2.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E034MultipleInheritance3.ump
 @@endexample

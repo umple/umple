@@ -12,6 +12,6 @@ noreferences
 @@source manualexamples/E037UninitializedConstantObject1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E037UninitializedConstantObject2.ump
 @@endexample

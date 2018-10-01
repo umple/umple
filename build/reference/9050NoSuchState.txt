@@ -14,7 +14,7 @@ An end state (with no outgoing transitions) is generated. The purpose of the war
 @@source manualexamples/W050TargetStateNotFound1.ump &diagramtype=state
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W050TargetStateNotFound2.ump &diagramtype=state
 @@endexample
 

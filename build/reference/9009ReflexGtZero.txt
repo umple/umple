@@ -21,7 +21,7 @@ have parents, <i>ad infinitum</i>.
 @@source manualexamples/E009ReflexiveLowerBound1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E009ReflexiveLowerBound2.ump
 @@endexample
 

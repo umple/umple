@@ -14,7 +14,7 @@ as &#39;queued void&#39; or &#39;void&#39;.</p>
 @@source manualexamples/E041NonVoidQueuedMethod1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E041NonVoidQueuedMethod2.ump
 @@endexample
 

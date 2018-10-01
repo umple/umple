@@ -30,7 +30,7 @@ noreferences
 @@source manualexamples/E004InvalidMultiplicity1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E004InvalidMultiplicity2.ump
 @@endexample
 

@@ -15,10 +15,10 @@ noreferences
 @@source manualexamples/E013NonImmutableAssociation1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E013NonImmutableAssociation2.ump
 @@endexample
 
-@@example
+@@example @@caption Another Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E013NonImmutableAssociation3.ump
 @@endexample

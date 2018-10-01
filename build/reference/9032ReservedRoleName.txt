@@ -13,7 +13,7 @@ noreferences
 @@endexample
 
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E032ReservedRoleName2.ump
 @@endexample
 
@@ -21,10 +21,6 @@ noreferences
 @@source manualexamples/E032ReservedRoleName3.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E032ReservedRoleName4.ump
 @@endexample
-
-
-
-

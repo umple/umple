@@ -14,7 +14,7 @@ noreferences
 @@source manualexamples/E006MissingDefault1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E006MissingDefault2.ump
 @@endexample
 
