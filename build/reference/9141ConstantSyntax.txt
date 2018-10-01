@@ -19,11 +19,11 @@ Note that for an initialization value with no type specified will result in the 
 @@source manualexamples/W141ValueTypeMismatch1.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W141ValueTypeMismatch2.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W141ValueTypeMismatch3.ump
 @@endexample
 

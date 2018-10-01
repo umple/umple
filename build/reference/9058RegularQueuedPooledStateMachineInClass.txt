@@ -17,6 +17,6 @@ All the state machines in a given class must be of the same type (pooled, queued
 @@source manualexamples/E058RegularQueuedPooledStateMachineInClass1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E058RegularQueuedPooledStateMachineInClass2.ump
 @@endexample

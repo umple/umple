@@ -16,6 +16,6 @@ The state machines must be of the same type (e.g. both pooled), or else distribu
 @@source manualexamples/E060RegularPooledStateMachineInClass1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E060RegularPooledStateMachineInClass2.ump
 @@endexample

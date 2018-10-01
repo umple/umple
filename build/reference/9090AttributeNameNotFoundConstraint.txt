@@ -17,6 +17,6 @@ The attribute might have been defined in a separate file previously, but no long
 @@source manualexamples/E090AttributeNameNotFoundConstraint1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E090AttributeNameNotFoundConstraint2.ump
 @@endexample

@@ -16,6 +16,6 @@ This error is raised if a class does not contain an attribute of a specified typ
 @@source manualexamples/E091AttributeOfTypeNotFoundConstraint1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E091AttributeOfTypeNotFoundConstraint2.ump
 @@endexample

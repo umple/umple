@@ -14,7 +14,7 @@ noreferences
 @@source manualexamples/E051EventParametersMustMatch1.ump &diagramtype=state
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E051EventParametersMustMatch2.ump &diagramtype=state
 @@endexample
 

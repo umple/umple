@@ -15,6 +15,6 @@ In Umple, parallel state machines within the same composite state must have diff
 @@source manualexamples/E073DuplicateParallelStateMachineName1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E073DuplicateParallelStateMachineName2.ump
 @@endexample

@@ -22,6 +22,6 @@ Umple currently assumes the state that has been defined first is being reference
 @@source manualexamples/W066TransitionMultiplePossibleDestinations1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W066TransitionMultiplePossibleDestinations2.ump
 @@endexample

@@ -15,10 +15,10 @@ In Umple, final states are allowed to be empty, or they can contain entry action
 @@source manualexamples/W072RefactoredFinalState1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W072RefactoredFinalState2.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W072RefactoredFinalState3.ump
 @@endexample

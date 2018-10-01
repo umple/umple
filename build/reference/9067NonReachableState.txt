@@ -20,6 +20,6 @@ appropriate transition to the state machine.
 @@source manualexamples/W067NonReachableState1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W067NonReachableState2.ump
 @@endexample

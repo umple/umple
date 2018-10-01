@@ -21,6 +21,6 @@ In Umple, enumerations and state machines within the same class cannot have the 
 @@source manualexamples/E097EnumerationAndStateMachineConflict2.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E097EnumerationAndStateMachineConflict3.ump
 @@endexample

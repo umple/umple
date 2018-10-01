@@ -17,6 +17,6 @@ To catch and immediately process unspecified events, a queued or regular state m
 @@source manualexamples/W062UnspecifiedEventPooledStateMachine1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W062UnspecifiedEventPooledStateMachine2.ump
 @@endexample

@@ -12,10 +12,10 @@ Umple semantic warning reported when an enumeration makes a method parameter's t
 @@source manualexamples/W102EnumerationCausesMethodParameterAmbiguity1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W102EnumerationCausesMethodParameterAmbiguity2.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W102EnumerationCausesMethodParameterAmbiguity3.ump
 @@endexample

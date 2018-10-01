@@ -16,6 +16,6 @@ This error is raised if a class is not the subclass of a given class as expected
 @@source manualexamples/E092ClassIsNotSubclassConstraint1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E092ClassIsNotSubclassConstraint2.ump
 @@endexample

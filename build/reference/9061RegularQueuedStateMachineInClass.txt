@@ -16,6 +16,6 @@ The state machines must be of the same type (e.g. both queued), or else distribu
 @@source manualexamples/E061RegularQueuedStateMachineInClass1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E061RegularQueuedStateMachineInClass2.ump
 @@endexample
